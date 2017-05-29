@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43A00FCD-0FC1-4C34-A5A8-6FF2C090504D}</ProjectGuid>
+    <ProjectGuid>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>A2v10.Xaml</RootNamespace>
@@ -43,5 +43,6 @@
     <Compile Include="Layouts\Grid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
