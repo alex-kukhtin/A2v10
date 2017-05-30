@@ -1,11 +1,11 @@
 
-// childfrm.cpp : implementation of the CChildFrame class
+// ChildFrm.cpp : implementation of the CChildFrame class
 //
 
 #include "stdafx.h"
 #include "A2v10.Designer.h"
 
-#include "childfrm.h"
+#include "ChildFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -16,6 +16,8 @@
 IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWndEx)
 
 BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
+	ON_WM_CREATE()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 // CChildFrame construction/destruction
@@ -29,14 +31,44 @@ CChildFrame::~CChildFrame()
 {
 }
 
+BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
+{
+	return __super::OnCreateClient(lpcs, pContext);
+	/*
+	BOOL rc = m_wndSplitter.Create(this,
+	2, 2,			// TODO: adjust the number of rows, columns
+	CSize(10, 10),	// TODO: adjust the minimum pane size
+	pContext);
+	m_wndSplitter.ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
+	return rc;
+	*/
+}
 
 BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
-	if( !CMDIChildWndEx::PreCreateWindow(cs) )
+	if (!__super::PreCreateWindow(cs))
 		return FALSE;
-
+	cs.style |= WS_MAXIMIZE;
 	return TRUE;
+}
+
+// afx_msg
+int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (__super::OnCreate(lpCreateStruct) == -1)
+		return -1;
+	ModifyStyleEx(WS_EX_CLIENTEDGE, 0, 0);
+	ModifyStyle(0, WS_MAXIMIZE);
+	AfxGetMainWnd()->PostMessage(WMI_IDLE_UPDATE, WMI_IDLE_UPDATE_WPARAM, IDLE_UPDATE_MDITABS);
+	return 0;
+}
+
+// afx_msg
+void CChildFrame::OnClose()
+{
+	AfxGetMainWnd()->PostMessage(WMI_IDLE_UPDATE, WMI_IDLE_UPDATE_WPARAM, IDLE_UPDATE_MDITABS);
+	__super::OnClose();
 }
 
 // CChildFrame diagnostics
@@ -44,12 +76,12 @@ BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 #ifdef _DEBUG
 void CChildFrame::AssertValid() const
 {
-	CMDIChildWndEx::AssertValid();
+	__super::AssertValid();
 }
 
 void CChildFrame::Dump(CDumpContext& dc) const
 {
-	CMDIChildWndEx::Dump(dc);
+	__super::Dump(dc);
 }
 #endif //_DEBUG
 

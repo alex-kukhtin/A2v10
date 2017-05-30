@@ -93,7 +93,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;_BASEEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -139,7 +139,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;_BASEEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -185,7 +185,20 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="a2borderpane.cpp" />
+    <ClCompile Include="a2captionbutton.cpp" />
+    <ClCompile Include="a2dockablepane.cpp" />
+    <ClCompile Include="a2glowborder.cpp" />
+    <ClCompile Include="a2mdiframe.cpp" />
+    <ClCompile Include="a2miniframewnd.cpp" />
+    <ClCompile Include="a2sdiframe.cpp" />
+    <ClCompile Include="a2tabbedpane.cpp" />
+    <ClCompile Include="a2tabview.cpp" />
+    <ClCompile Include="a2toolbars.cpp" />
+    <ClCompile Include="a2toolbox.cpp" />
     <ClCompile Include="A2v10.Base.cpp" />
+    <ClCompile Include="a2visualmanager.cpp" />
+    <ClCompile Include="appdata.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -200,20 +213,41 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="guiext.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="theme.cpp" />
+    <ClCompile Include="uitools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def" />
     <None Include="res\A2v10Base.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\a2borderpane.h" />
+    <ClInclude Include="..\Include\a2captionbutton.h" />
+    <ClInclude Include="..\Include\a2dockablepane.h" />
+    <ClInclude Include="..\Include\a2glowborder.h" />
+    <ClInclude Include="..\Include\a2mdiframe.h" />
+    <ClInclude Include="..\Include\a2sdiframe.h" />
+    <ClInclude Include="..\Include\a2tabview.h" />
+    <ClInclude Include="..\Include\a2toolbars.h" />
+    <ClInclude Include="..\Include\a2toolbox.h" />
     <ClInclude Include="..\Include\A2v10.Base.h" />
+    <ClInclude Include="..\Include\a2visualmanager.h" />
+    <ClInclude Include="..\Include\allresources.h" />
+    <ClInclude Include="..\Include\appdata.h" />
+    <ClInclude Include="..\Include\appdefs.h" />
     <ClInclude Include="..\Include\dlldefs.h" />
+    <ClInclude Include="..\Include\guiext.h" />
+    <ClInclude Include="..\Include\theme.h" />
+    <ClInclude Include="..\Include\uitools.h" />
+    <ClInclude Include="a2miniframewnd.h" />
+    <ClInclude Include="a2tabbedpane.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

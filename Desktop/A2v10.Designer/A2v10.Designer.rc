@@ -74,26 +74,24 @@ IDR_A2v10DesignerTYPE         ICON         "res\\A2v10.DesignerDoc.ico"
 #endif
 IDI_FILE_VIEW           ICON         "res\\file_view.ico"
 IDI_FILE_VIEW_HC        ICON         "res\\file_view_hc.ico"
-IDI_CLASS_VIEW          ICON         "res\\class_view.ico"
-IDI_CLASS_VIEW_HC       ICON         "res\\class_view_hc.ico"
 IDI_OUTPUT_WND          ICON         "res\\output_wnd.ico"
 IDI_OUTPUT_WND_HC       ICON         "res\\output_wnd_hc.ico"
 IDI_PROPERTIES_WND      ICON         "res\\properties_wnd.ico"
 IDI_PROPERTIES_WND_HC   ICON         "res\\properties_wnd_hc.ico"
+
+ID_WND_SOLUTION         ICON         "res\\wndsolution.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
 IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
 IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
-IDB_CLASS_VIEW          BITMAP                  "res\\classview.bmp"
-IDB_CLASS_VIEW_24       BITMAP                  "res\\classview_hc.bmp"
 IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
@@ -107,6 +105,7 @@ IDB_PAGES_HC            BITMAP                  "res\\pages_hc.bmp"
 IDB_PAGES_SMALL         BITMAP                  "res\\pages_small.bmp"
 IDB_PAGES_SMALL_HC      BITMAP                  "res\\pages_small_hc.bmp"
 IDB_INFO                BITMAP                  "res\\info.bmp"
+ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -155,15 +154,20 @@ END
 
 IDR_MENU_IMAGES TOOLBAR 16, 15
 BEGIN
-    BUTTON      ID_WINDOW_MANAGER
-    SEPARATOR
-    BUTTON      ID_WINDOW_CASCADE
-    BUTTON      ID_WINDOW_TILE_HORZ
-    BUTTON      ID_TOOLS_MACRO
-    BUTTON      ID_SORTING_SORTALPHABETIC
-    BUTTON      ID_SORTING_SORTBYTYPE
-    BUTTON      ID_SORTING_SORTBYACCESS
-    BUTTON      ID_SORTING_GROUPBYTYPE
+	BUTTON      IDMENU_CLOSE
+	BUTTON      IDMENU_MINIMIZE
+	BUTTON      IDMENU_MAXIMIZE
+	BUTTON      IDMENU_RESTORE
+	BUTTON      IDMENU_HELP
+	BUTTON      ID_VIEW_PROPERTIES
+	BUTTON      ID_VIEW_TOOLBOX
+	BUTTON      ID_TOOLS_OPTIONS
+	BUTTON      ID_VIEW_COMMAND
+	BUTTON      ID_APP_EXIT
+	BUTTON      ID_EDIT_CLEAR_ALL
+	BUTTON      ID_WINDOW_CLOSE_ALL
+	BUTTON      ID_VIEW_SOLUTION
+	BUTTON		ID_VIEW_OUTLINE
 END
 
 IDR_PROPERTIES TOOLBAR 16, 15
@@ -437,6 +441,16 @@ BEGIN
     ID_INDICATOR_OVR        "OVR"
     ID_INDICATOR_REC        "REC"
 END
+
+STRINGTABLE
+BEGIN
+	ID_WND_SOLUTION "Solution"
+	ID_WND_OUTLINE "Outline"
+	ID_WND_TOOLBOX "Toolbox"
+	ID_WND_COMMAND "Command"
+	ID_WND_PROPERTIES "Properties"
+END
+
 STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new document\nNew"
@@ -514,23 +528,12 @@ BEGIN
     IDS_TOOLBAR_CUSTOMIZE   "Customize..."
     ID_WINDOW_MANAGER       "&Windows..."
     IDS_FILE_VIEW           "File View"
-    IDS_CLASS_VIEW          "Class View"
     IDS_EXPLORER            "Explorer"
     IDS_OUTPUT_WND          "Output"
     IDS_BUILD_TAB           "Build"
     IDS_DEBUG_TAB           "Debug"
     IDS_FIND_TAB            "Find"
     IDS_PROPERTIES_WND      "Properties"
-    IDS_MYCALENDARS         "My Calendars"
-    IDS_CALENDAR            "Calendar"
-    IDS_SHORTCUTS           "Shortcuts"
-    IDS_FOLDERS             "Folders"
-    IDS_OUTLOOKBAR          "Outlook Bar"
-    IDS_CAPTION_BUTTON      "Options..."
-    IDS_CAPTION_BUTTON_TIP  "Click here to see more options"
-    IDS_CAPTION_TEXT        "This is a caption bar where a message can be presented to the user."
-    IDS_CAPTION_IMAGE_TIP   "Important"
-    IDS_CAPTION_IMAGE_TEXT  "Here is an informational message for the user."
     IDS_EDIT_MENU           "Edit"
 END
 #endif

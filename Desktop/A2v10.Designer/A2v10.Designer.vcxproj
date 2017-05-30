@@ -191,14 +191,14 @@
     <ClInclude Include="A2v10.Designer.h" />
     <ClInclude Include="A2v10.DesignerDoc.h" />
     <ClInclude Include="A2v10.DesignerView.h" />
-    <ClInclude Include="CalendarBar.h" />
     <ClInclude Include="childfrm.h" />
-    <ClInclude Include="ClassView.h" />
+    <ClInclude Include="commandwnd.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="mainfrm.h" />
-    <ClInclude Include="OutputWnd.h" />
-    <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="outputwnd.h" />
+    <ClInclude Include="propertieswnd.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="solutionwnd.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ViewTree.h" />
@@ -207,13 +207,13 @@
     <ClCompile Include="A2v10.Designer.cpp" />
     <ClCompile Include="A2v10.DesignerDoc.cpp" />
     <ClCompile Include="A2v10.DesignerView.cpp" />
-    <ClCompile Include="CalendarBar.cpp" />
     <ClCompile Include="childfrm.cpp" />
-    <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="mainfrm.cpp" />
-    <ClCompile Include="OutputWnd.cpp" />
-    <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="outputwnd.cpp" />
+    <ClCompile Include="propertieswnd.cpp" />
+    <ClCompile Include="solutionwnd.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -228,17 +228,15 @@
   <ItemGroup>
     <Image Include="res\A2v10.Designer.ico" />
     <Image Include="res\A2v10.DesignerDoc.ico" />
-    <Image Include="res\classview.bmp" />
-    <Image Include="res\classview_hc.bmp" />
-    <Image Include="res\class_view.ico" />
-    <Image Include="res\class_view_hc.ico" />
     <Image Include="res\explorer.bmp" />
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />
     <Image Include="res\fileview_hc.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\imagelistsolution.bmp" />
     <Image Include="res\info.bmp" />
+    <Image Include="res\maintoolbar.bmp" />
     <Image Include="res\menuimages.bmp" />
     <Image Include="res\menuimages_hc.bmp" />
     <Image Include="res\nav_large.bmp" />
@@ -257,6 +255,10 @@
     <Image Include="res\sort_hc.bmp" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
+    <Image Include="res\wndcommand.ico" />
+    <Image Include="res\wndproperties.ico" />
+    <Image Include="res\wndsolution.ico" />
+    <Image Include="res\wndtoolbox.ico" />
     <Image Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>

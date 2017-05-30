@@ -45,19 +45,19 @@
     <ClInclude Include="FileView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClassView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ViewTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OutputWnd.h">
+    <ClInclude Include="solutionwnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PropertiesWnd.h">
+    <ClInclude Include="commandwnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CalendarBar.h">
+    <ClInclude Include="outputwnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="propertieswnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,19 +83,19 @@
     <ClCompile Include="FileView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClassView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ViewTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OutputWnd.cpp">
+    <ClCompile Include="commandwnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PropertiesWnd.cpp">
+    <ClCompile Include="solutionwnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CalendarBar.cpp">
+    <ClCompile Include="outputwnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="propertieswnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -111,22 +111,10 @@
     <Image Include="res\file_view_hc.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\class_view.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\class_view_hc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\fileview.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\fileview_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\classview.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\classview_hc.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\explorer.bmp">
@@ -199,6 +187,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndcommand.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndproperties.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndsolution.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndtoolbox.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\imagelistsolution.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\maintoolbar.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

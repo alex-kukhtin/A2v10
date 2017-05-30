@@ -1,26 +1,49 @@
 
 #pragma once
 
-class CPropertiesToolBar : public CMFCToolBar
+
+class CA2PropertyGridProperty : public CMFCPropertyGridProperty
 {
 public:
-	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
-	{
-		CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
-	}
+	CA2PropertyGridProperty(const CString& strGroupName, DWORD_PTR dwData = 0, BOOL bIsValueList = FALSE)
+		: CMFCPropertyGridProperty(strGroupName, dwData, bIsValueList), m_bAttached(false) {}
 
-	virtual BOOL AllowShowOnList() const { return FALSE; }
+	CA2PropertyGridProperty(const CString& strName, const COleVariant& varValue, LPCTSTR lpszDescr = NULL, DWORD_PTR dwData = 0,
+		LPCTSTR lpszEditMask = NULL, LPCTSTR lpszEditTemplate = NULL, LPCTSTR lpszValidChars = NULL)
+		: CMFCPropertyGridProperty(strName, varValue, lpszDescr, dwData, lpszEditMask, lpszEditTemplate, lpszValidChars),
+		m_bAttached(false) {}
+
+	virtual CString FormatProperty();
+	BOOL AddSubItemSorted(CMFCPropertyGridProperty* pProp);
+
+	bool m_bAttached;
 };
 
-class CPropertiesWnd : public CDockablePane
+class CA2PropertyGridCtrl : public CMFCPropertyGridCtrl
 {
-// Construction
+public:
+	//JavaScriptValue m_jsValue;
+	//JavaScriptValue m_jsValueParent;
+	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
+
+	//void FillProperties(JavaScriptValue val, JavaScriptValue parent);
+	void FillPropertyValues();
+
+protected:
+	virtual void OnDrawDescription(CDC* pDC, CRect rect);
+	//CMFCPropertyGridProperty* GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached);
+	void FillPropertiesInt();
+};
+
+class CPropertiesWnd : public CA2DockablePane
+{
+	// Construction
 public:
 	CPropertiesWnd();
 
 	void AdjustLayout();
 
-// Attributes
+	// Attributes
 public:
 	void SetVSDotNetLook(BOOL bSet)
 	{
@@ -29,28 +52,30 @@ public:
 	}
 
 protected:
-	CFont m_fntPropList;
 	CComboBox m_wndObjectCombo;
-	CPropertiesToolBar m_wndToolBar;
-	CMFCPropertyGridCtrl m_wndPropList;
+	CA2MFCToolBar m_wndToolBar;
+	CA2PropertyGridCtrl m_wndPropList;
 
-// Implementation
+	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+
+	// Implementation
 public:
 	virtual ~CPropertiesWnd();
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnExpandAllProperties();
 	afx_msg void OnUpdateExpandAllProperties(CCmdUI* pCmdUI);
-	afx_msg void OnSortProperties();
-	afx_msg void OnUpdateSortProperties(CCmdUI* pCmdUI);
 	afx_msg void OnProperties1();
 	afx_msg void OnUpdateProperties1(CCmdUI* pCmdUI);
-	afx_msg void OnProperties2();
-	afx_msg void OnUpdateProperties2(CCmdUI* pCmdUI);
-	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+	afx_msg LRESULT OnWmiSettingChange(WPARAM wParam, LPARAM lParam);
+
+	afx_msg void OnAlphabetical();
+	afx_msg void OnUpdateAlphabetical(CCmdUI* pCmdUI);
+	afx_msg void OnCategorized();
+	afx_msg void OnUpdateCategorized(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
 

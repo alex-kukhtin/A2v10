@@ -16,6 +16,7 @@
 #define new DEBUG_NEW
 #endif
 
+#pragma comment(lib,"../../bin/A2v10.Base.lib")
 
 // CMainApp
 
@@ -34,6 +35,7 @@ END_MESSAGE_MAP()
 CMainApp::CMainApp()
 {
 	m_bHiColorIcons = TRUE;
+	CDockablePane::m_bDisableAnimation = TRUE;
 
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
@@ -71,8 +73,12 @@ BOOL CMainApp::InitInstance()
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
-	CWinAppEx::InitInstance();
+	__super::InitInstance();
 
+	if (!AfxInitRichEdit5()) {
+		AfxMessageBox(IDP_RICH_INIT_FAILED);
+		return FALSE;
+	}
 
 	EnableTaskbarInteraction();
 
@@ -90,7 +96,7 @@ BOOL CMainApp::InitInstance()
 	LoadStdProfileSettings(16);  // Load standard INI file options (including MRU)
 
 
-	InitContextMenuManager();
+	//InitContextMenuManager();
 	InitShellManager();
 
 	InitKeyboardManager();

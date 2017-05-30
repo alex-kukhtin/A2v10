@@ -1,5 +1,5 @@
 
-// childfrm.h : interface of the CChildFrame class
+// ChildFrm.h : interface of the CChildFrame class
 //
 
 #pragma once
@@ -10,16 +10,20 @@ class CChildFrame : public CMDIChildWndEx
 public:
 	CChildFrame();
 
-// Attributes
+	// Attributes
+protected:
+	CSplitterWndEx m_wndSplitter;
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
+public:
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CChildFrame();
 #ifdef _DEBUG
@@ -27,7 +31,10 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnClose();
 };

@@ -3,36 +3,30 @@
 
 #include "ViewTree.h"
 
-class CClassToolBar : public CMFCToolBar
-{
-	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
-	{
-		CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
-	}
-
-	virtual BOOL AllowShowOnList() const { return FALSE; }
-};
-
-class CClassView : public CDockablePane
+class CSolutionWnd : public CA2DockablePane
 {
 public:
-	CClassView();
-	virtual ~CClassView();
+	CSolutionWnd();
+	virtual ~CSolutionWnd();
 
 	void AdjustLayout();
 	void OnChangeVisualStyle();
 
 protected:
-	CClassToolBar m_wndToolBar;
+	CA2MFCToolBar m_wndToolBar;
 	CViewTree m_wndClassView;
 	CImageList m_ClassViewImages;
 	UINT m_nCurrSort;
 
-	void FillClassView();
+	void LoadSolution();
+	void CloseSolution();
+
+	//void InsertCollection(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask);
 
 // Overrides
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -43,11 +37,12 @@ protected:
 	afx_msg void OnClassDefinition();
 	afx_msg void OnClassProperties();
 	afx_msg void OnNewFolder();
-	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg LRESULT OnChangeActiveTab(WPARAM, LPARAM);
+	//afx_msg LRESULT OnChangeActiveTab(WPARAM, LPARAM);
 	afx_msg void OnSort(UINT id);
 	afx_msg void OnUpdateSort(CCmdUI* pCmdUI);
+	afx_msg LRESULT OnWmiNotify(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnWmiPropertyChanged(WPARAM wParam, LPARAM lParam);
 
 	DECLARE_MESSAGE_MAP()
 };

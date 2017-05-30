@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by A2v10.Designer.rc
+// Used by A2v10.Help.rc
 //
 #define IDD_ABOUTBOX				100
 #define IDR_POPUP_EDIT				119
@@ -13,8 +13,7 @@
 #define ID_VIEW_CUSTOMIZE			126
 #define IDR_MAINFRAME				128
 #define IDR_MAINFRAME_256			129
-#define IDR_A2v10DesignerTYPE				130
-#define ID_WINDOW_MANAGER			131
+#define IDR_A2v10HelpTYPE				130
 #define ID_VIEW_FILEVIEW			133
 #define ID_VIEW_CLASSVIEW			134
 #define ID_PROPERTIES				135
@@ -31,24 +30,10 @@
 #define ID_SORTING_SORTALPHABETIC	146
 #define ID_SORTING_SORTBYTYPE		147
 #define ID_SORTING_SORTBYACCESS		148
-#define ID_VIEW_OUTPUTWND			149
-#define ID_VIEW_PROPERTIESWND		150
-#define ID_SORTPROPERTIES			151
-#define ID_PROPERTIES1				152
-#define ID_PROPERTIES2				153
-#define ID_EXPAND_ALL				154
 #define IDS_FILE_VIEW				155
-#define IDS_CLASS_VIEW				156
-#define IDS_OUTPUT_WND				157
-#define IDS_PROPERTIES_WND			158
 #define IDI_FILE_VIEW				161
 #define IDI_FILE_VIEW_HC			162
-#define IDI_CLASS_VIEW				163
-#define IDI_CLASS_VIEW_HC			164
-#define IDI_OUTPUT_WND				165
 #define IDI_OUTPUT_WND_HC			166
-#define IDI_PROPERTIES_WND			167
-#define IDI_PROPERTIES_WND_HC		168
 #define IDR_EXPLORER				169
 #define IDB_EXPLORER_24				170
 #define IDR_SORT					171
@@ -57,39 +42,62 @@
 #define IDR_POPUP_EXPLORER			174
 #define IDB_FILE_VIEW				175
 #define IDB_FILE_VIEW_24			176
-#define IDB_CLASS_VIEW				177
-#define IDB_CLASS_VIEW_24			178
-#define IDR_MENU_IMAGES				179
 #define IDB_MENU_IMAGES_24			180
 #define ID_TOOLS_MACRO				181
-#define IDR_OUTPUT_POPUP			182
-#define IDR_PROPERTIES				183
-#define IDB_PROPERTIES_HC			184
-#define ID_VIEW_NAVIGATION			185
-#define IDB_NAVIGATION_LARGE		186
-#define IDB_NAVIGATION_LARGE_HC		187
-#define IDB_PAGES					188
-#define IDB_PAGES_HC				189
-#define IDB_PAGES_SMALL				190
-#define IDB_PAGES_SMALL_HC			191
-#define ID_TOOLS_OPTIONS			220
-#define ID_VIEW_CAPTION_BAR			221
-#define IDB_INFO					230
-#define IDS_CAPTION_BUTTON			231
-#define IDS_CAPTION_BUTTON_TIP		232
-#define IDS_CAPTION_TEXT			233
-#define IDS_CAPTION_IMAGE_TIP		234
-#define IDS_CAPTION_IMAGE_TEXT		235
-#define IDS_MYCALENDARS				250
-#define IDS_CALENDAR				251
-#define IDS_SHORTCUTS				252
-#define IDS_FOLDERS					253
-#define IDS_OUTLOOKBAR				258
-#define IDS_BUILD_TAB				300
-#define IDS_DEBUG_TAB				301
-#define IDS_FIND_TAB				302
+#define IDR_OUTPUT_POPUP            182
+
+
+#define ID_VIEW_CAPTION_BAR 200
+#define ID_EXPAND_ALL 201
+#define ID_SORTPROPERTIES 202
+#define ID_PROPERTIES1 203
+#define ID_PROPERTIES2 204
+#define IDR_A2v10DesignerTYPE           205
+#define IDS_OUTPUT_WND 206
+
+#define ID_VIEW_OUTPUTWND       400
+
+#define IDR_MENU_IMAGES		230
+
 #define IDS_EXPLORER				305
 #define IDS_EDIT_MENU				306
+
+#define IDS_BUILD_TAB           300
+#define IDS_DEBUG_TAB           301
+#define IDS_FIND_TAB            302
+#define IDS_EXPLORER            305
+#define IDS_EDIT_MENU           306
+#define IDS_PROPERTIES_WND      307
+
+#define ID_VIEW_OUTPUTWND       400
+#define ID_WND_PROPERTIES       500
+#define ID_WND_TOOLBOX          501
+#define ID_WND_COMMAND          502
+#define ID_WND_SOLUTION         503
+#define ID_WND_OUTLINE			504
+#define IDM_POPUP_MENU          600
+
+#define ID_FILE_OPEN_SOLUTION           32000
+#define ID_FILE_CLOSE_SOLUTION          32001
+#define ID_FILE_SAVE_ALL                32002
+#define ID_EDIT_FIND_IN_FILES			32100
+#define ID_VIEW_PROPERTIES              32200
+#define ID_VIEW_TOOLBOX                 32201
+#define ID_VIEW_COMMAND                 32202
+#define ID_VIEW_SOLUTION                32203
+#define ID_VIEW_OUTLINE					32204
+#define ID_TOOLS_OPTIONS                32400
+#define ID_WINDOW_MANAGER               32600
+#define ID_WINDOW_CLOSE_ALL				32601
+#define ID_PROP_ALPHABETICAL			32700
+#define ID_PROP_CATEGORIZED				32701
+#define IDP_OLE_INIT_FAILED             51000
+#define IDP_RICH_INIT_FAILED            51001
+#define IDMENU_CLOSE                    0xD000
+#define IDMENU_RESTORE                  0xD001
+#define IDMENU_MAXIMIZE                 0xD002
+#define IDMENU_MINIMIZE                 0xD003
+#define IDMENU_HELP                     0xD004
 
 // Next default values for new objects
 //
