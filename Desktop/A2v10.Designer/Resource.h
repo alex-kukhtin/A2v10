@@ -43,13 +43,10 @@
 #define IDB_FILE_VIEW				175
 #define IDB_FILE_VIEW_24			176
 #define IDB_MENU_IMAGES_24			180
-#define ID_TOOLS_MACRO				181
 #define IDR_OUTPUT_POPUP            182
 
 
-#define ID_VIEW_CAPTION_BAR 200
 #define ID_EXPAND_ALL 201
-#define ID_SORTPROPERTIES 202
 #define ID_PROPERTIES1 203
 #define ID_PROPERTIES2 204
 #define IDR_A2v10DesignerTYPE           205
@@ -58,6 +55,9 @@
 #define ID_VIEW_OUTPUTWND       400
 
 #define IDR_MENU_IMAGES		230
+#define IDR_TOOLBOX         232
+#define IDR_PROPERTIES      234
+#define IDR_PRINTPREVIEW    236
 
 #define IDS_EXPLORER				305
 #define IDS_EDIT_MENU				306

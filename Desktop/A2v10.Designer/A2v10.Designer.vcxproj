@@ -234,6 +234,7 @@
     <Image Include="res\fileview_hc.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\formtoolbox.bmp" />
     <Image Include="res\imagelistsolution.bmp" />
     <Image Include="res\info.bmp" />
     <Image Include="res\maintoolbar.bmp" />
@@ -247,10 +248,7 @@
     <Image Include="res\pages_hc.bmp" />
     <Image Include="res\pages_small.bmp" />
     <Image Include="res\pages_small_hc.bmp" />
-    <Image Include="res\properties.bmp" />
-    <Image Include="res\properties_hc.bmp" />
-    <Image Include="res\properties_wnd.ico" />
-    <Image Include="res\properties_wnd_hc.ico" />
+    <Image Include="res\propstoolbar.bmp" />
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
     <Image Include="res\Toolbar.bmp" />

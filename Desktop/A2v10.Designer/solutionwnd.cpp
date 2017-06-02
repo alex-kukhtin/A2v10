@@ -416,22 +416,22 @@ void CSolutionWnd::CloseSolution()
 // afx_msg
 LRESULT CSolutionWnd::OnWmiNotify(WPARAM wParam, LPARAM lParam)
 {
-	/*
 	switch (wParam) {
 	case WMIN_OPEN_SOLUTION:
-		try 
-		{
+		//try 
+		//{
 			LoadSolution();
-		}
+		//}
+		/*
 		catch (JavaScriptException& e) {
 			e.ReportError();
 		}
+		*/
 		break;
 	case  WMIN_SOLUTION_CLOSED:
 		CloseSolution();
 		break;
 	}
-	*/
 	return 0L;
 }
 
@@ -442,7 +442,7 @@ LRESULT CSolutionWnd::OnWmiPropertyChanged(WPARAM wParam, LPARAM lParam)
 	PROPERTY_CHANGED_INFO* pInfo = reinterpret_cast<PROPERTY_CHANGED_INFO*>(lParam);
 	if (pInfo == nullptr)
 		return 0L;
-	if (wcscmp(pInfo->szPropName, L"name") != 0)
+	if (wcsncmp(pInfo->szPropName, L"name", 16) != 0)
 		return 0L;
 	/*
 	LPARAM lRef = reinterpret_cast<LPARAM>(pInfo->pJsRef);
