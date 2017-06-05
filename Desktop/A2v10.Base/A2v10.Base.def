@@ -34,3 +34,5 @@ EXPORTS
 ?OnUpdateCmdUI@CA2MFCToolBar@@UAEXPAVCFrameWnd@@H@Z
 ?GetRowHeight@CA2MFCMenuBar@@UBEHXZ
 ?Create@CA2BorderPanes@@QAEHPAVCWnd@@@Z
+;
+??0CA2DocTemplate@@QAE@IPAUCRuntimeClass@@00@Z

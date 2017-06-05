@@ -12,7 +12,6 @@
 #define IDS_TOOLBAR_CUSTOMIZE		125
 #define ID_VIEW_CUSTOMIZE			126
 #define IDR_MAINFRAME				128
-#define IDR_MAINFRAME_256			129
 #define IDR_A2v10HelpTYPE				130
 #define ID_VIEW_FILEVIEW			133
 #define ID_VIEW_CLASSVIEW			134
@@ -86,6 +85,7 @@
 #define ID_VIEW_COMMAND                 32202
 #define ID_VIEW_SOLUTION                32203
 #define ID_VIEW_OUTLINE					32204
+#define ID_DEBUG_RUN					32300
 #define ID_TOOLS_OPTIONS                32400
 #define ID_WINDOW_MANAGER               32600
 #define ID_WINDOW_CLOSE_ALL				32601

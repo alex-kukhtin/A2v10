@@ -34,6 +34,9 @@ public:
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+
+	afx_msg void OnCloseAllDocuments();
+	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
 };
 
 extern CMainApp theApp;

@@ -19,6 +19,17 @@ namespace A2v10.Tests.DataModelTester
 			_dataModel = dataModel;
 			_instance = dataModel.Eval<ExpandoObject>(expression);
 			_instanceArray = dataModel.Eval<IList<ExpandoObject>>(expression);
+			Assert.IsTrue(_instance != null || _instanceArray != null, $"Could not evaluate expression '{expression}'");
+				
+		}
+
+		public void AllProperties(String props)
+		{
+			var propArray = props.Split(',');
+			var dict = _instance as IDictionary<String, Object>;
+			foreach (var prop in propArray)
+				Assert.IsTrue(dict.ContainsKey(prop), $"Property {prop} not found");
+			Assert.AreEqual(propArray.Length, dict.Count, $"invalid length for '{props}'");
 		}
 
 		public void AreValueEqual<T>(T expected, String property)

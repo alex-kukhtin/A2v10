@@ -25,6 +25,9 @@ BEGIN_MESSAGE_MAP(CMainApp, CWinAppEx)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
+	// Windows
+	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
+	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
 END_MESSAGE_MAP()
@@ -110,7 +113,7 @@ BOOL CMainApp::InitInstance()
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
 	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(IDR_A2v10DesignerTYPE,
+	pDocTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
 		RUNTIME_CLASS(CA2v10DesignerDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CA2v10DesignerView));
@@ -215,7 +218,27 @@ void CMainApp::SaveCustomState()
 {
 }
 
-// CMainApp message handlers
+// afx_msg
+void CMainApp::OnCloseAllDocuments()
+{
+	POSITION pos = m_pDocManager->GetFirstDocTemplatePosition();
+	while (pos) {
+		CDocTemplate* pTempl = m_pDocManager->GetNextDocTemplate(pos);
+		POSITION docPos = pTempl->GetFirstDocPosition();
+		while (docPos)
+		{
+			CDocument* pDoc = pTempl->GetNextDoc(docPos);
+			if (pDoc->SaveModified())
+				pDoc->OnCloseDocument();
+		}
+	}
+}
+
+// afx_msg 
+void CMainApp::OnUpdateCloseAllDocuments(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(m_pDocManager->GetOpenDocumentCount() > 0);
+}
 
 
 

@@ -6,9 +6,9 @@ using System.Dynamic;
 
 /*
  * TODO: 
- * 1. Complex Fields
- * 2. Maps
- * 3. Nested lists
+ * 3. Tree
+ * 4. Groups
+ * 5. Nested Object
  */
 
 namespace A2v10.Data
@@ -19,6 +19,7 @@ namespace A2v10.Data
 
 		IDataModel _dataModel;
 		IdMapper _idMap = new IdMapper();
+		RefMapper _refMap = new RefMapper();
 		ExpandoObject _root = new ExpandoObject();
 
 		public IDataModel DataModel
@@ -38,6 +39,7 @@ namespace A2v10.Data
 			var rootFI = new FieldInfo(rdr.GetName(0));
 			var currentRecord = new ExpandoObject();
 			bool bAdded = false;
+			Object id = null;
 			for (int i=0; i<rdr.FieldCount; i++) {
 				var dataVal = rdr.GetValue(i);
 				if (dataVal == DBNull.Value)
@@ -46,30 +48,33 @@ namespace A2v10.Data
 				FieldInfo fi = new FieldInfo(fn);
 				AddValueToRecord(currentRecord, fi, dataVal);
 				if (fi.IsId)
-					_idMap.Add(rootFI.PropertyName, dataVal, currentRecord);
-				//else if (fi.IsRefId)
+				{
+					if (fi.IsComplexField)
+						_idMap.Add(fi.TypeName, dataVal, currentRecord);
+					else
+					{
+						_idMap.Add(rootFI.TypeName, dataVal, currentRecord);
+						id = dataVal;
+					}
+				}
 				if (fi.IsParentId)
 				{
 					if (rootFI.IsArray)
 						AddRecordToArray(fi.TypeName, dataVal, currentRecord);
-					// Найдем элемент fi.TypeName[dataVal]
-					int fx = 2221; // TODO:
 					bAdded = true;
 				}
 			}
 			if (!bAdded)
-				AddRecordToModel(currentRecord, rootFI);
+				AddRecordToModel(currentRecord, rootFI, id);
 		}
 
 		void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
 		{
-			// TODO:Complex Path
-			var pxa = propName.Split('.'); // <Path>.PropName
+			var pxa = propName.Split('.'); // <Type>.PropName
 			/*0-key, 1-Property*/
 			var key = Tuple.Create(pxa[0], id);
-			var objList = _idMap[key];
-			foreach (var target in objList)
-				target.AddToArray(pxa[1], currentRecord);
+			var mapObj = _idMap[key];
+			mapObj.AddToArray(pxa[1], currentRecord);
 		}
 
 		void AddValueToRecord(IDictionary<String, Object> record, FieldInfo field, Object value)
@@ -78,29 +83,44 @@ namespace A2v10.Data
 				return;
 			if (field.IsArray)
 				record.Add(field.PropertyName, new List<ExpandoObject>());
+			else if (field.IsComplexField)
+			{
+				var propNames = field.PropertyName.Split('.');
+				if (propNames.Length != 2)
+					throw new DataLoaderException($"Invalid complex name {field.PropertyName}");
+				var innerObj = record.GetOrCreate(propNames[0]);
+				innerObj.Add(propNames[1], value);				
+			}
+			else if (field.IsRefId)
+			{
+				var refValue = new ExpandoObject();
+				_refMap.Add(field.TypeName, value, refValue);
+				record.Add(field.PropertyName, refValue);
+			}
 			else
 				record.Add(field.PropertyName, value);
 		}
 
-		void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field)
+		void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
 		{
 			if (field.IsArray)
-			{
 				_root.AddToArray(field.PropertyName, currentRecord);
-			}
 			else if (field.IsObject)
-			{
 				_root.Add(field.PropertyName, currentRecord);
-			}
+			else if (field.IsMap)
+				_refMap.MergeObject(field.TypeName, id, currentRecord);
 		}
 
 
-		void ProcessComplexMetadata(FieldInfo fieldInfo, ElementMetadata elem)
+		void ProcessComplexMetadata(FieldInfo fieldInfo, ElementMetadata elem, DataType dt)
 		{
 			// create metadata for nested type
-			GetOrCreateMetadata(fieldInfo.TypeName);
-			// add property to element
-			var fna = fieldInfo.PropertyName.Split('.'); 
+			var innerElem = GetOrCreateMetadata(fieldInfo.TypeName);
+			var fna = fieldInfo.PropertyName.Split('.');
+			if (fna.Length != 2)
+				throw new DataLoaderException($"Invalid complex name {fieldInfo.PropertyName}");
+			elem.AddField(new FieldInfo($"{fna[0]}!{fieldInfo.TypeName}"), DataType.Undefined);
+			innerElem.AddField(new FieldInfo(fieldInfo, fna[1]), dt);
 		}
 
 		public void ProcessOneMetadata(IDataReader rdr)
@@ -110,7 +130,7 @@ namespace A2v10.Data
 			// first field = self object
 			var objectDef = new FieldInfo(rdr.GetName(0));
 			var rootMetadata = GetOrCreateMetadata(ROOT);
-			rootMetadata.AddField(objectDef, objectDef.FieldType);
+			rootMetadata.AddField(objectDef, DataType.Undefined);
 
 			// other fields = object fields
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
@@ -119,14 +139,14 @@ namespace A2v10.Data
 				var fieldDef = new FieldInfo(rdr.GetName(i));
 				if (!fieldDef.IsVisible)
 					continue;
-				FieldType ft = rdr.GetFieldType(i).Name.TypeName2FieldType();
+				DataType dt = rdr.GetFieldType(i).Name.TypeName2DataType();
 				if (fieldDef.IsComplexField)
 				{
-					ProcessComplexMetadata(fieldDef, typeMetadata);
+					ProcessComplexMetadata(fieldDef, typeMetadata, dt);
 				}
 				else
 				{
-					typeMetadata.AddField(fieldDef, ft);
+					typeMetadata.AddField(fieldDef, dt);
 					if (fieldDef.IsRefId || fieldDef.IsArray)
 					{
 						// create metadata for nested object or array

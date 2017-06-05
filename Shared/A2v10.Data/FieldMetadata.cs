@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
-	public enum FieldType
+	public enum DataType
 	{
-		Unknown,
+		Undefined,
 		String,
 		Number,
 		Date,
 		Boolean,
+	}
+
+	public enum FieldType
+	{
+		Scalar,
 		Object,
-		Array
+		Array,
+		Map
 	}
 
 	public enum SpecType
@@ -28,14 +34,14 @@ namespace A2v10.Data
 
 	public class FieldMetadata
 	{
-		public FieldType Type { get; }
+		public DataType DataType { get; }
 		public FieldType ItemType { get; } // for object, array
 		public String RefObject { get; } // for object, array
 
-		public FieldMetadata(FieldInfo fi, FieldType type)
+		public FieldMetadata(FieldInfo fi, DataType type)
 		{
-			Type = type;
-			ItemType = FieldType.Unknown;
+			DataType = type;
+			ItemType = FieldType.Scalar;
 			RefObject = null;
 			if (fi.IsObjectLike)
 			{

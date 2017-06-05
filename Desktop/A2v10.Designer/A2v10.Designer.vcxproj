@@ -185,9 +185,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="A2v10.Designer.h" />
     <ClInclude Include="A2v10.DesignerDoc.h" />
     <ClInclude Include="A2v10.DesignerView.h" />
@@ -236,7 +233,6 @@
     <Image Include="res\file_view_hc.ico" />
     <Image Include="res\formtoolbox.bmp" />
     <Image Include="res\imagelistsolution.bmp" />
-    <Image Include="res\info.bmp" />
     <Image Include="res\maintoolbar.bmp" />
     <Image Include="res\menuimages.bmp" />
     <Image Include="res\menuimages_hc.bmp" />
@@ -251,8 +247,6 @@
     <Image Include="res\propstoolbar.bmp" />
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
-    <Image Include="res\Toolbar.bmp" />
-    <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\wndcommand.ico" />
     <Image Include="res\wndproperties.ico" />
     <Image Include="res\wndsolution.ico" />

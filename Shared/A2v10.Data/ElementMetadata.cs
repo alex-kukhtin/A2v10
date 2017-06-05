@@ -13,7 +13,7 @@ namespace A2v10.Data
 		public String Id { get; private set; }
 		public String Name { get; private set; }
 
-		public void AddField(FieldInfo field, FieldType type)
+		public void AddField(FieldInfo field, DataType type)
 		{
 			if (!field.IsVisible)
 				return;
@@ -39,12 +39,12 @@ namespace A2v10.Data
 			return _fields.ContainsKey(field);
 		}
 
-		bool IsFieldExists(String name, FieldType fieldType)
+		bool IsFieldExists(String name, DataType dataType)
 		{
 			FieldMetadata fm;
 			if (_fields.TryGetValue(name, out fm))
 			{
-				if (fm.Type != fieldType)
+				if (fm.DataType != dataType)
 					throw new DataLoaderException($"Invalid property '{name}'. Type mismatch.");
 				return true;
 			}

@@ -18,26 +18,40 @@ namespace A2v10.Data
 		{
 			PropertyName = null;
 			TypeName = null;
-			FieldType = FieldType.Unknown;
+			FieldType = FieldType.Scalar;
 			SpecType = SpecType.Unknown;
 			var x = name.Split('!');
 			if (x.Length > 0)
 				PropertyName = x[0];
 			if (x.Length > 1)
+			{
 				TypeName = x[1];
+				FieldType = FieldType.Object;
+			}
 			if (x.Length > 2)
 			{
 				FieldType = DataHelpers.TypeName2FieldType(x[2]);
-				if (FieldType == FieldType.Unknown)
+				if (FieldType == FieldType.Scalar)
 					SpecType = DataHelpers.TypeName2SpecType(x[2]);
 			}
 			IsComplexField = PropertyName.Contains('.');
 		}
 
+		public FieldInfo(FieldInfo source, String name)
+		{
+			PropertyName = name;
+			TypeName = null;
+			FieldType = source.FieldType;
+			SpecType = source.SpecType;
+			IsComplexField = false;
+		}
+
+
 		public Boolean IsVisible { get { return !String.IsNullOrEmpty(PropertyName); } }
 
 		public Boolean IsArray { get { return FieldType == FieldType.Array; } }
 		public Boolean IsObject { get { return FieldType == FieldType.Object; } }
+		public Boolean IsMap { get { return FieldType == FieldType.Map; } }
 
 		public Boolean IsObjectLike { get { return IsArray || IsObject; } }
 

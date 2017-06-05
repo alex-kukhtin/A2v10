@@ -188,6 +188,7 @@
     <ClCompile Include="a2borderpane.cpp" />
     <ClCompile Include="a2captionbutton.cpp" />
     <ClCompile Include="a2dockablepane.cpp" />
+    <ClCompile Include="a2doctemplate.cpp" />
     <ClCompile Include="a2glowborder.cpp" />
     <ClCompile Include="a2mdiframe.cpp" />
     <ClCompile Include="a2miniframewnd.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="..\Include\a2borderpane.h" />
     <ClInclude Include="..\Include\a2captionbutton.h" />
     <ClInclude Include="..\Include\a2dockablepane.h" />
+    <ClInclude Include="..\Include\a2doctemplate.h" />
     <ClInclude Include="..\Include\a2glowborder.h" />
     <ClInclude Include="..\Include\a2mdiframe.h" />
     <ClInclude Include="..\Include\a2sdiframe.h" />

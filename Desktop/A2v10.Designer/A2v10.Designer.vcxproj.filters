@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="A2v10.Designer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
     <Image Include="res\pages_small_hc.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\info.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="UserImages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -169,12 +163,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\A2v10.Designer.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\Toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\wndcommand.ico">

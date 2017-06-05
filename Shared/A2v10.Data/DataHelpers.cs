@@ -9,28 +9,37 @@ namespace A2v10.Data
 {
 	public static class DataHelpers
 	{
-		public static FieldType TypeName2FieldType(this String s)
+		public static DataType TypeName2DataType(this String s)
 		{
 			switch (s)
 			{
 				case "DateTime":
-					return FieldType.Date;
+					return DataType.Date;
 				case "String":
-					return FieldType.String;
+					return DataType.String;
 				case "Int64":
 				case "Int32":
 				case "Double":
 				case "Decimal":
-					return FieldType.Number;
+					return DataType.Number;
 				case "Boolean":
-					return FieldType.Boolean;
+					return DataType.Boolean;
+			}
+			throw new DataLoaderException($"Invalid data type {s}");
+		}
+
+		public static FieldType TypeName2FieldType(this String s)
+		{
+			switch (s)
+			{
 				case "Object":
 					return FieldType.Object;
 				case "Array":
 					return FieldType.Array;
-
+				case "Map":
+					return FieldType.Map;
 			}
-			return FieldType.Unknown;
+			return FieldType.Scalar;
 		}
 
 		public static SpecType TypeName2SpecType(this String s)
@@ -71,5 +80,24 @@ namespace A2v10.Data
 			arr.Add(value);
 		}
 
+		public static void CopyFrom(this ExpandoObject target, ExpandoObject source)
+		{
+			var dTarget = target as IDictionary<String, Object>;
+			var dSource = source as IDictionary<String, Object>;
+			foreach (var itm in dSource)
+			{
+				dTarget.Add(itm.Key, itm.Value);
+			}
+		}
+
+		public static IDictionary<String, Object> GetOrCreate(this IDictionary<String, Object> dict, String key)
+		{
+			Object obj;
+			if (dict.TryGetValue(key, out obj))
+				return obj as IDictionary<String, Object>;
+			obj = new ExpandoObject();
+			dict.Add(key, obj);
+			return obj as IDictionary<String, Object>;
+		}
 	}
 }

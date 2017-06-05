@@ -80,6 +80,7 @@ IDI_OUTPUT_WND_HC       ICON         "res\\output_wnd_hc.ico"
 ID_WND_SOLUTION         ICON         "res\\wndsolution.ico"
 ID_WND_PROPERTIES       ICON         "res\\wndproperties.ico"
 ID_WND_TOOLBOX          ICON         "res\\wndtoolbox.ico"
+ID_WND_COMMAND          ICON         "res\\wndcommand.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -87,7 +88,6 @@ ID_WND_TOOLBOX          ICON         "res\\wndtoolbox.ico"
 //
 
 IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
-IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
@@ -102,7 +102,6 @@ IDB_PAGES               BITMAP                  "res\\pages.bmp"
 IDB_PAGES_HC            BITMAP                  "res\\pages_hc.bmp"
 IDB_PAGES_SMALL         BITMAP                  "res\\pages_small.bmp"
 IDB_PAGES_SMALL_HC      BITMAP                  "res\\pages_small_hc.bmp"
-IDB_INFO                BITMAP                  "res\\info.bmp"
 
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
@@ -113,32 +112,26 @@ IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR 16, 15
+IDR_MAINFRAME TOOLBAR 16, 16
 BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
-END
-
-IDR_MAINFRAME_256 TOOLBAR 16, 15
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
+	BUTTON      ID_FILE_NEW
+	BUTTON      ID_FILE_OPEN
+	BUTTON      ID_FILE_SAVE
+	BUTTON      ID_FILE_SAVE_ALL
+	SEPARATOR
+	BUTTON      ID_EDIT_CUT
+	BUTTON      ID_EDIT_COPY
+	BUTTON      ID_EDIT_PASTE
+	SEPARATOR
+	BUTTON      ID_EDIT_UNDO
+	BUTTON      ID_EDIT_REDO
+	SEPARATOR
+	BUTTON		ID_DEBUG_RUN
+	SEPARATOR
+	BUTTON      ID_EDIT_FIND_IN_FILES
+	SEPARATOR
+	BUTTON      ID_FILE_PRINT
+	BUTTON      ID_APP_ABOUT
 END
 
 
@@ -192,14 +185,31 @@ BEGIN
         MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "&Close",                      ID_FILE_CLOSE
-        MENUITEM SEPARATOR
+		MENUITEM SEPARATOR
+		MENUITEM "&Save\tCtrl+S", ID_FILE_SAVE
+		MENUITEM "Save &As...", ID_FILE_SAVE_AS
+		MENUITEM "Save A&ll...\tCtrl+Shift+S", ID_FILE_SAVE_ALL
+		MENUITEM SEPARATOR
         MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1,GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
-    POPUP "&View"
+	POPUP "&Edit"
+	BEGIN
+		MENUITEM "&Undo\tCtrl+Z", ID_EDIT_UNDO
+		MENUITEM "&Redo\tCtrl+Y", ID_EDIT_REDO
+		MENUITEM SEPARATOR
+		MENUITEM "Cu&t\tCtrl+X", ID_EDIT_CUT
+		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
+		MENUITEM "&Paste\tCtrl+V", ID_EDIT_PASTE
+		MENUITEM "&Delete\tDel", ID_EDIT_CLEAR
+		MENUITEM SEPARATOR
+		MENUITEM "&Find\tCtrl+F", ID_EDIT_FIND
+		MENUITEM "F&ind in files\tCtrl+Shift+F", ID_EDIT_FIND_IN_FILES
+	END
+	POPUP "&View"
     BEGIN
         POPUP "&Toolbars and Docking Windows"
         BEGIN
@@ -207,7 +217,22 @@ BEGIN
         END
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
-    POPUP "&Help"
+	POPUP "&Project"
+	BEGIN
+		MENUITEM "&Status Bar", ID_VIEW_STATUS_BAR
+	END
+	POPUP "&Tools"
+	BEGIN
+		MENUITEM "&Status Bar", ID_VIEW_STATUS_BAR
+	END
+	POPUP "&Window"
+	BEGIN
+		MENUITEM "&New Window", ID_WINDOW_NEW
+		MENUITEM "C&lose All Documents", ID_WINDOW_CLOSE_ALL
+		MENUITEM SEPARATOR
+		//MENUITEM "&Windows...", ID_WINDOW_MANAGER
+	END
+	POPUP "&Help"
     BEGIN
         MENUITEM "&About A2v10.Designer...",          ID_APP_ABOUT
     END
@@ -215,45 +240,13 @@ END
 
 IDR_A2v10DesignerTYPE MENU
 BEGIN
-    POPUP "&File"
+    POPUP "&Format"
     BEGIN
-        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
-        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "&Close",                      ID_FILE_CLOSE
-        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
-        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
-        MENUITEM SEPARATOR
-        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
-        MENUITEM "Print Pre&view",              ID_FILE_PRINT_PREVIEW
-        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
-        MENUITEM SEPARATOR
-        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1,GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       ID_APP_EXIT
-    END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
-        MENUITEM SEPARATOR
-        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
-        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
-        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
-    END
-    POPUP "&View"
-    BEGIN
-        POPUP "&Toolbars and Docking Windows"
-        BEGIN
-            MENUITEM "<placeholder>",           ID_VIEW_TOOLBAR
-        END
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
-    POPUP "&Window"
+    POPUP "&Layout"
     BEGIN
         MENUITEM "&New Window",                 ID_WINDOW_NEW
-    END
-    POPUP "&Help"
-    BEGIN
-        MENUITEM "&About A2v10.Designer...",          ID_APP_ABOUT
     END
 END
 
@@ -321,20 +314,31 @@ END
 
 IDR_MAINFRAME ACCELERATORS
 BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY,CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY,CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY,CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY,CONTROL
-	"Z",            ID_EDIT_UNDO,           VIRTKEY,CONTROL
-	"X",            ID_EDIT_CUT,            VIRTKEY,CONTROL
-	"C",            ID_EDIT_COPY,           VIRTKEY,CONTROL
-	"V",            ID_EDIT_PASTE,          VIRTKEY,CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY,ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY,SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY,CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY,SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY
-    VK_F6,          ID_PREV_PANE,           VIRTKEY,SHIFT
+	"A", ID_VIEW_COMMAND, VIRTKEY, CONTROL, ALT
+	"F", ID_EDIT_FIND, VIRTKEY, CONTROL
+	"F", ID_EDIT_FIND_IN_FILES, VIRTKEY, SHIFT, CONTROL
+	"L", ID_VIEW_SOLUTION, VIRTKEY, CONTROL, ALT
+	"N", ID_FILE_NEW, VIRTKEY, CONTROL
+	"O", ID_FILE_OPEN, VIRTKEY, CONTROL
+	"S", ID_FILE_SAVE, VIRTKEY, CONTROL
+	"S", ID_FILE_SAVE_ALL, VIRTKEY, SHIFT, CONTROL
+	"T", ID_VIEW_OUTLINE, VIRTKEY, CONTROL, ALT
+	"P", ID_FILE_PRINT, VIRTKEY, CONTROL
+	"Z", ID_EDIT_UNDO, VIRTKEY, CONTROL
+	"X", ID_EDIT_CUT, VIRTKEY, CONTROL
+	"X", ID_VIEW_TOOLBOX, VIRTKEY, CONTROL, ALT
+	"Y", ID_EDIT_REDO, VIRTKEY, CONTROL
+	"C", ID_EDIT_COPY, VIRTKEY, CONTROL
+	"V", ID_EDIT_PASTE, VIRTKEY, CONTROL
+	VK_BACK, ID_EDIT_UNDO, VIRTKEY, ALT
+	VK_DELETE, ID_EDIT_CUT, VIRTKEY, SHIFT
+	VK_DELETE, ID_EDIT_CLEAR, VIRTKEY
+	VK_INSERT, ID_EDIT_COPY, VIRTKEY, CONTROL
+	VK_INSERT, ID_EDIT_PASTE, VIRTKEY, SHIFT
+	VK_F4, ID_VIEW_PROPERTIES, VIRTKEY
+	VK_F5, ID_DEBUG_RUN, VIRTKEY
+	VK_F6, ID_NEXT_PANE, VIRTKEY
+	VK_F6, ID_PREV_PANE, VIRTKEY, SHIFT
 END
 
 

@@ -18,6 +18,7 @@
 #include "../include/a2toolbars.h"
 #include "../include/a2tabview.h"
 #include "../include/a2toolbox.h"
+#include "../include/a2doctemplate.h"
 
 #include "../include/uitools.h"
 //#include "../include/filetools.h"

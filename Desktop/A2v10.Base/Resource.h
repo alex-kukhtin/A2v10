@@ -3,6 +3,8 @@
 // Used by A2v10.Base.rc
 //
 
+#define IDIL_10X10				700
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

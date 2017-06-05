@@ -89,7 +89,7 @@ CImageList* CTheme::GetImageList(ImageListType type /*= ImageList16x16*/)
 		IL_DEF& id = ilDefs[type];
 		CBitmap bmp;
 		VERIFY(bmp.LoadBitmap(id.nID));
-		pList->Create(id.iWidth, id.iHeight, ILC_COLOR24 | ILC_MASK, 0, 0);
+		VERIFY(pList->Create(id.iWidth, id.iHeight, ILC_COLOR24 | ILC_MASK, 0, 0));
 		pList->Add(&bmp, id.clrMask);
 	}
 	ATLASSERT(pList->GetSafeHandle() != NULL);
