@@ -8,5 +8,9 @@ namespace A2v10.Infrastructure
 {
 	public interface IDataModel
 	{
+		Object Metadata { get; }
+		Object Root { get; }
+
+		T Eval<T>(String expression, T fallback = default(T));
 	}
 }

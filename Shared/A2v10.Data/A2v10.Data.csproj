@@ -40,10 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataHelpers.cs" />
+    <Compile Include="DataLoaderException.cs" />
     <Compile Include="DataModelLoader.cs" />
     <Compile Include="DynamicDataModel.cs" />
     <Compile Include="ElementMetadata.cs" />
     <Compile Include="FieldInfo.cs" />
+    <Compile Include="FieldMetadata.cs" />
+    <Compile Include="IdMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDbContext.cs" />
     <Compile Include="SqlExtensions.cs" />
