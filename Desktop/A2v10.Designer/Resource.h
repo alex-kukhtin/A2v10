@@ -12,7 +12,7 @@
 #define IDS_TOOLBAR_CUSTOMIZE		125
 #define ID_VIEW_CUSTOMIZE			126
 #define IDR_MAINFRAME				128
-#define IDR_A2v10HelpTYPE				130
+#define IDR_A2v10DesignerTYPE       131
 #define ID_VIEW_FILEVIEW			133
 #define ID_VIEW_CLASSVIEW			134
 #define ID_PROPERTIES				135
@@ -41,14 +41,12 @@
 #define IDR_POPUP_EXPLORER			174
 #define IDB_FILE_VIEW				175
 #define IDB_FILE_VIEW_24			176
-#define IDB_MENU_IMAGES_24			180
 #define IDR_OUTPUT_POPUP            182
 
 
 #define ID_EXPAND_ALL 201
 #define ID_PROPERTIES1 203
 #define ID_PROPERTIES2 204
-#define IDR_A2v10DesignerTYPE           205
 #define IDS_OUTPUT_WND 206
 
 #define ID_VIEW_OUTPUTWND       400

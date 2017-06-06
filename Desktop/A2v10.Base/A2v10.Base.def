@@ -1,6 +1,7 @@
 EXPORTS
 ?IsDebug@CAppData@@SA_NXZ
 ?ClearTrace@CAppData@@SAXXZ
+?SetDebug@CAppData@@SAX_N@Z
 ;
 ??0CA2DockablePane@@QAE@XZ
 ??1CA2DockablePane@@UAE@XZ
@@ -36,3 +37,5 @@ EXPORTS
 ?Create@CA2BorderPanes@@QAEHPAVCWnd@@@Z
 ;
 ??0CA2DocTemplate@@QAE@IPAUCRuntimeClass@@00@Z
+;
+?ParseParam@CA2CommandLineInfo@@UAEXPB_WHH@Z

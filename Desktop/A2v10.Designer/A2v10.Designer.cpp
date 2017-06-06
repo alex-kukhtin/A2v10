@@ -17,6 +17,7 @@
 #endif
 
 #pragma comment(lib,"../../bin/A2v10.Base.lib")
+#pragma comment(lib,"../../bin/A2v10.Net.Shim.lib")
 
 // CMainApp
 
@@ -102,7 +103,8 @@ BOOL CMainApp::InitInstance()
 	//InitContextMenuManager();
 	InitShellManager();
 
-	InitKeyboardManager();
+	// do not use Keyboard Manager - we need default accelerators
+	//InitKeyboardManager();
 
 	InitTooltipManager();
 	CMFCToolTipInfo ttParams;
@@ -132,15 +134,29 @@ BOOL CMainApp::InitInstance()
 
 
 	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
+	CA2CommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
-
+	CAppData::SetDebug(cmdInfo.IsDebugMode());
 
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
-	if (!ProcessShellCommand(cmdInfo))
+	//if (!ProcessShellCommand(cmdInfo))
+		//return FALSE;
+
+	try
+	{
+		CDotNetRuntime::Start();
+		//JavaScriptRuntime::CreateGlobalObject();
+		//JavaScriptRuntime::StartDebugging();
+	}
+	catch (CDotNetException de)
+	{
+		AfxMessageBox(L"error!");
+		de.ReportError();
 		return FALSE;
+	}
+
 	// The main window has been initialized, so show and update it
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();

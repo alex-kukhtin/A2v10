@@ -13,3 +13,17 @@
 #endif
 
 
+#ifndef AFX_RT_DATA
+#ifdef _RTEXT
+#define AFX_RT_CLASS       AFX_CLASS_EXPORT
+#define AFX_RT_API         AFX_API_EXPORT
+#define AFX_RT_DATA        AFX_DATA_EXPORT
+#else
+#define AFX_RT_CLASS       AFX_CLASS_IMPORT
+#define AFX_RT_API         AFX_API_IMPORT
+#define AFX_RT_DATA        AFX_DATA_IMPORT
+#endif
+#endif
+
+
+

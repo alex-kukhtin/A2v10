@@ -129,34 +129,10 @@
     <Image Include="res\menuimages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\menuimages_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\output_wnd.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\output_wnd_hc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\nav_large.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\nav_large_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\pages.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\pages_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\pages_small.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\pages_small_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="UserImages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\A2v10.DesignerDoc.ico">

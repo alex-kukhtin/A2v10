@@ -235,15 +235,8 @@
     <Image Include="res\imagelistsolution.bmp" />
     <Image Include="res\maintoolbar.bmp" />
     <Image Include="res\menuimages.bmp" />
-    <Image Include="res\menuimages_hc.bmp" />
-    <Image Include="res\nav_large.bmp" />
-    <Image Include="res\nav_large_hc.bmp" />
     <Image Include="res\output_wnd.ico" />
     <Image Include="res\output_wnd_hc.ico" />
-    <Image Include="res\pages.bmp" />
-    <Image Include="res\pages_hc.bmp" />
-    <Image Include="res\pages_small.bmp" />
-    <Image Include="res\pages_small_hc.bmp" />
     <Image Include="res\propstoolbar.bmp" />
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
@@ -251,7 +244,6 @@
     <Image Include="res\wndproperties.ico" />
     <Image Include="res\wndsolution.ico" />
     <Image Include="res\wndtoolbox.ico" />
-    <Image Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\A2v10Designer.rc2" />

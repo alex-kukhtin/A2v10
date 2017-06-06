@@ -95,13 +95,6 @@ IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
-IDB_MENU_IMAGES_24      BITMAP                  "res\\menuimages_hc.bmp"
-IDB_NAVIGATION_LARGE    BITMAP                  "res\\nav_large.bmp"
-IDB_NAVIGATION_LARGE_HC BITMAP                  "res\\nav_large_hc.bmp"
-IDB_PAGES               BITMAP                  "res\\pages.bmp"
-IDB_PAGES_HC            BITMAP                  "res\\pages_hc.bmp"
-IDB_PAGES_SMALL         BITMAP                  "res\\pages_small.bmp"
-IDB_PAGES_SMALL_HC      BITMAP                  "res\\pages_small_hc.bmp"
 
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
@@ -135,13 +128,13 @@ BEGIN
 END
 
 
-IDR_SORT TOOLBAR 16, 15
+IDR_SORT TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_SORT_MENU
     BUTTON      ID_NEW_FOLDER
 END
 
-IDR_EXPLORER TOOLBAR 16, 15
+IDR_EXPLORER TOOLBAR 16, 16
 BEGIN
     BUTTON      ID_PROPERTIES
 END
@@ -152,7 +145,7 @@ BEGIN
 	BUTTON      ID_PROP_ALPHABETICAL
 END
 
-IDR_MENU_IMAGES TOOLBAR 16, 15
+IDR_MENU_IMAGES TOOLBAR 16, 16
 BEGIN
 	BUTTON      IDMENU_CLOSE
 	BUTTON      IDMENU_MINIMIZE
@@ -211,10 +204,17 @@ BEGIN
 	END
 	POPUP "&View"
     BEGIN
-        POPUP "&Toolbars and Docking Windows"
-        BEGIN
-            MENUITEM "<placeholder>",           ID_VIEW_TOOLBAR
-        END
+		POPUP "&Toolbars and Docking Windows"
+		BEGIN
+			MENUITEM "<placeholder>", ID_VIEW_TOOLBAR
+		END
+		MENUITEM "Solution Ex&plorer\tCtrl+Alt+L",	ID_VIEW_SOLUTION
+		MENUITEM "Toolbo&x\tCtrl+Alt+X",			ID_VIEW_TOOLBOX
+		MENUITEM SEPARATOR
+		MENUITEM "&Command Window\tCtrl+Alt+A",		ID_VIEW_COMMAND
+		MENUITEM "Properties &Window\tF4",			ID_VIEW_PROPERTIES
+		MENUITEM "&Document Outline\tCtrl+Alt+T",	ID_VIEW_OUTLINE
+		MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
 	POPUP "&Project"
@@ -223,7 +223,7 @@ BEGIN
 	END
 	POPUP "&Tools"
 	BEGIN
-		MENUITEM "&Status Bar", ID_VIEW_STATUS_BAR
+		MENUITEM "&Options...", ID_TOOLS_OPTIONS
 	END
 	POPUP "&Window"
 	BEGIN
@@ -234,7 +234,7 @@ BEGIN
 	END
 	POPUP "&Help"
     BEGIN
-        MENUITEM "&About A2v10.Designer...",          ID_APP_ABOUT
+        MENUITEM "&About ...\tCtrl+F1",          ID_APP_ABOUT
     END
 END
 
@@ -242,12 +242,12 @@ IDR_A2v10DesignerTYPE MENU
 BEGIN
     POPUP "&Format"
     BEGIN
-        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
-    END
+		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
+	END
     POPUP "&Layout"
     BEGIN
-        MENUITEM "&New Window",                 ID_WINDOW_NEW
-    END
+		MENUITEM "Cu&t\tCtrl+X", ID_EDIT_CUT
+	END
 END
 
 
@@ -339,6 +339,7 @@ BEGIN
 	VK_F5, ID_DEBUG_RUN, VIRTKEY
 	VK_F6, ID_NEXT_PANE, VIRTKEY
 	VK_F6, ID_PREV_PANE, VIRTKEY, SHIFT
+	VK_F1, ID_APP_ABOUT, VIRTKEY, CONTROL
 END
 
 

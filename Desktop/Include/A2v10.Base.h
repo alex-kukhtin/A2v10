@@ -8,6 +8,8 @@
 #include "../Include/theme.h"
 #include "../include/guiext.h"
 
+#include "../include/a2appl.h"
+
 #include "../include/a2visualmanager.h"
 #include "../include/a2glowborder.h"
 #include "../include/a2captionbutton.h"

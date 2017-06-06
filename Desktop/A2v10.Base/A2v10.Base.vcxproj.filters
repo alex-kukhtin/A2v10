@@ -78,6 +78,9 @@
     <ClCompile Include="a2doctemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="a2appl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -158,6 +161,9 @@
       <Filter>Include Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\a2doctemplate.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\a2appl.h">
       <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>
