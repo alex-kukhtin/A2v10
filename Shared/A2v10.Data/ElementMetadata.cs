@@ -1,8 +1,6 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
@@ -12,6 +10,7 @@ namespace A2v10.Data
 
 		public String Id { get; private set; }
 		public String Name { get; private set; }
+		public String Items { get; private set; }
 
 		public void AddField(FieldInfo field, DataType type)
 		{

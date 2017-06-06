@@ -8,6 +8,7 @@ using A2v10.Tests.Config;
 namespace A2v10.Tests
 {
 	[TestClass]
+	[TestCategory("Database")]
 	public class DatabaseTest
 	{
 
@@ -99,6 +100,32 @@ namespace A2v10.Tests
 			seriesObj.IsArray(1);
 			seriesObj.AreArrayValueEqual(501, 0, "Id");
 			seriesObj.AreArrayValueEqual(10.0, 0, "Price");
+		}
+
+
+		[TestMethod]
+		public async Task TestTreeModel()
+		{
+			IDataModel dm = await _dbContext.LoadModelAsync("a2test.TreeModel");
+			var md = new MetadataTester(dm);
+			md.IsAllKeys("TRoot,TMenu");
+			md.HasAllProperties("TRoot", "Menu");
+			md.HasAllProperties("TMenu", "Menu,Name");
+			md.IsName("TMenu", "Name");
+
+			var dt = new DataTester(dm, "Menu");
+			dt.IsArray(2);
+			dt.AreArrayValueEqual("Item 1", 0, "Name");
+			dt.AreArrayValueEqual("Item 2", 1, "Name");
+
+			dt = new DataTester(dm, "Menu[0].Menu");
+			dt.IsArray(2);
+			dt.AreArrayValueEqual("Item 1.1", 0, "Name");
+			dt.AreArrayValueEqual("Item 1.2", 1, "Name");
+
+			dt = new DataTester(dm, "Menu[0].Menu[0].Menu");
+			dt.IsArray(1);
+			dt.AreArrayValueEqual("Item 1.1.1", 0, "Name");
 		}
 	}
 }

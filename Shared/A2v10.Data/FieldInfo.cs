@@ -52,6 +52,7 @@ namespace A2v10.Data
 		public Boolean IsArray { get { return FieldType == FieldType.Array; } }
 		public Boolean IsObject { get { return FieldType == FieldType.Object; } }
 		public Boolean IsMap { get { return FieldType == FieldType.Map; } }
+		public Boolean IsTree { get { return FieldType == FieldType.Tree; } }
 
 		public Boolean IsObjectLike { get { return IsArray || IsObject; } }
 

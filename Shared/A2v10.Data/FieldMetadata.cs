@@ -20,7 +20,8 @@ namespace A2v10.Data
 		Scalar,
 		Object,
 		Array,
-		Map
+		Map,
+		Tree
 	}
 
 	public enum SpecType

@@ -20,6 +20,39 @@ namespace A2v10.Data
 			Root = root;
 		}
 
+		public void Traverse(Func<Object, Boolean> callback)
+		{
+			var root = Root as ExpandoObject;
+			if (root == null)
+				return;
+			TraverseImpl(root, callback);
+		}
+
+		bool TraverseImpl(ExpandoObject root, Func<Object, Boolean> callback)
+		{
+			if (root == null)
+				return false;
+			if (!callback(root))
+				return false;
+			foreach (var r in root)
+			{
+				if (r.Value is IList<ExpandoObject>)
+				{
+					var list = r.Value as IList<ExpandoObject>;
+					foreach (var l in list)
+					{
+						if (!TraverseImpl(l, callback))
+							return false;
+					}
+				}
+				else if (r.Value is ExpandoObject)
+				{
+					if (!callback(r.Value))
+						return false;
+				}
+			}
+			return true;
+		}
 
 		public T Eval<T>(String expression, T fallback = default(T))
 		{

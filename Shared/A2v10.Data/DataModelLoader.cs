@@ -40,7 +40,8 @@ namespace A2v10.Data
 			var currentRecord = new ExpandoObject();
 			bool bAdded = false;
 			Object id = null;
-			for (int i=0; i<rdr.FieldCount; i++) {
+			// from 1!
+			for (int i=1; i<rdr.FieldCount; i++) {
 				var dataVal = rdr.GetValue(i);
 				if (dataVal == DBNull.Value)
 					dataVal = null;
@@ -60,8 +61,19 @@ namespace A2v10.Data
 				if (fi.IsParentId)
 				{
 					if (rootFI.IsArray)
+					{
 						AddRecordToArray(fi.TypeName, dataVal, currentRecord);
-					bAdded = true;
+						bAdded = true;
+					}
+					else if (rootFI.IsTree)
+					{
+						if (dataVal == null)
+							_root.AddToArray(rootFI.PropertyName, currentRecord);
+						else
+							AddRecordToArray(fi.TypeName, dataVal, currentRecord);
+						bAdded = true;
+
+					}
 				}
 			}
 			if (!bAdded)
@@ -134,6 +146,8 @@ namespace A2v10.Data
 
 			// other fields = object fields
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
+			//if (objectDef.IsTree)
+				//typeMetadata.AddField(objectDef, DataType.Undefined);
 			for (int i=1; i<rdr.FieldCount; i++)
 			{
 				var fieldDef = new FieldInfo(rdr.GetName(i));

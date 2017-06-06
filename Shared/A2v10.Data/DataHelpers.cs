@@ -38,6 +38,8 @@ namespace A2v10.Data
 					return FieldType.Array;
 				case "Map":
 					return FieldType.Map;
+				case "Tree":
+					return FieldType.Tree;
 			}
 			return FieldType.Scalar;
 		}

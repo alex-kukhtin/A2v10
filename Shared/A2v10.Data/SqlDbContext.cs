@@ -77,5 +77,71 @@ namespace A2v10.Data
 			}
 		}
 
+		public async Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null)
+		{
+			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			{
+				var metadataCommand = command.Replace(".Update", ".Metadata");
+				using (var cnn = await GetConnectionAsync())
+				{
+					using (var cmd = cnn.CreateCommandSP(metadataCommand))
+					{
+						using (var rdr = await cmd.ExecuteReaderAsync())
+						{
+							do
+							{
+
+							}
+							while (await rdr.NextResultAsync());
+						}
+					}
+					using (var cmd = cnn.CreateCommandSP(command))
+					{
+						SqlCommandBuilder.DeriveParameters(cmd);
+					}
+				}
+				return null;
+			}
+		}
+
+		public async Task<T> LoadAsync<T>(String command, Object prms = null) where T : class
+		{
+			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			{
+				using (var cnn = await GetConnectionAsync())
+				{
+
+				}
+			}
+			return null;
+		}
+
+
+		public async Task ExecuteAsync<T>(String command, T element) where T : class
+		{
+			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			{
+				using (var cnn = await GetConnectionAsync())
+				{
+					using (var cmd = cnn.CreateCommandSP(command))
+					{
+					}
+				}
+			}
+		}
+
+		public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
+		{
+			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			{
+				using (var cnn = await GetConnectionAsync())
+				{
+					using (var cmd = cnn.CreateCommandSP(command))
+					{
+					}
+				}
+			}
+			return null;
+		}
 	}
 }
