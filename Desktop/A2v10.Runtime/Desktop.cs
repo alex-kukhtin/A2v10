@@ -10,7 +10,11 @@ namespace A2v10RuntimeNet
     {
 		public static void Start()
 		{
-			int fx = 22;
+		}
+
+		public static void Stop()
+		{
+
 		}
     }
 }

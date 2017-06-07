@@ -1,3 +1,4 @@
 EXPORTS
-?Start@CDotNetRuntime@@SAXXZ
+;
 ?ReportError@CDotNetException@@QAEXXZ
+?Start@CDotNetRuntime@@SAXXZ

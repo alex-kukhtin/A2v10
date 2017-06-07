@@ -1,10 +1,6 @@
-// A2v10.Net.Shim.cpp : Defines the initialization routines for the DLL.
+// A2v10.Net.Shim.cpp : Defines the exported functions for the DLL application.
 //
 
 #include "stdafx.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
 
 

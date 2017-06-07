@@ -22,19 +22,19 @@ void CDotNetException::ReportError()
 void CDotNetRuntime::Start()
 {
 	A2v10RuntimeNet::Desktop::Start();
-	::MessageBox(NULL, L"started from (DLL) !", NULL, MB_OK | MB_ICONEXCLAMATION);
+	//::MessageBox(NULL, L"started from (DLL) !", NULL, MB_OK | MB_ICONEXCLAMATION);
 	//ThrowIfError();
 }
 
 // static 
 void CDotNetRuntime::Stop()
 {
-
+	A2v10RuntimeNet::Desktop::Stop();
 }
 
 // static 
 void CDotNetRuntime::SetMainWnd(HWND hWnd)
 {
-
+	m_hWnd = hWnd;
 }
 

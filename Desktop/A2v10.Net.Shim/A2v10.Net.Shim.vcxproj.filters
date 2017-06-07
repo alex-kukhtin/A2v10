@@ -14,17 +14,25 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Include Files">
-      <UniqueIdentifier>{a1080264-5717-49e1-ab6a-121a72f24f27}</UniqueIdentifier>
+      <UniqueIdentifier>{2bf703cb-1602-462c-9e85-1a414781b9dc}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\dotnetshim.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Net.Shim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dotnetshim.cpp">
@@ -35,33 +43,5 @@
     <None Include="A2v10.Net.Shim.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="res\A2v10NetShim.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\dlldefs.h">
-      <Filter>Include Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\A2v10.Net.Shim.h">
-      <Filter>Include Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\dotnetshim.h">
-      <Filter>Include Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="A2v10.Net.Shim.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
