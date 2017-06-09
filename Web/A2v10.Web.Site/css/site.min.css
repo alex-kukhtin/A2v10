@@ -1,1 +1,1 @@
-﻿body,html{padding:0;overflow:hidden;height:100%;width:100%;}textarea{resize:none;}
+﻿.text-bold{font-weight:bold;}.text-no-bold{font-weight:normal;}.text-italic{font-style:italic;}.text-italic{font-style:normal;}html{font-family:'Segoe UI',Tahoma,Verdana,sans-serif;font-size:13px;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#222;}body{padding:0;margin:0;overflow:hidden;height:100%;width:100%;box-sizing:border-box;}textarea{resize:none;}

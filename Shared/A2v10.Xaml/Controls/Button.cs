@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A2v10.Xaml
+namespace A2v10.Xaml.Controls
 {
-	public abstract class Control : UIElement
+	public class Button : CommandControl
 	{
-
 	}
 }

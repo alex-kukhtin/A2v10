@@ -86,6 +86,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="packages.config" />
+    <Content Include="Less\Utlis.less" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\services\" />

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-	public abstract class Control : UIElement
+	public abstract class CommandControl : ContentControl
 	{
-
 	}
 }
