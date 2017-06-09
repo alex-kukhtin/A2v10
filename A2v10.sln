@@ -40,6 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Data", "Shared\A2v10.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{2F3BE304-2E99-46CB-B3B0-597BC222DE37}"
 	ProjectSection(SolutionItems) = preProject
+		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql
 		SqlScripts\a2v10test.sql = SqlScripts\a2v10test.sql
 	EndProjectSection
 EndProject

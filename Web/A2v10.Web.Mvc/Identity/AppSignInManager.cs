@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity.Owin;
-using System.Threading.Tasks;
+
 using Microsoft.Owin.Security;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Owin;
+using Microsoft.AspNet.Identity.Owin;
+
+using System.Threading.Tasks;
 
 namespace A2v10.Web.Mvc.Identity
 {

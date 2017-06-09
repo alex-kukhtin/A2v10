@@ -8,7 +8,8 @@ namespace A2v10.Infrastructure
 {
 	public enum ProfileAction
 	{
-		Sql
+		Sql,
+		Xaml
 	};
 
 	public interface IProfiler
