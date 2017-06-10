@@ -376,6 +376,10 @@
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Script\A2v10.Script.csproj">
+      <Project>{8d4a108f-28a4-4c56-bb2c-d189e6ab01c9}</Project>
+      <Name>A2v10.Script</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

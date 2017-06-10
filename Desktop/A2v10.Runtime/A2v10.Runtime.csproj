@@ -43,5 +43,11 @@
     <Compile Include="Desktop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
