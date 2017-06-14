@@ -84,6 +84,12 @@ BOOL CMainApp::InitInstance()
 		return FALSE;
 	}
 
+	HMODULE hModule = ::LoadLibrary(L"scintilla.dll");
+	if (!hModule) {
+		AfxMessageBox(IDP_SCI_INIT_FAILED);
+		return FALSE;
+	}
+
 	EnableTaskbarInteraction();
 
 	// AfxInitRichEdit2() is required to use RichEdit control	

@@ -426,6 +426,13 @@ END
 
 STRINGTABLE
 BEGIN
+IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+IDP_RICH_INIT_FAILED    "RichEdit initialization failed."
+IDP_SCI_INIT_FAILED     "Scintilla initialization failed."
+END
+
+STRINGTABLE
+BEGIN
 // Non-mac-targeting apps remove the two extra substrings
     IDR_MAINFRAME           "A2v10.Designer"
     IDR_A2v10DesignerTYPE         "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"

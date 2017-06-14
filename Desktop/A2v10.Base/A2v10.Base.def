@@ -25,6 +25,7 @@ EXPORTS
 ;
 ?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
+?TryDoCmdMsg@CUITools@@SAHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
 ;
 ?GetUIFont@CTheme@@SAPAVCFont@@W4FontType@1@@Z
 ;

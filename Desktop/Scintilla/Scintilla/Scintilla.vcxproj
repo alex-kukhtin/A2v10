@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{D7C60A54-C3C7-45E1-B7BB-CA37F92634AA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Scintilla</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\..\bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\..\bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\Scintilla\lexlib;$(SolutionDir)..\..\..\Scintilla\src;$(SolutionDir)..\..\..\Scintilla\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;shell32.lib;uuid.lib;imm32.lib;msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\Scintilla\lexlib;$(SolutionDir)..\..\..\Scintilla\src;$(SolutionDir)..\..\..\Scintilla\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;shell32.lib;uuid.lib;imm32.lib;msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\scintilla\include\ILexer.h" />
+    <ClInclude Include="..\..\..\..\scintilla\include\Platform.h" />
+    <ClInclude Include="..\..\..\..\scintilla\include\SciLexer.h" />
+    <ClInclude Include="..\..\..\..\scintilla\include\Scintilla.h" />
+    <ClInclude Include="..\..\..\..\scintilla\include\ScintillaWidget.h" />
+    <ClInclude Include="..\..\..\..\scintilla\include\Sci_Position.h" />
+    <ClInclude Include="..\..\..\..\scintilla\win32\HanjaDic.h" />
+    <ClInclude Include="..\..\..\..\scintilla\win32\PlatWin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\scintilla\lexers\LexCPP.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexers\LexHTML.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexers\LexJSON.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexers\LexMSSQL.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\Accessor.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\CharacterCategory.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\CharacterSet.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\LexerBase.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\LexerModule.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\LexerNoExceptions.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\LexerSimple.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\PropSetSimple.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\StyleContext.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\WordList.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\AutoComplete.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\CallTip.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\CaseConvert.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\CaseFolder.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\CellBuffer.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\CharClassify.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\ContractionState.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\DBCS.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Decoration.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Document.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\EditModel.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Editor.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\EditView.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Indicator.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\KeyMap.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\LineMarker.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\MarginView.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\PerLine.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\PositionCache.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\RESearch.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\RunStyles.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\ScintillaBase.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Selection.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\Style.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\UniConversion.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\ViewStyle.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\XPM.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\win32\CheckD2D.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\win32\HanjaDic.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\win32\PlatWin.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\win32\ScintillaWin.cxx" />
+    <ClCompile Include="Catalogue.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

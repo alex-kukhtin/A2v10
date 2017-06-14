@@ -91,6 +91,7 @@
 #define ID_PROP_CATEGORIZED				32701
 #define IDP_OLE_INIT_FAILED             51000
 #define IDP_RICH_INIT_FAILED            51001
+#define IDP_SCI_INIT_FAILED				51002
 #define IDMENU_CLOSE                    0xD000
 #define IDMENU_RESTORE                  0xD001
 #define IDMENU_MAXIMIZE                 0xD002

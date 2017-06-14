@@ -35,6 +35,10 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
 
+#define SCI_LEXER
+#include "../include/Scintilla.h"
+#include "../include/SciLexer.h"
+#undef SCI_LEXER
 
 
 
