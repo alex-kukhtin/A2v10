@@ -40,3 +40,5 @@ EXPORTS
 ??0CA2DocTemplate@@QAE@IPAUCRuntimeClass@@00@Z
 ;
 ?ParseParam@CA2CommandLineInfo@@UAEXPB_WHH@Z
+;
+?Evaluate@JavaScriptRuntime@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W@Z

@@ -16,6 +16,12 @@
     <Filter Include="Include Files">
       <UniqueIdentifier>{1e95cc98-e2c1-4ba5-95e2-83e8372a5dca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\JavaScriptRuntime">
+      <UniqueIdentifier>{6ea8b52c-44de-48c7-9157-a069eb9655da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include Files\JavaScriptRuntime">
+      <UniqueIdentifier>{af960ed5-4b68-40ab-bffe-2ce96c5deab6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Base.cpp">
@@ -80,6 +86,21 @@
     </ClCompile>
     <ClCompile Include="a2appl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="javascriptruntime.cpp">
+      <Filter>Source Files\JavaScriptRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="javascriptnative.cpp">
+      <Filter>Source Files\JavaScriptRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="javascriptvalue.cpp">
+      <Filter>Source Files\JavaScriptRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="javascriptpropertyid.cpp">
+      <Filter>Source Files\JavaScriptRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="javascriptexceptions.cpp">
+      <Filter>Source Files\JavaScriptRuntime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +186,21 @@
     </ClInclude>
     <ClInclude Include="..\Include\a2appl.h">
       <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\javascriptruntime.h">
+      <Filter>Include Files\JavaScriptRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\javascriptvalue.h">
+      <Filter>Include Files\JavaScriptRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\javascriptpropertyid.h">
+      <Filter>Include Files\JavaScriptRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\javascriptnative.h">
+      <Filter>Include Files\JavaScriptRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\javascriptexceptions.h">
+      <Filter>Include Files\JavaScriptRuntime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

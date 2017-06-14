@@ -76,5 +76,11 @@
     <Compile Include="ScriptContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

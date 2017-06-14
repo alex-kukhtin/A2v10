@@ -9,8 +9,13 @@
 #include "mainfrm.h"
 
 #include "childfrm.h"
+
 #include "A2v10.DesignerDoc.h"
 #include "A2v10.DesignerView.h"
+
+#include "moduledoc.h"
+#include "sciview.h"
+#include "moduleview.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,13 +29,13 @@
 BEGIN_MESSAGE_MAP(CMainApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &CMainApp::OnAppAbout)
 	// Standard file based document commands
-	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
+	ON_COMMAND(ID_FILE_NEW, OnFileNew)
+	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	// Windows
 	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
 	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
+	ON_COMMAND(ID_FILE_PRINT_SETUP, OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 
@@ -122,9 +127,9 @@ BOOL CMainApp::InitInstance()
 	//  serve as the connection between documents, frame windows and views
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
-		RUNTIME_CLASS(CA2v10DesignerDoc),
+		RUNTIME_CLASS(CModuleDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CA2v10DesignerView));
+		RUNTIME_CLASS(CModuleView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
@@ -158,7 +163,6 @@ BOOL CMainApp::InitInstance()
 	}
 	catch (CDotNetException de)
 	{
-		AfxMessageBox(L"error!");
 		de.ReportError();
 		return FALSE;
 	}
@@ -173,7 +177,16 @@ BOOL CMainApp::InitInstance()
 int CMainApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
-	return CWinAppEx::ExitInstance();
+	try
+	{
+		CDotNetRuntime::Stop();
+	}
+	catch (CDotNetException /*de*/)
+	{
+		// do nothing
+	}
+
+	return __super::ExitInstance();
 }
 
 // CMainApp message handlers

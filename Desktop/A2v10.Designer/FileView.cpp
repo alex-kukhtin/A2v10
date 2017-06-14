@@ -226,7 +226,7 @@ void CFileView::OnSetFocus(CWnd* pOldWnd)
 void CFileView::OnChangeVisualStyle()
 {
 	m_wndToolBar.CleanUpLockedImages();
-	m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_EXPLORER_24 : IDR_EXPLORER, 0, 0, TRUE /* Locked */);
+	m_wndToolBar.LoadBitmap(IDB_EXPLORER_24, 0, 0, TRUE /* Locked */);
 
 	m_FileViewImages.DeleteImageList();
 

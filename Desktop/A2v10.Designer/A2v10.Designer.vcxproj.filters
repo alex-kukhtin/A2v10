@@ -16,6 +16,15 @@
     <Filter Include="Include Files">
       <UniqueIdentifier>{f7d5aabb-9d46-4fbe-b508-87d0c0abbfb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\FormDesigner">
+      <UniqueIdentifier>{7f90d42f-f27f-4f6b-a29e-0af41de2da03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModuleEditor">
+      <UniqueIdentifier>{34334167-eaf8-49d8-8a17-01f4ad0a4d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ModuleEditor">
+      <UniqueIdentifier>{98a43ee5-c572-4bb9-97f4-4c4a1148d692}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A2v10.Designer.h">
@@ -72,6 +81,12 @@
     <ClInclude Include="..\Include\Scintilla.h">
       <Filter>Include Files</Filter>
     </ClInclude>
+    <ClInclude Include="moduleview.h">
+      <Filter>Header Files\ModuleEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="moduledoc.h">
+      <Filter>Header Files\ModuleEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -113,6 +128,12 @@
     <ClCompile Include="sciview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="moduleview.cpp">
+      <Filter>Source Files\ModuleEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="moduledoc.cpp">
+      <Filter>Source Files\ModuleEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="A2v10.Designer.rc">
@@ -130,9 +151,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\fileview_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\explorer.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\explorer_hc.bmp">

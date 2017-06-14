@@ -185,6 +185,9 @@
     <ClCompile Include="..\..\..\..\scintilla\win32\HanjaDic.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\scintilla\src\ExternalLexer.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">

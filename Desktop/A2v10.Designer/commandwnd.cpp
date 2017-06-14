@@ -7,7 +7,6 @@
 
 /**** TODO:
 1. IntelliSense
-2. 
 */
 
 
@@ -24,7 +23,7 @@ LRESULT CA2CommandEdit::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 {
 	if (wParam != WMI_FILL_PROPS_WPARAM)
 		return 0L;
-	return (LRESULT)WMI_FILL_PROPS_RESULT_SKIP;
+	return (LRESULT)WMI_FILL_PROPS_RESULT_EMPTY;
 }
 
 CCommandWnd::CCommandWnd()
@@ -277,7 +276,6 @@ void CCommandWnd::ProcessHome()
 
 void CCommandWnd::ProcessCurrentLine()
 {
-	/*
 	m_wndRichEdit.LockWindowUpdate();
 	int iLine = m_wndRichEdit.LineFromChar(-1);
 	int nLen = m_wndRichEdit.LineLength(iLine);
@@ -297,7 +295,7 @@ void CCommandWnd::ProcessCurrentLine()
 	CString strResult = COMMAND_PROMPT;
 	bool bOk = true;
 	if (!strText.IsEmpty()) {
-		try 
+		try
 		{
 			strResult = L"\r";
 			strResult += JavaScriptRuntime::Evaluate(strText);
@@ -340,7 +338,6 @@ void CCommandWnd::ProcessCurrentLine()
 	m_bSkipEnProtect = false;
 	m_wndRichEdit.UnlockWindowUpdate();
 	AfxGetMainWnd()->PostMessageW(WM_COMMAND, ID_VIEW_COMMAND);
-	*/
 }
 
 void CCommandWnd::CheckCmdBufferSize()

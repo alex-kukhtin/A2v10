@@ -216,6 +216,11 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="guiext.cpp" />
+    <ClCompile Include="javascriptexceptions.cpp" />
+    <ClCompile Include="javascriptnative.cpp" />
+    <ClCompile Include="javascriptpropertyid.cpp" />
+    <ClCompile Include="javascriptruntime.cpp" />
+    <ClCompile Include="javascriptvalue.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -248,6 +253,11 @@
     <ClInclude Include="..\Include\appdefs.h" />
     <ClInclude Include="..\Include\dlldefs.h" />
     <ClInclude Include="..\Include\guiext.h" />
+    <ClInclude Include="..\Include\javascriptexceptions.h" />
+    <ClInclude Include="..\Include\javascriptnative.h" />
+    <ClInclude Include="..\Include\javascriptpropertyid.h" />
+    <ClInclude Include="..\Include\javascriptruntime.h" />
+    <ClInclude Include="..\Include\javascriptvalue.h" />
     <ClInclude Include="..\Include\theme.h" />
     <ClInclude Include="..\Include\uitools.h" />
     <ClInclude Include="a2miniframewnd.h" />

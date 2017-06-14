@@ -28,4 +28,12 @@
 //#include "../include/convert.h"
 
 
+#include "../Include/ChakraCommon.h"
+#include "../include/javascriptnative.h"
+#include "../include/javascriptpropertyid.h"
+#include "../include/javascriptvalue.h"
+#include "../include/javascriptruntime.h"
+#include "../include/javascriptexceptions.h"
+
+
 

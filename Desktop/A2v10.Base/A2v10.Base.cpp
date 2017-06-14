@@ -8,3 +8,4 @@
 #endif
 
 
+#pragma comment(lib, "../../bin/ChakraCore.lib")

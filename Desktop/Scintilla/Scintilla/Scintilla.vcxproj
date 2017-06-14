@@ -90,7 +90,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;SCI_LEXER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\Scintilla\lexlib;$(SolutionDir)..\..\..\Scintilla\src;$(SolutionDir)..\..\..\Scintilla\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -118,7 +118,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SCINTILLA_EXPORTS;SCI_LEXER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\Scintilla\lexlib;$(SolutionDir)..\..\..\Scintilla\src;$(SolutionDir)..\..\..\Scintilla\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -182,6 +182,7 @@
     <ClCompile Include="..\..\..\..\scintilla\src\EditModel.cxx" />
     <ClCompile Include="..\..\..\..\scintilla\src\Editor.cxx" />
     <ClCompile Include="..\..\..\..\scintilla\src\EditView.cxx" />
+    <ClCompile Include="..\..\..\..\scintilla\src\ExternalLexer.cxx" />
     <ClCompile Include="..\..\..\..\scintilla\src\Indicator.cxx" />
     <ClCompile Include="..\..\..\..\scintilla\src\KeyMap.cxx" />
     <ClCompile Include="..\..\..\..\scintilla\src\LineMarker.cxx" />

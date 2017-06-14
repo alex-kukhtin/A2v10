@@ -37,3 +37,7 @@
 
 #include "..\Include\allresources.h"
 
+// JAVASCRIPT
+#include "stdint.h"
+#include "..\Include\ChakraCore.h"
+

@@ -13,6 +13,17 @@ CDotNetException::CDotNetException(const wchar_t* szError)
 	m_msg = szError;
 }
 
+static void ThrowIfError()
+{
+	if (A2v10RuntimeNet::Desktop::HasError)
+	{
+		pin_ptr<const wchar_t> ptr = PtrToStringChars(A2v10RuntimeNet::Desktop::LastErrorMessage);
+		if (ptr == nullptr)
+			throw CDotNetException(L"unknown exception");
+		throw CDotNetException(ptr);
+	}
+}
+
 void CDotNetException::ReportError()
 {
 	::MessageBox(m_hWnd, m_msg.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
@@ -22,14 +33,15 @@ void CDotNetException::ReportError()
 void CDotNetRuntime::Start()
 {
 	A2v10RuntimeNet::Desktop::Start();
-	//::MessageBox(NULL, L"started from (DLL) !", NULL, MB_OK | MB_ICONEXCLAMATION);
-	//ThrowIfError();
+	ThrowIfError();
 }
+
 
 // static 
 void CDotNetRuntime::Stop()
 {
 	A2v10RuntimeNet::Desktop::Stop();
+	ThrowIfError();
 }
 
 // static 

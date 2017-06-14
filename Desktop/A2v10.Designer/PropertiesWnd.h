@@ -26,7 +26,7 @@ public:
 	//JavaScriptValue m_jsValueParent;
 	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
 
-	//void FillProperties(JavaScriptValue val, JavaScriptValue parent);
+	void FillProperties(JavaScriptValue val, JavaScriptValue parent);
 	void FillPropertyValues();
 
 protected:

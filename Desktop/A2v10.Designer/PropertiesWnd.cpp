@@ -462,6 +462,12 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 		m_wndPropList.FillPropertyValues();
 		return; // skip fill, may be update values
 	}
+	else if (lResult == WMI_FILL_PROPS_RESULT_EMPTY) {
+		m_wndPropList.RemoveAll();
+		m_wndPropList.AdjustLayout();
+		m_wndPropList.Invalidate();
+		return;
+	}
 	/*
 	JavaScriptValue value;
 	JavaScriptValue parent;
@@ -562,22 +568,24 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 	*/
 }
 
-/*
 void CA2PropertyGridCtrl::FillProperties(JavaScriptValue val, JavaScriptValue parent)
 {
+	/*
 	if (val == m_jsValue)
 		return;
 	m_jsValue = val;
 	m_jsValueParent = parent;
+	*/
 	RemoveAll();
+	/*
 	if (m_jsValue.IsValid())
 	{
 		FillPropertiesInt();
 	}
+	*/
 	AdjustLayout();
 	Invalidate();
 }
-*/
 
 /*
 CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached)

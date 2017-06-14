@@ -92,7 +92,6 @@ IDR_SORT                BITMAP                  "res\\sort.bmp"
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
 IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
-IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 
@@ -332,7 +331,7 @@ BEGIN
 	"V", ID_EDIT_PASTE, VIRTKEY, CONTROL
 	VK_BACK, ID_EDIT_UNDO, VIRTKEY, ALT
 	VK_DELETE, ID_EDIT_CUT, VIRTKEY, SHIFT
-	VK_DELETE, ID_EDIT_CLEAR, VIRTKEY
+	//VK_DELETE, ID_EDIT_CLEAR, VIRTKEY (!)
 	VK_INSERT, ID_EDIT_COPY, VIRTKEY, CONTROL
 	VK_INSERT, ID_EDIT_PASTE, VIRTKEY, SHIFT
 	VK_F4, ID_VIEW_PROPERTIES, VIRTKEY

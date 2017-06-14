@@ -194,6 +194,8 @@
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="moduledoc.h" />
+    <ClInclude Include="moduleview.h" />
     <ClInclude Include="sciview.h" />
     <ClInclude Include="mainfrm.h" />
     <ClInclude Include="outputwnd.h" />
@@ -212,10 +214,12 @@
     <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="mainfrm.cpp" />
+    <ClCompile Include="moduleview.cpp" />
     <ClCompile Include="outputwnd.cpp" />
     <ClCompile Include="propertieswnd.cpp" />
     <ClCompile Include="sciview.cpp" />
     <ClCompile Include="solutionwnd.cpp" />
+    <ClCompile Include="moduledoc.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -230,7 +234,6 @@
   <ItemGroup>
     <Image Include="res\A2v10.Designer.ico" />
     <Image Include="res\A2v10.DesignerDoc.ico" />
-    <Image Include="res\explorer.bmp" />
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />
     <Image Include="res\fileview_hc.bmp" />
