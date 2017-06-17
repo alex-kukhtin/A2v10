@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{2DF7BB2D-75C2-44BD-8AFB-42DF5870EE32}</ProjectGuid>
-    <RootNamespace>A2v10Base</RootNamespace>
+    <ProjectGuid>{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC}</ProjectGuid>
+    <RootNamespace>A2v10LocaleEn</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
     <Keyword>MFCDLLProj</Keyword>
   </PropertyGroup>
@@ -93,12 +93,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;_BASEEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\A2v10.Base.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\A2v10.Locale.En.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -120,7 +120,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\A2v10.Base.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\A2v10.Locale.En.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -139,14 +139,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;_BASEEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\A2v10.Base.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\A2v10.Locale.En.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -172,7 +172,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\A2v10.Base.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\A2v10.Locale.En.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -185,98 +185,24 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="a2appl.cpp" />
-    <ClCompile Include="a2borderpane.cpp" />
-    <ClCompile Include="a2captionbutton.cpp" />
-    <ClCompile Include="a2dockablepane.cpp" />
-    <ClCompile Include="a2doctemplate.cpp" />
-    <ClCompile Include="a2glowborder.cpp" />
-    <ClCompile Include="a2mdiframe.cpp" />
-    <ClCompile Include="a2miniframewnd.cpp" />
-    <ClCompile Include="a2sdiframe.cpp" />
-    <ClCompile Include="a2tabbedpane.cpp" />
-    <ClCompile Include="a2tabview.cpp" />
-    <ClCompile Include="a2toolbars.cpp" />
-    <ClCompile Include="a2toolbox.cpp" />
-    <ClCompile Include="A2v10.Base.cpp" />
-    <ClCompile Include="a2visualmanager.cpp" />
-    <ClCompile Include="appdata.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="guictrls.cpp" />
-    <ClCompile Include="guiext.cpp" />
-    <ClCompile Include="javascriptexceptions.cpp" />
-    <ClCompile Include="javascriptnative.cpp" />
-    <ClCompile Include="javascriptpropertyid.cpp" />
-    <ClCompile Include="javascriptruntime.cpp" />
-    <ClCompile Include="javascriptvalue.cpp" />
-    <ClCompile Include="optionsps.cpp" />
+    <ClCompile Include="A2v10.Locale.En.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="theme.cpp" />
-    <ClCompile Include="uitools.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="A2v10.Base.def" />
-    <None Include="res\A2v10Base.rc2" />
+    <None Include="A2v10.Locale.En.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\a2appl.h" />
-    <ClInclude Include="..\Include\a2borderpane.h" />
-    <ClInclude Include="..\Include\a2captionbutton.h" />
-    <ClInclude Include="..\Include\a2dockablepane.h" />
-    <ClInclude Include="..\Include\a2doctemplate.h" />
-    <ClInclude Include="..\Include\a2glowborder.h" />
-    <ClInclude Include="..\Include\a2mdiframe.h" />
-    <ClInclude Include="..\Include\a2sdiframe.h" />
-    <ClInclude Include="..\Include\a2tabview.h" />
-    <ClInclude Include="..\Include\a2toolbars.h" />
-    <ClInclude Include="..\Include\a2toolbox.h" />
-    <ClInclude Include="..\Include\A2v10.Base.h" />
-    <ClInclude Include="..\Include\a2visualmanager.h" />
-    <ClInclude Include="..\Include\allresources.h" />
-    <ClInclude Include="..\Include\appdata.h" />
-    <ClInclude Include="..\Include\appdefs.h" />
-    <ClInclude Include="..\Include\appstructs.h" />
-    <ClInclude Include="..\Include\dlldefs.h" />
-    <ClInclude Include="..\Include\guictrls.h" />
-    <ClInclude Include="..\Include\guiext.h" />
-    <ClInclude Include="..\Include\javascriptexceptions.h" />
-    <ClInclude Include="..\Include\javascriptnative.h" />
-    <ClInclude Include="..\Include\javascriptpropertyid.h" />
-    <ClInclude Include="..\Include\javascriptruntime.h" />
-    <ClInclude Include="..\Include\javascriptvalue.h" />
-    <ClInclude Include="..\Include\optionsps.h" />
-    <ClInclude Include="..\Include\theme.h" />
-    <ClInclude Include="..\Include\uitools.h" />
-    <ClInclude Include="a2miniframewnd.h" />
-    <ClInclude Include="a2tabbedpane.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="A2v10.Base.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\imagelist10x10.bmp" />
-    <Image Include="res\imagelist12x12.bmp" />
+    <ResourceCompile Include="A2v10.Locale.En.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,8 @@
 #include "..\Include\a2dockablepane.h"
 #include "..\Include\a2toolbars.h"
 #include "..\Include\a2toolbox.h"
+#include "..\Include\appdefs.h"
+#include "..\Include\guiext.h"
 #include "..\Include\theme.h"
 #include "..\Include\appdefs.h"
 

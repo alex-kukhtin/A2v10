@@ -248,6 +248,18 @@ public:
 	}
 };
 
+class CGdiTools sealed
+{
+	CGdiTools(); // declare only
+public:
+	static COLORREF LightenColor(COLORREF col, double factor);
+	static COLORREF DarkenColor(COLORREF col, double factor);
+	static COLORREF InvertColor(COLORREF col);
+	static bool			IsBlackColor(COLORREF clr);
+	static COLORREF GetShadowBWColor(COLORREF clr);
+	static BOOL EraseBackgroundParent(CWnd* pWnd, CDC* pDC);
+};
+
 #undef AFX_DATA
 #define AFX_DATA
 

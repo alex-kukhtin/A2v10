@@ -28,6 +28,9 @@ public:
 // Implementation
 	BOOL  m_bHiColorIcons;
 
+protected:
+	void LoadLangLibrary();
+
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
@@ -37,6 +40,7 @@ public:
 
 	afx_msg void OnCloseAllDocuments();
 	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
+	afx_msg void CMainApp::OnToolsOptions();
 };
 
 extern CMainApp theApp;

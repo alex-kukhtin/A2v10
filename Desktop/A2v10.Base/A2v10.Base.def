@@ -2,6 +2,7 @@ EXPORTS
 ?IsDebug@CAppData@@SA_NXZ
 ?ClearTrace@CAppData@@SAXXZ
 ?SetDebug@CAppData@@SAX_N@Z
+?GetCurrentUILang@CAppData@@SAHXZ
 ;
 ??0CA2DockablePane@@QAE@XZ
 ??1CA2DockablePane@@UAE@XZ
@@ -42,3 +43,4 @@ EXPORTS
 ?ParseParam@CA2CommandLineInfo@@UAEXPB_WHH@Z
 ;
 ?Evaluate@JavaScriptRuntime@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W@Z
+?DoOptions@COptionsPropertySheet@@SAXK@Z

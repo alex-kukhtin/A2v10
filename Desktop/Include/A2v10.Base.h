@@ -5,8 +5,8 @@
 #include "../include/allresources.h"
 #include "../include/appdefs.h"
 #include "../include/appdata.h"
-#include "../Include/theme.h"
 #include "../include/guiext.h"
+#include "../Include/theme.h"
 
 #include "../include/a2appl.h"
 
@@ -26,6 +26,8 @@
 //#include "../include/filetools.h"
 //#include "../include/typetools.h"
 //#include "../include/convert.h"
+
+#include "../include/optionsps.h"
 
 
 #include "../Include/ChakraCommon.h"

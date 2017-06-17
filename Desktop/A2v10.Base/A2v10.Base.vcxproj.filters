@@ -102,6 +102,12 @@
     <ClCompile Include="javascriptexceptions.cpp">
       <Filter>Source Files\JavaScriptRuntime</Filter>
     </ClCompile>
+    <ClCompile Include="guictrls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="optionsps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -202,6 +208,15 @@
     <ClInclude Include="..\Include\javascriptexceptions.h">
       <Filter>Include Files\JavaScriptRuntime</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\guictrls.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\appstructs.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\optionsps.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="A2v10.Base.rc">
@@ -210,6 +225,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\imagelist10x10.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\imagelist12x12.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

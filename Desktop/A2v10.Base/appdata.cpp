@@ -8,6 +8,7 @@
 #define new DEBUG_NEW
 #endif
 
+static LPCWSTR LANG_OPTIONS_ENTRY = L"UI Language";
 
 struct TBSTRUCT
 {
@@ -23,13 +24,13 @@ struct APP_DATA
 {
 	APP_DATA();
 	~APP_DATA();
+	int m_nCurrentUiLang;
 	bool m_bDebug;
-	bool m_bFullScreen;
 	CArray<TBSTRUCT> m_traceBuffer;
 };
 
 APP_DATA::APP_DATA()
-	: m_bDebug(false), m_bFullScreen(false)
+	: m_bDebug(false), m_nCurrentUiLang(0)
 {
 }
 
@@ -37,9 +38,19 @@ APP_DATA::~APP_DATA()
 {
 }
 
+static void _loadAppData(APP_DATA& data) {
+	CWinAppEx* pApp = dynamic_cast<CWinAppEx*>(AfxGetApp());
+	data.m_nCurrentUiLang = pApp->GetInt(LANG_OPTIONS_ENTRY, 0);
+}
+
 static APP_DATA& getAppData()
 {
 	static APP_DATA app_data;
+	static bool bAppDataLoaded = false;
+	if (!bAppDataLoaded) {
+		_loadAppData(app_data);
+		bAppDataLoaded = true;
+	}
 	return app_data;
 }
 
@@ -168,4 +179,22 @@ void CAppData::ClearTrace()
 	_s_t.s_tc = TRACE_CAT_UNK;
 	_s_t.strFile = EMPTYSTR;
 	_s_t.strMsg = EMPTYSTR;
+}
+
+// static 
+int CAppData::GetCurrentUILang()
+{
+	return getAppData().m_nCurrentUiLang;
+}
+
+void CAppData::SetProfileUiLang(int nLang)
+{
+	CWinAppEx* pApp = dynamic_cast<CWinAppEx*>(AfxGetApp());
+	pApp->WriteInt(LANG_OPTIONS_ENTRY, nLang);
+}
+
+int CAppData::GetProfileUiLang()
+{
+	CWinAppEx* pApp = dynamic_cast<CWinAppEx*>(AfxGetApp());
+	return pApp->GetInt(LANG_OPTIONS_ENTRY, 0);
 }

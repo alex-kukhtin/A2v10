@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CMainApp, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, OnFilePrintSetup)
+	ON_COMMAND(ID_TOOLS_OPTIONS, OnToolsOptions)
 END_MESSAGE_MAP()
 
 
@@ -95,21 +96,12 @@ BOOL CMainApp::InitInstance()
 		return FALSE;
 	}
 
-	EnableTaskbarInteraction();
+	SetRegistryKey(L"A2v10.Designer"); // before lang
+	LoadLangLibrary();
 
-	// AfxInitRichEdit2() is required to use RichEdit control	
-	// AfxInitRichEdit2();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
-	SetRegistryKey(L"A2v10.Designer");
 	LoadStdProfileSettings(16);  // Load standard INI file options (including MRU)
 
+	EnableTaskbarInteraction();
 
 	//InitContextMenuManager();
 	InitShellManager();
@@ -187,6 +179,18 @@ int CMainApp::ExitInstance()
 	}
 
 	return __super::ExitInstance();
+}
+
+
+void CMainApp::LoadLangLibrary()
+{
+	int lang = CAppData::GetCurrentUILang();
+	if (lang == 0)
+		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Uk.dll"));
+	else if (lang == 1)
+		VERIFY(AfxLoadLibrary(L"A2v10.Locale.En.dll"));
+	else if (lang == 2)
+		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Ru.dll"));
 }
 
 // CMainApp message handlers
@@ -276,4 +280,8 @@ void CMainApp::OnUpdateCloseAllDocuments(CCmdUI* pCmdUI)
 }
 
 
-
+// afx_msg
+void CMainApp::OnToolsOptions() 
+{
+	COptionsPropertySheet::DoOptions(COptionsPropertySheet::page_all);
+}

@@ -18,4 +18,8 @@ public:
 	static void TraceWARNING(TRACE_CATEGORY tc, LPCWSTR szFile, LPCWSTR szMsg, ...);
 	static void TraceERROR(TRACE_CATEGORY tc, LPCWSTR szFile, LPCWSTR szMsg, ...);
 	static void ClearTrace();
+
+	static int GetCurrentUILang();
+	static int GetProfileUiLang();
+	static void SetProfileUiLang(int nLang);
 };

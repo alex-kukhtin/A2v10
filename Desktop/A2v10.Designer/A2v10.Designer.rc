@@ -1,4 +1,4 @@
-//Microsoft Visual C++ generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -16,19 +16,25 @@
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
-#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+// Russian (Russia) resources
 
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+#ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
     "#ifndef APSTUDIO_INVOKED\r\n"
     "#include ""targetver.h""\r\n"
@@ -38,7 +44,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_OLE_RESOURCES\r\n"
     "#define _AFX_NO_TRACKER_RESOURCES\r\n"
@@ -58,6 +64,16 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+#endif    // Russian (Russia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -66,21 +82,26 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\A2v10.Designer.ico"
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE 9, 1
-IDR_MAINFRAME           ICON         "res\\A2v10.Designer.ico"
-IDR_A2v10DesignerTYPE         ICON         "res\\A2v10.DesignerDoc.ico"
-#endif
-IDI_FILE_VIEW           ICON         "res\\file_view.ico"
-IDI_FILE_VIEW_HC        ICON         "res\\file_view_hc.ico"
-IDI_OUTPUT_WND          ICON         "res\\output_wnd.ico"
-IDI_OUTPUT_WND_HC       ICON         "res\\output_wnd_hc.ico"
+IDR_A2v10DesignerTYPE   ICON                    "res\\A2v10.DesignerDoc.ico"
 
-ID_WND_SOLUTION         ICON         "res\\wndsolution.ico"
-ID_WND_PROPERTIES       ICON         "res\\wndproperties.ico"
-ID_WND_TOOLBOX          ICON         "res\\wndtoolbox.ico"
-ID_WND_COMMAND          ICON         "res\\wndcommand.ico"
+IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
+
+IDI_FILE_VIEW_HC        ICON                    "res\\file_view_hc.ico"
+
+IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
+
+IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
+
+ID_WND_SOLUTION         ICON                    "res\\wndsolution.ico"
+
+ID_WND_PROPERTIES       ICON                    "res\\wndproperties.ico"
+
+ID_WND_TOOLBOX          ICON                    "res\\wndtoolbox.ico"
+
+ID_WND_COMMAND          ICON                    "res\\wndcommand.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -88,16 +109,25 @@ ID_WND_COMMAND          ICON         "res\\wndcommand.ico"
 //
 
 IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
+
 IDR_SORT                BITMAP                  "res\\sort.bmp"
+
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
+
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
+
 IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
+
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
+
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
+
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
+
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -106,26 +136,25 @@ IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
 
 IDR_MAINFRAME TOOLBAR 16, 16
 BEGIN
-	BUTTON      ID_FILE_NEW
-	BUTTON      ID_FILE_OPEN
-	BUTTON      ID_FILE_SAVE
-	BUTTON      ID_FILE_SAVE_ALL
-	SEPARATOR
-	BUTTON      ID_EDIT_CUT
-	BUTTON      ID_EDIT_COPY
-	BUTTON      ID_EDIT_PASTE
-	SEPARATOR
-	BUTTON      ID_EDIT_UNDO
-	BUTTON      ID_EDIT_REDO
-	SEPARATOR
-	BUTTON		ID_DEBUG_RUN
-	SEPARATOR
-	BUTTON      ID_EDIT_FIND_IN_FILES
-	SEPARATOR
-	BUTTON      ID_FILE_PRINT
-	BUTTON      ID_APP_ABOUT
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_FILE_SAVE_ALL
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_EDIT_UNDO
+    BUTTON      ID_EDIT_REDO
+    SEPARATOR
+    BUTTON      ID_DEBUG_RUN
+    SEPARATOR
+    BUTTON      ID_EDIT_FIND_IN_FILES
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
 END
-
 
 IDR_SORT TOOLBAR 16, 16
 BEGIN
@@ -140,30 +169,28 @@ END
 
 IDR_PROPERTIES TOOLBAR 16, 16
 BEGIN
-	BUTTON      ID_PROP_CATEGORIZED
-	BUTTON      ID_PROP_ALPHABETICAL
+    BUTTON      ID_PROP_CATEGORIZED
+    BUTTON      ID_PROP_ALPHABETICAL
 END
 
 IDR_MENU_IMAGES TOOLBAR 16, 16
 BEGIN
-	BUTTON      IDMENU_CLOSE
-	BUTTON      IDMENU_MINIMIZE
-	BUTTON      IDMENU_MAXIMIZE
-	BUTTON      IDMENU_RESTORE
-	BUTTON      IDMENU_HELP
-	BUTTON      ID_VIEW_PROPERTIES
-	BUTTON      ID_VIEW_TOOLBOX
-	BUTTON      ID_TOOLS_OPTIONS
-	BUTTON      ID_VIEW_COMMAND
-	BUTTON      ID_APP_EXIT
-	BUTTON      ID_EDIT_CLEAR_ALL
-	BUTTON      ID_WINDOW_CLOSE_ALL
-	BUTTON      ID_VIEW_SOLUTION
-	BUTTON		ID_VIEW_OUTLINE
+    BUTTON      IDMENU_CLOSE
+    BUTTON      IDMENU_MINIMIZE
+    BUTTON      IDMENU_MAXIMIZE
+    BUTTON      IDMENU_RESTORE
+    BUTTON      IDMENU_HELP
+    BUTTON      ID_VIEW_PROPERTIES
+    BUTTON      ID_VIEW_TOOLBOX
+    BUTTON      ID_TOOLS_OPTIONS
+    BUTTON      ID_VIEW_COMMAND
+    BUTTON      ID_APP_EXIT
+    BUTTON      ID_EDIT_CLEAR_ALL
+    BUTTON      ID_WINDOW_CLOSE_ALL
+    BUTTON      ID_VIEW_SOLUTION
+    BUTTON      ID_VIEW_OUTLINE
 END
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE 9, 1
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -177,63 +204,62 @@ BEGIN
         MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "&Close",                      ID_FILE_CLOSE
-		MENUITEM SEPARATOR
-		MENUITEM "&Save\tCtrl+S", ID_FILE_SAVE
-		MENUITEM "Save &As...", ID_FILE_SAVE_AS
-		MENUITEM "Save A&ll...\tCtrl+Shift+S", ID_FILE_SAVE_ALL
-		MENUITEM SEPARATOR
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM "Save A&ll...\tCtrl+Shift+S",  ID_FILE_SAVE_ALL
+        MENUITEM SEPARATOR
         MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
-        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1,GRAYED
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
-	POPUP "&Edit"
-	BEGIN
-		MENUITEM "&Undo\tCtrl+Z", ID_EDIT_UNDO
-		MENUITEM "&Redo\tCtrl+Y", ID_EDIT_REDO
-		MENUITEM SEPARATOR
-		MENUITEM "Cu&t\tCtrl+X", ID_EDIT_CUT
-		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
-		MENUITEM "&Paste\tCtrl+V", ID_EDIT_PASTE
-		MENUITEM "&Delete\tDel", ID_EDIT_CLEAR
-		MENUITEM SEPARATOR
-		MENUITEM "&Find\tCtrl+F", ID_EDIT_FIND
-		MENUITEM "F&ind in files\tCtrl+Shift+F", ID_EDIT_FIND_IN_FILES
-	END
-	POPUP "&View"
+    POPUP "&Edit"
     BEGIN
-		POPUP "&Toolbars and Docking Windows"
-		BEGIN
-			MENUITEM "<placeholder>", ID_VIEW_TOOLBAR
-		END
-		MENUITEM "Solution Ex&plorer\tCtrl+Alt+L",	ID_VIEW_SOLUTION
-		MENUITEM "Toolbo&x\tCtrl+Alt+X",			ID_VIEW_TOOLBOX
-		MENUITEM SEPARATOR
-		MENUITEM "&Command Window\tCtrl+Alt+A",		ID_VIEW_COMMAND
-		MENUITEM "Properties &Window\tF4",			ID_VIEW_PROPERTIES
-		MENUITEM "&Document Outline\tCtrl+Alt+T",	ID_VIEW_OUTLINE
-		MENUITEM SEPARATOR
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               ID_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "&Delete\tDel",                ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Find\tCtrl+F",               ID_EDIT_FIND
+        MENUITEM "F&ind in files\tCtrl+Shift+F", ID_EDIT_FIND_IN_FILES
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "&Toolbars and Docking Windows"
+        BEGIN
+            MENUITEM "<placeholder>",               ID_VIEW_TOOLBAR
+        END
+        MENUITEM "Solution Ex&plorer\tCtrl+Alt+L", ID_VIEW_SOLUTION
+        MENUITEM "Toolbo&x\tCtrl+Alt+X",        ID_VIEW_TOOLBOX
+        MENUITEM SEPARATOR
+        MENUITEM "&Command Window\tCtrl+Alt+A", ID_VIEW_COMMAND
+        MENUITEM "Properties &Window\tF4",      ID_VIEW_PROPERTIES
+        MENUITEM "&Document Outline\tCtrl+Alt+T", ID_VIEW_OUTLINE
+        MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
-	POPUP "&Project"
-	BEGIN
-		MENUITEM "&Status Bar", ID_VIEW_STATUS_BAR
-	END
-	POPUP "&Tools"
-	BEGIN
-		MENUITEM "&Options...", ID_TOOLS_OPTIONS
-	END
-	POPUP "&Window"
-	BEGIN
-		MENUITEM "&New Window", ID_WINDOW_NEW
-		MENUITEM "C&lose All Documents", ID_WINDOW_CLOSE_ALL
-		MENUITEM SEPARATOR
-		//MENUITEM "&Windows...", ID_WINDOW_MANAGER
-	END
-	POPUP "&Help"
+    POPUP "&Project"
     BEGIN
-        MENUITEM "&About ...\tCtrl+F1",          ID_APP_ABOUT
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Options...",                 ID_TOOLS_OPTIONS
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&New Window",                 ID_WINDOW_NEW
+        MENUITEM "C&lose All Documents",        ID_WINDOW_CLOSE_ALL
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About ...\tCtrl+F1",         ID_APP_ABOUT
     END
 END
 
@@ -241,24 +267,21 @@ IDR_A2v10DesignerTYPE MENU
 BEGIN
     POPUP "&Format"
     BEGIN
-		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
-	END
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+    END
     POPUP "&Layout"
     BEGIN
-		MENUITEM "Cu&t\tCtrl+X", ID_EDIT_CUT
-	END
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+    END
 END
-
-
-
 
 IDR_POPUP_EDIT MENU
 BEGIN
-	POPUP "Edit"
-	BEGIN
-		MENUITEM "Cu&t\tCtrl+X",            ID_EDIT_CUT
-		MENUITEM "&Copy\tCtrl+C",           ID_EDIT_COPY
-		MENUITEM "&Paste\tCtrl+V",          ID_EDIT_PASTE
+    POPUP "Edit"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
     END
 END
 
@@ -301,10 +324,11 @@ BEGIN
     END
 END
 
-IDR_HELP_MENU MENU 
+IDR_HELP_MENU MENU
 BEGIN
-    MENUITEM "&About A2v10.Designer...",          ID_APP_ABOUT
+    MENUITEM "&About A2v10.Designer...",    ID_APP_ABOUT
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -313,35 +337,32 @@ END
 
 IDR_MAINFRAME ACCELERATORS
 BEGIN
-	"A", ID_VIEW_COMMAND, VIRTKEY, CONTROL, ALT
-	"F", ID_EDIT_FIND, VIRTKEY, CONTROL
-	"F", ID_EDIT_FIND_IN_FILES, VIRTKEY, SHIFT, CONTROL
-	"L", ID_VIEW_SOLUTION, VIRTKEY, CONTROL, ALT
-	"N", ID_FILE_NEW, VIRTKEY, CONTROL
-	"O", ID_FILE_OPEN, VIRTKEY, CONTROL
-	"S", ID_FILE_SAVE, VIRTKEY, CONTROL
-	"S", ID_FILE_SAVE_ALL, VIRTKEY, SHIFT, CONTROL
-	"T", ID_VIEW_OUTLINE, VIRTKEY, CONTROL, ALT
-	"P", ID_FILE_PRINT, VIRTKEY, CONTROL
-	"Z", ID_EDIT_UNDO, VIRTKEY, CONTROL
-	"X", ID_EDIT_CUT, VIRTKEY, CONTROL
-	"X", ID_VIEW_TOOLBOX, VIRTKEY, CONTROL, ALT
-	"Y", ID_EDIT_REDO, VIRTKEY, CONTROL
-	"C", ID_EDIT_COPY, VIRTKEY, CONTROL
-	"V", ID_EDIT_PASTE, VIRTKEY, CONTROL
-	VK_BACK, ID_EDIT_UNDO, VIRTKEY, ALT
-	VK_DELETE, ID_EDIT_CUT, VIRTKEY, SHIFT
-	//VK_DELETE, ID_EDIT_CLEAR, VIRTKEY (!)
-	VK_INSERT, ID_EDIT_COPY, VIRTKEY, CONTROL
-	VK_INSERT, ID_EDIT_PASTE, VIRTKEY, SHIFT
-	VK_F4, ID_VIEW_PROPERTIES, VIRTKEY
-	VK_F5, ID_DEBUG_RUN, VIRTKEY
-	VK_F6, ID_NEXT_PANE, VIRTKEY
-	VK_F6, ID_PREV_PANE, VIRTKEY, SHIFT
-	VK_F1, ID_APP_ABOUT, VIRTKEY, CONTROL
+    "A",            ID_VIEW_COMMAND,        VIRTKEY, CONTROL, ALT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL
+    "F",            ID_EDIT_FIND_IN_FILES,  VIRTKEY, SHIFT, CONTROL
+    "L",            ID_VIEW_SOLUTION,       VIRTKEY, CONTROL, ALT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE_ALL,       VIRTKEY, SHIFT, CONTROL
+    "T",            ID_VIEW_OUTLINE,        VIRTKEY, CONTROL, ALT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "X",            ID_VIEW_TOOLBOX,        VIRTKEY, CONTROL, ALT
+    "Y",            ID_EDIT_REDO,           VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F4,          ID_VIEW_PROPERTIES,     VIRTKEY 
+    VK_F5,          ID_DEBUG_RUN,           VIRTKEY 
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+    VK_F1,          ID_APP_ABOUT,           VIRTKEY, CONTROL
 END
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -352,7 +373,7 @@ END
 IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About A2v10.Designer"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
     LTEXT           "A2v10.Designer, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
@@ -360,25 +381,34 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
-
+IDD_OPTION_GENERAL DIALOGEX 0, 0, 295, 205
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "User Interface",IDC_TITLE1,7,7,281,9
+    LTEXT           "Interface language:",IDC_STATIC,14,23,65,8
+    COMBOBOX        IDC_COMBO1,86,21,202,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "The language will be changed after restarting of application.",IDC_PROMPT1,14,37,274,12,NOT WS_VISIBLE
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
-VS_VERSION_INFO     VERSIONINFO
-  FILEVERSION       1,0,0,1
-  PRODUCTVERSION    1,0,0,1
- FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS VS_FF_DEBUG
+ FILEFLAGS 0x1L
 #else
  FILEFLAGS 0x0L
 #endif
- FILEOS VOS_NT_WINDOWS32
- FILETYPE VFT_APP
- FILESUBTYPE VFT2_UNKNOWN
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -386,19 +416,20 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "A2v10.Designer"
-            VALUE "FileVersion",     "1.0.0.1"
-            VALUE "InternalName",    "A2v10.Designer.exe"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "A2v10.Designer.exe"
             VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-            VALUE "OriginalFilename","A2v10.Designer.exe"
+            VALUE "OriginalFilename", "A2v10.Designer.exe"
             VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion",  "1.0.0.1"
+            VALUE "ProductVersion", "1.0.0.1"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x0409, 1200
+        VALUE "Translation", 0x409, 1200
     END
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -415,8 +446,29 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
     END
+
+    IDD_OPTION_GENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 288
+        VERTGUIDE, 14
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 198
+    END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_OPTION_GENERAL AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -425,22 +477,23 @@ END
 
 STRINGTABLE
 BEGIN
-IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
-IDP_RICH_INIT_FAILED    "RichEdit initialization failed."
-IDP_SCI_INIT_FAILED     "Scintilla initialization failed."
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+    IDP_RICH_INIT_FAILED    "RichEdit initialization failed."
+    IDP_SCI_INIT_FAILED     "Scintilla initialization failed."
 END
 
 STRINGTABLE
 BEGIN
-// Non-mac-targeting apps remove the two extra substrings
     IDR_MAINFRAME           "A2v10.Designer"
-    IDR_A2v10DesignerTYPE         "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"
+    IDR_A2v10DesignerTYPE   "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"
 END
+
 STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "A2v10.Designer"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
+
 STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
@@ -453,11 +506,16 @@ END
 
 STRINGTABLE
 BEGIN
-	ID_WND_SOLUTION "Solution"
-	ID_WND_OUTLINE "Outline"
-	ID_WND_TOOLBOX "Toolbox"
-	ID_WND_COMMAND "Command"
-	ID_WND_PROPERTIES "Properties"
+    ID_WND_PROPERTIES       "Properties"
+    ID_WND_TOOLBOX          "Toolbox"
+    ID_WND_COMMAND          "Command"
+    ID_WND_SOLUTION         "Solution"
+    ID_WND_OUTLINE          "Outline"
+END
+
+STRINGTABLE
+BEGIN
+    IDD_OPTION_GENERAL      "General options"
 END
 
 STRINGTABLE
@@ -469,11 +527,19 @@ BEGIN
     ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
     ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
     ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
-    ID_FILE_PRINT_DIRECT    "Print the active document using current options\nQuick Print"
     ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_DIRECT    "Print the active document using current options\nQuick Print"
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE
+BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE
+BEGIN
     ID_FILE_MRU_FILE1       "Open this document"
     ID_FILE_MRU_FILE2       "Open this document"
     ID_FILE_MRU_FILE3       "Open this document"
@@ -490,14 +556,26 @@ BEGIN
     ID_FILE_MRU_FILE14      "Open this document"
     ID_FILE_MRU_FILE15      "Open this document"
     ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE
+BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE
+BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
     ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
     ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
     ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE
+BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
     ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
@@ -509,6 +587,10 @@ BEGIN
     ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
     ID_EDIT_UNDO            "Undo the last action\nUndo"
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE
+BEGIN
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
 END
 
@@ -521,12 +603,19 @@ BEGIN
     AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
     AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
     AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE
+BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
     AFX_IDS_MDICHILD        "Activate this window"
-    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
 END
 
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
 
 STRINGTABLE
 BEGIN
@@ -534,35 +623,60 @@ BEGIN
     IDS_STATUS_PANE2        "Pane 2"
     IDS_TOOLBAR_STANDARD    "Standard"
     IDS_TOOLBAR_CUSTOMIZE   "Customize..."
+END
+
+STRINGTABLE
+BEGIN
     ID_WINDOW_MANAGER       "&Windows..."
+END
+
+STRINGTABLE
+BEGIN
     IDS_FILE_VIEW           "File View"
+END
+
+STRINGTABLE
+BEGIN
     IDS_EXPLORER            "Explorer"
+    IDS_EDIT_MENU           "Edit"
+END
+
+STRINGTABLE
+BEGIN
     IDS_OUTPUT_WND          "Output"
+END
+
+STRINGTABLE
+BEGIN
     IDS_BUILD_TAB           "Build"
     IDS_DEBUG_TAB           "Debug"
     IDS_FIND_TAB            "Find"
-    IDS_PROPERTIES_WND      "Properties"
-    IDS_EDIT_MENU           "Edit"
 END
-#endif
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
 #define _AFX_NO_OLE_RESOURCES
 #define _AFX_NO_TRACKER_RESOURCES
 #define _AFX_NO_PROPERTY_RESOURCES
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
-#include "res\\A2v10Designer.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\A2v10Designer.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"      // Standard components
-#include "afxprint.rc"  // printing/print preview resources
+#include "afxprint.rc"    // printing/print preview resources
 #if !defined(_AFXDLL)
 #include "afxribbon.rc"        // MFC ribbon and control bar resources
 #endif
 #endif
+
+/////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+

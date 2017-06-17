@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 #include "..\Include\appdefs.h"
+#include "..\include\guiext.h"
 #include "..\include\theme.h"
 #include "resource.h"
 
@@ -11,9 +12,11 @@
 
 
 #define MASK_COLOR RGB(255, 0, 255)
+
 // static 
 CFont  CTheme::m_fonts[CTheme::FontTypeCount];
 CImageList CTheme::m_imageLists[CTheme::ImageListCount];
+COLORREF   CTheme::m_colors[CTheme::ColorCount] = { UNKNOWN_COLOR };
 
 // static 
 CFont* CTheme::GetUIFont(FontType ft/*= FontNormal*/)
@@ -32,37 +35,52 @@ CFont* CTheme::GetUIFont(FontType ft/*= FontNormal*/)
 	}
 	if (m_fonts[ft].GetSafeHandle() != nullptr)
 		return &(m_fonts[ft]);
+
+	LOGFONT lf = { 0 };
+	afxGlobalData.fontRegular.GetLogFont(&lf);
+
 	switch (ft) {
-	case FontNonClient:
-	{
-		LOGFONT lf = { 0 };
-		afxGlobalData.fontRegular.GetLogFont(&lf);
-
-		NONCLIENTMETRICS info = { 0 };
-		info.cbSize = sizeof(info);
-
-		afxGlobalData.GetNonClientMetrics(info);
-
-		lf.lfHeight = info.lfMenuFont.lfHeight;
-		lf.lfWeight = info.lfMenuFont.lfWeight;
-		lf.lfItalic = info.lfMenuFont.lfItalic;
-
-		m_fonts[FontNonClient].CreateFontIndirect(&lf);
-		return &m_fonts[FontNonClient];
-	}
-	break;
-	case FontUiDefault :
-	{
-		LOGFONT lf = { 0 };
-		afxGlobalData.fontRegular.GetLogFont(&lf);
+	case FontNormal:
+	case FontBold:
+	case FontUnderline:
+		// stubs. use std fonts
+		ATLASSERT(FALSE);
+		break;
+	case FontBig:
+		lf.lfHeight = (int)((double)lf.lfHeight * 9.75 / 8.25);
+		break;
+	case FontUiDefault:
 		lf.lfHeight = lf.lfHeight * 75;
-		m_fonts[FontUiDefault].CreateFontIndirect(&lf);
-		return &m_fonts[FontUiDefault];
+		break;
+	case FontNonClient:
+		{
+			NONCLIENTMETRICS info = { 0 };
+			info.cbSize = sizeof(info);
+
+			afxGlobalData.GetNonClientMetrics(info);
+
+			lf.lfHeight = info.lfMenuFont.lfHeight;
+			lf.lfWeight = info.lfMenuFont.lfWeight;
+			lf.lfItalic = info.lfMenuFont.lfItalic;
+		}
+		break;
 	}
-	break;
-	}
+	m_fonts[ft].CreateFontIndirect(&lf);
+	ATLASSERT((HFONT)m_fonts[ft] != NULL);
+	return &(m_fonts[ft]);
 	ATLASSERT(FALSE);
 	return nullptr;
+}
+
+
+// static 
+int CTheme::GetFontHeight(FontType ft /*= FontNormal*/)
+{
+	CWindowDC dc(NULL);
+	CThemeFontSDC font(&dc, ft);
+	TEXTMETRIC tm = { 0 };
+	dc.GetTextMetrics(&tm);
+	return tm.tmHeight + tm.tmExternalLeading;
 }
 
 struct IL_DEF
@@ -77,6 +95,7 @@ static IL_DEF ilDefs[CTheme::ImageListCount] =
 {
 	{ 0,			16, 16, MASK_COLOR },
 	{ IDIL_10X10,	10, 10, MASK_COLOR },
+	{ IDIL_12X12,	12, 12, MASK_COLOR },
 };
 
 // static 
@@ -104,4 +123,29 @@ void CTheme::OnSettingChange()
 			m_fonts[i].DeleteObject();
 		}
 	}
+}
+
+COLORREF CTheme::GetRealColor(ColorType ct)
+{
+	ATLASSERT((ct >= 0) && (ct < ColorCount));
+	if (m_colors[0] == UNKNOWN_COLOR) {
+		// initializing
+		for (int i = ColorSystemFirst; i <= ColorSystemLast; i++) {
+			m_colors[i] = ::GetSysColor(i);
+		}
+		m_colors[ColorBorder] = m_colors[ColorHighlight]; // RGB(176, 176, 192);
+		m_colors[ColorRedNumbers] = RGB(224, 0, 0);
+		m_colors[ColorBackground2] = CGdiTools::LightenColor(m_colors[ColorActiveCaption], 0.8);
+		m_colors[ColorCaptionTop] = CGdiTools::LightenColor(m_colors[ColorHighlight], 0.45);
+		m_colors[ColorCaptionBottom] = CGdiTools::DarkenColor(m_colors[ColorHighlight], 0.05);
+		m_colors[ColorBtnFaceLight] = CGdiTools::LightenColor(m_colors[ColorBtnFace], 0.60);
+		m_colors[ColorExcelSelect] = RGB(43, 23, 11); //RGB( 73,  53,  21); // from MS EXCEL
+		m_colors[ColorDialogBorder] = RGB(127, 157, 185); // THEMES Dialog Border
+		m_colors[ColorMask] = MASK_COLOR;
+		m_colors[ColorBackSpecial] = RGB(255, 255, 213); // #ffffd5
+		m_colors[ColorBackError] = RGB(255, 226, 228);
+		m_colors[ColorBackWarning] = RGB(255, 241, 210);
+		m_colors[ColorOutlineWarning] = RGB(253, 189, 40);
+	}
+	return m_colors[ct];
 }
