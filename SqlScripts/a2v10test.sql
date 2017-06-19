@@ -1,4 +1,4 @@
-/* 20170608-7001 */
+/* 20170619-7003 */
 
 use a2v10test;
 go
@@ -202,11 +202,11 @@ begin
 		[SubObject!TSubObject!RefId] = SubObject
 	from @MainObject;
 
-	select [!TSubObject!Map] = null, [Id!!Id] = Id, [Name!!Name] = Name, [!TMainObject!ParentId] = ParentId,
+	select [!TSubObject!Map] = null, [Id!!Id] = Id, [Name!!Name] = Name, [!TMainObject.SubObject!ParentId] = ParentId,
 		[SubArray!TSubObjectArrayItem!Array] = null
 	from @SubObject;
 
-	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [!TSubObject!ParentId] = ParentId
+	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [!TSubObject.SubArray!ParentId] = ParentId
 	from @SubObjectArray;
 end
 go

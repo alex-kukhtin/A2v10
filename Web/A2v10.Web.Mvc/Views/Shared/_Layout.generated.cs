@@ -170,7 +170,16 @@ WriteLiteral(">\r\n\t\t\t<p>&copy; ");
             
             #line default
             #line hidden
-WriteLiteral(" - My ASP.NET Application</p>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
+WriteLiteral("  ");
+
+            
+            #line 33 "..\..\Views\Shared\_Layout.cshtml"
+                                     Write(A2v10.Web.Mvc.Configuration.AppInfo.MainAssembly.Version);
+
+            
+            #line default
+            #line hidden
+WriteLiteral("</p>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
@@ -180,14 +189,14 @@ WriteLiteral("></script>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 1130), Tuple.Create("\"", 1183)
+WriteAttribute("src", Tuple.Create(" src=\"", 1164), Tuple.Create("\"", 1217)
             
             #line 37 "..\..\Views\Shared\_Layout.cshtml"
-, Tuple.Create(Tuple.Create("", 1136), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
+, Tuple.Create(Tuple.Create("", 1170), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
             
             #line default
             #line hidden
-, 1136), false)
+, 1170), false)
 );
 
 WriteLiteral("></script>\r\n");

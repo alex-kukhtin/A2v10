@@ -4,6 +4,9 @@ using A2v10.Infrastructure;
 using System.Threading.Tasks;
 using A2v10.Tests.DataModelTester;
 using A2v10.Tests.Config;
+using System.Dynamic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace A2v10.Tests
 {
@@ -127,5 +130,47 @@ namespace A2v10.Tests
 			dt.IsArray(1);
 			dt.AreArrayValueEqual("Item 1.1.1", 0, "Name");
 		}
+
+
+		[TestMethod]
+		public async Task TestWriteSubObjectData()
+		{
+			var jsonData = @"
+			{
+				Id : 45,
+				Name: 'MainObjectName',
+				NumValue : 531.55,
+				BitValue : true,
+				SubObject : {
+					Id: 55,
+					Name: 'SubObjectName',
+					SubArray: [
+						{X: 5, Y:6},
+						{X: 8, Y:9}
+					]
+				}		
+			}
+			";
+			var dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(jsonData.Replace('\'', '"'), new ExpandoObjectConverter());
+			IDataModel dm = await _dbContext.SaveModelAsync("a2test.[NestedObject.Update]", dataToSave);
+
+			var dt = new DataTester(dm, "MainObject");
+			dt.AreValueEqual(45L, "Id");
+			dt.AreValueEqual("MainObjectName", "Name");
+
+			var tdsub = new DataTester(dm, "MainObject.SubObject");
+			tdsub.AreValueEqual(55L, "Id");
+			tdsub.AreValueEqual("SubObjectName", "Name");
+
+			var tdsubarray = new DataTester(dm, "MainObject.SubObject.SubArray");
+			tdsubarray.IsArray(2);
+
+			tdsubarray.AreArrayValueEqual(5, 0, "X");
+			tdsubarray.AreArrayValueEqual(6, 0, "Y");
+
+			tdsubarray.AreArrayValueEqual(8, 1, "X");
+			tdsubarray.AreArrayValueEqual(9, 1, "Y");
+		}
+
 	}
 }

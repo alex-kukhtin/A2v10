@@ -13,7 +13,7 @@ using System.Dynamic;
 
 namespace A2v10.Data
 {
-	internal class DataModelLoader
+	internal class DataModelReader
 	{
 		const String ROOT = "TRoot";
 
@@ -83,6 +83,8 @@ namespace A2v10.Data
 		void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
 		{
 			var pxa = propName.Split('.'); // <Type>.PropName
+			if (pxa.Length != 2)
+				throw new DataLoaderException($"Invalid field name 'propName'. 'TypeName.PropertyName' expected");
 			/*0-key, 1-Property*/
 			var key = Tuple.Create(pxa[0], id);
 			var mapObj = _idMap[key];

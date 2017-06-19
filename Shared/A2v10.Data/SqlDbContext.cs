@@ -28,7 +28,7 @@ namespace A2v10.Data
 
 		public async Task<IDataModel> LoadModelAsync(String command, Object prms = null)
 		{
-			var modelLoader = new DataModelLoader();
+			var modelReader = new DataModelReader();
 			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
 			{
 				await ReadDataAsync(command,
@@ -37,16 +37,16 @@ namespace A2v10.Data
 					},
 					(no, rdr) =>
 					{
-						modelLoader.ProcessOneRecord(rdr);
+						modelReader.ProcessOneRecord(rdr);
 					},
 					(no, rdr) =>
 					{
-						modelLoader.ProcessOneMetadata(rdr);
+						modelReader.ProcessOneMetadata(rdr);
 					});
 			}
-			return modelLoader.DataModel;
+			return modelReader.DataModel;
 		}
-
+	
 		public async Task ReadDataAsync(String command,
 			Action<SqlParameterCollection> setParams,
 			Action<Int32, IDataReader> onRead,
@@ -79,6 +79,8 @@ namespace A2v10.Data
 
 		public async Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null)
 		{
+			var dataReader = new DataModelReader();
+			var dataWriter = new DataModelWriter();
 			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
 			{
 				var metadataCommand = command.Replace(".Update", ".Metadata");
@@ -90,7 +92,7 @@ namespace A2v10.Data
 						{
 							do
 							{
-
+								dataWriter.ProcessOneMetadata(rdr);
 							}
 							while (await rdr.NextResultAsync());
 						}
@@ -98,9 +100,22 @@ namespace A2v10.Data
 					using (var cmd = cnn.CreateCommandSP(command))
 					{
 						SqlCommandBuilder.DeriveParameters(cmd);
-					}
+						dataWriter.SetTableParameters(cmd, data, prms);
+						using (var rdr = await cmd.ExecuteReaderAsync())
+						{
+							do
+							{
+								// metadata is not needed
+								while (await rdr.ReadAsync())
+								{
+									dataReader.ProcessOneRecord(rdr);
+								}
+							}
+							while (await rdr.NextResultAsync());
+						}
+					}				
 				}
-				return null;
+				return dataReader.DataModel;
 			}
 		}
 

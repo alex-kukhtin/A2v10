@@ -57,7 +57,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -104,6 +104,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AppInfo.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebConfiguration.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />
@@ -127,16 +128,6 @@
     <Compile Include="Start\FilterConfig.cs" />
     <Compile Include="Views\Account\ConfirmEmail.generated.cs">
       <DependentUpon>ConfirmEmail.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ExternalLoginConfirmation.generated.cs">
-      <DependentUpon>ExternalLoginConfirmation.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ExternalLoginFailure.generated.cs">
-      <DependentUpon>ExternalLoginFailure.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -177,11 +168,6 @@
     </Compile>
     <Compile Include="Views\Account\VerifyCode.generated.cs">
       <DependentUpon>VerifyCode.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\_ExternalLoginsListPartial.generated.cs">
-      <DependentUpon>_ExternalLoginsListPartial.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -263,14 +249,6 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ConfirmEmail.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ExternalLoginConfirmation.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ExternalLoginFailure.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Account\ForgotPassword.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ForgotPassword.generated.cs</LastGenOutput>
@@ -302,10 +280,6 @@
     <Content Include="Views\Account\VerifyCode.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>VerifyCode.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>_ExternalLoginsListPartial.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Home\About.cshtml">
       <Generator>RazorGenerator</Generator>

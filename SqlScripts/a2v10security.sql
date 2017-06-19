@@ -1,4 +1,4 @@
-﻿/* 20170605-7001 */
+﻿/* 20170619-7003 */
 ------------------------------------------------
 set noexec off;
 go
@@ -13,19 +13,11 @@ begin
 end
 go
 ------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2sys')
-begin
-	exec sp_executesql N'create schema a2sys';
-end
-go
-------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
 begin
 	exec sp_executesql N'create schema a2security';
 end
 go
-
-
 ------------------------------------------------
 -- a2security schema
 ------------------------------------------------
@@ -67,7 +59,7 @@ create view a2security.ViewUsers
 as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
-		PersonName, Memo, AppKey, SecurityStamp
+		PersonName, Memo
 	from a2security.Users;
 go
 ------------------------------------------------
@@ -116,7 +108,6 @@ go
 ------------------------------------------------
 begin
 	set nocount on;
-	grant execute on schema ::a2sys to public;
 	grant execute on schema ::a2security to public;
 end
 go

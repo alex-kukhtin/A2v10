@@ -13,4 +13,12 @@ namespace A2v10.Data
 		{
 		}
 	}
+
+	public class DataWriterException : Exception
+	{
+		public DataWriterException(String message)
+			:base(message)
+		{
+		}
+	}
 }

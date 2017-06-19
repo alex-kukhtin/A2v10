@@ -1,6 +1,5 @@
-﻿
+﻿(function () {
 
-(function () {
 	window.app = {
 		modules: {},
 		require: require
@@ -11,5 +10,4 @@
 			return app.modules[module];
 	}
 
-	alert(1);
 }());
