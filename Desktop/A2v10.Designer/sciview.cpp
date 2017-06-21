@@ -63,6 +63,7 @@ void CSciEditView::SetupEditor()
 	CStringA strFontA(strFont); // ANSI!
 	SendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, reinterpret_cast<LPARAM>((LPCSTR)strFontA));
 	SendMessage(SCI_STYLESETSIZE, STYLE_DEFAULT, 11);
+	SendMessage(SCI_SETCODEPAGE, SC_CP_UTF8, 0L);
 
 	SendMessage(SCI_SETTABWIDTH, 4);
 

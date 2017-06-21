@@ -188,14 +188,18 @@
     <ClInclude Include="..\Include\SciLexer.h" />
     <ClInclude Include="..\Include\Scintilla.h" />
     <ClInclude Include="..\Include\Sci_Position.h" />
+    <ClInclude Include="a2formtab.h" />
+    <ClInclude Include="a2formview.h" />
     <ClInclude Include="A2v10.Designer.h" />
     <ClInclude Include="A2v10.DesignerDoc.h" />
     <ClInclude Include="A2v10.DesignerView.h" />
+    <ClInclude Include="a2formdoc.h" />
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="moduledoc.h" />
     <ClInclude Include="moduleview.h" />
+    <ClInclude Include="recttracker.h" />
     <ClInclude Include="sciview.h" />
     <ClInclude Include="mainfrm.h" />
     <ClInclude Include="outputwnd.h" />
@@ -207,9 +211,12 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="a2formtab.cpp" />
+    <ClCompile Include="a2formview.cpp" />
     <ClCompile Include="A2v10.Designer.cpp" />
     <ClCompile Include="A2v10.DesignerDoc.cpp" />
     <ClCompile Include="A2v10.DesignerView.cpp" />
+    <ClCompile Include="a2formdoc.cpp" />
     <ClCompile Include="childfrm.cpp" />
     <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="FileView.cpp" />
@@ -217,6 +224,7 @@
     <ClCompile Include="moduleview.cpp" />
     <ClCompile Include="outputwnd.cpp" />
     <ClCompile Include="propertieswnd.cpp" />
+    <ClCompile Include="recttracker.cpp" />
     <ClCompile Include="sciview.cpp" />
     <ClCompile Include="solutionwnd.cpp" />
     <ClCompile Include="moduledoc.cpp" />

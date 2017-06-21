@@ -25,6 +25,9 @@
     <Filter Include="Header Files\ModuleEditor">
       <UniqueIdentifier>{98a43ee5-c572-4bb9-97f4-4c4a1148d692}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FormDesigner">
+      <UniqueIdentifier>{cd902839-f6f4-479d-aa73-58de9bc7c2ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A2v10.Designer.h">
@@ -87,6 +90,18 @@
     <ClInclude Include="moduledoc.h">
       <Filter>Header Files\ModuleEditor</Filter>
     </ClInclude>
+    <ClInclude Include="recttracker.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
+    <ClInclude Include="a2formdoc.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
+    <ClInclude Include="a2formview.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
+    <ClInclude Include="a2formtab.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -133,6 +148,18 @@
     </ClCompile>
     <ClCompile Include="moduledoc.cpp">
       <Filter>Source Files\ModuleEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="recttracker.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="a2formdoc.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="a2formview.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="a2formtab.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

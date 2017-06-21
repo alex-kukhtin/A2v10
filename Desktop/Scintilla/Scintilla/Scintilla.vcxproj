@@ -153,6 +153,7 @@
     <ClInclude Include="..\..\..\..\scintilla\include\Sci_Position.h" />
     <ClInclude Include="..\..\..\..\scintilla\win32\HanjaDic.h" />
     <ClInclude Include="..\..\..\..\scintilla\win32\PlatWin.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\scintilla\lexers\LexCPP.cxx" />

@@ -16,6 +16,10 @@
 #include "moduledoc.h"
 #include "sciview.h"
 #include "moduleview.h"
+#include "a2formdoc.h"
+#include "a2formview.h"
+#include "a2formtab.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -117,14 +121,23 @@ BOOL CMainApp::InitInstance()
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
-		RUNTIME_CLASS(CModuleDoc),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CModuleView));
-	if (!pDocTemplate)
+	try 
+	{
+		CA2DocTemplate* pModuleTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
+			RUNTIME_CLASS(CModuleDoc),
+			RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+			RUNTIME_CLASS(CModuleView));
+		AddDocTemplate(pModuleTemplate);
+
+		CA2DocTemplate* pFormTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
+			RUNTIME_CLASS(CA2FormDocument),
+			RUNTIME_CLASS(CChildFrame), //
+			RUNTIME_CLASS(CA2FormTabView));
+		AddDocTemplate(pFormTemplate);
+	}
+	catch (std::bad_alloc&) {
 		return FALSE;
-	AddDocTemplate(pDocTemplate);
+	}
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
@@ -185,12 +198,15 @@ int CMainApp::ExitInstance()
 void CMainApp::LoadLangLibrary()
 {
 	int lang = CAppData::GetCurrentUILang();
-	if (lang == 0)
+	if (lang == 0) {
 		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Uk.dll"));
-	else if (lang == 1)
+	}
+	else if (lang == 1) {
 		VERIFY(AfxLoadLibrary(L"A2v10.Locale.En.dll"));
-	else if (lang == 2)
+	}
+	else if (lang == 2) {
 		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Ru.dll"));
+	}
 }
 
 // CMainApp message handlers

@@ -44,3 +44,10 @@ EXPORTS
 ;
 ?Evaluate@JavaScriptRuntime@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W@Z
 ?DoOptions@COptionsPropertySheet@@SAXK@Z
+;
+??0CA2TabView@@IAE@XZ
+??1CA2TabView@@UAE@XZ
+?IsScrollBar@CA2TabView@@MBEHXZ
+?GetMessageMap@CA2TabView@@MBEPBUAFX_MSGMAP@@XZ
+
+?GetThisClass@CA2TabView@@SGPAUCRuntimeClass@@XZ
