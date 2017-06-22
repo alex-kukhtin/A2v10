@@ -85,6 +85,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 IDR_MAINFRAME           ICON                    "res\\A2v10.Designer.ico"
 
 IDR_A2v10DesignerTYPE   ICON                    "res\\A2v10.DesignerDoc.ico"
+IDR_JSMODULE			ICON                    "res\\A2v10.DesignerDoc.ico"
 
 IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
 
@@ -154,6 +155,19 @@ BEGIN
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
+END
+
+IDR_TOOLBOX TOOLBAR 16, 16
+BEGIN
+	BUTTON      ID_TOOLBOX_POINTER
+	BUTTON      ID_TOOLBOX_BUTTON
+	BUTTON      ID_TOOLBOX_CHECK
+	BUTTON      ID_TOOLBOX_COMBOBOX
+	BUTTON      ID_TOOLBOX_DATAGRID
+	SEPARATOR
+	BUTTON      ID_TOOLBOX_CANVAS
+	BUTTON      ID_TOOLBOX_GRID
+	//BUTTON      ID_TOOLBOX_DOCKPANEL
 END
 
 IDR_SORT TOOLBAR 16, 16
@@ -275,6 +289,14 @@ BEGIN
     END
 END
 
+IDR_JSMODULE MENU
+BEGIN
+	POPUP "&Module"
+	BEGIN
+		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
+	END
+END
+
 IDR_POPUP_EDIT MENU
 BEGIN
     POPUP "Edit"
@@ -302,8 +324,6 @@ BEGIN
     BEGIN
         MENUITEM "&Open",                       ID_OPEN
         MENUITEM "Open &With....",              ID_OPEN_WITH
-        MENUITEM SEPARATOR
-        MENUITEM "&Compile",                    ID_DUMMY_COMPILE
         MENUITEM SEPARATOR
         MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
         MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
@@ -486,6 +506,7 @@ STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "A2v10.Designer"
     IDR_A2v10DesignerTYPE   "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"
+	IDR_JSMODULE			"\nModule\nModule\nModules (*.js)\n.js\A2v10.Form\nA2v10.Form"
 END
 
 STRINGTABLE
@@ -516,6 +537,19 @@ END
 STRINGTABLE
 BEGIN
     IDD_OPTION_GENERAL      "General options"
+END
+
+STRINGTABLE
+BEGIN
+	ID_TOOLBOX_POINTER      "Pointer"
+	ID_TOOLBOX_BUTTON       "Button"
+	ID_TOOLBOX_CHECK        "CheckBox"
+	ID_TOOLBOX_RADIO        "RadioButton"
+	ID_TOOLBOX_COMBOBOX     "ComboBox"
+	ID_TOOLBOX_DATAGRID     "DataGrid"
+	ID_TOOLBOX_DATEPICKER   "DatePicker"
+	ID_TOOLBOX_CANVAS       "Canvas"
+	ID_TOOLBOX_GRID         "Grid"
 END
 
 STRINGTABLE

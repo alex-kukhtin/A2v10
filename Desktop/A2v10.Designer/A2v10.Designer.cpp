@@ -10,9 +10,6 @@
 
 #include "childfrm.h"
 
-#include "A2v10.DesignerDoc.h"
-#include "A2v10.DesignerView.h"
-
 #include "moduledoc.h"
 #include "sciview.h"
 #include "moduleview.h"
@@ -123,7 +120,7 @@ BOOL CMainApp::InitInstance()
 	//  serve as the connection between documents, frame windows and views
 	try 
 	{
-		CA2DocTemplate* pModuleTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
+		CA2DocTemplate* pModuleTemplate = new CA2DocTemplate(IDR_JSMODULE,
 			RUNTIME_CLASS(CModuleDoc),
 			RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 			RUNTIME_CLASS(CModuleView));

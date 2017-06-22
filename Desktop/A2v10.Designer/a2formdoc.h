@@ -1,5 +1,6 @@
 #pragma once
 
+struct RENDER_INFO;
 
 class CA2FormDocument : public CDocument
 {
@@ -11,9 +12,8 @@ public:
 	virtual ~CA2FormDocument();
 
 	void Clear();
+	void DrawContent(RENDER_INFO& ri);
 
-public:
-	// Overrides
 	virtual BOOL OnNewDocument();
 	virtual void OnCloseDocument();
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);

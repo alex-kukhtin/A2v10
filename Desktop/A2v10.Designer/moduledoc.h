@@ -9,6 +9,9 @@ public:
 	CModuleDoc();
 	virtual ~CModuleDoc();
 
+	virtual void Serialize(CArchive& ar);
+	virtual void SetModifiedFlag(BOOL bModified = TRUE);
+
 protected:
 	virtual BOOL OnNewDocument();
 

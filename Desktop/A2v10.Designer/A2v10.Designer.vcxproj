@@ -191,12 +191,11 @@
     <ClInclude Include="a2formtab.h" />
     <ClInclude Include="a2formview.h" />
     <ClInclude Include="A2v10.Designer.h" />
-    <ClInclude Include="A2v10.DesignerDoc.h" />
-    <ClInclude Include="A2v10.DesignerView.h" />
     <ClInclude Include="a2formdoc.h" />
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="formitem.h" />
     <ClInclude Include="moduledoc.h" />
     <ClInclude Include="moduleview.h" />
     <ClInclude Include="recttracker.h" />
@@ -214,12 +213,11 @@
     <ClCompile Include="a2formtab.cpp" />
     <ClCompile Include="a2formview.cpp" />
     <ClCompile Include="A2v10.Designer.cpp" />
-    <ClCompile Include="A2v10.DesignerDoc.cpp" />
-    <ClCompile Include="A2v10.DesignerView.cpp" />
     <ClCompile Include="a2formdoc.cpp" />
     <ClCompile Include="childfrm.cpp" />
     <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="formitem.cpp" />
     <ClCompile Include="mainfrm.cpp" />
     <ClCompile Include="moduleview.cpp" />
     <ClCompile Include="outputwnd.cpp" />

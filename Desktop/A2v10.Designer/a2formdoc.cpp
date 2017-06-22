@@ -7,6 +7,7 @@
 #include "A2v10.Designer.h"
 #endif
 
+#include "formitem.h"
 #include "a2formdoc.h"
 
 #include "mainfrm.h"
@@ -72,4 +73,17 @@ void CA2FormDocument::Serialize(CArchive& ar)
 void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 {
 	__super::SetModifiedFlag(bModified);
+}
+
+void CA2FormDocument::DrawContent(RENDER_INFO& ri)
+{
+	//ATLASSERT(m_pRoot);
+
+	ri.pDC->SetBkMode(TRANSPARENT);
+	HGDIOBJ pOldFont = ri.pDC->SelectObject(CTheme::GetUIFont(CTheme::FontUiDefault));
+
+	//m_pRoot->Draw(ri);
+	//DrawSelection(ri);
+
+	ri.pDC->SelectObject(pOldFont);
 }

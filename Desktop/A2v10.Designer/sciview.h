@@ -13,7 +13,10 @@ public:
 	virtual ~CSciEditView();
 
 	CString GetText();
+	CStringA GetTextA();
 	void SetText(LPCWSTR szText);
+	void SetTextA(LPCSTR szText);
+	void SetSavePoint();
 
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -59,6 +62,9 @@ protected:
 	afx_msg void OnUpdateEditRedo(CCmdUI* pCmdUI);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnEditSelectAll();
+	afx_msg void OnCharAdded(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSavePointLeft(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
 class CJsEditView : public CSciEditView

@@ -63,7 +63,11 @@ protected:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnEditClear();
-	afx_msg void OnUpdateEditClear(CCmdUI* pCmdUI);
+	afx_msg void OnEditCut();
+	afx_msg void OnEditCopy();
+	afx_msg void OnEditPaste();
+	afx_msg void OnUpdateSelected(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
 };

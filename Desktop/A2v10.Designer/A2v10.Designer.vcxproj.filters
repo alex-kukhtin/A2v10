@@ -45,12 +45,6 @@
     <ClInclude Include="childfrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="A2v10.DesignerDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="A2v10.DesignerView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,6 +96,9 @@
     <ClInclude Include="a2formtab.h">
       <Filter>Header Files\FormDesigner</Filter>
     </ClInclude>
+    <ClInclude Include="formitem.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -114,12 +111,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="childfrm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="A2v10.DesignerDoc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="A2v10.DesignerView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileView.cpp">
@@ -159,6 +150,9 @@
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
     <ClCompile Include="a2formtab.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="formitem.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
   </ItemGroup>

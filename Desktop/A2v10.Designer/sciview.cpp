@@ -36,6 +36,17 @@ BOOL CSciEditView::PreCreateWindow(CREATESTRUCT& cs)
 	return __super::PreCreateWindow(cs);
 }
 
+CStringA CSciEditView::GetTextA()
+{
+	int len = GetCurrentDocLen();
+	// ANSI!
+	CStringA ansiText;
+	LPSTR buff = ansiText.GetBuffer(len + 1);
+	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(buff));
+	ansiText.ReleaseBuffer();
+	return ansiText;
+}
+
 CString CSciEditView::GetText()
 {
 	int len = GetCurrentDocLen();
@@ -52,6 +63,16 @@ void CSciEditView::SetText(LPCWSTR szText)
 	// ANSI
 	CStringA ansiText(szText);
 	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>((LPCSTR)ansiText));
+}
+
+void CSciEditView::SetTextA(LPCSTR szText) {
+	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>((LPCSTR)szText));
+}
+
+void CSciEditView::SetSavePoint()
+{
+	SendMessage(SCI_EMPTYUNDOBUFFER);
+	SendMessage(SCI_SETSAVEPOINT);
 }
 
 
@@ -148,6 +169,9 @@ BEGIN_MESSAGE_MAP(CSciEditView, CCtrlView)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_REDO, OnUpdateEditRedo)
 	ON_WM_CONTEXTMENU()
 	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
+	ON_NOTIFY_REFLECT(SCN_CHARADDED, OnCharAdded)
+	ON_NOTIFY_REFLECT(SCN_UPDATEUI, OnUpdateUi)
+	ON_NOTIFY_REFLECT(SCN_SAVEPOINTLEFT, OnSavePointLeft)
 END_MESSAGE_MAP()
 
 int CSciEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -163,14 +187,11 @@ int CSciEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 // virtual
 void CSciEditView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-	/*
 	switch (lHint) {
 	case HINT_DOCUMENT_SAVED:
-		SendMessage(SCI_EMPTYUNDOBUFFER);
-		SendMessage(SCI_SETSAVEPOINT);
+		SetSavePoint();
 		break;
 	}
-	*/
 }
 
 long CSciEditView::GetLineLength(int line) const
@@ -275,8 +296,43 @@ void CSciEditView::OnContextMenu(CWnd* pWnd, CPoint point)
 	CUITools::TrackPopupMenu(IDM_POPUP_MENU, subMenu, this, point);
 }
 
-IMPLEMENT_DYNCREATE(CJsEditView, CSciEditView)
 
+// afx_msg
+void CSciEditView::OnCharAdded(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
+	/*
+	MaintainIndentation(pSCN->ch);
+	ATLASSERT(m_pAutoCompletion);
+	m_pAutoCompletion->InsertMatchedChar(pSCN->ch);
+	*/
+}
+
+// afx_msg
+void CSciEditView::OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
+	if (pSCN->nmhdr.hwndFrom != GetSafeHwnd())
+		return;
+	/*
+	braceMatch();
+	if (IsHtmlLikeLang()) {
+		CXmlTagFinder xmlTagFinder(this);
+		xmlTagFinder.TagMatch();
+	}
+	*/
+}
+
+// afx_msg
+void CSciEditView::OnSavePointLeft(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
+	if (pSCN->nmhdr.hwndFrom != GetSafeHwnd())
+		return;
+	GetDocument()->SetModifiedFlag(TRUE);
+}
+
+IMPLEMENT_DYNCREATE(CJsEditView, CSciEditView)
 
 // virtual 
 void CJsEditView::SetupEditor()

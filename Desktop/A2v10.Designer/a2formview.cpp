@@ -8,6 +8,7 @@
 #include "A2v10.Designer.h"
 #endif
 
+#include "formitem.h"
 #include "a2formdoc.h"
 #include "a2formview.h"
 //#include "formtool.h"
@@ -32,7 +33,13 @@ BEGIN_MESSAGE_MAP(CA2FormView, CScrollView)
 	ON_COMMAND_RANGE(ID_TOOLBOX_FIRST, ID_TOOLBOX_LAST, OnTool)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_TOOLBOX_FIRST, ID_TOOLBOX_LAST, OnUpdateTool)
 	ON_COMMAND(ID_EDIT_CLEAR, OnEditClear)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_CLEAR, OnUpdateEditClear)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_CLEAR, OnUpdateSelected)
+	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateSelected)
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateSelected)
+	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
 	// Standard printing commands
 	//ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
 	//ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
@@ -256,7 +263,6 @@ void CA2FormView::OnDraw(CDC* pDC)
 	if (!pDC->IsPrinting())
 		DrawGrid(pDrawDC);
 
-	/*
 	RENDER_INFO ri;
 	ri.pDC = pDrawDC;
 	GetDocument()->DrawContent(ri);
@@ -271,7 +277,6 @@ void CA2FormView::OnDraw(CDC* pDC)
 		pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), &dc, 0, 0, SRCCOPY);
 		dc.SelectObject(pOldBitmap);
 	}
-	*/
 }
 
 void CA2FormView::ClientToDoc(CRect& rect)
@@ -389,7 +394,7 @@ LRESULT CA2FormView::OnWmiFillToolbox(WPARAM wParam, LPARAM lParam)
 		return 0L;
 	UINT* nID = reinterpret_cast<UINT*>(lParam);
 	*nID = IDR_TOOLBOX;
-	return (LRESULT)TRUE;
+	return (LRESULT) TRUE;
 }
 
 // afx_msg
@@ -508,7 +513,28 @@ void CA2FormView::OnEditClear()
 }
 
 // afx_msg
-void CA2FormView::OnUpdateEditClear(CCmdUI* pCmdUI)
+void CA2FormView::OnUpdateSelected(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(TRUE);
+}
+
+// afx_msg
+void CA2FormView::OnEditCut()
+{
+}
+
+
+// afx_msg
+void CA2FormView::OnEditCopy()
+{
+}
+
+// afx_msg
+void CA2FormView::OnEditPaste()
+{
+}
+
+// afx_msg
+void CA2FormView::OnUpdateEditPaste(CCmdUI* pCmdUI)
+{
 }
