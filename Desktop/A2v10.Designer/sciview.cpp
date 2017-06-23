@@ -58,6 +58,11 @@ CString CSciEditView::GetText()
 	return CString(ansiText);
 }
 
+void CSciEditView::SetReadOnly(bool bSet)
+{
+	SendMessage(SCI_SETREADONLY, bSet, 0);
+}
+
 void CSciEditView::SetText(LPCWSTR szText)
 {
 	// ANSI
@@ -151,10 +156,17 @@ void CSciEditView::SetupEditor()
 
 	// draw line below if not expanded
 	// SendMessage(SCI_SETFOLDFLAGS, SC_FOLDFLAG_LINEAFTER_CONTRACTED);
-
 	// enable automatic folding
 	WORD foldFlags = SC_AUTOMATICFOLD_SHOW | SC_AUTOMATICFOLD_CLICK | SC_AUTOMATICFOLD_CHANGE;
 	SendMessage(SCI_SETAUTOMATICFOLD, foldFlags, 0);
+
+
+	COLORREF currentLineColor = RGB(255, 216, 56);
+	// Current position marker
+	SendMessage(SCI_MARKERDEFINE, MARKER_CURRENT_LINE, SC_MARK_SHORTARROW);
+	SendMessage(SCI_MARKERSETFORE, MARKER_CURRENT_LINE, grayColor);
+	SendMessage(SCI_MARKERSETBACK, MARKER_CURRENT_LINE, currentLineColor);
+
 }
 
 BEGIN_MESSAGE_MAP(CSciEditView, CCtrlView)
@@ -451,4 +463,3 @@ void CXamlEditView::SetupEditor()
 	*/
 	SendMessage(SCI_STYLESETFORE, SCE_H_COMMENT, commentText);
 }
-

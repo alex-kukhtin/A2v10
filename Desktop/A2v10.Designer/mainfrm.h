@@ -37,7 +37,9 @@ protected:  // control bar embedded members
 
 
 protected:
-	virtual BOOL CMainFrame::OnSetMenu(HMENU hmenu);
+	virtual BOOL OnSetMenu(HMENU hmenu);
+
+	CWnd* FindOrCreateCodeWindow(LPCWSTR szFileName);
 
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnWindowManager();
@@ -56,6 +58,7 @@ protected:
 	afx_msg void OnViewOutline();
 	afx_msg void OnEnableAlways(CCmdUI* pCmdUI);
 	afx_msg void OnHelpFinder();
+	afx_msg LRESULT OnWmiDebugBreak(WPARAM wParam, LPARAM lParam);
 
 	DECLARE_MESSAGE_MAP()
 

@@ -127,34 +127,9 @@
         /// <returns>The runtime created.</returns>
         public static JavaScriptRuntime Create()
         {
-            return Create(JavaScriptRuntimeAttributes.None, JavaScriptRuntimeVersion.Version11, null);
+            return Create(JavaScriptRuntimeAttributes.None, JavaScriptRuntimeVersion.VersionEdge, null);
         }
 
-		/*
-		public static ManualResetEvent continueEvent = new ManualResetEvent(false);
-
-		public static void ContinueDebugging()
-		{
-			continueEvent.Set();
-		}
-		*/
-
-		public static void DiagDebugEventCallback(JavaScriptDiagDebugEvent debugEvent, JavaScriptValue eventData, IntPtr callbackState)
-		{
-			String result = eventData.Stringify();
-			if (debugEvent == JavaScriptDiagDebugEvent.JsDiagDebugEventDebuggerStatement)
-			{
-
-				//continueEvent.Reset();
-				//continueEvent.WaitOne(-1);
-				Native.JsDiagSetStepType(JavaScriptDiagStepType.JsDiagStepTypeStepOver);
-			}
-		}
-
-		public void StartDebugging()
-		{
-			//Native.ThrowIfError(Native.JsDiagStartDebugging(this, DiagDebugEventCallback, IntPtr.Zero));
-		}
 		/// <summary>
 		///     Disposes a runtime.
 		/// </summary>

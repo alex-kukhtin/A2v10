@@ -43,6 +43,15 @@ EXPORTS
 ?ParseParam@CA2CommandLineInfo@@UAEXPB_WHH@Z
 ;
 ?Evaluate@JavaScriptRuntime@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W@Z
+?StartDebugging@JavaScriptRuntime@@SAXXZ
+?CreateContext@JavaScriptRuntime@@SAPAXXZ
+?CreateGlobalObject@JavaScriptRuntime@@SAXXZ
+??0JavaScriptContext@@QAE@XZ
+??1JavaScriptContext@@QAE@XZ
+?RunScript@JavaScriptRuntime@@SA_NPB_W0@Z
+?InDebugMode@JavaScriptRuntime@@SA_NXZ
+?SetDebugMode@JavaScriptRuntime@@SAX_N@Z
+;
 ?DoOptions@COptionsPropertySheet@@SAXK@Z
 ;
 ??0CA2TabView@@IAE@XZ

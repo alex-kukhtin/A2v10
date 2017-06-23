@@ -52,13 +52,14 @@
 // edit: 32100
 #define ID_EDIT_FIND_IN_FILES	32100
 // view: 32200
-#define ID_VIEW_PROPERTIES  32200
-#define	ID_VIEW_TOOLBOX		32201
-#define ID_VIEW_COMMAND     32202
-#define ID_VIEW_SOLUTION    32203
-#define ID_VIEW_OUTLINE     32204
+#define ID_VIEW_PROPERTIES		32200
+#define	ID_VIEW_TOOLBOX			32201
+#define ID_VIEW_COMMAND			32202
+#define ID_VIEW_SOLUTION		32203
+#define ID_VIEW_OUTLINE			32204
 // project & debug: 32300
-#define ID_DEBUG_RUN		32300
+#define ID_DEBUG_RUN			32300
+#define ID_DEBUG_RUN_INT        32301
 // tools: 32400
 #define ID_TOOLS_OPTIONS	32400
 // toolbox: 32500

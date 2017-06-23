@@ -46,6 +46,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2MDIFrameWnd)
 	ON_COMMAND(ID_VIEW_OUTLINE, OnViewOutline)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_OUTLINE, OnEnableAlways)
 	ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
+	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -60,8 +61,6 @@ static UINT indicators[] =
 
 CMainFrame::CMainFrame()
 {
-	// TODO: add member initialization code here
-	//theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_AQUA);
 	m_wndToolBar.SetShowOnList(TRUE);
 }
 
@@ -182,9 +181,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Enable toolbar and docking window menu replacement
 	EnablePaneMenu(TRUE, 0, strCustomize, ID_VIEW_TOOLBAR);
 
-	// enable quick (Alt+drag) toolbar customization
-	//CMFCToolBar::EnableQuickCustomization();
-
 	// Switch the order of document name and application name on the window title bar. This
 	// improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle(0, FWS_PREFIXTITLE);
@@ -198,11 +194,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
+	cs.style &= ~(FWS_ADDTOTITLE);
 	if (!__super::PreCreateWindow(cs))
 		return FALSE;
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-
 	return TRUE;
 }
 
@@ -277,7 +271,6 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	CSize szIcon(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
 
 	HICON hIcon;
-
 
 	hIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(ID_WND_OUTLINE), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
 	m_wndFileView.SetIcon(hIcon, FALSE);
@@ -505,4 +498,37 @@ void CMainFrame::OnHelpFinder()
 	if (pCombo->FindItem(txt) == -1)
 		pCombo->AddItem(txt);
 	AfxMessageBox(msg);
+}
+
+// afx_msg
+LRESULT CMainFrame::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam) 
+{
+	if (wParam != WMI_DEBUG_BREAK_WPARAM)
+		return 0L;
+	DEBUG_BREAK_INFO* pBreakInfo = reinterpret_cast<DEBUG_BREAK_INFO*>(lParam);
+	if (!pBreakInfo)
+		return 0;
+	CWnd* pWnd = FindOrCreateCodeWindow(pBreakInfo->szFileName);
+	if (pWnd)
+		pWnd->SendMessage(WMI_DEBUG_BREAK, wParam, lParam);
+	return 0L;
+}
+
+CWnd* CMainFrame::FindOrCreateCodeWindow(LPCWSTR szFileName)
+{
+	POSITION tPos = theApp.m_pDocManager->GetFirstDocTemplatePosition();
+	while (tPos) {
+		CDocTemplate* pTemplate = theApp.m_pDocManager->GetNextDocTemplate(tPos);
+		POSITION dPos = pTemplate->GetFirstDocPosition();
+		while (dPos) {
+			CDocument* pDoc = pTemplate->GetNextDoc(dPos);
+			if (pDoc->GetPathName() == szFileName) {
+				POSITION vPos = pDoc->GetFirstViewPosition();
+				if (vPos) {
+					return pDoc->GetNextView(vPos);
+				}
+			}
+		}
+	}
+	return NULL;
 }

@@ -96,11 +96,8 @@ IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
 IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
 
 ID_WND_SOLUTION         ICON                    "res\\wndsolution.ico"
-
 ID_WND_PROPERTIES       ICON                    "res\\wndproperties.ico"
-
 ID_WND_TOOLBOX          ICON                    "res\\wndtoolbox.ico"
-
 ID_WND_COMMAND          ICON                    "res\\wndcommand.ico"
 
 
@@ -122,11 +119,8 @@ IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
-
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
-
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
-
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
 
 
@@ -203,6 +197,7 @@ BEGIN
     BUTTON      ID_WINDOW_CLOSE_ALL
     BUTTON      ID_VIEW_SOLUTION
     BUTTON      ID_VIEW_OUTLINE
+	BUTTON      ID_EDIT_CLEAR
 END
 
 
@@ -293,6 +288,7 @@ IDR_JSMODULE MENU
 BEGIN
 	POPUP "&Module"
 	BEGIN
+		MENUITEM "&Start/Continue Debugging\tF5", ID_DEBUG_RUN
 		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
 	END
 END
@@ -552,44 +548,11 @@ BEGIN
 	ID_TOOLBOX_GRID         "Grid"
 END
 
-STRINGTABLE
-BEGIN
-    ID_FILE_NEW             "Create a new document\nNew"
-    ID_FILE_OPEN            "Open an existing document\nOpen"
-    ID_FILE_CLOSE           "Close the active document\nClose"
-    ID_FILE_SAVE            "Save the active document\nSave"
-    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
-    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
-    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
-    ID_FILE_PRINT           "Print the active document\nPrint"
-    ID_FILE_PRINT_DIRECT    "Print the active document using current options\nQuick Print"
-    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
-END
 
 STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
-END
-
-STRINGTABLE
-BEGIN
-    ID_FILE_MRU_FILE1       "Open this document"
-    ID_FILE_MRU_FILE2       "Open this document"
-    ID_FILE_MRU_FILE3       "Open this document"
-    ID_FILE_MRU_FILE4       "Open this document"
-    ID_FILE_MRU_FILE5       "Open this document"
-    ID_FILE_MRU_FILE6       "Open this document"
-    ID_FILE_MRU_FILE7       "Open this document"
-    ID_FILE_MRU_FILE8       "Open this document"
-    ID_FILE_MRU_FILE9       "Open this document"
-    ID_FILE_MRU_FILE10      "Open this document"
-    ID_FILE_MRU_FILE11      "Open this document"
-    ID_FILE_MRU_FILE12      "Open this document"
-    ID_FILE_MRU_FILE13      "Open this document"
-    ID_FILE_MRU_FILE14      "Open this document"
-    ID_FILE_MRU_FILE15      "Open this document"
-    ID_FILE_MRU_FILE16      "Open this document"
 END
 
 STRINGTABLE
@@ -608,43 +571,12 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE
-BEGIN
-    ID_EDIT_CLEAR           "Erase the selection\nErase"
-    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
-    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
-    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
-    ID_EDIT_FIND            "Find the specified text\nFind"
-    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
-    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
-    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
-    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
-    ID_EDIT_UNDO            "Undo the last action\nUndo"
-    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
-END
 
 STRINGTABLE
 BEGIN
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
 END
 
-STRINGTABLE
-BEGIN
-    AFX_IDS_SCSIZE          "Change the window size"
-    AFX_IDS_SCMOVE          "Change the window position"
-    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
-    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
-    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
-    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
-    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
-END
-
-STRINGTABLE
-BEGIN
-    AFX_IDS_SCRESTORE       "Restore the window to normal size"
-    AFX_IDS_SCTASKLIST      "Activate Task List"
-    AFX_IDS_MDICHILD        "Activate this window"
-END
 
 STRINGTABLE
 BEGIN
@@ -653,8 +585,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_STATUS_PANE1        "Pane 1"
-    IDS_STATUS_PANE2        "Pane 2"
     IDS_TOOLBAR_STANDARD    "Standard"
     IDS_TOOLBAR_CUSTOMIZE   "Customize..."
 END

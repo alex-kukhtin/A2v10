@@ -35,12 +35,13 @@ protected:
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
 
-	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 
+	afx_msg void OnAppAbout();
+	afx_msg void OnFileSaveAll();
 	afx_msg void OnCloseAllDocuments();
 	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
-	afx_msg void CMainApp::OnToolsOptions();
+	afx_msg void OnToolsOptions();
 };
 
 extern CMainApp theApp;

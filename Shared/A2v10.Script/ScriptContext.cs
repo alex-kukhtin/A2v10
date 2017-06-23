@@ -20,7 +20,6 @@ namespace A2v10.Script
 			if (IsValid)
 				return;
 			_runtime = JavaScriptRuntime.Create();
-			//_runtime.StartDebugging();
 			CreateContext();
 		}
 

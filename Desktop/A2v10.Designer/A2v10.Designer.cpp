@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CMainApp, CWinAppEx)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
+	ON_COMMAND(ID_FILE_SAVE_ALL, OnFileSaveAll)
 	// Windows
 	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
@@ -61,8 +62,6 @@ CMainApp::CMainApp()
 	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("A2v10.Designer.AppID.NoVersion"));
 
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
 }
 
 // The one and only CMainApp object
@@ -160,8 +159,8 @@ BOOL CMainApp::InitInstance()
 	try
 	{
 		CDotNetRuntime::Start();
-		//JavaScriptRuntime::CreateGlobalObject();
-		//JavaScriptRuntime::StartDebugging();
+		JavaScriptRuntime::CreateGlobalObject();
+		JavaScriptRuntime::StartDebugging();
 	}
 	catch (CDotNetException de)
 	{
@@ -178,7 +177,6 @@ BOOL CMainApp::InitInstance()
 
 int CMainApp::ExitInstance()
 {
-	//TODO: handle additional resources you may have added
 	try
 	{
 		CDotNetRuntime::Stop();
@@ -268,6 +266,13 @@ void CMainApp::LoadCustomState()
 
 void CMainApp::SaveCustomState()
 {
+}
+
+// afx_msg
+void CMainApp::OnFileSaveAll() 
+{
+	// TODO:
+	ATLASSERT(FALSE);
 }
 
 // afx_msg

@@ -1,5 +1,8 @@
 #pragma once
 
+
+#define MARKER_CURRENT_LINE 1
+
 class CSciEditView : public CCtrlView
 {
 	DECLARE_DYNCREATE(CSciEditView)
@@ -17,6 +20,7 @@ public:
 	void SetText(LPCWSTR szText);
 	void SetTextA(LPCSTR szText);
 	void SetSavePoint();
+	void SetReadOnly(bool bSet);
 
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

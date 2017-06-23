@@ -17,6 +17,7 @@ class CCommandWnd : public CA2DockablePane
 	bool m_bSkipEnProtect;
 	CArray<CString, LPCWSTR> m_cmdBuffer;
 	int m_cmdBufferIndex;
+
 public:
 	CCommandWnd();
 	virtual ~CCommandWnd();

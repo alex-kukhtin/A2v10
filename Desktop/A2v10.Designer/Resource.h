@@ -4,8 +4,6 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDR_POPUP_EDIT                  119
-#define IDS_STATUS_PANE1                122
-#define IDS_STATUS_PANE2                123
 #define IDS_TOOLBAR_STANDARD            124
 #define IDS_TOOLBAR_CUSTOMIZE           125
 #define ID_VIEW_CUSTOMIZE               126
@@ -89,6 +87,7 @@
 #define ID_VIEW_SOLUTION                32203
 #define ID_VIEW_OUTLINE                 32204
 #define ID_DEBUG_RUN                    32300
+#define ID_DEBUG_RUN_INT                32301
 #define ID_TOOLS_OPTIONS                32400
 #define ID_TOOLBOX_FIRST				32500
 #define ID_TOOLBOX_POINTER				32500

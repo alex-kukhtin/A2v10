@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by A2v10.Locale.Ru.rc
 //
+#define IDM_POPUP_MENU                  600
 #define IDD_OPTION_GENERAL              800
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
