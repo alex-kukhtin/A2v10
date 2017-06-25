@@ -8,25 +8,28 @@ protected: // create from serialization only
 	CA2FormDocument();
 	DECLARE_DYNCREATE(CA2FormDocument)
 
+	CFormItem* m_pRoot;
 public:
 	virtual ~CA2FormDocument();
 
-	void Clear();
-	void DrawContent(RENDER_INFO& ri);
+	void DrawContent(const RENDER_INFO& ri);
 
-	virtual BOOL OnNewDocument();
-	virtual void OnCloseDocument();
-	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
-	virtual BOOL CanCloseFrame(CFrameWnd* pFrame);
-	virtual void Serialize(CArchive& ar);
-	virtual void SetModifiedFlag(BOOL bModified = TRUE);
+	virtual BOOL OnNewDocument() override;
+	virtual void OnCloseDocument() override;
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName) override;
+	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName) override;
+	virtual BOOL CanCloseFrame(CFrameWnd* pFrame) override;
+	virtual void Serialize(CArchive& ar) override;
+	virtual void SetModifiedFlag(BOOL bModified = TRUE) override;
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
 #endif // SHARED_HANDLERS
 
 protected:
+	void DrawSelection(const RENDER_INFO& ri);
+	void CreateRootElement();
+	void Clear();
 
 	DECLARE_MESSAGE_MAP()
 

@@ -99,6 +99,9 @@
     <ClInclude Include="formitem.h">
       <Filter>Header Files\FormDesigner</Filter>
     </ClInclude>
+    <ClInclude Include="elemform.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -153,6 +156,9 @@
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
     <ClCompile Include="formitem.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="elemform.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
   </ItemGroup>

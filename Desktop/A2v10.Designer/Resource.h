@@ -58,6 +58,7 @@
 #define ID_WND_SOLUTION                 503
 #define ID_WND_OUTLINE                  504
 #define IDM_POPUP_MENU                  600
+#define IDM_POPUP_FORM					601
 #define IDD_OPTION_GENERAL              800
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001

@@ -6,7 +6,8 @@
 #include "../include/appdefs.h"
 #include "../include/appdata.h"
 #include "../include/guiext.h"
-#include "../Include/theme.h"
+#include "../include/theme.h"
+#include "../include/xmltools.h"
 
 #include "../include/a2appl.h"
 

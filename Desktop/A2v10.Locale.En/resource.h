@@ -3,6 +3,7 @@
 // Used by A2v10.Locale.En.rc
 //
 #define IDM_POPUP_MENU                  600
+#define IDM_POPUP_FORM					601
 #define IDD_OPTION_GENERAL              800
 #define IDS_STRING5000                  5000
 #define IDS_OPTIONS_CAPTION             12000

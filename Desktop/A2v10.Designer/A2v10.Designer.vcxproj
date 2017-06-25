@@ -194,6 +194,7 @@
     <ClInclude Include="a2formdoc.h" />
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
+    <ClInclude Include="elemform.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="formitem.h" />
     <ClInclude Include="moduledoc.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="a2formdoc.cpp" />
     <ClCompile Include="childfrm.cpp" />
     <ClCompile Include="commandwnd.cpp" />
+    <ClCompile Include="elemform.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="formitem.cpp" />
     <ClCompile Include="mainfrm.cpp" />

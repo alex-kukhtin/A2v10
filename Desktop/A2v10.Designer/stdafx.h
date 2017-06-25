@@ -22,6 +22,7 @@
 #include <afxext.h>         // MFC extensions
 
 
+#import "msxml6.dll"
 
 
 

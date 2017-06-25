@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CA2FormView, CScrollView)
 	ON_MESSAGE(WMI_FILL_PROPS, OnWmiFillProps)
 	ON_WM_CREATE()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_CONTEXTMENU()
 	ON_COMMAND_RANGE(ID_TOOLBOX_FIRST, ID_TOOLBOX_LAST, OnTool)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_TOOLBOX_FIRST, ID_TOOLBOX_LAST, OnUpdateTool)
 	ON_COMMAND(ID_EDIT_CLEAR, OnEditClear)
@@ -208,11 +209,11 @@ void CA2FormView::OnPrepareDCEx(CDC* pDC, CPrintInfo* pInfo /*=NULL*/)
 	// Window = logical
 	pDC->SetWindowExt(7200, 7200);
 	pDC->OffsetViewportOrg(OFFSET_VIEWPORT_ROOT, OFFSET_VIEWPORT_ROOT); // offset viewport
-																		/*
-																		if ((m_zoomFactor != (UINT)IZF_100) && (pInfo == NULL)) {
-																		pDC->ScaleViewportExt(GetZoomNom(m_zoomFactor), GetZoomDenom(m_zoomFactor), GetZoomNom(m_zoomFactor), GetZoomDenom(m_zoomFactor));
-																		}
-																		*/
+	/*
+	if ((m_zoomFactor != (UINT)IZF_100) && (pInfo == NULL)) {
+	pDC->ScaleViewportExt(GetZoomNom(m_zoomFactor), GetZoomDenom(m_zoomFactor), GetZoomNom(m_zoomFactor), GetZoomDenom(m_zoomFactor));
+	}
+	*/
 }
 
 int CA2FormView::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -497,6 +498,28 @@ bool CA2FormView::TrackOutline(CPoint point)
 	}
 	*/
 	return false;
+}
+
+int CA2FormView::GetContextMenuPopupIndex() 
+{ 
+	return 0; 
+}
+
+// afx_msg
+void CA2FormView::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+	if (pWnd->GetSafeHwnd() != GetSafeHwnd())
+	{
+		__super::OnContextMenu(pWnd, point);
+		return;
+	}
+	SetFocus();
+	int subMenu = GetContextMenuPopupIndex();
+	if (subMenu == -1) {
+		ATLASSERT(FALSE);
+		return;
+	}
+	CUITools::TrackPopupMenu(IDM_POPUP_FORM, subMenu, this, point);
 }
 
 // afx_msg

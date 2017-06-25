@@ -22,17 +22,18 @@ public:
 
 	// Overrides
 public:
-	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
+	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL) override;
 
 protected:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual void OnDraw(CDC* pDC) override;  // overridden to draw this view
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+	int GetContextMenuPopupIndex();
 
-	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo) override;
+	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
 
 	void SetDocumentSize();
 
@@ -40,12 +41,12 @@ protected:
 public:
 	virtual ~CA2FormView();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
 protected:
-	virtual void OnInitialUpdate(); // called first time after construct
+	virtual void OnInitialUpdate() override; // called first time after construct
 	virtual void OnPrepareDCEx(CDC* pDC, CPrintInfo* pInfo = NULL);
 
 protected:
@@ -53,6 +54,7 @@ protected:
 	void DrawGrid(CDC* pDC);
 
 
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnFilePrintPreview();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnWmiFillToolbox(WPARAM wParam, LPARAM lParam);
