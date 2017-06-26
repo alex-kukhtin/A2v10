@@ -60,7 +60,7 @@ void JavaScriptRuntime::CreateGlobalObject()
 }
 
 // static 
-CString JavaScriptRuntime::Evaluate(LPCWSTR szScript)
+CString JavaScriptRuntime::Evaluate(const wchar_t* szScript)
 {
 	JavaScriptValue result;
 	JavaScriptNative::ThrowIfError(JsRunScript(szScript, JS_SOURCE_CONTEXT_NONE, L"", result));
@@ -100,6 +100,12 @@ JsContextRef JavaScriptRuntime::CreateContext()
 	return newContext;
 }
 
+// static 
+JavaScriptValue JavaScriptRuntime::CreateDesignerElement(const wchar_t* szJson)
+{
+	auto createElem = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.form.__createElement");
+	return createElem.CallFunctionArg(JavaScriptValue::FromString(szJson));
+}
 
 static int processEvents()
 {

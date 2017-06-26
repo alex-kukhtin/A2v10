@@ -61,6 +61,7 @@
     <Compile Include="Hosting\JavaScriptPropertyId.cs" />
     <Compile Include="Hosting\JavaScriptPropertyIdType.cs" />
     <Compile Include="Hosting\JavaScriptRuntime.cs" />
+    <Compile Include="Hosting\JavaScriptParseScriptAttributes.cs" />
     <Compile Include="Hosting\JavaScriptRuntimeAttributes.cs" />
     <Compile Include="Hosting\JavaScriptRuntimeVersion.cs" />
     <Compile Include="Hosting\JavaScriptScriptException.cs" />

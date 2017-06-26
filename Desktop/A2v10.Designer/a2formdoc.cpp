@@ -57,7 +57,6 @@ void CA2FormDocument::CreateRootElement()
 {
 	ATLASSERT(m_pRoot == nullptr);
 	m_pRoot = new CFormElement();
-	//JavaScriptValue val = JavaScriptRuntime::CreateElement(L"form.form");
 }
 
 // virtual 

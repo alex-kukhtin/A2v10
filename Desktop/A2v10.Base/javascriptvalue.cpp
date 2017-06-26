@@ -331,6 +331,16 @@ JavaScriptValue JavaScriptValue::ConstructObject(JavaScriptValue argValue)
 	return value;
 }
 
+JavaScriptValue JavaScriptValue::CallFunctionArg(JavaScriptValue arg)
+{
+	JavaScriptValue value;
+	JsValueRef args[2];
+	JavaScriptNative::ThrowIfError(JsGetUndefinedValue(&args[0]));
+	args[1] = arg.m_handle;
+	JavaScriptNative::ThrowIfError(JsCallFunction(m_handle, args, 2, value));
+	return value;
+}
+
 JavaScriptValue JavaScriptValue::CallFunction(JavaScriptValue argThis, JavaScriptValue arg1)
 {
 	JavaScriptValue value;

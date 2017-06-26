@@ -4,7 +4,7 @@
 #define AFX_DATA AFX_BASE_DATA
 
 
-class JavaScriptContext
+class JavaScriptContext sealed
 {
 	JsContextRef m_prevContext;
 public:
@@ -12,13 +12,15 @@ public:
 	~JavaScriptContext();
 };
 
-class JavaScriptRuntime
+class JavaScriptRuntime sealed
 {
 public:
 	static JsRuntimeHandle CurrentRuntime();
 	static JsContextRef CreateContext();
-	static CString Evaluate(LPCWSTR szScript);
+	static CString Evaluate(const wchar_t* szScript);
 	static bool RunScript(LPCWSTR szScript, LPCWSTR szFileName);
+
+	static JavaScriptValue CreateDesignerElement(const wchar_t* szJson);
 
 	static void SetException(JavaScriptValue exception);
 	static void SetUnknownException();

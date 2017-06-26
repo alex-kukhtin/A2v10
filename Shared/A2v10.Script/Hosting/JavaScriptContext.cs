@@ -156,20 +156,28 @@
             return result;
         }
 
-        /// <summary>
-        ///     Parses a serialized script and returns a <c>Function</c> representing the script.
-        /// </summary>
-        /// <remarks>
-        ///     Requires an active script context.
-        /// </remarks>
-        /// <param name="script">The script to parse.</param>
-        /// <param name="buffer">The serialized script.</param>
-        /// <param name="sourceContext">
-        ///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
-        /// </param>
-        /// <param name="sourceName">The location the script came from.</param>
-        /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static JavaScriptValue ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
+		public static JavaScriptValue ParseScriptLibrary(string script)
+		{
+			JavaScriptValue result;
+			Native.ThrowIfError(Native.JsParseScriptWithAttributes(script, JavaScriptSourceContext.None, String.Empty, JsParseScriptAttributes.JsParseScriptAttributeLibraryCode, out result));
+			return result;
+		}
+
+
+		/// <summary>
+		///     Parses a serialized script and returns a <c>Function</c> representing the script.
+		/// </summary>
+		/// <remarks>
+		///     Requires an active script context.
+		/// </remarks>
+		/// <param name="script">The script to parse.</param>
+		/// <param name="buffer">The serialized script.</param>
+		/// <param name="sourceContext">
+		///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
+		/// </param>
+		/// <param name="sourceName">The location the script came from.</param>
+		/// <returns>A <c>Function</c> representing the script code.</returns>
+		public static JavaScriptValue ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
             JavaScriptValue result;
             Native.ThrowIfError(Native.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));

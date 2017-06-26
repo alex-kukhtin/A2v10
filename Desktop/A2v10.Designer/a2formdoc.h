@@ -1,6 +1,7 @@
 #pragma once
 
 struct RENDER_INFO;
+class CFormItem;
 
 class CA2FormDocument : public CDocument
 {

@@ -33,6 +33,7 @@ public:
 	JavaScriptValue& SetProperty(const wchar_t* propName, double value, bool useStrictRules = true);
 	JavaScriptValue& SetIndexedProperty(int iIndex, JavaScriptValue value);
 	JavaScriptValue CallFunction();
+	JavaScriptValue CallFunctionArg(JavaScriptValue arg);
 	JavaScriptValue CallFunction(JavaScriptValue argThis, JavaScriptValue arg1);
 	JavaScriptValue CallFunction(JavaScriptValue argThis, JavaScriptValue arg1, JavaScriptValue arg2);
 	JavaScriptValue GetPrototype();

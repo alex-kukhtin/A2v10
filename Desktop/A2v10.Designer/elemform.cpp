@@ -10,6 +10,12 @@
 CFormElement::CFormElement()
 {
 	m_position.SetRect(0, 0, 400 * 75, 300 * 75);
+	try {
+		m_jsValue = JavaScriptRuntime::CreateDesignerElement(L"{'type':'form'}");
+	}
+	catch (JavaScriptException& ex) {
+		ex.ReportError();
+	}
 }
 
 // virtual 

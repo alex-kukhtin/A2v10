@@ -51,6 +51,8 @@ EXPORTS
 ?RunScript@JavaScriptRuntime@@SA_NPB_W0@Z
 ?InDebugMode@JavaScriptRuntime@@SA_NXZ
 ?SetDebugMode@JavaScriptRuntime@@SAX_N@Z
+?CreateDesignerElement@JavaScriptRuntime@@SA?AUJavaScriptValue@@PB_W@Z
+??0JavaScriptValue@@QAE@ABQAX@Z
 ;
 ?DoOptions@COptionsPropertySheet@@SAXK@Z
 ;

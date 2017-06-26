@@ -30,6 +30,7 @@ class CFormItem
 {
 protected:
 	CRect m_position;
+	JavaScriptValue m_jsValue;
 public:
 	CFormItem();
 	virtual ~CFormItem();

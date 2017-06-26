@@ -1,7 +1,9 @@
 ﻿using A2v10.Infrastructure;
+using A2v10.Runtime.Properties;
 using A2v10.Script;
 using ChakraHost.Hosting;
 using System;
+using System.Globalization;
 
 namespace A2v10RuntimeNet
 {
@@ -16,7 +18,9 @@ namespace A2v10RuntimeNet
 		{
 			try
 			{
+				Resources.Culture = CultureInfo.InvariantCulture;
 				ScriptContext.Start();
+				LoadRuntimeLibrary();
 			}
 			catch (Exception ex)
 			{
@@ -50,6 +54,24 @@ namespace A2v10RuntimeNet
 			else
 			{
 				LastErrorMessage = ex.Message;
+			}
+		}
+
+		static void LoadRuntimeLibrary()
+		{
+			String[] app =
+			{
+				Resources.Application
+			};
+			ParseLibraryElements(app);
+		}
+
+		static void ParseLibraryElements(String[] elems)
+		{
+			foreach (var elem in elems)
+			{
+				var lib = JavaScriptContext.ParseScriptLibrary(elem);
+				lib.CallFunction(JavaScriptValue.Undefined);
 			}
 		}
 	}

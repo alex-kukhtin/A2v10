@@ -8,6 +8,8 @@
 #endif
 
 CFormItem::CFormItem()
+: m_position(0, 0, 0, 0),
+  m_jsValue(JS_INVALID_REFERENCE)
 {
 
 }

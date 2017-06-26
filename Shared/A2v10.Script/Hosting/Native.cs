@@ -173,7 +173,11 @@
         [DllImport(DllName, CharSet = CharSet.Unicode)]
         internal static extern JavaScriptErrorCode JsParseScript(string script, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
-        [DllImport(DllName, CharSet = CharSet.Unicode)]
+		// FROM ChakraCommonWindows.h
+		[DllImport(DllName, CharSet = CharSet.Unicode)]
+		internal static extern JavaScriptErrorCode JsParseScriptWithAttributes(string script, JavaScriptSourceContext sourceContext, string sourceUrl, JsParseScriptAttributes parseAttributes, out JavaScriptValue result);
+
+		[DllImport(DllName, CharSet = CharSet.Unicode)]
         internal static extern JavaScriptErrorCode JsRunScript(string script, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
 
         [DllImport(DllName, CharSet = CharSet.Unicode)]
