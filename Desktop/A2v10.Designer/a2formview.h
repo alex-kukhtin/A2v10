@@ -2,6 +2,7 @@
 #pragma once
 
 class CA2FormDocument;
+class CFormItem;
 
 class CA2FormView : public CScrollView
 {
@@ -20,7 +21,9 @@ public:
 	void DocToClient(CRect& rect);
 	void DocToClient(CSize& size);
 
-	// Overrides
+
+	void SelectItem(CFormItem* pItem, bool bAdd = false);
+
 public:
 	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL) override;
 

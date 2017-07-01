@@ -30,6 +30,8 @@ namespace A2v10RuntimeNet
 
 		public static void Stop()
 		{
+			if (_scriptContext == null)
+				return;
 			(_scriptContext as IDisposable).Dispose();
 		}
 

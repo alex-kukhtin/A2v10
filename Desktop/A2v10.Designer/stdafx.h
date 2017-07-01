@@ -17,6 +17,8 @@
 #define _AFX_ALL_WARNINGS
 
 #include "string"
+#include "list"
+#include "algorithm"
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions

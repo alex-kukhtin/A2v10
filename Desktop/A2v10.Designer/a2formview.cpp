@@ -11,7 +11,7 @@
 #include "formitem.h"
 #include "a2formdoc.h"
 #include "a2formview.h"
-//#include "formtool.h"
+#include "formtool.h"
 #include "recttracker.h"
 
 #ifdef _DEBUG
@@ -113,15 +113,15 @@ BOOL CA2FormView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	CA2FormDocument* pDoc = GetDocument();
 	ATLASSERT(pDoc);
 
-	bool bLocked = false; // pDoc->IsLocked();
+	bool bLocked = pDoc->IsLocked();
 	if (bLocked)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
 
-	/*
-	if (CFormTool::s_currentShape != CFormItem::_pointer)
+	if (CFormTool::s_currentShape != CFormTool::_pointer)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
+	/*
 	int cnt = pDoc->GetSelectionCount();
 	if (cnt == 0)
 		return __super::OnSetCursor(pWnd, nHitTest, message);
@@ -224,7 +224,7 @@ int CA2FormView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-// CA2v10DesignerView drawing
+// Drawing
 
 void CA2FormView::OnDraw(CDC* pDC)
 {
@@ -317,8 +317,7 @@ void CA2FormView::DrawGrid(CDC* pDC)
 }
 
 
-// CA2v10DesignerView printing
-
+// Printing
 
 void CA2FormView::OnFilePrintPreview()
 {
@@ -424,13 +423,13 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 // afx_msg
 void CA2FormView::OnTool(UINT nID)
 {
-	//CFormTool::SetShape(nID);
+	CFormTool::SetShape(nID);
 }
 
 // afx_msg
 void CA2FormView::OnUpdateTool(CCmdUI* pCmdUI)
 {
-	//pCmdUI->SetCheck(CFormTool::IsShape(pCmdUI->m_nID) ? 1 : 0);
+	pCmdUI->SetCheck(CFormTool::IsShape(pCmdUI->m_nID) ? 1 : 0);
 }
 
 // afx_msg
@@ -439,12 +438,10 @@ void CA2FormView::OnLButtonDown(UINT nFlags, CPoint point)
 	__super::OnLButtonDown(nFlags, point);
 	if (TrackOutline(point))
 		return;
-	/*
 	CFormTool* pTool = CFormTool::FindTool();
 	if (pTool == NULL)
 		return;
 	pTool->OnLButtonDown(this, nFlags, point);
-	*/
 }
 
 
@@ -545,7 +542,6 @@ void CA2FormView::OnUpdateSelected(CCmdUI* pCmdUI)
 void CA2FormView::OnEditCut()
 {
 }
-
 
 // afx_msg
 void CA2FormView::OnEditCopy()

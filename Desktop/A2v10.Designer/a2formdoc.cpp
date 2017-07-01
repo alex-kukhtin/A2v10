@@ -59,6 +59,11 @@ void CA2FormDocument::CreateRootElement()
 	m_pRoot = new CFormElement();
 }
 
+bool CA2FormDocument::IsLocked() const
+{
+	return false;
+}
+
 // virtual 
 void CA2FormDocument::OnCloseDocument()
 {

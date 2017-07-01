@@ -26,16 +26,24 @@ private:
 };
 
 
+class CA2FormView;
+
 class CFormItem 
 {
 protected:
 	CRect m_position;
 	JavaScriptValue m_jsValue;
+
+	std::list<CFormItem*> m_children;
+
 public:
 	CFormItem();
 	virtual ~CFormItem();
 
 	virtual void Draw(const RENDER_INFO& ri) abstract;
 	virtual DWORD GetTrackMask() const { return RTRE_ALL; }
-	virtual const CRect& GetPosition() {return m_position; }
+	virtual const CRect& GetPosition() const {return m_position; }
+	virtual CFormItem* ObjectAt(CPoint point);
+	virtual CSize GetMinTrackSize() const;
+	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
 };

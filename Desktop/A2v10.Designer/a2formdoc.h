@@ -15,6 +15,8 @@ public:
 
 	void DrawContent(const RENDER_INFO& ri);
 
+	bool IsLocked() const;
+
 	virtual BOOL OnNewDocument() override;
 	virtual void OnCloseDocument() override;
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName) override;

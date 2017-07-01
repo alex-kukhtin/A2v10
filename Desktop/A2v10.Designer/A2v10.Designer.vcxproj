@@ -197,6 +197,7 @@
     <ClInclude Include="elemform.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="formitem.h" />
+    <ClInclude Include="formtool.h" />
     <ClInclude Include="moduledoc.h" />
     <ClInclude Include="moduleview.h" />
     <ClInclude Include="recttracker.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="elemform.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="formitem.cpp" />
+    <ClCompile Include="formtool.cpp" />
     <ClCompile Include="mainfrm.cpp" />
     <ClCompile Include="moduleview.cpp" />
     <ClCompile Include="outputwnd.cpp" />
