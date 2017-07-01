@@ -501,8 +501,9 @@ END
 STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "A2v10.Designer"
+	/*title/newdocname/description/filter part/extension/doctype (reg)/full docname (reg)*/
     IDR_A2v10DesignerTYPE   "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"
-	IDR_JSMODULE			"\nModule\nModule\nModules (*.js)\n.js\A2v10.Form\nA2v10.Form"
+	IDR_JSMODULE			"\nmodule\nJavaScript file\nJavaScript Files (*.js)\n.js\n\n"
 END
 
 STRINGTABLE

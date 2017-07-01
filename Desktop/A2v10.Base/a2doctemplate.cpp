@@ -60,8 +60,8 @@ void CA2DocTemplate::LoadAndMegeMenu()
 	HMENU hDocumentMenu = ::LoadMenu(hInstDoc, MAKEINTRESOURCE(m_nIDResource));
 	if (hDocumentMenu == NULL)
 		return;
-	// вставляем элементы меню в позицию - 2 (Window, Help);
-	int itmPos = max(0, ::GetMenuItemCount(m_hMenuShared) - 2);
+	// insert into (count - 3) (Tools, Window, Help);
+	int itmPos = max(0, ::GetMenuItemCount(m_hMenuShared) - 3);
 
 	CMenu* pDocumentMenu = CMenu::FromHandle(hDocumentMenu);
 

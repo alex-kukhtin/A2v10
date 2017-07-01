@@ -1097,3 +1097,24 @@ void CA2VisualManager::OnDrawHeaderCtrlSortArrow(CMFCHeaderCtrl* pCtrl, CDC* pDC
 	CImageList* pImageList = CTheme::GetImageList(CTheme::ImageList10x10);
 	pImageList->Draw(pDC, bIsUp ? 2 : 1, pt, ILD_TRANSPARENT);
 }
+
+COLORREF CA2VisualManager::OnDrawPropertySheetListItem(CDC* pDC, CMFCPropertySheet* /*pParent*/, CRect rect, BOOL bIsHighlihted, BOOL bIsSelected)
+{
+	ASSERT_VALID(pDC);
+
+	CBrush* pBrush = NULL;
+
+	if (bIsSelected)
+	{
+		pBrush = &m_brHighlightDn;
+	}
+	else if (bIsHighlihted)
+	{
+		pBrush = &m_brHighlight;
+	}
+
+	OnFillHighlightedArea(pDC, rect, pBrush, NULL);
+	pDC->Draw3dRect(rect, m_clrMenuItemBorder, m_clrMenuItemBorder);
+
+	return GetGlobalData()->clrBtnText;
+}

@@ -19,11 +19,11 @@ JavaScriptPropertyId Invalid()
 	return JavaScriptPropertyId();
 }
 
-CString JavaScriptPropertyId::Name()
+const wchar_t* JavaScriptPropertyId::Name()
 {
 	const wchar_t* name;
 	JavaScriptNative::ThrowIfError(JsGetPropertyNameFromId(m_id, &name));
-	return CString(name);
+	return name;
 }
 
 // static 

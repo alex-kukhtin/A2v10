@@ -189,8 +189,6 @@ BEGIN_MESSAGE_MAP(CPropertiesWnd, CA2DockablePane)
 	/* */
 	ON_COMMAND(ID_EXPAND_ALL, OnExpandAllProperties)
 	ON_UPDATE_COMMAND_UI(ID_EXPAND_ALL, OnUpdateExpandAllProperties)
-	ON_COMMAND(ID_PROPERTIES1, OnProperties1)
-	ON_UPDATE_COMMAND_UI(ID_PROPERTIES1, OnUpdateProperties1)
 	ON_MESSAGE(WMI_SETTINGCHANGE, OnWmiSettingChange)
 END_MESSAGE_MAP()
 
@@ -303,15 +301,6 @@ void CPropertiesWnd::OnUpdateCategorized(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(!m_wndPropList.IsAlphabeticMode());
 }
 
-void CPropertiesWnd::OnProperties1()
-{
-	// TODO: Add your command handler code here
-}
-
-void CPropertiesWnd::OnUpdateProperties1(CCmdUI* /*pCmdUI*/)
-{
-	// TODO: Add your command update UI handler code here
-}
 
 void CPropertiesWnd::InitPropList()
 {

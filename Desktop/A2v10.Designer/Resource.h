@@ -39,7 +39,6 @@
 #define IDB_FILE_VIEW_24                176
 #define IDR_OUTPUT_POPUP                182
 #define ID_EXPAND_ALL                   201
-#define ID_PROPERTIES1                  203
 #define ID_PROPERTIES2                  204
 #define IDS_OUTPUT_WND                  206
 #define IDR_MENU_IMAGES                 230

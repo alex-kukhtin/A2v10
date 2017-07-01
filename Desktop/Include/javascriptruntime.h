@@ -33,6 +33,8 @@ public:
 	static void SetDebugMode(bool bSet);
 	static void EnterDebugMode();
 	static void ExitDebugMode();
+
+	static CString GetFileNameFromScriptId(int scriptId);
 };
 
 #undef AFX_DATA

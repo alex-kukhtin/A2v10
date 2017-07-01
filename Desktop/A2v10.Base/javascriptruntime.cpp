@@ -16,9 +16,8 @@
 JsRuntimeHandle s_runtime = JS_INVALID_RUNTIME_HANDLE;
 volatile bool s_bInDebugMode = false;
 volatile bool s_bClosingProgress = false;
-CMap<int, int, CString, LPCWSTR> s_fileMap;
 
-JsSourceContext s_currentContext = 0;
+JsSourceContext s_currentContext = JS_SOURCE_CONTEXT_NONE;
 
 // static 
 JsRuntimeHandle JavaScriptRuntime::CurrentRuntime()
@@ -72,9 +71,7 @@ bool JavaScriptRuntime::RunScript(LPCWSTR szCode, LPCWSTR szPathName)
 	JavaScriptValue result = JS_INVALID_REFERENCE;
 	s_currentContext += 1;
 	int context = s_currentContext;
-	s_fileMap.SetAt(context, szPathName);
 	JavaScriptNative::ThrowIfError(JsRunScript(szCode, context, szPathName, result));
-	s_fileMap.RemoveKey(context);
 	return s_bClosingProgress;
 }
 
@@ -162,17 +159,37 @@ static void _sendDebugInfo(JsValueRef eventData)
 	if (s_bClosingProgress)
 		return;
 	JavaScriptValue eventInfo(eventData);
+
 	int lineNo = eventInfo.GetProperty(L"line").ToInt();
 	int scriptId = eventInfo.GetProperty(L"scriptId").ToInt();
-	CString fileName;
-	if (!s_fileMap.Lookup(scriptId, fileName)) {
-		//TODO: exception ???
-	}
+
+	CString fileName = JavaScriptRuntime::GetFileNameFromScriptId(scriptId);
+
 	DEBUG_BREAK_INFO breakInfo;
-	breakInfo.szFileName = (LPCWSTR)fileName;
+	breakInfo.szFileName = (LPCWSTR) fileName;
 	breakInfo.scriptId = scriptId;
 	breakInfo.lineNo = lineNo;
 	AfxGetMainWnd()->SendMessage(WMI_DEBUG_BREAK, WMI_DEBUG_BREAK_WPARAM, (LPARAM)&breakInfo);
+}
+
+CString JavaScriptRuntime::GetFileNameFromScriptId(int scriptId)
+{
+	JavaScriptValue arr;
+	JavaScriptNative::ThrowIfError(JsDiagGetScripts(arr));
+	int len = arr.GetProperty(L"length").ToInt();
+	auto fileNamePropId = JavaScriptPropertyId::FromString(L"fileName");
+	auto scriptIdPropId = JavaScriptPropertyId::FromString(L"scriptId");
+	for (int i = 0; i < len; i++) {
+		JavaScriptValue item = arr.GetProperty(i);
+		int itemId = item.GetProperty(scriptIdPropId).ToInt();
+		if (itemId == scriptId) {
+			JavaScriptValue fileNameVal = item.GetProperty(fileNamePropId);
+			if (fileNameVal.ValueType() == JsString) {
+				return fileNameVal.ToString();
+			}
+		}
+	}
+	return L"";
 }
 
 void CHAKRA_CALLBACK DiagDebugEventCallback(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState)
@@ -183,10 +200,8 @@ void CHAKRA_CALLBACK DiagDebugEventCallback(_In_ JsDiagDebugEvent debugEvent, _I
 		JavaScriptRuntime::SetDebugMode(true);
 		JavaScriptRuntime::EnterDebugMode();
 		_sendDebugInfo(eventData);
-		/*
 		auto str = JavaScriptValue::GlobalObject().GetPropertyChain(L"JSON.stringify");
 		auto data = str.CallFunction(JavaScriptValue::Undefined(), eventData).ToString();
-		*/
 		processEvents();
 	}
 }

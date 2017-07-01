@@ -59,8 +59,6 @@ CA2FormView::~CA2FormView()
 
 BOOL CA2FormView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
 	return __super::PreCreateWindow(cs);
 }
 
@@ -113,8 +111,7 @@ BOOL CA2FormView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	CA2FormDocument* pDoc = GetDocument();
 	ATLASSERT(pDoc);
 
-	bool bLocked = pDoc->IsLocked();
-	if (bLocked)
+	if (pDoc->IsLocked())
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
 

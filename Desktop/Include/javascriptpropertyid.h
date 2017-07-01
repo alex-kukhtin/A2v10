@@ -10,7 +10,7 @@ public:
 	operator JsPropertyIdRef*() { return &m_id; }
 	operator JsPropertyIdRef() { return m_id; }
 
-	CString Name();
+	const wchar_t* Name();
 
 	static JavaScriptPropertyId FromString(const wchar_t* szName);
 

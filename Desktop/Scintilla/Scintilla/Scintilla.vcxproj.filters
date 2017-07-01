@@ -191,6 +191,9 @@
     <ClCompile Include="..\..\..\..\scintilla\src\ExternalLexer.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\scintilla\lexlib\DefaultLexer.cxx">
+      <Filter>Source Files\LexLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">

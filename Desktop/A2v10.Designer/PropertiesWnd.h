@@ -13,7 +13,7 @@ public:
 		: CMFCPropertyGridProperty(strName, varValue, lpszDescr, dwData, lpszEditMask, lpszEditTemplate, lpszValidChars),
 		m_bAttached(false) {}
 
-	virtual CString FormatProperty();
+	virtual CString FormatProperty() override;
 	BOOL AddSubItemSorted(CMFCPropertyGridProperty* pProp);
 
 	bool m_bAttached;
@@ -24,13 +24,13 @@ class CA2PropertyGridCtrl : public CMFCPropertyGridCtrl
 public:
 	//JavaScriptValue m_jsValue;
 	//JavaScriptValue m_jsValueParent;
-	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const;
+	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const override;
 
 	void FillProperties(JavaScriptValue val, JavaScriptValue parent);
 	void FillPropertyValues();
 
 protected:
-	virtual void OnDrawDescription(CDC* pDC, CRect rect);
+	virtual void OnDrawDescription(CDC* pDC, CRect rect) override;
 	//CMFCPropertyGridProperty* GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached);
 	void FillPropertiesInt();
 };
@@ -40,6 +40,7 @@ class CPropertiesWnd : public CA2DockablePane
 	// Construction
 public:
 	CPropertiesWnd();
+	virtual ~CPropertiesWnd() override;
 
 	void AdjustLayout();
 
@@ -56,20 +57,13 @@ protected:
 	CA2MFCToolBar m_wndToolBar;
 	CA2PropertyGridCtrl m_wndPropList;
 
-	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler) override;
 
-	// Implementation
-public:
-	virtual ~CPropertiesWnd();
-
-protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnExpandAllProperties();
 	afx_msg void OnUpdateExpandAllProperties(CCmdUI* pCmdUI);
-	afx_msg void OnProperties1();
-	afx_msg void OnUpdateProperties1(CCmdUI* pCmdUI);
 	afx_msg LRESULT OnWmiSettingChange(WPARAM wParam, LPARAM lParam);
 
 	afx_msg void OnAlphabetical();
