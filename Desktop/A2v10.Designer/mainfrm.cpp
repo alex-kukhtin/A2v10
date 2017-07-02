@@ -33,6 +33,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2MDIFrameWnd)
 	ON_COMMAND(ID_VIEW_OUTPUTWND, &CMainFrame::OnViewOutputWindow)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_OUTPUTWND, &CMainFrame::OnUpdateViewOutputWindow)
 	*/
+	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
+	ON_MESSAGE(WMI_CONSOLE, OnWmiConsole)
 	ON_WM_SETTINGCHANGE()
 	ON_MESSAGE(WMIC_DEBUG_MSG, OnDebugMessage)
 	ON_COMMAND(ID_VIEW_PROPERTIES, OnViewProperties)
@@ -46,7 +48,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2MDIFrameWnd)
 	ON_COMMAND(ID_VIEW_OUTLINE, OnViewOutline)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_OUTLINE, OnEnableAlways)
 	ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
-	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
+	ON_COMMAND(ID_VIEW_CONSOLE, OnViewConsole)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_CONSOLE, OnEnableAlways)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -74,8 +77,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	m_wndMenuBar.EnableHelpCombobox(ID_HELP_FINDER, L"Help finder", HELP_COMBO_WIDTH);
-
-	BOOL bNameValid;
 
 	EnableDefaultMDITabbedGroups();
 
@@ -107,13 +108,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	CString strToolBarName;
-	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
-	ASSERT(bNameValid);
+	VERIFY(strToolBarName.LoadString(IDS_TOOLBAR_STANDARD));
 	m_wndToolBar.SetWindowText(strToolBarName);
 
-	CString strCustomize;
-	//bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
-	//ASSERT(bNameValid);
+	CString strCustomize; // Empty string required.
 	m_wndToolBar.EnableCustomizeButton(TRUE, 0, strCustomize);
 
 	if (!m_wndStatusBar.Create(this))
@@ -137,9 +135,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	EnableDocking(CBRS_ALIGN_ANY);
 
-	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
-	// enable Visual Studio 2005 style docking window auto-hide behavior
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	// Load menu item image (not placed on any standard toolbars):
@@ -155,21 +151,22 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CDockablePane* pTabbedBar = NULL;
 	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndCommand.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
-	m_wndCommand.AttachToTabWnd(&m_wndOutput, DM_SHOW, FALSE, &pTabbedBar);
+	m_wndConsole.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndCommand);
+	m_wndOutput.AttachToTabWnd(&m_wndCommand, DM_SHOW, FALSE, &pTabbedBar);
+	m_wndConsole.AttachToTabWnd(&m_wndCommand, DM_SHOW, FALSE, &pTabbedBar);
 
 
-	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndSolution.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndToolBox.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndFileView);
-	m_wndSolution.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
-	//pTabbedBar->Attach()
-	m_wndToolBox.AttachToTabWnd(&m_wndFileView, DM_SHOW, FALSE, &pTabbedBar);
+	DockPane(&m_wndSolution);
+	m_wndToolBox.AttachToTabWnd(&m_wndSolution, DM_SHOW, FALSE, &pTabbedBar);
 
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndOutline.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
+	m_wndOutline.AttachToTabWnd(&m_wndProperties, DM_SHOW, FALSE, &pTabbedBar);
 
 
 	// set the visual manager and style based on persisted value
@@ -216,12 +213,12 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
-	// Create file view
+	// Create outline view
 	VERIFY(strTitle.LoadString(ID_WND_OUTLINE));
-	if (!m_wndFileView.Create(strTitle, this, CRect(0, 0, VERT_PANE_WIDTH, 500), TRUE, ID_WND_OUTLINE,
+	if (!m_wndOutline.Create(strTitle, this, CRect(0, 0, VERT_PANE_WIDTH, 500), TRUE, ID_WND_OUTLINE,
 		dwDefaultStyle | CBRS_LEFT))
 	{
-		TRACE0("Failed to create File View window\n");
+		TRACE0("Failed to create Outline window\n");
 		return FALSE; // failed to create
 	}
 
@@ -243,7 +240,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
-	// Create command window
+	// Command window
 	VERIFY(strTitle.LoadString(ID_WND_COMMAND));
 	if (!m_wndCommand.Create(strTitle, this, CRect(0, 0, 500, HORZ_PANE_HEIGHT), TRUE, ID_WND_COMMAND,
 		dwDefaultStyle | CBRS_BOTTOM))
@@ -252,7 +249,16 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
-	// Create properties window
+	// console window
+	VERIFY(strTitle.LoadString(ID_WND_CONSOLE));
+	if (!m_wndConsole.Create(strTitle, this, CRect(0, 0, 500, HORZ_PANE_HEIGHT), TRUE, ID_WND_CONSOLE,
+		dwDefaultStyle | CBRS_BOTTOM))
+	{
+		TRACE0("Failed to create console window\n");
+		return FALSE; // failed to create
+	}
+
+	// Properties window
 	VERIFY(strTitle.LoadString(ID_WND_PROPERTIES));
 	if (!m_wndProperties.Create(strTitle, this, CRect(0, 0, VERT_PANE_WIDTH, 500), TRUE, ID_WND_PROPERTIES,
 		dwDefaultStyle | CBRS_RIGHT))
@@ -261,11 +267,11 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
-	SetDockingWindowIcons(theApp.m_bHiColorIcons);
+	SetDockingWindowIcons();
 	return TRUE;
 }
 
-void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
+void CMainFrame::SetDockingWindowIcons()
 {
 	HINSTANCE hInst = ::AfxGetResourceHandle();
 	CSize szIcon(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
@@ -273,7 +279,7 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	HICON hIcon;
 
 	hIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(ID_WND_OUTLINE), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
-	m_wndFileView.SetIcon(hIcon, FALSE);
+	m_wndOutline.SetIcon(hIcon, FALSE);
 
 	HICON hOutputBarIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(IDI_OUTPUT_WND_HC), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
@@ -283,6 +289,9 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 
 	hIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(ID_WND_COMMAND), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
 	m_wndCommand.SetIcon(hIcon, FALSE);
+
+	hIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(ID_WND_CONSOLE), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
+	m_wndConsole.SetIcon(hIcon, FALSE);
 
 	hIcon = (HICON) ::LoadImage(hInst, MAKEINTRESOURCE(ID_WND_TOOLBOX), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
 	m_wndToolBox.SetIcon(hIcon, FALSE);
@@ -452,8 +461,15 @@ void CMainFrame::OnViewToolbox()
 
 void CMainFrame::OnViewOutline()
 {
-	m_wndFileView.ShowPane(TRUE, FALSE, TRUE);
-	m_wndFileView.SetFocus();
+	m_wndOutline.ShowPane(TRUE, FALSE, TRUE);
+	m_wndOutline.SetFocus();
+
+}
+
+void CMainFrame::OnViewConsole()
+{
+	m_wndConsole.ShowPane(TRUE, FALSE, TRUE);
+	m_wndConsole.SetFocus();
 
 }
 
@@ -511,6 +527,18 @@ LRESULT CMainFrame::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam)
 	CWnd* pWnd = FindOrCreateCodeWindow(pBreakInfo->szFileName);
 	if (pWnd)
 		pWnd->SendMessage(WMI_DEBUG_BREAK, wParam, lParam);
+	return 0L;
+}
+
+// afx_msg
+LRESULT CMainFrame::OnWmiConsole(WPARAM wParam, LPARAM lParam) 
+{
+	if ((wParam < WMI_CONSOLE_MIN) || (wParam > WMI_CONSOLE_MAX))
+		return 0L;
+	LPCWSTR szMessage = reinterpret_cast<LPCWSTR>(lParam);
+	if (!szMessage)
+		return 0L;
+	m_wndConsole.WriteToConsole((CConsoleWnd::ConsoleMsgType) wParam, szMessage);
 	return 0L;
 }
 

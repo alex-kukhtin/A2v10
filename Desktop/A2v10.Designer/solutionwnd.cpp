@@ -199,7 +199,7 @@ void CSolutionWnd::AdjustLayout()
 
 	CRect rectClient;
 	GetClientRect(rectClient);
-	AdjustBorder(rectClient);
+	AdjustBorder(rectClient); // !!!
 
 	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
 
@@ -264,7 +264,6 @@ void CSolutionWnd::OnNewFolder()
 void CSolutionWnd::OnSetFocus(CWnd* pOldWnd)
 {
 	__super::OnSetFocus(pOldWnd);
-
 	m_wndClassView.SetFocus();
 }
 

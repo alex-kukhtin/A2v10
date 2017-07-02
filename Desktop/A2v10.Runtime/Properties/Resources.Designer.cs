@@ -61,22 +61,73 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to &quot;use strict&quot;;
         ///
         ///// global!
-        ///designer = {
-        ///	__createElement = function () {
-        ///		return null;
+        ///
+        ///var designer = {
+        ///	form: {
+        ///		__createElement: function () {
+        ///			return null;
+        ///		}
+        ///	},
+        ///	registerElement: function (ctor) {
+        ///		var name = ctor.prototype.type;
+        ///		this.elements[name] = ctor;
+        ///	},
+        ///	elements: {
+        ///
         ///	}
         ///};
         ///
         ///
-        ///app = {
-        ///};.
+        ///var app = {
+        ///};
+        ///
+        ///Object.freeze(designer);
+        ///Object.freeze(app);
+        ///.
         /// </summary>
         internal static string Application {
             get {
                 return ResourceManager.GetString("Application", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (function () {
+        ///	&quot;use strict&quot;;
+        ///
+        ///	function Form() {
+        ///		this.
+        ///	}
+        ///
+        ///	Form.prototype.type = &quot;Form&quot;;
+        ///
+        ///	Form.prototype.metadata = {
+        ///		properties: {
+        ///			Width: {
+        ///				category: &quot;Layout&quot;,
+        ///				type: &quot;string&quot;,
+        ///				description: &quot;Specifies the width of the element&quot;
+        ///			},
+        ///			Height: {
+        ///				category: &quot;Layout&quot;,
+        ///				type: &quot;string&quot;,
+        ///				description: &quot;Specifies the height of the element&quot;
+        ///			}
+        ///		}
+        ///	};
+        ///
+        ///	designer.form.registerElement(Form);
+        ///})();
+        ///
+        ///
+        ///.
+        /// </summary>
+        internal static string Form_form {
+            get {
+                return ResourceManager.GetString("Form_form", resourceCulture);
             }
         }
     }

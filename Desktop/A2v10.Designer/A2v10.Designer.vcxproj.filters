@@ -48,9 +48,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ViewTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -105,6 +102,12 @@
     <ClInclude Include="formtool.h">
       <Filter>Header Files\FormDesigner</Filter>
     </ClInclude>
+    <ClInclude Include="outlinewnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="consolewnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -117,9 +120,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="childfrm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ViewTree.cpp">
@@ -167,6 +167,12 @@
     <ClCompile Include="formtool.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
+    <ClCompile Include="outlinewnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="consolewnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="A2v10.Designer.rc">
@@ -204,9 +210,6 @@
     <Image Include="res\output_wnd_hc.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\A2v10.DesignerDoc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\A2v10.Designer.ico">
       <Filter>Resource Files</Filter>
     </Image>
@@ -232,6 +235,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\formtoolbox.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndoutline.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wndconsole.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\form.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jsmodule.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

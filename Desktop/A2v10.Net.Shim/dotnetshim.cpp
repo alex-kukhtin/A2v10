@@ -45,6 +45,13 @@ void CDotNetRuntime::Stop()
 }
 
 // static 
+void CDotNetRuntime::LoadLibrary()
+{
+	A2v10RuntimeNet::Desktop::LoadRuntimeLibrary();
+	ThrowIfError();
+}
+
+// static 
 void CDotNetRuntime::SetMainWnd(HWND hWnd)
 {
 	m_hWnd = hWnd;

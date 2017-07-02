@@ -67,6 +67,7 @@ bool CA2FormDocument::IsLocked() const
 // virtual 
 void CA2FormDocument::OnCloseDocument()
 {
+	Clear();
 	__super::OnCloseDocument();
 }
 
@@ -79,7 +80,18 @@ BOOL CA2FormDocument::OnOpenDocument(LPCTSTR lpszPathName)
 // virtual 
 BOOL CA2FormDocument::OnSaveDocument(LPCTSTR lpszPathName)
 {
-	return __super::OnSaveDocument(lpszPathName);
+	try 
+	{
+		CXmlFile file(lpszPathName, L"xaml");
+		m_pRoot->SaveToXaml(file);
+		file.Write();
+	}
+	catch (CXmlError& err) 
+	{
+		err.ReportError();
+		return FALSE;
+	}
+	return TRUE;
 }
 
 //virtual 

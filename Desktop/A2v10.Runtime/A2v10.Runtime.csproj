@@ -57,6 +57,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="JavaScript\form.form.js" />
     <Content Include="JavaScript\app.js" />
   </ItemGroup>
   <ItemGroup>

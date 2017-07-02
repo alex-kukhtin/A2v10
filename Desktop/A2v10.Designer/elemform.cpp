@@ -24,3 +24,11 @@ void CFormElement::Draw(const RENDER_INFO& ri)
 	CBrushSDC brush(ri.pDC, RGB(240, 240, 240));
 	ri.pDC->Rectangle(m_position);
 }
+
+// virtual 
+void CFormElement::SetXamlAttributes(PXmlNode& node)
+{
+	CXmlAttributes::SetLongAttr(node, L"Width", m_position.Width());
+	CXmlAttributes::SetLongAttr(node, L"Height", m_position.Height());
+};
+

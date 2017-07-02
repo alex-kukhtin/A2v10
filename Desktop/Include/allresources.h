@@ -3,6 +3,7 @@
 
 #define IDR_MAINFRAME		128
 #define IDR_JSMODULE        129
+#define IDR_FORM			130
 
 #define IDR_MENU_IMAGES		230
 #define IDR_TOOLBOX         232
@@ -14,12 +15,14 @@
 #define ID_WND_COMMAND      502
 #define ID_WND_SOLUTION     503
 #define ID_WND_OUTLINE      504
+#define ID_WND_CONSOLE		505
 
 #define IDM_POPUP_MENU		600
 #define IDM_POPUP_FORM		601
 #define IDM_POPUP_COMMAND_INDEX  0
 #define IDM_POPUP_JSEDIT_INDEX   1
 #define IDM_POPUP_XAMLEDIT_INDEX 2
+#define IDM_POPUP_CONSOLE_INDEX  3
 
 
 #define IDIL_10X10				700
@@ -58,6 +61,7 @@
 #define ID_VIEW_COMMAND			32202
 #define ID_VIEW_SOLUTION		32203
 #define ID_VIEW_OUTLINE			32204
+#define ID_VIEW_CONSOLE			32205
 // project & debug: 32300
 #define ID_DEBUG_RUN			32300
 #define ID_DEBUG_RUN_INT        32301

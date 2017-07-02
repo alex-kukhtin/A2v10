@@ -194,8 +194,9 @@
     <ClInclude Include="a2formdoc.h" />
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
+    <ClInclude Include="consolewnd.h" />
     <ClInclude Include="elemform.h" />
-    <ClInclude Include="FileView.h" />
+    <ClInclude Include="outlinewnd.h" />
     <ClInclude Include="formitem.h" />
     <ClInclude Include="formtool.h" />
     <ClInclude Include="moduledoc.h" />
@@ -218,8 +219,9 @@
     <ClCompile Include="a2formdoc.cpp" />
     <ClCompile Include="childfrm.cpp" />
     <ClCompile Include="commandwnd.cpp" />
+    <ClCompile Include="consolewnd.cpp" />
     <ClCompile Include="elemform.cpp" />
-    <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="outlinewnd.cpp" />
     <ClCompile Include="formitem.cpp" />
     <ClCompile Include="formtool.cpp" />
     <ClCompile Include="mainfrm.cpp" />
@@ -243,14 +245,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\A2v10.Designer.ico" />
-    <Image Include="res\A2v10.DesignerDoc.ico" />
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />
     <Image Include="res\fileview_hc.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\form.ico" />
     <Image Include="res\formtoolbox.bmp" />
     <Image Include="res\imagelistsolution.bmp" />
+    <Image Include="res\jsmodule.ico" />
     <Image Include="res\maintoolbar.bmp" />
     <Image Include="res\menuimages.bmp" />
     <Image Include="res\output_wnd.ico" />
@@ -259,6 +262,8 @@
     <Image Include="res\sort.bmp" />
     <Image Include="res\sort_hc.bmp" />
     <Image Include="res\wndcommand.ico" />
+    <Image Include="res\wndconsole.ico" />
+    <Image Include="res\wndoutline.ico" />
     <Image Include="res\wndproperties.ico" />
     <Image Include="res\wndsolution.ico" />
     <Image Include="res\wndtoolbox.ico" />

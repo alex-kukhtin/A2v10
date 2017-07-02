@@ -20,7 +20,6 @@ namespace A2v10RuntimeNet
 			{
 				Resources.Culture = CultureInfo.InvariantCulture;
 				ScriptContext.Start();
-				LoadRuntimeLibrary();
 			}
 			catch (Exception ex)
 			{
@@ -33,6 +32,16 @@ namespace A2v10RuntimeNet
 			if (_scriptContext == null)
 				return;
 			(_scriptContext as IDisposable).Dispose();
+		}
+
+		public static void LoadRuntimeLibrary()
+		{
+			String[] app =
+			{
+				Resources.Application,
+				Resources.Form_form
+			};
+			ParseLibraryElements(app);
 		}
 
 		static IScriptContext ScriptContext
@@ -57,15 +66,6 @@ namespace A2v10RuntimeNet
 			{
 				LastErrorMessage = ex.Message;
 			}
-		}
-
-		static void LoadRuntimeLibrary()
-		{
-			String[] app =
-			{
-				Resources.Application
-			};
-			ParseLibraryElements(app);
 		}
 
 		static void ParseLibraryElements(String[] elems)

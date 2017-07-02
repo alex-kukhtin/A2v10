@@ -15,6 +15,7 @@ class CDotNetRuntime {
 public:
 	static void Start();
 	static void Stop();
+	static void LoadLibrary();
 	static void SetMainWnd(HWND hWnd);
 };
 

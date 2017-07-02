@@ -46,4 +46,9 @@ public:
 	virtual CFormItem* ObjectAt(CPoint point);
 	virtual CSize GetMinTrackSize() const;
 	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
+
+	virtual void SaveToXaml(CXmlFile& file);
+
+protected:
+	virtual void SetXamlAttributes(PXmlNode& node) abstract;
 };

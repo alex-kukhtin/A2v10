@@ -46,9 +46,32 @@ JsValueRef CHAKRA_CALLBACK AlertCallback(_In_ JsValueRef callee, _In_ bool isCon
 	{
 		JavaScriptRuntime::SetUnknownException();
 	}
-	return nullptr;
+	return JS_INVALID_REFERENCE;
 }
 
+JsValueRef CHAKRA_CALLBACK LogCallback(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState) 
+{
+	try 
+	{
+		CString strMessage(L"");
+		if (argumentCount > 1)
+			strMessage = JavaScriptValue(arguments[1]).ConvertToString().ToString();
+		WPARAM wParam = reinterpret_cast<WPARAM>(callbackState);
+		CWnd* pWnd = AfxGetMainWnd();
+		if (pWnd) {
+			pWnd->SendMessage(WMI_CONSOLE, wParam, (LPARAM)(LPCWSTR)strMessage);
+		}
+	}
+	catch (JavaScriptException& jsEx) 
+	{
+		jsEx.SetException();
+	}
+	catch (...) 
+	{
+		JavaScriptRuntime::SetUnknownException();
+	}
+	return JS_INVALID_REFERENCE;
+}
 // static
 void JavaScriptRuntime::CreateGlobalObject()
 {
@@ -56,6 +79,10 @@ void JavaScriptRuntime::CreateGlobalObject()
 	auto glob = JavaScriptValue::GlobalObject();
 	auto alert = JavaScriptValue::CreateFunction(AlertCallback, nullptr);
 	glob.SetProperty(L"alert", alert);
+	auto console = JavaScriptValue::CreateObject();
+	glob.SetProperty(L"console", console);
+	auto log = JavaScriptValue::CreateFunction(LogCallback, (void*) WMI_CONSOLE_LOG);
+	console.SetProperty(L"log", log);
 }
 
 // static 
@@ -249,12 +276,14 @@ JavaScriptContext::JavaScriptContext()
 	auto globTrg = JavaScriptValue::GlobalObject();
 
 	auto alertPropId = JavaScriptPropertyId::FromString(L"alert");
+	auto consolePropId = JavaScriptPropertyId::FromString(L"console");
 	auto alertVal = globTrg.GetProperty(alertPropId);
-	if (alertVal.ValueType() == JsUndefined)
-	{
-		alertVal = globSrc.GetProperty(alertPropId);
-		globTrg.SetProperty(alertPropId, alertVal);
-	}
+	if (alertVal.ValueType() != JsUndefined)
+		return; // already set
+	alertVal = globSrc.GetProperty(alertPropId);
+	globTrg.SetProperty(alertPropId, alertVal);
+	auto consoleVal = globSrc.GetProperty(consolePropId);
+	globTrg.SetProperty(consolePropId, consoleVal);
 }
 
 JavaScriptContext::~JavaScriptContext()

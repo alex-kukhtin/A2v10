@@ -28,10 +28,10 @@ CA2DockablePane::~CA2DockablePane()
 
 
 BEGIN_MESSAGE_MAP(CA2DockablePane, CDockablePane)
-	ON_WM_CREATE()
 	ON_WM_PAINT()
-	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
+	ON_WM_SIZE()
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -72,7 +72,7 @@ void CA2DockablePane::OnPaint()
 	auto pVm = DYNAMIC_DOWNCAST(CA2VisualManager, CMFCVisualManager::GetInstance());
 	if (pVm == NULL)
 		return;
-	// нарисовать нужно только рамки, и если мы в табах, то снизу специальным образом
+	// Draw frame only. For tabs - special case
 	auto pOldBrush = dc.SelectObject(pVm->GetDockedPaneBorderBrush());
 	dc.PatBlt(rc.left, rc.top, 1, rc.Height() + 1, PATCOPY);
 	dc.PatBlt(rc.left, rc.top, rc.Width(), 1, PATCOPY);

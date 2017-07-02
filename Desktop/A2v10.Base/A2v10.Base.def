@@ -62,3 +62,10 @@ EXPORTS
 ?GetMessageMap@CA2TabView@@MBEPBUAFX_MSGMAP@@XZ
 
 ?GetThisClass@CA2TabView@@SGPAUCRuntimeClass@@XZ
+;
+?ReportError@CXmlError@@QAEXXZ
+?Write@CXmlFile@@QAE_NXZ
+?SetLongAttr@CXmlAttributes@@SAXV?$_com_ptr_t@V?$_com_IIID@UIXMLDOMElement@MSXML2@@$1?_GUID_2933bf86_7b36_11d2_b20e_00c04f983e60@@3U__s_GUID@@B@@@@PB_WJ@Z
+?CreateRoot@CXmlFile@@QAE?AV?$_com_ptr_t@V?$_com_IIID@UIXMLDOMNode@MSXML2@@$1?_GUID_2933bf80_7b36_11d2_b20e_00c04f983e60@@3U__s_GUID@@B@@@@PB_W@Z
+?CreateElement@CXmlFile@@QAE?AV?$_com_ptr_t@V?$_com_IIID@UIXMLDOMElement@MSXML2@@$1?_GUID_2933bf86_7b36_11d2_b20e_00c04f983e60@@3U__s_GUID@@B@@@@PB_W@Z
+

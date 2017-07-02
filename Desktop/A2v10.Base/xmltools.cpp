@@ -43,22 +43,27 @@ PXmlNode CXmlFile::CreateRoot(LPCWSTR rootName)
 		CXmlTools::TestHR(m_doc.CreateInstance(XML_PARSER_INSTANCE));
 	ATLASSERT(m_doc != NULL);
 
-	if (m_bProcessingInstr) 
-	{
-		PXmlProcessingInstruction processingInstr = m_doc->createProcessingInstruction(L"xml", L"version=\"1.0\" encoding=\"UTF-8\"");
+	PXmlElement root = m_doc->createElement(rootName);
 
-		PXmlNode pDocNode = (PXmlNode)m_doc;
-		pDocNode->appendChild(processingInstr);
+	if (m_type == L"xaml")
+	{
+
+		root->setAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
+		root->setAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
 	}
 	
-	PXmlElement root = m_doc->createElement(rootName);
-	root->setAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
-
 	m_doc->documentElement = root;
 	m_docelem = root;
 
 	return root;
 }
+
+PXmlElement CXmlFile::CreateElement(LPCWSTR elemName)
+{
+	ATLASSERT(m_doc != NULL);
+	return m_doc->createElement(elemName);
+}
+
 
 PXmlNode CXmlFile::GetRoot()
 {
@@ -82,13 +87,19 @@ bool CXmlFile::Load()
 
 bool CXmlFile::Write()
 {
-	_bstr_t fileName = (LPCWSTR) m_file;
+	_bstr_t fileName = (LPCWSTR)m_file;
 	CXmlTools::TestHR(m_doc->save(fileName));
 	return true;
 }
 
 // static 
 void CXmlAttributes::SetStringAttr(PXmlElement nd, LPCWSTR nm, LPCWSTR val)
+{
+	nd->setAttribute(nm, val);
+}
+
+// static 
+void CXmlAttributes::SetLongAttr(PXmlElement nd, LPCWSTR nm, LONG val)
 {
 	nd->setAttribute(nm, val);
 }

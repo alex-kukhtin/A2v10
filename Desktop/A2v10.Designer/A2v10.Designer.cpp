@@ -96,7 +96,7 @@ BOOL CMainApp::InitInstance()
 		return FALSE;
 	}
 
-	SetRegistryKey(L"A2v10.Designer"); // before lang
+	SetRegistryKey(L"A2v10"); // before lang
 	LoadLangLibrary();
 
 	LoadStdProfileSettings(16);  // Load standard INI file options (including MRU)
@@ -125,7 +125,7 @@ BOOL CMainApp::InitInstance()
 			RUNTIME_CLASS(CModuleView));
 		AddDocTemplate(pModuleTemplate);
 
-		CA2DocTemplate* pFormTemplate = new CA2DocTemplate(IDR_A2v10DesignerTYPE,
+		CA2DocTemplate* pFormTemplate = new CA2DocTemplate(IDR_FORM,
 			RUNTIME_CLASS(CA2FormDocument),
 			RUNTIME_CLASS(CChildFrame), //
 			RUNTIME_CLASS(CA2FormTabView));
@@ -160,6 +160,7 @@ BOOL CMainApp::InitInstance()
 	{
 		CDotNetRuntime::Start();
 		JavaScriptRuntime::CreateGlobalObject();
+		CDotNetRuntime::LoadLibrary();
 		JavaScriptRuntime::StartDebugging();
 	}
 	catch (CDotNetException de)

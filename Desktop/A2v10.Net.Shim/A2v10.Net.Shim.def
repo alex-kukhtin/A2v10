@@ -3,3 +3,4 @@ EXPORTS
 ?ReportError@CDotNetException@@QAEXXZ
 ?Start@CDotNetRuntime@@SAXXZ
 ?Stop@CDotNetRuntime@@SAXXZ
+?LoadLibraryW@CDotNetRuntime@@SAXXZ

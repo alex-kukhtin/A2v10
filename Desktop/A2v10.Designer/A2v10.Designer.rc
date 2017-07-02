@@ -84,8 +84,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\A2v10.Designer.ico"
 
-IDR_A2v10DesignerTYPE   ICON                    "res\\A2v10.DesignerDoc.ico"
-IDR_JSMODULE			ICON                    "res\\A2v10.DesignerDoc.ico"
+IDR_JSMODULE			ICON                    "res\\jsmodule.ico"
+IDR_FORM				ICON					"res\\form.ico"
 
 IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
 
@@ -99,6 +99,8 @@ ID_WND_SOLUTION         ICON                    "res\\wndsolution.ico"
 ID_WND_PROPERTIES       ICON                    "res\\wndproperties.ico"
 ID_WND_TOOLBOX          ICON                    "res\\wndtoolbox.ico"
 ID_WND_COMMAND          ICON                    "res\\wndcommand.ico"
+ID_WND_OUTLINE			ICON					"res\\wndoutline.ico"
+ID_WND_CONSOLE			ICON					"res\\wndconsole.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,7 +108,6 @@ ID_WND_COMMAND          ICON                    "res\\wndcommand.ico"
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
 
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 
@@ -118,6 +119,7 @@ IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 
+IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
@@ -198,6 +200,7 @@ BEGIN
     BUTTON      ID_VIEW_SOLUTION
     BUTTON      ID_VIEW_OUTLINE
 	BUTTON      ID_EDIT_CLEAR
+	BUTTON		ID_VIEW_CONSOLE
 END
 
 
@@ -247,7 +250,8 @@ BEGIN
         MENUITEM "Toolbo&x\tCtrl+Alt+X",        ID_VIEW_TOOLBOX
         MENUITEM SEPARATOR
         MENUITEM "&Command Window\tCtrl+Alt+A", ID_VIEW_COMMAND
-        MENUITEM "Properties &Window\tF4",      ID_VIEW_PROPERTIES
+		MENUITEM "Co&nsole Window\tCtrl+Alt+C", ID_VIEW_CONSOLE
+		MENUITEM "Properties &Window\tF4",      ID_VIEW_PROPERTIES
         MENUITEM "&Document Outline\tCtrl+Alt+T", ID_VIEW_OUTLINE
         MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
@@ -272,7 +276,7 @@ BEGIN
     END
 END
 
-IDR_A2v10DesignerTYPE MENU
+IDR_FORM MENU
 BEGIN
     POPUP "&Format"
     BEGIN
@@ -354,7 +358,8 @@ END
 IDR_MAINFRAME ACCELERATORS
 BEGIN
     "A",            ID_VIEW_COMMAND,        VIRTKEY, CONTROL, ALT
-    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL
+	"C",			ID_VIEW_CONSOLE,		VIRTKEY, CONTROL, ALT
+	"F",            ID_EDIT_FIND,           VIRTKEY, CONTROL
     "F",            ID_EDIT_FIND_IN_FILES,  VIRTKEY, SHIFT, CONTROL
     "L",            ID_VIEW_SOLUTION,       VIRTKEY, CONTROL, ALT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
@@ -502,8 +507,8 @@ STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "A2v10.Designer"
 	/*title/newdocname/description/filter part/extension/doctype (reg)/full docname (reg)*/
-    IDR_A2v10DesignerTYPE   "\nA2v10Designer\nA2v10.Designer\n\n\nA2v10Designer.Document\nA2v10.Designer.Document"
 	IDR_JSMODULE			"\nmodule\nJavaScript file\nJavaScript Files (*.js)\n.js\n\n"
+	IDR_FORM				"\nform\nForm file\nForm Files (*.xaml)\n.xaml\n\n"
 END
 
 STRINGTABLE
@@ -529,6 +534,7 @@ BEGIN
     ID_WND_COMMAND          "Command"
     ID_WND_SOLUTION         "Solution"
     ID_WND_OUTLINE          "Outline"
+	ID_WND_CONSOLE			"Console"
 END
 
 STRINGTABLE

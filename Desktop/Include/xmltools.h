@@ -34,14 +34,14 @@ public:
 class CXmlFile
 {
 	CString m_file;
-	bool m_bProcessingInstr;
+	CString m_type;
 	PXmlDocument m_doc;
 	PXmlElement	 m_docelem;
 
 	friend class CXmlError;
 public:
-	CXmlFile(LPCWSTR szFileName = EMPTYSTR, bool bPI = false)
-		: m_file(szFileName), m_bProcessingInstr(bPI) {};
+	CXmlFile(LPCWSTR szFileName = EMPTYSTR, LPCWSTR szType = nullptr)
+		: m_file(szFileName), m_type(szType) {};
 
 	bool Load();
 	bool LoadWithWhiteSpace();
