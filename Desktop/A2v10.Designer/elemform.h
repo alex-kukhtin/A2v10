@@ -8,5 +8,5 @@ public:
 	virtual DWORD GetTrackMask() const override { return RTRE_SIZEONLY; }
 
 protected:
-	virtual void SetXamlAttributes(PXmlNode& node) override;
+	virtual void SetXamlAttributes(void* node) override;
 };

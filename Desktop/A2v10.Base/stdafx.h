@@ -33,8 +33,6 @@
 
 #include <atlbase.h>
 
-#import "msxml6.dll"
-
 #include "..\Include\allresources.h"
 
 // JAVASCRIPT

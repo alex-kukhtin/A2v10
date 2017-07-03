@@ -7,7 +7,6 @@
 #include "../include/appdata.h"
 #include "../include/guiext.h"
 #include "../include/theme.h"
-#include "../include/xmltools.h"
 
 #include "../include/a2appl.h"
 
@@ -38,5 +37,5 @@
 #include "../include/javascriptruntime.h"
 #include "../include/javascriptexceptions.h"
 
-
+#include "../include/tinyxml2.h"
 

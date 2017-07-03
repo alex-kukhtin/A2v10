@@ -26,9 +26,9 @@ void CFormElement::Draw(const RENDER_INFO& ri)
 }
 
 // virtual 
-void CFormElement::SetXamlAttributes(PXmlNode& node)
+void CFormElement::SetXamlAttributes(void* node)
 {
-	CXmlAttributes::SetLongAttr(node, L"Width", m_position.Width());
-	CXmlAttributes::SetLongAttr(node, L"Height", m_position.Height());
+	//CXmlAttributes::SetLongAttr(node, L"Width", m_position.Width());
+	//CXmlAttributes::SetLongAttr(node, L"Height", m_position.Height());
 };
 

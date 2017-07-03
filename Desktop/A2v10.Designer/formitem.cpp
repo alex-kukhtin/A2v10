@@ -57,10 +57,12 @@ void CFormItem::MoveTo(const CRect& position, CA2FormView* pView, int hitHandle)
 }
 
 // virtual 
-void CFormItem::SaveToXaml(CXmlFile& file)
+void CFormItem::SaveToXaml(void* file)
 {
+	/*
 	PXmlNode form = file.CreateRoot(L"Form");
 	PXmlNode grid = file.CreateElement(L"Grid");
 	form->appendChild(grid);
 	SetXamlAttributes(form);
+	*/
 }

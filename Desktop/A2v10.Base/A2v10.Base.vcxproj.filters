@@ -108,7 +108,7 @@
     <ClCompile Include="optionsps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xmltools.cpp">
+    <ClCompile Include="tinyxml2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -220,7 +220,7 @@
     <ClInclude Include="..\Include\optionsps.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\xmltools.h">
+    <ClInclude Include="..\Include\tinyxml2.h">
       <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>

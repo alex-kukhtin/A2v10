@@ -230,8 +230,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="theme.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="uitools.cpp" />
-    <ClCompile Include="xmltools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def" />
@@ -265,8 +265,8 @@
     <ClInclude Include="..\Include\javascriptvalue.h" />
     <ClInclude Include="..\Include\optionsps.h" />
     <ClInclude Include="..\Include\theme.h" />
+    <ClInclude Include="..\Include\tinyxml2.h" />
     <ClInclude Include="..\Include\uitools.h" />
-    <ClInclude Include="..\Include\xmltools.h" />
     <ClInclude Include="a2miniframewnd.h" />
     <ClInclude Include="a2tabbedpane.h" />
     <ClInclude Include="Resource.h" />

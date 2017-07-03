@@ -82,13 +82,34 @@ BOOL CA2FormDocument::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	try 
 	{
-		CXmlFile file(lpszPathName, L"xaml");
-		m_pRoot->SaveToXaml(file);
-		file.Write();
+		tinyxml2::XMLDocument doc;
+		auto root = doc.NewElement(L"Form");
+		root->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
+		root->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
+		root->SetAttribute(L"Width", 123);
+		root->SetAttribute(L"Height", 123);
+		doc.InsertEndChild(root);
+		auto tb = doc.NewElement(L"Form.Toolbar");
+		root->InsertEndChild(tb);
+		tb->InsertEndChild(doc.NewElement(L"Grid"));
+		tinyxml2::XMLPrinter printer;
+		doc.Print(&printer);
+		AfxMessageBox(printer.CStr());
+
+		tinyxml2::XMLDocument pdoc;
+		pdoc.Parse(printer.CStr());
+		tinyxml2::XMLPrinter printer2;
+		pdoc.Print(&printer2);
+		AfxMessageBox(printer2.CStr());
+		//m_pRoot->SaveToXaml(doc);
+		//auto error = doc.SaveFile(path);
+		//CXmlFile file(lpszPathName, L"xaml");
+		//m_pRoot->SaveToXaml(file);
+		//file.Write();
 	}
-	catch (CXmlError& err) 
+	catch (int /*CXmlError& err*/) 
 	{
-		err.ReportError();
+		//err.ReportError();
 		return FALSE;
 	}
 	return TRUE;
