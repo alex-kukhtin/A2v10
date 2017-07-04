@@ -2,6 +2,7 @@
 
 struct RENDER_INFO;
 class CFormItem;
+class CXamlEditView;
 
 class CA2FormDocument : public CDocument
 {
@@ -33,6 +34,8 @@ protected:
 	void DrawSelection(const RENDER_INFO& ri);
 	void CreateRootElement();
 	void Clear();
+	CXamlEditView* GetXamlEditView();
+	void ParseXml(LPCWSTR szXml);
 
 	DECLARE_MESSAGE_MAP()
 

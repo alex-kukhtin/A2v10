@@ -57,12 +57,14 @@ void CFormItem::MoveTo(const CRect& position, CA2FormView* pView, int hitHandle)
 }
 
 // virtual 
-void CFormItem::SaveToXaml(void* file)
+void CFormItem::SaveToXaml(tinyxml2::XMLDocument* xmldoc, tinyxml2::XMLElement* parent)
 {
-	/*
-	PXmlNode form = file.CreateRoot(L"Form");
-	PXmlNode grid = file.CreateElement(L"Grid");
-	form->appendChild(grid);
-	SetXamlAttributes(form);
-	*/
+	auto item = xmldoc->NewElement(ElementName());
+	if (parent == nullptr)
+		xmldoc->InsertEndChild(item);
+	else
+		parent->InsertEndChild(item);
+	SetXamlAttributes(item);
+	auto comment = xmldoc->NewComment(L"это комментарий в тексте");
+	xmldoc->InsertEndChild(comment);
 }

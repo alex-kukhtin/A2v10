@@ -68,6 +68,7 @@ EXPORTS
 ?InsertFirstChild@XMLNode@tinyxml2@@QAEPAV12@PAV12@@Z
 ?VisitEnter@XMLPrinter@tinyxml2@@UAE_NABVXMLDocument@2@@Z
 ?SetAttribute@XMLAttribute@tinyxml2@@QAEXH@Z
+?SetAttribute@XMLAttribute@tinyxml2@@QAEXN@Z
 ?FindOrCreateAttribute@XMLElement@tinyxml2@@AAEPAVXMLAttribute@2@PB_W@Z
 ?Print@XMLDocument@tinyxml2@@QBEXPAVXMLPrinter@2@@Z
 ?NewElement@XMLDocument@tinyxml2@@QAEPAVXMLElement@2@PB_W@Z
@@ -83,3 +84,7 @@ EXPORTS
 ?InsertEndChild@XMLNode@tinyxml2@@QAEPAV12@PAV12@@Z
 ?SetAttribute@XMLAttribute@tinyxml2@@QAEXPB_W@Z
 ?Parse@XMLDocument@tinyxml2@@QAE?AW4XMLError@2@PB_WI@Z
+?FirstChildElement@XMLNode@tinyxml2@@QBEPBVXMLElement@2@PB_W@Z
+?NewComment@XMLDocument@tinyxml2@@QAEPAVXMLComment@2@PB_W@Z
+?Value@XMLNode@tinyxml2@@QBEPB_WXZ
+

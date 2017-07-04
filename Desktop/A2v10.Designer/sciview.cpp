@@ -49,13 +49,12 @@ CStringA CSciEditView::GetTextA()
 
 CString CSciEditView::GetText()
 {
+	USES_CONVERSION;
 	int len = GetCurrentDocLen();
-	// ANSI!
-	CStringA ansiText;
-	LPSTR buff = ansiText.GetBuffer(len + 1);
-	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(buff));
-	ansiText.ReleaseBuffer();
-	return CString(ansiText);
+	char* buffer = new char[len + 1];
+	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(buffer));
+	buffer[len] = 0;
+	return CString(A2W_CP(buffer, CP_UTF8));
 }
 
 void CSciEditView::SetReadOnly(bool bSet)
@@ -65,9 +64,10 @@ void CSciEditView::SetReadOnly(bool bSet)
 
 void CSciEditView::SetText(LPCWSTR szText)
 {
-	// ANSI
-	CStringA ansiText(szText);
-	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>((LPCSTR)ansiText));
+	// UTF8
+	USES_CONVERSION;
+	LPCSTR szAnsi = W2A_CP(szText, CP_UTF8);
+	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>((LPCSTR)szAnsi));
 }
 
 void CSciEditView::SetTextA(LPCSTR szText) {

@@ -26,9 +26,12 @@ void CFormElement::Draw(const RENDER_INFO& ri)
 }
 
 // virtual 
-void CFormElement::SetXamlAttributes(void* node)
+void CFormElement::SetXamlAttributes(tinyxml2::XMLElement* node)
 {
-	//CXmlAttributes::SetLongAttr(node, L"Width", m_position.Width());
-	//CXmlAttributes::SetLongAttr(node, L"Height", m_position.Height());
+	node->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
+	node->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
+
+	node->SetAttribute(L"Width", m_position.Width() / 75.0);
+	node->SetAttribute(L"Height", m_position.Height() / 75.0);
 };
 

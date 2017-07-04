@@ -387,7 +387,7 @@ const wchar_t* XMLUtil::ReadBOM( const wchar_t* p, bool* bom )
     TIXMLASSERT( p );
     TIXMLASSERT( bom );
     *bom = false;
-    const wchar_t* pu = reinterpret_cast<const wchar_t*>(p);
+    const char* pu = reinterpret_cast<const char*>(p);
     // Check for BOM:
     if (    *(pu+0) == TIXML_UTF_LEAD_0
             && *(pu+1) == TIXML_UTF_LEAD_1
@@ -2412,7 +2412,8 @@ void XMLPrinter::Print( const wchar_t* format, ... )
 void XMLPrinter::PrintSpace( int depth )
 {
     for( int i=0; i<depth; ++i ) {
-        Print( L"    " );
+        //Print( L"    " );
+		Print(L"\t");
     }
 }
 

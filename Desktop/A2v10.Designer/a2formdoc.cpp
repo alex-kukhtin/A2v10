@@ -14,6 +14,7 @@
 #include "recttracker.h"
 
 #include "elemform.h"
+#include "sciview.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -71,45 +72,95 @@ void CA2FormDocument::OnCloseDocument()
 	__super::OnCloseDocument();
 }
 
+CXamlEditView* CA2FormDocument::GetXamlEditView()
+{
+	POSITION pos = GetFirstViewPosition();
+	while (pos) {
+		CXamlEditView* pView = DYNAMIC_DOWNCAST(CXamlEditView, GetNextView(pos));
+		if (pView)
+			return pView;
+	}
+	return nullptr;
+}
+
+void CA2FormDocument::ParseXml(LPCWSTR szXml) 
+{
+	CreateRootElement();
+	tinyxml2::XMLDocument doc;
+	auto error = doc.Parse(szXml);
+	auto root = doc.RootElement();
+	LPCWSTR rootName = root->Name();
+	//m_pRoot->ParseXaml(root);
+	int fx = 55;
+	tinyxml2::XMLPrinter printer;
+	doc.Print(&printer);
+	//AfxMessageBox(printer.CStr());
+	CXamlEditView* pView = GetXamlEditView();
+	pView->SetText(printer.CStr());
+}
+
 // virtual 
 BOOL CA2FormDocument::OnOpenDocument(LPCTSTR lpszPathName)
 {
-	return __super::OnOpenDocument(lpszPathName);
+	USES_CONVERSION;
+	CXamlEditView* pView = GetXamlEditView();
+	ATLASSERT(pView);
+	try 
+	{
+		CFile file(lpszPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyRead);
+		BYTE hdr[3] = { 0, 0, 0}; // UTF-8 signature
+		file.Read(hdr, 3);
+		if (hdr[0] == 0xef && hdr[1] == 0xbb && hdr[2] == 0xbf) {
+			LONG length = (LONG) file.GetLength() - 3;
+			char* buffer = new char[length + 1];
+			file.Read(buffer, length);
+			buffer[length] = 0;
+			// set text to Scintilla view
+			pView->SetTextA(buffer);
+			ParseXml(A2W_CP(buffer, CP_UTF8));
+			delete[] buffer;
+		}
+		file.Close();
+	}
+	catch (CFileException* ex) 
+	{
+		ex->ReportError();
+		ex->Delete();
+	}
+	return TRUE;
 }
 
 // virtual 
 BOOL CA2FormDocument::OnSaveDocument(LPCTSTR lpszPathName)
 {
-	try 
+	CXamlEditView* pView = GetXamlEditView();
+	ATLASSERT(pView);
+	try
 	{
+		/*
 		tinyxml2::XMLDocument doc;
-		auto root = doc.NewElement(L"Form");
-		root->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
-		root->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
-		root->SetAttribute(L"Width", 123);
-		root->SetAttribute(L"Height", 123);
-		doc.InsertEndChild(root);
-		auto tb = doc.NewElement(L"Form.Toolbar");
-		root->InsertEndChild(tb);
-		tb->InsertEndChild(doc.NewElement(L"Grid"));
+		m_pRoot->SaveToXaml(&doc, nullptr);
+
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
-		AfxMessageBox(printer.CStr());
 
-		tinyxml2::XMLDocument pdoc;
-		pdoc.Parse(printer.CStr());
-		tinyxml2::XMLPrinter printer2;
-		pdoc.Print(&printer2);
-		AfxMessageBox(printer2.CStr());
-		//m_pRoot->SaveToXaml(doc);
-		//auto error = doc.SaveFile(path);
-		//CXmlFile file(lpszPathName, L"xaml");
-		//m_pRoot->SaveToXaml(file);
-		//file.Write();
+		// UTF-8 with signature
+		USES_CONVERSION;
+		const char* pAnsi = W2A_CP(printer.CStr(), CP_UTF8);
+		*/
+		CStringA utf8Text = pView->GetTextA();
+		CFile file;
+		file.Open(lpszPathName, CFile::modeWrite | CFile::modeCreate | CFile::shareDenyNone);
+		BYTE hdr[3] = { 0xef, 0xbb, 0xbf }; // UTF-8 signature
+		file.Write(hdr, 3);
+		file.Write((LPCSTR) utf8Text, utf8Text.GetLength());
+		file.Close();
+		SetModifiedFlag(FALSE);
 	}
-	catch (int /*CXmlError& err*/) 
+	catch (CFileException* ex) 
 	{
-		//err.ReportError();
+		ex->ReportError();
+		ex->Delete();
 		return FALSE;
 	}
 	return TRUE;

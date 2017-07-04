@@ -40,6 +40,7 @@ public:
 	CFormItem();
 	virtual ~CFormItem();
 
+	virtual LPCWSTR ElementName() abstract;
 	virtual void Draw(const RENDER_INFO& ri) abstract;
 	virtual DWORD GetTrackMask() const { return RTRE_ALL; }
 	virtual const CRect& GetPosition() const {return m_position; }
@@ -47,8 +48,8 @@ public:
 	virtual CSize GetMinTrackSize() const;
 	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
 
-	virtual void SaveToXaml(void* file);
+	virtual void SaveToXaml(tinyxml2::XMLDocument* xmldoc, tinyxml2::XMLElement* parent);
 
 protected:
-	virtual void SetXamlAttributes(void* node) abstract;
+	virtual void SetXamlAttributes(tinyxml2::XMLElement* node) abstract;
 };
