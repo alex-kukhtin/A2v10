@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -123,16 +126,57 @@ namespace A2v10.Data
 		{
 			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
 			{
-				using (var cnn = await GetConnectionAsync())
+                var helper = new LoadHelper<T>();
+                using (var cnn = await GetConnectionAsync())
 				{
-
-				}
-			}
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlExtensions.SetFromDynamic(cmd.Parameters, prms);
+                        using (var rdr = await cmd.ExecuteReaderAsync())
+                        {
+                            helper.ProcessRecord(rdr);
+                            if (await rdr.ReadAsync())
+                            {
+                                T result = helper.ProcessFields(rdr);
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
 			return null;
 		}
 
 
-		public async Task ExecuteAsync<T>(String command, T element) where T : class
+        void SetParametersFrom<T>(SqlCommand cmd, T element)
+        {
+            Type retType = typeof(T);
+            var props = retType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            SqlCommandBuilder.DeriveParameters(cmd);
+            var sqlParams = cmd.Parameters;
+            foreach (var p in props)
+            {
+                var paramName = "@" + p.Name;
+                if (sqlParams.Contains(paramName))
+                {
+                    var sqlParam = sqlParams[paramName];
+                    var sqlVal = p.GetValue(element);
+                    if (sqlParam.SqlDbType == SqlDbType.VarBinary)
+                    {
+                        var stream = sqlVal as Stream;
+                        if (stream == null)
+                            throw new IndexOutOfRangeException("Stream expected");
+                        sqlParam.Value = new SqlBytes(stream);
+                    }
+                    else
+                    {
+                        sqlParam.Value = SqlExtensions.ConvertTo(sqlVal, sqlParam.SqlDbType.ToType());
+                    }
+                }
+            }
+        }
+
+        public async Task ExecuteAsync<T>(String command, T element) where T : class
 		{
 			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
 			{
@@ -140,6 +184,8 @@ namespace A2v10.Data
 				{
 					using (var cmd = cnn.CreateCommandSP(command))
 					{
+                        SetParametersFrom(cmd, element);
+                        await cmd.ExecuteNonQueryAsync();
 					}
 				}
 			}
@@ -147,16 +193,44 @@ namespace A2v10.Data
 
 		public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
 		{
-			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var token = _config.Profiler.Start(ProfileAction.Sql, command))
 			{
-				using (var cnn = await GetConnectionAsync())
+                Type retType = typeof(T);
+                var props = retType.GetProperties();
+                var result = new List<T>();
+                using (var cnn = await GetConnectionAsync())
 				{
 					using (var cmd = cnn.CreateCommandSP(command))
 					{
+                        SqlExtensions.SetFromDynamic(cmd.Parameters, prms);
+                        using (var rdr = await cmd.ExecuteReaderAsync())
+                        {
+                            var keyMap = new Dictionary<String, Int32>();
+                            for (int c = 0; c < rdr.FieldCount; c++)
+                            {
+                                keyMap.Add(rdr.GetName(c), c);
+                            }
+                            while (await rdr.ReadAsync())
+                            {
+                                T item = System.Activator.CreateInstance(retType) as T;
+                                Int32 fieldIndex;
+                                foreach (var p in props)
+                                {
+                                    if (keyMap.TryGetValue(p.Name, out fieldIndex))
+                                    {
+                                        var dbVal = rdr.GetValue(fieldIndex);
+                                        if (dbVal == DBNull.Value)
+                                            dbVal = null;
+                                        p.SetValue(item, dbVal);
+                                    }
+                                }
+                                result.Add(item);
+                            }
+                        }
 					}
 				}
-			}
-			return null;
-		}
+                return result;
+            }
+        }
 	}
 }

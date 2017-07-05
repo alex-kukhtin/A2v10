@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace A2v10.Data
 {
@@ -78,5 +79,54 @@ namespace A2v10.Data
 				return Convert.ChangeType(value, to, CultureInfo.InvariantCulture);
 			}
 		}
-	}
+
+        public static Type ToType(this SqlDbType sqlType)
+        {
+            switch (sqlType)
+            {
+                case SqlDbType.BigInt:
+                    return typeof(Int64);
+                case SqlDbType.Int:
+                    return typeof(Int32);
+                case SqlDbType.SmallInt:
+                    return typeof(Int16);
+                case SqlDbType.Bit:
+                    return typeof(Boolean);
+                case SqlDbType.Float:
+                    return typeof(Double);
+                case SqlDbType.Money:
+                    return typeof(Decimal);
+                case SqlDbType.Real:
+                    return typeof(Double);
+                case SqlDbType.DateTime:
+                    return typeof(DateTime);
+                case SqlDbType.NVarChar:
+                case SqlDbType.NText:
+                case SqlDbType.NChar:
+                    return typeof(String);
+                case SqlDbType.UniqueIdentifier:
+                    return typeof(Guid);
+            }
+            throw new ArgumentOutOfRangeException("SqlExtensions.SqlType.ToType");
+        }
+
+        public static void SetFromDynamic(SqlParameterCollection prms, Object vals)
+        {
+            if (vals == null)
+                return;
+            IDictionary<String, Object> valsD;
+            // may be EpandoObject
+            valsD = vals as IDictionary<String, Object>;
+            if (valsD == null)
+            {
+                valsD = vals.GetType()
+                    .GetProperties()
+                    .ToDictionary(key => key.Name, val => val.GetValue(vals));
+            }
+            foreach (var prop in valsD)
+            {
+                prms.AddWithValue("@" + prop.Key, prop.Value);
+            }
+        }
+    }
 }

@@ -138,7 +138,7 @@ WriteLiteral("                    ");
 
             
             #line 18 "..\..\Views\Account\Login.cshtml"
-               Write(Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" }));
+               Write(Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" }));
 
             
             #line default
@@ -153,7 +153,7 @@ WriteLiteral("                        ");
 
             
             #line 20 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.TextBoxFor(m => m.Email, new { @class = "form-control" }));
+                   Write(Html.TextBoxFor(m => m.Name, new { @class = "form-control" }));
 
             
             #line default
@@ -164,7 +164,7 @@ WriteLiteral("                        ");
 
             
             #line 21 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" }));
+                   Write(Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" }));
 
             
             #line default

@@ -114,7 +114,7 @@ WriteLiteral("        ");
 
             
             #line 15 "..\..\Views\Account\Register.cshtml"
-   Write(Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" }));
+   Write(Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" }));
 
             
             #line default
@@ -129,7 +129,7 @@ WriteLiteral("            ");
 
             
             #line 17 "..\..\Views\Account\Register.cshtml"
-       Write(Html.TextBoxFor(m => m.Email, new { @class = "form-control" }));
+       Write(Html.TextBoxFor(m => m.Name, new { @class = "form-control" }));
 
             
             #line default
@@ -146,7 +146,7 @@ WriteLiteral("        ");
 
             
             #line 21 "..\..\Views\Account\Register.cshtml"
-   Write(Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" }));
+   Write(Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" }));
 
             
             #line default
@@ -161,7 +161,7 @@ WriteLiteral("            ");
 
             
             #line 23 "..\..\Views\Account\Register.cshtml"
-       Write(Html.PasswordFor(m => m.Password, new { @class = "form-control" }));
+       Write(Html.TextBoxFor(m => m.Email, new { @class = "form-control" }));
 
             
             #line default
@@ -178,7 +178,7 @@ WriteLiteral("        ");
 
             
             #line 27 "..\..\Views\Account\Register.cshtml"
-   Write(Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" }));
+   Write(Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" }));
 
             
             #line default
@@ -193,6 +193,38 @@ WriteLiteral("            ");
 
             
             #line 29 "..\..\Views\Account\Register.cshtml"
+       Write(Html.PasswordFor(m => m.Password, new { @class = "form-control" }));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n        </div>\r\n    </div>\r\n");
+
+WriteLiteral("    <div");
+
+WriteLiteral(" class=\"form-group\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("        ");
+
+            
+            #line 33 "..\..\Views\Account\Register.cshtml"
+   Write(Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" }));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n        <div");
+
+WriteLiteral(" class=\"col-md-10\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("            ");
+
+            
+            #line 35 "..\..\Views\Account\Register.cshtml"
        Write(Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" }));
 
             
@@ -219,7 +251,7 @@ WriteLiteral(" value=\"Register\"");
 WriteLiteral(" />\r\n        </div>\r\n    </div>\r\n");
 
             
-            #line 37 "..\..\Views\Account\Register.cshtml"
+            #line 43 "..\..\Views\Account\Register.cshtml"
 }
 
             
