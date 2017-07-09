@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\components\datagrid.js" />
+    <Content Include="app\services\datamodel.js" />
+    <Content Include="app\services\http.js" />
     <Content Include="css\font-awesome.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\site.css" />
@@ -72,7 +75,10 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
+    <Content Include="TestPages\attention.txt" />
+    <Content Include="TestPages\datagrid.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -87,10 +93,10 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="packages.config" />
     <Content Include="Less\Utlis.less" />
+    <Content Include="Less\DataGrid.less" />
+    <Content Include="Less\Normalize.less" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="app\services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
@@ -109,6 +115,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

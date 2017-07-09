@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/site.css" rel="stylesheet"/>
+</head>
+<body>
+    <div id="test-app" style="padding:20px">
+        <h3>Simple DataGrid</h3>
+        <div>
+            <label>
+                <input type="checkbox" v-model="Options.Bordered"/>
+                <span>Bordered</span>
+            </label>
+            <label>
+                <input type="checkbox" v-model="Options.Striped" />
+                <span>Striped</span>
+            </label>
+        </div>
+        <div>
+            <data-grid :items-source="Customers" :bordered="Options.Bordered" :striped="Options.Striped">
+                <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
+                <data-grid-column header="Name" content="Name"></data-grid-column>
+                <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
+                <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
+                <data-grid-column id="tml" header="Templated column"></data-grid-column>
+                <template slot="tml" scope="cell">
+                    <input type="checkbox">
+                    <input v-model.lazy="cell.row.Name" />
+                    <button @click="cell.row.Name = ''">x</button>
+                </template>
+            </data-grid>
+        </div>
+        <div>
+            <pre v-text="$data"></pre>
+        </div>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../app/app.js"></script>
+    <script type="text/javascript" src="../app/components/datagrid.js"></script>
+    <script type="text/javascript" src="../app/services/datamodel.js"></script>
+
+
+<script type="text/javascript">
+    (function () {
+    Vue.per
+    let modelData = {
+        Customers: [
+            { Id: 5, Name: "Customer # 5", Amount: 500 },
+            { Id: 7, Name: "Customer # 7", Amount: 700 },
+            { Id: 8, Name: "Customer # 8", Amount: 800 }
+        ],
+        Options: {
+            Bordered: true,
+            Striped: false
+        }
+    };
+
+    new Vue({
+        el: "#test-app",
+        data: modelData
+    });
+})();
+</script>
+</body>
+</html>

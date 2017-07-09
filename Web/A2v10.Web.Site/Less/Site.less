@@ -1,6 +1,6 @@
 ﻿
+@import "Normalize.less";
 @import "Variables.less";
-
 @import "Utlis.less";
 
 html {
@@ -12,14 +12,24 @@ html {
 }
 
 body {
-	padding: 0;
-	margin:0;
 	overflow: hidden;
 	height: 100%;
 	width: 100%;
-	box-sizing:border-box;
 }
 
 textarea {
 	resize: none;
+}
+
+td, th {
+    text-align:left;
+    font-weight:normal;
+}
+
+@import "DataGrid.less";
+
+pre {
+    font-family: @monospace-font;
+    background-color:#eee;
+    padding:6px;
 }

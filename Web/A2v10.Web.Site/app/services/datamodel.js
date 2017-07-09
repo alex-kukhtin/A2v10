@@ -1,19 +1,4 @@
-(function () {
-
-	window.app = {
-		modules: {}
-    };
-
-    window.require = require;
-
-	function require(module) {
-		if (module in app.modules)
-            return app.modules[module];
-        throw new Error('module ' + module + 'not found');
-	}
-
-}());
-(function() {
+﻿(function() {
 
     const META = '_meta_';
     const PARENT = '_parent_';
@@ -97,7 +82,4 @@
         defHidden: defHidden,
         createObject: createObject
     }
-})();
-(function () {
-    alert('http serivice')
 })();

@@ -1,16 +1,23 @@
 [
-				{
-								"outputFileName": "Scripts/main.js",
-								"inputFiles": [
-												"app/app.js",
-												"app/services/*.js"
-								]
-				},
-				{
-								"outputFileName": "Scripts/vue.min.js",
-								"inputFiles": [
-												"bower_components/vue/dist/vue.min.js"
-								],
-								"minify": { "enabled": false }
-				}
+  {
+    "outputFileName": "Scripts/main.js",
+    "inputFiles": [
+      "app/app.js",
+      "app/services/*.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/vue.min.js",
+    "inputFiles": [
+      "bower_components/vue/dist/vue.min.js"
+    ],
+    "minify": { "enabled": false }
+  },
+  {
+    "outputFileName": "Scripts/vue.js",
+    "inputFiles": [
+      "bower_components/vue/dist/vue.js"
+    ],
+    "minify": { "enabled": false }
+  }
 ]

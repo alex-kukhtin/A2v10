@@ -1,14 +1,36 @@
-﻿.text-bold {
+﻿body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+.bold {
   font-weight: bold;
 }
-.text-no-bold {
+.no-bold {
   font-weight: normal;
 }
-.text-italic {
+.italic {
   font-style: italic;
 }
-.text-italic {
-  font-style: normal;
+.no-italic {
+  font-style: italic;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
 }
 html {
   font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -18,13 +40,34 @@ html {
   color: #222;
 }
 body {
-  padding: 0;
-  margin: 0;
   overflow: hidden;
   height: 100%;
   width: 100%;
-  box-sizing: border-box;
 }
 textarea {
   resize: none;
+}
+td,
+th {
+  text-align: left;
+  font-weight: normal;
+}
+table.data-grid {
+  border: 1px solid #ddd;
+}
+table.data-grid td,
+table.data-grid th {
+  padding: 4px 6px;
+}
+table.bordered td,
+table.bordered th {
+  border: 1px solid #ddd;
+}
+table.striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f5f5f5;
+}
+pre {
+  font-family: Consolas, Courier New, Courier, monospace;
+  background-color: #eee;
+  padding: 6px;
 }
