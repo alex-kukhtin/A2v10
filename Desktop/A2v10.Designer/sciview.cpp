@@ -86,12 +86,19 @@ void CSciEditView::SetupEditor()
 {
 	CString strFont = CUITools::GetMonospaceFontFamily();
 
+	COLORREF grayColor = RGB(165, 165, 165);
+	COLORREF whiteColor = RGB(255, 255, 255);
+	COLORREF lineNumbersColor = RGB(43, 145, 175);
+	COLORREF marginBack = RGB(248, 248, 248);
+
 	CStringA strFontA(strFont); // ANSI!
 	SendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, reinterpret_cast<LPARAM>((LPCSTR)strFontA));
 	SendMessage(SCI_STYLESETSIZE, STYLE_DEFAULT, 11);
 	SendMessage(SCI_SETCODEPAGE, SC_CP_UTF8, 0L);
 
 	SendMessage(SCI_SETTABWIDTH, 4);
+	SendMessage(SCI_SETMARGINS, 3); // Marker, LineNumber, Fold
+	SendMessage(SCI_STYLESETBACK, STYLE_LINENUMBER, marginBack);
 
 	// indentation guides
 	SendMessage(SCI_SETINDENTATIONGUIDES, SC_IV_LOOKBOTH);
@@ -99,12 +106,9 @@ void CSciEditView::SetupEditor()
 	//SendMessage(SCI_SETMARGINTYPEN, SC_MARGIN_BACK, SC_MARGIN_SYMBOL);
 	SendMessage(SCI_SETMARGINMASKN, SC_MARGIN_BACK, SC_MASK_FOLDERS);
 	SendMessage(SCI_SETMARGINSENSITIVEN, SC_MARGIN_BACK, TRUE);
-	SendMessage(SCI_SETMARGINWIDTHN, SC_MARGIN_BACK, 12);
+	SendMessage(SCI_SETMARGINWIDTHN, SC_MARGIN_BACK, 12); /*folder symbol size*/
 
-	COLORREF grayColor = RGB(165, 165, 165);
-	COLORREF whiteColor = RGB(255, 255, 255);
-
-	// margin bar color
+	// folder margin bar color
 	SendMessage(SCI_SETFOLDMARGINCOLOUR, TRUE, whiteColor);
 	SendMessage(SCI_SETFOLDMARGINHICOLOUR, TRUE, whiteColor);
 
@@ -163,10 +167,17 @@ void CSciEditView::SetupEditor()
 
 	COLORREF currentLineColor = RGB(255, 216, 56);
 	// Current position marker
-	SendMessage(SCI_MARKERDEFINE, MARKER_CURRENT_LINE, SC_MARK_SHORTARROW);
+	SendMessage(SCI_MARKERDEFINE,  MARKER_CURRENT_LINE, SC_MARK_SHORTARROW);
 	SendMessage(SCI_MARKERSETFORE, MARKER_CURRENT_LINE, grayColor);
 	SendMessage(SCI_MARKERSETBACK, MARKER_CURRENT_LINE, currentLineColor);
 
+	// Line numbers
+	if (true) {
+		SendMessage(SCI_SETMARGINTYPEN, MARGIN_LINENUMBER, SC_MARGIN_NUMBER);
+		int textWidth = SendMessage(SCI_TEXTWIDTH, STYLE_DEFAULT, (LPARAM)(const char*) "_99");
+		SendMessage(SCI_SETMARGINWIDTHN, MARGIN_LINENUMBER, textWidth);
+		SendMessage(SCI_STYLESETFORE, STYLE_LINENUMBER, lineNumbersColor);
+	}
 }
 
 BEGIN_MESSAGE_MAP(CSciEditView, CCtrlView)
@@ -326,6 +337,7 @@ void CSciEditView::OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult)
 	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
 	if (pSCN->nmhdr.hwndFrom != GetSafeHwnd())
 		return;
+	ATLTRACE(L"update ui: %d\n", pSCN->updated);
 	/*
 	braceMatch();
 	if (IsHtmlLikeLang()) {

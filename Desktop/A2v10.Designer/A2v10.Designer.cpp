@@ -272,8 +272,14 @@ void CMainApp::SaveCustomState()
 // afx_msg
 void CMainApp::OnFileSaveAll() 
 {
-	// TODO:
-	ATLASSERT(FALSE);
+	POSITION tmlPos = m_pDocManager->GetFirstDocTemplatePosition();
+	while (tmlPos) {
+		CDocTemplate* pTml = m_pDocManager->GetNextDocTemplate(tmlPos);
+		POSITION docPos = pTml->GetFirstDocPosition();
+		while (docPos) {
+			pTml->GetNextDoc(docPos)->OnCmdMsg(ID_FILE_SAVE, CN_COMMAND, NULL, NULL);
+		}
+	}
 }
 
 // afx_msg

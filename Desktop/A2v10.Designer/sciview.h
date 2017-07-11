@@ -1,7 +1,9 @@
 #pragma once
 
 
-#define MARKER_CURRENT_LINE 1
+#define MARKER_CURRENT_LINE 0
+
+#define MARGIN_LINENUMBER 0
 
 class CSciEditView : public CCtrlView
 {

@@ -56,9 +56,10 @@ void CModuleView::OnDebugRunInt()
 	bool bClosing = JavaScriptRuntime::RunScript(code, pathName);
 	if (bClosing)
 		return; // DO NOTHING! shutting down!
+	// may be destroyed inside debugger
 	if (GetSafeHwnd()) {
 		RemoveCurrentLineMarker();
-		SetReadOnly(false); // may be destroyed inside debugger
+		SetReadOnly(false); 
 	}
 }
 
@@ -77,6 +78,8 @@ LRESULT CModuleView::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam)
 		return 0;
 	RemoveCurrentLineMarker();
 	m_nCurrentLineHandle = SendMessage(SCI_MARKERADD, pBreakInfo->lineNo, MARKER_CURRENT_LINE);
-	SendMessage(SCI_ENSUREVISIBLE, pBreakInfo->lineNo);
+	SendMessage(SCI_ENSUREVISIBLE, pBreakInfo->lineNo); // unfold
+	SendMessage(SCI_GOTOLINE, pBreakInfo->lineNo);
+	SendMessage(SCI_SCROLLCARET, 0, 0L); // scroll into
 	return 0L;
 }
