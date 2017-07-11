@@ -48,6 +48,7 @@
     <Compile Include="Controls\CommandControl.cs" />
     <Compile Include="Controls\ContentControl.cs" />
     <Compile Include="Controls\Control.cs" />
+    <Compile Include="Controls\DataGrid.cs" />
     <Compile Include="Layouts\Grid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

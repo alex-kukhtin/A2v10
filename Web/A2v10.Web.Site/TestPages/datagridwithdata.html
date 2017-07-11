@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../css/site.css" rel="stylesheet"/>
+</head>
+<body>
+    <!--TODO:
+        1. $reload() -  use metadata
+    -->
+    <div id="test-app" style="padding:20px;height:600px;overflow:auto">
+        <h4>Simple DataGrid</h4>
+        <div>
+            <div class="toolbar">
+                <button @click.stop.prevent="Customers.$append()"><i class="fa fa-plus"></i> add row</button>
+                <button @click.stop.prevent="$exec('command')"><i class="fa fa-database"></i> exec</button>
+                <button @click.stop.prevent="$save()"><i class="fa fa-save"></i> save</button>
+                <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
+            </div>
+            <data-grid :items-source="Customers" 
+                       :bordered="true" 
+                       :striped="true" 
+                       :hover="true">
+                <data-grid-column header="#" content="$index" align="center"></data-grid-column>
+                <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
+                <data-grid-column header="Name" content="Name"></data-grid-column>
+                <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
+                <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
+                <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
+                <template slot="clr" scope="cell">
+                    <button @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i></button>
+                </template>
+            </data-grid>
+        </div>
+        <h4>Data</h4>
+        <div>
+            <pre v-text="$data"></pre>
+        </div>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../app/app.js"></script>
+    <script type="text/javascript" src="../app/services/utlis.js"></script>
+    <script type="text/javascript" src="../app/services/datamodel.js"></script>
+    <script type="text/javascript" src="../app/components/datagrid.js"></script>
+
+
+<script type="text/javascript">
+    (function () {
+
+    const cmn = require('datamodel');
+
+    function TCustomer(source, path) {
+        cmn.createObject(this, source, path);
+    }
+
+    cmn.defineObject(TCustomer, {
+        Id: Number,
+        Name: String,
+        Amount: Number
+    }, /* array item */ true);
+
+    function TCustomerArray(source, path) {
+        return cmn.createArray(source, path, TCustomer);
+    }
+
+    function TRoot(source) {
+        cmn.createObject(this, source, '');
+    }
+
+    cmn.defineObject(TRoot, {
+        Customers: TCustomerArray,
+        MyElement: TCustomer
+    })
+
+    let modelData = {
+        Customers: [
+            { Id: 5, Name: "Customer # 5", Amount: 500 },
+            { Id: 7, Name: "Customer # 7", Amount: 700 },
+            { Id: 8, Name: "Customer # 8", Amount: 800 }
+        ],
+        MyElement: {
+            Id: 10, Name: "Stand alone", Amount: 5000
+        }
+    };
+
+    let template = {
+
+    }
+
+    var BaseVue = Vue.extend({
+        methods: {
+            $exec(cmd) {
+                //alert(this._template);
+                alert('exec:' + cmd);
+            },
+            $save() {
+                alert(JSON.stringify(this.$data, null, 2));
+            },
+            $reload() {
+                let newData = new this._root_ctor(modelData);
+                for (let key in newData) { 
+                    Vue.set(this.$data, key, newData[key]);
+                }
+            }
+        }
+    });
+
+    var reactiveData = new TRoot(modelData);
+
+    var vm = new BaseVue({
+        el: "#test-app",
+        data: reactiveData,
+    });
+
+    vm._root_ctor = TRoot;
+    vm._template = {
+    };
+
+})();
+</script>
+</body>
+</html>

@@ -28,7 +28,7 @@ namespace A2v10.Xaml
 				AddCssClass(classes);
 		}
 
-		internal void SetInnerText(object p)
+		internal void SetInnerText(Object p)
 		{
 			throw new NotImplementedException();
 		}
@@ -212,27 +212,27 @@ namespace A2v10.Xaml
 
 		String GetAttributes()
 		{
-			if (_attributes != null)
-				return " " + String.Join(" ",
-					_attributes.Select(
-						(item) => {
-							return String.IsNullOrEmpty(item.Value)
-								? item.Key :
-								$"{item.Key}=\"{item.Value}\"";
-						}));
-			return String.Empty;
+            if (_attributes == null)
+                return String.Empty;
+			return " " + String.Join(" ",
+				_attributes.Select(
+					(item) => {
+						return String.IsNullOrEmpty(item.Value)
+							? item.Key :
+							$"{item.Key}=\"{item.Value}\"";
+					}));
 		}
 
 		String GetStyles()
 		{
-			if (_styles != null)
-				return " style=\"" + String.Join(";",
-					_styles.Select(
-						(item) =>
-						{
-							return $"{item.Key}:{item.Value}";
-						})) + "\"";
-			return String.Empty;
+            if (_styles == null)
+                return String.Empty;
+			return " style=\"" + String.Join(";",
+				_styles.Select(
+					(item) =>
+					{
+						return $"{item.Key}:{item.Value}";
+					})) + "\"";
 		}
 
 		String CreateStartTag(bool bSelfClosing)
@@ -246,6 +246,5 @@ namespace A2v10.Xaml
 				.Append(bSelfClosing ? "/>" : ">");
 			return sb.ToString();
 		}
-
 	}
 }

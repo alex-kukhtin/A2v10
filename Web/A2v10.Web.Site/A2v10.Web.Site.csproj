@@ -54,6 +54,7 @@
     <Content Include="app\components\datagrid.js" />
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\http.js" />
+    <Content Include="app\services\utlis.js" />
     <Content Include="css\font-awesome.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\site.css" />
@@ -78,6 +79,7 @@
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
     <Content Include="TestPages\attention.txt" />
+    <Content Include="TestPages\datagridwithdata.html" />
     <Content Include="TestPages\datagrid.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

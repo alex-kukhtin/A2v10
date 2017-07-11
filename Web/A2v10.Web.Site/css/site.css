@@ -6,11 +6,13 @@
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  empty-cells: show;
 }
 td,
 th {
   padding: 0;
 }
+/* data grid */
 .bold {
   font-weight: bold;
 }
@@ -54,20 +56,26 @@ th {
 }
 table.data-grid {
   border: 1px solid #ddd;
+  cursor: default;
 }
 table.data-grid td,
 table.data-grid th {
   padding: 4px 6px;
+  vertical-align: top;
 }
 table.bordered td,
 table.bordered th {
   border: 1px solid #ddd;
 }
 table.striped > tbody > tr:nth-of-type(odd) {
-  background-color: #f5f5f5;
+  background-color: rgba(224, 224, 224, 0.25);
+}
+table.hover > tbody > tr:hover {
+  background-color: #fdf4bf;
 }
 pre {
   font-family: Consolas, Courier New, Courier, monospace;
-  background-color: #eee;
+  font-size: 0.85em;
+  background-color: #f8f8f8;
   padding: 6px;
 }

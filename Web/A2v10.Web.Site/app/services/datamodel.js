@@ -1,7 +1,12 @@
 ﻿(function() {
 
+    /** TODO:
+     * Element.construct event
+     */
     const META = '_meta_';
     const PARENT = '_parent_';
+    const SRC = '_src_';
+    const PATH = '_path_';
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -38,33 +43,37 @@
         Object.defineProperty(trg, prop, {
             enumerable: true,
             configurable: true, /*required for vue*/
-            get: function () {
+            get() {
                 return this._src_[prop];
             },
-            set: function (val) {
+            set(val) {
                 this._src_[prop] = val;
+                if (!this._path_)
+                    return;
                 //TODO: fire datamodel event
-                console.warn(this._path_ + '.' + prop + '.change');
+                let eventName = this._path_ + '.' + prop + '.change';
+                console.warn(eventName);
             }
         });
     }
 
     function createObject(elem, source, path) {
-        defHidden(elem, '_src_', {});
-        defHidden(elem, '_path_', path);
-        for (var propName in elem._meta_) {
+        defHidden(elem, SRC, {});
+        defHidden(elem, PATH, path);
+        for (let propName in elem._meta_) {
             defSource(elem, source, propName);
         }
+        return elem;
     }
 
     function createArray(source, path, ctor) {
-        var arr = new _BaseArray(source.length);
+        let arr = new _BaseArray(source.length);
+        let dotPath = path + '[]'
         defHidden(arr, '_elem_', ctor);
-        defHidden(arr, '_path_', path);
-        var dotPath = path + '[]'
+        defHidden(arr, PATH, path);
         if (!source)
             return arr;
-        for (var i = 0; i < source.length; i++) {
+        for (let i = 0; i < source.length; i++) {
             arr[i] = new arr._elem_(source[i], dotPath);
             defHidden(arr[i], PARENT, arr);
         }
@@ -77,9 +86,39 @@
 
     _BaseArray.prototype = Array.prototype;
 
+    _BaseArray.prototype.$append = function (src) {
+        let newElem = new this._elem_(src || null, this._path_ + '[]');
+        defHidden(newElem, PARENT, this);
+        let len = this.push(newElem);
+        console.warn(this._path_ + '[].add'); // EVENT
+        return this[len-1]; // newly created reactive element
+    };
+
+    _BaseArray.prototype.$remove = function (item) {
+        let index = this.indexOf(item);
+        if (index == -1)
+            return;
+        this.splice(index, 1); // EVENT
+        console.warn(this._path_ + '[].remove');
+    };
+
+    function defineObject(obj, meta, arrayItem) {
+        defHidden(obj.prototype, META, meta);
+        if (arrayItem) {
+            defArrayItem(obj);
+        }
+    }
+
+    function defArrayItem(elem) {
+        elem.prototype.$remove = function () {
+            let arr = this._parent_;
+            arr.$remove(this);
+        }
+    }
 
     app.modules['datamodel'] = {
-        defHidden: defHidden,
-        createObject: createObject
+        createObject: createObject,
+        createArray: createArray,
+        defineObject: defineObject
     }
 })();

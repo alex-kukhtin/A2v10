@@ -18,5 +18,10 @@ namespace A2v10.Xaml
 			if (Italic.HasValue)
 				tag.AddCssClass(Italic.Value ? "text-italic" : "text-no-italic");
 		}
+
+        internal virtual void RenderElement(RenderContext context)
+        {
+
+        }
 	}
 }

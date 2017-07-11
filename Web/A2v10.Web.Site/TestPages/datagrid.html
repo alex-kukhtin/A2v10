@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../css/site.css" rel="stylesheet"/>
 </head>
 <body>
-    <div id="test-app" style="padding:20px">
-        <h3>Simple DataGrid</h3>
+    <div id="test-app" style="padding:20px;height:600px;overflow:auto">
+        <h4>Simple DataGrid</h4>
         <div>
             <label>
                 <input type="checkbox" v-model="Options.Bordered"/>
@@ -17,21 +18,38 @@
                 <input type="checkbox" v-model="Options.Striped" />
                 <span>Striped</span>
             </label>
+            <label>
+                <input type="checkbox" v-model="Options.Hover" />
+                <span>Hover</span>
+            </label>
+            <label>Dynamic column:</label>
+            <select v-model="Options.Dynamic">
+                <option v-for="opt in Options.DisplayVariants" :value="opt" v-text="opt.display"></option>
+            </select>
         </div>
         <div>
-            <data-grid :items-source="Customers" :bordered="Options.Bordered" :striped="Options.Striped">
+            <data-grid :items-source="Customers" 
+                       :bordered="Options.Bordered" 
+                       :striped="Options.Striped" 
+                       :hover="Options.Hover">
                 <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
                 <data-grid-column header="Name" content="Name"></data-grid-column>
                 <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
                 <data-grid-column id="tml" header="Templated column"></data-grid-column>
+                <data-grid-column :header="Options.Dynamic.header" :content="Options.Dynamic.display" :align="Options.Dynamic.align"></data-grid-column>
+                <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
                 <template slot="tml" scope="cell">
                     <input type="checkbox">
                     <input v-model.lazy="cell.row.Name" />
                     <button @click="cell.row.Name = ''">x</button>
                 </template>
+                <template slot="clr" scope="cell">
+                    <button><i class="fa fa-trash"></i></button>
+                </template>
             </data-grid>
         </div>
+        <h4>Data</h4>
         <div>
             <pre v-text="$data"></pre>
         </div>
@@ -53,9 +71,18 @@
         ],
         Options: {
             Bordered: true,
-            Striped: false
+            Striped: false,
+            Hover: false,
+            Dynamic: null,
+            DisplayVariants: [
+                { display: 'Id', align: 'center', header: 'Id*'},
+                { display: 'Name', align: 'left', header: 'Name*' },
+                { display: 'Amount', align: 'right', header: 'Amount*' },
+            ]
         }
     };
+
+    modelData.Options.Dynamic = modelData.Options.DisplayVariants[0];
 
     new Vue({
         el: "#test-app",

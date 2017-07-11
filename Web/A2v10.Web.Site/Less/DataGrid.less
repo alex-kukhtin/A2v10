@@ -1,10 +1,13 @@
-﻿@import "Variables.less";
+﻿
+@import "Variables.less";
 
 table.data-grid {
     border: 1px solid @data-grid-border-color;
+    cursor: default;
 
     td, th {
         padding: 4px 6px;
+        vertical-align: top;
     }
 }
 
@@ -16,7 +19,12 @@ table.bordered {
 
 table.striped {
     > tbody > tr:nth-of-type(odd) {
-        background-color:#f5f5f5;
+        background-color: @alter-bg-color;
     }
 }
 
+table.hover {
+    > tbody > tr:hover {
+        background-color:@hover-bg-color;
+    }
+}
