@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CA2MDIFrameWnd, CMDIFrameWndEx)
 	ON_MESSAGE(WM_NCHITTEST, OnNcHitTest)
 	ON_WM_PAINT()
 	ON_WM_NCMOUSEMOVE()
+	ON_MESSAGE(WM_SETMESSAGESTRING, OnSetMessageString)
 	ON_MESSAGE(WM_IDLEUPDATECMDUI, OnIdleUpdateCmdUI)
 	ON_MESSAGE(WM_NCCALCSIZE, OnNcCalcSize)
 	ON_WM_NCMOUSELEAVE()
@@ -115,6 +116,12 @@ int CA2MDIFrameWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	return 0;
+}
+
+// virtual
+void CA2MDIFrameWnd::GetMessageString(UINT nID, CString& rMessage) const
+{
+	rMessage.Empty();
 }
 
 // virtual 
@@ -330,6 +337,12 @@ LRESULT CA2MDIFrameWnd::OnIdleUpdateCmdUI(WPARAM, LPARAM)
 BOOL CA2MDIFrameWnd::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
+}
+
+// afx_msg
+LRESULT CA2MDIFrameWnd::OnSetMessageString(WPARAM wParam, LPARAM lParam)
+{
+	return 0L;
 }
 
 

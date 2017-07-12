@@ -50,11 +50,8 @@ CStringA CSciEditView::GetTextA()
 CString CSciEditView::GetText()
 {
 	USES_CONVERSION;
-	int len = GetCurrentDocLen();
-	char* buffer = new char[len + 1];
-	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(buffer));
-	buffer[len] = 0;
-	return CString(A2W_CP(buffer, CP_UTF8));
+	CStringA ansiA = GetTextA();
+	return CString(A2W_CP(ansiA.GetString(), CP_UTF8));
 }
 
 void CSciEditView::SetReadOnly(bool bSet)
@@ -90,6 +87,8 @@ void CSciEditView::SetupEditor()
 	COLORREF whiteColor = RGB(255, 255, 255);
 	COLORREF lineNumbersColor = RGB(43, 145, 175);
 	COLORREF marginBack = RGB(248, 248, 248);
+
+	SendMessage(SCI_SETEOLMODE, SC_EOL_CRLF); // Windows EOL
 
 	CStringA strFontA(strFont); // ANSI!
 	SendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, reinterpret_cast<LPARAM>((LPCSTR)strFontA));
@@ -217,12 +216,33 @@ void CSciEditView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	}
 }
 
+int CSciEditView::GetCurrentLine() const
+{
+	return long(SendMessage(SCI_LINEFROMPOSITION, GetCurrentPos()));
+}
+
+int CSciEditView::GetLineIndent(int line) const
+{
+	return (long)SendMessage(SCI_GETLINEINDENTATION, line);
+}
+
 long CSciEditView::GetLineLength(int line) const
 {
 	long lineEnd = (long) SendMessage(SCI_GETLINEENDPOSITION, line);
 	long lineStart = (long) SendMessage(SCI_POSITIONFROMLINE, line);
 	return lineEnd - lineStart;
 };
+
+
+long CSciEditView::GetCurrentPos() const
+{
+	return (long)SendMessage(SCI_GETCURRENTPOS);
+}
+
+long CSciEditView::GetCurrentDocLen() const
+{
+	return (long)SendMessage(SCI_GETLENGTH);
+}
 
 void CSciEditView::GetText(char* dest, Sci_PositionCR start, Sci_PositionCR end) const
 {
@@ -241,6 +261,46 @@ void CSciEditView::ClearIndicator(int num)
 	SendMessage(SCI_INDICATORCLEARRANGE, s, e - s);
 };
 
+void CSciEditView::AutoIndent(const char ch)
+{
+	int curLine = GetCurrentLine();
+	int prevLine = curLine - 1;
+	while (prevLine >= 0 && GetLineLength(prevLine) == 0)
+		prevLine--;
+	if (prevLine < 0)
+		return;
+	int prevIndent = GetLineIndent(prevLine);
+	SetLineIndent(curLine, prevIndent);
+}
+
+void CSciEditView::SetLineIndent(int line, int indent)
+{
+	if (line == 0)
+		return;
+	int prevLine = line - 1;
+	Sci_TextRange tr;
+	int len = GetLineLength(prevLine);
+	int posStart = SendMessage(SCI_POSITIONFROMLINE, prevLine);
+	CStringA ansiText;
+	LPSTR buff = ansiText.GetBuffer(len + 1);
+	tr.chrg.cpMin = posStart;
+	tr.chrg.cpMax = posStart + len;
+	char* buf = ansiText.GetBuffer(len + 1);
+	tr.lpstrText = ansiText.GetBuffer(len + 1);
+	SendMessage(SCI_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+	buf[len] = '\0';
+	ansiText.ReleaseBuffer();
+	CStringA newLine = ansiText;
+	buff = newLine.GetBuffer();
+	for (int i=0; buff[i]; i++) {
+		char ch = buff[i];
+		if (ch != ' ' && ch != '\t') {
+			buff[i] = '\0';
+		}
+	}
+	newLine.ReleaseBuffer();
+	SendMessage(SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(newLine.GetString()));
+}
 
 // afx_msg
 void CSciEditView::OnEditCopy()
@@ -324,8 +384,10 @@ void CSciEditView::OnContextMenu(CWnd* pWnd, CPoint point)
 void CSciEditView::OnCharAdded(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
+	char ch = pSCN->ch;
+	if (ch == '\n')
+		AutoIndent(pSCN->ch);
 	/*
-	MaintainIndentation(pSCN->ch);
 	ATLASSERT(m_pAutoCompletion);
 	m_pAutoCompletion->InsertMatchedChar(pSCN->ch);
 	*/
@@ -337,7 +399,7 @@ void CSciEditView::OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult)
 	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
 	if (pSCN->nmhdr.hwndFrom != GetSafeHwnd())
 		return;
-	ATLTRACE(L"update ui: %d\n", pSCN->updated);
+	//ATLTRACE(L"update ui: %d\n", pSCN->updated);
 	/*
 	braceMatch();
 	if (IsHtmlLikeLang()) {
@@ -436,14 +498,6 @@ void CXamlEditView::SetupEditor()
 	}
 
 
-	/*
-	const char* jsInstre1 = "abstract boolean break byte case catch char class const continue debugger default delete do double else enum export extends final finally float for from function goto if implements import in instanceof int interface let long native new null of package private protected public return short static super switch synchronized this throw throws transient try typeof var void volatile while with true false prototype";
-	const char* jsType1 = "Array Date eval hasOwnProperty Infinity isFinite isNaN isPrototypeOf Math NaN Number Object String toString undefined valueOf alert";
-
-	SendMessage(SCI_SETKEYWORDS, 0, reinterpret_cast<LPARAM>(jsInstre1));
-	SendMessage(SCI_SETKEYWORDS, 1, reinterpret_cast<LPARAM>(jsType1));
-	*/
-
 	COLORREF tagText = RGB(128, 0, 0);
 	COLORREF attrText = RGB(255, 0, 0);
 	COLORREF stringText = RGB(0, 0, 255);
@@ -452,11 +506,6 @@ void CXamlEditView::SetupEditor()
 	COLORREF cEntityColor = RGB(128, 0, 128);
 	//COLORREF numberText = RGB(0, 0, 128);
 
-	/*
-	COLORREF keywordText = RGB(0, 0, 255);
-	COLORREF type1Text = RGB(128, 0, 128);
-	COLORREF commentText = RGB(0, 128, 0);
-	*/
 
 	SendMessage(SCI_STYLESETFORE, SCE_H_TAG, tagText);
 	SendMessage(SCI_STYLESETFORE, SCE_H_ATTRIBUTE, attrText);

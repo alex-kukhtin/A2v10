@@ -53,7 +53,15 @@ void CModuleView::OnDebugRunInt()
 	CString pathName = GetDocument()->GetPathName();
 	SetReadOnly(true);
 	JavaScriptContext jscs;
-	bool bClosing = JavaScriptRuntime::RunScript(code, pathName);
+	bool bClosing = false;
+	try 
+	{
+		bClosing = JavaScriptRuntime::RunScript(code, pathName);
+	}
+	catch (JavaScriptException& ex) 
+	{
+		ex.ReportError();
+	}
 	if (bClosing)
 		return; // DO NOTHING! shutting down!
 	// may be destroyed inside debugger
@@ -76,6 +84,10 @@ LRESULT CModuleView::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam)
 	DEBUG_BREAK_INFO* pBreakInfo = reinterpret_cast<DEBUG_BREAK_INFO*>(lParam);
 	if (!pBreakInfo)
 		return 0;
+	CMDIChildWnd* pFrame = reinterpret_cast<CMDIChildWnd*>(GetParent());
+	pFrame->MDIActivate();
+	//GetParent()->SendMessage(WM_MDIACTIVATE, (WPARAM)GetSafeHwnd());
+	SetFocus();
 	RemoveCurrentLineMarker();
 	m_nCurrentLineHandle = SendMessage(SCI_MARKERADD, pBreakInfo->lineNo, MARKER_CURRENT_LINE);
 	SendMessage(SCI_ENSUREVISIBLE, pBreakInfo->lineNo); // unfold

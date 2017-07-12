@@ -23,6 +23,7 @@ EXPORTS
 ?OnSettingChange@CA2MDIFrameWnd@@IAEXIPB_W@Z
 ?OnCmdMsg@CA2MDIFrameWnd@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
 ?OnCreate@CA2MDIFrameWnd@@IAEHPAUtagCREATESTRUCTW@@@Z
+?GetMessageString@CA2MDIFrameWnd@@UBEXIAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
 ;
 ?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ

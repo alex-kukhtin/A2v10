@@ -34,25 +34,16 @@ protected:
 	virtual bool IsHtmlLikeLang() { return false; }
 	virtual int GetContextMenuPopupIndex() { return -1; }
 
+	void AutoIndent(const char ch);
 
 	long GetLineLength(int line) const;
 	void GetText(char* dst, Sci_PositionCR start, Sci_PositionCR end) const;
 	int SearchInTarget(const char* text2Find, int lenOfText2Find, int fromPos, int toPos) const;
-
-	long GetLineIndent(int line) const
-	{
-		return (long)SendMessage(SCI_GETLINEINDENTATION, line);
-	}
-
-	long GetCurrentPos() const
-	{
-		return (long) SendMessage(SCI_GETCURRENTPOS);
-	}
-
-	long GetCurrentDocLen() const
-	{
-		return (long) SendMessage(SCI_GETLENGTH);
-	}
+	int GetCurrentLine() const;
+	int GetLineIndent(int line) const;
+	void SetLineIndent(int line, int indent);
+	long GetCurrentPos() const;
+	long GetCurrentDocLen() const;
 
 	void ClearIndicator(int indicatorNumber);
 
@@ -77,18 +68,18 @@ class CJsEditView : public CSciEditView
 {
 	DECLARE_DYNCREATE(CJsEditView)
 protected:
-	virtual void SetupEditor();
-	virtual bool IsCLikeLang() { return true; }
-	virtual bool IsHtmlLikeLang() { return false; }
-	virtual int GetContextMenuPopupIndex() { return IDM_POPUP_JSEDIT_INDEX; }
+	virtual void SetupEditor() override;
+	virtual bool IsCLikeLang() override { return true; }
+	virtual bool IsHtmlLikeLang() override { return false; }
+	virtual int GetContextMenuPopupIndex() override { return IDM_POPUP_JSEDIT_INDEX; }
 };
 
 class CXamlEditView : public CSciEditView
 {
 	DECLARE_DYNCREATE(CXamlEditView)
 protected:
-	virtual void SetupEditor();
-	virtual bool IsCLikeLang() { return false; }
-	virtual bool IsHtmlLikeLang() { return true; }
-	virtual int GetContextMenuPopupIndex() { return IDM_POPUP_XAMLEDIT_INDEX; }
+	virtual void SetupEditor() override;
+	virtual bool IsCLikeLang() override { return false; }
+	virtual bool IsHtmlLikeLang() override { return true; }
+	virtual int GetContextMenuPopupIndex() override { return IDM_POPUP_XAMLEDIT_INDEX; }
 };
