@@ -7,15 +7,43 @@
 #define new DEBUG_NEW
 #endif
 
-CFormElement::CFormElement()
+CFormElement::CFormElement(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode)
+	: CFormItem(pDoc, pNode)
 {
-	m_position.SetRect(0, 0, 400 * 75, 300 * 75);
-	try {
-		m_jsValue = JavaScriptRuntime::CreateDesignerElement(L"{'type':'form'}");
+	Xml2Properties();
+}
+
+void CFormElement::Xml2Properties()
+{
+	ATLASSERT(m_pNode);
+	double width = 400; // default size
+	double height = 300;
+	for (auto pAttr = m_pNode->FirstAttribute(); pAttr; pAttr = pAttr->Next()) {
+		CString attrName = pAttr->Name();
+		if (attrName == L"Width")
+			width = pAttr->DoubleValue();
+		else if (attrName == L"Height")
+			height = pAttr->DoubleValue();
+		else if (attrName == L"Title")
+			m_title = pAttr->Value();
 	}
-	catch (JavaScriptException& ex) {
-		ex.ReportError();
+	m_position.SetRect(0, 0, (int) (width * 75.0), (int) (height * 75.0));
+	for (auto pChild = m_pNode->FirstChildElement(); pChild; pChild = pChild->NextSiblingElement()) {
+		CString name = pChild->Name();
+		int fx = 55;
 	}
+}
+
+// virtual 
+void CFormElement::Properties2Xml()
+{
+	ATLASSERT(m_pNode);
+	m_pNode->SetAttribute(L"Width", m_position.Width() / 75.0);
+	m_pNode->SetAttribute(L"Height", m_position.Height() / 75.0);
+	if (m_title.IsEmpty())
+		m_pNode->DeleteAttribute(L"Title");
+	else
+		m_pNode->SetAttribute(L"Title", m_title);
 }
 
 // virtual 
@@ -24,14 +52,4 @@ void CFormElement::Draw(const RENDER_INFO& ri)
 	CBrushSDC brush(ri.pDC, RGB(240, 240, 240));
 	ri.pDC->Rectangle(m_position);
 }
-
-// virtual 
-void CFormElement::SetXamlAttributes(tinyxml2::XMLElement* node)
-{
-	node->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
-	node->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
-
-	node->SetAttribute(L"Width", m_position.Width() / 75.0);
-	node->SetAttribute(L"Height", m_position.Height() / 75.0);
-};
 

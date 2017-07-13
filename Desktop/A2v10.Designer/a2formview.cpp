@@ -70,8 +70,36 @@ BOOL CA2FormView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 	return __super::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
+
+// virtual 
+void CA2FormView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
+{
+	__super::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	if (bActivate) {
+		CA2FormDocument* pDoc = GetDocument();
+		if (pDoc->IsModifiedText()) {
+			pDoc->SetXmlFromXmlText();
+			Invalidate();
+		}
+	}
+}
+
 void CA2FormView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
+	switch (lHint) {
+	case HINT_INVALIDATE_ITEM :
+	{
+		CFormItem* pItem = reinterpret_cast<CFormItem*>(pHint);
+		if (pItem) {
+			ASSERT_VALID(pItem);
+			CRect rect(pItem->GetPosition());
+			DocToClient(rect);
+			rect.InflateRect(CX_HANDLE_SIZE, CX_HANDLE_SIZE);
+			InvalidateRect(rect);
+		}
+	}
+	break;
+	}
 	/*
 	if (GetDocument()->IsLoading())
 		return;
@@ -129,8 +157,20 @@ BOOL CA2FormView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	GetCursorPos(&pt);
 	ScreenToClient(&pt);
 	ClientToDoc(pt);
-	CFormItem* pItem = GetDocument()->ObjectAt(pt);
 	*/
+	//CFormItem* pItem = GetDocument()->ObjectAt(pt);
+	//if (!pItem)
+		//return __super::OnSetCursor(pWnd, nHitTest, message);
+
+	CFormItem* pItem = GetDocument()->m_pRoot; // SELECTED ITEM;
+	CRect rect(pItem->GetPosition());
+	DocToClient(rect);
+	CRectTrackerEx tracker(rect, CRectTracker::resizeOutside, false);
+	tracker.m_dwDrawStyle = pItem->GetTrackMask();
+	if (tracker.SetCursorEx(this, nHitTest)) {
+		//ATLTRACE(L"hit %d, %d\n", pt.x, pt.y);
+		return TRUE;
+	}
 
 
 	/*

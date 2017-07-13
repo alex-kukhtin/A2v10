@@ -111,6 +111,9 @@
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="xmltools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -221,6 +224,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\tinyxml2.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\xmltools.h">
       <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>

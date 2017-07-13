@@ -108,6 +108,9 @@
     <ClInclude Include="consolewnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xamlview.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="consolewnd.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xamlview.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

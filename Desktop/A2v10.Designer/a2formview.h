@@ -13,9 +13,6 @@ protected: // create from serialization only
 	// Attributes
 public:
 	CA2FormDocument* GetDocument() const;
-
-	// Operations
-public:
 	void ClientToDoc(CRect& rect);
 	void ClientToDoc(CPoint& point);
 	void DocToClient(CRect& rect);
@@ -28,6 +25,7 @@ public:
 	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL) override;
 
 protected:
+	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) override;
 	virtual void OnDraw(CDC* pDC) override;  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 	int GetContextMenuPopupIndex();

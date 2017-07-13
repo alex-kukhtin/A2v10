@@ -24,7 +24,8 @@
 IMPLEMENT_DYNCREATE(CA2FormDocument, CDocument)
 
 CA2FormDocument::CA2FormDocument()
-	: m_pRoot(nullptr)
+	: m_pRoot(nullptr),
+	  m_bXmlModified(false), m_bTextModified(false)
 {
 }
 
@@ -37,9 +38,19 @@ CA2FormDocument::~CA2FormDocument()
 
 void CA2FormDocument::Clear() 
 {
+	ClearRoot();
+}
+
+void CA2FormDocument::ClearRoot()
+{
+	ClearSelection();
 	if (m_pRoot)
 		delete m_pRoot;
 	m_pRoot = nullptr;
+}
+
+void CA2FormDocument::ClearSelection()
+{
 }
 
 BEGIN_MESSAGE_MAP(CA2FormDocument, CDocument)
@@ -54,10 +65,32 @@ BOOL CA2FormDocument::OnNewDocument()
 	return TRUE;
 }
 
+void CA2FormDocument::Xml2Form()
+{
+	ClearRoot();
+	tinyxml2::XMLElement* pNode = m_xmlDocument.RootElement();
+	if (pNode != nullptr) {
+		CString name = pNode->Name();
+		if (name == "Dialog") {
+			m_pRoot = new CFormElement(this, pNode);
+		}
+	}
+}
+
+CFormItem* CA2FormDocument::ObjectAt(CPoint point)
+{
+	return m_pRoot->ObjectAt(point);
+}
+
 void CA2FormDocument::CreateRootElement()
 {
 	ATLASSERT(m_pRoot == nullptr);
-	m_pRoot = new CFormElement();
+	auto root = m_xmlDocument.NewElement(L"Dialog");
+	root->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
+	root->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
+	m_xmlDocument.InsertEndChild(root);
+	m_pRoot = new CFormElement(this, root);
+	SetXmlTextFromXml();
 }
 
 bool CA2FormDocument::IsLocked() const
@@ -83,87 +116,89 @@ CXamlEditView* CA2FormDocument::GetXamlEditView()
 	return nullptr;
 }
 
-void CA2FormDocument::ParseXml(LPCWSTR szXml) 
-{
-	CreateRootElement();
-	tinyxml2::XMLDocument doc;
-	auto error = doc.Parse(szXml);
-	auto root = doc.RootElement();
-	LPCWSTR rootName = root->Name();
-	//m_pRoot->ParseXaml(root);
-	int fx = 55;
-	tinyxml2::XMLPrinter printer;
-	doc.Print(&printer);
-	//AfxMessageBox(printer.CStr());
-	CXamlEditView* pView = GetXamlEditView();
-	pView->SetText(printer.CStr());
-}
 
-// virtual 
-BOOL CA2FormDocument::OnOpenDocument(LPCTSTR lpszPathName)
+void CA2FormDocument::ParseXml(const char* szXml) 
 {
 	USES_CONVERSION;
-	CXamlEditView* pView = GetXamlEditView();
-	ATLASSERT(pView);
-	try 
-	{
-		CFile file(lpszPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyRead);
-		BYTE hdr[3] = { 0, 0, 0}; // UTF-8 signature
-		file.Read(hdr, 3);
-		if (hdr[0] == 0xef && hdr[1] == 0xbb && hdr[2] == 0xbf) {
-			LONG length = (LONG) file.GetLength() - 3;
-			char* buffer = new char[length + 1];
-			file.Read(buffer, length);
-			buffer[length] = 0;
-			// set text to Scintilla view
-			pView->SetTextA(buffer);
-			ParseXml(A2W_CP(buffer, CP_UTF8));
-			delete[] buffer;
-		}
-		file.Close();
-	}
-	catch (CFileException* ex) 
-	{
-		ex->ReportError();
-		ex->Delete();
-	}
-	return TRUE;
+	LPCWSTR szXmlW = A2W_CP(szXml, CP_UTF8);
+	auto error = m_xmlDocument.Parse(szXmlW);
+	if (error != tinyxml2::XML_SUCCESS)
+		throw CXmlError(error);
 }
 
-// virtual 
-BOOL CA2FormDocument::OnSaveDocument(LPCTSTR lpszPathName)
+void CA2FormDocument::LoadDocument(CFile* pFile, CXamlEditView* pView)
+{
+	try 
+	{
+		BYTE hdr[3] = { 0, 0, 0}; // UTF-8 signature
+		pFile->Read(hdr, 3);
+		CStringA ansiText;
+		LONG length = (LONG) pFile->GetLength();
+		if (hdr[0] == 0xef && hdr[1] == 0xbb && hdr[2] == 0xbf) {
+			length -= 3;
+		}
+		else 
+		{
+			THROW(new CArchiveException(CArchiveException::badSchema));
+		}
+		char* buffer = ansiText.GetBuffer(length + 1);
+		pFile->Read(buffer, length);
+		buffer[length] = 0;
+		ParseXml(buffer);
+		pView->SetTextA(buffer);
+		pView->SetSavePoint();
+		// set text to Scintilla view
+		ansiText.ReleaseBuffer();
+		Xml2Form();
+	}
+	catch (CXmlError& error) {
+		// set invalid text to view ????
+		// set for error state ????
+		error.ReportError();
+		THROW(new CUserException());
+	}
+}
+
+void CA2FormDocument::SetXmlFromXmlText()
 {
 	CXamlEditView* pView = GetXamlEditView();
+	CString xmlText = pView->GetText();
+	m_xmlDocument.Parse(xmlText);
+	Xml2Form();
+	SetModifiedXml(false);
+	SetModifiedText(false);
+}
+
+void CA2FormDocument::SetXmlTextFromXml()
+{
+	CXamlEditView* pView = GetXamlEditView();
+	tinyxml2::XMLPrinter printer;
+	m_xmlDocument.Print(&printer);
+	pView->SetText(printer.CStr());
+	SetModifiedText(false);
+	SetModifiedXml(false);
+}
+
+void CA2FormDocument::SaveDocument(CFile* pFile, CXamlEditView* pView)
+{
 	ATLASSERT(pView);
 	try
 	{
-		/*
-		tinyxml2::XMLDocument doc;
-		m_pRoot->SaveToXaml(&doc, nullptr);
-
-		tinyxml2::XMLPrinter printer;
-		doc.Print(&printer);
-
-		// UTF-8 with signature
-		USES_CONVERSION;
-		const char* pAnsi = W2A_CP(printer.CStr(), CP_UTF8);
-		*/
+		if (IsModifiedXml()) {
+			SetXmlTextFromXml();
+		}
 		CStringA utf8Text = pView->GetTextA();
-		CFile file;
-		file.Open(lpszPathName, CFile::modeWrite | CFile::modeCreate | CFile::shareDenyNone);
+		// try to parse xml text
+		ParseXml(utf8Text.GetString());
 		BYTE hdr[3] = { 0xef, 0xbb, 0xbf }; // UTF-8 signature
-		file.Write(hdr, 3);
-		file.Write((LPCSTR) utf8Text, utf8Text.GetLength());
-		file.Close();
-		SetModifiedFlag(FALSE);
+		pFile->Write(hdr, 3);
+		pFile->Write((LPCSTR) utf8Text, utf8Text.GetLength());
+		Xml2Form(); // always
 	}
-	catch (CFileException* ex) 
-	{
-		ex->ReportError();
-		ex->Delete();
-		return FALSE;
+	catch (CXmlError& err) {
+		err.ReportError();
+		THROW(new CUserException());
 	}
-	return TRUE;
 }
 
 //virtual 
@@ -177,13 +212,38 @@ BOOL CA2FormDocument::CanCloseFrame(CFrameWnd* pFrame)
 // virtual 
 void CA2FormDocument::Serialize(CArchive& ar)
 {
-	ATLASSERT(FALSE);
+	CXamlEditView* pView = GetXamlEditView();
+	ATLASSERT(pView);
+	if (ar.IsLoading()) 
+	{
+		LoadDocument(ar.GetFile(), pView);
+	}
+	else if (ar.IsStoring()) 
+	{
+		SaveDocument(ar.GetFile(), pView);
+		UpdateAllViews(NULL, HINT_DOCUMENT_SAVED, 0L);
+	}
+}
+
+void CA2FormDocument::SetModifiedXml(bool bModified /*= true*/)
+{
+	m_bXmlModified = bModified;
+	if (bModified)
+		SetModifiedFlag(TRUE);
+}
+
+void CA2FormDocument::SetModifiedText(bool bModified /*= true*/)
+{
+	m_bTextModified = bModified;
+	if (bModified)
+		SetModifiedFlag(TRUE);
 }
 
 // virtual 
 void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 {
-	if (bModified) {
+	if (bModified) 
+	{
 		UpdateAllViews(NULL, HINT_DOCUMENT_MODIFIED, 0L);
 		CString strTitle = GetTitle();
 		int len = strTitle.GetLength();
@@ -191,6 +251,11 @@ void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 			strTitle += L"*";
 			SetTitle(strTitle);
 		}
+	}
+	else 
+	{
+		SetModifiedXml(false);
+		SetModifiedText(false);
 	}
 	__super::SetModifiedFlag(bModified);
 }

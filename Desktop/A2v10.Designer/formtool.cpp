@@ -122,8 +122,12 @@ void CFormSelectTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoin
 	bool bLocked = pDoc->IsLocked();
 	CPoint local(point);
 	pView->ClientToDoc(local);
+	// TEMP
+	CFormItem* pItem = pDoc->m_pRoot;
+	if (HandleOneObject(pView, point))
+		return;
 	/*
-	CFormItem* pItem = pDoc->ObjectAt(local);
+	//CFormItem* pItem = pDoc->ObjectAt(local);
 	int cnt = pDoc->m_selectionList.GetCount();
 	if (cnt == 0) {
 
@@ -155,25 +159,28 @@ void CFormSelectTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoin
 
 bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 {
-	/*
 	CA2FormDocument* pDoc = pView->GetDocument();
 	ATLASSERT(pDoc);
+	/*
 	//if (pView->IsInsideEditor())
 	//return FALSE;
 
 	ASSERT(pDoc->m_selectionList.GetCount() == 1);
 	// один выделенный объект
+	*/
 
 	if (GetAsyncKeyState(GetSystemMetrics(SM_SWAPBUTTON) ? VK_RBUTTON : VK_LBUTTON) >= 0)
 		return FALSE; // Left button already released
 
+	CFormItem* pItem = pDoc->m_pRoot;
+	/*
 	CFormItem* pItem = pDoc->m_selectionList.GetHead();
 	ATLASSERT(pItem);
-	/*
 	if (!pItem->m_bFirstClick) {
 	if (pItem->OnLButtonDown(pView, 0, point))
 	return TRUE;
 	}
+	*/
 	// для линии pItem->OnLButtonDown уже все, что можно сделал
 	// поэтому просто уходим
 	//if (pItem->GetFlags() & VFITEM_ISLINE)
@@ -199,7 +206,6 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 			return TRUE;
 		}
 	}
-	*/
 	return false;
 }
 

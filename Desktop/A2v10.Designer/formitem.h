@@ -1,6 +1,8 @@
 #pragma once
 
 class CFormItem;
+class CA2FormDocument;
+class tinyxml2::XMLElement;
 
 // TRACK MASK
 // BitNo == TrackerHit + 1
@@ -28,19 +30,28 @@ private:
 
 class CA2FormView;
 
-class CFormItem 
+class CFormItemList : public CList<CFormItem*>
+{
+public:
+	virtual ~CFormItemList();
+	void Clear();
+};
+
+class CFormItem  : public CObject
 {
 protected:
 	CRect m_position;
-	JavaScriptValue m_jsValue;
 
-	std::list<CFormItem*> m_children;
-
+	tinyxml2::XMLElement* m_pNode;
+	CA2FormDocument* m_pDoc;
+	CFormItemList m_children;
 public:
-	CFormItem();
+	CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
 	virtual ~CFormItem();
 
 	virtual LPCWSTR ElementName() abstract;
+	virtual void Xml2Properties();
+	virtual void Properties2Xml();
 	virtual void Draw(const RENDER_INFO& ri) abstract;
 	virtual DWORD GetTrackMask() const { return RTRE_ALL; }
 	virtual const CRect& GetPosition() const {return m_position; }
@@ -48,8 +59,6 @@ public:
 	virtual CSize GetMinTrackSize() const;
 	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
 
-	virtual void SaveToXaml(tinyxml2::XMLDocument* xmldoc, tinyxml2::XMLElement* parent);
-
-protected:
-	virtual void SetXamlAttributes(tinyxml2::XMLElement* node) abstract;
+	virtual void Invalidate();
+	virtual void SetPosition(const CRect& rect);
 };

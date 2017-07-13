@@ -415,7 +415,14 @@ void CSciEditView::OnSavePointLeft(NMHDR* pNMHDR, LRESULT* pResult)
 	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
 	if (pSCN->nmhdr.hwndFrom != GetSafeHwnd())
 		return;
+	SavePointLeft();
 	GetDocument()->SetModifiedFlag(TRUE);
+}
+
+// virtual
+void CSciEditView::SavePointLeft()
+{
+
 }
 
 IMPLEMENT_DYNCREATE(CJsEditView, CSciEditView)

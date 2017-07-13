@@ -10,21 +10,33 @@ protected: // create from serialization only
 	CA2FormDocument();
 	DECLARE_DYNCREATE(CA2FormDocument)
 
+	tinyxml2::XMLDocument m_xmlDocument;
 	CFormItem* m_pRoot;
+	bool m_bXmlModified;
+	bool m_bTextModified;
 public:
 	virtual ~CA2FormDocument();
+	void ClearRoot();
+	void ClearSelection();
 
 	void DrawContent(const RENDER_INFO& ri);
 
 	bool IsLocked() const;
-
+	CFormItem* ObjectAt(CPoint point);
+	
+	bool IsModifiedXml() const { return m_bXmlModified; }
+	bool IsModifiedText() const { return m_bTextModified; }
+	void SetXmlTextFromXml();
+	void SetXmlFromXmlText();
 	virtual BOOL OnNewDocument() override;
 	virtual void OnCloseDocument() override;
-	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName) override;
-	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName) override;
 	virtual BOOL CanCloseFrame(CFrameWnd* pFrame) override;
 	virtual void Serialize(CArchive& ar) override;
 	virtual void SetModifiedFlag(BOOL bModified = TRUE) override;
+
+	void SetModifiedXml(bool bModified = true);
+	void SetModifiedText(bool bModified = true);
+
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -33,9 +45,12 @@ public:
 protected:
 	void DrawSelection(const RENDER_INFO& ri);
 	void CreateRootElement();
+	void Xml2Form();
 	void Clear();
 	CXamlEditView* GetXamlEditView();
-	void ParseXml(LPCWSTR szXml);
+	void ParseXml(const char* szXml);
+	void LoadDocument(CFile* pFile, CXamlEditView* pView);
+	void SaveDocument(CFile* pFile, CXamlEditView* pView);
 
 	DECLARE_MESSAGE_MAP()
 

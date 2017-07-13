@@ -33,6 +33,7 @@ protected:
 	virtual bool IsCLikeLang() { return false; }
 	virtual bool IsHtmlLikeLang() { return false; }
 	virtual int GetContextMenuPopupIndex() { return -1; }
+	virtual void SavePointLeft();
 
 	void AutoIndent(const char ch);
 

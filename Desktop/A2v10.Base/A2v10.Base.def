@@ -88,4 +88,12 @@ EXPORTS
 ?FirstChildElement@XMLNode@tinyxml2@@QBEPBVXMLElement@2@PB_W@Z
 ?NewComment@XMLDocument@tinyxml2@@QAEPAVXMLComment@2@PB_W@Z
 ?Value@XMLNode@tinyxml2@@QBEPB_WXZ
+?ErrorIDToName@XMLDocument@tinyxml2@@SAPB_WW4XMLError@2@@Z
+??0CXmlError@@QAE@W4XMLError@tinyxml2@@@Z
+?Name@XMLAttribute@tinyxml2@@QBEPB_WXZ
+?QueryDoubleValue@XMLAttribute@tinyxml2@@QBE?AW4XMLError@2@PAN@Z
+?Value@XMLAttribute@tinyxml2@@QBEPB_WXZ
+?NextSiblingElement@XMLNode@tinyxml2@@QBEPBVXMLElement@2@PB_W@Z
+?DeleteAttribute@XMLElement@tinyxml2@@QAEXPB_W@Z
+?ReportError@CXmlError@@QAEXXZ
 
