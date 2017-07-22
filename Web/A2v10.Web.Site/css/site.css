@@ -63,6 +63,9 @@ table.data-grid th {
   padding: 4px 6px;
   vertical-align: top;
 }
+table.data-grid tr.active {
+  background-color: #cde6f7 !important;
+}
 table.bordered td,
 table.bordered th {
   border: 1px solid #ddd;

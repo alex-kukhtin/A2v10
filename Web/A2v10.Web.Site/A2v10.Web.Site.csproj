@@ -52,6 +52,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\datagrid.js" />
+    <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\http.js" />
     <Content Include="app\services\utlis.js" />

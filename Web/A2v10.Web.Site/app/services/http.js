@@ -8,7 +8,7 @@
 
     }
 
-    app.modules['datamodel'] = {
+    app.modules['http'] = {
         get: get,
         post: post
     }

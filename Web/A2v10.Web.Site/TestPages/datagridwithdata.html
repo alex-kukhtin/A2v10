@@ -15,22 +15,32 @@
         <div>
             <div class="toolbar">
                 <button @click.stop.prevent="Customers.$append()"><i class="fa fa-plus"></i> add row</button>
-                <button @click.stop.prevent="$exec('command')"><i class="fa fa-database"></i> exec</button>
+                <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
                 <button @click.stop.prevent="$save()"><i class="fa fa-save"></i> save</button>
                 <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
+                <label v-text="Customers.length"></label>
+                <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>
             </div>
             <data-grid :items-source="Customers" 
                        :bordered="true" 
                        :striped="true" 
-                       :hover="true">
+                       :hover="true"
+                       :selected="Customers.selected">
+                <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
                 <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
                 <data-grid-column header="Name" content="Name"></data-grid-column>
                 <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
+                <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
                 <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
                 <template slot="clr" scope="cell">
-                    <button @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i></button>
+                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i></button>
+                    <button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="fa fa-plus"></i></button>
+                    <button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="fa fa-minus"></i></button>
+                </template>
+                <template slot="check" scope="cell">
+                    <input type="checkbox" value="true" v-model="cell.row.$checked" />
                 </template>
             </data-grid>
         </div>
@@ -41,13 +51,15 @@
     </div>
     <script type="text/javascript" src="../scripts/vue.js"></script>
     <script type="text/javascript" src="../app/app.js"></script>
+    <script type="text/javascript" src="../app/platform/webvue.js"></script>
     <script type="text/javascript" src="../app/services/utlis.js"></script>
     <script type="text/javascript" src="../app/services/datamodel.js"></script>
     <script type="text/javascript" src="../app/components/datagrid.js"></script>
 
 
 <script type="text/javascript">
-    (function () {
+(function () {
+    Vue.performance = true;
 
     const cmn = require('datamodel');
 
@@ -86,14 +98,29 @@
     };
 
     let template = {
-
+        commands: {
+            inc: function (to, value) {
+                to.Amount += value;
+            }
+        }
     }
 
     var BaseVue = Vue.extend({
         methods: {
-            $exec(cmd) {
+            $exec(cmd, ...args) {
+                if (this._template.commands) {
+                    let cmdf = this._template.commands[cmd];
+                    if (typeof cmdf === 'function') {
+                        cmdf.apply(this, args);
+                        return;
+                    }
+                }
+                console.error(`command "${cmd}" not found`);
+
                 //alert(this._template);
-                alert('exec:' + cmd);
+                //alert('exec:' + cmd);
+                //console.dir(this._template.commands);
+                //this.$data.Customers[1].Amount += 10;
             },
             $save() {
                 alert(JSON.stringify(this.$data, null, 2));
@@ -115,8 +142,7 @@
     });
 
     vm._root_ctor = TRoot;
-    vm._template = {
-    };
+    vm._template = template;
 
 })();
 </script>

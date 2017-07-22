@@ -3,8 +3,9 @@
  /*TODO:
 2. size (compact, large ??)
 3. contextual
-4. selectable
 5. grouping
+6. select (выбирается правильно, но теряет фокус при выборе редактора)
+7. Доделать checked
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
@@ -17,12 +18,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr v-for="(item, rowIndex) in itemsSource">
-            <data-grid-cell v-for="(col, colIndex) in columns" :key="colIndex" :row="item" :index="rowIndex" :col="col"></data-grid-cell>
-        </tr>
+        <data-grid-row :cols="columns" v-for="(item, rowIndex) in itemsSource" :row="item" :key="rowIndex" :index="rowIndex"></data-grid-row>
     </tbody>
 </table>
 `;
+
+    const dataGridRowTemplate =
+        '<tr @mouseup="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
 
     const dataGridColumn = {
         name: 'data-grid-column',
@@ -60,7 +62,7 @@
         props: {
             row: Object,
             col: Object,
-            index: Number,
+            index: Number
         },
         render(h, ctx) {
             let tag = 'td';
@@ -102,6 +104,24 @@
         },
     };
 
+    const dataGridRow = {
+        name: 'data-grid-row',
+        template: dataGridRowTemplate,
+        components: {
+            'data-grid-cell': dataGridCell
+        },
+        props: {
+            row: Object,
+            cols: Array,
+            index: Number
+        },
+        computed: {
+            active() {
+                return this.row === this.$parent.selected;
+            }
+        }
+    };
+
     Vue.component('data-grid', {
         props: {
             'items-source': [Object, Array],
@@ -111,7 +131,7 @@
         },
         template: dataGridTemplate,
         components: {
-            'data-grid-cell': dataGridCell
+            'data-grid-row': dataGridRow
         },
         data() {
             return {
@@ -125,6 +145,9 @@
                 if (this.striped) cssClass += ' striped';
                 if (this.hover) cssClass += ' hover';
                 return cssClass;
+            },
+            selected() {
+                return this.itemsSource.$selected;
             }
         },
         methods: {

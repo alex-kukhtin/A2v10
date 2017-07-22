@@ -9,7 +9,7 @@
 	function require(module) {
 		if (module in app.modules)
             return app.modules[module];
-        throw new Error('module ' + module + 'not found');
+        throw new Error('module "' + module + '" not found');
 	}
 
 }());
@@ -22,6 +22,8 @@
     const PARENT = '_parent_';
     const SRC = '_src_';
     const PATH = '_path_';
+
+    const platform = require('platform');
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -62,6 +64,7 @@
                 return this._src_[prop];
             },
             set(val) {
+                //TODO: handle changing event
                 this._src_[prop] = val;
                 if (!this._path_)
                     return;
@@ -78,6 +81,10 @@
         for (let propName in elem._meta_) {
             defSource(elem, source, propName);
         }
+        let ctorname = elem.constructor.name;
+        let constructEvent = ctorname + '.construct';
+        // TODO: fire datamodel event
+        console.warn(constructEvent);
         return elem;
     }
 
@@ -91,6 +98,16 @@
         for (let i = 0; i < source.length; i++) {
             arr[i] = new arr._elem_(source[i], dotPath);
             defHidden(arr[i], PARENT, arr);
+            arr[i].$checked = false;
+            // TODO: move to template!!
+            Object.defineProperty(arr[i], "Sum", {
+                enumerable: true,
+                configurable: false,
+                get() {
+                    return this.Amount * 2.0;
+                }
+
+            });
         }
         return arr;
     }
@@ -100,13 +117,16 @@
     }
 
     _BaseArray.prototype = Array.prototype;
+    _BaseArray.prototype.$selected = null;
 
     _BaseArray.prototype.$append = function (src) {
         let newElem = new this._elem_(src || null, this._path_ + '[]');
         defHidden(newElem, PARENT, this);
         let len = this.push(newElem);
         console.warn(this._path_ + '[].add'); // EVENT
-        return this[len-1]; // newly created reactive element
+        let ne = this[len - 1]; // maybe newly created reactive element
+        platform.set(this, "$selected", ne);
+        return ne;
     };
 
     _BaseArray.prototype.$remove = function (item) {
@@ -115,6 +135,10 @@
             return;
         this.splice(index, 1); // EVENT
         console.warn(this._path_ + '[].remove');
+        if (index >= this.length)
+            index -= 1;
+        if (this.length > index)
+            platform.set(this, '$selected', this[index]);
     };
 
     function defineObject(obj, meta, arrayItem) {
@@ -128,7 +152,11 @@
         elem.prototype.$remove = function () {
             let arr = this._parent_;
             arr.$remove(this);
-        }
+        };
+        elem.prototype.$select = function () {
+            let arr = this._parent_;
+            platform.set(arr, "$selected", this);
+        };
     }
 
     app.modules['datamodel'] = {
@@ -147,7 +175,7 @@
 
     }
 
-    app.modules['datamodel'] = {
+    app.modules['http'] = {
         get: get,
         post: post
     }
