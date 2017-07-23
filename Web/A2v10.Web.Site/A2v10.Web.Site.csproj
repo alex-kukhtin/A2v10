@@ -52,6 +52,8 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\datagrid.js" />
+    <Content Include="app\components\textbox.js" />
+    <Content Include="app\components\validator.js" />
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\http.js" />
@@ -82,6 +84,7 @@
     <Content Include="TestPages\attention.txt" />
     <Content Include="TestPages\datagridwithdata.html" />
     <Content Include="TestPages\datagrid.html" />
+    <Content Include="TestPages\formcontrol.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

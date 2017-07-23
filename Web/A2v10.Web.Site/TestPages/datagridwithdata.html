@@ -20,6 +20,8 @@
                 <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
                 <label v-text="Customers.length"></label>
                 <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>
+                <label v-text="Customers.Total"></label>
+                <textbox :item="Customers[0]" prop="Name"></textbox>
             </div>
             <data-grid :items-source="Customers" 
                        :bordered="true" 
@@ -29,11 +31,12 @@
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
                 <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
-                <data-grid-column header="Name" content="Name"></data-grid-column>
+                <data-grid-column header="Name" content="Name" validate="Customers[].Name"></data-grid-column>
                 <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
                 <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
                 <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
+                <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
                     <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i></button>
                     <button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="fa fa-plus"></i></button>
@@ -41,6 +44,9 @@
                 </template>
                 <template slot="check" scope="cell">
                     <input type="checkbox" value="true" v-model="cell.row.$checked" />
+                </template>
+                <template slot="txtbox" scope="cell">
+                    <textbox :item="cell.row" prop="Name"></textbox>
                 </template>
             </data-grid>
         </div>
@@ -54,31 +60,33 @@
     <script type="text/javascript" src="../app/platform/webvue.js"></script>
     <script type="text/javascript" src="../app/services/utlis.js"></script>
     <script type="text/javascript" src="../app/services/datamodel.js"></script>
+    <script type="text/javascript" src="../app/components/validator.js"></script>
+    <script type="text/javascript" src="../app/components/textbox.js"></script>
     <script type="text/javascript" src="../app/components/datagrid.js"></script>
 
 
 <script type="text/javascript">
 (function () {
-    Vue.performance = true;
-
     const cmn = require('datamodel');
 
-    function TCustomer(source, path) {
-        cmn.createObject(this, source, path);
+    // ctor
+    function TCustomer(source, path, parent) {
+        cmn.createObject(this, source, path, parent);
     }
 
+    // metadata
     cmn.defineObject(TCustomer, {
         Id: Number,
         Name: String,
         Amount: Number
     }, /* array item */ true);
 
-    function TCustomerArray(source, path) {
-        return cmn.createArray(source, path, TCustomer);
+    function TCustomerArray(source, path, parent) {
+        return cmn.createArray(source, path, TCustomer, TCustomerArray, parent);
     }
 
     function TRoot(source) {
-        cmn.createObject(this, source, '');
+        cmn.createObject(this, source, '', this);
     }
 
     cmn.defineObject(TRoot, {
@@ -98,32 +106,35 @@
     };
 
     let template = {
+        properties: {
+            'TCustomer.Sum': function () { return this.Amount * 2 },
+            'TCustomerArray.Total': function () { return this.reduce((p, c) => p + c.Sum, 0); }
+        },
+        events: {
+            'TCustomer.construct': (obj) => { console.warn('process:' + obj.constructor.name); },
+            'Customers[].Name.change': (obj) => { console.warn('process:' + obj.constructor.name); }
+        },
         commands: {
             inc: function (to, value) {
                 to.Amount += value;
-            }
+            },
+            test: () => console.log(this)
+        },
+        validators: {
+            'Customers[].Name': 'Введите имя'
         }
     }
 
     var BaseVue = Vue.extend({
         methods: {
             $exec(cmd, ...args) {
-                if (this._template.commands) {
-                    let cmdf = this._template.commands[cmd];
-                    if (typeof cmdf === 'function') {
-                        cmdf.apply(this, args);
-                        return;
-                    }
-                }
-                console.error(`command "${cmd}" not found`);
-
-                //alert(this._template);
-                //alert('exec:' + cmd);
-                //console.dir(this._template.commands);
-                //this.$data.Customers[1].Amount += 10;
+                let root = this.$data;
+                root._exec_(cmd, ...args);
             },
             $save() {
-                alert(JSON.stringify(this.$data, null, 2));
+                alert(JSON.stringify(this.$data, function (key, value) {
+                    return (key[0] === '$' || key[0] === '_') ? undefined : value;
+                }, 2));
             },
             $reload() {
                 let newData = new this._root_ctor(modelData);
@@ -134,6 +145,7 @@
         }
     });
 
+    cmn.implementRoot(TRoot, template);
     var reactiveData = new TRoot(modelData);
 
     var vm = new BaseVue({
@@ -141,8 +153,8 @@
         data: reactiveData,
     });
 
-    vm._root_ctor = TRoot;
-    vm._template = template;
+    //vm._root_ctor = TRoot;
+    //vm._template = template;
 
 })();
 </script>

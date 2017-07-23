@@ -24,18 +24,19 @@
 `;
 
     const dataGridRowTemplate =
-        '<tr @mouseup="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
+        '<tr mouseup="rowSelect()" @mouseup="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
 
     const dataGridColumn = {
         name: 'data-grid-column',
         template: '<th :class="cssClass"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
         props: {
-            header: { type: String },
+            header: String,
             content: { type: String },
-            icon: {type: String},
-            id: { type: String },
+            icon: String,
+            id: String,
             align: { type: String, default: 'left' },
-            editable: { type: Boolean, default: false }
+            editable: { type: Boolean, default: false },
+            validate: String
         },
         created() {
             let addColumn = this.$parent.$addColumn;
@@ -65,6 +66,7 @@
             index: Number
         },
         render(h, ctx) {
+            //console.warn('render cell');
             let tag = 'td';
             let row = ctx.props.row;
             let col = ctx.props.col;
@@ -77,7 +79,7 @@
             let childProps = {
                 props: {
                     row: row,
-                    col: col
+                    col: col,
                 }
             };
             if (col.template) {
@@ -88,6 +90,18 @@
             if (!col.content) {
                 return h(tag, cellProps);
             }
+
+            let validator = {
+                props: ['path', 'item'],
+                template: '<validator :path="path" :item="item"></validator>'
+            };
+
+            let validatorProps = {
+                props: {
+                    path: col.validate,
+                    item: row
+                }
+            };
 
             if (col.editable) {
                 /* editable content */
@@ -100,7 +114,11 @@
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
-            return h(tag, cellProps, [row[col.content]]);
+            let chElems = [row[col.content]];
+            if (col.validate) {
+                chElems.push(h(validator, validatorProps));
+            }
+            return h(tag, cellProps, chElems);
         },
     };
 
@@ -118,6 +136,13 @@
         computed: {
             active() {
                 return this.row === this.$parent.selected;
+                //return this === this.$parent.rowSelected;
+            }
+        },
+        methods: {
+            rowSelect() {
+                throw new Error("do not call");
+                //this.$parent.rowSelected = this;
             }
         }
     };
@@ -136,6 +161,7 @@
         data() {
             return {
                 columns: []
+                //rowSelected: null
             }
         },
         computed: {
