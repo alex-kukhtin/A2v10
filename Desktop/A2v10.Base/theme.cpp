@@ -64,6 +64,22 @@ CFont* CTheme::GetUIFont(FontType ft/*= FontNormal*/)
 			lf.lfItalic = info.lfMenuFont.lfItalic;
 		}
 		break;
+	case FontSmall:
+		{
+			lf.lfHeight = 675;
+			HDC hDC = ::GetDC(NULL);
+			POINT pt;
+			// 72 points/inch, 10 decipoints/point
+			pt.y = ::MulDiv(::GetDeviceCaps(hDC, LOGPIXELSY), lf.lfHeight, 7200);
+			pt.x = 0;
+			::DPtoLP(hDC, &pt, 1);
+			POINT ptOrg = { 0, 0 };
+			::DPtoLP(hDC, &ptOrg, 1);
+			lf.lfHeight = -abs(pt.y - ptOrg.y);
+			lf.lfQuality = CLEARTYPE_NATURAL_QUALITY; //  for small required
+			::ReleaseDC(NULL, hDC);
+		}
+		break;
 	}
 	m_fonts[ft].CreateFontIndirect(&lf);
 	ATLASSERT((HFONT)m_fonts[ft] != NULL);

@@ -14,7 +14,7 @@
 // See A2v10.Designer.cpp for the implementation of this class
 //
 
-class CMainApp : public CWinAppEx
+class CMainApp : public CA2WinApp
 {
 public:
 	CMainApp();
@@ -37,10 +37,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg void OnAppAbout();
-	afx_msg void OnFileSaveAll();
-	afx_msg void OnCloseAllDocuments();
-	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
 	afx_msg void OnToolsOptions();
 };
 

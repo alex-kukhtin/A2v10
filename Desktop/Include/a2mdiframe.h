@@ -20,6 +20,7 @@ public:
 	BOOL CreateBorderPanes();
 	void DockBorderPanes();
 	virtual void GetMessageString(UINT nID, CString& rMessage) const override;
+	void UpdateTabs();
 
 protected:
 	int GetCaptionHeight();

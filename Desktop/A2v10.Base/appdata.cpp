@@ -187,6 +187,23 @@ int CAppData::GetCurrentUILang()
 	return getAppData().m_nCurrentUiLang;
 }
 
+// static 
+LPCWSTR CAppData::GetCurrentUILangCode()
+{
+	int nLang = CAppData::GetCurrentUILang();
+	switch (nLang) 
+	{
+	case CAppData::LangUk:
+		return L"Uk";
+	case CAppData::LangEn:
+		return L"En";
+	case CAppData::LangRu:
+		return L"Ru";
+	}
+	ATLASSERT(FALSE);
+	return NULL;
+}
+
 void CAppData::SetProfileUiLang(int nLang)
 {
 	CWinAppEx* pApp = dynamic_cast<CWinAppEx*>(AfxGetApp());

@@ -65,21 +65,7 @@ Write(ViewBag.Message);
             
             #line default
             #line hidden
-WriteLiteral("</h3>\r\n\r\n<address>\r\n    One Microsoft Way<br />\r\n    Redmond, WA 98052-6399<br />" +
-"\r\n    <abbr");
-
-WriteLiteral(" title=\"Phone\"");
-
-WriteLiteral(">P:</abbr>\r\n    425.555.0100\r\n</address>\r\n\r\n<address>\r\n    <strong>Support:</stro" +
-"ng>   <a");
-
-WriteLiteral(" href=\"mailto:Support@example.com\"");
-
-WriteLiteral(">Support@example.com</a><br />\r\n    <strong>Marketing:</strong> <a");
-
-WriteLiteral(" href=\"mailto:Marketing@example.com\"");
-
-WriteLiteral(">Marketing@example.com</a>\r\n</address>");
+WriteLiteral("</h3>\r\n\r\n<p>Contact page</p>");
 
         }
     }

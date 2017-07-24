@@ -5,6 +5,7 @@
 #define IDM_POPUP_MENU                  600
 #define IDM_POPUP_FORM					601
 #define IDD_OPTION_GENERAL              800
+#define IDD_ABOUT						801
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
 #define IDC_DIALOG_FIRST                14000
@@ -23,6 +24,11 @@
 #define IDC_PROMPT3                     14013
 #define IDC_PROMPT4                     14014
 #define IDC_PROMPT5                     14015
+#define IDC_TEXT1						14016
+#define IDC_TEXT2						14017
+#define IDC_TEXT3						14018
+#define IDC_TEXT4						14019
+#define IDC_TEXT5						14020
 
 // Next default values for new objects
 // 

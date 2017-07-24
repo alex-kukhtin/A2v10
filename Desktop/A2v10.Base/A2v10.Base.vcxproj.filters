@@ -114,6 +114,12 @@
     <ClCompile Include="xmltools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="versions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="appabout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -229,6 +235,12 @@
     <ClInclude Include="..\Include\xmltools.h">
       <Filter>Include Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\versions.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="appabout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="A2v10.Base.rc">
@@ -240,6 +252,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\imagelist12x12.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\imagelist48x48.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

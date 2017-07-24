@@ -24,6 +24,7 @@ EXPORTS
 ?OnCmdMsg@CA2MDIFrameWnd@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
 ?OnCreate@CA2MDIFrameWnd@@IAEHPAUtagCREATESTRUCTW@@@Z
 ?GetMessageString@CA2MDIFrameWnd@@UBEXIAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
+?UpdateTabs@CA2MDIFrameWnd@@QAEXXZ
 ;
 ?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
@@ -96,4 +97,7 @@ EXPORTS
 ?NextSiblingElement@XMLNode@tinyxml2@@QBEPBVXMLElement@2@PB_W@Z
 ?DeleteAttribute@XMLElement@tinyxml2@@QAEXPB_W@Z
 ?ReportError@CXmlError@@QAEXXZ
-
+;
+?GetThisMessageMap@CA2WinApp@@KGPBUAFX_MSGMAP@@XZ
+??0CA2WinApp@@QAE@XZ
+??1CA2WinApp@@UAE@XZ

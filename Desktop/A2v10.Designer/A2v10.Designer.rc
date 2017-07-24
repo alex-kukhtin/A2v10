@@ -391,17 +391,6 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About A2v10.Designer"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "A2v10.Designer, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2017",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
-END
-
 IDD_OPTION_GENERAL DIALOGEX 0, 0, 295, 205
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "General"
@@ -439,7 +428,7 @@ BEGIN
             VALUE "FileDescription", "A2v10.Designer"
             VALUE "FileVersion", "10.0.7007.0"
             VALUE "InternalName", "A2v10.Designer.exe"
-			VALUE "LegalCopyright", "© 2008-2017 Alex Kukhtin.  All rights reserved."
+			VALUE "LegalCopyright", "© 2007-2017 Alex Kukhtin.  All rights reserved."
 			VALUE "OriginalFilename", "A2v10.Designer.exe"
             VALUE "ProductName", "A2"
             VALUE "ProductVersion", "10.0.0.0"
@@ -460,14 +449,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
-    IDD_ABOUTBOX, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 163
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 55
-    END
-
     IDD_OPTION_GENERAL, DIALOG
     BEGIN
         LEFTMARGIN, 7

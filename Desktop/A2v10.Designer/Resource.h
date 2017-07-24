@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by A2v10.Designer.rc
 //
-#define IDD_ABOUTBOX                    100
 #define IDR_POPUP_EDIT                  119
 #define IDS_TOOLBAR_STANDARD            124
 #define IDS_TOOLBAR_CUSTOMIZE           125
@@ -78,6 +77,11 @@
 #define IDC_PROMPT3                     14013
 #define IDC_PROMPT4                     14014
 #define IDC_PROMPT5                     14015
+#define IDC_TEXT1						14016
+#define IDC_TEXT2						14017
+#define IDC_TEXT3						14018
+#define IDC_TEXT4						14019
+#define IDC_TEXT5						14020
 #define ID_FILE_OPEN_SOLUTION           32000
 #define ID_FILE_CLOSE_SOLUTION          32001
 #define ID_FILE_SAVE_ALL                32002

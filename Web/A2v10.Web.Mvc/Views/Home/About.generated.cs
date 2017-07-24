@@ -65,7 +65,7 @@ Write(ViewBag.Message);
             
             #line default
             #line hidden
-WriteLiteral("</h3>\r\n\r\n<p>Use this area to provide additional application information.</p>\r\n");
+WriteLiteral("</h3>\r\n\r\n<p>About page</p>\r\n");
 
         }
     }

@@ -242,15 +242,11 @@ void CA2FormDocument::SetModifiedText(bool bModified /*= true*/)
 // virtual 
 void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 {
+	if (bModified && IsModified())
+		return;
 	if (bModified) 
 	{
 		UpdateAllViews(NULL, HINT_DOCUMENT_MODIFIED, 0L);
-		CString strTitle = GetTitle();
-		int len = strTitle.GetLength();
-		if ((len > 0) && (strTitle[len - 1] != L'*')) {
-			strTitle += L"*";
-			SetTitle(strTitle);
-		}
 	}
 	else 
 	{
@@ -258,6 +254,7 @@ void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 		SetModifiedText(false);
 	}
 	__super::SetModifiedFlag(bModified);
+	UpdateFrameCounts();        // will cause name change in views
 }
 
 void CA2FormDocument::DrawContent(const RENDER_INFO& ri)

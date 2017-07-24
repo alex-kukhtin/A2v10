@@ -27,8 +27,10 @@
 
 #define IDIL_10X10				700
 #define IDIL_12x12				701
+#define IDIL_48X48				702
 
 #define IDD_OPTION_GENERAL  800
+#define IDD_ABOUT			801
 
 #define IDS_OPTIONS_CAPTION  12000
 #define IDS_LANGUAGES        12001
@@ -49,6 +51,11 @@
 #define IDC_PROMPT3			  14013	
 #define IDC_PROMPT4			  14014	
 #define IDC_PROMPT5			  14015	
+#define IDC_TEXT1			14016
+#define IDC_TEXT2			14017
+#define IDC_TEXT3			14018
+#define IDC_TEXT4			14019
+#define IDC_TEXT5			14020
 // file: 32000
 #define ID_FILE_OPEN_SOLUTION		32000
 #define ID_FILE_CLOSE_SOLUTION		32001

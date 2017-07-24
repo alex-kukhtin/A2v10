@@ -85,4 +85,82 @@ void CChildFrame::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
+BOOL CChildFrame::IsOwnerDrawCaption2() 
+{ 
+	return CMFCVisualManager::GetInstance()->IsOwnerDrawCaption(); // && !m_bIsOleInPlaceActive;
+}
+
+void CChildFrame::OnUpdateFrameTitle2(BOOL bAddToTitle)
+{
+	// from CMDIChildWnd::OnUpdateFrameTitle
+	// update our parent window first
+	GetMDIFrame()->OnUpdateFrameTitle(bAddToTitle);
+
+	if ((GetStyle() & FWS_ADDTOTITLE) == 0)
+		return;     // leave child window alone!
+
+	CDocument* pDocument = GetActiveDocument();
+	if (bAddToTitle)
+	{
+		TCHAR szText[256 + _MAX_PATH];
+		if (pDocument == NULL)
+			Checked::tcsncpy_s(szText, _countof(szText), m_strTitle, _TRUNCATE);
+		else {
+			Checked::tcsncpy_s(szText, _countof(szText), pDocument->GetTitle(), _TRUNCATE);
+		}
+		if (m_nWindow > 0)
+		{
+			TCHAR szWinNumber[16 + 1];
+			_stprintf_s(szWinNumber, _countof(szWinNumber), _T(":%d"), m_nWindow);
+
+			if (_tcslen(szText) + _tcslen(szWinNumber) < _countof(szText))
+			{
+				Checked::tcscat_s(szText, _countof(szText), szWinNumber);
+			}
+		}
+
+		if (pDocument->IsModified())
+			Checked::tcscat_s(szText, _countof(szText), L"*");
+		// set title if changed, but don't remove completely
+		AfxSetWindowText(m_hWnd, szText);
+	}
+}
+
+// virtual 
+void CChildFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+	// from CMDIChildWndEx::OnUpdateFrameTitle
+	BOOL bRedraw = /*m_Impl.IsOwnerDrawCaption()*/  IsOwnerDrawCaption2() && IsWindowVisible() && (GetStyle() & WS_MAXIMIZE) == 0;
+
+	CString strTitle1;
+
+	if (bRedraw)
+	{
+		GetWindowText(strTitle1);
+	}
+
+	//CMDIChildWnd::OnUpdateFrameTitle(bAddToTitle);
+	OnUpdateFrameTitle2(bAddToTitle);
+
+	if (bRedraw)
+	{
+		CString strTitle2;
+		GetWindowText(strTitle2);
+
+		if (strTitle1 != strTitle2)
+		{
+			SendMessage(WM_NCPAINT, 0, 0);
+		}
+	}
+
+	if (m_pMDIFrame != NULL)
+	{
+		ASSERT_VALID(m_pMDIFrame);
+		//m_pMDIFrame->m_wndClientArea.UpdateTabs();
+		CA2MDIFrameWnd* pFrame = DYNAMIC_DOWNCAST(CA2MDIFrameWnd, m_pMDIFrame);
+		ATLASSERT(pFrame);
+		pFrame->UpdateTabs();
+	}
+}
+
 // CChildFrame message handlers

@@ -200,6 +200,7 @@
     <ClCompile Include="a2toolbox.cpp" />
     <ClCompile Include="A2v10.Base.cpp" />
     <ClCompile Include="a2visualmanager.cpp" />
+    <ClCompile Include="appabout.cpp" />
     <ClCompile Include="appdata.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -232,6 +233,7 @@
     <ClCompile Include="theme.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="uitools.cpp" />
+    <ClCompile Include="versions.cpp" />
     <ClCompile Include="xmltools.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -268,9 +270,11 @@
     <ClInclude Include="..\Include\theme.h" />
     <ClInclude Include="..\Include\tinyxml2.h" />
     <ClInclude Include="..\Include\uitools.h" />
+    <ClInclude Include="..\Include\versions.h" />
     <ClInclude Include="..\Include\xmltools.h" />
     <ClInclude Include="a2miniframewnd.h" />
     <ClInclude Include="a2tabbedpane.h" />
+    <ClInclude Include="appabout.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -281,6 +285,7 @@
   <ItemGroup>
     <Image Include="res\imagelist10x10.bmp" />
     <Image Include="res\imagelist12x12.bmp" />
+    <Image Include="res\imagelist48x48.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

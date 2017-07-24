@@ -9,6 +9,12 @@ class CAppData
 	CAppData(void); // declaration only
 	~CAppData(void);
 public:
+	enum Lang {
+		LangUk = 0,
+		LangEn = 1,
+		LangRu = 2
+	};
+
 	static void SetDebug(bool bDebug = true);
 	static bool IsDebug();
 
@@ -20,6 +26,7 @@ public:
 	static void ClearTrace();
 
 	static int GetCurrentUILang();
+	static LPCWSTR GetCurrentUILangCode();
 	static int GetProfileUiLang();
 	static void SetProfileUiLang(int nLang);
 };

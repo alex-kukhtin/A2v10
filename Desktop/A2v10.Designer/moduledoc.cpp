@@ -31,16 +31,13 @@ END_MESSAGE_MAP()
 // virtual 
 void CModuleDoc::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 {
+	if (bModified && IsModified())
+		return;
 	if (bModified) {
 		UpdateAllViews(NULL, HINT_DOCUMENT_MODIFIED, 0L);
-		CString strTitle = GetTitle();
-		int len = strTitle.GetLength();
-		if ((len > 0) && (strTitle[len - 1] != L'*')) {
-			strTitle += L"*";
-			SetTitle(strTitle);
-		}
 	}
 	__super::SetModifiedFlag(bModified);
+	UpdateFrameCounts();        // will cause name change in views
 }
 
 // virtual 

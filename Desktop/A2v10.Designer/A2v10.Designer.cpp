@@ -27,15 +27,10 @@
 
 // CMainApp
 
-BEGIN_MESSAGE_MAP(CMainApp, CWinAppEx)
-	ON_COMMAND(ID_APP_ABOUT, &CMainApp::OnAppAbout)
+BEGIN_MESSAGE_MAP(CMainApp, CA2WinApp)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
-	ON_COMMAND(ID_FILE_SAVE_ALL, OnFileSaveAll)
-	// Windows
-	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
-	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, OnFilePrintSetup)
 	ON_COMMAND(ID_TOOLS_OPTIONS, OnToolsOptions)
@@ -193,6 +188,7 @@ int CMainApp::ExitInstance()
 
 void CMainApp::LoadLangLibrary()
 {
+	// TODO: to CA2WinApp
 	int lang = CAppData::GetCurrentUILang();
 	if (lang == 0) {
 		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Uk.dll"));
@@ -208,57 +204,12 @@ void CMainApp::LoadLangLibrary()
 // CMainApp message handlers
 
 
-// CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg();
-
-// Dialog Data
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_ABOUTBOX };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-// Implementation
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
-
-// App command to run the dialog
-void CMainApp::OnAppAbout()
-{
-	CAboutDlg aboutDlg;
-	aboutDlg.DoModal();
-}
 
 // CMainApp customization load/save methods
 
 void CMainApp::PreLoadState()
 {
-	BOOL bNameValid;
-	CString strName;
-	bNameValid = strName.LoadString(IDS_EDIT_MENU);
-	ASSERT(bNameValid);
-	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
-	bNameValid = strName.LoadString(IDS_EXPLORER);
-	ASSERT(bNameValid);
-	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EXPLORER);
 }
 
 void CMainApp::LoadCustomState()
@@ -267,41 +218,6 @@ void CMainApp::LoadCustomState()
 
 void CMainApp::SaveCustomState()
 {
-}
-
-// afx_msg
-void CMainApp::OnFileSaveAll() 
-{
-	POSITION tmlPos = m_pDocManager->GetFirstDocTemplatePosition();
-	while (tmlPos) {
-		CDocTemplate* pTml = m_pDocManager->GetNextDocTemplate(tmlPos);
-		POSITION docPos = pTml->GetFirstDocPosition();
-		while (docPos) {
-			pTml->GetNextDoc(docPos)->OnCmdMsg(ID_FILE_SAVE, CN_COMMAND, NULL, NULL);
-		}
-	}
-}
-
-// afx_msg
-void CMainApp::OnCloseAllDocuments()
-{
-	POSITION pos = m_pDocManager->GetFirstDocTemplatePosition();
-	while (pos) {
-		CDocTemplate* pTempl = m_pDocManager->GetNextDocTemplate(pos);
-		POSITION docPos = pTempl->GetFirstDocPosition();
-		while (docPos)
-		{
-			CDocument* pDoc = pTempl->GetNextDoc(docPos);
-			if (pDoc->SaveModified())
-				pDoc->OnCloseDocument();
-		}
-	}
-}
-
-// afx_msg 
-void CMainApp::OnUpdateCloseAllDocuments(CCmdUI* pCmdUI)
-{
-	pCmdUI->Enable(m_pDocManager->GetOpenDocumentCount() > 0);
 }
 
 

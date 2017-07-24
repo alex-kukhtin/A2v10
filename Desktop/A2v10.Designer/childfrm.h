@@ -9,30 +9,27 @@ class CChildFrame : public CMDIChildWndEx
 	DECLARE_DYNCREATE(CChildFrame)
 public:
 	CChildFrame();
+	virtual ~CChildFrame() override;
 
-	// Attributes
 protected:
 	CSplitterWndEx m_wndSplitter;
-public:
 
-	// Operations
 public:
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext) override;
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+	virtual void OnUpdateFrameTitle(BOOL bAddToTitle) override;
 
-	// Overrides
 public:
-	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
-	// Implementation
-public:
-	virtual ~CChildFrame();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
 	// Generated message map functions
 protected:
+	BOOL IsOwnerDrawCaption2();
+	void OnUpdateFrameTitle2(BOOL bAddToTitle);
+
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

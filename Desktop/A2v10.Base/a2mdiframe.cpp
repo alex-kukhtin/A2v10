@@ -83,6 +83,11 @@ int CA2MDIFrameWnd::GetCaptionHeight()
 	return max(::GetSystemMetrics(SM_CYCAPTION) + 4, 28);
 }
 
+void CA2MDIFrameWnd::UpdateTabs() 
+{
+	m_wndClientArea.UpdateTabs();
+}
+
 void CA2MDIFrameWnd::UpdateMdiTabs()
 {
 	// MFC BUG. Update artifacts 
@@ -121,7 +126,9 @@ int CA2MDIFrameWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 // virtual
 void CA2MDIFrameWnd::GetMessageString(UINT nID, CString& rMessage) const
 {
-	rMessage.Empty();
+	if (nID == 0)
+		return;
+	__super::GetMessageString(nID, rMessage); // needed for tooltip
 }
 
 // virtual 
@@ -342,7 +349,10 @@ BOOL CA2MDIFrameWnd::OnEraseBkgnd(CDC* pDC)
 // afx_msg
 LRESULT CA2MDIFrameWnd::OnSetMessageString(WPARAM wParam, LPARAM lParam)
 {
-	return 0L;
+	UINT nIDLast = m_nIDLastMessage;
+	m_nIDLastMessage = (UINT)wParam;    // new ID (or 0)
+	m_nIDTracking = (UINT)wParam;       // so F1 on toolbar buttons work
+	return nIDLast;
 }
 
 
