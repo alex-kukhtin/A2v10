@@ -26,7 +26,7 @@
     const ROOT = '_root_';
 
     const platform = require('platform');
-    const utils = require('utils');
+    const validators = require('validators');
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -205,16 +205,7 @@
         console.error(`command "${cmd}" not found`);
     }
 
-    function validateItem(vals, item) {
-        if (item.Amount < 500)
-            return null;
-        return [
-            { msg: 'Введите значение', severity: 'error' },
-            { msg: 'Введите еще одно значение', severity: 'error' }
-        ];
-    }
-
-    function validate(item, path) {
+    function validate(item, path, val) {
         if (!item) return null;
         let tml = item._root_.$template;
         if (!tml) return null;
@@ -222,7 +213,7 @@
         if (!vals) return null;
         var elemvals = vals[path];
         if (!elemvals) return null;
-        return validateItem(elemvals, item);
+        return validators.validate(elemvals, item, val);
     }
 
     function implementRoot(root, template) {
@@ -269,12 +260,32 @@
 
 (function() {
 
+    app.modules['log'] = {
+
+    };
+
+})();
+(function () {
+
+    const toString = Object.prototype.toString;
+
     function isFunction(value) { return typeof value === 'function'; }
     function isDefined(value) { return typeof value !== 'undefined'; }
     function isObject(value) { return value !== null && typeof value === 'object'; }
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isString(value) { return typeof value === 'string'; }
     function isNumber(value) { return typeof value === 'number'; }
+
+    function notBlank(val) {
+        if (!val)
+            return false;
+        switch (typeof (val)) {
+            case 'string':
+                return val !== '';
+        }
+        return (val || '') !== '';
+    }
+
 
     app.modules['utils'] = {
         isArray: Array.isArray,
@@ -283,6 +294,64 @@
         isObject: isObject,
         isDate: isDate,
         isString: isString,
-        isNumber : isNumber
+        isNumber: isNumber,
+        toString: toString,
+        notBlank: notBlank
     }
+})();
+
+(function () {
+
+    const utils = require('utils');
+
+    const ERROR = 'error';
+
+    function validateStd(rule, val) {
+        switch (rule) {
+            case 'notBlank':
+                return utils.notBlank(val);
+        }
+        console.error(`invalid std rule: '${rule}'`);
+        return true;
+    }
+
+    function validateImpl(rules, item, val) {
+        let retval = [];
+        rules.forEach(function (rule) {
+            if (utils.isString(rule)) {
+                if (!validateStd('notBlank', val))
+                    retval.push({ msg: rule, severity: ERROR });
+            } else if (utils.isString(rule.valid)) {
+                if (!validateStd(rule.valid, val))
+                    retval.push({ msg: rule.msg, severity: ERROR });
+            } else if (utils.isFunction(rule.valid)) {
+                if (!rule.valid(item, val))
+                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+            } else {
+                console.error('invalid valid element type for rule');
+            }
+        });
+        return retval;
+    }
+
+
+    function validateItem(vals, item, val) {
+        let arr = [];
+        if (utils.isArray(vals))
+            arr = vals;
+        else if (utils.isObject(vals))
+            arr.push(vals);
+        else if (utils.isString(vals))
+            arr.push({ valid: 'notBlank', msg: vals });
+        let err = validateImpl(arr, item, val);
+        if (!err.length)
+            return null;
+        return err;
+    }
+
+
+    app.modules['validators'] = {
+        validate: validateItem
+    };
+
 })();

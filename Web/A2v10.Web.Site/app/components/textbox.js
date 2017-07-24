@@ -16,10 +16,10 @@
             errors() {
                 if (!this.item) return null;
                 let root = this.item._root_;
-                return root._validate_(this.item, this.path);
+                return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
-                return (this.invalid) ? "invalid" : "valid";
+                return 'control' + (this.invalid ? ' invalid' : ' valid');
             }
         },
         methods: {

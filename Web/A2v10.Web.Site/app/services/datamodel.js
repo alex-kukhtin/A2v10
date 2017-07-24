@@ -11,7 +11,7 @@
     const ROOT = '_root_';
 
     const platform = require('platform');
-    const utils = require('utils');
+    const validators = require('validators');
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -190,16 +190,7 @@
         console.error(`command "${cmd}" not found`);
     }
 
-    function validateItem(vals, item) {
-        if (item.Amount < 500)
-            return null;
-        return [
-            { msg: 'Введите значение', severity: 'error' },
-            { msg: 'Введите еще одно значение', severity: 'error' }
-        ];
-    }
-
-    function validate(item, path) {
+    function validate(item, path, val) {
         if (!item) return null;
         let tml = item._root_.$template;
         if (!tml) return null;
@@ -207,7 +198,7 @@
         if (!vals) return null;
         var elemvals = vals[path];
         if (!elemvals) return null;
-        return validateItem(elemvals, item);
+        return validators.validate(elemvals, item, val);
     }
 
     function implementRoot(root, template) {

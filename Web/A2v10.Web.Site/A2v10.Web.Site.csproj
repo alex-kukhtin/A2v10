@@ -57,7 +57,9 @@
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\http.js" />
+    <Content Include="app\services\log.js" />
     <Content Include="app\services\utlis.js" />
+    <Content Include="app\services\validators.js" />
     <Content Include="css\font-awesome.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\site.css" />
@@ -101,6 +103,7 @@
     <Content Include="Less\Utlis.less" />
     <Content Include="Less\DataGrid.less" />
     <Content Include="Less\Normalize.less" />
+    <Content Include="Less\Control.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

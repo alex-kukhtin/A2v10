@@ -32,15 +32,15 @@
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
                 <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
                 <data-grid-column header="Name" content="Name" validate="Customers[].Name"></data-grid-column>
-                <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
+                <data-grid-column header="Amount" content="Amount" :editable="true" align="right"></data-grid-column>
                 <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
                 <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
                 <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
-                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i></button>
-                    <button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="fa fa-plus"></i></button>
-                    <button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="fa fa-minus"></i></button>
+                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i>
+                    </button><button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="fa fa-plus"></i>
+                    </button><button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="fa fa-minus"></i></button>
                 </template>
                 <template slot="check" scope="cell">
                     <input type="checkbox" value="true" v-model="cell.row.$checked" />
@@ -59,6 +59,7 @@
     <script type="text/javascript" src="../app/app.js"></script>
     <script type="text/javascript" src="../app/platform/webvue.js"></script>
     <script type="text/javascript" src="../app/services/utlis.js"></script>
+    <script type="text/javascript" src="../app/services/validators.js"></script>
     <script type="text/javascript" src="../app/services/datamodel.js"></script>
     <script type="text/javascript" src="../app/components/validator.js"></script>
     <script type="text/javascript" src="../app/components/textbox.js"></script>
@@ -121,7 +122,10 @@
             test: () => console.log(this)
         },
         validators: {
-            'Customers[].Name': 'Введите имя'
+            'Customers[].Name': 'Введите имя',
+            'Customers[].Amount': ['Введите число',
+                { valid: function (item) { return item.Amount > 100; }, msg: 'Должно быть больше 100' }
+            ]
         }
     }
 

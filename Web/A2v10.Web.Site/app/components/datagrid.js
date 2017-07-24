@@ -107,7 +107,8 @@
                 /* editable content */
                 let child = {
                     props: ['row', 'col'],
-                    template: '<input type="text" v-model.lazy="row[col.content]">'
+                    /*TODO: control type */
+                    template: '<textbox :item="row" :prop="col.content"></textbox>'
                 };
                 return h(tag, cellProps, [h(child, childProps)]);
             }
@@ -115,6 +116,7 @@
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
             let chElems = [row[col.content]];
+            /*TODO: validate ???? */
             if (col.validate) {
                 chElems.push(h(validator, validatorProps));
             }

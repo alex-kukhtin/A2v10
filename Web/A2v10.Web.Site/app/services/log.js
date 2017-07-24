@@ -1,0 +1,7 @@
+﻿(function() {
+
+    app.modules['log'] = {
+
+    };
+
+})();

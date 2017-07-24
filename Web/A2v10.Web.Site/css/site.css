@@ -54,6 +54,13 @@ th {
   text-align: left;
   font-weight: normal;
 }
+.control input,
+.control select {
+  width: 100%;
+}
+.control.invalid input {
+  outline: 1px solid #ff6a00;
+}
 table.data-grid {
   border: 1px solid #ddd;
   cursor: default;
