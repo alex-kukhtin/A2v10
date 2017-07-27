@@ -19,7 +19,14 @@
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
-                return 'control' + (this.invalid ? ' invalid' : ' valid');
+                let cls = 'control' + (this.invalid ? ' invalid' : ' valid');
+                return cls;
+            },
+            inputClass() {
+                let cls = '';
+                if (this.align !== 'left')
+                    cls += 'text-' + this.align;
+                return cls;
             }
         },
         methods: {
@@ -31,7 +38,7 @@
 
     let textBoxTemplate =
 `<div :class="cssClass">
-    <input v-model.lazy="item[prop]" />
+    <input v-model.lazy="item[prop]" :class="inputClass"/>
     <validator :invalid="invalid" :errors="errors"></validator>
     <span>{{path}}</span>
     <button @click="test">*</button>
@@ -41,6 +48,10 @@
     Vue.component('textbox', {
         extends: baseControl,
         template: textBoxTemplate,
-        props: ['item', 'prop']
+        props: {
+            item: Object,
+            prop: String,
+            align: { type: String, default: 'left' }
+        }
     });
 })();

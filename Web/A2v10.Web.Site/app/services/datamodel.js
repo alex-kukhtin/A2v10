@@ -2,7 +2,8 @@
 
     /* TODO:
     1. changing event
-    2. validators
+    3. add properties to prototype
+    4. add plain properties
     */
     const META = '_meta_';
     const PARENT = '_parent_';
@@ -20,6 +21,12 @@
             configurable: false,
             value: value
         });
+    }
+
+    function ensureType(type, val) {
+        if (type === Number)
+            return isFinite(val) ? + val : 0;
+        return val;
     }
 
     function defSource(trg, source, prop, parent) {
@@ -51,8 +58,12 @@
                 return this._src_[prop];
             },
             set(val) {
-                //TODO: handle changing event
+                //TODO: emit and handle changing event
+                val = ensureType(this._meta_[prop], val);
+                if (val === this._src_[prop])
+                    return;
                 this._src_[prop] = val;
+                this._root_.$setDirty(true);
                 if (!this._path_)
                     return;
                 let eventName = this._path_ + '.' + prop + '.change';
@@ -91,6 +102,11 @@
         let ctorname = elem.constructor.name;
         let constructEvent = ctorname + '.construct';
         elem._root_.$emit(constructEvent, elem);
+        if (elem._root_ === elem) {
+            // root element
+            elem._root_ctor_ = elem.constructor;
+            elem.$dirty = false;
+        }
         return elem;
     }
 
@@ -122,16 +138,27 @@
     _BaseArray.prototype = Array.prototype;
     _BaseArray.prototype.$selected = null;
 
-    _BaseArray.prototype.$append = function (src) {
+    _BaseArray.prototype.$new = function (src) {
         let newElem = new this._elem_(src || null, this._path_ + '[]', this);
         newElem.$checked = false;
+        return newElem;
+    };
+
+    _BaseArray.prototype.$append = function (src) {
+        let newElem = this.$new(src);
         let len = this.push(newElem);
         let ne = this[len - 1]; // maybe newly created reactive element
         let eventName = this._path_ + '[].add';
+        this._root_.$setDirty(true);
         this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
         platform.set(this, "$selected", ne);
         return ne;
     };
+
+    _BaseArray.prototype.$empty = function () {
+        this.splice(0, this.length);
+        return this;
+    }
 
     _BaseArray.prototype.$remove = function (item) {
         let index = this.indexOf(item);
@@ -139,12 +166,21 @@
             return;
         this.splice(index, 1); // EVENT
         let eventName = this._path_ + '[].remove';
+        this._root_.$setDirty(true);
         this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
         if (index >= this.length)
             index -= 1;
         if (this.length > index)
             platform.set(this, '$selected', this[index]);
     };
+
+    _BaseArray.prototype.$copy = function (src) {
+        this.$empty();
+        for (let i = 0; i < src.length; i++) {
+            this.push(this.$new(src[i]));
+        }
+        return this;
+    }
 
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
@@ -201,12 +237,32 @@
         return validators.validate(elemvals, item, val);
     }
 
+    function setDirty(val) {
+        this.$dirty = val;
+    }
+
+    function merge(src) {
+        for (var prop in this._meta_) {
+            let ctor = this._meta_[prop];
+            let trg = this[prop];
+            if (Array.isArray(trg)) {
+                platform.set(trg, "$selected", null);
+                trg.$copy(src[prop]);
+            } else {
+                let newsrc = new ctor(src[prop], prop, this);
+                platform.set(this, prop, newsrc);
+            }
+        }
+    }
+
     function implementRoot(root, template) {
         root.prototype.$emit = emit;
+        root.prototype.$setDirty = setDirty;
+        root.prototype.$merge = merge;
         root.prototype.$template = template;
         root.prototype._exec_ = executeCommand;
         root.prototype._validate_ = validate;
-        // props cache
+        // props cache for tcreate
         let xProp = {};
         for (let p in template.properties) {
             let px = p.split('.'); // Type.Prop

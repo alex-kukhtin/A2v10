@@ -24,14 +24,14 @@
 `;
 
     const dataGridRowTemplate =
-        '<tr mouseup="rowSelect()" @mouseup="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
+        '<tr @mouseup.stop.prevent="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
 
     const dataGridColumn = {
         name: 'data-grid-column',
         template: '<th :class="cssClass"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
         props: {
             header: String,
-            content: { type: String },
+            content: String,
             icon: String,
             id: String,
             align: { type: String, default: 'left' },
@@ -106,9 +106,9 @@
             if (col.editable) {
                 /* editable content */
                 let child = {
-                    props: ['row', 'col'],
+                    props: ['row', 'col', 'align'],
                     /*TODO: control type */
-                    template: '<textbox :item="row" :prop="col.content"></textbox>'
+                    template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
                 };
                 return h(tag, cellProps, [h(child, childProps)]);
             }

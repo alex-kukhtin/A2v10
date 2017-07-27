@@ -1,4 +1,4 @@
-#### Third party notices
+### Third party notices
 
 
 A2v10 uses third party material from the projects listed below.

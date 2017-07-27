@@ -8,7 +8,7 @@
 </head>
 <body>
     <!--TODO:
-        1. $reload() -  use metadata
+        5:
     -->
     <div id="test-app" style="padding:20px;height:600px;overflow:auto">
         <h4>Simple DataGrid</h4>
@@ -16,12 +16,13 @@
             <div class="toolbar">
                 <button @click.stop.prevent="Customers.$append()"><i class="fa fa-plus"></i> add row</button>
                 <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
-                <button @click.stop.prevent="$save()"><i class="fa fa-save"></i> save</button>
+                <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="fa fa-save"></i> save</button>
                 <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
                 <label v-text="Customers.length"></label>
                 <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>
                 <label v-text="Customers.Total"></label>
-                <textbox :item="Customers[0]" prop="Name"></textbox>
+                <label v-text="'dirty:' + $isDirty + ' pristine:' + $isPristine"></label>
+                <textbox :item="MyElement" prop="Name"></textbox>
             </div>
             <data-grid :items-source="Customers" 
                        :bordered="true" 
@@ -34,7 +35,7 @@
                 <data-grid-column header="Name" content="Name" validate="Customers[].Name"></data-grid-column>
                 <data-grid-column header="Amount" content="Amount" :editable="true" align="right"></data-grid-column>
                 <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
-                <data-grid-column header="Edit Name" content="Name" :editable="true"></data-grid-column>
+                <data-grid-column header="Edit Name" content="Name" :editable="true" align="center"></data-grid-column>
                 <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
                 <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
@@ -46,7 +47,7 @@
                     <input type="checkbox" value="true" v-model="cell.row.$checked" />
                 </template>
                 <template slot="txtbox" scope="cell">
-                    <textbox :item="cell.row" prop="Name"></textbox>
+                    <textbox :item="cell.row" prop="Name" align="right"></textbox>
                 </template>
             </data-grid>
         </div>
@@ -93,7 +94,7 @@
     cmn.defineObject(TRoot, {
         Customers: TCustomerArray,
         MyElement: TCustomer
-    })
+    });
 
     let modelData = {
         Customers: [
@@ -112,6 +113,7 @@
             'TCustomerArray.Total': function () { return this.reduce((p, c) => p + c.Sum, 0); }
         },
         events: {
+            'TRoot.construct': (obj) => { console.warn('process:' + obj.constructor.name); },
             'TCustomer.construct': (obj) => { console.warn('process:' + obj.constructor.name); },
             'Customers[].Name.change': (obj) => { console.warn('process:' + obj.constructor.name); }
         },
@@ -122,6 +124,7 @@
             test: () => console.log(this)
         },
         validators: {
+            'MyElement.Name': 'Введите имя',
             'Customers[].Name': 'Введите имя',
             'Customers[].Amount': ['Введите число',
                 { valid: function (item) { return item.Amount > 100; }, msg: 'Должно быть больше 100' }
@@ -129,6 +132,7 @@
         }
     }
 
+    // ЭТО стандартный viewModel
     var BaseVue = Vue.extend({
         methods: {
             $exec(cmd, ...args) {
@@ -139,12 +143,20 @@
                 alert(JSON.stringify(this.$data, function (key, value) {
                     return (key[0] === '$' || key[0] === '_') ? undefined : value;
                 }, 2));
+                this.$data.$setDirty(false);
             },
             $reload() {
-                let newData = new this._root_ctor(modelData);
-                for (let key in newData) { 
-                    Vue.set(this.$data, key, newData[key]);
-                }
+                let dat = this.$data;
+                dat.$merge(modelData);
+                dat.$setDirty(false);
+            }
+        },
+        computed: {
+            $isDirty() {
+                return this.$data.$dirty;
+            },
+            $isPristine() {
+                return !this.$data.$dirty; 
             }
         }
     });
