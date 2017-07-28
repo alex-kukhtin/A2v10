@@ -62,6 +62,7 @@ void CModuleView::OnDebugRunInt()
 	{
 		ex.ReportError();
 	}
+	JavaScriptRuntime::EndRunScript();
 	if (bClosing)
 		return; // DO NOTHING! shutting down!
 	// may be destroyed inside debugger

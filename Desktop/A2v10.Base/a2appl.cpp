@@ -5,6 +5,7 @@
 #include "../include/appdefs.h"
 #include "../include/appdata.h"
 #include "../include/a2appl.h"
+#include "../include/optionsps.h"
 
 #include "appabout.h"
 
@@ -15,6 +16,7 @@
 CA2WinApp::CA2WinApp()
 	: CWinAppEx(FALSE /* no smart update*/)
 {
+	CDockablePane::m_bDisableAnimation = TRUE;
 }
 
 CA2WinApp::~CA2WinApp()
@@ -27,7 +29,87 @@ BEGIN_MESSAGE_MAP(CA2WinApp, CWinAppEx)
 	// Windows
 	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
+	// Tools
+	ON_COMMAND(ID_TOOLS_OPTIONS, OnToolsOptions)
 END_MESSAGE_MAP()
+
+// virtual 
+BOOL CA2WinApp::InitInstance()
+{
+	// InitCommonControlsEx() is required on Windows XP if an application
+	// manifest specifies use of ComCtl32.dll version 6 or later to enable
+	// visual styles.  Otherwise, any window creation will fail.
+	INITCOMMONCONTROLSEX InitCtrls;
+	InitCtrls.dwSize = sizeof(InitCtrls);
+	// Set this to include all the common control classes you want to use
+	// in your application.
+	InitCtrls.dwICC = ICC_WIN95_CLASSES;
+	InitCommonControlsEx(&InitCtrls);
+
+	if (!__super::InitInstance())
+		return FALSE;
+
+	if (!AfxInitRichEdit5()) {
+		AfxMessageBox(IDP_RICH_INIT_FAILED);
+		return FALSE;
+	}
+
+	HMODULE hModule = ::LoadLibrary(L"scintilla.dll");
+	if (!hModule) {
+		AfxMessageBox(IDP_SCI_INIT_FAILED);
+		return FALSE;
+	}
+
+	SetRegistryKey(L"A2v10"); // before lang
+	LoadLangLibrary();
+
+	LoadStdProfileSettings(16);  // Load standard INI file options (including MRU)
+
+	EnableTaskbarInteraction();
+
+	InitContextMenuManager(); // needed for tab menu
+	InitShellManager();
+
+	// do not use Keyboard Manager - we need default accelerators
+	//InitKeyboardManager();
+
+	InitTooltipManager();
+	CMFCToolTipInfo ttParams;
+	ttParams.m_bVislManagerTheme = TRUE;
+	GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
+		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
+
+	return TRUE;
+}
+
+//virtual 
+int CA2WinApp::ExitInstance() {
+	return __super::ExitInstance();
+}
+
+void CA2WinApp::LoadLangLibrary()
+{
+	LPCWSTR szLang = CAppData::GetCurrentUILangCode();
+	CString libName;
+	libName.Format(L"A2v10.Locale.%s.dll", szLang);
+	VERIFY(AfxLoadLibrary(libName));
+}
+
+// Customization load/save methods
+// virtual
+void CA2WinApp::PreLoadState()
+{
+}
+
+// virtual
+void CA2WinApp::LoadCustomState()
+{
+}
+
+// virtual
+void CA2WinApp::SaveCustomState()
+{
+}
 
 // afx_msg
 void CA2WinApp::OnAppAbout()
@@ -84,3 +166,8 @@ void CA2WinApp::OnFileSaveAll()
 	}
 }
 
+// afx_msg
+void CA2WinApp::OnToolsOptions()
+{
+	COptionsPropertySheet::DoOptions(COptionsPropertySheet::page_all);
+}

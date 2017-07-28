@@ -74,12 +74,9 @@ int COutlineWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	OnChangeVisualStyle();
 
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
-
 	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
 
 	m_wndToolBar.SetOwner(this);
-
-	// All commands will be routed via this control , not via the parent frame:
 	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
 
 	// Fill in some static tree view data (dummy code, nothing magic here)
@@ -218,7 +215,7 @@ void COutlineWnd::OnChangeVisualStyle()
 
 	m_FileViewImages.DeleteImageList();
 
-	UINT uiBmpId = theApp.m_bHiColorIcons ? IDB_FILE_VIEW_24 : IDB_FILE_VIEW;
+	UINT uiBmpId = IDB_FILE_VIEW_24;
 
 	CBitmap bmp;
 	if (!bmp.LoadBitmap(uiBmpId))
@@ -231,9 +228,7 @@ void COutlineWnd::OnChangeVisualStyle()
 	BITMAP bmpObj;
 	bmp.GetBitmap(&bmpObj);
 
-	UINT nFlags = ILC_MASK;
-
-	nFlags |= (theApp.m_bHiColorIcons) ? ILC_COLOR24 : ILC_COLOR4;
+	UINT nFlags = ILC_MASK | ILC_COLOR24;
 
 	m_FileViewImages.Create(16, bmpObj.bmHeight, nFlags, 0, 0);
 	m_FileViewImages.Add(&bmp, RGB(255, 0, 255));

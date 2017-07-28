@@ -44,6 +44,7 @@
 #define IDR_TOOLBOX                     232
 #define IDR_PROPERTIES                  234
 #define IDR_PRINTPREVIEW                236
+#define IDR_WND_CONSOLE					238
 #define IDS_BUILD_TAB                   300
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
@@ -114,6 +115,7 @@
 #define ID_WINDOW_CLOSE_ALL             32601
 #define ID_PROP_ALPHABETICAL            32700
 #define ID_PROP_CATEGORIZED             32701
+#define ID_INDICATOR_LNCOL				32800
 #define IDP_OLE_INIT_FAILED             51000
 #define IDP_RICH_INIT_FAILED            51001
 #define IDP_SCI_INIT_FAILED             51002

@@ -39,12 +39,10 @@ protected:
 	virtual BOOL OnSetMenu(HMENU hmenu) override;
 
 	CWnd* FindOrCreateCodeWindow(LPCWSTR szFileName);
+	virtual void OnDebugModeChanged(bool bDebug) override;
 
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnWindowManager();
 	afx_msg void OnViewCustomize();
-	afx_msg void OnApplicationLook(UINT id);
-	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	afx_msg void OnViewOutputWindow();
 	afx_msg void OnUpdateViewOutputWindow(CCmdUI* pCmdUI);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
@@ -60,6 +58,8 @@ protected:
 	afx_msg void OnHelpFinder();
 	afx_msg LRESULT OnWmiDebugBreak(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnWmiConsole(WPARAM wParam, LPARAM lParam);
+
+	afx_msg void OnUpdateLineNo(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
 

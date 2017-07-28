@@ -9,13 +9,23 @@ public:
 	CA2WinApp();
 	virtual ~CA2WinApp() override;
 
+	virtual BOOL InitInstance() override;
+	virtual int ExitInstance() override;
+
 protected:
+	void LoadLangLibrary();
+
+	virtual void PreLoadState() override;
+	virtual void LoadCustomState() override;
+	virtual void SaveCustomState() override;
+
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg void OnAppAbout();
 	afx_msg void OnFileSaveAll();
 	afx_msg void OnCloseAllDocuments();
 	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
+	afx_msg void OnToolsOptions();
 };
 
 class CA2CommandLineInfo : public CCommandLineInfo

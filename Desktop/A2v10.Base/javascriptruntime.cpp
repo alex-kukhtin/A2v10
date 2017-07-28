@@ -252,18 +252,26 @@ bool JavaScriptRuntime::InDebugMode()
 
 void JavaScriptRuntime::SetDebugMode(bool bSet) 
 {
+	if (s_bInDebugMode == bSet)
+		return;
 	s_bInDebugMode = bSet;
+	if (bSet)
+		AfxGetMainWnd()->PostMessage(WMI_DEBUG_MODE, WMI_DEBUG_MODE_WPARAM, (LPARAM)TRUE);
+}
+
+// static 
+void JavaScriptRuntime::EndRunScript()
+{
+	AfxGetMainWnd()->PostMessage(WMI_DEBUG_MODE, WMI_DEBUG_MODE_WPARAM, (LPARAM)FALSE);
 }
 
 void JavaScriptRuntime::ExitDebugMode()
 {
-
 }
 
 // static 
 void JavaScriptRuntime::EnterDebugMode()
 {
-
 }
 
 JavaScriptContext::JavaScriptContext()

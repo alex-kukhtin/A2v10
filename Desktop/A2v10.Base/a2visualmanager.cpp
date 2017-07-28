@@ -122,6 +122,7 @@ void CA2AutoHideButton::OnDraw(CDC* pDC)
 }
 
 CA2VisualManager::CA2VisualManager()
+	:m_bDebugMode(false)
 {
 	CMFCAutoHideButton::m_nBorderSize = 1;
 	CMFCAutoHideBar::m_pAutoHideButtonRTS = RUNTIME_CLASS(CA2AutoHideButton);
@@ -130,6 +131,7 @@ CA2VisualManager::CA2VisualManager()
 	m_clrToolBar = defColor;
 	m_clrDivider = defColor;
 	m_clrStatusBar = defColor;
+	m_clrStatusBarDebugMode = defColor;
 	m_clrCaptionButtonBackground = defColor;
 	m_clrActiveCaption = defColor;
 	m_clrInactiveCaption = defColor;
@@ -150,6 +152,14 @@ CA2VisualManager::~CA2VisualManager()
 {
 }
 
+bool CA2VisualManager::SetDebugMode(bool bMode)
+{
+	if (m_bDebugMode == bMode)
+		return false;
+	m_bDebugMode = bMode;
+	return true;
+}
+
 // virtual 
 void CA2VisualManager::OnUpdateSystemColors()
 {
@@ -165,6 +175,7 @@ void CA2VisualManager::OnUpdateSystemColors()
 	m_clrToolBarBottomLine = RGB(220, 224, 236); // toolbar border
 	m_clrDivider = RGB(41, 57, 85); // divider
 	m_clrStatusBar = RGB(14, 99, 156); // dark blue status bar
+	m_clrStatusBarDebugMode = RGB(201, 81, 0); // brown status bar (debug)
 	m_clrCaptionButtonBackground = RGB(255, 252, 244); // caption button background
 
 	m_clrHighlight = RGB(253, 244, 191); // highlight button and menu
@@ -192,6 +203,7 @@ void CA2VisualManager::OnUpdateSystemColors()
 	m_brWindowCaption.DeleteObject();
 	m_brDivider.DeleteObject();
 	m_brStatusBar.DeleteObject();
+	m_brStatusBarDebugMode.DeleteObject();
 	m_brActiveCaption.DeleteObject();
 	m_brInactiveCaption.DeleteObject();
 	m_brDockedPaneBorder.DeleteObject();
@@ -214,6 +226,7 @@ void CA2VisualManager::OnUpdateSystemColors()
 	m_brWindowCaption.CreateSolidBrush(m_clrWindowCaption);
 	m_brDivider.CreateSolidBrush(m_clrDivider);
 	m_brStatusBar.CreateSolidBrush(m_clrStatusBar);
+	m_brStatusBarDebugMode.CreateSolidBrush(m_clrStatusBarDebugMode);
 	m_brActiveCaption.CreateSolidBrush(m_clrActiveCaption);
 	m_brInactiveCaption.CreateSolidBrush(m_clrInactiveCaption);
 	m_brDockedPaneBorder.CreateSolidBrush(m_clrDockedPaneBorder);
@@ -311,7 +324,7 @@ void CA2VisualManager::OnFillBarBackground(CDC* pDC, CBasePane* pBar, CRect rect
 	}
 	else if (pBar->IsKindOf(RUNTIME_CLASS(CMFCRibbonStatusBar)))
 	{
-		pDC->FillRect(rectClient, &m_brStatusBar);
+		pDC->FillRect(rectClient, m_bDebugMode ? &m_brStatusBarDebugMode : &m_brStatusBar);
 	}
 	else if (pBar->IsKindOf(RUNTIME_CLASS(CAutoHideDockSite)))
 	{
@@ -323,8 +336,8 @@ void CA2VisualManager::OnFillBarBackground(CDC* pDC, CBasePane* pBar, CRect rect
 	}
 	else
 	{
-		//ATLASSERT(FALSE);
-		pDC->FillSolidRect(rectClient, RGB(255, 255, 0));
+		// ATLASSERT(FALSE);
+		pDC->FillSolidRect(rectClient, RGB(255, 255, 0)); // TEST YELLOW BRUSH
 		//__super::OnFillBarBackground(pDC, pBar, rectClient, rectClip, bNCArea);
 	}
 }

@@ -3,8 +3,6 @@
 //
 
 #include "stdafx.h"
-#include "afxwinappex.h"
-#include "afxdialogex.h"
 #include "A2v10.Designer.h"
 #include "mainfrm.h"
 
@@ -33,17 +31,14 @@ BEGIN_MESSAGE_MAP(CMainApp, CA2WinApp)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, OnFilePrintSetup)
-	ON_COMMAND(ID_TOOLS_OPTIONS, OnToolsOptions)
 END_MESSAGE_MAP()
 
 
 // CMainApp construction
 
 CMainApp::CMainApp()
+	: CA2WinApp()
 {
-	m_bHiColorIcons = TRUE;
-	CDockablePane::m_bDisableAnimation = TRUE;
-
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
 #ifdef _MANAGED
@@ -68,47 +63,8 @@ CMainApp theApp;
 
 BOOL CMainApp::InitInstance()
 {
-	// InitCommonControlsEx() is required on Windows XP if an application
-	// manifest specifies use of ComCtl32.dll version 6 or later to enable
-	// visual styles.  Otherwise, any window creation will fail.
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// Set this to include all the common control classes you want to use
-	// in your application.
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
-
-	__super::InitInstance();
-
-	if (!AfxInitRichEdit5()) {
-		AfxMessageBox(IDP_RICH_INIT_FAILED);
+	if (!__super::InitInstance())
 		return FALSE;
-	}
-
-	HMODULE hModule = ::LoadLibrary(L"scintilla.dll");
-	if (!hModule) {
-		AfxMessageBox(IDP_SCI_INIT_FAILED);
-		return FALSE;
-	}
-
-	SetRegistryKey(L"A2v10"); // before lang
-	LoadLangLibrary();
-
-	LoadStdProfileSettings(16);  // Load standard INI file options (including MRU)
-
-	EnableTaskbarInteraction();
-
-	//InitContextMenuManager();
-	InitShellManager();
-
-	// do not use Keyboard Manager - we need default accelerators
-	//InitKeyboardManager();
-
-	InitTooltipManager();
-	CMFCToolTipInfo ttParams;
-	ttParams.m_bVislManagerTheme = TRUE;
-	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
-		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
@@ -186,43 +142,6 @@ int CMainApp::ExitInstance()
 }
 
 
-void CMainApp::LoadLangLibrary()
-{
-	// TODO: to CA2WinApp
-	int lang = CAppData::GetCurrentUILang();
-	if (lang == 0) {
-		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Uk.dll"));
-	}
-	else if (lang == 1) {
-		VERIFY(AfxLoadLibrary(L"A2v10.Locale.En.dll"));
-	}
-	else if (lang == 2) {
-		VERIFY(AfxLoadLibrary(L"A2v10.Locale.Ru.dll"));
-	}
-}
-
 // CMainApp message handlers
 
 
-
-
-// CMainApp customization load/save methods
-
-void CMainApp::PreLoadState()
-{
-}
-
-void CMainApp::LoadCustomState()
-{
-}
-
-void CMainApp::SaveCustomState()
-{
-}
-
-
-// afx_msg
-void CMainApp::OnToolsOptions() 
-{
-	COptionsPropertySheet::DoOptions(COptionsPropertySheet::page_all);
-}

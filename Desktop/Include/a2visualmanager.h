@@ -12,6 +12,7 @@ class CA2VisualManager : public CMFCVisualManagerVS2005
 	COLORREF m_clrToolBar;
 	COLORREF m_clrDivider;
 	COLORREF m_clrStatusBar;
+	COLORREF m_clrStatusBarDebugMode;
 	COLORREF m_clrCaptionButtonBackground;
 	COLORREF m_clrActiveCaption;
 	COLORREF m_clrInactiveCaption;
@@ -30,6 +31,7 @@ class CA2VisualManager : public CMFCVisualManagerVS2005
 	CBrush m_brToolBar;
 	CBrush m_brDivider;
 	CBrush m_brStatusBar;
+	CBrush m_brStatusBarDebugMode;
 	CBrush m_brActiveCaption;
 	CBrush m_brInactiveCaption;
 	CBrush m_brWindowCaption;
@@ -41,11 +43,14 @@ class CA2VisualManager : public CMFCVisualManagerVS2005
 	CBrush m_brTabViewBorder;
 	CBrush m_brHeaderBack;
 
+	bool m_bDebugMode;
 public:
 	CA2VisualManager();
 	virtual ~CA2VisualManager();
 
 public:
+	bool SetDebugMode(bool bMode);
+
 	CBrush* GetDockedPaneBorderBrush() { return &m_brDockedPaneBorder; }
 	CBrush* GetWindowCaptionBackgroundBrush() { return &m_brWindowCaption; }
 	void OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, bool bHighlighted, bool bPressed);

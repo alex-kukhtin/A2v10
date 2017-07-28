@@ -5,7 +5,7 @@
 
 CConsoleWnd::CConsoleWnd()
 {
-
+	m_wndToolBar.SetUpdateCmdUIByOwner(TRUE);
 }
 
 CConsoleWnd::~CConsoleWnd()
@@ -55,6 +55,14 @@ int CConsoleWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndRichEdit.SetBackgroundColor(FALSE, RGB(230, 231, 232));
 	m_wndRichEdit.SetOptions(ECOOP_OR, ECO_NOHIDESEL);
 
+	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE);
+	m_wndToolBar.LoadToolBar(IDR_WND_CONSOLE, 0, 0, TRUE /* Is locked */);
+	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS);
+	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
+
+	m_wndToolBar.SetOwner(this);
+	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
+
 	AdjustLayout();
 	return 0L;
 }
@@ -63,7 +71,12 @@ void CConsoleWnd::AdjustLayout()
 {
 	CRect rectClient;
 	GetClientRect(rectClient);
-	m_wndRichEdit.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), rectClient.Height(), SWP_NOZORDER);
+	AdjustBorder(rectClient);
+
+	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
+
+	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndRichEdit.SetWindowPos(NULL, rectClient.left, rectClient.top + cyTlb, rectClient.Width(), rectClient.Height() - cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 // afx_msg

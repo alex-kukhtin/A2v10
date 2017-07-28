@@ -194,6 +194,7 @@ BEGIN_MESSAGE_MAP(CSciEditView, CCtrlView)
 	ON_NOTIFY_REFLECT(SCN_CHARADDED, OnCharAdded)
 	ON_NOTIFY_REFLECT(SCN_UPDATEUI, OnUpdateUi)
 	ON_NOTIFY_REFLECT(SCN_SAVEPOINTLEFT, OnSavePointLeft)
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_LNCOL, OnUpdateLineColumn)
 END_MESSAGE_MAP()
 
 int CSciEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -410,6 +411,18 @@ void CSciEditView::OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 // afx_msg
+void CSciEditView::OnUpdateLineColumn(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(TRUE);
+	long pos  = (long) SendMessage(SCI_GETCURRENTPOS);
+	long line = (long)SendMessage(SCI_LINEFROMPOSITION, pos);
+	long lineStart = (long)SendMessage(SCI_POSITIONFROMLINE, line);
+	CString text;
+	text.Format(L"Ln %ld    Col %ld", line + 1, pos - lineStart + 1);
+	pCmdUI->SetText(text);
+}
+
+// afx_msg
 void CSciEditView::OnSavePointLeft(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SCNotification* pSCN = reinterpret_cast<SCNotification*>(pNMHDR);
@@ -531,3 +544,4 @@ void CXamlEditView::SetupEditor()
 	*/
 	SendMessage(SCI_STYLESETFORE, SCE_H_COMMENT, commentText);
 }
+

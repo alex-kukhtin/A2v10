@@ -6,6 +6,7 @@
 class CConsoleWnd : public CA2DockablePane
 {
 	CRichEditCtrl m_wndRichEdit;
+	CA2MFCToolBar m_wndToolBar;
 
 public:
 	CConsoleWnd();

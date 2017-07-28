@@ -291,7 +291,7 @@ void CSolutionWnd::OnChangeVisualStyle()
 	m_wndClassView.SetImageList(&m_ClassViewImages, TVSIL_NORMAL);
 
 	m_wndToolBar.CleanUpLockedImages();
-	m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_SORT_24 : IDR_SORT, 0, 0, TRUE /* Locked */);
+	m_wndToolBar.LoadBitmap(IDB_SORT_24, 0, 0, TRUE /* Locked */);
 }
 
 /*

@@ -62,6 +62,7 @@ BOOL CA2FormDocument::OnNewDocument()
 	if (!__super::OnNewDocument())
 		return FALSE;
 	CreateRootElement();
+	SetModifiedFlag(FALSE);
 	return TRUE;
 }
 

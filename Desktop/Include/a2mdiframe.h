@@ -31,6 +31,8 @@ protected:
 	virtual void AdjustDockingLayout(HDWP hdwp = NULL) override;
 	virtual  BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo) override;
 
+	virtual void OnDebugModeChanged(bool bDebug);
+
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnPaint();
 	afx_msg LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam);
@@ -47,6 +49,8 @@ protected:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg LRESULT OnSetMessageString(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnChangeDebugMode(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnWindowManager();
 };
 
 #undef AFX_DATA

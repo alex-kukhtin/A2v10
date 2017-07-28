@@ -53,10 +53,9 @@ EXPORTS
 ?RunScript@JavaScriptRuntime@@SA_NPB_W0@Z
 ?InDebugMode@JavaScriptRuntime@@SA_NXZ
 ?SetDebugMode@JavaScriptRuntime@@SAX_N@Z
+?EndRunScript@JavaScriptRuntime@@SAXXZ
 ?CreateDesignerElement@JavaScriptRuntime@@SA?AUJavaScriptValue@@PB_W@Z
 ??0JavaScriptValue@@QAE@ABQAX@Z
-;
-?DoOptions@COptionsPropertySheet@@SAXK@Z
 ;
 ??0CA2TabView@@IAE@XZ
 ??1CA2TabView@@UAE@XZ
@@ -101,3 +100,8 @@ EXPORTS
 ?GetThisMessageMap@CA2WinApp@@KGPBUAFX_MSGMAP@@XZ
 ??0CA2WinApp@@QAE@XZ
 ??1CA2WinApp@@UAE@XZ
+?InitInstance@CA2WinApp@@UAEHXZ
+?ExitInstance@CA2WinApp@@UAEHXZ
+?PreLoadState@CA2WinApp@@MAEXXZ
+?LoadCustomState@CA2WinApp@@MAEXXZ
+?SaveCustomState@CA2WinApp@@MAEXXZ

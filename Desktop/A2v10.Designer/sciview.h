@@ -63,6 +63,7 @@ protected:
 	afx_msg void OnCharAdded(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnUpdateUi(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnSavePointLeft(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnUpdateLineColumn(CCmdUI* pCmdUI);
 };
 
 class CJsEditView : public CSciEditView

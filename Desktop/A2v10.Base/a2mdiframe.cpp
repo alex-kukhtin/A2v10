@@ -51,6 +51,8 @@ BEGIN_MESSAGE_MAP(CA2MDIFrameWnd, CMDIFrameWndEx)
 	ON_MESSAGE(WMI_IDLE_UPDATE, OnIdleUpdate)
 	ON_REGISTERED_MESSAGE(AFX_WM_ON_MOVETOTABGROUP, OnMoveToTabGroup)
 	ON_WM_SETTINGCHANGE()
+	ON_MESSAGE(WMI_DEBUG_MODE, OnChangeDebugMode)
+	ON_COMMAND(ID_WINDOW_MANAGER, OnWindowManager)
 END_MESSAGE_MAP()
 
 
@@ -346,6 +348,12 @@ BOOL CA2MDIFrameWnd::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
+// virtual 
+void CA2MDIFrameWnd::OnDebugModeChanged(bool bDebug)
+{
+
+}
+
 // afx_msg
 LRESULT CA2MDIFrameWnd::OnSetMessageString(WPARAM wParam, LPARAM lParam)
 {
@@ -369,4 +377,21 @@ void CA2MDIFrameWnd::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	__super::OnSettingChange(uFlags, lpszSection);
 	CTheme::OnSettingChange();
 	SendMessageToDescendants(WMI_SETTINGCHANGE, WPARAM(uFlags), (LPARAM)lpszSection, TRUE, TRUE);
+}
+
+// afx_msg
+LRESULT CA2MDIFrameWnd::OnChangeDebugMode(WPARAM wParam, LPARAM lParam) 
+{
+	if (wParam != WMI_DEBUG_MODE_WPARAM)
+		return 0L;
+	auto pVm = DYNAMIC_DOWNCAST(CA2VisualManager, CMFCVisualManager::GetInstance());
+	bool bMode = lParam ? true : false;
+	if (pVm->SetDebugMode(bMode))
+		OnDebugModeChanged(bMode);
+	return 0L;
+}
+
+void CA2MDIFrameWnd::OnWindowManager()
+{
+	ShowWindowsDialog();
 }

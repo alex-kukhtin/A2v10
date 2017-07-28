@@ -22,22 +22,11 @@ public:
 
 // Overrides
 public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-
-// Implementation
-	BOOL  m_bHiColorIcons;
+	virtual BOOL InitInstance() override;
+	virtual int ExitInstance() override;
 
 protected:
-	void LoadLangLibrary();
-
-	virtual void PreLoadState();
-	virtual void LoadCustomState();
-	virtual void SaveCustomState();
-
 	DECLARE_MESSAGE_MAP()
-
-	afx_msg void OnToolsOptions();
 };
 
 extern CMainApp theApp;

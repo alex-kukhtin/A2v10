@@ -125,6 +125,7 @@ ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
 
+IDR_WND_CONSOLE			BITMAP					"res\\consoletoolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -164,6 +165,12 @@ BEGIN
 	BUTTON      ID_TOOLBOX_CANVAS
 	BUTTON      ID_TOOLBOX_GRID
 	//BUTTON      ID_TOOLBOX_DOCKPANEL
+END
+
+IDR_WND_CONSOLE TOOLBAR 16, 16
+BEGIN
+	BUTTON ID_EDIT_COPY
+	BUTTON ID_EDIT_CLEAR_ALL
 END
 
 IDR_SORT TOOLBAR 16, 16
