@@ -238,6 +238,7 @@ namespace A2v10.Web.Site.Controllers
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<Int64>());
                 if (user != null)
                 {
+                    await UserManager.UpdateUser(user);
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });

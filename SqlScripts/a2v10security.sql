@@ -1,4 +1,4 @@
-﻿/* 20170705-7008 */
+﻿/* 20170728-7010 */
 ------------------------------------------------
 set noexec off;
 go
@@ -154,6 +154,25 @@ begin
 	set xact_abort on;
 	insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
 		values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
+	--TODO: log
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UpdateUserPassword')
+	drop procedure a2security.UpdateUserPassword
+go
+------------------------------------------------
+create procedure a2security.UpdateUserPassword
+@Id bigint,
+@PasswordHash nvarchar(max),
+@SecurityStamp nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
+	--TODO: log
 end
 go
 ------------------------------------------------
@@ -214,7 +233,6 @@ begin
 	grant execute on schema ::a2security to public;
 end
 go
-
 ------------------------------------------------
 set noexec off;
 go

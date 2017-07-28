@@ -23,3 +23,4 @@ void CA2MFCToolBar::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 		__super::OnUpdateCmdUI(pTarget, bDisableIfNoHndler);
 }
 
+

@@ -133,7 +133,12 @@ namespace A2v10.Web.Mvc.Identity
 				await _dbContext.ExecuteAsync<AppUser>("[a2security].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
-		}
+            else if (user.IsPasswordModified)
+            {
+                await _dbContext.ExecuteAsync<AppUser>("[a2security].[UpdateUserPassword]", user);
+                user.ClearModified(UserModifiedFlag.Password);
+            }
+        }
 
 		#endregion
 
@@ -239,7 +244,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetPasswordHashAsync(AppUser user, String passwordHash)
 		{
 			user.PasswordHash = passwordHash;
-			return Task.FromResult(0);
+            user.SetModified(UserModifiedFlag.Password);
+            return Task.FromResult(0);
 		}
 
 		public Task<String> GetPasswordHashAsync(AppUser user)
@@ -330,7 +336,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetSecurityStampAsync(AppUser user, String stamp)
 		{
 			user.SecurityStamp = stamp;
-			return Task.FromResult(0);
+            user.SetModified(UserModifiedFlag.Password);
+            return Task.FromResult(0);
 		}
 
 		public Task<String> GetSecurityStampAsync(AppUser user)

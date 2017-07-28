@@ -1,4 +1,4 @@
-/* 20170619-7003 */
+/* 20170728-7010 */
 
 use a2v10test;
 go
@@ -19,7 +19,7 @@ create procedure a2test.SimpleModel
 as
 begin
 	set nocount on;
-	select [Model!TModel!Object] = null, [Id!!Id] = 123, [Name!!Name]='ObjectName';
+	select [Model!TModel!Object] = null, [Id!!Id] = 123, [Name!!Name]='ObjectName', [Decimal] = cast(55.1234 as decimal(10, 5));
 end
 go
 ------------------------------------------------
@@ -117,8 +117,8 @@ go
 		Id: 55,
 		Name: 'SubObjectName',
 		SubArray: [
-			{X: 5, Y:6},
-			{X: 8, Y:9}
+			{X: 5, Y:6, D:5.1 },
+			{X: 8, Y:9, D:7.23 }
 		]
 	}
 }
@@ -167,7 +167,8 @@ table (
 	[Id] bigint null,
 	[ParentId] bigint null,
 	[X] int,
-	[Y] int 
+	[Y] int,
+	[D] decimal(10, 5)
 )
 go
 ------------------------------------------------
@@ -206,7 +207,7 @@ begin
 		[SubArray!TSubObjectArrayItem!Array] = null
 	from @SubObject;
 
-	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [!TSubObject.SubArray!ParentId] = ParentId
+	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [D] = D, [!TSubObject.SubArray!ParentId] = ParentId
 	from @SubObjectArray;
 end
 go

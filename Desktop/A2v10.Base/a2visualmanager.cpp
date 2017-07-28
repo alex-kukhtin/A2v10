@@ -1131,3 +1131,10 @@ COLORREF CA2VisualManager::OnDrawPropertySheetListItem(CDC* pDC, CMFCPropertyShe
 
 	return GetGlobalData()->clrBtnText;
 }
+
+// virtual 
+COLORREF CA2VisualManager::OnDrawRibbonStatusBarPane(CDC* pDC, CMFCRibbonStatusBar* pBar, CMFCRibbonStatusBarPane* pPane)
+{
+	__super::OnDrawRibbonStatusBarPane(pDC, pBar, pPane);
+	return COLOR_WHITE;
+}

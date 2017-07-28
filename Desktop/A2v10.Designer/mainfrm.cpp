@@ -114,8 +114,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetInformation(L"Ready");
 
 	/*TODO: AUTOMATIC CALC PANE SIZE */
-	CString lineTest(L'_', CString("Ln 9999    Col 999").GetLength());
-	CMFCRibbonStatusBarPane* pPane = new CMFCRibbonStatusBarPane(ID_INDICATOR_LNCOL, lineTest, TRUE);
+	CString lineText(L'0', CString("Ln 9999    Col 999").GetLength());
+	CMFCRibbonStatusBarPane* pPane = new CMFCRibbonStatusBarPane(ID_INDICATOR_LNCOL, EMPTYSTR, TRUE, NULL, lineText);
 	m_wndStatusBar.AddExtendedElement(pPane, L"Ln & Col");
 	//CRect paneRect = pPane->GetRect();
 	//paneRect.right = paneRect.left + 100;

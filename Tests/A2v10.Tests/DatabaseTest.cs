@@ -1,12 +1,16 @@
 ﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using A2v10.Infrastructure;
+using System;
 using System.Threading.Tasks;
-using A2v10.Tests.DataModelTester;
-using A2v10.Tests.Config;
 using System.Dynamic;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+
+using A2v10.Infrastructure;
+using A2v10.Tests.DataModelTester;
+using A2v10.Tests.Config;
 
 namespace A2v10.Tests
 {
@@ -28,16 +32,17 @@ namespace A2v10.Tests
 			var md = new MetadataTester(dm);
 			md.IsAllKeys("TRoot,TModel");
 			md.HasAllProperties("TRoot", "Model");
-			md.HasAllProperties("TModel", "Name,Id");
+			md.HasAllProperties("TModel", "Name,Id,Decimal");
 			md.IsId("TModel", "Id");
 			md.IsName("TModel", "Name");
 
 			var dt = new DataTester(dm, "Model");
 			dt.AreValueEqual(123, "Id");
 			dt.AreValueEqual("ObjectName", "Name");
-		}
+            dt.AreValueEqual(55.1234M, "Decimal");
+        }
 
-		[TestMethod]
+        [TestMethod]
 		public async Task TestComplexModel()
 		{
 			IDataModel dm = await _dbContext.LoadModelAsync("a2test.ComplexModel");
@@ -145,8 +150,8 @@ namespace A2v10.Tests
 					Id: 55,
 					Name: 'SubObjectName',
 					SubArray: [
-						{X: 5, Y:6},
-						{X: 8, Y:9}
+						{X: 5, Y:6, D:5.1 },
+						{X: 8, Y:9, D:7.23 }
 					]
 				}		
 			}
@@ -167,10 +172,12 @@ namespace A2v10.Tests
 
 			tdsubarray.AreArrayValueEqual(5, 0, "X");
 			tdsubarray.AreArrayValueEqual(6, 0, "Y");
+            tdsubarray.AreArrayValueEqual(5.1M, 0, "D");
 
-			tdsubarray.AreArrayValueEqual(8, 1, "X");
+            tdsubarray.AreArrayValueEqual(8, 1, "X");
 			tdsubarray.AreArrayValueEqual(9, 1, "Y");
-		}
+            tdsubarray.AreArrayValueEqual(7.23M, 1, "D");
+        }
 
-	}
+    }
 }

@@ -9,8 +9,9 @@ namespace A2v10.Web.Mvc.Identity
 	[Flags]
 	public enum UserModifiedFlag
 	{
-		Default = 0,
-		Lockout = 0x0001,
+		Default  = 0,
+		Lockout  = 0x0001,
+        Password = 0x0002
 	}
 
 	public class AppUser : IUser<Int64>
@@ -52,7 +53,15 @@ namespace A2v10.Web.Mvc.Identity
 			}
 		}
 
-		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
+        public Boolean IsPasswordModified
+        {
+            get
+            {
+                return _modifiedFlag.HasFlag(UserModifiedFlag.Password);
+            }
+        }
+
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 		{
 			// Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
 			var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);

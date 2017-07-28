@@ -14,20 +14,20 @@ public:
 	{
 	}
 
-	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler) override;
 
-	virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD /*dockMethod*/)
+	virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD /*dockMethod*/) override
 		{ return FALSE; }
 
-	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
+	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override
 		{	return FALSE; }
 
-	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
+	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override
 	{
 		return TRUE;
 	}
 
-	virtual BOOL AllowShowOnList() const { return m_bAllowShowOnList; }
+	virtual BOOL AllowShowOnList() const  override { return m_bAllowShowOnList; }
 
 	void SetShowOnList(BOOL bSet) { m_bAllowShowOnList = bSet; }
 	void SetUpdateCmdUIByOwner(BOOL bSet) { m_bUpdateCmdUiByOwner = bSet; }
@@ -41,40 +41,30 @@ public:
 	{
 	}
 
-	virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD /*dockMethod*/)
+	virtual BOOL OnBeforeFloat(CRect& /*rectFloat*/, AFX_DOCK_METHOD /*dockMethod*/) override
 	{
 		return FALSE;
 	}
 
-	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
+	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override
 	{
 		return TRUE;
 	}
 
-	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
+	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override
 	{
 		return TRUE;
 	}
-	virtual int GetRowHeight() const;
+	virtual int GetRowHeight() const override;
 };
 
 class CA2MFCRibbonStatusBar : public CMFCRibbonStatusBar
 {
 public:
-	CA2MFCRibbonStatusBar()
-	{
-	}
+	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override { return TRUE; }
+	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1) override { return TRUE; }
+	virtual void OnPaneContextMenu(CWnd* pParentFrame, CPoint point) override {}
 
-
-	virtual BOOL LoadState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
-	{
-		return TRUE;
-	}
-
-	virtual BOOL SaveState(LPCTSTR lpszProfileName = NULL, int nIndex = -1, UINT uiID = (UINT)-1)
-	{
-		return TRUE;
-	}
 };
 
 #undef AFX_DATA

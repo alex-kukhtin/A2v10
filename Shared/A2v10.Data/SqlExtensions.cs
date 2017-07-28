@@ -94,6 +94,7 @@ namespace A2v10.Data
                 case SqlDbType.Float:
                     return typeof(Double);
                 case SqlDbType.Money:
+                case SqlDbType.Decimal:
                     return typeof(Decimal);
                 case SqlDbType.Real:
                     return typeof(Double);
