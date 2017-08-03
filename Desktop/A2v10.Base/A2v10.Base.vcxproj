@@ -202,6 +202,7 @@
     <ClCompile Include="a2visualmanager.cpp" />
     <ClCompile Include="appabout.cpp" />
     <ClCompile Include="appdata.cpp" />
+    <ClCompile Include="convert.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -258,6 +259,7 @@
     <ClInclude Include="..\Include\appdata.h" />
     <ClInclude Include="..\Include\appdefs.h" />
     <ClInclude Include="..\Include\appstructs.h" />
+    <ClInclude Include="..\Include\convert.h" />
     <ClInclude Include="..\Include\dlldefs.h" />
     <ClInclude Include="..\Include\guictrls.h" />
     <ClInclude Include="..\Include\guiext.h" />

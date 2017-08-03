@@ -21,11 +21,9 @@ static char THIS_FILE[] = __FILE__;
 // virtual 
 CString CA2PropertyGridProperty::FormatProperty()
 {
-	/*
 	COleVariant& var = m_varValue;
 	if (V_VT(&var) == VT_R8)
 		return CConvert::Double2String(V_R8(&var));
-	*/
 	return __super::FormatProperty();
 }
 
@@ -71,9 +69,6 @@ BOOL CA2PropertyGridProperty::AddSubItemSorted(CMFCPropertyGridProperty* pProp)
 void CA2PropertyGridCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
 {
 	LPCWSTR propName = pProp->GetName();
-	/*
-	CString camelCasePropName = CStringTools::ToCamelCase(propName);
-	*/
 
 	DWORD dwData = pProp->GetData();
 	bool bAttached = false;
@@ -84,7 +79,6 @@ void CA2PropertyGridCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) con
 
 	COleVariant var = pProp->GetValue();
 
-	/*
 	JavaScriptValue val;
 
 	switch (dwData) {
@@ -111,14 +105,15 @@ void CA2PropertyGridCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) con
 		return;
 	};
 	CA2PropertyGridCtrl* pThis = const_cast<CA2PropertyGridCtrl*>(this);
+	/*
 	if (bAttached) {
-		CString funcName(camelCasePropName);
+		CString funcName(propName);
 		JavaScriptValue propAccessor = pThis->m_jsValueParent.GetProperty(L"$$" + funcName);
 		propAccessor.CallFunction(pThis->m_jsValueParent, JavaScriptValue::FromString(pThis->m_jsValue.GetHashKey()), val);
 	}
 	else
-		pThis->m_jsValue.SetProperty((LPCWSTR)camelCasePropName, val);
 	*/
+		pThis->m_jsValue.SetProperty(propName, val);
 }
 
 // virtual
@@ -439,23 +434,25 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 	FILL_PROPS_INFO info;
 	LPARAM lParam = reinterpret_cast<LPARAM>(&info);
 
-	/*
-	CWnd* pWndFocus = CWnd::FromHandle(hWndFocus);
-	if (!pWndFocus->IsKindOf(RUNTIME_CLASS(CView)))
-	{
-	// TEST PANE TYPE
-	}
-	*/
 	LRESULT lResult = ::SendMessage(hWndFocus, WMI_FILL_PROPS, WMI_FILL_PROPS_WPARAM, lParam);
-	if (lResult == WMI_FILL_PROPS_RESULT_SKIP) {
-		m_wndPropList.FillPropertyValues();
-		return; // skip fill, may be update values
-	}
-	else if (lResult == WMI_FILL_PROPS_RESULT_EMPTY) {
-		m_wndPropList.RemoveAll();
-		m_wndPropList.AdjustLayout();
-		m_wndPropList.Invalidate();
-		return;
+	switch (lResult) {
+		case WMI_FILL_PROPS_RESULT_SKIP:
+			m_wndPropList.FillPropertyValues();
+			break;
+		case WMI_FILL_PROPS_RESULT_UNK: // zero
+		case WMI_FILL_PROPS_RESULT_EMPTY:
+			m_wndPropList.Clear();
+			break;
+		case WMI_FILL_PROPS_RESULT_OK:
+			{
+				JsValueRef refValue = reinterpret_cast<JsValueRef>(info.elem);
+				JsValueRef refParent = reinterpret_cast<JsValueRef>(info.parent);
+				m_wndPropList.FillProperties(JavaScriptValue(refValue), JavaScriptValue(refParent));
+			}
+			break;
+		case WMI_FILL_PROPS_RESULT_REFILL :
+			m_wndPropList.FillPropertyValues();
+			break;
 	}
 	/*
 	JavaScriptValue value;
@@ -466,18 +463,17 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 		value = JavaScriptValue(refValue);
 		parent = JavaScriptValue(refParent);
 	}
-	else if (lResult == WMI_FILL_PROPS_RESULT_REFILL) {
-		m_wndPropList.FillPropertyValues();
-		return;
-	}
-	m_wndPropList.FillProperties(value, parent);
 	*/
+}
+
+CA2PropertyGridCtrl::CA2PropertyGridCtrl()
+{
+
 }
 
 
 void CA2PropertyGridCtrl::FillPropertyValues()
 {
-	/*
 	if (!m_jsValue.IsValid())
 		return;
 	bool bRedraw = false;
@@ -485,7 +481,7 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 		auto pCat = GetProperty(i);
 		for (int j = 0; j < pCat->GetSubItemsCount(); j++) {
 			auto pProp = pCat->GetSubItem(j);
-			CString camelCasePropname = CStringTools::ToCamelCase(pProp->GetName());
+			CString propName = pProp->GetName();
 			COleVariant newValue;
 			const COleVariant oldValue = pProp->GetValue();
 			JavaScriptValue propVal;
@@ -494,12 +490,12 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 			{
 				// attached property
 				vt -= VT_TAG;
-				JavaScriptValue propAccessor = m_jsValueParent.GetProperty(L"$$" + camelCasePropname);
+				JavaScriptValue propAccessor = m_jsValueParent.GetProperty(L"$$" + propName);
 				propVal = propAccessor.CallFunction(m_jsValueParent, JavaScriptValue::FromString(m_jsValue.GetHashKey()));
 			}
 			else
 			{
-				propVal = m_jsValue.GetProperty(camelCasePropname);
+				propVal = m_jsValue.GetProperty(propName);
 			}
 			switch (vt) {
 			case VT_R8:
@@ -554,38 +550,48 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 	}
 	if (bRedraw)
 		Invalidate();
-	*/
 }
 
-void CA2PropertyGridCtrl::FillProperties(JavaScriptValue val, JavaScriptValue parent)
+void CA2PropertyGridCtrl::Clear()
 {
-	/*
-	if (val == m_jsValue)
-		return;
-	m_jsValue = val;
-	m_jsValueParent = parent;
-	*/
+	m_jsValue = JavaScriptValue::Invalid();
+	m_jsValueParent = JavaScriptValue::Invalid();
 	RemoveAll();
-	/*
-	if (m_jsValue.IsValid())
-	{
-		FillPropertiesInt();
-	}
-	*/
 	AdjustLayout();
 	Invalidate();
 }
 
-/*
+void CA2PropertyGridCtrl::FillProperties(JavaScriptValue val, JavaScriptValue parent)
+{
+	if (val == m_jsValue)
+		return;
+	m_jsValue = val;
+	m_jsValueParent = parent;
+	RemoveAll();
+	try 
+	{
+		if (m_jsValue.IsValid())
+			FillPropertiesInternal();
+	}
+	catch (JavaScriptException& ex) 
+	{
+		ex.ReportError();
+		m_jsValue = JavaScriptValue::Invalid();
+		m_jsValueParent = JavaScriptValue::Invalid();
+	}
+	AdjustLayout();
+	Invalidate();
+}
+
 CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached)
 {
 	CString descr = meta.GetProperty(L"description").ToStringCheck();
 	CString type = meta.GetProperty(L"type").ToStringCheck();
-	CString pascalCaseName = CStringTools::ToPascalCase(szName);
 
 	int vtTag = 0;
 	JavaScriptValue val;
-	if (bAttached) {
+	if (bAttached) 
+	{
 		CString name(szName);
 		JavaScriptValue propAccessor = m_jsValueParent.GetProperty(L"$$" + name);
 		val = propAccessor.CallFunction(m_jsValueParent, JavaScriptValue::FromString(m_jsValue.GetHashKey()));
@@ -593,36 +599,39 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 	}
 	else
 		val = m_jsValue.GetProperty(szName);
-	CMFCPropertyGridProperty* pProp = NULL;
+	CMFCPropertyGridProperty* pProp = nullptr;
 	if (type == L"color") {
+		ATLASSERT(FALSE);
+		/*
 		COLORREF clr = CConvert::String2Color(val.ToString());
 		CMFCPropertyGridColorProperty* pColorProp =
 			new CMFCPropertyGridColorProperty(pascalCaseName, clr, nullptr, descr, VT_COLOR + vtTag);
 		pColorProp->EnableOtherButton(_T("Other..."));
 		pColorProp->EnableAutomaticButton(_T("Default"), AUTO_COLOR);
 		pProp = pColorProp;
+		*/
 	}
 	else if (type == L"string")
 	{
 		COleVariant var = val.ToStringCheck();
-		pProp = new CMFCPropertyGridProperty(pascalCaseName, var, descr, VT_BSTR + vtTag);
+		pProp = new CMFCPropertyGridProperty(szName, var, descr, VT_BSTR + vtTag);
 	}
 	else if (type == L"number") {
 		COleVariant var = val.ToDouble();
-		pProp = new CA2PropertyGridProperty(pascalCaseName, var, descr, VT_R8 + vtTag);
+		pProp = new CA2PropertyGridProperty(szName, var, descr, VT_R8 + vtTag);
 	}
 	else if (type == L"boolean") {
 		COleVariant var(val.ToBool() ? VARIANT_TRUE : VARIANT_FALSE, VT_BOOL);
-		pProp = new CMFCPropertyGridProperty(pascalCaseName, var, descr, VT_BOOL + vtTag);
+		pProp = new CMFCPropertyGridProperty(szName, var, descr, VT_BOOL + vtTag);
 	}
 	else if (type == L"version") {
 		// TODO: version property type
 		COleVariant var(val.ToStringCheck());
-		pProp = new CMFCPropertyGridProperty(pascalCaseName, var, descr, VT_BSTR + vtTag);
+		pProp = new CMFCPropertyGridProperty(szName, var, descr, VT_BSTR + vtTag);
 	}
 	else if (type == L"enum") {
 		COleVariant var = val.ToStringCheck();
-		pProp = new CMFCPropertyGridProperty(pascalCaseName, var, descr, VT_BSTR + vtTag);
+		pProp = new CMFCPropertyGridProperty(szName, var, descr, VT_BSTR + vtTag);
 		JavaScriptValue val = meta.GetProperty(L"enum");
 		if (val.ValueType() == JsValueType::JsArray) {
 			int len = val.GetProperty(L"length").ToInt();
@@ -634,30 +643,33 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 	}
 	else
 	{
-		pProp = new CA2PropertyGridProperty(pascalCaseName, COleVariant(L""), descr, VT_EMPTY + vtTag);
+		pProp = new CA2PropertyGridProperty(szName, COleVariant(EMPTYSTR), descr, VT_EMPTY + vtTag);
 	}
 	return pProp;
 }
-*/
 
-void CA2PropertyGridCtrl::FillPropertiesInt()
+void CA2PropertyGridCtrl::FillPropertiesInternal()
 {
-	/*
-	auto meta = m_jsValue.GetProperty(L"metadata");
+	if (!m_jsValue.IsValid())
+		return;
+	JavaScriptPropertyId catPropId = JavaScriptPropertyId::FromString(L"category");
+	JavaScriptPropertyId metaPropId = JavaScriptPropertyId::FromString(L"_meta_");
+
+	auto meta = m_jsValue.GetProperty(metaPropId);
 	if (meta.ValueType() != JsValueType::JsObject)
 		return;
 	auto props = meta.GetProperty(L"properties");
 	if (props.ValueType() != JsValueType::JsObject)
 		return;
 
-	JavaScriptValue attached;
+	JavaScriptValue attached = JavaScriptValue::Invalid();
 	if (m_jsValueParent.IsValid())
-		attached = m_jsValueParent.GetProperty(L"metadata").GetProperty(L"attached");
+		attached = m_jsValueParent.GetProperty(metaPropId).GetProperty(L"attached");
 
-	CMap<CString, LPCWSTR, CA2PropertyGridProperty*, CA2PropertyGridProperty*> catMap;
 	CArray<CString, LPCWSTR> names;
+	CMap<CString, LPCWSTR, CA2PropertyGridProperty*, CA2PropertyGridProperty*> catMap;
 
-	names.RemoveAll();
+
 	props.PropertyNames(names);
 
 	for (int i = 0; i < names.GetSize(); i++) {
@@ -665,8 +677,8 @@ void CA2PropertyGridCtrl::FillPropertiesInt()
 		if (name.IsEmpty())
 			continue;
 		JavaScriptValue info = props.GetProperty(name);
-		CString pascalCaseName = CStringTools::ToPascalCase(name);
-		CString category = info.GetProperty(L"category").ToStringCheck();
+		//CString pascalCaseName = CStringTools::ToPascalCase(name);
+		CString category = info.GetProperty(catPropId).ToStringCheck();
 		if (category.IsEmpty())
 			category = DEFAULT_CATEGORY;
 		CA2PropertyGridProperty* pProp = NULL;
@@ -679,20 +691,22 @@ void CA2PropertyGridCtrl::FillPropertiesInt()
 	}
 
 	// and attached now
-	if (attached.IsValid() && (attached.ValueType() == JsValueType::JsObject)) {
+	if (attached.IsValid() && (attached.ValueType() == JsValueType::JsObject)) 
+	{
 		names.RemoveAll();
 		attached.PropertyNames(names);
-		for (int i = 0; i < names.GetSize(); i++) {
+		for (int i = 0; i < names.GetSize(); i++) 
+		{
 			CString name = names.ElementAt(i);
 			if (name.IsEmpty())
 				continue;
 			JavaScriptValue info = attached.GetProperty(name);
-			CString pascalCaseName = CStringTools::ToPascalCase(name);
-			CString category = info.GetProperty(L"category").ToStringCheck();
+			CString category = info.GetProperty(catPropId).ToStringCheck();
 			if (category.IsEmpty())
 				category = DEFAULT_CATEGORY;
 			CA2PropertyGridProperty* pProp = NULL;
-			if (!catMap.Lookup(category, pProp)) {
+			if (!catMap.Lookup(category, pProp)) 
+			{
 				pProp = new CA2PropertyGridProperty(category);
 				AddProperty(pProp, FALSE, FALSE);
 				catMap.SetAt(category, pProp);
@@ -700,5 +714,4 @@ void CA2PropertyGridCtrl::FillPropertiesInt()
 			pProp->AddSubItem(GetPropertyValue(name, info, true));
 		}
 	}
-	*/
 }

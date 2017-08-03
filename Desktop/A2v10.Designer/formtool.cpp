@@ -84,8 +84,8 @@ void CFormTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoint& poi
 	pView->ClientToDoc(nr);
 	pView->ClientToDoc(local);
 	CA2FormDocument* pDoc = pView->GetDocument();
-	//CFormItem* pParent = pDoc->ObjectAt(local);
-	//TODOL if (pParent)
+	CFormItem* pParent = pDoc->ObjectAt(local);
+	//if (pParent)
 		//pParent = pParent->GetCreateTarget();
 	// Convert to doc coords and snap to grid if needed
 	//pView->PrepareNewRect(nr);

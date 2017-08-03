@@ -25,7 +25,7 @@
 #include "../include/uitools.h"
 //#include "../include/filetools.h"
 //#include "../include/typetools.h"
-//#include "../include/convert.h"
+#include "../include/convert.h"
 #include "../include/versions.h"
 
 #include "../include/optionsps.h"

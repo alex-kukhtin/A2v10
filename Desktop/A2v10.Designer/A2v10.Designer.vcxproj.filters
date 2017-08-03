@@ -111,6 +111,9 @@
     <ClInclude Include="xamlview.h">
       <Filter>Header Files\FormDesigner</Filter>
     </ClInclude>
+    <ClInclude Include="grid.h">
+      <Filter>Header Files\FormDesigner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -177,6 +180,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xamlview.cpp">
+      <Filter>Source Files\FormDesigner</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
   </ItemGroup>

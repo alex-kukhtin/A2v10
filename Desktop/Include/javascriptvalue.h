@@ -30,6 +30,7 @@ public:
 	JavaScriptValue GetProperty(int iIndex);
 	JavaScriptValue& SetProperty(JavaScriptPropertyId id, JavaScriptValue value, bool useStrictRules = true);
 	JavaScriptValue& SetProperty(const wchar_t* propName, JavaScriptValue value, bool useStrictRules = true);
+	JavaScriptValue& SetProperty(const wchar_t* propName, const wchar_t* value, bool useStrictRules = true);
 	JavaScriptValue& SetProperty(const wchar_t* propName, double value, bool useStrictRules = true);
 	JavaScriptValue& SetIndexedProperty(int iIndex, JavaScriptValue value);
 	JavaScriptValue CallFunction();

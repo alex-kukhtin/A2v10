@@ -1,21 +1,27 @@
-﻿"use strict";
+﻿
+// global variables!
 
-// global!
+function createElement(name, ...args) {
+    if (name in this.elements) {
+        return new this.elements[name](...args);
+    }
+    console.error(`__createElement. Element '${name}' not found`);
+    return null;
+}
 
 var designer = {
-	form: {
-		__createElement: function () {
-			console.log('create element here');
-			return null;
-		},
-		__registerElement: function (ctor) {
+    form: {
+        elements: {},
+        __createElement: createElement,
+		__registerElement(ctor) {
 			var name = ctor.prototype.type;
 			this.elements[name] = ctor;
 		},
-		elements: {
-
-		}
-	}
+    },
+    solution: {
+        elements: {},
+        __createElement: createElement
+    }
 };
 
 

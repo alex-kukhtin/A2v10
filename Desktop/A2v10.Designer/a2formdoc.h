@@ -14,6 +14,7 @@ protected: // create from serialization only
 	CFormItem* m_pRoot;
 	bool m_bXmlModified;
 	bool m_bTextModified;
+	bool m_bPropertyChanged;
 public:
 	virtual ~CA2FormDocument();
 	void ClearRoot();

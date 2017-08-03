@@ -25,7 +25,8 @@ IMPLEMENT_DYNCREATE(CA2FormDocument, CDocument)
 
 CA2FormDocument::CA2FormDocument()
 	: m_pRoot(nullptr),
-	  m_bXmlModified(false), m_bTextModified(false)
+	  m_bXmlModified(false), m_bTextModified(false),
+	  m_bPropertyChanged(false)
 {
 }
 

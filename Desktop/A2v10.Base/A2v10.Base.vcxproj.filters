@@ -120,6 +120,9 @@
     <ClCompile Include="appabout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="convert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -240,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="appabout.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\convert.h">
+      <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

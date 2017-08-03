@@ -37,16 +37,24 @@ public:
 	void Clear();
 };
 
+
 class CFormItem  : public CObject
 {
 protected:
 	CRect m_position;
-
+	JavaScriptValue m_jsValue;
 	tinyxml2::XMLElement* m_pNode;
 	CA2FormDocument* m_pDoc;
 	CFormItemList m_children;
+	CFormItem* m_pParent;
 public:
 	CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
+
+	virtual void ConstructObject();
+
+	JsValueRef GetJsHandle() { return (JsValueRef)m_jsValue; }
+	CFormItem* GetParent() { return m_pParent; }
+
 	virtual ~CFormItem();
 
 	virtual LPCWSTR ElementName() abstract;

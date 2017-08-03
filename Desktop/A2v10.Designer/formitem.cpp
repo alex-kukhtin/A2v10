@@ -10,7 +10,7 @@
 
 
 CFormItem::CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode)
-: m_pDoc(pDoc), m_pNode(pNode), m_position(0, 0, 0, 0)
+: m_pDoc(pDoc), m_pNode(pNode), m_position(0, 0, 0, 0), m_pParent(nullptr)
 {
 }
 
@@ -18,6 +18,40 @@ CFormItem::CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode)
 CFormItem::~CFormItem()
 {
 
+}
+
+// virtual 
+void CFormItem::ConstructObject()
+{
+	CString objName = ElementName();
+	try {
+		auto jsForm = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.form");
+		auto jsCreate = jsForm.GetProperty(L"__createElement");
+		m_jsValue = jsCreate.CallFunction(jsForm, JavaScriptValue::FromString(objName));
+	}
+	catch (JavaScriptException& ex) 
+	{
+		ex.ReportError();
+	}
+	/*
+	auto jsItemConstructor = jsForms.GetProperty(objName);
+
+	if (jsItemConstructor.ValueType() != JsValueType::JsFunction) {
+		CString errMsg;
+		errMsg.Format(L"Constructor for type \"%s\" not found", (LPCWSTR)objName);
+		AfxMessageBox(errMsg);
+		return;
+	}
+
+	ATLASSERT(jsItemConstructor.ValueType() == JsValueType::JsFunction);
+
+	JavaScriptValue arg = JavaScriptValue::CreateObject();
+	m_jsValue = jsItemConstructor.ConstructObject(arg);
+	//Js2Properties();
+
+	//JavaScriptValue func = JavaScriptValue::CreateFunction(JavaScriptObjectMap::NotifyJsCallback, (void*)(DWORD_PTR)this);
+	//arg.SetProperty(L"notifyPropertyChange", func);
+	*/
 }
 
 // virtual 

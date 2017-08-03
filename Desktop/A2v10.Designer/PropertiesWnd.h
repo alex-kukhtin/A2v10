@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 class CA2PropertyGridProperty : public CMFCPropertyGridProperty
 {
 public:
@@ -21,31 +20,32 @@ public:
 
 class CA2PropertyGridCtrl : public CMFCPropertyGridCtrl
 {
+	JavaScriptValue m_jsValue;
+	JavaScriptValue m_jsValueParent;
+
 public:
-	//JavaScriptValue m_jsValue;
-	//JavaScriptValue m_jsValueParent;
+	CA2PropertyGridCtrl();
+
 	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const override;
 
 	void FillProperties(JavaScriptValue val, JavaScriptValue parent);
 	void FillPropertyValues();
+	void Clear();
 
 protected:
 	virtual void OnDrawDescription(CDC* pDC, CRect rect) override;
-	//CMFCPropertyGridProperty* GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached);
-	void FillPropertiesInt();
+	CMFCPropertyGridProperty* GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached);
+	void FillPropertiesInternal();
 };
 
 class CPropertiesWnd : public CA2DockablePane
 {
-	// Construction
 public:
 	CPropertiesWnd();
 	virtual ~CPropertiesWnd() override;
 
 	void AdjustLayout();
 
-	// Attributes
-public:
 	void SetVSDotNetLook(BOOL bSet)
 	{
 		m_wndPropList.SetVSDotNetLook(bSet);

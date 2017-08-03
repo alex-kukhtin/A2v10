@@ -174,6 +174,11 @@ JavaScriptValue& JavaScriptValue::SetProperty(const wchar_t* propName, double va
 	return SetProperty(propName, JavaScriptValue::FromDouble(value), useStrictRules);
 }
 
+JavaScriptValue& JavaScriptValue::SetProperty(const wchar_t* propName, const wchar_t* value, bool useStrictRules /*= true*/)
+{
+	return SetProperty(propName, JavaScriptValue::FromString(value), useStrictRules);
+}
+
 JavaScriptValue& JavaScriptValue::SetIndexedProperty(int iIndex, JavaScriptValue value)
 {
 	if (ValueType() != JsValueType::JsArray)

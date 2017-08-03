@@ -441,8 +441,7 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 		return 0L;
 	auto pDoc = GetDocument();
 	FILL_PROPS_INFO* pInfo = reinterpret_cast<FILL_PROPS_INFO*>(lParam);
-	/*
-	CFormItem* pItem = pDoc->GetSelectedItem();
+	CFormItem* pItem = pDoc->m_pRoot;//TODO : selection pDoc->GetSelectedItem();
 	if (pItem) {
 		pInfo->elem = reinterpret_cast<DWORD_PTR>(pItem->GetJsHandle());
 		if (pItem->GetParent())
@@ -451,10 +450,9 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 			pDoc->m_bPropertyChanged = false;
 			return (LRESULT)WMI_FILL_PROPS_RESULT_REFILL;
 		}
-		return (LRESULT)WMI_FILL_PROPS_RESULT_OK;
+		return (LRESULT) WMI_FILL_PROPS_RESULT_OK;
 	}
-	*/
-	return 0L;
+	return (LRESULT)WMI_FILL_PROPS_RESULT_EMPTY;
 }
 
 // afx_msg
