@@ -63,6 +63,7 @@ public:
 
 	bool IsValid() const;
 	JsValueType ValueType();
+	void SetInvalid();
 
 	UINT AddRef();
 	UINT Release();

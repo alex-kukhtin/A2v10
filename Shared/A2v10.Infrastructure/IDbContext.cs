@@ -8,6 +8,7 @@ namespace A2v10.Infrastructure
 {
 	public interface IDbContext
 	{
+        String ConnectionString { get; }
 		Task<SqlConnection> GetConnectionAsync();
 		Task<IDataModel> LoadModelAsync(String command, Object prms = null);
 		Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null);

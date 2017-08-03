@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\a2v10security.sql = SqlScripts\a2v10security.sql
 		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql
 		SqlScripts\a2v10test.sql = SqlScripts\a2v10test.sql
+		SqlScripts\a2v10workflow.sql = SqlScripts\a2v10workflow.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Runtime", "Desktop\A2v10.Runtime\A2v10.Runtime.csproj", "{DCD07C48-1983-4861-9717-3A770C3C37E0}"
@@ -71,6 +72,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A2v10.Locale.Ru", "Desktop\A2v10.Locale.Ru\A2v10.Locale.Ru.vcxproj", "{22C8C752-65C0-4EDE-BBC7-BA1BC297376C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A2v10.Locale.En", "Desktop\A2v10.Locale.En\A2v10.Locale.En.vcxproj", "{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Workflow", "Shared\A2v10.Workflow\A2v10.Workflow.csproj", "{76269196-DB55-4299-AE0F-A33A5BAB294F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -240,6 +243,18 @@ Global
 		{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC}.Release|x64.Build.0 = Release|x64
 		{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC}.Release|x86.ActiveCfg = Release|Win32
 		{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC}.Release|x86.Build.0 = Release|Win32
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|x64.Build.0 = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Debug|x86.Build.0 = Debug|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|x64.ActiveCfg = Release|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|x64.Build.0 = Release|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|x86.ActiveCfg = Release|Any CPU
+		{76269196-DB55-4299-AE0F-A33A5BAB294F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -259,5 +274,6 @@ Global
 		{D83CDCFC-2189-4A41-A978-72E76DEF978F} = {825023F4-F682-4FA8-BA5D-F253B5BB52F3}
 		{22C8C752-65C0-4EDE-BBC7-BA1BC297376C} = {825023F4-F682-4FA8-BA5D-F253B5BB52F3}
 		{4FADD7BC-8EEC-4A85-AD5A-E0AEF78A65DC} = {825023F4-F682-4FA8-BA5D-F253B5BB52F3}
+		{76269196-DB55-4299-AE0F-A33A5BAB294F} = {5371E97D-8916-4D33-9BE7-C0C97209DD54}
 	EndGlobalSection
 EndGlobal

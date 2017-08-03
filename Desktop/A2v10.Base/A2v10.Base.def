@@ -85,6 +85,9 @@ EXPORTS
 ?CallFunctionArg@JavaScriptValue@@QAE?AU1@U1@@Z
 ?SetProperty@JavaScriptValue@@QAEAAU1@PB_WN_N@Z
 ?SetProperty@JavaScriptValue@@QAEAAU1@PB_W0_N@Z
+?SetInvalid@JavaScriptValue@@QAEXXZ
+?AddRef@JavaScriptValue@@QAEIXZ
+?Release@JavaScriptValue@@QAEIXZ
 ;
 ??0CA2TabView@@IAE@XZ
 ??1CA2TabView@@UAE@XZ
@@ -138,4 +141,6 @@ EXPORTS
 ?Color2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@K@Z
 ?Double2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@N@Z
 ?String2Color@CConvert@@SAKPB_WK@Z
+;
+?OnPropertyChanged@CJsElement@@UAEXPB_W@Z
 

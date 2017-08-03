@@ -17,21 +17,23 @@ CFormItem::CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode)
 // virtual 
 CFormItem::~CFormItem()
 {
-
+	if (m_jsValue.IsValid())
+		m_jsValue.Release();
 }
 
 // virtual 
 void CFormItem::ConstructObject()
 {
-	CString objName = ElementName();
 	try {
 		auto jsForm = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.form");
 		auto jsCreate = jsForm.GetProperty(L"__createElement");
-		m_jsValue = jsCreate.CallFunction(jsForm, JavaScriptValue::FromString(objName));
+		m_jsValue = jsCreate.CallFunction(jsForm, JavaScriptValue::FromString(ElementName()));
+		m_jsValue.AddRef();
 	}
 	catch (JavaScriptException& ex) 
 	{
 		ex.ReportError();
+		m_jsValue.SetInvalid();
 	}
 	/*
 	auto jsItemConstructor = jsForms.GetProperty(objName);

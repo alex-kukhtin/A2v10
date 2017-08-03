@@ -214,10 +214,10 @@ bool CFormSelectTool::MoveObjects(CA2FormView* pView, const CPoint& point)
 	CA2FormDocument* pDoc = pView->GetDocument();
 	//if (pView->IsInsideEditor())
 	//return FALSE;
-	/*
 	// несколько выделенных объектов, работаем только с Move
 	CPoint local(point);
 	pView->ClientToDoc(local);
+	/*
 	CRect tr(pDoc->GetSelectionRect());
 	local = tr.TopLeft();
 	pView->DocToClient(tr);

@@ -20,22 +20,26 @@ public:
 
 class CA2PropertyGridCtrl : public CMFCPropertyGridCtrl
 {
-	JavaScriptValue m_jsValue;
-	JavaScriptValue m_jsValueParent;
+	CJsElement* m_pJsValue;
+	CJsElement* m_pJsValueParent;
 
 public:
 	CA2PropertyGridCtrl();
 
 	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const override;
 
-	void FillProperties(JavaScriptValue val, JavaScriptValue parent);
+	void FillProperties(CJsElement* val, CJsElement* parent);
 	void FillPropertyValues();
 	void Clear();
+	void SetProperty(LPCWSTR szPropName, JavaScriptValue val);
 
 protected:
 	virtual void OnDrawDescription(CDC* pDC, CRect rect) override;
 	CMFCPropertyGridProperty* GetPropertyValue(LPCWSTR szName, JavaScriptValue& meta, bool bAttached);
 	void FillPropertiesInternal();
+
+	JavaScriptValue GetValue();
+	JavaScriptValue GetParentValue();
 };
 
 class CPropertiesWnd : public CA2DockablePane

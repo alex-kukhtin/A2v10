@@ -21,6 +21,11 @@ namespace A2v10.Data
 			_config = config;
 		}
 
+        public String ConnectionString
+        {
+            get { return _config.GetConnectionString(); }
+        }
+
 		public async Task<SqlConnection> GetConnectionAsync()
 		{
 			var cnnStr = _config.GetConnectionString();

@@ -38,7 +38,7 @@ public:
 };
 
 
-class CFormItem  : public CObject
+class CFormItem  : public CJsElement
 {
 protected:
 	CRect m_position;
@@ -52,7 +52,7 @@ public:
 
 	virtual void ConstructObject();
 
-	JsValueRef GetJsHandle() { return (JsValueRef)m_jsValue; }
+	virtual JsValueRef GetJsHandle() override { return (JsValueRef)m_jsValue; }
 	CFormItem* GetParent() { return m_pParent; }
 
 	virtual ~CFormItem();

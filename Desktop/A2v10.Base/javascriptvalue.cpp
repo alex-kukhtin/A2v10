@@ -74,6 +74,11 @@ JavaScriptValue JavaScriptValue::Invalid()
 	return JavaScriptValue();
 }
 
+void JavaScriptValue::SetInvalid() 
+{
+	m_handle = JS_INVALID_REFERENCE;
+}
+
 // static 
 JavaScriptValue JavaScriptValue::GlobalObject()
 {

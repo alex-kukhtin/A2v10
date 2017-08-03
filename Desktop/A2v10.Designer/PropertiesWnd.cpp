@@ -113,7 +113,33 @@ void CA2PropertyGridCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) con
 	}
 	else
 	*/
-		pThis->m_jsValue.SetProperty(propName, val);
+		pThis->SetProperty(propName, val);
+}
+
+
+JavaScriptValue CA2PropertyGridCtrl::GetValue()
+{
+	JavaScriptValue val;
+	if (m_pJsValue != nullptr)
+		val = m_pJsValue->GetJsHandle();
+	return val;
+}
+
+JavaScriptValue CA2PropertyGridCtrl::GetParentValue()
+{
+	JavaScriptValue val;
+	if (m_pJsValueParent != nullptr)
+		val = m_pJsValueParent->GetJsHandle();
+	return val;
+}
+
+void CA2PropertyGridCtrl::SetProperty(LPCWSTR szPropName, JavaScriptValue val)
+{
+	if (m_pJsValue == nullptr)
+		return;
+	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	jsValue.SetProperty(szPropName, val);
+	m_pJsValue->OnPropertyChanged(szPropName); // notify 
 }
 
 // virtual
@@ -445,9 +471,9 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 			break;
 		case WMI_FILL_PROPS_RESULT_OK:
 			{
-				JsValueRef refValue = reinterpret_cast<JsValueRef>(info.elem);
-				JsValueRef refParent = reinterpret_cast<JsValueRef>(info.parent);
-				m_wndPropList.FillProperties(JavaScriptValue(refValue), JavaScriptValue(refParent));
+				CJsElement* refValue = reinterpret_cast<CJsElement*>(info.elem);
+				CJsElement* refParent = reinterpret_cast<CJsElement*>(info.parent);
+				m_wndPropList.FillProperties(refValue, refParent);
 			}
 			break;
 		case WMI_FILL_PROPS_RESULT_REFILL :
@@ -467,6 +493,7 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 }
 
 CA2PropertyGridCtrl::CA2PropertyGridCtrl()
+	:m_pJsValue(nullptr), m_pJsValueParent(nullptr)
 {
 
 }
@@ -474,8 +501,12 @@ CA2PropertyGridCtrl::CA2PropertyGridCtrl()
 
 void CA2PropertyGridCtrl::FillPropertyValues()
 {
-	if (!m_jsValue.IsValid())
+	if (m_pJsValue == nullptr)
 		return;
+	JavaScriptValue jsValue = GetValue();
+	if (!jsValue.IsValid())
+		return;
+	JavaScriptValue jsValueParent = GetParentValue();
 	bool bRedraw = false;
 	for (int i = 0; i < GetPropertyCount(); i++) {
 		auto pCat = GetProperty(i);
@@ -490,12 +521,12 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 			{
 				// attached property
 				vt -= VT_TAG;
-				JavaScriptValue propAccessor = m_jsValueParent.GetProperty(L"$$" + propName);
-				propVal = propAccessor.CallFunction(m_jsValueParent, JavaScriptValue::FromString(m_jsValue.GetHashKey()));
+				JavaScriptValue propAccessor = jsValueParent.GetProperty(L"$$" + propName);
+				propVal = propAccessor.CallFunction(jsValueParent, JavaScriptValue::FromString(jsValue.GetHashKey()));
 			}
 			else
 			{
-				propVal = m_jsValue.GetProperty(propName);
+				propVal = jsValue.GetProperty(propName);
 			}
 			switch (vt) {
 			case VT_R8:
@@ -554,30 +585,30 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 
 void CA2PropertyGridCtrl::Clear()
 {
-	m_jsValue = JavaScriptValue::Invalid();
-	m_jsValueParent = JavaScriptValue::Invalid();
+	m_pJsValue = nullptr;
+	m_pJsValueParent = nullptr;
 	RemoveAll();
 	AdjustLayout();
 	Invalidate();
 }
 
-void CA2PropertyGridCtrl::FillProperties(JavaScriptValue val, JavaScriptValue parent)
+void CA2PropertyGridCtrl::FillProperties(CJsElement* val, CJsElement* parent)
 {
-	if (val == m_jsValue)
+	if (val == m_pJsValue)
 		return;
-	m_jsValue = val;
-	m_jsValueParent = parent;
+	m_pJsValue = val;
+	m_pJsValueParent = parent;
 	RemoveAll();
 	try 
 	{
-		if (m_jsValue.IsValid())
+		if (m_pJsValue != nullptr)
 			FillPropertiesInternal();
 	}
 	catch (JavaScriptException& ex) 
 	{
 		ex.ReportError();
-		m_jsValue = JavaScriptValue::Invalid();
-		m_jsValueParent = JavaScriptValue::Invalid();
+		m_pJsValue = nullptr;
+		m_pJsValueParent = nullptr;
 	}
 	AdjustLayout();
 	Invalidate();
@@ -587,18 +618,21 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 {
 	CString descr = meta.GetProperty(L"description").ToStringCheck();
 	CString type = meta.GetProperty(L"type").ToStringCheck();
-
+	if (m_pJsValue == nullptr)
+		return nullptr;
+	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	JavaScriptValue jsValueParent = GetParentValue();
 	int vtTag = 0;
 	JavaScriptValue val;
 	if (bAttached) 
 	{
 		CString name(szName);
-		JavaScriptValue propAccessor = m_jsValueParent.GetProperty(L"$$" + name);
-		val = propAccessor.CallFunction(m_jsValueParent, JavaScriptValue::FromString(m_jsValue.GetHashKey()));
+		JavaScriptValue propAccessor = jsValueParent.GetProperty(L"$$" + name);
+		val = propAccessor.CallFunction(jsValueParent, JavaScriptValue::FromString(jsValue.GetHashKey()));
 		vtTag = VT_TAG;
 	}
 	else
-		val = m_jsValue.GetProperty(szName);
+		val = jsValue.GetProperty(szName);
 	CMFCPropertyGridProperty* pProp = nullptr;
 	if (type == L"color") {
 		ATLASSERT(FALSE);
@@ -650,12 +684,16 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 
 void CA2PropertyGridCtrl::FillPropertiesInternal()
 {
-	if (!m_jsValue.IsValid())
+	if (m_pJsValue == nullptr)
+		return;
+	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	JavaScriptValue jsValueParent = GetParentValue();
+	if (!jsValue.IsValid())
 		return;
 	JavaScriptPropertyId catPropId = JavaScriptPropertyId::FromString(L"category");
 	JavaScriptPropertyId metaPropId = JavaScriptPropertyId::FromString(L"_meta_");
 
-	auto meta = m_jsValue.GetProperty(metaPropId);
+	auto meta = jsValue.GetProperty(metaPropId);
 	if (meta.ValueType() != JsValueType::JsObject)
 		return;
 	auto props = meta.GetProperty(L"properties");
@@ -663,8 +701,8 @@ void CA2PropertyGridCtrl::FillPropertiesInternal()
 		return;
 
 	JavaScriptValue attached = JavaScriptValue::Invalid();
-	if (m_jsValueParent.IsValid())
-		attached = m_jsValueParent.GetProperty(metaPropId).GetProperty(L"attached");
+	if (jsValueParent.IsValid())
+		attached = jsValueParent.GetProperty(metaPropId).GetProperty(L"attached");
 
 	CArray<CString, LPCWSTR> names;
 	CMap<CString, LPCWSTR, CA2PropertyGridProperty*, CA2PropertyGridProperty*> catMap;
@@ -677,7 +715,6 @@ void CA2PropertyGridCtrl::FillPropertiesInternal()
 		if (name.IsEmpty())
 			continue;
 		JavaScriptValue info = props.GetProperty(name);
-		//CString pascalCaseName = CStringTools::ToPascalCase(name);
 		CString category = info.GetProperty(catPropId).ToStringCheck();
 		if (category.IsEmpty())
 			category = DEFAULT_CATEGORY;
