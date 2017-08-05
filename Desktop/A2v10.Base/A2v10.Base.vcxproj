@@ -217,6 +217,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="filetools.cpp" />
     <ClCompile Include="guictrls.cpp" />
     <ClCompile Include="guiext.cpp" />
     <ClCompile Include="javascriptexceptions.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="..\Include\appstructs.h" />
     <ClInclude Include="..\Include\convert.h" />
     <ClInclude Include="..\Include\dlldefs.h" />
+    <ClInclude Include="..\Include\filetools.h" />
     <ClInclude Include="..\Include\guictrls.h" />
     <ClInclude Include="..\Include\guiext.h" />
     <ClInclude Include="..\Include\javascriptexceptions.h" />

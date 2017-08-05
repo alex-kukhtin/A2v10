@@ -4,3 +4,4 @@ EXPORTS
 ?Start@CDotNetRuntime@@SAXXZ
 ?Stop@CDotNetRuntime@@SAXXZ
 ?LoadLibraryW@CDotNetRuntime@@SAXXZ
+?LoadModuleContext@CDotNetRuntime@@SAXXZ

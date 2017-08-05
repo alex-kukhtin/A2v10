@@ -185,9 +185,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="A2v10.Application.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="mainview.h" />

@@ -4,7 +4,7 @@
 
 #pragma once
 
-class CMainFrame : public CFrameWndEx
+class CMainFrame : public CA2SDIFrameWnd
 {
 	
 protected: // create from serialization only
@@ -31,7 +31,7 @@ public:
 #endif
 
 protected:  // control bar embedded members
-	CMFCMenuBar       m_wndMenuBar;
+	//CMFCMenuBar       m_wndMenuBar;
 	CMFCToolBar       m_wndToolBar;
 	CMFCStatusBar     m_wndStatusBar;
 
@@ -39,8 +39,6 @@ protected:  // control bar embedded members
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFileClose();
-	afx_msg void OnViewCustomize();
-	afx_msg LRESULT OnToolbarCreateNew(WPARAM wp, LPARAM lp);
 	DECLARE_MESSAGE_MAP()
 
 };

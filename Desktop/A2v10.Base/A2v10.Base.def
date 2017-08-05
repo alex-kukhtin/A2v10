@@ -20,11 +20,21 @@ EXPORTS
 ?AdjustDockingLayout@CA2MDIFrameWnd@@MAEXPAX@Z
 ?RecalcLayout@CA2MDIFrameWnd@@MAEXH@Z
 ?DockPanes@CA2BorderPanes@@QAEXPAVCMDIFrameWndEx@@@Z
+?DockPanes@CA2BorderPanes@@QAEXPAVCFrameWndEx@@@Z
 ?OnSettingChange@CA2MDIFrameWnd@@IAEXIPB_W@Z
 ?OnCmdMsg@CA2MDIFrameWnd@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
 ?OnCreate@CA2MDIFrameWnd@@IAEHPAUtagCREATESTRUCTW@@@Z
 ?GetMessageString@CA2MDIFrameWnd@@UBEXIAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
 ?UpdateTabs@CA2MDIFrameWnd@@QAEXXZ
+;
+?GetThisMessageMap@CA2SDIFrameWnd@@KGPBUAFX_MSGMAP@@XZ
+?GetThisClass@CA2SDIFrameWnd@@SGPAUCRuntimeClass@@XZ
+??0CA2SDIFrameWnd@@IAE@XZ
+??1CA2SDIFrameWnd@@MAE@XZ
+?RecalcLayout@CA2SDIFrameWnd@@MAEXH@Z
+?AdjustDockingLayout@CA2SDIFrameWnd@@MAEXPAX@Z
+?OnCmdMsg@CA2SDIFrameWnd@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
+?OnCreate@CA2SDIFrameWnd@@IAEHPAUtagCREATESTRUCTW@@@Z
 ;
 ?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
@@ -143,4 +153,6 @@ EXPORTS
 ?String2Color@CConvert@@SAKPB_WK@Z
 ;
 ?OnPropertyChanged@CJsElement@@UAEXPB_W@Z
+;
+?SplitPath@CFileTools@@SAXPB_WAAUCFilePath@@@Z
 

@@ -14,7 +14,16 @@
 #define IDR_MAINFRAME_256			129
 #define IDR_A2v10TYPE				130
 #define IDS_CLOSE					195
+
+#define IDR_MENU_IMAGES		230
+
 #define IDS_EDIT_MENU				306
+
+#define IDMENU_CLOSE    0xD000
+#define IDMENU_RESTORE  0xD001
+#define IDMENU_MAXIMIZE 0xD002
+#define IDMENU_MINIMIZE 0xD003
+#define IDMENU_HELP     0xD004
 
 // Next default values for new objects
 //

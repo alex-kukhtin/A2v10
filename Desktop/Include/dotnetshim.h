@@ -16,6 +16,7 @@ public:
 	static void Start();
 	static void Stop();
 	static void LoadLibrary();
+	static void LoadModuleContext();
 	static void SetMainWnd(HWND hWnd);
 };
 

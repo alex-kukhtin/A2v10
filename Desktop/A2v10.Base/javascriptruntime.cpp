@@ -8,6 +8,7 @@
 #include "../include/javascriptexceptions.h"
 
 #include "../include/appdefs.h"
+#include "../include/filetools.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,10 +31,44 @@ JsRuntimeHandle JavaScriptRuntime::CurrentRuntime()
 	return s_runtime;
 }
 
+JsValueRef CHAKRA_CALLBACK RequireCallback(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState)
+{
+	CString msg;
+	try
+	{
+		if (argumentCount < 3)
+			throw JavaScriptUsageException(JsErrorCode::JsErrorInvalidArgument, L"__require");
+		CString fileName = JavaScriptValue(arguments[1]).ConvertToString().ToString();
+		CString pathName = JavaScriptValue(arguments[2]).ConvertToString().ToString();
+		WCHAR fullPath[_MAX_PATH + 1];
+		::PathCombine(fullPath, pathName, fileName);
+		::PathAddExtension(fullPath, L".js");
+		if (!::PathFileExists(fullPath)) {
+			msg.Format(L"File '%s' not found", fullPath);
+			throw JavaScriptUsageException(JsErrorCode::JsErrorInvalidArgument, msg);
+		}
+		CString code;
+		if (!CFileTools::LoadFile(fullPath, code)) {
+			msg.Format(L"Error reading from file '%s'", fullPath);
+			throw JavaScriptUsageException(JsErrorCode::JsErrorScriptException, msg);
+		}
+		return JavaScriptRuntime::RunModule(code, fullPath);
+	}
+	catch (JavaScriptException& jsEx) 
+	{
+		jsEx.SetException();
+	}
+	catch (...)
+	{
+		JavaScriptRuntime::SetUnknownException();
+	}
+	return JS_INVALID_REFERENCE;
+}
+
 JsValueRef CHAKRA_CALLBACK AlertCallback(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState)
 {
 	try {
-		CString strMessage(L"");
+		CString strMessage(EMPTYSTR);
 		if (argumentCount > 1)
 			strMessage = JavaScriptValue(arguments[1]).ConvertToString().ToString();
 		AfxMessageBox(strMessage);
@@ -53,7 +88,7 @@ JsValueRef CHAKRA_CALLBACK LogCallback(_In_ JsValueRef callee, _In_ bool isConst
 {
 	try 
 	{
-		CString strMessage(L"");
+		CString strMessage(EMPTYSTR);
 		if (argumentCount > 1)
 			strMessage = JavaScriptValue(arguments[1]).ConvertToString().ToString();
 		WPARAM wParam = reinterpret_cast<WPARAM>(callbackState);
@@ -72,17 +107,25 @@ JsValueRef CHAKRA_CALLBACK LogCallback(_In_ JsValueRef callee, _In_ bool isConst
 	}
 	return JS_INVALID_REFERENCE;
 }
+
 // static
 void JavaScriptRuntime::CreateGlobalObject()
 {
 	// in CURRENT (global) context
 	auto glob = JavaScriptValue::GlobalObject();
+	
 	auto alert = JavaScriptValue::CreateFunction(AlertCallback, nullptr);
 	glob.SetProperty(L"alert", alert);
+	
 	auto console = JavaScriptValue::CreateObject();
 	glob.SetProperty(L"console", console);
+	
 	auto log = JavaScriptValue::CreateFunction(LogCallback, (void*) WMI_CONSOLE_LOG);
 	console.SetProperty(L"log", log);
+
+	auto require = JavaScriptValue::CreateFunction(RequireCallback, nullptr);
+	glob.SetProperty(L"__require", require);
+
 }
 
 // static 
@@ -100,6 +143,20 @@ bool JavaScriptRuntime::RunScript(LPCWSTR szCode, LPCWSTR szPathName)
 	int context = s_currentContext;
 	JavaScriptNative::ThrowIfError(JsRunScript(szCode, context, szPathName, result));
 	return s_bClosingProgress;
+}
+
+JavaScriptValue JavaScriptRuntime::RunModule(LPCWSTR szCode, LPCWSTR szPathName)
+{
+	JavaScriptValue result = JS_INVALID_REFERENCE;
+	s_currentContext += 1;
+	int context = s_currentContext;
+	LPCWSTR szPrologue = L"(function() { let m = {exports: {}}; (function(module, exports) { ";
+	LPCWSTR szEpilogue = L" })(m, m.exports); return m.exports;})();";
+	CString codeToRun(szPrologue);
+	codeToRun += szCode;
+	codeToRun += szEpilogue;
+	JavaScriptNative::ThrowIfError(JsRunScript(codeToRun, context, szPathName, result));
+	return result;
 }
 
 // static 
@@ -285,6 +342,7 @@ JavaScriptContext::JavaScriptContext()
 
 	auto alertPropId = JavaScriptPropertyId::FromString(L"alert");
 	auto consolePropId = JavaScriptPropertyId::FromString(L"console");
+	auto requirePropId = JavaScriptPropertyId::FromString(L"__require");
 	auto alertVal = globTrg.GetProperty(alertPropId);
 	if (alertVal.ValueType() != JsUndefined)
 		return; // already set
@@ -292,6 +350,9 @@ JavaScriptContext::JavaScriptContext()
 	globTrg.SetProperty(alertPropId, alertVal);
 	auto consoleVal = globSrc.GetProperty(consolePropId);
 	globTrg.SetProperty(consolePropId, consoleVal);
+	auto requireVal = globSrc.GetProperty(requirePropId);
+	globTrg.SetProperty(requirePropId, requireVal);
+	//TODO: parse app objects in this context (app, require, etc)
 }
 
 JavaScriptContext::~JavaScriptContext()

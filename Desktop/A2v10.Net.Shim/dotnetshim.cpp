@@ -52,6 +52,13 @@ void CDotNetRuntime::LoadLibrary()
 }
 
 // static 
+void CDotNetRuntime::LoadModuleContext()
+{
+	A2v10RuntimeNet::Desktop::LoadModuleContext();
+	ThrowIfError();
+}
+
+// static 
 void CDotNetRuntime::SetMainWnd(HWND hWnd)
 {
 	m_hWnd = hWnd;

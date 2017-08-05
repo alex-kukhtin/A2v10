@@ -61,32 +61,51 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;use strict&quot;;
+        ///   Looks up a localized string similar to /*
+        ///global elements for context
+        ///*/
         ///
-        ///// global!
+        ///(function () {
+        ///    // this = global context
+        ///
+        ///    const modules = {};
+        ///
+        ///    this.require = function (module) {
+        ///        alert(&apos;require: &apos; + module);
+        ///    };
+        ///})();
+        ///.
+        /// </summary>
+        internal static string App_context {
+            get {
+                return ResourceManager.GetString("App_context", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///// global variables!
+        ///
+        ///function createElement(name, ...args) {
+        ///    if (name in this.elements) {
+        ///        return new this.elements[name](...args);
+        ///    }
+        ///    console.error(`__createElement. Element &apos;${name}&apos; not found`);
+        ///    return null;
+        ///}
         ///
         ///var designer = {
-        ///	form: {
-        ///		__createElement: function () {
-        ///			return null;
-        ///		}
-        ///	},
-        ///	registerElement: function (ctor) {
-        ///		var name = ctor.prototype.type;
-        ///		this.elements[name] = ctor;
-        ///	},
-        ///	elements: {
-        ///
-        ///	}
-        ///};
-        ///
-        ///
-        ///var app = {
-        ///};
-        ///
-        ///Object.freeze(designer);
-        ///Object.freeze(app);
-        ///.
+        ///    form: {
+        ///        elements: {},
+        ///        __createElement: createElement,
+        ///		__registerElement(ctor) {
+        ///			var name = ctor.prototype.type;
+        ///			this.elements[name] = ctor;
+        ///		},
+        ///    },
+        ///    solution: {
+        ///        elements: {},
+        ///        __createE [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Application {
             get {
@@ -96,34 +115,26 @@ namespace A2v10.Runtime.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to (function () {
-        ///	&quot;use strict&quot;;
         ///
-        ///	function Form() {
-        ///		this.
+        ///    function Form() {
+        ///        // form properties
+        ///        this.Width = 150;
+        ///        this.Height = 200;
+        ///        this.Title = &quot;Form title from JS&quot;;
         ///	}
         ///
         ///	Form.prototype.type = &quot;Form&quot;;
         ///
-        ///	Form.prototype.metadata = {
+        ///	Form.prototype._meta_ = {
         ///		properties: {
+        ///            Title: {
+        ///                category: &quot;Appearance&quot;,
+        ///                type: &quot;string&quot;,
+        ///                description: &quot;Specifies the text that will be displayed in the form&apos;s title bar&quot;
+        ///            },
         ///			Width: {
         ///				category: &quot;Layout&quot;,
-        ///				type: &quot;string&quot;,
-        ///				description: &quot;Specifies the width of the element&quot;
-        ///			},
-        ///			Height: {
-        ///				category: &quot;Layout&quot;,
-        ///				type: &quot;string&quot;,
-        ///				description: &quot;Specifies the height of the element&quot;
-        ///			}
-        ///		}
-        ///	};
-        ///
-        ///	designer.form.registerElement(Form);
-        ///})();
-        ///
-        ///
-        ///.
+        ///				type: &quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Form_form {
             get {

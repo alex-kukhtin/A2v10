@@ -19,6 +19,7 @@ public:
 	static JsContextRef CreateContext();
 	static CString Evaluate(const wchar_t* szScript);
 	static bool RunScript(LPCWSTR szScript, LPCWSTR szFileName);
+	static JavaScriptValue RunModule(LPCWSTR szCode, LPCWSTR szPathName);
 
 	static JavaScriptValue CreateDesignerElement(const wchar_t* szJson);
 

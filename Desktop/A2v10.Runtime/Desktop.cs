@@ -4,6 +4,7 @@ using A2v10.Script;
 using ChakraHost.Hosting;
 using System;
 using System.Globalization;
+using System.IO;
 
 namespace A2v10RuntimeNet
 {
@@ -44,7 +45,16 @@ namespace A2v10RuntimeNet
 			ParseLibraryElements(app);
 		}
 
-		static IScriptContext ScriptContext
+        public static void LoadModuleContext()
+        {
+            String[] app =
+            {
+                Resources.App_context,
+            };
+            ParseLibraryElements(app);
+        }
+
+        static IScriptContext ScriptContext
 		{
 			get
 			{

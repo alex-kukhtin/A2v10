@@ -52,19 +52,26 @@ void CModuleView::OnDebugRunInt()
 
 	CString pathName = GetDocument()->GetPathName();
 	SetReadOnly(true);
-	JavaScriptContext jscs;
+	JavaScriptContext jscs; // new scope
 	bool bClosing = false;
-	try 
+	// TODO:: ?? SaveAll
+	try
 	{
+		CDotNetRuntime::LoadModuleContext();
+		auto ctx = JavaScriptValue::GlobalObject().GetProperty(L"__context");
+		CFilePath path;
+		CFileTools::SplitPath(pathName, path);
+		ctx.SetProperty(L"_dir_", JavaScriptValue::FromString(path.m_drive + path.m_dir));
+		ctx.SetProperty(L"_file_", JavaScriptValue::FromString(path.m_name + path.m_ext));
 		bClosing = JavaScriptRuntime::RunScript(code, pathName);
 	}
 	catch (JavaScriptException& ex) 
 	{
 		ex.ReportError();
 	}
-	JavaScriptRuntime::EndRunScript();
 	if (bClosing)
 		return; // DO NOTHING! shutting down!
+	JavaScriptRuntime::EndRunScript();
 	// may be destroyed inside debugger
 	if (GetSafeHwnd()) {
 		RemoveCurrentLineMarker();

@@ -120,7 +120,6 @@ IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 
 IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
-IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
@@ -190,25 +189,6 @@ BEGIN
     BUTTON      ID_PROP_ALPHABETICAL
 END
 
-IDR_MENU_IMAGES TOOLBAR 16, 16
-BEGIN
-    BUTTON      IDMENU_CLOSE
-    BUTTON      IDMENU_MINIMIZE
-    BUTTON      IDMENU_MAXIMIZE
-    BUTTON      IDMENU_RESTORE
-    BUTTON      IDMENU_HELP
-    BUTTON      ID_VIEW_PROPERTIES
-    BUTTON      ID_VIEW_TOOLBOX
-    BUTTON      ID_TOOLS_OPTIONS
-    BUTTON      ID_VIEW_COMMAND
-    BUTTON      ID_APP_EXIT
-    BUTTON      ID_EDIT_CLEAR_ALL
-    BUTTON      ID_WINDOW_CLOSE_ALL
-    BUTTON      ID_VIEW_SOLUTION
-    BUTTON      ID_VIEW_OUTLINE
-	BUTTON      ID_EDIT_CLEAR
-	BUTTON		ID_VIEW_CONSOLE
-END
 
 
 /////////////////////////////////////////////////////////////////////////////

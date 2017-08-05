@@ -3,6 +3,7 @@
 // Used by A2v10.Base.rc
 //
 
+#define IDR_MENU_IMAGES			230
 #define IDIL_10X10				700
 #define IDIL_12X12				701
 #define IDIL_48X48				702
@@ -31,6 +32,24 @@
 #define IDC_TEXT3			  14018
 #define IDC_TEXT4			  14019
 #define IDC_TEXT5			  14020
+
+#define ID_VIEW_PROPERTIES		32200
+#define	ID_VIEW_TOOLBOX			32201
+#define ID_VIEW_COMMAND			32202
+#define ID_VIEW_SOLUTION		32203
+#define ID_VIEW_OUTLINE			32204
+#define ID_VIEW_CONSOLE			32205
+
+#define ID_TOOLS_OPTIONS	32400
+
+#define ID_WINDOW_MANAGER	32600
+#define ID_WINDOW_CLOSE_ALL 32601
+
+#define IDMENU_CLOSE    0xD000
+#define IDMENU_RESTORE  0xD001
+#define IDMENU_MAXIMIZE 0xD002
+#define IDMENU_MINIMIZE 0xD003
+#define IDMENU_HELP     0xD004
 
 // Next default values for new objects
 //

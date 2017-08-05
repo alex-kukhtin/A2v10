@@ -185,6 +185,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\a2framewmd.h" />
     <ClInclude Include="..\Include\SciLexer.h" />
     <ClInclude Include="..\Include\Scintilla.h" />
     <ClInclude Include="..\Include\Sci_Position.h" />
@@ -259,7 +260,6 @@
     <Image Include="res\imagelistsolution.bmp" />
     <Image Include="res\jsmodule.ico" />
     <Image Include="res\maintoolbar.bmp" />
-    <Image Include="res\menuimages.bmp" />
     <Image Include="res\output_wnd.ico" />
     <Image Include="res\output_wnd_hc.ico" />
     <Image Include="res\propstoolbar.bmp" />

@@ -114,6 +114,9 @@
     <ClInclude Include="grid.h">
       <Filter>Header Files\FormDesigner</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\a2framewmd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -211,9 +214,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\sort_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\menuimages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\output_wnd.ico">

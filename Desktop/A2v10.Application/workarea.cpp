@@ -48,6 +48,11 @@ BOOL CWorkarea::OnNewDocument()
 	return TRUE;
 }
 
+// virtual 
+HMENU CWorkarea::GetDefaultMenu()
+{
+	return NULL;
+}
 
 
 

@@ -36,6 +36,7 @@ public:
 #endif
 
 protected:
+	virtual HMENU GetDefaultMenu() override; // get menu depending on state
 
 // Generated message map functions
 protected:
