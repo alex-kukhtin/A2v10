@@ -2,7 +2,6 @@
 
     /* TODO:
     1. changing event
-    3. add properties to prototype
     4. add plain properties
     */
     const META = '_meta_';
@@ -13,6 +12,7 @@
 
     const platform = require('platform');
     const validators = require('validators');
+    const utils = require('utils');
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -255,21 +255,27 @@
         }
     }
 
-    function implementRoot(root, template) {
+    function implementRoot(root, template, ctors) {
         root.prototype.$emit = emit;
         root.prototype.$setDirty = setDirty;
         root.prototype.$merge = merge;
         root.prototype.$template = template;
         root.prototype._exec_ = executeCommand;
         root.prototype._validate_ = validate;
-        // props cache for tcreate
+        // props cache for t.construct
         let xProp = {};
         for (let p in template.properties) {
             let px = p.split('.'); // Type.Prop
-            if (!(px[0] in xProp))
-                xProp[px[0]] = {};
-            let cx = xProp[px[0]];
-            cx[px[1]] = template.properties[p];
+            if (px.length != 2) {
+                console.error(`invalid propery name '${p}'`);
+                continue;
+            }
+            let typeName = px[0];
+            let propName = px[1];
+            let pv = template.properties[p]; // property value
+            if (!(typeName in xProp))
+                xProp[typeName] = {};
+            xProp[typeName][propName] = pv;
         }
         template._props_ = xProp;
     }

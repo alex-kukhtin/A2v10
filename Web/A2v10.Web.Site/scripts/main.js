@@ -17,7 +17,6 @@
 
     /* TODO:
     1. changing event
-    3. add properties to prototype
     4. add plain properties
     */
     const META = '_meta_';
@@ -28,6 +27,7 @@
 
     const platform = require('platform');
     const validators = require('validators');
+    const utils = require('utils');
 
     function defHidden(obj, prop, value) {
         Object.defineProperty(obj, prop, {
@@ -270,21 +270,27 @@
         }
     }
 
-    function implementRoot(root, template) {
+    function implementRoot(root, template, ctors) {
         root.prototype.$emit = emit;
         root.prototype.$setDirty = setDirty;
         root.prototype.$merge = merge;
         root.prototype.$template = template;
         root.prototype._exec_ = executeCommand;
         root.prototype._validate_ = validate;
-        // props cache for tcreate
+        // props cache for t.construct
         let xProp = {};
         for (let p in template.properties) {
             let px = p.split('.'); // Type.Prop
-            if (!(px[0] in xProp))
-                xProp[px[0]] = {};
-            let cx = xProp[px[0]];
-            cx[px[1]] = template.properties[p];
+            if (px.length != 2) {
+                console.error(`invalid propery name '${p}'`);
+                continue;
+            }
+            let typeName = px[0];
+            let propName = px[1];
+            let pv = template.properties[p]; // property value
+            if (!(typeName in xProp))
+                xProp[typeName] = {};
+            xProp[typeName][propName] = pv;
         }
         template._props_ = xProp;
     }
@@ -297,18 +303,45 @@
     };
 })();
 (function () {
-    function get(url, data, callback) {
-        let xhr = new XMLHttpRequest();
-        xhr.open();
+
+
+    function doRequest(method, url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function (response) {
+                if (xhr.readyState !== 4)
+                    return;
+                if (xhr.status === 200)
+                    resolve(xhr.responseText);
+                else
+                    reject(xhr.error);
+            };
+            xhr.open(method, url, data);
+            xhr.send();
+        }
     }
 
-    function post(url, data, callback) {
+    function get(url, data) {
+        return doRequest('GET', url, data);
+    }
 
+    function post(url, data) {
+        return doRequest('POST', url, data);
+    }
+
+    function load(url, data, selector) {
+        doRequest('GET', url, data)
+            .then(function (html) {
+
+            })
+            .catch(function (error) {
+            });
     }
 
     app.modules['http'] = {
         get: get,
-        post: post
+        post: post,
+        load: load
     }
 })();
 

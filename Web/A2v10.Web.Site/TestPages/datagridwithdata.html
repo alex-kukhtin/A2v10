@@ -121,7 +121,9 @@
             inc: function (to, value) {
                 to.Amount += value;
             },
-            test: () => console.log(this)
+            test: () => {
+                alert('test'); console.log(this); 
+            }
         },
         validators: {
             'MyElement.Name': 'Введите имя',
@@ -161,7 +163,13 @@
         }
     });
 
-    cmn.implementRoot(TRoot, template);
+    let ctors = {
+        TCustomer,
+        TCustomerArray,
+        TRoot
+    };
+
+    cmn.implementRoot(TRoot, template, ctors);
     var reactiveData = new TRoot(modelData);
 
     var vm = new BaseVue({
