@@ -60,6 +60,8 @@
     <Content Include="app\services\log.js" />
     <Content Include="app\services\utlis.js" />
     <Content Include="app\services\validators.js" />
+    <Content Include="Content\jasmine\jasmine.css" />
+    <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="css\font-awesome.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\site.css" />
@@ -77,13 +79,20 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="scripts\jasmine\boot.js" />
+    <Content Include="scripts\jasmine\console.js" />
+    <Content Include="scripts\jasmine\jasmine-html.js" />
+    <Content Include="scripts\jasmine\jasmine.js" />
     <Content Include="scripts\main.js" />
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="tests\platform.js" />
+    <Content Include="tests\validators.js" />
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
     <Content Include="TestPages\attention.txt" />
+    <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\datagridwithdata.html" />
     <Content Include="TestPages\datagrid.html" />
     <Content Include="TestPages\formcontrol.html" />

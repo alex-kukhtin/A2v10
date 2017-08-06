@@ -389,6 +389,7 @@
     }
 })();
 
+/*20170806*/
 (function () {
 
     const utils = require('utils');
@@ -412,7 +413,7 @@
                     retval.push({ msg: rule, severity: ERROR });
             } else if (utils.isString(rule.valid)) {
                 if (!validateStd(rule.valid, val))
-                    retval.push({ msg: rule.msg, severity: ERROR });
+                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
             } else if (utils.isFunction(rule.valid)) {
                 if (!rule.valid(item, val))
                     retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
@@ -423,15 +424,14 @@
         return retval;
     }
 
-
-    function validateItem(vals, item, val) {
+    function validateItem(rules, item, val) {
         let arr = [];
-        if (utils.isArray(vals))
-            arr = vals;
-        else if (utils.isObject(vals))
-            arr.push(vals);
-        else if (utils.isString(vals))
-            arr.push({ valid: 'notBlank', msg: vals });
+        if (utils.isArray(rules))
+            arr = rules;
+        else if (utils.isObject(rules))
+            arr.push(rules);
+        else if (utils.isString(rules))
+            arr.push({ valid: 'notBlank', msg: rules });
         let err = validateImpl(arr, item, val);
         if (!err.length)
             return null;
