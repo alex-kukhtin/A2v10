@@ -24,7 +24,10 @@
                 if (!validateStd(rule.valid, val))
                     retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
             } else if (utils.isFunction(rule.valid)) {
-                if (!rule.valid(item, val))
+                let vr = rule.valid(item, val);
+                if (utils.isString(vr))
+                    retval.push({ msg: vr, severity: rule.severity || ERROR });
+                else if (!vr)
                     retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
             } else {
                 console.error('invalid valid element type for rule');

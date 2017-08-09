@@ -1,4 +1,4 @@
-﻿/* 20170728-7010 */
+﻿/* 20170809-7011 */
 ------------------------------------------------
 set noexec off;
 go
@@ -172,6 +172,26 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
+	--TODO: log
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UpdateUserLockout')
+	drop procedure a2security.UpdateUserLockout
+go
+------------------------------------------------
+create procedure a2security.UpdateUserLockout
+@Id bigint,
+@AccessFailedCount int,
+@LockoutEndDateUtc datetime
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set 
+		AccessFailedCount = @AccessFailedCount, LockoutEndDateUtc = @LockoutEndDateUtc
+	where Id=@Id;
 	--TODO: log
 end
 go

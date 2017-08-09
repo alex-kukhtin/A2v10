@@ -62,6 +62,15 @@ namespace A2v10.Web.Site.Controllers
             return View();
         }
 
+        async Task UpdateUser(String userName)
+        {
+            var user = await UserManager.FindByNameAsync(userName);
+            if (user != null)
+            {
+                // may be locked out
+                await UserManager.UpdateUser(user);
+            }
+        }
         //
         // POST: /Account/Login
         [HttpPost]
@@ -74,19 +83,19 @@ namespace A2v10.Web.Site.Controllers
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Name, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(userName:model.Name, password:model.Password, isPersistent:model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
+                    await UpdateUser(model.Name);
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
+                    await UpdateUser(model.Name);
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }

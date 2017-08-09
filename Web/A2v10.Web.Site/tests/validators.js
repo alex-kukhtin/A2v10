@@ -67,6 +67,57 @@ describe("Validators", function () {
 
     });
 
+    it("array of rules", function () {
+
+        function isValid(item, val) {
+            return item.test === val;
+        }
+
+        let rules = [
+            "valid is blank",
+            { valid: isValid, msg: 'error message' }
+        ];
+
+        let item = { test: 'test' };
+
+        // valid
+        expect(
+            val.validate(rules, item, 'test')
+        ).toBe(null);
+
+        // not valid
+        expect(
+            val.validate(rules, item, 'test1')
+        ).toEqual([{ msg: 'error message', severity: 'error' }]);
+
+        expect(
+            val.validate(rules, item, '')
+        ).toEqual([
+            { msg: 'valid is blank', severity: 'error' }, 
+            { msg: "error message", severity: 'error' }
+        ]);
+    });
+
+    it("valid function that returns a string", function () {
+        function isValid(item, val) {
+            return item.test === val ? true : `error ${val}`;
+        }
+
+        let rule = { valid: isValid, msg: 'error message', severity:'info' };
+
+        let item = { test: 'test' };
+
+        // valid
+        expect(
+            val.validate(rule, item, 'test')
+        ).toBe(null);
+
+        // not valid
+        expect(
+            val.validate(rule, item, 'test1')
+        ).toEqual([{ msg: 'error test1', severity:'info'}]);
+    });
+
 });
 
 
