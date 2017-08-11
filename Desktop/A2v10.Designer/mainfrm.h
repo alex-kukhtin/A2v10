@@ -25,6 +25,7 @@ public:
 protected:  // control bar embedded members
 	CA2MFCMenuBar       m_wndMenuBar;
 	CA2MFCToolBar       m_wndToolBar;
+	CA2MFCToolBar       m_wndDebuggerToolBar;
 	CA2ToolBoxPane      m_wndToolBox;
 	CA2MFCRibbonStatusBar    m_wndStatusBar;
 	COutlineWnd		  m_wndOutline;

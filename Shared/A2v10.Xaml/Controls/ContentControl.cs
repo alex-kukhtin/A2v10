@@ -9,6 +9,16 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
+        internal void RenderContent(RenderContext context)
+        {
+            if (Content == null)
+                return;
+            if (Content is UIElement)
+                (Content as UIElement).RenderElement(context);
+            else if (Content != null)
+                context.Writer.Write(Content.ToString());
+        }
+
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();

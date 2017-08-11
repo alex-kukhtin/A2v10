@@ -261,6 +261,9 @@
     <Image Include="res\jsmodule.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\debugtoolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\A2v10Designer.rc2">

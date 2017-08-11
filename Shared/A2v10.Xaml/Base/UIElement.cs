@@ -11,7 +11,7 @@ namespace A2v10.Xaml
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
 
-		internal void AddUiElementAttributes(TagBuilder tag)
+		internal virtual void AddAttributes(TagBuilder tag)
 		{
 			if (Bold.HasValue)
 				tag.AddCssClass(Bold.Value ? "text-bold" : "text-no-bold");

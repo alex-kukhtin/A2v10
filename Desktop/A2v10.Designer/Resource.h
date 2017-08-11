@@ -3,12 +3,11 @@
 // Used by A2v10.Designer.rc
 //
 #define IDR_POPUP_EDIT                  119
-#define IDS_TOOLBAR_STANDARD            124
-#define IDS_TOOLBAR_CUSTOMIZE           125
 #define ID_VIEW_CUSTOMIZE               126
 #define IDR_MAINFRAME                   128
 #define IDR_JSMODULE					129
 #define IDR_FORM						130
+#define IDR_DEBUG						131
 #define ID_VIEW_FILEVIEW                133
 #define ID_VIEW_CLASSVIEW               134
 #define ID_PROPERTIES                   135
@@ -62,6 +61,8 @@
 #define IDD_OPTION_GENERAL              800
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
+#define IDS_TOOLBAR_STANDARD			12002
+#define IDS_TOOLBAR_DEBUG				12003
 #define IDC_DIALOG_FIRST                14000
 #define IDC_COMBO1                      14001
 #define IDC_COMBO2                      14002
@@ -95,6 +96,9 @@
 #define ID_VIEW_CONSOLE					32205
 #define ID_DEBUG_RUN                    32300
 #define ID_DEBUG_RUN_INT                32301
+#define ID_DEBUG_STEP_INTO				32302
+#define ID_DEBUG_STEP_OVER				32303
+#define ID_DEBUG_STEP_OUT				32304
 #define ID_TOOLS_OPTIONS                32400
 #define ID_TOOLBOX_FIRST				32500
 #define ID_TOOLBOX_POINTER				32500
@@ -124,6 +128,8 @@
 #define IDMENU_MAXIMIZE                 0xD002
 #define IDMENU_MINIMIZE                 0xD003
 #define IDMENU_HELP                     0xD004
+#define AFX_IDW_TOOLBAR2                0xE807 
+#define AFX_IDW_TOOLBAR3                0xE808 
 
 // Next default values for new objects
 // 

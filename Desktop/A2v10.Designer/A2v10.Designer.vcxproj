@@ -250,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\A2v10.Designer.ico" />
+    <Image Include="res\debugtoolbar.bmp" />
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />
     <Image Include="res\fileview_hc.bmp" />

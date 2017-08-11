@@ -55,6 +55,7 @@ END_MESSAGE_MAP()
 CMainFrame::CMainFrame()
 {
 	m_wndToolBar.SetShowOnList(TRUE);
+	m_wndDebuggerToolBar.SetShowOnList(TRUE);
 }
 
 CMainFrame::~CMainFrame()
@@ -104,36 +105,48 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CString strCustomize; // Empty string required.
 	m_wndToolBar.EnableCustomizeButton(TRUE, 0, strCustomize);
 
+	if (!m_wndDebuggerToolBar.CreateEx(this,
+		TBSTYLE_FLAT,
+		WS_CHILD | CBRS_TOP | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_GRIPPER,
+		CRect(0, 2, 0, 2), AFX_IDW_TOOLBAR2) ||
+		!m_wndDebuggerToolBar.LoadToolBar(IDR_DEBUG))
+	{
+		TRACE0("Failed to create debugger toolbar\n");
+		return -1;      // fail to create
+	}
+	VERIFY(strToolBarName.LoadString(IDS_TOOLBAR_DEBUG));
+	m_wndDebuggerToolBar.SetWindowText(strToolBarName);
+	m_wndDebuggerToolBar.EnableCustomizeButton(TRUE, 0, strCustomize);
+
 	if (!m_wndStatusBar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-	//CMFCRibbonStatusBarPane* pPane = new CMFCRibbonStatusBarPane(ID_EDIT_CLEAR, L"Status Pane text");
-	//m_wndStatusBar.AddElement(pPane, NULL);
+
 	m_wndStatusBar.SetInformation(L"Ready");
 
-	/*TODO: AUTOMATIC CALC PANE SIZE */
-	CString lineText(L'0', CString("Ln 9999    Col 999").GetLength());
-	CMFCRibbonStatusBarPane* pPane = new CMFCRibbonStatusBarPane(ID_INDICATOR_LNCOL, EMPTYSTR, TRUE, NULL, lineText);
+	CString maxText("Ln 9999    Col 999");
+	CMFCRibbonStatusBarPane* pPane = new CMFCRibbonStatusBarPane(ID_INDICATOR_LNCOL, EMPTYSTR, TRUE, NULL, maxText);
 	m_wndStatusBar.AddExtendedElement(pPane, L"Ln & Col");
-	//CRect paneRect = pPane->GetRect();
-	//paneRect.right = paneRect.left + 100;
-	//pPane->SetRect(paneRect);
 
-
-	//m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
-
-	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
-	//m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-
-
-	DockPane(&m_wndMenuBar);
-	DockPane(&m_wndToolBar);
-	m_borderPanes.DockPanes(this);
+	m_wndMenuBar.EnableDocking(CBRS_ALIGN_TOP);
+	m_wndToolBar.EnableDocking(CBRS_ALIGN_TOP);
+	m_wndDebuggerToolBar.EnableDocking(CBRS_ALIGN_TOP);
 
 	EnableDocking(CBRS_ALIGN_ANY);
+
+	DockPane(&m_wndMenuBar);
+	DockPane(&m_wndDebuggerToolBar);
+	DockPaneLeftOf(&m_wndToolBar, &m_wndDebuggerToolBar);
+	//DockPaneLeftOf(&m_wndDebuggerToolBar, GetDocking
+
+	//m_wndDebuggerToolBar.
+
+
+	m_borderPanes.DockPanes(this);
+
+	//DockPaneLeftOf(&m_wndDebuggerToolBar, &m_wndToolBar);
 
 	CDockingManager::SetDockingMode(DT_SMART);
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
@@ -461,10 +474,11 @@ LRESULT CMainFrame::OnWmiConsole(WPARAM wParam, LPARAM lParam)
 }
 
 // virtual 
-void CMainFrame::OnDebugModeChanged(bool /*bDebug*/)
+void CMainFrame::OnDebugModeChanged(bool bDebug)
 {
 	// change status bar color
 	m_wndStatusBar.Invalidate();
+	m_wndDebuggerToolBar.ShowPane(bDebug ? TRUE : FALSE, TRUE, FALSE);
 }
 
 CWnd* CMainFrame::FindOrCreateCodeWindow(LPCWSTR szFileName)

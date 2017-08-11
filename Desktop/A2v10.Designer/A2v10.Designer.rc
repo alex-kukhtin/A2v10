@@ -125,6 +125,7 @@ IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
 
 IDR_WND_CONSOLE			BITMAP					"res\\consoletoolbar.bmp"
+IDR_DEBUG				BITMAP					"res\\debugtoolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -151,6 +152,15 @@ BEGIN
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
+END
+
+IDR_DEBUG TOOLBAR 16, 16
+BEGIN
+	BUTTON	ID_DEBUG_RUN
+    SEPARATOR
+	BUTTON	ID_DEBUG_STEP_INTO
+	BUTTON	ID_DEBUG_STEP_OVER
+	BUTTON  ID_DEBUG_STEP_OUT
 END
 
 IDR_TOOLBOX TOOLBAR 16, 16
@@ -370,6 +380,8 @@ BEGIN
     VK_F6,          ID_NEXT_PANE,           VIRTKEY 
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
     VK_F1,          ID_APP_ABOUT,           VIRTKEY, CONTROL
+    VK_F10,         ID_DEBUG_STEP_OVER,     VIRTKEY 
+    VK_F11,         ID_DEBUG_STEP_INTO,     VIRTKEY
 END
 
 
@@ -556,12 +568,6 @@ END
 STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_TOOLBAR_STANDARD    "Standard"
-    IDS_TOOLBAR_CUSTOMIZE   "Customize..."
 END
 
 STRINGTABLE

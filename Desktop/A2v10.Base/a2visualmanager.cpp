@@ -334,6 +334,10 @@ void CA2VisualManager::OnFillBarBackground(CDC* pDC, CBasePane* pBar, CRect rect
 	{
 		pDC->FillRect(rectClient, &m_brTabArea);
 	}
+	else if (pBar->IsKindOf(RUNTIME_CLASS(CDockSite)))
+	{
+		pDC->FillRect(rectClient, &m_brToolBar);
+	}
 	else
 	{
 		// ATLASSERT(FALSE);

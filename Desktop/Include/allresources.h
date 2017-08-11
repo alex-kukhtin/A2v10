@@ -4,6 +4,7 @@
 #define IDR_MAINFRAME		128
 #define IDR_JSMODULE        129
 #define IDR_FORM			130
+#define IDR_DEBUG			131
 
 #define IDR_MENU_IMAGES		230
 #define IDR_TOOLBOX         232
@@ -35,6 +36,8 @@
 
 #define IDS_OPTIONS_CAPTION  12000
 #define IDS_LANGUAGES        12001
+#define IDS_TOOLBAR_STANDARD 12002
+#define IDS_TOOLBAR_DEBUG	 12003
 
 #define IDC_DIALOG_FIRST      14000
 #define IDC_COMBO1			  14001
@@ -73,6 +76,9 @@
 // project & debug: 32300
 #define ID_DEBUG_RUN			32300
 #define ID_DEBUG_RUN_INT        32301
+#define ID_DEBUG_STEP_INTO		32302
+#define ID_DEBUG_STEP_OVER		32303
+#define ID_DEBUG_STEP_OUT		32304
 // tools: 32400
 #define ID_TOOLS_OPTIONS	32400
 // toolbox: 32500
@@ -113,6 +119,9 @@
 #define IDMENU_MAXIMIZE 0xD002
 #define IDMENU_MINIMIZE 0xD003
 #define IDMENU_HELP     0xD004
+
+#define AFX_IDW_TOOLBAR2                 0xE807 
+#define AFX_IDW_TOOLBAR3                 0xE808 
 
 #define IDW_GAPBAR_LEFT   (AFX_IDW_CONTROLBAR_LAST - 1)
 #define IDW_GAPBAR_TOP    (AFX_IDW_CONTROLBAR_LAST - 2)

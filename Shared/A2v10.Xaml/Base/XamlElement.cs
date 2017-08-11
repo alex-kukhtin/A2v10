@@ -28,6 +28,16 @@ namespace A2v10.Xaml
 			return bind;
 		}
 
+        public Bind GetBinding(String name)
+        {
+            if (_bindings == null)
+                return null;
+            Bind bind = null;
+            if (_bindings.TryGetValue(name, out bind))
+                return bind;
+            return null;
+        }
+
 		#region ISupportInitialize
 		public void BeginInit()
 		{

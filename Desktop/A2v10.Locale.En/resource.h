@@ -9,6 +9,8 @@
 #define IDS_STRING5000                  5000
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
+#define IDS_TOOLBAR_STANDARD			12002
+#define IDS_TOOLBAR_DEBUG				12003
 #define IDC_DIALOG_FIRST                14000
 #define IDC_COMBO1                      14001
 #define IDC_COMBO2                      14002

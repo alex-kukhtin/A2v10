@@ -49,6 +49,8 @@
     <Compile Include="Controls\ContentControl.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\DataGrid.cs" />
+    <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Controls\ValuedControl.cs" />
     <Compile Include="Layouts\Grid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A2v10.Xaml
+namespace A2v10.Xaml.Controls
 {
-	public class Grid : UIElement
-	{
+    public class TextBox : ValuedControl
+    {
         internal override void RenderElement(RenderContext context)
         {
-            var grid = new TagBuilder("div", "grid");
-            grid.RenderStart(context);
-            grid.RenderEnd(context);
+            var input = new TagBuilder("input");
+            input.RenderStart(context);
+            // close tag not needed
         }
     }
 }
