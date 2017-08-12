@@ -195,12 +195,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\file_view.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\file_view_hc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="res\fileview.bmp">
       <Filter>Resource Files</Filter>
     </Image>

@@ -177,6 +177,15 @@ void CA2MDIFrameWnd::RecalcLayout(BOOL bNotify /*= TRUE*/)
 	}
 }
 
+BOOL CA2MDIFrameWnd::PreTranslateMessage(MSG* pMsg)
+{
+	//MFC:hack disable activate menu on F1
+	if (pMsg->message == WM_SYSKEYUP && pMsg->wParam == VK_F10) {
+		return TRUE;
+	}
+	return __super::PreTranslateMessage(pMsg);
+}
+
 // afx_msg 
 void CA2MDIFrameWnd::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 {

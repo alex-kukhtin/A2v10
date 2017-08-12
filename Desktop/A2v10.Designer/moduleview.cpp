@@ -28,6 +28,9 @@ BEGIN_MESSAGE_MAP(CModuleView, CJsEditView)
 	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
 	ON_COMMAND(ID_DEBUG_RUN, OnDebugRun)
 	ON_COMMAND(ID_DEBUG_RUN_INT, OnDebugRunInt)
+	ON_COMMAND(ID_DEBUG_STEP_INTO, OnDebugStepInto)
+	ON_COMMAND(ID_DEBUG_STEP_OVER, OnDebugStepOver)
+	ON_COMMAND(ID_DEBUG_STEP_OUT, OnDebugStepOut)
 END_MESSAGE_MAP()
 
 
@@ -35,12 +38,39 @@ END_MESSAGE_MAP()
 void CModuleView::OnDebugRun() {
 	if (JavaScriptRuntime::InDebugMode()) {
 		// continue
+		JavaScriptRuntime::SetDebugStepType(DebugStepType::Continue);
 		JavaScriptRuntime::SetDebugMode(false);
 	}
 	else 
 	{
 		PostMessage(WM_COMMAND, ID_DEBUG_RUN_INT, 0L);
 	}
+}
+
+// afx_msg 
+void CModuleView::OnDebugStepInto() 
+{
+	if (!JavaScriptRuntime::InDebugMode())
+		return;
+	JavaScriptRuntime::SetDebugStepType(DebugStepType::StepIn);
+	JavaScriptRuntime::SetDebugMode(false);
+}
+
+// afx_msg 
+void CModuleView::OnDebugStepOver()
+{
+	if (!JavaScriptRuntime::InDebugMode())
+		return;
+	JavaScriptRuntime::SetDebugStepType(DebugStepType::StepOver);
+	JavaScriptRuntime::SetDebugMode(false);
+}
+
+void CModuleView::OnDebugStepOut() 
+{
+	if (!JavaScriptRuntime::InDebugMode())
+		return;
+	JavaScriptRuntime::SetDebugStepType(DebugStepType::StepOut);
+	JavaScriptRuntime::SetDebugMode(false);
 }
 
 /// afx_msg 

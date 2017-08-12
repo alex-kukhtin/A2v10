@@ -87,10 +87,6 @@ IDR_MAINFRAME           ICON                    "res\\A2v10.Designer.ico"
 IDR_JSMODULE			ICON                    "res\\jsmodule.ico"
 IDR_FORM				ICON					"res\\form.ico"
 
-IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
-
-IDI_FILE_VIEW_HC        ICON                    "res\\file_view_hc.ico"
-
 IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
 
 IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
@@ -382,6 +378,7 @@ BEGIN
     VK_F1,          ID_APP_ABOUT,           VIRTKEY, CONTROL
     VK_F10,         ID_DEBUG_STEP_OVER,     VIRTKEY 
     VK_F11,         ID_DEBUG_STEP_INTO,     VIRTKEY
+	VK_F11,			ID_DEBUG_STEP_OUT,		VIRTKEY, SHIFT
 END
 
 
@@ -389,17 +386,6 @@ END
 //
 // Dialog
 //
-
-IDD_OPTION_GENERAL DIALOGEX 0, 0, 295, 205
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
-CAPTION "General"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    LTEXT           "User Interface",IDC_TITLE1,7,7,281,9
-    LTEXT           "Interface language:",IDC_STATIC,14,23,65,8
-    COMBOBOX        IDC_COMBO1,86,21,202,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "The language will be changed after restarting of application.",IDC_PROMPT1,14,37,274,12,NOT WS_VISIBLE
-END
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -448,14 +434,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
-    IDD_OPTION_GENERAL, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 288
-        VERTGUIDE, 14
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 198
-    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -464,11 +442,6 @@ END
 //
 // AFX_DIALOG_LAYOUT
 //
-
-IDD_OPTION_GENERAL AFX_DIALOG_LAYOUT
-BEGIN
-    0
-END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -499,16 +472,6 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_INDICATOR_EXT        "EXT"
-    ID_INDICATOR_CAPS       "CAP"
-    ID_INDICATOR_NUM        "NUM"
-    ID_INDICATOR_SCRL       "SCRL"
-    ID_INDICATOR_OVR        "OVR"
-    ID_INDICATOR_REC        "REC"
-END
-
-STRINGTABLE
-BEGIN
     ID_WND_PROPERTIES       "Properties"
     ID_WND_TOOLBOX          "Toolbox"
     ID_WND_COMMAND          "Command"
@@ -517,10 +480,6 @@ BEGIN
 	ID_WND_CONSOLE			"Console"
 END
 
-STRINGTABLE
-BEGIN
-    IDD_OPTION_GENERAL      "General options"
-END
 
 STRINGTABLE
 BEGIN
@@ -558,6 +517,14 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
+STRINGTABLE
+BEGIN
+	ID_DEBUG_RUN			"Start\continue execution\nStart debugging"
+	ID_DEBUG_STEP_INTO		"Step into next function call\nStep into"
+	ID_DEBUG_STEP_OVER		"Step over next function call\nStep over"
+	ID_DEBUG_STEP_OUT		"Step out of current function\nStep out"
+END
+
 
 STRINGTABLE
 BEGIN
@@ -573,17 +540,6 @@ END
 STRINGTABLE
 BEGIN
     ID_WINDOW_MANAGER       "&Windows..."
-END
-
-STRINGTABLE
-BEGIN
-    IDS_FILE_VIEW           "File View"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_EXPLORER            "Explorer"
-    IDS_EDIT_MENU           "Edit"
 END
 
 STRINGTABLE

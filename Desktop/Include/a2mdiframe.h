@@ -30,6 +30,7 @@ protected:
 	virtual void RecalcLayout(BOOL bNotify = TRUE) override;
 	virtual void AdjustDockingLayout(HDWP hdwp = NULL) override;
 	virtual  BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo) override;
+	virtual BOOL PreTranslateMessage(MSG* pMsg) override;
 
 	virtual void OnDebugModeChanged(bool bDebug);
 

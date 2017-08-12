@@ -254,8 +254,6 @@
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />
     <Image Include="res\fileview_hc.bmp" />
-    <Image Include="res\file_view.ico" />
-    <Image Include="res\file_view_hc.ico" />
     <Image Include="res\form.ico" />
     <Image Include="res\formtoolbox.bmp" />
     <Image Include="res\imagelistsolution.bmp" />

@@ -23,9 +23,6 @@
 #define ID_SORTING_SORTALPHABETIC       146
 #define ID_SORTING_SORTBYTYPE           147
 #define ID_SORTING_SORTBYACCESS         148
-#define IDS_FILE_VIEW                   155
-#define IDI_FILE_VIEW                   161
-#define IDI_FILE_VIEW_HC                162
 #define IDI_OUTPUT_WND_HC               166
 #define IDR_EXPLORER                    169
 #define IDB_EXPLORER_24                 170
@@ -47,8 +44,6 @@
 #define IDS_BUILD_TAB                   300
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
-#define IDS_EXPLORER                    305
-#define IDS_EDIT_MENU                   306
 #define ID_VIEW_OUTPUTWND               400
 #define ID_WND_PROPERTIES               500
 #define ID_WND_TOOLBOX                  501

@@ -12,6 +12,17 @@ public:
 	~JavaScriptContext();
 };
 
+// from ChakraDebug.h!!!!
+typedef enum _DebugStepType
+{
+	StepIn = 0,
+	StepOut = 1,
+	StepOver = 2,
+	//StepBack = 3,
+	//ReverseContinue = 4,
+	Continue = 5
+} DebugStepType;
+
 class JavaScriptRuntime sealed
 {
 public:
@@ -35,6 +46,7 @@ public:
 	static void EnterDebugMode();
 	static void ExitDebugMode();
 	static void EndRunScript();
+	static void SetDebugStepType(DebugStepType step);
 
 	static CString GetFileNameFromScriptId(int scriptId);
 };

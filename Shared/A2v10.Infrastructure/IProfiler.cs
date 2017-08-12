@@ -9,7 +9,8 @@ namespace A2v10.Infrastructure
 	public enum ProfileAction
 	{
 		Sql,
-		Xaml
+		Xaml,
+        Workflow
 	};
 
 	public interface IProfiler

@@ -11,11 +11,9 @@
 #define IDR_MAINFRAME				128
 #define IDR_MAINFRAME_256			129
 #define IDR_A2v10TYPE				130
-#define IDS_CLOSE					195
 
 #define IDR_MENU_IMAGES		230
 
-#define IDS_EDIT_MENU				306
 
 #define IDS_TOOLBAR_STANDARD			12002
 

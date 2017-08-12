@@ -280,12 +280,15 @@ void CHAKRA_CALLBACK DiagDebugEventCallback(_In_ JsDiagDebugEvent debugEvent, _I
 {
 	if (s_bClosingProgress)
 		return;
-	if (debugEvent == JsDiagDebugEvent::JsDiagDebugEventDebuggerStatement) {
+	if ((debugEvent == JsDiagDebugEvent::JsDiagDebugEventDebuggerStatement) || 
+		(debugEvent == JsDiagDebugEvent::JsDiagDebugEventStepComplete) || 
+		(debugEvent == JsDiagDebugEvent::JsDiagDebugEventBreakpoint)) 
+	{
 		JavaScriptRuntime::SetDebugMode(true);
 		JavaScriptRuntime::EnterDebugMode();
 		_sendDebugInfo(eventData);
-		auto str = JavaScriptValue::GlobalObject().GetPropertyChain(L"JSON.stringify");
-		auto data = str.CallFunction(JavaScriptValue::Undefined(), eventData).ToString();
+		//auto str = JavaScriptValue::GlobalObject().GetPropertyChain(L"JSON.stringify");
+		//auto data = str.CallFunction(JavaScriptValue::Undefined(), eventData).ToString();
 		processEvents();
 	}
 }
@@ -329,6 +332,21 @@ void JavaScriptRuntime::ExitDebugMode()
 // static 
 void JavaScriptRuntime::EnterDebugMode()
 {
+}
+
+// static 
+void JavaScriptRuntime::SetDebugStepType(DebugStepType step)
+{
+	JsDiagStepType dt = JsDiagStepTypeContinue;
+	switch (step) {
+	case StepIn: dt = JsDiagStepTypeStepIn; break;
+	case StepOut: dt = JsDiagStepTypeStepOut; break;
+	case StepOver: dt = JsDiagStepTypeStepOver; break;
+	case Continue: dt = JsDiagStepTypeContinue; break;
+	default:
+		ATLASSERT(FALSE);
+	}
+	JavaScriptNative::ThrowIfError(JsDiagSetStepType(dt));
 }
 
 JavaScriptContext::JavaScriptContext()

@@ -6,7 +6,10 @@ using System.Activities;
 using System.Activities.DurableInstancing;
 using System.Runtime.DurableInstancing;
 
+using Microsoft.Activities.Extensions.Tracking;
+
 using A2v10.Infrastructure;
+using System.Activities.Tracking;
 
 namespace A2v10.Workflow
 {
@@ -17,6 +20,9 @@ namespace A2v10.Workflow
         private ManualResetEvent _endEvent = new ManualResetEvent(false);
         private const Int32 RUNNABLE_INSTANCES_DETECTION_PERIOD = 10;
 
+        private StateMachineStateTracker _tracker;
+        private IList<TrackInfo> _trackingRecords;
+
         private Exception _unhandledException;
 
         public static void StartWorkflow()
@@ -24,6 +30,13 @@ namespace A2v10.Workflow
             AppWorkflow aw = null;
             try
             {
+                Process process = Process.Create();
+
+                // workflow arguments
+                IDictionary<String, Object> args = new Dictionary<String, Object>();
+                args.Add("Process", process);
+                aw = Create(null, null, args, null);
+                process.WorkflowId = aw._application.Id;
             }
             catch (Exception ex)
             {
@@ -41,7 +54,20 @@ namespace A2v10.Workflow
             AppWorkflow aw = null;
             try
             {
-
+                String assemblyName = String.Empty;
+                String typeName = String.Empty;
+                Activity root = System.Activator.CreateInstance(assemblyName, typeName).Unwrap() as Activity;
+                foreach (var bm in aw._application.GetBookmarks())
+                {
+                    if (bm.BookmarkName == "TODO" /*inboxInfo.Bookmark*/)
+                    {
+                        var rr = new RequestResult();
+                        aw._application.ResumeBookmark(bm.BookmarkName, rr);
+                        return; // already resumed
+                    }
+                }
+                // if a bookmark is not found
+                aw._application.Unload();
             }
             catch (Exception ex)
             {
@@ -54,6 +80,18 @@ namespace A2v10.Workflow
             }
         }
 
+        internal void Track(TrackingRecord record)
+        {
+            if (_trackingRecords == null)
+                _trackingRecords = new List<TrackInfo>();
+            var ti = new TrackInfo(record);
+            if (_tracker != null)
+            {
+                ti.State = _tracker.CurrentState;
+            }
+            _trackingRecords.Add(ti);
+        }
+
         static AppWorkflow Create(IDbContext dbContext, Activity root, IDictionary<String, Object> args, WorkflowIdentity identity)
         {
             var aw = new AppWorkflow();
@@ -63,8 +101,8 @@ namespace A2v10.Workflow
             else
                 aw._application = new WorkflowApplication(root, args, identity);
             aw.SetApplicationHandlers();
-            //TODO:aw._tracker = StateMachineStateTracker.Attach(aw._application);
-            //TODO:aw._application.Extensions.Add(new WorkflowTracker(aw));
+            aw._tracker = StateMachineStateTracker.Attach(aw._application);
+            aw._application.Extensions.Add(new WorkflowTracker(aw));
             aw._application.Extensions.Add(dbContext);
             aw._application.InstanceStore = store;
             return aw;
@@ -101,6 +139,16 @@ namespace A2v10.Workflow
 
         void WriteTrackingRecords()
         {
+            if ((_trackingRecords == null) || (_trackingRecords.Count == 0))
+                return;
+            try
+            {
+               
+            }
+            catch (Exception /*ex*/)
+            {
+
+            }
         }
 
         void SetApplicationHandlers()
@@ -139,6 +187,8 @@ namespace A2v10.Workflow
 
         void RefreshWorkflowState()
         {
+            // Nothing to do is not necessary.
+            // Everything is saved in the TrackingRecord.
         }
 
          SqlWorkflowInstanceStore CreateInstanceStore(String cnnString)
