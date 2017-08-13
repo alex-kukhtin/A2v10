@@ -1,4 +1,6 @@
-﻿(function () {
+﻿/*20170813-7001*/
+/* utils.js */
+(function () {
 
     const toString = Object.prototype.toString;
 

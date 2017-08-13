@@ -46,6 +46,85 @@ body {
   height: 100%;
   width: 100%;
 }
+header,
+.header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 32px;
+  background-color: #4d6082;
+  color: white;
+}
+.content-view {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 24px;
+  background-color: azure;
+}
+.content-view.partial-page {
+  left: 256px;
+  top: 64px;
+}
+.content-view.full-page {
+  top: 64px;
+}
+.content-view.full-view {
+  top: 32px;
+}
+.nav-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  margin: 0;
+  background-color: aqua;
+}
+.nav-bar li {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nav-bar li a {
+  padding: 4px 6px;
+  height: 100%;
+}
+.nav-bar li a.active {
+  background-color: yellow;
+}
+.side-menu {
+  position: absolute;
+  left: 0;
+  top: 64px;
+  bottom: 24px;
+  width: 250px;
+  background-color: antiquewhite;
+  padding: 0;
+  margin: 0;
+}
+.side-menu li {
+  padding: 4px;
+  list-style: none;
+}
+.side-menu li.active {
+  background-color: palevioletred;
+}
+footer,
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 24px;
+  background-color: #f8ffe8;
+  border-top: 1px solid silver;
+}
 textarea {
   resize: none;
 }

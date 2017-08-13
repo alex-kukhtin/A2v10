@@ -18,10 +18,22 @@ namespace A2v10.Web.Mvc.Start
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("favicon.ico");
 
-			routes.MapRoute(
+            routes.MapRoute(
+                name: "page",
+                url: "_page/{*pathInfo}",
+                defaults: new { controller = "Shell", action = "Page" }
+            );
+
+            routes.MapRoute(
+                name: "dialog",
+                url: "_dialog/{*pathInfo}",
+                defaults: new { controller = "Element", action = "Dialog" }
+            );
+
+            routes.MapRoute(
 				name: "Default",
-				url: "{controller}/{action}/{id}",
-				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+				url: "{*pathInfo}",
+				defaults: new { controller = "Shell", action = "Index"}
 			);
 		}
 	}

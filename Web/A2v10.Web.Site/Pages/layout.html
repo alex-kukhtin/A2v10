@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="/css/font-awesome.min.css?v=4.7.0" rel="stylesheet" />
+    <link href="/css/site.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="shell" class="shell">
+        <header>
+            <i class="fa fa-user"></i>
+            <span v-text="title"></span>
+        </header>
+        <a2-nav-bar :menu="menu"></a2-nav-bar>
+        <a2-side-bar :menu="menu"></a2-side-bar>
+        <a2-content-view></a2-content-view>
+        <footer>footer text</footer>
+    </div>
+    <script src="/scripts/vue.js"></script>
+    <script src="/scripts/main.js"></script>
+    <script src="/pages/shell.js"></script>
+</body>
+</html>

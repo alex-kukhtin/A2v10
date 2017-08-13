@@ -1,4 +1,6 @@
-﻿(function() {
+﻿/*20170813-7001*/
+/* services/datamodel.js */
+(function() {
 
     /* TODO:
     1. changing event

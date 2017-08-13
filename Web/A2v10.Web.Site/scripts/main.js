@@ -1,7 +1,9 @@
+/*20170813-7005*/
+/*app.js*/
 (function () {
 
 	window.app = {
-		modules: {}
+        modules: {}
     };
 
     window.require = require;
@@ -10,9 +12,197 @@
 		if (module in app.modules)
             return app.modules[module];
         throw new Error('module "' + module + '" not found');
-	}
+    }
+})();
+/*20170813-7001*/
+/* platform/webvue.js */
+(function () {
 
-}());
+    function set(target, prop, value) {
+        Vue.set(target, prop, value);
+    }
+
+
+    app.modules['platform'] = {
+        set: set
+    }
+
+    app.modules['eventBus'] = new Vue();
+})();
+
+/*20170813-7001*/
+/* utils.js */
+(function () {
+
+    const toString = Object.prototype.toString;
+
+    function isFunction(value) { return typeof value === 'function'; }
+    function isDefined(value) { return typeof value !== 'undefined'; }
+    function isObject(value) { return value !== null && typeof value === 'object'; }
+    function isDate(value) { return toString.call(value) === '[object Date]'; }
+    function isString(value) { return typeof value === 'string'; }
+    function isNumber(value) { return typeof value === 'number'; }
+
+    function notBlank(val) {
+        if (!val)
+            return false;
+        switch (typeof (val)) {
+            case 'string':
+                return val !== '';
+        }
+        return (val || '') !== '';
+    }
+
+
+    app.modules['utils'] = {
+        isArray: Array.isArray,
+        isFunction: isFunction,
+        isDefined: isDefined,
+        isObject: isObject,
+        isDate: isDate,
+        isString: isString,
+        isNumber: isNumber,
+        toString: toString,
+        notBlank: notBlank
+    }
+})();
+
+(function() {
+
+    app.modules['log'] = {
+
+    };
+
+})();
+/*20170813-7001*/
+/* http.js */
+(function () {
+
+    let eventBus = require('eventBus');
+
+    function doRequest(method, url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function (response) {
+                eventBus.$emit('endRequest', url);
+                if (xhr.status === 200)
+                    resolve(xhr.responseText);
+                else
+                    reject(xhr.statusText);
+            };
+            xhr.onerror = function (response) {
+                reject(xhr.statusText);
+            }
+            xhr.open(method, url, true);
+            eventBus.$emit('beginRequest', url);
+            xhr.send();
+        });
+    }
+
+    function get(url) {
+        return doRequest('GET', url);
+    }
+
+    function post(url, data) {
+        return doRequest('POST', url, data);
+    }
+
+    function load(url, selector) {
+        doRequest('GET', url)
+            .then(function (html) {
+                if (selector.firstChild && selector.firstChild.__vue__)
+                    selector.firstChild.__vue__.$destroy();
+                let dp = new DOMParser();
+                let rdoc = dp.parseFromString(html, 'text/html');
+                // first element from fragment body
+                let srcElem = rdoc.body.firstElementChild;
+                selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+                for (let i = 0; i < rdoc.scripts.length; i++) {
+                    let s = rdoc.scripts[i];
+                    if (s.type === 'text/javascript') {
+                        let newScript = document.createElement("script");
+                        newScript.text = s.text;
+                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                    }
+                }
+            })
+            .catch(function (error) {
+                alert(error);
+            });
+    }
+
+    app.modules['http'] = {
+        get: get,
+        post: post,
+        load: load
+    }
+})();
+
+
+
+/*20170813-7005*/
+/*validators.js*/
+(function () {
+
+    const utils = require('utils');
+
+    const ERROR = 'error';
+
+    function validateStd(rule, val) {
+        switch (rule) {
+            case 'notBlank':
+                return utils.notBlank(val);
+        }
+        console.error(`invalid std rule: '${rule}'`);
+        return true;
+    }
+
+    function validateImpl(rules, item, val) {
+        let retval = [];
+        rules.forEach(function (rule) {
+            if (utils.isString(rule)) {
+                if (!validateStd('notBlank', val))
+                    retval.push({ msg: rule, severity: ERROR });
+            } else if (utils.isString(rule.valid)) {
+                if (!validateStd(rule.valid, val))
+                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+            } else if (utils.isFunction(rule.valid)) {
+                let vr = rule.valid(item, val);
+                if (utils.isString(vr))
+                    retval.push({ msg: vr, severity: rule.severity || ERROR });
+                else if (!vr)
+                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+            } else {
+                console.error('invalid valid element type for rule');
+            }
+        });
+        return retval;
+    }
+
+    function validateItem(rules, item, val) {
+        let arr = [];
+        if (utils.isArray(rules))
+            arr = rules;
+        else if (utils.isObject(rules))
+            arr.push(rules);
+        else if (utils.isString(rules))
+            arr.push({ valid: 'notBlank', msg: rules });
+        let err = validateImpl(arr, item, val);
+        if (!err.length)
+            return null;
+        return err;
+    }
+
+
+    app.modules['validators'] = {
+        validate: validateItem
+    };
+
+})();
+
+
+/*20170813-7001*/
+/* services/datamodel.js */
 (function() {
 
     /* TODO:
@@ -302,148 +492,278 @@
         implementRoot: implementRoot
     };
 })();
+/*20170813-7011*/
+/*components/include.js*/
 (function () {
 
+    const http = require('http');
 
-    function doRequest(method, url, data) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function (response) {
-                if (xhr.readyState !== 4)
-                    return;
-                if (xhr.status === 200)
-                    resolve(xhr.responseText);
-                else
-                    reject(xhr.error);
-            };
-            xhr.open(method, url, data);
-            xhr.send();
+    Vue.component('include', {
+        props: {
+            src: String,
+            cssClass: String
+        },
+        template: '<div :class="cssClass"></div>',
+        created: function () {
+            //alert('created');
+        },
+        watch: {
+            src: function (newUrl, oldUrl) {
+                http.load(newUrl, this.$el);
+            }
         }
-    }
-
-    function get(url, data) {
-        return doRequest('GET', url, data);
-    }
-
-    function post(url, data) {
-        return doRequest('POST', url, data);
-    }
-
-    function load(url, data, selector) {
-        doRequest('GET', url, data)
-            .then(function (html) {
-
-            })
-            .catch(function (error) {
-            });
-    }
-
-    app.modules['http'] = {
-        get: get,
-        post: post,
-        load: load
-    }
+    });
 })();
+(function () {
 
+    Vue.component('validator', {
+        props: ['invalid', 'errors'],
+        template: '<span v-if="invalid" class="validator"><ul><li v-for="err in errors" v-text="err.msg" :class="err.severity"></li></ul></span>',
+    });
 
-
+})();
 (function() {
 
-    app.modules['log'] = {
 
-    };
-
-})();
-(function () {
-
-    const toString = Object.prototype.toString;
-
-    function isFunction(value) { return typeof value === 'function'; }
-    function isDefined(value) { return typeof value !== 'undefined'; }
-    function isObject(value) { return value !== null && typeof value === 'object'; }
-    function isDate(value) { return toString.call(value) === '[object Date]'; }
-    function isString(value) { return typeof value === 'string'; }
-    function isNumber(value) { return typeof value === 'number'; }
-
-    function notBlank(val) {
-        if (!val)
-            return false;
-        switch (typeof (val)) {
-            case 'string':
-                return val !== '';
-        }
-        return (val || '') !== '';
-    }
-
-
-    app.modules['utils'] = {
-        isArray: Array.isArray,
-        isFunction: isFunction,
-        isDefined: isDefined,
-        isObject: isObject,
-        isDate: isDate,
-        isString: isString,
-        isNumber: isNumber,
-        toString: toString,
-        notBlank: notBlank
-    }
-})();
-
-/*20170806*/
-(function () {
-
-    const utils = require('utils');
-
-    const ERROR = 'error';
-
-    function validateStd(rule, val) {
-        switch (rule) {
-            case 'notBlank':
-                return utils.notBlank(val);
-        }
-        console.error(`invalid std rule: '${rule}'`);
-        return true;
-    }
-
-    function validateImpl(rules, item, val) {
-        let retval = [];
-        rules.forEach(function (rule) {
-            if (utils.isString(rule)) {
-                if (!validateStd('notBlank', val))
-                    retval.push({ msg: rule, severity: ERROR });
-            } else if (utils.isString(rule.valid)) {
-                if (!validateStd(rule.valid, val))
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
-            } else if (utils.isFunction(rule.valid)) {
-                let vr = rule.valid(item, val);
-                if (utils.isString(vr))
-                    retval.push({ msg: vr, severity: rule.severity || ERROR });
-                else if (!vr)
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
-            } else {
-                console.error('invalid valid element type for rule');
+    let baseControl = {
+        computed: {
+            path() {
+                return this.item._path_ + '.' + this.prop;
+            },
+            valid() {
+                return !this.invalid;
+            },
+            invalid() {
+                let err = this.errors;
+                return err && err.length > 0;
+            },
+            errors() {
+                if (!this.item) return null;
+                let root = this.item._root_;
+                return root._validate_(this.item, this.path, this.item[this.prop]);
+            },
+            cssClass() {
+                let cls = 'control' + (this.invalid ? ' invalid' : ' valid');
+                return cls;
+            },
+            inputClass() {
+                let cls = '';
+                if (this.align !== 'left')
+                    cls += 'text-' + this.align;
+                return cls;
             }
-        });
-        return retval;
-    }
-
-    function validateItem(rules, item, val) {
-        let arr = [];
-        if (utils.isArray(rules))
-            arr = rules;
-        else if (utils.isObject(rules))
-            arr.push(rules);
-        else if (utils.isString(rules))
-            arr.push({ valid: 'notBlank', msg: rules });
-        let err = validateImpl(arr, item, val);
-        if (!err.length)
-            return null;
-        return err;
-    }
-
-
-    app.modules['validators'] = {
-        validate: validateItem
+        },
+        methods: {
+            test() {
+                alert('from base control');
+            }
+        }
     };
+
+    let textBoxTemplate =
+`<div :class="cssClass">
+    <input v-model.lazy="item[prop]" :class="inputClass"/>
+    <validator :invalid="invalid" :errors="errors"></validator>
+    <span>{{path}}</span>
+    <button @click="test">*</button>
+</div>
+`;
+
+    Vue.component('textbox', {
+        extends: baseControl,
+        template: textBoxTemplate,
+        props: {
+            item: Object,
+            prop: String,
+            align: { type: String, default: 'left' }
+        }
+    });
+})();
+(function () {
+
+ /*TODO:
+2. size (compact, large ??)
+3. contextual
+5. grouping
+6. select (выбирается правильно, но теряет фокус при выборе редактора)
+7. Доделать checked
+*/
+
+/*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
+
+    const dataGridTemplate = `
+<table :class="cssClass">
+    <thead>
+        <tr>
+            <slot></slot>
+        </tr>
+    </thead>
+    <tbody>
+        <data-grid-row :cols="columns" v-for="(item, rowIndex) in itemsSource" :row="item" :key="rowIndex" :index="rowIndex"></data-grid-row>
+    </tbody>
+</table>
+`;
+
+    const dataGridRowTemplate =
+        '<tr @mouseup.stop.prevent="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
+
+    const dataGridColumn = {
+        name: 'data-grid-column',
+        template: '<th :class="cssClass"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
+        props: {
+            header: String,
+            content: String,
+            icon: String,
+            id: String,
+            align: { type: String, default: 'left' },
+            editable: { type: Boolean, default: false },
+            validate: String
+        },
+        created() {
+            let addColumn = this.$parent.$addColumn;
+            addColumn(this);
+        },
+        computed: {
+            template() {
+                return this.id ? this.$parent.$scopedSlots[this.id] : null;
+            },
+            cssClass() {
+                let cssClass = '';
+                if (this.align !== 'left')
+                    cssClass += (' text-' + this.align).toLowerCase();
+                cssClass = cssClass.trim();
+                return cssClass === '' ? null : cssClass;
+            }
+        }
+    };
+    Vue.component('data-grid-column', dataGridColumn);
+
+    const dataGridCell = {
+        functional: true,
+        name: 'data-grid-cell',
+        props: {
+            row: Object,
+            col: Object,
+            index: Number
+        },
+        render(h, ctx) {
+            //console.warn('render cell');
+            let tag = 'td';
+            let row = ctx.props.row;
+            let col = ctx.props.col;
+            let ix = ctx.props.index;
+
+            let cellProps = {
+                'class': col.cssClass
+            };
+
+            let childProps = {
+                props: {
+                    row: row,
+                    col: col,
+                }
+            };
+            if (col.template) {
+                let vNode = col.template(childProps.props);
+                return h(tag, cellProps, [vNode]);
+            }
+
+            if (!col.content) {
+                return h(tag, cellProps);
+            }
+
+            let validator = {
+                props: ['path', 'item'],
+                template: '<validator :path="path" :item="item"></validator>'
+            };
+
+            let validatorProps = {
+                props: {
+                    path: col.validate,
+                    item: row
+                }
+            };
+
+            if (col.editable) {
+                /* editable content */
+                let child = {
+                    props: ['row', 'col', 'align'],
+                    /*TODO: control type */
+                    template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
+                };
+                return h(tag, cellProps, [h(child, childProps)]);
+            }
+            /* simple content */
+            if (col.content === '$index')
+                return h(tag, cellProps, [ix + 1]);
+            let chElems = [row[col.content]];
+            /*TODO: validate ???? */
+            if (col.validate) {
+                chElems.push(h(validator, validatorProps));
+            }
+            return h(tag, cellProps, chElems);
+        },
+    };
+
+    const dataGridRow = {
+        name: 'data-grid-row',
+        template: dataGridRowTemplate,
+        components: {
+            'data-grid-cell': dataGridCell
+        },
+        props: {
+            row: Object,
+            cols: Array,
+            index: Number
+        },
+        computed: {
+            active() {
+                return this.row === this.$parent.selected;
+                //return this === this.$parent.rowSelected;
+            }
+        },
+        methods: {
+            rowSelect() {
+                throw new Error("do not call");
+                //this.$parent.rowSelected = this;
+            }
+        }
+    };
+
+    Vue.component('data-grid', {
+        props: {
+            'items-source': [Object, Array],
+            bordered: { type: Boolean, default: false },
+            striped: { type: Boolean, default: false },
+            hover: { type: Boolean, default: false }
+        },
+        template: dataGridTemplate,
+        components: {
+            'data-grid-row': dataGridRow
+        },
+        data() {
+            return {
+                columns: []
+                //rowSelected: null
+            }
+        },
+        computed: {
+            cssClass() {
+                let cssClass = 'data-grid';
+                if (this.bordered) cssClass += ' bordered';
+                if (this.striped) cssClass += ' striped';
+                if (this.hover) cssClass += ' hover';
+                return cssClass;
+            },
+            selected() {
+                return this.itemsSource.$selected;
+            }
+        },
+        methods: {
+            $addColumn(column) {
+                this.columns.push(column);
+            }
+        }
+    });
 
 })();

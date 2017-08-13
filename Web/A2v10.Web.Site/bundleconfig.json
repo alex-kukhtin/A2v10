@@ -3,8 +3,18 @@
     "outputFileName": "Scripts/main.js",
     "inputFiles": [
       "app/app.js",
-      "app/services/*.js"
-    ]
+      "app/platform/webvue.js",
+      "app/services/utils.js",
+      "app/services/log.js",
+      "app/services/http.js",
+      "app/services/validators.js",
+      "app/services/datamodel.js",
+      "app/components/include.js",
+      "app/components/validator.js",
+      "app/components/textbox.js",
+      "app/components/datagrid.js"
+    ],
+    "minify": { "enabled": false }
   },
   {
     "outputFileName": "Scripts/vue.min.js",

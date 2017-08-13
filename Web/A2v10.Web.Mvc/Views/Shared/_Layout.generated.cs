@@ -183,7 +183,7 @@ WriteLiteral("</p>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteLiteral(" src=\"/Scripts/vue.min.js?v=2.3.4\"");
+WriteLiteral(" src=\"/Scripts/vue.min.js?v=2.4.2\"");
 
 WriteLiteral("></script>\r\n\t<script");
 

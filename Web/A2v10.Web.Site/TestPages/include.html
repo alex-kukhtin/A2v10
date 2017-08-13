@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div id="app">
+        <h3>Test INCLUDE</h3>
+        <div>
+            <button @click="route('/catalog/customers')">customers</button>
+            <button @click="route('/catalog/suppliers')">suppliers</button>
+            <span v-text="rqCount"></span>
+        </div>
+        <include css-class="view" :src="src"></include>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
+    <script>
+        (function () {
+            const eventBus = require('eventBus');
+            let vm = new Vue({
+                el: "#app",
+                data: {
+                    src: '',
+                    rqCount: 0
+                },
+                created: function () {
+                    var me = this;
+                    eventBus.$on('beginRequest', function (url) {
+                        me.rqCount += 1;
+                    });
+                    eventBus.$on('endRequest', function (url) {
+                        me.rqCount -= 1;
+                    });
+                },
+                methods: {
+                    route: function (url) {
+                        this.src = '/_page' + url;
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
