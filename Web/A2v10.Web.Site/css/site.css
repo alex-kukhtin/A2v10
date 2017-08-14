@@ -12,7 +12,11 @@ td,
 th {
   padding: 0;
 }
+/* header */
+/* nav bar */
 /* data grid */
+/* dialog */
+/* z-index */
 .bold {
   font-weight: bold;
 }
@@ -40,11 +44,14 @@ html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   color: #222;
+  box-sizing: border-box;
+  padding: 0;
 }
 body {
   overflow: hidden;
   height: 100%;
   width: 100%;
+  padding: 0;
 }
 header,
 .header {
@@ -61,34 +68,18 @@ header,
   left: 0;
   right: 0;
   top: 0;
-  bottom: 24px;
-  background-color: azure;
+  bottom: 26px;
 }
 .content-view.partial-page {
   left: 256px;
   top: 64px;
+  background-color: aliceblue;
 }
 .content-view.full-page {
   top: 64px;
 }
 .content-view.full-view {
   top: 32px;
-}
-.main-view .modal-wrapper {
-  background-color: rgba(7, 7, 7, 0.25);
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-}
-.main-view .modal-wrapper .modal-window {
-  width: 500px;
-  height: 300px;
-  margin: auto;
-  margin-top: 60px;
-  background-color: whitesmoke;
-  border: 1px solid silver;
 }
 .nav-bar {
   position: absolute;
@@ -97,22 +88,33 @@ header,
   top: 32px;
   height: 32px;
   line-height: 32px;
+  font-size: 15px;
   padding: 0;
   margin: 0;
-  background-color: aqua;
+  background-color: #f2f3f9;
+  text-transform: uppercase;
+  display: flex;
 }
 .nav-bar li {
-  display: inline-block;
+  display: inline-flex;
+  align-items: stretch;
   list-style: none;
-  padding: 0;
+  padding: 0 8px;
   margin: 0;
-}
-.nav-bar li a {
-  padding: 4px 6px;
   height: 100%;
 }
-.nav-bar li a.active {
-  background-color: yellow;
+.nav-bar li a {
+  align-items: stretch;
+}
+.nav-bar li a:hover {
+  text-decoration: none;
+}
+.nav-bar li:hover {
+  background-color: #e8e9f4;
+}
+.nav-bar li.active a {
+  color: #0d82f8;
+  border-bottom: 3px solid #57a8fa;
 }
 .load-indicator {
   position: absolute;
@@ -127,17 +129,23 @@ header,
   left: 0;
   top: 64px;
   bottom: 24px;
+  padding-top: 50px;
   width: 250px;
-  background-color: antiquewhite;
+  background-color: white;
+  border-right: 1px solid silver;
   padding: 0;
   margin: 0;
 }
 .side-menu li {
   padding: 4px;
   list-style: none;
+  cursor: pointer;
+}
+.side-menu li:hover {
+  background-color: #fdf4bf;
 }
 .side-menu li.active {
-  background-color: palevioletred;
+  background-color: #cde6f7;
 }
 footer,
 .footer {
@@ -149,6 +157,14 @@ footer,
   background-color: #f8ffe8;
   border-top: 1px solid silver;
 }
+a {
+  color: #57a8fa;
+  text-decoration: none;
+}
+a:hover {
+  color: #0d82f8;
+  text-decoration: underline;
+}
 textarea {
   resize: none;
 }
@@ -156,6 +172,12 @@ td,
 th {
   text-align: left;
   font-weight: normal;
+}
+pre {
+  font-family: Consolas, Courier New, Courier, monospace;
+  font-size: 0.85em;
+  background-color: #f8f8f8;
+  padding: 6px;
 }
 .control input,
 .control select {
@@ -165,7 +187,7 @@ th {
   outline: 1px solid #ff6a00;
 }
 table.data-grid {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   cursor: default;
 }
 table.data-grid td,
@@ -178,7 +200,7 @@ table.data-grid tr.active {
 }
 table.bordered td,
 table.bordered th {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
 }
 table.striped > tbody > tr:nth-of-type(odd) {
   background-color: rgba(224, 224, 224, 0.25);
@@ -186,9 +208,34 @@ table.striped > tbody > tr:nth-of-type(odd) {
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf;
 }
-pre {
-  font-family: Consolas, Courier New, Courier, monospace;
-  font-size: 0.85em;
-  background-color: #f8f8f8;
-  padding: 6px;
+.modal-stack {
+  position: fixed;
+}
+.modal-stack .modal-wrapper {
+  background-color: rgba(0, 0, 0, 0.25);
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1030;
+  overflow: auto;
+}
+.modal-stack .modal-wrapper .modal-window {
+  position: relative;
+  margin: 70px auto 30px auto;
+  width: 600px;
+  height: auto;
+  border: 1px solid #ccc;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: white;
+}
+.modal-header {
+  background-color: #fff29d;
+  padding: 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+.modal-header button {
+  float: right;
 }

@@ -35,8 +35,6 @@
         }
     };
 
-    app.modules['control'] = {
-        control: control
-    };
+    app.components['control'] = control;
 
 })();

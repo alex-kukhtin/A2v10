@@ -1,7 +1,7 @@
 ﻿
 <!--ID нужно делать как GUID'ы, иначе перекрываются!!!!-->
 
-<div id="catalog-customers-index">
+<div id="catalog-customers-index" style="height:400px">
     <h4>catalog/customers Data grid</h4>
     <div>
         <button @click.stop.prevent="Customers.$append()">Add</button>
@@ -88,8 +88,12 @@
                     bus.$emit('route');
                 },
                 $showDialog() {
-                    var x = bus.$emit('modal', {x:5, y:10});
-                    alert('emit modal returns');
+                    var dat = { x: 5, y: 10, promise:null };
+                    var x = bus.$emit('modal', 'dialogName', dat);
+                    dat.promise.then(function (result) {
+                        alert('then:' + result);
+                    })
+                    alert('resturs:' + dat.promise);
                     //alert('show dialog');
                     //let elem = document.createElement('a2-modal');
                     //document.body.appendChild(elem);

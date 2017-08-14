@@ -5,6 +5,7 @@
 @font-size:13px;
 
 @text-color:#222;
+@default-brd-color:#ccc;
 
 @brand-bk_color: #4d6082;
 
@@ -12,7 +13,34 @@
 @active-bg-color: #cde6f7;
 @alter-bg-color: rgba(224, 224, 224, 0.25);
 
+@link-color: #57a8fa;
+@link-hover-color: darken(@link-color, 15%);
+
+/* header */
+@header-height: 32px;
+
+/* nav bar */
+@navbar-height: 32px;
+@navbar-bg-color: #f2f3f9;
+@navbar-highlight-color: darken(@navbar-bg-color, 3%);
+
 /* data grid */
-@data-grid-border-color:#ddd;
+@data-grid-border-color:@default-brd-color;
+@sort-bg-color: rgba(238,238,238, 0.4);
 
 @error-border-color: #ff6a00;
+
+/* dialog */
+@dialog-header-bg-color: #fff29d;
+
+/* z-index */
+@modal-wrapper-index: 1030;
+
+//* mixins
+.noselect() {
+    -webkit-touch-callout: none; //* iOS Safari */
+    -webkit-user-select: none; //* Chrome/Safari/Opera */
+    -moz-user-select: none; //* Firefox */
+    -ms-user-select: none; //* Internet Explorer/Edge */
+    user-select: none; 
+}

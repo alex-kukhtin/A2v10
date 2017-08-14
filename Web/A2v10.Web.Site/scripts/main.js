@@ -1,17 +1,25 @@
-/*20170813-7005*/
+/*20170814-7013*/
 /*app.js*/
 (function () {
 
 	window.app = {
-        modules: {}
+        modules: {},
+        components: {}
     };
 
     window.require = require;
+    window.component = component;
 
 	function require(module) {
 		if (module in app.modules)
             return app.modules[module];
         throw new Error('module "' + module + '" not found');
+    }
+
+    function component(name) {
+        if (name in app.components)
+            return app.components[name];
+        throw new Error('component "' + name + '" not found');
     }
 })();
 /*20170813-7001*/
@@ -494,7 +502,7 @@
         implementRoot: implementRoot
     };
 })();
-/*20170814-7012*/
+/*20170814-7013*/
 /*components/include.js*/
 (function () {
 
@@ -510,11 +518,16 @@
             if (this.src)
                 http.load(this.src, this.$el);
         },
+        destroyed() {
+            let fc = this.$el.firstElementChild;
+            if (fc && fc.__vue__)
+                fc.__vue__.$destroy();
+        },
         watch: {
             src: function (newUrl, oldUrl) {
                 http.load(newUrl, this.$el);
             }
-        }
+        },
     });
 })();
 (function () {
@@ -562,9 +575,7 @@
         }
     };
 
-    app.modules['control'] = {
-        control: control
-    };
+    app.components['control'] = control;
 
 })();
 (function() {
@@ -578,7 +589,7 @@
     <button @click="test">*</button>
 </div>
 `;
-    let baseControl = require('control').control;
+    let baseControl = component('control');
 
     Vue.component('textbox', {
         extends: baseControl,
@@ -779,4 +790,29 @@
         }
     });
 
+})();
+(function () {
+
+    const bus = require('eventBus');
+
+    const modalComponent = {
+        template: `
+        <div class="modal-window">
+            <div class="modal-header">
+                <span>{{dialog.title}} {{dialog.url}}</span><button @click.stop='closeModal'>x</button>
+            </div>
+            <include class='dialog-include' :src="dialog.url"></include>
+        </div>
+        `,
+        props: {
+            dialog: Object
+        },
+        methods: {
+            closeModal() {
+                bus.$emit('modalClose');
+            }
+        }
+    };
+
+    app.components['modal'] = modalComponent;
 })();

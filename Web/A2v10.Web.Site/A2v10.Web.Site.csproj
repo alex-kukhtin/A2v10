@@ -54,6 +54,7 @@
     <Content Include="app\components\control.js" />
     <Content Include="app\components\datagrid.js" />
     <Content Include="app\components\include.js" />
+    <Content Include="app\components\modal.js" />
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\validator.js" />
     <Content Include="app\platform\webvue.js" />
@@ -122,6 +123,7 @@
     <Content Include="Less\DataGrid.less" />
     <Content Include="Less\Normalize.less" />
     <Content Include="Less\Control.less" />
+    <Content Include="Less\Dialog.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

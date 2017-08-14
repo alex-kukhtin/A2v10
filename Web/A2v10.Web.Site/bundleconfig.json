@@ -13,7 +13,8 @@
       "app/components/validator.js",
       "app/components/control.js",
       "app/components/textbox.js",
-      "app/components/datagrid.js"
+      "app/components/datagrid.js",
+      "app/components/modal.js"
     ],
     "minify": { "enabled": false }
   },

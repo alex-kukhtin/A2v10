@@ -9,7 +9,7 @@
     <button @click="test">*</button>
 </div>
 `;
-    let baseControl = require('control').control;
+    let baseControl = component('control');
 
     Vue.component('textbox', {
         extends: baseControl,

@@ -22,14 +22,14 @@ TODO:
     let menu = [
         { title: "Home", url: "home" },
         {
-            title: 'Catalog', url: 'catalog', menu: [
+            title: 'Справочники', url: 'catalog', menu: [
                 { title: "Suppliers", url: 'suppliers' },
                 { title: "Customers", url: 'customers' },
                 { title: "Edit 3 segment", url: 'edit/5' }
             ]
         },
         {
-            title: 'Document', url: 'document', menu: [
+            title: 'Документы', url: 'document', menu: [
                 { title: "Incoming", url: 'incoming' },
                 { title: "Outgoing", url: 'outgoing' },
                 { title: "edit 4 segment", url: 'outgoing/edit/2' }
@@ -66,7 +66,7 @@ TODO:
         props: {
             menu: Array
         },
-        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" ><a href="\" :class="{active : isActive(item)}" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
+        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}"><a href="\" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
 
         data: function () {
             return {
@@ -122,7 +122,7 @@ TODO:
 
     const sideBar = {
         // TODO: разные варианты меню
-        template: '<ul class="side-menu"><li v-for="itm in sideMenu" :key="itm.url" :class="{active: isActive(itm)}"><a href="" v-text="itm.title" @click.stop.prevent="navigate(itm)"></a></li></ul>',
+        template: '<ul class="side-menu"><li v-for="itm in sideMenu" :key="itm.url" :class="{active: isActive(itm)}" @click.stop.prevent="navigate(itm)"><a href v-text="itm.title"></a></li></ul>',
         props: {
             menu: Array
         },
@@ -196,6 +196,8 @@ TODO:
         }
     };
 
+    const modalComponent = component('modal');
+
     // important: use v-show instead v-if to ensure components created only once
     const a2MainView = {
         template: `
@@ -204,17 +206,17 @@ TODO:
     <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
     <a2-content-view></a2-content-view>
     <div class="load-indicator" v-show="pendingRequest"></div>
-    <div class='modal-wrapper' v-if="hasModals">
-        <div class="modal-window" tabindex="0" v-for="dlg in modals" @keyup.esc='closeModal'>
-            <span>{{dlg.title}} {{dlg.url}}</span><button @click.stop='closeModal'>x</button>
-            <include :src="dlg.url"></include>
+    <div class="modal-stack" v-if="hasModals" @keyup.esc='closeModal'>
+        <div class="modal-wrapper" v-for="dlg in modals">
+            <a2-modal :dialog="dlg"></a2-modal>
         </div>
     </div>
 </div>`,
         components: {
             'a2-nav-bar': navBar,
             'a2-side-bar': sideBar,
-            'a2-content-view': contentView
+            'a2-content-view': contentView,
+            'a2-modal': modalComponent
         },
         props: {
             menu: Array
@@ -242,7 +244,7 @@ TODO:
         },
         methods: {
             closeModal() {
-                this.modals.pop();
+                bus.$emit('modalClose');
             },
             keyUp() {
                 alert('key up');
@@ -263,10 +265,19 @@ TODO:
             });
             bus.$on('endRequest', function () {
                 me.requestsCount -= 1;
-            })
-            bus.$on('modal', function (modal) {
-                alert('modal event handled: ' + JSON.stringify(modal));
-                me.modals.push({ title: "dialog", url: "/_page/catalog/suppliers" });
+            });
+            bus.$on('modal', function (modal, prms) {
+                //alert('modal event handled: ' + JSON.stringify(modal));
+                let dlg = { title: "dialog", url: "/_page/catalog/suppliers", prms: prms };
+                prms.promise = new Promise(function (resolve, reject) {
+                    prms.resolve = resolve;
+                });
+                me.modals.push(dlg);
+            });
+            bus.$on('modalClose', function (result) {
+                let dlg = me.modals.pop();
+                dlg.prms.resolve(result);
+                //alert('closed:' + dlg.url);
             });
         }
     };

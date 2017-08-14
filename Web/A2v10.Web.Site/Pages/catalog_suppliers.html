@@ -1,7 +1,7 @@
 ﻿
 <!--ID нужно делать как GUID'ы, иначе перекрываются!!!!-->
 
-<div id="catalog-suppliers-index">
+<div id="catalog-suppliers-index" style="min-height:400px">
     <h4>catalog/suppliers Data grid</h4>
     <div>
         <button @click.stop.prevent="Customers.$append()">Add</button>
@@ -9,7 +9,7 @@
         <label v-text="Customers.length"></label>
         <button @click.stop.prevent="$showDialog">Show Dialog</button>
     </div>
-    <div>
+    <div style="width:200px">
         <textbox :item="Customers[0]" prop="Name"></textbox>
     </div>
     <data-grid :items-source="Customers" :striped="true" :bordered="true" :hover="true">
@@ -26,6 +26,10 @@
             </button>
         </template>
     </data-grid>
+    <div>
+        <button @click.stop.prevent="$closeModal('ok')">OK</button>
+        <button @click.stop.prevent="$closeModal('cancel')">Cancel</button>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -90,7 +94,10 @@
                     bus.$emit('route');
                 },
                 $showDialog() {
-                    var x = bus.$emit('modal', {x:234, y:88});
+                    var x = bus.$emit('modal', 'dialogName', {x:234, y:88});
+                },
+                $closeModal(result) {
+                    bus.$emit('modalClose', result);
                 }
             }
         });

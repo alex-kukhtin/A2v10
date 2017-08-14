@@ -9,12 +9,15 @@ html {
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
 	color:@text-color;
+    box-sizing:border-box;
+    padding:0;
 }
 
 body {
 	overflow: hidden;
 	height: 100%;
 	width: 100%;
+    padding:0;
 }
 
 header, .header {
@@ -30,13 +33,13 @@ header, .header {
     left:0;
     right:0;
     top:0;
-    bottom:24px;
-    background-color:azure;
+    bottom:26px;
 }
 
 .content-view.partial-page {
     left:256px;
     top:64px;
+    background-color:aliceblue;
 }
 
 .content-view.full-page {
@@ -47,40 +50,43 @@ header, .header {
     top: 32px;
 }
 
-.main-view .modal-wrapper {
-    background-color:rgba(7,7,7, 0.25);
-    position:absolute;
-    left:0; top:0; right:0; bottom:0;
-    .modal-window {
-        width:500px;
-        height:300px;
-        margin:auto;
-        margin-top:60px;
-        background-color:whitesmoke;
-        border:1px solid silver;
-    }
-}
-
 .nav-bar {
-    position:absolute;
-    left:0; right:0;
-    top:32px;
-    height:32px;
-    line-height:32px;
-    padding:0;
-    margin:0;
-    background-color:aqua;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: @header-height;
+    height: @navbar-height;
+    line-height: @navbar-height;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+    background-color: @navbar-bg-color;
+    text-transform: uppercase;
+    display: flex;
+
     li {
-        display:inline-block;
-        list-style:none;
-        padding:0;
-        margin:0;
+        display: inline-flex;
+        align-items: stretch;
+        list-style: none;
+        padding: 0 8px;
+        margin: 0;
+        height: 100%;
+
         a {
-            padding:4px 6px;
-            height:100%;
+            align-items: stretch;
+
+            &:hover {
+                text-decoration: none;
+            }
         }
-        a.active {
-            background-color:yellow;
+
+        &:hover {
+            background-color: @navbar-highlight-color;
+        }
+
+        &.active a {
+            color: @link-hover-color;
+            border-bottom: 3px solid @link-color;
         }
     }
 }
@@ -96,19 +102,26 @@ header, .header {
 .side-menu {
     position: absolute;
     left: 0;
-    top: 64px;
+    top: @header-height + @navbar-height;
     bottom: 24px;
+    padding-top: 50px;
     width: 250px;
-    background-color: antiquewhite;
-    padding:0;
-    margin:0;
+    background-color: white;
+    border-right: 1px solid silver;
+    padding: 0;
+    margin: 0;
+
     li {
         padding: 4px;
         list-style: none;
-    }
+        cursor:pointer;
+        &:hover {
+            background-color:@hover-bg-color;
+        }
 
-    li.active {
-        background-color: palevioletred;
+        &.active {
+            background-color: @active-bg-color;
+        }
     }
 }
 
@@ -120,6 +133,15 @@ footer, .footer {
     border-top:1px solid silver;
 }
 
+a {
+    color: @link-color;
+    text-decoration:none;
+    &:hover {
+        color: @link-hover-color;
+        text-decoration:underline;
+    }
+}
+
 textarea {
 	resize: none;
 }
@@ -129,13 +151,15 @@ td, th {
     font-weight:normal;
 }
 
-@import "Control.less";
-@import "DataGrid.less";
-
-
 pre {
     font-family: @monospace-font;
     font-size:0.85em;
     background-color:#f8f8f8;
     padding:6px;
 }
+
+@import "Control.less";
+@import "DataGrid.less";
+@import "Dialog.less";
+
+
