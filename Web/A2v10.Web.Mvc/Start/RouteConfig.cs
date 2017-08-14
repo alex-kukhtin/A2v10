@@ -19,13 +19,19 @@ namespace A2v10.Web.Mvc.Start
 			routes.IgnoreRoute("favicon.ico");
 
             routes.MapRoute(
-                name: "page",
+                name: "Account",
+                url: "Account/{action}",
+                defaults: new { controller = "Account" }
+            );
+
+            routes.MapRoute(
+                name: "Page",
                 url: "_page/{*pathInfo}",
                 defaults: new { controller = "Shell", action = "Page" }
             );
 
             routes.MapRoute(
-                name: "dialog",
+                name: "Dialog",
                 url: "_dialog/{*pathInfo}",
                 defaults: new { controller = "Element", action = "Dialog" }
             );

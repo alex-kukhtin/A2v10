@@ -203,6 +203,7 @@ TODO:
     <a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
     <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
     <a2-content-view></a2-content-view>
+    <div class="load-indicator" v-show="pendingRequest"></div>
     <div class='modal-wrapper' v-if="hasModals">
         <div class="modal-window" tabindex="0" v-for="dlg in modals" @keyup.esc='closeModal'>
             <span>{{dlg.title}} {{dlg.url}}</span><button @click.stop='closeModal'>x</button>
@@ -222,12 +223,16 @@ TODO:
             return {
                 navBarVisible: false,
                 sideBarVisible: true,
+                requestsCount: 0,
                 modals: []
             };
         },
         computed: {
             hasModals: function () {
                 return this.modals.length > 0;
+            },
+            pendingRequest: function () {
+                return this.requestsCount > 0;
             }
         },        
         mounted() {
@@ -253,6 +258,12 @@ TODO:
                 me.sideBarVisible = len === 3;
                 me.modals.splice(0, me.modals.length);
             });
+            bus.$on('beginRequest', function () {
+                me.requestsCount += 1;
+            });
+            bus.$on('endRequest', function () {
+                me.requestsCount -= 1;
+            })
             bus.$on('modal', function (modal) {
                 alert('modal event handled: ' + JSON.stringify(modal));
                 me.modals.push({ title: "dialog", url: "/_page/catalog/suppliers" });

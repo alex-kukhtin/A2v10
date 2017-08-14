@@ -4,6 +4,7 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+    [Authorize]
 	public class ShellController : BaseController
 	{
         public ShellController(IDbContext dbContext)

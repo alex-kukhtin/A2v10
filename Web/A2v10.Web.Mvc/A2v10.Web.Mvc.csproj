@@ -111,7 +111,6 @@
     <Compile Include="Configuration\WebConfiguration.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
     <Compile Include="Identity\AppRole.cs" />
@@ -170,21 +169,6 @@
     </Compile>
     <Compile Include="Views\Account\VerifyCode.generated.cs">
       <DependentUpon>VerifyCode.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Home\About.generated.cs">
-      <DependentUpon>About.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Home\Contact.generated.cs">
-      <DependentUpon>Contact.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Home\Index.generated.cs">
-      <DependentUpon>Index.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -282,18 +266,6 @@
     <Content Include="Views\Account\VerifyCode.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>VerifyCode.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Home\About.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>About.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Home\Contact.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Contact.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Home\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Manage\ChangePassword.cshtml">
       <Generator>RazorGenerator</Generator>

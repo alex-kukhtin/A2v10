@@ -173,7 +173,7 @@ namespace A2v10.Web.Site.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Shell");
                 }
                 AddErrors(result);
             }
@@ -324,7 +324,7 @@ namespace A2v10.Web.Site.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Shell");
         }
 
 
@@ -361,7 +361,7 @@ namespace A2v10.Web.Site.Controllers
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError(String.Empty, error);
             }
         }
 
@@ -371,7 +371,7 @@ namespace A2v10.Web.Site.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Shell");
         }
         #endregion
     }

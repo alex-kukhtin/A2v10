@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+    [Authorize]
     public class ElementController : BaseController
     {
         public ElementController(IDbContext dbContext)

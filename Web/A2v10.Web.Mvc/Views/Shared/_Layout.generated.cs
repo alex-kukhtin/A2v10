@@ -100,43 +100,12 @@ WriteLiteral("></i>\r\n\t\t\t\t<div");
 
 WriteLiteral(" class=\"navbar-collapse collapse\"");
 
-WriteLiteral(">\r\n\t\t\t\t\t<ul");
-
-WriteLiteral(" class=\"nav navbar-nav\"");
-
-WriteLiteral(">\r\n\t\t\t\t\t\t<li>");
-
-            
-            #line 20 "..\..\Views\Shared\_Layout.cshtml"
-                       Write(Html.ActionLink("Home", "Index", "Home"));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("</li>\r\n\t\t\t\t\t\t<li>");
-
-            
-            #line 21 "..\..\Views\Shared\_Layout.cshtml"
-                       Write(Html.ActionLink("About", "About", "Home"));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("</li>\r\n\t\t\t\t\t\t<li>");
-
-            
-            #line 22 "..\..\Views\Shared\_Layout.cshtml"
-                       Write(Html.ActionLink("Contact", "Contact", "Home"));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("</li>\r\n\t\t\t\t\t</ul>\r\n");
+WriteLiteral(">\r\n");
 
 WriteLiteral("\t\t\t\t\t");
 
             
-            #line 24 "..\..\Views\Shared\_Layout.cshtml"
+            #line 19 "..\..\Views\Shared\_Layout.cshtml"
                Write(Html.Partial("_LoginPartial"));
 
             
@@ -151,7 +120,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\t\t\t");
 
             
-            #line 29 "..\..\Views\Shared\_Layout.cshtml"
+            #line 24 "..\..\Views\Shared\_Layout.cshtml"
        Write(RenderBody());
 
             
@@ -164,7 +133,7 @@ WriteLiteral(" class=\"footer\"");
 WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 
             
-            #line 33 "..\..\Views\Shared\_Layout.cshtml"
+            #line 28 "..\..\Views\Shared\_Layout.cshtml"
                  Write(DateTime.Now.Year);
 
             
@@ -173,7 +142,7 @@ WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 WriteLiteral("  ");
 
             
-            #line 33 "..\..\Views\Shared\_Layout.cshtml"
+            #line 28 "..\..\Views\Shared\_Layout.cshtml"
                                      Write(A2v10.Web.Mvc.Configuration.AppInfo.MainAssembly.Version);
 
             
@@ -189,14 +158,14 @@ WriteLiteral("></script>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 1164), Tuple.Create("\"", 1217)
+WriteAttribute("src", Tuple.Create(" src=\"", 938), Tuple.Create("\"", 991)
             
-            #line 37 "..\..\Views\Shared\_Layout.cshtml"
-, Tuple.Create(Tuple.Create("", 1170), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
+            #line 32 "..\..\Views\Shared\_Layout.cshtml"
+, Tuple.Create(Tuple.Create("", 944), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
             
             #line default
             #line hidden
-, 1170), false)
+, 944), false)
 );
 
 WriteLiteral("></script>\r\n");
@@ -204,7 +173,7 @@ WriteLiteral("></script>\r\n");
 WriteLiteral("    ");
 
             
-            #line 38 "..\..\Views\Shared\_Layout.cshtml"
+            #line 33 "..\..\Views\Shared\_Layout.cshtml"
 Write(RenderSection("scripts", required: false));
 
             
