@@ -25,7 +25,7 @@
 
     app.modules['platform'] = {
         set: set
-    }
+    };
 
     app.modules['eventBus'] = new Vue();
 })();
@@ -74,7 +74,7 @@
     };
 
 })();
-/*20170813-7001*/
+/*20170814-7012*/
 /* http.js */
 (function () {
 
@@ -91,8 +91,9 @@
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
+                eventBus.$emit('endRequest', url);
                 reject(xhr.statusText);
-            }
+            };
             xhr.open(method, url, true);
             eventBus.$emit('beginRequest', url);
             xhr.send();
@@ -135,7 +136,7 @@
         get: get,
         post: post,
         load: load
-    }
+    };
 })();
 
 
@@ -197,11 +198,10 @@
     app.modules['validators'] = {
         validate: validateItem
     };
-
 })();
 
 
-/*20170813-7001*/
+/*20170814-7012*/
 /* services/datamodel.js */
 (function() {
 
@@ -317,7 +317,7 @@
 
     function createArray(source, path, ctor, arrctor, parent) {
         let arr = new _BaseArray(source.length);
-        let dotPath = path + '[]'
+        let dotPath = path + '[]';
         defHidden(arr, '_elem_', ctor);
         defHidden(arr, PATH, path);
         defHidden(arr, PARENT, parent);
@@ -363,7 +363,7 @@
     _BaseArray.prototype.$empty = function () {
         this.splice(0, this.length);
         return this;
-    }
+    };
 
     _BaseArray.prototype.$remove = function (item) {
         let index = this.indexOf(item);
@@ -385,7 +385,7 @@
             this.push(this.$new(src[i]));
         }
         return this;
-    }
+    };
 
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
@@ -469,20 +469,22 @@
         root.prototype._validate_ = validate;
         // props cache for t.construct
         let xProp = {};
-        for (let p in template.properties) {
-            let px = p.split('.'); // Type.Prop
-            if (px.length != 2) {
-                console.error(`invalid propery name '${p}'`);
-                continue;
+        if (template) {
+            for (let p in template.properties) {
+                let px = p.split('.'); // Type.Prop
+                if (px.length !== 2) {
+                    console.error(`invalid propery name '${p}'`);
+                    continue;
+                }
+                let typeName = px[0];
+                let propName = px[1];
+                let pv = template.properties[p]; // property value
+                if (!(typeName in xProp))
+                    xProp[typeName] = {};
+                xProp[typeName][propName] = pv;
             }
-            let typeName = px[0];
-            let propName = px[1];
-            let pv = template.properties[p]; // property value
-            if (!(typeName in xProp))
-                xProp[typeName] = {};
-            xProp[typeName][propName] = pv;
+            template._props_ = xProp;
         }
-        template._props_ = xProp;
     }
 
     app.modules['datamodel'] = {
@@ -492,7 +494,7 @@
         implementRoot: implementRoot
     };
 })();
-/*20170813-7011*/
+/*20170814-7012*/
 /*components/include.js*/
 (function () {
 
@@ -504,8 +506,9 @@
             cssClass: String
         },
         template: '<div :class="cssClass"></div>',
-        created: function () {
-            //alert('created');
+        mounted() {
+            if (this.src)
+                http.load(this.src, this.$el);
         },
         watch: {
             src: function (newUrl, oldUrl) {
@@ -522,10 +525,9 @@
     });
 
 })();
-(function() {
+(function () {
 
-
-    let baseControl = {
+    const control = {
         computed: {
             path() {
                 return this.item._path_ + '.' + this.prop;
@@ -560,6 +562,14 @@
         }
     };
 
+    app.modules['control'] = {
+        control: control
+    };
+
+})();
+(function() {
+
+
     let textBoxTemplate =
 `<div :class="cssClass">
     <input v-model.lazy="item[prop]" :class="inputClass"/>
@@ -568,6 +578,7 @@
     <button @click="test">*</button>
 </div>
 `;
+    let baseControl = require('control').control;
 
     Vue.component('textbox', {
         extends: baseControl,
@@ -579,6 +590,8 @@
         }
     });
 })();
+/*20170814-7012*/
+/*components/datagrid.js*/
 (function () {
 
  /*TODO:
@@ -660,7 +673,7 @@
             let childProps = {
                 props: {
                     row: row,
-                    col: col,
+                    col: col
                 }
             };
             if (col.template) {
@@ -702,7 +715,7 @@
                 chElems.push(h(validator, validatorProps));
             }
             return h(tag, cellProps, chElems);
-        },
+        }
     };
 
     const dataGridRow = {
@@ -745,7 +758,7 @@
             return {
                 columns: []
                 //rowSelected: null
-            }
+            };
         },
         computed: {
             cssClass() {

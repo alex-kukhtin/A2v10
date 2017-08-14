@@ -1,4 +1,4 @@
-﻿/*20170813-7011*/
+﻿/*20170814-7012*/
 /*components/include.js*/
 (function () {
 
@@ -10,8 +10,9 @@
             cssClass: String
         },
         template: '<div :class="cssClass"></div>',
-        created: function () {
-            //alert('created');
+        mounted() {
+            if (this.src)
+                http.load(this.src, this.$el);
         },
         watch: {
             src: function (newUrl, oldUrl) {

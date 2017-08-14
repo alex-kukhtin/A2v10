@@ -1,4 +1,4 @@
-﻿/*20170813-7001*/
+﻿/*20170814-7012*/
 /* http.js */
 (function () {
 
@@ -15,8 +15,9 @@
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
+                eventBus.$emit('endRequest', url);
                 reject(xhr.statusText);
-            }
+            };
             xhr.open(method, url, true);
             eventBus.$emit('beginRequest', url);
             xhr.send();
@@ -59,7 +60,7 @@
         get: get,
         post: post,
         load: load
-    }
+    };
 })();
 
 

@@ -9,7 +9,7 @@
 
     app.modules['platform'] = {
         set: set
-    }
+    };
 
     app.modules['eventBus'] = new Vue();
 })();

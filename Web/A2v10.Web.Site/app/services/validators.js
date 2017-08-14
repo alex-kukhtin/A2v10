@@ -55,6 +55,5 @@
     app.modules['validators'] = {
         validate: validateItem
     };
-
 })();
 

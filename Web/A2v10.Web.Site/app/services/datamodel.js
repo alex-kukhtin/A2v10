@@ -1,4 +1,4 @@
-﻿/*20170813-7001*/
+﻿/*20170814-7012*/
 /* services/datamodel.js */
 (function() {
 
@@ -114,7 +114,7 @@
 
     function createArray(source, path, ctor, arrctor, parent) {
         let arr = new _BaseArray(source.length);
-        let dotPath = path + '[]'
+        let dotPath = path + '[]';
         defHidden(arr, '_elem_', ctor);
         defHidden(arr, PATH, path);
         defHidden(arr, PARENT, parent);
@@ -160,7 +160,7 @@
     _BaseArray.prototype.$empty = function () {
         this.splice(0, this.length);
         return this;
-    }
+    };
 
     _BaseArray.prototype.$remove = function (item) {
         let index = this.indexOf(item);
@@ -182,7 +182,7 @@
             this.push(this.$new(src[i]));
         }
         return this;
-    }
+    };
 
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
@@ -266,20 +266,22 @@
         root.prototype._validate_ = validate;
         // props cache for t.construct
         let xProp = {};
-        for (let p in template.properties) {
-            let px = p.split('.'); // Type.Prop
-            if (px.length != 2) {
-                console.error(`invalid propery name '${p}'`);
-                continue;
+        if (template) {
+            for (let p in template.properties) {
+                let px = p.split('.'); // Type.Prop
+                if (px.length !== 2) {
+                    console.error(`invalid propery name '${p}'`);
+                    continue;
+                }
+                let typeName = px[0];
+                let propName = px[1];
+                let pv = template.properties[p]; // property value
+                if (!(typeName in xProp))
+                    xProp[typeName] = {};
+                xProp[typeName][propName] = pv;
             }
-            let typeName = px[0];
-            let propName = px[1];
-            let pv = template.properties[p]; // property value
-            if (!(typeName in xProp))
-                xProp[typeName] = {};
-            xProp[typeName][propName] = pv;
+            template._props_ = xProp;
         }
-        template._props_ = xProp;
     }
 
     app.modules['datamodel'] = {

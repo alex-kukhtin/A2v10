@@ -74,6 +74,22 @@ header,
 .content-view.full-view {
   top: 32px;
 }
+.main-view .modal-wrapper {
+  background-color: rgba(7, 7, 7, 0.25);
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.main-view .modal-wrapper .modal-window {
+  width: 500px;
+  height: 300px;
+  margin: auto;
+  margin-top: 60px;
+  background-color: whitesmoke;
+  border: 1px solid silver;
+}
 .nav-bar {
   position: absolute;
   left: 0;

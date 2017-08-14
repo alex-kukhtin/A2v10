@@ -1,4 +1,6 @@
-﻿(function () {
+﻿/*20170814-7012*/
+/*components/datagrid.js*/
+(function () {
 
  /*TODO:
 2. size (compact, large ??)
@@ -79,7 +81,7 @@
             let childProps = {
                 props: {
                     row: row,
-                    col: col,
+                    col: col
                 }
             };
             if (col.template) {
@@ -121,7 +123,7 @@
                 chElems.push(h(validator, validatorProps));
             }
             return h(tag, cellProps, chElems);
-        },
+        }
     };
 
     const dataGridRow = {
@@ -164,7 +166,7 @@
             return {
                 columns: []
                 //rowSelected: null
-            }
+            };
         },
         computed: {
             cssClass() {

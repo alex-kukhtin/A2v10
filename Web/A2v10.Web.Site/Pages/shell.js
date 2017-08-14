@@ -20,12 +20,12 @@ TODO:
 
     const bus = require('eventBus');
     let menu = [
-        {title: "Home", url: "home"},
+        { title: "Home", url: "home" },
         {
             title: 'Catalog', url: 'catalog', menu: [
-                {title: "Suppliers", url: 'suppliers' },
-                {title: "Customers", url: 'customers' },
-                {title: "Edit 3 segment", url: 'edit/5' }
+                { title: "Suppliers", url: 'suppliers' },
+                { title: "Customers", url: 'customers' },
+                { title: "Edit 3 segment", url: 'edit/5' }
             ]
         },
         {
@@ -34,34 +34,20 @@ TODO:
                 { title: "Outgoing", url: 'outgoing' },
                 { title: "edit 4 segment", url: 'outgoing/edit/2' }
             ]
-        },
-    ]
+        }
+    ];
 
     function Location() {
         this.wl = window.location.pathname.split('/');
-
-        this.segment = function (no) {
-            let wl = this.wl;
-            return (wl.length > no) ? wl[no].toLowerCase() : '';
-        };
-
-        this.isSideMenuVisible = function () {
-            return this.wl.length == 3;
-        }
-
-        this.isNavBarVisible = function () {
-            let len = this.wl.length;
-            return len == 2 || len == 3;
-        }
     }
 
     Location.prototype.routeLength = function () {
         return this.wl.length;
-    }
+    };
 
     Location.prototype.segment = function (no) {
         let wl = this.wl;
-        return (wl.length > no) ? wl[no].toLowerCase() : '';
+        return wl.length > no ? wl[no].toLowerCase() : '';
     };
 
     Location.prototype.saveMenuUrl = function () {
@@ -74,19 +60,18 @@ TODO:
             else
                 window.localStorage.removeItem(key);
         }
-    }
+    };
 
     const navBar = {
         props: {
             menu: Array
         },
-        template: '<ul v-if="visible" class="nav-bar"><li v-for="item in menu" :key="item.url" ><a href="\" :class="{active : isActive(item)}" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
+        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" ><a href="\" :class="{active : isActive(item)}" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
 
         data: function () {
             return {
-                activeItem: null,
-                visible: true
-            }
+                activeItem: null
+            };
         },
 
         created: function () {
@@ -110,16 +95,11 @@ TODO:
                 me.activeItem = me.menu[0];
                 window.history.replaceState(null, me.activeItem.title, me.activeItem.url);
             }
-
-            bus.$on('route', function () {
-                let loc = new Location();
-                me.visible = loc.isNavBarVisible();
-            });
         },
 
         methods: {
             isActive: function (item) {
-                return item == this.activeItem;
+                return item === this.activeItem;
             },
             navigate: function (item) {
                 let key = `menu:${item.url}`;
@@ -138,10 +118,11 @@ TODO:
                 bus.$emit('route');
             }
         }
-    }
+    };
 
     const sideBar = {
-        template: '<ul v-if="sideMenuVisible" class="side-menu"><li v-for="itm in sideMenu" :key="itm.url" :class="{active: isActive(itm)}"><a href="" v-text="itm.title" @click.stop.prevent="navigate(itm)"></a></li></ul>',
+        // TODO: разные варианты меню
+        template: '<ul class="side-menu"><li v-for="itm in sideMenu" :key="itm.url" :class="{active: isActive(itm)}"><a href="" v-text="itm.title" @click.stop.prevent="navigate(itm)"></a></li></ul>',
         props: {
             menu: Array
         },
@@ -149,14 +130,8 @@ TODO:
             return {
                 sideMenu: null,
                 topUrl: null,
-                activeItem: null,
-                visible: true
-            }
-        },
-        computed: {
-            sideMenuVisible: function() {
-                return this.visible && !!this.sideMenu;
-            }
+                activeItem: null
+            };
         },
         methods: {
             isActive: function (itm) {
@@ -173,7 +148,6 @@ TODO:
             var me = this;
             bus.$on('route', function () {
                 let loc = new Location();
-                me.visible = loc.isSideMenuVisible();
                 let s1 = loc.segment(1);
                 let s2 = loc.segment(2);
                 let m1 = me.menu.find(itm => itm.url === s1);
@@ -186,7 +160,7 @@ TODO:
                     if (me.sideMenu)
                         me.activeItem = me.sideMenu.find(itm => itm.url === s2);
                 }
-            })
+            });
         }
     };
 
@@ -205,7 +179,7 @@ TODO:
             return {
                 currentView: null,
                 cssClass: ''
-            }
+            };
         },
         created() {
             var me = this;
@@ -215,29 +189,85 @@ TODO:
                 me.currentView = "/_page" + window.location.pathname;
                 let len = loc.routeLength();
                 me.cssClass =
-                    (len == 2) ? 'full-page' :
-                    (len == 3) ? 'partial-page' :
+                    len === 2 ? 'full-page' :
+                    len === 3 ? 'partial-page' :
                     'full-view';
-            })
+            });
+        }
+    };
+
+    // important: use v-show instead v-if to ensure components created only once
+    const a2MainView = {
+        template: `
+<div class="main-view">
+    <a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
+    <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
+    <a2-content-view></a2-content-view>
+    <div class='modal-wrapper' v-if="hasModals">
+        <div class="modal-window" tabindex="0" v-for="dlg in modals" @keyup.esc='closeModal'>
+            <span>{{dlg.title}} {{dlg.url}}</span><button @click.stop='closeModal'>x</button>
+            <include :src="dlg.url"></include>
+        </div>
+    </div>
+</div>`,
+        components: {
+            'a2-nav-bar': navBar,
+            'a2-side-bar': sideBar,
+            'a2-content-view': contentView
+        },
+        props: {
+            menu: Array
+        },
+        data() {
+            return {
+                navBarVisible: false,
+                sideBarVisible: true,
+                modals: []
+            };
+        },
+        computed: {
+            hasModals: function () {
+                return this.modals.length > 0;
+            }
+        },        
+        mounted() {
+            // first time created
+            new Location().saveMenuUrl();
+            bus.$emit('route');
+        },
+        methods: {
+            closeModal() {
+                this.modals.pop();
+            },
+            keyUp() {
+                alert('key up');
+            }
+        },
+        created() {
+            let me = this;
+            bus.$on('route', function () {
+                let loc = new Location();
+                let len = loc.routeLength();
+                let seg1 = loc.segment(1);
+                me.navBarVisible = len === 2 || len === 3;
+                me.sideBarVisible = len === 3;
+                me.modals.splice(0, me.modals.length);
+            });
+            bus.$on('modal', function (modal) {
+                alert('modal event handled: ' + JSON.stringify(modal));
+                me.modals.push({ title: "dialog", url: "/_page/catalog/suppliers" });
+            });
         }
     };
 
     new Vue({
         el: '#shell',
         components: {
-            'a2-nav-bar': navBar,
-            'a2-side-bar': sideBar,
-            'a2-content-view' : contentView
+            'a2-main-view': a2MainView
         },
         data: {
             title: 'application title',
             menu: menu
-        },
-        mounted: function () {
-            // first time created
-            new Location().saveMenuUrl();
-            bus.$emit('route');
         }
     });
-
 })();

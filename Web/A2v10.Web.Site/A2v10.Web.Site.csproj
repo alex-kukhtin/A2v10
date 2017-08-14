@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\components\control.js" />
     <Content Include="app\components\datagrid.js" />
     <Content Include="app\components\include.js" />
     <Content Include="app\components\textbox.js" />
@@ -61,6 +62,7 @@
     <Content Include="app\services\log.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
+    <Content Include="Pages\catalog_suppliers.html" />
     <Content Include="Pages\catalog_customers.html" />
     <Content Include="Pages\shell.js" />
     <Content Include="Content\jasmine\jasmine.css" />
@@ -94,6 +96,7 @@
     <Content Include="TestPages\include.html" />
     <Content Include="TestPages\gridlayout.html" />
     <Content Include="tests\platform.js" />
+    <Content Include="tests\datamodel.js" />
     <Content Include="tests\validators.js" />
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />

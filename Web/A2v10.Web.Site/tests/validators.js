@@ -1,7 +1,7 @@
 ﻿
 describe("Validators", function () {
 
-    let val = require('validators');
+    const val = require('validators');
 
     it("notBlank (string - rule as string)", function () {
         let rule = 'blank message';

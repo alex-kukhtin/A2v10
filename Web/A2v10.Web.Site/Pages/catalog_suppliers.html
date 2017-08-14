@@ -1,17 +1,20 @@
 ﻿
 <!--ID нужно делать как GUID'ы, иначе перекрываются!!!!-->
 
-<div id="catalog-customers-index">
-    <h4>catalog/customers Data grid</h4>
+<div id="catalog-suppliers-index">
+    <h4>catalog/suppliers Data grid</h4>
     <div>
         <button @click.stop.prevent="Customers.$append()">Add</button>
         <button @click.stop.prevent="Customers.$append()">Add in dialog</button>
         <label v-text="Customers.length"></label>
         <button @click.stop.prevent="$showDialog">Show Dialog</button>
     </div>
+    <div>
+        <textbox :item="Customers[0]" prop="Name"></textbox>
+    </div>
     <data-grid :items-source="Customers" :striped="true" :bordered="true" :hover="true">
         <data-grid-column header="Id" content="Id"></data-grid-column>
-        <data-grid-column header="Name" content="Name"></data-grid-column>
+        <data-grid-column header="Name" content="Name" :editable="true"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
         <data-grid-column id="cmd"></data-grid-column>
         <template slot="cmd" scope="cell">
@@ -65,8 +68,8 @@
 
         const modelData = {
             Customers: [
-                { Id: 123, Name: "First customer", Amount: 150 },
-                { Id: 247, Name: "Second customer", Amount: 300 },
+                { Id: 123, Name: "First supplier", Amount: 150 },
+                { Id: 247, Name: "Second supplier", Amount: 300 },
             ]
         };
 
@@ -74,13 +77,12 @@
         cmn.implementRoot(TRoot, template, ctors);
         const reactiveData = new TRoot(modelData);
 
-        Vue.component('a2-modal', {
-            template: '<div class="modal-wrapper"><div>'
-        });
-
         new Vue({
-            el: "#catalog-customers-index",
+            el: "#catalog-suppliers-index",
             data: reactiveData,
+            destroyed() {
+                alert('suppliers destroyed');
+            },
             methods: {
                 $edit(item) {
                     //alert(item.Name);
@@ -88,11 +90,7 @@
                     bus.$emit('route');
                 },
                 $showDialog() {
-                    var x = bus.$emit('modal', {x:5, y:10});
-                    alert('emit modal returns');
-                    //alert('show dialog');
-                    //let elem = document.createElement('a2-modal');
-                    //document.body.appendChild(elem);
+                    var x = bus.$emit('modal', {x:234, y:88});
                 }
             }
         });
