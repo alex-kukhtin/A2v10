@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="/css/font-awesome.min.css?v=4.7.0" rel="stylesheet" />
+    <link href="/css/site.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" style="padding:20px;background-color:papayawhip;width:250px;border:1px solid brown;margin:20px;">
+        <h3>tree view component test</h3>
+
+        <ul class="tree-view" style="border:1px solid silver">
+            <tree-item v-for="(itm, index) in items" 
+               :item="itm" :key="index" :name="'name'" 
+                :subitems="'menu'" :click="click">
+            </tree-item>
+        </ul>
+    </div>
+    <script src="/scripts/vue.js"></script>
+    <script src="/app/components/treeview.js"></script>
+    <script>
+        (function () {
+
+            var menu = [
+                {
+                    name: "User", icon: "user", menu: [
+                        { name: "Sub User 1" },
+                        { name: "Sub User 2" }
+                    ]
+                },
+                {
+                    name: "Tasks", icon: "tasks", menu: [
+                        {name: "Sub Task 1" },
+                        {
+                            name: "Sub Task 2 with long line and wrapping text", menu: [
+                                { name: "Sub Sub Task 2.1 with long line and wrapping text" },
+                                { name: "Sub Sub Task 2.2" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+
+            new Vue({
+                el: "#app",
+                data: {
+                    items: menu
+                },
+                methods: {
+                    click: function (item) {
+                        alert('click:' + item.name);
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

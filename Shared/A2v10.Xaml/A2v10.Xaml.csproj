@@ -38,10 +38,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Bind.cs" />
+    <Compile Include="Base\Enums.cs" />
     <Compile Include="Base\RenderContext.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\TagBuilder.cs" />
     <Compile Include="Base\UIElement.cs" />
+    <Compile Include="Base\UIElementCollection.cs" />
     <Compile Include="Base\XamlElement.cs" />
     <Compile Include="Base\XamlException.cs" />
     <Compile Include="Controls\Button.cs" />

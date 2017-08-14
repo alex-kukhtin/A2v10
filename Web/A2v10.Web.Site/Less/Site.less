@@ -18,12 +18,16 @@ body {
 	height: 100%;
 	width: 100%;
     padding:0;
+    background-color:white;
 }
 
 header, .header {
     position:absolute;
     left:0;top:0;right:0;
-    height:32px;
+    height:@header-height;
+    line-height:@header-height;
+    font-size:18px;
+    padding-left:8px;
     background-color:@brand-bk_color;
     color:white;
 }
@@ -103,8 +107,7 @@ header, .header {
     position: absolute;
     left: 0;
     top: @header-height + @navbar-height;
-    bottom: 24px;
-    padding-top: 50px;
+    bottom: @footer-height;
     width: 250px;
     background-color: white;
     border-right: 1px solid silver;
@@ -114,9 +117,10 @@ header, .header {
     li {
         padding: 4px;
         list-style: none;
-        cursor:pointer;
+        cursor: pointer;
+
         &:hover {
-            background-color:@hover-bg-color;
+            background-color: @hover-bg-color;
         }
 
         &.active {
@@ -126,11 +130,16 @@ header, .header {
 }
 
 footer, .footer {
-    position:absolute;
-    left:0; bottom:0; right:0;
-    height:24px;
-    background-color:#f8ffe8;
-    border-top:1px solid silver;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: @footer-height;
+    line-height: @footer-height;
+    background-color: #f8ffe8;
+    border-top: 1px solid @default-brd-color;
+    z-index: @footer-index;
+    padding-left: 8px;
 }
 
 a {
@@ -162,4 +171,74 @@ pre {
 @import "DataGrid.less";
 @import "Dialog.less";
 
+.tree-view {
+    background-color: azure;
+    margin: 0;
+    padding: 0;
 
+    .toggle {
+        display: inline-block;
+        width: 18px;
+    }
+
+    li {
+        list-style: none;
+        position: relative;
+
+        .overlay {
+            display: inline-flex;
+            width:100%;
+            align-items:baseline;
+            padding: 4px 0;
+
+            &:hover {
+                background-color: @hover-bg-color;
+            }
+
+            .fa {
+                color: #8591a2;
+                font-size: 15px;
+                background-color:yellow;
+            }
+        }
+
+        > ul {
+            margin: 0;
+            padding-left: 16px; /*indentation*/
+        }
+
+        &.collapsed {
+            > .overlay > .toggle {
+                background-color: lemonchiffon;
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 10px; /*padding*/
+                    top: 6px;
+                    border: 6px solid transparent;
+                    border-left-color: fuchsia;
+                }
+            }
+
+            ul {
+                display: none;
+            }
+        }
+
+        &.expanded {
+            > .overlay > .toggle {
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 8px; /*padding*/
+                    top: 6px;
+                    border: 5px solid transparent;
+                    border-right-color: fuchsia;
+                    border-bottom-color: fuchsia;
+                }
+            }
+        }
+    }
+}

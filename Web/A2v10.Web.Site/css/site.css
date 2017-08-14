@@ -12,7 +12,7 @@ td,
 th {
   padding: 0;
 }
-/* header */
+/* header-footer */
 /* nav bar */
 /* data grid */
 /* dialog */
@@ -52,6 +52,7 @@ body {
   height: 100%;
   width: 100%;
   padding: 0;
+  background-color: white;
 }
 header,
 .header {
@@ -60,6 +61,9 @@ header,
   top: 0;
   right: 0;
   height: 32px;
+  line-height: 32px;
+  font-size: 18px;
+  padding-left: 8px;
   background-color: #4d6082;
   color: white;
 }
@@ -128,8 +132,7 @@ header,
   position: absolute;
   left: 0;
   top: 64px;
-  bottom: 24px;
-  padding-top: 50px;
+  bottom: 22px;
   width: 250px;
   background-color: white;
   border-right: 1px solid silver;
@@ -153,9 +156,12 @@ footer,
   left: 0;
   bottom: 0;
   right: 0;
-  height: 24px;
+  height: 22px;
+  line-height: 22px;
   background-color: #f8ffe8;
-  border-top: 1px solid silver;
+  border-top: 1px solid #ccc;
+  z-index: 1020;
+  padding-left: 8px;
 }
 a {
   color: #57a8fa;
@@ -238,4 +244,61 @@ table.hover > tbody > tr:hover {
 }
 .modal-header button {
   float: right;
+}
+.tree-view {
+  background-color: azure;
+  margin: 0;
+  padding: 0;
+}
+.tree-view .toggle {
+  display: inline-block;
+  width: 18px;
+}
+.tree-view li {
+  list-style: none;
+  position: relative;
+}
+.tree-view li .overlay {
+  display: inline-flex;
+  width: 100%;
+  align-items: baseline;
+  padding: 4px 0;
+}
+.tree-view li .overlay:hover {
+  background-color: #fdf4bf;
+}
+.tree-view li .overlay .fa {
+  color: #8591a2;
+  font-size: 15px;
+  background-color: yellow;
+}
+.tree-view li > ul {
+  margin: 0;
+  padding-left: 16px;
+  /*indentation*/
+}
+.tree-view li.collapsed > .overlay > .toggle {
+  background-color: lemonchiffon;
+}
+.tree-view li.collapsed > .overlay > .toggle:after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  /*padding*/
+  top: 6px;
+  border: 6px solid transparent;
+  border-left-color: fuchsia;
+}
+.tree-view li.collapsed ul {
+  display: none;
+}
+.tree-view li.expanded > .overlay > .toggle:after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  /*padding*/
+  top: 6px;
+  border: 5px solid transparent;
+  border-right-color: fuchsia;
+  border-bottom-color: fuchsia;
 }

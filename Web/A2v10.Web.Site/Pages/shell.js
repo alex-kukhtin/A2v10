@@ -276,8 +276,8 @@ TODO:
             });
             bus.$on('modalClose', function (result) {
                 let dlg = me.modals.pop();
-                dlg.prms.resolve(result);
-                //alert('closed:' + dlg.url);
+                if (result)
+                    dlg.prms.resolve(result);
             });
         }
     };
