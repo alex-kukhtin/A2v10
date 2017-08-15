@@ -126,6 +126,7 @@
     <Content Include="Less\Normalize.less" />
     <Content Include="Less\Control.less" />
     <Content Include="Less\Dialog.less" />
+    <Content Include="Less\ToolBar.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

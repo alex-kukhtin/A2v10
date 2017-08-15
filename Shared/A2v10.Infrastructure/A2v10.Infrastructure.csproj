@@ -38,8 +38,9 @@
     <Compile Include="IBackgroundTasksManager.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="IDbContext.cs" />
-    <Compile Include="IConfiguration.cs" />
+    <Compile Include="IApplicationHost.cs" />
     <Compile Include="IProfiler.cs" />
+    <Compile Include="IRenderer.cs" />
     <Compile Include="IScriptContext.cs" />
     <Compile Include="IWorkflowEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,21 +14,21 @@ namespace A2v10.Data
 {
 	public class SqlDbContext : IDbContext
 	{
-		IConfiguration _config;
+        IApplicationHost _host;
 
-		public SqlDbContext(IConfiguration config)
+		public SqlDbContext(IApplicationHost host)
 		{
-			_config = config;
+            _host = host;
 		}
 
         public String ConnectionString
         {
-            get { return _config.GetConnectionString(); }
+            get { return _host.ConnectionString; }
         }
 
 		public async Task<SqlConnection> GetConnectionAsync()
 		{
-			var cnnStr = _config.GetConnectionString();
+			var cnnStr = _host.ConnectionString;
 			var cnn = new SqlConnection(cnnStr);
 			await cnn.OpenAsync();
 			return cnn;
@@ -37,11 +37,12 @@ namespace A2v10.Data
 		public async Task<IDataModel> LoadModelAsync(String command, Object prms = null)
 		{
 			var modelReader = new DataModelReader();
-			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
 			{
 				await ReadDataAsync(command,
 					(prm) =>
 					{
+                        modelReader.SetParameters(prm, prms);
 					},
 					(no, rdr) =>
 					{
@@ -89,7 +90,7 @@ namespace A2v10.Data
 		{
 			var dataReader = new DataModelReader();
 			var dataWriter = new DataModelWriter();
-			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
 			{
 				var metadataCommand = command.Replace(".Update", ".Metadata");
 				using (var cnn = await GetConnectionAsync())
@@ -129,7 +130,7 @@ namespace A2v10.Data
 
 		public async Task<T> LoadAsync<T>(String command, Object prms = null) where T : class
 		{
-			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
 			{
                 var helper = new LoadHelper<T>();
                 using (var cnn = await GetConnectionAsync())
@@ -183,7 +184,7 @@ namespace A2v10.Data
 
         public async Task ExecuteAsync<T>(String command, T element) where T : class
 		{
-			using (var p = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
 			{
 				using (var cnn = await GetConnectionAsync())
 				{
@@ -198,7 +199,7 @@ namespace A2v10.Data
 
 		public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
 		{
-			using (var token = _config.Profiler.Start(ProfileAction.Sql, command))
+			using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
 			{
                 Type retType = typeof(T);
                 var props = retType.GetProperties();

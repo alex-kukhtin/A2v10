@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Dynamic;
+using System.Reflection;
 
 /*
  * TODO: 
@@ -33,6 +35,16 @@ namespace A2v10.Data
 			}
 		}
 
+        public void SetParameters(SqlParameterCollection prms, Object values)
+        {
+            if (values == null)
+                return;
+            var props = values.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var prop in props)
+            {
+                prms.AddWithValue("@" + prop.Name, prop.GetValue(values));
+            }
+        }
 
 		public void ProcessOneRecord(IDataReader rdr)
 		{

@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\a2v10security.sql = SqlScripts\a2v10security.sql
 		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql
 		SqlScripts\a2v10test.sql = SqlScripts\a2v10test.sql
+		SqlScripts\a2v10ui.sql = SqlScripts\a2v10ui.sql
 		SqlScripts\a2v10workflow.sql = SqlScripts\a2v10workflow.sql
 	EndProjectSection
 EndProject

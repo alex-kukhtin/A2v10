@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using A2v10.Infrastructure;
 
 namespace A2v10.Web.Mvc.Models
 {
@@ -39,12 +40,22 @@ namespace A2v10.Web.Mvc.Models
         public String schema; // or parent
         public Boolean index;
 
+        public String template;
+
         [JsonIgnore]
         private RequestModel _parent;
 
         internal void SetParent(RequestModel model)
         {
             _parent = model;
+        }
+
+        public String Path
+        {
+            get
+            {
+                return _parent._modelPath;
+            }
         }
 
         [JsonIgnore]
@@ -137,7 +148,7 @@ namespace A2v10.Web.Mvc.Models
         private String _command;
 
         [JsonIgnore]
-        private String _modelPath;
+        internal String _modelPath;
 
         public String model; // data model
         public String schema; // schema for data model
@@ -177,19 +188,6 @@ namespace A2v10.Web.Mvc.Models
             }
         }
 
-        static String GetModelPath(String appKey, String path)
-        {
-            return $"{AppRoot}/{appKey}/{path}/model.json".ToLowerInvariant();
-        }
-
-        static String AppRoot
-        {
-            get
-            {
-                //TODO:
-                return "c:/git/apps/";
-            }
-        }
 
         private void EndInit()
         {
@@ -238,19 +236,17 @@ namespace A2v10.Web.Mvc.Models
             return mi;
         }
 
-        public static async Task<RequestModel> CreateFromUrl(String appKey, RequestUrlKind kind, String normalizedUrl)
+        public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, RequestUrlKind kind, String normalizedUrl)
         {
             var mi = GetModelInfo(kind, normalizedUrl);
-            String path = Path.GetFullPath(GetModelPath(appKey, mi.path));
-            using (var ss = new StreamReader(path)) {
-                var rm = JsonConvert.DeserializeObject<RequestModel>(await ss.ReadToEndAsync());
-                rm.EndInit();
-                rm._action = mi.action;
-                rm._dialog = mi.dialog;
-                rm._command = mi.command;
-                rm._modelPath = mi.path;
-                return rm;
-            }
+            String jsonText = await host.ReadTextFile(mi.path, "model.json");
+            var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
+            rm.EndInit();
+            rm._action = mi.action;
+            rm._dialog = mi.dialog;
+            rm._command = mi.command;
+            rm._modelPath = mi.path;
+            return rm;
         }
     }
 }

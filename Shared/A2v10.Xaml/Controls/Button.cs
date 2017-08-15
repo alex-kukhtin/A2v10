@@ -8,12 +8,12 @@ namespace A2v10.Xaml
 {
 	public class Button : CommandControl
 	{
+        public Icon Icon { get; set; }
 
         internal override void RenderElement(RenderContext context)
         {
             var button = new TagBuilder("button", "btn");
             AddAttributes(button);
-
             button.RenderStart(context);
             RenderContent(context);
             button.RenderEnd(context);

@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Web.Mvc;
-using A2v10.Infrastructure;
-using A2v10.Web.Mvc.Models;
 using System.Threading.Tasks;
-using A2v10.Web.Mvc.Filters;
 
-/**
- * TODO: Use IConfiguration
- */
+using A2v10.Infrastructure;
+using A2v10.Web.Mvc.Filters;
+using A2v10.Web.Mvc.Models;
+
 namespace A2v10.Web.Mvc.Controllers
 {
     [Authorize]
 	public class ShellController : BaseController
 	{
-        public ShellController(IDbContext dbContext)
-            : base(dbContext)
+        public ShellController(IApplicationHost host, IDbContext dbContext, IRenderer renderer)
+            : base(host, dbContext, renderer)
         {
         }
 

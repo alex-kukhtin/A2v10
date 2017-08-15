@@ -53,12 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\TestConfig.cs" />
-    <Compile Include="Config\TestConfiguration.cs" />
+    <Compile Include="Config\TestApplicationHost.cs" />
     <Compile Include="Config\TestProfiler.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="DataModelTester\DataTester.cs" />
     <Compile Include="DataModelTester\MetadataTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -72,6 +73,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
+      <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
+      <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

@@ -14,11 +14,13 @@ namespace A2v10.Web.Mvc.Start
 	using Ninject.Web.Common;
 	using Ninject.Web.Mvc;
 
-	using A2v10.Data;
 	using A2v10.Infrastructure;
-	using A2v10.Web.Mvc.Configuration;
+    using A2v10.Xaml;
+    using A2v10.Data;
 
-	public static class NinjectWebCommon
+    using A2v10.Web.Mvc.Configuration;
+
+    public static class NinjectWebCommon
 	{
 		private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
@@ -78,11 +80,12 @@ namespace A2v10.Web.Mvc.Start
 		private static void RegisterServices(IKernel kernel)
 		{
 			kernel.Bind<IDbContext>().To<SqlDbContext>().InSingletonScope();
-			kernel.Bind<IConfiguration>().To<WebConfiguration>().InSingletonScope();
+			kernel.Bind<IApplicationHost>().To<WebApplicationHost>().InSingletonScope();
 			kernel.Bind<IProfiler>().To<WebProfiler>().InSingletonScope();
+            kernel.Bind<IRenderer>().To<XamlRenderer>().InSingletonScope();
 
-			/* for ServiceLocator */
-			DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            /* for ServiceLocator */
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 		}
 	}
 }

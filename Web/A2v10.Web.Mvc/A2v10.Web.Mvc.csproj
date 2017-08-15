@@ -110,7 +110,7 @@
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
-    <Compile Include="Configuration\WebConfiguration.cs" />
+    <Compile Include="Configuration\WebApplicationHost.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -329,6 +329,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Script\A2v10.Script.csproj">
       <Project>{8d4a108f-28a4-4c56-bb2c-d189e6ab01c9}</Project>
       <Name>A2v10.Script</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
+      <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
+      <Name>A2v10.Xaml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

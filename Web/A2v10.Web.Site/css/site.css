@@ -15,6 +15,7 @@ th {
 /* header-footer */
 /* nav bar */
 /* data grid */
+/* toolbar */
 /* dialog */
 /* z-index */
 .bold {
@@ -213,6 +214,10 @@ table.striped > tbody > tr:nth-of-type(odd) {
 }
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf;
+}
+.toolbar {
+  display: block;
+  background-color: #cfd6e5;
 }
 .modal-stack {
   position: fixed;
