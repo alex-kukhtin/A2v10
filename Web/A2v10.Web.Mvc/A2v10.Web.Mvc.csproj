@@ -107,6 +107,8 @@
     <Compile Include="Configuration\AppInfo.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ElementController.cs" />
+    <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
+    <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebConfiguration.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />

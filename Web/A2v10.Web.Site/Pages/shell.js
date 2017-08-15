@@ -185,9 +185,17 @@ TODO:
             var me = this;
             bus.$on('route', function () {
                 let loc = new Location();
-                //TODO: += query
-                me.currentView = "/_page" + window.location.pathname;
                 let len = loc.routeLength();
+                //TODO: // find menu and get location from it
+                //TODO: += query
+                let tail = '';
+                switch (len) {
+                    case 2: tail = '/index/0'; break;
+                    case 3: tail = '/index/0'; break;
+                }
+
+
+                me.currentView = "/_page" + window.location.pathname + tail;
                 me.cssClass =
                     len === 2 ? 'full-page' :
                     len === 3 ? 'partial-page' :

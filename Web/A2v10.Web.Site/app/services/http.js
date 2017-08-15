@@ -7,6 +7,7 @@
     function doRequest(method, url, data) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
+            
             xhr.onload = function (response) {
                 eventBus.$emit('endRequest', url);
                 if (xhr.status === 200)
@@ -19,8 +20,10 @@
                 reject(xhr.statusText);
             };
             xhr.open(method, url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Accept', 'application/json, text/html');
             eventBus.$emit('beginRequest', url);
-            xhr.send();
+            xhr.send(data);
         });
     }
 

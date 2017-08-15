@@ -1,4 +1,6 @@
 ﻿using A2v10.Infrastructure;
+using A2v10.Web.Mvc.Filters;
+using A2v10.Web.Mvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,13 @@ namespace A2v10.Web.Mvc.Controllers
         {
         }
 
-        public ActionResult Dialog(String pathInfo)
+        [IsAjaxOnly]
+        public async Task Dialog(String pathInfo)
         {
-            return new EmptyResult();
+            await RenderElementKind(RequestUrlKind.Dialog, pathInfo);
         }
 
+        [IsAjaxOnly]
         public ActionResult Invoke(String pathInfo)
         {
             return new EmptyResult();

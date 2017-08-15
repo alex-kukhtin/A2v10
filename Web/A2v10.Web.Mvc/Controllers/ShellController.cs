@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Web.Mvc;
 using A2v10.Infrastructure;
+using A2v10.Web.Mvc.Models;
+using System.Threading.Tasks;
+using A2v10.Web.Mvc.Filters;
 
+/**
+ * TODO: Use IConfiguration
+ */
 namespace A2v10.Web.Mvc.Controllers
 {
     [Authorize]
@@ -17,18 +23,10 @@ namespace A2v10.Web.Mvc.Controllers
             return File("~/pages/layout.html", "text/html");
         }
 
-        public ActionResult Page(String pathInfo)
+        [IsAjaxOnly]
+        public async Task Page(String pathInfo)
         {
-            String[] route = pathInfo.Split('/');
-            if (pathInfo == "catalog/customers")
-            {
-                return File("~/pages/catalog_customers.html", "text/html");
-            }
-            else if (pathInfo == "catalog/suppliers")
-            {
-                return File("~/pages/catalog_suppliers.html", "text/html");
-            }
-            return Content($"<div>{pathInfo}</div>", "text/html");
+            await RenderElementKind(RequestUrlKind.Page, pathInfo);
         }
 	}
 }
