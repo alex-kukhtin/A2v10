@@ -9,12 +9,12 @@
     <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="app" style="padding:20px;background-color:papayawhip;width:250px;border:1px solid brown;margin:20px;">
+    <div id="app" style="padding:20px;width:250px;border:1px solid brown;margin:20px;">
         <h3>tree view component test</h3>
 
-        <ul class="tree-view" style="border:1px solid silver">
+        <ul class="tree-view" style="border:1px solid silver;height:200px;overflow:auto">
             <tree-item v-for="(itm, index) in items" 
-               :item="itm" :key="index" :name="'name'" 
+               :item="itm" :key="index" :name="'name'" icon="icon"
                 :subitems="'menu'" :click="click">
             </tree-item>
         </ul>
@@ -27,17 +27,16 @@
             var menu = [
                 {
                     name: "User", icon: "user", menu: [
-                        { name: "Sub User 1" },
-                        { name: "Sub User 2" }
+                        { name: "Sub User 1", icon:"folder" },
+                        { name: "Sub User 2", icon:"folder-open" }
                     ]
                 },
                 {
                     name: "Tasks", icon: "tasks", menu: [
-                        {name: "Sub Task 1" },
-                        {
-                            name: "Sub Task 2 with long line and wrapping text", menu: [
-                                { name: "Sub Sub Task 2.1 with long line and wrapping text" },
-                                { name: "Sub Sub Task 2.2" }
+                        {name: "Sub Task 1", icon:"folder" },
+                        {name: "Sub Task 2 with long line and wrapping text", icon:"folder-o", menu: [
+                                { name: "Sub Sub Task 2.1 with long line and wrapping text", icon:"users" },
+                                { name: "Sub Sub Task 2.2", icon:"book" }
                             ]
                         }
                     ]

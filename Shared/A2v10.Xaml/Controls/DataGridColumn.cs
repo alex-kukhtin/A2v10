@@ -13,11 +13,20 @@ namespace A2v10.Xaml
         public Object Content { get; set; }
         public String Header { get; set; }
 
+        public TextAlign Align { get; set; }
+
         internal void RenderColumn(RenderContext context)
         {
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(column, "header", nameof(Header), Header);
             MergeBindingAttribute(column, "content", nameof(Content), Content);
+
+            var alignProp = GetBinding(nameof(Align));
+            if (alignProp != null)
+                column.MergeAttribute(":align", alignProp.Path);
+            else if (Align != TextAlign.Default)
+                column.MergeAttribute("align", Align.ToString().ToLowerInvariant());
+
             column.RenderStart(context);
             column.RenderEnd(context);
         }

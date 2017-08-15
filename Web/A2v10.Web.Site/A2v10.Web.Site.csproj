@@ -127,6 +127,7 @@
     <Content Include="Less\Control.less" />
     <Content Include="Less\Dialog.less" />
     <Content Include="Less\ToolBar.less" />
+    <Content Include="Less\TreeView.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

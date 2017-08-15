@@ -1,0 +1,75 @@
+﻿
+@import "Variables.less";
+
+.tree-view {
+    margin: 0;
+    padding: 0;
+
+    li {
+        list-style: none;
+        position: relative;
+
+        .overlay {
+            display: inline-flex;
+            align-items: baseline;
+            width: 100%;
+            padding: 3px 0 5px 0;
+
+            .toggle {
+                display: inline-block;
+                flex-shrink: 0; /*fixed*/
+                width: 16px;
+                height: 16px;
+            }
+
+            &:hover {
+                background-color: @hover-bg-color;
+            }
+
+            .fa {
+                flex-shrink: 0; /*fixed*/
+                color: #8591a2;
+                font-size: 14px;
+                margin-right: 3px;
+            }
+        }
+
+        > ul {
+            margin: 0;
+            padding-left: 16px; /*indentation*/
+        }
+
+        &.collapsed {
+            > .overlay > .toggle {
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 6px; /*padding*/
+                    top: 8px;
+                    border: 5px solid transparent;
+                    border-left-color: @tv-icon-color;
+                }
+            }
+
+            ul {
+                display: none;
+            }
+        }
+
+        &.expanded {
+            > .overlay > .toggle {
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 4px; /*padding*/
+                    top: 8px;
+                    border: 4px solid transparent;
+                    border-right-color: @tv-icon-color;
+                    border-bottom-color: @tv-icon-color;
+                }
+            }
+        }
+    }
+}
+

@@ -12,6 +12,7 @@ namespace A2v10.Xaml
     {
         public Boolean Hover { get; set; }
         public Boolean Striped { get; set; }
+        public Boolean Bordered { get; set; }
 
         public Object ItemsSource { get; set; }
 
@@ -23,10 +24,13 @@ namespace A2v10.Xaml
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.Path);
+            //TODO: обобщить для булевских атрибутов (в UI Element)
             if (Hover)
                 dataGrid.MergeAttribute(":hover", "true");
             if (Striped)
                 dataGrid.MergeAttribute(":striped", "true");
+            if (Bordered)
+                dataGrid.MergeAttribute(":bordered", "true");
             dataGrid.RenderStart(context);
             foreach (var col in Columns)
                 col.RenderColumn(context);

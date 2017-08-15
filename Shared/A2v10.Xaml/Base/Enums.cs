@@ -1,6 +1,14 @@
 ﻿
 namespace A2v10.Xaml
 {
+    public enum TextAlign
+    {
+        Default = 0,
+        Left = Default,
+        Right,
+        Center 
+    }
+
     public enum Icon
     {
         NoIcon = 0,

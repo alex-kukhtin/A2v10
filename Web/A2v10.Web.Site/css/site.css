@@ -16,6 +16,7 @@ th {
 /* nav bar */
 /* data grid */
 /* toolbar */
+/* tree-view*/
 /* dialog */
 /* z-index */
 .bold {
@@ -108,9 +109,6 @@ header,
   margin: 0;
   height: 100%;
 }
-.nav-bar li a {
-  align-items: stretch;
-}
 .nav-bar li a:hover {
   text-decoration: none;
 }
@@ -202,6 +200,10 @@ table.data-grid th {
   padding: 4px 6px;
   vertical-align: top;
 }
+table.data-grid th {
+  background-color: #ddd;
+  color: #777;
+}
 table.data-grid tr.active {
   background-color: #cde6f7 !important;
 }
@@ -218,6 +220,64 @@ table.hover > tbody > tr:hover {
 .toolbar {
   display: block;
   background-color: #cfd6e5;
+}
+.tree-view {
+  margin: 0;
+  padding: 0;
+}
+.tree-view li {
+  list-style: none;
+  position: relative;
+}
+.tree-view li .overlay {
+  display: inline-flex;
+  align-items: baseline;
+  width: 100%;
+  padding: 3px 0 5px 0;
+}
+.tree-view li .overlay .toggle {
+  display: inline-block;
+  flex-shrink: 0;
+  /*fixed*/
+  width: 16px;
+  height: 16px;
+}
+.tree-view li .overlay:hover {
+  background-color: #fdf4bf;
+}
+.tree-view li .overlay .fa {
+  flex-shrink: 0;
+  /*fixed*/
+  color: #8591a2;
+  font-size: 14px;
+  margin-right: 3px;
+}
+.tree-view li > ul {
+  margin: 0;
+  padding-left: 16px;
+  /*indentation*/
+}
+.tree-view li.collapsed > .overlay > .toggle:after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  /*padding*/
+  top: 8px;
+  border: 5px solid transparent;
+  border-left-color: #8591a2;
+}
+.tree-view li.collapsed ul {
+  display: none;
+}
+.tree-view li.expanded > .overlay > .toggle:after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  /*padding*/
+  top: 8px;
+  border: 4px solid transparent;
+  border-right-color: #8591a2;
+  border-bottom-color: #8591a2;
 }
 .modal-stack {
   position: fixed;
@@ -249,61 +309,4 @@ table.hover > tbody > tr:hover {
 }
 .modal-header button {
   float: right;
-}
-.tree-view {
-  background-color: azure;
-  margin: 0;
-  padding: 0;
-}
-.tree-view .toggle {
-  display: inline-block;
-  width: 18px;
-}
-.tree-view li {
-  list-style: none;
-  position: relative;
-}
-.tree-view li .overlay {
-  display: inline-flex;
-  width: 100%;
-  align-items: baseline;
-  padding: 4px 0;
-}
-.tree-view li .overlay:hover {
-  background-color: #fdf4bf;
-}
-.tree-view li .overlay .fa {
-  color: #8591a2;
-  font-size: 15px;
-  background-color: yellow;
-}
-.tree-view li > ul {
-  margin: 0;
-  padding-left: 16px;
-  /*indentation*/
-}
-.tree-view li.collapsed > .overlay > .toggle {
-  background-color: lemonchiffon;
-}
-.tree-view li.collapsed > .overlay > .toggle:after {
-  content: '';
-  position: absolute;
-  left: 10px;
-  /*padding*/
-  top: 6px;
-  border: 6px solid transparent;
-  border-left-color: fuchsia;
-}
-.tree-view li.collapsed ul {
-  display: none;
-}
-.tree-view li.expanded > .overlay > .toggle:after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  /*padding*/
-  top: 6px;
-  border: 5px solid transparent;
-  border-right-color: fuchsia;
-  border-bottom-color: fuchsia;
 }
