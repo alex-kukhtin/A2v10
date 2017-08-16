@@ -56,13 +56,6 @@ header, .header {
 
 @import "Nav.less";
 
-.load-indicator {
-    position: absolute;
-    left: 0; right: 0;
-    top: 30px;
-    height: 4px;
-    background-color: orange;
-}
 
 .side-bar {
     position: absolute;
@@ -169,5 +162,38 @@ pre {
         overflow: auto;
         padding: 10px;
         max-height: 250px;
+    }
+}
+
+
+.load-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: @header-height - 2px;
+    height: 4px;
+    width: 100%;
+    overflow: hidden;
+    background-color: darken(@navbar-bg-color, 10%);
+
+    &:before {
+        content: '';
+        display: block;
+        position: relative;
+        left: 0;
+        width: 50%;
+        height: 4px;
+        background-color: gold;
+        animation: loading 2s linear infinite;
+    }
+}
+
+@keyframes loading {
+    from {
+        left: 0;
+    }
+
+    to {
+        left: 100%;
     }
 }

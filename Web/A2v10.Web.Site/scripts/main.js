@@ -54,7 +54,7 @@
     function notBlank(val) {
         if (!val)
             return false;
-        switch (typeof (val)) {
+        switch (typeof val) {
             case 'string':
                 return val !== '';
         }
@@ -72,7 +72,7 @@
         isNumber: isNumber,
         toString: toString,
         notBlank: notBlank
-    }
+    };
 })();
 
 (function() {
@@ -636,7 +636,7 @@
 
     const dataGridColumn = {
         name: 'data-grid-column',
-        template: '<th :class="cssClass"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
+        template: '<th :class="cssClass" @click.stop.prevent="doSort"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
         props: {
             header: String,
             content: String,
@@ -644,13 +644,23 @@
             id: String,
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
-            validate: String
+            validate: String,
+            sortable: { type: Boolean, default: undefined }
+        },
+        data() {
+            return {
+                dir: null
+            };
         },
         created() {
-            let addColumn = this.$parent.$addColumn;
-            addColumn(this);
+            this.$parent.$addColumn(this);
         },
         computed: {
+            isSortable() {
+                if (!this.content)
+                    return false;
+                return typeof this.sortable === 'undefined' ? this.$parent.sortable : this.sortable;
+            },
             template() {
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
             },
@@ -658,8 +668,19 @@
                 let cssClass = '';
                 if (this.align !== 'left')
                     cssClass += (' text-' + this.align).toLowerCase();
+                if (this.isSortable) {
+                    cssClass += ' sort';
+                    if (this.dir)
+                        cssClass += ' ' + this.dir;
+                }
                 cssClass = cssClass.trim();
                 return cssClass === '' ? null : cssClass;
+            }
+        },
+        methods: {
+            doSort() {
+                if (this.isSortable)
+                    this.$parent.$doSort(this);
             }
         }
     };
@@ -760,9 +781,12 @@
     Vue.component('data-grid', {
         props: {
             'items-source': [Object, Array],
-            bordered: { type: Boolean, default: false },
-            striped: { type: Boolean, default: false },
-            hover: { type: Boolean, default: false }
+            bordered: Boolean,
+            striped: Boolean,
+            hover: { type: Boolean, default: false },
+            sortable: { type: Boolean, default: false },
+            // callbacks
+            onsort: Function
         },
         template: dataGridTemplate,
         components: {
@@ -787,6 +811,14 @@
             }
         },
         methods: {
+            $doSort(column) {
+                let ss = column.dir || 'asc';
+                this.columns.forEach((col) => { col.dir = null; });
+                column.dir = ss === 'asc' ? "desc" : "asc";
+                // todo: client/server sorting
+                if (this.onsort)
+                    this.onsort(column.content, column.dir);
+            },
             $addColumn(column) {
                 this.columns.push(column);
             }

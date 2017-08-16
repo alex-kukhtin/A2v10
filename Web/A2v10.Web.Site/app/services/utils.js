@@ -14,7 +14,7 @@
     function notBlank(val) {
         if (!val)
             return false;
-        switch (typeof (val)) {
+        switch (typeof val) {
             case 'string':
                 return val !== '';
         }
@@ -32,5 +32,5 @@
         isNumber: isNumber,
         toString: toString,
         notBlank: notBlank
-    }
+    };
 })();

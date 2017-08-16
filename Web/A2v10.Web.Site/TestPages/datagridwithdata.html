@@ -15,6 +15,7 @@
         <div>
             <div class="toolbar">
                 <button @click.stop.prevent="Customers.$append()"><i class="fa fa-plus"></i> add row</button>
+                <button @click.stop.prevent="$append100()"><i class="fa fa-plus"></i> add 100 rows</button>
                 <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
                 <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="fa fa-save"></i> save</button>
                 <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
@@ -24,10 +25,12 @@
                 <label v-text="'dirty:' + $isDirty + ' pristine:' + $isPristine"></label>
                 <textbox :item="MyElement" prop="Name"></textbox>
             </div>
-            <data-grid :items-source="Customers" 
+            <data-grid :items-source="$Customers10" 
                        :bordered="true" 
                        :striped="true" 
                        :hover="true"
+                       :sortable="true"
+                       :onsort="$onSort"
                        :selected="Customers.selected">
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
@@ -36,7 +39,7 @@
                 <data-grid-column header="Amount" content="Amount" :editable="true" align="right"></data-grid-column>
                 <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true" align="center"></data-grid-column>
-                <data-grid-column id="clr" icon="trash" align="center"></data-grid-column>
+                <data-grid-column id="clr" icon="trash" align="center" :sortable="false"></data-grid-column>
                 <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
                     <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i>
@@ -161,6 +164,11 @@
             $isPristine() {
                 return !this.$data.$dirty; 
             }
+        },
+        methods: {
+            $onSort(column, dir) {
+                alert('sort on ' + column + ':' + dir);
+            }
         }
     });
 
@@ -176,6 +184,22 @@
     var vm = new BaseVue({
         el: "#test-app",
         data: reactiveData,
+        computed:
+        {
+            // Client pagination !!!!
+            $Customers10() {
+                return this.Customers.slice(0, 10);
+            }
+        },
+        methods: {
+            $append100() {
+                let arr = this.Customers;
+                let newArr = [];
+                for (let i = 0; i < 100; i++)
+                    newArr.push(arr.$new());
+                arr.splice(arr.length, 0, ...newArr);
+            }
+        }
     });
 
     //vm._root_ctor = TRoot;
