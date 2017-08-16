@@ -11,11 +11,21 @@
 <body>
     <div id="app" style="padding:20px;width:250px;border:1px solid brown;margin:20px;">
         <h3>tree view component test</h3>
-
-        <ul class="tree-view" style="border:1px solid silver;height:200px;overflow:auto">
+        <div style="margin-bottom:15px">
+            <label>
+                <input type="checkbox" v-model="hasIcon" />
+                Has Icon
+            </label>
+            <label>
+                <input type="checkbox" v-model="wrapLabel" />
+                Wrap Label
+            </label>
+            <button @click="addElem">Add element</button>
+        </div>
+        <ul class="tree-view" style="border:1px solid silver;height:200px;">
             <tree-item v-for="(itm, index) in items" 
-               :item="itm" :key="index" :name="'name'" icon="icon"
-                :subitems="'menu'" :click="click">
+               :item="itm" :key="index" :label="'name'" icon="icon" title="name"
+               :subitems="'menu'" :click="click" :is-active="isActive" :has-icon="hasIcon" :wrap-label="wrapLabel">
             </tree-item>
         </ul>
     </div>
@@ -46,11 +56,20 @@
             new Vue({
                 el: "#app",
                 data: {
-                    items: menu
+                    items: menu,
+                    activeItem: null,
+                    hasIcon: true,
+                    wrapLabel: true
                 },
                 methods: {
                     click: function (item) {
-                        alert('click:' + item.name);
+                        this.activeItem = item;
+                    },
+                    isActive: function (item) {
+                        return item === this.activeItem;
+                    },
+                    addElem: function () {
+                        this.items.push({name:"from script", icon:"bug"})
                     }
                 }
             });

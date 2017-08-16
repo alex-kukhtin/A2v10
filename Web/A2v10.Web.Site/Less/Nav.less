@@ -1,0 +1,40 @@
+﻿@import "Variables.less";
+
+.nav-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: @header-height;
+    height: @navbar-height;
+    line-height: @navbar-height;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+    background-color: @navbar-bg-color;
+    text-transform: uppercase;
+    display: flex;
+
+    li {
+        display: inline-flex;
+        align-items: stretch;
+        list-style: none;
+        padding: 0 8px;
+        margin: 0;
+        height: 100%;
+
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+
+        &:hover {
+            background-color: @navbar-highlight-color;
+        }
+
+        &.active a {
+            color: @link-hover-color;
+            border-bottom: 3px solid @link-color;
+        }
+    }
+}

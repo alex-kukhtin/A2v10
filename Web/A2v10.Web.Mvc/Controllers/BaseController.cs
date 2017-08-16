@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace A2v10.Web.Mvc.Controllers
@@ -46,8 +47,16 @@ namespace A2v10.Web.Mvc.Controllers
             }
             catch (Exception ex)
             {
-                Response.Output.Write($"$<div>{ex.Message}</div>");
+                WriteException(ex);
             }
+        }
+
+        void WriteException(Exception ex)
+        {
+            if (ex.InnerException != null)
+                ex = ex.InnerException;
+            var msg = Server.HtmlEncode(ex.Message);
+            Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
         }
 
         protected async Task Render(RequestView rw)
@@ -77,11 +86,17 @@ namespace A2v10.Web.Mvc.Controllers
                 // write markup
                 Response.Output.Write(strWriter.ToString());
             }
+            await WriteModelScript(rw, model, rootId);
+        }
+
+
+        async Task WriteModelScript(RequestView rw, IDataModel model, String rootId)
+        {
+            String dataModelText = "null";
             if (model != null)
             {
                 // write model script
                 String templateText = null;
-                String dataModelText = "null";
                 if (rw.template != null)
                 {
                     templateText = await _host.ReadTextFile(rw.Path, rw.template + ".js");
@@ -95,6 +110,7 @@ namespace A2v10.Web.Mvc.Controllers
                     NullValueHandling = NullValueHandling.Ignore
                 };
                 dataModelText = JsonConvert.SerializeObject(model.Root, jss);
+            }
 
                 //Response.Output.Write(model.GetModelScript(rootId, templateFile));
                 const String script =
@@ -106,7 +122,6 @@ namespace A2v10.Web.Mvc.Controllers
         return $(DataModelText);
     };
 
-
     new Vue({
         el:'#$(RootId)',
         data: getModelData()
@@ -114,11 +129,10 @@ namespace A2v10.Web.Mvc.Controllers
 })();
 </script>
 ";
-                var sb = new StringBuilder(script);
-                sb.Replace("$(RootId)", rootId);
-                sb.Replace("$(DataModelText)", dataModelText);
-                Response.Output.Write(sb.ToString());
-            }
+            var sb = new StringBuilder(script);
+            sb.Replace("$(RootId)", rootId);
+            sb.Replace("$(DataModelText)", dataModelText);
+            Response.Output.Write(sb.ToString());
         }
     }
 }

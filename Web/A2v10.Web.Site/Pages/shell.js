@@ -4,7 +4,6 @@
 /*
 TODO:
 3. SideBar - разные режимы
-4. SideBar - дерево
 */
 
 /* routing rules 
@@ -23,16 +22,22 @@ TODO:
         { title: "Home", url: "home" },
         {
             title: 'Справочники', url: 'catalog', menu: [
-                { title: "Suppliers", url: 'suppliers' },
-                { title: "Customers", url: 'customers' },
-                { title: "Edit 3 segment", url: 'edit/5' }
+                { title: "Suppliers", url: 'suppliers', icon:'bank'},
+                { title: "Customers", url: 'customers', icon:'tasks'},
+                { title: "Edit 3 segment", url: 'edit/5', icon:'building' },
+                {
+                    title: "Menu Folder", icon: 'folder', menu: [
+                        { title: "Suppliers 2 (with long text <b>bold</b> escaped <script></script>)", url: 'suppliers1', icon: 'bank' },
+                        { title: "Customers 2", url: 'customers2'}
+                    ]
+                }
             ]
         },
         {
             title: 'Документы', url: 'document', menu: [
-                { title: "Incoming", url: 'incoming' },
-                { title: "Outgoing", url: 'outgoing' },
-                { title: "edit 4 segment", url: 'outgoing/edit/2' }
+                { title: "Incoming", url: 'incoming', icon: 'file' },
+                { title: "Outgoing", url: 'outgoing', icon: 'file-o'},
+                { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'folder-open-o' }
             ]
         }
     ];
@@ -122,7 +127,17 @@ TODO:
 
     const sideBar = {
         // TODO: разные варианты меню
-        template: '<ul class="side-menu"><li v-for="itm in sideMenu" :key="itm.url" :class="{active: isActive(itm)}" @click.stop.prevent="navigate(itm)"><a href v-text="itm.title"></a></li></ul>',
+        template: `
+<div class="side-bar">
+    <a href role="button" class="fa fa-fw collapse-handle" @click.stop.prevent="toggle"></a>
+    <ul class="tree-view">
+        <tree-item v-for="(itm, index) in sideMenu" 
+            :item="itm" :key="index" label="title" icon="icon" title="title"
+            :subitems="'menu'" :click="navigate" :is-active="isActive" :has-icon="true" :wrap-label="true">
+        </tree-item>
+    </ul>
+</div>
+`,
         props: {
             menu: Array
         },
@@ -142,6 +157,9 @@ TODO:
                 window.history.pushState(null, itm.title, newUrl);
                 new Location().saveMenuUrl();
                 bus.$emit('route');
+            },
+            toggle() {
+                alert('yet not implemented');
             }
         },
         created: function () {
@@ -193,7 +211,6 @@ TODO:
                     case 2: tail = '/index/0'; break;
                     case 3: tail = '/index/0'; break;
                 }
-
 
                 me.currentView = "/_page" + window.location.pathname + tail;
                 me.cssClass =
@@ -253,9 +270,6 @@ TODO:
         methods: {
             closeModal() {
                 bus.$emit('modalClose');
-            },
-            keyUp() {
-                alert('key up');
             }
         },
         created() {

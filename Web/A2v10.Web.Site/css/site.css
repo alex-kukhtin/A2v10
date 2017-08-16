@@ -127,27 +127,35 @@ header,
   height: 4px;
   background-color: orange;
 }
-.side-menu {
+.side-bar {
   position: absolute;
   left: 0;
   top: 64px;
   bottom: 22px;
   width: 250px;
-  background-color: white;
-  border-right: 1px solid silver;
-  padding: 0;
+  padding: 16px 0 0 0;
   margin: 0;
+  border-right: 1px solid #cfd6e5;
 }
-.side-menu li {
-  padding: 4px;
-  list-style: none;
-  cursor: pointer;
+.side-bar .tree-view {
+  height: 100%;
 }
-.side-menu li:hover {
-  background-color: #fdf4bf;
+.side-bar .collapse-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  padding: 2px 4px;
+  color: #bdc5d8;
+  font-size: 12px;
 }
-.side-menu li.active {
-  background-color: #cde6f7;
+.side-bar .collapse-handle:hover {
+  color: #0d82f8;
+  text-decoration: none;
+}
+.side-bar .collapse-handle:before {
+  content: "\f053";
+  /*fa-chevron-left*/
 }
 footer,
 .footer {
@@ -158,7 +166,7 @@ footer,
   height: 22px;
   line-height: 22px;
   background-color: #f8ffe8;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #bdc5d8;
   z-index: 1020;
   padding-left: 8px;
 }
@@ -192,7 +200,7 @@ pre {
   outline: 1px solid #ff6a00;
 }
 table.data-grid {
-  border: 1px solid #ccc;
+  border: 1px solid #bdc5d8;
   cursor: default;
 }
 table.data-grid td,
@@ -209,7 +217,7 @@ table.data-grid tr.active {
 }
 table.bordered td,
 table.bordered th {
-  border: 1px solid #ccc;
+  border: 1px solid #bdc5d8;
 }
 table.striped > tbody > tr:nth-of-type(odd) {
   background-color: rgba(224, 224, 224, 0.25);
@@ -224,33 +232,47 @@ table.hover > tbody > tr:hover {
 .tree-view {
   margin: 0;
   padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .tree-view li {
   list-style: none;
   position: relative;
+  cursor: pointer;
 }
-.tree-view li .overlay {
+.tree-view li.active > .overlay {
+  background-color: #cde6f7;
+}
+.tree-view li.active > .overlay:hover {
+  background-color: #cde6f7;
+}
+.tree-view li > .overlay {
   display: inline-flex;
   align-items: baseline;
   width: 100%;
   padding: 3px 0 5px 0;
 }
-.tree-view li .overlay .toggle {
+.tree-view li > .overlay .toggle {
   display: inline-block;
   flex-shrink: 0;
   /*fixed*/
   width: 16px;
   height: 16px;
 }
-.tree-view li .overlay:hover {
+.tree-view li > .overlay:hover {
   background-color: #fdf4bf;
 }
-.tree-view li .overlay .fa {
+.tree-view li > .overlay .fa {
   flex-shrink: 0;
   /*fixed*/
   color: #8591a2;
   font-size: 14px;
   margin-right: 3px;
+}
+.tree-view li > .overlay .no-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .tree-view li > ul {
   margin: 0;
@@ -262,7 +284,7 @@ table.hover > tbody > tr:hover {
   position: absolute;
   left: 6px;
   /*padding*/
-  top: 8px;
+  top: 9px;
   border: 5px solid transparent;
   border-left-color: #8591a2;
 }
@@ -274,7 +296,7 @@ table.hover > tbody > tr:hover {
   position: absolute;
   left: 4px;
   /*padding*/
-  top: 8px;
+  top: 9px;
   border: 4px solid transparent;
   border-right-color: #8591a2;
   border-bottom-color: #8591a2;
@@ -297,7 +319,7 @@ table.hover > tbody > tr:hover {
   margin: 70px auto 30px auto;
   width: 600px;
   height: auto;
-  border: 1px solid #ccc;
+  border: 1px solid #bdc5d8;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   background-color: white;
 }
@@ -305,8 +327,31 @@ table.hover > tbody > tr:hover {
   background-color: #fff29d;
   padding: 8px;
   font-weight: bold;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #bdc5d8;
 }
 .modal-header button {
   float: right;
+}
+.app-exception {
+  margin: 20% auto;
+  width: 50%;
+  height: auto;
+  text-align: center;
+  z-index: 100;
+  position: relative;
+  padding: 0;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #dca7a7;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.app-exception .message {
+  padding: 15px 10px;
+  font-weight: bold;
+}
+.app-exception .stack-trace {
+  border-top: 1px solid #a94442;
+  overflow: auto;
+  padding: 10px;
+  max-height: 250px;
 }

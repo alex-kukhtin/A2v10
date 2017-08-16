@@ -54,44 +54,7 @@ header, .header {
     top: 32px;
 }
 
-.nav-bar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: @header-height;
-    height: @navbar-height;
-    line-height: @navbar-height;
-    font-size: 15px;
-    padding: 0;
-    margin: 0;
-    background-color: @navbar-bg-color;
-    text-transform: uppercase;
-    display: flex;
-
-    li {
-        display: inline-flex;
-        align-items: stretch;
-        list-style: none;
-        padding: 0 8px;
-        margin: 0;
-        height: 100%;
-
-        a {
-            &:hover {
-                text-decoration: none;
-            }
-        }
-
-        &:hover {
-            background-color: @navbar-highlight-color;
-        }
-
-        &.active a {
-            color: @link-hover-color;
-            border-bottom: 3px solid @link-color;
-        }
-    }
-}
+@import "Nav.less";
 
 .load-indicator {
     position: absolute;
@@ -101,28 +64,36 @@ header, .header {
     background-color: orange;
 }
 
-.side-menu {
+.side-bar {
     position: absolute;
     left: 0;
     top: @header-height + @navbar-height;
     bottom: @footer-height;
     width: 250px;
-    background-color: white;
-    border-right: 1px solid silver;
-    padding: 0;
+    padding: 16px 0 0 0;
     margin: 0;
+    border-right: 1px solid @light-brd-color;
 
-    li {
-        padding: 4px;
-        list-style: none;
-        cursor: pointer;
+    .tree-view {
+        height: 100%;
+    }
+
+    .collapse-handle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: auto;
+        padding: 2px 4px;
+        color: @default-brd-color;
+        font-size:12px;
 
         &:hover {
-            background-color: @hover-bg-color;
+            color: @link-hover-color;
+            text-decoration: none;
         }
 
-        &.active {
-            background-color: @active-bg-color;
+        &:before {
+            content: "\f053"; /*fa-chevron-left*/
         }
     }
 }
@@ -171,3 +142,32 @@ pre {
 @import "TreeView.less";
 @import "Dialog.less";
 
+@danger-txt-color: #a94442;
+@danger-bg-color: #f2dede;
+@danger-brd-color: darken(@danger-bg-color, 15%);
+
+.app-exception {
+    margin: 20% auto;
+    width: 50%;
+    height: auto;
+    text-align: center;
+    z-index: 100;
+    position: relative;
+    padding: 0;
+    background-color: @danger-bg-color;
+    color: @danger-txt-color;
+    border: 1px solid @danger-brd-color;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+    .message {
+        padding: 15px 10px;
+        font-weight: bold;
+    }
+
+    .stack-trace {
+        border-top: 1px solid #a94442;
+        overflow: auto;
+        padding: 10px;
+        max-height: 250px;
+    }
+}

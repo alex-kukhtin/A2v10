@@ -1,35 +1,36 @@
 [
-  {
-    "outputFileName": "Scripts/main.js",
-    "inputFiles": [
-      "app/app.js",
-      "app/platform/webvue.js",
-      "app/services/utils.js",
-      "app/services/log.js",
-      "app/services/http.js",
-      "app/services/validators.js",
-      "app/services/datamodel.js",
-      "app/components/include.js",
-      "app/components/validator.js",
-      "app/components/control.js",
-      "app/components/textbox.js",
-      "app/components/datagrid.js",
-      "app/components/modal.js"
-    ],
-    "minify": { "enabled": false }
-  },
-  {
-    "outputFileName": "Scripts/vue.min.js",
-    "inputFiles": [
-      "bower_components/vue/dist/vue.min.js"
-    ],
-    "minify": { "enabled": false }
-  },
-  {
-    "outputFileName": "Scripts/vue.js",
-    "inputFiles": [
-      "bower_components/vue/dist/vue.js"
-    ],
-    "minify": { "enabled": false }
-  }
+	{
+		"outputFileName": "Scripts/main.js",
+		"inputFiles": [
+			"app/app.js",
+			"app/platform/webvue.js",
+			"app/services/utils.js",
+			"app/services/log.js",
+			"app/services/http.js",
+			"app/services/validators.js",
+			"app/services/datamodel.js",
+			"app/components/include.js",
+			"app/components/validator.js",
+			"app/components/control.js",
+			"app/components/textbox.js",
+			"app/components/datagrid.js",
+			"app/components/treeview.js",
+			"app/components/modal.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/vue.min.js",
+		"inputFiles": [
+			"bower_components/vue/dist/vue.min.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/vue.js",
+		"inputFiles": [
+			"bower_components/vue/dist/vue.js"
+		],
+		"minify": { "enabled": false }
+	}
 ]
