@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    const bus = require('eventBus');
+    const store = require('store');
 
     const modalComponent = {
         template: `
@@ -20,7 +20,7 @@
                 keyUpHandler: function () {
                     // escape
                     if (event.which === 27) {
-                        bus.$emit('modalClose', false);
+                        store.$emit('modalClose', false);
                         event.stopPropagation();
                         event.preventDefault();
                     }
@@ -29,7 +29,7 @@
         },
         methods: {
             closeModal(result) {
-                bus.$emit('modalClose', result);
+                store.$emit('modalClose', result);
             }
         },
         created() {

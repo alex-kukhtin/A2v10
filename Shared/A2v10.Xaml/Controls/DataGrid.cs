@@ -13,6 +13,7 @@ namespace A2v10.Xaml
         public Boolean Hover { get; set; }
         public Boolean Striped { get; set; }
         public Boolean Bordered { get; set; }
+        public Boolean Sort { get; set; }
 
         public Object ItemsSource { get; set; }
 
@@ -24,16 +25,19 @@ namespace A2v10.Xaml
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.Path);
-            //TODO: обобщить для булевских атрибутов (в UI Element)
-            if (Hover)
-                dataGrid.MergeAttribute(":hover", "true");
-            if (Striped)
-                dataGrid.MergeAttribute(":striped", "true");
-            if (Bordered)
-                dataGrid.MergeAttribute(":bordered", "true");
+            MergeBoolAttribute(dataGrid, nameof(Hover), Hover);
+            MergeBoolAttribute(dataGrid, nameof(Striped), Striped);
+            MergeBoolAttribute(dataGrid, nameof(Bordered), Bordered);
+            MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
             dataGrid.RenderStart(context);
+            Int32 colIndex = 0;
             foreach (var col in Columns)
-                col.RenderColumn(context);
+            {
+                //using (context.NewScope($"col{++colIndex}"))
+                //{
+                    col.RenderColumn(context);
+                //}
+            }
             dataGrid.RenderEnd(context);
         }
 

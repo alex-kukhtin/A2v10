@@ -12,6 +12,8 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
+    const store = require('store');
+
     const dataGridTemplate = `
 <table :class="cssClass">
     <thead>
@@ -39,21 +41,29 @@
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
             validate: String,
-            sortable: { type: Boolean, default: undefined }
+            sort: { type: Boolean, default: undefined }
         },
         data() {
             return {
-                dir: null
+                dirClient: null
             };
         },
         created() {
             this.$parent.$addColumn(this);
         },
         computed: {
+            dir() {
+                // TODO: client/server
+                let q = store.query;
+                if (q.sort === this.content) {
+                    return q.dir;
+                }
+                return null;
+            },
             isSortable() {
                 if (!this.content)
                     return false;
-                return typeof this.sortable === 'undefined' ? this.$parent.sortable : this.sortable;
+                return typeof this.sort === 'undefined' ? this.$parent.sort : this.sort;
             },
             template() {
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
@@ -73,8 +83,16 @@
         },
         methods: {
             doSort() {
-                if (this.isSortable)
-                    this.$parent.$doSort(this);
+                if (!this.isSortable)
+                    return;
+                // TODO: client/server
+                let q = store.query;
+                let qdir = q.dir;
+                if (q.sort === this.content)
+                    qdir = qdir === 'asc' ? 'desc' : 'asc';
+                store.query = { sort: this.content, dir: qdir };
+                //TODO: client
+                //this.$parent.$doSort(this);
             }
         }
     };
@@ -178,7 +196,7 @@
             bordered: Boolean,
             striped: Boolean,
             hover: { type: Boolean, default: false },
-            sortable: { type: Boolean, default: false },
+            sort: { type: Boolean, default: false },
             // callbacks
             onsort: Function
         },
@@ -206,9 +224,9 @@
         },
         methods: {
             $doSort(column) {
-                let ss = column.dir || 'asc';
-                this.columns.forEach((col) => { col.dir = null; });
-                column.dir = ss === 'asc' ? "desc" : "asc";
+                //let ss = column.dir || 'asc';
+                //this.columns.forEach((col) => { col.dir = null; });
+                //column.dir = ss === 'asc' ? "desc" : "asc";
                 // todo: client/server sorting
                 if (this.onsort)
                     this.onsort(column.content, column.dir);

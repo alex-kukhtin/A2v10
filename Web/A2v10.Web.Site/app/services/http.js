@@ -2,27 +2,27 @@
 /* http.js */
 (function () {
 
-    let eventBus = require('eventBus');
+    let store = require('store');
 
     function doRequest(method, url, data) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             
             xhr.onload = function (response) {
-                eventBus.$emit('endRequest', url);
+                store.$emit('endRequest', url);
                 if (xhr.status === 200)
                     resolve(xhr.responseText);
                 else
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
-                eventBus.$emit('endRequest', url);
+                store.$emit('endRequest', url);
                 reject(xhr.statusText);
             };
             xhr.open(method, url, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json, text/html');
-            eventBus.$emit('beginRequest', url);
+            store.$emit('beginRequest', url);
             xhr.send(data);
         });
     }

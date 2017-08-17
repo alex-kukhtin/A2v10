@@ -29,7 +29,7 @@
                        :bordered="true" 
                        :striped="true" 
                        :hover="true"
-                       :sortable="true"
+                       :sort="true"
                        :onsort="$onSort"
                        :selected="Customers.selected">
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
@@ -74,7 +74,7 @@
 <script type="text/javascript">
 (function () {
     const cmn = require('datamodel');
-
+    const store = require('store');
     // ctor
     function TCustomer(source, path, parent) {
         cmn.createObject(this, source, path, parent);
@@ -167,7 +167,25 @@
         },
         methods: {
             $onSort(column, dir) {
-                alert('sort on ' + column + ':' + dir);
+                //alert('sort on ' + column + ':' + dir);
+                //location.hash = { sort }
+                let q = store.query;
+                let qdir = q.dir;
+                if (q.sort === column)
+                    qdir = qdir === 'asc' ? 'desc' : 'asc';
+                store.query = { sort: column, dir: qdir };
+                /*
+                var parsing = document.createElement('a');
+                parsing.setAttribute('href', window.location.href);
+                let search = parsing.search ? parsing.search.replace(/^\?/, '') : '';
+                //alert(search);
+                let queryString = `?sort=${column}&dir=${dir}`;
+                let newUrl = window.location.path + queryString;
+                window.history.pushState(null, null, newUrl);
+                store.query.sort = column;
+                store.$emit('route');
+                */
+                //window.history.pushState()
             }
         }
     });

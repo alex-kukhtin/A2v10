@@ -204,6 +204,11 @@ table.data-grid th {
   background-color: #f5f5f5;
   color: #555;
   position: relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 table.data-grid th.sort {
   cursor: pointer;
@@ -214,17 +219,17 @@ table.data-grid th.sort:hover {
 table.data-grid th.sort.desc:after {
   content: '';
   position: absolute;
-  left: calc(50% - 6px);
+  left: calc(50% - 5px);
   top: 0;
-  border: 6px solid transparent;
+  border: 5px solid transparent;
   border-top-color: #999;
 }
 table.data-grid th.sort.asc:after {
   content: '';
   position: absolute;
-  left: calc(50% - 6px);
-  top: -6px;
-  border: 6px solid transparent;
+  left: calc(50% - 5px);
+  top: -5px;
+  border: 5px solid transparent;
   border-bottom-color: #999;
 }
 table.data-grid tr.active {
@@ -362,7 +367,8 @@ table.hover > tbody > tr:hover {
 }
 .app-exception .message {
   padding: 15px 10px;
-  font-weight: bold;
+  font-weight: normal;
+  white-space: pre-line;
 }
 .app-exception .stack-trace {
   border-top: 1px solid #a94442;

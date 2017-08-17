@@ -115,6 +115,11 @@ namespace A2v10.Web.Mvc.Models
     public abstract class RequestView : RequestBase
     {
         public abstract String GetView();
+
+        public String GetRelativePath(String extension)
+        {
+            return $"~/{Path}/{GetView()}{extension}";
+        }
     }
 
     public class RequestAction : RequestView

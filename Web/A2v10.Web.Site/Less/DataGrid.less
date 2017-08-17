@@ -18,7 +18,7 @@ table.data-grid {
         background-color: @dg-header-bg-color;
         color: @dg-header-txt-color;
         position: relative;
-
+        .noselect();
         &.sort {
             //background-color: aliceblue;
             cursor: pointer;
@@ -31,18 +31,18 @@ table.data-grid {
         &.sort.desc:after {
             content: '';
             position: absolute;
-            left: ~"calc(50% - 6px)";
+            left: ~"calc(50% - 5px)";
             top: 0;
-            border: 6px solid transparent;
+            border: 5px solid transparent;
             border-top-color: #999;
         }
 
         &.sort.asc:after {
             content: '';
             position: absolute;
-            left: ~"calc(50% - 6px)";
-            top: -6px;
-            border: 6px solid transparent;
+            left: ~"calc(50% - 5px)";
+            top: -5px;
+            border: 5px solid transparent;
             border-bottom-color: #999;
         }
     }

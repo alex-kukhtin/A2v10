@@ -72,19 +72,40 @@ namespace A2v10.Web.Mvc.Controllers
                     UserId = UserId
                 });
             }
-            String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".xaml");
+            // try HTML
             String rootId = "el" + Guid.NewGuid().ToString();
-            using (var strWriter = new StringWriter())
-            {
-                var ri = new RenderInfo()
+            String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".html");
+            bool bRendered = false;
+            if (System.IO.File.Exists(fileName)) {
+                using (var tr = new StreamReader(fileName))
                 {
-                    RootId = rootId,
-                    FileName = fileName,
-                    Writer = strWriter
-                };
-                _renderer.Render(ri);
-                // write markup
-                Response.Output.Write(strWriter.ToString());
+                    String htmlText = await tr.ReadToEndAsync();
+                    htmlText = htmlText.Replace("$(RootId)", rootId);
+                    Response.Output.Write(htmlText);
+                    bRendered = true;
+                }
+            } else {
+                // render XAML
+                fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".xaml");
+                if (System.IO.File.Exists(fileName))
+                {
+                    using (var strWriter = new StringWriter())
+                    {
+                        var ri = new RenderInfo()
+                        {
+                            RootId = rootId,
+                            FileName = fileName,
+                            Writer = strWriter
+                        };
+                        _renderer.Render(ri);
+                        // write markup
+                        Response.Output.Write(strWriter.ToString());
+                        bRendered = true;
+                    }
+                }
+            }
+            if (!bRendered) {
+                throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".html")}\n{rw.GetRelativePath(".xaml")}");
             }
             await WriteModelScript(rw, model, rootId);
         }

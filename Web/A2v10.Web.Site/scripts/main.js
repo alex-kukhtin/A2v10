@@ -30,12 +30,107 @@
         Vue.set(target, prop, value);
     }
 
+    function Location() {
+        this.wl = window.location.pathname.split('/');
+        this.search = window.location.search.substring(1);
+    }
+
+    Location.current = function () {
+        return new Location();
+    }
+
+    Location.prototype.routeLength = function () {
+        return this.wl.length;
+    };
+
+    Location.prototype.segment = function (no) {
+        let wl = this.wl;
+        return wl.length > no ? wl[no].toLowerCase() : '';
+    };
+
+    Location.prototype.saveMenuUrl = function () {
+        let storage = window.localStorage;
+        if (!storage)
+            return;
+        let s1 = this.segment(1);
+        let s2 = this.segment(2);
+        let search = this.search;
+        if (s1) {
+            let keym = 'menu:' + s1;
+            let keys = 'menusearch:' + s1;
+            (s2) ? storage.setItem(keym, s2) : storage.removeItem(keym);
+            (search) ? storage.setItem(keys, search) : storage.removeItem(keys);
+        }
+        return this;
+    };
+
+    function parseQueryString(str) {
+        var obj = {};
+        str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
+            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return obj;
+    }
+
+    var store = new Vue({
+        data: {
+            sort: 'Name',
+            dir: 'asc'
+        },
+        computed: {
+            query: {
+                get() {
+                    // todo: get from window.query
+                    let query = window.location.search.substring(1); // skip '?'
+                    let qs = parseQueryString(query);
+                    this.sort = qs.sort;
+                    this.dir = qs.dir;
+                    //return qs;
+                    //console.dir(qs);
+                    return {
+                        sort: this.sort,
+                        dir: this.dir
+                    };
+                },
+                set(value) {
+                    // set window.query
+                    this.sort = value.sort;
+                    this.dir = value.dir;
+                    let newUrl = window.location.pathname;
+                    newUrl += `?sort=${this.sort}&dir=${this.dir}`;
+                    window.history.pushState(null, null, newUrl);
+                    Location.current().saveMenuUrl();
+                }
+            }
+        },
+        methods: {
+            location() {
+                return Location.current();
+            },
+            navigate(url) {
+                window.history.pushState(null, null, url);
+                let loc = Location.current();
+                this.$emit('route', loc);
+            },
+            navigateMenu(url) {
+                window.history.pushState(null, null, url);
+                let loc = Location.current();
+                loc.saveMenuUrl();
+                this.$emit('route', loc);
+            },
+            navigateCurrent() {
+                let loc = Location.current();
+                loc.saveMenuUrl();
+                this.$emit('route', loc);
+            }
+        }
+    });
 
     app.modules['platform'] = {
         set: set
     };
 
-    app.modules['eventBus'] = new Vue();
+    app.modules['store'] = store;
 })();
 
 /*20170813-7001*/
@@ -86,27 +181,27 @@
 /* http.js */
 (function () {
 
-    let eventBus = require('eventBus');
+    let store = require('store');
 
     function doRequest(method, url, data) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             
             xhr.onload = function (response) {
-                eventBus.$emit('endRequest', url);
+                store.$emit('endRequest', url);
                 if (xhr.status === 200)
                     resolve(xhr.responseText);
                 else
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
-                eventBus.$emit('endRequest', url);
+                store.$emit('endRequest', url);
                 reject(xhr.statusText);
             };
             xhr.open(method, url, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json, text/html');
-            eventBus.$emit('beginRequest', url);
+            store.$emit('beginRequest', url);
             xhr.send(data);
         });
     }
@@ -618,6 +713,8 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
+    const store = require('store');
+
     const dataGridTemplate = `
 <table :class="cssClass">
     <thead>
@@ -645,21 +742,29 @@
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
             validate: String,
-            sortable: { type: Boolean, default: undefined }
+            sort: { type: Boolean, default: undefined }
         },
         data() {
             return {
-                dir: null
+                dirClient: null
             };
         },
         created() {
             this.$parent.$addColumn(this);
         },
         computed: {
+            dir() {
+                // TODO: client/server
+                let q = store.query;
+                if (q.sort === this.content) {
+                    return q.dir;
+                }
+                return null;
+            },
             isSortable() {
                 if (!this.content)
                     return false;
-                return typeof this.sortable === 'undefined' ? this.$parent.sortable : this.sortable;
+                return typeof this.sort === 'undefined' ? this.$parent.sort : this.sort;
             },
             template() {
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
@@ -679,8 +784,16 @@
         },
         methods: {
             doSort() {
-                if (this.isSortable)
-                    this.$parent.$doSort(this);
+                if (!this.isSortable)
+                    return;
+                // TODO: client/server
+                let q = store.query;
+                let qdir = q.dir;
+                if (q.sort === this.content)
+                    qdir = qdir === 'asc' ? 'desc' : 'asc';
+                store.query = { sort: this.content, dir: qdir };
+                //TODO: client
+                //this.$parent.$doSort(this);
             }
         }
     };
@@ -784,7 +897,7 @@
             bordered: Boolean,
             striped: Boolean,
             hover: { type: Boolean, default: false },
-            sortable: { type: Boolean, default: false },
+            sort: { type: Boolean, default: false },
             // callbacks
             onsort: Function
         },
@@ -812,9 +925,9 @@
         },
         methods: {
             $doSort(column) {
-                let ss = column.dir || 'asc';
-                this.columns.forEach((col) => { col.dir = null; });
-                column.dir = ss === 'asc' ? "desc" : "asc";
+                //let ss = column.dir || 'asc';
+                //this.columns.forEach((col) => { col.dir = null; });
+                //column.dir = ss === 'asc' ? "desc" : "asc";
                 // todo: client/server sorting
                 if (this.onsort)
                     this.onsort(column.content, column.dir);
@@ -901,7 +1014,7 @@
 
 (function () {
 
-    const bus = require('eventBus');
+    const store = require('store');
 
     const modalComponent = {
         template: `
@@ -921,7 +1034,7 @@
                 keyUpHandler: function () {
                     // escape
                     if (event.which === 27) {
-                        bus.$emit('modalClose', false);
+                        store.$emit('modalClose', false);
                         event.stopPropagation();
                         event.preventDefault();
                     }
@@ -930,7 +1043,7 @@
         },
         methods: {
             closeModal(result) {
-                bus.$emit('modalClose', result);
+                store.$emit('modalClose', result);
             }
         },
         created() {

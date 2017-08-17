@@ -13,7 +13,9 @@
             <i class="fa fa-user"></i>
             <span v-text="title"></span>
         </header>
-        <footer>footer text</footer>
+        <footer>
+            <a href @click.stop.prevent="about">about</a>
+        </footer>
         <a2-main-view :menu="menu"></a2-main-view>
     </div>
     <script src="/scripts/vue.js"></script>

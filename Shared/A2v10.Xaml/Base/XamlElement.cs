@@ -38,6 +38,18 @@ namespace A2v10.Xaml
             return null;
         }
 
+        internal void MergeBoolAttribute(TagBuilder tag, String propName, Boolean value)
+        {
+            var attrBind = GetBinding(propName);
+            // bool attrs always with ':'
+            String attrName = $":{propName.ToLowerInvariant()}";
+            if (attrBind != null)
+                tag.MergeAttribute(attrName, attrBind.Path);
+            else if (value)
+                tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant());
+
+        }
+
 		#region ISupportInitialize
 		public void BeginInit()
 		{

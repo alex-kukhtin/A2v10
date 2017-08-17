@@ -17,7 +17,7 @@ TODO:
 
 (function () {
 
-    const bus = require('eventBus');
+    const store = require('store');
     let menu = [
         { title: "Home", url: "home" },
         {
@@ -42,31 +42,6 @@ TODO:
         }
     ];
 
-    function Location() {
-        this.wl = window.location.pathname.split('/');
-    }
-
-    Location.prototype.routeLength = function () {
-        return this.wl.length;
-    };
-
-    Location.prototype.segment = function (no) {
-        let wl = this.wl;
-        return wl.length > no ? wl[no].toLowerCase() : '';
-    };
-
-    Location.prototype.saveMenuUrl = function () {
-        let s1 = this.segment(1);
-        let s2 = this.segment(2);
-        if (s1) {
-            let key = 'menu:' + s1;
-            if (s2)
-                window.localStorage.setItem(key, s2);
-            else
-                window.localStorage.removeItem(key);
-        }
-    };
-
     const navBar = {
         props: {
             menu: Array
@@ -83,22 +58,22 @@ TODO:
             var me = this;
 
             function findCurrent() {
-                let loc = new Location();
+                let loc = store.location();
                 let seg1 = loc.segment(1);
                 me.activeItem = me.menu.find(itm => itm.url === seg1);
                 return loc;
             }
 
             window.addEventListener('popstate', function (event, a, b) {
-                findCurrent().saveMenuUrl();
-                bus.$emit('route');
+                findCurrent();
+                store.navigateCurrent();
             });
 
             findCurrent();
 
             if (!me.activeItem) {
                 me.activeItem = me.menu[0];
-                window.history.replaceState(null, me.activeItem.title, me.activeItem.url);
+                window.history.replaceState(null, null, me.activeItem.url);
             }
         },
 
@@ -107,10 +82,14 @@ TODO:
                 return item === this.activeItem;
             },
             navigate: function (item) {
+                // TODO: getSavedUrl from store
                 let key = `menu:${item.url}`;
+                let skey = `menusearch:${item.url}`;
                 this.activeItem = item;
                 let url = '/' + item.url;
                 let savedUrl = window.localStorage.getItem(key);
+                let savedSearch = window.localStorage.getItem(skey);
+                alert(savedSearch);
                 if (savedUrl) {
                     url = url + '/' + savedUrl;
                 } else {
@@ -119,8 +98,9 @@ TODO:
                         url = url + '/' + item.menu[0].url;
                     }
                 }
-                window.history.pushState(null, null, url);
-                bus.$emit('route');
+                if (savedSearch)
+                    url += '?' + savedSearch;
+                store.navigate(url);
             }
         }
     };
@@ -154,9 +134,7 @@ TODO:
             },
             navigate: function (itm) {
                 let newUrl = `/${this.topUrl}/${itm.url}`;
-                window.history.pushState(null, itm.title, newUrl);
-                new Location().saveMenuUrl();
-                bus.$emit('route');
+                store.navigateMenu(newUrl);
             },
             toggle() {
                 alert('yet not implemented');
@@ -164,8 +142,7 @@ TODO:
         },
         created: function () {
             var me = this;
-            bus.$on('route', function () {
-                let loc = new Location();
+            store.$on('route', function (loc) {
                 let s1 = loc.segment(1);
                 let s2 = loc.segment(2);
                 let m1 = me.menu.find(itm => itm.url === s1);
@@ -201,8 +178,7 @@ TODO:
         },
         created() {
             var me = this;
-            bus.$on('route', function () {
-                let loc = new Location();
+            store.$on('route', function (loc) {
                 let len = loc.routeLength();
                 //TODO: // find menu and get location from it
                 //TODO: += query
@@ -264,31 +240,29 @@ TODO:
         },        
         mounted() {
             // first time created
-            new Location().saveMenuUrl();
-            bus.$emit('route');
+            store.navigateCurrent();
         },
         methods: {
             closeModal() {
-                bus.$emit('modalClose');
+                store.$emit('modalClose');
             }
         },
         created() {
             let me = this;
-            bus.$on('route', function () {
-                let loc = new Location();
+            store.$on('route', function (loc) {
                 let len = loc.routeLength();
                 let seg1 = loc.segment(1);
                 me.navBarVisible = len === 2 || len === 3;
                 me.sideBarVisible = len === 3;
                 me.modals.splice(0, me.modals.length);
             });
-            bus.$on('beginRequest', function () {
+            store.$on('beginRequest', function () {
                 me.requestsCount += 1;
             });
-            bus.$on('endRequest', function () {
+            store.$on('endRequest', function () {
                 me.requestsCount -= 1;
             });
-            bus.$on('modal', function (modal, prms) {
+            store.$on('modal', function (modal, prms) {
                 //alert('modal event handled: ' + JSON.stringify(modal));
                 let dlg = { title: "dialog", url: "/_page/catalog/suppliers", prms: prms };
                 prms.promise = new Promise(function (resolve, reject) {
@@ -296,7 +270,7 @@ TODO:
                 });
                 me.modals.push(dlg);
             });
-            bus.$on('modalClose', function (result) {
+            store.$on('modalClose', function (result) {
                 let dlg = me.modals.pop();
                 if (result)
                     dlg.prms.resolve(result);
@@ -312,6 +286,11 @@ TODO:
         data: {
             title: 'application title',
             menu: menu
+        },
+        methods: {
+            about() {
+                store.navigate('/app/about/show');
+            }
         }
     });
 })();
