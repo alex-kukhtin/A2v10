@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76269196-DB55-4299-AE0F-A33A5BAB294F}</ProjectGuid>
+    <ProjectGuid>{64F0A84F-87DA-45B3-9722-7FA341383CF8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Workflow</RootNamespace>
-    <AssemblyName>A2v10.Workflow</AssemblyName>
+    <RootNamespace>TestApplication</RootNamespace>
+    <AssemblyName>TestApplication</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,16 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Activities.Extensions, Version=2.0.6.9, Culture=neutral, PublicKeyToken=23b0c89d0d5ad43f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Activities.Extensions.2.0.6.9\lib\Net45\Microsoft.Activities.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
-    <Reference Include="System.Activities.DurableInstancing" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.DurableInstancing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,27 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\Request.cs" />
-    <Compile Include="Activities\RequestResult.cs" />
-    <Compile Include="AppWorkflow.cs" />
-    <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RuntimeActivity.cs" />
-    <Compile Include="ServiceLocator.cs" />
-    <Compile Include="WorkflowDefinition.cs" />
-    <Compile Include="WorkflowEngine.cs" />
-    <Compile Include="WorkflowException.cs" />
-    <Compile Include="WorkflowTracker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
-      <Name>A2v10.Infrastructure</Name>
+    <None Include="Test\Workflows\SimpleWorkflow_v1.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
+      <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
+      <Name>A2v10.Workflow</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

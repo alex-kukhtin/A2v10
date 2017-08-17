@@ -22,7 +22,7 @@ namespace A2v10.Tests
 		IDbContext _dbContext;
 		public DatabaseTest()
 		{
-			_dbContext = TestConfig.DbContext;
+			_dbContext = TestConfig.DbContext.Value;
 		}
 
 		[TestMethod]

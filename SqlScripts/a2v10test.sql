@@ -2,11 +2,17 @@
 
 use a2v10test;
 go
-
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2test')
 begin
 	exec sp_executesql N'create schema a2test';
+end
+go
+------------------------------------------------
+-- initial data for testing
+if not exists(select * from a2security.Users where Id=50)
+begin
+	insert into a2security.Users (Id, UserName, SecurityStamp) values (50, N'Test User 50', N'SecurityStamp50') 
 end
 go
 ------------------------------------------------
@@ -209,5 +215,22 @@ begin
 
 	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [D] = D, [!TSubObject.SubArray!ParentId] = ParentId
 	from @SubObjectArray;
+end
+go
+
+-- CLEAN UP DATABASE
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Workflow.Clear.All')
+	drop procedure a2test.[Workflow.Clear.All]
+go
+------------------------------------------------
+create procedure a2test.[Workflow.Clear.All]
+as
+begin
+	set nocount on;
+	delete from a2workflow.[Log];
+	delete from a2workflow.[Inbox];
+	delete from a2workflow.[Processes];
+	delete from [System.Activities.DurableInstancing].InstancesTable;
 end
 go

@@ -10,6 +10,7 @@ using Microsoft.Activities.Extensions.Tracking;
 
 using A2v10.Infrastructure;
 using System.Activities.Tracking;
+using System.Threading.Tasks;
 
 namespace A2v10.Workflow
 {
@@ -25,23 +26,30 @@ namespace A2v10.Workflow
 
         private Exception _unhandledException;
 
-        public static void StartWorkflow()
+        IDbContext _dbContext;
+
+        public static Int64 StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
         {
             AppWorkflow aw = null;
             try
             {
-                Process process = Process.Create();
-
+                var def = WorkflowDefinition.Create(info.Source);
+                Activity root = def.LoadFromSource(host);
+                Process process = Process.Create(def, info);
                 // workflow arguments
                 IDictionary<String, Object> args = new Dictionary<String, Object>();
                 args.Add("Process", process);
-                aw = Create(null, null, args, null);
+                aw = Create(dbContext, root, args, def.Identity);
                 process.WorkflowId = aw._application.Id;
+                process.Start(dbContext);
+                aw._application.Run(_wfTimeSpan);
+                return process.Id;
             }
             catch (Exception ex)
             {
                 if (!CatchWorkflow(aw, ex))
                     throw;
+                return 0;
             }
             finally
             {
@@ -101,6 +109,7 @@ namespace A2v10.Workflow
             else
                 aw._application = new WorkflowApplication(root, args, identity);
             aw.SetApplicationHandlers();
+            aw._dbContext = dbContext;
             aw._tracker = StateMachineStateTracker.Attach(aw._application);
             aw._application.Extensions.Add(new WorkflowTracker(aw));
             aw._application.Extensions.Add(dbContext);
@@ -143,11 +152,15 @@ namespace A2v10.Workflow
                 return;
             try
             {
-               
+                var prm = new
+                {
+                    InstanceId = _application.Id
+                };
+                _dbContext.SaveList<TrackInfo>("[a2workflow].[WriteLog]", prm, _trackingRecords);
             }
             catch (Exception /*ex*/)
             {
-
+                // eat all ?
             }
         }
 

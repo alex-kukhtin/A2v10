@@ -37,7 +37,7 @@
 
     Location.current = function () {
         return new Location();
-    }
+    };
 
     Location.prototype.routeLength = function () {
         return this.wl.length;
@@ -58,8 +58,8 @@
         if (s1) {
             let keym = 'menu:' + s1;
             let keys = 'menusearch:' + s1;
-            (s2) ? storage.setItem(keym, s2) : storage.removeItem(keym);
-            (search) ? storage.setItem(keys, search) : storage.removeItem(keys);
+            s2 ? storage.setItem(keym, s2) : storage.removeItem(keym);
+            search ? storage.setItem(keys, search) : storage.removeItem(keys);
         }
         return this;
     };

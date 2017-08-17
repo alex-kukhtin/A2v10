@@ -15,12 +15,33 @@ namespace A2v10.Workflow
         [DataMember]
         public Int64 Id { get; set; }
         [DataMember]
-        internal Guid WorkflowId { get; set; }
+        public Int64 Owner { get; set; }
+        [DataMember]
+        public String Kind { get; set; }
+        [DataMember]
+        public String Schema { get; set; }
+        [DataMember]
+        public String Model { get; set; }
+        [DataMember]
+        public Int64 ModelId { get; set; }
 
+        [DataMember]
+        public Guid WorkflowId { get; set; }
 
-        internal static Process Create()
+        public String Source { get; set; }
+        public String Definition { get; set; }
+
+        internal static Process Create(WorkflowDefinition def, StartWorkflowInfo info)
         {
-            return new Process();
+            var p = new Process();
+            p.Kind = def.Name;
+            p.Definition = def.Definition;
+            p.Source = def.Source;
+            p.Owner = info.UserId;
+            p.Schema = info.Schema;
+            p.Model = info.Model;
+            p.ModelId = info.ModelId;
+            return p;
         }
 
         internal static Process GetProcessFromContext(WorkflowDataContext DataContext)
@@ -30,14 +51,26 @@ namespace A2v10.Workflow
             return process;
         }
 
+        internal void Start(IDbContext dbContext)
+        {
+            dbContext.Execute<Process>("a2workflow.[Process.Create]", this);
+            if (this.Id == 0)
+                throw new WorkflowException("Failed to start process");
+        }
+
         private IDataModel _model;
 
         IDataModel GetModel()
         {
+            throw new NotImplementedException();
+            /*
             if (_model != null)
                 return _model;
             // Get IDBContext
+            // IDbContext dbContext = null;
+            //dbContext.LoadModelAsync()
             return null;
+            */
         }
     }
 }

@@ -12,129 +12,140 @@ using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
-	public class SqlDbContext : IDbContext
-	{
+    public class SqlDbContext : IDbContext
+    {
         IApplicationHost _host;
 
-		public SqlDbContext(IApplicationHost host)
-		{
+        const String RET_PARAM_NAME = "@RetId";
+
+        public SqlDbContext(IApplicationHost host)
+        {
             _host = host;
-		}
+        }
 
         public String ConnectionString
         {
             get { return _host.ConnectionString; }
         }
 
-		public async Task<SqlConnection> GetConnectionAsync()
-		{
-			var cnnStr = _host.ConnectionString;
-			var cnn = new SqlConnection(cnnStr);
-			await cnn.OpenAsync();
-			return cnn;
-		}
+        public async Task<SqlConnection> GetConnectionAsync()
+        {
+            var cnnStr = _host.ConnectionString;
+            var cnn = new SqlConnection(cnnStr);
+            await cnn.OpenAsync();
+            return cnn;
+        }
 
-		public async Task<IDataModel> LoadModelAsync(String command, Object prms = null)
-		{
-			var modelReader = new DataModelReader();
-			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
-			{
-				await ReadDataAsync(command,
-					(prm) =>
-					{
+        public SqlConnection GetConnection()
+        {
+            var cnnStr = _host.ConnectionString;
+            var cnn = new SqlConnection(cnnStr);
+            cnn.Open();
+            return cnn;
+        }
+
+
+        public async Task<IDataModel> LoadModelAsync(String command, Object prms = null)
+        {
+            var modelReader = new DataModelReader();
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                await ReadDataAsync(command,
+                    (prm) =>
+                    {
                         modelReader.SetParameters(prm, prms);
-					},
-					(no, rdr) =>
-					{
-						modelReader.ProcessOneRecord(rdr);
-					},
-					(no, rdr) =>
-					{
-						modelReader.ProcessOneMetadata(rdr);
-					});
-			}
-			return modelReader.DataModel;
-		}
-	
-		public async Task ReadDataAsync(String command,
-			Action<SqlParameterCollection> setParams,
-			Action<Int32, IDataReader> onRead,
-			Action<Int32, IDataReader> onMetadata)
-		{
-			using (var cnn = await GetConnectionAsync())
-			{
-				Int32 rdrNo = 0;
-				using (var cmd = cnn.CreateCommandSP(command))
-				{
-					if (setParams != null)
-						setParams(cmd.Parameters);
-					using (SqlDataReader rdr = await cmd.ExecuteReaderAsync())
-					{
-						do
-						{
-							if (onMetadata != null)
-								onMetadata(rdrNo, rdr);
-							while (await rdr.ReadAsync())
-							{
-								if (onRead != null)
-									onRead(rdrNo, rdr);
-							}
-							rdrNo += 1;
-						} while (await rdr.NextResultAsync());
-					}
-				}
-			}
-		}
+                    },
+                    (no, rdr) =>
+                    {
+                        modelReader.ProcessOneRecord(rdr);
+                    },
+                    (no, rdr) =>
+                    {
+                        modelReader.ProcessOneMetadata(rdr);
+                    });
+            }
+            return modelReader.DataModel;
+        }
 
-		public async Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null)
-		{
-			var dataReader = new DataModelReader();
-			var dataWriter = new DataModelWriter();
-			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
-			{
-				var metadataCommand = command.Replace(".Update", ".Metadata");
-				using (var cnn = await GetConnectionAsync())
-				{
-					using (var cmd = cnn.CreateCommandSP(metadataCommand))
-					{
-						using (var rdr = await cmd.ExecuteReaderAsync())
-						{
-							do
-							{
-								dataWriter.ProcessOneMetadata(rdr);
-							}
-							while (await rdr.NextResultAsync());
-						}
-					}
-					using (var cmd = cnn.CreateCommandSP(command))
-					{
-						SqlCommandBuilder.DeriveParameters(cmd);
-						dataWriter.SetTableParameters(cmd, data, prms);
-						using (var rdr = await cmd.ExecuteReaderAsync())
-						{
-							do
-							{
-								// metadata is not needed
-								while (await rdr.ReadAsync())
-								{
-									dataReader.ProcessOneRecord(rdr);
-								}
-							}
-							while (await rdr.NextResultAsync());
-						}
-					}				
-				}
-				return dataReader.DataModel;
-			}
-		}
+        public async Task ReadDataAsync(String command,
+            Action<SqlParameterCollection> setParams,
+            Action<Int32, IDataReader> onRead,
+            Action<Int32, IDataReader> onMetadata)
+        {
+            using (var cnn = await GetConnectionAsync())
+            {
+                Int32 rdrNo = 0;
+                using (var cmd = cnn.CreateCommandSP(command))
+                {
+                    if (setParams != null)
+                        setParams(cmd.Parameters);
+                    using (SqlDataReader rdr = await cmd.ExecuteReaderAsync())
+                    {
+                        do
+                        {
+                            if (onMetadata != null)
+                                onMetadata(rdrNo, rdr);
+                            while (await rdr.ReadAsync())
+                            {
+                                if (onRead != null)
+                                    onRead(rdrNo, rdr);
+                            }
+                            rdrNo += 1;
+                        } while (await rdr.NextResultAsync());
+                    }
+                }
+            }
+        }
 
-		public async Task<T> LoadAsync<T>(String command, Object prms = null) where T : class
-		{
-			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
-			{
+        public async Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null)
+        {
+            var dataReader = new DataModelReader();
+            var dataWriter = new DataModelWriter();
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                var metadataCommand = command.Replace(".Update", ".Metadata");
+                using (var cnn = await GetConnectionAsync())
+                {
+                    using (var cmd = cnn.CreateCommandSP(metadataCommand))
+                    {
+                        using (var rdr = await cmd.ExecuteReaderAsync())
+                        {
+                            do
+                            {
+                                dataWriter.ProcessOneMetadata(rdr);
+                            }
+                            while (await rdr.NextResultAsync());
+                        }
+                    }
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlCommandBuilder.DeriveParameters(cmd);
+                        dataWriter.SetTableParameters(cmd, data, prms);
+                        using (var rdr = await cmd.ExecuteReaderAsync())
+                        {
+                            do
+                            {
+                                // metadata is not needed
+                                while (await rdr.ReadAsync())
+                                {
+                                    dataReader.ProcessOneRecord(rdr);
+                                }
+                            }
+                            while (await rdr.NextResultAsync());
+                        }
+                    }
+                }
+                return dataReader.DataModel;
+            }
+        }
+
+        public async Task<T> LoadAsync<T>(String command, Object prms = null) where T : class
+        {
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
                 var helper = new LoadHelper<T>();
                 using (var cnn = await GetConnectionAsync())
-				{
+                {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
                         SqlExtensions.SetFromDynamic(cmd.Parameters, prms);
@@ -150,16 +161,22 @@ namespace A2v10.Data
                     }
                 }
             }
-			return null;
-		}
+            return null;
+        }
 
 
-        void SetParametersFrom<T>(SqlCommand cmd, T element)
+        SqlParameter SetParametersFrom<T>(SqlCommand cmd, T element)
         {
             Type retType = typeof(T);
             var props = retType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             SqlCommandBuilder.DeriveParameters(cmd);
             var sqlParams = cmd.Parameters;
+            SqlParameter retParam = null;
+            if (cmd.Parameters.Contains(RET_PARAM_NAME))
+            {
+                retParam = cmd.Parameters[RET_PARAM_NAME];
+                retParam.Value = DBNull.Value;
+            }
             foreach (var p in props)
             {
                 var paramName = "@" + p.Name;
@@ -180,34 +197,64 @@ namespace A2v10.Data
                     }
                 }
             }
+            return retParam;
+        }
+
+        void SetReturnParamResult(SqlParameter retParam, Object element)
+        {
+            if (retParam == null)
+                return;
+            if (retParam.Value == DBNull.Value)
+                return;
+            var idProp = element.GetType().GetProperty("Id");
+            if (idProp != null)
+                idProp.SetValue(element, retParam.Value);
         }
 
         public async Task ExecuteAsync<T>(String command, T element) where T : class
-		{
-			using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
-			{
-				using (var cnn = await GetConnectionAsync())
-				{
-					using (var cmd = cnn.CreateCommandSP(command))
-					{
-                        SetParametersFrom(cmd, element);
+        {
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                using (var cnn = await GetConnectionAsync())
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        var retParam = SetParametersFrom(cmd, element);
                         await cmd.ExecuteNonQueryAsync();
-					}
-				}
-			}
-		}
+                        SetReturnParamResult(retParam, element);
+                    }
+                }
+            }
+        }
 
-		public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
-		{
-			using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
-			{
+        public void Execute<T>(String command, T element) where T : class
+        {
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                using (var cnn = GetConnection())
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+
+                        var retParam = SetParametersFrom(cmd, element);
+                        cmd.ExecuteNonQuery();
+                        SetReturnParamResult(retParam, element);
+                    }
+                }
+            }
+        }
+
+        public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
+        {
+            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
                 Type retType = typeof(T);
                 var props = retType.GetProperties();
                 var result = new List<T>();
                 using (var cnn = await GetConnectionAsync())
-				{
-					using (var cmd = cnn.CreateCommandSP(command))
-					{
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
                         SqlExtensions.SetFromDynamic(cmd.Parameters, prms);
                         using (var rdr = await cmd.ExecuteReaderAsync())
                         {
@@ -233,10 +280,88 @@ namespace A2v10.Data
                                 result.Add(item);
                             }
                         }
-					}
-				}
+                    }
+                }
                 return result;
             }
         }
-	}
+
+        void SetParametersWithList<T>(SqlCommand cmd, Object prms, IEnumerable<T> list) where T : class
+        {
+            Type listType = typeof(T);
+            Type prmsType = prms != null ? prms.GetType() : null;
+            var props = listType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var propsD = new Dictionary<String, PropertyInfo>();
+            DataTable dt = new DataTable();
+            foreach (var p in props)
+            {
+                var column = new DataColumn(p.Name, p.PropertyType);
+                if (p.PropertyType == typeof(String))
+                    column.MaxLength = 32767;
+                dt.Columns.Add(column);
+                propsD.Add(p.Name, p);
+            }
+            for (int i = 0; i < cmd.Parameters.Count; i++)
+            {
+                SqlParameter prm = cmd.Parameters[i];
+                var simpleParamName = prm.ParameterName.Substring(1); // skip @
+                if (prm.SqlDbType == SqlDbType.Structured)
+                {
+                    foreach (var itm in list)
+                    {
+                        var row = dt.NewRow();
+                        for (int c = 0; c < dt.Columns.Count; c++)
+                        {
+                            var col = dt.Columns[c];
+                            var rowVal = propsD[col.ColumnName].GetValue(itm);
+                            var dbVal = SqlExtensions.ConvertTo(rowVal, col.DataType);
+                            row[col.ColumnName] = dbVal;
+                        }
+                        dt.Rows.Add(row);
+                    }
+                    prm.Value = dt;
+                    prm.RemoveDbName(); // remove first segment (database name)
+                }
+                else if (prmsType != null)
+                {
+                    // scalar parameter
+                    var pi = prmsType.GetProperty(simpleParamName);
+                    if (pi != null)
+                        prm.Value = pi.GetValue(prms);
+                }
+            }
+        }
+
+        public void SaveList<T>(String command, Object prms, IEnumerable<T> list) where T : class
+        {
+            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                using (var cnn = GetConnection())
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlCommandBuilder.DeriveParameters(cmd);
+                        SetParametersWithList<T>(cmd, prms, list);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public async Task SaveListAsync<T>(String command, Object prms, IEnumerable<T> list) where T : class
+        {
+            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                using (var cnn = await GetConnectionAsync())
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlCommandBuilder.DeriveParameters(cmd);
+                        SetParametersWithList<T>(cmd, prms, list);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+        }
+    }
 }
