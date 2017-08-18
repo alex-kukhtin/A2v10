@@ -17,13 +17,13 @@ TODO:
         { title: "Home", url: "home" },
         {
             title: 'Справочники', url: 'catalog', menu: [
-                { title: "Suppliers", url: 'suppliers', icon:'bank', query:'order=Name&dir=desc'},
-                { title: "Customers", url: 'customers', icon:'tasks'},
-                { title: "Edit 3 segment", url: 'edit/5', icon:'building' },
+                { title: "Suppliers", url: 'suppliers', icon:'file-symlink', query:'order=Name&dir=desc'},
+                { title: "Customers", url: 'customers', icon:'copy'},
+                { title: "Edit 3 segment", url: 'edit/5', icon:'menu' },
                 {
                     title: "Menu Folder", icon: 'folder', menu: [
-                        { title: "Suppliers 2 (with long text <b>bold</b> escaped <script></script>)", url: 'suppliers1', icon: 'bank' },
-                        { title: "Customers 2", url: 'customers2'}
+                        { title: "Suppliers 2 (with long text <b>bold</b> escaped <script></script>)", url: 'suppliers1', icon: 'save' },
+                        { title: "Customers 2", url: 'customers2', icon:'dot'}
                     ]
                 }
             ]

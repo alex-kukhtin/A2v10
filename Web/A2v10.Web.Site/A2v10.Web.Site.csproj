@@ -67,6 +67,8 @@
     <Content Include="app\platform\route.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
+    <Content Include="css\bowtie.css" />
+    <Content Include="css\fonts\Bowtie.svg" />
     <Content Include="Pages\catalog_suppliers.html" />
     <Content Include="Pages\catalog_customers.html" />
     <Content Include="Pages\shell.js" />
@@ -132,6 +134,10 @@
     <Content Include="Less\ToolBar.less" />
     <Content Include="Less\TreeView.less" />
     <Content Include="Less\Nav.less" />
+    <Content Include="css\fonts\Bowtie.eot" />
+    <Content Include="css\fonts\Bowtie.ttf" />
+    <Content Include="css\fonts\Bowtie.woff" />
+    <Content Include="css\fonts\Bowtie.woff2" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

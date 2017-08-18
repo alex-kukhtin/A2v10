@@ -1,0 +1,19 @@
+﻿/*catalog/customers*/
+{
+	"@schema": "model_schema.json",
+	"schema": "a2v10demo",
+	"model": "Catalog.Customers",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "Index.view",
+			"template": "index.template"
+		}
+	},
+	"dialogs": {
+		"edit": {
+			"view": "edit.dialog",
+			"template": "element"
+		}
+	}	
+}

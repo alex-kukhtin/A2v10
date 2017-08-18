@@ -1085,7 +1085,7 @@
                 return this.isActive(this.item);
             },
             iconClass: function () {
-                return this.icon ? "fa fa-fw fa-" + (this.item[this.icon] || 'empty') : '';
+                return this.icon ? "bowtie-" + (this.item[this.icon] || 'empty') : '';
             }
         }
     });
@@ -1136,12 +1136,9 @@
 
     app.components['modal'] = modalComponent;
 })();
+/*20170818-7016*/
+/*controllers/base.js*/
 (function () {
-
-
-    /**
-     * Базовый контроллер DataModelController
-     */
     const store = require('store');
 
     const base = Vue.extend({
@@ -1171,10 +1168,10 @@
                 dat.$setDirty(false);
                 //TODO: promise
             },
-            $showDialog(url) {
-                var dat = { x: 5, y: 10, promise: null };
-                var x = store.$emit('modal', url, dat);
-                return dat.promise;
+            $showDialog(url, data) {
+                var dlgData = { promise: null, params: data };
+                var x = store.$emit('modal', url, dlgData);
+                return dlgData.promise;
                 /*
                 dat.promise.then(function (result) {
                     alert('then:' + result);
@@ -1196,12 +1193,10 @@
             }
         },
         created() {
-            // TODO: register data
-            //alert(this.$data.Customers.length);
+            console.warn('TODO: register debug data');
         },
         destroyed() {
-            // TODO: unregister data
-            alert('base controller destroyed ');
+            console.warn('TODO: unregister debug data');
         }
     });
     

@@ -72,8 +72,11 @@ namespace A2v10.Web.Mvc.Controllers
                     UserId = UserId
                 });
             }
-            // try HTML
             String rootId = "el" + Guid.NewGuid().ToString();
+
+            String modelScript = await WriteModelScript(rw, model, rootId);
+
+            // try HTML
             String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".html");
             bool bRendered = false;
             if (System.IO.File.Exists(fileName)) {
@@ -107,7 +110,7 @@ namespace A2v10.Web.Mvc.Controllers
             if (!bRendered) {
                 throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".html")}\n{rw.GetRelativePath(".xaml")}");
             }
-            await WriteModelScript(rw, model, rootId);
+            Response.Output.Write(modelScript);
         }
 
 
@@ -129,8 +132,9 @@ namespace A2v10.Web.Mvc.Controllers
             return sb.ToString();
     }
 
-        async Task WriteModelScript(RequestView rw, IDataModel model, String rootId)
+        async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
         {
+            StringBuilder output = new StringBuilder();
             String dataModelText = "null";
             String templateText = "{}";
             if (model != null)
@@ -153,8 +157,6 @@ namespace A2v10.Web.Mvc.Controllers
                 dataModelText = JsonConvert.SerializeObject(model.Root, jss);
             }
 
-//TODO: model template
-            //Response.Output.Write(model.GetModelScript(rootId, templateFile));
             const String scriptHeader =
 @"
 <script type=""text/javascript"">
@@ -177,16 +179,22 @@ namespace A2v10.Web.Mvc.Controllers
 })();
 </script>
 ";
-            var sb = new StringBuilder(scriptHeader);
-            sb.Replace("$(RootId)", rootId);
-            sb.Replace("$(DataModelText)", dataModelText);
-            sb.Replace("$(TemplateText)", templateText);
-            Response.Output.Write(sb.ToString());
+
+            const String emptyModel = "function modelData() {return null;}";
+
+            var header = new StringBuilder(scriptHeader);
+            header.Replace("$(RootId)", rootId);
+            header.Replace("$(DataModelText)", dataModelText);
+            header.Replace("$(TemplateText)", templateText);
+            output.Append(header);
             if (model != null)
-                Response.Output.Write(model.CreateScript());
-            sb = new StringBuilder(scriptFooter);
-            sb.Replace("$(RootId)", rootId);
-            Response.Output.Write(sb.ToString());
+                output.Append(model.CreateScript());
+            else
+                output.Append(emptyModel);
+            var footer = new StringBuilder(scriptFooter);
+            footer.Replace("$(RootId)", rootId);
+            output.Append(footer);
+            return output.ToString();
         }
     }
 }

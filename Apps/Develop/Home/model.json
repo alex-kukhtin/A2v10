@@ -1,0 +1,8 @@
+﻿/*home*/
+{
+	"actions": {
+		"index": {
+			"view": "HomePage.view"
+		}
+	}
+}

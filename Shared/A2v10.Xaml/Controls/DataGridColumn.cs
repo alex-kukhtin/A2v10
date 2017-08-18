@@ -45,4 +45,13 @@ namespace A2v10.Xaml
             base.OnEndInit();
         }
     }
+
+    public class DataGridColumnCollection : List<DataGridColumn>
+    {
+        public DataGridColumnCollection()
+        {
+
+        }
+    }
+
 }

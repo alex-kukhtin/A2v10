@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    [ContentProperty("Children")]
     public class Page : RootContainer
     {
 

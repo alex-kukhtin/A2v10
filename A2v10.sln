@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5371E97D-8916-4D33-9BE7-C0C97209DD54}"
 EndProject
@@ -86,6 +86,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A2v10.Application", "Deskto
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "Tests\TestApplication\TestApplication.csproj", "{64F0A84F-87DA-45B3-9722-7FA341383CF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apps", "Apps\Apps.csproj", "{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -289,6 +291,18 @@ Global
 		{64F0A84F-87DA-45B3-9722-7FA341383CF8}.Release|x64.Build.0 = Release|Any CPU
 		{64F0A84F-87DA-45B3-9722-7FA341383CF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{64F0A84F-87DA-45B3-9722-7FA341383CF8}.Release|x86.Build.0 = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|x64.Build.0 = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Debug|x86.Build.0 = Debug|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|x64.ActiveCfg = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|x64.Build.0 = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|x86.ActiveCfg = Release|Any CPU
+		{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -311,5 +325,8 @@ Global
 		{76269196-DB55-4299-AE0F-A33A5BAB294F} = {5371E97D-8916-4D33-9BE7-C0C97209DD54}
 		{B157E1E0-9C29-44EE-9060-BBD1060486F5} = {825023F4-F682-4FA8-BA5D-F253B5BB52F3}
 		{64F0A84F-87DA-45B3-9722-7FA341383CF8} = {EDE3BC29-B647-49D6-B76A-0AACEAD74445}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67E3839A-1DFF-4FE5-B2E5-787CAD3503E7}
 	EndGlobalSection
 EndGlobal

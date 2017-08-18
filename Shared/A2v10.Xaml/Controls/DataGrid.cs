@@ -17,7 +17,7 @@ namespace A2v10.Xaml
 
         public Object ItemsSource { get; set; }
 
-        public List<DataGridColumn> Columns { get; set; } = new List<DataGridColumn>();
+        public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
         internal override void RenderElement(RenderContext context)
         {

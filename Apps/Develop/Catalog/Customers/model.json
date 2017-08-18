@@ -1,0 +1,12 @@
+﻿/*catalog/customers*/
+{
+	"schema": "a2v10demo",
+	"model": "Catalog.Customers",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "Index.view"
+		}
+	}
+}

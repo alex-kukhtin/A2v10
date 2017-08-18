@@ -300,12 +300,14 @@ table.hover > tbody > tr:hover {
 .tree-view li > .overlay:hover {
   background-color: #fdf4bf;
 }
-.tree-view li > .overlay .fa {
+.tree-view li > .overlay i {
   flex-shrink: 0;
   /*fixed*/
   color: #8591a2;
   font-size: 14px;
-  margin-right: 3px;
+  margin-left: 2px;
+  width: 18px;
+  /*16 + 2 margin*/
 }
 .tree-view li > .overlay .no-wrap {
   white-space: nowrap;

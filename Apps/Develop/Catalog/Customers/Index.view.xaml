@@ -1,0 +1,19 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Toolbar>
+		<Button Icon="File">Create</Button>
+		<Button Icon="Edit">Edit</Button>
+		<Button Icon="AddressBook">Delete</Button>
+		<Button>
+		</Button>
+	</Toolbar>
+	<DataGrid ItemsSource="{Bind Customers}" Hover="True" 
+			  Striped="True" Bordered="True" Sort="True">
+		<DataGridColumn Header="Код" Content="Id" Align="Right"/>
+		<DataGridColumn Header="Наименование" Content="Name"/>
+		<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
+	</DataGrid>
+</Page>
+
+    

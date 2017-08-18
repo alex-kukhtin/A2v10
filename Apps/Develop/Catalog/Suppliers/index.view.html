@@ -1,0 +1,39 @@
+﻿
+<div id="$(RootId)" style="min-height:400px">
+    <h3>HTML view catalog/suppliers Data grid (but model is customer)</h3>
+    <i class="bowtie-alert"></i>
+    <i class="bowtie-approve-disapprove"></i>
+    <i class="bowtie-approve"></i>
+    <i class="bowtie-folder"></i>
+    <i>italic text</i>
+    <div class="toolbar" style="padding:6px;display:flex">
+        <button @click.stop.prevent="Customers.$append()">Add</button>
+        <button @click.stop.prevent="Customers.$append()">Add in dialog</button>
+        <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
+        <button @click.stop.prevent="$save()">Save</button>
+        <label v-text="Customers.length"></label>
+        <button @click.stop.prevent="$showDialog('catalog/customers/browse')">Browse dialog</button>
+    </div>
+    <data-grid :items-source="Customers" :striped="true" 
+               :bordered="true" :hover="true" :sort="true">
+        <data-grid-column header="Id" content="Id"></data-grid-column>
+        <data-grid-column header="Name" content="Name"></data-grid-column>
+        <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
+        <data-grid-column header="Name (edit)" content="Name" :editable="true"></data-grid-column>
+        <data-grid-column header="Sum" content="$Sum" align="right"></data-grid-column>
+        <data-grid-column id="cmd"></data-grid-column>
+        <template slot="cmd" scope="cell">
+            <button @click.stop.prevent="$editDialog('\catalog\customers\edit', cell.row)">
+                <i class="fa fa-edit"></i>
+            </button>
+            <button @click.stop.prevent="cell.row.$remove()">
+                <i class="fa fa-trash"></i>
+            </button>
+        </template>
+    </data-grid>
+    <div>
+        <button @click.stop.prevent="$closeModal('ok')">OK</button>
+        <button @click.stop.prevent="$closeModal('cancel')">Cancel</button>
+    </div>
+</div>
+
