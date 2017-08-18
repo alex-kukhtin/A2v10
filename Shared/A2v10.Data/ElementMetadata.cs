@@ -4,15 +4,18 @@ using System.Collections.Generic;
 
 namespace A2v10.Data
 {
-	public class ElementMetadata
-	{
-		IDictionary<String, FieldMetadata> _fields = new Dictionary<String, FieldMetadata>();
+    public class ElementMetadata
+    {
+        IDictionary<String, FieldMetadata> _fields = new Dictionary<String, FieldMetadata>();
 
-		public String Id { get; private set; }
-		public String Name { get; private set; }
-		public String Items { get; private set; }
+        public String Id { get; private set; }
+        public String Name { get; private set; }
+        public String Items { get; private set; }
+        public Boolean IsArrayType { get; set; }
 
-		public void AddField(FieldInfo field, DataType type)
+        internal IDictionary<String, FieldMetadata> Fields { get { return _fields; } }
+
+        public void AddField(FieldInfo field, DataType type)
 		{
 			if (!field.IsVisible)
 				return;

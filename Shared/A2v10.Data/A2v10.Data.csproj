@@ -51,6 +51,7 @@
     <Compile Include="IdMapper.cs" />
     <Compile Include="LoadHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptWriter.cs" />
     <Compile Include="SqlDbContext.cs" />
     <Compile Include="SqlExtensions.cs" />
   </ItemGroup>

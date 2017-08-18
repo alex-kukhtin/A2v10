@@ -56,6 +56,7 @@
     <Compile Include="Config\TestApplicationHost.cs" />
     <Compile Include="Config\TestProfiler.cs" />
     <Compile Include="DatabaseTest.cs" />
+    <Compile Include="DataModelTest.cs" />
     <Compile Include="DataModelTester\DataTester.cs" />
     <Compile Include="DataModelTester\MetadataTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

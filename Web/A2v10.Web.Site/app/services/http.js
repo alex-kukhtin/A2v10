@@ -1,4 +1,4 @@
-﻿/*20170814-7012*/
+﻿/*20170818-7015*/
 /* http.js */
 (function () {
 
@@ -36,27 +36,31 @@
     }
 
     function load(url, selector) {
-        doRequest('GET', url)
-            .then(function (html) {
-                if (selector.firstChild && selector.firstChild.__vue__)
-                    selector.firstChild.__vue__.$destroy();
-                let dp = new DOMParser();
-                let rdoc = dp.parseFromString(html, 'text/html');
-                // first element from fragment body
-                let srcElem = rdoc.body.firstElementChild;
-                selector.innerHTML = srcElem ? srcElem.outerHTML : '';
-                for (let i = 0; i < rdoc.scripts.length; i++) {
-                    let s = rdoc.scripts[i];
-                    if (s.type === 'text/javascript') {
-                        let newScript = document.createElement("script");
-                        newScript.text = s.text;
-                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
+        return new Promise(function (resolve, reject) {
+            doRequest('GET', url)
+                .then(function (html) {
+                    if (selector.firstChild && selector.firstChild.__vue__)
+                        selector.firstChild.__vue__.$destroy();
+                    let dp = new DOMParser();
+                    let rdoc = dp.parseFromString(html, 'text/html');
+                    // first element from fragment body
+                    let srcElem = rdoc.body.firstElementChild;
+                    selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+                    for (let i = 0; i < rdoc.scripts.length; i++) {
+                        let s = rdoc.scripts[i];
+                        if (s.type === 'text/javascript') {
+                            let newScript = document.createElement("script");
+                            newScript.text = s.text;
+                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                        }
                     }
-                }
-            })
-            .catch(function (error) {
-                alert(error);
-            });
+                    resolve(true);
+                })
+                .catch(function (error) {
+                    alert(error);
+                    resolve(false);
+                });
+        });
     }
 
     app.modules['http'] = {

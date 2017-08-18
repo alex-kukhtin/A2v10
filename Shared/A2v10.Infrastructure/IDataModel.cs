@@ -14,5 +14,7 @@ namespace A2v10.Infrastructure
 
 		T Eval<T>(String expression, T fallback = default(T));
 		void Traverse(Func<Object, Boolean> callback);
+
+        String CreateScript();
 	}
 }

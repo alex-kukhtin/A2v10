@@ -23,6 +23,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,6 +53,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
     <Content Include="app\components\include.js" />
     <Content Include="app\components\modal.js" />
@@ -62,6 +64,7 @@
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\http.js" />
     <Content Include="app\services\log.js" />
+    <Content Include="app\platform\route.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="Pages\catalog_suppliers.html" />

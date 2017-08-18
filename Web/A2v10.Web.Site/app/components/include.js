@@ -1,18 +1,35 @@
-﻿/*20170814-7013*/
+﻿/*20170818-7015*/
 /*components/include.js*/
+
 (function () {
 
     const http = require('http');
 
     Vue.component('include', {
+        template: '<div :class="implClass"></div>',
         props: {
             src: String,
             cssClass: String
         },
-        template: '<div :class="cssClass"></div>',
+        data() {
+            return {
+                loading: true
+            };
+        },
+        methods: {
+            loaded(ok) {
+                this.loading = false;
+            }
+        },
+        computed: {
+            implClass() {
+                return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
+            }
+        },
         mounted() {
-            if (this.src)
-                http.load(this.src, this.$el);
+            if (this.src) {
+                http.load(this.src, this.$el).then(this.loaded);
+            }
         },
         destroyed() {
             let fc = this.$el.firstElementChild;
@@ -21,8 +38,9 @@
         },
         watch: {
             src: function (newUrl, oldUrl) {
-                http.load(newUrl, this.$el);
+                this.loading = true;
+                http.load(newUrl, this.$el).then(this.loaded);
             }
-        },
+        }
     });
 })();

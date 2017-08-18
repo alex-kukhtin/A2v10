@@ -4,6 +4,7 @@
 		"inputFiles": [
 			"app/app.js",
 			"app/platform/webvue.js",
+			"app/platform/route.js",
 			"app/services/utils.js",
 			"app/services/log.js",
 			"app/services/http.js",
@@ -15,7 +16,8 @@
 			"app/components/textbox.js",
 			"app/components/datagrid.js",
 			"app/components/treeview.js",
-			"app/components/modal.js"
+			"app/components/modal.js",
+			"app/controllers/base.js"
 		],
 		"minify": { "enabled": false }
 	},

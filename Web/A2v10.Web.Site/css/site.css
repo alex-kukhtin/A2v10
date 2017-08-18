@@ -87,6 +87,24 @@ header,
 .content-view.full-view {
   top: 32px;
 }
+.include.loading {
+  /* //spinner for loading
+    &:after {
+        content: "\f110"; /* fa-spinner * /
+        position: absolute;
+        left: ~"calc(50% - 13px)";
+        top: ~"calc(50% - 13px)";
+        font-size: 26px;
+        color: @link-color;
+        font-family: FontAwesome;
+        //animation: fa-spin 2s infinite linear;
+        animation: fa-spin 1s infinite steps(8);
+    }
+    */
+}
+.include.loading > div {
+  display: none;
+}
 .nav-bar {
   position: absolute;
   left: 0;

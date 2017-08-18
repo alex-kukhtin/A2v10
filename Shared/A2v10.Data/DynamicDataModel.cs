@@ -58,5 +58,12 @@ namespace A2v10.Data
 		{
 			return (this.Root).Eval<T>(expression, fallback);
 		}
-	}
+
+        public String CreateScript()
+        {
+            var sw = new ScriptWriter(this);
+            return sw.GetScript();
+        }
+
+    }
 }

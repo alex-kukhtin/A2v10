@@ -45,6 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Test\Catalog\Customers\model.json" />
     <None Include="Test\Workflows\SimpleWorkflow_v1.xaml">
       <SubType>Designer</SubType>
     </None>
@@ -55,5 +56,11 @@
       <Name>A2v10.Workflow</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Test_4Catalog_4Customers_4model_1json__JSONSchema="..\..\..\..\..\..\apps\model.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

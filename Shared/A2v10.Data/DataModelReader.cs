@@ -160,6 +160,8 @@ namespace A2v10.Data
 
 			// other fields = object fields
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
+            if (objectDef.IsArray)
+                typeMetadata.IsArrayType = true;
 			//if (objectDef.IsTree)
 				//typeMetadata.AddField(objectDef, DataType.Undefined);
 			for (int i=1; i<rdr.FieldCount; i++)

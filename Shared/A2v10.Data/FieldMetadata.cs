@@ -39,7 +39,9 @@ namespace A2v10.Data
 		public FieldType ItemType { get; } // for object, array
 		public String RefObject { get; } // for object, array
 
-		public FieldMetadata(FieldInfo fi, DataType type)
+        public Boolean IsArrayLike { get { return ItemType == FieldType.Object || ItemType == FieldType.Array; } }
+
+        public FieldMetadata(FieldInfo fi, DataType type)
 		{
 			DataType = type;
 			ItemType = FieldType.Scalar;

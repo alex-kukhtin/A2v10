@@ -12,7 +12,7 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
-    const store = require('store');
+    const route = require('route');
 
     const dataGridTemplate = `
 <table :class="cssClass">
@@ -54,9 +54,10 @@
         computed: {
             dir() {
                 // TODO: client/server
-                let q = store.query;
-                if (q.sort === this.content) {
-                    return q.dir;
+                let q = route.query;
+                //console.dir(q);
+                if (q.order === this.content) {
+                    return (q.dir || '').toLowerCase();
                 }
                 return null;
             },
@@ -86,11 +87,14 @@
                 if (!this.isSortable)
                     return;
                 // TODO: client/server
-                let q = store.query;
-                let qdir = q.dir;
-                if (q.sort === this.content)
+
+                let q = route.query;
+                let qdir = (q.dir || 'asc').toLowerCase();
+                if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
-                store.query = { sort: this.content, dir: qdir };
+                }
+                route.query = { order: this.content, dir: qdir };
+
                 //TODO: client
                 //this.$parent.$doSort(this);
             }

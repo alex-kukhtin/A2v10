@@ -1,28 +1,23 @@
-﻿/*20170813-7005*/
+﻿/*20170818-7015*/
 /*shell.js*/
 
 /*
 TODO:
 3. SideBar - разные режимы
-*/
-
-/* routing rules 
-
-1. /top
-2. /top/side
-3. /top/action/id
-4. /top/side/action/id
-
+4. Collapse/expand
+5. 
 */
 
 (function () {
 
+    const route = require('route');
     const store = require('store');
+
     let menu = [
         { title: "Home", url: "home" },
         {
             title: 'Справочники', url: 'catalog', menu: [
-                { title: "Suppliers", url: 'suppliers', icon:'bank'},
+                { title: "Suppliers", url: 'suppliers', icon:'bank', query:'order=Name&dir=desc'},
                 { title: "Customers", url: 'customers', icon:'tasks'},
                 { title: "Edit 3 segment", url: 'edit/5', icon:'building' },
                 {
@@ -35,12 +30,28 @@ TODO:
         },
         {
             title: 'Документы', url: 'document', menu: [
-                { title: "Incoming", url: 'incoming', icon: 'file' },
+                { title: "Incoming", url: 'incoming', icon: 'file', query:'order=Date&dir=asc' },
                 { title: "Outgoing", url: 'outgoing', icon: 'file-o'},
                 { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'folder-open-o' }
             ]
         }
     ];
+
+    function findMenu(menu, func) {
+        if (!menu)
+            return null;
+        for (let i = 0; i < menu.length; i++) {
+            let itm = menu[i];
+            if (func(itm))
+                return itm;
+            if (itm.menu) {
+                let found = findMenu(itm.menu, func);
+                if (found)
+                    return found;
+            }
+        }
+        return null;
+    }
 
     const navBar = {
         props: {
@@ -58,7 +69,7 @@ TODO:
             var me = this;
 
             function findCurrent() {
-                let loc = store.location();
+                let loc = route.location();
                 let seg1 = loc.segment(1);
                 me.activeItem = me.menu.find(itm => itm.url === seg1);
                 return loc;
@@ -66,13 +77,14 @@ TODO:
 
             window.addEventListener('popstate', function (event, a, b) {
                 findCurrent();
-                store.navigateCurrent();
+                route.navigateCurrent();
             });
 
             findCurrent();
 
             if (!me.activeItem) {
                 me.activeItem = me.menu[0];
+                // TODO: to route
                 window.history.replaceState(null, null, me.activeItem.url);
             }
         },
@@ -82,25 +94,23 @@ TODO:
                 return item === this.activeItem;
             },
             navigate: function (item) {
-                // TODO: getSavedUrl from store
-                let key = `menu:${item.url}`;
-                let skey = `menusearch:${item.url}`;
+                // nav bar
                 this.activeItem = item;
                 let url = '/' + item.url;
-                let savedUrl = window.localStorage.getItem(key);
-                let savedSearch = window.localStorage.getItem(skey);
-                alert(savedSearch);
+                let query = null;
+                let savedUrl = route.savedMenu(item.url);
+                let activeItem = null;
                 if (savedUrl) {
-                    url = url + '/' + savedUrl;
+                    // find active side menu item
+                    activeItem = findMenu(item.menu, (itm) => itm.url === savedUrl);
                 } else {
-                    // todo: find active item
-                    if (item.menu && item.menu.length) {
-                        url = url + '/' + item.menu[0].url;
-                    }
+                    activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
                 }
-                if (savedSearch)
-                    url += '?' + savedSearch;
-                store.navigate(url);
+                if (activeItem) {
+                    url = url + '/' + activeItem.url;
+                    query = activeItem.query;
+                }
+                route.navigateMenu(url, query);
             }
         }
     };
@@ -133,16 +143,19 @@ TODO:
                 return itm === this.activeItem;
             },
             navigate: function (itm) {
+                if (!itm.url)
+                    return; // no url. is folder?
                 let newUrl = `/${this.topUrl}/${itm.url}`;
-                store.navigateMenu(newUrl);
+                route.navigateMenu(newUrl, itm.query);
             },
             toggle() {
+                // TODO: collapse/expand
                 alert('yet not implemented');
             }
         },
         created: function () {
             var me = this;
-            store.$on('route', function (loc) {
+            route.$on('route', function (loc) {
                 let s1 = loc.segment(1);
                 let s2 = loc.segment(2);
                 let m1 = me.menu.find(itm => itm.url === s1);
@@ -153,7 +166,7 @@ TODO:
                     me.topUrl = m1.url;
                     me.sideMenu = m1.menu || null;
                     if (me.sideMenu)
-                        me.activeItem = me.sideMenu.find(itm => itm.url === s2);
+                        me.activeItem = findMenu(me.sideMenu, (itm) => itm.url === s2);
                 }
             });
         }
@@ -178,17 +191,17 @@ TODO:
         },
         created() {
             var me = this;
-            store.$on('route', function (loc) {
+            route.$on('route', function (loc) {
                 let len = loc.routeLength();
-                //TODO: // find menu and get location from it
-                //TODO: += query
+                //TODO: // find menu and get location from it ???
                 let tail = '';
                 switch (len) {
                     case 2: tail = '/index/0'; break;
                     case 3: tail = '/index/0'; break;
                 }
-
-                me.currentView = "/_page" + window.location.pathname + tail;
+                let url = "/_page" + window.location.pathname + tail;
+                url += window.location.search;
+                me.currentView = url;
                 me.cssClass =
                     len === 2 ? 'full-page' :
                     len === 3 ? 'partial-page' :
@@ -240,20 +253,21 @@ TODO:
         },        
         mounted() {
             // first time created
-            store.navigateCurrent();
+            route.navigateCurrent();
         },
         methods: {
             closeModal() {
-                store.$emit('modalClose');
+                route.$emit('modalClose');
             }
         },
         created() {
             let me = this;
-            store.$on('route', function (loc) {
+            route.$on('route', function (loc) {
                 let len = loc.routeLength();
                 let seg1 = loc.segment(1);
                 me.navBarVisible = len === 2 || len === 3;
                 me.sideBarVisible = len === 3;
+                // close all modals
                 me.modals.splice(0, me.modals.length);
             });
             store.$on('beginRequest', function () {
@@ -263,8 +277,8 @@ TODO:
                 me.requestsCount -= 1;
             });
             store.$on('modal', function (modal, prms) {
-                //alert('modal event handled: ' + JSON.stringify(modal));
-                let dlg = { title: "dialog", url: "/_page/catalog/suppliers", prms: prms };
+                // show modal
+                let dlg = { title: "dialog", url: "/_page/catalog/suppliers/index/0", prms: prms };
                 prms.promise = new Promise(function (resolve, reject) {
                     prms.resolve = resolve;
                 });
@@ -278,6 +292,10 @@ TODO:
         }
     };
 
+
+
+    // main VIEW SHELL
+
     new Vue({
         el: '#shell',
         components: {
@@ -289,7 +307,7 @@ TODO:
         },
         methods: {
             about() {
-                store.navigate('/app/about/show');
+                route.navigateMenu('/system/app/about');
             }
         }
     });

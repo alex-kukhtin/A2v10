@@ -111,16 +111,36 @@ namespace A2v10.Web.Mvc.Controllers
         }
 
 
+        String CreateTemplateForWrite(String fileTemplateText)
+        {
+            const String tmlHeader = 
+@"(function() {
+    let module = { exports: undefined };
+    (function(module, exports) {";
+
+            const String tmlFooter =
+@"
+    })(module, module.exports);
+    return module.exports;
+})()";
+            var sb = new StringBuilder(tmlHeader);
+            sb.Append(fileTemplateText);
+            sb.Append(tmlFooter);
+            return sb.ToString();
+    }
+
         async Task WriteModelScript(RequestView rw, IDataModel model, String rootId)
         {
             String dataModelText = "null";
+            String templateText = "{}";
             if (model != null)
             {
                 // write model script
-                String templateText = null;
+                String fileTemplateText = null;
                 if (rw.template != null)
                 {
-                    templateText = await _host.ReadTextFile(rw.Path, rw.template + ".js");
+                    fileTemplateText = await _host.ReadTextFile(rw.Path, rw.template + ".js");
+                    templateText = CreateTemplateForWrite(fileTemplateText);
                 }
                 var jss = new JsonSerializerSettings()
                 {
@@ -133,26 +153,39 @@ namespace A2v10.Web.Mvc.Controllers
                 dataModelText = JsonConvert.SerializeObject(model.Root, jss);
             }
 
-                //Response.Output.Write(model.GetModelScript(rootId, templateFile));
-                const String script =
+//TODO: model template
+            //Response.Output.Write(model.GetModelScript(rootId, templateFile));
+            const String scriptHeader =
 @"
 <script type=""text/javascript"">
 (function() {
+    const DataModelController = component('baseController');
 
-    function getModelData() {
-        return $(DataModelText);
-    };
-
-    new Vue({
+    const rawData = $(DataModelText);
+    const template = $(TemplateText);
+";
+            const String scriptFooter =
+@"
+    const vm = new DataModelController({
         el:'#$(RootId)',
-        data: getModelData()
+        data: modelData(template, rawData)
     });
+
+    vm.$data.$host = {
+        $viewModel: vm
+    };
 })();
 </script>
 ";
-            var sb = new StringBuilder(script);
+            var sb = new StringBuilder(scriptHeader);
             sb.Replace("$(RootId)", rootId);
             sb.Replace("$(DataModelText)", dataModelText);
+            sb.Replace("$(TemplateText)", templateText);
+            Response.Output.Write(sb.ToString());
+            if (model != null)
+                Response.Output.Write(model.CreateScript());
+            sb = new StringBuilder(scriptFooter);
+            sb.Replace("$(RootId)", rootId);
             Response.Output.Write(sb.ToString());
         }
     }

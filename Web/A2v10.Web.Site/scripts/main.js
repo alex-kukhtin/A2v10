@@ -22,7 +22,7 @@
         throw new Error('component "' + name + '" not found');
     }
 })();
-/*20170813-7001*/
+/*20170818-7015*/
 /* platform/webvue.js */
 (function () {
 
@@ -30,13 +30,84 @@
         Vue.set(target, prop, value);
     }
 
+    const store = new Vue({
+    });
+
+
+    app.modules['platform'] = {
+        set: set
+    };
+
+    app.modules['store'] = store;
+
+})();
+
+/*20170818-7015*/
+/* platform/route.js */
+(function () {
+
+    const SEARCH_PREFIX = "search:";
+    const MENU_PREFIX = "menu:";
+    const ENABLE_SAVE_SEARCH = true;
+
+    function parseQueryString(str) {
+        var obj = {};
+        str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
+            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return obj;
+    }
+
+    function makeQueryString(obj) {
+        if (!obj)
+            return '';
+        let esc = encodeURIComponent;
+        let query = Object.keys(obj).map(k => esc(k) + '=' + esc(obj[k])).join('&');
+        return '?' + query;
+    }
+
+    function saveSearchToStorage() {
+        if (!ENABLE_SAVE_SEARCH)
+            return;
+        let stg = window.localStorage;
+        if (!stg)
+            return;
+        let loc = window.location;
+        let key = SEARCH_PREFIX + loc.pathname;
+        loc.search ? stg.setItem(key, loc.search) : stg.removeItem(key);
+        //console.info(`store key='${key}', value='${loc.search}'`);
+    }
+
+    function getSearchFromStorage(url) {
+        if (!ENABLE_SAVE_SEARCH)
+            return '';
+        let stg = window.localStorage;
+        if (!stg)
+            return '';
+        let key = SEARCH_PREFIX + url;
+        let res = stg.getItem(key) || '';
+        //console.info(`get key='${key}', value='${res}'`);
+        return res;
+    }
+
     function Location() {
-        this.wl = window.location.pathname.split('/');
+        this.path = window.location.pathname;
+        this.wl = this.path.split('/');
         this.search = window.location.search.substring(1);
     }
 
+    // static
     Location.current = function () {
         return new Location();
+    };
+
+    Location.getSavedMenu = function (segment) {
+        let stg = window.localStorage;
+        if (!stg)
+            return '';
+        let key = MENU_PREFIX + segment;
+        let res = stg.getItem(key) || '';
+        return res;
     };
 
     Location.prototype.routeLength = function () {
@@ -49,57 +120,39 @@
     };
 
     Location.prototype.saveMenuUrl = function () {
-        let storage = window.localStorage;
-        if (!storage)
+        let stg = window.localStorage;
+        if (!stg)
             return;
         let s1 = this.segment(1);
         let s2 = this.segment(2);
         let search = this.search;
         if (s1) {
-            let keym = 'menu:' + s1;
-            let keys = 'menusearch:' + s1;
-            s2 ? storage.setItem(keym, s2) : storage.removeItem(keym);
-            search ? storage.setItem(keys, search) : storage.removeItem(keys);
+            let keym = MENU_PREFIX + s1;
+            s2 ? stg.setItem(keym, s2) : stg.removeItem(keym);
         }
         return this;
     };
 
-    function parseQueryString(str) {
-        var obj = {};
-        str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = decodeURIComponent(value);
-        });
-        return obj;
-    }
-
-    var store = new Vue({
+    var route = new Vue({
         data: {
-            sort: 'Name',
-            dir: 'asc'
+            search: {}
         },
         computed: {
             query: {
                 get() {
-                    // todo: get from window.query
-                    let query = window.location.search.substring(1); // skip '?'
-                    let qs = parseQueryString(query);
-                    this.sort = qs.sort;
-                    this.dir = qs.dir;
-                    //return qs;
-                    //console.dir(qs);
-                    return {
-                        sort: this.sort,
-                        dir: this.dir
-                    };
+                    let wls = window.location.search.substring(1); // skip '?'
+                    let qs = parseQueryString(wls);
+                    Vue.set(this, 'search', qs);
+                    return this.search;
                 },
                 set(value) {
-                    // set window.query
-                    this.sort = value.sort;
-                    this.dir = value.dir;
+                    Vue.set(this, 'search', value);
                     let newUrl = window.location.pathname;
-                    newUrl += `?sort=${this.sort}&dir=${this.dir}`;
+                    newUrl += makeQueryString(this.search);
                     window.history.pushState(null, null, newUrl);
-                    Location.current().saveMenuUrl();
+                    saveSearchToStorage();
+                    //TODO: hashChanged - reload
+                    //this.$emit('route', this.location());
                 }
             }
         },
@@ -107,30 +160,31 @@
             location() {
                 return Location.current();
             },
-            navigate(url) {
+            savedMenu: Location.getSavedMenu,
+            navigateMenu(url, query) {
+                let srch = getSearchFromStorage(url);
+                if (!srch)
+                    url += query ? '?' + query : '';
+                else
+                    url += srch;
+                if (query)
+                    Vue.set(this, 'search', parseQueryString(query));
+                console.info('navigate:' + url);
                 window.history.pushState(null, null, url);
-                let loc = Location.current();
-                this.$emit('route', loc);
-            },
-            navigateMenu(url) {
-                window.history.pushState(null, null, url);
-                let loc = Location.current();
+                let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             },
             navigateCurrent() {
-                let loc = Location.current();
+                let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             }
         }
     });
 
-    app.modules['platform'] = {
-        set: set
-    };
 
-    app.modules['store'] = store;
+    app.modules['route'] = route;
 })();
 
 /*20170813-7001*/
@@ -177,7 +231,7 @@
     };
 
 })();
-/*20170814-7012*/
+/*20170818-7015*/
 /* http.js */
 (function () {
 
@@ -215,27 +269,31 @@
     }
 
     function load(url, selector) {
-        doRequest('GET', url)
-            .then(function (html) {
-                if (selector.firstChild && selector.firstChild.__vue__)
-                    selector.firstChild.__vue__.$destroy();
-                let dp = new DOMParser();
-                let rdoc = dp.parseFromString(html, 'text/html');
-                // first element from fragment body
-                let srcElem = rdoc.body.firstElementChild;
-                selector.innerHTML = srcElem ? srcElem.outerHTML : '';
-                for (let i = 0; i < rdoc.scripts.length; i++) {
-                    let s = rdoc.scripts[i];
-                    if (s.type === 'text/javascript') {
-                        let newScript = document.createElement("script");
-                        newScript.text = s.text;
-                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
+        return new Promise(function (resolve, reject) {
+            doRequest('GET', url)
+                .then(function (html) {
+                    if (selector.firstChild && selector.firstChild.__vue__)
+                        selector.firstChild.__vue__.$destroy();
+                    let dp = new DOMParser();
+                    let rdoc = dp.parseFromString(html, 'text/html');
+                    // first element from fragment body
+                    let srcElem = rdoc.body.firstElementChild;
+                    selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+                    for (let i = 0; i < rdoc.scripts.length; i++) {
+                        let s = rdoc.scripts[i];
+                        if (s.type === 'text/javascript') {
+                            let newScript = document.createElement("script");
+                            newScript.text = s.text;
+                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                        }
                     }
-                }
-            })
-            .catch(function (error) {
-                alert(error);
-            });
+                    resolve(true);
+                })
+                .catch(function (error) {
+                    alert(error);
+                    resolve(false);
+                });
+        });
     }
 
     app.modules['http'] = {
@@ -600,21 +658,38 @@
         implementRoot: implementRoot
     };
 })();
-/*20170814-7013*/
+/*20170818-7015*/
 /*components/include.js*/
+
 (function () {
 
     const http = require('http');
 
     Vue.component('include', {
+        template: '<div :class="implClass"></div>',
         props: {
             src: String,
             cssClass: String
         },
-        template: '<div :class="cssClass"></div>',
+        data() {
+            return {
+                loading: true
+            };
+        },
+        methods: {
+            loaded(ok) {
+                this.loading = false;
+            }
+        },
+        computed: {
+            implClass() {
+                return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
+            }
+        },
         mounted() {
-            if (this.src)
-                http.load(this.src, this.$el);
+            if (this.src) {
+                http.load(this.src, this.$el).then(this.loaded);
+            }
         },
         destroyed() {
             let fc = this.$el.firstElementChild;
@@ -623,9 +698,10 @@
         },
         watch: {
             src: function (newUrl, oldUrl) {
-                http.load(newUrl, this.$el);
+                this.loading = true;
+                http.load(newUrl, this.$el).then(this.loaded);
             }
-        },
+        }
     });
 })();
 (function () {
@@ -713,7 +789,7 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
-    const store = require('store');
+    const route = require('route');
 
     const dataGridTemplate = `
 <table :class="cssClass">
@@ -755,9 +831,10 @@
         computed: {
             dir() {
                 // TODO: client/server
-                let q = store.query;
-                if (q.sort === this.content) {
-                    return q.dir;
+                let q = route.query;
+                //console.dir(q);
+                if (q.order === this.content) {
+                    return (q.dir || '').toLowerCase();
                 }
                 return null;
             },
@@ -787,11 +864,14 @@
                 if (!this.isSortable)
                     return;
                 // TODO: client/server
-                let q = store.query;
-                let qdir = q.dir;
-                if (q.sort === this.content)
+
+                let q = route.query;
+                let qdir = (q.dir || 'asc').toLowerCase();
+                if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
-                store.query = { sort: this.content, dir: qdir };
+                }
+                route.query = { order: this.content, dir: qdir };
+
                 //TODO: client
                 //this.$parent.$doSort(this);
             }
@@ -1055,4 +1135,76 @@
     };
 
     app.components['modal'] = modalComponent;
+})();
+(function () {
+
+
+    /**
+     * Базовый контроллер DataModelController
+     */
+    const store = require('store');
+
+    const base = Vue.extend({
+        computed: {
+            $isDirty() {
+                return this.$data.$dirty;
+            },
+            $isPristine() {
+                return !this.$data.$dirty;
+            }
+        },
+        methods: {
+            $exec(cmd, ...args) {
+                let root = this.$data;
+                root._exec_(cmd, ...args);
+            },
+            $save() {
+                alert(JSON.stringify(this.$data, function (key, value) {
+                    return (key[0] === '$' || key[0] === '_') ? undefined : value;
+                }, 2));
+                this.$data.$setDirty(false);
+                //TODO: promise
+            },
+            $reload() {
+                let dat = this.$data;
+                dat.$merge(modelData);
+                dat.$setDirty(false);
+                //TODO: promise
+            },
+            $showDialog(url) {
+                var dat = { x: 5, y: 10, promise: null };
+                var x = store.$emit('modal', url, dat);
+                return dat.promise;
+                /*
+                dat.promise.then(function (result) {
+                    alert('then:' + result);
+                })
+                alert('resturs:' + dat.promise);
+                */
+            },
+            $closeModal(result) {
+                store.$emit('modalClose', result);
+            },
+            $onSort(column, dir) {
+                //alert('sort on ' + column + ':' + dir);
+                //location.hash = { sort }
+                let q = store.query;
+                let qdir = q.dir;
+                if (q.sort === column)
+                    qdir = qdir === 'asc' ? 'desc' : 'asc';
+                store.query = { sort: column, dir: qdir };
+            }
+        },
+        created() {
+            // TODO: register data
+            //alert(this.$data.Customers.length);
+        },
+        destroyed() {
+            // TODO: unregister data
+            alert('base controller destroyed ');
+        }
+    });
+    
+    app.components['baseController'] = base;
+
 })();

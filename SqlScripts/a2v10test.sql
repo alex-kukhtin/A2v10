@@ -29,6 +29,19 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'ArrayModel')
+	drop procedure a2test.ArrayModel
+go
+------------------------------------------------
+create procedure a2test.ArrayModel
+@UserId bigint = null
+as
+begin
+	set nocount on;
+	select [Customers!TCustomer!Array] = null, [Id!!Id] = 123, [Name!!Name]='ObjectName', [Amount] = cast(55.1234 as decimal(10, 5));
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'ComplexModel')
 	drop procedure a2test.ComplexModel
 go
