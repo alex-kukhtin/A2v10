@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Dynamic;
 
 namespace A2v10.Infrastructure
@@ -29,6 +30,20 @@ namespace A2v10.Infrastructure
                 d[name] = value;
             else
                 d.Add(name, value);
+        }
+
+        public static void Append(this ExpandoObject obj, NameValueCollection coll, Boolean toPascalCase = false)
+        {
+            if (coll == null)
+                return;
+            var d = obj as IDictionary<String, Object>;
+            foreach (var key in coll.Keys)
+            {
+                var skey = key.ToString();
+                if (toPascalCase)
+                    skey = skey.ToPascalCase();
+                d.Add(skey, coll[key.ToString()]);
+            }
         }
     }
 }

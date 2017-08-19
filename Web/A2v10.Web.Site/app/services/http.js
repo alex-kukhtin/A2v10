@@ -1,4 +1,4 @@
-﻿/*20170818-7015*/
+﻿/*20170819-7016*/
 /* http.js */
 (function () {
 
@@ -10,8 +10,13 @@
             
             xhr.onload = function (response) {
                 store.$emit('endRequest', url);
-                if (xhr.status === 200)
-                    resolve(xhr.responseText);
+                if (xhr.status === 200) {
+                    let ct = xhr.getResponseHeader('content-type');
+                    let xhrResult = xhr.responseText;
+                    if (ct.indexOf('application/json') !== -1)
+                        xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                }
                 else
                     reject(xhr.statusText);
             };

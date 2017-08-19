@@ -27,6 +27,23 @@ let template = {
             //alert(this.$save);
             //console.dir(this);
         },
+        testThen(vm) {
+            // todo: vm
+            var vm = this.$host.$viewModel;
+            vm.$confirm({
+                message: "confirm message text", title: "from template", buttons: [
+                    { text: "Save", result: "save" },
+                    { text: "Don't save", result: "close" },
+                    { text: "Cancel", result: false }
+                ]
+            }).then(function (result) {
+                alert('template:' + result);
+            });
+        },
+        inc(elem, inc) {
+            elem.Amount += inc;
+            elem.Name += "*";
+        },
         objcmd: {
             saveRequired: true,
             validOnly: true,

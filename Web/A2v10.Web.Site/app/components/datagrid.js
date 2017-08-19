@@ -87,16 +87,14 @@
                 if (!this.isSortable)
                     return;
                 // TODO: client/server
-
                 let q = route.query;
                 let qdir = (q.dir || 'asc').toLowerCase();
                 if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
                 }
                 route.query = { order: this.content, dir: qdir };
-
-                //TODO: client
-                //this.$parent.$doSort(this);
+                if (this.$parent.searchChange)
+                    this.$parent.searchChange();
             }
         }
     };
@@ -160,7 +158,8 @@
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
-            let chElems = [row[col.content]];
+            // Warning: toString() is required.
+            let chElems = [row[col.content].toString()];
             /*TODO: validate ???? */
             if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -202,7 +201,7 @@
             hover: { type: Boolean, default: false },
             sort: { type: Boolean, default: false },
             // callbacks
-            onsort: Function
+            searchChange: Function
         },
         template: dataGridTemplate,
         components: {
@@ -227,14 +226,6 @@
             }
         },
         methods: {
-            $doSort(column) {
-                //let ss = column.dir || 'asc';
-                //this.columns.forEach((col) => { col.dir = null; });
-                //column.dir = ss === 'asc' ? "desc" : "asc";
-                // todo: client/server sorting
-                if (this.onsort)
-                    this.onsort(column.content, column.dir);
-            },
             $addColumn(column) {
                 this.columns.push(column);
             }

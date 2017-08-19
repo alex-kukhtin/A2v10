@@ -186,6 +186,7 @@
 
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
+        obj.prototype.$merge = merge;
         if (arrayItem) {
             defArrayItem(obj);
         }
@@ -251,8 +252,12 @@
                 platform.set(trg, "$selected", null);
                 trg.$copy(src[prop]);
             } else {
-                let newsrc = new ctor(src[prop], prop, this);
-                platform.set(this, prop, newsrc);
+                if (utils.isPrimitiveCtor(ctor))
+                    platform.set(this, prop, src[prop]);
+                else {
+                    let newsrc = new ctor(src[prop], prop, this);
+                    platform.set(this, prop, newsrc);
+                }
             }
         }
     }

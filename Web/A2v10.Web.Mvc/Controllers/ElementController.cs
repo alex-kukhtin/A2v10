@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Dynamic;
 using Newtonsoft.Json.Converters;
 using System.Text;
+using System.Web;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -103,14 +104,25 @@ namespace A2v10.Web.Mvc.Controllers
                 dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
             }
             String baseUrl = dataToSave.Get<String>("baseUrl");
+
+            ExpandoObject loadPrms = new ExpandoObject();
+            if (baseUrl.Contains("?"))
+            {
+                var parts = baseUrl.Split('?');
+                baseUrl = parts[0];
+                // parts[1] contains query parameters
+                var qryParams = HttpUtility.ParseQueryString(parts[1]);
+                loadPrms.Append(qryParams, toPascalCase: true);
+            }
+
+            if (baseUrl == null)
+                throw new RequestModelException("There are not base url for command 'reload'");
+
             var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
             RequestView rw = rm.GetCurrentAction();
-            var prms = new
-            {
-                UserId = UserId,
-                Id = rw.Id
-            };
-            IDataModel model = await _dbContext.LoadModelAsync(rw.LoadProcedure, prms);
+            loadPrms.Set("UserId", UserId);
+            loadPrms.Set("Id", rw.Id);
+            IDataModel model = await _dbContext.LoadModelAsync(rw.LoadProcedure, loadPrms);
             WriteDataModel(model);
         }
     }

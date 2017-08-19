@@ -118,6 +118,9 @@
         let wl = this.wl;
         return wl.length > no ? wl[no].toLowerCase() : '';
     };
+    Location.prototype.fullPath = function () {
+        return this.path + (this.search ? '?' + this.search : '');
+    }
 
     Location.prototype.saveMenuUrl = function () {
         let stg = window.localStorage;
@@ -160,6 +163,14 @@
             location() {
                 return Location.current();
             },
+            replaceUrlSearch(url) {
+                // replace search part url to current
+                let search = window.location.search;
+                let parts = url.split('?');
+                if (parts.length !== 2)
+                    return url;
+                return parts[0] + search;
+            },
             savedMenu: Location.getSavedMenu,
             navigateMenu(url, query) {
                 let srch = getSearchFromStorage(url);
@@ -179,6 +190,19 @@
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
+            },
+            navigate(url) {
+                let loc = this.location();
+                console.info('navigate:' + url);
+                let oldUrl = loc.fullPath();
+                // push/pop state feature. Replace the current state and push new one.
+                window.history.replaceState(oldUrl, null, oldUrl);
+                window.history.pushState(oldUrl, null, url);
+                loc = this.location(); // get new instance
+                this.$emit('route', loc);
+            },
+            close() {
+                window.history.back();
             }
         }
     });
@@ -199,6 +223,9 @@
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isString(value) { return typeof value === 'string'; }
     function isNumber(value) { return typeof value === 'number'; }
+    function isPrimitiveCtor(ctor) {
+        return ctor === String || ctor === Number || ctor === Boolean;
+    }
 
     function notBlank(val) {
         if (!val)
@@ -227,7 +254,8 @@
         isNumber: isNumber,
         toString: toString,
         notBlank: notBlank,
-        toJson: toJson
+        toJson: toJson,
+        isPrimitiveCtor: isPrimitiveCtor
     };
 })();
 
@@ -238,7 +266,7 @@
     };
 
 })();
-/*20170818-7015*/
+/*20170819-7016*/
 /* http.js */
 (function () {
 
@@ -250,8 +278,13 @@
             
             xhr.onload = function (response) {
                 store.$emit('endRequest', url);
-                if (xhr.status === 200)
-                    resolve(xhr.responseText);
+                if (xhr.status === 200) {
+                    let ct = xhr.getResponseHeader('content-type');
+                    let xhrResult = xhr.responseText;
+                    if (ct.indexOf('application/json') !== -1)
+                        xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                }
                 else
                     reject(xhr.statusText);
             };
@@ -562,6 +595,7 @@
 
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
+        obj.prototype.$merge = merge;
         if (arrayItem) {
             defArrayItem(obj);
         }
@@ -627,8 +661,12 @@
                 platform.set(trg, "$selected", null);
                 trg.$copy(src[prop]);
             } else {
-                let newsrc = new ctor(src[prop], prop, this);
-                platform.set(this, prop, newsrc);
+                if (utils.isPrimitiveCtor(ctor))
+                    platform.set(this, prop, src[prop]);
+                else {
+                    let newsrc = new ctor(src[prop], prop, this);
+                    platform.set(this, prop, newsrc);
+                }
             }
         }
     }
@@ -892,16 +930,14 @@
                 if (!this.isSortable)
                     return;
                 // TODO: client/server
-
                 let q = route.query;
                 let qdir = (q.dir || 'asc').toLowerCase();
                 if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
                 }
                 route.query = { order: this.content, dir: qdir };
-
-                //TODO: client
-                //this.$parent.$doSort(this);
+                if (this.$parent.searchChange)
+                    this.$parent.searchChange();
             }
         }
     };
@@ -965,7 +1001,8 @@
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
-            let chElems = [row[col.content]];
+            // Warning: toString() is required.
+            let chElems = [row[col.content].toString()];
             /*TODO: validate ???? */
             if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -1007,7 +1044,7 @@
             hover: { type: Boolean, default: false },
             sort: { type: Boolean, default: false },
             // callbacks
-            onsort: Function
+            searchChange: Function
         },
         template: dataGridTemplate,
         components: {
@@ -1032,14 +1069,6 @@
             }
         },
         methods: {
-            $doSort(column) {
-                //let ss = column.dir || 'asc';
-                //this.columns.forEach((col) => { col.dir = null; });
-                //column.dir = ss === 'asc' ? "desc" : "asc";
-                // todo: client/server sorting
-                if (this.onsort)
-                    this.onsort(column.content, column.dir);
-            },
             $addColumn(column) {
                 this.columns.push(column);
             }
@@ -1113,7 +1142,7 @@
                 return this.isActive(this.item);
             },
             iconClass: function () {
-                return this.icon ? "bowtie-" + (this.item[this.icon] || 'empty') : '';
+                return this.icon ? "ico ico-" + (this.item[this.icon] || 'empty') : '';
             }
         }
     });
@@ -1122,17 +1151,29 @@
 
 (function () {
 
+
+/**
+TODO: may be icon for confirm ????
+*/
+
+    const modalTemplate = `
+<div class="modal-window">
+    <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
+    <div v-else class="modal-content">
+        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="closeModal(false)">x</button></div>
+        <div class="modal-body">
+            <p v-text="dialog.message"></p>            
+        </div>
+        <div class="modal-footer">
+            <button v-for="(btn, index) in buttons"  :key="index" @click="closeModal(btn.result)" v-text="btn.text"></button>
+        </div>
+    </div>
+</div>        
+`;
     const store = require('store');
 
     const modalComponent = {
-        template: `
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>{{dialog.title}} {{dialog.url}}</span><button @click.stop='closeModal(false)'>x</button>
-            </div>
-            <include class='dialog-include' :src="dialog.url"></include>
-        </div>
-        `,
+        template: modalTemplate,
         props: {
             dialog: Object
         },
@@ -1154,6 +1195,22 @@
                 store.$emit('modalClose', result);
             }
         },
+        computed: {
+            isInclude: function () {
+                return !!this.dialog.url
+            },
+            title: function () {
+                return this.dialog.title || 'error';
+            }, 
+            buttons: function () {
+                if (this.dialog.buttons)
+                    return this.dialog.buttons;
+                return [
+                    { text: "OK", result: true },
+                    { text: "Cancel", result: false }
+                ];
+            }
+        },
         created() {
             document.addEventListener('keyup', this.keyUpHandler);
         },
@@ -1171,13 +1228,16 @@
     const store = require('store');
     const utils = require('utils');
     const dataservice = require('std:dataservice');
+    const route = require('route');
 
     const base = Vue.extend({
         __baseUrl__: '',
         computed: {
+
             $isDirty() {
                 return this.$data.$dirty;
             },
+
             $isPristine() {
                 return !this.$data.$dirty;
             }
@@ -1187,29 +1247,40 @@
                 let root = this.$data;
                 root._exec_(cmd, ...args);
             },
+
             $save() {
                 var self = this;
-                // TODO: make URL ???? Id ??
                 var url = '/_data/save';
                 return new Promise(function (resolve, reject) {
                     var jsonData = utils.toJson({ baseUrl: self.__baseUrl__, data: self.$data });
-                    dataservice.post(url, jsonData).then(function () {
+                    dataservice.post(url, jsonData).then(function (data) {
+                        self.$data.$merge(data);
                         self.$data.$setDirty(false);
-                        resolve(true);
+                        // data is full model. Resolve requires single element
+                        let dataToResolve;
+                        for (let p in data) {
+                            dataToResolve = data[p];
+                        }
+                        resolve(dataToResolve); // single element (raw data)
                     }).catch(function (result) {
                         alert('save error:' + result);
                     });
                 });
             },
+
             $reload() {
+                var self = this;
                 var url = '/_data/reload';
-                let dat = this.$data;
+                let dat = self.$data;
                 return new Promise(function (resolve, reject) {
                     var jsonData = utils.toJson({ baseUrl: self.__baseUrl__ });
                     dataservice.post(url, jsonData).then(function (data) {
-                        alert('reload success')
-                        dat.$merge(data);
-                        dat.$setDirty(false);
+                        if (utils.isObject(data)) {
+                            dat.$merge(data);
+                            dat.$setDirty(false);
+                        } else {
+                            throw new Error('invalid response type for $reload');
+                        }
                     }).catch(function (error) {
                         alert('reload error:' + error);
                     });
@@ -1218,41 +1289,105 @@
             $requery() {
                 alert('requery here');
             },
-            $dialog(command, url, data) {
-                var dlgData = { promise: null, data: data };
-                store.$emit('modal', url, dlgData);
-                // TODO: use command!!!
-                return dlgData.promise;
-                /*
-                dlgData.promise.then(function (result) {
-                    alert('then:' + result);
-                })
-                alert('resturs:' + dat.promise);
-                */
+
+            $navigate(url, data) {
+                // TODO: make correct URL
+                let urlToNavigate = '/' + url + '/' + data;
+                route.navigate(urlToNavigate);
             },
-            $saveAndClose(result) {
-                this.$save().then(function () {
-                    store.$emit('modalClose', true);
+            $confirm(prms) {
+                let dlgData = { promise: null, data: prms };
+                store.$emit('confirm', dlgData);
+                return dlgData.promise;
+            },
+            $dialog(command, url, data) {
+                return new Promise(function (resolve, reject) {
+                    // sent a single object
+                    let dataToSent = data;
+                    if (command === 'add') {
+                        if (!utils.isArray(data)) {
+                            console.error('$dialog.add. The argument is not an array');
+                        }
+                        dataToSent = null;
+                    }
+                    let dlgData = { promise: null, data: dataToSent };
+                    store.$emit('modal', url, dlgData);
+                    if (command === 'edit' || command === 'browse') {
+                        dlgData.promise.then(function (result) {
+                            // result is raw data
+                            data.$merge(result);
+                            resolve(result);
+                        });
+                    } else if (command === 'add') {
+                        // append to array
+                        dlgData.promise.then(function (result) {
+                            // result is raw data
+                            data.$append(result);
+                            resolve(result);
+                        });
+                    } else {
+                        dlgData.promise.then(function (result) {
+                            resolve(result);
+                        });
+                    }
                 });
             },
+
+            $saveAndClose(result) {
+                this.$save().then(function (result) {
+                    store.$emit('modalClose', result);
+                });
+            },
+
             $closeModal(result) {
                 store.$emit('modalClose', result);
             },
-            $onSort(column, dir) {
-                //alert('sort on ' + column + ':' + dir);
-                //location.hash = { sort }
-                let q = store.query;
-                let qdir = q.dir;
-                if (q.sort === column)
-                    qdir = qdir === 'asc' ? 'desc' : 'asc';
-                store.query = { sort: column, dir: qdir };
+
+            $close() {
+                if (this.$saveModified())
+                    route.close();
+            },
+
+            $searchChange() {
+                let newUrl = route.replaceUrlSearch(this.__baseUrl__);
+                this.__baseUrl__ = newUrl;
+                this.$reload();
+            },
+
+            $saveModified() {
+                if (!this.$isDirty)
+                    return true;
+                let self = this;
+                // TODO: localize!!!
+                let dlg = {
+                    message: "Element was modified. Save changes?",
+                    title: "Confirm close",
+                    buttons: [
+                        { text: "Save", result: "save" },
+                        { text: "Don't save", result: "close" },
+                        { text: "Cancel", result: false }
+                    ]
+                };
+                this.$confirm(dlg).then(function (result) {
+                    if (result == 'close') {
+                        // close without saving
+                        self.$data.$setDirty(false);
+                        self.$close();
+                    } else if (result === 'save') {
+                        // save then close
+                        self.$save().then(function () {
+                            self.$close();
+                        })
+                    }
+                });
+                return false;
             }
         },
         created() {
-            console.warn('TODO: register debug data');
+            store.$emit('registerData', this);
         },
         destroyed() {
-            console.warn('TODO: unregister debug data');
+            store.$emit('registerData', null);
         }
     });
     

@@ -27,6 +27,9 @@ let template = {
             //alert(this.$save);
             //console.dir(this);
         },
+        inc(elem, inc) {
+            elem.Amout += inc;
+        },
         objcmd: {
             saveRequired: true,
             validOnly: true,

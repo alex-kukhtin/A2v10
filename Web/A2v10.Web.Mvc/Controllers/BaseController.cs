@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,31 +79,22 @@ namespace A2v10.Web.Mvc.Controllers
             IDataModel model = null;
             if (loadProc != null)
             {
-                //TODO: // use model ID
-                model = await _dbContext.LoadModelAsync(loadProc, new
-                {
-                    UserId = UserId,
-                    Id = rw.Id
-                });
+                ExpandoObject loadPrms = new ExpandoObject();
+                loadPrms.Append(Request.QueryString, toPascalCase: true);
+                loadPrms.Set("UserId", UserId);
+                loadPrms.Set("Id", rw.Id);
+                model = await _dbContext.LoadModelAsync(loadProc, loadPrms);
             }
             String rootId = "el" + Guid.NewGuid().ToString();
 
             String modelScript = await WriteModelScript(rw, model, rootId);
 
-            // try HTML
-            String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".html");
+            // TODO: use view engines
+            // try xaml
+            String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".xaml");
             bool bRendered = false;
             if (System.IO.File.Exists(fileName)) {
-                using (var tr = new StreamReader(fileName))
-                {
-                    String htmlText = await tr.ReadToEndAsync();
-                    htmlText = htmlText.Replace("$(RootId)", rootId);
-                    Response.Output.Write(htmlText);
-                    bRendered = true;
-                }
-            } else {
                 // render XAML
-                fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".xaml");
                 if (System.IO.File.Exists(fileName))
                 {
                     using (var strWriter = new StringWriter())
@@ -119,9 +111,21 @@ namespace A2v10.Web.Mvc.Controllers
                         bRendered = true;
                     }
                 }
+            } else {
+                // try html
+                fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".html");
+                if (System.IO.File.Exists(fileName)) {
+                    using (var tr = new StreamReader(fileName))
+                    {
+                        String htmlText = await tr.ReadToEndAsync();
+                        htmlText = htmlText.Replace("$(RootId)", rootId);
+                        Response.Output.Write(htmlText);
+                        bRendered = true;
+                    }
+                }
             }
             if (!bRendered) {
-                throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".html")}\n{rw.GetRelativePath(".xaml")}");
+                throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml")}\n{rw.GetRelativePath(".html")}");
             }
             Response.Output.Write(modelScript);
         }

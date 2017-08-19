@@ -31,7 +31,7 @@ TODO:
         {
             title: 'Документы', url: 'document', menu: [
                 { title: "Incoming", url: 'incoming', icon: 'file', query:'order=Date&dir=asc' },
-                { title: "Outgoing", url: 'outgoing', icon: 'edit'},
+                { title: "Outgoing", url: 'outgoing', icon: 'database'},
                 { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'comment' }
             ]
         }
@@ -54,20 +54,22 @@ TODO:
     }
 
     const navBar = {
+
         props: {
             menu: Array
         },
+
         template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}"><a href="\" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
 
         data: function () {
             return {
-                activeItem: null
+                activeItem: null,
             };
         },
 
         created: function () {
             var me = this;
-
+            me.__dataStack__ = [];
             function findCurrent() {
                 let loc = route.location();
                 let seg1 = loc.segment(1);
@@ -76,6 +78,18 @@ TODO:
             }
 
             window.addEventListener('popstate', function (event, a, b) {
+                if (me.__dataStack__.length > 0) {
+                    let comp = me.__dataStack__[0];
+                    let oldUrl = event.state;
+                    console.warn('pop state: ' + oldUrl);
+                    if (!comp.$saveModified()) {
+                        // disable navigate
+                        oldUrl = comp.__baseUrl__.replace('/_page', '');
+                        console.warn('return url: ' + oldUrl);
+                        window.history.pushState(oldUrl, null, oldUrl);
+                        return;
+                    }
+                }
                 findCurrent();
                 route.navigateCurrent();
             });
@@ -87,6 +101,13 @@ TODO:
                 // TODO: to route
                 window.history.replaceState(null, null, me.activeItem.url);
             }
+
+            store.$on('registerData', function (component) {
+                if (component)
+                    me.__dataStack__.push(component);
+                else
+                    me.__dataStack__.pop(component);
+            });
         },
 
         methods: {
@@ -288,12 +309,21 @@ TODO:
                 dlg.promise = new Promise(function (resolve, reject) {
                     dlg.resolve = resolve;
                 });
+                prms.promise = dlg.promise;
                 me.modals.push(dlg);
             });
             store.$on('modalClose', function (result) {
                 let dlg = me.modals.pop();
                 if (result)
                     dlg.resolve(result);
+            });
+            store.$on('confirm', function (prms) {
+                let dlg = prms.data;
+                dlg.promise = new Promise(function (resolve) {
+                    dlg.resolve = resolve;
+                });
+                prms.promise = dlg.promise;
+                me.modals.push(dlg);
             });
         }
     };

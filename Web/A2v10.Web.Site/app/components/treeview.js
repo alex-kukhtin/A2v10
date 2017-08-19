@@ -64,7 +64,7 @@
                 return this.isActive(this.item);
             },
             iconClass: function () {
-                return this.icon ? "bowtie-" + (this.item[this.icon] || 'empty') : '';
+                return this.icon ? "ico ico-" + (this.item[this.icon] || 'empty') : '';
             }
         }
     });

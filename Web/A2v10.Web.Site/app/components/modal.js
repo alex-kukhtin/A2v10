@@ -1,16 +1,28 @@
 ﻿(function () {
 
+
+/**
+TODO: may be icon for confirm ????
+*/
+
+    const modalTemplate = `
+<div class="modal-window">
+    <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
+    <div v-else class="modal-content">
+        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="closeModal(false)">x</button></div>
+        <div class="modal-body">
+            <p v-text="dialog.message"></p>            
+        </div>
+        <div class="modal-footer">
+            <button v-for="(btn, index) in buttons"  :key="index" @click="closeModal(btn.result)" v-text="btn.text"></button>
+        </div>
+    </div>
+</div>        
+`;
     const store = require('store');
 
     const modalComponent = {
-        template: `
-        <div class="modal-window">
-            <div class="modal-header">
-                <span>{{dialog.title}} {{dialog.url}}</span><button @click.stop='closeModal(false)'>x</button>
-            </div>
-            <include class='dialog-include' :src="dialog.url"></include>
-        </div>
-        `,
+        template: modalTemplate,
         props: {
             dialog: Object
         },
@@ -30,6 +42,22 @@
         methods: {
             closeModal(result) {
                 store.$emit('modalClose', result);
+            }
+        },
+        computed: {
+            isInclude: function () {
+                return !!this.dialog.url
+            },
+            title: function () {
+                return this.dialog.title || 'error';
+            }, 
+            buttons: function () {
+                if (this.dialog.buttons)
+                    return this.dialog.buttons;
+                return [
+                    { text: "OK", result: true },
+                    { text: "Cancel", result: false }
+                ];
             }
         },
         created() {

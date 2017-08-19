@@ -38,15 +38,41 @@ end
 go
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Index]
-@UserId bigint
+@UserId bigint,
+@Order nvarchar(255) = null,
+@Dir nvarchar(255) = null
 as
 begin
 	set nocount on;
+
+	declare @Asc nvarchar(10), @Desc nvarchar(10);
+	set @Asc = N'asc'; set @Desc = N'desc';
+	set @Dir = lower(@Dir);
+
+	--raiserror(@Dir , 16, -1) with nowait;
+
+	with T as (
+		select Id, Name, Amount, Memo,
+			_RowNumber = row_number() over (
+			 order by
+			case when @Order=N'Id' and @Dir = @Asc then c.Id end asc,
+			case when @Order=N'Id' and @Dir = @Desc  then c.Id end desc,
+			case when @Order=N'Name' and @Dir = @Asc then c.[Name] end asc,
+			case when @Order=N'Name' and @Dir = @Desc  then c.[Name] end desc,
+			case when @Order=N'Amount' and @Dir = @Asc then c.[Amount] end asc,
+			case when @Order=N'Amount' and @Dir = @Desc  then c.[Amount] end desc,
+			case when @Order=N'Memo' and @Dir = @Asc then c.[Memo] end asc,
+			case when @Order=N'Memo' and @Dir = @Desc  then c.[Memo] end desc
+			)
+		from a2v10demo.[Catalog.Customers] c
+	)
 	select [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo
-	from a2v10demo.[Catalog.Customers];
+	from T order by _RowNumber;
 end
 go
 
+exec a2v10demo.[Catalog.Customer.Index] 100, N'Id', N'asc';
+go
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Load]
 @UserId bigint,
@@ -112,7 +138,7 @@ begin
 		update set 
 			target.[Name] = source.[Name],
 			target.[Amount] = source.Amount,
-			target.[Memo] = source.[Memo]
+			target.[Memo] = source.[Memo] + N'*'
 	when not matched by target then
 		insert (Name, Amount, Memo)
 		values (Name, Amount, Memo)
@@ -127,4 +153,6 @@ go
 ------------------------------------------------
 set noexec off;
 go
+
+delete from a2v10demo.[Catalog.Customers] where Id>=105
 

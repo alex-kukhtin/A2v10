@@ -1,24 +1,30 @@
 ﻿
 <div id="$(RootId)" style="min-height:400px">
-    <h3>HTML EDIT CUSTOMER</h3>
+    <div class="modal-header"><span>HTML EDIT CUSTOMER [</span><span v-text="Customer.Id"></span>]</div>
 
-    <div class="grid" style="margin:20px">
-        <div class="control">
-            <label>name:</label>
-            <textbox :item="Customer" prop="Name"></textbox>
+    <div class="modal-body">
+        <div class="grid" style="margin:20px">
+            <div class="control">
+                <label>name:</label>
+                <textbox :item="Customer" prop="Name"></textbox>
+            </div>
+            <div class="control">
+                <label>amount:</label>
+                <textbox :item="Customer" prop="Amount"></textbox>
+            </div>
+            <div class="control">
+                <label>memo:</label>
+                <textbox :item="Customer" prop="Memo"></textbox>
+            </div>
         </div>
-        <div class="control">
-            <label>amount:</label>
-            <textbox :item="Customer" prop="Amount"></textbox>
-        </div>
-        <div class="control">
-            <label>memo:</label>
-            <textbox :item="Customer" prop="Memo"></textbox>
+        <div>
+            <h5>states</h5>
+            <div>dirty = {{$isDirty}} pristine = {{$isPristine}}</div>
         </div>
     </div>
-
-    <div style="margin-top:50px">
-        <button @click.stop.prevent="$saveAndClose()">OK</button>
+    <div style="margin-top:50px" class="model-footer">
+        <button @click.stop.prevent="$saveAndClose()" :disabled="$isPristine">OK</button>
+        <button @click.stop.prevent="$save()" :disabled="$isPristine">Save without close</button>
         <button @click.stop.prevent="$closeModal(false)">Cancel</button>
     </div>
 </div>

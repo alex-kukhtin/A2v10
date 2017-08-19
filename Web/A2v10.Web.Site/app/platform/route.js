@@ -74,6 +74,9 @@
         let wl = this.wl;
         return wl.length > no ? wl[no].toLowerCase() : '';
     };
+    Location.prototype.fullPath = function () {
+        return this.path + (this.search ? '?' + this.search : '');
+    }
 
     Location.prototype.saveMenuUrl = function () {
         let stg = window.localStorage;
@@ -116,6 +119,14 @@
             location() {
                 return Location.current();
             },
+            replaceUrlSearch(url) {
+                // replace search part url to current
+                let search = window.location.search;
+                let parts = url.split('?');
+                if (parts.length !== 2)
+                    return url;
+                return parts[0] + search;
+            },
             savedMenu: Location.getSavedMenu,
             navigateMenu(url, query) {
                 let srch = getSearchFromStorage(url);
@@ -135,6 +146,19 @@
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
+            },
+            navigate(url) {
+                let loc = this.location();
+                console.info('navigate:' + url);
+                let oldUrl = loc.fullPath();
+                // push/pop state feature. Replace the current state and push new one.
+                window.history.replaceState(oldUrl, null, oldUrl);
+                window.history.pushState(oldUrl, null, url);
+                loc = this.location(); // get new instance
+                this.$emit('route', loc);
+            },
+            close() {
+                window.history.back();
             }
         }
     });

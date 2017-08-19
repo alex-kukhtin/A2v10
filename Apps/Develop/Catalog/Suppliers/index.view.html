@@ -1,23 +1,36 @@
 ﻿
 <div id="$(RootId)" style="min-height:400px">
     <h3>HTML view catalog/suppliers Data grid (but model is customer)</h3>
-    <i class="bowtie-alert"></i>
-    <i class="bowtie-approve-disapprove"></i>
-    <i class="bowtie-approve"></i>
-    <i class="bowtie-folder"></i>
+    <i class="ico-chevron-down"></i>
+    <i class="ico-chevron-left"></i>
+    <i class="ico-chevron-right"></i>
+    <i class="ico-chevron-up"></i>
+    <i class="ico-dashboard"></i>
     <i>italic text</i>
+    <i class="ico-comment" />
+    <i class="ico-comment-add" />
+    <i class="ico-comment-discussion" />
+    <i class="ico-comment-lines" />
+    <i class="ico-comment-next" />
+    <i class="ico-comment-outline" />
+    <i class="ico-comment-previous" />
+    <i class="ico-comment-urgent" />
+    <i class="ico-database" />
+    <i class="icon-dot" />
+
     <div class="toolbar" style="padding:6px;display:flex">
         <button @click.stop.prevent="Customers.$append()">Add</button>
         <button @click.stop.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
-        <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
-        <button @click.stop.prevent="$save()"><i class="bowtie-save"></i> Save</button>
-        <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="bowtie-edit"></i> Edit in dialog</button>
-        <button @click.stop.prevent="$reload()"><i class="bowtie-navigate-refresh"></i> Reload</button>
+        <button @click.stop.prevent="$exec('test')"><i class="ico-database"></i> exec</button>
+        <button @click.stop.prevent="$save()"><i class="ico ico-save"></i> Save</button>
+        <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
+        <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
         <label v-text="Customers.length"></label>
-        <button @click.stop.prevent="$dialog('show', 'catalog/suppliers/browse')">Browse dialog</button>
+        <button @click.stop.prevent="$dialog('show', 'catalog/suppliers/browse')"><i class="ico ico-search"></i>Browse dialog</button>
+        <button @click.stop.prevent="$exec('testThen')"><i class="ico ico-trash"></i>Test then</button>
     </div>
     <data-grid :items-source="Customers" :striped="true" 
-               :bordered="true" :hover="true" :sort="true">
+               :bordered="true" :hover="true" :sort="true" :search-change="$searchChange">
         <data-grid-column header="Id" content="Id"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
@@ -26,13 +39,16 @@
         <data-grid-column id="cmd"></data-grid-column>
         <template slot="cmd" scope="cell">
             <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
-                <i class="bowtie-edit"></i>
+                <i class="ico-edit"></i>
             </button>
-            <button @click.stop.prevent="$open('edit', 'catalog/suppliers/edit', cell.row)">
-                <i class="bowtie-file"></i>
+            <button @click.stop.prevent="$navigate('catalog/suppliers/edit', cell.row.Id)">
+                <i class="ico-file"></i>
             </button>
             <button @click.stop.prevent="cell.row.$remove()">
-                <i class="bowtie-close"></i>
+                <i class="ico-copy"></i>
+            </button>
+            <button @click.stop.prevent="$exec('inc', cell.row, 5)">
+                <i class="ico-folder"></i>
             </button>
         </template>
     </data-grid>

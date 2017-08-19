@@ -10,6 +10,9 @@
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isString(value) { return typeof value === 'string'; }
     function isNumber(value) { return typeof value === 'number'; }
+    function isPrimitiveCtor(ctor) {
+        return ctor === String || ctor === Number || ctor === Boolean;
+    }
 
     function notBlank(val) {
         if (!val)
@@ -38,6 +41,7 @@
         isNumber: isNumber,
         toString: toString,
         notBlank: notBlank,
-        toJson: toJson
+        toJson: toJson,
+        isPrimitiveCtor: isPrimitiveCtor
     };
 })();

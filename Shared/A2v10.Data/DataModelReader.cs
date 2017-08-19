@@ -39,12 +39,24 @@ namespace A2v10.Data
         {
             if (values == null)
                 return;
-            var props = values.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var prop in props)
+            if (values is ExpandoObject)
             {
-                var val = prop.GetValue(values);
-                if (val != null)
-                    prms.AddWithValue("@" + prop.Name, val);
+                foreach (var e in values as IDictionary<String, Object>)
+                {
+                    var val = e.Value;
+                    if (val != null)
+                        prms.AddWithValue("@" + e.Key, e.Value);
+                }
+            }
+            else
+            {
+                var props = values.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var prop in props)
+                {
+                    var val = prop.GetValue(values);
+                    if (val != null)
+                        prms.AddWithValue("@" + prop.Name, val);
+                }
             }
         }
 

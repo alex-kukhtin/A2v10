@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
-    <link href="/css/bowtie.css" rel="stylesheet" />
     <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -14,7 +13,7 @@
             <span v-text="title"></span>
         </header>
         <footer>
-            <a href @click.stop.prevent="about">about</a>
+            <a href="\system\app\about" @click.stop.prevent="about">about</a>
         </footer>
         <a2-main-view :menu="menu"></a2-main-view>
     </div>
