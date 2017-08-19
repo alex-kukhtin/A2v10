@@ -54,6 +54,8 @@
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
+                    if (selector.firstChild && selector.firstChild.__vue__)
+                        selector.firstChild.__vue__.__baseUrl__ = url;
                     resolve(true);
                 })
                 .catch(function (error) {

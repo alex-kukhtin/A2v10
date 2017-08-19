@@ -31,8 +31,8 @@ TODO:
         {
             title: 'Документы', url: 'document', menu: [
                 { title: "Incoming", url: 'incoming', icon: 'file', query:'order=Date&dir=asc' },
-                { title: "Outgoing", url: 'outgoing', icon: 'file-o'},
-                { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'folder-open-o' }
+                { title: "Outgoing", url: 'outgoing', icon: 'edit'},
+                { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'comment' }
             ]
         }
     ];
@@ -277,17 +277,23 @@ TODO:
                 me.requestsCount -= 1;
             });
             store.$on('modal', function (modal, prms) {
-                // show modal
-                let dlg = { title: "dialog", url: "/_page/catalog/suppliers/index/0", prms: prms };
-                prms.promise = new Promise(function (resolve, reject) {
-                    prms.resolve = resolve;
+                // TODO: Path.combine
+                let id = '0';
+                if (prms && prms.data && prms.data.Id) {
+                    id = prms.data.Id;
+                    // TODO: get correct ID
+                }
+                let url = '/_dialog/' + modal + '/' + id;
+                let dlg = { title: "dialog", url: url, prms: prms.data };
+                dlg.promise = new Promise(function (resolve, reject) {
+                    dlg.resolve = resolve;
                 });
                 me.modals.push(dlg);
             });
             store.$on('modalClose', function (result) {
                 let dlg = me.modals.pop();
                 if (result)
-                    dlg.prms.resolve(result);
+                    dlg.resolve(result);
             });
         }
     };

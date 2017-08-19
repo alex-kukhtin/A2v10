@@ -53,6 +53,7 @@
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Controls\DataGrid.cs" />
     <Compile Include="Controls\DataGridColumn.cs" />
+    <Compile Include="Controls\List.cs" />
     <Compile Include="Controls\Repeater.cs" />
     <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Controls\ValuedControl.cs" />

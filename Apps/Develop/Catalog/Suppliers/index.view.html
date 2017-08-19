@@ -8,11 +8,13 @@
     <i>italic text</i>
     <div class="toolbar" style="padding:6px;display:flex">
         <button @click.stop.prevent="Customers.$append()">Add</button>
-        <button @click.stop.prevent="Customers.$append()">Add in dialog</button>
+        <button @click.stop.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
         <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
-        <button @click.stop.prevent="$save()">Save</button>
+        <button @click.stop.prevent="$save()"><i class="bowtie-save"></i> Save</button>
+        <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="bowtie-edit"></i> Edit in dialog</button>
+        <button @click.stop.prevent="$reload()"><i class="bowtie-navigate-refresh"></i> Reload</button>
         <label v-text="Customers.length"></label>
-        <button @click.stop.prevent="$showDialog('catalog/customers/browse')">Browse dialog</button>
+        <button @click.stop.prevent="$dialog('show', 'catalog/suppliers/browse')">Browse dialog</button>
     </div>
     <data-grid :items-source="Customers" :striped="true" 
                :bordered="true" :hover="true" :sort="true">
@@ -23,11 +25,14 @@
         <data-grid-column header="Sum" content="$Sum" align="right"></data-grid-column>
         <data-grid-column id="cmd"></data-grid-column>
         <template slot="cmd" scope="cell">
-            <button @click.stop.prevent="$editDialog('\catalog\customers\edit', cell.row)">
-                <i class="fa fa-edit"></i>
+            <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
+                <i class="bowtie-edit"></i>
+            </button>
+            <button @click.stop.prevent="$open('edit', 'catalog/suppliers/edit', cell.row)">
+                <i class="bowtie-file"></i>
             </button>
             <button @click.stop.prevent="cell.row.$remove()">
-                <i class="fa fa-trash"></i>
+                <i class="bowtie-close"></i>
             </button>
         </template>
     </data-grid>

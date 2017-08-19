@@ -42,7 +42,9 @@ namespace A2v10.Data
             var props = values.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var prop in props)
             {
-                prms.AddWithValue("@" + prop.Name, prop.GetValue(values));
+                var val = prop.GetValue(values);
+                if (val != null)
+                    prms.AddWithValue("@" + prop.Name, val);
             }
         }
 

@@ -21,6 +21,12 @@
         return (val || '') !== '';
     }
 
+    function toJson(data) {
+        return JSON.stringify(data, function (key, value) {
+            return (key[0] === '$' || key[0] === '_') ? undefined : value;
+        }, 2);
+    }
+
 
     app.modules['utils'] = {
         isArray: Array.isArray,
@@ -31,6 +37,7 @@
         isString: isString,
         isNumber: isNumber,
         toString: toString,
-        notBlank: notBlank
+        notBlank: notBlank,
+        toJson: toJson
     };
 })();

@@ -10,6 +10,7 @@
 			"app/services/http.js",
 			"app/services/validators.js",
 			"app/services/datamodel.js",
+			"app/services/dataservice.js",
 			"app/components/include.js",
 			"app/components/validator.js",
 			"app/components/control.js",

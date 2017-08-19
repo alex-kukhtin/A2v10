@@ -2,7 +2,7 @@
 {
 	"@schema": "model_schema.json",
 	"schema": "a2v10demo",
-	"model": "Catalog.Customers",
+	"model": "Catalog.Customer",
 	"actions": {
 		"index": {
 			"index": true,
@@ -12,8 +12,8 @@
 	},
 	"dialogs": {
 		"edit": {
-			"view": "edit.dialog",
-			"template": "element"
+			"dialog": "edit.dialog",
+			"template": "element.template"
 		}
 	}	
 }

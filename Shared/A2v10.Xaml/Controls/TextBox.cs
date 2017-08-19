@@ -10,9 +10,8 @@ namespace A2v10.Xaml
     {
         internal override void RenderElement(RenderContext context)
         {
-            var input = new TagBuilder("input");
-            input.RenderStart(context);
-            // close tag not needed
+            var input = new TagBuilder("textbox");
+            input.Render(context);
         }
     }
 }

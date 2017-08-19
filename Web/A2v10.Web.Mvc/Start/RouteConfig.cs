@@ -37,6 +37,12 @@ namespace A2v10.Web.Mvc.Start
             );
 
             routes.MapRoute(
+                name: "Data",
+                url: "_data/{*command}",
+                defaults: new { controller = "Element", action = "Data" }
+            );
+
+            routes.MapRoute(
 				name: "Default",
 				url: "{*pathInfo}",
 				defaults: new { controller = "Shell", action = "Index"}

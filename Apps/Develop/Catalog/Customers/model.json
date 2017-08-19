@@ -1,7 +1,7 @@
 ﻿/*catalog/customers*/
 {
 	"schema": "a2v10demo",
-	"model": "Catalog.Customers",
+	"model": "Catalog.Customer",
 	"actions": {
 		"index": {
 			"index": true,

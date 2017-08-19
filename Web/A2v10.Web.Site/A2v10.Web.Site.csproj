@@ -62,6 +62,7 @@
     <Content Include="app\components\validator.js" />
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
+    <Content Include="app\services\dataservice.js" />
     <Content Include="app\services\http.js" />
     <Content Include="app\services\log.js" />
     <Content Include="app\platform\route.js" />

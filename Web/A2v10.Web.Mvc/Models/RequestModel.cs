@@ -21,7 +21,13 @@ namespace A2v10.Web.Mvc.Models
     {
         Page,
         Dialog,
-        Command
+        Command,
+        Data
+    }
+
+    public enum RequestDataAction
+    {
+        Save
     }
 
     public struct RequestModelInfo
@@ -31,6 +37,7 @@ namespace A2v10.Web.Mvc.Models
         public String dialog;
         public String command;
         public String path;
+        public String data;
     }
 
 
@@ -50,11 +57,21 @@ namespace A2v10.Web.Mvc.Models
             _parent = model;
         }
 
+        [JsonIgnore]
         public String Path
         {
             get
             {
                 return _parent._modelPath;
+            }
+        }
+
+        [JsonIgnore]
+        public String Id
+        {
+            get
+            {
+                return _parent._id;
             }
         }
 
@@ -135,6 +152,7 @@ namespace A2v10.Web.Mvc.Models
     public class RequestDialog : RequestView
     {
         public string dialog;
+
         public override string GetView()
         {
             return dialog;
@@ -151,9 +169,13 @@ namespace A2v10.Web.Mvc.Models
         private String _action;
         private String _dialog;
         private String _command;
+        private String _data;
+        private RequestUrlKind _kind;
 
         [JsonIgnore]
         internal String _modelPath;
+        [JsonIgnore]
+        internal String _id;
 
         public String model; // data model
         public String schema; // schema for data model
@@ -162,6 +184,19 @@ namespace A2v10.Web.Mvc.Models
         public Dictionary<String, RequestDialog> dialogs { get; set; }
         public Dictionary<String, RequestCommand> commands { get; set; }
 
+        public RequestDataAction DataAction
+        {
+            get
+            {
+                switch (_data.ToLowerInvariant())
+                {
+                    case "save": return RequestDataAction.Save;
+                    default:
+                        throw new RequestModelException($"Invalid data action {_data}");
+                }
+            }
+        }
+
         public RequestAction CurrentAction
         {
             get
@@ -169,7 +204,7 @@ namespace A2v10.Web.Mvc.Models
                 if (actions == null)
                     throw new RequestModelException($"There are no actions in model '{_modelPath}'");
                 if (String.IsNullOrEmpty(_action))
-                    throw new RequestModelException($"Invalid empty action in model {_modelPath}");
+                    throw new RequestModelException($"Invalid empty action in url for model {_modelPath}");
                 RequestAction ma;
                 if (actions.TryGetValue(_action, out ma))
                     return ma;
@@ -181,7 +216,14 @@ namespace A2v10.Web.Mvc.Models
         {
             get
             {
-                throw new NotImplementedException();
+                if (dialogs == null)
+                    throw new RequestModelException($"There are no dialogs in model '{_modelPath}'");
+                if (String.IsNullOrEmpty(_dialog))
+                    throw new RequestModelException($"Invalid empty dialog in url for {_modelPath}");
+                RequestDialog da;
+                if (dialogs.TryGetValue(_dialog, out da))
+                    return da;
+                throw new RequestModelException($"Dialog '{_dialog}' not found in model {_modelPath}");
             }
         }
 
@@ -193,6 +235,19 @@ namespace A2v10.Web.Mvc.Models
             }
         }
 
+        public RequestView GetCurrentAction()
+        {
+            return GetCurrentAction(_kind);
+        }
+
+        public RequestView GetCurrentAction(RequestUrlKind kind)
+        {
+            if (kind == RequestUrlKind.Page)
+                return CurrentAction;
+            else if (kind == RequestUrlKind.Dialog)
+                return CurrentDialog;
+            throw new RequestModelException($"Invalid kind ({kind}) for GetCurrentAction");
+        }
 
         private void EndInit()
         {
@@ -233,6 +288,9 @@ namespace A2v10.Web.Mvc.Models
                 case RequestUrlKind.Command:
                     mi.command = action;
                     break;
+                case RequestUrlKind.Data:
+                    mi.data = action;
+                    break;
                 default:
                     throw new RequestModelException($"Invalid action kind ({kind})");
             }
@@ -250,7 +308,31 @@ namespace A2v10.Web.Mvc.Models
             rm._action = mi.action;
             rm._dialog = mi.dialog;
             rm._command = mi.command;
+            rm._data = mi.data;
             rm._modelPath = mi.path;
+            rm._id = mi.id == "0" ? null : mi.id;
+            return rm;
+        }
+
+        public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, String baseUrl)
+        {
+            baseUrl = baseUrl.ToLowerInvariant();
+            RequestUrlKind kind;
+            if (baseUrl.StartsWith("/_dialog")) {
+                kind = RequestUrlKind.Dialog;
+                baseUrl = baseUrl.Substring(9);
+            }
+            else if (baseUrl.StartsWith("/_page"))
+            {
+                kind = RequestUrlKind.Page;
+                baseUrl = baseUrl.Substring(7);
+            }
+            else
+            {
+                throw new RequestModelException($"Invalid base url: {baseUrl}");
+            }
+            var rm = await CreateFromUrl(host, kind, baseUrl);
+            rm._kind = kind;
             return rm;
         }
     }

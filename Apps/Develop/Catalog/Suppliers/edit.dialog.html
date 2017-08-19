@@ -1,0 +1,25 @@
+﻿
+<div id="$(RootId)" style="min-height:400px">
+    <h3>HTML EDIT CUSTOMER</h3>
+
+    <div class="grid" style="margin:20px">
+        <div class="control">
+            <label>name:</label>
+            <textbox :item="Customer" prop="Name"></textbox>
+        </div>
+        <div class="control">
+            <label>amount:</label>
+            <textbox :item="Customer" prop="Amount"></textbox>
+        </div>
+        <div class="control">
+            <label>memo:</label>
+            <textbox :item="Customer" prop="Memo"></textbox>
+        </div>
+    </div>
+
+    <div style="margin-top:50px">
+        <button @click.stop.prevent="$saveAndClose()">OK</button>
+        <button @click.stop.prevent="$closeModal(false)">Cancel</button>
+    </div>
+</div>
+

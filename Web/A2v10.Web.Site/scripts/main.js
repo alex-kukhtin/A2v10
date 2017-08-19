@@ -210,6 +210,12 @@
         return (val || '') !== '';
     }
 
+    function toJson(data) {
+        return JSON.stringify(data, function (key, value) {
+            return (key[0] === '$' || key[0] === '_') ? undefined : value;
+        }, 2);
+    }
+
 
     app.modules['utils'] = {
         isArray: Array.isArray,
@@ -220,7 +226,8 @@
         isString: isString,
         isNumber: isNumber,
         toString: toString,
-        notBlank: notBlank
+        notBlank: notBlank,
+        toJson: toJson
     };
 })();
 
@@ -287,6 +294,8 @@
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
+                    if (selector.firstChild && selector.firstChild.__vue__)
+                        selector.firstChild.__vue__.__baseUrl__ = url;
                     resolve(true);
                 })
                 .catch(function (error) {
@@ -658,6 +667,25 @@
         implementRoot: implementRoot
     };
 })();
+/*20170819-7016*/
+/* dataservice.js */
+(function () {
+
+    let http = require('http');
+    let utils = require('utils');
+
+    function post(url, data) {
+        return http.post(url, data);
+    }
+
+    app.modules['std:dataservice'] = {
+        post: post
+    };
+})();
+
+
+
+
 /*20170818-7015*/
 /*components/include.js*/
 
@@ -1136,12 +1164,16 @@
 
     app.components['modal'] = modalComponent;
 })();
-/*20170818-7016*/
+/*20170819-7016*/
 /*controllers/base.js*/
 (function () {
+
     const store = require('store');
+    const utils = require('utils');
+    const dataservice = require('std:dataservice');
 
     const base = Vue.extend({
+        __baseUrl__: '',
         computed: {
             $isDirty() {
                 return this.$data.$dirty;
@@ -1156,28 +1188,52 @@
                 root._exec_(cmd, ...args);
             },
             $save() {
-                alert(JSON.stringify(this.$data, function (key, value) {
-                    return (key[0] === '$' || key[0] === '_') ? undefined : value;
-                }, 2));
-                this.$data.$setDirty(false);
-                //TODO: promise
+                var self = this;
+                // TODO: make URL ???? Id ??
+                var url = '/_data/save';
+                return new Promise(function (resolve, reject) {
+                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__, data: self.$data });
+                    dataservice.post(url, jsonData).then(function () {
+                        self.$data.$setDirty(false);
+                        resolve(true);
+                    }).catch(function (result) {
+                        alert('save error:' + result);
+                    });
+                });
             },
             $reload() {
+                var url = '/_data/reload';
                 let dat = this.$data;
-                dat.$merge(modelData);
-                dat.$setDirty(false);
-                //TODO: promise
+                return new Promise(function (resolve, reject) {
+                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__ });
+                    dataservice.post(url, jsonData).then(function (data) {
+                        alert('reload success')
+                        dat.$merge(data);
+                        dat.$setDirty(false);
+                    }).catch(function (error) {
+                        alert('reload error:' + error);
+                    });
+                });
             },
-            $showDialog(url, data) {
-                var dlgData = { promise: null, params: data };
-                var x = store.$emit('modal', url, dlgData);
+            $requery() {
+                alert('requery here');
+            },
+            $dialog(command, url, data) {
+                var dlgData = { promise: null, data: data };
+                store.$emit('modal', url, dlgData);
+                // TODO: use command!!!
                 return dlgData.promise;
                 /*
-                dat.promise.then(function (result) {
+                dlgData.promise.then(function (result) {
                     alert('then:' + result);
                 })
                 alert('resturs:' + dat.promise);
                 */
+            },
+            $saveAndClose(result) {
+                this.$save().then(function () {
+                    store.$emit('modalClose', true);
+                });
             },
             $closeModal(result) {
                 store.$emit('modalClose', result);

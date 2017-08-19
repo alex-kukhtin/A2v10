@@ -198,9 +198,9 @@ begin
 	declare @NestedMain [a2test].[NestedMain.TableType];
 	declare @SubObject [a2test].[NestedSub.TableType];
 	declare @SubObjectArray [a2test].[NestedSubArray.TableType];
-	select [MainObject!!Metadata]=null, * from @NestedMain;
-	select [SubObject!SubObject!Metadata]=null, * from @SubObject;
-	select [SubObjectArray!SubObject.SubArray!Metadata]=null, * from @SubObjectArray;
+	select [MainObject!MainObject!Metadata]=null, * from @NestedMain;
+	select [SubObject!MainObject.SubObject!Metadata]=null, * from @SubObject;
+	select [SubObjectArray!MainObject.SubObject.SubArray!Metadata]=null, * from @SubObjectArray;
 end
 go
 ------------------------------------------------

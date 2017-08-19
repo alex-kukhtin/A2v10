@@ -52,7 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Develop\Catalog\Customers\index.template.js" />
+    <Content Include="Develop\Catalog\Suppliers\element.template.js" />
     <Content Include="Develop\Catalog\Suppliers\index.template.js" />
+    <Content Include="Develop\Catalog\Suppliers\edit.dialog.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view.html" />
   </ItemGroup>
   <ItemGroup>

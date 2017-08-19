@@ -42,7 +42,7 @@ namespace A2v10.Web.Mvc.Controllers
             try
             {
                 RequestModel rm = await RequestModel.CreateFromUrl(_host, kind, pathInfo);
-                RequestView rw = rm.CurrentAction as RequestView;
+                RequestView rw = rm.GetCurrentAction(kind);
                 await Render(rw);
             }
             catch (Exception ex)
@@ -59,6 +59,18 @@ namespace A2v10.Web.Mvc.Controllers
             Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
         }
 
+        protected void WriteExceptionStatus(Exception ex)
+        {
+            if (ex.InnerException != null)
+                ex = ex.InnerException;
+            Response.ContentEncoding = Encoding.UTF8;
+            Response.HeaderEncoding = Encoding.UTF8;
+            Response.StatusCode = 255; // CUSTOM ERROR!!!!
+            Response.ContentType = "text/plain";
+            Response.StatusDescription = ex.Message;
+            Response.Write(ex.Message);
+        }
+
         protected async Task Render(RequestView rw)
         {
             String viewName = rw.GetView();
@@ -69,7 +81,8 @@ namespace A2v10.Web.Mvc.Controllers
                 //TODO: // use model ID
                 model = await _dbContext.LoadModelAsync(loadProc, new
                 {
-                    UserId = UserId
+                    UserId = UserId,
+                    Id = rw.Id
                 });
             }
             String rootId = "el" + Guid.NewGuid().ToString();
@@ -146,15 +159,7 @@ namespace A2v10.Web.Mvc.Controllers
                     fileTemplateText = await _host.ReadTextFile(rw.Path, rw.template + ".js");
                     templateText = CreateTemplateForWrite(fileTemplateText);
                 }
-                var jss = new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented,
-                    StringEscapeHandling = StringEscapeHandling.EscapeHtml,
-                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                    NullValueHandling = NullValueHandling.Ignore
-                };
-                dataModelText = JsonConvert.SerializeObject(model.Root, jss);
+                dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
             }
 
             const String scriptHeader =
@@ -195,6 +200,21 @@ namespace A2v10.Web.Mvc.Controllers
             footer.Replace("$(RootId)", rootId);
             output.Append(footer);
             return output.ToString();
+        }
+
+        public static JsonSerializerSettings StandardSerializerSettings
+        {
+            get
+            {
+                return new JsonSerializerSettings()
+                {
+                    Formatting = Formatting.Indented,
+                    StringEscapeHandling = StringEscapeHandling.EscapeHtml,
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+            }
         }
     }
 }
