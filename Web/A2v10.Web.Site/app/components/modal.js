@@ -46,17 +46,20 @@ TODO: may be icon for confirm ????
         },
         computed: {
             isInclude: function () {
-                return !!this.dialog.url
+                return !!this.dialog.url;
             },
             title: function () {
-                return this.dialog.title || 'error';
+                return this.dialog.title || 'Error';
             }, 
             buttons: function () {
+                console.warn(this.dialog.style);
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
+                else if (this.dialog.style === 'alert')
+                    return [{ text: 'OK', result: false }];
                 return [
-                    { text: "OK", result: true },
-                    { text: "Cancel", result: false }
+                    { text: 'OK', result: true },
+                    { text: 'Cancel', result: false }
                 ];
             }
         },

@@ -7,16 +7,16 @@
     <i class="ico-chevron-up"></i>
     <i class="ico-dashboard"></i>
     <i>italic text</i>
-    <i class="ico-comment" />
-    <i class="ico-comment-add" />
-    <i class="ico-comment-discussion" />
-    <i class="ico-comment-lines" />
-    <i class="ico-comment-next" />
-    <i class="ico-comment-outline" />
-    <i class="ico-comment-previous" />
-    <i class="ico-comment-urgent" />
-    <i class="ico-database" />
-    <i class="icon-dot" />
+    <i class="ico-comment"></i>
+    <i class="ico-comment-add"></i>
+    <i class="ico-comment-discussion"></i>
+    <i class="ico-comment-lines"></i>
+    <i class="ico-comment-next"></i>
+    <i class="ico-comment-outline"></i>
+    <i class="ico-comment-previous"></i>
+    <i class="ico-comment-urgent"></i>
+    <i class="ico-database"></i>
+    <i class="icon-dot"></i>
 
     <div class="toolbar" style="padding:6px;display:flex">
         <button @click.stop.prevent="Customers.$append()">Add</button>
@@ -26,11 +26,12 @@
         <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
         <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
         <label v-text="Customers.length"></label>
-        <button @click.stop.prevent="$dialog('show', 'catalog/suppliers/browse')"><i class="ico ico-search"></i>Browse dialog</button>
+        <button @click.stop.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
         <button @click.stop.prevent="$exec('testThen')"><i class="ico ico-trash"></i>Test then</button>
+        <span v-text="$query"></span>
     </div>
     <data-grid :items-source="Customers" :striped="true" 
-               :bordered="true" :hover="true" :sort="true" :search-change="$searchChange">
+               :bordered="true" :hover="true" :sort="true" :query="$query">
         <data-grid-column header="Id" content="Id"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>

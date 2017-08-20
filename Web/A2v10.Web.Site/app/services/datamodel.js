@@ -1,4 +1,4 @@
-﻿/*20170814-7012*/
+﻿/*20170820-7017*/
 /* services/datamodel.js */
 (function() {
 
@@ -22,6 +22,14 @@
             enumerable: false,
             configurable: false,
             value: value
+        });
+    }
+
+    function defHiddenGet(obj, prop, get) {
+        Object.defineProperty(obj, prop, {
+            enumerable: false,
+            configurable: false,
+            get: get
         });
     }
 
@@ -108,6 +116,7 @@
             // root element
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
+            elem._query_ = {};
         }
         return elem;
     }
@@ -187,6 +196,19 @@
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
         obj.prototype.$merge = merge;
+
+        defHiddenGet(obj.prototype, "$host", function () {
+            return this._root_._host_;
+        });
+
+        defHiddenGet(obj.prototype, "$root", function () {
+            return this._root_;
+        });
+
+        defHiddenGet(obj.prototype, "$vm", function () {
+            return this._root_._host_.$viewModel;
+        });
+
         if (arrayItem) {
             defArrayItem(obj);
         }

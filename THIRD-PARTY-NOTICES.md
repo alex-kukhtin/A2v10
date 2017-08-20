@@ -3,17 +3,17 @@
 
 A2v10 uses third party material from the projects listed below.
 
-* ChakraCore - [https://github.com/Microsoft/ChakraCore](https://github.com/Microsoft/ChakraCore)
-* Scintilla - [http://www.scintilla.org](http://www.scintilla.org)
-* TinyXML-2 - [https://github.com/leethomason/tinyxml2](https://github.com/leethomason/tinyxml2)
-* Json.NET - [http://www.newtonsoft.com/json](http://www.newtonsoft.com/json)
-* Vue - [https://github.com/vuejs/vue](https://github.com/vuejs/vue)
-* Font Awesome 4.7.0 by @davegandy - [http://fontawesome.io](http://fontawesome.io)
-* Jasmine - [https://github.com/jasmine/jasmine](https://github.com/jasmine/jasmine)
- 
+* ChakraCore - https://github.com/Microsoft/ChakraCore
+* Scintilla - http://www.scintilla.org
+* TinyXML-2 - https://github.com/leethomason/tinyxml2
+* Json.NET - http://www.newtonsoft.com/json
+* Vue - https://github.com/vuejs/vue
+* Jasmine - https://github.com/jasmine/jasmine
+* Bowtie icon font - https://github.com/jimlamb/Bowtie
+
 ---
  
-ChakraCore The MIT License (MIT)
+__ChakraCore The MIT License (MIT)__
 
 Copyright (c) Microsoft Corporation
 All rights reserved.
@@ -38,7 +38,7 @@ SOFTWARE.
 
 ----
 
-License for Scintilla and SciTE
+__License for Scintilla and SciTE__
 
 Copyright 1998-2002 by Neil Hodgson <neilh@scintilla.org>
 
@@ -61,7 +61,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 ---
 
-License for TinyXML-2
+__License for TinyXML-2__
 
 TinyXML-2 is released under the zlib license:
 
@@ -75,7 +75,7 @@ This notice may not be removed or altered from any source distribution.
 
 
 ----
-License for Newtonsoft Json.NET
+__License for Newtonsoft Json.NET__
 
 
 The MIT License (MIT)
@@ -90,7 +90,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ----
 
-License for Vue
+__License for Vue__
 
 The MIT License (MIT)
 
@@ -116,14 +116,7 @@ THE SOFTWARE.
 
 ----
 
-License for Font Awesome
-
-http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
-
-
-----
-
-License for Jasmine
+__License for Jasmine__
 
 Copyright (c) 2008-2017 Pivotal Labs
 
@@ -145,3 +138,15 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+----
+
+__License for Bowtie__
+
+Creative Commons Zero v1.0 Universal
+
+The Creative Commons CC0 
+Public Domain Dedication waives copyright interest in any a work you've created and dedicates it to the world-wide public domain. Use CC0 to opt out of copyright entirely and ensure your work has the widest reach. As with the Unlicense and typical software licenses, CC0 disclaims warranties. CC0 is very similar to the Unlicense.
+
+For more information, please see
+http://creativecommons.org/publicdomain/zero/1.0/

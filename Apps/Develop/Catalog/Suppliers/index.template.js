@@ -21,11 +21,16 @@ let template = {
         test(args) {
             // this === root;
             let host = this.$host;
-            alert('test command executed');
+            //alert('test command executed');
             // !!!promises
-            this.$host.$viewModel.$save();
+            this.$vm.$confirm("Are you sure to execute ?")
+                .then(function (result) {
+                    alert('answer is ' + result);
+                });
+            //host.$viewModel.$save();
             //alert(this.$save);
             //console.dir(this);
+            alert(this.$root.Customers[2].$vm === this.$vm);
         },
         testThen(vm) {
             // todo: vm

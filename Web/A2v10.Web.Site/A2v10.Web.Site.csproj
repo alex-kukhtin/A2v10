@@ -53,6 +53,8 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\components\tab.js" />
+    <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
     <Content Include="app\components\include.js" />
@@ -75,14 +77,11 @@
     <Content Include="Pages\shell.js" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
-    <Content Include="css\font-awesome.css" />
-    <Content Include="css\font-awesome.min.css" />
     <Content Include="css\site.css" />
     <Content Include="css\site.min.css">
       <DependentUpon>site.css</DependentUpon>
     </Content>
     <Content Include="favicon.ico" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Less\Variables.less" />
     <Content Include="Less\Site.less" />
@@ -101,6 +100,7 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="TestPages\tabcomponent.html" />
     <Content Include="TestPages\treeview.html" />
     <Content Include="TestPages\include.html" />
     <Content Include="TestPages\gridlayout.html" />
@@ -121,11 +121,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="packages.config" />
     <Content Include="Less\Utlis.less" />
     <Content Include="Less\DataGrid.less" />

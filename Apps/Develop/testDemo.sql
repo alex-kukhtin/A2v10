@@ -39,6 +39,7 @@ go
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
+@Id bigint = null, -- если вызывается как Browse
 @Order nvarchar(255) = null,
 @Dir nvarchar(255) = null
 as
@@ -69,9 +70,6 @@ begin
 	select [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo
 	from T order by _RowNumber;
 end
-go
-
-exec a2v10demo.[Catalog.Customer.Index] 100, N'Id', N'asc';
 go
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Load]

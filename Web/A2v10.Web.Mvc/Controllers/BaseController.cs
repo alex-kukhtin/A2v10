@@ -48,11 +48,11 @@ namespace A2v10.Web.Mvc.Controllers
             }
             catch (Exception ex)
             {
-                WriteException(ex);
+                WriteHtmlException(ex);
             }
         }
 
-        void WriteException(Exception ex)
+        void WriteHtmlException(Exception ex)
         {
             if (ex.InnerException != null)
                 ex = ex.InnerException;
@@ -66,9 +66,10 @@ namespace A2v10.Web.Mvc.Controllers
                 ex = ex.InnerException;
             Response.ContentEncoding = Encoding.UTF8;
             Response.HeaderEncoding = Encoding.UTF8;
+            Response.SuppressContent = false;
             Response.StatusCode = 255; // CUSTOM ERROR!!!!
             Response.ContentType = "text/plain";
-            Response.StatusDescription = ex.Message;
+            Response.StatusDescription = "Custom server error";
             Response.Write(ex.Message);
         }
 
@@ -179,12 +180,16 @@ namespace A2v10.Web.Mvc.Controllers
 @"
     const vm = new DataModelController({
         el:'#$(RootId)',
+        props: {
+            inDialog: {type: Boolean, default: $(IsDialog)} 
+        },
         data: modelData(template, rawData)
     });
 
-    vm.$data.$host = {
+    vm.$data._host_ = {
         $viewModel: vm
     };
+
 })();
 </script>
 ";
@@ -202,6 +207,7 @@ namespace A2v10.Web.Mvc.Controllers
                 output.Append(emptyModel);
             var footer = new StringBuilder(scriptFooter);
             footer.Replace("$(RootId)", rootId);
+            footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());
             output.Append(footer);
             return output.ToString();
         }

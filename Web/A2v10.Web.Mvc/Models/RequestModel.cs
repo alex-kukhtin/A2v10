@@ -133,6 +133,8 @@ namespace A2v10.Web.Mvc.Models
     {
         public abstract String GetView();
 
+        public virtual Boolean IsDialog { get { return false; } }
+
         public String GetRelativePath(String extension)
         {
             return $"~/{Path}/{GetView()}{extension}";
@@ -152,6 +154,8 @@ namespace A2v10.Web.Mvc.Models
     public class RequestDialog : RequestView
     {
         public string dialog;
+
+        public override Boolean IsDialog { get { return true; } }
 
         public override string GetView()
         {

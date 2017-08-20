@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="test-tab">
+        <div>
+            <h3>Static Tabs</h3>
+            <a2-tab-panel>
+                <a2-tab-item header="header1" icon="user">text for item 1</a2-tab-item>
+                <a2-tab-item header="header2" icon="database">i am the second item</a2-tab-item>
+                <a2-tab-item header="header3">
+                    <div>
+                        <h3>третий элемент</h3>
+                        а это содержимое третьего элемента
+                        <span>{{Document.Name}}</span>
+                        <div v-for="(row, rowIndex) in Document.Rows">
+                            {{row}},
+                        </div>
+                    </div>
+                </a2-tab-item>
+            </a2-tab-panel>
+        </div>
+
+        <div>
+            <h3>Dynamic Tabs</h3>
+
+            <a2-tab-panel v-for="(tab, index) in tabs" :key="index">
+            </a2-tab-panel>
+
+            <span>{{tabs}}</span>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../app/components/tab.js"></script>
+
+
+    <script type="text/javascript">
+
+    (function() {
+
+        var sampleData = {
+            tabs: [
+                {},
+                {},
+                {}
+            ],
+            Document: {
+                Name: "document name value",
+                Rows: [{}, {}, {}]
+            }
+        };
+
+        var vm = new Vue({
+            el: "#test-tab",
+            data: sampleData
+        });
+
+    })();
+
+    </script>
+</body>
+</html>

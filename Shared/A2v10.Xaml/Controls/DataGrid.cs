@@ -29,7 +29,7 @@ namespace A2v10.Xaml
             MergeBoolAttribute(dataGrid, nameof(Striped), Striped);
             MergeBoolAttribute(dataGrid, nameof(Bordered), Bordered);
             MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
-            dataGrid.MergeAttribute(":search-change", "$searchChange"); // always
+            dataGrid.MergeAttribute(":query", "$query"); // always
             dataGrid.RenderStart(context);
             Int32 colIndex = 0;
             foreach (var col in Columns)

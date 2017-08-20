@@ -163,6 +163,7 @@
             location() {
                 return Location.current();
             },
+
             replaceUrlSearch(url) {
                 // replace search part url to current
                 let search = window.location.search;
@@ -171,7 +172,27 @@
                     return url;
                 return parts[0] + search;
             },
+
+            queryFromUrl(url) {
+                if (!url)
+                    return {};
+                let parts = url.split('?');
+                if (parts.length === 2)
+                    return parseQueryString(parts[1]);
+                return {};
+            },
+
+            replaceUrlQuery(url, qry) {
+                if (!url)
+                    return;
+                let parts = url.split('?');
+                if (parts.length > 0)
+                    return parts[0] + makeQueryString(qry);
+                return url;
+            },
+
             savedMenu: Location.getSavedMenu,
+
             navigateMenu(url, query) {
                 let srch = getSearchFromStorage(url);
                 if (!srch)
@@ -285,6 +306,9 @@
                         xhrResult = JSON.parse(xhr.responseText);
                     resolve(xhrResult);
                 }
+                else if (xhr.status === 255) {
+                    reject(xhr.responseText || xhr.statusText);
+                }
                 else
                     reject(xhr.statusText);
             };
@@ -327,8 +351,10 @@
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
-                    if (selector.firstChild && selector.firstChild.__vue__)
-                        selector.firstChild.__vue__.__baseUrl__ = url;
+                    if (selector.firstChild && selector.firstChild.__vue__) {
+                        let ve = selector.firstChild.__vue__;
+                        ve.$data.__baseUrl__ = url;
+                    }
                     resolve(true);
                 })
                 .catch(function (error) {
@@ -407,7 +433,7 @@
 })();
 
 
-/*20170814-7012*/
+/*20170820-7017*/
 /* services/datamodel.js */
 (function() {
 
@@ -431,6 +457,14 @@
             enumerable: false,
             configurable: false,
             value: value
+        });
+    }
+
+    function defHiddenGet(obj, prop, get) {
+        Object.defineProperty(obj, prop, {
+            enumerable: false,
+            configurable: false,
+            get: get
         });
     }
 
@@ -517,6 +551,7 @@
             // root element
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
+            elem._query_ = {};
         }
         return elem;
     }
@@ -596,6 +631,19 @@
     function defineObject(obj, meta, arrayItem) {
         defHidden(obj.prototype, META, meta);
         obj.prototype.$merge = merge;
+
+        defHiddenGet(obj.prototype, "$host", function () {
+            return this._root_._host_;
+        });
+
+        defHiddenGet(obj.prototype, "$root", function () {
+            return this._root_;
+        });
+
+        defHiddenGet(obj.prototype, "$vm", function () {
+            return this._root_._host_.$viewModel;
+        });
+
         if (arrayItem) {
             defArrayItem(obj);
         }
@@ -855,8 +903,6 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
-    const route = require('route');
-
     const dataGridTemplate = `
 <table :class="cssClass">
     <thead>
@@ -897,8 +943,10 @@
         computed: {
             dir() {
                 // TODO: client/server
-                let q = route.query;
-                //console.dir(q);
+                var qry = this.$parent.query;
+                if (!qry)
+                    return '';
+                let q = qry;
                 if (q.order === this.content) {
                     return (q.dir || '').toLowerCase();
                 }
@@ -908,6 +956,9 @@
                 if (!this.content)
                     return false;
                 return typeof this.sort === 'undefined' ? this.$parent.sort : this.sort;
+            },
+            isUpdateUrl() {
+                return !this.$root.inDialog;
             },
             template() {
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
@@ -929,15 +980,14 @@
             doSort() {
                 if (!this.isSortable)
                     return;
-                // TODO: client/server
-                let q = route.query;
+                // TODO: client/server mode, dialog mode
+                let q = this.$parent.query;
                 let qdir = (q.dir || 'asc').toLowerCase();
                 if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
                 }
-                route.query = { order: this.content, dir: qdir };
-                if (this.$parent.searchChange)
-                    this.$parent.searchChange();
+                let nq = { order: this.content, dir: qdir };
+                this.$root.$emit('queryChange', nq);
             }
         }
     };
@@ -1043,8 +1093,7 @@
             striped: Boolean,
             hover: { type: Boolean, default: false },
             sort: { type: Boolean, default: false },
-            // callbacks
-            searchChange: Function
+            query: Object
         },
         template: dataGridTemplate,
         components: {
@@ -1197,17 +1246,20 @@ TODO: may be icon for confirm ????
         },
         computed: {
             isInclude: function () {
-                return !!this.dialog.url
+                return !!this.dialog.url;
             },
             title: function () {
-                return this.dialog.title || 'error';
+                return this.dialog.title || 'Error';
             }, 
             buttons: function () {
+                console.warn(this.dialog.style);
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
+                else if (this.dialog.style === 'alert')
+                    return [{ text: 'OK', result: false }];
                 return [
-                    { text: "OK", result: true },
-                    { text: "Cancel", result: false }
+                    { text: 'OK', result: true },
+                    { text: 'Cancel', result: false }
                 ];
             }
         },
@@ -1221,7 +1273,7 @@ TODO: may be icon for confirm ????
 
     app.components['modal'] = modalComponent;
 })();
-/*20170819-7016*/
+/*20170820-7017*/
 /*controllers/base.js*/
 (function () {
 
@@ -1231,15 +1283,52 @@ TODO: may be icon for confirm ????
     const route = require('route');
 
     const base = Vue.extend({
-        __baseUrl__: '',
-        computed: {
+        // inDialog: bool (in derived class)
 
+        data() {
+            return {
+                __init__: true,
+                __baseUrl__: ''
+            };
+        },
+
+        computed: {
+            $baseUrl() {
+                return this.$data.__baseUrl__;  
+            },
+            $query() {
+                return this.$data._query_;
+            },
             $isDirty() {
                 return this.$data.$dirty;
             },
-
             $isPristine() {
                 return !this.$data.$dirty;
+            }
+        },
+        watch: {
+            $baseUrl: function (newUrl) {
+                if (!this.$data.__init__)
+                    return;
+                if (this.inDialog)
+                    this.$data._query_ = route.queryFromUrl(newUrl);
+                else
+                    this.$data._query = route.query;
+                Vue.nextTick(() => { this.$data.__init__ = false; });
+            },
+            "$query": {
+                handler: function (newVal, oldVal) {
+                    if (this.$data.__init__)
+                        return;
+                    if (this.inDialog) {
+                        this.$data.__baseUrl__ = route.replaceUrlQuery(this.$baseUrl, newVal);
+                        this.$reload();
+                    } else {
+                        route.query = newVal;
+                        this.$searchChange();
+                    }
+                },
+                deep: true
             }
         },
         methods: {
@@ -1252,7 +1341,7 @@ TODO: may be icon for confirm ????
                 var self = this;
                 var url = '/_data/save';
                 return new Promise(function (resolve, reject) {
-                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__, data: self.$data });
+                    var jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
                     dataservice.post(url, jsonData).then(function (data) {
                         self.$data.$merge(data);
                         self.$data.$setDirty(false);
@@ -1262,8 +1351,8 @@ TODO: may be icon for confirm ????
                             dataToResolve = data[p];
                         }
                         resolve(dataToResolve); // single element (raw data)
-                    }).catch(function (result) {
-                        alert('save error:' + result);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
                     });
                 });
             },
@@ -1273,21 +1362,22 @@ TODO: may be icon for confirm ????
                 var url = '/_data/reload';
                 let dat = self.$data;
                 return new Promise(function (resolve, reject) {
-                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__ });
+                    var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
                     dataservice.post(url, jsonData).then(function (data) {
                         if (utils.isObject(data)) {
                             dat.$merge(data);
                             dat.$setDirty(false);
                         } else {
-                            throw new Error('invalid response type for $reload');
+                            throw new Error('Invalid response type for $reload');
                         }
-                    }).catch(function (error) {
-                        alert('reload error:' + error);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
                     });
                 });
             },
+
             $requery() {
-                alert('requery here');
+                alert('requery. Yet not implemented');
             },
 
             $navigate(url, data) {
@@ -1296,11 +1386,30 @@ TODO: may be icon for confirm ????
                 route.navigate(urlToNavigate);
             },
             $confirm(prms) {
+                if (utils.isString(prms))
+                    prms = { message: prms };
                 let dlgData = { promise: null, data: prms };
                 store.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
-            $dialog(command, url, data) {
+            $alert(msg, title) {
+                let dlgData = {
+                    promise: null, data: {
+                        message: msg, title: title, style: 'alert'
+                    }
+                };
+                store.$emit('confirm', dlgData);
+                return dlgData.promise;
+            },
+
+            $alertUi(msg) {
+                if (msg.indexOf('UI:') === 0)
+                    this.$alert(msg.substring(3));
+                else
+                    alert(msg);
+            },
+
+            $dialog(command, url, data, query) {
                 return new Promise(function (resolve, reject) {
                     // sent a single object
                     let dataToSent = data;
@@ -1310,10 +1419,14 @@ TODO: may be icon for confirm ????
                         }
                         dataToSent = null;
                     }
-                    let dlgData = { promise: null, data: dataToSent };
+                    let dlgData = { promise: null, data: dataToSent, query: query };
                     store.$emit('modal', url, dlgData);
                     if (command === 'edit' || command === 'browse') {
                         dlgData.promise.then(function (result) {
+                            if (!utils.isObject(data)) {
+                                console.error(`$dialog.${command}. The argument is not an object`);
+                                return;
+                            }
                             // result is raw data
                             data.$merge(result);
                             resolve(result);
@@ -1349,8 +1462,8 @@ TODO: may be icon for confirm ????
             },
 
             $searchChange() {
-                let newUrl = route.replaceUrlSearch(this.__baseUrl__);
-                this.__baseUrl__ = newUrl;
+                let newUrl = route.replaceUrlSearch(this.$baseUrl);
+                this.$data.__baseUrl__ = newUrl;
                 this.$reload();
             },
 
@@ -1369,7 +1482,7 @@ TODO: may be icon for confirm ????
                     ]
                 };
                 this.$confirm(dlg).then(function (result) {
-                    if (result == 'close') {
+                    if (result === 'close') {
                         // close without saving
                         self.$data.$setDirty(false);
                         self.$close();
@@ -1377,7 +1490,7 @@ TODO: may be icon for confirm ????
                         // save then close
                         self.$save().then(function () {
                             self.$close();
-                        })
+                        });
                     }
                 });
                 return false;
@@ -1385,6 +1498,11 @@ TODO: may be icon for confirm ????
         },
         created() {
             store.$emit('registerData', this);
+            if (!this.inDialog)
+                this.$data._query_ = route.query;
+            this.$on('queryChange', function (val) {
+                this.$data._query_ = val;
+            });
         },
         destroyed() {
             store.$emit('registerData', null);
@@ -1392,5 +1510,342 @@ TODO: may be icon for confirm ????
     });
     
     app.components['baseController'] = base;
+
+})();
+
+
+(function () {
+
+
+    const route = require('route');
+    const store = require('store');
+    const modal = component('modal');
+
+
+    function findMenu(menu, func) {
+        if (!menu)
+            return null;
+        for (let i = 0; i < menu.length; i++) {
+            let itm = menu[i];
+            if (func(itm))
+                return itm;
+            if (itm.menu) {
+                let found = findMenu(itm.menu, func);
+                if (found)
+                    return found;
+            }
+        }
+        return null;
+    }
+
+    const navBar = {
+
+        props: {
+            menu: Array
+        },
+
+        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}"><a href="\" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
+
+        data: function () {
+            return {
+                activeItem: null
+            };
+        },
+
+        created: function () {
+            var me = this;
+            me.__dataStack__ = [];
+            function findCurrent() {
+                let loc = route.location();
+                let seg1 = loc.segment(1);
+                me.activeItem = me.menu.find(itm => itm.url === seg1);
+                return loc;
+            }
+
+            window.addEventListener('popstate', function (event, a, b) {
+                if (me.__dataStack__.length > 0) {
+                    let comp = me.__dataStack__[0];
+                    let oldUrl = event.state;
+                    console.warn('pop state: ' + oldUrl);
+                    if (!comp.$saveModified()) {
+                        // disable navigate
+                        oldUrl = comp.__baseUrl__.replace('/_page', '');
+                        console.warn('return url: ' + oldUrl);
+                        window.history.pushState(oldUrl, null, oldUrl);
+                        return;
+                    }
+                }
+                findCurrent();
+                route.navigateCurrent();
+            });
+
+            findCurrent();
+
+            if (!me.activeItem) {
+                me.activeItem = me.menu[0];
+                // TODO: to route
+                window.history.replaceState(null, null, me.activeItem.url);
+            }
+
+            store.$on('registerData', function (component) {
+                if (component)
+                    me.__dataStack__.push(component);
+                else
+                    me.__dataStack__.pop(component);
+            });
+        },
+
+        methods: {
+            isActive: function (item) {
+                return item === this.activeItem;
+            },
+            navigate: function (item) {
+                // nav bar
+                this.activeItem = item;
+                let url = '/' + item.url;
+                let query = null;
+                let savedUrl = route.savedMenu(item.url);
+                let activeItem = null;
+                if (savedUrl) {
+                    // find active side menu item
+                    activeItem = findMenu(item.menu, (itm) => itm.url === savedUrl);
+                } else {
+                    activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
+                }
+                if (activeItem) {
+                    url = url + '/' + activeItem.url;
+                    query = activeItem.query;
+                }
+                route.navigateMenu(url, query);
+            }
+        }
+    };
+
+    const sideBar = {
+        // TODO: разные варианты меню
+        template: `
+<div :class="cssClass">
+    <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
+    <div class="side-bar-body" v-if="bodyIsVisible">
+        <ul class="tree-view">
+            <tree-item v-for="(itm, index) in sideMenu" 
+                :item="itm" :key="index" label="title" icon="icon" title="title"
+                :subitems="'menu'" :click="navigate" :is-active="isActive" :has-icon="true" :wrap-label="true">
+            </tree-item>
+        </ul>
+    </div>
+    <div v-else class="side-bar-title" @click.stop.prevent="toggle">
+        <span class="side-bar-label" v-text="title"></span>
+    </div>
+</div>
+`,
+        props: {
+            menu: Array
+        },
+        data: function () {
+            return {
+                sideMenu: null,
+                topUrl: null,
+                activeItem: null
+            };
+        },
+        computed: {
+            cssClass: function () {
+                return 'side-bar ' + (this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded');
+            },
+            bodyIsVisible() {
+                return !this.$parent.sideBarCollapsed;
+            },
+            title() {
+                return this.activeItem ? this.activeItem.title : 'Меню';
+            }
+        },
+        methods: {
+            isActive: function (itm) {
+                return itm === this.activeItem;
+            },
+            navigate: function (itm) {
+                if (!itm.url)
+                    return; // no url. is folder?
+                let newUrl = `/${this.topUrl}/${itm.url}`;
+                route.navigateMenu(newUrl, itm.query);
+            },
+            toggle() {
+                this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
+            }
+        },
+        created: function () {
+            var me = this;
+            route.$on('route', function (loc) {
+                let s1 = loc.segment(1);
+                let s2 = loc.segment(2);
+                let m1 = me.menu.find(itm => itm.url === s1);
+                if (!m1) {
+                    me.topUrl = null;
+                    me.sideMenu = null;
+                } else {
+                    me.topUrl = m1.url;
+                    me.sideMenu = m1.menu || null;
+                    if (me.sideMenu)
+                        me.activeItem = findMenu(me.sideMenu, (itm) => itm.url === s2);
+                }
+            });
+        }
+    };
+
+    const contentView = {
+        render(h) {
+            return h('div', {
+                attrs: {
+                    class: 'content-view ' + this.cssClass
+                }
+            }, [h('include', {
+                props: {
+                    src: this.currentView
+                }
+            })]);
+        },
+        data() {
+            return {
+                currentView: null,
+                cssClass: ''
+            };
+        },
+        created() {
+            var me = this;
+            route.$on('route', function (loc) {
+                let len = loc.routeLength();
+                //TODO: // find menu and get location from it ???
+                let tail = '';
+                switch (len) {
+                    case 2: tail = '/index/0'; break;
+                    case 3: tail = '/index/0'; break;
+                }
+                let url = "/_page" + window.location.pathname + tail;
+                url += window.location.search;
+                me.currentView = url;
+                me.cssClass =
+                    len === 2 ? 'full-page' :
+                        len === 3 ? 'partial-page' :
+                            'full-view';
+            });
+        }
+    };
+
+    // important: use v-show instead v-if to ensure components created only once
+    const a2MainView = {
+        template: `
+<div :class="cssClass">
+    <a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
+    <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
+    <a2-content-view></a2-content-view>
+    <div class="load-indicator" v-show="pendingRequest"></div>
+    <div class="modal-stack" v-if="hasModals" @keyup.esc='closeModal'>
+        <div class="modal-wrapper" v-for="dlg in modals">
+            <a2-modal :dialog="dlg"></a2-modal>
+        </div>
+    </div>
+</div>`,
+        components: {
+            'a2-nav-bar': navBar,
+            'a2-side-bar': sideBar,
+            'a2-content-view': contentView,
+            'a2-modal': modal
+        },
+        props: {
+            menu: Array
+        },
+        data() {
+            return {
+                navBarVisible: false,
+                sideBarVisible: true,
+                sideBarCollapsed: false,
+                requestsCount: 0,
+                modals: []
+            };
+        },
+        computed: {
+            cssClass: function () {
+                return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
+            },
+            hasModals: function () {
+                return this.modals.length > 0;
+            },
+            pendingRequest: function () {
+                return this.requestsCount > 0;
+            }
+        },
+        mounted() {
+            // first time created
+            route.navigateCurrent();
+        },
+        methods: {
+            closeModal() {
+                route.$emit('modalClose');
+            }
+        },
+        created() {
+            let me = this;
+            route.$on('route', function (loc) {
+                let len = loc.routeLength();
+                let seg1 = loc.segment(1);
+                me.navBarVisible = len === 2 || len === 3;
+                me.sideBarVisible = len === 3;
+                // close all modals
+                me.modals.splice(0, me.modals.length);
+            });
+            store.$on('beginRequest', function () {
+                me.requestsCount += 1;
+            });
+            store.$on('endRequest', function () {
+                me.requestsCount -= 1;
+            });
+            store.$on('modal', function (modal, prms) {
+                // TODO: Path.combine
+                let id = '0';
+                if (prms && prms.data && prms.data.Id) {
+                    id = prms.data.Id;
+                    // TODO: get correct ID
+                }
+                let url = '/_dialog/' + modal + '/' + id;
+                url = route.replaceUrlQuery(url, prms.query);
+                let dlg = { title: "dialog", url: url, prms: prms.data };
+                dlg.promise = new Promise(function (resolve, reject) {
+                    dlg.resolve = resolve;
+                });
+                prms.promise = dlg.promise;
+                me.modals.push(dlg);
+            });
+            store.$on('modalClose', function (result) {
+                let dlg = me.modals.pop();
+                if (result)
+                    dlg.resolve(result);
+            });
+            store.$on('confirm', function (prms) {
+                let dlg = prms.data;
+                dlg.promise = new Promise(function (resolve) {
+                    dlg.resolve = resolve;
+                });
+                prms.promise = dlg.promise;
+                me.modals.push(dlg);
+            });
+        }
+    };
+
+
+
+
+    const shell = Vue.extend({
+        components: {
+            'a2-main-view': a2MainView
+        },
+        methods: {
+            about() {
+                route.navigateMenu('/system/app/about');
+            }
+        }
+    });
+
+    app.components['std:shellController'] = shell;
 
 })();

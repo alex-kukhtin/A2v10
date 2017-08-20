@@ -119,6 +119,7 @@
             location() {
                 return Location.current();
             },
+
             replaceUrlSearch(url) {
                 // replace search part url to current
                 let search = window.location.search;
@@ -127,7 +128,27 @@
                     return url;
                 return parts[0] + search;
             },
+
+            queryFromUrl(url) {
+                if (!url)
+                    return {};
+                let parts = url.split('?');
+                if (parts.length === 2)
+                    return parseQueryString(parts[1]);
+                return {};
+            },
+
+            replaceUrlQuery(url, qry) {
+                if (!url)
+                    return;
+                let parts = url.split('?');
+                if (parts.length > 0)
+                    return parts[0] + makeQueryString(qry);
+                return url;
+            },
+
             savedMenu: Location.getSavedMenu,
+
             navigateMenu(url, query) {
                 let srch = getSearchFromStorage(url);
                 if (!srch)

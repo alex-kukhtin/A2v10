@@ -6,7 +6,7 @@
   font-style: normal;
 }
 i,
-i.ico {
+.ico {
   font-family: 'Bowtie';
   speak: none;
   font-size: 14px;
@@ -85,6 +85,15 @@ i.ico {
 }
 .ico-trash:before {
   content: "\e62a";
+}
+.ico-user:before {
+  content: "\e692";
+}
+.ico-users:before {
+  content: "\e693";
+}
+.ico-eye:before {
+  content: "\e699";
 }
 body {
   padding: 0;
@@ -169,6 +178,9 @@ header,
   top: 64px;
   background-color: aliceblue;
 }
+.side-bar-collapsed .content-view.partial-page {
+  left: 26px;
+}
 .content-view.full-page {
   top: 64px;
 }
@@ -235,8 +247,21 @@ header,
   margin: 0;
   border-right: 1px solid #cfd6e5;
 }
+.side-bar .side-bar-body,
 .side-bar .tree-view {
   height: 100%;
+}
+.side-bar .side-bar-title {
+  background-color: #f2f3f9;
+  white-space: nowrap;
+  height: 100%;
+  cursor: pointer;
+  font-size: 14px;
+}
+.side-bar .side-bar-title .side-bar-label {
+  display: block;
+  padding-left: 10px;
+  transform: rotate(90deg);
 }
 .side-bar .collapse-handle {
   position: absolute;
@@ -250,10 +275,20 @@ header,
 .side-bar .collapse-handle:hover {
   color: #0d82f8;
   text-decoration: none;
+  background-color: #f2f3f9;
 }
 .side-bar .collapse-handle:before {
-  content: "\f053";
-  /*fa-chevron-left*/
+  content: "\e611";
+}
+.side-bar.collapsed {
+  width: 20px;
+  background-color: #f2f3f9;
+}
+.side-bar.collapsed .collapse-handle {
+  padding-right: 6px;
+}
+.side-bar.collapsed .collapse-handle:before {
+  content: "\e612";
 }
 footer,
 .footer {
@@ -263,10 +298,25 @@ footer,
   right: 0;
   height: 22px;
   line-height: 22px;
-  background-color: #f8ffe8;
+  background-color: #f2f3f9;
   border-top: 1px solid #bdc5d8;
   z-index: 1020;
   padding-left: 8px;
+  font-size: 12px;
+}
+footer .right-part,
+.footer .right-part {
+  display: inline-block;
+  float: right;
+  padding-right: 2px;
+}
+footer button,
+.footer button {
+  background-color: skyblue;
+  border: 1px solid blue;
+  font-size: 12px;
+  padding: 1px 6px;
+  text-transform: lowercase;
 }
 a {
   color: #57a8fa;
@@ -289,6 +339,10 @@ pre {
   font-size: 0.85em;
   background-color: #f8f8f8;
   padding: 6px;
+}
+button {
+  padding: 4px 6px;
+  font-size: 13px;
 }
 .control input,
 .control select {
@@ -355,11 +409,14 @@ table.hover > tbody > tr:hover {
   display: block;
   background-color: #cfd6e5;
 }
+.toolbar button:hover {
+  background-color: antiquewhite;
+}
 .toolbar i {
   display: inline-block;
   font-size: 14px;
   color: #808080;
-  width: 20px;
+  margin-right: 4px;
 }
 .tree-view {
   margin: 0;
@@ -465,6 +522,13 @@ table.hover > tbody > tr:hover {
 }
 .modal-header button {
   float: right;
+}
+.modal-footer {
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ccc;
+  display: flex;
+  align-items: flex-end;
 }
 .app-exception {
   margin: 20% auto;

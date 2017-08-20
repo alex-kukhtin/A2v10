@@ -18,6 +18,11 @@
 		"edit": {
 			"dialog": "edit.dialog",
 			"template": "element.template"
+		},
+		"browse": {
+			"dialog": "browse.dialog",
+			"template": "index.template",
+			"index": true
 		}
 	}
 }

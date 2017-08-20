@@ -1,4 +1,4 @@
-﻿/*20170819-7016*/
+﻿/*20170820-7017*/
 /*controllers/base.js*/
 (function () {
 
@@ -8,15 +8,52 @@
     const route = require('route');
 
     const base = Vue.extend({
-        __baseUrl__: '',
-        computed: {
+        // inDialog: bool (in derived class)
 
+        data() {
+            return {
+                __init__: true,
+                __baseUrl__: ''
+            };
+        },
+
+        computed: {
+            $baseUrl() {
+                return this.$data.__baseUrl__;  
+            },
+            $query() {
+                return this.$data._query_;
+            },
             $isDirty() {
                 return this.$data.$dirty;
             },
-
             $isPristine() {
                 return !this.$data.$dirty;
+            }
+        },
+        watch: {
+            $baseUrl: function (newUrl) {
+                if (!this.$data.__init__)
+                    return;
+                if (this.inDialog)
+                    this.$data._query_ = route.queryFromUrl(newUrl);
+                else
+                    this.$data._query = route.query;
+                Vue.nextTick(() => { this.$data.__init__ = false; });
+            },
+            "$query": {
+                handler: function (newVal, oldVal) {
+                    if (this.$data.__init__)
+                        return;
+                    if (this.inDialog) {
+                        this.$data.__baseUrl__ = route.replaceUrlQuery(this.$baseUrl, newVal);
+                        this.$reload();
+                    } else {
+                        route.query = newVal;
+                        this.$searchChange();
+                    }
+                },
+                deep: true
             }
         },
         methods: {
@@ -29,7 +66,7 @@
                 var self = this;
                 var url = '/_data/save';
                 return new Promise(function (resolve, reject) {
-                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__, data: self.$data });
+                    var jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
                     dataservice.post(url, jsonData).then(function (data) {
                         self.$data.$merge(data);
                         self.$data.$setDirty(false);
@@ -39,8 +76,8 @@
                             dataToResolve = data[p];
                         }
                         resolve(dataToResolve); // single element (raw data)
-                    }).catch(function (result) {
-                        alert('save error:' + result);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
                     });
                 });
             },
@@ -50,21 +87,22 @@
                 var url = '/_data/reload';
                 let dat = self.$data;
                 return new Promise(function (resolve, reject) {
-                    var jsonData = utils.toJson({ baseUrl: self.__baseUrl__ });
+                    var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
                     dataservice.post(url, jsonData).then(function (data) {
                         if (utils.isObject(data)) {
                             dat.$merge(data);
                             dat.$setDirty(false);
                         } else {
-                            throw new Error('invalid response type for $reload');
+                            throw new Error('Invalid response type for $reload');
                         }
-                    }).catch(function (error) {
-                        alert('reload error:' + error);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
                     });
                 });
             },
+
             $requery() {
-                alert('requery here');
+                alert('requery. Yet not implemented');
             },
 
             $navigate(url, data) {
@@ -73,11 +111,30 @@
                 route.navigate(urlToNavigate);
             },
             $confirm(prms) {
+                if (utils.isString(prms))
+                    prms = { message: prms };
                 let dlgData = { promise: null, data: prms };
                 store.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
-            $dialog(command, url, data) {
+            $alert(msg, title) {
+                let dlgData = {
+                    promise: null, data: {
+                        message: msg, title: title, style: 'alert'
+                    }
+                };
+                store.$emit('confirm', dlgData);
+                return dlgData.promise;
+            },
+
+            $alertUi(msg) {
+                if (msg.indexOf('UI:') === 0)
+                    this.$alert(msg.substring(3));
+                else
+                    alert(msg);
+            },
+
+            $dialog(command, url, data, query) {
                 return new Promise(function (resolve, reject) {
                     // sent a single object
                     let dataToSent = data;
@@ -87,10 +144,14 @@
                         }
                         dataToSent = null;
                     }
-                    let dlgData = { promise: null, data: dataToSent };
+                    let dlgData = { promise: null, data: dataToSent, query: query };
                     store.$emit('modal', url, dlgData);
                     if (command === 'edit' || command === 'browse') {
                         dlgData.promise.then(function (result) {
+                            if (!utils.isObject(data)) {
+                                console.error(`$dialog.${command}. The argument is not an object`);
+                                return;
+                            }
                             // result is raw data
                             data.$merge(result);
                             resolve(result);
@@ -126,8 +187,8 @@
             },
 
             $searchChange() {
-                let newUrl = route.replaceUrlSearch(this.__baseUrl__);
-                this.__baseUrl__ = newUrl;
+                let newUrl = route.replaceUrlSearch(this.$baseUrl);
+                this.$data.__baseUrl__ = newUrl;
                 this.$reload();
             },
 
@@ -146,7 +207,7 @@
                     ]
                 };
                 this.$confirm(dlg).then(function (result) {
-                    if (result == 'close') {
+                    if (result === 'close') {
                         // close without saving
                         self.$data.$setDirty(false);
                         self.$close();
@@ -154,7 +215,7 @@
                         // save then close
                         self.$save().then(function () {
                             self.$close();
-                        })
+                        });
                     }
                 });
                 return false;
@@ -162,6 +223,11 @@
         },
         created() {
             store.$emit('registerData', this);
+            if (!this.inDialog)
+                this.$data._query_ = route.query;
+            this.$on('queryChange', function (val) {
+                this.$data._query_ = val;
+            });
         },
         destroyed() {
             store.$emit('registerData', null);

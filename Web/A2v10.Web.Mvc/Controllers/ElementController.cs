@@ -50,15 +50,6 @@ namespace A2v10.Web.Mvc.Controllers
                     default:
                         throw new RequestModelException($"Invalid data action {command}");
                 }
-                /*
-                var rm = await RequestModel.CreateFromUrl(_host, RequestUrlKind.Data, pathInfo);
-                switch (rm.DataAction)
-                {
-                    case RequestDataAction.Save:
-                        await SaveData(rm);
-                        break;
-                }
-                */
             }
             catch (Exception ex)
             {

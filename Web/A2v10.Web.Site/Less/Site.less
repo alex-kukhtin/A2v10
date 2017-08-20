@@ -33,6 +33,11 @@ header, .header {
     color:white;
 }
 
+@side-bar-width: 250px;
+@side-bar-gap: 6px;
+@side-bar-collapsed-width: 20px;
+@side-bar-collapsed-bg-color: @navbar-bg-color;
+
 .content-view {
     position:absolute;
     left:0;
@@ -42,9 +47,13 @@ header, .header {
 }
 
 .content-view.partial-page {
-    left:256px;
+    left: @side-bar-width + @side-bar-gap;
     top:64px;
     background-color:aliceblue;
+}
+
+.side-bar-collapsed .content-view.partial-page {
+    left: @side-bar-collapsed-width + @side-bar-gap;
 }
 
 .content-view.full-page {
@@ -82,13 +91,27 @@ header, .header {
     left: 0;
     top: @header-height + @navbar-height;
     bottom: @footer-height;
-    width: 250px;
+    width: @side-bar-width;
     padding: 16px 0 0 0;
     margin: 0;
     border-right: 1px solid @light-brd-color;
 
-    .tree-view {
+    .side-bar-body, .tree-view {
         height: 100%;
+    }
+
+    .side-bar-title {
+        background-color: @side-bar-collapsed-bg-color;
+        white-space: nowrap;
+        height: 100%;
+        cursor: pointer;
+        font-size:14px;
+
+        .side-bar-label {
+            display: block;
+            padding-left: 10px;
+            transform: rotate(90deg);
+        }
     }
 
     .collapse-handle {
@@ -98,15 +121,28 @@ header, .header {
         width: auto;
         padding: 2px 4px;
         color: @default-brd-color;
-        font-size:12px;
+        font-size: 12px;
 
         &:hover {
             color: @link-hover-color;
             text-decoration: none;
+            background-color: @side-bar-collapsed-bg-color;
         }
 
         &:before {
-            content: "\f053"; /*fa-chevron-left*/
+            content: "\e611"; // ico-chevron-left
+        }
+    }
+
+    &.collapsed {
+        width: @side-bar-collapsed-width;
+        background-color: @side-bar-collapsed-bg-color;
+
+        .collapse-handle {
+            padding-right:6px;
+            &:before {
+                content: "\e612"; // ico-chevron-right
+            }
         }
     }
 }
@@ -118,10 +154,25 @@ footer, .footer {
     right: 0;
     height: @footer-height;
     line-height: @footer-height;
-    background-color: #f8ffe8;
+    background-color: @footer-bg-color;
     border-top: 1px solid @default-brd-color;
     z-index: @footer-index;
     padding-left: 8px;
+    font-size:12px;
+
+    .right-part {
+        display:inline-block;
+        float:right;
+        padding-right:2px;
+    }
+
+    button {
+        background-color:skyblue;
+        border:1px solid blue;
+        font-size:12px;
+        padding:1px 6px;
+        text-transform:lowercase;
+    }
 }
 
 a {
@@ -147,6 +198,11 @@ pre {
     font-size:0.85em;
     background-color:#f8f8f8;
     padding:6px;
+}
+
+button {
+    padding: 4px 6px;
+    font-size: 13px;
 }
 
 @import "Control.less";

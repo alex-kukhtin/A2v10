@@ -17,6 +17,9 @@
                         xhrResult = JSON.parse(xhr.responseText);
                     resolve(xhrResult);
                 }
+                else if (xhr.status === 255) {
+                    reject(xhr.responseText || xhr.statusText);
+                }
                 else
                     reject(xhr.statusText);
             };
@@ -59,8 +62,10 @@
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
-                    if (selector.firstChild && selector.firstChild.__vue__)
-                        selector.firstChild.__vue__.__baseUrl__ = url;
+                    if (selector.firstChild && selector.firstChild.__vue__) {
+                        let ve = selector.firstChild.__vue__;
+                        ve.$data.__baseUrl__ = url;
+                    }
                     resolve(true);
                 })
                 .catch(function (error) {

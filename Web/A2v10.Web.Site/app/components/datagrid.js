@@ -12,8 +12,6 @@
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
-    const route = require('route');
-
     const dataGridTemplate = `
 <table :class="cssClass">
     <thead>
@@ -54,8 +52,10 @@
         computed: {
             dir() {
                 // TODO: client/server
-                let q = route.query;
-                //console.dir(q);
+                var qry = this.$parent.query;
+                if (!qry)
+                    return '';
+                let q = qry;
                 if (q.order === this.content) {
                     return (q.dir || '').toLowerCase();
                 }
@@ -65,6 +65,9 @@
                 if (!this.content)
                     return false;
                 return typeof this.sort === 'undefined' ? this.$parent.sort : this.sort;
+            },
+            isUpdateUrl() {
+                return !this.$root.inDialog;
             },
             template() {
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
@@ -86,15 +89,14 @@
             doSort() {
                 if (!this.isSortable)
                     return;
-                // TODO: client/server
-                let q = route.query;
+                // TODO: client/server mode, dialog mode
+                let q = this.$parent.query;
                 let qdir = (q.dir || 'asc').toLowerCase();
                 if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
                 }
-                route.query = { order: this.content, dir: qdir };
-                if (this.$parent.searchChange)
-                    this.$parent.searchChange();
+                let nq = { order: this.content, dir: qdir };
+                this.$root.$emit('queryChange', nq);
             }
         }
     };
@@ -200,8 +202,7 @@
             striped: Boolean,
             hover: { type: Boolean, default: false },
             sort: { type: Boolean, default: false },
-            // callbacks
-            searchChange: Function
+            query: Object
         },
         template: dataGridTemplate,
         components: {
