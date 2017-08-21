@@ -135,6 +135,7 @@
     <Content Include="fonts\Bowtie.woff" />
     <Content Include="fonts\Bowtie.woff2" />
     <Content Include="Less\Bowtie.less" />
+    <Content Include="Less\Tab.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

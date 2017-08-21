@@ -32,8 +32,12 @@
                 <template slot="items" scope="item">
                     <span>dynamic tab item: </span>
                     <span v-text="item"></span>
-                </template>    
+                </template>
             </a2-tab-panel>
+        </div>
+        <div>
+            <a href="test.123">Click ME here</a>
+            <a href="https://www.google.com.ua">go to google!</a>
         </div>
     </div>
 
@@ -44,6 +48,8 @@
     <script type="text/javascript">
 
     (function() {
+
+        alert('loaded');
 
         var sampleData = {
             tabs: [
@@ -57,10 +63,12 @@
             }
         };
 
+        debugger;
         var vm = new Vue({
             el: "#test-tab",
             data: sampleData
         });
+
 
     })();
 

@@ -9,7 +9,6 @@
 #define IDS_STATUS_PANE2			123
 #define ID_VIEW_CUSTOMIZE			126
 #define IDR_MAINFRAME				128
-#define IDR_MAINFRAME_256			129
 #define IDR_A2v10TYPE				130
 
 #define IDR_MENU_IMAGES		230

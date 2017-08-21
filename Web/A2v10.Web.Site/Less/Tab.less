@@ -1,0 +1,24 @@
+﻿@import "Variables.less";
+
+
+.tab-panel {
+    background-color:yellow;
+    padding:0;
+    .tab-header {
+        background-color:#f8f8f8;
+        li {
+            display:inline-block;
+            padding: 6px 10px;
+            list-style:none;
+            cursor:pointer;
+            &:hover {
+                background-color:antiquewhite;
+            }
+            &.active {
+                background-color:white;
+                cursor:default;
+                border-top:3px solid gold;
+            }
+        }
+    }
+}

@@ -9,7 +9,9 @@
 #include "mainframe.h"
 
 #include "workarea.h"
-#include "mainview.h"
+#include "cefclient.h"
+#include "cefview.h"
+#include "cefapp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -17,6 +19,8 @@
 
 #pragma comment(lib,"../../bin/A2v10.Base.lib")
 #pragma comment(lib,"../../bin/A2v10.Net.Shim.lib")
+
+#pragma comment(lib,"../../bin/libcef.lib")
 
 // CMainApp
 
@@ -34,8 +38,6 @@ END_MESSAGE_MAP()
 
 CMainApp::CMainApp()
 {
-	m_bHiColorIcons = TRUE;
-
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
 #ifdef _MANAGED
@@ -69,6 +71,8 @@ BOOL CMainApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
+	CCefApplication::Init(m_hInstance);
+
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
 	CMultiDocTemplate* pDocTemplate;
@@ -76,7 +80,7 @@ BOOL CMainApp::InitInstance()
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CWorkarea),
 		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
-		RUNTIME_CLASS(CMainView));
+		RUNTIME_CLASS(CCefView));
 	if (!pDocTemplate)
 		return FALSE;
 	m_pDocTemplate = pDocTemplate;
@@ -100,11 +104,19 @@ BOOL CMainApp::InitInstance()
 	return TRUE;
 }
 
+// virtual 
+BOOL CMainApp::PumpMessage()
+{
+	BOOL rc = __super::PumpMessage();
+	CefDoMessageLoopWork();
+	return rc;
+}
+
 int CMainApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
-
+	CefShutdown();
 	return CWinAppEx::ExitInstance();
 }
 

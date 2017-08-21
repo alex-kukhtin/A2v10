@@ -1,0 +1,18 @@
+﻿BUILD CEF
+
+1. download cef_binary_3.xxxxxxxx_windows32_minimal.tar.bz2 from 
+	http://opensource.spotify.com/cefbuilds/index.html#windows32_builds
+2. unpack it to c:\git\cef_win32
+3. open folder c:\git\cef_win32 by Visual Studio 2017
+4. change  "/MTd" to "/MDd" and "/MT" to "MD"
+	(dynamic vs static linking ) in file .\cmake\cef_variables.cmake
+5. comment (#) add_subdirectory(tests/....) in CMakeLists.txt
+6. remove makelists.json (if needed)
+7. build x86-Debug and x86-Release configurations
+8. copy all content .\release to output
+9. copy all content .\resources to output
+
+10. copy {user}\{guid}\build\x86-Debug\libcef_dll_wrapper\libcef_dll_wrapper.lib to A2v10\Desktop\Lib\Debug
+11. copy {user}\{guid}\build\x86-Release\libcef_dll_wrapper\libcef_dll_wrapper.lib to A2v10\Desktop\Lib\Release
+
+

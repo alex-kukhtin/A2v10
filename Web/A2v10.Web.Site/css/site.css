@@ -257,6 +257,7 @@ header,
   height: 100%;
   cursor: pointer;
   font-size: 14px;
+  padding-left: 2px;
 }
 .side-bar .side-bar-title .side-bar-label {
   display: block;
@@ -491,6 +492,27 @@ table.hover > tbody > tr:hover {
   border: 4px solid transparent;
   border-right-color: #8591a2;
   border-bottom-color: #8591a2;
+}
+.tab-panel {
+  background-color: yellow;
+  padding: 0;
+}
+.tab-panel .tab-header {
+  background-color: #f8f8f8;
+}
+.tab-panel .tab-header li {
+  display: inline-block;
+  padding: 6px 10px;
+  list-style: none;
+  cursor: pointer;
+}
+.tab-panel .tab-header li:hover {
+  background-color: antiquewhite;
+}
+.tab-panel .tab-header li.active {
+  background-color: white;
+  cursor: default;
+  border-top: 3px solid gold;
 }
 .modal-stack {
   position: fixed;
