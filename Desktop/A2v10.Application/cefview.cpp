@@ -146,6 +146,7 @@ void CCefView::OnSize(UINT nType, int cx, int cy)
 			CRect rect;
 			GetClientRect(&rect);
 			::SetWindowPos(hwnd, HWND_TOP, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+			m_browser->GetHost()->WasResized();
 		}
 	}
 }
@@ -163,9 +164,11 @@ void CCefView::OnInitialUpdate()
 
 	CefBrowserSettings browserSettings;
 	browserSettings.web_security = STATE_DISABLED;
-
+	browserSettings.local_storage = STATE_ENABLED;
+	cef_string_set(L"UTF-8", 5, &browserSettings.default_encoding, true);
 	m_clientHandler = new CCefClientHandler(this);
-	LPCSTR szRootUrl = "client://localhost"; //L"https://www.google.com.ua";
+	LPCSTR szRootUrl = "client://app"; 
+	//LPCSTR szRootUrl = "https://www.google.com.ua";
 	m_clientHandler->CreateBrowser(info, browserSettings, CefString(szRootUrl));
 }
 

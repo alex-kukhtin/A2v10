@@ -18,7 +18,7 @@ public:
 	virtual void Cancel() {};
 	static void RegisterSchemaHandlerFactory();
 private:
-	std::string data_;
+	std::vector<byte> data_;
 	std::string mime_type_;
 	size_t offset_;
 

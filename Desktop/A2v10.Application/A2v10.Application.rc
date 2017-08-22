@@ -156,8 +156,8 @@ END
 //
 
 VS_VERSION_INFO     VERSIONINFO
-  FILEVERSION       1,0,0,1
-  PRODUCTVERSION    1,0,0,1
+  FILEVERSION       10,0,7007,0
+  PRODUCTVERSION    10,0,0,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -174,12 +174,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "A2v10.Application"
-            VALUE "FileVersion",     "1.0.0.1"
+            VALUE "FileVersion",     "10.0.7007.0"
             VALUE "InternalName",    "A2v10.Application.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+			VALUE "LegalCopyright", "© 2007-2017 Alex Kukhtin.  All rights reserved."
             VALUE "OriginalFilename","A2v10.Application.exe"
-            VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion",  "1.0.0.1"
+            VALUE "ProductName", "A2"
+            VALUE "ProductVersion",  "10.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -216,15 +216,6 @@ BEGIN
 END
 STRINGTABLE
 BEGIN
-    ID_INDICATOR_EXT        "EXT"
-    ID_INDICATOR_CAPS       "CAP"
-    ID_INDICATOR_NUM        "NUM"
-    ID_INDICATOR_SCRL       "SCRL"
-    ID_INDICATOR_OVR        "OVR"
-    ID_INDICATOR_REC        "REC"
-END
-STRINGTABLE
-BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
@@ -241,8 +232,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_STATUS_PANE1        "Pane 1"
-    IDS_STATUS_PANE2        "Pane 2"
     IDS_TOOLBAR_STANDARD    "Standard"
 END
 #endif

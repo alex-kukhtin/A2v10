@@ -21,7 +21,7 @@ void CCefApplication::Init(HINSTANCE hInstance)
 
 	CefMainArgs args(hInstance);
 	CefSettings settings;
-	settings.single_process = false;
+	settings.single_process = true;
 	settings.multi_threaded_message_loop = false;
 	settings.no_sandbox = true;
 	settings.remote_debugging_port = 5555; /// TODO

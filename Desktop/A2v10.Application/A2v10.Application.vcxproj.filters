@@ -45,6 +45,9 @@
     <ClInclude Include="cefscheme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="appres.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cefscheme.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="appres.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

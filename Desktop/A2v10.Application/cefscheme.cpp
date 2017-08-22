@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 #include "cefscheme.h"
+#include "appres.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -16,21 +17,25 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	std::string url = request->GetURL();
 	std::string method = request->GetMethod();
 
-	LPCWSTR resId = MAKEINTRESOURCE(2000);
-	HINSTANCE hInst = AfxFindResourceHandle(resId, RT_RCDATA);
-	HRSRC hRsrc = ::FindResource(hInst, resId, RT_RCDATA);
-
-	HGLOBAL hGlob = ::LoadResource(hInst, hRsrc);
-	char* szRes = (char*) ::LockResource(hGlob); // UTF8;
-
-	data_ = szRes + 3; //  "text from scheme handler <a href=\"test/123\">Click!</a><br>" + url + "<br>" + method;
-
-					   //if (hRsrc)
-					   //data_ += "<br>resource was found";
-
-	handled = true;
-	mime_type_ = "text/html";
-	handled = true;
+	const char* mime = nullptr;
+	int resSize = 0;
+	const byte* resBytes = CApplicationResources::LoadResource(url.c_str(), &mime, resSize);
+	if (resBytes) {
+		data_.resize(resSize);
+		memcpy_s(data_.data(), resSize, resBytes, resSize);
+		mime_type_ = mime;
+		handled = true;
+	}
+	else 
+	{
+		std::string error = "file not found: ";
+		error += url;
+		resSize = error.length();
+		data_.resize(resSize);
+		memcpy_s(data_.data(), resSize, error.c_str(), resSize);
+		mime_type_ = mime;
+		handled = true;
+	}
 	if (handled) {
 		callback->Continue();
 		return true;
@@ -46,11 +51,11 @@ void CClientSchemeHandler::GetResponseHeaders(CefRefPtr<CefResponse> response,
 	CEF_REQUIRE_IO_THREAD();
 	DCHECK(!data_.empty());
 
-	response->SetMimeType("text/html");
+	response->SetMimeType(mime_type_);
 	response->SetStatus(200);
 
 	// Set the resulting response length.
-	response_length = data_.length();
+	response_length = data_.size();
 }
 
 // virtual 
@@ -64,11 +69,11 @@ bool CClientSchemeHandler::ReadResponse(void* data_out,
 	bool has_data = false;
 	bytes_read = 0;
 
-	if (offset_ < data_.length()) {
+	if (offset_ < data_.size()) {
 		// Copy the next block of data into the buffer.
 		int transfer_size =
-			min(bytes_to_read, static_cast<int>(data_.length() - offset_));
-		memcpy(data_out, data_.c_str() + offset_, transfer_size);
+			min(bytes_to_read, static_cast<int>(data_.size() - offset_));
+		memcpy(data_out, data_.data() + offset_, transfer_size);
 		offset_ += transfer_size;
 
 		bytes_read = transfer_size;
@@ -100,6 +105,6 @@ private:
 // static
 void CClientSchemeHandler::RegisterSchemaHandlerFactory()
 {
-	CefRegisterSchemeHandlerFactory("client", "localhost",
+	CefRegisterSchemeHandlerFactory("client", "app",
 		new ClientSchemeHandlerFactory());
 }

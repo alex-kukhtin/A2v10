@@ -143,6 +143,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\;C:\Git\cef_win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +190,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="A2v10.Application.h" />
+    <ClInclude Include="appres.h" />
     <ClInclude Include="cefapp.h" />
     <ClInclude Include="cefclient.h" />
     <ClInclude Include="cefscheme.h" />
@@ -201,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp" />
+    <ClCompile Include="appres.cpp" />
     <ClCompile Include="cefapp.cpp" />
     <ClCompile Include="cefclient.cpp" />
     <ClCompile Include="cefscheme.cpp" />
