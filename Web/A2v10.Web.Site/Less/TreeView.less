@@ -4,13 +4,13 @@
 .tree-view {
     margin: 0;
     padding: 0;
-    overflow-y:auto;
-    overflow-x:hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     li {
         list-style: none;
         position: relative;
-        cursor:pointer;
+        cursor: pointer;
 
         &.active > .overlay {
             background-color: @active-bg-color;
@@ -26,11 +26,19 @@
             width: 100%;
             padding: 3px 0 5px 0;
 
+            .tv-folder {
+                font-weight: bold;
+                color:@tv-icon-color;
+            }
+
             .toggle {
                 display: inline-block;
                 flex-shrink: 0; /*fixed*/
                 width: 16px;
                 height: 16px;
+                font-size: 16px;
+                font-family: "Bowtie";
+                color: @tv-icon-color;
             }
 
             &:hover {
@@ -41,14 +49,14 @@
                 flex-shrink: 0; /*fixed*/
                 color: #8591a2;
                 font-size: 14px;
-                margin-left:2px;
-                width:20px; /*16 + 4 margin*/
+                margin-left: 2px;
+                width: 20px; /*16 + 4 margin*/
             }
 
             .no-wrap {
-                white-space:nowrap;
-                overflow:hidden;
-                text-overflow:ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
 
@@ -61,12 +69,10 @@
             > .overlay > .toggle {
 
                 &:after {
-                    content: '';
+                    content: "\e68a"; /**tree-collapsed*/
                     position: absolute;
-                    left: 6px; /*padding*/
-                    top: 9px;
-                    border: 5px solid transparent;
-                    border-left-color: @tv-icon-color;
+                    left: 4px;
+                    top: 6px;
                 }
             }
 
@@ -78,13 +84,10 @@
         &.expanded {
             > .overlay > .toggle {
                 &:after {
-                    content: '';
+                    content: "\e68b"; /*tree-expanded*/
                     position: absolute;
-                    left: 4px; /*padding*/
-                    top: 9px;
-                    border: 4px solid transparent;
-                    border-right-color: @tv-icon-color;
-                    border-bottom-color: @tv-icon-color;
+                    left: 2px;
+                    top: 5px;
                 }
             }
         }

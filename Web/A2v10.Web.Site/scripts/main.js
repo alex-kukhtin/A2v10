@@ -62,8 +62,11 @@
         if (!obj)
             return '';
         let esc = encodeURIComponent;
-        let query = Object.keys(obj).map(k => esc(k) + '=' + esc(obj[k])).join('&');
-        return '?' + query;
+        let query = Object.keys(obj)
+            .filter(k => obj[k])
+            .map(k => esc(k) + '=' + esc(obj[k]))
+            .join('&');
+        return query ? '?' + query : '';
     }
 
     function saveSearchToStorage() {
@@ -120,7 +123,7 @@
     };
     Location.prototype.fullPath = function () {
         return this.path + (this.search ? '?' + this.search : '');
-    }
+    };
 
     Location.prototype.saveMenuUrl = function () {
         let stg = window.localStorage;
@@ -260,7 +263,7 @@
 
     function toJson(data) {
         return JSON.stringify(data, function (key, value) {
-            return (key[0] === '$' || key[0] === '_') ? undefined : value;
+            return key[0] === '$' || key[0] === '_' ? undefined : value;
         }, 2);
     }
 
@@ -433,7 +436,7 @@
 })();
 
 
-/*20170820-7017*/
+/*20170823-7018*/
 /* services/datamodel.js */
 (function() {
 
@@ -552,12 +555,20 @@
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
             elem._query_ = {};
+            // rowcount
+            for (var m in elem._meta_) {
+                let rcp = m + '.$RowCount';
+                if (rcp in source) {
+                    let rcv = source[rcp];
+                    elem[m].$RowCount = rcv;
+                }
+            }
         }
         return elem;
     }
 
     function createArray(source, path, ctor, arrctor, parent) {
-        let arr = new _BaseArray(source.length);
+        let arr = new _BaseArray(source ? source.length : 0);
         let dotPath = path + '[]';
         defHidden(arr, '_elem_', ctor);
         defHidden(arr, PATH, path);
@@ -622,8 +633,10 @@
 
     _BaseArray.prototype.$copy = function (src) {
         this.$empty();
-        for (let i = 0; i < src.length; i++) {
-            this.push(this.$new(src[i]));
+        if (utils.isArray(src)) {
+            for (let i = 0; i < src.length; i++) {
+                this.push(this.$new(src[i]));
+            }
         }
         return this;
     };
@@ -889,39 +902,61 @@
         }
     });
 })();
-/*20170814-7012*/
+/*20170823-7018*/
 /*components/datagrid.js*/
 (function () {
 
  /*TODO:
 2. size (compact, large ??)
-3. contextual
-5. grouping
+5. grouping (multiply)
 6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
+8. pager - (client/server)
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
     const dataGridTemplate = `
-<table :class="cssClass">
-    <thead>
-        <tr>
-            <slot></slot>
-        </tr>
-    </thead>
-    <tbody>
-        <data-grid-row :cols="columns" v-for="(item, rowIndex) in itemsSource" :row="item" :key="rowIndex" :index="rowIndex"></data-grid-row>
-    </tbody>
-</table>
+<div class="data-grid-container">
+    <slot name="toolbar" :query="dgQuery" />
+    <table :class="cssClass">
+        <colgroup>
+            <col v-if="isMarkCell"/>
+            <col :class="columnClass(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th v-if="isMarkCell" class="marker"></th>
+                <slot></slot>
+            </tr>
+        </thead>
+        <tbody>
+            <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+        </tbody>
+    </table>
+    <slot name="pager" :query="dgQuery" :sort="sort"/>
+</div>
 `;
 
-    const dataGridRowTemplate =
-        '<tr @mouseup.stop.prevent="row.$select()" :class="{active : active}" ><data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index"></data-grid-cell></tr>';
+    const dataGridRowTemplate = `
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass">
+    <td v-if="isMarkCell" class="marker">
+        <div :class="markClass"></div>
+    </td>
+    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index">
+    </data-grid-cell>
+</tr>`;
+
+    const dataGridColumnTemplate = `
+<th :class="cssClass" @click.stop.prevent="doSort">
+    <i :class="\'fa fa-\' + icon" v-if="icon"></i>
+    <slot>{{header || content}}</slot>
+</th>
+`;
 
     const dataGridColumn = {
         name: 'data-grid-column',
-        template: '<th :class="cssClass" @click.stop.prevent="doSort"><i :class="\'fa fa-\' + icon" v-if="icon"></i> <slot>{{header || content}}</slot></th>',
+        template: dataGridColumnTemplate,
         props: {
             header: String,
             content: String,
@@ -930,23 +965,17 @@
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
             validate: String,
-            sort: { type: Boolean, default: undefined }
-        },
-        data() {
-            return {
-                dirClient: null
-            };
+            sort: { type: Boolean, default: undefined },
+            mark: String
         },
         created() {
             this.$parent.$addColumn(this);
         },
         computed: {
             dir() {
-                // TODO: client/server
-                var qry = this.$parent.query;
-                if (!qry)
+                var q = this.$parent.dgQuery;
+                if (!q)
                     return '';
-                let q = qry;
                 if (q.order === this.content) {
                     return (q.dir || '').toLowerCase();
                 }
@@ -955,7 +984,7 @@
             isSortable() {
                 if (!this.content)
                     return false;
-                return typeof this.sort === 'undefined' ? this.$parent.sort : this.sort;
+                return typeof this.sort === 'undefined' ? this.$parent.isGridSortable : this.sort;
             },
             isUpdateUrl() {
                 return !this.$root.inDialog;
@@ -964,30 +993,38 @@
                 return this.id ? this.$parent.$scopedSlots[this.id] : null;
             },
             cssClass() {
-                let cssClass = '';
-                if (this.align !== 'left')
-                    cssClass += (' text-' + this.align).toLowerCase();
+                let cssClass = this.classAlign;
                 if (this.isSortable) {
                     cssClass += ' sort';
                     if (this.dir)
                         cssClass += ' ' + this.dir;
                 }
-                cssClass = cssClass.trim();
-                return cssClass === '' ? null : cssClass;
+                return cssClass;
+            },
+            classAlign() {
+                return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
             }
         },
         methods: {
             doSort() {
                 if (!this.isSortable)
                     return;
-                // TODO: client/server mode, dialog mode
-                let q = this.$parent.query;
+                let q = this.$parent.dgQuery;
                 let qdir = (q.dir || 'asc').toLowerCase();
                 if (q.order === this.content) {
                     qdir = qdir === 'asc' ? 'desc' : 'asc';
                 }
-                let nq = { order: this.content, dir: qdir };
-                this.$root.$emit('queryChange', nq);
+                let nq = Object.assign({}, q, { order: this.content, dir: qdir });
+                Vue.set(this.$parent, 'dgQuery', nq);
+            },
+            cellCssClass(row) {
+                let cssClass = this.classAlign;
+                if (this.mark) {
+                    let mark = row[this.mark];
+                    if (mark)
+                        cssClass += ' ' + mark;
+                }
+                return cssClass.trim();
             }
         }
     };
@@ -1009,7 +1046,7 @@
             let ix = ctx.props.index;
 
             let cellProps = {
-                'class': col.cssClass
+                'class': col.cellCssClass(row)
             };
 
             let childProps = {
@@ -1070,12 +1107,27 @@
         props: {
             row: Object,
             cols: Array,
-            index: Number
+            index: Number,
+            mark: String
         },
         computed: {
             active() {
                 return this.row === this.$parent.selected;
                 //return this === this.$parent.rowSelected;
+            },
+            rowClass() {
+                let cssClass = '';
+                if (this.active)
+                    cssClass += 'active';
+                if (this.isMarkRow && this.mark)
+                    cssClass += ' ' + this.row[this.mark];
+                return cssClass.trim();
+            },
+            isMarkCell() {
+                return this.$parent.isMarkCell;
+            },
+            markClass() {
+               return this.mark ? this.row[this.mark] : '';
             }
         },
         methods: {
@@ -1092,8 +1144,11 @@
             bordered: Boolean,
             striped: Boolean,
             hover: { type: Boolean, default: false },
-            sort: { type: Boolean, default: false },
-            query: Object
+            sort: String,
+            routeQuery: Object,
+            mark: String,
+            filterFields: String,
+            markStyle: String
         },
         template: dataGridTemplate,
         components: {
@@ -1101,11 +1156,34 @@
         },
         data() {
             return {
-                columns: []
-                //rowSelected: null
+                columns: [],
+                clientItems: null,
+                dgQuery: {
+                    // predefined for sorting and pagination
+                    dir: undefined,
+                    order: undefined,
+                    offset: undefined
+                }
             };
         },
+        watch: {
+            dgQuery: {
+                handler(nq, oq) {
+                    this.queryChange();
+                },
+                deep:true
+            }
+        },
         computed: {
+            $items() {
+                return this.clientItems ? this.clientItems : this.itemsSource;
+            },
+            isMarkCell() {
+                return this.markStyle === 'marker' || this.markStyle === 'both';
+            },
+            isMarkRow() {
+                return this.markStyle === 'row' || this.markStyle === 'both';
+            },
             cssClass() {
                 let cssClass = 'data-grid';
                 if (this.bordered) cssClass += ' bordered';
@@ -1115,16 +1193,138 @@
             },
             selected() {
                 return this.itemsSource.$selected;
+            },
+            isGridSortable() {
+                return !!this.sort;
             }
         },
         methods: {
             $addColumn(column) {
                 this.columns.push(column);
+            },
+            columnClass(column) {
+                return {
+                    sorted: !!column.dir
+                };
+            },
+            queryChange()
+            {
+                let nq = this.dgQuery;
+                if (this.sort === 'server') {
+                    this.$root.$emit('queryChange', nq);
+                    return;
+                }
+                let rev = nq.dir === 'desc';
+                let sortProp = nq.order;
+                let arr = [].concat(this.itemsSource);
+                if (nq.filter) {
+                    let sv = nq.filter.toUpperCase();
+                    // TODO: add $contains to element
+                    arr = arr.filter((itm) => itm.Name.toUpperCase().indexOf(sv) !== -1);
+                }
+                arr.sort((a, b) => {
+                    let av = a[sortProp];
+                    let bv = b[sortProp];
+                    if (av === bv)
+                        return 0;
+                    else if (av < bv)
+                        return rev ? 1 : -1;
+                    else
+                        return rev ? -1 : 1;
+                });
+                if (nq.offset !== undefined) {
+                    //TODO: pageSize
+                    arr = arr.slice(+nq.offset, +nq.offset + 3);
+                }
+                this.clientItems = arr;
             }
+        },
+        created() {
+            if (!this.filterFields)
+                return;
+            // make all filter fields 
+            let q = this.dgQuery;
+            let nq = {};
+            this.filterFields.split(',').forEach(v => {
+                let f = v.trim();
+                nq[v.trim()] = undefined;
+            });
+            let xq = {};
+            if (this.sort === 'server') {
+                // from route
+                xq = this.routeQuery;
+            }
+            nq = Object.assign({}, q, nq, xq);
+            Vue.set(this, 'dgQuery', nq);
         }
     });
 
 })();
+/*20170823-7018*/
+/*components/pager.js*/
+
+/*
+TODO: pageSize
+*/
+
+(function () {
+
+    const pagerTemplate = `
+    <div class="data-grid-pager">
+        <button @click.stop.prevent="prev" :disabled="isFirstPage">prev</button>
+        <button @click.stop.prevent="next" :disabled="isLastPage">next</button>
+        <label v-text="query"></label>
+        <span>length: {{length}} sort:{{sort}}</span>
+    </div>
+`;
+
+
+    Vue.component('a2-pager', {
+        template: pagerTemplate,
+        props: {
+            itemsSource: Array,
+            query: Object,
+            sort: String,
+            pageSize: {
+                type: Number,
+                default: 3 //TODO: default page size
+            }
+        },
+        computed: {
+            offset() {
+                return +this.query.offset || 0;
+            },
+            length() {
+                if (this.sort === 'server')
+                    return this.itemsSource.$RowCount;
+                else
+                    return this.itemsSource.length;
+            },
+            isLastPage() {
+                return this.offset + this.pageSize >= this.length;
+            },
+            isFirstPage() {
+                return +this.offset === 0;
+            }
+        },        
+        methods: {
+            next() {
+                if (this.isLastPage)
+                    return;
+                var cv = this.offset + this.pageSize;
+                this.query.offset = cv;
+            },
+            prev() {
+                if (this.isFirstPage)
+                    return;
+                let cv = this.offset - this.pageSize;
+                this.query.offset = cv;
+            }
+        }
+    });
+})();
+
+
 /* 20170816-7014 */
 /*components/treeview.js*/
 
@@ -1135,17 +1335,18 @@
     */
     Vue.component('tree-item', {
         template: `
-<li @click.stop.prevent="click(item)" :title="item[title]"
+<li @click.stop.prevent="doClick(item)" :title="item[title]"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div class="overlay">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
-        <span v-if="!isFolder" class="toggle"></span>
+        <span v-else class="toggle"></span>
         <i v-if="hasIcon" :class="iconClass"></i>
-        <a href v-text="item[label]" :class="{'no-wrap':!wrapLabel }"></a>
+        <a v-if="hasLink" :href="dataHref" v-text="item[label]" :class="{'no-wrap':!wrapLabel }"></a>
+        <span v-else v-text="item[label]" :class="{'tv-folder':true, 'no-wrap':!wrapLabel}"></span>
     </div>
     <ul v-if="isFolder" v-show="isExpanded">
         <tree-item v-for="(itm, index) in item[subitems]" 
-            :key="index" :item="itm" :click="click" :is-active="isActive" :has-icon="hasIcon"
+            :key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :has-icon="hasIcon" :folder-select="folderSelect"
             :label="label" :wrap-label="wrapLabel" :icon="icon" :subitems="subitems" :title="title"></tree-item>
     </ul>   
 </li>
@@ -1155,14 +1356,16 @@
             /* attrs */
             hasIcon: Boolean,
             wrapLabel: Boolean,
+            folderSelect: Boolean,
             /* prop names */
             label: String,
             icon: String,
             title: String,
             subitems: String,
-            /* functions */
+            /* callbacks */
             click: Function,
-            isActive: Function
+            isActive: Function,
+            getHref: Function
         },
         data() {
             return {
@@ -1170,6 +1373,12 @@
             };
         },
         methods: {
+            doClick(item) {
+                if (this.isFolder && !this.folderSelect)
+                    this.toggle();
+                else
+                    this.click(item);
+            },
             toggle() {
                 if (!this.isFolder)
                     return;
@@ -1180,6 +1389,9 @@
             isFolder: function () {
                 let ch = this.item[this.subitems];
                 return ch && ch.length;
+            },
+            hasLink() {
+                return !this.isFolder || this.folderSelect;
             },
             isExpanded: function () {
                 return this.isFolder && this.open;
@@ -1192,6 +1404,9 @@
             },
             iconClass: function () {
                 return this.icon ? "ico ico-" + (this.item[this.icon] || 'empty') : '';
+            },
+            dataHref() {
+                return this.getHref ? this.getHref(this.item) : '';
             }
         }
     });
@@ -1273,7 +1488,7 @@ TODO: may be icon for confirm ????
 
     app.components['modal'] = modalComponent;
 })();
-/*20170820-7017*/
+/*20170823-7018*/
 /*controllers/base.js*/
 (function () {
 
@@ -1284,7 +1499,6 @@ TODO: may be icon for confirm ????
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
-
         data() {
             return {
                 __init__: true,
@@ -1318,6 +1532,7 @@ TODO: may be icon for confirm ????
             },
             "$query": {
                 handler: function (newVal, oldVal) {
+                    //console.warn('query watched');
                     if (this.$data.__init__)
                         return;
                     if (this.inDialog) {
@@ -1357,9 +1572,22 @@ TODO: may be icon for confirm ????
                 });
             },
 
+            $invoke(cmd, base, data) {
+                alert('TODO: call invoke command');
+                let self = this;
+                let url = '/_data/invoke';
+                let baseUrl = base || self.$baseUrl;
+                return new Promise(function (resolve, reject) {
+                    dataservice.post(url).then(function (data) {
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                });
+            },
+
             $reload() {
                 var self = this;
-                var url = '/_data/reload';
+                let url = '/_data/reload';
                 let dat = self.$data;
                 return new Promise(function (resolve, reject) {
                     var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
@@ -1403,8 +1631,13 @@ TODO: may be icon for confirm ????
             },
 
             $alertUi(msg) {
+                if (msg instanceof Error) {
+                    alert(msg.message);
+                    return;
+                }
                 if (msg.indexOf('UI:') === 0)
                     this.$alert(msg.substring(3));
+
                 else
                     alert(msg);
             },
@@ -1512,11 +1745,14 @@ TODO: may be icon for confirm ????
     app.components['baseController'] = base;
 
 })();
-
+/*20170823-7015*/
+/* controllers/shell.js */
 
 (function () {
 
-
+    /* TODO: 
+    1. find first active item
+    */
     const route = require('route');
     const store = require('store');
     const modal = component('modal');
@@ -1544,11 +1780,18 @@ TODO: may be icon for confirm ????
             menu: Array
         },
 
-        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}"><a href="\" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
+        template: `
+<ul class="nav-bar">
+    <li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}">
+        <a :href="itemHref(item)" v-text="item.title" @click.stop.prevent="navigate(item)"></a>
+    </li>
+</ul>
+`,
 
         data: function () {
             return {
-                activeItem: null
+                activeItem: null,
+                isAppMode: false
             };
         },
 
@@ -1558,6 +1801,10 @@ TODO: may be icon for confirm ????
             function findCurrent() {
                 let loc = route.location();
                 let seg1 = loc.segment(1);
+                if (seg1 === 'app') {
+                    me.isAppMode = true;
+                    return null;
+                }
                 me.activeItem = me.menu.find(itm => itm.url === seg1);
                 return loc;
             }
@@ -1581,9 +1828,9 @@ TODO: may be icon for confirm ????
 
             findCurrent();
 
-            if (!me.activeItem) {
+            if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
-                // TODO: to route
+                // TODO: (find first active item  to route
                 window.history.replaceState(null, null, me.activeItem.url);
             }
 
@@ -1598,6 +1845,14 @@ TODO: may be icon for confirm ????
         methods: {
             isActive: function (item) {
                 return item === this.activeItem;
+            },
+            itemHref(item) {
+                // for 'open in new window' command
+                let url = '/' + item.url;
+                let activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
+                if (activeItem)
+                    url = url + '/' + activeItem.url;
+                return url;
             },
             navigate: function (item) {
                 // nav bar
@@ -1628,9 +1883,9 @@ TODO: may be icon for confirm ????
     <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <ul class="tree-view">
-            <tree-item v-for="(itm, index) in sideMenu" 
+            <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
                 :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :is-active="isActive" :has-icon="true" :wrap-label="true">
+                :subitems="'menu'" :click="navigate" :get-href="itemHref" :is-active="isActive" :has-icon="true" :wrap-label="true">
             </tree-item>
         </ul>
     </div>
@@ -1664,10 +1919,14 @@ TODO: may be icon for confirm ????
             isActive: function (itm) {
                 return itm === this.activeItem;
             },
+            itemHref(itm) {
+                // for 'open in new window' command
+                return `/${this.topUrl}/${itm.url}`;
+            },
             navigate: function (itm) {
                 if (!itm.url)
                     return; // no url. is folder?
-                let newUrl = `/${this.topUrl}/${itm.url}`;
+                let newUrl = this.itemHref(itm);
                 route.navigateMenu(newUrl, itm.query);
             },
             toggle() {
@@ -1789,8 +2048,14 @@ TODO: may be icon for confirm ????
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
                 let seg1 = loc.segment(1);
-                me.navBarVisible = len === 2 || len === 3;
-                me.sideBarVisible = len === 3;
+                if (seg1 === 'app') {
+                    me.navBarVisible = false;
+                    me.sideBarVisible = false;
+                }
+                else {
+                    me.navBarVisible = len === 2 || len === 3;
+                    me.sideBarVisible = len === 3;
+                }
                 // close all modals
                 me.modals.splice(0, me.modals.length);
             });
@@ -1841,7 +2106,12 @@ TODO: may be icon for confirm ????
         },
         methods: {
             about() {
-                route.navigateMenu('/system/app/about');
+                route.navigateMenu('/app/about');
+            },
+            root() {
+                // TODO: navigate to first active menu item
+                // alert(this.menu[0].url);
+                route.navigateMenu('/' + this.menu[0].url);
             }
         }
     });

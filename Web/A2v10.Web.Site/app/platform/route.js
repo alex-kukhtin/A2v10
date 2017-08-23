@@ -18,8 +18,11 @@
         if (!obj)
             return '';
         let esc = encodeURIComponent;
-        let query = Object.keys(obj).map(k => esc(k) + '=' + esc(obj[k])).join('&');
-        return '?' + query;
+        let query = Object.keys(obj)
+            .filter(k => obj[k])
+            .map(k => esc(k) + '=' + esc(obj[k]))
+            .join('&');
+        return query ? '?' + query : '';
     }
 
     function saveSearchToStorage() {
@@ -76,7 +79,7 @@
     };
     Location.prototype.fullPath = function () {
         return this.path + (this.search ? '?' + this.search : '');
-    }
+    };
 
     Location.prototype.saveMenuUrl = function () {
         let stg = window.localStorage;

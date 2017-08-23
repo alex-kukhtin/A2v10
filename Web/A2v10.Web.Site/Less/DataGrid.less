@@ -5,6 +5,9 @@
 @dg-header-hover-color : darken(@dg-header-bg-color, 10%);
 @dg-header-txt-color: #555;
 
+@dg-danger-bg-color: rgba(255, 106, 0, 0.15);
+@dg-warning-bg-color: rgba(255, 216, 0, 0.15);
+
 table.data-grid {
     border: 1px solid @data-grid-border-color;
     cursor: default;
@@ -14,11 +17,16 @@ table.data-grid {
         vertical-align: top;
     }
 
+    colgroup > col.sorted {
+        background-color: @sort-bg-color;
+    }
+
     th {
         background-color: @dg-header-bg-color;
         color: @dg-header-txt-color;
         position: relative;
         .noselect();
+
         &.sort {
             //background-color: aliceblue;
             cursor: pointer;
@@ -50,6 +58,36 @@ table.data-grid {
     tr.active {
         background-color: @active-bg-color !important;
     }
+
+    td.danger {
+        background-color: @dg-danger-bg-color !important;
+    }
+
+    td.warning {
+        background-color: @dg-warning-bg-color !important;
+    }
+
+    td.marker, th.marker {
+        padding: 0;
+        width: 12px;
+        height: 100%;
+        position:relative;
+    }
+
+    td.marker {
+        > div {
+            //TODO: HACK ???
+            position:absolute;
+            left:0;top:0;bottom:0;right:0;
+            border-left: 6px solid #ddd;
+            background-color:@alter-bg-color;
+        }
+
+        > .warning {
+            background-color: @dg-warning-bg-color;
+            border-left-color: gold;
+        }
+    }
 }
 
 table.bordered {
@@ -64,8 +102,12 @@ table.striped {
     }
 }
 
+table.data-grid > tbody > tr.warning {
+    background-color:@dg-warning-bg-color;
+}
+
 table.hover {
     > tbody > tr:hover {
-        background-color:@hover-bg-color;
+        background-color:@hover-bg-color!important;
     }
 }

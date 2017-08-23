@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5371E97D-8916-4D33-9BE7-C0C97209DD54}"
 EndProject
@@ -88,6 +88,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "Tests\TestApplication\TestApplication.csproj", "{64F0A84F-87DA-45B3-9722-7FA341383CF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apps", "Apps\Apps.csproj", "{C7D30183-7B8E-4F4A-9F04-9AC1C4DAA81A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{3E225544-FE66-4F29-86F2-7EED9831790C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

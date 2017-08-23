@@ -66,6 +66,8 @@ namespace A2v10.Data
 			var currentRecord = new ExpandoObject();
 			bool bAdded = false;
 			Object id = null;
+            Int32 rowCount = 0;
+            Boolean bHasRowCount = false;
 			// from 1!
 			for (int i=1; i<rdr.FieldCount; i++) {
 				var dataVal = rdr.GetValue(i);
@@ -74,6 +76,13 @@ namespace A2v10.Data
 				var fn = rdr.GetName(i);
 				FieldInfo fi = new FieldInfo(fn);
 				AddValueToRecord(currentRecord, fi, dataVal);
+                if (fi.IsRowCount) {
+                    if (dataVal is Int32)
+                        rowCount = (Int32)dataVal;
+                    else
+                        throw new DataLoaderException("Invalid field type for !!RowCount");
+                    bHasRowCount = true;
+                }
 				if (fi.IsId)
 				{
 					if (fi.IsComplexField)
@@ -104,7 +113,16 @@ namespace A2v10.Data
 			}
 			if (!bAdded)
 				AddRecordToModel(currentRecord, rootFI, id);
+            if (bHasRowCount)
+            {
+                AddRowCount(rootFI.PropertyName, rowCount);
+            }
 		}
+
+        void AddRowCount(String propertyName, Int32 rowCount)
+        {
+            _root.AddChecked($"{propertyName}.$RowCount", rowCount);
+        }
 
 		void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
 		{

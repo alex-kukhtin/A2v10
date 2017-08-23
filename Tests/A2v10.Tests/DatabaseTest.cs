@@ -140,21 +140,24 @@ namespace A2v10.Tests
 		[TestMethod]
 		public async Task TestWriteSubObjectData()
 		{
+            // DATA with ROOT
 			var jsonData = @"
-			{
-				Id : 45,
-				Name: 'MainObjectName',
-				NumValue : 531.55,
-				BitValue : true,
-				SubObject : {
-					Id: 55,
-					Name: 'SubObjectName',
-					SubArray: [
-						{X: 5, Y:6, D:5.1 },
-						{X: 8, Y:9, D:7.23 }
-					]
-				}		
-			}
+            {
+			    MainObject: {
+				    Id : 45,
+				    Name: 'MainObjectName',
+				    NumValue : 531.55,
+				    BitValue : true,
+				    SubObject : {
+					    Id: 55,
+					    Name: 'SubObjectName',
+					    SubArray: [
+						    {X: 5, Y:6, D:5.1 },
+						    {X: 8, Y:9, D:7.23 }
+					    ]
+				    }		
+			    }
+            }
 			";
 			var dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(jsonData.Replace('\'', '"'), new ExpandoObjectConverter());
 			IDataModel dm = await _dbContext.SaveModelAsync("a2test.[NestedObject.Update]", dataToSave);

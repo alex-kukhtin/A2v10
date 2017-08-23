@@ -56,6 +56,8 @@ namespace A2v10.Data
 					return SpecType.ParentId;
 				case "RefId":
 					return SpecType.RefId;
+                case "RowCount":
+                    return SpecType.RowCount;
 			}
 			return SpecType.Unknown;
 		}
@@ -66,7 +68,15 @@ namespace A2v10.Data
 			d.Add(key, value);
 		}
 
-		public static void AddToArray(this ExpandoObject eo, String key, ExpandoObject value)
+        public static void AddChecked(this ExpandoObject eo, String key, Object value)
+        {
+            var d = eo as IDictionary<String, Object>;
+            if (d.ContainsKey(key))
+                return;
+            d.Add(key, value);
+        }
+
+        public static void AddToArray(this ExpandoObject eo, String key, ExpandoObject value)
 		{
 			var d = eo as IDictionary<String, Object>;
 			Object objArr;

@@ -49,7 +49,7 @@ header, .header {
 .content-view.partial-page {
     left: @side-bar-width + @side-bar-gap;
     top:64px;
-    background-color:aliceblue;
+    //background-color:aliceblue;
 }
 
 .side-bar-collapsed .content-view.partial-page {
@@ -178,10 +178,19 @@ footer, .footer {
 
 a {
     color: @link-color;
-    text-decoration:none;
+    text-decoration: none;
+
     &:hover {
         color: @link-hover-color;
-        text-decoration:underline;
+        text-decoration: underline;
+    }
+
+    &:focus {
+        outline-style: none;
+    }
+
+    &:active {
+        color: @link-hover-color;
     }
 }
 

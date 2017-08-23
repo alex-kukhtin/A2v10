@@ -20,13 +20,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWnd)
 	ON_COMMAND(ID_FILE_CLOSE, &CMainFrame::OnFileClose)
 END_MESSAGE_MAP()
 
-static UINT indicators[] =
-{
-	ID_SEPARATOR,           // status line indicator
-	ID_INDICATOR_CAPS,
-	ID_INDICATOR_NUM,
-	ID_INDICATOR_SCRL,
-};
 
 // CMainFrame construction/destruction
 
@@ -60,7 +53,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CString strCustomize; // empty string required
 
-
 	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
 	//m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
 	//m_wndToolBar.EnableDocking(CBRS_ALIGN_TOP);
@@ -75,6 +67,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	CMFCToolBar::AddToolBarForImageCollection(IDR_MENU_IMAGES, IDR_MENU_IMAGES);
+	// MFC BUG. Sets transparent color only when painting
+	CMFCToolBarImages* pImages = CMFCToolBar::GetImages();
+	pImages->SetTransparentColor(GetGlobalData()->clrBtnFace);
+
 
 	// set the visual manager used to draw all user interface elements
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CA2VisualManager));

@@ -1,8 +1,11 @@
-﻿
+﻿/*20170823-7015*/
+/* controllers/shell.js */
 
 (function () {
 
-
+    /* TODO: 
+    1. find first active item
+    */
     const route = require('route');
     const store = require('store');
     const modal = component('modal');
@@ -30,11 +33,18 @@
             menu: Array
         },
 
-        template: '<ul class="nav-bar"><li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}"><a href="\" v-text="item.title" @click.stop.prevent="navigate(item)"></a></li></ul>',
+        template: `
+<ul class="nav-bar">
+    <li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}">
+        <a :href="itemHref(item)" v-text="item.title" @click.stop.prevent="navigate(item)"></a>
+    </li>
+</ul>
+`,
 
         data: function () {
             return {
-                activeItem: null
+                activeItem: null,
+                isAppMode: false
             };
         },
 
@@ -44,6 +54,10 @@
             function findCurrent() {
                 let loc = route.location();
                 let seg1 = loc.segment(1);
+                if (seg1 === 'app') {
+                    me.isAppMode = true;
+                    return null;
+                }
                 me.activeItem = me.menu.find(itm => itm.url === seg1);
                 return loc;
             }
@@ -67,9 +81,9 @@
 
             findCurrent();
 
-            if (!me.activeItem) {
+            if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
-                // TODO: to route
+                // TODO: (find first active item  to route
                 window.history.replaceState(null, null, me.activeItem.url);
             }
 
@@ -84,6 +98,14 @@
         methods: {
             isActive: function (item) {
                 return item === this.activeItem;
+            },
+            itemHref(item) {
+                // for 'open in new window' command
+                let url = '/' + item.url;
+                let activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
+                if (activeItem)
+                    url = url + '/' + activeItem.url;
+                return url;
             },
             navigate: function (item) {
                 // nav bar
@@ -114,9 +136,9 @@
     <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <ul class="tree-view">
-            <tree-item v-for="(itm, index) in sideMenu" 
+            <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
                 :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :is-active="isActive" :has-icon="true" :wrap-label="true">
+                :subitems="'menu'" :click="navigate" :get-href="itemHref" :is-active="isActive" :has-icon="true" :wrap-label="true">
             </tree-item>
         </ul>
     </div>
@@ -150,10 +172,14 @@
             isActive: function (itm) {
                 return itm === this.activeItem;
             },
+            itemHref(itm) {
+                // for 'open in new window' command
+                return `/${this.topUrl}/${itm.url}`;
+            },
             navigate: function (itm) {
                 if (!itm.url)
                     return; // no url. is folder?
-                let newUrl = `/${this.topUrl}/${itm.url}`;
+                let newUrl = this.itemHref(itm);
                 route.navigateMenu(newUrl, itm.query);
             },
             toggle() {
@@ -275,8 +301,14 @@
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
                 let seg1 = loc.segment(1);
-                me.navBarVisible = len === 2 || len === 3;
-                me.sideBarVisible = len === 3;
+                if (seg1 === 'app') {
+                    me.navBarVisible = false;
+                    me.sideBarVisible = false;
+                }
+                else {
+                    me.navBarVisible = len === 2 || len === 3;
+                    me.sideBarVisible = len === 3;
+                }
                 // close all modals
                 me.modals.splice(0, me.modals.length);
             });
@@ -327,7 +359,12 @@
         },
         methods: {
             about() {
-                route.navigateMenu('/system/app/about');
+                route.navigateMenu('/app/about');
+            },
+            root() {
+                // TODO: navigate to first active menu item
+                // alert(this.menu[0].url);
+                route.navigateMenu('/' + this.menu[0].url);
             }
         }
     });

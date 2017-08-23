@@ -7,6 +7,10 @@ namespace A2v10.Workflow
 {
     public class Request : NativeActivity<RequestResult>
     {
+        [RequiredArgument]
+        public InArgument<Inbox> Inbox { get; set; }
+        public InArgument<TrackRecord> TrackBefore { get; set; }
+        public InArgument<TrackRecord> TrackAfter { get; set; }
 
         protected override bool CanInduceIdle { get { return true; } }
 

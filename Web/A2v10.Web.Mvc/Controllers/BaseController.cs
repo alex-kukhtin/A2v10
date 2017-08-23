@@ -193,7 +193,7 @@ namespace A2v10.Web.Mvc.Controllers
 })();
 </script>
 ";
-
+            // TODO: may be data model from XAML ????
             const String emptyModel = "function modelData() {return null;}";
 
             var header = new StringBuilder(scriptHeader);

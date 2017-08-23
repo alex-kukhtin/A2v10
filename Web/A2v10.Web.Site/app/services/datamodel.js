@@ -1,4 +1,4 @@
-﻿/*20170820-7017*/
+﻿/*20170823-7018*/
 /* services/datamodel.js */
 (function() {
 
@@ -117,12 +117,20 @@
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
             elem._query_ = {};
+            // rowcount
+            for (var m in elem._meta_) {
+                let rcp = m + '.$RowCount';
+                if (rcp in source) {
+                    let rcv = source[rcp];
+                    elem[m].$RowCount = rcv;
+                }
+            }
         }
         return elem;
     }
 
     function createArray(source, path, ctor, arrctor, parent) {
-        let arr = new _BaseArray(source.length);
+        let arr = new _BaseArray(source ? source.length : 0);
         let dotPath = path + '[]';
         defHidden(arr, '_elem_', ctor);
         defHidden(arr, PATH, path);
@@ -187,8 +195,10 @@
 
     _BaseArray.prototype.$copy = function (src) {
         this.$empty();
-        for (let i = 0; i < src.length; i++) {
-            this.push(this.$new(src[i]));
+        if (utils.isArray(src)) {
+            for (let i = 0; i < src.length; i++) {
+                this.push(this.$new(src[i]));
+            }
         }
         return this;
     };

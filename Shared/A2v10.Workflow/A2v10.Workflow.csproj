@@ -52,10 +52,12 @@
     <Compile Include="Activities\Request.cs" />
     <Compile Include="Activities\RequestResult.cs" />
     <Compile Include="AppWorkflow.cs" />
+    <Compile Include="Inbox.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeActivity.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="TrackRecord.cs" />
     <Compile Include="WorkflowDefinition.cs" />
     <Compile Include="WorkflowEngine.cs" />
     <Compile Include="WorkflowException.cs" />

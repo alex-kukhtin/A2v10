@@ -53,6 +53,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\components\pager.js" />
     <Content Include="app\components\tab.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />

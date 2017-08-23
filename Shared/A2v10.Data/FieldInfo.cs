@@ -59,5 +59,6 @@ namespace A2v10.Data
 		public Boolean IsRefId { get { return SpecType == SpecType.RefId; } }
 		public Boolean IsParentId { get { return SpecType == SpecType.ParentId; } }
 		public Boolean IsId { get { return SpecType == SpecType.Id; } }
+        public Boolean IsRowCount { get { return SpecType == SpecType.RowCount; } }
 	}
 }

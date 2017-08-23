@@ -10,6 +10,12 @@ let template = {
     properties: {
         "TCustomer.$Sum": function () {
             return this.Amount * 2;
+        },
+        "TCustomer.$cellMark"() {
+            return this.Amount >= 500 ? 'danger' : '';
+        },
+        "TCustomer.$rowMark"() {
+            return this.Amount === 400.0 ? 'warning' : '';
         }
     },
     events: {
@@ -32,7 +38,7 @@ let template = {
             //console.dir(this);
             alert(this.$root.Customers[2].$vm === this.$vm);
         },
-        testThen(vm) {
+        testThen() {
             // todo: vm
             var vm = this.$host.$viewModel;
             vm.$confirm({

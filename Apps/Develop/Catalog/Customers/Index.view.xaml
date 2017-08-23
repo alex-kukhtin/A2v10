@@ -3,8 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Toolbar>
 		<Button Icon="File">Create</Button>
-		<Button Icon="Edit">Edit</Button>
-		<Button Icon="AddressBook">Delete</Button>
+		<Button Icon="CommentOutline">Edit</Button>
+		<Button Icon="Trash">Delete</Button>
 		<Button>
 		</Button>
 	</Toolbar>

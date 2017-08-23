@@ -9,7 +9,7 @@
         <span v-text="$query"></span>
     </div>
     <data-grid :items-source="Customers" :striped="true" :query="$query"
-               :bordered="true" :hover="true" :sort="true" >
+               :bordered="true" :hover="true" sort="client" >
         <data-grid-column header="Id" content="Id"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>

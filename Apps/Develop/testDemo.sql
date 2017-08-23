@@ -41,7 +41,10 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
 @Id bigint = null, -- если вызывается как Browse
 @Order nvarchar(255) = null,
-@Dir nvarchar(255) = null
+@Dir nvarchar(255) = null,
+@Filter nvarchar(255) = null,
+@Offset int = 0,
+@PageSize int = 20
 as
 begin
 	set nocount on;
@@ -49,13 +52,14 @@ begin
 	declare @Asc nvarchar(10), @Desc nvarchar(10);
 	set @Asc = N'asc'; set @Desc = N'desc';
 	set @Dir = lower(@Dir);
+	set @Offset = isnull(@Offset, 0);
 
 	--raiserror(@Dir , 16, -1) with nowait;
 
 	with T as (
 		select Id, Name, Amount, Memo,
 			_RowNumber = row_number() over (
-			 order by
+			order by
 			case when @Order=N'Id' and @Dir = @Asc then c.Id end asc,
 			case when @Order=N'Id' and @Dir = @Desc  then c.Id end desc,
 			case when @Order=N'Name' and @Dir = @Asc then c.[Name] end asc,
@@ -66,9 +70,13 @@ begin
 			case when @Order=N'Memo' and @Dir = @Desc  then c.[Memo] end desc
 			)
 		from a2v10demo.[Catalog.Customers] c
+		where @Filter is null or upper(c.Name) like N'%' + upper(@Filter) + N'%'
 	)
-	select [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo
-	from T order by _RowNumber;
+	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo,
+		[!!RowCount] = (select count(1) from T)
+	from T 
+		where [_RowNumber] > @Offset and [_RowNumber] <= @Offset + @PageSize
+	order by [_RowNumber];
 end
 go
 ------------------------------------------------

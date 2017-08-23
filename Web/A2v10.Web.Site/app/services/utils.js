@@ -26,7 +26,7 @@
 
     function toJson(data) {
         return JSON.stringify(data, function (key, value) {
-            return (key[0] === '$' || key[0] === '_') ? undefined : value;
+            return key[0] === '$' || key[0] === '_' ? undefined : value;
         }, 2);
     }
 

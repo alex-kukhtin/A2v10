@@ -33,6 +33,16 @@ describe("DataModel", function () {
         expect(customer.Amount).toBe(0);
     });
 
+    it("Create empty object", function () {
+        // TODO empty source
+        expect(0).toBe(1);
+    });
+
+    it("RowCount for Array ", function () {
+        // TODO empty source
+        expect(0).toBe(1);
+    });
+
     it("Get/set data", function () {
 
         let customer = createCustomer({ Id: 55, Name: 'Customer Name' });

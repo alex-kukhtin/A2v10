@@ -12,6 +12,7 @@ namespace A2v10.Data
         public String Name { get; private set; }
         public String Items { get; private set; }
         public Boolean IsArrayType { get; set; }
+        public Boolean IsRowCount { get; set; }
 
         internal IDictionary<String, FieldMetadata> Fields { get { return _fields; } }
 
@@ -31,6 +32,9 @@ namespace A2v10.Data
 				case SpecType.Name:
 					Name = field.PropertyName;
 					break;
+                case SpecType.RowCount:
+                    IsRowCount = true;
+                    break;
 			}
 		}
 

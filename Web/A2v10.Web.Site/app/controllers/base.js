@@ -1,4 +1,4 @@
-﻿/*20170820-7017*/
+﻿/*20170823-7018*/
 /*controllers/base.js*/
 (function () {
 
@@ -9,7 +9,6 @@
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
-
         data() {
             return {
                 __init__: true,
@@ -43,6 +42,7 @@
             },
             "$query": {
                 handler: function (newVal, oldVal) {
+                    //console.warn('query watched');
                     if (this.$data.__init__)
                         return;
                     if (this.inDialog) {
@@ -82,9 +82,22 @@
                 });
             },
 
+            $invoke(cmd, base, data) {
+                alert('TODO: call invoke command');
+                let self = this;
+                let url = '/_data/invoke';
+                let baseUrl = base || self.$baseUrl;
+                return new Promise(function (resolve, reject) {
+                    dataservice.post(url).then(function (data) {
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                });
+            },
+
             $reload() {
                 var self = this;
-                var url = '/_data/reload';
+                let url = '/_data/reload';
                 let dat = self.$data;
                 return new Promise(function (resolve, reject) {
                     var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
@@ -128,8 +141,13 @@
             },
 
             $alertUi(msg) {
+                if (msg instanceof Error) {
+                    alert(msg.message);
+                    return;
+                }
                 if (msg.indexOf('UI:') === 0)
                     this.$alert(msg.substring(3));
+
                 else
                     alert(msg);
             },

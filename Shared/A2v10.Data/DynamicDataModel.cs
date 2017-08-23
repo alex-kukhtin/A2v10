@@ -64,6 +64,5 @@ namespace A2v10.Data
             var sw = new ScriptWriter(this);
             return sw.GetScript();
         }
-
     }
 }
