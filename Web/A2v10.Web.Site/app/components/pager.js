@@ -44,7 +44,7 @@ TODO: pageSize
             isFirstPage() {
                 return +this.offset === 0;
             }
-        },        
+        },
         methods: {
             next() {
                 if (this.isLastPage)

@@ -12,7 +12,7 @@ namespace A2v10.Xaml
     {
         public Boolean Hover { get; set; }
         public Boolean Striped { get; set; }
-        public Boolean Bordered { get; set; }
+        public Boolean Border { get; set; }
         public Boolean Sort { get; set; }
 
         public Object ItemsSource { get; set; }
@@ -27,9 +27,11 @@ namespace A2v10.Xaml
                 dataGrid.MergeAttribute(":items-source", isb.Path);
             MergeBoolAttribute(dataGrid, nameof(Hover), Hover);
             MergeBoolAttribute(dataGrid, nameof(Striped), Striped);
-            MergeBoolAttribute(dataGrid, nameof(Bordered), Bordered);
-            MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
-            dataGrid.MergeAttribute(":query", "$query"); // always
+            MergeBoolAttribute(dataGrid, nameof(Border), Border);
+            //MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
+            // TODO: ????
+            dataGrid.MergeAttribute("sort", "server");
+            dataGrid.MergeAttribute(":route-query", "$query"); // always!
             dataGrid.RenderStart(context);
             Int32 colIndex = 0;
             foreach (var col in Columns)

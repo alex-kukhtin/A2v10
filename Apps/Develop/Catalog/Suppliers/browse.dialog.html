@@ -1,7 +1,7 @@
 ﻿
 <div id="$(RootId)" style="min-height:400px" test="true">
-    <div class="modal-header"><span>Выбор корреспондента 22</span><button @click.stop.prevent="$closeModal(false)">x</button></div>
-    <div class="toolbar" style="padding:6px;display:flex">
+    <div class="modal-header"><span>Выбор корреспондента</span><button @click.stop.prevent="$modalClose(false)">x</button></div>
+    <div class="toolbar" style="padding:6px;display:flex;width:100%">
         <button @click.stop.prevent="Customers.$append()">Add</button>
         <button @click.stop.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
         <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
@@ -9,15 +9,15 @@
         <span v-text="$query"></span>
     </div>
     <data-grid :items-source="Customers" :striped="true" :query="$query"
-               :bordered="true" :hover="true" sort="client" >
+               :border="true" :hover="true" sort="client" grid="vert">
         <data-grid-column header="Id" content="Id"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right"></data-grid-column>
         <data-grid-column header="Sum" content="$Sum" align="right"></data-grid-column>
     </data-grid>
     <div class="modal-footer">
-        <button @click.stop.prevent="$closeModal(Customers.$selected)">Выбрать</button>
-        <button @click.stop.prevent="$closeModal('cancel')">Отменить</button>
+        <button @click.stop.prevent="$modalClose(Customers.$selected)">Выбрать</button>
+        <button @click.stop.prevent="$modalClose('cancel')">Отменить</button>
     </div>
 </div>
 

@@ -5,6 +5,7 @@
     <div class="toolbar" style="padding:6px">
         <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="ico ico-save"></i>Save</button>
         <button @click.stop.prevent="$close()"><i class="ico-reload"></i>Close</button>
+        <button @click.stop.prevent="$saveAndClose()"><i class="ico-save"></i>Save & Close</button>
         <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i>Reload</button>
     </div>
 

@@ -166,6 +166,15 @@ header,
   background-color: #4d6082;
   color: white;
 }
+header a.app-title,
+.header a.app-title {
+  color: inherit;
+}
+header a.app-title:hover,
+.header a.app-title:hover {
+  text-decoration: none;
+  color: inherit;
+}
 .content-view {
   position: absolute;
   left: 0;
@@ -430,9 +439,25 @@ table.data-grid td.marker > .warning {
   background-color: rgba(255, 216, 0, 0.15);
   border-left-color: gold;
 }
-table.bordered td,
-table.bordered th {
+table th {
+  border-bottom: 1px solid #bdc5d8;
+}
+table.bordered {
   border: 1px solid #bdc5d8;
+}
+table.grid-vert td,
+table.grid-both td,
+table.grid-vert th,
+table.grid-both th {
+  border-left: 1px solid #bdc5d8;
+  border-right: 1px solid #bdc5d8;
+}
+table.grid-horz td,
+table.grid-both td,
+table.grid-horz th,
+table.grid-both th {
+  border-top: 1px solid #bdc5d8;
+  border-bottom: 1px solid #bdc5d8;
 }
 table.striped > tbody > tr:nth-of-type(even) {
   background-color: rgba(224, 224, 224, 0.25);

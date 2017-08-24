@@ -28,19 +28,22 @@
         <button @click.stop.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
         <button @click.stop.prevent="$exec('testThen')"><i class="ico ico-trash"></i>Test then</button>
         <span v-text="$query"></span>
+        <a2-pager :items-source="Customers" :query="$query" sort="server"></a2-pager>
     </div>
     <!-- mark - ИМЯ свойства!!! возвращает имя класса (danger, warning, red, green, blue, violet... etc)
            data-grid:mark - подсветка всей строки
            data-grid-column:mark - подсветка ячейки
     -->
     <data-grid :items-source="Customers" :striped="true" :pager="true" filter-fields="filter,state"
-               :bordered="true" :hover="true" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
+               :border="true" :hover="true" grid="vert" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
+        <data-grid-column header="index" content="$index" align="right"></data-grid-column>
         <data-grid-column header="Id" content="Id" align="right"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
         <data-grid-column header="Amount" content="Amount" align="right" mark="$cellMark"></data-grid-column>
         <data-grid-column header="Name (edit)" content="Name" :editable="true"></data-grid-column>
         <data-grid-column header="Sum" content="$Sum" align="right" :sort="false"></data-grid-column>
         <data-grid-column id="cmd"></data-grid-column>
+        <data-grid-column header="??" content="$invalid" :sort="false"></data-grid-column>
         <template slot="cmd" scope="cell">
             <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
                 <i class="ico-edit"></i>
@@ -59,10 +62,16 @@
             <div class="toolbar">
                 <label>data-grid-toolbar</label>
                 <button @click.stop.prevent="Customers.$append()">add</button>
-                <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
+                <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Refresh</button>
+                <button @click.stop.prevent="$requery()"><i class="ico-reload"></i> Requery</button>
                 <button @click.stop.prevent="$exec('test')"><i class="ico-database"></i> exec</button>
                 <span v-text="props.query"></span>
                 <input v-model="props.query.filter"/>
+                <select v-model="props.query.filter">
+                    <option value="эле">Элемент</option>
+                    <option value="сто">Сто</option>
+                </select>
+                <span class="bold" v-if="props.query.filter">Filtered!!!</span>
             </div>
         </template>
         <template slot="pager" scope="props">

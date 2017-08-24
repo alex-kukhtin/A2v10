@@ -1,4 +1,4 @@
-﻿/*20170823-7015*/
+﻿/*20170824-7019*/
 /* controllers/shell.js */
 
 (function () {
@@ -27,6 +27,18 @@
         return null;
     }
 
+    function activateMenu(activeItem, loc) {
+        let seg2 = loc.segment(2);
+        if (!seg2) {
+            let url = activeItem.url;
+            let fa = findMenu(activeItem.menu, (mi) => mi.url && !mi.menu);
+            if (fa) {
+                url = '/' + url + '/' + fa.url;
+                route.setState(url, fa.title);
+            }
+        }
+    }
+
     const navBar = {
 
         props: {
@@ -51,14 +63,18 @@
         created: function () {
             var me = this;
             me.__dataStack__ = [];
+
             function findCurrent() {
                 let loc = route.location();
                 let seg1 = loc.segment(1);
+                let seg2 = loc.segment(2);
+                let len = loc.routeLength();
                 if (seg1 === 'app') {
                     me.isAppMode = true;
                     return null;
                 }
-                me.activeItem = me.menu.find(itm => itm.url === seg1);
+                let ai = me.menu.find(itm => itm.url === seg1);
+                me.activeItem = ai;
                 return loc;
             }
 
@@ -66,32 +82,42 @@
                 if (me.__dataStack__.length > 0) {
                     let comp = me.__dataStack__[0];
                     let oldUrl = event.state;
-                    console.warn('pop state: ' + oldUrl);
+                    //console.warn('pop state: ' + oldUrl);
                     if (!comp.$saveModified()) {
                         // disable navigate
                         oldUrl = comp.__baseUrl__.replace('/_page', '');
-                        console.warn('return url: ' + oldUrl);
+                        //console.warn('return url: ' + oldUrl);
                         window.history.pushState(oldUrl, null, oldUrl);
                         return;
                     }
                 }
+                route.updateSearch();
                 findCurrent();
                 route.navigateCurrent();
             });
 
-            findCurrent();
+            let loc = findCurrent();
+
+            if (me.activeItem && me.activeItem.menu)
+            {
+                activateMenu(me.activeItem, loc);
+            }
 
             if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
-                // TODO: (find first active item  to route
-                window.history.replaceState(null, null, me.activeItem.url);
+                activateMenu(me.activeItem, loc);
             }
+
 
             store.$on('registerData', function (component) {
                 if (component)
                     me.__dataStack__.push(component);
                 else
                     me.__dataStack__.pop(component);
+            });
+
+            this.$root.$on('navigateTop', function (top) {
+                me.navigate(top);
             });
         },
 
@@ -112,6 +138,7 @@
                 this.activeItem = item;
                 let url = '/' + item.url;
                 let query = null;
+                let title = null;
                 let savedUrl = route.savedMenu(item.url);
                 let activeItem = null;
                 if (savedUrl) {
@@ -123,8 +150,9 @@
                 if (activeItem) {
                     url = url + '/' + activeItem.url;
                     query = activeItem.query;
+                    title = activeItem.title;
                 }
-                route.navigateMenu(url, query);
+                route.navigateMenu(url, query, title);
             }
         }
     };
@@ -172,15 +200,22 @@
             isActive: function (itm) {
                 return itm === this.activeItem;
             },
+            itemUrl(itm)
+            {
+                return `/${this.topUrl}/${itm.url}`;
+            },
             itemHref(itm) {
                 // for 'open in new window' command
-                return `/${this.topUrl}/${itm.url}`;
+                let url = this.itemUrl(itm);
+                if (itm.query)
+                    url += '?' + itm.query;
+                return url;
             },
             navigate: function (itm) {
                 if (!itm.url)
                     return; // no url. is folder?
-                let newUrl = this.itemHref(itm);
-                route.navigateMenu(newUrl, itm.query);
+                let newUrl = this.itemUrl(itm);
+                route.navigateMenu(newUrl, itm.query, itm.title);
             },
             toggle() {
                 this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
@@ -201,6 +236,8 @@
                     if (me.sideMenu)
                         me.activeItem = findMenu(me.sideMenu, (itm) => itm.url === s2);
                 }
+                if (me.activeItem)
+                    route.setTitle(me.activeItem.title);
             });
         }
     };
@@ -213,13 +250,15 @@
                 }
             }, [h('include', {
                 props: {
-                    src: this.currentView
+                    src: this.currentView,
+                    needReload: this.needReload
                 }
             })]);
         },
         data() {
             return {
                 currentView: null,
+                needReload: false,
                 cssClass: ''
             };
         },
@@ -234,12 +273,19 @@
                     case 3: tail = '/index/0'; break;
                 }
                 let url = "/_page" + window.location.pathname + tail;
-                url += window.location.search;
+                let search = window.location.search;
+                url += search;
                 me.currentView = url;
                 me.cssClass =
                     len === 2 ? 'full-page' :
-                        len === 3 ? 'partial-page' :
-                            'full-view';
+                    len === 3 ? 'partial-page' :
+                                'full-view';
+            });
+
+            store.$on('requery', function () {
+                // just trigger
+                me.needReload = true;
+                Vue.nextTick(() => me.needReload = false);
             });
         }
     };
@@ -359,12 +405,12 @@
         },
         methods: {
             about() {
-                route.navigateMenu('/app/about');
+                // TODO: localization
+                route.navigateMenu('/app/about', null, "О программе");
             },
             root() {
-                // TODO: navigate to first active menu item
-                // alert(this.menu[0].url);
-                route.navigateMenu('/' + this.menu[0].url);
+                // first menu element
+                this.$emit('navigateTop', this.menu[0]);
             }
         }
     });

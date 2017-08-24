@@ -13,7 +13,15 @@ TODO:
     const Shell = component('std:shellController');
 
     const menu = [
-        { title: "Начало", url: "home"},
+        {
+            title: "Начало", url: "home", menu: [
+                {
+                    title: 'xxxx', icon: 'save', menu: [
+                        {title: 'yyyy', url: 'subhome'}
+                    ]
+                }
+            ]
+        },
         {
             type:'tree', title: 'Справочники', url: 'catalog', menu: [
                 { title: "Suppliers", url: 'suppliers', icon:'users', query:'order=Name&dir=desc'},

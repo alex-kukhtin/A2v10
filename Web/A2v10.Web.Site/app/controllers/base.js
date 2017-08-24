@@ -1,4 +1,4 @@
-﻿/*20170823-7018*/
+﻿/*20170824-7019*/
 /*controllers/base.js*/
 (function () {
 
@@ -115,7 +115,7 @@
             },
 
             $requery() {
-                alert('requery. Yet not implemented');
+                store.$emit('requery');
             },
 
             $navigate(url, data) {
@@ -189,14 +189,22 @@
                 });
             },
 
-            $saveAndClose(result) {
-                this.$save().then(function (result) {
+            $modalSaveAndClose(result) {
+                if (this.$isDirty)
+                    this.$save().then((result) => store.$emit('modalClose', result));
+                else
                     store.$emit('modalClose', result);
-                });
             },
 
-            $closeModal(result) {
+            $modalClose(result) {
                 store.$emit('modalClose', result);
+            },
+
+            $saveAndClose() {
+                if (this.$isDirty)
+                    this.$save().then(() => route.close());
+                else
+                    route.close();
             },
 
             $close() {

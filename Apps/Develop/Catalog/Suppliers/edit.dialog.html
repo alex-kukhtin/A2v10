@@ -23,9 +23,9 @@
         </div>
     </div>
     <div style="margin-top:50px" class="model-footer">
-        <button @click.stop.prevent="$saveAndClose()" :disabled="$isPristine">OK</button>
+        <button @click.stop.prevent="$modalSaveAndClose()" :disabled="$isPristine">OK</button>
         <button @click.stop.prevent="$save()" :disabled="$isPristine">Save without close</button>
-        <button @click.stop.prevent="$closeModal(false)">Cancel</button>
+        <button @click.stop.prevent="$modalClose(false)">Cancel</button>
     </div>
 </div>
 

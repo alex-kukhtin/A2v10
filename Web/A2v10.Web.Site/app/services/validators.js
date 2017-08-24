@@ -1,4 +1,4 @@
-﻿/*20170813-7005*/
+﻿/*20170824-7019*/
 /*validators.js*/
 (function () {
 
@@ -38,6 +38,7 @@
     }
 
     function validateItem(rules, item, val) {
+        // console.warn(item);
         let arr = [];
         if (utils.isArray(rules))
             arr = rules;

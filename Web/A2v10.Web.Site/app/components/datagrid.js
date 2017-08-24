@@ -1,4 +1,4 @@
-﻿/*20170823-7018*/
+﻿/*20170824-7019*/
 /*components/datagrid.js*/
 (function () {
 
@@ -11,6 +11,8 @@
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
+
+    const utils = require('utils');
 
     const dataGridTemplate = `
 <div class="data-grid-container">
@@ -35,7 +37,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.capture.stop.prevent="dblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -184,8 +186,10 @@
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
+
             // Warning: toString() is required.
-            let chElems = [row[col.content].toString()];
+            let content = utils.toString(row[col.content]);
+            let chElems = [content];
             /*TODO: validate ???? */
             if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -230,6 +234,13 @@
             rowSelect() {
                 throw new Error("do not call");
                 //this.$parent.rowSelected = this;
+            },
+            dblClick($event) {
+                if ($event.target.tagName !== 'TD') {
+                    alert('double click return:' + $event.target.tagName);
+                    return;
+                }
+                alert('double click:' + $event.target.tagName);
             }
         }
     };
@@ -237,7 +248,8 @@
     Vue.component('data-grid', {
         props: {
             'items-source': [Object, Array],
-            bordered: Boolean,
+            border: Boolean,
+            grid: String,
             striped: Boolean,
             hover: { type: Boolean, default: false },
             sort: String,
@@ -282,7 +294,8 @@
             },
             cssClass() {
                 let cssClass = 'data-grid';
-                if (this.bordered) cssClass += ' bordered';
+                if (this.border) cssClass += ' border';
+                if (this.grid) cssClass += ' grid-' + this.grid;
                 if (this.striped) cssClass += ' striped';
                 if (this.hover) cssClass += ' hover';
                 return cssClass;
@@ -336,15 +349,16 @@
             }
         },
         created() {
-            if (!this.filterFields)
-                return;
-            // make all filter fields 
             let q = this.dgQuery;
             let nq = {};
-            this.filterFields.split(',').forEach(v => {
-                let f = v.trim();
-                nq[v.trim()] = undefined;
-            });
+
+            if (this.filterFields) {
+            // make all filter fields (for reactivity)
+                this.filterFields.split(',').forEach(v => {
+                    let f = v.trim();
+                    nq[v.trim()] = undefined;
+                });
+            }
             let xq = {};
             if (this.sort === 'server') {
                 // from route

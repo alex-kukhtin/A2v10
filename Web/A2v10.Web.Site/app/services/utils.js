@@ -1,8 +1,6 @@
-﻿/*20170813-7001*/
+﻿/*20170824-7019*/
 /* utils.js */
 (function () {
-
-    const toString = Object.prototype.toString;
 
     function isFunction(value) { return typeof value === 'function'; }
     function isDefined(value) { return typeof value !== 'undefined'; }
@@ -10,8 +8,12 @@
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isString(value) { return typeof value === 'string'; }
     function isNumber(value) { return typeof value === 'number'; }
+
     function isPrimitiveCtor(ctor) {
         return ctor === String || ctor === Number || ctor === Boolean;
+    }
+    function isEmptyObject(obj) {
+        return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
     function notBlank(val) {
@@ -30,6 +32,15 @@
         }, 2);
     }
 
+    function toString(obj) {
+        if (!isDefined(obj))
+            return '';
+        else if (obj === null)
+            return '';
+        else if (isObject(obj))
+            return toJson(obj);
+        return obj + '';
+    }
 
     app.modules['utils'] = {
         isArray: Array.isArray,
@@ -42,6 +53,7 @@
         toString: toString,
         notBlank: notBlank,
         toJson: toJson,
-        isPrimitiveCtor: isPrimitiveCtor
+        isPrimitiveCtor: isPrimitiveCtor,
+        isEmptyObject: isEmptyObject
     };
 })();

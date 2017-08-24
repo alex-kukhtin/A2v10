@@ -9,7 +9,7 @@
 		</Button>
 	</Toolbar>
 	<DataGrid ItemsSource="{Bind Customers}" Hover="True" 
-			  Striped="True" Bordered="True" Sort="True">
+			  Striped="True" Border="True" Sort="True">
 		<DataGridColumn Header="Код" Content="Id" Align="Right"/>
 		<DataGridColumn Header="Наименование" Content="Name"/>
 		<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>

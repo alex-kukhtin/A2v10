@@ -44,7 +44,7 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @Dir nvarchar(255) = null,
 @Filter nvarchar(255) = null,
 @Offset int = 0,
-@PageSize int = 20
+@PageSize int = 3
 as
 begin
 	set nocount on;

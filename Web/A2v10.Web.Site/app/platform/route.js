@@ -1,4 +1,4 @@
-﻿/*20170818-7015*/
+﻿/*20170824-7019*/
 /* platform/route.js */
 (function () {
 
@@ -95,7 +95,7 @@
         return this;
     };
 
-    var route = new Vue({
+    const route = new Vue({
         data: {
             search: {}
         },
@@ -105,16 +105,17 @@
                     let wls = window.location.search.substring(1); // skip '?'
                     let qs = parseQueryString(wls);
                     Vue.set(this, 'search', qs);
+                    //console.warn('get route.query:' + wls);
                     return this.search;
                 },
                 set(value) {
                     Vue.set(this, 'search', value);
                     let newUrl = window.location.pathname;
                     newUrl += makeQueryString(this.search);
-                    window.history.pushState(null, null, newUrl);
+                    // replace, do not push!
+                    window.history.replaceState(null, null, newUrl);
                     saveSearchToStorage();
-                    //TODO: hashChanged - reload
-                    //this.$emit('route', this.location());
+                    //console.warn('set route.query:' + makeQueryString(this.search));
                 }
             }
         },
@@ -152,7 +153,8 @@
 
             savedMenu: Location.getSavedMenu,
 
-            navigateMenu(url, query) {
+            navigateMenu(url, query, title) {
+                //console.warn('navigate menu:' + url);
                 let srch = getSearchFromStorage(url);
                 if (!srch)
                     url += query ? '?' + query : '';
@@ -160,26 +162,46 @@
                     url += srch;
                 if (query)
                     Vue.set(this, 'search', parseQueryString(query));
-                console.info('navigate:' + url);
+                console.info('navigate to:' + url);
+                this.setTitle(title);
                 window.history.pushState(null, null, url);
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             },
+
             navigateCurrent() {
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             },
-            navigate(url) {
+
+            navigate(url, title) {
                 let loc = this.location();
-                console.info('navigate:' + url);
+                console.info('navigate to:' + url);
                 let oldUrl = loc.fullPath();
                 // push/pop state feature. Replace the current state and push new one.
+                this.setTitle(title);
                 window.history.replaceState(oldUrl, null, oldUrl);
                 window.history.pushState(oldUrl, null, url);
                 loc = this.location(); // get new instance
                 this.$emit('route', loc);
+            },
+            setTitle(title) {
+                if (title)
+                    document.title = title;
+            },
+            setState(url, title) {
+                this.setTitle(title);
+                window.history.replaceState(null, null, url);
+            },
+            updateSearch() {
+                //return;
+                let wls = window.location.search.substring(1); // skip '?'
+                let qs = parseQueryString(wls);
+                //console.warn('update search:' + wls);
+                Vue.set(this, 'search', qs);
+                saveSearchToStorage();
             },
             close() {
                 window.history.back();

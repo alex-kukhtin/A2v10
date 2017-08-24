@@ -101,7 +101,9 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\tabcomponent.html" />
+    <Content Include="TestPages\testscript.html" />
     <Content Include="TestPages\treeview.html" />
     <Content Include="TestPages\include.html" />
     <Content Include="TestPages\gridlayout.html" />

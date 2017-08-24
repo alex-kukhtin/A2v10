@@ -1,4 +1,4 @@
-﻿/*20170823-7018*/
+﻿/*20170824-7019*/
 /* services/datamodel.js */
 (function() {
 
@@ -11,14 +11,15 @@
     const SRC = '_src_';
     const PATH = '_path_';
     const ROOT = '_root_';
+    const ERRORS = '_errors_'
 
     const platform = require('platform');
     const validators = require('validators');
     const utils = require('utils');
 
-    function defHidden(obj, prop, value) {
+    function defHidden(obj, prop, value, writable) {
         Object.defineProperty(obj, prop, {
-            writable: false,
+            writable: writable || false,
             enumerable: false,
             configurable: false,
             value: value
@@ -29,6 +30,14 @@
         Object.defineProperty(obj, prop, {
             enumerable: false,
             configurable: false,
+            get: get
+        });
+    }
+
+    function defPropertyGet(trg, prop, get) {
+        Object.defineProperty(trg, prop, {
+            enumerable: true,
+            configurable: true, /* needed */
             get: get
         });
     }
@@ -105,10 +114,21 @@
         defHidden(elem, PATH, path);
         defHidden(elem, ROOT, parent._root_ || parent);
         defHidden(elem, PARENT, parent);
+        defHidden(elem, ERRORS, null, true);
         for (let propName in elem._meta_) {
             defSource(elem, source, propName, parent);
         }
         createObjProperties(elem, elem.constructor);
+
+        defPropertyGet(elem, "$valid", function () {
+            if (this._root_._needValidate_)
+                this._root_._validateAll_();
+            return !this._errors_;
+        });
+        defPropertyGet(elem, "$invalid", function () {
+            return !this.$valid;
+        });
+
         let ctorname = elem.constructor.name;
         let constructEvent = ctorname + '.construct';
         elem._root_.$emit(constructEvent, elem);
@@ -117,10 +137,10 @@
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
             elem._query_ = {};
-            // rowcount
+            // rowcount implementation
             for (var m in elem._meta_) {
                 let rcp = m + '.$RowCount';
-                if (rcp in source) {
+                if (source && rcp in source) {
                     let rcv = source[rcp];
                     elem[m].$RowCount = rcv;
                 }
@@ -236,6 +256,7 @@
     }
 
     function emit(event, ...arr) {
+        this._needValidate_ = true;
         console.info('emit: ' + event);
         let templ = this.$template;
         if (!templ) return;
@@ -261,7 +282,7 @@
         console.error(`command "${cmd}" not found`);
     }
 
-    function validate(item, path, val) {
+    function validateImpl(item, path, val) {
         if (!item) return null;
         let tml = item._root_.$template;
         if (!tml) return null;
@@ -270,6 +291,110 @@
         var elemvals = vals[path];
         if (!elemvals) return null;
         return validators.validate(elemvals, item, val);
+    }
+
+    function saveErrors(item, path, errors)
+    {
+        if (!item._errors_ && !errors)
+            return; // already null
+        else if (!item._errors_ && errors)
+            item._errors_ = {}; // new empty object
+        if (errors)
+            item._errors_[path] = errors;
+        else if (path in item._errors_)
+            delete item._errors_[path];
+        if (utils.isEmptyObject(item._errors_))
+            item._errors_ = null;
+        return errors;
+    }
+
+    function validate(item, path, val) {
+        if (!item._root_._needValidate_) {
+            // already done
+            if (!item._errors_)
+                return null;
+            if (path in item._errors_)
+                return item._errors_[path];
+            return null;
+        }
+        //console.warn('validate self element:' + path);
+        let res = validateImpl(item, path, val);
+        return saveErrors(item, path, res);
+    }
+
+    function* enumData(root, path, name) {
+        if (!path) {
+            // scalar value in root
+            yield { item: root, val: root[name] };
+            return;
+        }
+        let sp = path.split('.');
+        let currentData = root;
+        for (let i = 0; i < sp.length; i++) {
+            let last = i === sp.length - 1;
+            let prop = sp[i];
+            if (prop.endsWith('[]')) {
+                // is array
+                let pname = prop.substring(0, prop.length - 2);
+                let objto = root[pname];
+                if (!objto)
+                    continue;
+                for (let j = 0; j < objto.length; j++) {
+                    let arrItem = objto[j];
+                    if (last)
+                        yield { item: arrItem, val: arrItem[name] };
+                    else {
+                        let newpath = sp.slice(1).join('.');
+                        for (var y of enumData(arrItem, newpath, name))
+                            yield { item: y.item, val: y.val };
+                    }
+                }
+            } else {
+                // simple element
+                let objto = root[prop];
+                if (objto) {
+                    yield { item: root[prop], val: objto[name] };
+                }
+            }
+        }
+    }
+
+    // enumerate all data (recursive)
+    function* dataForVal(root, path) {
+        let ld = path.lastIndexOf('.');
+        let dp = '';
+        let dn = path;
+        if (ld !== -1) {
+            dp = path.substring(0, ld);
+            dn = path.substring(ld + 1);
+        }
+        for (val of enumData(root, dp, dn))
+            yield val;
+    }
+
+    function validateOneElement(root, path, vals) {
+        if (!vals)
+            return;
+        for (let elem of dataForVal(root, path)) {
+            //console.warn(elem);
+            let res = validators.validate(vals, elem.item, elem.val);
+            saveErrors(elem.item, path, res);
+        }
+    }
+
+    function validateAll() {
+        var me = this;
+        if (!me._needValidate_)
+            return;
+        //console.warn('call validate all');
+        me._needValidate_ = false;
+        let tml = me.$template;
+        if (!tml) return;
+        let vals = tml.validators;
+        if (!vals) return;
+        for (var val in vals) {
+            validateOneElement(me, val, vals[val])
+        }
     }
 
     function setDirty(val) {
@@ -283,6 +408,14 @@
             if (Array.isArray(trg)) {
                 platform.set(trg, "$selected", null);
                 trg.$copy(src[prop]);
+                // copy rowCount
+                if ('$RowCount' in trg) {
+                    let rcProp = prop + '.$RowCount';
+                    if (rcProp in src)
+                        trg.$RowCount = src[rcProp];
+                    else
+                        trg.$RowCount = 0;
+                }
             } else {
                 if (utils.isPrimitiveCtor(ctor))
                     platform.set(this, prop, src[prop]);
@@ -301,6 +434,7 @@
         root.prototype.$template = template;
         root.prototype._exec_ = executeCommand;
         root.prototype._validate_ = validate;
+        root.prototype._validateAll_ = validateAll;
         // props cache for t.construct
         let xProp = {};
         if (template) {
@@ -325,6 +459,7 @@
         createObject: createObject,
         createArray: createArray,
         defineObject: defineObject,
-        implementRoot: implementRoot
+        implementRoot: implementRoot,
+        enumData: enumData
     };
 })();

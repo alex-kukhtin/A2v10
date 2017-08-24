@@ -90,9 +90,27 @@ table.data-grid {
     }
 }
 
+table {
+    th {
+        border-bottom:1px solid @data-grid-border-color;
+    }
+}
+
 table.bordered {
+    border: 1px solid @data-grid-border-color;
+}
+
+table.grid-vert, table.grid-both {
     td, th {
-        border: 1px solid @data-grid-border-color;
+        border-left: 1px solid @data-grid-border-color;
+        border-right: 1px solid @data-grid-border-color;
+    }
+}
+
+table.grid-horz, table.grid-both {
+    td, th {
+        border-top: 1px solid @data-grid-border-color;
+        border-bottom: 1px solid @data-grid-border-color;
     }
 }
 

@@ -9,12 +9,12 @@ TODO: may be icon for confirm ????
 <div class="modal-window">
     <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
     <div v-else class="modal-content">
-        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="closeModal(false)">x</button></div>
+        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="modalClose(false)">x</button></div>
         <div class="modal-body">
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button v-for="(btn, index) in buttons"  :key="index" @click="closeModal(btn.result)" v-text="btn.text"></button>
+            <button v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -40,7 +40,7 @@ TODO: may be icon for confirm ????
             };
         },
         methods: {
-            closeModal(result) {
+            modalClose(result) {
                 store.$emit('modalClose', result);
             }
         },

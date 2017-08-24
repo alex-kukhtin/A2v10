@@ -42,7 +42,7 @@
 
 })();
 
-/*20170818-7015*/
+/*20170824-7019*/
 /* platform/route.js */
 (function () {
 
@@ -139,7 +139,7 @@
         return this;
     };
 
-    var route = new Vue({
+    const route = new Vue({
         data: {
             search: {}
         },
@@ -149,16 +149,17 @@
                     let wls = window.location.search.substring(1); // skip '?'
                     let qs = parseQueryString(wls);
                     Vue.set(this, 'search', qs);
+                    //console.warn('get route.query:' + wls);
                     return this.search;
                 },
                 set(value) {
                     Vue.set(this, 'search', value);
                     let newUrl = window.location.pathname;
                     newUrl += makeQueryString(this.search);
-                    window.history.pushState(null, null, newUrl);
+                    // replace, do not push!
+                    window.history.replaceState(null, null, newUrl);
                     saveSearchToStorage();
-                    //TODO: hashChanged - reload
-                    //this.$emit('route', this.location());
+                    //console.warn('set route.query:' + makeQueryString(this.search));
                 }
             }
         },
@@ -196,7 +197,8 @@
 
             savedMenu: Location.getSavedMenu,
 
-            navigateMenu(url, query) {
+            navigateMenu(url, query, title) {
+                //console.warn('navigate menu:' + url);
                 let srch = getSearchFromStorage(url);
                 if (!srch)
                     url += query ? '?' + query : '';
@@ -204,26 +206,46 @@
                     url += srch;
                 if (query)
                     Vue.set(this, 'search', parseQueryString(query));
-                console.info('navigate:' + url);
+                console.info('navigate to:' + url);
+                this.setTitle(title);
                 window.history.pushState(null, null, url);
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             },
+
             navigateCurrent() {
                 let loc = this.location();
                 loc.saveMenuUrl();
                 this.$emit('route', loc);
             },
-            navigate(url) {
+
+            navigate(url, title) {
                 let loc = this.location();
-                console.info('navigate:' + url);
+                console.info('navigate to:' + url);
                 let oldUrl = loc.fullPath();
                 // push/pop state feature. Replace the current state and push new one.
+                this.setTitle(title);
                 window.history.replaceState(oldUrl, null, oldUrl);
                 window.history.pushState(oldUrl, null, url);
                 loc = this.location(); // get new instance
                 this.$emit('route', loc);
+            },
+            setTitle(title) {
+                if (title)
+                    document.title = title;
+            },
+            setState(url, title) {
+                this.setTitle(title);
+                window.history.replaceState(null, null, url);
+            },
+            updateSearch() {
+                //return;
+                let wls = window.location.search.substring(1); // skip '?'
+                let qs = parseQueryString(wls);
+                //console.warn('update search:' + wls);
+                Vue.set(this, 'search', qs);
+                saveSearchToStorage();
             },
             close() {
                 window.history.back();
@@ -235,11 +257,9 @@
     app.modules['route'] = route;
 })();
 
-/*20170813-7001*/
+/*20170824-7019*/
 /* utils.js */
 (function () {
-
-    const toString = Object.prototype.toString;
 
     function isFunction(value) { return typeof value === 'function'; }
     function isDefined(value) { return typeof value !== 'undefined'; }
@@ -247,8 +267,12 @@
     function isDate(value) { return toString.call(value) === '[object Date]'; }
     function isString(value) { return typeof value === 'string'; }
     function isNumber(value) { return typeof value === 'number'; }
+
     function isPrimitiveCtor(ctor) {
         return ctor === String || ctor === Number || ctor === Boolean;
+    }
+    function isEmptyObject(obj) {
+        return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
     }
 
     function notBlank(val) {
@@ -267,6 +291,15 @@
         }, 2);
     }
 
+    function toString(obj) {
+        if (!isDefined(obj))
+            return '';
+        else if (obj === null)
+            return '';
+        else if (isObject(obj))
+            return toJson(obj);
+        return obj + '';
+    }
 
     app.modules['utils'] = {
         isArray: Array.isArray,
@@ -279,7 +312,8 @@
         toString: toString,
         notBlank: notBlank,
         toJson: toJson,
-        isPrimitiveCtor: isPrimitiveCtor
+        isPrimitiveCtor: isPrimitiveCtor,
+        isEmptyObject: isEmptyObject
     };
 })();
 
@@ -376,7 +410,7 @@
 
 
 
-/*20170813-7005*/
+/*20170824-7019*/
 /*validators.js*/
 (function () {
 
@@ -416,6 +450,7 @@
     }
 
     function validateItem(rules, item, val) {
+        // console.warn(item);
         let arr = [];
         if (utils.isArray(rules))
             arr = rules;
@@ -436,7 +471,7 @@
 })();
 
 
-/*20170823-7018*/
+/*20170824-7019*/
 /* services/datamodel.js */
 (function() {
 
@@ -449,14 +484,15 @@
     const SRC = '_src_';
     const PATH = '_path_';
     const ROOT = '_root_';
+    const ERRORS = '_errors_'
 
     const platform = require('platform');
     const validators = require('validators');
     const utils = require('utils');
 
-    function defHidden(obj, prop, value) {
+    function defHidden(obj, prop, value, writable) {
         Object.defineProperty(obj, prop, {
-            writable: false,
+            writable: writable || false,
             enumerable: false,
             configurable: false,
             value: value
@@ -467,6 +503,14 @@
         Object.defineProperty(obj, prop, {
             enumerable: false,
             configurable: false,
+            get: get
+        });
+    }
+
+    function defPropertyGet(trg, prop, get) {
+        Object.defineProperty(trg, prop, {
+            enumerable: true,
+            configurable: true, /* needed */
             get: get
         });
     }
@@ -543,10 +587,21 @@
         defHidden(elem, PATH, path);
         defHidden(elem, ROOT, parent._root_ || parent);
         defHidden(elem, PARENT, parent);
+        defHidden(elem, ERRORS, null, true);
         for (let propName in elem._meta_) {
             defSource(elem, source, propName, parent);
         }
         createObjProperties(elem, elem.constructor);
+
+        defPropertyGet(elem, "$valid", function () {
+            if (this._root_._needValidate_)
+                this._root_._validateAll_();
+            return !this._errors_;
+        });
+        defPropertyGet(elem, "$invalid", function () {
+            return !this.$valid;
+        });
+
         let ctorname = elem.constructor.name;
         let constructEvent = ctorname + '.construct';
         elem._root_.$emit(constructEvent, elem);
@@ -555,10 +610,10 @@
             elem._root_ctor_ = elem.constructor;
             elem.$dirty = false;
             elem._query_ = {};
-            // rowcount
+            // rowcount implementation
             for (var m in elem._meta_) {
                 let rcp = m + '.$RowCount';
-                if (rcp in source) {
+                if (source && rcp in source) {
                     let rcv = source[rcp];
                     elem[m].$RowCount = rcv;
                 }
@@ -674,6 +729,7 @@
     }
 
     function emit(event, ...arr) {
+        this._needValidate_ = true;
         console.info('emit: ' + event);
         let templ = this.$template;
         if (!templ) return;
@@ -699,7 +755,7 @@
         console.error(`command "${cmd}" not found`);
     }
 
-    function validate(item, path, val) {
+    function validateImpl(item, path, val) {
         if (!item) return null;
         let tml = item._root_.$template;
         if (!tml) return null;
@@ -708,6 +764,110 @@
         var elemvals = vals[path];
         if (!elemvals) return null;
         return validators.validate(elemvals, item, val);
+    }
+
+    function saveErrors(item, path, errors)
+    {
+        if (!item._errors_ && !errors)
+            return; // already null
+        else if (!item._errors_ && errors)
+            item._errors_ = {}; // new empty object
+        if (errors)
+            item._errors_[path] = errors;
+        else if (path in item._errors_)
+            delete item._errors_[path];
+        if (utils.isEmptyObject(item._errors_))
+            item._errors_ = null;
+        return errors;
+    }
+
+    function validate(item, path, val) {
+        if (!item._root_._needValidate_) {
+            // already done
+            if (!item._errors_)
+                return null;
+            if (path in item._errors_)
+                return item._errors_[path];
+            return null;
+        }
+        //console.warn('validate self element:' + path);
+        let res = validateImpl(item, path, val);
+        return saveErrors(item, path, res);
+    }
+
+    function* enumData(root, path, name) {
+        if (!path) {
+            // scalar value in root
+            yield { item: root, val: root[name] };
+            return;
+        }
+        let sp = path.split('.');
+        let currentData = root;
+        for (let i = 0; i < sp.length; i++) {
+            let last = i === sp.length - 1;
+            let prop = sp[i];
+            if (prop.endsWith('[]')) {
+                // is array
+                let pname = prop.substring(0, prop.length - 2);
+                let objto = root[pname];
+                if (!objto)
+                    continue;
+                for (let j = 0; j < objto.length; j++) {
+                    let arrItem = objto[j];
+                    if (last)
+                        yield { item: arrItem, val: arrItem[name] };
+                    else {
+                        let newpath = sp.slice(1).join('.');
+                        for (var y of enumData(arrItem, newpath, name))
+                            yield { item: y.item, val: y.val };
+                    }
+                }
+            } else {
+                // simple element
+                let objto = root[prop];
+                if (objto) {
+                    yield { item: root[prop], val: objto[name] };
+                }
+            }
+        }
+    }
+
+    // enumerate all data (recursive)
+    function* dataForVal(root, path) {
+        let ld = path.lastIndexOf('.');
+        let dp = '';
+        let dn = path;
+        if (ld !== -1) {
+            dp = path.substring(0, ld);
+            dn = path.substring(ld + 1);
+        }
+        for (val of enumData(root, dp, dn))
+            yield val;
+    }
+
+    function validateOneElement(root, path, vals) {
+        if (!vals)
+            return;
+        for (let elem of dataForVal(root, path)) {
+            //console.warn(elem);
+            let res = validators.validate(vals, elem.item, elem.val);
+            saveErrors(elem.item, path, res);
+        }
+    }
+
+    function validateAll() {
+        var me = this;
+        if (!me._needValidate_)
+            return;
+        //console.warn('call validate all');
+        me._needValidate_ = false;
+        let tml = me.$template;
+        if (!tml) return;
+        let vals = tml.validators;
+        if (!vals) return;
+        for (var val in vals) {
+            validateOneElement(me, val, vals[val])
+        }
     }
 
     function setDirty(val) {
@@ -721,6 +881,14 @@
             if (Array.isArray(trg)) {
                 platform.set(trg, "$selected", null);
                 trg.$copy(src[prop]);
+                // copy rowCount
+                if ('$RowCount' in trg) {
+                    let rcProp = prop + '.$RowCount';
+                    if (rcProp in src)
+                        trg.$RowCount = src[rcProp];
+                    else
+                        trg.$RowCount = 0;
+                }
             } else {
                 if (utils.isPrimitiveCtor(ctor))
                     platform.set(this, prop, src[prop]);
@@ -739,6 +907,7 @@
         root.prototype.$template = template;
         root.prototype._exec_ = executeCommand;
         root.prototype._validate_ = validate;
+        root.prototype._validateAll_ = validateAll;
         // props cache for t.construct
         let xProp = {};
         if (template) {
@@ -763,7 +932,8 @@
         createObject: createObject,
         createArray: createArray,
         defineObject: defineObject,
-        implementRoot: implementRoot
+        implementRoot: implementRoot,
+        enumData: enumData
     };
 })();
 /*20170819-7016*/
@@ -785,7 +955,7 @@
 
 
 
-/*20170818-7015*/
+/*20170824-7019*/
 /*components/include.js*/
 
 (function () {
@@ -796,16 +966,25 @@
         template: '<div :class="implClass"></div>',
         props: {
             src: String,
-            cssClass: String
+            cssClass: String,
+            needReload: Boolean
         },
         data() {
             return {
-                loading: true
+                loading: true,
+                currentUrl: '',
+                _needReload: true
             };
         },
         methods: {
             loaded(ok) {
                 this.loading = false;
+            },
+            requery() {
+                if (this.currentUrl) {
+                    // Do not set loading. Avoid blinking
+                    http.load(this.currentUrl, this.$el).then(this.loaded);
+                }
             }
         },
         computed: {
@@ -815,6 +994,7 @@
         },
         mounted() {
             if (this.src) {
+                this.currentUrl = this.src;
                 http.load(this.src, this.$el).then(this.loaded);
             }
         },
@@ -825,8 +1005,13 @@
         },
         watch: {
             src: function (newUrl, oldUrl) {
-                this.loading = true;
+                this.loading = true; // hides the current view
+                this.currentUrl = newUrl;
                 http.load(newUrl, this.$el).then(this.loaded);
+            },
+            needReload(val) {
+                // works like a trigger
+                if (val) this.requery();
             }
         }
     });
@@ -902,7 +1087,7 @@
         }
     });
 })();
-/*20170823-7018*/
+/*20170824-7019*/
 /*components/datagrid.js*/
 (function () {
 
@@ -915,6 +1100,8 @@
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
+
+    const utils = require('utils');
 
     const dataGridTemplate = `
 <div class="data-grid-container">
@@ -939,7 +1126,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.capture.stop.prevent="dblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1088,8 +1275,10 @@
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
+
             // Warning: toString() is required.
-            let chElems = [row[col.content].toString()];
+            let content = utils.toString(row[col.content]);
+            let chElems = [content];
             /*TODO: validate ???? */
             if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -1134,6 +1323,13 @@
             rowSelect() {
                 throw new Error("do not call");
                 //this.$parent.rowSelected = this;
+            },
+            dblClick($event) {
+                if ($event.target.tagName !== 'TD') {
+                    alert('double click return:' + $event.target.tagName);
+                    return;
+                }
+                alert('double click:' + $event.target.tagName);
             }
         }
     };
@@ -1141,7 +1337,8 @@
     Vue.component('data-grid', {
         props: {
             'items-source': [Object, Array],
-            bordered: Boolean,
+            border: Boolean,
+            grid: String,
             striped: Boolean,
             hover: { type: Boolean, default: false },
             sort: String,
@@ -1186,7 +1383,8 @@
             },
             cssClass() {
                 let cssClass = 'data-grid';
-                if (this.bordered) cssClass += ' bordered';
+                if (this.border) cssClass += ' border';
+                if (this.grid) cssClass += ' grid-' + this.grid;
                 if (this.striped) cssClass += ' striped';
                 if (this.hover) cssClass += ' hover';
                 return cssClass;
@@ -1240,15 +1438,16 @@
             }
         },
         created() {
-            if (!this.filterFields)
-                return;
-            // make all filter fields 
             let q = this.dgQuery;
             let nq = {};
-            this.filterFields.split(',').forEach(v => {
-                let f = v.trim();
-                nq[v.trim()] = undefined;
-            });
+
+            if (this.filterFields) {
+            // make all filter fields (for reactivity)
+                this.filterFields.split(',').forEach(v => {
+                    let f = v.trim();
+                    nq[v.trim()] = undefined;
+                });
+            }
             let xq = {};
             if (this.sort === 'server') {
                 // from route
@@ -1306,7 +1505,7 @@ TODO: pageSize
             isFirstPage() {
                 return +this.offset === 0;
             }
-        },        
+        },
         methods: {
             next() {
                 if (this.isLastPage)
@@ -1424,12 +1623,12 @@ TODO: may be icon for confirm ????
 <div class="modal-window">
     <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
     <div v-else class="modal-content">
-        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="closeModal(false)">x</button></div>
+        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="modalClose(false)">x</button></div>
         <div class="modal-body">
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button v-for="(btn, index) in buttons"  :key="index" @click="closeModal(btn.result)" v-text="btn.text"></button>
+            <button v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -1455,7 +1654,7 @@ TODO: may be icon for confirm ????
             };
         },
         methods: {
-            closeModal(result) {
+            modalClose(result) {
                 store.$emit('modalClose', result);
             }
         },
@@ -1488,7 +1687,7 @@ TODO: may be icon for confirm ????
 
     app.components['modal'] = modalComponent;
 })();
-/*20170823-7018*/
+/*20170824-7019*/
 /*controllers/base.js*/
 (function () {
 
@@ -1605,7 +1804,7 @@ TODO: may be icon for confirm ????
             },
 
             $requery() {
-                alert('requery. Yet not implemented');
+                store.$emit('requery');
             },
 
             $navigate(url, data) {
@@ -1679,14 +1878,22 @@ TODO: may be icon for confirm ????
                 });
             },
 
-            $saveAndClose(result) {
-                this.$save().then(function (result) {
+            $modalSaveAndClose(result) {
+                if (this.$isDirty)
+                    this.$save().then((result) => store.$emit('modalClose', result));
+                else
                     store.$emit('modalClose', result);
-                });
             },
 
-            $closeModal(result) {
+            $modalClose(result) {
                 store.$emit('modalClose', result);
+            },
+
+            $saveAndClose() {
+                if (this.$isDirty)
+                    this.$save().then(() => route.close());
+                else
+                    route.close();
             },
 
             $close() {
@@ -1745,7 +1952,7 @@ TODO: may be icon for confirm ????
     app.components['baseController'] = base;
 
 })();
-/*20170823-7015*/
+/*20170824-7019*/
 /* controllers/shell.js */
 
 (function () {
@@ -1774,6 +1981,18 @@ TODO: may be icon for confirm ????
         return null;
     }
 
+    function activateMenu(activeItem, loc) {
+        let seg2 = loc.segment(2);
+        if (!seg2) {
+            let url = activeItem.url;
+            let fa = findMenu(activeItem.menu, (mi) => mi.url && !mi.menu);
+            if (fa) {
+                url = '/' + url + '/' + fa.url;
+                route.setState(url, fa.title);
+            }
+        }
+    }
+
     const navBar = {
 
         props: {
@@ -1798,14 +2017,18 @@ TODO: may be icon for confirm ????
         created: function () {
             var me = this;
             me.__dataStack__ = [];
+
             function findCurrent() {
                 let loc = route.location();
                 let seg1 = loc.segment(1);
+                let seg2 = loc.segment(2);
+                let len = loc.routeLength();
                 if (seg1 === 'app') {
                     me.isAppMode = true;
                     return null;
                 }
-                me.activeItem = me.menu.find(itm => itm.url === seg1);
+                let ai = me.menu.find(itm => itm.url === seg1);
+                me.activeItem = ai;
                 return loc;
             }
 
@@ -1813,32 +2036,42 @@ TODO: may be icon for confirm ????
                 if (me.__dataStack__.length > 0) {
                     let comp = me.__dataStack__[0];
                     let oldUrl = event.state;
-                    console.warn('pop state: ' + oldUrl);
+                    //console.warn('pop state: ' + oldUrl);
                     if (!comp.$saveModified()) {
                         // disable navigate
                         oldUrl = comp.__baseUrl__.replace('/_page', '');
-                        console.warn('return url: ' + oldUrl);
+                        //console.warn('return url: ' + oldUrl);
                         window.history.pushState(oldUrl, null, oldUrl);
                         return;
                     }
                 }
+                route.updateSearch();
                 findCurrent();
                 route.navigateCurrent();
             });
 
-            findCurrent();
+            let loc = findCurrent();
+
+            if (me.activeItem && me.activeItem.menu)
+            {
+                activateMenu(me.activeItem, loc);
+            }
 
             if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
-                // TODO: (find first active item  to route
-                window.history.replaceState(null, null, me.activeItem.url);
+                activateMenu(me.activeItem, loc);
             }
+
 
             store.$on('registerData', function (component) {
                 if (component)
                     me.__dataStack__.push(component);
                 else
                     me.__dataStack__.pop(component);
+            });
+
+            this.$root.$on('navigateTop', function (top) {
+                me.navigate(top);
             });
         },
 
@@ -1859,6 +2092,7 @@ TODO: may be icon for confirm ????
                 this.activeItem = item;
                 let url = '/' + item.url;
                 let query = null;
+                let title = null;
                 let savedUrl = route.savedMenu(item.url);
                 let activeItem = null;
                 if (savedUrl) {
@@ -1870,8 +2104,9 @@ TODO: may be icon for confirm ????
                 if (activeItem) {
                     url = url + '/' + activeItem.url;
                     query = activeItem.query;
+                    title = activeItem.title;
                 }
-                route.navigateMenu(url, query);
+                route.navigateMenu(url, query, title);
             }
         }
     };
@@ -1919,15 +2154,22 @@ TODO: may be icon for confirm ????
             isActive: function (itm) {
                 return itm === this.activeItem;
             },
+            itemUrl(itm)
+            {
+                return `/${this.topUrl}/${itm.url}`;
+            },
             itemHref(itm) {
                 // for 'open in new window' command
-                return `/${this.topUrl}/${itm.url}`;
+                let url = this.itemUrl(itm);
+                if (itm.query)
+                    url += '?' + itm.query;
+                return url;
             },
             navigate: function (itm) {
                 if (!itm.url)
                     return; // no url. is folder?
-                let newUrl = this.itemHref(itm);
-                route.navigateMenu(newUrl, itm.query);
+                let newUrl = this.itemUrl(itm);
+                route.navigateMenu(newUrl, itm.query, itm.title);
             },
             toggle() {
                 this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
@@ -1948,6 +2190,8 @@ TODO: may be icon for confirm ????
                     if (me.sideMenu)
                         me.activeItem = findMenu(me.sideMenu, (itm) => itm.url === s2);
                 }
+                if (me.activeItem)
+                    route.setTitle(me.activeItem.title);
             });
         }
     };
@@ -1960,13 +2204,15 @@ TODO: may be icon for confirm ????
                 }
             }, [h('include', {
                 props: {
-                    src: this.currentView
+                    src: this.currentView,
+                    needReload: this.needReload
                 }
             })]);
         },
         data() {
             return {
                 currentView: null,
+                needReload: false,
                 cssClass: ''
             };
         },
@@ -1981,12 +2227,19 @@ TODO: may be icon for confirm ????
                     case 3: tail = '/index/0'; break;
                 }
                 let url = "/_page" + window.location.pathname + tail;
-                url += window.location.search;
+                let search = window.location.search;
+                url += search;
                 me.currentView = url;
                 me.cssClass =
                     len === 2 ? 'full-page' :
-                        len === 3 ? 'partial-page' :
-                            'full-view';
+                    len === 3 ? 'partial-page' :
+                                'full-view';
+            });
+
+            store.$on('requery', function () {
+                // just trigger
+                me.needReload = true;
+                Vue.nextTick(() => me.needReload = false);
             });
         }
     };
@@ -2106,12 +2359,12 @@ TODO: may be icon for confirm ????
         },
         methods: {
             about() {
-                route.navigateMenu('/app/about');
+                // TODO: localization
+                route.navigateMenu('/app/about', null, "О программе");
             },
             root() {
-                // TODO: navigate to first active menu item
-                // alert(this.menu[0].url);
-                route.navigateMenu('/' + this.menu[0].url);
+                // first menu element
+                this.$emit('navigateTop', this.menu[0]);
             }
         }
     });
