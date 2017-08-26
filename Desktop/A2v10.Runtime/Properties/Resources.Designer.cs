@@ -19,7 +19,7 @@ namespace A2v10.Runtime.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -68,10 +68,18 @@ namespace A2v10.Runtime.Properties {
         ///(function () {
         ///    // this = global context
         ///
+        ///    let g = this;
         ///    const modules = {};
         ///
-        ///    this.require = function (module) {
-        ///        alert(&apos;require: &apos; + module);
+        ///    g.require = function (module) {
+        ///        if (!(module in modules))
+        ///            modules[module] = __require(module, g.__context._dir_);
+        ///        return modules[module];
+        ///    };
+        ///
+        ///    g.__context = {
+        ///        _file_: null,
+        ///        _dir_: null
         ///    };
         ///})();
         ///.
@@ -86,26 +94,23 @@ namespace A2v10.Runtime.Properties {
         ///   Looks up a localized string similar to 
         ///// global variables!
         ///
-        ///function createElement(name, ...args) {
-        ///    if (name in this.elements) {
-        ///        return new this.elements[name](...args);
-        ///    }
-        ///    console.error(`__createElement. Element &apos;${name}&apos; not found`);
-        ///    return null;
-        ///}
+        ///var designer = (function () {
         ///
-        ///var designer = {
-        ///    form: {
-        ///        elements: {},
-        ///        __createElement: createElement,
-        ///		__registerElement(ctor) {
-        ///			var name = ctor.prototype.type;
-        ///			this.elements[name] = ctor;
-        ///		},
-        ///    },
-        ///    solution: {
-        ///        elements: {},
-        ///        __createE [rest of string was truncated]&quot;;.
+        ///    function createElement(name, ...args) {
+        ///        if (name in this.elements) {
+        ///            return new this.elements[name](...args);
+        ///        }
+        ///        console.error(`__createElement. Element &apos;${name}&apos; not found`);
+        ///        return null;
+        ///    }
+        ///
+        ///    let designer = {
+        ///        form: {
+        ///            elements: {},
+        ///            __createElement: createElement,
+        ///            __registerElement(ctor) {
+        ///                var name = ctor.prototype.type;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Application {
             get {
@@ -139,6 +144,41 @@ namespace A2v10.Runtime.Properties {
         internal static string Form_form {
             get {
                 return ResourceManager.GetString("Form_form", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///(function () {
+        ///
+        ///    const cats = {
+        ///        general: &quot;Общие&quot;
+        ///    };
+        ///
+        ///    function copyProps(trg, src) {
+        ///        for (let p in trg._meta_) {
+        ///            let sprop = src[p];
+        ///            let mi = trg._meta_[p];
+        ///        }
+        ///    }
+        ///
+        ///    function Column(src) {
+        ///        copyProps(this, src);
+        ///    }
+        ///
+        ///    Column.prototype._meta_ = {
+        ///        Name: {
+        ///            category: cats.general,
+        ///            type: &quot;string&quot;,
+        ///            description: &quot;Наименование колонки таблицы&quot;
+        ///        }
+        ///    }
+        ///
+        ///    function [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Solution {
+            get {
+                return ResourceManager.GetString("Solution", resourceCulture);
             }
         }
     }

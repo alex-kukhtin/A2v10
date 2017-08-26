@@ -63,5 +63,16 @@ namespace A2v10.Xaml
             RenderChildren(context);
             grid.RenderEnd(context);
         }
+
+        internal override void RenderChildren(RenderContext context)
+        {
+            foreach (var ch in Children)
+            {
+                using (context.GridContext(GetRow(ch), GetColumn(ch)))
+                {
+                    ch.RenderElement(context);
+                }
+            }
+        }
     }
 }

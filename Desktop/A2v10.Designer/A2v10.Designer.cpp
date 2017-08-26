@@ -114,7 +114,7 @@ BOOL CMainApp::InitInstance()
 		CDotNetRuntime::LoadLibrary();
 		JavaScriptRuntime::StartDebugging();
 	}
-	catch (CDotNetException de)
+	catch (CDotNetException& de)
 	{
 		de.ReportError();
 		return FALSE;
@@ -133,7 +133,7 @@ int CMainApp::ExitInstance()
 	{
 		CDotNetRuntime::Stop();
 	}
-	catch (CDotNetException /*de*/)
+	catch (CDotNetException& /*de*/)
 	{
 		// do nothing
 	}
@@ -141,7 +141,7 @@ int CMainApp::ExitInstance()
 	return __super::ExitInstance();
 }
 
-
 // CMainApp message handlers
+
 
 

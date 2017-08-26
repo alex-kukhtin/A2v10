@@ -61,6 +61,11 @@ protected:
 	afx_msg LRESULT OnWmiConsole(WPARAM wParam, LPARAM lParam);
 
 	afx_msg void OnUpdateLineNo(CCmdUI* pCmdUI);
+	afx_msg void OnSolutionSave();
+	afx_msg void OnSolutionLoad();
+	afx_msg void OnSolutionClose();
+	afx_msg void OnSolutionNew();
+	afx_msg void OnUpdateSolutionOpen(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
 

@@ -37,9 +37,17 @@ public:
 	void Clear();
 };
 
-
-class CFormItem  : public CJsElement
+class CItemRegister
 {
+public:
+	CItemRegister(LPCTSTR szClassName, CRuntimeClass* pClass);
+};
+
+class CItemRegisterMap : public CMap<CString, LPCWSTR, CRuntimeClass*, CRuntimeClass*&> {};
+
+class CFormItem : public CObject
+{
+	DECLARE_DYNAMIC(CFormItem)
 protected:
 	CRect m_position;
 	JavaScriptValue m_jsValue;
@@ -48,25 +56,41 @@ protected:
 	CFormItemList m_children;
 	CFormItem* m_pParent;
 public:
-	CFormItem(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
+	CFormItem();
+
+	void Construct(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
+
+	GUID m_guid;
+
+	static CFormItem* CreateNode(LPCWSTR szClassName, CFormItem* pParent = nullptr);
+	static CItemRegisterMap& Register(LPCWSTR szClassName, CRuntimeClass* pRuntimeClass);
 
 	virtual void ConstructObject();
 
-	virtual JsValueRef GetJsHandle() override { return (JsValueRef)m_jsValue; }
+	JsValueRef GetJsHandle() { return (JsValueRef)m_jsValue; }
 	CFormItem* GetParent() { return m_pParent; }
+	CFormItem* FindByGuid(const GUID& guid);
 
 	virtual ~CFormItem();
 
 	virtual LPCWSTR ElementName() abstract;
 	virtual void Xml2Properties();
 	virtual void Properties2Xml();
-	virtual void Draw(const RENDER_INFO& ri) abstract;
 	virtual DWORD GetTrackMask() const { return RTRE_ALL; }
 	virtual const CRect& GetPosition() const {return m_position; }
 	virtual CFormItem* ObjectAt(CPoint point);
 	virtual CSize GetMinTrackSize() const;
 	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
+	virtual void MoveTo(const CRect& newPos);
+	virtual void OnJsPropertyChange(LPCWSTR szPropName);
+
+	virtual void Draw(const RENDER_INFO& ri) abstract;
+	virtual void DrawChildren(const RENDER_INFO& ri);
+	virtual CFormItem* Clone();
+	virtual CFormItem& operator=(const CFormItem& other);
 
 	virtual void Invalidate();
 	virtual void SetPosition(const CRect& rect);
+private:
+
 };

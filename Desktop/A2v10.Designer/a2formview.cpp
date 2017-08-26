@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CA2FormView, CScrollView)
 	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WMI_FILL_TOOLBOX, OnWmiFillToolbox)
 	ON_MESSAGE(WMI_FILL_PROPS, OnWmiFillProps)
+	ON_MESSAGE(WMI_PROPERTY_CHANGED, OnWmiPropertyChanged)
 	ON_WM_CREATE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_CONTEXTMENU()
@@ -45,7 +46,8 @@ BEGIN_MESSAGE_MAP(CA2FormView, CScrollView)
 	//ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
 	//ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
 	//ON_COMMAND(ID_FILE_PRINT_PREVIEW, OnFilePrintPreview)
-
+	ON_COMMAND(ID_EDIT_UNDO, OnEditUndo)
+	ON_COMMAND(ID_EDIT_REDO, OnEditRedo)
 END_MESSAGE_MAP()
 
 CA2FormView::CA2FormView()
@@ -91,7 +93,6 @@ void CA2FormView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	{
 		CFormItem* pItem = reinterpret_cast<CFormItem*>(pHint);
 		if (pItem) {
-			ASSERT_VALID(pItem);
 			CRect rect(pItem->GetPosition());
 			DocToClient(rect);
 			rect.InflateRect(CX_HANDLE_SIZE, CX_HANDLE_SIZE);
@@ -99,6 +100,9 @@ void CA2FormView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		}
 	}
 	break;
+	default:
+		Invalidate();
+		break;
 	}
 	/*
 	if (GetDocument()->IsLoading())
@@ -441,11 +445,13 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 		return 0L;
 	auto pDoc = GetDocument();
 	FILL_PROPS_INFO* pInfo = reinterpret_cast<FILL_PROPS_INFO*>(lParam);
+	pInfo->wndTarget = GetSafeHwnd();
 	CFormItem* pItem = pDoc->m_pRoot;//TODO : selection pDoc->GetSelectedItem();
 	if (pItem) {
-		pInfo->elem = reinterpret_cast<DWORD_PTR>(pItem);
+		pInfo->elemTarget = pItem;
+		pInfo->elem = reinterpret_cast<DWORD_PTR>(pItem->GetJsHandle());
 		if (pItem->GetParent())
-			pInfo->parent = reinterpret_cast<DWORD_PTR>(pItem->GetParent());
+			pInfo->parent = reinterpret_cast<DWORD_PTR>(pItem->GetParent()->GetJsHandle());
 		if (pDoc->m_bPropertyChanged) {
 			pDoc->m_bPropertyChanged = false;
 			return (LRESULT)WMI_FILL_PROPS_RESULT_REFILL;
@@ -453,6 +459,30 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 		return (LRESULT) WMI_FILL_PROPS_RESULT_OK;
 	}
 	return (LRESULT)WMI_FILL_PROPS_RESULT_EMPTY;
+}
+
+LRESULT CA2FormView::OnWmiPropertyChanged(WPARAM wParam, LPARAM lParam) 
+{
+	if (wParam != WMI_PROPERTY_CHANGED_WPARAM)
+		return 0L;
+	PROPERTY_CHANGED_INFO* pInfo = reinterpret_cast<PROPERTY_CHANGED_INFO*>(lParam);
+	if (pInfo == nullptr)
+		return 0L;
+	CFormItem* pItem = reinterpret_cast<CFormItem*>(pInfo->pSource);
+	if (pItem == nullptr)
+		return 0L;
+	auto pDoc = GetDocument();
+	try
+	{
+		pDoc->m_undo.DoAction(CFormUndo::_change, pItem); // OLD values
+		pItem->OnJsPropertyChange(pInfo->szPropName);
+		pDoc->m_bPropertyChanged = true; // refill properties needed
+	}
+	catch (JavaScriptException& ex) {
+		// do nothing
+		ex.ReportError();
+	}
+	return 0L;
 }
 
 // afx_msg
@@ -591,4 +621,18 @@ void CA2FormView::OnEditPaste()
 // afx_msg
 void CA2FormView::OnUpdateEditPaste(CCmdUI* pCmdUI)
 {
+}
+
+void CA2FormView::OnEditUndo()
+{
+	SetFocus();
+	CA2FormDocument* pDoc = GetDocument();
+	pDoc->m_undo.DoUndo(pDoc);
+}
+
+void CA2FormView::OnEditRedo()
+{
+	SetFocus();
+	CA2FormDocument* pDoc = GetDocument();
+	pDoc->m_undo.DoRedo(pDoc);
 }

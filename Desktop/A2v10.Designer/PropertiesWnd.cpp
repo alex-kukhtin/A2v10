@@ -120,26 +120,32 @@ void CA2PropertyGridCtrl::OnPropertyChanged(CMFCPropertyGridProperty* pProp) con
 JavaScriptValue CA2PropertyGridCtrl::GetValue()
 {
 	JavaScriptValue val;
-	if (m_pJsValue != nullptr)
-		val = m_pJsValue->GetJsHandle();
+	if (m_jsValueRef != nullptr)
+		return JavaScriptValue(m_jsValueRef);
 	return val;
 }
 
 JavaScriptValue CA2PropertyGridCtrl::GetParentValue()
 {
 	JavaScriptValue val;
-	if (m_pJsValueParent != nullptr)
-		val = m_pJsValueParent->GetJsHandle();
+	if (m_jsValueParentRef != nullptr)
+		return JavaScriptValue(m_jsValueParentRef);
 	return val;
 }
 
 void CA2PropertyGridCtrl::SetProperty(LPCWSTR szPropName, JavaScriptValue val)
 {
-	if (m_pJsValue == nullptr)
+	if (m_jsValueRef == nullptr)
 		return;
-	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	JavaScriptValue jsValue = GetValue();
 	jsValue.SetProperty(szPropName, val);
-	m_pJsValue->OnPropertyChanged(szPropName); // notify 
+	if (m_hWndTarget != nullptr) {
+		PROPERTY_CHANGED_INFO info;
+		info.szPropName = szPropName;
+		info.pJsRef = m_jsValueRef;
+		info.pSource = m_pTargetElem;
+		::SendMessage(m_hWndTarget, WMI_PROPERTY_CHANGED, WMI_PROPERTY_CHANGED_WPARAM, (LPARAM)&info);
+	}
 }
 
 // virtual
@@ -471,8 +477,9 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 			break;
 		case WMI_FILL_PROPS_RESULT_OK:
 			{
-				CJsElement* refValue = reinterpret_cast<CJsElement*>(info.elem);
-				CJsElement* refParent = reinterpret_cast<CJsElement*>(info.parent);
+				JsValueRef refValue = reinterpret_cast<JsValueRef>(info.elem);
+				JsValueRef refParent = reinterpret_cast<JsValueRef>(info.parent);
+				m_wndPropList.SetTarget(info.wndTarget, info.elemTarget);
 				m_wndPropList.FillProperties(refValue, refParent);
 			}
 			break;
@@ -493,7 +500,8 @@ void CPropertiesWnd::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler)
 }
 
 CA2PropertyGridCtrl::CA2PropertyGridCtrl()
-	:m_pJsValue(nullptr), m_pJsValueParent(nullptr)
+	:m_jsValueRef(nullptr), m_jsValueParentRef(nullptr),
+	m_hWndTarget(nullptr), m_pTargetElem(nullptr)
 {
 
 }
@@ -501,7 +509,7 @@ CA2PropertyGridCtrl::CA2PropertyGridCtrl()
 
 void CA2PropertyGridCtrl::FillPropertyValues()
 {
-	if (m_pJsValue == nullptr)
+	if (m_jsValueRef == nullptr)
 		return;
 	JavaScriptValue jsValue = GetValue();
 	if (!jsValue.IsValid())
@@ -583,32 +591,41 @@ void CA2PropertyGridCtrl::FillPropertyValues()
 		Invalidate();
 }
 
+void CA2PropertyGridCtrl::SetTarget(HWND hWndTarget /*= nullptr*/, void* pElem /*= nullptr*/)
+{
+	m_hWndTarget = hWndTarget;
+	m_pTargetElem = pElem;
+}
+
 void CA2PropertyGridCtrl::Clear()
 {
-	m_pJsValue = nullptr;
-	m_pJsValueParent = nullptr;
+	m_jsValueRef = nullptr;
+	m_jsValueParentRef = nullptr;
+	m_hWndTarget = nullptr;
+	m_pTargetElem = nullptr;
+
 	RemoveAll();
 	AdjustLayout();
 	Invalidate();
 }
 
-void CA2PropertyGridCtrl::FillProperties(CJsElement* val, CJsElement* parent)
+void CA2PropertyGridCtrl::FillProperties(JsValueRef val, JsValueRef parent)
 {
-	if (val == m_pJsValue)
+	if (val == m_jsValueRef)
 		return;
-	m_pJsValue = val;
-	m_pJsValueParent = parent;
+	m_jsValueRef = val;
+	m_jsValueParentRef = parent;
 	RemoveAll();
 	try 
 	{
-		if (m_pJsValue != nullptr)
+		if (m_jsValueRef != nullptr)
 			FillPropertiesInternal();
 	}
 	catch (JavaScriptException& ex) 
 	{
 		ex.ReportError();
-		m_pJsValue = nullptr;
-		m_pJsValueParent = nullptr;
+		m_jsValueRef = nullptr;
+		m_jsValueParentRef = nullptr;
 	}
 	AdjustLayout();
 	Invalidate();
@@ -618,9 +635,9 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 {
 	CString descr = meta.GetProperty(L"description").ToStringCheck();
 	CString type = meta.GetProperty(L"type").ToStringCheck();
-	if (m_pJsValue == nullptr)
+	if (m_jsValueRef == nullptr)
 		return nullptr;
-	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	JavaScriptValue jsValue = GetValue();
 	JavaScriptValue jsValueParent = GetParentValue();
 	int vtTag = 0;
 	JavaScriptValue val;
@@ -684,19 +701,16 @@ CMFCPropertyGridProperty* CA2PropertyGridCtrl::GetPropertyValue(LPCWSTR szName, 
 
 void CA2PropertyGridCtrl::FillPropertiesInternal()
 {
-	if (m_pJsValue == nullptr)
+	if (m_jsValueRef == nullptr)
 		return;
-	JavaScriptValue jsValue = m_pJsValue->GetJsHandle();
+	JavaScriptValue jsValue = GetValue();
 	JavaScriptValue jsValueParent = GetParentValue();
 	if (!jsValue.IsValid())
 		return;
 	JavaScriptPropertyId catPropId = JavaScriptPropertyId::FromString(L"category");
 	JavaScriptPropertyId metaPropId = JavaScriptPropertyId::FromString(L"_meta_");
 
-	auto meta = jsValue.GetProperty(metaPropId);
-	if (meta.ValueType() != JsValueType::JsObject)
-		return;
-	auto props = meta.GetProperty(L"properties");
+	auto props = jsValue.GetProperty(metaPropId);
 	if (props.ValueType() != JsValueType::JsObject)
 		return;
 

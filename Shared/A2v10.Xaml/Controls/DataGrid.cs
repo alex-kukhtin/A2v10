@@ -15,6 +15,8 @@ namespace A2v10.Xaml
         public Boolean Border { get; set; }
         public Boolean Sort { get; set; }
 
+        public GridLinesVisibility GridLines { get; set; }
+
         public Object ItemsSource { get; set; }
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
@@ -32,6 +34,11 @@ namespace A2v10.Xaml
             // TODO: ????
             dataGrid.MergeAttribute("sort", "server");
             dataGrid.MergeAttribute(":route-query", "$query"); // always!
+
+            // TODO: binding for GridLines ???
+            if (GridLines != GridLinesVisibility.None)
+                dataGrid.MergeAttribute("grid", GridLines.ToString());
+
             dataGrid.RenderStart(context);
             Int32 colIndex = 0;
             foreach (var col in Columns)

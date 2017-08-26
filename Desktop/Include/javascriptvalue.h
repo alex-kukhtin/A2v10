@@ -28,6 +28,7 @@ public:
 	JavaScriptValue GetProperty(const wchar_t* propName);
 	JavaScriptValue GetPropertyChain(const wchar_t* propName);
 	JavaScriptValue GetProperty(int iIndex);
+	JavaScriptValue GetIndexedProperty(int iIndex);
 	JavaScriptValue& SetProperty(JavaScriptPropertyId id, JavaScriptValue value, bool useStrictRules = true);
 	JavaScriptValue& SetProperty(const wchar_t* propName, JavaScriptValue value, bool useStrictRules = true);
 	JavaScriptValue& SetProperty(const wchar_t* propName, const wchar_t* value, bool useStrictRules = true);

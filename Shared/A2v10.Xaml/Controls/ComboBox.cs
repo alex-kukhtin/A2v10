@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace A2v10.Xaml.Controls
+namespace A2v10.Xaml
 {
     [ContentProperty("ItemsSource")]
     public class ComboBox : ValuedControl
@@ -14,7 +14,9 @@ namespace A2v10.Xaml.Controls
 
         internal override void RenderElement(RenderContext context)
         {
-            base.RenderElement(context);
+            var combo = new TagBuilder("select");
+            combo.RenderStart(context);
+            combo.RenderEnd(context);
         }
     }
 }

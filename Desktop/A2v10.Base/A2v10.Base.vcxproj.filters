@@ -123,9 +123,6 @@
     <ClCompile Include="convert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="jselement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="filetools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -251,9 +248,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\convert.h">
-      <Filter>Include Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\jselement.h">
       <Filter>Include Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\filetools.h">

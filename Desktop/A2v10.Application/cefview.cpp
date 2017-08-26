@@ -62,12 +62,7 @@ BOOL CCefView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CCefView::OnDraw(CDC* /*pDC*/)
 {
-	CWorkarea* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	// TODO: add draw code for native data here
+	// do nothing
 }
 
 
@@ -127,7 +122,7 @@ void CCefView::Dump(CDumpContext& dc) const
 CWorkarea* CCefView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CWorkarea)));
-	return (CWorkarea*)m_pDocument;
+	return (CWorkarea*) m_pDocument;
 }
 #endif //_DEBUG
 
@@ -150,6 +145,8 @@ void CCefView::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 }
+
+// m_browser->GetHost()->Find(findId++, "text", forward, case, next)
 
 // virtual
 void CCefView::OnInitialUpdate()

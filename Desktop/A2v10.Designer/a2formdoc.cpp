@@ -55,6 +55,8 @@ void CA2FormDocument::ClearSelection()
 }
 
 BEGIN_MESSAGE_MAP(CA2FormDocument, CDocument)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_UNDO, OnUpdateEditUndo)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_REDO, OnUpdateEditRedo)
 END_MESSAGE_MAP()
 
 // virtual 
@@ -73,9 +75,14 @@ void CA2FormDocument::Xml2Form()
 	tinyxml2::XMLElement* pNode = m_xmlDocument.RootElement();
 	if (pNode != nullptr) {
 		CString name = pNode->Name();
-		if (name == "Dialog") {
-			m_pRoot = new CFormElement(this, pNode);
+		m_pRoot = CFormItem::CreateNode(name, nullptr);
+		if (m_pRoot == nullptr) {
+			CString msg;
+			msg.Format(L"Can't create root element '%s'", name);
+			AfxMessageBox(msg);
+			return;
 		}
+		m_pRoot->Construct(this, pNode);
 	}
 }
 
@@ -91,7 +98,8 @@ void CA2FormDocument::CreateRootElement()
 	root->SetAttribute(L"xmlns", L"clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml");
 	root->SetAttribute(L"xmlns:x", L"http://schemas.microsoft.com/winfx/2006/xaml");
 	m_xmlDocument.InsertEndChild(root);
-	m_pRoot = new CFormElement(this, root);
+	m_pRoot = new CFormElement();
+	m_pRoot->Construct(this, root);
 	SetXmlTextFromXml();
 }
 
@@ -230,15 +238,19 @@ void CA2FormDocument::Serialize(CArchive& ar)
 void CA2FormDocument::SetModifiedXml(bool bModified /*= true*/)
 {
 	m_bXmlModified = bModified;
-	if (bModified)
+	if (bModified) {
+		m_bPropertyChanged = true;
 		SetModifiedFlag(TRUE);
+	}
 }
 
 void CA2FormDocument::SetModifiedText(bool bModified /*= true*/)
 {
 	m_bTextModified = bModified;
-	if (bModified)
+	if (bModified) {
+		m_bPropertyChanged = true;
 		SetModifiedFlag(TRUE);
+	}
 }
 
 // virtual 
@@ -281,4 +293,29 @@ void CA2FormDocument::DrawSelection(const RENDER_INFO& ri)
 	tr.m_dwDrawStyle = pItem->GetTrackMask();
 	bool bOutline = bNotFirst; // || m_bOrderMode || m_bInsideEditor || GetDocument()->IsControlsLocked()
 	tr.DrawItem(ri.pDC, bOutline);
+}
+
+
+CFormItem* CA2FormDocument::UndoChanges(CFormItem* pClone)
+{
+	if (m_pRoot == nullptr)
+		return nullptr;
+	CFormItem* pItem = m_pRoot->FindByGuid(pClone->m_guid);
+	if (pItem == nullptr)
+		return nullptr;
+	CFormItem* pOriginal = pItem->Clone();
+	*pItem = *pClone;
+	m_bPropertyChanged = true; // fill props
+	return pOriginal;
+}
+
+
+void CA2FormDocument::OnUpdateEditUndo(CCmdUI* pCmdUI) 
+{
+	pCmdUI->Enable(m_undo.CanUndo());
+}
+
+void CA2FormDocument::OnUpdateEditRedo(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(m_undo.CanRedo());
 }

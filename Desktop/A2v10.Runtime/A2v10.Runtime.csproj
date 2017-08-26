@@ -58,8 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="JavaScript\app.context.js" />
-    <Content Include="JavaScript\form.form.js" />
     <Content Include="JavaScript\app.js" />
+    <Content Include="JavaScript\form.form.js" />
+    <Content Include="JavaScript\solution.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

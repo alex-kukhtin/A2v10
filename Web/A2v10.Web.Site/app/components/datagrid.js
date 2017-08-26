@@ -1,4 +1,4 @@
-﻿/*20170824-7019*/
+﻿/*20170825-7020*/
 /*components/datagrid.js*/
 (function () {
 
@@ -20,7 +20,7 @@
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
-            <col :class="columnClass(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+            <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
             <tr>
@@ -37,7 +37,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.capture.stop.prevent="dblClick">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.stop.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -64,7 +64,8 @@
             editable: { type: Boolean, default: false },
             validate: String,
             sort: { type: Boolean, default: undefined },
-            mark: String
+            mark: String,
+            width: String
         },
         created() {
             this.$parent.$addColumn(this);
@@ -235,12 +236,12 @@
                 throw new Error("do not call");
                 //this.$parent.rowSelected = this;
             },
-            dblClick($event) {
-                if ($event.target.tagName !== 'TD') {
-                    alert('double click return:' + $event.target.tagName);
+            doDblClick($event) {
+                // deselect text
+                if (!this.$parent.dblclick)
                     return;
-                }
-                alert('double click:' + $event.target.tagName);
+                window.getSelection().removeAllRanges();
+                this.$parent.dblclick();
             }
         }
     };
@@ -256,7 +257,8 @@
             routeQuery: Object,
             mark: String,
             filterFields: String,
-            markStyle: String
+            markStyle: String,
+            dblclick: Function
         },
         template: dataGridTemplate,
         components: {
@@ -295,7 +297,7 @@
             cssClass() {
                 let cssClass = 'data-grid';
                 if (this.border) cssClass += ' border';
-                if (this.grid) cssClass += ' grid-' + this.grid;
+                if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
                 if (this.striped) cssClass += ' striped';
                 if (this.hover) cssClass += ' hover';
                 return cssClass;
@@ -312,8 +314,16 @@
                 this.columns.push(column);
             },
             columnClass(column) {
+                if (utils.isDefined(column.dir))
+                    return {
+                        sorted: !!column.dir
+                    };
+                else
+                    return undefined;
+            },
+            columnStyle(column) {
                 return {
-                    sorted: !!column.dir
+                    width: utils.isDefined(column.width) ? column.width : undefined
                 };
             },
             queryChange()

@@ -64,3 +64,10 @@ void CDotNetRuntime::SetMainWnd(HWND hWnd)
 	m_hWnd = hWnd;
 }
 
+// static
+void CDotNetRuntime::OpenSolution(LPCWSTR szFileName)
+{
+	auto fileName = gcnew System::String(szFileName);
+	A2v10RuntimeNet::Desktop::OpenSolution(fileName);
+	ThrowIfError();
+}

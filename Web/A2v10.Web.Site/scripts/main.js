@@ -198,7 +198,6 @@
             savedMenu: Location.getSavedMenu,
 
             navigateMenu(url, query, title) {
-                //console.warn('navigate menu:' + url);
                 let srch = getSearchFromStorage(url);
                 if (!srch)
                     url += query ? '?' + query : '';
@@ -206,6 +205,9 @@
                     url += srch;
                 if (query)
                     Vue.set(this, 'search', parseQueryString(query));
+                else if (srch) {
+                    Vue.set(this, 'search', parseQueryString(srch.substring(1)));
+                }
                 console.info('navigate to:' + url);
                 this.setTitle(title);
                 window.history.pushState(null, null, url);
@@ -235,8 +237,14 @@
                 if (title)
                     document.title = title;
             },
-            setState(url, title) {
+            setState(url, title, query) {
                 this.setTitle(title);
+                if (query)
+                    url += '?' + query;
+                else {
+                    let search = getSearchFromStorage(url);
+                    url += search || '';
+                }
                 window.history.replaceState(null, null, url);
             },
             updateSearch() {
@@ -1087,7 +1095,7 @@
         }
     });
 })();
-/*20170824-7019*/
+/*20170825-7020*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1109,7 +1117,7 @@
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
-            <col :class="columnClass(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+            <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
             <tr>
@@ -1126,7 +1134,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.capture.stop.prevent="dblClick">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.stop.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1153,7 +1161,8 @@
             editable: { type: Boolean, default: false },
             validate: String,
             sort: { type: Boolean, default: undefined },
-            mark: String
+            mark: String,
+            width: String
         },
         created() {
             this.$parent.$addColumn(this);
@@ -1324,12 +1333,12 @@
                 throw new Error("do not call");
                 //this.$parent.rowSelected = this;
             },
-            dblClick($event) {
-                if ($event.target.tagName !== 'TD') {
-                    alert('double click return:' + $event.target.tagName);
+            doDblClick($event) {
+                // deselect text
+                if (!this.$parent.dblclick)
                     return;
-                }
-                alert('double click:' + $event.target.tagName);
+                window.getSelection().removeAllRanges();
+                this.$parent.dblclick();
             }
         }
     };
@@ -1345,7 +1354,8 @@
             routeQuery: Object,
             mark: String,
             filterFields: String,
-            markStyle: String
+            markStyle: String,
+            dblclick: Function
         },
         template: dataGridTemplate,
         components: {
@@ -1384,7 +1394,7 @@
             cssClass() {
                 let cssClass = 'data-grid';
                 if (this.border) cssClass += ' border';
-                if (this.grid) cssClass += ' grid-' + this.grid;
+                if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
                 if (this.striped) cssClass += ' striped';
                 if (this.hover) cssClass += ' hover';
                 return cssClass;
@@ -1401,8 +1411,16 @@
                 this.columns.push(column);
             },
             columnClass(column) {
+                if (utils.isDefined(column.dir))
+                    return {
+                        sorted: !!column.dir
+                    };
+                else
+                    return undefined;
+            },
+            columnStyle(column) {
                 return {
-                    sorted: !!column.dir
+                    width: utils.isDefined(column.width) ? column.width : undefined
                 };
             },
             queryChange()
@@ -1701,7 +1719,8 @@ TODO: may be icon for confirm ????
         data() {
             return {
                 __init__: true,
-                __baseUrl__: ''
+                __baseUrl__: '',
+                __requestsCount__: 0
             };
         },
 
@@ -1717,6 +1736,9 @@ TODO: may be icon for confirm ????
             },
             $isPristine() {
                 return !this.$data.$dirty;
+            },
+            $isLoading() {
+                return this.$data.__requestsCount__ > 0;
             }
         },
         watch: {
@@ -1807,11 +1829,19 @@ TODO: may be icon for confirm ????
                 store.$emit('requery');
             },
 
+            $remove(item, confirm) {
+                if (!confirm)
+                    item.$remove();
+                else
+                    this.$confirm(confirm).then(() => item.$remove());
+            },
+
             $navigate(url, data) {
                 // TODO: make correct URL
                 let urlToNavigate = '/' + url + '/' + data;
                 route.navigate(urlToNavigate);
             },
+
             $confirm(prms) {
                 if (utils.isString(prms))
                     prms = { message: prms };
@@ -1819,6 +1849,7 @@ TODO: may be icon for confirm ????
                 store.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
+
             $alert(msg, title) {
                 let dlgData = {
                     promise: null, data: {
@@ -1934,18 +1965,30 @@ TODO: may be icon for confirm ????
                     }
                 });
                 return false;
+            },
+            __beginRequest() {
+                this.$data.__requestsCount__ += 1;
+            },
+            __endRequest() {
+                this.$data.__requestsCount__ -= 1;
             }
         },
         created() {
             store.$emit('registerData', this);
             if (!this.inDialog)
                 this.$data._query_ = route.query;
+
             this.$on('queryChange', function (val) {
                 this.$data._query_ = val;
             });
+
+            store.$on('beginRequest', this.__beginRequest);
+            store.$on('endRequest', this.__endRequest);
         },
         destroyed() {
             store.$emit('registerData', null);
+            store.$off('beginRequest', this.__beginRequest);
+            store.$off('endRequest', this.__endRequest);
         }
     });
     
@@ -1963,7 +2006,6 @@ TODO: may be icon for confirm ????
     const route = require('route');
     const store = require('store');
     const modal = component('modal');
-
 
     function findMenu(menu, func) {
         if (!menu)
@@ -1983,13 +2025,23 @@ TODO: may be icon for confirm ????
 
     function activateMenu(activeItem, loc) {
         let seg2 = loc.segment(2);
-        if (!seg2) {
+
+        function activateFirst()
+        {
             let url = activeItem.url;
             let fa = findMenu(activeItem.menu, (mi) => mi.url && !mi.menu);
             if (fa) {
                 url = '/' + url + '/' + fa.url;
-                route.setState(url, fa.title);
+                route.setState(url, fa.title, fa.query);
             }
+        }
+
+        if (!seg2) {
+            activateFirst();
+        }
+        else if (loc.routeLength() !== 4) {
+            let fa = findMenu(activeItem.menu, (mi) => mi.url == seg2);
+            if (!fa) activateFirst();
         }
     }
 
@@ -2015,6 +2067,7 @@ TODO: may be icon for confirm ????
         },
 
         created: function () {
+            // nav-bar
             var me = this;
             me.__dataStack__ = [];
 
@@ -2052,14 +2105,22 @@ TODO: may be icon for confirm ????
 
             let loc = findCurrent();
 
-            if (me.activeItem && me.activeItem.menu)
+            if (me.activeItem) 
             {
-                activateMenu(me.activeItem, loc);
+                if (me.activeItem.menu) {
+                    activateMenu(me.activeItem, loc);
+                }
+                else {
+                    // unknoun menu element
+                    this.navigate(me.activeItem);
+                }
             }
 
             if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
                 activateMenu(me.activeItem, loc);
+                if (!me.activeItem.menu)
+                    this.navigate(me.activeItem);
             }
 
 
@@ -2176,6 +2237,7 @@ TODO: may be icon for confirm ????
             }
         },
         created: function () {
+            // side bar
             var me = this;
             route.$on('route', function (loc) {
                 let s1 = loc.segment(1);
@@ -2217,6 +2279,7 @@ TODO: may be icon for confirm ????
             };
         },
         created() {
+            // content view
             var me = this;
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
@@ -2297,6 +2360,7 @@ TODO: may be icon for confirm ????
             }
         },
         created() {
+            // shell
             let me = this;
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
@@ -2313,9 +2377,13 @@ TODO: may be icon for confirm ????
                 me.modals.splice(0, me.modals.length);
             });
             store.$on('beginRequest', function () {
+                if (me.hasModals)
+                    return;
                 me.requestsCount += 1;
             });
             store.$on('endRequest', function () {
+                if (me.hasModals)
+                    return;
                 me.requestsCount -= 1;
             });
             store.$on('modal', function (modal, prms) {

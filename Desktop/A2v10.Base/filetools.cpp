@@ -8,6 +8,13 @@
 #endif
 
 
+class CFileToolsImpl
+{
+public:
+	static bool LoadTextFromFile(int offset, CFile& file, CString& text, UINT codePage = CP_UTF8);
+	static void SaveTextToFile(CFile& file, LPCWSTR szText, UINT codePage = CP_UTF8);
+};
+
 // static 
 void CFileTools::SplitPath(LPCWSTR szPath, CFilePath& path)
 {
@@ -57,13 +64,13 @@ bool CFileTools::LoadFile(LPCWSTR szFileName, CString& text)
 			file.Read(&r3, 1);
 			if (r3 == 0xBF) {
 				// UTF 8 file with signature
-				LoadTextFromFile(file, text, CP_UTF8);
+				CFileToolsImpl::LoadTextFromFile(3, file, text, CP_UTF8);
 			}
 		}
 		else
 		{
 			file.SeekToBegin();
-			LoadTextFromFile(file, text);
+			CFileToolsImpl::LoadTextFromFile(0, file, text);
 		}
 	}
 	catch (CFileException* e) 
@@ -75,11 +82,36 @@ bool CFileTools::LoadFile(LPCWSTR szFileName, CString& text)
 	return true;
 }
 
-bool CFileTools::LoadTextFromFile(CFile& file, CString& text, UINT codePage /*= CP_UTF8*/)
+// static 
+bool CFileTools::SaveFileUTF8(LPCWSTR szFileName, LPCWSTR szText)
+{
+	if (!szFileName || !*szFileName)
+		return false;
+	CFile file;
+	CFileException e;
+	CFileStatus fs;
+
+	try {
+		if (!file.Open(szFileName, CFile::modeWrite | CFile::modeCreate | CFile::shareDenyWrite, &e)) {
+			e.ReportError();
+			return false;
+		}
+		CFileToolsImpl::SaveTextToFile(file, szText, CP_UTF8);
+		file.Close();
+	}
+	catch (CFileException* e) {
+		e->ReportError();
+		e->Delete();
+		return false;
+	}
+	return true;
+}
+
+bool CFileToolsImpl::LoadTextFromFile(int offset, CFile& file, CString& text, UINT codePage /*= CP_UTF8*/)
 {
 	text.Empty();
-	int nLen = (int) file.GetLength();
-	if (nLen == 0)
+	int nLen = (int) file.GetLength() - offset;
+	if (nLen <= 0)
 		return true; // empty file
 	LPVOID hText = ::LocalAlloc(LMEM_MOVEABLE, static_cast<UINT>(::ATL::AtlMultiplyThrow(static_cast<UINT>(nLen + 1), static_cast<UINT>(sizeof(WCHAR)))));
 	if (hText == NULL)
@@ -88,8 +120,10 @@ bool CFileTools::LoadTextFromFile(CFile& file, CString& text, UINT codePage /*= 
 	file.Read(lpszText, nLen);
 	lpszText[nLen] = '\0'; // ANSI!
 	LPWSTR szUniText = text.GetBuffer(nLen);
-	szUniText[0] = L'\0'; // UNICODE
+	szUniText[0] = L'\0'; // wide
 	int ret = ::MultiByteToWideChar(codePage, 0, lpszText, nLen, szUniText, nLen);
+	szUniText[ret] = L'\0'; // wide
+	text.ReleaseBufferSetLength(ret);
 	::LocalUnlock(hText);
 	::LocalFree(hText);
 	if (ret == 0) {
@@ -98,6 +132,20 @@ bool CFileTools::LoadTextFromFile(CFile& file, CString& text, UINT codePage /*= 
 		text.ReleaseBufferSetLength(0);
 		return false;
 	}
-	text.ReleaseBufferSetLength(ret);
 	return true;
+}
+
+// static 
+void CFileToolsImpl::SaveTextToFile(CFile& file, LPCWSTR szText, UINT codePage /*= CP_UTF8*/)
+{
+	// header
+	if (codePage == CP_UTF8) {
+		BYTE hdr[3] = {0xEF, 0xBB, 0xBF};
+		file.Write(hdr, 3);
+	}
+
+	USES_CONVERSION;
+	LPCSTR szUtf8 = W2A_CP(szText, CP_UTF8);
+	int len = strlen(szUtf8);
+	file.Write(szUtf8, len);
 }

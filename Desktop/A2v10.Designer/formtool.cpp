@@ -201,7 +201,7 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 			CRect nr(tracker.m_rect);
 			nr.NormalizeRect();
 			pView->ClientToDoc(nr);
-			//pDoc->m_undo.DoAction(CFormUndo::_change, pItem);
+			pDoc->m_undo.DoAction(CFormUndo::_change, pItem);
 			pItem->MoveTo(nr, pView, hit);
 			return TRUE;
 		}

@@ -15,6 +15,7 @@ namespace A2v10.Xaml
             var button = new TagBuilder("button", "btn");
             AddAttributes(button);
             button.RenderStart(context);
+            RenderIcon(context, Icon);
             RenderContent(context);
             button.RenderEnd(context);
         }

@@ -35,11 +35,11 @@
            data-grid-column:mark - подсветка ячейки
     -->
     <data-grid :items-source="Customers" :striped="true" :pager="true" filter-fields="filter,state"
-               :border="true" :hover="true" grid="vert" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
+               :border="true" :hover="true" grid="vertical" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
         <data-grid-column header="index" content="$index" align="right"></data-grid-column>
-        <data-grid-column header="Id" content="Id" align="right"></data-grid-column>
+        <data-grid-column header="Id" content="Id" width="0%" align="right"></data-grid-column>
         <data-grid-column header="Name" content="Name"></data-grid-column>
-        <data-grid-column header="Amount" content="Amount" align="right" mark="$cellMark"></data-grid-column>
+        <data-grid-column header="AmountW" width="0%" content="Amount" align="right" mark="$cellMark"></data-grid-column>
         <data-grid-column header="Name (edit)" content="Name" :editable="true"></data-grid-column>
         <data-grid-column header="Sum" content="$Sum" align="right" :sort="false"></data-grid-column>
         <data-grid-column id="cmd"></data-grid-column>
@@ -51,8 +51,8 @@
             <button @click.stop.prevent="$navigate('catalog/suppliers/edit', cell.row.Id)">
                 <i class="ico-file"></i>
             </button>
-            <button @click.stop.prevent="cell.row.$remove()">
-                <i class="ico-copy"></i>
+            <button @click.stop.prevent="$remove(cell.row, 'are you sure?')">
+                <i class="ico-trash"></i>
             </button>
             <button @click.stop.prevent="$exec('inc', cell.row, 5)">
                 <i class="ico-folder"></i>

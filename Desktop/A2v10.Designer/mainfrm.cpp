@@ -48,6 +48,12 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2MDIFrameWnd)
 	ON_COMMAND(ID_VIEW_CONSOLE, OnViewConsole)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CONSOLE, OnEnableAlways)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_LNCOL, OnUpdateLineNo)
+	ON_COMMAND(ID_FILE_SAVE_SOLUTION, OnSolutionSave)
+	ON_UPDATE_COMMAND_UI(ID_FILE_SAVE_SOLUTION, OnUpdateSolutionOpen)
+	ON_COMMAND(ID_FILE_OPEN_SOLUTION, OnSolutionLoad)
+	ON_COMMAND(ID_FILE_NEW_SOLUTION, OnSolutionNew)
+	ON_COMMAND(ID_FILE_CLOSE_SOLUTION, OnSolutionClose)
+	ON_UPDATE_COMMAND_UI(ID_FILE_CLOSE_SOLUTION, OnUpdateSolutionOpen)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -505,4 +511,34 @@ void CMainFrame::OnUpdateLineNo(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(TRUE);
 	pCmdUI->SetText(L"");
+}
+
+// afx_msg
+void CMainFrame::OnSolutionSave()
+{
+	m_wndSolution.DoSave();
+}
+
+// afx_msg
+void CMainFrame::OnSolutionLoad()
+{
+	m_wndSolution.DoLoad();
+}
+
+// afx_msg
+void CMainFrame::OnSolutionNew()
+{
+	m_wndSolution.DoCreate();
+}
+
+// afx_msg
+void CMainFrame::OnSolutionClose()
+{
+	m_wndSolution.DoClose();
+}
+
+// afx_msg 
+void CMainFrame::OnUpdateSolutionOpen(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(m_wndSolution.IsLoaded());
 }

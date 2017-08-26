@@ -9,10 +9,20 @@ namespace A2v10.Xaml
         Center
     }
 
+    public enum GridLinesVisibility {
+        None,
+        Horizontal,
+        Vertical,
+        Both
+    }
+
     public enum Icon
     {
         NoIcon = 0,
+        Alert,
+        Approve,
         ShevronDown,
+        Calendar,
         ChevronLeft,
         ChevronRight,
         ChevronUp,
@@ -27,14 +37,19 @@ namespace A2v10.Xaml
         Dashboard,
         Database,
         Eye,
+        Flag,
+        Disapprove,
         Dot,
+        Download,
         File,
         Folder,
+        History,
         Refresh,
         Reload,
         Save,
         Search,
         Trash,
+        Upload,
         User,
         Users
     }

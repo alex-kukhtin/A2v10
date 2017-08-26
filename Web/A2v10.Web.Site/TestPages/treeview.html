@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
-    <link href="/css/font-awesome.min.css?v=4.7.0" rel="stylesheet" />
     <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -38,13 +37,13 @@
                 {
                     name: "User", icon: "user", menu: [
                         { name: "Sub User 1", icon:"folder" },
-                        { name: "Sub User 2", icon:"folder-open" }
+                        { name: "Sub User 2", icon:"flag" }
                     ]
                 },
                 {
-                    name: "Tasks", icon: "tasks", menu: [
+                    name: "Tasks", icon: "upload", menu: [
                         {name: "Sub Task 1", icon:"folder" },
-                        {name: "Sub Task 2 with long line and wrapping text", icon:"folder-o", menu: [
+                        {name: "Sub Task 2 with long line and wrapping text", icon:"file", menu: [
                                 { name: "Sub Sub Task 2.1 with long line and wrapping text", icon:"users" },
                                 { name: "Sub Sub Task 2.2", icon:"book" }
                             ]
@@ -69,7 +68,7 @@
                         return item === this.activeItem;
                     },
                     addElem: function () {
-                        this.items.push({name:"from script", icon:"bug"})
+                        this.items.push({name:"from script", icon:"dot"})
                     }
                 }
             });

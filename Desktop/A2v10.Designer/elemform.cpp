@@ -3,16 +3,14 @@
 #include "formitem.h"
 #include "elemform.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-CFormElement::CFormElement(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode)
-	: CFormItem(pDoc, pNode)
-{
-	ConstructObject();
-	Xml2Properties();
-}
+CItemRegister form(L"Form", RUNTIME_CLASS(CFormElement));
+
+IMPLEMENT_DYNCREATE(CFormElement, CFormItem)
 
 void CFormElement::Xml2Properties()
 {
@@ -60,8 +58,40 @@ void CFormElement::Properties2Xml()
 // virtual 
 void CFormElement::Draw(const RENDER_INFO& ri)
 {
-	CBrushSDC brush(ri.pDC, RGB(240, 240, 240));
+	CBrushSDC brush(ri.pDC, RGB(240, 255, 240));
 	ri.pDC->Rectangle(m_position);
 	ri.pDC->DrawText(m_title, m_position, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+	DrawChildren(ri);
 }
+
+
+// virtual
+void CFormElement::OnJsPropertyChange(LPCWSTR szPropName)
+{
+	CRect newpos = m_position;
+	if (wcscmp(szPropName, L"Width") == 0) 
+	{
+		double w = m_jsValue.GetProperty(L"Width").ToDouble();
+		newpos.right = newpos.left + (int) (w * 75.0);
+	}
+	else if (wcscmp(szPropName, L"Height") == 0) 
+	{
+		double h = m_jsValue.GetProperty(L"Height").ToDouble();
+		newpos.bottom = newpos.top + (int)(h * 75.0);
+	}
+	MoveTo(newpos);
+}
+
+// virtual 
+CFormItem& CFormElement::operator=(const CFormItem& other)
+{
+	CFormItem::operator=(other);
+	const CFormElement& elem = (CFormElement&)other;
+	m_title = elem.m_title;
+	if (m_jsValue.IsValid()) {
+		m_jsValue.SetProperty(L"Width", m_position.Width() / 75.0);
+		m_jsValue.SetProperty(L"Heigth", m_position.Height() / 75.0);
+	}
+	return *this;
+};
 

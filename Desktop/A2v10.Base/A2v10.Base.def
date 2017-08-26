@@ -69,12 +69,14 @@ EXPORTS
 ?SetDebugStepType@JavaScriptRuntime@@SAXW4_DebugStepType@@@Z
 ??0JavaScriptValue@@QAE@ABQAX@Z
 ?FromString@JavaScriptPropertyId@@SA?AU1@PB_W@Z
+??0JavaScriptPropertyId@@QAE@PAX@Z
 ??0JavaScriptValue@@QAE@XZ
 ?Invalid@JavaScriptValue@@SA?AU1@XZ
 ?GetProperty@JavaScriptValue@@QAE?AU1@H@Z
 ?GetProperty@JavaScriptValue@@QAE?AU1@PB_W@Z
 ?CallFunction@JavaScriptValue@@QAE?AU1@U1@0@Z
 ?SetProperty@JavaScriptValue@@QAEAAU1@PB_WU1@_N@Z
+?GetIndexedProperty@JavaScriptValue@@QAE?AU1@H@Z
 ?GetProperty@JavaScriptValue@@QAE?AU1@UJavaScriptPropertyId@@@Z
 ??8JavaScriptValue@@QAE_NABU0@@Z
 ?ValueType@JavaScriptValue@@QAE?AW4_JsValueType@@XZ
@@ -136,6 +138,7 @@ EXPORTS
 ??0CXmlError@@QAE@W4XMLError@tinyxml2@@@Z
 ?Name@XMLAttribute@tinyxml2@@QBEPB_WXZ
 ?QueryDoubleValue@XMLAttribute@tinyxml2@@QBE?AW4XMLError@2@PAN@Z
+?QueryIntValue@XMLAttribute@tinyxml2@@QBE?AW4XMLError@2@PAH@Z
 ?Value@XMLAttribute@tinyxml2@@QBEPB_WXZ
 ?NextSiblingElement@XMLNode@tinyxml2@@QBEPBVXMLElement@2@PB_W@Z
 ?DeleteAttribute@XMLElement@tinyxml2@@QAEXPB_W@Z
@@ -154,7 +157,9 @@ EXPORTS
 ?Double2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@N@Z
 ?String2Color@CConvert@@SAKPB_WK@Z
 ;
-?OnPropertyChanged@CJsElement@@UAEXPB_W@Z
-;
 ?SplitPath@CFileTools@@SAXPB_WAAUCFilePath@@@Z
+?LoadFile@CFileTools@@SA_NPB_WAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
+?SaveFileUTF8@CFileTools@@SA_NPB_W0@Z
+
+
 

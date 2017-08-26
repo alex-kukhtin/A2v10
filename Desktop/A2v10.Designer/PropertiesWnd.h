@@ -20,17 +20,19 @@ public:
 
 class CA2PropertyGridCtrl : public CMFCPropertyGridCtrl
 {
-	CJsElement* m_pJsValue;
-	CJsElement* m_pJsValueParent;
-
+	JsValueRef m_jsValueRef;
+	JsValueRef m_jsValueParentRef;
+	HWND m_hWndTarget;
+	void* m_pTargetElem;
 public:
 	CA2PropertyGridCtrl();
 
 	virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const override;
 
-	void FillProperties(CJsElement* val, CJsElement* parent);
+	void FillProperties(JsValueRef val, JsValueRef parent);
 	void FillPropertyValues();
 	void Clear();
+	void SetTarget(HWND hWndTarget = nullptr, void* pElem = nullptr);
 	void SetProperty(LPCWSTR szPropName, JavaScriptValue val);
 
 protected:

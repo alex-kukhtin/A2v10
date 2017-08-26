@@ -41,6 +41,7 @@
 #define IDR_PROPERTIES                  234
 #define IDR_PRINTPREVIEW                236
 #define IDR_WND_CONSOLE					238
+#define IDR_SOLUTION					240
 #define IDS_BUILD_TAB                   300
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
@@ -53,7 +54,9 @@
 #define ID_WND_CONSOLE					505
 #define IDM_POPUP_MENU                  600
 #define IDM_POPUP_FORM					601
+#define IDM_POPUP_SOLUTION				602
 #define IDD_OPTION_GENERAL              800
+#define IDD_SOLUTION_CREATE				802
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
 #define IDS_TOOLBAR_STANDARD			12002
@@ -81,7 +84,9 @@
 #define IDC_TEXT5						14020
 #define ID_FILE_OPEN_SOLUTION           32000
 #define ID_FILE_CLOSE_SOLUTION          32001
-#define ID_FILE_SAVE_ALL                32002
+#define ID_FILE_SAVE_SOLUTION			32002
+#define ID_FILE_NEW_SOLUTION			32003
+#define ID_FILE_SAVE_ALL				32004
 #define ID_EDIT_FIND_IN_FILES           32100
 #define ID_VIEW_PROPERTIES              32200
 #define ID_VIEW_TOOLBOX                 32201
@@ -114,6 +119,10 @@
 #define ID_WINDOW_CLOSE_ALL             32601
 #define ID_PROP_ALPHABETICAL            32700
 #define ID_PROP_CATEGORIZED             32701
+#define ID_SOLUTION_ADD_TABLE			32702
+#define ID_SOLUTION_ADD_VIEW			32703
+#define ID_SOLUTION_ADD_COLUMN			32704
+#define ID_SOLUTION_ADD					32729
 #define ID_INDICATOR_LNCOL				32800
 #define IDP_OLE_INIT_FAILED             51000
 #define IDP_RICH_INIT_FAILED            51001

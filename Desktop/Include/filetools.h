@@ -19,8 +19,8 @@ private:
 	~CFileTools(void);
 public:
 	static void SplitPath(LPCWSTR szPath, CFilePath& path);
-	static bool LoadTextFromFile(CFile& file, CString& text, UINT codePage = CP_UTF8);
 	static bool LoadFile(LPCWSTR szFileName, CString& text);
+	static bool SaveFileUTF8(LPCWSTR szFileName, LPCWSTR szText);
 };
 
 #undef AFX_DATA

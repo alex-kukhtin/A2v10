@@ -18,6 +18,7 @@ public:
 	static void LoadLibrary();
 	static void LoadModuleContext();
 	static void SetMainWnd(HWND hWnd);
+	static void OpenSolution(LPCWSTR szFileName);
 };
 
 #undef AFX_DATA

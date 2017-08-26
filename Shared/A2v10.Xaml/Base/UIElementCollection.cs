@@ -33,7 +33,7 @@ namespace A2v10.Xaml
             if (value is String)
             {
                 var x = new UIElementCollection();
-                throw new NotImplementedException();
+                throw new NotImplementedException("Create UIElementCollection from String");
                 /*
                 var text = new Text();
                 text.Content = value.ToString();

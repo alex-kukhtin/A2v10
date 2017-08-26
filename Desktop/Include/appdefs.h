@@ -81,8 +81,14 @@ struct FILL_PROPS_INFO
 {
 	DWORD_PTR elem;
 	DWORD_PTR parent;
+	HWND wndTarget;
+	void* elemTarget;
 	FILL_PROPS_INFO()
-		: elem(0), parent(0) {}
+		: elem(0), parent(0), wndTarget(nullptr), elemTarget(nullptr)
+	{}
+	void Clear() {
+		*this = FILL_PROPS_INFO();
+	}
 };
 
 #define WM_APP_A2 (WM_APP + 80)
@@ -100,8 +106,9 @@ struct FILL_PROPS_INFO
 #define IDLE_UPDATE_MDITABS 0x0001
 
 #define WMI_NOTIFY		(WM_APP_A2 + 3)
-#define WMIN_OPEN_SOLUTION		123
+#define WMIN_SOLUTION_OPENED	123
 #define WMIN_SOLUTION_CLOSED	129
+#define WMIN_SOLUTION_SAVED		135
 
 #define WMI_FILL_TOOLBOX (WM_APP_A2 + 4)
 #define WMI_FILL_TOOLBOX_WPARAM 991274
@@ -110,7 +117,7 @@ struct FILL_PROPS_INFO
 
 struct PROPERTY_CHANGED_INFO {
 	LPCWSTR szPropName;
-	CCmdTarget* pSource;
+	void* pSource;
 	void* pJsRef;
 	PROPERTY_CHANGED_INFO()
 		: szPropName(nullptr), pSource(nullptr), pJsRef(nullptr) {}

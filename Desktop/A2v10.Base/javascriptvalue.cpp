@@ -193,6 +193,13 @@ JavaScriptValue& JavaScriptValue::SetIndexedProperty(int iIndex, JavaScriptValue
 	return *this;
 }
 
+JavaScriptValue JavaScriptValue::GetIndexedProperty(int iIndex)
+{
+	if (ValueType() != JsValueType::JsArray)
+		throw JavaScriptUsageException(JsErrorCode::JsErrorInvalidArgument, L"Invalid argument (Indexed propery).");
+	return GetProperty(iIndex);
+}
+
 JavaScriptValue& JavaScriptValue::Push(JavaScriptValue value)
 {
 	if (ValueType() != JsValueType::JsArray)

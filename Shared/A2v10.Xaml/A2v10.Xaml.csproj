@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Base.cs" />
     <Compile Include="Base\Bind.cs" />
     <Compile Include="Base\Enums.cs" />
     <Compile Include="Base\RenderContext.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Controls\Repeater.cs" />
     <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Controls\ValuedControl.cs" />
+    <Compile Include="Layouts\Block.cs" />
     <Compile Include="Layouts\RootContainer.cs" />
     <Compile Include="Layouts\Container.cs" />
     <Compile Include="Layouts\Dialog.cs" />

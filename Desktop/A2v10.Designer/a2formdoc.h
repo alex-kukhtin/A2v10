@@ -4,6 +4,8 @@ struct RENDER_INFO;
 class CFormItem;
 class CXamlEditView;
 
+#include "formundo.h"
+
 class CA2FormDocument : public CDocument
 {
 protected: // create from serialization only
@@ -15,6 +17,8 @@ protected: // create from serialization only
 	bool m_bXmlModified;
 	bool m_bTextModified;
 	bool m_bPropertyChanged;
+
+	CFormUndo m_undo;
 public:
 	virtual ~CA2FormDocument();
 	void ClearRoot();
@@ -38,6 +42,8 @@ public:
 	void SetModifiedXml(bool bModified = true);
 	void SetModifiedText(bool bModified = true);
 
+	CFormItem* UndoChanges(CFormItem* pClone);
+
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -55,6 +61,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+	afx_msg void OnUpdateEditUndo(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditRedo(CCmdUI* pCmdUI);
 #ifdef SHARED_HANDLERS
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);

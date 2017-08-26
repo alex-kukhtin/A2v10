@@ -14,7 +14,7 @@ TODO:
 
     const menu = [
         {
-            title: "Начало", url: "home", menu: [
+            title: "Начало", url: "home", menu234: [
                 {
                     title: 'xxxx', icon: 'save', menu: [
                         {title: 'yyyy', url: 'subhome'}

@@ -154,7 +154,6 @@
             savedMenu: Location.getSavedMenu,
 
             navigateMenu(url, query, title) {
-                //console.warn('navigate menu:' + url);
                 let srch = getSearchFromStorage(url);
                 if (!srch)
                     url += query ? '?' + query : '';
@@ -162,6 +161,9 @@
                     url += srch;
                 if (query)
                     Vue.set(this, 'search', parseQueryString(query));
+                else if (srch) {
+                    Vue.set(this, 'search', parseQueryString(srch.substring(1)));
+                }
                 console.info('navigate to:' + url);
                 this.setTitle(title);
                 window.history.pushState(null, null, url);
@@ -191,8 +193,14 @@
                 if (title)
                     document.title = title;
             },
-            setState(url, title) {
+            setState(url, title, query) {
                 this.setTitle(title);
+                if (query)
+                    url += '?' + query;
+                else {
+                    let search = getSearchFromStorage(url);
+                    url += search || '';
+                }
                 window.history.replaceState(null, null, url);
             },
             updateSearch() {

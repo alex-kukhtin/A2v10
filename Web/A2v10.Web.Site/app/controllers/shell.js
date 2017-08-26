@@ -10,7 +10,6 @@
     const store = require('store');
     const modal = component('modal');
 
-
     function findMenu(menu, func) {
         if (!menu)
             return null;
@@ -29,13 +28,23 @@
 
     function activateMenu(activeItem, loc) {
         let seg2 = loc.segment(2);
-        if (!seg2) {
+
+        function activateFirst()
+        {
             let url = activeItem.url;
             let fa = findMenu(activeItem.menu, (mi) => mi.url && !mi.menu);
             if (fa) {
                 url = '/' + url + '/' + fa.url;
-                route.setState(url, fa.title);
+                route.setState(url, fa.title, fa.query);
             }
+        }
+
+        if (!seg2) {
+            activateFirst();
+        }
+        else if (loc.routeLength() !== 4) {
+            let fa = findMenu(activeItem.menu, (mi) => mi.url == seg2);
+            if (!fa) activateFirst();
         }
     }
 
@@ -61,6 +70,7 @@
         },
 
         created: function () {
+            // nav-bar
             var me = this;
             me.__dataStack__ = [];
 
@@ -98,14 +108,22 @@
 
             let loc = findCurrent();
 
-            if (me.activeItem && me.activeItem.menu)
+            if (me.activeItem) 
             {
-                activateMenu(me.activeItem, loc);
+                if (me.activeItem.menu) {
+                    activateMenu(me.activeItem, loc);
+                }
+                else {
+                    // unknoun menu element
+                    this.navigate(me.activeItem);
+                }
             }
 
             if (!me.activeItem && !this.isAppMode) {
                 me.activeItem = me.menu[0];
                 activateMenu(me.activeItem, loc);
+                if (!me.activeItem.menu)
+                    this.navigate(me.activeItem);
             }
 
 
@@ -222,6 +240,7 @@
             }
         },
         created: function () {
+            // side bar
             var me = this;
             route.$on('route', function (loc) {
                 let s1 = loc.segment(1);
@@ -263,6 +282,7 @@
             };
         },
         created() {
+            // content view
             var me = this;
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
@@ -343,6 +363,7 @@
             }
         },
         created() {
+            // shell
             let me = this;
             route.$on('route', function (loc) {
                 let len = loc.routeLength();
@@ -359,9 +380,13 @@
                 me.modals.splice(0, me.modals.length);
             });
             store.$on('beginRequest', function () {
+                if (me.hasModals)
+                    return;
                 me.requestsCount += 1;
             });
             store.$on('endRequest', function () {
+                if (me.hasModals)
+                    return;
                 me.requestsCount -= 1;
             });
             store.$on('modal', function (modal, prms) {

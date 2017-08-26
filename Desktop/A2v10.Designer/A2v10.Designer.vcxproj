@@ -197,6 +197,7 @@
     <ClInclude Include="commandwnd.h" />
     <ClInclude Include="consolewnd.h" />
     <ClInclude Include="elemform.h" />
+    <ClInclude Include="formundo.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="outlinewnd.h" />
     <ClInclude Include="formitem.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="solutionwnd.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="textbox.h" />
     <ClInclude Include="ViewTree.h" />
     <ClInclude Include="xamlview.h" />
   </ItemGroup>
@@ -224,6 +226,7 @@
     <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="consolewnd.cpp" />
     <ClCompile Include="elemform.cpp" />
+    <ClCompile Include="formundo.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="outlinewnd.cpp" />
     <ClCompile Include="formitem.cpp" />
@@ -242,6 +245,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="textbox.cpp" />
     <ClCompile Include="ViewTree.cpp" />
     <ClCompile Include="xamlview.cpp" />
   </ItemGroup>

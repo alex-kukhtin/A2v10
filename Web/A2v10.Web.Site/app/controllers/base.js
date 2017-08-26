@@ -12,7 +12,8 @@
         data() {
             return {
                 __init__: true,
-                __baseUrl__: ''
+                __baseUrl__: '',
+                __requestsCount__: 0
             };
         },
 
@@ -28,6 +29,9 @@
             },
             $isPristine() {
                 return !this.$data.$dirty;
+            },
+            $isLoading() {
+                return this.$data.__requestsCount__ > 0;
             }
         },
         watch: {
@@ -118,11 +122,19 @@
                 store.$emit('requery');
             },
 
+            $remove(item, confirm) {
+                if (!confirm)
+                    item.$remove();
+                else
+                    this.$confirm(confirm).then(() => item.$remove());
+            },
+
             $navigate(url, data) {
                 // TODO: make correct URL
                 let urlToNavigate = '/' + url + '/' + data;
                 route.navigate(urlToNavigate);
             },
+
             $confirm(prms) {
                 if (utils.isString(prms))
                     prms = { message: prms };
@@ -130,6 +142,7 @@
                 store.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
+
             $alert(msg, title) {
                 let dlgData = {
                     promise: null, data: {
@@ -245,18 +258,30 @@
                     }
                 });
                 return false;
+            },
+            __beginRequest() {
+                this.$data.__requestsCount__ += 1;
+            },
+            __endRequest() {
+                this.$data.__requestsCount__ -= 1;
             }
         },
         created() {
             store.$emit('registerData', this);
             if (!this.inDialog)
                 this.$data._query_ = route.query;
+
             this.$on('queryChange', function (val) {
                 this.$data._query_ = val;
             });
+
+            store.$on('beginRequest', this.__beginRequest);
+            store.$on('endRequest', this.__endRequest);
         },
         destroyed() {
             store.$emit('registerData', null);
+            store.$off('beginRequest', this.__beginRequest);
+            store.$off('endRequest', this.__endRequest);
         }
     });
     

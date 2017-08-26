@@ -1,0 +1,30 @@
+﻿
+
+.grid {
+    display: grid;
+    //width: 600px;
+    height: 400px;
+    background-color: aliceblue;
+    padding:10px;
+    grid-gap: 10px;
+    grid-template-columns: 120px auto 1fr;
+    grid-template-rows: auto 50px auto 1fr;
+
+    div {
+        width: 100px;
+        height: 50px;
+        background-color: lightyellow;
+        border: 1px solid orange;
+    }
+
+    div:first-child {
+        background-color:antiquewhite;
+        width:100%;
+        height:70px;
+    }
+
+    button {
+        width:100%;
+        height:30px;
+    }
+}

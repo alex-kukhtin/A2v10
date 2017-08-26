@@ -60,6 +60,7 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnWmiFillToolbox(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnWmiFillProps(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnWmiPropertyChanged(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnTool(UINT nID);
 	afx_msg void OnUpdateTool(CCmdUI* pCmdUI);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -71,6 +72,8 @@ protected:
 	afx_msg void OnEditPaste();
 	afx_msg void OnUpdateSelected(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
+	afx_msg void OnEditUndo();
+	afx_msg void OnEditRedo();
 
 	DECLARE_MESSAGE_MAP()
 };

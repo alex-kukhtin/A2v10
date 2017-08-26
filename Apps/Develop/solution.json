@@ -1,16 +1,37 @@
 ﻿{
-	"name": "demo",
-	"version": "1.0.0",
-	"dependencies": [
-
-	],
-
-	"tables": {
-	},
-
-	"views": {
-	},
-
-	"models": {
-	}
+  "Name": "Demo Solution",
+  "Schema": "demoSchema",
+  "Tables": [
+    {
+      "Name": "Agents",
+      "UiName": "",
+      "Columns": [
+        {
+          "Name": "NewTag",
+          "Unique": true
+        },
+        {
+          "Name": "Amount",
+          "Unique": false
+        }
+      ]
+    }
+  ],
+  "Views": [
+    {
+      "Name": "Customers",
+      "UiName": "",
+      "Columns": []
+    },
+    {
+      "Name": "Suppliers",
+      "UiName": "",
+      "Columns": []
+    },
+    {
+      "Name": "Documents",
+      "UiName": "",
+      "Columns": []
+    }
+  ]
 }

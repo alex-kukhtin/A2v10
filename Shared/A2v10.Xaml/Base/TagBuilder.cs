@@ -115,6 +115,15 @@ namespace A2v10.Xaml
 			return this;
 		}
 
+        public TagBuilder MergeStyles(IEnumerable<StringKeyValuePair> pairs)
+        {
+            if (pairs == null)
+                return this;
+            foreach (var kvp in pairs)
+                MergeStyle(kvp.Key, kvp.Value);
+            return this;
+        }
+
 		public String GetAttribute(String key)
 		{
 			if (_attributes == null)
@@ -174,17 +183,16 @@ namespace A2v10.Xaml
 
 		public TagBuilder Render(RenderContext context, TagRenderMode mode = TagRenderMode.Normal, bool addSpace = false)
 		{
-			_bRender = true;
 			switch (mode)
 			{
 				case TagRenderMode.SelfClosing:
-					context.Writer.Write(CreateStartTag(true));
+					context.Writer.Write(CreateStartTag(context, true));
 					break;
 				case TagRenderMode.StartTag:
-					context.Writer.Write(CreateStartTag(false));
+					context.Writer.Write(CreateStartTag(context, false));
 					break;
 				case TagRenderMode.Normal:
-					context.Writer.Write(CreateStartTag(false));
+					context.Writer.Write(CreateStartTag(context, false));
 					context.Writer.Write(InnerText);
 					context.Writer.Write($"</{TagName}>");
 					break;
@@ -192,9 +200,10 @@ namespace A2v10.Xaml
 					context.Writer.Write($"</{TagName}>");
 					break;
 			}
-			if (addSpace)
+            if (addSpace)
 				context.Writer.WriteLine();
-			return this;
+            _bRender = true;
+            return this;
 		}
 
 		public TagBuilder RenderStart(RenderContext context)
@@ -235,9 +244,10 @@ namespace A2v10.Xaml
 					})) + "\"";
 		}
 
-		String CreateStartTag(bool bSelfClosing)
+		String CreateStartTag(RenderContext context, bool bSelfClosing)
 		{
 			var sb = new StringBuilder(255);
+            this.MergeStyles(context.GetGridAttributes());
 			sb.Append("<")
 				.Append(TagName)
 				.Append(GetCssClasses())

@@ -119,6 +119,7 @@ IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
+IDR_SOLUTION            BITMAP                  "res\\sort.bmp"
 
 IDR_WND_CONSOLE			BITMAP					"res\\consoletoolbar.bmp"
 IDR_DEBUG				BITMAP					"res\\debugtoolbar.bmp"
@@ -195,6 +196,10 @@ BEGIN
     BUTTON      ID_PROP_ALPHABETICAL
 END
 
+IDR_SOLUTION	TOOLBAR 16, 16
+BEGIN
+	BUTTON      ID_SOLUTION_ADD
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -206,11 +211,21 @@ IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
-        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+		POPUP "&New"
+		BEGIN
+			MENUITEM "&Solution...",		ID_FILE_NEW_SOLUTION
+			MENUITEM "&File\tCtrl+N",       ID_FILE_NEW
+		END
+		POPUP "&Open"
+		BEGIN
+			MENUITEM "&Solution...",		ID_FILE_OPEN_SOLUTION
+			MENUITEM "&File...\tCtrl+O",	ID_FILE_OPEN
+		END
         MENUITEM "&Close",                      ID_FILE_CLOSE
-        MENUITEM SEPARATOR
+		MENUITEM "Close Solu&tion",				ID_FILE_CLOSE_SOLUTION
+		MENUITEM SEPARATOR
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+		MENUITEM "Save &Solution",				ID_FILE_SAVE_SOLUTION
         MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
         MENUITEM "Save A&ll...\tCtrl+Shift+S",  ID_FILE_SAVE_ALL
         MENUITEM SEPARATOR
@@ -298,6 +313,16 @@ BEGIN
         MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
     END
+END
+
+IDM_POPUP_SOLUTION MENU
+BEGIN
+	POPUP "_Add_"
+	BEGIN
+		MENUITEM "Table", ID_SOLUTION_ADD_TABLE
+		MENUITEM "View",  ID_SOLUTION_ADD_VIEW
+		MENUITEM "Column", ID_SOLUTION_ADD_COLUMN
+	END
 END
 
 IDR_POPUP_SORT MENU

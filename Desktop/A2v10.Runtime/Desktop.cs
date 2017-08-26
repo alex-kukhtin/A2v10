@@ -40,7 +40,8 @@ namespace A2v10RuntimeNet
 			String[] app =
 			{
 				Resources.Application,
-				Resources.Form_form
+				Resources.Form_form,
+                Resources.Solution
 			};
 			ParseLibraryElements(app);
 		}
@@ -86,5 +87,17 @@ namespace A2v10RuntimeNet
 				lib.CallFunction(JavaScriptValue.Undefined);
 			}
 		}
+
+        public static void OpenSolution(String fileName)
+        {
+            try
+            {
+                throw new Exception($"opens file {fileName} (from C#)");
+            }
+            catch (Exception ex)
+            {
+                SetLastError(ex);
+            }
+        }
 	}
 }
