@@ -1,10 +1,13 @@
 ﻿/*20170824-7019*/
 /*validators.js*/
-(function () {
+app.modules['std:validators'] = function() {
 
     const utils = require('utils');
-
     const ERROR = 'error';
+
+	return {
+		validate: validateItem
+	};
 
     function validateStd(rule, val) {
         switch (rule) {
@@ -51,10 +54,6 @@
             return null;
         return err;
     }
+};
 
-
-    app.modules['validators'] = {
-        validate: validateItem
-    };
-})();
 

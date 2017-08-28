@@ -13,10 +13,11 @@
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
     const utils = require('utils');
+	const store = component('std:store');
 
     const dataGridTemplate = `
 <div class="data-grid-container">
-    <slot name="toolbar" />
+    <slot name="toolbar" :query="dgQuery" />
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -32,7 +33,7 @@
             <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
         </tbody>
     </table>
-	<slot name="pager"></slot>
+    <slot name="pager" :query="dgQuery" :sort="sort"/>
 </div>
 `;
 
@@ -71,8 +72,16 @@
             this.$parent.$addColumn(this);
         },
 		computed: {
+			query: () => store.getters.query,
             dir() {
-				return this.$parent.sortDir(this.content);
+                //var q = this.$parent.dgQuery;
+				var q = this.query;
+                if (!q)
+                    return '';
+                if (q.order === this.content) {
+                    return (q.dir || '').toLowerCase();
+                }
+                return null;
             },
             isSortable() {
                 if (!this.content)
@@ -82,12 +91,8 @@
             isUpdateUrl() {
                 return !this.$root.inDialog;
             },
-			template() {
-				return this.id ? this.$parent.$scopedSlots[this.id] : null;
-			},
-			classAlign() {
-				return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
-			},
+            template: () => this.id ? this.$parent.$scopedSlots[this.id] : null,
+			classAlign: () => this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '',
             cssClass() {
                 let cssClass = this.classAlign;
                 if (this.isSortable) {
@@ -102,7 +107,13 @@
             doSort() {
                 if (!this.isSortable)
 					return;
-				this.$parent.doSort(this.content);
+				let q = this.query;
+                let qdir = (q.dir || 'asc').toLowerCase();
+                if (q.order === this.content) {
+                    qdir = qdir === 'asc' ? 'desc' : 'asc';
+				}
+				store.commit('query', { dir: qdir, order: this.content });
+				//this.$root.$emit('queryChange');
             },
             cellCssClass(row) {
                 let cssClass = this.classAlign;
@@ -255,8 +266,22 @@
         data() {
             return {
                 columns: [],
-                clientItems: null
+                clientItems: null,
+                dgQuery: {
+                    // predefined for sorting and pagination
+                    dir: undefined,
+                    order: undefined,
+                    offset: undefined
+                }
             };
+        },
+        watch: {
+            dgQuery: {
+                handler(nq, oq) {
+                    this.queryChange();
+                },
+                deep:true
+            }
         },
         computed: {
             $items() {
@@ -299,17 +324,7 @@
                 return {
                     width: utils.isDefined(column.width) ? column.width : undefined
                 };
-			},
-			doSort(order) {
-				// TODO: // collectionView || locally
-				this.$parent.$emit('sort', order);
-			},
-			sortDir(order) {
-				// TODO: 
-				if (this.$parent.sortDir)
-					return this.$parent.sortDir(order);
-				return undefined;
-			},
+            },
             queryChange()
             {
                 let nq = this.dgQuery;
@@ -341,6 +356,25 @@
                 }
                 this.clientItems = arr;
             }
+        },
+        created() {
+            let q = this.dgQuery;
+            let nq = {};
+
+            if (this.filterFields) {
+            // make all filter fields (for reactivity)
+                this.filterFields.split(',').forEach(v => {
+                    let f = v.trim();
+                    nq[v.trim()] = undefined;
+                });
+            }
+            let xq = {};
+            if (this.sort === 'server') {
+                // from route
+                xq = this.routeQuery;
+            }
+            nq = Object.assign({}, q, nq, xq);
+            Vue.set(this, 'dgQuery', nq);
         }
     });
 

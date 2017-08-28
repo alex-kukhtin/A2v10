@@ -5,6 +5,7 @@
 			"app/app.js",
 			"app/platform/webvue.js",
 			"app/platform/route.js",
+			"app/platform/routex.js",
 			"app/services/utils.js",
 			"app/services/log.js",
 			"app/services/http.js",
@@ -18,6 +19,7 @@
 			"app/components/datagrid.js",
 			"app/components/pager.js",
 			"app/components/treeview.js",
+			"app/components/collectionview.js",
 			"app/components/modal.js",
 			"app/controllers/base.js",
 			"app/controllers/shell.js"
@@ -27,14 +29,16 @@
 	{
 		"outputFileName": "Scripts/vue.min.js",
 		"inputFiles": [
-			"bower_components/vue/dist/vue.min.js"
+			"bower_components/vue/dist/vue.min.js",
+			"bower_components/vuex/dist/vuex.min.js"
 		],
 		"minify": { "enabled": false }
 	},
 	{
 		"outputFileName": "Scripts/vue.js",
 		"inputFiles": [
-			"bower_components/vue/dist/vue.js"
+			"bower_components/vue/dist/vue.js",
+			"bower_components/vuex/dist/vuex.js"
 		],
 		"minify": { "enabled": false }
 	}

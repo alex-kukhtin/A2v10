@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .dropdown {
+            position:relative;
+            display:inline-block;
+            padding:10px;
+        }
+
+        .dropdown > .dropdown-menu {
+            display: none;
+            position: absolute;
+        }
+
+        .dropdown.show > .dropdown-menu {
+            display:block;
+            background-color:skyblue;
+            padding:10px;
+            left:0;
+            top:100%;
+            width:auto;
+            border:1px solid red;
+            box-shadow:rgba(0, 0, 0, 0.5) 10px 10px 20px;
+        }
+
+        .dropdown-item {
+            display: block;
+            min-width: 120px;
+        }
+        .dropdown-divider {
+            height:1px;
+            margin:.5rem 0;
+            background-color:forestgreen;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="app">
+        <h3>Buttons with drop down</h3>
+
+        <p>
+            <div>Simple</div>
+
+            <div class="dropdown" data-toggle="dropdown" v-dropdown>
+                <button>Simple button</button>
+                <div class="dropdown-menu">
+                    <a href="" class="dropdown-item">First</a>
+                    <a href="" class="dropdown-item">Second</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="dropdown-item">Third</a>
+                </div>
+            </div>
+
+            <div class="dropdown" data-toggle="dropdown" v-dropdown>
+                <button>Simple button</button>
+                <div class="dropdown-menu">
+                    <a href="" class="dropdown-item">First</a>
+                    <a href="" class="dropdown-item">Second</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="dropdown-item">Third</a>
+                </div>
+            </div>
+
+            <div style="margin-top:200px">
+                <button>outside</button>
+            </div>
+        </p>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script>
+        Vue.directive('dropdown', {
+            bind(el, binding, vnode) {
+                this._elem = el;
+                var me = this;
+
+                me.click = function () {
+                    return function windowClick(event) {
+                        me._shown = false;
+                        console.dir(el);
+                        el.classList.remove('show');
+                        document.removeEventListener('click', me._click);
+                    }
+                };
+
+                el.addEventListener('click', function (event) {
+                    el.classList.add("show");
+                    me._shown = true;
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                    me._click = me.click();
+                    document.addEventListener('click', me._click);
+                    /*
+                    setTimeout(() => {
+                        window.addEventListener('click', windowClick);
+                    }, 1);
+                    */
+                });
+            },
+            unbind(el) {
+                alert('unbind');
+            }
+        });
+
+        new Vue({
+            el: '#app'
+        });
+
+    </script>
+</body>
+</html>

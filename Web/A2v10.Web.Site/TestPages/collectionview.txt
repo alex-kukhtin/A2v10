@@ -1,0 +1,43 @@
+﻿
+CollectionView
+==============
+
+1. Элемент, который позволяет разбивать на страницы, фильтровать и сортировать любую коллекцию.
+Может работать как на клиенте, так и на сервере
+
+2. Элемент <Pager> просто кнопки. Привязываются к Parent
+
+3. Фильтр задается как набор объектов с привязками к свойству, по которому 
+нужно сортировать элементы.
+
+4. 
+
+
+<CollectionView
+	ItemsSource={Bind Customers} RunAt="Client" 
+		PageSize="20" CanSort="True" CanFilter="True">
+
+	<CollectionView.Filters>
+		<Filter Name="Text" DataType="String" Property="Name"/>	
+		<Filter Name="Number" DataType="Number" Property="Id"/>	
+	</CollectionView.Filters>
+
+	<ToolBar>
+		<TextBox Label="Text" Value="{Bind Parent.Filter.Text}"/>
+		<TextBox Label="Number" Value="{Bind Parent.Filter.Number}"/>
+	</ToolBar>
+
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Sort="True">
+		<DataGridColumn Header="Id" Binding="Id"/>
+		<DataGridColumn Header="Name" Binding="Name"/>
+		<DataGridColumn>
+			<Button Content="Edit" />
+			<Button Content="Remove" />
+		</DataGridColumn>
+	<DataGrid>
+
+	<Pager Source="Parent.Pager">
+		
+	</Pager>
+
+</CollectionView>

@@ -1,15 +1,22 @@
-﻿/*20170819-7016*/
-/* http.js */
-(function () {
+﻿/*20170828-7021*/
+/* services/http.js */
 
-    let store = require('store');
+app.modules['std:http'] = function () {
+
+	let eventBus = require('std:eventBus');
+
+	return {
+		get: get,
+		post: post,
+		load: load
+	};
 
     function doRequest(method, url, data) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             
             xhr.onload = function (response) {
-                store.$emit('endRequest', url);
+				eventBus.$emit('endRequest', url);
                 if (xhr.status === 200) {
                     let ct = xhr.getResponseHeader('content-type');
                     let xhrResult = xhr.responseText;
@@ -24,13 +31,13 @@
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
-                store.$emit('endRequest', url);
+				eventBus.$emit('endRequest', url);
                 reject(xhr.statusText);
             };
             xhr.open(method, url, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json, text/html');
-            store.$emit('beginRequest', url);
+			eventBus.$emit('beginRequest', url);
             xhr.send(data);
         });
     }
@@ -73,13 +80,9 @@
                     resolve(false);
                 });
         });
-    }
+	}
+};
 
-    app.modules['http'] = {
-        get: get,
-        post: post,
-        load: load
-    };
-})();
+
 
 

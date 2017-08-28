@@ -11,8 +11,14 @@
     window.component = component;
 
 	function require(module) {
-		if (module in app.modules)
-            return app.modules[module];
+		if (module in app.modules) {
+			let am = app.modules[module];
+			if (typeof am === 'function') {
+				am = am(); // always singleton
+				app.modules[module] = am;
+			}
+			return am;
+		}
         throw new Error('module "' + module + '" not found');
     }
 

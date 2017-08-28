@@ -13,11 +13,11 @@
         <h4>Simple DataGrid</h4>
         <div>
             <div class="toolbar">
-                <button @click.stop.prevent="Customers.$append()"><i class="fa fa-plus"></i> add row</button>
-                <button @click.stop.prevent="$append100()"><i class="fa fa-plus"></i> add 100 rows</button>
-                <button @click.stop.prevent="$exec('test')"><i class="fa fa-database"></i> exec</button>
-                <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="fa fa-save"></i> save</button>
-                <button @click.stop.prevent="$reload()"><i class="fa fa-refresh"></i> refresh</button>
+                <button @click.stop.prevent="Customers.$append()"><i class="ico ico-plus"></i> add row</button>
+                <button @click.stop.prevent="$append100()"><i class="ico ico-plus-box"></i> add 100 rows</button>
+                <button @click.stop.prevent="$exec('test')"><i class="ico ico-database"></i> exec</button>
+                <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="ico ico-save"></i> save</button>
+                <button @click.stop.prevent="$reload()"><i class="ico ico-refresh"></i> refresh</button>
                 <label v-text="Customers.length"></label>
                 <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>
                 <label v-text="Customers.Total"></label>
@@ -26,10 +26,10 @@
             </div>
             <data-grid :items-source="$Customers10" 
                        :bordered="true" 
+                       grid="both"
                        :striped="true" 
                        :hover="true"
-                       :sort="true"
-                       :onsort="$onSort"
+                       sort="self"
                        :selected="Customers.selected">
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
@@ -41,9 +41,9 @@
                 <data-grid-column id="clr" icon="trash" align="center" :sortable="false"></data-grid-column>
                 <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
-                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="fa fa-trash"></i>
-                    </button><button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="fa fa-plus"></i>
-                    </button><button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="fa fa-minus"></i></button>
+                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="ico ico-trash"></i>
+                     </button><button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="ico ico-plus"></i>
+                    </button><button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="ico ico-minus"></i></button>
                 </template>
                 <template slot="check" scope="cell">
                     <input type="checkbox" value="true" v-model="cell.row.$checked" />
@@ -61,6 +61,7 @@
     <script type="text/javascript" src="../scripts/vue.js"></script>
     <script type="text/javascript" src="../app/app.js"></script>
     <script type="text/javascript" src="../app/platform/webvue.js"></script>
+    <script type="text/javascript" src="../app/platform/routex.js"></script>
     <script type="text/javascript" src="../app/services/utils.js"></script>
     <script type="text/javascript" src="../app/services/validators.js"></script>
     <script type="text/javascript" src="../app/services/datamodel.js"></script>
@@ -73,10 +74,18 @@
 <script type="text/javascript">
 (function () {
     const cmn = require('datamodel');
-    const store = require('store');
+
+    //const store = require('std:store');
     // ctor
-    function TCustomer(source, path, parent) {
-        cmn.createObject(this, source, path, parent);
+    //function TCustomer(source, path, parent) {
+        //cmn.createObject(this, source, path, parent);
+    //}
+
+
+    class TCustomer {
+        constructor(source, path, parent) {
+            cmn.createObject(this, source, path, parent);
+        }
     }
 
     // metadata
@@ -90,8 +99,10 @@
         return cmn.createArray(source, path, TCustomer, TCustomerArray, parent);
     }
 
-    function TRoot(source) {
-        cmn.createObject(this, source, '', this);
+    class TRoot {
+        constructor(source) {
+            cmn.createObject(this, source, '', this);
+        }
     }
 
     cmn.defineObject(TRoot, {
@@ -134,11 +145,16 @@
             'Customers[].Amount': ['Введите число',
                 { valid: function (item) { return item.Amount > 100; }, msg: 'Должно быть больше 100' }
             ]
+        },
+        delegates: {
+            'Customers.Filter': function (item, query) {
+
+            }
         }
     }
 
     // ЭТО стандартный viewModel
-    var BaseVue = Vue.extend({
+    let BaseVue = Vue.extend({
         methods: {
             $exec(cmd, ...args) {
                 let root = this.$data;
@@ -164,7 +180,7 @@
                 return !this.$data.$dirty; 
             }
         },
-        methods: {
+        methods23: {
             $onSort(column, dir) {
                 //alert('sort on ' + column + ':' + dir);
                 //location.hash = { sort }

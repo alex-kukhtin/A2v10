@@ -50,8 +50,9 @@ function* enumData(root, path, name) {
                     yield { item: arrItem, val: arrItem[name]};
                 else {
                     let newpath = sp.slice(1).join('.');
-                    for (var y of enumData(arrItem, newpath, name))
-                        yield { item: y.item, val: y.val};
+                    yield* enumData(arrItem, newpath, name); 
+                    //for (var y of enumData(arrItem, newpath, name))
+                        //yield { item: y.item, val: y.val};
                 }
             }
         } else {
@@ -65,15 +66,15 @@ function* enumData(root, path, name) {
 }
 
 for (v of enumData(root, "Element", "Tag")) {
-    console.warn(v);
+    console.dir(v);
 }
 
 for (v of enumData(root, "", "Scalar")) {
-    console.warn(v);
+    console.dir(v);
 }
 
 for (v of enumData(root, "Customers[]", "Name")) {
-    console.warn(v);
+    console.dir(v);
 
 }
 

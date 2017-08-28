@@ -57,6 +57,7 @@
     <Content Include="Develop\Catalog\Suppliers\index.template.js" />
     <Content Include="Develop\Catalog\Suppliers\edit.dialog.html" />
     <Content Include="Develop\Catalog\Suppliers\browse.dialog.html" />
+    <Content Include="Develop\Catalog\Suppliers\index.view_old.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view.html" />
   </ItemGroup>
   <ItemGroup>

@@ -1,14 +1,16 @@
-﻿/*20170824-7019*/
+﻿/*20170828-7021*/
 /*controllers/base.js*/
 (function () {
 
-    const store = require('store');
+    const eventBus = require('std:eventBus');
     const utils = require('utils');
     const dataservice = require('std:dataservice');
     const route = require('route');
+	const store = component('std:store');
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
+		store: store,
         data() {
             return {
                 __init__: true,
@@ -35,7 +37,7 @@
             }
         },
         watch: {
-            $baseUrl: function (newUrl) {
+            $baseUrl2: function (newUrl) {
                 if (!this.$data.__init__)
                     return;
                 if (this.inDialog)
@@ -44,7 +46,7 @@
                     this.$data._query = route.query;
                 Vue.nextTick(() => { this.$data.__init__ = false; });
             },
-            "$query": {
+            "$query2": {
                 handler: function (newVal, oldVal) {
                     //console.warn('query watched');
                     if (this.$data.__init__)
@@ -118,8 +120,8 @@
                 });
             },
 
-            $requery() {
-                store.$emit('requery');
+			$requery() {
+				eventBus.$emit('requery');
             },
 
             $remove(item, confirm) {
@@ -131,15 +133,16 @@
 
             $navigate(url, data) {
                 // TODO: make correct URL
-                let urlToNavigate = '/' + url + '/' + data;
-                route.navigate(urlToNavigate);
+				let urlToNavigate = '/' + url + '/' + data;
+				this.$store.commit('navigate', urlToNavigate, null); 
+                //route.navigate(urlToNavigate);
             },
 
             $confirm(prms) {
                 if (utils.isString(prms))
                     prms = { message: prms };
                 let dlgData = { promise: null, data: prms };
-                store.$emit('confirm', dlgData);
+				eventBus.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
 
@@ -149,7 +152,7 @@
                         message: msg, title: title, style: 'alert'
                     }
                 };
-                store.$emit('confirm', dlgData);
+				eventBus.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
 
@@ -176,7 +179,7 @@
                         dataToSent = null;
                     }
                     let dlgData = { promise: null, data: dataToSent, query: query };
-                    store.$emit('modal', url, dlgData);
+					eventBus.$emit('modal', url, dlgData);
                     if (command === 'edit' || command === 'browse') {
                         dlgData.promise.then(function (result) {
                             if (!utils.isObject(data)) {
@@ -204,13 +207,13 @@
 
             $modalSaveAndClose(result) {
                 if (this.$isDirty)
-                    this.$save().then((result) => store.$emit('modalClose', result));
+					this.$save().then((result) => eventBus.$emit('modalClose', result));
                 else
-                    store.$emit('modalClose', result);
+					eventBus.$emit('modalClose', result);
             },
 
             $modalClose(result) {
-                store.$emit('modalClose', result);
+				eventBus.$emit('modalClose', result);
             },
 
             $saveAndClose() {
@@ -264,24 +267,34 @@
             },
             __endRequest() {
                 this.$data.__requestsCount__ -= 1;
-            }
+			},
+			__queryChange(search) {
+				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
+				this.$reload();
+			}
         },
         created() {
-            store.$emit('registerData', this);
+			eventBus.$emit('registerData', this);
+
             if (!this.inDialog)
                 this.$data._query_ = route.query;
 
-            this.$on('queryChange', function (val) {
-                this.$data._query_ = val;
+			/*
+			store.$on('queryChange', function (url) {
+				alert('query change');
+                //this.$data._query_ = val;
             });
+			*/
 
-            store.$on('beginRequest', this.__beginRequest);
-            store.$on('endRequest', this.__endRequest);
+			eventBus.$on('beginRequest', this.__beginRequest);
+			eventBus.$on('endRequest', this.__endRequest);
+			eventBus.$on('queryChange', this.__queryChange);
         },
         destroyed() {
-            store.$emit('registerData', null);
-            store.$off('beginRequest', this.__beginRequest);
-            store.$off('endRequest', this.__endRequest);
+			eventBus.$emit('registerData', null);
+			eventBus.$off('beginRequest', this.__beginRequest);
+			eventBus.$off('endRequest', this.__endRequest);
+			eventBus.$off('queryChange', this.__queryChange);
         }
     });
     

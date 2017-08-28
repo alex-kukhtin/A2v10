@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .pager {
+            background-color:aliceblue; margin:10px 0; padding:4px;
+        }
+        td, th {
+            padding:4px 6px;
+        }
+        th {
+            background-color:burlywood;
+            cursor:pointer;
+        }
+        table {
+            border-collapse:collapse;
+            margin:6px 0;
+        }
+        code {
+            display:block;
+            padding:4px;
+            margin:6px 0;
+            background-color:lemonchiffon;
+        }
+        th.asc {
+            background-color:red;
+            color:white;
+        }
+        th.desc {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+    
+        <h3>Collection view demo</h3>
+
+        <div>
+            <collection-view :items-source="Elements" :page-size="4" :initial-filter="{Text:''}">
+                <template scope="parent">
+                    <div class="toolbar">
+                        <button @click.stop.prevent="add(1)">add</button>
+                        <button @click.stop.prevent="add(100)">add 100</button>
+                        <label>filter:</label><input v-model="parent.filter.Text">
+                        <span>filter:{{parent.filter}}</span>
+                    </div>
+                    <data-grid :items-source="parent.itemsSource">
+
+                    </data-grid>
+                    <pager :source="parent.pager">
+
+                    </pager>
+                </template>
+            </collection-view>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="collectionview.js"></script>
+</body>
+</html>

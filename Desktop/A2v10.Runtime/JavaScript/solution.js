@@ -86,7 +86,7 @@
 
     function Solution(src) {
         copyProps(this, src);
-        console.log(src);
+        //console.log(src);
         this.Tables = [];
         this.Views = [];
         if (src.Tables)

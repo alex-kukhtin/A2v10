@@ -3,7 +3,7 @@
 
 (function () {
 
-    const http = require('http');
+    const http = require('std:http');
 
     Vue.component('include', {
         template: '<div :class="implClass"></div>',
@@ -24,7 +24,7 @@
                 this.loading = false;
             },
             requery() {
-                if (this.currentUrl) {
+				if (this.currentUrl) {
                     // Do not set loading. Avoid blinking
                     http.load(this.currentUrl, this.$el).then(this.loaded);
                 }
@@ -47,10 +47,15 @@
                 fc.__vue__.$destroy();
         },
         watch: {
-            src: function (newUrl, oldUrl) {
-                this.loading = true; // hides the current view
-                this.currentUrl = newUrl;
-                http.load(newUrl, this.$el).then(this.loaded);
+			src: function (newUrl, oldUrl) {
+				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+					// Only the search has changed. No need to reload
+					this.currentUrl = newUrl;
+				} else {
+					this.loading = true; // hides the current view
+					this.currentUrl = newUrl;
+					http.load(newUrl, this.$el).then(this.loaded);
+				}
             },
             needReload(val) {
                 // works like a trigger

@@ -1,6 +1,7 @@
 {
   "name": "myproject",
   "dependencies": {
-    "vue": "v2.4.2"
+    "vue": "v2.4.2",
+    "vuex": "v2.3.0"
   }
 }

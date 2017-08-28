@@ -1,4 +1,4 @@
-﻿/*20170824-7019*/
+﻿/*20170826-7020*/
 /* services/datamodel.js */
 (function() {
 
@@ -14,7 +14,7 @@
     const ERRORS = '_errors_'
 
     const platform = require('platform');
-    const validators = require('validators');
+    const validators = require('std:validators');
     const utils = require('utils');
 
     function defHidden(obj, prop, value, writable) {
@@ -345,8 +345,7 @@
                         yield { item: arrItem, val: arrItem[name] };
                     else {
                         let newpath = sp.slice(1).join('.');
-                        for (var y of enumData(arrItem, newpath, name))
-                            yield { item: y.item, val: y.val };
+                        yield* enumData(arrItem, newpath, name)
                     }
                 }
             } else {

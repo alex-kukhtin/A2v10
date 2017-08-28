@@ -2,7 +2,7 @@
 /* dataservice.js */
 (function () {
 
-    let http = require('http');
+    let http = require('std:http');
     let utils = require('utils');
 
     function post(url, data) {

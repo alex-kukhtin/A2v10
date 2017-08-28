@@ -1,4 +1,8 @@
-﻿(function () {
+﻿
+/*20170828-7021*/
+/* components/modal.js */
+
+(function () {
 
 
 /**
@@ -19,10 +23,10 @@ TODO: may be icon for confirm ????
     </div>
 </div>        
 `;
-    const store = require('store');
+    const eventBus = require('std:eventBus');
 
     const modalComponent = {
-        template: modalTemplate,
+		template: modalTemplate,
         props: {
             dialog: Object
         },
@@ -32,7 +36,7 @@ TODO: may be icon for confirm ????
                 keyUpHandler: function () {
                     // escape
                     if (event.which === 27) {
-                        store.$emit('modalClose', false);
+                        eventBus.$emit('modalClose', false);
                         event.stopPropagation();
                         event.preventDefault();
                     }
@@ -41,7 +45,7 @@ TODO: may be icon for confirm ????
         },
         methods: {
             modalClose(result) {
-                store.$emit('modalClose', result);
+				eventBus.$emit('modalClose', result);
             }
         },
         computed: {
@@ -71,5 +75,5 @@ TODO: may be icon for confirm ????
         }
     };
 
-    app.components['modal'] = modalComponent;
+    app.components['std:modal'] = modalComponent;
 })();

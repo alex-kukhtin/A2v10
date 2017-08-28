@@ -1,4 +1,4 @@
-﻿/* 20170809-7011 */
+﻿/* 20170827-7012 */
 ------------------------------------------------
 set noexec off;
 go
@@ -29,15 +29,15 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sec
 begin
 	create table a2security.Users
 	(
-		Id	bigint		not null constraint PK_Users primary key
+		Id	bigint not null constraint PK_Users primary key
 			constraint DF_Users_PK default(next value for a2security.SQ_Users),
-		UserName		nvarchar(255)	not null constraint UNQ_Users_UserName unique,
-		SecurityStamp	nvarchar(max)	not null,
-		PasswordHash	nvarchar(max)	null,
+		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
+		SecurityStamp nvarchar(max)	not null,
+		PasswordHash nvarchar(max)	null,
 		TwoFactorEnabled bit not null constraint DF_Users_TwoFactorEnabled default(0),
-		Email			nvarchar(255)	null,
-		EmailConfirmed	bit not null constraint DF_Users_EmailConfirmed default(0),
-		PhoneNumber		nvarchar(255)	null,
+		Email nvarchar(255)	null,
+		EmailConfirmed bit not null constraint DF_Users_EmailConfirmed default(0),
+		PhoneNumber nvarchar(255)	null,
 		PhoneNumberConfirmed bit not null constraint DF_Users_PhoneNumberConfirmed default(0),
 		LockoutEnabled	bit	not null constraint DF_Users_LockoutEnabled default(1),
 		LockoutEndDateUtc datetime null,
@@ -68,7 +68,7 @@ go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserGroups')
 begin
-	-- группы пользователей
+	-- user groups
 	create table a2security.UserGroups
 	(
 		UserId	bigint	not null
@@ -77,6 +77,76 @@ begin
 			constraint FK_UserGroups_Group_Id foreign key references a2security.Groups(Id),
 		constraint PK_UserGroups primary key(UserId, GroupId)
 	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Roles')
+	create sequence a2security.SQ_Roles as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Roles')
+begin
+	create table a2security.Roles
+	(
+		Id		bigint			not null constraint PK_Roles primary key
+			constraint DF_Roles_PK default(next value for a2security.SQ_Roles),
+		[Key] nvarchar(255) not null constraint UNQ_Roles_Key unique,
+		Name nvarchar(255)	not null constraint UNQ_Roles_Name unique,
+		Memo nvarchar(255) null
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_UserRoles')
+	create sequence a2security.SQ_UserRoles as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserRoles')
+begin
+	create table a2security.UserRoles
+	(
+		Id	bigint	not null constraint PK_UserRoles primary key
+			constraint DF_UserRoles_PK default(next value for a2security.SQ_UserRoles),
+		RoleId bigint null
+			constraint FK_UserRoles_Roles_Id foreign key references a2security.Roles(Id),
+		UserId	bigint	null
+			constraint FK_UserRoles_Users_Id foreign key references a2security.Users(Id),
+		GroupId bigint null 
+			constraint FK_UserRoles_GroupId_Id foreign key references a2security.Groups(Id)
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Acl')
+	create sequence a2security.SQ_Acl as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Acl')
+begin
+	-- access control list
+	create table a2security.[Acl]
+	(
+		Id	bigint not null constraint PK_Acl primary key
+			constraint DF_Acl_PK default(next value for a2security.SQ_Acl),
+		[Object] sysname not null,
+		[ObjectId] bigint not null,
+		UserId bigint null 
+			constraint FK_Acl_UserId_AG_USER foreign key references a2security.Users(Id),
+		GroupId bigint null 
+			constraint FK_Acl_GroupId_Groups foreign key references a2security.Groups(Id),
+		CanView smallint not null	-- 0
+			constraint CK_Acl_CanView check(CanView in (0, 1, -1))
+			constraint DF_Acl_CanView default(0),
+		CanEdit smallint not null	-- 1
+			constraint CK_Acl_CanEdit check(CanEdit in (0, 1, -1))
+			constraint DF_Acl_CanEdit default(0),
+		CanDelete smallint not null	-- 2
+			constraint CK_Acl_CanDelete check(CanDelete in (0, 1, -1))
+			constraint DF_Acl_CanDelete default(0),
+		CanApply smallint not null	-- 2
+			constraint CK_Acl_CanApply check(CanApply in (0, 1, -1))
+			constraint DF_Acl_CanApply default(0)
+	);
 end
 go
 ------------------------------------------------
@@ -204,47 +274,11 @@ create procedure a2security.GetUserGroups
 @UserId bigint
 as
 begin
+	set nocount on;
 	select r.Id, r.Name 
 	from a2security.UserGroups ur
 		inner join a2security.Groups r on ur.GroupId = r.Id
 	where ur.UserId = @UserId;
-end
-go
-------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Roles')
-	create sequence a2security.SQ_Roles as bigint start with 100 increment by 1;
-go
-------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Roles')
-begin
-	create table a2security.Roles
-	(
-		Id		bigint			not null constraint PK_Roles primary key
-			constraint DF_Roles_PK default(next value for a2security.SQ_Roles),
-		[Key] nvarchar(255) not null constraint UNQ_Roles_Key unique,
-		Name nvarchar(255)	not null constraint UNQ_Roles_Name unique,
-		Memo nvarchar(255) null
-	)
-end
-go
-------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_UserRoles')
-	create sequence a2security.SQ_UserRoles as bigint start with 100 increment by 1;
-go
-------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserRoles')
-begin
-	create table a2security.UserRoles
-	(
-		Id	bigint	not null constraint PK_UserRoles primary key
-			constraint DF_UserRoles_PK default(next value for a2security.SQ_UserRoles),
-		RoleId bigint null
-			constraint FK_UserRoles_Roles_Id foreign key references a2security.Roles(Id),
-		UserId	bigint	null
-			constraint FK_UserRoles_Users_Id foreign key references a2security.Users(Id),
-		GroupId bigint null 
-			constraint FK_UserRoles_GroupId_Id foreign key references a2security.Groups(Id)
-	)
 end
 go
 ------------------------------------------------

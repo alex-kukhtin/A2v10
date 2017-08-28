@@ -11,8 +11,14 @@
     window.component = component;
 
 	function require(module) {
-		if (module in app.modules)
-            return app.modules[module];
+		if (module in app.modules) {
+			let am = app.modules[module];
+			if (typeof am === 'function') {
+				am = am(); // always singleton
+				app.modules[module] = am;
+			}
+			return am;
+		}
         throw new Error('module "' + module + '" not found');
     }
 
@@ -24,21 +30,19 @@
 })();
 /*20170818-7015*/
 /* platform/webvue.js */
+
 (function () {
 
     function set(target, prop, value) {
         Vue.set(target, prop, value);
     }
 
-    const store = new Vue({
-    });
-
 
     app.modules['platform'] = {
         set: set
     };
 
-    app.modules['store'] = store;
+	app.modules['std:eventBus'] = new Vue({});
 
 })();
 
@@ -265,65 +269,185 @@
     app.modules['route'] = route;
 })();
 
-/*20170824-7019*/
-/* utils.js */
+
+
 (function () {
 
-    function isFunction(value) { return typeof value === 'function'; }
-    function isDefined(value) { return typeof value !== 'undefined'; }
-    function isObject(value) { return value !== null && typeof value === 'object'; }
-    function isDate(value) { return toString.call(value) === '[object Date]'; }
-    function isString(value) { return typeof value === 'string'; }
-    function isNumber(value) { return typeof value === 'number'; }
+	const title = null;
 
-    function isPrimitiveCtor(ctor) {
-        return ctor === String || ctor === Number || ctor === Boolean;
-    }
-    function isEmptyObject(obj) {
-        return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
-    }
 
-    function notBlank(val) {
-        if (!val)
-            return false;
-        switch (typeof val) {
-            case 'string':
-                return val !== '';
-        }
-        return (val || '') !== '';
-    }
+	const eventBus = require('std:eventBus');
+	// TODO:
 
-    function toJson(data) {
-        return JSON.stringify(data, function (key, value) {
-            return key[0] === '$' || key[0] === '_' ? undefined : value;
-        }, 2);
-    }
+	// 1: save/restore query (localStorage)
+	// 2: document title
 
-    function toString(obj) {
-        if (!isDefined(obj))
-            return '';
-        else if (obj === null)
-            return '';
-        else if (isObject(obj))
-            return toJson(obj);
-        return obj + '';
-    }
+	function parseQueryString(str) {
+		var obj = {};
+		str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
+			obj[decodeURIComponent(key)] = decodeURIComponent(value);
+		});
+		return obj;
+	}
 
-    app.modules['utils'] = {
-        isArray: Array.isArray,
-        isFunction: isFunction,
-        isDefined: isDefined,
-        isObject: isObject,
-        isDate: isDate,
-        isString: isString,
-        isNumber: isNumber,
-        toString: toString,
-        notBlank: notBlank,
-        toJson: toJson,
-        isPrimitiveCtor: isPrimitiveCtor,
-        isEmptyObject: isEmptyObject
-    };
+	function makeQueryString(obj) {
+		if (!obj)
+			return '';
+		let esc = encodeURIComponent;
+		let query = Object.keys(obj)
+			.filter(k => obj[k])
+			.map(k => esc(k) + '=' + esc(obj[k]))
+			.join('&');
+		return query ? '?' + query : '';
+	}
+
+	function setTitle(title) {
+		if (title)
+			document.title = title;
+	}
+
+	const store = new Vuex.Store({
+		state: {
+			route: window.location.pathname,
+			query: parseQueryString(window.location.search)
+		},
+		getters: {
+			seg0: (state) => state.route.split('/')[1],
+			seg1: (state) => state.route.split('/')[2],
+			len: (state) => state.route.split('/').length,
+			url: (state) => state.route,
+			query: (state) => state.query,
+			route: (state) => {
+				let sr = state.route.split('/');
+				return {
+					len: sr.length,
+					seg0: sr[1],
+					seg1: sr[2]
+				};
+			},
+			baseUrl: (state) => {
+				return state.route + makeQueryString(state.query);
+			},
+			search: (state) => {
+				return makeQueryString(state.query);
+			}		
+		},
+		mutations: {
+			navigate(state, url, query) {
+				let oldUrl = state.route + makeQueryString(state.query);
+				state.route = url;
+				state.query = Object.assign({}, query);
+				let newUrl = state.route + makeQueryString(query);
+				let h = window.history;
+				setTitle(title);
+				// push/pop state feature. Replace the current state and push new one.
+				h.replaceState(oldUrl, null, oldUrl);
+				h.pushState(oldUrl, null, newUrl);
+			},
+			query(state, query) {
+				// changes all query
+				state.query = Object.assign({}, query);
+				let newUrl = state.route + makeQueryString(state.query);
+				window.history.replaceState(null, null, newUrl);
+			},
+			setquery(state, query) {
+				// changes some fields or query
+				state.query = Object.assign({}, state.query, query);
+				let newUrl = state.route + makeQueryString(state.query);
+				// TODO: replaceUrl: boolean
+				window.history.replaceState(null, null, newUrl);
+				eventBus.$emit('queryChange', makeQueryString(state.query));
+			},
+			popstate(state) {
+				state.route = window.location.pathname;
+				state.query = parseQueryString(window.location.search);
+			},
+			setstate(state, url) {
+				window.history.replaceState(null, title, url);
+				state.route = window.location.pathname;
+				state.query = parseQueryString(window.location.search);
+			}
+		}
+	});
+
+	function replaceUrlSearch(url, search) {
+		let parts = url.split('?');
+		return parts[0] + (search || '');
+	}
+
+	function replaceUrlQuery(url, query) {
+		return replaceUrlSearch(url, makeQueryString(query));
+	}
+
+	store.parseQueryString = parseQueryString;
+	store.makeQueryString = makeQueryString;
+	store.replaceUrlSearch = replaceUrlSearch;
+	store.replaceUrlQuery = replaceUrlQuery;
+
+	app.components['std:store'] = store;
 })();
+/*20170829-7021*/
+/* services/utils.js */
+
+app.modules['utils'] = function () {
+
+	return {
+		isArray: Array.isArray,
+		isFunction: isFunction,
+		isDefined: isDefined,
+		isObject: isObject,
+		isDate: isDate,
+		isString: isString,
+		isNumber: isNumber,
+		toString: toString,
+		notBlank: notBlank,
+		toJson: toJson,
+		isPrimitiveCtor: isPrimitiveCtor,
+		isEmptyObject: isEmptyObject
+	};
+
+	function isFunction(value) { return typeof value === 'function'; }
+	function isDefined(value) { return typeof value !== 'undefined'; }
+	function isObject(value) { return value !== null && typeof value === 'object'; }
+	function isDate(value) { return toString.call(value) === '[object Date]'; }
+	function isString(value) { return typeof value === 'string'; }
+	function isNumber(value) { return typeof value === 'number'; }
+
+	function isPrimitiveCtor(ctor) {
+		return ctor === String || ctor === Number || ctor === Boolean;
+	}
+	function isEmptyObject(obj) {
+		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
+	}
+
+	function notBlank(val) {
+		if (!val)
+			return false;
+		switch (typeof val) {
+			case 'string':
+				return val !== '';
+		}
+		return (val || '') !== '';
+	}
+
+	function toJson(data) {
+		return JSON.stringify(data, function (key, value) {
+			return key[0] === '$' || key[0] === '_' ? undefined : value;
+		}, 2);
+	}
+
+	function toString(obj) {
+		if (!isDefined(obj))
+			return '';
+		else if (obj === null)
+			return '';
+		else if (isObject(obj))
+			return toJson(obj);
+		return obj + '';
+	}
+};
+
+
 
 (function() {
 
@@ -332,18 +456,25 @@
     };
 
 })();
-/*20170819-7016*/
-/* http.js */
-(function () {
+/*20170828-7021*/
+/* services/http.js */
 
-    let store = require('store');
+app.modules['std:http'] = function () {
+
+	let eventBus = require('std:eventBus');
+
+	return {
+		get: get,
+		post: post,
+		load: load
+	};
 
     function doRequest(method, url, data) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             
             xhr.onload = function (response) {
-                store.$emit('endRequest', url);
+				eventBus.$emit('endRequest', url);
                 if (xhr.status === 200) {
                     let ct = xhr.getResponseHeader('content-type');
                     let xhrResult = xhr.responseText;
@@ -358,13 +489,13 @@
                     reject(xhr.statusText);
             };
             xhr.onerror = function (response) {
-                store.$emit('endRequest', url);
+				eventBus.$emit('endRequest', url);
                 reject(xhr.statusText);
             };
             xhr.open(method, url, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json, text/html');
-            store.$emit('beginRequest', url);
+			eventBus.$emit('beginRequest', url);
             xhr.send(data);
         });
     }
@@ -407,24 +538,23 @@
                     resolve(false);
                 });
         });
-    }
+	}
+};
 
-    app.modules['http'] = {
-        get: get,
-        post: post,
-        load: load
-    };
-})();
+
 
 
 
 /*20170824-7019*/
 /*validators.js*/
-(function () {
+app.modules['std:validators'] = function() {
 
     const utils = require('utils');
-
     const ERROR = 'error';
+
+	return {
+		validate: validateItem
+	};
 
     function validateStd(rule, val) {
         switch (rule) {
@@ -471,15 +601,11 @@
             return null;
         return err;
     }
+};
 
 
-    app.modules['validators'] = {
-        validate: validateItem
-    };
-})();
 
-
-/*20170824-7019*/
+/*20170826-7020*/
 /* services/datamodel.js */
 (function() {
 
@@ -495,7 +621,7 @@
     const ERRORS = '_errors_'
 
     const platform = require('platform');
-    const validators = require('validators');
+    const validators = require('std:validators');
     const utils = require('utils');
 
     function defHidden(obj, prop, value, writable) {
@@ -826,8 +952,7 @@
                         yield { item: arrItem, val: arrItem[name] };
                     else {
                         let newpath = sp.slice(1).join('.');
-                        for (var y of enumData(arrItem, newpath, name))
-                            yield { item: y.item, val: y.val };
+                        yield* enumData(arrItem, newpath, name)
                     }
                 }
             } else {
@@ -948,7 +1073,7 @@
 /* dataservice.js */
 (function () {
 
-    let http = require('http');
+    let http = require('std:http');
     let utils = require('utils');
 
     function post(url, data) {
@@ -968,7 +1093,7 @@
 
 (function () {
 
-    const http = require('http');
+    const http = require('std:http');
 
     Vue.component('include', {
         template: '<div :class="implClass"></div>',
@@ -989,7 +1114,7 @@
                 this.loading = false;
             },
             requery() {
-                if (this.currentUrl) {
+				if (this.currentUrl) {
                     // Do not set loading. Avoid blinking
                     http.load(this.currentUrl, this.$el).then(this.loaded);
                 }
@@ -1012,10 +1137,15 @@
                 fc.__vue__.$destroy();
         },
         watch: {
-            src: function (newUrl, oldUrl) {
-                this.loading = true; // hides the current view
-                this.currentUrl = newUrl;
-                http.load(newUrl, this.$el).then(this.loaded);
+			src: function (newUrl, oldUrl) {
+				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+					// Only the search has changed. No need to reload
+					this.currentUrl = newUrl;
+				} else {
+					this.loading = true; // hides the current view
+					this.currentUrl = newUrl;
+					http.load(newUrl, this.$el).then(this.loaded);
+				}
             },
             needReload(val) {
                 // works like a trigger
@@ -1113,7 +1243,7 @@
 
     const dataGridTemplate = `
 <div class="data-grid-container">
-    <slot name="toolbar" :query="dgQuery" />
+    <slot name="toolbar" />
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -1129,7 +1259,7 @@
             <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
         </tbody>
     </table>
-    <slot name="pager" :query="dgQuery" :sort="sort"/>
+	<slot name="pager"></slot>
 </div>
 `;
 
@@ -1167,15 +1297,9 @@
         created() {
             this.$parent.$addColumn(this);
         },
-        computed: {
+		computed: {
             dir() {
-                var q = this.$parent.dgQuery;
-                if (!q)
-                    return '';
-                if (q.order === this.content) {
-                    return (q.dir || '').toLowerCase();
-                }
-                return null;
+				return this.$parent.sortDir(this.content);
             },
             isSortable() {
                 if (!this.content)
@@ -1185,9 +1309,12 @@
             isUpdateUrl() {
                 return !this.$root.inDialog;
             },
-            template() {
-                return this.id ? this.$parent.$scopedSlots[this.id] : null;
-            },
+			template() {
+				return this.id ? this.$parent.$scopedSlots[this.id] : null;
+			},
+			classAlign() {
+				return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
+			},
             cssClass() {
                 let cssClass = this.classAlign;
                 if (this.isSortable) {
@@ -1197,21 +1324,12 @@
                 }
                 return cssClass;
             },
-            classAlign() {
-                return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
-            }
         },
         methods: {
             doSort() {
                 if (!this.isSortable)
-                    return;
-                let q = this.$parent.dgQuery;
-                let qdir = (q.dir || 'asc').toLowerCase();
-                if (q.order === this.content) {
-                    qdir = qdir === 'asc' ? 'desc' : 'asc';
-                }
-                let nq = Object.assign({}, q, { order: this.content, dir: qdir });
-                Vue.set(this.$parent, 'dgQuery', nq);
+					return;
+				this.$parent.doSort(this.content);
             },
             cellCssClass(row) {
                 let cssClass = this.classAlign;
@@ -1364,22 +1482,8 @@
         data() {
             return {
                 columns: [],
-                clientItems: null,
-                dgQuery: {
-                    // predefined for sorting and pagination
-                    dir: undefined,
-                    order: undefined,
-                    offset: undefined
-                }
+                clientItems: null
             };
-        },
-        watch: {
-            dgQuery: {
-                handler(nq, oq) {
-                    this.queryChange();
-                },
-                deep:true
-            }
         },
         computed: {
             $items() {
@@ -1422,7 +1526,17 @@
                 return {
                     width: utils.isDefined(column.width) ? column.width : undefined
                 };
-            },
+			},
+			doSort(order) {
+				// TODO: // collectionView || locally
+				this.$parent.$emit('sort', order);
+			},
+			sortDir(order) {
+				// TODO: 
+				if (this.$parent.sortDir)
+					return this.$parent.sortDir(order);
+				return undefined;
+			},
             queryChange()
             {
                 let nq = this.dgQuery;
@@ -1454,25 +1568,6 @@
                 }
                 this.clientItems = arr;
             }
-        },
-        created() {
-            let q = this.dgQuery;
-            let nq = {};
-
-            if (this.filterFields) {
-            // make all filter fields (for reactivity)
-                this.filterFields.split(',').forEach(v => {
-                    let f = v.trim();
-                    nq[v.trim()] = undefined;
-                });
-            }
-            let xq = {};
-            if (this.sort === 'server') {
-                // from route
-                xq = this.routeQuery;
-            }
-            nq = Object.assign({}, q, nq, xq);
-            Vue.set(this, 'dgQuery', nq);
         }
     });
 
@@ -1480,66 +1575,20 @@
 /*20170823-7018*/
 /*components/pager.js*/
 
-/*
-TODO: pageSize
-*/
-
-(function () {
-
-    const pagerTemplate = `
-    <div class="data-grid-pager">
-        <button @click.stop.prevent="prev" :disabled="isFirstPage">prev</button>
-        <button @click.stop.prevent="next" :disabled="isLastPage">next</button>
-        <label v-text="query"></label>
-        <span>length: {{length}} sort:{{sort}}</span>
-    </div>
-`;
-
-
-    Vue.component('a2-pager', {
-        template: pagerTemplate,
-        props: {
-            itemsSource: Array,
-            query: Object,
-            sort: String,
-            pageSize: {
-                type: Number,
-                default: 3 //TODO: default page size
-            }
-        },
-        computed: {
-            offset() {
-                return +this.query.offset || 0;
-            },
-            length() {
-                if (this.sort === 'server')
-                    return this.itemsSource.$RowCount;
-                else
-                    return this.itemsSource.length;
-            },
-            isLastPage() {
-                return this.offset + this.pageSize >= this.length;
-            },
-            isFirstPage() {
-                return +this.offset === 0;
-            }
-        },
-        methods: {
-            next() {
-                if (this.isLastPage)
-                    return;
-                var cv = this.offset + this.pageSize;
-                this.query.offset = cv;
-            },
-            prev() {
-                if (this.isFirstPage)
-                    return;
-                let cv = this.offset - this.pageSize;
-                this.query.offset = cv;
-            }
-        }
-    });
-})();
+Vue.component('a2-pager', {
+	template: `
+<div class="pager">
+	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
+		pages={{source.pages}}</code>
+	<a href @click.stop.prevent="source.first">first</a>
+	<a href @click.stop.prevent="source.prev">prev</a>
+	<a href @click.stop.prevent="source.next">next</a>
+</div>
+`,
+	props: {
+		source: Object
+	}
+});
 
 
 /* 20170816-7014 */
@@ -1630,6 +1679,154 @@ TODO: pageSize
 
 })();
 
+/*
+TODO: доделать фильтры
+*/
+
+
+Vue.component('collection-view', {
+	store: component('std:store'),
+	template: `
+<div>
+	<slot :itemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
+	<code>
+		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
+		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+	</code>
+</div>
+`,
+	props: {
+		itemsSource: Array,
+		pageSize: Number,
+		initialFilter: Object,
+		runAt:String
+	},
+	data() {
+		// TODO: Initial sorting, filters
+		return {
+			filter: this.initialFilter,
+			filteredCount: 0,
+			localQuery: {
+				offset: 0,
+				dir: 'desc',
+				order: 'Id'
+			}
+		};
+	},
+	watch: {
+		dir() {
+			// можно отслеживать вычисляемые свойства
+			//alert('dir changed');
+		}
+	},
+	computed: {
+		isServer() {
+			return this.runAt === 'server';
+		},
+		dir() {
+			if (this.isServer)
+				return this.$store.getters.query.dir;
+			return this.localQuery.dir;
+		},
+		offset() {
+			if (this.isServer)
+				return this.$store.getters.query.offset || 0;
+			return this.localQuery.offset;
+		},
+		order() {
+			if (this.isServer)
+				return this.$store.getters.query.order;
+			return this.localQuery.order;
+		},
+		pagedSource() {
+			//console.warn('get paged source');
+			if (this.isServer)
+				return this.itemsSource; // server - all data from server
+			let arr = [].concat(this.itemsSource);
+			// filter (TODO: // правильная фильтрация)
+			if (this.filter && this.filter.Text)
+				arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
+			// sort
+			if (this.order && this.dir) {
+				let p = this.order;
+				let d = this.dir === 'asc';
+				arr.sort((a, b) => {
+					if (a[p] === b[p])
+						return 0;
+					else if (a[p] < b[p])
+						return d ? -1 : 1;
+					return d ? 1 : -1;
+				});
+			}
+			// HACK!
+			this.filteredCount = arr.length;
+			// pager
+			return arr.slice(this.offset, this.offset + this.pageSize);
+		},
+		sourceCount() {
+			if (this.isServer)
+				return this.itemsSource.$RowCount;
+			return this.itemsSource.length;
+		},
+		thisPager() {
+			return this;
+		},
+		pages() {
+			let cnt = this.filteredCount;
+			if (this.isServer)
+				cnt = this.sourceCount;
+			return Math.ceil(cnt / this.pageSize);
+		}
+	},
+	methods: {
+		$setOffset(offset) {
+			if (this.isServer)
+				this.$store.commit('setquery', {offset: offset});
+			else
+				this.localQuery.offset = offset;
+
+		},
+		first() {
+			this.$setOffset(0);
+		},
+		prev() {
+			let no = this.offset;
+			if (no > 0)
+				no -= this.pageSize;
+			this.$setOffset(no);
+		},
+		next() {
+			let no = this.offset + this.pageSize
+			this.$setOffset(no);
+		},
+		sortDir(order) {
+			return order === this.order ? this.dir : undefined;
+		},
+		doSort(order) {
+			let nq = { dir: this.dir, order: this.order };
+			if (nq.order === order)
+				nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+			else {
+				nq.order = order;
+				nq.dir = 'asc';
+			}
+			if (this.isServer) {
+				this.$store.commit('setquery', nq);
+			} else {
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
+			}
+		}
+	},
+	created() {
+		this.$on('sort', this.doSort);
+	}
+});
+
+
+/*20170828-7021*/
+/* components/modal.js */
+
 (function () {
 
 
@@ -1651,10 +1848,10 @@ TODO: may be icon for confirm ????
     </div>
 </div>        
 `;
-    const store = require('store');
+    const eventBus = require('std:eventBus');
 
     const modalComponent = {
-        template: modalTemplate,
+		template: modalTemplate,
         props: {
             dialog: Object
         },
@@ -1664,7 +1861,7 @@ TODO: may be icon for confirm ????
                 keyUpHandler: function () {
                     // escape
                     if (event.which === 27) {
-                        store.$emit('modalClose', false);
+                        eventBus.$emit('modalClose', false);
                         event.stopPropagation();
                         event.preventDefault();
                     }
@@ -1673,7 +1870,7 @@ TODO: may be icon for confirm ????
         },
         methods: {
             modalClose(result) {
-                store.$emit('modalClose', result);
+				eventBus.$emit('modalClose', result);
             }
         },
         computed: {
@@ -1703,19 +1900,21 @@ TODO: may be icon for confirm ????
         }
     };
 
-    app.components['modal'] = modalComponent;
+    app.components['std:modal'] = modalComponent;
 })();
-/*20170824-7019*/
+/*20170828-7021*/
 /*controllers/base.js*/
 (function () {
 
-    const store = require('store');
+    const eventBus = require('std:eventBus');
     const utils = require('utils');
     const dataservice = require('std:dataservice');
     const route = require('route');
+	const store = component('std:store');
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
+		store: store,
         data() {
             return {
                 __init__: true,
@@ -1742,7 +1941,7 @@ TODO: may be icon for confirm ????
             }
         },
         watch: {
-            $baseUrl: function (newUrl) {
+            $baseUrl2: function (newUrl) {
                 if (!this.$data.__init__)
                     return;
                 if (this.inDialog)
@@ -1751,7 +1950,7 @@ TODO: may be icon for confirm ????
                     this.$data._query = route.query;
                 Vue.nextTick(() => { this.$data.__init__ = false; });
             },
-            "$query": {
+            "$query2": {
                 handler: function (newVal, oldVal) {
                     //console.warn('query watched');
                     if (this.$data.__init__)
@@ -1825,8 +2024,8 @@ TODO: may be icon for confirm ????
                 });
             },
 
-            $requery() {
-                store.$emit('requery');
+			$requery() {
+				eventBus.$emit('requery');
             },
 
             $remove(item, confirm) {
@@ -1838,15 +2037,16 @@ TODO: may be icon for confirm ????
 
             $navigate(url, data) {
                 // TODO: make correct URL
-                let urlToNavigate = '/' + url + '/' + data;
-                route.navigate(urlToNavigate);
+				let urlToNavigate = '/' + url + '/' + data;
+				this.$store.commit('navigate', urlToNavigate, null); 
+                //route.navigate(urlToNavigate);
             },
 
             $confirm(prms) {
                 if (utils.isString(prms))
                     prms = { message: prms };
                 let dlgData = { promise: null, data: prms };
-                store.$emit('confirm', dlgData);
+				eventBus.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
 
@@ -1856,7 +2056,7 @@ TODO: may be icon for confirm ????
                         message: msg, title: title, style: 'alert'
                     }
                 };
-                store.$emit('confirm', dlgData);
+				eventBus.$emit('confirm', dlgData);
                 return dlgData.promise;
             },
 
@@ -1883,7 +2083,7 @@ TODO: may be icon for confirm ????
                         dataToSent = null;
                     }
                     let dlgData = { promise: null, data: dataToSent, query: query };
-                    store.$emit('modal', url, dlgData);
+					eventBus.$emit('modal', url, dlgData);
                     if (command === 'edit' || command === 'browse') {
                         dlgData.promise.then(function (result) {
                             if (!utils.isObject(data)) {
@@ -1911,13 +2111,13 @@ TODO: may be icon for confirm ????
 
             $modalSaveAndClose(result) {
                 if (this.$isDirty)
-                    this.$save().then((result) => store.$emit('modalClose', result));
+					this.$save().then((result) => eventBus.$emit('modalClose', result));
                 else
-                    store.$emit('modalClose', result);
+					eventBus.$emit('modalClose', result);
             },
 
             $modalClose(result) {
-                store.$emit('modalClose', result);
+				eventBus.$emit('modalClose', result);
             },
 
             $saveAndClose() {
@@ -1971,210 +2171,138 @@ TODO: may be icon for confirm ????
             },
             __endRequest() {
                 this.$data.__requestsCount__ -= 1;
-            }
+			},
+			__queryChange(search) {
+				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
+				this.$reload();
+			}
         },
         created() {
-            store.$emit('registerData', this);
+			eventBus.$emit('registerData', this);
+
             if (!this.inDialog)
                 this.$data._query_ = route.query;
 
-            this.$on('queryChange', function (val) {
-                this.$data._query_ = val;
+			/*
+			store.$on('queryChange', function (url) {
+				alert('query change');
+                //this.$data._query_ = val;
             });
+			*/
 
-            store.$on('beginRequest', this.__beginRequest);
-            store.$on('endRequest', this.__endRequest);
+			eventBus.$on('beginRequest', this.__beginRequest);
+			eventBus.$on('endRequest', this.__endRequest);
+			eventBus.$on('queryChange', this.__queryChange);
         },
         destroyed() {
-            store.$emit('registerData', null);
-            store.$off('beginRequest', this.__beginRequest);
-            store.$off('endRequest', this.__endRequest);
+			eventBus.$emit('registerData', null);
+			eventBus.$off('beginRequest', this.__beginRequest);
+			eventBus.$off('endRequest', this.__endRequest);
+			eventBus.$off('queryChange', this.__queryChange);
         }
     });
     
     app.components['baseController'] = base;
 
 })();
-/*20170824-7019*/
+/*20170828-7021*/
 /* controllers/shell.js */
 
 (function () {
 
-    /* TODO: 
-    1. find first active item
-    */
-    const route = require('route');
-    const store = require('store');
-    const modal = component('modal');
+	const store = component('std:store');
+	const eventBus = require('std:eventBus');
+	const modal = component('std:modal');
 
-    function findMenu(menu, func) {
-        if (!menu)
-            return null;
-        for (let i = 0; i < menu.length; i++) {
-            let itm = menu[i];
-            if (func(itm))
-                return itm;
-            if (itm.menu) {
-                let found = findMenu(itm.menu, func);
-                if (found)
-                    return found;
-            }
-        }
-        return null;
-    }
+	const UNKNOWN_TITLE = 'unknown title';
 
-    function activateMenu(activeItem, loc) {
-        let seg2 = loc.segment(2);
+	function findMenu(menu, func) {
+		if (!menu)
+			return null;
+		for (let i = 0; i < menu.length; i++) {
+			let itm = menu[i];
+			if (func(itm))
+				return itm;
+			if (itm.menu) {
+				let found = findMenu(itm.menu, func);
+				if (found)
+					return found;
+			}
+		}
+		return null;
+	}
 
-        function activateFirst()
-        {
-            let url = activeItem.url;
-            let fa = findMenu(activeItem.menu, (mi) => mi.url && !mi.menu);
-            if (fa) {
-                url = '/' + url + '/' + fa.url;
-                route.setState(url, fa.title, fa.query);
-            }
-        }
+	function combineUrl(u1, u2)
+	{
+		u2 = u2 || '';
+		let rv = u1 || '/';
+		if (rv.endsWith('/'))
+			rv += u2;
+		else
+			rv += '/' + u2;
+		return rv;
+	}
 
-        if (!seg2) {
-            activateFirst();
-        }
-        else if (loc.routeLength() !== 4) {
-            let fa = findMenu(activeItem.menu, (mi) => mi.url == seg2);
-            if (!fa) activateFirst();
-        }
-    }
+	function makeMenuUrl(menu, url) {
+		if (!url.startsWith('/'))
+			url = '/' + url;
+		let sUrl = url.split('/');
+		let routeLen = sUrl.length;
+		let seg1 = sUrl[1];
+		let am = null;
+		if (seg1)
+			am = menu.find((mi) => mi.url === seg1);
+		if (!am) {
+			am = findMenu(menu, (mi) => mi.url && !mi.menu);
+			if (am)
+				return combineUrl(url, am.url);
+		} else if (am && !am.menu) {
+			return url; // no sub menu
+		}
+		url = combineUrl('/', seg1);
+		let seg2 = sUrl[2];
+		if (!seg2) {
+			// find first active menu in am.menu
+			am = findMenu(am.menu, (mi) => mi.url && !mi.menu);
+		} else {
+			// find current active menu in am.menu
+			am = findMenu(am.menu, (mi) => mi.url === seg2);
+		}
+		if (am)
+			return combineUrl(url, am.url);
+		return url; // TODO: ????
+	}
 
-    const navBar = {
-
-        props: {
-            menu: Array
-        },
-
-        template: `
+	const a2NavBar = {
+		template: `
 <ul class="nav-bar">
-    <li v-for="item in menu" :key="item.url" :class="{active : isActive(item)}">
+    <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
         <a :href="itemHref(item)" v-text="item.title" @click.stop.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
-
-        data: function () {
-            return {
-                activeItem: null,
-                isAppMode: false
-            };
-        },
-
-        created: function () {
-            // nav-bar
-            var me = this;
-            me.__dataStack__ = [];
-
-            function findCurrent() {
-                let loc = route.location();
-                let seg1 = loc.segment(1);
-                let seg2 = loc.segment(2);
-                let len = loc.routeLength();
-                if (seg1 === 'app') {
-                    me.isAppMode = true;
-                    return null;
-                }
-                let ai = me.menu.find(itm => itm.url === seg1);
-                me.activeItem = ai;
-                return loc;
-            }
-
-            window.addEventListener('popstate', function (event, a, b) {
-                if (me.__dataStack__.length > 0) {
-                    let comp = me.__dataStack__[0];
-                    let oldUrl = event.state;
-                    //console.warn('pop state: ' + oldUrl);
-                    if (!comp.$saveModified()) {
-                        // disable navigate
-                        oldUrl = comp.__baseUrl__.replace('/_page', '');
-                        //console.warn('return url: ' + oldUrl);
-                        window.history.pushState(oldUrl, null, oldUrl);
-                        return;
-                    }
-                }
-                route.updateSearch();
-                findCurrent();
-                route.navigateCurrent();
-            });
-
-            let loc = findCurrent();
-
-            if (me.activeItem) 
-            {
-                if (me.activeItem.menu) {
-                    activateMenu(me.activeItem, loc);
-                }
-                else {
-                    // unknoun menu element
-                    this.navigate(me.activeItem);
-                }
-            }
-
-            if (!me.activeItem && !this.isAppMode) {
-                me.activeItem = me.menu[0];
-                activateMenu(me.activeItem, loc);
-                if (!me.activeItem.menu)
-                    this.navigate(me.activeItem);
-            }
+		props: {
+			menu: Array
+		},
+		computed:
+		{
+			seg0: () => store.getters.seg0
+		},
+		methods: {
+			isActive(item) {
+				return this.seg0 === item.url;
+			},
+			itemHref: (item) => '/', // TODO: findHref
+			navigate(item) {
+				this.$store.commit('navigate', makeMenuUrl(this.menu, item.url));
+			}
+		}
+	};
 
 
-            store.$on('registerData', function (component) {
-                if (component)
-                    me.__dataStack__.push(component);
-                else
-                    me.__dataStack__.pop(component);
-            });
-
-            this.$root.$on('navigateTop', function (top) {
-                me.navigate(top);
-            });
-        },
-
-        methods: {
-            isActive: function (item) {
-                return item === this.activeItem;
-            },
-            itemHref(item) {
-                // for 'open in new window' command
-                let url = '/' + item.url;
-                let activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
-                if (activeItem)
-                    url = url + '/' + activeItem.url;
-                return url;
-            },
-            navigate: function (item) {
-                // nav bar
-                this.activeItem = item;
-                let url = '/' + item.url;
-                let query = null;
-                let title = null;
-                let savedUrl = route.savedMenu(item.url);
-                let activeItem = null;
-                if (savedUrl) {
-                    // find active side menu item
-                    activeItem = findMenu(item.menu, (itm) => itm.url === savedUrl);
-                } else {
-                    activeItem = findMenu(item.menu, (itm) => itm.url && !!item.menu);
-                }
-                if (activeItem) {
-                    url = url + '/' + activeItem.url;
-                    query = activeItem.query;
-                    title = activeItem.title;
-                }
-                route.navigateMenu(url, query, title);
-            }
-        }
-    };
-
-    const sideBar = {
-        // TODO: разные варианты меню
-        template: `
+	const a2SideBar = {
+		// TODO: разные варианты меню
+		template: `
 <div :class="cssClass">
     <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
@@ -2190,126 +2318,105 @@ TODO: may be icon for confirm ????
     </div>
 </div>
 `,
-        props: {
-            menu: Array
-        },
-        data: function () {
-            return {
-                sideMenu: null,
-                topUrl: null,
-                activeItem: null
-            };
-        },
-        computed: {
-            cssClass: function () {
-                return 'side-bar ' + (this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded');
-            },
-            bodyIsVisible() {
-                return !this.$parent.sideBarCollapsed;
-            },
-            title() {
-                return this.activeItem ? this.activeItem.title : 'Меню';
-            }
-        },
-        methods: {
-            isActive: function (itm) {
-                return itm === this.activeItem;
-            },
-            itemUrl(itm)
-            {
-                return `/${this.topUrl}/${itm.url}`;
-            },
-            itemHref(itm) {
-                // for 'open in new window' command
-                let url = this.itemUrl(itm);
-                if (itm.query)
-                    url += '?' + itm.query;
-                return url;
-            },
-            navigate: function (itm) {
-                if (!itm.url)
-                    return; // no url. is folder?
-                let newUrl = this.itemUrl(itm);
-                route.navigateMenu(newUrl, itm.query, itm.title);
-            },
+		props: {
+			menu: Array
+		},
+		computed: {
+			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
+			cssClass() {
+				return 'side-bar ' + (this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded');
+			},
+			bodyIsVisible() {
+				return !this.$parent.sideBarCollapsed;
+			},
+			title() {
+				let sm = this.sideMenu;
+				if (!sm)
+					return UNKNOWN_TITLE;
+				let seg1 = this.seg1;
+				let am = findMenu(sm, (mi) => mi.url === seg1);
+				if (am)
+					return am.title || UNKNOWN_TITLE;
+				return UNKNOWN_TITLE;
+			},
+			sideMenu() {
+				let top = this.topMenu;
+				return top ? top.menu : null;
+			},
+			topMenu() {
+				let seg0 = this.seg0;
+				return findMenu(this.menu, (mi) => mi.url === seg0);
+			}
+		},
+		methods: {
+			isActive(item) {
+				return this.seg1 === item.url;
+			},
+			navigate(item) {
+				let top = this.topMenu;
+				if (top)
+					this.$store.commit('navigate', '/' + top.url + '/' + item.url);
+				else
+					console.error('no top menu found');
+			},
+			itemHref(item) {
+				// TODO:
+				return undefined;
+			},
             toggle() {
-                this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
-            }
-        },
-        created: function () {
-            // side bar
-            var me = this;
-            route.$on('route', function (loc) {
-                let s1 = loc.segment(1);
-                let s2 = loc.segment(2);
-                let m1 = me.menu.find(itm => itm.url === s1);
-                if (!m1) {
-                    me.topUrl = null;
-                    me.sideMenu = null;
-                } else {
-                    me.topUrl = m1.url;
-                    me.sideMenu = m1.menu || null;
-                    if (me.sideMenu)
-                        me.activeItem = findMenu(me.sideMenu, (itm) => itm.url === s2);
-                }
-                if (me.activeItem)
-                    route.setTitle(me.activeItem.title);
-            });
-        }
-    };
+				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
+			}
+		}
+	};
 
-    const contentView = {
-        render(h) {
-            return h('div', {
-                attrs: {
-                    class: 'content-view ' + this.cssClass
-                }
-            }, [h('include', {
-                props: {
-                    src: this.currentView,
-                    needReload: this.needReload
-                }
-            })]);
-        },
-        data() {
-            return {
-                currentView: null,
-                needReload: false,
-                cssClass: ''
-            };
-        },
-        created() {
-            // content view
-            var me = this;
-            route.$on('route', function (loc) {
-                let len = loc.routeLength();
-                //TODO: // find menu and get location from it ???
-                let tail = '';
-                switch (len) {
-                    case 2: tail = '/index/0'; break;
-                    case 3: tail = '/index/0'; break;
-                }
-                let url = "/_page" + window.location.pathname + tail;
-                let search = window.location.search;
-                url += search;
-                me.currentView = url;
-                me.cssClass =
-                    len === 2 ? 'full-page' :
-                    len === 3 ? 'partial-page' :
-                                'full-view';
-            });
+	const contentView = {
+		render(h) {
+			return h('div', {
+				attrs: {
+					class: 'content-view ' + this.cssClass
+				}
+			}, [h('include', {
+				props: {
+					src: this.currentView,
+					needReload: this.needReload
+				}
+			})]);
+		},
+		computed: {
+			currentView() {
+				// TODO: compact
+				let url = store.getters.url;
+				let len = store.getters.len;
+				if (len === 2 || len === 3)
+					url += '/index/0';
+				return '/_page' + url + store.getters.search;
+			},
+			cssClass() {
+				let route = this.$store.getters.route;
+				return route.len === 3 ? 'partial-page' :
+					route.len === 2 ? 'full-page' : 'full-view';
+			}
+		},
+		data() {
+			return {
+				needReload: false
+			};
+		},
+		created() {
+			// content view
+			var me = this;
+			eventBus.$on('requery', function () {
+				// just trigger
+				me.needReload = true;
+				Vue.nextTick(() => me.needReload = false);
+			});
+		}
+	};
 
-            store.$on('requery', function () {
-                // just trigger
-                me.needReload = true;
-                Vue.nextTick(() => me.needReload = false);
-            });
-        }
-    };
-
-    // important: use v-show instead v-if to ensure components created only once
-    const a2MainView = {
-        template: `
+	const a2MainView = {
+		store,
+		template: `
 <div :class="cssClass">
     <a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
     <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
@@ -2321,122 +2428,118 @@ TODO: may be icon for confirm ????
         </div>
     </div>
 </div>`,
-        components: {
-            'a2-nav-bar': navBar,
-            'a2-side-bar': sideBar,
+		components: {
+			'a2-nav-bar': a2NavBar,
+			'a2-side-bar': a2SideBar,
             'a2-content-view': contentView,
             'a2-modal': modal
-        },
-        props: {
-            menu: Array
-        },
-        data() {
-            return {
-                navBarVisible: false,
-                sideBarVisible: true,
-                sideBarCollapsed: false,
-                requestsCount: 0,
-                modals: []
-            };
-        },
-        computed: {
-            cssClass: function () {
-                return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
-            },
-            hasModals: function () {
-                return this.modals.length > 0;
-            },
-            pendingRequest: function () {
-                return this.requestsCount > 0;
-            }
-        },
-        mounted() {
-            // first time created
-            route.navigateCurrent();
-        },
-        methods: {
-            closeModal() {
-                route.$emit('modalClose');
-            }
-        },
-        created() {
-            // shell
-            let me = this;
-            route.$on('route', function (loc) {
-                let len = loc.routeLength();
-                let seg1 = loc.segment(1);
-                if (seg1 === 'app') {
-                    me.navBarVisible = false;
-                    me.sideBarVisible = false;
-                }
-                else {
-                    me.navBarVisible = len === 2 || len === 3;
-                    me.sideBarVisible = len === 3;
-                }
-                // close all modals
-                me.modals.splice(0, me.modals.length);
-            });
-            store.$on('beginRequest', function () {
-                if (me.hasModals)
-                    return;
-                me.requestsCount += 1;
-            });
-            store.$on('endRequest', function () {
-                if (me.hasModals)
-                    return;
-                me.requestsCount -= 1;
-            });
-            store.$on('modal', function (modal, prms) {
-                // TODO: Path.combine
-                let id = '0';
-                if (prms && prms.data && prms.data.Id) {
-                    id = prms.data.Id;
-                    // TODO: get correct ID
-                }
-                let url = '/_dialog/' + modal + '/' + id;
-                url = route.replaceUrlQuery(url, prms.query);
-                let dlg = { title: "dialog", url: url, prms: prms.data };
-                dlg.promise = new Promise(function (resolve, reject) {
-                    dlg.resolve = resolve;
-                });
-                prms.promise = dlg.promise;
-                me.modals.push(dlg);
-            });
-            store.$on('modalClose', function (result) {
-                let dlg = me.modals.pop();
-                if (result)
-                    dlg.resolve(result);
-            });
-            store.$on('confirm', function (prms) {
-                let dlg = prms.data;
-                dlg.promise = new Promise(function (resolve) {
-                    dlg.resolve = resolve;
-                });
-                prms.promise = dlg.promise;
-                me.modals.push(dlg);
-            });
-        }
-    };
+		},
+		props: {
+			menu: Array
+		},
+		data() {
+			return {
+				sideBarCollapsed: false,
+				requestsCount: 0,
+				modals: []
+			};
+		},
+		computed: {
+			route() {
+				return this.$store.getters.route;
+			},
+			navBarVisible() {
+				let route = this.route;
+				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
+			},
+			sideBarVisible() {
+				let route = this.route;
+				return route.seg0 !== 'app' && route.len === 3;
+			},
+			cssClass() {
+				return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
+			},
+			pendingRequest() { return this.requestsCount > 0; },
+			hasModals() { return this.modals.length > 0; }
+		},
+		created() {
+			// todo: find first URL
+			// pathname, not route
+			let newUrl = makeMenuUrl(this.menu, window.location.pathname);
+			this.$store.commit('setstate', newUrl);
 
+			let me = this;
 
+			eventBus.$on('modal', function (modal, prms) {
+				// TODO: Path.combine
+				let id = '0';
+				if (prms && prms.data && prms.data.Id) {
+					id = prms.data.Id;
+					// TODO: get correct ID
+				}
+				let url = '/_dialog/' + modal + '/' + id;
+				url = store.replaceUrlQuery(url, prms.query);
+				let dlg = { title: "dialog", url: url, prms: prms.data };
+				dlg.promise = new Promise(function (resolve, reject) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
 
+			eventBus.$on('modalClose', function (result) {
+				let dlg = me.modals.pop();
+				if (result)
+					dlg.resolve(result);
+			});
+
+			eventBus.$on('confirm', function (prms) {
+				let dlg = prms.data;
+				dlg.promise = new Promise(function (resolve) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
+
+		}
+	};
 
     const shell = Vue.extend({
         components: {
             'a2-main-view': a2MainView
-        },
+		},
+		store,
         methods: {
             about() {
-                // TODO: localization
-                route.navigateMenu('/app/about', null, "О программе");
+				// TODO: localization
+				this.$store.commit('navigate', '/app/about');
+                //route.navigateMenu('/app/about', null, "О программе");
             },
-            root() {
-                // first menu element
-                this.$emit('navigateTop', this.menu[0]);
+			root() {
+				this.$store.commit('navigate', makeMenuUrl(this.menu, '/'));
             }
-        }
+		},
+		created() {
+			let me = this;
+			me.__dataStack__ = [];
+			window.addEventListener('popstate', function (event, a, b) {
+				if (me.__dataStack__.length > 0) {
+					let comp = me.__dataStack__[0];
+					let oldUrl = event.state;
+					//console.warn('pop state: ' + oldUrl);
+					if (!comp.$saveModified()) {
+						// disable navigate
+						oldUrl = comp.__baseUrl__.replace('/_page', '');
+						//console.warn('return url: ' + oldUrl);
+						window.history.pushState(oldUrl, null, oldUrl);
+						return;
+					}
+				}
+				me.$store.commit('popstate');
+			});
+		}
     });
 
     app.components['std:shellController'] = shell;
-
 })();

@@ -52,9 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\components\datagrid_old.js" />
+    <Content Include="app\components\pager _old.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\tab.js" />
+    <Content Include="app\controllers\shell _old.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
@@ -63,6 +67,7 @@
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
+    <Content Include="app\platform\routex.js" />
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
     <Content Include="app\services\dataservice.js" />
@@ -101,12 +106,20 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="TestPages\collectionview.html" />
+    <Content Include="TestPages\collectionview.js" />
+    <Content Include="TestPages\collectionview.txt" />
+    <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\generator.js" />
+    <Content Include="TestPages\pager.html" />
+    <Content Include="TestPages\pager.js" />
     <Content Include="TestPages\tabcomponent.html" />
     <Content Include="TestPages\testscript.html" />
     <Content Include="TestPages\treeview.html" />
     <Content Include="TestPages\include.html" />
     <Content Include="TestPages\gridlayout.html" />
+    <Content Include="TestPages\xstore.html" />
+    <Content Include="TestPages\xstore.js" />
     <Content Include="tests\platform.js" />
     <Content Include="tests\datamodel.js" />
     <Content Include="tests\validators.js" />

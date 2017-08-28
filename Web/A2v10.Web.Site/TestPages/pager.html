@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <div id="app">
+        <div>
+            <h4>data-grid with filters and outer pager</h4>
+            <p>Эта штука позволяет сделать внешний wrapper со своей областью видимости.
+            template.scope дает возможность передать родительский контекст
+            в дочерний.
+            свойство thisPager в шаблоне ссылается на сам pager (computed: thisPager() {return this;})
+            <br />
+            Можно сделать объект с фильтрами. Но нужно знать заранее все имена свойств, 
+            чтобы можно было сделать их реактивными и связать с html.
+            <br />
+            Еще нужно добавить в этот wrapper сортировки!!!
+            </p>
+            <div>
+                <button @click="add100">add 100 items</button>
+                <button @click="check">check</button>
+                <label>page size: </label><input v-model.lazy="PageSize"/>
+            </div>
+            <xpager :page-size="PageSize" :items-source="Elements" :filter-func="Filter" runat="server" :query-props="{t:1, x:'200'}">
+                <template scope="parent" :query-props="{Test:'', Data:null, Checked:false}">
+                    <div>
+                        pager inside table: 
+                        <button @click.stop.prevent="parent.pager.next">next</button>
+                        <span>pager query: {{parent.pager.query}}</span>
+                        <input v-model="parent.pager.query.filter1">
+                    </div>
+                    <div>
+                        <span>pager query props: {{parent.pager.queryProps}}</span>
+                    </div>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th><a href="" @click="sort('id', 'a')" :class="{active:isSort('id', 'a')}">asc</a></th>
+                                <th><a href="" @click="sort('id', 'd')" class="{active:isSort('id', 'd')}">desc</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in parent.itemsSource" :key="index">
+                                <td>
+                                    <span v-text="index + 1 + parent.pager.offset"></span>
+                                </td>
+                                <td>
+                                    <span v-text="parent.pager.offset"></span>
+                                </td>
+                                <td>
+                                    <span>id:</span> <span v-text="item.id"></span>
+                                </td>
+                                <td>
+                                    <span>id:</span> <input v-model="item.id">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>parent context: length={{Elements.length}}</div>
+                    <div>sub pager</div>
+                    <xpager :page-size="3" :items-source="parent.itemsSource">
+                        <template scope="parent">
+                            <div>
+                                sub pager inside list:
+                                <button @click.stop.prevent="parent.pager.prev">prev</button>
+                                <button @click.stop.prevent="parent.pager.next">next</button>
+                            </div>
+                            <ul>
+                                <li v-for="(item, index) in parent.itemsSource" :key="index">id={{item.id}}</li>
+                            </ul>
+                        </template>
+                    </xpager>
+                </template>
+                <testpager></testpager>
+            </xpager>
+        </div>
+    </div>
+    <!--
+        
+        // функция фильтрации - свойство, которое должно возвращать функцию
+        // нужно сделать в шаблоне блок filters
+        // как-то более красиво определить, какие свойства нужно фильтровать
+
+        <PagerWrapper ItemsSource={Bind Customers} FilterFunc={Bind Filter}
+            PageSize="10" FilterProps="Text:String, From:Date, To:Date, Flag:Boolean">
+        <DataGrid ItemsSource={Bind Wrapper.ItemsSource} >
+            <DataGrid.Toolbar>
+                <TextBox Label="Filter" Value={Bind Pager.Query.Text}/>
+                <CheckBox Label="Checked" Value={Bind Pager.Query.Flag}/>
+            </DataGrid.Toolbar>
+            <DataGrid.Pager>
+                <Pager Source={Pager} Style="Default">
+            </DataGrid.Pager>
+        </DataGrid>
+    </PagerWrapper>
+    -->
+
+
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="pager.js"></script>
+</body>
+</html>
