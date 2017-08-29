@@ -2,14 +2,123 @@
 @import "Variables.less";
 
 
-.control {
-    input, select {
-        width:100%
+@control-border: #aaa;
+@label-color: #777;
+@control-bg-color:white;
+@control-height:2em;
+
+
+/*TODO: 
+    2. v-focus-parent directive
+    3. .validator width
+    4. .validator arrows
+*/
+
+.control-group {
+    display: block;
+    background-color: aliceblue;
+    margin-bottom: 10px;
+
+    label {
+        color: @label-color;
+        margin-bottom: 3px;
+        display: block;
+    }
+
+    .validator {
+        position: absolute;
+        display: none;
+        left: 100%;
+        top: 0;
+        padding: 10px;
+        background-color: @danger-bg-color;
+        color: @danger-txt-color;
+        border: 1px solid @danger-brd-color;
+        margin-left: 10px;
+        width: auto;
+        box-shadow: 1px 4px 10px @danger-shadow-color;
+
+        .error {
+            display: list-item;
+            list-style-type: none;
+        }
+    }
+
+    .input-group {
+        border: 1px solid @control-border;
+        display: flex;
+        align-items: baseline;
+        background-color: @control-bg-color;
+        position: relative;
+
+        > a {
+            align-self: stretch;
+            padding: 0 3px;
+            line-height: @control-height;
+            color: #999;
+
+            &:hover {
+                text-decoration: none;
+                color: @link-hover-color
+            }
+        }
+    }
+
+    &:hover .input-group {
+        border-color: @link-hover-color;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    input {
+        padding: 0 6px;
+        height: @control-height;
+        width: 100%;
+        color: @text-color;
+        background-color: transparent;
+
+        &:focus {
+            outline-style: none;
+        }
+    }
+
+    .control {
+        border-style: none;
     }
 }
 
-.control.invalid {
-    input {
-        outline:1px solid @error-border-color;
+.control-group.invalid {
+    label {
+        color: @danger-txt-color;
     }
+
+    &:hover .validator {
+        display: block;
+    }
+
+    &:hover .input-group {
+        box-shadow: 1px 1px 4px @danger-shadow-color;
+    }
+
+    .input-group {
+        border-color: @danger-brd-color;
+        background-color: #fff8f8;
+
+        &:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            border: 4px solid @danger-txt-color;
+            border-left-color: transparent;
+            border-bottom-color: transparent;
+        }
+
+        .control {
+            background-color: #fff8f8;
+        }
+    }
+}
+
+.data-grid .control-group {
+    margin:0;
 }

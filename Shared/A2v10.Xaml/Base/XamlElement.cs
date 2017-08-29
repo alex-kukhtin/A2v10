@@ -7,7 +7,7 @@ namespace A2v10.Xaml
 {
 	public class XamlElement : ISupportInitialize
 	{
-		IDictionary<String, Bind> _bindings;
+		IDictionary<String, BindBase> _bindings;
 
 		internal XamlElement Parent { get; private set; }
 
@@ -20,10 +20,10 @@ namespace A2v10.Xaml
 			Parent = parent;
 		}
 
-		public Bind SetBinding(String name, Bind bind)
+		public BindBase SetBinding(String name, BindBase bind)
 		{
 			if (_bindings == null)
-				_bindings = new Dictionary<String, Bind>();
+				_bindings = new Dictionary<String, BindBase>();
 			_bindings.Add(name, bind);
 			return bind;
 		}
@@ -32,9 +32,27 @@ namespace A2v10.Xaml
         {
             if (_bindings == null)
                 return null;
-            Bind bind = null;
+            BindBase bind = null;
             if (_bindings.TryGetValue(name, out bind))
-                return bind;
+            {
+                if (bind is Bind)
+                    return bind as Bind;
+                throw new XamlException($"Binding '{name}' must be a Bind");
+            }
+            return null;
+        }
+
+        public BindCmd GetBindingCommand(String name)
+        {
+            if (_bindings == null)
+                return null;
+            BindBase bind = null;
+            if (_bindings.TryGetValue(name, out bind))
+            {
+                if (bind is BindCmd)
+                    return bind as BindCmd;
+                throw new XamlException($"Binding '{name}' must be a BindCmd");
+            }
             return null;
         }
 

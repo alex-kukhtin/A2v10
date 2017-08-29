@@ -10,6 +10,7 @@ let template = {
     events: {
     },
     validators: {
+		"Customers[].Name": "Обязательное поле"
     },
     commands: {
 

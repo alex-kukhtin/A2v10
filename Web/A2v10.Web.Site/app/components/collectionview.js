@@ -7,7 +7,7 @@ Vue.component('collection-view', {
 	store: component('std:store'),
 	template: `
 <div>
-	<slot :itemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
+	<slot :ItemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
 		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
@@ -15,7 +15,7 @@ Vue.component('collection-view', {
 </div>
 `,
 	props: {
-		itemsSource: Array,
+		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
 		runAt:String
@@ -60,8 +60,8 @@ Vue.component('collection-view', {
 		pagedSource() {
 			//console.warn('get paged source');
 			if (this.isServer)
-				return this.itemsSource; // server - all data from server
-			let arr = [].concat(this.itemsSource);
+				return this.ItemsSource; // server - all data from server
+			let arr = [].concat(this.ItemsSource);
 			// filter (TODO: // правильная фильтрация)
 			if (this.filter && this.filter.Text)
 				arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
@@ -84,8 +84,8 @@ Vue.component('collection-view', {
 		},
 		sourceCount() {
 			if (this.isServer)
-				return this.itemsSource.$RowCount;
-			return this.itemsSource.length;
+				return this.ItemsSource.$RowCount;
+			return this.ItemsSource.length;
 		},
 		thisPager() {
 			return this;

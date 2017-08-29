@@ -13,7 +13,7 @@
 
 	function parseQueryString(str) {
 		var obj = {};
-		str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
+		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
 			obj[decodeURIComponent(key)] = decodeURIComponent(value);
 		});
 		return obj;
@@ -77,6 +77,7 @@
 				// changes all query
 				state.query = Object.assign({}, query);
 				let newUrl = state.route + makeQueryString(state.query);
+				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
@@ -84,6 +85,7 @@
 				state.query = Object.assign({}, state.query, query);
 				let newUrl = state.route + makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
+				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', makeQueryString(state.query));
 			},
@@ -92,6 +94,7 @@
 				state.query = parseQueryString(window.location.search);
 			},
 			setstate(state, url) {
+				//console.warn('set setstate: ' + url);
 				window.history.replaceState(null, title, url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);

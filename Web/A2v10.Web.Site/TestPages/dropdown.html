@@ -4,111 +4,358 @@
     <meta charset="utf-8" />
     <title></title>
     <style>
+        [v-cloak] {
+            display: none;
+        }
+
         .dropdown {
             position:relative;
             display:inline-block;
             padding:10px;
         }
 
-        .dropdown > .dropdown-menu {
+        .dropdown-menu {
             display: none;
             position: absolute;
+            background-color: skyblue;
+            padding: 10px;
+            left:10px;
+            top:10px;
+            width: auto;
+            border: 1px solid red;
+            box-shadow: rgba(0, 0, 0, 0.5) 10px 10px 20px;
+            z-index:500;
+        }
+
+        .dropdown-menu.dialog {
+            display:none;
+            position:absolute;
+            padding:20px;
+            background-color:beige;
+            left:0;
+            top:100%;
+            z-index:500;
+            border-color:forestgreen;
         }
 
         .dropdown.show > .dropdown-menu {
-            display:block;
-            background-color:skyblue;
-            padding:10px;
-            left:0;
-            top:100%;
-            width:auto;
-            border:1px solid red;
-            box-shadow:rgba(0, 0, 0, 0.5) 10px 10px 20px;
+            display: block;
+            left: 0;
+            top: 100%;
+        }
+
+        .dropdown.show > button {
+            background-color:aquamarine;
         }
 
         .dropdown-item {
             display: block;
             min-width: 120px;
         }
+
         .dropdown-divider {
             height:1px;
             margin:.5rem 0;
             background-color:forestgreen;
         }
-    </style>
+
+        .context-menu {
+            position:relative;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .datepicker {
+            position:relative;
+        }
+        .datepicker > .calendar {
+            position:absolute;
+            width:200px;
+            height:200px;
+            background-color:#fcf1b4;
+            left:0;
+            top:100%;
+            z-index:500;
+            border:1px solid brown;
+        }
+        </style>
 </head>
 <body>
 
 
     <div id="app">
         <h3>Buttons with drop down</h3>
+        <p>
+            Popup поддерживают: drop-down, date-picker, context-menu, popover, 
+        </p>
+        <p>
+            Любой элемент с директивой v-dropdown.
+            Внутри него должен быть элемент с атрибутом toggle - это то, что 
+            открывает dropdown. Ну и сам popup элемент c классом
+            "dropdown-menu"
+
+            Все, что внутри элемента с классом "dropdown-item" или с атрибутом
+            "close-dropdown" закрывает popup.
+            Открытие - просто добавление в врехний элемент класса open.
+
+            То, что вложенный popup снабжен классом dropdown-menu - это нужно для
+            css. Сама директива это не использует
+        </p>
 
         <p>
-            <div>Simple</div>
+            Команды меню не должны делать .stop!
+            Нам нужно закрывать меню. "click" должен
+            распространяться выше до документа
+        </p>
 
-            <div class="dropdown" data-toggle="dropdown" v-dropdown>
-                <button>Simple button</button>
+        <p>
+            <label>
+                <input type="checkbox" v-model="is3">
+                Show third DropDown
+            </label>
+        </p>
+            <div class="dropdown" v-dropdown>
+                <button toggle>Simple button</button>
                 <div class="dropdown-menu">
-                    <a href="" class="dropdown-item">First</a>
-                    <a href="" class="dropdown-item">Second</a>
+                    <a href="" @click.prevent="doClick(1)" class="dropdown-item">First</a>
+                    <a href="" @click.prevent="doClick(2)" class="dropdown-item">Second</a>
                     <div class="dropdown-divider"></div>
-                    <a href="" class="dropdown-item">Third</a>
+                    <a href="" @click.prevent="doClick(3)" class="dropdown-item">Third</a>
                 </div>
             </div>
 
-            <div class="dropdown" data-toggle="dropdown" v-dropdown>
-                <button>Simple button</button>
-                <div class="dropdown-menu">
-                    <a href="" class="dropdown-item">First</a>
-                    <a href="" class="dropdown-item">Second</a>
+            <div class="dropdown" v-dropdown>
+                <button toggle @click="openFilter">Another button</button>
+                <div class="dropdown-menu dialog">
+                    <a href="javascript:void(0)" class="dropdown-item">First</a>
+                    <a href="javascript:void(0)" class="dropdown-item">Second</a>
                     <div class="dropdown-divider"></div>
-                    <a href="" class="dropdown-item">Third</a>
+                    <a href="javascript:void(0)" class="dropdown-item">Third</a>
+                    <hr />
+                    <input v-model="filterText"/>
+                    <div>
+                        <button close-dropdown @click.prevent="closeFilter(true)">Ok</button>
+                        <button close-dropdown @click.prevent="closeFilter(false)">Cancel</button>
+                    </div>
+                </div>
+                <span>Filter:</span>
+                <span v-text="filterText"></span>
+            </div>
+
+            <span v-cloak>
+                <span class="dropdown" v-dropdown v-if="is3">
+                    <a href="" toggle>third with hyperlink</a>
+                    <div class="dropdown-menu">
+                        <a href="javascript:void(0)" class="dropdown-item">First</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Second</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </span>
+            </span>
+
+            <a2-date-picker v-if="is3"></a2-date-picker>
+
+            <div v-contextmenu class="context-menu" style="margin-top:40px;width:150px;height:150px;background-color:antiquewhite;overflow:scroll">
+                use context menu
+                <div style="height:400px;width:150px;margin:10px;overflow:scroll">
+                </div>
+                <div class="dropdown-menu">
+                    <a href="" @click.prevent="doClick(1)" class="dropdown-item">First</a>
+                    <a href="" @click.prevent="doClick(2)" class="dropdown-item">Second</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="" @click.prevent="doClick(3)" class="dropdown-item">Third</a>
                 </div>
             </div>
 
             <div style="margin-top:200px">
-                <button>outside</button>
+                <button>another</button>
             </div>
-        </p>
     </div>
     <script src="../scripts/vue.js"></script>
     <script>
-        Vue.directive('dropdown', {
-            bind(el, binding, vnode) {
-                this._elem = el;
-                var me = this;
+        let bus = new Vue({});
 
-                me.click = function () {
-                    return function windowClick(event) {
-                        me._shown = false;
-                        console.dir(el);
-                        el.classList.remove('show');
-                        document.removeEventListener('click', me._click);
-                    }
+        function isVisible(el) {
+            return el.classList.contains('show');
+        }
+
+        Vue.component('a2-date-picker', {
+            template: `
+<div class="datepicker">
+    <input><a href='' @click.prevent='toggle'>=</a>
+    <div class="calendar" v-if="isOpen">
+        <div class="header">
+            <a @click.prevent='prev'>prev</a>
+            <a @click.prevent='next'>next</a>
+        </div>
+    </div>
+</div>
+`,
+            data() {
+                return {
+                    isOpen: false
                 };
-
-                el.addEventListener('click', function (event) {
-                    el.classList.add("show");
-                    me._shown = true;
-                    event.stopImmediatePropagation();
-                    event.preventDefault();
-                    me._click = me.click();
-                    document.addEventListener('click', me._click);
-                    /*
-                    setTimeout(() => {
-                        window.addEventListener('click', windowClick);
-                    }, 1);
-                    */
-                });
             },
-            unbind(el) {
-                alert('unbind');
+            methods: {
+                toggle() {
+                    console.warn('toggle datepicker');
+                    this.isOpen = !this.isOpen;
+                },
+                __clickOutside(ev) {
+                    this.isOpen = false;
+                }
+            },
+            mounted() {
+                this.$el._close = this.__clickOutside;
+                this.$el.setAttribute('dropdown-top', '');
+                bus.$emit('registerDropDown', this.$el);
+            },
+            beforeDestroy() {
+                bus.$emit('unregisterDropDown', this.$el);
             }
         });
 
-        new Vue({
-            el: '#app'
+        Vue.directive('dropdown', {
+
+            bind(el, binding, vnode) {
+                var me = this;
+                console.warn('bind ');
+                //let el = elem;
+                el._btn = el.querySelector('[toggle]');
+                el.setAttribute('dropdown-top', '');
+
+                bus.$emit('registerDropDown', el);
+
+                el._close = function (ev) {
+                    //console.info('outside click');
+                    el.classList.remove('show');
+                };
+
+                el.addEventListener('click', function (event) {
+                    if (event.target === el._btn) {
+                        // already handled
+                        event.preventDefault();
+                        if (isVisible(el))
+                            el.classList.remove('show');
+                        else {
+                            //console.dir(vnode.children[0].context);
+                            //el._btn.dispatchEvent(new Event('click'));
+                            el.classList.add("show");
+                        }
+                    }
+                    //event.stopImmediatePropagation();
+                });
+            },
+            unbind(el) {
+                bus.$emit('unregisterDropDown', el);
+            }
         });
+
+        Vue.directive('contextmenu', {
+            bind(el, binding, vnode) {
+                bus.$emit('registerDropDown', el);
+                el.setAttribute('dropdown-top', '');
+
+                el._menu = el.querySelector('.dropdown-menu');
+                document.body.appendChild(el._menu);
+
+                el._close = (ev) => {
+                    console.warn('close context menu');
+                    el._menu.classList.remove('show');
+                };
+
+                el.addEventListener('contextmenu', (ev) => {
+                    ev.preventDefault();
+                    let style = el._menu.style;
+                    style.top = ev.pageY + 'px';
+                    style.left = ev.pageX + 'px';
+                    style.backgroundColor = "yellow";
+                    el._menu.classList.toggle('show');
+                    console.dir(ev);
+                    //console.warn('open context menu');
+                });
+            },
+            unbind(el) {
+                //TODO: removeElement from document.body!!!
+                bus.$emit('unregisterDropDown', el);
+            }
+
+        });
+
+        function closest(node, css) {
+            while (node) {
+                if (node.matches(css)) return node;
+                else node = node.parentElement;
+            }
+            return null;
+        } 
+
+        let app = new Vue({
+            el: '#app',
+            data: {
+                filterText: 'filter',
+                is3: true
+            },
+            methods: {
+                doClick(arg) {
+                    console.warn('do click: ' + arg)
+                },
+                openFilter() {
+                    //alert('open filter')
+                    this.filterText = 'opened filter';
+                },
+                closeFilter(result) {
+                    alert('close filter: ' + result);
+                }
+            },
+            created() {
+                let me = this;
+                me._dropDowns = [];
+
+                bus.$on('registerDropDown', (elem) => {
+                    me._dropDowns.push(elem);
+                });
+                bus.$on('unregisterDropDown', (elem) => {
+                    let ix = me._dropDowns.indexOf(elem);
+                    if (ix != -1)
+                        me._dropDowns.splice(ix, 1);
+                    delete elem._close;
+                })
+
+                function closeContextMenus(ev) {
+                    if (me._dropDowns.length == 0)
+                        return;
+                    console.warn('dropDowns: ' + me._dropDowns.length);
+                    for (let i = 0; i < me._dropDowns.length; i++) {
+                        let el = me._dropDowns[i];
+                        if (ev.target.classList.contains('dropdown-item') ||
+                            ev.target.hasAttribute('close-dropdown') ||
+                            closest(ev.target, '[dropdown-top]') !== el) {
+                            el._close(ev.target);
+                        } else {
+                            console.warn('skip');
+                        }
+                    }
+                }
+
+                document.body.addEventListener('click', closeContextMenus);
+                document.body.addEventListener('contextmenu', closeContextMenus);  
+
+                // close on esc
+                document.body.addEventListener('keydown', (ev) => {
+                    if (ev.which === 27) {
+                        for (let i = 0; i < me._dropDowns.length; i++) {
+                            let el = me._dropDowns[i];
+                            el._close(ev.target);
+                        }
+                    }
+                });
+            }
+        });
+
+        root = app;
 
     </script>
 </body>

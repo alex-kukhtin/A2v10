@@ -8,17 +8,15 @@ namespace A2v10.Xaml
 {
 	public abstract class CommandControl : ContentControl
 	{
-        Object Command { get; set; }
+        public Command Command { get; set; }
 
-        // TODO: Command Type ???
-
-        internal override void AddAttributes(TagBuilder tag)
+        internal override void AddAttributes(TagBuilder tag, RenderContext context)
         {
-            base.AddAttributes(tag);
-            var cmd = GetBinding(nameof(Command));
+            base.AddAttributes(tag, context);
+            var cmd = GetBindingCommand(nameof(Command));
             if (cmd == null)
                 return;
-            //TODO: merge command to button
+            tag.MergeAttribute("@click.prevent", cmd.GetCommand());
         }
     }
 }

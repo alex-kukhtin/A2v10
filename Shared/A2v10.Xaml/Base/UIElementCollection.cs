@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace A2v10.Xaml
 {
     [TypeConverter(typeof(UICollectionConverter))]
-    public class UIElementCollection : List<UIElement>
+    public class UIElementCollection : List<UIElementBase>
     {
         public UIElementCollection()
         {
@@ -21,7 +21,7 @@ namespace A2v10.Xaml
         {
             if (sourceType == typeof(String))
                 return true;
-            else if (sourceType == typeof(UIElement))
+            else if (sourceType == typeof(UIElementBase))
                 return true;
             return base.CanConvertFrom(context, sourceType);
         }
@@ -41,10 +41,10 @@ namespace A2v10.Xaml
                 return x;
                 */
             }
-            else if (value is UIElement)
+            else if (value is UIElementBase)
             {
                 var x = new UIElementCollection();
-                x.Add(value as UIElement);
+                x.Add(value as UIElementBase);
                 return x;
             }
             return base.ConvertFrom(context, culture, value);

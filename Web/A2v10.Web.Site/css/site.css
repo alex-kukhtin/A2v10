@@ -101,14 +101,18 @@ i,
 .ico-history:before {
   content: "\e657";
 }
+.ico-reload:before,
 .ico-refresh:before {
   content: "\e658";
+  color: #034989;
 }
-.ico-reload:before {
+.ico-requery:before {
   content: "\e659";
+  color: #034989;
 }
 .ico-save:before {
   content: "\e661";
+  color: #034989;
 }
 .ico-search:before {
   content: "\e662";
@@ -377,6 +381,12 @@ a:focus {
 a:active {
   color: #0d82f8;
 }
+input {
+  border-style: none;
+  font-size: 13px;
+  height: 1.6em;
+  padding: 0 6px;
+}
 textarea {
   resize: none;
 }
@@ -395,12 +405,99 @@ button {
   padding: 4px 6px;
   font-size: 13px;
 }
-.control input,
-.control select {
-  width: 100%;
+/*TODO: 
+    2. v-focus-parent directive
+    3. .validator width
+    4. .validator arrows
+*/
+.control-group {
+  display: block;
+  background-color: aliceblue;
+  margin-bottom: 10px;
 }
-.control.invalid input {
-  outline: 1px solid #ff6a00;
+.control-group label {
+  color: #777;
+  margin-bottom: 3px;
+  display: block;
+}
+.control-group .validator {
+  position: absolute;
+  display: none;
+  left: 100%;
+  top: 0;
+  padding: 10px;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #dca7a7;
+  margin-left: 10px;
+  width: auto;
+  box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.2);
+}
+.control-group .validator .error {
+  display: list-item;
+  list-style-type: none;
+}
+.control-group .input-group {
+  border: 1px solid #aaa;
+  display: flex;
+  align-items: baseline;
+  background-color: white;
+  position: relative;
+}
+.control-group .input-group > a {
+  align-self: stretch;
+  padding: 0 3px;
+  line-height: 2em;
+  color: #999;
+}
+.control-group .input-group > a:hover {
+  text-decoration: none;
+  color: #0d82f8;
+}
+.control-group:hover .input-group {
+  border-color: #0d82f8;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.control-group input {
+  padding: 0 6px;
+  height: 2em;
+  width: 100%;
+  color: #222;
+  background-color: transparent;
+}
+.control-group input:focus {
+  outline-style: none;
+}
+.control-group .control {
+  border-style: none;
+}
+.control-group.invalid label {
+  color: #a94442;
+}
+.control-group.invalid:hover .validator {
+  display: block;
+}
+.control-group.invalid:hover .input-group {
+  box-shadow: 1px 1px 4px rgba(169, 68, 66, 0.2);
+}
+.control-group.invalid .input-group {
+  border-color: #dca7a7;
+  background-color: #fff8f8;
+}
+.control-group.invalid .input-group:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: 4px solid #a94442;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+.control-group.invalid .input-group .control {
+  background-color: #fff8f8;
+}
+.data-grid .control-group {
+  margin: 0;
 }
 table.data-grid {
   border: 1px solid #bdc5d8;
@@ -410,6 +507,12 @@ table.data-grid td,
 table.data-grid th {
   padding: 4px 6px;
   vertical-align: top;
+}
+table.data-grid td.cell-editable {
+  padding: 0;
+}
+table.data-grid td.cell-editable .control-group {
+  margin: -1px;
 }
 table.data-grid colgroup > col.sorted {
   background-color: rgba(238, 238, 238, 0.4);
@@ -505,17 +608,49 @@ table.hover > tbody > tr:hover {
   background-color: #fdf4bf !important;
 }
 .toolbar {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  padding: 2px;
+  overflow: visible;
   background-color: #cfd6e5;
+  color: #555;
 }
-.toolbar button:hover {
-  background-color: antiquewhite;
+.toolbar .btn {
+  white-space: nowrap;
+  border: 1px solid transparent;
+  background-color: #cfd6e5;
+  text-transform: lowercase;
+  padding: 4px 6px;
+  color: #222;
 }
-.toolbar i {
+.toolbar .btn:hover {
+  background-color: #fdf4bf;
+  border-color: #e5c365;
+}
+.toolbar .btn:active {
+  background-color: #fff29d;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  border-color: #e5c365;
+}
+.toolbar .btn:focus {
+  outline-style: none;
+}
+.toolbar i.ico {
   display: inline-block;
   font-size: 14px;
-  color: #808080;
   margin-right: 4px;
+}
+.toolbar .divider {
+  display: inline-block;
+  width: 1px;
+  border-right: 1px solid #e0e4ee;
+  align-self: stretch;
+  background-color: #9dacca;
+  margin: 1px 4px;
+}
+.toolbar .dropdown.show .btn {
+  background-color: #eaf0ff;
+  border-color: #9ba7b7;
 }
 .tree-view {
   margin: 0;
@@ -651,6 +786,66 @@ table.hover > tbody > tr:hover {
   border-top: 1px solid #ccc;
   display: flex;
   align-items: flex-end;
+}
+.menu {
+  padding: 2px;
+  top: 100%;
+  min-width: 200px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid #9ba7b7;
+}
+.menu .dropdown-item {
+  display: block;
+  cursor: pointer;
+  padding: 6px 8px;
+  color: #555;
+}
+.menu .dropdown-item:hover {
+  text-decoration: none;
+}
+.menu .dropdown-item:hover {
+  background-color: #fdf4bf;
+}
+.dropdown {
+  position: relative;
+  overflow: visible;
+}
+.dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  z-index: 1040;
+  background-color: #eaf0ff;
+  width: auto;
+  height: auto;
+  left: 0;
+  top: 0;
+}
+.dropdown.show .dropdown-menu {
+  display: block;
+}
+.dropdown .menu {
+  top: 100%;
+}
+.toolbar > .dropdown {
+  display: inline-block;
+  overflow: visible;
+  /*
+    &.show:after {
+        content: '';
+        height: 7px;
+        background-color: red;
+        border: 1px solid gray;
+        border-bottom-color:white;
+        position: absolute;
+        top: ~"calc(100% - 4px)";
+        left: 0px;
+        right: 0;
+        z-index: 4000;
+    }
+    */
+}
+.toolbar > .dropdown .menu {
+  margin-top: 3px;
 }
 .grid {
   display: grid;

@@ -17,6 +17,16 @@ table.data-grid {
         vertical-align: top;
     }
 
+    td.cell-editable {
+        padding:0;
+        .control-group {
+            margin:-1px;
+            .input-group {
+                //border-style:none!important;
+            }
+        }
+    }
+
     colgroup > col.sorted {
         background-color: @sort-bg-color;
     }

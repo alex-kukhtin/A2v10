@@ -6,6 +6,7 @@
 	const store = component('std:store');
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
+	const popup = require('std:popup');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -259,9 +260,21 @@
 			// todo: find first URL
 			// pathname, not route
 			let newUrl = makeMenuUrl(this.menu, window.location.pathname);
+			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', newUrl);
 
 			let me = this;
+
+			eventBus.$on('beginRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount += 1;
+			});
+			eventBus.$on('endRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount -= 1;
+			});
 
 			eventBus.$on('modal', function (modal, prms) {
 				// TODO: Path.combine
@@ -315,7 +328,9 @@
 		},
 		created() {
 			let me = this;
+
 			me.__dataStack__ = [];
+	
 			window.addEventListener('popstate', function (event, a, b) {
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
@@ -331,6 +346,8 @@
 				}
 				me.$store.commit('popstate');
 			});
+
+			popup.startService();
 		}
     });
 

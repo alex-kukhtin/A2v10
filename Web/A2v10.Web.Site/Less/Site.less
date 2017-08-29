@@ -201,6 +201,13 @@ a {
     }
 }
 
+input {
+    border-style: none;
+    font-size: 13px;
+    height: 1.6em;
+    padding: 0 6px;
+}
+
 textarea {
 	resize: none;
 }
@@ -219,7 +226,7 @@ pre {
 
 button {
     padding: 4px 6px;
-    font-size: 13px;
+    font-size: @font-size;
 }
 
 @import "Control.less";
@@ -229,11 +236,8 @@ button {
 @import "Tab.less";
 @import "Dialog.less";
 
+@import "DropDown.less";
 @import "Grid.less";
-
-@danger-txt-color: #a94442;
-@danger-bg-color: #f2dede;
-@danger-brd-color: darken(@danger-bg-color, 15%);
 
 .app-exception {
     margin: 20% auto;

@@ -4,9 +4,9 @@
 
 
     <collection-view :items-source="Customers" :page-size="3" :initial-filter="{Text:''}" run-at="server">
-        <template scope="parent">
+        <template scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
-                <data-grid :items-source="parent.itemsSource" :striped="true" :pager="true" filter-fields="filter,state"
+                <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
                            :border="true" :hover="true" grid="vertical" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
                     <data-grid-column header="index" content="$index" align="right"></data-grid-column>
                     <data-grid-column header="Id" content="Id" width="0%" align="right"></data-grid-column>
@@ -16,45 +16,64 @@
                     <data-grid-column header="Sum" content="$Sum" align="right" :sort="false"></data-grid-column>
                     <data-grid-column id="cmd"></data-grid-column>
                     <data-grid-column header="??" content="$invalid" :sort="false"></data-grid-column>
-                    <template slot="cmd" scope="cell">
-                        <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
+                    <template slot="cmd2" scope="cell">
+                        <button @click.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
                             <i class="ico-edit"></i>
                         </button>
-                        <button @click.stop.prevent="$navigate('catalog/suppliers/edit', cell.row.Id)">
+                        <button @click.prevent="$navigate('catalog/suppliers/edit', cell.row.Id)">
                             <i class="ico-file"></i>
                         </button>
-                        <button @click.stop.prevent="$remove(cell.row, 'are you sure?')">
+                        <button @click.prevent="$remove(cell.row, 'are you sure?')">
                             <i class="ico-trash"></i>
                         </button>
-                        <button @click.stop.prevent="$exec('inc', cell.row, 5)">
+                        <button @click.prevent="$exec('inc', cell.row, 5)">
                             <i class="ico-folder"></i>
                         </button>
                     </template>
                     <template slot="toolbar" scope="props">
                         <div class="toolbar">
                             <label>data-grid-toolbar</label>
-                            <button @click.stop.prevent="Customers.$append()">add</button>
-                            <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Refresh</button>
-                            <button @click.stop.prevent="$requery()"><i class="ico-reload"></i> Requery</button>
-                            <button @click.stop.prevent="$exec('test')"><i class="ico-database"></i> exec</button>
-                            <button @click.stop.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
-                            <code v-text="parent.filter"></code>
-                            <input v-model="parent.filter.Text" />
-                            <select v-model="parent.filter.Text">
+                            <div class="dropdown" v-dropdown>
+                                <button class="btn" toggle>Drop Down<span class="cr"></span></button>
+                                <div class="dropdown-menu menu">
+                                    <a class="dropdown-item" @click.prevent="Customers.$append()"><i class="ico ico-plus"></i>Append element</a>
+                                    <a class="dropdown-item" @click.prevent="$reload"><i class="ico ico-refresh"></i>Refresh</a>
+                                </div>
+                            </div>
+                            <button class="btn" @click.prevent="Customers.$append()">add</button>
+                            <button class="btn" @click.prevent="$reload()"><i class="ico-refresh"></i> Refresh</button>
+                            <button class="btn" @click.prevent="$requery()"><i class="ico-reload"></i> Requery</button>
+                            <div class="divider" role="separator"></div>
+                            <button class="btn" @click.prevent="$exec('test')"><i class="ico-database"></i> exec</button>
+                            <button class="btn" @click.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
+                            <code v-text="Parent.filter"></code>
+                            <input v-model="Parent.filter.Text" />
+                            <select v-model="Parent.filter.Text">
                                 <option value="эле">Элемент</option>
                                 <option value="сто">Сто</option>
                             </select>
-                            <span class="bold" v-if="parent.filter.Text">Filtered!!!</span>
+                            <span class="bold" v-if="Parent.filter.Text">Filtered!!!</span>
                         </div>
                     </template>
                     <template slot="pager" scope="props">
                         <b>data-grid-pager</b>
-                        <a2-pager :source="parent.pager" />
+                        <a2-pager :source="Parent.pager" />
+                    </template>
+                    <template slot="footer" scope="props">
+                        <template is="tfoot">
+                            <template is="tr">
+                                <td :colspan="9" style="background-color:whitesmoke;border:1px solid red">
+                                    Всего элементов <span class="bold" v-text="Customers.length"></span>
+                                    Pager = {{Parent.pager.pageSize}}
+
+                                </td>
+                            </template>
+                        </template>
                     </template>
                 </data-grid>
             </div>
             <b>collection view-pager</b>
-            <a2-pager :source="parent.pager" />
+            <a2-pager :source="Parent.pager" />
     </template>
 </collection-view>
 </div>

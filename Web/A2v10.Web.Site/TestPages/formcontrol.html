@@ -7,6 +7,12 @@
         * {
             box-sizing:border-box;
         }
+
+        html, body {
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size:13px;
+        }
+
         .grid {
             display: grid;
             width: 100%;
@@ -63,9 +69,113 @@
             bottom: 5px;
             padding: 10px;
         }
+
+        .form-control {
+            display: inline-block;
+        }
+
+        .input-group {
+            position: relative;
+            white-space:nowrap;
+            background-color:aliceblue;
+            border:1px solid blue;
+            display:flex;
+        }
+
+        .form-control label {
+            color:#888;
+            display:block;
+            margin-bottom:3px;
+        }
+
+        .form-input {
+            padding:0 6px;
+            width:100%;
+            height:2em;
+        }
+
+        .input-group:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.23);
+            border: 1px solid #ccc;
+        }
+
+        .form-input2:hover {
+            border-color:blue;
+        }
+
+       .form-input:focus, 
+       .form-input:active {
+            outline-style: none;
+       }
+
+        .form-control.invalid .input-group {
+            border-color: red;
+            box-shadow: 0 2px 2px rgba(255, 0, 0, 0.23);
+        }
+
+        .form-control.invalid .input-group:after {
+            content:'';
+            position:absolute;
+            border:5px solid red;
+            border-left-color:transparent;
+            border-bottom-color:transparent;
+            right:0;
+            top:0;
+            z-index:100;
+        }
+
+        .val-list {
+            position:absolute;
+            display:none;
+            left:100%;
+            top:0;
+            background-color:yellow;
+            margin-left:10px;
+            border:1px solid red;
+        }
+
+        .form-control.invalid:hover .val-list {
+            display:block;
+        } 
+
+        .error {
+            display:list-item;
+            list-style-type:none;
+            white-space:nowrap;
+            padding:4px 6px;
+        }
+
     </style>
 </head>
 <body>
+    <div style="margin-bottom:100px">
+        <h3>Form control test</h3>
+
+        <div style="width:150px;background-color:papayawhip">
+            <div class="form-control">
+                <label>Simple element</label>
+                <div class="input-group">
+                    <span>1</span>
+                    <input class="form-input">
+                    <div class="validator">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control invalid">
+            <label>invalid-element</label>
+            <div class="input-group">
+                <input class="form-input">
+                <span>i am the text</span>
+                <div class="val-list">
+                    <a class="error">Error #1</a>
+                    <a class="error">Error #2</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div class="grid">
         <div class="grid-cell" style="grid-row:1;grid-column:1">row:1 col:1</div>
         <div class="grid-cell" style="grid-row:1;grid-column:2">row:1 col:2</div>
@@ -76,6 +186,7 @@
             <input /><div class="validator">*<ul><li>first</li><li>second</li></ul></div>
         </div>
     </div>
+
     <script>
     </script>
 </body>

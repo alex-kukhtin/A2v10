@@ -1,0 +1,77 @@
+﻿@import "Variables.less";
+
+
+@button-gap: 3px;
+
+.menu {
+    padding: 2px;
+    top: 100%;
+    min-width: 200px; //TODO:
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid @dropdown-brd-color;
+
+    .dropdown-item {
+        display: block;
+        cursor: pointer;
+        padding: 6px 8px;
+        color:#555;
+        &:hover {
+            text-decoration:none;
+        }
+    }
+
+    .dropdown-item:hover {
+        background-color: @hover-bg-color;
+    }
+}
+
+
+.dropdown {
+    position: relative;
+    overflow: visible;
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        z-index: @popup-index;
+        background-color: @dropdown-bg-color;
+        width: auto;
+        height: auto;
+        left: 0;
+        top: 0;
+    }
+
+    &.show {
+        .dropdown-menu {
+            display: block;
+        }
+    }
+
+    .menu {
+        top: 100%;
+    }
+}
+
+.toolbar > .dropdown {
+    display: inline-block;
+    overflow:visible;
+
+    .menu {
+        margin-top:@button-gap;
+    }
+
+    /*
+    &.show:after {
+        content: '';
+        height: 7px;
+        background-color: red;
+        border: 1px solid gray;
+        border-bottom-color:white;
+        position: absolute;
+        top: ~"calc(100% - 4px)";
+        left: 0px;
+        right: 0;
+        z-index: 4000;
+    }
+    */
+}

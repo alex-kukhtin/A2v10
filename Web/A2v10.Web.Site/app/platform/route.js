@@ -108,7 +108,7 @@
                     //console.warn('get route.query:' + wls);
                     return this.search;
                 },
-                set(value) {
+				set(value) {
                     Vue.set(this, 'search', value);
                     let newUrl = window.location.pathname;
                     newUrl += makeQueryString(this.search);
@@ -183,7 +183,7 @@
                 console.info('navigate to:' + url);
                 let oldUrl = loc.fullPath();
                 // push/pop state feature. Replace the current state and push new one.
-                this.setTitle(title);
+				this.setTitle(title);
                 window.history.replaceState(oldUrl, null, oldUrl);
                 window.history.pushState(oldUrl, null, url);
                 loc = this.location(); // get new instance

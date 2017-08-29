@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class TextBox : ValuedControl
+    public class Group : Container
     {
         internal override void RenderElement(RenderContext context)
         {
-            var input = new TagBuilder("textbox");
-            MergeValue(input, context);
-            input.Render(context);
+            RenderChildren(context);
         }
     }
 }

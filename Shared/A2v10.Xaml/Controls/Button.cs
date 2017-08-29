@@ -13,7 +13,7 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context)
         {
             var button = new TagBuilder("button", "btn");
-            AddAttributes(button);
+            AddAttributes(button, context);
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

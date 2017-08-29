@@ -156,7 +156,7 @@
                     //console.warn('get route.query:' + wls);
                     return this.search;
                 },
-                set(value) {
+				set(value) {
                     Vue.set(this, 'search', value);
                     let newUrl = window.location.pathname;
                     newUrl += makeQueryString(this.search);
@@ -231,7 +231,7 @@
                 console.info('navigate to:' + url);
                 let oldUrl = loc.fullPath();
                 // push/pop state feature. Replace the current state and push new one.
-                this.setTitle(title);
+				this.setTitle(title);
                 window.history.replaceState(oldUrl, null, oldUrl);
                 window.history.pushState(oldUrl, null, url);
                 loc = this.location(); // get new instance
@@ -284,7 +284,7 @@
 
 	function parseQueryString(str) {
 		var obj = {};
-		str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
+		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
 			obj[decodeURIComponent(key)] = decodeURIComponent(value);
 		});
 		return obj;
@@ -348,6 +348,7 @@
 				// changes all query
 				state.query = Object.assign({}, query);
 				let newUrl = state.route + makeQueryString(state.query);
+				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
@@ -355,6 +356,7 @@
 				state.query = Object.assign({}, state.query, query);
 				let newUrl = state.route + makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
+				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', makeQueryString(state.query));
 			},
@@ -363,6 +365,7 @@
 				state.query = parseQueryString(window.location.search);
 			},
 			setstate(state, url) {
+				//console.warn('set setstate: ' + url);
 				window.history.replaceState(null, title, url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
@@ -1088,6 +1091,81 @@ app.modules['std:validators'] = function() {
 
 
 
+/*20170829-7022*/
+/* services/popup.js */
+
+app.modules['std:popup'] = function () {
+
+	const __dropDowns__ = [];
+	let __started = false;
+
+	const __error = 'Perhaps you forgot to create a _click function for popup element';
+
+	return {
+		startService: startService,
+		registerPopup: registerPopup,
+		unregisterPopup: unregisterPopup
+	};
+
+	function registerPopup(el) {
+		__dropDowns__.push(el);
+	}
+
+	function unregisterPopup(el) {
+		let ix = __dropDowns__.indexOf(el);
+		if (ix !== -1)
+			__dropDowns__.splice(ix, 1);
+		delete el._close;
+	}
+
+	function startService() {
+		if (__started)
+			return;
+
+		__started = true;
+
+		document.body.addEventListener('click', closePopups);
+		document.body.addEventListener('contextmenu', closePopups);  
+		document.body.addEventListener('keydown', closeOnEsc);
+	}
+
+
+	function closest(node, css) {
+		while (node) {
+			if (node.matches(css)) return node;
+			else node = node.parentElement;
+		}
+		return null;
+	} 
+
+	function closePopups(ev) {
+		if (__dropDowns__.length === 0)
+			return;
+		for (let i = 0; i < __dropDowns__.length; i++) {
+			let el = __dropDowns__[i];
+			if (closest(ev.target, '.dropdown-item') ||
+				ev.target.hasAttribute('close-dropdown') ||
+				closest(ev.target, '[dropdown-top]') !== el) {
+				if (!el._close)
+					throw new Error(__error);
+				el._close(ev.target);
+			}
+		}
+	}
+
+	// close on esc
+	function closeOnEsc(ev) {
+		if (ev.which !== 27) return;
+		for (let i = 0; i < me.__dropDowns__.length; i++) {
+			let el = __dropDowns__[i];
+			if (!el._close)
+				throw new Error(__error);
+			el._close(ev.target);
+		}
+	}
+};
+
+
 /*20170824-7019*/
 /*components/include.js*/
 
@@ -1158,7 +1236,7 @@ app.modules['std:validators'] = function() {
 
     Vue.component('validator', {
         props: ['invalid', 'errors'],
-        template: '<span v-if="invalid" class="validator"><ul><li v-for="err in errors" v-text="err.msg" :class="err.severity"></li></ul></span>',
+        template: '<div v-if="invalid" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
     });
 
 })();
@@ -1182,7 +1260,7 @@ app.modules['std:validators'] = function() {
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
-                let cls = 'control' + (this.invalid ? ' invalid' : ' valid');
+				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
                 return cls;
             },
             inputClass() {
@@ -1207,12 +1285,18 @@ app.modules['std:validators'] = function() {
 
     let textBoxTemplate =
 `<div :class="cssClass">
-    <input v-model.lazy="item[prop]" :class="inputClass"/>
-    <validator :invalid="invalid" :errors="errors"></validator>
-    <span>{{path}}</span>
-    <button @click="test">*</button>
+	<div class="input-group">
+		<input v-model.lazy="item[prop]" :class="inputClass"/>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
 </div>
 `;
+
+	/*
+	<span>{{ path }}</span>
+		<button @click="test" >*</button >
+	*/
+
     let baseControl = component('control');
 
     Vue.component('textbox', {
@@ -1258,13 +1342,14 @@ app.modules['std:validators'] = function() {
         <tbody>
             <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
         </tbody>
+		<slot name="footer"></slot>
     </table>
 	<slot name="pager"></slot>
 </div>
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.stop.prevent="doDblClick">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1273,7 +1358,7 @@ app.modules['std:validators'] = function() {
 </tr>`;
 
     const dataGridColumnTemplate = `
-<th :class="cssClass" @click.stop.prevent="doSort">
+<th :class="cssClass" @click.prevent="doSort">
     <i :class="\'fa fa-\' + icon" v-if="icon"></i>
     <slot>{{header || content}}</slot>
 </th>
@@ -1331,13 +1416,15 @@ app.modules['std:validators'] = function() {
 					return;
 				this.$parent.doSort(this.content);
             },
-            cellCssClass(row) {
+            cellCssClass(row, editable) {
                 let cssClass = this.classAlign;
                 if (this.mark) {
                     let mark = row[this.mark];
                     if (mark)
                         cssClass += ' ' + mark;
-                }
+				}
+				if (editable)
+					cssClass += ' cell-editable';
                 return cssClass.trim();
             }
         }
@@ -1359,8 +1446,8 @@ app.modules['std:validators'] = function() {
             let col = ctx.props.col;
             let ix = ctx.props.index;
 
-            let cellProps = {
-                'class': col.cellCssClass(row)
+			let cellProps = {
+				'class': col.cellCssClass(row, col.editable)
             };
 
             let childProps = {
@@ -1396,7 +1483,7 @@ app.modules['std:validators'] = function() {
                     props: ['row', 'col', 'align'],
                     /*TODO: control type */
                     template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
-                };
+				};
                 return h(tag, cellProps, [h(child, childProps)]);
             }
             /* simple content */
@@ -1688,7 +1775,7 @@ Vue.component('collection-view', {
 	store: component('std:store'),
 	template: `
 <div>
-	<slot :itemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
+	<slot :ItemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
 		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
@@ -1696,7 +1783,7 @@ Vue.component('collection-view', {
 </div>
 `,
 	props: {
-		itemsSource: Array,
+		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
 		runAt:String
@@ -1741,8 +1828,8 @@ Vue.component('collection-view', {
 		pagedSource() {
 			//console.warn('get paged source');
 			if (this.isServer)
-				return this.itemsSource; // server - all data from server
-			let arr = [].concat(this.itemsSource);
+				return this.ItemsSource; // server - all data from server
+			let arr = [].concat(this.ItemsSource);
 			// filter (TODO: // правильная фильтрация)
 			if (this.filter && this.filter.Text)
 				arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
@@ -1765,8 +1852,8 @@ Vue.component('collection-view', {
 		},
 		sourceCount() {
 			if (this.isServer)
-				return this.itemsSource.$RowCount;
-			return this.itemsSource.length;
+				return this.ItemsSource.$RowCount;
+			return this.ItemsSource.length;
 		},
 		thisPager() {
 			return this;
@@ -1902,6 +1989,47 @@ TODO: may be icon for confirm ????
 
     app.components['std:modal'] = modalComponent;
 })();
+/*20170829-7022*/
+/* directives/dropdown.js */
+
+Vue.directive('dropdown', {
+	bind(el, binding, vnode) {
+
+		const popup = require('std:popup');
+		let me = this;
+
+		me.isVisible = function (el) {
+			return el.classList.contains('show');
+		};
+
+		me._btn = el.querySelector('[toggle]');
+		el.setAttribute('dropdown-top', '');
+
+		popup.registerPopup(el);
+
+		el._close = function (ev) {
+			el.classList.remove('show');
+		};
+
+		el.addEventListener('click', function (event) {
+			if (event.target === me._btn) {
+				event.preventDefault();
+				if (me.isVisible(el))
+					el.classList.remove('show');
+				else {
+					el.classList.add("show");
+				}
+			}
+		});
+	},
+	unbind(el) {
+		const popup = require('std:popup');
+		popup.unregisterPopup(el);
+	}
+});
+
+
+
 /*20170828-7021*/
 /*controllers/base.js*/
 (function () {
@@ -2213,6 +2341,7 @@ TODO: may be icon for confirm ????
 	const store = component('std:store');
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
+	const popup = require('std:popup');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -2466,9 +2595,21 @@ TODO: may be icon for confirm ????
 			// todo: find first URL
 			// pathname, not route
 			let newUrl = makeMenuUrl(this.menu, window.location.pathname);
+			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', newUrl);
 
 			let me = this;
+
+			eventBus.$on('beginRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount += 1;
+			});
+			eventBus.$on('endRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount -= 1;
+			});
 
 			eventBus.$on('modal', function (modal, prms) {
 				// TODO: Path.combine
@@ -2522,7 +2663,9 @@ TODO: may be icon for confirm ????
 		},
 		created() {
 			let me = this;
+
 			me.__dataStack__ = [];
+	
 			window.addEventListener('popstate', function (event, a, b) {
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
@@ -2538,6 +2681,8 @@ TODO: may be icon for confirm ????
 				}
 				me.$store.commit('popstate');
 			});
+
+			popup.startService();
 		}
     });
 

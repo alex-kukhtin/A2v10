@@ -1,19 +1,35 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Toolbar>
-		<Button Icon="File">Create</Button>
-		<Button Icon="CommentOutline">Edit</Button>
-		<Button Icon="Trash">Delete</Button>
-		<Button Icon="Approve" />
-		<ComboBox></ComboBox>
-	</Toolbar>
-	<DataGrid ItemsSource="{Bind Customers}" Hover="True" 
-			  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="Id" Align="Right"/>
-		<DataGridColumn Header="Наименование" Content="Name"/>
-		<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
-	</DataGrid>
+	<CollectionView ItemsSource="{Bind Customers}">
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
+			<DataGrid.Toolbar>
+				<Toolbar>
+					<Button Icon="Plus">Создать</Button>
+					<Button Icon="Eye">Изменить</Button>
+					<Button Icon="Trash">Удалить</Button>
+					<Separator />
+					<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+					<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+					<Separator />
+					<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+				</Toolbar>
+			</DataGrid.Toolbar>
+			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
+			<DataGridColumn Header="Наименование" Content="Name"/>
+			<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
+			<DataGridColumn Header="Шаблон">
+				<Group>
+					<TextBox Value="{Bind Name}"/>
+					<Button Icon="Plus" Content="{Bind Id}" />
+				</Group>
+			</DataGridColumn>
+			<DataGrid.Pager>
+				<Pager Source="{Bind Parent.pager}" />
+			</DataGrid.Pager>
+		</DataGrid>
+	</CollectionView>
 </Page>
 
     

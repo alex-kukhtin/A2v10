@@ -30,6 +30,18 @@ namespace A2v10.Xaml
         }
     }
 
+    internal struct ScopeElem
+    {
+        internal String From;
+        internal String To;
+
+        public ScopeElem(String from, String to)
+        {
+            From = from;
+            To = to;
+        }
+    }
+
     internal class GridContext : IDisposable
     {
         RenderContext _renderContext;
@@ -46,12 +58,30 @@ namespace A2v10.Xaml
         }
     }
 
+
+
+    internal class ScopeContext: IDisposable
+    {
+        RenderContext _renderContext;
+        public ScopeContext(RenderContext context, ScopeElem scope)
+        {
+            _renderContext = context;
+            _renderContext.PushScope(scope);
+        }
+
+        public void Dispose()
+        {
+            _renderContext.PopScope();
+        }
+    }
+
 	internal class RenderContext
 	{
         public String RootId { get; set; }
 		public TextWriter Writer { get; private set; }
 
-        private Stack<GridRowCol> _stack = new Stack<GridRowCol>();
+        private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
+        private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
 
         public RenderContext(TextWriter writer)
         {
@@ -76,20 +106,49 @@ namespace A2v10.Xaml
 
         internal void PushRowCol(GridRowCol rowCol)
         {
-            _stack.Push(rowCol);
+            _stackGrid.Push(rowCol);
         }
 
         internal void PopRowCol()
         {
-            _stack.Pop();
+            _stackGrid.Pop();
+        }
+
+        internal void PushScope(ScopeElem scope)
+        {
+            _stackScope.Push(scope);
+        }
+
+        internal void PopScope()
+        {
+            _stackScope.Pop();
+        }
+
+        internal String GetCurrentScope() {
+            if (_stackScope.Count == 0)
+                return String.Empty;
+            var scope = _stackScope.Peek();
+            return scope.To;
         }
 
         public IEnumerable<StringKeyValuePair> GetGridAttributes()
         {
-            if (_stack.Count == 0)
+            if (_stackGrid.Count == 0)
                 return null;
-            GridRowCol rowCol = _stack.Peek();
+            GridRowCol rowCol = _stackGrid.Peek();
             return rowCol.GetGridAttributes();
+        }
+
+        internal String GetNormalizedPath(String path)
+        {
+            if (_stackScope.Count == 0)
+                return path;
+            var scope = _stackScope.Peek();
+            int ix = path.LastIndexOf('.');
+            if (ix == -1)
+                return scope.To + '.' + path;
+            // TODO: check recursive!!!
+            return path.Replace(scope.From, scope.To);
         }
 	}
 }

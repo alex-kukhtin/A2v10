@@ -18,7 +18,7 @@ namespace A2v10.Xaml
 
             String fileName = String.Empty;
             // XamlServices.Load sets IUriContext
-            UIElement uiElem = XamlServices.Load(info.FileName) as UIElement;
+            UIElementBase uiElem = XamlServices.Load(info.FileName) as UIElementBase;
             if (uiElem == null)
                 throw new XamlException("Xaml. Root is not UIElement");
 

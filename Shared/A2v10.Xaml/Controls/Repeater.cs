@@ -11,7 +11,7 @@ namespace A2v10.Xaml.Controls
     public class Repeater : UIElement
     {
         public Object ItemsSource { get; set; }
-        public UIElement ItemTemplate { get; set; }
+        public UIElementBase ItemTemplate { get; set; }
 
         internal override void RenderElement(RenderContext context)
         {

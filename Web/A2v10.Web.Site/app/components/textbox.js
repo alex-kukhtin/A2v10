@@ -3,12 +3,18 @@
 
     let textBoxTemplate =
 `<div :class="cssClass">
-    <input v-model.lazy="item[prop]" :class="inputClass"/>
-    <validator :invalid="invalid" :errors="errors"></validator>
-    <span>{{path}}</span>
-    <button @click="test">*</button>
+	<div class="input-group">
+		<input v-model.lazy="item[prop]" :class="inputClass"/>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
 </div>
 `;
+
+	/*
+	<span>{{ path }}</span>
+		<button @click="test" >*</button >
+	*/
+
     let baseControl = component('control');
 
     Vue.component('textbox', {

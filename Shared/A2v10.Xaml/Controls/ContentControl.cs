@@ -9,6 +9,14 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
+        internal override void AddAttributes(TagBuilder tag, RenderContext context)
+        {
+            base.AddAttributes(tag, context);
+            var contBind = GetBinding(nameof(Content));
+            if (contBind != null)
+                tag.MergeAttribute("v-text", contBind.GetPath(context));
+        }
+
         internal void RenderContent(RenderContext context)
         {
             if (Content == null)

@@ -67,6 +67,7 @@
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
+    <Content Include="app\directives\dropdown.js" />
     <Content Include="app\platform\routex.js" />
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />
@@ -74,6 +75,7 @@
     <Content Include="app\services\http.js" />
     <Content Include="app\services\log.js" />
     <Content Include="app\platform\route.js" />
+    <Content Include="app\services\popup.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="css\bowtie.css" />
@@ -110,6 +112,7 @@
     <Content Include="TestPages\collectionview.js" />
     <Content Include="TestPages\collectionview.txt" />
     <Content Include="TestPages\dropdown.html" />
+    <Content Include="TestPages\formcontrol2.html" />
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\pager.html" />
     <Content Include="TestPages\pager.js" />
@@ -153,6 +156,7 @@
     <Content Include="Less\Bowtie.less" />
     <Content Include="Less\Tab.less" />
     <Content Include="Less\Grid.less" />
+    <Content Include="Less\DropDown.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

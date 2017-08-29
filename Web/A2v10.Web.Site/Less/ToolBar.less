@@ -1,21 +1,58 @@
 ﻿
 @import "Variables.less";
 
+@tb-active-bg-color: #fff29d;
+@tb-hover-brd-color: #e5c365;
 
 .toolbar {
-    display:block;
-    background-color:@toolbar-bg-color;
+    display: flex;
+    align-items: baseline;
+    padding: 2px;
+    overflow: visible;
+    background-color: @toolbar-bg-color;
+    color: @toolbar-txt-color;
 
-    button {
+    .btn {
+        white-space: nowrap;
+        border: 1px solid transparent;
+        background-color: @toolbar-bg-color;
+        text-transform: lowercase;
+        padding: 4px 6px;
+        color: @text-color;
+
         &:hover {
-            background-color:antiquewhite;
+            background-color: @hover-bg-color;
+            border-color: @tb-hover-brd-color;
+        }
+
+        &:active {
+            background-color: @tb-active-bg-color;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+            border-color: @tb-hover-brd-color;
+        }
+
+        &:focus {
+            outline-style: none;
         }
     }
 
-    i {
-        display:inline-block;
-        font-size:14px;
-        color:#808080;
-        margin-right:4px;
+    i.ico {
+        display: inline-block;
+        font-size: 14px;
+        margin-right: 4px;
+    }
+
+    .divider {
+        display: inline-block;
+        width: 1px;
+        border-right: 1px solid lighten(@toolbar-bg-color, 5%);
+        align-self: stretch;
+        background-color: darken(@toolbar-bg-color, 15%);
+        margin: 1px 4px;
+    }
+
+    .dropdown.show .btn {
+        background-color:@dropdown-bg-color;
+        border-color:@dropdown-brd-color;
     }
 }

@@ -50,6 +50,7 @@ namespace A2v10.Xaml
         PlusBox,
         Refresh,
         Reload,
+        Requery,
         Save,
         Search,
         Trash,

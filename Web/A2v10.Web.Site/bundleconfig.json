@@ -12,6 +12,7 @@
 			"app/services/validators.js",
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
+			"app/services/popup.js",
 			"app/components/include.js",
 			"app/components/validator.js",
 			"app/components/control.js",
@@ -21,6 +22,7 @@
 			"app/components/treeview.js",
 			"app/components/collectionview.js",
 			"app/components/modal.js",
+			"app/directives/*.js",
 			"app/controllers/base.js",
 			"app/controllers/shell.js"
 		],

@@ -18,7 +18,7 @@
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
-                let cls = 'control' + (this.invalid ? ' invalid' : ' valid');
+				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
                 return cls;
             },
             inputClass() {

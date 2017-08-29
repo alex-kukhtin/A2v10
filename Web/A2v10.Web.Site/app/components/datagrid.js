@@ -31,13 +31,14 @@
         <tbody>
             <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
         </tbody>
+		<slot name="footer"></slot>
     </table>
 	<slot name="pager"></slot>
 </div>
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.stop.prevent="doDblClick">
+<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -46,7 +47,7 @@
 </tr>`;
 
     const dataGridColumnTemplate = `
-<th :class="cssClass" @click.stop.prevent="doSort">
+<th :class="cssClass" @click.prevent="doSort">
     <i :class="\'fa fa-\' + icon" v-if="icon"></i>
     <slot>{{header || content}}</slot>
 </th>
@@ -104,13 +105,15 @@
 					return;
 				this.$parent.doSort(this.content);
             },
-            cellCssClass(row) {
+            cellCssClass(row, editable) {
                 let cssClass = this.classAlign;
                 if (this.mark) {
                     let mark = row[this.mark];
                     if (mark)
                         cssClass += ' ' + mark;
-                }
+				}
+				if (editable)
+					cssClass += ' cell-editable';
                 return cssClass.trim();
             }
         }
@@ -132,8 +135,8 @@
             let col = ctx.props.col;
             let ix = ctx.props.index;
 
-            let cellProps = {
-                'class': col.cellCssClass(row)
+			let cellProps = {
+				'class': col.cellCssClass(row, col.editable)
             };
 
             let childProps = {
@@ -169,7 +172,7 @@
                     props: ['row', 'col', 'align'],
                     /*TODO: control type */
                     template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
-                };
+				};
                 return h(tag, cellProps, [h(child, childProps)]);
             }
             /* simple content */

@@ -19,6 +19,9 @@ namespace A2v10.Xaml
 
         public Object ItemsSource { get; set; }
 
+        public Pager Pager { get; set; }
+        public UIElementBase Toolbar { get; set; }
+
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
         internal override void RenderElement(RenderContext context)
@@ -43,10 +46,29 @@ namespace A2v10.Xaml
             Int32 colIndex = 0;
             foreach (var col in Columns)
             {
-                //using (context.NewScope($"col{++colIndex}"))
-                //{
-                    col.RenderColumn(context);
-                //}
+                col.RenderColumn(context, colIndex);
+                colIndex++;
+            }
+
+            if (Toolbar != null)
+            {
+                var tbTml = new TagBuilder("template");
+                tbTml.MergeAttribute("slot", "toolbar");
+                tbTml.MergeAttribute("scope", "props");
+                tbTml.RenderStart(context);
+                Toolbar.RenderElement(context);
+                tbTml.RenderEnd(context);
+
+            }
+            if (Pager != null)
+            {
+                var pagerTml = new TagBuilder("template");
+                pagerTml.MergeAttribute("slot", "pager");
+                pagerTml.MergeAttribute("scope", "props");
+                pagerTml.RenderStart(context);
+                Pager.RenderElement(context);
+                pagerTml.RenderEnd(context);
+
             }
             dataGrid.RenderEnd(context);
         }
