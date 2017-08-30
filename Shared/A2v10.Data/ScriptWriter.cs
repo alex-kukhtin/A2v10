@@ -24,8 +24,23 @@ namespace A2v10.Data
                 sb.Append(GetConstructors());
             }
             sb.AppendLine("\tcmn.implementRoot(TRoot, template, ctors);");
-            sb.AppendLine("\treturn new TRoot(data);");
+            sb.AppendLine("\tlet root = new TRoot(data);");
+            sb.AppendLine(SetModelInfo());
+            sb.AppendLine("\treturn root;");
             sb.AppendLine("}");
+            return sb.ToString();
+        }
+
+        public String SetModelInfo()
+        {
+            if (_model.System == null)
+                return null;
+            var sb = new StringBuilder("\tcmn.setModelInfo(root, {\n");
+            foreach (var k in _model.System as IDictionary<String, Object>)
+            {
+                sb.Append($"{k.Key}: {k.Value}\n");
+            }
+            sb.Append("});");
             return sb.ToString();
         }
 

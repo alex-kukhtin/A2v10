@@ -27,12 +27,18 @@
 
         <div>
             <h3>Dynamic Tabs</h3>
-
+            <div>
+                <button @click.prevent="addItem">+</button>
+            </div>
             <a2-tab-panel :items="Document.Rows" header="id">
-                <template slot="items" scope="item">
+                <template slot="items" scope="tabitem">
                     <span>dynamic tab item: </span>
-                    <span v-text="item"></span>
+                    <span v-text="tabitem.item.id"></span>
+                    <button @click.prevent="removeItem(tabitem.item)">-</button>
                 </template>    
+                <template slot="header" scope="tabitem">
+                    <b>I am the header {{tabitem.index}}</b>
+                </template>
             </a2-tab-panel>
         </div>
     </div>
@@ -59,7 +65,19 @@
 
         var vm = new Vue({
             el: "#test-tab",
-            data: sampleData
+            data: sampleData,
+            methods: {
+                addItem() {
+                    let coll = this.Document.Rows;
+                    coll.push({ id: coll.length + 1});
+                },
+                removeItem(item) {
+                    let coll = this.Document.Rows;
+                    let ix = coll.indexOf(item);
+                    if (ix != -1)
+                        coll.splice(ix, 1);
+                }
+            }
         });
 
     })();

@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link href="../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../css/site.css" rel="stylesheet"/>
 </head>
 <body>
@@ -28,7 +27,7 @@
             </select>
         </div>
         <div>
-            <data-grid :items-source="Customers" 
+            <data-grid :items-source="Document.Customers" 
                        :bordered="Options.Bordered" 
                        :striped="Options.Striped" 
                        :hover="Options.Hover">
@@ -55,27 +54,27 @@
         </div>
     </div>
     <script type="text/javascript" src="../scripts/vue.js"></script>
-    <script type="text/javascript" src="../app/app.js"></script>
-    <script type="text/javascript" src="../app/components/datagrid.js"></script>
-    <script type="text/javascript" src="../app/services/datamodel.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
 
 
 <script type="text/javascript">
     (function () {
     Vue.per
     let modelData = {
-        Customers: [
-            { Id: 5, Name: "Customer # 5", Amount: 500 },
-            { Id: 7, Name: "Customer # 7", Amount: 700 },
-            { Id: 8, Name: "Customer # 8", Amount: 800 }
-        ],
+        Document: {
+            Customers: [
+                { Id: 5, Name: "Customer # 5", Amount: 500 },
+                { Id: 7, Name: "Customer # 7", Amount: 700 },
+                { Id: 8, Name: "Customer # 8", Amount: 800 }
+            ],
+        },
         Options: {
             Bordered: true,
             Striped: false,
             Hover: false,
             Dynamic: null,
             DisplayVariants: [
-                { display: 'Id', align: 'center', header: 'Id*'},
+                { display: 'Id', align: 'center', header: 'Id*' },
                 { display: 'Name', align: 'left', header: 'Name*' },
                 { display: 'Amount', align: 'right', header: 'Amount*' },
             ]

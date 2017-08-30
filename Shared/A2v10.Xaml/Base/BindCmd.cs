@@ -11,12 +11,15 @@ namespace A2v10.Xaml
         Reload,
         Refresh,
         Requery,
-        Save
+        Save,
+        OpenSelected
     }
 
     public class BindCmd : BindBase
     {
         public CommandType Command { get; set; }
+        public String Argument { get; set; }
+        public String Action { get; set; }
 
         public BindCmd()
         {
@@ -41,6 +44,12 @@ namespace A2v10.Xaml
                     return "$requery()";
                 case CommandType.Save:
                     return "$save()";
+                case CommandType.OpenSelected:
+                    if (String.IsNullOrEmpty(Action))
+                        throw new NotImplementedException($"Action required for OpenSelected command");
+                    if (String.IsNullOrEmpty(Argument))
+                        throw new NotImplementedException($"Argument required for OpenSelected command");
+                    return $"$open({{mode:'selected', action:'{Action}', arg:{Argument} }})";
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }

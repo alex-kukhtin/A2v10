@@ -24,6 +24,6 @@
             item: Object,
             prop: String,
             align: { type: String, default: 'left' }
-        }
+		}
     });
 })();

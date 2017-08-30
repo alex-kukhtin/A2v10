@@ -63,7 +63,7 @@ app.modules['std:popup'] = function () {
 	// close on esc
 	function closeOnEsc(ev) {
 		if (ev.which !== 27) return;
-		for (let i = 0; i < me.__dropDowns__.length; i++) {
+		for (let i = 0; i < __dropDowns__.length; i++) {
 			let el = __dropDowns__[i];
 			if (!el._close)
 				throw new Error(__error);

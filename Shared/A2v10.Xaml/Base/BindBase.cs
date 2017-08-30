@@ -6,8 +6,7 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-    [Browsable(false)]
-    public class BindBase : MarkupExtension
+    public abstract class BindBase : MarkupExtension
     {
         public override object ProvideValue(IServiceProvider serviceProvider)
         {

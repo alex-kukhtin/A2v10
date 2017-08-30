@@ -56,5 +56,15 @@ namespace A2v10.Data
 			}
 			return false;
 		}
-	}
+
+        public FieldMetadata GetField(String name)
+        {
+            FieldMetadata fm;
+            if (_fields.TryGetValue(name, out fm))
+            {
+                return fm;
+            }
+            throw new DataLoaderException($"Field '{name}' not found.");
+        }
+    }
 }

@@ -37,8 +37,8 @@ TODO:
         },
         {
             type:'accordion', title: 'Документы', url: 'document', menu: [
-                { title: "Incoming", url: 'incoming', icon: 'file', query:'order=Date&dir=asc' },
-                { title: "Outgoing", url: 'outgoing', icon: 'database'},
+                { title: "Заявки", url: 'request', icon: 'file', query:'order=Date&dir=asc' },
+                { title: "Котировки", url: 'quotations', icon: 'database'},
                 { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'comment' }
             ]
         }

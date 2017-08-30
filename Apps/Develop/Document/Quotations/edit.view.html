@@ -1,0 +1,10 @@
+﻿
+<div id="$(RootId)">
+    <data-grid :items-source="Document.Rows" :striped="true"
+                :border="true" :hover="true" grid="vertical" :route-query="$query">
+        <data-grid-column header="index" content="$index" align="right"></data-grid-column>
+        <data-grid-column header="Id" content="Id" align="right"></data-grid-column>
+        <data-grid-column header="Qty" content="Qty" align="right"></data-grid-column>
+        <data-grid-column header="Entity" content="Entity" align="left"></data-grid-column>
+    </data-grid>
+</div>

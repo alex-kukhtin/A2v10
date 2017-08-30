@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 
         internal void RenderContent(RenderContext context)
         {
+            // Если это привязка, то она добавится через AddAttributes
             if (Content == null)
                 return;
             if (Content is UIElement)

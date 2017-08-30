@@ -7,10 +7,12 @@ Vue.component('collection-view', {
 	store: component('std:store'),
 	template: `
 <div>
-	<slot :ItemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" 
+		:filter="filter">
+	</slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+		offset:{{Offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
 	</code>
 </div>
 `,
@@ -47,7 +49,7 @@ Vue.component('collection-view', {
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
-		offset() {
+		Offset() {
 			if (this.isServer)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
@@ -80,7 +82,7 @@ Vue.component('collection-view', {
 			// HACK!
 			this.filteredCount = arr.length;
 			// pager
-			return arr.slice(this.offset, this.offset + this.pageSize);
+			return arr.slice(this.Offset, this.Offset + this.pageSize);
 		},
 		sourceCount() {
 			if (this.isServer)
@@ -109,13 +111,13 @@ Vue.component('collection-view', {
 			this.$setOffset(0);
 		},
 		prev() {
-			let no = this.offset;
+			let no = this.Offset;
 			if (no > 0)
 				no -= this.pageSize;
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.offset + this.pageSize
+			let no = this.Offset + this.pageSize
 			this.$setOffset(no);
 		},
 		sortDir(order) {

@@ -42,10 +42,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Develop\Document\Request\index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\model.json" />
     <None Include="Develop\Catalog\Suppliers\model.json" />
+    <None Include="Develop\Document\Quotations\model.json" />
+    <None Include="Develop\Document\Request\model.json" />
     <None Include="Develop\Home\model.json" />
     <None Include="Develop\solution.json" />
     <None Include="model.schema.json" />
@@ -59,6 +65,10 @@
     <Content Include="Develop\Catalog\Suppliers\browse.dialog.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view_old.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view.html" />
+    <Content Include="Develop\Document\Quotations\index.template.js" />
+    <Content Include="Develop\Document\Quotations\edit.view.html" />
+    <Content Include="Develop\Document\Request\element.template.js" />
+    <Content Include="Develop\Document\Request\index.template.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\Index.view.xaml">
@@ -74,6 +84,21 @@
   <ItemGroup>
     <None Include="Develop\Home\HomePage.view.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Request\edit.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Quotations\index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Quotations\edit.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

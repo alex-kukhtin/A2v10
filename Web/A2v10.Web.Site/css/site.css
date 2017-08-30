@@ -224,7 +224,7 @@ header a.app-title:hover,
 }
 .content-view.partial-page {
   left: 256px;
-  top: 64px;
+  top: 70px;
 }
 .side-bar-collapsed .content-view.partial-page {
   left: 26px;
@@ -872,11 +872,11 @@ table.hover > tbody > tr:hover {
   height: 30px;
 }
 .app-exception {
-  margin: 20% auto;
-  width: 50%;
+  margin: 50px auto;
+  width: 600px;
   height: auto;
   text-align: center;
-  z-index: 100;
+  z-index: 2000;
   position: relative;
   padding: 0;
   background-color: #f2dede;
@@ -888,12 +888,15 @@ table.hover > tbody > tr:hover {
   padding: 15px 10px;
   font-weight: normal;
   white-space: pre-line;
+  font-weight: bold;
 }
 .app-exception .stack-trace {
   border-top: 1px solid #a94442;
+  background-color: #f9f0f0;
   overflow: auto;
   padding: 10px;
-  max-height: 250px;
+  max-height: 200px;
+  font-size: 92%;
 }
 .load-indicator {
   position: absolute;
@@ -922,4 +925,13 @@ table.hover > tbody > tr:hover {
   to {
     left: 100%;
   }
+}
+pre.a2-code {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 12px;
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  overflow: auto;
+  max-height: 300px;
 }

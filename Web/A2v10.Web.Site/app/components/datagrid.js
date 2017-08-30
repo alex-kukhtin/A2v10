@@ -42,8 +42,7 @@
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
-    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index">
-    </data-grid-cell>
+    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
     const dataGridColumnTemplate = `
@@ -133,8 +132,7 @@
             let tag = 'td';
             let row = ctx.props.row;
             let col = ctx.props.col;
-            let ix = ctx.props.index;
-
+			let ix = ctx.props.index;
 			let cellProps = {
 				'class': col.cellCssClass(row, col.editable)
             };
@@ -180,10 +178,11 @@
                 return h(tag, cellProps, [ix + 1]);
 
             // Warning: toString() is required.
-            let content = utils.toString(row[col.content]);
+			// TODO: calc chain f.i. Document.Rows
+			let content = utils.toString(row[col.content]);
             let chElems = [content];
             /*TODO: validate ???? */
-            if (col.validate) {
+			if (col.validate) {
                 chElems.push(h(validator, validatorProps));
             }
             return h(tag, cellProps, chElems);
@@ -314,7 +313,8 @@
 				return undefined;
 			},
             queryChange()
-            {
+			{
+				alert(1);
                 let nq = this.dgQuery;
                 if (this.sort === 'server') {
                     this.$root.$emit('queryChange', nq);

@@ -1,0 +1,10 @@
+<!-- Document edit -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DataGrid ItemsSource="{Bind Document.Rows}" GridLines="Both">
+		<DataGridColumn Header="Id" Content="Id" Align="Right"/>
+		<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
+	</DataGrid>
+</Page>
+
+    

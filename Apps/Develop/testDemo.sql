@@ -44,10 +44,16 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @Dir nvarchar(255) = null,
 @Filter nvarchar(255) = null,
 @Offset int = 0,
-@PageSize int = 3
+@PageSize int = null
 as
 begin
 	set nocount on;
+
+	declare @defaultPageSize int;
+	-- TODO get page size form meta
+	set @defaultPageSize = 4;
+	if @PageSize is null
+		set @PageSize = @defaultPageSize;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10);
 	set @Asc = N'asc'; set @Desc = N'desc';
@@ -77,6 +83,9 @@ begin
 	from T 
 		where [_RowNumber] > @Offset and [_RowNumber] <= @Offset + @PageSize
 	order by [_RowNumber];
+
+	-- служебный набор данных добавляется в Root
+	select [!$System!] = null, [!!PageSize] = @defaultPageSize;
 end
 go
 ------------------------------------------------

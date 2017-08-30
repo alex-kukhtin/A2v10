@@ -54,6 +54,8 @@ namespace A2v10.Tests.Config
             }
         }
 
+        public Boolean IsDebugConfiguration { get { return true; } }
+
         public String MakeFullPath(String path, String fileName)
         {
             throw new NotImplementedException();

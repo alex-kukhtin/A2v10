@@ -12,6 +12,7 @@ namespace A2v10.Infrastructure
 		IProfiler Profiler { get; }
         String AppPath { get; }
         String AppKey { get; }
+        Boolean IsDebugConfiguration { get; }
 
         String MakeFullPath(String path, String fileName);
         Task<String> ReadTextFile(String path, String fileName);

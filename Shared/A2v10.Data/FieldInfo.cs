@@ -39,9 +39,10 @@ namespace A2v10.Data
 
 		public FieldInfo(FieldInfo source, String name)
 		{
+            // for complex fields only
 			PropertyName = name;
 			TypeName = null;
-			FieldType = source.FieldType;
+			FieldType = FieldType.Scalar;
 			SpecType = source.SpecType;
 			IsComplexField = false;
 		}

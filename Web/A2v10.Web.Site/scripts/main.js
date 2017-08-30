@@ -1062,13 +1062,21 @@ app.modules['std:validators'] = function() {
             }
             template._props_ = xProp;
         }
-    }
+	}
+
+	function setModelInfo(root, info) {
+		// may be default
+		root.__modelInfo = info ? info : {
+				PageSize: 20
+		};
+	}
 
     app.modules['datamodel'] = {
         createObject: createObject,
         createArray: createArray,
         defineObject: defineObject,
-        implementRoot: implementRoot,
+		implementRoot: implementRoot,
+		setModelInfo: setModelInfo,
         enumData: enumData
     };
 })();
@@ -1156,7 +1164,7 @@ app.modules['std:popup'] = function () {
 	// close on esc
 	function closeOnEsc(ev) {
 		if (ev.which !== 27) return;
-		for (let i = 0; i < me.__dropDowns__.length; i++) {
+		for (let i = 0; i < __dropDowns__.length; i++) {
 			let el = __dropDowns__[i];
 			if (!el._close)
 				throw new Error(__error);
@@ -1306,7 +1314,7 @@ app.modules['std:popup'] = function () {
             item: Object,
             prop: String,
             align: { type: String, default: 'left' }
-        }
+		}
     });
 })();
 /*20170825-7020*/
@@ -1353,8 +1361,7 @@ app.modules['std:popup'] = function () {
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
-    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index">
-    </data-grid-cell>
+    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
     const dataGridColumnTemplate = `
@@ -1444,8 +1451,7 @@ app.modules['std:popup'] = function () {
             let tag = 'td';
             let row = ctx.props.row;
             let col = ctx.props.col;
-            let ix = ctx.props.index;
-
+			let ix = ctx.props.index;
 			let cellProps = {
 				'class': col.cellCssClass(row, col.editable)
             };
@@ -1491,10 +1497,11 @@ app.modules['std:popup'] = function () {
                 return h(tag, cellProps, [ix + 1]);
 
             // Warning: toString() is required.
-            let content = utils.toString(row[col.content]);
+			// TODO: calc chain f.i. Document.Rows
+			let content = utils.toString(row[col.content]);
             let chElems = [content];
             /*TODO: validate ???? */
-            if (col.validate) {
+			if (col.validate) {
                 chElems.push(h(validator, validatorProps));
             }
             return h(tag, cellProps, chElems);
@@ -1625,7 +1632,8 @@ app.modules['std:popup'] = function () {
 				return undefined;
 			},
             queryChange()
-            {
+			{
+				alert(1);
                 let nq = this.dgQuery;
                 if (this.sort === 'server') {
                     this.$root.$emit('queryChange', nq);
@@ -1665,7 +1673,7 @@ app.modules['std:popup'] = function () {
 Vue.component('a2-pager', {
 	template: `
 <div class="pager">
-	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
+	<code>pager source: offset={{source.Offset}}, pageSize={{source.pageSize}},
 		pages={{source.pages}}</code>
 	<a href @click.stop.prevent="source.first">first</a>
 	<a href @click.stop.prevent="source.prev">prev</a>
@@ -1775,10 +1783,12 @@ Vue.component('collection-view', {
 	store: component('std:store'),
 	template: `
 <div>
-	<slot :ItemsSource="pagedSource" :pager="thisPager" :filter="filter"></slot>
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" 
+		:filter="filter">
+	</slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+		offset:{{Offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
 	</code>
 </div>
 `,
@@ -1815,7 +1825,7 @@ Vue.component('collection-view', {
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
-		offset() {
+		Offset() {
 			if (this.isServer)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
@@ -1848,7 +1858,7 @@ Vue.component('collection-view', {
 			// HACK!
 			this.filteredCount = arr.length;
 			// pager
-			return arr.slice(this.offset, this.offset + this.pageSize);
+			return arr.slice(this.Offset, this.Offset + this.pageSize);
 		},
 		sourceCount() {
 			if (this.isServer)
@@ -1877,13 +1887,13 @@ Vue.component('collection-view', {
 			this.$setOffset(0);
 		},
 		prev() {
-			let no = this.offset;
+			let no = this.Offset;
 			if (no > 0)
 				no -= this.pageSize;
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.offset + this.pageSize
+			let no = this.Offset + this.pageSize
 			this.$setOffset(no);
 		},
 		sortDir(order) {
@@ -2066,9 +2076,13 @@ Vue.directive('dropdown', {
             },
             $isLoading() {
                 return this.$data.__requestsCount__ > 0;
-            }
-        },
-        watch: {
+			},
+			$modelInfo() {
+				return this.$data.__modelInfo;
+			}
+		},
+		/*
+		watch: {
             $baseUrl2: function (newUrl) {
                 if (!this.$data.__init__)
                     return;
@@ -2094,6 +2108,7 @@ Vue.directive('dropdown', {
                 deep: true
             }
         },
+		*/
         methods: {
             $exec(cmd, ...args) {
                 let root = this.$data;
@@ -2115,7 +2130,8 @@ Vue.directive('dropdown', {
                         }
                         resolve(dataToResolve); // single element (raw data)
                     }).catch(function (msg) {
-                        self.$alertUi(msg);
+						self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -2125,10 +2141,17 @@ Vue.directive('dropdown', {
                 let self = this;
                 let url = '/_data/invoke';
                 let baseUrl = base || self.$baseUrl;
-                return new Promise(function (resolve, reject) {
-                    dataservice.post(url).then(function (data) {
-                    }).catch(function (msg) {
+				return new Promise(function (resolve, reject) {
+					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (utils.isObject(data)) {
+							resolve(data);
+						} else {
+							throw new Error('Invalid response type for $invoke');
+						}
+					}).catch(function (msg) {
                         self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -2146,8 +2169,9 @@ Vue.directive('dropdown', {
                         } else {
                             throw new Error('Invalid response type for $reload');
                         }
-                    }).catch(function (msg) {
+					}).catch(function (msg) {
                         self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -2168,7 +2192,19 @@ Vue.directive('dropdown', {
 				let urlToNavigate = '/' + url + '/' + data;
 				this.$store.commit('navigate', urlToNavigate, null); 
                 //route.navigate(urlToNavigate);
-            },
+			},
+
+			$open(data) {
+				// TODO: переделать
+				let sel = data.arg.$selected;
+				if (!sel)
+					return;
+				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
+				this.$store.commit('navigate', url, null); 
+				//alert(sel.$id);
+				// TODO: $id from metadata!!!
+				// alert(url + sel.Id);
+			},
 
             $confirm(prms) {
                 if (utils.isString(prms))
@@ -2250,14 +2286,14 @@ Vue.directive('dropdown', {
 
             $saveAndClose() {
                 if (this.$isDirty)
-                    this.$save().then(() => route.close());
+                    this.$save().then(() => this.$close());
                 else
-                    route.close();
+                    this.$close();
             },
 
             $close() {
                 if (this.$saveModified())
-                    route.close();
+                    store.close();
             },
 
             $searchChange() {

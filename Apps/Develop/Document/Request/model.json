@@ -1,0 +1,31 @@
+﻿/*document/request*/
+{
+	"schema": "a2v10x",
+	"model": "Sales.Request",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "Index.view",
+			"template": "index.template"
+		},
+		"edit": {
+			"view": "Edit.view",
+			"template": "element.template"
+		},
+		"browse": {
+			"view": "Browse.dialog",
+			"template": "browse.template"
+		}
+	},
+	"dialogs": {
+		"edit": {
+			"dialog": "edit.dialog",
+			"template": "element.template"
+		},
+		"browse": {
+			"dialog": "browse.dialog",
+			"template": "index.template",
+			"index": true
+		}
+	}
+}

@@ -12,6 +12,8 @@ namespace A2v10.Xaml
     {
         public Object ItemsSource { get; set; }
 
+        public Int32? PageSize { get; set; }
+
         //public RunMode RunAt { get; set; }
 
         internal override void RenderElement(RenderContext context)
@@ -22,7 +24,11 @@ namespace A2v10.Xaml
                 tag.MergeAttribute(":items-source", itemsSource.Path);
 
             tag.MergeAttribute("run-at", "server"); // TODO: run-at???
-            tag.MergeAttribute(":page-size", "3"); // TODO: page-size???
+
+            if (PageSize != null)
+                tag.MergeAttribute(":page-size", PageSize.Value.ToString());
+            else
+                tag.MergeAttribute(":page-size", "$modelInfo.PageSize");
 
             tag.RenderStart(context);
             var tml = new TagBuilder("template");

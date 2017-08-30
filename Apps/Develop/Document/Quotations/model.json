@@ -1,0 +1,12 @@
+﻿/*document/request*/
+{
+	"schema": "a2v10x",
+	"model": "Sales.Request",
+	"actions": {
+		"index": {
+			"index": false,
+			"view": "edit.view",
+			"template": "index.template"
+		}
+	}
+}

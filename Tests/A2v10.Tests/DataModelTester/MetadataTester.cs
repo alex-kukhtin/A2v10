@@ -47,5 +47,21 @@ namespace A2v10.Tests.DataModelTester
 			var data = _meta[key] as ElementMetadata;
 			Assert.AreEqual(data.Name, prop);
 		}
-	}
+
+        public void IsType(String key, String propName, DataType dt)
+        {
+            var data = _meta[key] as ElementMetadata;
+            Assert.IsTrue(data.ContainsField(propName));
+            var fp = data.GetField(propName);
+            Assert.AreEqual(fp.DataType, dt);
+        }
+
+        public void IsItemType(String key, String propName, FieldType ft)
+        {
+            var data = _meta[key] as ElementMetadata;
+            Assert.IsTrue(data.ContainsField(propName));
+            var fp = data.GetField(propName);
+            Assert.AreEqual(fp.ItemType, ft);
+        }
+    }
 }

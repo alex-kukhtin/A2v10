@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -11,6 +8,7 @@ namespace A2v10.Xaml
     public class DataGridColumn : XamlElement
     {
         public Object Content { get; set; }
+        //TODO: may be UIElement
         public String Header { get; set; }
 
         public TextAlign Align { get; set; }
@@ -22,7 +20,14 @@ namespace A2v10.Xaml
             Boolean isTemplate = Content is UIElement;
             String tmlId = null;
             if (!isTemplate)
-                MergeBindingAttribute(context, column, "content", nameof(Content), Content);
+            {
+                // always content without SEMICOLON!
+                var bindProp = GetBinding(nameof(Content));
+                if (bindProp != null)
+                    column.MergeAttribute("content", bindProp.GetPath(context));
+                else if (Content != null)
+                    column.MergeAttribute("content", Content.ToString());
+            }
             var alignProp = GetBinding(nameof(Align));
             if (alignProp != null)
                 column.MergeAttribute(":align", alignProp.Path);
@@ -31,7 +36,7 @@ namespace A2v10.Xaml
             if (isTemplate) {
                 tmlId = $"col{colIndex}";
                 column.MergeAttribute("id", tmlId);
-                    }
+            }
             column.RenderStart(context);
             column.RenderEnd(context);
             if (isTemplate)
@@ -60,6 +65,8 @@ namespace A2v10.Xaml
         protected override void OnEndInit()
         {
             base.OnEndInit();
+            if (Content is UIElement)
+                (Content as UIElement).SetParent(this);
         }
     }
 

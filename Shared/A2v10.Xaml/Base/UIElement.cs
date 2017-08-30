@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-	public class UIElement: UIElementBase
+	public abstract class UIElement: UIElementBase
 	{
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
@@ -41,6 +41,5 @@ namespace A2v10.Xaml
             new TagBuilder("i", "ico ico-" + icon.ToString().ToKebabCase())
                 .Render(context);
         }
-
     }
 }

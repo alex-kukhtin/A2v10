@@ -18,11 +18,13 @@ namespace A2v10.Data
 	internal class DataModelReader
 	{
 		const String ROOT = "TRoot";
+        const String SYSTEM_TYPE = "$System";
 
-		IDataModel _dataModel;
+        IDataModel _dataModel;
 		IdMapper _idMap = new IdMapper();
 		RefMapper _refMap = new RefMapper();
 		ExpandoObject _root = new ExpandoObject();
+        ExpandoObject _sys = new ExpandoObject();
 
 		public IDataModel DataModel
 		{
@@ -30,7 +32,7 @@ namespace A2v10.Data
 			{
 				if (_dataModel != null)
 					return _dataModel;
-				_dataModel = new DynamicDataModel(_metadata, _root);
+				_dataModel = new DynamicDataModel(_metadata, _root, _sys);
 				return _dataModel;
 			}
 		}
@@ -60,9 +62,29 @@ namespace A2v10.Data
             }
         }
 
+        void ProcessSystemRecord(IDataReader rdr)
+        {
+            // from !
+            for (int i=1; i<rdr.FieldCount; i++)
+            {
+                var fn = rdr.GetName(i);
+                var dataVal = rdr.GetValue(i);
+                if (fn == "!!PageSize")
+                {
+                    Int32 pageSize = (Int32)dataVal;
+                    _sys.Add("PageSize", pageSize);
+                }
+            }
+        }
+
 		public void ProcessOneRecord(IDataReader rdr)
 		{
 			var rootFI = new FieldInfo(rdr.GetName(0));
+            if (rootFI.TypeName == SYSTEM_TYPE)
+            {
+                ProcessSystemRecord(rdr);
+                return;
+            }
 			var currentRecord = new ExpandoObject();
 			bool bAdded = false;
 			Object id = null;
@@ -128,11 +150,13 @@ namespace A2v10.Data
 		{
 			var pxa = propName.Split('.'); // <Type>.PropName
 			if (pxa.Length != 2)
-				throw new DataLoaderException($"Invalid field name 'propName'. 'TypeName.PropertyName' expected");
+				throw new DataLoaderException($"Invalid field name '{propName}' for array. 'TypeName.PropertyName' expected");
 			/*0-key, 1-Property*/
 			var key = Tuple.Create(pxa[0], id);
-			var mapObj = _idMap[key];
-			mapObj.AddToArray(pxa[1], currentRecord);
+            ExpandoObject mapObj = null;
+            if (!_idMap.TryGetValue(key, out mapObj))
+                throw new DataLoaderException($"Property '{propName}'. Object {pxa[0]} (Id={id}) not found in map");
+            mapObj.AddToArray(pxa[1], currentRecord);
 		}
 
 		void AddValueToRecord(IDictionary<String, Object> record, FieldInfo field, Object value)
@@ -187,6 +211,8 @@ namespace A2v10.Data
 				return;
 			// first field = self object
 			var objectDef = new FieldInfo(rdr.GetName(0));
+            if (objectDef.TypeName == SYSTEM_TYPE)
+                return; // not needed
 			var rootMetadata = GetOrCreateMetadata(ROOT);
 			rootMetadata.AddField(objectDef, DataType.Undefined);
 

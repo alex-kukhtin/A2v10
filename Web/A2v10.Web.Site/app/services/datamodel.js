@@ -452,13 +452,21 @@
             }
             template._props_ = xProp;
         }
-    }
+	}
+
+	function setModelInfo(root, info) {
+		// may be default
+		root.__modelInfo = info ? info : {
+				PageSize: 20
+		};
+	}
 
     app.modules['datamodel'] = {
         createObject: createObject,
         createArray: createArray,
         defineObject: defineObject,
-        implementRoot: implementRoot,
+		implementRoot: implementRoot,
+		setModelInfo: setModelInfo,
         enumData: enumData
     };
 })();

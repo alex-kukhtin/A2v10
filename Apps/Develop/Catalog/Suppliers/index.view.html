@@ -3,7 +3,7 @@
     <h3>DATA grid with client paging/sorting/filtering</h3>
 
 
-    <collection-view :items-source="Customers" :page-size="3" :initial-filter="{Text:''}" run-at="server">
+    <collection-view :items-source="Customers" :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="server">
         <template scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
                 <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
@@ -57,14 +57,14 @@
                     </template>
                     <template slot="pager" scope="props">
                         <b>data-grid-pager</b>
-                        <a2-pager :source="Parent.pager" />
+                        <a2-pager :source="Parent.Pager" />
                     </template>
                     <template slot="footer" scope="props">
                         <template is="tfoot">
                             <template is="tr">
                                 <td :colspan="9" style="background-color:whitesmoke;border:1px solid red">
                                     Всего элементов <span class="bold" v-text="Customers.length"></span>
-                                    Pager = {{Parent.pager.pageSize}}
+                                    Pager = {{Parent.Pager.pageSize}}
 
                                 </td>
                             </template>
@@ -73,7 +73,7 @@
                 </data-grid>
             </div>
             <b>collection view-pager</b>
-            <a2-pager :source="Parent.pager" />
+            <a2-pager :source="Parent.Pager" />
     </template>
 </collection-view>
 </div>

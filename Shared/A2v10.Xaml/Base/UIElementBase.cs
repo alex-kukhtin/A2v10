@@ -3,7 +3,7 @@ using System;
 
 namespace A2v10.Xaml
 {
-    public class UIElementBase : XamlElement
+    public abstract class UIElementBase : XamlElement
     {
 
         internal virtual Boolean SkipRender(RenderContext context)
@@ -11,9 +11,6 @@ namespace A2v10.Xaml
             return false;
         }
 
-        internal virtual void RenderElement(RenderContext context)
-        {
-
-        }
+        internal abstract void RenderElement(RenderContext context);
     }
 }

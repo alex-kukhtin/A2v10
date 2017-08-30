@@ -13,11 +13,13 @@ namespace A2v10.Data
     {
 		public Object Metadata { get; }
 		public ExpandoObject Root { get; }
+        public ExpandoObject System { get; }
 
-		internal DynamicDataModel(Object metadata, ExpandoObject root)
+		internal DynamicDataModel(Object metadata, ExpandoObject root, ExpandoObject system)
 		{
 			Metadata = metadata;
 			Root = root;
+            System = system;
 		}
 
 		public void Traverse(Func<Object, Boolean> callback)

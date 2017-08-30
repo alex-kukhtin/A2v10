@@ -35,7 +35,7 @@ namespace A2v10.Xaml
             MergeBoolAttribute(dataGrid, nameof(Border), Border);
             //MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
             // TODO: ????
-            dataGrid.MergeAttribute("sort", "server");
+            //dataGrid.MergeAttribute("sort", "server");
             dataGrid.MergeAttribute(":route-query", "$query"); // always!
 
             // TODO: binding for GridLines ???

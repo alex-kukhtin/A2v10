@@ -55,7 +55,7 @@ header, .header {
 
 .content-view.partial-page {
     left: @side-bar-width + @side-bar-gap;
-    top:64px;
+    top:70px //64px + 6px;
     //background-color:aliceblue;
 }
 
@@ -240,11 +240,11 @@ button {
 @import "Grid.less";
 
 .app-exception {
-    margin: 20% auto;
-    width: 50%;
+    margin: 50px auto;
+    width: 600px;
     height: auto;
     text-align: center;
-    z-index: 100;
+    z-index: @exception-index;
     position: relative;
     padding: 0;
     background-color: @danger-bg-color;
@@ -255,14 +255,17 @@ button {
     .message {
         padding: 15px 10px;
         font-weight: normal;
-        white-space:pre-line;
+        white-space: pre-line;
+        font-weight: bold;
     }
 
     .stack-trace {
-        border-top: 1px solid #a94442;
+        border-top: 1px solid @danger-txt-color;
+        background-color: lighten(@danger-bg-color, 5%);
         overflow: auto;
         padding: 10px;
-        max-height: 250px;
+        max-height: 200px;
+        font-size: 92%;
     }
 }
 
@@ -297,4 +300,14 @@ button {
     to {
         left: 100%;
     }
+}
+
+pre.a2-code {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size:12px;
+    font-family:Consolas,'Courier New', Courier, monospace;
+    overflow:auto;
+    max-height:300px;
 }

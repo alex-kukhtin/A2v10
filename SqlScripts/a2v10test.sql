@@ -230,6 +230,20 @@ begin
 	from @SubObjectArray;
 end
 go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'ComplexObjects')
+	drop procedure a2test.ComplexObjects
+go
+------------------------------------------------
+create procedure a2test.ComplexObjects
+@UserId bigint = null
+as
+begin
+	set nocount on;
+	select [Document!TDocument!Object] = null, [Id!!Id]=200, [Agent.Id!TAgent!Id] = 300, [Agent.Name!TAgent] = 'Agent name';
+end
+go
+
 
 -- CLEAN UP DATABASE
 ------------------------------------------------
@@ -247,3 +261,5 @@ begin
 	delete from [System.Activities.DurableInstancing].InstancesTable;
 end
 go
+
+

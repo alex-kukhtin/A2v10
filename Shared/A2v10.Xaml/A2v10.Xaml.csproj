@@ -53,6 +53,7 @@
     <Compile Include="Base\XamlException.cs" />
     <Compile Include="Components\CollectionView.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\Code.cs" />
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\CommandControl.cs" />
     <Compile Include="Controls\ContentControl.cs" />

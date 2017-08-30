@@ -65,6 +65,8 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+        public Boolean IsDebugConfiguration { get { return true; } }
+
         public String MakeFullPath(String path, String fileName)
         {
             String fullPath = Path.Combine($"{AppPath}/{AppKey}", path, fileName);

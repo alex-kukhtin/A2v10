@@ -57,7 +57,12 @@ namespace A2v10.Web.Mvc.Controllers
             if (ex.InnerException != null)
                 ex = ex.InnerException;
             var msg = Server.HtmlEncode(ex.Message);
-            Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
+            var stackTrace = Server.HtmlEncode(ex.StackTrace);
+            // TODO: debug / release without stack trace
+            if (_host.IsDebugConfiguration)
+                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
+            else
+                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
         }
 
         protected void WriteExceptionStatus(Exception ex)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class ValuedControl : Control
+    public abstract class ValuedControl : Control
     {
        public Object Value { get; set; }
 

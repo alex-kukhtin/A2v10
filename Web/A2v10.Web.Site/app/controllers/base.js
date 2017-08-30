@@ -34,9 +34,13 @@
             },
             $isLoading() {
                 return this.$data.__requestsCount__ > 0;
-            }
-        },
-        watch: {
+			},
+			$modelInfo() {
+				return this.$data.__modelInfo;
+			}
+		},
+		/*
+		watch: {
             $baseUrl2: function (newUrl) {
                 if (!this.$data.__init__)
                     return;
@@ -62,6 +66,7 @@
                 deep: true
             }
         },
+		*/
         methods: {
             $exec(cmd, ...args) {
                 let root = this.$data;
@@ -83,7 +88,8 @@
                         }
                         resolve(dataToResolve); // single element (raw data)
                     }).catch(function (msg) {
-                        self.$alertUi(msg);
+						self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -93,10 +99,17 @@
                 let self = this;
                 let url = '/_data/invoke';
                 let baseUrl = base || self.$baseUrl;
-                return new Promise(function (resolve, reject) {
-                    dataservice.post(url).then(function (data) {
-                    }).catch(function (msg) {
+				return new Promise(function (resolve, reject) {
+					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (utils.isObject(data)) {
+							resolve(data);
+						} else {
+							throw new Error('Invalid response type for $invoke');
+						}
+					}).catch(function (msg) {
                         self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -114,8 +127,9 @@
                         } else {
                             throw new Error('Invalid response type for $reload');
                         }
-                    }).catch(function (msg) {
+					}).catch(function (msg) {
                         self.$alertUi(msg);
+						reject();
                     });
                 });
             },
@@ -136,7 +150,19 @@
 				let urlToNavigate = '/' + url + '/' + data;
 				this.$store.commit('navigate', urlToNavigate, null); 
                 //route.navigate(urlToNavigate);
-            },
+			},
+
+			$open(data) {
+				// TODO: переделать
+				let sel = data.arg.$selected;
+				if (!sel)
+					return;
+				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
+				this.$store.commit('navigate', url, null); 
+				//alert(sel.$id);
+				// TODO: $id from metadata!!!
+				// alert(url + sel.Id);
+			},
 
             $confirm(prms) {
                 if (utils.isString(prms))
@@ -218,14 +244,14 @@
 
             $saveAndClose() {
                 if (this.$isDirty)
-                    this.$save().then(() => route.close());
+                    this.$save().then(() => this.$close());
                 else
-                    route.close();
+                    this.$close();
             },
 
             $close() {
                 if (this.$saveModified())
-                    route.close();
+                    store.close();
             },
 
             $searchChange() {
