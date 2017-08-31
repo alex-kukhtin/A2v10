@@ -56,9 +56,11 @@ namespace A2v10.Xaml
         }
         #endregion
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var grid = new TagBuilder("div", "grid");
+            if (onRender != null)
+                onRender(grid);
             grid.RenderStart(context);
             RenderChildren(context);
             grid.RenderEnd(context);

@@ -7,7 +7,9 @@ namespace A2v10.Xaml
 {
     public enum CommandType
     {
+        Unknown,
         Close,
+        SaveAndClose,
         Reload,
         Refresh,
         Requery,
@@ -37,6 +39,8 @@ namespace A2v10.Xaml
         {
             switch (Command)
             {
+                case CommandType.Unknown:
+                    throw new NotImplementedException($"Command required for BindCmd extension");
                 case CommandType.Refresh:
                 case CommandType.Reload:
                     return "$reload()";
@@ -44,6 +48,10 @@ namespace A2v10.Xaml
                     return "$requery()";
                 case CommandType.Save:
                     return "$save()";
+                case CommandType.Close:
+                    return "$close()";
+                case CommandType.SaveAndClose:
+                    return "$saveAndClose()";
                 case CommandType.OpenSelected:
                     if (String.IsNullOrEmpty(Action))
                         throw new NotImplementedException($"Action required for OpenSelected command");
@@ -52,6 +60,17 @@ namespace A2v10.Xaml
                     return $"$open({{mode:'selected', action:'{Action}', arg:{Argument} }})";
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
+            }
+        }
+
+        internal void MergeCommandAttributes(TagBuilder tag)
+        {
+            switch (Command)
+            {
+                case CommandType.Save:
+                case CommandType.SaveAndClose:
+                    tag.MergeAttribute(":disabled", "$isPristine");
+                    break;
             }
         }
     }

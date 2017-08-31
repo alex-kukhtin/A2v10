@@ -1,6 +1,9 @@
 ﻿
 @import "Variables.less";
 
+@modal-padding: 8px;
+@modal-footer-bg-color:#f5f5f5;
+
 .modal-stack {
     position: fixed;
 
@@ -26,7 +29,7 @@
 
 .modal-header {
     background-color: @dialog-header-bg-color;
-    padding: 8px;
+    padding: @modal-padding;
     font-weight: bold;
     border-bottom: 1px solid @default-brd-color;
     button {
@@ -35,9 +38,30 @@
 }
 
 .modal-footer {
-    padding:12px;
-    background-color:#f5f5f5;
-    border-top:1px solid #ccc;
-    display:flex;
-    align-items:flex-end;
+    padding: 12px @modal-padding;
+    background-color: @modal-footer-bg-color;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+
+    .btn + .btn {
+        margin-left: @modal-padding;
+    }
+
+    .aligner {
+        flex-grow: 1;
+    }
+
+    .btn-help {
+        cursor: pointer;
+
+        .ico {
+            margin-right: 4px;
+        }
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
 }

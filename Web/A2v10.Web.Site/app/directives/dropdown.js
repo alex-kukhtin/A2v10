@@ -37,4 +37,3 @@ Vue.directive('dropdown', {
 	}
 });
 
-

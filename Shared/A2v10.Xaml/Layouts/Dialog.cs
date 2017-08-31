@@ -10,7 +10,7 @@ namespace A2v10.Xaml
     {
         public String Title { get; set; }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var dialog = new TagBuilder("div", "modal");
             dialog.MergeAttribute("id", context.RootId);

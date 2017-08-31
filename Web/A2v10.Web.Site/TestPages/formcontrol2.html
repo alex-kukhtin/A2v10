@@ -4,6 +4,29 @@
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" href="../css/site.min.css" />
+    <style>
+        .spinner {
+            margin: 4px 0;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: transparent;
+            border-radius: 50%;
+            border: 3px solid #ccc;
+        }
+
+            .spinner.active {
+                border-color: #157eff;
+                border-bottom-color: #ccc;
+                animation: spin 2s linear infinite;
+            }
+
+        @keyframes spin {
+            0% {transform: rotate(0deg);}
+
+            100% {transform: rotate(360deg);}
+        }
+    </style>
 </head>
 <body>
 
@@ -47,5 +70,11 @@
             </div>
         </p>
     </div>
+    <footer class="footer">
+        <div class="spinner">
+        </div>
+        <div class="spinner active">
+        </div>
+    </footer>
 </body>
 </html>

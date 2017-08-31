@@ -18,7 +18,7 @@ TODO: may be icon for confirm ????
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -17,10 +18,11 @@ namespace A2v10.Xaml
             }
         }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var div = new TagBuilder("div");
-
+            if (onRender != null)
+                onRender(div);
             div.RenderStart(context);
             RenderChildren(context);
             div.RenderEnd(context);

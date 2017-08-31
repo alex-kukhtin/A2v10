@@ -17,6 +17,7 @@
                 <button @click.stop.prevent="$append100()"><i class="ico ico-plus-box"></i> add 100 rows</button>
                 <button @click.stop.prevent="$exec('test')"><i class="ico ico-database"></i> exec</button>
                 <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="ico ico-save"></i> save</button>
+                <div style="flex-grow:1"></div>
                 <button @click.stop.prevent="$reload()"><i class="ico ico-refresh"></i> refresh</button>
                 <label v-text="Customers.length"></label>
                 <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>

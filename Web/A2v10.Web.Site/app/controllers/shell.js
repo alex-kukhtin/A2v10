@@ -41,6 +41,8 @@
 		if (!url.startsWith('/'))
 			url = '/' + url;
 		let sUrl = url.split('/');
+		if (sUrl.length === 5 || sUrl.length === 4)
+			return url; // full qualified
 		let routeLen = sUrl.length;
 		let seg1 = sUrl[1];
 		let am = null;
@@ -316,6 +318,14 @@
             'a2-main-view': a2MainView
 		},
 		store,
+		data() {
+			return {
+				requestsCount: 0
+			};
+		},
+		computed: {
+			processing() { return this.requestsCount > 0; }
+		},
         methods: {
             about() {
 				// TODO: localization
@@ -348,6 +358,9 @@
 			});
 
 			popup.startService();
+
+			eventBus.$on('beginRequest', () => me.requestsCount += 1);
+			eventBus.$on('endRequest', () => me.requestsCount -= 1);
 		}
     });
 

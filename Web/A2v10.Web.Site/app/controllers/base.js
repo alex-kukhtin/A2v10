@@ -251,7 +251,7 @@
 
             $close() {
                 if (this.$saveModified())
-                    store.close();
+                    this.$store.commit("close");
             },
 
             $searchChange() {

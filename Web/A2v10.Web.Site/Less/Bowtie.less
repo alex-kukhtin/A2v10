@@ -1,6 +1,8 @@
 ﻿
 @icon-blue: #034989;
 @icon-green: #317a2e;
+@icon-red: #a94442;
+@icon-yellow: #dcb67a;
 
 @font-face {
     font-family: 'Bowtie';
@@ -114,7 +116,7 @@ i, .ico {
 
 .ico-folder:before {
     content: "\e640";
-    color: #dcb67a;
+    color: @icon-yellow;
 }
 
 .ico-minus:before {
@@ -127,10 +129,15 @@ i, .ico {
 
 .ico-plus:before {
     content: "\e64c";
+    color:@icon-green;
 }
 
 .ico-plus-box:before {
     content: "\e64d";
+}
+
+.ico-menu:before {
+    content: "\e651";
 }
 
 .ico-history:before {
@@ -157,8 +164,37 @@ i, .ico {
     content: "\e662";
 }
 
+.ico-gear:before {
+    content: "\e669";
+}
+
+.ico-help:before {
+    content: "\e674";
+}
+
+.ico-info:before {
+    content: "\e675";
+}
+
+.ico-info-outline:before {
+    content: "\e676";
+}
+
+.ico-success:before {
+    content: "\e677";
+}
+
+.ico-waiting:before {
+    content: "\e678";
+}
+
+.ico-warning:before {
+    content: "\e679";
+}
+
 .ico-trash:before {
     content: "\e62a";
+    color: @icon-red;
 }
 
 .ico-download:before {
@@ -180,3 +216,13 @@ i, .ico {
 .ico-eye:before {
     content: "\e699";
 }
+
+.ico-delete:before {
+    content: "\e64b";
+    color: @icon-red;
+}
+
+.ico-close:before {
+    content: "\e64b";
+}
+

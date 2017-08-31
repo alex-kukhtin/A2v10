@@ -114,6 +114,7 @@
     <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\formcontrol2.html" />
     <Content Include="TestPages\generator.js" />
+    <Content Include="TestPages\pagelayout.html" />
     <Content Include="TestPages\pager.html" />
     <Content Include="TestPages\pager.js" />
     <Content Include="TestPages\tabcomponent.html" />
@@ -157,6 +158,8 @@
     <Content Include="Less\Tab.less" />
     <Content Include="Less\Grid.less" />
     <Content Include="Less\DropDown.less" />
+    <Content Include="Less\Page.less" />
+    <Content Include="Less\Button.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -6,6 +6,7 @@
 
 .toolbar {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     padding: 2px;
     overflow: visible;
@@ -31,8 +32,10 @@
             border-color: @tb-hover-brd-color;
         }
 
-        &:focus {
-            outline-style: none;
+
+        &:disabled:hover {
+            background-color: transparent;
+            border-color:transparent;
         }
     }
 
@@ -52,7 +55,11 @@
     }
 
     .dropdown.show .btn {
-        background-color:@dropdown-bg-color;
-        border-color:@dropdown-brd-color;
+        background-color: @dropdown-bg-color;
+        border-color: @dropdown-brd-color;
+    }
+
+    .aligner {
+        flex-grow: 1;
     }
 }

@@ -8,7 +8,7 @@ namespace A2v10.Xaml
 {
     public class List : Control
     {
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             throw new NotImplementedException();
         }

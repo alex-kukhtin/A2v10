@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class Group : Container
+    public class Taskpad : Container
     {
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            var tag = new TagBuilder("div", "taskpad");
+            if (onRender != null)
+                onRender(tag);
+            tag.RenderStart(context);
             RenderChildren(context);
+            tag.RenderEnd(context);
         }
     }
 }

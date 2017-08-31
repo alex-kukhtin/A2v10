@@ -11,6 +11,6 @@ namespace A2v10.Xaml
             return false;
         }
 
-        internal abstract void RenderElement(RenderContext context);
+        internal abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
     }
 }

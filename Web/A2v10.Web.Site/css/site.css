@@ -94,9 +94,13 @@ i,
 }
 .ico-plus:before {
   content: "\e64c";
+  color: #317a2e;
 }
 .ico-plus-box:before {
   content: "\e64d";
+}
+.ico-menu:before {
+  content: "\e651";
 }
 .ico-history:before {
   content: "\e657";
@@ -117,8 +121,30 @@ i,
 .ico-search:before {
   content: "\e662";
 }
+.ico-gear:before {
+  content: "\e669";
+}
+.ico-help:before {
+  content: "\e674";
+}
+.ico-info:before {
+  content: "\e675";
+}
+.ico-info-outline:before {
+  content: "\e676";
+}
+.ico-success:before {
+  content: "\e677";
+}
+.ico-waiting:before {
+  content: "\e678";
+}
+.ico-warning:before {
+  content: "\e679";
+}
 .ico-trash:before {
   content: "\e62a";
+  color: #a94442;
 }
 .ico-download:before {
   content: "\e68c";
@@ -134,6 +160,13 @@ i,
 }
 .ico-eye:before {
   content: "\e699";
+}
+.ico-delete:before {
+  content: "\e64b";
+  color: #a94442;
+}
+.ico-close:before {
+  content: "\e64b";
 }
 body {
   padding: 0;
@@ -176,6 +209,13 @@ th {
 }
 .text-center {
   text-align: center;
+}
+.absolute {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  overflow: auto;
 }
 html {
   font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -220,7 +260,7 @@ header a.app-title:hover,
   left: 0;
   right: 0;
   top: 0;
-  bottom: 26px;
+  bottom: 22px;
 }
 .content-view.partial-page {
   left: 256px;
@@ -235,20 +275,10 @@ header a.app-title:hover,
 .content-view.full-view {
   top: 32px;
 }
-.include.loading {
-  /* //spinner for loading
-    &:after {
-        content: "\f110"; /* fa-spinner * /
-        position: absolute;
-        left: ~"calc(50% - 13px)";
-        top: ~"calc(50% - 13px)";
-        font-size: 26px;
-        color: @link-color;
-        font-family: FontAwesome;
-        //animation: fa-spin 2s infinite linear;
-        animation: fa-spin 1s infinite steps(8);
-    }
-    */
+.include {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 .include.loading > div {
   display: none;
@@ -284,6 +314,29 @@ header a.app-title:hover,
 .nav-bar li.active a {
   color: #0d82f8;
   border-bottom: 3px solid #57a8fa;
+}
+.page {
+  width: 100%;
+  height: 100%;
+}
+.page.page-grid {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto;
+}
+.page.page-grid .page-toolbar {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+.page.page-grid .page-taskpad {
+  grid-column: 2;
+  grid-row: 2;
+  overflow: auto;
+}
+.page.page-grid .page-content {
+  grid-row: 2;
+  grid-column: 1;
+  overflow: auto;
 }
 .side-bar {
   position: absolute;
@@ -352,6 +405,7 @@ footer,
   z-index: 1020;
   padding-left: 8px;
   font-size: 12px;
+  vertical-align: middle;
 }
 footer .right-part,
 .footer .right-part {
@@ -367,19 +421,30 @@ footer button,
   padding: 1px 6px;
   text-transform: lowercase;
 }
-a {
-  color: #57a8fa;
-  text-decoration: none;
+footer .spinner,
+.footer .spinner {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 2px;
+  background-color: transparent;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  vertical-align: -2px;
 }
-a:hover {
-  color: #0d82f8;
-  text-decoration: underline;
+footer .spinner.active,
+.footer .spinner.active {
+  border-color: #0d82f8;
+  border-top-color: #ccc;
+  animation: spin 1.5s linear infinite;
 }
-a:focus {
-  outline-style: none;
-}
-a:active {
-  color: #0d82f8;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 input {
   border-style: none;
@@ -394,6 +459,20 @@ td,
 th {
   text-align: left;
   font-weight: normal;
+}
+a {
+  color: #57a8fa;
+  text-decoration: none;
+}
+a:hover {
+  color: #0d82f8;
+  text-decoration: underline;
+}
+a:focus {
+  outline-style: none;
+}
+a:active {
+  color: #0d82f8;
 }
 pre {
   font-family: Consolas, Courier New, Courier, monospace;
@@ -432,6 +511,7 @@ button {
   margin-left: 10px;
   width: auto;
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.2);
+  z-index: 1050;
 }
 .control-group .validator .error {
   display: list-item;
@@ -498,6 +578,13 @@ button {
 }
 .data-grid .control-group {
   margin: 0;
+}
+.btn:focus {
+  outline-style: none;
+}
+.btn:disabled {
+  opacity: 0.5;
+  color: #777;
 }
 table.data-grid {
   border: 1px solid #bdc5d8;
@@ -609,6 +696,7 @@ table.hover > tbody > tr:hover {
 }
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   padding: 2px;
   overflow: visible;
@@ -632,8 +720,9 @@ table.hover > tbody > tr:hover {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   border-color: #e5c365;
 }
-.toolbar .btn:focus {
-  outline-style: none;
+.toolbar .btn:disabled:hover {
+  background-color: transparent;
+  border-color: transparent;
 }
 .toolbar i.ico {
   display: inline-block;
@@ -651,6 +740,9 @@ table.hover > tbody > tr:hover {
 .toolbar .dropdown.show .btn {
   background-color: #eaf0ff;
   border-color: #9ba7b7;
+}
+.toolbar .aligner {
+  flex-grow: 1;
 }
 .tree-view {
   margin: 0;
@@ -781,11 +873,27 @@ table.hover > tbody > tr:hover {
   float: right;
 }
 .modal-footer {
-  padding: 12px;
+  padding: 12px 8px;
   background-color: #f5f5f5;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #ddd;
   display: flex;
-  align-items: flex-end;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+.modal-footer .btn + .btn {
+  margin-left: 8px;
+}
+.modal-footer .aligner {
+  flex-grow: 1;
+}
+.modal-footer .btn-help {
+  cursor: pointer;
+}
+.modal-footer .btn-help .ico {
+  margin-right: 4px;
+}
+.modal-footer .btn-help:hover {
+  text-decoration: none;
 }
 .menu {
   padding: 2px;
@@ -849,27 +957,22 @@ table.hover > tbody > tr:hover {
 }
 .grid {
   display: grid;
-  height: 400px;
   background-color: aliceblue;
   padding: 10px;
   grid-gap: 10px;
   grid-template-columns: 120px auto 1fr;
-  grid-template-rows: auto 50px auto 1fr;
+  grid-template-rows: auto auto 50px auto 1fr;
 }
-.grid div {
+.grid div222 {
   width: 100px;
   height: 50px;
   background-color: lightyellow;
   border: 1px solid orange;
 }
-.grid div:first-child {
+.grid div222:first-child {
   background-color: antiquewhite;
   width: 100%;
   height: 70px;
-}
-.grid button {
-  width: 100%;
-  height: 30px;
 }
 .app-exception {
   margin: 50px auto;
@@ -934,4 +1037,10 @@ pre.a2-code {
   font-family: Consolas, 'Courier New', Courier, monospace;
   overflow: auto;
   max-height: 300px;
+}
+.taskpad {
+  background-color: azure;
+  margin-left: 6px;
+  margin-right: 6px;
+  border-left: 1px solid silver;
 }

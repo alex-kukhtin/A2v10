@@ -40,6 +40,7 @@ header, .header {
     }
 }
 
+
 @side-bar-width: 250px;
 @side-bar-gap: 6px;
 @side-bar-collapsed-width: 20px;
@@ -50,7 +51,7 @@ header, .header {
     left:0;
     right:0;
     top:0;
-    bottom:26px;
+    bottom:@footer-height;
 }
 
 .content-view.partial-page {
@@ -71,26 +72,19 @@ header, .header {
     top: 32px;
 }
 
+.include {
+    width:100%;
+    height:100%;
+    position:relative;
+}
 .include.loading {
     > div {
         display: none;
     }
-    /* //spinner for loading
-    &:after {
-        content: "\f110"; /* fa-spinner * /
-        position: absolute;
-        left: ~"calc(50% - 13px)";
-        top: ~"calc(50% - 13px)";
-        font-size: 26px;
-        color: @link-color;
-        font-family: FontAwesome;
-        //animation: fa-spin 2s infinite linear;
-        animation: fa-spin 1s infinite steps(8);
-    }
-    */
 }
 
 @import "Nav.less";
+@import "Page.less";
 
 
 .side-bar {
@@ -166,21 +160,66 @@ footer, .footer {
     border-top: 1px solid @default-brd-color;
     z-index: @footer-index;
     padding-left: 8px;
-    font-size:12px;
+    font-size: 12px;
+    vertical-align: middle;
 
     .right-part {
-        display:inline-block;
-        float:right;
-        padding-right:2px;
+        display: inline-block;
+        float: right;
+        padding-right: 2px;
     }
 
     button {
-        background-color:skyblue;
-        border:1px solid blue;
-        font-size:12px;
-        padding:1px 6px;
-        text-transform:lowercase;
+        background-color: skyblue;
+        border: 1px solid blue;
+        font-size: 12px;
+        padding: 1px 6px;
+        text-transform: lowercase;
     }
+
+    .spinner {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 2px;
+        background-color: transparent;
+        border-radius: 50%;
+        border: 3px solid #ccc;
+        vertical-align: -2px;
+
+        &.active {
+            border-color: @link-hover-color;
+            border-top-color: #ccc;
+            animation: spin 1.5s linear infinite;
+        }
+    }
+}
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+input {
+    border-style: none;
+    font-size: 13px;
+    height: 1.6em;
+    padding: 0 6px;
+}
+
+textarea {
+	resize: none;
+}
+
+td, th {
+    text-align:left;
+    font-weight:normal;
 }
 
 a {
@@ -201,22 +240,6 @@ a {
     }
 }
 
-input {
-    border-style: none;
-    font-size: 13px;
-    height: 1.6em;
-    padding: 0 6px;
-}
-
-textarea {
-	resize: none;
-}
-
-td, th {
-    text-align:left;
-    font-weight:normal;
-}
-
 pre {
     font-family: @monospace-font;
     font-size:0.85em;
@@ -230,6 +253,7 @@ button {
 }
 
 @import "Control.less";
+@import "Button.less";
 @import "DataGrid.less";
 @import "ToolBar.less";
 @import "TreeView.less";
@@ -293,13 +317,8 @@ button {
 }
 
 @keyframes loading {
-    from {
-        left: 0;
-    }
-
-    to {
-        left: 100%;
-    }
+    from {left: 0;}
+    to {left: 100%;}
 }
 
 pre.a2-code {
@@ -310,4 +329,11 @@ pre.a2-code {
     font-family:Consolas,'Courier New', Courier, monospace;
     overflow:auto;
     max-height:300px;
+}
+
+.taskpad {
+    background-color:azure;
+    margin-left:6px;
+    margin-right:6px;
+    border-left:1px solid silver;
 }

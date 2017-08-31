@@ -1,16 +1,26 @@
 ﻿<!-- Document edit -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Toolbar>
-		<Button Command="{BindCmd Command=Reload}">добавить строку</Button>
-		<Button Icon="Save" Command="{BindCmd Save}">сохранить</Button>
-		<Separator />
-		<Button Icon="Reload" Command="{BindCmd Reload}">обновить</Button>
-		<Button Icon="Requery" Command="{BindCmd Requery}">перезагрузить</Button>
-	</Toolbar>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Plus" Command="{BindCmd Command=Reload}">Добавить строку</Button>
+			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+			<Button Icon="Save" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
+			<Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad>
+			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
+		</Taskpad>
+	</Page.Taskpad>
 	<Grid>
 		<Code Grid.Column="1" Multiline="True" Content="{Bind Document.Agent.DateCreated}"></Code>
 		<Code Grid.Column="2" Multiline="True" Content="{Bind Document.Agent.DateModified}"></Code>
+		<ComboBox Grid.Row="2" Grid.Column="1"></ComboBox>
 	</Grid>
 	<DataGrid ItemsSource="{Bind Document.Rows}" GridLines="Vertical" Striped="True">
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
@@ -20,6 +30,7 @@
 		<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
 		<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
 	</DataGrid>
+	<TextBox Value="{Bind Document.Memo}"></TextBox>
 	<Code Multiline="True" Content="{Bind Document.Rows}"></Code>
 </Page>
 

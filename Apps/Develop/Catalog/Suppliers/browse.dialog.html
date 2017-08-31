@@ -20,8 +20,10 @@
         </data-grid>
     </div>
     <div class="modal-footer">
-        <button @click.stop.prevent="$modalClose(Customers.$selected)">Выбрать</button>
-        <button @click.stop.prevent="$modalClose(false)">Отменить</button>
+        <a class="btn-help"><i class="ico ico-help"></i>Справка</a>
+        <div class="aligner"></div>
+        <button class="btn" @click.stop.prevent="$modalClose(Customers.$selected)">Выбрать</button>
+        <button class="btn" @click.stop.prevent="$modalClose(false)">Отменить</button>
     </div>
 </div>
 

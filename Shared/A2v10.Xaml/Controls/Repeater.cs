@@ -13,7 +13,7 @@ namespace A2v10.Xaml.Controls
         public Object ItemsSource { get; set; }
         public UIElementBase ItemTemplate { get; set; }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             if (ItemTemplate == null)
                 throw new XamlException("Invalid empty item template for Repeater");

@@ -8,11 +8,12 @@
 </head>
 <body>
     <div id="shell" class="shell">
-        <header>
+        <header class="header">
             <i class="bowtie-user"></i>
             <a class="app-title" href='\' v-text="title" @click.stop.prevent="root"></a>
         </header>
-        <footer>
+        <footer class="footer">
+            <div :class="{spinner: true, active:processing}"></div>
             <a href="\app\about" @click.stop.prevent="about">about</a>
             version: <span v-text="version"></span>
             <span class="right-part">

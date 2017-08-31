@@ -35,6 +35,15 @@
 			document.title = title;
 	}
 
+	function makeBackUrl(url) {
+		let urlArr = url.split('/');
+		if (urlArr.length === 5)
+			return urlArr.slice(0, 3).join('/');
+		else if (url.length === 4)
+			return urlArr.slice(0, 2).join('/');
+		return url;
+	}
+
 	const store = new Vuex.Store({
 		state: {
 			route: window.location.pathname,
@@ -98,6 +107,12 @@
 				window.history.replaceState(null, title, url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+			},
+			close(state) {
+				if (window.history.length)
+					window.history.back();
+				else
+					store.commit('navigate', makeBackUrl(state.route));
 			}
 		}
 	});
@@ -115,6 +130,7 @@
 	store.makeQueryString = makeQueryString;
 	store.replaceUrlSearch = replaceUrlSearch;
 	store.replaceUrlQuery = replaceUrlQuery;
+	store.makeBackUrl = makeBackUrl;
 
 	app.components['std:store'] = store;
 })();

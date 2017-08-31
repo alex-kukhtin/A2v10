@@ -11,12 +11,30 @@ namespace A2v10.Xaml
     public class Page : RootContainer
     {
 
-        internal override void RenderElement(RenderContext context)
+        public UIElement Toolbar { get; set; }
+        public UIElement Taskpad { get; set; }
+
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var page = new TagBuilder("div", "page");
+            bool isGridPage = (Toolbar != null) || (Taskpad != null);
+            var page = new TagBuilder("div", "page absolute");
+            if (isGridPage)
+                page.AddCssClass("page-grid");
             page.MergeAttribute("id", context.RootId);
             page.RenderStart(context);
-            RenderChildren(context);
+
+            if (isGridPage)
+            {
+                if (Toolbar != null)
+                    Toolbar.RenderElement(context, (tag) => tag.AddCssClass("page-toolbar"));
+                if (Taskpad != null)
+                    Taskpad.RenderElement(context, (tag) => tag.AddCssClass("page-taskpad"));
+                var content = new TagBuilder("div", "page-content").RenderStart(context);
+                RenderChildren(context);
+                content.RenderEnd(context);
+            }
+            else
+                RenderChildren(context);
             page.RenderEnd(context);
         }
     }

@@ -26,6 +26,7 @@ namespace A2v10.Xaml
         ChevronLeft,
         ChevronRight,
         ChevronUp,
+        Close,
         Comment,
         CommentAdd,
         CommentDiscussion,
@@ -34,6 +35,7 @@ namespace A2v10.Xaml
         CommentOutline,
         CommentPrevious,
         CommentUrgent,
+        Delete,
         Dashboard,
         Database,
         Disapprove,
@@ -43,7 +45,12 @@ namespace A2v10.Xaml
         Flag,
         File,
         Folder,
+        Gear,
+        Help,
         History,
+        Info,
+        InfoOutline,
+        Menu,
         Minus,
         MinusBox,
         Plus,
@@ -52,10 +59,13 @@ namespace A2v10.Xaml
         Reload,
         Requery,
         Save,
+        Success,
         Search,
         Trash,
         Upload,
         User,
-        Users
+        Users,
+        Waiting,
+        Warning
     }
 }

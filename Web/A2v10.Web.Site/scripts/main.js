@@ -306,6 +306,15 @@
 			document.title = title;
 	}
 
+	function makeBackUrl(url) {
+		let urlArr = url.split('/');
+		if (urlArr.length === 5)
+			return urlArr.slice(0, 3).join('/');
+		else if (url.length === 4)
+			return urlArr.slice(0, 2).join('/');
+		return url;
+	}
+
 	const store = new Vuex.Store({
 		state: {
 			route: window.location.pathname,
@@ -369,6 +378,12 @@
 				window.history.replaceState(null, title, url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+			},
+			close(state) {
+				if (window.history.length)
+					window.history.back();
+				else
+					store.commit('navigate', makeBackUrl(state.route));
 			}
 		}
 	});
@@ -386,6 +401,7 @@
 	store.makeQueryString = makeQueryString;
 	store.replaceUrlSearch = replaceUrlSearch;
 	store.replaceUrlQuery = replaceUrlQuery;
+	store.makeBackUrl = makeBackUrl;
 
 	app.components['std:store'] = store;
 })();
@@ -1940,7 +1956,7 @@ TODO: may be icon for confirm ????
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -2037,7 +2053,6 @@ Vue.directive('dropdown', {
 		popup.unregisterPopup(el);
 	}
 });
-
 
 
 /*20170828-7021*/
@@ -2293,7 +2308,7 @@ Vue.directive('dropdown', {
 
             $close() {
                 if (this.$saveModified())
-                    store.close();
+                    this.$store.commit("close");
             },
 
             $searchChange() {
@@ -2412,6 +2427,8 @@ Vue.directive('dropdown', {
 		if (!url.startsWith('/'))
 			url = '/' + url;
 		let sUrl = url.split('/');
+		if (sUrl.length === 5 || sUrl.length === 4)
+			return url; // full qualified
 		let routeLen = sUrl.length;
 		let seg1 = sUrl[1];
 		let am = null;
@@ -2687,6 +2704,14 @@ Vue.directive('dropdown', {
             'a2-main-view': a2MainView
 		},
 		store,
+		data() {
+			return {
+				requestsCount: 0
+			};
+		},
+		computed: {
+			processing() { return this.requestsCount > 0; }
+		},
         methods: {
             about() {
 				// TODO: localization
@@ -2719,6 +2744,9 @@ Vue.directive('dropdown', {
 			});
 
 			popup.startService();
+
+			eventBus.$on('beginRequest', () => me.requestsCount += 1);
+			eventBus.$on('endRequest', () => me.requestsCount -= 1);
 		}
     });
 

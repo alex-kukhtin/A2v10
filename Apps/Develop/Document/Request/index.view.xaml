@@ -1,15 +1,12 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<CollectionView ItemsSource="{Bind Documents}">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-				  Striped="True" Border="True" Sort="False" GridLines="Vertical">
-			<DataGrid.Toolbar>
-				<Toolbar>
-					<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
-					<Button Icon="File" Command="{BindCmd OpenSelected, Action=Edit, Argument=Documents}">Открыть</Button>
-					<Button Icon="Trash">Удалить</Button>
-					<!--
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
+			<Button Icon="File" Command="{BindCmd OpenSelected, Action=Edit, Argument=Documents}">Открыть</Button>
+			<Button Icon="Delete">Удалить</Button>
+			<!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action
 					Create Action="Edit"
 					RemoveSelected Confirm
@@ -17,17 +14,20 @@
 					Exec Action=Command
 					Invoke Action=Command
 					-->
-					<Separator />
-					<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-					<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-				</Toolbar>
-			</DataGrid.Toolbar>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<CollectionView ItemsSource="{Bind Documents}">
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				  Striped="True" Sort="False" GridLines="Vertical">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
 			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
 			<DataGridColumn Header="Номер" Content="SNo" />
-			<DataGridColumn Header="Котрагент" Content="Agent"/>
+			<DataGridColumn Header="Котрагент" Content="{Bind Agent}"/>
 			<DataGridColumn Header="Сумма" Content="Sum" Align="Right"/>
 			<DataGridColumn Header="Примечание" Content="Memo" />
 			<DataGridColumn Header="Договор" Content="Contract" />

@@ -11,7 +11,7 @@ namespace A2v10.Xaml
     {
         public Boolean Multiline { get; set; }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var code = new TagBuilder(Multiline ? "pre" : "code");
             if (Multiline)

@@ -12,7 +12,7 @@ namespace A2v10.Xaml
     {
         public Object ItemsSource { get; set; }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var combo = new TagBuilder("select");
             combo.RenderStart(context);

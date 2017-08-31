@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 	{
         public Icon Icon { get; set; }
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var button = new TagBuilder("button", "btn");
             AddAttributes(button, context);

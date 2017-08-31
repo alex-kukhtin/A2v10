@@ -24,9 +24,11 @@ namespace A2v10.Xaml
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
-        internal override void RenderElement(RenderContext context)
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var dataGrid = new TagBuilder("data-grid");
+            if (onRender != null)
+                onRender(dataGrid);
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.Path);
