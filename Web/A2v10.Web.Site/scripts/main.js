@@ -28,6 +28,24 @@
         throw new Error('component "' + name + '" not found');
     }
 })();
+
+
+(function (elem) {
+	elem.closest = elem.closest || function (css) {
+		let node = this;
+		while (node) {
+			if (node.matches(css))
+				return node;
+			else
+				node = node.parentElement;
+		}
+		return null;
+	}
+})(Element.prototype);
+
+
+
+
 /*20170818-7015*/
 /* platform/webvue.js */
 
@@ -269,18 +287,16 @@
     app.modules['route'] = route;
 })();
 
-
+/*20170901-7022*/
+/* platform/routex.js */
 
 (function () {
 
-	const title = null;
-
-
 	const eventBus = require('std:eventBus');
+
 	// TODO:
 
 	// 1: save/restore query (localStorage)
-	// 2: document title
 
 	function parseQueryString(str) {
 		var obj = {};
@@ -301,9 +317,13 @@
 		return query ? '?' + query : '';
 	}
 
-	function setTitle(title) {
-		if (title)
-			document.title = title;
+	const titleStore = {};
+
+	function setTitle(to) {
+		if (to.title) {
+			document.title = to.title;
+			titleStore[to.url] = to.title;
+		}
 	}
 
 	function makeBackUrl(url) {
@@ -342,13 +362,13 @@
 			}		
 		},
 		mutations: {
-			navigate(state, url, query) {
+			navigate(state, to) { // to: {url, query, title}
 				let oldUrl = state.route + makeQueryString(state.query);
-				state.route = url;
-				state.query = Object.assign({}, query);
-				let newUrl = state.route + makeQueryString(query);
+				state.route = to.url;
+				state.query = Object.assign({}, to.query);
+				let newUrl = state.route + makeQueryString(to.query);
 				let h = window.history;
-				setTitle(title);
+				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
@@ -372,18 +392,22 @@
 			popstate(state) {
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+				if (state.route in titleStore) {
+					document.title = titleStore[state.route];
+				}
 			},
-			setstate(state, url) {
+			setstate(state, to ){ // to: {url, title}
 				//console.warn('set setstate: ' + url);
-				window.history.replaceState(null, title, url);
+				window.history.replaceState(null, null, to.url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+				setTitle(to);
 			},
 			close(state) {
 				if (window.history.length)
 					window.history.back();
 				else
-					store.commit('navigate', makeBackUrl(state.route));
+					store.commit('navigate', { url: makeBackUrl(state.route) });
 			}
 		}
 	});
@@ -1155,10 +1179,7 @@ app.modules['std:popup'] = function () {
 
 
 	function closest(node, css) {
-		while (node) {
-			if (node.matches(css)) return node;
-			else node = node.parentElement;
-		}
+		if (node) return node.closest(css);
 		return null;
 	} 
 
@@ -1280,7 +1301,7 @@ app.modules['std:popup'] = function () {
             },
             errors() {
                 if (!this.item) return null;
-                let root = this.item._root_;
+				let root = this.item._root_;
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
@@ -1310,7 +1331,7 @@ app.modules['std:popup'] = function () {
     let textBoxTemplate =
 `<div :class="cssClass">
 	<div class="input-group">
-		<input v-model.lazy="item[prop]" :class="inputClass"/>
+		<input v-focus v-model.lazy="item[prop]" :class="inputClass"/>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
 </div>
@@ -1330,7 +1351,7 @@ app.modules['std:popup'] = function () {
             item: Object,
             prop: String,
             align: { type: String, default: 'left' }
-		}
+		}		
     });
 })();
 /*20170825-7020*/
@@ -2055,7 +2076,24 @@ Vue.directive('dropdown', {
 });
 
 
-/*20170828-7021*/
+/*20170109-7022*/
+/* directives/focus.js */
+
+Vue.directive('focus', {
+	bind(el, binding, vnode) {
+
+		el.addEventListener("focus", function (event) {
+			event.target.parentElement.classList.add('focus');
+		});
+
+		el.addEventListener("blur", function (event) {
+			event.target.parentElement.classList.remove('focus');
+		});
+	}
+});
+
+
+/*20170901-7022*/
 /*controllers/base.js*/
 (function () {
 
@@ -2144,9 +2182,8 @@ Vue.directive('dropdown', {
                             dataToResolve = data[p];
                         }
                         resolve(dataToResolve); // single element (raw data)
-                    }).catch(function (msg) {
+					}).catch(function (msg) {
 						self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -2166,7 +2203,6 @@ Vue.directive('dropdown', {
 						}
 					}).catch(function (msg) {
                         self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -2186,7 +2222,6 @@ Vue.directive('dropdown', {
                         }
 					}).catch(function (msg) {
                         self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -2205,7 +2240,7 @@ Vue.directive('dropdown', {
             $navigate(url, data) {
                 // TODO: make correct URL
 				let urlToNavigate = '/' + url + '/' + data;
-				this.$store.commit('navigate', urlToNavigate, null); 
+				this.$store.commit('navigate', { url: urlToNavigate }); 
                 //route.navigate(urlToNavigate);
 			},
 
@@ -2215,7 +2250,7 @@ Vue.directive('dropdown', {
 				if (!sel)
 					return;
 				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
-				this.$store.commit('navigate', url, null); 
+				this.$store.commit('navigate', { url: url }); 
 				//alert(sel.$id);
 				// TODO: $id from metadata!!!
 				// alert(url + sel.Id);
@@ -2384,7 +2419,7 @@ Vue.directive('dropdown', {
     app.components['baseController'] = base;
 
 })();
-/*20170828-7021*/
+/*20170901-7022*/
 /* controllers/shell.js */
 
 (function () {
@@ -2423,7 +2458,8 @@ Vue.directive('dropdown', {
 		return rv;
 	}
 
-	function makeMenuUrl(menu, url) {
+	function makeMenuUrl(menu, url, opts) {
+		opts = opts || {};
 		if (!url.startsWith('/'))
 			url = '/' + url;
 		let sUrl = url.split('/');
@@ -2436,9 +2472,12 @@ Vue.directive('dropdown', {
 			am = menu.find((mi) => mi.url === seg1);
 		if (!am) {
 			am = findMenu(menu, (mi) => mi.url && !mi.menu);
-			if (am)
+			if (am) {
+				opts.title = am.title;
 				return combineUrl(url, am.url);
+			}
 		} else if (am && !am.menu) {
+			opts.title = am.title;
 			return url; // no sub menu
 		}
 		url = combineUrl('/', seg1);
@@ -2450,8 +2489,10 @@ Vue.directive('dropdown', {
 			// find current active menu in am.menu
 			am = findMenu(am.menu, (mi) => mi.url === seg2);
 		}
-		if (am)
+		if (am) {
+			opts.title = am.title;
 			return combineUrl(url, am.url);
+		}
 		return url; // TODO: ????
 	}
 
@@ -2476,7 +2517,8 @@ Vue.directive('dropdown', {
 			},
 			itemHref: (item) => '/', // TODO: findHref
 			navigate(item) {
-				this.$store.commit('navigate', makeMenuUrl(this.menu, item.url));
+				let opts = { title: null };
+				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, item.url, opts), title:  opts.title});
 			}
 		}
 	};
@@ -2537,8 +2579,10 @@ Vue.directive('dropdown', {
 			},
 			navigate(item) {
 				let top = this.topMenu;
-				if (top)
-					this.$store.commit('navigate', '/' + top.url + '/' + item.url);
+				if (top) {
+					let url = '/' + top.url + '/' + item.url;
+					this.$store.commit('navigate', { url: url, title: item.title });
+				}
 				else
 					console.error('no top menu found');
 			},
@@ -2647,9 +2691,10 @@ Vue.directive('dropdown', {
 		created() {
 			// todo: find first URL
 			// pathname, not route
-			let newUrl = makeMenuUrl(this.menu, window.location.pathname);
+			let opts = { title: null };
+			let newUrl = makeMenuUrl(this.menu, window.location.pathname, opts);
 			newUrl = newUrl + window.location.search;
-			this.$store.commit('setstate', newUrl);
+			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
 			let me = this;
 
@@ -2715,11 +2760,11 @@ Vue.directive('dropdown', {
         methods: {
             about() {
 				// TODO: localization
-				this.$store.commit('navigate', '/app/about');
-                //route.navigateMenu('/app/about', null, "О программе");
+				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму' }); // TODO 
             },
 			root() {
-				this.$store.commit('navigate', makeMenuUrl(this.menu, '/'));
+				let opts = { title: null };
+				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
             }
 		},
 		created() {
@@ -2740,6 +2785,7 @@ Vue.directive('dropdown', {
 						return;
 					}
 				}
+
 				me.$store.commit('popstate');
 			});
 

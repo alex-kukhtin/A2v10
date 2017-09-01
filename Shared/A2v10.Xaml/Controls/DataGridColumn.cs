@@ -13,10 +13,13 @@ namespace A2v10.Xaml
 
         public TextAlign Align { get; set; }
 
+        public Boolean Editable { get; set; }
+
         internal void RenderColumn(RenderContext context, Int32 colIndex)
         {
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
+            MergeBoolAttribute(column, nameof(Editable), Editable);
             Boolean isTemplate = Content is UIElement;
             String tmlId = null;
             if (!isTemplate)
@@ -33,6 +36,7 @@ namespace A2v10.Xaml
                 column.MergeAttribute(":align", alignProp.Path);
             else if (Align != TextAlign.Default)
                 column.MergeAttribute("align", Align.ToString().ToLowerInvariant());
+
             if (isTemplate) {
                 tmlId = $"col{colIndex}";
                 column.MergeAttribute("id", tmlId);

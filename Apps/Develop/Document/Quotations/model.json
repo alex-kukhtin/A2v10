@@ -1,11 +1,12 @@
 ﻿/*document/request*/
 {
-	"schema": "a2v10x",
-	"model": "Sales.Request",
+	"source": "frontis",
+	"schema": "a2insurance",
+	"model": "Quotation",
 	"actions": {
 		"index": {
-			"index": false,
-			"view": "edit.view",
+			"index": true,
+			"view": "Index.view",
 			"template": "index.template"
 		}
 	}

@@ -58,13 +58,13 @@ namespace A2v10.Data
 
 		public static Object ConvertTo(Object value, Type to)
 		{
-			if (value == null)
-				return DBNull.Value;
-			else if (value is ExpandoObject)
-			{
-				var id = (value as ExpandoObject).Get<Object>("Id");
-				if (id == null)
-					return DBNull.Value;
+            if (value == null)
+                return DBNull.Value;
+            else if (value is ExpandoObject)
+            {
+                var id = (value as ExpandoObject).Get<Object>("Id");
+                if (id == null)
+                    return DBNull.Value;
 				return Convert.ChangeType(id, to, CultureInfo.InvariantCulture);
 			}
 			else if (value is String)

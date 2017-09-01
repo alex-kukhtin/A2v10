@@ -45,6 +45,7 @@ namespace A2v10.Web.Mvc.Models
     {
         public String model; // or parent
         public String schema; // or parent
+        public String source; // or parent
         public Boolean index;
 
         public String template;
@@ -94,7 +95,7 @@ namespace A2v10.Web.Mvc.Models
             get
             {
                 if (index)
-                    throw new RequestModelException($"Could not update index model {CurrentModel}");
+                    throw new RequestModelException($"Could not update index model '{CurrentModel}'");
                 var cm = CurrentModel;
                 if (String.IsNullOrEmpty(cm))
                     return null;
@@ -112,6 +113,19 @@ namespace A2v10.Web.Mvc.Models
                 if (schema == null)
                     return _parent.schema;
                 return schema;
+            }
+        }
+
+        [JsonIgnore]
+        public String CurrentSource
+        {
+            get
+            {
+                if (_parent == null)
+                    throw new ArgumentNullException(nameof(_parent));
+                if (schema == null)
+                    return _parent.source;
+                return source;
             }
         }
 
@@ -183,6 +197,7 @@ namespace A2v10.Web.Mvc.Models
 
         public String model; // data model
         public String schema; // schema for data model
+        public String source; // connection string for data model
 
         public Dictionary<String, RequestAction> actions { get; set; }
         public Dictionary<String, RequestDialog> dialogs { get; set; }

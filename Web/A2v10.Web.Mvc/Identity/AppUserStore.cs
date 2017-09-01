@@ -97,7 +97,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public async Task CreateAsync(AppUser user)
 		{
-			await _dbContext.ExecuteAsync("[a2security].[CreateUser]", user);
+			await _dbContext.ExecuteAsync(null, "[a2security].[CreateUser]", user);
 			CacheUser(user);
 		}
 
@@ -111,7 +111,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetById(userId);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>("[a2security].[FindUserById]", new { Id = userId });
+			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserById]", new { Id = userId });
 			CacheUser(user);
 			return user;
 		}
@@ -121,7 +121,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByName(userName);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>("[a2security].[FindUserByName]", new { UserName = userName });
+			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserByName]", new { UserName = userName });
 			CacheUser(user);
 			return user;
 		}
@@ -130,12 +130,12 @@ namespace A2v10.Web.Mvc.Identity
 		{
 			if (user.IsLockoutModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>("[a2security].[UpdateUserLockout]", user);
+				await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
             else if (user.IsPasswordModified)
             {
-                await _dbContext.ExecuteAsync<AppUser>("[a2security].[UpdateUserPassword]", user);
+                await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserPassword]", user);
                 user.ClearModified(UserModifiedFlag.Password);
             }
         }
@@ -301,7 +301,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByEmail(email);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>("[a2security].[FindUserByEmail]", new { Email = email });
+			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserByEmail]", new { Email = email });
 			CacheUser(user);
 			return user;
 		}
@@ -388,7 +388,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public async Task<IList<String>> GetRolesAsync(AppUser user)
 		{
-			var list = await _dbContext.LoadListAsync<AppRole>("[a2security].[GetUserGroups]", new { UserId = user.Id });
+			var list = await _dbContext.LoadListAsync<AppRole>(null, "[a2security].[GetUserGroups]", new { UserId = user.Id });
 			return list.Select<AppRole, String>(x => x.Name).ToList();
 		}
 

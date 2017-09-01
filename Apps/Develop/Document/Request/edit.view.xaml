@@ -18,17 +18,21 @@
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid>
-		<Code Grid.Column="1" Multiline="True" Content="{Bind Document.Agent.DateCreated}"></Code>
-		<Code Grid.Column="2" Multiline="True" Content="{Bind Document.Agent.DateModified}"></Code>
-		<ComboBox Grid.Row="2" Grid.Column="1"></ComboBox>
+		<Code Grid.Col="1" Multiline="True" Content="{Bind Document.Agent.DateCreated}"></Code>
+		<Code Grid.Col="2" Multiline="True" Content="{Bind Document.Agent.DateModified}"></Code>
+		<ComboBox Grid.Row="2" Grid.Col="1"></ComboBox>
+		<TextBox Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
+		<TextBox Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" Label="Котрагент"  Value="{Bind Document.Agent.Name}"/>
 	</Grid>
 	<DataGrid ItemsSource="{Bind Document.Rows}" GridLines="Vertical" Striped="True">
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
 		<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
-		<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right"/>
+		<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
 		<DataGridColumn Header="Price" Content="{Bind Price}" Align="Right"/>
 		<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
 		<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
+		<DataGridColumn>
+		</DataGridColumn>
 	</DataGrid>
 	<TextBox Value="{Bind Document.Memo}"></TextBox>
 	<Code Multiline="True" Content="{Bind Document.Rows}"></Code>

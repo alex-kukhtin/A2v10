@@ -1,4 +1,5 @@
-﻿@font-face {
+﻿/* icon colors */
+@font-face {
   font-family: 'Bowtie';
   src: url('/fonts/Bowtie.eot?vqc4am');
   src: url('/fonts/Bowtie.eot?vqc4am#iefix') format('embedded-opentype'), url('/fonts/Bowtie.woff2?vqc4am') format('woff2'), url('/fonts/Bowtie.ttf?vqc4am') format('truetype'), url('/fonts/Bowtie.woff?vqc4am') format('woff'), url('/fonts/Bowtie.svg?vqc4am#Bowtie') format('svg');
@@ -182,6 +183,7 @@ td,
 th {
   padding: 0;
 }
+/* controls */
 /* header-footer */
 /* nav bar */
 /* data grid */
@@ -189,6 +191,7 @@ th {
 /* tree-view*/
 /* dialog */
 /* z-index */
+/* mixins */
 .bold {
   font-weight: bold;
 }
@@ -446,11 +449,39 @@ footer .spinner.active,
     transform: rotate(360deg);
   }
 }
-input {
+input,
+select {
   border-style: none;
   font-size: 13px;
-  height: 1.6em;
-  padding: 0 6px;
+  height: 1.851em;
+  color: #222;
+  padding: 0 5px;
+}
+input:focus,
+select:focus {
+  outline-style: none;
+}
+/* hide for focused */
+input::-moz-placeholder {
+  color: #aaa;
+}
+input:focus::-moz-placeholder {
+  color: transparent;
+}
+input:-ms-input-placeholder {
+  color: #aaa;
+}
+input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+input::-webkit-input-placeholder {
+  color: #aaa;
+}
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+select {
+  padding: 0 2px;
 }
 textarea {
   resize: none;
@@ -492,11 +523,11 @@ button {
 .control-group {
   display: block;
   background-color: aliceblue;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .control-group label {
   color: #777;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   display: block;
 }
 .control-group .validator {
@@ -510,7 +541,7 @@ button {
   border: 1px solid #dca7a7;
   margin-left: 10px;
   width: auto;
-  box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.2);
+  box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   z-index: 1050;
 }
 .control-group .validator .error {
@@ -527,42 +558,61 @@ button {
 .control-group .input-group > a {
   align-self: stretch;
   padding: 0 3px;
-  line-height: 2em;
-  color: #999;
+  line-height: 1.851em;
+  color: #777;
 }
 .control-group .input-group > a:hover {
   text-decoration: none;
   color: #0d82f8;
 }
-.control-group:hover .input-group {
-  border-color: #0d82f8;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+.control-group .input-group > a .ico:before {
+  color: inherit;
 }
-.control-group input {
-  padding: 0 6px;
-  height: 2em;
+.control-group:hover .input-group,
+.control-group .input-group.focus {
+  border-color: #0d82f8;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+}
+.control-group .input-group.focus {
+  z-index: 92;
+}
+.control-group:hover .input-group {
+  z-index: 94;
+}
+.control-group input,
+.control-group select {
   width: 100%;
-  color: #222;
   background-color: transparent;
 }
-.control-group input:focus {
-  outline-style: none;
+.control-group select {
+  padding: 0 2px;
 }
 .control-group .control {
   border-style: none;
 }
+.control-group.required label:before {
+  content: '\2731';
+  display: inline-block;
+  color: #dca7a7;
+  margin-right: 2px;
+  vertical-align: 1px;
+  font-size: 85%;
+}
 .control-group.invalid label {
   color: #a94442;
 }
-.control-group.invalid:hover .validator {
+.control-group.invalid:hover .validator,
+.control-group.invalid .input-group.focus .validator {
   display: block;
 }
-.control-group.invalid:hover .input-group {
-  box-shadow: 1px 1px 4px rgba(169, 68, 66, 0.2);
+.control-group.invalid:hover .input-group,
+.control-group.invalid .input-group.focus {
+  box-shadow: 1px 2px 4px rgba(169, 68, 66, 0.3);
 }
 .control-group.invalid .input-group {
   border-color: #dca7a7;
   background-color: #fff8f8;
+  z-index: 90;
 }
 .control-group.invalid .input-group:after {
   content: '';
@@ -586,9 +636,14 @@ button {
   opacity: 0.5;
   color: #777;
 }
+/*
+    TODO:
+    1. Разобраться с border: (td:first-child (left:none???)
+*/
 table.data-grid {
-  border: 1px solid #bdc5d8;
   cursor: default;
+  width: 100%;
+  border: 1px solid #bdc5d8;
 }
 table.data-grid td,
 table.data-grid th {
@@ -728,6 +783,7 @@ table.hover > tbody > tr:hover {
   display: inline-block;
   font-size: 14px;
   margin-right: 4px;
+  color: #333;
 }
 .toolbar .divider {
   display: inline-block;
@@ -961,7 +1017,7 @@ table.hover > tbody > tr:hover {
   padding: 10px;
   grid-gap: 10px;
   grid-template-columns: 120px auto 1fr;
-  grid-template-rows: auto auto 50px auto 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
 }
 .grid div222 {
   width: 100px;

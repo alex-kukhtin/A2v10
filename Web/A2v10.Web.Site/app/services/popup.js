@@ -38,10 +38,7 @@ app.modules['std:popup'] = function () {
 
 
 	function closest(node, css) {
-		while (node) {
-			if (node.matches(css)) return node;
-			else node = node.parentElement;
-		}
+		if (node) return node.closest(css);
 		return null;
 	} 
 

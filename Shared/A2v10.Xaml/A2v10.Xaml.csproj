@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\AttachedHelpers.cs" />
     <Compile Include="Base\Base.cs" />
     <Compile Include="Base\Bind.cs" />
     <Compile Include="Base\BindBase.cs" />

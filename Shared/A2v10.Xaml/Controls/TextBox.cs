@@ -11,6 +11,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var input = new TagBuilder("textbox");
+            if (onRender != null)
+                onRender(input);
             MergeValue(input, context);
             input.Render(context);
         }

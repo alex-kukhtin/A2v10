@@ -15,6 +15,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var combo = new TagBuilder("select");
+            if (onRender != null)
+                onRender(combo);
             combo.RenderStart(context);
             combo.RenderEnd(context);
         }

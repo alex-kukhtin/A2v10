@@ -16,26 +16,16 @@ namespace A2v10.Xaml
         }
 
         #region Attached Properties
-        static IDictionary<Object, ToolbarAlign> _attachedPart = new Dictionary<Object, ToolbarAlign>();
+        static Lazy<IDictionary<Object, ToolbarAlign>> _attachedPart = new Lazy<IDictionary<Object, ToolbarAlign>>(() => new Dictionary<Object, ToolbarAlign>());
 
         public static void SetAlign(Object obj, ToolbarAlign aln)
         {
-            if (_attachedPart == null)
-                _attachedPart = new Dictionary<Object, ToolbarAlign>();
-            if (_attachedPart.ContainsKey(obj))
-                _attachedPart[obj] = aln;
-            else
-                _attachedPart.Add(obj, aln);
+            AttachedHelpers.SetAttached(_attachedPart, obj, aln);
         }
+
         public static ToolbarAlign GetAlgin(Object obj)
         {
-            if (_attachedPart != null)
-            {
-                ToolbarAlign aln;
-                if (_attachedPart.TryGetValue(obj, out aln))
-                    return aln;
-            }
-            return ToolbarAlign.Left;
+            return AttachedHelpers.GetAttached(_attachedPart, obj);
         }
         #endregion
 

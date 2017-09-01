@@ -5,7 +5,6 @@
 @control-border: #aaa;
 @label-color: #777;
 @control-bg-color:white;
-@control-height:2em;
 
 
 /*TODO: 
@@ -17,11 +16,11 @@
 .control-group {
     display: block;
     background-color: aliceblue;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 
     label {
         color: @label-color;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
         display: block;
     }
 
@@ -56,34 +55,56 @@
             align-self: stretch;
             padding: 0 3px;
             line-height: @control-height;
-            color: #999;
+            color: #777;
 
             &:hover {
                 text-decoration: none;
                 color: @link-hover-color
             }
+            .ico:before {
+                color:inherit;
+            }
         }
+    }
+
+    &:hover .input-group,
+    .input-group.focus
+    {
+        border-color: @link-hover-color;
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    // для "схлопнутых" элементов
+    .input-group.focus {
+        z-index:@focus-index;
     }
 
     &:hover .input-group {
-        border-color: @link-hover-color;
-        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        z-index:@hover-index;
     }
 
-    input {
-        padding: 0 6px;
-        height: @control-height;
+    input, select {
         width: 100%;
-        color: @text-color;
         background-color: transparent;
+    }
 
-        &:focus {
-            outline-style: none;
-        }
+    select {
+        padding:0 2px;
     }
 
     .control {
         border-style: none;
+    }
+}
+
+.control-group.required {
+    label:before {
+        content: '\2731';
+        display: inline-block;
+        color: @danger-brd-color;
+        margin-right:2px;
+        vertical-align:1px;
+        font-size:85%;
     }
 }
 
@@ -92,18 +113,21 @@
         color: @danger-txt-color;
     }
 
-    &:hover .validator {
+    &:hover .validator,
+    .input-group.focus .validator {
         display: block;
     }
 
-    &:hover .input-group {
-        box-shadow: 1px 1px 4px @danger-shadow-color;
+    &:hover .input-group,
+    .input-group.focus
+    {
+        box-shadow: 1px 2px 4px @danger-shadow-color;
     }
 
     .input-group {
         border-color: @danger-brd-color;
         background-color: #fff8f8;
-
+        z-index: @invalid-index;
         &:after {
             content: '';
             position: absolute;

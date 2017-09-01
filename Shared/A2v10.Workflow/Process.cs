@@ -53,7 +53,7 @@ namespace A2v10.Workflow
 
         internal void Start(IDbContext dbContext)
         {
-            dbContext.Execute<Process>("a2workflow.[Process.Create]", this);
+            dbContext.Execute<Process>(null, "a2workflow.[Process.Create]", this);
             if (this.Id == 0)
                 throw new WorkflowException("Failed to start process");
         }

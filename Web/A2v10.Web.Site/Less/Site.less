@@ -206,11 +206,28 @@ footer, .footer {
     }
 }
 
-input {
+input, select {
     border-style: none;
     font-size: 13px;
-    height: 1.6em;
-    padding: 0 6px;
+    height: @control-height;
+    color: @text-color;
+    padding: 0 @input-padding;
+
+    &:focus {
+        outline-style: none;
+    }
+}
+
+/* hide for focused */
+input::-moz-placeholder {color:@placeholder-color; }
+input:focus::-moz-placeholder {color:transparent; }
+input:-ms-input-placeholder {color:@placeholder-color;}
+input:focus:-ms-input-placeholder {color:transparent;}
+input::-webkit-input-placeholder {color:@placeholder-color;}
+input:focus::-webkit-input-placeholder {color: transparent;}
+
+select {
+    padding: 0 @select-padding;
 }
 
 textarea {
@@ -292,7 +309,6 @@ button {
         font-size: 92%;
     }
 }
-
 
 .load-indicator {
     position: absolute;

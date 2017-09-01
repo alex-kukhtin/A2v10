@@ -234,7 +234,7 @@ namespace A2v10.Data
 				}
 				else
 				{
-					typeMetadata.AddField(fieldDef, dt);
+					var fm = typeMetadata.AddField(fieldDef, dt);
 					if (fieldDef.IsRefId || fieldDef.IsArray)
 					{
 						// create metadata for nested object or array

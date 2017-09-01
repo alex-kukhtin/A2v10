@@ -89,7 +89,7 @@ namespace A2v10.Web.Mvc.Controllers
                 loadPrms.Append(Request.QueryString, toPascalCase: true);
                 loadPrms.Set("UserId", UserId);
                 loadPrms.Set("Id", rw.Id);
-                model = await _dbContext.LoadModelAsync(loadProc, loadPrms);
+                model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
             }
             String rootId = "el" + Guid.NewGuid().ToString();
 

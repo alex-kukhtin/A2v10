@@ -8,6 +8,6 @@ namespace A2v10.Xaml
 {
 	public abstract class Control : UIElement
 	{
-
+        public String Label { get; set; }
 	}
 }

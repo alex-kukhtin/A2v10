@@ -1,4 +1,4 @@
-/* 20170728-7010 */
+/* 20170901-7022 */
 
 use a2v10test;
 go
@@ -244,6 +244,24 @@ begin
 end
 go
 
+
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'RefObjects')
+	drop procedure a2test.RefObjects
+go
+------------------------------------------------
+create procedure a2test.RefObjects
+@UserId bigint = null
+as
+begin
+	set nocount on;
+	select [Document!TDocument!Object] = null, [Id!!Id]=200, [Agent!TAgent!RefId] = 300, [Company!TAgent!RefId]= 500;
+
+	select [!TAgent!Map] = null, [Id!!Id] = 300, Name = N'Agent Name'
+	union all
+	select [!TAgent!Map] = null, [Id!!Id] = 500, Name = N'Company Name';
+end
+go
 
 -- CLEAN UP DATABASE
 ------------------------------------------------

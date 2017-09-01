@@ -73,7 +73,7 @@ namespace A2v10.Web.Mvc.Controllers
             {
                 UserId = UserId
             };
-            IDataModel model = await _dbContext.SaveModelAsync(rw.UpdateProcedure, data, prms);
+            IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
             WriteDataModel(model);
         }
 
@@ -113,7 +113,7 @@ namespace A2v10.Web.Mvc.Controllers
             RequestView rw = rm.GetCurrentAction();
             loadPrms.Set("UserId", UserId);
             loadPrms.Set("Id", rw.Id);
-            IDataModel model = await _dbContext.LoadModelAsync(rw.LoadProcedure, loadPrms);
+            IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, rw.LoadProcedure, loadPrms);
             WriteDataModel(model);
         }
     }

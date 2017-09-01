@@ -17,15 +17,14 @@ namespace A2v10.Tests.Config
 			_profiler = profiler;
 		}
 
-		public String ConnectionString
+		public String ConnectionString(String source)
 		{
-            get
-            {
-                var cnnStr = ConfigurationManager.ConnectionStrings["Default"];
-                if (cnnStr == null)
-                    throw new ConfigurationErrorsException("ConnectionString \"Default\" not found");
-                return cnnStr.ConnectionString;
-            }
+            if (String.IsNullOrEmpty(source))
+                source = "Default";
+            var cnnStr = ConfigurationManager.ConnectionStrings[source];
+            if (cnnStr == null)
+                throw new ConfigurationErrorsException($"Connection string '{source}' not found");
+            return cnnStr.ConnectionString;
 		}
 
 		public IProfiler Profiler

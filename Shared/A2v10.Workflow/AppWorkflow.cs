@@ -103,7 +103,7 @@ namespace A2v10.Workflow
         static AppWorkflow Create(IDbContext dbContext, Activity root, IDictionary<String, Object> args, WorkflowIdentity identity)
         {
             var aw = new AppWorkflow();
-            var store = aw.CreateInstanceStore(dbContext.ConnectionString);
+            var store = aw.CreateInstanceStore(dbContext.ConnectionString(null));
             if (args == null)
                 aw._application = new WorkflowApplication(root, identity);
             else
@@ -156,7 +156,7 @@ namespace A2v10.Workflow
                 {
                     InstanceId = _application.Id
                 };
-                _dbContext.SaveList<TrackInfo>("[a2workflow].[WriteLog]", prm, _trackingRecords);
+                _dbContext.SaveList<TrackInfo>(null, "[a2workflow].[WriteLog]", prm, _trackingRecords);
             }
             catch (Exception /*ex*/)
             {

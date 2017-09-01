@@ -10,7 +10,9 @@ let template = {
 	},
     events: {
     },
-    validators: {
+	validators: {
+		'Document.SNo': 'Введите номер документа',
+		'Document.Rows[].Qty': 'Количество должно быть больше нуля'
     },
     commands: {
     }

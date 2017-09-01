@@ -1,15 +1,13 @@
-﻿
+﻿/*20170901-7022*/
+/* platform/routex.js */
 
 (function () {
 
-	const title = null;
-
-
 	const eventBus = require('std:eventBus');
+
 	// TODO:
 
 	// 1: save/restore query (localStorage)
-	// 2: document title
 
 	function parseQueryString(str) {
 		var obj = {};
@@ -30,9 +28,13 @@
 		return query ? '?' + query : '';
 	}
 
-	function setTitle(title) {
-		if (title)
-			document.title = title;
+	const titleStore = {};
+
+	function setTitle(to) {
+		if (to.title) {
+			document.title = to.title;
+			titleStore[to.url] = to.title;
+		}
 	}
 
 	function makeBackUrl(url) {
@@ -71,13 +73,13 @@
 			}		
 		},
 		mutations: {
-			navigate(state, url, query) {
+			navigate(state, to) { // to: {url, query, title}
 				let oldUrl = state.route + makeQueryString(state.query);
-				state.route = url;
-				state.query = Object.assign({}, query);
-				let newUrl = state.route + makeQueryString(query);
+				state.route = to.url;
+				state.query = Object.assign({}, to.query);
+				let newUrl = state.route + makeQueryString(to.query);
 				let h = window.history;
-				setTitle(title);
+				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
@@ -101,18 +103,22 @@
 			popstate(state) {
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+				if (state.route in titleStore) {
+					document.title = titleStore[state.route];
+				}
 			},
-			setstate(state, url) {
+			setstate(state, to ){ // to: {url, title}
 				//console.warn('set setstate: ' + url);
-				window.history.replaceState(null, title, url);
+				window.history.replaceState(null, null, to.url);
 				state.route = window.location.pathname;
 				state.query = parseQueryString(window.location.search);
+				setTitle(to);
 			},
 			close(state) {
 				if (window.history.length)
 					window.history.back();
 				else
-					store.commit('navigate', makeBackUrl(state.route));
+					store.commit('navigate', { url: makeBackUrl(state.route) });
 			}
 		}
 	});

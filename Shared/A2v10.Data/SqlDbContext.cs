@@ -23,34 +23,34 @@ namespace A2v10.Data
             _host = host;
         }
 
-        public String ConnectionString
+        public String ConnectionString(String source)
         {
-            get { return _host.ConnectionString; }
+            return _host.ConnectionString(source);
         }
 
-        public async Task<SqlConnection> GetConnectionAsync()
+        public async Task<SqlConnection> GetConnectionAsync(String source)
         {
-            var cnnStr = _host.ConnectionString;
+            var cnnStr = _host.ConnectionString(source);
             var cnn = new SqlConnection(cnnStr);
             await cnn.OpenAsync();
             return cnn;
         }
 
-        public SqlConnection GetConnection()
+        public SqlConnection GetConnection(String source)
         {
-            var cnnStr = _host.ConnectionString;
+            var cnnStr = _host.ConnectionString(source);
             var cnn = new SqlConnection(cnnStr);
             cnn.Open();
             return cnn;
         }
 
 
-        public async Task<IDataModel> LoadModelAsync(String command, Object prms = null)
+        public async Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null)
         {
             var modelReader = new DataModelReader();
             using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
             {
-                await ReadDataAsync(command,
+                await ReadDataAsync(source, command,
                     (prm) =>
                     {
                         modelReader.SetParameters(prm, prms);
@@ -67,12 +67,12 @@ namespace A2v10.Data
             return modelReader.DataModel;
         }
 
-        public async Task ReadDataAsync(String command,
+        public async Task ReadDataAsync(String source, String command,
             Action<SqlParameterCollection> setParams,
             Action<Int32, IDataReader> onRead,
             Action<Int32, IDataReader> onMetadata)
         {
-            using (var cnn = await GetConnectionAsync())
+            using (var cnn = await GetConnectionAsync(source))
             {
                 Int32 rdrNo = 0;
                 using (var cmd = cnn.CreateCommandSP(command))
@@ -97,14 +97,14 @@ namespace A2v10.Data
             }
         }
 
-        public async Task<IDataModel> SaveModelAsync(String command, Object data, Object prms = null)
+        public async Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null)
         {
             var dataReader = new DataModelReader();
             var dataWriter = new DataModelWriter();
             using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
             {
                 var metadataCommand = command.Replace(".Update", ".Metadata");
-                using (var cnn = await GetConnectionAsync())
+                using (var cnn = await GetConnectionAsync(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(metadataCommand))
                     {
@@ -139,12 +139,12 @@ namespace A2v10.Data
             }
         }
 
-        public async Task<T> LoadAsync<T>(String command, Object prms = null) where T : class
+        public async Task<T> LoadAsync<T>(String source, String command, Object prms = null) where T : class
         {
             using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
             {
                 var helper = new LoadHelper<T>();
-                using (var cnn = await GetConnectionAsync())
+                using (var cnn = await GetConnectionAsync(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
@@ -211,11 +211,11 @@ namespace A2v10.Data
                 idProp.SetValue(element, retParam.Value);
         }
 
-        public async Task ExecuteAsync<T>(String command, T element) where T : class
+        public async Task ExecuteAsync<T>(String source, String command, T element) where T : class
         {
             using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
             {
-                using (var cnn = await GetConnectionAsync())
+                using (var cnn = await GetConnectionAsync(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
@@ -227,11 +227,11 @@ namespace A2v10.Data
             }
         }
 
-        public void Execute<T>(String command, T element) where T : class
+        public void Execute<T>(String source, String command, T element) where T : class
         {
             using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
             {
-                using (var cnn = GetConnection())
+                using (var cnn = GetConnection(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
@@ -244,14 +244,14 @@ namespace A2v10.Data
             }
         }
 
-        public async Task<IList<T>> LoadListAsync<T>(String command, Object prms) where T : class
+        public async Task<IList<T>> LoadListAsync<T>(String source, String command, Object prms) where T : class
         {
             using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
             {
                 Type retType = typeof(T);
                 var props = retType.GetProperties();
                 var result = new List<T>();
-                using (var cnn = await GetConnectionAsync())
+                using (var cnn = await GetConnectionAsync(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
@@ -332,11 +332,11 @@ namespace A2v10.Data
             }
         }
 
-        public void SaveList<T>(String command, Object prms, IEnumerable<T> list) where T : class
+        public void SaveList<T>(String source, String command, Object prms, IEnumerable<T> list) where T : class
         {
             using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
             {
-                using (var cnn = GetConnection())
+                using (var cnn = GetConnection(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {
@@ -348,11 +348,11 @@ namespace A2v10.Data
             }
         }
 
-        public async Task SaveListAsync<T>(String command, Object prms, IEnumerable<T> list) where T : class
+        public async Task SaveListAsync<T>(String source, String command, Object prms, IEnumerable<T> list) where T : class
         {
             using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
             {
-                using (var cnn = await GetConnectionAsync())
+                using (var cnn = await GetConnectionAsync(source))
                 {
                     using (var cmd = cnn.CreateCommandSP(command))
                     {

@@ -29,7 +29,7 @@ namespace A2v10.Tests
         [TestMethod]
         public async Task TestSimpleModel()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync("a2test.SimpleModel");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.SimpleModel");
             var md = new MetadataTester(dm);
             md.IsAllKeys("TRoot,TModel");
             md.HasAllProperties("TRoot", "Model");
@@ -46,7 +46,7 @@ namespace A2v10.Tests
         [TestMethod]
         public async Task TestComplexModel()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync("a2test.ComplexModel");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.ComplexModel");
             var md = new MetadataTester(dm);
             md.IsAllKeys("TRoot,TDocument,TRow,TAgent,TProduct,TSeries,TUnit");
             md.HasAllProperties("TRoot", "Document");
@@ -115,7 +115,7 @@ namespace A2v10.Tests
         [TestMethod]
         public async Task TestTreeModel()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync("a2test.TreeModel");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.TreeModel");
             var md = new MetadataTester(dm);
             md.IsAllKeys("TRoot,TMenu");
             md.HasAllProperties("TRoot", "Menu");
@@ -161,7 +161,7 @@ namespace A2v10.Tests
             }
 			";
             var dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(jsonData.Replace('\'', '"'), new ExpandoObjectConverter());
-            IDataModel dm = await _dbContext.SaveModelAsync("a2test.[NestedObject.Update]", dataToSave);
+            IDataModel dm = await _dbContext.SaveModelAsync(null, "a2test.[NestedObject.Update]", dataToSave);
 
             var dt = new DataTester(dm, "MainObject");
             dt.AreValueEqual(45L, "Id");
@@ -186,7 +186,7 @@ namespace A2v10.Tests
         [TestMethod]
         public async Task TestComplexObjects()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync("a2test.ComplexObjects");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.ComplexObjects");
             var md = new MetadataTester(dm);
             md.IsAllKeys("TRoot,TDocument,TAgent");
             md.IsItemType("TRoot", "Document", FieldType.Object);
@@ -208,6 +208,39 @@ namespace A2v10.Tests
             dt = new DataTester(dm, "Document.Agent");
             dt.AreValueEqual(300, "Id");
             dt.AreValueEqual("Agent name", "Name");
+        }
+
+        [TestMethod]
+        public async Task TextRefObjects()
+        {
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.RefObjects");
+            var md = new MetadataTester(dm);
+            md.IsAllKeys("TRoot,TDocument,TAgent");
+            md.IsItemType("TRoot", "Document", FieldType.Object);
+
+            md.IsId("TDocument", "Id");
+            md.IsItemType("TDocument", "Agent", FieldType.Object);
+            md.IsItemType("TDocument", "Company", FieldType.Object);
+            md.IsItemRefObject("TDocument", "Agent", "TAgent");
+            md.IsItemRefObject("TDocument", "Company", "TAgent");
+
+            md.IsId("TAgent", "Id");
+            md.IsName("TAgent", null);
+            md.IsType("TAgent", "Id", DataType.Number);
+            md.IsType("TAgent", "Name", DataType.String);
+            md.IsItemType("TAgent", "Id", FieldType.Scalar);
+            md.IsItemType("TAgent", "Name", FieldType.Scalar);
+
+            var dt = new DataTester(dm, "Document");
+            dt.AreValueEqual(200, "Id");
+
+            dt = new DataTester(dm, "Document.Agent");
+            dt.AreValueEqual(300, "Id");
+            dt.AreValueEqual("Agent Name", "Name");
+
+            dt = new DataTester(dm, "Document.Company");
+            dt.AreValueEqual(500, "Id");
+            dt.AreValueEqual("Company Name", "Name");
         }
     }
 }

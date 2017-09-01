@@ -68,6 +68,8 @@
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
     <Content Include="app\directives\dropdown.js" />
+    <Content Include="app\directives\focus.js" />
+    <Content Include="app\platform\polyfills.js" />
     <Content Include="app\platform\routex.js" />
     <Content Include="app\platform\webvue.js" />
     <Content Include="app\services\datamodel.js" />

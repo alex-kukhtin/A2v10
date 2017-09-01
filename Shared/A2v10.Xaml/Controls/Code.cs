@@ -14,6 +14,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var code = new TagBuilder(Multiline ? "pre" : "code");
+            if (onRender != null)
+                onRender(code);
             if (Multiline)
                 code.AddCssClass("pre-scrollable");
             code.AddCssClass("a2-code");

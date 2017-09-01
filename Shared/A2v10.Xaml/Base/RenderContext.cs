@@ -8,24 +8,34 @@ namespace A2v10.Xaml
 {
     internal struct GridRowCol
     {
-        internal Int32? _row;
-        internal Int32? _col;
+        private Int32? _row;
+        private Int32? _col;
+        private Int32? _rowSpan;
+        private Int32? _colSpan;
 
-        public GridRowCol(Int32? row, Int32? col)
+        public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan)
         {
             _row = row;
             _col = col;
+            _rowSpan = rowSpan;
+            _colSpan = colSpan;
         }
 
         public IList<StringKeyValuePair> GetGridAttributes()
         {
-            if (_row == null && _col == null)
-                return null;
             var rv = new List<StringKeyValuePair>();
+            String row = "1";
+            String col = "1";
             if (_row != null)
-                rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = _row.Value.ToString() });
+                row = _row.Value.ToString();
+            if (_rowSpan != null)
+                row += " / span " + _rowSpan.Value.ToString();
+            rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = row });
             if (_col != null)
-                rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = _col.Value.ToString() });
+                col = _col.Value.ToString();
+            if (_colSpan != null)
+                col += " / span " + _colSpan.Value.ToString();
+            rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
             return rv;
         }
     }
@@ -98,9 +108,9 @@ namespace A2v10.Xaml
 			Writer.Write("&#xa;");
 		}
 
-        public GridContext GridContext(Int32? row, Int32? col)
+        public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan)
         {
-            var rowCol = new GridRowCol(row, col);
+            var rowCol = new GridRowCol(row, col, rowSpan, colSpan);
             return new GridContext(this, rowCol);
         }
 

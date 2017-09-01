@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Configuration;
-using A2v10.Infrastructure;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections.Generic;
+using A2v10.Infrastructure;
 
 namespace A2v10.Web.Mvc.Configuration
 {
 	public class WebApplicationHost : IApplicationHost
 	{
 		IProfiler _profiler;
-		String _cnnStr = null;
+		IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 
 		public WebApplicationHost(IProfiler profiler)
 		{
@@ -18,21 +19,20 @@ namespace A2v10.Web.Mvc.Configuration
 
 		#region IConfiguration
 		public IProfiler Profiler => _profiler;
-		public String ConnectionString
+		public String ConnectionString(String source)
 		{
-            get
-            {
-                if (_cnnStr == null)
-                {
-                    var strSet = ConfigurationManager.ConnectionStrings["Default"];
-                    if (strSet == null)
-                    {
-                        throw new ConfigurationErrorsException("ConnectionString \"Default\" not found");
-                    }
-                    _cnnStr = strSet.ConnectionString;
-                }
-                return _cnnStr;
-            }
+            if (String.IsNullOrEmpty(source))
+                source = "Default";
+
+            String cnnStr = null;
+            if (_cnnStrings.TryGetValue(source, out cnnStr))
+                return cnnStr;
+            var strSet = ConfigurationManager.ConnectionStrings[source];
+            if (strSet == null)
+                throw new ConfigurationErrorsException($"Connection string '{source}' not found");
+            cnnStr = strSet.ConnectionString;
+            _cnnStrings.Add(source, strSet.ConnectionString);
+            return cnnStr;
 		}
 
         public String AppPath

@@ -1,4 +1,4 @@
-﻿/*20170828-7021*/
+﻿/*20170901-7022*/
 /*controllers/base.js*/
 (function () {
 
@@ -87,9 +87,8 @@
                             dataToResolve = data[p];
                         }
                         resolve(dataToResolve); // single element (raw data)
-                    }).catch(function (msg) {
+					}).catch(function (msg) {
 						self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -109,7 +108,6 @@
 						}
 					}).catch(function (msg) {
                         self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -129,7 +127,6 @@
                         }
 					}).catch(function (msg) {
                         self.$alertUi(msg);
-						reject();
                     });
                 });
             },
@@ -148,7 +145,7 @@
             $navigate(url, data) {
                 // TODO: make correct URL
 				let urlToNavigate = '/' + url + '/' + data;
-				this.$store.commit('navigate', urlToNavigate, null); 
+				this.$store.commit('navigate', { url: urlToNavigate }); 
                 //route.navigate(urlToNavigate);
 			},
 
@@ -158,7 +155,7 @@
 				if (!sel)
 					return;
 				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
-				this.$store.commit('navigate', url, null); 
+				this.$store.commit('navigate', { url: url }); 
 				//alert(sel.$id);
 				// TODO: $id from metadata!!!
 				// alert(url + sel.Id);

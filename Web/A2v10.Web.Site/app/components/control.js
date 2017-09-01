@@ -14,7 +14,7 @@
             },
             errors() {
                 if (!this.item) return null;
-                let root = this.item._root_;
+				let root = this.item._root_;
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {

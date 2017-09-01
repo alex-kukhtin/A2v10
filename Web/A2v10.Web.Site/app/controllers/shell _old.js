@@ -43,7 +43,7 @@
             activateFirst();
         }
         else if (loc.routeLength() !== 4) {
-            let fa = findMenu(activeItem.menu, (mi) => mi.url == seg2);
+            let fa = findMenu(activeItem.menu, (mi) => mi.url === seg2);
             if (!fa) activateFirst();
         }
     }

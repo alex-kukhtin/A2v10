@@ -17,6 +17,13 @@
 @link-color: #57a8fa;
 @link-hover-color: darken(@link-color, 15%);
 
+
+/* controls */
+@control-height: 1.851em; // FF magic number
+@input-padding: 5px;
+@select-padding: 2px;
+@placeholder-color:#aaa;
+
 /* header-footer */
 @header-height: 32px;
 @footer-height: 22px;
@@ -47,6 +54,9 @@
 @dropdown-bg-color: #eaf0ff;
 
 /* z-index */
+@invalid-index: 90;
+@focus-index: 92;
+@hover-index: 94;
 @footer-index: 1020;
 @modal-wrapper-index: 1030;
 @popup-index: 1040;
@@ -58,9 +68,10 @@
 @danger-txt-color: #a94442;
 @danger-bg-color: #f2dede;
 @danger-brd-color: darken(@danger-bg-color, 15%);
-@danger-shadow-color: rgba(169,68,66,0.2);
+@danger-shadow-color: rgba(169,68,66,0.3);
 
-//* mixins
+
+/* mixins */
 .noselect() {
     -webkit-touch-callout: none; //* iOS Safari */
     -webkit-user-select: none; //* Chrome/Safari/Opera */

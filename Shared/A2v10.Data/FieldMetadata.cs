@@ -51,7 +51,11 @@ namespace A2v10.Data
 			{
 				ItemType = fi.FieldType;
 				RefObject = fi.TypeName;
-			}
+			} else if (fi.IsRefId)
+            {
+                ItemType = FieldType.Object;
+                RefObject = fi.TypeName;
+            }
 		}
 	}
 }

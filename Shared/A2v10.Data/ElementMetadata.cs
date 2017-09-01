@@ -16,13 +16,14 @@ namespace A2v10.Data
 
         internal IDictionary<String, FieldMetadata> Fields { get { return _fields; } }
 
-        public void AddField(FieldInfo field, DataType type)
+        public FieldMetadata AddField(FieldInfo field, DataType type)
 		{
 			if (!field.IsVisible)
-				return;
-			if (IsFieldExists(field.PropertyName, type))
-				return;
-			FieldMetadata fm = new FieldMetadata(field, type);
+				return null;
+            FieldMetadata fm;
+			if (IsFieldExists(field.PropertyName, type, out fm))
+				return fm;
+			fm = new FieldMetadata(field, type);
 			_fields.Add(field.PropertyName, fm);
 			switch (field.SpecType)
 			{
@@ -36,6 +37,7 @@ namespace A2v10.Data
                     IsRowCount = true;
                     break;
 			}
+            return fm;
 		}
 
 		public Int32 FieldCount { get { return _fields.Count; } }
@@ -45,9 +47,8 @@ namespace A2v10.Data
 			return _fields.ContainsKey(field);
 		}
 
-		bool IsFieldExists(String name, DataType dataType)
+		bool IsFieldExists(String name, DataType dataType, out FieldMetadata fm)
 		{
-			FieldMetadata fm;
 			if (_fields.TryGetValue(name, out fm))
 			{
 				if (fm.DataType != dataType)

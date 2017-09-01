@@ -44,7 +44,7 @@
 			</Toolbar>
 		</DataGrid.Toolbar>
 		<DataGridColumn Header="Код" Content="Id" Align="Right"/>
-		<DataGridColumn Header="Наименование" Content="Name"/>
+		<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
 		<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
 	</DataGrid>
 </Page>

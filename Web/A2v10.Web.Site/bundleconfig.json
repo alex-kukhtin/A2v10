@@ -3,6 +3,7 @@
 		"outputFileName": "Scripts/main.js",
 		"inputFiles": [
 			"app/app.js",
+			"app/platform/polyfills.js",
 			"app/platform/webvue.js",
 			"app/platform/route.js",
 			"app/platform/routex.js",

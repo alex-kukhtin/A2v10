@@ -1,6 +1,7 @@
 ﻿/*document/request*/
 {
-	"schema": "a2v10x",
+	"source": "a2start",
+	"schema": "a2v10start",
 	"model": "Sales.Request",
 	"actions": {
 		"index": {

@@ -1,4 +1,4 @@
-﻿/*20170828-7021*/
+﻿/*20170901-7022*/
 /* controllers/shell.js */
 
 (function () {
@@ -37,7 +37,8 @@
 		return rv;
 	}
 
-	function makeMenuUrl(menu, url) {
+	function makeMenuUrl(menu, url, opts) {
+		opts = opts || {};
 		if (!url.startsWith('/'))
 			url = '/' + url;
 		let sUrl = url.split('/');
@@ -50,9 +51,12 @@
 			am = menu.find((mi) => mi.url === seg1);
 		if (!am) {
 			am = findMenu(menu, (mi) => mi.url && !mi.menu);
-			if (am)
+			if (am) {
+				opts.title = am.title;
 				return combineUrl(url, am.url);
+			}
 		} else if (am && !am.menu) {
+			opts.title = am.title;
 			return url; // no sub menu
 		}
 		url = combineUrl('/', seg1);
@@ -64,8 +68,10 @@
 			// find current active menu in am.menu
 			am = findMenu(am.menu, (mi) => mi.url === seg2);
 		}
-		if (am)
+		if (am) {
+			opts.title = am.title;
 			return combineUrl(url, am.url);
+		}
 		return url; // TODO: ????
 	}
 
@@ -90,7 +96,8 @@
 			},
 			itemHref: (item) => '/', // TODO: findHref
 			navigate(item) {
-				this.$store.commit('navigate', makeMenuUrl(this.menu, item.url));
+				let opts = { title: null };
+				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, item.url, opts), title:  opts.title});
 			}
 		}
 	};
@@ -151,8 +158,10 @@
 			},
 			navigate(item) {
 				let top = this.topMenu;
-				if (top)
-					this.$store.commit('navigate', '/' + top.url + '/' + item.url);
+				if (top) {
+					let url = '/' + top.url + '/' + item.url;
+					this.$store.commit('navigate', { url: url, title: item.title });
+				}
 				else
 					console.error('no top menu found');
 			},
@@ -261,9 +270,10 @@
 		created() {
 			// todo: find first URL
 			// pathname, not route
-			let newUrl = makeMenuUrl(this.menu, window.location.pathname);
+			let opts = { title: null };
+			let newUrl = makeMenuUrl(this.menu, window.location.pathname, opts);
 			newUrl = newUrl + window.location.search;
-			this.$store.commit('setstate', newUrl);
+			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
 			let me = this;
 
@@ -329,11 +339,11 @@
         methods: {
             about() {
 				// TODO: localization
-				this.$store.commit('navigate', '/app/about');
-                //route.navigateMenu('/app/about', null, "О программе");
+				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму' }); // TODO 
             },
 			root() {
-				this.$store.commit('navigate', makeMenuUrl(this.menu, '/'));
+				let opts = { title: null };
+				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
             }
 		},
 		created() {
@@ -354,6 +364,7 @@
 						return;
 					}
 				}
+
 				me.$store.commit('popstate');
 			});
 

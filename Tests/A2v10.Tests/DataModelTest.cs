@@ -22,7 +22,7 @@ namespace A2v10.Tests
         [TestMethod]
         public async Task SimpleScript()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync("a2test.ArrayModel");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.ArrayModel");
             String script = dm.CreateScript();
             /*TODO: check script */
             Assert.IsTrue(true);

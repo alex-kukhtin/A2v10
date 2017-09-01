@@ -10,50 +10,52 @@ namespace A2v10.Xaml
 	{
 
         #region Attached Properties
-        static IDictionary<Object, Int32> _attachedColumn = new Dictionary<Object, Int32>();
-        static IDictionary<Object, Int32> _attachedRow = new Dictionary<Object, Int32>();
+        static Lazy<IDictionary<Object, Int32>> _attachedColumn = new Lazy<IDictionary<Object, Int32>>(()=> new Dictionary<Object, Int32>());
+        static Lazy<IDictionary<Object, Int32>> _attachedRow = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
+        static Lazy<IDictionary<Object, Int32>> _attachedColSpan = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
+        static Lazy<IDictionary<Object, Int32>> _attachedRowSpan = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
 
-        public static void SetColumn(Object obj, Int32 col)
+
+        public static void SetCol(Object obj, Int32 col)
         {
-            if (_attachedColumn == null)
-                _attachedColumn = new Dictionary<Object, Int32>();
-            if (_attachedColumn.ContainsKey(obj))
-                _attachedColumn[obj] = col;
-            else
-                _attachedColumn.Add(obj, col);
+            AttachedHelpers.SetAttached(_attachedColumn, obj, col);
         }
 
-        public static Int32? GetColumn(Object obj)
+        public static Int32? GetCol(Object obj)
         {
-            if (_attachedColumn != null)
-            {
-                Int32 column;
-                if (_attachedColumn.TryGetValue(obj, out column))
-                    return column;
-            }
-            return null;
+            return AttachedHelpers.GetAttached(_attachedColumn, obj);
         }
 
-        public static void SetRow(Object obj, Int32 col)
+        public static void SetRow(Object obj, Int32 row)
         {
-            if (_attachedRow == null)
-                _attachedRow = new Dictionary<Object, Int32>();
-            if (_attachedRow.ContainsKey(obj))
-                _attachedRow[obj] = col;
-            else
-                _attachedRow.Add(obj, col);
+            AttachedHelpers.SetAttached(_attachedRow, obj, row);
         }
 
         public static Int32? GetRow(Object obj)
         {
-            if (_attachedRow != null)
-            {
-                Int32 column;
-                if (_attachedRow.TryGetValue(obj, out column))
-                    return column;
-            }
-            return null;
+            return AttachedHelpers.GetAttached(_attachedRow, obj);
         }
+
+        public static void SetColSpan(Object obj, Int32 span)
+        {
+            AttachedHelpers.SetAttached(_attachedColSpan, obj, span);
+        }
+
+        public static Int32? GetColSpan(Object obj)
+        {
+            return AttachedHelpers.GetAttached(_attachedColSpan, obj);
+        }
+
+        public static void SetRowSpan(Object obj, Int32 span)
+        {
+            AttachedHelpers.SetAttached(_attachedRowSpan, obj, span);
+        }
+
+        public static Int32? GetRowSpan(Object obj)
+        {
+            return AttachedHelpers.GetAttached(_attachedRowSpan, obj);
+        }
+
         #endregion
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -61,6 +63,7 @@ namespace A2v10.Xaml
             var grid = new TagBuilder("div", "grid");
             if (onRender != null)
                 onRender(grid);
+            // TODO: row/col definitions
             grid.RenderStart(context);
             RenderChildren(context);
             grid.RenderEnd(context);
@@ -70,7 +73,7 @@ namespace A2v10.Xaml
         {
             foreach (var ch in Children)
             {
-                using (context.GridContext(GetRow(ch), GetColumn(ch)))
+                using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch)))
                 {
                     ch.RenderElement(context);
                 }
