@@ -9,6 +9,9 @@ namespace A2v10.Xaml
     public class Dialog : RootContainer
     {
         public String Title { get; set; }
+        public String HelpFile { get; set; }
+
+        public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -17,8 +20,9 @@ namespace A2v10.Xaml
             dialog.RenderStart(context);
 
             RenderHeader(context);
+            RenderLoadIndicator(context);
 
-            var content = new TagBuilder("div", "modal-header");
+            var content = new TagBuilder("div", "modal-content");
             content.RenderStart(context);
             RenderChildren(context);
             content.RenderEnd(context);
@@ -33,12 +37,69 @@ namespace A2v10.Xaml
             var header = new TagBuilder("div", "modal-header");
             header.RenderStart(context);
             var hdr = GetBinding(nameof(Title));
+            if ((hdr != null) || (Title != null))
+            {
+                var span = new TagBuilder("span");
+                if (hdr != null)
+                    span.MergeAttribute("v-text", hdr.GetPathFormat(context));
+                else if (Title != null)
+                    span.SetInnerText(Title);
+                span.Render(context);
+            }
+            var close = new TagBuilder("button", "btnclose");
+            close.MergeAttribute("@click.prevent", "$modalClose(false)");
+            close.SetInnerText("&#x2715;");
+            close.Render(context);
+
             header.RenderEnd(context);
+        }
+
+        void RenderLoadIndicator(RenderContext context)
+        {
+            new TagBuilder("div", "load-indicator")
+                .MergeAttribute("v-show", "$isLoading")
+                .Render(context);
         }
 
         void RenderFooter(RenderContext context)
         {
+            if (Buttons.Count == 0 && !HasHelp)
+                return;
+            var footer = new TagBuilder("div", "modal-footer");
+            footer.RenderStart(context);
 
+            if (HasHelp)
+            {
+                //<a class="btn-help"><i class="ico ico-help"></i>Справка</a>
+                var ha = new TagBuilder("a", "btn-help");
+                // TODO: Help path
+                var hbind = GetBinding(nameof(HelpFile));
+                if (hbind != null)
+                {
+                }
+                else if (!String.IsNullOrEmpty(HelpFile))
+                {
+                }
+                ha.RenderStart(context);
+                new TagBuilder("i", "ico ico-help")
+                    .Render(context);
+                // TODO: Localize ???
+                context.Writer.Write("Help");
+                ha.RenderEnd(context);
+                new TagBuilder("div", "aligner").Render(context);
+            }
+
+            foreach (var b in Buttons)
+                b.RenderElement(context);
+            footer.RenderEnd(context);
+        }
+
+        Boolean HasHelp
+        {
+            get
+            {
+                return GetBinding(nameof(HelpFile)) != null || !String.IsNullOrEmpty(HelpFile);
+            }
         }
     }
 }

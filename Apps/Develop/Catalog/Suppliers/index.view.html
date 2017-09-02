@@ -3,11 +3,12 @@
     <h3>DATA grid with client paging/sorting/filtering</h3>
 
 
-    <collection-view :items-source="Customers" :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="server">
+    <collection-view :items-source="Customers"
+                     :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="serverurl">
         <template scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
                 <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
-                           :border="true" :hover="true" grid="vertical" sort="server" :route-query="$query" mark="$rowMark" mark-style="marker">
+                           :border="true" :hover="true" grid="vertical" :sort="true" :route-query="$query" mark="$rowMark" mark-style="marker">
                     <data-grid-column header="index" content="$index" align="right"></data-grid-column>
                     <data-grid-column header="Id" content="Id" width="0%" align="right"></data-grid-column>
                     <data-grid-column header="Name" content="Name"></data-grid-column>
@@ -32,9 +33,9 @@
                     </template>
                     <template slot="toolbar" scope="props">
                         <div class="toolbar">
-                            <label>data-grid-toolbar</label>
-                            <div class="dropdown" v-dropdown>
-                                <button class="btn" toggle>Drop Down<span class="cr"></span></button>
+                            <label>Data-grid Toolbar:</label>
+                            <div class="dropdown dir-down" v-dropdown>
+                                <button class="btn" toggle>Drop Down<span class="caret"></span></button>
                                 <div class="dropdown-menu menu">
                                     <a class="dropdown-item" @click.prevent="Customers.$append()"><i class="ico ico-plus"></i>Append element</a>
                                     <a class="dropdown-item" @click.prevent="$reload"><i class="ico ico-refresh"></i>Refresh</a>
@@ -46,12 +47,19 @@
                             <div class="divider" role="separator"></div>
                             <button class="btn" @click.prevent="$exec('test')"><i class="ico-database"></i> exec</button>
                             <button class="btn" @click.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
+                            <button class="btn" @click.prevent="$dialog('show', 'catalog/suppliers/browse2')"><i class="ico ico-alert"></i>Browse dialog XAML</button>
                             <code v-text="Parent.filter"></code>
-                            <input v-model="Parent.filter.Text" />
-                            <select v-model="Parent.filter.Text">
-                                <option value="эле">Элемент</option>
-                                <option value="сто">Сто</option>
-                            </select>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input v-focus class="control" v-model="Parent.filter.Text" />
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <select v-focus class="control" v-model="Parent.filter.Text">
+                                    <option value="эле">Элемент</option>
+                                    <option value="сто">Сто</option>
+                                </select>
+                            </div>
                             <span class="bold" v-if="Parent.filter.Text">Filtered!!!</span>
                         </div>
                     </template>

@@ -19,7 +19,17 @@ namespace A2v10.Xaml
             bool isGridPage = (Toolbar != null) || (Taskpad != null);
             var page = new TagBuilder("div", "page absolute");
             if (isGridPage)
+            {
                 page.AddCssClass("page-grid");
+                if (Taskpad != null)
+                {
+                    var tp = Taskpad as Taskpad;
+                    if (tp != null && tp.Width != null)
+                    {
+                        page.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+                    }
+                }
+            }
             page.MergeAttribute("id", context.RootId);
             page.RenderStart(context);
 

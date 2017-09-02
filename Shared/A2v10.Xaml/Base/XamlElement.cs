@@ -5,13 +5,36 @@ using System.ComponentModel;
 
 namespace A2v10.Xaml
 {
-	public class XamlElement : ISupportInitialize
+	public class XamlElement : ISupportInitialize, ISupportBinding
 	{
-		IDictionary<String, BindBase> _bindings;
 
 		internal XamlElement Parent { get; private set; }
 
-		protected virtual void OnEndInit()
+        BindImpl _bindImpl;
+
+        #region ISupportBinding
+        public BindImpl BindImpl
+        {
+            get
+            {
+                if (_bindImpl == null)
+                    _bindImpl = new BindImpl();
+                return _bindImpl;
+            }
+        }
+
+        public Bind GetBinding(String name)
+        {
+            return _bindImpl?.GetBinding(name);
+        }
+
+        public BindCmd GetBindingCommand(String name)
+        {
+            return _bindImpl?.GetBindingCommand(name);
+        }
+        #endregion
+
+        protected virtual void OnEndInit()
 		{
 		}
 
@@ -20,41 +43,6 @@ namespace A2v10.Xaml
 			Parent = parent;
 		}
 
-		public BindBase SetBinding(String name, BindBase bind)
-		{
-			if (_bindings == null)
-				_bindings = new Dictionary<String, BindBase>();
-			_bindings.Add(name, bind);
-			return bind;
-		}
-
-        public Bind GetBinding(String name)
-        {
-            if (_bindings == null)
-                return null;
-            BindBase bind = null;
-            if (_bindings.TryGetValue(name, out bind))
-            {
-                if (bind is Bind)
-                    return bind as Bind;
-                throw new XamlException($"Binding '{name}' must be a Bind");
-            }
-            return null;
-        }
-
-        public BindCmd GetBindingCommand(String name)
-        {
-            if (_bindings == null)
-                return null;
-            BindBase bind = null;
-            if (_bindings.TryGetValue(name, out bind))
-            {
-                if (bind is BindCmd)
-                    return bind as BindCmd;
-                throw new XamlException($"Binding '{name}' must be a BindCmd");
-            }
-            return null;
-        }
 
         internal void MergeBoolAttribute(TagBuilder tag, String propName, Boolean value)
         {

@@ -192,6 +192,10 @@ th {
 /* dialog */
 /* z-index */
 /* mixins */
+.block {
+  display: block;
+  width: 100%;
+}
 .bold {
   font-weight: bold;
 }
@@ -235,6 +239,13 @@ body {
   width: 100%;
   padding: 0;
   background-color: white;
+}
+button {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+button:focus {
+  outline-style: none;
 }
 header,
 .header {
@@ -511,10 +522,6 @@ pre {
   background-color: #f8f8f8;
   padding: 6px;
 }
-button {
-  padding: 4px 6px;
-  font-size: 13px;
-}
 /*TODO: 
     2. v-focus-parent directive
     3. .validator width
@@ -636,6 +643,24 @@ button {
   opacity: 0.5;
   color: #777;
 }
+.btnclose {
+  padding: 0 4px;
+  line-height: normal;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+.caret {
+  display: inline-block;
+  margin-left: 4px;
+  border: 4px solid transparent;
+  vertical-align: middle;
+  border-top-color: #222;
+}
+.caret.up {
+  border-top-color: transparent;
+  border-bottom-color: #222;
+  vertical-align: top;
+}
 /*
     TODO:
     1. Разобраться с border: (td:first-child (left:none???)
@@ -645,8 +670,7 @@ table.data-grid {
   width: 100%;
   border: 1px solid #bdc5d8;
 }
-table.data-grid td,
-table.data-grid th {
+table.data-grid td {
   padding: 4px 6px;
   vertical-align: top;
 }
@@ -662,12 +686,16 @@ table.data-grid colgroup > col.sorted {
 table.data-grid th {
   background-color: #f5f5f5;
   color: #555;
-  position: relative;
+  border-bottom: 1px solid #ccc;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+table.data-grid th .h-holder {
+  position: relative;
+  padding: 4px 6px;
 }
 table.data-grid th.sort {
   cursor: pointer;
@@ -675,7 +703,11 @@ table.data-grid th.sort {
 table.data-grid th.sort:hover {
   background-color: #dcdcdc;
 }
-table.data-grid th.sort.desc:after {
+table.data-grid th.sort.desc,
+table.data-grid th.sort.asc {
+  background-color: #eee;
+}
+table.data-grid th.sort.desc .h-holder:after {
   content: '';
   position: absolute;
   left: calc(50% - 5px);
@@ -683,7 +715,7 @@ table.data-grid th.sort.desc:after {
   border: 5px solid transparent;
   border-top-color: #999;
 }
-table.data-grid th.sort.asc:after {
+table.data-grid th.sort.asc .h-holder:after {
   content: '';
   position: absolute;
   left: calc(50% - 5px);
@@ -700,8 +732,7 @@ table.data-grid td.danger {
 table.data-grid td.warning {
   background-color: rgba(255, 216, 0, 0.15) !important;
 }
-table.data-grid td.marker,
-table.data-grid th.marker {
+table.data-grid td.marker {
   padding: 0;
   width: 12px;
   height: 100%;
@@ -721,22 +752,23 @@ table.data-grid td.marker > .warning {
   border-left-color: gold;
 }
 table th {
-  border-bottom: 1px solid #bdc5d8;
+  border: 1px solid #ccc;
 }
 table.bordered {
   border: 1px solid #bdc5d8;
 }
 table.grid-vertical td,
-table.grid-both td,
-table.grid-vertical th,
-table.grid-both th {
+table.grid-both td {
   border-left: 1px solid #bdc5d8;
   border-right: 1px solid #bdc5d8;
 }
-table.grid-horizontal td,
-table.grid-both td,
-table.grid-horizontal th,
+table.grid-vertical th,
 table.grid-both th {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+table.grid-horizontal td,
+table.grid-both td {
   border-top: 1px solid #bdc5d8;
   border-bottom: 1px solid #bdc5d8;
 }
@@ -778,6 +810,10 @@ table.hover > tbody > tr:hover {
 .toolbar .btn:disabled:hover {
   background-color: transparent;
   border-color: transparent;
+}
+.toolbar label {
+  display: inline-block;
+  padding: 0 4px;
 }
 .toolbar i.ico {
   display: inline-block;
@@ -924,9 +960,18 @@ table.hover > tbody > tr:hover {
   padding: 8px;
   font-weight: bold;
   border-bottom: 1px solid #bdc5d8;
+  min-height: 1.4em;
 }
-.modal-header button {
+.modal-header .btnclose {
   float: right;
+  color: #aaa;
+}
+.modal-header .btnclose:hover,
+.modal-header .btnclose:active,
+.modal-header .btnclose:focus {
+  color: #555;
+  background-color: #fff9d0;
+  border-color: #e5c365;
 }
 .modal-footer {
   padding: 12px 8px;
@@ -951,11 +996,17 @@ table.hover > tbody > tr:hover {
 .modal-footer .btn-help:hover {
   text-decoration: none;
 }
+/*
+TODO: 
+    1. shadow into variables
+    2. menu-item: css
+
+*/
 .menu {
   padding: 2px;
   top: 100%;
   min-width: 200px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
   border: 1px solid #9ba7b7;
 }
 .menu .dropdown-item {
@@ -982,34 +1033,57 @@ table.hover > tbody > tr:hover {
   width: auto;
   height: auto;
   left: 0;
-  top: 0;
+  right: auto;
+  top: 100%;
+  bottom: auto;
+}
+.dropdown .dropdown-menu.down-right {
+  right: 0;
+  left: auto;
+}
+.dropdown .dropdown-menu.up-left {
+  bottom: 100%;
+  top: auto;
+  box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+}
+.dropdown .dropdown-menu.up-right {
+  bottom: 100%;
+  top: auto;
+  right: 0;
+  left: auto;
+  box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
 }
 .dropdown.show .dropdown-menu {
   display: block;
 }
-.dropdown .menu {
-  top: 100%;
-}
 .toolbar > .dropdown {
   display: inline-block;
   overflow: visible;
-  /*
-    &.show:after {
-        content: '';
-        height: 7px;
-        background-color: red;
-        border: 1px solid gray;
-        border-bottom-color:white;
-        position: absolute;
-        top: ~"calc(100% - 4px)";
-        left: 0px;
-        right: 0;
-        z-index: 4000;
-    }
-    */
 }
 .toolbar > .dropdown .menu {
-  margin-top: 3px;
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+.toolbar > .dropdown.show:after {
+  content: '';
+  height: 3px;
+  background-color: #eaf0ff;
+  position: absolute;
+  z-index: 1041;
+  left: 1px;
+  right: 1px;
+}
+.toolbar > .dropdown.dir-down.show:after {
+  bottom: 0;
+}
+.toolbar > .dropdown.dir-up.show:after {
+  top: 0;
+}
+.dropdown .btn-caret {
+  border-left: 1px solid #9dacca;
+}
+.dropdown .btn-caret .caret {
+  margin-left: 0;
 }
 .grid {
   display: grid;
@@ -1097,6 +1171,6 @@ pre.a2-code {
 .taskpad {
   background-color: azure;
   margin-left: 6px;
-  margin-right: 6px;
-  border-left: 1px solid silver;
+  border-left: 1px solid #ddd;
+  padding: 0 6px;
 }

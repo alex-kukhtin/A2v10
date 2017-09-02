@@ -1,5 +1,9 @@
-﻿/*
-TODO: доделать фильтры
+﻿/*20170902-7023*/
+/*components/collectionview.js*/
+
+/*
+TODO:
+7. доделать фильтры
 */
 
 
@@ -20,7 +24,7 @@ Vue.component('collection-view', {
 		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
-		runAt:String
+		runAt: String
 	},
 	data() {
 		// TODO: Initial sorting, filters
@@ -29,8 +33,8 @@ Vue.component('collection-view', {
 			filteredCount: 0,
 			localQuery: {
 				offset: 0,
-				dir: 'desc',
-				order: 'Id'
+				dir: 'asc',
+				order: ''
 			}
 		};
 	},
@@ -42,27 +46,31 @@ Vue.component('collection-view', {
 	},
 	computed: {
 		isServer() {
-			return this.runAt === 'server';
+			return this.runAt !== 'client';
+		},
+		isQueryUrl() {
+			// use window hash
+			return this.runAt === 'serverurl';
 		},
 		dir() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
 		Offset() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
 		},
 		order() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.order;
 			return this.localQuery.order;
 		},
 		pagedSource() {
-			//console.warn('get paged source');
 			if (this.isServer)
-				return this.ItemsSource; // server - all data from server
+				return this.ItemsSource;
+			console.warn('get paged source');
 			let arr = [].concat(this.ItemsSource);
 			// filter (TODO: // правильная фильтрация)
 			if (this.filter && this.filter.Text)
@@ -101,8 +109,12 @@ Vue.component('collection-view', {
 	},
 	methods: {
 		$setOffset(offset) {
-			if (this.isServer)
-				this.$store.commit('setquery', {offset: offset});
+			if (this.runAt === 'server') {
+				this.localQuery.offset = offset;
+				// for this BaseController only
+				this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+			} else if (this.runAt === 'serverurl')
+				this.$store.commit('setquery', { offset: offset});
 			else
 				this.localQuery.offset = offset;
 
@@ -117,23 +129,30 @@ Vue.component('collection-view', {
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.Offset + this.pageSize
+			let no = this.Offset + this.pageSize;
 			this.$setOffset(no);
 		},
 		sortDir(order) {
 			return order === this.order ? this.dir : undefined;
 		},
 		doSort(order) {
-			let nq = { dir: this.dir, order: this.order };
+			let nq = { dir: this.dir, order: this.order};
 			if (nq.order === order)
 				nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
 			else {
 				nq.order = order;
 				nq.dir = 'asc';
 			}
-			if (this.isServer) {
+			if (this.runAt === 'server') {
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
+				// for this BaseController only
+				this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+			}
+			else if (this.runAt === 'serverurl') {
 				this.$store.commit('setquery', nq);
 			} else {
+				// local
 				this.localQuery.dir = nq.dir;
 				this.localQuery.order = nq.order;
 			}

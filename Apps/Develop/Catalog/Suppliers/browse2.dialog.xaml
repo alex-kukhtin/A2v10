@@ -1,0 +1,31 @@
+<!-- Demo dialog page -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		HelpFile="/customers/browse"
+		Title="{Bind Customers.length, Format='Выбор корреспондента из {0} элементов'}">
+	<Dialog.Buttons>
+		<Button>Выбрать</Button>
+		<Button Command="{BindCmd Close}">Закрыть</Button>
+	</Dialog.Buttons>
+	<CollectionView RunAt="Server" ItemsSource="{Bind Customers}">
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
+			<DataGrid.Toolbar>
+				<Toolbar>
+					<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+					<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+					<Separator />
+					<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+				</Toolbar>
+			</DataGrid.Toolbar>
+			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
+			<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
+			<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
+			<DataGrid.Pager>
+				<Pager Source="{Bind Parent.Pager}" />
+			</DataGrid.Pager>
+		</DataGrid>
+	</CollectionView>
+</Dialog>
+
+    

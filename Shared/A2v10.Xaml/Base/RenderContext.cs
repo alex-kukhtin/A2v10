@@ -92,10 +92,18 @@ namespace A2v10.Xaml
 
         private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
         private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
+        private UIElementBase _root;
 
-        public RenderContext(TextWriter writer)
+        public RenderContext(TextWriter writer, UIElementBase root)
         {
             Writer = writer;
+            _root = root;
+        }
+
+        public Boolean IsDialog { get
+            {
+                return _root is Dialog;
+            }
         }
 
         public void RenderSpace()

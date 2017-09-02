@@ -1,27 +1,36 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<CollectionView ItemsSource="{Bind Contracts}">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-				  Striped="True" Sort="False" GridLines="Vertical">
-			<DataGrid.Toolbar>
-				<Toolbar>
-					<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
-					<Button Icon="Delete">Удалить</Button>
+	<Toolbar>
+		<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
+		<Button Icon="Delete">Удалить</Button>
+		<Separator />
+		<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+		<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+		<Button Content="Test Drop Down 2" Icon="Menu">
+			<Button.DropDown>
+				<DropDownMenu Direction="DownRight">
+					<MenuItem Command="{BindCmd Reload}" Icon="Reload">Reload</MenuItem>
 					<Separator />
-					<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-					<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-				</Toolbar>
-			</DataGrid.Toolbar>
+					<MenuItem Command="{BindCmd Requery}" Icon="Requery">Requery</MenuItem>
+				</DropDownMenu>
+			</Button.DropDown>
+		</Button>
+	</Toolbar>
+	<CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl">
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				  Striped="True" Sort="True" GridLines="Vertical">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
-			<DataGridColumn Header="Дата" Content="{Bind DateFrom}" Align="Center"/>
+			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center"/>
 			<DataGridColumn Header="Продукт" Content="{Bind ProductName}"/>
 			<DataGridColumn Header="Страхователь" Content="{Bind InsurantName}"/>
-			<DataGridColumn Header="Сумма" Content="{Bind Sum}" Align="Right"/>
-			<DataGridColumn Header="Создан" Content="{Bind CreatedDate}" Align="Center"/>
+			<DataGridColumn Header="Состояние" Content="{Bind StateName}"/>
+			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+			<DataGridColumn Header="Premium" Content="{Bind Premium, DataType=Currency}" Align="Right"/>
+			<DataGridColumn Header="Создан" Content="{Bind CreatedDate, DataType=DateTime}" Align="Center"/>
 			<!--
 			<DataGridColumn Header="Номер" Content="SNo" />
 			<DataGridColumn Header="Котрагент" Content="Agent"/>
@@ -31,6 +40,22 @@
 			-->
 		</DataGrid>
 	</CollectionView>
+	<Toolbar>
+		<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
+		<Button Icon="Delete">Удалить</Button>
+		<Separator />
+		<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+		<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+		<Button Content="Test Drop Down" Icon="Menu">
+			<Button.DropDown>
+				<DropDownMenu Direction="UpRight">
+					<MenuItem Command="{BindCmd Reload}" Icon="Reload">Reload</MenuItem>
+					<Separator />
+					<MenuItem Command="{BindCmd Requery}" Icon="Requery">Requery</MenuItem>
+				</DropDownMenu>
+			</Button.DropDown>
+		</Button>
+	</Toolbar>
 </Page>
 
     

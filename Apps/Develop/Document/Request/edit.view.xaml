@@ -13,8 +13,9 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
-		<Taskpad>
+		<Taskpad Width="25%">
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
+			<Button Block="True">Оформить накладную</Button>
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid>

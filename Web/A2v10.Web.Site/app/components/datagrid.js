@@ -1,4 +1,4 @@
-﻿/*20170825-7020*/
+﻿/*20170902-7023*/
 /*components/datagrid.js*/
 (function () {
 
@@ -47,8 +47,10 @@
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-    <i :class="\'fa fa-\' + icon" v-if="icon"></i>
-    <slot>{{header || content}}</slot>
+	<div class="h-holder">
+		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
+		<slot>{{header || content}}</slot>
+	</div>
 </th>
 `;
 
@@ -96,7 +98,7 @@
                         cssClass += ' ' + this.dir;
                 }
                 return cssClass;
-            },
+            }
         },
         methods: {
             doSort() {
@@ -236,55 +238,70 @@
         }
     };
 
-    Vue.component('data-grid', {
-        props: {
-            'items-source': [Object, Array],
-            border: Boolean,
-            grid: String,
-            striped: Boolean,
-            hover: { type: Boolean, default: false },
-            sort: String,
-            routeQuery: Object,
-            mark: String,
-            filterFields: String,
-            markStyle: String,
-            dblclick: Function
-        },
-        template: dataGridTemplate,
-        components: {
-            'data-grid-row': dataGridRow
-        },
-        data() {
-            return {
-                columns: [],
-                clientItems: null
-            };
-        },
-        computed: {
-            $items() {
-                return this.clientItems ? this.clientItems : this.itemsSource;
-            },
-            isMarkCell() {
-                return this.markStyle === 'marker' || this.markStyle === 'both';
-            },
-            isMarkRow() {
-                return this.markStyle === 'row' || this.markStyle === 'both';
-            },
-            cssClass() {
-                let cssClass = 'data-grid';
-                if (this.border) cssClass += ' border';
-                if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
-                if (this.striped) cssClass += ' striped';
-                if (this.hover) cssClass += ' hover';
-                return cssClass;
-            },
-            selected() {
-                return this.itemsSource.$selected;
-            },
-            isGridSortable() {
-                return !!this.sort;
-            }
-        },
+	Vue.component('data-grid', {
+		props: {
+			'items-source': [Object, Array],
+			border: Boolean,
+			grid: String,
+			striped: Boolean,
+			hover: { type: Boolean, default: false },
+			sort: Boolean,
+			routeQuery: Object,
+			mark: String,
+			filterFields: String,
+			markStyle: String,
+			dblclick: Function
+		},
+		template: dataGridTemplate,
+		components: {
+			'data-grid-row': dataGridRow
+		},
+		data() {
+			return {
+				columns: [],
+				clientItems: null,
+				localSort: {
+					dir: 'asc',
+					order: ''
+				}
+			};
+		},
+		computed: {
+			$items() {
+				return this.clientItems ? this.clientItems : this.itemsSource;
+			},
+			isMarkCell() {
+				return this.markStyle === 'marker' || this.markStyle === 'both';
+			},
+			isMarkRow() {
+				return this.markStyle === 'row' || this.markStyle === 'both';
+			},
+			cssClass() {
+				let cssClass = 'data-grid';
+				if (this.border) cssClass += ' border';
+				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
+				if (this.striped) cssClass += ' striped';
+				if (this.hover) cssClass += ' hover';
+				return cssClass;
+			},
+			selected() {
+				return this.itemsSource.$selected;
+			},
+			isGridSortable() {
+				return !!this.sort;
+			},
+			isLocal() {
+				return !this.$parent.sortDir;
+			}
+		},
+		watch: {
+			localSort: {
+				handler() {
+					this.doSortLocally();
+				},
+				deep: true
+			}
+		},
         methods: {
             $addColumn(column) {
                 this.columns.push(column);
@@ -304,30 +321,28 @@
 			},
 			doSort(order) {
 				// TODO: // collectionView || locally
-				this.$parent.$emit('sort', order);
+				if (this.isLocal) {
+					if (this.localSort.order === order)
+						this.localSort.dir = this.localSort.dir === 'asc' ? 'desc' : 'asc';
+					else {
+						this.localSort = { order: order, dir: 'asc' };
+					}
+				} else {
+					this.$parent.$emit('sort', order);
+				}
 			},
 			sortDir(order) {
 				// TODO: 
-				if (this.$parent.sortDir)
+				if (this.isLocal)
+					return this.localSort.order === order ? this.localSort.dir : undefined;
+				else
 					return this.$parent.sortDir(order);
-				return undefined;
 			},
-            queryChange()
+            doSortLocally(order)
 			{
-				alert(1);
-                let nq = this.dgQuery;
-                if (this.sort === 'server') {
-                    this.$root.$emit('queryChange', nq);
-                    return;
-                }
-                let rev = nq.dir === 'desc';
-                let sortProp = nq.order;
+				let rev = this.localSort.dir === 'desc';
+				let sortProp = this.localSort.order;
                 let arr = [].concat(this.itemsSource);
-                if (nq.filter) {
-                    let sv = nq.filter.toUpperCase();
-                    // TODO: add $contains to element
-                    arr = arr.filter((itm) => itm.Name.toUpperCase().indexOf(sv) !== -1);
-                }
                 arr.sort((a, b) => {
                     let av = a[sortProp];
                     let bv = b[sortProp];
@@ -338,10 +353,6 @@
                     else
                         return rev ? -1 : 1;
                 });
-                if (nq.offset !== undefined) {
-                    //TODO: pageSize
-                    arr = arr.slice(+nq.offset, +nq.offset + 3);
-                }
                 this.clientItems = arr;
             }
         }

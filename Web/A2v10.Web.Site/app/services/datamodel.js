@@ -11,7 +11,7 @@
     const SRC = '_src_';
     const PATH = '_path_';
     const ROOT = '_root_';
-    const ERRORS = '_errors_'
+	const ERRORS = '_errors_';
 
     const platform = require('platform');
     const validators = require('std:validators');
@@ -345,7 +345,7 @@
                         yield { item: arrItem, val: arrItem[name] };
                     else {
                         let newpath = sp.slice(1).join('.');
-                        yield* enumData(arrItem, newpath, name)
+						yield* enumData(arrItem, newpath, name);
                     }
                 }
             } else {

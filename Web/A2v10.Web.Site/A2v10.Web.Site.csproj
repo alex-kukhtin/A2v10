@@ -78,6 +78,7 @@
     <Content Include="app\services\log.js" />
     <Content Include="app\platform\route.js" />
     <Content Include="app\services\popup.js" />
+    <Content Include="app\services\url.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="css\bowtie.css" />

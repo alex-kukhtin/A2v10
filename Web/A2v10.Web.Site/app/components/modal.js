@@ -11,14 +11,14 @@ TODO: may be icon for confirm ????
 
     const modalTemplate = `
 <div class="modal-window">
-    <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
-    <div v-else class="modal-content">
-        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="modalClose(false)">x</button></div>
+    <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+    <div v-else class="modal-body">
+        <div class="modal-header"><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
         <div class="modal-body">
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        

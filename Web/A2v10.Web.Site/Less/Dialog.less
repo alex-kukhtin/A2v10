@@ -32,8 +32,17 @@
     padding: @modal-padding;
     font-weight: bold;
     border-bottom: 1px solid @default-brd-color;
-    button {
-        float:right;
+    min-height:1.4em;
+
+    .btnclose {
+        float: right;
+        color:#aaa;
+
+        &:hover, &:active, &:focus {
+            color:#555;
+            background-color:lighten(@dialog-header-bg-color, 10%);
+            border-color: @tb-hover-brd-color;
+        }
     }
 }
 

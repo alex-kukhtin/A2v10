@@ -1,32 +1,14 @@
-﻿/*20170901-7022*/
+﻿/*20170902-7023*/
 /* platform/routex.js */
 
 (function () {
 
 	const eventBus = require('std:eventBus');
+	const urlTools = require('std:url');
 
 	// TODO:
 
 	// 1: save/restore query (localStorage)
-
-	function parseQueryString(str) {
-		var obj = {};
-		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-			obj[decodeURIComponent(key)] = decodeURIComponent(value);
-		});
-		return obj;
-	}
-
-	function makeQueryString(obj) {
-		if (!obj)
-			return '';
-		let esc = encodeURIComponent;
-		let query = Object.keys(obj)
-			.filter(k => obj[k])
-			.map(k => esc(k) + '=' + esc(obj[k]))
-			.join('&');
-		return query ? '?' + query : '';
-	}
 
 	const titleStore = {};
 
@@ -49,7 +31,7 @@
 	const store = new Vuex.Store({
 		state: {
 			route: window.location.pathname,
-			query: parseQueryString(window.location.search)
+			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
 			seg0: (state) => state.route.split('/')[1],
@@ -66,18 +48,18 @@
 				};
 			},
 			baseUrl: (state) => {
-				return state.route + makeQueryString(state.query);
+				return state.route + urlTools.makeQueryString(state.query);
 			},
 			search: (state) => {
-				return makeQueryString(state.query);
+				return urlTools.makeQueryString(state.query);
 			}		
 		},
 		mutations: {
 			navigate(state, to) { // to: {url, query, title}
-				let oldUrl = state.route + makeQueryString(state.query);
+				let oldUrl = state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
-				let newUrl = state.route + makeQueryString(to.query);
+				let newUrl = state.route + urlTools.makeQueryString(to.query);
 				let h = window.history;
 				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
@@ -87,22 +69,22 @@
 			query(state, query) {
 				// changes all query
 				state.query = Object.assign({}, query);
-				let newUrl = state.route + makeQueryString(state.query);
+				let newUrl = state.route + urlTools.makeQueryString(state.query);
 				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
 				// changes some fields or query
 				state.query = Object.assign({}, state.query, query);
-				let newUrl = state.route + makeQueryString(state.query);
+				let newUrl = state.route + urlTools.makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
 				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
-				eventBus.$emit('queryChange', makeQueryString(state.query));
+				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {
 				state.route = window.location.pathname;
-				state.query = parseQueryString(window.location.search);
+				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
@@ -111,7 +93,7 @@
 				//console.warn('set setstate: ' + url);
 				window.history.replaceState(null, null, to.url);
 				state.route = window.location.pathname;
-				state.query = parseQueryString(window.location.search);
+				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
 			},
 			close(state) {
@@ -129,11 +111,11 @@
 	}
 
 	function replaceUrlQuery(url, query) {
-		return replaceUrlSearch(url, makeQueryString(query));
+		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
-	store.parseQueryString = parseQueryString;
-	store.makeQueryString = makeQueryString;
+	store.parseQueryString = urlTools.parseQueryString;
+	store.makeQueryString = urlTools.makeQueryString;
 	store.replaceUrlSearch = replaceUrlSearch;
 	store.replaceUrlQuery = replaceUrlQuery;
 	store.makeBackUrl = makeBackUrl;

@@ -46,6 +46,58 @@
 
 
 
+/*20170902-7023*/
+/* services/url.js */
+
+app.modules['std:url'] = function () {
+
+	return {
+		combine: combine,
+		makeQueryString: makeQueryString,
+		parseQueryString: parseQueryString
+	};
+
+	function normalize(elem) {
+		elem = '' + elem || '';
+		elem = elem.replace(/\\/g, '/');
+		if (elem.startsWith('/'))
+			elem = elem.substring(1);
+		if (elem.endsWith('/'))
+			elem = elem.substring(0, elem.length - 1);
+		return elem;
+	}
+
+	function combine(...args) {
+		return '/' + args.map(normalize).join('/').replace(/\\/g, '/');
+	}
+
+	function makeQueryString(obj) {
+		if (!obj)
+			return '';
+		let esc = encodeURIComponent;
+		// skip special (starts with '_')
+		let query = Object.keys(obj)
+			.filter(k => k.startsWith('_') ? null : obj[k])
+			.map(k => esc(k) + '=' + esc(obj[k]))
+			.join('&');
+		return query ? '?' + query : '';
+	}
+
+	function parseQueryString(str) {
+		var obj = {};
+		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
+			obj[decodeURIComponent(key)] = decodeURIComponent(value);
+		});
+		return obj;
+	}
+
+};
+
+
+
+
+
+
 /*20170818-7015*/
 /* platform/webvue.js */
 
@@ -287,35 +339,17 @@
     app.modules['route'] = route;
 })();
 
-/*20170901-7022*/
+/*20170902-7023*/
 /* platform/routex.js */
 
 (function () {
 
 	const eventBus = require('std:eventBus');
+	const urlTools = require('std:url');
 
 	// TODO:
 
 	// 1: save/restore query (localStorage)
-
-	function parseQueryString(str) {
-		var obj = {};
-		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-			obj[decodeURIComponent(key)] = decodeURIComponent(value);
-		});
-		return obj;
-	}
-
-	function makeQueryString(obj) {
-		if (!obj)
-			return '';
-		let esc = encodeURIComponent;
-		let query = Object.keys(obj)
-			.filter(k => obj[k])
-			.map(k => esc(k) + '=' + esc(obj[k]))
-			.join('&');
-		return query ? '?' + query : '';
-	}
 
 	const titleStore = {};
 
@@ -338,7 +372,7 @@
 	const store = new Vuex.Store({
 		state: {
 			route: window.location.pathname,
-			query: parseQueryString(window.location.search)
+			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
 			seg0: (state) => state.route.split('/')[1],
@@ -355,18 +389,18 @@
 				};
 			},
 			baseUrl: (state) => {
-				return state.route + makeQueryString(state.query);
+				return state.route + urlTools.makeQueryString(state.query);
 			},
 			search: (state) => {
-				return makeQueryString(state.query);
+				return urlTools.makeQueryString(state.query);
 			}		
 		},
 		mutations: {
 			navigate(state, to) { // to: {url, query, title}
-				let oldUrl = state.route + makeQueryString(state.query);
+				let oldUrl = state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
-				let newUrl = state.route + makeQueryString(to.query);
+				let newUrl = state.route + urlTools.makeQueryString(to.query);
 				let h = window.history;
 				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
@@ -376,22 +410,22 @@
 			query(state, query) {
 				// changes all query
 				state.query = Object.assign({}, query);
-				let newUrl = state.route + makeQueryString(state.query);
+				let newUrl = state.route + urlTools.makeQueryString(state.query);
 				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
 				// changes some fields or query
 				state.query = Object.assign({}, state.query, query);
-				let newUrl = state.route + makeQueryString(state.query);
+				let newUrl = state.route + urlTools.makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
 				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
-				eventBus.$emit('queryChange', makeQueryString(state.query));
+				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {
 				state.route = window.location.pathname;
-				state.query = parseQueryString(window.location.search);
+				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
@@ -400,7 +434,7 @@
 				//console.warn('set setstate: ' + url);
 				window.history.replaceState(null, null, to.url);
 				state.route = window.location.pathname;
-				state.query = parseQueryString(window.location.search);
+				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
 			},
 			close(state) {
@@ -418,11 +452,11 @@
 	}
 
 	function replaceUrlQuery(url, query) {
-		return replaceUrlSearch(url, makeQueryString(query));
+		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
-	store.parseQueryString = parseQueryString;
-	store.makeQueryString = makeQueryString;
+	store.parseQueryString = urlTools.parseQueryString;
+	store.makeQueryString = urlTools.makeQueryString;
 	store.replaceUrlSearch = replaceUrlSearch;
 	store.replaceUrlQuery = replaceUrlQuery;
 	store.makeBackUrl = makeBackUrl;
@@ -661,7 +695,7 @@ app.modules['std:validators'] = function() {
     const SRC = '_src_';
     const PATH = '_path_';
     const ROOT = '_root_';
-    const ERRORS = '_errors_'
+	const ERRORS = '_errors_';
 
     const platform = require('platform');
     const validators = require('std:validators');
@@ -995,7 +1029,7 @@ app.modules['std:validators'] = function() {
                         yield { item: arrItem, val: arrItem[name] };
                     else {
                         let newpath = sp.slice(1).join('.');
-                        yield* enumData(arrItem, newpath, name)
+						yield* enumData(arrItem, newpath, name);
                     }
                 }
             } else {
@@ -1354,7 +1388,7 @@ app.modules['std:popup'] = function () {
 		}		
     });
 })();
-/*20170825-7020*/
+/*20170902-7023*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1403,8 +1437,10 @@ app.modules['std:popup'] = function () {
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-    <i :class="\'fa fa-\' + icon" v-if="icon"></i>
-    <slot>{{header || content}}</slot>
+	<div class="h-holder">
+		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
+		<slot>{{header || content}}</slot>
+	</div>
 </th>
 `;
 
@@ -1452,7 +1488,7 @@ app.modules['std:popup'] = function () {
                         cssClass += ' ' + this.dir;
                 }
                 return cssClass;
-            },
+            }
         },
         methods: {
             doSort() {
@@ -1592,55 +1628,70 @@ app.modules['std:popup'] = function () {
         }
     };
 
-    Vue.component('data-grid', {
-        props: {
-            'items-source': [Object, Array],
-            border: Boolean,
-            grid: String,
-            striped: Boolean,
-            hover: { type: Boolean, default: false },
-            sort: String,
-            routeQuery: Object,
-            mark: String,
-            filterFields: String,
-            markStyle: String,
-            dblclick: Function
-        },
-        template: dataGridTemplate,
-        components: {
-            'data-grid-row': dataGridRow
-        },
-        data() {
-            return {
-                columns: [],
-                clientItems: null
-            };
-        },
-        computed: {
-            $items() {
-                return this.clientItems ? this.clientItems : this.itemsSource;
-            },
-            isMarkCell() {
-                return this.markStyle === 'marker' || this.markStyle === 'both';
-            },
-            isMarkRow() {
-                return this.markStyle === 'row' || this.markStyle === 'both';
-            },
-            cssClass() {
-                let cssClass = 'data-grid';
-                if (this.border) cssClass += ' border';
-                if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
-                if (this.striped) cssClass += ' striped';
-                if (this.hover) cssClass += ' hover';
-                return cssClass;
-            },
-            selected() {
-                return this.itemsSource.$selected;
-            },
-            isGridSortable() {
-                return !!this.sort;
-            }
-        },
+	Vue.component('data-grid', {
+		props: {
+			'items-source': [Object, Array],
+			border: Boolean,
+			grid: String,
+			striped: Boolean,
+			hover: { type: Boolean, default: false },
+			sort: Boolean,
+			routeQuery: Object,
+			mark: String,
+			filterFields: String,
+			markStyle: String,
+			dblclick: Function
+		},
+		template: dataGridTemplate,
+		components: {
+			'data-grid-row': dataGridRow
+		},
+		data() {
+			return {
+				columns: [],
+				clientItems: null,
+				localSort: {
+					dir: 'asc',
+					order: ''
+				}
+			};
+		},
+		computed: {
+			$items() {
+				return this.clientItems ? this.clientItems : this.itemsSource;
+			},
+			isMarkCell() {
+				return this.markStyle === 'marker' || this.markStyle === 'both';
+			},
+			isMarkRow() {
+				return this.markStyle === 'row' || this.markStyle === 'both';
+			},
+			cssClass() {
+				let cssClass = 'data-grid';
+				if (this.border) cssClass += ' border';
+				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
+				if (this.striped) cssClass += ' striped';
+				if (this.hover) cssClass += ' hover';
+				return cssClass;
+			},
+			selected() {
+				return this.itemsSource.$selected;
+			},
+			isGridSortable() {
+				return !!this.sort;
+			},
+			isLocal() {
+				return !this.$parent.sortDir;
+			}
+		},
+		watch: {
+			localSort: {
+				handler() {
+					this.doSortLocally();
+				},
+				deep: true
+			}
+		},
         methods: {
             $addColumn(column) {
                 this.columns.push(column);
@@ -1660,30 +1711,28 @@ app.modules['std:popup'] = function () {
 			},
 			doSort(order) {
 				// TODO: // collectionView || locally
-				this.$parent.$emit('sort', order);
+				if (this.isLocal) {
+					if (this.localSort.order === order)
+						this.localSort.dir = this.localSort.dir === 'asc' ? 'desc' : 'asc';
+					else {
+						this.localSort = { order: order, dir: 'asc' };
+					}
+				} else {
+					this.$parent.$emit('sort', order);
+				}
 			},
 			sortDir(order) {
 				// TODO: 
-				if (this.$parent.sortDir)
+				if (this.isLocal)
+					return this.localSort.order === order ? this.localSort.dir : undefined;
+				else
 					return this.$parent.sortDir(order);
-				return undefined;
 			},
-            queryChange()
+            doSortLocally(order)
 			{
-				alert(1);
-                let nq = this.dgQuery;
-                if (this.sort === 'server') {
-                    this.$root.$emit('queryChange', nq);
-                    return;
-                }
-                let rev = nq.dir === 'desc';
-                let sortProp = nq.order;
+				let rev = this.localSort.dir === 'desc';
+				let sortProp = this.localSort.order;
                 let arr = [].concat(this.itemsSource);
-                if (nq.filter) {
-                    let sv = nq.filter.toUpperCase();
-                    // TODO: add $contains to element
-                    arr = arr.filter((itm) => itm.Name.toUpperCase().indexOf(sv) !== -1);
-                }
                 arr.sort((a, b) => {
                     let av = a[sortProp];
                     let bv = b[sortProp];
@@ -1694,10 +1743,6 @@ app.modules['std:popup'] = function () {
                     else
                         return rev ? -1 : 1;
                 });
-                if (nq.offset !== undefined) {
-                    //TODO: pageSize
-                    arr = arr.slice(+nq.offset, +nq.offset + 3);
-                }
                 this.clientItems = arr;
             }
         }
@@ -1811,8 +1856,12 @@ Vue.component('a2-pager', {
 
 })();
 
+/*20170902-7023*/
+/*components/collectionview.js*/
+
 /*
-TODO: доделать фильтры
+TODO:
+7. доделать фильтры
 */
 
 
@@ -1833,7 +1882,7 @@ Vue.component('collection-view', {
 		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
-		runAt:String
+		runAt: String
 	},
 	data() {
 		// TODO: Initial sorting, filters
@@ -1842,8 +1891,8 @@ Vue.component('collection-view', {
 			filteredCount: 0,
 			localQuery: {
 				offset: 0,
-				dir: 'desc',
-				order: 'Id'
+				dir: 'asc',
+				order: ''
 			}
 		};
 	},
@@ -1855,27 +1904,31 @@ Vue.component('collection-view', {
 	},
 	computed: {
 		isServer() {
-			return this.runAt === 'server';
+			return this.runAt !== 'client';
+		},
+		isQueryUrl() {
+			// use window hash
+			return this.runAt === 'serverurl';
 		},
 		dir() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
 		Offset() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
 		},
 		order() {
-			if (this.isServer)
+			if (this.isQueryUrl)
 				return this.$store.getters.query.order;
 			return this.localQuery.order;
 		},
 		pagedSource() {
-			//console.warn('get paged source');
 			if (this.isServer)
-				return this.ItemsSource; // server - all data from server
+				return this.ItemsSource;
+			console.warn('get paged source');
 			let arr = [].concat(this.ItemsSource);
 			// filter (TODO: // правильная фильтрация)
 			if (this.filter && this.filter.Text)
@@ -1914,8 +1967,12 @@ Vue.component('collection-view', {
 	},
 	methods: {
 		$setOffset(offset) {
-			if (this.isServer)
-				this.$store.commit('setquery', {offset: offset});
+			if (this.runAt === 'server') {
+				this.localQuery.offset = offset;
+				// for this BaseController only
+				this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+			} else if (this.runAt === 'serverurl')
+				this.$store.commit('setquery', { offset: offset});
 			else
 				this.localQuery.offset = offset;
 
@@ -1930,23 +1987,30 @@ Vue.component('collection-view', {
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.Offset + this.pageSize
+			let no = this.Offset + this.pageSize;
 			this.$setOffset(no);
 		},
 		sortDir(order) {
 			return order === this.order ? this.dir : undefined;
 		},
 		doSort(order) {
-			let nq = { dir: this.dir, order: this.order };
+			let nq = { dir: this.dir, order: this.order};
 			if (nq.order === order)
 				nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
 			else {
 				nq.order = order;
 				nq.dir = 'asc';
 			}
-			if (this.isServer) {
+			if (this.runAt === 'server') {
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
+				// for this BaseController only
+				this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+			}
+			else if (this.runAt === 'serverurl') {
 				this.$store.commit('setquery', nq);
 			} else {
+				// local
 				this.localQuery.dir = nq.dir;
 				this.localQuery.order = nq.order;
 			}
@@ -1970,14 +2034,14 @@ TODO: may be icon for confirm ????
 
     const modalTemplate = `
 <div class="modal-window">
-    <include v-if="isInclude" class="modal-content" :src="dialog.url"></include>
-    <div v-else class="modal-content">
-        <div class="modal-header"><span v-text="title"></span><button @click.stop.prevent="modalClose(false)">x</button></div>
+    <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+    <div v-else class="modal-body">
+        <div class="modal-header"><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
         <div class="modal-body">
             <p v-text="dialog.message"></p>            
         </div>
         <div class="modal-footer">
-            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -2036,20 +2100,18 @@ TODO: may be icon for confirm ????
 
     app.components['std:modal'] = modalComponent;
 })();
-/*20170829-7022*/
+/*20170902-7023*/
 /* directives/dropdown.js */
 
 Vue.directive('dropdown', {
 	bind(el, binding, vnode) {
 
+		//console.warn('bind drop down');
+
 		const popup = require('std:popup');
 		let me = this;
 
-		me.isVisible = function (el) {
-			return el.classList.contains('show');
-		};
-
-		me._btn = el.querySelector('[toggle]');
+		el._btn = el.querySelector('[toggle]');
 		el.setAttribute('dropdown-top', '');
 
 		popup.registerPopup(el);
@@ -2059,9 +2121,10 @@ Vue.directive('dropdown', {
 		};
 
 		el.addEventListener('click', function (event) {
-			if (event.target === me._btn) {
+			if (event.target === el._btn) {
 				event.preventDefault();
-				if (me.isVisible(el))
+				let isVisible = el.classList.contains('show');
+				if (isVisible)
 					el.classList.remove('show');
 				else {
 					el.classList.add("show");
@@ -2070,6 +2133,7 @@ Vue.directive('dropdown', {
 		});
 	},
 	unbind(el) {
+		//console.warn('unbind drop down');
 		const popup = require('std:popup');
 		popup.unregisterPopup(el);
 	}
@@ -2093,7 +2157,7 @@ Vue.directive('focus', {
 });
 
 
-/*20170901-7022*/
+/*20170902-7023*/
 /*controllers/base.js*/
 (function () {
 
@@ -2102,6 +2166,7 @@ Vue.directive('focus', {
     const dataservice = require('std:dataservice');
     const route = require('route');
 	const store = component('std:store');
+	const urltools = require('std:url');
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
@@ -2237,23 +2302,22 @@ Vue.directive('focus', {
                     this.$confirm(confirm).then(() => item.$remove());
             },
 
-            $navigate(url, data) {
-                // TODO: make correct URL
-				let urlToNavigate = '/' + url + '/' + data;
+			$navigate(url, data) {
+				let urlToNavigate = urltools.combine(url, data);
 				this.$store.commit('navigate', { url: urlToNavigate }); 
-                //route.navigate(urlToNavigate);
 			},
 
-			$open(data) {
+			$openSelected(url, arr) {
 				// TODO: переделать
-				let sel = data.arg.$selected;
+				let sel = arr.$selected;
 				if (!sel)
 					return;
-				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
-				this.$store.commit('navigate', { url: url }); 
-				//alert(sel.$id);
-				// TODO: $id from metadata!!!
-				// alert(url + sel.Id);
+				// TODO: $id property
+				this.$navigate(url, sel.Id);
+			},
+
+			$hasSelected(arr) {
+				return !!arr.$selected;
 			},
 
             $confirm(prms) {
@@ -2379,7 +2443,16 @@ Vue.directive('focus', {
                     }
                 });
                 return false;
-            },
+			},
+
+			$format(value, format) {
+				if (!format)
+					return value;
+				if (format.indexOf('{0}') !== -1)
+					return format.replace('{0}', value);
+				// TODO: format dates, numbers, etc
+				return value;
+			},
             __beginRequest() {
                 this.$data.__requestsCount__ += 1;
             },
@@ -2407,19 +2480,21 @@ Vue.directive('focus', {
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
+
+			this.$on('localQueryChange', this.__queryChange);
         },
         destroyed() {
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
+			this.$off('localQueryChange', this.__queryChange);
         }
     });
     
     app.components['baseController'] = base;
-
 })();
-/*20170901-7022*/
+/*20170902-7023*/
 /* controllers/shell.js */
 
 (function () {
@@ -2428,6 +2503,7 @@ Vue.directive('focus', {
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
 	const popup = require('std:popup');
+	const urlTools = require('std:url');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -2447,21 +2523,9 @@ Vue.directive('focus', {
 		return null;
 	}
 
-	function combineUrl(u1, u2)
-	{
-		u2 = u2 || '';
-		let rv = u1 || '/';
-		if (rv.endsWith('/'))
-			rv += u2;
-		else
-			rv += '/' + u2;
-		return rv;
-	}
-
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
-		if (!url.startsWith('/'))
-			url = '/' + url;
+		url = urlTools.combine(url);
 		let sUrl = url.split('/');
 		if (sUrl.length === 5 || sUrl.length === 4)
 			return url; // full qualified
@@ -2474,14 +2538,16 @@ Vue.directive('focus', {
 			am = findMenu(menu, (mi) => mi.url && !mi.menu);
 			if (am) {
 				opts.title = am.title;
-				return combineUrl(url, am.url);
+				return urlTools.combine(url, am.url);
 			}
 		} else if (am && !am.menu) {
 			opts.title = am.title;
 			return url; // no sub menu
 		}
-		url = combineUrl('/', seg1);
+		url = urlTools.combine(seg1);
 		let seg2 = sUrl[2];
+		if (!seg2 && opts.seg2)
+			seg2 = opts.seg2; // may be
 		if (!seg2) {
 			// find first active menu in am.menu
 			am = findMenu(am.menu, (mi) => mi.url && !mi.menu);
@@ -2491,7 +2557,7 @@ Vue.directive('focus', {
 		}
 		if (am) {
 			opts.title = am.title;
-			return combineUrl(url, am.url);
+			return urlTools.combine(url, am.url);
 		}
 		return url; // TODO: ????
 	}
@@ -2515,10 +2581,13 @@ Vue.directive('focus', {
 			isActive(item) {
 				return this.seg0 === item.url;
 			},
-			itemHref: (item) => '/', // TODO: findHref
+			itemHref: (item) => '/' + item.url,
 			navigate(item) {
-				let opts = { title: null };
-				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, item.url, opts), title:  opts.title});
+				let storageKey = "menu:" + item.url;
+				let savedUrl = localStorage.getItem("menu:" + item.url);
+				let opts = { title: null, seg2: savedUrl };
+				let url = makeMenuUrl(this.menu, item.url, opts);
+				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
 	};
@@ -2580,14 +2649,21 @@ Vue.directive('focus', {
 			navigate(item) {
 				let top = this.topMenu;
 				if (top) {
-					let url = '/' + top.url + '/' + item.url;
+					let url = urlTools.combine(top.url, item.url);
+					if (item.url.indexOf('/') === -1) {
+						// save only simple path
+						localStorage.setItem('menu:' + top.url, item.url);
+					}
 					this.$store.commit('navigate', { url: url, title: item.title });
 				}
 				else
 					console.error('no top menu found');
 			},
 			itemHref(item) {
-				// TODO:
+				let top = this.topMenu;
+				if (top) {
+					return urlTools.combine(top.url, item.url);
+				}
 				return undefined;
 			},
             toggle() {
@@ -2616,10 +2692,12 @@ Vue.directive('focus', {
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
 					url += '/index/0';
-				return '/_page' + url + store.getters.search;
+				return urlTools.combine('/_page', url) + store.getters.search;
 			},
 			cssClass() {
 				let route = this.$store.getters.route;
+				if (route.seg0 === 'app')
+					return 'full-view';
 				return route.len === 3 ? 'partial-page' :
 					route.len === 2 ? 'full-page' : 'full-view';
 			}
@@ -2716,7 +2794,7 @@ Vue.directive('focus', {
 					id = prms.data.Id;
 					// TODO: get correct ID
 				}
-				let url = '/_dialog/' + modal + '/' + id;
+				let url = urlTools.combine('/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
 				dlg.promise = new Promise(function (resolve, reject) {

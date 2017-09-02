@@ -16,8 +16,8 @@ namespace A2v10.Xaml
             var cmd = GetBindingCommand(nameof(Command));
             if (cmd == null)
                 return;
-            tag.MergeAttribute("@click.prevent", cmd.GetCommand());
             cmd.MergeCommandAttributes(tag);
+            tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
         }
     }
 }

@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
+    // marker for binding
     public class Command
     {
-        public String GetCommand()
-        {
-            return String.Empty;
-        }
     }
 }

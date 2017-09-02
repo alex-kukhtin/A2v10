@@ -7,6 +7,13 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    public enum RunMode
+    {
+        Client,
+        Server,
+        ServerUrl
+    }
+
     [ContentProperty("Children")]
     public class CollectionView : Container
     {
@@ -14,10 +21,12 @@ namespace A2v10.Xaml
 
         public Int32? PageSize { get; set; }
 
-        //public RunMode RunAt { get; set; }
+        public RunMode RunAt { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            if (context.IsDialog && RunAt == RunMode.ServerUrl)
+                throw new XamlException("RunAt='ServerUrl' is not allowed in dialogs");
             var tag = new TagBuilder("collection-view");
             if (onRender != null)
                 onRender(tag);
@@ -25,7 +34,7 @@ namespace A2v10.Xaml
             if (itemsSource != null)
                 tag.MergeAttribute(":items-source", itemsSource.Path);
 
-            tag.MergeAttribute("run-at", "server"); // TODO: run-at???
+            tag.MergeAttribute("run-at", RunAt.ToString().ToLowerInvariant());
 
             if (PageSize != null)
                 tag.MergeAttribute(":page-size", PageSize.Value.ToString());

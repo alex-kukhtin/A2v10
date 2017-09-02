@@ -18,11 +18,17 @@ namespace A2v10.Xaml
 
             String fileName = String.Empty;
             // XamlServices.Load sets IUriContext
-            UIElementBase uiElem = XamlServices.Load(info.FileName) as UIElementBase;
+            UIElementBase uiElem = null;
+            if (!String.IsNullOrEmpty(info.FileName))
+                uiElem = XamlServices.Load(info.FileName) as UIElementBase;
+            else if (!String.IsNullOrEmpty(info.Text))
+                uiElem = XamlServices.Parse(info.Text) as UIElementBase;
+            else
+                throw new XamlException("Xaml. There must be either a 'FileName' or a 'Text' property");
             if (uiElem == null)
-                throw new XamlException("Xaml. Root is not UIElement");
+                throw new XamlException("Xaml. Root is not 'UIElement'");
 
-            RenderContext ctx = new RenderContext(info.Writer);
+            RenderContext ctx = new RenderContext(info.Writer, uiElem);
             ctx.RootId = info.RootId; 
             uiElem.RenderElement(ctx);
         }

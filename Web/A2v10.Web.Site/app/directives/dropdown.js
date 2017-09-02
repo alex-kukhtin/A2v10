@@ -1,17 +1,15 @@
-﻿/*20170829-7022*/
+﻿/*20170902-7023*/
 /* directives/dropdown.js */
 
 Vue.directive('dropdown', {
 	bind(el, binding, vnode) {
 
+		//console.warn('bind drop down');
+
 		const popup = require('std:popup');
 		let me = this;
 
-		me.isVisible = function (el) {
-			return el.classList.contains('show');
-		};
-
-		me._btn = el.querySelector('[toggle]');
+		el._btn = el.querySelector('[toggle]');
 		el.setAttribute('dropdown-top', '');
 
 		popup.registerPopup(el);
@@ -21,9 +19,10 @@ Vue.directive('dropdown', {
 		};
 
 		el.addEventListener('click', function (event) {
-			if (event.target === me._btn) {
+			if (event.target === el._btn) {
 				event.preventDefault();
-				if (me.isVisible(el))
+				let isVisible = el.classList.contains('show');
+				if (isVisible)
 					el.classList.remove('show');
 				else {
 					el.classList.add("show");
@@ -32,6 +31,7 @@ Vue.directive('dropdown', {
 		});
 	},
 	unbind(el) {
+		//console.warn('unbind drop down');
 		const popup = require('std:popup');
 		popup.unregisterPopup(el);
 	}

@@ -1,13 +1,20 @@
 ﻿@import "Variables.less";
 
 
-@button-gap: 3px;
+/*
+TODO: 
+    1. shadow into variables
+    2. menu-item: css
+
+*/
+
+@button-gap: -1px;
 
 .menu {
     padding: 2px;
     top: 100%;
     min-width: 200px; //TODO:
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
     border: 1px solid @dropdown-brd-color;
 
     .dropdown-item {
@@ -38,7 +45,28 @@
         width: auto;
         height: auto;
         left: 0;
-        top: 0;
+        right: auto;
+        top: 100%;
+        bottom: auto;
+    }
+
+    .dropdown-menu.down-right {
+        right: 0;
+        left: auto;
+    }
+
+    .dropdown-menu.up-left {
+        bottom: 100%;
+        top: auto;
+        box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-menu.up-right {
+        bottom: 100%;
+        top: auto;
+        right: 0;
+        left: auto;
+        box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
     }
 
     &.show {
@@ -46,32 +74,42 @@
             display: block;
         }
     }
-
-    .menu {
-        top: 100%;
-    }
 }
 
 .toolbar > .dropdown {
     display: inline-block;
-    overflow:visible;
+    overflow: visible;
 
     .menu {
-        margin-top:@button-gap;
+        margin-top: @button-gap;
+        margin-bottom: @button-gap;
     }
 
-    /*
     &.show:after {
         content: '';
-        height: 7px;
-        background-color: red;
-        border: 1px solid gray;
-        border-bottom-color:white;
+        height: 3px;
+        background-color: @dropdown-bg-color;
         position: absolute;
-        top: ~"calc(100% - 4px)";
-        left: 0px;
-        right: 0;
-        z-index: 4000;
+        z-index: @popup-index + 1;
+        left: 1px;
+        right: 1px;
     }
-    */
+
+    &.dir-down.show:after {
+        bottom: 0;
+    }
+
+    &.dir-up.show:after {
+        top: 0;
+    }
+}
+
+.dropdown {
+    .btn-caret {
+        border-left: 1px solid darken(@toolbar-bg-color, 15%);
+
+        .caret {
+            margin-left: 0;
+        }
+    }
 }

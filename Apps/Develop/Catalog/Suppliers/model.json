@@ -23,6 +23,11 @@
 			"dialog": "browse.dialog",
 			"template": "index.template",
 			"index": true
+		},
+		"browse2": {
+			"dialog": "browse2.dialog",
+			"template": "index.template",
+			"index": true
 		}
 	}
 }

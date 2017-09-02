@@ -4,6 +4,7 @@
 		"inputFiles": [
 			"app/app.js",
 			"app/platform/polyfills.js",
+			"app/services/url.js",
 			"app/platform/webvue.js",
 			"app/platform/route.js",
 			"app/platform/routex.js",

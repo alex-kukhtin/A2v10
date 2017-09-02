@@ -16,6 +16,15 @@ namespace A2v10.Xaml
         Both
     }
 
+    public enum DataType
+    {
+        String, 
+        Date,
+        DateTime,
+        Number,
+        Currency
+    }
+
     public enum Icon
     {
         NoIcon = 0,

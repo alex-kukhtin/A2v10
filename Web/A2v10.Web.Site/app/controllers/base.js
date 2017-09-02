@@ -1,4 +1,4 @@
-﻿/*20170901-7022*/
+﻿/*20170902-7023*/
 /*controllers/base.js*/
 (function () {
 
@@ -7,6 +7,7 @@
     const dataservice = require('std:dataservice');
     const route = require('route');
 	const store = component('std:store');
+	const urltools = require('std:url');
 
     const base = Vue.extend({
         // inDialog: bool (in derived class)
@@ -142,23 +143,22 @@
                     this.$confirm(confirm).then(() => item.$remove());
             },
 
-            $navigate(url, data) {
-                // TODO: make correct URL
-				let urlToNavigate = '/' + url + '/' + data;
+			$navigate(url, data) {
+				let urlToNavigate = urltools.combine(url, data);
 				this.$store.commit('navigate', { url: urlToNavigate }); 
-                //route.navigate(urlToNavigate);
 			},
 
-			$open(data) {
+			$openSelected(url, arr) {
 				// TODO: переделать
-				let sel = data.arg.$selected;
+				let sel = arr.$selected;
 				if (!sel)
 					return;
-				let url = this.$store.getters.url + '/' + data.action.toLowerCase() + '/' + sel.Id;
-				this.$store.commit('navigate', { url: url }); 
-				//alert(sel.$id);
-				// TODO: $id from metadata!!!
-				// alert(url + sel.Id);
+				// TODO: $id property
+				this.$navigate(url, sel.Id);
+			},
+
+			$hasSelected(arr) {
+				return !!arr.$selected;
 			},
 
             $confirm(prms) {
@@ -284,7 +284,16 @@
                     }
                 });
                 return false;
-            },
+			},
+
+			$format(value, format) {
+				if (!format)
+					return value;
+				if (format.indexOf('{0}') !== -1)
+					return format.replace('{0}', value);
+				// TODO: format dates, numbers, etc
+				return value;
+			},
             __beginRequest() {
                 this.$data.__requestsCount__ += 1;
             },
@@ -312,15 +321,17 @@
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
+
+			this.$on('localQueryChange', this.__queryChange);
         },
         destroyed() {
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
+			this.$off('localQueryChange', this.__queryChange);
         }
     });
     
     app.components['baseController'] = base;
-
 })();

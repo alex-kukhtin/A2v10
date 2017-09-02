@@ -1,6 +1,6 @@
 ﻿
 <div id="$(RootId)" test="true">
-    <div class="modal-header"><span>Выбор корреспондента</span><button @click.stop.prevent="$modalClose(false)">x</button></div>
+    <div class="modal-header"><span>Выбор корреспондента</span><button class="btnclose" @click.prevent="$modalClose(false)">&#x2715;</button></div>
     <div class="load-indicator" v-show="$isLoading"></div>
     <div class="modal-content" style="min-height:200px" >
         <div class="toolbar" style="padding:6px;display:flex;width:100%">

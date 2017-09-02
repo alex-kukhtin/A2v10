@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 	{
 
 		public String Path { get; set; }
+        public String Format { get; set; }
+        public DataType DataType { get; set; }
 
 		public Bind()
 		{
@@ -27,6 +29,17 @@ namespace A2v10.Xaml
             if (Path == null)
                 return null;
             return context.GetNormalizedPath(Path);
+        }
+
+        // for text bindings only
+        internal String GetPathFormat(RenderContext context)
+        {
+            if (Path == null)
+                return null;
+            String realPath = context.GetNormalizedPath(Path);
+            if (String.IsNullOrEmpty(Format))
+                return realPath;
+            return $"$format({realPath}, '{Format.Replace("'", "\\'")}')";
         }
 	}
 }

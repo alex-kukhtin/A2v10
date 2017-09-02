@@ -21,7 +21,7 @@ namespace A2v10.Xaml
     {
         public CommandType Command { get; set; }
         public String Argument { get; set; }
-        public String Action { get; set; }
+        public String Url { get; set; }
 
         public BindCmd()
         {
@@ -35,7 +35,7 @@ namespace A2v10.Xaml
             Command = cmdType;
         }
 
-        public String GetCommand()
+        internal String GetCommand(RenderContext context)
         {
             switch (Command)
             {
@@ -49,15 +49,28 @@ namespace A2v10.Xaml
                 case CommandType.Save:
                     return "$save()";
                 case CommandType.Close:
-                    return "$close()";
+                    return context.IsDialog ? "$modalClose()" : "$close()";
                 case CommandType.SaveAndClose:
+                    if (context.IsDialog)
+                    {
+                        var argsc = GetBinding(nameof(Argument));
+                        if (argsc == null)
+                            throw new NotImplementedException($"Argument required for dialog SaveAndClose command");
+                        return $"$modalSaveAndClose({argsc.Path})";
+                    }
                     return "$saveAndClose()";
                 case CommandType.OpenSelected:
-                    if (String.IsNullOrEmpty(Action))
-                        throw new NotImplementedException($"Action required for OpenSelected command");
-                    if (String.IsNullOrEmpty(Argument))
-                        throw new NotImplementedException($"Argument required for OpenSelected command");
-                    return $"$open({{mode:'selected', action:'{Action}', arg:{Argument} }})";
+                    if (String.IsNullOrEmpty(Url))
+                        throw new NotImplementedException($"Url required for OpenSelected command");
+                    var arg = GetBinding(nameof(Argument));
+                    if (arg != null)
+                    {
+                        // TODO: check URL format
+                        if (!Url.StartsWith("/"))
+                            throw new NotImplementedException("Url must start with '/'");
+                        return $"$openSelected('{Url}', {arg.Path})";
+                    }
+                    throw new XamlException($"Argument bind required for OpenSelected command");
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }
@@ -71,6 +84,12 @@ namespace A2v10.Xaml
                 case CommandType.SaveAndClose:
                     tag.MergeAttribute(":disabled", "$isPristine");
                     break;
+                case CommandType.OpenSelected:
+                    var arg = GetBinding(nameof(Argument));
+                    if (arg != null)
+                        tag.MergeAttribute(":disabled", $"!$hasSelected({arg.Path})");
+                    break;
+                    //tag.MergeAttribute(":disabled:")
             }
         }
     }

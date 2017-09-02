@@ -4,7 +4,7 @@
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
-			<Button Icon="File" Command="{BindCmd OpenSelected, Action=Edit, Argument=Documents}">Открыть</Button>
+			<Button Icon="File" Command="{BindCmd OpenSelected, Url='/document/request/edit', Argument={Bind Documents}}">Открыть</Button>
 			<Button Icon="Delete">Удалить</Button>
 			<!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action
@@ -19,9 +19,9 @@
 			<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
 		</Toolbar>
 	</Page.Toolbar>
-	<CollectionView ItemsSource="{Bind Documents}">
+	<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
 		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-				  Striped="True" Sort="False" GridLines="Vertical">
+				  Striped="True" Sort="True" GridLines="Vertical">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>

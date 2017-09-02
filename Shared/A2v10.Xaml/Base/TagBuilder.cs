@@ -36,7 +36,7 @@ namespace A2v10.Xaml
 		void CheckRendered()
 		{
 			if (_bRender)
-				throw new InvalidOperationException($"The element {TagName} is already rendered!");
+				throw new InvalidOperationException($"The element <{TagName}> is already rendered!");
 		}
 
 		HashSet<String> _cssClasses = null;

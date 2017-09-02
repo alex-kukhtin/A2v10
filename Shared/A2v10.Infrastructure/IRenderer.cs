@@ -7,6 +7,7 @@ namespace A2v10.Infrastructure
     {
         public String RootId;
         public String FileName;
+        public String Text;
         public TextWriter Writer;
     }
 

@@ -1,4 +1,4 @@
-﻿/*20170901-7022*/
+﻿/*20170902-7023*/
 /* controllers/shell.js */
 
 (function () {
@@ -7,6 +7,7 @@
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
 	const popup = require('std:popup');
+	const urlTools = require('std:url');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -26,21 +27,9 @@
 		return null;
 	}
 
-	function combineUrl(u1, u2)
-	{
-		u2 = u2 || '';
-		let rv = u1 || '/';
-		if (rv.endsWith('/'))
-			rv += u2;
-		else
-			rv += '/' + u2;
-		return rv;
-	}
-
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
-		if (!url.startsWith('/'))
-			url = '/' + url;
+		url = urlTools.combine(url);
 		let sUrl = url.split('/');
 		if (sUrl.length === 5 || sUrl.length === 4)
 			return url; // full qualified
@@ -53,14 +42,16 @@
 			am = findMenu(menu, (mi) => mi.url && !mi.menu);
 			if (am) {
 				opts.title = am.title;
-				return combineUrl(url, am.url);
+				return urlTools.combine(url, am.url);
 			}
 		} else if (am && !am.menu) {
 			opts.title = am.title;
 			return url; // no sub menu
 		}
-		url = combineUrl('/', seg1);
+		url = urlTools.combine(seg1);
 		let seg2 = sUrl[2];
+		if (!seg2 && opts.seg2)
+			seg2 = opts.seg2; // may be
 		if (!seg2) {
 			// find first active menu in am.menu
 			am = findMenu(am.menu, (mi) => mi.url && !mi.menu);
@@ -70,7 +61,7 @@
 		}
 		if (am) {
 			opts.title = am.title;
-			return combineUrl(url, am.url);
+			return urlTools.combine(url, am.url);
 		}
 		return url; // TODO: ????
 	}
@@ -94,10 +85,13 @@
 			isActive(item) {
 				return this.seg0 === item.url;
 			},
-			itemHref: (item) => '/', // TODO: findHref
+			itemHref: (item) => '/' + item.url,
 			navigate(item) {
-				let opts = { title: null };
-				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, item.url, opts), title:  opts.title});
+				let storageKey = "menu:" + item.url;
+				let savedUrl = localStorage.getItem("menu:" + item.url);
+				let opts = { title: null, seg2: savedUrl };
+				let url = makeMenuUrl(this.menu, item.url, opts);
+				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
 	};
@@ -159,14 +153,21 @@
 			navigate(item) {
 				let top = this.topMenu;
 				if (top) {
-					let url = '/' + top.url + '/' + item.url;
+					let url = urlTools.combine(top.url, item.url);
+					if (item.url.indexOf('/') === -1) {
+						// save only simple path
+						localStorage.setItem('menu:' + top.url, item.url);
+					}
 					this.$store.commit('navigate', { url: url, title: item.title });
 				}
 				else
 					console.error('no top menu found');
 			},
 			itemHref(item) {
-				// TODO:
+				let top = this.topMenu;
+				if (top) {
+					return urlTools.combine(top.url, item.url);
+				}
 				return undefined;
 			},
             toggle() {
@@ -195,10 +196,12 @@
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
 					url += '/index/0';
-				return '/_page' + url + store.getters.search;
+				return urlTools.combine('/_page', url) + store.getters.search;
 			},
 			cssClass() {
 				let route = this.$store.getters.route;
+				if (route.seg0 === 'app')
+					return 'full-view';
 				return route.len === 3 ? 'partial-page' :
 					route.len === 2 ? 'full-page' : 'full-view';
 			}
@@ -295,7 +298,7 @@
 					id = prms.data.Id;
 					// TODO: get correct ID
 				}
-				let url = '/_dialog/' + modal + '/' + id;
+				let url = urlTools.combine('/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
 				dlg.promise = new Promise(function (resolve, reject) {
