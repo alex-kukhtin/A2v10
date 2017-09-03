@@ -35,6 +35,7 @@ namespace A2v10.Xaml
         ChevronLeft,
         ChevronRight,
         ChevronUp,
+        Clear,
         Close,
         Comment,
         CommentAdd,

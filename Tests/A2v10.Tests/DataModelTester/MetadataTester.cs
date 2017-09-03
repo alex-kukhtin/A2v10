@@ -64,12 +64,13 @@ namespace A2v10.Tests.DataModelTester
             Assert.AreEqual(fp.ItemType, ft);
         }
 
-        public void IsItemRefObject(String key, String propName, String refObject)
+        public void IsItemRefObject(String key, String propName, String refObject, FieldType ft)
         {
             var data = _meta[key] as ElementMetadata;
             Assert.IsTrue(data.ContainsField(propName));
             var fp = data.GetField(propName);
             Assert.AreEqual(fp.RefObject, refObject);
+            Assert.AreEqual(fp.ItemType, ft);
         }
     }
 }

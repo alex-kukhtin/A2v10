@@ -9,9 +9,9 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
-        internal override void AddAttributes(TagBuilder tag, RenderContext context)
+        internal override void MergeAttributes(TagBuilder tag, RenderContext context)
         {
-            base.AddAttributes(tag, context);
+            base.MergeAttributes(tag, context);
             var contBind = GetBinding(nameof(Content));
             if (contBind != null)
                 tag.MergeAttribute("v-text", contBind.GetPath(context));
@@ -19,7 +19,7 @@ namespace A2v10.Xaml
 
         internal void RenderContent(RenderContext context)
         {
-            // Если это привязка, то она добавится через AddAttributes
+            // if it's a binding, it will be added via MergeAttribute
             if (Content == null)
                 return;
             if (Content is UIElement)

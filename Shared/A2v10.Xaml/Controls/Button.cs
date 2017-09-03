@@ -39,7 +39,7 @@ namespace A2v10.Xaml
             var button = new TagBuilder("button", "btn");
             if (hasDropDown && !hasCommand)
                 button.MergeAttribute("toggle", String.Empty);
-            AddAttributes(button, context);
+            MergeAttributes(button, context);
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

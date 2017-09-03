@@ -19,7 +19,7 @@ namespace A2v10.Xaml
             if (Multiline)
                 code.AddCssClass("pre-scrollable");
             code.AddCssClass("a2-code");
-            AddAttributes(code, context);
+            MergeAttributes(code, context);
             code.RenderStart(context);
             RenderContent(context);
             code.RenderEnd(context);

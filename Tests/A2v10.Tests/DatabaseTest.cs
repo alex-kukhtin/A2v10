@@ -211,7 +211,7 @@ namespace A2v10.Tests
         }
 
         [TestMethod]
-        public async Task TextRefObjects()
+        public async Task TestRefObjects()
         {
             IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.RefObjects");
             var md = new MetadataTester(dm);
@@ -221,8 +221,8 @@ namespace A2v10.Tests
             md.IsId("TDocument", "Id");
             md.IsItemType("TDocument", "Agent", FieldType.Object);
             md.IsItemType("TDocument", "Company", FieldType.Object);
-            md.IsItemRefObject("TDocument", "Agent", "TAgent");
-            md.IsItemRefObject("TDocument", "Company", "TAgent");
+            md.IsItemRefObject("TDocument", "Agent", "TAgent", FieldType.Object);
+            md.IsItemRefObject("TDocument", "Company", "TAgent", FieldType.Object);
 
             md.IsId("TAgent", "Id");
             md.IsName("TAgent", null);
@@ -241,6 +241,22 @@ namespace A2v10.Tests
             dt = new DataTester(dm, "Document.Company");
             dt.AreValueEqual(500, "Id");
             dt.AreValueEqual("Company Name", "Name");
+        }
+
+        [TestMethod]
+        public async Task TestEmptyArrayMeta()
+        {
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.EmptyArray");
+            var md = new MetadataTester(dm);
+            md.IsAllKeys("TRoot,TModel,TRow");
+            md.IsItemType("TRoot", "Model", FieldType.Object);
+            md.IsId("TModel", "Key");
+            md.IsName("TModel", "ModelName");
+            md.IsItemRefObject("TModel", "Rows", "TRow", FieldType.Array);
+
+            String script = dm.CreateScript();
+            var pos = script.IndexOf("cmn.defineObject(TRow, {}, true);");
+            Assert.AreNotEqual(-1, pos, "Invalid script for array");
         }
     }
 }

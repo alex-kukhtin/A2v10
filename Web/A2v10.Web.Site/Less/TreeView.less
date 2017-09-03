@@ -12,6 +12,11 @@
         position: relative;
         cursor: pointer;
 
+        a:hover, a:active {
+            text-decoration:none;
+            color:@link-hover-color;
+        }
+
         &.active > .overlay {
             background-color: @active-bg-color;
 

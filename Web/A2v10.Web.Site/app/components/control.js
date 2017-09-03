@@ -1,6 +1,10 @@
 ﻿(function () {
 
-    const control = {
+	const control = {
+		props: {
+			label: String,
+			required: Boolean
+		},
         computed: {
             path() {
                 return this.item._path_ + '.' + this.prop;
@@ -19,6 +23,8 @@
             },
             cssClass() {
 				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
+				if (this.required)
+					cls += ' required';
                 return cls;
             },
             inputClass() {
@@ -26,7 +32,10 @@
                 if (this.align !== 'left')
                     cls += 'text-' + this.align;
                 return cls;
-            }
+			},
+			hasLabel() {
+				return !!this.label;
+			}
         },
         methods: {
             test() {

@@ -15,6 +15,8 @@ namespace A2v10.Xaml
 
         public Boolean Editable { get; set; }
 
+        public Command Command { get; set; }
+
         internal void RenderColumn(RenderContext context, Int32 colIndex)
         {
             var column = new TagBuilder("data-grid-column");

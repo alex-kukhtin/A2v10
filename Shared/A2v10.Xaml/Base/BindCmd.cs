@@ -14,7 +14,10 @@ namespace A2v10.Xaml
         Refresh,
         Requery,
         Save,
-        OpenSelected
+        OpenSelected,
+        Append,
+        Browse,
+        Exec
     }
 
     public class BindCmd : BindBase
@@ -44,35 +47,64 @@ namespace A2v10.Xaml
                 case CommandType.Refresh:
                 case CommandType.Reload:
                     return "$reload()";
+
                 case CommandType.Requery:
                     return "$requery()";
+
                 case CommandType.Save:
                     return "$save()";
+
                 case CommandType.Close:
                     return context.IsDialog ? "$modalClose()" : "$close()";
+
                 case CommandType.SaveAndClose:
                     if (context.IsDialog)
                     {
                         var argsc = GetBinding(nameof(Argument));
                         if (argsc == null)
-                            throw new NotImplementedException($"Argument required for dialog SaveAndClose command");
+                            throw new NotImplementedException($"Argument bind required for dialog SaveAndClose command");
                         return $"$modalSaveAndClose({argsc.Path})";
                     }
                     return "$saveAndClose()";
+
                 case CommandType.OpenSelected:
-                    if (String.IsNullOrEmpty(Url))
-                        throw new NotImplementedException($"Url required for OpenSelected command");
-                    var arg = GetBinding(nameof(Argument));
-                    if (arg != null)
-                    {
-                        // TODO: check URL format
-                        if (!Url.StartsWith("/"))
-                            throw new NotImplementedException("Url must start with '/'");
-                        return $"$openSelected('{Url}', {arg.Path})";
-                    }
-                    throw new XamlException($"Argument bind required for OpenSelected command");
+                    return $"$openSelected('{CommandUrl}', {ArgumentBinding.GetPath(context)})";
+
+                case CommandType.Append:
+                    return $"{ArgumentBinding.GetPath(context)}.$append()";
+
+                case CommandType.Browse:
+                    return $"$dialog('browse', '{CommandUrl}', {ArgumentBinding.GetPath(context)})";
+
+                case CommandType.Exec:
+                    return $"$exec('add100rows', Document)";
+
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
+            }
+        }
+
+        Bind ArgumentBinding
+        {
+            get
+            {
+                var arg = GetBinding(nameof(Argument));
+                if (arg != null)
+                    return arg;
+                throw new XamlException($"Argument bind required for {Command} command");
+            }
+        }
+
+        String CommandUrl
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(Url))
+                    throw new NotImplementedException($"Url required for {Command} command");
+                // TODO: check URL format
+                if (!Url.StartsWith("/"))
+                    throw new NotImplementedException("Url must start with '/'");
+                return Url;
             }
         }
 

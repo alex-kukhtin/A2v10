@@ -10,9 +10,9 @@ namespace A2v10.Xaml
 	{
         public Command Command { get; set; }
 
-        internal override void AddAttributes(TagBuilder tag, RenderContext context)
+        internal override void MergeAttributes(TagBuilder tag, RenderContext context)
         {
-            base.AddAttributes(tag, context);
+            base.MergeAttributes(tag, context);
             var cmd = GetBindingCommand(nameof(Command));
             if (cmd == null)
                 return;

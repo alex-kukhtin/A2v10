@@ -51,12 +51,13 @@ TODO:
         <div class="tab-content">
             <div class="tab-item" v-if="isActiveTab(item)" v-for="(item, tabIndex) in items" :key="tabIndex">
                 <slot name="items" :item="item" :index="tabIndex" />
-                <span>{{item}}</span>
             </div>
         </div>
     </template>
 </div>
 `;
+
+	//<span>{{ item }}</span>
 
     const tabItemTemplate = `
 <div class="tab-item" v-if="isActive">

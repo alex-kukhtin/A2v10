@@ -6,6 +6,8 @@ namespace A2v10.Xaml
     public abstract class UIElementBase : XamlElement
     {
 
+        internal Boolean IsInGrid { get; set; }
+
         internal virtual Boolean SkipRender(RenderContext context)
         {
             return false;

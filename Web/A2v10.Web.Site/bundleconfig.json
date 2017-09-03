@@ -23,6 +23,7 @@
 			"app/components/pager.js",
 			"app/components/treeview.js",
 			"app/components/collectionview.js",
+			"app/components/tab.js",
 			"app/components/modal.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",

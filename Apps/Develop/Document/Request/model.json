@@ -23,7 +23,7 @@
 			"dialog": "edit.dialog",
 			"template": "element.template"
 		},
-		"browse": {
+		"browseAgent": {
 			"dialog": "browse.dialog",
 			"template": "index.template",
 			"index": true

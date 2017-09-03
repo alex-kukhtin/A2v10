@@ -10,11 +10,14 @@ namespace A2v10.Xaml
     {
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var input = new TagBuilder("textbox");
+            var input = new TagBuilder("textbox", null, IsInGrid);
             if (onRender != null)
                 onRender(input);
+            MergeAttributes(input, context);
             MergeValue(input, context);
-            input.Render(context);
+            input.RenderStart(context);
+            RenderAddOns(context);
+            input.RenderEnd(context);
         }
     }
 }

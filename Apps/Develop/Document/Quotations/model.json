@@ -1,13 +1,17 @@
-﻿/*document/request*/
+﻿/*Document/quotations*/
 {
 	"source": "frontis",
-	"schema": "a2insurance",
-	"model": "Quotation",
+	"schema": "a2git",
+	"model": "Quotation.Casco",
 	"actions": {
 		"index": {
 			"index": true,
 			"view": "Index.view",
 			"template": "index.template"
+		},
+		"edit": {
+			"view": "edit.view",
+			"template": "element.template"
 		}
 	}
 }

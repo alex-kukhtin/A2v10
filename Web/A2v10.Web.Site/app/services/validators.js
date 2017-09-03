@@ -41,7 +41,7 @@ app.modules['std:validators'] = function() {
     }
 
     function validateItem(rules, item, val) {
-        // console.warn(item);
+        //console.warn(item);
         let arr = [];
         if (utils.isArray(rules))
             arr = rules;

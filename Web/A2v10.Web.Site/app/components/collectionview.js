@@ -70,7 +70,7 @@ Vue.component('collection-view', {
 		pagedSource() {
 			if (this.isServer)
 				return this.ItemsSource;
-			console.warn('get paged source');
+			let s = performance.now();
 			let arr = [].concat(this.ItemsSource);
 			// filter (TODO: // правильная фильтрация)
 			if (this.filter && this.filter.Text)
@@ -90,7 +90,9 @@ Vue.component('collection-view', {
 			// HACK!
 			this.filteredCount = arr.length;
 			// pager
-			return arr.slice(this.Offset, this.Offset + this.pageSize);
+			arr = arr.slice(this.Offset, this.Offset + this.pageSize);
+			console.warn('get paged source:' + (performance.now() - s).toFixed(2) + ' ms');
+			return arr;
 		},
 		sourceCount() {
 			if (this.isServer)

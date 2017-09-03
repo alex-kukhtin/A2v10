@@ -10,7 +10,7 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var mi = new TagBuilder("a", "dropdown-item");
-            AddAttributes(mi, context);
+            MergeAttributes(mi, context);
 
             mi.RenderStart(context);
             RenderIcon(context, Icon);

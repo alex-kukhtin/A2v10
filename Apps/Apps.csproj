@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Develop\Common\Agent\model.json" />
     <None Include="Develop\Document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
@@ -65,6 +66,8 @@
     <Content Include="Develop\Catalog\Suppliers\browse.dialog.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view_old.html" />
     <Content Include="Develop\Catalog\Suppliers\index.view.html" />
+    <Content Include="Develop\Common\Agent\index.template.js" />
+    <Content Include="Develop\Document\Quotations\element.template.js" />
     <Content Include="Develop\Document\Quotations\index.template.js" />
     <Content Include="Develop\Document\Quotations\edit.view.html" />
     <Content Include="Develop\Document\Request\element.template.js" />
@@ -104,6 +107,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Suppliers\browse2.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Common\Agent\browse.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

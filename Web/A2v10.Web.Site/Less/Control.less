@@ -27,16 +27,19 @@
     .validator {
         position: absolute;
         display: none;
+        margin:0;
         left: 100%;
+        //right:100%;
         top: 0;
-        padding: 10px;
+        padding: 2px 6px 4px 6px;
         background-color: @danger-bg-color;
         color: @danger-txt-color;
         border: 1px solid @danger-brd-color;
         margin-left: 10px;
-        width: auto;
+        text-align:left;
         box-shadow: 1px 4px 10px @danger-shadow-color;
         z-index:@validator-index;
+        line-height:1.3em;
 
         .error {
             display: list-item;

@@ -1,4 +1,4 @@
-﻿/*20170826-7020*/
+﻿/*20170903-7024*/
 /* services/datamodel.js */
 (function() {
 
@@ -15,7 +15,8 @@
 
     const platform = require('platform');
     const validators = require('std:validators');
-    const utils = require('utils');
+	const utils = require('utils');
+	const log = require('std:log');
 
     function defHidden(obj, prop, value, writable) {
         Object.defineProperty(obj, prop, {
@@ -109,6 +110,10 @@
     }
 
     function createObject(elem, source, path, parent) {
+		let ctorname = elem.constructor.name;
+		let startTime = null;
+		if (ctorname === 'TRoot')
+			startTime = performance.now();
         parent = parent || elem;
         defHidden(elem, SRC, {});
         defHidden(elem, PATH, path);
@@ -129,7 +134,6 @@
             return !this.$valid;
         });
 
-        let ctorname = elem.constructor.name;
         let constructEvent = ctorname + '.construct';
         elem._root_.$emit(constructEvent, elem);
         if (elem._root_ === elem) {
@@ -144,8 +148,13 @@
                     let rcv = source[rcp];
                     elem[m].$RowCount = rcv;
                 }
-            }
-        }
+			}
+			elem._enableValidate_ = true;
+			elem._needValidate_ = true;
+
+		}
+		if (startTime)
+			log.time('create root time:', startTime);
         return elem;
     }
 
@@ -255,31 +264,41 @@
         };
     }
 
-    function emit(event, ...arr) {
-        this._needValidate_ = true;
-        console.info('emit: ' + event);
+	function emit(event, ...arr) {
+		if (this._enableValidate_) {
+			if (!this._needValidate_) {
+				this._needValidate_ = true;
+			}
+		}
+        log.info('emit: ' + event);
         let templ = this.$template;
         if (!templ) return;
         let events = templ.events;
         if (!events) return;
         if (event in events) {
             // fire event
-            console.info('handle: ' + event);
+            log.info('handle: ' + event);
             let func = events[event];
             func(...arr);
         }
     }
 
-    function executeCommand(cmd, ...args) {
-        let tml = this.$template;
-        if (tml && tml.commands) {
-            let cmdf = tml.commands[cmd];
-            if (typeof cmdf === 'function') {
-                cmdf.apply(this, args);
-                return;
-            }
-        }
-        console.error(`command "${cmd}" not found`);
+	function executeCommand(cmd, ...args) {
+		try {
+			this._root_._enableValidate_ = false;
+			let tml = this.$template;
+			if (tml && tml.commands) {
+				let cmdf = tml.commands[cmd];
+				if (typeof cmdf === 'function') {
+					cmdf.apply(this, args);
+					return;
+				}
+			}
+			console.error(`command "${cmd}" not found`);
+		} finally {
+			this._root_._enableValidate_ = true;
+			this._root_._needValidate_ = true;
+		}
     }
 
     function validateImpl(item, path, val) {
@@ -328,17 +347,16 @@
             yield { item: root, val: root[name] };
             return;
         }
-        let sp = path.split('.');
+		let sp = path.split('.');
         let currentData = root;
         for (let i = 0; i < sp.length; i++) {
             let last = i === sp.length - 1;
-            let prop = sp[i];
+			let prop = sp[i];
             if (prop.endsWith('[]')) {
                 // is array
-                let pname = prop.substring(0, prop.length - 2);
-                let objto = root[pname];
-                if (!objto)
-                    continue;
+				let pname = prop.substring(0, prop.length - 2);
+				let objto = currentData[pname];
+                if (!objto) continue;
                 for (let j = 0; j < objto.length; j++) {
                     let arrItem = objto[j];
                     if (last)
@@ -351,9 +369,8 @@
             } else {
                 // simple element
                 let objto = root[prop];
-                if (objto) {
-                    yield { item: root[prop], val: objto[name] };
-                }
+				if (objto) yield { item: root[prop], val: objto[name] };
+				currentData = objto;
             }
         }
     }
@@ -366,16 +383,14 @@
         if (ld !== -1) {
             dp = path.substring(0, ld);
             dn = path.substring(ld + 1);
-        }
-        for (val of enumData(root, dp, dn))
-            yield val;
+		}
+		yield* enumData(root, dp, dn);
     }
 
     function validateOneElement(root, path, vals) {
         if (!vals)
-            return;
+			return;
         for (let elem of dataForVal(root, path)) {
-            //console.warn(elem);
             let res = validators.validate(vals, elem.item, elem.val);
             saveErrors(elem.item, path, res);
         }
@@ -384,46 +399,54 @@
     function validateAll() {
         var me = this;
         if (!me._needValidate_)
-            return;
-        //console.warn('call validate all');
-        me._needValidate_ = false;
+			return;
+		me._needValidate_ = false;
+		var startTime = performance.now();
         let tml = me.$template;
         if (!tml) return;
         let vals = tml.validators;
         if (!vals) return;
         for (var val in vals) {
             validateOneElement(me, val, vals[val])
-        }
+		}
+		var e = performance.now();
+		log.time('validation time:', startTime);
     }
 
     function setDirty(val) {
         this.$dirty = val;
     }
 
-    function merge(src) {
-        for (var prop in this._meta_) {
-            let ctor = this._meta_[prop];
-            let trg = this[prop];
-            if (Array.isArray(trg)) {
-                platform.set(trg, "$selected", null);
-                trg.$copy(src[prop]);
-                // copy rowCount
-                if ('$RowCount' in trg) {
-                    let rcProp = prop + '.$RowCount';
-                    if (rcProp in src)
-                        trg.$RowCount = src[rcProp];
-                    else
-                        trg.$RowCount = 0;
-                }
-            } else {
-                if (utils.isPrimitiveCtor(ctor))
-                    platform.set(this, prop, src[prop]);
-                else {
-                    let newsrc = new ctor(src[prop], prop, this);
-                    platform.set(this, prop, newsrc);
-                }
-            }
-        }
+	function merge(src) {
+		try {
+			this._root_._enableValidate_ = false;
+			for (var prop in this._meta_) {
+				let ctor = this._meta_[prop];
+				let trg = this[prop];
+				if (Array.isArray(trg)) {
+					platform.set(trg, "$selected", null);
+					trg.$copy(src[prop]);
+					// copy rowCount
+					if ('$RowCount' in trg) {
+						let rcProp = prop + '.$RowCount';
+						if (rcProp in src)
+							trg.$RowCount = src[rcProp];
+						else
+							trg.$RowCount = 0;
+					}
+				} else {
+					if (utils.isPrimitiveCtor(ctor))
+						platform.set(this, prop, src[prop]);
+					else {
+						let newsrc = new ctor(src[prop], prop, this);
+						platform.set(this, prop, newsrc);
+					}
+				}
+			}
+		} finally {
+			this._root_._enableValidate_ = true;
+			this._root_._needValidate_ = true;
+		}
     }
 
     function implementRoot(root, template, ctors) {

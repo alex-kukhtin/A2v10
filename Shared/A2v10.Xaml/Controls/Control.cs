@@ -10,12 +10,38 @@ namespace A2v10.Xaml
 	{
         public Boolean Block { get; set; }
         public String Label { get; set; }
+        public Boolean Required { get; set; }
 
-        internal override void AddAttributes(TagBuilder tag, RenderContext context)
+        Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
+
+        public UIElementCollection AddOns { get { return _addOns.Value;} }
+
+        internal override void MergeAttributes(TagBuilder tag, RenderContext context)
         {
-            base.AddAttributes(tag, context);
+            base.MergeAttributes(tag, context);
             if (Block)
                 tag.AddCssClass("block");
+            AddControlAttributes(tag);
+        }
+
+        private void AddControlAttributes(TagBuilder tag)
+        {
+            SetBindingAttributeString(tag, "label", nameof(Label), Label);
+            MergeBoolAttribute(tag, nameof(Required), Required);
+        }
+
+        internal void RenderAddOns(RenderContext context)
+        {
+            if (!_addOns.IsValueCreated)
+                return;
+            foreach (var ctl in AddOns)
+            {
+                ctl.RenderElement(context, (tag) =>
+                {
+                    tag.AddCssClass("add-on");
+                    tag.MergeAttribute("tabindex", "-1");
+                });
+            }
         }
     }
 }

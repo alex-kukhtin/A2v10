@@ -225,7 +225,7 @@ namespace A2v10.Web.Mvc.Models
                 if (String.IsNullOrEmpty(_action))
                     throw new RequestModelException($"Invalid empty action in url for model {_modelPath}");
                 RequestAction ma;
-                if (actions.TryGetValue(_action, out ma))
+                if (actions.TryGetValue(_action.ToLowerInvariant(), out ma))
                     return ma;
                 throw new RequestModelException($"Action '{_action}' not found in model {_modelPath}");
             }

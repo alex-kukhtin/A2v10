@@ -238,7 +238,9 @@ namespace A2v10.Data
 					if (fieldDef.IsRefId || fieldDef.IsArray)
 					{
 						// create metadata for nested object or array
-						GetOrCreateMetadata(fieldDef.TypeName);
+						var tm = GetOrCreateMetadata(fieldDef.TypeName);
+                        if (fieldDef.IsArray)
+                            tm.IsArrayType = true;
 					}
 				}
 			}

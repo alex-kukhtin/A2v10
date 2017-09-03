@@ -26,14 +26,14 @@ namespace A2v10.Xaml
             var rv = new List<StringKeyValuePair>();
             String row = "1";
             String col = "1";
-            if (_row != null)
+            if (_row != null && _row.Value != 0)
                 row = _row.Value.ToString();
-            if (_rowSpan != null)
+            if (_rowSpan != null && _rowSpan.Value != 0)
                 row += " / span " + _rowSpan.Value.ToString();
             rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = row });
-            if (_col != null)
+            if (_col != null && _col.Value != 0)
                 col = _col.Value.ToString();
-            if (_colSpan != null)
+            if (_colSpan != null && _colSpan.Value != 0)
                 col += " / span " + _colSpan.Value.ToString();
             rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
             return rv;
@@ -166,6 +166,8 @@ namespace A2v10.Xaml
             if (ix == -1)
                 return scope.To + '.' + path;
             // TODO: check recursive!!!
+            //if (String.IsNullOrEmpty(scope.From))
+                //return scope.To + '.' + path; // ????
             return path.Replace(scope.From, scope.To);
         }
 	}

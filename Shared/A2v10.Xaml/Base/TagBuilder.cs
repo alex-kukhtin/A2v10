@@ -20,10 +20,12 @@ namespace A2v10.Xaml
 		public String InnerText { get; set; }
 
 		Boolean _bRender = false;
+        Boolean _inGrid = false;
 
-		public TagBuilder(String tagName = "div", String classes = null)
+		public TagBuilder(String tagName = "div", String classes = null, Boolean inGrid = false)
 		{
 			TagName = tagName;
+            _inGrid = inGrid;
 			if (!String.IsNullOrEmpty(classes))
 				AddCssClass(classes);
 		}
@@ -247,7 +249,7 @@ namespace A2v10.Xaml
 		String CreateStartTag(RenderContext context, bool bSelfClosing)
 		{
 			var sb = new StringBuilder(255);
-            this.MergeStyles(context.GetGridAttributes());
+            this.MergeStyles(_inGrid ? context.GetGridAttributes() : null);
 			sb.Append("<")
 				.Append(TagName)
 				.Append(GetCssClasses())

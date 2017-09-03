@@ -1,10 +1,78 @@
-<!-- Document edit -->
+﻿<!-- Document edit -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<DataGrid ItemsSource="{Bind Document.Rows}" GridLines="Both">
-		<DataGridColumn Header="Id" Content="Id" Align="Right"/>
-		<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
-	</DataGrid>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
+			<Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Width="25%">
+
+		</Taskpad>
+	</Page.Taskpad>
+	<TabPanel>
+		<Tab Header="Котировка">
+			<Grid>
+				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
+				<TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}"/>
+			</Grid>
+			<Table>
+				<TableRow>
+					<TableCell>Страхователь</TableCell>
+					<TextBox Value="{Bind Contract.InsurantName}">
+						<TextBox.AddOns>
+							<Hyperlink Icon="Search" />
+							<Hyperlink Icon="Clear" />
+						</TextBox.AddOns>
+					</TextBox>
+				</TableRow>
+			</Table>
+
+			<TabPanel ItemsSource="{Bind Contract.Lists}">
+				<Tab>
+					<!--
+					<Code Content="{Bind Vehicles}"></Code>
+					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+					-->
+					<Table ItemsSource="{Bind Vehicles}">
+						<Table.Header>
+							<TableRow>
+								<TableCell/>
+								<TableCell>Тариф</TableCell>
+							</TableRow>
+						</Table.Header>
+						<TableRow>
+							<TableCell>Страхова сума</TableCell>
+							<TextBox Value="{Bind Sum}"></TextBox>
+						</TableRow>
+						<TableRow>
+							<TableCell>Марка/модель</TableCell>
+							<Code Content="{Bind MarkModel}"/>
+							<TableCell Content="{Bind MarkModel}"/>
+						</TableRow>
+						<TableRow>
+							<TableCell>Об'єм двигуна см&#xb3;</TableCell>
+							<Code Content="{Bind Volume}"></Code>
+						</TableRow>
+					</Table>
+					<!--
+					</CollectionView>
+					-->
+				</Tab>
+			</TabPanel>
+		</Tab>
+		<Tab Header="Вложения"></Tab>
+		<Tab Header="Фото"></Tab>
+		<Tab Header="Протокол"></Tab>
+		<Tab Header="Отладка">
+			<Code Multiline="True" Content="{Bind Contract}"></Code>
+		</Tab>
+	</TabPanel>
 </Page>
 
     

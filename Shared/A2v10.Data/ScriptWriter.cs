@@ -107,6 +107,8 @@ namespace A2v10.Data
                     sb.Append(fm.DataType);
                 sb.Append(",");
             }
+            if (sb.Length == 0)
+                return sb;
             sb.Remove(sb.Length - 1, 1); // remove tail comma
             return sb;
         }

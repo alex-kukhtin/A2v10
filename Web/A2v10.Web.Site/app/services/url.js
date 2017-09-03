@@ -1,4 +1,4 @@
-﻿/*20170902-7023*/
+﻿/*20170903-7024*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -20,7 +20,7 @@ app.modules['std:url'] = function () {
 	}
 
 	function combine(...args) {
-		return '/' + args.map(normalize).join('/').replace(/\\/g, '/');
+		return '/' + args.map(normalize).filter(x => !!x).join('/');
 	}
 
 	function makeQueryString(obj) {

@@ -60,7 +60,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var grid = new TagBuilder("div", "grid");
+            var grid = new TagBuilder("div", "grid", IsInGrid);
             if (onRender != null)
                 onRender(grid);
             // TODO: row/col definitions
@@ -73,6 +73,7 @@ namespace A2v10.Xaml
         {
             foreach (var ch in Children)
             {
+                ch.IsInGrid = true;
                 using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch)))
                 {
                     ch.RenderElement(context);

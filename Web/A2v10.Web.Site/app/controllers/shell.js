@@ -1,4 +1,4 @@
-﻿/*20170902-7023*/
+﻿/*20170903-7024*/
 /* controllers/shell.js */
 
 (function () {
@@ -271,8 +271,6 @@
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-			// todo: find first URL
-			// pathname, not route
 			let opts = { title: null };
 			let newUrl = makeMenuUrl(this.menu, window.location.pathname, opts);
 			newUrl = newUrl + window.location.search;
@@ -292,11 +290,10 @@
 			});
 
 			eventBus.$on('modal', function (modal, prms) {
-				// TODO: Path.combine
 				let id = '0';
 				if (prms && prms.data && prms.data.Id) {
-					id = prms.data.Id;
 					// TODO: get correct ID
+					id = prms.data.Id;
 				}
 				let url = urlTools.combine('/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);

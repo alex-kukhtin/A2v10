@@ -7,12 +7,16 @@
     <style>
         option {
             color:blue;
-            padding:12px;
-            font-size:12px;
-            margin:12px;
+            font-size:13px;
             background-color:yellow;
         }
-    </style>
+            option.x {
+                display: inline-block;
+                padding: 12px;
+                margin: 12px;
+                line-height: 20px;
+            }
+</style>
 </head>
 <body>
 
@@ -24,7 +28,7 @@
 
             <div style="width:230px" id="test">
                 <div class="control-group">
-                    <label>Simple label (valid)</label>
+                    <label v-text="label">Simple label (valid)</label>
                     <div class="input-group">
                         <input v-focus type="text" class="control" placeholder="valid input">
                         <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
@@ -55,14 +59,16 @@
                 <div class="control-group required">
                     <label>Combo box here</label>
                     <div class="input-group">
+                        <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
                         <select v-focus class="control">
                             <option>Option 1</option>
                             <option>Option 2</option>
                             <option>Option 3</option>
                         </select>
+                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
                     </div>
                 </div>
-                <div class="control-group required">
+                <div class="control-group required bold">
                     <label>Required label 	&#x2731;</label>
                     <div class="input-group">
                         <input v-focus type="text" class="control" placeholder="control without label">
@@ -86,7 +92,10 @@
     <script>
         //alert(document.getElementById('test').closest('body'));
         new Vue({
-            el:"#app"
+            el: "#app",
+            data: {
+                label: "i am the label"
+            }
         });
     </script>
 </body>
