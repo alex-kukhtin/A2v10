@@ -24,8 +24,7 @@
         template: textBoxTemplate,
         props: {
             item: Object,
-            prop: String,
-            align: { type: String, default: 'left' }
+            prop: String
 		}		
     });
 })();

@@ -1,6 +1,7 @@
 ﻿<!-- Document edit -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  Title="{Bind Document.Id, Format='Заявка [{0}]'}">
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
@@ -19,46 +20,50 @@
 			<Button Block="True">Оформить накладную</Button>
 		</Taskpad>
 	</Page.Taskpad>
-	<Grid>
-		<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated}"></Code>
-		<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
-		<ComboBox Label="продавец" Grid.Row="2" Grid.Col="1"></ComboBox>
-		<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
-		<TextBox Label="покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Document.Agent.Name}">
-			<TextBox.AddOns>
-				<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
-				<Hyperlink Icon="Clear" />
-			</TextBox.AddOns>
-		</TextBox>
-	</Grid>
-	<Toolbar>
-		<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
-		<Button Icon="Delete" Content="Удалить выделенную строку" />
-		<Button Icon="Dashboard" Content="Подбор товара" />
-		<Code Content="{Bind Document.Rows.length}"></Code>
-		<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Exec, Argument={Bind Document}}"/>
-	</Toolbar>
-	<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True">
-			<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
-			<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
-			<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
-			<DataGridColumn Header="Price" Content="{Bind Price}" Align="Right"/>
-			<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
-			<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
-			<DataGridColumn>
-				<Button Icon="Delete"></Button>
-			</DataGridColumn>
-		</DataGrid>
-	</CollectionView>
-	<Grid>
-		<Code Content="{Bind Document.Sum}"></Code>
-	</Grid>
+	<TabPanel>
+		<Tab Header="Управленческая">
+			<Grid>
+				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated}"></Code>
+				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
+				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2"></ComboBox>
+				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
+				<TextBox Label="покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Document.Agent.Name}">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
+						<Hyperlink Icon="Clear" />
+					</TextBox.AddOns>
+				</TextBox>
+			</Grid>
+			<Toolbar>
+				<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+				<Button Icon="Delete" Content="Удалить выделенную строку" />
+				<Button Icon="Dashboard" Content="Подбор товара" />
+				<Code Content="{Bind Document.Rows.length}"></Code>
+				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Exec, Argument={Bind Document}}"/>
+			</Toolbar>
+			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
+				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True">
+					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
+					<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
+					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
+					<DataGridColumn Header="Price" Content="{Bind Price}" Align="Right"/>
+					<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
+					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
+					<DataGridColumn>
+						<Button Icon="Delete"></Button>
+					</DataGridColumn>
+				</DataGrid>
+			</CollectionView>
+			<Grid>
+				<Code Content="{Bind Document.Sum}"></Code>
+			</Grid>
 
-	<TextBox Label="Примечание" Value="{Bind Document.Memo}"></TextBox>
-	<!--
-	<Code Multiline="True" Content="{Bind Document.Rows}"></Code>
-	-->
+			<TextBox Label="Примечание" Value="{Bind Document.Memo}"></TextBox>
+		</Tab>
+		<Tab Header="Отладка">
+			<Code Multiline="True" Content="{Bind Document}"></Code>
+		</Tab>
+	</TabPanel>
 </Page>
 
     

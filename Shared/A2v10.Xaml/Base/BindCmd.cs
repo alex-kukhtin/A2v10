@@ -63,7 +63,7 @@ namespace A2v10.Xaml
                         var argsc = GetBinding(nameof(Argument));
                         if (argsc == null)
                             throw new NotImplementedException($"Argument bind required for dialog SaveAndClose command");
-                        return $"$modalSaveAndClose({argsc.Path})";
+                        return $"$modalSaveAndClose({argsc.GetPath(context)})";
                     }
                     return "$saveAndClose()";
 
@@ -108,7 +108,7 @@ namespace A2v10.Xaml
             }
         }
 
-        internal void MergeCommandAttributes(TagBuilder tag)
+        internal void MergeCommandAttributes(TagBuilder tag, RenderContext context)
         {
             switch (Command)
             {
@@ -119,7 +119,7 @@ namespace A2v10.Xaml
                 case CommandType.OpenSelected:
                     var arg = GetBinding(nameof(Argument));
                     if (arg != null)
-                        tag.MergeAttribute(":disabled", $"!$hasSelected({arg.Path})");
+                        tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
                     break;
                     //tag.MergeAttribute(":disabled:")
             }

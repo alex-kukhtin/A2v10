@@ -697,7 +697,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170903-7024*/
+/*20170905-7025*/
 /* services/datamodel.js */
 (function() {
 
@@ -890,6 +890,10 @@ app.modules['std:validators'] = function() {
         newElem.$checked = false;
         return newElem;
     };
+
+	defPropertyGet(_BaseArray.prototype, "Count", function() {
+		return this.length;
+	});
 
     _BaseArray.prototype.$append = function (src) {
         let newElem = this.$new(src);
@@ -1362,7 +1366,8 @@ app.modules['std:popup'] = function () {
 	const control = {
 		props: {
 			label: String,
-			required: Boolean
+			required: Boolean,
+            align: { type: String, default: 'left' }
 		},
         computed: {
             path() {
@@ -1432,8 +1437,7 @@ app.modules['std:popup'] = function () {
         template: textBoxTemplate,
         props: {
             item: Object,
-            prop: String,
-            align: { type: String, default: 'left' }
+            prop: String
 		}		
     });
 })();
@@ -1804,7 +1808,7 @@ app.modules['std:popup'] = function () {
 Vue.component('a2-pager', {
 	template: `
 <div class="pager">
-	<code>pager source: offset={{source.Offset}}, pageSize={{source.pageSize}},
+	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
 		pages={{source.pages}}</code>
 	<a href @click.stop.prevent="source.first">first</a>
 	<a href @click.stop.prevent="source.prev">prev</a>
@@ -1923,7 +1927,7 @@ Vue.component('collection-view', {
 	</slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{Offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
 	</code>
 </div>
 `,
@@ -1953,7 +1957,7 @@ Vue.component('collection-view', {
 	},
 	computed: {
 		isServer() {
-			return this.runAt !== 'client';
+			return this.runAt === 'serverurl' || this.runAt === 'server';
 		},
 		isQueryUrl() {
 			// use window hash
@@ -1964,7 +1968,7 @@ Vue.component('collection-view', {
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
-		Offset() {
+		offset() {
 			if (this.isQueryUrl)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
@@ -1997,7 +2001,7 @@ Vue.component('collection-view', {
 			// HACK!
 			this.filteredCount = arr.length;
 			// pager
-			arr = arr.slice(this.Offset, this.Offset + this.pageSize);
+			arr = arr.slice(this.offset, this.offset + this.pageSize);
 			console.warn('get paged source:' + (performance.now() - s).toFixed(2) + ' ms');
 			return arr;
 		},
@@ -2032,13 +2036,13 @@ Vue.component('collection-view', {
 			this.$setOffset(0);
 		},
 		prev() {
-			let no = this.Offset;
+			let no = this.offset;
 			if (no > 0)
 				no -= this.pageSize;
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.Offset + this.pageSize;
+			let no = this.offset + this.pageSize;
 			this.$setOffset(no);
 		},
 		sortDir(order) {
@@ -2357,7 +2361,7 @@ Vue.directive('focus', {
 });
 
 
-/*20170902-7023*/
+/*20170904-7025*/
 /*controllers/base.js*/
 (function () {
 
@@ -2369,9 +2373,30 @@ Vue.directive('focus', {
 	const urltools = require('std:url');
 	const log = require('std:log');
 
+	const documentTitle = {
+		render() {
+			return null;
+		},
+		props: ['page-title'],
+		watch: {
+			pageTitle(newValue) {
+				if (this.pageTitle)
+					document.title = this.pageTitle;
+			}
+		},
+		created() {
+			if (this.pageTitle)
+				document.title = this.pageTitle;
+		}
+	};
+
 	const base = Vue.extend({
-		// inDialog: bool (in derived class)
+		// inDialog: Boolean (in derived class)
+		// pageTitle: String (in derived class)
 		store: store,
+		components: {
+			'a2-document-title': documentTitle
+		},
 		data() {
 			return {
 				__init__: true,
@@ -2671,8 +2696,10 @@ Vue.directive('focus', {
 		created() {
 			eventBus.$emit('registerData', this);
 
-			if (!this.inDialog)
+			if (!this.inDialog) {
 				this.$data._query_ = route.query;
+				///console.dir(this);
+			}
 			//alert(this.$data._needValidate_);
 			//this.$data._needValidate_ = true;
 			/*
@@ -2695,13 +2722,6 @@ Vue.directive('focus', {
 			eventBus.$off('queryChange', this.__queryChange);
 			this.$off('localQueryChange', this.__queryChange);
 		},
-		mounted() {
-			//alert('mounted');
-			//this.$nextTick(() =>
-				//..this.$data._validateAll_()
-			//);
-			//console.dir(this.$data._validateAll_);
-		},
 		beforeUpdate() {
 			this.__updateStartTime = performance.now();
 		},
@@ -2710,7 +2730,7 @@ Vue.directive('focus', {
 		}
     });
     
-    app.components['baseController'] = base;
+	app.components['baseController'] = base;
 })();
 /*20170903-7024*/
 /* controllers/shell.js */

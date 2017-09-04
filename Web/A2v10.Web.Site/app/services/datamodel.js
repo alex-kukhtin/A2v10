@@ -1,4 +1,4 @@
-﻿/*20170903-7024*/
+﻿/*20170905-7025*/
 /* services/datamodel.js */
 (function() {
 
@@ -191,6 +191,10 @@
         newElem.$checked = false;
         return newElem;
     };
+
+	defPropertyGet(_BaseArray.prototype, "Count", function() {
+		return this.length;
+	});
 
     _BaseArray.prototype.$append = function (src) {
         let newElem = this.$new(src);

@@ -21,7 +21,7 @@ namespace A2v10.Xaml
         {
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
-            MergeBoolAttribute(column, nameof(Editable), Editable);
+            MergeBoolAttribute(column, context, nameof(Editable), Editable);
             Boolean isTemplate = Content is UIElement;
             String tmlId = null;
             if (!isTemplate)
@@ -29,13 +29,13 @@ namespace A2v10.Xaml
                 // always content without SEMICOLON!
                 var bindProp = GetBinding(nameof(Content));
                 if (bindProp != null)
-                    column.MergeAttribute("content", bindProp.GetPath(context));
+                    column.MergeAttribute("content", bindProp.Path /*!without context!*/);
                 else if (Content != null)
                     column.MergeAttribute("content", Content.ToString());
             }
             var alignProp = GetBinding(nameof(Align));
             if (alignProp != null)
-                column.MergeAttribute(":align", alignProp.Path);
+                column.MergeAttribute(":align", alignProp.Path /*!without context!*/);
             else if (Align != TextAlign.Default)
                 column.MergeAttribute("align", Align.ToString().ToLowerInvariant());
 
@@ -51,10 +51,7 @@ namespace A2v10.Xaml
                 templ.MergeAttribute("slot", tmlId);
                 templ.MergeAttribute("scope", "cell");
                 templ.RenderStart(context);
-                using (var cts = new ScopeContext(context, new ScopeElem("Item", "cell.row")))
-                {
-                    (Content as UIElement).RenderElement(context);
-                }
+                (Content as UIElement).RenderElement(context);
                 templ.RenderEnd(context);
             }
         }

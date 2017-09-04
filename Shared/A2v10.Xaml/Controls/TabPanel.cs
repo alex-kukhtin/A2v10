@@ -31,7 +31,7 @@ namespace A2v10.Xaml
                 tml.MergeAttribute("slot", "items");
                 tml.MergeAttribute("scope", "tabitem");
                 tml.RenderStart(context);
-                using (var cts = new ScopeContext(context, new ScopeElem(String.Empty, "tabitem.item")))
+                using (var cts = new ScopeContext(context, "tabitem.item"))
                 {
                     Tabs[0].RenderTemplate(context);
                 }

@@ -31,11 +31,11 @@ namespace A2v10.Xaml
                 onRender(dataGrid);
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
-                dataGrid.MergeAttribute(":items-source", isb.Path);
-            MergeBoolAttribute(dataGrid, nameof(Hover), Hover);
-            MergeBoolAttribute(dataGrid, nameof(Striped), Striped);
-            MergeBoolAttribute(dataGrid, nameof(Border), Border);
-            MergeBoolAttribute(dataGrid, nameof(Sort), Sort);
+                dataGrid.MergeAttribute(":items-source", isb.GetPath(context));
+            MergeBoolAttribute(dataGrid, context, nameof(Hover), Hover);
+            MergeBoolAttribute(dataGrid, context, nameof(Striped), Striped);
+            MergeBoolAttribute(dataGrid, context, nameof(Border), Border);
+            MergeBoolAttribute(dataGrid, context, nameof(Sort), Sort);
             dataGrid.MergeAttribute(":route-query", "$query"); // always!
 
             // TODO: binding for GridLines ???

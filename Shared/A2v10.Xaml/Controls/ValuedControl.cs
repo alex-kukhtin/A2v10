@@ -15,23 +15,16 @@ namespace A2v10.Xaml
             var valBind = GetBinding(nameof(Value));
             if (valBind != null) {
                 // split to path and property
-                String path = valBind.Path;
+                String path = valBind.GetPath(context);
                 String itemPath = String.Empty;
                 String itemProp = String.Empty;
                 if (String.IsNullOrEmpty(path))
                     return;
                 int ix = path.LastIndexOf('.');
-                if (ix == -1)
-                {
-                    itemProp = path;
-                    itemPath = context.GetCurrentScope();
-                }
-                else
-                {
+                if (ix != -1) { 
                     itemProp = path.Substring(ix + 1);
-                    itemPath = context.GetNormalizedPath(path.Substring(0, ix));
+                    itemPath = path.Substring(0, ix);
                 }
-
                 if (String.IsNullOrEmpty(itemPath) || String.IsNullOrEmpty(itemProp))
                     throw new XamlException($"invalid binding for Value '{path}'");
                 input.MergeAttribute(":item", itemPath);

@@ -111,6 +111,7 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="TestPages\collectionview2.html" />
     <Content Include="TestPages\collectionview.html" />
     <Content Include="TestPages\collectionview.js" />
     <Content Include="TestPages\collectionview.txt" />

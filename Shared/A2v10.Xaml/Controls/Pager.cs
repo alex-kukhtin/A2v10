@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
@@ -16,7 +12,7 @@ namespace A2v10.Xaml
             var source = GetBinding(nameof(Source));
             if (source == null)
                 throw new XamlException("Pager has no Source binding");
-            pager.MergeAttribute(":source", source.Path);
+            pager.MergeAttribute(":source", source.GetPath(context));
             pager.Render(context, TagRenderMode.SelfClosing);
         }
     }

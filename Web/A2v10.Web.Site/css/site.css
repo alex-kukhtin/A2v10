@@ -1114,6 +1114,9 @@ TODO:
   width: 100%;
   height: 70px;
 }
+.grid .control-group {
+  margin-bottom: 0;
+}
 .app-exception {
   margin: 50px auto;
   width: 600px;

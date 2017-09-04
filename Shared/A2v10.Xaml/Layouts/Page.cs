@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -13,6 +9,8 @@ namespace A2v10.Xaml
 
         public UIElement Toolbar { get; set; }
         public UIElement Taskpad { get; set; }
+        public String Title { get; set; }
+
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -31,7 +29,10 @@ namespace A2v10.Xaml
                 }
             }
             page.MergeAttribute("id", context.RootId);
+
+
             page.RenderStart(context);
+            RenderTitle(context);
 
             if (isGridPage)
             {
@@ -46,6 +47,17 @@ namespace A2v10.Xaml
             else
                 RenderChildren(context);
             page.RenderEnd(context);
+        }
+
+        void RenderTitle(RenderContext context)
+        {
+            Bind titleBind = GetBinding(nameof(Title));
+            if (titleBind != null || !String.IsNullOrEmpty(Title))
+            {
+                var dt = new TagBuilder("a2-document-title");
+                MergeBindingAttributeString(dt, context, "page-title", nameof(Title), Title);
+                dt.Render(context);
+            }
         }
     }
 }

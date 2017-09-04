@@ -3,7 +3,8 @@
 	const control = {
 		props: {
 			label: String,
-			required: Boolean
+			required: Boolean,
+            align: { type: String, default: 'left' }
 		},
         computed: {
             path() {

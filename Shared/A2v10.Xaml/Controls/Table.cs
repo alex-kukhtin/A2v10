@@ -80,7 +80,6 @@ namespace A2v10.Xaml
                 {
                     Rows[0].RenderElement(context, (tag) => {
                         tag.MergeAttribute("v-for", repeatAttr);
-                        tag.MergeAttribute(":key", "rowIndex");
                     } );
                 }
                 else
@@ -88,7 +87,7 @@ namespace A2v10.Xaml
                     var tml = new TagBuilder("template");
                     tml.MergeAttribute("v-for", repeatAttr);
                     tml.RenderStart(context);
-                    using (var cts = new ScopeContext(context, new ScopeElem(String.Empty, "row")))
+                    using (var cts = new ScopeContext(context, "row"))
                     {
                         foreach (var row in Rows)
                             row.RenderElement(context, (tag) => tag.MergeAttribute(":key", "rowIndex"));

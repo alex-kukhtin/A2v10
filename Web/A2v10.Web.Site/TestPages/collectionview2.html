@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+    
+        <h3>Collection view demo</h3>
+        <div>
+            Name: <span :text="Contract.Name"></span>
+        </div>
+
+        <div>
+            <a2-tab-panel :items="Contract.Lists">
+                <template slot="header" scope="tabitem">
+                    <b>I am the header {{tabitem.index}}</b>
+                </template>
+                <template slot="items" scope="tabitem">
+                    {{tabitem}}
+                    <collection-view :items-source="tabitem.item.Vehicles" :page-size="2">
+                        <template scope="parent">
+                            collection view body
+                            {{parent.ItemsSource}}
+                            <a @click.stop="parent.Pager.next()">next>></a>
+                            <table border="1">
+                                <tbody>
+                                    <template v-for="(row, rowIndex) in parent.ItemsSource">
+                                        <tr>
+                                            <td>x</td>
+                                            <td v-text="rowIndex"></td>
+                                            <td v-text="row.Name"></td>
+                                            <td v-text="row.Volume"></td>
+                                            <td v-text="parent.Pager.offset + rowIndex"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">second row</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                            <a2-pager :source="parent.Pager"></a2-pager>
+                        </template>
+                    </collection-view>
+                </template>
+                <!--
+                <collection-view :items-source="tabitem.Vehicles" :page-size="2">
+                    <template scope="parent">
+                    </template>
+                </collection-view>
+                -->
+            </a2-tab-panel>
+            <button @click.stop="reload2">reload</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
+
+    <script>
+        const BaseController = component('baseController');
+        const rawData = {
+            Contract: {
+                Name: "Contract name",
+                Lists: [
+                    {
+                        Name: 'List1', Vehicles: [
+                            {Name: "Audi", Volume: 1500, Year: 2001 },
+                            {Name: "Bmw", Volume: 2500, Year: 2008 },
+                            {Name: "Toyota", Volume: 1400, Year: 2006 }
+                        ]
+                    },
+                    {
+                        Name: 'List2', Vehicles: [
+                            { Name: "VW", Volume: 200, Year: 2011 },
+                            { Name: "Mazda", Volume: 1600, Year: 2007 },
+                            { Name: "Honda", Volume: 2600, Year: 2009 }
+                        ]
+                    }
+               ]
+            }
+        };
+
+        let ctl = new BaseController({
+            el: "#app",
+            data: rawData,
+            methods: {
+                reload2() {
+                    alert('reload 2');
+                    Vue.set($data, 'Contract', rawData.Contract);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -14,7 +14,7 @@ namespace A2v10.Xaml
             base.MergeAttributes(tag, context);
             var contBind = GetBinding(nameof(Content));
             if (contBind != null)
-                tag.MergeAttribute("v-text", contBind.GetPath(context));
+                tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
         }
 
         internal void RenderContent(RenderContext context)

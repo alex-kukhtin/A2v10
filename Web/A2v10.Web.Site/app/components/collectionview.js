@@ -16,7 +16,7 @@ Vue.component('collection-view', {
 	</slot>
 	<code>
 		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{Offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
 	</code>
 </div>
 `,
@@ -46,7 +46,7 @@ Vue.component('collection-view', {
 	},
 	computed: {
 		isServer() {
-			return this.runAt !== 'client';
+			return this.runAt === 'serverurl' || this.runAt === 'server';
 		},
 		isQueryUrl() {
 			// use window hash
@@ -57,7 +57,7 @@ Vue.component('collection-view', {
 				return this.$store.getters.query.dir;
 			return this.localQuery.dir;
 		},
-		Offset() {
+		offset() {
 			if (this.isQueryUrl)
 				return this.$store.getters.query.offset || 0;
 			return this.localQuery.offset;
@@ -90,7 +90,7 @@ Vue.component('collection-view', {
 			// HACK!
 			this.filteredCount = arr.length;
 			// pager
-			arr = arr.slice(this.Offset, this.Offset + this.pageSize);
+			arr = arr.slice(this.offset, this.offset + this.pageSize);
 			console.warn('get paged source:' + (performance.now() - s).toFixed(2) + ' ms');
 			return arr;
 		},
@@ -125,13 +125,13 @@ Vue.component('collection-view', {
 			this.$setOffset(0);
 		},
 		prev() {
-			let no = this.Offset;
+			let no = this.offset;
 			if (no > 0)
 				no -= this.pageSize;
 			this.$setOffset(no);
 		},
 		next() {
-			let no = this.Offset + this.pageSize;
+			let no = this.offset + this.pageSize;
 			this.$setOffset(no);
 		},
 		sortDir(order) {

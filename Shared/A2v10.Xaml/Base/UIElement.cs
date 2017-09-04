@@ -20,15 +20,15 @@ namespace A2v10.Xaml
 				tag.AddCssClass(Bold.Value ? "bold" : "no-bold");
 			if (Italic.HasValue)
 				tag.AddCssClass(Italic.Value ? "italic" : "no-italic");
-            SetBindingAttributeString(tag, "title", "Tip", Tip);
+            MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
 		}
 
 
-        internal void SetBindingAttributeString(TagBuilder tag, String attrName, String propName, String propValue)
+        internal void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)
         {
             var attrBind = GetBinding(propName);
             if (attrBind != null)
-                tag.MergeAttribute($":{attrName}", attrBind.Path);
+                tag.MergeAttribute($":{attrName}", attrBind.GetPathFormat(context));
             else
                 tag.MergeAttribute(attrName, propValue);
         }

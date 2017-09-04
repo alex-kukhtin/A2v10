@@ -186,7 +186,8 @@ namespace A2v10.Web.Mvc.Controllers
     const vm = new DataModelController({
         el:'#$(RootId)',
         props: {
-            inDialog: {type: Boolean, default: $(IsDialog)} 
+            inDialog: {type: Boolean, default: $(IsDialog)},
+            pageTitle: {type: String}
         },
         data: modelData(template, rawData)
     });

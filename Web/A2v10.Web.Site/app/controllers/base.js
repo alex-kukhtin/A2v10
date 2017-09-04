@@ -1,4 +1,4 @@
-﻿/*20170902-7023*/
+﻿/*20170904-7025*/
 /*controllers/base.js*/
 (function () {
 
@@ -10,9 +10,30 @@
 	const urltools = require('std:url');
 	const log = require('std:log');
 
+	const documentTitle = {
+		render() {
+			return null;
+		},
+		props: ['page-title'],
+		watch: {
+			pageTitle(newValue) {
+				if (this.pageTitle)
+					document.title = this.pageTitle;
+			}
+		},
+		created() {
+			if (this.pageTitle)
+				document.title = this.pageTitle;
+		}
+	};
+
 	const base = Vue.extend({
-		// inDialog: bool (in derived class)
+		// inDialog: Boolean (in derived class)
+		// pageTitle: String (in derived class)
 		store: store,
+		components: {
+			'a2-document-title': documentTitle
+		},
 		data() {
 			return {
 				__init__: true,
@@ -312,8 +333,10 @@
 		created() {
 			eventBus.$emit('registerData', this);
 
-			if (!this.inDialog)
+			if (!this.inDialog) {
 				this.$data._query_ = route.query;
+				///console.dir(this);
+			}
 			//alert(this.$data._needValidate_);
 			//this.$data._needValidate_ = true;
 			/*
@@ -336,13 +359,6 @@
 			eventBus.$off('queryChange', this.__queryChange);
 			this.$off('localQueryChange', this.__queryChange);
 		},
-		mounted() {
-			//alert('mounted');
-			//this.$nextTick(() =>
-				//..this.$data._validateAll_()
-			//);
-			//console.dir(this.$data._validateAll_);
-		},
 		beforeUpdate() {
 			this.__updateStartTime = performance.now();
 		},
@@ -351,5 +367,5 @@
 		}
     });
     
-    app.components['baseController'] = base;
+	app.components['baseController'] = base;
 })();

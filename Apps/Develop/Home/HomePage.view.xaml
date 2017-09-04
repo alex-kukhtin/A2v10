@@ -1,13 +1,14 @@
 <!-- Home Page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  Title="Home page title">
 	<Grid>
 		<Block Grid.Row="1" Grid.Col="1"></Block>
 		<Block Grid.Row="2" Grid.Col="2"></Block>
 		<Block Grid.Row="1" Grid.Col="2"></Block>
 		<Block Grid.Row="2" Grid.Col="1"></Block>
 		<Block Grid.Row="1" Grid.Col="3"></Block>
-		<Button Grid.Row="3" Grid.Col="1" Icon="Approve">Button</Button>
+		<Button Grid.Row="3" Grid.Col="1" Icon="Approve" Command="{BindCmd Reload}">Button</Button>
 		<Grid Grid.Row="3" Grid.Col="2">
 			<Button Grid.Row="1" Grid.Col="1" Icon="CommentDiscussion" >Button inside</Button>
 		</Grid>

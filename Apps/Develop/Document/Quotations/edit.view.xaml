@@ -1,6 +1,7 @@
 ﻿<!-- Document edit -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  Title="{Bind Contract.Id, Format='Котировка [{0}]'}">
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
@@ -18,50 +19,65 @@
 	<TabPanel>
 		<Tab Header="Котировка">
 			<Grid>
+				<!--
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
 				<TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}"/>
+				-->
 			</Grid>
 			<Table>
 				<TableRow>
 					<TableCell>Страхователь</TableCell>
+					<!--
 					<TextBox Value="{Bind Contract.InsurantName}">
 						<TextBox.AddOns>
 							<Hyperlink Icon="Search" />
 							<Hyperlink Icon="Clear" />
 						</TextBox.AddOns>
 					</TextBox>
+					-->
 				</TableRow>
 			</Table>
 
 			<TabPanel ItemsSource="{Bind Contract.Lists}">
-				<Tab>
+				<Tab Header="{Bind Index}">
+					<Code Content="{Bind Vehicles.Count}"></Code>
 					<!--
-					<Code Content="{Bind Vehicles}"></Code>
-					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+					<DataGrid ItemsSource="{Bind Vehicles}">
+						<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
+					</DataGrid>
 					-->
-					<Table ItemsSource="{Bind Vehicles}">
-						<Table.Header>
+					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+						<Code Content="{Bind Parent.ItemsSource}"></Code>
+						<!--
+						<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
+							<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
+						</DataGrid>
+						-->
+						<Table ItemsSource="{Bind Parent.ItemsSource}">
+							<Table.Header>
+							</Table.Header>
 							<TableRow>
-								<TableCell/>
 								<TableCell>Тариф</TableCell>
+								<TableCell Content="{Bind Id, Format='id = {0}'}"/>
 							</TableRow>
-						</Table.Header>
-						<TableRow>
-							<TableCell>Страхова сума</TableCell>
-							<TextBox Value="{Bind Sum}"></TextBox>
-						</TableRow>
-						<TableRow>
-							<TableCell>Марка/модель</TableCell>
-							<Code Content="{Bind MarkModel}"/>
-							<TableCell Content="{Bind MarkModel}"/>
-						</TableRow>
-						<TableRow>
-							<TableCell>Об'єм двигуна см&#xb3;</TableCell>
-							<Code Content="{Bind Volume}"></Code>
-						</TableRow>
-					</Table>
-					<!--
+							<TableRow>
+								<TableCell>Страхова сума</TableCell>
+								<TableCell Content="{Bind Sum, Format='sum = {0}'}"></TableCell>
+								<TextBox Value="{Bind Sum}"></TextBox>
+							</TableRow>
+							<TableRow>
+								<TableCell>Марка/модель</TableCell>
+								<Code Content="{Bind MarkModel.length}"/>
+								<TableCell Content="{Bind MarkModel}"/>
+							</TableRow>
+							<TableRow>
+								<TableCell>Об'єм двигуна см&#xb3;</TableCell>
+								<Code Content="{Bind Volume}"></Code>
+							</TableRow>
+						</Table>
+						<Pager Source="{Bind Parent.Pager}"></Pager>
 					</CollectionView>
+					<!--
 					-->
 				</Tab>
 			</TabPanel>

@@ -44,13 +44,13 @@ namespace A2v10.Xaml
 		}
 
 
-        internal void MergeBoolAttribute(TagBuilder tag, String propName, Boolean value)
+        internal void MergeBoolAttribute(TagBuilder tag, RenderContext context, String propName, Boolean value)
         {
             var attrBind = GetBinding(propName);
             // bool attrs always with ':'
             String attrName = $":{propName.ToLowerInvariant()}";
             if (attrBind != null)
-                tag.MergeAttribute(attrName, attrBind.Path);
+                tag.MergeAttribute(attrName, attrBind.GetPath(context));
             else if (value)
                 tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant());
 

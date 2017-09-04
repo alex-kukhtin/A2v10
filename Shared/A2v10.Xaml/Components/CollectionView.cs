@@ -30,9 +30,9 @@ namespace A2v10.Xaml
             var tag = new TagBuilder("collection-view");
             if (onRender != null)
                 onRender(tag);
-            var itemsSource = GetBinding(nameof(ItemsSource));
+            Bind itemsSource = GetBinding(nameof(ItemsSource));
             if (itemsSource != null)
-                tag.MergeAttribute(":items-source", itemsSource.Path);
+                tag.MergeAttribute(":items-source", itemsSource.GetPath(context));
 
             tag.MergeAttribute("run-at", RunAt.ToString().ToLowerInvariant());
 

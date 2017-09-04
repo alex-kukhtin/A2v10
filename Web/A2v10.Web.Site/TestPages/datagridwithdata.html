@@ -9,7 +9,8 @@
     <!--TODO:
         5:
     -->
-    <div id="test-app" style="padding:20px;height:600px;overflow:auto">
+    <div id="test-app" style="padding:20px;height:600px;overflow:auto" :xtitle="'page title ' + Customers.length" cumputed-title="computed title">
+        <a2-document-title :page-title="'length' + Customers.length"></a2-document-title>
         <h4>Simple DataGrid</h4>
         <div>
             <div class="toolbar">
@@ -30,7 +31,7 @@
                        grid="both"
                        :striped="true" 
                        :hover="true"
-                       sort="self"
+                       :sort="true"
                        :selected="Customers.selected">
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
@@ -60,16 +61,7 @@
         </div>
     </div>
     <script type="text/javascript" src="../scripts/vue.js"></script>
-    <script type="text/javascript" src="../app/app.js"></script>
-    <script type="text/javascript" src="../app/platform/webvue.js"></script>
-    <script type="text/javascript" src="../app/platform/routex.js"></script>
-    <script type="text/javascript" src="../app/services/utils.js"></script>
-    <script type="text/javascript" src="../app/services/validators.js"></script>
-    <script type="text/javascript" src="../app/services/datamodel.js"></script>
-    <script type="text/javascript" src="../app/components/validator.js"></script>
-    <script type="text/javascript" src="../app/components/control.js"></script>
-    <script type="text/javascript" src="../app/components/textbox.js"></script>
-    <script type="text/javascript" src="../app/components/datagrid.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
 
 
 <script type="text/javascript">
@@ -155,6 +147,7 @@
     }
 
     // ЭТО стандартный viewModel
+    // уже не используется
     let BaseVue = Vue.extend({
         methods: {
             $exec(cmd, ...args) {
@@ -215,7 +208,10 @@
     cmn.implementRoot(TRoot, template, ctors);
     var reactiveData = new TRoot(modelData);
 
-    var vm = new BaseVue({
+    var BaseController = component('baseController');
+
+    //var vm = new BaseVue({
+    var vm = new BaseController({
         el: "#test-app",
         data: reactiveData,
         computed:
@@ -238,7 +234,6 @@
 
     //vm._root_ctor = TRoot;
     //vm._template = template;
-
 })();
 </script>
 </body>

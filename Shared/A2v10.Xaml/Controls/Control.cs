@@ -21,13 +21,13 @@ namespace A2v10.Xaml
             base.MergeAttributes(tag, context);
             if (Block)
                 tag.AddCssClass("block");
-            AddControlAttributes(tag);
+            AddControlAttributes(tag, context);
         }
 
-        private void AddControlAttributes(TagBuilder tag)
+        private void AddControlAttributes(TagBuilder tag, RenderContext context)
         {
-            SetBindingAttributeString(tag, "label", nameof(Label), Label);
-            MergeBoolAttribute(tag, nameof(Required), Required);
+            MergeBindingAttributeString(tag, context, "label", nameof(Label), Label);
+            MergeBoolAttribute(tag, context, nameof(Required), Required);
         }
 
         internal void RenderAddOns(RenderContext context)

@@ -40,18 +40,6 @@ namespace A2v10.Xaml
         }
     }
 
-    internal struct ScopeElem
-    {
-        internal String From;
-        internal String To;
-
-        public ScopeElem(String from, String to)
-        {
-            From = from;
-            To = to;
-        }
-    }
-
     internal class GridContext : IDisposable
     {
         RenderContext _renderContext;
@@ -73,7 +61,7 @@ namespace A2v10.Xaml
     internal class ScopeContext: IDisposable
     {
         RenderContext _renderContext;
-        public ScopeContext(RenderContext context, ScopeElem scope)
+        public ScopeContext(RenderContext context, String scope)
         {
             _renderContext = context;
             _renderContext.PushScope(scope);
@@ -91,7 +79,7 @@ namespace A2v10.Xaml
 		public TextWriter Writer { get; private set; }
 
         private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
-        private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
+        private Stack<String> _stackScope = new Stack<String>();
         private UIElementBase _root;
 
         public RenderContext(TextWriter writer, UIElementBase root)
@@ -132,7 +120,7 @@ namespace A2v10.Xaml
             _stackGrid.Pop();
         }
 
-        internal void PushScope(ScopeElem scope)
+        internal void PushScope(String scope)
         {
             _stackScope.Push(scope);
         }
@@ -140,13 +128,6 @@ namespace A2v10.Xaml
         internal void PopScope()
         {
             _stackScope.Pop();
-        }
-
-        internal String GetCurrentScope() {
-            if (_stackScope.Count == 0)
-                return String.Empty;
-            var scope = _stackScope.Peek();
-            return scope.To;
         }
 
         public IEnumerable<StringKeyValuePair> GetGridAttributes()
@@ -161,14 +142,10 @@ namespace A2v10.Xaml
         {
             if (_stackScope.Count == 0)
                 return path;
-            var scope = _stackScope.Peek();
-            int ix = path.LastIndexOf('.');
-            if (ix == -1)
-                return scope.To + '.' + path;
-            // TODO: check recursive!!!
-            //if (String.IsNullOrEmpty(scope.From))
-                //return scope.To + '.' + path; // ????
-            return path.Replace(scope.From, scope.To);
+            if (path.StartsWith("Parent."))
+                return path;
+            String scope = _stackScope.Peek();
+            return scope + '.' + path;
         }
 	}
 }
