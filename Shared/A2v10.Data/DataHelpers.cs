@@ -46,19 +46,9 @@ namespace A2v10.Data
 
 		public static SpecType TypeName2SpecType(this String s)
 		{
-			switch (s)
-			{
-				case "Id":
-					return SpecType.Id;
-				case "Name":
-					return SpecType.Name;
-				case "ParentId":
-					return SpecType.ParentId;
-				case "RefId":
-					return SpecType.RefId;
-                case "RowCount":
-                    return SpecType.RowCount;
-			}
+            SpecType st;
+            if (Enum.TryParse<SpecType>(s, out st))
+                return st;
 			return SpecType.Unknown;
 		}
 

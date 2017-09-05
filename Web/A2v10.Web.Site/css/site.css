@@ -1117,6 +1117,15 @@ TODO:
 .grid .control-group {
   margin-bottom: 0;
 }
+.badge {
+  display: inline-block;
+  background-color: #8591a2;
+  color: white;
+  padding: 0.2em .4em 0.3em 0.4em;
+  font-size: 85%;
+  margin-left: 0.4em;
+  border-radius: 0.8em;
+}
 .app-exception {
   margin: 50px auto;
   width: 600px;

@@ -32,6 +32,9 @@ TODO:
                 </a>
             </li>
         </ul>
+		<template>
+			<slot name="title" />
+		</template>
         <div class="tab-content">
             <slot />
         </div>
@@ -39,15 +42,16 @@ TODO:
     <template v-else>
         <ul class="tab-header">
             <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
-				<slot name="header" :item="item" :index="tabIndex">
+				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
 					<a href>
-						TODO: default tab header
-						<span v-text="tabHeader(item, tabIndex)"></span> 
-						<span>{{isActiveTab(item)}}</span>
+						<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 					</a>
 				</slot>
             </li>
         </ul>
+		<template>
+			<slot name="title" />
+		</template>
         <div class="tab-content">
             <div class="tab-item" v-if="isActiveTab(item)" v-for="(item, tabIndex) in items" :key="tabIndex">
                 <slot name="items" :item="item" :index="tabIndex" />
@@ -108,13 +112,16 @@ TODO:
 			}
 		},
 		watch: {
-			'items.length'(newVal, oldVal) {
+			items(newVal, oldVal) {
 				let tabs = this.items;
-				if (newVal < oldVal) {
+				if (newVal.length < oldVal.length) {
 					// tab has been removed
 					if (this._index >= tabs.length)
 						this._index = tabs.length - 1;
 					this.select(tabs[this._index]);
+				} else if (newVal.length === oldVal.length) {
+					// may be reloaded
+					if (tabs.length > 0) this.select(tabs[0]);
 				} else {
 					// tab has been added
 					this.select(tabs[tabs.length - 1]);
@@ -130,8 +137,8 @@ TODO:
 			isActiveTab(item) {
                 return item == this.activeTab;
             },
-            tabHeader(item, index) {
-                return item[this.header] + ':' + index;
+            defaultTabHeader(item, index) {
+                return 'Tab ' + (index + 1);
             },
             $addTab(tab) {
                 this.tabs.push(tab);

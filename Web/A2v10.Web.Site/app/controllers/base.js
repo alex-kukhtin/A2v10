@@ -1,4 +1,4 @@
-﻿/*20170904-7025*/
+﻿/*20170905-7026*/
 /*controllers/base.js*/
 (function () {
 
@@ -178,8 +178,7 @@
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				// TODO: $id property
-				this.$navigate(url, sel.Id);
+				this.$navigate(url, sel.$id);
 			},
 
 			$hasSelected(arr) {

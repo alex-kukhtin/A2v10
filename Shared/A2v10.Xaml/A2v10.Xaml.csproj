@@ -79,15 +79,21 @@
     <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Controls\ValuedControl.cs" />
     <Compile Include="Layouts\Block.cs" />
+    <Compile Include="Layouts\Panel.cs" />
     <Compile Include="Layouts\RootContainer.cs" />
     <Compile Include="Layouts\Container.cs" />
     <Compile Include="Layouts\Dialog.cs" />
     <Compile Include="Layouts\Grid.cs" />
     <Compile Include="Layouts\Page.cs" />
+    <Compile Include="Layouts\Splitter.cs" />
     <Compile Include="Layouts\Taskpad.cs" />
     <Compile Include="Layouts\Toolbar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\Table.cs" />
+    <Compile Include="Text\Inline.cs" />
+    <Compile Include="Text\InlineCollection.cs" />
+    <Compile Include="Text\Span.cs" />
+    <Compile Include="Text\Text.cs" />
     <Compile Include="XamlRenderer.cs" />
   </ItemGroup>
   <ItemGroup>

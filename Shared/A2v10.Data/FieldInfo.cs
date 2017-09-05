@@ -23,6 +23,7 @@ namespace A2v10.Data
 			var x = name.Split('!');
 			if (x.Length > 0)
 				PropertyName = x[0];
+            CheckField(x);
 			if (x.Length > 1)
 			{
 				TypeName = x[1];
@@ -36,6 +37,7 @@ namespace A2v10.Data
 			}
 			IsComplexField = PropertyName.Contains('.');
 		}
+
 
 		public FieldInfo(FieldInfo source, String name)
 		{
@@ -61,5 +63,19 @@ namespace A2v10.Data
 		public Boolean IsParentId { get { return SpecType == SpecType.ParentId; } }
 		public Boolean IsId { get { return SpecType == SpecType.Id; } }
         public Boolean IsRowCount { get { return SpecType == SpecType.RowCount; } }
-	}
+
+        private static void CheckField(String[] parts)
+        {
+            if (parts.Length == 2)
+            {
+                var p1 = parts[1];
+                SpecType st;
+                if (SpecType.TryParse(p1, out st))
+                {
+                    // A special type is specified, but there are only two parts in the field name
+                    throw new DataLoaderException($"Invalid field name '{String.Join("!", parts)}'");
+                }
+            }
+        }
+    }
 }

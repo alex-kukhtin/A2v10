@@ -8,7 +8,10 @@ let template = {
 	},
 	delegates: {
 	},
-    events: {
+	events: {
+		'TList.construct'(list) {
+			console.dir(list);
+		} 
     },
     validators: {
     },

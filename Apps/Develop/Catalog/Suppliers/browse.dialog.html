@@ -1,5 +1,5 @@
 ﻿
-<div id="$(RootId)" test="true">
+<div id="$(RootId)" test="true" v-modal-width="{ width:'600px', cssClass: 'wide'}">
     <div class="modal-header"><span>Выбор корреспондента</span><button class="btnclose" @click.prevent="$modalClose(false)">&#x2715;</button></div>
     <div class="load-indicator" v-show="$isLoading"></div>
     <div class="modal-content" style="min-height:200px" >
@@ -11,7 +11,7 @@
             <span v-text="$query"></span>
         </div>
         <data-grid :items-source="Customers" :striped="true" :query="$query"
-                   :border="true" :hover="true" sort="client" grid="vertical"
+                   :border="true" :hover="true" :sort="true" grid="vertical"
                    :dblclick="() => {$modalClose(Customers.$selected)}">
             <data-grid-column header="Id" content="Id"></data-grid-column>
             <data-grid-column header="Name" content="Name"></data-grid-column>

@@ -1,5 +1,5 @@
 ﻿
-/*20170828-7021*/
+/*20170905-7026*/
 /* components/modal.js */
 
 (function () {
@@ -23,6 +23,21 @@ TODO: may be icon for confirm ????
     </div>
 </div>        
 `;
+
+	const setWidthComponent = {
+		inserted(el, binding) {
+			// TODO: width or cssClass???
+			//alert('set width-created:' + binding.value);
+			// alert(binding.value.cssClass);
+			let mw = el.closest('.modal-window');
+			if (mw && binding.value.width)
+				mw.style.width = binding.value.width;
+			//alert(el.closest('.modal-window'));
+		}
+	};
+
+	Vue.directive('modal-width', setWidthComponent);
+
     const eventBus = require('std:eventBus');
 
     const modalComponent = {

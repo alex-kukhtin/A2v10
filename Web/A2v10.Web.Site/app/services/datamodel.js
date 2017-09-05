@@ -1,4 +1,4 @@
-﻿/*20170905-7025*/
+﻿/*20170905-7026*/
 /* services/datamodel.js */
 (function() {
 
@@ -50,7 +50,7 @@
     }
 
     function defSource(trg, source, prop, parent) {
-        let propCtor = trg._meta_[prop];
+        let propCtor = trg._meta_.props[prop];
         let pathdot = trg._path_ ? trg._path_ + '.' : '';
         let shadow = trg._src_;
         source = source || {};
@@ -79,7 +79,7 @@
             },
             set(val) {
                 //TODO: emit and handle changing event
-                val = ensureType(this._meta_[prop], val);
+                val = ensureType(this._meta_.props[prop], val);
                 if (val === this._src_[prop])
                     return;
                 this._src_[prop] = val;
@@ -120,7 +120,7 @@
         defHidden(elem, ROOT, parent._root_ || parent);
         defHidden(elem, PARENT, parent);
         defHidden(elem, ERRORS, null, true);
-        for (let propName in elem._meta_) {
+        for (let propName in elem._meta_.props) {
             defSource(elem, source, propName, parent);
         }
         createObjProperties(elem, elem.constructor);
@@ -142,7 +142,7 @@
             elem.$dirty = false;
             elem._query_ = {};
             // rowcount implementation
-            for (var m in elem._meta_) {
+            for (var m in elem._meta_.props) {
                 let rcp = m + '.$RowCount';
                 if (source && rcp in source) {
                     let rcv = source[rcp];
@@ -250,7 +250,25 @@
 
         defHiddenGet(obj.prototype, "$vm", function () {
             return this._root_._host_.$viewModel;
-        });
+		});
+
+		defHiddenGet(obj.prototype, "$id", function () {
+			let idName = this._meta_.$id;
+			if (!idName) {
+				let tpname = this.constructor.name;
+				throw new Error(tpname + ' object does not have an Id property');
+			}
+			return this[idName];
+		});
+
+		defHiddenGet(obj.prototype, "$name", function () {
+			let nameName = this._meta_.$name;
+			if (!nameName) {
+				let tpname = this.constructor.name;
+				throw new Error(tpname + ' object does not have a Name property');
+			}
+			return this[nameName];
+		});
 
         if (arrayItem) {
             defArrayItem(obj);
@@ -424,8 +442,8 @@
 	function merge(src) {
 		try {
 			this._root_._enableValidate_ = false;
-			for (var prop in this._meta_) {
-				let ctor = this._meta_[prop];
+			for (var prop in this._meta_.props) {
+				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					platform.set(trg, "$selected", null);

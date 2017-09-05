@@ -61,15 +61,26 @@ namespace A2v10.Xaml
     internal class ScopeContext: IDisposable
     {
         RenderContext _renderContext;
-        public ScopeContext(RenderContext context, String scope)
+        public ScopeContext(RenderContext context, String scope, Func<String, String> replace = null)
         {
             _renderContext = context;
-            _renderContext.PushScope(scope);
+            _renderContext.PushScope(scope, replace);
         }
 
         public void Dispose()
         {
             _renderContext.PopScope();
+        }
+    }
+
+    internal struct ScopeElem
+    {
+        public String Scope;
+        public Func<String, String> Replace;
+        public ScopeElem(String scope, Func<String, String> replace)
+        {
+            Scope = scope;
+            Replace = replace;
         }
     }
 
@@ -79,7 +90,7 @@ namespace A2v10.Xaml
 		public TextWriter Writer { get; private set; }
 
         private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
-        private Stack<String> _stackScope = new Stack<String>();
+        private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
         private UIElementBase _root;
 
         public RenderContext(TextWriter writer, UIElementBase root)
@@ -120,9 +131,9 @@ namespace A2v10.Xaml
             _stackGrid.Pop();
         }
 
-        internal void PushScope(String scope)
+        internal void PushScope(String scope, Func<String, String> replace)
         {
-            _stackScope.Push(scope);
+            _stackScope.Push(new ScopeElem(scope, replace));
         }
 
         internal void PopScope()
@@ -144,8 +155,11 @@ namespace A2v10.Xaml
                 return path;
             if (path.StartsWith("Parent."))
                 return path;
-            String scope = _stackScope.Peek();
-            return scope + '.' + path;
+            ScopeElem scope = _stackScope.Peek();
+            var result = scope.Scope + "." + path;
+            if (scope.Replace != null)
+                return scope.Replace(result);
+            return result;
         }
 	}
 }

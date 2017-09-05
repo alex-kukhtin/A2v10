@@ -19,27 +19,35 @@
 	<TabPanel>
 		<Tab Header="Котировка">
 			<Grid>
-				<!--
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
 				<TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}"/>
-				-->
 			</Grid>
 			<Table>
 				<TableRow>
 					<TableCell>Страхователь</TableCell>
-					<!--
 					<TextBox Value="{Bind Contract.InsurantName}">
 						<TextBox.AddOns>
 							<Hyperlink Icon="Search" />
 							<Hyperlink Icon="Clear" />
 						</TextBox.AddOns>
 					</TextBox>
-					-->
 				</TableRow>
 			</Table>
 
+			<Button Block="True" Command="{BindCmd Append, Argument={Bind Contract.Lists}}">+ List</Button>
+			<Text>
+				Text here
+				<Span Italic="True" Bold="True" Content="{Bind Contract.Id, Format='contract id = {0}'}"></Span>
+				And more text
+			</Text>
 			<TabPanel ItemsSource="{Bind Contract.Lists}">
-				<Tab Header="{Bind Index}">
+				<Tab>
+					<Tab.Header>
+						<Group>
+							<Code Content="{Bind $Number, Format='Перелік {0} '}"></Code>
+							<Code Content="{Bind Vehicles.Count, Format='({0})'}"></Code>
+						</Group>
+					</Tab.Header>
 					<Code Content="{Bind Vehicles.Count}"></Code>
 					<!--
 					<DataGrid ItemsSource="{Bind Vehicles}">
@@ -73,6 +81,20 @@
 							<TableRow>
 								<TableCell>Об'єм двигуна см&#xb3;</TableCell>
 								<Code Content="{Bind Volume}"></Code>
+							</TableRow>
+							<TableRow>
+								<TableCell ColSpan="2">
+									<Table ItemsSource="{Bind OptionalEquipment}">
+										<TableRow>
+											<TableCell>1</TableCell>
+											<TableCell Content="{Bind Placement}"></TableCell>
+											<TableCell Content="{Bind Vendor}"></TableCell>
+											<TableCell>
+												<TextBox Value="{Bind Vendor}"/>
+											</TableCell>
+										</TableRow>
+									</Table>
+								</TableCell>
 							</TableRow>
 						</Table>
 						<Pager Source="{Bind Parent.Pager}"></Pager>

@@ -77,8 +77,10 @@ namespace A2v10.Data
             .AppendLine("\tcmn.createObject(this, source, path, parent);")
             .AppendLine("}")
             // metadata
-            .Append($"cmn.defineObject({name}, {{")
+            .Append($"cmn.defineObject({name}, {{props: {{")
             .Append(GetProperties(ctor))
+            .Append("}")
+            .Append(GetSpecialProperties(ctor))
             .AppendLine($"}}, {arrItem});");
 
             if (ctor.IsArrayType)
@@ -88,6 +90,21 @@ namespace A2v10.Data
                 .AppendLine("}");
             }
             return sb;
+        }
+
+        public String GetSpecialProperties(ElementMetadata meta)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!String.IsNullOrEmpty(meta.Id))
+                sb.Append($"$id: '{meta.Id}',");
+            if (!String.IsNullOrEmpty(meta.Name))
+                sb.Append($"$name: '{meta.Name}',");
+            if (!String.IsNullOrEmpty(meta.RowNumber))
+                sb.Append($"$rowNo: '{meta.RowNumber}',");
+            if (sb.Length == 0)
+                return null;
+            sb.Remove(sb.Length - 1, 1); // remove tail comma
+            return ",\n" + sb.ToString();
         }
 
         public StringBuilder GetProperties(ElementMetadata meta)
@@ -103,6 +120,8 @@ namespace A2v10.Data
                     sb.Append(fm.RefObject + "Array");
                 else if (fm.ItemType == FieldType.Object)
                     sb.Append(fm.RefObject);
+                else if (fm.DataType == DataType.Undefined)
+                    throw new DataLoaderException($"Invalid data type for {meta.Name}.{fd.Key}");
                 else
                     sb.Append(fm.DataType);
                 sb.Append(",");

@@ -4,6 +4,20 @@
     <meta charset="utf-8" />
     <title></title>
     <link href="../css/site.css" rel="stylesheet" />
+    <style>
+        .badge {
+            display:inline-block;
+            background-color:#888;
+            color:white;
+            padding:0.2em .4em 0.4em 0.4em;
+            font-size:85%;
+            margin-left:0.4em;
+            border-radius:0.8em;
+        }
+        .x {
+            border: 6px solid red;
+        }
+    </style>
 </head>
 <body>
     <div id="test-tab">
@@ -37,7 +51,15 @@
                     <button @click.prevent="removeItem(tabitem.item)">-</button>
                 </template>    
                 <template slot="header" scope="tabitem">
-                    <b>I am the header {{tabitem.index}}</b>
+                    I am the header {{tabitem.index}} + {{tabitem.number}}
+                    <span>Row id is {{tabitem.item.id}}</span>
+                    <button @click.stop="removeItem(tabitem.item)">x</button>
+                    <span class="badge">fgh12</span>
+                </template>
+                <template slot="title">
+                    <div class="tab-title">
+                        <h4>Tab title here ({{Document.Rows.length}})</h4>
+                    </div>
                 </template>
             </a2-tab-panel>
         </div>

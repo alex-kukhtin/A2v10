@@ -16,9 +16,15 @@
             <div :class="{spinner: true, active:processing}"></div>
             <a href="\app\about" @click.stop.prevent="about">about</a>
             version: <span v-text="version"></span>
-            <span class="right-part">
-                <button>Debug</button>
-            </span>
+            <div class="right-part">
+                <div class="dropdown dir-up" v-dropdown>
+                    <button class="btn-debug" toggle>Debug<span class="caret"></span></button>
+                    <div class="dropdown-menu menu up-right">
+                        <a href="" @click.prevent="debugTrace" class="dropdown-item">Tracing</a>
+                        <a href="" @click.prevent="debugOptions" class="dropdown-item">Options</a>
+                    </div>
+                </div>
+            </div>
         </footer>
         <a2-main-view :menu="menu"></a2-main-view>
     </div>

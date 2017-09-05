@@ -1,4 +1,4 @@
-﻿/*20170903-7024*/
+﻿/*20170905-7026*/
 /* controllers/shell.js */
 
 (function () {
@@ -291,9 +291,9 @@
 
 			eventBus.$on('modal', function (modal, prms) {
 				let id = '0';
-				if (prms && prms.data && prms.data.Id) {
+				if (prms && prms.data && prms.data.$id) {
 					// TODO: get correct ID
-					id = prms.data.Id;
+					id = prms.data.$id;
 				}
 				let url = urlTools.combine('/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
@@ -344,7 +344,13 @@
 			root() {
 				let opts = { title: null };
 				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
-            }
+			},
+			debugOptions() {
+				alert('debug options');
+			},
+			debugTrace() {
+				alert('debug trace');
+			}
 		},
 		created() {
 			let me = this;
@@ -355,11 +361,9 @@
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
 					let oldUrl = event.state;
-					//console.warn('pop state: ' + oldUrl);
 					if (!comp.$saveModified()) {
 						// disable navigate
-						oldUrl = comp.__baseUrl__.replace('/_page', '');
-						//console.warn('return url: ' + oldUrl);
+						oldUrl = comp.$data.__baseUrl__.replace('/_page', '');
 						window.history.pushState(oldUrl, null, oldUrl);
 						return;
 					}
@@ -367,6 +371,14 @@
 
 				me.$store.commit('popstate');
 			});
+
+			eventBus.$on('registerData', function (component) {
+				if (component)
+					me.__dataStack__.push(component);
+				else
+					me.__dataStack__.pop(component);
+			});
+
 
 			popup.startService();
 

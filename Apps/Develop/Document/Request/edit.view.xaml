@@ -18,10 +18,16 @@
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
 			<Button Block="True">Оформить накладную</Button>
+			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}">
+				<TextBox.AddOns>
+					<Hyperlink Icon="Search"/>
+					<Hyperlink Icon="Clear"/>
+				</TextBox.AddOns>
+			</TextBox>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
-		<Tab Header="Управленческая">
+		<Tab Header="Заявка">
 			<Grid>
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
@@ -59,6 +65,10 @@
 			</Grid>
 
 			<TextBox Label="Примечание" Value="{Bind Document.Memo}"></TextBox>
+		</Tab>
+		<Tab Header="Бухгалтерская">
+			<Text>Это бухгалтерская заявка по документу №
+				<Span Content="{Bind Document.SNo}" Bold="True"></Span></Text>
 		</Tab>
 		<Tab Header="Отладка">
 			<Code Multiline="True" Content="{Bind Document}"></Code>

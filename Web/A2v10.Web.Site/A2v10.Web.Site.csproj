@@ -54,11 +54,8 @@
     <Content Include="app\app.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
-    <Content Include="app\components\datagrid_old.js" />
-    <Content Include="app\components\pager _old.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\tab.js" />
-    <Content Include="app\controllers\shell _old.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
@@ -76,7 +73,6 @@
     <Content Include="app\services\dataservice.js" />
     <Content Include="app\services\http.js" />
     <Content Include="app\services\log.js" />
-    <Content Include="app\platform\route.js" />
     <Content Include="app\services\popup.js" />
     <Content Include="app\services\url.js" />
     <Content Include="app\services\utils.js" />

@@ -83,9 +83,12 @@
 
     // metadata
     cmn.defineObject(TCustomer, {
-        Id: Number,
-        Name: String,
-        Amount: Number
+        props: {
+            Id: Number,
+            Name: String,
+            Amount: Number
+        },
+        $id: 'Id'
     }, /* array item */ true);
 
     function TCustomerArray(source, path, parent) {
@@ -99,8 +102,10 @@
     }
 
     cmn.defineObject(TRoot, {
-        Customers: TCustomerArray,
-        MyElement: TCustomer
+        props: {
+            Customers: TCustomerArray,
+            MyElement: TCustomer
+        }
     });
 
     let modelData = {

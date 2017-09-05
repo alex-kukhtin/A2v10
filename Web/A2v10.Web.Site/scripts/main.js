@@ -697,7 +697,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170905-7025*/
+/*20170905-7026*/
 /* services/datamodel.js */
 (function() {
 
@@ -749,7 +749,7 @@ app.modules['std:validators'] = function() {
     }
 
     function defSource(trg, source, prop, parent) {
-        let propCtor = trg._meta_[prop];
+        let propCtor = trg._meta_.props[prop];
         let pathdot = trg._path_ ? trg._path_ + '.' : '';
         let shadow = trg._src_;
         source = source || {};
@@ -778,7 +778,7 @@ app.modules['std:validators'] = function() {
             },
             set(val) {
                 //TODO: emit and handle changing event
-                val = ensureType(this._meta_[prop], val);
+                val = ensureType(this._meta_.props[prop], val);
                 if (val === this._src_[prop])
                     return;
                 this._src_[prop] = val;
@@ -819,7 +819,7 @@ app.modules['std:validators'] = function() {
         defHidden(elem, ROOT, parent._root_ || parent);
         defHidden(elem, PARENT, parent);
         defHidden(elem, ERRORS, null, true);
-        for (let propName in elem._meta_) {
+        for (let propName in elem._meta_.props) {
             defSource(elem, source, propName, parent);
         }
         createObjProperties(elem, elem.constructor);
@@ -841,7 +841,7 @@ app.modules['std:validators'] = function() {
             elem.$dirty = false;
             elem._query_ = {};
             // rowcount implementation
-            for (var m in elem._meta_) {
+            for (var m in elem._meta_.props) {
                 let rcp = m + '.$RowCount';
                 if (source && rcp in source) {
                     let rcv = source[rcp];
@@ -949,7 +949,25 @@ app.modules['std:validators'] = function() {
 
         defHiddenGet(obj.prototype, "$vm", function () {
             return this._root_._host_.$viewModel;
-        });
+		});
+
+		defHiddenGet(obj.prototype, "$id", function () {
+			let idName = this._meta_.$id;
+			if (!idName) {
+				let tpname = this.constructor.name;
+				throw new Error(tpname + ' object does not have an Id property');
+			}
+			return this[idName];
+		});
+
+		defHiddenGet(obj.prototype, "$name", function () {
+			let nameName = this._meta_.$name;
+			if (!nameName) {
+				let tpname = this.constructor.name;
+				throw new Error(tpname + ' object does not have a Name property');
+			}
+			return this[nameName];
+		});
 
         if (arrayItem) {
             defArrayItem(obj);
@@ -1123,8 +1141,8 @@ app.modules['std:validators'] = function() {
 	function merge(src) {
 		try {
 			this._root_._enableValidate_ = false;
-			for (var prop in this._meta_) {
-				let ctor = this._meta_[prop];
+			for (var prop in this._meta_.props) {
+				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					platform.set(trg, "$selected", null);
@@ -2110,6 +2128,9 @@ TODO:
                 </a>
             </li>
         </ul>
+		<template>
+			<slot name="title" />
+		</template>
         <div class="tab-content">
             <slot />
         </div>
@@ -2117,15 +2138,16 @@ TODO:
     <template v-else>
         <ul class="tab-header">
             <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
-				<slot name="header" :item="item" :index="tabIndex">
+				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
 					<a href>
-						TODO: default tab header
-						<span v-text="tabHeader(item, tabIndex)"></span> 
-						<span>{{isActiveTab(item)}}</span>
+						<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 					</a>
 				</slot>
             </li>
         </ul>
+		<template>
+			<slot name="title" />
+		</template>
         <div class="tab-content">
             <div class="tab-item" v-if="isActiveTab(item)" v-for="(item, tabIndex) in items" :key="tabIndex">
                 <slot name="items" :item="item" :index="tabIndex" />
@@ -2186,13 +2208,16 @@ TODO:
 			}
 		},
 		watch: {
-			'items.length'(newVal, oldVal) {
+			items(newVal, oldVal) {
 				let tabs = this.items;
-				if (newVal < oldVal) {
+				if (newVal.length < oldVal.length) {
 					// tab has been removed
 					if (this._index >= tabs.length)
 						this._index = tabs.length - 1;
 					this.select(tabs[this._index]);
+				} else if (newVal.length === oldVal.length) {
+					// may be reloaded
+					if (tabs.length > 0) this.select(tabs[0]);
 				} else {
 					// tab has been added
 					this.select(tabs[tabs.length - 1]);
@@ -2208,8 +2233,8 @@ TODO:
 			isActiveTab(item) {
                 return item == this.activeTab;
             },
-            tabHeader(item, index) {
-                return item[this.header] + ':' + index;
+            defaultTabHeader(item, index) {
+                return 'Tab ' + (index + 1);
             },
             $addTab(tab) {
                 this.tabs.push(tab);
@@ -2226,7 +2251,7 @@ TODO:
 
 })();
 
-/*20170828-7021*/
+/*20170905-7026*/
 /* components/modal.js */
 
 (function () {
@@ -2250,6 +2275,21 @@ TODO: may be icon for confirm ????
     </div>
 </div>        
 `;
+
+	const setWidthComponent = {
+		inserted(el, binding) {
+			// TODO: width or cssClass???
+			//alert('set width-created:' + binding.value);
+			// alert(binding.value.cssClass);
+			let mw = el.closest('.modal-window');
+			if (mw && binding.value.width)
+				mw.style.width = binding.value.width;
+			//alert(el.closest('.modal-window'));
+		}
+	};
+
+	Vue.directive('modal-width', setWidthComponent);
+
     const eventBus = require('std:eventBus');
 
     const modalComponent = {
@@ -2344,7 +2384,7 @@ Vue.directive('dropdown', {
 });
 
 
-/*20170109-7022*/
+/*20170905-7026*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -2355,13 +2395,23 @@ Vue.directive('focus', {
 		});
 
 		el.addEventListener("blur", function (event) {
+			let t = event.target;
+			t._selectDone = false;
 			event.target.parentElement.classList.remove('focus');
 		});
+
+		el.addEventListener("click", function (event) {
+			let t = event.target;
+			if (t._selectDone)
+				return;
+			t._selectDone = true;
+			t.select();
+		}, true);
 	}
 });
 
 
-/*20170904-7025*/
+/*20170905-7026*/
 /*controllers/base.js*/
 (function () {
 
@@ -2541,8 +2591,7 @@ Vue.directive('focus', {
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				// TODO: $id property
-				this.$navigate(url, sel.Id);
+				this.$navigate(url, sel.$id);
 			},
 
 			$hasSelected(arr) {
@@ -2732,7 +2781,7 @@ Vue.directive('focus', {
     
 	app.components['baseController'] = base;
 })();
-/*20170903-7024*/
+/*20170905-7026*/
 /* controllers/shell.js */
 
 (function () {
@@ -3025,9 +3074,9 @@ Vue.directive('focus', {
 
 			eventBus.$on('modal', function (modal, prms) {
 				let id = '0';
-				if (prms && prms.data && prms.data.Id) {
+				if (prms && prms.data && prms.data.$id) {
 					// TODO: get correct ID
-					id = prms.data.Id;
+					id = prms.data.$id;
 				}
 				let url = urlTools.combine('/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
@@ -3078,7 +3127,13 @@ Vue.directive('focus', {
 			root() {
 				let opts = { title: null };
 				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
-            }
+			},
+			debugOptions() {
+				alert('debug options');
+			},
+			debugTrace() {
+				alert('debug trace');
+			}
 		},
 		created() {
 			let me = this;
@@ -3089,11 +3144,9 @@ Vue.directive('focus', {
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
 					let oldUrl = event.state;
-					//console.warn('pop state: ' + oldUrl);
 					if (!comp.$saveModified()) {
 						// disable navigate
-						oldUrl = comp.__baseUrl__.replace('/_page', '');
-						//console.warn('return url: ' + oldUrl);
+						oldUrl = comp.$data.__baseUrl__.replace('/_page', '');
 						window.history.pushState(oldUrl, null, oldUrl);
 						return;
 					}
@@ -3101,6 +3154,14 @@ Vue.directive('focus', {
 
 				me.$store.commit('popstate');
 			});
+
+			eventBus.$on('registerData', function (component) {
+				if (component)
+					me.__dataStack__.push(component);
+				else
+					me.__dataStack__.pop(component);
+			});
+
 
 			popup.startService();
 

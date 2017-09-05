@@ -31,7 +31,8 @@ namespace A2v10.Data
 		Name,
 		RefId,
 		ParentId,
-        RowCount
+        RowCount,
+        RowNumber
 	}
 
 	public class FieldMetadata

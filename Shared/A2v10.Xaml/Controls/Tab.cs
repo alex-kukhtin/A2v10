@@ -12,7 +12,7 @@ namespace A2v10.Xaml
 
     public class Tab : Container
     {
-        public String Header { get; set; }
+        public Object Header { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -20,7 +20,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(tab);
             MergeAttributes(tab, context);
-            tab.MergeAttribute("header", Header);
+            if (Header is String)
+                tab.MergeAttribute("header", Header?.ToString());
             tab.RenderStart(context);
 
             RenderChildren(context);
