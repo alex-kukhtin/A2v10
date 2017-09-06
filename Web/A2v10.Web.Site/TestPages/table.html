@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+</head>
+<body>
+
+    <div id="app" style="padding:10px">
+        <h3>Table demo</h3>
+
+        <table class="a2-table grid-both" style="border:2px solid silver">
+            <colgroup>
+                <col style="width:200px"/>
+                <col style="width:60px" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Заголовок 1</th>
+                    <th colspan="3">Header 2</th>
+                    <th>3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label>Метка 1</label></td>
+                    <td class="ctrl"><textbox></textbox></td>
+                    <td><label>Метка 2</label></td>
+                    <td class="ctrl"><textbox></textbox></td>
+                    <td rowspan="2">Text</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><label>Метка 3</label></td>
+                    <td colspan="2" class="ctrl">
+                        <div class="control-group invalid">
+                            <div class="input-group">
+                                <input />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Таблица в таблице</td>
+                    <td colspan="4" class="ctrl">
+                        <table class="a2-table grid-both">
+                            <tbody>
+                                <tr>
+                                    <td class="no-wrap">Sub 1</td>
+                                    <td class="ctrl"><textbox></textbox></td>
+                                    <td class="no-wrap">Sub 2</td>
+                                    <td class="ctrl"><textbox></textbox></td>
+                                </tr>
+                                <tr>
+                                    <td class="no-wrap">Sub 3</td>
+                                    <td class="ctrl"><textbox></textbox></td>
+                                    <td class="no-wrap">Sub 4</td>
+                                    <td class="ctrl"><textbox></textbox></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+        new Vue({
+            el: "#app"
+        });
+    </script>
+</body>
+</html>

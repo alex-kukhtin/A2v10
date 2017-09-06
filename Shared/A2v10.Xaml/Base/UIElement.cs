@@ -22,32 +22,5 @@ namespace A2v10.Xaml
 				tag.AddCssClass(Italic.Value ? "italic" : "no-italic");
             MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
 		}
-
-
-        internal void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)
-        {
-            var attrBind = GetBinding(propName);
-            if (attrBind != null)
-                tag.MergeAttribute($":{attrName}", attrBind.GetPathFormat(context));
-            else
-                tag.MergeAttribute(attrName, propValue);
-        }
-
-        internal void MergeAttributeInt32(TagBuilder tag, RenderContext context, String attrName, String propName, Int32? propValue)
-        {
-            var attrBind = GetBinding(propName);
-            if (attrBind != null)
-                tag.MergeAttribute($":{attrName}", attrBind.GetPath(context));
-            else if (propValue != null)
-                tag.MergeAttribute($":{attrName}", propValue.ToString());
-        }
-
-        internal void RenderIcon(RenderContext context, Icon icon)
-        {
-            if (icon == Icon.NoIcon)
-                return;
-            new TagBuilder("i", "ico ico-" + icon.ToString().ToKebabCase())
-                .Render(context);
-        }
     }
 }

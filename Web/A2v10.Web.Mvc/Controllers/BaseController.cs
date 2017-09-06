@@ -142,7 +142,8 @@ namespace A2v10.Web.Mvc.Controllers
             const String tmlHeader = 
 @"(function() {
     let module = { exports: undefined };
-    (function(module, exports) {";
+    (function(module, exports) {
+    'use strict';";
 
             const String tmlFooter =
 @"

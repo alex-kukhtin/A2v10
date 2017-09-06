@@ -1,24 +1,96 @@
 ﻿@import "Variables.less";
 
+@tab-brd-color:@default-brd-color;
+@tab-active-brd-color:gold;
+@tab-bg-color:#f8f8f8;
+@tab-hover-color:#eee;
+@tab-header-padding:6px 12px;
 
 .tab-panel {
-    background-color:yellow;
-    padding:0;
+    padding: 0;
+    align-self: stretch;
+    overflow:auto;
+    height: auto;
+    background-color:@tab-bg-color;
+    padding-top:6px;
+
     .tab-header {
-        background-color:#f8f8f8;
+        background-color: @tab-bg-color;
+        margin: 0;
+        padding: 0 6px 0;
+
         li {
-            display:inline-block;
-            padding: 6px 10px;
-            list-style:none;
-            cursor:pointer;
+            display: inline-block;
+            padding: @tab-header-padding;
+            list-style: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-top-width: 3px;
+            margin-bottom: -1px;
+            color: @link-color;
+
+            .ico {
+                color: @icon-color;
+            }
+
             &:hover {
-                background-color:antiquewhite;
+                background-color: @tab-hover-color;
+                color: @link-hover-color;
+                border-bottom-color: @tab-brd-color;
             }
+
             &.active {
-                background-color:white;
-                cursor:default;
-                border-top:3px solid gold;
+                background-color: white;
+                cursor: default;
+                border-top: 3px solid @tab-active-brd-color;
+                border-right: 1px solid @tab-brd-color;
+                border-left: 1px solid @tab-brd-color;
+                color: @text-color;
             }
+
+            &.active.yellow {
+                background-color:lightyellow;
+            }
+
+            &.active:hover {
+                border-bottom-color: transparent;
+            }
+
+            .noselect();
         }
+    }
+
+    .tab-content {
+        background-color:white;
+        border-top: 1px solid @tab-brd-color;
+    }
+
+    .tab-content.yellow {
+        background-color:lightyellow;
+    }
+}
+
+.tab-panel.fixed-header {
+
+    > .tab-header {
+        height: 32px;
+    }
+
+    > .tab-content {
+        overflow: auto;
+        height: ~"calc(100% - 33px)";
+    }
+
+    &.bordered > .tab-content {
+        height: ~"calc(100% - 34px)";
+    }
+}
+
+.tab-panel.bordered {
+    > .tab-header {
+        padding-left:0;
+    }
+    > .tab-content {
+        border: 1px solid @tab-brd-color;
     }
 }

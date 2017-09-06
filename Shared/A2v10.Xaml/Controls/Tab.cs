@@ -10,6 +10,11 @@ namespace A2v10.Xaml
     {
     }
 
+    /*
+     * TODO:
+     * 1. Можно добавить раскраску. атрибут tab-style="yellow", а в Tab.less есть такой класс
+     */
+
     public class Tab : Container
     {
         public Object Header { get; set; }

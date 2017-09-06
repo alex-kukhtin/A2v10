@@ -28,7 +28,12 @@ namespace A2v10.Xaml
             var td = new TagBuilder("td");
             if (onRender != null)
                 onRender(td);
+
             MergeAttributes(td, context);
+
+            if (Content is ITableControl)
+                td.AddCssClass("ctrl");
+
             Bind isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
             {

@@ -14,6 +14,10 @@ namespace A2v10.Xaml
 
         public Object Header { get; set; }
 
+        public Boolean FixedHeader { get; set; }
+
+        public Boolean Border { get; set; }
+
         public TabCollection Tabs { get; set; } = new TabCollection();
 
         static String _replaceScope(String path)
@@ -28,6 +32,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(panel);
             MergeAttributes(panel, context);
+            panel.AddCssClassBool(FixedHeader, "fixed-header");
+            panel.AddCssClassBool(Border, "bordered");
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
             {

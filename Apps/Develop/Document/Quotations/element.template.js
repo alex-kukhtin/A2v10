@@ -1,8 +1,11 @@
 ﻿
 /* index template */
 
-let template = {
-    properties: {
+const template = {
+	properties: {
+		'TList.Sum'() {
+			return this.Vehicles.reduce((p, c) => p + c.Sum, 0);
+		}
 	},
 	methods: {
 	},
@@ -10,10 +13,12 @@ let template = {
 	},
 	events: {
 		'TList.construct'(list) {
+			console.dir(this);
 			console.dir(list);
 		} 
     },
-    validators: {
+	validators: {
+		'Contract.Lists[].Vehicles[].Sum': "Введіть суму"
     },
     commands: {
     }

@@ -13,11 +13,7 @@ namespace A2v10.Xaml
         internal override void MergeAttributes(TagBuilder tag, RenderContext context)
         {
             base.MergeAttributes(tag, context);
-            var cmd = GetBindingCommand(nameof(Command));
-            if (cmd == null)
-                return;
-            cmd.MergeCommandAttributes(tag, context);
-            tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
+            MergeCommandAttribute(tag, context);
         }
     }
 }

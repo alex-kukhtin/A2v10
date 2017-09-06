@@ -1,0 +1,72 @@
+﻿@import "Variables.less";
+
+@table-brd-color:#ccc;
+
+@table-hdr-bg-color:#eee;
+
+table {
+    th {
+        border: 1px solid @table-brd-color;
+    }
+}
+
+table.bordered {
+}
+
+table.grid-vertical, table.grid-both {
+    > tbody > tr > td {
+        border-left: 1px solid @table-brd-color;
+        border-right: 1px solid @table-brd-color;
+    }
+
+    > thead > tr > th {
+        border-left: 1px solid @table-brd-color;
+        border-right: 1px solid @table-brd-color;
+    }
+}
+
+table.grid-horizontal, table.grid-both {
+    > tbody > tr > td {
+        border-top: 1px solid @table-brd-color;
+        border-bottom: 1px solid @table-brd-color;
+    }
+}
+
+table.striped {
+    > tbody > tr:nth-of-type(even) {
+        background-color: @alter-bg-color;
+    }
+}
+
+table.a2-table {
+    table-layout:auto;
+    background-color:#f8f8f8;
+    tbody > tr > td {
+        padding: 4px 6px;
+        vertical-align:baseline;
+
+        label {
+            display:inline-block;
+        }
+        .control-group {            
+            margin: -1px;
+            .input-group {
+                border-color:@table-brd-color;
+            }
+        }
+        .a2-table {
+            margin: -1px;
+        }
+    }
+
+    > thead > tr > th {
+        padding:4px 6px;
+        vertical-align:middle;
+        background-color:@table-hdr-bg-color;
+    }
+
+    td.ctrl {
+        padding:0;
+        vertical-align:top;
+    }
+}

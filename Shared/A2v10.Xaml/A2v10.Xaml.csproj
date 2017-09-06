@@ -46,6 +46,7 @@
     <Compile Include="Base\Command.cs" />
     <Compile Include="Base\Enums.cs" />
     <Compile Include="Base\ISupportBinding.cs" />
+    <Compile Include="Base\ITableControl.cs" />
     <Compile Include="Base\RenderContext.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\TagBuilder.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Controls\DataGridColumn.cs" />
     <Compile Include="Controls\DropDownMenu.cs" />
     <Compile Include="Controls\Group.cs" />
-    <Compile Include="Controls\Hyperlink.cs" />
+    <Compile Include="Text\Hyperlink.cs" />
     <Compile Include="Controls\List.cs" />
     <Compile Include="Controls\MenuItem.cs" />
     <Compile Include="Controls\Pager.cs" />

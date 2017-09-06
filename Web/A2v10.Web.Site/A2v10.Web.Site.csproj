@@ -78,7 +78,7 @@
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="css\bowtie.css" />
-    <Content Include="fonts\Bowtie.svg" />
+    <Content Include="css\fonts\bowtie.svg" />
     <Content Include="Pages\catalog_suppliers.html" />
     <Content Include="Pages\catalog_customers.html" />
     <Content Include="Pages\shell.js" />
@@ -114,10 +114,12 @@
     <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\formcontrol2.html" />
     <Content Include="TestPages\generator.js" />
+    <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\pagelayout.html" />
     <Content Include="TestPages\pager.html" />
     <Content Include="TestPages\pager.js" />
     <Content Include="TestPages\tabcomponent.html" />
+    <Content Include="TestPages\table.html" />
     <Content Include="TestPages\testscript.html" />
     <Content Include="TestPages\treeview.html" />
     <Content Include="TestPages\include.html" />
@@ -150,16 +152,16 @@
     <Content Include="Less\ToolBar.less" />
     <Content Include="Less\TreeView.less" />
     <Content Include="Less\Nav.less" />
-    <Content Include="fonts\Bowtie.eot" />
-    <Content Include="fonts\Bowtie.ttf" />
-    <Content Include="fonts\Bowtie.woff" />
-    <Content Include="fonts\Bowtie.woff2" />
     <Content Include="Less\Bowtie.less" />
     <Content Include="Less\Tab.less" />
     <Content Include="Less\Grid.less" />
     <Content Include="Less\DropDown.less" />
     <Content Include="Less\Page.less" />
     <Content Include="Less\Button.less" />
+    <Content Include="css\fonts\bowtie.eot" />
+    <Content Include="css\fonts\bowtie.ttf" />
+    <Content Include="css\fonts\bowtie.woff" />
+    <Content Include="Less\Table.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

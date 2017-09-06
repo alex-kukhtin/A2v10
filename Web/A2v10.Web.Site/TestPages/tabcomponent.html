@@ -6,40 +6,77 @@
     <link href="../css/site.css" rel="stylesheet" />
     <style>
         .badge {
-            display:inline-block;
-            background-color:#888;
-            color:white;
-            padding:0.2em .4em 0.4em 0.4em;
-            font-size:85%;
-            margin-left:0.4em;
-            border-radius:0.8em;
+            display: inline-block;
+            background-color: #888;
+            color: white;
+            padding: 0.2em .4em 0.4em 0.4em;
+            font-size: 85%;
+            margin-left: 0.4em;
+            border-radius: 0.8em;
         }
+
         .x {
             border: 6px solid red;
+        }
+
+        .tab-test {
+            width: 100%;
+            overflow: auto;
+            grid-template-columns: 80% 1fr;
+            grid-template-rows: 200px 1fr;
+        }
+
+        .tab-wrapper {
+            border: 1px solid darkred;
+        }
+
+        .full-height {
         }
     </style>
 </head>
 <body>
-    <div id="test-tab">
-        <div>
-            <h3>Static Tabs</h3>
-            <a2-tab-panel>
-                <a2-tab-item header="header1" icon="user">text for item 1</a2-tab-item>
-                <a2-tab-item header="header2" icon="database">i am the second item</a2-tab-item>
-                <a2-tab-item header="header3">
-                    <div>
-                        <h3>третий элемент</h3>
-                        а это содержимое третьего элемента
-                        <span>{{Document.Name}}</span>
-                        <div v-for="(row, rowIndex) in Document.Rows">
-                            {{row}}
-                        </div>
+    <div id="test-tab" class="grid tab-test">
+        <a2-tab-panel class="fixed-header bordered" style="grid-row:1">
+            <a2-tab-item header="header1" icon="user" tab-style="yellow">
+                <div class="grid" style="grid-template-rows:100px 1fr; grid-template-columns:350px 1fr;background-color:transparent">
+                    <a2-tab-panel class="fixed-header bordered" style="grid-row:1;grid-column:1">
+                        <a2-tab-item header="sub tab 1">sub 1</a2-tab-item>
+                        <a2-tab-item header="sub tab 2">sub 2</a2-tab-item>
+                        <a2-tab-item header="Длинный заголовок" tab-style="yellow">
+                            <div>
+                                <h3>третий элемент</h3>
+                                а это содержимое третьего элемента
+                                <span>{{Document.Name}}</span>
+                                <div v-for="(row, rowIndex) in Document.Rows">
+                                    {{row}}
+                                </div>
+                                <hr />
+                                <div v-for="(row, rowIndex) in Document.Rows">
+                                    {{row}}
+                                </div>
+                            </div>
+                        </a2-tab-item>
+                    </a2-tab-panel>
+                </div>
+            </a2-tab-item>
+            <a2-tab-item header="header2" icon="database">i am the second item</a2-tab-item>
+            <a2-tab-item header="Длинный заголовок" tab-style="yellow">
+                <div>
+                    <h3>третий элемент</h3>
+                    а это содержимое третьего элемента
+                    <span>{{Document.Name}}</span>
+                    <div v-for="(row, rowIndex) in Document.Rows">
+                        {{row}}
                     </div>
-                </a2-tab-item>
-            </a2-tab-panel>
-        </div>
+                    <hr />
+                    <div v-for="(row, rowIndex) in Document.Rows">
+                        {{row}}
+                    </div>
+                </div>
+            </a2-tab-item>
+        </a2-tab-panel>
 
-        <div>
+        <div class="tab-wrapper" style="grid-row:2">
             <h3>Dynamic Tabs</h3>
             <div>
                 <button @click.prevent="addItem">+</button>
@@ -49,7 +86,7 @@
                     <span>dynamic tab item: </span>
                     <span v-text="tabitem.item.id"></span>
                     <button @click.prevent="removeItem(tabitem.item)">-</button>
-                </template>    
+                </template>
                 <template slot="header" scope="tabitem">
                     I am the header {{tabitem.index}} + {{tabitem.number}}
                     <span>Row id is {{tabitem.item.id}}</span>
@@ -71,38 +108,38 @@
 
     <script type="text/javascript">
 
-    (function() {
+        (function () {
 
-        var sampleData = {
-            tabs: [
-                {},
-                {},
-                {}
-            ],
-            Document: {
-                Name: "document name value",
-                Rows: [{id:1}, {id:2}, {id:3}]
-            }
-        };
-
-        var vm = new Vue({
-            el: "#test-tab",
-            data: sampleData,
-            methods: {
-                addItem() {
-                    let coll = this.Document.Rows;
-                    coll.push({ id: coll.length + 1});
-                },
-                removeItem(item) {
-                    let coll = this.Document.Rows;
-                    let ix = coll.indexOf(item);
-                    if (ix != -1)
-                        coll.splice(ix, 1);
+            var sampleData = {
+                tabs: [
+                    {},
+                    {},
+                    {}
+                ],
+                Document: {
+                    Name: "document name value",
+                    Rows: [{ id: 1 }, { id: 2 }, { id: 3 }]
                 }
-            }
-        });
+            };
 
-    })();
+            var vm = new Vue({
+                el: "#test-tab",
+                data: sampleData,
+                methods: {
+                    addItem() {
+                        let coll = this.Document.Rows;
+                        coll.push({ id: coll.length + 1 });
+                    },
+                    removeItem(item) {
+                        let coll = this.Document.Rows;
+                        let ix = coll.indexOf(item);
+                        if (ix != -1)
+                            coll.splice(ix, 1);
+                    }
+                }
+            });
+
+        })();
 
     </script>
 </body>

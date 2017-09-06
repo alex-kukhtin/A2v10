@@ -9,7 +9,11 @@ namespace A2v10.Xaml
 	public abstract class Control : UIElement
 	{
         public Boolean Block { get; set; }
+
         public String Label { get; set; }
+
+        public String Description { get; set; }
+
         public Boolean Required { get; set; }
 
         Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
@@ -27,6 +31,7 @@ namespace A2v10.Xaml
         private void AddControlAttributes(TagBuilder tag, RenderContext context)
         {
             MergeBindingAttributeString(tag, context, "label", nameof(Label), Label);
+            MergeBindingAttributeString(tag, context, "description", nameof(Description), Description);
             MergeBoolAttribute(tag, context, nameof(Required), Required);
         }
 

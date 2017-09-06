@@ -3,60 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
     <style>
         [v-cloak] {
             display: none;
         }
 
-        .dropdown {
-            position:relative;
-            display:inline-block;
-            padding:10px;
-        }
 
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: skyblue;
-            padding: 10px;
-            left:10px;
-            top:10px;
-            width: auto;
-            border: 1px solid red;
-            box-shadow: rgba(0, 0, 0, 0.5) 10px 10px 20px;
-            z-index:500;
-        }
 
         .dropdown-menu.dialog {
             display:none;
             position:absolute;
-            padding:20px;
-            background-color:beige;
-            left:0;
-            top:100%;
-            z-index:500;
-            border-color:forestgreen;
+            padding:6px;
         }
 
-        .dropdown.show > .dropdown-menu {
-            display: block;
+        .xxx {
+            background-color: beige;
             left: 0;
             top: 100%;
-        }
-
-        .dropdown.show > button {
-            background-color:aquamarine;
-        }
-
-        .dropdown-item {
-            display: block;
-            min-width: 120px;
-        }
-
-        .dropdown-divider {
-            height:1px;
-            margin:.5rem 0;
-            background-color:forestgreen;
+            z-index: 500;
+            border-color: forestgreen;
         }
 
         .context-menu {
@@ -86,7 +52,7 @@
 
 
     <div id="app">
-        <h3>Buttons with drop down</h3>
+        <h3>Элементы DropDown</h3>
         <p>
             Popup поддерживают: drop-down, date-picker, context-menu, popover, 
         </p>
@@ -116,25 +82,28 @@
                 Show third DropDown
             </label>
         </p>
-            <div class="dropdown" v-dropdown>
-                <button toggle>Simple button</button>
-                <div class="dropdown-menu">
-                    <a href="" @click.prevent="doClick(1)" class="dropdown-item">First</a>
-                    <a href="" @click.prevent="doClick(2)" class="dropdown-item">Second</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="" @click.prevent="doClick(3)" class="dropdown-item">Third</a>
-                </div>
+
+        <div class="toolbar">
+            <div class="dropdown dir-down" v-dropdown>
+                <button class="btn" toggle>Simple button</button>
+                <ul class="dropdown-menu menu">
+                    <li @click.prevent="doClick(1)" class="dropdown-item"><i class="ico ico-database"></i>First</li>
+                    <li href="" @click.prevent="doClick(2)" class="dropdown-item"><i class="ico ico-user"></i>Second</li>
+                    <li class="divider"></li>
+                    <li href="" @click.prevent="doClick(3)" class="dropdown-item"><i class="ico ico-reload"></i>Third</li>
+                    <li href="" @click.prevent="doClick(3)" class="dropdown-item"><i class="ico ico-none"></i>Third</li>
+                </ul>
             </div>
 
-            <div class="dropdown" v-dropdown>
-                <button toggle @click="openFilter">Another button</button>
-                <div class="dropdown-menu dialog">
+            <div class="dropdown dir-down" v-dropdown>
+                <button toggle @click="openFilter" class="btn">dropdown dialog </button>
+                <div class="dropdown-menu dialog menu">
                     <a href="javascript:void(0)" class="dropdown-item">First</a>
-                    <a href="javascript:void(0)" class="dropdown-item">Second</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="javascript:void(0)" class="dropdown-item">Third</a>
-                    <hr />
-                    <input v-model="filterText"/>
+                    <a href="javascript:void(0)" class="dropdown-item">Second (dialog)</a>
+                    <div class="divider"></div>
+                    <a href="javascript:void(0)" class="dropdown-item">Third (dialog)</a>
+                    <div class="divider"></div>
+                    <input v-model="filterText" />
                     <div>
                         <button close-dropdown @click.prevent="closeFilter(true)">Ok</button>
                         <button close-dropdown @click.prevent="closeFilter(false)">Cancel</button>
@@ -143,15 +112,16 @@
                 <span>Filter:</span>
                 <span v-text="filterText"></span>
             </div>
+        </div>
 
             <span v-cloak>
                 <span class="dropdown" v-dropdown v-if="is3">
                     <a href="" toggle>third with hyperlink</a>
-                    <div class="dropdown-menu">
-                        <a href="javascript:void(0)" class="dropdown-item">First</a>
-                        <a href="javascript:void(0)" class="dropdown-item">Second</a>
-                        <div class="dropdown-divider"></div>
-                    </div>
+                    <ul class="dropdown-menu menu">
+                        <li class="dropdown-item">First</a>
+                        <li class="divider"></li>
+                        <li href="javascript:void(0)" class="dropdown-item">Second</li>
+                    </ul>
                 </span>
             </span>
 
@@ -159,18 +129,18 @@
 
             <div v-contextmenu class="context-menu" style="margin-top:40px;width:150px;height:150px;background-color:antiquewhite;overflow:scroll">
                 use context menu
-                <div style="height:400px;width:150px;margin:10px;overflow:scroll">
+                <div style="height:400px;width:150px;margin:10px">
                 </div>
-                <div class="dropdown-menu">
-                    <a href="" @click.prevent="doClick(1)" class="dropdown-item">First</a>
-                    <a href="" @click.prevent="doClick(2)" class="dropdown-item">Second</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="" @click.prevent="doClick(3)" class="dropdown-item">Third</a>
+                <div class="dropdown-menu menu">
+                    <a href="" @click.prevent="doClick(1)" class="dropdown-item">First context element</a>
+                    <a href="" @click.prevent="doClick(2)" class="dropdown-item">Second context element</a>
+                    <div class="divider"></div>
+                    <a href="" @click.prevent="doClick(3)" class="dropdown-item">Third context element</a>
                 </div>
             </div>
 
             <div style="margin-top:200px">
-                <button>another</button>
+                <button>another button</button>
             </div>
     </div>
     <script src="../scripts/vue.js"></script>
@@ -183,8 +153,12 @@
 
         Vue.component('a2-date-picker', {
             template: `
-<div class="datepicker">
-    <input><a href='' @click.prevent='toggle'>=</a>
+<div class="control-group" style="width:160px;position:relative;overflow:visible">
+    <label>Date picker control</label>
+    <div class="input-group">
+        <input v-focus />
+        <a href='' @click.prevent='toggle'><i class="ico ico-calendar"></i></a>
+    </div>
     <div class="calendar" v-if="isOpen">
         <div class="header">
             <a @click.prevent='prev'>prev</a>
@@ -271,7 +245,7 @@
                     let style = el._menu.style;
                     style.top = ev.pageY + 'px';
                     style.left = ev.pageX + 'px';
-                    style.backgroundColor = "yellow";
+                    //style.backgroundColor = "yellow";
                     el._menu.classList.toggle('show');
                     console.dir(ev);
                     //console.warn('open context menu');

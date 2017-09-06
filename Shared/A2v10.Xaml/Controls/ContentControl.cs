@@ -22,8 +22,8 @@ namespace A2v10.Xaml
             // if it's a binding, it will be added via MergeAttribute
             if (Content == null)
                 return;
-            if (Content is UIElement)
-                (Content as UIElement).RenderElement(context);
+            if (Content is UIElementBase)
+                (Content as UIElementBase).RenderElement(context);
             else if (Content != null)
                 context.Writer.Write(Content.ToString());
         }

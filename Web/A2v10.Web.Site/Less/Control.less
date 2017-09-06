@@ -2,8 +2,8 @@
 @import "Variables.less";
 
 
-@control-border: #aaa;
-@label-color: #777;
+@control-border: @default-brd-color;
+@label-color: #575757;
 @control-bg-color:white;
 
 
@@ -20,30 +20,69 @@
 
     label {
         color: @label-color;
-        margin-bottom: 4px;
+        margin-bottom: 0.2em;
         display: block;
+    }
+
+    .descr {
+        display: inline-block;
+        font-size: 96%;
+        margin-bottom: 0.25em;
+        color: @label-color;
     }
 
     .validator {
         position: absolute;
         display: none;
-        margin:0;
-        left: 100%;
-        //right:100%;
-        top: 0;
+        margin: 0;
+        left: -1px;
+        width:auto;
+        font-size: 96%;
+        bottom: 100%;
         padding: 2px 6px 4px 6px;
         background-color: @danger-bg-color;
         color: @danger-txt-color;
         border: 1px solid @danger-brd-color;
-        margin-left: 10px;
-        text-align:left;
+        margin-bottom: 8px;
+        text-align: left;
         box-shadow: 1px 4px 10px @danger-shadow-color;
-        z-index:@validator-index;
-        line-height:1.3em;
+        z-index: @validator-index;
+        line-height: 1.2em;
+
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+        }
+
+        &:before {
+            left: 8px;
+            margin-bottom: -8px;
+            border: 8px solid transparent;
+            border-top: 8px solid @danger-brd-color;
+            border-bottom-width: 0
+        }
+
+        &:after {
+            left: 8.5px;
+            margin-bottom: -7px;
+            border: 7px solid transparent;
+            border-top: 7px solid @danger-bg-color;
+            border-bottom-width: 0;
+        }
 
         .error {
             display: list-item;
             list-style-type: none;
+            padding-left:6px;
+            white-space: normal;
+            max-width:190px;
+            // custom bullet
+            &:before {
+                content:'\2022';
+                position:absolute;
+                left:3px;
+            }
         }
     }
 
@@ -53,37 +92,45 @@
         align-items: baseline;
         background-color: @control-bg-color;
         position: relative;
+        padding: 1px 0;
+        width: auto;
 
         > a {
             align-self: stretch;
             padding: 0 3px;
             line-height: @control-height;
-            color: #777;
+            color: @label-color;
 
             &:hover {
                 text-decoration: none;
                 color: @link-hover-color
             }
+
             .ico:before {
-                color:inherit;
+                color: inherit;
             }
+        }
+
+        .ico-clear {
+            // small patch
+            font-size: 90%;
+            margin: 0.1em;
         }
     }
 
     &:hover .input-group,
-    .input-group.focus
-    {
-        border-color: @link-hover-color;
+    .input-group.focus {
+        border-color: @link-hover-color!important;
         box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     }
-
     // для "схлопнутых" элементов
     .input-group.focus {
-        z-index:@focus-index;
+        z-index: @focus-index;
     }
 
     &:hover .input-group {
-        z-index:@hover-index;
+        // нельзя, иначе "всплывает" поверх выделенной ошибки
+        z-index: @hover-index;
     }
 
     input, select {
@@ -92,7 +139,7 @@
     }
 
     select {
-        padding:0 2px;
+        padding: 0 2px;
     }
 
     .control {
@@ -128,7 +175,7 @@
     }
 
     .input-group {
-        border-color: @danger-brd-color;
+        border-color: @danger-brd-color!important;
         background-color: #fff8f8;
         z-index: @invalid-index;
         &:after {

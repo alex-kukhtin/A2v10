@@ -1,5 +1,8 @@
 ﻿/*20170814-7013*/
 /*app.js*/
+
+"use script";
+
 (function () {
 
 	window.app = {

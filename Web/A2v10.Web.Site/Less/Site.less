@@ -133,7 +133,7 @@ header, .header {
         width: auto;
         padding: 2px 4px;
         color: @default-brd-color;
-        font-size: 12px;
+        font-size: 110%;
 
         &:hover {
             color: @link-hover-color;
@@ -142,7 +142,7 @@ header, .header {
         }
 
         &:before {
-            content: "\e611"; // ico-chevron-left
+            content: "\e9a3"; // chevron-left
         }
     }
 
@@ -153,7 +153,7 @@ header, .header {
         .collapse-handle {
             padding-right:6px;
             &:before {
-                content: "\e612"; // ico-chevron-right
+                content: "\e9a5"; // chevron-right
             }
         }
     }
@@ -252,6 +252,7 @@ td, th {
 a {
     color: @link-color;
     text-decoration: none;
+    cursor:pointer;
 
     &:hover {
         color: @link-hover-color;
@@ -281,6 +282,7 @@ pre {
 @import "TreeView.less";
 @import "Tab.less";
 @import "Dialog.less";
+@import "Table.less";
 
 @import "DropDown.less";
 @import "Grid.less";

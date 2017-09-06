@@ -1,5 +1,8 @@
 /*20170814-7013*/
 /*app.js*/
+
+"use script";
+
 (function () {
 
 	window.app = {
@@ -119,229 +122,6 @@ app.modules['std:url'] = function () {
 
 	app.modules['std:eventBus'] = new Vue({});
 
-})();
-
-/*20170824-7019*/
-/* platform/route.js */
-(function () {
-
-    const SEARCH_PREFIX = "search:";
-    const MENU_PREFIX = "menu:";
-    const ENABLE_SAVE_SEARCH = true;
-
-    function parseQueryString(str) {
-        var obj = {};
-        str.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = decodeURIComponent(value);
-        });
-        return obj;
-    }
-
-    function makeQueryString(obj) {
-        if (!obj)
-            return '';
-        let esc = encodeURIComponent;
-        let query = Object.keys(obj)
-            .filter(k => obj[k])
-            .map(k => esc(k) + '=' + esc(obj[k]))
-            .join('&');
-        return query ? '?' + query : '';
-    }
-
-    function saveSearchToStorage() {
-        if (!ENABLE_SAVE_SEARCH)
-            return;
-        let stg = window.localStorage;
-        if (!stg)
-            return;
-        let loc = window.location;
-        let key = SEARCH_PREFIX + loc.pathname;
-        loc.search ? stg.setItem(key, loc.search) : stg.removeItem(key);
-        //console.info(`store key='${key}', value='${loc.search}'`);
-    }
-
-    function getSearchFromStorage(url) {
-        if (!ENABLE_SAVE_SEARCH)
-            return '';
-        let stg = window.localStorage;
-        if (!stg)
-            return '';
-        let key = SEARCH_PREFIX + url;
-        let res = stg.getItem(key) || '';
-        //console.info(`get key='${key}', value='${res}'`);
-        return res;
-    }
-
-    function Location() {
-        this.path = window.location.pathname;
-        this.wl = this.path.split('/');
-        this.search = window.location.search.substring(1);
-    }
-
-    // static
-    Location.current = function () {
-        return new Location();
-    };
-
-    Location.getSavedMenu = function (segment) {
-        let stg = window.localStorage;
-        if (!stg)
-            return '';
-        let key = MENU_PREFIX + segment;
-        let res = stg.getItem(key) || '';
-        return res;
-    };
-
-    Location.prototype.routeLength = function () {
-        return this.wl.length;
-    };
-
-    Location.prototype.segment = function (no) {
-        let wl = this.wl;
-        return wl.length > no ? wl[no].toLowerCase() : '';
-    };
-    Location.prototype.fullPath = function () {
-        return this.path + (this.search ? '?' + this.search : '');
-    };
-
-    Location.prototype.saveMenuUrl = function () {
-        let stg = window.localStorage;
-        if (!stg)
-            return;
-        let s1 = this.segment(1);
-        let s2 = this.segment(2);
-        let search = this.search;
-        if (s1) {
-            let keym = MENU_PREFIX + s1;
-            s2 ? stg.setItem(keym, s2) : stg.removeItem(keym);
-        }
-        return this;
-    };
-
-    const route = new Vue({
-        data: {
-            search: {}
-        },
-        computed: {
-            query: {
-                get() {
-                    let wls = window.location.search.substring(1); // skip '?'
-                    let qs = parseQueryString(wls);
-                    Vue.set(this, 'search', qs);
-                    //console.warn('get route.query:' + wls);
-                    return this.search;
-                },
-				set(value) {
-                    Vue.set(this, 'search', value);
-                    let newUrl = window.location.pathname;
-                    newUrl += makeQueryString(this.search);
-                    // replace, do not push!
-                    window.history.replaceState(null, null, newUrl);
-                    saveSearchToStorage();
-                    //console.warn('set route.query:' + makeQueryString(this.search));
-                }
-            }
-        },
-        methods: {
-            location() {
-                return Location.current();
-            },
-
-            replaceUrlSearch(url) {
-                // replace search part url to current
-                let search = window.location.search;
-                let parts = url.split('?');
-                if (parts.length !== 2)
-                    return url;
-                return parts[0] + search;
-            },
-
-            queryFromUrl(url) {
-                if (!url)
-                    return {};
-                let parts = url.split('?');
-                if (parts.length === 2)
-                    return parseQueryString(parts[1]);
-                return {};
-            },
-
-            replaceUrlQuery(url, qry) {
-                if (!url)
-                    return;
-                let parts = url.split('?');
-                if (parts.length > 0)
-                    return parts[0] + makeQueryString(qry);
-                return url;
-            },
-
-            savedMenu: Location.getSavedMenu,
-
-            navigateMenu(url, query, title) {
-                let srch = getSearchFromStorage(url);
-                if (!srch)
-                    url += query ? '?' + query : '';
-                else
-                    url += srch;
-                if (query)
-                    Vue.set(this, 'search', parseQueryString(query));
-                else if (srch) {
-                    Vue.set(this, 'search', parseQueryString(srch.substring(1)));
-                }
-                console.info('navigate to:' + url);
-                this.setTitle(title);
-                window.history.pushState(null, null, url);
-                let loc = this.location();
-                loc.saveMenuUrl();
-                this.$emit('route', loc);
-            },
-
-            navigateCurrent() {
-                let loc = this.location();
-                loc.saveMenuUrl();
-                this.$emit('route', loc);
-            },
-
-            navigate(url, title) {
-                let loc = this.location();
-                console.info('navigate to:' + url);
-                let oldUrl = loc.fullPath();
-                // push/pop state feature. Replace the current state and push new one.
-				this.setTitle(title);
-                window.history.replaceState(oldUrl, null, oldUrl);
-                window.history.pushState(oldUrl, null, url);
-                loc = this.location(); // get new instance
-                this.$emit('route', loc);
-            },
-            setTitle(title) {
-                if (title)
-                    document.title = title;
-            },
-            setState(url, title, query) {
-                this.setTitle(title);
-                if (query)
-                    url += '?' + query;
-                else {
-                    let search = getSearchFromStorage(url);
-                    url += search || '';
-                }
-                window.history.replaceState(null, null, url);
-            },
-            updateSearch() {
-                //return;
-                let wls = window.location.search.substring(1); // skip '?'
-                let qs = parseQueryString(wls);
-                //console.warn('update search:' + wls);
-                Vue.set(this, 'search', qs);
-                saveSearchToStorage();
-            },
-            close() {
-                window.history.back();
-            }
-        }
-    });
-
-
-    app.modules['route'] = route;
 })();
 
 /*20170902-7023*/
@@ -701,6 +481,7 @@ app.modules['std:validators'] = function() {
 /* services/datamodel.js */
 (function() {
 
+	"use strict";
     /* TODO:
     1. changing event
     4. add plain properties
@@ -999,8 +780,8 @@ app.modules['std:validators'] = function() {
         if (event in events) {
             // fire event
             log.info('handle: ' + event);
-            let func = events[event];
-            func(...arr);
+			let func = events[event];
+			func.call(undefined, ...arr);
         }
     }
 
@@ -1062,10 +843,10 @@ app.modules['std:validators'] = function() {
         return saveErrors(item, path, res);
     }
 
-    function* enumData(root, path, name) {
+    function* enumData(root, path, name, index) {
         if (!path) {
             // scalar value in root
-            yield { item: root, val: root[name] };
+            yield { item: root, val: root[name], ix:index };
             return;
         }
 		let sp = path.split('.');
@@ -1074,30 +855,43 @@ app.modules['std:validators'] = function() {
             let last = i === sp.length - 1;
 			let prop = sp[i];
             if (prop.endsWith('[]')) {
-                // is array
+				// is array
 				let pname = prop.substring(0, prop.length - 2);
+				if (!(pname in currentData)) {
+					console.error(`Invalid validator key. Property '${pname}' not found in '${currentData.constructor.name}'`);
+				}
 				let objto = currentData[pname];
                 if (!objto) continue;
                 for (let j = 0; j < objto.length; j++) {
                     let arrItem = objto[j];
-                    if (last)
-                        yield { item: arrItem, val: arrItem[name] };
-                    else {
-                        let newpath = sp.slice(1).join('.');
-						yield* enumData(arrItem, newpath, name);
+					if (last) {
+						yield { item: arrItem, val: arrItem[name], ix: index + ':' + j };
+					} else {
+						let newpath = sp.slice(i + 1).join('.');
+						yield* enumData(arrItem, newpath, name, index + ':' + j);
                     }
-                }
+				}
+				return;
             } else {
                 // simple element
-                let objto = root[prop];
-				if (objto) yield { item: root[prop], val: objto[name] };
-				currentData = objto;
+				if (!prop in root) {
+					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);					
+				}
+				let objto = root[prop];
+				if (last) {
+					if (objto)
+						yield { item: objto, val: objto[name], ix:index };
+					return;
+				}
+				else {
+					currentData = objto;
+				}
             }
         }
     }
 
     // enumerate all data (recursive)
-    function* dataForVal(root, path) {
+	function* dataForVal(root, path) {
         let ld = path.lastIndexOf('.');
         let dp = '';
         let dn = path;
@@ -1105,16 +899,24 @@ app.modules['std:validators'] = function() {
             dp = path.substring(0, ld);
             dn = path.substring(ld + 1);
 		}
-		yield* enumData(root, dp, dn);
+		yield* enumData(root, dp, dn, '');
     }
 
     function validateOneElement(root, path, vals) {
         if (!vals)
 			return;
-        for (let elem of dataForVal(root, path)) {
-            let res = validators.validate(vals, elem.item, elem.val);
-            saveErrors(elem.item, path, res);
-        }
+		let errs = [];
+		for (let elem of dataForVal(root, path)) {
+			let res = validators.validate(vals, elem.item, elem.val);
+			saveErrors(elem.item, path, res);
+			if (res && res.length) {
+				errs.push(...res);
+				// elem.ix - индексы в массивах, по которым мы прохдили
+				// console.dir(elem.ix);
+			}
+
+		}
+		return errs.length ? errs : null;
     }
 
     function validateAll() {
@@ -1126,12 +928,16 @@ app.modules['std:validators'] = function() {
         let tml = me.$template;
         if (!tml) return;
         let vals = tml.validators;
-        if (!vals) return;
+		if (!vals) return;
+		let allerrs = [];
         for (var val in vals) {
-            validateOneElement(me, val, vals[val])
+			let err1 = validateOneElement(me, val, vals[val])
+			if (err1)
+				allerrs.push({ x: val, e: err1 });
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
+		console.dir(allerrs);
     }
 
     function setDirty(val) {
@@ -1385,10 +1191,11 @@ app.modules['std:popup'] = function () {
 		props: {
 			label: String,
 			required: Boolean,
-            align: { type: String, default: 'left' }
+			align: { type: String, default: 'left' },
+			description: String
 		},
         computed: {
-            path() {
+			path() {
                 return this.item._path_ + '.' + this.prop;
             },
             valid() {
@@ -1401,6 +1208,9 @@ app.modules['std:popup'] = function () {
             errors() {
                 if (!this.item) return null;
 				let root = this.item._root_;
+				if (!root) return null;
+				if (!root._validate_)
+					return null;
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
@@ -1417,6 +1227,9 @@ app.modules['std:popup'] = function () {
 			},
 			hasLabel() {
 				return !!this.label;
+			},
+			hasDescr() {
+				return !!this.description;
 			}
         },
         methods: {
@@ -1440,6 +1253,7 @@ app.modules['std:popup'] = function () {
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
 
@@ -1450,11 +1264,19 @@ app.modules['std:popup'] = function () {
 
     let baseControl = component('control');
 
+	const defaultObj = {
+		_validate_() {
+			return true;
+		}
+	};
+
     Vue.component('textbox', {
         extends: baseControl,
         template: textBoxTemplate,
-        props: {
-            item: Object,
+		props: {
+			item: {
+				type: Object, default: {}
+			},
             prop: String
 		}		
     });
@@ -2094,14 +1916,13 @@ Vue.component('collection-view', {
 	}
 });
 
-/* 20170816-7014 */
+/* 20170906-7027 */
 /*components/tab.js*/
 
 /*
 TODO:
 
 2. isActive with location hash
-3. css
 5. enable/disable tabs
 7. много табов - добавить стрелки ?
 10. default header for dynamic tab
@@ -2121,17 +1942,15 @@ TODO:
 <div class="tab-panel">
     <template v-if="static">
         <ul class="tab-header">
-            <li :class="{active: tab.isActive}" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
-                <a href>
-                    <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
-                    <span v-text="tab.header"></span>
-                </a>
+            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
+                <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
+                <span v-text="tab.header"></span>
             </li>
         </ul>
 		<template>
 			<slot name="title" />
 		</template>
-        <div class="tab-content">
+        <div class="tab-content" :class="contentCssClass">
             <slot />
         </div>
     </template>
@@ -2139,9 +1958,7 @@ TODO:
         <ul class="tab-header">
             <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
 				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
-					<a href>
-						<span v-text="defaultTabHeader(item, tabIndex)"></span> 
-					</a>
+					<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 				</slot>
             </li>
         </ul>
@@ -2157,8 +1974,6 @@ TODO:
 </div>
 `;
 
-	//<span>{{ item }}</span>
-
     const tabItemTemplate = `
 <div class="tab-item" v-if="isActive">
     <slot />
@@ -2171,7 +1986,8 @@ TODO:
         template: tabItemTemplate,
         props: {
             header: String,
-			icon: String
+			icon: String,
+			tabStyle: String
         },
         computed: {
             hasIcon() {
@@ -2182,6 +1998,9 @@ TODO:
             },
             isActive() {
                 return this === this.$parent.activeTab;
+			},
+			tabCssClass() {
+				return (this.isActive ? 'active ' : '') + (this.tabStyle || '');
 			}
         },
         created() {
@@ -2205,6 +2024,9 @@ TODO:
         computed: {
             static() {
                 return !this.items;
+			},
+			contentCssClass() {
+				return this.activeTab ? this.activeTab.tabStyle : '';
 			}
 		},
 		watch: {
@@ -2384,7 +2206,7 @@ Vue.directive('dropdown', {
 });
 
 
-/*20170905-7026*/
+/*20170906-7027*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -2405,20 +2227,20 @@ Vue.directive('focus', {
 			if (t._selectDone)
 				return;
 			t._selectDone = true;
-			t.select();
+			if (t.select) t.select();
+			event.stopImmediatePropagation();
 		}, true);
 	}
 });
 
 
-/*20170905-7026*/
+/*20170906-7027*/
 /*controllers/base.js*/
 (function () {
 
     const eventBus = require('std:eventBus');
     const utils = require('utils');
     const dataservice = require('std:dataservice');
-    const route = require('route');
 	const store = component('std:store');
 	const urltools = require('std:url');
 	const log = require('std:log');
@@ -2475,34 +2297,6 @@ Vue.directive('focus', {
 				return this.$data.__modelInfo;
 			}
 		},
-		/*
-		watch: {
-            $baseUrl2: function (newUrl) {
-                if (!this.$data.__init__)
-                    return;
-                if (this.inDialog)
-                    this.$data._query_ = route.queryFromUrl(newUrl);
-                else
-                    this.$data._query = route.query;
-                Vue.nextTick(() => { this.$data.__init__ = false; });
-            },
-            "$query2": {
-                handler: function (newVal, oldVal) {
-                    //console.warn('query watched');
-                    if (this.$data.__init__)
-                        return;
-                    if (this.inDialog) {
-                        this.$data.__baseUrl__ = route.replaceUrlQuery(this.$baseUrl, newVal);
-                        this.$reload();
-                    } else {
-                        route.query = newVal;
-                        this.$searchChange();
-                    }
-                },
-                deep: true
-            }
-        },
-		*/
 		methods: {
 			$exec(cmd, ...args) {
 				let root = this.$data;
@@ -2689,7 +2483,7 @@ Vue.directive('focus', {
 			},
 
 			$searchChange() {
-				let newUrl = route.replaceUrlSearch(this.$baseUrl);
+				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
 				this.$data.__baseUrl__ = newUrl;
 				this.$reload();
 			},
@@ -2745,17 +2539,12 @@ Vue.directive('focus', {
 		created() {
 			eventBus.$emit('registerData', this);
 
-			if (!this.inDialog) {
-				this.$data._query_ = route.query;
-				///console.dir(this);
-			}
-			//alert(this.$data._needValidate_);
-			//this.$data._needValidate_ = true;
 			/*
-			store.$on('queryChange', function (url) {
-				alert('query change');
-                //this.$data._query_ = val;
-            });
+			TODO: а зачем это было ???
+			if (!this.inDialog) {
+				//alert(this.$data._query_);
+				//this.$data._query_ = route.query;
+			}
 			*/
 
 			eventBus.$on('beginRequest', this.__beginRequest);

@@ -111,9 +111,12 @@ namespace A2v10.Web.Mvc.Controllers
 
             var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
             RequestView rw = rm.GetCurrentAction();
+            String loadProc = rw.LoadProcedure;
+            if (loadProc == null)
+                throw new RequestModelException("The data model is empty");
             loadPrms.Set("UserId", UserId);
             loadPrms.Set("Id", rw.Id);
-            IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, rw.LoadProcedure, loadPrms);
+            IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
             WriteDataModel(model);
         }
     }

@@ -2,6 +2,7 @@
 /* services/datamodel.js */
 (function() {
 
+	"use strict";
     /* TODO:
     1. changing event
     4. add plain properties
@@ -300,8 +301,8 @@
         if (event in events) {
             // fire event
             log.info('handle: ' + event);
-            let func = events[event];
-            func(...arr);
+			let func = events[event];
+			func.call(undefined, ...arr);
         }
     }
 
@@ -363,10 +364,10 @@
         return saveErrors(item, path, res);
     }
 
-    function* enumData(root, path, name) {
+    function* enumData(root, path, name, index) {
         if (!path) {
             // scalar value in root
-            yield { item: root, val: root[name] };
+            yield { item: root, val: root[name], ix:index };
             return;
         }
 		let sp = path.split('.');
@@ -375,30 +376,43 @@
             let last = i === sp.length - 1;
 			let prop = sp[i];
             if (prop.endsWith('[]')) {
-                // is array
+				// is array
 				let pname = prop.substring(0, prop.length - 2);
+				if (!(pname in currentData)) {
+					console.error(`Invalid validator key. Property '${pname}' not found in '${currentData.constructor.name}'`);
+				}
 				let objto = currentData[pname];
                 if (!objto) continue;
                 for (let j = 0; j < objto.length; j++) {
                     let arrItem = objto[j];
-                    if (last)
-                        yield { item: arrItem, val: arrItem[name] };
-                    else {
-                        let newpath = sp.slice(1).join('.');
-						yield* enumData(arrItem, newpath, name);
+					if (last) {
+						yield { item: arrItem, val: arrItem[name], ix: index + ':' + j };
+					} else {
+						let newpath = sp.slice(i + 1).join('.');
+						yield* enumData(arrItem, newpath, name, index + ':' + j);
                     }
-                }
+				}
+				return;
             } else {
                 // simple element
-                let objto = root[prop];
-				if (objto) yield { item: root[prop], val: objto[name] };
-				currentData = objto;
+				if (!prop in root) {
+					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);					
+				}
+				let objto = root[prop];
+				if (last) {
+					if (objto)
+						yield { item: objto, val: objto[name], ix:index };
+					return;
+				}
+				else {
+					currentData = objto;
+				}
             }
         }
     }
 
     // enumerate all data (recursive)
-    function* dataForVal(root, path) {
+	function* dataForVal(root, path) {
         let ld = path.lastIndexOf('.');
         let dp = '';
         let dn = path;
@@ -406,16 +420,24 @@
             dp = path.substring(0, ld);
             dn = path.substring(ld + 1);
 		}
-		yield* enumData(root, dp, dn);
+		yield* enumData(root, dp, dn, '');
     }
 
     function validateOneElement(root, path, vals) {
         if (!vals)
 			return;
-        for (let elem of dataForVal(root, path)) {
-            let res = validators.validate(vals, elem.item, elem.val);
-            saveErrors(elem.item, path, res);
-        }
+		let errs = [];
+		for (let elem of dataForVal(root, path)) {
+			let res = validators.validate(vals, elem.item, elem.val);
+			saveErrors(elem.item, path, res);
+			if (res && res.length) {
+				errs.push(...res);
+				// elem.ix - индексы в массивах, по которым мы прохдили
+				// console.dir(elem.ix);
+			}
+
+		}
+		return errs.length ? errs : null;
     }
 
     function validateAll() {
@@ -427,12 +449,16 @@
         let tml = me.$template;
         if (!tml) return;
         let vals = tml.validators;
-        if (!vals) return;
+		if (!vals) return;
+		let allerrs = [];
         for (var val in vals) {
-            validateOneElement(me, val, vals[val])
+			let err1 = validateOneElement(me, val, vals[val])
+			if (err1)
+				allerrs.push({ x: val, e: err1 });
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
+		console.dir(allerrs);
     }
 
     function setDirty(val) {

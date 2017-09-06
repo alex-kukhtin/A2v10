@@ -8,8 +8,9 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
     [ContentProperty("Rows")]
-    public class Table : Control
+    public class Table : Control, ITableControl
     {
+        public GridLinesVisibility GridLines { get; set; }
 
         public TableRowCollection Rows { get; set; } = new TableRowCollection();
 
@@ -50,10 +51,16 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(table);
             MergeAttributes(table, context);
+
+            if (GridLines != GridLinesVisibility.None)
+                table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
+
             table.RenderStart(context);
             RenderHeader(context);
+
             RenderBody(context);
             RenderFooter(context);
+
             table.RenderEnd(context);
         }
 

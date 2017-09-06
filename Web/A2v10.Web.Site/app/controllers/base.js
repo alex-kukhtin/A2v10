@@ -1,11 +1,10 @@
-﻿/*20170905-7026*/
+﻿/*20170906-7027*/
 /*controllers/base.js*/
 (function () {
 
     const eventBus = require('std:eventBus');
     const utils = require('utils');
     const dataservice = require('std:dataservice');
-    const route = require('route');
 	const store = component('std:store');
 	const urltools = require('std:url');
 	const log = require('std:log');
@@ -62,34 +61,6 @@
 				return this.$data.__modelInfo;
 			}
 		},
-		/*
-		watch: {
-            $baseUrl2: function (newUrl) {
-                if (!this.$data.__init__)
-                    return;
-                if (this.inDialog)
-                    this.$data._query_ = route.queryFromUrl(newUrl);
-                else
-                    this.$data._query = route.query;
-                Vue.nextTick(() => { this.$data.__init__ = false; });
-            },
-            "$query2": {
-                handler: function (newVal, oldVal) {
-                    //console.warn('query watched');
-                    if (this.$data.__init__)
-                        return;
-                    if (this.inDialog) {
-                        this.$data.__baseUrl__ = route.replaceUrlQuery(this.$baseUrl, newVal);
-                        this.$reload();
-                    } else {
-                        route.query = newVal;
-                        this.$searchChange();
-                    }
-                },
-                deep: true
-            }
-        },
-		*/
 		methods: {
 			$exec(cmd, ...args) {
 				let root = this.$data;
@@ -276,7 +247,7 @@
 			},
 
 			$searchChange() {
-				let newUrl = route.replaceUrlSearch(this.$baseUrl);
+				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
 				this.$data.__baseUrl__ = newUrl;
 				this.$reload();
 			},
@@ -332,17 +303,12 @@
 		created() {
 			eventBus.$emit('registerData', this);
 
-			if (!this.inDialog) {
-				this.$data._query_ = route.query;
-				///console.dir(this);
-			}
-			//alert(this.$data._needValidate_);
-			//this.$data._needValidate_ = true;
 			/*
-			store.$on('queryChange', function (url) {
-				alert('query change');
-                //this.$data._query_ = val;
-            });
+			TODO: а зачем это было ???
+			if (!this.inDialog) {
+				//alert(this.$data._query_);
+				//this.$data._query_ = route.query;
+			}
 			*/
 
 			eventBus.$on('beginRequest', this.__beginRequest);

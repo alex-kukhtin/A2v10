@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class TextBox : ValuedControl
+    public class TextBox : ValuedControl, ITableControl
     {
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {

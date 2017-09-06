@@ -199,9 +199,9 @@ namespace A2v10.Web.Mvc.Models
         public String schema; // schema for data model
         public String source; // connection string for data model
 
-        public Dictionary<String, RequestAction> actions { get; set; }
-        public Dictionary<String, RequestDialog> dialogs { get; set; }
-        public Dictionary<String, RequestCommand> commands { get; set; }
+        public Dictionary<String, RequestAction> actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<String, RequestDialog> dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<String, RequestCommand> commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
 
         public RequestDataAction DataAction
         {
@@ -220,7 +220,7 @@ namespace A2v10.Web.Mvc.Models
         {
             get
             {
-                if (actions == null)
+                if (actions.Count == 0)
                     throw new RequestModelException($"There are no actions in model '{_modelPath}'");
                 if (String.IsNullOrEmpty(_action))
                     throw new RequestModelException($"Invalid empty action in url for model {_modelPath}");
@@ -235,7 +235,7 @@ namespace A2v10.Web.Mvc.Models
         {
             get
             {
-                if (dialogs == null)
+                if (dialogs.Count == 0)
                     throw new RequestModelException($"There are no dialogs in model '{_modelPath}'");
                 if (String.IsNullOrEmpty(_dialog))
                     throw new RequestModelException($"Invalid empty dialog in url for {_modelPath}");
@@ -270,15 +270,12 @@ namespace A2v10.Web.Mvc.Models
 
         private void EndInit()
         {
-            if (actions != null)
-                foreach (var a in actions.Values)
-                    a.SetParent(this);
-            if (commands != null)
-                foreach (var c in commands.Values)
-                    c.SetParent(this);
-            if (dialogs != null)
-                foreach (var d in dialogs.Values)
-                    d.SetParent(this);
+            foreach (var a in actions.Values)
+                a.SetParent(this);
+            foreach (var c in commands.Values)
+                c.SetParent(this);
+            foreach (var d in dialogs.Values)
+                d.SetParent(this);
         }
 
         public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)

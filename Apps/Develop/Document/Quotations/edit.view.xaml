@@ -22,7 +22,7 @@
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
 				<TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}"/>
 			</Grid>
-			<Table>
+			<Table GridLines="Both">
 				<TableRow>
 					<TableCell>Страхователь</TableCell>
 					<TextBox Value="{Bind Contract.InsurantName}">
@@ -48,7 +48,8 @@
 							<Code Content="{Bind Vehicles.Count, Format='({0})'}"></Code>
 						</Group>
 					</Tab.Header>
-					<Code Content="{Bind Vehicles.Count}"></Code>
+					<Code Content="{Bind Sum}"></Code>
+					<Hyperlink Command="{BindCmd Append, Argument={Bind Vehicles}}">add vehicle</Hyperlink>
 					<!--
 					<DataGrid ItemsSource="{Bind Vehicles}">
 						<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
@@ -61,7 +62,7 @@
 							<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 						</DataGrid>
 						-->
-						<Table ItemsSource="{Bind Parent.ItemsSource}">
+						<Table GridLines="Both" ItemsSource="{Bind Parent.ItemsSource}">
 							<Table.Header>
 							</Table.Header>
 							<TableRow>
@@ -81,10 +82,11 @@
 							<TableRow>
 								<TableCell>Об'єм двигуна см&#xb3;</TableCell>
 								<Code Content="{Bind Volume}"></Code>
+								<Hyperlink Content="Ссылка"></Hyperlink>
 							</TableRow>
 							<TableRow>
 								<TableCell ColSpan="2">
-									<Table ItemsSource="{Bind OptionalEquipment}">
+									<Table ItemsSource="{Bind OptionalEquipment}" GridLines="Both">
 										<TableRow>
 											<TableCell>1</TableCell>
 											<TableCell Content="{Bind Placement}"></TableCell>

@@ -5,7 +5,7 @@
     <title></title>
     <link rel="stylesheet" href="../css/site.min.css" />
     <style>
-        option {
+        option22 {
             color:blue;
             font-size:13px;
             background-color:yellow;
@@ -16,15 +16,23 @@
                 margin: 12px;
                 line-height: 20px;
             }
+        .static {
+            height:24px;
+            line-height:1.8em;
+            background-color:#f8f8f8;
+            color:gray;
+            padding:0 6px;
+            width:100%;
+        }
 </style>
 </head>
 <body>
 
     <div style="margin:60px" id="app">
-        <h3>TEST FOR FORM CONTROL</h3>
+        <h2>TEST FOR FORM CONTROL</h2>
 
         <p>
-            <h3>simple form control</h3>
+            <h3>simple form controls</h3>
 
             <div style="width:230px" id="test">
                 <div class="control-group">
@@ -32,22 +40,23 @@
                     <div class="input-group">
                         <input v-focus type="text" class="control" placeholder="valid input">
                         <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
+                        <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
                     </div>
                 </div>
                 <div class="control-group invalid">
                     <label>Simple label (invalid)</label>
-                    <div class="input-group">
+                    <div class="input-group focus">
                         <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
                         <input v-focus type="text" class="control" placeholder="control with invalid input">
                         <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
+                        <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
                         <div class="validator">
                             <span class="error">error number one</span>
                             <span class="error">error number two</span>
                             <span class="error">error #3</span>
                         </div>
                     </div>
+                    <span class="descr">description for control with more lines and text text text</span>
                 </div>
                 <div class="control-group">
                     <div class="input-group">
@@ -59,13 +68,25 @@
                 <div class="control-group required">
                     <label>Combo box here</label>
                     <div class="input-group">
-                        <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
                         <select v-focus class="control">
                             <option>Option 1</option>
                             <option>Option 2</option>
                             <option>Option 3</option>
                         </select>
-                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Binded combo box</label>
+                    <div class="input-group">
+                        <select v-focus class="control" v-model="selectedCompany">
+                            <option v-for="comp in companies" v-text="comp.name" v-bind:value="comp"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Selected company (static):</label>
+                    <div class="input-group">
+                        <div class="static" v-text="selectedCompany"></div>
                     </div>
                 </div>
                 <div class="control-group required bold">
@@ -94,7 +115,16 @@
         new Vue({
             el: "#app",
             data: {
-                label: "i am the label"
+                label: "binded label",
+                companies: [
+                    { name: 'company 1', id: 500 },
+                    { name: 'company 2', id: 510 },
+                    { name: 'company 3', id: 530 }
+                ],
+                selectedCompany: null
+            },
+            created() {
+                this.selectedCompany = this.companies[1];
             }
         });
     </script>

@@ -5,7 +5,7 @@
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
-			<Button Icon="Save" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
+			<Button Icon="SaveClose" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
 			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
@@ -18,12 +18,17 @@
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
 			<Button Block="True">Оформить накладную</Button>
-			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}">
+			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
 				<TextBox.AddOns>
 					<Hyperlink Icon="Search"/>
 					<Hyperlink Icon="Clear"/>
 				</TextBox.AddOns>
 			</TextBox>
+			<Table GridLines="Both">
+				<TableRow>
+					<Hyperlink Content="Ссылка" />
+				</TableRow>
+			</Table>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
@@ -33,7 +38,9 @@
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
 				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2"></ComboBox>
 				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
-				<TextBox Label="покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Document.Agent.Name}">
+				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
+						 Description="выберите покупателя" Tip="введите фрагмент наименования для поиска"
+						 Value="{Bind Document.Agent.Name}">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
 						<Hyperlink Icon="Clear" />

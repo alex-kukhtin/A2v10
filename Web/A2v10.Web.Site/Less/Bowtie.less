@@ -6,12 +6,11 @@
 
 @font-face {
     font-family: 'Bowtie';
-    src: url('/fonts/Bowtie.eot?vqc4am');
-    src: url('/fonts/Bowtie.eot?vqc4am#iefix') format('embedded-opentype'), 
-        url('/fonts/Bowtie.woff2?vqc4am') format('woff2'), 
-        url('/fonts/Bowtie.ttf?vqc4am') format('truetype'), 
-        url('/fonts/Bowtie.woff?vqc4am') format('woff'), 
-        url('/fonts/Bowtie.svg?vqc4am#Bowtie') format('svg');
+    src: url('/css/fonts/bowtie.eot');
+    src: url('/css/fonts/bowtie.eot?#iefix') format('eot'), 
+        url('/css/fonts/bowtie.woff') format('woff'), 
+        url('/css/fonts/bowtie.ttf') format('truetype'), 
+        url('/css/fonts/bowtie.svg#bowtie') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -30,199 +29,231 @@ i, .ico {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.ico-none:before {
+    content: "";
+}
+
 .ico-alert:before {
-    content: "\e600";
+    content: "\e935";
+    color:@icon-red;
 }
 
 .ico-flag:before {
-    content: "\e600";
+    content: "\e935";
 }
 
 .ico-approve:before {
-    content: "\e601";
+    content: "\e936";
 }
 
 .ico-disapprove:before {
-    content: "\e602";
+    content: "\e937";
 }
 
 .ico-calendar:before {
-    content: "\e60e";
+    content: "\e93d";
 }
 
 .ico-chevron-down:before {
-    content: "\e610";
+    content: "\e9a4";
 }
 
 .ico-chevron-left:before {
-    content: "\e611";
+    content: "\e9a3";
 }
 
 .ico-chevron-right:before {
-    content: "\e612";
+    content: "\e9a5";
 }
 
 .ico-chevron-up:before {
-    content: "\e613";
+    content: "\e9a2";
 }
 
 .ico-comment:before {
-    content: "\e617";
+    content: "\e92d";
 }
 
 .ico-comment-add:before {
-    content: "\e618";
+    content: "\e92e";
 }
 
 .ico-comment-discussion:before {
-    content: "\e619";
+    content: "\e92f";
 }
 
 .ico-comment-lines:before {
-    content: "\e61a";
+    content: "\e930";
 }
 
 .ico-comment-next:before {
-    content: "\e61b";
+    content: "\e931";
 }
 
 .ico-comment-outline:before {
-    content: "\e61c";
+    content: "\e932";
 }
 
 .ico-comment-previous:before {
-    content: "\e61d";
+    content: "\e933";
 }
 
 .ico-comment-urgent:before {
-    content: "\e61e";
+    content: "\e934";
+}
+
+.ico-copy:before {
+    content: "\e94b";
+}
+
+.ico-cut:before {
+    content: "\e94c";
 }
 
 .ico-dashboard:before {
-    content: "\e61f";
+    content: "\e944";
 }
 
 .ico-database:before {
-    content: "\e620";
+    content: "\e945";
 }
 
 .ico-dot:before {
-    content: "\e626";
+    content: "\ea49";
+}
+
+.ico-edit:before {
+    content: "\e949";
 }
 
 .ico-file:before {
-    content: "\e637";
+    content: "\e9dd";
 }
 
 .ico-folder:before {
-    content: "\e640";
+    content: "\e95b";
     color: @icon-yellow;
 }
 
 .ico-minus:before {
-    content: "\e648";
+    content: "\e965";
 }
 
 .ico-minus-box:before {
-    content: "\e649";
+    content: "\e967";
 }
 
 .ico-plus:before {
-    content: "\e64c";
+    content: "\e970";
     color: @icon-green;
 }
 
 .ico-plus-box:before {
-    content: "\e64d";
+    content: "\e973";
 }
 
 .ico-menu:before {
-    content: "\e651";
+    content: "\e9f9";
+}
+
+.ico-message:before {
+    content: "\e963";
 }
 
 .ico-history:before {
-    content: "\e657";
+    content: "\e9ff";
 }
 .ico-reload:before,
 .ico-refresh:before {
-    content: "\e658";
+    content: "\ea00";
     color: @icon-blue;
 }
 
 .ico-requery:before {
-    content: "\e659";
+    content: "\e90e";
     color: @icon-blue;
 }
 
 .ico-save:before {
-    content: "\e661";
+    content: "\e982";
+    color: @icon-blue;
+}
+
+.ico-save-close:before {
+    content: "\e985";
     color: @icon-blue;
 }
 
 .ico-search:before {
-    content: "\e662";
+    content: "\e986";
 }
 
 .ico-gear:before {
-    content: "\e669";
+    content: "\e98f";
 }
 
 .ico-help:before {
-    content: "\e674";
+    content: "\ea06";
 }
 
 .ico-info:before {
-    content: "\e675";
+    content: "\ea08";
 }
 
 .ico-info-outline:before {
-    content: "\e676";
+    content: "\ea09";
+}
+
+.ico-paste:before {
+    content: "\e94e";
 }
 
 .ico-success:before {
-    content: "\e677";
+    content: "\ea12";
 }
 
 .ico-waiting:before {
-    content: "\e678";
+    content: "\ea14";
 }
 
 .ico-warning:before {
-    content: "\e679";
+    content: "\ea16";
 }
 
 .ico-trash:before {
-    content: "\e62a";
+    content: "\e992";
     color: @icon-red;
 }
 
 .ico-download:before {
-    content: "\e68c";
+    content: "\e90f";
 }
 
 .ico-upload:before {
-    content: "\e68d";
+    content: "\e910";
 }
 
 .ico-user:before {
-    content: "\e692";
+    content: "\e998";
 }
 
 .ico-users:before {
-    content: "\e693";
+    content: "\e999";
 }
 
 .ico-eye:before {
-    content: "\e699";
+    content: "\e99e";
 }
 
 .ico-delete:before {
-    content: "\e64b";
+    content: "\e94f";
     color: @icon-red;
 }
 
-.ico-clear:before,
-.ico-close:before {
-    content: "\e64b";
+.ico-clear:before {
+    content: "\e9fa";
 }
 
+.ico-close:before {
+    content: "\e94f";
+}

@@ -9,7 +9,7 @@ A2v10 uses third party material from the projects listed below.
 * Json.NET - http://www.newtonsoft.com/json
 * Vue - https://github.com/vuejs/vue
 * Jasmine - https://github.com/jasmine/jasmine
-* Bowtie icon font - https://github.com/jimlamb/Bowtie
+* Icon font generator - https://github.com/chryw/vsfi/tree/bowtie-sfx
 
 ---
  
@@ -140,13 +140,3 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ----
-
-__License for Bowtie__
-
-Creative Commons Zero v1.0 Universal
-
-The Creative Commons CC0 
-Public Domain Dedication waives copyright interest in any a work you've created and dedicates it to the world-wide public domain. Use CC0 to opt out of copyright entirely and ensure your work has the widest reach. As with the Unlicense and typical software licenses, CC0 disclaims warranties. CC0 is very similar to the Unlicense.
-
-For more information, please see
-http://creativecommons.org/publicdomain/zero/1.0/

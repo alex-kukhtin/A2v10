@@ -1,54 +1,68 @@
-﻿@import "Variables.less";
-
+﻿
+@import "Variables.less";
 
 /*
 TODO: 
     1. shadow into variables
-    2. menu-item: css
-
 */
 
 @button-gap: -1px;
 
 .menu {
     padding: 2px;
+    margin: 2px 0;
     top: 100%;
-    min-width: 200px; //TODO:
+    min-width: 160px; //TODO:
     box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
     border: 1px solid @dropdown-brd-color;
 
     .dropdown-item {
         display: block;
         cursor: pointer;
-        padding: 6px 8px;
-        color:#555;
+        padding: 4px 6px;
+        color:@text-color;
         &:hover {
             text-decoration:none;
+        }
+        > .ico {
+            display:inline-block;
+            margin-right:6px;
+            color:inherit;
+            min-width:16px;
+            &:before {
+                color:@icon-color;
+            }
         }
     }
 
     .dropdown-item:hover {
         background-color: @hover-bg-color;
     }
+
+    > .divider {
+        height:1px;
+        margin:4px 6px;
+        background-color:lighten(@dropdown-brd-color, 10%);
+    }
 }
 
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    z-index: @popup-index;
+    background-color: @dropdown-bg-color;
+    width: auto;
+    height: auto;
+    left: 0;
+    right: auto;
+    top: 100%;
+    bottom: auto;
+}
 
 .dropdown {
     position: relative;
     overflow: visible;
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        z-index: @popup-index;
-        background-color: @dropdown-bg-color;
-        width: auto;
-        height: auto;
-        left: 0;
-        right: auto;
-        top: 100%;
-        bottom: auto;
-    }
 
     .dropdown-menu.down-right {
         right: 0;

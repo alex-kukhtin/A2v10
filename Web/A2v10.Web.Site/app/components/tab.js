@@ -1,11 +1,10 @@
-﻿/* 20170816-7014 */
+﻿/* 20170906-7027 */
 /*components/tab.js*/
 
 /*
 TODO:
 
 2. isActive with location hash
-3. css
 5. enable/disable tabs
 7. много табов - добавить стрелки ?
 10. default header for dynamic tab
@@ -25,17 +24,15 @@ TODO:
 <div class="tab-panel">
     <template v-if="static">
         <ul class="tab-header">
-            <li :class="{active: tab.isActive}" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
-                <a href>
-                    <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
-                    <span v-text="tab.header"></span>
-                </a>
+            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
+                <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
+                <span v-text="tab.header"></span>
             </li>
         </ul>
 		<template>
 			<slot name="title" />
 		</template>
-        <div class="tab-content">
+        <div class="tab-content" :class="contentCssClass">
             <slot />
         </div>
     </template>
@@ -43,9 +40,7 @@ TODO:
         <ul class="tab-header">
             <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
 				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
-					<a href>
-						<span v-text="defaultTabHeader(item, tabIndex)"></span> 
-					</a>
+					<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 				</slot>
             </li>
         </ul>
@@ -61,8 +56,6 @@ TODO:
 </div>
 `;
 
-	//<span>{{ item }}</span>
-
     const tabItemTemplate = `
 <div class="tab-item" v-if="isActive">
     <slot />
@@ -75,7 +68,8 @@ TODO:
         template: tabItemTemplate,
         props: {
             header: String,
-			icon: String
+			icon: String,
+			tabStyle: String
         },
         computed: {
             hasIcon() {
@@ -86,6 +80,9 @@ TODO:
             },
             isActive() {
                 return this === this.$parent.activeTab;
+			},
+			tabCssClass() {
+				return (this.isActive ? 'active ' : '') + (this.tabStyle || '');
 			}
         },
         created() {
@@ -109,6 +106,9 @@ TODO:
         computed: {
             static() {
                 return !this.items;
+			},
+			contentCssClass() {
+				return this.activeTab ? this.activeTab.tabStyle : '';
 			}
 		},
 		watch: {

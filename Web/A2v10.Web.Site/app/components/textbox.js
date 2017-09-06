@@ -9,6 +9,7 @@
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
 
@@ -19,11 +20,19 @@
 
     let baseControl = component('control');
 
+	const defaultObj = {
+		_validate_() {
+			return true;
+		}
+	};
+
     Vue.component('textbox', {
         extends: baseControl,
         template: textBoxTemplate,
-        props: {
-            item: Object,
+		props: {
+			item: {
+				type: Object, default: {}
+			},
             prop: String
 		}		
     });

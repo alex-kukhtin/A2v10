@@ -8,7 +8,7 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
     [ContentProperty("ItemsSource")]
-    public class ComboBox : ValuedControl
+    public class ComboBox : ValuedControl, ITableControl
     {
         public Object ItemsSource { get; set; }
 

@@ -123,40 +123,6 @@ table.data-grid {
     }
 }
 
-table {
-    th {
-        border:1px solid @dg-header-brd-color;
-    }
-}
-
-table.bordered {
-    border: 1px solid @data-grid-border-color;
-}
-
-table.grid-vertical, table.grid-both {
-    td {
-        border-left: 1px solid @data-grid-border-color;
-        border-right: 1px solid @data-grid-border-color;
-    }
-
-    th {
-        border-left: 1px solid @dg-header-brd-color;
-        border-right: 1px solid @dg-header-brd-color;
-    }
-}
-
-table.grid-horizontal, table.grid-both {
-    td {
-        border-top: 1px solid @data-grid-border-color;
-        border-bottom: 1px solid @data-grid-border-color;
-    }
-}
-
-table.striped {
-    > tbody > tr:nth-of-type(even) {
-        background-color: @alter-bg-color;
-    }
-}
 
 table.data-grid > tbody > tr.warning {
     background-color:@dg-warning-bg-color;

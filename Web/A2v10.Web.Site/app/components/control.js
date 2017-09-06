@@ -4,10 +4,11 @@
 		props: {
 			label: String,
 			required: Boolean,
-            align: { type: String, default: 'left' }
+			align: { type: String, default: 'left' },
+			description: String
 		},
         computed: {
-            path() {
+			path() {
                 return this.item._path_ + '.' + this.prop;
             },
             valid() {
@@ -20,6 +21,9 @@
             errors() {
                 if (!this.item) return null;
 				let root = this.item._root_;
+				if (!root) return null;
+				if (!root._validate_)
+					return null;
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
@@ -36,6 +40,9 @@
 			},
 			hasLabel() {
 				return !!this.label;
+			},
+			hasDescr() {
+				return !!this.description;
 			}
         },
         methods: {
