@@ -1,4 +1,4 @@
-﻿/*20170829-7021*/
+﻿/*20170908-7029*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -15,7 +15,8 @@ app.modules['utils'] = function () {
 		notBlank: notBlank,
 		toJson: toJson,
 		isPrimitiveCtor: isPrimitiveCtor,
-		isEmptyObject: isEmptyObject
+		isEmptyObject: isEmptyObject,
+		eval : eval
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -38,6 +39,10 @@ app.modules['utils'] = function () {
 		switch (typeof val) {
 			case 'string':
 				return val !== '';
+			case 'object':
+				if ('$id' in val) {
+					return !!val.$id;
+				}
 		}
 		return (val || '') !== '';
 	}
@@ -56,6 +61,20 @@ app.modules['utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return obj + '';
+	}
+
+	function eval(obj, path) {
+		let ps = (path || '').split('.');
+		let r = obj;
+		for (let i = 0; i < ps.length; i++) {
+			let pi = ps[i];
+			if (!(pi in r))
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
+			r = r[ps[i]];
+		}
+		if (isObject(r))
+			return toJson(r);
+		return r;
 	}
 };
 

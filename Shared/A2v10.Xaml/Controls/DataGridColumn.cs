@@ -43,6 +43,10 @@ namespace A2v10.Xaml
                 tmlId = $"col{colIndex}";
                 column.MergeAttribute("id", tmlId);
             }
+
+            var cmdBind = GetBindingCommand(nameof(Command));
+            if (cmdBind != null)
+                column.MergeAttribute(":command", cmdBind.GetCommand(context, true));
             column.RenderStart(context);
             column.RenderEnd(context);
             if (isTemplate)
@@ -51,7 +55,11 @@ namespace A2v10.Xaml
                 templ.MergeAttribute("slot", tmlId);
                 templ.MergeAttribute("scope", "cell");
                 templ.RenderStart(context);
-                (Content as UIElement).RenderElement(context);
+                using (var ctx = new ScopeContext(context, "cell.row"))
+                {
+                    (Content as UIElement).RenderElement(context);
+
+                }
                 templ.RenderEnd(context);
             }
         }

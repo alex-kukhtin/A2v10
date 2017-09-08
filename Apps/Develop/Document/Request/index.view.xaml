@@ -4,7 +4,7 @@
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
-			<Button Icon="File" Command="{BindCmd OpenSelected, Url='/document/request/edit', Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="File" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
 			<Button Icon="Delete">Удалить</Button>
 			<!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action
@@ -27,10 +27,11 @@
 			</DataGrid.Pager>
 			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
 			<DataGridColumn Header="Номер" Content="SNo" />
-			<DataGridColumn Header="Котрагент" Content="{Bind Agent}"/>
+			<DataGridColumn Header="Котрагент" Content="{Bind Agent.Name}"/>
 			<DataGridColumn Header="Сумма" Content="Sum" Align="Right"/>
-			<DataGridColumn Header="Примечание" Content="Memo" />
-			<DataGridColumn Header="Договор" Content="Contract" />
+			<DataGridColumn Header="Примечание" Content="Memo" Command="{BindCmd Open, Url='/document/request/edit'}"/>
+			<DataGridColumn Header="Договор" Content="Contract.FullName" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
+			<DataGridColumn Header="Url" Content="Url" Command="{BindCmd Open, Url={Bind Url}}"/>
 		</DataGrid>
 	</CollectionView>
 </Page>

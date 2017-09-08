@@ -14,6 +14,8 @@ let template = {
     events: {
     },
 	validators: {
+		'Document.Company': 'Выберите продавца',
+		'Document.Agent': 'Выберите покупателя',
 		'Document.SNo': 'Введите номер документа',
 		'Document.Rows[].Qty': 'Количество должно быть больше нуля',
 		'Document.Rows[].Price': 'Цена должна быть больше нуля',

@@ -6,99 +6,111 @@
     <link rel="stylesheet" href="../css/site.min.css" />
     <style>
         option22 {
-            color:blue;
-            font-size:13px;
-            background-color:yellow;
+            color: blue;
+            font-size: 13px;
+            background-color: yellow;
         }
-            option.x {
-                display: inline-block;
-                padding: 12px;
-                margin: 12px;
-                line-height: 20px;
-            }
+
+        option.x {
+            display: inline-block;
+            padding: 12px;
+            margin: 12px;
+            line-height: 20px;
+        }
+
         .static {
-            height:24px;
-            line-height:1.8em;
-            background-color:#f8f8f8;
-            color:gray;
-            padding:0 6px;
-            width:100%;
+            height: 24px;
+            line-height: 1.8em;
+            background-color: #f8f8f8;
+            color: gray;
+            padding: 0 6px;
+            width: 100%;
         }
-</style>
+    </style>
 </head>
 <body>
 
     <div style="margin:60px" id="app">
         <h2>TEST FOR FORM CONTROL</h2>
 
-        <p>
-            <h3>simple form controls</h3>
 
-            <div style="width:230px" id="test">
-                <div class="control-group">
-                    <label v-text="label">Simple label (valid)</label>
-                    <div class="input-group">
-                        <input v-focus type="text" class="control" placeholder="valid input">
-                        <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
+        <h3>simple form controls</h3>
+
+        <div style="width:690px; display:grid; grid-template-columns: 1fr 1fr 1fr; grid-gap:1em;align-items:end;" id="test">
+            <div class="control-group">
+                <label v-text="label">Simple label (valid)</label>
+                <div class="input-group">
+                    <input v-focus type="text" class="control" placeholder="valid input">
+                    <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
+                    <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
+                </div>
+            </div>
+            <div class="control-group invalid">
+                <label>Simple label (invalid)</label>
+                <div class="input-group focus">
+                    <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
+                    <input v-focus type="text" class="control" placeholder="control with invalid input">
+                    <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
+                    <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
+                    <div class="validator">
+                        <span class="error">error number one</span>
+                        <span class="error">error number two</span>
+                        <span class="error">error #3</span>
                     </div>
                 </div>
-                <div class="control-group invalid">
-                    <label>Simple label (invalid)</label>
-                    <div class="input-group focus">
-                        <a href="" tabindex="-1"><i class="ico ico-search"></i></a>
-                        <input v-focus type="text" class="control" placeholder="control with invalid input">
-                        <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-clear"></i></a>
-                        <div class="validator">
-                            <span class="error">error number one</span>
-                            <span class="error">error number two</span>
-                            <span class="error">error #3</span>
-                        </div>
-                    </div>
-                    <span class="descr">description for control with more lines and text text text</span>
+                <span class="descr">description for control with more lines and text text text</span>
+            </div>
+            <div class="control-group">
+                <div class="input-group">
+                    <input v-focus type="text" class="control" placeholder="control without label">
+                    <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
+                    <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
                 </div>
-                <div class="control-group">
-                    <div class="input-group">
-                        <input v-focus type="text" class="control" placeholder="control without label">
-                        <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
-                    </div>
-                </div>
-                <div class="control-group required">
-                    <label>Combo box here</label>
-                    <div class="input-group">
-                        <select v-focus class="control">
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Binded combo box</label>
-                    <div class="input-group">
-                        <select v-focus class="control" v-model="selectedCompany">
-                            <option v-for="comp in companies" v-text="comp.name" v-bind:value="comp"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Selected company (static):</label>
-                    <div class="input-group">
-                        <div class="static" v-text="selectedCompany"></div>
-                    </div>
-                </div>
-                <div class="control-group required bold">
-                    <label>Required label 	&#x2731;</label>
-                    <div class="input-group">
-                        <input v-focus type="text" class="control" placeholder="control without label">
-                        <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
-                        <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
+            </div>
+            <div class="control-group required invalid">
+                <label>Combo box (static options)</label>
+                <div class="input-group">
+                    <select v-focus class="control">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                    <div class="validator">
+                        <span class="error">please, select value</span>
                     </div>
                 </div>
             </div>
-        </p>
+            <div class="control-group">
+                <label>Binded combo box</label>
+                <div class="input-group">
+                    <select v-focus class="control" v-model="selectedCompany">
+                        <option v-for="comp in companies" v-text="comp.$name" v-bind:value="comp"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Selected company (static):</label>
+                <div class="input-group">
+                    <div class="static" v-text="selectedCompany"></div>
+                </div>
+            </div>
+            <div class="control-group required bold">
+                <label>Required label 	&#x2731;</label>
+                <div class="input-group">
+                    <input v-focus type="text" class="control" placeholder="control without label">
+                    <a href="" tabindex="-1"><i class="ico ico-alert"></i></a>
+                    <a href="" tabindex="-1"><i class="ico ico-plus"></i></a>
+                </div>
+            </div>
+            <combobox label="combobox component" 
+                      :items-source="companies" :item="thisObj" prop="selectedCompany"></combobox>
+            <select is="combobox" label="combobox component (static options)" v-cloak
+                      :item="selectedCompany" prop="$id">
+                <option :value="5">Id = 51</option>
+                <option :value="6">Id = 62</option>
+                <option :value="7">Id = 73</option>
+            </select>
+        </div>
     </div>
     <footer class="footer">
         <div class="spinner">
@@ -108,7 +120,7 @@
         <div class="spinner active">
         </div>
     </footer>
-    <script src="../scripts/vue.min.js"></script>
+    <script src="../scripts/vue.js"></script>
     <script src="../scripts/main.js"></script>
     <script>
         //alert(document.getElementById('test').closest('body'));
@@ -117,11 +129,16 @@
             data: {
                 label: "binded label",
                 companies: [
-                    { name: 'company 1', id: 500 },
-                    { name: 'company 2', id: 510 },
-                    { name: 'company 3', id: 530 }
+                    { $name: 'company 1', $id: 500 },
+                    { $name: 'company 2', $id: 510 },
+                    { $name: 'company 3', $id: 530 }
                 ],
                 selectedCompany: null
+            },
+            computed: {
+                thisObj() {
+                    return this;
+                }
             },
             created() {
                 this.selectedCompany = this.companies[1];

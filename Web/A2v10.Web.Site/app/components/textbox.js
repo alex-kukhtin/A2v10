@@ -31,7 +31,9 @@
         template: textBoxTemplate,
 		props: {
 			item: {
-				type: Object, default: {}
+				type: Object, default() {
+					return {};
+				}
 			},
             prop: String
 		}		

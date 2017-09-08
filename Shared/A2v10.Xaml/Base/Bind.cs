@@ -26,8 +26,6 @@ namespace A2v10.Xaml
 
         internal String GetPath(RenderContext context)
         {
-            if (Path == null)
-                return null;
             return context.GetNormalizedPath(Path);
         }
 

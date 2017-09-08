@@ -248,7 +248,7 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170829-7021*/
+/*20170908-7029*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -265,7 +265,8 @@ app.modules['utils'] = function () {
 		notBlank: notBlank,
 		toJson: toJson,
 		isPrimitiveCtor: isPrimitiveCtor,
-		isEmptyObject: isEmptyObject
+		isEmptyObject: isEmptyObject,
+		eval : eval
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -288,6 +289,10 @@ app.modules['utils'] = function () {
 		switch (typeof val) {
 			case 'string':
 				return val !== '';
+			case 'object':
+				if ('$id' in val) {
+					return !!val.$id;
+				}
 		}
 		return (val || '') !== '';
 	}
@@ -306,6 +311,20 @@ app.modules['utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return obj + '';
+	}
+
+	function eval(obj, path) {
+		let ps = (path || '').split('.');
+		let r = obj;
+		for (let i = 0; i < ps.length; i++) {
+			let pi = ps[i];
+			if (!(pi in r))
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
+			r = r[ps[i]];
+		}
+		if (isObject(r))
+			return toJson(r);
+		return r;
 	}
 };
 
@@ -1275,13 +1294,63 @@ app.modules['std:popup'] = function () {
         template: textBoxTemplate,
 		props: {
 			item: {
-				type: Object, default: {}
+				type: Object, default() {
+					return {};
+				}
 			},
             prop: String
 		}		
     });
 })();
-/*20170902-7023*/
+
+(function () {
+
+
+    let comboBoxTemplate =
+`<div :class="cssClass">
+	<label v-if="hasLabel" v-text="label" />
+	<div class="input-group">
+		<select v-model="cmbValue" :class="inputClass">
+			<slot>
+				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
+					v-text="cmb.$name" :value="cmb"></option>
+			</slot>
+		</select>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
+</div>
+`;
+
+    let baseControl = component('control');
+
+	const defaultObj = {
+		_validate_() {
+			return true;
+		}
+	};
+
+    Vue.component('combobox', {
+        extends: baseControl,
+		template: comboBoxTemplate,
+		props: {
+			prop: String,
+			item: {
+				type: Object, default() { return {}; } },
+			itemsSource: {
+				type: Array, default() { return []; } }
+		},
+		computed: {
+			cmbValue: {
+				get() { return this.item ? this.item[this.prop] : null; },
+				set(value) {
+					if (this.item) this.item[this.prop] = value;
+				}
+			}
+		}
+    });
+})();
+/*20170908-7028*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1321,7 +1390,7 @@ app.modules['std:popup'] = function () {
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1350,7 +1419,8 @@ app.modules['std:popup'] = function () {
             validate: String,
             sort: { type: Boolean, default: undefined },
             mark: String,
-            width: String
+			width: String,
+			command: Object
         },
         created() {
             this.$parent.$addColumn(this);
@@ -1401,7 +1471,8 @@ app.modules['std:popup'] = function () {
                 return cssClass.trim();
             }
         }
-    };
+	};
+
     Vue.component('data-grid-column', dataGridColumn);
 
     const dataGridCell = {
@@ -1457,14 +1528,39 @@ app.modules['std:popup'] = function () {
                     template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
 				};
                 return h(tag, cellProps, [h(child, childProps)]);
-            }
+			} else if (col.command) {
+				// column command -> hyperlink
+				let arg1 = col.command.arg1 || '';
+				if (arg1 === 'this') arg1 = row;
+				if (arg1.startsWith('{')) {
+					arg1 = arg1.substring(1, arg1.length - 1)
+					let narg = row[arg1];
+					if (!narg)
+						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+					arg1 = narg;
+				}
+				let arg2 = col.command.arg2 || '';
+				if (arg2 === 'this') arg2 = row;
+				let child = {
+					props: ['row', 'col'],
+					/*prevent*/
+					template: '<a @click.stop.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					methods: {
+						doCommand() {
+							col.command.cmd(arg1, arg2);
+						},
+						eval: utils.eval
+					}
+				};
+				return h(tag, cellProps, [h(child, childProps)]);
+			}
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
 
             // Warning: toString() is required.
-			// TODO: calc chain f.i. Document.Rows
-			let content = utils.toString(row[col.content]);
+			// TODO: calc chain (Document.Rows)
+			let content = utils.eval(row, col.content);
             let chElems = [content];
             /*TODO: validate ???? */
 			if (col.validate) {
@@ -2234,7 +2330,7 @@ Vue.directive('focus', {
 });
 
 
-/*20170906-7027*/
+/*20170908-7028*/
 /*controllers/base.js*/
 (function () {
 
@@ -2376,15 +2472,26 @@ Vue.directive('focus', {
 			},
 
 			$navigate(url, data) {
-				let urlToNavigate = urltools.combine(url, data);
+				let dataToNavigate = data;
+				if (utils.isObject(dataToNavigate))
+					dataToNavigate = dataToNavigate.$id;
+				let urlToNavigate = urltools.combine(url, dataToNavigate);
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
 			$openSelected(url, arr) {
 				// TODO: переделать
+				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
 					return;
+				if (url.startsWith('{')) {
+					url = url.substring(1, url.length - 1);
+					let nUrl = sel[url];
+					if (!nUrl)
+						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
+					url = nUrl
+				}
 				this.$navigate(url, sel.$id);
 			},
 

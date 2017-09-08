@@ -56,6 +56,7 @@
     <Content Include="app\components\control.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\tab.js" />
+    <Content Include="app\components\combobox.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
@@ -107,6 +108,7 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="TestPages\checkbox.html" />
     <Content Include="TestPages\collectionview2.html" />
     <Content Include="TestPages\collectionview.html" />
     <Content Include="TestPages\collectionview.js" />
@@ -162,6 +164,7 @@
     <Content Include="css\fonts\bowtie.ttf" />
     <Content Include="css\fonts\bowtie.woff" />
     <Content Include="Less\Table.less" />
+    <Content Include="Less\CheckBox.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

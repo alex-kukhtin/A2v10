@@ -14,10 +14,12 @@ namespace A2v10.Xaml
         Refresh,
         Requery,
         Save,
+        Open,
         OpenSelected,
         Append,
         Browse,
-        Exec
+        Exec,
+        Remove
     }
 
     public class BindCmd : BindBase
@@ -38,7 +40,7 @@ namespace A2v10.Xaml
             Command = cmdType;
         }
 
-        internal String GetCommand(RenderContext context)
+        internal String GetCommand(RenderContext context, Boolean indirect = false)
         {
             switch (Command)
             {
@@ -68,13 +70,22 @@ namespace A2v10.Xaml
                     return "$saveAndClose()";
 
                 case CommandType.OpenSelected:
-                    return $"$openSelected('{CommandUrl}', {ArgumentBinding.GetPath(context)})";
-
+                    return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
+                case CommandType.Open:
+                    if (indirect)
+                        return $"{{cmd:$navigate, arg1:'{CommandUrl}', arg2:'this'}}";
+                    else
+                        return $"$navigate('{CommandUrl}', {CommandArgument(context)})";
+                case CommandType.Remove:
+                    if (indirect)
+                        return $"{{cmd:$remove, arg1:'this'}}";
+                    else
+                        return $"$remove({CommandArgumentOrThis(context)})";
                 case CommandType.Append:
-                    return $"{ArgumentBinding.GetPath(context)}.$append()";
+                    return $"{CommandArgument(context)}.$append()";
 
                 case CommandType.Browse:
-                    return $"$dialog('browse', '{CommandUrl}', {ArgumentBinding.GetPath(context)})";
+                    return $"$dialog('browse', '{CommandUrl}', {CommandArgument(context)})";
 
                 case CommandType.Exec:
                     return $"$exec('add100rows', Document)";
@@ -82,6 +93,25 @@ namespace A2v10.Xaml
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }
+        }
+
+        String CommandArgument(RenderContext context)
+        {
+           var arg = ArgumentBinding.GetPath(context);
+            if (String.IsNullOrEmpty(arg))
+                return "null";
+            return arg;
+        }
+
+        String CommandArgumentOrThis(RenderContext context)
+        {
+            var argBind = GetBinding(nameof(Argument));
+            if (argBind != null)
+                return argBind.GetPath(context);
+            var path = context.GetNormalizedPath(String.Empty);
+            if (String.IsNullOrEmpty(path))
+                throw new XamlException($"Invalid arguments for {Command} command");
+            return path;
         }
 
         Bind ArgumentBinding
@@ -99,6 +129,11 @@ namespace A2v10.Xaml
         {
             get
             {
+                var urlBind = GetBinding(nameof(Url));
+                if (urlBind != null)
+                {
+                    return $"{{{urlBind.Path}}}";
+                }
                 if (String.IsNullOrEmpty(Url))
                     throw new NotImplementedException($"Url required for {Command} command");
                 // TODO: check URL format

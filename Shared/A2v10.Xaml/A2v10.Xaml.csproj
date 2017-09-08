@@ -58,6 +58,8 @@
     <Compile Include="Base\XamlException.cs" />
     <Compile Include="Components\CollectionView.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
+    <Compile Include="Controls\CheckBoxBase.cs" />
     <Compile Include="Controls\Code.cs" />
     <Compile Include="Controls\ComboBox.cs" />
     <Compile Include="Controls\CommandControl.cs" />
@@ -67,6 +69,9 @@
     <Compile Include="Controls\DataGridColumn.cs" />
     <Compile Include="Controls\DropDownMenu.cs" />
     <Compile Include="Controls\Group.cs" />
+    <Compile Include="Controls\PropertyGrid.cs" />
+    <Compile Include="Controls\Radio.cs" />
+    <Compile Include="Controls\Selector.cs" />
     <Compile Include="Text\Hyperlink.cs" />
     <Compile Include="Controls\List.cs" />
     <Compile Include="Controls\MenuItem.cs" />

@@ -17,7 +17,9 @@
 			<!--
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
-			<Button Block="True">Оформить накладную</Button>
+			<Button Block="True">Оформить сделку</Button>
+			<Button Block="True" Tip="Создать другую заявку на основании этой" 
+					Command="{BindCmd Exec}">Создать на основании</Button>
 			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
 				<TextBox.AddOns>
 					<Hyperlink Icon="Search"/>
@@ -26,9 +28,10 @@
 			</TextBox>
 			<Table GridLines="Both">
 				<TableRow>
-					<Hyperlink Content="Ссылка" />
+					<Hyperlink Content="Ссылка в таблице" />
 				</TableRow>
 			</Table>
+			<Code Content="{Bind Warehouses}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
@@ -36,7 +39,7 @@
 			<Grid>
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
-				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2"></ComboBox>
+				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
 				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
 				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
 						 Description="выберите покупателя" Tip="введите фрагмент наименования для поиска"
@@ -46,6 +49,11 @@
 						<Hyperlink Icon="Clear" />
 					</TextBox.AddOns>
 				</TextBox>
+				<ComboBox Label="Доставку включить" Value="{Bind Document.DeliveryType}">
+					<ComboBoxItem Value="0">В итоги по документу</ComboBoxItem>
+					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
+					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>
+				</ComboBox>
 			</Grid>
 			<Toolbar>
 				<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
@@ -53,19 +61,29 @@
 				<Button Icon="Dashboard" Content="Подбор товара" />
 				<Code Content="{Bind Document.Rows.length}"></Code>
 				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Exec, Argument={Bind Document}}"/>
+				<Separator />
+				<CheckBox Label="Цена закупки без НДС" Value="{Bind Document.VatPurchases}" />
 			</Toolbar>
 			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
-				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True">
+				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
 					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
-					<DataGridColumn Header="Entity" Content="{Bind Entity}"></DataGridColumn>
+					<DataGridColumn Header="Entity" Content="{Bind Entity.Name}"></DataGridColumn>
 					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
 					<DataGridColumn Header="Price" Content="{Bind Price}" Align="Right"/>
 					<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
 					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
 					<DataGridColumn>
-						<Button Icon="Delete"></Button>
+						<Group>
+							<!--А как привязаться к Root.Warehouses ??? -->
+							<ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
+							<TextBox Value="{Bind Entity.Name}"></TextBox>
+						</Group>
+					</DataGridColumn>
+					<DataGridColumn>
+						<Button Icon="Delete" Command="{BindCmd Remove}"></Button>
 					</DataGridColumn>
 				</DataGrid>
+				<Pager Source="{Bind Parent.Pager}"></Pager>
 			</CollectionView>
 			<Grid>
 				<Code Content="{Bind Document.Sum}"></Code>

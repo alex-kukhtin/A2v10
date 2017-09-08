@@ -2,7 +2,8 @@
 /* index template */
 
 let template = {
-    properties: {
+	properties: {
+		'Document.Url': () => '/document/request/edit'
 	},
 	methods: {
 	},

@@ -1,4 +1,4 @@
-﻿/*20170902-7023*/
+﻿/*20170908-7028*/
 /*components/datagrid.js*/
 (function () {
 
@@ -38,7 +38,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @mouseup.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -67,7 +67,8 @@
             validate: String,
             sort: { type: Boolean, default: undefined },
             mark: String,
-            width: String
+			width: String,
+			command: Object
         },
         created() {
             this.$parent.$addColumn(this);
@@ -118,7 +119,8 @@
                 return cssClass.trim();
             }
         }
-    };
+	};
+
     Vue.component('data-grid-column', dataGridColumn);
 
     const dataGridCell = {
@@ -174,14 +176,39 @@
                     template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
 				};
                 return h(tag, cellProps, [h(child, childProps)]);
-            }
+			} else if (col.command) {
+				// column command -> hyperlink
+				let arg1 = col.command.arg1 || '';
+				if (arg1 === 'this') arg1 = row;
+				if (arg1.startsWith('{')) {
+					arg1 = arg1.substring(1, arg1.length - 1)
+					let narg = row[arg1];
+					if (!narg)
+						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+					arg1 = narg;
+				}
+				let arg2 = col.command.arg2 || '';
+				if (arg2 === 'this') arg2 = row;
+				let child = {
+					props: ['row', 'col'],
+					/*prevent*/
+					template: '<a @click.stop.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					methods: {
+						doCommand() {
+							col.command.cmd(arg1, arg2);
+						},
+						eval: utils.eval
+					}
+				};
+				return h(tag, cellProps, [h(child, childProps)]);
+			}
             /* simple content */
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
 
             // Warning: toString() is required.
-			// TODO: calc chain f.i. Document.Rows
-			let content = utils.toString(row[col.content]);
+			// TODO: calc chain (Document.Rows)
+			let content = utils.eval(row, col.content);
             let chElems = [content];
             /*TODO: validate ???? */
 			if (col.validate) {

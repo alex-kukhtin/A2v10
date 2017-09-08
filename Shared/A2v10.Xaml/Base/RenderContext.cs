@@ -151,12 +151,19 @@ namespace A2v10.Xaml
 
         internal String GetNormalizedPath(String path)
         {
+            if (path == null)
+                path = String.Empty;
+            const String rootKey = "Root.";
             if (_stackScope.Count == 0)
                 return path;
             if (path.StartsWith("Parent."))
                 return path;
+            if (path.StartsWith(rootKey))
+                return path.Substring(rootKey.Length);
             ScopeElem scope = _stackScope.Peek();
-            var result = scope.Scope + "." + path;
+            String result = scope.Scope;
+            if (!String.IsNullOrEmpty(path))
+                result += "." + path;
             if (scope.Replace != null)
                 return scope.Replace(result);
             return result;

@@ -1,4 +1,4 @@
-﻿/*20170906-7027*/
+﻿/*20170908-7028*/
 /*controllers/base.js*/
 (function () {
 
@@ -140,15 +140,26 @@
 			},
 
 			$navigate(url, data) {
-				let urlToNavigate = urltools.combine(url, data);
+				let dataToNavigate = data;
+				if (utils.isObject(dataToNavigate))
+					dataToNavigate = dataToNavigate.$id;
+				let urlToNavigate = urltools.combine(url, dataToNavigate);
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
 			$openSelected(url, arr) {
 				// TODO: переделать
+				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
 					return;
+				if (url.startsWith('{')) {
+					url = url.substring(1, url.length - 1);
+					let nUrl = sel[url];
+					if (!nUrl)
+						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
+					url = nUrl
+				}
 				this.$navigate(url, sel.$id);
 			},
 

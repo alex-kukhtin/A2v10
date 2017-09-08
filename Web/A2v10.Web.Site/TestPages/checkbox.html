@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+</head>
+<body style="overflow:auto">
+    <div style="padding:20px">
+        <h4>Check boxes</h4>
+        <label class="checkbox"><input type="checkbox"><span>CheckBox label</span></label>
+        <label class="checkbox"><input type="checkbox" checked/><span>CheckBox label</span></label>
+        <label class="checkbox"><input type="checkbox"><span>CheckBox label</span></label>
+        <label class="checkbox"><input type="checkbox" disabled><span>CheckBox disabled</span></label>
+        <label class="checkbox"><input type="checkbox" checked disabled><span>CheckBox disabled checked</span></label>
+        <label class="checkbox"><input id="ind" type="checkbox" indeterminate><span>CheckBox indeterminate</span></label>
+        <label class="checkbox"><input id="ind2" type="checkbox" disabled><span>CheckBox indeterminate</span></label>
+    </div>
+
+    <div style="padding:20px">
+        <h4>Check boxes</h4>
+        <label class="checkbox small"><input type="checkbox"><span>CheckBox label (small)</span></label>
+        <label class="checkbox small"><input type="checkbox" checked /><span>CheckBox label (small)</span></label>
+        <label class="checkbox"><input type="checkbox"><span>CheckBox label</span></label>
+        <label class="checkbox"><input type="checkbox" disabled><span>CheckBox disabled</span></label>
+        <label class="checkbox"><input type="checkbox" checked disabled><span>CheckBox disabled checked</span></label>
+        <label class="checkbox"><input id="ind" type="checkbox" indeterminate><span>CheckBox indeterminate</span></label>
+        <label class="checkbox"><input id="ind2" type="checkbox" disabled><span>CheckBox indeterminate</span></label>
+    </div>
+
+    <div style="padding:20px">
+        <h4>Radio buttons</h4>
+        <label class="radio"><input type="radio"><span>Radio label</span></label>
+        <label class="radio"><input type="radio" checked /><span>Radio label</span></label>
+        <label class="radio"><input type="radio"><span>Radio label</span></label>
+        <label class="radio"><input type="radio" disabled><span>Radio disabled</span></label>
+        <label class="radio"><input type="radio" checked disabled/><span>Radio checked disabled</span></label>
+    </div>
+
+
+    <div class="toolbar">
+        <button class="btn"><i class="ico ico-reload"></i>toolbar button</button>
+        <label class="checkbox"><input id="ind2" type="checkbox"><span>checkbox in toolbar</span></label>
+        <button class="btn"><i class="ico ico-reload"></i>toolbar button</button>
+        <div class="divider"></div>
+        <label class="radio"><input type="radio" checked /><span>Radio label in toolbar</span></label>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var checkbox = document.getElementById("ind");
+            checkbox.indeterminate = true;
+            checkbox = document.getElementById("ind2");
+            checkbox.indeterminate = true;
+        };
+    </script>
+
+</body>
+</html>
