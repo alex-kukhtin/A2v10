@@ -14,7 +14,15 @@ namespace A2v10.Xaml
         {
             var option = new TagBuilder("option");
             if (Value != null)
-                option.MergeAttribute("value", Value.ToString());
+            {
+                if (Value is IJavaScriptSource)
+                    option.MergeAttribute(":value", (Value as IJavaScriptSource).GetJsValue());
+                else
+                    option.MergeAttribute("value", Value.ToString());
+            } else
+            {
+                option.MergeAttribute(":value", "null"); // JS null value
+            }
             option.RenderStart(context);
             if (Content != null)
                 context.Writer.Write(Content);
@@ -22,19 +30,28 @@ namespace A2v10.Xaml
         }
     }
 
+    public class ComboBoxItems : List<ComboBoxItem>
+    {
+
+    }
+
     [ContentProperty("Children")]
     public class ComboBox : ValuedControl, ITableControl
     {
-        List<ComboBoxItem> _children;
+        ComboBoxItems _children;
         public Object ItemsSource { get; set; }
 
-        public List<ComboBoxItem> Children
+        public ComboBoxItems Children
         {
             get
             {
                 if (_children == null)
-                    _children = new List<ComboBoxItem>();
+                    _children = new ComboBoxItems();
                 return _children;
+            }
+            set
+            {
+                _children = value;
             }
         }
 

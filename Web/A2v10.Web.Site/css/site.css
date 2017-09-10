@@ -39,6 +39,27 @@ i,
 .ico-calendar:before {
   content: "\e93d";
 }
+.ico-chart-area:before {
+  content: "\e922";
+}
+.ico-chart-bar:before {
+  content: "\e923";
+}
+.ico-chart-column:before {
+  content: "\e924";
+}
+.ico-chart-pie:before {
+  content: "\e925";
+}
+.ico-chart-pivot:before {
+  content: "\e926";
+}
+.ico-chart-stacked-area:before {
+  content: "\e927";
+}
+.ico-chart-stacked-bar:before {
+  content: "\e928";
+}
 .ico-chevron-down:before {
   content: "\e9a4";
 }
@@ -96,6 +117,12 @@ i,
 .ico-file:before {
   content: "\e9dd";
 }
+.ico-filter:before {
+  content: "\e988";
+}
+.ico-filter-outline:before {
+  content: "\e987";
+}
 .ico-folder:before {
   content: "\e95b";
   color: #dcb67a;
@@ -127,6 +154,14 @@ i,
   content: "\ea00";
   color: #034989;
 }
+.ico-error:before {
+  content: "\ea02";
+  color: #a94442;
+}
+.ico-error-outline:before {
+  content: "\ea03";
+  color: #a94442;
+}
 .ico-requery:before {
   content: "\e90e";
   color: #034989;
@@ -144,6 +179,9 @@ i,
 }
 .ico-gear:before {
   content: "\e98f";
+}
+.ico-gear-outline:before {
+  content: "\e990";
 }
 .ico-help:before {
   content: "\ea06";
@@ -170,6 +208,15 @@ i,
   content: "\e992";
   color: #a94442;
 }
+.ico-table:before {
+  content: "\eab0";
+}
+.ico-tag:before {
+  content: "\e997";
+}
+.ico-tag-outline:before {
+  content: "\e996";
+}
 .ico-download:before {
   content: "\e90f";
 }
@@ -193,7 +240,10 @@ i,
   content: "\e9fa";
 }
 .ico-close:before {
-  content: "\e94f";
+  content: "\e9fa";
+}
+* {
+  box-sizing: border-box;
 }
 body {
   padding: 0;
@@ -749,7 +799,9 @@ pre {
 table.data-grid {
   cursor: default;
   width: 100%;
-  border: 1px solid #bdc5d8;
+}
+table.data-grid col.fit {
+  width: 1px;
 }
 table.data-grid td {
   padding: 4px 6px;
@@ -760,6 +812,10 @@ table.data-grid td.cell-editable {
 }
 table.data-grid td.cell-editable .control-group {
   margin: -1px;
+}
+table.data-grid td.cell-validator {
+  padding: 4px 4px;
+  width: 23px;
 }
 table.data-grid colgroup > col.sorted {
   background-color: rgba(238, 238, 238, 0.4);
@@ -832,6 +888,67 @@ table.data-grid td.marker > .warning {
   background-color: rgba(255, 216, 0, 0.15);
   border-left-color: gold;
 }
+table.data-grid th.group-cell {
+  white-space: nowrap;
+  overflow: hidden;
+}
+table.data-grid th.group-cell a {
+  display: inline-block;
+  padding: 3px 0;
+  min-width: 12px;
+  border: 1px solid transparent;
+  color: #aaa;
+  font-size: 85%;
+  text-align: center;
+}
+table.data-grid th.group-cell a:hover {
+  background-color: #ddd;
+  text-decoration: none;
+}
+table.data-grid th.group-cell a + a {
+  border-left-color: #ccc;
+}
+table.data-grid tr.group td {
+  background-color: #eaeaea;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  color: #7f7f7f;
+  padding-left: 0;
+}
+table.data-grid tr.group td .expmark:after {
+  font-family: 'Bowtie';
+  content: '\e9cd';
+  /*tree-collapsed*/
+  width: 16px;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 16px;
+}
+table.data-grid tr.group td .expmark.expanded:after {
+  content: '\e9cb';
+  /*tree-expanded*/
+}
+table.data-grid tr.group td .grtitle {
+  font-weight: bold;
+}
+table.data-grid tr.group td .grcount {
+  float: right;
+  font-size: 85%;
+  background-color: #aaa;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+table.data-grid tr.group.lev-2 td {
+  padding-left: 12px;
+}
+table.data-grid td.group-marker {
+  padding: 0;
+  border-style: none;
+}
+table.data-grid.border {
+  border: 1px solid #bdc5d8;
+}
 table.data-grid > tbody > tr.warning {
   background-color: rgba(255, 216, 0, 0.15);
 }
@@ -875,7 +992,7 @@ table.hover > tbody > tr:hover {
 }
 .toolbar > .divider {
   display: inline-block;
-  width: 1px;
+  width: 2px;
   border-right: 1px solid #e0e4ee;
   align-self: stretch;
   background-color: #9dacca;
@@ -887,6 +1004,21 @@ table.hover > tbody > tr:hover {
 }
 .toolbar .aligner {
   flex-grow: 1;
+}
+.toolbar .control-group {
+  display: inline-flex;
+  margin: 0;
+  align-self: stretch;
+  background-color: transparent;
+}
+.toolbar .control-group label {
+  align-self: center;
+  padding: 0 3px;
+  text-transform: lowercase;
+}
+.toolbar .control-group select,
+.toolbar .control-group input {
+  height: 1.6em;
 }
 .tree-view {
   margin: 0;
@@ -954,7 +1086,7 @@ table.hover > tbody > tr:hover {
 }
 .tree-view li.collapsed > .overlay > .toggle:after {
   content: "\e9cd";
-  /**tree-collapsed*/
+  /*tree-collapsed*/
   position: absolute;
   left: 4px;
   top: 6px;

@@ -73,12 +73,18 @@ namespace A2v10.Xaml
                     return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
                 case CommandType.Open:
                     if (indirect)
+                    {
+                        if (!IsArgumentEmpty(context))
+                            return $"{{cmd:$navigate, arg1:'{CommandUrl}', arg2:'{CommandArgument(context)}'}}";
                         return $"{{cmd:$navigate, arg1:'{CommandUrl}', arg2:'this'}}";
+                    }
                     else
                         return $"$navigate('{CommandUrl}', {CommandArgument(context)})";
                 case CommandType.Remove:
                     if (indirect)
+                    {
                         return $"{{cmd:$remove, arg1:'this'}}";
+                    }
                     else
                         return $"$remove({CommandArgumentOrThis(context)})";
                 case CommandType.Append:
@@ -101,6 +107,13 @@ namespace A2v10.Xaml
             if (String.IsNullOrEmpty(arg))
                 return "null";
             return arg;
+        }
+
+        Boolean IsArgumentEmpty(RenderContext context)
+        {
+            var argBind = GetBinding(nameof(Argument));
+            return argBind == null || String.IsNullOrEmpty(argBind.Path);
+
         }
 
         String CommandArgumentOrThis(RenderContext context)

@@ -13,6 +13,7 @@ namespace A2v10.Xaml
          * 2. Render
          * 3. Grouping
          */
+        public Object ItemsSource { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -37,7 +38,15 @@ namespace A2v10.Xaml
         void RenderBody(RenderContext context)
         {
             var tbody = new TagBuilder("tbody").RenderStart(context);
-            
+            var isBind = GetBinding(nameof(ItemsSource));
+            if (isBind != null)
+            {
+                var tr = new TagBuilder("tr");
+                tr.MergeAttribute("v-for", $"(prop, propIndex) in {isBind.GetPath(context)}");
+                tr.MergeAttribute(":key", "propIndex");
+                tr.RenderStart(context);
+                tr.RenderEnd(context);
+            }
             tbody.RenderEnd(context);
         }
     }

@@ -16,13 +16,36 @@
 				</DropDownMenu>
 			</Button.DropDown>
 		</Button>
+		<ComboBox Label="Группировать:" Value="{Bind Options.GroupBy}">
+			<ComboBoxItem Content="Без группировки"></ComboBoxItem>
+			<ComboBoxItem Content="Состояние договора">
+				<ComboBoxItem.Value>
+					<GroupDescription GroupBy="StateName" Count="True" Title="Состояние: {Value}"/>
+				</ComboBoxItem.Value>
+			</ComboBoxItem>
+			<ComboBoxItem Content="Состояние + Сумма">
+				<ComboBoxItem.Value>
+					<GroupDescriptions>
+						<GroupDescription GroupBy="StateName" Count="True"/>
+						<GroupDescription GroupBy="$Sum" Count="False" Title="Сумма = {Value}, договоров: {Count}"/>
+					</GroupDescriptions>
+				</ComboBoxItem.Value>
+			</ComboBoxItem>
+		</ComboBox>
+		<TextBox Label="?:"></TextBox>
 	</Toolbar>
 	<CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl">
 		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				  GroupBy="{Bind Options.GroupBy}"
 				  Striped="True" Sort="True" GridLines="Vertical">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
+			<!--
+			<DataGrid.GroupBy>
+				<GroupDescription GroupBy="StateName" Title="Состояние: {Value} [{Count}]" Collapsed="False" Count="True"/>
+			</DataGrid.GroupBy>
+			-->
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center"/>
 			<DataGridColumn Header="Продукт" Content="{Bind ProductName}"/>
@@ -31,6 +54,7 @@
 			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Premium" Content="{Bind Premium, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Создан" Content="{Bind CreatedDate, DataType=DateTime}" Align="Center"/>
+			<DataGridColumn Header="Сумма" Content="{Bind $Sum, DataType=Currency}" Align="Right"/>
 			<!--
 			<DataGridColumn Header="Номер" Content="SNo" />
 			<DataGridColumn Header="Котрагент" Content="Agent"/>

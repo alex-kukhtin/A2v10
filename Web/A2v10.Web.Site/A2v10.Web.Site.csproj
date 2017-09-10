@@ -118,6 +118,8 @@
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\pagelayout.html" />
+    <Content Include="TestPages\property-grid.js" />
+    <Content Include="TestPages\property-grid.html" />
     <Content Include="TestPages\pager.html" />
     <Content Include="TestPages\pager.js" />
     <Content Include="TestPages\tabcomponent.html" />

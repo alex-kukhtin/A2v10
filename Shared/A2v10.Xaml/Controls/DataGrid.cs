@@ -24,6 +24,18 @@ namespace A2v10.Xaml
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
+        GroupDescriptions _groupBy;
+        public GroupDescriptions GroupBy
+        {
+            get
+            {
+                if (_groupBy == null)
+                    _groupBy = new GroupDescriptions();
+                return _groupBy;
+            }
+            set { _groupBy = value; }
+        }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var dataGrid = new TagBuilder("data-grid");
@@ -41,6 +53,16 @@ namespace A2v10.Xaml
             // TODO: binding for GridLines ???
             if (GridLines != GridLinesVisibility.None)
                 dataGrid.MergeAttribute("grid", GridLines.ToString());
+
+            var groupByBind = GetBinding(nameof(GroupBy));
+            if (groupByBind != null)
+            {
+                dataGrid.MergeAttribute(":group-by", groupByBind.GetPath(context));
+            }
+            else if (_groupBy != null)
+            {
+                dataGrid.MergeAttribute(":group-by", _groupBy.GetJsValue());
+            }
 
             dataGrid.RenderStart(context);
             Int32 colIndex = 0;

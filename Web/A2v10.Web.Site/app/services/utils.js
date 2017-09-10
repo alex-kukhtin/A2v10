@@ -1,4 +1,4 @@
-﻿/*20170908-7029*/
+﻿/*20170910-7029*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -8,6 +8,7 @@ app.modules['utils'] = function () {
 		isFunction: isFunction,
 		isDefined: isDefined,
 		isObject: isObject,
+		isObjectExact: isObjectExact,
 		isDate: isDate,
 		isString: isString,
 		isNumber: isNumber,
@@ -25,6 +26,7 @@ app.modules['utils'] = function () {
 	function isDate(value) { return toString.call(value) === '[object Date]'; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
+	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean;

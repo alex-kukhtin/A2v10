@@ -39,12 +39,12 @@
     i.ico {
         display: inline-block;
         margin-right: 6px;
-        color:@icon-color;
+        color: @icon-color;
     }
 
     > .divider {
         display: inline-block;
-        width: 1px;
+        width: 2px;
         border-right: 1px solid lighten(@toolbar-bg-color, 5%);
         align-self: stretch;
         background-color: darken(@toolbar-bg-color, 15%);
@@ -58,5 +58,25 @@
 
     .aligner {
         flex-grow: 1;
+    }
+
+    .control-group {
+        display: inline-flex;
+        margin: 0;
+        align-self:stretch;
+        background-color:transparent;
+
+        label {
+            align-self:center;
+            padding:0 3px;
+            text-transform:lowercase;
+        }
+
+        .input-group {
+        }
+
+        select, input {
+            height: 1.6em;
+        }
     }
 }

@@ -56,5 +56,12 @@ namespace A2v10.Infrastructure
             }
             return b.ToString();
         }
+
+        public static String EncodeJs(this String s)
+        {
+            if (String.IsNullOrEmpty(s))
+                return null;
+            return s.Replace("'", "\\'").Replace("\"", "\\\"");
+        }
     }
 }

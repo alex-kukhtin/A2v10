@@ -17,10 +17,19 @@
 @dg-danger-bg-color: rgba(255, 106, 0, 0.15);
 @dg-warning-bg-color: rgba(255, 216, 0, 0.15);
 
+@group-padding: 12px;
+@group-bg-color: #eaeaea;
+@group-txt-color:#7f7f7f;
+@group-brd-color:#ccc;
+
+
 table.data-grid {
     cursor: default;
     width: 100%;
-    border: 1px solid @data-grid-border-color;
+
+    col.fit {
+        width: 1px;
+    }
 
     td {
         padding: 4px 6px;
@@ -39,6 +48,11 @@ table.data-grid {
         }
     }
 
+    td.cell-validator{
+        padding:4px 4px;
+        width:23px;
+    }
+
     colgroup > col.sorted {
         background-color: @sort-bg-color;
     }
@@ -46,8 +60,7 @@ table.data-grid {
     th {
         background-color: @dg-header-bg-color;
         color: @dg-header-txt-color;
-        border-bottom:1px solid @dg-header-brd-color;
-
+        border-bottom: 1px solid @dg-header-brd-color;
         //position: relative; // Firefox BUG: hide borders
         .noselect();
 
@@ -65,7 +78,7 @@ table.data-grid {
         }
 
         &.sort.desc, &.sort.asc {
-            background-color:@dg-sort-column-bg-color;
+            background-color: @dg-sort-column-bg-color;
         }
 
         &.sort.desc .h-holder:after {
@@ -121,6 +134,88 @@ table.data-grid {
             border-left-color: gold;
         }
     }
+
+    th.group-cell {
+        white-space: nowrap;
+        overflow: hidden;
+
+        a {
+            display: inline-block;
+            padding: 3px 0;
+            min-width: @group-padding;
+            border: 1px solid transparent;
+            color: #aaa;
+            font-size: 85%;
+            text-align: center;
+
+            &:hover {
+                background-color: #ddd;
+                text-decoration: none;
+            }
+        }
+
+        a + a {
+            border-left-color: #ccc;
+        }
+    }
+
+    tr.group {
+        td {
+            background-color: @group-bg-color;
+            border-bottom: 1px solid @group-brd-color;
+            cursor: pointer;
+            color: @group-txt-color;
+            padding-left: 0;
+
+            & .expmark:after {
+                font-family: 'Bowtie';
+                content: '\e9cd'; /*tree-collapsed*/
+                width: 16px;
+                display: inline-block;
+                vertical-align: top;
+                font-size: 16px;
+            }
+
+            & .expmark.expanded:after {
+                content: '\e9cb'; /*tree-expanded*/
+            }
+
+            .grtitle {
+                font-weight:bold;
+            }
+
+            .grcount {
+                float:right;
+                font-size:85%;
+                background-color: #aaa;               
+                color:white;
+                padding: 2px 4px;
+                border-radius: 4px;
+            }
+        }
+
+        &.lev-2 td {
+            padding-left: @group-padding;
+        }
+    }
+
+    td.group-marker {
+        padding: 0;
+        border-style: none;
+    }
+
+    tr.lev-2 .group-marker {
+        //padding-left: @group-padding * 2 + @group-padding / 2;
+    }
+
+    tr.lev-3 .group-marker {
+        //padding-left: @group-padding * 3 + @group-padding / 2;
+    }
+}
+
+
+table.data-grid.border {
+    border: 1px solid @data-grid-border-color;
 }
 
 

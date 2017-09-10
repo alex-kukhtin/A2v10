@@ -4,6 +4,13 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    public enum ColumnControlType
+    {
+        Default,
+        Editor,
+        Validator
+    }
+
     [ContentProperty("Content")]
     public class DataGridColumn : XamlElement
     {
@@ -13,15 +20,20 @@ namespace A2v10.Xaml
 
         public TextAlign Align { get; set; }
 
+        public Boolean Fit { get; set; }
+
         public Boolean Editable { get; set; }
 
         public Command Command { get; set; }
+
+        public ColumnControlType ControlType { get; set; }
 
         internal void RenderColumn(RenderContext context, Int32 colIndex)
         {
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
             MergeBoolAttribute(column, context, nameof(Editable), Editable);
+            MergeBoolAttribute(column, context, nameof(Fit), Fit);
             Boolean isTemplate = Content is UIElement;
             String tmlId = null;
             if (!isTemplate)
@@ -33,6 +45,13 @@ namespace A2v10.Xaml
                 else if (Content != null)
                     column.MergeAttribute("content", Content.ToString());
             }
+
+            Bind ctBind = GetBinding(nameof(ControlType));
+            if (ctBind != null)
+                column.MergeAttribute(":control-type", ctBind.Path /*!without context!*/);
+            else if (ControlType != ColumnControlType.Default)
+                column.MergeAttribute("control-type", ControlType.ToString().ToLowerInvariant());
+
             var alignProp = GetBinding(nameof(Align));
             if (alignProp != null)
                 column.MergeAttribute(":align", alignProp.Path /*!without context!*/);

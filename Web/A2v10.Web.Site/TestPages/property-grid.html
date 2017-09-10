@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        table.prop-grid {
+            border-collapse:collapse;
+        }
+        td {
+            padding: 4px 6px;
+            border:1px solid #ccc;
+        }
+
+        td.prop {
+            text-align:right;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h3>property grid component</h3>
+
+        <div>
+            <h5>static property grid</h5>
+            <property-grid>
+                <property-grid-item name="Name" :value="Contract.Name"></property-grid-item>
+                <property-grid-item name="Date" :value="Contract.Date" format="dd.mm.yyyy"></property-grid-item>
+                <property-grid-item style="color:red" name="Memo" :value="Contract.Memo"></property-grid-item>
+                <property-grid-item style="color:cadetblue" name="Editable">
+                    <input v-model="Contract.Name"/>
+                </property-grid-item>
+            </property-grid>
+        </div>
+
+        <div>
+            <h5>dynamic property grid</h5>
+            <property-grid :items-source="arraySource" name-prop="name" value-prop="value" format-prop="format">
+            </property-grid>
+        </div>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="property-grid.js"></script>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                Contract: {
+                    Name: 'Contract name',
+                    Date: new Date(),
+                    Sum: 150.00,
+                    Memo: 'Contract memo'
+                }
+            },
+            computed: {
+                arraySource() {
+                    let arr = [];
+                    arr.push({ name: 'Name', value: this.Contract.Name });
+                    arr.push({ name: 'Date', value: this.Contract.Date, format:'dd mm yyyy' });
+                    arr.push({ name: 'Sum', value: this.Contract.Sum });
+                    arr.push({ name: 'Memo', value: this.Contract.Memo });
+                    return arr;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

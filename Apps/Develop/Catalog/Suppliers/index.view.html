@@ -10,6 +10,7 @@
                 <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
                            :border="true" :hover="true" grid="vertical" :sort="true" :route-query="$query" mark="$rowMark" mark-style="marker">
                     <data-grid-column header="index" content="$index" align="right"></data-grid-column>
+                    <data-grid-column header="" control-type="validator"></data-grid-column>
                     <data-grid-column header="Id" content="Id" width="0%" align="right"></data-grid-column>
                     <data-grid-column header="Name" content="Name"></data-grid-column>
                     <data-grid-column header="AmountW" width="0%" content="Amount" align="right" mark="$cellMark"></data-grid-column>

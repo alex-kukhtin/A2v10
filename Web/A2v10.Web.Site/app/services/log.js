@@ -11,6 +11,6 @@ app.modules['std:log'] = function () {
 	}
 
 	function countTime(msg, start) {
-		console.warn(msg + (performance.now() - start).toFixed(2) + ' ms');
+		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
 	}
 };

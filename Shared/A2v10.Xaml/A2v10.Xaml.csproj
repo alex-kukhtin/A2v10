@@ -45,6 +45,8 @@
     <Compile Include="Base\BindImpl.cs" />
     <Compile Include="Base\Command.cs" />
     <Compile Include="Base\Enums.cs" />
+    <Compile Include="Base\GroupDescription.cs" />
+    <Compile Include="Base\IJavaScriptSource.cs" />
     <Compile Include="Base\ISupportBinding.cs" />
     <Compile Include="Base\ITableControl.cs" />
     <Compile Include="Base\RenderContext.cs" />

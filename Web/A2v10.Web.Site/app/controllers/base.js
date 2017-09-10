@@ -339,7 +339,7 @@
 			this.__updateStartTime = performance.now();
 		},
 		updated() {
-			log.time('update time: ', this.__updateStartTime);
+			log.time('update time:', this.__updateStartTime);
 		}
     });
     

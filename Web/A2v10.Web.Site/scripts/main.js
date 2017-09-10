@@ -248,7 +248,7 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170908-7029*/
+/*20170910-7029*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -258,6 +258,7 @@ app.modules['utils'] = function () {
 		isFunction: isFunction,
 		isDefined: isDefined,
 		isObject: isObject,
+		isObjectExact: isObjectExact,
 		isDate: isDate,
 		isString: isString,
 		isNumber: isNumber,
@@ -275,6 +276,7 @@ app.modules['utils'] = function () {
 	function isDate(value) { return toString.call(value) === '[object Date]'; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
+	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean;
@@ -343,7 +345,7 @@ app.modules['std:log'] = function () {
 	}
 
 	function countTime(msg, start) {
-		console.warn(msg + (performance.now() - start).toFixed(2) + ' ms');
+		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
 	}
 };
 
@@ -1350,21 +1352,30 @@ app.modules['std:popup'] = function () {
 		}
     });
 })();
-/*20170908-7028*/
+/*20170910-7028*/
 /*components/datagrid.js*/
 (function () {
 
  /*TODO:
 2. size (compact, large ??)
-5. grouping (multiply)
 6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
-8. pager - (client/server)
+9. grouping: SERVER, XAML
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
 
-    const utils = require('utils');
+	/**
+	 * группировки. v-show на строке гораздо быстрее, чем v-if на всем шаблоне
+	 */
+
+	/*
+		{{g.group}} level:{{g.level}} expanded:{{g.expanded}} source:{{g.source}} count:
+	 */
+
+
+	const utils = require('utils');
+	const log = require('std:log');
 
     const dataGridTemplate = `
 <div class="data-grid-container">
@@ -1372,17 +1383,39 @@ app.modules['std:popup'] = function () {
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
+			<col v-if="isGrouping" class="fit"/>
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
             <tr>
                 <th v-if="isMarkCell" class="marker"></th>
+				<th v-if="isGrouping" class="group-cell">
+					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
+						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+				</th>
                 <slot></slot>
             </tr>
         </thead>
-        <tbody>
-            <data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
-        </tbody>
+		<template v-if="isGrouping">
+			<tbody>
+				<template v-for="(g, gIndex) of $groups">
+					<tr v-if="isGroupGroupVisible(g)" :class="'group lev-' + g.level" :key="gIndex">
+						<td @click.stop='toggleGroup(g)' :colspan="columns.length + 1">
+						<span :class="{expmark: true, expanded: g.expanded}" />
+						<span class="grtitle" v-text="groupTitle(g)" />
+						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
+					</tr>
+					<template>
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" v-for="(row, rowIndex) in g.items" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+					</template>
+				</template>
+			</tbody>
+		</template>
+		<template v-else>
+			<tbody>
+				<data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+			</tbody>
+		</template>
 		<slot name="footer"></slot>
     </table>
 	<slot name="pager"></slot>
@@ -1394,6 +1427,7 @@ app.modules['std:popup'] = function () {
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
+	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
@@ -1418,8 +1452,10 @@ app.modules['std:popup'] = function () {
             editable: { type: Boolean, default: false },
             validate: String,
             sort: { type: Boolean, default: undefined },
-            mark: String,
+			mark: String,
+			controlType: String,
 			width: String,
+			fit: Boolean,
 			command: Object
         },
         created() {
@@ -1453,7 +1489,7 @@ app.modules['std:popup'] = function () {
                 return cssClass;
             }
         },
-        methods: {
+		methods: {
             doSort() {
                 if (!this.isSortable)
 					return;
@@ -1504,7 +1540,16 @@ app.modules['std:popup'] = function () {
                 return h(tag, cellProps, [vNode]);
             }
 
-            if (!col.content) {
+			if (col.controlType === 'validator') {
+				let cellValid = {
+					props: ['item', 'col'],
+					template: '<span><i v-if="item.$invalid" class="ico ico-error"></i></span>'
+				};
+				cellProps.class = { 'cell-validator': true };
+				return h(tag, cellProps, [h(cellValid, { props: { item: row, col: col } })]);
+			}
+
+			if (!col.content) {
                 return h(tag, cellProps);
             }
 
@@ -1533,14 +1578,14 @@ app.modules['std:popup'] = function () {
 				let arg1 = col.command.arg1 || '';
 				if (arg1 === 'this') arg1 = row;
 				if (arg1.startsWith('{')) {
-					arg1 = arg1.substring(1, arg1.length - 1)
+					arg1 = arg1.substring(1, arg1.length - 1);
 					let narg = row[arg1];
 					if (!narg)
 						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
 					arg1 = narg;
 				}
 				let arg2 = col.command.arg2 || '';
-				if (arg2 === 'this') arg2 = row;
+				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2);
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
@@ -1567,7 +1612,7 @@ app.modules['std:popup'] = function () {
                 chElems.push(h(validator, validatorProps));
             }
             return h(tag, cellProps, chElems);
-        }
+		}
     };
 
     const dataGridRow = {
@@ -1580,7 +1625,9 @@ app.modules['std:popup'] = function () {
             row: Object,
             cols: Array,
             index: Number,
-            mark: String
+			mark: String,
+			group: Boolean,
+			level : Number
         },
         computed: {
             active() {
@@ -1592,7 +1639,9 @@ app.modules['std:popup'] = function () {
                 if (this.active)
                     cssClass += 'active';
                 if (this.isMarkRow && this.mark)
-                    cssClass += ' ' + this.row[this.mark];
+					cssClass += ' ' + this.row[this.mark];
+				if (this.level)
+					cssClass += ' lev-' + this.level;
                 return cssClass.trim();
             },
             isMarkCell() {
@@ -1629,7 +1678,8 @@ app.modules['std:popup'] = function () {
 			mark: String,
 			filterFields: String,
 			markStyle: String,
-			dblclick: Function
+			dblclick: Function,
+			groupBy: [Array, Object]
 		},
 		template: dataGridTemplate,
 		components: {
@@ -1639,6 +1689,7 @@ app.modules['std:popup'] = function () {
 			return {
 				columns: [],
 				clientItems: null,
+				clientGroups: null,
 				localSort: {
 					dir: 'asc',
 					order: ''
@@ -1671,27 +1722,95 @@ app.modules['std:popup'] = function () {
 			},
 			isLocal() {
 				return !this.$parent.sortDir;
+			},
+			isGrouping() {
+				return this.groupBy;
+			},
+			$groupCount() {
+				if (utils.isObjectExact(this.groupBy))
+					return 1;
+				else
+					return this.groupBy.length;
+			},
+			$groups() {
+				function* enumGroups(src, p0, lev, cnt) {
+					for (let grKey in src) {
+						if (grKey === 'items') continue;
+						let srcElem = src[grKey];
+						let count = srcElem.items ? srcElem.items.length : 0;
+						if (cnt)
+							cnt.c += count;
+						let pElem = {
+							group: grKey,
+							p0: p0,
+							expanded: true,
+							level: lev,
+							items: srcElem.items || null,
+							count: count
+						};
+						yield pElem;
+						if (!src.items) {
+							let cnt = { c: 0 };
+							yield* enumGroups(srcElem, pElem, lev + 1, cnt);
+							pElem.count += cnt.c;
+						}
+					}
+				}
+				this.doSortLocally();
+				// classic tree
+				let startTime = performance.now(); 
+				let grmap = {};
+				let grBy = this.groupBy;
+				if (utils.isObjectExact(grBy))
+					grBy = [grBy];
+				for (let itm of this.$items) {
+					let root = grmap;
+					for (let gr of grBy) {
+						let key = itm[gr.prop];
+						if (!utils.isDefined(key)) key = '';
+						if (key === '') key = "Unknown";
+						if (!(key in root)) root[key] = {};
+						root = root[key];
+					}
+					if (!root.items)
+						root.items = [];
+					root.items.push(itm);
+				}
+				// tree to plain array
+				let grArray = [];
+				for (let el of enumGroups(grmap, null, 1)) {
+					el.source = grBy[el.level - 1];
+					if (el.source.expanded === false)
+						el.expanded = false;
+					grArray.push(el);
+				}
+				this.clientGroups = grArray;
+				log.time('datagrid grouping time:', startTime);
+				return this.clientGroups;
 			}
 		},
 		watch: {
 			localSort: {
 				handler() {
-					this.doSortLocally();
+					this.handleSort();
 				},
 				deep: true
+			},
+			'itemsSource.length'() {
+				this.handleSort();
 			}
 		},
         methods: {
             $addColumn(column) {
                 this.columns.push(column);
             },
-            columnClass(column) {
-                if (utils.isDefined(column.dir))
-                    return {
-                        sorted: !!column.dir
-                    };
-                else
-                    return undefined;
+			columnClass(column) {
+				let cls = '';
+				if (column.fit || column.controlType === 'validator')
+					cls += 'fit';
+				if (utils.isDefined(column.dir))
+					cls = + ' sorted';
+                return cls;
             },
             columnStyle(column) {
                 return {
@@ -1717,8 +1836,11 @@ app.modules['std:popup'] = function () {
 				else
 					return this.$parent.sortDir(order);
 			},
-            doSortLocally(order)
+            doSortLocally()
 			{
+				if (!this.isLocal) return;
+				if (!this.localSort.order) return;
+				let startTime = performance.now(); 
 				let rev = this.localSort.dir === 'desc';
 				let sortProp = this.localSort.order;
                 let arr = [].concat(this.itemsSource);
@@ -1731,12 +1853,54 @@ app.modules['std:popup'] = function () {
                         return rev ? 1 : -1;
                     else
                         return rev ? -1 : 1;
-                });
+				});
+				log.time('datagrid sorting time:', startTime);
                 this.clientItems = arr;
-            }
+			},
+			handleSort() {
+				if (this.isGrouping)
+					this.clientGroups = null;
+				else
+					this.doSortLocally();
+			},
+			toggleGroup(g) {
+				g.expanded = !g.expanded;
+			},
+			isGroupGroupVisible(g) {
+				if (!g.group)
+					return false;
+				if (!g.p0)
+					return true;
+				let cg = g.p0;
+				while (cg) {
+					if (!cg.expanded) return false;
+					cg = cg.p0;
+				}
+				return true;
+			},
+			isGroupBodyVisible(g) {
+				if (!g.expanded) return false;
+				let cg = g.p0;
+				while (cg) {
+					if (!cg.expanded) return false;
+					cg = cg.p0;
+				}
+				return true;
+			},
+			groupTitle(g) {
+				if (g.source && g.source.title)
+					return g.source.title
+						.replace('{Value}', g.group)
+						.replace('{Count}', g.count);
+				return g.group;
+			},
+			expandGroups(lev) {
+				// lev 1-based
+				for (var gr of this.$groups)
+					gr.expanded = gr.level < lev;
+			}
         }
     });
-
 })();
 /*20170823-7018*/
 /*components/pager.js*/
@@ -2671,7 +2835,7 @@ Vue.directive('focus', {
 			this.__updateStartTime = performance.now();
 		},
 		updated() {
-			log.time('update time: ', this.__updateStartTime);
+			log.time('update time:', this.__updateStartTime);
 		}
     });
     

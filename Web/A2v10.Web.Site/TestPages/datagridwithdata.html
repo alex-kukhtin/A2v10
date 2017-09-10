@@ -14,8 +14,8 @@
         <h4>Simple DataGrid</h4>
         <div>
             <div class="toolbar">
-                <button @click.stop.prevent="Customers.$append()"><i class="ico ico-plus"></i> add row</button>
-                <button @click.stop.prevent="$append100()"><i class="ico ico-plus-box"></i> add 100 rows</button>
+                <button class="btn" @click.stop.prevent="Customers.$append()"><i class="ico ico-plus"></i> add row</button>
+                <button class="btn" @click.stop.prevent="$append100()"><i class="ico ico-plus-box"></i> add 100 rows</button>
                 <button @click.stop.prevent="$exec('test')"><i class="ico ico-database"></i> exec</button>
                 <button @click.stop.prevent="$save()" :disabled="$isPristine"><i class="ico ico-save"></i> save</button>
                 <div style="flex-grow:1"></div>
@@ -24,16 +24,27 @@
                 <button :disabled="!Customers.$selected" @click.stop.prevent="Customers.$selected.$remove()"><i class="fa fa-tasks"></i> remove selected</button>
                 <label v-text="Customers.Total"></label>
                 <label v-text="'dirty:' + $isDirty + ' pristine:' + $isPristine"></label>
-                <textbox :item="MyElement" prop="Name"></textbox>
+                <select v-model="currentGroupBy">
+                    <option :value="{prop:'Name', count:true}">Наименование</option>
+                    <option :value="{prop:'Amount', count:true}">Сумма</option>
+                    <option :value="null">Без группировки</option>
+                </select>
             </div>
-            <data-grid :items-source="$Customers10" 
-                       :bordered="true" 
-                       grid="both"
+            <data-grid :items-source="Customers" 
+                       :border="true" 
+                       grid="vertical"
                        :striped="true" 
                        :hover="true"
+                       :group-by="[{prop: 'Name', expanded:true, title:'Покупатель: {Value}', count:true}, {prop: 'Amount', title: 'Сумма продаж: {value} (элементов: {count})', count:false, expanded:true}]"
                        :sort="true"
                        :selected="Customers.selected">
+                <!--
+                    
+                       :group-by="[{prop: 'Name', expanded:true, title:'Покупатель: {Value}', count:true}, {prop: 'Amount', title: 'Сумма продаж: {value} (элементов: {count})', count:false, expanded:true}]"
+                       :group-by="[{prop: 'Name', title:'Покупатель: {Value}', count:true}]"
+                
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
+                    -->
                 <data-grid-column header="#" content="$index" align="center"></data-grid-column>
                 <data-grid-column header="Id" content="Id" align="center"></data-grid-column>
                 <data-grid-column header="Name" content="Name" validate="Customers[].Name"></data-grid-column>
@@ -48,7 +59,10 @@
                     </button><button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="ico ico-minus"></i></button>
                 </template>
                 <template slot="check" scope="cell">
-                    <input type="checkbox" value="true" v-model="cell.row.$checked" />
+                    <label class="checkbox">
+                        <span></span>
+                        <input type="checkbox" value="true" v-model="cell.row.$checked" />
+                    </label>
                 </template>
                 <template slot="txtbox" scope="cell">
                     <textbox :item="cell.row" prop="Name" align="right"></textbox>
@@ -112,7 +126,10 @@
         Customers: [
             { Id: 5, Name: "Customer # 5", Amount: 500 },
             { Id: 7, Name: "Customer # 7", Amount: 700 },
-            { Id: 8, Name: "Customer # 8", Amount: 800 }
+            { Id: 8, Name: "Customer # 8", Amount: 800 },
+            { Id: 5, Name: "Customer # 5", Amount: 700 },
+            { Id: 51, Name: "Customer # 5", Amount: 700 },
+            { Id: 81, Name: "Customer # 8", Amount: 800 }
         ],
         MyElement: {
             Id: 10, Name: "Stand alone", Amount: 5000
@@ -218,7 +235,14 @@
     //var vm = new BaseVue({
     var vm = new BaseController({
         el: "#test-app",
-        data: reactiveData,
+        data: {
+            Customers: reactiveData.Customers,
+            GroupBySource: [
+                [{ prop: 'Name', title: 'Покупатель: {value}', count: true }],
+                [{ prop: 'Amount', title: 'Сумма продаж: {value}', count: true }]
+            ],
+            currentGroupBy: { prop: 'Name', count: true }
+        },
         computed:
         {
             // Client pagination !!!!

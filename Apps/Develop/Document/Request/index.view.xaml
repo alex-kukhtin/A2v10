@@ -25,12 +25,13 @@
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
-			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
+			<DataGridColumn Header="Код" Content="Id" Align="Right" Fit="True"/>
 			<DataGridColumn Header="Номер" Content="SNo" />
 			<DataGridColumn Header="Котрагент" Content="{Bind Agent.Name}"/>
 			<DataGridColumn Header="Сумма" Content="Sum" Align="Right"/>
 			<DataGridColumn Header="Примечание" Content="Memo" Command="{BindCmd Open, Url='/document/request/edit'}"/>
 			<DataGridColumn Header="Договор" Content="Contract.FullName" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
+			<DataGridColumn Header="Contract Id" Content="Contract.Id" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
 			<DataGridColumn Header="Url" Content="Url" Command="{BindCmd Open, Url={Bind Url}}"/>
 		</DataGrid>
 	</CollectionView>
