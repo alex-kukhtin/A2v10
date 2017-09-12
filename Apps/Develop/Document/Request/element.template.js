@@ -11,7 +11,11 @@ let template = {
 	delegates: {
 		// new
 	},
-    events: {
+	events: {
+		// TODO:
+		'Root.create'(root) {
+			//alert(root.Document.DateCreated instanceof Date);
+		}
     },
 	validators: {
 		'Document.Company': 'Выберите продавца',

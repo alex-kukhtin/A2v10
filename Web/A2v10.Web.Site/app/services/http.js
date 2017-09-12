@@ -54,8 +54,10 @@ app.modules['std:http'] = function () {
         return new Promise(function (resolve, reject) {
             doRequest('GET', url)
                 .then(function (html) {
-                    if (selector.firstChild && selector.firstChild.__vue__)
-                        selector.firstChild.__vue__.$destroy();
+					if (selector.firstChild && selector.firstChild.__vue__) {
+						console.warn('destroy component');
+						selector.firstChild.__vue__.$destroy();
+					}
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body

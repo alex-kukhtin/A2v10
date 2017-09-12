@@ -1,0 +1,39 @@
+﻿@import "Variables.less";
+
+@btn-bg-color:white;
+@btn-dis-color:#f8f8f8;
+
+.pager {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+    padding: 2px 2px;
+    display:flex;
+    align-items:center;
+
+    a {
+        display: inline-block;
+        padding: 2px 4px;
+        background-color: @btn-bg-color;
+        border: 1px solid #ccc;
+        border-left-width:0;
+        min-width:23px;
+        text-align:center;
+
+        &:hover {
+            background-color: #e0e0e0;
+        }
+
+        &[disabled] {
+            color: #ccc;
+            background-color:@btn-dis-color;
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: @btn-dis-color;
+            }
+        }
+    }
+    a:first-child {
+        border-left-width:1px;
+    }
+}

@@ -4,7 +4,7 @@
 
 
     <collection-view :items-source="Customers"
-                     :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="serverurl">
+                     :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="client" :initial-sort="{order:'Amount', dir:'desc'} ">
         <template scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
                 <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"

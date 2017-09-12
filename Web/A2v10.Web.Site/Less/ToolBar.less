@@ -12,10 +12,8 @@
 
     .btn {
         white-space: nowrap;
-        border: 1px solid transparent;
         background-color: @toolbar-bg-color;
         text-transform: lowercase;
-        padding: 4px 6px;
         color: @text-color;
 
         &:hover {
@@ -51,15 +49,6 @@
         margin: 1px 4px;
     }
 
-    .dropdown.show .btn {
-        background-color: @dropdown-bg-color;
-        border-color: @dropdown-brd-color;
-    }
-
-    .aligner {
-        flex-grow: 1;
-    }
-
     .control-group {
         display: inline-flex;
         margin: 0;
@@ -79,4 +68,10 @@
             height: 1.6em;
         }
     }
+}
+
+.dropdown.show .btn {
+    background-color: @dropdown-bg-color;
+    border-color: @dropdown-brd-color;
+    color: @toolbar-txt-color;
 }

@@ -34,17 +34,19 @@
             implClass() {
                 return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
             }
-        },
+		},
         mounted() {
             if (this.src) {
-                this.currentUrl = this.src;
+				this.currentUrl = this.src;
                 http.load(this.src, this.$el).then(this.loaded);
             }
         },
         destroyed() {
             let fc = this.$el.firstElementChild;
-            if (fc && fc.__vue__)
-                fc.__vue__.$destroy();
+			if (fc && fc.__vue__) {
+				console.warn('desroy component');
+				fc.__vue__.$destroy();
+			}
         },
         watch: {
 			src: function (newUrl, oldUrl) {

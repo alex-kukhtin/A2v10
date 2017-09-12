@@ -1,4 +1,4 @@
-﻿/*20170910-7029*/
+﻿/*20170912-7031*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -17,13 +17,14 @@ app.modules['utils'] = function () {
 		toJson: toJson,
 		isPrimitiveCtor: isPrimitiveCtor,
 		isEmptyObject: isEmptyObject,
-		eval : eval
+		eval: eval,
+		format: format
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
 	function isDefined(value) { return typeof value !== 'undefined'; }
 	function isObject(value) { return value !== null && typeof value === 'object'; }
-	function isDate(value) { return toString.call(value) === '[object Date]'; }
+	function isDate(value) { return value instanceof Date; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
@@ -77,6 +78,40 @@ app.modules['utils'] = function () {
 		if (isObject(r))
 			return toJson(r);
 		return r;
+	}
+
+	function format(obj, dataType) {
+		if (!dataType)
+			return obj;
+		switch (dataType) {
+			case "DateTime":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleDateString() + ' ' + obj.toLocaleTimeString();
+			case "Date":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleDateString();
+			case "Time":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleTimeString();
+			case "Currency":
+				if (!isNumber(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleString(undefined, { minimumFractionDigits:2, useGrouping:true });
+			default:
+				console.error(`Invalid DataType for utils.format (${dataType})`);
+		}
+		return obj;
 	}
 };
 

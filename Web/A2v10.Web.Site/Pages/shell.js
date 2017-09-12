@@ -25,7 +25,8 @@ TODO:
         {
             type:'tree', title: 'Справочники', url: 'catalog', menu: [
                 { title: "Suppliers", url: 'suppliers', icon:'users', query:'order=Name&dir=desc'},
-                { title: "Покупатели", url: 'customers', icon:'database'},
+				{ title: "Покупатели", url: 'customers', icon: 'database' },
+				{ title: "Объекты строительства", url: 'buildings', icon: 'step' },
                 { title: "Edit 3 segment", url: 'edit/5', icon:'dashboard' },
                 {
                     title: "Menu Folder", icon: 'folder', menu: [
@@ -52,7 +53,7 @@ TODO:
         el: '#shell',
         data: {
             title: 'application title',
-            version: '10.0.7005',
+            version: '$(AppVersion)',
             menu: menu
         }
     });

@@ -8,5 +8,11 @@
 			"template": "index.template",
 			"view": "Index.view"
 		}
+	},
+	"popups": {
+		"demo": {
+			"index": true,
+			"popup": "demo.popup"
+		}
 	}
 }

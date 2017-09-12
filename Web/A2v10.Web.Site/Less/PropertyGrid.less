@@ -1,0 +1,32 @@
+﻿@import "Variables.less";
+@import "Utlis.less";
+
+@v-pading: 4px;
+@h-padding: 6px;
+
+table.prop-grid {
+    width: 100%;
+
+    col.prop-name {
+        width: 1px;
+    }
+
+    td.prop-name {
+        color: #999;
+        padding: @v-pading @h-padding @v-pading 0;
+    }
+
+    td.prop-value {
+        padding: @v-pading 0 @v-pading @h-padding;
+    }
+
+    &.grid-both, &.grid-vertical {
+        td.prop-name {
+            padding-left: @h-padding;
+        }
+
+        td.prop-value {
+            padding-right: @h-padding;
+        }
+    }
+}

@@ -25,6 +25,12 @@ namespace A2v10.Web.Mvc.Start
             );
 
             routes.MapRoute(
+                name: "Shell",
+                url: "Shell/{action}",
+                defaults: new { controller = "Shell" }
+            );
+
+            routes.MapRoute(
                 name: "Page",
                 url: "_page/{*pathInfo}",
                 defaults: new { controller = "Shell", action = "Page" }
@@ -34,6 +40,12 @@ namespace A2v10.Web.Mvc.Start
                 name: "Dialog",
                 url: "_dialog/{*pathInfo}",
                 defaults: new { controller = "Element", action = "Dialog" }
+            );
+
+            routes.MapRoute(
+                name: "Popup",
+                url: "_popup/{*pathInfo}",
+                defaults: new { controller = "Element", action = "Popup" }
             );
 
             routes.MapRoute(

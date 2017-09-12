@@ -29,6 +29,12 @@ namespace A2v10.Web.Mvc.Controllers
         }
 
         [IsAjaxOnly]
+        public async Task Popup(String pathInfo)
+        {
+            await RenderElementKind(RequestUrlKind.Popup, pathInfo);
+        }
+
+        [IsAjaxOnly]
         public ActionResult Invoke(String pathInfo)
         {
             throw new NotImplementedException();

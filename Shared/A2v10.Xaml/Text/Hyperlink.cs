@@ -21,6 +21,7 @@ namespace A2v10.Xaml
             var tag = new TagBuilder("a");
             if (onRender != null)
                 onRender(tag);
+            MergeAttributes(tag, context);
             MergeCommandAttribute(tag, context);
 
             tag.RenderStart(context);

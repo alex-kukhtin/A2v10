@@ -21,6 +21,7 @@ namespace A2v10.Web.Mvc.Models
     {
         Page,
         Dialog,
+        Popup,
         Command,
         Data
     }
@@ -35,6 +36,7 @@ namespace A2v10.Web.Mvc.Models
         public String id;
         public String action;
         public String dialog;
+        public String popup;
         public String command;
         public String path;
         public String data;
@@ -177,6 +179,16 @@ namespace A2v10.Web.Mvc.Models
         }
     }
 
+    public class RequestPopup : RequestView
+    {
+        public string popup;
+
+        public override string GetView()
+        {
+            return popup;
+        }
+    }
+
     public class RequestCommand : RequestBase
     {
         public String command;
@@ -186,6 +198,7 @@ namespace A2v10.Web.Mvc.Models
     {
         private String _action;
         private String _dialog;
+        private String _popup;
         private String _command;
         private String _data;
         private RequestUrlKind _kind;
@@ -201,6 +214,7 @@ namespace A2v10.Web.Mvc.Models
 
         public Dictionary<String, RequestAction> actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestDialog> dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<String, RequestPopup> popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestCommand> commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
 
         public RequestDataAction DataAction
@@ -246,6 +260,21 @@ namespace A2v10.Web.Mvc.Models
             }
         }
 
+        public RequestPopup CurrentPopup
+        {
+            get
+            {
+                if (popups.Count == 0)
+                    throw new RequestModelException($"There are no popups in model '{_modelPath}'");
+                if (String.IsNullOrEmpty(_popup))
+                    throw new RequestModelException($"Invalid empty popup in url for {_modelPath}");
+                RequestPopup pa;
+                if (popups.TryGetValue(_popup, out pa))
+                    return pa;
+                throw new RequestModelException($"Popup '{_popup}' not found in model {_modelPath}");
+            }
+        }
+
         public RequestCommand CurrentCommand
         {
             get
@@ -265,6 +294,8 @@ namespace A2v10.Web.Mvc.Models
                 return CurrentAction;
             else if (kind == RequestUrlKind.Dialog)
                 return CurrentDialog;
+            else if (kind == RequestUrlKind.Popup)
+                return CurrentPopup;
             throw new RequestModelException($"Invalid kind ({kind}) for GetCurrentAction");
         }
 
@@ -276,6 +307,8 @@ namespace A2v10.Web.Mvc.Models
                 c.SetParent(this);
             foreach (var d in dialogs.Values)
                 d.SetParent(this);
+            foreach (var p in popups.Values)
+                p.SetParent(this);
         }
 
         public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)
@@ -301,6 +334,9 @@ namespace A2v10.Web.Mvc.Models
                 case RequestUrlKind.Dialog:
                     mi.dialog = action;
                     break;
+                case RequestUrlKind.Popup:
+                    mi.popup = action;
+                    break;
                 case RequestUrlKind.Command:
                     mi.command = action;
                     break;
@@ -323,6 +359,7 @@ namespace A2v10.Web.Mvc.Models
             rm.EndInit();
             rm._action = mi.action;
             rm._dialog = mi.dialog;
+            rm._popup = mi.popup;
             rm._command = mi.command;
             rm._data = mi.data;
             rm._modelPath = mi.path;
@@ -334,7 +371,8 @@ namespace A2v10.Web.Mvc.Models
         {
             baseUrl = baseUrl.ToLowerInvariant();
             RequestUrlKind kind;
-            if (baseUrl.StartsWith("/_dialog")) {
+            if (baseUrl.StartsWith("/_dialog"))
+            {
                 kind = RequestUrlKind.Dialog;
                 baseUrl = baseUrl.Substring(9);
             }
@@ -342,6 +380,11 @@ namespace A2v10.Web.Mvc.Models
             {
                 kind = RequestUrlKind.Page;
                 baseUrl = baseUrl.Substring(7);
+            }
+            else if (baseUrl.StartsWith("/_popup"))
+            {
+                kind = RequestUrlKind.Popup;
+                baseUrl = baseUrl.Substring(8);
             }
             else
             {

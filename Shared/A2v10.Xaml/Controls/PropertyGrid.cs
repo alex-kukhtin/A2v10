@@ -9,11 +9,12 @@ namespace A2v10.Xaml
     {
 
         /* TODO: 
-         * 1. PropertyGridItem
-         * 2. Render
          * 3. Grouping
          */
         public Object ItemsSource { get; set; }
+
+        public PropertyGridItems Children { get; set; } = new PropertyGridItems();
+        public GridLinesVisibility GridLines { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -21,6 +22,9 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(table);
             MergeAttributes(table, context);
+            if (GridLines != GridLinesVisibility.None)
+                table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
+
             table.RenderStart(context);
             RenderColumns(context);
             RenderBody(context);
@@ -41,11 +45,21 @@ namespace A2v10.Xaml
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
             {
+                if (Children.Count != 1)
+                    throw new XamlException("For a table with an items source, only one child element is allowed");
                 var tr = new TagBuilder("tr");
                 tr.MergeAttribute("v-for", $"(prop, propIndex) in {isBind.GetPath(context)}");
                 tr.MergeAttribute(":key", "propIndex");
                 tr.RenderStart(context);
+                using (new ScopeContext(context, "prop"))
+                {
+                    Children[0].RenderElement(context, (tag) => tag.MergeAttribute(":key", "propIndex"));
+                }
                 tr.RenderEnd(context);
+            }
+            else
+            {
+                Children.Render(context);
             }
             tbody.RenderEnd(context);
         }

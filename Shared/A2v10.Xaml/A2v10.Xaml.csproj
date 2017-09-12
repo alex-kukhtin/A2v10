@@ -50,6 +50,7 @@
     <Compile Include="Base\ISupportBinding.cs" />
     <Compile Include="Base\ITableControl.cs" />
     <Compile Include="Base\RenderContext.cs" />
+    <Compile Include="Base\SortDescription.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\TagBuilder.cs" />
     <Compile Include="Base\UIElement.cs" />
@@ -72,8 +73,11 @@
     <Compile Include="Controls\DropDownMenu.cs" />
     <Compile Include="Controls\Group.cs" />
     <Compile Include="Controls\PropertyGrid.cs" />
+    <Compile Include="Controls\PropertyGridItem.cs" />
     <Compile Include="Controls\Radio.cs" />
     <Compile Include="Controls\Selector.cs" />
+    <Compile Include="Layouts\Popup.cs" />
+    <Compile Include="Text\Break.cs" />
     <Compile Include="Text\Hyperlink.cs" />
     <Compile Include="Controls\List.cs" />
     <Compile Include="Controls\MenuItem.cs" />
@@ -100,6 +104,8 @@
     <Compile Include="Controls\Table.cs" />
     <Compile Include="Text\Inline.cs" />
     <Compile Include="Text\InlineCollection.cs" />
+    <Compile Include="Text\Line.cs" />
+    <Compile Include="Text\Popover.cs" />
     <Compile Include="Text\Span.cs" />
     <Compile Include="Text\Text.cs" />
     <Compile Include="XamlRenderer.cs" />

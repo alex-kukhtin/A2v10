@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+    </style>
+</head>
+<body>
+
+    <div id="app" style="padding:20px;height:300px;overflow:auto;background-color:aliceblue;border:1px solid blue" v-cloak>
+        <h3>Popover component</h3>
+
+        <div>
+            <h5>static popover</h5>
+            Это текст, а внутри него 
+            <popover icon="table" class="po-right" title="align right">
+                i am the text for popover component for right-top aligh without (simple text)
+            </popover>
+            потом снова текст
+            <popover class="po-top" icon="table" title="alight top">
+                <div>i am the text for popover component for top-left align within div tag</div>
+            </popover>
+            теперь выравнивание
+            <popover icon="database"  class="po-bottom" title="alight bottom">
+                <div>i am the text for popover component for top-right align within div tag</div>
+            </popover>
+            и дополнительное выравнивание
+            <popover icon="info-outline" class="po-left" title="left">
+                <div>i am the text for popover component for top-left align</div>
+            </popover>
+            и завершается текстом
+        </div>
+
+        <div>
+            <h5>dynamic popover</h5>
+            <popover class="po-right" icon="error" url="/catalog/customers/demo/0" title="Динамический для загрузки">
+            </popover>
+        </div>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
+
+    <script>
+        const popup = require('std:popup');
+        popup.startService();
+
+        new Vue({
+            el: "#app",
+            data: {
+                Contract: {
+                    Name: 'Contract name',
+                    Date: new Date(),
+                    Sum: 150.00,
+                    Memo: 'Contract memo'
+                }
+            },
+            computed: {
+                arraySource() {
+                    let arr = [];
+                    arr.push({ name: 'Name', value: this.Contract.Name });
+                    arr.push({ name: 'Date', value: this.Contract.Date, format:'dd mm yyyy' });
+                    arr.push({ name: 'Sum', value: this.Contract.Sum });
+                    arr.push({ name: 'Memo', value: this.Contract.Memo });
+                    return arr;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

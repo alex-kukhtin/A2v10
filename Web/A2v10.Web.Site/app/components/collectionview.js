@@ -24,6 +24,7 @@ Vue.component('collection-view', {
 		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
+		initialSort: Object,
 		runAt: String
 	},
 	data() {
@@ -134,6 +135,10 @@ Vue.component('collection-view', {
 			let no = this.offset + this.pageSize;
 			this.$setOffset(no);
 		},
+		last() {
+			//TODO
+			this.$setOffset(1000);
+		},
 		sortDir(order) {
 			return order === this.order ? this.dir : undefined;
 		},
@@ -161,6 +166,10 @@ Vue.component('collection-view', {
 		}
 	},
 	created() {
+		if (this.initialSort) {
+			this.localQuery.order = this.initialSort.order;
+			this.localQuery.dir = this.initialSort.dir;
+		}
 		this.$on('sort', this.doSort);
 	}
 });

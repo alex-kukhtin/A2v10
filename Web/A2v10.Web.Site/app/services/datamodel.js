@@ -1,4 +1,4 @@
-﻿/*20170905-7026*/
+﻿/*20170912-7031*/
 /* services/datamodel.js */
 (function() {
 
@@ -66,7 +66,7 @@
                 shadow[prop] = source[prop] || false;
                 break;
             case Date:
-                shadow[prop] = source[prop] || null;
+                shadow[prop] = new Date(source[prop] || null);
                 break;
             default:
                 shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, parent);
@@ -108,7 +108,12 @@
                 });
             }
         }
-    }
+	}
+
+	function initRootElement(elem) {
+		// объект уже создан
+		elem._root_.$emit('Root.create', elem);
+	}
 
     function createObject(elem, source, path, parent) {
 		let ctorname = elem.constructor.name;
@@ -152,7 +157,7 @@
 			}
 			elem._enableValidate_ = true;
 			elem._needValidate_ = true;
-
+			initRootElement(elem);
 		}
 		if (startTime)
 			log.time('create root time:', startTime);

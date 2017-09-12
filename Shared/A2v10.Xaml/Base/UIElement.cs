@@ -13,8 +13,9 @@ namespace A2v10.Xaml
 		public Boolean? Italic { get; set; }
         public String Tip { get; set; }
 
-		internal virtual void MergeAttributes(TagBuilder tag, RenderContext context)
+		internal override void MergeAttributes(TagBuilder tag, RenderContext context)
 		{
+            base.MergeAttributes(tag, context);
             // TODO: Bold/Italic Binding
 			if (Bold.HasValue)
 				tag.AddCssClass(Bold.Value ? "bold" : "no-bold");

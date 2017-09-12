@@ -23,6 +23,8 @@ namespace A2v10.Xaml
 
         public RunMode RunAt { get; set; }
 
+        public SortDescription Sort { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             if (context.IsDialog && RunAt == RunMode.ServerUrl)
@@ -35,6 +37,8 @@ namespace A2v10.Xaml
                 tag.MergeAttribute(":items-source", itemsSource.GetPath(context));
 
             tag.MergeAttribute("run-at", RunAt.ToString().ToLowerInvariant());
+            if (Sort != null)
+                tag.MergeAttribute(":initial-sort", Sort.GetJsValue());
 
             if (PageSize != null)
                 tag.MergeAttribute(":page-size", PageSize.Value.ToString());

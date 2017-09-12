@@ -3,11 +3,11 @@
     <div class="modal-header"><span>Выбор корреспондента</span><button class="btnclose" @click.prevent="$modalClose(false)">&#x2715;</button></div>
     <div class="load-indicator" v-show="$isLoading"></div>
     <div class="modal-content" style="min-height:200px" >
-        <div class="toolbar" style="padding:6px;display:flex;width:100%">
-            <button @click.stop.prevent="Customers.$append()">Add</button>
-            <button @click.stop.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
-            <button @click.stop.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
-            <button @click.stop.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
+        <div class="toolbar">
+            <button class="btn" @click.prevent="Customers.$append()">Add</button>
+            <button class="btn" @click.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
+            <button class="btn" @click.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
+            <button class="btn" @click.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
             <span v-text="$query"></span>
         </div>
         <data-grid :items-source="Customers" :striped="true" :query="$query"

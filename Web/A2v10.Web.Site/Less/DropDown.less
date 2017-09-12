@@ -98,6 +98,9 @@ TODO:
         margin-top: @button-gap;
         margin-bottom: @button-gap;
     }
+}
+
+.dropdown {
 
     &.show:after {
         content: '';
@@ -116,14 +119,16 @@ TODO:
     &.dir-up.show:after {
         top: 0;
     }
-}
 
-.dropdown {
     .btn-caret {
-        border-left: 1px solid darken(@toolbar-bg-color, 15%);
+        border-left: 1px solid @text-color;
 
         .caret {
             margin-left: 0;
         }
+    }
+
+    &.show > .btn:hover {
+        background-color:@dropdown-bg-color;
     }
 }

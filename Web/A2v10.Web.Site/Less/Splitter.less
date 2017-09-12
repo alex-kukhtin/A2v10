@@ -1,0 +1,41 @@
+﻿@import "Variables.less";
+@import "Utlis.less";
+
+@handle-width: 6px;
+
+.splitter {
+    display: grid;
+    position: relative;
+    grid-gap: 0;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 1fr @handle-width 2fr;
+
+    .spl-part {
+        overflow: auto;
+        grid-row: 1;
+    }
+
+    .drag-handle {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: @light-brd-color;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+.splitter.vertical {
+    .spl-handle {
+        border-left: 1px solid @light-brd-color;
+        grid-row: 1;
+    }
+
+    .spl-handle, .drag-handle {
+        width: @handle-width;
+        height: 100%;
+        cursor: w-resize;
+    }
+}

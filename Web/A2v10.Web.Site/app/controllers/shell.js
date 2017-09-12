@@ -1,4 +1,4 @@
-﻿/*20170905-7026*/
+﻿/*20170912-7031*/
 /* controllers/shell.js */
 
 (function () {
@@ -70,7 +70,7 @@
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.title" @click.stop.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" v-text="item.title" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -101,7 +101,7 @@
 		// TODO: разные варианты меню
 		template: `
 <div :class="cssClass">
-    <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
+    <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <ul class="tree-view">
             <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
@@ -110,7 +110,7 @@
             </tree-item>
         </ul>
     </div>
-    <div v-else class="side-bar-title" @click.stop.prevent="toggle">
+    <div v-else class="side-bar-title" @click.prevent="toggle">
         <span class="side-bar-label" v-text="title"></span>
     </div>
 </div>
@@ -350,6 +350,15 @@
 			},
 			debugTrace() {
 				alert('debug trace');
+			},
+			debugModel() {
+				alert('debug model');
+			},
+			profile() {
+				alert('user profile');
+			},
+			changeUser() {
+				alert('change user');
 			}
 		},
 		created() {

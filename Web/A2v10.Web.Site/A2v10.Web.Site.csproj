@@ -55,6 +55,7 @@
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
     <Content Include="app\components\pager.js" />
+    <Content Include="app\components\popover.js" />
     <Content Include="app\components\tab.js" />
     <Content Include="app\components\combobox.js" />
     <Content Include="app\controllers\shell.js" />
@@ -67,6 +68,7 @@
     <Content Include="app\components\validator.js" />
     <Content Include="app\directives\dropdown.js" />
     <Content Include="app\directives\focus.js" />
+    <Content Include="app\directives\resize.js" />
     <Content Include="app\platform\polyfills.js" />
     <Content Include="app\platform\routex.js" />
     <Content Include="app\platform\webvue.js" />
@@ -118,6 +120,8 @@
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\pagelayout.html" />
+    <Content Include="TestPages\popover.html" />
+    <Content Include="TestPages\popover.js" />
     <Content Include="TestPages\property-grid.js" />
     <Content Include="TestPages\property-grid.html" />
     <Content Include="TestPages\pager.html" />
@@ -167,6 +171,10 @@
     <Content Include="css\fonts\bowtie.woff" />
     <Content Include="Less\Table.less" />
     <Content Include="Less\CheckBox.less" />
+    <Content Include="Less\Popover.less" />
+    <Content Include="Less\Pager.less" />
+    <Content Include="Less\PropertyGrid.less" />
+    <Content Include="Less\Splitter.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

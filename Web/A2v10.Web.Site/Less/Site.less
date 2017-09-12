@@ -29,27 +29,71 @@ body {
 button {
     padding: 4px 6px;
     font-size: @font-size;
-
+    border:1px solid transparent;
+    cursor:pointer;
     &:focus {
         outline-style: none;
     }
 }
 
 
+hr {
+    margin:0.3em 0;
+    border:1px solid #ccc;
+    border-bottom-style:none;
+}
+
 header, .header {
-    position:absolute;
-    left:0;top:0;right:0;
-    height:@header-height;
-    line-height:@header-height;
-    font-size:18px;
-    padding-left:8px;
-    background-color:@brand-bk_color;
-    color:white;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: @header-height;
+    font-size: 18px;
+    padding: 0 8px;
+    background-color: @brand-bk_color;
+    color: white;
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+
     a.app-title {
-        color:inherit;
+        color: inherit;
+
         &:hover {
-            text-decoration:none;
-            color:inherit;
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+
+    .h-right {
+        font-size: 13px;
+
+        > a.nav-admin {
+            color: inherit;
+            padding: 4px 6px;
+
+            &:hover {
+                background-color: @brand-hover-color;
+            }
+        }
+
+        > .dropdown {
+            display: inline-block;
+
+            .menu {
+                margin-top: -1px;
+                min-width: 185px;
+            }
+        }
+
+        .btn {
+            background-color: transparent;
+            color: white;
+
+            &:hover {
+                background-color: @brand-hover-color;
+            }
         }
     }
 }
@@ -99,6 +143,7 @@ header, .header {
 
 @import "Nav.less";
 @import "Page.less";
+@import "Splitter.less";
 
 
 .side-bar {
@@ -181,18 +226,24 @@ footer, .footer {
         display: inline-block;
         float: right;
         padding-right: 2px;
+
+        .menu {
+            margin-bottom: -2px;
+            font-size:13px;
+        }
     }
 
     button {
-        background-color: skyblue;
-        border: 1px solid blue;
+        background-color: @danger-btn-color;
         font-size: 12px;
         padding: 1px 6px;
+        color: white;
         text-transform: lowercase;
     }
 
     .spinner {
         display: inline-block;
+        box-sizing: content-box;
         width: 8px;
         height: 8px;
         margin-right: 2px;
@@ -256,14 +307,15 @@ td, th {
 a {
     color: @link-color;
     text-decoration: none;
-    cursor:pointer;
+    cursor: pointer;
 
     &:hover {
         color: @link-hover-color;
-        text-decoration: underline;
+        text-decoration: none;
     }
 
     &:focus {
+        color: @link-hover-color;
         outline-style: none;
     }
 
@@ -287,9 +339,11 @@ pre {
 @import "Tab.less";
 @import "Dialog.less";
 @import "Table.less";
+@import "PropertyGrid.less";
 @import "CheckBox.less";
-
+@import "Pager.less";
 @import "DropDown.less";
+@import "Popover.less";
 @import "Grid.less";
 
 .badge {

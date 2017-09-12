@@ -46,7 +46,7 @@
 			<tbody>
 				<template v-for="(g, gIndex) of $groups">
 					<tr v-if="isGroupGroupVisible(g)" :class="'group lev-' + g.level" :key="gIndex">
-						<td @click.stop='toggleGroup(g)' :colspan="columns.length + 1">
+						<td @click.prevent='toggleGroup(g)' :colspan="columns.length + 1">
 						<span :class="{expmark: true, expanded: g.expanded}" />
 						<span class="grtitle" v-text="groupTitle(g)" />
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
@@ -69,7 +69,7 @@
 `;
 
     const dataGridRowTemplate = `
-<tr @click.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -235,7 +235,7 @@
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.stop.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);

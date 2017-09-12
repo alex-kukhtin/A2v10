@@ -1,4 +1,4 @@
-﻿/*20170908-7028*/
+﻿/*20170912-7031*/
 /*controllers/base.js*/
 (function () {
 
@@ -158,7 +158,7 @@
 					let nUrl = sel[url];
 					if (!nUrl)
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
-					url = nUrl
+					url = nUrl;
 				}
 				this.$navigate(url, sel.$id);
 			},
@@ -292,12 +292,13 @@
 				return false;
 			},
 
-			$format(value, format) {
-				if (!format)
+			$format(value, dataType, format) {
+				if (!format && !dataType)
 					return value;
-				if (format.indexOf('{0}') !== -1)
+				if (dataType)
+					value = utils.format(value, dataType);
+				if (format && format.indexOf('{0}') !== -1)
 					return format.replace('{0}', value);
-				// TODO: format dates, numbers, etc
 				return value;
 			},
 			__beginRequest() {

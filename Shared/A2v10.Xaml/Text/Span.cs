@@ -18,6 +18,7 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var span = new TagBuilder("span");
+            MergeAttributes(span, context);
             span.AddCssClassBoolNo(Bold, "bold");
             span.AddCssClassBoolNo(Italic, "italic");
             var cbind = GetBinding(nameof(Content));

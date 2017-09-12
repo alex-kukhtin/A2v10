@@ -1,0 +1,11 @@
+﻿/*catalog/buildObjects*/
+{
+	"schema": "a2v10demo",
+	"model": "Catalog.Customer",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "Index.view"
+		}
+	}
+}

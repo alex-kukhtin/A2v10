@@ -34,7 +34,7 @@ namespace A2v10.Xaml
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
             MergeBoolAttribute(column, context, nameof(Editable), Editable);
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
-            Boolean isTemplate = Content is UIElement;
+            Boolean isTemplate = Content is UIElementBase;
             String tmlId = null;
             if (!isTemplate)
             {
@@ -76,7 +76,7 @@ namespace A2v10.Xaml
                 templ.RenderStart(context);
                 using (var ctx = new ScopeContext(context, "cell.row"))
                 {
-                    (Content as UIElement).RenderElement(context);
+                    (Content as UIElementBase).RenderElement(context);
 
                 }
                 templ.RenderEnd(context);
@@ -95,8 +95,8 @@ namespace A2v10.Xaml
         protected override void OnEndInit()
         {
             base.OnEndInit();
-            if (Content is UIElement)
-                (Content as UIElement).SetParent(this);
+            if (Content is XamlElement)
+                (Content as XamlElement).SetParent(this);
         }
     }
 

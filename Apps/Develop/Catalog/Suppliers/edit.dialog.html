@@ -1,9 +1,9 @@
 ﻿
-<div id="$(RootId)" style="min-height:400px">
+<div id="$(RootId)">
     <div class="modal-header"><span>HTML EDIT CUSTOMER [</span><span v-text="Customer.Id"></span>]</div>
 
-    <div class="modal-body">
-        <div class="grid" style="margin:20px">
+    <div class="modal-body" style="min-height:200px">
+        <div class="grid">
             <div class="control">
                 <label>name:</label>
                 <textbox :item="Customer" prop="Name"></textbox>
@@ -22,10 +22,10 @@
             <div>dirty = {{$isDirty}} pristine = {{$isPristine}}</div>
         </div>
     </div>
-    <div style="margin-top:50px" class="model-footer">
-        <button @click.stop.prevent="$modalSaveAndClose()" :disabled="$isPristine">OK</button>
-        <button @click.stop.prevent="$save()" :disabled="$isPristine">Save without close</button>
-        <button @click.stop.prevent="$modalClose(false)">Cancel</button>
+    <div class="modal-footer">
+        <button class="btn" @click.prevent="$modalSaveAndClose()" :disabled="$isPristine">OK</button>
+        <button class="btn" @click.prevent="$save()" :disabled="$isPristine">Save without close</button>
+        <button class="btn" @click.prevent="$modalClose(false)">Cancel</button>
     </div>
 </div>
 

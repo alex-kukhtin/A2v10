@@ -31,14 +31,20 @@
 					<Hyperlink Content="Ссылка в таблице" />
 				</TableRow>
 			</Table>
-			<Code Content="{Bind Warehouses}"></Code>
+			<PropertyGrid GridLines="Horizontal">
+				<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
+				<PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
+				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
+				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
+			</PropertyGrid>
+			<Code Content="{Bind Document}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
 		<Tab Header="Заявка">
 			<Grid>
-				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated}"></Code>
-				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified}"></Code>
+				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
+				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
 				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
 				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
 				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
@@ -49,6 +55,9 @@
 						<Hyperlink Icon="Clear" />
 					</TextBox.AddOns>
 				</TextBox>
+				<!--
+				<Selector />
+				-->
 				<ComboBox Label="Доставку включить" Value="{Bind Document.DeliveryType}">
 					<ComboBoxItem Value="0">В итоги по документу</ComboBoxItem>
 					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
@@ -65,13 +74,17 @@
 				<CheckBox Label="Цена закупки без НДС" Value="{Bind Document.VatPurchases}" />
 			</Toolbar>
 			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
+				<!-- Начальная сортировка для таблицы -->
+				<CollectionView.Sort>
+					<SortDescription Property="Price" Dir="Desc"/>
+				</CollectionView.Sort>
 				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
-					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right"/>
-					<DataGridColumn Header="Entity" Content="{Bind Entity.Name}"></DataGridColumn>
+					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
+					<DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
 					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
-					<DataGridColumn Header="Price" Content="{Bind Price}" Align="Right"/>
-					<DataGridColumn Header="Sum" Content="{Bind Sum}" Align="Right"/>
-					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right"/>
+					<DataGridColumn Header="Price" Content="{Bind Price, DataType=Currency}" Align="Right" Fit="True"/>
+					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right" Fit="True"/>
 					<DataGridColumn>
 						<Group>
 							<!--А как привязаться к Root.Warehouses ??? -->
@@ -80,7 +93,16 @@
 						</Group>
 					</DataGridColumn>
 					<DataGridColumn>
-						<Button Icon="Delete" Command="{BindCmd Remove}"></Button>
+						<Group>
+							<Button Icon="Delete" Command="{BindCmd Remove}"></Button>
+							<Popover Icon="Info" Placement="Left">
+								<Text>
+									Информация о товаре:
+									Наименование:
+									<Span Bold="True" Content="{Bind Entity.Name}"></Span>
+								</Text>
+							</Popover>
+						</Group>
 					</DataGridColumn>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"></Pager>

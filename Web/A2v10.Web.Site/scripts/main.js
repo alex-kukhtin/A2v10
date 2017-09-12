@@ -248,7 +248,7 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170910-7029*/
+/*20170912-7031*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -267,13 +267,14 @@ app.modules['utils'] = function () {
 		toJson: toJson,
 		isPrimitiveCtor: isPrimitiveCtor,
 		isEmptyObject: isEmptyObject,
-		eval : eval
+		eval: eval,
+		format: format
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
 	function isDefined(value) { return typeof value !== 'undefined'; }
 	function isObject(value) { return value !== null && typeof value === 'object'; }
-	function isDate(value) { return toString.call(value) === '[object Date]'; }
+	function isDate(value) { return value instanceof Date; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
@@ -327,6 +328,40 @@ app.modules['utils'] = function () {
 		if (isObject(r))
 			return toJson(r);
 		return r;
+	}
+
+	function format(obj, dataType) {
+		if (!dataType)
+			return obj;
+		switch (dataType) {
+			case "DateTime":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleDateString() + ' ' + obj.toLocaleTimeString();
+			case "Date":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleDateString();
+			case "Time":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleTimeString();
+			case "Currency":
+				if (!isNumber(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.toLocaleString(undefined, { minimumFractionDigits:2, useGrouping:true });
+			default:
+				console.error(`Invalid DataType for utils.format (${dataType})`);
+		}
+		return obj;
 	}
 };
 
@@ -405,8 +440,10 @@ app.modules['std:http'] = function () {
         return new Promise(function (resolve, reject) {
             doRequest('GET', url)
                 .then(function (html) {
-                    if (selector.firstChild && selector.firstChild.__vue__)
-                        selector.firstChild.__vue__.$destroy();
+					if (selector.firstChild && selector.firstChild.__vue__) {
+						console.warn('destroy component');
+						selector.firstChild.__vue__.$destroy();
+					}
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body
@@ -498,7 +535,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170905-7026*/
+/*20170912-7031*/
 /* services/datamodel.js */
 (function() {
 
@@ -566,7 +603,7 @@ app.modules['std:validators'] = function() {
                 shadow[prop] = source[prop] || false;
                 break;
             case Date:
-                shadow[prop] = source[prop] || null;
+                shadow[prop] = new Date(source[prop] || null);
                 break;
             default:
                 shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, parent);
@@ -608,7 +645,12 @@ app.modules['std:validators'] = function() {
                 });
             }
         }
-    }
+	}
+
+	function initRootElement(elem) {
+		// объект уже создан
+		elem._root_.$emit('Root.create', elem);
+	}
 
     function createObject(elem, source, path, parent) {
 		let ctorname = elem.constructor.name;
@@ -652,7 +694,7 @@ app.modules['std:validators'] = function() {
 			}
 			elem._enableValidate_ = true;
 			elem._needValidate_ = true;
-
+			initRootElement(elem);
 		}
 		if (startTime)
 			log.time('create root time:', startTime);
@@ -1168,17 +1210,19 @@ app.modules['std:popup'] = function () {
             implClass() {
                 return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
             }
-        },
+		},
         mounted() {
             if (this.src) {
-                this.currentUrl = this.src;
+				this.currentUrl = this.src;
                 http.load(this.src, this.$el).then(this.loaded);
             }
         },
         destroyed() {
             let fc = this.$el.firstElementChild;
-            if (fc && fc.__vue__)
-                fc.__vue__.$destroy();
+			if (fc && fc.__vue__) {
+				console.warn('desroy component');
+				fc.__vue__.$destroy();
+			}
         },
         watch: {
 			src: function (newUrl, oldUrl) {
@@ -1400,7 +1444,7 @@ app.modules['std:popup'] = function () {
 			<tbody>
 				<template v-for="(g, gIndex) of $groups">
 					<tr v-if="isGroupGroupVisible(g)" :class="'group lev-' + g.level" :key="gIndex">
-						<td @click.stop='toggleGroup(g)' :colspan="columns.length + 1">
+						<td @click.prevent='toggleGroup(g)' :colspan="columns.length + 1">
 						<span :class="{expmark: true, expanded: g.expanded}" />
 						<span class="grtitle" v-text="groupTitle(g)" />
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
@@ -1423,7 +1467,7 @@ app.modules['std:popup'] = function () {
 `;
 
     const dataGridRowTemplate = `
-<tr @click.stop.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1589,7 +1633,7 @@ app.modules['std:popup'] = function () {
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.stop.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);
@@ -1908,18 +1952,96 @@ app.modules['std:popup'] = function () {
 Vue.component('a2-pager', {
 	template: `
 <div class="pager">
+	<a href @click.prevent="source.first" :disabled="disabledFirst"><i class="ico ico-chevron-left-end"/></a>
+	<a href @click.prevent="source.prev" :disabled="disabledPrev"><i class="ico ico-chevron-left"/></a>
+
+	<a href v-for="b in middleButtons " @click.prevent="page(b)"><span v-text="b"></span></a>
+
+	<a href @click.prevent="source.next"><i class="ico ico-chevron-right"/></a>
+	<a href @click.prevent="source.last"><i class="ico ico-chevron-right-end"/></a>
 	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
-		pages={{source.pages}}</code>
-	<a href @click.stop.prevent="source.first">first</a>
-	<a href @click.stop.prevent="source.prev">prev</a>
-	<a href @click.stop.prevent="source.next">next</a>
+		pages={{source.pages}} count={{source.sourceCount}}</code>
 </div>
 `,
 	props: {
 		source: Object
+	},
+	computed: {
+		middleButtons() {
+			let ba = [];
+			ba.push(1);
+			ba.push(2);
+			return ba;
+		},
+		disabledFirst() {
+			return this.source.offset === 0;
+		},
+		disabledPrev() {
+			return this.source.offset === 0;
+		}
+	},
+	methods: {
+		page(no) {
+
+		}
 	}
 });
 
+
+/*20170911-7030*/
+/*components/popover.js*/
+
+Vue.component('popover', {
+	template: `
+<div v-dropdown class="popover-wrapper">
+	<span toggle class="popover-title"><i :class="iconClass"></i> <span v-text="title"></span></span>
+	<div class="popup-body">
+		<div class="arrow" />
+		<div v-if="visible">
+			<include :src="popoverUrl"/>
+		</div>
+		<slot />
+	</div>	
+</div>
+`,
+	/*
+	1. Если добавить tabindex="-1" для toggle, то можно сделать закрытие по blur
+	2. можно добавить кнопку закрытия. Любой элемент с атрибутом close-dropdown
+	<span class="close" close-dropdown style="float:right">x</span >
+	*/
+
+	data() {
+		return {
+			state: 'hidden',
+			popoverUrl: ''
+		};
+	},
+	props: {
+		icon: String,
+		url: String,
+		title: String
+	},
+	computed: {
+		iconClass() {
+			return "ico po-ico" + this.icon ? (' ico-' + this.icon) : '';
+		},
+		visible() {
+			return this.url && this.state === 'shown';
+		}
+	},
+	mounted() {
+		this.$el._show = () => {
+			this.state = 'shown';
+			if (this.url)
+				this.popoverUrl = '/_popup' + this.url;
+		};
+		this.$el._hide = () => {
+			this.state = 'hidden';
+			this.popoverUrl = '';
+		};
+		this.state = 'shown';
+	}
+});
 
 /* 20170816-7014 */
 /*components/treeview.js*/
@@ -2035,6 +2157,7 @@ Vue.component('collection-view', {
 		ItemsSource: Array,
 		pageSize: Number,
 		initialFilter: Object,
+		initialSort: Object,
 		runAt: String
 	},
 	data() {
@@ -2145,6 +2268,10 @@ Vue.component('collection-view', {
 			let no = this.offset + this.pageSize;
 			this.$setOffset(no);
 		},
+		last() {
+			//TODO
+			this.$setOffset(1000);
+		},
 		sortDir(order) {
 			return order === this.order ? this.dir : undefined;
 		},
@@ -2172,6 +2299,10 @@ Vue.component('collection-view', {
 		}
 	},
 	created() {
+		if (this.initialSort) {
+			this.localQuery.order = this.initialSort.order;
+			this.localQuery.dir = this.initialSort.dir;
+		}
 		this.$on('sort', this.doSort);
 	}
 });
@@ -2426,7 +2557,7 @@ TODO: may be icon for confirm ????
 
     app.components['std:modal'] = modalComponent;
 })();
-/*20170902-7023*/
+/*20170911-7030*/
 /* directives/dropdown.js */
 
 Vue.directive('dropdown', {
@@ -2439,20 +2570,42 @@ Vue.directive('dropdown', {
 
 		el._btn = el.querySelector('[toggle]');
 		el.setAttribute('dropdown-top', '');
+		// el.focus();
+		if (!el._btn) {
+			console.error('DropDown does not have a toggle element');
+		}
 
 		popup.registerPopup(el);
 
 		el._close = function (ev) {
+			if (el._hide)
+				el._hide();
 			el.classList.remove('show');
 		};
 
+		/*
+		el.addEventListener('blur', function (event) {
+			if (el._close) el._close(event);
+		}, true);
+		*/
+
 		el.addEventListener('click', function (event) {
-			if (event.target === el._btn) {
+			let trg = event.target;
+			while (trg) {
+				if (trg === el._btn) break;
+				if (trg === el) return;
+				trg = trg.parentElement;
+			}
+			if (trg === el._btn) {
 				event.preventDefault();
 				let isVisible = el.classList.contains('show');
-				if (isVisible)
+				if (isVisible) {
+					if (el._hide)
+						el._hide();
 					el.classList.remove('show');
-				else {
+				} else {
+					if (el._show)
+						el._show();
 					el.classList.add("show");
 				}
 			}
@@ -2494,7 +2647,152 @@ Vue.directive('focus', {
 });
 
 
-/*20170908-7028*/
+/*20170912-7031*/
+/* directives/resize.js */
+
+Vue.directive('resize', {
+	bind(el, binding, vnode) {
+
+		Vue.nextTick(function () {
+			const minWidth = 20;
+			function findHandle(el) {
+				for (ch of el.childNodes) {
+					if (ch.nodeType === Node.ELEMENT_NODE) {
+						if (ch.classList.contains('drag-handle'))
+							return ch;
+					}
+				}
+				return null;
+			}
+
+			let grid = el.parentElement;
+
+			let parts = {
+				grid: grid,
+				handle: findHandle(grid),
+				resizing: false,
+				offsetX(event) {
+					let rc = this.grid.getBoundingClientRect();
+					return event.clientX - rc.left;
+				}
+			};
+
+			if (!parts.handle) {
+				console.error('Resize handle not found');
+				return;
+			}
+
+			el._parts = parts;
+
+			grid.addEventListener('mouseup', function (event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
+				p.resizing = false;
+				event.preventDefault();
+				p.handle.style.display = 'none';
+				p.grid.style.cursor = 'default';
+				let x = p.offsetX(event);
+				if (x < minWidth) x = minWidth;
+				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
+			}, false);
+
+			grid.addEventListener('mousemove', function (event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
+				event.preventDefault();
+				let x = p.offsetX(event);
+				p.handle.style.left = x + 'px';
+			}, false);
+
+			el.addEventListener('mousedown', function (event) {
+				let p = el._parts;
+				if (p.resizing)
+					return;
+				event.preventDefault();
+				p.resizing = true;
+				let x = p.offsetX(event);
+				p.handle.style.left = x + 'px';
+				p.handle.style.display = 'block';
+				p.grid.style.cursor = 'w-resize';
+			}, false);
+		});
+		/*
+		Vue.nextTick(function () {
+
+			const minWidth = 20;
+
+			function findHandle(el) {
+				for (ch of el.childNodes) {
+					if (ch.nodeType === Node.ELEMENT_NODE) {
+						if (ch.classList.contains('drag-handle'))
+							return ch;
+					}
+				}
+				return null;
+			}
+
+			let grid = el.parentElement;
+
+			let parts = {
+				grid: grid,
+				handle: findHandle(grid),
+				resizing: false
+			};
+
+			if (!parts.handle) {
+				console.error('Resize handle not found');
+				return;
+			}
+
+			el._parts = parts;
+
+			el._parts.grid.addEventListener('mouseup', function (event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
+				p.resizing = false;
+				event.preventDefault();
+				p.handle.style.display = 'none';
+				p.grid.style.cursor = 'default';
+				let rc = p.getBoundingClientRect();
+				let x = event.clientX - rc.left;
+				if (x < minWidth) x = minWidth;
+				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
+			}, false);
+
+			el._parts.grid.addEventListener('mousemove', function (event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
+				let rc = p.grid.getBoundingClientRect();
+				event.preventDefault();
+				let x = event.clientX - rc.left;
+				p.handle.style.left = x + 'px';
+			}, false);
+
+			el.addEventListener('mousedown', function (event) {
+				let p = el._parts;
+				if (p.resizing)
+					return;
+				event.preventDefault();
+				p.resizing = true;
+				let rc = p.grid.getBoundingClientRect();
+				let x = event.offsetX + event.target.offsetLeft;
+				let x = event.clientX - rc.left;
+				p.handle.style.left = x + 'px';
+				p.handle.style.display = 'block';
+				p.grid.style.cursor = 'w-resize';
+			}, false);
+		});
+
+		*/
+	}
+});
+
+
+/*20170912-7031*/
 /*controllers/base.js*/
 (function () {
 
@@ -2654,7 +2952,7 @@ Vue.directive('focus', {
 					let nUrl = sel[url];
 					if (!nUrl)
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
-					url = nUrl
+					url = nUrl;
 				}
 				this.$navigate(url, sel.$id);
 			},
@@ -2788,12 +3086,13 @@ Vue.directive('focus', {
 				return false;
 			},
 
-			$format(value, format) {
-				if (!format)
+			$format(value, dataType, format) {
+				if (!format && !dataType)
 					return value;
-				if (format.indexOf('{0}') !== -1)
+				if (dataType)
+					value = utils.format(value, dataType);
+				if (format && format.indexOf('{0}') !== -1)
 					return format.replace('{0}', value);
-				// TODO: format dates, numbers, etc
 				return value;
 			},
 			__beginRequest() {
@@ -2841,7 +3140,7 @@ Vue.directive('focus', {
     
 	app.components['baseController'] = base;
 })();
-/*20170905-7026*/
+/*20170912-7031*/
 /* controllers/shell.js */
 
 (function () {
@@ -2913,7 +3212,7 @@ Vue.directive('focus', {
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.title" @click.stop.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" v-text="item.title" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -2944,7 +3243,7 @@ Vue.directive('focus', {
 		// TODO: разные варианты меню
 		template: `
 <div :class="cssClass">
-    <a href role="button" class="ico collapse-handle" @click.stop.prevent="toggle"></a>
+    <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <ul class="tree-view">
             <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
@@ -2953,7 +3252,7 @@ Vue.directive('focus', {
             </tree-item>
         </ul>
     </div>
-    <div v-else class="side-bar-title" @click.stop.prevent="toggle">
+    <div v-else class="side-bar-title" @click.prevent="toggle">
         <span class="side-bar-label" v-text="title"></span>
     </div>
 </div>
@@ -3193,6 +3492,15 @@ Vue.directive('focus', {
 			},
 			debugTrace() {
 				alert('debug trace');
+			},
+			debugModel() {
+				alert('debug model');
+			},
+			profile() {
+				alert('user profile');
+			},
+			changeUser() {
+				alert('change user');
 			}
 		},
 		created() {

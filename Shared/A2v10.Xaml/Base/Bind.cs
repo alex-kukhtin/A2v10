@@ -35,9 +35,15 @@ namespace A2v10.Xaml
             if (Path == null)
                 return null;
             String realPath = context.GetNormalizedPath(Path);
-            if (String.IsNullOrEmpty(Format))
+            if (String.IsNullOrEmpty(Format) && DataType == DataType.String)
                 return realPath;
-            return $"$format({realPath}, '{Format.Replace("'", "\\'")}')";
+            String fmt = "null";
+            String dt = "null";
+            if (!String.IsNullOrEmpty(Format))
+                fmt = $"'{Format.Replace("'", "\\'")}'";
+            if (DataType != DataType.String)
+                dt = $"'{DataType.ToString()}'";
+            return $"$format({realPath}, {dt}, {fmt})";
         }
 	}
 }
