@@ -26,7 +26,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public String PasswordHash { get; set; }
 		public String SecurityStamp { get; set; }
-		public DateTime? LockoutEndDateUtc { get; set; }
+		public DateTimeOffset LockoutEndDateUtc { get; set; }
 		public Boolean LockoutEnabled { get; set; }
 		public Int32 AccessFailedCount { get; set; }
 		public Boolean TwoFactorEnabled { get; set; }

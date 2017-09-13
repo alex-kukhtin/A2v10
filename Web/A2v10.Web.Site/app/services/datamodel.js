@@ -287,7 +287,9 @@
             arr.$remove(this);
         };
         elem.prototype.$select = function () {
-            let arr = this._parent_;
+			let arr = this._parent_;
+			if (arr.$selected === this)
+				return;
             platform.set(arr, "$selected", this);
         };
     }

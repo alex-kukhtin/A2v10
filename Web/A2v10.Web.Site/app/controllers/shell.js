@@ -1,4 +1,4 @@
-﻿/*20170912-7031*/
+﻿/*20170913-7032*/
 /* controllers/shell.js */
 
 (function () {
@@ -87,6 +87,8 @@
 			},
 			itemHref: (item) => '/' + item.url,
 			navigate(item) {
+				if (this.isActive(item))
+					return;
 				let storageKey = "menu:" + item.url;
 				let savedUrl = localStorage.getItem("menu:" + item.url);
 				let opts = { title: null, seg2: savedUrl };
@@ -151,6 +153,8 @@
 				return this.seg1 === item.url;
 			},
 			navigate(item) {
+				if (this.isActive(item))
+					return;
 				let top = this.topMenu;
 				if (top) {
 					let url = urlTools.combine(top.url, item.url);

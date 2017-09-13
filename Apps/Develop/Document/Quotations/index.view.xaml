@@ -54,7 +54,7 @@
 			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Premium" Content="{Bind Premium, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Создан" Content="{Bind CreatedDate, DataType=DateTime}" Align="Center"/>
-			<DataGridColumn Header="Сумма" Content="{Bind $Sum, DataType=Currency}" Align="Right"/>
+			<DataGridColumn Header="Сумма" Content="{Bind $Sum}" Align="Right"/>
 			<!--
 			<DataGridColumn Header="Номер" Content="SNo" />
 			<DataGridColumn Header="Котрагент" Content="Agent"/>

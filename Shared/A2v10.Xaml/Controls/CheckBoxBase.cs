@@ -15,6 +15,7 @@ namespace A2v10.Xaml
             var tag = new TagBuilder("label", ControlType);
             if (onRender != null)
                 onRender(tag);
+            MergeAttributes(tag, context);
             tag.RenderStart(context);
             var input = new TagBuilder("input");
             input.MergeAttribute("type", ControlType);
@@ -26,13 +27,12 @@ namespace A2v10.Xaml
             if (lblBind != null)
             {
                 span.MergeAttribute("v-text", lblBind.GetPathFormat(context));
-                span.Render(context);
             }
             else if (Label != null)
             {
                 span.SetInnerText(Label.ToString());
-                span.Render(context);
             }
+            span.Render(context); // always (empty too)
             tag.RenderEnd(context);
         }
 

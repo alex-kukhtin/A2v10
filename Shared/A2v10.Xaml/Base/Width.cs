@@ -21,6 +21,11 @@ namespace A2v10.Xaml
         {
             return Value;
         }
+
+        public static Width Fr1()
+        {
+            return new Width() { Value = "1fr" };
+        }
     }
 
     public class WidthConverter: TypeConverter
@@ -48,6 +53,8 @@ namespace A2v10.Xaml
                     return new Width() { Value = strVal };
                 else if (strVal.EndsWith("px"))
                     return new Width() { Value = strVal };
+                else if (strVal.EndsWith("*"))
+                    return new Width() { Value = strVal.Trim().Replace("*", "fr") };
                 else if (Double.TryParse(strVal, out dblVal))
                     return new Width() { Value = strVal + "px" };
             }

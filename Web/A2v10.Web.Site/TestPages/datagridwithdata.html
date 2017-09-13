@@ -29,19 +29,24 @@
                     <option :value="{prop:'Amount', count:true}">Сумма</option>
                     <option :value="null">Без группировки</option>
                 </select>
+                <label class="checkbox">
+                    <input type="checkbox" />
+                    <span></span>
+                </label>
             </div>
             <data-grid :items-source="Customers" 
                        :border="true" 
                        grid="vertical"
                        :striped="true" 
                        :hover="true"
-                       :group-by="[{prop: 'Name', expanded:true, title:'Покупатель: {Value}', count:true}, {prop: 'Amount', title: 'Сумма продаж: {value} (элементов: {count})', count:false, expanded:true}]"
+                       :group-by="currentGroupBy"
                        :sort="true"
                        :selected="Customers.selected">
                 <!--
                     
                        :group-by="[{prop: 'Name', expanded:true, title:'Покупатель: {Value}', count:true}, {prop: 'Amount', title: 'Сумма продаж: {value} (элементов: {count})', count:false, expanded:true}]"
                        :group-by="[{prop: 'Name', title:'Покупатель: {Value}', count:true}]"
+                       :group-by="[{prop: 'Name', expanded:true, title:'Покупатель: {Value}', count:true}, {prop: 'Amount', title: 'Сумма продаж: {value} (элементов: {count})', count:false, expanded:true}]"
                 
                 <data-grid-column id="check" icon="check" align="center"></data-grid-column>
                     -->
@@ -52,20 +57,27 @@
                 <data-grid-column header="Sum" content="Sum" align="right"></data-grid-column>
                 <data-grid-column header="Edit Name" content="Name" :editable="true" align="center"></data-grid-column>
                 <data-grid-column id="clr" icon="trash" align="center" :sortable="false"></data-grid-column>
+                <data-grid-column id="check" header="" :fit="true"></data-grid-column>
+                <!--
+                    -->
                 <data-grid-column id="txtbox" header="TextBox"></data-grid-column>
                 <template slot="clr" scope="cell">
-                    <button v-if="cell.row.$checked" @click.stop.prevent="cell.row.$remove()"><i class="ico ico-trash"></i>
-                     </button><button @click.stop.prevent="$exec('inc', cell.row, 100)"><i class="ico ico-plus"></i>
-                    </button><button @click.stop.prevent="$exec('inc', cell.row, -100)"><i class="ico ico-minus"></i></button>
+                    <div style="display:none">
+                        <button class="btn" v-if="cell.row.$checked" @click.prevent="cell.row.$remove()">
+                            <i class="ico ico-trash"></i>
+                        </button><button class="btn" @click.prevent="$exec('inc', cell.row, 100)">
+                            <i class="ico ico-plus"></i>
+                        </button><button class="btn" @click.prevent="$exec('inc', cell.row, -100)"><i class="ico ico-minus"></i></button>
+                    </div>
                 </template>
                 <template slot="check" scope="cell">
                     <label class="checkbox">
+                        <input type="checkbox" />
                         <span></span>
-                        <input type="checkbox" value="true" v-model="cell.row.$checked" />
                     </label>
                 </template>
                 <template slot="txtbox" scope="cell">
-                    <textbox :item="cell.row" prop="Name" align="right"></textbox>
+                    <textbox style="display:none" :item="cell.row" prop="Name" align="right"></textbox>
                 </template>
             </data-grid>
         </div>

@@ -41,12 +41,16 @@
 				<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
 				<Separator />
 				<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+				<Button Icon="Alert"/>
 			</Toolbar>
 		</DataGrid.Toolbar>
 		<DataGridColumn Header="Код" Content="Id" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
-		<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
+		<DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
 		<DataGridColumn ControlType="Validator"/>
+		<DataGridColumn Fit="True">
+			<CheckBox />
+		</DataGridColumn>
 	</DataGrid>
 </Page>
 

@@ -1,7 +1,9 @@
-﻿/*20170912-7031*/
+﻿/*20170913-7032*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
+
+	const dateLocale = 'uk-UA';
 
 	return {
 		isArray: Array.isArray,
@@ -66,7 +68,7 @@ app.modules['utils'] = function () {
 		return obj + '';
 	}
 
-	function eval(obj, path) {
+	function eval(obj, path, dataType) {
 		let ps = (path || '').split('.');
 		let r = obj;
 		for (let i = 0; i < ps.length; i++) {
@@ -75,8 +77,12 @@ app.modules['utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
 			r = r[ps[i]];
 		}
-		if (isObject(r))
+		if (isDate(r))
+			return format(r, dataType);
+		else if (isObject(r))
 			return toJson(r);
+		else if (format)
+			return format(r, dataType);
 		return r;
 	}
 
@@ -89,19 +95,25 @@ app.modules['utils'] = function () {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleDateString() + ' ' + obj.toLocaleTimeString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleDateString(dateLocale) + ' ' + obj.toLocaleTimeString(dateLocale);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleDateString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleDateString(dateLocale);
 			case "Time":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleTimeString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleTimeString(dateLocale);
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);

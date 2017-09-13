@@ -19,13 +19,25 @@
 
     <div style="padding:20px">
         <h4>Check boxes</h4>
+        Text
         <label class="checkbox small"><input type="checkbox"><span>CheckBox label (small)</span></label>
+        text
         <label class="checkbox small"><input type="checkbox" checked /><span>CheckBox label (small)</span></label>
+        text
         <label class="checkbox"><input type="checkbox"><span>CheckBox label</span></label>
         <label class="checkbox"><input type="checkbox" disabled><span>CheckBox disabled</span></label>
         <label class="checkbox"><input type="checkbox" checked disabled><span>CheckBox disabled checked</span></label>
         <label class="checkbox"><input id="ind" type="checkbox" indeterminate><span>CheckBox indeterminate</span></label>
         <label class="checkbox"><input id="ind2" type="checkbox" disabled><span>CheckBox indeterminate</span></label>
+    </div>
+
+    <div style="padding:20px">
+        <h4>Without label</h4>
+        <label class="checkbox"><input type="checkbox"><span>CheckBox label</span></label>
+        <label class="checkbox"><input type="checkbox"><span></span></label>
+        <label class="checkbox"><input type="checkbox" checked><span></span></label>
+        <label class="checkbox"><input type="checkbox" disabled><span></span></label>
+        <label style="display:block" class="checkbox"><input type="checkbox" disabled><span>with wrapped<br />label</span></label>
     </div>
 
     <div style="padding:20px">
@@ -40,7 +52,7 @@
 
     <div class="toolbar">
         <button class="btn"><i class="ico ico-reload"></i>toolbar button</button>
-        <label class="checkbox"><input id="ind2" type="checkbox"><span>checkbox in toolbar</span></label>
+        <label class="checkbox"><input id="ind2" type="checkbox"><span>Цена закупки без НДС</span></label>
         <button class="btn"><i class="ico ico-reload"></i>toolbar button</button>
         <div class="divider"></div>
         <label class="radio"><input type="radio" checked /><span>Radio label in toolbar</span></label>

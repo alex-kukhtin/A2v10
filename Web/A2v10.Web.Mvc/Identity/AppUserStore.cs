@@ -192,15 +192,14 @@ namespace A2v10.Web.Mvc.Identity
 		#region IUserLockoutStore
 		public Task<DateTimeOffset> GetLockoutEndDateAsync(AppUser user)
 		{
-			return Task.FromResult<DateTimeOffset>(user.LockoutEndDateUtc.HasValue ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc)) : new DateTimeOffset());
+			return Task.FromResult<DateTimeOffset>(user.LockoutEndDateUtc);
 		}
 
 		public Task SetLockoutEndDateAsync(AppUser user, DateTimeOffset lockoutEnd)
 		{
-			DateTime? newLockoutDate = (lockoutEnd == DateTimeOffset.MinValue) ? null : new DateTime?(lockoutEnd.UtcDateTime);
-			if (user.LockoutEndDateUtc != newLockoutDate)
+			if (user.LockoutEndDateUtc != lockoutEnd)
 			{
-				user.LockoutEndDateUtc = newLockoutDate;
+				user.LockoutEndDateUtc = lockoutEnd;
 				user.SetModified(UserModifiedFlag.Lockout);
 			}
 			return Task.FromResult<int>(0);

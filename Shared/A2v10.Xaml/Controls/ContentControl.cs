@@ -35,5 +35,19 @@ namespace A2v10.Xaml
 			if (xamlElem != null)
 				xamlElem.SetParent(this); 
 		}
+
+        internal Boolean HasContent
+        {
+            get
+            {
+                if (GetBinding(nameof(Content)) != null)
+                    return true;
+                if (Content is String)
+                    return !String.IsNullOrWhiteSpace(Content.ToString());
+                if (Content != null)
+                    return true;
+                return false;
+            }
+        }
 	}
 }

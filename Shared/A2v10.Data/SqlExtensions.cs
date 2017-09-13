@@ -101,6 +101,8 @@ namespace A2v10.Data
                     return typeof(Double);
                 case SqlDbType.DateTime:
                     return typeof(DateTime);
+                case SqlDbType.DateTimeOffset:
+                    return typeof(DateTimeOffset);
                 case SqlDbType.NVarChar:
                 case SqlDbType.NText:
                 case SqlDbType.NChar:

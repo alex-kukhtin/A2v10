@@ -15,15 +15,19 @@
 
 label.checkbox, label.radio {
     cursor: pointer;
-    display: inline-block;
-    margin-right: 10px;
+    display: inline;
+    position:relative;
+    //margin-right: 10px; ???
     padding:2px 0;
     line-height:16px;
+    white-space:nowrap;
 
     span {
         display: inline-block;
         position: relative;
         padding-left: @checkbox-size + 6px;
+        min-height:1em;
+        white-space:normal;
 
         &::before {
             position: absolute;
@@ -64,13 +68,15 @@ label.radio {
 
 input[type="checkbox"],
 input[type="radio"] {
-    opacity: 1;
+    opacity: 0;
     z-index: 1;
     width: 0;
     height: 0;
     padding: 0;
     margin: 0;
     cursor: pointer;
+    position:absolute;
+    left:2px; top:2px;// ff:bug 
 
     &:disabled + span {
         cursor: not-allowed;
@@ -134,13 +140,13 @@ input[type="radio"] {
 
 // test for small
 label.checkbox.small {
-    font-size: 92%;
+    font-size: 0.9em;
 
     span:before {
-        transform: scale(0.92, 0.92);
+        transform: scale(.9, .9);
     }
 
     span:after {
-        transform: scale(0.92, 0.92);
+        transform: scale(.9, .9);
     }
 }

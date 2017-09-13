@@ -70,12 +70,6 @@ WriteLiteral(">\r\n    <title>");
             #line hidden
 WriteLiteral(" - A2v10</title>\r\n\t<link");
 
-WriteLiteral(" href=\"/css/font-awesome.min.css?v=4.7.0\"");
-
-WriteLiteral(" rel=\"stylesheet\"");
-
-WriteLiteral(" />\r\n\t<link");
-
 WriteLiteral(" href=\"/css/site.min.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
@@ -105,7 +99,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\t\t\t\t\t");
 
             
-            #line 19 "..\..\Views\Shared\_Layout.cshtml"
+            #line 18 "..\..\Views\Shared\_Layout.cshtml"
                Write(Html.Partial("_LoginPartial"));
 
             
@@ -120,7 +114,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\t\t\t");
 
             
-            #line 24 "..\..\Views\Shared\_Layout.cshtml"
+            #line 23 "..\..\Views\Shared\_Layout.cshtml"
        Write(RenderBody());
 
             
@@ -133,7 +127,7 @@ WriteLiteral(" class=\"footer\"");
 WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 
             
-            #line 28 "..\..\Views\Shared\_Layout.cshtml"
+            #line 27 "..\..\Views\Shared\_Layout.cshtml"
                  Write(DateTime.Now.Year);
 
             
@@ -142,7 +136,7 @@ WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 WriteLiteral("  ");
 
             
-            #line 28 "..\..\Views\Shared\_Layout.cshtml"
+            #line 27 "..\..\Views\Shared\_Layout.cshtml"
                                      Write(A2v10.Web.Mvc.Configuration.AppInfo.MainAssembly.Version);
 
             
@@ -158,14 +152,14 @@ WriteLiteral("></script>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteAttribute("src", Tuple.Create(" src=\"", 938), Tuple.Create("\"", 991)
+WriteAttribute("src", Tuple.Create(" src=\"", 869), Tuple.Create("\"", 922)
             
-            #line 32 "..\..\Views\Shared\_Layout.cshtml"
-, Tuple.Create(Tuple.Create("", 944), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
+            #line 31 "..\..\Views\Shared\_Layout.cshtml"
+, Tuple.Create(Tuple.Create("", 875), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
             
             #line default
             #line hidden
-, 944), false)
+, 875), false)
 );
 
 WriteLiteral("></script>\r\n");
@@ -173,7 +167,7 @@ WriteLiteral("></script>\r\n");
 WriteLiteral("    ");
 
             
-            #line 33 "..\..\Views\Shared\_Layout.cshtml"
+            #line 32 "..\..\Views\Shared\_Layout.cshtml"
 Write(RenderSection("scripts", required: false));
 
             

@@ -40,6 +40,8 @@ namespace A2v10.Xaml
             if (hasDropDown && !hasCommand)
                 button.MergeAttribute("toggle", String.Empty);
             MergeAttributes(button, context);
+            if (!HasContent && (Icon != Icon.NoIcon))
+                button.AddCssClass("btn-icon");
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

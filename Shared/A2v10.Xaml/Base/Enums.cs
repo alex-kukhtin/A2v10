@@ -16,6 +16,12 @@ namespace A2v10.Xaml
         Both
     }
 
+    public enum Orientation
+    {
+        Vertical,
+        Horizontal
+    }
+
     public enum DataType
     {
         String, 

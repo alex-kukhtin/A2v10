@@ -1,4 +1,4 @@
-﻿/*20170910-7028*/
+﻿/*20170913-7032*/
 /*components/datagrid.js*/
 (function () {
 
@@ -68,8 +68,9 @@
 </div>
 `;
 
+	/* @click.prevent disables checkboxes & other controls in cells */
     const dataGridRowTemplate = `
-<tr @click.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -91,7 +92,8 @@
         template: dataGridColumnTemplate,
         props: {
             header: String,
-            content: String,
+			content: String,
+			dataType: String,
             icon: String,
             id: String,
             align: { type: String, default: 'left' },
@@ -105,7 +107,7 @@
 			command: Object
         },
         created() {
-            this.$parent.$addColumn(this);
+			this.$parent.$addColumn(this);
         },
 		computed: {
             dir() {
@@ -231,11 +233,11 @@
 					arg1 = narg;
 				}
 				let arg2 = col.command.arg2 || '';
-				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2);
+				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2, col.dataType);
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);
@@ -249,9 +251,7 @@
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
 
-            // Warning: toString() is required.
-			// TODO: calc chain (Document.Rows)
-			let content = utils.eval(row, col.content);
+			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
             /*TODO: validate ???? */
 			if (col.validate) {
@@ -452,10 +452,10 @@
             },
 			columnClass(column) {
 				let cls = '';
-				if (column.fit || column.controlType === 'validator')
+				if (column.fit || (column.controlType === 'validator'))
 					cls += 'fit';
 				if (utils.isDefined(column.dir))
-					cls = + ' sorted';
+					cls += ' sorted';
                 return cls;
             },
             columnStyle(column) {

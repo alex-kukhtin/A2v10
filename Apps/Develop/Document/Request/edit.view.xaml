@@ -37,7 +37,7 @@
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
 				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
-			<Code Content="{Bind Document}"></Code>
+			<Code Content="{Bind Document.Company}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
@@ -71,7 +71,7 @@
 				<Code Content="{Bind Document.Rows.length}"></Code>
 				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Exec, Argument={Bind Document}}"/>
 				<Separator />
-				<CheckBox Label="Цена закупки без НДС" Value="{Bind Document.VatPurchases}" />
+				<CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
 			</Toolbar>
 			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
 				<!-- Начальная сортировка для таблицы -->

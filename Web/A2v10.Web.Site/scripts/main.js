@@ -248,10 +248,12 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170912-7031*/
+/*20170913-7032*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
+
+	const dateLocale = 'uk-UA';
 
 	return {
 		isArray: Array.isArray,
@@ -316,7 +318,7 @@ app.modules['utils'] = function () {
 		return obj + '';
 	}
 
-	function eval(obj, path) {
+	function eval(obj, path, dataType) {
 		let ps = (path || '').split('.');
 		let r = obj;
 		for (let i = 0; i < ps.length; i++) {
@@ -325,8 +327,12 @@ app.modules['utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
 			r = r[ps[i]];
 		}
-		if (isObject(r))
+		if (isDate(r))
+			return format(r, dataType);
+		else if (isObject(r))
 			return toJson(r);
+		else if (format)
+			return format(r, dataType);
 		return r;
 	}
 
@@ -339,19 +345,25 @@ app.modules['utils'] = function () {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleDateString() + ' ' + obj.toLocaleTimeString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleDateString(dateLocale) + ' ' + obj.toLocaleTimeString(dateLocale);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleDateString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleDateString(dateLocale);
 			case "Time":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleTimeString();
+				if (!obj.getTime())
+					return '';
+				return obj.toLocaleTimeString(dateLocale);
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
@@ -824,7 +836,9 @@ app.modules['std:validators'] = function() {
             arr.$remove(this);
         };
         elem.prototype.$select = function () {
-            let arr = this._parent_;
+			let arr = this._parent_;
+			if (arr.$selected === this)
+				return;
             platform.set(arr, "$selected", this);
         };
     }
@@ -1396,7 +1410,7 @@ app.modules['std:popup'] = function () {
 		}
     });
 })();
-/*20170910-7028*/
+/*20170913-7032*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1466,8 +1480,9 @@ app.modules['std:popup'] = function () {
 </div>
 `;
 
+	/* @click.prevent disables checkboxes & other controls in cells */
     const dataGridRowTemplate = `
-<tr @click.prevent="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -1489,7 +1504,8 @@ app.modules['std:popup'] = function () {
         template: dataGridColumnTemplate,
         props: {
             header: String,
-            content: String,
+			content: String,
+			dataType: String,
             icon: String,
             id: String,
             align: { type: String, default: 'left' },
@@ -1503,7 +1519,7 @@ app.modules['std:popup'] = function () {
 			command: Object
         },
         created() {
-            this.$parent.$addColumn(this);
+			this.$parent.$addColumn(this);
         },
 		computed: {
             dir() {
@@ -1629,11 +1645,11 @@ app.modules['std:popup'] = function () {
 					arg1 = narg;
 				}
 				let arg2 = col.command.arg2 || '';
-				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2);
+				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2, col.dataType);
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content)"></a>',
+					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);
@@ -1647,9 +1663,7 @@ app.modules['std:popup'] = function () {
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
 
-            // Warning: toString() is required.
-			// TODO: calc chain (Document.Rows)
-			let content = utils.eval(row, col.content);
+			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
             /*TODO: validate ???? */
 			if (col.validate) {
@@ -1850,10 +1864,10 @@ app.modules['std:popup'] = function () {
             },
 			columnClass(column) {
 				let cls = '';
-				if (column.fit || column.controlType === 'validator')
+				if (column.fit || (column.controlType === 'validator'))
 					cls += 'fit';
 				if (utils.isDefined(column.dir))
-					cls = + ' sorted';
+					cls += ' sorted';
                 return cls;
             },
             columnStyle(column) {
@@ -3140,7 +3154,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20170912-7031*/
+/*20170913-7032*/
 /* controllers/shell.js */
 
 (function () {
@@ -3229,6 +3243,8 @@ Vue.directive('resize', {
 			},
 			itemHref: (item) => '/' + item.url,
 			navigate(item) {
+				if (this.isActive(item))
+					return;
 				let storageKey = "menu:" + item.url;
 				let savedUrl = localStorage.getItem("menu:" + item.url);
 				let opts = { title: null, seg2: savedUrl };
@@ -3293,6 +3309,8 @@ Vue.directive('resize', {
 				return this.seg1 === item.url;
 			},
 			navigate(item) {
+				if (this.isActive(item))
+					return;
 				let top = this.topMenu;
 				if (top) {
 					let url = urlTools.combine(top.url, item.url);

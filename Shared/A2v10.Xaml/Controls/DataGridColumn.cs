@@ -41,7 +41,11 @@ namespace A2v10.Xaml
                 // always content without SEMICOLON!
                 var bindProp = GetBinding(nameof(Content));
                 if (bindProp != null)
+                {
                     column.MergeAttribute("content", bindProp.Path /*!without context!*/);
+                    if (bindProp.DataType != DataType.String)
+                        column.MergeAttribute("data-type", bindProp.DataType.ToString());
+                }
                 else if (Content != null)
                     column.MergeAttribute("content", Content.ToString());
             }

@@ -66,86 +66,81 @@ WriteLiteral(".</h2>\r\n<div");
 
 WriteLiteral(" class=\"row\"");
 
-WriteLiteral(">\r\n    <div");
-
-WriteLiteral(" class=\"col-md-8\"");
-
-WriteLiteral(">\r\n        <section");
-
-WriteLiteral(" id=\"loginForm\"");
-
-WriteLiteral(">\r\n");
+WriteLiteral(">\r\n    <div>\r\n");
 
             
-            #line 11 "..\..\Views\Account\Login.cshtml"
+            #line 10 "..\..\Views\Account\Login.cshtml"
+        
+            
+            #line default
+            #line hidden
+            
+            #line 10 "..\..\Views\Account\Login.cshtml"
+         using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
             
             
             #line default
             #line hidden
             
-            #line 11 "..\..\Views\Account\Login.cshtml"
-             using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                
-            
-            #line default
-            #line hidden
-            
-            #line 13 "..\..\Views\Account\Login.cshtml"
-           Write(Html.AntiForgeryToken());
+            #line 12 "..\..\Views\Account\Login.cshtml"
+       Write(Html.AntiForgeryToken());
 
             
             #line default
             #line hidden
             
-            #line 13 "..\..\Views\Account\Login.cshtml"
-                                        
+            #line 12 "..\..\Views\Account\Login.cshtml"
+                                    
 
             
             #line default
             #line hidden
-WriteLiteral("                <h4>Use a local account to log in.</h4>\r\n");
+WriteLiteral("            <h4>Use a local account to log in.</h4>\r\n");
 
-WriteLiteral("                <hr />\r\n");
+WriteLiteral("            <hr />\r\n");
 
             
-            #line 16 "..\..\Views\Account\Login.cshtml"
-                
+            #line 15 "..\..\Views\Account\Login.cshtml"
             
-            #line default
-            #line hidden
-            
-            #line 16 "..\..\Views\Account\Login.cshtml"
-           Write(Html.ValidationSummary(true, "", new { @class = "text-danger" }));
-
             
             #line default
             #line hidden
             
-            #line 16 "..\..\Views\Account\Login.cshtml"
-                                                                                 
+            #line 15 "..\..\Views\Account\Login.cshtml"
+       Write(Html.ValidationSummary(true, "", new { @class = "text-danger" }));
 
             
             #line default
             #line hidden
-WriteLiteral("                <div");
-
-WriteLiteral(" class=\"form-group\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("                    ");
-
             
-            #line 18 "..\..\Views\Account\Login.cshtml"
-               Write(Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" }));
+            #line 15 "..\..\Views\Account\Login.cshtml"
+                                                                             
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                    <div");
+WriteLiteral("            <div");
 
-WriteLiteral(" class=\"col-md-10\"");
+WriteLiteral(" class=\"grid\"");
+
+WriteLiteral(" style=\"grid-template-columns:auto 1fr;width:400px\"");
+
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" style=\"grid-row:1; grid-column:1\"");
+
+WriteLiteral(" class=\"required\"");
+
+WriteLiteral(">Логин</label>\r\n                <div");
+
+WriteLiteral(" class=\"control-group\"");
+
+WriteLiteral(" style=\"grid-row:1;grid-column:2\"");
+
+WriteLiteral(">\r\n                    <div");
+
+WriteLiteral(" class=\"input-group\"");
 
 WriteLiteral(">\r\n");
 
@@ -153,42 +148,37 @@ WriteLiteral("                        ");
 
             
             #line 20 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.TextBoxFor(m => m.Name, new { @class = "form-control" }));
+                   Write(Html.TextBoxFor(m => m.Name, new { @class = "control", style = "grid-row:1; grid-column:2" }));
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n");
-
-WriteLiteral("                        ");
-
-            
-            #line 21 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" }));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                    </div>\r\n                </div>\r\n");
-
-WriteLiteral("                <div");
-
-WriteLiteral(" class=\"form-group\"");
-
-WriteLiteral(">\r\n");
+WriteLiteral("\r\n                    </div>\r\n");
 
 WriteLiteral("                    ");
 
             
-            #line 25 "..\..\Views\Account\Login.cshtml"
-               Write(Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" }));
+            #line 22 "..\..\Views\Account\Login.cshtml"
+               Write(Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" }));
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                    <div");
+WriteLiteral("\r\n                </div>\r\n                <label");
 
-WriteLiteral(" class=\"col-md-10\"");
+WriteLiteral(" style=\"grid-row:2; grid-column:1\"");
+
+WriteLiteral(" class=\"required\"");
+
+WriteLiteral(">Пароль</label>\r\n                <div");
+
+WriteLiteral(" class=\"control-group\"");
+
+WriteLiteral(" style=\"grid-row:2;grid-column:2\"");
+
+WriteLiteral(">\r\n                    <div");
+
+WriteLiteral(" class=\"input-group\"");
 
 WriteLiteral(">\r\n");
 
@@ -196,107 +186,98 @@ WriteLiteral("                        ");
 
             
             #line 27 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.PasswordFor(m => m.Password, new { @class = "form-control" }));
+                   Write(Html.PasswordFor(m => m.Password, new { @class = "control", style = "grid-row:2;grid-column:2" }));
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n");
-
-WriteLiteral("                        ");
-
-            
-            #line 28 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" }));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                    </div>\r\n                </div>\r\n");
-
-WriteLiteral("                <div");
-
-WriteLiteral(" class=\"form-group\"");
-
-WriteLiteral(">\r\n                    <div");
-
-WriteLiteral(" class=\"col-md-offset-2 col-md-10\"");
-
-WriteLiteral(">\r\n                        <div");
-
-WriteLiteral(" class=\"checkbox\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("                            ");
-
-            
-            #line 34 "..\..\Views\Account\Login.cshtml"
-                       Write(Html.CheckBoxFor(m => m.RememberMe));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n");
-
-WriteLiteral("                            ");
-
-            
-            #line 35 "..\..\Views\Account\Login.cshtml"
-                       Write(Html.LabelFor(m => m.RememberMe));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                        </div>\r\n                    </div>\r\n                </d" +
-"iv>\r\n");
-
-WriteLiteral("                <div");
-
-WriteLiteral(" class=\"form-group\"");
-
-WriteLiteral(">\r\n                    <div");
-
-WriteLiteral(" class=\"col-md-offset-2 col-md-10\"");
-
-WriteLiteral(">\r\n                        <input");
-
-WriteLiteral(" type=\"submit\"");
-
-WriteLiteral(" value=\"Log in\"");
-
-WriteLiteral(" class=\"btn btn-default\"");
-
-WriteLiteral(" />\r\n                    </div>\r\n                </div>\r\n");
-
-WriteLiteral("                <p>\r\n");
+WriteLiteral("\r\n                    </div>\r\n");
 
 WriteLiteral("                    ");
 
             
-            #line 45 "..\..\Views\Account\Login.cshtml"
-               Write(Html.ActionLink("Register as a new user", "Register"));
+            #line 29 "..\..\Views\Account\Login.cshtml"
+               Write(Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" }));
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n                </p>\r\n");
+WriteLiteral("\r\n                </div>\r\n                <label");
 
+WriteLiteral(" class=\"checkbox\"");
+
+WriteLiteral(" style=\"grid-row:3;grid-column:2\"");
+
+WriteLiteral(">\r\n                    <input");
+
+WriteLiteral(" type=\"checkbox\"");
+
+WriteLiteral(" name=\"RememberMe\"");
+
+WriteLiteral(" value=\"true\"");
+
+WriteLiteral("/>\r\n                    <span>Запомнить учетные данные</span>\r\n                </" +
+"label>\r\n                <input");
+
+WriteLiteral(" name=\"RememberMe\"");
+
+WriteLiteral(" type=\"hidden\"");
+
+WriteLiteral(" value=\"false\"");
+
+WriteLiteral("/>\r\n");
+
+WriteLiteral("                ");
+
+            
+            #line 36 "..\..\Views\Account\Login.cshtml"
+           Write(Html.CheckBoxFor(m => m.RememberMe));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n                <div");
+
+WriteLiteral(" style=\"grid-row:4;grid-column:2\"");
+
+WriteLiteral(">\r\n                    <input");
+
+WriteLiteral(" type=\"submit\"");
+
+WriteLiteral(" value=\"Вход в систему\"");
+
+WriteLiteral(" class=\"btn btn-default\"");
+
+WriteLiteral(" />\r\n                </div>\r\n            </div>\r\n");
+
+WriteLiteral("            <p>\r\n");
+
+WriteLiteral("                ");
+
+            
+            #line 42 "..\..\Views\Account\Login.cshtml"
+           Write(Html.ActionLink("Register as a new user", "Register"));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n            </p>\r\n");
+
+            
+            #line 44 "..\..\Views\Account\Login.cshtml"
+            
+            
+            #line default
+            #line hidden
             
             #line 47 "..\..\Views\Account\Login.cshtml"
-                
-            
-            #line default
-            #line hidden
-            
-            #line 50 "..\..\Views\Account\Login.cshtml"
-                          
-            }
+                      
+        }
 
             
             #line default
             #line hidden
-WriteLiteral("        </section>\r\n    </div>\r\n</div>\r\n");
+WriteLiteral("    </div>\r\n</div>\r\n");
 
         }
     }

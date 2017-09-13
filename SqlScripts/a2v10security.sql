@@ -40,7 +40,7 @@ begin
 		PhoneNumber nvarchar(255)	null,
 		PhoneNumberConfirmed bit not null constraint DF_Users_PhoneNumberConfirmed default(0),
 		LockoutEnabled	bit	not null constraint DF_Users_LockoutEnabled default(1),
-		LockoutEndDateUtc datetime null,
+		LockoutEndDateUtc datetimeoffset null,
 		AccessFailedCount int not null constraint DF_Users_AccessFailedCount default(0),
 		[Locale] nvarchar(32) not null constraint DF_Users_Locale default('uk_UA'),
 		PersonName nvarchar(255) null,
@@ -253,7 +253,7 @@ go
 create procedure a2security.UpdateUserLockout
 @Id bigint,
 @AccessFailedCount int,
-@LockoutEndDateUtc datetime
+@LockoutEndDateUtc datetimeoffset
 as
 begin
 	set nocount on;
