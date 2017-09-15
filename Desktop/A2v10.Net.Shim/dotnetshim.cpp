@@ -71,3 +71,12 @@ void CDotNetRuntime::OpenSolution(LPCWSTR szFileName)
 	A2v10RuntimeNet::Desktop::OpenSolution(fileName);
 	ThrowIfError();
 }
+
+// satatic
+std::wstring CDotNetRuntime::ProcessRequest(LPCWSTR szUrl)
+{
+	auto url = gcnew System::String(szUrl);
+	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url);
+	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
+	return ptr;
+}

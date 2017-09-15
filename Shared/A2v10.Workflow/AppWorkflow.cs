@@ -112,7 +112,6 @@ namespace A2v10.Workflow
             aw._dbContext = dbContext;
             aw._tracker = StateMachineStateTracker.Attach(aw._application);
             aw._application.Extensions.Add(new WorkflowTracker(aw));
-            aw._application.Extensions.Add(dbContext);
             aw._application.InstanceStore = store;
             return aw;
         }

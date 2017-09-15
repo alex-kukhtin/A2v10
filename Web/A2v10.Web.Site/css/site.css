@@ -1118,7 +1118,7 @@ table.hover > tbody > tr:hover {
 }
 .toolbar i.ico {
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 2px;
   color: #333;
 }
 .toolbar > .divider {
@@ -1131,7 +1131,7 @@ table.hover > tbody > tr:hover {
 }
 .toolbar .control-group {
   display: inline-flex;
-  margin: 0;
+  margin: 1px 0;
   align-self: stretch;
   background-color: transparent;
 }
@@ -1142,7 +1142,7 @@ table.hover > tbody > tr:hover {
 }
 .toolbar .control-group select,
 .toolbar .control-group input {
-  height: 1.6em;
+  height: 1.4em;
 }
 .dropdown.show .btn {
   background-color: #eaf0ff;
@@ -1451,7 +1451,7 @@ label.checkbox span,
 label.radio span {
   display: inline-block;
   position: relative;
-  padding-left: 20px;
+  padding-left: 21px;
   min-height: 1em;
   white-space: normal;
 }

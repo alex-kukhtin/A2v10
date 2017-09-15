@@ -1,0 +1,31 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Plus" Tip="Добавить Пользоваетля">Создать</Button>
+            <Button Icon="Edit">Изменить</Button>
+            <Button Icon="Delete">Удалить</Button>
+            <Separator />
+            <TextBox Label="Фильтр:"/>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        </Toolbar>
+    </Page.Toolbar>
+	<CollectionView ItemsSource="{Bind Customers}" RunAt="ServerUrl">
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
+			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+			<DataGridColumn Header="Логин" Content="{Bind Name}"/>
+			<DataGridColumn Header="Имя" Content="Amount" Align="Right"/>
+            <DataGridColumn Header="e-mail" />
+            <DataGridColumn Header="Телефон" />
+            <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+            <DataGrid.Pager>
+				<Pager Source="{Bind Parent.Pager}" />
+			</DataGrid.Pager>
+		</DataGrid>
+	</CollectionView>
+</Page>
+
+    

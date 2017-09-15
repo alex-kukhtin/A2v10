@@ -14,7 +14,9 @@ namespace A2v10.Infrastructure
         Boolean IsDebugConfiguration { get; }
 
         String ConnectionString(String source);
-        String MakeFullPath(String path, String fileName);
-        Task<String> ReadTextFile(String path, String fileName);
+        String MakeFullPath(Boolean bAdmin, String path, String fileName);
+        Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName);
+
+        String AppVersion { get; }
 	}
 }

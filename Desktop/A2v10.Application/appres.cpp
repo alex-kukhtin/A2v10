@@ -20,7 +20,8 @@ struct RES_DEF
 
 LPCSTR mimeCss   = "text/css";
 LPCSTR mimeHtml  = "text/html";
-LPCSTR mimeJs    = "application/ecmascript";
+LPCSTR mimeJs    = "application/javascript";
+LPCSTR mimeJson = "application/json";
 LPCSTR mimeWoff2 = "application/font-woff2";
 
 const RES_DEF resArray[] =
@@ -57,6 +58,11 @@ public:
 	bool IsAppUrl() {
 		return path.Find(L"app/_page") == 0;
 	}
+	CString UrlToRequest() {
+		CString newPath(path);
+		newPath.Replace(L"app/", L"");
+		return newPath;
+	}
 };
 
 
@@ -86,13 +92,33 @@ const byte* CApplicationResources::LoadResource(LPCSTR szUrl, LPCSTR* pMime, int
 	ATLASSERT(pMime != nullptr);
 	*pMime = mimeHtml;
 	resSize = 0;
+	static std::string rrResult;
+	USES_CONVERSION;
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
+	LPCWSTR szError = nullptr;
 	if (parsedUrl.IsAppUrl()) {
-		LPCSTR szError = "<div><div>page not found.<br><a href=\"https://www.google.com.ua/\">Find!</a></div></div>";
-		resSize = strlen(szError);
-		return (byte*) szError;
+		try 
+		{
+			CString strUrl(parsedUrl.UrlToRequest());
+			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl);
+			rrResult = W2A_CP(wResult.c_str(), CP_UTF8);
+			//LPCSTR szResult= "<div><div>page not found.<br><a href=\"https://www.google.com.ua/\">Find!</a></div></div>";
+			resSize = rrResult.length();
+			return (byte*)rrResult.c_str();
+		}
+		catch (CDotNetException& ex) 
+		{
+			szError = ex.GetMessage();
+		}
 	}
+	if (szError) 
+	{
+		rrResult = W2A_CP(szError, CP_UTF8);
+		resSize = rrResult.length();
+		return (byte*)rrResult.c_str();
+	}
+
 	LPCWSTR resId = _findResourceId(parsedUrl.path, pMime);
 	if (!resId) {
 		// may be browse back from http:://

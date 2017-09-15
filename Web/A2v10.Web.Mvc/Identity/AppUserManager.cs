@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 using Microsoft.Owin;
 using Microsoft.AspNet.Identity;
@@ -20,7 +19,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)
 		{
-			IDbContext dbContext = DependencyResolver.Current.GetService<IDbContext>();
+			IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
 			AppUserStore store = new AppUserStore(dbContext);
 			AppUserManager manager = new AppUserManager(store);
 			manager.Construct(options);

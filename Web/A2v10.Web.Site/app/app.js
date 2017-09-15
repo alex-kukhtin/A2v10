@@ -12,6 +12,7 @@
 
     window.require = require;
     window.component = component;
+    window.$$rootUrl = document.querySelector('meta[name=rootUrl]').content || '';
 
 	function require(module) {
 		if (module in app.modules) {

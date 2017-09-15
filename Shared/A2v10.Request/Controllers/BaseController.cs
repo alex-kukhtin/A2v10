@@ -1,94 +1,48 @@
-﻿using A2v10.Infrastructure;
-using A2v10.Web.Mvc.Models;
-using Microsoft.AspNet.Identity;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Newtonsoft.Json;
 
-namespace A2v10.Web.Mvc.Controllers
+using A2v10.Infrastructure;
+
+namespace A2v10.Request
 {
-    [Authorize]
-    public class BaseController : Controller
+    public partial class BaseController
     {
         protected IApplicationHost _host;
         protected IDbContext _dbContext;
         protected IRenderer _renderer;
 
-        public Int64 UserId
+        public BaseController()
         {
-            get
-            {
-                return User.Identity.GetUserId<Int64>();
-            }
+            // DI ready
+            IServiceLocator current = ServiceLocator.Current;
+            _host = current.GetService<IApplicationHost>();
+            _dbContext = current.GetService<IDbContext>();
+            _renderer = current.GetService<IRenderer>();
         }
 
-        public BaseController(IApplicationHost host, IDbContext dbContext, IRenderer renderer)
+        public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
+        public Boolean Admin { get; set; }
+
+        public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
         {
-            _host = host;
-            _dbContext = dbContext;
-            _renderer = renderer;
+            RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, kind, pathInfo);
+            RequestView rw = rm.GetCurrentAction(kind);
+            await Render(rw, writer, loadPrms);
         }
 
-        protected async Task RenderElementKind(RequestUrlKind kind, String pathInfo)
-        {
-            Response.ContentType = "text/html";
-            Response.ContentEncoding = Encoding.UTF8;
-            try
-            {
-                RequestModel rm = await RequestModel.CreateFromUrl(_host, kind, pathInfo);
-                RequestView rw = rm.GetCurrentAction(kind);
-                await Render(rw);
-            }
-            catch (Exception ex)
-            {
-                WriteHtmlException(ex);
-            }
-        }
-
-        void WriteHtmlException(Exception ex)
-        {
-            if (ex.InnerException != null)
-                ex = ex.InnerException;
-            var msg = Server.HtmlEncode(ex.Message);
-            var stackTrace = Server.HtmlEncode(ex.StackTrace);
-            // TODO: debug / release without stack trace
-            if (_host.IsDebugConfiguration)
-                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
-            else
-                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
-        }
-
-        protected void WriteExceptionStatus(Exception ex)
-        {
-            if (ex.InnerException != null)
-                ex = ex.InnerException;
-            Response.ContentEncoding = Encoding.UTF8;
-            Response.HeaderEncoding = Encoding.UTF8;
-            Response.SuppressContent = false;
-            Response.StatusCode = 255; // CUSTOM ERROR!!!!
-            Response.ContentType = "text/plain";
-            Response.StatusDescription = "Custom server error";
-            Response.Write(ex.Message);
-        }
-
-        protected async Task Render(RequestView rw)
+        protected async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms)
         {
             String viewName = rw.GetView();
             String loadProc = rw.LoadProcedure;
             IDataModel model = null;
             if (loadProc != null)
             {
-                ExpandoObject loadPrms = new ExpandoObject();
-                loadPrms.Append(Request.QueryString, toPascalCase: true);
-                loadPrms.Set("UserId", UserId);
-                loadPrms.Set("Id", rw.Id);
+                if (loadPrms != null)
+                    loadPrms.Set("Id", rw.Id);
                 model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
             }
             String rootId = "el" + Guid.NewGuid().ToString();
@@ -97,9 +51,10 @@ namespace A2v10.Web.Mvc.Controllers
 
             // TODO: use view engines
             // try xaml
-            String fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".xaml");
+            String fileName = _host.MakeFullPath(Admin, rw.Path, rw.GetView() + ".xaml");
             bool bRendered = false;
-            if (System.IO.File.Exists(fileName)) {
+            if (System.IO.File.Exists(fileName))
+            {
                 // render XAML
                 if (System.IO.File.Exists(fileName))
                 {
@@ -113,48 +68,33 @@ namespace A2v10.Web.Mvc.Controllers
                         };
                         _renderer.Render(ri);
                         // write markup
-                        Response.Output.Write(strWriter.ToString());
+                        writer.Write(strWriter.ToString());
                         bRendered = true;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 // try html
-                fileName = _host.MakeFullPath(rw.Path, rw.GetView() + ".html");
-                if (System.IO.File.Exists(fileName)) {
+                fileName = _host.MakeFullPath(Admin, rw.Path, rw.GetView() + ".html");
+                if (System.IO.File.Exists(fileName))
+                {
                     using (var tr = new StreamReader(fileName))
                     {
                         String htmlText = await tr.ReadToEndAsync();
                         htmlText = htmlText.Replace("$(RootId)", rootId);
-                        Response.Output.Write(htmlText);
+                        writer.Write(htmlText);
                         bRendered = true;
                     }
                 }
             }
-            if (!bRendered) {
+            if (!bRendered)
+            {
                 throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml")}\n{rw.GetRelativePath(".html")}");
             }
-            Response.Output.Write(modelScript);
+            writer.Write(modelScript);
         }
 
-
-        String CreateTemplateForWrite(String fileTemplateText)
-        {
-            const String tmlHeader = 
-@"(function() {
-    let module = { exports: undefined };
-    (function(module, exports) {
-    'use strict';";
-
-            const String tmlFooter =
-@"
-    })(module, module.exports);
-    return module.exports;
-})()";
-            var sb = new StringBuilder(tmlHeader);
-            sb.Append(fileTemplateText);
-            sb.Append(tmlFooter);
-            return sb.ToString();
-    }
 
         async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
         {
@@ -167,7 +107,7 @@ namespace A2v10.Web.Mvc.Controllers
                 String fileTemplateText = null;
                 if (rw.template != null)
                 {
-                    fileTemplateText = await _host.ReadTextFile(rw.Path, rw.template + ".js");
+                    fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
                     templateText = CreateTemplateForWrite(fileTemplateText);
                 }
                 dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
@@ -217,6 +157,25 @@ namespace A2v10.Web.Mvc.Controllers
             footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());
             output.Append(footer);
             return output.ToString();
+        }
+
+        String CreateTemplateForWrite(String fileTemplateText)
+        {
+            const String tmlHeader =
+@"(function() {
+    let module = { exports: undefined };
+    (function(module, exports) {
+    'use strict';";
+
+            const String tmlFooter =
+@"
+    })(module, module.exports);
+    return module.exports;
+})()";
+            var sb = new StringBuilder(tmlHeader);
+            sb.Append(fileTemplateText);
+            sb.Append(tmlFooter);
+            return sb.ToString();
         }
 
         public static JsonSerializerSettings StandardSerializerSettings

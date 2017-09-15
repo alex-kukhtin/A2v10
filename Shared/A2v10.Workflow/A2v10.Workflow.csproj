@@ -56,7 +56,6 @@
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeActivity.cs" />
-    <Compile Include="ServiceLocator.cs" />
     <Compile Include="TrackRecord.cs" />
     <Compile Include="WorkflowDefinition.cs" />
     <Compile Include="WorkflowEngine.cs" />

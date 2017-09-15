@@ -11,7 +11,13 @@
 // virtual 
 void CCefApplication::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar)
 {
-	registrar->AddCustomScheme("client", true, false, false, true, false, false);
+	registrar->AddCustomScheme("client", 
+		true /*is_standard*/, 
+		true /*is_local*/, 
+		false /*is_display_isolated*/, 
+		false, /*is_secure*/
+		false, /*is_cors_enabled*/
+		false /*is_csp_bypassing*/);
 }
 
 // static 

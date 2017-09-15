@@ -1,4 +1,4 @@
-﻿/*20170913-7032*/
+﻿/*20170915-7033*/
 /* controllers/shell.js */
 
 (function () {
@@ -11,21 +11,23 @@
 
 	const UNKNOWN_TITLE = 'unknown title';
 
-	function findMenu(menu, func) {
+	function findMenu(menu, func, parentMenu) {
 		if (!menu)
 			return null;
 		for (let i = 0; i < menu.length; i++) {
 			let itm = menu[i];
 			if (func(itm))
 				return itm;
-			if (itm.menu) {
+            if (itm.menu) {
+                if (parentMenu)
+                    parentMenu.url = itm.url;
 				let found = findMenu(itm.menu, func);
 				if (found)
 					return found;
 			}
 		}
 		return null;
-	}
+    }
 
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
@@ -38,11 +40,13 @@
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.url === seg1);
-		if (!am) {
-			am = findMenu(menu, (mi) => mi.url && !mi.menu);
+        if (!am) {
+            // no segments - find first active menu
+            let parentMenu = { url: '' };
+            am = findMenu(menu, (mi) => mi.url && !mi.menu, parentMenu);
 			if (am) {
 				opts.title = am.title;
-				return urlTools.combine(url, am.url);
+				return urlTools.combine(url, parentMenu.url, am.url);
 			}
 		} else if (am && !am.menu) {
 			opts.title = am.title;
@@ -88,11 +92,15 @@
 			itemHref: (item) => '/' + item.url,
 			navigate(item) {
 				if (this.isActive(item))
-					return;
-				let storageKey = "menu:" + item.url;
-				let savedUrl = localStorage.getItem("menu:" + item.url);
+                    return;
+                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.url);
+                let savedUrl = localStorage.getItem(storageKey) || '';
+                if (savedUrl && !findMenu(item.menu, (mi) => mi.url === savedUrl)) {
+                    // saved segment not found in current menu
+                    savedUrl = '';
+                }
 				let opts = { title: null, seg2: savedUrl };
-				let url = makeMenuUrl(this.menu, item.url, opts);
+                let url = makeMenuUrl(this.menu, item.url, opts);
 				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
@@ -159,8 +167,8 @@
 				if (top) {
 					let url = urlTools.combine(top.url, item.url);
 					if (item.url.indexOf('/') === -1) {
-						// save only simple path
-						localStorage.setItem('menu:' + top.url, item.url);
+                        // save only simple path
+                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.url), item.url);
 					}
 					this.$store.commit('navigate', { url: url, title: item.title });
 				}
@@ -196,11 +204,12 @@
 		computed: {
 			currentView() {
 				// TODO: compact
+                let root = window.$$rootUrl;
 				let url = store.getters.url;
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
 					url += '/index/0';
-				return urlTools.combine('/_page', url) + store.getters.search;
+				return urlTools.combine(root, '/_page', url) + store.getters.search;
 			},
 			cssClass() {
 				let route = this.$store.getters.route;
@@ -275,8 +284,8 @@
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-			let opts = { title: null };
-			let newUrl = makeMenuUrl(this.menu, window.location.pathname, opts);
+            let opts = { title: null };
+            let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
@@ -294,12 +303,13 @@
 			});
 
 			eventBus.$on('modal', function (modal, prms) {
-				let id = '0';
+                let id = '0';
+                let root = window.$$rootUrl;
 				if (prms && prms.data && prms.data.$id) {
 					// TODO: get correct ID
 					id = prms.data.$id;
 				}
-				let url = urlTools.combine('/_dialog', modal, id);
+				let url = urlTools.combine(root, '/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
 				dlg.promise = new Promise(function (resolve, reject) {
@@ -343,10 +353,15 @@
         methods: {
             about() {
 				// TODO: localization
-				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму' }); // TODO 
+				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму...' }); // TODO 
             },
 			root() {
-				let opts = { title: null };
+                let opts = { title: null };
+                let currentUrl = this.$store.getters.url;
+                let menuUrl = makeMenuUrl(this.menu, '/', opts);
+                if (currentUrl === menuUrl) {
+                    return; // already in root
+                }
 				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
 			},
 			debugOptions() {

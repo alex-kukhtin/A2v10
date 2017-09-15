@@ -51,6 +51,10 @@
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
+      <Project>{4abb9b68-f32c-4262-8aff-0af8a1087d30}</Project>
+      <Name>A2v10.Request</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Script\A2v10.Script.csproj">
       <Project>{8D4A108F-28A4-4C56-BB2C-D189E6AB01C9}</Project>
       <Name>A2v10.Script</Name>

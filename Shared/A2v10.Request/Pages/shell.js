@@ -58,4 +58,6 @@ TODO:
         }
     });
 
+	window.$rootUrl = '';
+
 })();

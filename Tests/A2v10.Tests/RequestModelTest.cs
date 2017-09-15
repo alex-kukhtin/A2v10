@@ -1,4 +1,5 @@
-﻿using A2v10.Web.Mvc.Models;
+﻿using A2v10.Request;
+using A2v10.Web.Mvc.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace A2v10.Tests
 {
     [TestClass]
-    [TestCategory("Database")]
+    [TestCategory("Web request")]
     public class RequestModelTest
     {
         [TestMethod]

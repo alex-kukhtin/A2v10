@@ -1,6 +1,7 @@
 ﻿using A2v10.Infrastructure;
 using A2v10.Runtime.Properties;
 using A2v10.Script;
+using A2v10.Request;
 using ChakraHost.Hosting;
 using System;
 using System.Globalization;
@@ -97,6 +98,26 @@ namespace A2v10RuntimeNet
             catch (Exception ex)
             {
                 SetLastError(ex);
+            }
+        }
+
+        public static String ProcessRequest(String url)
+        {
+            try
+            {
+                var ctrl = new BaseController();
+                using (var writer = new StringWriter()) {
+                    ctrl.RenderElementKind(RequestUrlKind.Page, url, null, writer).Wait();
+                    return writer.ToString();
+                }
+                return $"<div>page '{url}' not found.</div>";
+            }
+            catch (Exception ex)
+            {
+                //SetLastError(ex);
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return $"<div>{ex.Message}</div>";
             }
         }
 	}

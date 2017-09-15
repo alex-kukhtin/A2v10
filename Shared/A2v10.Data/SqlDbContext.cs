@@ -67,6 +67,28 @@ namespace A2v10.Data
             return modelReader.DataModel;
         }
 
+        public IDataModel LoadModel(String source, String command, Object prms = null)
+        {
+            var modelReader = new DataModelReader();
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                ReadData(source, command,
+                    (prm) =>
+                    {
+                        modelReader.SetParameters(prm, prms);
+                    },
+                    (no, rdr) =>
+                    {
+                        modelReader.ProcessOneRecord(rdr);
+                    },
+                    (no, rdr) =>
+                    {
+                        modelReader.ProcessOneMetadata(rdr);
+                    });
+            }
+            return modelReader.DataModel;
+        }
+
         public async Task ReadDataAsync(String source, String command,
             Action<SqlParameterCollection> setParams,
             Action<Int32, IDataReader> onRead,
@@ -92,6 +114,36 @@ namespace A2v10.Data
                             }
                             rdrNo += 1;
                         } while (await rdr.NextResultAsync());
+                    }
+                }
+            }
+        }
+
+        public async void ReadData(String source, String command,
+            Action<SqlParameterCollection> setParams,
+            Action<Int32, IDataReader> onRead,
+            Action<Int32, IDataReader> onMetadata)
+        {
+            using (var cnn = GetConnection(source))
+            {
+                Int32 rdrNo = 0;
+                using (var cmd = cnn.CreateCommandSP(command))
+                {
+                    if (setParams != null)
+                        setParams(cmd.Parameters);
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        do
+                        {
+                            if (onMetadata != null)
+                                onMetadata(rdrNo, rdr);
+                            while (await rdr.ReadAsync())
+                            {
+                                if (onRead != null)
+                                    onRead(rdrNo, rdr);
+                            }
+                            rdrNo += 1;
+                        } while (rdr.NextResult());
                     }
                 }
             }

@@ -82,9 +82,6 @@
     <Content Include="app\services\validators.js" />
     <Content Include="css\bowtie.css" />
     <Content Include="css\fonts\bowtie.svg" />
-    <Content Include="Pages\catalog_suppliers.html" />
-    <Content Include="Pages\catalog_customers.html" />
-    <Content Include="Pages\shell.js" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="css\site.css" />
@@ -101,7 +98,6 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <Content Include="Pages\layout.html" />
     <Content Include="scripts\jasmine\boot.js" />
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />

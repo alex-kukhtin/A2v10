@@ -59,15 +59,6 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -105,10 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AppInfo.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ElementController.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
-    <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebApplicationHost.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />
@@ -123,10 +111,10 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Start\NinjectWebCommon.cs" />
     <Compile Include="Start\RouteConfig.cs" />
     <Compile Include="Start\Startup.Auth.cs" />
     <Compile Include="Start\Startup.cs" />
+    <Compile Include="Start\Startup.Services.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />
     <Compile Include="Views\Account\ConfirmEmail.generated.cs">
@@ -326,9 +314,17 @@
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
+      <Project>{4abb9b68-f32c-4262-8aff-0af8a1087d30}</Project>
+      <Name>A2v10.Request</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Script\A2v10.Script.csproj">
       <Project>{8d4a108f-28a4-4c56-bb2c-d189e6ab01c9}</Project>
       <Name>A2v10.Script</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
+      <Project>{76269196-DB55-4299-AE0F-A33A5BAB294F}</Project>
+      <Name>A2v10.Workflow</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>

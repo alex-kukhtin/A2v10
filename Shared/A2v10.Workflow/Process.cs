@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using A2v10.Infrastructure;
 using System.Activities;
+using System.Dynamic;
 
 namespace A2v10.Workflow
 {
@@ -58,19 +59,18 @@ namespace A2v10.Workflow
                 throw new WorkflowException("Failed to start process");
         }
 
-        private IDataModel _model;
+        private IDataModel _model = null;
 
         IDataModel GetModel()
         {
-            throw new NotImplementedException();
-            /*
+            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
             if (_model != null)
                 return _model;
-            // Get IDBContext
-            // IDbContext dbContext = null;
-            //dbContext.LoadModelAsync()
-            return null;
-            */
+            String proc = $"[{this.Schema}].[{this.Model}.Load]";
+            ExpandoObject loadPrms = new ExpandoObject();
+            loadPrms.Set("Id", ModelId);
+            _model = dbContext.LoadModel(String.Empty, proc, loadPrms);
+            return _model;
         }
     }
 }

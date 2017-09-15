@@ -10,8 +10,9 @@ namespace A2v10.Infrastructure
 	{
         String ConnectionString(String source);
 		Task<SqlConnection> GetConnectionAsync(String source);
-		Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null);
-		Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null);
+        IDataModel LoadModel(String source, String command, Object prms = null);
+        Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null);
+        Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null);
 
 		Task<T> LoadAsync<T>(String source, String command, Object prms = null) where T : class;
 		Task<IList<T>> LoadListAsync<T>(String source, String command, Object prms) where T : class;

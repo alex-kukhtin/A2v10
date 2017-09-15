@@ -11,11 +11,11 @@ protected: // create from serialization only
 	CCefView();
 	DECLARE_DYNCREATE(CCefView)
 
-// Attributes
+	// Attributes
 public:
 	CWorkarea* GetDocument() const;
 
-// Overrides
+	// Overrides
 public:
 	virtual void OnDraw(CDC* pDC) override;  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
@@ -25,7 +25,7 @@ protected:
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
 	virtual void OnInitialUpdate() override;
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CCefView();
 #ifdef _DEBUG
@@ -35,7 +35,7 @@ public:
 
 protected:
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnFilePrintPreview();
@@ -49,6 +49,9 @@ protected:
 	//CCefClientHandler::Delegate
 	virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) override;
+
+	afx_msg void OnReload();
+	afx_msg void OnReloadIgnoreCache();
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp

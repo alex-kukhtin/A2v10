@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Common\Agent\model.json" />
     <None Include="Develop\Document\Request\index.view.xaml">
@@ -59,6 +60,7 @@
     <None Include="model.schema.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\Identity\User\index.template.js" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
     <Content Include="Develop\Catalog\Customers\index.template.js" />
     <Content Include="Develop\Catalog\Suppliers\edit.view.html" />
@@ -124,6 +126,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Buildings\Index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\User\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

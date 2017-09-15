@@ -77,6 +77,10 @@
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
+      <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>
+      <Name>A2v10.Request</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>

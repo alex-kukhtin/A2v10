@@ -1,0 +1,12 @@
+﻿/*identity/user*/
+{
+  "schema": "a2v10demo",
+  "model": "Catalog.Customer",
+  "actions": {
+    "index": {
+      "index": true,
+      "template": "index.template",
+      "view": "Index.view"
+    }
+  }
+}

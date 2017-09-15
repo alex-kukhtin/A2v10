@@ -39,17 +39,7 @@ namespace ASP
         }
         public override void Execute()
         {
-WriteLiteral("<!DOCTYPE html>\r\n");
-
-            
-            #line 2 "..\..\Views\Shared\_Layout.cshtml"
-  
-	String currentBuild = "1234";
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<html>\r\n<head>\r\n    <meta");
+WriteLiteral("<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <meta");
 
 WriteLiteral(" charset=\"utf-8\"");
 
@@ -62,7 +52,7 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1.0\"");
 WriteLiteral(">\r\n    <title>");
 
             
-            #line 9 "..\..\Views\Shared\_Layout.cshtml"
+            #line 6 "..\..\Views\Shared\_Layout.cshtml"
       Write(ViewBag.Title);
 
             
@@ -99,7 +89,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\t\t\t\t\t");
 
             
-            #line 18 "..\..\Views\Shared\_Layout.cshtml"
+            #line 15 "..\..\Views\Shared\_Layout.cshtml"
                Write(Html.Partial("_LoginPartial"));
 
             
@@ -114,7 +104,7 @@ WriteLiteral(">\r\n");
 WriteLiteral("\t\t\t");
 
             
-            #line 23 "..\..\Views\Shared\_Layout.cshtml"
+            #line 20 "..\..\Views\Shared\_Layout.cshtml"
        Write(RenderBody());
 
             
@@ -127,7 +117,7 @@ WriteLiteral(" class=\"footer\"");
 WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 
             
-            #line 27 "..\..\Views\Shared\_Layout.cshtml"
+            #line 24 "..\..\Views\Shared\_Layout.cshtml"
                  Write(DateTime.Now.Year);
 
             
@@ -136,7 +126,7 @@ WriteLiteral(">\r\n\t\t\t<p>&copy; ");
 WriteLiteral("  ");
 
             
-            #line 27 "..\..\Views\Shared\_Layout.cshtml"
+            #line 24 "..\..\Views\Shared\_Layout.cshtml"
                                      Write(A2v10.Web.Mvc.Configuration.AppInfo.MainAssembly.Version);
 
             
@@ -146,34 +136,9 @@ WriteLiteral("</p>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteLiteral(" src=\"/Scripts/vue.min.js?v=2.4.2\"");
+WriteLiteral(" src=\"/scripts/vue.min.js?v=2.4.2\"");
 
-WriteLiteral("></script>\r\n\t<script");
-
-WriteLiteral(" type=\"text/javascript\"");
-
-WriteAttribute("src", Tuple.Create(" src=\"", 869), Tuple.Create("\"", 922)
-            
-            #line 31 "..\..\Views\Shared\_Layout.cshtml"
-, Tuple.Create(Tuple.Create("", 875), Tuple.Create<System.Object, System.Int32>(Html.Raw("/Scripts/main.js?v=" + currentBuild)
-            
-            #line default
-            #line hidden
-, 875), false)
-);
-
-WriteLiteral("></script>\r\n");
-
-WriteLiteral("    ");
-
-            
-            #line 32 "..\..\Views\Shared\_Layout.cshtml"
-Write(RenderSection("scripts", required: false));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n</body>\r\n</html>\r\n");
+WriteLiteral("></script>\r\n</body>\r\n</html>\r\n");
 
         }
     }

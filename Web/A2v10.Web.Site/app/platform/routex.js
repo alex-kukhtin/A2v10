@@ -1,4 +1,4 @@
-﻿/*20170902-7023*/
+﻿/*20170915-7033*/
 /* platform/routex.js */
 
 (function () {
@@ -26,11 +26,17 @@
 		else if (url.length === 4)
 			return urlArr.slice(0, 2).join('/');
 		return url;
-	}
+    }
+
+    function normalizedRoute()
+    {
+        let path = window.location.pathname;
+        return urlTools.normalizeRoot(path);
+    }
 
 	const store = new Vuex.Store({
 		state: {
-			route: window.location.pathname,
+            route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
@@ -55,11 +61,12 @@
 			}		
 		},
 		mutations: {
-			navigate(state, to) { // to: {url, query, title}
-				let oldUrl = state.route + urlTools.makeQueryString(state.query);
+            navigate(state, to) { // to: {url, query, title}
+                let root = window.$$rootUrl;
+				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
-				let newUrl = state.route + urlTools.makeQueryString(to.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
 				let h = window.history;
 				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
@@ -68,31 +75,32 @@
 			},
 			query(state, query) {
 				// changes all query
+                let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
-				let newUrl = state.route + urlTools.makeQueryString(state.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
 				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
 				// changes some fields or query
+                let root = window.$$rootUrl;
 				state.query = Object.assign({}, state.query, query);
-				let newUrl = state.route + urlTools.makeQueryString(state.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
 				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {
-				state.route = window.location.pathname;
+                state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-			setstate(state, to ){ // to: {url, title}
-				//console.warn('set setstate: ' + url);
-				window.history.replaceState(null, null, to.url);
-				state.route = window.location.pathname;
+            setstate(state, to) { // to: {url, title}
+                window.history.replaceState(null, null, window.$$rootUrl + to.url);
+                state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
 			},

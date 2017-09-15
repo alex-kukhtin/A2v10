@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using A2v10.Infrastructure;
 
-namespace A2v10.Web.Mvc.Models
+namespace A2v10.Request
 {
     public class RequestModelException : Exception
     {
@@ -351,10 +351,10 @@ namespace A2v10.Web.Mvc.Models
             return mi;
         }
 
-        public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, RequestUrlKind kind, String normalizedUrl)
+        public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
         {
             var mi = GetModelInfo(kind, normalizedUrl);
-            String jsonText = await host.ReadTextFile(mi.path, "model.json");
+            String jsonText = await host.ReadTextFile(bAdmin, mi.path, "model.json");
             var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
             rm.EndInit();
             rm._action = mi.action;
@@ -367,7 +367,7 @@ namespace A2v10.Web.Mvc.Models
             return rm;
         }
 
-        public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, String baseUrl)
+        public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, Boolean bAdmin, String baseUrl)
         {
             baseUrl = baseUrl.ToLowerInvariant();
             RequestUrlKind kind;
@@ -390,7 +390,7 @@ namespace A2v10.Web.Mvc.Models
             {
                 throw new RequestModelException($"Invalid base url: {baseUrl}");
             }
-            var rm = await CreateFromUrl(host, kind, baseUrl);
+            var rm = await CreateFromUrl(host, bAdmin, kind, baseUrl);
             rm._kind = kind;
             return rm;
         }

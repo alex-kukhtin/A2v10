@@ -1,9 +1,10 @@
-﻿/*20170828-7021*/
+﻿/*20170915-7033*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
-	let eventBus = require('std:eventBus');
+    const eventBus = require('std:eventBus');
+    const urlTools = require('std:url');
 
 	return {
 		get: get,
@@ -73,7 +74,7 @@ app.modules['std:http'] = function () {
                     }
                     if (selector.firstChild && selector.firstChild.__vue__) {
                         let ve = selector.firstChild.__vue__;
-                        ve.$data.__baseUrl__ = url;
+                        ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
                     }
                     resolve(true);
                 })

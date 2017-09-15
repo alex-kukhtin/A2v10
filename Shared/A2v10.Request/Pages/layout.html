@@ -6,6 +6,7 @@
     <meta name="description" content="A2:Web" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="rootUrl" content="$(RootUrl)" />
     <title></title>
     <link href="/css/site.min.css" rel="stylesheet" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -16,11 +17,11 @@
         <header class="header">
             <div class="h-block">
                 <i class="bowtie-user"></i>
-                <a class="app-title" href='\' v-text="title" @click.prevent="root"></a>
+                <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
             </div>
             <div class="aligner"></div>
             <div class="h-block h-right">
-                <a class="nav-admin" href="\admin\"><i class="ico ico-gear-outline"></i></a>
+                <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
                 <div class="dropdown dir-down" v-dropdown>
                     <button class="btn" toggle><i class="ico ico-user"></i> Александр Кухтин<span class="caret"></span></button>
                     <div class="dropdown-menu menu down-right">
@@ -28,7 +29,7 @@
                         <div class="divider"></div>
                         <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
                         <div class="divider"></div>
-                        <form id="logoutForm" method="post" action="/Account/LogOff">
+                        <form id="logoutForm" method="post" action="Account/LogOff">
                             <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
                         </form>
                     </div>
@@ -37,7 +38,7 @@
         </header>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
-            <a href="\app\about" @click.prevent="about">about</a>
+            <a href="/app/about" @click.prevent="about">about</a>
             version: <span v-text="version"></span>
             <div class="right-part">
                 <div class="dropdown dir-up" v-dropdown>
@@ -55,6 +56,6 @@
     </div>
     <script type="text/javascript" src="/scripts/vue.js"></script>
     <script type="text/javascript" src="/scripts/main.js"></script>
-    <script type="text/javascript" src="/Shell/ShellScript"></script>
+    <script type="text/javascript" src="/shellscript"></script>
 </body>
 </html>

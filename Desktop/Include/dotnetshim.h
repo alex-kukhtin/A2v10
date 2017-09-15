@@ -9,6 +9,9 @@ class CDotNetException
 public:
 	CDotNetException(const wchar_t* szError);
 	void ReportError();
+	LPCWSTR GetMessage() {
+		return m_msg.c_str();
+	}
 };
 
 class CDotNetRuntime {
@@ -19,6 +22,7 @@ public:
 	static void LoadModuleContext();
 	static void SetMainWnd(HWND hWnd);
 	static void OpenSolution(LPCWSTR szFileName);
+	static std::wstring ProcessRequest(LPCWSTR szUrl);
 };
 
 #undef AFX_DATA

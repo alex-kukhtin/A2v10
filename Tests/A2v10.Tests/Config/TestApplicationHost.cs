@@ -55,14 +55,16 @@ namespace A2v10.Tests.Config
 
         public Boolean IsDebugConfiguration { get { return true; } }
 
-        public String MakeFullPath(String path, String fileName)
+        public String MakeFullPath(Boolean bAdmin, String path, String fileName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<String> ReadTextFile(String path, String fileName)
+        public Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
         {
             throw new NotImplementedException();
         }
+
+        public String AppVersion => throw new NotImplementedException();
     }
 }

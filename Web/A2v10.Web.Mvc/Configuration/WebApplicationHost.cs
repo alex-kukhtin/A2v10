@@ -56,9 +56,9 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
-        public async Task<String> ReadTextFile(String path, String fileName)
+        public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
         {
-            String fullPath = MakeFullPath(path, fileName);
+            String fullPath = MakeFullPath(bAdmin, path, fileName);
             using (var tr = new StreamReader(fullPath))
             {
                 return await tr.ReadToEndAsync();
@@ -67,12 +67,20 @@ namespace A2v10.Web.Mvc.Configuration
 
         public Boolean IsDebugConfiguration { get { return true; } }
 
-        public String MakeFullPath(String path, String fileName)
+        public String MakeFullPath(Boolean bAdmin, String path, String fileName)
         {
-            String fullPath = Path.Combine($"{AppPath}/{AppKey}", path, fileName);
+            String appKey = bAdmin ? "admin" : AppKey ;
+            String fullPath = Path.Combine($"{AppPath}/{appKey}", path, fileName);
             return Path.GetFullPath(fullPath);
         }
         #endregion
 
+        public String AppVersion
+        {
+            get
+            {
+                return AppInfo.MainAssembly.Version;
+            }
+        }
     }
 }

@@ -31,6 +31,8 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_COMMAND(ID_NAVIGATE_REFRESH, OnReload)
+	ON_COMMAND(ID_NAVIGATE_REFRESH_IGNORE_CACHE, OnReloadIgnoreCache)
 END_MESSAGE_MAP()
 
 // CCefView construction/destruction
@@ -182,4 +184,18 @@ void CCefView::OnBrowserClosed(CefRefPtr<CefBrowser> browser)
 		m_browser = nullptr;
 		m_clientHandler->DetachDelegate();
 	}
+}
+
+// afx_msg
+void CCefView::OnReload() 
+{
+	if (m_browser != nullptr)
+		m_browser->Reload();
+}
+
+// afx_msg
+void CCefView::OnReloadIgnoreCache() 
+{
+	if (m_browser != nullptr)
+		m_browser->ReloadIgnoreCache();
 }

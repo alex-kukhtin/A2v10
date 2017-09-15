@@ -1,4 +1,4 @@
-﻿/*20170912-7031*/
+﻿/*20170915-7033*/
 /*controllers/base.js*/
 (function () {
 
@@ -107,8 +107,9 @@
 			},
 
 			$reload() {
-				var self = this;
-				let url = '/_data/reload';
+                let self = this;
+                let root = window.$$rootUrl;
+				let url = root + '/_data/reload';
 				let dat = self.$data;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ baseUrl: self.$baseUrl });

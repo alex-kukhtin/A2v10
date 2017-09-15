@@ -17,12 +17,10 @@ namespace A2v10.Workflow
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             base.CacheMetadata(metadata);
-            metadata.RequireExtension<IDbContext>();
         }
 
         protected override void Execute(NativeActivityContext context)
         {
-            var dbContext = context.GetExtension<IDbContext>();
             var process = Process.GetProcessFromContext(context.DataContext);
         }
 
@@ -30,7 +28,6 @@ namespace A2v10.Workflow
         {
             if (!(obj is RequestResult))
                 throw new WorkflowException("Invalid ResponseType. Must be RequestResult");
-            var dbContext = context.GetExtension<IDbContext>();
             var rr = obj as RequestResult;
         }
     }

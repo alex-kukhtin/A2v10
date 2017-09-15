@@ -15,13 +15,15 @@ namespace A2v10.Xaml
     }
 
     [ContentProperty("Children")]
-    public class CollectionView : Container
+    public class CollectionView : UIElementBase
     {
         public Object ItemsSource { get; set; }
 
         public Int32? PageSize { get; set; }
 
         public RunMode RunAt { get; set; }
+
+        public UIElementCollection Children { get; set; } = new UIElementCollection();
 
         public SortDescription Sort { get; set; }
 
@@ -32,6 +34,7 @@ namespace A2v10.Xaml
             var tag = new TagBuilder("collection-view");
             if (onRender != null)
                 onRender(tag);
+            MergeAttributes(tag, context);
             Bind itemsSource = GetBinding(nameof(ItemsSource));
             if (itemsSource != null)
                 tag.MergeAttribute(":items-source", itemsSource.GetPath(context));
@@ -49,9 +52,17 @@ namespace A2v10.Xaml
             var tml = new TagBuilder("template");
             tml.MergeAttribute("scope", "Parent");
             tml.RenderStart(context);
-            RenderChildren(context);
+            foreach (var ch in Children)
+                ch.RenderElement(context);
             tml.RenderEnd(context);
             tag.RenderEnd(context);
+        }
+
+        protected override void OnEndInit()
+        {
+            base.OnEndInit();
+            foreach (var ch in Children)
+                ch.SetParent(this);
         }
     }
 }

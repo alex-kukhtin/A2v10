@@ -1,4 +1,4 @@
-﻿/*20170903-7024*/
+﻿/*20170915-7033*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -6,7 +6,8 @@ app.modules['std:url'] = function () {
 	return {
 		combine: combine,
 		makeQueryString: makeQueryString,
-		parseQueryString: parseQueryString
+        parseQueryString: parseQueryString,
+        normalizeRoot: normalizeRoot
 	};
 
 	function normalize(elem) {
@@ -17,7 +18,14 @@ app.modules['std:url'] = function () {
 		if (elem.endsWith('/'))
 			elem = elem.substring(0, elem.length - 1);
 		return elem;
-	}
+    }
+
+    function normalizeRoot(path) {
+        let root = window.$$rootUrl;
+        if (root && path.startsWith(root))
+            return path.substring(root.length);
+        return path;
+    }
 
 	function combine(...args) {
 		return '/' + args.map(normalize).filter(x => !!x).join('/');

@@ -12,6 +12,7 @@
 
     window.require = require;
     window.component = component;
+    window.$$rootUrl = document.querySelector('meta[name=rootUrl]').content || '';
 
 	function require(module) {
 		if (module in app.modules) {
@@ -49,7 +50,7 @@
 
 
 
-/*20170903-7024*/
+/*20170915-7033*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -57,7 +58,8 @@ app.modules['std:url'] = function () {
 	return {
 		combine: combine,
 		makeQueryString: makeQueryString,
-		parseQueryString: parseQueryString
+        parseQueryString: parseQueryString,
+        normalizeRoot: normalizeRoot
 	};
 
 	function normalize(elem) {
@@ -68,7 +70,14 @@ app.modules['std:url'] = function () {
 		if (elem.endsWith('/'))
 			elem = elem.substring(0, elem.length - 1);
 		return elem;
-	}
+    }
+
+    function normalizeRoot(path) {
+        let root = window.$$rootUrl;
+        if (root && path.startsWith(root))
+            return path.substring(root.length);
+        return path;
+    }
 
 	function combine(...args) {
 		return '/' + args.map(normalize).filter(x => !!x).join('/');
@@ -124,7 +133,7 @@ app.modules['std:url'] = function () {
 
 })();
 
-/*20170902-7023*/
+/*20170915-7033*/
 /* platform/routex.js */
 
 (function () {
@@ -152,11 +161,17 @@ app.modules['std:url'] = function () {
 		else if (url.length === 4)
 			return urlArr.slice(0, 2).join('/');
 		return url;
-	}
+    }
+
+    function normalizedRoute()
+    {
+        let path = window.location.pathname;
+        return urlTools.normalizeRoot(path);
+    }
 
 	const store = new Vuex.Store({
 		state: {
-			route: window.location.pathname,
+            route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
@@ -181,11 +196,12 @@ app.modules['std:url'] = function () {
 			}		
 		},
 		mutations: {
-			navigate(state, to) { // to: {url, query, title}
-				let oldUrl = state.route + urlTools.makeQueryString(state.query);
+            navigate(state, to) { // to: {url, query, title}
+                let root = window.$$rootUrl;
+				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
-				let newUrl = state.route + urlTools.makeQueryString(to.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
 				let h = window.history;
 				setTitle(to);
 				// push/pop state feature. Replace the current state and push new one.
@@ -194,31 +210,32 @@ app.modules['std:url'] = function () {
 			},
 			query(state, query) {
 				// changes all query
+                let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
-				let newUrl = state.route + urlTools.makeQueryString(state.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
 				//console.warn('set query: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
 				// changes some fields or query
+                let root = window.$$rootUrl;
 				state.query = Object.assign({}, state.query, query);
-				let newUrl = state.route + urlTools.makeQueryString(state.query);
+				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
 				// TODO: replaceUrl: boolean
 				//console.warn('set setquery: ' + newUrl);
 				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {
-				state.route = window.location.pathname;
+                state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-			setstate(state, to ){ // to: {url, title}
-				//console.warn('set setstate: ' + url);
-				window.history.replaceState(null, null, to.url);
-				state.route = window.location.pathname;
+            setstate(state, to) { // to: {url, title}
+                window.history.replaceState(null, null, window.$$rootUrl + to.url);
+                state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
 			},
@@ -396,12 +413,13 @@ app.modules['std:log'] = function () {
 	}
 };
 
-/*20170828-7021*/
+/*20170915-7033*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
-	let eventBus = require('std:eventBus');
+    const eventBus = require('std:eventBus');
+    const urlTools = require('std:url');
 
 	return {
 		get: get,
@@ -471,7 +489,7 @@ app.modules['std:http'] = function () {
                     }
                     if (selector.firstChild && selector.firstChild.__vue__) {
                         let ve = selector.firstChild.__vue__;
-                        ve.$data.__baseUrl__ = url;
+                        ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
                     }
                     resolve(true);
                 })
@@ -2806,7 +2824,7 @@ Vue.directive('resize', {
 });
 
 
-/*20170912-7031*/
+/*20170915-7033*/
 /*controllers/base.js*/
 (function () {
 
@@ -2915,8 +2933,9 @@ Vue.directive('resize', {
 			},
 
 			$reload() {
-				var self = this;
-				let url = '/_data/reload';
+                let self = this;
+                let root = window.$$rootUrl;
+				let url = root + '/_data/reload';
 				let dat = self.$data;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
@@ -3154,7 +3173,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20170913-7032*/
+/*20170915-7033*/
 /* controllers/shell.js */
 
 (function () {
@@ -3167,21 +3186,23 @@ Vue.directive('resize', {
 
 	const UNKNOWN_TITLE = 'unknown title';
 
-	function findMenu(menu, func) {
+	function findMenu(menu, func, parentMenu) {
 		if (!menu)
 			return null;
 		for (let i = 0; i < menu.length; i++) {
 			let itm = menu[i];
 			if (func(itm))
 				return itm;
-			if (itm.menu) {
+            if (itm.menu) {
+                if (parentMenu)
+                    parentMenu.url = itm.url;
 				let found = findMenu(itm.menu, func);
 				if (found)
 					return found;
 			}
 		}
 		return null;
-	}
+    }
 
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
@@ -3194,11 +3215,13 @@ Vue.directive('resize', {
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.url === seg1);
-		if (!am) {
-			am = findMenu(menu, (mi) => mi.url && !mi.menu);
+        if (!am) {
+            // no segments - find first active menu
+            let parentMenu = { url: '' };
+            am = findMenu(menu, (mi) => mi.url && !mi.menu, parentMenu);
 			if (am) {
 				opts.title = am.title;
-				return urlTools.combine(url, am.url);
+				return urlTools.combine(url, parentMenu.url, am.url);
 			}
 		} else if (am && !am.menu) {
 			opts.title = am.title;
@@ -3244,11 +3267,15 @@ Vue.directive('resize', {
 			itemHref: (item) => '/' + item.url,
 			navigate(item) {
 				if (this.isActive(item))
-					return;
-				let storageKey = "menu:" + item.url;
-				let savedUrl = localStorage.getItem("menu:" + item.url);
+                    return;
+                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.url);
+                let savedUrl = localStorage.getItem(storageKey) || '';
+                if (savedUrl && !findMenu(item.menu, (mi) => mi.url === savedUrl)) {
+                    // saved segment not found in current menu
+                    savedUrl = '';
+                }
 				let opts = { title: null, seg2: savedUrl };
-				let url = makeMenuUrl(this.menu, item.url, opts);
+                let url = makeMenuUrl(this.menu, item.url, opts);
 				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
@@ -3315,8 +3342,8 @@ Vue.directive('resize', {
 				if (top) {
 					let url = urlTools.combine(top.url, item.url);
 					if (item.url.indexOf('/') === -1) {
-						// save only simple path
-						localStorage.setItem('menu:' + top.url, item.url);
+                        // save only simple path
+                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.url), item.url);
 					}
 					this.$store.commit('navigate', { url: url, title: item.title });
 				}
@@ -3352,11 +3379,12 @@ Vue.directive('resize', {
 		computed: {
 			currentView() {
 				// TODO: compact
+                let root = window.$$rootUrl;
 				let url = store.getters.url;
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
 					url += '/index/0';
-				return urlTools.combine('/_page', url) + store.getters.search;
+				return urlTools.combine(root, '/_page', url) + store.getters.search;
 			},
 			cssClass() {
 				let route = this.$store.getters.route;
@@ -3431,8 +3459,8 @@ Vue.directive('resize', {
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-			let opts = { title: null };
-			let newUrl = makeMenuUrl(this.menu, window.location.pathname, opts);
+            let opts = { title: null };
+            let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
@@ -3450,12 +3478,13 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modal', function (modal, prms) {
-				let id = '0';
+                let id = '0';
+                let root = window.$$rootUrl;
 				if (prms && prms.data && prms.data.$id) {
 					// TODO: get correct ID
 					id = prms.data.$id;
 				}
-				let url = urlTools.combine('/_dialog', modal, id);
+				let url = urlTools.combine(root, '/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
 				dlg.promise = new Promise(function (resolve, reject) {
@@ -3499,10 +3528,15 @@ Vue.directive('resize', {
         methods: {
             about() {
 				// TODO: localization
-				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму' }); // TODO 
+				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму...' }); // TODO 
             },
 			root() {
-				let opts = { title: null };
+                let opts = { title: null };
+                let currentUrl = this.$store.getters.url;
+                let menuUrl = makeMenuUrl(this.menu, '/', opts);
+                if (currentUrl === menuUrl) {
+                    return; // already in root
+                }
 				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
 			},
 			debugOptions() {
