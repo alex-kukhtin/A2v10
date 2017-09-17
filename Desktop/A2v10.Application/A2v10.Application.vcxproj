@@ -227,6 +227,7 @@
   <ItemGroup>
     <None Include="res\A2v10Application.rc2" />
     <None Include="res\test.html" />
+    <None Include="res\test_admin.html" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="build.txt" />

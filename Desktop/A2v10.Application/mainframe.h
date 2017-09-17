@@ -32,6 +32,7 @@ public:
 
 // Generated message map functions
 protected:
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFileClose();
 	DECLARE_MESSAGE_MAP()

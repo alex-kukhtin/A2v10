@@ -6,28 +6,29 @@
     <meta name="description" content="A2:Web" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="rootUrl" content="$(RootUrl)" />
+    <meta name="rootUrl" content="/admin" />
     <title></title>
     <link href="/css/site.min.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
+    <!-- TODO: REPLACE WITH NEW SHELL -->
     <div id="shell" class="shell">
         <header class="header">
             <div class="h-block">
                 <i class="ico ico-dashboard"></i>
-                <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
+                <a class="app-title" href='/admin' v-text="title" @click.prevent="root"></a>
             </div>
             <div class="aligner"></div>
             <div class="h-block h-right">
                 <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
                 <div class="dropdown dir-down" v-dropdown>
-                    <button class="btn" toggle><i class="ico ico-user"></i> Администратор системы<span class="caret"></span></button>
+                    <button class="btn" toggle><i class="ico ico-user"></i> Администратор системы <span class="caret"></span></button>
                     <div class="dropdown-menu menu down-right">
                         <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
                         <div class="divider"></div>
-                        <form id="logoutForm" method="post" action="/Account/LogOff">
+                        <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
+                        <div class="divider"></div>
+                        <form id="logoutForm" method="post" action="Account/LogOff">
                             <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
                         </form>
                     </div>
@@ -36,7 +37,7 @@
         </header>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
-            <a href="/app/about" @click.prevent="about">about (admin mode)</a>
+            <a href="/app/about" @click.prevent="about">about</a>
             version: <span v-text="version"></span>
             <div class="right-part">
                 <div class="dropdown dir-up" v-dropdown>
@@ -54,6 +55,41 @@
     </div>
     <script type="text/javascript" src="/scripts/vue.js"></script>
     <script type="text/javascript" src="/scripts/main.js"></script>
-    <script type="text/javascript" src="/shellscriptadmin"></script>
+    <script type="text/javascript">
+        (function () {
+
+            const Shell = component('std:shellController');
+
+    const menu = [
+        {
+            type: 'tree', title: 'Администратор', url: 'identity', menu: [
+                { title: "Пользователи", url: 'user', icon: 'user' },
+                { title: "Группы", url: 'group', icon: 'users' },
+                { title: "Роли", url: 'role', icon: 'users' }
+            ]
+        },
+        {
+            title: "Бизнес процессы", url: 'workflow', icon: 'folder', menu: [
+                { title: "Выполняемые", url: 'executing', icon: 'save' },
+                { title: "Аварийные", url: 'failed', icon: 'dot' }
+            ]
+        }
+    ];
+
+
+
+    // main VIEW SHELL
+
+    const shell = new Shell({
+        el: '#shell',
+        data: {
+            title: 'application title (admin)',
+            version: '10.0.70xx (admin)',
+            menu: menu
+        }
+    });
+
+        })();
+    </script>
 </body>
 </html>

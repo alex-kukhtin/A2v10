@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_NAVIGATE_REFRESH, OnReload)
 	ON_COMMAND(ID_NAVIGATE_REFRESH_IGNORE_CACHE, OnReloadIgnoreCache)
+	ON_COMMAND(ID_SHOW_DEVTOOLS, OnShowDevTools)
 END_MESSAGE_MAP()
 
 // CCefView construction/destruction
@@ -166,7 +167,7 @@ void CCefView::OnInitialUpdate()
 	browserSettings.local_storage = STATE_ENABLED;
 	cef_string_set(L"UTF-8", 5, &browserSettings.default_encoding, true);
 	m_clientHandler = new CCefClientHandler(this);
-	LPCSTR szRootUrl = "client://app"; 
+	LPCSTR szRootUrl = "http://app"; 
 	//LPCSTR szRootUrl = "https://www.google.com.ua";
 	m_clientHandler->CreateBrowser(info, browserSettings, CefString(szRootUrl));
 }
@@ -198,4 +199,18 @@ void CCefView::OnReloadIgnoreCache()
 {
 	if (m_browser != nullptr)
 		m_browser->ReloadIgnoreCache();
+}
+
+// afx_msg
+void CCefView::OnShowDevTools() 
+{
+	if (m_browser == nullptr)
+		return;
+	auto host = m_browser->GetHost();
+	CefWindowInfo info;
+	info.ex_style = WS_EX_PALETTEWINDOW;
+	info.SetAsPopup(host->GetWindowHandle(), "Developer tools");
+	CefBrowserSettings settings;
+	CefPoint elementAt;
+	host->ShowDevTools(info, nullptr, settings, elementAt);
 }

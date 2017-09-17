@@ -22,7 +22,9 @@ public:
 	static void LoadModuleContext();
 	static void SetMainWnd(HWND hWnd);
 	static void OpenSolution(LPCWSTR szFileName);
-	static std::wstring ProcessRequest(LPCWSTR szUrl);
+
+	static void StartDesktopServices();
+	static std::wstring ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPCWSTR szPost);
 };
 
 #undef AFX_DATA

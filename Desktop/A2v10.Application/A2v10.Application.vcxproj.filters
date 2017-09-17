@@ -98,6 +98,9 @@
     <None Include="res\test.html">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\test_admin.html">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="build.txt" />

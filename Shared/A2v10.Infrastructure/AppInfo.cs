@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace A2v10.Web.Mvc.Configuration
+namespace A2v10.Infrastructure
 {
 
 	public class AssemblyDescription

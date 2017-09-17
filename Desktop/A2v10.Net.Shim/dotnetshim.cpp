@@ -73,10 +73,19 @@ void CDotNetRuntime::OpenSolution(LPCWSTR szFileName)
 }
 
 // satatic
-std::wstring CDotNetRuntime::ProcessRequest(LPCWSTR szUrl)
+std::wstring CDotNetRuntime::ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPCWSTR szPostData)
 {
 	auto url = gcnew System::String(szUrl);
-	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url);
+	auto search = gcnew System::String(szSearch);
+	auto postData = gcnew System::String(szPostData);
+	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url, search, postData);
 	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
 	return ptr;
+}
+
+// static 
+void CDotNetRuntime::StartDesktopServices() 
+{
+	A2v10RuntimeNet::Desktop::StartDesktopServices();
+	ThrowIfError();
 }

@@ -127,7 +127,7 @@ WriteLiteral("  ");
 
             
             #line 24 "..\..\Views\Shared\_Layout.cshtml"
-                                     Write(A2v10.Web.Mvc.Configuration.AppInfo.MainAssembly.Version);
+                                     Write(A2v10.Infrastructure.AppInfo.MainAssembly.Version);
 
             
             #line default

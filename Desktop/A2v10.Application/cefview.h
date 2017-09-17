@@ -52,6 +52,7 @@ protected:
 
 	afx_msg void OnReload();
 	afx_msg void OnReloadIgnoreCache();
+	afx_msg void OnShowDevTools();
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp

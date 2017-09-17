@@ -13,29 +13,24 @@ namespace A2v10.Request
 {
     public partial class BaseController
     {
-        public async Task Data(String command, Int64 userId, Stream inputStream, TextWriter writer)
+        public async Task Data(String command, Int64 userId, String json, TextWriter writer)
         {
             switch (command.ToLowerInvariant())
             {
                 case "save":
-                    await SaveData(userId, inputStream, writer);
+                    await SaveData(userId, json, writer);
                     break;
                 case "reload":
-                    await ReloadData(userId, inputStream, writer);
+                    await ReloadData(userId, json, writer);
                     break;
                 default:
                     throw new RequestModelException($"Invalid data action {command}");
             }
         }
 
-        async Task SaveData(Int64 userId, Stream inputStream, TextWriter writer)
+        async Task SaveData(Int64 userId, String json, TextWriter writer)
         {
-            ExpandoObject dataToSave;
-            using (var tr = new StreamReader(inputStream))
-            {
-                String json = tr.ReadToEnd();
-                dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
-            }
+            ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
             String baseUrl = dataToSave.Get<String>("baseUrl");
             ExpandoObject data = dataToSave.Get<ExpandoObject>("data");
             var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
@@ -48,14 +43,9 @@ namespace A2v10.Request
             WriteDataModel(model, writer);
         }
 
-        async Task ReloadData(Int64 userId, Stream inputStream, TextWriter writer)
+        async Task ReloadData(Int64 userId, String json, TextWriter writer)
         {
-            ExpandoObject dataToSave;
-            using (var tr = new StreamReader(inputStream))
-            {
-                String json = tr.ReadToEnd();
-                dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
-            }
+            ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
             String baseUrl = dataToSave.Get<String>("baseUrl");
 
             ExpandoObject loadPrms = new ExpandoObject();

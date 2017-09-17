@@ -21,16 +21,19 @@ struct RES_DEF
 LPCSTR mimeCss   = "text/css";
 LPCSTR mimeHtml  = "text/html";
 LPCSTR mimeJs    = "application/javascript";
-LPCSTR mimeJson = "application/json";
-LPCSTR mimeWoff2 = "application/font-woff2";
+LPCSTR mimeJson  = "application/json";
+LPCSTR mimeWoff  = "application/font-woff";
+LPCSTR mimeTtf   = "application/font-ttf";
 
 const RES_DEF resArray[] =
 {
-	{L"app/",                   IDWEB_SITE_MAIN_HTML,	 mimeHtml  },
+	{L"app/",                   IDWEB_SITE_MAIN_HTML,		mimeHtml  },
+	{L"app/admin/",             IDWEB_SITE_MAIN_HTML_ADMIN,	mimeHtml },
 	{L"app/css/site.min.css",   IDWEB_SITE_MAIN_CSS,	 mimeCss   },
 	{L"app/scripts/vue.js",	    IDWEB_SCRIPT_VUE_JS,	 mimeJs    },
 	{L"app/scripts/main.js",	IDWEB_SCRIPT_MAIN_JS,	 mimeJs    },
-	{L"app/fonts/bowtie.woff2", IDWEB_FONT_BOWTIE_FONT,  mimeWoff2 }
+	{L"app/css/fonts/bowtie.woff", IDWEB_FONT_BOWTIE_FONT,  mimeWoff },
+	{L"app/css/fonts/bowtie.ttf",  IDWEB_FONT_BOWTIE_FONT2,  mimeTtf }
 
 };
 
@@ -56,8 +59,17 @@ public:
 	bool error;
 	static CParsedUrl CreateFrom(LPCSTR szUrl);
 	bool IsAppUrl() {
-		return path.Find(L"app/_page") == 0;
+		return 
+			(path.Find(L"app/_") == 0) ||
+			(path.Find(L"app/admin/_") == 0);
 	}
+
+	bool IsAppData() {
+		return 
+			(path.Find(L"app/_data") == 0) ||
+			(path.Find(L"app/admin/_data") == 0);
+	}
+
 	CString UrlToRequest() {
 		CString newPath(path);
 		newPath.Replace(L"app/", L"");
@@ -87,25 +99,28 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 }
 
 // static 
-const byte* CApplicationResources::LoadResource(LPCSTR szUrl, LPCSTR* pMime, int& resSize)
+bool CApplicationResources::LoadResource(const char* szUrl, LPCSTR* pMime, std::vector<byte>& data, const char* postData)
 {
 	ATLASSERT(pMime != nullptr);
 	*pMime = mimeHtml;
-	resSize = 0;
-	static std::string rrResult;
 	USES_CONVERSION;
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
 	LPCWSTR szError = nullptr;
 	if (parsedUrl.IsAppUrl()) {
+		if (parsedUrl.IsAppData())
+			*pMime = mimeJson;
 		try 
 		{
 			CString strUrl(parsedUrl.UrlToRequest());
-			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl);
-			rrResult = W2A_CP(wResult.c_str(), CP_UTF8);
+			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl, parsedUrl.search, A2W_CP(postData, CP_UTF8));
+			std::string rrResult = W2A_CP(wResult.c_str(), CP_UTF8);
 			//LPCSTR szResult= "<div><div>page not found.<br><a href=\"https://www.google.com.ua/\">Find!</a></div></div>";
-			resSize = rrResult.length();
-			return (byte*)rrResult.c_str();
+			size_t resSize = rrResult.length();
+			data.resize(resSize);
+			if (resSize != 0)
+				memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
+			return true;
 		}
 		catch (CDotNetException& ex) 
 		{
@@ -114,21 +129,27 @@ const byte* CApplicationResources::LoadResource(LPCSTR szUrl, LPCSTR* pMime, int
 	}
 	if (szError) 
 	{
-		rrResult = W2A_CP(szError, CP_UTF8);
-		resSize = rrResult.length();
-		return (byte*)rrResult.c_str();
+		std::string rrResult = W2A_CP(szError, CP_UTF8);
+		size_t resSize = rrResult.length();
+		data.resize(resSize);
+		memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
+		return true;
 	}
 
 	LPCWSTR resId = _findResourceId(parsedUrl.path, pMime);
 	if (!resId) {
 		// may be browse back from http:://
 		resId = _findResourceId(L"app/", pMime);
-		if (!resId)
-			return nullptr;
+		if (!resId) {
+			data.resize(0);
+			return false;
+		}
 	}
 	HINSTANCE hInst = AfxFindResourceHandle(resId, RT_RCDATA);
 	HRSRC hRsrc = ::FindResource(hInst, resId, RT_RCDATA);
-	resSize = (int) ::SizeofResource(hInst, hRsrc);
+	size_t resSize = (int) ::SizeofResource(hInst, hRsrc);
 	HGLOBAL hGlob = ::LoadResource(hInst, hRsrc);
-	return (const byte*) ::LockResource(hGlob); // binary;
+	data.resize(resSize);
+	memcpy_s(data.data(), resSize, ::LockResource(hGlob), resSize);
+	return true;
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Configuration;
 using A2v10.Request;
+using System.IO;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -54,8 +55,8 @@ namespace A2v10.Web.Mvc.Controllers
             if (pathInfo.StartsWith("admin/"))
             {
                 pathInfo = pathInfo.Substring(6);
-                _baseController.Admin = true;
                 // ADMIN mode
+                _baseController.Admin = true;
             }
 
             if (pathInfo.StartsWith("shellscript"))
@@ -139,7 +140,12 @@ namespace A2v10.Web.Mvc.Controllers
             Response.ContentType = "application/json";
             try
             {
-                await _baseController.Data(command, UserId, Request.InputStream, Response.Output);
+
+                using (var tr = new StreamReader(Request.InputStream))
+                {
+                    String json = tr.ReadToEnd();
+                    await _baseController.Data(command, UserId, json, Response.Output);
+                }
             }
             catch (Exception ex)
             {

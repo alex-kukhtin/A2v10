@@ -92,6 +92,16 @@ BOOL CMainApp::InitInstance()
 	ParseCommandLine(cmdInfo);
 
 
+	try
+	{
+		CDotNetRuntime::StartDesktopServices();
+	}
+	catch (CDotNetException& de)
+	{
+		de.ReportError();
+		return FALSE;
+	}
+
 
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
@@ -101,6 +111,16 @@ BOOL CMainApp::InitInstance()
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
+	CMenu* pSysMenu = m_pMainWnd->GetSystemMenu(FALSE);
+	
+	if (pSysMenu != nullptr)
+	{
+		pSysMenu->AppendMenu(MF_SEPARATOR);
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_OPTIONS,  L"Options...");
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_DEVTOOLS, L"Developer tools...\tF12");
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_ABOUTBOX, L"About...");
+	}
+
 	return TRUE;
 }
 

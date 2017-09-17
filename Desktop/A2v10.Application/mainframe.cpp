@@ -18,6 +18,7 @@ IMPLEMENT_DYNCREATE(CMainFrame, CA2SDIFrameWnd)
 BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWnd)
 	ON_WM_CREATE()
 	ON_COMMAND(ID_FILE_CLOSE, &CMainFrame::OnFileClose)
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 
@@ -135,4 +136,25 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 void CMainFrame::OnFileClose()
 {
 	DestroyWindow();
+}
+
+// afx_msg
+void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & 0xFFF0) == IDM_SYS_ABOUTBOX)
+	{
+		PostMessage(WM_COMMAND, ID_APP_ABOUT);
+	}
+	else if ((nID & 0xFFF0) == IDM_SYS_OPTIONS)
+	{
+		PostMessage(WM_COMMAND, ID_TOOLS_OPTIONS);
+	}
+	else if ((nID & 0xFFF0) == IDM_SYS_DEVTOOLS)
+	{
+		PostMessage(WM_COMMAND, ID_SHOW_DEVTOOLS);
+	}
+	else
+	{
+		__super::OnSysCommand(nID, lParam);
+	}
 }

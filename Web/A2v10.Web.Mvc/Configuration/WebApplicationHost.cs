@@ -19,7 +19,8 @@ namespace A2v10.Web.Mvc.Configuration
 
 		#region IConfiguration
 		public IProfiler Profiler => _profiler;
-		public String ConnectionString(String source)
+
+        public String ConnectionString(String source)
 		{
             if (String.IsNullOrEmpty(source))
                 source = "Default";
@@ -75,12 +76,6 @@ namespace A2v10.Web.Mvc.Configuration
         }
         #endregion
 
-        public String AppVersion
-        {
-            get
-            {
-                return AppInfo.MainAssembly.Version;
-            }
-        }
+        public String AppVersion => AppInfo.MainAssembly.Version;
     }
 }

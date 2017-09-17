@@ -16,13 +16,28 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	bool handled = false;
 	std::string url = request->GetURL();
 	std::string method = request->GetMethod();
+	std::string post;
+	if (method == "POST") 
+	{
+		CefRefPtr<CefPostData> postData = request->GetPostData();
+		if (postData != nullptr) {
+			size_t postCnt = postData->GetElementCount();
+			if (postCnt != 0) {
+				CefPostData::ElementVector elems;
+				postData->GetElements(elems);
+				for (auto it=elems.begin(); it != elems.end(); ++it) {
+					CefPostDataElement* elem = *it;
+					size_t bytes = elem->GetBytesCount();
+					post.resize(bytes);
+					elem->GetBytes(bytes, (void*)post.data());
+				}
+			}
+		}
+	}
 
 	const char* mime = nullptr;
-	int resSize = 0;
-	const byte* resBytes = CApplicationResources::LoadResource(url.c_str(), &mime, resSize);
-	if (resBytes) {
-		data_.resize(resSize);
-		memcpy_s(data_.data(), resSize, resBytes, resSize);
+	bool rc = CApplicationResources::LoadResource(url.c_str(), &mime, data_, post.c_str());
+	if (rc) {
 		mime_type_ = mime;
 		handled = true;
 	}
@@ -30,7 +45,7 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	{
 		std::string error = "file not found: ";
 		error += url;
-		resSize = error.length();
+		size_t resSize = error.length();
 		data_.resize(resSize);
 		memcpy_s(data_.data(), resSize, error.c_str(), resSize);
 		mime_type_ = mime;
@@ -105,6 +120,6 @@ private:
 // static
 void CClientSchemeHandler::RegisterSchemaHandlerFactory()
 {
-	CefRegisterSchemeHandlerFactory("client", "app",
+	CefRegisterSchemeHandlerFactory("http", "app",
 		new ClientSchemeHandlerFactory());
 }

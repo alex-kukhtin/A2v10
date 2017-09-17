@@ -1,11 +1,20 @@
-﻿using A2v10.Infrastructure;
-using A2v10.Runtime.Properties;
-using A2v10.Script;
-using A2v10.Request;
-using ChakraHost.Hosting;
+﻿
 using System;
 using System.Globalization;
 using System.IO;
+using System.Dynamic;
+
+using ChakraHost.Hosting;
+
+using A2v10.Infrastructure;
+using A2v10.Runtime.Properties;
+using A2v10.Script;
+using A2v10.Request;
+using A2v10.Runtime;
+using A2v10.Data;
+using A2v10.Xaml;
+using A2v10.Workflow;
+using System.Web;
 
 namespace A2v10RuntimeNet
 {
@@ -101,22 +110,68 @@ namespace A2v10RuntimeNet
             }
         }
 
-        public static String ProcessRequest(String url)
+        public static void StartDesktopServices()
         {
+            IServiceLocator locator = ServiceLocator.Current;
+            IProfiler profiler = new DesktopProfiler();
+            IApplicationHost host = new DesktopApplicationHost(profiler);
+            IDbContext dbContext = new SqlDbContext(host);
+            IRenderer renderer = new XamlRenderer();
+            IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
+            locator.RegisterService<IProfiler>(profiler);
+            locator.RegisterService<IApplicationHost>(host);
+            locator.RegisterService<IDbContext>(dbContext);
+            locator.RegisterService<IRenderer>(renderer);
+            locator.RegisterService<IWorkflowEngine>(wfEngine);
+
+        }
+
+        static void Render(BaseController ctrl, RequestUrlKind kind, String path, String search, TextWriter writer)
+        {
+            ExpandoObject loadPrms = new ExpandoObject();
+            loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
+            // TODO: current user ID;
+            loadPrms.Set("UserId", 101);
+            ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
+        }
+
+
+        public static String ProcessRequest(String url, String search, String postData)
+        {
+            var controller = new BaseController();
+            if (url.StartsWith("admin/"))
+            {
+                url = url.Substring(6);
+                controller.Admin = true;
+            }
+            Int64 userId = 101; // TODO userId
             try
             {
-                var ctrl = new BaseController();
                 using (var writer = new StringWriter()) {
-                    ctrl.RenderElementKind(RequestUrlKind.Page, url, null, writer).Wait();
+                    if (url.StartsWith("_page/"))
+                        Render(controller, RequestUrlKind.Page, url.Substring(6), search, writer);
+                    else if (url.StartsWith("_dialog/"))
+                        Render(controller, RequestUrlKind.Dialog, url.Substring(8), search, writer);
+                    else if (url.StartsWith("_popup/"))
+                        Render(controller, RequestUrlKind.Popup, url.Substring(7), search, writer);
+                    else if (url.StartsWith("_data/"))
+                    {
+                        var command = url.Substring(6);
+                        controller.Data(command, userId, postData, writer).Wait();
+                    }
+                    else
+                    {
+                        // TODO: exception
+                        writer.Write($"<div>page '{url}' not found.</div>");
+                    }
                     return writer.ToString();
                 }
-                return $"<div>page '{url}' not found.</div>";
             }
             catch (Exception ex)
             {
-                //SetLastError(ex);
                 if (ex.InnerException != null)
                     ex = ex.InnerException;
+                // TODO:: /exception
                 return $"<div>{ex.Message}</div>";
             }
         }

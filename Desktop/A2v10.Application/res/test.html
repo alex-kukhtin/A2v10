@@ -41,7 +41,7 @@
             version: <span v-text="version"></span>
             <div class="right-part">
                 <div class="dropdown dir-up" v-dropdown>
-                    <button class="btn btn-debug" toggle>Debug<span class="caret"></span></button>
+                    <button class="btn btn-debug" toggle>Debug<span class="caret up"></span></button>
                     <div class="dropdown-menu menu up-right">
                         <a @click.prevent="debugModel" class="dropdown-item"><i class="ico ico-database"></i> Модель данных</a>
                         <a @click.prevent="debugTrace" class="dropdown-item"><i class="ico ico-log"></i> Трассировка</a>
@@ -52,6 +52,7 @@
             </div>
         </footer>
         <a2-main-view :menu="menu"></a2-main-view>
+    </div>
     <script type="text/javascript" src="/scripts/vue.js"></script>
     <script type="text/javascript" src="/scripts/main.js"></script>
     <script type="text/javascript">
@@ -76,8 +77,8 @@
         },
         {
             type:'accordion', title: 'Документы', url: 'document', menu: [
-                { title: "Incoming", url: 'incoming', icon: 'file', query:'order=Date&dir=asc' },
-                { title: "Outgoing", url: 'outgoing', icon: 'database'},
+                { title: "Котировки", url: 'quotations', icon: 'file', query:'order=Date&dir=asc' },
+                { title: "Заявки", url: 'request', icon: 'database'},
                 { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'comment' }
             ]
         }
