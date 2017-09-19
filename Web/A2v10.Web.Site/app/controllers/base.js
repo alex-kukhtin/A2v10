@@ -1,4 +1,4 @@
-﻿/*20170915-7033*/
+﻿/*20170918-7034*/
 /*controllers/base.js*/
 (function () {
 
@@ -68,18 +68,31 @@
 			},
 
 			$save() {
-				var self = this;
-				var url = '/_data/save';
+				let self = this;
+                let root = window.$$rootUrl;
+				let url = root + '/_data/save';
 				return new Promise(function (resolve, reject) {
-					var jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
+                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
+                    let wasNew = self.$baseUrl.endsWith('/new');
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
 						self.$data.$setDirty(false);
-						// data is full model. Resolve requires single element
-						let dataToResolve;
-						for (let p in data) {
-							dataToResolve = data[p];
-						}
+						// data is a full model. Resolve requires only single element.
+                        let dataToResolve;
+                        let newId;
+                        for (let p in data) {
+                            // always first element in the result
+                            dataToResolve = data[p];
+                            newId = self.$data[p].$id; // new element
+                            if (dataToResolve)
+                                break;
+                        }
+                        if (wasNew && newId) {
+                            // assign the new id to the route
+                            self.$store.commit('setnewid', { id: newId });
+                            // and in the __baseUrl__
+                            self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+                        }
 						resolve(dataToResolve); // single element (raw data)
 					}).catch(function (msg) {
 						self.$alertUi(msg);
@@ -90,7 +103,8 @@
 			$invoke(cmd, base, data) {
 				alert('TODO: call invoke command');
 				let self = this;
-				let url = '/_data/invoke';
+                let root = window.$$rootUrl;
+				let url = root + '/_data/invoke';
 				let baseUrl = base || self.$baseUrl;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl });
@@ -141,13 +155,40 @@
 			},
 
 			$navigate(url, data) {
-				let dataToNavigate = data;
-				if (utils.isObject(dataToNavigate))
+				let dataToNavigate = data || 'new';
+                if (utils.isObjectExact(dataToNavigate))
 					dataToNavigate = dataToNavigate.$id;
 				let urlToNavigate = urltools.combine(url, dataToNavigate);
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
+            $dbRemoveSelected(arr, confirm) {
+                let sel = arr.$selected;
+                if (!sel)
+                    return;
+                let id = sel.$id;
+                let self = this;
+                let root = window.$$rootUrl;
+
+                function dbRemove() {
+                    let postUrl = root + '/_data/dbRemove';
+                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
+
+                    dataservice.post(postUrl, jsonData).then(function (data) {
+                        sel.$remove(); // without confirm
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                }
+
+                if (confirm) {
+                    this.$confirm(confirm).then(function () {
+                        dbRemove();
+                    });
+                } else {
+                    dbRemove();
+                }
+            },
 			$openSelected(url, arr) {
 				// TODO: переделать
 				url = url || '';
@@ -301,7 +342,28 @@
 				if (format && format.indexOf('{0}') !== -1)
 					return format.replace('{0}', value);
 				return value;
-			},
+            },
+
+            $expand(elem, propName) {
+                let arr = elem[propName];
+                if (arr.$loaded)
+                    return;
+
+                let self = this,
+                    root = window.$$rootUrl,
+                    url = root + '/_data/expand',
+                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+
+                dataservice.post(url, jsonData).then(function (data) {
+                    for (let el of data[propName])
+                        arr.push(arr.$new(el));
+                }).catch(function (msg) {
+                    self.$alertUi(msg);
+                 });
+
+                arr.$loaded = true;
+            },
+
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
 			},

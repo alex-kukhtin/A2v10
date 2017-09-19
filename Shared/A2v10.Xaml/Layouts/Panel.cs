@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class Panel : Container
+    public class Panel : Container, ITableControl
     {
         public Object Header { get; set; }
         public Icon Icon { get; set; }

@@ -9,7 +9,7 @@ namespace A2v10.Xaml
     public class Taskpad : Container
     {
 
-        public Width Width { get; set; }
+        public Length Width { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {

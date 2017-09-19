@@ -14,6 +14,9 @@ namespace A2v10.Xaml
 
         public TableRowCollection Rows { get; set; } = new TableRowCollection();
 
+        public Boolean Border { get; set; }
+        public Boolean Compact { get; set; }
+
         public TableRowCollection Header
         {
             get
@@ -39,9 +42,24 @@ namespace A2v10.Xaml
             set { _footer = value; }
         }
 
+        public TableColumnCollection Columns
+        {
+            get
+            {
+                if (_columns == null)
+                    _columns = new TableColumnCollection();
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+            }
+        }
+
 
         TableRowCollection _header;
         TableRowCollection _footer;
+        TableColumnCollection _columns;
 
         public Object ItemsSource { get; set; }
 
@@ -55,7 +73,14 @@ namespace A2v10.Xaml
             if (GridLines != GridLinesVisibility.None)
                 table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
 
+            table.AddCssClassBool(Border, "bordered");
+            table.AddCssClassBool(Compact, "compact");
+
             table.RenderStart(context);
+
+            if (_columns != null)
+                Columns.Render(context);
+
             RenderHeader(context);
 
             RenderBody(context);
@@ -131,6 +156,9 @@ namespace A2v10.Xaml
             if (_footer != null)
                 foreach (var f in Footer)
                     f.SetParent(this);
+            if (_columns != null)
+                foreach (var c in Columns)
+                    c.SetParent(this);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿/*catalog/buildObjects*/
 {
-	"schema": "a2v10demo",
-	"model": "Catalog.Customer",
+  "schema": "a2v10",
+  "source": "frontis",
+	"model": "Catalog.InsObject",
 	"actions": {
 		"index": {
 			"index": true,

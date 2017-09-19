@@ -32,7 +32,7 @@ namespace A2v10.Data
 			if (x.Length > 2)
 			{
 				FieldType = DataHelpers.TypeName2FieldType(x[2]);
-				if (FieldType == FieldType.Scalar)
+				if (FieldType == FieldType.Scalar || FieldType == FieldType.Array)
 					SpecType = DataHelpers.TypeName2SpecType(x[2]);
 			}
 			IsComplexField = PropertyName.Contains('.');
@@ -57,7 +57,7 @@ namespace A2v10.Data
 		public Boolean IsMap { get { return FieldType == FieldType.Map; } }
 		public Boolean IsTree { get { return FieldType == FieldType.Tree; } }
 
-		public Boolean IsObjectLike { get { return IsArray || IsObject; } }
+		public Boolean IsObjectLike { get { return IsArray || IsObject || IsTree; } }
 
 		public Boolean IsRefId { get { return SpecType == SpecType.RefId; } }
 		public Boolean IsParentId { get { return SpecType == SpecType.ParentId; } }

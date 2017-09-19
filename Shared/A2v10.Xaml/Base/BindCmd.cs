@@ -14,8 +14,10 @@ namespace A2v10.Xaml
         Refresh,
         Requery,
         Save,
+        Create,
         Open,
         OpenSelected,
+        DbRemoveSelected,
         Append,
         Browse,
         Exec,
@@ -27,6 +29,8 @@ namespace A2v10.Xaml
         public CommandType Command { get; set; }
         public String Argument { get; set; }
         public String Url { get; set; }
+
+        public Confirm Confirm { get; set; }
 
         public BindCmd()
         {
@@ -71,6 +75,8 @@ namespace A2v10.Xaml
 
                 case CommandType.OpenSelected:
                     return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
+                case CommandType.DbRemoveSelected:
+                    return $"$dbRemoveSelected({CommandArgument(context)} {GetConfirm(context)})";
                 case CommandType.Open:
                     if (indirect)
                     {
@@ -80,13 +86,15 @@ namespace A2v10.Xaml
                     }
                     else
                         return $"$navigate('{CommandUrl}', {CommandArgument(context)})";
+                case CommandType.Create:
+                    return $"$navigate('{CommandUrl}')";
                 case CommandType.Remove:
                     if (indirect)
                     {
                         return $"{{cmd:$remove, arg1:'this'}}";
                     }
                     else
-                        return $"$remove({CommandArgumentOrThis(context)})";
+                        return $"$remove({CommandArgumentOrThis(context)} {GetConfirm(context)})";
                 case CommandType.Append:
                     return $"{CommandArgument(context)}.$append()";
 
@@ -95,7 +103,6 @@ namespace A2v10.Xaml
 
                 case CommandType.Exec:
                     return $"$exec('add100rows', Document)";
-
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }
@@ -107,6 +114,13 @@ namespace A2v10.Xaml
             if (String.IsNullOrEmpty(arg))
                 return "null";
             return arg;
+        }
+
+        String GetConfirm(RenderContext context)
+        {
+            if (Confirm == null)
+                return String.Empty;
+            return Confirm.GetJsValue(context);
         }
 
         Boolean IsArgumentEmpty(RenderContext context)
@@ -165,6 +179,7 @@ namespace A2v10.Xaml
                     tag.MergeAttribute(":disabled", "$isPristine");
                     break;
                 case CommandType.OpenSelected:
+                case CommandType.DbRemoveSelected:
                     var arg = GetBinding(nameof(Argument));
                     if (arg != null)
                         tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");

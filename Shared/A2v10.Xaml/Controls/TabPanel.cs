@@ -14,8 +14,6 @@ namespace A2v10.Xaml
 
         public Object Header { get; set; }
 
-        public Boolean FixedHeader { get; set; }
-
         public Boolean Border { get; set; }
 
         public TabCollection Tabs { get; set; } = new TabCollection();
@@ -32,7 +30,6 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(panel);
             MergeAttributes(panel, context);
-            panel.AddCssClassBool(FixedHeader, "fixed-header");
             panel.AddCssClassBool(Border, "bordered");
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
@@ -88,10 +85,20 @@ namespace A2v10.Xaml
 
         void RenderHeader(RenderContext context)
         {
-            var tbind = GetBinding(nameof(Header));
-            if (tbind != null)
+            var hBind = GetBinding(nameof(Header));
+            if (hBind != null || Header != null)
             {
-
+                var ht = new TagBuilder("template");
+                ht.MergeAttribute("slot", "title");
+                ht.RenderStart(context);
+                var tag = new TagBuilder("div", "pane-header");
+                tag.RenderStart(context);
+                if (hBind != null)
+                    tag.MergeAttribute("v-text", hBind.GetPath(context));
+                else if (Header != null)
+                    RenderContent(context, Header);
+                tag.RenderEnd(context);
+                ht.RenderEnd(context);
             }
         }
 

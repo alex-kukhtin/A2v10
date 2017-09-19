@@ -92,6 +92,30 @@ namespace A2v10.Request
         }
 
         [JsonIgnore]
+        public String DeleteProcedure
+        {
+            get
+            {
+                var cm = CurrentModel;
+                if (String.IsNullOrEmpty(cm))
+                    return null;
+                return $"[{CurrentSchema}].[{cm}.Delete]";
+            }
+        }
+
+        [JsonIgnore]
+        public String ExpandProcedure
+        {
+            get
+            {
+                var cm = CurrentModel;
+                if (String.IsNullOrEmpty(cm))
+                    return null;
+                return $"[{CurrentSchema}].[{cm}.Expand]";
+            }
+        }
+
+        [JsonIgnore]
         public String UpdateProcedure
         {
             get
@@ -363,7 +387,7 @@ namespace A2v10.Request
             rm._command = mi.command;
             rm._data = mi.data;
             rm._modelPath = mi.path;
-            rm._id = mi.id == "0" ? null : mi.id;
+            rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
             return rm;
         }
 

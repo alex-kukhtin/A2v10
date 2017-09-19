@@ -33,17 +33,15 @@
 		</DataGrid>
 	</CollectionView>
 	-->
-	<DataGrid ItemsSource="{Bind Customers}" Hover="True" 
+    <Toolbar>
+        <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+        <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        <Separator />
+        <Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+        <Button Icon="Alert"/>
+    </Toolbar>
+    <DataGrid ItemsSource="{Bind Customers}" Hover="True" 
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-		<DataGrid.Toolbar>
-			<Toolbar>
-				<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-				<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-				<Separator />
-				<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
-				<Button Icon="Alert"/>
-			</Toolbar>
-		</DataGrid.Toolbar>
 		<DataGridColumn Header="Код" Content="Id" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
 		<DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>

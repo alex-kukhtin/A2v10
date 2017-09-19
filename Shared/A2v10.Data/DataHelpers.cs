@@ -40,6 +40,8 @@ namespace A2v10.Data
 					return FieldType.Map;
 				case "Tree":
 					return FieldType.Tree;
+                case "Items": // for tree element
+                    return FieldType.Array;
 			}
 			return FieldType.Scalar;
 		}

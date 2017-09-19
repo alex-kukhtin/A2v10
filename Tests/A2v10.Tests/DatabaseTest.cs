@@ -255,7 +255,7 @@ namespace A2v10.Tests
             md.IsItemRefObject("TModel", "Rows", "TRow", FieldType.Array);
 
             String script = dm.CreateScript();
-            var pos = script.IndexOf("cmn.defineObject(TRow, {}, true);");
+            var pos = script.IndexOf("cmn.defineObject(TRow, {props: {}}, true);");
             Assert.AreNotEqual(-1, pos, "Invalid script for array");
         }
     }

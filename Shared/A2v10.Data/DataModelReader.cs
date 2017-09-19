@@ -187,7 +187,9 @@ namespace A2v10.Data
 		{
 			if (field.IsArray)
 				_root.AddToArray(field.PropertyName, currentRecord);
-			else if (field.IsObject)
+            else if (field.IsTree)
+                _root.AddToArray(field.PropertyName, currentRecord);
+            else if (field.IsObject)
 				_root.Add(field.PropertyName, currentRecord);
 			else if (field.IsMap)
 				_refMap.MergeObject(field.TypeName, id, currentRecord);
@@ -218,7 +220,7 @@ namespace A2v10.Data
 
 			// other fields = object fields
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
-            if (objectDef.IsArray)
+            if (objectDef.IsArray || objectDef.IsTree)
                 typeMetadata.IsArrayType = true;
 			//if (objectDef.IsTree)
 				//typeMetadata.AddField(objectDef, DataType.Undefined);

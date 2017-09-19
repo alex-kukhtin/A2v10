@@ -12,17 +12,31 @@ namespace A2v10.Xaml
     {
         public Object Content { get; set; }
 
+        public ControlSize Size { get; set; }
+
         public Icon Icon { get; set; }
 
         public Command Command { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tag = new TagBuilder("a");
+            var tag = new TagBuilder("a", "a2-hyperlink");
             if (onRender != null)
                 onRender(tag);
             MergeAttributes(tag, context);
             MergeCommandAttribute(tag, context);
+
+            if (Size != ControlSize.Default)
+            {
+                switch (Size)
+                {
+                    case ControlSize.Small:
+                        tag.AddCssClass("small");
+                        break;
+                    default:
+                        throw new XamlException("Only ControlSize.Small is supported for the Hyperlink");
+                }
+            }
 
             tag.RenderStart(context);
 

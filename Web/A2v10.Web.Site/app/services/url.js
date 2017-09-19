@@ -1,4 +1,4 @@
-﻿/*20170915-7033*/
+﻿/*20170918-7034*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -7,10 +7,12 @@ app.modules['std:url'] = function () {
 		combine: combine,
 		makeQueryString: makeQueryString,
         parseQueryString: parseQueryString,
-        normalizeRoot: normalizeRoot
+        normalizeRoot: normalizeRoot,
+        idChangedOnly: idChangedOnly
 	};
 
-	function normalize(elem) {
+    function normalize(elem) {
+        // TODO: TEST
 		elem = '' + elem || '';
 		elem = elem.replace(/\\/g, '/');
 		if (elem.startsWith('/'))
@@ -43,7 +45,8 @@ app.modules['std:url'] = function () {
 		return query ? '?' + query : '';
 	}
 
-	function parseQueryString(str) {
+    function parseQueryString(str) {
+        //TODO: TEST
 		var obj = {};
 		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
 			obj[decodeURIComponent(key)] = decodeURIComponent(value);
@@ -51,6 +54,18 @@ app.modules['std:url'] = function () {
 		return obj;
 	}
 
+    function idChangedOnly(newUrl, oldUrl) {
+        // TODO: TEST
+        let ns = (newUrl || '').split('/');
+        let os = (oldUrl || '').split('/');
+        if (ns.length != os.length)
+            return false;
+        if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+            if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))
+                return true;
+        }
+        return false;
+    }
 };
 
 

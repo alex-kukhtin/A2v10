@@ -50,7 +50,7 @@
 
 
 
-/*20170915-7033*/
+/*20170918-7034*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -59,10 +59,12 @@ app.modules['std:url'] = function () {
 		combine: combine,
 		makeQueryString: makeQueryString,
         parseQueryString: parseQueryString,
-        normalizeRoot: normalizeRoot
+        normalizeRoot: normalizeRoot,
+        idChangedOnly: idChangedOnly
 	};
 
-	function normalize(elem) {
+    function normalize(elem) {
+        // TODO: TEST
 		elem = '' + elem || '';
 		elem = elem.replace(/\\/g, '/');
 		if (elem.startsWith('/'))
@@ -95,7 +97,8 @@ app.modules['std:url'] = function () {
 		return query ? '?' + query : '';
 	}
 
-	function parseQueryString(str) {
+    function parseQueryString(str) {
+        //TODO: TEST
 		var obj = {};
 		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
 			obj[decodeURIComponent(key)] = decodeURIComponent(value);
@@ -103,6 +106,18 @@ app.modules['std:url'] = function () {
 		return obj;
 	}
 
+    function idChangedOnly(newUrl, oldUrl) {
+        // TODO: TEST
+        let ns = (newUrl || '').split('/');
+        let os = (oldUrl || '').split('/');
+        if (ns.length != os.length)
+            return false;
+        if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+            if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))
+                return true;
+        }
+        return false;
+    }
 };
 
 
@@ -238,7 +253,15 @@ app.modules['std:url'] = function () {
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
-			},
+            },
+            setnewid(state, to) {
+                let root = window.$$rootUrl;
+                let oldRoute = state.route;
+                let newRoute = oldRoute.replace('/new', '/' + to.id);
+                state.route = newRoute;
+                let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
+                window.history.replaceState(null, null, newUrl);
+            },
 			close(state) {
 				if (window.history.length)
 					window.history.back();
@@ -565,7 +588,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170912-7031*/
+/*20170918-7034*/
 /* services/datamodel.js */
 (function() {
 
@@ -777,6 +800,11 @@ app.modules['std:validators'] = function() {
         this._root_.$setDirty(true);
         this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
         platform.set(this, "$selected", ne);
+        // set RowNumber
+        if ('$rowNo' in newElem._meta_) {
+            let rowNoProp = newElem._meta_.$rowNo;
+            newElem[rowNoProp] = len; // 1-based
+        }
         return ne;
     };
 
@@ -786,6 +814,8 @@ app.modules['std:validators'] = function() {
     };
 
     _BaseArray.prototype.$remove = function (item) {
+        if (!item)
+            return;
         let index = this.indexOf(item);
         if (index === -1)
             return;
@@ -797,6 +827,13 @@ app.modules['std:validators'] = function() {
             index -= 1;
         if (this.length > index)
             platform.set(this, '$selected', this[index]);
+        // renumber rows
+        if ('$rowNo' in item._meta_) {
+            let rowNoProp = item._meta_.$rowNo;
+            for (let i = 0; i < this.length; i++) {
+                this[i][rowNoProp] = i + 1; // 1-based
+            }
+        }
     };
 
     _BaseArray.prototype.$copy = function (src) {
@@ -846,6 +883,21 @@ app.modules['std:validators'] = function() {
         if (arrayItem) {
             defArrayItem(obj);
         }
+
+        if (meta.$hasChildren) {
+            defHiddenGet(obj.prototype, "$hasChildren", function () {
+                let hcName = this._meta_.$hasChildren;
+                if (!hcName) return undefined;
+                return this[hcName];
+            });
+        }
+        if (meta.$items) {
+            defHiddenGet(obj.prototype, "$items", function () {
+                let itmsName = this._meta_.$items;
+                if (!itmsName) return undefined;
+                return this[itmsName];
+            });
+        }
     }
 
     function defArrayItem(elem) {
@@ -853,11 +905,17 @@ app.modules['std:validators'] = function() {
             let arr = this._parent_;
             arr.$remove(this);
         };
-        elem.prototype.$select = function () {
-			let arr = this._parent_;
+        elem.prototype.$select = function (root) {
+			let arr = root || this._parent_;
 			if (arr.$selected === this)
 				return;
             platform.set(arr, "$selected", this);
+        };
+
+        elem.prototype.$isSelected = function (root) {
+            let arr = root || this._parent_;
+            return arr.$selected === this;
+
         };
     }
 
@@ -1045,7 +1103,7 @@ app.modules['std:validators'] = function() {
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
-				if (Array.isArray(trg)) {
+                if (Array.isArray(trg)) {
 					platform.set(trg, "$selected", null);
 					trg.$copy(src[prop]);
 					// copy rowCount
@@ -1055,7 +1113,8 @@ app.modules['std:validators'] = function() {
 							trg.$RowCount = src[rcProp];
 						else
 							trg.$RowCount = 0;
-					}
+                    }
+                    // try to select old value
 				} else {
 					if (utils.isPrimitiveCtor(ctor))
 						platform.set(this, prop, src[prop]);
@@ -1212,6 +1271,7 @@ app.modules['std:popup'] = function () {
 (function () {
 
     const http = require('std:http');
+    const urlTools = require('std:url');
 
     Vue.component('include', {
         template: '<div :class="implClass"></div>',
@@ -1258,12 +1318,18 @@ app.modules['std:popup'] = function () {
         },
         watch: {
 			src: function (newUrl, oldUrl) {
-				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
-					// Only the search has changed. No need to reload
-					this.currentUrl = newUrl;
-				} else {
+                if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+                    // Only the search has changed. No need to reload.
+                    this.currentUrl = newUrl;
+                }
+                else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
+                    // Id has changed after save. No need to reload.
+                    this.currentUrl = newUrl;
+                }
+				else {
 					this.loading = true; // hides the current view
-					this.currentUrl = newUrl;
+                    this.currentUrl = newUrl;
+                    console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },
@@ -1273,14 +1339,6 @@ app.modules['std:popup'] = function () {
             }
         }
     });
-})();
-(function () {
-
-    Vue.component('validator', {
-        props: ['invalid', 'errors'],
-        template: '<div v-if="invalid" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
-    });
-
 })();
 (function () {
 
@@ -1339,14 +1397,67 @@ app.modules['std:popup'] = function () {
     app.components['control'] = control;
 
 })();
+/* 20170919-7035 */
+/*components/validator.js*/
+
+Vue.component('validator', {
+        props: ['invalid', 'errors'],
+        template: '<div v-if="invalid" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+});
+
+
+Vue.component('validator-control', {
+    template: '<div>111<validator :invalid="invalid" :errors="errors"></validator></div>',
+    props: {
+        item: {
+            type: Object, default() {
+                return {};
+            }
+        },
+        prop: String
+    },
+    created() {
+        alert(this.errors);
+    },
+    computed: {
+        path() {
+            return this.item._path_ + '.' + this.prop;
+        },
+        invalid() {
+            let err = this.errors;
+            return err && err.length > 0;
+        },
+        errors() {
+            if (!this.item) return null;
+            let root = this.item._root_;
+            if (!root) return null;
+            if (!root._validate_)
+                return null;
+            return root._validate_(this.item, this.path, this.item[this.prop]);
+        },
+    }
+});
 (function() {
 
+    const utlis = require('utils');
 
     let textBoxTemplate =
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input v-focus v-model.lazy="item[prop]" :class="inputClass"/>
+		<slot></slot>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
+</div>
+`;
+
+    let staticTemplate =
+        `<div :class="cssClass">
+	<label v-if="hasLabel" v-text="label" />
+	<div class="input-group static">
+		<span v-text="text" :class="inputClass"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1361,12 +1472,6 @@ app.modules['std:popup'] = function () {
 
     let baseControl = component('control');
 
-	const defaultObj = {
-		_validate_() {
-			return true;
-		}
-	};
-
     Vue.component('textbox', {
         extends: baseControl,
         template: textBoxTemplate,
@@ -1377,8 +1482,23 @@ app.modules['std:popup'] = function () {
 				}
 			},
             prop: String
-		}		
+        }
     });
+
+    Vue.component('static', {
+        extends: baseControl,
+        template: staticTemplate,
+        props: {
+            item: {
+                type: Object, default() {
+                    return {};
+                }
+            },
+            prop: String,
+            text: String
+        }
+    });
+
 })();
 
 (function () {
@@ -1428,7 +1548,7 @@ app.modules['std:popup'] = function () {
 		}
     });
 })();
-/*20170913-7032*/
+/*20170918-7034*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1455,7 +1575,6 @@ app.modules['std:popup'] = function () {
 
     const dataGridTemplate = `
 <div class="data-grid-container">
-    <slot name="toolbar" />
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -2020,13 +2139,13 @@ Vue.component('a2-pager', {
 });
 
 
-/*20170911-7030*/
+/*20170918-7034*/
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper">
-	<span toggle class="popover-title"><i :class="iconClass"></i> <span v-text="title"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="title"></span></span>
 	<div class="popup-body">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -2053,9 +2172,15 @@ Vue.component('popover', {
 		url: String,
 		title: String
 	},
-	computed: {
-		iconClass() {
-			return "ico po-ico" + this.icon ? (' ico-' + this.icon) : '';
+    computed: {
+        hasIcon() {
+            return !!this.icon;
+        },
+        iconClass() {
+            let cls = "ico po-ico";
+            if (this.icon)
+                cls += ' ico-' + this.icon;
+            return cls;
 		},
 		visible() {
 			return this.url && this.state === 'shown';
@@ -2075,73 +2200,87 @@ Vue.component('popover', {
 	}
 });
 
-/* 20170816-7014 */
+/* 20170919-7035 */
 /*components/treeview.js*/
 
 (function () {
 
+    const utils = require('utils');
+
     /*TODO:
-        3. folder/item
+        4. select first item
     */
-    Vue.component('tree-item', {
+    const treeItemComponent = {
+        name: 'tree-item',
         template: `
-<li @click.stop.prevent="doClick(item)" :title="item[title]"
+<li @click.stop.prevent="doClick(item)" :title="item[options.title]"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
-    <div class="overlay">
+    <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
-        <span v-else class="toggle"></span>
-        <i v-if="hasIcon" :class="iconClass"></i>
-        <a v-if="hasLink" :href="dataHref" v-text="item[label]" :class="{'no-wrap':!wrapLabel }"></a>
-        <span v-else v-text="item[label]" :class="{'tv-folder':true, 'no-wrap':!wrapLabel}"></span>
+        <span v-else class="toggle"/>
+        <i v-if="options.hasIcon" :class="iconClass"/>
+        <a v-if="hasLink(item)" :href="dataHref" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
+        <span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
     </div>
     <ul v-if="isFolder" v-show="isExpanded">
-        <tree-item v-for="(itm, index) in item[subitems]" 
-            :key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :has-icon="hasIcon" :folder-select="folderSelect"
-            :label="label" :wrap-label="wrapLabel" :icon="icon" :subitems="subitems" :title="title"></tree-item>
+        <tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
+            :key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
     </ul>   
 </li>
 `,
         props: {
             item: Object,
-            /* attrs */
-            hasIcon: Boolean,
-            wrapLabel: Boolean,
-            folderSelect: Boolean,
-            /* prop names */
-            label: String,
-            icon: String,
-            title: String,
-            subitems: String,
+            options: Object,
+            rootItems: Array,
             /* callbacks */
             click: Function,
+            expand: Function,
             isActive: Function,
             getHref: Function
         },
         data() {
             return {
-                open: true
+                open: !this.options.isDynamic
             };
         },
         methods: {
+            isFolderSelect(item) {
+                let fs = this.options.folderSelect;
+                if (utils.isFunction(fs))
+                    return fs(item);
+                return !!this.options.folderSelect;
+            },
             doClick(item) {
-                if (this.isFolder && !this.folderSelect)
+                if (this.isFolder && !this.isFolderSelect(item))
                     this.toggle();
-                else
-                    this.click(item);
+                else {
+                    if (this.options.isDynamic) {
+                        item.$select(this.rootItems);
+                    } else {
+                        this.click(item);
+                    }
+                }
+            },
+            hasLink(item) {
+                return !this.isFolder || this.isFolderSelect(item);
             },
             toggle() {
                 if (!this.isFolder)
                     return;
-                this.open = !this.open;
+                if (this.options.isDynamic) {
+                    this.open = !this.open;
+                    this.expand(this.item, this.options.subitems);
+                } else {
+                    this.open = !this.open;
+                }
             }
         },
         computed: {
             isFolder: function () {
-                let ch = this.item[this.subitems];
+                if (this.options.isDynamic && this.item.$hasChildren)
+                    return true;
+                let ch = this.item[this.options.subitems];
                 return ch && ch.length;
-            },
-            hasLink() {
-                return !this.isFolder || this.folderSelect;
             },
             isExpanded: function () {
                 return this.isFolder && this.open;
@@ -2150,17 +2289,101 @@ Vue.component('popover', {
                 return this.isFolder && !this.open;
             },
             isItemSelected: function () {
-                return this.isActive(this.item);
+                if (this.options.isDynamic)
+                    return this.item.$isSelected(this.rootItems);
+                if (!this.isActive)
+                    return false;
+                return this.isActive && this.isActive(this.item);
             },
             iconClass: function () {
-                return this.icon ? "ico ico-" + (this.item[this.icon] || 'empty') : '';
+                let icons = this.options.staticIcons;
+                if (icons)
+                    return "ico ico-" + (this.isFolder ? icons[0] : icons[1]);
+                if (this.options.icon) {
+                    let icon = this.item[this.options.icon];
+                    return icon ? "ico ico-" + (icon || 'empty') : '';
+                }
+                return undefined;
             },
             dataHref() {
                 return this.getHref ? this.getHref(this.item) : '';
             }
+        },
+        updated(x) {
+            // close expanded when reloaded
+            if (this.options.isDynamic && this.open) {
+                if (this.item.$hasChildren) {
+                    let arr = this.item[this.options.subitems];
+                    if (!arr.$loaded)
+                        this.open = false;
+                }
+            }
+        }
+    };
+
+    /*
+    options: {
+        // property names
+        title: String,
+        icon: String,
+        label: String,
+        subitems: String,
+        // options
+        staticIcons: [String, String], //[Folder, Item]
+        folderSelect: Boolean || Function,
+        wrapLabel: Boolean,
+        hasIcon: Boolean,
+        isDynamic: Boolean        
+    }
+    */
+
+    Vue.component('tree-view', {
+        components: {
+            'tree-item': treeItemComponent
+        },
+        template: `
+<ul class="tree-view">
+    <tree-item v-for="(itm, index) in items" :options="options"
+        :item="itm" :key="index"
+        :click="click" :is-active="isActive" :expand="expand" :root-items="items">
+    </tree-item>
+</ul>
+        `,
+        props: {
+            options: Object,
+            items: Array,
+            isActive: Function,
+            click: Function,
+            expand: Function,
+            autoSelect: String
+        },
+        computed: {
+            isSelectFirstItem() {
+                return this.autoSelect === 'first-item';
+            }
+        },
+        methods: {
+            selectFirstItem() {
+                if (!this.isSelectFirstItem)
+                    return;
+                let itms = this.items;
+                if (!itms.length)
+                    return;
+                let fe = itms[0];
+                if (fe.$select)
+                    fe.$select(this.items);
+            }
+        },
+        created() {
+            this.selectFirstItem();
+        },
+        updated() {
+            if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
+                // after reload
+                this.selectFirstItem();
+            }
         }
     });
-
 })();
 
 /*20170902-7023*/
@@ -2370,9 +2593,7 @@ TODO:
                 <span v-text="tab.header"></span>
             </li>
         </ul>
-		<template>
-			<slot name="title" />
-		</template>
+        <slot name="title" />
         <div class="tab-content" :class="contentCssClass">
             <slot />
         </div>
@@ -2385,9 +2606,7 @@ TODO:
 				</slot>
             </li>
         </ul>
-		<template>
-			<slot name="title" />
-		</template>
+		<slot name="title" />
         <div class="tab-content">
             <div class="tab-item" v-if="isActiveTab(item)" v-for="(item, tabIndex) in items" :key="tabIndex">
                 <slot name="items" :item="item" :index="tabIndex" />
@@ -2476,7 +2695,7 @@ TODO:
 					this._index = this.items.indexOf(item);
             },
 			isActiveTab(item) {
-                return item == this.activeTab;
+                return item === this.activeTab;
             },
             defaultTabHeader(item, index) {
                 return 'Tab ' + (index + 1);
@@ -2496,7 +2715,7 @@ TODO:
 
 })();
 
-/*20170905-7026*/
+/*20170918-7034*/
 /* components/modal.js */
 
 (function () {
@@ -2569,13 +2788,15 @@ TODO: may be icon for confirm ????
             }, 
             buttons: function () {
                 console.warn(this.dialog.style);
+                let okText = this.dialog.okText || 'OK';
+                let cancelText = this.dialog.cancelText || 'Cancel';
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
                 else if (this.dialog.style === 'alert')
-                    return [{ text: 'OK', result: false }];
+                    return [{ text: okText, result: false }];
                 return [
-                    { text: 'OK', result: true },
-                    { text: 'Cancel', result: false }
+                    { text: okText, result: true },
+                    { text: cancelText, result: false }
                 ];
             }
         },
@@ -2824,7 +3045,7 @@ Vue.directive('resize', {
 });
 
 
-/*20170915-7033*/
+/*20170918-7034*/
 /*controllers/base.js*/
 (function () {
 
@@ -2894,18 +3115,31 @@ Vue.directive('resize', {
 			},
 
 			$save() {
-				var self = this;
-				var url = '/_data/save';
+				let self = this;
+                let root = window.$$rootUrl;
+				let url = root + '/_data/save';
 				return new Promise(function (resolve, reject) {
-					var jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
+                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
+                    let wasNew = self.$baseUrl.endsWith('/new');
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
 						self.$data.$setDirty(false);
-						// data is full model. Resolve requires single element
-						let dataToResolve;
-						for (let p in data) {
-							dataToResolve = data[p];
-						}
+						// data is a full model. Resolve requires only single element.
+                        let dataToResolve;
+                        let newId;
+                        for (let p in data) {
+                            // always first element in the result
+                            dataToResolve = data[p];
+                            newId = self.$data[p].$id; // new element
+                            if (dataToResolve)
+                                break;
+                        }
+                        if (wasNew && newId) {
+                            // assign the new id to the route
+                            self.$store.commit('setnewid', { id: newId });
+                            // and in the __baseUrl__
+                            self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+                        }
 						resolve(dataToResolve); // single element (raw data)
 					}).catch(function (msg) {
 						self.$alertUi(msg);
@@ -2916,7 +3150,8 @@ Vue.directive('resize', {
 			$invoke(cmd, base, data) {
 				alert('TODO: call invoke command');
 				let self = this;
-				let url = '/_data/invoke';
+                let root = window.$$rootUrl;
+				let url = root + '/_data/invoke';
 				let baseUrl = base || self.$baseUrl;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl });
@@ -2967,13 +3202,40 @@ Vue.directive('resize', {
 			},
 
 			$navigate(url, data) {
-				let dataToNavigate = data;
-				if (utils.isObject(dataToNavigate))
+				let dataToNavigate = data || 'new';
+                if (utils.isObjectExact(dataToNavigate))
 					dataToNavigate = dataToNavigate.$id;
 				let urlToNavigate = urltools.combine(url, dataToNavigate);
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
+            $dbRemoveSelected(arr, confirm) {
+                let sel = arr.$selected;
+                if (!sel)
+                    return;
+                let id = sel.$id;
+                let self = this;
+                let root = window.$$rootUrl;
+
+                function dbRemove() {
+                    let postUrl = root + '/_data/dbRemove';
+                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
+
+                    dataservice.post(postUrl, jsonData).then(function (data) {
+                        sel.$remove(); // without confirm
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                }
+
+                if (confirm) {
+                    this.$confirm(confirm).then(function () {
+                        dbRemove();
+                    });
+                } else {
+                    dbRemove();
+                }
+            },
 			$openSelected(url, arr) {
 				// TODO: переделать
 				url = url || '';
@@ -3127,7 +3389,28 @@ Vue.directive('resize', {
 				if (format && format.indexOf('{0}') !== -1)
 					return format.replace('{0}', value);
 				return value;
-			},
+            },
+
+            $expand(elem, propName) {
+                let arr = elem[propName];
+                if (arr.$loaded)
+                    return;
+
+                let self = this,
+                    root = window.$$rootUrl,
+                    url = root + '/_data/expand',
+                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+
+                dataservice.post(url, jsonData).then(function (data) {
+                    for (let el of data[propName])
+                        arr.push(arr.$new(el));
+                }).catch(function (msg) {
+                    self.$alertUi(msg);
+                 });
+
+                arr.$loaded = true;
+            },
+
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
 			},
@@ -3173,7 +3456,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20170915-7033*/
+/*20170919-7035*/
 /* controllers/shell.js */
 
 (function () {
@@ -3281,19 +3564,26 @@ Vue.directive('resize', {
 		}
 	};
 
+    /**
+            <tree-item
+                :item="itm" :key="index" label="title" icon="icon" title="title"
+                :subitems="'menu'" :click="navigate" :get-href="itemHref"  >
+            </tree-item>
+     */
 
 	const a2SideBar = {
-		// TODO: разные варианты меню
+        // TODO: 
+        // 1. разные варианты меню
+        // 2. folderSelect как функция 
 		template: `
 <div :class="cssClass">
     <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
-        <ul class="tree-view">
-            <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
-                :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :get-href="itemHref" :is-active="isActive" :has-icon="true" :wrap-label="true">
-            </tree-item>
-        </ul>
+        <tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
+            :options="{folderSelect: folderSelect, label: 'title', title: 'title',
+                subitems: 'menu',
+                icon:'icon', wrapLabel: true, hasIcon: true}">
+        </tree-view>
     </div>
     <div v-else class="side-bar-title" @click.prevent="toggle">
         <span class="side-bar-label" v-text="title"></span>
@@ -3334,7 +3624,10 @@ Vue.directive('resize', {
 		methods: {
 			isActive(item) {
 				return this.seg1 === item.url;
-			},
+            },
+            folderSelect(item) {
+                return !!item.url;
+            },
 			navigate(item) {
 				if (this.isActive(item))
 					return;

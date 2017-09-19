@@ -18,7 +18,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var table = new TagBuilder("table", "prop-grid");
+            var table = new TagBuilder("table", "prop-grid", IsInGrid);
             if (onRender != null)
                 onRender(table);
             MergeAttributes(table, context);

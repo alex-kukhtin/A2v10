@@ -4,32 +4,31 @@
     <meta charset="utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="rootUrl" content="" />
     <title></title>
     <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="app" style="padding:20px;width:250px;border:1px solid brown;margin:20px;">
+    <div id="app" style="padding:20px;width:350px;border:1px solid brown;margin:20px;">
         <h3>tree view component test</h3>
         <div style="margin-bottom:15px">
-            <label>
+            <label class="checkbox">
                 <input type="checkbox" v-model="hasIcon" />
-                Has Icon
+                <span>Has Icon</span>
             </label>
-            <label>
+            <label class="checkbox">
                 <input type="checkbox" v-model="wrapLabel" />
-                Wrap Label
+                <span>Wrap Label</span>
             </label>
-            <button @click="addElem">Add element</button>
+            <button class="btn" @click="addElem">Add</button>
         </div>
-        <ul class="tree-view" style="border:1px solid silver;height:200px;">
-            <tree-item v-for="(itm, index) in items" 
-               :item="itm" :key="index" :label="'name'" icon="icon" title="name"
-               :subitems="'menu'" :click="click" :is-active="isActive" :has-icon="hasIcon" :wrap-label="wrapLabel">
-            </tree-item>
-        </ul>
+        <tree-view :items="items" :is-active="isActive" :click="click" 
+                   :options="{label: 'name', title: 'name', subitems: 'menu', staticIcons:['folder', 'file'], wrapLabel: wrapLabel, hasIcon: hasIcon, folderSelect: true}"
+            style="border:1px solid silver;height:200px;">
+        </tree-view>
     </div>
     <script src="/scripts/vue.js"></script>
-    <script src="/app/components/treeview.js"></script>
+    <script src="/scripts/main.js"></script>
     <script>
         (function () {
 

@@ -171,6 +171,7 @@
     <Content Include="Less\Pager.less" />
     <Content Include="Less\PropertyGrid.less" />
     <Content Include="Less\Splitter.less" />
+    <Content Include="Less\Layout.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

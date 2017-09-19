@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -15,11 +16,15 @@ namespace A2v10.Xaml
 
     }
 
-    public class TableCell : ContentControl
+    public class TableCell : UiContentElement
     {
 
         public Int32? ColSpan { get; set; }
         public Int32? RowSpan { get; set; }
+        public VerticalAlign VAlign { get; set; }
+        public WrapMode Wrap { get; set; }
+
+        public Boolean Validate { get; set; }
 
         public Object ItemsSource { get; set; }
 
@@ -30,6 +35,12 @@ namespace A2v10.Xaml
                 onRender(td);
 
             MergeAttributes(td, context);
+
+            if (VAlign != VerticalAlign.Default)
+                td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
+
+            if (Wrap != WrapMode.Default)
+                td.AddCssClass(Wrap.ToString().ToKebabCase());
 
             if (Content is ITableControl)
                 td.AddCssClass("ctrl");
@@ -44,6 +55,15 @@ namespace A2v10.Xaml
             MergeAttributeInt32(td, context, nameof(RowSpan), "rowspan", RowSpan);
             td.RenderStart(context);
             RenderContent(context);
+            /*
+             * Никакого толку, содержимое в атрибуте
+            if (Validate)
+            {
+                var val = new TagBuilder("validator-control");
+                val.MergeAttribute(":item", "row");
+                val.MergeAttribute("prop", "Sum");
+                val.Render(context);
+            }*/
             td.RenderEnd(context);
         }
     }

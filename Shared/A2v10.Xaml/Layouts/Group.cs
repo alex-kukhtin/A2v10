@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-    public class Group : Container
+    public class Group : Container, ITableControl
     {
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {

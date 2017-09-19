@@ -1,10 +1,10 @@
-﻿/*20170911-7030*/
+﻿/*20170918-7034*/
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper">
-	<span toggle class="popover-title"><i :class="iconClass"></i> <span v-text="title"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="title"></span></span>
 	<div class="popup-body">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -31,9 +31,15 @@ Vue.component('popover', {
 		url: String,
 		title: String
 	},
-	computed: {
-		iconClass() {
-			return "ico po-ico" + this.icon ? (' ico-' + this.icon) : '';
+    computed: {
+        hasIcon() {
+            return !!this.icon;
+        },
+        iconClass() {
+            let cls = "ico po-ico";
+            if (this.icon)
+                cls += ' ico-' + this.icon;
+            return cls;
 		},
 		visible() {
 			return this.url && this.state === 'shown';

@@ -1,4 +1,4 @@
-﻿/*20170915-7033*/
+﻿/*20170919-7035*/
 /* controllers/shell.js */
 
 (function () {
@@ -106,19 +106,26 @@
 		}
 	};
 
+    /**
+            <tree-item
+                :item="itm" :key="index" label="title" icon="icon" title="title"
+                :subitems="'menu'" :click="navigate" :get-href="itemHref"  >
+            </tree-item>
+     */
 
 	const a2SideBar = {
-		// TODO: разные варианты меню
+        // TODO: 
+        // 1. разные варианты меню
+        // 2. folderSelect как функция 
 		template: `
 <div :class="cssClass">
     <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
-        <ul class="tree-view">
-            <tree-item v-for="(itm, index) in sideMenu" :folder-select="!!itm.url"
-                :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :get-href="itemHref" :is-active="isActive" :has-icon="true" :wrap-label="true">
-            </tree-item>
-        </ul>
+        <tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
+            :options="{folderSelect: folderSelect, label: 'title', title: 'title',
+                subitems: 'menu',
+                icon:'icon', wrapLabel: true, hasIcon: true}">
+        </tree-view>
     </div>
     <div v-else class="side-bar-title" @click.prevent="toggle">
         <span class="side-bar-label" v-text="title"></span>
@@ -159,7 +166,10 @@
 		methods: {
 			isActive(item) {
 				return this.seg1 === item.url;
-			},
+            },
+            folderSelect(item) {
+                return !!item.url;
+            },
 			navigate(item) {
 				if (this.isActive(item))
 					return;

@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-    public abstract class CheckBoxBase : ValuedControl
+    [ContentProperty("Label")]
+    public abstract class CheckBoxBase : ValuedControl, ITableControl
     {
         internal abstract String ControlType { get; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tag = new TagBuilder("label", ControlType);
+            var tag = new TagBuilder("label", ControlType, IsInGrid);
             if (onRender != null)
                 onRender(tag);
             MergeAttributes(tag, context);

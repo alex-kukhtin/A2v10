@@ -8,16 +8,14 @@
 		<Button Command="{BindCmd Close}">Закрыть</Button>
 	</Dialog.Buttons>
 	<CollectionView RunAt="Server" ItemsSource="{Bind Customers}">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+        <Toolbar>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            <Separator />
+            <Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+        </Toolbar>
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-			<DataGrid.Toolbar>
-				<Toolbar>
-					<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-					<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-					<Separator />
-					<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
-				</Toolbar>
-			</DataGrid.Toolbar>
 			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
 			<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
 			<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>

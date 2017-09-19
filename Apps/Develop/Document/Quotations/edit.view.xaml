@@ -13,40 +13,62 @@
 	</Page.Toolbar>
 	<Page.Taskpad>
 		<Taskpad Width="25%">
-
-		</Taskpad>
+            <CheckBox Value="{Bind Contract.NeedUnderwriting}">Потрібен андеррайтінг</CheckBox>
+            <Button Block="True">Відправити на андеррйтінг</Button>
+            <Button Block="True">Створити договір</Button>
+        </Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
 		<Tab Header="Котировка">
 			<Grid>
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
-				<TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}"/>
-			</Grid>
-			<Table GridLines="Both">
-				<TableRow>
-					<TableCell>Страхователь</TableCell>
-					<TextBox Value="{Bind Contract.InsurantName}">
-						<TextBox.AddOns>
-							<Hyperlink Icon="Search" />
-							<Hyperlink Icon="Clear" />
-						</TextBox.AddOns>
-					</TextBox>
-				</TableRow>
-			</Table>
-
-			<Button Block="True" Command="{BindCmd Append, Argument={Bind Contract.Lists}}">+ List</Button>
-			<Text>
+                <TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}">
+                    <TextBox.AddOns>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Contract.Insurant}}"/>
+                        <Hyperlink Icon="Clear"/>
+                    </TextBox.AddOns>
+                </TextBox>
+                <Static Value="{Bind Contract.InsurantName}" Label="Страхователь" Required="True" Grid.Col="2" Grid.ColSpan="2" Grid.Row="2">
+                    <Static.AddOns>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Contract.Insurant}}"/>
+                        <Hyperlink Icon="Clear" />
+                    </Static.AddOns>
+                </Static>
+                <StackPanel Grid.Col="1" Grid.Row="3">Text in cell</StackPanel>
+			    <Table Grid.Row="3" Grid.Col="3" GridLines="Both" Columns="Fit, 100, 100" If="{Bind Contract.NeedUnderwriting}">
+				    <TableRow>
+					    <TableCell>Страхователь</TableCell>
+					    <TextBox Value="{Bind Contract.InsurantName}">
+						    <TextBox.AddOns>
+							    <Hyperlink Icon="Search" />
+							    <Hyperlink Icon="Clear" />
+						    </TextBox.AddOns>
+					    </TextBox>
+                        <Static Value="{Bind Contract.InsurantName}">
+                            <Static.AddOns>
+                                <Hyperlink Icon="Search" />
+                                <Hyperlink Icon="Clear" />
+                            </Static.AddOns>
+                        </Static>
+                    </TableRow>
+			    </Table>
+            </Grid>
+            <Text>
 				Text here
 				<Span Italic="True" Bold="True" Content="{Bind Contract.Id, Format='contract id = {0}'}"></Span>
 				And more text
 			</Text>
 			<TabPanel ItemsSource="{Bind Contract.Lists}">
+                <TabPanel.Header>
+                    <Hyperlink Size="Small" Icon="PlusBox" Command="{BindCmd Append, Argument={Bind Contract.Lists}}">додати перелік</Hyperlink>
+                </TabPanel.Header>
 				<Tab>
 					<Tab.Header>
 						<Group>
-							<Code Content="{Bind $Number, Format='Перелік {0} '}"></Code>
+							<Span Content="{Bind $Number, Format='Перелік {0} '}"></Span>
 							<Code Content="{Bind Vehicles.Count, Format='({0})'}"></Code>
-						</Group>
+                            <Hyperlink Size="Small" Icon="DeleteBox" Command="{BindCmd Remove, Confirm='Видалити перелік?'}"/>
+                        </Group>
 					</Tab.Header>
 					<Code Content="{Bind Sum}"></Code>
 					<Hyperlink Command="{BindCmd Append, Argument={Bind Vehicles}}">add vehicle</Hyperlink>
@@ -55,24 +77,39 @@
 						<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 					</DataGrid>
 					-->
+                    <Header Size="Small">Об'єкти у переліку</Header>
 					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+                        <!--
 						<Code Content="{Bind Parent.ItemsSource}"></Code>
-						<!--
 						<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
 							<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 						</DataGrid>
-						-->
-						<Table GridLines="Both" ItemsSource="{Bind Parent.ItemsSource}">
+                        <Pager Source="{Bind Parent.Pager}"></Pager>
+                        -->
+                        <Table GridLines="Both" Border="True" Compact="False"
+                               ItemsSource="{Bind Parent.ItemsSource}" Columns="Fit,Fit,Fit,200,300,Fit">
 							<Table.Header>
 							</Table.Header>
 							<TableRow>
+                                <TableCell VAlign="Middle" RowSpan="5">1</TableCell>
 								<TableCell>Тариф</TableCell>
-								<TableCell Content="{Bind Id, Format='id = {0}'}"/>
-							</TableRow>
+                                <TableCell>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox />
+                                        <TextBox />
+                                    </StackPanel>
+                                </TableCell>
+                                <TableCell />
+                                <TableCell />
+                                <TableCell VAlign="Middle" RowSpan="5">
+                                    <Hyperlink Size="Small" Icon="DeleteBox" Command="{BindCmd Remove, Confirm='Видалити об&#x2019;єкт?'}"/>
+                                </TableCell>
+                            </TableRow>
 							<TableRow>
 								<TableCell>Страхова сума</TableCell>
-								<TableCell Content="{Bind Sum, Format='sum = {0}'}"></TableCell>
+								<TableCell Wrap="NoWrap" Validate="True"  Content="{Bind Sum, Format='Страхова сума (val) = {0}', DataType=Currency}"></TableCell>
 								<TextBox Value="{Bind Sum}"></TextBox>
+                                <Static Value="{Bind Sum, DataType=Currency, Format='Страхова сума = {0}'}"></Static>
 							</TableRow>
 							<TableRow>
 								<TableCell>Марка/модель</TableCell>
@@ -84,8 +121,19 @@
 								<Code Content="{Bind Volume}"></Code>
 								<Hyperlink Content="Ссылка"></Hyperlink>
 							</TableRow>
+                            <TableRow>
+                                <TableCell Wrap="NoWrap">Протиугінний засіб</TableCell>
+                                <CheckBox Wrap="NoWrap" Label="Оренда/прокат"/>
+                                <CheckBox Label="Пошкодження"/>
+                                <TableCell>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox Label="Оренда/прокат"/>
+                                        <CheckBox Label="Пошкодження"/>
+                                    </StackPanel>
+                                </TableCell>
+                            </TableRow>
 							<TableRow>
-								<TableCell ColSpan="2">
+								<TableCell ColSpan="3">
 									<Table ItemsSource="{Bind OptionalEquipment}" GridLines="Both">
 										<TableRow>
 											<TableCell>1</TableCell>
@@ -98,6 +146,7 @@
 									</Table>
 								</TableCell>
 							</TableRow>
+                            <TableRowDivider></TableRowDivider>
 						</Table>
 						<Pager Source="{Bind Parent.Pager}"></Pager>
 					</CollectionView>

@@ -2,11 +2,29 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Splitter>
-		<Block Splitter.Width="200px">
-			<Text>Это левая панель сплиттера</Text>
-		</Block>
+		<Group>
+            <Toolbar>
+                <Button Icon="Reload" Command="{BindCmd Reload}"/>
+            </Toolbar>
+            <TreeView ItemsSource="{Bind InsObjects}" AutoSelect="FirstItem"  FolderSelect="True" 
+                      IconFolder="Folder" IconItem="Steps">
+                <TreeViewItem ItemsSource="{Bind InsObjects}" Label="{Bind Name}" Tip="{Bind Id}"/>
+            </TreeView>
+		</Group>
 
-		<TabPanel FixedHeader="True" Border="True">
+        <!---->
+        <TabPanel Splitter.Width="2*" Border="False">
+            <TabPanel.Header>
+                <Hyperlink Size="Small" Icon="PlusBox" Command="{BindCmd Append, Argument={Bind InsObjects}}">додати перелік</Hyperlink>
+            </TabPanel.Header>
+            <Tab Header="Code">
+                <Header Size="Default">Default header</Header>
+                <Header Size="Large">Large Header</Header>
+                <Header Size="Medium">Medium Header</Header>
+                <Header Size="Small">Small Header</Header>
+                <Header Size="Mini">Mini Header</Header>
+                <Code Multiline="True" Content="{Bind InsObjects.$selected}"></Code>
+            </Tab>
 			<Tab Header="Задачи">
 				<Text>Задачи</Text>
 			</Tab>

@@ -13,14 +13,14 @@ namespace A2v10.Xaml
 
 
         #region Attached Properties
-        static Lazy<IDictionary<Object, Width>> _attachedWidths = new Lazy<IDictionary<Object, Width>>(() => new Dictionary<Object, Width>());
+        static Lazy<IDictionary<Object, Length>> _attachedWidths = new Lazy<IDictionary<Object, Length>>(() => new Dictionary<Object, Length>());
 
-        public static void SetWidth(Object obj, Width width)
+        public static void SetWidth(Object obj, Length width)
         {
             AttachedHelpers.SetAttached(_attachedWidths, obj, width);
         }
 
-        public static Width GetWidth(Object obj)
+        public static Length GetWidth(Object obj)
         {
             return AttachedHelpers.GetAttached(_attachedWidths, obj);
         }
@@ -38,8 +38,8 @@ namespace A2v10.Xaml
             MergeAttributes(spl, context);
             spl.AddCssClass(Orientation.ToString().ToLowerInvariant());
             // width
-            Width p1w = GetWidth(Children[0]) ?? Width.Fr1();
-            Width p2w = GetWidth(Children[1]) ?? Width.Fr1();
+            Length p1w = GetWidth(Children[0]) ?? Length.Fr1();
+            Length p2w = GetWidth(Children[1]) ?? Length.Fr1();
 
             String rowsCols = Orientation == Orientation.Vertical ? "grid-template-columns" : "grid-template-rows";
             spl.MergeStyle(rowsCols, $"{p1w} 6px {p2w}");

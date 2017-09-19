@@ -1,11 +1,24 @@
 ﻿(function() {
 
+    const utlis = require('utils');
 
     let textBoxTemplate =
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input v-focus v-model.lazy="item[prop]" :class="inputClass"/>
+		<slot></slot>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
+</div>
+`;
+
+    let staticTemplate =
+        `<div :class="cssClass">
+	<label v-if="hasLabel" v-text="label" />
+	<div class="input-group static">
+		<span v-text="text" :class="inputClass"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -20,12 +33,6 @@
 
     let baseControl = component('control');
 
-	const defaultObj = {
-		_validate_() {
-			return true;
-		}
-	};
-
     Vue.component('textbox', {
         extends: baseControl,
         template: textBoxTemplate,
@@ -36,6 +43,21 @@
 				}
 			},
             prop: String
-		}		
+        }
     });
+
+    Vue.component('static', {
+        extends: baseControl,
+        template: staticTemplate,
+        props: {
+            item: {
+                type: Object, default() {
+                    return {};
+                }
+            },
+            prop: String,
+            text: String
+        }
+    });
+
 })();

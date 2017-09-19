@@ -4,6 +4,7 @@
 (function () {
 
     const http = require('std:http');
+    const urlTools = require('std:url');
 
     Vue.component('include', {
         template: '<div :class="implClass"></div>',
@@ -50,12 +51,18 @@
         },
         watch: {
 			src: function (newUrl, oldUrl) {
-				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
-					// Only the search has changed. No need to reload
-					this.currentUrl = newUrl;
-				} else {
+                if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+                    // Only the search has changed. No need to reload.
+                    this.currentUrl = newUrl;
+                }
+                else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
+                    // Id has changed after save. No need to reload.
+                    this.currentUrl = newUrl;
+                }
+				else {
 					this.loading = true; // hides the current view
-					this.currentUrl = newUrl;
+                    this.currentUrl = newUrl;
+                    console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },

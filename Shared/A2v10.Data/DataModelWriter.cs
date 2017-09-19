@@ -129,6 +129,7 @@ namespace A2v10.Data
 				bool bLast = (i == (x.Length - 1));
 				String prop = x[i];
 				Object propValue;
+                // RowNumber is 1-based!
 				if (currentData.TryGetValue(prop, out propValue))
 				{
 					if (propValue is IList<Object>)
@@ -137,10 +138,10 @@ namespace A2v10.Data
 						for (int j=0; j<list.Count; j++)
 						{
 							var currVal = list[j] as ExpandoObject;
-							currVal.Set("RowNumber", j);
+							currVal.Set("RowNumber", j + 1);
 							currVal.Set("ParentId", currentId);
 							if (parentIndex != null)
-								currVal.Set("ParentRowNumber", parentIndex.Value);
+								currVal.Set("ParentRowNumber", parentIndex.Value + 1);
 							if (bLast)
 								yield return currVal;
 							else

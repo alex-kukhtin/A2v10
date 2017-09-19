@@ -1,36 +1,42 @@
 ﻿@import "Variables.less";
 
-@table-brd-color:#ccc;
 
-@table-hdr-bg-color:#eee;
+@table-hdr-bg-color: #f5f5f5;
+
+@a2-table-brd-color:#ddd;
 
 table {
     th {
         border: 1px solid @table-brd-color;
     }
+
+    col.fit {
+        width:.1%;
+    }
 }
 
 table.bordered {
+    // use OUTLINE
 }
 
 table.grid-vertical, table.grid-both {
-    > tbody > tr > td {
-        border-left: 1px solid @table-brd-color;
-        border-right: 1px solid @table-brd-color;
-    }
-
-    > thead > tr > th {
-        border-left: 1px solid @table-brd-color;
-        border-right: 1px solid @table-brd-color;
+    > tbody > tr > td, thead > tr> th {
+        border-left-width: 1px;
+        border-left-style:solid;
+        border-right-width: 1px;
+        border-right-style:solid;
     }
 }
 
 table.grid-horizontal, table.grid-both {
     > tbody > tr > td {
-        border-top: 1px solid @table-brd-color;
-        border-bottom: 1px solid @table-brd-color;
+        border-top-width: 1px;
+        border-top-style:solid;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
     }
 }
+
 
 table.striped {
     > tbody > tr:nth-of-type(even) {
@@ -39,34 +45,108 @@ table.striped {
 }
 
 table.a2-table {
-    table-layout:auto;
-    background-color:#f8f8f8;
+    table-layout: auto;
+    //background-color: #f8f8f8;
+    background-color: #fcfaf6;
+
+    &.bordered {
+        margin: 1px;
+        outline: 1px solid @a2-table-brd-color;
+        max-width: ~"calc(100% - 2px)";
+    }
+
     tbody > tr > td {
         padding: 4px 6px;
-        vertical-align:baseline;
+        vertical-align: top;
+        border-color: @a2-table-brd-color;
 
         label {
-            display:inline-block;
+            display: inline-block;
         }
-        .control-group {            
-            margin: -1px;
+
+        .control-group {
+            margin: 0;
+
             .input-group {
-                border-color:@table-brd-color;
+                //border-color: @a2-table-brd-color;
+                border-style: none;
             }
         }
+
         .a2-table {
             margin: -1px;
         }
     }
 
     > thead > tr > th {
-        padding:4px 6px;
-        vertical-align:middle;
-        background-color:@table-hdr-bg-color;
+        padding: 4px 6px;
+        vertical-align: middle;
+        background-color: @table-hdr-bg-color;
     }
 
     td.ctrl {
-        padding:0;
-        vertical-align:top;
+        padding: 0;
+        vertical-align: top;
+
+        .checkbox, .radio {
+            margin: 2px 6px;
+        }
+
+        .stack-panel.horizontal {
+            .control-group + .control-group {
+                border-left:1px solid @a2-table-brd-color;
+            }
+        }
+    }
+
+    td.row-divider {
+        padding: 0;
+        height: 1px;
+        background-color: @a2-table-brd-color;
+    }
+
+    tr:last-child td.row-divider {
+        display: none;
+    }
+}
+
+.a2-table.compact {
+    font-size: 95%;
+
+    tbody > tr > td {
+        padding: 2px 4px;
+
+        .input-group {
+            padding:0;
+        }
+
+        .input-group input {
+            font-size: 97%;
+            height: 1.67em;
+        }
+
+        .input-group.static > span {
+            line-height:1.67em;
+        }
+
+        &.row-divider {
+            padding:0;
+        }
+
+        &.ctrl {
+            padding: 0;
+            vertical-align:top;
+
+            .checkbox, .radio {
+                margin: 0 6px 0 4px;
+                :before, :after {
+                    width:13px;
+                    height:13px;
+                }
+                > span {
+                    padding-left:18px;
+                }
+            }
+        }
     }
 }

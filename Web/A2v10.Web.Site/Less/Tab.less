@@ -4,22 +4,31 @@
 @tab-active-brd-color:gold;
 @tab-bg-color:#f8f8f8;
 @tab-hover-color:#eee;
-@tab-header-padding:6px 12px;
+@tab-header-padding:6px 10px;
 
 .tab-panel {
     padding: 0;
-    align-self: stretch;
-    overflow:auto;
-    height: auto;
-    background-color:@tab-bg-color;
     padding-top:6px;
+    align-self: stretch;
+    overflow: auto;
+    height: auto;
+    background-color: @tab-bg-color;
+    display: grid;
+    grid-gap: 0;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr auto;
+    align-items: stretch;
+    height: 100%;
 
     .tab-header {
         background-color: @tab-bg-color;
         margin: 0;
         padding: 0 6px 0;
+        grid-row: 1;
+        grid-column: 1;
+        border-bottom: 1px solid @tab-brd-color;
 
-        li {
+        > li {
             display: inline-block;
             padding: @tab-header-padding;
             list-style: none;
@@ -29,7 +38,7 @@
             margin-bottom: -1px;
             color: @link-color;
 
-            .ico {
+            > .ico {
                 color: @icon-color;
             }
 
@@ -49,7 +58,7 @@
             }
 
             &.active.yellow {
-                background-color:lightyellow;
+                background-color: lightyellow;
             }
 
             &.active:hover {
@@ -60,29 +69,26 @@
         }
     }
 
+    .pane-header {
+        grid-row: 1;
+        grid-column: 2;
+        align-self: stretch;
+        border-bottom: 1px solid @tab-brd-color;
+        padding-right: 6px;
+        color: #777;
+        display:inline-flex;
+        align-items:center;
+    }
+
     .tab-content {
-        background-color:white;
-        border-top: 1px solid @tab-brd-color;
+        grid-row: 2;
+        grid-column: 1 / span 2;
+        background-color: white;
+        overflow:auto;
     }
 
     .tab-content.yellow {
-        background-color:lightyellow;
-    }
-}
-
-.tab-panel.fixed-header {
-
-    > .tab-header {
-        height: 32px;
-    }
-
-    > .tab-content {
-        overflow: auto;
-        height: ~"calc(100% - 33px)";
-    }
-
-    &.bordered > .tab-content {
-        height: ~"calc(100% - 34px)";
+        background-color: lightyellow;
     }
 }
 
@@ -92,5 +98,6 @@
     }
     > .tab-content {
         border: 1px solid @tab-brd-color;
+        border-top:none;
     }
 }

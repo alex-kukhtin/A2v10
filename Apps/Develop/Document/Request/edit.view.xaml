@@ -17,12 +17,12 @@
 			<!--
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
-			<Button Block="True">Оформить сделку</Button>
-			<Button Block="True" Tip="Создать другую заявку на основании этой" 
+			<Button Block="True" Icon="File">Оформить сделку</Button>
+			<Button Block="True" Icon="Copy" Tip="Создать другую заявку на основании этой" 
 					Command="{BindCmd Exec}">Создать на основании</Button>
 			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
 				<TextBox.AddOns>
-					<Hyperlink Icon="Search"/>
+					<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Document.Contract}}"/>
 					<Hyperlink Icon="Clear"/>
 				</TextBox.AddOns>
 			</TextBox>
@@ -37,7 +37,7 @@
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
 				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
-			<Code Content="{Bind Document.Company}"></Code>
+			<Code Content="{Bind Document.Contract}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
@@ -80,7 +80,8 @@
 				</CollectionView.Sort>
 				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
 					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
-					<DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
+                    <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
+                    <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
 					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
 					<DataGridColumn Header="Price" Content="{Bind Price, DataType=Currency}" Align="Right" Fit="True"/>
 					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
@@ -94,8 +95,20 @@
 					</DataGridColumn>
 					<DataGridColumn>
 						<Group>
-							<Button Icon="Delete" Command="{BindCmd Remove}"></Button>
-							<Popover Icon="Info" Placement="Left">
+							<Button Icon="Delete" Command="{BindCmd Remove, Confirm='Are you sure?'}"></Button>
+                            <Button Icon="Trash">
+                                <Button.Command>
+                                    <BindCmd Command="Remove">
+                                        <BindCmd.Confirm>
+                                            <Confirm 
+                                                Message="{Bind Qty, Format='Sure to remove with qty={0}'}" 
+                                                OkText="Да, удалить" CancelText="Нет, оставить"
+                                                Title="{Bind Qty, Format='Title [{0}]'}"/>
+                                        </BindCmd.Confirm>
+                                    </BindCmd>
+                                </Button.Command>
+                            </Button>
+                            <Popover Icon="Info" Placement="Left">
 								<Text>
 									Информация о товаре:
 									Наименование:

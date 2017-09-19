@@ -29,7 +29,7 @@ TODO:
 				{ title: "Объекты строительства", url: 'buildings', icon: 'step' },
                 { title: "Edit 3 segment", url: 'edit/5', icon:'dashboard' },
                 {
-                    title: "Menu Folder", icon: 'folder', menu: [
+                    title: "Menu Folder", icon: 'folder', url:'folder', menu: [
                         { title: "Suppliers 2 (with long text <b>bold</b> escaped <script></script>)", url: 'suppliers1', icon: 'save' },
                         { title: "Customers 2", url: 'customers2', icon:'dot'}
                     ]

@@ -28,6 +28,17 @@ namespace A2v10.Xaml
             MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
         }
 
+        internal void RenderContent(RenderContext context, Object content)
+        {
+            // if it's a binding, it will be added via MergeAttribute
+            if (content == null)
+                return;
+            if (content is UIElementBase)
+                (content as UIElementBase).RenderElement(context);
+            else if (content != null)
+                context.Writer.Write(content.ToString());
+        }
+
         internal void RenderIcon(RenderContext context, Icon icon)
         {
             if (icon == Icon.NoIcon)

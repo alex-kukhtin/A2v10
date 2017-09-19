@@ -29,9 +29,7 @@ TODO:
                 <span v-text="tab.header"></span>
             </li>
         </ul>
-		<template>
-			<slot name="title" />
-		</template>
+        <slot name="title" />
         <div class="tab-content" :class="contentCssClass">
             <slot />
         </div>
@@ -44,9 +42,7 @@ TODO:
 				</slot>
             </li>
         </ul>
-		<template>
-			<slot name="title" />
-		</template>
+		<slot name="title" />
         <div class="tab-content">
             <div class="tab-item" v-if="isActiveTab(item)" v-for="(item, tabIndex) in items" :key="tabIndex">
                 <slot name="items" :item="item" :index="tabIndex" />
@@ -135,7 +131,7 @@ TODO:
 					this._index = this.items.indexOf(item);
             },
 			isActiveTab(item) {
-                return item == this.activeTab;
+                return item === this.activeTab;
             },
             defaultTabHeader(item, index) {
                 return 'Tab ' + (index + 1);

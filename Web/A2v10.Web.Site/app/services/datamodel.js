@@ -1,4 +1,4 @@
-﻿/*20170912-7031*/
+﻿/*20170918-7034*/
 /* services/datamodel.js */
 (function() {
 
@@ -210,6 +210,11 @@
         this._root_.$setDirty(true);
         this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
         platform.set(this, "$selected", ne);
+        // set RowNumber
+        if ('$rowNo' in newElem._meta_) {
+            let rowNoProp = newElem._meta_.$rowNo;
+            newElem[rowNoProp] = len; // 1-based
+        }
         return ne;
     };
 
@@ -219,6 +224,8 @@
     };
 
     _BaseArray.prototype.$remove = function (item) {
+        if (!item)
+            return;
         let index = this.indexOf(item);
         if (index === -1)
             return;
@@ -230,6 +237,13 @@
             index -= 1;
         if (this.length > index)
             platform.set(this, '$selected', this[index]);
+        // renumber rows
+        if ('$rowNo' in item._meta_) {
+            let rowNoProp = item._meta_.$rowNo;
+            for (let i = 0; i < this.length; i++) {
+                this[i][rowNoProp] = i + 1; // 1-based
+            }
+        }
     };
 
     _BaseArray.prototype.$copy = function (src) {
@@ -279,6 +293,21 @@
         if (arrayItem) {
             defArrayItem(obj);
         }
+
+        if (meta.$hasChildren) {
+            defHiddenGet(obj.prototype, "$hasChildren", function () {
+                let hcName = this._meta_.$hasChildren;
+                if (!hcName) return undefined;
+                return this[hcName];
+            });
+        }
+        if (meta.$items) {
+            defHiddenGet(obj.prototype, "$items", function () {
+                let itmsName = this._meta_.$items;
+                if (!itmsName) return undefined;
+                return this[itmsName];
+            });
+        }
     }
 
     function defArrayItem(elem) {
@@ -286,11 +315,17 @@
             let arr = this._parent_;
             arr.$remove(this);
         };
-        elem.prototype.$select = function () {
-			let arr = this._parent_;
+        elem.prototype.$select = function (root) {
+			let arr = root || this._parent_;
 			if (arr.$selected === this)
 				return;
             platform.set(arr, "$selected", this);
+        };
+
+        elem.prototype.$isSelected = function (root) {
+            let arr = root || this._parent_;
+            return arr.$selected === this;
+
         };
     }
 
@@ -478,7 +513,7 @@
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
-				if (Array.isArray(trg)) {
+                if (Array.isArray(trg)) {
 					platform.set(trg, "$selected", null);
 					trg.$copy(src[prop]);
 					// copy rowCount
@@ -488,7 +523,8 @@
 							trg.$RowCount = src[rcProp];
 						else
 							trg.$RowCount = 0;
-					}
+                    }
+                    // try to select old value
 				} else {
 					if (utils.isPrimitiveCtor(ctor))
 						platform.set(this, prop, src[prop]);

@@ -101,6 +101,8 @@ namespace A2v10.Data
                 sb.Append($"$name: '{meta.Name}',");
             if (!String.IsNullOrEmpty(meta.RowNumber))
                 sb.Append($"$rowNo: '{meta.RowNumber}',");
+            if (!String.IsNullOrEmpty(meta.HasChildren))
+                sb.Append($"$hasChildren: '{meta.HasChildren}',");
             if (sb.Length == 0)
                 return null;
             sb.Remove(sb.Length - 1, 1); // remove tail comma
@@ -117,6 +119,8 @@ namespace A2v10.Data
                 .Append(':');
                 // TODO: special data type
                 if (fm.ItemType == FieldType.Array)
+                    sb.Append(fm.RefObject + "Array");
+                else if (fm.ItemType == FieldType.Tree)
                     sb.Append(fm.RefObject + "Array");
                 else if (fm.ItemType == FieldType.Object)
                     sb.Append(fm.RefObject);

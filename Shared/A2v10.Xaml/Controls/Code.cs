@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var code = new TagBuilder(Multiline ? "pre" : "code");
+            var code = new TagBuilder(Multiline ? "pre" : "code", null, IsInGrid);
             if (onRender != null)
                 onRender(code);
             if (Multiline)

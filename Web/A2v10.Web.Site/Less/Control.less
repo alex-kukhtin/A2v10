@@ -36,7 +36,7 @@
         display: none;
         margin: 0;
         left: -1px;
-        width:auto;
+        width: auto;
         font-size: 96%;
         bottom: 100%;
         padding: 2px 6px 4px 6px;
@@ -74,14 +74,14 @@
         .error {
             display: list-item;
             list-style-type: none;
-            padding-left:6px;
+            padding-left: 6px;
             white-space: normal;
-            max-width:190px;
+            max-width: 190px;
             // custom bullet
             &:before {
-                content:'\2022';
-                position:absolute;
-                left:3px;
+                content: '\2022';
+                position: absolute;
+                left: 3px;
             }
         }
     }
@@ -94,6 +94,20 @@
         position: relative;
         padding: 1px 0;
         width: auto;
+
+        input, select {
+            height: @control-height;
+        }
+
+        &.static {
+            background-color: #f8f8f8;
+            > span {
+                padding: 0 5px;
+                line-height: @control-height;
+                display: block;
+                width: 100%;
+            }
+        }
 
         > a {
             align-self: stretch;
@@ -120,9 +134,16 @@
 
     &:hover .input-group,
     .input-group.focus {
-        border-color: @link-hover-color!important;
+        border-color: @link-hover-color !important;
         box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     }
+
+    /* можно запретить :hover */
+    &:hover .input-group.static {
+        border-color:@control-border!important;
+        box-shadow:none;
+    }
+
     // для "схлопнутых" элементов
     .input-group.focus {
         z-index: @focus-index;
@@ -196,4 +217,12 @@
 
 .data-grid .control-group {
     margin:0;
+}
+
+
+.a2-hyperlink.small {
+    font-size:92%;
+    i.ico {
+        font-size:12px;
+    }
 }

@@ -103,7 +103,15 @@
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
-			},
+            },
+            setnewid(state, to) {
+                let root = window.$$rootUrl;
+                let oldRoute = state.route;
+                let newRoute = oldRoute.replace('/new', '/' + to.id);
+                state.route = newRoute;
+                let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
+                window.history.replaceState(null, null, newUrl);
+            },
 			close(state) {
 				if (window.history.length)
 					window.history.back();

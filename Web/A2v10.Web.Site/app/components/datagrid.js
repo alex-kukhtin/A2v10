@@ -1,4 +1,4 @@
-﻿/*20170913-7032*/
+﻿/*20170918-7034*/
 /*components/datagrid.js*/
 (function () {
 
@@ -25,7 +25,6 @@
 
     const dataGridTemplate = `
 <div class="data-grid-container">
-    <slot name="toolbar" />
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>

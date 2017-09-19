@@ -3,9 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Page.Toolbar>
 		<Toolbar>
-			<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
+			<Button Icon="Plus" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
 			<Button Icon="File" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
-			<Button Icon="Delete">Удалить</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
 			<!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action
 					Create Action="Edit"
@@ -28,12 +28,8 @@
 			<DataGridColumn Header="Код" Content="Id" Align="Right" Fit="True"/>
 			<DataGridColumn Header="Номер" Content="SNo" />
 			<DataGridColumn Header="Котрагент">
-				<Popover Text="{Bind Agent.Name}" If="{Bind Agent.Id}">
-					<Popup>
-						<Text>Информация о контрагенте</Text>
-					</Popup>
-				</Popover>
-			</DataGridColumn>
+                <Popover Placement="Right" Text="{Bind Agent.Name}" If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
+            </DataGridColumn>
 			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Примечание" Content="Memo" Command="{BindCmd Open, Url='/document/request/edit'}"/>
 			<DataGridColumn Header="Договор" Content="Contract.FullName" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>

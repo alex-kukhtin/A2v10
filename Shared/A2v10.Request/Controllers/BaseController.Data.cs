@@ -23,6 +23,12 @@ namespace A2v10.Request
                 case "reload":
                     await ReloadData(userId, json, writer);
                     break;
+                case "dbremove":
+                    await DbRemove(userId, json, writer);
+                    break;
+                case "expand":
+                    await ExpandData(userId, json, writer);
+                    break;
                 default:
                     throw new RequestModelException($"Invalid data action {command}");
             }
@@ -69,6 +75,44 @@ namespace A2v10.Request
             loadPrms.Set("UserId", userId);
             loadPrms.Set("Id", rw.Id);
             IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+            WriteDataModel(model, writer);
+        }
+
+        async Task DbRemove(Int64 userId, String json, TextWriter writer)
+        {
+            ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+            String baseUrl = jsonData.Get<String>("baseUrl");
+            Object id = jsonData.Get<Object>("id");
+            var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+            var action = rm.GetCurrentAction();
+            if (action == null)
+                throw new RequestModelException("There are no current action");
+            String deleteProc = action.DeleteProcedure;
+            if (deleteProc == null)
+                throw new RequestModelException("The data model is empty");
+            ExpandoObject execPrms = new ExpandoObject();
+            execPrms.Set("UserId", userId);
+            execPrms.Set("Id", id);
+            await _dbContext.LoadModelAsync(action.CurrentSource, deleteProc, execPrms);
+            writer.Write("{\"status\": \"OK\"}"); // JSON!
+        }
+
+        async Task ExpandData(Int64 userId, String json, TextWriter writer)
+        {
+            ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+            String baseUrl = jsonData.Get<String>("baseUrl");
+            Object id = jsonData.Get<Object>("id");
+            var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+            var action = rm.GetCurrentAction();
+            if (action == null)
+                throw new RequestModelException("There are no current action");
+            String expandProc = action.ExpandProcedure;
+            if (expandProc == null)
+                throw new RequestModelException("The data model is empty");
+            ExpandoObject execPrms = new ExpandoObject();
+            execPrms.Set("UserId", userId);
+            execPrms.Set("Id", id);
+            IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, expandProc, execPrms);
             WriteDataModel(model, writer);
         }
 

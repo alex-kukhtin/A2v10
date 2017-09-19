@@ -20,7 +20,6 @@ namespace A2v10.Xaml
         public Object ItemsSource { get; set; }
 
         public Pager Pager { get; set; }
-        public UIElementBase Toolbar { get; set; }
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
@@ -38,7 +37,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var dataGrid = new TagBuilder("data-grid");
+            var dataGrid = new TagBuilder("data-grid", null, IsInGrid);
             if (onRender != null)
                 onRender(dataGrid);
             var isb = GetBinding(nameof(ItemsSource));
@@ -72,16 +71,6 @@ namespace A2v10.Xaml
                 colIndex++;
             }
 
-            if (Toolbar != null)
-            {
-                var tbTml = new TagBuilder("template");
-                tbTml.MergeAttribute("slot", "toolbar");
-                tbTml.MergeAttribute("scope", "props");
-                tbTml.RenderStart(context);
-                Toolbar.RenderElement(context);
-                tbTml.RenderEnd(context);
-
-            }
             if (Pager != null)
             {
                 var pagerTml = new TagBuilder("template");

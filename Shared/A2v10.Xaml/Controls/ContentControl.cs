@@ -19,13 +19,7 @@ namespace A2v10.Xaml
 
         internal void RenderContent(RenderContext context)
         {
-            // if it's a binding, it will be added via MergeAttribute
-            if (Content == null)
-                return;
-            if (Content is UIElementBase)
-                (Content as UIElementBase).RenderElement(context);
-            else if (Content != null)
-                context.Writer.Write(Content.ToString());
+            RenderContent(context, Content);
         }
 
 		protected override void OnEndInit()

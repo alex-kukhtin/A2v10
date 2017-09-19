@@ -11,8 +11,8 @@ namespace A2v10.Data
         public String Id { get; private set; }
         public String Name { get; private set; }
         public String RowNumber { get; private set; }
+        public String HasChildren { get; private set; }
 
-        public String Items { get; private set; }
         public Boolean IsArrayType { get; set; }
         public Boolean IsRowCount { get; set; }
 
@@ -41,7 +41,10 @@ namespace A2v10.Data
                 case SpecType.RowCount:
                     IsRowCount = true;
                     break;
-			}
+                case SpecType.HasChildren:
+                    HasChildren = field.PropertyName;
+                    break;
+            }
             return fm;
 		}
 

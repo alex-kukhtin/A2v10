@@ -1,5 +1,5 @@
 ﻿
-/*20170905-7026*/
+/*20170918-7034*/
 /* components/modal.js */
 
 (function () {
@@ -72,13 +72,15 @@ TODO: may be icon for confirm ????
             }, 
             buttons: function () {
                 console.warn(this.dialog.style);
+                let okText = this.dialog.okText || 'OK';
+                let cancelText = this.dialog.cancelText || 'Cancel';
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
                 else if (this.dialog.style === 'alert')
-                    return [{ text: 'OK', result: false }];
+                    return [{ text: okText, result: false }];
                 return [
-                    { text: 'OK', result: true },
-                    { text: 'Cancel', result: false }
+                    { text: okText, result: true },
+                    { text: cancelText, result: false }
                 ];
             }
         },

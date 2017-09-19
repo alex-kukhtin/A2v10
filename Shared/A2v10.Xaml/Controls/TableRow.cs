@@ -54,4 +54,16 @@ namespace A2v10.Xaml
                 c.SetParent(this);
         }
     }
+
+    public class TableRowDivider : TableRow
+    {
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+        {
+            var table = (this.Parent as Table);
+            var cols = Math.Max(table.Columns.Count, 1);
+            var tr = new TagBuilder("tr").RenderStart(context);
+            new TagBuilder("td", "row-divider").MergeAttribute("colspan", cols).Render(context);
+            tr.RenderEnd(context);
+        }
+    }
 }

@@ -9,6 +9,14 @@ namespace A2v10.Xaml
         Center
     }
 
+    public enum VerticalAlign
+    {
+        Default,
+        Top,
+        Middle,
+        Bottom
+    }
+
     public enum GridLinesVisibility {
         None,
         Horizontal,
@@ -30,6 +38,23 @@ namespace A2v10.Xaml
         Time,
         Number,
         Currency
+    }
+
+    public enum ControlSize
+    {
+        Default = 0,
+        Large = 1,
+        Medium = Default,
+        Small = 2,
+        Mini = 3
+    };
+
+    public enum WrapMode
+    {
+        Default,
+        Wrap,
+        NoWrap,
+        PreWrap
     }
 
     public enum Icon
@@ -68,6 +93,7 @@ namespace A2v10.Xaml
         Copy,
         Cut,
         Delete,
+        DeleteBox,
         Dashboard,
         Database,
         Disapprove,
