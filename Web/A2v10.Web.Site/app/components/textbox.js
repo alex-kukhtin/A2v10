@@ -6,7 +6,7 @@
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model.lazy="item[prop]" :class="inputClass"/>
+		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -42,7 +42,8 @@
 					return {};
 				}
 			},
-            prop: String
+            prop: String,
+            placeholder: String
         }
     });
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,7 +64,7 @@ namespace A2v10.Data
                 if (re.Value.IsArrayType)
                     sb.Append(re.Key + "Array").Append(",");
             }
-            sb.Remove(sb.Length - 1, 1); // remove tail comma
+            sb.RemoveTailComma();
             sb.AppendLine("};");
             return sb;
         }
@@ -105,7 +106,7 @@ namespace A2v10.Data
                 sb.Append($"$hasChildren: '{meta.HasChildren}',");
             if (sb.Length == 0)
                 return null;
-            sb.Remove(sb.Length - 1, 1); // remove tail comma
+            sb.RemoveTailComma();
             return ",\n" + sb.ToString();
         }
 
@@ -132,7 +133,7 @@ namespace A2v10.Data
             }
             if (sb.Length == 0)
                 return sb;
-            sb.Remove(sb.Length - 1, 1); // remove tail comma
+            sb.RemoveTailComma();
             return sb;
         }
     }

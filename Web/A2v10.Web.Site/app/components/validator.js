@@ -7,8 +7,10 @@ Vue.component('validator', {
 });
 
 
+/*
+TODO: нужно, чтобы добавлялся invalid для родительского элемента.
 Vue.component('validator-control', {
-    template: '<div>111<validator :invalid="invalid" :errors="errors"></validator></div>',
+    template: '<validator :invalid="invalid" :errors="errors"></validator></div>',
     props: {
         item: {
             type: Object, default() {
@@ -38,3 +40,4 @@ Vue.component('validator-control', {
         },
     }
 });
+*/

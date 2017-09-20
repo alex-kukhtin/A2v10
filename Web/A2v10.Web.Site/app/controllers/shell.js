@@ -106,12 +106,6 @@
 		}
 	};
 
-    /**
-            <tree-item
-                :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :get-href="itemHref"  >
-            </tree-item>
-     */
 
 	const a2SideBar = {
         // TODO: 
@@ -336,7 +330,7 @@
 			});
 
 			eventBus.$on('confirm', function (prms) {
-				let dlg = prms.data;
+                let dlg = prms.data;
 				dlg.promise = new Promise(function (resolve) {
 					dlg.resolve = resolve;
 				});

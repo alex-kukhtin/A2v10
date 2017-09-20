@@ -41,7 +41,10 @@ let template = {
             //host.$viewModel.$save();
             //alert(this.$save);
             //console.dir(this);
-            alert(this.$root.Customers[2].$vm === this.$vm);
+            //alert(this.$root.Customers[2].$vm === this.$vm);
+        },
+        alert() {
+            this.$vm.$alert('Здесь произошла какая-то большая ошибка с длинным текстом с возможными переносами');
         },
         testThen() {
             // todo: vm

@@ -6,11 +6,26 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
-	public class Button : CommandControl
+    public enum ButtonStyle
+    {
+        Primary = 0,
+        Danger = 1,
+        Warning = 2,
+        Info = 3,
+        Success = 4,
+        Green = Success,
+        Orange = Warning,
+        Red = Danger,
+        Cyan = Info,
+    }
+
+    public class Button : CommandControl
 	{
         public Icon Icon { get; set; }
 
         public UIElement DropDown { get; set; }
+
+        public ButtonStyle Style { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -37,6 +52,10 @@ namespace A2v10.Xaml
         {
             Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
             var button = new TagBuilder("button", "btn");
+            if (!(Parent is Toolbar))
+            {
+                button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
+            }
             if (hasDropDown && !hasCommand)
                 button.MergeAttribute("toggle", String.Empty);
             MergeAttributes(button, context);

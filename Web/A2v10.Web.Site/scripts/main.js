@@ -1406,8 +1406,10 @@ Vue.component('validator', {
 });
 
 
+/*
+TODO: нужно, чтобы добавлялся invalid для родительского элемента.
 Vue.component('validator-control', {
-    template: '<div>111<validator :invalid="invalid" :errors="errors"></validator></div>',
+    template: '<validator :invalid="invalid" :errors="errors"></validator></div>',
     props: {
         item: {
             type: Object, default() {
@@ -1437,6 +1439,7 @@ Vue.component('validator-control', {
         },
     }
 });
+*/
 (function() {
 
     const utlis = require('utils');
@@ -1445,7 +1448,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model.lazy="item[prop]" :class="inputClass"/>
+		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1481,7 +1484,8 @@ Vue.component('validator-control', {
 					return {};
 				}
 			},
-            prop: String
+            prop: String,
+            placeholder: String
         }
     });
 
@@ -2715,14 +2719,17 @@ TODO:
 
 })();
 
-/*20170918-7034*/
+/*20170920-7036*/
 /* components/modal.js */
 
 (function () {
 
+    const eventBus = require('std:eventBus');
 
 /**
-TODO: may be icon for confirm ????
+TODO:
+    4. Large, Small
+    5. Set width v-modal-width=""
 */
 
     const modalTemplate = `
@@ -2730,11 +2737,12 @@ TODO: may be icon for confirm ????
     <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
     <div v-else class="modal-body">
         <div class="modal-header"><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
-        <div class="modal-body">
-            <p v-text="dialog.message"></p>            
+        <div :class="bodyClass">
+            <i v-if="hasIcon" :class="iconClass" />
+            <div v-text="dialog.message" />
         </div>
         <div class="modal-footer">
-            <button class="btn" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn btn-primary" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -2746,15 +2754,17 @@ TODO: may be icon for confirm ????
 			//alert('set width-created:' + binding.value);
 			// alert(binding.value.cssClass);
 			let mw = el.closest('.modal-window');
-			if (mw && binding.value.width)
-				mw.style.width = binding.value.width;
+			if (mw) {
+                if (binding.value.width)
+				    mw.style.width = binding.value.width;
+                if (binding.value.cssClass)
+                    mw.classList.add(binding.value.cssClass);
+            }
 			//alert(el.closest('.modal-window'));
 		}
 	};
 
 	Vue.directive('modal-width', setWidthComponent);
-
-    const eventBus = require('std:eventBus');
 
     const modalComponent = {
 		template: modalTemplate,
@@ -2783,9 +2793,20 @@ TODO: may be icon for confirm ????
             isInclude: function () {
                 return !!this.dialog.url;
             },
+            hasIcon() {
+                return !!this.dialog.style;
+            },
             title: function () {
-                return this.dialog.title || 'Error';
+                // todo
+                let defTitle = this.dialog.style === 'confirm' ? "Підтверження" : "Помилка";
+                return this.dialog.title || defTitle;
             }, 
+            bodyClass() {
+                return 'modal-body ' + (this.dialog.style || '');
+            },
+            iconClass() {
+                return "ico ico-" + this.dialog.style;
+            },
             buttons: function () {
                 console.warn(this.dialog.style);
                 let okText = this.dialog.okText || 'OK';
@@ -3258,7 +3279,8 @@ Vue.directive('resize', {
 
 			$confirm(prms) {
 				if (utils.isString(prms))
-					prms = { message: prms };
+                    prms = { message: prms };
+                prms.style = 'confirm';
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
@@ -3564,12 +3586,6 @@ Vue.directive('resize', {
 		}
 	};
 
-    /**
-            <tree-item
-                :item="itm" :key="index" label="title" icon="icon" title="title"
-                :subitems="'menu'" :click="navigate" :get-href="itemHref"  >
-            </tree-item>
-     */
 
 	const a2SideBar = {
         // TODO: 
@@ -3794,7 +3810,7 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('confirm', function (prms) {
-				let dlg = prms.data;
+                let dlg = prms.data;
 				dlg.promise = new Promise(function (resolve) {
 					dlg.resolve = resolve;
 				});

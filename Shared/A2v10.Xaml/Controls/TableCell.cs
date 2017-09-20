@@ -24,7 +24,7 @@ namespace A2v10.Xaml
         public VerticalAlign VAlign { get; set; }
         public WrapMode Wrap { get; set; }
 
-        public Boolean Validate { get; set; }
+        //public Boolean Validate { get; set; }
 
         public Object ItemsSource { get; set; }
 

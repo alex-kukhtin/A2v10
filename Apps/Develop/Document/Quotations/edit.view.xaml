@@ -107,7 +107,7 @@
                             </TableRow>
 							<TableRow>
 								<TableCell>Страхова сума</TableCell>
-								<TableCell Wrap="NoWrap" Validate="True"  Content="{Bind Sum, Format='Страхова сума (val) = {0}', DataType=Currency}"></TableCell>
+								<TableCell Wrap="NoWrap" Content="{Bind Sum, Format='Страхова сума (val) = {0}', DataType=Currency}"></TableCell>
 								<TextBox Value="{Bind Sum}"></TextBox>
                                 <Static Value="{Bind Sum, DataType=Currency, Format='Страхова сума = {0}'}"></Static>
 							</TableRow>

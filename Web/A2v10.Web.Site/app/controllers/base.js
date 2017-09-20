@@ -211,7 +211,8 @@
 
 			$confirm(prms) {
 				if (utils.isString(prms))
-					prms = { message: prms };
+                    prms = { message: prms };
+                prms.style = 'confirm';
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;

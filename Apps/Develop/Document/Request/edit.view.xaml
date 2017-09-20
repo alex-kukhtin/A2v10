@@ -48,7 +48,9 @@
 				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
 				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
 				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
-						 Description="выберите покупателя" Tip="введите фрагмент наименования для поиска"
+						 Description="выберите покупателя" 
+                         Placeholder="введите фрагмент наименования для поиска"
+                         Tip="введите фрагмент наименования для поиска"
 						 Value="{Bind Document.Agent.Name}">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
@@ -102,8 +104,8 @@
                                         <BindCmd.Confirm>
                                             <Confirm 
                                                 Message="{Bind Qty, Format='Sure to remove with qty={0}'}" 
-                                                OkText="Да, удалить" CancelText="Нет, оставить"
-                                                Title="{Bind Qty, Format='Title [{0}]'}"/>
+                                                OkText="Так, видалити" CancelText="Ні, залишити"
+                                                Title="{Bind Id, Format='Код рядка [{0}]'}"/>
                                         </BindCmd.Confirm>
                                     </BindCmd>
                                 </Button.Command>

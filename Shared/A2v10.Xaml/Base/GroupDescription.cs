@@ -41,7 +41,7 @@ namespace A2v10.Xaml
             {
                 sb.Append(d.GetJsValue()).Append(',');
             }
-            sb.Remove(sb.Length - 1, 1); // remove tail comma
+            sb.RemoveTailComma();
             sb.Append("]");
             return sb.ToString();
         }

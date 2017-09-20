@@ -104,7 +104,7 @@ namespace A2v10.Xaml
             }
 
             childElem.AppendJsValues(sb, context);
-            sb.Remove(sb.Length - 1, 1); // tail comma
+            sb.RemoveTailComma(); // tail comma
             sb.Append("}");
             return sb.ToString();
         }

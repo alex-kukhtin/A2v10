@@ -175,14 +175,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
-      <Name>A2v10.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
-      <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
-      <Name>A2v10.Xaml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
       <Project>{478240ab-9772-4f70-8e31-bd0303cbf836}</Project>
       <Name>A2v10.Web.Mvc</Name>

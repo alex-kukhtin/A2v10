@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,21 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
+    public enum DialogSize
+    {
+        Default = 0,
+        Small = 1,
+        Medium = Default,
+        Large = 2,
+    }
+
     public class Dialog : RootContainer
     {
         public String Title { get; set; }
         public String HelpFile { get; set; }
+
+        public DialogSize Size { get; set; }
+        public Length Width { get; set; }
 
         public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -17,6 +29,9 @@ namespace A2v10.Xaml
         {
             var dialog = new TagBuilder("div", "modal");
             dialog.MergeAttribute("id", context.RootId);
+
+            SetSize(dialog);
+
             dialog.RenderStart(context);
 
             RenderHeader(context);
@@ -30,6 +45,24 @@ namespace A2v10.Xaml
             RenderFooter(context);
 
             dialog.RenderEnd(context);
+        }
+
+
+
+        void SetSize(TagBuilder dialog)
+        {
+            if ((Size == DialogSize.Default || Size == DialogSize.Medium) && (Width == null))
+                return;
+            var sb = new StringBuilder("{");
+            if (Size == DialogSize.Large)
+                sb.Append("cssClass:'large',");
+            else if (Size == DialogSize.Small)
+                sb.Append("cssClass:'small',");
+            if (Width != null)
+                sb.Append($"width:'{Width.Value}',");
+            sb.RemoveTailComma();
+            sb.Append("}");
+            dialog.MergeAttribute("v-modal-width", sb.ToString());
         }
 
         void RenderHeader(RenderContext context)

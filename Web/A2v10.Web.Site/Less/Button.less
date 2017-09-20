@@ -1,4 +1,4 @@
-﻿
+﻿@import "Variables.less";
 
 .btn {
     &:focus {
@@ -39,4 +39,35 @@
     border-top-color:transparent;
     border-bottom-color:currentColor;
     vertical-align:top;
+}
+
+.btn {
+    padding:4px 8px;
+    &:focus {
+        outline-offset:-3px;
+        outline-color:#bbb;
+        outline-style:dotted;
+        outline-width:1px;
+    }
+}
+
+.btn-primary {
+    background-color: #e8e8e8;
+    border-color: #ccc;
+
+    &:hover {
+        background-color: white;
+    }
+
+    &:active {
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+        outline-style:none;
+        border-color:#bbb;
+    }
+}
+
+.btn-orange, .btn-warning {
+    background-color:#f0ad4e;
+    border-color:#eea236;
+    color:white;
 }

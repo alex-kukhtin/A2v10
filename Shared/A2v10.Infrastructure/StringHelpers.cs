@@ -63,5 +63,15 @@ namespace A2v10.Infrastructure
                 return null;
             return s.Replace("'", "\\'").Replace("\"", "\\\"");
         }
+
+        public static StringBuilder RemoveTailComma(this StringBuilder sb)
+        {
+            if (sb.Length < 1)
+                return sb;
+            Int32 len = sb.Length;
+            if (sb[len - 1] == ',')
+                sb.Remove(len - 1, 1);
+            return sb;
+        }
     }
 }
