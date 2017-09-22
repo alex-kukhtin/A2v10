@@ -78,7 +78,7 @@
 					</DataGrid>
 					-->
                     <Header Size="Small">Об'єкти у переліку</Header>
-					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="10">
                         <!--
 						<Code Content="{Bind Parent.ItemsSource}"></Code>
 						<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
@@ -108,8 +108,8 @@
 							<TableRow>
 								<TableCell>Страхова сума</TableCell>
 								<TableCell Wrap="NoWrap" Content="{Bind Sum, Format='Страхова сума (val) = {0}', DataType=Currency}"></TableCell>
-								<TextBox Value="{Bind Sum}"></TextBox>
-                                <Static Value="{Bind Sum, DataType=Currency, Format='Страхова сума = {0}'}"></Static>
+                                <TextBox Value="{Bind Sum, DataType=Currency}" Bold="True" Italic="True"/>
+                                <Static Bold="True" Value="{Bind Sum, DataType=Currency, Format='Страхова сума = {0}'}"></Static>
 							</TableRow>
 							<TableRow>
 								<TableCell>Марка/модель</TableCell>
@@ -118,8 +118,8 @@
 							</TableRow>
 							<TableRow>
 								<TableCell>Об'єм двигуна см&#xb3;</TableCell>
-								<Code Content="{Bind Volume}"></Code>
-								<Hyperlink Content="Ссылка"></Hyperlink>
+                                <Static Value="{Bind Volume}" Bold="True"/>
+                                <Hyperlink Content="Ссылка"></Hyperlink>
 							</TableRow>
                             <TableRow>
                                 <TableCell Wrap="NoWrap">Протиугінний засіб</TableCell>

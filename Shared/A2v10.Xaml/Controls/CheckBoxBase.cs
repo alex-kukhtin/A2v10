@@ -18,6 +18,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(tag);
             MergeAttributes(tag, context);
+            if (IsLabelEmpty)
+                tag.AddCssClass("no-label");
             tag.RenderStart(context);
             var input = new TagBuilder("input");
             input.MergeAttribute("type", ControlType);
@@ -44,6 +46,15 @@ namespace A2v10.Xaml
             if (valBind != null)
             {
                 input.MergeAttribute("v-model", valBind.GetPath(context));
+            }
+        }
+
+        Boolean IsLabelEmpty {
+            get
+            {
+                if (GetBinding(nameof(Label)) != null)
+                    return false;
+                return Label == null;
             }
         }
 

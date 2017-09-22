@@ -25,8 +25,10 @@
       "app/components/popover.js",
       "app/components/treeview.js",
       "app/components/collectionview.js",
+      "app/components/upload.js",
       "app/components/tab.js",
       "app/components/modal.js",
+      "app/components/image.js",
       "app/directives/*.js",
       "app/controllers/base.js",
       "app/controllers/shell.js"

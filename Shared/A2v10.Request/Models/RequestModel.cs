@@ -23,7 +23,8 @@ namespace A2v10.Request
         Dialog,
         Popup,
         Command,
-        Data
+        Data,
+        Image
     }
 
     public enum RequestDataAction
@@ -218,6 +219,11 @@ namespace A2v10.Request
         public String command;
     }
 
+    public class RequestImage : RequestBase
+    {
+        public String key;
+    }
+
     public class RequestModel
     {
         private String _action;
@@ -240,6 +246,10 @@ namespace A2v10.Request
         public Dictionary<String, RequestDialog> dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestPopup> popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestCommand> commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
+
+
+        [JsonIgnore]
+        public String ModelAction => _action;
 
         public RequestDataAction DataAction
         {
@@ -340,6 +350,7 @@ namespace A2v10.Request
             // {pathInfo}/action/id - ACTION
             // {pathInfo}/dialog/id - DIALOG
             // {pathInfo}/command/id - COMMAND
+            // {pathInfo}/image/id - IMAGE
 
             var mi = new RequestModelInfo();
             String[] urlParts = normalizedUrl.Split('/');
@@ -366,6 +377,9 @@ namespace A2v10.Request
                     break;
                 case RequestUrlKind.Data:
                     mi.data = action;
+                    break;
+                case RequestUrlKind.Image:
+                    mi.action = action;
                     break;
                 default:
                     throw new RequestModelException($"Invalid action kind ({kind})");
@@ -408,6 +422,11 @@ namespace A2v10.Request
             else if (baseUrl.StartsWith("/_popup"))
             {
                 kind = RequestUrlKind.Popup;
+                baseUrl = baseUrl.Substring(8);
+            }
+            else if (baseUrl.StartsWith("/_image"))
+            {
+                kind = RequestUrlKind.Image;
                 baseUrl = baseUrl.Substring(8);
             }
             else

@@ -12,6 +12,9 @@ using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Configuration;
 using A2v10.Request;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -80,6 +83,10 @@ namespace A2v10.Web.Mvc.Controllers
                 String command = pathInfo.Substring(6);
                 await Data(command);
             }
+            else if (pathInfo.StartsWith("_image/"))
+            {
+                await Image("/" + pathInfo); // with element
+            }
             else
             {
                 Index(); // root element (always)
@@ -96,7 +103,7 @@ namespace A2v10.Web.Mvc.Controllers
             {
                 WriteHtmlException(ex);
             }
-            /*
+            /* TODO:
             String layoutText = System.IO.File.ReadAllText(Server.MapPath("~/pages/layout.html"));
             layoutText = layoutText.Replace("$(RootUrl)", RootUrl);
             Response.Write(layoutText);
@@ -146,6 +153,63 @@ namespace A2v10.Web.Mvc.Controllers
                     String json = tr.ReadToEnd();
                     await _baseController.Data(command, UserId, json, Response.Output);
                 }
+            }
+            catch (Exception ex)
+            {
+                WriteExceptionStatus(ex);
+            }
+        }
+
+        async Task Image(String url)
+        {
+            if (Request.HttpMethod == "POST")
+            {
+                await SaveImage(url);
+            }
+            else
+            {
+                await LoadImage(url);
+            }
+        }
+
+        async Task LoadImage(String url)
+        { 
+            try
+            {
+                ImageInfo info = await _baseController.Image(url, UserId);
+                if (info == null)
+                    return;
+                Response.ContentType = info.Mime;
+                if (info.Stream == null)
+                    return;
+                Response.BinaryWrite(info.Stream);
+            }
+            catch (Exception ex)
+            {
+                Response.ContentType = "image/png";
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+                var b = new Bitmap(380, 30);
+                var g = Graphics.FromImage(b);
+                g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+                g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+                g.Save();
+                b.Save(Response.OutputStream, ImageFormat.Png);
+            }
+        }
+
+        async Task SaveImage(String url)
+        {
+            Response.ContentType = "application/json";
+            try
+            {
+                var files = Request.Files;
+                var list= await _baseController.SaveImages(url, files, UserId);
+                var rval = new ExpandoObject();
+                rval.Set("status", "OK");
+                rval.Set("ids", list);
+                String result = JsonConvert.SerializeObject(rval, BaseController.StandardSerializerSettings);
+                Response.Write(result);
             }
             catch (Exception ex)
             {

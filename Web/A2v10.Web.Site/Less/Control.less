@@ -15,18 +15,19 @@
 
 .control-group {
     display: block;
-    background-color: aliceblue;
+    //background-color: aliceblue;
     margin-bottom: 12px;
 
     label {
+        font-size: 92%;
         color: @label-color;
-        margin-bottom: 0.2em;
+        margin-bottom: 0.15em;
         display: block;
     }
 
     .descr {
         display: inline-block;
-        font-size: 96%;
+        font-size: 92%;
         margin-bottom: 0.25em;
         color: @label-color;
     }
@@ -48,6 +49,8 @@
         box-shadow: 1px 4px 10px @danger-shadow-color;
         z-index: @validator-index;
         line-height: 1.2em;
+        font-weight:normal;
+        font-style:normal;
 
         &:before, &:after {
             content: '';
@@ -97,10 +100,13 @@
 
         input, select {
             height: @control-height;
+            font-weight: inherit;
+            font-style:inherit;
         }
 
         &.static {
             background-color: #f8f8f8;
+
             > span {
                 padding: 0 5px;
                 line-height: @control-height;
@@ -137,13 +143,11 @@
         border-color: @link-hover-color !important;
         box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
     }
-
     /* можно запретить :hover */
     &:hover .input-group.static {
-        border-color:@control-border!important;
-        box-shadow:none;
+        border-color: @control-border !important;
+        box-shadow: none;
     }
-
     // для "схлопнутых" элементов
     .input-group.focus {
         z-index: @focus-index;
@@ -175,7 +179,7 @@
         color: @danger-brd-color;
         margin-right:2px;
         vertical-align:1px;
-        font-size:85%;
+        font-size:75%;
     }
 }
 

@@ -1,4 +1,4 @@
-﻿/*20170918-7034*/
+﻿/*20170921-7037*/
 /*controllers/base.js*/
 (function () {
 
@@ -243,7 +243,13 @@
 			$dialog(command, url, data, query) {
 				return new Promise(function (resolve, reject) {
 					// sent a single object
-					let dataToSent = data;
+                    if (command === 'edit-selected') {
+                        if (!utils.isArray(data)) {
+                            console.error('$dialog.editSelected. The argument is not an array');
+                        }
+                        data = data.$selected;
+                    }
+                    let dataToSent = data;
 					if (command === 'add') {
 						if (!utils.isArray(data)) {
 							console.error('$dialog.add. The argument is not an array');
@@ -252,16 +258,16 @@
 					}
 					let dlgData = { promise: null, data: dataToSent, query: query };
 					eventBus.$emit('modal', url, dlgData);
-					if (command === 'edit' || command === 'browse') {
-						dlgData.promise.then(function (result) {
-							if (!utils.isObject(data)) {
-								console.error(`$dialog.${command}. The argument is not an object`);
-								return;
-							}
-							// result is raw data
-							data.$merge(result);
-							resolve(result);
-						});
+                    if (command === 'edit' || command === 'edit-selected' || command === 'browse') {
+                        dlgData.promise.then(function (result) {
+                            if (!utils.isObject(data)) {
+                                console.error(`$dialog.${command}. The argument is not an object`);
+                                return;
+                            }
+                            // result is raw data
+                            data.$merge(result);
+                            resolve(result);
+                        });
 					} else if (command === 'add') {
 						// append to array
 						dlgData.promise.then(function (result) {

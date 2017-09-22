@@ -26,16 +26,33 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2v10demo' and TABLE_NAME=N'Attachments')
+begin
+	create table a2v10demo.Attachments
+	(
+		Id bigint identity(100, 1) not null constraint PK_Attachments primary key,
+		Name nvarchar(255) null,
+		Mime nvarchar(255) null,
+		Data varbinary(max) null,
+		DateCreated datetime not null constraint DF_Attachments_DateCreated default(getdate()),
+		UserId bigint not null
+	);
+end
+
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2v10demo' and TABLE_NAME=N'Catalog.Customers')
 begin
 	create table a2v10demo.[Catalog.Customers] (
 		Id bigint identity(100, 1) not null constraint [PK_Catalog.Customers] primary key,
 		Name nvarchar(255) null,
 		Amount money null,
-		Memo nvarchar(255) null
+		Memo nvarchar(255) null,
+		Photo bigint null
 	) 
 end
 go
+
+--alter table a2v10demo.[Catalog.Customers] add Photo bigint null;
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
@@ -63,7 +80,7 @@ begin
 	--raiserror(@Dir , 16, -1) with nowait;
 
 	with T as (
-		select Id, Name, Amount, Memo,
+		select Id, Name, Amount, Memo, Photo,
 			_RowNumber = row_number() over (
 			order by
 			case when @Order=N'Id' and @Dir = @Asc then c.Id end asc,
@@ -78,7 +95,7 @@ begin
 		from a2v10demo.[Catalog.Customers] c
 		where @Filter is null or upper(c.Name) like N'%' + upper(@Filter) + N'%'
 	)
-	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo,
+	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo, Photo,
 		[!!RowCount] = (select count(1) from T)
 	from T 
 		where [_RowNumber] > @Offset and [_RowNumber] <= @Offset + @PageSize
@@ -95,10 +112,51 @@ alter procedure a2v10demo.[Catalog.Customer.Load]
 as
 begin
 	set nocount on;
-	select [Customer!TCustomer!Object]=null, [Id!!Id] = Id, Name, Amount, Memo
+	select [Customer!TCustomer!Object]=null, [Id!!Id] = Id, Name, Amount, Memo,
+		Photo,
+		[Images!TImage!Array] = null
 	from a2v10demo.[Catalog.Customers] where Id=@Id;
+
+	select [!TImage!Array] = null, [Id!!Id] = 51, [Photo] = 119, [!TCustomer.Images!ParentId] = @Id
+	union all
+	select [!TImage!Array] = null, [Id!!Id] = 52, [Photo] = 120, [!TCustomer.Images!ParentId] = @Id;
 end
 go
+------------------------------------------------
+alter procedure a2v10demo.[Catalog.Customer.Photo.Load]
+@UserId bigint,
+@Id bigint = null,
+@Key nvarchar(255)
+as
+begin
+	set nocount on;
+	select Mime, Stream = Data, Name from a2v10demo.Attachments where Id=@Id;
+end
+go
+------------------------------------------------
+alter procedure a2v10demo.[Catalog.Customer.Photo.Update]
+@UserId bigint,
+@Id bigint,
+@Key nvarchar(255),
+@Mime nvarchar(255),
+@Name nvarchar(255),
+@Stream varbinary(max),
+@RetId bigint output
+as
+begin
+	set nocount on;
+	declare @rtable table (Id bigint);
+	
+	insert into a2v10demo.Attachments(UserId, Name, Mime, Data)
+		output inserted.Id into @rtable
+	values(@UserId, @Name, @Mime, @Stream);
+
+	select @RetId = Id from @rtable;
+end
+go
+
+--select * from a2frontis_wt.a2data.Attachments where Id=108
+
 
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2v10demo' and ROUTINE_NAME=N'Catalog.Customer.Metadata')
@@ -118,7 +176,8 @@ table (
 	[Id] bigint null,
 	[Name] nvarchar(255),
 	[Amount] money,
-	[Memo] nvarchar(255)
+	[Memo] nvarchar(255),
+	[Photo] bigint
 )
 go
 ------------------------------------------------
@@ -153,10 +212,11 @@ begin
 		update set 
 			target.[Name] = source.[Name],
 			target.[Amount] = source.Amount,
-			target.[Memo] = source.[Memo] + N'*'
+			target.[Memo] = source.[Memo],
+			target.[Photo] = source.[Photo]
 	when not matched by target then
-		insert (Name, Amount, Memo)
-		values (Name, Amount, Memo)
+		insert (Name, Amount, Memo, Photo)
+		values (Name, Amount, Memo, Photo)
 	output 
 		$action op, inserted.Id id
 	into @output(op, id);

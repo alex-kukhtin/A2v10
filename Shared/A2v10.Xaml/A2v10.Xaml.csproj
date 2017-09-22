@@ -73,6 +73,8 @@
     <Compile Include="Controls\DataGrid.cs" />
     <Compile Include="Controls\DataGridColumn.cs" />
     <Compile Include="Controls\DropDownMenu.cs" />
+    <Compile Include="Controls\Image.cs" />
+    <Compile Include="Controls\ImageList.cs" />
     <Compile Include="Controls\Static.cs" />
     <Compile Include="Layouts\Group.cs" />
     <Compile Include="Controls\Header.cs" />

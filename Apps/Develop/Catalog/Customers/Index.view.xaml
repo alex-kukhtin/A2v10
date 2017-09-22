@@ -34,6 +34,8 @@
 	</CollectionView>
 	-->
     <Toolbar>
+        <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/catalog/suppliers/edit', Argument={Bind Customers}}" Tip="Изменить покупателя">Изменить</Button>
+        <Separator />
         <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
         <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         <Separator />
@@ -42,14 +44,23 @@
     </Toolbar>
     <DataGrid ItemsSource="{Bind Customers}" Hover="True" 
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="Id" Align="Right" Fit="True"/>
-		<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
 		<DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
-		<DataGridColumn ControlType="Validator"/>
+        <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right"/>
+        <DataGridColumn ControlType="Validator"/>
 		<DataGridColumn Fit="True">
 			<CheckBox />
 		</DataGridColumn>
-	</DataGrid>
+        <DataGridColumn Fit="True">
+            <Hyperlink Icon="Edit" Command="{BindCmd Dialog, Action=Edit, Url='/catalog/suppliers/edit', Argument={Bind }}"/>
+        </DataGridColumn>
+        <!--
+        <DataGridColumn Fit="True" Header="Картинка">
+            <Image Base="/common/agent" Source="{Bind Photo}"/>
+        </DataGridColumn>
+        -->
+    </DataGrid>
 </Page>
 
     

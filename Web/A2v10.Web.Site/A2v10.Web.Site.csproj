@@ -54,10 +54,12 @@
     <Content Include="app\app.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\components\image.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\popover.js" />
     <Content Include="app\components\tab.js" />
     <Content Include="app\components\combobox.js" />
+    <Content Include="app\components\upload.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />

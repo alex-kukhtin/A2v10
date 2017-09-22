@@ -110,7 +110,7 @@ app.modules['std:url'] = function () {
         // TODO: TEST
         let ns = (newUrl || '').split('/');
         let os = (oldUrl || '').split('/');
-        if (ns.length != os.length)
+        if (ns.length !== os.length)
             return false;
         if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
             if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))
@@ -436,7 +436,7 @@ app.modules['std:log'] = function () {
 	}
 };
 
-/*20170915-7033*/
+/*20170922-7037*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -447,7 +447,8 @@ app.modules['std:http'] = function () {
 	return {
 		get: get,
 		post: post,
-		load: load
+        load: load,
+        upload: upload
 	};
 
     function doRequest(method, url, data) {
@@ -487,6 +488,27 @@ app.modules['std:http'] = function () {
 
     function post(url, data) {
         return doRequest('POST', url, data);
+    }
+
+    function upload(url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function (response) {
+                if (xhr.status === 200) {
+                    let xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                } else if (xhr.status === 255) {
+                    alert(xhr.responseText || xhr.statusText);
+                }
+            };
+            xhr.onerror = function (response) {
+                alert('Error');
+            };
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(data);
+        });
     }
 
     function load(url, selector) {
@@ -588,7 +610,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170918-7034*/
+/*20170922-7037*/
 /* services/datamodel.js */
 (function() {
 
@@ -858,6 +880,10 @@ app.modules['std:validators'] = function() {
             return this._root_;
         });
 
+        defHiddenGet(obj.prototype, "$parent", function () {
+            return this._parent_;
+        });
+
         defHiddenGet(obj.prototype, "$vm", function () {
             return this._root_._host_.$viewModel;
 		});
@@ -1027,7 +1053,7 @@ app.modules['std:validators'] = function() {
 				return;
             } else {
                 // simple element
-				if (!prop in root) {
+				if (!(prop in root)) {
 					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);					
 				}
 				let objto = root[prop];
@@ -1084,7 +1110,7 @@ app.modules['std:validators'] = function() {
 		if (!vals) return;
 		let allerrs = [];
         for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val])
+            let err1 = validateOneElement(me, val, vals[val]);
 			if (err1)
 				allerrs.push({ x: val, e: err1 });
 		}
@@ -2566,6 +2592,80 @@ Vue.component('collection-view', {
 	}
 });
 
+/*20170921-7037*/
+/* services/upload.js */
+
+
+(function() {
+
+    var url = require('std:url');
+    var http = require('std:http');
+
+    Vue.component("a2-upload", {
+        /* TODO:
+            1. Accept for images/upload
+            2. multiple
+        */
+        template: `
+            <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
+                <input type="file" @change="uploadImage" multiple accept="image/*" />
+            </label>
+        `,
+        props: {
+            item: Object,
+            prop: String,
+            base: String,
+            newItem: Boolean
+        },
+        data: function () {
+            return {
+                hover: false
+            };
+        },
+        computed: {
+            cssClass() {
+                return 'file-upload' + (this.hover ? ' hover' : '');
+            }
+        },
+        methods: {
+            dragOver(ev) {
+                this.hover = true;
+                ev.preventDefault();
+            },
+            dragLeave(ev) {
+                this.hover = false;
+                ev.preventDefault();
+            },
+            uploadImage(ev) {
+                let root = window.$rootUrl;
+                let id = this.item[this.prop];
+                let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
+                var fd = new FormData();
+                for (let file of ev.target.files) {
+                    fd.append('file', file, file.name);
+                }
+                http.upload(imgUrl, fd).then((result) => {
+                    // may be id or [id,id,id]
+                    if (result.status === 'OK') {
+                        // TODO: // multiple
+                        if (this.newItem) {
+                            let p0 = this.item.$parent;
+                            for (let id of result.ids) {
+                                let ni = p0.$append();
+                                ni[this.prop] = id;
+                            }
+                        } else {
+                            this.item[this.prop] = result.ids[0];
+                        }
+                    }
+                    //alert('result =' + JSON.stringify(result));
+                });
+            }
+        }
+    });
+
+})();
+
 /* 20170906-7027 */
 /*components/tab.js*/
 
@@ -2831,6 +2931,83 @@ TODO:
 
     app.components['std:modal'] = modalComponent;
 })();
+/*20170921-7037*/
+/* services/image.js */
+
+(function () {
+
+    /**
+     TODO:
+    2. if/else - image/upload
+    3. Photo, Base for list
+    4. multiple for list
+    5. css
+     */
+
+    var url = require('std:url');
+
+    Vue.component('a2-image', {
+        template: `
+<div>
+    <span v-text="href"></span>
+    <span>{{newElem}}</span>
+    <img v-if="isImageVisible" :src="href" style="width:auto;height:auto;max-width:300px" @click.prevent="clickOnImage"/>
+    <a @click.prevent="removeImage">x</a>
+    <a2-upload v-if="isUploadVisible" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem"/>
+</div>
+`,
+        props: {
+            base: String,
+            item: Object,
+            prop: String,
+            newItem: Boolean,
+            inArray: Boolean,
+            source: Array
+        },
+        data() {
+            return {
+                newElem: {}
+            };
+        },
+        computed: {
+            href: function () {
+                if (this.newItem)
+                    return undefined;
+                let root = window.$rootUrl;
+                let id = this.item[this.prop];
+                return url.combine(root, '_image', this.base, this.prop, id);
+            },
+            isImageVisible() {
+                return !this.newItem;
+            },
+            isUploadVisible: function () {
+                if (this.newItem)
+                    return true;
+                return !this.inArray && !this.item[this.prop];
+            },
+            itemForUpload() {
+                return this.newItem ? this.newElem : this.item;
+            }
+        },
+        methods: {
+            removeImage: function () {
+                if (this.inArray)
+                    this.item.$remove();
+                else
+                    this.item[this.prop] = undefined;
+            },
+            clickOnImage: function () {
+                alert('click on image');
+            }
+        },
+        created() {
+            if (this.newItem && this.source && this.source.$new) {
+                this.newElem = this.source.$new();
+            }
+        }
+    });
+
+})();
 /*20170911-7030*/
 /* directives/dropdown.js */
 
@@ -3066,7 +3243,7 @@ Vue.directive('resize', {
 });
 
 
-/*20170918-7034*/
+/*20170921-7037*/
 /*controllers/base.js*/
 (function () {
 
@@ -3311,7 +3488,13 @@ Vue.directive('resize', {
 			$dialog(command, url, data, query) {
 				return new Promise(function (resolve, reject) {
 					// sent a single object
-					let dataToSent = data;
+                    if (command === 'edit-selected') {
+                        if (!utils.isArray(data)) {
+                            console.error('$dialog.editSelected. The argument is not an array');
+                        }
+                        data = data.$selected;
+                    }
+                    let dataToSent = data;
 					if (command === 'add') {
 						if (!utils.isArray(data)) {
 							console.error('$dialog.add. The argument is not an array');
@@ -3320,16 +3503,16 @@ Vue.directive('resize', {
 					}
 					let dlgData = { promise: null, data: dataToSent, query: query };
 					eventBus.$emit('modal', url, dlgData);
-					if (command === 'edit' || command === 'browse') {
-						dlgData.promise.then(function (result) {
-							if (!utils.isObject(data)) {
-								console.error(`$dialog.${command}. The argument is not an object`);
-								return;
-							}
-							// result is raw data
-							data.$merge(result);
-							resolve(result);
-						});
+                    if (command === 'edit' || command === 'edit-selected' || command === 'browse') {
+                        dlgData.promise.then(function (result) {
+                            if (!utils.isObject(data)) {
+                                console.error(`$dialog.${command}. The argument is not an object`);
+                                return;
+                            }
+                            // result is raw data
+                            data.$merge(result);
+                            resolve(result);
+                        });
 					} else if (command === 'add') {
 						// append to array
 						dlgData.promise.then(function (result) {

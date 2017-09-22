@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" @click.prevent="$modalSaveAndClose()" :disabled="$isPristine">OK</button>
+        <button class="btn" @click.prevent="$modalSaveAndClose(Customer)" :disabled="$isPristine">OK</button>
         <button class="btn" @click.prevent="$save()" :disabled="$isPristine">Save without close</button>
         <button class="btn" @click.prevent="$modalClose(false)">Cancel</button>
     </div>

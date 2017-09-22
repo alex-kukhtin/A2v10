@@ -1,4 +1,4 @@
-﻿/*20170915-7033*/
+﻿/*20170922-7037*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -9,7 +9,8 @@ app.modules['std:http'] = function () {
 	return {
 		get: get,
 		post: post,
-		load: load
+        load: load,
+        upload: upload
 	};
 
     function doRequest(method, url, data) {
@@ -49,6 +50,27 @@ app.modules['std:http'] = function () {
 
     function post(url, data) {
         return doRequest('POST', url, data);
+    }
+
+    function upload(url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function (response) {
+                if (xhr.status === 200) {
+                    let xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                } else if (xhr.status === 255) {
+                    alert(xhr.responseText || xhr.statusText);
+                }
+            };
+            xhr.onerror = function (response) {
+                alert('Error');
+            };
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(data);
+        });
     }
 
     function load(url, selector) {

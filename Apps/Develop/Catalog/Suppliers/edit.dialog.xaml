@@ -1,0 +1,30 @@
+<!-- Demo dialog page -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		Title="{Bind Customer.Id, Format='Свойства поставщика [{0}]'}">
+	<Dialog.Buttons>
+        <Button Command="{BindCmd SaveAndClose}">OK</Button>
+		<Button Command="{BindCmd Close}">Закрыть</Button>
+	</Dialog.Buttons>
+    <TabPanel>
+        <Tab Header="Общие">
+            <Grid>
+                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
+                <Static Grid.Row="2" Grid.Col="1" Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
+                <TextBox Grid.Row="3" Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
+            </Grid>
+        </Tab>
+        <Tab Header="Фото">
+            <Image Source="{Bind Customer.Photo}" Base="/common/agent"/>
+        </Tab>
+        <Tab Header="Картинки">
+            <ImageList ItemsSource="{Bind Customer.Images}">
+                <Image Source="{Bind Photo}" Base="/common/agent"/>
+            </ImageList>
+        </Tab>
+        <Tab Header="Отладка">
+            <Code Content="{Bind Customer}" Multiline="True"/>
+        </Tab>
+    </TabPanel>
+</Dialog>
+
+    

@@ -6,7 +6,9 @@
         <div class="toolbar">
             <button class="btn" @click.prevent="Customers.$append()">Add</button>
             <button class="btn" @click.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
-            <button class="btn" @click.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
+            <button class="btn" 
+                    @click.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" 
+                    :disabled="!Customers.$selected"><i class="ico-edit"></i> Edit in dialog</button>
             <button class="btn" @click.prevent="$reload()"><i class="ico-refresh"></i> Reload</button>
             <span v-text="$query"></span>
         </div>

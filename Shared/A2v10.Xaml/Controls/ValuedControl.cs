@@ -12,24 +12,7 @@ namespace A2v10.Xaml
 
        internal void MergeValue(TagBuilder input, RenderContext context)
        {
-            var valBind = GetBinding(nameof(Value));
-            if (valBind != null) {
-                // split to path and property
-                String path = valBind.GetPath(context);
-                String itemPath = String.Empty;
-                String itemProp = String.Empty;
-                if (String.IsNullOrEmpty(path))
-                    return;
-                int ix = path.LastIndexOf('.');
-                if (ix != -1) { 
-                    itemProp = path.Substring(ix + 1);
-                    itemPath = path.Substring(0, ix);
-                }
-                if (String.IsNullOrEmpty(itemPath) || String.IsNullOrEmpty(itemProp))
-                    throw new XamlException($"invalid binding for Value '{path}'");
-                input.MergeAttribute(":item", itemPath);
-                input.MergeAttribute("prop", itemProp);
-            }
+            MergeValueItemProp(input, context, nameof(Value));
        }
     }
 }

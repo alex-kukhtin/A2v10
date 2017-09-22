@@ -1,4 +1,5 @@
 ﻿
+using A2v10.Infrastructure;
 using System;
 using System.Reflection;
 using System.Windows.Markup;
@@ -21,7 +22,17 @@ namespace A2v10.Xaml
         Append,
         Browse,
         Exec,
-        Remove
+        Remove,
+        Dialog
+    }
+
+    public enum DialogAction
+    {
+        Unknown,
+        Create,
+        Edit,
+        EditSelected,
+        Show
     }
 
     public class BindCmd : BindBase
@@ -29,6 +40,7 @@ namespace A2v10.Xaml
         public CommandType Command { get; set; }
         public String Argument { get; set; }
         public String Url { get; set; }
+        public DialogAction Action { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -65,12 +77,7 @@ namespace A2v10.Xaml
 
                 case CommandType.SaveAndClose:
                     if (context.IsDialog)
-                    {
-                        var argsc = GetBinding(nameof(Argument));
-                        if (argsc == null)
-                            throw new NotImplementedException($"Argument bind required for dialog SaveAndClose command");
-                        return $"$modalSaveAndClose({argsc.GetPath(context)})";
-                    }
+                        return "$modalSaveAndClose()";
                     return "$saveAndClose()";
 
                 case CommandType.OpenSelected:
@@ -103,6 +110,12 @@ namespace A2v10.Xaml
 
                 case CommandType.Exec:
                     return $"$exec('add100rows', Document)";
+
+                case CommandType.Dialog:
+                    if (Action == DialogAction.Unknown)
+                        throw new XamlException($"Action required for {Command} command");
+                    return $"$dialog('{Action.ToString().ToKebabCase()}', '{CommandUrl}', {CommandArgument(context)})";
+
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }
@@ -180,11 +193,20 @@ namespace A2v10.Xaml
                     break;
                 case CommandType.OpenSelected:
                 case CommandType.DbRemoveSelected:
-                    var arg = GetBinding(nameof(Argument));
-                    if (arg != null)
-                        tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+                    {
+                        var arg = GetBinding(nameof(Argument));
+                        if (arg != null)
+                            tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+                        break;
+                    }
+                case CommandType.Dialog:
+                    if (Action == DialogAction.EditSelected)
+                    {
+                        var arg = GetBinding(nameof(Argument));
+                        if (arg != null)
+                            tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+                    }
                     break;
-                    //tag.MergeAttribute(":disabled:")
             }
         }
     }

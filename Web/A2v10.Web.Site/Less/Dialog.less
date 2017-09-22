@@ -2,7 +2,8 @@
 @import "Variables.less";
 
 @modal-padding: 8px;
-@modal-footer-bg-color:#f5f5f5;
+@modal-footer-bg-color: #f5f5f5;
+@modal-width-medium: 500px;
 
 .modal-stack {
     position: fixed;
@@ -21,7 +22,7 @@
         .modal-window {
             position: relative;
             margin: 70px auto 30px auto;
-            width: 500px;
+            width: @modal-width-medium;
             height: auto;
             border: 1px solid @default-brd-color;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -35,6 +36,10 @@
         .modal-window.large {
             width: 800px;
         }
+    }
+
+    .modal-body .app-exception {
+        width: @modal-width-medium - 2px;
     }
 }
 
@@ -67,7 +72,7 @@
     align-items: baseline;
 
     .btn {
-        min-width: 64px;
+        min-width: 70px;
     }
 
     .btn + .btn {

@@ -58,7 +58,7 @@ app.modules['std:url'] = function () {
         // TODO: TEST
         let ns = (newUrl || '').split('/');
         let os = (oldUrl || '').split('/');
-        if (ns.length != os.length)
+        if (ns.length !== os.length)
             return false;
         if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
             if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))

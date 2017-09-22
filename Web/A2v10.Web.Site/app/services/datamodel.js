@@ -1,4 +1,4 @@
-﻿/*20170918-7034*/
+﻿/*20170922-7037*/
 /* services/datamodel.js */
 (function() {
 
@@ -268,6 +268,10 @@
             return this._root_;
         });
 
+        defHiddenGet(obj.prototype, "$parent", function () {
+            return this._parent_;
+        });
+
         defHiddenGet(obj.prototype, "$vm", function () {
             return this._root_._host_.$viewModel;
 		});
@@ -437,7 +441,7 @@
 				return;
             } else {
                 // simple element
-				if (!prop in root) {
+				if (!(prop in root)) {
 					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);					
 				}
 				let objto = root[prop];
@@ -494,7 +498,7 @@
 		if (!vals) return;
 		let allerrs = [];
         for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val])
+            let err1 = validateOneElement(me, val, vals[val]);
 			if (err1)
 				allerrs.push({ x: val, e: err1 });
 		}
