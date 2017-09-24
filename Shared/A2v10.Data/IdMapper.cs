@@ -22,31 +22,60 @@ namespace A2v10.Data
 		}
 	}
 
-	internal class RefMapper : Dictionary<Tuple<String, Object>, IList<ExpandoObject>>
+    internal class RefMapperItem
+    {
+        public IList<ExpandoObject> List;
+        public ExpandoObject Source;
+
+        public RefMapperItem()
+        {
+        }
+
+        public void AddToList(ExpandoObject eo)
+        {
+            if (List == null)
+                List = new List<ExpandoObject>();
+            List.Add(eo);
+        }
+    }
+
+	internal class RefMapper : Dictionary<Tuple<String, Object>, RefMapperItem>
 	{
 		public void Add(String typeName, Object id, ExpandoObject value)
 		{
 			var key = Tuple.Create(typeName, id);
-			IList<ExpandoObject> list;
-			if (!TryGetValue(key, out list))
+            RefMapperItem item;
+			if (!TryGetValue(key, out item))
 			{
-				list = new List<ExpandoObject>();
-				Add(key, list);
+				item = new RefMapperItem();
+				Add(key, item);
 			}
-			list.Add(value);
+            item.AddToList(value);
+            if (item.Source != null)
+            {
+                foreach (var target in item.List)
+                    target.CopyFrom(item.Source);
+            }
 		}
 
 		public void MergeObject(String typeName, object id, ExpandoObject source)
 		{
 			var key = Tuple.Create(typeName, id);
-			IList<ExpandoObject> list;
-			if (TryGetValue(key, out list))
+			RefMapperItem item;
+			if (TryGetValue(key, out item))
 			{
-				foreach (var target in list)
+				foreach (var target in item.List)
 				{
 					target.CopyFrom(source);
 				}
 			}
+            else
+            {
+                // forwar definition
+                item = new RefMapperItem();
+                item.Source = source;
+                Add(key, item);
+            }
 		}
 	}
 }

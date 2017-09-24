@@ -65,7 +65,9 @@
 					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
 					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>
 				</ComboBox>
-			</Grid>
+                <Static Label="Сумма по документу" Grid.Row="4" Grid.Col="1" Value="{Bind Document.Sum, DataType=Currency}"/>
+
+            </Grid>
 			<Toolbar>
 				<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
 				<Button Icon="Delete" Content="Удалить выделенную строку" />
@@ -134,7 +136,8 @@
 		</Tab>
 		<Tab Header="Отладка">
 			<Code Multiline="True" Content="{Bind Document}"></Code>
-		</Tab>
+            <Code Multiline="True" Content="{Bind Companies}"></Code>
+        </Tab>
 	</TabPanel>
 </Page>
 

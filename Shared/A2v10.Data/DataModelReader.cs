@@ -185,14 +185,17 @@ namespace A2v10.Data
 
 		void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
 		{
-			if (field.IsArray)
-				_root.AddToArray(field.PropertyName, currentRecord);
+            if (field.IsArray)
+            {
+                _refMap.MergeObject(field.TypeName, id, currentRecord);
+                _root.AddToArray(field.PropertyName, currentRecord);
+            }
             else if (field.IsTree)
                 _root.AddToArray(field.PropertyName, currentRecord);
             else if (field.IsObject)
-				_root.Add(field.PropertyName, currentRecord);
-			else if (field.IsMap)
-				_refMap.MergeObject(field.TypeName, id, currentRecord);
+                _root.Add(field.PropertyName, currentRecord);
+            else if (field.IsMap)
+                _refMap.MergeObject(field.TypeName, id, currentRecord);
 		}
 
 
@@ -261,5 +264,9 @@ namespace A2v10.Data
 			_metadata.Add(typeName, elemMeta);
 			return elemMeta;
 		}
+
+        public void PostProcess()
+        {
+        }
 	}
 }

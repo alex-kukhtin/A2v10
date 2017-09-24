@@ -33,7 +33,7 @@ namespace A2v10.Xaml
                 col.AddCssClass("fit");
             if (Width != null)
                 col.MergeStyle("width", Width.Value);
-            col.Render(context);
+            col.Render(context, TagRenderMode.SelfClosing);
         }
     }
 

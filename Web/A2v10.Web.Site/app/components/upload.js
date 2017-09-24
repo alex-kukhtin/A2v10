@@ -1,4 +1,4 @@
-﻿/*20170921-7037*/
+﻿/*20170923-7038*/
 /* services/upload.js */
 
 
@@ -9,12 +9,12 @@
 
     Vue.component("a2-upload", {
         /* TODO:
-            1. Accept for images/upload
-            2. multiple
+         1. Accept for images/upload - may be accept property ???
+         4. ControllerName (_image ???)
         */
         template: `
             <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-                <input type="file" @change="uploadImage" multiple accept="image/*" />
+                <input type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
             </label>
         `,
         props: {
@@ -31,6 +31,9 @@
         computed: {
             cssClass() {
                 return 'file-upload' + (this.hover ? ' hover' : '');
+            },
+            isMultiple() {
+                return !!this.newItem;
             }
         },
         methods: {
@@ -50,8 +53,9 @@
                 for (let file of ev.target.files) {
                     fd.append('file', file, file.name);
                 }
-                http.upload(imgUrl, fd).then((result) => {
-                    // may be id or [id,id,id]
+                http.upload(imgUrl, fd).then((result) => {                    
+                    // result = {status: '', ids:[]}
+                    ev.target.value = ''; // clear current selection
                     if (result.status === 'OK') {
                         // TODO: // multiple
                         if (this.newItem) {
@@ -64,7 +68,6 @@
                             this.item[this.prop] = result.ids[0];
                         }
                     }
-                    //alert('result =' + JSON.stringify(result));
                 });
             }
         }

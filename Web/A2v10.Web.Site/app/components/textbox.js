@@ -57,7 +57,7 @@
                 }
             },
             prop: String,
-            text: String
+            text: [String, Number]
         }
     });
 

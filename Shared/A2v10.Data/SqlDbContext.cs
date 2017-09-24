@@ -64,6 +64,7 @@ namespace A2v10.Data
                         modelReader.ProcessOneMetadata(rdr);
                     });
             }
+            modelReader.PostProcess();
             return modelReader.DataModel;
         }
 
@@ -86,6 +87,7 @@ namespace A2v10.Data
                         modelReader.ProcessOneMetadata(rdr);
                     });
             }
+            modelReader.PostProcess();
             return modelReader.DataModel;
         }
 
@@ -187,6 +189,7 @@ namespace A2v10.Data
                         }
                     }
                 }
+                dataReader.PostProcess();
                 return dataReader.DataModel;
             }
         }

@@ -34,8 +34,8 @@ namespace A2v10.Xaml
         void RenderColumns(RenderContext context)
         {
             var colGroup = new TagBuilder("colgroup").RenderStart(context);
-            new TagBuilder("col", "prop-name").Render(context);
-            new TagBuilder("col", "prop-value").Render(context);
+            new TagBuilder("col", "prop-name").Render(context, TagRenderMode.SelfClosing);
+            new TagBuilder("col", "prop-value").Render(context, TagRenderMode.SelfClosing);
             colGroup.RenderEnd(context);
         }
 

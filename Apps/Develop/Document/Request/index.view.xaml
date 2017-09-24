@@ -34,7 +34,7 @@
 			<DataGridColumn Header="Примечание" Content="Memo" Command="{BindCmd Open, Url='/document/request/edit'}"/>
 			<DataGridColumn Header="Договор" Content="Contract.FullName" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
 			<DataGridColumn Header="Contract Id" Content="Contract.Id" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
-			<DataGridColumn Header="Url" Content="Url" Command="{BindCmd Open, Url={Bind Url}}"/>
+			<DataGridColumn Header="Comp" Content="{Bind Company.Id}" />
 			<DataGridColumn Header="Договор">
 				<Popover Icon="InfoOutline" Text="{Bind Contract.FullName}" Placement="Left" If="{Bind Contract.Id}">
 					<Popup Width="230px">

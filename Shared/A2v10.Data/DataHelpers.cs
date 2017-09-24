@@ -87,6 +87,8 @@ namespace A2v10.Data
 		public static void CopyFrom(this ExpandoObject target, ExpandoObject source)
 		{
 			var dTarget = target as IDictionary<String, Object>;
+            if (dTarget.Count != 0)
+                return; // skip if already filled
 			var dSource = source as IDictionary<String, Object>;
 			foreach (var itm in dSource)
 			{

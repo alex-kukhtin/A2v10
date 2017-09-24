@@ -16,7 +16,10 @@ namespace A2v10.Xaml
             if (Value != null)
             {
                 if (Value is IJavaScriptSource)
-                    option.MergeAttribute(":value", (Value as IJavaScriptSource).GetJsValue());
+                {
+                    var jsValue = (Value as IJavaScriptSource).GetJsValue();
+                    option.MergeAttribute(":value", jsValue);
+                }
                 else
                     option.MergeAttribute("value", Value.ToString());
             } else

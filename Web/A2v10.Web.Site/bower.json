@@ -1,7 +1,11 @@
 {
   "name": "myproject",
   "dependencies": {
-    "vue": "v2.4.2",
-    "vuex": "v2.3.0"
+    "vue": "v2.4.4",
+    "vuex": "v2.4.0"
+  },
+  "resolutions": {
+    "vue": "v2.4.4",
+    "vuex": "v2.4.0"
   }
 }

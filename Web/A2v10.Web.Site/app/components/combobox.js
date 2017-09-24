@@ -2,6 +2,8 @@
 (function () {
 
 
+    const utils = require('utils');
+
     let comboBoxTemplate =
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
@@ -38,11 +40,20 @@
 		},
 		computed: {
 			cmbValue: {
-				get() { return this.item ? this.item[this.prop] : null; },
+                get() {
+                    let val = this.item ? this.item[this.prop] : null;
+                    if (!utils.isObjectExact(val))
+                        return val;
+                    if (this.itemsSource.indexOf(val) !== -1) {
+                        return val;
+                    }
+                    // always return value from ItemsSource
+                    return this.itemsSource.find((x) => x.$id === val.$id);
+                },
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
-			}
-		}
+            },
+        }
     });
 })();
