@@ -52,7 +52,6 @@ TODO:
     const shell = new Shell({
         el: '#shell',
         data: {
-            title: 'application title',
             version: '$(AppVersion)',
             menu: menu
         }

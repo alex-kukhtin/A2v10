@@ -23,7 +23,8 @@ namespace A2v10.Xaml
         Browse,
         Exec,
         Remove,
-        Dialog
+        Dialog,
+        Select
     }
 
     public enum DialogAction
@@ -82,6 +83,8 @@ namespace A2v10.Xaml
 
                 case CommandType.OpenSelected:
                     return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
+                case CommandType.Select:
+                    return $"$modalSelect({CommandArgument(context)})";
                 case CommandType.DbRemoveSelected:
                     return $"$dbRemoveSelected({CommandArgument(context)} {GetConfirm(context)})";
                 case CommandType.Open:
@@ -192,6 +195,7 @@ namespace A2v10.Xaml
                     tag.MergeAttribute(":disabled", "$isPristine");
                     break;
                 case CommandType.OpenSelected:
+                case CommandType.Select:
                 case CommandType.DbRemoveSelected:
                     {
                         var arg = GetBinding(nameof(Argument));

@@ -1,4 +1,4 @@
-﻿/*20170913-7032*/
+﻿/*20170925-7038*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -20,7 +20,15 @@ app.modules['utils'] = function () {
 		isPrimitiveCtor: isPrimitiveCtor,
 		isEmptyObject: isEmptyObject,
 		eval: eval,
-		format: format
+        format: format,
+		toNumber: toNumber,
+		date: {
+			today: dateToday,
+			zero: dateZero,
+			parse: dateParse,
+			equal: dateEqual,
+			isZero: dateIsZero
+		}
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -39,11 +47,16 @@ app.modules['utils'] = function () {
 	}
 
 	function notBlank(val) {
+		console.warn('not Blank:' + (typeof val) + ' val:' + val);
 		if (!val)
 			return false;
+		if (isDate(val))
+			return !dateIsZero(val);
 		switch (typeof val) {
 			case 'string':
 				return val !== '';
+			case 'date':
+				return false;
 			case 'object':
 				if ('$id' in val) {
 					return !!val.$id;
@@ -95,7 +108,7 @@ app.modules['utils'] = function () {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				if (!obj.getTime())
+				if (dateIsZero(obj))
 					return '';
 				return obj.toLocaleDateString(dateLocale) + ' ' + obj.toLocaleTimeString(dateLocale);
 			case "Date":
@@ -103,7 +116,7 @@ app.modules['utils'] = function () {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				if (!obj.getTime())
+				if (dateIsZero(obj))
 					return '';
 				return obj.toLocaleDateString(dateLocale);
 			case "Time":
@@ -111,7 +124,7 @@ app.modules['utils'] = function () {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
-				if (!obj.getTime())
+				if (dateIsZero(obj))
 					return '';
 				return obj.toLocaleTimeString(dateLocale);
 			case "Currency":
@@ -124,6 +137,52 @@ app.modules['utils'] = function () {
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
+    }
+
+    function toNumber(val) {
+        if (isString(val))
+            val = val.replace(/\s/g, '').replace(',', '.');
+        return isFinite(val) ? +val : 0;
+	}
+
+	function dateToday() {
+		let td = new Date();
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateZero() {
+		let td = new Date(0, 0, 1);
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateParse(str) {
+		str = str || '';
+		if (!str) return dateZero();
+		let today = dateToday();
+		let seg = str.split('.');
+		if (seg.length == 1) {
+			seg.push('' + (today.getMonth() + 1));
+			seg.push('' + today.getFullYear());
+		} else if (seg.length == 2) {
+			seg.push('' + today.getFullYear());
+		}
+		let td = new Date(+seg[2], +seg[1] - 1, +seg[0], 0, 0, 0, 0);
+		if (isNaN(td.getDate()))
+			return dateZero();
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateEqual(d1, d2) {
+		return d1.getFullYear() === d2.getFullYear() &&
+			d1.getMonth() === d2.getMonth() &&
+			d1.getDate() === d2.getDate();
+	}
+
+	function dateIsZero(d1) {
+		return dateEqual(d1, dateZero());
 	}
 };
 

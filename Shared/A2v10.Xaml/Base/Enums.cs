@@ -156,6 +156,8 @@ namespace A2v10.Xaml
         Tag,
         TagOutline,
         Trash,
+        TriangleLeft,
+        TriangleRight,
         Upload,
         User,
         Users,

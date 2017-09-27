@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,12 +60,48 @@ namespace A2v10.Xaml
 
         #endregion
 
+
+        RowDefinitions _rows;
+        ColumnDefinitions _columns;
+
+        public RowDefinitions Rows
+        {
+            get
+            {
+                if (_rows == null)
+                    _rows = new RowDefinitions();
+                return _rows;
+            }
+            set
+            {
+                _rows = value;
+            }
+        }
+
+        public ColumnDefinitions Columns
+        {
+            get
+            {
+                if (_columns == null)
+                    _columns = new ColumnDefinitions();
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+            }
+        }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var grid = new TagBuilder("div", "grid", IsInGrid);
             if (onRender != null)
                 onRender(grid);
             // TODO: row/col definitions
+            if (_rows != null)
+                grid.MergeStyle("grid-template-rows", _rows.ToAttribute());
+            if (_columns != null)
+                grid.MergeStyle("grid-template-columns", _columns.ToAttribute());
             grid.RenderStart(context);
             RenderChildren(context);
             grid.RenderEnd(context);
@@ -79,6 +117,117 @@ namespace A2v10.Xaml
                     ch.RenderElement(context);
                 }
             }
+        }
+    }
+
+    public class RowDefinition
+    {
+        public GridLength Height { get; set; }
+    }
+
+    [TypeConverter(typeof(RowDefinitionsConverter))]
+    public class RowDefinitions : List<RowDefinition>
+    {
+        public static RowDefinitions FromString(String val)
+        {
+            var coll = new RowDefinitions();
+            foreach (var row in val.Split(','))
+            {
+                var rd = new RowDefinition();
+                rd.Height = GridLength.FromString(row.Trim());
+                coll.Add(rd);
+            }
+            return coll;
+        }
+        public String ToAttribute()
+        {
+            var sb = new StringBuilder();
+            foreach (var w in this)
+            {
+                sb.Append(w.Height.Value).Append(" ");
+            }
+            return sb.ToString();
+        }
+    }
+
+    public class ColumnDefinition
+    {
+        public GridLength Width { get; set; }
+    }
+
+    [TypeConverter(typeof(ColumnDefinitionsConverter))]
+    public class ColumnDefinitions : List<ColumnDefinition>
+    {
+        public static ColumnDefinitions FromString(String val)
+        {
+            var coll = new ColumnDefinitions();
+            foreach (var row in val.Split(','))
+            {
+                var cd = new ColumnDefinition();
+                cd.Width = GridLength.FromString(row.Trim());
+                coll.Add(cd);
+            }
+            return coll;
+        }
+
+        public String ToAttribute()
+        {
+            var sb = new StringBuilder();
+            foreach (var w in this)
+            {
+                sb.Append(w.Width.Value).Append(" ");
+            }
+            return sb.ToString();
+        }
+    }
+
+    public class RowDefinitionsConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(String))
+                return true;
+            else if (sourceType == typeof(RowDefinitions))
+                return true;
+            return false;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value == null)
+                return null;
+            if (value is RowDefinitions)
+                return value;
+            else if (value is String)
+            {
+                return RowDefinitions.FromString(value.ToString());
+            }
+            return base.ConvertFrom(context, culture, value);
+        }
+    }
+
+    public class ColumnDefinitionsConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(String))
+                return true;
+            else if (sourceType == typeof(ColumnDefinitions))
+                return true;
+            return false;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value == null)
+                return null;
+            if (value is ColumnDefinitions)
+                return value;
+            else if (value is String)
+            {
+                return ColumnDefinitions.FromString(value.ToString());
+            }
+            return base.ConvertFrom(context, culture, value);
         }
     }
 }

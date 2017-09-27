@@ -13,6 +13,7 @@
         </Toolbar>
     </Page.Toolbar>
 	<CollectionView ItemsSource="{Bind Customers}" RunAt="ServerUrl">
+        <Pager Source="{Bind Parent.Pager}"></Pager>
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
@@ -22,10 +23,10 @@
             <DataGridColumn Header="Телефон" />
             <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
             <DataGrid.Pager>
-				<Pager Source="{Bind Parent.Pager}" />
-			</DataGrid.Pager>
+                <Pager Source="{Bind Parent.Pager}"></Pager>
+            </DataGrid.Pager>
 		</DataGrid>
-	</CollectionView>
+    </CollectionView>
 </Page>
 
     

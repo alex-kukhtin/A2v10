@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <meta name="rootUrl" content=""/>
     <link rel="stylesheet" href="../css/site.min.css" />
     <style>
         option22 {
@@ -30,7 +31,7 @@
 </head>
 <body>
 
-    <div style="margin:60px" id="app">
+    <div style="margin:60px;overflow:auto" id="app">
         <h2>TEST FOR FORM CONTROL</h2>
 
 
@@ -104,7 +105,7 @@
             </div>
             <combobox label="combobox component" 
                       :items-source="companies" :item="thisObj" prop="selectedCompany"></combobox>
-            <select is="combobox" label="combobox component (static options)" v-cloak
+            <select label="combobox component (static options)" v-cloak
                       :item="selectedCompany" prop="$id">
                 <option :value="5">Id = 51</option>
                 <option :value="6">Id = 62</option>

@@ -7,10 +7,13 @@
 	</Dialog.Buttons>
     <TabPanel>
         <Tab Header="Общие">
-            <Grid>
-                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
-                <Static Grid.Row="2" Grid.Col="1" Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
-                <TextBox Grid.Row="3" Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
+            <Grid Columns="150, Auto">
+                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2"
+                         Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
+                <Static Grid.Row="2" Grid.Col="1" Align="Right"
+                        Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
+                <TextBox Grid.Row="3" Multiline="True" Rows="3"
+                         Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
             </Grid>
         </Tab>
         <Tab Header="Фото">

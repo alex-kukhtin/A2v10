@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <meta name="rootUrl" content=""/>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        </style>
+</head>
+<body>
+
+
+    <div id="app" style="margin:50px;width:200px">
+        <h3>Элементы Date Picker</h3>
+
+        <a2-date-picker :item="Document" prop="Date" label="DatePicker control" description="description for datepicker"></a2-date-picker>
+
+        <!--
+        <a2-date-picker :item="Document" prop="Date" label="Another picker control" description="description for datepicker"></a2-date-picker>
+        -->
+
+        <static :item="Document" prop="Date" :text="Document.Date"></static>
+
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="../scripts/main.js"></script>
+    <!--
+    <script src="datepicker.js"></script>
+        -->
+
+    <script>
+        let dt = new Date(2017, 02, 27);
+        dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+        new Vue({
+            el: "#app",
+            data: {
+                Document: {
+                    Date : dt
+                }
+                    
+            }
+        });
+
+        const popup = require('std:popup');
+        popup.startService();
+
+    </script>
+</body>
+</html>

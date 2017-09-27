@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Toolbar>
         <Button Icon="Plus" Content="Создать" Command="{BindCmd Create, Url='/Document/Quotations/Edit'}" />
-        <Button Icon="File" Command="{BindCmd OpenSelected, Url='/Document/Quotations/Edit', Argument={Bind Contracts}}">Открыть</Button>
+        <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/Document/Quotations/Edit', Argument={Bind Contracts}}">Открыть</Button>
 		<Button Icon="Delete">Удалить</Button>
 		<Separator />
 		<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>

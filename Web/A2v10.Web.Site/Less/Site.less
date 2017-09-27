@@ -14,6 +14,10 @@ html {
     padding:0;
 }
 
+input, textarea, select, button {
+    font-family: @font-family;
+}
+
 body {
 	overflow: hidden;
 	height: 100%;
@@ -64,6 +68,15 @@ header, .header {
             text-decoration: none;
             color: inherit;
         }
+    }
+
+    .app-subtitle {
+        font-size:85%;
+        padding-left:6px;
+    }
+
+    .ico {
+        font-size:1em;
     }
 
     .h-right {
@@ -237,7 +250,8 @@ footer, .footer {
     button {
         background-color: @danger-btn-color;
         font-size: 12px;
-        padding: 1px 6px;
+        line-height:14px;
+        padding: 0 6px 1px 6px;
         color: white;
         text-transform: lowercase;
     }
@@ -272,16 +286,20 @@ footer, .footer {
     }
 }
 
-input, select {
+
+input, select, textarea {
     border-style: none;
     font-size: 13px;
-    height: @control-height;
     color: @text-color;
     padding: 0 @input-padding;
 
     &:focus {
         outline-style: none;
     }
+}
+
+input, select {
+    height: @control-height;
 }
 
 /* hide for focused */
@@ -334,6 +352,7 @@ pre {
 
 @import "Control.less";
 @import "Button.less";
+@import "DatePicker.less";
 @import "DataGrid.less";
 @import "ToolBar.less";
 @import "TreeView.less";

@@ -143,7 +143,7 @@ begin
 		CanDelete smallint not null	-- 2
 			constraint CK_Acl_CanDelete check(CanDelete in (0, 1, -1))
 			constraint DF_Acl_CanDelete default(0),
-		CanApply smallint not null	-- 2
+		CanApply smallint not null	-- 3
 			constraint CK_Acl_CanApply check(CanApply in (0, 1, -1))
 			constraint DF_Acl_CanApply default(0)
 	);

@@ -16,7 +16,7 @@ let template = {
             return !this.$valid ? 'danger' : '';
         },
         "TCustomer.$rowMark"() {
-            return this.Amount === 400.0 ? 'warning' : '';
+            return this.Amount === 22.0 ? 'warning' : '';
         },
         "TCustomer.$isValid"() {
             //this._root_._validate_(this, "Customers[].Name", this.Name);

@@ -22,7 +22,7 @@
 					Command="{BindCmd Exec}">Создать на основании</Button>
 			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
 				<TextBox.AddOns>
-					<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Document.Contract}}"/>
+					<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
 					<Hyperlink Icon="Clear"/>
 				</TextBox.AddOns>
 			</TextBox>
@@ -42,10 +42,10 @@
 	</Page.Taskpad>
 	<TabPanel>
 		<Tab Header="Заявка">
-			<Grid>
+			<Grid Columns="1*, 1*, 2*">
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
-				<ComboBox Label="продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
+				<ComboBox Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
 				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
 				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
 						 Description="выберите покупателя" 
@@ -65,7 +65,8 @@
 					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
 					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>
 				</ComboBox>
-                <Static Label="Сумма по документу" Grid.Row="4" Grid.Col="1" Value="{Bind Document.Sum, DataType=Currency}"/>
+                <Static Label="Сумма по документу" Align="Right" Bold="True"
+                        Grid.Row="4" Grid.Col="2" Value="{Bind Document.Sum, DataType=Currency}"/>
 
             </Grid>
 			<Toolbar>
@@ -123,12 +124,19 @@
 					</DataGridColumn>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"></Pager>
+                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="True" GridLines="Both">
+                    <TableRow>
+                        <TableCell>1</TableCell>
+                        <TableCell>2</TableCell>
+                        <TableCell>3</TableCell>
+                    </TableRow>
+                </Table>
 			</CollectionView>
 			<Grid>
 				<Code Content="{Bind Document.Sum}"></Code>
 			</Grid>
 
-			<TextBox Label="Примечание" Value="{Bind Document.Memo}"></TextBox>
+			<TextBox Label="Примечание" Value="{Bind Document.Memo}" Multiline="True" Rows="3"></TextBox>
 		</Tab>
 		<Tab Header="Бухгалтерская">
 			<Text>Это бухгалтерская заявка по документу №

@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
+    <Compile Include="Identity\IdentityExtensions.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebApplicationHost.cs" />
     <Compile Include="Configuration\WebProfiler.cs" />

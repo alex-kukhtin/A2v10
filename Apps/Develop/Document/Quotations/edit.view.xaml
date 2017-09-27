@@ -16,18 +16,22 @@
             <CheckBox Value="{Bind Contract.NeedUnderwriting}">Потрібен андеррайтінг</CheckBox>
             <Button Block="True">Відправити на андеррйтінг</Button>
             <Button Block="True">Створити договір</Button>
+            <DatePicker Value="{Bind Contract.DateFrom}" Label="Дата начала" Bold="True"
+                        Required="True" Description="введите дату начала действия"/>
+            <Static Value="{Bind Contract.DateFrom, DataType=Date}" Align="Center"/>
         </Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
 		<Tab Header="Котировка">
-			<Grid>
-				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}"/>
+			<Grid Columns="130, 1*">
+				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}" Align="Right"/>
                 <TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}">
                     <TextBox.AddOns>
-                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Contract.Insurant}}"/>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Contract.Insurant}}"/>
                         <Hyperlink Icon="Clear"/>
                     </TextBox.AddOns>
                 </TextBox>
+                <DatePicker Grid.Row="2" Value="{Bind Contract.DateFrom}" Label="Дата начала" Required="True" />
                 <Static Value="{Bind Contract.InsurantName}" Label="Страхователь" Required="True" Grid.Col="2" Grid.ColSpan="2" Grid.Row="2">
                     <Static.AddOns>
                         <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse', Argument={Bind Contract.Insurant}}"/>

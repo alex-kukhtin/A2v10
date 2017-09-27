@@ -36,6 +36,7 @@
         .datepicker {
             position:relative;
         }
+
         .datepicker > .calendar {
             position:absolute;
             width:200px;
@@ -105,8 +106,8 @@
                     <div class="divider"></div>
                     <input v-model="filterText" />
                     <div>
-                        <button close-dropdown @click.prevent="closeFilter(true)">Ok</button>
-                        <button close-dropdown @click.prevent="closeFilter(false)">Cancel</button>
+                        <button class="btn btn-default" close-dropdown @click.prevent="closeFilter(true)">Ok</button>
+                        <button class="btn btn-primary" close-dropdown @click.prevent="closeFilter(false)">Cancel</button>
                     </div>
                 </div>
                 <span>Filter:</span>
@@ -118,7 +119,7 @@
                 <span class="dropdown" v-dropdown v-if="is3">
                     <a href="" toggle>third with hyperlink</a>
                     <ul class="dropdown-menu menu">
-                        <li class="dropdown-item">First</a>
+                        <li class="dropdown-item">First</li>
                         <li class="divider"></li>
                         <li href="javascript:void(0)" class="dropdown-item">Second</li>
                     </ul>

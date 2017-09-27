@@ -46,7 +46,7 @@
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
-		<DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
+		<DataGridColumn Header="Сумма продаж" Editable="True" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
         <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right"/>
         <DataGridColumn ControlType="Validator"/>
 		<DataGridColumn Fit="True">

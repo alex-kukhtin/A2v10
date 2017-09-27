@@ -1,10 +1,10 @@
 ﻿
-<div id="$(RootId)" test="true" v-modal-width="{ width:'300px', cssClass: 'large'}">
+<div id="$(RootId)" test="true" v-modal-width="{ width:'500px', cssClass: 'large'}">
     <div class="modal-header"><span>Выбор корреспондента</span><button class="btnclose" @click.prevent="$modalClose(false)">&#x2715;</button></div>
     <div class="load-indicator" v-show="$isLoading"></div>
-    <div class="modal-content" style="min-height:200px" >
+    <div class="modal-content" style="min-height:200px;max-height:500px" >
         <div class="toolbar">
-            <button class="btn" @click.prevent="Customers.$append()">Add</button>
+            <button class="btn" @click.prevent="Customers.$append()"><i class="ico ico-plus"></i> add</button>
             <button class="btn" @click.prevent="$dialog('add', 'catalog/suppliers/edit', Customers)">Add in dialog</button>
             <button class="btn" 
                     @click.prevent="$dialog('edit', 'catalog/suppliers/edit', Customers.$selected)" 
@@ -24,8 +24,8 @@
     <div class="modal-footer">
         <a class="btn-help"><i class="ico ico-help"></i>Справка</a>
         <div class="aligner"></div>
-        <button class="btn" @click.stop.prevent="$modalClose(Customers.$selected)">Выбрать</button>
-        <button class="btn" @click.stop.prevent="$modalClose(false)">Отменить</button>
+        <button class="btn btn-primary" @click.stop.prevent="$modalClose(Customers.$selected)">Выбрать</button>
+        <button class="btn btn-primary" @click.stop.prevent="$modalClose(false)">Отменить</button>
     </div>
 </div>
 

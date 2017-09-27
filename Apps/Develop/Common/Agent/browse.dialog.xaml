@@ -4,7 +4,7 @@
 		HelpFile="/customers/browse"
 		Title="{Bind Customers.length, Format='Выбор корреспондента из {0} элементов'}">
 	<Dialog.Buttons>
-		<Button>Выбрать</Button>
+		<Button Command="{BindCmd Select, Argument={Bind Customers}}">Выбрать</Button>
 		<Button Command="{BindCmd Close}">Закрыть</Button>
 	</Dialog.Buttons>
 	<CollectionView RunAt="Server" ItemsSource="{Bind Customers}">

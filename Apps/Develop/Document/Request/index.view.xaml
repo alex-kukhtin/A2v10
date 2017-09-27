@@ -4,7 +4,7 @@
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Plus" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
-			<Button Icon="File" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
 			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
 			<!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action

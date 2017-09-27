@@ -354,12 +354,12 @@ namespace A2v10.Web.Mvc.Identity
              * var user = HttpContext.Current.User.Identity as ClaimsIdentity;
              */
 			IList<Claim> list = new List<Claim>();
-			/*
+            list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
+            /*
 			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
-			list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
 			list.Add(new Claim("AppKey", user.ComputedAppKey));
 			*/
-			return Task.FromResult(list);
+            return Task.FromResult(list);
 		}
 
 		public Task AddClaimAsync(AppUser user, Claim claim)

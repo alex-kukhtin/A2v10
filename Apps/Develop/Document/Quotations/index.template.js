@@ -18,7 +18,7 @@ let template = {
 			};
 		}
     },
-    validators: {
+	validators: {
     },
     commands: {
     }

@@ -16,14 +16,15 @@
     <div id="shell" class="shell">
         <header class="header">
             <div class="h-block">
-                <i class="ico ico-dashboard"></i>
-                <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
+                <i class="ico ico-dashboard-outline"></i>
+                <a class="app-title" href='/' @click.prevent="root">$(AppTitle)</a>
+                <span class="app-subtitle">администратор</span>
             </div>
             <div class="aligner"></div>
             <div class="h-block h-right">
                 <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
                 <div class="dropdown dir-down" v-dropdown>
-                    <button class="btn" toggle><i class="ico ico-user"></i> Администратор системы<span class="caret"></span></button>
+                    <button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
                     <div class="dropdown-menu menu down-right">
                         <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
                         <div class="divider"></div>

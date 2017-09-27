@@ -19,15 +19,15 @@
     margin-bottom: 12px;
 
     label {
-        font-size: 92%;
+        font-size: 95%;
         color: @label-color;
-        margin-bottom: 0.15em;
+        margin-bottom: .15em;
         display: block;
     }
 
     .descr {
         display: inline-block;
-        font-size: 92%;
+        font-size: 95%;
         margin-bottom: 0.25em;
         color: @label-color;
     }
@@ -112,6 +112,7 @@
                 line-height: @control-height;
                 display: block;
                 width: 100%;
+                min-height:1.8em;
             }
         }
 
@@ -158,7 +159,7 @@
         z-index: @hover-index;
     }
 
-    input, select {
+    input, select, textarea {
         width: 100%;
         background-color: transparent;
     }

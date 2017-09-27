@@ -21,6 +21,7 @@ namespace A2v10.Web.Mvc.Identity
 		public String UserName { get; set; }
 		#endregion
 
+        public String PersonName { get; set; }
 		public String Email { get; set; }
 		public String PhoneNumber { get; set; }
 

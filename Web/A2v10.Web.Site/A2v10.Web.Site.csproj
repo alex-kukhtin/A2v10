@@ -54,6 +54,7 @@
     <Content Include="app\app.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
+    <Content Include="app\components\datepicker.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\popover.js" />
@@ -113,8 +114,10 @@
     <Content Include="TestPages\collectionview.html" />
     <Content Include="TestPages\collectionview.js" />
     <Content Include="TestPages\collectionview.txt" />
+    <Content Include="TestPages\datepicker.html" />
     <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\formcontrol2.html" />
+    <Content Include="TestPages\datepicker.js" />
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\pagelayout.html" />
@@ -174,6 +177,7 @@
     <Content Include="Less\PropertyGrid.less" />
     <Content Include="Less\Splitter.less" />
     <Content Include="Less\Layout.less" />
+    <Content Include="Less\DatePicker.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

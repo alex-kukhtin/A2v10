@@ -13,7 +13,7 @@ namespace A2v10.Xaml
             if (source == null)
                 throw new XamlException("Pager has no Source binding");
             pager.MergeAttribute(":source", source.GetPath(context));
-            pager.Render(context, TagRenderMode.SelfClosing);
+            pager.Render(context, TagRenderMode.Normal);
         }
     }
 }

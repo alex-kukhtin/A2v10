@@ -1,4 +1,4 @@
-﻿/*20170921-7037*/
+﻿/*20170926-7038*/
 /*controllers/base.js*/
 (function () {
 
@@ -293,6 +293,14 @@
 			$modalClose(result) {
 				eventBus.$emit('modalClose', result);
 			},
+
+            $modalSelect(array) {
+                if (!('$selected' in array)) {
+                    console.error('invalid array for $modalSelect');
+                    return;
+                }
+                this.$modalClose(array.$selected);
+            },
 
 			$saveAndClose() {
 				if (this.$isDirty)

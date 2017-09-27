@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using System.Dynamic;
 using System.Text;
 using System.Net;
+using System.Collections.Generic;
 
-using Microsoft.AspNet.Identity;
-
-using A2v10.Infrastructure;
-using A2v10.Web.Mvc.Configuration;
-using A2v10.Request;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+
+using Microsoft.AspNet.Identity;
+
 using Newtonsoft.Json;
+using A2v10.Infrastructure;
+using A2v10.Request;
+using A2v10.Web.Mvc.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -68,15 +70,15 @@ namespace A2v10.Web.Mvc.Controllers
             }
             else if (pathInfo.StartsWith("_page/"))
             {
-                await Render(pathInfo.Substring(6), A2v10.Request.RequestUrlKind.Page);
+                await Render(pathInfo.Substring(6), RequestUrlKind.Page);
             }
             else if (pathInfo.StartsWith("_dialog/"))
             {
-                await Render(pathInfo.Substring(8), A2v10.Request.RequestUrlKind.Dialog);
+                await Render(pathInfo.Substring(8), RequestUrlKind.Dialog);
             }
             else if (pathInfo.StartsWith("_popup/"))
             {
-                await Render(pathInfo.Substring(7), A2v10.Request.RequestUrlKind.Popup);
+                await Render(pathInfo.Substring(7), RequestUrlKind.Popup);
             }
             else if (pathInfo.StartsWith("_data/"))
             {
@@ -85,7 +87,7 @@ namespace A2v10.Web.Mvc.Controllers
             }
             else if (pathInfo.StartsWith("_image/"))
             {
-                await Image("/" + pathInfo); // with element
+                await Image("/" + pathInfo); // with _image prefix
             }
             else
             {
@@ -98,16 +100,16 @@ namespace A2v10.Web.Mvc.Controllers
             try
             {
                 Response.ContentType = "text/html";
-                _baseController.Layout(Response.Output, RootUrl);
-            } catch (Exception ex)
+                var prms = new Dictionary<String, String>();
+                prms.Add("$(RootUrl)", RootUrl);
+                prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
+                prms.Add("$(AppTitle)", "A2:AppTitle");
+                _baseController.Layout(Response.Output, prms);
+            }
+            catch (Exception ex)
             {
                 WriteHtmlException(ex);
             }
-            /* TODO:
-            String layoutText = System.IO.File.ReadAllText(Server.MapPath("~/pages/layout.html"));
-            layoutText = layoutText.Replace("$(RootUrl)", RootUrl);
-            Response.Write(layoutText);
-            */
         }
 
         async Task Render(String pathInfo, RequestUrlKind kind)

@@ -14,8 +14,20 @@
 </div>
 `;
 
-    let staticTemplate =
+    let textAreaTemplate =
         `<div :class="cssClass">
+	<label v-if="hasLabel" v-text="label" />
+	<div class="input-group">
+		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder"/>
+		<slot></slot>
+		<validator :invalid="invalid" :errors="errors"></validator>
+	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
+</div>
+`;
+
+    let staticTemplate =
+`<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
 		<span v-text="text" :class="inputClass"/>
@@ -47,6 +59,21 @@
         }
     });
 
+    Vue.component('a2-textarea', {
+        extends: baseControl,
+        template: textAreaTemplate,
+        props: {
+            item: {
+                type: Object, default() {
+                    return {};
+                }
+            },
+            prop: String,
+            placeholder: String,
+            rows:Number
+        }
+    });
+
     Vue.component('static', {
         extends: baseControl,
         template: staticTemplate,
@@ -57,7 +84,7 @@
                 }
             },
             prop: String,
-            text: [String, Number]
+            text: [String, Number, Date]
         }
     });
 

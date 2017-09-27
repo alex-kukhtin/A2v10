@@ -1,4 +1,4 @@
-﻿/*20170919-7035*/
+﻿/*20170925-7038*/
 /* controllers/shell.js */
 
 (function () {
@@ -247,7 +247,7 @@
     <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
     <a2-content-view></a2-content-view>
     <div class="load-indicator" v-show="pendingRequest"></div>
-    <div class="modal-stack" v-if="hasModals" @keyup.esc='closeModal'>
+    <div class="modal-stack" v-if="hasModals">
         <div class="modal-wrapper" v-for="dlg in modals">
             <a2-modal :dialog="dlg"></a2-modal>
         </div>
@@ -329,6 +329,13 @@
 					dlg.resolve(result);
 			});
 
+            eventBus.$on('modalCloseAll', function () {
+                while (me.modals.length) {
+                    let dlg = me.modals.pop();
+                    dlg.resolve(false);
+                }
+            });
+
 			eventBus.$on('confirm', function (prms) {
                 let dlg = prms.data;
 				dlg.promise = new Promise(function (resolve) {
@@ -389,7 +396,8 @@
 
 			me.__dataStack__ = [];
 	
-			window.addEventListener('popstate', function (event, a, b) {
+            window.addEventListener('popstate', function (event, a, b) {
+				eventBus.$emit('modalCloseAll');
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
 					let oldUrl = event.state;
