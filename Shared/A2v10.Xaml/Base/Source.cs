@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Markup;
 using System.Xaml;
@@ -47,21 +48,20 @@ namespace A2v10.Xaml
 				String targetDir = System.IO.Path.Combine(basePath, path);
 				if (System.IO.Path.GetExtension(targetDir).ToLowerInvariant() == ".js")
 				{
-					if (System.IO.File.Exists(targetDir))
-						return System.IO.File.ReadAllText(targetDir);
+					if (File.Exists(targetDir))
+						return File.ReadAllText(targetDir);
 					else
 						throw new XamlException($"File not found {path}");
 				}
 				else
 				{
 					String trgPath = System.IO.Path.ChangeExtension(targetDir, "xaml");
-					if (System.IO.File.Exists(trgPath))
+					if (File.Exists(trgPath))
 						return XamlServices.Load(trgPath);
 					else
 						throw new XamlException($"File not found {path}");
 				}
 			}
-
 		}
 	}
 }

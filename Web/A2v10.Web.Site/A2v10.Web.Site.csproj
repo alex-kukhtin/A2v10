@@ -60,6 +60,7 @@
     <Content Include="app\components\popover.js" />
     <Content Include="app\components\tab.js" />
     <Content Include="app\components\combobox.js" />
+    <Content Include="app\components\taskpad.js" />
     <Content Include="app\components\upload.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
@@ -178,6 +179,7 @@
     <Content Include="Less\Splitter.less" />
     <Content Include="Less\Layout.less" />
     <Content Include="Less\DatePicker.less" />
+    <Content Include="Less\Taskpad.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -6,6 +6,10 @@
 @arrow-size: 9px;
 @arrow-gap: 6px;
 @popup-bk-color: #fffce9;
+@popup-bk-color-cyan: #edfcfe;
+@popup-bk-color-green: #f4ffd8;
+@popup-bk-color-red: #fedbdb;
+@popup-bk-color-blue: #e5f1fe;
 
 .popover-wrapper {
     position: relative;
@@ -131,4 +135,42 @@
             border-bottom-color: @popup-bk-color;
         }
     }
+}
+
+.popover-color(@color) {
+    > .popup-body {
+        background-color: @color;
+    }
+
+    &.po-right > .popup-body > .arrow:after {
+        border-right-color: @color;
+    }
+
+    &.po-left > .popup-body > .arrow:after {
+        border-left-color: @color;
+    }
+
+    &.po-top > .popup-body > .arrow:after {
+        border-top-color: @color;
+    }
+
+    &.po-bottom > .popup-body > .arrow:after {
+        border-bottom-color: @color;
+    }
+}
+
+.popover-wrapper.po-cyan {
+    .popover-color(@popup-bk-color-cyan);
+}
+
+.popover-wrapper.po-green {
+    .popover-color(@popup-bk-color-green);
+}
+
+.popover-wrapper.po-red {
+    .popover-color(@popup-bk-color-red);
+}
+
+.popover-wrapper.po-blue {
+    .popover-color(@popup-bk-color-blue);
 }

@@ -3,7 +3,7 @@
 
 /*
     TODO:
-    1. Разобраться с border: (td:first-child (left:none???)
+    1. do somthing with border: (td:first-child (left:none???)
 */
 
 
@@ -16,7 +16,13 @@
 
 
 @dg-danger-bg-color: rgba(255, 106, 0, 0.15);
+@dg-danger-brd-color: #fc7c7c;
 @dg-warning-bg-color: rgba(255, 216, 0, 0.15);
+@dg-warning-brd-color: gold;
+@dg-success-bg-color: rgba(216, 255, 216, 0.5);
+@dg-success-brd-color: #89e489;
+@dg-info-bg-color: rgba(26, 255, 216, 0.15);
+@dg-info-brd-color: #72eaea;
 
 @group-padding: 12px;
 @group-bg-color: lighten(@table-hdr-brd-color, 12%);
@@ -111,12 +117,20 @@ table.data-grid {
         background-color: @active-bg-color !important;
     }
 
-    td.danger {
+    td.danger, td.error {
         background-color: @dg-danger-bg-color !important;
     }
 
     td.warning {
         background-color: @dg-warning-bg-color !important;
+    }
+
+    td.success {
+        background-color: @dg-success-bg-color !important;
+    }
+
+    td.info {
+        background-color: @dg-info-bg-color !important;
     }
 
     td.marker {
@@ -138,12 +152,22 @@ table.data-grid {
 
         > .warning {
             background-color: @dg-warning-bg-color;
-            border-left-color: gold;
+            border-left-color: @dg-warning-brd-color;
         }
 
-        > .danger {
+        > .danger, > .error {
             background-color: @dg-danger-bg-color;
-            border-left-color: darken(@dg-danger-bg-color, 30%);
+            border-left-color: @dg-danger-brd-color;
+        }
+
+        > .success {
+            background-color: @dg-success-bg-color;
+            border-left-color: @dg-success-brd-color;
+        }
+
+        > .info {
+            background-color: @dg-info-bg-color;
+            border-left-color: @dg-info-brd-color;
         }
     }
 
@@ -231,8 +255,22 @@ table.data-grid.border {
 }
 
 
-table.data-grid > tbody > tr.warning {
-    background-color:@dg-warning-bg-color;
+table.data-grid > tbody {
+    > tr.warning {
+        background-color: @dg-warning-bg-color;
+    }
+
+    > tr.danger, > tr.error {
+        background-color: @dg-danger-bg-color;
+    }
+
+    > tr.success {
+        background-color: @dg-success-bg-color;
+    }
+
+    > tr.info {
+        background-color: @dg-info-bg-color;
+    }
 }
 
 table.hover {

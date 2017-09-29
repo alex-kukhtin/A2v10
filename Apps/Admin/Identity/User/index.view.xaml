@@ -3,8 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Plus" Tip="Добавить Пользоваетля">Создать</Button>
-            <Button Icon="Edit">Изменить</Button>
+            <Button Icon="Plus" Tip="Добавить пользоваетля" Command="{BindCmd Dialog, Action=Create, Url='/Identity/User/Create', Argument={Bind Customers}}">Создать</Button>
+            <Button Icon="Edit" Tip="Свойства пользоваетля" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Customers}}">Свойства</Button>
             <Button Icon="Delete">Удалить</Button>
             <Separator />
             <TextBox Label="Фильтр:"/>
@@ -13,12 +13,11 @@
         </Toolbar>
     </Page.Toolbar>
 	<CollectionView ItemsSource="{Bind Customers}" RunAt="ServerUrl">
-        <Pager Source="{Bind Parent.Pager}"></Pager>
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
 			<DataGridColumn Header="Логин" Content="{Bind Name}"/>
-			<DataGridColumn Header="Имя" Content="Amount" Align="Right"/>
+			<DataGridColumn Header="Имя" Content="{Bind Amount}" Align="Right"/>
             <DataGridColumn Header="e-mail" />
             <DataGridColumn Header="Телефон" />
             <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>

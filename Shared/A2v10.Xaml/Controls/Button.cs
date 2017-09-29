@@ -8,15 +8,23 @@ namespace A2v10.Xaml
 {
     public enum ButtonStyle
     {
-        Primary = 0,
-        Danger = 1,
-        Warning = 2,
-        Info = 3,
-        Success = 4,
+        Default = 0,
+        Primary = 1,
+        Danger = 2,
+        Warning = 3,
+        Info = 4,
+        Success = 5,
         Green = Success,
         Orange = Warning,
         Red = Danger,
         Cyan = Info,
+    }
+
+    public enum IconAlign
+    {
+        Default = 0,
+        Left = 0,
+        Top = 1,
     }
 
     public class Button : CommandControl
@@ -26,6 +34,10 @@ namespace A2v10.Xaml
         public UIElement DropDown { get; set; }
 
         public ButtonStyle Style { get; set; }
+
+        public ControlSize Size { get; set; }
+
+        public IconAlign IconAlign { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -52,6 +64,23 @@ namespace A2v10.Xaml
         {
             Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
             var button = new TagBuilder("button", "btn");
+            if (!Block)
+                button.AddCssClass("a2-inline");
+            switch (Size)
+            {
+                case ControlSize.Large:
+                    button.AddCssClass("lg");
+                    break;
+                case ControlSize.Small:
+                    button.AddCssClass("sm");
+                    break;
+                case ControlSize.Mini:
+                    button.AddCssClass("xs");
+                    break;
+            }
+            if (IconAlign == IconAlign.Top)
+                button.AddCssClass("icon-top");
+
             if (!(Parent is Toolbar))
             {
                 button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
@@ -61,6 +90,7 @@ namespace A2v10.Xaml
             MergeAttributes(button, context);
             if (!HasContent && (Icon != Icon.NoIcon))
                 button.AddCssClass("btn-icon");
+            MergeDisabled(button, context);
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

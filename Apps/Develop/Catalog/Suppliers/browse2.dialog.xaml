@@ -6,7 +6,7 @@
         Width="75%"
 		Title="{Bind Customers.length, Format='Выбор корреспондента из {0} элементов'}">
 	<Dialog.Buttons>
-		<Button Style="Orange" Command="{BindCmd Select, Argument={Bind Customers}}">Выбрать</Button>
+		<Button Style="Warning" Command="{BindCmd Select, Argument={Bind Customers}}">Выбрать</Button>
 		<Button Command="{BindCmd Close}">Закрыть</Button>
 	</Dialog.Buttons>
 	<CollectionView RunAt="Server" ItemsSource="{Bind Customers}">
@@ -18,9 +18,9 @@
         </Toolbar>
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
-			<DataGridColumn Header="Наименование" Content="Name" Editable="True"/>
-			<DataGridColumn Header="Сумма продаж" Content="Amount" Align="Right"/>
+			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
+			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
+			<DataGridColumn Header="Сумма продаж" Content="{Bind Amount}" Align="Right"/>
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>

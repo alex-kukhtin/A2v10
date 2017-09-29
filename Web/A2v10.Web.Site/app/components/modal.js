@@ -22,7 +22,7 @@ TODO:
             <div v-text="dialog.message" />
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        

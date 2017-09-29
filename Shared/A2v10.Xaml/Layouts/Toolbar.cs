@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
+
+    public enum ToolbarStyle
+    {
+        Default,
+        Transparent
+    }
+
     public class Toolbar : Container
     {
 
@@ -29,11 +37,15 @@ namespace A2v10.Xaml
         }
         #endregion
 
+        public ToolbarStyle Style { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tb = new TagBuilder("div", "toolbar");
             if (onRender != null)
                 onRender(tb);
+            if (Style != ToolbarStyle.Default)
+                tb.AddCssClass(Style.ToString().ToKebabCase());
             tb.RenderStart(context);
             RenderChildren(context);
             tb.RenderEnd(context);

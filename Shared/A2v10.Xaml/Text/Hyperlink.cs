@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tag = new TagBuilder("a", "a2-hyperlink");
+            var tag = new TagBuilder("a", "a2-hyperlink a2-inline");
             if (onRender != null)
                 onRender(tag);
             MergeAttributes(tag, context);

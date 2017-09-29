@@ -5,7 +5,8 @@
 			label: String,
 			required: Boolean,
 			align: { type: String, default: 'left' },
-			description: String
+			description: String,
+			disabled: Boolean
 		},
         computed: {
 			path() {
@@ -28,8 +29,8 @@
             },
             cssClass() {
 				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
-				if (this.required)
-					cls += ' required';
+				if (this.required) cls += ' required';
+				if (this.disabled) cls += ' disabled';
                 return cls;
             },
             inputClass() {

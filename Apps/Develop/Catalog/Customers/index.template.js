@@ -6,6 +6,14 @@
 
 let template = {
     properties: {
+		"TCustomer.$rowMark"() {
+			//return this.Amount === 22.0 ? 'warning' : '';
+			return this.Amount === 22.0 ? 'success' : '';
+		},
+		"TCustomer.$cellMark"() {
+			//return this.Amount >= 500 ? 'danger' : '';
+			return this.Amount === 40000 ? 'success' : '';
+		}
     },
     events: {
     },

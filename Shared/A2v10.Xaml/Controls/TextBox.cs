@@ -18,6 +18,7 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(input);
             MergeAttributes(input, context);
+            MergeDisabled(input, context);
             if (Multiline)
                 MergeAttributeInt32(input, context, "rows", nameof(Rows), Rows);
             MergeAlign(input, context, Align);

@@ -1,4 +1,4 @@
-﻿/*20170918-7034*/
+﻿/*20170928-7039*/
 /*components/datagrid.js*/
 (function () {
 
@@ -6,7 +6,7 @@
 2. size (compact, large ??)
 6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
-9. grouping: SERVER, XAML
+10.
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
@@ -277,14 +277,13 @@
         computed: {
             active() {
                 return this.row === this.$parent.selected;
-                //return this === this.$parent.rowSelected;
             },
             rowClass() {
                 let cssClass = '';
-                if (this.active)
-                    cssClass += 'active';
-                if (this.isMarkRow && this.mark)
+				if (this.active) cssClass += 'active';
+				if (this.$parent.isMarkRow && this.mark) {
 					cssClass += ' ' + this.row[this.mark];
+				}
 				if (this.level)
 					cssClass += ' lev-' + this.level;
                 return cssClass.trim();

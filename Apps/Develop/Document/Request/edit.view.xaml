@@ -17,10 +17,18 @@
 			<!--
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
-			<Button Block="True" Icon="File">Оформить сделку</Button>
-			<Button Block="True" Icon="Copy" Tip="Создать другую заявку на основании этой" 
+			<Button Block="True" Icon="File" Style="Orange" Size="Large">Оформить сделку</Button>
+            <Button Block="True" Icon="File" Style="Primary" Size="Large" Disabled="{Bind $isPristine}">Оформить другую сделку (запрещено)</Button>
+            <Button Block="True" Icon="Copy" Size="Large" Tip="Создать другую заявку на основании этой" 
 					Command="{BindCmd Exec}">Создать на основании</Button>
-			<TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
+            <Button Block="True" Icon="Approve" Style="Red" IconAlign="Top" Size="Large">Большая красная кнопка с иконкой сверху</Button>
+            <Button Block="True" Icon="Approve" Style="Green" Disabled="True">Green</Button>
+            <Button Icon="Approve" Style="Cyan" Size="Small">small 1</Button>
+            <Button Icon="Disapprove" Style="Green" Size="Mini">small 2</Button>
+            <Button Icon="ArrowExport" Style="Red" Size="Small">small 3</Button>
+            <Button Block="True" Icon="Approve" Style="Orange" Size="Large">Orange</Button>
+            <Button Block="True" Icon="Approve" Style="Primary">Primary</Button>
+            <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки" Disabled="{Bind $isPristine}">
 				<TextBox.AddOns>
 					<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
 					<Hyperlink Icon="Clear"/>
@@ -42,6 +50,7 @@
 	</Page.Taskpad>
 	<TabPanel>
 		<Tab Header="Заявка">
+            <Header>Заявка на поставку</Header>
 			<Grid Columns="1*, 1*, 2*">
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
@@ -69,7 +78,7 @@
                         Grid.Row="4" Grid.Col="2" Value="{Bind Document.Sum, DataType=Currency}"/>
 
             </Grid>
-			<Toolbar>
+			<Toolbar Style="Transparent">
 				<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
 				<Button Icon="Delete" Content="Удалить выделенную строку" />
 				<Button Icon="Dashboard" Content="Подбор товара" />
@@ -100,9 +109,9 @@
 					</DataGridColumn>
 					<DataGridColumn>
 						<Group>
-							<Button Icon="Delete" Command="{BindCmd Remove, Confirm='Are you sure?'}"></Button>
-                            <Button Icon="Trash">
-                                <Button.Command>
+							<Hyperlink Icon="Delete" Command="{BindCmd Remove, Confirm='Are you sure?'}"></Hyperlink>
+                            <Hyperlink Icon="Trash">
+                                <Hyperlink.Command>
                                     <BindCmd Command="Remove">
                                         <BindCmd.Confirm>
                                             <Confirm 
@@ -111,8 +120,8 @@
                                                 Title="{Bind Id, Format='Код рядка [{0}]'}"/>
                                         </BindCmd.Confirm>
                                     </BindCmd>
-                                </Button.Command>
-                            </Button>
+                                </Hyperlink.Command>
+                            </Hyperlink>
                             <Popover Icon="Info" Placement="Left">
 								<Text>
 									Информация о товаре:

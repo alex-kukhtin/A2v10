@@ -13,6 +13,16 @@ namespace A2v10.Xaml
         Left
     }
 
+    public enum PopoverBackgroundStyle
+    {
+        Default = 0,
+        Yellow = Default,
+        Cyan = 1,
+        Green = 2,
+        Red = 3,
+        Blue = 4
+    }
+
     [ContentProperty("Content")]
     public class Popover : Inline
     {
@@ -23,11 +33,15 @@ namespace A2v10.Xaml
 
         public String Url { get; set; }
 
+        public PopoverBackgroundStyle Background { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var po = new TagBuilder("popover");
+            var po = new TagBuilder("popover", "a2-inline");
             MergeAttributes(po, context);
             po.AddCssClass("po-" + Placement.ToString().ToKebabCase());
+            if (Background != PopoverBackgroundStyle.Default)
+                po.AddCssClass("po-" + Background.ToString().ToKebabCase());
             if (Icon != Icon.NoIcon)
                 po.MergeAttribute("icon", Icon.ToString().ToKebabCase());
             MergeBindingAttributeString(po, context, "title", nameof(Text), Text);
@@ -55,6 +69,13 @@ namespace A2v10.Xaml
                 context.Writer.Write(Content.ToString());
             }                
             po.RenderEnd(context);
+        }
+
+        protected override void OnEndInit()
+        {
+            base.OnEndInit();
+            if (Background == PopoverBackgroundStyle.Yellow)
+                Background = PopoverBackgroundStyle.Default;
         }
     }
 }

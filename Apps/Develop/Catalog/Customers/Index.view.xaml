@@ -42,12 +42,12 @@
         <Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
         <Button Icon="Alert"/>
     </Toolbar>
-    <DataGrid ItemsSource="{Bind Customers}" Hover="True" 
+    <DataGrid ItemsSource="{Bind Customers}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Mark="{Bind $cellMark}"/>
 		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
 		<DataGridColumn Header="Сумма продаж" Editable="True" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
-        <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right"/>
+        <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right" Mark="{Bind $cellMark}"/>
         <DataGridColumn ControlType="Validator"/>
 		<DataGridColumn Fit="True">
 			<CheckBox />

@@ -1,0 +1,71 @@
+﻿@import "Variables.less";
+
+
+@taskpad-collapsed-bg-color: @navbar-bg-color;
+@taskpad-gap: 6px;
+@taskpad-collapsed-width: 20px;
+
+@handle-size: 16px;
+
+.taskpad {
+    overflow: hidden;
+    border-left: 1px solid @light-brd-color;
+    position: relative;
+
+    .taskpad-body {
+        background-color: azure;
+        overflow: auto;
+        height: 100%;
+        margin-top: @handle-size;
+        margin-left: @taskpad-gap; // ???
+    }
+
+    &.expanded {
+        margin-left: 6px;
+
+        .collapse-handle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: auto;
+            padding: 1px 4px;
+            color: @default-brd-color;
+            font-size: 110%;
+
+            &:hover {
+                color: @link-hover-color;
+                text-decoration: none;
+                background-color: @taskpad-collapsed-bg-color;
+            }
+
+            &:before {
+                content: "\e9a5"; // chevron-left
+            }
+        }
+    }
+
+    &.collapsed {
+        background-color:@taskpad-collapsed-bg-color;
+        margin-left:3px;
+        .collapse-handle {
+            &:before {
+                content: "\e9a3"; // chevron-right
+            }
+        }
+    }
+
+    .taskpad-title {
+        background-color: @taskpad-collapsed-bg-color;
+        white-space: nowrap;
+        height: 100%;
+        cursor: pointer;
+        font-size: 14px;
+        padding-left: 2px;
+
+        .taskpad-label {
+            display: block;
+            padding-left: 10px;
+            transform: rotate(90deg);
+        }
+    }
+}

@@ -8,5 +8,11 @@
       "template": "index.template",
       "view": "Index.view"
     }
+  },
+  "dialogs": {
+    "edit": {
+      "dialog": "Edit.dialog",
+      "template": "edit.template"
+    }
   }
 }

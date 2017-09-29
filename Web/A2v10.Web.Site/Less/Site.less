@@ -31,7 +31,6 @@ body {
 }
 
 button {
-    padding: 4px 6px;
     font-size: @font-size;
     border:1px solid transparent;
     cursor:pointer;
@@ -158,6 +157,7 @@ header, .header {
 @import "Nav.less";
 @import "Page.less";
 @import "Splitter.less";
+@import "Taskpad.less";
 
 
 .side-bar {
@@ -445,13 +445,6 @@ pre.a2-code {
     margin:0;
 }
 
-.taskpad {
-    background-color:azure;
-    margin-left:6px;
-    border-left:1px solid #ddd;
-    padding:0 6px;
-}
-
 h2, .h2 { font-size: 1.6em; }
 h3, .h3 { font-size: 1.2em; }
 h4, .h4 { font-size: 1em; }
@@ -480,4 +473,16 @@ h5, .h5 { font-size: 0.85em; }
         font-size:1px;
         opacity:0;
     }
+}
+
+.badge {
+    display:inline-block;
+    padding:.25rem .4rem;
+    font-size:75%;
+    font-weight:700;
+    line-height:1;
+    text-align:center;
+    white-space:nowrap;
+    vertical-align:baseline;
+    border-radius:.25rem;
 }

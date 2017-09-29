@@ -39,7 +39,7 @@
                     <span class="bold" v-if="Parent.filter.Text">Filtered!!!</span>
                 </div>
                 <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
-                           :border="true" :hover="true" grid="vertical" :sort="true" :route-query="$query" mark="$rowMark" mark-style="marker">
+                           :border="true" :hover="true" grid="vertical" :sort="true" :route-query="$query" mark="$rowMark" mark-style="row">
                     <data-grid-column header="index" content="$index" align="right"></data-grid-column>
                     <data-grid-column header="" control-type="validator"></data-grid-column>
                     <data-grid-column header="Id" content="Id" width="0%" align="right"></data-grid-column>

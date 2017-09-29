@@ -30,6 +30,7 @@
       "app/components/tab.js",
       "app/components/modal.js",
       "app/components/image.js",
+      "app/components/taskpad.js",
       "app/directives/*.js",
       "app/controllers/base.js",
       "app/controllers/shell.js"

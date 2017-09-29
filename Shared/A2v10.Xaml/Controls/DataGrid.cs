@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,14 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    public enum RowMarkerStyle
+    {
+        None,
+        Row,
+        Marker,
+        Both
+    }
+
     [ContentProperty("Columns")]
     public class DataGrid : Control
     {
@@ -22,6 +31,10 @@ namespace A2v10.Xaml
         public Pager Pager { get; set; }
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
+
+        public RowMarkerStyle MarkerStyle { get; set; }
+
+        public Object Mark { get; set; }
 
         GroupDescriptions _groupBy;
         public GroupDescriptions GroupBy
@@ -48,6 +61,19 @@ namespace A2v10.Xaml
             MergeBoolAttribute(dataGrid, context, nameof(Border), Border);
             MergeBoolAttribute(dataGrid, context, nameof(Sort), Sort);
             dataGrid.MergeAttribute(":route-query", "$query"); // always!
+
+            if (MarkerStyle != RowMarkerStyle.None)
+                dataGrid.MergeAttribute("mark-style", MarkerStyle.ToString().ToKebabCase());
+
+            var mbind = GetBinding(nameof(Mark));
+            if (mbind != null)
+            {
+                dataGrid.MergeAttribute("mark", mbind.GetPath(context));
+            }
+            else if (Mark != null)
+            {
+                throw new XamlException("The Mark property must be a binding");
+            }
 
             // TODO: binding for GridLines ???
             if (GridLines != GridLinesVisibility.None)

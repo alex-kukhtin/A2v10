@@ -28,17 +28,26 @@ namespace A2v10.Xaml
 
         public ColumnControlType ControlType { get; set; }
 
+        public Object Mark { get; set; }
+
         internal void RenderColumn(RenderContext context, Int32 colIndex)
         {
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
             MergeBoolAttribute(column, context, nameof(Editable), Editable);
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
+
+            var markBind = GetBinding(nameof(Mark));
+            if (markBind != null)
+                column.MergeAttribute("mark", markBind.Path /*!without context!*/);
+            else if (Mark != null)
+                throw new XamlException("The Mark property must be a binding");
+
             Boolean isTemplate = Content is UIElementBase;
             String tmlId = null;
             if (!isTemplate)
             {
-                // always content without SEMICOLON!
+                // always content without a SEMICOLON!
                 var bindProp = GetBinding(nameof(Content));
                 if (bindProp != null)
                 {
@@ -47,7 +56,7 @@ namespace A2v10.Xaml
                         column.MergeAttribute("data-type", bindProp.DataType.ToString());
                 }
                 else if (Content != null)
-                    column.MergeAttribute("content", Content.ToString());
+                    throw new XamlException($"The Content property must be a binding ({Content})");
             }
 
             Bind ctBind = GetBinding(nameof(ControlType));

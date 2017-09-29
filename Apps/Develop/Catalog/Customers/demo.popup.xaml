@@ -11,7 +11,7 @@
     <CollectionView RunAt="Server" ItemsSource="{Bind Customers}">
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
-			<DataGridColumn Header="Код" Content="Id" Align="Right"/>
+			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
 			<DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Popovers">

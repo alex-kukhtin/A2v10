@@ -1,4 +1,4 @@
-﻿/*20170925-7038*/
+﻿/*20170928-7039*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -47,7 +47,6 @@ app.modules['utils'] = function () {
 	}
 
 	function notBlank(val) {
-		console.warn('not Blank:' + (typeof val) + ' val:' + val);
 		if (!val)
 			return false;
 		if (isDate(val))

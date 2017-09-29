@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tag = new TagBuilder("div", "taskpad");
+            var tag = new TagBuilder("a2-taskpad", null, IsInGrid);
             if (onRender != null)
                 onRender(tag);
             tag.RenderStart(context);

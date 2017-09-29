@@ -3,7 +3,7 @@
 
 
 @control-border: @default-brd-color;
-@label-color: #575757;
+@label-color: #757575;
 @control-bg-color:white;
 
 
@@ -220,10 +220,23 @@
     }
 }
 
+.control-group.disabled {
+    .input-group {
+        background-color: @disabled-bg-color;
+    }
+    a {
+        pointer-events:none;
+    }
+}
+
 .data-grid .control-group {
     margin:0;
 }
 
+
+.a2-inline + .a2-inline {
+  margin-left:.4rem;
+}
 
 .a2-hyperlink.small {
     font-size:92%;

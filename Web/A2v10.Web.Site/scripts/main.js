@@ -288,7 +288,7 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170925-7038*/
+/*20170928-7039*/
 /* services/utils.js */
 
 app.modules['utils'] = function () {
@@ -337,7 +337,6 @@ app.modules['utils'] = function () {
 	}
 
 	function notBlank(val) {
-		console.warn('not Blank:' + (typeof val) + ' val:' + val);
 		if (!val)
 			return false;
 		if (isDate(val))
@@ -1430,7 +1429,8 @@ app.modules['std:popup'] = function () {
 			label: String,
 			required: Boolean,
 			align: { type: String, default: 'left' },
-			description: String
+			description: String,
+			disabled: Boolean
 		},
         computed: {
 			path() {
@@ -1453,8 +1453,8 @@ app.modules['std:popup'] = function () {
             },
             cssClass() {
 				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
-				if (this.required)
-					cls += ' required';
+				if (this.required) cls += ' required';
+				if (this.disabled) cls += ' disabled';
                 return cls;
             },
             inputClass() {
@@ -1531,7 +1531,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder"/>
+		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1543,7 +1543,7 @@ Vue.component('validator-control', {
         `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder"/>
+		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1821,7 +1821,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20170918-7034*/
+/*20170928-7039*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1829,7 +1829,7 @@ Vue.component('validator-control', {
 2. size (compact, large ??)
 6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
-9. grouping: SERVER, XAML
+10.
 */
 
 /*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
@@ -2100,14 +2100,13 @@ Vue.component('validator-control', {
         computed: {
             active() {
                 return this.row === this.$parent.selected;
-                //return this === this.$parent.rowSelected;
             },
             rowClass() {
                 let cssClass = '';
-                if (this.active)
-                    cssClass += 'active';
-                if (this.isMarkRow && this.mark)
+				if (this.active) cssClass += 'active';
+				if (this.$parent.isMarkRow && this.mark) {
 					cssClass += ' ' + this.row[this.mark];
+				}
 				if (this.level)
 					cssClass += ' lev-' + this.level;
                 return cssClass.trim();
@@ -3088,7 +3087,7 @@ TODO:
             <div v-text="dialog.message" />
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+            <button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
         </div>
     </div>
 </div>        
@@ -3254,6 +3253,52 @@ TODO:
     });
 
 })();
+
+
+Vue.component("a2-taskpad", {
+	template:
+`<div :class="cssClass">
+	<a class="ico collapse-handle" @click.stop="toggle"></a>
+	<div v-if="expanded" class="taskpad-body">
+		<slot>
+		</slot>
+	</div>
+	<div v-else class="taskpad-title" @click.prevent="toggle">
+		<span class="taskpad-label">Задачи</span>
+	</div>
+</div>
+`,
+	data() {
+		return {
+			expanded: true,
+			__savedCols: '',
+		}
+	},
+	computed: {
+		cssClass() {
+			let cls = "taskpad";
+			if (this.expanded) cls += ' expanded'; else cls += ' collapsed';
+			return cls;
+		}
+	},
+	methods: {
+		toggle() {
+			// HACK
+			let topStyle = this.$el.parentElement.style;
+			this.expanded = !this.expanded;
+			if (this.expanded)
+				topStyle.gridTemplateColumns = this.__savedCols;
+			else
+				topStyle.gridTemplateColumns = "1fr 20px";
+		}
+	},
+	mounted() {
+		let topStyle = this.$el.parentElement.style;
+		this.__savedCols = topStyle.gridTemplateColumns;
+	}
+});
+
+
 /*20170911-7030*/
 /* directives/dropdown.js */
 

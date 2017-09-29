@@ -16,6 +16,9 @@ namespace A2v10.Xaml
 
         public Boolean Required { get; set; }
 
+        public Boolean Disabled { get; set; }
+
+
         Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
         public UIElementCollection AddOns { get { return _addOns.Value;} }
@@ -45,8 +48,18 @@ namespace A2v10.Xaml
                 {
                     tag.AddCssClass("add-on");
                     tag.MergeAttribute("tabindex", "-1");
+                    MergeDisabled(tag, context);
                 });
             }
+        }
+
+        internal virtual void MergeDisabled(TagBuilder tag, RenderContext context)
+        {
+            var disBind = GetBinding(nameof(Disabled));
+            if (disBind != null)
+                tag.MergeAttribute(":disabled", disBind.GetPath(context));
+            else if (Disabled)
+                tag.MergeAttribute("disabled", String.Empty);
         }
     }
 }
