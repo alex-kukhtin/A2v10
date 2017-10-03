@@ -34,6 +34,9 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_COMMAND(ID_NAVIGATE_REFRESH, OnReload)
 	ON_COMMAND(ID_NAVIGATE_REFRESH_IGNORE_CACHE, OnReloadIgnoreCache)
 	ON_COMMAND(ID_SHOW_DEVTOOLS, OnShowDevTools)
+	ON_MESSAGE(WM_APPCOMMAND, OnAppCommand)
+	ON_COMMAND(ID_NAVIGATE_BACK, OnNavigateBack)
+	ON_COMMAND(ID_NAVIGATE_FORWARD, OnNavigateForward)
 END_MESSAGE_MAP()
 
 // CCefView construction/destruction
@@ -213,4 +216,32 @@ void CCefView::OnShowDevTools()
 	CefBrowserSettings settings;
 	CefPoint elementAt;
 	host->ShowDevTools(info, nullptr, settings, elementAt);
+}
+
+// afx_msg
+void CCefView::OnNavigateBack() 
+{
+	if (m_browser != nullptr)
+		m_browser->GoBack();
+}
+
+// afx_msg 
+void CCefView::OnNavigateForward()
+{
+	if (m_browser != nullptr)
+		m_browser->GoForward();
+}
+
+// afx_msg
+LRESULT CCefView::OnAppCommand(WPARAM wParam, LPARAM lParam) 
+{
+	switch (GET_APPCOMMAND_LPARAM(lParam)) {
+	case APPCOMMAND_BROWSER_BACKWARD:
+		OnNavigateBack();
+		break;
+	case APPCOMMAND_BROWSER_FORWARD:
+		OnNavigateForward();
+		break;
+	}
+	return 0;
 }

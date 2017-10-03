@@ -9,10 +9,16 @@
 			"view": "Index.view"
 		}
 	},
-	"popups": {
-		"demo": {
-			"index": true,
-			"popup": "demo.popup"
-		}
-	}
+  "popups": {
+    "demo": {
+      "index": true,
+      "popup": "demo.popup"
+    }
+  },
+  "commands": {
+    "invokeSql": {
+      "type": "sql",
+      "procedure": "Catalog.Invoke"
+    }
+  }
 }

@@ -21,10 +21,20 @@ let template = {
 		"Customers[].Name": "Обязательное поле"
     },
     commands: {
-
+		TEST: TEST
     }
 };
 
+
+function TEST(arg) {
+	// THIS = root
+	let vm = this.$vm;
+	vm.$invoke('invokeSql', arg, 'catalog/customers')
+	.then((result) => {
+		console.dir(result);
+		alert(result.Customer.Id);
+	});
+}
 //alert('template created:' + template);
 
 module.exports = template;

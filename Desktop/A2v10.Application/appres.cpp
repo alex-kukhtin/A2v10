@@ -103,7 +103,6 @@ bool CApplicationResources::LoadResource(const char* szUrl, LPCSTR* pMime, std::
 {
 	ATLASSERT(pMime != nullptr);
 	*pMime = mimeHtml;
-	USES_CONVERSION;
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
 	LPCWSTR szError = nullptr;
@@ -113,9 +112,11 @@ bool CApplicationResources::LoadResource(const char* szUrl, LPCSTR* pMime, std::
 		try 
 		{
 			CString strUrl(parsedUrl.UrlToRequest());
-			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl, parsedUrl.search, A2W_CP(postData, CP_UTF8));
-			std::string rrResult = W2A_CP(wResult.c_str(), CP_UTF8);
-			//LPCSTR szResult= "<div><div>page not found.<br><a href=\"https://www.google.com.ua/\">Find!</a></div></div>";
+			// A2W
+			std::wstring wPost = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(postData);
+			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl, parsedUrl.search, wPost.c_str()); // A2W_CP(postData, CP_UTF8));
+			// W2A
+			std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wResult.c_str());
 			size_t resSize = rrResult.length();
 			data.resize(resSize);
 			if (resSize != 0)
@@ -129,7 +130,8 @@ bool CApplicationResources::LoadResource(const char* szUrl, LPCSTR* pMime, std::
 	}
 	if (szError) 
 	{
-		std::string rrResult = W2A_CP(szError, CP_UTF8);
+		// W2A
+		std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(szError);
 		size_t resSize = rrResult.length();
 		data.resize(resSize);
 		memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);

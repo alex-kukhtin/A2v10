@@ -17,6 +17,8 @@
 #define _AFX_ALL_WARNINGS
 
 #include "string"
+#include "locale"
+#include "codecvt"
 #include "list"
 #include "algorithm"
 

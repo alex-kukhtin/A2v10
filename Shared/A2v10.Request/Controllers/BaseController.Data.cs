@@ -29,6 +29,9 @@ namespace A2v10.Request
                 case "expand":
                     await ExpandData(userId, json, writer);
                     break;
+                case "invoke":
+                    await InvokeData(userId, json, writer);
+                    break;
                 default:
                     throw new RequestModelException($"Invalid data action {command}");
             }
@@ -46,6 +49,36 @@ namespace A2v10.Request
                 UserId = userId
             };
             IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+            WriteDataModel(model, writer);
+        }
+
+        async Task InvokeData(Int64 userId, String json, TextWriter writer)
+        {
+            ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+            String baseUrl = dataToInvoke.Get<String>("baseUrl");
+            String command = dataToInvoke.Get<String>("cmd");
+            ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
+            dataToExec.Set("UserId", userId);
+            var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+            var cmd = rm.GetCommand(command);
+            await ExecuteCommand(cmd, dataToExec, writer);
+        }
+
+        async Task ExecuteCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
+        {
+            switch (cmd.type)
+            {
+                case CommandType.sql:
+                    await ExecuteSqlCommand(cmd, dataToExec, writer);
+                    break;
+                default:
+                    throw new RequestModelException($"Invalid command type '{cmd.type}'");
+            }
+        }
+
+        async Task ExecuteSqlCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
+        {
+            IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
             WriteDataModel(model, writer);
         }
 

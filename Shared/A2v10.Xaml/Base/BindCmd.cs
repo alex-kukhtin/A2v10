@@ -21,7 +21,8 @@ namespace A2v10.Xaml
         DbRemoveSelected,
         Append,
         Browse,
-        Exec,
+        Execute,
+        ExecuteSelected,
         Remove,
         Dialog,
         Select
@@ -42,6 +43,9 @@ namespace A2v10.Xaml
         public String Argument { get; set; }
         public String Url { get; set; }
         public DialogAction Action { get; set; }
+
+        public String Execute { get; set; }
+        public String CommandName { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -83,10 +87,13 @@ namespace A2v10.Xaml
 
                 case CommandType.OpenSelected:
                     return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
+
                 case CommandType.Select:
                     return $"$modalSelect({CommandArgument(context)})";
+
                 case CommandType.DbRemoveSelected:
                     return $"$dbRemoveSelected({CommandArgument(context)} {GetConfirm(context)})";
+
                 case CommandType.Open:
                     if (indirect)
                     {
@@ -111,8 +118,11 @@ namespace A2v10.Xaml
                 case CommandType.Browse:
                     return $"$dialog('browse', '{CommandUrl}', {CommandArgument(context)})";
 
-                case CommandType.Exec:
-                    return $"$exec('add100rows', Document)";
+                case CommandType.Execute:
+                    return $"$exec('{GetName()}', {CommandArgument(context, true)} {GetConfirm(context)})";
+
+                case CommandType.ExecuteSelected:
+                    return $"$execSelected('{GetName()}', {CommandArgument(context)} {GetConfirm(context)})";
 
                 case CommandType.Dialog:
                     if (Action == DialogAction.Unknown)
@@ -123,10 +133,24 @@ namespace A2v10.Xaml
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
             }
         }
-
-        String CommandArgument(RenderContext context)
+        String GetName()
         {
-           var arg = ArgumentBinding.GetPath(context);
+            if (String.IsNullOrEmpty(CommandName))
+                throw new XamlException($"CommandName required for {Command} command");
+            return CommandName;
+        }
+
+        String CommandArgument(RenderContext context, Boolean nullable = false)
+        {
+            String arg = null;
+            if (nullable)
+            {
+                var argBind = GetBinding(nameof(Argument));
+                if (argBind != null)
+                    arg = argBind.GetPath(context);
+            }
+            else
+                arg = ArgumentBinding.GetPath(context);
             if (String.IsNullOrEmpty(arg))
                 return "null";
             return arg;
@@ -196,6 +220,7 @@ namespace A2v10.Xaml
                     break;
                 case CommandType.OpenSelected:
                 case CommandType.Select:
+                case CommandType.ExecuteSelected:
                 case CommandType.DbRemoveSelected:
                     {
                         var arg = GetBinding(nameof(Argument));

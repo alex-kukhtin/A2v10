@@ -48,8 +48,8 @@ void CModuleDoc::Serialize(CArchive& ar)
 	CModuleView* pView = reinterpret_cast<CModuleView*>(GetNextView(pos));
 	if (ar.IsStoring()) 
 	{
-		CStringA text = pView->GetTextA(); // UTF-8
-		ar.GetFile()->Write((LPCSTR) text, text.GetLength());
+		std::string text = pView->GetTextA(); // UTF-8
+		ar.GetFile()->Write(text.c_str(), text.length());
 		UpdateAllViews(NULL, HINT_DOCUMENT_SAVED, 0L);
 	}
 	else if (ar.IsLoading()) 

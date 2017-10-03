@@ -225,9 +225,26 @@ begin
 	exec [a2v10demo].[Catalog.Customer.Load] @UserId, @RetId;
 end
 go
+
+------------------------------------------------
+alter procedure a2v10demo.[Catalog.Invoke]
+@UserId bigint,
+@Id bigint = null,
+@Name nvarchar(255) = null,
+@Memo nvarchar(255) = null,
+@Amount money = null,
+@Photo bigint = null
+as
+begin
+	set nocount on;
+	--throw 60000, @Name, 0;
+	exec a2v10demo.[Catalog.Customer.Load] @UserId, @Id;
+end
+go
+
 ------------------------------------------------
 set noexec off;
 go
 
-delete from a2v10demo.[Catalog.Customers] where Id>=105
+--delete from a2v10demo.[Catalog.Customers] where Id>=105
 

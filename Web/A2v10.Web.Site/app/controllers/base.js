@@ -62,9 +62,24 @@
 			}
 		},
 		methods: {
-			$exec(cmd, ...args) {
+			$exec(cmd, arg, confirm) {
 				let root = this.$data;
-				root._exec_(cmd, ...args);
+				if (!confirm)
+					root._exec_(cmd, arg);
+				else
+					this.$confirm(confirm).then(() => root._exec_(cmd, arg));
+			},
+
+			$execSelected(cmd, arg, confirm) {
+				let root = this.$data;
+				if (!utils.isArray(arg)) {
+					console.error('Invalid argument for $execSelected');
+					return;
+				}
+				if (!confirm)
+					root._exec_(cmd, arg.$selected);
+				else
+					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
 
 			$save() {
@@ -100,14 +115,15 @@
 				});
 			},
 
-			$invoke(cmd, base, data) {
-				alert('TODO: call invoke command');
+			$invoke(cmd, data, base) {
 				let self = this;
                 let root = window.$$rootUrl;
 				let url = root + '/_data/invoke';
-				let baseUrl = base || self.$baseUrl;
+				let baseUrl = self.$baseUrl;
+				if (base)
+					baseUrl = urltools.combine('_page', base, 'index', 0);
 				return new Promise(function (resolve, reject) {
-					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl });
+					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
 							resolve(data);

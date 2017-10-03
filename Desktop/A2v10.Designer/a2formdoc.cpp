@@ -129,9 +129,9 @@ CXamlEditView* CA2FormDocument::GetXamlEditView()
 
 void CA2FormDocument::ParseXml(const char* szXml) 
 {
-	USES_CONVERSION;
-	LPCWSTR szXmlW = A2W_CP(szXml, CP_UTF8);
-	auto error = m_xmlDocument.Parse(szXmlW);
+	// A2W
+	std::wstring wXml = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(szXml);
+	auto error = m_xmlDocument.Parse(wXml.c_str());
 	if (error != tinyxml2::XML_SUCCESS)
 		throw CXmlError(error);
 }
@@ -172,8 +172,8 @@ void CA2FormDocument::LoadDocument(CFile* pFile, CXamlEditView* pView)
 void CA2FormDocument::SetXmlFromXmlText()
 {
 	CXamlEditView* pView = GetXamlEditView();
-	CString xmlText = pView->GetText();
-	m_xmlDocument.Parse(xmlText);
+	std::wstring xmlText = pView->GetText();
+	m_xmlDocument.Parse(xmlText.c_str());
 	Xml2Form();
 	SetModifiedXml(false);
 	SetModifiedText(false);
@@ -197,12 +197,12 @@ void CA2FormDocument::SaveDocument(CFile* pFile, CXamlEditView* pView)
 		if (IsModifiedXml()) {
 			SetXmlTextFromXml();
 		}
-		CStringA utf8Text = pView->GetTextA();
+		std::string utf8Text = pView->GetTextA();
 		// try to parse xml text
-		ParseXml(utf8Text.GetString());
+		ParseXml(utf8Text.c_str());
 		BYTE hdr[3] = { 0xef, 0xbb, 0xbf }; // UTF-8 signature
 		pFile->Write(hdr, 3);
-		pFile->Write((LPCSTR) utf8Text, utf8Text.GetLength());
+		pFile->Write((LPCSTR) utf8Text.c_str(), utf8Text.length());
 		Xml2Form(); // always
 	}
 	catch (CXmlError& err) {

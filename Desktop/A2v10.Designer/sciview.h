@@ -17,8 +17,8 @@ public:
 	CSciEditView();
 	virtual ~CSciEditView();
 
-	CString GetText();
-	CStringA GetTextA();
+	std::wstring GetText();
+	std::string GetTextA();
 	void SetText(LPCWSTR szText);
 	void SetTextA(LPCSTR szText);
 	void SetSavePoint();

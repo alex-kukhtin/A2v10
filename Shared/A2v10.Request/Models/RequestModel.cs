@@ -214,9 +214,20 @@ namespace A2v10.Request
         }
     }
 
+    public enum CommandType
+    {
+        none,
+        sql
+    }
+
     public class RequestCommand : RequestBase
     {
         public String command;
+        public CommandType type;
+        public String procedure;
+
+        [JsonIgnore]
+        public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
     }
 
     public class RequestImage : RequestBase
@@ -343,6 +354,14 @@ namespace A2v10.Request
                 d.SetParent(this);
             foreach (var p in popups.Values)
                 p.SetParent(this);
+        }
+
+        public RequestCommand GetCommand(String command)
+        {
+            RequestCommand cmd;
+            if (commands.TryGetValue(command, out cmd))
+                return cmd;
+            throw new RequestModelException($"Command '{command}' not found");
         }
 
         public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)

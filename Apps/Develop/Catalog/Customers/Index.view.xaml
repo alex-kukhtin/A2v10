@@ -39,7 +39,7 @@
         <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
         <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         <Separator />
-        <Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+        <Button Icon="Upload" Command="{BindCmd ExecuteSelected, CommandName=TEST, Argument={Bind Customers}}">Invoke</Button>
         <Button Icon="Alert"/>
     </Toolbar>
     <DataGrid ItemsSource="{Bind Customers}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"

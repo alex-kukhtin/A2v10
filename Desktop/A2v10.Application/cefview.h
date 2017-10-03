@@ -41,6 +41,9 @@ protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg LRESULT OnAppCommand(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnNavigateBack();
+	afx_msg void OnNavigateForward();
 	DECLARE_MESSAGE_MAP()
 
 	CefRefPtr<CCefClientHandler> m_clientHandler;

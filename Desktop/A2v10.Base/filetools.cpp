@@ -143,9 +143,8 @@ void CFileToolsImpl::SaveTextToFile(CFile& file, LPCWSTR szText, UINT codePage /
 		BYTE hdr[3] = {0xEF, 0xBB, 0xBF};
 		file.Write(hdr, 3);
 	}
-
-	USES_CONVERSION;
-	LPCSTR szUtf8 = W2A_CP(szText, CP_UTF8);
-	int len = strlen(szUtf8);
-	file.Write(szUtf8, len);
+	// W2A
+	std::string strUtf8 = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(szText);
+	int len = strUtf8.length();
+	file.Write(strUtf8.c_str(), len);
 }

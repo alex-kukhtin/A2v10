@@ -1000,6 +1000,9 @@ pre {
 .control-group .input-group > a .ico:before {
   color: inherit;
 }
+.control-group .input-group .a2-inline {
+  margin-left: 0 !important;
+}
 .control-group .input-group .ico-clear {
   font-size: 90%;
   margin: 0.1em;

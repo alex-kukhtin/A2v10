@@ -20,7 +20,7 @@
 			<Button Block="True" Icon="File" Style="Orange" Size="Large">Оформить сделку</Button>
             <Button Block="True" Icon="File" Style="Primary" Size="Large" Disabled="{Bind $isPristine}">Оформить другую сделку (запрещено)</Button>
             <Button Block="True" Icon="Copy" Size="Large" Tip="Создать другую заявку на основании этой" 
-					Command="{BindCmd Exec}">Создать на основании</Button>
+					Command="{BindCmd Execute, CommandName=Test}">Создать на основании</Button>
             <Button Block="True" Icon="Approve" Style="Red" IconAlign="Top" Size="Large">Большая красная кнопка с иконкой сверху</Button>
             <Button Block="True" Icon="Approve" Style="Green" Disabled="True">Green</Button>
             <Button Icon="Approve" Style="Cyan" Size="Small">small 1</Button>
@@ -83,7 +83,7 @@
 				<Button Icon="Delete" Content="Удалить выделенную строку" />
 				<Button Icon="Dashboard" Content="Подбор товара" />
 				<Code Content="{Bind Document.Rows.length}"></Code>
-				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Exec, Argument={Bind Document}}"/>
+				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
 				<Separator />
 				<CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
 			</Toolbar>

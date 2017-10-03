@@ -36,22 +36,23 @@ BOOL CSciEditView::PreCreateWindow(CREATESTRUCT& cs)
 	return __super::PreCreateWindow(cs);
 }
 
-CStringA CSciEditView::GetTextA()
+std::string CSciEditView::GetTextA()
 {
 	int len = GetCurrentDocLen();
 	// ANSI!
-	CStringA ansiText;
-	LPSTR buff = ansiText.GetBuffer(len + 1);
-	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(buff));
-	ansiText.ReleaseBuffer();
+	std::string ansiText;
+	ansiText.resize(len + 1);
+	//LPSTR buff = ansiText.GetBuffer(len + 1);
+	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(ansiText.data()));
 	return ansiText;
 }
 
-CString CSciEditView::GetText()
+std::wstring CSciEditView::GetText()
 {
-	USES_CONVERSION;
-	CStringA ansiA = GetTextA();
-	return CString(A2W_CP(ansiA.GetString(), CP_UTF8));
+	std::string ansiA = GetTextA();
+	// A2W
+	std::wstring ansiW = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(ansiA.c_str());
+	return ansiW;
 }
 
 void CSciEditView::SetReadOnly(bool bSet)
@@ -61,10 +62,9 @@ void CSciEditView::SetReadOnly(bool bSet)
 
 void CSciEditView::SetText(LPCWSTR szText)
 {
-	// UTF8
-	USES_CONVERSION;
-	LPCSTR szAnsi = W2A_CP(szText, CP_UTF8);
-	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>((LPCSTR)szAnsi));
+	// W2A
+	std::string strUtf8 = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(szText);
+	SendMessage(SCI_SETTEXT, 0, reinterpret_cast<LPARAM>(strUtf8.c_str()));
 }
 
 void CSciEditView::SetTextA(LPCSTR szText) {

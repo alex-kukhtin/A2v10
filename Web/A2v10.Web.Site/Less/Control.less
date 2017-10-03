@@ -49,8 +49,8 @@
         box-shadow: 1px 4px 10px @danger-shadow-color;
         z-index: @validator-index;
         line-height: 1.2em;
-        font-weight:normal;
-        font-style:normal;
+        font-weight: normal;
+        font-style: normal;
 
         &:before, &:after {
             content: '';
@@ -101,7 +101,7 @@
         input, select {
             height: @control-height;
             font-weight: inherit;
-            font-style:inherit;
+            font-style: inherit;
         }
 
         &.static {
@@ -112,7 +112,7 @@
                 line-height: @control-height;
                 display: block;
                 width: 100%;
-                min-height:1.8em;
+                min-height: 1.8em;
             }
         }
 
@@ -130,6 +130,10 @@
             .ico:before {
                 color: inherit;
             }
+        }
+
+        .a2-inline {
+            margin-left: 0 !important;
         }
 
         .ico-clear {
@@ -195,15 +199,15 @@
     }
 
     &:hover .input-group,
-    .input-group.focus
-    {
+    .input-group.focus {
         box-shadow: 1px 2px 4px @danger-shadow-color;
     }
 
     .input-group {
-        border-color: @danger-brd-color!important;
+        border-color: @danger-brd-color !important;
         background-color: #fff8f8;
         z-index: @invalid-index;
+
         &:after {
             content: '';
             position: absolute;

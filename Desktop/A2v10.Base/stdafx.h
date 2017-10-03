@@ -15,6 +15,12 @@
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 
+#include "string"
+#include "locale"
+#include "codecvt"
+#include "list"
+#include "algorithm"
+
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxole.h>         // MFC OLE classes
 #include <afxodlgs.h>       // MFC OLE dialog classes

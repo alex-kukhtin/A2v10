@@ -76,8 +76,8 @@ void CModuleView::OnDebugStepOut()
 /// afx_msg 
 void CModuleView::OnDebugRunInt() 
 {
-	CString code = GetText();
-	if (code.IsEmpty())
+	std::wstring code = GetText();
+	if (code.empty())
 		return;
 
 	CString pathName = GetDocument()->GetPathName();
@@ -93,7 +93,7 @@ void CModuleView::OnDebugRunInt()
 		CFileTools::SplitPath(pathName, path);
 		ctx.SetProperty(L"_dir_", JavaScriptValue::FromString(path.m_drive + path.m_dir));
 		ctx.SetProperty(L"_file_", JavaScriptValue::FromString(path.m_name + path.m_ext));
-		bClosing = JavaScriptRuntime::RunScript(code, pathName);
+		bClosing = JavaScriptRuntime::RunScript(code.c_str(), pathName);
 	}
 	catch (JavaScriptException& ex) 
 	{
