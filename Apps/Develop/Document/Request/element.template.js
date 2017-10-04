@@ -13,7 +13,8 @@ let template = {
 	},
 	events: {
 		// TODO:
-		'Root.create'(root) {
+		'Model.load'(root) {
+			//alert(root.Document.$isNew);
 			//alert(root.Document.DateCreated instanceof Date);
 		}
     },

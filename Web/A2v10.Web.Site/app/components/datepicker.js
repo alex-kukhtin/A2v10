@@ -1,7 +1,10 @@
 ﻿(function () {
 
 	const popup = require('std:popup');
+
 	const utils = require('utils');
+	const eventBus = require('std:eventBus');
+
 	const baseControl = component('control');
 
 	Vue.component('a2-date-picker', {
@@ -11,7 +14,7 @@
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />
-        <a href @click.stop.prevent="toggle"><i class="ico ico-calendar"></i></a>
+        <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
@@ -48,8 +51,10 @@
 		methods: {
 			dummy() {
 			},
-			toggle() {
+			toggle(ev) {
 				if (!this.isOpen) {
+					// close other popups
+					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
 						this.modelDate = utils.date.today();
 				}

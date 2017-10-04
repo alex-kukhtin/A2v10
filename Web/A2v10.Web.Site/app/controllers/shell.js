@@ -8,6 +8,7 @@
 	const modal = component('std:modal');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
+	const log = require('std:log');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -359,7 +360,11 @@
 			};
 		},
 		computed: {
-			processing() { return this.requestsCount > 0; }
+			processing() { return this.requestsCount > 0; },
+			traceEnabled: {
+				get() { return log.traceEnabled(); },
+				set(value) { log.enableTrace(value); }
+			}
 		},
         methods: {
             about() {
@@ -424,6 +429,9 @@
 
 			eventBus.$on('beginRequest', () => me.requestsCount += 1);
 			eventBus.$on('endRequest', () => me.requestsCount -= 1);
+
+			eventBus.$on('closeAllPopups', popup.closeAll);
+
 		}
     });
 

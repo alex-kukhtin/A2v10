@@ -263,9 +263,16 @@ app.modules['std:url'] = function () {
                 window.history.replaceState(null, null, newUrl);
             },
 			close(state) {
-				if (window.history.length)
+				if (window.history.length > 1) {
+					let oldUrl = window.location.pathname;
 					window.history.back();
-				else
+					// it is done?
+					setTimeout(() => {
+						if (window.location.pathname === oldUrl) {
+							store.commit('navigate', { url: makeBackUrl(state.route) });
+						}
+					}, 300);
+				} else
 					store.commit('navigate', { url: makeBackUrl(state.route) });
 			}
 		}
@@ -479,17 +486,39 @@ app.modules['utils'] = function () {
 
 
 app.modules['std:log'] = function () {
+
+	let _traceEnabled = false;
+
 	return {
 		info: info,
-		time: countTime
+		warn: warning,
+		error: error,
+		time: countTime,
+		traceEnabled() {
+			return _traceEnabled;
+		},
+		enableTrace(val) {
+			_traceEnabled = val;
+			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
+		}
 	};
 
 	function info(msg) {
-		/*TODO: слишком долго, нужно режим debug/release*/
-		//console.info(msg);
+		if (!_traceEnabled) return;
+		console.info(msg);
+	}
+
+	function warning(msg) {
+		if (!_traceEnabled) return;
+		console.warn(msg);
+	}
+
+	function error(msg) {
+		console.error(msg); // always
 	}
 
 	function countTime(msg, start) {
+		if (!_traceEnabled) return;
 		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
 	}
 };
@@ -574,7 +603,7 @@ app.modules['std:http'] = function () {
             doRequest('GET', url)
                 .then(function (html) {
 					if (selector.firstChild && selector.firstChild.__vue__) {
-						console.warn('destroy component');
+						//console.warn('destroy component');
 						selector.firstChild.__vue__.$destroy();
 					}
                     let dp = new DOMParser();
@@ -668,7 +697,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170927-7039*/
+/*20171004-7040*/
 /* services/datamodel.js */
 (function () {
 
@@ -737,7 +766,8 @@ app.modules['std:validators'] = function() {
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-				shadow[prop] = new Date(source[prop] || null);
+				let srcval = source[prop] || null;
+				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, parent);
@@ -783,7 +813,7 @@ app.modules['std:validators'] = function() {
 
 	function initRootElement(elem) {
 		// object already created
-		elem._root_.$emit('Root.create', elem);
+		elem._root_.$emit('Model.load', elem);
 	}
 
 	function createObject(elem, source, path, parent) {
@@ -797,6 +827,9 @@ app.modules['std:validators'] = function() {
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
+
+
+
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
 		}
@@ -805,7 +838,19 @@ app.modules['std:validators'] = function() {
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
 				this._root_._validateAll_();
-			return !this._errors_;
+			if (this._errors_)
+				return false;
+			for (var x in this) {
+				if (x[0] === '$' || x[0] === '_')
+					continue;
+				let sx = this[x];
+				if (utils.isObject(sx) && ('$valid' in sx)) {
+					let sx = this[x];
+					if (!sx.$valid)
+						return false;
+				}
+			}
+			return true;
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
@@ -843,7 +888,22 @@ app.modules['std:validators'] = function() {
 		defHidden(arr, PARENT, parent);
 		defHidden(arr, ROOT, parent._root_ || parent);
 
+		defPropertyGet(arr, "$valid", function () {
+			if (this._errors_)
+				return false;
+			for (var x of this) {
+				if (x._errors_)
+					return false;
+			}
+			return true;
+		});
+		defPropertyGet(arr, "$invalid", function () {
+			return !this.$valid;
+		});
+
+
 		createObjProperties(arr, arrctor);
+
 		let constructEvent = arrctor.name + '.construct';
 		arr._root_.$emit(constructEvent, arr);
 
@@ -945,6 +1005,10 @@ app.modules['std:validators'] = function() {
 
 		defHiddenGet(obj.prototype, "$vm", function () {
 			return this._root_._host_.$viewModel;
+		});
+
+		defHiddenGet(obj.prototype, "$isNew", function () {
+			return !this.$id;
 		});
 
 		defHiddenGet(obj.prototype, "$id", function () {
@@ -1075,7 +1139,6 @@ app.modules['std:validators'] = function() {
 				return item._errors_[path];
 			return null;
 		}
-		//console.warn('validate self element:' + path);
 		let res = validateImpl(item, path, val);
 		return saveErrors(item, path, res);
 	}
@@ -1168,8 +1231,9 @@ app.modules['std:validators'] = function() {
 		let allerrs = [];
 		for (var val in vals) {
 			let err1 = validateOneElement(me, val, vals[val]);
-			if (err1)
+			if (err1) {
 				allerrs.push({ x: val, e: err1 });
+			}
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
@@ -1285,10 +1349,12 @@ app.modules['std:popup'] = function () {
 
 	const __error = 'Perhaps you forgot to create a _click function for popup element';
 
+
 	return {
 		startService: startService,
 		registerPopup: registerPopup,
-		unregisterPopup: unregisterPopup
+		unregisterPopup: unregisterPopup,
+		closeAll: closeAllPopups
 	};
 
 	function registerPopup(el) {
@@ -1318,6 +1384,13 @@ app.modules['std:popup'] = function () {
 		if (node) return node.closest(css);
 		return null;
 	} 
+
+	function closeAllPopups() {
+		__dropDowns__.forEach((el) => {
+			if (el._close)
+				el._close(document);
+		});
+	}
 
 	function closePopups(ev) {
 		if (__dropDowns__.length === 0)
@@ -1394,7 +1467,7 @@ app.modules['std:popup'] = function () {
         destroyed() {
             let fc = this.$el.firstElementChild;
 			if (fc && fc.__vue__) {
-				console.warn('desroy component');
+				//console.warn('desroy component');
 				fc.__vue__.$destroy();
 			}
         },
@@ -1411,7 +1484,7 @@ app.modules['std:popup'] = function () {
 				else {
 					this.loading = true; // hides the current view
                     this.currentUrl = newUrl;
-                    console.warn('src was changed. load');
+                    //console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },
@@ -1676,7 +1749,10 @@ Vue.component('validator-control', {
 (function () {
 
 	const popup = require('std:popup');
+
 	const utils = require('utils');
+	const eventBus = require('std:eventBus');
+
 	const baseControl = component('control');
 
 	Vue.component('a2-date-picker', {
@@ -1686,7 +1762,7 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />
-        <a href @click.stop.prevent="toggle"><i class="ico ico-calendar"></i></a>
+        <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
@@ -1723,8 +1799,10 @@ Vue.component('validator-control', {
 		methods: {
 			dummy() {
 			},
-			toggle() {
+			toggle(ev) {
 				if (!this.isOpen) {
+					// close other popups
+					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
 						this.modelDate = utils.date.today();
 				}
@@ -2059,12 +2137,18 @@ Vue.component('validator-control', {
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);
 						},
-						eval: utils.eval
+						eval: utils.eval,
+						getHref() {
+							let id = arg2;
+							if (utils.isObjectExact(arg2))
+								id = arg2.$id;
+							return arg1 + '/' + id;
+						}
 					}
 				};
 				return h(tag, cellProps, [h(child, childProps)]);
@@ -2577,7 +2661,7 @@ Vue.component('popover', {
                 }
                 return undefined;
             },
-            dataHref() {
+			dataHref() {
                 return this.getHref ? this.getHref(this.item) : '';
             }
         },
@@ -2615,7 +2699,7 @@ Vue.component('popover', {
         },
         template: `
 <ul class="tree-view">
-    <tree-item v-for="(itm, index) in items" :options="options"
+    <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
         :click="click" :is-active="isActive" :expand="expand" :root-items="items">
     </tree-item>
@@ -2627,7 +2711,8 @@ Vue.component('popover', {
             isActive: Function,
             click: Function,
             expand: Function,
-            autoSelect: String
+			autoSelect: String,
+			getHref: Function
         },
         computed: {
             isSelectFirstItem() {
@@ -2666,10 +2751,14 @@ TODO:
 7. доделать фильтры
 */
 
+(function () {
 
-Vue.component('collection-view', {
-	store: component('std:store'),
-	template: `
+
+	const log = require('std:log');
+
+	Vue.component('collection-view', {
+		store: component('std:store'),
+		template: `
 <div>
 	<slot :ItemsSource="pagedSource" :Pager="thisPager" 
 		:filter="filter">
@@ -2680,160 +2769,161 @@ Vue.component('collection-view', {
 	</code>
 </div>
 `,
-	props: {
-		ItemsSource: Array,
-		pageSize: Number,
-		initialFilter: Object,
-		initialSort: Object,
-		runAt: String
-	},
-	data() {
-		// TODO: Initial sorting, filters
-		return {
-			filter: this.initialFilter,
-			filteredCount: 0,
-			localQuery: {
-				offset: 0,
-				dir: 'asc',
-				order: ''
+		props: {
+			ItemsSource: Array,
+			pageSize: Number,
+			initialFilter: Object,
+			initialSort: Object,
+			runAt: String
+		},
+		data() {
+			// TODO: Initial sorting, filters
+			return {
+				filter: this.initialFilter,
+				filteredCount: 0,
+				localQuery: {
+					offset: 0,
+					dir: 'asc',
+					order: ''
+				}
+			};
+		},
+		watch: {
+			dir() {
+				// можно отслеживать вычисляемые свойства
+				//alert('dir changed');
 			}
-		};
-	},
-	watch: {
-		dir() {
-			// можно отслеживать вычисляемые свойства
-			//alert('dir changed');
-		}
-	},
-	computed: {
-		isServer() {
-			return this.runAt === 'serverurl' || this.runAt === 'server';
 		},
-		isQueryUrl() {
-			// use window hash
-			return this.runAt === 'serverurl';
-		},
-		dir() {
-			if (this.isQueryUrl)
-				return this.$store.getters.query.dir;
-			return this.localQuery.dir;
-		},
-		offset() {
-			if (this.isQueryUrl)
-				return this.$store.getters.query.offset || 0;
-			return this.localQuery.offset;
-		},
-		order() {
-			if (this.isQueryUrl)
-				return this.$store.getters.query.order;
-			return this.localQuery.order;
-		},
-		pagedSource() {
-			if (this.isServer)
-				return this.ItemsSource;
-			let s = performance.now();
-			let arr = [].concat(this.ItemsSource);
-			// filter (TODO: // правильная фильтрация)
-			if (this.filter && this.filter.Text)
-				arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
-			// sort
-			if (this.order && this.dir) {
-				let p = this.order;
-				let d = this.dir === 'asc';
-				arr.sort((a, b) => {
-					if (a[p] === b[p])
-						return 0;
-					else if (a[p] < b[p])
-						return d ? -1 : 1;
-					return d ? 1 : -1;
-				});
+		computed: {
+			isServer() {
+				return this.runAt === 'serverurl' || this.runAt === 'server';
+			},
+			isQueryUrl() {
+				// use window hash
+				return this.runAt === 'serverurl';
+			},
+			dir() {
+				if (this.isQueryUrl)
+					return this.$store.getters.query.dir;
+				return this.localQuery.dir;
+			},
+			offset() {
+				if (this.isQueryUrl)
+					return this.$store.getters.query.offset || 0;
+				return this.localQuery.offset;
+			},
+			order() {
+				if (this.isQueryUrl)
+					return this.$store.getters.query.order;
+				return this.localQuery.order;
+			},
+			pagedSource() {
+				if (this.isServer)
+					return this.ItemsSource;
+				let s = performance.now();
+				let arr = [].concat(this.ItemsSource);
+				// filter (TODO: // правильная фильтрация)
+				if (this.filter && this.filter.Text)
+					arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
+				// sort
+				if (this.order && this.dir) {
+					let p = this.order;
+					let d = this.dir === 'asc';
+					arr.sort((a, b) => {
+						if (a[p] === b[p])
+							return 0;
+						else if (a[p] < b[p])
+							return d ? -1 : 1;
+						return d ? 1 : -1;
+					});
+				}
+				// HACK!
+				this.filteredCount = arr.length;
+				// pager
+				arr = arr.slice(this.offset, this.offset + this.pageSize);
+				log.time('get paged source:', s);
+				return arr;
+			},
+			sourceCount() {
+				if (this.isServer)
+					return this.ItemsSource.$RowCount;
+				return this.ItemsSource.length;
+			},
+			thisPager() {
+				return this;
+			},
+			pages() {
+				let cnt = this.filteredCount;
+				if (this.isServer)
+					cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
 			}
-			// HACK!
-			this.filteredCount = arr.length;
-			// pager
-			arr = arr.slice(this.offset, this.offset + this.pageSize);
-			console.warn('get paged source:' + (performance.now() - s).toFixed(2) + ' ms');
-			return arr;
 		},
-		sourceCount() {
-			if (this.isServer)
-				return this.ItemsSource.$RowCount;
-			return this.ItemsSource.length;
-		},
-		thisPager() {
-			return this;
-		},
-		pages() {
-			let cnt = this.filteredCount;
-			if (this.isServer)
-				cnt = this.sourceCount;
-			return Math.ceil(cnt / this.pageSize);
-		}
-	},
-	methods: {
-		$setOffset(offset) {
-			if (this.runAt === 'server') {
-				this.localQuery.offset = offset;
-				// for this BaseController only
-				this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
-			} else if (this.runAt === 'serverurl')
-				this.$store.commit('setquery', { offset: offset});
-			else
-				this.localQuery.offset = offset;
+		methods: {
+			$setOffset(offset) {
+				if (this.runAt === 'server') {
+					this.localQuery.offset = offset;
+					// for this BaseController only
+					this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+				} else if (this.runAt === 'serverurl')
+					this.$store.commit('setquery', { offset: offset });
+				else
+					this.localQuery.offset = offset;
 
-		},
-		first() {
-			this.$setOffset(0);
-		},
-		prev() {
-			let no = this.offset;
-			if (no > 0)
-				no -= this.pageSize;
-			this.$setOffset(no);
-		},
-		next() {
-			let no = this.offset + this.pageSize;
-			this.$setOffset(no);
-		},
-		last() {
-			//TODO
-			this.$setOffset(1000);
-		},
-		sortDir(order) {
-			return order === this.order ? this.dir : undefined;
-		},
-		doSort(order) {
-			let nq = { dir: this.dir, order: this.order};
-			if (nq.order === order)
-				nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
-			else {
-				nq.order = order;
-				nq.dir = 'asc';
+			},
+			first() {
+				this.$setOffset(0);
+			},
+			prev() {
+				let no = this.offset;
+				if (no > 0)
+					no -= this.pageSize;
+				this.$setOffset(no);
+			},
+			next() {
+				let no = this.offset + this.pageSize;
+				this.$setOffset(no);
+			},
+			last() {
+				//TODO
+				this.$setOffset(1000);
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				let nq = { dir: this.dir, order: this.order };
+				if (nq.order === order)
+					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				else {
+					nq.order = order;
+					nq.dir = 'asc';
+				}
+				if (this.runAt === 'server') {
+					this.localQuery.dir = nq.dir;
+					this.localQuery.order = nq.order;
+					// for this BaseController only
+					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+				}
+				else if (this.runAt === 'serverurl') {
+					this.$store.commit('setquery', nq);
+				} else {
+					// local
+					this.localQuery.dir = nq.dir;
+					this.localQuery.order = nq.order;
+				}
 			}
-			if (this.runAt === 'server') {
-				this.localQuery.dir = nq.dir;
-				this.localQuery.order = nq.order;
-				// for this BaseController only
-				this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+		},
+		created() {
+			if (this.initialSort) {
+				this.localQuery.order = this.initialSort.order;
+				this.localQuery.dir = this.initialSort.dir;
 			}
-			else if (this.runAt === 'serverurl') {
-				this.$store.commit('setquery', nq);
-			} else {
-				// local
-				this.localQuery.dir = nq.dir;
-				this.localQuery.order = nq.order;
-			}
+			this.$on('sort', this.doSort);
 		}
-	},
-	created() {
-		if (this.initialSort) {
-			this.localQuery.order = this.initialSort.order;
-			this.localQuery.dir = this.initialSort.dir;
-		}
-		this.$on('sort', this.doSort);
-	}
-});
+	});
 
+})();
 /*20170923-7038*/
 /* services/upload.js */
 
@@ -3383,7 +3473,7 @@ Vue.directive('focus', {
 				return;
 			t._selectDone = true;
 			if (t.select) t.select();
-			event.stopImmediatePropagation();
+			//event.stopImmediatePropagation();
 		}, true);
 	}
 });
@@ -3986,6 +4076,7 @@ Vue.directive('resize', {
 	const modal = component('std:modal');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
+	const log = require('std:log');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -4337,7 +4428,11 @@ Vue.directive('resize', {
 			};
 		},
 		computed: {
-			processing() { return this.requestsCount > 0; }
+			processing() { return this.requestsCount > 0; },
+			traceEnabled: {
+				get() { return log.traceEnabled(); },
+				set(value) { log.enableTrace(value); }
+			}
 		},
         methods: {
             about() {
@@ -4402,6 +4497,9 @@ Vue.directive('resize', {
 
 			eventBus.$on('beginRequest', () => me.requestsCount += 1);
 			eventBus.$on('endRequest', () => me.requestsCount -= 1);
+
+			eventBus.$on('closeAllPopups', popup.closeAll);
+
 		}
     });
 

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
     public class Header : UiContentElement
     {
         public ControlSize Size { get; set; }
+
+        public String Badge { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -23,8 +20,24 @@ namespace A2v10.Xaml
 
             var h = new TagBuilder(tagName, "a2-header", IsInGrid);
             MergeAttributes(h, context);
+            bool bHasBadge = GetBinding(nameof(Badge)) != null ||
+                !String.IsNullOrEmpty(Badge);
+            if (!bHasBadge)
+                MergeContent(h, context);
             h.RenderStart(context);
-            RenderContent(context);
+            if (bHasBadge)
+            {
+                var span = new TagBuilder("span");
+                MergeContent(span, context);
+                span.RenderStart(context);
+                RenderContent(context);
+                span.RenderEnd(context);
+            }
+            else
+            {
+                RenderContent(context);
+            }
+            RenderBadge(context, Badge);
             h.RenderEnd(context);
         }
     }

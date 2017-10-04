@@ -45,7 +45,7 @@
         destroyed() {
             let fc = this.$el.firstElementChild;
 			if (fc && fc.__vue__) {
-				console.warn('desroy component');
+				//console.warn('desroy component');
 				fc.__vue__.$destroy();
 			}
         },
@@ -62,7 +62,7 @@
 				else {
 					this.loading = true; // hides the current view
                     this.currentUrl = newUrl;
-                    console.warn('src was changed. load');
+                    //console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },

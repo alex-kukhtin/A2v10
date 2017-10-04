@@ -97,6 +97,7 @@ namespace A2v10.Xaml
             var grid = new TagBuilder("div", "grid", IsInGrid);
             if (onRender != null)
                 onRender(grid);
+            MergeAttributes(grid, context);
             // TODO: row/col definitions
             if (_rows != null)
                 grid.MergeStyle("grid-template-rows", _rows.ToAttribute());

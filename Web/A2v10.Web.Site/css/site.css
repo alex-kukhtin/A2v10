@@ -787,11 +787,16 @@ footer .right-part .menu,
 footer button,
 .footer button {
   background-color: #b94e4c;
-  font-size: 12px;
+  font-size: inherit;
   line-height: 14px;
   padding: 0 6px 1px 6px;
   color: white;
   text-transform: lowercase;
+  vertical-align: baseline;
+}
+footer button:focus,
+.footer button:focus {
+  outline-style: none;
 }
 footer .spinner,
 .footer .spinner {
@@ -834,7 +839,7 @@ textarea:focus {
 }
 input,
 select {
-  height: 1.8em;
+  height: 1.77em;
 }
 /* hide for focused */
 input::-moz-placeholder {
@@ -895,7 +900,7 @@ pre {
 */
 .control-group {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: .5rem;
   /* можно запретить :hover */
 }
 .control-group label {
@@ -916,6 +921,7 @@ pre {
   margin: 0;
   left: -1px;
   width: auto;
+  min-width: 150px;
   font-size: 96%;
   bottom: 100%;
   padding: 2px 6px 4px 6px;
@@ -973,7 +979,7 @@ pre {
 }
 .control-group .input-group input,
 .control-group .input-group select {
-  height: 1.8em;
+  height: 1.77em;
   font-weight: inherit;
   font-style: inherit;
 }
@@ -982,15 +988,15 @@ pre {
 }
 .control-group .input-group.static > span {
   padding: 0 5px;
-  line-height: 1.8em;
+  line-height: 1.77em;
   display: block;
   width: 100%;
-  min-height: 1.8em;
+  min-height: 1.77em;
 }
 .control-group .input-group > a {
   align-self: stretch;
   padding: 0 3px;
-  line-height: 1.8em;
+  line-height: 1.77em;
   color: #757575;
 }
 .control-group .input-group > a:hover {
@@ -1034,11 +1040,11 @@ pre {
 .control-group .control {
   border-style: none;
 }
-.control-group.required label:before {
+.control-group.required label:after {
   content: '\2731';
   display: inline-block;
   color: #dca7a7;
-  margin-right: 2px;
+  margin-left: 2px;
   vertical-align: 1px;
   font-size: 75%;
 }
@@ -1527,7 +1533,7 @@ table.hover > tbody > tr:hover {
 .toolbar.transparent .btn {
   color: #57a8fa;
 }
-.toolbar .btn {
+.toolbar .btn-tb {
   white-space: nowrap;
   background-color: transparent;
   text-transform: lowercase;
@@ -1535,29 +1541,32 @@ table.hover > tbody > tr:hover {
   min-width: 0;
   padding: 3px 6px 4px 6px;
 }
-.toolbar .btn:focus {
+.toolbar .btn-tb:focus {
   outline-style: none;
 }
-.toolbar .btn:hover {
+.toolbar .btn-tb:hover {
   background-color: #fdf4bf;
   border-color: #e5c365;
 }
-.toolbar .btn:active {
+.toolbar .btn-tb:active {
   background-color: #fff29d;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   border-color: #e5c365;
 }
-.toolbar .btn:disabled {
+.toolbar .btn-tb:disabled {
   color: #777;
 }
-.toolbar .btn:disabled:hover {
+.toolbar .btn-tb:disabled:hover {
   background-color: transparent;
   border-color: transparent;
 }
-.toolbar i.ico {
+.toolbar button > i.ico {
   display: inline-block;
   margin-right: 2px;
   color: #333;
+}
+.toolbar .a2-header {
+  margin: 0;
 }
 .toolbar > .divider {
   display: inline-block;
@@ -1567,23 +1576,23 @@ table.hover > tbody > tr:hover {
   background-color: #9dacca;
   margin: 1px 4px;
 }
-.toolbar .control-group {
+.toolbar > .control-group {
   display: inline-flex;
   margin: 1px 0;
   align-self: stretch;
   background-color: transparent;
 }
-.toolbar .control-group label {
+.toolbar > .control-group label {
   align-self: center;
   padding: 0 3px;
   text-transform: lowercase;
   font-size: 100%;
 }
-.toolbar .control-group select,
-.toolbar .control-group input {
+.toolbar > .control-group select,
+.toolbar > .control-group input {
   height: 1.5em;
 }
-.dropdown.show .btn {
+.dropdown.show > .btn {
   background-color: #eaf0ff;
   border-color: #9ba7b7;
   color: #555;
@@ -1696,7 +1705,7 @@ table.hover > tbody > tr:hover {
 }
 .tab-panel .tab-header > li {
   display: inline-block;
-  padding: 3px 10px 5px 10px;
+  padding: 0.45rem 1rem 0.55rem 1rem;
   list-style: none;
   cursor: pointer;
   border: 1px solid transparent;
@@ -1731,6 +1740,10 @@ table.hover > tbody > tr:hover {
 .tab-panel .tab-header > li.active:hover {
   border-bottom-color: transparent;
 }
+.tab-panel .tab-header > li .a2-header {
+  display: inline;
+  margin: 0;
+}
 .tab-panel .pane-header {
   grid-row: 1;
   grid-column: 2;
@@ -1740,6 +1753,9 @@ table.hover > tbody > tr:hover {
   color: #777;
   display: inline-flex;
   align-items: center;
+}
+.tab-panel .pane-header .a2-header {
+  margin: 0;
 }
 .tab-panel .tab-content {
   grid-row: 2;
@@ -1888,10 +1904,10 @@ table.a2-table tbody > tr > td label {
   display: inline-block;
 }
 table.a2-table tbody > tr > td .control-group {
-  margin: 0;
+  margin: -1px -1px -2px -1px;
 }
 table.a2-table tbody > tr > td .control-group .input-group {
-  border-style: none;
+  border-color: #ddd;
 }
 table.a2-table tbody > tr > td .a2-table {
   margin: -1px;
@@ -2191,6 +2207,12 @@ TODO:
   top: 100%;
   bottom: auto;
 }
+.dropdown-menu > .checkbox {
+  margin-left: 4px;
+}
+.dropdown-menu > .checkbox > span {
+  padding-left: 26px;
+}
 .dropdown {
   position: relative;
   overflow: visible;
@@ -2431,15 +2453,6 @@ TODO:
 .stack-panel.horizontal {
   flex-direction: row;
 }
-.badge {
-  display: inline-block;
-  background-color: #8591a2;
-  color: white;
-  padding: 0.2em .4em 0.3em 0.4em;
-  font-size: 85%;
-  margin-left: 0.4em;
-  border-radius: 0.8em;
-}
 .app-exception {
   margin: 50px auto;
   width: 600px;
@@ -2546,9 +2559,12 @@ h5,
 }
 .badge {
   display: inline-block;
+  background-color: #8591a2;
+  color: white;
   padding: .25rem .4rem;
-  font-size: 75%;
-  font-weight: 700;
+  margin-left: 0.4rem;
+  font-size: 85%;
+  font-weight: 500;
   line-height: 1;
   text-align: center;
   white-space: nowrap;

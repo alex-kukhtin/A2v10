@@ -14,15 +14,23 @@
 	<Page.Taskpad>
 		<Taskpad Width="25%">
             <CheckBox Value="{Bind Contract.NeedUnderwriting}">Потрібен андеррайтінг</CheckBox>
-            <Button Block="True">Відправити на андеррйтінг</Button>
-            <Button Block="True">Створити договір</Button>
+            <Button Block="True"
+                    Style="Warning" Icon="ArrowExport" IconAlign="Top">Відправити на андеррйтінг</Button>
+            <Button Block="True" Style="Info" Icon="File" IconAlign="Top">Створити договір</Button>
             <DatePicker Value="{Bind Contract.DateFrom}" Label="Дата начала" Bold="True"
                         Required="True" Description="введите дату начала действия"/>
             <Static Value="{Bind Contract.DateFrom, DataType=Date}" Align="Center"/>
+            <PropertyGrid GridLines="Horizontal">
+                <PropertyGridItem Name="Код" Content="{Bind Contract.Id}"></PropertyGridItem>
+                <PropertyGridItem Name="Создана" Content="{Bind Contract.CreatedDate, DataType=DateTime}"></PropertyGridItem>
+            </PropertyGrid>
         </Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
-		<Tab Header="Котировка">
+        <TabPanel.Header>
+            <Header Size="Small" Badge="Предварительная">Котировка "Пермьер-форте"</Header>
+        </TabPanel.Header>
+        <Tab Header="Котировка">
 			<Grid Columns="130, 1*">
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}" Align="Right"/>
                 <TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}">
@@ -69,20 +77,31 @@
 				<Tab>
 					<Tab.Header>
 						<Group>
-							<Span Content="{Bind $Number, Format='Перелік {0} '}"></Span>
-							<Code Content="{Bind Vehicles.Count, Format='({0})'}"></Code>
-                            <Hyperlink Size="Small" Icon="DeleteBox" Command="{BindCmd Remove, Confirm='Видалити перелік?'}"/>
+                            <Popover Icon="ErrorOutline" Placement="Bottom"
+                                     If="{Bind $invalid}"></Popover>
+                            <Header Size="Small" Content="{Bind $Number, Format='Перелік {0}'}" Badge="{Bind Vehicles.Count}"/>
+                            <Hyperlink Size="Small" Margin="0 0 0 10" Icon="DeleteBox" Command="{BindCmd Remove, Confirm='Видалити перелік?'}"/>
                         </Group>
 					</Tab.Header>
-					<Code Content="{Bind Sum}"></Code>
-					<Hyperlink Command="{BindCmd Append, Argument={Bind Vehicles}}">add vehicle</Hyperlink>
-					<!--
+                    <Toolbar Padding="7" Style="Transparent">
+                        <Header Size="Small">Об'єкти у переліку</Header>
+                        <Hyperlink Size="Small" Toolbar.Align="Right" Icon="PlusBox" Command="{BindCmd Append, Argument={Bind Vehicles}}">додати об'єкт</Hyperlink>
+                    </Toolbar>
+                    <Text>
+                        valid: <Span Content="{Bind $valid}"></Span>
+                        invalid: <Span Content="{Bind $invalid}"></Span>
+                    </Text>
+                    <!--
 					<DataGrid ItemsSource="{Bind Vehicles}">
 						<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 					</DataGrid>
 					-->
-                    <Header Size="Small">Об'єкти у переліку</Header>
-					<CollectionView ItemsSource="{Bind Vehicles}" PageSize="10">
+                    <Text>
+                        vehicles count: <Span Content="{Bind Vehicles.length}"></Span>,
+                        vehicles valid: <Span Content="{Bind Vehicles.$valid}"></Span>,
+                        vehicles invalid: <Span Content="{Bind Vehicles.$invalid}"></Span>
+                    </Text>
+                    <CollectionView ItemsSource="{Bind Vehicles}" PageSize="10">
                         <!--
 						<Code Content="{Bind Parent.ItemsSource}"></Code>
 						<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
@@ -119,12 +138,14 @@
 								<TableCell>Марка/модель</TableCell>
 								<Code Content="{Bind MarkModel.length}"/>
 								<TableCell Content="{Bind MarkModel}"/>
-							</TableRow>
+                                <TableCell Content="{Bind $valid}"/>
+                            </TableRow>
 							<TableRow>
 								<TableCell>Об'єм двигуна см&#xb3;</TableCell>
-                                <Static Value="{Bind Volume}" Bold="True"/>
-                                <Hyperlink Content="Ссылка"></Hyperlink>
-							</TableRow>
+                                <TextBox Value="{Bind Volume}" Bold="True"/>
+                                <Hyperlink Size="Small"  Icon="Flag" Content="ссылка"></Hyperlink>
+                                <TableCell Content="{Bind _errors_}"></TableCell>
+                            </TableRow>
                             <TableRow>
                                 <TableCell Wrap="NoWrap">Протиугінний засіб</TableCell>
                                 <CheckBox Wrap="NoWrap" Label="Оренда/прокат"/>

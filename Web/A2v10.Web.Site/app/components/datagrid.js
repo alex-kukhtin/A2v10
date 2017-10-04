@@ -236,12 +236,18 @@
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
 							col.command.cmd(arg1, arg2);
 						},
-						eval: utils.eval
+						eval: utils.eval,
+						getHref() {
+							let id = arg2;
+							if (utils.isObjectExact(arg2))
+								id = arg2.$id;
+							return arg1 + '/' + id;
+						}
 					}
 				};
 				return h(tag, cellProps, [h(child, childProps)]);

@@ -103,7 +103,7 @@
                 }
                 return undefined;
             },
-            dataHref() {
+			dataHref() {
                 return this.getHref ? this.getHref(this.item) : '';
             }
         },
@@ -141,7 +141,7 @@
         },
         template: `
 <ul class="tree-view">
-    <tree-item v-for="(itm, index) in items" :options="options"
+    <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
         :click="click" :is-active="isActive" :expand="expand" :root-items="items">
     </tree-item>
@@ -153,7 +153,8 @@
             isActive: Function,
             click: Function,
             expand: Function,
-            autoSelect: String
+			autoSelect: String,
+			getHref: Function
         },
         computed: {
             isSelectFirstItem() {

@@ -12,9 +12,8 @@ namespace A2v10.Xaml
     {
         public Object Content { get; set; }
 
-        internal override void MergeAttributes(TagBuilder tag, RenderContext context)
+        internal void MergeContent(TagBuilder tag, RenderContext context)
         {
-            base.MergeAttributes(tag, context);
             var contBind = GetBinding(nameof(Content));
             if (contBind != null)
                 tag.MergeAttribute("v-text", contBind.GetPathFormat(context));

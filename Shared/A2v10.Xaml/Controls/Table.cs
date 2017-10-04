@@ -108,23 +108,27 @@ namespace A2v10.Xaml
             if (isBind != null)
             {
                 var repeatAttr = $"(row, rowIndex) in {isBind.GetPath(context)}";
-                if (Rows.Count == 1)
+                using (new ScopeContext(context, "row"))
                 {
-                    Rows[0].RenderElement(context, (tag) => {
-                        tag.MergeAttribute("v-for", repeatAttr);
-                    } );
-                }
-                else
-                {
-                    var tml = new TagBuilder("template");
-                    tml.MergeAttribute("v-for", repeatAttr);
-                    tml.RenderStart(context);
-                    using (var cts = new ScopeContext(context, "row"))
+                    if (Rows.Count == 1)
                     {
-                        foreach (var row in Rows)
-                            row.RenderElement(context, (tag) => tag.MergeAttribute(":key", "rowIndex"));
+                        Rows[0].RenderElement(context, (tag) =>
+                        {
+                            tag.MergeAttribute("v-for", repeatAttr);
+                        });
                     }
-                    tml.RenderEnd(context);
+                    else
+                    {
+                        var tml = new TagBuilder("template");
+                        tml.MergeAttribute("v-for", repeatAttr);
+                        tml.RenderStart(context);
+                        using (var cts = new ScopeContext(context, "row"))
+                        {
+                            foreach (var row in Rows)
+                                row.RenderElement(context, (tag) => tag.MergeAttribute(":key", "rowIndex"));
+                        }
+                        tml.RenderEnd(context);
+                    }
                 }
             }
             else

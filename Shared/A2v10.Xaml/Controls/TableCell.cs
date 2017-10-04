@@ -35,6 +35,7 @@ namespace A2v10.Xaml
                 onRender(td);
 
             MergeAttributes(td, context);
+            MergeContent(td, context);
 
             if (VAlign != VerticalAlign.Default)
                 td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");

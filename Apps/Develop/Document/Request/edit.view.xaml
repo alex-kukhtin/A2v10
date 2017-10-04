@@ -135,9 +135,13 @@
 				<Pager Source="{Bind Parent.Pager}"></Pager>
                 <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="True" GridLines="Both">
                     <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>2</TableCell>
-                        <TableCell>3</TableCell>
+                        <TableCell Content="{Bind Id}"></TableCell>
+                        <TableCell>
+                            <TextBox Value="{Bind Entity.Name}" />
+                        </TableCell>
+                        <TableCell>
+                            <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
+                        </TableCell>
                     </TableRow>
                 </Table>
 			</CollectionView>

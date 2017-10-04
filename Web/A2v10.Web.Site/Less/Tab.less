@@ -4,7 +4,7 @@
 @tab-active-brd-color:gold;
 @tab-bg-color:#f8f8f8;
 @tab-hover-color:#eee;
-@tab-header-padding:3px 10px 5px 10px;
+@tab-header-padding:.45rem 1rem .55rem 1rem;
 
 .tab-panel {
     padding: 0;
@@ -66,6 +66,11 @@
             }
 
             .noselect();
+
+            .a2-header {
+                display:inline;
+                margin:0;
+            }
         }
     }
 
@@ -77,7 +82,10 @@
         padding-right: 6px;
         color: #777;
         display:inline-flex;
-        align-items:center;
+        align-items:center; 
+        .a2-header {
+            margin:0;
+        }
     }
 
     .tab-content {

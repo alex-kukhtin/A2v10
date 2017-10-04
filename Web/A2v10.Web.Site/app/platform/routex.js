@@ -113,9 +113,16 @@
                 window.history.replaceState(null, null, newUrl);
             },
 			close(state) {
-				if (window.history.length)
+				if (window.history.length > 1) {
+					let oldUrl = window.location.pathname;
 					window.history.back();
-				else
+					// it is done?
+					setTimeout(() => {
+						if (window.location.pathname === oldUrl) {
+							store.commit('navigate', { url: makeBackUrl(state.route) });
+						}
+					}, 300);
+				} else
 					store.commit('navigate', { url: makeBackUrl(state.route) });
 			}
 		}

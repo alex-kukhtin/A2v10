@@ -20,7 +20,7 @@ Vue.directive('focus', {
 				return;
 			t._selectDone = true;
 			if (t.select) t.select();
-			event.stopImmediatePropagation();
+			//event.stopImmediatePropagation();
 		}, true);
 	}
 });

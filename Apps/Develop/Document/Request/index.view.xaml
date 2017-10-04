@@ -17,7 +17,9 @@
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
 			<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-		</Toolbar>
+            <Separator />
+            <TextBox Label="Фильтр"></TextBox>
+        </Toolbar>
 	</Page.Toolbar>
 	<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
 		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 

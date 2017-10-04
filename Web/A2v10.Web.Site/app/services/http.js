@@ -78,7 +78,7 @@ app.modules['std:http'] = function () {
             doRequest('GET', url)
                 .then(function (html) {
 					if (selector.firstChild && selector.firstChild.__vue__) {
-						console.warn('destroy component');
+						//console.warn('destroy component');
 						selector.firstChild.__vue__.$destroy();
 					}
                     let dp = new DOMParser();

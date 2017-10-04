@@ -64,8 +64,10 @@ namespace A2v10.Xaml
         {
             Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
             var button = new TagBuilder("button", "btn");
-            if (!Block)
+            if (!Block && !(Parent is Toolbar))
                 button.AddCssClass("a2-inline");
+            if (Parent is Toolbar)
+                button.AddCssClass("btn-tb");
             switch (Size)
             {
                 case ControlSize.Large:

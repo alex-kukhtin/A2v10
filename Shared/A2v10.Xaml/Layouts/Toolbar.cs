@@ -46,6 +46,7 @@ namespace A2v10.Xaml
                 onRender(tb);
             if (Style != ToolbarStyle.Default)
                 tb.AddCssClass(Style.ToString().ToKebabCase());
+            MergeAttributes(tb, context);
             tb.RenderStart(context);
             RenderChildren(context);
             tb.RenderEnd(context);

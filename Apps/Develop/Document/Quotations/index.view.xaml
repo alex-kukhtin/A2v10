@@ -8,13 +8,19 @@
 		<Separator />
 		<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
 		<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-		<Button Content="Test Drop Down 2" Icon="Menu">
+		<Button Content="Test Drop Down 2" Icon="FilterOutline">
 			<Button.DropDown>
-				<DropDownMenu Direction="DownRight">
-					<MenuItem Command="{BindCmd Reload}" Icon="Reload">Reload</MenuItem>
-					<Separator />
-					<MenuItem Command="{BindCmd Requery}" Icon="Requery">Requery</MenuItem>
-				</DropDownMenu>
+                <DropDownMenu Padding="10">
+                    <TextBox Label="Текст" Value="" />
+                    <TextBox Label="Содержимое" Value="" />
+                    <TextBox Label="Фильтр" Value="" />
+                    <ComboBox Label="Группировать" />
+                    <Line />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Size="Small">OK</Button>
+                        <Button Size="Small">Отмена</Button>
+                    </StackPanel>
+                </DropDownMenu>
 			</Button.DropDown>
 		</Button>
 		<ComboBox Label="Группировать:" Value="{Bind Options.GroupBy}">

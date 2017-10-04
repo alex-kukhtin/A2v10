@@ -34,6 +34,10 @@ namespace A2v10.Xaml
                 return new Length() { Value = strVal };
             else if (strVal.EndsWith("px"))
                 return new Length() { Value = strVal };
+            else if (strVal.EndsWith("em"))
+                return new Length() { Value = strVal };
+            else if (strVal.EndsWith("rem"))
+                return new Length() { Value = strVal };
             else if (Double.TryParse(strVal, out dblVal))
                 return new Length() { Value = strVal + "px" };
             throw new XamlException($"Invalid length value '{strVal}'");

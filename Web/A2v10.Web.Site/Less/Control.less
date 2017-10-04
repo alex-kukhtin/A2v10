@@ -16,7 +16,7 @@
 .control-group {
     display: block;
     //background-color: aliceblue;
-    margin-bottom: 12px;
+    margin-bottom: .5rem;
 
     label {
         font-size: 95%;
@@ -38,6 +38,7 @@
         margin: 0;
         left: -1px;
         width: auto;
+        min-width:150px;
         font-size: 96%;
         bottom: 100%;
         padding: 2px 6px 4px 6px;
@@ -112,7 +113,7 @@
                 line-height: @control-height;
                 display: block;
                 width: 100%;
-                min-height: 1.8em;
+                min-height: @control-height;
             }
         }
 
@@ -178,11 +179,11 @@
 }
 
 .control-group.required {
-    label:before {
+    label:after {
         content: '\2731';
         display: inline-block;
         color: @danger-brd-color;
-        margin-right:2px;
+        margin-left:2px;
         vertical-align:1px;
         font-size:75%;
     }

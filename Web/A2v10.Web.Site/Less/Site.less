@@ -249,11 +249,15 @@ footer, .footer {
 
     button {
         background-color: @danger-btn-color;
-        font-size: 12px;
+        font-size: inherit;
         line-height:14px;
         padding: 0 6px 1px 6px;
         color: white;
         text-transform: lowercase;
+        vertical-align:baseline;
+        &:focus {
+            outline-style:none;
+        }
     }
 
     .spinner {
@@ -367,15 +371,6 @@ pre {
 @import "Grid.less";
 @import "Layout.less";
 
-.badge {
-    display: inline-block;
-    background-color: @dark-bk-color;
-    color: white;
-    padding: 0.2em .4em 0.3em 0.4em;
-    font-size: 85%;
-    margin-left: 0.4em;
-    border-radius: 0.8em;
-}
 
 .app-exception {
     margin: 50px auto;
@@ -476,13 +471,16 @@ h5, .h5 { font-size: 0.85em; }
 }
 
 .badge {
-    display:inline-block;
-    padding:.25rem .4rem;
-    font-size:75%;
-    font-weight:700;
-    line-height:1;
-    text-align:center;
-    white-space:nowrap;
-    vertical-align:baseline;
-    border-radius:.25rem;
+    display: inline-block;
+    background-color: @dark-bk-color;
+    color: white;
+    padding: .25rem .4rem;
+    margin-left: 0.4rem;
+    font-size: 85%;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
 }

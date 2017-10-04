@@ -1,4 +1,4 @@
-﻿/*20170927-7039*/
+﻿/*20171004-7040*/
 /* services/datamodel.js */
 (function () {
 
@@ -67,7 +67,8 @@
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-				shadow[prop] = new Date(source[prop] || null);
+				let srcval = source[prop] || null;
+				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, parent);
@@ -113,7 +114,7 @@
 
 	function initRootElement(elem) {
 		// object already created
-		elem._root_.$emit('Root.create', elem);
+		elem._root_.$emit('Model.load', elem);
 	}
 
 	function createObject(elem, source, path, parent) {
@@ -127,6 +128,9 @@
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
+
+
+
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
 		}
@@ -135,7 +139,19 @@
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
 				this._root_._validateAll_();
-			return !this._errors_;
+			if (this._errors_)
+				return false;
+			for (var x in this) {
+				if (x[0] === '$' || x[0] === '_')
+					continue;
+				let sx = this[x];
+				if (utils.isObject(sx) && ('$valid' in sx)) {
+					let sx = this[x];
+					if (!sx.$valid)
+						return false;
+				}
+			}
+			return true;
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
@@ -173,7 +189,22 @@
 		defHidden(arr, PARENT, parent);
 		defHidden(arr, ROOT, parent._root_ || parent);
 
+		defPropertyGet(arr, "$valid", function () {
+			if (this._errors_)
+				return false;
+			for (var x of this) {
+				if (x._errors_)
+					return false;
+			}
+			return true;
+		});
+		defPropertyGet(arr, "$invalid", function () {
+			return !this.$valid;
+		});
+
+
 		createObjProperties(arr, arrctor);
+
 		let constructEvent = arrctor.name + '.construct';
 		arr._root_.$emit(constructEvent, arr);
 
@@ -275,6 +306,10 @@
 
 		defHiddenGet(obj.prototype, "$vm", function () {
 			return this._root_._host_.$viewModel;
+		});
+
+		defHiddenGet(obj.prototype, "$isNew", function () {
+			return !this.$id;
 		});
 
 		defHiddenGet(obj.prototype, "$id", function () {
@@ -405,7 +440,6 @@
 				return item._errors_[path];
 			return null;
 		}
-		//console.warn('validate self element:' + path);
 		let res = validateImpl(item, path, val);
 		return saveErrors(item, path, res);
 	}
@@ -498,8 +532,9 @@
 		let allerrs = [];
 		for (var val in vals) {
 			let err1 = validateOneElement(me, val, vals[val]);
-			if (err1)
+			if (err1) {
 				allerrs.push({ x: val, e: err1 });
+			}
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);

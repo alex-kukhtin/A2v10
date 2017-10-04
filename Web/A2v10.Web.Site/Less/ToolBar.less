@@ -17,7 +17,7 @@
         }
     }
 
-    .btn {
+    .btn-tb {
         white-space: nowrap;
         //background-color: @toolbar-bg-color;
         background-color: transparent;
@@ -49,10 +49,14 @@
         }
     }
 
-    i.ico {
+    button > i.ico {
         display: inline-block;
         margin-right: 2px;
         color: @icon-color;
+    }
+
+    .a2-header {
+        margin:0;
     }
 
     > .divider {
@@ -64,7 +68,7 @@
         margin: 1px 4px;
     }
 
-    .control-group {
+    > .control-group {
         display: inline-flex;
         margin: 1px 0;
         align-self: stretch;
@@ -86,7 +90,7 @@
     }
 }
 
-.dropdown.show .btn {
+.dropdown.show > .btn {
     background-color: @dropdown-bg-color;
     border-color: @dropdown-brd-color;
     color: @toolbar-txt-color;

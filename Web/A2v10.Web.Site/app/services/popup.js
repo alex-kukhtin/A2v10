@@ -8,10 +8,12 @@ app.modules['std:popup'] = function () {
 
 	const __error = 'Perhaps you forgot to create a _click function for popup element';
 
+
 	return {
 		startService: startService,
 		registerPopup: registerPopup,
-		unregisterPopup: unregisterPopup
+		unregisterPopup: unregisterPopup,
+		closeAll: closeAllPopups
 	};
 
 	function registerPopup(el) {
@@ -41,6 +43,13 @@ app.modules['std:popup'] = function () {
 		if (node) return node.closest(css);
 		return null;
 	} 
+
+	function closeAllPopups() {
+		__dropDowns__.forEach((el) => {
+			if (el._close)
+				el._close(document);
+		});
+	}
 
 	function closePopups(ev) {
 		if (__dropDowns__.length === 0)

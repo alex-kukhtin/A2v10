@@ -1,8 +1,6 @@
 ﻿
 using A2v10.Infrastructure;
 using System;
-using System.ComponentModel;
-using System.Globalization;
 
 namespace A2v10.Xaml
 {
@@ -12,7 +10,10 @@ namespace A2v10.Xaml
         public Boolean? Show { get; set; }
         public Boolean? Hide { get; set; }
 
-        internal Boolean IsInGrid { get; set; }     
+        internal Boolean IsInGrid { get; set; } 
+        
+        public Thickness Margin { get; set; }
+        public Thickness Padding { get; set; }
 
         internal virtual Boolean SkipRender(RenderContext context)
         {
@@ -26,6 +27,10 @@ namespace A2v10.Xaml
             MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
             MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
             MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
+            if (Margin != null)
+                Margin.MergeStyles("margin", tag);
+            if (Padding != null)
+                Padding.MergeStyles("padding", tag);
         }
 
         internal void RenderContent(RenderContext context, Object content)
@@ -107,5 +112,20 @@ namespace A2v10.Xaml
             }
         }
 
+
+        internal void RenderBadge(RenderContext context, String badge)
+        {
+            var badgeBind = GetBinding("Badge");
+            if (badgeBind != null)
+            {
+                new TagBuilder("span", "badge")
+                    .MergeAttribute("v-text", badgeBind.GetPathFormat(context))
+                    .Render(context);
+            } else if (!String.IsNullOrEmpty(badge)) {
+                new TagBuilder("span", "badge")
+                    .SetInnerText(badge)
+                    .Render(context);
+            }
+        }
     }
 }
