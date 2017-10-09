@@ -1518,6 +1518,9 @@ table.data-grid > tbody > tr.info {
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf !important;
 }
+table.hover > tbody > tr.active:hover {
+  background-color: #cde6f7 !important;
+}
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1587,6 +1590,9 @@ table.hover > tbody > tr:hover {
   padding: 0 3px;
   text-transform: lowercase;
   font-size: 100%;
+}
+.toolbar > .control-group .input-group > a {
+  line-height: 1.5em;
 }
 .toolbar > .control-group select,
 .toolbar > .control-group input {
@@ -2277,6 +2283,13 @@ TODO:
 }
 .popover-wrapper > .popover-title {
   border-bottom: 1px dotted #57a8fa;
+}
+.popover-wrapper > .popover-title > span {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .popover-wrapper > .popover-title:hover {
   color: #0d82f8;

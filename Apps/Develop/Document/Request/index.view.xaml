@@ -1,12 +1,12 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Page.Toolbar>
-		<Toolbar>
-			<Button Icon="Plus" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
-			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
-			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
-			<!--
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Plus" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
+            <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
+            <Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
+            <!--
 					OpenSelected Action="Edit" -> arg из родителя (пропуская Parent) -> Action
 					Create Action="Edit"
 					RemoveSelected Confirm
@@ -14,43 +14,55 @@
 					Exec Action=Command
 					Invoke Action=Command
 					-->
-			<Separator />
-			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-			<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
             <Separator />
-            <TextBox Label="Фильтр"></TextBox>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            <Separator />
+            <TextBox Label="Фильтр" Value="{Bind Parent.Filter.Filter}">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="FilterOutline" Command="{BindCmd Reload}"/>
+                </TextBox.AddOns>
+            </TextBox>
+            <Span Content="{Bind Parent.Filter.Filter}"></Span>
         </Toolbar>
-	</Page.Toolbar>
-	<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-				  Striped="True" Sort="True" GridLines="Vertical">
-			<DataGrid.Pager>
-				<Pager Source="{Bind Parent.Pager}" />
-			</DataGrid.Pager>
-			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
-			<DataGridColumn Header="Номер" Content="{Bind SNo}" />
-			<DataGridColumn Header="Котрагент">
-                <Popover Placement="Right" Text="{Bind Agent.Name}" If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
-            </DataGridColumn>
-			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
-			<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
-			<DataGridColumn Header="Договор" Content="{Bind Contract.FullName}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
-			<DataGridColumn Header="Contract Id" Content="{Bind Contract.Id}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
-			<DataGridColumn Header="Comp" Content="{Bind Company.Id}" />
-			<DataGridColumn Header="Договор">
-				<Popover Icon="InfoOutline" Background="Cyan" Text="{Bind Contract.FullName}" Placement="Left" If="{Bind Contract.Id}">
-					<Popup Width="230px">
-						<Text>Информация о договоре
-							<Break/>"<Span Content="{Bind Contract.FullName}" Bold="True"></Span>"
-							<Line/>
-							который можно открыть прямо отсюда
-							<Hyperlink Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}">ссылка на договор</Hyperlink>
-						</Text>
-					</Popup>					
-				</Popover>
-			</DataGridColumn>
-		</DataGrid>
-	</CollectionView>
+    </Page.Toolbar>
+    <Page.CollectionView>
+        <CollectionView ItemsSource="{Bind Documents}" RunAt="Client" FilterDelegate="Filter">
+            <CollectionView.Filter>
+                <FilterDescription>
+                    <FilterItem Property="Filter" />
+                </FilterDescription>
+            </CollectionView.Filter>
+        </CollectionView>
+    </Page.CollectionView>
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+				Striped="True" Sort="True" GridLines="Vertical">
+		<DataGrid.Pager>
+			<Pager Source="{Bind Parent.Pager}" />
+		</DataGrid.Pager>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Номер" Content="{Bind SNo}" />
+		<DataGridColumn Header="Котрагент">
+            <Popover Placement="Right" Text="{Bind Agent.Name}" If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
+        </DataGridColumn>
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
+		<DataGridColumn Header="Договор" Content="{Bind Contract.FullName}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
+		<DataGridColumn Header="Contract Id" Content="{Bind Contract.Id}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
+		<DataGridColumn Header="Comp" Content="{Bind Company.Id}" />
+		<DataGridColumn Header="Договор">
+			<Popover Icon="InfoOutline" Background="Cyan" Text="{Bind Contract.FullName}" Placement="Left" If="{Bind Contract.Id}">
+				<Popup Width="230px">
+					<Text>Информация о договоре
+						<Break/>"<Span Content="{Bind Contract.FullName}" Bold="True"></Span>"
+						<Line/>
+						который можно открыть прямо отсюда
+						<Hyperlink Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}">ссылка на договор</Hyperlink>
+					</Text>
+				</Popup>					
+			</Popover>
+		</DataGridColumn>
+	</DataGrid>
 </Page>
 
     

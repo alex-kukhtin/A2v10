@@ -1,4 +1,4 @@
-﻿/* 20170827-7012 */
+﻿/* 20171008-7042 */
 ------------------------------------------------
 set noexec off;
 go
@@ -72,9 +72,9 @@ begin
 	create table a2security.UserGroups
 	(
 		UserId	bigint	not null
-			constraint FK_UserGroups_Users_Id foreign key references a2security.Users(Id),
+			constraint FK_UserGroups_UsersId_Users foreign key references a2security.Users(Id),
 		GroupId bigint	not null
-			constraint FK_UserGroups_Group_Id foreign key references a2security.Groups(Id),
+			constraint FK_UserGroups_GroupId_Groups foreign key references a2security.Groups(Id),
 		constraint PK_UserGroups primary key(UserId, GroupId)
 	)
 end
@@ -108,11 +108,11 @@ begin
 		Id	bigint	not null constraint PK_UserRoles primary key
 			constraint DF_UserRoles_PK default(next value for a2security.SQ_UserRoles),
 		RoleId bigint null
-			constraint FK_UserRoles_Roles_Id foreign key references a2security.Roles(Id),
+			constraint FK_UserRoles_RoleId_Roles foreign key references a2security.Roles(Id),
 		UserId	bigint	null
-			constraint FK_UserRoles_Users_Id foreign key references a2security.Users(Id),
+			constraint FK_UserRoles_UserId_Users foreign key references a2security.Users(Id),
 		GroupId bigint null 
-			constraint FK_UserRoles_GroupId_Id foreign key references a2security.Groups(Id)
+			constraint FK_UserRoles_GroupId_Groups foreign key references a2security.Groups(Id)
 	)
 end
 go
@@ -131,7 +131,7 @@ begin
 		[Object] sysname not null,
 		[ObjectId] bigint not null,
 		UserId bigint null 
-			constraint FK_Acl_UserId_AG_USER foreign key references a2security.Users(Id),
+			constraint FK_Acl_UserId_Users foreign key references a2security.Users(Id),
 		GroupId bigint null 
 			constraint FK_Acl_GroupId_Groups foreign key references a2security.Groups(Id),
 		CanView smallint not null	-- 0

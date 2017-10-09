@@ -1,6 +1,8 @@
 <!-- Demo page -->
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+    <Page.CollectionView>
+        <CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl" />
+    </Page.CollectionView>
 	<Toolbar>
         <Button Icon="Plus" Content="Создать" Command="{BindCmd Create, Url='/Document/Quotations/Edit'}" />
         <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/Document/Quotations/Edit', Argument={Bind Contracts}}">Открыть</Button>
@@ -39,18 +41,19 @@
 				</ComboBoxItem.Value>
 			</ComboBoxItem>
 		</ComboBox>
-		<TextBox Label="?:"></TextBox>
+		<TextBox Label="?:" Value="{Bind Options.GroupBy}"></TextBox>
 	</Toolbar>
     <!--GroupBy="{Bind Options.GroupBy}"-->
-	<CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl">
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" GroupBy="{Bind Parent.GroupBy}"
 				  Striped="True" Sort="True" GridLines="Vertical">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
+            <!--
 			<DataGrid.GroupBy>
 				<GroupDescription GroupBy="StateName" Title="Состояние: {Value} [{Count}]" Collapsed="False" Count="True"/>
 			</DataGrid.GroupBy>
+            -->
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center"/>
 			<DataGridColumn Header="Продукт" Content="{Bind ProductName}"/>
@@ -68,7 +71,6 @@
 			<DataGridColumn Header="Договор" Content="Contract" />
 			-->
 		</DataGrid>
-	</CollectionView>
 	<Toolbar>
 		<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
 		<Button Icon="Delete">Удалить</Button>

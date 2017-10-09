@@ -1,5 +1,5 @@
 ﻿
-/*20170920-7036*/
+/*20171006-7041*/
 /* components/modal.js */
 
 (function () {
@@ -88,7 +88,7 @@ TODO:
                 return "ico ico-" + this.dialog.style;
             },
             buttons: function () {
-                console.warn(this.dialog.style);
+                //console.warn(this.dialog.style);
                 let okText = this.dialog.okText || 'OK';
                 let cancelText = this.dialog.cancelText || 'Cancel';
                 if (this.dialog.buttons)

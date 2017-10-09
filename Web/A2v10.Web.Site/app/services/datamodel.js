@@ -1,4 +1,4 @@
-﻿/*20171004-7040*/
+﻿/*20171006-7041*/
 /* services/datamodel.js */
 (function () {
 
@@ -255,6 +255,10 @@
 		return this;
 	};
 
+	_BaseArray.prototype.$clearSelected = function () {
+		platform.set(this, '$selected', null);
+	}
+
 	_BaseArray.prototype.$remove = function (item) {
 		if (!item)
 			return;
@@ -386,6 +390,18 @@
 			let func = events[event];
 			func.call(undefined, ...arr);
 		}
+	}
+
+	function getDelegate(name) {
+		let tml = this.$template;
+		if (!tml.delegates) {
+			console.error('There are no delegates in the template');
+			return null;
+		}
+		if (name in tml.delegates) {
+			return tml.delegates[name];
+		}
+		console.error(`Delegate "${name}" not found in the template`);
 	}
 
 	function executeCommand(cmd, ...args) {
@@ -584,6 +600,7 @@
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
 		root.prototype._exec_ = executeCommand;
+		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		// props cache for t.construct

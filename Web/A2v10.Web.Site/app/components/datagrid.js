@@ -1,4 +1,4 @@
-﻿/*20170928-7039*/
+﻿/*20171006-7041*/
 /*components/datagrid.js*/
 (function () {
 
@@ -281,8 +281,8 @@
 			level : Number
         },
         computed: {
-            active() {
-                return this.row === this.$parent.selected;
+			active() {
+				return this.row == this.$parent.selected;
             },
             rowClass() {
                 let cssClass = '';
@@ -365,7 +365,12 @@
 				return cssClass;
 			},
 			selected() {
-				return this.itemsSource.$selected;
+				// reactive!!!
+				let src = this.itemsSource;
+				if (src.$origin) {
+					src = src.$origin;
+				}
+				return src.$selected;
 			},
 			isGridSortable() {
 				return !!this.sort;

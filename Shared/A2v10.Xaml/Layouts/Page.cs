@@ -11,6 +11,7 @@ namespace A2v10.Xaml
         public UIElement Taskpad { get; set; }
         public String Title { get; set; }
 
+        public CollectionView CollectionView { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -34,6 +35,9 @@ namespace A2v10.Xaml
             page.RenderStart(context);
             RenderTitle(context);
 
+            if (CollectionView != null)
+                CollectionView.RenderStart(context);
+
             if (isGridPage)
             {
                 if (Toolbar != null)
@@ -46,6 +50,10 @@ namespace A2v10.Xaml
             }
             else
                 RenderChildren(context);
+
+            if (CollectionView != null)
+                CollectionView.RenderEnd(context);
+
             page.RenderEnd(context);
         }
 

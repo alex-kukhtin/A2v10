@@ -6,7 +6,7 @@
 
 // TODO
 
-let template = {
+const template = {
     properties: {
         "TCustomer.$Sum": function () {
             return this.Amount * 2;
@@ -27,7 +27,10 @@ let template = {
     },
     validators: {
         "Customers[].Name": "Обязательное поле"
-    },
+	},
+	delegates: {
+		filter : filterDelegate
+	},
     commands: {
         test(args) {
             // this === root;
@@ -78,5 +81,10 @@ let template = {
         }
     }
 };
+
+function filterDelegate(item, filter) {
+	// фильтрация элементов
+	return item.Id.toString().indexOf(filter.Filter) != -1;
+}
 
 module.exports = template;

@@ -393,7 +393,17 @@
                  });
 
                 arr.$loaded = true;
-            },
+			},
+
+			$delegate(name) {
+				const root = this.$data;
+				return root._delegate_(name);
+				// TODO: get delegate from template
+				return function (item, filter) {
+					console.warn('filter:' + item.Id + " filter:" + filter.Filter);
+					return true;
+				}
+			},
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;

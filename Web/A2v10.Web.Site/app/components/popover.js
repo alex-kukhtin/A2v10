@@ -55,6 +55,6 @@ Vue.component('popover', {
 			this.state = 'hidden';
 			this.popoverUrl = '';
 		};
-		this.state = 'shown';
+		//this.state = 'shown';
 	}
 });

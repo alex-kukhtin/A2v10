@@ -1,13 +1,20 @@
-﻿/*20170902-7023*/
+﻿/*20171006-7041*/
 /*components/collectionview.js*/
 
 /*
 TODO:
-7. доделать фильтры
+8. правильный pager
+11. GroupBy
 */
 
 (function () {
 
+	/**
+	<code>
+		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
+		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+	</code>
+	 */
 
 	const log = require('std:log');
 
@@ -15,13 +22,8 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="pagedSource" :Pager="thisPager" 
-		:filter="filter">
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
 	</slot>
-	<code>
-		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
-	</code>
 </div>
 `,
 		props: {
@@ -29,24 +31,33 @@ TODO:
 			pageSize: Number,
 			initialFilter: Object,
 			initialSort: Object,
-			runAt: String
+			runAt: String,
+			filterDelegate: Function
 		},
 		data() {
-			// TODO: Initial sorting, filters
+			let lq = Object.assign({}, {
+				offset: 0,
+				dir: 'asc',
+				order: ''
+			}, this.initialFilter);
+
 			return {
 				filter: this.initialFilter,
 				filteredCount: 0,
-				localQuery: {
-					offset: 0,
-					dir: 'asc',
-					order: ''
-				}
+				localQuery: lq
 			};
 		},
 		watch: {
 			dir() {
 				// можно отслеживать вычисляемые свойства
 				//alert('dir changed');
+			},
+			filter: {
+				handler() {
+					if (this.isServer)
+						this.filterChanged();
+				},
+				deep:true
 			}
 		},
 		computed: {
@@ -77,9 +88,14 @@ TODO:
 					return this.ItemsSource;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
-				// filter (TODO: // правильная фильтрация)
-				if (this.filter && this.filter.Text)
-					arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
+
+				if (this.filterDelegate) {
+					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
+				} else {
+					// filter (TODO: // правильная фильтрация)
+					if (this.filter && this.filter.Filter)
+						arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Filter) !== -1);
+				}
 				// sort
 				if (this.order && this.dir) {
 					let p = this.order;
@@ -96,6 +112,8 @@ TODO:
 				this.filteredCount = arr.length;
 				// pager
 				arr = arr.slice(this.offset, this.offset + this.pageSize);
+				arr.$origin = this.ItemsSource;
+				arr.$origin.$clearSelected();
 				log.time('get paged source:', s);
 				return arr;
 			},
@@ -166,6 +184,22 @@ TODO:
 					// local
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;
+				}
+			},
+			filterChanged() {
+				// for server only
+				let nq = {};
+				for (let x in this.filter) {
+					let fVal = this.filter[x];
+					if (fVal)
+						nq[x] = fVal;
+				}
+				if (this.runAt === 'server') {
+					// for this BaseController only
+					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+				}
+				else if (this.runAt === 'serverurl') {
+					this.$store.commit('setquery', nq);
 				}
 			}
 		},

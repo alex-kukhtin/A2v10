@@ -1,4 +1,4 @@
-﻿/*20170911-7030*/
+﻿/*20171006-7041*/
 /* directives/dropdown.js */
 
 Vue.directive('dropdown', {
@@ -39,12 +39,14 @@ Vue.directive('dropdown', {
 			}
 			if (trg === el._btn) {
 				event.preventDefault();
+				event.stopPropagation();
 				let isVisible = el.classList.contains('show');
 				if (isVisible) {
 					if (el._hide)
 						el._hide();
 					el.classList.remove('show');
 				} else {
+					popup.closeAll();
 					if (el._show)
 						el._show();
 					el.classList.add("show");

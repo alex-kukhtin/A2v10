@@ -78,21 +78,27 @@
                         Grid.Row="4" Grid.Col="2" Value="{Bind Document.Sum, DataType=Currency}"/>
 
             </Grid>
-			<Toolbar Style="Transparent">
-				<Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
-				<Button Icon="Delete" Content="Удалить выделенную строку" />
-				<Button Icon="Dashboard" Content="Подбор товара" />
-				<Code Content="{Bind Document.Rows.length}"></Code>
-				<Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
-				<Separator />
-				<CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
-			</Toolbar>
-			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
-				<!-- Начальная сортировка для таблицы -->
+			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5" FilterDelegate="FilterRows">
+                <!-- Начальная сортировка для таблицы -->
 				<CollectionView.Sort>
 					<SortDescription Property="Price" Dir="Desc"/>
 				</CollectionView.Sort>
-				<DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
+                <CollectionView.Filter>
+                    <FilterDescription>
+                        <FilterItem Property="Filter"/>
+                    </FilterDescription>
+                </CollectionView.Filter>
+                <Toolbar Style="Transparent">
+                    <Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+                    <Button Icon="Delete" Content="Удалить выделенную строку" />
+                    <Button Icon="Dashboard" Content="Подбор товара" />
+                    <Code Content="{Bind Document.Rows.length}"></Code>
+                    <Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
+                    <TextBox Label="фильтр" Value="{Bind Parent.Filter.Filter}"></TextBox>
+                    <Separator />
+                    <CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
+                </Toolbar>
+                <DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
 					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
@@ -133,14 +139,29 @@
 					</DataGridColumn>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"></Pager>
-                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="True" GridLines="Both">
+                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both">
+                    <Table.Header>
+                        <TableRow>
+                            <TableCell>Номер</TableCell>
+                            <TableCell>Товар/ПНТ</TableCell>
+                            <TableCell>Кол-во</TableCell>
+                            <TableCell>Склад</TableCell>
+                        </TableRow>
+                    </Table.Header>
                     <TableRow>
                         <TableCell Content="{Bind Id}"></TableCell>
                         <TableCell>
-                            <TextBox Value="{Bind Entity.Name}" />
+                            <TextBox Value="{Bind Entity.Name}">
+                                <TextBox.AddOns>
+                                    <Hyperlink Icon="Search"/>
+                                </TextBox.AddOns>
+                            </TextBox>
                         </TableCell>
                         <TableCell>
                             <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
+                        </TableCell>
+                        <TableCell>
+                            <ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
                         </TableCell>
                     </TableRow>
                 </Table>

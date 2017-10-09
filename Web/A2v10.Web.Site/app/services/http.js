@@ -1,4 +1,4 @@
-﻿/*20170922-7037*/
+﻿/*20171006-7041*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -84,8 +84,14 @@ app.modules['std:http'] = function () {
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body
-                    let srcElem = rdoc.body.firstElementChild;
-                    selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+					let srcElem = rdoc.body.firstElementChild;
+					let elemId = srcElem.id || null;
+					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+					if (elemId && !document.getElementById(elemId)) {
+						selector.innerHTML = '';
+						resolve(false);
+						return;
+					}
                     for (let i = 0; i < rdoc.scripts.length; i++) {
                         let s = rdoc.scripts[i];
                         if (s.type === 'text/javascript') {

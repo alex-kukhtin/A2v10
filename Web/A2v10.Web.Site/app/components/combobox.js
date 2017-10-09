@@ -1,4 +1,6 @@
-﻿
+﻿/*20171006-7041*/
+/*components/combobox.js*/
+
 (function () {
 
 
@@ -43,7 +45,9 @@
                 get() {
                     let val = this.item ? this.item[this.prop] : null;
                     if (!utils.isObjectExact(val))
-                        return val;
+						return val;
+					if (!('$id' in val))
+						return val;
                     if (this.itemsSource.indexOf(val) !== -1) {
                         return val;
                     }

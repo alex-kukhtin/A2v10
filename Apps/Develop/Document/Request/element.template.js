@@ -9,7 +9,7 @@ let template = {
 		// new
 	},
 	delegates: {
-		// new
+		FilterRows: filterRows
 	},
 	events: {
 		// TODO:
@@ -37,6 +37,10 @@ let template = {
 
 function documentSumProperty() {
 	return this.Rows.reduce((prev, curr) => prev + curr.Qty, 0);
+}
+
+function filterRows(row, filter) {
+	return row.Entity.Name.indexOf(filter.Filter) != -1;
 }
 
 module.exports = template;

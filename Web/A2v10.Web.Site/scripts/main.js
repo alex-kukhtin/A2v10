@@ -523,7 +523,7 @@ app.modules['std:log'] = function () {
 	}
 };
 
-/*20170922-7037*/
+/*20171006-7041*/
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -609,8 +609,14 @@ app.modules['std:http'] = function () {
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body
-                    let srcElem = rdoc.body.firstElementChild;
-                    selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+					let srcElem = rdoc.body.firstElementChild;
+					let elemId = srcElem.id || null;
+					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+					if (elemId && !document.getElementById(elemId)) {
+						selector.innerHTML = '';
+						resolve(false);
+						return;
+					}
                     for (let i = 0; i < rdoc.scripts.length; i++) {
                         let s = rdoc.scripts[i];
                         if (s.type === 'text/javascript') {
@@ -697,7 +703,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171004-7040*/
+/*20171006-7041*/
 /* services/datamodel.js */
 (function () {
 
@@ -954,6 +960,10 @@ app.modules['std:validators'] = function() {
 		return this;
 	};
 
+	_BaseArray.prototype.$clearSelected = function () {
+		platform.set(this, '$selected', null);
+	}
+
 	_BaseArray.prototype.$remove = function (item) {
 		if (!item)
 			return;
@@ -1085,6 +1095,18 @@ app.modules['std:validators'] = function() {
 			let func = events[event];
 			func.call(undefined, ...arr);
 		}
+	}
+
+	function getDelegate(name) {
+		let tml = this.$template;
+		if (!tml.delegates) {
+			console.error('There are no delegates in the template');
+			return null;
+		}
+		if (name in tml.delegates) {
+			return tml.delegates[name];
+		}
+		console.error(`Delegate "${name}" not found in the template`);
 	}
 
 	function executeCommand(cmd, ...args) {
@@ -1283,6 +1305,7 @@ app.modules['std:validators'] = function() {
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
 		root.prototype._exec_ = executeCommand;
+		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		// props cache for t.construct
@@ -1687,6 +1710,8 @@ Vue.component('validator-control', {
     });
 
 })();
+/*20171006-7041*/
+/*components/combobox.js*/
 
 (function () {
 
@@ -1732,7 +1757,9 @@ Vue.component('validator-control', {
                 get() {
                     let val = this.item ? this.item[this.prop] : null;
                     if (!utils.isObjectExact(val))
-                        return val;
+						return val;
+					if (!('$id' in val))
+						return val;
                     if (this.itemsSource.indexOf(val) !== -1) {
                         return val;
                     }
@@ -1899,7 +1926,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20170928-7039*/
+/*20171006-7041*/
 /*components/datagrid.js*/
 (function () {
 
@@ -2182,8 +2209,8 @@ Vue.component('validator-control', {
 			level : Number
         },
         computed: {
-            active() {
-                return this.row === this.$parent.selected;
+			active() {
+				return this.row == this.$parent.selected;
             },
             rowClass() {
                 let cssClass = '';
@@ -2266,7 +2293,12 @@ Vue.component('validator-control', {
 				return cssClass;
 			},
 			selected() {
-				return this.itemsSource.$selected;
+				// reactive!!!
+				let src = this.itemsSource;
+				if (src.$origin) {
+					src = src.$origin;
+				}
+				return src.$selected;
 			},
 			isGridSortable() {
 				return !!this.sort;
@@ -2552,7 +2584,7 @@ Vue.component('popover', {
 			this.state = 'hidden';
 			this.popoverUrl = '';
 		};
-		this.state = 'shown';
+		//this.state = 'shown';
 	}
 });
 
@@ -2743,16 +2775,23 @@ Vue.component('popover', {
     });
 })();
 
-/*20170902-7023*/
+/*20171006-7041*/
 /*components/collectionview.js*/
 
 /*
 TODO:
-7. доделать фильтры
+8. правильный pager
+11. GroupBy
 */
 
 (function () {
 
+	/**
+	<code>
+		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
+		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
+	</code>
+	 */
 
 	const log = require('std:log');
 
@@ -2760,13 +2799,8 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="pagedSource" :Pager="thisPager" 
-		:filter="filter">
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
 	</slot>
-	<code>
-		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
-	</code>
 </div>
 `,
 		props: {
@@ -2774,24 +2808,33 @@ TODO:
 			pageSize: Number,
 			initialFilter: Object,
 			initialSort: Object,
-			runAt: String
+			runAt: String,
+			filterDelegate: Function
 		},
 		data() {
-			// TODO: Initial sorting, filters
+			let lq = Object.assign({}, {
+				offset: 0,
+				dir: 'asc',
+				order: ''
+			}, this.initialFilter);
+
 			return {
 				filter: this.initialFilter,
 				filteredCount: 0,
-				localQuery: {
-					offset: 0,
-					dir: 'asc',
-					order: ''
-				}
+				localQuery: lq
 			};
 		},
 		watch: {
 			dir() {
 				// можно отслеживать вычисляемые свойства
 				//alert('dir changed');
+			},
+			filter: {
+				handler() {
+					if (this.isServer)
+						this.filterChanged();
+				},
+				deep:true
 			}
 		},
 		computed: {
@@ -2822,9 +2865,14 @@ TODO:
 					return this.ItemsSource;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
-				// filter (TODO: // правильная фильтрация)
-				if (this.filter && this.filter.Text)
-					arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Text) !== -1);
+
+				if (this.filterDelegate) {
+					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
+				} else {
+					// filter (TODO: // правильная фильтрация)
+					if (this.filter && this.filter.Filter)
+						arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Filter) !== -1);
+				}
 				// sort
 				if (this.order && this.dir) {
 					let p = this.order;
@@ -2841,6 +2889,8 @@ TODO:
 				this.filteredCount = arr.length;
 				// pager
 				arr = arr.slice(this.offset, this.offset + this.pageSize);
+				arr.$origin = this.ItemsSource;
+				arr.$origin.$clearSelected();
 				log.time('get paged source:', s);
 				return arr;
 			},
@@ -2911,6 +2961,22 @@ TODO:
 					// local
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;
+				}
+			},
+			filterChanged() {
+				// for server only
+				let nq = {};
+				for (let x in this.filter) {
+					let fVal = this.filter[x];
+					if (fVal)
+						nq[x] = fVal;
+				}
+				if (this.runAt === 'server') {
+					// for this BaseController only
+					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+				}
+				else if (this.runAt === 'serverurl') {
+					this.$store.commit('setquery', nq);
 				}
 			}
 		},
@@ -3154,7 +3220,7 @@ TODO:
 
 })();
 
-/*20170920-7036*/
+/*20171006-7041*/
 /* components/modal.js */
 
 (function () {
@@ -3243,7 +3309,7 @@ TODO:
                 return "ico ico-" + this.dialog.style;
             },
             buttons: function () {
-                console.warn(this.dialog.style);
+                //console.warn(this.dialog.style);
                 let okText = this.dialog.okText || 'OK';
                 let cancelText = this.dialog.cancelText || 'Cancel';
                 if (this.dialog.buttons)
@@ -3389,7 +3455,7 @@ Vue.component("a2-taskpad", {
 });
 
 
-/*20170911-7030*/
+/*20171006-7041*/
 /* directives/dropdown.js */
 
 Vue.directive('dropdown', {
@@ -3430,12 +3496,14 @@ Vue.directive('dropdown', {
 			}
 			if (trg === el._btn) {
 				event.preventDefault();
+				event.stopPropagation();
 				let isVisible = el.classList.contains('show');
 				if (isVisible) {
 					if (el._hide)
 						el._hide();
 					el.classList.remove('show');
 				} else {
+					popup.closeAll();
 					if (el._show)
 						el._show();
 					el.classList.add("show");
@@ -4019,7 +4087,17 @@ Vue.directive('resize', {
                  });
 
                 arr.$loaded = true;
-            },
+			},
+
+			$delegate(name) {
+				const root = this.$data;
+				return root._delegate_(name);
+				// TODO: get delegate from template
+				return function (item, filter) {
+					console.warn('filter:' + item.Id + " filter:" + filter.Filter);
+					return true;
+				}
+			},
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;

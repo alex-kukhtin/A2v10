@@ -275,6 +275,10 @@ table.data-grid > tbody {
 
 table.hover {
     > tbody > tr:hover {
-        background-color:@hover-bg-color!important;
+        background-color: @hover-bg-color !important;
+    }
+
+    > tbody > tr.active:hover {
+        background-color: @active-bg-color !important;
     }
 }

@@ -4,7 +4,9 @@
 
 
     <collection-view :items-source="Customers"
-                     :page-size="$modelInfo.PageSize" :initial-filter="{Text:''}" run-at="client" :initial-sort="{order:'Amount', dir:'desc'} ">
+                     :page-size="$modelInfo.PageSize" :initial-filter="{Filter:''}" 
+                     run-at="client" :initial-sort="{order:'Amount', dir:'desc'}" 
+                     :filter-delegate="$delegate('filter')">
         <template scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
                 <div class="toolbar">
@@ -24,21 +26,21 @@
                     <button class="btn" @click.prevent="$exec('alert')"><i class="ico-alert"></i> alert</button>
                     <button class="btn" @click.prevent="$dialog('browse', 'catalog/suppliers/browse', Customers.$selected, {order:'Amount', dir:'desc'})"><i class="ico ico-search"></i>Browse dialog</button>
                     <button class="btn" @click.prevent="$dialog('show', 'catalog/suppliers/browse2')"><i class="ico ico-alert"></i>Browse dialog XAML</button>
-                    <code v-text="Parent.filter"></code>
+                    <code v-text="Parent.Filter"></code>
                     <div class="control-group">
                         <div class="input-group">
-                            <input v-focus class="control" v-model="Parent.filter.Text" />
+                            <input v-focus class="control" v-model.lazy="Parent.Filter.Filter" />
                         </div>
                     </div>
                     <div class="input-group">
-                        <select v-focus class="control" v-model="Parent.filter.Text">
+                        <select v-focus class="control" v-model="Parent.Filter.Filter">
                             <option value="эле">Элемент</option>
                             <option value="сто">Сто</option>
                         </select>
                     </div>
-                    <span class="bold" v-if="Parent.filter.Text">Filtered!!!</span>
+                    <span class="bold" v-if="Parent.Filter.Filter">Filtered!!!</span>
                 </div>
-                <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true" filter-fields="filter,state"
+                <data-grid :items-source="Parent.ItemsSource" :striped="true" :pager="true"
                            :border="true" :hover="true" grid="vertical" :sort="true" :route-query="$query" mark="$rowMark" mark-style="row">
                     <data-grid-column header="index" content="$index" align="right"></data-grid-column>
                     <data-grid-column header="" control-type="validator"></data-grid-column>
