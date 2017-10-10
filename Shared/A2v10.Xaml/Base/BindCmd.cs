@@ -31,10 +31,12 @@ namespace A2v10.Xaml
     public enum DialogAction
     {
         Unknown,
-        Create,
+        Create, // simple create
         Edit,
         EditSelected,
-        Show
+        Show,
+        Browse,
+        Append, // create and append to dialog
     }
 
     public class BindCmd : BindBase
@@ -127,7 +129,10 @@ namespace A2v10.Xaml
                 case CommandType.Dialog:
                     if (Action == DialogAction.Unknown)
                         throw new XamlException($"Action required for {Command} command");
-                    return $"$dialog('{Action.ToString().ToKebabCase()}', '{CommandUrl}', {CommandArgument(context)})";
+                    bool bNullable = false;
+                    if (Action == DialogAction.Create)
+                        bNullable = true;
+                    return $"$dialog('{Action.ToString().ToKebabCase()}', '{CommandUrl}', {CommandArgument(context, bNullable)})";
 
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
@@ -205,7 +210,7 @@ namespace A2v10.Xaml
                     throw new NotImplementedException($"Url required for {Command} command");
                 // TODO: check URL format
                 if (!Url.StartsWith("/"))
-                    throw new NotImplementedException("Url must start with '/'");
+                    throw new NotImplementedException($"Url '{Url}' must start with '/'");
                 return Url;
             }
         }

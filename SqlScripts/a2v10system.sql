@@ -1,11 +1,11 @@
-﻿/* 20170605-1001 */
+﻿/* 20171010-7043 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 17 aug 2017 14:56
-module version : 1001
+Last updated : 10 oct 2017 14:50
+module version : 7043
 */
 ------------------------------------------------
 set noexec off;
@@ -27,12 +27,33 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
+begin
+	create table a2sys.SysParams
+	(
+		-- database schema
+		Name sysname not null constraint PK_SysParams primary key,
+		StringValue nvarchar(255) null,
+		IntValue int null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Id.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[Id.TableType]
+	as table(
+		Id bigint null
+	);
+end
+go
+
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2sys to public;
 end
 go
-
 ------------------------------------------------
 set noexec off;
 go

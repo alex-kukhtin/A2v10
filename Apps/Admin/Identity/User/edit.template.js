@@ -1,5 +1,5 @@
 ﻿
-/* identity/user index template */
+/* identity/user template */
 
 const template = {
     properties: {

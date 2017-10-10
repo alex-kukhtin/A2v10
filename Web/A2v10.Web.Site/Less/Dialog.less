@@ -2,6 +2,8 @@
 @import "Variables.less";
 
 @modal-padding: 8px;
+@modal-header-height: 34px;
+
 @modal-footer-bg-color: #f5f5f5;
 @modal-width-medium: 500px;
 
@@ -24,7 +26,7 @@
             margin: 70px auto 30px auto;
             width: @modal-width-medium;
             height: auto;
-            border: 1px solid @default-brd-color;
+            border: 1px solid @dark-bk-color;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             background-color: white;
         }
@@ -49,15 +51,15 @@
     padding: @modal-padding;
     font-weight: bold;
     border-bottom: 1px solid @default-brd-color;
-    min-height:1.4em;
+    min-height: @modal-header-height;
 
     .btnclose {
         float: right;
-        color:#aaa;
+        color: #aaa;
 
         &:hover, &:active, &:focus {
-            color:#555;
-            background-color:lighten(@dialog-header-bg-color, 10%);
+            color: #555;
+            background-color: lighten(@dialog-header-bg-color, 10%);
             border-color: @tb-hover-brd-color;
         }
     }

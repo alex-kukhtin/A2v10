@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Dynamic;
+using System.Linq;
 
 namespace A2v10.Infrastructure
 {
@@ -44,6 +45,37 @@ namespace A2v10.Infrastructure
                     skey = skey.ToPascalCase();
                 d.Add(skey, coll[key.ToString()]);
             }
+        }
+
+        public static ExpandoObject RemoveEmptyArrays(this ExpandoObject obj)
+        {
+            if (obj == null)
+                return obj;
+            var dict = obj as IDictionary<String, Object>;
+            var arr = dict.Keys.ToList();
+            foreach (var key in arr)
+            {
+                var val = dict[key];
+                if (val is IList<ExpandoObject>)
+                {
+                    var list = val as IList<ExpandoObject>;
+                    if (list != null)
+                    {
+                        if (list.Count == 0)
+                            dict[key] = null;
+                        else
+                        {
+                            foreach (var l in list)
+                                l.RemoveEmptyArrays();
+                        }
+                    }
+                }
+                else if (val is ExpandoObject)
+                {
+                    (val as ExpandoObject).RemoveEmptyArrays();
+                }
+            }
+            return obj;
         }
     }
 }

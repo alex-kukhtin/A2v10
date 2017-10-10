@@ -1,11 +1,10 @@
-﻿/*identity/user*/
+﻿/*identity/group*/
 {
   "schema": "a2admin",
-  "model": "User",
+  "model": "Group",
   "actions": {
     "index": {
       "index": true,
-      "template": "index.template",
       "view": "Index.view"
     }
   },
@@ -15,8 +14,8 @@
       "template": "edit.template"
     },
     "browse": {
-      "index": true,
-      "dialog": "Browse.dialog"
+      "dialog": "Browse.Dialog",
+      "index": true
     }
   }
 }

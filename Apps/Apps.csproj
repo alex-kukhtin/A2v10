@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Common\Agent\model.json" />
@@ -60,6 +61,8 @@
     <None Include="model.schema.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\Identity\Group\edit.template.js" />
+    <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
     <Content Include="Develop\Catalog\Customers\index.template.js" />
@@ -136,6 +139,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Suppliers\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\User\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\Group\index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\Group\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\User\browse.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

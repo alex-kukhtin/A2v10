@@ -478,7 +478,6 @@ header,
   top: 0;
   right: 0;
   height: 32px;
-  font-size: 18px;
   padding: 0 4px 0 8px;
   background-color: #4d6082;
   color: white;
@@ -486,54 +485,51 @@ header,
   align-content: flex-start;
   align-items: center;
 }
-header a.app-title,
-.header a.app-title {
+header .h-block a.app-title,
+.header .h-block a.app-title {
   color: inherit;
+  font-size: 18px;
 }
-header a.app-title:hover,
-.header a.app-title:hover {
+header .h-block a.app-title .ico,
+.header .h-block a.app-title .ico {
+  font-size: inherit;
+  margin-right: 6px;
+}
+header .h-block a.app-title:hover,
+.header .h-block a.app-title:hover {
   text-decoration: none;
   color: inherit;
 }
-header .app-subtitle,
-.header .app-subtitle {
-  font-size: 85%;
+header .h-block .app-subtitle,
+.header .h-block .app-subtitle {
   padding-left: 6px;
 }
-header .ico,
-.header .ico {
-  font-size: 1em;
-}
-header .h-right,
-.header .h-right {
-  font-size: 13px;
-}
-header .h-right > a.nav-admin,
-.header .h-right > a.nav-admin {
+header > a.nav-admin,
+.header > a.nav-admin {
   color: inherit;
   padding: 4px 6px;
 }
-header .h-right > a.nav-admin:hover,
-.header .h-right > a.nav-admin:hover {
+header > a.nav-admin:hover,
+.header > a.nav-admin:hover {
   background-color: #7186ab;
 }
-header .h-right > .dropdown,
-.header .h-right > .dropdown {
+header > .dropdown,
+.header > .dropdown {
   display: inline-block;
 }
-header .h-right > .dropdown .menu,
-.header .h-right > .dropdown .menu {
+header > .dropdown .menu,
+.header > .dropdown .menu {
   margin-top: -1px;
   min-width: 185px;
 }
-header .h-right .btn,
-.header .h-right .btn {
+header .btn,
+.header .btn {
   background-color: transparent;
   color: white;
   padding: 4px;
 }
-header .h-right .btn:hover,
-.header .h-right .btn:hover {
+header .btn:hover,
+.header .btn:hover {
   background-color: #7186ab;
 }
 .content-view {
@@ -1128,6 +1124,9 @@ pre {
   font-size: 0.95rem;
   line-height: 1;
 }
+.btn.sm > .ico {
+  font-size: 12px;
+}
 .btn.xs {
   padding: .25rem .7rem;
   font-size: 0.85rem;
@@ -1532,6 +1531,7 @@ table.hover > tbody > tr.active:hover {
 }
 .toolbar.transparent {
   background-color: transparent;
+  padding: 2px 0;
 }
 .toolbar.transparent .btn {
   color: #57a8fa;
@@ -1798,7 +1798,7 @@ table.hover > tbody > tr.active:hover {
   margin: 70px auto 30px auto;
   width: 500px;
   height: auto;
-  border: 1px solid #bdc5d8;
+  border: 1px solid #8591a2;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   background-color: white;
 }
@@ -1816,7 +1816,7 @@ table.hover > tbody > tr.active:hover {
   padding: 8px;
   font-weight: bold;
   border-bottom: 1px solid #bdc5d8;
-  min-height: 1.4em;
+  min-height: 34px;
 }
 .modal-header .btnclose {
   float: right;
@@ -1875,8 +1875,8 @@ table col.fit {
 }
 table.grid-vertical > tbody > tr > td,
 table.grid-both > tbody > tr > td,
-table.grid-vertical thead > tr > th,
-table.grid-both thead > tr > th {
+table.grid-vertical thead > tr > td,
+table.grid-both thead > tr > td {
   border-left-width: 1px;
   border-left-style: solid;
   border-right-width: 1px;
@@ -1918,10 +1918,12 @@ table.a2-table tbody > tr > td .control-group .input-group {
 table.a2-table tbody > tr > td .a2-table {
   margin: -1px;
 }
-table.a2-table > thead > tr > th {
+table.a2-table > thead > tr > td,
+table.a2-table tfoot > tr > td {
   padding: 4px 6px;
   vertical-align: middle;
   background-color: #f5f5f5;
+  border-color: #ddd;
 }
 table.a2-table td.ctrl {
   padding: 0;

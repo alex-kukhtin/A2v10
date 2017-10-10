@@ -11,7 +11,7 @@
     const treeItemComponent = {
         name: 'tree-item',
         template: `
-<li @click.stop.prevent="doClick(item)" :title="item[options.title]"
+<li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
@@ -85,7 +85,13 @@
             },
             isCollapsed: function () {
                 return this.isFolder && !this.open;
-            },
+			},
+			title() {
+				var t = this.item[this.options.title];
+				if (!t)
+					t = this.item[this.options.label];
+				return t;
+			},
             isItemSelected: function () {
                 if (this.options.isDynamic)
                     return this.item.$isSelected(this.rootItems);

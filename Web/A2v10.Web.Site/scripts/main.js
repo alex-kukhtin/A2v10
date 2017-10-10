@@ -1710,7 +1710,7 @@ Vue.component('validator-control', {
     });
 
 })();
-/*20171006-7041*/
+/*20171010-7043*/
 /*components/combobox.js*/
 
 (function () {
@@ -1722,7 +1722,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<select v-model="cmbValue" :class="inputClass">
+		<select v-focus v-model="cmbValue" :class="inputClass">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="cmb.$name" :value="cmb"></option>
@@ -2601,7 +2601,7 @@ Vue.component('popover', {
     const treeItemComponent = {
         name: 'tree-item',
         template: `
-<li @click.stop.prevent="doClick(item)" :title="item[options.title]"
+<li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
@@ -2675,7 +2675,13 @@ Vue.component('popover', {
             },
             isCollapsed: function () {
                 return this.isFolder && !this.open;
-            },
+			},
+			title() {
+				var t = this.item[this.options.title];
+				if (!t)
+					t = this.item[this.options.label];
+				return t;
+			},
             isItemSelected: function () {
                 if (this.options.isDynamic)
                     return this.item.$isSelected(this.rootItems);
@@ -2775,7 +2781,7 @@ Vue.component('popover', {
     });
 })();
 
-/*20171006-7041*/
+/*20171010-7043*/
 /*components/collectionview.js*/
 
 /*
@@ -2970,6 +2976,9 @@ TODO:
 					let fVal = this.filter[x];
 					if (fVal)
 						nq[x] = fVal;
+					else {
+						nq[x] = undefined;
+					}
 				}
 				if (this.runAt === 'server') {
 					// for this BaseController only
@@ -2984,6 +2993,13 @@ TODO:
 			if (this.initialSort) {
 				this.localQuery.order = this.initialSort.order;
 				this.localQuery.dir = this.initialSort.dir;
+			}
+			if (this.isQueryUrl) {
+				// get filter values from query
+				let q = this.$store.getters.query;
+				for (let x in this.filter) {
+					if (x in q) this.filter[x] = q[x];
+				}
 			}
 			this.$on('sort', this.doSort);
 		}
@@ -3093,7 +3109,7 @@ TODO:
 <div class="tab-panel">
     <template v-if="static">
         <ul class="tab-header">
-            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
+            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.prevent="select(tab)">
                 <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
                 <span v-text="tab.header"></span>
             </li>
@@ -3105,7 +3121,7 @@ TODO:
     </template>
     <template v-else>
         <ul class="tab-header">
-            <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
+            <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.prevent="select(item)">
 				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
 					<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 				</slot>
@@ -3960,7 +3976,7 @@ Vue.directive('resize', {
                         data = data.$selected;
                     }
                     let dataToSent = data;
-					if (command === 'add') {
+					if (command === 'append') {
 						if (!utils.isArray(data)) {
 							console.error('$dialog.add. The argument is not an array');
 						}
@@ -3978,7 +3994,7 @@ Vue.directive('resize', {
                             data.$merge(result);
                             resolve(result);
                         });
-					} else if (command === 'add') {
+					} else if (command === 'append') {
 						// append to array
 						dlgData.promise.then(function (result) {
 							// result is raw data
@@ -4165,10 +4181,10 @@ Vue.directive('resize', {
 			let itm = menu[i];
 			if (func(itm))
 				return itm;
-            if (itm.menu) {
+            if (itm.Menu) {
                 if (parentMenu)
-                    parentMenu.url = itm.url;
-				let found = findMenu(itm.menu, func);
+                    parentMenu.Url = itm.Url;
+				let found = findMenu(itm.Menu, func);
 				if (found)
 					return found;
 			}
@@ -4186,17 +4202,17 @@ Vue.directive('resize', {
 		let seg1 = sUrl[1];
 		let am = null;
 		if (seg1)
-			am = menu.find((mi) => mi.url === seg1);
+			am = menu.find((mi) => mi.Url === seg1);
         if (!am) {
             // no segments - find first active menu
-            let parentMenu = { url: '' };
-            am = findMenu(menu, (mi) => mi.url && !mi.menu, parentMenu);
+            let parentMenu = { Url: '' };
+            am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
 			if (am) {
-				opts.title = am.title;
-				return urlTools.combine(url, parentMenu.url, am.url);
+				opts.title = am.Title;
+				return urlTools.combine(url, parentMenu.Url, am.Url);
 			}
-		} else if (am && !am.menu) {
-			opts.title = am.title;
+		} else if (am && !am.Menu) {
+			opts.title = am.Title;
 			return url; // no sub menu
 		}
 		url = urlTools.combine(seg1);
@@ -4204,15 +4220,15 @@ Vue.directive('resize', {
 		if (!seg2 && opts.seg2)
 			seg2 = opts.seg2; // may be
 		if (!seg2) {
-			// find first active menu in am.menu
-			am = findMenu(am.menu, (mi) => mi.url && !mi.menu);
+			// find first active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url && !mi.Menu);
 		} else {
-			// find current active menu in am.menu
-			am = findMenu(am.menu, (mi) => mi.url === seg2);
+			// find current active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
 		}
 		if (am) {
-			opts.title = am.title;
-			return urlTools.combine(url, am.url);
+			opts.title = am.Title;
+			return urlTools.combine(url, am.Url);
 		}
 		return url; // TODO: ????
 	}
@@ -4221,7 +4237,7 @@ Vue.directive('resize', {
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.title" @click.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" v-text="item.Name" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -4234,20 +4250,20 @@ Vue.directive('resize', {
 		},
 		methods: {
 			isActive(item) {
-				return this.seg0 === item.url;
+				return this.seg0 === item.Url;
 			},
-			itemHref: (item) => '/' + item.url,
+			itemHref: (item) => '/' + item.Url,
 			navigate(item) {
 				if (this.isActive(item))
                     return;
-                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.url);
+                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
                 let savedUrl = localStorage.getItem(storageKey) || '';
-                if (savedUrl && !findMenu(item.menu, (mi) => mi.url === savedUrl)) {
+                if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
                     // saved segment not found in current menu
                     savedUrl = '';
                 }
 				let opts = { title: null, seg2: savedUrl };
-                let url = makeMenuUrl(this.menu, item.url, opts);
+                let url = makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
@@ -4263,9 +4279,9 @@ Vue.directive('resize', {
     <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
-            :options="{folderSelect: folderSelect, label: 'title', title: 'title',
-                subitems: 'menu',
-                icon:'icon', wrapLabel: true, hasIcon: true}">
+            :options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
+                subitems: 'Menu',
+                icon:'Icon', wrapLabel: true, hasIcon: true}">
         </tree-view>
     </div>
     <div v-else class="side-bar-title" @click.prevent="toggle">
@@ -4290,38 +4306,38 @@ Vue.directive('resize', {
 				if (!sm)
 					return UNKNOWN_TITLE;
 				let seg1 = this.seg1;
-				let am = findMenu(sm, (mi) => mi.url === seg1);
+				let am = findMenu(sm, (mi) => mi.Url === seg1);
 				if (am)
-					return am.title || UNKNOWN_TITLE;
+					return am.Name || UNKNOWN_TITLE;
 				return UNKNOWN_TITLE;
 			},
 			sideMenu() {
 				let top = this.topMenu;
-				return top ? top.menu : null;
+				return top ? top.Menu : null;
 			},
 			topMenu() {
 				let seg0 = this.seg0;
-				return findMenu(this.menu, (mi) => mi.url === seg0);
+				return findMenu(this.menu, (mi) => mi.Url === seg0);
 			}
 		},
 		methods: {
 			isActive(item) {
-				return this.seg1 === item.url;
+				return this.seg1 === item.Url;
             },
             folderSelect(item) {
-                return !!item.url;
+                return !!item.Url;
             },
 			navigate(item) {
 				if (this.isActive(item))
 					return;
 				let top = this.topMenu;
 				if (top) {
-					let url = urlTools.combine(top.url, item.url);
-					if (item.url.indexOf('/') === -1) {
+					let url = urlTools.combine(top.Url, item.Url);
+					if (item.Url.indexOf('/') === -1) {
                         // save only simple path
-                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.url), item.url);
+                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
 					}
-					this.$store.commit('navigate', { url: url, title: item.title });
+					this.$store.commit('navigate', { url: url, title: item.Title });
 				}
 				else
 					console.error('no top menu found');
@@ -4329,7 +4345,7 @@ Vue.directive('resize', {
 			itemHref(item) {
 				let top = this.topMenu;
 				if (top) {
-					return urlTools.combine(top.url, item.url);
+					return urlTools.combine(top.Url, item.Url);
 				}
 				return undefined;
 			},
@@ -4435,7 +4451,7 @@ Vue.directive('resize', {
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-            let opts = { title: null };
+			let opts = { title: null };
             let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });

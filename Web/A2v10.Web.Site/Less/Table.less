@@ -20,7 +20,7 @@ table.bordered {
 }
 
 table.grid-vertical, table.grid-both {
-    > tbody > tr > td, thead > tr> th {
+    > tbody > tr > td, thead > tr> td {
         border-left-width: 1px;
         border-left-style:solid;
         border-right-width: 1px;
@@ -79,10 +79,11 @@ table.a2-table {
         }
     }
 
-    > thead > tr > th {
+    > thead > tr > td, tfoot > tr > td {
         padding: 4px 6px;
         vertical-align: middle;
         background-color: @table-hdr-bg-color;
+        border-color:@a2-table-brd-color;
     }
 
     td.ctrl {

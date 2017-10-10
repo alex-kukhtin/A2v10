@@ -61,19 +61,6 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layout {
             get {
@@ -82,19 +69,6 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layoutAdmin {
             get {
@@ -103,32 +77,6 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /*20170818-7015*/
-        ////*shell.js*/
-        ///
-        ////*
-        ///TODO:
-        ///3. SideBar - разные режимы
-        ///4. Collapse/expand
-        ///5. 
-        ///*/
-        ///
-        ///(function () {
-        ///
-        ///    const Shell = component(&apos;std:shellController&apos;);
-        ///
-        ///    const menu = [
-        ///        {
-        ///            title: &quot;Начало&quot;, url: &quot;home&quot;, menu234: [
-        ///                {
-        ///                    title: &apos;xxxx&apos;, icon: &apos;save&apos;, menu: [
-        ///                        {title: &apos;yyyy&apos;, url: &apos;subhome&apos;}
-        ///                    ]
-        ///                }
-        ///            ]
-        ///        },
-        ///        {
-        ///            type:&apos;tree&apos;, title: &apos;Сп [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shell {
             get {
@@ -137,26 +85,6 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /*20170818-7015*/
-        ////*shell.js*/
-        ///
-        ////*
-        ///*/
-        ///
-        ///(function () {
-        ///
-        ///    const Shell = component(&apos;std:shellController&apos;);
-        ///
-        ///    const menu = [
-        ///        {
-        ///            type:&apos;tree&apos;, title: &apos;Администратор&apos;, url: &apos;identity&apos;, menu: [
-        ///                { title: &quot;Пользователи&quot;, url: &apos;users&apos;, icon:&apos;user&apos;},
-        ///				{ title: &quot;Группы&quot;, url: &apos;groups&apos;, icon: &apos;users&apos; },
-        ///                { title: &quot;Роли&quot;, url: &apos;roles&apos;, icon: &apos;users&apos; }
-        ///            ]
-        ///        },
-        ///        {
-        ///            title: &quot;Бизнес процессы&quot;, icon: &apos;folder&apos;, menu:  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shellAdmin {
             get {

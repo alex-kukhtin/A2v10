@@ -178,19 +178,15 @@ namespace A2v10.Request
             return sb.ToString();
         }
 
-        public static JsonSerializerSettings StandardSerializerSettings
-        {
-            get
-            {
-                return new JsonSerializerSettings()
-                {
+
+        public static readonly JsonSerializerSettings StandardSerializerSettings = 
+            new JsonSerializerSettings() {
                     Formatting = Formatting.Indented,
                     StringEscapeHandling = StringEscapeHandling.EscapeHtml,
                     DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                    NullValueHandling = NullValueHandling.Ignore
+                    DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore
                 };
-            }
-        }
     }
 }

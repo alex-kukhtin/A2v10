@@ -1,4 +1,4 @@
-﻿/*20171006-7041*/
+﻿/*20171010-7043*/
 /*components/collectionview.js*/
 
 /*
@@ -193,6 +193,9 @@ TODO:
 					let fVal = this.filter[x];
 					if (fVal)
 						nq[x] = fVal;
+					else {
+						nq[x] = undefined;
+					}
 				}
 				if (this.runAt === 'server') {
 					// for this BaseController only
@@ -207,6 +210,13 @@ TODO:
 			if (this.initialSort) {
 				this.localQuery.order = this.initialSort.order;
 				this.localQuery.dir = this.initialSort.dir;
+			}
+			if (this.isQueryUrl) {
+				// get filter values from query
+				let q = this.$store.getters.query;
+				for (let x in this.filter) {
+					if (x in q) this.filter[x] = q[x];
+				}
 			}
 			this.$on('sort', this.doSort);
 		}

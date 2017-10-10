@@ -19,10 +19,10 @@
 			let itm = menu[i];
 			if (func(itm))
 				return itm;
-            if (itm.menu) {
+            if (itm.Menu) {
                 if (parentMenu)
-                    parentMenu.url = itm.url;
-				let found = findMenu(itm.menu, func);
+                    parentMenu.Url = itm.Url;
+				let found = findMenu(itm.Menu, func);
 				if (found)
 					return found;
 			}
@@ -40,17 +40,17 @@
 		let seg1 = sUrl[1];
 		let am = null;
 		if (seg1)
-			am = menu.find((mi) => mi.url === seg1);
+			am = menu.find((mi) => mi.Url === seg1);
         if (!am) {
             // no segments - find first active menu
-            let parentMenu = { url: '' };
-            am = findMenu(menu, (mi) => mi.url && !mi.menu, parentMenu);
+            let parentMenu = { Url: '' };
+            am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
 			if (am) {
-				opts.title = am.title;
-				return urlTools.combine(url, parentMenu.url, am.url);
+				opts.title = am.Title;
+				return urlTools.combine(url, parentMenu.Url, am.Url);
 			}
-		} else if (am && !am.menu) {
-			opts.title = am.title;
+		} else if (am && !am.Menu) {
+			opts.title = am.Title;
 			return url; // no sub menu
 		}
 		url = urlTools.combine(seg1);
@@ -58,15 +58,15 @@
 		if (!seg2 && opts.seg2)
 			seg2 = opts.seg2; // may be
 		if (!seg2) {
-			// find first active menu in am.menu
-			am = findMenu(am.menu, (mi) => mi.url && !mi.menu);
+			// find first active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url && !mi.Menu);
 		} else {
-			// find current active menu in am.menu
-			am = findMenu(am.menu, (mi) => mi.url === seg2);
+			// find current active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
 		}
 		if (am) {
-			opts.title = am.title;
-			return urlTools.combine(url, am.url);
+			opts.title = am.Title;
+			return urlTools.combine(url, am.Url);
 		}
 		return url; // TODO: ????
 	}
@@ -75,7 +75,7 @@
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.title" @click.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" v-text="item.Name" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -88,20 +88,20 @@
 		},
 		methods: {
 			isActive(item) {
-				return this.seg0 === item.url;
+				return this.seg0 === item.Url;
 			},
-			itemHref: (item) => '/' + item.url,
+			itemHref: (item) => '/' + item.Url,
 			navigate(item) {
 				if (this.isActive(item))
                     return;
-                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.url);
+                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
                 let savedUrl = localStorage.getItem(storageKey) || '';
-                if (savedUrl && !findMenu(item.menu, (mi) => mi.url === savedUrl)) {
+                if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
                     // saved segment not found in current menu
                     savedUrl = '';
                 }
 				let opts = { title: null, seg2: savedUrl };
-                let url = makeMenuUrl(this.menu, item.url, opts);
+                let url = makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title:  opts.title});
 			}
 		}
@@ -117,9 +117,9 @@
     <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
     <div class="side-bar-body" v-if="bodyIsVisible">
         <tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
-            :options="{folderSelect: folderSelect, label: 'title', title: 'title',
-                subitems: 'menu',
-                icon:'icon', wrapLabel: true, hasIcon: true}">
+            :options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
+                subitems: 'Menu',
+                icon:'Icon', wrapLabel: true, hasIcon: true}">
         </tree-view>
     </div>
     <div v-else class="side-bar-title" @click.prevent="toggle">
@@ -144,38 +144,38 @@
 				if (!sm)
 					return UNKNOWN_TITLE;
 				let seg1 = this.seg1;
-				let am = findMenu(sm, (mi) => mi.url === seg1);
+				let am = findMenu(sm, (mi) => mi.Url === seg1);
 				if (am)
-					return am.title || UNKNOWN_TITLE;
+					return am.Name || UNKNOWN_TITLE;
 				return UNKNOWN_TITLE;
 			},
 			sideMenu() {
 				let top = this.topMenu;
-				return top ? top.menu : null;
+				return top ? top.Menu : null;
 			},
 			topMenu() {
 				let seg0 = this.seg0;
-				return findMenu(this.menu, (mi) => mi.url === seg0);
+				return findMenu(this.menu, (mi) => mi.Url === seg0);
 			}
 		},
 		methods: {
 			isActive(item) {
-				return this.seg1 === item.url;
+				return this.seg1 === item.Url;
             },
             folderSelect(item) {
-                return !!item.url;
+                return !!item.Url;
             },
 			navigate(item) {
 				if (this.isActive(item))
 					return;
 				let top = this.topMenu;
 				if (top) {
-					let url = urlTools.combine(top.url, item.url);
-					if (item.url.indexOf('/') === -1) {
+					let url = urlTools.combine(top.Url, item.Url);
+					if (item.Url.indexOf('/') === -1) {
                         // save only simple path
-                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.url), item.url);
+                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
 					}
-					this.$store.commit('navigate', { url: url, title: item.title });
+					this.$store.commit('navigate', { url: url, title: item.Title });
 				}
 				else
 					console.error('no top menu found');
@@ -183,7 +183,7 @@
 			itemHref(item) {
 				let top = this.topMenu;
 				if (top) {
-					return urlTools.combine(top.url, item.url);
+					return urlTools.combine(top.Url, item.Url);
 				}
 				return undefined;
 			},
@@ -289,7 +289,7 @@
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-            let opts = { title: null };
+			let opts = { title: null };
             let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });

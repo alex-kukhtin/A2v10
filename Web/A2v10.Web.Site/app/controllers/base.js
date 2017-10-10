@@ -266,7 +266,7 @@
                         data = data.$selected;
                     }
                     let dataToSent = data;
-					if (command === 'add') {
+					if (command === 'append') {
 						if (!utils.isArray(data)) {
 							console.error('$dialog.add. The argument is not an array');
 						}
@@ -284,7 +284,7 @@
                             data.$merge(result);
                             resolve(result);
                         });
-					} else if (command === 'add') {
+					} else if (command === 'append') {
 						// append to array
 						dlgData.promise.then(function (result) {
 							// result is raw data

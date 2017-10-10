@@ -52,7 +52,6 @@ header, .header {
     top: 0;
     right: 0;
     height: @header-height;
-    font-size: 18px;
     padding: 0 4px 0 8px;
     background-color: @brand-bk_color;
     color: white;
@@ -60,53 +59,51 @@ header, .header {
     align-content: flex-start;
     align-items: center;
 
-    a.app-title {
+    .h-block {
+        a.app-title {
+            color: inherit;
+            font-size: 18px;
+
+            .ico {
+                font-size:inherit;
+                margin-right:6px;
+            }
+            &:hover {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+
+        .app-subtitle {
+            padding-left: 6px;
+        }
+    }
+
+    > a.nav-admin {
         color: inherit;
+        padding: 4px 6px;
 
         &:hover {
-            text-decoration: none;
-            color: inherit;
+            background-color: @brand-hover-color;
         }
     }
 
-    .app-subtitle {
-        font-size:85%;
-        padding-left:6px;
+    > .dropdown {
+        display: inline-block;
+
+        .menu {
+            margin-top: -1px;
+            min-width: 185px;
+        }
     }
 
-    .ico {
-        font-size:1em;
-    }
+    .btn {
+        background-color: transparent;
+        color: white;
+        padding: 4px;
 
-    .h-right {
-        font-size: 13px;
-
-        > a.nav-admin {
-            color: inherit;
-            padding: 4px 6px;
-
-            &:hover {
-                background-color: @brand-hover-color;
-            }
-        }
-
-        > .dropdown {
-            display: inline-block;
-
-            .menu {
-                margin-top: -1px;
-                min-width: 185px;
-            }
-        }
-
-        .btn {
-            background-color: transparent;
-            color: white;
-            padding:4px;
-
-            &:hover {
-                background-color: @brand-hover-color;
-            }
+        &:hover {
+            background-color: @brand-hover-color;
         }
     }
 }

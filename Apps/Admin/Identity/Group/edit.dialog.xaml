@@ -1,0 +1,34 @@
+<!-- Group properties -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+        Title="{Bind Group.Id, Format='Властивості групи [{0}]'}">
+    <Dialog.Buttons>
+        <Button Command="{BindCmd SaveAndClose}">OK</Button>
+        <Button Command="{BindCmd Close}">Скасувати</Button>
+    </Dialog.Buttons>
+    <TabPanel>
+        <Tab Header="Загальні">
+            <Grid Columns="1*, 1*">
+                <TextBox Grid.Row="1" Label="Назва" Value="{Bind Group.Name}"/>
+                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}"/>
+                <TextBox Grid.Row="3" Grid.ColSpan="2" Label="Примітка" Value="{Bind Group.Memo}" 
+                         Multiline="True" Rows="3"/>
+            </Grid>
+        </Tab>
+        <Tab Header="Користувачі" Padding="5, 10">
+            <Toolbar Style="Transparent">
+                <Button Size="Small" Toolbar.Align="Right" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
+                <Button Size="Small" Toolbar.Align="Right" Icon="Delete" Content="Видалити" Command="{BindCmd Command=Remove, Argument={Bind Group.Users}}"/>
+            </Toolbar>
+            <DataGrid GridLines="Vertical" Hover="True" ItemsSource="{Bind Group.Users}" Striped="True">
+                <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
+                <DataGridColumn Header="Логін" Content="{Bind Name}"/>
+                <DataGridColumn Header="Ім'я" Content="{Bind PersonName}"/>
+                <DataGridColumn Fit="True">
+                    <Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>
+                </DataGridColumn>
+            </DataGrid>
+        </Tab>
+    </TabPanel>
+</Dialog>
+
+    

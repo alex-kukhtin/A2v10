@@ -15,23 +15,20 @@
 <body>
     <div id="shell" class="shell">
         <header class="header">
-            <div class="h-block">
-                <i class="ico ico-dashboard-outline"></i>
-                <a class="app-title" href='/' @click.prevent="root">$(AppTitle)</a>
-                <span class="app-subtitle">администратор</span>
+            <div class="h-block">                
+                <a class="app-title" href='/' @click.prevent="root"><i class="ico ico-dashboard-outline"></i><span v-text="title"></span></a>
+                <span class="app-subtitle" v-text="subtitle"></span>
             </div>
             <div class="aligner"></div>
-            <div class="h-block h-right">
-                <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
-                <div class="dropdown dir-down" v-dropdown>
-                    <button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
-                    <div class="dropdown-menu menu down-right">
-                        <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                        <div class="divider"></div>
-                        <form id="logoutForm" method="post" action="/Account/LogOff">
-                            <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
-                        </form>
-                    </div>
+            <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
+            <div class="dropdown dir-down" v-dropdown>
+                <button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
+                <div class="dropdown-menu menu down-right">
+                    <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
+                    <div class="divider"></div>
+                    <form id="logoutForm" method="post" action="/Account/LogOff">
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
+                    </form>
                 </div>
             </div>
         </header>

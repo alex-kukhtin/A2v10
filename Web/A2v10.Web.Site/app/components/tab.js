@@ -24,7 +24,7 @@ TODO:
 <div class="tab-panel">
     <template v-if="static">
         <ul class="tab-header">
-            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.stop.prevent="select(tab)">
+            <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.prevent="select(tab)">
                 <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
                 <span v-text="tab.header"></span>
             </li>
@@ -36,7 +36,7 @@ TODO:
     </template>
     <template v-else>
         <ul class="tab-header">
-            <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.stop.prevent="select(item)">
+            <li :class="{active: isActiveTab(item)}" v-for="(item, tabIndex) in items" :key="tabIndex" @click.prevent="select(item)">
 				<slot name="header" :item="item" :index="tabIndex" :number="tabIndex + 1">
 					<span v-text="defaultTabHeader(item, tabIndex)"></span> 
 				</slot>

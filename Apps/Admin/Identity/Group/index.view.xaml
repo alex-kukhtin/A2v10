@@ -1,7 +1,7 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
     <Page.CollectionView>
-        <CollectionView ItemsSource="{Bind Users}" RunAt="ServerUrl">
+        <CollectionView ItemsSource="{Bind Groups}" RunAt="ServerUrl">
             <CollectionView.Filter>
                 <FilterDescription>
                     <FilterItem Property="Fragment" />
@@ -11,9 +11,9 @@
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Plus" Tip="Додати користувача" Command="{BindCmd Dialog, Action=Create, Url='/Identity/User/Create', Argument={Bind Users}}">Створити</Button>
-            <Button Icon="Edit" Tip="Властивості користувача" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Users}}">Властивості</Button>
-            <Button Icon="Delete" Content="Видалити" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm='Ви дійсно бажаєте видалити користувача?'}"/>
+            <Button Icon="Plus" Tip="Додати групу" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Edit', Argument={Bind Groups}}">Створити</Button>
+            <Button Icon="Edit" Tip="Властивості групи" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/Group/Edit', Argument={Bind Groups}}">Властивості</Button>
+            <Button Icon="Delete" Content="Видалити" Command="{BindCmd DbRemoveSelected, Argument={Bind Groups}, Confirm='Ви дійсно бажаєте видалити групу?'}"/>
             <Separator />
             <TextBox Label="Фільтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для пошуку"/>
             <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Оновити таблицю">Оновити</Button>
@@ -25,14 +25,10 @@
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
 				Striped="True" Border="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
-        <DataGridColumn Header="Логін" Content="{Bind Name}"/>
-        <!--
-		<DataGridColumn Header="Имя" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
-        -->
-		<DataGridColumn Header="Ім'я" Content="{Bind PersonName}" />
-        <DataGridColumn Header="e-mail" Content="{Bind Email}" />
-        <DataGridColumn Header="Телефон" Content="{Bind Phone}" />
+        <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+        <DataGridColumn Header="Назва" Content="{Bind Name}" />
         <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+        <DataGridColumn Header="Користувачів" Content="{Bind UserCount}" Fit="True"/>
         <DataGrid.Pager>
             <Pager Source="{Bind Parent.Pager}"></Pager>
         </DataGrid.Pager>

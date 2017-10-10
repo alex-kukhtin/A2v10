@@ -103,7 +103,6 @@ namespace A2v10.Web.Mvc.Controllers
                 var prms = new Dictionary<String, String>();
                 prms.Add("$(RootUrl)", RootUrl);
                 prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
-                prms.Add("$(AppTitle)", "A2:AppTitle");
                 _baseController.Layout(Response.Output, prms);
             }
             catch (Exception ex)
@@ -224,17 +223,7 @@ namespace A2v10.Web.Mvc.Controllers
             Response.ContentType = "application/javascript";
             try
             {
-                _baseController.ShellScript(admin, Response.Output);
-                /*
-                ExpandoObject loadPrms = new ExpandoObject();
-                loadPrms.Set("UserId", UserId);
-
-                String version = AppInfo.MainAssembly.Version;
-                //IDataModel dm = await _dbContext.LoadModelAsync(String.Empty, "[a2ui].[Menu.Load]", loadPrms);
-                String shellText = System.IO.File.ReadAllText(Server.MapPath("~/pages/shell.js"));
-
-                Response.Write(shellText.Replace("$(AppVersion)", version));
-                */
+                await _baseController.ShellScript(UserId, admin, Response.Output);
             }
             catch (Exception ex)
             {

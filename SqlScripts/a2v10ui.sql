@@ -49,7 +49,10 @@ create procedure a2ui.[Menu.Load]
 as
 begin
 	set nocount on;
-
+	-- TODO: 
+	-- 1. get default root for user
+	-- 2. ACL
+	-- 3. AppTitle/Subtitle
 	declare @RootId bigint = 1;
 	with RT as (
 		select Id=m0.Id, ParentId = m0.Parent, [Level]=0
@@ -59,12 +62,17 @@ begin
 		select m1.Id, m1.Parent, RT.[Level]+1
 			from RT inner join a2ui.Menu m1 on m1.Parent = RT.Id
 	)
-	select [Menu!TMenu!Tree] = null, [Id!!Id]=RT.Id, [!!ParentId]=RT.ParentId,
+	select [Menu!TMenu!Tree] = null, [Id!!Id]=RT.Id, [!TMenu.Menu!ParentId]=RT.ParentId,
 		[Menu!TMenu!Array] = null,
-		m.Name, m.Icon, m.[Description]
+		m.Name, m.Url, m.Icon, m.[Description]
 	from RT 
 		inner join a2ui.Menu m on RT.Id=m.Id
 	order by RT.[Level], m.[Order], RT.[Id];
+
+	-- system parameters
+	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle]
+	from (select Name, Value=StringValue from a2sys.SysParams) as s
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
 end
 go
 ------------------------------------------------

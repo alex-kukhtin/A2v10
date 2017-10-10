@@ -15,28 +15,45 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            TagBuilder page = null;
             bool isGridPage = (Toolbar != null) || (Taskpad != null);
-            var page = new TagBuilder("div", "page absolute");
-            if (isGridPage)
+
+            // render page OR colleciton view
+
+            Action<TagBuilder> addGridAction = (tag) =>
             {
-                page.AddCssClass("page-grid");
+                if (!isGridPage)
+                    return;
+                tag.AddCssClass("page-grid");
                 if (Taskpad != null)
                 {
                     var tp = Taskpad as Taskpad;
                     if (tp != null && tp.Width != null)
                     {
-                        page.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+                        tag.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
                     }
                 }
-            }
-            page.MergeAttribute("id", context.RootId);
-
-
-            page.RenderStart(context);
-            RenderTitle(context);
+            };
 
             if (CollectionView != null)
-                CollectionView.RenderStart(context);
+            {
+                CollectionView.RenderStart(context, (tag) =>
+                {
+                    tag.AddCssClass("page").AddCssClass("absolute");
+                    addGridAction(tag);
+                    tag.MergeAttribute("id", context.RootId);
+                });
+            }
+            else
+            {
+                page = new TagBuilder("div", "page absolute");
+                page.MergeAttribute("id", context.RootId);
+                addGridAction(page);
+                page.RenderStart(context);
+            }
+
+
+            RenderTitle(context);
 
             if (isGridPage)
             {
@@ -53,8 +70,12 @@ namespace A2v10.Xaml
 
             if (CollectionView != null)
                 CollectionView.RenderEnd(context);
-
-            page.RenderEnd(context);
+            else
+            {
+                if (page == null)
+                    throw new InvalidProgramException();
+                page.RenderEnd(context);
+            }
         }
 
         void RenderTitle(RenderContext context)

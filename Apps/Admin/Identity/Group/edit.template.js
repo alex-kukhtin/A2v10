@@ -1,12 +1,13 @@
 ﻿
-/* identity/user index template */
+/* identity/group template */
 
 const template = {
     properties: {
     },
     events: {
     },
-    validators: {
+	validators: {
+		'Group.Name': "Назва не може бути пустою"
     },
     commands: {
 
