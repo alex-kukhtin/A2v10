@@ -131,7 +131,7 @@ namespace A2v10RuntimeNet
             ExpandoObject loadPrms = new ExpandoObject();
             loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
             // TODO: current user ID;
-            loadPrms.Set("UserId", 101);
+            loadPrms.Set("UserId", 100);
             ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
         }
 
@@ -144,7 +144,7 @@ namespace A2v10RuntimeNet
                 url = url.Substring(6);
                 controller.Admin = true;
             }
-            Int64 userId = 101; // TODO userId
+            Int64 userId = 100; // TODO userId
             try
             {
                 using (var writer = new StringWriter()) {
@@ -158,6 +158,10 @@ namespace A2v10RuntimeNet
                     {
                         var command = url.Substring(6);
                         controller.Data(command, userId, postData, writer).Wait();
+                    }
+                    else if (url.StartsWith("_image/"))
+                    {
+                        controller.Image("/" + url, userId).Wait(); // with _image prefix
                     }
                     else
                     {

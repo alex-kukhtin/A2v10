@@ -19,19 +19,17 @@
                 <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
             </div>
             <div class="aligner"></div>
-            <div class="h-block h-right">
-                <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
-                <div class="dropdown dir-down" v-dropdown>
-                    <button class="btn" toggle><i class="ico ico-user"></i> Александр Кухтин<span class="caret"></span></button>
-                    <div class="dropdown-menu menu down-right">
-                        <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                        <div class="divider"></div>
-                        <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
-                        <div class="divider"></div>
-                        <form id="logoutForm" method="post" action="Account/LogOff">
-                            <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
-                        </form>
-                    </div>
+            <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
+            <div class="dropdown dir-down" v-dropdown>
+                <button class="btn" toggle><i class="ico ico-user"></i> Александр Кухтин<span class="caret"></span></button>
+                <div class="dropdown-menu menu down-right">
+                    <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
+                    <div class="divider"></div>
+                    <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
+                    <div class="divider"></div>
+                    <form id="logoutForm" method="post" action="Account/LogOff">
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
+                    </form>
                 </div>
             </div>
         </header>
@@ -61,25 +59,25 @@
             const Shell = component('std:shellController');
 
     const menu = [
-        { title: "Начало", url: "home"},
+        { Name: "Начало", Url: "home"},
         {
-            type:'tree', title: 'Справочники', url: 'catalog', menu: [
-                { title: "Suppliers", url: 'suppliers', icon:'users', query:'order=Name&dir=desc'},
-                { title: "Покупатели", url: 'customers', icon:'database'},
-                { title: "Edit 3 segment", url: 'edit/5', icon:'dashboard' },
+            type:'tree', Name: 'Справочники', Url: 'catalog', Menu: [
+                { Name: "Suppliers", Url: 'suppliers', Icon:'users', query:'order=Name&dir=desc'},
+                { Name: "Покупатели", Url: 'customers', Icon:'database'},
+                { Name: "Edit 3 segment", Url: 'edit/5', Icon:'dashboard' },
                 {
-                    title: "Menu Folder", icon: 'folder', menu: [
-                        { title: "Suppliers 2 (with long text <b>bold</b>)", url: 'suppliers1', icon: 'save' },
-                        { title: "Customers 2", url: 'customers2', icon:'dot'}
+                    Name: "Menu Folder", icon: 'folder', Menu: [
+                        { Name: "Suppliers 2 (with long text <b>bold</b>)", Url: 'suppliers1', Icon: 'save' },
+                        { Name: "Customers 2", url: 'customers2', Icon:'dot'}
                     ]
                 }
             ]
         },
         {
-            type:'accordion', title: 'Документы', url: 'document', menu: [
-                { title: "Котировки", url: 'quotations', icon: 'file', query:'order=Date&dir=asc' },
-                { title: "Заявки", url: 'request', icon: 'database'},
-                { title: "edit 4 segment", url: 'outgoing/edit/2', icon: 'comment' }
+            type:'accordion', Name: 'Документы', Url: 'document', Menu: [
+                { Name: "Котировки", Url: 'quotations', Icon: 'file', query:'order=Date&dir=asc' },
+                { Name: "Заявки", Url: 'request', Icon: 'database'},
+                { Name: "edit 4 segment", Url: 'outgoing/edit/2', Icon: 'comment' }
             ]
         }
     ];
@@ -96,6 +94,8 @@
             menu: menu
         }
     });
+
+    window.$rootUrl = '';
 
         })();
     </script>

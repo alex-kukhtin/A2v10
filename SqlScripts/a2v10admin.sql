@@ -284,7 +284,7 @@ begin
 			or upper(g.Memo) like @Fragment or cast(g.Id as nvarchar) like @Fragment
 	)
 
-	select [Groups!TGroup!Array]=null, [!!RowCount] = (select count(1) from T) 
+	select [Groups!TGroup!Array]=null, *, [!!RowCount] = (select count(1) from T) 
 	from T
 		where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
 	order by [!!RowNumber];

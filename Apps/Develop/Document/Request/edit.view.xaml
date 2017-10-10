@@ -145,6 +145,7 @@
                             <TableCell>Номер</TableCell>
                             <TableCell>Товар/ПНТ</TableCell>
                             <TableCell>Кол-во</TableCell>
+                            <TableCell>Доставка</TableCell>
                             <TableCell>Склад</TableCell>
                         </TableRow>
                     </Table.Header>
@@ -157,12 +158,11 @@
                                 </TextBox.AddOns>
                             </TextBox>
                         </TableCell>
-                        <TableCell>
-                            <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
+                        <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
+                        <TableCell VAlign="Bottom">
+                            <CheckBox></CheckBox>
                         </TableCell>
-                        <TableCell>
-                            <ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
-                        </TableCell>
+                        <ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
                     </TableRow>
                 </Table>
 			</CollectionView>

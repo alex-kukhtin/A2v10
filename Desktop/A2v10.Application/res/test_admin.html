@@ -19,19 +19,17 @@
                 <a class="app-title" href='/admin' v-text="title" @click.prevent="root"></a>
             </div>
             <div class="aligner"></div>
-            <div class="h-block h-right">
-                <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
-                <div class="dropdown dir-down" v-dropdown>
-                    <button class="btn" toggle><i class="ico ico-user"></i> Администратор системы <span class="caret"></span></button>
-                    <div class="dropdown-menu menu down-right">
-                        <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                        <div class="divider"></div>
-                        <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
-                        <div class="divider"></div>
-                        <form id="logoutForm" method="post" action="Account/LogOff">
-                            <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
-                        </form>
-                    </div>
+            <a class="nav-admin" href="/"><i class="ico ico-gear-outline"></i></a>
+            <div class="dropdown dir-down" v-dropdown>
+                <button class="btn" toggle><i class="ico ico-user"></i> Администратор системы <span class="caret"></span></button>
+                <div class="dropdown-menu menu down-right">
+                    <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
+                    <div class="divider"></div>
+                    <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
+                    <div class="divider"></div>
+                    <form id="logoutForm" method="post" action="Account/LogOff">
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
+                    </form>
                 </div>
             </div>
         </header>
@@ -62,16 +60,16 @@
 
     const menu = [
         {
-            type: 'tree', title: 'Администратор', url: 'identity', menu: [
-                { title: "Пользователи", url: 'user', icon: 'user' },
-                { title: "Группы", url: 'group', icon: 'users' },
-                { title: "Роли", url: 'role', icon: 'users' }
+            type: 'tree', Name: 'Администратор', Url: 'identity', Menu: [
+                { Name: "Пользователи", Url: 'user', Icon: 'user' },
+                { Name: "Группы", Url: 'group', Icon: 'users' },
+                { Name: "Роли", Url: 'role', Icon: 'users' }
             ]
         },
         {
-            title: "Бизнес процессы", url: 'workflow', icon: 'folder', menu: [
-                { title: "Выполняемые", url: 'executing', icon: 'save' },
-                { title: "Аварийные", url: 'failed', icon: 'dot' }
+            Name: "Бизнес процессы", Url: 'workflow', Icon: 'folder', Menu: [
+                { Name: "Выполняемые", Url: 'executing', Icon: 'save' },
+                { Name: "Аварийные", Url: 'failed', Icon: 'dot' }
             ]
         }
     ];
@@ -88,6 +86,8 @@
             menu: menu
         }
     });
+
+        window.$rootUrl = '';
 
         })();
     </script>
