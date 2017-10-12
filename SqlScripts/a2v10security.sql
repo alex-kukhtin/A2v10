@@ -1,4 +1,12 @@
-﻿/* 20171008-7042 */
+﻿/* 20171011-7044 */
+/*
+------------------------------------------------
+Copyright © 2008-2017 Alex Kukhtin
+
+Last updated : 11 oct 2017 09:00
+module version : 7044
+*/
+
 ------------------------------------------------
 set noexec off;
 go
@@ -11,6 +19,13 @@ begin
 	raiserror (@err, 16, -1) with nowait;
 	set noexec on;
 end
+go
+------------------------------------------------
+set nocount on;
+if not exists(select * from a2sys.Versions where Module = N'std:security')
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7044);
+else
+	update a2sys.Versions set [Version] = 7044 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -32,6 +47,7 @@ begin
 		Id	bigint not null constraint PK_Users primary key
 			constraint DF_Users_PK default(next value for a2security.SQ_Users),
 		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
+		Void bit not null constraint DF_Users_Void default(0),
 		SecurityStamp nvarchar(max)	not null,
 		PasswordHash nvarchar(max)	null,
 		TwoFactorEnabled bit not null constraint DF_Users_TwoFactorEnabled default(0),
@@ -160,8 +176,9 @@ create view a2security.ViewUsers
 as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
-		PersonName, Memo
-	from a2security.Users;
+		PersonName, Memo, Void
+	from a2security.Users
+	where Void=0;
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserById')
@@ -203,28 +220,6 @@ begin
 	set nocount on;
 	select * from a2security.ViewUsers with(nolock)
 	where Email=@Email;
-end
-go
-
-------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUser')
-	drop procedure a2security.CreateUser
-go
-------------------------------------------------
-create procedure a2security.CreateUser
-@UserName nvarchar(255),
-@PasswordHash nvarchar(max) = null,
-@SecurityStamp nvarchar(max),
-@Email nvarchar(255) = null,
-@PhoneNumber nvarchar(255) = null
-as
-begin
-	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-	insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
-		values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
-	--TODO: log
 end
 go
 ------------------------------------------------
@@ -279,6 +274,32 @@ begin
 	from a2security.UserGroups ur
 		inner join a2security.Groups r on ur.GroupId = r.Id
 	where ur.UserId = @UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateUserInfo')
+	drop procedure [a2security].[Permission.UpdateUserInfo]
+go
+------------------------------------------------
+create procedure [a2security].[Permission.UpdateUserInfo]
+as
+begin
+	set nocount on;
+	declare @procName sysname;
+	declare @sqlProc sysname;
+	declare #tmpcrs cursor local fast_forward read_only for
+		select ROUTINE_NAME from INFORMATION_SCHEMA.ROUTINES 
+			where ROUTINE_SCHEMA = N'a2security' and ROUTINE_NAME like N'Permission.UpdateAcl.%';
+	open #tmpcrs;
+	fetch next from #tmpcrs into @procName;
+	while @@fetch_status = 0
+	begin
+		set @sqlProc = N'a2security.[' + @procName + N']';
+		exec sp_executesql @sqlProc;
+		fetch next from #tmpcrs into @procName;
+	end
+	close #tmpcrs;
+	deallocate #tmpcrs;
 end
 go
 ------------------------------------------------

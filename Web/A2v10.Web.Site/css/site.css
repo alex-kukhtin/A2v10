@@ -1839,7 +1839,7 @@ table.hover > tbody > tr.active:hover {
 }
 .modal-footer .btn {
   min-width: 6rem;
-  padding: .4rem .6rem;
+  padding: .4rem .75rem;
 }
 .modal-footer .btn + .btn {
   margin-left: 8px;

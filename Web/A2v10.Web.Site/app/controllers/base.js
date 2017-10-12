@@ -1,4 +1,4 @@
-﻿/*20170926-7038*/
+﻿/*20171012-7045*/
 /*controllers/base.js*/
 (function () {
 
@@ -168,6 +168,16 @@
 					item.$remove();
 				else
 					this.$confirm(confirm).then(() => item.$remove());
+			},
+
+			$removeSelected(arr, confirm) {
+				if (!utils.isArray(arr)) {
+					console.error('$removeSelected. The argument is not an array');
+				}
+				let item = arr.$selected;
+				if (!item)
+					return;
+				this.$remove(item, confirm);
 			},
 
 			$navigate(url, data) {

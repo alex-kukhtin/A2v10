@@ -1926,7 +1926,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171006-7041*/
+/*20171012-7045*/
 /*components/datagrid.js*/
 (function () {
 
@@ -2140,6 +2140,20 @@ Vue.component('validator-control', {
                 }
             };
 
+			function normalizeArg(arg, eval) {
+				arg = arg || '';
+				if (arg === 'this')
+					arg = row;
+				else if (arg.startsWith('{')) {
+					arg = arg.substring(1, arg.length - 1);
+					if  (!(arg in row))
+						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+					arg = row[arg];
+				} else if (arg && eval)
+					arg = utils.eval(row, arg, col.dataType);
+				return arg;
+			}
+
             if (col.editable) {
                 /* editable content */
                 let child = {
@@ -2150,27 +2164,22 @@ Vue.component('validator-control', {
                 return h(tag, cellProps, [h(child, childProps)]);
 			} else if (col.command) {
 				// column command -> hyperlink
-				let arg1 = col.command.arg1 || '';
-				if (arg1 === 'this') arg1 = row;
-				if (arg1.startsWith('{')) {
-					arg1 = arg1.substring(1, arg1.length - 1);
-					let narg = row[arg1];
-					if (!narg)
-						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
-					arg1 = narg;
-				}
-				let arg2 = col.command.arg2 || '';
-				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2, col.dataType);
+				// arg1. command
+				let arg1 = normalizeArg(col.command.arg1, false);
+				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
+				let arg3 = normalizeArg(col.command.arg3, false);
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
 					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
-							col.command.cmd(arg1, arg2);
+							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,
 						getHref() {
+							if (arg1 == '$dialog')
+								return null;
 							let id = arg2;
 							if (utils.isObjectExact(arg2))
 								id = arg2.$id;
@@ -2235,11 +2244,12 @@ Vue.component('validator-control', {
                 //this.$parent.rowSelected = this;
             },
             doDblClick($event) {
-                // deselect text
-                if (!this.$parent.dblclick)
-                    return;
+				// deselect text
+				$event.stopImmediatePropagation();
+				if (!this.$parent.doubleclick)
+					return;
                 window.getSelection().removeAllRanges();
-                this.$parent.dblclick();
+				this.$parent.doubleclick();
             }
         }
     };
@@ -2256,7 +2266,7 @@ Vue.component('validator-control', {
 			mark: String,
 			filterFields: String,
 			markStyle: String,
-			dblclick: Function,
+			doubleclick: Function,
 			groupBy: [Array, Object]
 		},
 		template: dataGridTemplate,
@@ -3111,7 +3121,7 @@ TODO:
         <ul class="tab-header">
             <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.prevent="select(tab)">
                 <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
-                <span v-text="tab.header"></span>
+                <span v-text="tab.header"></span><span class="badge" v-if="tab.hasBadge" v-text="tab.badge"></span>				
             </li>
         </ul>
         <slot name="title" />
@@ -3148,14 +3158,18 @@ TODO:
         name:'a2-tab-item',
         template: tabItemTemplate,
         props: {
-            header: String,
+			header: String,
+			badge: [String, Number, Object],
 			icon: String,
 			tabStyle: String
         },
         computed: {
             hasIcon() {
                 return !!this.icon;
-            },
+			},
+			hasBadge() {
+				return !!this.badge;
+			},
             iconCss() {
                 return this.icon ? ("ico ico-" + this.icon) : '';
             },
@@ -3708,7 +3722,7 @@ Vue.directive('resize', {
 });
 
 
-/*20170926-7038*/
+/*20171012-7045*/
 /*controllers/base.js*/
 (function () {
 
@@ -3878,6 +3892,16 @@ Vue.directive('resize', {
 					item.$remove();
 				else
 					this.$confirm(confirm).then(() => item.$remove());
+			},
+
+			$removeSelected(arr, confirm) {
+				if (!utils.isArray(arr)) {
+					console.error('$removeSelected. The argument is not an array');
+				}
+				let item = arr.$selected;
+				if (!item)
+					return;
+				this.$remove(item, confirm);
 			},
 
 			$navigate(url, data) {

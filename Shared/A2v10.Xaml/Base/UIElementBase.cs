@@ -127,5 +127,14 @@ namespace A2v10.Xaml
                     .Render(context);
             }
         }
+
+        internal virtual void MergeAlign(TagBuilder input, RenderContext context, TextAlign align)
+        {
+            var alignProp = GetBinding("Align");
+            if (alignProp != null)
+                input.MergeAttribute(":align", alignProp.GetPath(context));
+            else if (align != TextAlign.Default)
+                input.MergeAttribute("align", align.ToString().ToLowerInvariant());
+        }
     }
 }

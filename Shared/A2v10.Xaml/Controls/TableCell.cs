@@ -23,6 +23,7 @@ namespace A2v10.Xaml
         public Int32? RowSpan { get; set; }
         public VerticalAlign VAlign { get; set; }
         public WrapMode Wrap { get; set; }
+        public TextAlign Align { get; set; }
 
         //public Boolean Validate { get; set; }
 
@@ -36,6 +37,9 @@ namespace A2v10.Xaml
 
             MergeAttributes(td, context);
             MergeContent(td, context);
+
+            if (Align != TextAlign.Left)
+                td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 
             if (VAlign != VerticalAlign.Default)
                 td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");

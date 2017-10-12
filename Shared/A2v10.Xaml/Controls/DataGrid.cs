@@ -36,6 +36,8 @@ namespace A2v10.Xaml
 
         public Object Mark { get; set; }
 
+        public Command DoubleClick { get; set; }
+
         GroupDescriptions _groupBy;
         public GroupDescriptions GroupBy
         {
@@ -61,6 +63,13 @@ namespace A2v10.Xaml
             MergeBoolAttribute(dataGrid, context, nameof(Border), Border);
             MergeBoolAttribute(dataGrid, context, nameof(Sort), Sort);
             dataGrid.MergeAttribute(":route-query", "$query"); // always!
+
+            var dblClickBind = GetBindingCommand(nameof(DoubleClick));
+            if (dblClickBind != null)
+            {
+                // Function!
+                dataGrid.MergeAttribute(":doubleclick", "() => " + dblClickBind.GetCommand(context));
+            }
 
             if (MarkerStyle != RowMarkerStyle.None)
                 dataGrid.MergeAttribute("mark-style", MarkerStyle.ToString().ToKebabCase());

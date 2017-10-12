@@ -49,7 +49,7 @@
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel>
-		<Tab Header="Заявка">
+		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
             <Header>Заявка на поставку</Header>
 			<Grid Columns="1*, 1*, 2*">
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
@@ -90,7 +90,7 @@
                 </CollectionView.Filter>
                 <Toolbar Style="Transparent">
                     <Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
-                    <Button Icon="Delete" Content="Удалить выделенную строку" />
+                    <Button Icon="Delete" Content="Удалить выделенную строку" Command="{BindCmd RemoveSelected, Argument={Bind Document.Rows}, Confirm='Удалить строку?'}"/>
                     <Button Icon="Dashboard" Content="Подбор товара" />
                     <Code Content="{Bind Document.Rows.length}"></Code>
                     <Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
@@ -159,7 +159,7 @@
                             </TextBox>
                         </TableCell>
                         <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
-                        <TableCell VAlign="Bottom">
+                        <TableCell Align="Center">
                             <CheckBox></CheckBox>
                         </TableCell>
                         <ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
@@ -172,7 +172,7 @@
 
 			<TextBox Label="Примечание" Value="{Bind Document.Memo}" Multiline="True" Rows="3"></TextBox>
 		</Tab>
-		<Tab Header="Бухгалтерская">
+		<Tab Header="Бухгалтерская" Badge="New!">
 			<Text>Это бухгалтерская заявка по документу №
 				<Span Content="{Bind Document.SNo}" Bold="True"></Span></Text>
 		</Tab>

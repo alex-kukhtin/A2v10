@@ -26,7 +26,7 @@ TODO:
         <ul class="tab-header">
             <li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.prevent="select(tab)">
                 <i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
-                <span v-text="tab.header"></span>
+                <span v-text="tab.header"></span><span class="badge" v-if="tab.hasBadge" v-text="tab.badge"></span>				
             </li>
         </ul>
         <slot name="title" />
@@ -63,14 +63,18 @@ TODO:
         name:'a2-tab-item',
         template: tabItemTemplate,
         props: {
-            header: String,
+			header: String,
+			badge: [String, Number, Object],
 			icon: String,
 			tabStyle: String
         },
         computed: {
             hasIcon() {
                 return !!this.icon;
-            },
+			},
+			hasBadge() {
+				return !!this.badge;
+			},
             iconCss() {
                 return this.icon ? ("ico ico-" + this.icon) : '';
             },

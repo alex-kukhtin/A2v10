@@ -1,10 +1,10 @@
-/* 20170803-1006 */
+/* 20171011-7044 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 17 aug 2017 22:22
-module version : 1005
+Last updated : 11 oct 2017 09:00
+module version : 7044
 */
 
 /*
@@ -28,6 +28,13 @@ begin
 	raiserror (@err, 16, -1) with nowait;
 	set noexec on;
 end
+go
+------------------------------------------------
+set nocount on;
+if not exists(select * from a2sys.Versions where Module = N'std:workflow')
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7044);
+else
+	update a2sys.Versions set [Version] = 7044 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')

@@ -24,6 +24,7 @@ namespace A2v10.Xaml
         Execute,
         ExecuteSelected,
         Remove,
+        RemoveSelected,
         Dialog,
         Select
     }
@@ -90,8 +91,12 @@ namespace A2v10.Xaml
                 case CommandType.OpenSelected:
                     return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
 
+
                 case CommandType.Select:
                     return $"$modalSelect({CommandArgument(context)})";
+
+                case CommandType.RemoveSelected:
+                    return $"$removeSelected({CommandArgument(context)} {GetConfirm(context)})";
 
                 case CommandType.DbRemoveSelected:
                     return $"$dbRemoveSelected({CommandArgument(context)} {GetConfirm(context)})";
@@ -100,13 +105,14 @@ namespace A2v10.Xaml
                     if (indirect)
                     {
                         if (!IsArgumentEmpty(context))
-                            return $"{{cmd:$navigate, arg1:'{CommandUrl}', arg2:'{CommandArgument(context)}'}}";
-                        return $"{{cmd:$navigate, arg1:'{CommandUrl}', arg2:'this'}}";
+                            return $"{{cmd:$navigate, eval: true, arg1:'{CommandUrl}', arg2:'{CommandArgument(context)}'}}";
+                        return $"{{cmd:$navigate, eval:true, arg1:'{CommandUrl}', arg2:'this'}}";
                     }
                     else
                         return $"$navigate('{CommandUrl}', {CommandArgument(context)})";
                 case CommandType.Create:
                     return $"$navigate('{CommandUrl}')";
+
                 case CommandType.Remove:
                     if (indirect)
                     {
@@ -114,6 +120,7 @@ namespace A2v10.Xaml
                     }
                     else
                         return $"$remove({CommandArgumentOrThis(context)} {GetConfirm(context)})";
+
                 case CommandType.Append:
                     return $"{CommandArgument(context)}.$append()";
 
@@ -132,6 +139,14 @@ namespace A2v10.Xaml
                     bool bNullable = false;
                     if (Action == DialogAction.Create)
                         bNullable = true;
+                    if (indirect)
+                    {
+                        String arg3 = "this";
+                        if (!IsArgumentEmpty(context))
+                            arg3 = CommandArgument(context);
+                        // command, url, data
+                        return $"{{cmd:$dialog, arg1:'{Action.ToString().ToKebabCase()}', arg2:'{CommandUrl}', arg3: '{arg3}'}}";
+                    }
                     return $"$dialog('{Action.ToString().ToKebabCase()}', '{CommandUrl}', {CommandArgument(context, bNullable)})";
 
                 default:
@@ -211,7 +226,7 @@ namespace A2v10.Xaml
                 // TODO: check URL format
                 if (!Url.StartsWith("/"))
                     throw new NotImplementedException($"Url '{Url}' must start with '/'");
-                return Url;
+                return Url.ToLowerInvariant();
             }
         }
 
@@ -227,6 +242,7 @@ namespace A2v10.Xaml
                 case CommandType.Select:
                 case CommandType.ExecuteSelected:
                 case CommandType.DbRemoveSelected:
+                case CommandType.RemoveSelected:
                     {
                         var arg = GetBinding(nameof(Argument));
                         if (arg != null)

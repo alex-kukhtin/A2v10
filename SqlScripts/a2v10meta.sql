@@ -1,11 +1,11 @@
-/* 20170724-7010 */
+/* 20171011-7044 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 17 aug 2017 22:06
-module version : 1001
+Last updated : 11 oct 2017 09:00
+module version : 7044
 */
 
 ------------------------------------------------
@@ -20,6 +20,13 @@ begin
 	raiserror (@err, 16, -1) with nowait;
 	set noexec on;
 end
+go
+------------------------------------------------
+set nocount on;
+if not exists(select * from a2sys.Versions where Module = N'std:meta')
+	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7044);
+else
+	update a2sys.Versions set [Version] = 7044 where Module = N'std:meta';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2meta')
@@ -90,9 +97,23 @@ begin
 		Name sysname not null constraint PK_Modules primary key,
 		UiName nvarchar(255) null,
 		[Version] int not null constraint DF_Modules_Version default(0),
-		DateCreated datetime not null constraint DF_Modules_DateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_Modules_DateModified default(getutcdate()),
+		DateCreated datetime not null constraint DF_Modules_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Modules_DateModified default(getdate()),
 		[Description] nvarchar(255) null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2meta' and TABLE_NAME=N'Models')
+begin
+	create table a2meta.[Models]
+	(
+		Name sysname not null constraint PK_Models primary key,
+		[Description] nvarchar(255) null,
+		Paged bit not null constraint DF_Models_Paged default(0),
+		PageSize int null,
+		DateCreated datetime not null constraint DF_Models_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Models_DateModified default(getdate()),
 	);
 end
 go
@@ -108,8 +129,8 @@ begin
 		UiName nvarchar(255) null,
 		Parent sysname null constraint FK_Tables_Parent_Tables foreign key references a2meta.[Tables]([Key]),
 		[Version] int not null constraint DF_Tables_Version default(1),
-		DateCreated datetime not null constraint DF_Tables_DateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_Tables_DateModified default(getutcdate()),
+		DateCreated datetime not null constraint DF_Tables_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Tables_DateModified default(getdate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -134,8 +155,8 @@ begin
 		[Unique] bit not null constraint DF_Columns_Unique default(0),
 		[References] sysname null
 			constraint DF_Columns_References_Columns foreign key references a2meta.[Columns]([Key]),
-		DateCreated datetime not null constraint DF_Columns_DateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_Columns_DateModified default(getutcdate()),
+		DateCreated datetime not null constraint DF_Columns_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Columns_DateModified default(getdate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -299,9 +320,9 @@ begin
 				$Columns$
 				Void bit not null constraint DF_$Name$_Void default(0),
 				Active bit not null constraint DF_$Name$_Active default(1),
-				DateCreated datetime not null constraint DF_$Name$_DateCreated default(getutcdate()),
+				DateCreated datetime not null constraint DF_$Name$_DateCreated default(getdate()),
 				UserCreated bigint not null,
-				DateModified datetime not null constraint DF_$Name$_DateModified default(getutcdate()),
+				DateModified datetime not null constraint DF_$Name$_DateModified default(getdate()),
 				UserModified bigint not null,
 				RowVersion rowversion
 			)';
@@ -326,7 +347,7 @@ begin
 	select @oldver= a2meta.fn_TableVersion(@module, @name);
 	if @newver > @oldver
 	begin
-		-- update colums
+		-- update columns
 		exec a2meta.[Columns.Sync] @module, @name;
 		set @sql = N''
 		-- set new version

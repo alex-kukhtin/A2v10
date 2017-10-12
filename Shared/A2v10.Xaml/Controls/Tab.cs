@@ -19,14 +19,24 @@ namespace A2v10.Xaml
     {
         public Object Header { get; set; }
 
+        public String Badge { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tab = new TagBuilder("a2-tab-item");
             if (onRender != null)
                 onRender(tab);
             MergeAttributes(tab, context);
-            if (Header is String)
+            var headerBind = GetBinding(nameof(Header));
+            if (headerBind != null)
+                tab.MergeAttribute(":header", headerBind.GetPathFormat(context));
+            else if (Header is String)
                 tab.MergeAttribute("header", Header?.ToString());
+            var badgeBind = GetBinding(nameof(Badge));
+            if (badgeBind != null)
+                tab.MergeAttribute(":badge", badgeBind.GetPathFormat(context));
+            else if (Badge != null)
+                tab.MergeAttribute("badge", Badge);
             tab.RenderStart(context);
 
             RenderChildren(context);

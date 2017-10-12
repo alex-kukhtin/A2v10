@@ -1,11 +1,11 @@
-﻿/* 20171010-7043 */
+﻿/* 20171011-7044 */
 
 /*
 ------------------------------------------------
-Copyright © 2008-2017 A. Kukhtin
+Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 10 oct 2017 14:50
-module version : 7043
+Last updated : 11 oct 2017 09:00
+module version : 7044
 */
 ------------------------------------------------
 set noexec off;
@@ -21,17 +21,33 @@ begin
 end
 go
 ------------------------------------------------
+set nocount on;
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2sys')
 begin
 	exec sp_executesql N'create schema a2sys';
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'Versions')
+begin
+	create table a2sys.Versions
+	(
+		Module sysname not null constraint PK_Versions primary key,
+		[Version] int null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from a2sys.Versions where Module = N'std:system')
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7044);
+else
+	update a2sys.Versions set [Version] = 7044 where Module = N'std:system';
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
 begin
 	create table a2sys.SysParams
 	(
-		-- database schema
 		Name sysname not null constraint PK_SysParams primary key,
 		StringValue nvarchar(255) null,
 		IntValue int null

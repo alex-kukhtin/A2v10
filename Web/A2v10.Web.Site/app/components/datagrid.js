@@ -1,4 +1,4 @@
-﻿/*20171006-7041*/
+﻿/*20171012-7045*/
 /*components/datagrid.js*/
 (function () {
 
@@ -212,6 +212,20 @@
                 }
             };
 
+			function normalizeArg(arg, eval) {
+				arg = arg || '';
+				if (arg === 'this')
+					arg = row;
+				else if (arg.startsWith('{')) {
+					arg = arg.substring(1, arg.length - 1);
+					if  (!(arg in row))
+						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+					arg = row[arg];
+				} else if (arg && eval)
+					arg = utils.eval(row, arg, col.dataType);
+				return arg;
+			}
+
             if (col.editable) {
                 /* editable content */
                 let child = {
@@ -222,27 +236,22 @@
                 return h(tag, cellProps, [h(child, childProps)]);
 			} else if (col.command) {
 				// column command -> hyperlink
-				let arg1 = col.command.arg1 || '';
-				if (arg1 === 'this') arg1 = row;
-				if (arg1.startsWith('{')) {
-					arg1 = arg1.substring(1, arg1.length - 1);
-					let narg = row[arg1];
-					if (!narg)
-						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
-					arg1 = narg;
-				}
-				let arg2 = col.command.arg2 || '';
-				if (arg2 === 'this') arg2 = row; else arg2 = utils.eval(row, arg2, col.dataType);
+				// arg1. command
+				let arg1 = normalizeArg(col.command.arg1, false);
+				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
+				let arg3 = normalizeArg(col.command.arg3, false);
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
 					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
 						doCommand() {
-							col.command.cmd(arg1, arg2);
+							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,
 						getHref() {
+							if (arg1 == '$dialog')
+								return null;
 							let id = arg2;
 							if (utils.isObjectExact(arg2))
 								id = arg2.$id;
@@ -307,11 +316,12 @@
                 //this.$parent.rowSelected = this;
             },
             doDblClick($event) {
-                // deselect text
-                if (!this.$parent.dblclick)
-                    return;
+				// deselect text
+				$event.stopImmediatePropagation();
+				if (!this.$parent.doubleclick)
+					return;
                 window.getSelection().removeAllRanges();
-                this.$parent.dblclick();
+				this.$parent.doubleclick();
             }
         }
     };
@@ -328,7 +338,7 @@
 			mark: String,
 			filterFields: String,
 			markStyle: String,
-			dblclick: Function,
+			doubleclick: Function,
 			groupBy: [Array, Object]
 		},
 		template: dataGridTemplate,

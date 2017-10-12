@@ -1,4 +1,11 @@
-/* 20171010-7043 */
+/* 20171011-7044 */
+/*
+------------------------------------------------
+Copyright © 2008-2017 Alex Kukhtin
+
+Last updated : 11 oct 2017 09:00
+module version : 7044
+*/
 ------------------------------------------------
 set noexec off;
 go
@@ -13,9 +20,28 @@ begin
 end
 go
 ------------------------------------------------
+set nocount on;
+if not exists(select * from a2sys.Versions where Module = N'std:admin')
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7044);
+else
+	update a2sys.Versions set [Version] = 7044 where Module = N'std:admin';
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
 begin
 	exec sp_executesql N'create schema a2admin';
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Ensure.Admin')
+	drop procedure a2admin.[Ensure.Admin]
+go
+------------------------------------------------
+create procedure a2admin.[Ensure.Admin]
+@UserId bigint
+as
+begin
+	set nocount on;
 end
 go
 ------------------------------------------------
@@ -29,7 +55,7 @@ as
 begin
 	set nocount on;
 
-	-- TODO: ensure that user is admin
+	exec a2admin.[Ensure.Admin] @UserId;
 	declare @RootId bigint = 99;
 	with RT as (
 		select Id=m0.Id, ParentId = m0.Parent, [Level]=0
@@ -69,7 +95,8 @@ as
 begin
 	set nocount on;
 
-	-- ensure that user is admin
+	exec a2admin.[Ensure.Admin] @UserId;
+
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	set @Asc = N'Asc'; set @Desc = N'Desc';
 	set @Dir = isnull(@Dir, @Asc);
@@ -119,8 +146,9 @@ create procedure a2admin.[User.Load]
 @Id bigint = null
 as
 begin
-	-- ensure that user is admin
 	set nocount on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
 
 	select [User!TUser!Object]=null, 
 		[Id!!Id]=u.Id, [Name!!Name]=u.UserName, [Phone!!Phone]=u.PhoneNumber, [Email]=u.Email,
@@ -171,7 +199,7 @@ create procedure a2admin.[User.Metadata]
 as
 begin
 	set nocount on;
-	-- ensure that user is admin
+
 	declare @User a2admin.[User.TableType];
 	declare @Roles a2sys.[Id.TableType];
 	declare @Groups a2sys.[Id.TableType];
@@ -193,7 +221,8 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	-- ensure that user is admin
+	exec a2admin.[Ensure.Admin] @UserId;
+
 	declare @output table(op sysname, id bigint);
 
 	merge a2security.ViewUsers as target
@@ -232,7 +261,7 @@ begin
 	when not matched by source and target.UserId=@RetId then
 		delete;
 
-	-- TODO: acl exec a2security.[Permission.UpdateUserInfo];
+	exec a2security.[Permission.UpdateUserInfo];
 	exec a2admin.[User.Load] @UserId, @RetId;
 end
 go
@@ -253,7 +282,8 @@ as
 begin
 	set nocount on;
 
-	-- ensure that user is admin
+	exec a2admin.[Ensure.Admin] @UserId;
+
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	set @Asc = N'Asc'; set @Desc = N'Desc';
 	set @Dir = isnull(@Dir, @Asc);
@@ -304,7 +334,9 @@ create procedure a2admin.[Group.Load]
 as
 begin
 	set nocount on;
-	-- ensure that user is admin
+	
+	exec a2admin.[Ensure.Admin] @UserId;
+
 	select [Group!TGroup!Object]=null, [Id!!Id]=g.Id, [Name!!Name]=g.Name, 
 		[Key] = g.[Key], [Memo]=g.Memo, [Users!TUser!Array] = null,
 		[UserCount]=(select count(1) from a2security.UserGroups ug where ug.GroupId = g.Id)
@@ -346,9 +378,10 @@ create procedure a2admin.[Group.Metadata]
 as
 begin
 	set nocount on;
+
 	declare @Group a2admin.[Group.TableType];
 	declare @Users a2sys.[Id.TableType];
-	-- основная таблица
+
 	select [Group!Group!Metadata]=null, * from @Group;
 	select [Users!Group.Users!Metadata] = null, * from @Users;
 end
@@ -364,7 +397,8 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
-	-- ensure that user is admin
+
+	exec a2admin.[Ensure.Admin] @UserId;
 
 	declare @output table(op sysname, id bigint);
 
@@ -392,7 +426,7 @@ begin
 		insert(GroupId, UserId) values (@RetId, source.Id)
 	when not matched by source and target.GroupId=@RetId then delete;
 		
-	--TODO:exec a2security.[Permission.UpdateUserInfo];
+	exec a2security.[Permission.UpdateUserInfo];
 	exec a2admin.[Group.Load] @UserId, @RetId;
 end
 go
