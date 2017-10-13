@@ -22,8 +22,6 @@ namespace A2v10.Xaml
 
         public String Label { get; set; }
 
-        public String Tip { get; set; }
-
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             throw new NotImplementedException();

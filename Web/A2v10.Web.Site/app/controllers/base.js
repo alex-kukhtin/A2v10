@@ -3,7 +3,7 @@
 (function () {
 
     const eventBus = require('std:eventBus');
-    const utils = require('utils');
+    const utils = require('std:utils');
     const dataservice = require('std:dataservice');
 	const store = component('std:store');
 	const urltools = require('std:url');

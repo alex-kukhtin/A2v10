@@ -61,7 +61,7 @@
                 }
 				else {
 					this.loading = true; // hides the current view
-                    this.currentUrl = newUrl;
+					this.currentUrl = newUrl;
                     //console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}

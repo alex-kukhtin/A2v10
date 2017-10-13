@@ -109,7 +109,7 @@
 						</DataGrid>
                         <Pager Source="{Bind Parent.Pager}"></Pager>
                         -->
-                        <Table GridLines="Both" Border="True" Compact="False"
+                        <Table GridLines="Both" Border="True" Compact="True"
                                ItemsSource="{Bind Parent.ItemsSource}" Columns="Fit,Fit,Fit,200,300,Fit">
 							<Table.Header>
 							</Table.Header>
@@ -131,7 +131,7 @@
 							<TableRow>
 								<TableCell>Страхова сума</TableCell>
 								<TableCell Wrap="NoWrap" Content="{Bind Sum, Format='Страхова сума (val) = {0}', DataType=Currency}"></TableCell>
-                                <TextBox Value="{Bind Sum, DataType=Currency}" Bold="True" Italic="True"/>
+                                <TextBox Value="{Bind Sum, DataType=Currency}" Bold="True" />
                                 <Static Bold="True" Value="{Bind Sum, DataType=Currency, Format='Страхова сума = {0}'}"></Static>
 							</TableRow>
 							<TableRow>

@@ -110,7 +110,7 @@ app.modules['std:http'] = function () {
                     alert(error);
                     resolve(false);
                 });
-        });
+		});
 	}
 };
 

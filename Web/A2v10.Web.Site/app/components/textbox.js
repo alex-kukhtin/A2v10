@@ -1,6 +1,6 @@
 ﻿(function() {
 
-    const utlis = require('utils');
+    const utlis = require('std:utils');
 
     let textBoxTemplate =
 `<div :class="cssClass">

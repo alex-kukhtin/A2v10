@@ -1396,16 +1396,20 @@ table.data-grid tr.active {
   background-color: #cde6f7 !important;
 }
 table.data-grid td.danger,
-table.data-grid td.error {
+table.data-grid td.error,
+table.data-grid td.red {
   background-color: rgba(255, 106, 0, 0.15) !important;
 }
-table.data-grid td.warning {
+table.data-grid td.warning,
+table.data-grid td.yellow {
   background-color: rgba(255, 216, 0, 0.15) !important;
 }
-table.data-grid td.success {
+table.data-grid td.success,
+table.data-grid td.green {
   background-color: rgba(216, 255, 216, 0.5) !important;
 }
-table.data-grid td.info {
+table.data-grid td.info,
+table.data-grid td.cyan {
   background-color: rgba(26, 255, 216, 0.15) !important;
 }
 table.data-grid td.marker {
@@ -1423,20 +1427,24 @@ table.data-grid td.marker > div {
   border-left: 6px solid #ddd;
   background-color: rgba(224, 224, 224, 0.25);
 }
-table.data-grid td.marker > .warning {
+table.data-grid td.marker > .warning,
+table.data-grid td.marker > .yellow {
   background-color: rgba(255, 216, 0, 0.15);
   border-left-color: gold;
 }
 table.data-grid td.marker > .danger,
-table.data-grid td.marker > .error {
+table.data-grid td.marker > .error,
+table.data-grid td.marker > .red {
   background-color: rgba(255, 106, 0, 0.15);
   border-left-color: #fc7c7c;
 }
-table.data-grid td.marker > .success {
+table.data-grid td.marker > .success,
+table.data-grid td.marker > .green {
   background-color: rgba(216, 255, 216, 0.5);
   border-left-color: #89e489;
 }
-table.data-grid td.marker > .info {
+table.data-grid td.marker > .info,
+table.data-grid td.marker > .cyan {
   background-color: rgba(26, 255, 216, 0.15);
   border-left-color: #72eaea;
 }
@@ -1501,17 +1509,21 @@ table.data-grid td.group-marker {
 table.data-grid.border {
   border: 1px solid #bdc5d8;
 }
-table.data-grid > tbody > tr.warning {
+table.data-grid > tbody > tr.warning,
+table.data-grid > tbody > tr.yellow {
   background-color: rgba(255, 216, 0, 0.15);
 }
 table.data-grid > tbody > tr.danger,
-table.data-grid > tbody > tr.error {
+table.data-grid > tbody > tr.error,
+table.data-grid > tbody > tr.red {
   background-color: rgba(255, 106, 0, 0.15);
 }
-table.data-grid > tbody > tr.success {
+table.data-grid > tbody > tr.success,
+table.data-grid > tbody > tr.green {
   background-color: rgba(216, 255, 216, 0.5);
 }
-table.data-grid > tbody > tr.info {
+table.data-grid > tbody > tr.info,
+table.data-grid > tbody > tr.cyan {
   background-color: rgba(26, 255, 216, 0.15);
 }
 table.hover > tbody > tr:hover {
@@ -1726,6 +1738,9 @@ table.hover > tbody > tr.active:hover {
 }
 .tab-panel .tab-header > li > .ico {
   color: #333;
+}
+.tab-panel .tab-header > li .badge {
+  vertical-align: bottom;
 }
 .tab-panel .tab-header > li:hover {
   background-color: #eee;
@@ -1944,9 +1959,6 @@ table.a2-table td.row-divider {
 table.a2-table tr:last-child td.row-divider {
   display: none;
 }
-.a2-table.compact {
-  font-size: 95%;
-}
 .a2-table.compact tbody > tr > td {
   padding: 2px 4px;
 }
@@ -1954,11 +1966,11 @@ table.a2-table tr:last-child td.row-divider {
   padding: 0;
 }
 .a2-table.compact tbody > tr > td .input-group input {
-  font-size: 97%;
   height: 1.67em;
 }
 .a2-table.compact tbody > tr > td .input-group.static > span {
   line-height: 1.67em;
+  min-height: 1.67em;
 }
 .a2-table.compact tbody > tr > td.row-divider {
   padding: 0;

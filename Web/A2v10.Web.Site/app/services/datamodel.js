@@ -14,9 +14,9 @@
 	const ROOT = '_root_';
 	const ERRORS = '_errors_';
 
-	const platform = require('platform');
+	const platform = require('std:platform');
 	const validators = require('std:validators');
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const log = require('std:log');
 
 	function defHidden(obj, prop, value, writable) {
@@ -224,6 +224,8 @@
 	_BaseArray.prototype = Array.prototype;
 	_BaseArray.prototype.$selected = null;
 
+	defineCommonProps(_BaseArray.prototype);
+
 	_BaseArray.prototype.$new = function (src) {
 		let newElem = new this._elem_(src || null, this._path_ + '[]', this);
 		newElem.$checked = false;
@@ -235,7 +237,12 @@
 	});
 
 	_BaseArray.prototype.$append = function (src) {
+		let addingEvent = this._path_ + '[].adding';
 		let newElem = this.$new(src);
+		// TODO: emit adding and check result
+		let er = this._root_.$emit(addingEvent, this/*array*/, newElem/*elem*/);
+		if (er === false)
+			return; // disabled
 		let len = this.push(newElem);
 		let ne = this[len - 1]; // maybe newly created reactive element
 		let eventName = this._path_ + '[].add';
@@ -292,25 +299,28 @@
 		return this;
 	};
 
-	function defineObject(obj, meta, arrayItem) {
-		defHidden(obj.prototype, META, meta);
-		obj.prototype.$merge = merge;
-
-		defHiddenGet(obj.prototype, "$host", function () {
+	function defineCommonProps(obj) {
+		defHiddenGet(obj, "$host", function () {
 			return this._root_._host_;
 		});
 
-		defHiddenGet(obj.prototype, "$root", function () {
+		defHiddenGet(obj, "$root", function () {
 			return this._root_;
 		});
 
-		defHiddenGet(obj.prototype, "$parent", function () {
+		defHiddenGet(obj, "$parent", function () {
 			return this._parent_;
 		});
 
-		defHiddenGet(obj.prototype, "$vm", function () {
+		defHiddenGet(obj, "$vm", function () {
 			return this._root_._host_.$viewModel;
 		});
+	}
+
+	function defineObject(obj, meta, arrayItem) {
+		defHidden(obj.prototype, META, meta);
+		obj.prototype.$merge = merge;
+		defineCommonProps(obj.prototype);
 
 		defHiddenGet(obj.prototype, "$isNew", function () {
 			return !this.$id;
@@ -388,7 +398,10 @@
 			// fire event
 			log.info('handle: ' + event);
 			let func = events[event];
-			func.call(undefined, ...arr);
+			let rv = func.call(undefined, ...arr);
+			if (rv === false)
+				log.info(event + ' returns false');
+			return rv;
 		}
 	}
 

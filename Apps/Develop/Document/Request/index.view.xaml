@@ -45,7 +45,7 @@
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Номер" Content="{Bind SNo}" />
 		<DataGridColumn Header="Котрагент">
-            <Popover Placement="Right" Text="{Bind Agent.Name}" If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
+            <Popover Tip="Свойства корреспондента" Placement="Right" Text="{Bind Agent.Name}" If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
         </DataGridColumn>
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
@@ -59,7 +59,7 @@
 						<Break/>"<Span Content="{Bind Contract.FullName}" Bold="True"></Span>"
 						<Line/>
 						который можно открыть прямо отсюда
-						<Hyperlink Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}">ссылка на договор</Hyperlink>
+						<Hyperlink Tip="Изменить договор" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}">ссылка на договор</Hyperlink>
 					</Text>
 				</Popup>					
 			</Popover>

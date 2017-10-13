@@ -12,7 +12,7 @@
 	}
 
 
-    app.modules['platform'] = {
+    app.modules['std:platform'] = {
 		set: set,
 		defer: defer
     };

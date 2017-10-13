@@ -20,7 +20,7 @@
 	 */
 
 
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const log = require('std:log');
 
     const dataGridTemplate = `

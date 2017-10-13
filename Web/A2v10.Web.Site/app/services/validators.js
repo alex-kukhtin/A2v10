@@ -2,7 +2,7 @@
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
-    const utils = require('utils');
+    const utils = require('std:utils');
     const ERROR = 'error';
 
 	return {

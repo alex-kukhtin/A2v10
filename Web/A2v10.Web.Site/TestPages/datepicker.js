@@ -1,7 +1,7 @@
 ﻿(function () {
 
 	const popup = require('std:popup');
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const baseControl = component('control');
 
 	Vue.component('a2-date-picker', {

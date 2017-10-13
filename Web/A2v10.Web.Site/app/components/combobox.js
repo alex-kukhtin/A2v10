@@ -4,7 +4,7 @@
 (function () {
 
 
-    const utils = require('utils');
+    const utils = require('std:utils');
 
     let comboBoxTemplate =
 `<div :class="cssClass">

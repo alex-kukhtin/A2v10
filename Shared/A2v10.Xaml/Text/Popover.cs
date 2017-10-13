@@ -44,7 +44,7 @@ namespace A2v10.Xaml
                 po.AddCssClass("po-" + Background.ToString().ToKebabCase());
             if (Icon != Icon.NoIcon)
                 po.MergeAttribute("icon", Icon.ToString().ToKebabCase());
-            MergeBindingAttributeString(po, context, "title", nameof(Text), Text);
+            MergeBindingAttributeString(po, context, "content", nameof(Text), Text);
 
             var urlBind = GetBinding(nameof(Url));
             if (urlBind != null)

@@ -2,13 +2,15 @@
 /* customers template */
 
 // TODO: yet not supported
-//const cmn = require('../common.catalog');
+const cmn = require('common/module1');
+
+//alert(cmn.X);
 
 let template = {
     properties: {
 		"TCustomer.$rowMark"() {
 			//return this.Amount === 22.0 ? 'warning' : '';
-			return this.Amount === 22.0 ? 'success' : '';
+			return this.Amount === 22.0 ? 'yellow' : '';
 		},
 		"TCustomer.$cellMark"() {
 			//return this.Amount >= 500 ? 'danger' : '';

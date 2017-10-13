@@ -3,7 +3,7 @@
 (function () {
 
 	let http = require('std:http');
-	let utils = require('utils');
+	let utils = require('std:utils');
 
 	function post(url, data) {
 		return http.post(url, data);

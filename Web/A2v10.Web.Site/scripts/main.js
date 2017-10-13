@@ -60,7 +60,7 @@ app.modules['std:url'] = function () {
 		makeQueryString: makeQueryString,
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
-        idChangedOnly: idChangedOnly
+		idChangedOnly: idChangedOnly
 	};
 
     function normalize(elem) {
@@ -107,17 +107,16 @@ app.modules['std:url'] = function () {
 	}
 
     function idChangedOnly(newUrl, oldUrl) {
-        // TODO: TEST
         let ns = (newUrl || '').split('/');
         let os = (oldUrl || '').split('/');
         if (ns.length !== os.length)
             return false;
         if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
-            if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))
+            if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length -1).join('/'))
                 return true;
         }
         return false;
-    }
+	}
 };
 
 
@@ -139,7 +138,7 @@ app.modules['std:url'] = function () {
 	}
 
 
-    app.modules['platform'] = {
+    app.modules['std:platform'] = {
 		set: set,
 		defer: defer
     };
@@ -147,6 +146,126 @@ app.modules['std:url'] = function () {
 	app.modules['std:eventBus'] = new Vue({});
 
 })();
+
+/*20171006-7041*/
+/* services/http.js */
+
+app.modules['std:http'] = function () {
+
+    const eventBus = require('std:eventBus');
+    const urlTools = require('std:url');
+
+	return {
+		get: get,
+		post: post,
+        load: load,
+        upload: upload
+	};
+
+    function doRequest(method, url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            
+            xhr.onload = function (response) {
+				eventBus.$emit('endRequest', url);
+                if (xhr.status === 200) {
+                    let ct = xhr.getResponseHeader('content-type');
+                    let xhrResult = xhr.responseText;
+                    if (ct.indexOf('application/json') !== -1)
+                        xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                }
+                else if (xhr.status === 255) {
+                    reject(xhr.responseText || xhr.statusText);
+                }
+                else
+                    reject(xhr.statusText);
+            };
+            xhr.onerror = function (response) {
+				eventBus.$emit('endRequest', url);
+                reject(xhr.statusText);
+            };
+            xhr.open(method, url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Accept', 'application/json, text/html');
+			eventBus.$emit('beginRequest', url);
+            xhr.send(data);
+        });
+    }
+
+    function get(url) {
+        return doRequest('GET', url);
+    }
+
+    function post(url, data) {
+        return doRequest('POST', url, data);
+    }
+
+    function upload(url, data) {
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function (response) {
+                if (xhr.status === 200) {
+                    let xhrResult = JSON.parse(xhr.responseText);
+                    resolve(xhrResult);
+                } else if (xhr.status === 255) {
+                    alert(xhr.responseText || xhr.statusText);
+                }
+            };
+            xhr.onerror = function (response) {
+                alert('Error');
+            };
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(data);
+        });
+    }
+
+    function load(url, selector) {
+        return new Promise(function (resolve, reject) {
+            doRequest('GET', url)
+                .then(function (html) {
+					if (selector.firstChild && selector.firstChild.__vue__) {
+						//console.warn('destroy component');
+						selector.firstChild.__vue__.$destroy();
+					}
+                    let dp = new DOMParser();
+                    let rdoc = dp.parseFromString(html, 'text/html');
+                    // first element from fragment body
+					let srcElem = rdoc.body.firstElementChild;
+					let elemId = srcElem.id || null;
+					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
+					if (elemId && !document.getElementById(elemId)) {
+						selector.innerHTML = '';
+						resolve(false);
+						return;
+					}
+                    for (let i = 0; i < rdoc.scripts.length; i++) {
+                        let s = rdoc.scripts[i];
+                        if (s.type === 'text/javascript') {
+                            let newScript = document.createElement("script");
+                            newScript.text = s.text;
+                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                        }
+                    }
+                    if (selector.firstChild && selector.firstChild.__vue__) {
+                        let ve = selector.firstChild.__vue__;
+                        ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
+                    }
+                    resolve(true);
+                })
+                .catch(function (error) {
+                    alert(error);
+                    resolve(false);
+                });
+		});
+	}
+};
+
+
+
+
 
 /*20170915-7033*/
 /* platform/routex.js */
@@ -257,10 +376,10 @@ app.modules['std:url'] = function () {
             setnewid(state, to) {
                 let root = window.$$rootUrl;
                 let oldRoute = state.route;
-                let newRoute = oldRoute.replace('/new', '/' + to.id);
-                state.route = newRoute;
-                let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
-                window.history.replaceState(null, null, newUrl);
+				let newRoute = oldRoute.replace('/new', '/' + to.id);
+				state.route = newRoute;
+				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
+				window.history.replaceState(null, null, newUrl);
             },
 			close(state) {
 				if (window.history.length > 1) {
@@ -295,10 +414,10 @@ app.modules['std:url'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20170928-7039*/
+/*20171013-7046*/
 /* services/utils.js */
 
-app.modules['utils'] = function () {
+app.modules['std:utils'] = function () {
 
 	const dateLocale = 'uk-UA';
 
@@ -523,131 +642,11 @@ app.modules['std:log'] = function () {
 	}
 };
 
-/*20171006-7041*/
-/* services/http.js */
-
-app.modules['std:http'] = function () {
-
-    const eventBus = require('std:eventBus');
-    const urlTools = require('std:url');
-
-	return {
-		get: get,
-		post: post,
-        load: load,
-        upload: upload
-	};
-
-    function doRequest(method, url, data) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            
-            xhr.onload = function (response) {
-				eventBus.$emit('endRequest', url);
-                if (xhr.status === 200) {
-                    let ct = xhr.getResponseHeader('content-type');
-                    let xhrResult = xhr.responseText;
-                    if (ct.indexOf('application/json') !== -1)
-                        xhrResult = JSON.parse(xhr.responseText);
-                    resolve(xhrResult);
-                }
-                else if (xhr.status === 255) {
-                    reject(xhr.responseText || xhr.statusText);
-                }
-                else
-                    reject(xhr.statusText);
-            };
-            xhr.onerror = function (response) {
-				eventBus.$emit('endRequest', url);
-                reject(xhr.statusText);
-            };
-            xhr.open(method, url, true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('Accept', 'application/json, text/html');
-			eventBus.$emit('beginRequest', url);
-            xhr.send(data);
-        });
-    }
-
-    function get(url) {
-        return doRequest('GET', url);
-    }
-
-    function post(url, data) {
-        return doRequest('POST', url, data);
-    }
-
-    function upload(url, data) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.onload = function (response) {
-                if (xhr.status === 200) {
-                    let xhrResult = JSON.parse(xhr.responseText);
-                    resolve(xhrResult);
-                } else if (xhr.status === 255) {
-                    alert(xhr.responseText || xhr.statusText);
-                }
-            };
-            xhr.onerror = function (response) {
-                alert('Error');
-            };
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.send(data);
-        });
-    }
-
-    function load(url, selector) {
-        return new Promise(function (resolve, reject) {
-            doRequest('GET', url)
-                .then(function (html) {
-					if (selector.firstChild && selector.firstChild.__vue__) {
-						//console.warn('destroy component');
-						selector.firstChild.__vue__.$destroy();
-					}
-                    let dp = new DOMParser();
-                    let rdoc = dp.parseFromString(html, 'text/html');
-                    // first element from fragment body
-					let srcElem = rdoc.body.firstElementChild;
-					let elemId = srcElem.id || null;
-					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
-					if (elemId && !document.getElementById(elemId)) {
-						selector.innerHTML = '';
-						resolve(false);
-						return;
-					}
-                    for (let i = 0; i < rdoc.scripts.length; i++) {
-                        let s = rdoc.scripts[i];
-                        if (s.type === 'text/javascript') {
-                            let newScript = document.createElement("script");
-                            newScript.text = s.text;
-                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
-                        }
-                    }
-                    if (selector.firstChild && selector.firstChild.__vue__) {
-                        let ve = selector.firstChild.__vue__;
-                        ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
-                    }
-                    resolve(true);
-                })
-                .catch(function (error) {
-                    alert(error);
-                    resolve(false);
-                });
-        });
-	}
-};
-
-
-
-
-
 /*20170824-7019*/
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
-    const utils = require('utils');
+    const utils = require('std:utils');
     const ERROR = 'error';
 
 	return {
@@ -719,9 +718,9 @@ app.modules['std:validators'] = function() {
 	const ROOT = '_root_';
 	const ERRORS = '_errors_';
 
-	const platform = require('platform');
+	const platform = require('std:platform');
 	const validators = require('std:validators');
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const log = require('std:log');
 
 	function defHidden(obj, prop, value, writable) {
@@ -929,6 +928,8 @@ app.modules['std:validators'] = function() {
 	_BaseArray.prototype = Array.prototype;
 	_BaseArray.prototype.$selected = null;
 
+	defineCommonProps(_BaseArray.prototype);
+
 	_BaseArray.prototype.$new = function (src) {
 		let newElem = new this._elem_(src || null, this._path_ + '[]', this);
 		newElem.$checked = false;
@@ -940,7 +941,12 @@ app.modules['std:validators'] = function() {
 	});
 
 	_BaseArray.prototype.$append = function (src) {
+		let addingEvent = this._path_ + '[].adding';
 		let newElem = this.$new(src);
+		// TODO: emit adding and check result
+		let er = this._root_.$emit(addingEvent, this/*array*/, newElem/*elem*/);
+		if (er === false)
+			return; // disabled
 		let len = this.push(newElem);
 		let ne = this[len - 1]; // maybe newly created reactive element
 		let eventName = this._path_ + '[].add';
@@ -997,25 +1003,28 @@ app.modules['std:validators'] = function() {
 		return this;
 	};
 
-	function defineObject(obj, meta, arrayItem) {
-		defHidden(obj.prototype, META, meta);
-		obj.prototype.$merge = merge;
-
-		defHiddenGet(obj.prototype, "$host", function () {
+	function defineCommonProps(obj) {
+		defHiddenGet(obj, "$host", function () {
 			return this._root_._host_;
 		});
 
-		defHiddenGet(obj.prototype, "$root", function () {
+		defHiddenGet(obj, "$root", function () {
 			return this._root_;
 		});
 
-		defHiddenGet(obj.prototype, "$parent", function () {
+		defHiddenGet(obj, "$parent", function () {
 			return this._parent_;
 		});
 
-		defHiddenGet(obj.prototype, "$vm", function () {
+		defHiddenGet(obj, "$vm", function () {
 			return this._root_._host_.$viewModel;
 		});
+	}
+
+	function defineObject(obj, meta, arrayItem) {
+		defHidden(obj.prototype, META, meta);
+		obj.prototype.$merge = merge;
+		defineCommonProps(obj.prototype);
 
 		defHiddenGet(obj.prototype, "$isNew", function () {
 			return !this.$id;
@@ -1093,7 +1102,10 @@ app.modules['std:validators'] = function() {
 			// fire event
 			log.info('handle: ' + event);
 			let func = events[event];
-			func.call(undefined, ...arr);
+			let rv = func.call(undefined, ...arr);
+			if (rv === false)
+				log.info(event + ' returns false');
+			return rv;
 		}
 	}
 
@@ -1348,7 +1360,7 @@ app.modules['std:validators'] = function() {
 (function () {
 
 	let http = require('std:http');
-	let utils = require('utils');
+	let utils = require('std:utils');
 
 	function post(url, data) {
 		return http.post(url, data);
@@ -1506,7 +1518,7 @@ app.modules['std:popup'] = function () {
                 }
 				else {
 					this.loading = true; // hides the current view
-                    this.currentUrl = newUrl;
+					this.currentUrl = newUrl;
                     //console.warn('src was changed. load');
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
@@ -1621,7 +1633,7 @@ Vue.component('validator-control', {
 */
 (function() {
 
-    const utlis = require('utils');
+    const utlis = require('std:utils');
 
     let textBoxTemplate =
 `<div :class="cssClass">
@@ -1716,7 +1728,7 @@ Vue.component('validator-control', {
 (function () {
 
 
-    const utils = require('utils');
+    const utils = require('std:utils');
 
     let comboBoxTemplate =
 `<div :class="cssClass">
@@ -1777,7 +1789,7 @@ Vue.component('validator-control', {
 
 	const popup = require('std:popup');
 
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
 
 	const baseControl = component('control');
@@ -1948,7 +1960,7 @@ Vue.component('validator-control', {
 	 */
 
 
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const log = require('std:log');
 
     const dataGridTemplate = `
@@ -2537,13 +2549,13 @@ Vue.component('a2-pager', {
 });
 
 
-/*20170918-7034*/
+/*20170913-7046*/
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="title"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
 	<div class="popup-body">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -2568,7 +2580,8 @@ Vue.component('popover', {
 	props: {
 		icon: String,
 		url: String,
-		title: String
+		content: String,
+		title:String
 	},
     computed: {
         hasIcon() {
@@ -2603,7 +2616,7 @@ Vue.component('popover', {
 
 (function () {
 
-    const utils = require('utils');
+    const utils = require('std:utils');
 
     /*TODO:
         4. select first item
@@ -3727,7 +3740,7 @@ Vue.directive('resize', {
 (function () {
 
     const eventBus = require('std:eventBus');
-    const utils = require('utils');
+    const utils = require('std:utils');
     const dataservice = require('std:dataservice');
 	const store = component('std:store');
 	const urltools = require('std:url');

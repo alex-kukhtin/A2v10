@@ -8,7 +8,7 @@ app.modules['std:url'] = function () {
 		makeQueryString: makeQueryString,
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
-        idChangedOnly: idChangedOnly
+		idChangedOnly: idChangedOnly
 	};
 
     function normalize(elem) {
@@ -55,17 +55,16 @@ app.modules['std:url'] = function () {
 	}
 
     function idChangedOnly(newUrl, oldUrl) {
-        // TODO: TEST
         let ns = (newUrl || '').split('/');
         let os = (oldUrl || '').split('/');
         if (ns.length !== os.length)
             return false;
         if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
-            if (ns.slice(ns.length - 1).join('/') === os.slice(os.length -1).join('/'))
+            if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length -1).join('/'))
                 return true;
         }
         return false;
-    }
+	}
 };
 
 

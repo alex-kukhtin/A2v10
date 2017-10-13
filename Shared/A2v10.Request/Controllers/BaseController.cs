@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
+using System.Collections.Generic;
+using A2v10.Infrastructure.Utilities;
 
 namespace A2v10.Request
 {
@@ -101,6 +103,7 @@ namespace A2v10.Request
             StringBuilder output = new StringBuilder();
             String dataModelText = "null";
             String templateText = "{}";
+            StringBuilder sbRequired = new StringBuilder();
             if (model != null)
             {
                 // write model script
@@ -108,14 +111,21 @@ namespace A2v10.Request
                 if (rw.template != null)
                 {
                     fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
+                    AddRequiredModules(sbRequired, fileTemplateText);
                     templateText = CreateTemplateForWrite(fileTemplateText);
                 }
                 dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
             }
 
+
             const String scriptHeader =
 @"
 <script type=""text/javascript"">
+
+'use strict';
+
+$(RequiredModules)
+
 (function() {
     const DataModelController = component('baseController');
 
@@ -142,11 +152,12 @@ namespace A2v10.Request
 ";
             // TODO: may be data model from XAML ????
             const String emptyModel = "function modelData() {return null;}";
-
+    
             var header = new StringBuilder(scriptHeader);
             header.Replace("$(RootId)", rootId);
             header.Replace("$(DataModelText)", dataModelText);
             header.Replace("$(TemplateText)", templateText);
+            header.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
             output.Append(header);
             if (model != null)
                 output.Append(model.CreateScript());
@@ -161,23 +172,145 @@ namespace A2v10.Request
 
         String CreateTemplateForWrite(String fileTemplateText)
         {
+
             const String tmlHeader =
 @"(function() {
     let module = { exports: undefined };
     (function(module, exports) {
-    'use strict';";
+";
+
+            const String tmlFooter =
+    @"
+    })(module, module.exports);
+    return module.exports;
+})()";
+
+            var sb = new StringBuilder();
+
+            sb.AppendLine()
+            .AppendLine(tmlHeader)
+            .AppendLine(fileTemplateText)
+            .AppendLine(tmlFooter);
+            return sb.ToString();
+        }
+
+        HashSet<String> _modulesWritten;
+
+        void AddRequiredModules(StringBuilder sb, String clientScript)
+        {
+            const String tmlHeader =
+@"
+    app.modules['$(Module)'] = function() {
+    let module = { exports: undefined };
+    (function(module, exports) {
+";
 
             const String tmlFooter =
 @"
     })(module, module.exports);
     return module.exports;
-})()";
-            var sb = new StringBuilder(tmlHeader);
-            sb.Append(fileTemplateText);
-            sb.Append(tmlFooter);
-            return sb.ToString();
+};";
+
+            if (String.IsNullOrEmpty(clientScript))
+                return;
+            if (_modulesWritten == null)
+                _modulesWritten = new HashSet<String>();
+            int iIndex = 0;
+            while (true)
+            {
+                String moduleName = FindModuleNameFromString(clientScript, ref iIndex);
+                if (moduleName == null)
+                    return; // not found
+                if (String.IsNullOrEmpty(moduleName))
+                    continue;
+                if (moduleName.ToLowerInvariant().StartsWith("global/"))
+                    continue;
+                if (moduleName.ToLowerInvariant().StartsWith("std:"))
+                    continue;
+                if (_modulesWritten.Contains(moduleName))
+                    continue;
+                var fileName = Path.ChangeExtension(moduleName, "js");
+                var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, fileName));
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException(filePath);
+                String moduleText = File.ReadAllText(filePath);
+                sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
+                    .AppendLine(moduleText)
+                    .AppendLine(tmlFooter)
+                    .AppendLine();
+                _modulesWritten.Add(moduleName);
+                AddRequiredModules(sb, moduleText);
+            }
         }
 
+        public static String FindModuleNameFromString(String text, ref int pos)
+        {
+            String funcName = "require";
+            int rPos = text.IndexOf(funcName, pos);
+            if (rPos == -1)
+                return null; // не продолжаем, ничего не нашли
+            pos = rPos + funcName.Length;
+            // проверим, что мы не в комментарии
+            int oc = text.LastIndexOf("/*", rPos);
+            int cc = text.LastIndexOf("*/", rPos);
+            if (oc != -1)
+            {
+                // есть открывающий комментарий
+                if (cc == -1)
+                {
+                    return String.Empty; // нет закрывающего
+                }
+                if (cc < oc)
+                {
+                    return String.Empty; // закрывающий левее открывающего, мы внутри
+                }
+            }
+            int startLine = text.LastIndexOfAny(new Char[] { '\r', '\n' }, rPos);
+            oc = text.LastIndexOf("//", rPos);
+            if ((oc != 1) && (oc > startLine))
+                return String.Empty; // есть однострочный и он после начала строки
+
+            Tokenizer tokenizer = null;
+            try
+            {
+                // проверим точку, как предыдущий токен
+                var dotPos = text.LastIndexOf('.', rPos);
+                if (dotPos != -1)
+                {
+                    tokenizer = new Tokenizer(text, dotPos);
+                    if (tokenizer.token.id == Tokenizer.TokenId.Dot)
+                    {
+                        tokenizer.NextToken();
+                        var tok = tokenizer.token;
+                        if (tok.id == Tokenizer.TokenId.Identifier && tok.Text == "require")
+                        {
+                            tokenizer.NextToken();
+                            if (tokenizer.token.id == Tokenizer.TokenId.OpenParen)
+                                return String.Empty; /* есть точка перед require */
+                        }
+                    }
+                }
+                tokenizer = new Tokenizer(text, rPos + funcName.Length);
+                if (tokenizer.token.id == Tokenizer.TokenId.OpenParen)
+                {
+                    tokenizer.NextToken();
+                    if (tokenizer.token.id == Tokenizer.TokenId.StringLiteral)
+                    {
+                        pos = tokenizer.GetTextPos();
+                        return tokenizer.token.UnquotedText.Replace("\\\\", "/");
+                    }
+                }
+                pos = tokenizer.GetTextPos();
+                return String.Empty;
+            }
+            catch (Exception /*ex*/)
+            {
+                // parser error
+                if (tokenizer != null)
+                    pos = tokenizer.GetTextPos();
+                return null;
+            }
+        }
 
         public static readonly JsonSerializerSettings StandardSerializerSettings = 
             new JsonSerializerSettings() {

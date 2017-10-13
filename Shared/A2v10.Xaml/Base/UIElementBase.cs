@@ -15,6 +15,8 @@ namespace A2v10.Xaml
         public Thickness Margin { get; set; }
         public Thickness Padding { get; set; }
 
+        public String Tip { get; set; }
+
         internal virtual Boolean SkipRender(RenderContext context)
         {
             return false;
@@ -27,6 +29,7 @@ namespace A2v10.Xaml
             MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
             MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
             MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
+            MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
             if (Margin != null)
                 Margin.MergeStyles("margin", tag);
             if (Padding != null)

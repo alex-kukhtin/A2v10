@@ -1,7 +1,7 @@
-﻿/*20170928-7039*/
+﻿/*20171013-7046*/
 /* services/utils.js */
 
-app.modules['utils'] = function () {
+app.modules['std:utils'] = function () {
 
 	const dateLocale = 'uk-UA';
 

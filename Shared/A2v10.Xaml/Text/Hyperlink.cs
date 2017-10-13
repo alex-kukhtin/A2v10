@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 
         public Command Command { get; set; }
 
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tag = new TagBuilder("a", "a2-hyperlink a2-inline");

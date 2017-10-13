@@ -117,19 +117,19 @@ table.data-grid {
         background-color: @active-bg-color !important;
     }
 
-    td.danger, td.error {
+    td.danger, td.error, td.red {
         background-color: @dg-danger-bg-color !important;
     }
 
-    td.warning {
+    td.warning, td.yellow {
         background-color: @dg-warning-bg-color !important;
     }
 
-    td.success {
+    td.success, td.green {
         background-color: @dg-success-bg-color !important;
     }
 
-    td.info {
+    td.info, td.cyan {
         background-color: @dg-info-bg-color !important;
     }
 
@@ -150,22 +150,22 @@ table.data-grid {
             background-color: @alter-bg-color;
         }
 
-        > .warning {
+        > .warning, > .yellow {
             background-color: @dg-warning-bg-color;
             border-left-color: @dg-warning-brd-color;
         }
 
-        > .danger, > .error {
+        > .danger, > .error, > .red {
             background-color: @dg-danger-bg-color;
             border-left-color: @dg-danger-brd-color;
         }
 
-        > .success {
+        > .success, >.green {
             background-color: @dg-success-bg-color;
             border-left-color: @dg-success-brd-color;
         }
 
-        > .info {
+        > .info, > .cyan {
             background-color: @dg-info-bg-color;
             border-left-color: @dg-info-brd-color;
         }
@@ -256,19 +256,19 @@ table.data-grid.border {
 
 
 table.data-grid > tbody {
-    > tr.warning {
+    > tr.warning, > tr.yellow {
         background-color: @dg-warning-bg-color;
     }
 
-    > tr.danger, > tr.error {
+    > tr.danger, > tr.error, > tr.red {
         background-color: @dg-danger-bg-color;
     }
 
-    > tr.success {
+    > tr.success, > tr.green {
         background-color: @dg-success-bg-color;
     }
 
-    > tr.info {
+    > tr.info, > tr.cyan {
         background-color: @dg-info-bg-color;
     }
 }

@@ -3,7 +3,7 @@
 
 (function () {
 
-    const utils = require('utils');
+    const utils = require('std:utils');
 
     /*TODO:
         4. select first item

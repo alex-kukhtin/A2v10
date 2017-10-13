@@ -1,10 +1,10 @@
-﻿/*20170918-7034*/
+﻿/*20170913-7046*/
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="title"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
 	<div class="popup-body">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -29,7 +29,8 @@ Vue.component('popover', {
 	props: {
 		icon: String,
 		url: String,
-		title: String
+		content: String,
+		title:String
 	},
     computed: {
         hasIcon() {

@@ -2,7 +2,7 @@
 
 	const popup = require('std:popup');
 
-	const utils = require('utils');
+	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
 
 	const baseControl = component('control');
