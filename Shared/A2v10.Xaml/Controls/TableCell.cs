@@ -22,7 +22,6 @@ namespace A2v10.Xaml
         public Int32? ColSpan { get; set; }
         public Int32? RowSpan { get; set; }
         public VerticalAlign VAlign { get; set; }
-        public WrapMode Wrap { get; set; }
         public TextAlign Align { get; set; }
 
         //public Boolean Validate { get; set; }
@@ -43,9 +42,6 @@ namespace A2v10.Xaml
 
             if (VAlign != VerticalAlign.Default)
                 td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
-
-            if (Wrap != WrapMode.Default)
-                td.AddCssClass(Wrap.ToString().ToKebabCase());
 
             if (Content is ITableControl)
                 td.AddCssClass("ctrl");

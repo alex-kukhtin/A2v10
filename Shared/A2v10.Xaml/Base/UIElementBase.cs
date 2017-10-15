@@ -14,6 +14,7 @@ namespace A2v10.Xaml
         
         public Thickness Margin { get; set; }
         public Thickness Padding { get; set; }
+        public WrapMode Wrap { get; set; }
 
         public String Tip { get; set; }
 
@@ -34,6 +35,8 @@ namespace A2v10.Xaml
                 Margin.MergeStyles("margin", tag);
             if (Padding != null)
                 Padding.MergeStyles("padding", tag);
+            if (Wrap != WrapMode.Default)
+                tag.AddCssClass(Wrap.ToString().ToKebabCase());
         }
 
         internal void RenderContent(RenderContext context, Object content)

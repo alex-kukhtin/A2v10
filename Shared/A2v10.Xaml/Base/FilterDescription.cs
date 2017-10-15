@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Windows.Markup;
 
 using A2v10.Infrastructure;
+using System.ComponentModel;
+using System.Globalization;
 
 namespace A2v10.Xaml
 {
@@ -35,8 +37,25 @@ namespace A2v10.Xaml
     }
 
     [ContentProperty("Items")]
+    [TypeConverter(typeof(FilterDescriptionConverter))]
     public class FilterDescription : IJavaScriptSource
     {
+        public FilterDescription()
+        {
+
+        }
+
+        public FilterDescription(String from)
+        {
+            foreach (var x in from.Split(','))
+            {
+                var item = new FilterItem();
+                item.DataType = DataType.String;
+                item.Property = x.Trim();
+                Items.Add(item);
+            }
+        }
+
         public FilterItems Items { get; set; } = new FilterItems();
 
         public String GetJsValue()
@@ -50,6 +69,29 @@ namespace A2v10.Xaml
             sb.RemoveTailComma();
             sb.Append("}");
             return sb.ToString();
+        }
+    }
+
+    internal class FilterDescriptionConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(String))
+                return true;
+            else if (sourceType == typeof(FilterDescription))
+                return true;
+            return false;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value == null)
+                return null;
+            if (value is String)
+                return new FilterDescription(value.ToString());
+            else if (value is FilterDescription)
+                return value;
+            throw new XamlException($"Invalid FilterDescription value '{value}'");
         }
     }
 }

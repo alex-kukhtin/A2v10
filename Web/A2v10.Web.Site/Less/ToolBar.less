@@ -7,12 +7,16 @@
 .toolbar {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    //align-items: baseline; ???
+    align-items:center;
     padding: 2px;
     overflow: visible;
     background-color: @toolbar-bg-color;
     color: @toolbar-txt-color;
 
+    .checkbox {
+        margin:0 3px;
+    }
     &.transparent {
         background-color: transparent;
         padding:2px 0;

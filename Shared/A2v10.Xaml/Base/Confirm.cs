@@ -62,7 +62,7 @@ namespace A2v10.Xaml
                 return new Confirm() { Message = value.ToString() };
             else if (value is Confirm)
                 return value as Confirm;
-            throw new XamlException($"Invalid confirm value '{value}'");
+            throw new XamlException($"Invalid Confirm value '{value}'");
         }
     }
 }

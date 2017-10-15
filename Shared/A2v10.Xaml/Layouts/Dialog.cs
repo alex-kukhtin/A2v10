@@ -38,6 +38,8 @@ namespace A2v10.Xaml
             RenderLoadIndicator(context);
 
             var content = new TagBuilder("div", "modal-content");
+            if (Padding != null)
+                Padding.MergeStyles("padding", content);
             content.RenderStart(context);
             RenderChildren(context);
             content.RenderEnd(context);

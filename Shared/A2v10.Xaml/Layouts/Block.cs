@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var div = new TagBuilder("div");
+            var div = new TagBuilder("div", null, IsInGrid);
             if (onRender != null)
                 onRender(div);
             div.RenderStart(context);

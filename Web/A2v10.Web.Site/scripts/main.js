@@ -702,7 +702,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171006-7041*/
+/*20171014-7046*/
 /* services/datamodel.js */
 (function () {
 
@@ -775,7 +775,7 @@ app.modules['std:validators'] = function() {
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
 			default:
-				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, parent);
+				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
 				break;
 		}
 		Object.defineProperty(trg, prop, {
@@ -805,13 +805,26 @@ app.modules['std:validators'] = function() {
 		let props = templ._props_;
 		if (!props) return;
 		let objname = ctor.name;
-		if (objname in props) {
+        if (objname in props) {
 			for (let p in props[objname]) {
-				Object.defineProperty(elem, p, {
-					configurable: false,
-					enumerable: true,
-					get: props[objname][p]
-				});
+                log.info(`create property: ${objname}.${p}`);
+                let propInfo = props[objname][p];
+                if (utils.isFunction(propInfo)) {
+                    Object.defineProperty(elem, p, {
+                        configurable: false,
+                        enumerable: true,
+                        get: propInfo
+                    });
+                } else if (utils.isObjectExact(propInfo)) {
+                    Object.defineProperty(elem, p, {
+                        configurable: false,
+                        enumerable: true,
+                        get: propInfo.get,
+                        set: propInfo.set
+                    });
+                } else {
+                    alert('todo: invalid property type');
+                }
 			}
 		}
 	}
@@ -886,7 +899,7 @@ app.modules['std:validators'] = function() {
 	}
 
 	function createArray(source, path, ctor, arrctor, parent) {
-		let arr = new _BaseArray(source ? source.length : 0);
+        let arr = new _BaseArray(source ? source.length : 0);
 		let dotPath = path + '[]';
 		defHidden(arr, '_elem_', ctor);
 		defHidden(arr, PATH, path);
@@ -966,9 +979,9 @@ app.modules['std:validators'] = function() {
 		return this;
 	};
 
-	_BaseArray.prototype.$clearSelected = function () {
-		platform.set(this, '$selected', null);
-	}
+    _BaseArray.prototype.$clearSelected = function () {
+        platform.set(this, '$selected', null);
+    };
 
 	_BaseArray.prototype.$remove = function (item) {
 		if (!item)

@@ -8,7 +8,6 @@ namespace A2v10.Xaml
 	{
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
-        public WrapMode Wrap { get; set; }
 
 		internal override void MergeAttributes(TagBuilder tag, RenderContext context)
 		{
@@ -18,8 +17,6 @@ namespace A2v10.Xaml
 				tag.AddCssClass(Bold.Value ? "bold" : "no-bold");
 			if (Italic.HasValue)
 				tag.AddCssClass(Italic.Value ? "italic" : "no-italic");
-            if (Wrap != WrapMode.Default)
-                tag.AddCssClass(Wrap.ToString().ToKebabCase());
 		}
     }
 }
