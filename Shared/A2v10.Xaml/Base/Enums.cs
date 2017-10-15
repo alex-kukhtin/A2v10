@@ -37,7 +37,8 @@ namespace A2v10.Xaml
         DateTime,
         Time,
         Number,
-        Currency
+        Currency,
+        Boolean
     }
 
     public enum ControlSize

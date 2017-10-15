@@ -80,6 +80,7 @@
     <Content Include="Develop\Document\Quotations\index.template.js" />
     <Content Include="Develop\Document\Quotations\edit.view.html" />
     <Content Include="Develop\Document\Request\element.template.js" />
+    <Content Include="Develop\Document\Request\entityChoice.template.js" />
     <Content Include="Develop\Document\Request\index.template.js" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,12 @@
     <None Include="Admin\Identity\User\browse.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Develop\Document\Request\EntityChoice.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -409,10 +409,10 @@
 				const root = this.$data;
 				return root._delegate_(name);
 				// TODO: get delegate from template
-				return function (item, filter) {
-					console.warn('filter:' + item.Id + " filter:" + filter.Filter);
-					return true;
-				}
+                return function (item, filter) {
+                    console.warn('filter:' + item.Id + " filter:" + filter.Filter);
+                    return true;
+                };
 			},
 
 			__beginRequest() {
@@ -424,11 +424,16 @@
 			__queryChange(search) {
 				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
-			}
+            },
+            __doInit__() {
+                const root = this.$data;
+                root._modelLoad_();
+            }
 		},
 		created() {
-			eventBus.$emit('registerData', this);
-
+            let out = { caller: null };
+            eventBus.$emit('registerData', this, out);
+            this.$caller = out.caller;
 			/*
 			TODO: а зачем это было ???
 			if (!this.inDialog) {

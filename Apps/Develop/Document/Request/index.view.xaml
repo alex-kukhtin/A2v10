@@ -23,17 +23,10 @@
                     <Hyperlink Icon="FilterOutline" Command="{BindCmd Reload}"/>
                 </TextBox.AddOns>
             </TextBox>
-            <Span Content="{Bind Parent.Filter.Filter}"></Span>
         </Toolbar>
     </Page.Toolbar>
     <Page.CollectionView>
-        <CollectionView ItemsSource="{Bind Documents}" RunAt="Client" FilterDelegate="Filter">
-            <CollectionView.Filter>
-                <FilterDescription>
-                    <FilterItem Property="Filter" />
-                </FilterDescription>
-            </CollectionView.Filter>
-        </CollectionView>
+        <CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl" Filter="Filter"/>
     </Page.CollectionView>
     <!---->
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
@@ -49,9 +42,12 @@
         </DataGridColumn>
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
+        <!--
 		<DataGridColumn Header="Договор" Content="{Bind Contract.FullName}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
 		<DataGridColumn Header="Contract Id" Content="{Bind Contract.Id}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
+        -->
 		<DataGridColumn Header="Comp" Content="{Bind Company.Id}" />
+        <!--
 		<DataGridColumn Header="Договор">
 			<Popover Icon="InfoOutline" Background="Cyan" Text="{Bind Contract.FullName}" Placement="Left" If="{Bind Contract.Id}">
 				<Popup Width="230px">
@@ -64,6 +60,7 @@
 				</Popup>					
 			</Popover>
 		</DataGridColumn>
+        -->
 	</DataGrid>
 </Page>
 

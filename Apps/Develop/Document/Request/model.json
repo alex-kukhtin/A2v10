@@ -1,7 +1,7 @@
 ﻿/*document/request*/
 {
 	"source": "a2start",
-	"schema": "a2v10start",
+	"schema": "a2v10",
 	"model": "Sales.Request",
 	"actions": {
 		"index": {
@@ -18,15 +18,21 @@
 			"template": "browse.template"
 		}
 	},
-	"dialogs": {
-		"edit": {
-			"dialog": "edit.dialog",
-			"template": "element.template"
-		},
-		"browseAgent": {
-			"dialog": "browse.dialog",
-			"template": "index.template",
-			"index": true
-		}
-	}
+  "dialogs": {
+    "edit": {
+      "dialog": "edit.dialog",
+      "template": "element.template"
+    },
+    "browseAgent": {
+      "dialog": "browse.dialog",
+      "template": "index.template",
+      "index": true
+    },
+    "entityChoice": {
+      "dialog": "entityChoice.dialog",
+      "template": "entityChoice.template",
+      "model": "Sales.Entity.Choice",
+      "index": true
+    }
+  }
 }

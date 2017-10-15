@@ -147,6 +147,8 @@ $(RequiredModules)
         $viewModel: vm
     };
 
+    vm.__doInit__();
+
 })();
 </script>
 ";

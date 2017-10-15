@@ -414,7 +414,7 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20171013-7046*/
+/*20171015-7047*/
 /* services/utils.js */
 
 app.modules['std:utils'] = function () {
@@ -437,7 +437,8 @@ app.modules['std:utils'] = function () {
 		isEmptyObject: isEmptyObject,
 		eval: eval,
         format: format,
-		toNumber: toNumber,
+        toNumber: toNumber,
+        getStringId: getStringId,
 		date: {
 			today: dateToday,
 			zero: dateZero,
@@ -544,14 +545,30 @@ app.modules['std:utils'] = function () {
 				return obj.toLocaleTimeString(dateLocale);
 			case "Currency":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
+					console.error(`Invalid Currency for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleString(undefined, { minimumFractionDigits:2, useGrouping:true });
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 2, useGrouping: true });
+            case "Number":
+                if (!isNumber(obj)) {
+                    console.error(`Invalid Number for utils.format (${obj})`);
+                    return obj;
+                }
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 0, useGrouping: true });
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
+    }
+
+    function getStringId(obj) {
+        if (!obj)
+            return '0';
+        if (isNumber(obj))
+            return obj;
+        else if (isObjectExact(obj))
+            return obj.$id || 0;
+        return '0';
     }
 
     function toNumber(val) {
@@ -702,7 +719,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171014-7046*/
+/*20171015-7047*/
 /* services/datamodel.js */
 (function () {
 
@@ -829,11 +846,6 @@ app.modules['std:validators'] = function() {
 		}
 	}
 
-	function initRootElement(elem) {
-		// object already created
-		elem._root_.$emit('Model.load', elem);
-	}
-
 	function createObject(elem, source, path, parent) {
 		let ctorname = elem.constructor.name;
 		let startTime = null;
@@ -890,8 +902,10 @@ app.modules['std:validators'] = function() {
 				}
 			}
 			elem._enableValidate_ = true;
-			elem._needValidate_ = true;
-			initRootElement(elem);
+            elem._needValidate_ = true;
+            elem._modelLoad_ = () => {
+                elem.$emit('Model.Load', elem);
+            }
 		}
 		if (startTime)
 			log.time('create root time:', startTime);
@@ -4159,10 +4173,10 @@ Vue.directive('resize', {
 				const root = this.$data;
 				return root._delegate_(name);
 				// TODO: get delegate from template
-				return function (item, filter) {
-					console.warn('filter:' + item.Id + " filter:" + filter.Filter);
-					return true;
-				}
+                return function (item, filter) {
+                    console.warn('filter:' + item.Id + " filter:" + filter.Filter);
+                    return true;
+                };
 			},
 
 			__beginRequest() {
@@ -4174,11 +4188,16 @@ Vue.directive('resize', {
 			__queryChange(search) {
 				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
-			}
+            },
+            __doInit__() {
+                const root = this.$data;
+                root._modelLoad_();
+            }
 		},
 		created() {
-			eventBus.$emit('registerData', this);
-
+            let out = { caller: null };
+            eventBus.$emit('registerData', this, out);
+            this.$caller = out.caller;
 			/*
 			TODO: а зачем это было ???
 			if (!this.inDialog) {
@@ -4210,7 +4229,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20170925-7038*/
+/*20171015-7047*/
 /* controllers/shell.js */
 
 (function () {
@@ -4220,7 +4239,8 @@ Vue.directive('resize', {
 	const modal = component('std:modal');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
-	const log = require('std:log');
+    const log = require('std:log');
+    const utils = require('std:utils');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -4519,13 +4539,9 @@ Vue.directive('resize', {
 				me.requestsCount -= 1;
 			});
 
-			eventBus.$on('modal', function (modal, prms) {
-                let id = '0';
+            eventBus.$on('modal', function (modal, prms) {
+                let id = utils.getStringId(prms ? prms.data : null);
                 let root = window.$$rootUrl;
-				if (prms && prms.data && prms.data.$id) {
-					// TODO: get correct ID
-					id = prms.data.$id;
-				}
 				let url = urlTools.combine(root, '/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
@@ -4629,10 +4645,12 @@ Vue.directive('resize', {
 				me.$store.commit('popstate');
 			});
 
-			eventBus.$on('registerData', function (component) {
-				if (component)
-					me.__dataStack__.push(component);
-				else
+			eventBus.$on('registerData', function (component, out) {
+                if (component) {
+                    if (me.__dataStack__.length > 0)
+                        out.caller = me.__dataStack__[0];
+                    me.__dataStack__.push(component);
+                } else
 					me.__dataStack__.pop(component);
 			});
 

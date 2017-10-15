@@ -1,4 +1,4 @@
-﻿/*20171014-7046*/
+﻿/*20171015-7047*/
 /* services/datamodel.js */
 (function () {
 
@@ -125,11 +125,6 @@
 		}
 	}
 
-	function initRootElement(elem) {
-		// object already created
-		elem._root_.$emit('Model.load', elem);
-	}
-
 	function createObject(elem, source, path, parent) {
 		let ctorname = elem.constructor.name;
 		let startTime = null;
@@ -186,8 +181,10 @@
 				}
 			}
 			elem._enableValidate_ = true;
-			elem._needValidate_ = true;
-			initRootElement(elem);
+            elem._needValidate_ = true;
+            elem._modelLoad_ = () => {
+                elem.$emit('Model.Load', elem);
+            }
 		}
 		if (startTime)
 			log.time('create root time:', startTime);

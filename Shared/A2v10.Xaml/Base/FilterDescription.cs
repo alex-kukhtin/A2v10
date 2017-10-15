@@ -25,6 +25,16 @@ namespace A2v10.Xaml
                 case DataType.Number:
                 case DataType.Currency:
                     return Value == null ? "0" : $"+{Value}";
+                case DataType.Boolean:
+                    if (Value == null)
+                        return "false";
+                    if (Value is String)
+                    {
+                        var strVal = Value.ToString();
+                        if (strVal == "True" || strVal == "False")
+                            return strVal.ToLowerInvariant();
+                    }
+                    throw new NotImplementedException($"Invalid value for Boolean FilterItem '{Value}'");
                 default:
                     throw new NotImplementedException("type for FilterItem");
             }

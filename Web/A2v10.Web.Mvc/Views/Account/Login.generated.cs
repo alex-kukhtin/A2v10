@@ -240,15 +240,13 @@ WriteLiteral("\r\n                <div");
 
 WriteLiteral(" style=\"grid-row:4;grid-column:2\"");
 
-WriteLiteral(">\r\n                    <input");
+WriteLiteral(">\r\n                    <button");
 
 WriteLiteral(" type=\"submit\"");
 
-WriteLiteral(" value=\"Вход в систему\"");
-
 WriteLiteral(" class=\"btn btn-default\"");
 
-WriteLiteral(" />\r\n                </div>\r\n            </div>\r\n");
+WriteLiteral(">Вход в систему</button>\r\n                </div>\r\n            </div>\r\n");
 
 WriteLiteral("            <p>\r\n");
 

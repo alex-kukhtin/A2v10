@@ -1,4 +1,4 @@
-﻿/*20170925-7038*/
+﻿/*20171015-7047*/
 /* controllers/shell.js */
 
 (function () {
@@ -8,7 +8,8 @@
 	const modal = component('std:modal');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
-	const log = require('std:log');
+    const log = require('std:log');
+    const utils = require('std:utils');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -307,13 +308,9 @@
 				me.requestsCount -= 1;
 			});
 
-			eventBus.$on('modal', function (modal, prms) {
-                let id = '0';
+            eventBus.$on('modal', function (modal, prms) {
+                let id = utils.getStringId(prms ? prms.data : null);
                 let root = window.$$rootUrl;
-				if (prms && prms.data && prms.data.$id) {
-					// TODO: get correct ID
-					id = prms.data.$id;
-				}
 				let url = urlTools.combine(root, '/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
@@ -417,10 +414,12 @@
 				me.$store.commit('popstate');
 			});
 
-			eventBus.$on('registerData', function (component) {
-				if (component)
-					me.__dataStack__.push(component);
-				else
+			eventBus.$on('registerData', function (component, out) {
+                if (component) {
+                    if (me.__dataStack__.length > 0)
+                        out.caller = me.__dataStack__[0];
+                    me.__dataStack__.push(component);
+                } else
 					me.__dataStack__.pop(component);
 			});
 

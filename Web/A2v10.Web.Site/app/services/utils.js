@@ -1,4 +1,4 @@
-﻿/*20171013-7046*/
+﻿/*20171015-7047*/
 /* services/utils.js */
 
 app.modules['std:utils'] = function () {
@@ -21,7 +21,8 @@ app.modules['std:utils'] = function () {
 		isEmptyObject: isEmptyObject,
 		eval: eval,
         format: format,
-		toNumber: toNumber,
+        toNumber: toNumber,
+        getStringId: getStringId,
 		date: {
 			today: dateToday,
 			zero: dateZero,
@@ -128,14 +129,30 @@ app.modules['std:utils'] = function () {
 				return obj.toLocaleTimeString(dateLocale);
 			case "Currency":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
+					console.error(`Invalid Currency for utils.format (${obj})`);
 					return obj;
 				}
-				return obj.toLocaleString(undefined, { minimumFractionDigits:2, useGrouping:true });
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 2, useGrouping: true });
+            case "Number":
+                if (!isNumber(obj)) {
+                    console.error(`Invalid Number for utils.format (${obj})`);
+                    return obj;
+                }
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 0, useGrouping: true });
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
+    }
+
+    function getStringId(obj) {
+        if (!obj)
+            return '0';
+        if (isNumber(obj))
+            return obj;
+        else if (isObjectExact(obj))
+            return obj.$id || 0;
+        return '0';
     }
 
     function toNumber(val) {

@@ -1,0 +1,57 @@
+﻿
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      Title="Подбор товара" Size="Large"
+    >
+    <Dialog.Buttons>
+        <Button Content="Закрыть" Command="{BindCmd Close}"/>
+    </Dialog.Buttons>
+	<Toolbar Style="Transparent">
+		<TextBox Value="[[vm.$query.Fragment]]" Label="Фрагмент наименования:" />
+		<CheckBox Label="Только остатки" Value="[[vm.$query.InStockOnly]]" />
+		<Button Icon="Search" Command="[[vm.$reload()]]" Content="Найти"/>
+	</Toolbar>
+	<Text>можно ввести ПНТ или до трех фрагментов наименования (через пробел)</Text>
+	<Line />
+	<DataGrid Hover="True" Striped="True" Border="True"
+		ItemsSource="{Bind Entities}" >
+		<DataGridColumn Content="{Bind Article}" Header="ПНТ" Fit="True" />
+		<DataGridColumn Header="Наименование">
+			<Group>
+				<Span Content="{Bind Name}" />
+				<Hyperlink Icon="Table" Size="Mini" Tip="Карточка товара"  Command="[[vm.$showDialog('entityCard', {EntityId: item.Id})]]" />
+			</Group>
+		</DataGridColumn>
+        <DataGridColumn Content="{Bind Unit.Name}" Header="Ед. изм." Align="Center"/>
+        <DataGridColumn Content="{Bind Rem, DataType=Number}" Header="Остаток" Align="Right" Fit="True"/>
+        <DataGridColumn Header="Кол-во" Align="Right">
+            <TextBox Value="{Bind Qty, DataType=Number}" Align="Right"/>
+        </DataGridColumn>
+		<DataGridColumn Header="Цена">
+			<Static Value="{Bind Price, DataType=Currency}" Align="Right">
+				<Static.AddOns>
+                    <!--
+					<Hyperlink Icon="InfoCircle" Size="Mini" Block="False">
+						<Hyperlink.Popover>
+							<Popover Placement="BottomRight" SnapToSource="False" Trigger="OutsideClick">
+								<Popover.ContentTemplate>
+									<ControlGroup>
+                                        <Table ItemsSource="{Bind Prices}" If="{Bind Expression='item.$HasPrices'}"
+                                               CssClass="popover-price" Condensed="True" Striped="True" Hover="True" Select="True">
+												<TableRow>
+													<TableCell Content="{Bind PriceKind.Name}" Wrap="NoWrap" />
+													<TableCell Content="{Bind Price, DataType=Currency}" Align="Right" Bold="True"/>
+												</TableRow>
+										</Table>
+										<Span If="{Bind Expression='!item.$HasPrices'}" Wrap="NoWrap">Нет цен по товару</Span>
+									</ControlGroup>
+								</Popover.ContentTemplate>
+							</Popover>
+						</Hyperlink.Popover>
+					</Hyperlink>
+                    -->
+				</Static.AddOns>
+			</Static>
+		</DataGridColumn>
+		<DataGridColumn Content="{Bind Warehouse.Name}" Header="Склад"/>
+	</DataGrid>
+</Dialog>

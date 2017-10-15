@@ -80,9 +80,6 @@
             </Grid>
 			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5" FilterDelegate="FilterRows">
                 <!-- Начальная сортировка для таблицы -->
-				<CollectionView.Sort>
-					<SortDescription Property="Price" Dir="Desc"/>
-				</CollectionView.Sort>
                 <CollectionView.Filter>
                     <FilterDescription>
                         <FilterItem Property="Filter"/>
@@ -91,7 +88,7 @@
                 <Toolbar Style="Transparent">
                     <Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
                     <Button Icon="Delete" Content="Удалить выделенную строку" Command="{BindCmd RemoveSelected, Argument={Bind Document.Rows}, Confirm='Удалить строку?'}"/>
-                    <Button Icon="Dashboard" Content="Подбор товара" />
+                    <Button Icon="Dashboard" Content="Подбор товара" Command="{BindCmd Dialog, Action=Show, Url='/Document/request/entityChoice', Argument={Bind Document.Contract.Id}}"/>
                     <Code Content="{Bind Document.Rows.length}"></Code>
                     <Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
                     <TextBox Label="фильтр" Value="{Bind Parent.Filter.Filter}"></TextBox>
@@ -103,8 +100,10 @@
                     <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
 					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
-					<DataGridColumn Header="Price" Content="{Bind Price, DataType=Currency}" Align="Right" Fit="True"/>
+					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True"/>
+                    <!--
 					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+                    -->
 					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right" Fit="True"/>
 					<DataGridColumn>
 						<Group>
