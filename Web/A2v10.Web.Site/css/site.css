@@ -414,6 +414,9 @@ th {
 .text-center {
   text-align: center;
 }
+.text-small {
+  font-size: 90%;
+}
 .absolute {
   position: absolute;
   left: 0;
@@ -990,18 +993,26 @@ pre {
   width: 100%;
   min-height: 1.77em;
 }
-.control-group .input-group > a {
+.control-group .input-group > a,
+.control-group .input-group > .popover-wrapper {
   align-self: stretch;
-  padding: 0 3px;
   line-height: 1.77em;
+}
+.control-group .input-group > a .ico:before,
+.control-group .input-group > .popover-wrapper .ico:before {
+  color: inherit;
+}
+.control-group .input-group > .popover-wrapper {
+  display: inline-block;
+  margin-right: 3px;
+}
+.control-group .input-group > a {
   color: #757575;
+  padding: 0 3px;
 }
 .control-group .input-group > a:hover {
   text-decoration: none;
   color: #0d82f8;
-}
-.control-group .input-group > a .ico:before {
-  color: inherit;
 }
 .control-group .input-group .a2-inline {
   margin-left: 0 !important;
@@ -1324,6 +1335,10 @@ pre {
     TODO:
     1. do somthing with border: (td:first-child (left:none???)
 */
+.data-grid-container {
+  overflow: auto;
+  position: relative;
+}
 table.data-grid {
   cursor: default;
   width: 100%;
@@ -1338,6 +1353,7 @@ table.data-grid td {
 }
 table.data-grid th {
   border-color: #cbcdda;
+  text-align: left!important;
 }
 table.data-grid td.cell-editable {
   padding: 0;
@@ -1367,8 +1383,14 @@ table.data-grid th .h-holder {
   position: relative;
   padding: 4px 6px;
 }
+table.data-grid th .h-holder:after {
+  content: '';
+  border: 5px solid transparent;
+  margin-left: 2px;
+}
 table.data-grid th.sort {
   cursor: pointer;
+  white-space: nowrap;
 }
 table.data-grid th.sort:hover {
   background-color: #dcdcdc;
@@ -1379,19 +1401,19 @@ table.data-grid th.sort.asc {
 }
 table.data-grid th.sort.desc .h-holder:after {
   content: '';
-  position: absolute;
-  left: calc(50% - 5px);
-  top: 0;
+  display: inline-block;
   border: 5px solid transparent;
   border-top-color: #999;
+  margin-left: 2px;
+  vertical-align: bottom;
 }
 table.data-grid th.sort.asc .h-holder:after {
   content: '';
-  position: absolute;
-  left: calc(50% - 5px);
-  top: -5px;
+  display: inline-block;
   border: 5px solid transparent;
   border-bottom-color: #999;
+  margin-left: 2px;
+  vertical-align: top;
 }
 table.data-grid tr.active {
   background-color: #cde6f7 !important;
@@ -1532,6 +1554,33 @@ table.hover > tbody > tr:hover {
 }
 table.hover > tbody > tr.active:hover {
   background-color: #cde6f7 !important;
+}
+.data-grid-container.fixed-header {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.data-grid-container.fixed-header .data-grid-body {
+  margin-top: 25px;
+  overflow: auto;
+  height: calc(100% - 52px);
+  border-bottom: 1px solid #cbcdda;
+}
+.data-grid-container.fixed-header .data-grid-body th > .h-holder {
+  position: absolute;
+  top: 0;
+  background-color: inherit;
+  width: 100%;
+  margin-left: -1px;
+  border-left: 1px solid #cbcdda;
+  border-bottom: 1px solid #cbcdda;
+}
+.data-grid-container.fixed-header .a2-pager {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom-style: none;
 }
 .toolbar {
   display: flex;
@@ -2154,15 +2203,14 @@ label.checkbox.small span:before {
 label.checkbox.small span:after {
   transform: scale(0.9, 0.9);
 }
-.pager {
+.a2-pager {
   background-color: #f8f8f8;
   border-bottom: 1px solid #ccc;
-  padding: 2px 2px;
+  padding: 2px 6px 2px 0;
   display: flex;
   align-items: center;
 }
-.pager a {
-  display: inline-block;
+.a2-pager button {
   padding: 2px 4px;
   background-color: white;
   border: 1px solid #ccc;
@@ -2170,19 +2218,36 @@ label.checkbox.small span:after {
   min-width: 23px;
   text-align: center;
 }
-.pager a:hover {
+.a2-pager button:hover {
   background-color: #e0e0e0;
 }
-.pager a[disabled] {
+.a2-pager button[disabled] {
   color: #ccc;
   background-color: #f8f8f8;
   cursor: not-allowed;
 }
-.pager a[disabled]:hover {
+.a2-pager button[disabled]:hover {
   background-color: #f8f8f8;
 }
-.pager a:first-child {
+.a2-pager button.active {
+  background-color: #cde6f7;
+}
+.a2-pager button.active:hover {
+  background-color: #cde6f7;
+}
+.a2-pager button:first-child {
   border-left-width: 1px;
+}
+.a2-pager > .a2-pager-divider {
+  flex-grow: 2;
+}
+.a2-pager > .a2-pager-title {
+  font-size: .9em;
+}
+.a2-pager .a2-pager-dots {
+  display: inline-block;
+  width: 23px;
+  text-align: center;
 }
 /*
 TODO: 
@@ -2300,10 +2365,10 @@ TODO:
   display: inline-block;
   cursor: pointer;
   padding-bottom: 1px;
-  color: #57a8fa;
+  color: #78b925;
 }
 .popover-wrapper > .popover-title {
-  border-bottom: 1px dotted #57a8fa;
+  border-bottom: 1px dotted #78b925;
 }
 .popover-wrapper > .popover-title > span {
   -webkit-touch-callout: none;
@@ -2313,8 +2378,8 @@ TODO:
   user-select: none;
 }
 .popover-wrapper > .popover-title:hover {
-  color: #0d82f8;
-  border-bottom-color: #0d82f8;
+  color: #5c8f1d;
+  border-bottom-color: #5c8f1d;
 }
 .popover-wrapper > .popup-body {
   display: none;
@@ -2486,6 +2551,23 @@ TODO:
 }
 .stack-panel.horizontal {
   flex-direction: row;
+}
+.panel {
+  border: 1px solid #cfd6e5;
+  margin-bottom: 6px;
+}
+.panel .panel-header {
+  padding: 6px 6px;
+  font-size: 110%;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #cfd6e5;
+  color: #777;
+}
+.panel .panel-content > .prop-grid tr:first-child > td {
+  border-top-style: none;
+}
+.panel .panel-content > .prop-grid tr:last-child > td {
+  border-bottom-style: none;
 }
 .app-exception {
   margin: 50px auto;

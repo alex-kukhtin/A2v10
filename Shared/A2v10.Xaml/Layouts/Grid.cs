@@ -61,6 +61,8 @@ namespace A2v10.Xaml
         #endregion
 
 
+        public Length Height { get; set; }
+
         RowDefinitions _rows;
         ColumnDefinitions _columns;
 
@@ -98,7 +100,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(grid);
             MergeAttributes(grid, context);
-            // TODO: row/col definitions
+            if (Height != null)
+                grid.MergeStyle("height", Height.Value);
             if (_rows != null)
                 grid.MergeStyle("grid-template-rows", _rows.ToAttribute());
             if (_columns != null)

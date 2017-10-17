@@ -28,6 +28,13 @@ namespace A2v10.Xaml
             return _bindImpl?.GetBinding(name);
         }
 
+        public void SetBinding(String name, BindBase bind)
+        {
+            if (bind == null)
+                return;
+            BindImpl.SetBinding(name, bind);
+        }
+
         public BindCmd GetBindingCommand(String name)
         {
             return _bindImpl?.GetBindingCommand(name);

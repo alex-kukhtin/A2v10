@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Windows.Markup;
 
@@ -8,6 +9,7 @@ namespace A2v10.Xaml
     {
         Default,
         Editor,
+        CheckBox,
         Validator
     }
 
@@ -30,18 +32,33 @@ namespace A2v10.Xaml
 
         public Object Mark { get; set; }
 
+        public Length Width { get; set; }
+
+        public WrapMode Wrap { get; set; }
+
+        Boolean _noPadding;
+
         internal void RenderColumn(RenderContext context, Int32 colIndex)
         {
+            CheckValid();
             var column = new TagBuilder("data-grid-column");
             MergeBindingAttribute(context, column, "header", nameof(Header), Header);
             MergeBoolAttribute(column, context, nameof(Editable), Editable);
+            if (_noPadding)
+                column.MergeAttribute(":no-padding", "true");
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
+            if (Width != null)
+                column.MergeAttribute("width", Width.Value);
+            if (Wrap != WrapMode.Default)
+                column.MergeAttribute("wrap", Wrap.ToString().ToKebabCase());
 
             var markBind = GetBinding(nameof(Mark));
             if (markBind != null)
                 column.MergeAttribute("mark", markBind.Path /*!without context!*/);
             else if (Mark != null)
                 throw new XamlException("The Mark property must be a binding");
+
+            CreateEditable();
 
             Boolean isTemplate = Content is UIElementBase;
             String tmlId = null;
@@ -104,6 +121,43 @@ namespace A2v10.Xaml
             else if (propValue != null)
                 tag.MergeAttribute(attr, propValue.ToString());
         }
+
+        void CreateEditable()
+        {
+            switch (ControlType)
+            {
+                case ColumnControlType.Default:
+                case ColumnControlType.Editor:
+                    if (!Editable)
+                        return;
+                    var textBox = new TextBox();
+                    textBox.SetBinding("Value", GetBinding("Content"));
+                    textBox.SetBinding("Align", GetBinding("Align")); // dynamic
+                    textBox.Align = Align; // static
+                    Content = textBox;
+                    break;
+                case ColumnControlType.CheckBox:
+                    var checkBox = new CheckBox();
+                    checkBox.SetBinding("Value", GetBinding("Content"));
+                    if (!Editable)
+                        checkBox.Disabled = true;
+                    Content = checkBox;
+                    break;
+            }
+        }
+
+        void CheckValid()
+        {
+            if (Editable && Content != null)
+            {
+                throw new XamlException("For editable columns the Content must be a binding"); 
+            } 
+            if (Content is TextBox)
+            {
+                _noPadding = true;
+            }
+        }
+
 
         protected override void OnEndInit()
         {

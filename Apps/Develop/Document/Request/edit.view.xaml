@@ -14,6 +14,22 @@
 	</Page.Toolbar>
 	<Page.Taskpad>
 		<Taskpad Width="25%">
+            <Panel Padding="0, 6">
+                <Panel.Header>
+                    <Text>Информация о договоре [<Span Bold="True" Content="{Bind Document.Contract.Id}"/>]
+                    </Text>
+                </Panel.Header>
+                <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки" Disabled="{Bind $isPristine}">
+                    <TextBox.AddOns>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
+                        <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Contract}}" />
+                    </TextBox.AddOns>
+                </TextBox>
+                <PropertyGrid GridLines="Horizontal">
+                    <PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
+                    <PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
+                </PropertyGrid>
+            </Panel>
 			<!--
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
@@ -28,12 +44,6 @@
             <Button Icon="ArrowExport" Style="Red" Size="Small">small 3</Button>
             <Button Block="True" Icon="Approve" Style="Orange" Size="Large">Orange</Button>
             <Button Block="True" Icon="Approve" Style="Primary">Primary</Button>
-            <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки" Disabled="{Bind $isPristine}">
-				<TextBox.AddOns>
-					<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
-					<Hyperlink Icon="Clear"/>
-				</TextBox.AddOns>
-			</TextBox>
 			<Table GridLines="Both">
 				<TableRow>
 					<Hyperlink Content="Ссылка в таблице" />
@@ -55,7 +65,11 @@
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
 				<ComboBox Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
-				<TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}"/>
+                <TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}">
+                    <TextBox.AddOns>
+                        <Popover Icon="Info" Content="Popover text"></Popover>
+                    </TextBox.AddOns>
+                </TextBox>
 				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
 						 Description="выберите покупателя" 
                          Placeholder="введите фрагмент наименования для поиска"

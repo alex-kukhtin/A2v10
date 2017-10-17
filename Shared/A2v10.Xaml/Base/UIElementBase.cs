@@ -25,18 +25,36 @@ namespace A2v10.Xaml
 
         internal abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
 
-        internal virtual void MergeAttributes(TagBuilder tag, RenderContext context)
+        [Flags]
+        public enum MergeAttrMode
         {
-            MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
-            MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
-            MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
-            MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
-            if (Margin != null)
-                Margin.MergeStyles("margin", tag);
-            if (Padding != null)
-                Padding.MergeStyles("padding", tag);
-            if (Wrap != WrapMode.Default)
-                tag.AddCssClass(Wrap.ToString().ToKebabCase());
+            Standard = 0x01,
+            Margin = 0x02,
+            Wrap = 0x04,
+            All = Standard | Margin | Wrap
+        }
+
+        internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+        {
+            if ((mode & MergeAttrMode.Standard) != 0)
+            {
+                MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
+                MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
+                MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
+                MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
+            }
+            if ((mode & MergeAttrMode.Wrap) != 0)
+            {
+                if (Wrap != WrapMode.Default)
+                    tag.AddCssClass(Wrap.ToString().ToKebabCase());
+            }
+            if ((mode & MergeAttrMode.Margin) != 0)
+            {
+                if (Margin != null)
+                    Margin.MergeStyles("margin", tag);
+                if (Padding != null)
+                    Padding.MergeStyles("padding", tag);
+            }
         }
 
         internal void RenderContent(RenderContext context, Object content)

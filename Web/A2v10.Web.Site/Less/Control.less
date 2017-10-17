@@ -38,7 +38,7 @@
         margin: 0;
         left: -1px;
         width: auto;
-        min-width:150px;
+        min-width: 150px;
         font-size: 96%;
         bottom: 100%;
         padding: 2px 6px 4px 6px;
@@ -117,19 +117,26 @@
             }
         }
 
-        > a {
+        > a, > .popover-wrapper {
             align-self: stretch;
-            padding: 0 3px;
             line-height: @control-height;
+            .ico:before {
+                color: inherit;
+            }
+        }
+
+        > .popover-wrapper {
+            display:inline-block;
+            margin-right:3px;
+        }
+
+        > a {
             color: @label-color;
+            padding: 0 3px;
 
             &:hover {
                 text-decoration: none;
                 color: @link-hover-color
-            }
-
-            .ico:before {
-                color: inherit;
             }
         }
 

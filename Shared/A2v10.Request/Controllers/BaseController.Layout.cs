@@ -30,8 +30,8 @@ namespace A2v10.Request
             ExpandoObject loadPrms = new ExpandoObject();
             loadPrms.Set("UserId", userId);
 
-            String schema = bAdmin ? "a2admin" : "a2ui";
-            IDataModel dm = await _dbContext.LoadModelAsync(String.Empty, $"[{schema}].[Menu.Load]", loadPrms);
+            String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
+            IDataModel dm = await _dbContext.LoadModelAsync(String.Empty, proc, loadPrms);
 
             String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), BaseController.StandardSerializerSettings);
 

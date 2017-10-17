@@ -2,22 +2,22 @@
 
 @btn-bg-color:white;
 @btn-dis-color:#f8f8f8;
+@btn-width: 23px;
 
-.pager {
+.a2-pager {
     background-color: #f8f8f8;
     border-bottom: 1px solid #ccc;
-    padding: 2px 2px;
-    display:flex;
-    align-items:center;
+    padding: 2px 6px 2px 0;
+    display: flex;
+    align-items: center;
 
-    a {
-        display: inline-block;
+    button {
         padding: 2px 4px;
         background-color: @btn-bg-color;
         border: 1px solid #ccc;
-        border-left-width:0;
-        min-width:23px;
-        text-align:center;
+        border-left-width: 0;
+        min-width: @btn-width;
+        text-align: center;
 
         &:hover {
             background-color: #e0e0e0;
@@ -25,15 +25,38 @@
 
         &[disabled] {
             color: #ccc;
-            background-color:@btn-dis-color;
+            background-color: @btn-dis-color;
             cursor: not-allowed;
 
             &:hover {
                 background-color: @btn-dis-color;
             }
         }
+
+        &.active {
+            background-color: @active-bg-color;
+
+            &:hover {
+                background-color: @active-bg-color;
+            }
+        }
+
+        &:first-child {
+            border-left-width: 1px;
+        }
     }
-    a:first-child {
-        border-left-width:1px;
+
+
+    > .a2-pager-divider {
+        flex-grow: 2;
+    }
+
+    > .a2-pager-title {
+        font-size:.9em;
+    }
+    .a2-pager-dots {
+        display: inline-block;
+        width: @btn-width;
+        text-align: center;
     }
 }

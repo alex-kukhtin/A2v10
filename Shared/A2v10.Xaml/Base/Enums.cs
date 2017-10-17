@@ -50,6 +50,12 @@ namespace A2v10.Xaml
         Mini = 3
     };
 
+    public enum TextSize
+    {
+        Normal,
+        Small
+    }
+
     public enum WrapMode
     {
         Default,

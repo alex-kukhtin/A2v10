@@ -1,4 +1,4 @@
-/* 20171011-7044 */
+/* 20171017-7048 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
@@ -45,11 +45,11 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Menu.Load')
-	drop procedure a2admin.[Menu.Load]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Menu.Admin.Load')
+	drop procedure a2admin.[Menu.Admin.Load]
 go
 ------------------------------------------------
-create procedure a2admin.[Menu.Load]
+create procedure a2admin.[Menu.Admin.Load]
 @UserId bigint
 as
 begin

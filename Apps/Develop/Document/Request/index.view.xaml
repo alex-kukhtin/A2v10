@@ -30,7 +30,7 @@
     </Page.CollectionView>
     <!---->
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-				Striped="True" Sort="True" GridLines="Vertical"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
                 DoubleClick="{BindCmd OpenSelected, Url='/Document/Request/Edit', Argument={Bind Documents}}">
 		<DataGrid.Pager>
 			<Pager Source="{Bind Parent.Pager}" />

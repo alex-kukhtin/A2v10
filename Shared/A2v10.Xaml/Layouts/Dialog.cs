@@ -22,6 +22,7 @@ namespace A2v10.Xaml
 
         public DialogSize Size { get; set; }
         public Length Width { get; set; }
+        public Length Height { get; set; }
 
         public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -38,6 +39,8 @@ namespace A2v10.Xaml
             RenderLoadIndicator(context);
 
             var content = new TagBuilder("div", "modal-content");
+            if (Height != null)
+                content.MergeStyle("height", Height.Value);
             if (Padding != null)
                 Padding.MergeStyles("padding", content);
             content.RenderStart(context);

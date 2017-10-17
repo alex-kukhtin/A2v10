@@ -1,4 +1,4 @@
-﻿/*20171012-7045*/
+﻿/*20171016-7048*/
 /*components/datagrid.js*/
 (function () {
 
@@ -25,6 +25,7 @@
 
     const dataGridTemplate = `
 <div class="data-grid-container">
+    <div class="data-grid-body">
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -63,6 +64,7 @@
 		</template>
 		<slot name="footer"></slot>
     </table>
+    </div>
 	<slot name="pager"></slot>
 </div>
 `;
@@ -76,6 +78,9 @@
 	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
+
+    // нужно вставить в сам header для Fixed
+    //<span>{{ header || content }}</span>
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
@@ -97,12 +102,14 @@
             id: String,
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
+            noPadding: { type: Boolean, default: false },
             validate: String,
             sort: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
-			fit: Boolean,
+            fit: Boolean,
+            wrap: String,
 			command: Object
         },
         created() {
@@ -150,7 +157,9 @@
                         cssClass += ' ' + mark;
 				}
 				if (editable)
-					cssClass += ' cell-editable';
+                    cssClass += ' cell-editable';
+                if (this.wrap)
+                    cssClass += ' ' + this.wrap;
                 return cssClass.trim();
             }
         }
@@ -172,8 +181,8 @@
             let row = ctx.props.row;
             let col = ctx.props.col;
 			let ix = ctx.props.index;
-			let cellProps = {
-				'class': col.cellCssClass(row, col.editable)
+            let cellProps = {
+                'class': col.cellCssClass(row, col.editable || col.noPadding)
             };
 
             let childProps = {
@@ -226,15 +235,7 @@
 				return arg;
 			}
 
-            if (col.editable) {
-                /* editable content */
-                let child = {
-                    props: ['row', 'col', 'align'],
-                    /*TODO: control type */
-                    template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
-				};
-                return h(tag, cellProps, [h(child, childProps)]);
-			} else if (col.command) {
+			if (col.command) {
 				// column command -> hyperlink
 				// arg1. command
 				let arg1 = normalizeArg(col.command.arg1, false);

@@ -10,8 +10,9 @@ namespace A2v10.Xaml
     {
         internal override string ControlType => "radio";
 
-        internal override void MergeCheckBoxAttributes(TagBuilder tag)
+        internal override void MergeCheckBoxAttributes(TagBuilder tag, RenderContext context)
         {
+            base.MergeCheckBoxAttributes(tag, context);
             // TODO Merge Checked Value 
             throw new NotImplementedException();
         }

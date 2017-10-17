@@ -24,7 +24,7 @@ namespace A2v10.Xaml
             var input = new TagBuilder("input");
             input.MergeAttribute("type", ControlType);
             MergeCheckBoxValue(input, context);
-            MergeCheckBoxAttributes(input);
+            MergeCheckBoxAttributes(input, context);
             input.Render(context, TagRenderMode.SelfClosing);
             var span = new TagBuilder("span");
             var lblBind = GetBinding(nameof(Label));
@@ -58,8 +58,9 @@ namespace A2v10.Xaml
             }
         }
 
-        internal virtual void MergeCheckBoxAttributes(TagBuilder tag)
+        internal virtual void MergeCheckBoxAttributes(TagBuilder tag, RenderContext context)
         {
+            MergeDisabled(tag, context);
         }
     }
 }

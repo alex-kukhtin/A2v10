@@ -40,6 +40,11 @@ namespace A2v10.Xaml
             return _bindImpl?.GetBinding(name);
         }
 
+        void SetBinding(String name, BindBase bind)
+        {
+            _bindImpl.SetBinding(name, bind);
+        }
+
         public BindCmd GetBindingCommand(String name)
         {
             return _bindImpl?.GetBindingCommand(name);

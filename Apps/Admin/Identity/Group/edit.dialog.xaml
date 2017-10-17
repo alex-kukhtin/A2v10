@@ -1,25 +1,30 @@
 <!-- Group properties -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
         Title="{Bind Group.Id, Format='Властивості групи [{0}]'}">
+    <!--TODO: Resources (Confirm)-->
     <Dialog.Buttons>
         <Button Command="{BindCmd SaveAndClose}">OK</Button>
         <Button Command="{BindCmd Close}">Скасувати</Button>
     </Dialog.Buttons>
     <TabPanel>
         <Tab Header="Загальні">
-            <Grid Columns="1*, 1*">
+            <Grid Columns="1*, 1*" Rows="Auto, Auto, 88, Auto">
                 <TextBox Grid.Row="1" Label="Назва" Value="{Bind Group.Name}"/>
                 <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}"/>
-                <TextBox Grid.Row="3" Grid.ColSpan="2" Label="Примітка" Value="{Bind Group.Memo}" 
+                <TextBox Grid.Row="4" Grid.ColSpan="2" Label="Примітка" Value="{Bind Group.Memo}" 
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
         <Tab Header="Користувачі" Padding="5, 10">
             <Toolbar Style="Transparent">
-                <Button Size="Small" Toolbar.Align="Right" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
-                <Button Size="Small" Toolbar.Align="Right" Icon="Delete" Content="Видалити" Command="{BindCmd Command=Remove, Argument={Bind Group.Users}}"/>
+                <Button Size="Small" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
+                <Button Size="Small" Icon="Delete" Content="Видалити" Command="{BindCmd Command=RemoveSelected, Argument={Bind Group.Users}, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>
+                <Text Size="Small"  Toolbar.Align="Right">всього користувачів:
+                    <Span Bold="True" Content="{Bind Group.Users.Count}"/>
+                </Text>
             </Toolbar>
-            <DataGrid GridLines="Vertical" Hover="True" ItemsSource="{Bind Group.Users}" Striped="True">
+            <DataGrid GridLines="Vertical" Hover="True" Height="270" FixedHeader="True"
+                      ItemsSource="{Bind Group.Users}" Striped="True">
                 <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
                 <DataGridColumn Header="Логін" Content="{Bind Name}"/>
                 <DataGridColumn Header="Ім'я" Content="{Bind PersonName}"/>

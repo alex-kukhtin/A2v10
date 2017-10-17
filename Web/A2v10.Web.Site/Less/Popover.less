@@ -11,23 +11,26 @@
 @popup-bk-color-red: #fedbdb;
 @popup-bk-color-blue: #e5f1fe;
 
+@popover-text-color: #78b925;
+@popover-hover-color: darken(@popover-text-color, 10%);
+
 .popover-wrapper {
     position: relative;
     display: inline-block;
     cursor: pointer;
     padding-bottom: 1px;
-    color: @link-color;
+    color: @popover-text-color;
 
     > .popover-title {
-        border-bottom: 1px dotted @link-color;
+        border-bottom: 1px dotted @popover-text-color;
         > span {
             .noselect();
         }
     }
 
     > .popover-title:hover {
-        color: @link-hover-color;
-        border-bottom-color: @link-hover-color;
+        color: @popover-hover-color;
+        border-bottom-color: @popover-hover-color;
     }
 
     > .popup-body {

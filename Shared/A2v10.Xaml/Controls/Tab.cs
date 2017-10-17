@@ -21,6 +21,8 @@ namespace A2v10.Xaml
 
         public String Badge { get; set; }
 
+        public Length Height { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tab = new TagBuilder("a2-tab-item");
@@ -37,6 +39,8 @@ namespace A2v10.Xaml
                 tab.MergeAttribute(":badge", badgeBind.GetPathFormat(context));
             else if (Badge != null)
                 tab.MergeAttribute("badge", Badge);
+            if (Height != null)
+                tab.MergeStyle("height", Height.Value);
             tab.RenderStart(context);
 
             RenderChildren(context);

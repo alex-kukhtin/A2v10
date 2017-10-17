@@ -122,6 +122,8 @@
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\pagelayout.html" />
+    <Content Include="TestPages\pager2.html" />
+    <Content Include="TestPages\pager2.js" />
     <Content Include="TestPages\popover.html" />
     <Content Include="TestPages\popover.js" />
     <Content Include="TestPages\property-grid.js" />

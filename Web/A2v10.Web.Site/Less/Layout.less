@@ -14,3 +14,26 @@
     }
 }
 
+.panel {
+    border: 1px solid @light-brd-color;
+    margin-bottom:6px;
+    .panel-header {
+        padding: 6px 6px;
+        font-size: 110%;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid @light-brd-color;
+        color: #777;
+    }
+
+    .panel-content {
+        > .prop-grid {
+            tr:first-child > td {
+                border-top-style: none;
+            }
+
+            tr:last-child > td {
+                border-bottom-style: none;
+            }
+        }
+    }
+}

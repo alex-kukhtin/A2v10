@@ -171,7 +171,9 @@ TODO:
 				else {
 					nq.order = order;
 					nq.dir = 'asc';
-				}
+                }
+                if (!nq.order)
+                    nq.dir = null;
 				if (this.runAt === 'server') {
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;

@@ -457,7 +457,7 @@ app.modules['std:utils'] = function () {
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
-		return ctor === String || ctor === Number || ctor === Boolean;
+		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
 	}
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -719,7 +719,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171015-7047*/
+/*20171016-7048*/
 /* services/datamodel.js */
 (function () {
 
@@ -884,7 +884,7 @@ app.modules['std:validators'] = function() {
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
-		});
+        });
 
 		let constructEvent = ctorname + '.construct';
 		elem._root_.$emit(constructEvent, elem);
@@ -1050,7 +1050,10 @@ app.modules['std:validators'] = function() {
 
 	function defineObject(obj, meta, arrayItem) {
 		defHidden(obj.prototype, META, meta);
-		obj.prototype.$merge = merge;
+
+        obj.prototype.$merge = merge;
+        obj.prototype.$empty = empty;
+
 		defineCommonProps(obj.prototype);
 
 		defHiddenGet(obj.prototype, "$isNew", function () {
@@ -1304,6 +1307,13 @@ app.modules['std:validators'] = function() {
 	function setDirty(val) {
 		this.$dirty = val;
 	}
+
+    function empty() {
+        let obj = this;
+        // ctor(source path parent)
+        let newElem = new obj.constructor({}, '', obj._parent_);
+        obj.$merge(newElem);
+    }
 
 	function merge(src) {
 		try {
@@ -1965,7 +1975,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171012-7045*/
+/*20171016-7048*/
 /*components/datagrid.js*/
 (function () {
 
@@ -1992,6 +2002,7 @@ Vue.component('validator-control', {
 
     const dataGridTemplate = `
 <div class="data-grid-container">
+    <div class="data-grid-body">
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -2030,6 +2041,7 @@ Vue.component('validator-control', {
 		</template>
 		<slot name="footer"></slot>
     </table>
+    </div>
 	<slot name="pager"></slot>
 </div>
 `;
@@ -2043,6 +2055,9 @@ Vue.component('validator-control', {
 	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
+
+    // нужно вставить в сам header для Fixed
+    //<span>{{ header || content }}</span>
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
@@ -2064,12 +2079,14 @@ Vue.component('validator-control', {
             id: String,
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
+            noPadding: { type: Boolean, default: false },
             validate: String,
             sort: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
-			fit: Boolean,
+            fit: Boolean,
+            wrap: String,
 			command: Object
         },
         created() {
@@ -2117,7 +2134,9 @@ Vue.component('validator-control', {
                         cssClass += ' ' + mark;
 				}
 				if (editable)
-					cssClass += ' cell-editable';
+                    cssClass += ' cell-editable';
+                if (this.wrap)
+                    cssClass += ' ' + this.wrap;
                 return cssClass.trim();
             }
         }
@@ -2139,8 +2158,8 @@ Vue.component('validator-control', {
             let row = ctx.props.row;
             let col = ctx.props.col;
 			let ix = ctx.props.index;
-			let cellProps = {
-				'class': col.cellCssClass(row, col.editable)
+            let cellProps = {
+                'class': col.cellCssClass(row, col.editable || col.noPadding)
             };
 
             let childProps = {
@@ -2193,15 +2212,7 @@ Vue.component('validator-control', {
 				return arg;
 			}
 
-            if (col.editable) {
-                /* editable content */
-                let child = {
-                    props: ['row', 'col', 'align'],
-                    /*TODO: control type */
-                    template: '<textbox :item="row" :prop="col.content" :align="col.align" ></textbox>'
-				};
-                return h(tag, cellProps, [h(child, childProps)]);
-			} else if (col.command) {
+			if (col.command) {
 				// column command -> hyperlink
 				// arg1. command
 				let arg1 = normalizeArg(col.command.arg1, false);
@@ -2534,11 +2545,11 @@ Vue.component('validator-control', {
         }
     });
 })();
-/*20170823-7018*/
+/*20171017-7049*/
 /*components/pager.js*/
 
-Vue.component('a2-pager', {
-	template: `
+/*
+template: `
 <div class="pager">
 	<a href @click.prevent="source.first" :disabled="disabledFirst"><i class="ico ico-chevron-left-end"/></a>
 	<a href @click.prevent="source.prev" :disabled="disabledPrev"><i class="ico ico-chevron-left"/></a>
@@ -2550,29 +2561,109 @@ Vue.component('a2-pager', {
 	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
 		pages={{source.pages}} count={{source.sourceCount}}</code>
 </div>
-`,
+*/
+
+Vue.component('a2-pager', {
 	props: {
 		source: Object
 	},
-	computed: {
-		middleButtons() {
-			let ba = [];
-			ba.push(1);
-			ba.push(2);
-			return ba;
-		},
-		disabledFirst() {
-			return this.source.offset === 0;
-		},
-		disabledPrev() {
-			return this.source.offset === 0;
-		}
+    computed: {
+        pages() {
+            return Math.ceil(this.count / this.source.pageSize);
+        },
+        currentPage() {
+            return Math.ceil(this.offset / this.source.pageSize) + 1;
+        },
+        title() {
+            let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+            if (!this.count)
+                return '';
+            return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
+        },
+        offset() {
+            return this.source.offset;
+        },
+        count() {
+            return this.source.sourceCount;
+        }
 	},
-	methods: {
-		page(no) {
+    methods: {
+        setOffset(offset) {
+            if (this.offset === offset)
+                return;
+            this.source.$setOffset(offset);
+        },
+        isActive(page) {
+            return page === this.currentPage;
+        },
+        click(arg, $ev) {
+            $ev.preventDefault();
+            switch (arg) {
+                case 'prev':
+                    this.setOffset(this.offset - this.source.pageSize);
+                    break;
+                case 'next':
+                    this.setOffset(this.offset + this.source.pageSize);
+                    break;
+            }
+        },
+        goto(page, $ev) {
+            $ev.preventDefault();
+            this.setOffset((page - 1) * this.source.pageSize);
+        }
+	},
+    render(h, ctx) {
+        let contProps = {
+            class: 'a2-pager'
+        };
+        let children = [];
+        const dotsClass = { 'class': 'a2-pager-dots' };
+        const renderBtn = (page) => {
+            return h('button', {
+                domProps: { innerText: page },
+                on: { click: ($ev) => this.goto(page, $ev) },
+                class: { active: this.isActive(page) }
+            });
+        };
+        // prev
+        children.push(h('button', {
+            on: { click: ($ev) => this.click('prev', $ev) },
+            attrs: { disabled: this.offset === 0 }
+        }, [h('i', { 'class': 'ico ico-chevron-left' })]
+        ));
+        // first
+        children.push(renderBtn(1));
+        if (this.pages > 1)
+            children.push(renderBtn(2));
+        // middle
+        let ms = Math.max(this.currentPage - 2, 3);
+        let me = Math.min(ms + 5, this.pages - 1);
+        if (me - ms < 5)
+            ms = Math.max(me - 5, 3);
+        if (ms > 3)
+            children.push(h('span', dotsClass, '...'));
+        for (let mi = ms; mi < me; ++mi) {
+            children.push(renderBtn(mi));
+        }
+        if (me < this.pages - 1)
+            children.push(h('span', dotsClass, '...'));
+        // last
+        if (this.pages > 3)
+            children.push(renderBtn(this.pages - 1));
+        if (this.pages > 2)
+            children.push(renderBtn(this.pages));
+        // next
+        children.push(h('button', {
+            on: { click: ($ev) => this.click('next', $ev) },
+            attrs: { disabled: this.currentPage === this.pages }
+        },
+            [h('i', { 'class': 'ico ico-chevron-right' })]
+        ));
 
-		}
-	}
+        children.push(h('span', { class: 'a2-pager-divider' }));
+        children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
+        return h('div', contProps, children);
+    }
 });
 
 
@@ -3004,7 +3095,9 @@ TODO:
 				else {
 					nq.order = order;
 					nq.dir = 'asc';
-				}
+                }
+                if (!nq.order)
+                    nq.dir = null;
 				if (this.runAt === 'server') {
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;

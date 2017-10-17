@@ -24,6 +24,8 @@ namespace A2v10.Xaml
         public Boolean Border { get; set; }
         public Boolean Sort { get; set; }
 
+        public Boolean FixedHeader { get; set; }
+
         public GridLinesVisibility GridLines { get; set; }
 
         public Object ItemsSource { get; set; }
@@ -37,6 +39,8 @@ namespace A2v10.Xaml
         public Object Mark { get; set; }
 
         public Command DoubleClick { get; set; }
+
+        public Length Height { get; set; }
 
         GroupDescriptions _groupBy;
         public GroupDescriptions GroupBy
@@ -55,6 +59,10 @@ namespace A2v10.Xaml
             var dataGrid = new TagBuilder("data-grid", null, IsInGrid);
             if (onRender != null)
                 onRender(dataGrid);
+            if (Height != null)
+                dataGrid.MergeStyle("height", Height.Value);
+            if (FixedHeader)
+                dataGrid.AddCssClass("fixed-header");
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.GetPath(context));

@@ -1,27 +1,32 @@
-<!-- Demo page -->
+<!-- User Properties -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
         Title="{Bind User.Id, Format='Властивості користувача [{0}]'}">
+    <!--TODO: Resources (Confirm)-->
     <Dialog.Buttons>
         <Button Command="{BindCmd SaveAndClose}">OK</Button>
         <Button Command="{BindCmd Close}">Скасувати</Button>
     </Dialog.Buttons>
     <TabPanel>
         <Tab Header="Загальні">
-            <Grid Columns="1*, 1*">
+            <Grid Columns="1*, 1*" Rows="Auto,Auto,Auto,33,Auto">
                 <TextBox Grid.Row="1" Label="Логін" Value="{Bind User.Name}"/>
                 <TextBox Grid.Row="2" Grid.ColSpan="2" Label="Ім'я" Value="{Bind User.PersonName}"/>
                 <TextBox Grid.Row="3" Grid.Col="1" Label="e-mail" Value="{Bind User.Email}"/>
                 <TextBox Grid.Row="3" Grid.Col="2" Label="Телефон" Value="{Bind User.Phone}"/>
-                <TextBox Grid.Row="4" Grid.ColSpan="2" Label="Примітка" Value="{Bind User.Memo}" 
+                <TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примітка" Value="{Bind User.Memo}" 
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
         <Tab Header="Групи" Padding="5, 10">
             <Toolbar Style="Transparent">
-                <Button Size="Small" Toolbar.Align="Right" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Browse', Argument={Bind User.Groups}}"/>
-                <Button Size="Small" Toolbar.Align="Right" Icon="Delete" Content="Видалити" Command="{BindCmd Command=Remove, Argument={Bind User.Groups}}"/>
+                <Button Size="Small" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Browse', Argument={Bind User.Groups}}"/>
+                <Button Size="Small" Icon="Delete" Content="Видалити" Command="{BindCmd Command=RemoveSelected, Argument={Bind User.Groups}, Confirm='Ви дійсно бажаєте видалити групу?'}"/>
+                <Text Size="Small"  Toolbar.Align="Right">всього груп:
+                    <Span Bold="True" Content="{Bind User.Groups.Count}"/>
+                </Text>
             </Toolbar>
-            <DataGrid GridLines="Vertical" Hover="True" ItemsSource="{Bind User.Groups}" Striped="True">
+            <DataGrid GridLines="Vertical" Height="270" FixedHeader="True"
+                      Hover="True" ItemsSource="{Bind User.Groups}" Striped="True">
                 <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
                 <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
                 <DataGridColumn Header="Назва" Content="{Bind Name}"/>

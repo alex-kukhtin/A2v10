@@ -43,15 +43,19 @@
         <Button Icon="Alert"/>
     </Toolbar>
     <DataGrid ItemsSource="{Bind Customers}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
-				  Striped="True" Border="True" Sort="True" GridLines="Vertical">
+				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
+              FixedHeader="True" Height="400">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Mark="{Bind $cellMark}"/>
-		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
-		<DataGridColumn Header="Сумма продаж" Editable="True" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
+		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True" />
+        <DataGridColumn Header="Сумма продаж">
+            <TextBox Value="{Bind Amount, DataType=Currency}" Align="Right"/>
+        </DataGridColumn>
         <DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
         <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right" Mark="{Bind $cellMark}"/>
         <DataGridColumn ControlType="Validator"/>
-		<DataGridColumn Fit="True">
-			<CheckBox />
+        <DataGridColumn Fit="True" ControlType="Checkbox" Content="{Bind $checked}"/>
+        <DataGridColumn Fit="True">
+			<CheckBox Value="{Bind $checked}"/>
 		</DataGridColumn>
         <DataGridColumn Fit="True">
             <Hyperlink Icon="Edit" Command="{BindCmd Dialog, Action=Edit, Url='/catalog/suppliers/edit', Argument={Bind }}"/>

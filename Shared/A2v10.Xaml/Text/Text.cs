@@ -13,10 +13,14 @@ namespace A2v10.Xaml
     {
         public InlineCollection Inlines { get; } = new InlineCollection();
 
+        public TextSize Size { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tag = new TagBuilder("span", null, IsInGrid);
             MergeAttributes(tag, context);
+            if (Size != TextSize.Normal)
+                tag.AddCssClass("text-" + Size.ToString().ToLowerInvariant());
             tag.RenderStart(context);
             Inlines.Render(context);
             tag.RenderEnd(context);

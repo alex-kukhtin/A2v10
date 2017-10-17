@@ -23,9 +23,9 @@ namespace A2v10.Xaml
 
         public UIElementCollection AddOns { get { return _addOns.Value;} }
 
-        internal override void MergeAttributes(TagBuilder tag, RenderContext context)
+        internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
         {
-            base.MergeAttributes(tag, context);
+            base.MergeAttributes(tag, context, mode);
             if (Block)
                 tag.AddCssClass("block");
             AddControlAttributes(tag, context);

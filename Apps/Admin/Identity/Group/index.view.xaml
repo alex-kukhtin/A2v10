@@ -1,4 +1,4 @@
-<!-- Demo page -->
+<!-- User Groups Index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Groups}" RunAt="ServerUrl">
@@ -22,7 +22,7 @@
             -->
         </Toolbar>
     </Page.Toolbar>
-    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
 				Striped="True" Border="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
         <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>

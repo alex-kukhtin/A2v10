@@ -3,49 +3,51 @@
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl" />
     </Page.CollectionView>
-	<Toolbar>
-        <Button Icon="Plus" Content="Создать" Command="{BindCmd Create, Url='/Document/Quotations/Edit'}" />
-        <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/Document/Quotations/Edit', Argument={Bind Contracts}}">Открыть</Button>
-		<Button Icon="Delete">Удалить</Button>
-		<Separator />
-		<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-		<Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-		<Button Content="Test Drop Down 2" Icon="FilterOutline">
-			<Button.DropDown>
-                <DropDownMenu Padding="10">
-                    <TextBox Label="Текст" Value="" />
-                    <TextBox Label="Содержимое" Value="" />
-                    <TextBox Label="Фильтр" Value="" />
-                    <ComboBox Label="Группировать" />
-                    <Line />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Size="Small">OK</Button>
-                        <Button Size="Small">Отмена</Button>
-                    </StackPanel>
-                </DropDownMenu>
-			</Button.DropDown>
-		</Button>
-		<ComboBox Label="Группировать:" Value="{Bind Options.GroupBy}">
-			<ComboBoxItem Content="Без группировки"></ComboBoxItem>
-			<ComboBoxItem Content="Состояние договора">
-				<ComboBoxItem.Value>
-					<GroupDescription GroupBy="StateName" Count="True" Title="Состояние: {Value}"/>
-				</ComboBoxItem.Value>
-			</ComboBoxItem>
-			<ComboBoxItem Content="Состояние + Сумма">
-				<ComboBoxItem.Value>
-					<GroupDescriptions>
-						<GroupDescription GroupBy="StateName" Count="True"/>
-						<GroupDescription GroupBy="$Sum" Count="False" Title="Сумма = {Value}, договоров: {Count}"/>
-					</GroupDescriptions>
-				</ComboBoxItem.Value>
-			</ComboBoxItem>
-		</ComboBox>
-		<TextBox Label="?:" Value="{Bind Options.GroupBy}"></TextBox>
-	</Toolbar>
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Plus" Content="Создать" Command="{BindCmd Create, Url='/Document/Quotations/Edit'}" />
+            <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/Document/Quotations/Edit', Argument={Bind Contracts}}">Открыть</Button>
+            <Button Icon="Delete">Удалить</Button>
+            <Separator />
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            <Button Content="Test Drop Down 2" Icon="FilterOutline">
+                <Button.DropDown>
+                    <DropDownMenu Padding="10">
+                        <TextBox Label="Текст" Value="" />
+                        <TextBox Label="Содержимое" Value="" />
+                        <TextBox Label="Фильтр" Value="" />
+                        <ComboBox Label="Группировать" />
+                        <Line />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Size="Small">OK</Button>
+                            <Button Size="Small">Отмена</Button>
+                        </StackPanel>
+                    </DropDownMenu>
+                </Button.DropDown>
+            </Button>
+            <ComboBox If="False" Label="Группировать:" Value="{Bind Options.GroupBy}">
+                <ComboBoxItem Content="Без группировки"></ComboBoxItem>
+                <ComboBoxItem Content="Состояние договора">
+                    <ComboBoxItem.Value>
+                        <GroupDescription GroupBy="StateName" Count="True" Title="Состояние: {Value}"/>
+                    </ComboBoxItem.Value>
+                </ComboBoxItem>
+                <ComboBoxItem Content="Состояние + Сумма">
+                    <ComboBoxItem.Value>
+                        <GroupDescriptions>
+                            <GroupDescription GroupBy="StateName" Count="True"/>
+                            <GroupDescription GroupBy="$Sum" Count="False" Title="Сумма = {Value}, договоров: {Count}"/>
+                        </GroupDescriptions>
+                    </ComboBoxItem.Value>
+                </ComboBoxItem>
+            </ComboBox>
+            <TextBox Label="?:" Value="{Bind Options.GroupBy}"></TextBox>
+        </Toolbar>
+    </Page.Toolbar>
     <!--GroupBy="{Bind Options.GroupBy}"-->
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" GroupBy="{Bind Parent.GroupBy}"
-				  Striped="True" Sort="True" GridLines="Vertical">
+				  Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True">
 			<DataGrid.Pager>
 				<Pager Source="{Bind Parent.Pager}" />
 			</DataGrid.Pager>
@@ -56,9 +58,9 @@
             -->
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center"/>
-			<DataGridColumn Header="Продукт" Content="{Bind ProductName}"/>
+			<DataGridColumn Header="Продукт" Content="{Bind ProductName}" Wrap="NoWrap"/>
 			<DataGridColumn Header="Страхователь" Content="{Bind InsurantName}"/>
-			<DataGridColumn Header="Состояние" Content="{Bind StateName}"/>
+            <DataGridColumn Header="Состояние" Content="{Bind StateName}" Wrap="NoWrap"/>
 			<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Premium" Content="{Bind Premium, DataType=Currency}" Align="Right"/>
 			<DataGridColumn Header="Создан" Content="{Bind CreatedDate, DataType=DateTime}" Align="Center"/>
@@ -71,7 +73,7 @@
 			<DataGridColumn Header="Договор" Content="Contract" />
 			-->
 		</DataGrid>
-	<Toolbar>
+	<Toolbar If="False">
 		<Button Icon="Plus" Tip="Создать заявку">Создать</Button>
 		<Button Icon="Delete">Удалить</Button>
 		<Separator />

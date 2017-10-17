@@ -16,6 +16,7 @@ namespace A2v10.Xaml
         Requery,
         Save,
         Create,
+        Clear,
         Open,
         OpenSelected,
         DbRemoveSelected,
@@ -26,7 +27,7 @@ namespace A2v10.Xaml
         Remove,
         RemoveSelected,
         Dialog,
-        Select
+        Select,
     }
 
     public enum DialogAction
@@ -79,6 +80,9 @@ namespace A2v10.Xaml
 
                 case CommandType.Save:
                     return "$save()";
+
+                case CommandType.Clear:
+                    return $"{CommandArgument(context)}.$empty()";
 
                 case CommandType.Close:
                     return context.IsDialog ? "$modalClose()" : "$close()";

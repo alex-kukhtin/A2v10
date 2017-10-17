@@ -1,4 +1,4 @@
-﻿/*20171015-7047*/
+﻿/*20171016-7048*/
 /* services/datamodel.js */
 (function () {
 
@@ -163,7 +163,7 @@
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
-		});
+        });
 
 		let constructEvent = ctorname + '.construct';
 		elem._root_.$emit(constructEvent, elem);
@@ -329,7 +329,10 @@
 
 	function defineObject(obj, meta, arrayItem) {
 		defHidden(obj.prototype, META, meta);
-		obj.prototype.$merge = merge;
+
+        obj.prototype.$merge = merge;
+        obj.prototype.$empty = empty;
+
 		defineCommonProps(obj.prototype);
 
 		defHiddenGet(obj.prototype, "$isNew", function () {
@@ -583,6 +586,13 @@
 	function setDirty(val) {
 		this.$dirty = val;
 	}
+
+    function empty() {
+        let obj = this;
+        // ctor(source path parent)
+        let newElem = new obj.constructor({}, '', obj._parent_);
+        obj.$merge(newElem);
+    }
 
 	function merge(src) {
 		try {

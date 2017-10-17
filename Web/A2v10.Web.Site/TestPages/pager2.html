@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.min.css" />
+    <style>
+        .a2-pager {
+            padding:10px;
+            background-color:aliceblue;
+            display:flex;
+            align-items:center;
+        }
+        .a2-pager button {
+            padding:4px;
+            min-width:26px;
+            border:1px solid gray;
+            margin-left:-1px;
+        }
+        .a2-pager button.active {
+            background-color:cornflowerblue;
+            color:white
+        }
+        .a2-pager .a2-pager-dots {
+            display:inline-block;
+            width:26px;
+            text-align:center;
+        }
+        .a2-pager .a2-pager-divider {
+            flex-grow:2;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" style="padding:10px">
+        <h4>TEST PAGER</h4>
+
+
+        <a2-pager :offset="offset" :page-size="pageSize" :count="count" :set-offset="setOffset"></a2-pager>
+
+        <div>
+            <input v-model.lazy="count" type="number"/>
+        </div>
+        <div>
+            <span>page-size: {{pageSize}} offset: {{offset}} count:{{count}}</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="pager2.js"></script>
+
+    <script type="text/javascript">
+
+        new Vue({
+            el: '#app',
+            data: {
+                pageSize: 5,
+                offset: 0,
+                count: 151
+            },
+            methods: {
+                setOffset(offset) {
+                    this.offset = offset;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
