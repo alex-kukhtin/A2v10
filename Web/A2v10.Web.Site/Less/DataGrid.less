@@ -31,7 +31,8 @@
 
 
 .data-grid-container {
-    overflow:auto;
+    overflow-x:hidden;
+    overflow-y:auto;
     position:relative;
 }
 
@@ -51,7 +52,7 @@ table.data-grid {
 
     th {
         border-color: @table-hdr-brd-color;
-        text-align:left!important;
+        text-align: left !important;
     }
 
     td.cell-editable {
@@ -86,16 +87,17 @@ table.data-grid {
         .h-holder {
             position: relative;
             padding: 4px 6px;
+
             &:after {
-                content:'';
-                border:5px solid transparent;
-                margin-left:2px;
+                content: '';
+                border: 5px solid transparent;
+                margin-left: 2px;
             }
         }
 
         &.sort {
             cursor: pointer;
-            white-space:nowrap;
+            white-space: nowrap;
 
             &:hover {
                 background-color: @dg-header-hover-color;
@@ -259,6 +261,10 @@ table.data-grid {
     tr.lev-3 .group-marker {
         //padding-left: @group-padding * 3 + @group-padding / 2;
     }
+
+    tr:last-child td {
+        border-bottom: 1px solid @table-brd-color;
+    }
 }
 
 
@@ -300,29 +306,49 @@ table.hover {
     overflow: hidden;
     position: relative;
 
-    .data-grid-body {
+    > .data-grid-body.fixed-header {
         margin-top: 25px;
-        overflow: auto;
+        overflow: hidden;
+        overflow-y: auto;
         // 25px (header) + 27px(pager)
-        height: ~"calc(100% - 52px)";
-        border-bottom: 1px solid @table-hdr-brd-color;
+        height: ~"calc(100% - 25px)";
+        //border-bottom: 1px solid @table-hdr-brd-color;
 
-        th > .h-holder {
-            position: absolute;
-            top: 0;
-            background-color: inherit;
-            width: 100%;
-            margin-left: -1px;
-            border-left: 1px solid @table-hdr-brd-color;
-            border-bottom: 1px solid @table-hdr-brd-color;
+        > table > thead {
+            height: 0;
+
+            > tr > th {
+                border-top-style: none;
+                border-bottom-style: none;
+                height: 0;
+                visibility: hidden;
+
+                > .h-fill {
+                    padding: 0 @table-cell-padding-h;
+                    height: 0;
+                    color: transparent;
+                    line-height: 0 !important;
+                    margin-top: -5px;
+                    opacity: 0;
+                }
+
+                &.sort > .h-fill:after {
+                    content: '';
+                    border: 5px solid transparent;
+                    margin-left: 2px;
+                }
+
+                > .h-holder {
+                    position: absolute;
+                    visibility: visible;
+                    top: 0;
+                    background-color: inherit;
+                    width: 100%;
+                    margin-left: -1px;
+                    border-left: 1px solid @table-hdr-brd-color;
+                    border-bottom: 1px solid @table-hdr-brd-color;
+                }
+            }
         }
-    }
-
-    .a2-pager {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-bottom-style: none;
     }
 }

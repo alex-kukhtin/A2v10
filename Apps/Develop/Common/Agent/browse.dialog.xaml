@@ -19,11 +19,9 @@
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
 			<DataGridColumn Header="Сумма продаж" Content="{Bind Amount}" Align="Right"/>
-			<DataGrid.Pager>
-				<Pager Source="{Bind Parent.Pager}" />
-			</DataGrid.Pager>
 		</DataGrid>
-	</CollectionView>
+        <Pager Source="{Bind Parent.Pager}" />
+    </CollectionView>
 </Dialog>
 
     

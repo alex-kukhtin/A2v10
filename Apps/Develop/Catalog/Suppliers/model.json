@@ -16,16 +16,16 @@
 	},
 	"dialogs": {
 		"edit": {
-			"dialog": "edit.dialog",
+			"view": "edit.dialog",
 			"template": "element.template"
 		},
 		"browse": {
-			"dialog": "browse.dialog",
+			"view": "browse.dialog",
 			"template": "index.template",
 			"index": true
 		},
 		"browse2": {
-			"dialog": "browse2.dialog",
+			"view": "browse2.dialog",
 			"template": "index.template",
 			"index": true
 		}

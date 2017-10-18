@@ -1,4 +1,4 @@
-﻿/*20171016-7048*/
+﻿/*20171018-7050*/
 /*components/datagrid.js*/
 (function () {
 
@@ -24,8 +24,8 @@
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div class="data-grid-container">
-    <div class="data-grid-body">
+<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader}">
+    <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -33,8 +33,8 @@
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
-            <tr>
-                <th v-if="isMarkCell" class="marker"></th>
+            <tr v-show="isHeaderVisible">
+                <th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder"></div></th>
 				<th v-if="isGrouping" class="group-cell">
 					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
 						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
@@ -65,7 +65,6 @@
 		<slot name="footer"></slot>
     </table>
     </div>
-	<slot name="pager"></slot>
 </div>
 `;
 
@@ -84,7 +83,8 @@
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-	<div class="h-holder">
+    <div class="h-fill" v-if="fixedHeader">{{header || content}}
+    </div><div class="h-holder">
 		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
 		<slot>{{header || content}}</slot>
 	</div>
@@ -118,6 +118,9 @@
 		computed: {
             dir() {
 				return this.$parent.sortDir(this.content);
+            },
+            fixedHeader() {
+                return this.$parent.fixedHeader;
             },
             isSortable() {
                 if (!this.content)
@@ -333,6 +336,8 @@
 			border: Boolean,
 			grid: String,
 			striped: Boolean,
+            fixedHeader: Boolean,
+            hideHeader: Boolean,
 			hover: { type: Boolean, default: false },
 			sort: Boolean,
 			routeQuery: Object,
@@ -340,7 +345,7 @@
 			filterFields: String,
 			markStyle: String,
 			doubleclick: Function,
-			groupBy: [Array, Object]
+            groupBy: [Array, Object]
 		},
 		template: dataGridTemplate,
 		components: {
@@ -366,7 +371,10 @@
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
-			},
+            },
+            isHeaderVisible() {
+                return !this.hideHeader;
+            },
 			cssClass() {
 				let cssClass = 'data-grid';
 				if (this.border) cssClass += ' border';

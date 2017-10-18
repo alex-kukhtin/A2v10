@@ -1,4 +1,4 @@
-﻿/*20171016-7048*/
+﻿/*20171018-7050*/
 /* services/datamodel.js */
 (function () {
 
@@ -339,6 +339,10 @@
 			return !this.$id;
 		});
 
+        defHiddenGet(obj.prototype, "$isEmpty", function () {
+            return !this.$id;
+        });
+
 		defHiddenGet(obj.prototype, "$id", function () {
 			let idName = this._meta_.$id;
 			if (!idName) {
@@ -594,7 +598,7 @@
         obj.$merge(newElem);
     }
 
-	function merge(src) {
+	function merge(src, cmd) {
 		try {
 			this._root_._enableValidate_ = false;
 			for (var prop in this._meta_.props) {
@@ -624,7 +628,12 @@
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
-		}
+        }
+        if (cmd === 'browse') {
+            // emit .change event
+            let eventName = this._path_ + '.change';
+            this._root_.$emit(eventName, this.$parent, this);
+        }
 	}
 
 	function implementRoot(root, template, ctors) {

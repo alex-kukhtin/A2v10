@@ -47,7 +47,7 @@ table.striped {
 table.a2-table {
     table-layout: auto;
     //background-color: #f8f8f8;
-    background-color: #fcfaf6;
+    //background-color: #fcfaf6;
 
     &.bordered {
         margin: 1px;
@@ -80,10 +80,10 @@ table.a2-table {
     }
 
     > thead > tr > td, tfoot > tr > td {
-        padding: 4px 6px;
+        padding: @table-cell-padding;
         vertical-align: middle;
         background-color: @table-hdr-bg-color;
-        border-color:@a2-table-brd-color;
+        border-color: @a2-table-brd-color;
     }
 
     td.ctrl {
@@ -96,7 +96,7 @@ table.a2-table {
 
         .stack-panel.horizontal {
             .control-group + .control-group {
-                border-left:1px solid @a2-table-brd-color;
+                border-left: 1px solid @a2-table-brd-color;
             }
         }
     }
@@ -153,3 +153,20 @@ table.a2-table {
         }
     }
 }
+
+table.a2-table.bk-paper {
+    background-color: #fcfaf6;
+}
+
+table.a2-table.bk-yellow {
+    background-color: #fffff0;
+}
+
+table.a2-table.bk-cyan {
+    background-color: #f8ffff;
+}
+
+table.a2-table.bk-rose {
+    background-color: #fff8f8;
+}
+

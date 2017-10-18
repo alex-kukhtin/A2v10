@@ -16,6 +16,12 @@ namespace A2v10.Xaml
         Both
     }
 
+    public enum HeadersVisibility
+    {
+        Column,
+        None
+    }
+
     [ContentProperty("Columns")]
     public class DataGrid : Control
     {
@@ -25,12 +31,11 @@ namespace A2v10.Xaml
         public Boolean Sort { get; set; }
 
         public Boolean FixedHeader { get; set; }
+        public HeadersVisibility HeadersVisibility { get; set; }
 
         public GridLinesVisibility GridLines { get; set; }
 
         public Object ItemsSource { get; set; }
-
-        public Pager Pager { get; set; }
 
         public DataGridColumnCollection Columns { get; set; } = new DataGridColumnCollection();
 
@@ -59,10 +64,13 @@ namespace A2v10.Xaml
             var dataGrid = new TagBuilder("data-grid", null, IsInGrid);
             if (onRender != null)
                 onRender(dataGrid);
+            MergeAttributes(dataGrid, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
             if (Height != null)
                 dataGrid.MergeStyle("height", Height.Value);
             if (FixedHeader)
-                dataGrid.AddCssClass("fixed-header");
+                dataGrid.MergeAttribute(":fixed-header", "true");
+            if (HeadersVisibility == HeadersVisibility.None)
+                dataGrid.MergeAttribute(":hide-header", "true");
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.GetPath(context));
@@ -112,17 +120,6 @@ namespace A2v10.Xaml
             {
                 col.RenderColumn(context, colIndex);
                 colIndex++;
-            }
-
-            if (Pager != null)
-            {
-                var pagerTml = new TagBuilder("template");
-                pagerTml.MergeAttribute("slot", "pager");
-                pagerTml.MergeAttribute("scope", "props");
-                pagerTml.RenderStart(context);
-                Pager.RenderElement(context);
-                pagerTml.RenderEnd(context);
-
             }
             dataGrid.RenderEnd(context);
         }

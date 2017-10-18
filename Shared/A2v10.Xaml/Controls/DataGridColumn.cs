@@ -152,7 +152,7 @@ namespace A2v10.Xaml
             {
                 throw new XamlException("For editable columns the Content must be a binding"); 
             } 
-            if (Content is TextBox)
+            if ((Content is TextBox) || (Content is Static))
             {
                 _noPadding = true;
             }

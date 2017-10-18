@@ -172,7 +172,12 @@ namespace A2v10.Request
 
     public abstract class RequestView : RequestBase
     {
-        public abstract String GetView();
+        public String view;
+
+        public String GetView()
+        {
+            return view;
+        }
 
         public virtual Boolean IsDialog { get { return false; } }
 
@@ -184,34 +189,15 @@ namespace A2v10.Request
 
     public class RequestAction : RequestView
     {
-        public String view;
-
-        public override string GetView()
-        {
-            return view;
-        }
     }
 
     public class RequestDialog : RequestView
     {
-        public string dialog;
-
         public override Boolean IsDialog { get { return true; } }
-
-        public override string GetView()
-        {
-            return dialog;
-        }
     }
 
     public class RequestPopup : RequestView
     {
-        public string popup;
-
-        public override string GetView()
-        {
-            return popup;
-        }
     }
 
     public enum CommandType

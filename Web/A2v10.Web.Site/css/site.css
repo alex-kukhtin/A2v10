@@ -602,7 +602,7 @@ header .btn:hover,
 }
 .page.page-grid {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr auto;
 }
 .page.page-grid .page-toolbar {
@@ -611,7 +611,13 @@ header .btn:hover,
 }
 .page.page-grid .page-taskpad {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 2 / span 2;
+}
+.page.page-grid .page-pager {
+  grid-row: 3;
+  grid-column: 1;
+  border-style: none;
+  border-top-style: solid;
 }
 .page.page-grid .page-content {
   grid-row: 2;
@@ -659,7 +665,7 @@ header .btn:hover,
 }
 .taskpad .taskpad-body {
   overflow: auto;
-  height: 100%;
+  height: calc(100% - 16px);
   margin-top: 16px;
   margin-left: 6px;
   margin-right: 6px;
@@ -1336,7 +1342,8 @@ pre {
     1. do somthing with border: (td:first-child (left:none???)
 */
 .data-grid-container {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
 }
 table.data-grid {
@@ -1353,7 +1360,7 @@ table.data-grid td {
 }
 table.data-grid th {
   border-color: #cbcdda;
-  text-align: left!important;
+  text-align: left !important;
 }
 table.data-grid td.cell-editable {
   padding: 0;
@@ -1529,6 +1536,9 @@ table.data-grid td.group-marker {
   padding: 0;
   border-style: none;
 }
+table.data-grid tr:last-child td {
+  border-bottom: 1px solid #e5e8eb;
+}
 table.data-grid.border {
   border: 1px solid #bdc5d8;
 }
@@ -1560,27 +1570,43 @@ table.hover > tbody > tr.active:hover {
   overflow: hidden;
   position: relative;
 }
-.data-grid-container.fixed-header .data-grid-body {
+.data-grid-container.fixed-header > .data-grid-body.fixed-header {
   margin-top: 25px;
-  overflow: auto;
-  height: calc(100% - 52px);
-  border-bottom: 1px solid #cbcdda;
+  overflow: hidden;
+  overflow-y: auto;
+  height: calc(100% - 25px);
 }
-.data-grid-container.fixed-header .data-grid-body th > .h-holder {
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead {
+  height: 0;
+}
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th {
+  border-top-style: none;
+  border-bottom-style: none;
+  height: 0;
+  visibility: hidden;
+}
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th > .h-fill {
+  padding: 0 6px;
+  height: 0;
+  color: transparent;
+  line-height: 0 !important;
+  margin-top: -5px;
+  opacity: 0;
+}
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th.sort > .h-fill:after {
+  content: '';
+  border: 5px solid transparent;
+  margin-left: 2px;
+}
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th > .h-holder {
   position: absolute;
+  visibility: visible;
   top: 0;
   background-color: inherit;
   width: 100%;
   margin-left: -1px;
   border-left: 1px solid #cbcdda;
   border-bottom: 1px solid #cbcdda;
-}
-.data-grid-container.fixed-header .a2-pager {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-bottom-style: none;
 }
 .toolbar {
   display: flex;
@@ -1962,7 +1988,6 @@ table.striped > tbody > tr:nth-of-type(even) {
 }
 table.a2-table {
   table-layout: auto;
-  background-color: #fcfaf6;
 }
 table.a2-table.bordered {
   margin: 1px;
@@ -2046,6 +2071,18 @@ table.a2-table tr:last-child td.row-divider {
 .a2-table.compact tbody > tr > td.ctrl .checkbox > span,
 .a2-table.compact tbody > tr > td.ctrl .radio > span {
   padding-left: 18px;
+}
+table.a2-table.bk-paper {
+  background-color: #fcfaf6;
+}
+table.a2-table.bk-yellow {
+  background-color: #fffff0;
+}
+table.a2-table.bk-cyan {
+  background-color: #f8ffff;
+}
+table.a2-table.bk-rose {
+  background-color: #fff8f8;
 }
 table.prop-grid {
   width: 100%;
@@ -2205,18 +2242,18 @@ label.checkbox.small span:after {
 }
 .a2-pager {
   background-color: #f8f8f8;
-  border-bottom: 1px solid #ccc;
   padding: 2px 6px 2px 0;
   display: flex;
   align-items: center;
+  border: 1px solid #e5e8eb;
 }
 .a2-pager button {
   padding: 2px 4px;
   background-color: white;
   border: 1px solid #ccc;
-  border-left-width: 0;
   min-width: 23px;
   text-align: center;
+  margin-right: -1px;
 }
 .a2-pager button:hover {
   background-color: #e0e0e0;
@@ -2243,6 +2280,7 @@ label.checkbox.small span:after {
 }
 .a2-pager > .a2-pager-title {
   font-size: .9em;
+  color: #777;
 }
 .a2-pager .a2-pager-dots {
   display: inline-block;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,17 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+
+    public enum TableBackgroundStyle
+    {
+        None,
+        Paper,
+        Yellow,
+        Cyan,
+        Rose
+    }
+
+
     [ContentProperty("Rows")]
     public class Table : Control, ITableControl
     {
@@ -16,6 +28,8 @@ namespace A2v10.Xaml
 
         public Boolean Border { get; set; }
         public Boolean Compact { get; set; }
+
+        public TableBackgroundStyle Background { get; set; }
 
         public TableRowCollection Header
         {
@@ -69,6 +83,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(table);
             MergeAttributes(table, context);
+            if (Background != TableBackgroundStyle.None)
+                table.AddCssClass("bk-" + Background.ToString().ToKebabCase());
 
             if (GridLines != GridLinesVisibility.None)
                 table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");

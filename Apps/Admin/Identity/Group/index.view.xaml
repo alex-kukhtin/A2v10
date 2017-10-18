@@ -29,10 +29,10 @@
         <DataGridColumn Header="Назва" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Group/Edit'}"/>
         <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
         <DataGridColumn Header="Користувачів" Content="{Bind UserCount}" Fit="True"/>
-        <DataGrid.Pager>
-            <Pager Source="{Bind Parent.Pager}"></Pager>
-        </DataGrid.Pager>
 	</DataGrid>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </Page.Pager>
 </Page>
 
     

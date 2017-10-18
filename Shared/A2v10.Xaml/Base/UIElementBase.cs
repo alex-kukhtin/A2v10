@@ -28,19 +28,23 @@ namespace A2v10.Xaml
         [Flags]
         public enum MergeAttrMode
         {
-            Standard = 0x01,
+            Visibility = 0x01,
             Margin = 0x02,
             Wrap = 0x04,
-            All = Standard | Margin | Wrap
+            Tip = 0x08,
+            All = Visibility | Margin | Wrap | Tip
         }
 
         internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
         {
-            if ((mode & MergeAttrMode.Standard) != 0)
+            if ((mode & MergeAttrMode.Visibility) != 0)
             {
                 MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
                 MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
                 MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
+            }
+            if ((mode & MergeAttrMode.Tip) != 0)
+            {
                 MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
             }
             if ((mode & MergeAttrMode.Wrap) != 0)
@@ -65,7 +69,7 @@ namespace A2v10.Xaml
             if (content is UIElementBase)
                 (content as UIElementBase).RenderElement(context);
             else if (content != null)
-                context.Writer.Write(content.ToString());
+                context.Writer.Write(content.ToString().Replace("\\n", "\n"));
         }
 
         internal void RenderIcon(RenderContext context, Icon icon)

@@ -719,7 +719,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171016-7048*/
+/*20171018-7050*/
 /* services/datamodel.js */
 (function () {
 
@@ -1060,6 +1060,10 @@ app.modules['std:validators'] = function() {
 			return !this.$id;
 		});
 
+        defHiddenGet(obj.prototype, "$isEmpty", function () {
+            return !this.$id;
+        });
+
 		defHiddenGet(obj.prototype, "$id", function () {
 			let idName = this._meta_.$id;
 			if (!idName) {
@@ -1315,7 +1319,7 @@ app.modules['std:validators'] = function() {
         obj.$merge(newElem);
     }
 
-	function merge(src) {
+	function merge(src, cmd) {
 		try {
 			this._root_._enableValidate_ = false;
 			for (var prop in this._meta_.props) {
@@ -1345,7 +1349,12 @@ app.modules['std:validators'] = function() {
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
-		}
+        }
+        if (cmd === 'browse') {
+            // emit .change event
+            let eventName = this._path_ + '.change';
+            this._root_.$emit(eventName, this.$parent, this);
+        }
 	}
 
 	function implementRoot(root, template, ctors) {
@@ -1975,7 +1984,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171016-7048*/
+/*20171018-7050*/
 /*components/datagrid.js*/
 (function () {
 
@@ -2001,8 +2010,8 @@ Vue.component('validator-control', {
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div class="data-grid-container">
-    <div class="data-grid-body">
+<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader}">
+    <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
             <col v-if="isMarkCell"/>
@@ -2010,8 +2019,8 @@ Vue.component('validator-control', {
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
-            <tr>
-                <th v-if="isMarkCell" class="marker"></th>
+            <tr v-show="isHeaderVisible">
+                <th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder"></div></th>
 				<th v-if="isGrouping" class="group-cell">
 					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
 						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
@@ -2042,7 +2051,6 @@ Vue.component('validator-control', {
 		<slot name="footer"></slot>
     </table>
     </div>
-	<slot name="pager"></slot>
 </div>
 `;
 
@@ -2061,7 +2069,8 @@ Vue.component('validator-control', {
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-	<div class="h-holder">
+    <div class="h-fill" v-if="fixedHeader">{{header || content}}
+    </div><div class="h-holder">
 		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
 		<slot>{{header || content}}</slot>
 	</div>
@@ -2095,6 +2104,9 @@ Vue.component('validator-control', {
 		computed: {
             dir() {
 				return this.$parent.sortDir(this.content);
+            },
+            fixedHeader() {
+                return this.$parent.fixedHeader;
             },
             isSortable() {
                 if (!this.content)
@@ -2310,6 +2322,8 @@ Vue.component('validator-control', {
 			border: Boolean,
 			grid: String,
 			striped: Boolean,
+            fixedHeader: Boolean,
+            hideHeader: Boolean,
 			hover: { type: Boolean, default: false },
 			sort: Boolean,
 			routeQuery: Object,
@@ -2317,7 +2331,7 @@ Vue.component('validator-control', {
 			filterFields: String,
 			markStyle: String,
 			doubleclick: Function,
-			groupBy: [Array, Object]
+            groupBy: [Array, Object]
 		},
 		template: dataGridTemplate,
 		components: {
@@ -2343,7 +2357,10 @@ Vue.component('validator-control', {
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
-			},
+            },
+            isHeaderVisible() {
+                return !this.hideHeader;
+            },
 			cssClass() {
 				let cssClass = 'data-grid';
 				if (this.border) cssClass += ' border';
@@ -4148,7 +4165,7 @@ Vue.directive('resize', {
                                 return;
                             }
                             // result is raw data
-                            data.$merge(result);
+                            data.$merge(result, command);
                             resolve(result);
                         });
 					} else if (command === 'append') {

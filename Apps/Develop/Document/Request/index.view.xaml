@@ -28,13 +28,13 @@
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl" Filter="Filter"/>
     </Page.CollectionView>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}" />
+    </Page.Pager>
     <!---->
-    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
                 DoubleClick="{BindCmd OpenSelected, Url='/Document/Request/Edit', Argument={Bind Documents}}">
-		<DataGrid.Pager>
-			<Pager Source="{Bind Parent.Pager}" />
-		</DataGrid.Pager>
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Номер" Content="{Bind SNo}" />
 		<DataGridColumn Header="Котрагент">

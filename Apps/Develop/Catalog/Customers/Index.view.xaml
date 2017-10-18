@@ -44,7 +44,7 @@
     </Toolbar>
     <DataGrid ItemsSource="{Bind Customers}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
-              FixedHeader="True" Height="400">
+              FixedHeader="True">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Mark="{Bind $cellMark}"/>
 		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True" />
         <DataGridColumn Header="Сумма продаж">

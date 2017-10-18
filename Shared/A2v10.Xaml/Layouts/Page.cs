@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 
         public UIElement Toolbar { get; set; }
         public UIElement Taskpad { get; set; }
+        public Pager Pager { get; set; }
         public String Title { get; set; }
 
         public CollectionView CollectionView { get; set; }
@@ -16,7 +17,7 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             TagBuilder page = null;
-            bool isGridPage = (Toolbar != null) || (Taskpad != null);
+            bool isGridPage = (Toolbar != null) || (Taskpad != null) || (Pager != null);
 
             // render page OR colleciton view
 
@@ -61,6 +62,8 @@ namespace A2v10.Xaml
                     Toolbar.RenderElement(context, (tag) => tag.AddCssClass("page-toolbar"));
                 if (Taskpad != null)
                     Taskpad.RenderElement(context, (tag) => tag.AddCssClass("page-taskpad"));
+                if (Pager != null)
+                    Pager.RenderElement(context, (tag) => tag.AddCssClass("page-pager"));
                 var content = new TagBuilder("div", "page-content").RenderStart(context);
                 RenderChildren(context);
                 content.RenderEnd(context);

@@ -9,6 +9,8 @@ namespace A2v10.Xaml
         {
             //<a2-pager :source = "Parent.pager" />
             var pager = new TagBuilder("a2-pager");
+            if (onRender != null)
+                onRender(pager);
             var source = GetBinding(nameof(Source));
             if (source == null)
                 throw new XamlException("Pager has no Source binding");

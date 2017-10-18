@@ -14,11 +14,11 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var panel = new TagBuilder("div", "panel", IsInGrid);
-            MergeAttributes(panel, context, MergeAttrMode.Standard);
+            MergeAttributes(panel, context, MergeAttrMode.Visibility);
             panel.RenderStart(context);
             RenderHeader(context);
             var content = new TagBuilder("div", "panel-content");
-            MergeAttributes(content, context, MergeAttrMode.Margin | MergeAttrMode.Wrap);
+            MergeAttributes(content, context, MergeAttrMode.Margin | MergeAttrMode.Wrap | MergeAttrMode.Tip);
             content.RenderStart(context);
             RenderChildren(context);
             content.RenderEnd(context);

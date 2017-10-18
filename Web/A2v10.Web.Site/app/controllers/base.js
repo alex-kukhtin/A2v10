@@ -291,7 +291,7 @@
                                 return;
                             }
                             // result is raw data
-                            data.$merge(result);
+                            data.$merge(result, command);
                             resolve(result);
                         });
 					} else if (command === 'append') {

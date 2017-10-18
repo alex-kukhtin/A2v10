@@ -45,12 +45,12 @@
             <TextBox Label="?:" Value="{Bind Options.GroupBy}"></TextBox>
         </Toolbar>
     </Page.Toolbar>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}" />
+    </Page.Pager>
     <!--GroupBy="{Bind Options.GroupBy}"-->
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" GroupBy="{Bind Parent.GroupBy}"
 				  Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True">
-			<DataGrid.Pager>
-				<Pager Source="{Bind Parent.Pager}" />
-			</DataGrid.Pager>
             <!--
 			<DataGrid.GroupBy>
 				<GroupDescription GroupBy="StateName" Title="Состояние: {Value} [{Count}]" Collapsed="False" Count="True"/>
