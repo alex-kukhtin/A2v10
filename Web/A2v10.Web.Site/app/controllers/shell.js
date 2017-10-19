@@ -1,4 +1,4 @@
-﻿/*20171015-7047*/
+﻿/*20171019-7051*/
 /* controllers/shell.js */
 
 (function () {
@@ -237,7 +237,8 @@
 				// just trigger
 				me.needReload = true;
 				Vue.nextTick(() => me.needReload = false);
-			});
+            });
+            log.loadSession();
 		}
 	};
 

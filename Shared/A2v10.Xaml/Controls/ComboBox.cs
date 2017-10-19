@@ -66,6 +66,7 @@ namespace A2v10.Xaml
             combo.MergeAttribute("is", "combobox");
             combo.MergeAttribute("v-cloak", String.Empty);
             MergeAttributes(combo, context);
+            MergeDisabled(combo, context);
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
                 combo.MergeAttribute(":items-source", isBind.GetPath(context));

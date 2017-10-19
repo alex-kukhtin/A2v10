@@ -1,7 +1,10 @@
-﻿
+﻿/*20171019-7051*/
+/* services/log.js */
+
 app.modules['std:log'] = function () {
 
-	let _traceEnabled = false;
+    let _traceEnabled = false;
+    const traceEnabledKey = 'traceEnabled';
 
 	return {
 		info: info,
@@ -13,8 +16,10 @@ app.modules['std:log'] = function () {
 		},
 		enableTrace(val) {
 			_traceEnabled = val;
-			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
-		}
+            console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
+            window.sessionStorage.setItem(traceEnabledKey, val);
+        },
+        loadSession: loadSession
 	};
 
 	function info(msg) {
@@ -34,5 +39,10 @@ app.modules['std:log'] = function () {
 	function countTime(msg, start) {
 		if (!_traceEnabled) return;
 		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
-	}
+    }
+
+    function loadSession() {
+        let te = window.sessionStorage.getItem(traceEnabledKey);
+        _traceEnabled = !!te;
+    }
 };

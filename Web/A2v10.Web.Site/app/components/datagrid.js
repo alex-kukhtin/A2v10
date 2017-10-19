@@ -1,10 +1,9 @@
-﻿/*20171018-7050*/
+﻿/*20171019-7051*/
 /*components/datagrid.js*/
 (function () {
 
  /*TODO:
 2. size (compact, large ??)
-6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
 10.
 */
@@ -243,13 +242,19 @@
 				// arg1. command
 				let arg1 = normalizeArg(col.command.arg1, false);
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
-				let arg3 = normalizeArg(col.command.arg3, false);
+                let arg3 = normalizeArg(col.command.arg3, false);
+                let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
-						doCommand() {
+                        doCommand(ev) {
+                            if (ev) {
+                                // ??? lock double click ???
+                                //ev.stopImmediatePropagation();
+                                //ev.preventDefault();
+                            }
 							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,

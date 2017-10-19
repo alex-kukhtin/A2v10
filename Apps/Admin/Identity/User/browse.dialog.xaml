@@ -19,7 +19,7 @@
         -->
         </Toolbar>
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" Height="270"
-				Striped="True" Border="True" Sort="True" GridLines="Vertical">
+				Striped="True" Border="True" Sort="True" GridLines="Vertical" FixedHeader="True">
             <DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
             <DataGridColumn Header="Логін" Content="{Bind Name}"/>
             <!--
@@ -29,10 +29,8 @@
             <DataGridColumn Header="e-mail" Content="{Bind Email}" />
             <DataGridColumn Header="Телефон" Content="{Bind Phone}" />
             <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
-            <DataGrid.Pager>
-                <Pager Source="{Bind Parent.Pager}"></Pager>
-            </DataGrid.Pager>
         </DataGrid>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
     </CollectionView>
 </Dialog>
 

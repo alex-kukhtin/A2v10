@@ -1,4 +1,4 @@
-﻿/*20171012-7045*/
+﻿/*20171019-7051*/
 /*controllers/base.js*/
 (function () {
 
@@ -180,7 +180,7 @@
 				this.$remove(item, confirm);
 			},
 
-			$navigate(url, data) {
+            $navigate(url, data) {
 				let dataToNavigate = data || 'new';
                 if (utils.isObjectExact(dataToNavigate))
 					dataToNavigate = dataToNavigate.$id;
@@ -266,6 +266,10 @@
 					alert(msg);
 			},
 
+            $showDialog(url, query) {
+                return this.$dialog('show', url, null, query);
+            },
+
 			$dialog(command, url, data, query) {
 				return new Promise(function (resolve, reject) {
 					// sent a single object
@@ -291,7 +295,7 @@
                                 return;
                             }
                             // result is raw data
-                            data.$merge(result, command);
+                            data.$merge(result, command === 'browse');
                             resolve(result);
                         });
 					} else if (command === 'append') {

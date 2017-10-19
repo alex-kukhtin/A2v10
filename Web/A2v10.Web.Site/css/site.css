@@ -457,6 +457,11 @@ body {
   width: 100%;
   padding: 0;
   background-color: white;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 [v-cloak] {
   display: none;
@@ -1390,17 +1395,17 @@ table.data-grid th .h-holder {
   position: relative;
   padding: 4px 6px;
 }
-table.data-grid th .h-holder:after {
-  content: '';
-  border: 5px solid transparent;
-  margin-left: 2px;
-}
 table.data-grid th.sort {
   cursor: pointer;
   white-space: nowrap;
 }
 table.data-grid th.sort:hover {
   background-color: #dcdcdc;
+}
+table.data-grid th.sort .h-holder:after {
+  content: '';
+  border: 5px solid transparent;
+  margin-left: 2px;
 }
 table.data-grid th.sort.desc,
 table.data-grid th.sort.asc {
@@ -1604,6 +1609,7 @@ table.hover > tbody > tr.active:hover {
   top: 0;
   background-color: inherit;
   width: 100%;
+  min-height: 26px;
   margin-left: -1px;
   border-left: 1px solid #cbcdda;
   border-bottom: 1px solid #cbcdda;
@@ -2089,6 +2095,7 @@ table.prop-grid {
 }
 table.prop-grid td {
   border-color: #e5e8eb;
+  line-height: 1em;
 }
 table.prop-grid col.prop-name {
   width: 1px;
@@ -2595,7 +2602,7 @@ TODO:
   margin-bottom: 6px;
 }
 .panel .panel-header {
-  padding: 6px 6px;
+  padding: 4px 6px;
   font-size: 110%;
   background-color: #f5f5f5;
   border-bottom: 1px solid #cfd6e5;

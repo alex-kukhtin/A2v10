@@ -1,4 +1,4 @@
-﻿/*20171018-7050*/
+﻿/*20171019-7051*/
 /* services/datamodel.js */
 (function () {
 
@@ -86,7 +86,9 @@
 				if (val === this._src_[prop])
 					return;
 				this._src_[prop] = val;
-				this._root_.$setDirty(true);
+                this._root_.$setDirty(true);
+                if (this._lockEvents_)
+                    return; // events locked
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -137,7 +139,7 @@
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
 
-
+        elem._lockEvents_ = 0;
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
@@ -592,15 +594,15 @@
 	}
 
     function empty() {
-        let obj = this;
         // ctor(source path parent)
-        let newElem = new obj.constructor({}, '', obj._parent_);
-        obj.$merge(newElem);
+        let newElem = new this.constructor({}, '', this._parent_);
+        this.$merge(newElem, true); // with event
     }
 
-	function merge(src, cmd) {
+	function merge(src, fireChange) {
 		try {
-			this._root_._enableValidate_ = false;
+            this._root_._enableValidate_ = false;
+            this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
@@ -628,9 +630,10 @@
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
+            this._lockEvents_ -= 1;
         }
-        if (cmd === 'browse') {
-            // emit .change event
+        if (fireChange) {
+            // emit .change event for all object
             let eventName = this._path_ + '.change';
             this._root_.$emit(eventName, this.$parent, this);
         }

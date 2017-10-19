@@ -277,6 +277,54 @@ begin
 end
 go
 
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Document.Load')
+	drop procedure a2test.[Document.Load]
+go
+------------------------------------------------
+create procedure a2test.[Document.Load]
+@UserId bigint = null,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	select [Document!TDocument!Object] = null, [Id!!Id]=@Id, [Agent!TAgent!RefId] = 300, 
+	[Company!TAgent!RefId]= 500, 
+	[PriceList!TPriceList!RefId] = 1,
+	[PriceKind!TPriceKind!RefId] = 7,
+	[Rows!TRow!Array] = null
+
+	select [!TRow!Array] = null, [Id!!Id] = 59, [!TDocument.Rows!ParentId] = @Id,
+		[PriceKind!TPriceKind!RefId] = 7, [Entity!TEntity!RefId] = 96;
+
+	select [!TAgent!Map] = null, [Id!!Id] = 300, Name = N'Agent Name'
+	union all
+	select [!TAgent!Map] = null, [Id!!Id] = 500, Name = N'Company Name';
+
+	select [!TEntity!Map] = null, [Id!!Id] = 96, Name = N'Entity Name',
+		[Prices!TPrice!Array] = null;
+
+	select [PriceLists!TPriceList!Array] = null, [Id!!Id] = 1, 
+		Name = N'PriceList', [PriceKinds!TPriceKind!Array] = null;
+
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = 7,
+		[!TPriceList.PriceKinds!ParentId] = 1, Name=N'Kind', 
+		[Prices!TPrice!Array] = null
+	union all
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = 8,
+		[!TPriceList.PriceKinds!ParentId] = 1, Name=N'Kind', 
+		[Prices!TPrice!Array] = null;
+
+	select [!TPrice!Array] = null, [Id!!Id] = 40, [!TPriceKind.Prices!ParentId] = 7, 
+		[!TEntity.Prices!ParentId] = 96, [PriceKind!TPriceKind!RefId] = 8,
+		Price = 22.5
+	union all
+	select [!TPrice!Array] = null, [Id!!Id] = 41, [!TPriceKind!Prices.ParentId] = 7, 
+		[!TEntity.Prices!ParentId] = 96, [PriceKind!TPriceKind!RefId] = 8,
+		Price = 36.8
+end
+go
+
 -- CLEAN UP DATABASE
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Workflow.Clear.All')

@@ -64,7 +64,7 @@
 			<Grid Columns="1*, 1*, 2*">
 				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
 				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
-				<ComboBox Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
+				<ComboBox Disabled="True" Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
                 <TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}">
                     <TextBox.AddOns>
                         <Popover Icon="Info" Content="Popover text"></Popover>

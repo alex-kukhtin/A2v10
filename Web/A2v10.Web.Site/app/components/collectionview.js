@@ -190,7 +190,7 @@ TODO:
 			},
 			filterChanged() {
 				// for server only
-				let nq = {};
+				let nq = { offset: 0};
 				for (let x in this.filter) {
 					let fVal = this.filter[x];
 					if (fVal)

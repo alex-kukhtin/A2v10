@@ -87,7 +87,7 @@ namespace A2v10.Data
             }
 			var currentRecord = new ExpandoObject();
 			bool bAdded = false;
-			Object id = null;
+            Object id = null;
             Int32 rowCount = 0;
             Boolean bHasRowCount = false;
 			// from 1!
@@ -133,8 +133,10 @@ namespace A2v10.Data
 					}
 				}
 			}
-			if (!bAdded)
-				AddRecordToModel(currentRecord, rootFI, id);
+            if (!bAdded)
+                AddRecordToModel(currentRecord, rootFI, id);
+            else
+                CheckRecordRef(currentRecord, rootFI, id);
             if (bHasRowCount)
             {
                 AddRowCount(rootFI.PropertyName, rowCount);
@@ -183,7 +185,14 @@ namespace A2v10.Data
 				record.Add(field.PropertyName, value);
 		}
 
-		void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
+        void CheckRecordRef(ExpandoObject currentRecord, FieldInfo field, Object id)
+        {
+            if (field.IsArray || field.IsMap)
+                _refMap.MergeObject(field.TypeName, id, currentRecord);
+        }
+
+
+        void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
 		{
             if (field.IsArray)
             {

@@ -64,14 +64,13 @@ namespace A2v10.Data
 			RefMapperItem item;
 			if (TryGetValue(key, out item))
 			{
-				foreach (var target in item.List)
-				{
-					target.CopyFrom(source);
-				}
+                if ((item != null) && (item.List != null))
+				    foreach (var target in item.List)
+    					target.CopyFrom(source);
 			}
             else
             {
-                // forwar definition
+                // forward definition
                 item = new RefMapperItem();
                 item.Source = source;
                 Add(key, item);

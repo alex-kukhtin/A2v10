@@ -620,10 +620,13 @@ app.modules['std:utils'] = function () {
 
 
 
+/*20171019-7051*/
+/* services/log.js */
 
 app.modules['std:log'] = function () {
 
-	let _traceEnabled = false;
+    let _traceEnabled = false;
+    const traceEnabledKey = 'traceEnabled';
 
 	return {
 		info: info,
@@ -635,8 +638,10 @@ app.modules['std:log'] = function () {
 		},
 		enableTrace(val) {
 			_traceEnabled = val;
-			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
-		}
+            console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
+            window.sessionStorage.setItem(traceEnabledKey, val);
+        },
+        loadSession: loadSession
 	};
 
 	function info(msg) {
@@ -656,7 +661,12 @@ app.modules['std:log'] = function () {
 	function countTime(msg, start) {
 		if (!_traceEnabled) return;
 		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
-	}
+    }
+
+    function loadSession() {
+        let te = window.sessionStorage.getItem(traceEnabledKey);
+        _traceEnabled = !!te;
+    }
 };
 
 /*20170824-7019*/
@@ -719,7 +729,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171018-7050*/
+/*20171019-7051*/
 /* services/datamodel.js */
 (function () {
 
@@ -807,7 +817,9 @@ app.modules['std:validators'] = function() {
 				if (val === this._src_[prop])
 					return;
 				this._src_[prop] = val;
-				this._root_.$setDirty(true);
+                this._root_.$setDirty(true);
+                if (this._lockEvents_)
+                    return; // events locked
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -858,7 +870,7 @@ app.modules['std:validators'] = function() {
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
 
-
+        elem._lockEvents_ = 0;
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
@@ -1313,15 +1325,15 @@ app.modules['std:validators'] = function() {
 	}
 
     function empty() {
-        let obj = this;
         // ctor(source path parent)
-        let newElem = new obj.constructor({}, '', obj._parent_);
-        obj.$merge(newElem);
+        let newElem = new this.constructor({}, '', this._parent_);
+        this.$merge(newElem, true); // with event
     }
 
-	function merge(src, cmd) {
+	function merge(src, fireChange) {
 		try {
-			this._root_._enableValidate_ = false;
+            this._root_._enableValidate_ = false;
+            this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
@@ -1349,9 +1361,10 @@ app.modules['std:validators'] = function() {
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
+            this._lockEvents_ -= 1;
         }
-        if (cmd === 'browse') {
-            // emit .change event
+        if (fireChange) {
+            // emit .change event for all object
             let eventName = this._path_ + '.change';
             this._root_.$emit(eventName, this.$parent, this);
         }
@@ -1768,7 +1781,7 @@ Vue.component('validator-control', {
     });
 
 })();
-/*20171010-7043*/
+/*20171019-7051*/
 /*components/combobox.js*/
 
 (function () {
@@ -1780,7 +1793,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<select v-focus v-model="cmbValue" :class="inputClass">
+		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="cmb.$name" :value="cmb"></option>
@@ -1984,13 +1997,12 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171018-7050*/
+/*20171019-7051*/
 /*components/datagrid.js*/
 (function () {
 
  /*TODO:
 2. size (compact, large ??)
-6. select (выбирается правильно, но теряет фокус при выборе редактора)
 7. Доделать checked
 10.
 */
@@ -2229,13 +2241,19 @@ Vue.component('validator-control', {
 				// arg1. command
 				let arg1 = normalizeArg(col.command.arg1, false);
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
-				let arg3 = normalizeArg(col.command.arg3, false);
+                let arg3 = normalizeArg(col.command.arg3, false);
+                let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
 					methods: {
-						doCommand() {
+                        doCommand(ev) {
+                            if (ev) {
+                                // ??? lock double click ???
+                                //ev.stopImmediatePropagation();
+                                //ev.preventDefault();
+                            }
 							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,
@@ -3131,7 +3149,7 @@ TODO:
 			},
 			filterChanged() {
 				// for server only
-				let nq = {};
+				let nq = { offset: 0};
 				for (let x in this.filter) {
 					let fVal = this.filter[x];
 					if (fVal)
@@ -3872,7 +3890,7 @@ Vue.directive('resize', {
 });
 
 
-/*20171012-7045*/
+/*20171019-7051*/
 /*controllers/base.js*/
 (function () {
 
@@ -4054,7 +4072,7 @@ Vue.directive('resize', {
 				this.$remove(item, confirm);
 			},
 
-			$navigate(url, data) {
+            $navigate(url, data) {
 				let dataToNavigate = data || 'new';
                 if (utils.isObjectExact(dataToNavigate))
 					dataToNavigate = dataToNavigate.$id;
@@ -4140,6 +4158,10 @@ Vue.directive('resize', {
 					alert(msg);
 			},
 
+            $showDialog(url, query) {
+                return this.$dialog('show', url, null, query);
+            },
+
 			$dialog(command, url, data, query) {
 				return new Promise(function (resolve, reject) {
 					// sent a single object
@@ -4165,7 +4187,7 @@ Vue.directive('resize', {
                                 return;
                             }
                             // result is raw data
-                            data.$merge(result, command);
+                            data.$merge(result, command === 'browse');
                             resolve(result);
                         });
 					} else if (command === 'append') {
@@ -4339,7 +4361,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20171015-7047*/
+/*20171019-7051*/
 /* controllers/shell.js */
 
 (function () {
@@ -4578,7 +4600,8 @@ Vue.directive('resize', {
 				// just trigger
 				me.needReload = true;
 				Vue.nextTick(() => me.needReload = false);
-			});
+            });
+            log.loadSession();
 		}
 	};
 

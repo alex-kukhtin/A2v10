@@ -22,7 +22,10 @@
             -->
         </Toolbar>
     </Page.Toolbar>
-    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </Page.Pager>
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
 				Striped="True" Border="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
         <DataGridColumn Header="Логін" Content="{Bind Name}"/>
@@ -33,9 +36,6 @@
         <DataGridColumn Header="e-mail" Content="{Bind Email}" />
         <DataGridColumn Header="Телефон" Content="{Bind Phone}" />
         <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
-        <DataGrid.Pager>
-            <Pager Source="{Bind Parent.Pager}"></Pager>
-        </DataGrid.Pager>
 	</DataGrid>
 </Page>
 

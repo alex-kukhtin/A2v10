@@ -87,12 +87,6 @@ table.data-grid {
         .h-holder {
             position: relative;
             padding: 4px 6px;
-
-            &:after {
-                content: '';
-                border: 5px solid transparent;
-                margin-left: 2px;
-            }
         }
 
         &.sort {
@@ -101,6 +95,12 @@ table.data-grid {
 
             &:hover {
                 background-color: @dg-header-hover-color;
+            }
+
+            .h-holder:after {
+                content: '';
+                border: 5px solid transparent;
+                margin-left: 2px;
             }
         }
 
@@ -344,6 +344,7 @@ table.hover {
                     top: 0;
                     background-color: inherit;
                     width: 100%;
+                    min-height:26px;
                     margin-left: -1px;
                     border-left: 1px solid @table-hdr-brd-color;
                     border-bottom: 1px solid @table-hdr-brd-color;

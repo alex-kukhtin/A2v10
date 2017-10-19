@@ -11,12 +11,12 @@
   },
   "dialogs": {
     "edit": {
-      "dialog": "Edit.dialog",
+      "view": "Edit.dialog",
       "template": "edit.template"
     },
     "browse": {
       "index": true,
-      "dialog": "Browse.dialog"
+      "view": "Browse.dialog"
     }
   }
 }

@@ -33,7 +33,7 @@ namespace A2v10.Tests.DataModelTester
 			var propArray = props.Split(',');
 			foreach (var prop in propArray)
 				Assert.IsTrue(data.ContainsField(prop), $"'{prop}' not found");
-			Assert.AreEqual(propArray.Length, data.FieldCount, $"invalid length for {props}");
+			Assert.AreEqual(propArray.Length, data.FieldCount, $"invalid length for '{props}' properties");
 		}
 
 		public void IsId(String key, String prop)
@@ -59,7 +59,7 @@ namespace A2v10.Tests.DataModelTester
         public void IsItemType(String key, String propName, FieldType ft)
         {
             var data = _meta[key] as ElementMetadata;
-            Assert.IsTrue(data.ContainsField(propName));
+            Assert.IsTrue(data.ContainsField(propName), $"Invalid item type for {key}.{propName}");
             var fp = data.GetField(propName);
             Assert.AreEqual(fp.ItemType, ft);
         }
