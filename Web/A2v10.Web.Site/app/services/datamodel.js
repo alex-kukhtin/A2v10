@@ -1,4 +1,4 @@
-﻿/*20171020-7052*/
+﻿/*20171020-7053*/
 /* services/datamodel.js */
 (function () {
 
@@ -175,9 +175,9 @@
 			elem._query_ = {};
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
-				let rcp = m + '.$RowCount';
+                let rcp = m + '.$RowCount';
 				if (source && rcp in source) {
-					let rcv = source[rcp];
+					let rcv = source[rcp] || 0;
 					elem[m].$RowCount = rcv;
 				}
 			}
@@ -185,6 +185,7 @@
             elem._needValidate_ = true;
             elem._modelLoad_ = () => {
                 elem.$emit('Model.load', elem);
+                elem._root_.$setDirty(false);
             }
 		}
 		if (startTime)
@@ -447,8 +448,17 @@
 				let cmdf = tml.commands[cmd];
 				if (typeof cmdf === 'function') {
 					cmdf.apply(this, args);
-					return;
-				}
+                    return;
+                } else if (utils.isObjectExact(cmdf)) {
+                    if (cmdf.confirm) {
+                        let vm = this.$vm;
+                        vm.$confirm(cmdf.confirm)
+                            .then(() => cmdf.exec.apply(this, args));
+                    } else {
+                        cmdf.exec.apply(this, args);
+                    }
+                    return;
+                }
 			}
 			console.error(`command "${cmd}" not found`);
 		} finally {
@@ -613,10 +623,10 @@
 					platform.set(trg, "$selected", null);
 					trg.$copy(src[prop]);
 					// copy rowCount
-					if ('$RowCount' in trg) {
+                    if ('$RowCount' in trg) {
 						let rcProp = prop + '.$RowCount';
 						if (rcProp in src)
-							trg.$RowCount = src[rcProp];
+							trg.$RowCount = src[rcProp] || 0;
 						else
 							trg.$RowCount = 0;
 					}

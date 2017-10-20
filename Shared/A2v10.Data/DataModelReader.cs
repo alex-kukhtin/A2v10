@@ -145,7 +145,10 @@ namespace A2v10.Data
 
         void AddRowCount(String propertyName, Int32 rowCount)
         {
-            _root.AddChecked($"{propertyName}.$RowCount", rowCount);
+            var pn = $"{propertyName}.$RowCount";
+            // added in metadata
+            // _root.AddChecked(pn, rowCount);
+            _root.Set(pn, rowCount);
         }
 
 		void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
@@ -229,16 +232,18 @@ namespace A2v10.Data
                 return; // not needed
 			var rootMetadata = GetOrCreateMetadata(ROOT);
 			rootMetadata.AddField(objectDef, DataType.Undefined);
-
 			// other fields = object fields
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
             if (objectDef.IsArray || objectDef.IsTree)
                 typeMetadata.IsArrayType = true;
-			//if (objectDef.IsTree)
-				//typeMetadata.AddField(objectDef, DataType.Undefined);
-			for (int i=1; i<rdr.FieldCount; i++)
+            //if (objectDef.IsTree)
+            //typeMetadata.AddField(objectDef, DataType.Undefined);
+            bool hasRowCount = false;
+            for (int i=1; i<rdr.FieldCount; i++)
 			{
 				var fieldDef = new FieldInfo(rdr.GetName(i));
+                if (fieldDef.IsRowCount)
+                    hasRowCount = true;
 				if (!fieldDef.IsVisible)
 					continue;
 				DataType dt = rdr.GetFieldType(i).Name.TypeName2DataType();
@@ -258,6 +263,8 @@ namespace A2v10.Data
 					}
 				}
 			}
+            if (hasRowCount)
+                _root.AddChecked($"{objectDef.PropertyName}.$RowCount", 0);
 		}
 
 		IDictionary<String, ElementMetadata> _metadata;

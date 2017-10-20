@@ -58,10 +58,11 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
 @Id bigint = null, -- если вызывается как Browse
 @Order nvarchar(255) = null,
---@Dir nvarchar(255) = null,
+@Dir nvarchar(255) = null,
 @Filter nvarchar(255) = null,
 @Offset int = 0,
-@PageSize int = 4
+@PageSize int = 4,
+@InStockOnly bit = 0
 as
 begin
 	set nocount on;
@@ -90,7 +91,7 @@ begin
 			case when @Order=N'Memo' and @Dir = @Desc  then c.[Memo] end desc
 			)
 		from a2v10demo.[Catalog.Customers] c
-		where @Filter is null or upper(c.Name) like N'%' + upper(@Filter) + N'%'
+		where upper(c.Name) like N'%' + upper(@Filter) + N'%'
 	)
 	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo, Photo,
 		[!!RowCount] = (select count(1) from T)

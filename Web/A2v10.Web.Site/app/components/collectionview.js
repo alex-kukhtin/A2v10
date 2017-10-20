@@ -1,9 +1,8 @@
-﻿/*20171010-7043*/
+﻿/*20171020-7053*/
 /*components/collectionview.js*/
 
 /*
 TODO:
-8. правильный pager
 11. GroupBy
 */
 
@@ -119,7 +118,7 @@ TODO:
 			},
 			sourceCount() {
 				if (this.isServer)
-					return this.ItemsSource.$RowCount;
+                    return this.ItemsSource.$RowCount;
 				return this.ItemsSource.length;
 			},
 			thisPager() {
@@ -133,38 +132,23 @@ TODO:
 			}
 		},
 		methods: {
-			$setOffset(offset) {
-				if (this.runAt === 'server') {
-					this.localQuery.offset = offset;
-					// for this BaseController only
+            $setOffset(offset) {
+                if (this.runAt === 'server') {
+                    this.localQuery.offset = offset;
+                    // for this BaseController only
                     if (!this.localQuery.order) this.localQuery.dir = undefined;
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
-				} else if (this.runAt === 'serverurl')
-					this.$store.commit('setquery', { offset: offset });
-				else
-					this.localQuery.offset = offset;
-
+                    this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+                } else if (this.runAt === 'serverurl') {
+                    this.$store.commit('setquery', { offset: offset });
+                } else {
+                    this.localQuery.offset = offset;
+                }
             },
-            /*
-			first() {
-				this.$setOffset(0);
-			},
-			prev() {
-				let no = this.offset;
-				if (no > 0)
-					no -= this.pageSize;
-				this.$setOffset(no);
-			},
-			next() {
-				let no = this.offset + this.pageSize;
-				this.$setOffset(no);
-			},
-            */
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
-			doSort(order) {
-				let nq = { dir: this.dir, order: this.order };
+            doSort(order) {
+                let nq = this.makeNewQuery();
 				if (nq.order === order)
 					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
 				else {
@@ -173,9 +157,8 @@ TODO:
                 }
                 if (!nq.order)
                     nq.dir = null;
-				if (this.runAt === 'server') {
-					this.localQuery.dir = nq.dir;
-					this.localQuery.order = nq.order;
+                if (this.runAt === 'server') {
+                    this.copyQueryToLocal(nq);
 					// for this BaseController only
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
 				}
@@ -186,20 +169,37 @@ TODO:
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;
 				}
-			},
+            },
+            makeNewQuery() {
+                let nq = { dir: this.dir, order: this.order, offset: this.offset };
+                for (let x in this.filter) {
+                    let fVal = this.filter[x];
+                    if (fVal)
+                        nq[x] = fVal;
+                    else {
+                        nq[x] = undefined;
+                    }
+                }
+                return nq;
+            },
+            copyQueryToLocal(q) {
+                for (let x in q) {
+                    let fVal = q[x];
+                    if (x === 'offset')
+                        this.localQuery[x] = q[x];
+                    else
+                        this.localQuery[x] = fVal ? fVal : undefined;
+                }
+            },
 			filterChanged() {
-				// for server only
-				let nq = { offset: 0};
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
+                // for server only
+                let nq = this.makeNewQuery();
+                nq.offset = 0;
+                if (!nq.order) nq.dir = undefined;
 				if (this.runAt === 'server') {
-					// for this BaseController only
+                    // for this BaseController only
+                    this.copyQueryToLocal(nq);
+                    // console.dir(this.localQuery);
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
 				}
 				else if (this.runAt === 'serverurl') {

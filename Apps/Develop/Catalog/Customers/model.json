@@ -12,7 +12,7 @@
   "popups": {
     "demo": {
       "index": true,
-      "popup": "demo.popup"
+      "view": "demo.popup"
     }
   },
   "commands": {

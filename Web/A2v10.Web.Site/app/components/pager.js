@@ -1,4 +1,4 @@
-﻿/*20171017-7049*/
+﻿/*20171020-7053*/
 /*components/pager.js*/
 
 /*
@@ -30,7 +30,7 @@ Vue.component('a2-pager', {
         title() {
             let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
             if (!this.count)
-                return '';
+                return 'нет элементов';
             return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
         },
         offset() {
@@ -85,7 +85,8 @@ Vue.component('a2-pager', {
         }, [h('i', { 'class': 'ico ico-chevron-left' })]
         ));
         // first
-        children.push(renderBtn(1));
+        if (this.pages > 0)
+            children.push(renderBtn(1));
         if (this.pages > 1)
             children.push(renderBtn(2));
         // middle
@@ -108,7 +109,7 @@ Vue.component('a2-pager', {
         // next
         children.push(h('button', {
             on: { click: ($ev) => this.click('next', $ev) },
-            attrs: { disabled: this.currentPage === this.pages }
+            attrs: { disabled: this.currentPage >= this.pages }
         },
             [h('i', { 'class': 'ico ico-chevron-right' })]
         ));

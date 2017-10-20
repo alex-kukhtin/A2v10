@@ -1007,7 +1007,7 @@ pre {
 .control-group .input-group > a,
 .control-group .input-group > .popover-wrapper {
   align-self: stretch;
-  line-height: 1.77em;
+  line-height: 1.75em;
 }
 .control-group .input-group > a .ico:before,
 .control-group .input-group > .popover-wrapper .ico:before {
@@ -2110,7 +2110,7 @@ table.prop-grid {
 }
 table.prop-grid td {
   border-color: #e5e8eb;
-  line-height: 1em;
+  line-height: normal;
 }
 table.prop-grid col.prop-name {
   width: 1px;
@@ -2132,6 +2132,12 @@ table.prop-grid.grid-vertical td.prop-name {
 table.prop-grid.grid-both td.prop-value,
 table.prop-grid.grid-vertical td.prop-value {
   padding-right: 6px;
+}
+table.prop-grid.compact td.prop-name {
+  padding: 2px 6px 2px 0;
+}
+table.prop-grid.compact td.prop-value {
+  padding: 2px 0 2px 6px;
 }
 label.checkbox,
 label.radio {

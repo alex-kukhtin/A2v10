@@ -1,4 +1,4 @@
-﻿/*20171019-7051*/
+﻿/*20171020-7053*/
 /* controllers/shell.js */
 
 (function () {
@@ -36,9 +36,11 @@
 		url = urlTools.combine(url);
 		let sUrl = url.split('/');
 		if (sUrl.length === 5 || sUrl.length === 4)
-			return url; // full qualified
+            return url; // full qualified
 		let routeLen = sUrl.length;
-		let seg1 = sUrl[1];
+        let seg1 = sUrl[1];
+        if (seg1 === 'app')
+            return url; // app
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.Url === seg1);
@@ -46,12 +48,12 @@
             // no segments - find first active menu
             let parentMenu = { Url: '' };
             am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
-			if (am) {
-				opts.title = am.Title;
+            if (am) {
+				opts.title = am.Name;
 				return urlTools.combine(url, parentMenu.Url, am.Url);
 			}
 		} else if (am && !am.Menu) {
-			opts.title = am.Title;
+			opts.title = am.Name;
 			return url; // no sub menu
 		}
 		url = urlTools.combine(seg1);
@@ -66,7 +68,7 @@
 			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
 		}
 		if (am) {
-			opts.title = am.Title;
+			opts.title = am.Name;
 			return urlTools.combine(url, am.Url);
 		}
 		return url; // TODO: ????
@@ -176,7 +178,7 @@
                         // save only simple path
                         localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
 					}
-					this.$store.commit('navigate', { url: url, title: item.Title });
+					this.$store.commit('navigate', { url: url, title: item.Name });
 				}
 				else
 					console.error('no top menu found');

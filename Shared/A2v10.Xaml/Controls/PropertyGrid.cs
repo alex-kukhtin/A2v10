@@ -12,6 +12,7 @@ namespace A2v10.Xaml
          * 3. Grouping
          */
         public Object ItemsSource { get; set; }
+        public Boolean Compact { get; set; }
 
         public PropertyGridItems Children { get; set; } = new PropertyGridItems();
         public GridLinesVisibility GridLines { get; set; }
@@ -21,6 +22,7 @@ namespace A2v10.Xaml
             var table = new TagBuilder("table", "prop-grid", IsInGrid);
             if (onRender != null)
                 onRender(table);
+            table.AddCssClassBool(Compact, "compact");
             MergeAttributes(table, context);
             if (GridLines != GridLinesVisibility.None)
                 table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");

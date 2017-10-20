@@ -239,6 +239,7 @@
 				if (utils.isString(prms))
                     prms = { message: prms };
                 prms.style = 'confirm';
+                prms.message = prms.message || prms.msg; // message or msg
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
@@ -426,7 +427,7 @@
 				this.$data.__requestsCount__ -= 1;
 			},
 			__queryChange(search) {
-				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
+                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
             },
             __doInit__() {

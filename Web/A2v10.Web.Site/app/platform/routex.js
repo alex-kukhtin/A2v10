@@ -12,7 +12,7 @@
 
 	const titleStore = {};
 
-	function setTitle(to) {
+    function setTitle(to) {
 		if (to.title) {
 			document.title = to.title;
 			titleStore[to.url] = to.title;

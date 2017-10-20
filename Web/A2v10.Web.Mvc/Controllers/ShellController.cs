@@ -107,7 +107,7 @@ namespace A2v10.Web.Mvc.Controllers
             }
             catch (Exception ex)
             {
-                WriteHtmlException(ex);
+                _baseController.WriteHtmlException(ex, Response.Output);
             }
         }
 
@@ -126,7 +126,7 @@ namespace A2v10.Web.Mvc.Controllers
             }
             catch (Exception ex)
             {
-                WriteHtmlException(ex);
+                _baseController.WriteHtmlException(ex, Response.Output);
             }
         }
 
@@ -243,18 +243,5 @@ namespace A2v10.Web.Mvc.Controllers
             Response.StatusDescription = "Custom server error";
             Response.Write(ex.Message);
         }
-
-        void WriteHtmlException(Exception ex)
-        {
-            if (ex.InnerException != null)
-                ex = ex.InnerException;
-            var msg = WebUtility.HtmlEncode(ex.Message);
-            var stackTrace = WebUtility.HtmlEncode(ex.StackTrace);
-            if (_baseController.IsDebugConfiguration)
-                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
-            else
-                Response.Output.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
-        }
-
     }
 }

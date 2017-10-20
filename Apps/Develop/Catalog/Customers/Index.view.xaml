@@ -33,16 +33,33 @@
 		</DataGrid>
 	</CollectionView>
 	-->
-    <Toolbar>
-        <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/catalog/suppliers/edit', Argument={Bind Customers}}" Tip="Изменить покупателя">Изменить</Button>
-        <Separator />
-        <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-        <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
-        <Separator />
-        <Button Icon="Upload" Command="{BindCmd ExecuteSelected, CommandName=TEST, Argument={Bind Customers}}">Invoke</Button>
-        <Button Icon="Alert"/>
-    </Toolbar>
-    <DataGrid ItemsSource="{Bind Customers}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/catalog/suppliers/edit', Argument={Bind Customers}}" Tip="Изменить покупателя">Изменить</Button>
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Filter}"/>
+            <CheckBox Label="Только остатки" Value="{Bind Parent.Filter.InStockOnly}"/>
+            <Separator />
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            <Separator />
+            <Button Icon="Upload" Command="{BindCmd ExecuteSelected, CommandName=TEST, Argument={Bind Customers}}">Invoke</Button>
+            <Button Icon="Alert"/>
+        </Toolbar>
+    </Page.Toolbar>
+    <Page.CollectionView>
+        <CollectionView ItemsSource="{Bind Customers}" RunAt="Server">
+            <CollectionView.Filter>
+                <FilterDescription>
+                    <FilterItem Property="Filter" DataType="String" />
+                    <FilterItem Property="InStockOnly" DataType="Boolean"/>
+                </FilterDescription>
+            </CollectionView.Filter>
+        </CollectionView>
+    </Page.CollectionView>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}" />
+    </Page.Pager>
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
 				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
               FixedHeader="True">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Mark="{Bind $cellMark}"/>

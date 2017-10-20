@@ -25,22 +25,18 @@ namespace A2v10.Web.Mvc.Start
            );
 
             routes.MapRoute(
+                name: "Report",
+                url: "Report/{action}",
+                defaults: new { controller = "Report" }
+           );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{*pathInfo}",
                 defaults: new { controller = "Shell", action = "Default" },
                 /*avoid duplicate controller names*/
                 namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
             );
-
-            /*
-            routes.MapRoute(
-                name: "Shell",
-                url: "Shell/{action}",
-                defaults: new { controller = "Shell" },
-                /*avoid duplicate controller names* /
-                namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
-            );
-            */
         }
     }
 }

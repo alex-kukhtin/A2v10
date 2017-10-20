@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using System.Collections.Generic;
 using A2v10.Infrastructure.Utilities;
+using System.Net;
 
 namespace A2v10.Request
 {
@@ -27,6 +28,7 @@ namespace A2v10.Request
         }
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
+        public IDbContext DbContext => _dbContext;
         public Boolean Admin { get; set; }
 
         public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
@@ -323,5 +325,19 @@ $(RequiredModules)
                     NullValueHandling = NullValueHandling.Ignore,
                     DefaultValueHandling = DefaultValueHandling.Ignore
                 };
+
+        public void WriteHtmlException(Exception ex, TextWriter writer)
+        {
+            if (ex.InnerException != null)
+                ex = ex.InnerException;
+            var msg = WebUtility.HtmlEncode(ex.Message);
+            var stackTrace = WebUtility.HtmlEncode(ex.StackTrace);
+            if (IsDebugConfiguration)
+                writer.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
+            else
+                writer.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
+        }
+
+
     }
 }

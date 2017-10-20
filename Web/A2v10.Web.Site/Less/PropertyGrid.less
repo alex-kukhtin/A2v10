@@ -3,13 +3,14 @@
 
 @v-pading: 4px;
 @h-padding: 6px;
+@v-pading-compact: 2px;
 
 table.prop-grid {
     width: 100%;
 
     td {
         border-color: @table-brd-color;
-        line-height:1em;
+        line-height:normal;
     }
 
     col.prop-name {
@@ -36,5 +37,15 @@ table.prop-grid {
         td.prop-value {
             padding-right: @h-padding;
         }
+    }
+}
+
+table.prop-grid.compact {
+    td.prop-name {
+        padding: @v-pading-compact @h-padding @v-pading-compact 0;
+    }
+
+    td.prop-value {
+        padding: @v-pading-compact 0 @v-pading-compact @h-padding;
     }
 }

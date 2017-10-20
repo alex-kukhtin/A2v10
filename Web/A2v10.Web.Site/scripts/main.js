@@ -281,7 +281,7 @@ app.modules['std:http'] = function () {
 
 	const titleStore = {};
 
-	function setTitle(to) {
+    function setTitle(to) {
 		if (to.title) {
 			document.title = to.title;
 			titleStore[to.url] = to.title;
@@ -729,7 +729,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171020-7052*/
+/*20171020-7053*/
 /* services/datamodel.js */
 (function () {
 
@@ -906,9 +906,9 @@ app.modules['std:validators'] = function() {
 			elem._query_ = {};
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
-				let rcp = m + '.$RowCount';
+                let rcp = m + '.$RowCount';
 				if (source && rcp in source) {
-					let rcv = source[rcp];
+					let rcv = source[rcp] || 0;
 					elem[m].$RowCount = rcv;
 				}
 			}
@@ -916,6 +916,7 @@ app.modules['std:validators'] = function() {
             elem._needValidate_ = true;
             elem._modelLoad_ = () => {
                 elem.$emit('Model.load', elem);
+                elem._root_.$setDirty(false);
             }
 		}
 		if (startTime)
@@ -1178,8 +1179,17 @@ app.modules['std:validators'] = function() {
 				let cmdf = tml.commands[cmd];
 				if (typeof cmdf === 'function') {
 					cmdf.apply(this, args);
-					return;
-				}
+                    return;
+                } else if (utils.isObjectExact(cmdf)) {
+                    if (cmdf.confirm) {
+                        let vm = this.$vm;
+                        vm.$confirm(cmdf.confirm)
+                            .then(() => cmdf.exec.apply(this, args));
+                    } else {
+                        cmdf.exec.apply(this, args);
+                    }
+                    return;
+                }
 			}
 			console.error(`command "${cmd}" not found`);
 		} finally {
@@ -1344,10 +1354,10 @@ app.modules['std:validators'] = function() {
 					platform.set(trg, "$selected", null);
 					trg.$copy(src[prop]);
 					// copy rowCount
-					if ('$RowCount' in trg) {
+                    if ('$RowCount' in trg) {
 						let rcProp = prop + '.$RowCount';
 						if (rcProp in src)
-							trg.$RowCount = src[rcProp];
+							trg.$RowCount = src[rcProp] || 0;
 						else
 							trg.$RowCount = 0;
 					}
@@ -2594,7 +2604,7 @@ Vue.component('validator-control', {
         }
     });
 })();
-/*20171017-7049*/
+/*20171020-7053*/
 /*components/pager.js*/
 
 /*
@@ -2626,7 +2636,7 @@ Vue.component('a2-pager', {
         title() {
             let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
             if (!this.count)
-                return '';
+                return 'нет элементов';
             return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
         },
         offset() {
@@ -2681,7 +2691,8 @@ Vue.component('a2-pager', {
         }, [h('i', { 'class': 'ico ico-chevron-left' })]
         ));
         // first
-        children.push(renderBtn(1));
+        if (this.pages > 0)
+            children.push(renderBtn(1));
         if (this.pages > 1)
             children.push(renderBtn(2));
         // middle
@@ -2704,7 +2715,7 @@ Vue.component('a2-pager', {
         // next
         children.push(h('button', {
             on: { click: ($ev) => this.click('next', $ev) },
-            attrs: { disabled: this.currentPage === this.pages }
+            attrs: { disabled: this.currentPage >= this.pages }
         },
             [h('i', { 'class': 'ico ico-chevron-right' })]
         ));
@@ -2971,12 +2982,11 @@ Vue.component('popover', {
     });
 })();
 
-/*20171010-7043*/
+/*20171020-7053*/
 /*components/collectionview.js*/
 
 /*
 TODO:
-8. правильный pager
 11. GroupBy
 */
 
@@ -3092,7 +3102,7 @@ TODO:
 			},
 			sourceCount() {
 				if (this.isServer)
-					return this.ItemsSource.$RowCount;
+                    return this.ItemsSource.$RowCount;
 				return this.ItemsSource.length;
 			},
 			thisPager() {
@@ -3106,38 +3116,23 @@ TODO:
 			}
 		},
 		methods: {
-			$setOffset(offset) {
-				if (this.runAt === 'server') {
-					this.localQuery.offset = offset;
-					// for this BaseController only
+            $setOffset(offset) {
+                if (this.runAt === 'server') {
+                    this.localQuery.offset = offset;
+                    // for this BaseController only
                     if (!this.localQuery.order) this.localQuery.dir = undefined;
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
-				} else if (this.runAt === 'serverurl')
-					this.$store.commit('setquery', { offset: offset });
-				else
-					this.localQuery.offset = offset;
-
+                    this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+                } else if (this.runAt === 'serverurl') {
+                    this.$store.commit('setquery', { offset: offset });
+                } else {
+                    this.localQuery.offset = offset;
+                }
             },
-            /*
-			first() {
-				this.$setOffset(0);
-			},
-			prev() {
-				let no = this.offset;
-				if (no > 0)
-					no -= this.pageSize;
-				this.$setOffset(no);
-			},
-			next() {
-				let no = this.offset + this.pageSize;
-				this.$setOffset(no);
-			},
-            */
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
-			doSort(order) {
-				let nq = { dir: this.dir, order: this.order };
+            doSort(order) {
+                let nq = this.makeNewQuery();
 				if (nq.order === order)
 					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
 				else {
@@ -3146,9 +3141,8 @@ TODO:
                 }
                 if (!nq.order)
                     nq.dir = null;
-				if (this.runAt === 'server') {
-					this.localQuery.dir = nq.dir;
-					this.localQuery.order = nq.order;
+                if (this.runAt === 'server') {
+                    this.copyQueryToLocal(nq);
 					// for this BaseController only
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
 				}
@@ -3159,20 +3153,37 @@ TODO:
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;
 				}
-			},
+            },
+            makeNewQuery() {
+                let nq = { dir: this.dir, order: this.order, offset: this.offset };
+                for (let x in this.filter) {
+                    let fVal = this.filter[x];
+                    if (fVal)
+                        nq[x] = fVal;
+                    else {
+                        nq[x] = undefined;
+                    }
+                }
+                return nq;
+            },
+            copyQueryToLocal(q) {
+                for (let x in q) {
+                    let fVal = q[x];
+                    if (x === 'offset')
+                        this.localQuery[x] = q[x];
+                    else
+                        this.localQuery[x] = fVal ? fVal : undefined;
+                }
+            },
 			filterChanged() {
-				// for server only
-				let nq = { offset: 0};
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
+                // for server only
+                let nq = this.makeNewQuery();
+                nq.offset = 0;
+                if (!nq.order) nq.dir = undefined;
 				if (this.runAt === 'server') {
-					// for this BaseController only
+                    // for this BaseController only
+                    this.copyQueryToLocal(nq);
+                    // console.dir(this.localQuery);
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
 				}
 				else if (this.runAt === 'serverurl') {
@@ -4144,6 +4155,7 @@ Vue.directive('resize', {
 				if (utils.isString(prms))
                     prms = { message: prms };
                 prms.style = 'confirm';
+                prms.message = prms.message || prms.msg; // message or msg
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
@@ -4331,7 +4343,7 @@ Vue.directive('resize', {
 				this.$data.__requestsCount__ -= 1;
 			},
 			__queryChange(search) {
-				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
+                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
             },
             __doInit__() {
@@ -4374,7 +4386,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20171019-7051*/
+/*20171020-7053*/
 /* controllers/shell.js */
 
 (function () {
@@ -4412,9 +4424,11 @@ Vue.directive('resize', {
 		url = urlTools.combine(url);
 		let sUrl = url.split('/');
 		if (sUrl.length === 5 || sUrl.length === 4)
-			return url; // full qualified
+            return url; // full qualified
 		let routeLen = sUrl.length;
-		let seg1 = sUrl[1];
+        let seg1 = sUrl[1];
+        if (seg1 === 'app')
+            return url; // app
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.Url === seg1);
@@ -4422,12 +4436,12 @@ Vue.directive('resize', {
             // no segments - find first active menu
             let parentMenu = { Url: '' };
             am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
-			if (am) {
-				opts.title = am.Title;
+            if (am) {
+				opts.title = am.Name;
 				return urlTools.combine(url, parentMenu.Url, am.Url);
 			}
 		} else if (am && !am.Menu) {
-			opts.title = am.Title;
+			opts.title = am.Name;
 			return url; // no sub menu
 		}
 		url = urlTools.combine(seg1);
@@ -4442,7 +4456,7 @@ Vue.directive('resize', {
 			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
 		}
 		if (am) {
-			opts.title = am.Title;
+			opts.title = am.Name;
 			return urlTools.combine(url, am.Url);
 		}
 		return url; // TODO: ????
@@ -4552,7 +4566,7 @@ Vue.directive('resize', {
                         // save only simple path
                         localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
 					}
-					this.$store.commit('navigate', { url: url, title: item.Title });
+					this.$store.commit('navigate', { url: url, title: item.Name });
 				}
 				else
 					console.error('no top menu found');
