@@ -19,6 +19,16 @@ table.bordered {
     // use OUTLINE
 }
 
+table.hover {
+    > tbody > tr:hover {
+        background-color: @hover-bg-color !important;
+    }
+
+    > tbody > tr.active:hover {
+        background-color: @active-bg-color !important;
+    }
+}
+
 table.grid-vertical, table.grid-both {
     > tbody > tr > td, thead > tr> td {
         border-left-width: 1px;
@@ -29,7 +39,7 @@ table.grid-vertical, table.grid-both {
 }
 
 table.grid-horizontal, table.grid-both {
-    > tbody > tr > td {
+    > tbody > tr > td, thead > tr > td {
         border-top-width: 1px;
         border-top-style:solid;
         border-bottom-width: 1px;

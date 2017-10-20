@@ -1,6 +1,7 @@
 ﻿
-using A2v10.Infrastructure;
 using System;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -119,27 +120,46 @@ namespace A2v10.Xaml
         internal void MergeValueItemProp(TagBuilder input, RenderContext context, String valueName)
         {
             var valBind = GetBinding(valueName);
-            if (valBind != null)
-            {
-                // split to path and property
-                String path = valBind.GetPath(context);
-                String itemPath = String.Empty;
-                String itemProp = String.Empty;
-                if (String.IsNullOrEmpty(path))
-                    return;
-                int ix = path.LastIndexOf('.');
-                if (ix != -1)
-                {
-                    itemProp = path.Substring(ix + 1);
-                    itemPath = path.Substring(0, ix);
-                }
-                if (String.IsNullOrEmpty(itemPath) || String.IsNullOrEmpty(itemProp))
-                    throw new XamlException($"invalid binding for {valueName} '{path}'");
-                input.MergeAttribute(":item", itemPath);
-                input.MergeAttribute("prop", itemProp);
-            }
+            if (valBind == null)
+                return;
+            // split to path and property
+            String path = valBind.GetPath(context);
+            var pp = SplitToPathProp(path);
+            if (String.IsNullOrEmpty(pp.Path) || String.IsNullOrEmpty(pp.Prop))
+                throw new XamlException($"invalid binding for {valueName} '{path}'");
+            input.MergeAttribute(":item", pp.Path);
+            input.MergeAttribute("prop", pp.Prop);
         }
 
+        internal void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)
+        {
+            var valBind = GetBinding(valueName);
+            if (valBind == null)
+                return;
+            // split to path and property
+            String path = valBind.GetPath(context);
+            var pp = SplitToPathProp(path);
+            if (String.IsNullOrEmpty(pp.Path) || String.IsNullOrEmpty(pp.Prop))
+                throw new XamlException($"invalid binding for {valueName} '{path}'");
+            input.MergeAttribute(":item-to-validate", pp.Path);
+            input.MergeAttribute("prop-to-validate", pp.Prop);
+        }
+
+        (String Path, String Prop) SplitToPathProp(String path)
+        {
+            var result = (Path:"", Prop:"");
+            String itemPath = String.Empty;
+            String itemProp = String.Empty;
+            if (String.IsNullOrEmpty(path))
+                return result;
+            int ix = path.LastIndexOf('.');
+            if (ix != -1)
+            {
+                result.Prop = path.Substring(ix + 1);
+                result.Path = path.Substring(0, ix);
+            }
+            return result;
+        }
 
         internal void RenderBadge(RenderContext context, String badge)
         {

@@ -40,6 +40,8 @@
 		props: {
 			item: Object,
 			prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
 			// override control.align (default value)
 			align: { type: String, default: 'center' }
 		},

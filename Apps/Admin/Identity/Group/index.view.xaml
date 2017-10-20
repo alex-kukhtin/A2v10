@@ -23,7 +23,7 @@
         </Toolbar>
     </Page.Toolbar>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
-				Striped="True" Border="True" Sort="True" GridLines="Vertical">
+				Striped="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
         <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
         <DataGridColumn Header="Назва" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Group/Edit'}"/>

@@ -1,4 +1,4 @@
-﻿/*20171019-7051*/
+﻿/*20171020-7052*/
 /* services/datamodel.js */
 (function () {
 
@@ -138,8 +138,7 @@
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
-
-        elem._lockEvents_ = 0;
+        defHidden(elem, '_lockEvents_', 0, true);
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
@@ -185,7 +184,7 @@
 			elem._enableValidate_ = true;
             elem._needValidate_ = true;
             elem._modelLoad_ = () => {
-                elem.$emit('Model.Load', elem);
+                elem.$emit('Model.load', elem);
             }
 		}
 		if (startTime)
@@ -247,6 +246,10 @@
 	defPropertyGet(_BaseArray.prototype, "Count", function () {
 		return this.length;
 	});
+
+    defPropertyGet(_BaseArray.prototype, "$isEmpty", function () {
+        return !this.length;
+    });
 
 	_BaseArray.prototype.$append = function (src) {
 		let addingEvent = this._path_ + '[].adding';
@@ -522,11 +525,11 @@
 				}
 				return;
 			} else {
-				// simple element
-				if (!(prop in root)) {
-					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);
-				}
-				let objto = root[prop];
+                // simple element
+                if (!(prop in currentData)) {
+                    console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
+                }
+                let objto = currentData[prop];
 				if (last) {
 					if (objto)
 						yield { item: objto, val: objto[name], ix: index };

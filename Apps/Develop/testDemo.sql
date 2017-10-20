@@ -58,19 +58,16 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
 @Id bigint = null, -- если вызывается как Browse
 @Order nvarchar(255) = null,
-@Dir nvarchar(255) = null,
+--@Dir nvarchar(255) = null,
 @Filter nvarchar(255) = null,
 @Offset int = 0,
-@PageSize int = null
+@PageSize int = 4
 as
 begin
 	set nocount on;
 
-	declare @defaultPageSize int;
+	--throw 60000,  @UserId, 0;
 	-- TODO get page size form meta
-	set @defaultPageSize = 4;
-	if @PageSize is null
-		set @PageSize = @defaultPageSize;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10);
 	set @Asc = N'asc'; set @Desc = N'desc';
@@ -102,7 +99,7 @@ begin
 	order by [_RowNumber];
 
 	-- служебный набор данных добавляется в Root
-	select [!$System!] = null, [!!PageSize] = @defaultPageSize;
+	select [!$System!] = null, [!!PageSize] = @PageSize;
 end
 go
 ------------------------------------------------

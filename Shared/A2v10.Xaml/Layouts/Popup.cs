@@ -15,6 +15,7 @@ namespace A2v10.Xaml
         {
             var tag = new TagBuilder("div", "a2-popup");
             tag.MergeAttribute("id", context.RootId);
+            MergeAttributes(tag, context, MergeAttrMode.Margin);
             if (Width != null)
                 tag.MergeStyle("width", Width.ToString());
             tag.RenderStart(context);

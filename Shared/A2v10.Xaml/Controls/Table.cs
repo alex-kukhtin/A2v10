@@ -28,6 +28,7 @@ namespace A2v10.Xaml
 
         public Boolean Border { get; set; }
         public Boolean Compact { get; set; }
+        public Boolean Hover { get; set; }
 
         public TableBackgroundStyle Background { get; set; }
 
@@ -91,6 +92,7 @@ namespace A2v10.Xaml
 
             table.AddCssClassBool(Border, "bordered");
             table.AddCssClassBool(Compact, "compact");
+            table.AddCssClassBool(Hover, "hover");
 
             table.RenderStart(context);
 

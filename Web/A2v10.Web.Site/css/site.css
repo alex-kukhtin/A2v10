@@ -1351,6 +1351,9 @@ pre {
   overflow-y: auto;
   position: relative;
 }
+.data-grid-container.bordered {
+  border: 1px solid #bdc5d8;
+}
 table.data-grid {
   cursor: default;
   width: 100%;
@@ -1541,11 +1544,8 @@ table.data-grid td.group-marker {
   padding: 0;
   border-style: none;
 }
-table.data-grid tr:last-child td {
+table.data-grid tr:last-child > td {
   border-bottom: 1px solid #e5e8eb;
-}
-table.data-grid.border {
-  border: 1px solid #bdc5d8;
 }
 table.data-grid > tbody > tr.warning,
 table.data-grid > tbody > tr.yellow {
@@ -1563,12 +1563,6 @@ table.data-grid > tbody > tr.green {
 table.data-grid > tbody > tr.info,
 table.data-grid > tbody > tr.cyan {
   background-color: rgba(26, 255, 216, 0.15);
-}
-table.hover > tbody > tr:hover {
-  background-color: #fdf4bf !important;
-}
-table.hover > tbody > tr.active:hover {
-  background-color: #cde6f7 !important;
 }
 .data-grid-container.fixed-header {
   height: 100%;
@@ -1609,10 +1603,23 @@ table.hover > tbody > tr.active:hover {
   top: 0;
   background-color: inherit;
   width: 100%;
-  min-height: 26px;
+  min-height: 27px;
   margin-left: -1px;
   border-left: 1px solid #cbcdda;
   border-bottom: 1px solid #cbcdda;
+  border-top: 1px solid #cbcdda;
+}
+.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header .h-holder {
+  border-top-style: none!important;
+}
+.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header th:first-child {
+  border-left-style: none!important;
+}
+.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header tbody > tr > td:first-child {
+  border-left-style: none!important;
+}
+.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header tbody > tr:last-child > td {
+  border-bottom-style: none!important;
 }
 .toolbar {
   display: flex;
@@ -1973,6 +1980,12 @@ table th {
 table col.fit {
   width: .1%;
 }
+table.hover > tbody > tr:hover {
+  background-color: #fdf4bf !important;
+}
+table.hover > tbody > tr.active:hover {
+  background-color: #cde6f7 !important;
+}
 table.grid-vertical > tbody > tr > td,
 table.grid-both > tbody > tr > td,
 table.grid-vertical thead > tr > td,
@@ -1983,7 +1996,9 @@ table.grid-both thead > tr > td {
   border-right-style: solid;
 }
 table.grid-horizontal > tbody > tr > td,
-table.grid-both > tbody > tr > td {
+table.grid-both > tbody > tr > td,
+table.grid-horizontal thead > tr > td,
+table.grid-both thead > tr > td {
   border-top-width: 1px;
   border-top-style: solid;
   border-bottom-width: 1px;
@@ -2602,7 +2617,7 @@ TODO:
   margin-bottom: 6px;
 }
 .panel .panel-header {
-  padding: 4px 6px;
+  padding: 5px 6px;
   font-size: 110%;
   background-color: #f5f5f5;
   border-bottom: 1px solid #cfd6e5;

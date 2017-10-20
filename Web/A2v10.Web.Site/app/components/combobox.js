@@ -38,7 +38,9 @@
 			item: {
 				type: Object, default() { return {}; } },
 			itemsSource: {
-				type: Array, default() { return []; } }
+				type: Array, default() { return []; } },
+            itemToValidate: Object,
+            propToValidate: String
 		},
 		computed: {
 			cmbValue: {

@@ -18,13 +18,16 @@ let template = {
 			//alert(root.Document.DateCreated instanceof Date);
 		}
     },
-	validators: {
+    /*
 		'Document.Company': 'Выберите продавца',
 		'Document.Agent': 'Выберите покупателя',
 		'Document.SNo': 'Введите номер документа',
 		'Document.Rows[].Qty': 'Количество должно быть больше нуля',
 		'Document.Rows[].Price': 'Цена должна быть больше нуля',
 		'Document.Rows[].Sum': 'Сумма должна быть больше нуля'
+    */
+	validators: {
+		'Document.Agent': 'Выберите покупателя',
     },
 	commands: {
 		add100rows(doc) {

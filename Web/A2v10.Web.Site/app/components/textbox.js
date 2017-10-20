@@ -55,6 +55,8 @@
 				}
 			},
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             placeholder: String
         }
     });
@@ -69,6 +71,8 @@
                 }
             },
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             placeholder: String,
             rows:Number
         }
@@ -84,6 +88,8 @@
                 }
             },
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             text: [String, Number, Date]
         }
     });

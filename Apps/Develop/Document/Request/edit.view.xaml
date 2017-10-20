@@ -74,10 +74,10 @@
 						 Description="выберите покупателя" 
                          Placeholder="введите фрагмент наименования для поиска"
                          Tip="введите фрагмент наименования для поиска"
-						 Value="{Bind Document.Agent.Name}">
+						 Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
-						<Hyperlink Icon="Clear" />
+						<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
 					</TextBox.AddOns>
 				</TextBox>
 				<!--
@@ -152,14 +152,20 @@
 					</DataGridColumn>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"></Pager>
-                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both">
+                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both" Hover="True">
                     <Table.Header>
                         <TableRow>
-                            <TableCell>Номер</TableCell>
-                            <TableCell>Товар/ПНТ</TableCell>
+                            <TableCell RowSpan="2">Номер</TableCell>
+                            <TableCell>Товар</TableCell>
                             <TableCell>Кол-во</TableCell>
                             <TableCell>Доставка</TableCell>
-                            <TableCell>Склад</TableCell>
+                            <TableCell RowSpan="2">Склад</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>ПНТ</TableCell>
+                            <TableCell>произв</TableCell>
+                            <TableCell>Да</TableCell>
+
                         </TableRow>
                     </Table.Header>
                     <TableRow>

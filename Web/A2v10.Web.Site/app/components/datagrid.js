@@ -1,4 +1,4 @@
-﻿/*20171019-7051*/
+﻿/*20171020-7052*/
 /*components/datagrid.js*/
 (function () {
 
@@ -23,7 +23,7 @@
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader}">
+<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
@@ -76,9 +76,6 @@
 	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
-
-    // нужно вставить в сам header для Fixed
-    //<span>{{ header || content }}</span>
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
@@ -382,7 +379,6 @@
             },
 			cssClass() {
 				let cssClass = 'data-grid';
-				if (this.border) cssClass += ' border';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
 				if (this.striped) cssClass += ' striped';
 				if (this.hover) cssClass += ' hover';

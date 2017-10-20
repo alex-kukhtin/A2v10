@@ -12,6 +12,9 @@
 			path() {
                 return this.item._path_ + '.' + this.prop;
             },
+            pathToValidate() {
+                return this.itemToValidate._path_ + '.' + this.propToValidate;
+            },
             valid() {
                 return !this.invalid;
             },
@@ -24,7 +27,9 @@
 				let root = this.item._root_;
 				if (!root) return null;
 				if (!root._validate_)
-					return null;
+                    return null;
+                if (this.itemToValidate)
+                    return root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate]);
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {

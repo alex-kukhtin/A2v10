@@ -729,7 +729,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171019-7051*/
+/*20171020-7052*/
 /* services/datamodel.js */
 (function () {
 
@@ -869,8 +869,7 @@ app.modules['std:validators'] = function() {
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
-
-        elem._lockEvents_ = 0;
+        defHidden(elem, '_lockEvents_', 0, true);
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
@@ -916,7 +915,7 @@ app.modules['std:validators'] = function() {
 			elem._enableValidate_ = true;
             elem._needValidate_ = true;
             elem._modelLoad_ = () => {
-                elem.$emit('Model.Load', elem);
+                elem.$emit('Model.load', elem);
             }
 		}
 		if (startTime)
@@ -978,6 +977,10 @@ app.modules['std:validators'] = function() {
 	defPropertyGet(_BaseArray.prototype, "Count", function () {
 		return this.length;
 	});
+
+    defPropertyGet(_BaseArray.prototype, "$isEmpty", function () {
+        return !this.length;
+    });
 
 	_BaseArray.prototype.$append = function (src) {
 		let addingEvent = this._path_ + '[].adding';
@@ -1253,11 +1256,11 @@ app.modules['std:validators'] = function() {
 				}
 				return;
 			} else {
-				// simple element
-				if (!(prop in root)) {
-					console.error(`Invalid Validator key. property '${prop}' not found in '${root.constructor.name}'`);
-				}
-				let objto = root[prop];
+                // simple element
+                if (!(prop in currentData)) {
+                    console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
+                }
+                let objto = currentData[prop];
 				if (last) {
 					if (objto)
 						yield { item: objto, val: objto[name], ix: index };
@@ -1603,6 +1606,9 @@ app.modules['std:popup'] = function () {
 			path() {
                 return this.item._path_ + '.' + this.prop;
             },
+            pathToValidate() {
+                return this.itemToValidate._path_ + '.' + this.propToValidate;
+            },
             valid() {
                 return !this.invalid;
             },
@@ -1615,7 +1621,9 @@ app.modules['std:popup'] = function () {
 				let root = this.item._root_;
 				if (!root) return null;
 				if (!root._validate_)
-					return null;
+                    return null;
+                if (this.itemToValidate)
+                    return root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate]);
                 return root._validate_(this.item, this.path, this.item[this.prop]);
             },
             cssClass() {
@@ -1747,6 +1755,8 @@ Vue.component('validator-control', {
 				}
 			},
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             placeholder: String
         }
     });
@@ -1761,6 +1771,8 @@ Vue.component('validator-control', {
                 }
             },
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             placeholder: String,
             rows:Number
         }
@@ -1776,6 +1788,8 @@ Vue.component('validator-control', {
                 }
             },
             prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
             text: [String, Number, Date]
         }
     });
@@ -1821,7 +1835,9 @@ Vue.component('validator-control', {
 			item: {
 				type: Object, default() { return {}; } },
 			itemsSource: {
-				type: Array, default() { return []; } }
+				type: Array, default() { return []; } },
+            itemToValidate: Object,
+            propToValidate: String
 		},
 		computed: {
 			cmbValue: {
@@ -1886,6 +1902,8 @@ Vue.component('validator-control', {
 		props: {
 			item: Object,
 			prop: String,
+            itemToValidate: Object,
+            propToValidate: String,
 			// override control.align (default value)
 			align: { type: String, default: 'center' }
 		},
@@ -1997,7 +2015,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171019-7051*/
+/*20171020-7052*/
 /*components/datagrid.js*/
 (function () {
 
@@ -2022,7 +2040,7 @@ Vue.component('validator-control', {
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader}">
+<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
@@ -2075,9 +2093,6 @@ Vue.component('validator-control', {
 	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
-
-    // нужно вставить в сам header для Fixed
-    //<span>{{ header || content }}</span>
 
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
@@ -2381,7 +2396,6 @@ Vue.component('validator-control', {
             },
 			cssClass() {
 				let cssClass = 'data-grid';
-				if (this.border) cssClass += ' border';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
 				if (this.striped) cssClass += ' striped';
 				if (this.hover) cssClass += ' hover';
@@ -3096,13 +3110,15 @@ TODO:
 				if (this.runAt === 'server') {
 					this.localQuery.offset = offset;
 					// for this BaseController only
+                    if (!this.localQuery.order) this.localQuery.dir = undefined;
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
 				} else if (this.runAt === 'serverurl')
 					this.$store.commit('setquery', { offset: offset });
 				else
 					this.localQuery.offset = offset;
 
-			},
+            },
+            /*
 			first() {
 				this.$setOffset(0);
 			},
@@ -3116,10 +3132,7 @@ TODO:
 				let no = this.offset + this.pageSize;
 				this.$setOffset(no);
 			},
-			last() {
-				//TODO
-				this.$setOffset(1000);
-			},
+            */
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},

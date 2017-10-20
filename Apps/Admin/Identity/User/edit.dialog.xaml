@@ -25,7 +25,7 @@
                     <Span Bold="True" Content="{Bind User.Groups.Count}"/>
                 </Text>
             </Toolbar>
-            <DataGrid GridLines="Vertical" Height="270" FixedHeader="True"
+            <DataGrid GridLines="Vertical" Height="270" FixedHeader="True" Border="True"
                       Hover="True" ItemsSource="{Bind User.Groups}" Striped="True">
                 <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
                 <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>

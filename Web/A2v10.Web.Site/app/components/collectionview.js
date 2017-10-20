@@ -137,13 +137,15 @@ TODO:
 				if (this.runAt === 'server') {
 					this.localQuery.offset = offset;
 					// for this BaseController only
+                    if (!this.localQuery.order) this.localQuery.dir = undefined;
 					this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
 				} else if (this.runAt === 'serverurl')
 					this.$store.commit('setquery', { offset: offset });
 				else
 					this.localQuery.offset = offset;
 
-			},
+            },
+            /*
 			first() {
 				this.$setOffset(0);
 			},
@@ -157,10 +159,7 @@ TODO:
 				let no = this.offset + this.pageSize;
 				this.$setOffset(no);
 			},
-			last() {
-				//TODO
-				this.$setOffset(1000);
-			},
+            */
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
