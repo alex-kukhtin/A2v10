@@ -11,15 +11,20 @@
                 <FilterItem Property="Fragment" />
             </FilterDescription>
         </CollectionView.Filter>
-        <Toolbar Style="Transparent">
-            <TextBox Label="Фільтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для пошуку"/>
-            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Оновити таблицю">Оновити</Button>
+        <Toolbar Style="Transparent" Padding="0,0,10,0">
+            <TextBox Label="Фільтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для пошуку" TabIndex="1">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="Search" Command="{BindCmd Reload}" Tip="Знайти"/>
+                </TextBox.AddOns>
+            </TextBox>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Оновити таблицю" Content="Оновити"/>
             <!--
         <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         -->
         </Toolbar>
         <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" Height="270"
-				Striped="True" Border="True" Sort="True" GridLines="Vertical" FixedHeader="True">
+				Striped="True" Border="True" Sort="True" GridLines="Vertical" 
+                FixedHeader="True" DoubleClick="{BindCmd Select, Argument={Bind Users}}">
             <DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
             <DataGridColumn Header="Логін" Content="{Bind Name}"/>
             <!--

@@ -1,10 +1,10 @@
-/* 20171017-7048 */
+/* 20171026-7049 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 11 oct 2017 09:00
-module version : 7044
+Last updated : 26 oct 2017 19:00
+module version : 7049
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7044);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7049);
 else
-	update a2sys.Versions set [Version] = 7044 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7049 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -87,7 +87,7 @@ go
 create procedure a2admin.[User.Index]
 @UserId bigint,
 @Order nvarchar(255) = N'Id',
-@Dir nvarchar(255) = N'Desc',
+@Dir nvarchar(255) = N'desc',
 @Offset int = 0,
 @PageSize int = 20,
 @Fragment nvarchar(255) = null
@@ -98,7 +98,7 @@ begin
 	exec a2admin.[Ensure.Admin] @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	set @Asc = N'Asc'; set @Desc = N'Desc';
+	set @Asc = N'asc'; set @Desc = N'desc';
 	set @Dir = isnull(@Dir, @Asc);
 	if @Fragment is not null
 		set @Fragment = N'%' + upper(@Fragment) + N'%';
@@ -274,7 +274,7 @@ go
 create procedure a2admin.[Group.Index]
 @UserId bigint,
 @Order nvarchar(255) = N'Id',
-@Dir nvarchar(255) = N'Desc',
+@Dir nvarchar(255) = N'desc',
 @Offset int = 0,
 @PageSize int = 20,
 @Fragment nvarchar(255) = null
@@ -285,7 +285,7 @@ begin
 	exec a2admin.[Ensure.Admin] @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	set @Asc = N'Asc'; set @Desc = N'Desc';
+	set @Asc = N'asc'; set @Desc = N'desc';
 	set @Dir = isnull(@Dir, @Asc);
 
 	set @Dir = isnull(@Dir, @Asc);

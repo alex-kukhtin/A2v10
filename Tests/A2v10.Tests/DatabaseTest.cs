@@ -347,6 +347,16 @@ namespace A2v10.Tests
 
             dt = new DataTester(dm, "Document.Rows[0].Entity.Prices[0].PriceKind");
             dt.AreValueEqual(8, "Id");
+
+            dt = new DataTester(dm, "PriceLists");
+            dt.IsArray(1);
+            dt.AreArrayValueEqual(1, 0, "Id");
+
+            dt = new DataTester(dm, "PriceKinds");
+            dt.IsArray(2);
+            dt.AreArrayValueEqual(7, 0, "Id");
+            dt.AreArrayValueEqual(8, 1, "Id");
+
         }
     }
 }

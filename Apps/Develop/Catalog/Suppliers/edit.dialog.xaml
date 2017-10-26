@@ -9,12 +9,16 @@
     <TabPanel>
         <Tab Header="Общие" Height="100%">
             <Grid Columns="150, Auto" Rows="Auto, Auto, 1*, Auto" Height="100%">
-                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2"
+                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" TabIndex="4"
                          Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
-                <Static Grid.Row="2" Grid.Col="1" Align="Right"
+                <Static Grid.Row="2" Grid.Col="1" Align="Right" TabIndex="1"
                         Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
-                <TextBox Grid.Row="4" Multiline="True" Rows="3"
+                <TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2"
                          Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
+                <ComboBox Grid.Row="3" TabIndex="3"
+                         Grid.Col="1" Grid.ColSpan="2" Label="Примечание">
+                    <ComboBoxItem Content="1" Value="1"></ComboBoxItem>
+                </ComboBox>
             </Grid>
         </Tab>
         <Tab Header="Фото">

@@ -9,7 +9,7 @@
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
 			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
-            <Button Icon="Print" Command="{BindCmd Report, Report=Invoice, Argument={Bind Document}}">Накладная</Button>
+            <Button Icon="Print" Command="{BindCmd Report, Report=Invoice, Argument={Bind Document}, SaveRequired=True}">Накладная</Button>
             <Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>
 	</Page.Toolbar>

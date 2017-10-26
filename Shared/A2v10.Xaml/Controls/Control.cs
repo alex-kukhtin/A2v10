@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 
         public Boolean Disabled { get; set; }
 
+        public Int32 TabIndex { get; set; }
 
         Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
@@ -36,6 +37,8 @@ namespace A2v10.Xaml
             MergeBindingAttributeString(tag, context, "label", nameof(Label), Label);
             MergeBindingAttributeString(tag, context, "description", nameof(Description), Description);
             MergeBoolAttribute(tag, context, nameof(Required), Required);
+            if (TabIndex != 0)
+                tag.MergeAttribute(":tab-index", TabIndex.ToString());
         }
 
         internal void RenderAddOns(RenderContext context)

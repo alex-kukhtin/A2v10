@@ -120,7 +120,8 @@ namespace A2v10.Data
 					if (rootFI.IsArray)
 					{
 						AddRecordToArray(fi.TypeName, dataVal, currentRecord);
-						bAdded = true;
+                        if (!rootFI.IsVisible)
+    						bAdded = true;
 					}
 					else if (rootFI.IsTree)
 					{

@@ -65,6 +65,8 @@ namespace A2v10.Data
                 var id = (value as ExpandoObject).Get<Object>("Id");
                 if (id == null)
                     return DBNull.Value;
+                if (id.ToString() == "0")
+                    return DBNull.Value; // Empty object
 				return Convert.ChangeType(id, to, CultureInfo.InvariantCulture);
 			}
 			else if (value is String)

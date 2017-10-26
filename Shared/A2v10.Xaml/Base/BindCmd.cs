@@ -2,6 +2,7 @@
 using A2v10.Infrastructure;
 using System;
 using System.Reflection;
+using System.Text;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -51,6 +52,8 @@ namespace A2v10.Xaml
         public String Execute { get; set; }
         public String CommandName { get; set; }
         public String Report { get; set; }
+
+        public Boolean SaveRequired { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -138,7 +141,7 @@ namespace A2v10.Xaml
                 case CommandType.ExecuteSelected:
                     return $"$execSelected('{GetName()}', {CommandArgument(context)} {GetConfirm(context)})";
                 case CommandType.Report:
-                    return $"$report('{GetReportName()}', {CommandArgument(context, nullable:true)})";
+                    return $"$report('{GetReportName()}', {CommandArgument(context, nullable:true)}, {GetOptions(context)})";
                 case CommandType.Dialog:
                     if (Action == DialogAction.Unknown)
                         throw new XamlException($"Action required for {Command} command");
@@ -172,6 +175,20 @@ namespace A2v10.Xaml
             if (String.IsNullOrEmpty(Report))
                 throw new XamlException($"ReportName required for {Command} command");
             return Report;
+        }
+
+        String GetOptions(RenderContext context)
+        {
+            if (!SaveRequired)
+                return "null";
+            StringBuilder sb = new StringBuilder("{");
+            if (SaveRequired)
+            {
+                sb.Append("saveRequired: true, ");
+            }
+            sb.RemoveTailComma();
+            sb.Append("}");
+            return sb.ToString();
         }
 
         String CommandArgument(RenderContext context, Boolean nullable = false)

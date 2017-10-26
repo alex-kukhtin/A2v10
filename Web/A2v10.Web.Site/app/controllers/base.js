@@ -1,4 +1,4 @@
-﻿/*20171026-7054*/
+﻿/*20171026-7055*/
 /*controllers/base.js*/
 (function () {
 
@@ -318,16 +318,24 @@
             },
 
             $report(rep, arg, opts) {
-                // TODO: saveRequired
-                let id = arg;
-                if (arg && utils.isObject(arg))
-                    id = arg.$id;
-                const root = window.$$rootUrl;
-                let url = root + '/report/show/' + id;
-                let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
-                url = url + urltools.makeQueryString({ base: baseUrl, rep: rep});
-                // new window
-                window.open(url, "_blank");
+
+                doReport = () => {
+                    let id = arg;
+                    if (arg && utils.isObject(arg))
+                        id = arg.$id;
+                    const root = window.$$rootUrl;
+                    let url = root + '/report/show/' + id;
+                    let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
+                    url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
+                    // open in new window
+                    window.open(url, "_blank");
+                };
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doReport());
+                    return;
+                }
+                doReport();
             },
 
 			$modalSaveAndClose(result) {

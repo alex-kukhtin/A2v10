@@ -1,4 +1,4 @@
-﻿/*20171019-7051*/
+﻿/*20171026-7056*/
 /*components/combobox.js*/
 
 (function () {
@@ -10,7 +10,7 @@
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled">
+		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="cmb.$name" :value="cmb"></option>

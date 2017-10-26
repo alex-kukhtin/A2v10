@@ -9,22 +9,22 @@
     <TabPanel>
         <Tab Header="Загальні">
             <Grid Columns="1*, 1*" Rows="Auto, Auto, 88, Auto">
-                <TextBox Grid.Row="1" Label="Назва" Value="{Bind Group.Name}"/>
-                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}"/>
-                <TextBox Grid.Row="4" Grid.ColSpan="2" Label="Примітка" Value="{Bind Group.Memo}" 
+                <TextBox Grid.Row="1" Label="Назва" Value="{Bind Group.Name}" TabIndex="1"/>
+                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}" TabIndex="2"/>
+                <TextBox Grid.Row="4" Grid.ColSpan="2" Label="Примітка" Value="{Bind Group.Memo}" TabIndex="3" 
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
         <Tab Header="Користувачі" Padding="5, 10">
             <Toolbar Style="Transparent">
-                <Button Size="Small" Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
-                <Button Size="Small" Icon="Delete" Content="Видалити" Command="{BindCmd Command=RemoveSelected, Argument={Bind Group.Users}, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>
+                <Button Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
+                <Button Icon="Delete" Content="Видалити" Command="{BindCmd Command=RemoveSelected, Argument={Bind Group.Users}, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>
                 <Text Size="Small"  Toolbar.Align="Right">всього користувачів:
                     <Span Bold="True" Content="{Bind Group.Users.Count}"/>
                 </Text>
             </Toolbar>
             <DataGrid GridLines="Vertical" Hover="True" Height="270" FixedHeader="True"
-                      ItemsSource="{Bind Group.Users}" Striped="True">
+                      ItemsSource="{Bind Group.Users}" Striped="True" Border="True">
                 <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
                 <DataGridColumn Header="Логін" Content="{Bind Name}"/>
                 <DataGridColumn Header="Ім'я" Content="{Bind PersonName}"/>

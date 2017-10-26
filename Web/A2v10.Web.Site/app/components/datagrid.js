@@ -77,11 +77,15 @@
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
+    /**
+        icon on header!!!
+		<i :class="\'ico ico-\' + icon" v-if="icon"></i>
+     */
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-    <div class="h-fill" v-if="fixedHeader">{{header || content}}
+    <div class="h-fill" v-if="fixedHeader">
+        {{header || content}}
     </div><div class="h-holder">
-		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
 		<slot>{{header || content}}</slot>
 	</div>
 </th>
@@ -106,7 +110,7 @@
 			width: String,
             fit: Boolean,
             wrap: String,
-			command: Object
+            command: Object,
         },
         created() {
 			this.$parent.$addColumn(this);
@@ -273,6 +277,8 @@
 
 			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
+            if (col.icon)
+                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon }));
             /*TODO: validate ???? */
 			if (col.validate) {
                 chElems.push(h(validator, validatorProps));

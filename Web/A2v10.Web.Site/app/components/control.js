@@ -1,4 +1,7 @@
-﻿(function () {
+﻿/*20171026-7056*/
+/*components/control.js*/
+
+(function () {
 
 	const control = {
 		props: {
@@ -6,7 +9,8 @@
 			required: Boolean,
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean
+			disabled: Boolean,
+            tabIndex: Number
 		},
         computed: {
 			path() {

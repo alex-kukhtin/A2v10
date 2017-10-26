@@ -1646,6 +1646,9 @@ app.modules['std:popup'] = function () {
         }
     });
 })();
+/*20171026-7056*/
+/*components/control.js*/
+
 (function () {
 
 	const control = {
@@ -1654,7 +1657,8 @@ app.modules['std:popup'] = function () {
 			required: Boolean,
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean
+			disabled: Boolean,
+            tabIndex: Number
 		},
         computed: {
 			path() {
@@ -1752,7 +1756,10 @@ Vue.component('validator-control', {
     }
 });
 */
-(function() {
+/*20171026-7056*/
+/*components/textbox.js*/
+
+(function () {
 
     const utlis = require('std:utils');
 
@@ -1760,7 +1767,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled"/>
+		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1772,7 +1779,7 @@ Vue.component('validator-control', {
         `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled"/>
+		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1784,7 +1791,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
-		<span v-text="text" :class="inputClass"/>
+		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1849,7 +1856,7 @@ Vue.component('validator-control', {
     });
 
 })();
-/*20171019-7051*/
+/*20171026-7056*/
 /*components/combobox.js*/
 
 (function () {
@@ -1861,7 +1868,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled">
+		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="cmb.$name" :value="cmb"></option>
@@ -2152,11 +2159,15 @@ Vue.component('validator-control', {
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
+    /**
+        icon on header!!!
+		<i :class="\'ico ico-\' + icon" v-if="icon"></i>
+     */
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-    <div class="h-fill" v-if="fixedHeader">{{header || content}}
+    <div class="h-fill" v-if="fixedHeader">
+        {{header || content}}
     </div><div class="h-holder">
-		<i :class="\'fa fa-\' + icon" v-if="icon"></i>
 		<slot>{{header || content}}</slot>
 	</div>
 </th>
@@ -2181,7 +2192,7 @@ Vue.component('validator-control', {
 			width: String,
             fit: Boolean,
             wrap: String,
-			command: Object
+            command: Object,
         },
         created() {
 			this.$parent.$addColumn(this);
@@ -2348,6 +2359,8 @@ Vue.component('validator-control', {
 
 			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
+            if (col.icon)
+                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon }));
             /*TODO: validate ???? */
 			if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -3789,7 +3802,7 @@ Vue.directive('dropdown', {
 });
 
 
-/*20170906-7027*/
+/*20171026-7056*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -3812,8 +3825,16 @@ Vue.directive('focus', {
 			t._selectDone = true;
 			if (t.select) t.select();
 			//event.stopImmediatePropagation();
-		}, true);
-	}
+        }, true);
+    },
+    inserted(el) {
+        if (el.tabIndex === 1) {
+            setTimeout(() => {
+                if (el.focus) el.focus();
+                if (el.select) el.select();
+            }, 0);
+        }
+    }
 });
 
 
@@ -3962,7 +3983,7 @@ Vue.directive('resize', {
 });
 
 
-/*20171026-7054*/
+/*20171026-7055*/
 /*controllers/base.js*/
 (function () {
 
@@ -4282,16 +4303,24 @@ Vue.directive('resize', {
             },
 
             $report(rep, arg, opts) {
-                // TODO: saveRequired
-                let id = arg;
-                if (arg && utils.isObject(arg))
-                    id = arg.$id;
-                const root = window.$$rootUrl;
-                let url = root + '/report/show/' + id;
-                let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
-                url = url + urltools.makeQueryString({ base: baseUrl, rep: rep});
-                // new window
-                window.open(url, "_blank");
+
+                doReport = () => {
+                    let id = arg;
+                    if (arg && utils.isObject(arg))
+                        id = arg.$id;
+                    const root = window.$$rootUrl;
+                    let url = root + '/report/show/' + id;
+                    let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
+                    url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
+                    // open in new window
+                    window.open(url, "_blank");
+                };
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doReport());
+                    return;
+                }
+                doReport();
             },
 
 			$modalSaveAndClose(result) {

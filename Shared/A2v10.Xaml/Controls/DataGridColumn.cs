@@ -34,6 +34,8 @@ namespace A2v10.Xaml
 
         public Length Width { get; set; }
 
+        public Icon Icon { get; set; }
+
         public WrapMode Wrap { get; set; }
 
         Boolean _noPadding;
@@ -49,6 +51,8 @@ namespace A2v10.Xaml
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
             if (Width != null)
                 column.MergeAttribute("width", Width.Value);
+            if (Icon != Icon.NoIcon)
+                column.MergeAttribute("icon", Icon.ToString().ToKebabCase());
             if (Wrap != WrapMode.Default)
                 column.MergeAttribute("wrap", Wrap.ToString().ToKebabCase());
 

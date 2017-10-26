@@ -1,4 +1,4 @@
-﻿/*20170906-7027*/
+﻿/*20171026-7056*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -21,7 +21,15 @@ Vue.directive('focus', {
 			t._selectDone = true;
 			if (t.select) t.select();
 			//event.stopImmediatePropagation();
-		}, true);
-	}
+        }, true);
+    },
+    inserted(el) {
+        if (el.tabIndex === 1) {
+            setTimeout(() => {
+                if (el.focus) el.focus();
+                if (el.select) el.select();
+            }, 0);
+        }
+    }
 });
 

@@ -1,10 +1,10 @@
-﻿/* 20171011-7044 */
+﻿/* 20171026-7045 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 11 oct 2017 09:00
-module version : 7044
+Last updated : 26 oct 2017 19:01
+module version : 7045
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7044);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7045);
 else
-	update a2sys.Versions set [Version] = 7044 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7045 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')

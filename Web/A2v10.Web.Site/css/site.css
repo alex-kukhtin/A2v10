@@ -1004,6 +1004,9 @@ pre {
   width: 100%;
   min-height: 1.77em;
 }
+.control-group .input-group.static > span:focus {
+  outline-style: none;
+}
 .control-group .input-group > a,
 .control-group .input-group > .popover-wrapper {
   align-self: stretch;
@@ -1365,6 +1368,10 @@ table.data-grid td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #e5e8eb;
+}
+table.data-grid td > i.ico {
+  float: left;
+  padding-right: 4px;
 }
 table.data-grid th {
   border-color: #cbcdda;

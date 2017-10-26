@@ -7,6 +7,7 @@
                     <FilterItem Property="Fragment" />
                 </FilterDescription>
             </CollectionView.Filter>
+
         </CollectionView>
     </Page.CollectionView>
     <Page.Toolbar>
@@ -24,11 +25,11 @@
     </Page.Toolbar>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
 				Striped="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
         <DataGridColumn Header="Назва" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Group/Edit'}"/>
         <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
-        <DataGridColumn Header="Користувачів" Content="{Bind UserCount}" Fit="True"/>
+        <DataGridColumn Header="Користувачів" Content="{Bind UserCount}" Fit="True" />
 	</DataGrid>
     <Page.Pager>
         <Pager Source="{Bind Parent.Pager}"></Pager>
