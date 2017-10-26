@@ -29,6 +29,7 @@ namespace A2v10.Request
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
         public IDbContext DbContext => _dbContext;
+        public IApplicationHost Host => _host;
         public Boolean Admin { get; set; }
 
         public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
@@ -320,8 +321,8 @@ $(RequiredModules)
             new JsonSerializerSettings() {
                     Formatting = Formatting.Indented,
                     StringEscapeHandling = StringEscapeHandling.EscapeHtml,
-                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat,                    
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
                     NullValueHandling = NullValueHandling.Ignore,
                     DefaultValueHandling = DefaultValueHandling.Ignore
                 };
@@ -333,11 +334,9 @@ $(RequiredModules)
             var msg = WebUtility.HtmlEncode(ex.Message);
             var stackTrace = WebUtility.HtmlEncode(ex.StackTrace);
             if (IsDebugConfiguration)
-                writer.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
+                writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
             else
-                writer.Write($"$<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
+                writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
         }
-
-
     }
 }

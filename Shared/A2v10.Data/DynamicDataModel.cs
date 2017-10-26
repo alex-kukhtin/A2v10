@@ -2,10 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
@@ -66,5 +62,11 @@ namespace A2v10.Data
             var sw = new ScriptWriter(this);
             return sw.GetScript();
         }
+
+        public IDictionary<String, Object> GetDynamic()
+        {
+            return ObjectBuilder.BuildObject(Root as ExpandoObject);
+        }
+
     }
 }

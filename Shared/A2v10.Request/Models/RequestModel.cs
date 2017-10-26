@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using A2v10.Infrastructure;
+using System.Dynamic;
 
 namespace A2v10.Request
 {
@@ -24,7 +25,8 @@ namespace A2v10.Request
         Popup,
         Command,
         Data,
-        Image
+        Image,
+        Report
     }
 
     public enum RequestDataAction
@@ -41,6 +43,7 @@ namespace A2v10.Request
         public String command;
         public String path;
         public String data;
+        public String report;
     }
 
 
@@ -216,6 +219,29 @@ namespace A2v10.Request
         public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
     }
 
+    public class RequestReport : RequestBase
+    {
+        public String report;
+        public String procedure;
+
+        public ExpandoObject variables;
+
+        [JsonIgnore]
+        public String ReportName => report;
+
+        [JsonIgnore]
+        public String ReportProcedure
+        {
+            get
+            {
+                var cm = CurrentModel;
+                if (String.IsNullOrEmpty(cm))
+                    return null;
+                return $"[{CurrentSchema}].[{cm}.Report]";
+            }
+        }
+    }
+
     public class RequestImage : RequestBase
     {
         public String key;
@@ -227,6 +253,7 @@ namespace A2v10.Request
         private String _dialog;
         private String _popup;
         private String _command;
+        private String _report;
         private String _data;
         private RequestUrlKind _kind;
 
@@ -243,6 +270,7 @@ namespace A2v10.Request
         public Dictionary<String, RequestDialog> dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestPopup> popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestCommand> commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<String, RequestReport> reports { get; set; } = new Dictionary<String, RequestReport>(StringComparer.InvariantCultureIgnoreCase);
 
 
         [JsonIgnore]
@@ -306,13 +334,7 @@ namespace A2v10.Request
             }
         }
 
-        public RequestCommand CurrentCommand
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public RequestCommand CurrentCommand => throw new NotImplementedException();
 
         public RequestView GetCurrentAction()
         {
@@ -340,6 +362,8 @@ namespace A2v10.Request
                 d.SetParent(this);
             foreach (var p in popups.Values)
                 p.SetParent(this);
+            foreach (var r in reports.Values)
+                r.SetParent(this);
         }
 
         public RequestCommand GetCommand(String command)
@@ -348,6 +372,14 @@ namespace A2v10.Request
             if (commands.TryGetValue(command, out cmd))
                 return cmd;
             throw new RequestModelException($"Command '{command}' not found");
+        }
+
+        public RequestReport GetReport()
+        {
+            RequestReport rep;
+            if (reports.TryGetValue(_report, out rep))
+                return rep;
+            throw new RequestModelException($"Report '{_report}' not found");
         }
 
         public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)
@@ -386,6 +418,9 @@ namespace A2v10.Request
                 case RequestUrlKind.Image:
                     mi.action = action;
                     break;
+                case RequestUrlKind.Report:
+                    mi.report = action;
+                    break;
                 default:
                     throw new RequestModelException($"Invalid action kind ({kind})");
             }
@@ -404,6 +439,7 @@ namespace A2v10.Request
             rm._dialog = mi.dialog;
             rm._popup = mi.popup;
             rm._command = mi.command;
+            rm._report = mi.report;
             rm._data = mi.data;
             rm._modelPath = mi.path;
             rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
@@ -433,6 +469,11 @@ namespace A2v10.Request
             {
                 kind = RequestUrlKind.Image;
                 baseUrl = baseUrl.Substring(8);
+            }
+            else if (baseUrl.StartsWith("/_report"))
+            {
+                kind = RequestUrlKind.Report;
+                baseUrl = baseUrl.Substring(9);
             }
             else
             {

@@ -28,17 +28,17 @@ namespace A2v10.Xaml
         RemoveSelected,
         Dialog,
         Select,
+        Report,
     }
 
     public enum DialogAction
     {
         Unknown,
-        Create, // simple create
         Edit,
         EditSelected,
         Show,
         Browse,
-        Append, // create and append to dialog
+        Append, // create in dialog and append to array
     }
 
     public class BindCmd : BindBase
@@ -50,6 +50,7 @@ namespace A2v10.Xaml
 
         public String Execute { get; set; }
         public String CommandName { get; set; }
+        public String Report { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -132,26 +133,28 @@ namespace A2v10.Xaml
                     return $"$dialog('browse', '{CommandUrl}', {CommandArgument(context)})";
 
                 case CommandType.Execute:
-                    return $"$exec('{GetName()}', {CommandArgument(context, true)} {GetConfirm(context)})";
+                    return $"$exec('{GetName()}', {CommandArgument(context, nullable:true)} {GetConfirm(context)})";
 
                 case CommandType.ExecuteSelected:
                     return $"$execSelected('{GetName()}', {CommandArgument(context)} {GetConfirm(context)})";
-
+                case CommandType.Report:
+                    return $"$report('{GetReportName()}', {CommandArgument(context, nullable:true)})";
                 case CommandType.Dialog:
                     if (Action == DialogAction.Unknown)
                         throw new XamlException($"Action required for {Command} command");
+                    String action = Action.ToString().ToKebabCase();
                     bool bNullable = false;
-                    if (Action == DialogAction.Create)
-                        bNullable = true;
+                    if (Action == DialogAction.Show)
+                        bNullable = true; // Nullable actions ???
                     if (indirect)
                     {
                         String arg3 = "this";
                         if (!IsArgumentEmpty(context))
                             arg3 = CommandArgument(context);
                         // command, url, data
-                        return $"{{cmd:$dialog, arg1:'{Action.ToString().ToKebabCase()}', arg2:'{CommandUrl}', arg3: '{arg3}'}}";
+                        return $"{{cmd:$dialog, arg1:'{action}', arg2:'{CommandUrl}', arg3: '{arg3}'}}";
                     }
-                    return $"$dialog('{Action.ToString().ToKebabCase()}', '{CommandUrl}', {CommandArgument(context, bNullable)})";
+                    return $"$dialog('{action}', '{CommandUrl}', {CommandArgument(context, bNullable)})";
 
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
@@ -162,6 +165,13 @@ namespace A2v10.Xaml
             if (String.IsNullOrEmpty(CommandName))
                 throw new XamlException($"CommandName required for {Command} command");
             return CommandName;
+        }
+
+        String GetReportName()
+        {
+            if (String.IsNullOrEmpty(Report))
+                throw new XamlException($"ReportName required for {Command} command");
+            return Report;
         }
 
         String CommandArgument(RenderContext context, Boolean nullable = false)
@@ -241,6 +251,9 @@ namespace A2v10.Xaml
                 case CommandType.Save:
                 case CommandType.SaveAndClose:
                     tag.MergeAttribute(":disabled", "$isPristine");
+                    break;
+                case CommandType.Execute:
+                    tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)})");
                     break;
                 case CommandType.OpenSelected:
                 case CommandType.Select:

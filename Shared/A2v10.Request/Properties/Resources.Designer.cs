@@ -61,6 +61,19 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///    &lt;title&gt;&lt;/title&gt;
+        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layout {
             get {
@@ -69,6 +82,19 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///    &lt;title&gt;&lt;/title&gt;
+        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layoutAdmin {
             get {
@@ -77,6 +103,27 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /*20171010-7043*/
+        ///
+        ///(function () {
+        ///
+        ///    const Shell = component(&apos;std:shellController&apos;);
+        ///
+        ///	const menu = $(Menu);
+        ///
+        ///    const shell = new Shell({
+        ///        el: &apos;#shell&apos;,
+        ///        data: {
+        ///            version: &apos;$(AppVersion)&apos;,
+        ///			menu: menu.Menu[0].Menu,
+        ///			title: menu.SysParams.AppTitle,
+        ///			subtitle: menu.SysParams.AppSubTitle
+        ///        }
+        ///    });
+        ///
+        ///	window.$rootUrl = &apos;&apos;;
+        ///
+        ///})();.
         /// </summary>
         internal static string shell {
             get {
@@ -85,10 +132,52 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /*20171010-7043*/
+        ///
+        ///(function () {
+        ///
+        ///    const Shell = component(&apos;std:shellController&apos;);
+        ///
+        ///	const menu = $(Menu);
+        ///
+        ///    const shell = new Shell({
+        ///        el: &apos;#shell&apos;,
+        ///        data: {
+        ///			title: menu.SysParams.AppTitle,
+        ///			subtitle: &apos;администратор&apos;,
+        ///            version: &apos;$(AppVersion)&apos;,
+        ///			menu: menu.Menu[0].Menu
+        ///        }
+        ///    });
+        ///
+        ///	window.$rootUrl = &apos;&apos;;
+        ///
+        ///})();.
         /// </summary>
         internal static string shellAdmin {
             get {
                 return ResourceManager.GetString("shellAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///    &lt;title&gt;&lt;/title&gt;
+        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string stiReportViewer {
+            get {
+                return ResourceManager.GetString("stiReportViewer", resourceCulture);
             }
         }
     }

@@ -33,11 +33,22 @@ let template = {
 		add100rows(doc) {
 			for (let i = 0; i < 100; i++)
 				doc.Rows.$append();
-		}
+        },
+        Test: {
+            canExec: canExecTest,
+            exec: execTest
+        }
     }
 };
 
 
+function execTest(arg) {
+    alert(arg.Id);
+}
+
+function canExecTest(arg) {
+    return true;
+}
 function documentSumProperty() {
 	return this.Rows.reduce((prev, curr) => prev + curr.Qty, 0);
 }

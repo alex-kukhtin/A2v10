@@ -11,7 +11,7 @@
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Plus" Tip="Додати користувача" Command="{BindCmd Dialog, Action=Create, Url='/Identity/User/Create', Argument={Bind Users}}">Створити</Button>
+            <Button Icon="Plus" Tip="Додати користувача" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Create', Argument={Bind Users}}">Створити</Button>
             <Button Icon="Edit" Tip="Властивості користувача" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Users}}">Властивості</Button>
             <Button Icon="Delete" Content="Видалити" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm='Ви дійсно бажаєте видалити користувача?'}"/>
             <Separator />

@@ -63,6 +63,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\stiReportViewer.html" />
     <Content Include="Pages\layoutAdmin.html" />
     <Content Include="Pages\layout.html" />
     <Content Include="Pages\shellAdmin.js" />

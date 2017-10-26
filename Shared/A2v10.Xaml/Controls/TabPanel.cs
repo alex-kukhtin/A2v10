@@ -40,7 +40,7 @@ namespace A2v10.Xaml
                 panel.RenderStart(context);
                 var tml = new TagBuilder("template");
                 tml.MergeAttribute("slot", "items");
-                tml.MergeAttribute("scope", "tabitem");
+                tml.MergeAttribute("slot-scope", "tabitem");
                 tml.RenderStart(context);
                 using (var cts = new ScopeContext(context, "tabitem.item", _replaceScope))
                 {
@@ -67,7 +67,7 @@ namespace A2v10.Xaml
                 return;
             var tml = new TagBuilder("template");
             tml.MergeAttribute("slot", "header");
-            tml.MergeAttribute("scope", "tabitem");
+            tml.MergeAttribute("slot-scope", "tabitem");
             tml.RenderStart(context);
             using (var cts = new ScopeContext(context, "tabitem.item", _replaceScope))
             {

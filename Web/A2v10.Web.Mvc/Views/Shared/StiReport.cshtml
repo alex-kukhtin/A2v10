@@ -1,0 +1,68 @@
+﻿@using A2v10.Reports;
+@using Stimulsoft.Report.Mvc;
+@{
+    Layout = null;
+    String locale = String.IsNullOrEmpty(ViewBag.Lang) ? "uk" : ViewBag.Lang;
+    String localeFile = $"~/Localization/{locale}.xml";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background-color: #e3e3e3;
+        }
+    </style>
+</head>
+<body scroll="none">
+    @Html.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer",
+            new StiMvcViewerOptions()
+            {
+                Theme = StiTheme.Office2013,
+                Localization = localeFile,
+                Server = new StiMvcViewerOptions.ServerOptions()
+                {
+                    Controller = "StiReport",
+                    RequestTimeout = 300,
+                    UseRelativeUrls = true
+                },
+                Actions = new StiMvcViewerOptions.ActionOptions()
+                {
+                    GetReportSnapshot = "GetReportSnapshot",
+                    ViewerEvent = "ViewerEvent",
+                    PrintReport = "PrintReport",
+                    ExportReport = "ExportReport",
+                    Interaction = "Interaction",
+                },
+                Appearance = new StiMvcViewerOptions.AppearanceOptions()
+                {
+                    BackgroundColor = System.Drawing.Color.FromArgb(0x00e3e3e3),
+                    ShowTooltips = false,
+                    ScrollbarsMode = true,
+                    FullScreenMode = true,
+                },
+                Toolbar = new StiMvcViewerOptions.ToolbarOptions()
+                {
+                    MenuAnimation = false,
+                    ShowFullScreenButton = false,
+                    ShowMenuMode = StiShowMenuMode.Click,
+                    FontFamily = "Segoe UI,Tahoma,Arial,Verdana,Sans-Serif",
+                    FontColor = System.Drawing.Color.FromArgb(0x00333333),
+                    ShowBookmarksButton = false,
+                    ShowParametersButton = true,
+                    ShowSendEmailButton = false,
+                },
+                Exports = new StiMvcViewerOptions.ExportOptions()
+                {
+                    DefaultSettings = new StiMvcViewerOptions.ExportSettings()
+                    {
+                        ExportToPdf = StiReportExtensions.GetDefaultPdfSettings(),
+                        ExportToExcel = StiReportExtensions.GetDefaultXlSettings()
+                    }
+                }
+            })
+</body>
+</html>

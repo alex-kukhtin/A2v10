@@ -12,13 +12,15 @@ namespace A2v10.Xaml
         private Int32? _col;
         private Int32? _rowSpan;
         private Int32? _colSpan;
+        private VerticalAlign? _vAlign;
 
-        public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan)
+        public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, VerticalAlign? vAlign)
         {
             _row = row;
             _col = col;
             _rowSpan = rowSpan;
             _colSpan = colSpan;
+            _vAlign = vAlign;
         }
 
         public IList<StringKeyValuePair> GetGridAttributes()
@@ -36,6 +38,12 @@ namespace A2v10.Xaml
             if (_colSpan != null && _colSpan.Value != 0)
                 col += " / span " + _colSpan.Value.ToString();
             rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
+            if (_vAlign != null)
+            {
+                String vAlign = _vAlign.Value.AlignSelf();
+                if (vAlign != null)
+                    rv.Add(new StringKeyValuePair() { Key = "align-self", Value = vAlign });
+            }
             return rv;
         }
     }
@@ -115,9 +123,9 @@ namespace A2v10.Xaml
 			Writer.Write("&#xa;");
 		}
 
-        public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan)
+        public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, VerticalAlign? vAlign)
         {
-            var rowCol = new GridRowCol(row, col, rowSpan, colSpan);
+            var rowCol = new GridRowCol(row, col, rowSpan, colSpan, vAlign);
             return new GridContext(this, rowCol);
         }
 

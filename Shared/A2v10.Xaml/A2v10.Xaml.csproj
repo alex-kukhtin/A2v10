@@ -48,6 +48,7 @@
     <Compile Include="Base\BindImpl.cs" />
     <Compile Include="Base\Command.cs" />
     <Compile Include="Base\Confirm.cs" />
+    <Compile Include="Base\EnumExtensions.cs" />
     <Compile Include="Base\Enums.cs" />
     <Compile Include="Base\FilterDescription.cs" />
     <Compile Include="Base\GroupDescription.cs" />

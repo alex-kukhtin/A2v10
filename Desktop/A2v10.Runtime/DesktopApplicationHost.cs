@@ -28,7 +28,7 @@ namespace A2v10.Runtime
             get
             {
                 // TODO: CONFIG
-                return "c:/git/a2v10/apps";
+                return "c:/a2v10demo/apps";
                 /*
                 String path = ConfigurationManager.AppSettings["appPath"];
                 if (path == null)
@@ -43,7 +43,7 @@ namespace A2v10.Runtime
             get
             {
                 // TODO: CONFIG
-                return "develop"; //ConfigurationManager.AppSettings["appKey"];
+                return "demo"; //ConfigurationManager.AppSettings["appKey"];
 
             }
         }
@@ -65,11 +65,7 @@ namespace A2v10.Runtime
                 source = "Default";
 
             if (source == "Default")
-                return "Data Source=localhost\\SQLEXPRESS2014;Initial Catalog=a2v10git;Integrated Security=True";
-            else if (source == "a2start")
-                return "Data Source=localhost\\SQLEXPRESS2014;Initial Catalog=a2start;Integrated Security=True";
-            else if (source == "frontis")
-                return "Data Source=localhost\\SQLEXPRESS2014;Initial Catalog=a2frontis_wt;Integrated Security=True";
+                return "Data Source=localhost;Initial Catalog=a2v10demo;Integrated Security=True";
 
             throw new ArgumentOutOfRangeException($"Connection string '{source}' not found");
             /*

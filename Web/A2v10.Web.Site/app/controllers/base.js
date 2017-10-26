@@ -1,4 +1,4 @@
-﻿/*20171019-7051*/
+﻿/*20171026-7054*/
 /*controllers/base.js*/
 (function () {
 
@@ -80,8 +80,11 @@
 					root._exec_(cmd, arg.$selected);
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
-			},
-
+            },
+            $canExecute(cmd, arg) {
+                let root = this.$data;
+                return root._canExec_(cmd, arg);
+            },
 			$save() {
 				let self = this;
                 let root = window.$$rootUrl;
@@ -312,7 +315,20 @@
 						});
 					}
 				});
-			},
+            },
+
+            $report(rep, arg, opts) {
+                // TODO: saveRequired
+                let id = arg;
+                if (arg && utils.isObject(arg))
+                    id = arg.$id;
+                const root = window.$$rootUrl;
+                let url = root + '/report/show/' + id;
+                let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
+                url = url + urltools.makeQueryString({ base: baseUrl, rep: rep});
+                // new window
+                window.open(url, "_blank");
+            },
 
 			$modalSaveAndClose(result) {
 				if (this.$isDirty)

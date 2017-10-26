@@ -7,6 +7,8 @@ const template = {
     events: {
     },
     validators: {
+        "User.Name": "Не вказано логін",
+        "User.Email": { valid:'email', msg: 'Помилкова адреса электронної пошти'}
     },
     commands: {
 

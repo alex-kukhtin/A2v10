@@ -1,4 +1,8 @@
-﻿(function () {
+﻿/*20170926-7054*/
+/* components/datepicker.js */
+
+
+(function () {
 
 	const popup = require('std:popup');
 
@@ -58,7 +62,7 @@
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
-						this.modelDate = utils.date.today();
+						this.item[this.prop] = utils.date.today();
 				}
 				this.isOpen = !this.isOpen;
 			},

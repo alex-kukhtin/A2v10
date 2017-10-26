@@ -72,7 +72,7 @@ namespace A2v10.Xaml
 
             _outer.RenderStart(context);
             _inner = new TagBuilder("template");
-            _inner.MergeAttribute("scope", "Parent");
+            _inner.MergeAttribute("slot-scope", "Parent");
             _inner.RenderStart(context);
         }
 

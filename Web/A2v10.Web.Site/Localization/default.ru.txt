@@ -1,0 +1,8 @@
+﻿;
+@Documents=Документы
+@Create=Создать
+@CreateDocument=Создать документ
+@Reload=Обновить
+@Refresh=Обновить
+@Delete=Удалить
+@Close=Закрыть

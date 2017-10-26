@@ -102,7 +102,7 @@ namespace A2v10.Xaml
             {
                 var templ = new TagBuilder("template");
                 templ.MergeAttribute("slot", tmlId);
-                templ.MergeAttribute("scope", "cell");
+                templ.MergeAttribute("slot-scope", "cell");
                 templ.RenderStart(context);
                 using (var ctx = new ScopeContext(context, "cell.row"))
                 {

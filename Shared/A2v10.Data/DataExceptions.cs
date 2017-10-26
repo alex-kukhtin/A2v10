@@ -21,4 +21,12 @@ namespace A2v10.Data
 		{
 		}
 	}
+
+    public class DataDynamicException: Exception
+    {
+        public DataDynamicException(String message)
+			:base(message)
+		{
+        }
+    }
 }

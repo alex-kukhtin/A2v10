@@ -1,9 +1,13 @@
-﻿/*20170824-7019*/
+﻿/*20171026-7054*/
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
     const utils = require('std:utils');
     const ERROR = 'error';
+
+    /* from angular.js !!! */
+    const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+    const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
 	return {
 		validate: validateItem
@@ -13,6 +17,12 @@ app.modules['std:validators'] = function() {
         switch (rule) {
             case 'notBlank':
                 return utils.notBlank(val);
+            case "email":
+                return validEmail(val);
+            case "url":
+                return validUrl(val);
+            case "isTrue":
+                return val === true;
         }
         console.error(`invalid std rule: '${rule}'`);
         return true;
@@ -53,6 +63,15 @@ app.modules['std:validators'] = function() {
         if (!err.length)
             return null;
         return err;
+    }
+
+
+    function validEmail(addr) {
+        return addr === '' || EMAIL_REGEXP.test(addr);
+    }
+
+    function validUrl(url) {
+        return url === '' || URL_REGEXP.test(url);
     }
 };
 

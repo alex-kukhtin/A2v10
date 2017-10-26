@@ -40,5 +40,6 @@ namespace A2v10.Request
             sb.Replace("$(AppVersion)", _host.AppVersion);
             writer.Write(sb.ToString());
         }
+
     }
 }

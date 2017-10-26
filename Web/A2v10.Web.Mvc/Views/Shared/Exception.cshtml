@@ -1,0 +1,15 @@
+﻿@model System.Exception
+
+@{
+    Layout = null;
+    ViewBag.Title = "Exception";
+}
+
+<h1 class="text-danger">Exception</h1>
+<h2 class="text-danger">@Model.Message</h2>
+
+<h5>Трассировка стека</h5>
+<p>
+    @Model.StackTrace
+</p>
+

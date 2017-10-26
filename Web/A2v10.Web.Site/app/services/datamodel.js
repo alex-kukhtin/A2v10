@@ -1,4 +1,4 @@
-﻿/*20171020-7053*/
+﻿/*20171026-7054*/
 /* services/datamodel.js */
 (function () {
 
@@ -67,7 +67,7 @@
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-				let srcval = source[prop] || null;
+                let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
 			default:
@@ -440,6 +440,18 @@
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
+    function canExecuteCommand(cmd, ...args) {
+        let tml = this.$template;
+        if (tml && tml.commands) {
+            let cmdf = tml.commands[cmd];
+            if (cmdf && utils.isFunction(cmdf.canExec)) {
+                return cmdf.canExec.apply(this, args);
+            }
+            return true;
+        }
+        return false;
+    }
+
 	function executeCommand(cmd, ...args) {
 		try {
 			this._root_._enableValidate_ = false;
@@ -450,6 +462,9 @@
 					cmdf.apply(this, args);
                     return;
                 } else if (utils.isObjectExact(cmdf)) {
+                    if (utils.isFunction(cmdf.canExec))
+                        if (!cmdf.canExec.apply(this, args))
+                            return;
                     if (cmdf.confirm) {
                         let vm = this.$vm;
                         vm.$confirm(cmdf.confirm)
@@ -657,7 +672,8 @@
 		root.prototype.$setDirty = setDirty;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
-		root.prototype._exec_ = executeCommand;
+        root.prototype._exec_ = executeCommand;
+        root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;

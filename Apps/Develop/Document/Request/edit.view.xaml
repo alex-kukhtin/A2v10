@@ -9,7 +9,8 @@
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
 			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
-			<Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
+            <Button Icon="Print" Command="{BindCmd Report, Report=Invoice, Argument={Bind Document}}">Накладная</Button>
+            <Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
@@ -36,7 +37,7 @@
 			<Button Block="True" Icon="File" Style="Orange" Size="Large">Оформить сделку</Button>
             <Button Block="True" Icon="File" Style="Primary" Size="Large" Disabled="{Bind $isPristine}">Оформить другую сделку (запрещено)</Button>
             <Button Block="True" Icon="Copy" Size="Large" Tip="Создать другую заявку на основании этой" 
-					Command="{BindCmd Execute, CommandName=Test}">Создать на основании</Button>
+					Command="{BindCmd Execute, CommandName=Test, Argument={Bind Document}}">Создать на основании</Button>
             <Button Block="True" Icon="Approve" Style="Red" IconAlign="Top" Size="Large">Большая красная кнопка с иконкой сверху</Button>
             <Button Block="True" Icon="Approve" Style="Green" Disabled="True">Green</Button>
             <Button Icon="Approve" Style="Cyan" Size="Small">small 1</Button>
@@ -62,15 +63,16 @@
 		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
             <Header>Заявка на поставку</Header>
 			<Grid Columns="1*, 1*, 2*">
-				<Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}"></Code>
-				<Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}"></Code>
-				<ComboBox Disabled="True" Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
+                <Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}" />
+                <Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}" Grid.VAlign="Top"/>
+                <ComboBox Disabled="True" Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
                 <TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}">
                     <TextBox.AddOns>
                         <Popover Icon="Info" Content="Popover text"></Popover>
                     </TextBox.AddOns>
                 </TextBox>
-				<TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
+                <DatePicker Grid.Row="3" Grid.Col="1" Value="{Bind Document.Date}" Grid.VAlign="Middle"/>
+                <TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
 						 Description="выберите покупателя" 
                          Placeholder="введите фрагмент наименования для поиска"
                          Tip="введите фрагмент наименования для поиска"

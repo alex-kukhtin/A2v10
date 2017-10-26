@@ -181,6 +181,27 @@ as
 	where Void=0;
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUser')
+	drop procedure a2security.CreateUser
+go
+------------------------------------------------
+create procedure a2security.CreateUser
+@UserName nvarchar(255),
+@PasswordHash nvarchar(max) = null,
+@SecurityStamp nvarchar(max),
+@Email nvarchar(255) = null,
+@PhoneNumber nvarchar(255) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
+		values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
+	--TODO: log
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserById')
 	drop procedure a2security.FindUserById
 go

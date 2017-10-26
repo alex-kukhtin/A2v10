@@ -17,6 +17,7 @@
             <div class="h-block">
                 <i class="ico ico-dashboard"></i>
                 <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
+                <span class="app-subtitle">демонстрационное приложение</span>
             </div>
             <div class="aligner"></div>
             <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
@@ -57,27 +58,19 @@
         (function () {
 
             const Shell = component('std:shellController');
+            //{ Name: "Начало", Url: "home" },
 
     const menu = [
-        { Name: "Начало", Url: "home"},
         {
             type:'tree', Name: 'Справочники', Url: 'catalog', Menu: [
-                { Name: "Suppliers", Url: 'suppliers', Icon:'users', query:'order=Name&dir=desc'},
-                { Name: "Покупатели", Url: 'customers', Icon:'database'},
-                { Name: "Edit 3 segment", Url: 'edit/5', Icon:'dashboard' },
-                {
-                    Name: "Menu Folder", icon: 'folder', Menu: [
-                        { Name: "Suppliers 2 (with long text <b>bold</b>)", Url: 'suppliers1', Icon: 'save' },
-                        { Name: "Customers 2", url: 'customers2', Icon:'dot'}
-                    ]
-                }
+                { Name: "Поставщики", Url: 'suppliers', Icon:'users'},
+                { Name: "Покупатели", Url: 'customers', Icon:'users'},
             ]
         },
         {
-            type:'accordion', Name: 'Документы', Url: 'document', Menu: [
-                { Name: "Котировки", Url: 'quotations', Icon: 'file', query:'order=Date&dir=asc' },
-                { Name: "Заявки", Url: 'request', Icon: 'database'},
-                { Name: "edit 4 segment", Url: 'outgoing/edit/2', Icon: 'comment' }
+            type:'tree', Name: 'Документы', Url: 'document', Menu: [
+                { Name: "Приходные накладные", Url: 'incoming', Icon: 'file'},
+                { Name: "Расходные накладные", Url: 'outgoing', Icon: 'file'},
             ]
         }
     ];
@@ -89,7 +82,7 @@
     const shell = new Shell({
         el: '#shell',
         data: {
-            title: 'application title (desktop)',
+            title: 'A2:DEMO',
             version: '10.0.70xx',
             menu: menu
         }

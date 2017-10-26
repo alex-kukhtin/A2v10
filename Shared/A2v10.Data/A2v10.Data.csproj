@@ -44,12 +44,14 @@
     <Compile Include="DataModelReader.cs" />
     <Compile Include="DataModelWriter.cs" />
     <Compile Include="DynamicDataModel.cs" />
+    <Compile Include="DynamicType.cs" />
     <Compile Include="ElementMetadata.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldMetadata.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IdMapper.cs" />
     <Compile Include="LoadHelper.cs" />
+    <Compile Include="ObjectBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="SqlDbContext.cs" />

@@ -26,7 +26,7 @@ namespace A2v10.Web.Mvc.Start
 
             routes.MapRoute(
                 name: "Report",
-                url: "Report/{action}",
+                url: "Report/{action}/{id}",
                 defaults: new { controller = "Report" }
            );
 

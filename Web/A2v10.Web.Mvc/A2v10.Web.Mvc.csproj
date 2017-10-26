@@ -209,6 +209,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Error.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\Exception.generated.cs">
+      <DependentUpon>Exception.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\Shared\StiReport.generated.cs">
+      <DependentUpon>StiReport.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Views\Shared\Lockout.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -313,6 +323,14 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>AddPhoneNumber.generated.cs</LastGenOutput>
     </None>
+    <Content Include="Views\Shared\StiReport.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>StiReport.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Shared\Exception.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Exception.generated.cs</LastGenOutput>
+    </Content>
     <None Include="Views\Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -325,6 +343,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Reports\A2v10.Reports.csproj">
+      <Project>{0562c1fe-b4b7-4ee2-bf83-1808ebd63d05}</Project>
+      <Name>A2v10.Reports</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
       <Project>{4abb9b68-f32c-4262-8aff-0af8a1087d30}</Project>

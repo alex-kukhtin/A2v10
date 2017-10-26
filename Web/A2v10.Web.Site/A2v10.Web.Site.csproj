@@ -102,6 +102,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\jasmine\boot.js" />
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />
@@ -115,6 +116,8 @@
     <Content Include="TestPages\collectionview.html" />
     <Content Include="TestPages\collectionview.js" />
     <Content Include="TestPages\collectionview.txt" />
+    <Content Include="TestPages\d3line.html" />
+    <Content Include="TestPages\d3line.js" />
     <Content Include="TestPages\datepicker.html" />
     <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\formcontrol2.html" />

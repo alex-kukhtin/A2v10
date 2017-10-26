@@ -50,28 +50,29 @@
 
 
 
-/*20170918-7034*/
+/*20171026-7054*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
 
-	return {
-		combine: combine,
-		makeQueryString: makeQueryString,
+    return {
+        combine: combine,
+        makeQueryString: makeQueryString,
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
-		idChangedOnly: idChangedOnly
-	};
+        idChangedOnly: idChangedOnly,
+        makeBaseUrl: makeBaseUrl
+    };
 
     function normalize(elem) {
         // TODO: TEST
-		elem = '' + elem || '';
-		elem = elem.replace(/\\/g, '/');
-		if (elem.startsWith('/'))
-			elem = elem.substring(1);
-		if (elem.endsWith('/'))
-			elem = elem.substring(0, elem.length - 1);
-		return elem;
+        elem = '' + elem || '';
+        elem = elem.replace(/\\/g, '/');
+        if (elem.startsWith('/'))
+            elem = elem.substring(1);
+        if (elem.endsWith('/'))
+            elem = elem.substring(0, elem.length - 1);
+        return elem;
     }
 
     function normalizeRoot(path) {
@@ -81,30 +82,30 @@ app.modules['std:url'] = function () {
         return path;
     }
 
-	function combine(...args) {
-		return '/' + args.map(normalize).filter(x => !!x).join('/');
-	}
+    function combine(...args) {
+        return '/' + args.map(normalize).filter(x => !!x).join('/');
+    }
 
-	function makeQueryString(obj) {
-		if (!obj)
-			return '';
-		let esc = encodeURIComponent;
-		// skip special (starts with '_')
-		let query = Object.keys(obj)
-			.filter(k => k.startsWith('_') ? null : obj[k])
-			.map(k => esc(k) + '=' + esc(obj[k]))
-			.join('&');
-		return query ? '?' + query : '';
-	}
+    function makeQueryString(obj) {
+        if (!obj)
+            return '';
+        let esc = encodeURIComponent;
+        // skip special (starts with '_')
+        let query = Object.keys(obj)
+            .filter(k => k.startsWith('_') ? null : obj[k])
+            .map(k => esc(k) + '=' + esc(obj[k]))
+            .join('&');
+        return query ? '?' + query : '';
+    }
 
     function parseQueryString(str) {
         //TODO: TEST
-		var obj = {};
-		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-			obj[decodeURIComponent(key)] = decodeURIComponent(value);
-		});
-		return obj;
-	}
+        var obj = {};
+        str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
+            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return obj;
+    }
 
     function idChangedOnly(newUrl, oldUrl) {
         let ns = (newUrl || '').split('/');
@@ -112,11 +113,19 @@ app.modules['std:url'] = function () {
         if (ns.length !== os.length)
             return false;
         if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
-            if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length -1).join('/'))
+            if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
                 return true;
         }
         return false;
-	}
+    }
+
+    function makeBaseUrl(url) {
+        let x = (url || '').split('/');
+        if (x.length === 6)
+            return x.slice(2, 4).join('/');
+        return url;
+    }
+    
 };
 
 
@@ -669,12 +678,16 @@ app.modules['std:log'] = function () {
     }
 };
 
-/*20170824-7019*/
+/*20171026-7054*/
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
     const utils = require('std:utils');
     const ERROR = 'error';
+
+    /* from angular.js !!! */
+    const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+    const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
 	return {
 		validate: validateItem
@@ -684,6 +697,12 @@ app.modules['std:validators'] = function() {
         switch (rule) {
             case 'notBlank':
                 return utils.notBlank(val);
+            case "email":
+                return validEmail(val);
+            case "url":
+                return validUrl(val);
+            case "isTrue":
+                return val === true;
         }
         console.error(`invalid std rule: '${rule}'`);
         return true;
@@ -725,11 +744,20 @@ app.modules['std:validators'] = function() {
             return null;
         return err;
     }
+
+
+    function validEmail(addr) {
+        return addr === '' || EMAIL_REGEXP.test(addr);
+    }
+
+    function validUrl(url) {
+        return url === '' || URL_REGEXP.test(url);
+    }
 };
 
 
 
-/*20171020-7053*/
+/*20171026-7054*/
 /* services/datamodel.js */
 (function () {
 
@@ -798,7 +826,7 @@ app.modules['std:validators'] = function() {
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-				let srcval = source[prop] || null;
+                let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
 			default:
@@ -1171,6 +1199,18 @@ app.modules['std:validators'] = function() {
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
+    function canExecuteCommand(cmd, ...args) {
+        let tml = this.$template;
+        if (tml && tml.commands) {
+            let cmdf = tml.commands[cmd];
+            if (cmdf && utils.isFunction(cmdf.canExec)) {
+                return cmdf.canExec.apply(this, args);
+            }
+            return true;
+        }
+        return false;
+    }
+
 	function executeCommand(cmd, ...args) {
 		try {
 			this._root_._enableValidate_ = false;
@@ -1181,6 +1221,9 @@ app.modules['std:validators'] = function() {
 					cmdf.apply(this, args);
                     return;
                 } else if (utils.isObjectExact(cmdf)) {
+                    if (utils.isFunction(cmdf.canExec))
+                        if (!cmdf.canExec.apply(this, args))
+                            return;
                     if (cmdf.confirm) {
                         let vm = this.$vm;
                         vm.$confirm(cmdf.confirm)
@@ -1388,7 +1431,8 @@ app.modules['std:validators'] = function() {
 		root.prototype.$setDirty = setDirty;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
-		root.prototype._exec_ = executeCommand;
+        root.prototype._exec_ = executeCommand;
+        root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
@@ -1870,6 +1914,10 @@ Vue.component('validator-control', {
         }
     });
 })();
+/*20170926-7054*/
+/* components/datepicker.js */
+
+
 (function () {
 
 	const popup = require('std:popup');
@@ -1930,7 +1978,7 @@ Vue.component('validator-control', {
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
-						this.modelDate = utils.date.today();
+						this.item[this.prop] = utils.date.today();
 				}
 				this.isOpen = !this.isOpen;
 			},
@@ -3914,7 +3962,7 @@ Vue.directive('resize', {
 });
 
 
-/*20171019-7051*/
+/*20171026-7054*/
 /*controllers/base.js*/
 (function () {
 
@@ -3996,8 +4044,11 @@ Vue.directive('resize', {
 					root._exec_(cmd, arg.$selected);
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
-			},
-
+            },
+            $canExecute(cmd, arg) {
+                let root = this.$data;
+                return root._canExec_(cmd, arg);
+            },
 			$save() {
 				let self = this;
                 let root = window.$$rootUrl;
@@ -4228,7 +4279,20 @@ Vue.directive('resize', {
 						});
 					}
 				});
-			},
+            },
+
+            $report(rep, arg, opts) {
+                // TODO: saveRequired
+                let id = arg;
+                if (arg && utils.isObject(arg))
+                    id = arg.$id;
+                const root = window.$$rootUrl;
+                let url = root + '/report/show/' + id;
+                let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
+                url = url + urltools.makeQueryString({ base: baseUrl, rep: rep});
+                // new window
+                window.open(url, "_blank");
+            },
 
 			$modalSaveAndClose(result) {
 				if (this.$isDirty)

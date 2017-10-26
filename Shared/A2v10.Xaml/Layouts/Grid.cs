@@ -16,6 +16,7 @@ namespace A2v10.Xaml
         static Lazy<IDictionary<Object, Int32>> _attachedRow = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
         static Lazy<IDictionary<Object, Int32>> _attachedColSpan = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
         static Lazy<IDictionary<Object, Int32>> _attachedRowSpan = new Lazy<IDictionary<Object, Int32>>(() => new Dictionary<Object, Int32>());
+        static Lazy<IDictionary<Object, VerticalAlign>> _attachedVAlign = new Lazy<IDictionary<Object, VerticalAlign>>(() => new Dictionary<Object, VerticalAlign>());
 
 
         public static void SetCol(Object obj, Int32 col)
@@ -56,6 +57,16 @@ namespace A2v10.Xaml
         public static Int32? GetRowSpan(Object obj)
         {
             return AttachedHelpers.GetAttached(_attachedRowSpan, obj);
+        }
+
+        public static void SetVAlign(Object obj, VerticalAlign vAlign)
+        {
+            AttachedHelpers.SetAttached(_attachedVAlign, obj, vAlign);
+        }
+
+        public static VerticalAlign? GetVAlign(Object obj)
+        {
+            return AttachedHelpers.GetAttached(_attachedVAlign, obj);
         }
 
         #endregion
@@ -116,7 +127,7 @@ namespace A2v10.Xaml
             foreach (var ch in Children)
             {
                 ch.IsInGrid = true;
-                using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch)))
+                using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch), GetVAlign(ch)))
                 {
                     ch.RenderElement(context);
                 }
