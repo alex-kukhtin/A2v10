@@ -1,4 +1,4 @@
-﻿/*20171026-7054*/
+﻿/*20171027-7057*/
 /* services/datamodel.js */
 (function () {
 
@@ -97,6 +97,23 @@
 		});
 	}
 
+    function createPrimitiveProperties(elem, ctor) {
+        const templ = elem._root_.$template;
+        if (!templ) return;
+        const props = templ._props_;
+        if (!props) return;
+        let objname = ctor.name;
+        if (objname in props) {
+            for (let p in props[objname]) {
+                let propInfo = props[objname][p];
+                if (utils.isPrimitiveCtor(propInfo)) {
+                    log.info(`create scalar property: ${objname}.${p}`);
+                    elem._meta_.props[p] = propInfo;
+                }
+            }
+        }
+    }
+
 	function createObjProperties(elem, ctor) {
 		let templ = elem._root_.$template;
 		if (!templ) return;
@@ -105,15 +122,19 @@
 		let objname = ctor.name;
         if (objname in props) {
 			for (let p in props[objname]) {
-                log.info(`create property: ${objname}.${p}`);
                 let propInfo = props[objname][p];
-                if (utils.isFunction(propInfo)) {
+                if (utils.isPrimitiveCtor(propInfo)) {
+                    continue;
+                }
+                else if (utils.isFunction(propInfo)) {
+                    log.info(`create property: ${objname}.${p}`);
                     Object.defineProperty(elem, p, {
                         configurable: false,
                         enumerable: true,
                         get: propInfo
                     });
                 } else if (utils.isObjectExact(propInfo)) {
+                    log.info(`create property: ${objname}.${p}`);
                     Object.defineProperty(elem, p, {
                         configurable: false,
                         enumerable: true,
@@ -128,7 +149,7 @@
 	}
 
 	function createObject(elem, source, path, parent) {
-		let ctorname = elem.constructor.name;
+		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -140,21 +161,33 @@
 		defHidden(elem, ERRORS, null, true);
         defHidden(elem, '_lockEvents_', 0, true);
 
+        let hasTemplProps = false;
+        const templ = elem._root_.$template;
+        if (templ && !utils.isEmptyObject(templ._props_))
+            hasTemplProps = true;
+
+        if (hasTemplProps)
+            createPrimitiveProperties(elem, elem.constructor);
+
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
-		}
-		createObjProperties(elem, elem.constructor);
+        }
+
+        if (hasTemplProps)
+            createObjProperties(elem, elem.constructor);
 
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
-				this._root_._validateAll_();
+                this._root_._validateAll_();
+            console.warn('call $valid:' + this._errors_);
+            console.dir(this._errors_);
 			if (this._errors_)
 				return false;
 			for (var x in this) {
 				if (x[0] === '$' || x[0] === '_')
 					continue;
 				let sx = this[x];
-				if (utils.isObject(sx) && ('$valid' in sx)) {
+				if (utils.isObject(sx) && '$valid' in sx) {
 					let sx = this[x];
 					if (!sx.$valid)
 						return false;
@@ -182,11 +215,11 @@
 				}
 			}
 			elem._enableValidate_ = true;
-            elem._needValidate_ = true;
+            elem._needValidate_ = false;
             elem._modelLoad_ = () => {
                 elem.$emit('Model.load', elem);
                 elem._root_.$setDirty(false);
-            }
+            };
 		}
 		if (startTime)
 			log.time('create root time:', startTime);
@@ -250,6 +283,10 @@
 
     defPropertyGet(_BaseArray.prototype, "$isEmpty", function () {
         return !this.length;
+    });
+
+    defPropertyGet(_BaseArray.prototype, "$checked", function () {
+        return this.filter((el) => el.$checked);
     });
 
 	_BaseArray.prototype.$append = function (src) {
@@ -478,11 +515,11 @@
 			console.error(`command "${cmd}" not found`);
 		} finally {
 			this._root_._enableValidate_ = true;
-			this._root_._needValidate_ = true;
+            this._root_._needValidate_ = true;
 		}
 	}
 
-	function validateImpl(item, path, val) {
+    function validateImpl(item, path, val, du) {
 		if (!item) return null;
 		let tml = item._root_.$template;
 		if (!tml) return null;
@@ -490,24 +527,24 @@
 		if (!vals) return null;
 		var elemvals = vals[path];
 		if (!elemvals) return null;
-		return validators.validate(elemvals, item, val);
+		return validators.validate(elemvals, item, val, du);
 	}
 
-	function saveErrors(item, path, errors) {
+    function saveErrors(item, path, errors) {
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)
-			item._errors_ = {}; // new empty object
-		if (errors)
+            item._errors_ = {}; // new empty object
+        if (errors && errors.length > 0)
 			item._errors_[path] = errors;
 		else if (path in item._errors_)
-			delete item._errors_[path];
+            delete item._errors_[path];
 		if (utils.isEmptyObject(item._errors_))
 			item._errors_ = null;
 		return errors;
 	}
 
-	function validate(item, path, val) {
+	function validate(item, path, val, ff) {
 		if (!item._root_._needValidate_) {
 			// already done
 			if (!item._errors_)
@@ -515,8 +552,8 @@
 			if (path in item._errors_)
 				return item._errors_[path];
 			return null;
-		}
-		let res = validateImpl(item, path, val);
+        }
+		let res = validateImpl(item, path, val, ff);
 		return saveErrors(item, path, res);
 	}
 
@@ -598,8 +635,9 @@
 
 	function validateAll() {
 		var me = this;
-		if (!me._needValidate_) return;
-		me._needValidate_ = false;
+        if (!me._host_) return;
+        if (!me._needValidate_) return;
+        me._needValidate_ = false;
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;

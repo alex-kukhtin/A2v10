@@ -6,17 +6,28 @@
     "index": {
       "index": true,
       "template": "index.template",
-      "view": "Index.view"
+      "view": "index.view"
     }
   },
   "dialogs": {
     "edit": {
-      "view": "Edit.dialog",
+      "view": "edit.dialog",
       "template": "edit.template"
+    },
+    "create": {
+      "view": "create.dialog",
+      "template": "create.template",
+      "hook": "clr-type:A2v10.Web.Mvc.Hooks.CreateUserHandler;assembly = A2v10.Web.Mvc"
     },
     "browse": {
       "index": true,
-      "view": "Browse.dialog"
+      "view": "browse.dialog"
+    }
+  },
+  "commands": {
+    "duplicateLogin": {
+      "type": "sql",
+      "procedure": "User.Login.CheckDuplicate"
     }
   }
 }

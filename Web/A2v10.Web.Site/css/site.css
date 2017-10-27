@@ -841,16 +841,19 @@ textarea {
   border-style: none;
   font-size: 13px;
   color: #222;
-  padding: 0 5px;
 }
 input:focus,
 select:focus,
 textarea:focus {
   outline-style: none;
 }
+textarea {
+  padding: 2px 5px;
+}
 input,
 select {
   height: 1.77em;
+  padding: 0 5px;
 }
 /* hide for focused */
 input::-moz-placeholder {
@@ -932,7 +935,7 @@ pre {
   margin: 0;
   left: -1px;
   width: auto;
-  min-width: 150px;
+  min-width: 120px;
   font-size: 96%;
   bottom: 100%;
   padding: 2px 6px 4px 6px;
@@ -954,7 +957,7 @@ pre {
   bottom: 0;
 }
 .control-group .validator:before {
-  left: 8px;
+  left: 7.5px;
   margin-bottom: -8px;
   border: 8px solid transparent;
   border-top: 8px solid #dca7a7;
@@ -1084,7 +1087,7 @@ pre {
 .control-group.invalid .input-group {
   border-color: #dca7a7 !important;
   background-color: #fff8f8;
-  z-index: 90;
+  z-index: 96;
 }
 .control-group.invalid .input-group:after {
   content: '';
@@ -1881,10 +1884,13 @@ table.data-grid > tbody > tr.cyan {
   grid-row: 2;
   grid-column: 1 / span 2;
   background-color: white;
-  overflow: auto;
+  overflow: visible;
 }
 .tab-panel .tab-content.yellow {
   background-color: lightyellow;
+}
+.tab-panel.full-page .tab-content {
+  overflow: auto;
 }
 .tab-panel.bordered > .tab-header {
   padding-left: 0;

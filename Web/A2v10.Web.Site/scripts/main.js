@@ -423,7 +423,7 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20171015-7047*/
+/*20171027-7057*/
 /* services/utils.js */
 
 app.modules['std:utils'] = function () {
@@ -678,7 +678,7 @@ app.modules['std:log'] = function () {
     }
 };
 
-/*20171026-7054*/
+/*20171027-7057*/
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
@@ -708,21 +708,41 @@ app.modules['std:validators'] = function() {
         return true;
     }
 
-    function validateImpl(rules, item, val) {
+    function validateImpl(rules, item, val, ff) {
         let retval = [];
         rules.forEach(function (rule) {
+            const sev = rule.severity || ERROR;
             if (utils.isString(rule)) {
                 if (!validateStd('notBlank', val))
                     retval.push({ msg: rule, severity: ERROR });
             } else if (utils.isString(rule.valid)) {
                 if (!validateStd(rule.valid, val))
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+                    retval.push({ msg: rule.msg, severity: sev });
             } else if (utils.isFunction(rule.valid)) {
                 let vr = rule.valid(item, val);
-                if (utils.isString(vr))
-                    retval.push({ msg: vr, severity: rule.severity || ERROR });
-                else if (!vr)
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+                if (vr && vr.then) {
+                    vr.then((result) => {
+                        let dm = { severity: sev, msg: rule.msg };
+                        let nu = false;
+                        if (utils.isString(result)) {
+                            dm.msg = result;
+                            retval.push(dm);
+                            nu = true;
+                        } else if (!result) {
+                            retval.push(dm);
+                            nu = true;
+                        }
+                        // need to update the validators
+                        item._root_._needValidate_ = true;
+                        if (nu && ff) ff();
+                    });
+                }
+                else if (utils.isString(vr)) {
+                    retval.push({ msg: vr, severity: sev });
+                }
+                else if (!vr) {
+                    retval.push({ msg: rule.msg, severity: sev });
+                }
             } else {
                 console.error('invalid valid element type for rule');
             }
@@ -730,7 +750,7 @@ app.modules['std:validators'] = function() {
         return retval;
     }
 
-    function validateItem(rules, item, val) {
+    function validateItem(rules, item, val, du) {
         //console.warn(item);
         let arr = [];
         if (utils.isArray(rules))
@@ -739,10 +759,8 @@ app.modules['std:validators'] = function() {
             arr.push(rules);
         else if (utils.isString(rules))
             arr.push({ valid: 'notBlank', msg: rules });
-        let err = validateImpl(arr, item, val);
-        if (!err.length)
-            return null;
-        return err;
+        let err = validateImpl(arr, item, val, du);
+        return err; // always array. may be defer
     }
 
 
@@ -757,7 +775,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171026-7054*/
+/*20171027-7057*/
 /* services/datamodel.js */
 (function () {
 
@@ -856,6 +874,23 @@ app.modules['std:validators'] = function() {
 		});
 	}
 
+    function createPrimitiveProperties(elem, ctor) {
+        const templ = elem._root_.$template;
+        if (!templ) return;
+        const props = templ._props_;
+        if (!props) return;
+        let objname = ctor.name;
+        if (objname in props) {
+            for (let p in props[objname]) {
+                let propInfo = props[objname][p];
+                if (utils.isPrimitiveCtor(propInfo)) {
+                    log.info(`create scalar property: ${objname}.${p}`);
+                    elem._meta_.props[p] = propInfo;
+                }
+            }
+        }
+    }
+
 	function createObjProperties(elem, ctor) {
 		let templ = elem._root_.$template;
 		if (!templ) return;
@@ -864,15 +899,19 @@ app.modules['std:validators'] = function() {
 		let objname = ctor.name;
         if (objname in props) {
 			for (let p in props[objname]) {
-                log.info(`create property: ${objname}.${p}`);
                 let propInfo = props[objname][p];
-                if (utils.isFunction(propInfo)) {
+                if (utils.isPrimitiveCtor(propInfo)) {
+                    continue;
+                }
+                else if (utils.isFunction(propInfo)) {
+                    log.info(`create property: ${objname}.${p}`);
                     Object.defineProperty(elem, p, {
                         configurable: false,
                         enumerable: true,
                         get: propInfo
                     });
                 } else if (utils.isObjectExact(propInfo)) {
+                    log.info(`create property: ${objname}.${p}`);
                     Object.defineProperty(elem, p, {
                         configurable: false,
                         enumerable: true,
@@ -887,7 +926,7 @@ app.modules['std:validators'] = function() {
 	}
 
 	function createObject(elem, source, path, parent) {
-		let ctorname = elem.constructor.name;
+		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -899,21 +938,33 @@ app.modules['std:validators'] = function() {
 		defHidden(elem, ERRORS, null, true);
         defHidden(elem, '_lockEvents_', 0, true);
 
+        let hasTemplProps = false;
+        const templ = elem._root_.$template;
+        if (templ && !utils.isEmptyObject(templ._props_))
+            hasTemplProps = true;
+
+        if (hasTemplProps)
+            createPrimitiveProperties(elem, elem.constructor);
+
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
-		}
-		createObjProperties(elem, elem.constructor);
+        }
+
+        if (hasTemplProps)
+            createObjProperties(elem, elem.constructor);
 
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
-				this._root_._validateAll_();
+                this._root_._validateAll_();
+            console.warn('call $valid:' + this._errors_);
+            console.dir(this._errors_);
 			if (this._errors_)
 				return false;
 			for (var x in this) {
 				if (x[0] === '$' || x[0] === '_')
 					continue;
 				let sx = this[x];
-				if (utils.isObject(sx) && ('$valid' in sx)) {
+				if (utils.isObject(sx) && '$valid' in sx) {
 					let sx = this[x];
 					if (!sx.$valid)
 						return false;
@@ -941,11 +992,11 @@ app.modules['std:validators'] = function() {
 				}
 			}
 			elem._enableValidate_ = true;
-            elem._needValidate_ = true;
+            elem._needValidate_ = false;
             elem._modelLoad_ = () => {
                 elem.$emit('Model.load', elem);
                 elem._root_.$setDirty(false);
-            }
+            };
 		}
 		if (startTime)
 			log.time('create root time:', startTime);
@@ -1009,6 +1060,10 @@ app.modules['std:validators'] = function() {
 
     defPropertyGet(_BaseArray.prototype, "$isEmpty", function () {
         return !this.length;
+    });
+
+    defPropertyGet(_BaseArray.prototype, "$checked", function () {
+        return this.filter((el) => el.$checked);
     });
 
 	_BaseArray.prototype.$append = function (src) {
@@ -1237,11 +1292,11 @@ app.modules['std:validators'] = function() {
 			console.error(`command "${cmd}" not found`);
 		} finally {
 			this._root_._enableValidate_ = true;
-			this._root_._needValidate_ = true;
+            this._root_._needValidate_ = true;
 		}
 	}
 
-	function validateImpl(item, path, val) {
+    function validateImpl(item, path, val, du) {
 		if (!item) return null;
 		let tml = item._root_.$template;
 		if (!tml) return null;
@@ -1249,24 +1304,24 @@ app.modules['std:validators'] = function() {
 		if (!vals) return null;
 		var elemvals = vals[path];
 		if (!elemvals) return null;
-		return validators.validate(elemvals, item, val);
+		return validators.validate(elemvals, item, val, du);
 	}
 
-	function saveErrors(item, path, errors) {
+    function saveErrors(item, path, errors) {
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)
-			item._errors_ = {}; // new empty object
-		if (errors)
+            item._errors_ = {}; // new empty object
+        if (errors && errors.length > 0)
 			item._errors_[path] = errors;
 		else if (path in item._errors_)
-			delete item._errors_[path];
+            delete item._errors_[path];
 		if (utils.isEmptyObject(item._errors_))
 			item._errors_ = null;
 		return errors;
 	}
 
-	function validate(item, path, val) {
+	function validate(item, path, val, ff) {
 		if (!item._root_._needValidate_) {
 			// already done
 			if (!item._errors_)
@@ -1274,8 +1329,8 @@ app.modules['std:validators'] = function() {
 			if (path in item._errors_)
 				return item._errors_[path];
 			return null;
-		}
-		let res = validateImpl(item, path, val);
+        }
+		let res = validateImpl(item, path, val, ff);
 		return saveErrors(item, path, res);
 	}
 
@@ -1357,8 +1412,9 @@ app.modules['std:validators'] = function() {
 
 	function validateAll() {
 		var me = this;
-		if (!me._needValidate_) return;
-		me._needValidate_ = false;
+        if (!me._host_) return;
+        if (!me._needValidate_) return;
+        me._needValidate_ = false;
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;
@@ -1646,7 +1702,7 @@ app.modules['std:popup'] = function () {
         }
     });
 })();
-/*20171026-7056*/
+/*20171027-7057*/
 /*components/control.js*/
 
 (function () {
@@ -1659,7 +1715,7 @@ app.modules['std:popup'] = function () {
 			description: String,
 			disabled: Boolean,
             tabIndex: Number
-		},
+        },
         computed: {
 			path() {
                 return this.item._path_ + '.' + this.prop;
@@ -1667,28 +1723,18 @@ app.modules['std:popup'] = function () {
             pathToValidate() {
                 return this.itemToValidate._path_ + '.' + this.propToValidate;
             },
-            valid() {
-                return !this.invalid;
-            },
-            invalid() {
-                let err = this.errors;
-                return err && err.length > 0;
-            },
             errors() {
                 if (!this.item) return null;
 				let root = this.item._root_;
 				if (!root) return null;
 				if (!root._validate_)
                     return null;
+                let err;
                 if (this.itemToValidate)
-                    return root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate]);
-                return root._validate_(this.item, this.path, this.item[this.prop]);
-            },
-            cssClass() {
-				let cls = 'control-group' + (this.invalid ? ' invalid' : ' valid');
-				if (this.required) cls += ' required';
-				if (this.disabled) cls += ' disabled';
-                return cls;
+                    err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
+                else
+                    err = root._validate_(this.item, this.path, this.item[this.prop], this.deferUpdate);
+                return err;
             },
             inputClass() {
                 let cls = '';
@@ -1704,6 +1750,27 @@ app.modules['std:popup'] = function () {
 			}
         },
         methods: {
+            valid() {
+                // method! no cache!
+                return !this.invalid();
+            },
+            invalid() {
+                // method! no cache!
+                let err = this.errors;
+                if (!err) return false;
+                return err.length > 0;
+            },
+            cssClass() {
+                // method! no cached!!!
+                let cls = 'control-group' + (this.invalid() ? ' invalid' : ' valid');
+                if (this.required) cls += ' required';
+                if (this.disabled) cls += ' disabled';
+                return cls;
+            },
+            deferUpdate() {
+                this.$children.forEach((val) => val.$forceUpdate());
+                this.$forceUpdate();
+            },
             test() {
                 alert('from base control');
             }
@@ -1717,8 +1784,11 @@ app.modules['std:popup'] = function () {
 /*components/validator.js*/
 
 Vue.component('validator', {
-        props: ['invalid', 'errors'],
-        template: '<div v-if="invalid" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+    props: {
+        'invalid': Function,
+        'errors': Array
+    },
+    template: '<div v-if="invalid()" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
 });
 
 
@@ -1756,7 +1826,7 @@ Vue.component('validator-control', {
     }
 });
 */
-/*20171026-7056*/
+/*20171027-7057*/
 /*components/textbox.js*/
 
 (function () {
@@ -1764,10 +1834,10 @@ Vue.component('validator-control', {
     const utlis = require('std:utils');
 
     let textBoxTemplate =
-`<div :class="cssClass">
+`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<input :type="controlType" v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors"></validator>
 	</div>
@@ -1776,7 +1846,7 @@ Vue.component('validator-control', {
 `;
 
     let textAreaTemplate =
-        `<div :class="cssClass">
+        `<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
@@ -1788,7 +1858,7 @@ Vue.component('validator-control', {
 `;
 
     let staticTemplate =
-`<div :class="cssClass">
+`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
 		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
@@ -1818,7 +1888,13 @@ Vue.component('validator-control', {
             prop: String,
             itemToValidate: Object,
             propToValidate: String,
-            placeholder: String
+            placeholder: String,
+            password: Boolean
+        },
+        computed: {
+            controlType() {
+                return this.password ? "password" : "text";
+            }
         }
     });
 
@@ -1856,7 +1932,7 @@ Vue.component('validator-control', {
     });
 
 })();
-/*20171026-7056*/
+/*20171027-7057*/
 /*components/combobox.js*/
 
 (function () {
@@ -1865,7 +1941,7 @@ Vue.component('validator-control', {
     const utils = require('std:utils');
 
     let comboBoxTemplate =
-`<div :class="cssClass">
+`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
@@ -1921,7 +1997,7 @@ Vue.component('validator-control', {
         }
     });
 })();
-/*20170926-7054*/
+/*20170927-7057*/
 /* components/datepicker.js */
 
 
@@ -1937,7 +2013,7 @@ Vue.component('validator-control', {
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div  :class="cssClass">
+<div  :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />
@@ -2080,7 +2156,7 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171020-7052*/
+/*20171027-7057*/
 /*components/datagrid.js*/
 (function () {
 
@@ -2240,8 +2316,8 @@ Vue.component('validator-control', {
                     let mark = row[this.mark];
                     if (mark)
                         cssClass += ' ' + mark;
-				}
-				if (editable)
+                }
+                if (editable && this.controlType !== 'checkbox')
                     cssClass += ' cell-editable';
                 if (this.wrap)
                     cssClass += ' ' + this.wrap;
@@ -3983,7 +4059,7 @@ Vue.directive('resize', {
 });
 
 
-/*20171026-7055*/
+/*20171027-7057*/
 /*controllers/base.js*/
 (function () {
 
@@ -4123,6 +4199,29 @@ Vue.directive('resize', {
 					});
 				});
 			},
+
+            $asyncValid(cmd, data) {
+                const vm = this;
+                const cache = vm.__asyncCache__;
+                const djson = JSON.stringify(data);
+                let val = cache[cmd];
+                if (!val) {
+                    val = { data: '', result: null };
+                    cache[cmd] = val;
+                }
+                if (val.data === djson) {
+                    return val.result;
+                }
+                val.data = djson;
+                return new Promise(function (resolve, reject) {
+                    Vue.nextTick(() => {
+                        vm.$invoke(cmd, data).then((result) => {
+                            val.result = result.Result.Value;
+                            resolve(val.result);
+                        });
+                    })
+                });
+            },
 
 			$reload() {
                 let self = this;
@@ -4323,9 +4422,15 @@ Vue.directive('resize', {
                 doReport();
             },
 
-			$modalSaveAndClose(result) {
-				if (this.$isDirty)
-					this.$save().then((result) => eventBus.$emit('modalClose', result));
+			$modalSaveAndClose(result, opts) {
+                if (this.$isDirty) {
+                    const root = this.$data;
+                    if (opts && opts.validRequired && root.$invalid) {
+                        this.$alert('Спочатку виправте помилки');
+                        return;
+                    }
+                    this.$save().then((result) => eventBus.$emit('modalClose', result));
+                }
 				else
 					eventBus.$emit('modalClose', result);
 			},
@@ -4460,7 +4565,8 @@ Vue.directive('resize', {
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 
-			this.$on('localQueryChange', this.__queryChange);
+            this.$on('localQueryChange', this.__queryChange);
+            this.__asyncCache__ = {};
 		},
 		destroyed() {
 			eventBus.$emit('registerData', null);

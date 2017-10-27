@@ -59,7 +59,7 @@
 			<Code Content="{Bind Document.Contract}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
-	<TabPanel>
+	<TabPanel FullPage="True">
 		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
             <Header>Заявка на поставку</Header>
 			<Grid Columns="1*, 1*, 2*">

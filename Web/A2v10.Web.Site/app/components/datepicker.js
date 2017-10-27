@@ -1,4 +1,4 @@
-﻿/*20170926-7054*/
+﻿/*20170927-7057*/
 /* components/datepicker.js */
 
 
@@ -14,7 +14,7 @@
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div  :class="cssClass">
+<div  :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />

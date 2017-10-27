@@ -224,7 +224,6 @@ begin
 	exec a2admin.[Ensure.Admin] @UserId;
 
 	declare @output table(op sysname, id bigint);
-
 	merge a2security.ViewUsers as target
 	using @User as source
 	on (target.Id = source.Id)
@@ -236,8 +235,8 @@ begin
 			target.Memo = source.Memo,
 			target.PersonName = source.PersonName
 	when not matched by target then
-		insert ([UserName], Email, PhoneNumber, Memo, PersonName)
-		values ([Name], Email, Phone, Memo, PersonName)
+		insert ([UserName], Email, PhoneNumber, Memo, PersonName, SecurityStamp)
+		values ([Name], Email, Phone, Memo, PersonName, N'')
 	output 
 		$action op,
 		inserted.Id id
@@ -265,7 +264,24 @@ begin
 	exec a2admin.[User.Load] @UserId, @RetId;
 end
 go
-
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'User.Login.CheckDuplicate')
+	drop procedure [a2admin].[User.Login.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2admin.[User.Login.CheckDuplicate]
+@UserId bigint,
+@Id bigint,
+@Login nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Users where UserName = @Login and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Group.Index')
 	drop procedure [a2admin].[Group.Index]

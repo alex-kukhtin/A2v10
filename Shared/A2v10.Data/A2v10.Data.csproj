@@ -48,7 +48,6 @@
     <Compile Include="ElementMetadata.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldMetadata.cs" />
-    <Compile Include="Helpers.cs" />
     <Compile Include="IdMapper.cs" />
     <Compile Include="LoadHelper.cs" />
     <Compile Include="ObjectBuilder.cs" />

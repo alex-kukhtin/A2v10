@@ -96,11 +96,17 @@
         grid-row: 2;
         grid-column: 1 / span 2;
         background-color: white;
-        overflow:auto;
+        overflow:visible;
     }
 
     .tab-content.yellow {
         background-color: lightyellow;
+    }
+}
+
+.tab-panel.full-page {
+    .tab-content {
+        overflow:auto;
     }
 }
 

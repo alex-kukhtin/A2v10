@@ -54,6 +54,7 @@ namespace A2v10.Xaml
         public String Report { get; set; }
 
         public Boolean SaveRequired { get; set; }
+        public Boolean ValidRequired { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -93,7 +94,7 @@ namespace A2v10.Xaml
 
                 case CommandType.SaveAndClose:
                     if (context.IsDialog)
-                        return "$modalSaveAndClose()";
+                        return $"$modalSaveAndClose(null, {GetOptionsValid(context)})";
                     return "$saveAndClose()";
 
                 case CommandType.OpenSelected:
@@ -183,13 +184,28 @@ namespace A2v10.Xaml
                 return "null";
             StringBuilder sb = new StringBuilder("{");
             if (SaveRequired)
-            {
                 sb.Append("saveRequired: true, ");
+            if (ValidRequired)
+                sb.Append("validRequired: true, ");
+            sb.RemoveTailComma();
+            sb.Append("}");
+            return sb.ToString();
+        }
+
+        String GetOptionsValid(RenderContext context)
+        {
+            if (!ValidRequired)
+                return String.Empty;
+            StringBuilder sb = new StringBuilder("{");
+            if (ValidRequired)
+            {
+                sb.Append("validRequired: true, ");
             }
             sb.RemoveTailComma();
             sb.Append("}");
             return sb.ToString();
         }
+
 
         String CommandArgument(RenderContext context, Boolean nullable = false)
         {

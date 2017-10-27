@@ -5,16 +5,16 @@
   "actions": {
     "index": {
       "index": true,
-      "view": "Index.view"
+      "view": "index.view"
     }
   },
   "dialogs": {
     "edit": {
-      "view": "Edit.dialog",
+      "view": "edit.dialog",
       "template": "edit.template"
     },
     "browse": {
-      "view": "Browse.Dialog",
+      "view": "browse.Dialog",
       "index": true
     }
   }

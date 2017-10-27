@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\Identity\Group\edit.template.js" />
+    <Content Include="Admin\Identity\User\create.template.js" />
     <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
@@ -170,6 +171,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\User\create.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\Group\browse.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

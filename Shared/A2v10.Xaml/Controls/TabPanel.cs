@@ -16,6 +16,8 @@ namespace A2v10.Xaml
 
         public Boolean Border { get; set; }
 
+        public Boolean FullPage { get; set; }
+
         public TabCollection Tabs { get; set; } = new TabCollection();
 
         static String _replaceScope(String path)
@@ -31,6 +33,7 @@ namespace A2v10.Xaml
                 onRender(panel);
             MergeAttributes(panel, context);
             panel.AddCssClassBool(Border, "bordered");
+            panel.AddCssClassBool(FullPage, "full-page");
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
             {

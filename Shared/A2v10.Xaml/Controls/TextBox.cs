@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 
         public Int32? Rows { get; set; }
 
+        public Boolean Password { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var input = new TagBuilder(Multiline ? "a2-textarea" : "textbox", null, IsInGrid);
@@ -21,6 +23,8 @@ namespace A2v10.Xaml
             MergeDisabled(input, context);
             if (Multiline)
                 MergeAttributeInt32(input, context, "rows", nameof(Rows), Rows);
+            if (Password)
+                input.MergeAttribute(":password", "true");
             MergeAlign(input, context, Align);
             MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
             MergeValue(input, context);

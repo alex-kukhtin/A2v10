@@ -1,0 +1,39 @@
+<!-- Browse groups dialog -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Padding="10"
+        Title="Вибір групи">
+    <Dialog.Buttons>
+        <Button Command="{BindCmd Select, Argument={Bind Groups}}">Обрати</Button>
+        <Button Command="{BindCmd Close}">Скасувати</Button>
+    </Dialog.Buttons>
+    <CollectionView ItemsSource="{Bind Groups}" RunAt="Server">
+        <CollectionView.Filter>
+            <FilterDescription>
+                <FilterItem Property="Fragment" />
+            </FilterDescription>
+        </CollectionView.Filter>
+        <Toolbar Style="Transparent" Padding="0,0,10,0">
+            <TextBox Label="Фільтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для пошуку" TabIndex="1">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="Search" Command="{BindCmd Reload}" Tip="Знайти"/>
+                </TextBox.AddOns>
+            </TextBox>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Оновити таблицю" Content="Оновити"/>
+            <!--
+        <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        -->
+        </Toolbar>
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" Height="270"
+				Striped="True" Border="True" Sort="True" GridLines="Vertical" 
+                FixedHeader="True" DoubleClick="{BindCmd Select, Argument={Bind Groups}}">
+            <DataGridColumn Content="{Bind $checked}" Align="Center"  Editable="True" ControlType="CheckBox" Fit="True"/>
+            <DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+            <DataGridColumn Header="Назва" Content="{Bind Name}" />
+            <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+            <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+        </DataGrid>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </CollectionView>
+    <Code Multiline="True" Content="{Bind Groups.$checked}"/>
+</Dialog>
+
+    

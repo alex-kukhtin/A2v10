@@ -1,4 +1,4 @@
-﻿/*20171020-7052*/
+﻿/*20171027-7057*/
 /*components/datagrid.js*/
 (function () {
 
@@ -158,8 +158,8 @@
                     let mark = row[this.mark];
                     if (mark)
                         cssClass += ' ' + mark;
-				}
-				if (editable)
+                }
+                if (editable && this.controlType !== 'checkbox')
                     cssClass += ' cell-editable';
                 if (this.wrap)
                     cssClass += ' ' + this.wrap;

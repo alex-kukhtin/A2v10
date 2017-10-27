@@ -36,8 +36,8 @@ namespace A2v10.Web.Mvc.Identity
 			// Configure validation logic for usernames
 			UserValidator = new UserValidator<AppUser, Int64>(this)
 			{
-				AllowOnlyAlphanumericUserNames = false,
-				RequireUniqueEmail = true
+				AllowOnlyAlphanumericUserNames = false
+				//RequireUniqueEmail = true /* there are no email required */
 			};
 
 			// Configure validation logic for passwords

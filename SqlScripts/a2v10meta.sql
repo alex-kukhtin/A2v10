@@ -1,11 +1,11 @@
-/* 20171011-7044 */
+/* 20171027-7045 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 11 oct 2017 09:00
-module version : 7044
+Last updated : 27 oct 2017
+module version : 7045
 */
 
 ------------------------------------------------
@@ -24,9 +24,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:meta')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7044);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7045);
 else
-	update a2sys.Versions set [Version] = 7044 where Module = N'std:meta';
+	update a2sys.Versions set [Version] = 7045 where Module = N'std:meta';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2meta')
@@ -131,6 +131,23 @@ begin
 		[Version] int not null constraint DF_Tables_Version default(1),
 		DateCreated datetime not null constraint DF_Tables_DateCreated default(getdate()),
 		DateModified datetime not null constraint DF_Tables_DateModified default(getdate()),
+		[Description] nvarchar(255) null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2meta' and TABLE_NAME=N'Views')
+begin
+	create table a2meta.[Views]
+	(
+		Name sysname not null,
+		Module sysname not null 
+			constraint FK_Views_Module_Modules foreign key references a2meta.Modules(Name),
+		[Key] as cast(Module + N'.' + Name as sysname) persisted not null constraint PK_Views primary key,
+		UiName nvarchar(255) null,
+		[Version] int not null constraint DF_Views_Version default(1),
+		DateCreated datetime not null constraint DF_Views_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Views_DateModified default(getdate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -368,7 +385,7 @@ begin
 	set nocount on;
 	declare @table sysname;
 	declare @schema sysname;
-	-- update colums
+	-- update tables
 	declare #tmpcrs cursor local fast_forward read_only for
 	select [Module], [Name] from a2meta.[Tables];
 	open #tmpcrs
@@ -383,9 +400,77 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2meta' and ROUTINE_NAME=N'View.Update')
+	drop procedure a2meta.[View.Update]
+go
+------------------------------------------------
+create procedure a2meta.[View.Update]
+@module sysname,
+@name sysname
+as
 begin
 	set nocount on;
-	grant execute on schema ::a2meta to public;
+	declare @sql nvarchar(max);
+	set @sql = N'
+	if exists(select * from INFORMATION_SCHEMA.VIEWS where TABLE_SCHEMA=N''$Schema$'' and TABLE_NAME=N''$Name$'')
+	begin
+		drop view [$Schema$].[$Name$];
+	end
+	';
+	set @sql = replace(@sql, N'$Name$', @name);
+	set @sql = replace(@sql, N'$Schema$', @module);
+	exec sp_executesql @sql;
+
+	set @sql = N'
+	create view [$Schema$].[$Name$] as
+		select [$Columns$] from [$Tables]
+	';
+
+	set @sql = replace(@sql, N'$Name$', @name);
+	set @sql = replace(@sql, N'$Schema$', @module);
+	exec sp_executesql @sql;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2meta' and ROUTINE_NAME=N'Views.Sync')
+	drop procedure a2meta.[Views.Sync]
+go
+------------------------------------------------
+create procedure a2meta.[Views.Sync]
+as
+begin
+	set nocount on;
+	declare @view sysname;
+	declare @schema sysname;
+	-- update views
+	declare #tmpcrs cursor local fast_forward read_only for
+	select [Module], [Name] from a2meta.[Views];
+	open #tmpcrs
+	fetch next from #tmpcrs into @schema, @view
+	while @@fetch_status = 0
+	begin
+		exec a2meta.[View.Update] @schema, @view;
+		fetch next from #tmpcrs into @schema, @view
+	end
+	close #tmpcrs
+	deallocate #tmpcrs
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2meta' and ROUTINE_NAME=N'Models.Sync')
+	drop procedure a2meta.[Models.Sync]
+go
+------------------------------------------------
+create procedure a2meta.[Models.Sync]
+as
+begin
+	set nocount on;
+end
+go
+------------------------------------------------
+begin
+	set nocount on;
+	--????grant execute on schema ::a2meta to public;
 end
 go
 
@@ -393,7 +478,9 @@ go
 /*
 drop table a2meta.[Columns]
 drop table a2meta.[Tables]
+drop table a2meta.[Views]
 drop table a2meta.[Modules]
+drop table a2meta.[Models]
 */
 ------------------------------------------------
 set noexec off;

@@ -1,4 +1,4 @@
-﻿/*20171026-7054*/
+﻿/*20171027-7057*/
 /*validators.js*/
 app.modules['std:validators'] = function() {
 
@@ -28,21 +28,41 @@ app.modules['std:validators'] = function() {
         return true;
     }
 
-    function validateImpl(rules, item, val) {
+    function validateImpl(rules, item, val, ff) {
         let retval = [];
         rules.forEach(function (rule) {
+            const sev = rule.severity || ERROR;
             if (utils.isString(rule)) {
                 if (!validateStd('notBlank', val))
                     retval.push({ msg: rule, severity: ERROR });
             } else if (utils.isString(rule.valid)) {
                 if (!validateStd(rule.valid, val))
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+                    retval.push({ msg: rule.msg, severity: sev });
             } else if (utils.isFunction(rule.valid)) {
                 let vr = rule.valid(item, val);
-                if (utils.isString(vr))
-                    retval.push({ msg: vr, severity: rule.severity || ERROR });
-                else if (!vr)
-                    retval.push({ msg: rule.msg, severity: rule.severity || ERROR });
+                if (vr && vr.then) {
+                    vr.then((result) => {
+                        let dm = { severity: sev, msg: rule.msg };
+                        let nu = false;
+                        if (utils.isString(result)) {
+                            dm.msg = result;
+                            retval.push(dm);
+                            nu = true;
+                        } else if (!result) {
+                            retval.push(dm);
+                            nu = true;
+                        }
+                        // need to update the validators
+                        item._root_._needValidate_ = true;
+                        if (nu && ff) ff();
+                    });
+                }
+                else if (utils.isString(vr)) {
+                    retval.push({ msg: vr, severity: sev });
+                }
+                else if (!vr) {
+                    retval.push({ msg: rule.msg, severity: sev });
+                }
             } else {
                 console.error('invalid valid element type for rule');
             }
@@ -50,7 +70,7 @@ app.modules['std:validators'] = function() {
         return retval;
     }
 
-    function validateItem(rules, item, val) {
+    function validateItem(rules, item, val, du) {
         //console.warn(item);
         let arr = [];
         if (utils.isArray(rules))
@@ -59,10 +79,8 @@ app.modules['std:validators'] = function() {
             arr.push(rules);
         else if (utils.isString(rules))
             arr.push({ valid: 'notBlank', msg: rules });
-        let err = validateImpl(arr, item, val);
-        if (!err.length)
-            return null;
-        return err;
+        let err = validateImpl(arr, item, val, du);
+        return err; // always array. may be defer
     }
 
 

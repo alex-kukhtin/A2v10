@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
+    <Compile Include="Hooks\CreateUserHandler.cs" />
     <Compile Include="Identity\IdentityExtensions.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebApplicationHost.cs" />

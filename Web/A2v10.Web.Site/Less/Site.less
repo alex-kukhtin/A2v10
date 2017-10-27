@@ -294,15 +294,19 @@ input, select, textarea {
     border-style: none;
     font-size: 13px;
     color: @text-color;
-    padding: 0 @input-padding;
 
     &:focus {
         outline-style: none;
     }
 }
 
+textarea {
+    padding:2px @input-padding;
+}
+
 input, select {
     height: @control-height;
+    padding: 0 @input-padding;
 }
 
 /* hide for focused */

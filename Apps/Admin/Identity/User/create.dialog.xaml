@@ -1,6 +1,6 @@
 <!-- User Properties -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-        Title="{Bind User.Id, Format='Властивості користувача [{0}]'}">
+        Title="Створення користувача">
     <!--TODO: Resources (Confirm)-->
     <Dialog.Buttons>
         <Button Command="{BindCmd SaveAndClose, ValidRequired=True}">OK</Button>
@@ -8,13 +8,20 @@
     </Dialog.Buttons>
     <TabPanel>
         <Tab Header="Загальні">
-            <Grid Columns="1*, 1*" Rows="Auto,Auto,Auto,33,Auto">
+            <Grid Columns="1*, 1*">
                 <TextBox Grid.Row="1" Label="Логін" Required="True"
                          Value="{Bind User.Name}" TabIndex="1"/>
+                <!--
+                <Code Content="{Bind User.$valid}" Grid.Col="2" Multiline="True"></Code>
+                -->
                 <TextBox Grid.Row="2" Grid.ColSpan="2" Label="Ім'я" Value="{Bind User.PersonName}" TabIndex="2"/>
                 <TextBox Grid.Row="3" Grid.Col="1" Label="e-mail" Value="{Bind User.Email}" TabIndex="3"/>
                 <TextBox Grid.Row="3" Grid.Col="2" Label="Телефон" Value="{Bind User.Phone}" TabIndex="4"/>
-                <TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примітка" Value="{Bind User.Memo}" TabIndex="5" 
+                <TextBox Grid.Row="4" Grid.Col="1" Label="Пароль" Required="True" Password="True"
+                         Value="{Bind User.Password}" TabIndex="5"/>
+                <TextBox Grid.Row="4" Grid.Col="2" Label="Підтверждення" Required="True" Password="True"
+                         Value="{Bind User.Confirm}" TabIndex="6"/>
+                <TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примітка" Value="{Bind User.Memo}" TabIndex="7" 
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
@@ -37,14 +44,6 @@
                 </DataGridColumn>
             </DataGrid>
         </Tab>
-        <!--
-        <Tab Header="Ролі" Padding="5, 10">
-            <Toolbar Style="Transparent">
-                <Button Toolbar.Align="Right" Icon="Plus" Content="Додати"/>
-                <Button Toolbar.Align="Right" Icon="Delete" Content="Видалити"/>
-            </Toolbar>
-        </Tab>
-        -->
     </TabPanel>
 </Dialog>
 

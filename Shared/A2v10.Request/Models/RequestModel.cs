@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using System.Dynamic;
+using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Globalization;
 
 namespace A2v10.Request
 {
@@ -176,6 +179,7 @@ namespace A2v10.Request
     public abstract class RequestView : RequestBase
     {
         public String view;
+        public String hook;
 
         public String GetView()
         {
@@ -187,6 +191,29 @@ namespace A2v10.Request
         public String GetRelativePath(String extension)
         {
             return $"~/{Path}/{GetView()}{extension}";
+        }
+
+        public IModelHandler GetHookHandler(IApplicationHost host)
+        {
+            if (String.IsNullOrEmpty(hook))
+                return null;
+            var regex = new Regex(@"^\s*clr-type\s*:\s*([\w\.]+)\s*;\s*assembly\s*=\s*([\w\.]+)\s*$");
+            var match = regex.Match(hook);
+            if (match.Groups.Count != 3)
+            {
+                String errorMsg = $"Invalid hook definition: '{hook}'. Expected: 'clr-type:TypeName;assembly=AssemblyName'";
+                throw new RequestModelException(errorMsg);
+            }
+            String assemblyName = match.Groups[2].Value;
+            String typeName = match.Groups[1].Value;
+            var modelHandler = System.Activator.CreateInstance(assemblyName:assemblyName, typeName:typeName, 
+                ignoreCase: false, bindingAttr: 0, 
+                binder: null, args:new Object[] { host }, 
+                culture: null, 
+                activationAttributes: null).Unwrap();
+            if (!(modelHandler is IModelHandler))
+                throw new RequestModelException($"{typeName} must implement interface IModelHandler");
+            return modelHandler as IModelHandler;
         }
     }
 

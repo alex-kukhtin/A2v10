@@ -1,4 +1,4 @@
-﻿/*20171026-7055*/
+﻿/*20171027-7057*/
 /*controllers/base.js*/
 (function () {
 
@@ -138,6 +138,29 @@
 					});
 				});
 			},
+
+            $asyncValid(cmd, data) {
+                const vm = this;
+                const cache = vm.__asyncCache__;
+                const djson = JSON.stringify(data);
+                let val = cache[cmd];
+                if (!val) {
+                    val = { data: '', result: null };
+                    cache[cmd] = val;
+                }
+                if (val.data === djson) {
+                    return val.result;
+                }
+                val.data = djson;
+                return new Promise(function (resolve, reject) {
+                    Vue.nextTick(() => {
+                        vm.$invoke(cmd, data).then((result) => {
+                            val.result = result.Result.Value;
+                            resolve(val.result);
+                        });
+                    })
+                });
+            },
 
 			$reload() {
                 let self = this;
@@ -338,9 +361,15 @@
                 doReport();
             },
 
-			$modalSaveAndClose(result) {
-				if (this.$isDirty)
-					this.$save().then((result) => eventBus.$emit('modalClose', result));
+			$modalSaveAndClose(result, opts) {
+                if (this.$isDirty) {
+                    const root = this.$data;
+                    if (opts && opts.validRequired && root.$invalid) {
+                        this.$alert('Спочатку виправте помилки');
+                        return;
+                    }
+                    this.$save().then((result) => eventBus.$emit('modalClose', result));
+                }
 				else
 					eventBus.$emit('modalClose', result);
 			},
@@ -475,7 +504,8 @@
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 
-			this.$on('localQueryChange', this.__queryChange);
+            this.$on('localQueryChange', this.__queryChange);
+            this.__asyncCache__ = {};
 		},
 		destroyed() {
 			eventBus.$emit('registerData', null);

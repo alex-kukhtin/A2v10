@@ -196,6 +196,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+	-- from account/register only
 	insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
 		values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
 	--TODO: log

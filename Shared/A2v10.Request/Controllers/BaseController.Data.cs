@@ -49,6 +49,9 @@ namespace A2v10.Request
                 UserId = userId
             };
             IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+            IModelHandler handler = rw.GetHookHandler(_host);
+            if (handler != null)
+                await handler.AfterSave(data, model.Root);
             WriteDataModel(model, writer);
         }
 

@@ -1,4 +1,4 @@
-﻿/*20171026-7056*/
+﻿/*20171027-7057*/
 /*components/combobox.js*/
 
 (function () {
@@ -7,7 +7,7 @@
     const utils = require('std:utils');
 
     let comboBoxTemplate =
-`<div :class="cssClass">
+`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
