@@ -92,7 +92,7 @@ namespace A2v10.Xaml
             MergeAttributes(button, context);
             if (!HasContent && (Icon != Icon.NoIcon))
                 button.AddCssClass("btn-icon");
-            MergeDisabled(button, context);
+            MergeDisabled(button, context, nativeControl: true);
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

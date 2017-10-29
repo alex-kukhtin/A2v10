@@ -51,18 +51,32 @@ namespace A2v10.Xaml
                 {
                     tag.AddCssClass("add-on");
                     tag.MergeAttribute("tabindex", "-1");
-                    MergeDisabled(tag, context);
+                    MergeDisabled(tag, context, nativeControl: true);
                 });
             }
         }
 
-        internal virtual void MergeDisabled(TagBuilder tag, RenderContext context)
+        internal virtual void MergeDisabled(TagBuilder tag, RenderContext context, Boolean nativeControl = false)
         {
             var disBind = GetBinding(nameof(Disabled));
             if (disBind != null)
                 tag.MergeAttribute(":disabled", disBind.GetPath(context));
             else if (Disabled)
-                tag.MergeAttribute("disabled", String.Empty);
+            {
+                if (nativeControl)
+                    tag.MergeAttribute("disabled", String.Empty);
+                else
+                    tag.MergeAttribute(":disabled", "true"); // jsValue
+            }
+        }
+
+        internal void CheckDisabledModel(RenderContext context)
+        {
+            if (context.IsDataModelIsReadOnly)
+            {
+                Disabled = true;
+                RemoveBinding(nameof(Disabled));
+            }
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿/*20171027-7057*/
+﻿/*20171028-7058*/
 /* services/utils.js */
 
 app.modules['std:utils'] = function () {
 
-	const dateLocale = 'uk-UA';
+    const dateLocale = 'uk-UA';
+    const dateOpts = {timeZone: 'UTC'};
 
 	return {
 		isArray: Array.isArray,
@@ -101,7 +102,7 @@ app.modules['std:utils'] = function () {
 
 	function format(obj, dataType) {
 		if (!dataType)
-			return obj;
+            return obj;
 		switch (dataType) {
 			case "DateTime":
 				if (!isDate(obj)) {
@@ -110,7 +111,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleDateString(dateLocale) + ' ' + obj.toLocaleTimeString(dateLocale);
+                return obj.toLocaleDateString(dateLocale, dateOpts) + ' ' + obj.toLocaleTimeString(dateLocale, dateOpts);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
@@ -118,7 +119,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleDateString(dateLocale);
+                return obj.toLocaleDateString(dateLocale, dateOpts);
 			case "Time":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
@@ -126,7 +127,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleTimeString(dateLocale);
+                return obj.toLocaleTimeString(dateLocale, dateOpts);
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Currency for utils.format (${obj})`);

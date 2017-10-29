@@ -1,4 +1,4 @@
-﻿/*20171020-7053*/
+﻿/*20171029-7059*/
 /* controllers/shell.js */
 
 (function () {
@@ -240,7 +240,6 @@
 				me.needReload = true;
 				Vue.nextTick(() => me.needReload = false);
             });
-            log.loadSession();
 		}
 	};
 
@@ -417,13 +416,14 @@
 				me.$store.commit('popstate');
 			});
 
-			eventBus.$on('registerData', function (component, out) {
+            eventBus.$on('registerData', function (component, out) {
                 if (component) {
                     if (me.__dataStack__.length > 0)
                         out.caller = me.__dataStack__[0];
-                    me.__dataStack__.push(component);
-                } else
-					me.__dataStack__.pop(component);
+                    me.__dataStack__.unshift(component);
+                } else {
+                    me.__dataStack__.shift(component);
+                }
 			});
 
 

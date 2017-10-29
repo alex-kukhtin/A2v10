@@ -60,6 +60,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            CheckDisabledModel(context);
             var combo = new TagBuilder("select", null, IsInGrid);
             if (onRender != null)
                 onRender(combo);

@@ -1,6 +1,5 @@
 ﻿<!-- Document edit -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	  Title="{Bind Document.Id, Format='Заявка [{0}]'}">
 	<Page.Toolbar>
 		<Toolbar>
@@ -56,13 +55,18 @@
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
 				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
-			<Code Content="{Bind Document.Contract}"></Code>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel FullPage="True">
 		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
             <Header>Заявка на поставку</Header>
-			<Grid Columns="1*, 1*, 2*">
+            <StackPanel Orientation="Horizontal">
+                <Static Label="Entity name" Bold="True"
+                            Value="{Bind Entity.Name}"/>
+                <TextBox Label="Entity name Edit" Bold="True"
+                            Value="{Bind Entity.Name}"/>
+            </StackPanel>
+            <Grid Columns="1*, 1*, 2*">
                 <Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}" />
                 <Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}" Grid.VAlign="Top"/>
                 <ComboBox Disabled="True" Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
@@ -78,8 +82,11 @@
                          Tip="введите фрагмент наименования для поиска"
 						 Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
 					<TextBox.AddOns>
+                        <!--
 						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
-						<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
+                        -->
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url={Bind Document.$browseAgentUrl}, Argument={Bind Document.Agent}}"/>
+                        <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
 					</TextBox.AddOns>
 				</TextBox>
 				<!--
@@ -90,9 +97,6 @@
 					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
 					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>
 				</ComboBox>
-                <Static Label="Сумма по документу" Align="Right" Bold="True"
-                        Grid.Row="4" Grid.Col="2" Value="{Bind Document.Sum, DataType=Currency}"/>
-
             </Grid>
 			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5" FilterDelegate="FilterRows">
                 <!-- Начальная сортировка для таблицы -->

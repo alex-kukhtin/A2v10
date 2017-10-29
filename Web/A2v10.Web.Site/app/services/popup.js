@@ -1,4 +1,4 @@
-﻿/*20170829-7022*/
+﻿/*20171029-7060*/
 /* services/popup.js */
 
 app.modules['std:popup'] = function () {
@@ -6,17 +6,19 @@ app.modules['std:popup'] = function () {
 	const __dropDowns__ = [];
 	let __started = false;
 
-	const __error = 'Perhaps you forgot to create a _click function for popup element';
+    const __error = 'Perhaps you forgot to create a _close function for popup element';
 
 
 	return {
 		startService: startService,
 		registerPopup: registerPopup,
 		unregisterPopup: unregisterPopup,
-		closeAll: closeAllPopups
+        closeAll: closeAllPopups,
+        closest: closest,
+        closeInside: closeInside
 	};
 
-	function registerPopup(el) {
+    function registerPopup(el) {
 		__dropDowns__.push(el);
 	}
 
@@ -49,18 +51,31 @@ app.modules['std:popup'] = function () {
 			if (el._close)
 				el._close(document);
 		});
-	}
+    }
+
+    function closeInside(el) {
+        if (!el) return;
+        // inside el only
+        let ch = el.querySelectorAll('.popover-wrapper');
+        for (let i = 0; i < ch.length; i++) {
+            let chel = ch[i];
+            if (chel._close) {
+                chel._close();
+            }
+        }
+    }
 
 	function closePopups(ev) {
 		if (__dropDowns__.length === 0)
-			return;
+            return;
 		for (let i = 0; i < __dropDowns__.length; i++) {
-			let el = __dropDowns__[i];
+            let el = __dropDowns__[i];
 			if (closest(ev.target, '.dropdown-item') ||
 				ev.target.hasAttribute('close-dropdown') ||
 				closest(ev.target, '[dropdown-top]') !== el) {
-				if (!el._close)
-					throw new Error(__error);
+                if (!el._close) {
+                    throw new Error(__error);
+                }
 				el._close(ev.target);
 			}
 		}

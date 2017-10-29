@@ -79,6 +79,18 @@ namespace A2v10.Data
 			}
 		}
 
+        Object CheckId(String colName, Object dbVal, Type dataType)
+        {
+            if (dbVal == DBNull.Value)
+                return dbVal;
+            if (colName.EndsWith("Id") && dataType == typeof(Int64))
+            {
+                if (dbVal.ToString() == "0")
+                    return DBNull.Value;
+            }
+            return dbVal;
+        }
+
 		void ProcessOneDataElem(DataTable table, ExpandoObject data)
 		{
 			var row = table.NewRow();
@@ -93,13 +105,15 @@ namespace A2v10.Data
 					if (GetComplexValue(data, col.ColumnName, out rowVal))
 					{
 						var dbVal = SqlExtensions.ConvertTo(rowVal, col.DataType);
+                        dbVal = CheckId(col.ColumnName, dbVal, col.DataType);
 						row[col.ColumnName] = dbVal;
 					}
 				}
 				else if (dataD.TryGetValue(col.ColumnName, out rowVal))
 				{
 					var dbVal = SqlExtensions.ConvertTo(rowVal, col.DataType);
-					row[col.ColumnName] = dbVal;
+                    dbVal = CheckId(col.ColumnName, dbVal, col.DataType);
+                    row[col.ColumnName] = dbVal;
 				}
 			}
 			table.Rows.Add(row);

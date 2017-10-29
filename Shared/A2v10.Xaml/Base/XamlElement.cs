@@ -28,6 +28,11 @@ namespace A2v10.Xaml
             return _bindImpl?.GetBinding(name);
         }
 
+        public void RemoveBinding(String name)
+        {
+            _bindImpl?.RemoveBinding(name);
+        }
+
         public void SetBinding(String name, BindBase bind)
         {
             if (bind == null)

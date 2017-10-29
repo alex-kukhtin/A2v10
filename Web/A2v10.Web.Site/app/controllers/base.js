@@ -1,4 +1,4 @@
-﻿/*20171027-7057*/
+﻿/*20171029-7060*/
 /*controllers/base.js*/
 (function () {
 
@@ -8,6 +8,10 @@
 	const store = component('std:store');
 	const urltools = require('std:url');
 	const log = require('std:log');
+
+
+    let __updateStartTime = 0;
+    let __createStartTime = 0;
 
 	const documentTitle = {
 		render() {
@@ -87,6 +91,8 @@
             },
 			$save() {
 				let self = this;
+                if (self.$root.$readOnly)
+                    return;
                 let root = window.$$rootUrl;
 				let url = root + '/_data/save';
 				return new Promise(function (resolve, reject) {
@@ -189,7 +195,9 @@
 					eventBus.$emit('requery');
 			},
 
-			$remove(item, confirm) {
+            $remove(item, confirm) {
+                if (item.$root.$readOnly)
+                    return;
 				if (!confirm)
 					item.$remove();
 				else
@@ -203,6 +211,8 @@
 				let item = arr.$selected;
 				if (!item)
 					return;
+                if (item.$root.$readOnly)
+                    return;
 				this.$remove(item, confirm);
 			},
 
@@ -242,18 +252,17 @@
                 }
             },
 			$openSelected(url, arr) {
-				// TODO: переделать
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				if (url.startsWith('{')) {
+                if (url.startsWith('{')) { // decorated. defer evaluate
 					url = url.substring(1, url.length - 1);
-					let nUrl = sel[url];
+                    let nUrl = utils.eval(sel, url);
 					if (!nUrl)
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
 					url = nUrl;
-				}
+                }
 				this.$navigate(url, sel.$id);
 			},
 
@@ -297,7 +306,10 @@
                 return this.$dialog('show', url, null, query);
             },
 
-			$dialog(command, url, data, query) {
+            $dialog(command, url, data, query) {
+                let uq = urltools.parseUrlAndQuery(url, query);
+                url = uq.url;
+                query = uq.query;
 				return new Promise(function (resolve, reject) {
 					// sent a single object
                     if (command === 'edit-selected') {
@@ -485,7 +497,10 @@
             },
             __doInit__() {
                 const root = this.$data;
-                root._modelLoad_();
+                let caller = null;
+                if (this.$caller)
+                    caller = this.$caller.$data;
+                root._modelLoad_(caller);
             }
 		},
 		created() {
@@ -506,6 +521,7 @@
 
             this.$on('localQueryChange', this.__queryChange);
             this.__asyncCache__ = {};
+            log.time('create time:', __createStartTime, false);
 		},
 		destroyed() {
 			eventBus.$emit('registerData', null);
@@ -515,10 +531,13 @@
 			this.$off('localQueryChange', this.__queryChange);
 		},
 		beforeUpdate() {
-			this.__updateStartTime = performance.now();
-		},
+			__updateStartTime = performance.now();
+        },
+        beforeCreate() {
+            __createStartTime = performance.now();
+        },
 		updated() {
-			log.time('update time:', this.__updateStartTime);
+			log.time('update time:', __updateStartTime, false);
 		}
     });
     

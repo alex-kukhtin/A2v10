@@ -3,13 +3,14 @@
 	init();
 
 	return {
-		properties: {
+        properties: {
 			"TEntity.Price": getEntityPrice,
 			"TEntity.$HasPrices": function () {
 			    return this.Prices && this.Prices.length > 0;
 			}
 		},
-		events: {
+        events: {
+            "Model.load": modelLoad,
 		    "Entities.load": onload,
 		    "Entities[].Qty.change": qtyChange
 	    }
@@ -17,6 +18,10 @@
         //	"addSelected": addSelected,
         //}
     };
+
+    function modelLoad(root, caller) {
+        console.dir(caller);
+    }
 
 	function onload() {
 		//alert(vm.$caller.Document.Contract.PriceKind.Id);

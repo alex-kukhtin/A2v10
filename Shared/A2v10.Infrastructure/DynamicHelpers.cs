@@ -34,6 +34,14 @@ namespace A2v10.Infrastructure
                 d.Add(name, value);
         }
 
+        public static Boolean HasProperty(this ExpandoObject obj, String name)
+        {
+            var d = obj as IDictionary<String, Object>;
+            if (d == null)
+                return false;
+            return d.ContainsKey(name);
+        }
+
         public static void Append(this ExpandoObject obj, NameValueCollection coll, Boolean toPascalCase = false)
         {
             if (coll == null)

@@ -1,7 +1,7 @@
 <!-- Demo dialog page -->
 <Popup xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	   Width="450px">
+	   Width="650px">
     <Toolbar>
         <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
         <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
@@ -13,9 +13,11 @@
 					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
 			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
+            <!--
             <DataGridColumn Header="Наименование">
                 <Static Value="{Bind Name}" Wrap="NoWrap"/>
             </DataGridColumn>
+            -->
             <DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right" />
             <DataGridColumn Header="Popovers" Wrap="NoWrap">
                 <Group>

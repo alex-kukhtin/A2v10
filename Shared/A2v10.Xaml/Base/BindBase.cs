@@ -49,6 +49,5 @@ namespace A2v10.Xaml
         {
             return _bindImpl?.GetBindingCommand(name);
         }
-
     }
 }

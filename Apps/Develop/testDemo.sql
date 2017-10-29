@@ -62,12 +62,13 @@ alter procedure a2v10demo.[Catalog.Customer.Index]
 @Filter nvarchar(255) = null,
 @Offset int = 0,
 @PageSize int = 4,
-@InStockOnly bit = 0
+@InStockOnly bit = 0,
+@DocumentId bigint = null
 as
 begin
 	set nocount on;
 
-	--throw 60000,  @UserId, 0;
+	--throw 60000,  @DocumentId, 0;
 	-- TODO get page size form meta
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10);
@@ -91,7 +92,7 @@ begin
 			case when @Order=N'Memo' and @Dir = @Desc  then c.[Memo] end desc
 			)
 		from a2v10demo.[Catalog.Customers] c
-		where upper(c.Name) like N'%' + upper(@Filter) + N'%'
+		where @Filter is null or upper(c.Name) like N'%' + upper(@Filter) + N'%'
 	)
 	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo, Photo,
 		[!!RowCount] = (select count(1) from T)

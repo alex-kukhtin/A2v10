@@ -335,6 +335,12 @@ a {
     text-decoration: none;
     cursor: pointer;
 
+    &[disabled] {
+        //pointer-events:none;
+        opacity:0.65;
+        cursor:not-allowed;
+    }
+
     &:hover {
         color: @link-hover-color;
         text-decoration: none;

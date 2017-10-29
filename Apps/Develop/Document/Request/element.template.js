@@ -3,7 +3,11 @@
 
 let template = {
 	properties: {
-		'Document.Sum': documentSumProperty
+        "TRoot.Entity": { Id: 123, Name: 'entityName' },
+        'Document.Sum': documentSumProperty,
+        'TDocument.$browseAgentUrl'() {
+            return '/common/agent/browse?DocumentId=' + this.Id;
+        }
 	},
 	methods: {
 		// new
@@ -13,9 +17,10 @@ let template = {
 	},
 	events: {
 		// TODO:
-		'Model.load'(root) {
-			//alert(root.Document.$isNew);
+        'Model.load'(root, caller) {
+            //console.dir(caller);
 			//alert(root.Document.DateCreated instanceof Date);
+            root.Entity.Name = 'entity name after load';
 		}
     },
     /*

@@ -98,7 +98,7 @@ namespace A2v10.Xaml
                     return "$saveAndClose()";
 
                 case CommandType.OpenSelected:
-                    return $"$openSelected('{CommandUrl}', {CommandArgument(context)})";
+                    return $"$openSelected({CommandUrl(context, decorate:true)}, {CommandArgument(context)})";
 
 
                 case CommandType.Select:
@@ -114,13 +114,13 @@ namespace A2v10.Xaml
                     if (indirect)
                     {
                         if (!IsArgumentEmpty(context))
-                            return $"{{cmd:$navigate, eval: true, arg1:'{CommandUrl}', arg2:'{CommandArgument(context)}'}}";
-                        return $"{{cmd:$navigate, eval:true, arg1:'{CommandUrl}', arg2:'this'}}";
+                            return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context)}, arg2:'{CommandArgument(context)}'}}";
+                        return $"{{cmd:$navigate, eval:true, arg1:{CommandUrl(context)}, arg2:'this'}}";
                     }
                     else
-                        return $"$navigate('{CommandUrl}', {CommandArgument(context)})";
+                        return $"$navigate({CommandUrl(context)}, {CommandArgument(context)})";
                 case CommandType.Create:
-                    return $"$navigate('{CommandUrl}')";
+                    return $"$navigate({CommandUrl(context)})";
 
                 case CommandType.Remove:
                     if (indirect)
@@ -134,7 +134,7 @@ namespace A2v10.Xaml
                     return $"{CommandArgument(context)}.$append()";
 
                 case CommandType.Browse:
-                    return $"$dialog('browse', '{CommandUrl}', {CommandArgument(context)})";
+                    return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)})";
 
                 case CommandType.Execute:
                     return $"$exec('{GetName()}', {CommandArgument(context, nullable:true)} {GetConfirm(context)})";
@@ -156,9 +156,9 @@ namespace A2v10.Xaml
                         if (!IsArgumentEmpty(context))
                             arg3 = CommandArgument(context);
                         // command, url, data
-                        return $"{{cmd:$dialog, arg1:'{action}', arg2:'{CommandUrl}', arg3: '{arg3}'}}";
+                        return $"{{cmd:$dialog, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
                     }
-                    return $"$dialog('{action}', '{CommandUrl}', {CommandArgument(context, bNullable)})";
+                    return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)})";
 
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
@@ -205,7 +205,6 @@ namespace A2v10.Xaml
             sb.Append("}");
             return sb.ToString();
         }
-
 
         String CommandArgument(RenderContext context, Boolean nullable = false)
         {
@@ -259,22 +258,21 @@ namespace A2v10.Xaml
             }
         }
 
-        String CommandUrl
+        String CommandUrl(RenderContext context, Boolean decorate = false)
         {
-            get
+            var urlBind = GetBinding(nameof(Url));
+            if (urlBind != null)
             {
-                var urlBind = GetBinding(nameof(Url));
-                if (urlBind != null)
-                {
-                    return $"{{{urlBind.Path}}}";
-                }
-                if (String.IsNullOrEmpty(Url))
-                    throw new NotImplementedException($"Url required for {Command} command");
-                // TODO: check URL format
-                if (!Url.StartsWith("/"))
-                    throw new NotImplementedException($"Url '{Url}' must start with '/'");
-                return Url.ToLowerInvariant();
+                if (decorate)
+                    return $"'{{{urlBind.Path}}}'";
+                return urlBind.GetPath(context);
             }
+            if (String.IsNullOrEmpty(Url))
+                throw new NotImplementedException($"Url required for {Command} command");
+            // TODO: check URL format
+            if (!Url.StartsWith("/"))
+                throw new NotImplementedException($"Url '{Url}' must start with '/'");
+            return $"'{Url.ToLowerInvariant()}'";
         }
 
         internal void MergeCommandAttributes(TagBuilder tag, RenderContext context)
@@ -283,22 +281,39 @@ namespace A2v10.Xaml
             {
                 case CommandType.Save:
                 case CommandType.SaveAndClose:
-                    tag.MergeAttribute(":disabled", "$isPristine");
+                    if (context.IsDataModelIsReadOnly)
+                        tag.MergeAttribute(":disabled", "true");
+                    else
+                        tag.MergeAttribute(":disabled", "$isPristine");
                     break;
                 case CommandType.Execute:
                     tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)})");
+                    break;
+                case CommandType.Append:
+                case CommandType.Remove:
+                    if (context.IsDataModelIsReadOnly)
+                        tag.MergeAttribute(":disabled", "true");
                     break;
                 case CommandType.OpenSelected:
                 case CommandType.Select:
                 case CommandType.ExecuteSelected:
                 case CommandType.DbRemoveSelected:
-                case CommandType.RemoveSelected:
                     {
                         var arg = GetBinding(nameof(Argument));
                         if (arg != null)
                             tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
-                        break;
                     }
+                    break;
+                case CommandType.RemoveSelected:
+                    if (context.IsDataModelIsReadOnly)
+                        tag.MergeAttribute(":disabled", "true");
+                    else
+                    {
+                        var arg = GetBinding(nameof(Argument));
+                        if (arg != null)
+                            tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+                    }
+                    break;
                 case CommandType.Dialog:
                     if (Action == DialogAction.EditSelected)
                     {

@@ -1,4 +1,4 @@
-﻿/*20171026-7056*/
+﻿/*20171029-7060*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -6,13 +6,13 @@ Vue.directive('focus', {
 
 		el.addEventListener("focus", function (event) {
 			event.target.parentElement.classList.add('focus');
-		});
+		}, false);
 
 		el.addEventListener("blur", function (event) {
 			let t = event.target;
 			t._selectDone = false;
 			event.target.parentElement.classList.remove('focus');
-		});
+		}, false);
 
 		el.addEventListener("click", function (event) {
 			let t = event.target;
@@ -20,8 +20,7 @@ Vue.directive('focus', {
 				return;
 			t._selectDone = true;
 			if (t.select) t.select();
-			//event.stopImmediatePropagation();
-        }, true);
+        }, false);
     },
     inserted(el) {
         if (el.tabIndex === 1) {

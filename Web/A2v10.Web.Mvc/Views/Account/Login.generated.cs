@@ -148,7 +148,7 @@ WriteLiteral("                        ");
 
             
             #line 20 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.TextBoxFor(m => m.Name, new { @class = "control", style = "grid-row:1; grid-column:2" }));
+                   Write(Html.TextBoxFor(m => m.Name, new { @class = "control" }));
 
             
             #line default
@@ -186,7 +186,7 @@ WriteLiteral("                        ");
 
             
             #line 27 "..\..\Views\Account\Login.cshtml"
-                   Write(Html.PasswordFor(m => m.Password, new { @class = "control", style = "grid-row:2;grid-column:2" }));
+                   Write(Html.PasswordFor(m => m.Password, new { @class = "control"}));
 
             
             #line default
@@ -225,18 +225,7 @@ WriteLiteral(" type=\"hidden\"");
 
 WriteLiteral(" value=\"false\"");
 
-WriteLiteral("/>\r\n");
-
-WriteLiteral("                ");
-
-            
-            #line 36 "..\..\Views\Account\Login.cshtml"
-           Write(Html.CheckBoxFor(m => m.RememberMe));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                <div");
+WriteLiteral("/>\r\n                <div");
 
 WriteLiteral(" style=\"grid-row:4;grid-column:2\"");
 
@@ -253,7 +242,7 @@ WriteLiteral("            <p>\r\n");
 WriteLiteral("                ");
 
             
-            #line 42 "..\..\Views\Account\Login.cshtml"
+            #line 41 "..\..\Views\Account\Login.cshtml"
            Write(Html.ActionLink("Register as a new user", "Register"));
 
             
@@ -262,13 +251,13 @@ WriteLiteral("                ");
 WriteLiteral("\r\n            </p>\r\n");
 
             
-            #line 44 "..\..\Views\Account\Login.cshtml"
+            #line 43 "..\..\Views\Account\Login.cshtml"
             
             
             #line default
             #line hidden
             
-            #line 47 "..\..\Views\Account\Login.cshtml"
+            #line 46 "..\..\Views\Account\Login.cshtml"
                       
         }
 

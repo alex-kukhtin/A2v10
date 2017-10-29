@@ -69,7 +69,8 @@ namespace A2v10.Request
                         {
                             RootId = rootId,
                             FileName = fileName,
-                            Writer = strWriter
+                            Writer = strWriter,
+                            DataModel = model
                         };
                         _renderer.Render(ri);
                         // write markup

@@ -9,6 +9,7 @@ namespace A2v10.Infrastructure
         public String FileName;
         public String Text;
         public TextWriter Writer;
+        public IDataModel DataModel;
     }
 
     public interface IRenderer

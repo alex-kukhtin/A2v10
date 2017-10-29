@@ -1,4 +1,4 @@
-﻿/*20171027-7057*/
+﻿/*20171029-7060*/
 /* services/datamodel.js */
 (function () {
 
@@ -12,7 +12,11 @@
 	const SRC = '_src_';
 	const PATH = '_path_';
 	const ROOT = '_root_';
-	const ERRORS = '_errors_';
+    const ERRORS = '_errors_';
+
+    const FLAG_VIEW = 1;
+    const FLAG_EDIT = 2;
+    const FLAG_DELETE = 4;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
@@ -69,8 +73,12 @@
 			case Date:
                 let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
-				break;
-			default:
+                break; 
+            case TMarker: // marker for dynamic property
+                let mp = trg._meta_.markerProps[prop];
+                shadow[prop] = mp;
+                break;
+            default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
 				break;
 		}
@@ -97,6 +105,8 @@
 		});
 	}
 
+    function TMarker() { }
+
     function createPrimitiveProperties(elem, ctor) {
         const templ = elem._root_.$template;
         if (!templ) return;
@@ -109,6 +119,14 @@
                 if (utils.isPrimitiveCtor(propInfo)) {
                     log.info(`create scalar property: ${objname}.${p}`);
                     elem._meta_.props[p] = propInfo;
+                } else if (utils.isObjectExact(propInfo)) {
+                    if (!propInfo.get) { // plain object
+                        log.info(`create object property: ${objname}.${p}`);
+                        elem._meta_.props[p] = TMarker;
+                        if (!elem._meta_.markerProps)
+                            elem._meta_.markerProps = {}
+                        elem._meta_.markerProps[p] = propInfo;
+                    }
                 }
             }
         }
@@ -134,13 +152,15 @@
                         get: propInfo
                     });
                 } else if (utils.isObjectExact(propInfo)) {
-                    log.info(`create property: ${objname}.${p}`);
-                    Object.defineProperty(elem, p, {
-                        configurable: false,
-                        enumerable: true,
-                        get: propInfo.get,
-                        set: propInfo.set
-                    });
+                    if (propInfo.get) { // has get, maybe set
+                        log.info(`create property: ${objname}.${p}`);
+                        Object.defineProperty(elem, p, {
+                            configurable: false,
+                            enumerable: true,
+                            get: propInfo.get,
+                            set: propInfo.set
+                        });
+                    }
                 } else {
                     alert('todo: invalid property type');
                 }
@@ -179,8 +199,6 @@
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
                 this._root_._validateAll_();
-            console.warn('call $valid:' + this._errors_);
-            console.dir(this._errors_);
 			if (this._errors_)
 				return false;
 			for (var x in this) {
@@ -216,15 +234,26 @@
 			}
 			elem._enableValidate_ = true;
             elem._needValidate_ = false;
-            elem._modelLoad_ = () => {
-                elem.$emit('Model.load', elem);
+            elem._modelLoad_ = (caller) => {
+                elem.$emit('Model.load', elem, caller);
                 elem._root_.$setDirty(false);
             };
+            defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
-		if (startTime)
-			log.time('create root time:', startTime);
+        if (startTime) {
+            log.time('create root time:', startTime, false);
+        }
 		return elem;
-	}
+    }
+
+    function isReadOnly() {
+        if ('__modelInfo' in this) {
+            let mi = this.__modelInfo;
+            if (utils.isDefined(mi.Permissions))
+                return mi.Permissions & FLAG_EDIT ? false : true;
+        }
+        return false;
+    }
 
 	function createArray(source, path, ctor, arrctor, parent) {
         let arr = new _BaseArray(source ? source.length : 0);
@@ -310,7 +339,9 @@
 		return ne;
 	};
 
-	_BaseArray.prototype.$empty = function () {
+    _BaseArray.prototype.$empty = function () {
+        if (this.$root.isReadOnly)
+            return;
 		this.splice(0, this.length);
 		return this;
 	};
@@ -343,6 +374,8 @@
 	};
 
 	_BaseArray.prototype.$copy = function (src) {
+        if (this.$root.isReadOnly)
+            return;
 		this.$empty();
 		if (utils.isArray(src)) {
 			for (let i = 0; i < src.length; i++) {
@@ -365,8 +398,10 @@
 			return this._parent_;
 		});
 
-		defHiddenGet(obj, "$vm", function () {
-			return this._root_._host_.$viewModel;
+        defHiddenGet(obj, "$vm", function () {
+            if (this._root_ && this._root_._host_)
+                return this._root_._host_.$viewModel;
+            return null;
 		});
 	}
 
@@ -652,14 +687,18 @@
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
-		console.dir(allerrs);
+		//console.dir(allerrs);
 	}
 
-	function setDirty(val) {
+    function setDirty(val) {
+        if (this.$root.$readOnly)
+            return;
 		this.$dirty = val;
 	}
 
     function empty() {
+        if (this.$root.isReadOnly)
+            return;
         // ctor(source path parent)
         let newElem = new this.constructor({}, '', this._parent_);
         this.$merge(newElem, true); // with event

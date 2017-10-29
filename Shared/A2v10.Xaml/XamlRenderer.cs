@@ -28,7 +28,7 @@ namespace A2v10.Xaml
             if (uiElem == null)
                 throw new XamlException("Xaml. Root is not 'UIElement'");
 
-            RenderContext ctx = new RenderContext(info.Writer, uiElem);
+            RenderContext ctx = new RenderContext(info.Writer, uiElem, info.DataModel);
             ctx.RootId = info.RootId; 
             uiElem.RenderElement(ctx);
         }

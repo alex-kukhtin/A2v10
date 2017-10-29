@@ -9,7 +9,8 @@ app.modules['std:url'] = function () {
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
-        makeBaseUrl: makeBaseUrl
+        makeBaseUrl,
+        parseUrlAndQuery
     };
 
     function normalize(elem) {
@@ -73,7 +74,16 @@ app.modules['std:url'] = function () {
             return x.slice(2, 4).join('/');
         return url;
     }
-    
+
+    function parseUrlAndQuery(url, query) {
+        let rv = { url: url, query: query };
+        if (url.indexOf('?') !== -1) {
+            let a = url.split('?');
+            rv.url = a[0];
+            rv.query = Object.assign({}, query, parseQueryString(a[1]));
+        }
+        return rv;
+    }
 };
 
 

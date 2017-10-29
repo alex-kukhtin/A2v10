@@ -1,4 +1,5 @@
 ﻿
+using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -100,16 +101,30 @@ namespace A2v10.Xaml
         private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
         private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
         private UIElementBase _root;
+        private IDataModel _dataModel;
 
-        public RenderContext(TextWriter writer, UIElementBase root)
+        public RenderContext(TextWriter writer, UIElementBase root, IDataModel dataModel)
         {
             Writer = writer;
             _root = root;
+            _dataModel = dataModel;
         }
 
-        public Boolean IsDialog { get
+        public Boolean IsDialog
+        {
+            get
             {
                 return _root is Dialog;
+            }
+        }
+
+        public Boolean IsDataModelIsReadOnly
+        {
+            get
+            {
+                if (_dataModel != null)
+                    return _dataModel.IsReadOnly;
+                return false;
             }
         }
 

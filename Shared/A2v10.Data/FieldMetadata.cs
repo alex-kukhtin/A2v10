@@ -34,7 +34,8 @@ namespace A2v10.Data
         RowCount,
         RowNumber,
         HasChildren,
-        Items
+        Items,
+        Permissions
 	}
 
 	public class FieldMetadata

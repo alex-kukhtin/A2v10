@@ -68,5 +68,17 @@ namespace A2v10.Data
             return ObjectBuilder.BuildObject(Root as ExpandoObject);
         }
 
+        public Boolean IsReadOnly
+        {
+            get
+            {
+                if (System != null && System.HasProperty("Permissions"))
+                {
+                    StdPermissions perm = (StdPermissions) System.Get<Int32>("Permissions");
+                    return !perm.HasFlag(StdPermissions.CanEdit);
+                }
+                return false;
+            }
+        }
     }
 }

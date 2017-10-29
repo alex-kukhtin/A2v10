@@ -165,6 +165,14 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 	drop procedure a2test.[NestedObject.Update]
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'NewObject.Metadata')
+	drop procedure a2test.[NewObject.Metadata]
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'NewObject.Update')
+	drop procedure a2test.[NewObject.Update]
+go
+------------------------------------------------
 if exists (select * from sys.types st join sys.schemas ss ON st.schema_id = ss.schema_id where st.name = N'NestedMain.TableType' AND ss.name = N'a2test')
 	drop type [a2test].[NestedMain.TableType];
 go
@@ -218,6 +226,15 @@ begin
 end
 go
 ------------------------------------------------
+create procedure a2test.[NewObject.Metadata]
+as
+begin
+	set nocount on;
+	declare @NestedMain [a2test].[NestedMain.TableType];
+	select [MainObject!MainObject!Metadata]=null, * from @NestedMain;
+end
+go
+------------------------------------------------
 create procedure a2test.[NestedObject.Update]
 @UserId bigint = null,
 @MainObject [a2test].[NestedMain.TableType] readonly,
@@ -242,6 +259,20 @@ begin
 
 	select [!TSubObjectArrayItem!Array] = null, [X] = X, [Y] = Y, [D] = D, [!TSubObject.SubArray!ParentId] = ParentId
 	from @SubObjectArray;
+end
+go
+------------------------------------------------
+create procedure a2test.[NewObject.Update]
+@UserId bigint = null,
+@MainObject [a2test].[NestedMain.TableType] readonly
+as
+begin
+	set nocount on;
+	
+	if exists(select * from @MainObject where Id is null)
+		select [MainObject!TMainObject!Object] = null, [Name] = N'Id is null';
+	else
+		select [MainObject!TMainObject!Object] = null, [Name] = N'Id is not null';
 end
 go
 ------------------------------------------------

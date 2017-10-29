@@ -201,6 +201,8 @@ namespace A2v10.Web.Mvc.Controllers
 
         async Task SaveImage(String url)
         {
+            if (IsNotAjax())
+                return;
             Response.ContentType = "application/json";
             try
             {

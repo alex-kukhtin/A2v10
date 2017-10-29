@@ -104,6 +104,8 @@ namespace A2v10.Data
                 sb.Append($"$rowNo: '{meta.RowNumber}',");
             if (!String.IsNullOrEmpty(meta.HasChildren))
                 sb.Append($"$hasChildren: '{meta.HasChildren}',");
+            if (!String.IsNullOrEmpty(meta.Permissions))
+                sb.Append($"$permissions: '{meta.Permissions}',");
             if (sb.Length == 0)
                 return null;
             sb.RemoveTailComma();

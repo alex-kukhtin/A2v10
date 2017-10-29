@@ -12,6 +12,7 @@ namespace A2v10.Data
         public String Name { get; private set; }
         public String RowNumber { get; private set; }
         public String HasChildren { get; private set; }
+        public String Permissions { get; set; }
 
         public Boolean IsArrayType { get; set; }
         public Boolean IsRowCount { get; set; }
@@ -43,6 +44,9 @@ namespace A2v10.Data
                     break;
                 case SpecType.HasChildren:
                     HasChildren = field.PropertyName;
+                    break;
+                case SpecType.Permissions:
+                    Permissions = field.PropertyName;
                     break;
             }
             return fm;

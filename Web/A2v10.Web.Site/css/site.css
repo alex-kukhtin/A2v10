@@ -890,6 +890,10 @@ a {
   text-decoration: none;
   cursor: pointer;
 }
+a[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 a:hover {
   color: #0d82f8;
   text-decoration: none;

@@ -184,6 +184,25 @@ namespace A2v10.Tests
         }
 
         [TestMethod]
+        public async Task TestWriteNewObject()
+        {
+            // DATA with ROOT
+            var jsonData = @"
+            {
+			    MainObject: {
+				    Id : 0,
+				    Name: 'MainObjectName',
+			    }
+            }
+			";
+            var dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(jsonData.Replace('\'', '"'), new ExpandoObjectConverter());
+            IDataModel dm = await _dbContext.SaveModelAsync(null, "a2test.[NewObject.Update]", dataToSave);
+
+            var dt = new DataTester(dm, "MainObject");
+            dt.AreValueEqual("Id is null", "Name");
+        }
+
+        [TestMethod]
         public async Task TestComplexObjects()
         {
             IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.ComplexObjects");

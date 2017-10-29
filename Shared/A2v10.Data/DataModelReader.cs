@@ -73,6 +73,10 @@ namespace A2v10.Data
                 {
                     Int32 pageSize = (Int32)dataVal;
                     _sys.Add("PageSize", pageSize);
+                } else if (fn == "!!Permissions")
+                {
+                    Int32 permissions = (Int32)dataVal;
+                    _sys.Add("Permissions", permissions);
                 }
             }
         }

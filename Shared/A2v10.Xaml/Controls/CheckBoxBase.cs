@@ -14,6 +14,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            CheckDisabledModel(context);
             var tag = new TagBuilder("label", ControlType, IsInGrid);
             if (onRender != null)
                 onRender(tag);
@@ -60,7 +61,7 @@ namespace A2v10.Xaml
 
         internal virtual void MergeCheckBoxAttributes(TagBuilder tag, RenderContext context)
         {
-            MergeDisabled(tag, context);
+            MergeDisabled(tag, context, nativeControl: true);
         }
     }
 }

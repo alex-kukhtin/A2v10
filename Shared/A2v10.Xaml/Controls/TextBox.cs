@@ -16,7 +16,9 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var input = new TagBuilder(Multiline ? "a2-textarea" : "textbox", null, IsInGrid);
+            CheckDisabledModel(context);
+            var tagName = Multiline ? "a2-textarea" : "textbox";
+            var input = new TagBuilder(tagName, null, IsInGrid);
             if (onRender != null)
                 onRender(input);
             MergeAttributes(input, context);

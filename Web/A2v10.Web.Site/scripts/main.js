@@ -61,7 +61,8 @@ app.modules['std:url'] = function () {
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
-        makeBaseUrl: makeBaseUrl
+        makeBaseUrl,
+        parseUrlAndQuery
     };
 
     function normalize(elem) {
@@ -125,7 +126,16 @@ app.modules['std:url'] = function () {
             return x.slice(2, 4).join('/');
         return url;
     }
-    
+
+    function parseUrlAndQuery(url, query) {
+        let rv = { url: url, query: query };
+        if (url.indexOf('?') !== -1) {
+            let a = url.split('?');
+            rv.url = a[0];
+            rv.query = Object.assign({}, query, parseQueryString(a[1]));
+        }
+        return rv;
+    }
 };
 
 
@@ -423,12 +433,13 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20171027-7057*/
+/*20171028-7058*/
 /* services/utils.js */
 
 app.modules['std:utils'] = function () {
 
-	const dateLocale = 'uk-UA';
+    const dateLocale = 'uk-UA';
+    const dateOpts = {timeZone: 'UTC'};
 
 	return {
 		isArray: Array.isArray,
@@ -526,7 +537,7 @@ app.modules['std:utils'] = function () {
 
 	function format(obj, dataType) {
 		if (!dataType)
-			return obj;
+            return obj;
 		switch (dataType) {
 			case "DateTime":
 				if (!isDate(obj)) {
@@ -535,7 +546,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleDateString(dateLocale) + ' ' + obj.toLocaleTimeString(dateLocale);
+                return obj.toLocaleDateString(dateLocale, dateOpts) + ' ' + obj.toLocaleTimeString(dateLocale, dateOpts);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
@@ -543,7 +554,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleDateString(dateLocale);
+                return obj.toLocaleDateString(dateLocale, dateOpts);
 			case "Time":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
@@ -551,7 +562,7 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
-				return obj.toLocaleTimeString(dateLocale);
+                return obj.toLocaleTimeString(dateLocale, dateOpts);
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Currency for utils.format (${obj})`);
@@ -629,12 +640,13 @@ app.modules['std:utils'] = function () {
 
 
 
-/*20171019-7051*/
+/*20171029-7060*/
 /* services/log.js */
 
 app.modules['std:log'] = function () {
 
     let _traceEnabled = false;
+    let _sessionLoaded = false;
     const traceEnabledKey = 'traceEnabled';
 
 	return {
@@ -642,15 +654,16 @@ app.modules['std:log'] = function () {
 		warn: warning,
 		error: error,
 		time: countTime,
-		traceEnabled() {
+        traceEnabled() {
+            if (!_sessionLoaded)
+                loadSession();
 			return _traceEnabled;
 		},
 		enableTrace(val) {
 			_traceEnabled = val;
             console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
             window.sessionStorage.setItem(traceEnabledKey, val);
-        },
-        loadSession: loadSession
+        }
 	};
 
 	function info(msg) {
@@ -667,14 +680,19 @@ app.modules['std:log'] = function () {
 		console.error(msg); // always
 	}
 
-	function countTime(msg, start) {
-		if (!_traceEnabled) return;
+	function countTime(msg, start, enable) {
+		if (!_traceEnabled && !enable) return;
 		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
     }
 
     function loadSession() {
         let te = window.sessionStorage.getItem(traceEnabledKey);
-        _traceEnabled = !!te;
+        if (te !== null) {
+            _traceEnabled = te === 'true';
+            if (_traceEnabled)
+                console.warn('tracing is enabled');
+        }
+        _sessionLoaded = true;
     }
 };
 
@@ -775,7 +793,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171027-7057*/
+/*20171029-7060*/
 /* services/datamodel.js */
 (function () {
 
@@ -789,7 +807,11 @@ app.modules['std:validators'] = function() {
 	const SRC = '_src_';
 	const PATH = '_path_';
 	const ROOT = '_root_';
-	const ERRORS = '_errors_';
+    const ERRORS = '_errors_';
+
+    const FLAG_VIEW = 1;
+    const FLAG_EDIT = 2;
+    const FLAG_DELETE = 4;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
@@ -846,8 +868,12 @@ app.modules['std:validators'] = function() {
 			case Date:
                 let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
-				break;
-			default:
+                break; 
+            case TMarker: // marker for dynamic property
+                let mp = trg._meta_.markerProps[prop];
+                shadow[prop] = mp;
+                break;
+            default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
 				break;
 		}
@@ -874,6 +900,8 @@ app.modules['std:validators'] = function() {
 		});
 	}
 
+    function TMarker() { }
+
     function createPrimitiveProperties(elem, ctor) {
         const templ = elem._root_.$template;
         if (!templ) return;
@@ -886,6 +914,14 @@ app.modules['std:validators'] = function() {
                 if (utils.isPrimitiveCtor(propInfo)) {
                     log.info(`create scalar property: ${objname}.${p}`);
                     elem._meta_.props[p] = propInfo;
+                } else if (utils.isObjectExact(propInfo)) {
+                    if (!propInfo.get) { // plain object
+                        log.info(`create object property: ${objname}.${p}`);
+                        elem._meta_.props[p] = TMarker;
+                        if (!elem._meta_.markerProps)
+                            elem._meta_.markerProps = {}
+                        elem._meta_.markerProps[p] = propInfo;
+                    }
                 }
             }
         }
@@ -911,13 +947,15 @@ app.modules['std:validators'] = function() {
                         get: propInfo
                     });
                 } else if (utils.isObjectExact(propInfo)) {
-                    log.info(`create property: ${objname}.${p}`);
-                    Object.defineProperty(elem, p, {
-                        configurable: false,
-                        enumerable: true,
-                        get: propInfo.get,
-                        set: propInfo.set
-                    });
+                    if (propInfo.get) { // has get, maybe set
+                        log.info(`create property: ${objname}.${p}`);
+                        Object.defineProperty(elem, p, {
+                            configurable: false,
+                            enumerable: true,
+                            get: propInfo.get,
+                            set: propInfo.set
+                        });
+                    }
                 } else {
                     alert('todo: invalid property type');
                 }
@@ -956,8 +994,6 @@ app.modules['std:validators'] = function() {
 		defPropertyGet(elem, "$valid", function () {
 			if (this._root_._needValidate_)
                 this._root_._validateAll_();
-            console.warn('call $valid:' + this._errors_);
-            console.dir(this._errors_);
 			if (this._errors_)
 				return false;
 			for (var x in this) {
@@ -993,15 +1029,26 @@ app.modules['std:validators'] = function() {
 			}
 			elem._enableValidate_ = true;
             elem._needValidate_ = false;
-            elem._modelLoad_ = () => {
-                elem.$emit('Model.load', elem);
+            elem._modelLoad_ = (caller) => {
+                elem.$emit('Model.load', elem, caller);
                 elem._root_.$setDirty(false);
             };
+            defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
-		if (startTime)
-			log.time('create root time:', startTime);
+        if (startTime) {
+            log.time('create root time:', startTime, false);
+        }
 		return elem;
-	}
+    }
+
+    function isReadOnly() {
+        if ('__modelInfo' in this) {
+            let mi = this.__modelInfo;
+            if (utils.isDefined(mi.Permissions))
+                return mi.Permissions & FLAG_EDIT ? false : true;
+        }
+        return false;
+    }
 
 	function createArray(source, path, ctor, arrctor, parent) {
         let arr = new _BaseArray(source ? source.length : 0);
@@ -1087,7 +1134,9 @@ app.modules['std:validators'] = function() {
 		return ne;
 	};
 
-	_BaseArray.prototype.$empty = function () {
+    _BaseArray.prototype.$empty = function () {
+        if (this.$root.isReadOnly)
+            return;
 		this.splice(0, this.length);
 		return this;
 	};
@@ -1120,6 +1169,8 @@ app.modules['std:validators'] = function() {
 	};
 
 	_BaseArray.prototype.$copy = function (src) {
+        if (this.$root.isReadOnly)
+            return;
 		this.$empty();
 		if (utils.isArray(src)) {
 			for (let i = 0; i < src.length; i++) {
@@ -1142,8 +1193,10 @@ app.modules['std:validators'] = function() {
 			return this._parent_;
 		});
 
-		defHiddenGet(obj, "$vm", function () {
-			return this._root_._host_.$viewModel;
+        defHiddenGet(obj, "$vm", function () {
+            if (this._root_ && this._root_._host_)
+                return this._root_._host_.$viewModel;
+            return null;
 		});
 	}
 
@@ -1429,14 +1482,18 @@ app.modules['std:validators'] = function() {
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
-		console.dir(allerrs);
+		//console.dir(allerrs);
 	}
 
-	function setDirty(val) {
+    function setDirty(val) {
+        if (this.$root.$readOnly)
+            return;
 		this.$dirty = val;
 	}
 
     function empty() {
+        if (this.$root.isReadOnly)
+            return;
         // ctor(source path parent)
         let newElem = new this.constructor({}, '', this._parent_);
         this.$merge(newElem, true); // with event
@@ -1546,7 +1603,7 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20170829-7022*/
+/*20171029-7060*/
 /* services/popup.js */
 
 app.modules['std:popup'] = function () {
@@ -1554,17 +1611,19 @@ app.modules['std:popup'] = function () {
 	const __dropDowns__ = [];
 	let __started = false;
 
-	const __error = 'Perhaps you forgot to create a _click function for popup element';
+    const __error = 'Perhaps you forgot to create a _close function for popup element';
 
 
 	return {
 		startService: startService,
 		registerPopup: registerPopup,
 		unregisterPopup: unregisterPopup,
-		closeAll: closeAllPopups
+        closeAll: closeAllPopups,
+        closest: closest,
+        closeInside: closeInside
 	};
 
-	function registerPopup(el) {
+    function registerPopup(el) {
 		__dropDowns__.push(el);
 	}
 
@@ -1597,18 +1656,31 @@ app.modules['std:popup'] = function () {
 			if (el._close)
 				el._close(document);
 		});
-	}
+    }
+
+    function closeInside(el) {
+        if (!el) return;
+        // inside el only
+        let ch = el.querySelectorAll('.popover-wrapper');
+        for (let i = 0; i < ch.length; i++) {
+            let chel = ch[i];
+            if (chel._close) {
+                chel._close();
+            }
+        }
+    }
 
 	function closePopups(ev) {
 		if (__dropDowns__.length === 0)
-			return;
+            return;
 		for (let i = 0; i < __dropDowns__.length; i++) {
-			let el = __dropDowns__[i];
+            let el = __dropDowns__[i];
 			if (closest(ev.target, '.dropdown-item') ||
 				ev.target.hasAttribute('close-dropdown') ||
 				closest(ev.target, '[dropdown-top]') !== el) {
-				if (!el._close)
-					throw new Error(__error);
+                if (!el._close) {
+                    throw new Error(__error);
+                }
 				el._close(ev.target);
 			}
 		}
@@ -2132,7 +2204,7 @@ Vue.component('validator-control', {
 				dt.setDate(1); // 1-st day of month
 				let w = dt.getDay() - 1; // weekday
 				if (w === -1) w = 6;
-				else if (w == 0) w = 7;
+				else if (w === 0) w = 7;
 				dt.setDate(-w + 1);
 				let arr = [];
 				for (let r = 0; r < 6; r++) {
@@ -3814,20 +3886,48 @@ Vue.component("a2-taskpad", {
 });
 
 
-/*20171006-7041*/
+
+Vue.component('a2-panel', {
+    template:
+`<div :class="cssClass">
+    <div class="panel-header">
+        <slot name='header'></slot>
+	    <a class="ico collapse-handle" @click.stop="toggle"></a>
+    </div>
+	<div v-if="expanded" class="panel-content">
+		<slot name='body'></slot>
+	</div>
+</div>
+`,
+    props: {
+        collapsed: Boolean
+    },
+    computed: {
+        cssClass() {
+            let cls = "panel";
+            if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
+            return cls;
+        }
+    },
+    methods: {
+        toggle() {
+            this.collapsed = !this.collapsed;
+        }
+    }
+});
+/*20171029-7060*/
 /* directives/dropdown.js */
+
 
 Vue.directive('dropdown', {
 	bind(el, binding, vnode) {
-
-		//console.warn('bind drop down');
 
 		const popup = require('std:popup');
 		let me = this;
 
 		el._btn = el.querySelector('[toggle]');
 		el.setAttribute('dropdown-top', '');
-		// el.focus();
+		// el.focus(); // ???
 		if (!el._btn) {
 			console.error('DropDown does not have a toggle element');
 		}
@@ -3837,14 +3937,8 @@ Vue.directive('dropdown', {
 		el._close = function (ev) {
 			if (el._hide)
 				el._hide();
-			el.classList.remove('show');
+            el.classList.remove('show');
 		};
-
-		/*
-		el.addEventListener('blur', function (event) {
-			if (el._close) el._close(event);
-		}, true);
-		*/
 
 		el.addEventListener('click', function (event) {
 			let trg = event.target;
@@ -3855,30 +3949,35 @@ Vue.directive('dropdown', {
 			}
 			if (trg === el._btn) {
 				event.preventDefault();
-				event.stopPropagation();
+                event.stopPropagation();
 				let isVisible = el.classList.contains('show');
 				if (isVisible) {
 					if (el._hide)
 						el._hide();
-					el.classList.remove('show');
-				} else {
-					popup.closeAll();
+                    el.classList.remove('show');
+                } else {
+                    // not nested popup
+                    let outer = popup.closest(el, '.popup-body');
+                    if (outer) {
+                        popup.closeInside(outer);
+                    } else {
+                        popup.closeAll();
+                    }
 					if (el._show)
 						el._show();
-					el.classList.add("show");
+                    el.classList.add('show');
 				}
 			}
 		});
 	},
 	unbind(el) {
-		//console.warn('unbind drop down');
 		const popup = require('std:popup');
 		popup.unregisterPopup(el);
 	}
 });
 
 
-/*20171026-7056*/
+/*20171029-7060*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
@@ -3886,13 +3985,13 @@ Vue.directive('focus', {
 
 		el.addEventListener("focus", function (event) {
 			event.target.parentElement.classList.add('focus');
-		});
+		}, false);
 
 		el.addEventListener("blur", function (event) {
 			let t = event.target;
 			t._selectDone = false;
 			event.target.parentElement.classList.remove('focus');
-		});
+		}, false);
 
 		el.addEventListener("click", function (event) {
 			let t = event.target;
@@ -3900,8 +3999,7 @@ Vue.directive('focus', {
 				return;
 			t._selectDone = true;
 			if (t.select) t.select();
-			//event.stopImmediatePropagation();
-        }, true);
+        }, false);
     },
     inserted(el) {
         if (el.tabIndex === 1) {
@@ -4059,7 +4157,7 @@ Vue.directive('resize', {
 });
 
 
-/*20171027-7057*/
+/*20171029-7060*/
 /*controllers/base.js*/
 (function () {
 
@@ -4069,6 +4167,10 @@ Vue.directive('resize', {
 	const store = component('std:store');
 	const urltools = require('std:url');
 	const log = require('std:log');
+
+
+    let __updateStartTime = 0;
+    let __createStartTime = 0;
 
 	const documentTitle = {
 		render() {
@@ -4148,6 +4250,8 @@ Vue.directive('resize', {
             },
 			$save() {
 				let self = this;
+                if (self.$root.$readOnly)
+                    return;
                 let root = window.$$rootUrl;
 				let url = root + '/_data/save';
 				return new Promise(function (resolve, reject) {
@@ -4250,7 +4354,9 @@ Vue.directive('resize', {
 					eventBus.$emit('requery');
 			},
 
-			$remove(item, confirm) {
+            $remove(item, confirm) {
+                if (item.$root.$readOnly)
+                    return;
 				if (!confirm)
 					item.$remove();
 				else
@@ -4264,6 +4370,8 @@ Vue.directive('resize', {
 				let item = arr.$selected;
 				if (!item)
 					return;
+                if (item.$root.$readOnly)
+                    return;
 				this.$remove(item, confirm);
 			},
 
@@ -4303,18 +4411,17 @@ Vue.directive('resize', {
                 }
             },
 			$openSelected(url, arr) {
-				// TODO: переделать
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				if (url.startsWith('{')) {
+                if (url.startsWith('{')) { // decorated. defer evaluate
 					url = url.substring(1, url.length - 1);
-					let nUrl = sel[url];
+                    let nUrl = utils.eval(sel, url);
 					if (!nUrl)
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
 					url = nUrl;
-				}
+                }
 				this.$navigate(url, sel.$id);
 			},
 
@@ -4358,7 +4465,10 @@ Vue.directive('resize', {
                 return this.$dialog('show', url, null, query);
             },
 
-			$dialog(command, url, data, query) {
+            $dialog(command, url, data, query) {
+                let uq = urltools.parseUrlAndQuery(url, query);
+                url = uq.url;
+                query = uq.query;
 				return new Promise(function (resolve, reject) {
 					// sent a single object
                     if (command === 'edit-selected') {
@@ -4546,7 +4656,10 @@ Vue.directive('resize', {
             },
             __doInit__() {
                 const root = this.$data;
-                root._modelLoad_();
+                let caller = null;
+                if (this.$caller)
+                    caller = this.$caller.$data;
+                root._modelLoad_(caller);
             }
 		},
 		created() {
@@ -4567,6 +4680,7 @@ Vue.directive('resize', {
 
             this.$on('localQueryChange', this.__queryChange);
             this.__asyncCache__ = {};
+            log.time('create time:', __createStartTime, false);
 		},
 		destroyed() {
 			eventBus.$emit('registerData', null);
@@ -4576,16 +4690,19 @@ Vue.directive('resize', {
 			this.$off('localQueryChange', this.__queryChange);
 		},
 		beforeUpdate() {
-			this.__updateStartTime = performance.now();
-		},
+			__updateStartTime = performance.now();
+        },
+        beforeCreate() {
+            __createStartTime = performance.now();
+        },
 		updated() {
-			log.time('update time:', this.__updateStartTime);
+			log.time('update time:', __updateStartTime, false);
 		}
     });
     
 	app.components['baseController'] = base;
 })();
-/*20171020-7053*/
+/*20171029-7059*/
 /* controllers/shell.js */
 
 (function () {
@@ -4827,7 +4944,6 @@ Vue.directive('resize', {
 				me.needReload = true;
 				Vue.nextTick(() => me.needReload = false);
             });
-            log.loadSession();
 		}
 	};
 
@@ -5004,13 +5120,14 @@ Vue.directive('resize', {
 				me.$store.commit('popstate');
 			});
 
-			eventBus.$on('registerData', function (component, out) {
+            eventBus.$on('registerData', function (component, out) {
                 if (component) {
                     if (me.__dataStack__.length > 0)
                         out.caller = me.__dataStack__[0];
-                    me.__dataStack__.push(component);
-                } else
-					me.__dataStack__.pop(component);
+                    me.__dataStack__.unshift(component);
+                } else {
+                    me.__dataStack__.shift(component);
+                }
 			});
 
 

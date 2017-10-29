@@ -18,6 +18,13 @@ namespace A2v10.Xaml
             return bind;
         }
 
+        public void RemoveBinding(String name)
+        {
+            if (_bindings == null) return;
+            if (_bindings.ContainsKey(name))
+                _bindings.Remove(name);
+        }
+
         public Bind GetBinding(String name)
         {
             if (_bindings == null)
