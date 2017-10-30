@@ -1,9 +1,9 @@
-﻿
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
 using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace A2v10.Xaml
 {

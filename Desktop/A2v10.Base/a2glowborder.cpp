@@ -1,3 +1,5 @@
+// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+
 #include "stdafx.h"
 
 #include "../include/a2glowborder.h"

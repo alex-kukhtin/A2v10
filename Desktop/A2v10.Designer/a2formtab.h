@@ -1,3 +1,5 @@
+// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+
 #pragma once
 
 class CA2FormTabView : public CA2TabView

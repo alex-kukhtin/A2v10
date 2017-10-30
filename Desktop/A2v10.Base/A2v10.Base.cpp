@@ -1,5 +1,4 @@
-// A2v10.Base.cpp : Defines the initialization routines for the DLL.
-//
+// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 

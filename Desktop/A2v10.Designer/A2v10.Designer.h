@@ -1,6 +1,5 @@
+// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
 
-// A2v10.Designer.h : main header file for the A2v10.Designer application
-//
 #pragma once
 
 #ifndef __AFXWIN_H__
