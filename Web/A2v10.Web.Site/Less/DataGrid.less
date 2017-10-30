@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
 @import "Variables.less";
 
 /*
@@ -276,6 +277,16 @@ table.data-grid {
     }
 }
 
+
+table.data-grid.compact {
+    //TODO: may be .small-font ????
+    font-size: .95rem;
+    line-height: normal;
+
+    td {
+        padding: 2px 4px;
+    }
+}
 
 table.data-grid > tbody {
     > tr.warning, > tr.yellow {

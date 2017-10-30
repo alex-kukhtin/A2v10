@@ -69,6 +69,7 @@
                             Value="{Bind Entity.Name}"/>
                 <TextBox Label="Entity name Edit" Bold="True"
                             Value="{Bind Entity.Name}"/>
+                <Popover Icon="FilterOutline" Text="{Bind Root.Entity.Name}" Hide="False"></Popover>
             </StackPanel>
             <Grid Columns="1*, 1*, 2*">
                 <Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}" />
@@ -119,7 +120,7 @@
                     <Separator />
                     <CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
                 </Toolbar>
-                <DataGrid ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
+                <DataGrid  ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
 					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
@@ -151,7 +152,7 @@
                                     </BindCmd>
                                 </Hyperlink.Command>
                             </Hyperlink>
-                            <Popover Icon="Info" Placement="Left">
+                            <Popover Icon="Info" Placement="LeftBottom">
 								<Text>
 									Информация о товаре:
 									Наименование:
@@ -195,13 +196,13 @@
                     </TableRow>
                 </Table>
 			</CollectionView>
-			<Grid>
+			<Grid If="False">
 				<Code Content="{Bind Document.Sum}"></Code>
 			</Grid>
 
 			<TextBox Label="Примечание" Value="{Bind Document.Memo}" Multiline="True" Rows="3"></TextBox>
 		</Tab>
-		<Tab Header="Бухгалтерская" Badge="New!">
+		<Tab Header="Бухгалтерская" Badge="New!" If="False">
 			<Text>Это бухгалтерская заявка по документу №
 				<Span Content="{Bind Document.SNo}" Bold="True"></Span></Text>
 		</Tab>

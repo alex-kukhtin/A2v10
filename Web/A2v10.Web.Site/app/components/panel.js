@@ -6,9 +6,9 @@
 Vue.component('a2-panel', {
     template:
 `<div :class="cssClass">
-    <div class="panel-header" @click.stop="toggle" v-if="!noHeader">
+    <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
-	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.stop="toggle"></a>
+	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.prevent="toggle"></a>
     </div>
     <slot v-if="expanded"></slot>
 </div>

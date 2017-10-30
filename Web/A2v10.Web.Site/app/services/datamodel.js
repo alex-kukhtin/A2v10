@@ -1,5 +1,8 @@
-﻿/*20171029-7060*/
-/* services/datamodel.js */
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171030-7062
+// services/datamodel.js
+
 (function () {
 
 	"use strict";
@@ -331,6 +334,7 @@
 		this._root_.$setDirty(true);
 		this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
 		platform.set(this, "$selected", ne);
+        emitSelect(this);
 		// set RowNumber
 		if ('$rowNo' in newElem._meta_) {
 			let rowNoProp = newElem._meta_.$rowNo;
@@ -347,7 +351,10 @@
 	};
 
     _BaseArray.prototype.$clearSelected = function () {
+        let was = this.$selected;
         platform.set(this, '$selected', null);
+        if (was)
+            emitSelect(this);
     };
 
 	_BaseArray.prototype.$remove = function (item) {
@@ -362,8 +369,10 @@
 		this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
 		if (index >= this.length)
 			index -= 1;
-		if (this.length > index)
-			platform.set(this, '$selected', this[index]);
+        if (this.length > index) {
+            platform.set(this, '$selected', this[index]);
+            emitSelect(this);
+        }
 		// renumber rows
 		if ('$rowNo' in item._meta_) {
 			let rowNoProp = item._meta_.$rowNo;
@@ -459,16 +468,22 @@
 		}
 	}
 
+    function emitSelect(arr) {
+        let selectEvent = arr._path_ + '[].select';
+        let er = arr._root_.$emit(selectEvent, arr/*array*/, arr.$selected /*item*/);
+    }
+
 	function defArrayItem(elem) {
 		elem.prototype.$remove = function () {
 			let arr = this._parent_;
 			arr.$remove(this);
-		};
+        };
 		elem.prototype.$select = function (root) {
 			let arr = root || this._parent_;
 			if (arr.$selected === this)
 				return;
-			platform.set(arr, "$selected", this);
+            platform.set(arr, "$selected", this);
+            emitSelect(arr);
 		};
 
 		elem.prototype.$isSelected = function (root) {

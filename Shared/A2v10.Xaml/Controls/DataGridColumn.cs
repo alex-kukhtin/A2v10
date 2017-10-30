@@ -164,7 +164,6 @@ namespace A2v10.Xaml
             }
         }
 
-
         protected override void OnEndInit()
         {
             base.OnEndInit();

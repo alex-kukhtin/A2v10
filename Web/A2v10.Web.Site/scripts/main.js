@@ -793,8 +793,11 @@ app.modules['std:validators'] = function() {
 
 
 
-/*20171029-7060*/
-/* services/datamodel.js */
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171030-7062
+// services/datamodel.js
+
 (function () {
 
 	"use strict";
@@ -1126,6 +1129,7 @@ app.modules['std:validators'] = function() {
 		this._root_.$setDirty(true);
 		this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
 		platform.set(this, "$selected", ne);
+        emitSelect(this);
 		// set RowNumber
 		if ('$rowNo' in newElem._meta_) {
 			let rowNoProp = newElem._meta_.$rowNo;
@@ -1142,7 +1146,10 @@ app.modules['std:validators'] = function() {
 	};
 
     _BaseArray.prototype.$clearSelected = function () {
+        let was = this.$selected;
         platform.set(this, '$selected', null);
+        if (was)
+            emitSelect(this);
     };
 
 	_BaseArray.prototype.$remove = function (item) {
@@ -1157,8 +1164,10 @@ app.modules['std:validators'] = function() {
 		this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
 		if (index >= this.length)
 			index -= 1;
-		if (this.length > index)
-			platform.set(this, '$selected', this[index]);
+        if (this.length > index) {
+            platform.set(this, '$selected', this[index]);
+            emitSelect(this);
+        }
 		// renumber rows
 		if ('$rowNo' in item._meta_) {
 			let rowNoProp = item._meta_.$rowNo;
@@ -1254,16 +1263,22 @@ app.modules['std:validators'] = function() {
 		}
 	}
 
+    function emitSelect(arr) {
+        let selectEvent = arr._path_ + '[].select';
+        let er = arr._root_.$emit(selectEvent, arr/*array*/, arr.$selected /*item*/);
+    }
+
 	function defArrayItem(elem) {
 		elem.prototype.$remove = function () {
 			let arr = this._parent_;
 			arr.$remove(this);
-		};
+        };
 		elem.prototype.$select = function (root) {
 			let arr = root || this._parent_;
 			if (arr.$selected === this)
 				return;
-			platform.set(arr, "$selected", this);
+            platform.set(arr, "$selected", this);
+            emitSelect(arr);
 		};
 
 		elem.prototype.$isSelected = function (root) {
@@ -2228,8 +2243,11 @@ Vue.component('validator-control', {
 	});
 })();
 
-/*20171027-7057*/
-/*components/datagrid.js*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171030-7062
+// components/datagrid.js*/
+
 (function () {
 
  /*TODO:
@@ -2576,7 +2594,8 @@ Vue.component('validator-control', {
 			striped: Boolean,
             fixedHeader: Boolean,
             hideHeader: Boolean,
-			hover: { type: Boolean, default: false },
+            hover: { type: Boolean, default: false },
+            compact: Boolean,
 			sort: Boolean,
 			routeQuery: Object,
 			mark: String,
@@ -2617,7 +2636,8 @@ Vue.component('validator-control', {
 				let cssClass = 'data-grid';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
 				if (this.striped) cssClass += ' striped';
-				if (this.hover) cssClass += ' hover';
+                if (this.hover) cssClass += ' hover';
+                if (this.compact) cssClass += ' compact';
 				return cssClass;
 			},
 			selected() {
@@ -3284,9 +3304,12 @@ TODO:
 				if (this.filterDelegate) {
 					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
 				} else {
-					// filter (TODO: // правильная фильтрация)
+                    // filter (TODO: // правильная фильтрация)
+                    console.error('there are no filter delegate');
+                    /*
 					if (this.filter && this.filter.Filter)
 						arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Filter) !== -1);
+                    */
 				}
 				// sort
 				if (this.order && this.dir) {
@@ -3894,9 +3917,9 @@ Vue.component("a2-taskpad", {
 Vue.component('a2-panel', {
     template:
 `<div :class="cssClass">
-    <div class="panel-header" @click.stop="toggle" v-if="!noHeader">
+    <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
-	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.stop="toggle"></a>
+	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.prevent="toggle"></a>
     </div>
     <slot v-if="expanded"></slot>
 </div>

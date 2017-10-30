@@ -9,10 +9,14 @@ namespace A2v10.Xaml
 {
     public enum PopupPlacement
     {
-        Top,
-        Right,
-        Bottom,
-        Left
+        TopRight,
+        TopLeft,
+        RightBottom,
+        RightTop,
+        BottomRight,
+        BottomLeft,
+        LeftBottom,
+        LeftTop
     }
 
     public enum PopoverBackgroundStyle
@@ -40,7 +44,7 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var po = new TagBuilder("popover", "a2-inline");
-            MergeAttributes(po, context);
+            MergeAttributes(po, context, MergeAttrMode.All);
             po.AddCssClass("po-" + Placement.ToString().ToKebabCase());
             if (Background != PopoverBackgroundStyle.Default)
                 po.AddCssClass("po-" + Background.ToString().ToKebabCase());

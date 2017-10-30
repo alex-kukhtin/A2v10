@@ -178,7 +178,7 @@ namespace A2v10.Xaml
                 path = String.Empty;
             const String rootKey = "Root.";
             if (_stackScope.Count == 0)
-                return path;
+                return path.Replace(rootKey, "$data.");
             if (path.StartsWith("Parent."))
                 return path;
             if (path.StartsWith(rootKey))

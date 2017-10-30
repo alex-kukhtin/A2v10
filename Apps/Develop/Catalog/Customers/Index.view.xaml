@@ -47,7 +47,7 @@
         </Toolbar>
     </Page.Toolbar>
     <Page.CollectionView>
-        <CollectionView ItemsSource="{Bind Customers}" RunAt="Server">
+        <CollectionView ItemsSource="{Bind Customers}" RunAt="Client" FilterDelegate="TestFilter">
             <CollectionView.Filter>
                 <FilterDescription>
                     <FilterItem Property="Filter" DataType="String" />

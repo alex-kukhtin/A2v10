@@ -27,6 +27,7 @@ namespace A2v10.Xaml
         public Boolean Striped { get; set; }
         public Boolean Border { get; set; }
         public Boolean Sort { get; set; }
+        public Boolean Compact { get; set; }
 
         public Boolean FixedHeader { get; set; }
         public HeadersVisibility HeadersVisibility { get; set; }
@@ -62,6 +63,7 @@ namespace A2v10.Xaml
             var dataGrid = new TagBuilder("data-grid", null, IsInGrid);
             if (onRender != null)
                 onRender(dataGrid);
+            MergeBindingAttributeBool(dataGrid, context, ":compact", nameof(Compact), Compact);
             MergeAttributes(dataGrid, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
             if (Height != null)
                 dataGrid.MergeStyle("height", Height.Value);

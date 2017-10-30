@@ -21,8 +21,8 @@
             <DataGridColumn Header="Сумма продаж" Content="{Bind Amount, DataType=Currency}" Align="Right" />
             <DataGridColumn Header="Popovers" Wrap="NoWrap">
                 <Group>
-                    <Popover Icon="Info" Text="Просто текст" Content="Содержимое внутри" Placement="Top"/>
-                    <Popover Icon="TagOutline" Placement="Right">
+                    <Popover Icon="Info" Text="Просто текст" Content="Содержимое внутри" Placement="TopRight"/>
+                    <Popover Icon="TagOutline" Placement="RightBottom">
                         <Text>
                             Это такой себе текст с
                             <Span Bold="True">какими-то</Span> элементами
@@ -30,7 +30,7 @@
                             <Hyperlink Icon="ChartArea">Ссылка куда-то</Hyperlink>
                         </Text>
                     </Popover>
-                    <Popover Icon="Table" Content="{Bind Name}" Text="Внутри имя" Placement="Bottom"/>
+                    <Popover Icon="Table" Content="{Bind Name}" Text="Внутри имя" Placement="BottomRight"/>
                 </Group>
                 <!--
 				<Popover Icon="Waiting" Content="Ссылка на что-то" Url="/catalog/customers/demo" Data="{Bind Id}">

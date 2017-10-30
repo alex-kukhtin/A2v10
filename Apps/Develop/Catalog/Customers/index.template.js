@@ -24,9 +24,15 @@ let template = {
 		}
     },
     events: {
+        "Customers[].select": customersSelect
     },
     validators: {
 		"Customers[].Name": "Обязательное поле"
+    },
+    delegates: {
+        TestFilter(val) {
+            return true;
+        }
     },
     commands: {
 		TEST: TEST
@@ -45,4 +51,8 @@ function TEST(arg) {
 }
 //alert('template created:' + template);
 
+
+function customersSelect(arr, elem) {
+    console.dir(elem);
+}
 module.exports = template;

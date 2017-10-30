@@ -7,7 +7,7 @@
                      :page-size="$modelInfo.PageSize" :initial-filter="{Filter:''}" 
                      run-at="client" :initial-sort="{order:'Amount', dir:'desc'}" 
                      :filter-delegate="$delegate('filter')">
-        <template scope="Parent">
+        <template slot-scope="Parent">
             <div style="height:300px;overflow:auto;background-color:lightyellow">
                 <div class="toolbar">
                     <label>Data-grid Toolbar:</label>
@@ -51,7 +51,7 @@
                     <data-grid-column header="Sum" content="$Sum" align="right" :sort="false"></data-grid-column>
                     <data-grid-column id="cmd"></data-grid-column>
                     <data-grid-column header="??" content="$invalid" :sort="false"></data-grid-column>
-                    <template slot="cmd2" scope="cell">
+                    <template slot="cmd2" slot-scope="cell">
                         <button @click.prevent="$dialog('edit', 'catalog/suppliers/edit', cell.row)">
                             <i class="ico-edit"></i>
                         </button>
@@ -65,11 +65,11 @@
                             <i class="ico-folder"></i>
                         </button>
                     </template>
-                    <template slot="pager" scope="props">
+                    <template slot="pager" slot-scope="props">
                         <b>data-grid-pager</b>
                         <a2-pager :source="Parent.Pager" />
                     </template>
-                    <template slot="footer" scope="props">
+                    <template slot="footer" slot-scope="props">
                         <template is="tfoot">
                             <template is="tr">
                                 <td :colspan="9" style="background-color:whitesmoke;border:1px solid red">

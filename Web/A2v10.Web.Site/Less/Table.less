@@ -1,4 +1,6 @@
-﻿@import "Variables.less";
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+@import "Variables.less";
 
 
 @table-hdr-bg-color: #f5f5f5;
@@ -123,13 +125,15 @@ table.a2-table {
 }
 
 .a2-table.compact {
-    //font-size: 95%;
-
+    //TODO: may be .small-font ????
+    font-size: 0.95rem;
+    line-height:normal;
+    
     tbody > tr > td {
         padding: 2px 4px;
 
         .input-group {
-            padding:0;
+            padding: 0;
         }
 
         .input-group input {
@@ -138,26 +142,28 @@ table.a2-table {
         }
 
         .input-group.static > span {
-            line-height:1.67em;
-            min-height:1.67em;
+            line-height: 1.67em;
+            min-height: 1.67em;
         }
 
         &.row-divider {
-            padding:0;
+            padding: 0;
         }
 
         &.ctrl {
             padding: 0;
-            vertical-align:top;
+            vertical-align: top;
 
             .checkbox, .radio {
                 margin: 0 6px 0 4px;
+
                 :before, :after {
-                    width:13px;
-                    height:13px;
+                    width: 13px;
+                    height: 13px;
                 }
+
                 > span {
-                    padding-left:18px;
+                    padding-left: 18px;
                 }
             }
         }

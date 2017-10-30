@@ -1,5 +1,8 @@
-﻿/*20171027-7057*/
-/*components/datagrid.js*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171030-7062
+// components/datagrid.js*/
+
 (function () {
 
  /*TODO:
@@ -346,7 +349,8 @@
 			striped: Boolean,
             fixedHeader: Boolean,
             hideHeader: Boolean,
-			hover: { type: Boolean, default: false },
+            hover: { type: Boolean, default: false },
+            compact: Boolean,
 			sort: Boolean,
 			routeQuery: Object,
 			mark: String,
@@ -387,7 +391,8 @@
 				let cssClass = 'data-grid';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
 				if (this.striped) cssClass += ' striped';
-				if (this.hover) cssClass += ' hover';
+                if (this.hover) cssClass += ' hover';
+                if (this.compact) cssClass += ' compact';
 				return cssClass;
 			},
 			selected() {

@@ -43,7 +43,8 @@ namespace A2v10.Xaml
             {
                 MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
                 MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
-                MergeBindingAttributeBool(tag, context, "v-hide", nameof(Hide), Hide);
+                // emulate v-hide
+                MergeBindingAttributeBool(tag, context, "v-show", nameof(Hide), Hide, bInvert:true);
             }
             if ((mode & MergeAttrMode.Tip) != 0)
             {
@@ -109,13 +110,19 @@ namespace A2v10.Xaml
             tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
         }
 
-        internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue)
+        internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, bool bInvert = false)
         {
+            String attrVal = null;
             var attrBind = GetBinding(propName);
             if (attrBind != null)
-                tag.MergeAttribute(attrName, attrBind.GetPath(context));
+                attrVal = attrBind.GetPath(context);
             else if (propValue != null)
-                tag.MergeAttribute(attrName, propValue.ToString().ToLowerInvariant());
+                attrVal = propValue.ToString().ToLowerInvariant();
+            if (attrVal == null)
+                return;
+            if (bInvert)
+                attrVal = "!" + attrVal;
+            tag.MergeAttribute(attrName, attrVal);
         }
 
         internal void MergeValueItemProp(TagBuilder input, RenderContext context, String valueName)

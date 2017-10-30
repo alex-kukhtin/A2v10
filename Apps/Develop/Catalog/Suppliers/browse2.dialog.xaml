@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		HelpFile="/customers/browse"
         Size="Large"
-        Width="75%"
+        Width="75%" Padding="10"
 		Title="{Bind Customers.length, Format='Выбор корреспондента из {0} элементов'}">
 	<Dialog.Buttons>
 		<Button Style="Warning" Command="{BindCmd Select, Argument={Bind Customers}}">Выбрать</Button>
@@ -16,10 +16,10 @@
             <Separator />
             <Button Icon="Save" Command="{BindCmd Save}">Зберегти</Button>
         </Toolbar>
-        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" 
-					  Striped="True" Border="True" Sort="True" GridLines="Vertical">
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="None"
+					  Striped="True" Border="False" Sort="True" GridLines="Both" Margin="10" Compact="True">
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
-			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True"/>
+			<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="False"/>
 			<DataGridColumn Header="Сумма продаж" Content="{Bind Amount}" Align="Right"/>
 		</DataGrid>
         <Pager Source="{Bind Parent.Pager}" />

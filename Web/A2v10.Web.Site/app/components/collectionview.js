@@ -91,9 +91,12 @@ TODO:
 				if (this.filterDelegate) {
 					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
 				} else {
-					// filter (TODO: // правильная фильтрация)
+                    // filter (TODO: // правильная фильтрация)
+                    console.error('there are no filter delegate');
+                    /*
 					if (this.filter && this.filter.Filter)
 						arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Filter) !== -1);
+                    */
 				}
 				// sort
 				if (this.order && this.dir) {
