@@ -678,7 +678,7 @@ header .btn:hover,
 .taskpad.expanded {
   margin-left: 6px;
 }
-.taskpad.expanded .collapse-handle {
+.taskpad.expanded .taskpad-collapse-handle {
   position: absolute;
   top: 0;
   left: 0;
@@ -687,19 +687,19 @@ header .btn:hover,
   color: #bdc5d8;
   font-size: 110%;
 }
-.taskpad.expanded .collapse-handle:hover {
+.taskpad.expanded .taskpad-collapse-handle:hover {
   color: #0d82f8;
   text-decoration: none;
   background-color: #f2f3f9;
 }
-.taskpad.expanded .collapse-handle:before {
+.taskpad.expanded .taskpad-collapse-handle:before {
   content: "\e9a5";
 }
 .taskpad.collapsed {
   background-color: #f2f3f9;
   margin-left: 3px;
 }
-.taskpad.collapsed .collapse-handle:before {
+.taskpad.collapsed .taskpad-collapse-handle:before {
   content: "\e9a3";
 }
 .taskpad .taskpad-title {
@@ -922,7 +922,7 @@ pre {
   /* можно запретить :hover */
 }
 .control-group label {
-  font-size: 95%;
+  font-size: 0.95rem;
   color: #757575;
   margin-bottom: .15em;
   display: block;
@@ -1450,7 +1450,7 @@ table.data-grid tr.active {
 table.data-grid td.danger,
 table.data-grid td.error,
 table.data-grid td.red {
-  background-color: rgba(255, 106, 0, 0.15) !important;
+  background-color: rgba(254, 220, 220, 0.5) !important;
 }
 table.data-grid td.warning,
 table.data-grid td.yellow {
@@ -1462,7 +1462,7 @@ table.data-grid td.green {
 }
 table.data-grid td.info,
 table.data-grid td.cyan {
-  background-color: rgba(26, 255, 216, 0.15) !important;
+  background-color: rgba(114, 234, 234, 0.15) !important;
 }
 table.data-grid td.marker {
   padding: 0;
@@ -1477,7 +1477,7 @@ table.data-grid td.marker > div {
   bottom: 0;
   right: 0;
   border-left: 6px solid #ddd;
-  background-color: rgba(224, 224, 224, 0.25);
+  background-color: rgba(208, 208, 208, 0.15);
 }
 table.data-grid td.marker > .warning,
 table.data-grid td.marker > .yellow {
@@ -1487,7 +1487,7 @@ table.data-grid td.marker > .yellow {
 table.data-grid td.marker > .danger,
 table.data-grid td.marker > .error,
 table.data-grid td.marker > .red {
-  background-color: rgba(255, 106, 0, 0.15);
+  background-color: rgba(254, 220, 220, 0.5);
   border-left-color: #fc7c7c;
 }
 table.data-grid td.marker > .success,
@@ -1497,7 +1497,7 @@ table.data-grid td.marker > .green {
 }
 table.data-grid td.marker > .info,
 table.data-grid td.marker > .cyan {
-  background-color: rgba(26, 255, 216, 0.15);
+  background-color: rgba(114, 234, 234, 0.15);
   border-left-color: #72eaea;
 }
 table.data-grid th.group-cell {
@@ -1561,22 +1561,22 @@ table.data-grid td.group-marker {
 table.data-grid tr:last-child > td {
   border-bottom: 1px solid #e5e8eb;
 }
-table.data-grid > tbody > tr.warning,
-table.data-grid > tbody > tr.yellow {
+table.data-grid > tbody > tr.warning td,
+table.data-grid > tbody > tr.yellow td {
   background-color: rgba(255, 216, 0, 0.15);
 }
-table.data-grid > tbody > tr.danger,
-table.data-grid > tbody > tr.error,
-table.data-grid > tbody > tr.red {
-  background-color: rgba(255, 106, 0, 0.15);
+table.data-grid > tbody > tr.danger td,
+table.data-grid > tbody > tr.error td,
+table.data-grid > tbody > tr.red td {
+  background-color: rgba(254, 220, 220, 0.5);
 }
-table.data-grid > tbody > tr.success,
-table.data-grid > tbody > tr.green {
+table.data-grid > tbody > tr.success td,
+table.data-grid > tbody > tr.green td {
   background-color: rgba(216, 255, 216, 0.5);
 }
-table.data-grid > tbody > tr.info,
-table.data-grid > tbody > tr.cyan {
-  background-color: rgba(26, 255, 216, 0.15);
+table.data-grid > tbody > tr.info td,
+table.data-grid > tbody > tr.cyan td {
+  background-color: rgba(114, 234, 234, 0.15);
 }
 .data-grid-container.fixed-header {
   height: 100%;
@@ -2022,7 +2022,7 @@ table.grid-both thead > tr > td {
   border-bottom-style: solid;
 }
 table.striped > tbody > tr:nth-of-type(even) {
-  background-color: rgba(224, 224, 224, 0.25);
+  background-color: rgba(208, 208, 208, 0.15);
 }
 table.a2-table {
   table-layout: auto;
@@ -2149,6 +2149,9 @@ table.prop-grid.grid-vertical td.prop-name {
 table.prop-grid.grid-both td.prop-value,
 table.prop-grid.grid-vertical td.prop-value {
   padding-right: 6px;
+}
+table.prop-grid.compact {
+  font-size: 0.95rem;
 }
 table.prop-grid.compact td.prop-name {
   padding: 2px 6px 2px 0;
@@ -2636,21 +2639,105 @@ TODO:
   flex-direction: row;
 }
 .panel {
-  border: 1px solid #cfd6e5;
   margin-bottom: 6px;
 }
 .panel .panel-header {
   padding: 5px 6px;
   font-size: 110%;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #cfd6e5;
-  color: #777;
+  display: flex;
+  justify-content: space-between;
+}
+.panel .panel-header .panel-collapse-handle {
+  font-size: 110%;
+  padding-top: 2px;
+}
+.panel .panel-header .panel-collapse-handle:hover {
+  text-decoration: none;
+}
+.panel .panel-header .panel-collapse-handle:before {
+  content: "\e9a2";
 }
 .panel .panel-content > .prop-grid tr:first-child > td {
   border-top-style: none;
 }
 .panel .panel-content > .prop-grid tr:last-child > td {
   border-bottom-style: none;
+}
+.panel.collapsed .panel-header {
+  border-bottom-style: none!important;
+}
+.panel.collapsed .panel-header .panel-collapse-handle:before {
+  content: "\e9a4";
+}
+.panel {
+  border: 1px solid #bdc5d8;
+}
+.panel .panel-header {
+  color: #777;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #bdc5d8;
+}
+.panel .panel-header .panel-collapse-handle {
+  color: #777;
+}
+.panel .panel-header .panel-collapse-handle:hover {
+  background-color: #e3e3e3;
+}
+.panel.panel-cyan {
+  border: 1px solid #9ec5e7;
+}
+.panel.panel-cyan .panel-header {
+  color: #317293;
+  background-color: #dbeef6;
+  border-bottom: 1px solid #9ec5e7;
+}
+.panel.panel-cyan .panel-header .panel-collapse-handle {
+  color: #317293;
+}
+.panel.panel-cyan .panel-header .panel-collapse-handle:hover {
+  background-color: #bee1ef;
+}
+.panel.panel-green {
+  border: 1px solid #aae396;
+}
+.panel.panel-green .panel-header {
+  color: #3d723e;
+  background-color: #e0f3d2;
+  border-bottom: 1px solid #aae396;
+}
+.panel.panel-green .panel-header .panel-collapse-handle {
+  color: #3d723e;
+}
+.panel.panel-green .panel-header .panel-collapse-handle:hover {
+  background-color: #cdebb6;
+}
+.panel.panel-red {
+  border: 1px solid #dfa4ae;
+}
+.panel.panel-red .panel-header {
+  color: #ab403f;
+  background-color: #f3dddd;
+  border-bottom: 1px solid #dfa4ae;
+}
+.panel.panel-red .panel-header .panel-collapse-handle {
+  color: #ab403f;
+}
+.panel.panel-red .panel-header .panel-collapse-handle:hover {
+  background-color: #eac3c3;
+}
+.panel.panel-yellow {
+  border: 1px solid #fcd891;
+}
+.panel.panel-yellow .panel-header {
+  color: #9c793d;
+  background-color: #fef8db;
+  border-bottom: 1px solid #fcd891;
+}
+.panel.panel-yellow .panel-header .panel-collapse-handle {
+  color: #9c793d;
+}
+.panel.panel-yellow .panel-header .panel-collapse-handle:hover {
+  background-color: #fdf1b8;
 }
 .app-exception {
   margin: 50px auto;

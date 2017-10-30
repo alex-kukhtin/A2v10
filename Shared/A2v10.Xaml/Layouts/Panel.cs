@@ -1,19 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 
 namespace A2v10.Xaml
 {
+    public enum PaneStyle
+    {
+        Default,
+        Info,
+        Warning,
+        Danger,
+        Error,
+        Success,
+        Green,
+        Cyan,
+        Red,
+        Yellow
+    }
+
     public class Panel : Container, ITableControl
     {
         public Object Header { get; set; }
-        public Icon Icon { get; set; }
+
+        public Boolean Collapsible { get; set; }
+
+        public Boolean? Collapsed { get; set; }
+
+        public PaneStyle Style { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var panel = new TagBuilder("div", "panel", IsInGrid);
+            var panel = new TagBuilder("a2-panel", null, IsInGrid);
+            MergeBindingAttributeBool(panel, context, ":initial-collapsed", nameof(Collapsed), Collapsed);
+            MergeBindingAttributeBool(panel, context, ":collapsible", nameof(Collapsible), Collapsible);
+            if (!HasHeader)
+                panel.MergeAttribute(":no-header", "true");
+            var sb = GetBinding(nameof(Style));
+            if (sb != null)
+                panel.MergeAttribute(":panel-style", sb.GetPathFormat(context));
+            else if (Style != PaneStyle.Default)
+                panel.MergeAttribute("panel-style", Style.ToString().ToLowerInvariant());
             MergeAttributes(panel, context, MergeAttrMode.Visibility);
             panel.RenderStart(context);
             RenderHeader(context);
@@ -31,13 +58,15 @@ namespace A2v10.Xaml
         {
             if (!HasHeader)
                 return;
-            var header = new TagBuilder("div", "panel-header");
+            var header = new TagBuilder("div", "panel-header-slot");
+            header.MergeAttribute("slot", "header");
             var hBind = GetBinding(nameof(Header));
             if (hBind != null)
             {
                 header.MergeAttribute("v-text", hBind.GetPathFormat(context));
             }
             header.RenderStart(context);
+
             if (Header is UIElementBase)
             {
                 (Header as UIElementBase).RenderElement(context);

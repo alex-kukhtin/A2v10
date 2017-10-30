@@ -3,7 +3,7 @@
 Vue.component("a2-taskpad", {
 	template:
 `<div :class="cssClass">
-	<a class="ico collapse-handle" @click.stop="toggle"></a>
+	<a class="ico taskpad-collapse-handle" @click.stop="toggle"></a>
 	<div v-if="expanded" class="taskpad-body">
 		<slot>
 		</slot>
@@ -14,10 +14,10 @@ Vue.component("a2-taskpad", {
 </div>
 `,
 	data() {
-		return {
-			expanded: true,
-			__savedCols: '',
-		}
+        return {
+            expanded: true,
+            __savedCols: ''
+        };
 	},
 	computed: {
 		cssClass() {

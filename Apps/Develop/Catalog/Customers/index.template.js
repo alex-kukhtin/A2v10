@@ -9,8 +9,14 @@ const cmn = require('common/module1');
 let template = {
     properties: {
 		"TCustomer.$rowMark"() {
-			//return this.Amount === 22.0 ? 'warning' : '';
-			return this.Amount === 22.0 ? 'yellow' : '';
+            //return this.Amount === 22.0 ? 'warning' : '';
+            switch (this.Amount) {
+                case 22: return 'red';
+                case 33: return 'yellow';
+                case 44: return 'cyan';
+                case 55: return 'green';
+            }
+			return this.Amount === 22.0 ? 'red' : '';
 		},
 		"TCustomer.$cellMark"() {
 			//return this.Amount >= 500 ? 'danger' : '';

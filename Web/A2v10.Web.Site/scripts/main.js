@@ -919,7 +919,7 @@ app.modules['std:validators'] = function() {
                         log.info(`create object property: ${objname}.${p}`);
                         elem._meta_.props[p] = TMarker;
                         if (!elem._meta_.markerProps)
-                            elem._meta_.markerProps = {}
+                            elem._meta_.markerProps = {};
                         elem._meta_.markerProps[p] = propInfo;
                     }
                 }
@@ -3845,7 +3845,7 @@ TODO:
 Vue.component("a2-taskpad", {
 	template:
 `<div :class="cssClass">
-	<a class="ico collapse-handle" @click.stop="toggle"></a>
+	<a class="ico taskpad-collapse-handle" @click.stop="toggle"></a>
 	<div v-if="expanded" class="taskpad-body">
 		<slot>
 		</slot>
@@ -3856,10 +3856,10 @@ Vue.component("a2-taskpad", {
 </div>
 `,
 	data() {
-		return {
-			expanded: true,
-			__savedCols: '',
-		}
+        return {
+            expanded: true,
+            __savedCols: ''
+        };
 	},
 	computed: {
 		cssClass() {
@@ -3886,31 +3886,67 @@ Vue.component("a2-taskpad", {
 });
 
 
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171030-7061
+// components/panel.js
 
 Vue.component('a2-panel', {
     template:
 `<div :class="cssClass">
-    <div class="panel-header">
+    <div class="panel-header" @click.stop="toggle" v-if="!noHeader">
         <slot name='header'></slot>
-	    <a class="ico collapse-handle" @click.stop="toggle"></a>
+	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.stop="toggle"></a>
     </div>
-	<div v-if="expanded" class="panel-content">
-		<slot name='body'></slot>
-	</div>
+    <slot v-if="expanded"></slot>
 </div>
 `,
     props: {
-        collapsed: Boolean
+        initialCollapsed: Boolean,
+        collapsible: Boolean,
+        panelStyle: String,
+        noHeader: Boolean
+    },
+    data() {
+        return {
+            collapsed: this.initialCollapsed
+        };
     },
     computed: {
         cssClass() {
             let cls = "panel";
             if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
+            if (this.panelStyle) {
+                switch (this.panelStyle.toLowerCase()) {
+                    case "red":
+                    case "danger":
+                    case "error":
+                        cls += ' panel-red';
+                        break;
+                    case "info":
+                    case "cyan":
+                        cls += ' panel-cyan';
+                        break;
+                    case "green":
+                    case "success":
+                        cls += ' panel-green';
+                        break;
+                    case "warning":
+                    case "yellow":
+                        cls += ' panel-yellow';
+                        break;
+                }
+            }
             return cls;
+        },
+        expanded() {
+            return !this.collapsed;
         }
     },
     methods: {
         toggle() {
+            if (!this.collapsible)
+                return;
             this.collapsed = !this.collapsed;
         }
     }

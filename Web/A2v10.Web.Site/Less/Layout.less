@@ -1,6 +1,27 @@
-﻿
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
 @import "Variables.less";
 
+
+@pane-def-txt: #777;
+@pane-def-bg: #f5f5f5;
+@pane-def-brd: @default-brd-color;
+
+@pane-cyan-txt: #317293;
+@pane-cyan-bg: #dbeef6;
+@pane-cyan-brd: darken(spin(@pane-cyan-bg, 10), 15%);
+
+@pane-green-txt: #3d723e;
+@pane-green-bg: #e0f3d2;
+@pane-green-brd: darken(spin(@pane-green-bg, 10), 15%);
+
+@pane-red-txt: #ab403f;
+@pane-red-bg: #f3dddd;
+@pane-red-brd: darken(spin(@pane-red-bg, -10), 15%);
+
+@pane-yellow-txt: #9c793d;
+@pane-yellow-bg: #fef8db;
+@pane-yellow-brd: darken(spin(@pane-yellow-bg, -10), 15%);
 
 .stack-panel {
     display: flex;
@@ -10,19 +31,31 @@
     }
 
     &.horizontal {
-        flex-direction:row;
+        flex-direction: row;
     }
 }
 
 .panel {
-    border: 1px solid @light-brd-color;
-    margin-bottom:6px;
+    margin-bottom: 6px;
+
     .panel-header {
         padding: 5px 6px;
         font-size: 110%;
-        background-color: #f5f5f5;
-        border-bottom: 1px solid @light-brd-color;
-        color: #777;
+        display: flex;
+        justify-content: space-between;
+
+        .panel-collapse-handle {
+            font-size: 110%;
+            padding-top:2px;
+
+            &:hover {
+                text-decoration: none;
+            }
+
+            &:before {
+                content: "\e9a2"; // chevron-up
+            }
+        }
     }
 
     .panel-content {
@@ -36,4 +69,54 @@
             }
         }
     }
+}
+
+.panel.collapsed {
+    .panel-header {
+        border-bottom-style:none!important;
+        .panel-collapse-handle {
+            &:before {
+                content: "\e9a4"; // chevron-up
+            }
+        }
+    }
+}
+
+.panel-varaint(@border, @background, @text) {
+    border: 1px solid @border;
+
+    .panel-header {
+        color: @text;
+        background-color: @background;
+        border-bottom: 1px solid @border;
+
+        .panel-collapse-handle {
+            color: @text;
+
+            &:hover {
+                background-color: darken(@background, 7%);
+            }
+        }
+    }
+}
+
+
+.panel {
+    .panel-varaint(@pane-def-brd, @pane-def-bg, @pane-def-txt);
+}
+
+.panel.panel-cyan {
+    .panel-varaint(@pane-cyan-brd, @pane-cyan-bg, @pane-cyan-txt);
+}
+
+.panel.panel-green {
+    .panel-varaint(@pane-green-brd, @pane-green-bg, @pane-green-txt);
+}
+
+.panel.panel-red {
+    .panel-varaint(@pane-red-brd, @pane-red-bg, @pane-red-txt);
+}
+
+.panel.panel-yellow {
+    .panel-varaint(@pane-yellow-brd, @pane-yellow-bg, @pane-yellow-txt);
 }

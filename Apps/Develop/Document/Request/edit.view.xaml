@@ -14,18 +14,22 @@
 	</Page.Toolbar>
 	<Page.Taskpad>
 		<Taskpad Width="25%">
-            <Panel Padding="0, 6">
-                <Panel.Header>
+            <!--
+                <Panel.Header C>
+                </Panel.Header>
                     <Text>Информация о договоре [<Span Bold="True" Content="{Bind Document.Contract.Id}"/>]
                     </Text>
-                </Panel.Header>
+            
+            -->
+            <Panel Padding="0, 6" Header="{Bind Document.Contract.Id, Format='Информация о договоре [{0}]'}" 
+                   Collapsible="True" Style="{Bind Document.$PaneStyle}">
                 <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки" Disabled="{Bind $isPristine}">
                     <TextBox.AddOns>
                         <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
                         <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Contract}}" />
                     </TextBox.AddOns>
                 </TextBox>
-                <PropertyGrid GridLines="Horizontal">
+                <PropertyGrid GridLines="Horizontal" Compact="True">
                     <PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
                     <PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
                 </PropertyGrid>

@@ -124,7 +124,7 @@
                         log.info(`create object property: ${objname}.${p}`);
                         elem._meta_.props[p] = TMarker;
                         if (!elem._meta_.markerProps)
-                            elem._meta_.markerProps = {}
+                            elem._meta_.markerProps = {};
                         elem._meta_.markerProps[p] = propInfo;
                     }
                 }

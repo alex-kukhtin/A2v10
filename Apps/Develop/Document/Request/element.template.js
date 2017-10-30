@@ -7,6 +7,9 @@ let template = {
         'Document.Sum': documentSumProperty,
         'TDocument.$browseAgentUrl'() {
             return '/common/agent/browse?DocumentId=' + this.Id;
+        },
+        "TDocument.$PaneStyle"() {
+            return this.Rows.Count > 3 ? "warning" : null;
         }
 	},
 	methods: {

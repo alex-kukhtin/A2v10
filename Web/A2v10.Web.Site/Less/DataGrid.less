@@ -15,13 +15,13 @@
 @dg-bage-bg-color: darken(@table-hdr-brd-color, 20%);
 
 
-@dg-danger-bg-color: rgba(255, 106, 0, 0.15);
+@dg-danger-bg-color: rgba(254, 220, 220, 0.5);
 @dg-danger-brd-color: #fc7c7c;
 @dg-warning-bg-color: rgba(255, 216, 0, 0.15);
 @dg-warning-brd-color: gold;
 @dg-success-bg-color: rgba(216, 255, 216, 0.5);
 @dg-success-brd-color: #89e489;
-@dg-info-bg-color: rgba(26, 255, 216, 0.15);
+@dg-info-bg-color: rgba(114, 234, 234, 0.15);
 @dg-info-brd-color: #72eaea;
 
 @group-padding: 12px;
@@ -279,19 +279,27 @@ table.data-grid {
 
 table.data-grid > tbody {
     > tr.warning, > tr.yellow {
-        background-color: @dg-warning-bg-color;
+        td {
+            background-color: @dg-warning-bg-color;
+        }
     }
 
     > tr.danger, > tr.error, > tr.red {
-        background-color: @dg-danger-bg-color;
+        td {
+            background-color: @dg-danger-bg-color;
+        }
     }
 
     > tr.success, > tr.green {
-        background-color: @dg-success-bg-color;
+        td {
+            background-color: @dg-success-bg-color;
+        }
     }
 
     > tr.info, > tr.cyan {
-        background-color: @dg-info-bg-color;
+        td {
+            background-color: @dg-info-bg-color;
+        }
     }
 }
 
