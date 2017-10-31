@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Plus" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
+            <Button Icon="Add" Tip="Создать заявку" Command="{BindCmd Create, Url='/Document/Request/Edit'}">Создать</Button>
             <Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={Bind Url}, Argument={Bind Documents}}">Открыть</Button>
             <Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
             <!--

@@ -1,4 +1,4 @@
-﻿/*20171029-7059*/
+﻿/*20171031-7063*/
 /* controllers/shell.js */
 
 (function () {
@@ -289,7 +289,7 @@
 				return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
 			},
 			pendingRequest() { return this.requestsCount > 0; },
-			hasModals() { return this.modals.length > 0; }
+            hasModals() { return this.modals.length > 0; }
 		},
 		created() {
 			let opts = { title: null };
@@ -355,7 +355,10 @@
 		store,
 		data() {
 			return {
-				requestsCount: 0
+                requestsCount: 0,
+                debugShowTrace: false,
+                debugShowModel: false,
+                dataCounter: 0
 			};
 		},
 		computed: {
@@ -363,8 +366,11 @@
 			traceEnabled: {
 				get() { return log.traceEnabled(); },
 				set(value) { log.enableTrace(value); }
-			}
-		},
+			},
+	        modelStack() {
+                return this.__dataStack__;
+            }
+    	},
         methods: {
             about() {
 				// TODO: localization
@@ -383,11 +389,17 @@
 				alert('debug options');
 			},
 			debugTrace() {
-				alert('debug trace');
+                this.debugShowModel = false;
+                this.debugShowTrace = !this.debugShowTrace;
 			},
-			debugModel() {
-				alert('debug model');
-			},
+            debugModel() {
+                this.debugShowTrace = false;
+                this.debugShowModel = !this.debugShowModel;
+            },
+            debugClose() {
+                this.debugShowModel = false;
+                this.debugShowTrace = false;
+            },
 			profile() {
 				alert('user profile');
 			},
@@ -417,6 +429,7 @@
 			});
 
             eventBus.$on('registerData', function (component, out) {
+                me.dataCounter += 1;
                 if (component) {
                     if (me.__dataStack__.length > 0)
                         out.caller = me.__dataStack__[0];

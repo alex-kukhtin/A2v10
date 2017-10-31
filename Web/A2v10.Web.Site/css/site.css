@@ -195,6 +195,9 @@ i,
 }
 .ico-plus:before {
   content: "\e970";
+}
+.ico-add:before {
+  content: "\e970";
   color: #317a2e;
 }
 .ico-plus-box:before {
@@ -906,10 +909,19 @@ a:active {
   color: #0d82f8;
 }
 pre {
-  font-family: Consolas, Courier New, Courier, monospace;
+  font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.85em;
   background-color: #f8f8f8;
   padding: 6px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  user-select: text;
+}
+pre.a2-code {
+  overflow: auto;
+  max-height: 300px;
+  margin: 0;
 }
 /*TODO: 
     2. v-focus-parent directive
@@ -2885,16 +2897,6 @@ TODO:
     left: 100%;
   }
 }
-pre.a2-code {
-  word-break: break-all;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-size: 12px;
-  font-family: Consolas, 'Courier New', Courier, monospace;
-  overflow: auto;
-  max-height: 300px;
-  margin: 0;
-}
 h2,
 .h2 {
   font-size: 1.6em;
@@ -2947,4 +2949,51 @@ h5,
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25rem;
+}
+.debug-panel {
+  position: absolute;
+  top: 32px;
+  bottom: 22px;
+  right: 0;
+  z-index: 110;
+  background-color: #f8f8f8;
+  border-left: 1px solid #bdc5d8;
+  width: 350px;
+  box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.debug-panel .debug-pane-header {
+  background-color: #fff29d;
+  padding: 2px 2px 2px 6px;
+  border-bottom: 1px solid #bdc5d8;
+}
+.debug-panel .debug-pane-header .debug-pane-title {
+  font-size: .95rem;
+}
+.debug-panel .debug-pane-header a.btn {
+  float: right;
+  padding: 0 2px;
+  color: #aaa;
+  border: 1px solid transparent;
+}
+.debug-panel .debug-pane-header a.btn:hover {
+  color: #555;
+  background-color: #fff9d0;
+  border-color: #e5c365;
+}
+.debug-panel .toolbar {
+  min-height: 29px;
+  border-bottom: 1px solid #bdc5d8;
+}
+.debug-panel .debug-body {
+  overflow: auto;
+  background-color: #f8f8f8;
+}
+.debug-panel .debug-model pre {
+  max-height: none;
+}
+.debug-panel .debug-trace {
+  padding: 6px;
 }

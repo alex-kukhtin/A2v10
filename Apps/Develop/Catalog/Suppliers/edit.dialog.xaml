@@ -1,12 +1,12 @@
 <!-- Demo dialog page -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
 		Title="{Bind Customer.Id, Format='Свойства поставщика [{0}]'}" 
-        Height="300">
+        Height="320">
 	<Dialog.Buttons>
         <Button Command="{BindCmd SaveAndClose}">OK</Button>
 		<Button Command="{BindCmd Close}">Закрыть</Button>
 	</Dialog.Buttons>
-    <TabPanel>
+    <TabPanel FullPage="True">
         <Tab Header="Общие" Height="100%">
             <Grid Columns="150, Auto" Rows="Auto, Auto, 1*, Auto" Height="100%">
                 <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" TabIndex="4"

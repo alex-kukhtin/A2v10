@@ -358,10 +358,21 @@ a {
 
 pre {
     font-family: @monospace-font;
-    font-size:0.85em;
-    background-color:#f8f8f8;
-    padding:6px;
+    font-size: 0.85em;
+    background-color: #f8f8f8;
+    padding: 6px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    user-select:text;
 }
+
+pre.a2-code {
+    overflow: auto;
+    max-height: 300px;
+    margin: 0;
+}
+
 
 @import "Control.less";
 @import "Button.less";
@@ -438,17 +449,6 @@ pre {
     to {left: 100%;}
 }
 
-pre.a2-code {
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    font-size:12px;
-    font-family:Consolas,'Courier New', Courier, monospace;
-    overflow:auto;
-    max-height:300px;
-    margin:0;
-}
-
 h2, .h2 { font-size: 1.6em; }
 h3, .h3 { font-size: 1.2em; }
 h4, .h4 { font-size: 1em; }
@@ -493,3 +493,5 @@ h5, .h5 { font-size: 0.85em; }
     vertical-align: baseline;
     border-radius: .25rem;
 }
+
+@import "Debug.less";

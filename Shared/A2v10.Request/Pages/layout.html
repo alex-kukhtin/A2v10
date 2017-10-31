@@ -35,6 +35,9 @@
                 </div>
             </div>
         </header>
+        <a2-main-view :menu="menu"></a2-main-view>
+        <a2-debug :model-stack="modelStack" :model-visible="debugShowModel" 
+                  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
             <a href="/app/about" @click.prevent="about">о программе</a>
@@ -57,7 +60,6 @@
                 </div>
             </div>
         </footer>
-        <a2-main-view :menu="menu"></a2-main-view>
         <!--
         <a2-debug v-if="debugVisible"></a2-debug>
         -->

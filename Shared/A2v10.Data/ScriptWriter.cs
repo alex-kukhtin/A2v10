@@ -39,7 +39,12 @@ namespace A2v10.Data
             var sb = new StringBuilder("\tcmn.setModelInfo(root, {\n");
             foreach (var k in _model.System as IDictionary<String, Object>)
             {
-                sb.Append($"{k.Key}: {k.Value}\n");
+                var val = k.Value;
+                if (val is Boolean)
+                    val = val.ToString().ToLowerInvariant();
+                else if (val is String)
+                    val = $"'{val}'";
+                sb.Append($"{k.Key}: {val}\n");
             }
             sb.Append("});");
             return sb.ToString();

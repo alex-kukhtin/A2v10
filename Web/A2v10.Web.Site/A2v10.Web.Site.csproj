@@ -55,6 +55,7 @@
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
     <Content Include="app\components\datepicker.js" />
+    <Content Include="app\components\debug.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\panel.js" />
@@ -103,6 +104,11 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Localization\default.ru.txt" />
+    <Content Include="Localization\default.uk.txt" />
+    <Content Include="Localization\en.xml" />
+    <Content Include="Localization\ru.xml" />
+    <Content Include="Localization\uk.xml" />
     <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\jasmine\boot.js" />
     <Content Include="scripts\jasmine\console.js" />
@@ -186,6 +192,7 @@
     <Content Include="Less\Layout.less" />
     <Content Include="Less\DatePicker.less" />
     <Content Include="Less\Taskpad.less" />
+    <Content Include="Less\Debug.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

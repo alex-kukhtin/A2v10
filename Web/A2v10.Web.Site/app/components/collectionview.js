@@ -1,5 +1,7 @@
-﻿/*20171020-7053*/
-/*components/collectionview.js*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171031-7063
+// components/collectionview.js
 
 /*
 TODO:
@@ -114,8 +116,9 @@ TODO:
 				this.filteredCount = arr.length;
 				// pager
 				arr = arr.slice(this.offset, this.offset + this.pageSize);
-				arr.$origin = this.ItemsSource;
-				arr.$origin.$clearSelected();
+                arr.$origin = this.ItemsSource;
+                if (arr.length !== arr.$origin.length)
+				    arr.$origin.$clearSelected();
 				log.time('get paged source:', s);
 				return arr;
 			},

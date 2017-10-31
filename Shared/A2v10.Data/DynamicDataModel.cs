@@ -72,10 +72,9 @@ namespace A2v10.Data
         {
             get
             {
-                if (System != null && System.HasProperty("Permissions"))
+                if (System != null && System.HasProperty("ReadOnly"))
                 {
-                    StdPermissions perm = (StdPermissions) System.Get<Int32>("Permissions");
-                    return !perm.HasFlag(StdPermissions.CanEdit);
+                    return System.Get<Boolean>("ReadOnly");
                 }
                 return false;
             }

@@ -31,6 +31,7 @@
       "app/components/image.js",
       "app/components/taskpad.js",
       "app/components/panel.js",
+      "app/components/debug.js",
       "app/directives/*.js",
       "app/controllers/base.js",
       "app/controllers/shell.js"

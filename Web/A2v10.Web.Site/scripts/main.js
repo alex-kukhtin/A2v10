@@ -795,7 +795,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7062
+// 20171031-7063
 // services/datamodel.js
 
 (function () {
@@ -1047,8 +1047,8 @@ app.modules['std:validators'] = function() {
     function isReadOnly() {
         if ('__modelInfo' in this) {
             let mi = this.__modelInfo;
-            if (utils.isDefined(mi.Permissions))
-                return mi.Permissions & FLAG_EDIT ? false : true;
+            if (utils.isDefined(mi.ReadOnly))
+                return mi.ReadOnly;
         }
         return false;
     }
@@ -1148,8 +1148,9 @@ app.modules['std:validators'] = function() {
     _BaseArray.prototype.$clearSelected = function () {
         let was = this.$selected;
         platform.set(this, '$selected', null);
-        if (was)
+        if (was) {
             emitSelect(this);
+        }
     };
 
 	_BaseArray.prototype.$remove = function (item) {
@@ -3211,8 +3212,10 @@ Vue.component('popover', {
     });
 })();
 
-/*20171020-7053*/
-/*components/collectionview.js*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171031-7063
+// components/collectionview.js
 
 /*
 TODO:
@@ -3327,8 +3330,9 @@ TODO:
 				this.filteredCount = arr.length;
 				// pager
 				arr = arr.slice(this.offset, this.offset + this.pageSize);
-				arr.$origin = this.ItemsSource;
-				arr.$origin.$clearSelected();
+                arr.$origin = this.ItemsSource;
+                if (arr.length !== arr.$origin.length)
+				    arr.$origin.$clearSelected();
 				log.time('get paged source:', s);
 				return arr;
 			},
@@ -3974,6 +3978,100 @@ Vue.component('a2-panel', {
         }
     }
 });
+/*20171031-7063*/
+/*components/debug.js*/
+
+(function () {
+
+    /**
+     * TODO
+    1. Trace window
+    2. Dock right/left
+    6.
+     */
+
+    const specKeys = {
+        '$vm': null,
+        '$host': null,
+        '$root': null,
+        '$parent': null
+    };
+
+    function isSpecialKey(key) {
+    }
+
+    function toJsonDebug(data) {
+        return JSON.stringify(data, function (key, value) {
+            if (key[0] === '$')
+                return !(key in specKeys) ? value : undefined;
+            else if (key[0] === '_')
+                return undefined;
+            return value;
+        }, 2);
+    }
+
+    Vue.component('a2-debug', {
+        template: `
+<div class="debug-panel" v-if="paneVisible">
+    <div class="debug-pane-header">
+        <span class="debug-pane-title" v-text="title"></span>
+        <a class="btn btn-close" @click.prevent="close">&#x2715</a>
+    </div>
+    <div class="toolbar">
+        <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> Обновить</button>
+    </div>
+    <div class="debug-model debug-body" v-if="modelVisible">
+        <pre class="a2-code" v-text="modelJson()"></pre>
+    </div>
+    <div class="debug-trace debug-body" v-if="traceVisible">
+        pane for tracing
+    </div>
+</div>
+`,
+        props: {
+            modelVisible: Boolean,
+            traceVisible: Boolean,
+            modelStack: Array,
+            counter: Number,
+            close: Function
+        },
+        computed: {
+            refreshCount() {
+                return this.counter;
+            },
+            paneVisible() {
+                return this.modelVisible || this.traceVisible;
+            },
+            title() {
+                return this.modelVisible ? 'Модель данных'
+                    : this.traceVisible ? 'Трассировка'
+                    : '';
+            }
+        },
+        methods: {
+            modelJson() {
+                // method. not cached
+                if (!this.modelVisible)
+                    return;
+                if (this.modelStack.length) {
+                    return toJsonDebug(this.modelStack[0].$data);
+                }
+                return '';
+            },
+            refresh() {
+                if (!this.modelVisible)
+                    return;
+                this.$forceUpdate();
+            }
+        },
+        watch: {
+            refreshCount() {
+                this.refresh();
+            }
+        }
+    });
+})();
+
 /*20171029-7060*/
 /* directives/dropdown.js */
 
@@ -4761,7 +4859,7 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20171029-7059*/
+/*20171031-7063*/
 /* controllers/shell.js */
 
 (function () {
@@ -5052,7 +5150,7 @@ Vue.directive('resize', {
 				return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
 			},
 			pendingRequest() { return this.requestsCount > 0; },
-			hasModals() { return this.modals.length > 0; }
+            hasModals() { return this.modals.length > 0; }
 		},
 		created() {
 			let opts = { title: null };
@@ -5118,7 +5216,10 @@ Vue.directive('resize', {
 		store,
 		data() {
 			return {
-				requestsCount: 0
+                requestsCount: 0,
+                debugShowTrace: false,
+                debugShowModel: false,
+                dataCounter: 0
 			};
 		},
 		computed: {
@@ -5126,8 +5227,11 @@ Vue.directive('resize', {
 			traceEnabled: {
 				get() { return log.traceEnabled(); },
 				set(value) { log.enableTrace(value); }
-			}
-		},
+			},
+	        modelStack() {
+                return this.__dataStack__;
+            }
+    	},
         methods: {
             about() {
 				// TODO: localization
@@ -5146,11 +5250,17 @@ Vue.directive('resize', {
 				alert('debug options');
 			},
 			debugTrace() {
-				alert('debug trace');
+                this.debugShowModel = false;
+                this.debugShowTrace = !this.debugShowTrace;
 			},
-			debugModel() {
-				alert('debug model');
-			},
+            debugModel() {
+                this.debugShowTrace = false;
+                this.debugShowModel = !this.debugShowModel;
+            },
+            debugClose() {
+                this.debugShowModel = false;
+                this.debugShowTrace = false;
+            },
 			profile() {
 				alert('user profile');
 			},
@@ -5180,6 +5290,7 @@ Vue.directive('resize', {
 			});
 
             eventBus.$on('registerData', function (component, out) {
+                me.dataCounter += 1;
                 if (component) {
                     if (me.__dataStack__.length > 0)
                         out.caller = me.__dataStack__[0];

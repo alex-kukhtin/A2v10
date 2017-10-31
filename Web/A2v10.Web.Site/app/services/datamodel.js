@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7062
+// 20171031-7063
 // services/datamodel.js
 
 (function () {
@@ -252,8 +252,8 @@
     function isReadOnly() {
         if ('__modelInfo' in this) {
             let mi = this.__modelInfo;
-            if (utils.isDefined(mi.Permissions))
-                return mi.Permissions & FLAG_EDIT ? false : true;
+            if (utils.isDefined(mi.ReadOnly))
+                return mi.ReadOnly;
         }
         return false;
     }
@@ -353,8 +353,9 @@
     _BaseArray.prototype.$clearSelected = function () {
         let was = this.$selected;
         platform.set(this, '$selected', null);
-        if (was)
+        if (was) {
             emitSelect(this);
+        }
     };
 
 	_BaseArray.prototype.$remove = function (item) {

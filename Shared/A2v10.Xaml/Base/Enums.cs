@@ -70,6 +70,7 @@ namespace A2v10.Xaml
     {
         NoIcon = 0,
         Access,
+        Add,
         Alert,
         Approve,
         ArrowDown,

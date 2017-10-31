@@ -111,7 +111,7 @@
                     </FilterDescription>
                 </CollectionView.Filter>
                 <Toolbar Style="Transparent">
-                    <Button Icon="Plus" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+                    <Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
                     <Button Icon="Delete" Content="Удалить выделенную строку" Command="{BindCmd RemoveSelected, Argument={Bind Document.Rows}, Confirm='Удалить строку?'}"/>
                     <Button Icon="Dashboard" Content="Подбор товара" Command="{BindCmd Dialog, Action=Show, Url='/Document/request/entityChoice', Argument={Bind Document.Contract.Id}}"/>
                     <Code Content="{Bind Document.Rows.length}"></Code>
