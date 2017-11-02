@@ -54,6 +54,7 @@ namespace A2v10.Xaml
 
         public Boolean SaveRequired { get; set; }
         public Boolean ValidRequired { get; set; }
+        public Boolean CheckReadOnly { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -104,10 +105,10 @@ namespace A2v10.Xaml
                     return $"$modalSelect({CommandArgument(context)})";
 
                 case CommandType.RemoveSelected:
-                    return $"$removeSelected({CommandArgument(context)} {GetConfirm(context)})";
+                    return $"$removeSelected({CommandArgument(context)}, {GetConfirm(context)})";
 
                 case CommandType.DbRemoveSelected:
-                    return $"$dbRemoveSelected({CommandArgument(context)} {GetConfirm(context)})";
+                    return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";
 
                 case CommandType.Open:
                     if (indirect)
@@ -127,7 +128,7 @@ namespace A2v10.Xaml
                         return $"{{cmd:$remove, arg1:'this'}}";
                     }
                     else
-                        return $"$remove({CommandArgumentOrThis(context)} {GetConfirm(context)})";
+                        return $"$remove({CommandArgumentOrThis(context)}, {GetConfirm(context)})";
 
                 case CommandType.Append:
                     return $"{CommandArgument(context)}.$append()";
@@ -136,10 +137,10 @@ namespace A2v10.Xaml
                     return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)})";
 
                 case CommandType.Execute:
-                    return $"$exec('{GetName()}', {CommandArgument(context, nullable:true)} {GetConfirm(context)})";
+                    return $"$exec('{GetName()}', {CommandArgument(context, nullable:true)}, {GetConfirm(context)}, {GetOptions(context)})";
 
                 case CommandType.ExecuteSelected:
-                    return $"$execSelected('{GetName()}', {CommandArgument(context)} {GetConfirm(context)})";
+                    return $"$execSelected('{GetName()}', {CommandArgument(context)}, {GetConfirm(context)})";
                 case CommandType.Report:
                     return $"$report('{GetReportName()}', {CommandArgument(context, nullable:true)}, {GetOptions(context)})";
                 case CommandType.Dialog:
@@ -157,7 +158,7 @@ namespace A2v10.Xaml
                         // command, url, data
                         return $"{{cmd:$dialog, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
                     }
-                    return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)})";
+                    return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetOptions(context)})";
 
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
@@ -179,13 +180,15 @@ namespace A2v10.Xaml
 
         String GetOptions(RenderContext context)
         {
-            if (!SaveRequired)
+            if (!SaveRequired && !ValidRequired && !CheckReadOnly)
                 return "null";
             StringBuilder sb = new StringBuilder("{");
             if (SaveRequired)
-                sb.Append("saveRequired: true, ");
+                sb.Append("saveRequired: true,");
             if (ValidRequired)
-                sb.Append("validRequired: true, ");
+                sb.Append("validRequired: true,");
+            if (CheckReadOnly)
+                sb.Append("checkReadOnly: true,");
             sb.RemoveTailComma();
             sb.Append("}");
             return sb.ToString();
@@ -224,7 +227,7 @@ namespace A2v10.Xaml
         String GetConfirm(RenderContext context)
         {
             if (Confirm == null)
-                return String.Empty;
+                return "null";
             return Confirm.GetJsValue(context);
         }
 
@@ -286,7 +289,7 @@ namespace A2v10.Xaml
                         tag.MergeAttribute(":disabled", "$isPristine");
                     break;
                 case CommandType.Execute:
-                    tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)})");
+                    tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
                     break;
                 case CommandType.Append:
                 case CommandType.Remove:

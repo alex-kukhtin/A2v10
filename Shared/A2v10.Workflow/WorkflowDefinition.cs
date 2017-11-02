@@ -14,7 +14,8 @@ namespace A2v10.Workflow
     {
         Unknown,
         ClrType,
-        File
+        File,
+        Definition
     }
 
     internal class WorkflowDefinition
@@ -41,6 +42,14 @@ namespace A2v10.Workflow
             }
         }
 
+
+        private WorkflowDefinition(Int64 inboxId)
+        {
+            Definition = "LOADED from DB";
+            // NAME, VERSION
+            Type = WorkflowType.Definition;
+            Identity = new WorkflowIdentity(Name, new Version(Version, 0), null);
+        }
 
         private WorkflowDefinition(String source)
         {
@@ -71,6 +80,11 @@ namespace A2v10.Workflow
         {
             var def = new WorkflowDefinition(source);
             return def;
+        }
+
+        public static WorkflowDefinition Load(Int64 inboxId)
+        {
+            return new WorkflowDefinition(inboxId);
         }
 
         String GetWorkflowFullPath(IApplicationHost host)
@@ -116,15 +130,7 @@ namespace A2v10.Workflow
             {
                 return System.Activator.CreateInstance(Assembly, Name).Unwrap() as Activity;
             }
-            else
-            {
-                throw new NotImplementedException($"WorkflowDefinition.LoadFromFile. Type={Type.ToString()}");
-            }
-        }
-
-        public Activity LoadFromString()
-        {
-            if (Type == WorkflowType.File)
+            else if (Type == WorkflowType.Definition)
             {
                 using (var sr = new StringReader(Definition))
                 {
@@ -133,13 +139,9 @@ namespace A2v10.Workflow
                     return root;
                 }
             }
-            else if (Type == WorkflowType.ClrType)
-            {
-                return System.Activator.CreateInstance(Assembly, Name).Unwrap() as Activity;
-            }
             else
             {
-                throw new NotImplementedException($"WorkflowDefinition.LoadFromString. Type={Type.ToString()}");
+                throw new NotImplementedException($"WorkflowDefinition. Invalid WorkflowType. Type={Type.ToString()}");
             }
         }
     }

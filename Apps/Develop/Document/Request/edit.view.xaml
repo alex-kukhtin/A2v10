@@ -114,6 +114,7 @@
                     <Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
                     <Button Icon="Delete" Content="Удалить выделенную строку" Command="{BindCmd RemoveSelected, Argument={Bind Document.Rows}, Confirm='Удалить строку?'}"/>
                     <Button Icon="Dashboard" Content="Подбор товара" Command="{BindCmd Dialog, Action=Show, Url='/Document/request/entityChoice', Argument={Bind Document.Contract.Id}}"/>
+                    <Button Icon="Access" Content="Exec" Command="{BindCmd Execute, CommandName=Test, Argument={Bind Document.Contract}, CheckReadOnly=True}"/>
                     <Code Content="{Bind Document.Rows.length}"></Code>
                     <Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
                     <TextBox Label="фильтр" Value="{Bind Parent.Filter.Filter}"></TextBox>

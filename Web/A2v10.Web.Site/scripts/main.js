@@ -433,8 +433,10 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20171028-7058*/
-/* services/utils.js */
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171102-7064
+// services/utils.js
 
 app.modules['std:utils'] = function () {
 
@@ -449,7 +451,8 @@ app.modules['std:utils'] = function () {
 		isObjectExact: isObjectExact,
 		isDate: isDate,
 		isString: isString,
-		isNumber: isNumber,
+        isNumber: isNumber,
+        isBoolean: isBoolean,
 		toString: toString,
 		notBlank: notBlank,
 		toJson: toJson,
@@ -473,7 +476,8 @@ app.modules['std:utils'] = function () {
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
 	function isString(value) { return typeof value === 'string'; }
-	function isNumber(value) { return typeof value === 'number'; }
+    function isNumber(value) { return typeof value === 'number'; }
+    function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
@@ -795,7 +799,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7063
+// 20171102-7064
 // services/datamodel.js
 
 (function () {
@@ -1327,8 +1331,19 @@ app.modules['std:validators'] = function() {
         let tml = this.$template;
         if (tml && tml.commands) {
             let cmdf = tml.commands[cmd];
-            if (cmdf && utils.isFunction(cmdf.canExec)) {
+            if (!cmdf)
+                return false;
+            if (cmdf.checkReadOnly === true) {
+                if (this.$root.$readOnly)
+                    return false;
+            }
+            if (utils.isFunction(cmdf.canExec)) {
                 return cmdf.canExec.apply(this, args);
+            } else if (utils.isBoolean(cmdf.canExec)) {
+                return cmdf.canExec; // for debugging purposes
+            } else if (utils.isDefined(cmdf.canExec)) {
+                console.error(`${cmd}.canExec should be a function`);
+                return false;
             }
             return true;
         }
@@ -1790,8 +1805,10 @@ app.modules['std:popup'] = function () {
         }
     });
 })();
-/*20171027-7057*/
-/*components/control.js*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171031-7064
+// components/control.js
 
 (function () {
 
@@ -1828,6 +1845,10 @@ app.modules['std:popup'] = function () {
                 let cls = '';
                 if (this.align !== 'left')
                     cls += 'text-' + this.align;
+                //if (this.dataType == 'Number' || this.dataType === N'Currency') {
+                //  if (this.itemValue < 0)
+                //      cls += ' negative-red';
+                //}
                 return cls;
 			},
 			hasLabel() {
@@ -3915,7 +3936,7 @@ Vue.component("a2-taskpad", {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7061
+// 20171031-7064
 // components/panel.js
 
 Vue.component('a2-panel', {
@@ -3923,7 +3944,7 @@ Vue.component('a2-panel', {
 `<div :class="cssClass">
     <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
-	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.prevent="toggle"></a>
+	    <span v-if="collapsible" class="ico panel-collapse-handle"></span>
     </div>
     <slot v-if="expanded"></slot>
 </div>
@@ -4314,8 +4335,11 @@ Vue.directive('resize', {
 });
 
 
-/*20171029-7060*/
-/*controllers/base.js*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171102-7064
+// controllers/base.js
+
 (function () {
 
     const eventBus = require('std:eventBus');
@@ -4379,10 +4403,15 @@ Vue.directive('resize', {
 			},
 			$modelInfo() {
 				return this.$data.__modelInfo;
-			}
+            },
+            $isReadOnly() {
+                return this.$data.$readOnly;
+            }
 		},
 		methods: {
-			$exec(cmd, arg, confirm) {
+            $exec(cmd, arg, confirm, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
 				let root = this.$data;
 				if (!confirm)
 					root._exec_(cmd, arg);
@@ -4401,13 +4430,15 @@ Vue.directive('resize', {
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
             },
-            $canExecute(cmd, arg) {
+            $canExecute(cmd, arg, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return false;
                 let root = this.$data;
                 return root._canExec_(cmd, arg);
             },
 			$save() {
-				let self = this;
-                if (self.$root.$readOnly)
+                let self = this;
+                if (self.$isReadOnly)
                     return;
                 let root = window.$$rootUrl;
 				let url = root + '/_data/save';
@@ -4512,7 +4543,7 @@ Vue.directive('resize', {
 			},
 
             $remove(item, confirm) {
-                if (item.$root.$readOnly)
+                if (this.$isReadOnly)
                     return;
 				if (!confirm)
 					item.$remove();
@@ -4527,7 +4558,7 @@ Vue.directive('resize', {
 				let item = arr.$selected;
 				if (!item)
 					return;
-                if (item.$root.$readOnly)
+                if (this.$isReadOnly)
                     return;
 				this.$remove(item, confirm);
 			},
@@ -4618,12 +4649,14 @@ Vue.directive('resize', {
 					alert(msg);
 			},
 
-            $showDialog(url, query) {
-                return this.$dialog('show', url, null, query);
+            $showDialog(url, data, opts) {
+                return this.$dialog('show', url, data, opts);
             },
 
-            $dialog(command, url, data, query) {
-                let uq = urltools.parseUrlAndQuery(url, query);
+            $dialog(command, url, data, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
+                let uq = urltools.parseUrlAndQuery(url, data);
                 url = uq.url;
                 query = uq.query;
 				return new Promise(function (resolve, reject) {
@@ -4669,7 +4702,8 @@ Vue.directive('resize', {
             },
 
             $report(rep, arg, opts) {
-
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
                 doReport = () => {
                     let id = arg;
                     if (arg && utils.isObject(arg))

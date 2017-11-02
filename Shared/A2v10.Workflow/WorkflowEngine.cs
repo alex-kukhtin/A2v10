@@ -20,5 +20,14 @@ namespace A2v10.Workflow
         {
             return AppWorkflow.StartWorkflow(_host, _dbContext, info);
         }
+
+        public void ResumeWorkflow(ResumeWorkflowInfo info)
+        {
+            AppWorkflow.ResumeWorkflow(_host, _dbContext, info);
+        }
+
+        public void ProcessPendingWorkflows()
+        {           
+        }
     }
 }

@@ -15,6 +15,6 @@ namespace A2v10.Web.Mvc.Start
 
 			Debug.Assert(ViewEngines.Engines[0] is WebFormViewEngine);
 			ViewEngines.Engines.RemoveAt(0); // WebForm is not used
-		}
+        }
 	}
 }

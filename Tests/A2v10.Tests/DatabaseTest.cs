@@ -296,10 +296,6 @@ namespace A2v10.Tests
             md.HasAllProperties("TRow", "Id,PriceKind,Entity");
             md.HasAllProperties("TEntity", "Id,Name,Prices");
 
-            md.IsItemType("TDocument", "Agent", FieldType.Object);
-            md.IsItemType("TDocument", "Company", FieldType.Object);
-            md.IsItemType("TDocument", "PriceList", FieldType.Object);
-            md.IsItemType("TDocument", "PriceKind", FieldType.Object);
             md.IsItemType("TDocument", "Rows", FieldType.Array);
             md.IsId("TDocument", "Id");
 
@@ -316,31 +312,6 @@ namespace A2v10.Tests
             var dt = new DataTester(dm, "Document");
             dt.AreValueEqual(docId, "Id");
 
-            dt = new DataTester(dm, "Document.Agent");
-            dt.AreValueEqual(300, "Id");
-            dt.AreValueEqual("Agent Name", "Name");
-
-            dt = new DataTester(dm, "Document.Company");
-            dt.AreValueEqual(500, "Id");
-            dt.AreValueEqual("Company Name", "Name");
-
-            dt = new DataTester(dm, "Document.PriceList");
-            dt.AreValueEqual(1, "Id");
-            dt.AreValueEqual("PriceList", "Name");
-
-            dt = new DataTester(dm, "Document.PriceKind");
-            dt.AreValueEqual(7, "Id");
-            dt.AreValueEqual("Kind", "Name");
-
-            dt = new DataTester(dm, "Document.PriceList.PriceKinds");
-            dt.IsArray(2);
-            dt.AreArrayValueEqual(7, 0, "Id");
-            dt.AreArrayValueEqual(8, 1, "Id");
-
-            dt = new DataTester(dm, "Document.PriceList.PriceKinds[0].Prices");
-            dt.IsArray(2);
-            dt.AreArrayValueEqual(22.5M, 0, "Price");
-            dt.AreArrayValueEqual(36.8M, 1, "Price");
 
             dt = new DataTester(dm, "Document.PriceKind.Prices");
             dt.IsArray(2);
@@ -377,5 +348,78 @@ namespace A2v10.Tests
             dt.AreArrayValueEqual(8, 1, "Id");
 
         }
+
+        [TestMethod]
+        public async Task TestDocument2()
+        {
+            ExpandoObject prms = new ExpandoObject();
+            prms.Add("UserId", 100);
+            Int64 docId = 10;
+            prms.Add("Id", docId);
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.[Document2.Load]", prms);
+            var md = new MetadataTester(dm);
+            md.IsAllKeys("TRoot,TDocument,TRow,TPriceList,TPriceKind,TPrice,TEntity");
+            md.HasAllProperties("TRoot", "Document,PriceLists,PriceKinds");
+            md.HasAllProperties("TDocument", "Id,Rows,PriceKind");
+            md.HasAllProperties("TPriceList", "Id,Name,PriceKinds");
+            md.HasAllProperties("TPriceKind", "Id,Name,Main");
+            md.HasAllProperties("TPrice", "Price,PriceKind");
+            md.HasAllProperties("TRow", "Id,Entity");
+            md.HasAllProperties("TEntity", "Id,Name,Prices");
+
+            md.IsItemType("TDocument", "Rows", FieldType.Array);
+            md.IsId("TDocument", "Id");
+
+            md.IsItemType("TRow", "Entity", FieldType.Object);
+            md.IsId("TRow", "Id");
+
+            md.IsId("TPriceList", "Id");
+            md.IsId("TPriceKind", "Id");
+
+            md.IsItemType("TEntity", "Prices", FieldType.Array);
+
+            // data
+            var dt = new DataTester(dm, "Document");
+            dt.AreValueEqual(docId, "Id");
+
+            dt = new DataTester(dm, "Document.PriceKind");
+            dt.AreValueEqual(4294967306L, "Id");
+
+            dt = new DataTester(dm, "Document.Rows");
+            dt.IsArray(1);
+            dt.AreArrayValueEqual(59, 0, "Id");
+
+            dt = new DataTester(dm, "Document.Rows[0].Entity.Prices");
+            dt.IsArray(3);
+            dt.AreArrayValueEqual(185.7M, 0, "Price");
+            dt.AreArrayValueEqual(179.4M, 1, "Price");
+            dt.AreArrayValueEqual(172.44M, 2, "Price");
+
+            dt = new DataTester(dm, "Document.Rows[0].Entity.Prices[0].PriceKind");
+            dt.AreValueEqual(4294967305L, "Id");
+            dt.AreValueEqual("Kind 1", "Name");
+
+            dt = new DataTester(dm, "Document.Rows[0].Entity.Prices[1].PriceKind");
+            dt.AreValueEqual(4294967304L, "Id");
+            dt.AreValueEqual("Kind 2", "Name");
+
+            dt = new DataTester(dm, "Document.Rows[0].Entity.Prices[2].PriceKind");
+            dt.AreValueEqual(4294967306L, "Id");
+            dt.AreValueEqual("Kind 3", "Name");
+
+            dt = new DataTester(dm, "PriceLists");
+            dt.IsArray(2);
+            dt.AreArrayValueEqual(4294967300L, 0, "Id");
+            dt.AreArrayValueEqual(4294967304L, 1, "Id");
+
+            dt = new DataTester(dm, "PriceKinds");
+            dt.IsArray(4);
+            dt.AreArrayValueEqual(4294967305L, 0, "Id");
+            dt.AreArrayValueEqual(4294967304L, 1, "Id");
+            dt.AreArrayValueEqual(4294967306L, 2, "Id");
+            dt.AreArrayValueEqual(4294967303L, 3, "Id");
+
+        }
+
     }
 }

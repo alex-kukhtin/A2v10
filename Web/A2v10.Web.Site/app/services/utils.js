@@ -1,5 +1,7 @@
-﻿/*20171028-7058*/
-/* services/utils.js */
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171102-7064
+// services/utils.js
 
 app.modules['std:utils'] = function () {
 
@@ -14,7 +16,8 @@ app.modules['std:utils'] = function () {
 		isObjectExact: isObjectExact,
 		isDate: isDate,
 		isString: isString,
-		isNumber: isNumber,
+        isNumber: isNumber,
+        isBoolean: isBoolean,
 		toString: toString,
 		notBlank: notBlank,
 		toJson: toJson,
@@ -38,7 +41,8 @@ app.modules['std:utils'] = function () {
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
 	function isString(value) { return typeof value === 'string'; }
-	function isNumber(value) { return typeof value === 'number'; }
+    function isNumber(value) { return typeof value === 'number'; }
+    function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {

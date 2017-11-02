@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Workflow
 {
     public class TrackRecord
     {
-        public DateTime EventTime { get; set; } = DateTime.UtcNow;
+        public DateTime EventTime { get; private set; } = DateTime.Now;
+        public String Message { get; set; }
+        public Int64 ProcessId { get; set; }
     }
 }

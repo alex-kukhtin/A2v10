@@ -10,6 +10,9 @@ namespace A2v10.Workflow
         public Int64 UserId { get; set; }
 
         [DataMember]
+        public Int64 InboxId { get; set; }
+
+        [DataMember]
         public String Answer { get; set; }
 
         [DataMember]

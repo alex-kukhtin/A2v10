@@ -26,7 +26,7 @@ namespace A2v10.Xaml
                 okText = $", okText:{okText}";
             if (cancelText != null)
                 cancelText = $", cancelText:{cancelText}";
-            return $", {{message: {msg}{title}{okText}{cancelText}}}";
+            return $"{{message: {msg}{title}{okText}{cancelText}}}";
         }
 
         internal String GetBindingString(RenderContext context, String propertyName, String propValue)

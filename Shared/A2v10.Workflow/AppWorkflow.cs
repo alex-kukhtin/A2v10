@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Activities;
 using System.Activities.DurableInstancing;
+using System.Activities.Tracking;
 using System.Runtime.DurableInstancing;
 
 using Microsoft.Activities.Extensions.Tracking;
 
 using A2v10.Infrastructure;
-using System.Activities.Tracking;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace A2v10.Workflow
 {
@@ -39,6 +39,7 @@ namespace A2v10.Workflow
                 // workflow arguments
                 IDictionary<String, Object> args = new Dictionary<String, Object>();
                 args.Add("Process", process);
+                args.Add("Comment", info.Comment);
                 aw = Create(dbContext, root, args, def.Identity);
                 process.WorkflowId = aw._application.Id;
                 process.Start(dbContext);
@@ -57,19 +58,27 @@ namespace A2v10.Workflow
             }
         }
 
-        public static void ResumeWorkflow()
+        public static void ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
         {
             AppWorkflow aw = null;
             try
             {
-                String assemblyName = String.Empty;
-                String typeName = String.Empty;
-                Activity root = System.Activator.CreateInstance(assemblyName, typeName).Unwrap() as Activity;
+                Inbox inbox = new Inbox(); // Inbox.Load(info.Id);
+                var def = WorkflowDefinition.Load(info.Id);
+                Activity root = def.LoadFromSource(host);
+                aw = Create(dbContext, root, null, def.Identity);
+                //WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(info.WorkflowId, aw._application.InstanceStore);
+                //aw._application.Load(instance, _wfTimeSpan);
+
                 foreach (var bm in aw._application.GetBookmarks())
                 {
-                    if (bm.BookmarkName == "TODO" /*inboxInfo.Bookmark*/)
+                    if (bm.BookmarkName == inbox.Bookmark)
                     {
                         var rr = new RequestResult();
+                        rr.Answer = info.Answer;
+                        rr.Comment = info.Comment;
+                        rr.UserId = info.UserId;
+                        rr.InboxId = info.Id;
                         aw._application.ResumeBookmark(bm.BookmarkName, rr);
                         return; // already resumed
                     }
@@ -119,7 +128,13 @@ namespace A2v10.Workflow
         static bool CatchWorkflow(AppWorkflow aw, Exception ex)
         {
             if ((aw != null) && (aw._application != null))
+            {
+                String msg = ex.Message;
+                if (ex.InnerException != null)
+                    msg = ex.InnerException.Message;
+                aw.Track(new CustomTrackingRecord(aw._application.Id, msg, TraceLevel.Error));
                 aw._application.Unload();
+            }
             if (ex.InnerException != null)
                 throw ex.InnerException;
             else

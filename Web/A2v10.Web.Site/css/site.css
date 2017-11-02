@@ -51,6 +51,9 @@ i,
 .ico-arrow-sort:before {
   content: "\e90a";
 }
+.ico-ban:before {
+  content: "\ea0a";
+}
 .ico-triangle-left:before {
   content: "\e9c8";
 }
@@ -198,13 +201,16 @@ i,
 }
 .ico-add:before {
   content: "\e970";
-  color: #317a2e;
+  color: #3a8b37;
 }
 .ico-plus-box:before {
   content: "\e973";
 }
 .ico-print:before {
   content: "\e97f";
+}
+.ico-policy:before {
+  content: "\e97e";
 }
 .ico-power:before {
   content: "\eaa3";
@@ -2749,13 +2755,11 @@ TODO:
   font-size: 110%;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 }
 .panel .panel-header .panel-collapse-handle {
   font-size: 110%;
   padding-top: 2px;
-}
-.panel .panel-header .panel-collapse-handle:hover {
-  text-decoration: none;
 }
 .panel .panel-header .panel-collapse-handle:before {
   content: "\e9a2";
@@ -2783,9 +2787,6 @@ TODO:
 .panel .panel-header .panel-collapse-handle {
   color: #777;
 }
-.panel .panel-header .panel-collapse-handle:hover {
-  background-color: #e3e3e3;
-}
 .panel.panel-cyan {
   border: 1px solid #9ec5e7;
 }
@@ -2796,9 +2797,6 @@ TODO:
 }
 .panel.panel-cyan .panel-header .panel-collapse-handle {
   color: #317293;
-}
-.panel.panel-cyan .panel-header .panel-collapse-handle:hover {
-  background-color: #bee1ef;
 }
 .panel.panel-green {
   border: 1px solid #aae396;
@@ -2811,9 +2809,6 @@ TODO:
 .panel.panel-green .panel-header .panel-collapse-handle {
   color: #3d723e;
 }
-.panel.panel-green .panel-header .panel-collapse-handle:hover {
-  background-color: #cdebb6;
-}
 .panel.panel-red {
   border: 1px solid #dfa4ae;
 }
@@ -2825,9 +2820,6 @@ TODO:
 .panel.panel-red .panel-header .panel-collapse-handle {
   color: #ab403f;
 }
-.panel.panel-red .panel-header .panel-collapse-handle:hover {
-  background-color: #eac3c3;
-}
 .panel.panel-yellow {
   border: 1px solid #fcd891;
 }
@@ -2838,9 +2830,6 @@ TODO:
 }
 .panel.panel-yellow .panel-header .panel-collapse-handle {
   color: #9c793d;
-}
-.panel.panel-yellow .panel-header .panel-collapse-handle:hover {
-  background-color: #fdf1b8;
 }
 .app-exception {
   margin: 50px auto;

@@ -137,6 +137,8 @@ namespace A2v10.Xaml
                 throw new XamlException($"invalid binding for {valueName} '{path}'");
             input.MergeAttribute(":item", pp.Path);
             input.MergeAttribute("prop", pp.Prop);
+            if (valBind.DataType != DataType.String)
+                input.MergeAttribute("data-type", valBind.DataType.ToString());
         }
 
         internal void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)

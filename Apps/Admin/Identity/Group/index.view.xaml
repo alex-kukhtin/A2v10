@@ -12,7 +12,7 @@
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Plus" Tip="Додати групу" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Edit', Argument={Bind Groups}}">Створити</Button>
+            <Button Icon="Add" Tip="Додати групу" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Edit', Argument={Bind Groups}}">Створити</Button>
             <Button Icon="Edit" Tip="Властивості групи" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/Group/Edit', Argument={Bind Groups}}">Властивості</Button>
             <Button Icon="Delete" Content="Видалити" Command="{BindCmd DbRemoveSelected, Argument={Bind Groups}, Confirm='Ви дійсно бажаєте видалити групу?'}"/>
             <Separator />

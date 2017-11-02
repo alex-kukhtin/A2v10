@@ -20,7 +20,7 @@
         </Tab>
         <Tab Header="Групи" Padding="5, 10">
             <Toolbar Style="Transparent">
-                <Button Icon="Plus" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Browse', Argument={Bind User.Groups}}"/>
+                <Button Icon="Add" Content="Додати" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Browse', Argument={Bind User.Groups}}"/>
                 <Button Icon="Delete" Content="Видалити" Command="{BindCmd Command=RemoveSelected, Argument={Bind User.Groups}, Confirm='Ви дійсно бажаєте видалити групу?'}"/>
                 <Text Size="Small"  Toolbar.Align="Right">всього груп:
                     <Span Bold="True" Content="{Bind User.Groups.Count}"/>

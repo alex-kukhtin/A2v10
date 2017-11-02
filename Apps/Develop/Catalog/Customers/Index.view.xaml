@@ -35,7 +35,8 @@
 	-->
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/catalog/suppliers/edit', Argument={Bind Customers}}" Tip="Изменить покупателя">Изменить</Button>
+            <Button Icon="Edit"
+                    Command="{BindCmd Dialog, Action=EditSelected, Url='/catalog/suppliers/edit', Argument={Bind Customers}}" Tip="Изменить покупателя">Изменить</Button>
             <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Filter}"/>
             <CheckBox Label="Только остатки" Value="{Bind Parent.Filter.InStockOnly}"/>
             <Separator />

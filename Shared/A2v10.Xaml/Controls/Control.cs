@@ -56,15 +56,16 @@ namespace A2v10.Xaml
 
         internal virtual void MergeDisabled(TagBuilder tag, RenderContext context, Boolean nativeControl = false)
         {
+            // may override the disabled attribute from the command
             var disBind = GetBinding(nameof(Disabled));
             if (disBind != null)
-                tag.MergeAttribute(":disabled", disBind.GetPath(context));
+                tag.MergeAttribute(":disabled", disBind.GetPath(context), replaceExisting:true);
             else if (Disabled)
             {
                 if (nativeControl)
-                    tag.MergeAttribute("disabled", String.Empty);
+                    tag.MergeAttribute("disabled", String.Empty, replaceExisting: true);
                 else
-                    tag.MergeAttribute(":disabled", "true"); // jsValue
+                    tag.MergeAttribute(":disabled", "true", replaceExisting:true); // jsValue
             }
         }
 

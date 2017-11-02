@@ -355,6 +355,50 @@ begin
 		Price = 36.8
 end
 go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Document2.Load')
+	drop procedure a2test.[Document2.Load]
+go
+------------------------------------------------
+create procedure a2test.[Document2.Load]
+@UserId bigint = null,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	select [Document!TDocument!Object] = null, [Id!!Id]=@Id,
+	[Rows!TRow!Array] = null, [PriceKind!TPriceKind!RefId] = cast(4294967306 as bigint)
+
+	select [!TRow!Array] = null, [Id!!Id] = 59, [!TDocument.Rows!ParentId] = @Id,
+		[Entity!TEntity!RefId] = cast(4295140867 as bigint);
+
+	select [!TEntity!Map] = null, [Id!!Id] = cast(4295140867 as bigint), Name = N'Entity Name',
+		[Prices!TPrice!Array] = null;
+
+	select [PriceLists!TPriceList!Array] = null, [Id!!Id] = cast(4294967300 as bigint), 
+		Name = N'PriceList', [PriceKinds!TPriceKind!Array] = null
+	union all
+	select [PriceLists!TPriceList!Array] = null, [Id!!Id] = cast(4294967304 as bigint), 
+		Name = N'PriceList', [PriceKinds!TPriceKind!Array] = null;
+
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = cast(4294967305  as bigint), [Name!!Name]=N'Kind 1', Main=1, [!TPriceList.PriceKinds!ParentId] = cast(4294967304 as bigint) 
+	union all
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = cast(4294967304 as bigint), [Name!!Name]=N'Kind 2', Main=0, [!TPriceList.PriceKinds!ParentId] = cast(4294967304 as bigint)
+	union all
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = cast(4294967306 as bigint), [Name!!Name]=N'Kind 3', Main=0, [!TPriceList.PriceKinds!ParentId] = cast(4294967304 as bigint)
+	union all
+	select [PriceKinds!TPriceKind!Array] = null, [Id!!Id] = cast(4294967303 as bigint), [Name!!Name]=N'Kind 4', Main=0, [!TPriceList.PriceKinds!ParentId] = cast(4294967304 as bigint)
+
+	select [!TPrice!Array] = null, [PriceKind!TPriceKind!RefId] = cast(4294967305 as bigint),
+		[!TEntity.Prices!ParentId] = cast(4295140867 as bigint), Price = 185.7
+	union all
+	select [!TPrice!Array] = null, [PriceKind!TPriceKind!RefId] = cast(4294967304 as bigint),
+		[!TEntity.Prices!ParentId] = cast(4295140867 as bigint), Price = 179.4
+	union all
+	select [!TPrice!Array] = null, [PriceKind!TPriceKind!RefId] = cast(4294967306 as bigint),
+		[!TEntity.Prices!ParentId] = cast(4295140867 as bigint), Price = 172.44
+end
+go
 
 -- CLEAN UP DATABASE
 ------------------------------------------------

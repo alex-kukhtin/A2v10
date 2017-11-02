@@ -1,5 +1,8 @@
-﻿/*20171029-7060*/
-/*controllers/base.js*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171102-7064
+// controllers/base.js
+
 (function () {
 
     const eventBus = require('std:eventBus');
@@ -63,10 +66,15 @@
 			},
 			$modelInfo() {
 				return this.$data.__modelInfo;
-			}
+            },
+            $isReadOnly() {
+                return this.$data.$readOnly;
+            }
 		},
 		methods: {
-			$exec(cmd, arg, confirm) {
+            $exec(cmd, arg, confirm, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
 				let root = this.$data;
 				if (!confirm)
 					root._exec_(cmd, arg);
@@ -85,13 +93,15 @@
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
             },
-            $canExecute(cmd, arg) {
+            $canExecute(cmd, arg, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return false;
                 let root = this.$data;
                 return root._canExec_(cmd, arg);
             },
 			$save() {
-				let self = this;
-                if (self.$root.$readOnly)
+                let self = this;
+                if (self.$isReadOnly)
                     return;
                 let root = window.$$rootUrl;
 				let url = root + '/_data/save';
@@ -196,7 +206,7 @@
 			},
 
             $remove(item, confirm) {
-                if (item.$root.$readOnly)
+                if (this.$isReadOnly)
                     return;
 				if (!confirm)
 					item.$remove();
@@ -211,7 +221,7 @@
 				let item = arr.$selected;
 				if (!item)
 					return;
-                if (item.$root.$readOnly)
+                if (this.$isReadOnly)
                     return;
 				this.$remove(item, confirm);
 			},
@@ -302,12 +312,14 @@
 					alert(msg);
 			},
 
-            $showDialog(url, query) {
-                return this.$dialog('show', url, null, query);
+            $showDialog(url, data, opts) {
+                return this.$dialog('show', url, data, opts);
             },
 
-            $dialog(command, url, data, query) {
-                let uq = urltools.parseUrlAndQuery(url, query);
+            $dialog(command, url, data, opts) {
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
+                let uq = urltools.parseUrlAndQuery(url, data);
                 url = uq.url;
                 query = uq.query;
 				return new Promise(function (resolve, reject) {
@@ -353,7 +365,8 @@
             },
 
             $report(rep, arg, opts) {
-
+                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                    return;
                 doReport = () => {
                     let id = arg;
                     if (arg && utils.isObject(arg))

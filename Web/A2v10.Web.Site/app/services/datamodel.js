@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7063
+// 20171102-7064
 // services/datamodel.js
 
 (function () {
@@ -532,8 +532,19 @@
         let tml = this.$template;
         if (tml && tml.commands) {
             let cmdf = tml.commands[cmd];
-            if (cmdf && utils.isFunction(cmdf.canExec)) {
+            if (!cmdf)
+                return false;
+            if (cmdf.checkReadOnly === true) {
+                if (this.$root.$readOnly)
+                    return false;
+            }
+            if (utils.isFunction(cmdf.canExec)) {
                 return cmdf.canExec.apply(this, args);
+            } else if (utils.isBoolean(cmdf.canExec)) {
+                return cmdf.canExec; // for debugging purposes
+            } else if (utils.isDefined(cmdf.canExec)) {
+                console.error(`${cmd}.canExec should be a function`);
+                return false;
             }
             return true;
         }

@@ -1,5 +1,7 @@
-﻿/*20171027-7057*/
-/*components/control.js*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171031-7064
+// components/control.js
 
 (function () {
 
@@ -36,6 +38,10 @@
                 let cls = '';
                 if (this.align !== 'left')
                     cls += 'text-' + this.align;
+                //if (this.dataType == 'Number' || this.dataType === N'Currency') {
+                //  if (this.itemValue < 0)
+                //      cls += ' negative-red';
+                //}
                 return cls;
 			},
 			hasLabel() {

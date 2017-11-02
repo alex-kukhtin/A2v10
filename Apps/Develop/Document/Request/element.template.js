@@ -43,6 +43,7 @@ let template = {
 				doc.Rows.$append();
         },
         Test: {
+            checkReadOnly: true,
             canExec: canExecTest,
             exec: execTest
         }

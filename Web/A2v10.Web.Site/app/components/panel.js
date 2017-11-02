@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7061
+// 20171031-7064
 // components/panel.js
 
 Vue.component('a2-panel', {
@@ -8,7 +8,7 @@ Vue.component('a2-panel', {
 `<div :class="cssClass">
     <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
-	    <a v-if="collapsible" class="ico panel-collapse-handle" @click.prevent="toggle"></a>
+	    <span v-if="collapsible" class="ico panel-collapse-handle"></span>
     </div>
     <slot v-if="expanded"></slot>
 </div>

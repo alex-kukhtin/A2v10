@@ -43,14 +43,11 @@
         font-size: 110%;
         display: flex;
         justify-content: space-between;
+        cursor:pointer;
 
         .panel-collapse-handle {
             font-size: 110%;
             padding-top:2px;
-
-            &:hover {
-                text-decoration: none;
-            }
 
             &:before {
                 content: "\e9a2"; // chevron-up
@@ -92,10 +89,6 @@
 
         .panel-collapse-handle {
             color: @text;
-
-            &:hover {
-                background-color: darken(@background, 7%);
-            }
         }
     }
 }

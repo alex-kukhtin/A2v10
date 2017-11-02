@@ -64,9 +64,14 @@ namespace A2v10.Data
 			RefMapperItem item;
 			if (TryGetValue(key, out item))
 			{
-                if ((item != null) && (item.List != null))
-				    foreach (var target in item.List)
-    					target.CopyFrom(source);
+                if (item != null)
+                {
+                    if ((item.Source == null) && (source != null))
+                        item.Source = source;
+                    if (item.List != null)
+                        foreach (var target in item.List)
+                            target.CopyFrom(source);
+                }
 			}
             else
             {
