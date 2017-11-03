@@ -8,6 +8,7 @@ A2v10 uses third party material from the projects listed below.
 * TinyXML-2 - https://github.com/leethomason/tinyxml2
 * Json.NET - http://www.newtonsoft.com/json
 * Vue - https://github.com/vuejs/vue
+* Vuex - https://github.com/vuejs/vuex
 * Jasmine - https://github.com/jasmine/jasmine
 * Icon font generator - https://github.com/chryw/vsfi/tree/bowtie-sfx
 
@@ -95,6 +96,32 @@ __License for Vue__
 The MIT License (MIT)
 
 Copyright (c) 2013-present, Yuxi (Evan) You
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+----
+
+__License for Vuex__
+
+The MIT License (MIT)
+
+Copyright (c) 2015-2016 Evan You
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
