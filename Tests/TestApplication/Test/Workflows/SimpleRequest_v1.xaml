@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="SimpeWorkflow_v1"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="SimpeRequest_v1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:aw="clr-namespace:A2v10.Workflow;assembly=A2v10.Workflow"
@@ -29,15 +29,15 @@
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
       <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
       <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
       <AssemblyReference>Microsoft.CSharp</AssemblyReference>
       <AssemblyReference>System.Data</AssemblyReference>
       <AssemblyReference>System.Net.Http</AssemblyReference>
       <AssemblyReference>System.Xml</AssemblyReference>
-      <AssemblyReference>System.Activities</AssemblyReference>
-      <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>A2v10.Workflow</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>TestApplication</AssemblyReference>
@@ -48,36 +48,39 @@
       <Variable x:TypeArguments="x:String" Name="Variable1" />
     </Flowchart.Variables>
     <Flowchart.StartNode>
-      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_2">
-        <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">
-              <mca:CSharpReference x:TypeArguments="x:String">Variable1</mca:CSharpReference>
-            </OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">Value1</InArgument>
-          </Assign.Value>
-        </Assign>
+      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+        <aw:Request SendAfter="{x:Null}" SendBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
+          <aw:Request.Inbox>
+            <InArgument x:TypeArguments="aw:Inbox">
+              <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
+{
+  Bookmark = "Bookmark1",
+  Text = "Simple Inbox",
+  For = "User",
+  ForId = Process.Owner
+}</mca:CSharpValue>
+            </InArgument>
+          </aw:Request.Inbox>
+        </aw:Request>
       </FlowStep>
     </Flowchart.StartNode>
     <x:Reference>__ReferenceID0</x:Reference>
-    <sads:DebugSymbol.Symbol>d0hjOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXFNpbXBsZVdvcmtmbG93X3YxLnhhbWwELgNCDwIBATQJPRICAQI7NDs6AgEHNw83XgIBAw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d0djOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXFNpbXBsZVJlcXVlc3RfdjEueGFtbAMuA0UPAgEBNAlAFgIBAjcPPRQCAQM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Request_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_2">
+      <sap2010:ViewStateData Id="FlowStep_3">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">179,139</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:Point x:Key="ShapeLocation">200,139</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>

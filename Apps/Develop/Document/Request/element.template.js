@@ -46,6 +46,11 @@ let template = {
             checkReadOnly: true,
             canExec: canExecTest,
             exec: execTest
+        },
+        async StartProcess(doc) {
+            const vm = this.$vm;
+            await vm.$invoke('startProcess', { Id: doc.Id });
+            vm.$close();
         }
     }
 };

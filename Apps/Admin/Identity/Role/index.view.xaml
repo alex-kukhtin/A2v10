@@ -1,0 +1,49 @@
+<!-- Roles Index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+    <Page.CollectionView>
+        <CollectionView ItemsSource="{Bind Roles}" RunAt="ServerUrl">
+            <CollectionView.Filter>
+                <FilterDescription>
+                    <FilterItem Property="Fragment" />
+                </FilterDescription>
+            </CollectionView.Filter>
+
+        </CollectionView>
+    </Page.CollectionView>
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Add" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Role/Edit', Argument={Bind Roles}}">Создать</Button>
+            <Button Icon="Edit" Content="Изменить"
+                    Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/Role/Edit', Argument={Bind Roles}}" />
+            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Roles}, Confirm='Вы действительно хотите удалить роль?'}"/>
+            <Separator />
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
+            <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+            <!--
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            -->
+            <Button Icon="HelpBlue" Toolbar.Align="Right">Справка</Button>
+        </Toolbar>
+    </Page.Toolbar>
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
+				Striped="True" Sort="True" GridLines="Vertical">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
+        <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+        <DataGridColumn Header="Наименование" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Role/Edit'}"/>
+        <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+        <DataGridColumn Header="Элементов" Content="{Bind ElemCount}" Fit="True" Align="Right"/>
+        <DataGridColumn Fit="True" Wrap="NoWrap">
+            <Group>
+                <Hyperlink Icon="Edit" Tip="Свойства роли" 
+                           Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Role/Edit', Argument={Bind}}"/>
+                <Hyperlink Icon="Delete" Tip="Удалить" 
+                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm='Вы действительно хотите удалить роль?'}"/>
+            </Group>
+        </DataGridColumn>
+	</DataGrid>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </Page.Pager>
+</Page>
+
+    

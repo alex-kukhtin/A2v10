@@ -53,6 +53,7 @@
     <Compile Include="Activities\RequestResult.cs" />
     <Compile Include="AppWorkflow.cs" />
     <Compile Include="Inbox.cs" />
+    <Compile Include="InboxInfo.cs" />
     <Compile Include="MessageInfo.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,6 +35,12 @@
       "index": true
     }
   },
+  "commands": {
+    "startProcess": {
+      "type": "startProcess",
+      "file": "Workflows/TestWorkflow_v1"
+    }
+  },
   "reports": {
     "invoice": {
       "type": "stiReport",

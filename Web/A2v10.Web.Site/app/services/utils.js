@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171103-7065
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -86,7 +86,9 @@ app.modules['std:utils'] = function () {
 		return obj + '';
 	}
 
-	function eval(obj, path, dataType) {
+    function eval(obj, path, dataType) {
+        if (!path)
+            return '';
 		let ps = (path || '').split('.');
 		let r = obj;
 		for (let i = 0; i < ps.length; i++) {

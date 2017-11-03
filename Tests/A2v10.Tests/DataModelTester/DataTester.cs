@@ -52,5 +52,11 @@ namespace A2v10.Tests.DataModelTester
 			Assert.AreEqual(expected, obj[property]);
 		}
 
-	}
+        public T GetArrayValue<T>(int index, String property)
+        {
+            IsArray();
+            var obj = _instanceArray[index] as ExpandoObject;
+            return obj.Get<T>(property);
+        }
+    }
 }

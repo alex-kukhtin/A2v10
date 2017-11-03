@@ -1,9 +1,11 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Activities;
-using A2v10.Infrastructure;
 using System.Activities.Tracking;
 using System.Diagnostics;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Workflow
 {
@@ -31,10 +33,10 @@ namespace A2v10.Workflow
             IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
             inbox.Create(dbContext, process.Id);
             // track before
-            DoTrack(TrackBefore.Get<TrackRecord>(context), context);
+            DoTrack(dbContext, TrackBefore.Get<TrackRecord>(context), context);
             // send before
             SendMessage(SendBefore.Get<MessageInfo>(context), inbox, context);
-            TrackInfo(context, $"Inbox created (Id: {inbox.Id}).");
+            TrackRecord(context, $"Inbox created {{Id: {inbox.Id}}}.");
             context.CreateBookmark(inbox.Bookmark, new BookmarkCallback(this.ContinueAt));
         }
 
@@ -46,25 +48,28 @@ namespace A2v10.Workflow
             var rr = obj as RequestResult;
             Inbox inbox = Inbox.Get<Inbox>(context);
             inbox.Resumed(dbContext, rr.InboxId, rr.UserId, rr.Answer);
-            TrackInfo(context, $"Inbox resumed (Id: {rr.InboxId}, UserId: {rr.UserId}) Result:'{rr.Answer}')");
+            TrackRecord(context, $"Inbox resumed {{Id: {rr.InboxId}, UserId: {rr.UserId}) Result:'{rr.Answer}'}}");
             // track after
-            DoTrack(TrackAfter.Get<TrackRecord>(context), context, rr.UserId);
+            DoTrack(dbContext, TrackAfter.Get<TrackRecord>(context), context, rr.UserId);
             // send after
             SendMessage(SendAfter.Get<MessageInfo>(context), inbox, context);
             this.Result.Set(context, rr);
         }
 
-        void DoTrack(TrackRecord record, NativeActivityContext context, Int64? userId = null)
+        void DoTrack(IDbContext dbContext, TrackRecord record, NativeActivityContext context, Int64? userId = null)
         {
             if (record == null)
                 return;
             var process = Process.GetProcessFromContext(context.DataContext);
 			record.ProcessId = process.Id;
-            TrackInfo(context, "Track recorded successfully");
+            if (userId.HasValue)
+                record.UserId = userId.Value;
+            record.Update(dbContext);
+            TrackRecord(context, $"TrackRecord written successfully {{Id:{record.Id}}}");
         }
 
 
-        void TrackInfo(NativeActivityContext context, String msg)
+        void TrackRecord(NativeActivityContext context, String msg)
         {
             var ctr = new CustomTrackingRecord(msg, TraceLevel.Info);
             context.Track(ctr);
@@ -82,7 +87,7 @@ namespace A2v10.Workflow
             msg.Key = messageInfo.Key;
 
             msg.Schema = process.Schema;
-            msg.Model = process.Model;
+            msg.Model = process.ModelName;
             msg.ModelId = process.ModelId;
             msg.Source = $"Inbox:{inbox.Id}";
 
@@ -91,7 +96,7 @@ namespace A2v10.Workflow
             msg.Environment.Add("ProcessId", process.Id);
 
             messaging.QueueMessage(msg);
-            TrackInfo(context, $"Message queued successfully (Id: {msg.Id})");
+            TrackRecord(context, $"Message queued successfully {{Id: {msg.Id}}}");
         }
     }
 }

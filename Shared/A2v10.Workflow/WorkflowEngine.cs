@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using A2v10.Infrastructure;
 using System.Threading.Tasks;
@@ -16,14 +17,14 @@ namespace A2v10.Workflow
             _dbContext = context;
         }
 
-        public Int64 StartWorkflow(StartWorkflowInfo info)
+        public async Task<Int64> StartWorkflow(StartWorkflowInfo info)
         {
-            return AppWorkflow.StartWorkflow(_host, _dbContext, info);
+            return await AppWorkflow.StartWorkflow(_host, _dbContext, info);
         }
 
-        public void ResumeWorkflow(ResumeWorkflowInfo info)
+        public async Task ResumeWorkflow(ResumeWorkflowInfo info)
         {
-            AppWorkflow.ResumeWorkflow(_host, _dbContext, info);
+            await AppWorkflow.ResumeWorkflow(_host, _dbContext, info);
         }
 
         public void ProcessPendingWorkflows()

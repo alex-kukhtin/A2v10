@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Linq;
 using System.Activities;
@@ -86,16 +87,27 @@ namespace A2v10.Workflow
                 dynamicActivity, compiledExpressionRoot);
         }
 
-        public static void Compile(String name, Activity root)
+        public static Boolean IsTypeCached(String name)
         {
             Type cachedType = RuntimeActivity.GetCachedType(name);
+            return cachedType != null;
+        }
+
+        public static bool Compile(String name, Activity root)
+        {
+            Type cachedType = RuntimeActivity.GetCachedType(name);
+            bool bCached = false;
             if (cachedType != null)
+            {
                 RuntimeActivity.CreateCompiledActivity(root as DynamicActivity, cachedType);
+                bCached = true;
+            }
             else
             {
                 cachedType = RuntimeActivity.CompileExpressions(root as DynamicActivity);
                 RuntimeActivity.CacheType(name, cachedType);
             }
+            return bCached;
         }
     }
 }

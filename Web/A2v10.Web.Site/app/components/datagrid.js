@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7062
+// 20171103-7065
 // components/datagrid.js*/
 
 (function () {
@@ -102,6 +102,7 @@
 			content: String,
 			dataType: String,
             icon: String,
+            bindIcon: String,
             id: String,
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
@@ -211,7 +212,7 @@
 				return h(tag, cellProps, [h(cellValid, { props: { item: row, col: col } })]);
 			}
 
-			if (!col.content) {
+            if (!col.content && !col.icon && !col.bindIcon) {
                 return h(tag, cellProps);
             }
 
@@ -280,8 +281,11 @@
 
 			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
+            let icoSingle = !col.content ? ' ico-single' : '';
             if (col.icon)
-                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon }));
+                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
+            else if (col.bindIcon)
+                chElems.unshift(h('i', { 'class': 'ico ico-' + utils.eval(row, col.bindIcon) + icoSingle }));
             /*TODO: validate ???? */
 			if (col.validate) {
                 chElems.push(h(validator, validatorProps));

@@ -1,14 +1,15 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Data
 {
@@ -208,6 +209,31 @@ namespace A2v10.Data
                         {
                             helper.ProcessRecord(rdr);
                             if (await rdr.ReadAsync())
+                            {
+                                T result = helper.ProcessFields(rdr);
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public T Load<T>(String source, String command, Object prms = null) where T : class
+        {
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                var helper = new LoadHelper<T>();
+                using (var cnn = GetConnection(source))
+                {
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlExtensions.SetFromDynamic(cmd.Parameters, prms);
+                        using (var rdr = cmd.ExecuteReader())
+                        {
+                            helper.ProcessRecord(rdr);
+                            if (rdr.Read())
                             {
                                 T result = helper.ProcessFields(rdr);
                                 return result;

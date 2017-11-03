@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171103-7065
 // controllers/base.js
 
 (function () {
@@ -234,25 +234,21 @@
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
-            $dbRemoveSelected(arr, confirm) {
-                let sel = arr.$selected;
-                if (!sel)
+            $dbRemove(elem, confirm) {
+                if (!elem)
                     return;
-                let id = sel.$id;
-                let self = this;
+                let id = elem.$id;
                 let root = window.$$rootUrl;
-
+                const self = this;
                 function dbRemove() {
                     let postUrl = root + '/_data/dbRemove';
                     let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
-
                     dataservice.post(postUrl, jsonData).then(function (data) {
-                        sel.$remove(); // without confirm
+                        elem.$remove(); // without confirm
                     }).catch(function (msg) {
                         self.$alertUi(msg);
                     });
                 }
-
                 if (confirm) {
                     this.$confirm(confirm).then(function () {
                         dbRemove();
@@ -261,6 +257,14 @@
                     dbRemove();
                 }
             },
+
+            $dbRemoveSelected(arr, confirm) {
+                let sel = arr.$selected;
+                if (!sel)
+                    return;
+                this.$dbRemove(sel, confirm)
+            },
+
 			$openSelected(url, arr) {
 				url = url || '';
 				let sel = arr.$selected;
@@ -319,7 +323,7 @@
             $dialog(command, url, data, opts) {
                 if (opts && opts.checkReadOnly && this.$isReadOnly)
                     return;
-                let uq = urltools.parseUrlAndQuery(url, data);
+                let uq = urltools.parseUrlAndQuery(url); // without data!
                 url = uq.url;
                 query = uq.query;
 				return new Promise(function (resolve, reject) {

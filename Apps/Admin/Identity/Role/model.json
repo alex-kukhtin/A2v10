@@ -1,0 +1,31 @@
+﻿/*identity/group*/
+{
+  "schema": "a2admin",
+  "model": "Role",
+  "actions": {
+    "index": {
+      "index": true,
+      "view": "index.view"
+    }
+  },
+  "dialogs": {
+    "edit": {
+      "view": "edit.dialog",
+      "template": "edit.template"
+    },
+    "browse": {
+      "view": "browse.Dialog",
+      "index": true
+    }
+  },
+  "commands": {
+    "duplicateKey": {
+      "type": "sql",
+      "procedure": "Role.Key.CheckDuplicate"
+    },
+    "duplicateName": {
+      "type": "sql",
+      "procedure": "Role.Name.CheckDuplicate"
+    }
+  }
+}

@@ -1,10 +1,10 @@
-/* 20171026-7049 */
+/* 20171103-7050 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 26 oct 2017 19:00
-module version : 7049
+Last updated : 03 nov 2017 11:00
+module version : 7050
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7049);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7050);
 else
-	update a2sys.Versions set [Version] = 7049 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7050 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -56,7 +56,9 @@ begin
 	set nocount on;
 
 	exec a2admin.[Ensure.Admin] @UserId;
-	declare @RootId bigint = 99;
+	declare @RootId bigint;
+	select @RootId = Id from a2ui.Menu where Parent is null and [Name] = N'Admin';
+
 	with RT as (
 		select Id=m0.Id, ParentId = m0.Parent, [Level]=0
 			from a2ui.Menu m0
@@ -103,7 +105,7 @@ begin
 	if @Fragment is not null
 		set @Fragment = N'%' + upper(@Fragment) + N'%';
 
-	-- список пользователей
+	-- list of users
 	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, [!!RowNumber])
 	as(
 		select u.Id, u.UserName, u.PhoneNumber, u.Email, u.PersonName, Memo,
@@ -158,7 +160,7 @@ begin
 	from a2security.ViewUsers u
 	where u.Id = @Id;
 	
-	select [!TGroup!Array] = null, [Id!!Id] = g.Id, [Key] = g.[Key], [Name!!Name] = g.Name, [Memo] = g.Memo,
+	select [!TGroup!Array] = null, [Id!!Id] = g.Id, [Key] = g.[Key], [Name!!Name] = g.[Name], [Memo] = g.Memo,
 		[!TUser.Groups!ParentId] = ug.UserId
 	from a2security.UserGroups ug
 		inner join a2security.Groups g on ug.GroupId = g.Id
@@ -308,25 +310,25 @@ begin
 	if @Fragment is not null
 		set @Fragment = N'%' + upper(@Fragment) + N'%';
 
-	-- список групп
+	-- list of groups
 	with T([Id!!Id], [Name!!Name], [Key], [Memo], [UserCount], [!!RowNumber]) 
 	as (
-		select [Id!!Id]=g.Id, [Name!!Name]=g.Name, 
+		select [Id!!Id]=g.Id, [Name!!Name]=g.[Name], 
 			[Key] = g.[Key], [Memo]=g.Memo, 
 			[UserCount]=(select count(1) from a2security.UserGroups ug where ug.GroupId = g.Id),
 			[!!RowNumber] = row_number() over (
 			 order by
 				case when @Order=N'Id' and @Dir = @Asc then g.Id end asc,
 				case when @Order=N'Id' and @Dir = @Desc  then g.Id end desc,
-				case when @Order=N'Name' and @Dir = @Asc then g.Name end asc,
-				case when @Order=N'Name' and @Dir = @Desc  then g.Name end desc,
+				case when @Order=N'Name' and @Dir = @Asc then g.[Name] end asc,
+				case when @Order=N'Name' and @Dir = @Desc  then g.[Name] end desc,
 				case when @Order=N'Key' and @Dir = @Asc then g.[Key] end asc,
 				case when @Order=N'Key' and @Dir = @Desc  then g.[Key] end desc,
 				case when @Order=N'Memo' and @Dir = @Asc then g.Memo end asc,
 				case when @Order=N'Memo' and @Dir = @Desc then g.Memo end desc
 			)
 		from a2security.Groups g
-		where @Fragment is null or upper(g.Name) like @Fragment or upper(g.[Key]) like @Fragment
+		where @Fragment is null or upper(g.[Name]) like @Fragment or upper(g.[Key]) like @Fragment
 			or upper(g.Memo) like @Fragment or cast(g.Id as nvarchar) like @Fragment
 	)
 
@@ -353,9 +355,8 @@ begin
 	
 	exec a2admin.[Ensure.Admin] @UserId;
 
-	select [Group!TGroup!Object]=null, [Id!!Id]=g.Id, [Name!!Name]=g.Name, 
-		[Key] = g.[Key], [Memo]=g.Memo, [Users!TUser!Array] = null,
-		[UserCount]=(select count(1) from a2security.UserGroups ug where ug.GroupId = g.Id)
+	select [Group!TGroup!Object]=null, [Id!!Id]=g.Id, [Name!!Name]=g.[Name], 
+		[Key] = g.[Key], [Memo]=g.Memo, [Users!TUser!Array] = null
 	from a2security.Groups g
 	where g.Id = @Id;
 
@@ -447,6 +448,250 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Index')
+	drop procedure [a2admin].[Role.Index]
+go
+------------------------------------------------
+create procedure a2admin.[Role.Index]
+@UserId bigint,
+@Order nvarchar(255) = N'Id',
+@Dir nvarchar(255) = N'desc',
+@Offset int = 0,
+@PageSize int = 20,
+@Fragment nvarchar(255) = null
+as
+begin
+	set nocount on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
+
+	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	set @Asc = N'asc'; set @Desc = N'desc';
+	set @Dir = isnull(@Dir, @Asc);
+
+	set @Dir = isnull(@Dir, @Asc);
+	if @Fragment is not null
+		set @Fragment = N'%' + upper(@Fragment) + N'%';
+
+	-- list of roles
+	with T([Id!!Id], [Name!!Name], [Key], [Memo], [ElemCount], [!!RowNumber]) 
+	as (
+		select [Id!!Id]=r.Id, [Name!!Name]=r.[Name], 
+			[Key] = r.[Key], [Memo]=r.Memo, 
+			[ElemCount]=(select count(1) from a2security.UserRoles ur where ur.RoleId = r.Id),
+			[!!RowNumber] = row_number() over (
+			 order by
+				case when @Order=N'Id' and @Dir = @Asc then r.Id end asc,
+				case when @Order=N'Id' and @Dir = @Desc  then r.Id end desc,
+				case when @Order=N'Name' and @Dir = @Asc then r.[Name] end asc,
+				case when @Order=N'Name' and @Dir = @Desc  then r.[Name] end desc,
+				case when @Order=N'Key' and @Dir = @Asc then r.[Key] end asc,
+				case when @Order=N'Key' and @Dir = @Desc  then r.[Key] end desc,
+				case when @Order=N'Memo' and @Dir = @Asc then r.Memo end asc,
+				case when @Order=N'Memo' and @Dir = @Desc then r.Memo end desc
+			)
+		from a2security.Roles r
+		where @Fragment is null or upper(r.[Name]) like @Fragment or upper(r.[Key]) like @Fragment
+			or upper(r.Memo) like @Fragment or cast(r.Id as nvarchar) like @Fragment
+	)
+
+	select [Roles!TRole!Array]=null, *, [!!RowCount] = (select count(1) from T) 
+	from T
+		where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
+	order by [!!RowNumber]; 
+
+
+	select [!$System!] = null, [!!PageSize] = 20;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Load')
+	drop procedure a2admin.[Role.Load]
+go
+------------------------------------------------
+create procedure a2admin.[Role.Load]
+@UserId bigint,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	
+	exec a2admin.[Ensure.Admin] @UserId;
+
+	select [Role!TRole!Object]=null, [Id!!Id]=r.Id, [Name!!Name]=r.[Name], 
+		[Key] = r.[Key], [Memo]=r.Memo, [UsersGroups!TUserOrGroup!Array] = null,
+		[ElemCount]=(select count(1) from a2security.UserRoles ur where ur.RoleId = r.Id)
+	from a2security.Roles r
+	where r.Id = @Id;
+
+	/* users in role */
+	select [!TUserOrGroup!Array] = null, [Id!!Id] = ur.Id, [!TRole.UsersGroups!ParentId] = ur.RoleId,
+		[UserId] = ur.UserId, [UserName] = u.UserName,
+		GroupId = ur.GroupId, GroupName= g.[Name]		
+	from a2security.UserRoles ur
+		left join a2security.ViewUsers u on ur.UserId = u.Id
+		left join a2security.Groups g on ur.GroupId = g.Id
+	where ur.RoleId = @Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Key.CheckDuplicate')
+	drop procedure [a2admin].[Role.Key.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2admin.[Role.Key.CheckDuplicate]
+@UserId bigint,
+@Id bigint,
+@Key nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Roles where [Key] = @Key and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Name.CheckDuplicate')
+	drop procedure [a2admin].[Role.Name.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2admin.[Role.Name.CheckDuplicate]
+@UserId bigint,
+@Id bigint,
+@Name nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Roles where [Name] = @Name and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Metadata')
+	drop procedure a2admin.[Role.Metadata]
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Update')
+	drop procedure a2admin.[Role.Update]
+go
+------------------------------------------------
+if exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2admin' and DOMAIN_NAME=N'Role.TableType' and DATA_TYPE=N'table type')
+	drop type a2admin.[Role.TableType];
+go
+------------------------------------------------
+if exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2admin' and DOMAIN_NAME=N'UserGroup.TableType' and DATA_TYPE=N'table type')
+	drop type a2admin.[UserGroup.TableType];
+go
+------------------------------------------------
+create type a2admin.[Role.TableType]
+as table(
+	Id bigint null,
+	[Name] nvarchar(255),
+	[Key] nvarchar(255),
+	[Memo] nvarchar(255)
+)
+go
+------------------------------------------------
+create type a2admin.[UserGroup.TableType]
+as table(
+	Id bigint null,
+	ParentId bigint,
+	[UserId] bigint,
+	[GroupId] bigint
+)
+go
+------------------------------------------------
+create procedure a2admin.[Role.Metadata]
+as
+begin
+	set nocount on;
+
+	declare @Role a2admin.[Role.TableType];
+	declare @UserGroup a2admin.[UserGroup.TableType];
+
+	select [Role!Role!Metadata]=null, * from @Role;
+	select [UsersGroups!Role.UsersGroups!Metadata] = null, * from @UserGroup;
+end
+go
+------------------------------------------------
+create procedure a2admin.[Role.Update]
+	@UserId bigint,
+	@Role a2admin.[Role.TableType] readonly,
+	@UsersGroups a2admin.[UserGroup.TableType] readonly,
+	@RetId bigint = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
+
+	declare @output table(op sysname, id bigint);
+
+	merge a2security.Roles as target
+	using @Role as source
+	on (target.Id = source.Id)
+	when matched then
+		update set 
+			target.[Name] = source.[Name],
+			target.[Key] = source.[Key],
+			target.[Memo] = source.Memo
+	when not matched by target then 
+		insert ([Name], [Key], Memo)
+		values ([Name], [Key], Memo)
+	output 
+		$action op,
+		inserted.Id id
+	into @output(op, id);
+	select top(1) @RetId = id from @output;
+
+	merge a2security.UserRoles as target
+	using @UsersGroups as source
+	on (target.Id = source.Id)
+	when not matched by target then
+		insert (RoleId, UserId, GroupId) 
+		values (@RetId, UserId, GroupId)
+	when not matched by source and target.RoleId=@RetId then
+		delete;
+
+	exec a2admin.[Role.Load] @UserId, @RetId;
+end
+go
+------------------------------------------------
+begin
+	-- create admin menu
+	declare @menu table(id bigint, p0 bigint, [name] nvarchar(255), [url] nvarchar(255), icon nvarchar(255), [order] int);
+	insert into @menu(id, p0, [name], [url], icon, [order])
+	values
+		(900, null, N'Admin',           null,        null,     0),
+		(901, 900,  N'Администратор',   N'identity', null,     10),
+		(902, 900,  N'Бизнес процессы', N'process',  null,     20),
+		(910, 901,  N'Пользователи',    N'user',     N'user',  10),
+		(911, 901,  N'Группы',          N'group',    N'users', 10),
+		(912, 901,  N'Роли',            N'role',     N'users', 20);
+			
+	merge a2ui.Menu as target
+	using @menu as source
+	on target.Id=source.id and target.Id >= 900 and target.Id < 1000
+	when matched then
+		update set
+			target.Id = source.id,
+			target.[Name] = source.[name],
+			target.[Url] = source.[url],
+			target.[Icon] = source.icon,
+			target.[Order] = source.[order]
+	when not matched by target then
+		insert(Id, Parent, [Name], [Url], Icon, [Order]) values (id, p0, [name], [url], icon, [order])
+	when not matched by source and target.Id >= 900 and target.Id < 1000 then 
+		delete;
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2admin to public;
@@ -455,3 +700,5 @@ go
 ------------------------------------------------
 set noexec off;
 go
+
+

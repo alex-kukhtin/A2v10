@@ -1,14 +1,12 @@
-﻿
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using System.Dynamic;
 using System.Text.RegularExpressions;
-using System.Reflection;
-using System.Globalization;
 
 namespace A2v10.Request
 {
@@ -233,7 +231,9 @@ namespace A2v10.Request
     public enum CommandType
     {
         none,
-        sql
+        sql,
+        startProcess,
+        resumeProcess
     }
 
     public class RequestCommand : RequestBase
@@ -241,6 +241,7 @@ namespace A2v10.Request
         public String command;
         public CommandType type;
         public String procedure;
+        public String file;
 
         [JsonIgnore]
         public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";

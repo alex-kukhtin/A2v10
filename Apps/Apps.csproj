@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Identity\Group\model.json" />
+    <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Common\Agent\model.json" />
@@ -62,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\Identity\Group\edit.template.js" />
+    <Content Include="Admin\Identity\Role\edit.template.js" />
     <Content Include="Admin\Identity\User\create.template.js" />
     <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
@@ -90,6 +92,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
+      <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
+      <Name>A2v10.Workflow</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
       <Name>A2v10.Xaml</Name>
@@ -179,6 +185,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Identity\Group\browse.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Workflows\TestWorkflow_v1.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\Role\index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\Role\edit.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

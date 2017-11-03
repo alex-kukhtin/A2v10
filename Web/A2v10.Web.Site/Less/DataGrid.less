@@ -55,8 +55,14 @@ table.data-grid {
         border-color: @table-brd-color;
 
         > i.ico {
-            float:left;
+            //float:left; /*for right aligned icons ??? */
             padding-right:4px;
+            font-size:inherit;
+
+            &.ico-single {
+                padding-right:0;
+                //float:none;
+            }
         }
     }
 

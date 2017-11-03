@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,6 +12,7 @@ using Microsoft.Activities.Extensions.Tracking;
 
 using A2v10.Infrastructure;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace A2v10.Workflow
 {
@@ -28,7 +30,7 @@ namespace A2v10.Workflow
 
         IDbContext _dbContext;
 
-        public static Int64 StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
+        public static async Task<Int64> StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
         {
             AppWorkflow aw = null;
             try
@@ -42,7 +44,7 @@ namespace A2v10.Workflow
                 args.Add("Comment", info.Comment);
                 aw = Create(dbContext, root, args, def.Identity);
                 process.WorkflowId = aw._application.Id;
-                process.Start(dbContext);
+                await process.Start(dbContext);
                 aw._application.Run(_wfTimeSpan);
                 return process.Id;
             }
@@ -58,18 +60,17 @@ namespace A2v10.Workflow
             }
         }
 
-        public static void ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
+        public static async Task ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
         {
             AppWorkflow aw = null;
             try
             {
-                Inbox inbox = new Inbox(); // Inbox.Load(info.Id);
-                var def = WorkflowDefinition.Load(info.Id);
+                InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId);
+                var def = WorkflowDefinition.Load(inbox);
                 Activity root = def.LoadFromSource(host);
                 aw = Create(dbContext, root, null, def.Identity);
-                //WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(info.WorkflowId, aw._application.InstanceStore);
-                //aw._application.Load(instance, _wfTimeSpan);
-
+                WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
+                aw._application.Load(instance, _wfTimeSpan);
                 foreach (var bm in aw._application.GetBookmarks())
                 {
                     if (bm.BookmarkName == inbox.Bookmark)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
@@ -74,6 +76,12 @@ namespace A2v10.Request
                 case CommandType.sql:
                     await ExecuteSqlCommand(cmd, dataToExec, writer);
                     break;
+                case CommandType.startProcess:
+                    await StartWorkflow(cmd, dataToExec, writer);
+                    break;
+                case CommandType.resumeProcess:
+                    await ResumeWorkflow(cmd, dataToExec, writer);
+                    break;
                 default:
                     throw new RequestModelException($"Invalid command type '{cmd.type}'");
             }
@@ -83,6 +91,43 @@ namespace A2v10.Request
         {
             IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
             WriteDataModel(model, writer);
+        }
+
+        async Task StartWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
+        {
+            var swi = new StartWorkflowInfo();
+            swi.DataSource = cmd.CurrentSource;
+            swi.Schema = cmd.CurrentSchema;
+            swi.Model = cmd.CurrentModel;
+            swi.ModelId = dataToStart.Get<Int64>("Id");
+            if (swi.ModelId == 0)
+                throw new RequestModelException("ModelId must be specified");
+            if (!String.IsNullOrEmpty(cmd.file))
+                swi.Source = $"file:{cmd.file}";
+            swi.Comment = dataToStart.Get<String>("Comment");
+            swi.UserId = dataToStart.Get<Int64>("UserId");
+            if (swi.Source == null)
+                throw new RequestModelException($"file or clrtype must be specified");
+            await _workflowEngine.StartWorkflow(swi);
+            WriteOK(writer);
+        }
+
+        async Task ResumeWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
+        {
+            var rwi = new ResumeWorkflowInfo();
+            rwi.Id = dataToStart.Get<Int64>("Id");
+            if (rwi.Id == 0)
+                throw new RequestModelException("InboxId must be specified");
+            rwi.UserId = dataToStart.Get<Int64>("UserId");
+            rwi.Answer = dataToStart.Get<String>("Answer");
+            rwi.Comment = dataToStart.Get<String>("Comment");
+            await _workflowEngine.ResumeWorkflow(rwi);
+            WriteOK(writer);
+        }
+
+        void WriteOK(TextWriter writer)
+        {
+            writer.Write(JsonConvert.SerializeObject(new { status = "OK" }, StandardSerializerSettings));
         }
 
         async Task ReloadData(Int64 userId, String json, TextWriter writer)

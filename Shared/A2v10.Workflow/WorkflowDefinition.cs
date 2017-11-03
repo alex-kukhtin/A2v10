@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Activities;
 using System.Activities.XamlIntegration;
@@ -42,11 +43,13 @@ namespace A2v10.Workflow
             }
         }
 
+        public Boolean Cached { get; private set; }
 
-        private WorkflowDefinition(Int64 inboxId)
+
+        private WorkflowDefinition(String name, String definition)
         {
-            Definition = "LOADED from DB";
-            // NAME, VERSION
+            Name = name;
+            Definition = definition;
             Type = WorkflowType.Definition;
             Identity = new WorkflowIdentity(Name, new Version(Version, 0), null);
         }
@@ -82,9 +85,9 @@ namespace A2v10.Workflow
             return def;
         }
 
-        public static WorkflowDefinition Load(Int64 inboxId)
+        public static WorkflowDefinition Load(InboxInfo info)
         {
-            return new WorkflowDefinition(inboxId);
+            return new WorkflowDefinition(info.Kind, info.Definition);
         }
 
         String GetWorkflowFullPath(IApplicationHost host)
@@ -107,6 +110,9 @@ namespace A2v10.Workflow
             }
             return sb.ToString();
         }
+
+
+        public Boolean IsActivityCached => RuntimeActivity.IsTypeCached(GetHashedName());
 
 
         public Activity LoadFromSource(IApplicationHost host)
@@ -135,7 +141,7 @@ namespace A2v10.Workflow
                 using (var sr = new StringReader(Definition))
                 {
                     Activity root = ActivityXamlServices.Load(sr) as Activity;
-                    RuntimeActivity.Compile(GetHashedName(), root);
+                    Cached = RuntimeActivity.Compile(GetHashedName(), root);
                     return root;
                 }
             }

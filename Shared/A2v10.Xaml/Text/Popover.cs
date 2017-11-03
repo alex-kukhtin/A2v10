@@ -43,7 +43,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var po = new TagBuilder("popover", "a2-inline");
+            var po = new TagBuilder("popover", "a2-inline", IsInGrid);
             MergeAttributes(po, context, MergeAttrMode.All);
             po.AddCssClass("po-" + Placement.ToString().ToKebabCase());
             if (Background != PopoverBackgroundStyle.Default)

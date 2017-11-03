@@ -435,7 +435,7 @@ app.modules['std:http'] = function () {
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171103-7065
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -521,7 +521,9 @@ app.modules['std:utils'] = function () {
 		return obj + '';
 	}
 
-	function eval(obj, path, dataType) {
+    function eval(obj, path, dataType) {
+        if (!path)
+            return '';
 		let ps = (path || '').split('.');
 		let r = obj;
 		for (let i = 0; i < ps.length; i++) {
@@ -2267,7 +2269,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171030-7062
+// 20171103-7065
 // components/datagrid.js*/
 
 (function () {
@@ -2369,6 +2371,7 @@ Vue.component('validator-control', {
 			content: String,
 			dataType: String,
             icon: String,
+            bindIcon: String,
             id: String,
             align: { type: String, default: 'left' },
             editable: { type: Boolean, default: false },
@@ -2478,7 +2481,7 @@ Vue.component('validator-control', {
 				return h(tag, cellProps, [h(cellValid, { props: { item: row, col: col } })]);
 			}
 
-			if (!col.content) {
+            if (!col.content && !col.icon && !col.bindIcon) {
                 return h(tag, cellProps);
             }
 
@@ -2547,8 +2550,11 @@ Vue.component('validator-control', {
 
 			let content = utils.eval(row, col.content, col.dataType);
             let chElems = [content];
+            let icoSingle = !col.content ? ' ico-single' : '';
             if (col.icon)
-                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon }));
+                chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
+            else if (col.bindIcon)
+                chElems.unshift(h('i', { 'class': 'ico ico-' + utils.eval(row, col.bindIcon) + icoSingle }));
             /*TODO: validate ???? */
 			if (col.validate) {
                 chElems.push(h(validator, validatorProps));
@@ -4337,7 +4343,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171103-7065
 // controllers/base.js
 
 (function () {
@@ -4571,25 +4577,21 @@ Vue.directive('resize', {
 				this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
-            $dbRemoveSelected(arr, confirm) {
-                let sel = arr.$selected;
-                if (!sel)
+            $dbRemove(elem, confirm) {
+                if (!elem)
                     return;
-                let id = sel.$id;
-                let self = this;
+                let id = elem.$id;
                 let root = window.$$rootUrl;
-
+                const self = this;
                 function dbRemove() {
                     let postUrl = root + '/_data/dbRemove';
                     let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
-
                     dataservice.post(postUrl, jsonData).then(function (data) {
-                        sel.$remove(); // without confirm
+                        elem.$remove(); // without confirm
                     }).catch(function (msg) {
                         self.$alertUi(msg);
                     });
                 }
-
                 if (confirm) {
                     this.$confirm(confirm).then(function () {
                         dbRemove();
@@ -4598,6 +4600,14 @@ Vue.directive('resize', {
                     dbRemove();
                 }
             },
+
+            $dbRemoveSelected(arr, confirm) {
+                let sel = arr.$selected;
+                if (!sel)
+                    return;
+                this.$dbRemove(sel, confirm)
+            },
+
 			$openSelected(url, arr) {
 				url = url || '';
 				let sel = arr.$selected;
@@ -4656,7 +4666,7 @@ Vue.directive('resize', {
             $dialog(command, url, data, opts) {
                 if (opts && opts.checkReadOnly && this.$isReadOnly)
                     return;
-                let uq = urltools.parseUrlAndQuery(url, data);
+                let uq = urltools.parseUrlAndQuery(url); // without data!
                 url = uq.url;
                 query = uq.query;
 				return new Promise(function (resolve, reject) {

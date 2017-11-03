@@ -1,10 +1,10 @@
-﻿/* 20171026-7045 */
+﻿/* 20171103-7046 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 26 oct 2017 19:01
-module version : 7045
+Last updated : 03 nov 2017 12:00
+module version : 7046
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7045);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7046);
 else
-	update a2sys.Versions set [Version] = 7045 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7046 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -104,13 +104,17 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sec
 begin
 	create table a2security.Roles
 	(
-		Id		bigint			not null constraint PK_Roles primary key
+		Id	bigint not null constraint PK_Roles primary key
 			constraint DF_Roles_PK default(next value for a2security.SQ_Roles),
-		[Key] nvarchar(255) not null constraint UNQ_Roles_Key unique,
-		Name nvarchar(255)	not null constraint UNQ_Roles_Name unique,
+		[Name] nvarchar(255) not null constraint UNQ_Roles_Name unique,
+		[Key] nvarchar(255) null,
 		Memo nvarchar(255) null
 	)
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Roles') and name = N'UNQ_Role_Key')
+	create unique index UNQ_Role_Key on a2security.Roles([Key]) where [Key] is not null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_UserRoles')

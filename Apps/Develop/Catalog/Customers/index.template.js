@@ -21,7 +21,10 @@ let template = {
 		"TCustomer.$cellMark"() {
 			//return this.Amount >= 500 ? 'danger' : '';
 			return this.Amount === 40000 ? 'success' : '';
-		}
+        },
+        "TCustomer.$Icon"() {
+            return this.Id === 100 ? "image" : 'file';
+        }
     },
     events: {
         "Customers[].select": customersSelect

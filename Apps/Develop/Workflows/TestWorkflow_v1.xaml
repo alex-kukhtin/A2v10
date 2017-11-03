@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="SimpeWorkflow_v1"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="TestWorkflow_v1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:aw="clr-namespace:A2v10.Workflow;assembly=A2v10.Workflow"
@@ -20,7 +20,6 @@
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System</x:String>
       <x:String>System.Collections.Generic</x:String>
-      <x:String>System.Data</x:String>
       <x:String>System.Linq</x:String>
       <x:String>System.Text</x:String>
       <x:String>A2v10.Workflow</x:String>
@@ -62,7 +61,7 @@
       </FlowStep>
     </Flowchart.StartNode>
     <x:Reference>__ReferenceID0</x:Reference>
-    <sads:DebugSymbol.Symbol>d0hjOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXFNpbXBsZVdvcmtmbG93X3YxLnhhbWwELgNCDwIBATQJPRICAQI7NDs6AgEHNw83XgIBAw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzhjOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAQtA0EPAgEBMwk8EgIBAjo0OjoCAQc2DzZeAgED</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

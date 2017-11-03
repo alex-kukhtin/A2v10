@@ -20,6 +20,7 @@ namespace A2v10.Xaml
         Open,
         OpenSelected,
         DbRemoveSelected,
+        DbRemove,
         Append,
         Browse,
         Execute,
@@ -106,6 +107,9 @@ namespace A2v10.Xaml
 
                 case CommandType.RemoveSelected:
                     return $"$removeSelected({CommandArgument(context)}, {GetConfirm(context)})";
+
+                case CommandType.DbRemove:
+                    return $"$dbRemove({CommandArgument(context)}, {GetConfirm(context)})";
 
                 case CommandType.DbRemoveSelected:
                     return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";

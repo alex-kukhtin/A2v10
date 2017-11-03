@@ -3,6 +3,9 @@
 @icon-green: #3a8b37;
 @icon-red: #a94442;
 @icon-yellow: #dcb67a;
+@icon-light-blue: #1ba1e2;
+
+@icon-inline-color: #8591a2;
 
 @font-face {
     font-family: 'Bowtie';
@@ -27,6 +30,11 @@ i, .ico {
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.ico.ico-inline {
+    font-size: inherit;
+    color: @icon-inline-color;
 }
 
 .ico-none:before {
@@ -358,12 +366,22 @@ i, .ico {
     content: "\ea06";
 }
 
+.ico-help-blue:before {
+    content: "\ea06";
+    color:@icon-light-blue;
+}
+
 .ico-help-outline:before {
     content: "\ea07";
 }
 
 .ico-info:before {
     content: "\ea08";
+}
+
+.ico-info-blue:before {
+    content: "\ea08";
+    color:@icon-light-blue;
 }
 
 .ico-info-outline:before {
@@ -471,4 +489,9 @@ i, .ico {
 
 .ico-image:before {
     content: "\ea2b";
+}
+
+.ico-process:before,
+.ico-share:before {
+    content: "\e993";
 }

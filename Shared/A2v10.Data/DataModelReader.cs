@@ -1,10 +1,14 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Dynamic;
 using System.Reflection;
+
+using A2v10.Infrastructure;
 
 /*
  * TODO: 
@@ -140,6 +144,13 @@ namespace A2v10.Data
 						bAdded = true;
 
 					}
+                    else if (rootFI.IsObject)
+                    {
+                        // nested object
+                        AddRecordToRecord(fi.TypeName, dataVal, currentRecord);
+                        if (!rootFI.IsVisible)
+                            bAdded = true;
+                    }
 				}
 			}
             if (!bAdded)
@@ -160,7 +171,20 @@ namespace A2v10.Data
             _root.Set(pn, rowCount);
         }
 
-		void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
+        void AddRecordToRecord(String propName, Object id, ExpandoObject currentRecord)
+        {
+            var pxa = propName.Split('.'); // <Type>.PropName
+            if (pxa.Length != 2)
+                throw new DataLoaderException($"Invalid field name '{propName}' for array. 'TypeName.PropertyName' expected");
+            /*0-key, 1-Property*/
+            var key = Tuple.Create(pxa[0], id);
+            ExpandoObject mapObj = null;
+            if (!_idMap.TryGetValue(key, out mapObj))
+                throw new DataLoaderException($"Property '{propName}'. Object {pxa[0]} (Id={id}) not found in map");
+            mapObj.Set(pxa[1], currentRecord);
+        }
+
+        void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
 		{
 			var pxa = propName.Split('.'); // <Type>.PropName
 			if (pxa.Length != 2)

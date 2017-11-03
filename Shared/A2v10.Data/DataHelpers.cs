@@ -24,6 +24,8 @@ namespace A2v10.Data
 					return DataType.Number;
 				case "Boolean":
 					return DataType.Boolean;
+                case "Guid":
+                    return DataType.String;
 			}
 			throw new DataLoaderException($"Invalid data type {s}");
 		}

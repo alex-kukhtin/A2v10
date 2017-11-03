@@ -20,6 +20,10 @@ i,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.ico.ico-inline {
+  font-size: inherit;
+  color: #8591a2;
+}
 .ico-none:before {
   content: "";
 }
@@ -274,11 +278,19 @@ i,
 .ico-help:before {
   content: "\ea06";
 }
+.ico-help-blue:before {
+  content: "\ea06";
+  color: #1ba1e2;
+}
 .ico-help-outline:before {
   content: "\ea07";
 }
 .ico-info:before {
   content: "\ea08";
+}
+.ico-info-blue:before {
+  content: "\ea08";
+  color: #1ba1e2;
 }
 .ico-info-outline:before {
   content: "\ea09";
@@ -360,6 +372,10 @@ i,
 }
 .ico-image:before {
   content: "\ea2b";
+}
+.ico-process:before,
+.ico-share:before {
+  content: "\e993";
 }
 * {
   box-sizing: border-box;
@@ -1395,8 +1411,11 @@ table.data-grid td {
   border-color: #e5e8eb;
 }
 table.data-grid td > i.ico {
-  float: left;
   padding-right: 4px;
+  font-size: inherit;
+}
+table.data-grid td > i.ico.ico-single {
+  padding-right: 0;
 }
 table.data-grid th {
   border-color: #cbcdda;

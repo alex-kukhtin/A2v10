@@ -1,10 +1,10 @@
-/* 20171011-7044 */
+/* 20171011-7045 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 11 oct 2017 09:00
-module version : 7044
+Last updated : 03 nov 2017 09:00
+module version : 7045
 */
 
 /*
@@ -32,9 +32,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7044);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7045);
 else
-	update a2sys.Versions set [Version] = 7044 where Module = N'std:workflow';
+	update a2sys.Versions set [Version] = 7045 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -60,12 +60,13 @@ begin
 		[Source] nvarchar(255) null, -- clr type name or file name 
 		[Definition] nvarchar(max) null, -- activity source
 		[State] nvarchar(255) null,
+		[DataSource] nvarchar(255) null,
 		[Schema] nvarchar(255) null,
 		Model nvarchar(255) null,
 		ModelId bigint null,
 
-		DateCreated datetime not null constraint DF_Processes_DateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_Processes_DateModified default(getutcdate()),
+		DateCreated datetime not null constraint DF_Processes_DateCreated default(getdate()),
+		DateModified datetime not null constraint DF_Processes_DateModified default(getdate()),
 		AutoStart bit null
 	);
 end
@@ -91,7 +92,7 @@ begin
 		ForId2 bigint null,
 		[Text] nvarchar(255) null,
 		Expired datetime,
-		DateCreated datetime not null constraint DF_Inbox_DateCreated default(getutcdate()),
+		DateCreated datetime not null constraint DF_Inbox_DateCreated default(getdate()),
 		DateRemoved datetime null,
 		UserRemoved bigint null
 			constraint FK_Inbox_UserRemoved references a2security.Users(Id),
@@ -175,8 +176,9 @@ create procedure a2workflow.[Process.Create]
 @Kind nvarchar(255),
 @Source nvarchar(255),
 @Definition nvarchar(max),
+@DataSource nvarchar(255),
 @Schema nvarchar(255),
-@Model nvarchar(255),
+@ModelName nvarchar(255),
 @ModelId bigint,
 @RetId bigint output
 as
@@ -187,9 +189,9 @@ begin
 
 	declare @outputTable table(Id bigint);
 
-	insert into a2workflow.Processes(WorkflowId, [Owner], [Definition], [Kind], [Source], [Schema], Model, ModelId)
+	insert into a2workflow.Processes(WorkflowId, [Owner], [Definition], [Kind], [Source], [DataSource], [Schema], Model, ModelId)
 		output inserted.Id into @outputTable(Id)
-		values (@WorkflowId, @Owner, @Definition, @Kind, @Source, @Schema, @Model, @ModelId);
+		values (@WorkflowId, @Owner, @Definition, @Kind, @Source, @DataSource, @Schema, @ModelName, @ModelId);
 
 	select top(1) @RetId = Id from @outputTable;
 end
@@ -207,7 +209,7 @@ create procedure a2workflow.[Inbox.Create]
 @ForId bigint,
 @ForId2 bigint,
 @Text nvarchar(255),
-@Expired datetime,
+@Expired datetime = null,
 @RetId bigint output
 as
 begin
@@ -225,6 +227,23 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'InboxInfo.Load')
+	drop procedure a2workflow.[InboxInfo.Load]
+go
+------------------------------------------------
+create procedure a2workflow.[InboxInfo.Load]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	select i.Id, i.Bookmark, p.Kind, p.WorkflowId, p.[Definition]
+	from a2workflow.Inbox i inner join a2workflow.Processes p on i.ProcessId = p.Id 
+	where i.Id = @Id and i.Void = 0;
+	-- TODO: can this user can load this inbox
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Inbox.Resume')
 	drop procedure [a2workflow].[Inbox.Resume]
 go
@@ -239,7 +258,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	update a2workflow.Inbox set Void=1, UserRemoved = @UserId, DateRemoved=getutcdate(),
+	update a2workflow.Inbox set Void=1, UserRemoved = @UserId, DateRemoved=getdate(),
 		Answer = @Answer
 	where Id = @Id;
 end
@@ -271,7 +290,34 @@ begin
 	order by PendingTimer;
 end
 go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Process.Load')
+	drop procedure a2workflow.[Process.Load]
+go
+------------------------------------------------
+create procedure a2workflow.[Process.Load]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select [Process!TProcess!Object] = null, [Id!!Id] = Id, [DataSource], [Schema], Model, ModelId, [Owner],
+		[Inboxes!TInbox!Array] = null, [Workflow!TWorkflow!Object] = null
+	from a2workflow.Processes
+	where Id = @Id;
 
+	select [!TInbox!Array] = null, [Id!!Id] = Id, [!TProcess.Inboxes!ParentId] = ProcessId,
+		Bookmark, [For], ForId, ForId2, Expired, DateCreated
+	from a2workflow.Inbox where ProcessId = @Id and Void=0;
+
+	select [!TWorkflow!Object] = null, [Id!!Id] = InstanceId, [!TProcess.Workflow!ParentId] = p.Id, 
+		ActiveBookmarks, ExecutionStatus
+	from [System.Activities.DurableInstancing].Instances i
+	inner join a2workflow.Processes p on p.WorkflowId = i.InstanceId
+	where p.Id = @Id;
+end
+go
 ------------------------------------------------
 begin
 	set nocount on;

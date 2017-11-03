@@ -23,6 +23,10 @@ namespace A2v10.Tests
             mi = RequestModel.GetModelInfo(RequestUrlKind.Page, "top/side/edit/123");
             Assert.AreEqual("edit", mi.action);
             Assert.AreEqual("top/side", mi.path);
+
+            mi = RequestModel.GetModelInfo(RequestUrlKind.Page, "s1/s2/s3/edit/123");
+            Assert.AreEqual("edit", mi.action);
+            Assert.AreEqual("s1/s2/s3", mi.path);
         }
     }
 }

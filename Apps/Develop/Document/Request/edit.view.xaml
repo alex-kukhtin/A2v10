@@ -37,7 +37,8 @@
 			<!--
 			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
 			-->
-			<Button Block="True" Icon="File" Style="Orange" Size="Large">Оформить сделку</Button>
+			<Button Block="True" Icon="Process" Style="Orange" IconAlign="Top"
+                    Size="Large" Command="{BindCmd Execute, CommandName='StartProcess', Argument={Bind Document}}">Запустить процесс</Button>
             <Button Block="True" Icon="File" Style="Primary" Size="Large" Disabled="{Bind $isPristine}">Оформить другую сделку (запрещено)</Button>
             <Button Block="True" Icon="Copy" Size="Large" Tip="Создать другую заявку на основании этой" 
 					Command="{BindCmd Execute, CommandName=Test, Argument={Bind Document}}">Создать на основании</Button>

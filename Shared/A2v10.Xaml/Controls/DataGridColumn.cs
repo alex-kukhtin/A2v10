@@ -53,7 +53,10 @@ namespace A2v10.Xaml
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
             if (Width != null)
                 column.MergeAttribute("width", Width.Value);
-            if (Icon != Icon.NoIcon)
+            var iconBind = GetBinding(nameof(Icon));
+            if (iconBind != null)
+                column.MergeAttribute("bind-icon", iconBind.Path /*without context*/);
+            else if (Icon != Icon.NoIcon)
                 column.MergeAttribute("icon", Icon.ToString().ToKebabCase());
             if (Wrap != WrapMode.Default)
                 column.MergeAttribute("wrap", Wrap.ToString().ToKebabCase());

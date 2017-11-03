@@ -414,6 +414,8 @@ begin
 	delete from a2workflow.[Inbox];
 	delete from a2workflow.[Processes];
 	delete from [System.Activities.DurableInstancing].InstancesTable;
+	delete from [System.Activities.DurableInstancing].LockOwnersTable;
+	delete from [System.Activities.DurableInstancing].RunnableInstancesTable;
 end
 go
 

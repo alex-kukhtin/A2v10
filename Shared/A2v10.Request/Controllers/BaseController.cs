@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Dynamic;
 using System.IO;
 using System.Text;
@@ -17,6 +19,7 @@ namespace A2v10.Request
         protected IApplicationHost _host;
         protected IDbContext _dbContext;
         protected IRenderer _renderer;
+        protected IWorkflowEngine _workflowEngine;
 
         public BaseController()
         {
@@ -25,6 +28,7 @@ namespace A2v10.Request
             _host = current.GetService<IApplicationHost>();
             _dbContext = current.GetService<IDbContext>();
             _renderer = current.GetService<IRenderer>();
+            _workflowEngine = current.GetService<IWorkflowEngine>();
         }
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
