@@ -8,6 +8,7 @@ namespace A2v10.Infrastructure
     public struct StartWorkflowInfo
     {
         public Int64 UserId { get; set; }
+        public String ActionBase { get; set; }
         public String Source { get; set; }
         public String DataSource { get; set; }
         public String Schema { get; set; }

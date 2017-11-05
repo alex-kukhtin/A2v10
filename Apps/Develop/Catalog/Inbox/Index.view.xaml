@@ -1,0 +1,29 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="ArrowOpen"
+                    Command="{BindCmd OpenSelected, Url='/catalog/inbox/open', Argument={Bind Inboxes}}">Открыть</Button>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        </Toolbar>
+    </Page.Toolbar>
+    <DataGrid ItemsSource="{Bind Inboxes}" Hover="True"
+				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
+              FixedHeader="True">
+		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
+        <DataGridColumn Header="PId" Content="{Bind ProcessId}" Align="Right" Fit="True" Wrap="NoWrap"/>
+        <DataGridColumn Header="Text" Content="{Bind Text}" Command="{BindCmd Open, Url='/catalog/inbox/open', Argument={Bind}}"/>
+        <DataGridColumn Header="Action" Content="{Bind Action}" />
+        <DataGridColumn Header="ActionBase" Content="{Bind ActionBase}" />
+        <DataGridColumn Header="Bookmark" Content="{Bind Bookmark}" />
+        <DataGridColumn Header="Date" Content="{Bind DateCreated, DataType=DateTime}" />
+        <DataGridColumn Header="Model">
+            <Text>
+                <Span Content="{Bind Schema}"/>.[<Span Content="{Bind Model}"/>]:<Span Content="{Bind ModelId}"></Span>
+            </Text>
+        </DataGridColumn>
+    </DataGrid>
+</Page>
+
+    

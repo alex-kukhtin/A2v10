@@ -13,10 +13,14 @@
 			"view": "Edit.view",
 			"template": "element.template"
 		},
-		"browse": {
-			"view": "Browse.dialog",
-			"template": "browse.template"
-		}
+    "browse": {
+      "view": "Browse.dialog",
+      "template": "browse.template"
+    },
+    "forOwner": {
+      "view": "Edit.View",
+      "template": "element.template"
+    }      
 	},
   "dialogs": {
     "edit": {
@@ -39,6 +43,10 @@
     "startProcess": {
       "type": "startProcess",
       "file": "Workflows/TestWorkflow_v1"
+    },
+    "testCommand": {
+      "type": "sql",
+      "procedure": "testProcedure"
     }
   },
   "reports": {

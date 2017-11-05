@@ -44,7 +44,7 @@
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
             <Separator />
             <Button Icon="Upload" Command="{BindCmd ExecuteSelected, CommandName=TEST, Argument={Bind Customers}}">Invoke</Button>
-            <Button Icon="Alert"/>
+            <Button Icon="Alert" Command="{BindCmd Execute, CommandName=TEST, Argument={Bind Customers}, Data={Bind DataForElement}}"/>
         </Toolbar>
     </Page.Toolbar>
     <Page.CollectionView>
@@ -60,8 +60,8 @@
     <Page.Pager>
         <Pager Source="{Bind Parent.Pager}" />
     </Page.Pager>
-    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" MarkerStyle="Both" Mark="{Bind $rowMark}"
-				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" MarkerStyle="Row" Mark="{Bind $rowMark}"
+				  Striped="True" Border="True" Sort="True" GridLines="Vertical" RowBold="{Bind $rowBold}"
               FixedHeader="True">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap" Icon="{Bind $Icon}" Mark="{Bind $cellMark}"/>
 		<DataGridColumn Header="Наименование" Content="{Bind Name}" Editable="True" />

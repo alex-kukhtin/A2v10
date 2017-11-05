@@ -42,6 +42,8 @@ namespace A2v10.Xaml
 
         public Object Mark { get; set; }
 
+        public Boolean? RowBold { get; set; }
+
         public Command DoubleClick { get; set; }
 
         public Length Height { get; set; }
@@ -99,6 +101,12 @@ namespace A2v10.Xaml
             {
                 throw new XamlException("The Mark property must be a binding");
             }
+            var rbbind = GetBinding(nameof(RowBold));
+
+            if (rbbind != null)
+                dataGrid.MergeAttribute("row-bold", rbbind.GetPath(context));
+            else if (RowBold != null)
+                throw new XamlException("The RowBold property must be a binding");
 
             // TODO: binding for GridLines ???
             if (GridLines != GridLinesVisibility.None)

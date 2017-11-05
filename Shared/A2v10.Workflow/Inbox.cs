@@ -1,7 +1,7 @@
 ﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
+using A2v10.Infrastructure;
 
 namespace A2v10.Workflow
 {
@@ -13,7 +13,7 @@ namespace A2v10.Workflow
         public Int64 ForId { get; set; }
         public Int64 ForId2 { get; set; }
         public String Text { get; set; }
-        public String View { get; set; }
+        public String Action { get; set; }
         public DateTime? Expired { get; set; }
 
         public Int64 ProcessId { get; set; }
@@ -29,6 +29,22 @@ namespace A2v10.Workflow
         {
             var arg = new { Id = Id, UserId = UserId, Answer = Answer };
             dbContext.Execute(String.Empty, "a2workflow.[Inbox.Resume]", arg);
+        }
+
+        internal class BoxedId
+        {
+            public Int64 Id { get; set; }
+        }
+
+        public static Int64 FindId(String what, String by, String value)
+        {
+            /*FindId("Role", "Name", "role_name"*/
+            /*FindId("Group", "Key", "group_key" */
+            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            var boxedId = dbContext.Load<BoxedId>(String.Empty, "a2workflow.[Inbox.FindId]", new { What = what, By = by, Value = value });
+            if (boxedId != null)
+                return boxedId.Id;
+            return 0;
         }
     }
 }

@@ -4,6 +4,11 @@ using A2v10.Infrastructure;
 using System;
 using System.Text;
 
+/*
+ * $exec(cmd, arg, confirm, opts) : $canExecute(cmd, arg, opts)
+ * $dialog(cmd, url, arg, data(query), opts)
+ */
+
 namespace A2v10.Xaml
 {
     public enum CommandType
@@ -42,8 +47,11 @@ namespace A2v10.Xaml
         Append, // create in dialog and append to array
     }
 
+
     public class BindCmd : BindBase
     {
+        private const String nullString = "null";
+
         public CommandType Command { get; set; }
         public String Argument { get; set; }
         public String Url { get; set; }
@@ -58,6 +66,8 @@ namespace A2v10.Xaml
         public Boolean CheckReadOnly { get; set; }
 
         public Confirm Confirm { get; set; }
+
+        public String Data { get; set; }
 
         public BindCmd()
         {
@@ -138,15 +148,17 @@ namespace A2v10.Xaml
                     return $"{CommandArgument(context)}.$append()";
 
                 case CommandType.Browse:
-                    return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)})";
+                    return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)}, {GetData(context)})";
 
                 case CommandType.Execute:
                     return $"$exec('{GetName()}', {CommandArgument(context, nullable:true)}, {GetConfirm(context)}, {GetOptions(context)})";
 
                 case CommandType.ExecuteSelected:
                     return $"$execSelected('{GetName()}', {CommandArgument(context)}, {GetConfirm(context)})";
+
                 case CommandType.Report:
                     return $"$report('{GetReportName()}', {CommandArgument(context, nullable:true)}, {GetOptions(context)})";
+
                 case CommandType.Dialog:
                     if (Action == DialogAction.Unknown)
                         throw new XamlException($"Action required for {Command} command");
@@ -162,7 +174,7 @@ namespace A2v10.Xaml
                         // command, url, data
                         return $"{{cmd:$dialog, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
                     }
-                    return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetOptions(context)})";
+                    return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context)}, {GetOptions(context)})";
 
                 default:
                     throw new NotImplementedException($"command '{Command}' yet not implemented");
@@ -185,7 +197,7 @@ namespace A2v10.Xaml
         String GetOptions(RenderContext context)
         {
             if (!SaveRequired && !ValidRequired && !CheckReadOnly)
-                return "null";
+                return nullString;
             StringBuilder sb = new StringBuilder("{");
             if (SaveRequired)
                 sb.Append("saveRequired: true,");
@@ -224,14 +236,24 @@ namespace A2v10.Xaml
             else
                 arg = ArgumentBinding.GetPath(context);
             if (String.IsNullOrEmpty(arg))
-                return "null";
+                return nullString;
             return arg;
+        }
+
+        String GetData(RenderContext context)
+        {
+            var dataBind = GetBinding(nameof(Data));
+            if (dataBind != null)
+                return dataBind.GetPath(context);
+            else if (Data != null)
+                return Data;
+            return nullString;
         }
 
         String GetConfirm(RenderContext context)
         {
             if (Confirm == null)
-                return "null";
+                return nullString;
             return Confirm.GetJsValue(context);
         }
 

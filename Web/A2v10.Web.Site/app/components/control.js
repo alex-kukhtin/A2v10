@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7064
+// 20171105-7067
 // components/control.js
 
 (function () {
@@ -12,7 +12,8 @@
 			align: { type: String, default: 'left' },
 			description: String,
 			disabled: Boolean,
-            tabIndex: Number
+            tabIndex: Number,
+            dataType: String
         },
         computed: {
 			path() {
@@ -38,12 +39,15 @@
                 let cls = '';
                 if (this.align !== 'left')
                     cls += 'text-' + this.align;
-                //if (this.dataType == 'Number' || this.dataType === N'Currency') {
-                //  if (this.itemValue < 0)
-                //      cls += ' negative-red';
-                //}
+                if (this.isNegative) cls += ' negative-red';
                 return cls;
-			},
+            },
+            isNegative() {
+                if (this.dataType === 'Number' || this.dataType === 'Currency')
+                    if (this.item && this.item[this.prop] < 0)
+                        return true;
+                return false;
+            },
 			hasLabel() {
 				return !!this.label;
 			},

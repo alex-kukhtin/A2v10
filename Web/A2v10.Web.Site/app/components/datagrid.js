@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171103-7065
+// 20171105-7067
 // components/datagrid.js*/
 
 (function () {
@@ -279,8 +279,15 @@
             if (col.content === '$index')
                 return h(tag, cellProps, [ix + 1]);
 
+            function isNegativeRed(col) {
+                if (col.dataType === 'Number' || col.dataType === 'Currency')
+                    if (utils.eval(row, col.content) < 0)
+                        return true;
+                return false;
+            }
+
 			let content = utils.eval(row, col.content, col.dataType);
-            let chElems = [content];
+            let chElems = [h('span', { 'class': { 'negative-red': isNegativeRed(col) } }, content)];
             let icoSingle = !col.content ? ' ico-single' : '';
             if (col.icon)
                 chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
@@ -317,7 +324,9 @@
 				if (this.active) cssClass += 'active';
 				if (this.$parent.isMarkRow && this.mark) {
 					cssClass += ' ' + this.row[this.mark];
-				}
+                }
+                if (this.$parent.rowBold && this.row[this.$parent.rowBold])
+                    cssClass += ' bold';
 				if (this.level)
 					cssClass += ' lev-' + this.level;
                 return cssClass.trim();
@@ -359,7 +368,8 @@
 			routeQuery: Object,
 			mark: String,
 			filterFields: String,
-			markStyle: String,
+            markStyle: String,
+            rowBold: String,
 			doubleclick: Function,
             groupBy: [Array, Object]
 		},

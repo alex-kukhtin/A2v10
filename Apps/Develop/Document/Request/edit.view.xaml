@@ -23,7 +23,7 @@
             -->
             <Panel Padding="0, 6" Header="{Bind Document.Contract.Id, Format='Информация о договоре [{0}]'}" 
                    Collapsible="True" Style="{Bind Document.$PaneStyle}">
-                <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки" Disabled="{Bind $isPristine}">
+                <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
                     <TextBox.AddOns>
                         <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
                         <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Contract}}" />
@@ -91,7 +91,7 @@
                         <!--
 						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
                         -->
-                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url={Bind Document.$browseAgentUrl}, Argument={Bind Document.Agent}}"/>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}, Data={Bind Document.$browseAgentData}}"/>
                         <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
 					</TextBox.AddOns>
 				</TextBox>
@@ -126,7 +126,7 @@
 					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
-					<DataGridColumn Header="Qty" Content="{Bind Qty}" Align="Right" Editable="True"/>
+					<DataGridColumn Header="Qty" Content="{Bind Qty, DataType=Currency}" Align="Right" Editable="True"/>
 					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True"/>
                     <!--
 					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
@@ -171,6 +171,7 @@
                             <TableCell RowSpan="2">Номер</TableCell>
                             <TableCell>Товар</TableCell>
                             <TableCell>Кол-во</TableCell>
+                            <TableCell>Цена</TableCell>
                             <TableCell>Доставка</TableCell>
                             <TableCell RowSpan="2">Склад</TableCell>
                         </TableRow>
@@ -190,6 +191,12 @@
                                 </TextBox.AddOns>
                             </TextBox>
                         </TableCell>
+                        <TextBox Value="{Bind BasePrice, DataType=Currency}" Align="Right">
+                            <TextBox.AddOns>
+                                <Hyperlink Icon="Queue" 
+                                       Command="{BindCmd Execute, CommandName=showEntityInfo, Argument={Bind}, SaveRequired=True}"/>
+                            </TextBox.AddOns>
+                        </TextBox>
                         <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
                         <TableCell Align="Center">
                             <CheckBox></CheckBox>

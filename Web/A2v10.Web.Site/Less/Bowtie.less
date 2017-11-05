@@ -4,8 +4,12 @@
 @icon-red: #a94442;
 @icon-yellow: #dcb67a;
 @icon-light-blue: #1ba1e2;
+@icon-light-red:#e41400;
+@icon-light-yellow:#ffcc00;
+@icon-light-green: #16cd16;
 
 @icon-inline-color: #8591a2;
+
 
 @font-face {
     font-family: 'Bowtie';
@@ -226,6 +230,21 @@ i, .ico {
     content: "\ea49";
 }
 
+.ico-dot-blue:before {
+    content: "\ea49";
+    color:@icon-light-blue;
+}
+
+.ico-dot-green:before {
+    content: "\ea49";
+    color: @icon-light-green;
+}
+
+.ico-dot-red:before {
+    content: "\ea49";
+    color: @icon-light-red;
+}
+
 .ico-square:before {
     content: "\ea4a";
 }
@@ -269,6 +288,30 @@ i, .ico {
 
 .ico-plus:before {
     content: "\e970";
+}
+
+.ico-pin:before {
+    content: "\e9ba";
+}
+
+.ico-pin-outline:before {
+    content: "\e9b9";
+}
+
+.ico-pinned:before {
+    content: "\e9bc";
+}
+
+.ico-pinned-outline:before {
+    content: "\e9bb";
+}
+
+.ico-unpin:before {
+    content: "\e9be";
+}
+
+.ico-unpin-outline:before {
+    content: "\e9bd";
 }
 
 .ico-add:before {
@@ -328,6 +371,10 @@ i, .ico {
     color: @icon-blue;
 }
 
+.ico-queue:before {
+    content: "\e92a";
+}
+
 .ico-save:before {
     content: "\e982";
     color: @icon-blue;
@@ -362,13 +409,17 @@ i, .ico {
     content: "\e990";
 }
 
+.ico-grid:before {
+    content: "\e99c";
+}
+
 .ico-help:before {
     content: "\ea06";
 }
 
 .ico-help-blue:before {
     content: "\ea06";
-    color:@icon-light-blue;
+    color:@icon-light-blue!important;
 }
 
 .ico-help-outline:before {
@@ -381,7 +432,7 @@ i, .ico {
 
 .ico-info-blue:before {
     content: "\ea08";
-    color:@icon-light-blue;
+    color:@icon-light-blue!important;
 }
 
 .ico-info-outline:before {
@@ -428,6 +479,26 @@ i, .ico {
 
 .ico-tag:before {
     content: "\e997";
+}
+
+.ico-tag-blue:before {
+    content: "\e997";
+    color:@icon-light-blue!important;
+}
+
+.ico-tag-green:before {
+    content: "\e997";
+    color: @icon-light-green !important;
+}
+
+.ico-tag-red:before {
+    content: "\e997";
+    color: @icon-light-red !important;
+}
+
+.ico-tag-yellow:before {
+    content: "\e997";
+    color: @icon-light-yellow!important;
 }
 
 .ico-tag-outline:before {

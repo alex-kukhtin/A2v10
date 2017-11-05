@@ -58,6 +58,7 @@ begin
 		WorkflowId uniqueidentifier null,
 		Kind nvarchar(255) not null,
 		[Source] nvarchar(255) null, -- clr type name or file name 
+		[ActionBase] nvarchar(255) null,
 		[Definition] nvarchar(max) null, -- activity source
 		[State] nvarchar(255) null,
 		[DataSource] nvarchar(255) null,
@@ -86,7 +87,7 @@ begin
 			constraint FK_Inbox_Processes references a2workflow.Processes(Id),
 		Bookmark nvarchar(255) not null,
 		Answer nvarchar(255) null,
-		[View] nvarchar(255) null,
+		[Action] nvarchar(255) null,
 		[For] nvarchar(255) null,
 		ForId bigint null,
 		ForId2 bigint null,
@@ -175,6 +176,7 @@ create procedure a2workflow.[Process.Create]
 @WorkflowId uniqueidentifier,
 @Kind nvarchar(255),
 @Source nvarchar(255),
+@ActionBase nvarchar(255),
 @Definition nvarchar(max),
 @DataSource nvarchar(255),
 @Schema nvarchar(255),
@@ -189,9 +191,9 @@ begin
 
 	declare @outputTable table(Id bigint);
 
-	insert into a2workflow.Processes(WorkflowId, [Owner], [Definition], [Kind], [Source], [DataSource], [Schema], Model, ModelId)
+	insert into a2workflow.Processes(WorkflowId, [Owner], [Definition], [ActionBase], [Kind], [Source], [DataSource], [Schema], Model, ModelId)
 		output inserted.Id into @outputTable(Id)
-		values (@WorkflowId, @Owner, @Definition, @Kind, @Source, @DataSource, @Schema, @ModelName, @ModelId);
+		values (@WorkflowId, @Owner, @Definition, @ActionBase, @Kind, @Source, @DataSource, @Schema, @ModelName, @ModelId);
 
 	select top(1) @RetId = Id from @outputTable;
 end
@@ -204,7 +206,7 @@ go
 create procedure a2workflow.[Inbox.Create]
 @ProcessId bigint,
 @Bookmark nvarchar(255),
-@View nvarchar(255),
+@Action nvarchar(255),
 @For nvarchar(255),
 @ForId bigint,
 @ForId2 bigint,
@@ -219,9 +221,9 @@ begin
 
 	declare @outputTable table(Id bigint);
 	
-	insert into a2workflow.Inbox(ProcessId, Bookmark, [View], [For], ForId, ForId2, [Text], Expired)
+	insert into a2workflow.Inbox(ProcessId, Bookmark, [Action], [For], ForId, ForId2, [Text], Expired)
 		output inserted.Id into @outputTable(Id)
-	values (@ProcessId, @Bookmark, @View, @For, @ForId, @ForId2, @Text, @Expired);
+	values (@ProcessId, @Bookmark, @Action, @For, @ForId, @ForId2, @Text, @Expired);
 
 	select top(1) @RetId = Id from @outputTable;
 end
@@ -241,6 +243,22 @@ begin
 	from a2workflow.Inbox i inner join a2workflow.Processes p on i.ProcessId = p.Id 
 	where i.Id = @Id and i.Void = 0;
 	-- TODO: can this user can load this inbox
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Inbox.Debug.Load')
+	drop procedure a2workflow.[Inbox.Debug.Load]
+go
+------------------------------------------------
+create procedure a2workflow.[Inbox.Debug.Load]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	select [Inbox!TInbox!Object]=null, i.Id, i.Bookmark, i.Void, i.UserRemoved, i.Answer
+	from a2workflow.Inbox i 
+	where i.Id = @Id;
 end
 go
 ------------------------------------------------
@@ -302,13 +320,14 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
-	select [Process!TProcess!Object] = null, [Id!!Id] = Id, [DataSource], [Schema], Model, ModelId, [Owner],
+	select [Process!TProcess!Object] = null, [Id!!Id] = Id, ActionBase,
+		[DataSource], [Schema], Model, ModelId, [Owner],
 		[Inboxes!TInbox!Array] = null, [Workflow!TWorkflow!Object] = null
 	from a2workflow.Processes
 	where Id = @Id;
 
 	select [!TInbox!Array] = null, [Id!!Id] = Id, [!TProcess.Inboxes!ParentId] = ProcessId,
-		Bookmark, [For], ForId, ForId2, Expired, DateCreated
+		[Action], Bookmark, [For], ForId, ForId2, Expired, DateCreated
 	from a2workflow.Inbox where ProcessId = @Id and Void=0;
 
 	select [!TWorkflow!Object] = null, [Id!!Id] = InstanceId, [!TProcess.Workflow!ParentId] = p.Id, 

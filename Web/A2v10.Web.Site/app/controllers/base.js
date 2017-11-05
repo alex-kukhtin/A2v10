@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171103-7065
+// 20171105-7067
 // controllers/base.js
 
 (function () {
@@ -12,9 +12,19 @@
 	const urltools = require('std:url');
 	const log = require('std:log');
 
-
     let __updateStartTime = 0;
     let __createStartTime = 0;
+
+    function __runDialog(url, arg, query, cb) {
+        return new Promise(function (resolve, reject) {
+            const dlgData = { promise: null, data: arg, query: query };
+            eventBus.$emit('modal', url, dlgData);
+            dlgData.promise.then(function (result) {
+                cb(result);
+                resolve(result);
+            });
+        });
+    }
 
 	const documentTitle = {
 		render() {
@@ -51,7 +61,10 @@
 		computed: {
 			$baseUrl() {
 				return this.$data.__baseUrl__;
-			},
+            },
+            $indirectUrl() {
+                return this.$data.__modelInfo.__indirectUrl__ || '';
+            },
 			$query() {
 				return this.$data._query_;
 			},
@@ -66,21 +79,30 @@
 			},
 			$modelInfo() {
 				return this.$data.__modelInfo;
-            },
-            $isReadOnly() {
-                return this.$data.$readOnly;
             }
 		},
-		methods: {
+        methods: {
             $exec(cmd, arg, confirm, opts) {
-                if (opts && opts.checkReadOnly && this.$isReadOnly)
-                    return;
-				let root = this.$data;
-				if (!confirm)
-					root._exec_(cmd, arg);
-				else
-					this.$confirm(confirm).then(() => root._exec_(cmd, arg));
-			},
+                if (this.$isReadOnly(opts)) return;
+
+                const doExec = () => {
+                    let root = this.$data;
+                    if (!confirm)
+                        root._exec_(cmd, arg);
+                    else
+                        this.$confirm(confirm).then(() => root._exec_(cmd, arg));
+                }
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doExec());
+                } else {
+                    doExec();
+                }
+            },
+
+            $isReadOnly(opts) {
+                return opts && opts.checkReadOnly && this.$data.$readOnly;
+            },
 
 			$execSelected(cmd, arg, confirm) {
 				let root = this.$data;
@@ -94,19 +116,20 @@
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
             },
             $canExecute(cmd, arg, opts) {
-                if (opts && opts.checkReadOnly && this.$isReadOnly)
+                if (this.$isReadOnly(opts))
                     return false;
                 let root = this.$data;
                 return root._canExec_(cmd, arg);
             },
 			$save() {
-                let self = this;
-                if (self.$isReadOnly)
+                if (this.$data.$isReadOnly)
                     return;
+                let self = this;
                 let root = window.$$rootUrl;
-				let url = root + '/_data/save';
-				return new Promise(function (resolve, reject) {
-                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, data: self.$data });
+                let url = root + '/_data/save';
+                let urlToSave = this.$indirectUrl || this.$baseUrl;
+                return new Promise(function (resolve, reject) {
+                    let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
                     let wasNew = self.$baseUrl.endsWith('/new');
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
@@ -137,8 +160,8 @@
 			$invoke(cmd, data, base) {
 				let self = this;
                 let root = window.$$rootUrl;
-				let url = root + '/_data/invoke';
-				let baseUrl = self.$baseUrl;
+                let url = root + '/_data/invoke';
+                let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
 				return new Promise(function (resolve, reject) {
@@ -206,7 +229,7 @@
 			},
 
             $remove(item, confirm) {
-                if (this.$isReadOnly)
+                if (this.$data.$isReadOnly)
                     return;
 				if (!confirm)
 					item.$remove();
@@ -221,7 +244,7 @@
 				let item = arr.$selected;
 				if (!item)
 					return;
-                if (this.$isReadOnly)
+                if (this.$data.$isReadOnly)
                     return;
 				this.$remove(item, confirm);
 			},
@@ -316,68 +339,67 @@
 					alert(msg);
 			},
 
-            $showDialog(url, data, opts) {
-                return this.$dialog('show', url, data, opts);
+            $showDialog(url, arg, query, opts) {
+                return this.$dialog('show', url, arg, query, opts);
             },
 
-            $dialog(command, url, data, opts) {
-                if (opts && opts.checkReadOnly && this.$isReadOnly)
+
+            $dialog(command, url, arg, query, opts) {
+                if (this.$isReadOnly(opts))
                     return;
-                let uq = urltools.parseUrlAndQuery(url); // without data!
-                url = uq.url;
-                query = uq.query;
-				return new Promise(function (resolve, reject) {
-					// sent a single object
-                    if (command === 'edit-selected') {
-                        if (!utils.isArray(data)) {
-                            console.error('$dialog.editSelected. The argument is not an array');
-                        }
-                        data = data.$selected;
+                function argIsNotAnArray() {
+                    if (!utils.isArray(arg)) {
+                        console.error(`$dialog.${command}. The argument is not an array`);
+                        return true;
                     }
-                    let dataToSent = data;
-					if (command === 'append') {
-						if (!utils.isArray(data)) {
-							console.error('$dialog.add. The argument is not an array');
-						}
-						dataToSent = null;
-					}
-					let dlgData = { promise: null, data: dataToSent, query: query };
-					eventBus.$emit('modal', url, dlgData);
-                    if (command === 'edit' || command === 'edit-selected' || command === 'browse') {
-                        dlgData.promise.then(function (result) {
-                            if (!utils.isObject(data)) {
+                }
+                function argIsNotAnObject() {
+                    if (!utils.isObjectExact(arg)) {
+                        console.error(`$dialog.${command}. The argument is not an object`);
+                        return true;
+                    }
+                }
+                function doDialog() {
+                    // result always is raw data
+                    switch (command) {
+                        case 'append':
+                            if (argIsNotAnArray()) return;
+                            return __runDialog(url, 0, query, (result) => { arg.$append(result); });
+                        case 'browse':
+                            if (!utils.isObject(arg)) {
                                 console.error(`$dialog.${command}. The argument is not an object`);
                                 return;
                             }
-                            // result is raw data
-                            data.$merge(result, command === 'browse');
-                            resolve(result);
-                        });
-					} else if (command === 'append') {
-						// append to array
-						dlgData.promise.then(function (result) {
-							// result is raw data
-							data.$append(result);
-							resolve(result);
-						});
-					} else {
-						dlgData.promise.then(function (result) {
-							resolve(result);
-						});
-					}
-				});
+                            return __runDialog(url, arg, query, (result) => { arg.$merge(result, true /*fire*/); });
+                        case 'edit-selected':
+                            if (argIsNotAnArray()) return;
+                            return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result, false /*fire*/); });
+                        case 'edit':
+                            if (argIsNotAnObject()) return;
+                            return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
+                        default: // simple show dialog
+                            return __runDialog(url, arg, query, () => { });
+                            break;
+                    }
+                }
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    let dlgResult = null;
+                    this.$save().then(() => { dlgResult = doDialog() });
+                    return dlgResult;
+                }
+                return doDialog();
             },
 
             $report(rep, arg, opts) {
-                if (opts && opts.checkReadOnly && this.$isReadOnly)
-                    return;
+                if (this.$isReadOnly(opts)) return;
                 doReport = () => {
                     let id = arg;
                     if (arg && utils.isObject(arg))
                         id = arg.$id;
                     const root = window.$$rootUrl;
                     let url = root + '/report/show/' + id;
-                    let baseUrl = urltools.makeBaseUrl(this.$baseUrl);
+                    let reportUrl = this.$indirectUrl || this.$baseUrl;
+                    let baseUrl = urltools.makeBaseUrl(reportUrl);
                     url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
                     // open in new window
                     window.open(url, "_blank");
@@ -442,9 +464,9 @@
 					message: "Element was modified. Save changes?",
 					title: "Confirm close",
 					buttons: [
-						{ text: "Save", result: "save" },
+						{ text: "Сохранить", result: "save" },
 						{ text: "Don't save", result: "close" },
-						{ text: "Cancel", result: false }
+						{ text: "Отмена", result: false }
 					]
 				};
 				this.$confirm(dlg).then(function (result) {

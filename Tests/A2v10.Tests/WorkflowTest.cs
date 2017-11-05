@@ -51,12 +51,14 @@ namespace A2v10.Tests
         {
             Int64 modelId = 123; // predefined
             Int64 userId = 50; // predefined
+            String bookmark = "Bookmark1";
             var info = new StartWorkflowInfo()
             {
                 Source = "file:Workflows/SimpleRequest_v1",
                 UserId = userId,
                 Schema = "a2test",
                 Model = "SimpleModel",
+                ActionBase = "simple/model",
                 ModelId = modelId
             };
             var _workflow = ServiceLocator.Current.GetService<IWorkflowEngine>();
@@ -74,12 +76,14 @@ namespace A2v10.Tests
             dt.AreValueEqual("SimpleModel", "Model");
             dt.AreValueEqual(modelId, "ModelId");
             dt.AreValueEqual(userId, "Owner");
+            dt.AreValueEqual("simple/model", "ActionBase");
 
             dt = new DataTester(pm, "Process.Inboxes");
             dt.IsArray(1);
-            dt.AreArrayValueEqual("Bookmark1", 0, "Bookmark");
+            dt.AreArrayValueEqual(bookmark, 0, "Bookmark");
             dt.AreArrayValueEqual("User", 0, "For");
             dt.AreArrayValueEqual(userId, 0, "ForId");
+            dt.AreArrayValueEqual("inbox/action", 0, "Action");
             Int64 inboxId = dt.GetArrayValue<Int64>(0, "Id");
 
             dt = new DataTester(pm, "Process.Workflow");
@@ -98,6 +102,16 @@ namespace A2v10.Tests
             );
             dt = new DataTester(pm, "Process.Workflow");
             dt.AreValueEqual("Closed", "ExecutionStatus");
+
+            pm = await dbContext.LoadModelAsync(String.Empty, "a2workflow.[Inbox.Debug.Load]",
+                new { UserId = userId, Id = inboxId }
+            );
+            dt = new DataTester(pm, "Inbox");
+            dt.AreValueEqual(inboxId, "Id");
+            dt.AreValueEqual(bookmark, "Bookmark");
+            dt.AreValueEqual(userId, "UserRemoved");
+            dt.AreValueEqual("OK", "Answer");
+            dt.AreValueEqual(true, "Void");
         }
     }
 }

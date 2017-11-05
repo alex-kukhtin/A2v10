@@ -5,8 +5,8 @@ let template = {
 	properties: {
         "TRoot.Entity": { Id: 123, Name: 'entityName' },
         'Document.Sum': documentSumProperty,
-        'TDocument.$browseAgentUrl'() {
-            return '/common/agent/browse?DocumentId=' + this.Id;
+        'TDocument.$browseAgentData'() {
+            return { DocumentId: + this.Id };
         },
         "TDocument.$PaneStyle"() {
             return this.Rows.Count > 3 ? "warning" : null;
@@ -51,6 +51,11 @@ let template = {
             const vm = this.$vm;
             await vm.$invoke('startProcess', { Id: doc.Id });
             vm.$close();
+        },
+        async showEntityInfo() {
+            const vm = this.$vm;
+            let r = await vm.$invoke('testCommand', { Id: 123 });
+            alert(1);
         }
     }
 };

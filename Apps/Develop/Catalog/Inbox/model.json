@@ -1,0 +1,16 @@
+﻿/*catalog/index*/
+{
+	"schema": "a2v10demo",
+	"model": "Inbox",
+	"actions": {
+    "index": {
+      "index": true,
+      "view": "index.view"
+    },
+    "open": {
+      "indirect": true,
+      "target": "{{Inbox.Action}}",
+      "targetId": "{{Inbox.ModelId}}"
+    }
+	}
+}

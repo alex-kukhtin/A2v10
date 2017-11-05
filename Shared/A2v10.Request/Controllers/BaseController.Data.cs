@@ -46,10 +46,8 @@ namespace A2v10.Request
             ExpandoObject data = dataToSave.Get<ExpandoObject>("data");
             var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
             RequestView rw = rm.GetCurrentAction();
-            var prms = new
-            {
-                UserId = userId
-            };
+            var prms = new ExpandoObject();
+            prms.Set("UserId", userId);
             IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
             IModelHandler handler = rw.GetHookHandler(_host);
             if (handler != null)
@@ -100,6 +98,7 @@ namespace A2v10.Request
             swi.Schema = cmd.CurrentSchema;
             swi.Model = cmd.CurrentModel;
             swi.ModelId = dataToStart.Get<Int64>("Id");
+            swi.ActionBase = cmd.ActionBase;
             if (swi.ModelId == 0)
                 throw new RequestModelException("ModelId must be specified");
             if (!String.IsNullOrEmpty(cmd.file))
@@ -156,6 +155,7 @@ namespace A2v10.Request
             loadPrms.Set("UserId", userId);
             loadPrms.Set("Id", rw.Id);
             IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+            rw = await LoadIndirect(rw, model, loadPrms);
             WriteDataModel(model, writer);
         }
 

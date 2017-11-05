@@ -79,5 +79,32 @@ namespace A2v10.Data
                 return false;
             }
         }
+
+        public void Merge(IDataModel src)
+        {
+            var trgMeta = Metadata as IDictionary<String, ElementMetadata>;
+            var srcMeta = src.Metadata as IDictionary<String, ElementMetadata>;
+            var trgRoot = Root;
+            var srcRoot = src.Root as IDictionary<String, Object>;
+            var rootObj = trgMeta["TRoot"];
+            foreach (var sm in srcMeta)
+            {
+                if (sm.Key != "TRoot")
+                {
+                    if (trgMeta.ContainsKey(sm.Key))
+                        trgMeta[sm.Key] = sm.Value;
+                    else
+                        trgMeta.Add(sm.Key, sm.Value);
+                }
+                else
+                {
+                    rootObj.Fields.Append(sm.Value.Fields);
+                }
+            }
+            foreach (var sr in srcRoot)
+            {
+                trgRoot.AddChecked(sr.Key, sr.Value);
+            }
+        }
     }
 }

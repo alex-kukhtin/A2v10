@@ -57,7 +57,8 @@
   Bookmark = "Bookmark1",
   Text = "Simple Inbox",
   For = "User",
-  ForId = Process.Owner
+  ForId = Process.Owner,
+  Action = "inbox/action"
 }</mca:CSharpValue>
             </InArgument>
           </aw:Request.Inbox>
@@ -65,7 +66,7 @@
       </FlowStep>
     </Flowchart.StartNode>
     <x:Reference>__ReferenceID0</x:Reference>
-    <sads:DebugSymbol.Symbol>d0djOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXFNpbXBsZVJlcXVlc3RfdjEueGFtbAMuA0UPAgEBNAlAFgIBAjcPPRQCAQM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d0djOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXFNpbXBsZVJlcXVlc3RfdjEueGFtbAMuA0YPAgEBNAlBFgIBAjcPPhQCAQM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

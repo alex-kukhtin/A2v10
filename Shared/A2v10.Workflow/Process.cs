@@ -36,6 +36,9 @@ namespace A2v10.Workflow
         public String Source { get; set; }
         public String Definition { get; set; }
 
+        [DataMember]
+        public String ActionBase { get; set; }
+
         public IDataModel Model => GetModel();
 
         public IDictionary<String, Object> CreateParams(Object obj)
@@ -55,6 +58,7 @@ namespace A2v10.Workflow
             var p = new Process();
             p.Kind = def.Name;
             p.Definition = def.Definition;
+            p.ActionBase = info.ActionBase;
             p.Source = def.Source;
             p.Owner = info.UserId;
             p.DataSource = info.DataSource;

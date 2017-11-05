@@ -169,6 +169,18 @@ i,
 .ico-dot:before {
   content: "\ea49";
 }
+.ico-dot-blue:before {
+  content: "\ea49";
+  color: #1ba1e2;
+}
+.ico-dot-green:before {
+  content: "\ea49";
+  color: #16cd16;
+}
+.ico-dot-red:before {
+  content: "\ea49";
+  color: #e41400;
+}
 .ico-square:before {
   content: "\ea4a";
 }
@@ -202,6 +214,24 @@ i,
 }
 .ico-plus:before {
   content: "\e970";
+}
+.ico-pin:before {
+  content: "\e9ba";
+}
+.ico-pin-outline:before {
+  content: "\e9b9";
+}
+.ico-pinned:before {
+  content: "\e9bc";
+}
+.ico-pinned-outline:before {
+  content: "\e9bb";
+}
+.ico-unpin:before {
+  content: "\e9be";
+}
+.ico-unpin-outline:before {
+  content: "\e9bd";
 }
 .ico-add:before {
   content: "\e970";
@@ -249,6 +279,9 @@ i,
   content: "\e90e";
   color: #034989;
 }
+.ico-queue:before {
+  content: "\e92a";
+}
 .ico-save:before {
   content: "\e982";
   color: #034989;
@@ -275,12 +308,15 @@ i,
 .ico-gear-outline:before {
   content: "\e990";
 }
+.ico-grid:before {
+  content: "\e99c";
+}
 .ico-help:before {
   content: "\ea06";
 }
 .ico-help-blue:before {
   content: "\ea06";
-  color: #1ba1e2;
+  color: #1ba1e2 !important;
 }
 .ico-help-outline:before {
   content: "\ea07";
@@ -290,7 +326,7 @@ i,
 }
 .ico-info-blue:before {
   content: "\ea08";
-  color: #1ba1e2;
+  color: #1ba1e2 !important;
 }
 .ico-info-outline:before {
   content: "\ea09";
@@ -326,6 +362,22 @@ i,
 }
 .ico-tag:before {
   content: "\e997";
+}
+.ico-tag-blue:before {
+  content: "\e997";
+  color: #1ba1e2 !important;
+}
+.ico-tag-green:before {
+  content: "\e997";
+  color: #16cd16 !important;
+}
+.ico-tag-red:before {
+  content: "\e997";
+  color: #e41400 !important;
+}
+.ico-tag-yellow:before {
+  content: "\e997";
+  color: #ffcc00 !important;
 }
 .ico-tag-outline:before {
   content: "\e996";
@@ -441,6 +493,9 @@ th {
 }
 .text-small {
   font-size: 90%;
+}
+.negative-red {
+  color: #da533f !important;
 }
 .absolute {
   position: absolute;
@@ -1051,7 +1106,7 @@ pre.a2-code {
 .control-group .input-group > a,
 .control-group .input-group > .popover-wrapper {
   align-self: stretch;
-  line-height: 1.75em;
+  line-height: 1.77em;
 }
 .control-group .input-group > a .ico:before,
 .control-group .input-group > .popover-wrapper .ico:before {
@@ -1621,6 +1676,9 @@ table.data-grid > tbody > tr.green td {
 table.data-grid > tbody > tr.info td,
 table.data-grid > tbody > tr.cyan td {
   background-color: rgba(114, 234, 234, 0.15);
+}
+table.data-grid > tbody > tr.bold td {
+  font-weight: 500;
 }
 .data-grid-container.fixed-header {
   height: 100%;
@@ -2344,10 +2402,10 @@ label.checkbox.small span:after {
   border: 1px solid #e5e8eb;
 }
 .a2-pager button {
-  padding: 2px 4px;
+  padding: 2px;
   background-color: white;
   border: 1px solid #ccc;
-  min-width: 23px;
+  min-width: 21px;
   text-align: center;
   margin-right: -1px;
 }
@@ -2380,7 +2438,7 @@ label.checkbox.small span:after {
 }
 .a2-pager .a2-pager-dots {
   display: inline-block;
-  width: 23px;
+  width: 21px;
   text-align: center;
 }
 /*
@@ -2865,7 +2923,6 @@ TODO:
 }
 .app-exception .message {
   padding: 15px 10px;
-  font-weight: normal;
   white-space: pre-line;
   font-weight: bold;
 }

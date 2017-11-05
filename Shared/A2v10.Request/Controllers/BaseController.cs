@@ -43,9 +43,29 @@ namespace A2v10.Request
             await Render(rw, writer, loadPrms);
         }
 
+        async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms)
+        {
+            if (String.IsNullOrEmpty(rw.target))
+                return rw;
+            String targetUrl = innerModel.Root.Resolve(rw.target);
+            if (String.IsNullOrEmpty(rw.targetId))
+                throw new RequestModelException("targetId must be specified for indirect action");
+            targetUrl += "/" + innerModel.Root.Resolve(rw.targetId);
+            var rm = await RequestModel.CreateFromUrl(_host, Admin, rw.CurrentKind, targetUrl);
+            rw = rm.GetCurrentAction();
+            String loadProc = rw.LoadProcedure;
+            if (loadProc != null)
+            {
+                loadPrms.Set("Id", rw.Id);
+                var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+                innerModel.Merge(newModel);
+                innerModel.System.Set("__indirectUrl__", rm.BaseUrl);
+            }
+            return rw;
+        }
+
         protected async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms)
         {
-            String viewName = rw.GetView();
             String loadProc = rw.LoadProcedure;
             IDataModel model = null;
             if (loadProc != null)
@@ -54,6 +74,10 @@ namespace A2v10.Request
                     loadPrms.Set("Id", rw.Id);
                 model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
             }
+            if (rw.indirect)
+                rw = await LoadIndirect(rw, model, loadPrms);
+
+            String viewName = rw.GetView();
             String rootId = "el" + Guid.NewGuid().ToString();
 
             String modelScript = await WriteModelScript(rw, model, rootId);

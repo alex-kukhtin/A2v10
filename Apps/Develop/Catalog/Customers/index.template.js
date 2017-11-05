@@ -15,12 +15,17 @@ let template = {
                 case 33: return 'yellow';
                 case 44: return 'cyan';
                 case 55: return 'green';
+                case 77: return 'green';
             }
 			return this.Amount === 22.0 ? 'red' : '';
 		},
 		"TCustomer.$cellMark"() {
 			//return this.Amount >= 500 ? 'danger' : '';
 			return this.Amount === 40000 ? 'success' : '';
+        },
+        "TCustomer.$rowBold"() {
+            //return this.Amount >= 500 ? 'danger' : '';
+            return this.Amount === 99;
         },
         "TCustomer.$Icon"() {
             return this.Id === 100 ? "image" : 'file';

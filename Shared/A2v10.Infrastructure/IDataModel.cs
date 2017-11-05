@@ -26,8 +26,11 @@ namespace A2v10.Infrastructure
 		void Traverse(Func<Object, Boolean> callback);
         IDictionary<String, dynamic> GetDynamic();
 
+        void Merge(IDataModel src);
+
         Boolean IsReadOnly { get; }
 
+        // TODO: move 
         String CreateScript();
 	}
 }

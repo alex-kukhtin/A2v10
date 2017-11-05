@@ -11,12 +11,12 @@
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Add" Tip="Створити користувача" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Create', Argument={Bind Users}}">Створити</Button>
-            <Button Icon="Edit" Tip="Властивості користувача" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Users}}">Властивості</Button>
-            <Button Icon="Delete" Content="Видалити" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm='Ви дійсно бажаєте видалити користувача?'}"/>
+            <Button Icon="Add" Tip="Создать пользователя" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Create', Argument={Bind Users}}">Создать</Button>
+            <Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Users}}">Свойства</Button>
+            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm='Вы действтельно хотите удалить пользователя?'}"/>
             <Separator />
-            <TextBox Label="Фільтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для пошуку"/>
-            <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Оновити таблицю">Оновити</Button>
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
+            <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
         </Toolbar>
     </Page.Toolbar>
     <Page.Pager>
@@ -25,14 +25,14 @@
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
 				Striped="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
-        <DataGridColumn Header="Логін" Content="{Bind Name}"/>
+        <DataGridColumn Header="Логин" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
         <!--
 		<DataGridColumn Header="Имя" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
         -->
-		<DataGridColumn Header="Ім'я" Content="{Bind PersonName}" />
+		<DataGridColumn Header="Имя" Content="{Bind PersonName}" />
         <DataGridColumn Header="e-mail" Content="{Bind Email}" />
         <DataGridColumn Header="Телефон" Content="{Bind Phone}" />
-        <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+        <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
 	</DataGrid>
 </Page>
 

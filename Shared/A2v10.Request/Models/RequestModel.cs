@@ -58,7 +58,7 @@ namespace A2v10.Request
         public String template;
 
         [JsonIgnore]
-        private RequestModel _parent;
+        protected RequestModel _parent;
 
         internal void SetParent(RequestModel model)
         {
@@ -178,11 +178,16 @@ namespace A2v10.Request
     {
         public String view;
         public String hook;
+        public Boolean indirect;
+        public String target;
+        public String targetId;
 
         public String GetView()
         {
             return view;
         }
+
+        public RequestUrlKind CurrentKind => _parent.CurrentKind;
 
         public virtual Boolean IsDialog { get { return false; } }
 
@@ -245,6 +250,15 @@ namespace A2v10.Request
 
         [JsonIgnore]
         public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
+
+        [JsonIgnore]
+        public String ActionBase
+        {
+            get
+            {
+                return _parent._modelPath;
+            }
+        }
     }
 
     public class RequestReport : RequestBase
@@ -294,6 +308,9 @@ namespace A2v10.Request
         public String schema; // schema for data model
         public String source; // connection string for data model
 
+        [JsonIgnore]
+        internal RequestUrlKind CurrentKind => _kind;
+
         public Dictionary<String, RequestAction> actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestDialog> dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
         public Dictionary<String, RequestPopup> popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.InvariantCultureIgnoreCase);
@@ -314,6 +331,23 @@ namespace A2v10.Request
                     default:
                         throw new RequestModelException($"Invalid data action {_data}");
                 }
+            }
+        }
+
+        public String BaseUrl
+        {
+            get
+            {
+                String kind = String.Empty;
+                switch (_kind)
+                {
+                    case RequestUrlKind.Page:
+                        kind = "_page";
+                        break;
+                    default:
+                        throw new RequestModelException($"Invalid RequestKind '{_kind}' for indirect query");
+                }
+                return $"/{kind}/{_modelPath}/{_action}/{_id}";
             }
         }
 
