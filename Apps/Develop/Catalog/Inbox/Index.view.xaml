@@ -3,7 +3,7 @@
     <Page.Toolbar>
         <Toolbar>
             <Button Icon="ArrowOpen"
-                    Command="{BindCmd OpenSelected, Url='/catalog/inbox/open', Argument={Bind Inboxes}}">Открыть</Button>
+                    Command="{BindCmd OpenSelected, Url='{Bind Inbox.Action}', Argument={Bind Inboxes}}">Открыть</Button>
             <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         </Toolbar>
@@ -14,6 +14,8 @@
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="PId" Content="{Bind ProcessId}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="Text" Content="{Bind Text}" Command="{BindCmd Open, Url='/catalog/inbox/open', Argument={Bind}}"/>
+        <DataGridColumn Header="For" Content="{Bind For}"/>
+        <DataGridColumn Header="ForId" Content="{Bind ForId}" Align="Right"/>
         <DataGridColumn Header="Action" Content="{Bind Action}" />
         <DataGridColumn Header="ActionBase" Content="{Bind ActionBase}" />
         <DataGridColumn Header="Bookmark" Content="{Bind Bookmark}" />

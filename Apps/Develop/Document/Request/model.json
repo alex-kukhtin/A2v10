@@ -18,8 +18,8 @@
       "template": "browse.template"
     },
     "forOwner": {
-      "view": "Edit.View",
-      "template": "element.template"
+      "view": "Inbox.View",
+      "template": "inbox.template"
     }      
 	},
   "dialogs": {
@@ -44,6 +44,9 @@
       "type": "startProcess",
       "file": "Workflows/TestWorkflow_v1"
     },
+    "resumeProcess": {
+      "type": "resumeProcess"
+    },      
     "testCommand": {
       "type": "sql",
       "procedure": "testProcedure"

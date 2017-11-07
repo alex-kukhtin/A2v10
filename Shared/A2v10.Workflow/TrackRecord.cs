@@ -7,16 +7,15 @@ namespace A2v10.Workflow
 {
     public class TrackRecord
     {
-        internal Int64 Id { get; private set; }
-        public DateTime EventTime { get; private set; } = DateTime.Now;
+        public Int64 Id { get; set; }
         public String Message { get; set; }
 
-        internal Int64 ProcessId { get; set; }
-        internal Int64 UserId { get; set; }
+        public Int64 ProcessId { get; set; }
+        public Int64 UserId { get; set; }
 
         internal void Update(IDbContext dbContext)
         {
-            dbContext.Execute(String.Empty, "a2workflow.[AddToTrack]", this);
+            dbContext.Execute(String.Empty, "a2workflow.[Process.AddToTrack]", this);
         }
     }
 }

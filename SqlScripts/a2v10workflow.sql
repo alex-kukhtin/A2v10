@@ -1,10 +1,10 @@
-/* 20171011-7045 */
+/* 20171107-7047 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 03 nov 2017 09:00
-module version : 7045
+Last updated : 07 nov 2017 17:00
+module version : 7047
 */
 
 /*
@@ -32,9 +32,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7045);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7047);
 else
-	update a2sys.Versions set [Version] = 7045 where Module = N'std:workflow';
+	update a2sys.Versions set [Version] = 7047 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -122,6 +122,26 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2workflow' and SEQUENCE_NAME=N'SQ_Track')
+	create sequence a2workflow.SQ_Track as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2workflow' and TABLE_NAME=N'Track')
+begin
+	create table a2workflow.[Track]
+	(
+		Id	bigint	not null constraint PK_Track primary key
+			constraint DF_Track_PK default(next value for a2workflow.SQ_Track),
+		ProcessId bigint not null
+			constraint FK_Track_Processes references a2workflow.Processes(Id),
+		[UserId] bigint  not null
+			constraint FK_Track_Users references a2security.Users(Id),
+		[DateTime] datetime not null,
+		[Message] nvarchar(max) null,
+	);
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'WriteLog')
 	drop procedure [a2workflow].[WriteLog]
 go
@@ -164,6 +184,30 @@ begin
 	begin
 		update a2workflow.Processes set [State] = @state, DateModified = getdate() where WorkflowId = @InstanceId;
 	end
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Process.AddToTrack')
+	drop procedure [a2workflow].[Process.AddToTrack]
+go
+------------------------------------------------
+create procedure a2workflow.[Process.AddToTrack]
+@ProcessId bigint,
+@Message nvarchar(max),
+@UserId bigint,
+@RetId bigint output
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @outputTable table(Id bigint);
+
+	insert into a2workflow.Track(ProcessId, [UserId], [Message], [DateTime])
+		output inserted.Id into @outputTable(Id)
+		values (@ProcessId, @UserId, @Message, getdate());
+	select top(1) @RetId = Id from @outputTable;
 end
 go
 ------------------------------------------------
@@ -229,6 +273,22 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Inbox.Remove')
+	drop procedure [a2workflow].[Inbox.Remove]
+go
+------------------------------------------------
+create procedure a2workflow.[Inbox.Remove]
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2workflow.Inbox set Void=0, Answer='Remove', UserRemoved=0, DateRemoved=getdate() 
+	where Id = @Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'InboxInfo.Load')
 	drop procedure a2workflow.[InboxInfo.Load]
 go
@@ -239,10 +299,30 @@ create procedure a2workflow.[InboxInfo.Load]
 as
 begin
 	set nocount on;
-	select i.Id, i.Bookmark, p.Kind, p.WorkflowId, p.[Definition]
+	select i.Id, i.Bookmark, p.Kind, p.WorkflowId, p.[Definition], i.ProcessId
 	from a2workflow.Inbox i inner join a2workflow.Processes p on i.ProcessId = p.Id 
 	where i.Id = @Id and i.Void = 0;
 	-- TODO: can this user can load this inbox
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Role.FindByKey')
+	drop procedure a2workflow.[Role.FindByKey]
+go
+------------------------------------------------
+create procedure a2workflow.[Role.FindByKey]
+@Key nvarchar(255)
+as
+begin
+	set nocount on;
+	select Id from a2security.Roles with(nolock)
+	where [Key] = @Key;
+	if @@rowcount = 0 
+	begin
+		declare @msg nvarchar(255);
+		set @msg = N'Role with Key "' + @Key + N'" not found';
+		throw 60000, @msg, 0
+	end
 end
 go
 ------------------------------------------------
@@ -322,7 +402,8 @@ begin
 	set transaction isolation level read uncommitted;
 	select [Process!TProcess!Object] = null, [Id!!Id] = Id, ActionBase,
 		[DataSource], [Schema], Model, ModelId, [Owner],
-		[Inboxes!TInbox!Array] = null, [Workflow!TWorkflow!Object] = null
+		[Inboxes!TInbox!Array] = null, [Workflow!TWorkflow!Object] = null,
+		[TrackRecords!TTrack!Array] = null
 	from a2workflow.Processes
 	where Id = @Id;
 
@@ -335,6 +416,10 @@ begin
 	from [System.Activities.DurableInstancing].Instances i
 	inner join a2workflow.Processes p on p.WorkflowId = i.InstanceId
 	where p.Id = @Id;
+
+	select [!TTrack!Array] = null, [Id!!Id] = Id, [!TProcess.TrackRecords!ParentId] = ProcessId,
+		UserId, [Message], [DateTime]
+	from a2workflow.Track where ProcessId = @Id;
 end
 go
 ------------------------------------------------

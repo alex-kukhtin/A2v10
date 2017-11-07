@@ -12,6 +12,7 @@ namespace A2v10.Infrastructure
         String Template { get; set; }
         String Key { get; set; }
 
+        String DataSource { get; set; }
         String Schema { get; set; }
         String Model { get; set; }
         Int64 ModelId { get; set; }

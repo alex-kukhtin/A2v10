@@ -1,10 +1,10 @@
-﻿/* 20171103-7046 */
+﻿/* 20171103-7047 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 03 nov 2017 12:00
-module version : 7046
+Last updated : 06 nov 2017 17:00
+module version : 7047
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7046);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7047);
 else
-	update a2sys.Versions set [Version] = 7046 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7047 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -62,6 +62,12 @@ begin
 		PersonName nvarchar(255) null,
 		Memo nvarchar(255) null
 	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Void')
+begin
+	alter table a2security.Users add Void bit not null constraint DF_Users_Void default(0) with values;
 end
 go
 ------------------------------------------------
@@ -182,7 +188,7 @@ as
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void
 	from a2security.Users
-	where Void=0;
+	where Void=0 and Id <> 0;
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUser')
@@ -326,6 +332,18 @@ begin
 	end
 	close #tmpcrs;
 	deallocate #tmpcrs;
+end
+go
+------------------------------------------------
+set nocount on;
+begin
+	-- predefined users and groups
+	if not exists(select * from a2security.Users where Id = 0)
+		insert into a2security.Users (Id, UserName, SecurityStamp) values (0, N'System', N'System');
+	if not exists(select * from a2security.Groups where Id = 1)
+		insert into a2security.Groups(Id, [Key], [Name]) values (1, N'Users', N'Все пользователи');
+	if not exists(select * from a2security.Groups where Id = 77)
+		insert into a2security.Groups(Id, [Key], [Name]) values (77, N'Admins', N'Администраторы');
 end
 go
 ------------------------------------------------

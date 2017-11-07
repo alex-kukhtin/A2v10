@@ -16,10 +16,15 @@ namespace A2v10.Tests.Config
 
         public TestConfig()
         {
-            ServiceLocator.Current.RegisterService<IDbContext>(DbContext.Value);
-            ServiceLocator.Current.RegisterService<IWorkflowEngine>(WorkflowEngine.Value);
-            ServiceLocator.Current.RegisterService<IApplicationHost>(AppHost.Value);
-            ServiceLocator.Current.RegisterService<IProfiler>(Profiler.Value);
+            var cs = ServiceLocator.Current;
+            if (!cs.IsServiceRegistered<IDbContext>())
+                cs.RegisterService<IDbContext>(DbContext.Value);
+            if (!cs.IsServiceRegistered<IWorkflowEngine>())
+                cs.RegisterService<IWorkflowEngine>(WorkflowEngine.Value);
+            if (!cs.IsServiceRegistered<IApplicationHost>())
+                cs.RegisterService<IApplicationHost>(AppHost.Value);
+            if (!cs.IsServiceRegistered<IProfiler>())
+                cs.RegisterService<IProfiler>(Profiler.Value);
         }
     }
 }

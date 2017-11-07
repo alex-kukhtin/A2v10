@@ -1,6 +1,8 @@
 ﻿
 /* element template */
 
+const utils = require('std:utils');
+
 let template = {
 	properties: {
         "TRoot.Entity": { Id: 123, Name: 'entityName' },
@@ -49,7 +51,8 @@ let template = {
         },
         async StartProcess(doc) {
             const vm = this.$vm;
-            await vm.$invoke('startProcess', { Id: doc.Id });
+            let result = await vm.$invoke('startProcess', { Id: doc.Id });
+            alert(utils.toJson(result));
             vm.$close();
         },
         async showEntityInfo() {

@@ -9,6 +9,7 @@ namespace A2v10.Infrastructure
     {
         T GetService<T>() where T:class;
         void RegisterService<T>(T service) where T:class;
+        Boolean IsServiceRegistered<T>() where T : class;
     }
 
     public class ServiceLocator : IServiceLocator
@@ -29,6 +30,11 @@ namespace A2v10.Infrastructure
         public void RegisterService<T>(T service) where T:class
         {
             _services.Add(typeof(T), service);
+        }
+
+        public Boolean IsServiceRegistered<T>() where T : class
+        {
+            return _services.ContainsKey(typeof(T));
         }
     }
 }

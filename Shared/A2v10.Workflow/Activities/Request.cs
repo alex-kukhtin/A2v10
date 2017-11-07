@@ -19,6 +19,8 @@ namespace A2v10.Workflow
         public InArgument<MessageInfo> SendBefore { get; set; }
         public InArgument<MessageInfo> SendAfter { get; set; }
 
+        public OutArgument<Int64> InboxId { get; set; }
+
         protected override bool CanInduceIdle { get { return true; } }
 
         protected override void CacheMetadata(NativeActivityMetadata metadata)
@@ -29,9 +31,12 @@ namespace A2v10.Workflow
         protected override void Execute(NativeActivityContext context)
         {
             var process = Process.GetProcessFromContext(context.DataContext);
+            var wfResult = context.GetExtension<WorkflowResult>();
             Inbox inbox = Inbox.Get<Inbox>(context);
             IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
             inbox.Create(dbContext, process.Id);
+            InboxId.Set(context, inbox.Id);
+            wfResult.InboxIds.Add(inbox.Id);
             // track before
             DoTrack(dbContext, TrackBefore.Get<TrackRecord>(context), context);
             // send before
@@ -62,7 +67,7 @@ namespace A2v10.Workflow
                 return;
             var process = Process.GetProcessFromContext(context.DataContext);
 			record.ProcessId = process.Id;
-            if (userId.HasValue)
+            if (record.UserId == 0 && userId.HasValue)
                 record.UserId = userId.Value;
             record.Update(dbContext);
             TrackRecord(context, $"TrackRecord written successfully {{Id:{record.Id}}}");
@@ -86,6 +91,7 @@ namespace A2v10.Workflow
             msg.Template = messageInfo.Template;
             msg.Key = messageInfo.Key;
 
+            msg.DataSource = process.DataSource;
             msg.Schema = process.Schema;
             msg.Model = process.ModelName;
             msg.ModelId = process.ModelId;

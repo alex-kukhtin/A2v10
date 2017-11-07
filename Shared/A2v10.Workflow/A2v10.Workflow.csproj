@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\ExecuteSql.cs" />
+    <Compile Include="Activities\RemoveInbox.cs" />
     <Compile Include="Activities\Request.cs" />
     <Compile Include="Activities\RequestResult.cs" />
     <Compile Include="AppWorkflow.cs" />

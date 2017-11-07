@@ -1,0 +1,203 @@
+﻿<!-- Document edit -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+	  Title="{Bind Document.Id, Format='Заявка [{0}]'}">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Command="{BindCmd Save}">Сохранить</Button>
+			<Button Icon="SaveClose" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<Button Icon="Requery" Command="{BindCmd Requery}">Перезагрузить</Button>
+            <Button Icon="Print" Command="{BindCmd Report, Report=Invoice, Argument={Bind Document}, SaveRequired=True}">Накладная</Button>
+            <Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Width="25%">
+            <!--
+                <Panel.Header C>
+                </Panel.Header>
+                    <Text>Информация о договоре [<Span Bold="True" Content="{Bind Document.Contract.Id}"/>]
+                    </Text>
+            
+            -->
+            <Panel Padding="0, 6" Header="{Bind Document.Contract.Id, Format='Информация о договоре [{0}]'}" 
+                   Collapsible="True" Style="{Bind Document.$PaneStyle}">
+                <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
+                    <TextBox.AddOns>
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>
+                        <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Contract}}" />
+                    </TextBox.AddOns>
+                </TextBox>
+                <PropertyGrid GridLines="Horizontal" Compact="True">
+                    <PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
+                    <PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
+                </PropertyGrid>
+            </Panel>
+			<!--
+			<Code Multiline="True" Content="{Bind Document.Agent}"></Code>
+			-->
+			<Button Block="True" Icon="Process" Style="Danger" IconAlign="Top"
+                    Size="Large" Command="{BindCmd Execute, CommandName=ResumeProcess, Argument={Bind Inbox}}">Продолжить процесс</Button>
+            <Button Block="True" Icon="File" Style="Primary" Size="Large" Disabled="{Bind $isPristine}">Оформить другую сделку (запрещено)</Button>
+            <Button Block="True" Icon="Copy" Size="Large" Tip="Создать другую заявку на основании этой" 
+					Command="{BindCmd Execute, CommandName=Test, Argument={Bind Document}}">Создать на основании</Button>
+            <Button Block="True" Icon="Approve" Style="Red" IconAlign="Top" Size="Large">Большая красная кнопка с иконкой сверху</Button>
+            <Button Block="True" Icon="Approve" Style="Green" Disabled="True">Green</Button>
+            <Button Icon="Approve" Style="Cyan" Size="Small">small 1</Button>
+            <Button Icon="Disapprove" Style="Green" Size="Mini">small 2</Button>
+            <Button Icon="ArrowExport" Style="Red" Size="Small">small 3</Button>
+            <Button Block="True" Icon="Approve" Style="Orange" Size="Large">Orange</Button>
+            <Button Block="True" Icon="Approve" Style="Primary">Primary</Button>
+			<Table GridLines="Both">
+				<TableRow>
+					<Hyperlink Content="Ссылка в таблице" />
+				</TableRow>
+			</Table>
+			<PropertyGrid GridLines="Horizontal">
+				<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
+				<PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
+				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
+				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
+			</PropertyGrid>
+		</Taskpad>
+	</Page.Taskpad>
+	<TabPanel FullPage="True">
+		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
+            <Header>Заявка на поставку</Header>
+            <Grid Columns="1*, 1*, 2*">
+                <Code Grid.Col="1" Content="{Bind Document.Agent.DateCreated, DataType=Date}" />
+                <Code Grid.Col="2" Content="{Bind Document.Agent.DateModified, DataType=Time}" Grid.VAlign="Top"/>
+                <ComboBox Disabled="True" Label="Продавец" Grid.Row="2" Grid.Col="2" ItemsSource="{Bind Companies}" Value="{Bind Document.Company}"></ComboBox>
+                <TextBox Required="True" Label="номер документа" Grid.Row="2" Grid.Col="1" Value="{Bind Document.SNo}">
+                    <TextBox.AddOns>
+                        <Popover Icon="Info" Content="Popover text"></Popover>
+                    </TextBox.AddOns>
+                </TextBox>
+                <DatePicker Grid.Row="3" Grid.Col="1" Value="{Bind Document.Date}" Grid.VAlign="Middle"/>
+                <TextBox Label="Покупатель" Grid.Row="3" Grid.Col="2" Grid.ColSpan="2" 
+						 Description="выберите покупателя" 
+                         Placeholder="введите фрагмент наименования для поиска"
+                         Tip="введите фрагмент наименования для поиска"
+						 Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
+					<TextBox.AddOns>
+                        <!--
+						<Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}}"/>
+                        -->
+                        <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}, Data={Bind Document.$browseAgentData}}"/>
+                        <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<!--
+				<Selector />
+				-->
+				<ComboBox Label="Доставку включить" Value="{Bind Document.DeliveryType}">
+					<ComboBoxItem Value="0">В итоги по документу</ComboBoxItem>
+					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
+					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>
+				</ComboBox>
+            </Grid>
+			<CollectionView ItemsSource="{Bind Document.Rows}" PageSize="5">
+                <Toolbar Style="Transparent">
+                    <Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+                    <Button Icon="Delete" Content="Удалить выделенную строку" Command="{BindCmd RemoveSelected, Argument={Bind Document.Rows}, Confirm='Удалить строку?'}"/>
+                    <Button Icon="Dashboard" Content="Подбор товара" Command="{BindCmd Dialog, Action=Show, Url='/Document/request/entityChoice', Argument={Bind Document.Contract.Id}}"/>
+                    <Button Icon="Access" Content="Exec" Command="{BindCmd Execute, CommandName=Test, Argument={Bind Document.Contract}, CheckReadOnly=True}"/>
+                    <Code Content="{Bind Document.Rows.length}"></Code>
+                    <Button Icon="Plus" Content="Добавить 100 строк" Command="{BindCmd Execute, CommandName=add100, Argument={Bind Document}}"/>
+                    <Separator />
+                    <CheckBox Label="цена закупки без НДС" Value="{Bind Document.VatPurchases}" Tip="Цена закупки указывается без учета НДС"/>
+                </Toolbar>
+                <DataGrid  ItemsSource="{Bind Parent.ItemsSource}" GridLines="Both" Striped="True" Hover="True" Sort="True">
+					<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"/>
+                    <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
+                    <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
+					<DataGridColumn Header="Qty" Content="{Bind Qty, DataType=Currency}" Align="Right" Editable="True"/>
+					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True"/>
+                    <!--
+					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+                    -->
+					<DataGridColumn Header="Weight" Content="{Bind Weight}" Align="Right" Fit="True"/>
+					<DataGridColumn>
+						<Group>
+							<!--А как привязаться к Root.Warehouses ??? -->
+							<ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
+							<TextBox Value="{Bind Entity.Name}"></TextBox>
+						</Group>
+					</DataGridColumn>
+					<DataGridColumn>
+						<Group>
+							<Hyperlink Icon="Delete" Command="{BindCmd Remove, Confirm='Are you sure?'}"></Hyperlink>
+                            <Hyperlink Icon="Trash">
+                                <Hyperlink.Command>
+                                    <BindCmd Command="Remove">
+                                        <BindCmd.Confirm>
+                                            <Confirm 
+                                                Message="{Bind Qty, Format='Sure to remove with qty={0}'}" 
+                                                OkText="Так, видалити" CancelText="Ні, залишити"
+                                                Title="{Bind Id, Format='Код рядка [{0}]'}"/>
+                                        </BindCmd.Confirm>
+                                    </BindCmd>
+                                </Hyperlink.Command>
+                            </Hyperlink>
+                            <Popover Icon="Info" Placement="LeftBottom">
+								<Text>
+									Информация о товаре:
+									Наименование:
+									<Span Bold="True" Content="{Bind Entity.Name}"></Span>
+								</Text>
+							</Popover>
+						</Group>
+					</DataGridColumn>
+				</DataGrid>
+				<Pager Source="{Bind Parent.Pager}"></Pager>
+                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both" Hover="True">
+                    <Table.Header>
+                        <TableRow>
+                            <TableCell RowSpan="2">Номер</TableCell>
+                            <TableCell>Товар</TableCell>
+                            <TableCell>Кол-во</TableCell>
+                            <TableCell>Цена</TableCell>
+                            <TableCell>Доставка</TableCell>
+                            <TableCell RowSpan="2">Склад</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>ПНТ</TableCell>
+                            <TableCell>произв</TableCell>
+                            <TableCell>Да</TableCell>
+
+                        </TableRow>
+                    </Table.Header>
+                    <TableRow>
+                        <TableCell Content="{Bind Id}"></TableCell>
+                        <TableCell>
+                            <TextBox Value="{Bind Entity.Name}">
+                                <TextBox.AddOns>
+                                    <Hyperlink Icon="Search"/>
+                                </TextBox.AddOns>
+                            </TextBox>
+                        </TableCell>
+                        <TextBox Value="{Bind BasePrice, DataType=Currency}" Align="Right">
+                            <TextBox.AddOns>
+                                <Hyperlink Icon="Queue" 
+                                       Command="{BindCmd Execute, CommandName=showEntityInfo, Argument={Bind}, SaveRequired=True}"/>
+                            </TextBox.AddOns>
+                        </TextBox>
+                        <Static Value="{Bind Qty, DataType=Currency}" Align="Right"/>
+                        <TableCell Align="Center">
+                            <CheckBox></CheckBox>
+                        </TableCell>
+                        <ComboBox Value="{Bind Warehouse}" ItemsSource="{Bind Root.Warehouses}"/>
+                    </TableRow>
+                </Table>
+			</CollectionView>
+			<Grid If="False">
+				<Code Content="{Bind Document.Sum}"></Code>
+			</Grid>
+
+			<TextBox Label="Примечание" Value="{Bind Document.Memo}" Multiline="True" Rows="3"></TextBox>
+		</Tab>
+	</TabPanel>
+</Page>
+
+    

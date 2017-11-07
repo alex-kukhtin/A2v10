@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7063
+// 20171106-7068
 // components/collectionview.js
 
 /*
@@ -10,12 +10,6 @@ TODO:
 
 (function () {
 
-	/**
-	<code>
-		collection-view: source-count={{sourceCount}}, page-size={{pageSize}}
-		offset:{{offset}}, pages={{pages}}, dir={{dir}}, order={{order}}, filter={{filter}}
-	</code>
-	 */
 
 	const log = require('std:log');
 
@@ -92,13 +86,6 @@ TODO:
 
 				if (this.filterDelegate) {
 					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
-				} else {
-                    // filter (TODO: // правильная фильтрация)
-                    console.error('there are no filter delegate');
-                    /*
-					if (this.filter && this.filter.Filter)
-						arr = arr.filter((v) => v.Id.toString().indexOf(this.filter.Filter) !== -1);
-                    */
 				}
 				// sort
 				if (this.order && this.dir) {

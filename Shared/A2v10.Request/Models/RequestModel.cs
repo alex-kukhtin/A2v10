@@ -433,7 +433,7 @@ namespace A2v10.Request
             RequestCommand cmd;
             if (commands.TryGetValue(command, out cmd))
                 return cmd;
-            throw new RequestModelException($"Command '{command}' not found");
+            throw new RequestModelException($"Command '{command}' not found in model.json");
         }
 
         public RequestReport GetReport()

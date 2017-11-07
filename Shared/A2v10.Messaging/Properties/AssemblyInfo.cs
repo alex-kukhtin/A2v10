@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("A2v10.Xaml")]
+[assembly: AssemblyTitle("A2v10.Messaging")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("A2v10.Xaml")]
+[assembly: AssemblyProduct("A2v10.Messaging")]
 [assembly: AssemblyCopyright("Copyright © 2015-2017 Alex Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e0577880-9b04-4a2a-b791-8fdb47caa3bc")]
+[assembly: Guid("d83666a0-acf5-47e6-94cf-732dddabbea2")]
 
 // Version information for an assembly consists of the following four values:
 //

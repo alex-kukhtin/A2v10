@@ -1,6 +1,8 @@
 ﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
+using System.Dynamic;
 using System.Runtime.Serialization;
 
 namespace A2v10.Workflow
@@ -19,5 +21,15 @@ namespace A2v10.Workflow
 
         [DataMember]
         public String Comment { get; set; }
+
+        // non serializable!
+        public ExpandoObject Params { get; set; }
+
+        public T ParamValue<T>(String Expression)
+        {
+            if (Params == null)
+                throw new WorkflowException("There are no Params in RequestResult");
+            return Params.Eval<T>(Expression, default(T), throwIfError:true);
+        }
     }
 }

@@ -30,9 +30,11 @@ namespace A2v10.Workflow
 
         IDbContext _dbContext;
 
-        public static async Task<Int64> StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
+        public static async Task<WorkflowResult> StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
         {
             AppWorkflow aw = null;
+            var result = new WorkflowResult();
+            result.InboxIds = new List<Int64>();
             try
             {
                 var def = WorkflowDefinition.Create(info.Source);
@@ -43,16 +45,18 @@ namespace A2v10.Workflow
                 args.Add("Process", process);
                 args.Add("Comment", info.Comment);
                 aw = Create(dbContext, root, args, def.Identity);
+                aw._application.Extensions.Add(result);
                 process.WorkflowId = aw._application.Id;
                 await process.Start(dbContext);
                 aw._application.Run(_wfTimeSpan);
-                return process.Id;
+                result.ProcessId = process.Id;
+                return result;
             }
             catch (Exception ex)
             {
                 if (!CatchWorkflow(aw, ex))
                     throw;
-                return 0;
+                return result;
             }
             finally
             {
@@ -60,15 +64,19 @@ namespace A2v10.Workflow
             }
         }
 
-        public static async Task ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
+        public static async Task<WorkflowResult> ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
         {
             AppWorkflow aw = null;
+            var result = new WorkflowResult();
+            result.InboxIds = new List<Int64>();
             try
             {
                 InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId);
+                result.ProcessId = inbox.ProcessId;
                 var def = WorkflowDefinition.Load(inbox);
                 Activity root = def.LoadFromSource(host);
                 aw = Create(dbContext, root, null, def.Identity);
+                aw._application.Extensions.Add(result);
                 WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
                 aw._application.Load(instance, _wfTimeSpan);
                 foreach (var bm in aw._application.GetBookmarks())
@@ -78,10 +86,11 @@ namespace A2v10.Workflow
                         var rr = new RequestResult();
                         rr.Answer = info.Answer;
                         rr.Comment = info.Comment;
+                        rr.Params = info.Params;
                         rr.UserId = info.UserId;
                         rr.InboxId = info.Id;
                         aw._application.ResumeBookmark(bm.BookmarkName, rr);
-                        return; // already resumed
+                        return result; // already resumed
                     }
                 }
                 // if a bookmark is not found
@@ -96,6 +105,7 @@ namespace A2v10.Workflow
             {
                 ProcessFinally(aw);
             }
+            return result;
         }
 
         internal void Track(TrackingRecord record)

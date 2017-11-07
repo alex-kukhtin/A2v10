@@ -152,6 +152,49 @@ namespace A2v10.Data
             }
         }
 
+        public IDataModel SaveModel(String source, String command, Object data, Object prms = null)
+        {
+            var dataReader = new DataModelReader();
+            var dataWriter = new DataModelWriter();
+            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            {
+                var metadataCommand = command.Replace(".Update", ".Metadata");
+                using (var cnn = GetConnection(source))
+                {
+                    using (var cmd = cnn.CreateCommandSP(metadataCommand))
+                    {
+                        using (var rdr = cmd.ExecuteReader())
+                        {
+                            do
+                            {
+                                dataWriter.ProcessOneMetadata(rdr);
+                            }
+                            while (rdr.NextResult());
+                        }
+                    }
+                    using (var cmd = cnn.CreateCommandSP(command))
+                    {
+                        SqlCommandBuilder.DeriveParameters(cmd);
+                        dataWriter.SetTableParameters(cmd, data, prms);
+                        using (var rdr = cmd.ExecuteReader())
+                        {
+                            do
+                            {
+                                // metadata is not needed
+                                while (rdr.Read())
+                                {
+                                    dataReader.ProcessOneRecord(rdr);
+                                }
+                            }
+                            while (rdr.NextResult());
+                        }
+                    }
+                }
+                dataReader.PostProcess();
+                return dataReader.DataModel;
+            }
+        }
+
         public async Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null)
         {
             var dataReader = new DataModelReader();

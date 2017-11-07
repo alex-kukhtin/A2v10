@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -83,6 +84,7 @@
     <Content Include="Develop\Document\Quotations\element.template.js" />
     <Content Include="Develop\Document\Quotations\index.template.js" />
     <Content Include="Develop\Document\Quotations\edit.view.html" />
+    <Content Include="Develop\Document\Request\inbox.template.js" />
     <Content Include="Develop\Document\Request\element.template.js" />
     <Content Include="Develop\Document\Request\entityChoice.template.js" />
     <Content Include="Develop\Document\Request\index.template.js" />
@@ -206,6 +208,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Inbox\Index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Request\inbox.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

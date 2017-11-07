@@ -36,15 +36,13 @@ namespace A2v10.Workflow
             public Int64 Id { get; set; }
         }
 
-        public static Int64 FindId(String what, String by, String value)
+        public static Int64 FindRoleId(String key)
         {
-            /*FindId("Role", "Name", "role_name"*/
-            /*FindId("Group", "Key", "group_key" */
             IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
-            var boxedId = dbContext.Load<BoxedId>(String.Empty, "a2workflow.[Inbox.FindId]", new { What = what, By = by, Value = value });
-            if (boxedId != null)
+            var boxedId = dbContext.Load<BoxedId>(String.Empty, "a2workflow.[Role.FindByKey]", new { Key = key });
+           if (boxedId != null)
                 return boxedId.Id;
-            return 0;
+            throw new WorkflowException($"Role with Key '{key}' not found");
         }
     }
 }

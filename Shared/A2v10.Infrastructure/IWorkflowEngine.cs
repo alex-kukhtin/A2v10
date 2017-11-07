@@ -1,6 +1,8 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace A2v10.Infrastructure
@@ -23,13 +25,20 @@ namespace A2v10.Infrastructure
         public Int64 UserId;
         public String Answer;
         public String Comment;
+        public ExpandoObject Params;
+    }
+
+    public class WorkflowResult
+    {
+        public Int64 ProcessId;
+        public List<Int64> InboxIds;
     }
 
     public interface IWorkflowEngine
     {
-        Task<Int64> StartWorkflow(StartWorkflowInfo info);
+        Task<WorkflowResult> StartWorkflow(StartWorkflowInfo info);
 
-        Task ResumeWorkflow(ResumeWorkflowInfo info);
+        Task<WorkflowResult> ResumeWorkflow(ResumeWorkflowInfo info);
 
         void ProcessPendingWorkflows();
     }

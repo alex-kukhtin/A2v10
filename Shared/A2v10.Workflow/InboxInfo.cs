@@ -10,6 +10,7 @@ namespace A2v10.Workflow
     internal class InboxInfo
     {
         public Int64 Id { get; set; }
+        public Int64 ProcessId { get; set; }
         public String Bookmark { get; set; }
         public String Kind { get; set; }
         public String Definition { get; set; }

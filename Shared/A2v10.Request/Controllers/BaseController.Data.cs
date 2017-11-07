@@ -107,8 +107,8 @@ namespace A2v10.Request
             swi.UserId = dataToStart.Get<Int64>("UserId");
             if (swi.Source == null)
                 throw new RequestModelException($"file or clrtype must be specified");
-            await _workflowEngine.StartWorkflow(swi);
-            WriteOK(writer);
+            WorkflowResult wr = await _workflowEngine.StartWorkflow(swi);
+            WriteJsonResult(writer, wr);
         }
 
         async Task ResumeWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
@@ -120,13 +120,14 @@ namespace A2v10.Request
             rwi.UserId = dataToStart.Get<Int64>("UserId");
             rwi.Answer = dataToStart.Get<String>("Answer");
             rwi.Comment = dataToStart.Get<String>("Comment");
-            await _workflowEngine.ResumeWorkflow(rwi);
-            WriteOK(writer);
+            rwi.Params = dataToStart.Get<ExpandoObject>("Params");
+            WorkflowResult wr = await _workflowEngine.ResumeWorkflow(rwi);
+            WriteJsonResult(writer, wr);
         }
 
-        void WriteOK(TextWriter writer)
+        void WriteJsonResult(TextWriter writer, Object data)
         {
-            writer.Write(JsonConvert.SerializeObject(new { status = "OK" }, StandardSerializerSettings));
+            writer.Write(JsonConvert.SerializeObject(data, StandardSerializerSettings));
         }
 
         async Task ReloadData(Int64 userId, String json, TextWriter writer)

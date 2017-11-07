@@ -128,8 +128,8 @@ namespace A2v10.Xaml
                     if (indirect)
                     {
                         if (!IsArgumentEmpty(context))
-                            return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context)}, arg2:'{CommandArgument(context)}'}}";
-                        return $"{{cmd:$navigate, eval:true, arg1:{CommandUrl(context)}, arg2:'this'}}";
+                            return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'{CommandArgument(context)}'}}";
+                        return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'this'}}";
                     }
                     else
                         return $"$navigate({CommandUrl(context)}, {CommandArgument(context)})";

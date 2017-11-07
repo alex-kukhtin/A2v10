@@ -1,10 +1,10 @@
-/* 20171103-7050 */
+/* 20171106-7051 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 03 nov 2017 11:00
-module version : 7050
+Last updated : 06 nov 2017 17:00
+module version : 7051
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7050);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7051);
 else
-	update a2sys.Versions set [Version] = 7050 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7051 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -223,6 +223,8 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
+	declare @AllUsersGroupId bigint = 1; -- predefined
+
 	exec a2admin.[Ensure.Admin] @UserId;
 
 	declare @output table(op sysname, id bigint);
@@ -262,6 +264,11 @@ begin
 	when not matched by source and target.UserId=@RetId then
 		delete;
 
+	if exists (select * from @output where op = N'INSERT')
+	begin
+		if not exists(select * from a2security.UserGroups where UserId=@RetId and GroupId=@AllUsersGroupId)
+			insert into a2security.UserGroups(UserId, GroupId) values (@RetId, @AllUsersGroupId);
+	end	
 	exec a2security.[Permission.UpdateUserInfo];
 	exec a2admin.[User.Load] @UserId, @RetId;
 end

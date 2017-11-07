@@ -13,6 +13,8 @@ namespace A2v10.Infrastructure
 		Task<SqlConnection> GetConnectionAsync(String source);
         IDataModel LoadModel(String source, String command, Object prms = null);
         Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null);
+
+        IDataModel SaveModel(String source, String command, Object data, Object prms = null);
         Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null);
 
         T Load<T>(String source, String command, Object prms = null) where T : class;

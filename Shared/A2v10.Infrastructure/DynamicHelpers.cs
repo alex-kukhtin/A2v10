@@ -90,7 +90,7 @@ namespace A2v10.Infrastructure
             return obj;
         }
 
-        public static Object EvalExpression(this ExpandoObject root, String expression)
+        public static Object EvalExpression(this ExpandoObject root, String expression, Boolean throwIfError = false)
         {
             Object currentContext = root;
             foreach (var exp in expression.Split('.'))
@@ -109,24 +109,32 @@ namespace A2v10.Infrastructure
                         currentContext = x[Int32.Parse(match.Groups[2].Value)];
                     }
                     else
+                    {
+                        if (throwIfError)
+                            throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
                         return null;
+                    }
                 }
                 else
                 {
                     if ((d != null) && d.ContainsKey(prop))
                         currentContext = d[prop];
                     else
+                    {
+                        if (throwIfError)
+                            throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
                         return null;
+                    }
                 }
             }
             return currentContext;
         }
 
-        public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T))
+        public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
         {
             if (expression == null)
                 return fallback;
-            Object result = root.EvalExpression(expression);
+            Object result = root.EvalExpression(expression, throwIfError);
             if (result == null)
                 return fallback;
             if (result is T)

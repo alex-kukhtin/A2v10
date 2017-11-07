@@ -17,14 +17,14 @@ namespace A2v10.Workflow
             _dbContext = context;
         }
 
-        public async Task<Int64> StartWorkflow(StartWorkflowInfo info)
+        public async Task<WorkflowResult> StartWorkflow(StartWorkflowInfo info)
         {
             return await AppWorkflow.StartWorkflow(_host, _dbContext, info);
         }
 
-        public async Task ResumeWorkflow(ResumeWorkflowInfo info)
+        public async Task<WorkflowResult> ResumeWorkflow(ResumeWorkflowInfo info)
         {
-            await AppWorkflow.ResumeWorkflow(_host, _dbContext, info);
+            return await AppWorkflow.ResumeWorkflow(_host, _dbContext, info);
         }
 
         public void ProcessPendingWorkflows()
