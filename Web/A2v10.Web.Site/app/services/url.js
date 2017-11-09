@@ -10,7 +10,8 @@ app.modules['std:url'] = function () {
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
         makeBaseUrl,
-        parseUrlAndQuery
+        parseUrlAndQuery,
+        replaceId
     };
 
     function normalize(elem) {
@@ -83,6 +84,10 @@ app.modules['std:url'] = function () {
             rv.query = Object.assign({}, query, parseQueryString(a[1]));
         }
         return rv;
+    }
+
+    function replaceId(url, newId) {
+        alert('todo::replaceId')
     }
 };
 

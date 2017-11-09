@@ -62,7 +62,8 @@ app.modules['std:url'] = function () {
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
         makeBaseUrl,
-        parseUrlAndQuery
+        parseUrlAndQuery,
+        replaceId
     };
 
     function normalize(elem) {
@@ -135,6 +136,10 @@ app.modules['std:url'] = function () {
             rv.query = Object.assign({}, query, parseQueryString(a[1]));
         }
         return rv;
+    }
+
+    function replaceId(url, newId) {
+        alert('todo::replaceId')
     }
 };
 
@@ -4599,7 +4604,14 @@ Vue.directive('resize', {
 					dataToNavigate = dataToNavigate.$id;
 				let urlToNavigate = urltools.combine(url, dataToNavigate);
 				this.$store.commit('navigate', { url: urlToNavigate });
-			},
+            },
+
+            $replaceId(newId) {
+                this.$store.commit('setnewid', { id: newId });
+                // and in the __baseUrl__
+                urlTools.replace()
+                this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+            },
 
             $dbRemove(elem, confirm) {
                 if (!elem)
