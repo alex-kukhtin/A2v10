@@ -49,6 +49,7 @@
     <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Catalog\Inbox\model.json" />
+    <None Include="Develop\Catalog\MyClients\model.json" />
     <None Include="Develop\Common\Agent\model.json" />
     <None Include="Develop\Document\Request\index.view.xaml">
       <SubType>Designer</SubType>
@@ -213,6 +214,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Document\Request\inbox.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Catalog\MyClients\Index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

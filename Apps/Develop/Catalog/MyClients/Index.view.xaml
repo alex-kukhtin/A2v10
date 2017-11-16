@@ -1,0 +1,29 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+    <Splitter>
+        <DataGrid Splitter.Width="30%" ItemsSource="{Bind Clients}" 
+                  Striped="True" Compact="True" Hover="True">
+            <DataGridColumn Header="Id" Content="{Bind Id}"/>
+            <DataGridColumn Header="Name" Content="{Bind Name}"/>
+        </DataGrid>
+        <TabPanel FullPage="True">
+            <Tab Header="Документы">
+            </Tab>
+            <Tab Header="Debug">
+                <Code Multiline="True" Content="{Bind Clients.$selected}"></Code>
+            </Tab>
+            <Tab Header="Test" If="{Bind Clients.$selected}">
+                <DataGrid ItemsSource="{Bind Clients.$selected.Documents}" 
+                          Striped="True"
+                          GridLines="Both">
+                    <DataGridColumn Header="Id" Content="{Bind Id}" Width="70"/>
+                    <DataGridColumn Header="Date" Content="{Bind Date, DataType=DateTime}" Width="130"/>
+                    <DataGridColumn Header="Amount" Content="{Bind Amount, DataType=Currency}" Align="Right" Width="100"/>
+                    <DataGridColumn Header="Memo" Content="{Bind Memo}" />
+                </DataGrid>
+            </Tab>
+        </TabPanel>
+    </Splitter>
+</Page>
+
+    

@@ -1,7 +1,7 @@
 ﻿
 describe("DataModel", function () {
 
-    const cmn = require('datamodel');
+    const cmn = require('std:datamodel');
 
     function createCustomer(source, template) {
         function TCustomer(source, path, parent) {

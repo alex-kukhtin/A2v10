@@ -1,12 +1,11 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20171116-7069
 // components/datagrid.js*/
 
 (function () {
 
  /*TODO:
-2. size (compact, large ??)
 7. Доделать checked
 10.
 */
@@ -599,6 +598,10 @@
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
 			}
+        },
+        updated() {
+            if (this.itemsSource)
+                this.itemsSource.$loadLazy();
         }
     });
 })();

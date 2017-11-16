@@ -1,4 +1,7 @@
-﻿
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171116-7069
+// components/taskpad.js
 
 Vue.component("a2-taskpad", {
 	template:

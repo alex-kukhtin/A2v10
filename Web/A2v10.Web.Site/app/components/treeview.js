@@ -1,5 +1,7 @@
-﻿/* 20170919-7035 */
-/*components/treeview.js*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171116-7069
+// components/treeview.js
 
 (function () {
 

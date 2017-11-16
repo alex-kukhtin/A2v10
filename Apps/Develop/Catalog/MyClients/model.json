@@ -1,0 +1,11 @@
+﻿/*catalog/index*/
+{
+	"schema": "a2v10demo",
+	"model": "MyClients",
+	"actions": {
+    "index": {
+      "index": true,
+      "view": "index.view"
+    }
+	}
+}

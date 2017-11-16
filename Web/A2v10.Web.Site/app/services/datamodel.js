@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171116-7069
 // services/datamodel.js
 
 (function () {
@@ -88,7 +88,7 @@
 		Object.defineProperty(trg, prop, {
 			enumerable: true,
 			configurable: true, /* needed */
-			get() {
+            get() {
 				return this._src_[prop];
 			},
 			set(val) {
@@ -298,8 +298,8 @@
 		return new Array(length || 0);
 	}
 
-	_BaseArray.prototype = Array.prototype;
-	_BaseArray.prototype.$selected = null;
+    _BaseArray.prototype = Array.prototype;
+    _BaseArray.prototype.$selected = null;
 
 	defineCommonProps(_BaseArray.prototype);
 
@@ -308,6 +308,7 @@
 		newElem.$checked = false;
 		return newElem;
 	};
+
 
 	defPropertyGet(_BaseArray.prototype, "Count", function () {
 		return this.length;
@@ -320,6 +321,18 @@
     defPropertyGet(_BaseArray.prototype, "$checked", function () {
         return this.filter((el) => el.$checked);
     });
+
+    _BaseArray.prototype.$loadLazy = function () {
+        if (this.$loaded) return;
+        if (!this.$parent) return;
+        const meta = this.$parent._meta_;
+        if (!meta.$lazy) return;
+        let propIx = this._path_.lastIndexOf('.');
+        let prop = this._path_.substring(propIx + 1);
+        if (!meta.$lazy.indexOf(prop) === -1) return;
+        console.dir('load lazy');
+        this.$vm.$loadLazy(this.$parent, prop);
+    }
 
 	_BaseArray.prototype.$append = function (src) {
 		let addingEvent = this._path_ + '[].adding';
@@ -564,6 +577,8 @@
                     if (utils.isFunction(cmdf.canExec))
                         if (!cmdf.canExec.apply(this, args))
                             return;
+                    if (cmdf.saveRequired)
+                        alert('to implement: exec.saveRequired');
                     if (cmdf.confirm) {
                         let vm = this.$vm;
                         vm.$confirm(cmdf.confirm)
@@ -797,7 +812,12 @@
 				xProp[typeName] = {};
 			xProp[typeName][propName] = pv;
 		}
-		template._props_ = xProp;
+        template._props_ = xProp;
+        /*
+        platform.defer(() => {
+            console.dir('end init');
+        });
+        */
 	}
 
 	function setModelInfo(root, info) {
@@ -807,7 +827,7 @@
 		};
 	}
 
-	app.modules['datamodel'] = {
+	app.modules['std:datamodel'] = {
 		createObject: createObject,
 		createArray: createArray,
 		defineObject: defineObject,

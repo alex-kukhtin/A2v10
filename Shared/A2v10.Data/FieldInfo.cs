@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
@@ -13,6 +12,7 @@ namespace A2v10.Data
 		public FieldType FieldType { get; }
 		public SpecType SpecType { get; }
 		public Boolean IsComplexField { get; }
+        public Boolean IsLazy { get; }
 
 		public FieldInfo(String name)
 		{
@@ -20,6 +20,7 @@ namespace A2v10.Data
 			TypeName = null;
 			FieldType = FieldType.Scalar;
 			SpecType = SpecType.Unknown;
+            IsLazy = false;
 			var x = name.Split('!');
 			if (x.Length > 0)
 				PropertyName = x[0];
@@ -34,8 +35,9 @@ namespace A2v10.Data
 				FieldType = DataHelpers.TypeName2FieldType(x[2]);
 				if (FieldType == FieldType.Scalar || FieldType == FieldType.Array)
 					SpecType = DataHelpers.TypeName2SpecType(x[2]);
-			}
-			IsComplexField = PropertyName.Contains('.');
+                IsLazy = x[2].Contains("Lazy");
+            }
+            IsComplexField = PropertyName.Contains('.');
 		}
 
 
@@ -47,6 +49,7 @@ namespace A2v10.Data
 			FieldType = FieldType.Scalar;
 			SpecType = source.SpecType;
 			IsComplexField = false;
+            IsLazy = false;
 		}
 
 

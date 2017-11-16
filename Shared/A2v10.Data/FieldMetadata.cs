@@ -43,12 +43,14 @@ namespace A2v10.Data
 		public DataType DataType { get; }
 		public FieldType ItemType { get; } // for object, array
 		public String RefObject { get; } // for object, array
+        public Boolean IsLazy { get; }
 
         public Boolean IsArrayLike { get { return ItemType == FieldType.Object || ItemType == FieldType.Array; } }
 
         public FieldMetadata(FieldInfo fi, DataType type)
 		{
 			DataType = type;
+            IsLazy = fi.IsLazy;
 			ItemType = FieldType.Scalar;
 			RefObject = null;
 			if (fi.IsObjectLike)

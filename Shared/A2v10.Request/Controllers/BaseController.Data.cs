@@ -31,6 +31,9 @@ namespace A2v10.Request
                 case "expand":
                     await ExpandData(userId, json, writer);
                     break;
+                case "loadlazy":
+                    await LoadLazyData(userId, json, writer);
+                    break;
                 case "invoke":
                     await InvokeData(userId, json, writer);
                     break;
@@ -195,6 +198,26 @@ namespace A2v10.Request
             execPrms.Set("UserId", userId);
             execPrms.Set("Id", id);
             IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, expandProc, execPrms);
+            WriteDataModel(model, writer);
+        }
+
+        async Task LoadLazyData(Int64 userId, String json, TextWriter writer)
+        {
+            ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+            String baseUrl = jsonData.Get<String>("baseUrl");
+            Object id = jsonData.Get<Object>("id");
+            String propName = jsonData.Get<String>("prop");
+            var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+            var action = rm.GetCurrentAction();
+            if (action == null)
+                throw new RequestModelException("There are no current action");
+            String loadProc = action.LoadLazyProcedure(propName.ToPascalCase());
+            if (loadProc == null)
+                throw new RequestModelException("The data model is empty");
+            ExpandoObject execPrms = new ExpandoObject();
+            execPrms.Set("UserId", userId);
+            execPrms.Set("Id", id);
+            IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, loadProc, execPrms);
             WriteDataModel(model, writer);
         }
 

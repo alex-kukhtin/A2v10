@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20171116-7069
 // controllers/base.js
 
 (function () {
@@ -520,6 +520,25 @@
 
                 arr.$loaded = true;
 			},
+
+            $loadLazy(elem, propName) {
+                let arr = elem[propName];
+                if (arr.$loaded)
+                    return;
+                let self = this,
+                    root = window.$$rootUrl,
+                    url = root + '/_data/loadlazy',
+                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+
+                dataservice.post(url, jsonData).then(function (data) {
+                    for (let el of data[propName])
+                        arr.push(arr.$new(el));
+                }).catch(function (msg) {
+                    self.$alertUi(msg);
+                });
+
+                arr.$loaded = true;
+            },
 
 			$delegate(name) {
 				const root = this.$data;

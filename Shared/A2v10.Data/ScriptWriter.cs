@@ -1,9 +1,9 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using A2v10.Infrastructure;
 
 namespace A2v10.Data
 {
@@ -20,7 +20,7 @@ namespace A2v10.Data
         {
             var sb = new StringBuilder();
             sb.AppendLine("function modelData(template, data) {");
-            sb.AppendLine("\tconst cmn = require('datamodel');");
+            sb.AppendLine("\tconst cmn = require('std:datamodel');");
             if (_model.Metadata != null) {
                 sb.Append(GetConstructors());
             }
@@ -111,6 +111,17 @@ namespace A2v10.Data
                 sb.Append($"$hasChildren: '{meta.HasChildren}',");
             if (!String.IsNullOrEmpty(meta.Permissions))
                 sb.Append($"$permissions: '{meta.Permissions}',");
+            StringBuilder lazyFields = new StringBuilder();
+            foreach (var f in meta.Fields)
+            {
+                if (f.Value.IsLazy)
+                    lazyFields.Append($"'{f.Key}',");
+            }
+            if (lazyFields.Length != 0)
+            {
+                lazyFields.RemoveTailComma();
+                sb.Append($"$lazy: [{lazyFields.ToString()}]");
+            }
             if (sb.Length == 0)
                 return null;
             sb.RemoveTailComma();
@@ -123,7 +134,7 @@ namespace A2v10.Data
             foreach (var fd in meta.Fields) {
                 var fm = fd.Value;
                 sb.AppendLine()
-                .Append(fd.Key)
+                .Append($"'{fd.Key}'")
                 .Append(':');
                 // TODO: special data type
                 if (fm.ItemType == FieldType.Array)
@@ -133,7 +144,7 @@ namespace A2v10.Data
                 else if (fm.ItemType == FieldType.Object)
                     sb.Append(fm.RefObject);
                 else if (fm.DataType == DataType.Undefined)
-                    throw new DataLoaderException($"Invalid data type for {meta.Name}.{fd.Key}");
+                    throw new DataLoaderException($"Invalid data type for '{meta.Name}.{fd.Key}'");
                 else
                     sb.Append(fm.DataType);
                 sb.Append(",");

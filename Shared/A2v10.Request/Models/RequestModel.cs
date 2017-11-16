@@ -96,6 +96,14 @@ namespace A2v10.Request
             }
         }
 
+        public String LoadLazyProcedure(String propName)
+        {
+            var cm = CurrentModel;
+            if (String.IsNullOrEmpty(cm))
+                return null;
+            return $"[{CurrentSchema}].[{cm}.{propName}]";
+        }
+
         [JsonIgnore]
         public String DeleteProcedure
         {

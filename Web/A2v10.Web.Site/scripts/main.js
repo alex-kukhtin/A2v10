@@ -806,7 +806,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171102-7064
+// 20171116-7069
 // services/datamodel.js
 
 (function () {
@@ -894,7 +894,7 @@ app.modules['std:validators'] = function() {
 		Object.defineProperty(trg, prop, {
 			enumerable: true,
 			configurable: true, /* needed */
-			get() {
+            get() {
 				return this._src_[prop];
 			},
 			set(val) {
@@ -1104,8 +1104,8 @@ app.modules['std:validators'] = function() {
 		return new Array(length || 0);
 	}
 
-	_BaseArray.prototype = Array.prototype;
-	_BaseArray.prototype.$selected = null;
+    _BaseArray.prototype = Array.prototype;
+    _BaseArray.prototype.$selected = null;
 
 	defineCommonProps(_BaseArray.prototype);
 
@@ -1114,6 +1114,7 @@ app.modules['std:validators'] = function() {
 		newElem.$checked = false;
 		return newElem;
 	};
+
 
 	defPropertyGet(_BaseArray.prototype, "Count", function () {
 		return this.length;
@@ -1126,6 +1127,18 @@ app.modules['std:validators'] = function() {
     defPropertyGet(_BaseArray.prototype, "$checked", function () {
         return this.filter((el) => el.$checked);
     });
+
+    _BaseArray.prototype.$loadLazy = function () {
+        if (this.$loaded) return;
+        if (!this.$parent) return;
+        const meta = this.$parent._meta_;
+        if (!meta.$lazy) return;
+        let propIx = this._path_.lastIndexOf('.');
+        let prop = this._path_.substring(propIx + 1);
+        if (!meta.$lazy.indexOf(prop) === -1) return;
+        console.dir('load lazy');
+        this.$vm.$loadLazy(this.$parent, prop);
+    }
 
 	_BaseArray.prototype.$append = function (src) {
 		let addingEvent = this._path_ + '[].adding';
@@ -1370,6 +1383,8 @@ app.modules['std:validators'] = function() {
                     if (utils.isFunction(cmdf.canExec))
                         if (!cmdf.canExec.apply(this, args))
                             return;
+                    if (cmdf.saveRequired)
+                        alert('to implement: exec.saveRequired');
                     if (cmdf.confirm) {
                         let vm = this.$vm;
                         vm.$confirm(cmdf.confirm)
@@ -1603,7 +1618,12 @@ app.modules['std:validators'] = function() {
 				xProp[typeName] = {};
 			xProp[typeName][propName] = pv;
 		}
-		template._props_ = xProp;
+        template._props_ = xProp;
+        /*
+        platform.defer(() => {
+            console.dir('end init');
+        });
+        */
 	}
 
 	function setModelInfo(root, info) {
@@ -1613,7 +1633,7 @@ app.modules['std:validators'] = function() {
 		};
 	}
 
-	app.modules['datamodel'] = {
+	app.modules['std:datamodel'] = {
 		createObject: createObject,
 		createArray: createArray,
 		defineObject: defineObject,
@@ -2278,13 +2298,12 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20171116-7069
 // components/datagrid.js*/
 
 (function () {
 
  /*TODO:
-2. size (compact, large ??)
 7. Доделать checked
 10.
 */
@@ -2877,6 +2896,10 @@ Vue.component('validator-control', {
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
 			}
+        },
+        updated() {
+            if (this.itemsSource)
+                this.itemsSource.$loadLazy();
         }
     });
 })();
@@ -3065,8 +3088,10 @@ Vue.component('popover', {
 	}
 });
 
-/* 20170919-7035 */
-/*components/treeview.js*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171116-7069
+// components/treeview.js
 
 (function () {
 
@@ -3900,7 +3925,10 @@ TODO:
     });
 
 })();
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+// 20171116-7069
+// components/taskpad.js
 
 Vue.component("a2-taskpad", {
 	template:
@@ -4349,7 +4377,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20171116-7069
 // controllers/base.js
 
 (function () {
@@ -4869,6 +4897,25 @@ Vue.directive('resize', {
 
                 arr.$loaded = true;
 			},
+
+            $loadLazy(elem, propName) {
+                let arr = elem[propName];
+                if (arr.$loaded)
+                    return;
+                let self = this,
+                    root = window.$$rootUrl,
+                    url = root + '/_data/loadlazy',
+                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+
+                dataservice.post(url, jsonData).then(function (data) {
+                    for (let el of data[propName])
+                        arr.push(arr.$new(el));
+                }).catch(function (msg) {
+                    self.$alertUi(msg);
+                });
+
+                arr.$loaded = true;
+            },
 
 			$delegate(name) {
 				const root = this.$data;

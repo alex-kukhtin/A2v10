@@ -7,7 +7,7 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
 {
-    public class CommonMessage : IMessage
+    internal class CommonMessage : IMessage
     {
         public Int64 Id { get; set; }
 

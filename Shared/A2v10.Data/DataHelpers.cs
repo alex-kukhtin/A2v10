@@ -1,9 +1,9 @@
-﻿using System;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
+
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Data
 {
@@ -37,6 +37,7 @@ namespace A2v10.Data
 				case "Object":
 					return FieldType.Object;
 				case "Array":
+                case "LazyArray":
 					return FieldType.Array;
 				case "Map":
 					return FieldType.Map;
