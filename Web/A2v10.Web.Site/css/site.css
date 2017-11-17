@@ -1708,6 +1708,7 @@ table.data-grid > tbody > tr.bold td {
   line-height: 0 !important;
   margin-top: -5px;
   opacity: 0;
+  white-space: nowrap;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th.sort > .h-fill:after {
   content: '';
@@ -1727,16 +1728,16 @@ table.data-grid > tbody > tr.bold td {
   border-top: 1px solid #cbcdda;
 }
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header .h-holder {
-  border-top-style: none!important;
+  border-top-style: none !important;
 }
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header th:first-child {
-  border-left-style: none!important;
+  border-left-style: none !important;
 }
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header tbody > tr > td:first-child {
-  border-left-style: none!important;
+  border-left-style: none !important;
 }
-.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header tbody > tr:last-child > td {
-  border-bottom-style: none!important;
+.data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header tbody > tr > td:last-child {
+  border-right-style: none !important;
 }
 .toolbar {
   display: flex;

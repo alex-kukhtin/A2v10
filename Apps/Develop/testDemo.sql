@@ -47,12 +47,15 @@ begin
 		Name nvarchar(255) null,
 		Amount money null,
 		Memo nvarchar(255) null,
+		[Date] datetime null,
 		Photo bigint null
 	) 
 end
 go
 
+
 --alter table a2v10demo.[Catalog.Customers] add Photo bigint null;
+--alter table a2v10demo.[Catalog.Customers] add [Date] datetime null;
 ------------------------------------------------
 alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
@@ -79,7 +82,7 @@ begin
 	--raiserror(@Dir , 16, -1) with nowait;
 
 	with T as (
-		select Id, Name, Amount, Memo, Photo,
+		select Id, Name, Amount, Memo, Photo, [Date],
 			_RowNumber = row_number() over (
 			order by
 			case when @Order=N'Id' and @Dir = @Asc then c.Id end asc,
@@ -94,7 +97,7 @@ begin
 		from a2v10demo.[Catalog.Customers] c
 		where @Filter is null or upper(c.Name) like N'%' + upper(@Filter) + N'%'
 	)
-	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo, Photo,
+	select top(@PageSize) [Customers!TCustomer!Array]=null, [Id!!Id] = Id, Name, Amount, Memo, Photo, [Date],
 		[!!RowCount] = (select count(1) from T)
 	from T 
 		where [_RowNumber] > @Offset and [_RowNumber] <= @Offset + @PageSize
@@ -111,7 +114,7 @@ alter procedure a2v10demo.[Catalog.Customer.Load]
 as
 begin
 	set nocount on;
-	select [Customer!TCustomer!Object]=null, [Id!!Id] = Id, Name, Amount, Memo,
+	select [Customer!TCustomer!Object]=null, [Id!!Id] = Id, Name, Amount, Memo, [Date],
 		Photo,
 		[Images!TImage!Array] = null
 	from a2v10demo.[Catalog.Customers] where Id=@Id;
@@ -176,7 +179,8 @@ table (
 	[Name] nvarchar(255),
 	[Amount] money,
 	[Memo] nvarchar(255),
-	[Photo] bigint
+	[Photo] bigint,
+	[Date] datetime
 )
 go
 ------------------------------------------------
@@ -212,10 +216,11 @@ begin
 			target.[Name] = source.[Name],
 			target.[Amount] = source.Amount,
 			target.[Memo] = source.[Memo],
-			target.[Photo] = source.[Photo]
+			target.[Photo] = source.[Photo],
+			target.[Date] = source.[Date]
 	when not matched by target then
-		insert (Name, Amount, Memo, Photo)
-		values (Name, Amount, Memo, Photo)
+		insert (Name, Amount, Memo, Photo, [Date])
+		values (Name, Amount, Memo, Photo, [Date])
 	output 
 		$action op, inserted.Id id
 	into @output(op, id);

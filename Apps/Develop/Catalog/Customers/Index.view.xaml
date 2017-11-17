@@ -69,6 +69,7 @@
             <TextBox Value="{Bind Amount, DataType=Currency}" Align="Right"/>
         </DataGridColumn>
         <DataGridColumn Header="Сумма продаж" Icon="Image" Content="{Bind Amount, DataType=Currency}" Align="Right"/>
+        <DataGridColumn Header="Date" Icon="Calendar" Content="{Bind Date, DataType=Date}" Align="Center"/>
         <DataGridColumn Header="Photo" Content="{Bind Photo}" Fit="True" Align="Right" Mark="{Bind $cellMark}"/>
         <DataGridColumn ControlType="Validator"/>
         <DataGridColumn Fit="True" ControlType="Checkbox" Content="{Bind $checked}"/>

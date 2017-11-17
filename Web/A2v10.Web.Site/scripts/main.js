@@ -440,7 +440,7 @@ app.modules['std:http'] = function () {
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7069
+// 20171117-7070
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -461,7 +461,8 @@ app.modules['std:utils'] = function () {
 		toString: toString,
 		notBlank: notBlank,
 		toJson: toJson,
-		isPrimitiveCtor: isPrimitiveCtor,
+        isPrimitiveCtor: isPrimitiveCtor,
+        isDateCtor: isDateCtor,
 		isEmptyObject: isEmptyObject,
 		eval: eval,
         format: format,
@@ -491,7 +492,12 @@ app.modules['std:utils'] = function () {
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
-	}
+    }
+
+    function isDateCtor(ctor) {
+        return ctor === Date;
+    }
+
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
 	}
@@ -829,7 +835,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20171117-7070
 // services/datamodel.js
 
 (function () {
@@ -1582,7 +1588,7 @@ app.modules['std:validators'] = function() {
         this.$merge(newElem, true); // with event
     }
 
-	function merge(src, fireChange) {
+    function merge(src, fireChange) {
 		try {
             this._root_._enableValidate_ = false;
             this._lockEvents_ += 1;
@@ -1601,10 +1607,12 @@ app.modules['std:validators'] = function() {
 							trg.$RowCount = 0;
 					}
 					// try to select old value
-				} else {
-					if (utils.isPrimitiveCtor(ctor))
-						platform.set(this, prop, src[prop]);
-					else {
+                } else {
+                    if (utils.isDateCtor(ctor))
+                        platform.set(this, prop, new Date(src[prop]));
+                    else if (utils.isPrimitiveCtor(ctor)) {
+                        platform.set(this, prop, src[prop]);
+                    } else {
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}
@@ -4511,7 +4519,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20171117-7070
 // controllers/base.js
 
 (function () {
@@ -5045,8 +5053,10 @@ Vue.directive('resize', {
                         return;
                     }
                     dataservice.post(url, jsonData).then(function (data) {
-                        for (let el of data[propName])
-                            arr.push(arr.$new(el));
+                        if (propName in data) {
+                            for (let el of data[propName])
+                                arr.push(arr.$new(el));
+                        }
                         resolve(arr);
                     }).catch(function (msg) {
                         self.$alertUi(msg);

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7069
+// 20171117-7070
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -21,7 +21,8 @@ app.modules['std:utils'] = function () {
 		toString: toString,
 		notBlank: notBlank,
 		toJson: toJson,
-		isPrimitiveCtor: isPrimitiveCtor,
+        isPrimitiveCtor: isPrimitiveCtor,
+        isDateCtor: isDateCtor,
 		isEmptyObject: isEmptyObject,
 		eval: eval,
         format: format,
@@ -51,7 +52,12 @@ app.modules['std:utils'] = function () {
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
-	}
+    }
+
+    function isDateCtor(ctor) {
+        return ctor === Date;
+    }
+
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
 	}

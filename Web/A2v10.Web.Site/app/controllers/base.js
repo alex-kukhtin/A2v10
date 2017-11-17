@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20171117-7070
 // controllers/base.js
 
 (function () {
@@ -534,8 +534,10 @@
                         return;
                     }
                     dataservice.post(url, jsonData).then(function (data) {
-                        for (let el of data[propName])
-                            arr.push(arr.$new(el));
+                        if (propName in data) {
+                            for (let el of data[propName])
+                                arr.push(arr.$new(el));
+                        }
                         resolve(arr);
                     }).catch(function (msg) {
                         self.$alertUi(msg);

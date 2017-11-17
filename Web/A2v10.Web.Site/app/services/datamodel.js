@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20171117-7070
 // services/datamodel.js
 
 (function () {
@@ -753,7 +753,7 @@
         this.$merge(newElem, true); // with event
     }
 
-	function merge(src, fireChange) {
+    function merge(src, fireChange) {
 		try {
             this._root_._enableValidate_ = false;
             this._lockEvents_ += 1;
@@ -772,10 +772,12 @@
 							trg.$RowCount = 0;
 					}
 					// try to select old value
-				} else {
-					if (utils.isPrimitiveCtor(ctor))
-						platform.set(this, prop, src[prop]);
-					else {
+                } else {
+                    if (utils.isDateCtor(ctor))
+                        platform.set(this, prop, new Date(src[prop]));
+                    else if (utils.isPrimitiveCtor(ctor)) {
+                        platform.set(this, prop, src[prop]);
+                    } else {
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}

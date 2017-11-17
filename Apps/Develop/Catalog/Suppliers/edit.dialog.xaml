@@ -16,9 +16,10 @@
                 <TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2"
                          Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
                 <ComboBox Grid.Row="3" TabIndex="3"
-                         Grid.Col="1" Grid.ColSpan="2" Label="Примечание">
+                         Grid.Col="1" Label="Примечание">
                     <ComboBoxItem Content="1" Value="1"></ComboBoxItem>
                 </ComboBox>
+                <DatePicker Grid.Row="3" Grid.Col="2" Label="Date" Value="{Bind Customer.Date}"/>
             </Grid>
         </Tab>
         <Tab Header="Фото">

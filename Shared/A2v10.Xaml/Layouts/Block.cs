@@ -24,6 +24,7 @@ namespace A2v10.Xaml
             var div = new TagBuilder("div", null, IsInGrid);
             if (onRender != null)
                 onRender(div);
+            MergeAttributes(div, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
             div.RenderStart(context);
             RenderChildren(context);
             div.RenderEnd(context);
