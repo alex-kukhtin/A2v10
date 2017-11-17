@@ -1,19 +1,45 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
     <Splitter>
+         <CollectionView Splitter.Width="30%" 
+                         ItemsSource="{Bind Clients}" Filter="Fragment" FilterDelegate="Filter"
+                         RunAt="Client" Margin="0,6px,0,0">
+            <TextBox Placeholder="Фрагмент имени" Value="{Bind Parent.Filter.Fragment}">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="Search" />
+                </TextBox.AddOns>
+            </TextBox>
+            <List ItemsSource="{Bind Parent.ItemsSource}" 
+                  AutoSelect="FirstItem" Absolute="34px, 6px, 0, 0">
+                <ListItem Header="{Bind Name}">
+                    <Text>
+                        Код: <Span Bold="True" Content="{Bind Id}"/>
+                    </Text>
+                </ListItem>
+            </List>
+        </CollectionView>
+        <!--
+        -->
+        <!--
         <DataGrid Splitter.Width="30%" ItemsSource="{Bind Clients}" 
                   Striped="True" Compact="True" Hover="True">
             <DataGridColumn Header="Id" Content="{Bind Id}"/>
             <DataGridColumn Header="Name" Content="{Bind Name}"/>
         </DataGrid>
-        <TabPanel FullPage="True">
-            <Tab Header="Документы">
+        -->
+        <TabPanel FullPage="True" >
+            <Tab Header="LazyObject">
             </Tab>
+            <!--
             <Tab Header="Debug">
                 <Code Multiline="True" Content="{Bind Clients.$selected}"></Code>
             </Tab>
-            <Tab Header="Test" If="{Bind Clients.$selected}">
-                <DataGrid ItemsSource="{Bind Clients.$selected.Documents}" 
+            -->
+            <Tab Header="Test">
+                <Toolbar>
+                    <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/Catalog/Suppliers/Edit', Argument={Bind Clients.Selected(Documents)}}">Изменить</Button>
+                </Toolbar>
+                <DataGrid ItemsSource="{Bind Clients.Selected(Documents)}" 
                           Striped="True"
                           GridLines="Both">
                     <DataGridColumn Header="Id" Content="{Bind Id}" Width="70"/>
@@ -21,6 +47,18 @@
                     <DataGridColumn Header="Amount" Content="{Bind Amount, DataType=Currency}" Align="Right" Width="100"/>
                     <DataGridColumn Header="Memo" Content="{Bind Memo}" />
                 </DataGrid>
+                <!--
+                -->
+                <!--
+                <Table ItemsSource="{Bind Clients.Selected(Documents)}" GridLines="Both" Border="True" Background="Yellow">
+                    <TableRow>
+                        <TableCell Content="{Bind Id}" />
+                        <TableCell Content="{Bind Date, DataType=DateTime}" />
+                        <TableCell Content="{Bind Amount, DataType=Currency}" Align="Right"/>
+                    </TableRow>
+                </Table>
+                -->
+                <Button Command="{BindCmd Execute, CommandName=TestDocuments}">Check Documents</Button>
             </Tab>
         </TabPanel>
     </Splitter>

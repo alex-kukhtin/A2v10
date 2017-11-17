@@ -311,7 +311,7 @@
 			},
 
 			$hasSelected(arr) {
-				return !!arr.$selected;
+				return arr && !!arr.$selected;
 			},
 
 			$confirm(prms) {
@@ -522,22 +522,26 @@
 			},
 
             $loadLazy(elem, propName) {
-                let arr = elem[propName];
-                if (arr.$loaded)
-                    return;
                 let self = this,
                     root = window.$$rootUrl,
                     url = root + '/_data/loadlazy',
                     jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
 
-                dataservice.post(url, jsonData).then(function (data) {
-                    for (let el of data[propName])
-                        arr.push(arr.$new(el));
-                }).catch(function (msg) {
-                    self.$alertUi(msg);
+                return new Promise(function (resolve, reject) {
+                    let arr = elem[propName];
+                    if (arr.$loaded) {
+                        resolve(arr);
+                        return;
+                    }
+                    dataservice.post(url, jsonData).then(function (data) {
+                        for (let el of data[propName])
+                            arr.push(arr.$new(el));
+                        resolve(arr);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                    arr.$loaded = true;
                 });
-
-                arr.$loaded = true;
             },
 
 			$delegate(name) {

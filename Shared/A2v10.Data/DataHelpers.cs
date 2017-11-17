@@ -35,6 +35,7 @@ namespace A2v10.Data
 			switch (s)
 			{
 				case "Object":
+                case "LazyObject":
 					return FieldType.Object;
 				case "Array":
                 case "LazyArray":

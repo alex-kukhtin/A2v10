@@ -38,8 +38,9 @@ let template = {
 		"Customers[].Name": "Обязательное поле"
     },
     delegates: {
-        TestFilter(val) {
-            return true;
+        TestFilter(val, filter) {
+            console.dir(val);
+            return val.Name.toLowerCase().indexOf(filter.Filter.toLowerCase()) != -1;
         }
     },
     commands: {

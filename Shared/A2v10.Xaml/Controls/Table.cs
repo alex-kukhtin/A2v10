@@ -92,6 +92,10 @@ namespace A2v10.Xaml
             table.AddCssClassBool(Compact, "compact");
             table.AddCssClassBool(Hover, "hover");
 
+            Bind isBind = GetBinding(nameof(ItemsSource));
+            if (isBind != null)
+                table.MergeAttribute("v-lazy", isBind.GetPath(context));
+
             table.RenderStart(context);
 
             if (_columns != null)

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171106-7068
+// 20171117-7069
 // components/collectionview.js
 
 /*
@@ -80,7 +80,9 @@ TODO:
 			},
 			pagedSource() {
 				if (this.isServer)
-					return this.ItemsSource;
+                    return this.ItemsSource;
+                if (!this.ItemsSource)
+                    return null;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
 
@@ -101,11 +103,14 @@ TODO:
 				}
 				// HACK!
 				this.filteredCount = arr.length;
-				// pager
-				arr = arr.slice(this.offset, this.offset + this.pageSize);
+                // pager
+                if (this.pageSize > 0)
+				    arr = arr.slice(this.offset, this.offset + this.pageSize);
                 arr.$origin = this.ItemsSource;
-                if (arr.length !== arr.$origin.length)
-				    arr.$origin.$clearSelected();
+                if (arr.indexOf(arr.$origin.$selected) == -1) {
+                    // not found in target array
+                    arr.$origin.$clearSelected();
+                }
 				log.time('get paged source:', s);
 				return arr;
 			},

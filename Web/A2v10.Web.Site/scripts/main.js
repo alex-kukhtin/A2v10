@@ -440,7 +440,7 @@ app.modules['std:http'] = function () {
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171103-7065
+// 20171117-7069
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -473,7 +473,11 @@ app.modules['std:utils'] = function () {
 			parse: dateParse,
 			equal: dateEqual,
 			isZero: dateIsZero
-		}
+        },
+        text: {
+            contains: textContains,
+            containsText: textContainsText
+        }
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -646,7 +650,26 @@ app.modules['std:utils'] = function () {
 
 	function dateIsZero(d1) {
 		return dateEqual(d1, dateZero());
-	}
+    }
+
+    function textContains(text, probe) {
+        if (!probe)
+            return true;
+        if (!text)
+            return false;
+        return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
+    }
+
+    function textContainsText(obj, props, probe) {
+        if (!probe) return true;
+        if (!obj)
+            return false;
+        for (v of props.split(',')) {
+            if (textContains(obj[v], probe))
+                return true;
+        }
+        return false;
+    }
 };
 
 
@@ -830,7 +853,9 @@ app.modules['std:validators'] = function() {
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-	const log = require('std:log');
+    const log = require('std:log');
+
+    let __initialized__ = false;
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -1046,6 +1071,7 @@ app.modules['std:validators'] = function() {
             elem._modelLoad_ = (caller) => {
                 elem.$emit('Model.load', elem, caller);
                 elem._root_.$setDirty(false);
+                __initialized__ = true;
             };
             defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
@@ -1128,16 +1154,21 @@ app.modules['std:validators'] = function() {
         return this.filter((el) => el.$checked);
     });
 
+    _BaseArray.prototype.Selected = function (propName) {
+        return this.$selected ? this.$selected[propName] : null;
+    };
+
     _BaseArray.prototype.$loadLazy = function () {
-        if (this.$loaded) return;
-        if (!this.$parent) return;
-        const meta = this.$parent._meta_;
-        if (!meta.$lazy) return;
-        let propIx = this._path_.lastIndexOf('.');
-        let prop = this._path_.substring(propIx + 1);
-        if (!meta.$lazy.indexOf(prop) === -1) return;
-        console.dir('load lazy');
-        this.$vm.$loadLazy(this.$parent, prop);
+        return new Promise((resolve, reject) => {
+            if (this.$loaded) { resolve(self); return; }
+            if (!this.$parent) { resolve(this); return; }
+            const meta = this.$parent._meta_;
+            if (!meta.$lazy) { resolve(this); return; }
+            let propIx = this._path_.lastIndexOf('.');
+            let prop = this._path_.substring(propIx + 1);
+            if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+            this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+        });
     }
 
 	_BaseArray.prototype.$append = function (src) {
@@ -1170,11 +1201,10 @@ app.modules['std:validators'] = function() {
 	};
 
     _BaseArray.prototype.$clearSelected = function () {
-        let was = this.$selected;
+        let sel = this.$selected;
+        if (!sel) return; // already null
         platform.set(this, '$selected', null);
-        if (was) {
-            emitSelect(this);
-        }
+        emitSelect(this);
     };
 
 	_BaseArray.prototype.$remove = function (item) {
@@ -2323,7 +2353,7 @@ Vue.component('validator-control', {
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
@@ -2896,10 +2926,6 @@ Vue.component('validator-control', {
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
 			}
-        },
-        updated() {
-            if (this.itemsSource)
-                this.itemsSource.$loadLazy();
         }
     });
 })();
@@ -3285,7 +3311,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171106-7068
+// 20171117-7069
 // components/collectionview.js
 
 /*
@@ -3365,7 +3391,9 @@ TODO:
 			},
 			pagedSource() {
 				if (this.isServer)
-					return this.ItemsSource;
+                    return this.ItemsSource;
+                if (!this.ItemsSource)
+                    return null;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
 
@@ -3386,11 +3414,14 @@ TODO:
 				}
 				// HACK!
 				this.filteredCount = arr.length;
-				// pager
-				arr = arr.slice(this.offset, this.offset + this.pageSize);
+                // pager
+                if (this.pageSize > 0)
+				    arr = arr.slice(this.offset, this.offset + this.pageSize);
                 arr.$origin = this.ItemsSource;
-                if (arr.length !== arr.$origin.length)
-				    arr.$origin.$clearSelected();
+                if (arr.indexOf(arr.$origin.$selected) == -1) {
+                    // not found in target array
+                    arr.$origin.$clearSelected();
+                }
 				log.time('get paged source:', s);
 				return arr;
 			},
@@ -3735,6 +3766,97 @@ TODO:
     });
 
 })();
+
+// yet not implemented !!!
+
+Vue.component("a2-list", {
+	template:
+`<ul class="a2-list" v-lazy="itemsSource">
+	<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in itemsSource" :key="listItemIndex" @click.prevent="select(listItem)" @keydown="keyDown">
+        <slot name="items" :item="listItem" />
+	</li>
+</ul>
+`,
+    props: {
+        itemsSource: Array,
+		autoSelect: String
+    },
+    computed: {
+        isSelectFirstItem() {
+            return this.autoSelect === 'first-item';
+        },
+        selectedSource() {
+            let src = this.itemsSource;
+            if (src.$origin)
+                src = src.$origin;
+            return src.$selected;
+        }
+    },
+	methods: {
+        cssClass(item) {
+            return item === this.selectedSource ? 'active' : null;
+        },
+        select(item) {
+            if (item.$select)
+                item.$select();
+		},
+        selectFirstItem() {
+            if (!this.isSelectFirstItem)
+                return;
+            // from source (not $origin!)
+            let src = this.itemsSource;
+            if (!src.length)
+                return;
+            let fe = src[0];
+            this.select(fe);
+        },
+        keyDown(e) {
+            const next = (delta) => {
+                let index;
+                index = this.itemsSource.indexOf(this.selectedSource);
+                if (index == -1)
+                    return;
+                index += delta;
+                if (index == -1)
+                    return;
+                if (index < this.itemsSource.length)
+                    this.select(this.itemsSource[index]);
+            };
+            switch (e.which) {
+                case 38: // up
+                    next(-1);
+                    break;
+                case 40: // down
+                    next(1);
+                    break;
+                case 36: // home
+                    //this.selected = this.itemsSource[0];
+                    break;
+                case 35: // end
+                    //this.selected = this.itemsSource[this.itemsSource.length - 1];
+                    break;
+                case 33: // pgUp
+                    break;
+                case 34: // pgDn
+                    break;
+                default:
+                    return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    },
+    created() {
+        this.selectFirstItem();
+    },
+    updated() {
+        if (!this.selectedSource && this.isSelectFirstItem) {
+            this.selectFirstItem();
+        }
+    }
+});
+
+
 
 /*20171006-7041*/
 /* components/modal.js */
@@ -4230,6 +4352,18 @@ Vue.directive('focus', {
 });
 
 
+/*20171117-7069*/
+/* directives/lazy.js */
+
+Vue.directive('lazy', {
+    componentUpdated(el, binding, vnode) {
+        let arr = binding.value;
+        if (arr && arr.$loadLazy)
+            arr.$loadLazy();
+    }
+});
+
+
 /*20170912-7031*/
 /* directives/resize.js */
 
@@ -4688,7 +4822,7 @@ Vue.directive('resize', {
 			},
 
 			$hasSelected(arr) {
-				return !!arr.$selected;
+				return arr && !!arr.$selected;
 			},
 
 			$confirm(prms) {
@@ -4899,22 +5033,26 @@ Vue.directive('resize', {
 			},
 
             $loadLazy(elem, propName) {
-                let arr = elem[propName];
-                if (arr.$loaded)
-                    return;
                 let self = this,
                     root = window.$$rootUrl,
                     url = root + '/_data/loadlazy',
                     jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
 
-                dataservice.post(url, jsonData).then(function (data) {
-                    for (let el of data[propName])
-                        arr.push(arr.$new(el));
-                }).catch(function (msg) {
-                    self.$alertUi(msg);
+                return new Promise(function (resolve, reject) {
+                    let arr = elem[propName];
+                    if (arr.$loaded) {
+                        resolve(arr);
+                        return;
+                    }
+                    dataservice.post(url, jsonData).then(function (data) {
+                        for (let el of data[propName])
+                            arr.push(arr.$new(el));
+                        resolve(arr);
+                    }).catch(function (msg) {
+                        self.$alertUi(msg);
+                    });
+                    arr.$loaded = true;
                 });
-
-                arr.$loaded = true;
             },
 
 			$delegate(name) {

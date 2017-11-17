@@ -17,6 +17,7 @@ namespace A2v10.Xaml
         public Thickness Margin { get; set; }
         public Thickness Padding { get; set; }
         public WrapMode Wrap { get; set; }
+        public Thickness Absolute { get; set; }
 
         public String Tip { get; set; }
 
@@ -61,6 +62,9 @@ namespace A2v10.Xaml
                     Margin.MergeStyles("margin", tag);
                 if (Padding != null)
                     Padding.MergeStyles("padding", tag);
+
+                if (Absolute != null)
+                    Absolute.MergeAbsolute(tag);
             }
         }
 
@@ -75,12 +79,13 @@ namespace A2v10.Xaml
                 context.Writer.Write(content.ToString().Replace("\\n", "\n"));
         }
 
-        internal void RenderIcon(RenderContext context, Icon icon)
+        internal void RenderIcon(RenderContext context, Icon icon, String addClass = null)
         {
             if (icon == Icon.NoIcon)
                 return;
-            new TagBuilder("i", "ico ico-" + icon.ToString().ToKebabCase())
-                .Render(context);
+            var iTag = new TagBuilder("i", "ico ico-" + icon.ToString().ToKebabCase());
+            iTag.AddCssClass(addClass);
+            iTag.Render(context);
             context.RenderSpace(); // after icon - always
         }
 

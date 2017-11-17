@@ -66,6 +66,12 @@ namespace A2v10.Xaml
         PreWrap
     }
 
+    public enum AutoSelectMode
+    {
+        None,
+        FirstItem
+    }
+
     public enum Icon
     {
         NoIcon = 0,

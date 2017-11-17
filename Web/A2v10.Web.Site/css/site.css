@@ -720,6 +720,7 @@ header .btn:hover,
 .splitter .spl-part {
   overflow: auto;
   grid-row: 1;
+  position: relative;
 }
 .splitter .drag-handle {
   display: none;
@@ -1995,15 +1996,72 @@ table.data-grid > tbody > tr.bold td {
 .tab-panel .tab-content.yellow {
   background-color: lightyellow;
 }
-.tab-panel.full-page .tab-content {
-  overflow: auto;
-}
 .tab-panel.bordered > .tab-header {
   padding-left: 0;
 }
 .tab-panel.bordered > .tab-content {
   border: 1px solid #bdc5d8;
   border-top: none;
+}
+.tab-panel.full-page .tab-content {
+  overflow: auto;
+}
+.a2-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+}
+.a2-list .a2-list-item {
+  cursor: pointer;
+  padding: 4px 6px 6px 6px;
+}
+.a2-list .a2-list-item:hover {
+  background-color: #fdf4bf;
+}
+.a2-list .a2-list-item.active {
+  background-color: #cde6f7;
+}
+.a2-list .a2-list-item:focus {
+  outline-style: none;
+}
+.generic-list-item {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto 1fr auto;
+  width: 100%;
+  line-height: 1.1;
+}
+.generic-list-item .list-item-icon {
+  display: block;
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  align-self: start;
+  font-size: 1.5rem;
+  margin-right: 6px;
+  margin-top: 2px;
+  color: #8591a2;
+  /*
+        padding:4px;
+        background-color:blue;
+        color:white;
+        */
+}
+.generic-list-item .list-item-header {
+  display: block;
+  grid-row: 1;
+  grid-column: 2;
+  margin-bottom: 2px;
+}
+.generic-list-item .list-item-body {
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.96rem;
+  color: #999;
+}
+.generic-list-item .list-item-commands {
+  grid-row: 1 / span 2;
+  grid-column: 3;
 }
 .modal-stack {
   position: fixed;
@@ -2833,10 +2891,16 @@ TODO:
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  line-height: 1.5rem;
+}
+.panel .panel-header .ico {
+  font-size: 1.2rem;
+  margin-right: 2px;
 }
 .panel .panel-header .panel-collapse-handle {
   font-size: 110%;
   padding-top: 2px;
+  margin: 0;
 }
 .panel .panel-header .panel-collapse-handle:before {
   content: "\e9a2";

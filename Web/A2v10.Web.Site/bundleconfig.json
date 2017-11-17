@@ -27,6 +27,7 @@
       "app/components/collectionview.js",
       "app/components/upload.js",
       "app/components/tab.js",
+      "app/components/list.js",
       "app/components/modal.js",
       "app/components/image.js",
       "app/components/taskpad.js",

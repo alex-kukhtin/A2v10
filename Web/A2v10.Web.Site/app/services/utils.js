@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171103-7065
+// 20171117-7069
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -33,7 +33,11 @@ app.modules['std:utils'] = function () {
 			parse: dateParse,
 			equal: dateEqual,
 			isZero: dateIsZero
-		}
+        },
+        text: {
+            contains: textContains,
+            containsText: textContainsText
+        }
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -206,7 +210,26 @@ app.modules['std:utils'] = function () {
 
 	function dateIsZero(d1) {
 		return dateEqual(d1, dateZero());
-	}
+    }
+
+    function textContains(text, probe) {
+        if (!probe)
+            return true;
+        if (!text)
+            return false;
+        return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
+    }
+
+    function textContainsText(obj, props, probe) {
+        if (!probe) return true;
+        if (!obj)
+            return false;
+        for (v of props.split(',')) {
+            if (textContains(obj[v], probe))
+                return true;
+        }
+        return false;
+    }
 };
 
 

@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/site.css" rel="stylesheet" />
+    <meta name="rootUrl" content="/"/>
+    <style>
+        li.active {
+            background-color:yellow;
+        }
+        .generic-list-item {
+            display:inline-grid;
+            grid-template-rows:auto auto;
+            grid-template-columns:auto 1fr auto;
+            width:100%;
+            background-color:aliceblue;
+        }
+        .generic-list-item .list-item-icon {
+            display:block;
+            grid-row:1 / span 2;
+            grid-column:1;
+            font-size:2.2rem;
+            margin-right:6px;
+            background-color2:deepskyblue;
+            color2:white;
+            padding2:4px;
+            font-weight2:normal;
+        }
+        .generic-list-item .list-item-header {
+            display:block;
+            grid-row: 1;
+            grid-column: 2;
+            font-weight:500;
+            margin-bottom:4px;
+        }
+            .generic-list-item .list-item-body {
+                grid-row: 2;
+                grid-column: 2;
+                font-size:0.9rem;
+            }
+            .generic-list-item .list-item-commands {
+                grid-row: 1 / span 2;
+                grid-column: 3;
+            }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h4>List demo</h4>
+        <textbox></textbox>
+        <a2-list :items-source="Document.Rows" auto-select="first-item" style="width:490px">
+            <template slot="items" slot-scope="listItem">
+                <div class="generic-list-item">
+                    <i class="ico ico-steps list-item-icon"></i>
+                    <div class="list-item-header">List item header here</div>
+                    <div class="list-item-body">
+                        Text for element:
+                        <span v-text="listItem.item.id + 6"></span>
+                        <span class="bold">bold text</span>
+                        <a href ><i class="ico ico-link"></i> Link inside</a> <i class="ico ico-calendar"></i> and text after icon
+                    </div>
+                    <div class="list-item-commands">
+                        <a><i class="ico ico-ellipsis-vertical"></i></a>
+                    </div>
+                </div>
+            </template>
+        </a2-list>
+    </div>
+    <script type="text/javascript" src="../scripts/vue.js"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
+
+    <script>
+        (function () {
+
+            var sampleData = {
+                Document: {
+                    Name: "document name value",
+                    Rows: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }]
+                }
+            };
+
+            var vm = new Vue({
+                el: "#app",
+                data: sampleData,
+                methods: {
+                }
+            });
+
+        })();
+
+    </script>
+</body>
+</html>

@@ -93,6 +93,7 @@ namespace A2v10.Infrastructure
         public static Object EvalExpression(this ExpandoObject root, String expression, Boolean throwIfError = false)
         {
             Object currentContext = root;
+            var arrRegEx = new Regex(@"(\w+)\[(\d+)\]{1}");
             foreach (var exp in expression.Split('.'))
             {
                 if (currentContext == null)
@@ -101,7 +102,7 @@ namespace A2v10.Infrastructure
                 var d = currentContext as IDictionary<String, Object>;
                 if (prop.Contains("["))
                 {
-                    var match = new Regex(@"(\w+)\[(\d+)\]{1}").Match(prop);
+                    var match = arrRegEx.Match(prop);
                     prop = match.Groups[1].Value;
                     if ((d != null) && d.ContainsKey(prop))
                     {

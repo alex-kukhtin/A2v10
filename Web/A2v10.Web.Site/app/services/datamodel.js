@@ -24,7 +24,9 @@
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-	const log = require('std:log');
+    const log = require('std:log');
+
+    let __initialized__ = false;
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -240,6 +242,7 @@
             elem._modelLoad_ = (caller) => {
                 elem.$emit('Model.load', elem, caller);
                 elem._root_.$setDirty(false);
+                __initialized__ = true;
             };
             defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
@@ -322,16 +325,21 @@
         return this.filter((el) => el.$checked);
     });
 
+    _BaseArray.prototype.Selected = function (propName) {
+        return this.$selected ? this.$selected[propName] : null;
+    };
+
     _BaseArray.prototype.$loadLazy = function () {
-        if (this.$loaded) return;
-        if (!this.$parent) return;
-        const meta = this.$parent._meta_;
-        if (!meta.$lazy) return;
-        let propIx = this._path_.lastIndexOf('.');
-        let prop = this._path_.substring(propIx + 1);
-        if (!meta.$lazy.indexOf(prop) === -1) return;
-        console.dir('load lazy');
-        this.$vm.$loadLazy(this.$parent, prop);
+        return new Promise((resolve, reject) => {
+            if (this.$loaded) { resolve(self); return; }
+            if (!this.$parent) { resolve(this); return; }
+            const meta = this.$parent._meta_;
+            if (!meta.$lazy) { resolve(this); return; }
+            let propIx = this._path_.lastIndexOf('.');
+            let prop = this._path_.substring(propIx + 1);
+            if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+            this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+        });
     }
 
 	_BaseArray.prototype.$append = function (src) {
@@ -364,11 +372,10 @@
 	};
 
     _BaseArray.prototype.$clearSelected = function () {
-        let was = this.$selected;
+        let sel = this.$selected;
+        if (!sel) return; // already null
         platform.set(this, '$selected', null);
-        if (was) {
-            emitSelect(this);
-        }
+        emitSelect(this);
     };
 
 	_BaseArray.prototype.$remove = function (item) {

@@ -22,7 +22,7 @@
             
             -->
             <Panel Padding="0, 6" Header="{Bind Document.Contract.Id, Format='Информация о договоре [{0}]'}" 
-                   Collapsible="True" Style="{Bind Document.$PaneStyle}">
+                   Icon="HelpBlue" Collapsible="True" Style="{Bind Document.$PaneStyle}">
                 <TextBox Label="Договор" Value="{Bind Document.Contract.FullName}" Description="выберите условия сделки">
                     <TextBox.AddOns>
                         <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/catalog/suppliers/browse2', Argument={Bind Document.Contract}}"/>

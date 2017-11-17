@@ -57,6 +57,15 @@ namespace A2v10.Xaml
             else
                 tag.MergeStyle(styleProp, $"{Top.Value} {Right.Value} {Bottom.Value} {Left.Value}");
         }
+
+        internal void MergeAbsolute(TagBuilder tag)
+        {
+            tag.MergeStyle("position", "absolute");
+            tag.MergeStyle("top", Top.Value);
+            tag.MergeStyle("left", Left.Value);
+            tag.MergeStyle("bottom", Bottom.Value);
+            tag.MergeStyle("right", Right.Value);
+        }
     }
 
     public class ThicknessConverter : TypeConverter

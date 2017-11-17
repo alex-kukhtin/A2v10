@@ -1,16 +1,12 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace A2v10.Xaml
 {
-	public class Bind : BindBase
+	public class Bind : BindBase, ISupportInitialize
 	{
 
 		public String Path { get; set; }
@@ -47,5 +43,20 @@ namespace A2v10.Xaml
                 dt = $"'{DataType.ToString()}'";
             return $"$format({realPath}, {dt}, {fmt})";
         }
-	}
+
+        public void BeginInit()
+        {
+        }
+
+        private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
+
+        public void EndInit()
+        {
+            if (Path == null)
+                return;
+            var match = _selectedRegEx.Match(Path);
+            if (match.Groups.Count == 3)
+                Path = $"{match.Groups[1].Value}.Selected('{match.Groups[2].Value}')";
+        }
+    }
 }

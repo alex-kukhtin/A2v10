@@ -25,7 +25,7 @@
 	const log = require('std:log');
 
     const dataGridTemplate = `
-<div :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
@@ -598,10 +598,6 @@
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
 			}
-        },
-        updated() {
-            if (this.itemsSource)
-                this.itemsSource.$loadLazy();
         }
     });
 })();

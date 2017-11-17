@@ -8,12 +8,6 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-    public enum AutoSelectMode
-    {
-        None,
-        FirstItem
-    }
-
     public class TreeViewItem : UIElementBase
     {
         public Object ItemsSource { get; set; }

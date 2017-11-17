@@ -5,7 +5,8 @@
 	"actions": {
     "index": {
       "index": true,
-      "view": "index.view"
+      "view": "index.view",
+      "template": "index.template"
     }
 	}
 }

@@ -28,6 +28,8 @@ namespace A2v10.Xaml
 
         public PaneStyle Style { get; set; }
 
+        public Icon Icon { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var panel = new TagBuilder("a2-panel", null, IsInGrid);
@@ -51,7 +53,7 @@ namespace A2v10.Xaml
             panel.RenderEnd(context);
         }
 
-        Boolean HasHeader => GetBinding(nameof(Header)) != null || Header != null;
+        Boolean HasHeader => GetBinding(nameof(Header)) != null || Header != null || Icon != Icon.NoIcon;
 
         void RenderHeader(RenderContext context)
         {
@@ -59,14 +61,18 @@ namespace A2v10.Xaml
                 return;
             var header = new TagBuilder("div", "panel-header-slot");
             header.MergeAttribute("slot", "header");
+            header.RenderStart(context);
+
+            RenderIcon(context, Icon);
+
             var hBind = GetBinding(nameof(Header));
             if (hBind != null)
             {
-                header.MergeAttribute("v-text", hBind.GetPathFormat(context));
+                var span = new TagBuilder("span");
+                span.MergeAttribute("v-text", hBind.GetPathFormat(context));
+                span.Render(context);
             }
-            header.RenderStart(context);
-
-            if (Header is UIElementBase)
+            else if (Header is UIElementBase)
             {
                 (Header as UIElementBase).RenderElement(context);
             }
