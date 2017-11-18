@@ -30,9 +30,17 @@ namespace A2v10.Xaml
 
         void RenderIconBlock(RenderContext context)
         {
-            if (Icon == Icon.NoIcon)
-                return;
-            RenderIcon(context, Icon, "list-item-icon");
+            var iBind = GetBinding(nameof(Icon));
+            if (iBind != null)
+            {
+                var iSpan = new TagBuilder("i", "ico list-item-icon ");
+                iSpan.MergeAttribute(":class", $"'ico-' + {iBind.GetPath(context)}");
+                iSpan.Render(context, TagRenderMode.Normal, addSpace: true);
+            }
+            else if (Icon != Icon.NoIcon)
+            {
+                RenderIcon(context, Icon, "list-item-icon");
+            }
         }           
         
         void RenderBody(RenderContext context)

@@ -9,9 +9,9 @@
                     <Hyperlink Icon="Search" />
                 </TextBox.AddOns>
             </TextBox>
-            <List ItemsSource="{Bind Parent.ItemsSource}" 
+            <List ItemsSource="{Bind Parent.ItemsSource}" Striped="True" Mark="{Bind $Mark}"
                   AutoSelect="FirstItem" Absolute="34px, 6px, 0, 0">
-                <ListItem Header="{Bind Name}">
+                <ListItem Header="{Bind Name}" Icon="{Bind $Icon}">
                     <Text>
                         Код: <Span Bold="True" Content="{Bind Id}"/>
                     </Text>
@@ -29,6 +29,16 @@
         -->
         <TabPanel FullPage="True" >
             <Tab Header="LazyObject">
+                <Block>
+                    <Text>Нормальный текст</Text>
+                </Block>
+                <Block>
+                    <Text Size="Small">Маленький текст</Text>
+                </Block>
+                <List Border="True" Margin="10">
+                    <ListItem Header="Static 1" Content="I am the static element"/>
+                    <ListItem Header="Static 2" Content="I am the static element"/>
+                </List>
             </Tab>
             <!--
             <Tab Header="Debug">

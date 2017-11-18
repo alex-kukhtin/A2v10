@@ -32,13 +32,16 @@
                 </div>
             </div>
         </header>
+        <a2-main-view :menu="menu"></a2-main-view>
+        <a2-debug :model-stack="modelStack" :model-visible="debugShowModel"
+                  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
             <a href="/app/about" @click.prevent="about">about (admin mode)</a>
             version: <span v-text="version"></span>
             <div class="right-part">
                 <div class="dropdown dir-up" v-dropdown>
-                    <button class="btn btn-debug" toggle>Debug<span class="caret up"></span></button>
+                    <button class="btn btn-debug" toggle>отладка<span class="caret up"></span></button>
                     <div class="dropdown-menu menu up-right">
                         <a @click.prevent="debugModel" class="dropdown-item"><i class="ico ico-database"></i> Модель данных</a>
                         <a @click.prevent="debugTrace" class="dropdown-item"><i class="ico ico-log"></i> Трассировка</a>
@@ -51,7 +54,6 @@
                 </div>
             </div>
         </footer>
-        <a2-main-view :menu="menu"></a2-main-view>
     </div>
     <script type="text/javascript" src="/scripts/vue.js"></script>
     <script type="text/javascript" src="/scripts/main.js"></script>

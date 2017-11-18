@@ -5,6 +5,8 @@ const tu = require('std:utils').text;
 
 let template = {
     properties: {
+        'TClient.$Mark': getMark,
+        'TClient.$Icon' : getIcon
     },
     events: {
     },
@@ -18,6 +20,13 @@ let template = {
     }
 };
 
+function getMark() {
+    return this.Id < 102 ? 'info' : '';
+}
+
+function getIcon() {
+    return this.Id < 102 ? "user" : 'file';
+}
 
 function TestDocuments() {
 	// THIS = root

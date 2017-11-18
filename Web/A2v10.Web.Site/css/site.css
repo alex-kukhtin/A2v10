@@ -185,7 +185,22 @@ i,
   content: "\ea4a";
 }
 .ico-edit:before {
+  content: "\e94a";
+}
+.ico-rename:before {
+  content: "\e953";
+}
+.ico-pencil:before {
   content: "\e949";
+}
+.ico-pencil-outline:before {
+  content: "\e94a";
+}
+.ico-package:before {
+  content: "\e95e";
+}
+.ico-package-outline:before {
+  content: "\e95d";
 }
 .ico-ellipsis:before {
   content: "\e9b4";
@@ -195,6 +210,9 @@ i,
 }
 .ico-file:before {
   content: "\e9dd";
+}
+.ico-file-content:before {
+  content: "\e9e1";
 }
 .ico-filter:before {
   content: "\e988";
@@ -429,6 +447,18 @@ i,
 .ico-share:before {
   content: "\e993";
 }
+.ico-lock:before {
+  content: "\e98c";
+}
+.ico-lock-outline:before {
+  content: "\e98b";
+}
+.ico-unlock:before {
+  content: "\e98e";
+}
+.ico-unlock-outline:before {
+  content: "\e98d";
+}
 * {
   box-sizing: border-box;
 }
@@ -492,7 +522,7 @@ th {
   text-align: center;
 }
 .text-small {
-  font-size: 90%;
+  font-size: .9rem;
 }
 .negative-red {
   color: #da533f !important;
@@ -2016,15 +2046,39 @@ table.data-grid > tbody > tr.bold td {
 .a2-list .a2-list-item {
   cursor: pointer;
   padding: 4px 6px 6px 6px;
+  border-left: 4px solid transparent;
 }
 .a2-list .a2-list-item:hover {
-  background-color: #fdf4bf;
+  background-color: #fdf4bf !important;
 }
 .a2-list .a2-list-item.active {
-  background-color: #cde6f7;
+  background-color: #cde6f7 !important;
 }
 .a2-list .a2-list-item:focus {
   outline-style: none;
+}
+.a2-list .a2-list-item.warning,
+.a2-list .a2-list-item.yellow {
+  border-left-color: gold;
+}
+.a2-list .a2-list-item.danger,
+.a2-list .a2-list-item.error,
+.a2-list .a2-list-item.red {
+  border-left-color: #fc7c7c;
+}
+.a2-list .a2-list-item.success,
+.a2-list .a2-list-item.green {
+  border-left-color: #89e489;
+}
+.a2-list .a2-list-item.info,
+.a2-list .a2-list-item.cyan {
+  border-left-color: #72eaea;
+}
+.a2-list.striped .a2-list-item:nth-of-type(even) {
+  background-color: rgba(208, 208, 208, 0.15);
+}
+.a2-list.border {
+  border: 1px solid #bdc5d8;
 }
 .generic-list-item {
   display: inline-grid;
@@ -2057,7 +2111,7 @@ table.data-grid > tbody > tr.bold td {
 .generic-list-item .list-item-body {
   grid-row: 2;
   grid-column: 2;
-  font-size: 0.96rem;
+  font-size: .9rem;
   color: #999;
 }
 .generic-list-item .list-item-commands {

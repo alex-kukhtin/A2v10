@@ -1,5 +1,7 @@
-﻿/*20170921-7037*/
-/* services/image.js */
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171118-7070
+// components/image.js
 
 (function () {
 
