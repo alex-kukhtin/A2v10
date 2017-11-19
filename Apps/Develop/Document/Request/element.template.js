@@ -65,7 +65,12 @@ let template = {
 
 
 function execTest(arg) {
-    alert(arg.Id);
+    const root = this;
+    const doc = root.Document;
+
+    //doc.Rows[0].Entity.$set({ Name: 'Entity name' });
+    doc.Rows[0].Entity = { Name: 'Entity name', Unit: {Id: 55, Name:'Unit'} };
+
 }
 
 function canExecTest(arg) {

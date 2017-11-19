@@ -1,10 +1,10 @@
-/* 20171106-7051 */
+/* 20171119-7052 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 06 nov 2017 17:00
-module version : 7051
+Last updated : 19 nov 2017 12:30
+module version : 7052
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7051);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7052);
 else
-	update a2sys.Versions set [Version] = 7051 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7052 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -363,14 +363,16 @@ begin
 	exec a2admin.[Ensure.Admin] @UserId;
 
 	select [Group!TGroup!Object]=null, [Id!!Id]=g.Id, [Name!!Name]=g.[Name], 
-		[Key] = g.[Key], [Memo]=g.Memo, [Users!TUser!Array] = null
+		[Key] = g.[Key], [Memo]=g.Memo, 
+		[UserCount]=(select count(1) from a2security.UserGroups ug where ug.GroupId = @Id),
+		[Users!TUser!Array] = null
 	from a2security.Groups g
 	where g.Id = @Id;
 
 	/* users in group */
 	select [!TUser!Array] = null, [Id!!Id] = u.Id, [Name!!Name] = u.UserName, u.PersonName,
 		u.Memo,
-	[!TGroup.Users!ParentId] = ug.GroupId
+		[!TGroup.Users!ParentId] = ug.GroupId
 	from a2security.UserGroups ug
 		inner join a2security.ViewUsers u on ug.UserId = u.Id
 	where ug.GroupId = @Id;
@@ -452,6 +454,42 @@ begin
 		
 	exec a2security.[Permission.UpdateUserInfo];
 	exec a2admin.[Group.Load] @UserId, @RetId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Group.Key.CheckDuplicate')
+	drop procedure [a2admin].[Group.Key.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2admin.[Group.Key.CheckDuplicate]
+@UserId bigint,
+@Id bigint,
+@Key nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Groups where [Key] = @Key and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Group.Name.CheckDuplicate')
+	drop procedure [a2admin].[Group.Name.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2admin.[Group.Name.CheckDuplicate]
+@UserId bigint,
+@Id bigint,
+@Name nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Groups where [Name] = @Name and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
 end
 go
 ------------------------------------------------

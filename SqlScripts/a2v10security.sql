@@ -1,10 +1,10 @@
-﻿/* 20171103-7047 */
+﻿/* 20171103-7048 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 06 nov 2017 17:00
-module version : 7047
+Last updated : 19 nov 2017 13:00
+module version : 7048
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7047);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7048);
 else
-	update a2sys.Versions set [Version] = 7047 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7048 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -81,11 +81,15 @@ begin
 	(
 		Id	bigint not null constraint PK_Groups primary key
 			constraint DF_Groups_PK default(next value for a2security.SQ_Groups),
-		[Key] nvarchar(255) not null constraint UNQ_Groups_Key unique,
-		Name nvarchar(255) not null constraint UNQ_Groups_Name unique,
+		[Name] nvarchar(255) not null constraint UNQ_Groups_Name unique,
+		[Key] nvarchar(255) null,
 		Memo nvarchar(255) null
 	)
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Groups') and name = N'UNQ_Group_Key')
+	create unique index UNQ_Group_Key on a2security.Groups([Key]) where [Key] is not null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserGroups')

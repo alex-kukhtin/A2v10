@@ -17,5 +17,15 @@
       "view": "browse.Dialog",
       "index": true
     }
+  },
+  "commands": {
+    "duplicateKey": {
+      "type": "sql",
+      "procedure": "Group.Key.CheckDuplicate"
+    },
+    "duplicateName": {
+      "type": "sql",
+      "procedure": "Group.Name.CheckDuplicate"
+    }
   }
 }

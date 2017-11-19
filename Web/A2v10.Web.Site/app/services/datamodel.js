@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7070
+// 20171119-7071
 // services/datamodel.js
 
 (function () {
@@ -56,7 +56,7 @@
 	function ensureType(type, val) {
 		if (type === Number) {
 			return utils.toNumber(val);
-		}
+        }
 		return val;
 	}
 
@@ -97,8 +97,13 @@
 				//TODO: emit and handle changing event
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
-					return;
-				this._src_[prop] = val;
+                    return;
+                if (this._src_[prop].$set && !val.$set) {
+                    // plain element to reactive
+                    this._src_[prop].$merge(val, false);
+                } else {
+                    this._src_[prop] = val;
+                }
                 this._root_.$setDirty(true);
                 if (this._lockEvents_)
                     return; // events locked
@@ -440,6 +445,7 @@
 
         obj.prototype.$merge = merge;
         obj.prototype.$empty = empty;
+        obj.prototype.$set = setElement;
 
 		defineCommonProps(obj.prototype);
 
@@ -751,6 +757,10 @@
         // ctor(source path parent)
         let newElem = new this.constructor({}, '', this._parent_);
         this.$merge(newElem, true); // with event
+    }
+
+    function setElement(src) {
+        this.$merge(src, true);
     }
 
     function merge(src, fireChange) {
