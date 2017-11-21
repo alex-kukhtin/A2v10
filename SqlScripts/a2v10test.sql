@@ -1,4 +1,4 @@
-/* 20170901-7022 */
+/* 20171121-7023 */
 
 use a2v10test;
 go
@@ -400,6 +400,29 @@ begin
 end
 go
 
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Document.Aliases')
+	drop procedure a2test.[Document.Aliases]
+go
+------------------------------------------------
+create procedure a2test.[Document.Aliases]
+@UserId bigint = null,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	select [!$Aliases!] = null, [~Document] = N'Document!TDocument!Object', [~TRow] = N'!TRow!Array'
+
+	select [~Document] = null, [Id!!Id]=@Id,
+	[Rows!TRow!Array] = null
+
+	select [~TRow] = null, [Id!!Id] = 59, [!TDocument.Rows!ParentId] = @Id,
+		[Entity!TEntity!RefId] = cast(59 as bigint);
+
+	select [!TEntity!Map] = null, [Id!!Id] = cast(276 as bigint), Name = N'Entity Name'
+end
+go
+
 -- CLEAN UP DATABASE
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Workflow.Clear.All')
@@ -412,6 +435,7 @@ begin
 	set nocount on;
 	delete from a2workflow.[Log];
 	delete from a2workflow.[Inbox];
+	delete from a2workflow.[Track];
 	delete from a2workflow.[Processes];
 	delete from [System.Activities.DurableInstancing].InstancesTable;
 	delete from [System.Activities.DurableInstancing].LockOwnersTable;

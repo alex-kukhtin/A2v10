@@ -19,27 +19,28 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Data
 {
-	internal class DataModelReader
-	{
-		const String ROOT = "TRoot";
+    internal class DataModelReader
+    {
+        const String ROOT = "TRoot";
         const String SYSTEM_TYPE = "$System";
+        const String ALIASES_TYPE = "$Aliases";
 
         IDataModel _dataModel;
-		IdMapper _idMap = new IdMapper();
-		RefMapper _refMap = new RefMapper();
-		ExpandoObject _root = new ExpandoObject();
+        IdMapper _idMap = new IdMapper();
+        RefMapper _refMap = new RefMapper();
+        ExpandoObject _root = new ExpandoObject();
         ExpandoObject _sys = new ExpandoObject();
 
-		public IDataModel DataModel
-		{
-			get
-			{
-				if (_dataModel != null)
-					return _dataModel;
-				_dataModel = new DynamicDataModel(_metadata, _root, _sys);
-				return _dataModel;
-			}
-		}
+        public IDataModel DataModel
+        {
+            get
+            {
+                if (_dataModel != null)
+                    return _dataModel;
+                _dataModel = new DynamicDataModel(_metadata, _root, _sys);
+                return _dataModel;
+            }
+        }
 
         public void SetParameters(SqlParameterCollection prms, Object values)
         {
@@ -69,7 +70,7 @@ namespace A2v10.Data
         void ProcessSystemRecord(IDataReader rdr)
         {
             // from !
-            for (int i=1; i<rdr.FieldCount; i++)
+            for (int i = 1; i < rdr.FieldCount; i++)
             {
                 var fn = rdr.GetName(i);
                 var dataVal = rdr.GetValue(i);
@@ -89,27 +90,32 @@ namespace A2v10.Data
             }
         }
 
-		public void ProcessOneRecord(IDataReader rdr)
-		{
-			var rootFI = new FieldInfo(rdr.GetName(0));
+        public void ProcessOneRecord(IDataReader rdr)
+        {
+            var rootFI = new FieldInfo(GetAlias(rdr.GetName(0)));
             if (rootFI.TypeName == SYSTEM_TYPE)
             {
                 ProcessSystemRecord(rdr);
                 return;
             }
-			var currentRecord = new ExpandoObject();
-			bool bAdded = false;
+            else if (rootFI.TypeName == ALIASES_TYPE)
+            {
+                ProcessAliasesRecord(rdr);
+                return;
+            }
+            var currentRecord = new ExpandoObject();
+            bool bAdded = false;
             Object id = null;
             Int32 rowCount = 0;
             Boolean bHasRowCount = false;
-			// from 1!
-			for (int i=1; i<rdr.FieldCount; i++) {
-				var dataVal = rdr.GetValue(i);
-				if (dataVal == DBNull.Value)
-					dataVal = null;
-				var fn = rdr.GetName(i);
-				FieldInfo fi = new FieldInfo(fn);
-				AddValueToRecord(currentRecord, fi, dataVal);
+            // from 1!
+            for (int i = 1; i < rdr.FieldCount; i++) {
+                var dataVal = rdr.GetValue(i);
+                if (dataVal == DBNull.Value)
+                    dataVal = null;
+                var fn = rdr.GetName(i);
+                FieldInfo fi = new FieldInfo(fn);
+                AddValueToRecord(currentRecord, fi, dataVal);
                 if (fi.IsRowCount) {
                     if (dataVal is Int32)
                         rowCount = (Int32)dataVal;
@@ -117,33 +123,33 @@ namespace A2v10.Data
                         throw new DataLoaderException("Invalid field type for !!RowCount");
                     bHasRowCount = true;
                 }
-				if (fi.IsId)
-				{
-					if (fi.IsComplexField)
-						_idMap.Add(fi.TypeName, dataVal, currentRecord);
-					else
-					{
-						_idMap.Add(rootFI.TypeName, dataVal, currentRecord);
-						id = dataVal;
-					}
-				}
-				if (fi.IsParentId)
-				{
-					if (rootFI.IsArray)
-					{
-						AddRecordToArray(fi.TypeName, dataVal, currentRecord);
+                if (fi.IsId)
+                {
+                    if (fi.IsComplexField)
+                        _idMap.Add(fi.TypeName, dataVal, currentRecord);
+                    else
+                    {
+                        _idMap.Add(rootFI.TypeName, dataVal, currentRecord);
+                        id = dataVal;
+                    }
+                }
+                if (fi.IsParentId)
+                {
+                    if (rootFI.IsArray)
+                    {
+                        AddRecordToArray(fi.TypeName, dataVal, currentRecord);
                         if (!rootFI.IsVisible)
-    						bAdded = true;
-					}
-					else if (rootFI.IsTree)
-					{
-						if (dataVal == null)
-							_root.AddToArray(rootFI.PropertyName, currentRecord);
-						else
-							AddRecordToArray(fi.TypeName, dataVal, currentRecord);
-						bAdded = true;
+                            bAdded = true;
+                    }
+                    else if (rootFI.IsTree)
+                    {
+                        if (dataVal == null)
+                            _root.AddToArray(rootFI.PropertyName, currentRecord);
+                        else
+                            AddRecordToArray(fi.TypeName, dataVal, currentRecord);
+                        bAdded = true;
 
-					}
+                    }
                     else if (rootFI.IsObject)
                     {
                         // nested object
@@ -151,8 +157,8 @@ namespace A2v10.Data
                         if (!rootFI.IsVisible)
                             bAdded = true;
                     }
-				}
-			}
+                }
+            }
             if (!bAdded)
                 AddRecordToModel(currentRecord, rootFI, id);
             else
@@ -161,7 +167,7 @@ namespace A2v10.Data
             {
                 AddRowCount(rootFI.PropertyName, rowCount);
             }
-		}
+        }
 
         void AddRowCount(String propertyName, Int32 rowCount)
         {
@@ -185,41 +191,41 @@ namespace A2v10.Data
         }
 
         void AddRecordToArray(String propName, Object id, ExpandoObject currentRecord)
-		{
-			var pxa = propName.Split('.'); // <Type>.PropName
-			if (pxa.Length != 2)
-				throw new DataLoaderException($"Invalid field name '{propName}' for array. 'TypeName.PropertyName' expected");
-			/*0-key, 1-Property*/
-			var key = Tuple.Create(pxa[0], id);
+        {
+            var pxa = propName.Split('.'); // <Type>.PropName
+            if (pxa.Length != 2)
+                throw new DataLoaderException($"Invalid field name '{propName}' for array. 'TypeName.PropertyName' expected");
+            /*0-key, 1-Property*/
+            var key = Tuple.Create(pxa[0], id);
             ExpandoObject mapObj = null;
             if (!_idMap.TryGetValue(key, out mapObj))
                 throw new DataLoaderException($"Property '{propName}'. Object {pxa[0]} (Id={id}) not found in map");
             mapObj.AddToArray(pxa[1], currentRecord);
-		}
+        }
 
-		void AddValueToRecord(IDictionary<String, Object> record, FieldInfo field, Object value)
-		{
-			if (!field.IsVisible)
-				return;
-			if (field.IsArray)
-				record.Add(field.PropertyName, new List<ExpandoObject>());
-			else if (field.IsComplexField)
-			{
-				var propNames = field.PropertyName.Split('.');
-				if (propNames.Length != 2)
-					throw new DataLoaderException($"Invalid complex name {field.PropertyName}");
-				var innerObj = record.GetOrCreate(propNames[0]);
-				innerObj.Add(propNames[1], value);				
-			}
-			else if (field.IsRefId)
-			{
-				var refValue = new ExpandoObject();
-				_refMap.Add(field.TypeName, value, refValue);
-				record.Add(field.PropertyName, refValue);
-			}
-			else
-				record.Add(field.PropertyName, value);
-		}
+        void AddValueToRecord(IDictionary<String, Object> record, FieldInfo field, Object value)
+        {
+            if (!field.IsVisible)
+                return;
+            if (field.IsArray)
+                record.Add(field.PropertyName, new List<ExpandoObject>());
+            else if (field.IsComplexField)
+            {
+                var propNames = field.PropertyName.Split('.');
+                if (propNames.Length != 2)
+                    throw new DataLoaderException($"Invalid complex name {field.PropertyName}");
+                var innerObj = record.GetOrCreate(propNames[0]);
+                innerObj.Add(propNames[1], value);
+            }
+            else if (field.IsRefId)
+            {
+                var refValue = new ExpandoObject();
+                _refMap.Add(field.TypeName, value, refValue);
+                record.Add(field.PropertyName, refValue);
+            }
+            else
+                record.Add(field.PropertyName, value);
+        }
 
         void CheckRecordRef(ExpandoObject currentRecord, FieldInfo field, Object id)
         {
@@ -229,7 +235,7 @@ namespace A2v10.Data
 
 
         void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
-		{
+        {
             if (field.IsArray)
             {
                 _refMap.MergeObject(field.TypeName, id, currentRecord);
@@ -241,28 +247,71 @@ namespace A2v10.Data
                 _root.Add(field.PropertyName, currentRecord);
             else if (field.IsMap)
                 _refMap.MergeObject(field.TypeName, id, currentRecord);
-		}
+        }
 
 
-		void ProcessComplexMetadata(FieldInfo fieldInfo, ElementMetadata elem, DataType dt)
-		{
-			// create metadata for nested type
-			var innerElem = GetOrCreateMetadata(fieldInfo.TypeName);
-			var fna = fieldInfo.PropertyName.Split('.');
-			if (fna.Length != 2)
-				throw new DataLoaderException($"Invalid complex name {fieldInfo.PropertyName}");
-			elem.AddField(new FieldInfo($"{fna[0]}!{fieldInfo.TypeName}"), DataType.Undefined);
-			innerElem.AddField(new FieldInfo(fieldInfo, fna[1]), dt);
-		}
+        void ProcessComplexMetadata(FieldInfo fieldInfo, ElementMetadata elem, DataType dt)
+        {
+            // create metadata for nested type
+            var innerElem = GetOrCreateMetadata(fieldInfo.TypeName);
+            var fna = fieldInfo.PropertyName.Split('.');
+            if (fna.Length != 2)
+                throw new DataLoaderException($"Invalid complex name {fieldInfo.PropertyName}");
+            elem.AddField(new FieldInfo($"{fna[0]}!{fieldInfo.TypeName}"), DataType.Undefined);
+            innerElem.AddField(new FieldInfo(fieldInfo, fna[1]), dt);
+        }
 
-		public void ProcessOneMetadata(IDataReader rdr)
+        Dictionary<String, String> _aliases;
+
+        void ProcessAliasesMetadata(IDataReader rdr)
+        {
+            _aliases = new Dictionary<String, String>();
+            // 1-based
+            for (int i = 1; i < rdr.FieldCount; i++)
+            {
+                _aliases.Add(rdr.GetName(i), null);
+            }
+        }
+
+        String GetAlias(String name)
+        {
+            if (_aliases == null)
+                return name;
+            String outName;
+            if (_aliases.TryGetValue(name, out outName))
+                return outName;
+            return name;
+        }
+
+        void ProcessAliasesRecord(IDataReader rdr)
+        {
+            if (_aliases == null)
+                throw new InvalidOperationException();
+            // 1-based
+            for (int i = 1; i < rdr.FieldCount; i++)
+            {
+                String name = rdr.GetName(i);
+                if (_aliases.ContainsKey(name))
+                {
+                    _aliases[name] = rdr.GetString(i);
+                }
+            }
+        }
+
+
+        public void ProcessOneMetadata(IDataReader rdr)
 		{
 			if (rdr.FieldCount == 0)
 				return;
 			// first field = self object
-			var objectDef = new FieldInfo(rdr.GetName(0));
+			var objectDef = new FieldInfo(GetAlias(rdr.GetName(0)));
             if (objectDef.TypeName == SYSTEM_TYPE)
                 return; // not needed
+            else if (objectDef.TypeName == ALIASES_TYPE)
+            {
+                ProcessAliasesMetadata(rdr);
+                return;
+            }
 			var rootMetadata = GetOrCreateMetadata(ROOT);
 			rootMetadata.AddField(objectDef, DataType.Undefined);
 			// other fields = object fields
