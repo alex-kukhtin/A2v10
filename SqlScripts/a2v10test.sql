@@ -1,4 +1,4 @@
-/* 20171121-7023 */
+/* 20171122-7024 */
 
 use a2v10test;
 go
@@ -411,13 +411,13 @@ create procedure a2test.[Document.Aliases]
 as
 begin
 	set nocount on;
-	select [!$Aliases!] = null, [~Document] = N'Document!TDocument!Object', [~TRow] = N'!TRow!Array'
+	select [!$Aliases!] = null, [~Document] = N'Document!TDocument!Object', [~TRow] = N'!TRow!Array', [~EntRef] = N'Entity!TEntity!RefId'
 
 	select [~Document] = null, [Id!!Id]=@Id,
 	[Rows!TRow!Array] = null
 
 	select [~TRow] = null, [Id!!Id] = 59, [!TDocument.Rows!ParentId] = @Id,
-		[Entity!TEntity!RefId] = cast(59 as bigint);
+		[~EntRef] = cast(59 as bigint);
 
 	select [!TEntity!Map] = null, [Id!!Id] = cast(276 as bigint), Name = N'Entity Name'
 end

@@ -43,7 +43,7 @@
                     </Text>
                 </StackPanel>
             </DataGridColumn>
-            <DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+            <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
         </DataGrid>
         <Pager Source="{Bind Parent.Pager}"></Pager>
     </CollectionView>

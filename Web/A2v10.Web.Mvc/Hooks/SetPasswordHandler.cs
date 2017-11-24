@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Web;
 using System.Dynamic;
 using System.Threading.Tasks;
@@ -12,12 +14,12 @@ using A2v10.Web.Mvc.Identity;
 
 namespace A2v10.Web.Mvc.Hooks
 {
-    public class CreateUserHandler : IModelHandler
+    public class SetPasswordHandler : IModelHandler
     {
         IApplicationHost _host;
         IOwinContext _context;
         AppUserManager _userManager;
-        public CreateUserHandler(IApplicationHost host)
+        public SetPasswordHandler(IApplicationHost host)
         {
             _host = host;
             _context = HttpContext.Current.GetOwinContext();
@@ -27,9 +29,8 @@ namespace A2v10.Web.Mvc.Hooks
         public async Task AfterSave(Object beforeData, Object afterData)
         {
             var before = beforeData as ExpandoObject;
-            var after = afterData as ExpandoObject;
 
-            var userId = after.Eval<Int64>("User.Id");
+            var userId = before.Eval<Int64>("User.Id");
             var pwd = before.Eval<String>("User.Password");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(userId);

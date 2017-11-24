@@ -25,8 +25,7 @@ namespace A2v10.Xaml
         internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
         {
             base.MergeAttributes(tag, context, mode);
-            if (Block)
-                tag.AddCssClass("block");
+            tag.AddCssClassBool(Block, "block");
             AddControlAttributes(tag, context);
         }
 

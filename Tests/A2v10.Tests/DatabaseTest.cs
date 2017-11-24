@@ -27,7 +27,7 @@ namespace A2v10.Tests
         }
 
         [TestMethod]
-        public async Task TestSimpleModel()
+        public async Task LoadSimpleModel()
         {
             IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.SimpleModel");
             var md = new MetadataTester(dm);
@@ -44,7 +44,7 @@ namespace A2v10.Tests
         }
 
         [TestMethod]
-        public async Task TestComplexModel()
+        public async Task LoadComplexModel()
         {
             IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.ComplexModel");
             var md = new MetadataTester(dm);
@@ -113,7 +113,7 @@ namespace A2v10.Tests
 
 
         [TestMethod]
-        public async Task TestTreeModel()
+        public async Task LoadTreeModel()
         {
             IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.TreeModel");
             var md = new MetadataTester(dm);
@@ -139,7 +139,7 @@ namespace A2v10.Tests
 
 
         [TestMethod]
-        public async Task TestWriteSubObjectData()
+        public async Task WriteSubObjectData()
         {
             // DATA with ROOT
             var jsonData = @"
@@ -184,7 +184,7 @@ namespace A2v10.Tests
         }
 
         [TestMethod]
-        public async Task TestWriteNewObject()
+        public async Task WriteNewObject()
         {
             // DATA with ROOT
             var jsonData = @"

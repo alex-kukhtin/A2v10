@@ -1,5 +1,13 @@
 <!-- Demo page -->
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+    <Page.Resources>
+        <sys:String x:Key="EditUrl">/Identity/User/Edit</sys:String>
+        <Confirm x:Key="SureDelete">Вы действительно хотите удалить пользователя?</Confirm>
+        <sys:String x:Key="PasswordUrl">/Identity/User/Password</sys:String>
+    </Page.Resources>
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Users}" RunAt="ServerUrl">
             <CollectionView.Filter>
@@ -12,28 +20,53 @@
     <Page.Toolbar>
         <Toolbar>
             <Button Icon="Add" Tip="Создать пользователя" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Create', Argument={Bind Users}}">Создать</Button>
-            <Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/User/Edit', Argument={Bind Users}}">Свойства</Button>
-            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm='Вы действтельно хотите удалить пользователя?'}"/>
+            <Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}">Свойства</Button>
+            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm={StaticResource SureDelete}}"/>
             <Separator />
             <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
             <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+            <Button Icon="EllipsisVertical" Toolbar.Align="Right" Tip="Дополнительные действия">
+                <Button.DropDown>
+                    <DropDownMenu Direction="DownRight">
+                        <MenuItem Icon="Lock" Content="Изменить пароль" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource PasswordUrl}, Argument={Bind Users}}"/>
+                    </DropDownMenu>
+                </Button.DropDown>
+            </Button>
         </Toolbar>
     </Page.Toolbar>
     <Page.Pager>
         <Pager Source="{Bind Parent.Pager}"></Pager>
     </Page.Pager>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
-				Striped="True" Sort="True" GridLines="Vertical">
+            DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
+			Striped="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
-        <DataGridColumn Header="Логин" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
-        <!--
-		<DataGridColumn Header="Имя" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
-        -->
-		<DataGridColumn Header="Имя" Content="{Bind PersonName}" />
-        <DataGridColumn Header="e-mail" Content="{Bind Email}" />
-        <DataGridColumn Header="Телефон" Content="{Bind Phone}" />
+        <DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap"
+                        Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+		<DataGridColumn Header="Имя" Content="{Bind PersonName}"/>
+        <DataGridColumn Header="е-mail/Телефон">
+            <StackPanel Orientation="Vertical">
+                <Text If="{Bind Email}" Wrap="NoWrap">
+                    <SpanIcon Icon="MessageOutline"/>
+                    <Span Content="{Bind Email}"/>
+                </Text>
+                <Text If="{Bind Phone}" Wrap="NoWrap">
+                    <SpanIcon Icon="Eye"/>
+                    <Span Content="{Bind Phone}"/>
+                </Text>
+            </StackPanel>
+        </DataGridColumn>
         <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
-	</DataGrid>
+        <DataGridColumn Fit="True" Wrap="NoWrap">
+            <Group>
+                <Hyperlink Icon="Edit" Tip="Свойства пользователя" 
+                           Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+                <Hyperlink Icon="Delete" Tip="Удалить" 
+                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+                <Hyperlink Icon="Lock" Tip="Изменить пароль" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource PasswordUrl}, Argument={Bind}}"/>
+            </Group>
+        </DataGridColumn>
+    </DataGrid>
 </Page>
 
     

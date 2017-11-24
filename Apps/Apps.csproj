@@ -67,6 +67,7 @@
   <ItemGroup>
     <Content Include="Admin\Identity\Group\edit.template.js" />
     <Content Include="Admin\Identity\Role\edit.template.js" />
+    <Content Include="Admin\Identity\User\password.template.js" />
     <Content Include="Admin\Identity\User\create.template.js" />
     <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
@@ -220,6 +221,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\MyClients\Index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Admin\Identity\User\password.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

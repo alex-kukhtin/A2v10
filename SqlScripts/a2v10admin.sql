@@ -1,10 +1,10 @@
-/* 20171119-7052 */
+/* 20171124-7053 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 19 nov 2017 12:30
-module version : 7052
+Last updated : 24 nov 2017 15:30
+module version : 7053
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7052);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7053);
 else
-	update a2sys.Versions set [Version] = 7052 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7053 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -289,6 +289,26 @@ begin
 	if exists(select * from a2security.Users where UserName = @Login and Id <> @Id)
 		set @valid = 0;
 	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'User.Delete')
+	drop procedure [a2admin].[User.Delete]
+go
+------------------------------------------------
+create procedure a2admin.[User.Delete]
+@UserId bigint,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
+	delete from a2security.UserGroups where UserId = @Id;
+	delete from a2security.UserRoles where UserId = @Id;
+	update a2security.ViewUsers set Void=1 where Id=@Id;
 end
 go
 ------------------------------------------------

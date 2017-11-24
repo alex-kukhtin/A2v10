@@ -113,7 +113,7 @@ namespace A2v10.Data
                 var dataVal = rdr.GetValue(i);
                 if (dataVal == DBNull.Value)
                     dataVal = null;
-                var fn = rdr.GetName(i);
+                var fn = GetAlias(rdr.GetName(i));
                 FieldInfo fi = new FieldInfo(fn);
                 AddValueToRecord(currentRecord, fi, dataVal);
                 if (fi.IsRowCount) {
@@ -323,7 +323,7 @@ namespace A2v10.Data
             bool hasRowCount = false;
             for (int i=1; i<rdr.FieldCount; i++)
 			{
-				var fieldDef = new FieldInfo(rdr.GetName(i));
+				var fieldDef = new FieldInfo(GetAlias(rdr.GetName(i)));
                 if (fieldDef.IsRowCount)
                     hasRowCount = true;
 				if (!fieldDef.IsVisible)

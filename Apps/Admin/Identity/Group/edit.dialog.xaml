@@ -10,7 +10,8 @@
         <Tab Header="Общие">
             <Grid Columns="1*, Auto, 1*" Rows="Auto, Auto, 88, Auto">
                 <TextBox Grid.Row="1" Label="Наименование" Value="{Bind Group.Name}" TabIndex="1"/>
-                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}" TabIndex="2"/>
+                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" Value="{Bind Group.Key}" 
+                         TabIndex="2" Disabled="{Bind Group.$KeyDisabled}"/>
                 <Popover Grid.Row="2" Grid.Col="2" Icon="InfoBlue" Placement="RightBottom" Margin="0, 0, 5, -5">
                     <Popup Width="200">
                         <Text>

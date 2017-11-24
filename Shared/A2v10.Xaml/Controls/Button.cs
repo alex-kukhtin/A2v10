@@ -116,6 +116,8 @@ namespace A2v10.Xaml
 
         void RenderCaret(RenderContext context, Boolean bDropUp)
         {
+            if (Content == null && Icon != Icon.NoIcon)
+                return; // icon only
             new TagBuilder("span", "caret")
                 .AddCssClassBool(bDropUp, "up")
                 .Render(context);

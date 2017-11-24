@@ -39,11 +39,24 @@
             </DataGrid>
         </Tab>
         <!--
-        <Tab Header="Ролі" Padding="5, 10">
+        <Tab Header="Роли" Padding="5, 10">
             <Toolbar Style="Transparent">
-                <Button Toolbar.Align="Right" Icon="Plus" Content="Додати"/>
-                <Button Toolbar.Align="Right" Icon="Delete" Content="Видалити"/>
+                <Button Icon="Add" Content="Добавить" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Role/Browse', Argument={Bind User.Roles}}"/>
+                <Button Icon="Delete" Content="Удалить" Command="{BindCmd Command=RemoveSelected, Argument={Bind User.Roles}, Confirm='Вы действительно хотите удалить роль?'}"/>
+                <Text Size="Small"  Toolbar.Align="Right">всего ролей:
+                    <Span Bold="True" Content="{Bind User.Roles.Count}"/>
+                </Text>
             </Toolbar>
+            <DataGrid GridLines="Vertical" Height="270" FixedHeader="True" Border="True"
+                      Hover="True" ItemsSource="{Bind User.Roles}" Striped="True">
+                <DataGridColumn Header="Код" Fit="True" Content="{Bind Id}" Align="Right"/>
+                <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+                <DataGridColumn Header="Наименование" Content="{Bind Name}"/>
+                <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+                <DataGridColumn Fit="True">
+                    <Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Confirm='Вы действительно хотите удалить роль?'}"/>
+                </DataGridColumn>
+            </DataGrid>
         </Tab>
         -->
     </TabPanel>

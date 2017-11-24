@@ -4,6 +4,7 @@
 const template = {
     properties: {
         "TGroup.$IdOrNew"() { return this.$isNew ? "Новая" : this.Id; },
+        "TGroup.$KeyDisabled"() { return this.Id < 100; }
     },
 	validators: {
         'Group.Name': [

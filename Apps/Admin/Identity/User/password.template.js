@@ -8,14 +8,7 @@ const template = {
         "TUser.Password": String,
         "TUser.Confirm" : String
     },
-    events: {
-    },
     validators: {
-        "User.Name": [
-            "Не указан логин",
-            {valid: duplicateLogin, async:true, msg: "Пользователь с таким логином уже существует"}
-        ],
-        "User.Email": { valid:'email', msg: 'Ошибка в адресе электронной почты'},
         "User.Password": [
             "Не указан пароль",
             { valid: validLen, msg: "Длина пароля не менее 6 символов" },
@@ -39,12 +32,5 @@ function validLen(user) {
     return user.Password.length >= 6;
 }
 
-function duplicateLogin(user, value) {
-    // this === rule ???
-    var vm = user.$vm;
-    if (!user.Name)
-        return true;
-    return vm.$asyncValid('duplicateLogin', { Login: user.Name, Id: user.Id });
-}
 
 module.exports = template;

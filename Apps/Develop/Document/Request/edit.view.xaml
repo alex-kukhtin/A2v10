@@ -60,6 +60,28 @@
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
 				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
+            <Panel Collapsible="True" Header="Test Table" Style="Yellow" Padding="0, 6">
+                <Table GridLines="Horizontal" Width="100%">
+                    <Table.Header>
+                        <TableRow>
+                            <TableCell>111</TableCell>
+                            <TableCell>222</TableCell>
+                        </TableRow>
+                    </Table.Header>
+                    <TableRow>
+                        <TableCell>111</TableCell>
+                        <TableCell>222</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>333</TableCell>
+                        <TableCell>444</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>555</TableCell>
+                        <TableCell>666</TableCell>
+                    </TableRow>
+                </Table>
+            </Panel>
 		</Taskpad>
 	</Page.Taskpad>
 	<TabPanel FullPage="True">

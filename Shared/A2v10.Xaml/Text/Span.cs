@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 
         public Boolean? Bold { get; set; }
         public Boolean? Italic { get; set; }
+        public Boolean Block { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -19,6 +20,8 @@ namespace A2v10.Xaml
             MergeAttributes(span, context);
             span.AddCssClassBoolNo(Bold, "bold");
             span.AddCssClassBoolNo(Italic, "italic");
+            span.AddCssClassBool(Block, "block");
+
             var cbind = GetBinding(nameof(Content));
             if (cbind != null)
                 span.MergeAttribute("v-text", cbind.GetPathFormat(context));

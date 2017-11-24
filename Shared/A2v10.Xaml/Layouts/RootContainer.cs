@@ -2,14 +2,46 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    public class ResourceDictionary : Dictionary<String, Object>
+    {
+
+    }
+
     public abstract class RootContainer : Container, IUriContext
     {
         #region IUriContext
         public Uri BaseUri { get; set; }
         #endregion
+
+        protected ResourceDictionary _resources;
+
+        public ResourceDictionary Resources
+        {
+            get
+            {
+                if (_resources == null)
+                    _resources = new ResourceDictionary();
+                return _resources;
+            }
+            set
+            {
+                _resources = value;
+            }
+        }
+
+        public Object FindResource(String key)
+        {
+            if (_resources == null)
+                return null;
+            Object resrc;
+            if (_resources.TryGetValue(key, out resrc))
+                return resrc;
+            return null;
+        }
     }
 }

@@ -1,5 +1,12 @@
 <!-- Roles Index -->
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+    <Page.Resources>
+        <sys:String x:Key="EditUrl">/Identity/Role/Edit</sys:String>
+        <Confirm x:Key="SureDelete">Вы действительно хотите удалить роль?</Confirm>
+    </Page.Resources>
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Roles}" RunAt="ServerUrl">
             <CollectionView.Filter>
@@ -12,10 +19,10 @@
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
-            <Button Icon="Add" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Role/Edit', Argument={Bind Roles}}">Создать</Button>
+            <Button Icon="Add" Command="{BindCmd Dialog, Action=Append, Url={StaticResource EditUrl}, Argument={Bind Roles}}">Создать</Button>
             <Button Icon="Edit" Content="Изменить"
-                    Command="{BindCmd Dialog, Action=EditSelected, Url='/Identity/Role/Edit', Argument={Bind Roles}}" />
-            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Roles}, Confirm='Вы действительно хотите удалить роль?'}"/>
+                    Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Roles}}" />
+            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Roles}, Confirm={StaticResource SureDelete}}"/>
             <Separator />
             <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
             <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
@@ -26,18 +33,19 @@
         </Toolbar>
     </Page.Toolbar>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
-				Striped="True" Sort="True" GridLines="Vertical">
+				Striped="True" Sort="True" GridLines="Vertical"
+              DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
-        <DataGridColumn Header="Наименование" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Role/Edit'}"/>
+        <DataGridColumn Header="Наименование" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}}"/>
         <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
         <DataGridColumn Header="Элементов" Content="{Bind ElemCount}" Fit="True" Align="Right"/>
         <DataGridColumn Fit="True" Wrap="NoWrap">
             <Group>
                 <Hyperlink Icon="Edit" Tip="Свойства роли" 
-                           Command="{BindCmd Dialog, Action=Edit, Url='/Identity/Role/Edit', Argument={Bind}}"/>
+                           Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
                 <Hyperlink Icon="Delete" Tip="Удалить" 
-                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm='Вы действительно хотите удалить роль?'}"/>
+                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
             </Group>
         </DataGridColumn>
 	</DataGrid>
