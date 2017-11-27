@@ -140,7 +140,7 @@ namespace A2v10.Data
                         {
                             if (onMetadata != null)
                                 onMetadata(rdrNo, rdr);
-                            while (await rdr.ReadAsync())
+                            while (rdr.Read())
                             {
                                 if (onRead != null)
                                     onRead(rdrNo, rdr);
