@@ -122,7 +122,7 @@ namespace A2v10.Data
             }
         }
 
-        public async void ReadData(String source, String command,
+        public void ReadData(String source, String command,
             Action<SqlParameterCollection> setParams,
             Action<Int32, IDataReader> onRead,
             Action<Int32, IDataReader> onMetadata)
@@ -223,7 +223,8 @@ namespace A2v10.Data
                         {
                             do
                             {
-                                // metadata is not needed
+                                // metadata is not needed (exclude aliases)
+                                dataReader.ProcessMetadataAliases(rdr);
                                 while (await rdr.ReadAsync())
                                 {
                                     dataReader.ProcessOneRecord(rdr);
