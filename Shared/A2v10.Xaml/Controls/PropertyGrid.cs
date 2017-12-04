@@ -51,15 +51,14 @@ namespace A2v10.Xaml
             {
                 if (Children.Count != 1)
                     throw new XamlException("For a table with an items source, only one child element is allowed");
-                var tr = new TagBuilder("tr");
-                tr.MergeAttribute("v-for", $"(prop, propIndex) in {isBind.GetPath(context)}");
-                tr.MergeAttribute(":key", "propIndex");
-                tr.RenderStart(context);
+                String path = isBind.GetPath(context); // before scope!
                 using (new ScopeContext(context, "prop"))
                 {
-                    Children[0].RenderElement(context, (tag) => tag.MergeAttribute(":key", "propIndex"));
+                    Children[0].RenderElement(context, (tag) => {
+                        tag.MergeAttribute("v-for", $"(prop, propIndex) in {path}");
+                        tag.MergeAttribute(":key", "propIndex");
+                    });
                 }
-                tr.RenderEnd(context);
             }
             else
             {

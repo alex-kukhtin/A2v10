@@ -17,6 +17,8 @@ namespace A2v10.Xaml
         public Int32? RowSpan { get; set; }
         public VerticalAlign VAlign { get; set; }
         public TextAlign Align { get; set; }
+        public Boolean? Bold { get; set; }
+        public Boolean? Italic { get; set; }
 
         //public Boolean Validate { get; set; }
 
@@ -29,6 +31,8 @@ namespace A2v10.Xaml
                 onRender(td);
 
             MergeAttributes(td, context);
+            td.AddCssClassBoolNo(Bold, "bold");
+            td.AddCssClassBoolNo(Italic, "italic");
             MergeContent(td, context);
 
             if (Align != TextAlign.Left)

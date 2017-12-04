@@ -440,7 +440,7 @@ app.modules['std:http'] = function () {
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7070
+// 20171204-7075
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -463,7 +463,8 @@ app.modules['std:utils'] = function () {
 		toJson: toJson,
         isPrimitiveCtor: isPrimitiveCtor,
         isDateCtor: isDateCtor,
-		isEmptyObject: isEmptyObject,
+        isEmptyObject: isEmptyObject,
+        defineProperty: defProperty,
 		eval: eval,
         format: format,
         toNumber: toNumber,
@@ -676,6 +677,15 @@ app.modules['std:utils'] = function () {
         }
         return false;
     }
+
+    function defProperty(trg, prop, get, set /*todo!*/) {
+        Object.defineProperty(trg, prop, {
+            enumerable: true,
+            configurable: true, /* needed */
+            get: get
+        });
+    }
+
 };
 
 
@@ -835,7 +845,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171119-7071
+// 20171203-7075
 // services/datamodel.js
 
 (function () {
@@ -1182,26 +1192,47 @@ app.modules['std:validators'] = function() {
         });
     }
 
-	_BaseArray.prototype.$append = function (src) {
-		let addingEvent = this._path_ + '[].adding';
-		let newElem = this.$new(src);
-		// TODO: emit adding and check result
-		let er = this._root_.$emit(addingEvent, this/*array*/, newElem/*elem*/);
-		if (er === false)
-			return; // disabled
-		let len = this.push(newElem);
-		let ne = this[len - 1]; // maybe newly created reactive element
-		let eventName = this._path_ + '[].add';
-		this._root_.$setDirty(true);
-		this._root_.$emit(eventName, this /*array*/, ne /*elem*/, len - 1 /*index*/);
-		platform.set(this, "$selected", ne);
-        emitSelect(this);
-		// set RowNumber
-		if ('$rowNo' in newElem._meta_) {
-			let rowNoProp = newElem._meta_.$rowNo;
-			newElem[rowNoProp] = len; // 1-based
-		}
-		return ne;
+    _BaseArray.prototype.$append = function (src) {
+        const that = this;
+        function append(src, select) {
+            let addingEvent = that._path_ + '[].adding';
+            let newElem = that.$new(src);
+            // TODO: emit adding and check result
+            let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
+            if (er === false)
+                return; // disabled
+            let len = that.push(newElem);
+            let ne = that[len - 1]; // maybe newly created reactive element
+            let eventName = that._path_ + '[].add';
+            that._root_.$setDirty(true);
+            that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
+            if (select) {
+                platform.set(that, "$selected", ne);
+                emitSelect(that);
+            }
+            // set RowNumber
+            if ('$rowNo' in newElem._meta_) {
+                let rowNoProp = newElem._meta_.$rowNo;
+                newElem[rowNoProp] = len; // 1-based
+            }
+            return ne;
+        }
+        if (utils.isArray(src)) {
+            let ra = [];
+            let lastElem = null;
+            src.forEach(function (elem) {
+                lastElem = append(elem, false);
+                ra.push(append(elem, false));
+            });
+            if (lastElem) {
+                // last added element
+                platform.set(that, "$selected", lastElem);
+                emitSelect(that);
+            }
+            return ra;
+        } else
+            return append(src, true);
+
 	};
 
     _BaseArray.prototype.$empty = function () {
@@ -4555,7 +4586,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7070
+// 20171203-7075
 // controllers/base.js
 
 (function () {
@@ -4869,6 +4900,10 @@ Vue.directive('resize', {
 				return arr && !!arr.$selected;
 			},
 
+            $hasChecked(arr) {
+                return arr && arr.$checked && arr.$checked.length;
+            },
+
 			$confirm(prms) {
 				if (utils.isString(prms))
                     prms = { message: prms };
@@ -4997,6 +5032,16 @@ Vue.directive('resize', {
                     return;
                 }
                 this.$modalClose(array.$selected);
+            },
+
+            $modalSelectChecked(array) {
+                if (!('$checked' in array)) {
+                    console.error('invalid array for $modalSelectChecked');
+                    return;
+                }
+                let chArray = array.$checked;
+                if (chArray.length > 0)
+                    this.$modalClose(chArray);
             },
 
 			$saveAndClose() {

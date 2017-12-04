@@ -81,6 +81,21 @@
                         <TableCell>666</TableCell>
                     </TableRow>
                 </Table>
+                <PropertyGrid ItemsSource="{Bind Document.Rows}">
+                    <PropertyGridItem Name="Id" Content="{Bind Qty}" />
+                </PropertyGrid>
+                <Repeater ItemsSource="{Bind Document.$Shipment}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Label="Id" Value="{Bind Ware.Id}"/>
+                        <TextBox Label="Name" Value="{Bind Ware.Name}"/>
+                        <Table ItemsSource="{Bind Documents}" Border="True" Compact="True">
+                            <TableRow>
+                                <TableCell Content="{Bind Id}"></TableCell>
+                                <TableCell Content="{Bind Name}"></TableCell>
+                            </TableRow>
+                        </Table>
+                    </StackPanel>
+                </Repeater>
             </Panel>
 		</Taskpad>
 	</Page.Taskpad>

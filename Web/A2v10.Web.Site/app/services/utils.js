@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7070
+// 20171204-7075
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -23,7 +23,8 @@ app.modules['std:utils'] = function () {
 		toJson: toJson,
         isPrimitiveCtor: isPrimitiveCtor,
         isDateCtor: isDateCtor,
-		isEmptyObject: isEmptyObject,
+        isEmptyObject: isEmptyObject,
+        defineProperty: defProperty,
 		eval: eval,
         format: format,
         toNumber: toNumber,
@@ -236,6 +237,15 @@ app.modules['std:utils'] = function () {
         }
         return false;
     }
+
+    function defProperty(trg, prop, get, set /*todo!*/) {
+        Object.defineProperty(trg, prop, {
+            enumerable: true,
+            configurable: true, /* needed */
+            get: get
+        });
+    }
+
 };
 
 

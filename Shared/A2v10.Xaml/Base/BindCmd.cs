@@ -34,6 +34,7 @@ namespace A2v10.Xaml
         RemoveSelected,
         Dialog,
         Select,
+        SelectChecked,
         Report,
     }
 
@@ -114,6 +115,9 @@ namespace A2v10.Xaml
 
                 case CommandType.Select:
                     return $"$modalSelect({CommandArgument(context)})";
+
+                case CommandType.SelectChecked:
+                    return $"$modalSelectChecked({CommandArgument(context)})";
 
                 case CommandType.RemoveSelected:
                     return $"$removeSelected({CommandArgument(context)}, {GetConfirm(context)})";
@@ -321,6 +325,13 @@ namespace A2v10.Xaml
                 case CommandType.Remove:
                     if (context.IsDataModelIsReadOnly)
                         tag.MergeAttribute(":disabled", "true");
+                    break;
+                case CommandType.SelectChecked:
+                    {
+                        var arg = GetBinding(nameof(Argument));
+                        if (arg != null)
+                            tag.MergeAttribute(":disabled", $"!$hasChecked({arg.GetPath(context)})");
+                    }
                     break;
                 case CommandType.OpenSelected:
                 case CommandType.Select:

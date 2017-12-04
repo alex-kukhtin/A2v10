@@ -3,22 +3,34 @@
 using System;
 using System.Windows.Markup;
 
-namespace A2v10.Xaml.Controls
+namespace A2v10.Xaml
 {
-    [ContentProperty("ItemTemplate")]
+    [ContentProperty("Content")]
     public class Repeater : UIElement
     {
         public Object ItemsSource { get; set; }
-        public UIElementBase ItemTemplate { get; set; }
+        public UIElementBase Content { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            if (ItemTemplate == null)
-                throw new XamlException("Invalid empty item template for Repeater");
-            var bs = GetBinding(nameof(ItemsSource));
-            if (bs == null)
+            var isBind = GetBinding(nameof(ItemsSource));
+            if (isBind == null)
                 return;
-            // TODO: wrap <div> with vFor
+            var div = new TagBuilder("div", null, IsInGrid);
+            if (onRender != null)
+                onRender(div);
+            MergeAttributes(div, context);
+            div.MergeAttribute("v-for", $"(elem, elemIndex) in {isBind.GetPath(context)}");
+            div.MergeAttribute(":key", "elemIndex");
+            div.RenderStart(context);
+            if (Content != null)
+            {
+                using (new ScopeContext(context, "elem"))
+                {
+                    Content.RenderElement(context);
+                }
+            }
+            div.RenderEnd(context);
         }
     }
 }

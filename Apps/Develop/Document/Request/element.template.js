@@ -12,7 +12,8 @@ let template = {
         },
         "TDocument.$PaneStyle"() {
             return this.Rows.Count > 3 ? "warning" : null;
-        }
+        },
+        "TDocument.$Shipment": getShipment
 	},
 	methods: {
 		// new
@@ -82,6 +83,19 @@ function documentSumProperty() {
 
 function filterRows(row, filter) {
 	return row.Entity.Name.indexOf(filter.Filter) != -1;
+}
+
+function getShipment() {
+    let doc = this;
+    // все склады, которые есть в строках документа
+    let wars = [];
+    doc.Rows.forEach(row => {
+        let whId = row.Warehouse.Id;
+        if (!whId) return;
+        if (wars.find(w => w.Ware.Id === whId)) return;
+        wars.push({ Ware: row.Warehouse, Documents: [{ Id: 10, Name: 'Id=10' }, {Id:20, Name: 'Id=20'}] });
+    });
+    return wars;
 }
 
 module.exports = template;

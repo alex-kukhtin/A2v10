@@ -41,8 +41,7 @@ namespace A2v10.Xaml
             nameCell.RenderEnd(context);
 
             var valCell = new TagBuilder("td", "prop-value");
-            if (Bold != null)
-                valCell.AddCssClass(Bold.Value ? "bold" : "no-bold");
+            valCell.AddCssClassBoolNo(Bold, "bold");
             var contBind = GetBinding(nameof(Content));
             if (contBind != null)
                 valCell.MergeAttribute("v-text", contBind.GetPathFormat(context));

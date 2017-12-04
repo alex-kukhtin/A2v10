@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7070
+// 20171203-7075
 // controllers/base.js
 
 (function () {
@@ -314,6 +314,10 @@
 				return arr && !!arr.$selected;
 			},
 
+            $hasChecked(arr) {
+                return arr && arr.$checked && arr.$checked.length;
+            },
+
 			$confirm(prms) {
 				if (utils.isString(prms))
                     prms = { message: prms };
@@ -442,6 +446,16 @@
                     return;
                 }
                 this.$modalClose(array.$selected);
+            },
+
+            $modalSelectChecked(array) {
+                if (!('$checked' in array)) {
+                    console.error('invalid array for $modalSelectChecked');
+                    return;
+                }
+                let chArray = array.$checked;
+                if (chArray.length > 0)
+                    this.$modalClose(chArray);
             },
 
 			$saveAndClose() {

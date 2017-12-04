@@ -9,6 +9,7 @@ const template = {
         "TUser.Confirm" : String
     },
     events: {
+        "User.Groups[].adding": onAdding
     },
     validators: {
         "User.Name": [
@@ -45,6 +46,12 @@ function duplicateLogin(user, value) {
     if (!user.Name)
         return true;
     return vm.$asyncValid('duplicateLogin', { Login: user.Name, Id: user.Id });
+}
+
+function onAdding(array, elem) {
+    if (array.find(item => item.Id === elem.Id))
+        return false; // такая группа уже есть
+    return true;
 }
 
 module.exports = template;

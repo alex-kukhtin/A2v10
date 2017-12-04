@@ -5,6 +5,7 @@ const template = {
     properties: {
     },
     events: {
+        "User.Groups[].adding": onAdding
     },
     validators: {
         "User.Name": [
@@ -19,6 +20,12 @@ const template = {
 };
 
 module.exports = template;
+
+function onAdding(array, elem) {
+    if (array.find(item => item.Id === elem.Id))
+        return false; // такая группа уже есть
+    return true;
+}
 
 function duplicateLogin(user, value) {
     // this === rule ???
