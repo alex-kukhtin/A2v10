@@ -48,6 +48,8 @@ namespace A2v10.Xaml
 
         public Length Height { get; set; }
 
+        public UIElementBase RowDetails { get; set; }
+
         GroupDescriptions _groupBy;
         public GroupDescriptions GroupBy
         {
@@ -73,6 +75,8 @@ namespace A2v10.Xaml
                 dataGrid.MergeAttribute(":fixed-header", "true");
             if (HeadersVisibility == HeadersVisibility.None)
                 dataGrid.MergeAttribute(":hide-header", "true");
+            if (RowDetails != null)
+                dataGrid.MergeAttribute(":row-details", "true");
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.GetPath(context));
@@ -129,7 +133,24 @@ namespace A2v10.Xaml
                 col.RenderColumn(context, colIndex);
                 colIndex++;
             }
+            RenderRowDetails(context);
             dataGrid.RenderEnd(context);
+        }
+
+        void RenderRowDetails(RenderContext context)
+        {
+            if (RowDetails == null)
+                return;
+            var rdtag = new TagBuilder("template");
+            rdtag.MergeAttribute("slot", "row-details");
+            rdtag.MergeAttribute("slot-scope", "details");
+            rdtag.RenderStart(context);
+            using (var ctx = new ScopeContext(context, "details.row"))
+            {
+                RowDetails.RenderElement(context);
+            }
+            rdtag.RenderEnd(context);
+
         }
 
         protected override void OnEndInit()

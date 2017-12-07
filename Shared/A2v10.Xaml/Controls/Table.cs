@@ -27,6 +27,7 @@ namespace A2v10.Xaml
         public Boolean Border { get; set; }
         public Boolean Compact { get; set; }
         public Boolean Hover { get; set; }
+        public Boolean Striped { get; set; }
         public Length Width { get; set; }
 
         public TableBackgroundStyle Background { get; set; }
@@ -94,6 +95,7 @@ namespace A2v10.Xaml
             table.AddCssClassBool(Border, "bordered");
             table.AddCssClassBool(Compact, "compact");
             table.AddCssClassBool(Hover, "hover");
+            table.AddCssClassBool(Striped, "striped");
 
             Bind isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)

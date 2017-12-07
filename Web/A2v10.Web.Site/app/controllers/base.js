@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171203-7075
+// 20171207-7076
 // controllers/base.js
 
 (function () {
@@ -201,8 +201,15 @@
                 });
             },
 
-			$reload() {
+            $reload(args) {
                 let self = this;
+                if (utils.isArray(args)) {
+                    // reload lazy
+                    let propIx = args._path_.lastIndexOf('.');
+                    let prop = args._path_.substring(propIx + 1);
+                    args.$loaded = false; // reload
+                    return self.$loadLazy(args.$parent, prop);
+                }
                 let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
@@ -549,6 +556,7 @@
                     }
                     dataservice.post(url, jsonData).then(function (data) {
                         if (propName in data) {
+                            arr.$empty();
                             for (let el of data[propName])
                                 arr.push(arr.$new(el));
                         }

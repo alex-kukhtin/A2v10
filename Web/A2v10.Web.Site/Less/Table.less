@@ -70,16 +70,13 @@ table.grid-horizontal, table.grid-both {
 }
 
 
-table.striped {
-    > tbody > tr:nth-of-type(even) {
-        background-color: @alter-bg-color;
-    }
-}
-
 table.a2-table {
     table-layout: auto;
     //background-color: #f8f8f8;
     //background-color: #fcfaf6;
+    &.striped > tbody > tr:nth-of-type(even) {
+        background-color: @alter-bg-color;
+    }
 
     &.bordered {
         margin: 1px;

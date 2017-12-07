@@ -50,6 +50,12 @@ table.data-grid {
         width: 1px;
     }
 
+    &.striped {
+        > tbody > tr.even {
+            background-color: @alter-bg-color;
+        }
+    }
+
     td {
         padding: 4px 6px;
         vertical-align: top;

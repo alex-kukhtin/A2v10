@@ -61,7 +61,7 @@
 				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
             <Panel Collapsible="True" Header="Test Table" Style="Yellow" Padding="0, 6">
-                <Table GridLines="Horizontal" Width="100%">
+                <Table GridLines="Horizontal" Width="100%" Striped="True">
                     <Table.Header>
                         <TableRow>
                             <TableCell>111</TableCell>
@@ -202,14 +202,14 @@
 					</DataGridColumn>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"></Pager>
-                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both" Hover="True">
+                <Table ItemsSource="{Bind Parent.ItemsSource}" Compact="False" GridLines="Both" Hover="True" Striped="True">
                     <Table.Header>
                         <TableRow>
                             <TableCell RowSpan="2">Номер</TableCell>
                             <TableCell>Товар</TableCell>
                             <TableCell>Кол-во</TableCell>
                             <TableCell>Цена</TableCell>
-                            <TableCell>Доставка</TableCell>
+                            <TableCell RowSpan="2">Доставка</TableCell>
                             <TableCell RowSpan="2">Склад</TableCell>
                         </TableRow>
                         <TableRow>

@@ -1491,6 +1491,9 @@ table.data-grid {
 table.data-grid col.fit {
   width: 1px;
 }
+table.data-grid.striped > tbody > tr.even {
+  background-color: rgba(208, 208, 208, 0.15);
+}
 table.data-grid td {
   padding: 4px 6px;
   vertical-align: top;
@@ -2272,11 +2275,11 @@ table.grid-both > tfoot > tr:last-child > td {
   border-bottom-style: none;
   border-bottom-width: 0;
 }
-table.striped > tbody > tr:nth-of-type(even) {
-  background-color: rgba(208, 208, 208, 0.15);
-}
 table.a2-table {
   table-layout: auto;
+}
+table.a2-table.striped > tbody > tr:nth-of-type(even) {
+  background-color: rgba(208, 208, 208, 0.15);
 }
 table.a2-table.bordered {
   margin: 1px;

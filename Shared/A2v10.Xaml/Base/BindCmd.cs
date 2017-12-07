@@ -90,7 +90,7 @@ namespace A2v10.Xaml
                     throw new NotImplementedException($"Command required for BindCmd extension");
                 case CommandType.Refresh:
                 case CommandType.Reload:
-                    return "$reload()";
+                    return $"$reload({CommandArgument(context, nullable:true)})";
 
                 case CommandType.Requery:
                     return "$requery()";

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20171207-7076
 // components/datagrid.js*/
 
 (function () {
@@ -54,13 +54,21 @@
 					</tr>
 					<template>
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" v-for="(row, rowIndex) in g.items" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex">
+                            <slot name="row-details" :row="item"></slot>
+                        </data-grid-row-details>
 					</template>
 				</template>
 			</tbody>
 		</template>
 		<template v-else>
 			<tbody>
-				<data-grid-row :cols="columns" v-for="(item, rowIndex) in $items" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+                <template v-for="(item, rowIndex) in $items">
+				    <data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
+                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex">
+                        <slot name="row-details" :row="item"></slot>
+                    </data-grid-row-details>
+                </template>
 			</tbody>
 		</template>
 		<slot name="footer"></slot>
@@ -79,6 +87,13 @@
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
+    const dataGridRowDetailsTemplate = `
+<tr v-if="visible" class="row-details">
+    <td :colspan='cols'>
+        <slot></slot>
+    </td>
+</tr>
+`;
     /**
         icon on header!!!
 		<i :class="\'ico ico-\' + icon" v-if="icon"></i>
@@ -86,9 +101,9 @@
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
     <div class="h-fill" v-if="fixedHeader">
-        {{header || content}}
+        {{header}}
     </div><div class="h-holder">
-		<slot>{{header || content}}</slot>
+		<slot>{{header}}</slot>
 	</div>
 </th>
 `;
@@ -324,6 +339,8 @@
 				if (this.$parent.isMarkRow && this.mark) {
 					cssClass += ' ' + this.row[this.mark];
                 }
+                if ((this.index + 1) % 2)
+                    cssClass += ' even'
                 if (this.$parent.rowBold && this.row[this.$parent.rowBold])
                     cssClass += ' bold';
 				if (this.level)
@@ -353,6 +370,20 @@
         }
     };
 
+    const dataGridRowDetails = {
+        name: 'data-grid-row-details',
+        template: dataGridRowDetailsTemplate,
+        props: {
+            cols: Number,
+            row: Object
+        },
+        computed: {
+            visible() {
+                return this.row == this.$parent.selected;
+            }
+        }
+    };
+
 	Vue.component('data-grid', {
 		props: {
 			'items-source': [Object, Array],
@@ -370,11 +401,13 @@
             markStyle: String,
             rowBold: String,
 			doubleclick: Function,
-            groupBy: [Array, Object]
+            groupBy: [Array, Object],
+            rowDetails: Boolean
 		},
 		template: dataGridTemplate,
 		components: {
-			'data-grid-row': dataGridRow
+            'data-grid-row': dataGridRow,
+            'data-grid-row-details': dataGridRowDetails
 		},
 		data() {
 			return {

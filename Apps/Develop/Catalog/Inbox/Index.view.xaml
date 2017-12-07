@@ -25,6 +25,23 @@
                 <Span Content="{Bind Schema}"/>.[<Span Content="{Bind Model}"/>]:<Span Content="{Bind ModelId}"></Span>
             </Text>
         </DataGridColumn>
+        <DataGrid.RowDetails>
+            <StackPanel Orientation="Horizontal">
+                <Text Size="Small">Row details from Xaml. Id=
+                    <Span Content="{Bind Id}" Bold="True"/>, Text=
+                    <Span Content="{Bind Text}" Bold="True"/>
+                </Text>
+                <Button Style="Info" Size="Mini" Icon="ArrowOpen"
+                    Command="{BindCmd Open, Url='/catalog/inbox/open', Argument={Bind}}">Open task</Button>
+                <Table Border="True" Compact="True">
+                    <TableRow>
+                        <TableCell>1</TableCell>
+                        <TableCell>2</TableCell>
+                        <TableCell>3</TableCell>
+                    </TableRow>
+                </Table>
+            </StackPanel>
+        </DataGrid.RowDetails>
     </DataGrid>
 </Page>
 
