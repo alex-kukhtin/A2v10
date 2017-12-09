@@ -154,6 +154,23 @@ table.data-grid {
         background-color: @active-bg-color !important;
     }
 
+    tr.row-details {
+        &:hover {
+            background-color: white !important;
+        }
+
+        td.details-cell {
+            background-color: #fcfaf6;
+            padding: 0;
+        }
+
+        .details-wrapper {
+            padding: 4px 6px;
+            border-top: 1px solid @table-brd-color;
+            border-bottom: 1px solid @table-brd-color;
+        }
+    }
+
     td.danger, td.error, td.red {
         background-color: @dg-danger-bg-color !important;
     }
@@ -172,7 +189,7 @@ table.data-grid {
 
     td.marker {
         padding: 0;
-        width: 12px;
+        min-width: 12px;
         height: 100%;
         position: relative;
 
@@ -183,6 +200,7 @@ table.data-grid {
             top: 0;
             bottom: 0;
             right: 0;
+            //height:50%;
             border-left: 6px solid #ddd;
             background-color: @alter-bg-color;
         }
@@ -205,6 +223,17 @@ table.data-grid {
         > .info, > .cyan {
             background-color: @dg-info-bg-color;
             border-left-color: @dg-info-brd-color;
+        }
+    }
+
+    td.details-marker {
+        padding: 0;
+        padding: 4px;
+        width: 22px;
+        cursor: pointer;
+
+        .ico {
+            padding: 0;
         }
     }
 
@@ -339,11 +368,11 @@ table.data-grid > tbody {
     position: relative;
 
     > .data-grid-body.fixed-header {
-        margin-top: 25px;
+        margin-top: 27px;
         overflow: hidden;
         overflow-y: auto;
         // 25px (header) + 27px(pager)
-        height: ~"calc(100% - 25px)";
+        height: ~"calc(100% - 27px)";
         //border-bottom: 1px solid @table-hdr-brd-color;
         > table > thead {
             height: 0;

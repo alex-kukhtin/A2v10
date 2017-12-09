@@ -8,8 +8,8 @@
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         </Toolbar>
     </Page.Toolbar>
-    <DataGrid ItemsSource="{Bind Inboxes}" Hover="True"
-				  Striped="True" Border="True" Sort="True" GridLines="Vertical"
+    <DataGrid ItemsSource="{Bind Inboxes}" Hover="True" MarkerStyle="Marker"
+		      Striped="True" Border="False" Sort="True" GridLines="Vertical"
               FixedHeader="True">
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="PId" Content="{Bind ProcessId}" Align="Right" Fit="True" Wrap="NoWrap"/>
@@ -26,21 +26,23 @@
             </Text>
         </DataGridColumn>
         <DataGrid.RowDetails>
-            <StackPanel Orientation="Horizontal">
-                <Text Size="Small">Row details from Xaml. Id=
-                    <Span Content="{Bind Id}" Bold="True"/>, Text=
-                    <Span Content="{Bind Text}" Bold="True"/>
-                </Text>
-                <Button Style="Info" Size="Mini" Icon="ArrowOpen"
+            <DataGridRowDetails Activate="Cell" Visible="{Bind $HasDetails}">
+                <StackPanel Orientation="Horizontal">
+                    <Text Size="Small">Row details from Xaml. Id=
+                        <Span Content="{Bind Id}" Bold="True"/> , Text=
+                        <Span Content="{Bind Text}" Bold="True"/>
+                    </Text>
+                    <Button Style="Info" Size="Mini" Icon="ArrowOpen"
                     Command="{BindCmd Open, Url='/catalog/inbox/open', Argument={Bind}}">Open task</Button>
-                <Table Border="True" Compact="True">
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>2</TableCell>
-                        <TableCell>3</TableCell>
-                    </TableRow>
-                </Table>
-            </StackPanel>
+                    <Table Border="True" Compact="True" Header="H1,H2,H3">
+                        <TableRow>
+                            <TableCell>1</TableCell>
+                            <TableCell>2</TableCell>
+                            <TableCell>3</TableCell>
+                        </TableRow>
+                    </Table>
+                </StackPanel>
+            </DataGridRowDetails>
         </DataGrid.RowDetails>
     </DataGrid>
 </Page>

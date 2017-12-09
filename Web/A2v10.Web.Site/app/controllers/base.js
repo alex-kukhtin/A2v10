@@ -590,6 +590,7 @@
             },
             __doInit__() {
                 const root = this.$data;
+                if (!root._modelLoad_) return;
                 let caller = null;
                 if (this.$caller)
                     caller = this.$caller.$data;

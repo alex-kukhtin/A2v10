@@ -58,16 +58,18 @@
                     <DataGridColumn Header="Amount" Content="{Bind Amount, DataType=Currency}" Align="Right" Width="100"/>
                     <DataGridColumn Header="Memo" Content="{Bind Memo}" />
                     <DataGrid.RowDetails>
-                        <Table Compact="True" GridLines="Both" Margin="10px" Background="Rose">
-                            <TableRow>
-                                <TableCell>Id</TableCell>
-                                <TableCell Content="{Bind Id}"/>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Date</TableCell>
-                                <TableCell Content="{Bind Date, DataType=DateTime}"/>
-                            </TableRow>
-                        </Table>
+                        <DataGridRowDetails Activate="Cell">
+                            <Table Compact="True" GridLines="Both" Margin="10px" Background="Rose">
+                                <TableRow>
+                                    <TableCell>Id</TableCell>
+                                    <TableCell Content="{Bind Id}"/>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell Content="{Bind Date, DataType=DateTime}"/>
+                                </TableRow>
+                            </Table>
+                        </DataGridRowDetails>
                     </DataGrid.RowDetails>
                 </DataGrid>
                 <!--

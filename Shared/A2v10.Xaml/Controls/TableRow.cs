@@ -2,11 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
 
+    [TypeConverter(typeof(TableRowCollectionConverter))]
     public class TableRowCollection : List<TableRow>
     {
         internal void Render(RenderContext context)
@@ -63,6 +66,34 @@ namespace A2v10.Xaml
             var tr = new TagBuilder("tr").RenderStart(context);
             new TagBuilder("td", "row-divider").MergeAttribute("colspan", cols).Render(context);
             tr.RenderEnd(context);
+        }
+    }
+
+    public class TableRowCollectionConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(String))
+                return true;
+            return false;
+        }
+
+        public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
+        {
+            if (value == null)
+                return null;
+            if (value is String)
+            {
+                TableRowCollection trc = new TableRowCollection();
+                TableRow row = new TableRow();
+                trc.Add(row);
+                foreach (var s in value.ToString().Split(','))
+                {
+                    row.Cells.Add(new TableCell() { Content = s.Trim() });
+                }
+                return trc;
+            }
+            throw new XamlException($"Invalid TableRowCollection value '{value}'");
         }
     }
 }

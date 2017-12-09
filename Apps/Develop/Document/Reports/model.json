@@ -1,0 +1,14 @@
+﻿/*Document/quotations*/
+{
+  "schema2": "a2v10demo",
+  "model2": "Reports",
+  "actions": {
+    "index": {
+      "index": true,
+      "view": "Index.view"
+    },
+    "open": {
+      "view": "edit.view"
+    }
+  }
+}

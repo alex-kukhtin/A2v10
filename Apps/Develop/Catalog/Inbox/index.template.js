@@ -3,8 +3,8 @@
 
 let template = {
 	properties: {
-		"Contract.$Sum"() {
-			return this.Sum > 100000 ? 'Больше 100 000' : 'Меньше 100 000';
+        "TInbox.$HasDetails"() {
+            return this.Id >= 125;
         }
 	},
 	events: {

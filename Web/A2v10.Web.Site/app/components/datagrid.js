@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171207-7076
+// 20171209-7077
 // components/datagrid.js*/
 
 (function () {
@@ -31,11 +31,13 @@
         <colgroup>
             <col v-if="isMarkCell"/>
 			<col v-if="isGrouping" class="fit"/>
+            <col v-if="isRowDetailsCell" class="fit" />
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
         </colgroup>
         <thead>
             <tr v-show="isHeaderVisible">
-                <th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder"></div></th>
+                <th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
+                <th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isGrouping" class="group-cell">
 					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
 						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
@@ -52,10 +54,10 @@
 						<span class="grtitle" v-text="groupTitle(g)" />
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
 					</tr>
-					<template>
-						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" v-for="(row, rowIndex) in g.items" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
-                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex">
-                            <slot name="row-details" :row="item"></slot>
+					<template v-for="(row, rowIndex) in g.items">
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="gIndex + ':' + rowIndex" :mark="mark">
+                            <slot name="row-details" :row="row"></slot>
                         </data-grid-row-details>
 					</template>
 				</template>
@@ -65,7 +67,7 @@
 			<tbody>
                 <template v-for="(item, rowIndex) in $items">
 				    <data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
-                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex">
+                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex" :mark="mark">
                         <slot name="row-details" :row="item"></slot>
                     </data-grid-row-details>
                 </template>
@@ -83,14 +85,20 @@
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
+    <td v-if="detailsMarker" class="details-marker" @click.prevent="toggleDetails">
+        <i v-if="detailsIcon" class="ico" :class="detailsExpandClass" />
+    </td>
 	<td class="group-marker" v-if="group"></td>
     <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
     const dataGridRowDetailsTemplate = `
 <tr v-if="visible" class="row-details">
-    <td :colspan='cols'>
-        <slot></slot>
+    <td v-if="isMarkCell" class="marker">
+        <div :class="markClass"></div>
+    </td>
+    <td :colspan='totalCols' class="details-cell">
+        <div class="details-wrapper"><slot></slot></div>
     </td>
 </tr>
 `;
@@ -350,6 +358,22 @@
             isMarkCell() {
                 return this.$parent.isMarkCell;
             },
+            detailsMarker() {
+                return this.$parent.isRowDetailsCell;
+            },
+            detailsIcon() {
+                if (!this.detailsMarker)
+                    return false;
+                let prdv = this.$parent.rowDetailsVisible;
+                if (prdv === false) return true; // property not specified
+                return prdv && this.row[prdv];
+            },
+            detailsExpandClass() {
+                return this.row.$details ? "ico-minus-circle" : "ico-plus-circle";
+            },
+            totalColumns() {
+                console.error('implement me');
+            },
             markClass() {
                return this.mark ? this.row[this.mark] : '';
             }
@@ -366,6 +390,11 @@
 					return;
                 window.getSelection().removeAllRanges();
 				this.$parent.doubleclick();
+            },
+            toggleDetails($event) {
+                //$event.stopImmediatePropagation();
+                if (!this.detailsIcon) return;
+                Vue.set(this.row, "$details", !this.row.$details);
             }
         }
     };
@@ -375,11 +404,28 @@
         template: dataGridRowDetailsTemplate,
         props: {
             cols: Number,
-            row: Object
+            row: Object,
+            mark: String
         },
         computed: {
             visible() {
+                if (this.$parent.isRowDetailsCell)
+                    return this.row.$details ? true : false;
                 return this.row == this.$parent.selected;
+            },
+            isMarkCell() {
+                return this.$parent.isMarkCell;
+            },
+            markClass() {
+                return this.mark ? this.row[this.mark] : '';
+            },
+            detailsMarker() {
+                return this.$parent.isRowDetailsCell;
+            },
+            totalCols() {
+                return this.cols +
+                    (this.isMarkCell ? 1 : 0) +
+                    (this.detailsMarker ? 1 : 0);
             }
         }
     };
@@ -402,7 +448,9 @@
             rowBold: String,
 			doubleclick: Function,
             groupBy: [Array, Object],
-            rowDetails: Boolean
+            rowDetails: Boolean,
+            rowDetailsActivate: String,
+            rowDetailsVisible: [String /*path*/, Boolean]
 		},
 		template: dataGridTemplate,
 		components: {
@@ -426,7 +474,10 @@
 			},
 			isMarkCell() {
 				return this.markStyle === 'marker' || this.markStyle === 'both';
-			},
+            },
+            isRowDetailsCell() {
+                return this.rowDetails && this.rowDetailsActivate == 'cell';
+            },
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
             },

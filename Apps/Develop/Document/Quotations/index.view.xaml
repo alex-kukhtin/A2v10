@@ -1,7 +1,8 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
     <Page.CollectionView>
-        <CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl" />
+        <CollectionView ItemsSource="{Bind Contracts}" RunAt="ServerUrl">
+        </CollectionView>
     </Page.CollectionView>
     <Page.Toolbar>
         <Toolbar>
@@ -26,7 +27,7 @@
                     </DropDownMenu>
                 </Button.DropDown>
             </Button>
-            <ComboBox If="False" Label="Группировать:" Value="{Bind Options.GroupBy}">
+            <ComboBox If="True" Label="Группировать:" Value="{Bind Options.GroupBy}">
                 <ComboBoxItem Content="Без группировки"></ComboBoxItem>
                 <ComboBoxItem Content="Состояние договора">
                     <ComboBoxItem.Value>
@@ -49,8 +50,8 @@
         <Pager Source="{Bind Parent.Pager}" />
     </Page.Pager>
     <!--GroupBy="{Bind Options.GroupBy}"-->
-        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" GroupBy="{Bind Parent.GroupBy}"
-				  Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True">
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" GroupBy="{Bind Options.GroupBy}"
+				  Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True" MarkerStyle="Marker">
             <!--
 			<DataGrid.GroupBy>
 				<GroupDescription GroupBy="StateName" Title="Состояние: {Value} [{Count}]" Collapsed="False" Count="True"/>
@@ -72,6 +73,11 @@
 			<DataGridColumn Header="Примечание" Content="Memo" />
 			<DataGridColumn Header="Договор" Content="Contract" />
 			-->
+        <DataGrid.RowDetails>
+            <Block>
+                <Button>Text 1</Button>
+            </Block>
+        </DataGrid.RowDetails>
 		</DataGrid>
 	<Toolbar If="False">
 		<Button Icon="Add" Tip="Создать заявку">Создать</Button>

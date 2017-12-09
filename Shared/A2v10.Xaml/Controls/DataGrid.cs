@@ -20,6 +20,12 @@ namespace A2v10.Xaml
         None
     }
 
+    public enum RowDetailsActivate
+    {
+        ActiveRow,
+        Cell
+    }
+
     [ContentProperty("Columns")]
     public class DataGrid : Control
     {
@@ -48,7 +54,7 @@ namespace A2v10.Xaml
 
         public Length Height { get; set; }
 
-        public UIElementBase RowDetails { get; set; }
+        public DataGridRowDetails RowDetails { get; set; }
 
         GroupDescriptions _groupBy;
         public GroupDescriptions GroupBy
@@ -76,7 +82,15 @@ namespace A2v10.Xaml
             if (HeadersVisibility == HeadersVisibility.None)
                 dataGrid.MergeAttribute(":hide-header", "true");
             if (RowDetails != null)
+            {
                 dataGrid.MergeAttribute(":row-details", "true");
+                dataGrid.MergeAttribute("row-details-activate", RowDetails.Activate.ToString().ToLowerInvariant());
+                var vBind = RowDetails.GetBinding("Visible");
+                if (vBind != null)
+                {
+                    dataGrid.MergeAttribute("row-details-visible", vBind.Path /*!without context!*/);
+                }
+            }
             var isb = GetBinding(nameof(ItemsSource));
             if (isb != null)
                 dataGrid.MergeAttribute(":items-source", isb.GetPath(context));
@@ -147,7 +161,7 @@ namespace A2v10.Xaml
             rdtag.RenderStart(context);
             using (var ctx = new ScopeContext(context, "details.row"))
             {
-                RowDetails.RenderElement(context);
+                RowDetails.Content.RenderElement(context);
             }
             rdtag.RenderEnd(context);
 

@@ -27,18 +27,29 @@ namespace A2v10.Xaml
         public IList<StringKeyValuePair> GetGridAttributes()
         {
             var rv = new List<StringKeyValuePair>();
-            String row = "1";
-            String col = "1";
+            String row = String.Empty;
+            String col = String.Empty;
             if (_row != null && _row.Value != 0)
                 row = _row.Value.ToString();
             if (_rowSpan != null && _rowSpan.Value != 0)
+            {
+                if (String.IsNullOrEmpty(row))
+                    row = "1";
                 row += " / span " + _rowSpan.Value.ToString();
-            rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = row });
+            }
+            if (!String.IsNullOrEmpty(row))
+                rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = row });
             if (_col != null && _col.Value != 0)
                 col = _col.Value.ToString();
             if (_colSpan != null && _colSpan.Value != 0)
+            {
+                if (String.IsNullOrEmpty(col))
+                    col = "1";
                 col += " / span " + _colSpan.Value.ToString();
-            rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
+            }
+            if (!String.IsNullOrEmpty(col))
+                rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
+
             if (_vAlign != null)
             {
                 String vAlign = _vAlign.Value.AlignSelf();
