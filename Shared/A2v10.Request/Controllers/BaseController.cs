@@ -45,21 +45,44 @@ namespace A2v10.Request
 
         async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms)
         {
-            if (String.IsNullOrEmpty(rw.target))
+            if (!rw.indirect)
                 return rw;
-            String targetUrl = innerModel.Root.Resolve(rw.target);
-            if (String.IsNullOrEmpty(rw.targetId))
-                throw new RequestModelException("targetId must be specified for indirect action");
-            targetUrl += "/" + innerModel.Root.Resolve(rw.targetId);
-            var rm = await RequestModel.CreateFromUrl(_host, Admin, rw.CurrentKind, targetUrl);
-            rw = rm.GetCurrentAction();
-            String loadProc = rw.LoadProcedure;
-            if (loadProc != null)
+            if (!String.IsNullOrEmpty(rw.target))
             {
-                loadPrms.Set("Id", rw.Id);
-                var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
-                innerModel.Merge(newModel);
-                innerModel.System.Set("__indirectUrl__", rm.BaseUrl);
+                String targetUrl = innerModel.Root.Resolve(rw.target);
+                if (String.IsNullOrEmpty(rw.targetId))
+                    throw new RequestModelException("targetId must be specified for indirect action");
+                targetUrl += "/" + innerModel.Root.Resolve(rw.targetId);
+                var rm = await RequestModel.CreateFromUrl(_host, Admin, rw.CurrentKind, targetUrl);
+                rw = rm.GetCurrentAction();
+                String loadProc = rw.LoadProcedure;
+                if (loadProc != null)
+                {
+                    loadPrms.Set("Id", rw.Id);
+                    var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+                    innerModel.Merge(newModel);
+                    innerModel.System.Set("__indirectUrl__", rm.BaseUrl);
+                }
+            }
+            else
+            {
+                // simple view/model redirect
+                if (rw.targetModel == null)
+                {
+                    throw new RequestModelException("'targetModel' must be specified for indirect action without 'target' property");
+
+                }
+                rw.model = innerModel.Root.Resolve(rw.targetModel.model);
+                rw.view = innerModel.Root.Resolve(rw.targetModel.view);
+                rw.schema = innerModel.Root.Resolve(rw.targetModel.schema);
+                rw.template = innerModel.Root.Resolve(rw.targetModel.template);
+                String loadProc = rw.LoadProcedure;
+                if (loadProc != null)
+                {
+                    loadPrms.Set("Id", rw.Id);
+                    var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+                    innerModel.Merge(newModel);
+                }
             }
             return rw;
         }

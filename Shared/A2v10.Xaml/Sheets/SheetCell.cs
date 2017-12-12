@@ -9,6 +9,9 @@ namespace A2v10.Xaml
     {
         public Int32? ColSpan { get; set; }
         public Int32? RowSpan { get; set; }
+        public TextAlign Align { get; set; }
+
+        public Boolean GroupIndent { get; set; } // ???
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
@@ -16,6 +19,8 @@ namespace A2v10.Xaml
             MergeAttributes(td, context);
             td.MergeAttribute("colspan", ColSpan);
             td.MergeAttribute("rowspan", RowSpan);
+            if (Align != TextAlign.Left)
+                td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
             MergeContent(td, context);
             td.RenderStart(context);
             RenderContent(context);

@@ -96,7 +96,7 @@
 			},
             isItemSelected: function () {
                 if (this.options.isDynamic)
-                    return this.item.$isSelected(this.rootItems);
+                    return this.item.$selected; //$isSelected(this.rootItems);
                 if (!this.isActive)
                     return false;
                 return this.isActive && this.isActive(this.item);

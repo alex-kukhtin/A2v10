@@ -24,6 +24,7 @@ namespace A2v10.Xaml
                 onRender(tag);
             MergeAttributes(tag, context);
             MergeCommandAttribute(tag, context);
+            tag.AddCssClassBool(Block, "block");
 
             if (Size != ControlSize.Default)
             {

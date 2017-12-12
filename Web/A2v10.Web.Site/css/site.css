@@ -3124,6 +3124,13 @@ TODO:
 .panel.panel-yellow > .panel-header .panel-collapse-handle {
   color: #9c793d;
 }
+table.sheet td,
+table.sheet th {
+  padding: 4px 6px;
+}
+table.sheet td {
+  border-color: #e5e8eb;
+}
 .app-exception {
   margin: 50px auto;
   width: 600px;

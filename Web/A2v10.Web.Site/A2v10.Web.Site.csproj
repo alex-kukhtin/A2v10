@@ -143,6 +143,8 @@
     <Content Include="TestPages\property-grid.html" />
     <Content Include="TestPages\pager.html" />
     <Content Include="TestPages\pager.js" />
+    <Content Include="TestPages\sheet.html" />
+    <Content Include="TestPages\sheet.js" />
     <Content Include="TestPages\tabcomponent.html" />
     <Content Include="TestPages\table.html" />
     <Content Include="TestPages\testscript.html" />
@@ -197,6 +199,7 @@
     <Content Include="Less\Taskpad.less" />
     <Content Include="Less\Debug.less" />
     <Content Include="Less\List.less" />
+    <Content Include="Less\Sheet.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -89,6 +89,7 @@
     <Content Include="Develop\Document\Quotations\element.template.js" />
     <Content Include="Develop\Document\Quotations\index.template.js" />
     <Content Include="Develop\Document\Quotations\edit.view.html" />
+    <Content Include="Develop\Document\Reports\report1.template.js" />
     <Content Include="Develop\Document\Request\inbox.template.js" />
     <Content Include="Develop\Document\Request\element.template.js" />
     <Content Include="Develop\Document\Request\entityChoice.template.js" />
@@ -233,6 +234,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Document\Reports\Index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Reports\Report1.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Document\Reports\Report2.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

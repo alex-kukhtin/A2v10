@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171118-7070
+// 20171212-7078
 // components/list.js
 
 (function() {
@@ -30,6 +30,7 @@
                 return this.autoSelect === 'first-item';
             },
             selectedSource() {
+                // method! not cached
                 let src = this.itemsSource;
                 if (!src) return null;
                 if (src.$origin)
@@ -39,7 +40,7 @@
         },
         methods: {
             cssClass(item) {
-                let cls = item === this.selectedSource ? 'active' : '';
+                let cls = item.$selected ? 'active' : '';
                 if (this.mark) {
                     let clsmrk = utils.eval(item, this.mark);
                     if (clsmrk) cls += ' ' + clsmrk;
@@ -47,8 +48,7 @@
                 return cls;
             },
             select(item) {
-                if (item.$select)
-                    item.$select();
+                if (item.$select) item.$select();
             },
             selectStatic() {
                 alert('yet not implemented');

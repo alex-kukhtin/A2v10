@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    [ContentProperty("Sections")]
     public class Sheet : UIElement
     {
 

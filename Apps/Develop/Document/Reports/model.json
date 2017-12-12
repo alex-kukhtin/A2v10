@@ -1,14 +1,20 @@
-﻿/*Document/quotations*/
+﻿/*Document/reports*/
 {
-  "schema2": "a2v10demo",
-  "model2": "Reports",
+  "schema": "a2v10demo",
+  "model": "Report",
   "actions": {
     "index": {
       "index": true,
       "view": "Index.view"
     },
-    "open": {
-      "view": "edit.view"
+    "show": {
+      "indirect": true,
+      "targetModel": {
+        "model": "{{Report.Model}}",
+        "view": "{{Report.View}}",
+        "schema": "{{Report.Schema}}",
+        "template": "{{Report.Template}}"
+      }
     }
   }
 }

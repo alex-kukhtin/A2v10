@@ -3,7 +3,7 @@
     <Page.Toolbar>
         <Toolbar>
             <Button Icon="ArrowOpen"
-                    Command="{BindCmd OpenSelected, Url='{Bind Inbox.Action}', Argument={Bind Inboxes}}">Открыть</Button>
+                    Command="{BindCmd OpenSelected, Url='{Bind Action}', Argument={Bind Inboxes}}">Открыть</Button>
             <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         </Toolbar>
@@ -26,7 +26,7 @@
             </Text>
         </DataGridColumn>
         <DataGrid.RowDetails>
-            <DataGridRowDetails Activate="Cell" Visible="{Bind $HasDetails}">
+            <DataGridRowDetails Activate="ActiveRow" Visible="{Bind $HasDetails}">
                 <StackPanel Orientation="Horizontal">
                     <Text Size="Small">Row details from Xaml. Id=
                         <Span Content="{Bind Id}" Bold="True"/> , Text=
@@ -45,6 +45,7 @@
             </DataGridRowDetails>
         </DataGrid.RowDetails>
     </DataGrid>
+    <Code Multiline="True" Content="{Bind Inboxes.$selected}"></Code>
 </Page>
 
     

@@ -560,6 +560,8 @@ app.modules['std:utils'] = function () {
 	function format(obj, dataType) {
 		if (!dataType)
             return obj;
+        if (!isDefined(obj))
+            return '';
 		switch (dataType) {
 			case "DateTime":
 				if (!isDate(obj)) {
@@ -845,7 +847,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171203-7075
+// 20171212-7078
 // services/datamodel.js
 
 (function () {
@@ -1051,7 +1053,10 @@ app.modules['std:validators'] = function() {
         if (hasTemplProps)
             createObjProperties(elem, elem.constructor);
 
-		defPropertyGet(elem, "$valid", function () {
+        if (path && path.endsWith(']'))
+            elem.$selected = false;
+
+        defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
                 this._root_._validateAll_();
 			if (this._errors_)
@@ -1118,7 +1123,6 @@ app.modules['std:validators'] = function() {
 		defHidden(arr, PATH, path);
 		defHidden(arr, PARENT, parent);
 		defHidden(arr, ROOT, parent._root_ || parent);
-
 		defPropertyGet(arr, "$valid", function () {
 			if (this._errors_)
 				return false;
@@ -1131,7 +1135,6 @@ app.modules['std:validators'] = function() {
 		defPropertyGet(arr, "$invalid", function () {
 			return !this.$valid;
 		});
-
 
 		createObjProperties(arr, arrctor);
 
@@ -1152,7 +1155,6 @@ app.modules['std:validators'] = function() {
 	}
 
     _BaseArray.prototype = Array.prototype;
-    _BaseArray.prototype.$selected = null;
 
 	defineCommonProps(_BaseArray.prototype);
 
@@ -1162,6 +1164,9 @@ app.modules['std:validators'] = function() {
 		return newElem;
 	};
 
+    defPropertyGet(_BaseArray.prototype, "$selected", function () {
+        return this.find(elem => elem.$selected);
+    });
 
 	defPropertyGet(_BaseArray.prototype, "Count", function () {
 		return this.length;
@@ -1176,7 +1181,8 @@ app.modules['std:validators'] = function() {
     });
 
     _BaseArray.prototype.Selected = function (propName) {
-        return this.$selected ? this.$selected[propName] : null;
+        let sel = this.$selected;
+        return sel ? sel[propName] : null;
     };
 
     _BaseArray.prototype.$loadLazy = function () {
@@ -1207,8 +1213,8 @@ app.modules['std:validators'] = function() {
             that._root_.$setDirty(true);
             that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
             if (select) {
-                platform.set(that, "$selected", ne);
-                emitSelect(that);
+                ne.$select();
+                emitSelect(that, ne);
             }
             // set RowNumber
             if ('$rowNo' in newElem._meta_) {
@@ -1226,8 +1232,7 @@ app.modules['std:validators'] = function() {
             });
             if (lastElem) {
                 // last added element
-                platform.set(that, "$selected", lastElem);
-                emitSelect(that);
+                lastElem.$select();
             }
             return ra;
         } else
@@ -1245,8 +1250,8 @@ app.modules['std:validators'] = function() {
     _BaseArray.prototype.$clearSelected = function () {
         let sel = this.$selected;
         if (!sel) return; // already null
-        platform.set(this, '$selected', null);
-        emitSelect(this);
+        sel.$selected = false;
+        emitSelect(this, null);
     };
 
 	_BaseArray.prototype.$remove = function (item) {
@@ -1262,8 +1267,7 @@ app.modules['std:validators'] = function() {
 		if (index >= this.length)
 			index -= 1;
         if (this.length > index) {
-            platform.set(this, '$selected', this[index]);
-            emitSelect(this);
+            this[index].$select();
         }
 		// renumber rows
 		if ('$rowNo' in item._meta_) {
@@ -1361,28 +1365,24 @@ app.modules['std:validators'] = function() {
 		}
 	}
 
-    function emitSelect(arr) {
+    function emitSelect(arr, item) {
         let selectEvent = arr._path_ + '[].select';
-        let er = arr._root_.$emit(selectEvent, arr/*array*/, arr.$selected /*item*/);
+        let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
     }
 
-	function defArrayItem(elem) {
+    function defArrayItem(elem) {
+
 		elem.prototype.$remove = function () {
 			let arr = this._parent_;
 			arr.$remove(this);
         };
-		elem.prototype.$select = function (root) {
-			let arr = root || this._parent_;
-			if (arr.$selected === this)
-				return;
-            platform.set(arr, "$selected", this);
-            emitSelect(arr);
-		};
-
-		elem.prototype.$isSelected = function (root) {
-			let arr = root || this._parent_;
-			return arr.$selected === this;
-
+        elem.prototype.$select = function (root) {
+            let arr = root || this._parent_;
+            let sel = arr.$selected;
+			if (sel === this) return;
+            if (sel) sel.$selected = false;
+            this.$selected = true;
+            emitSelect(arr, this);
 		};
 	}
 
@@ -1581,7 +1581,7 @@ app.modules['std:validators'] = function() {
 			saveErrors(elem.item, path, res);
 			if (res && res.length) {
 				errs.push(...res);
-				// elem.ix - индексы в массивах, по которым мы прохoдили
+				// elem.ix - array indexes
 				// console.dir(elem.ix);
 			}
 
@@ -1637,7 +1637,6 @@ app.modules['std:validators'] = function() {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
-					platform.set(trg, "$selected", null);
 					trg.$copy(src[prop]);
 					// copy rowCount
                     if ('$RowCount' in trg) {
@@ -2458,7 +2457,7 @@ Vue.component('validator-control', {
 
 	/* @click.prevent disables checkboxes & other controls in cells */
     const dataGridRowTemplate = `
-<tr @click="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -2470,7 +2469,7 @@ Vue.component('validator-control', {
 </tr>`;
 
     const dataGridRowDetailsTemplate = `
-<tr v-if="visible" class="row-details">
+<tr v-if="visible()" class="row-details">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -2715,23 +2714,6 @@ Vue.component('validator-control', {
 			level : Number
         },
         computed: {
-			active() {
-				return this.row == this.$parent.selected;
-            },
-            rowClass() {
-                let cssClass = '';
-				if (this.active) cssClass += 'active';
-				if (this.$parent.isMarkRow && this.mark) {
-					cssClass += ' ' + this.row[this.mark];
-                }
-                if ((this.index + 1) % 2)
-                    cssClass += ' even'
-                if (this.$parent.rowBold && this.row[this.$parent.rowBold])
-                    cssClass += ' bold';
-				if (this.level)
-					cssClass += ' lev-' + this.level;
-                return cssClass.trim();
-            },
             isMarkCell() {
                 return this.$parent.isMarkCell;
             },
@@ -2756,9 +2738,23 @@ Vue.component('validator-control', {
             }
         },
         methods: {
-            rowSelect() {
-                throw new Error("do not call");
-                //this.$parent.rowSelected = this;
+            rowClass() {
+                let cssClass = '';
+                const isActive = this.row.$selected; //this.row == this.$parent.selected();
+                if (isActive) cssClass += 'active';
+                if (this.$parent.isMarkRow && this.mark) {
+                    cssClass += ' ' + this.row[this.mark];
+                }
+                if ((this.index + 1) % 2)
+                    cssClass += ' even'
+                if (this.$parent.rowBold && this.row[this.$parent.rowBold])
+                    cssClass += ' bold';
+                if (this.level)
+                    cssClass += ' lev-' + this.level;
+                return cssClass.trim();
+            },
+            rowSelect(row) {
+                row.$select();
             },
             doDblClick($event) {
 				// deselect text
@@ -2785,11 +2781,6 @@ Vue.component('validator-control', {
             mark: String
         },
         computed: {
-            visible() {
-                if (this.$parent.isRowDetailsCell)
-                    return this.row.$details ? true : false;
-                return this.row == this.$parent.selected;
-            },
             isMarkCell() {
                 return this.$parent.isMarkCell;
             },
@@ -2803,6 +2794,13 @@ Vue.component('validator-control', {
                 return this.cols +
                     (this.isMarkCell ? 1 : 0) +
                     (this.detailsMarker ? 1 : 0);
+            }
+        },
+        methods: {
+            visible() {
+                if (this.$parent.isRowDetailsCell)
+                    return this.row.$details ? true : false;
+                return this.row == this.$parent.selected();
             }
         }
     };
@@ -2868,14 +2866,6 @@ Vue.component('validator-control', {
                 if (this.hover) cssClass += ' hover';
                 if (this.compact) cssClass += ' compact';
 				return cssClass;
-			},
-			selected() {
-				// reactive!!!
-				let src = this.itemsSource;
-				if (src.$origin) {
-					src = src.$origin;
-				}
-				return src.$selected;
 			},
 			isGridSortable() {
 				return !!this.sort;
@@ -2961,6 +2951,13 @@ Vue.component('validator-control', {
 			}
 		},
         methods: {
+            selected() {
+                let src = this.itemsSource;
+                if (src.$origin) {
+                    src = src.$origin;
+                }
+                return src.$selected;
+            },
             $addColumn(column) {
                 this.columns.push(column);
             },
@@ -3345,7 +3342,7 @@ Vue.component('popover', {
 			},
             isItemSelected: function () {
                 if (this.options.isDynamic)
-                    return this.item.$isSelected(this.rootItems);
+                    return this.item.$selected; //$isSelected(this.rootItems);
                 if (!this.isActive)
                     return false;
                 return this.isActive && this.isActive(this.item);
@@ -3901,7 +3898,7 @@ TODO:
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171118-7070
+// 20171212-7078
 // components/list.js
 
 (function() {
@@ -3931,6 +3928,7 @@ TODO:
                 return this.autoSelect === 'first-item';
             },
             selectedSource() {
+                // method! not cached
                 let src = this.itemsSource;
                 if (!src) return null;
                 if (src.$origin)
@@ -3940,7 +3938,7 @@ TODO:
         },
         methods: {
             cssClass(item) {
-                let cls = item === this.selectedSource ? 'active' : '';
+                let cls = item.$selected ? 'active' : '';
                 if (this.mark) {
                     let clsmrk = utils.eval(item, this.mark);
                     if (clsmrk) cls += ' ' + clsmrk;
@@ -3948,8 +3946,7 @@ TODO:
                 return cls;
             },
             select(item) {
-                if (item.$select)
-                    item.$select();
+                if (item.$select) item.$select();
             },
             selectStatic() {
                 alert('yet not implemented');

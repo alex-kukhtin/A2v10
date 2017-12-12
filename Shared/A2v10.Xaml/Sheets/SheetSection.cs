@@ -18,10 +18,26 @@ namespace A2v10.Xaml
             var tbody = new TagBuilder("tbody");
             MergeAttributes(tbody, context);
             tbody.RenderStart(context);
-            foreach (var r in Children)
-                r.RenderElement(context);
+            var isBind = GetBinding(nameof(ItemsSource));
+            if (isBind != null)
+            {
+                var tml = new TagBuilder("template");
+                tml.MergeAttribute("v-if", "true");
+                tml.MergeAttribute("v-for", $"(item, itemIndex) of {isBind.GetPath(context)}");
+                tml.RenderStart(context);
+                using (var scope = new ScopeContext(context, "item"))
+                {
+                    foreach (var r in Children)
+                        r.RenderElement(context);
+                }
+                tml.RenderEnd(context);
+            }
+            else
+            {
+                foreach (var r in Children)
+                    r.RenderElement(context);
+            }
             tbody.RenderEnd(context);
-            throw new NotImplementedException();
         }
 
         protected override void OnEndInit()

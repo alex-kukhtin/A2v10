@@ -81,7 +81,7 @@
 
 	/* @click.prevent disables checkboxes & other controls in cells */
     const dataGridRowTemplate = `
-<tr @click="row.$select()" :class="rowClass" v-on:dblclick.prevent="doDblClick">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -93,7 +93,7 @@
 </tr>`;
 
     const dataGridRowDetailsTemplate = `
-<tr v-if="visible" class="row-details">
+<tr v-if="visible()" class="row-details">
     <td v-if="isMarkCell" class="marker">
         <div :class="markClass"></div>
     </td>
@@ -338,23 +338,6 @@
 			level : Number
         },
         computed: {
-			active() {
-				return this.row == this.$parent.selected;
-            },
-            rowClass() {
-                let cssClass = '';
-				if (this.active) cssClass += 'active';
-				if (this.$parent.isMarkRow && this.mark) {
-					cssClass += ' ' + this.row[this.mark];
-                }
-                if ((this.index + 1) % 2)
-                    cssClass += ' even'
-                if (this.$parent.rowBold && this.row[this.$parent.rowBold])
-                    cssClass += ' bold';
-				if (this.level)
-					cssClass += ' lev-' + this.level;
-                return cssClass.trim();
-            },
             isMarkCell() {
                 return this.$parent.isMarkCell;
             },
@@ -379,9 +362,23 @@
             }
         },
         methods: {
-            rowSelect() {
-                throw new Error("do not call");
-                //this.$parent.rowSelected = this;
+            rowClass() {
+                let cssClass = '';
+                const isActive = this.row.$selected; //this.row == this.$parent.selected();
+                if (isActive) cssClass += 'active';
+                if (this.$parent.isMarkRow && this.mark) {
+                    cssClass += ' ' + this.row[this.mark];
+                }
+                if ((this.index + 1) % 2)
+                    cssClass += ' even'
+                if (this.$parent.rowBold && this.row[this.$parent.rowBold])
+                    cssClass += ' bold';
+                if (this.level)
+                    cssClass += ' lev-' + this.level;
+                return cssClass.trim();
+            },
+            rowSelect(row) {
+                row.$select();
             },
             doDblClick($event) {
 				// deselect text
@@ -408,11 +405,6 @@
             mark: String
         },
         computed: {
-            visible() {
-                if (this.$parent.isRowDetailsCell)
-                    return this.row.$details ? true : false;
-                return this.row == this.$parent.selected;
-            },
             isMarkCell() {
                 return this.$parent.isMarkCell;
             },
@@ -426,6 +418,13 @@
                 return this.cols +
                     (this.isMarkCell ? 1 : 0) +
                     (this.detailsMarker ? 1 : 0);
+            }
+        },
+        methods: {
+            visible() {
+                if (this.$parent.isRowDetailsCell)
+                    return this.row.$details ? true : false;
+                return this.row == this.$parent.selected();
             }
         }
     };
@@ -491,14 +490,6 @@
                 if (this.hover) cssClass += ' hover';
                 if (this.compact) cssClass += ' compact';
 				return cssClass;
-			},
-			selected() {
-				// reactive!!!
-				let src = this.itemsSource;
-				if (src.$origin) {
-					src = src.$origin;
-				}
-				return src.$selected;
 			},
 			isGridSortable() {
 				return !!this.sort;
@@ -584,6 +575,13 @@
 			}
 		},
         methods: {
+            selected() {
+                let src = this.itemsSource;
+                if (src.$origin) {
+                    src = src.$origin;
+                }
+                return src.$selected;
+            },
             $addColumn(column) {
                 this.columns.push(column);
             },

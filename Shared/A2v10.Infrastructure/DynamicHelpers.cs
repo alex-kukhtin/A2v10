@@ -145,6 +145,8 @@ namespace A2v10.Infrastructure
 
         public static String Resolve(this ExpandoObject This, String source)
         {
+            if (source == null)
+                return null;
             var r = new Regex("\\{\\{(.+?)\\}\\}");
             var ms = r.Matches(source);
             if (ms.Count == 0)

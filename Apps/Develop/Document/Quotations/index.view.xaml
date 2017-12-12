@@ -74,9 +74,11 @@
 			<DataGridColumn Header="Договор" Content="Contract" />
 			-->
         <DataGrid.RowDetails>
-            <Block>
-                <Button>Text 1</Button>
-            </Block>
+            <DataGridRowDetails>
+                <Block>
+                    <Button>Text 1</Button>
+                </Block>
+            </DataGridRowDetails>
         </DataGrid.RowDetails>
 		</DataGrid>
 	<Toolbar If="False">

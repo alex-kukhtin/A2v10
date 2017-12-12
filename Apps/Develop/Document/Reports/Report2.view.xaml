@@ -1,0 +1,52 @@
+﻿<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      Title="{Bind Report.Name}">
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+            <Button Toolbar.Align="Right" Icon="Close" Command="{BindCmd Close}">Закрыть</Button>
+        </Toolbar>
+    </Page.Toolbar>
+    <Sheet GridLines="Horizontal" Striped="True" Margin="10">
+        <Sheet.Header>
+            <SheetRow>
+                <SheetCell ColSpan="4" Content="{Bind Report.Name}"/>
+            </SheetRow>
+            <SheetRow>
+                <SheetCell>Id</SheetCell>
+                <SheetCell>Name</SheetCell>
+                <SheetCell>Date</SheetCell>
+                <SheetCell>Amount</SheetCell>
+            </SheetRow>
+        </Sheet.Header>
+        <SheetSection ItemsSource="{Bind Menu}">
+            <SheetRow>
+                <SheetCell Content="{Bind Id}" GroupIndent="True"/>
+                <SheetCell Content="{Bind Name}"/>
+                <SheetCell Content="{Bind Url}"/>
+                <SheetCell Content="{Bind Icon}"/>
+                <SheetCell>
+                    <Group>
+                        <Hyperlink Icon="Edit" Content="Edit" Command="{BindCmd Dialog, Action=Edit, Url='/Catalog/Suppliers/edit', Argument={Bind}}"/>
+                        <Hyperlink Icon="Eye" Content="Show" Command="{BindCmd Dialog, Action=Edit, Url='/Catalog/Suppliers/edit', Argument={Bind}}"/>
+                    </Group>
+                </SheetCell>
+            </SheetRow>
+            <SheetSection ItemsSource="{Bind Menu}">
+                <SheetRow>
+                    <SheetCell Content="{Bind Id}" />
+                    <SheetCell Content="{Bind Name}"/>
+                    <SheetCell Content="{Bind Url}"/>
+                    <SheetCell Content="{Bind Icon}"/>
+                </SheetRow>
+            </SheetSection>
+        </SheetSection>
+        <Sheet.Footer>
+            <SheetRow>
+                <SheetCell ColSpan="3">Footer</SheetCell>
+            </SheetRow>
+        </Sheet.Footer>
+    </Sheet>
+</Page>
+
+    

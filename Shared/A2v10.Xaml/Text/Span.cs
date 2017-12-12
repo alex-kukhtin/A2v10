@@ -12,7 +12,6 @@ namespace A2v10.Xaml
 
         public Boolean? Bold { get; set; }
         public Boolean? Italic { get; set; }
-        public Boolean Block { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {

@@ -54,7 +54,6 @@ namespace A2v10.Request
         public String schema; // or parent
         public String source; // or parent
         public Boolean index;
-
         public String template;
 
         [JsonIgnore]
@@ -64,6 +63,9 @@ namespace A2v10.Request
         {
             _parent = model;
         }
+
+        [JsonIgnore]
+        internal RequestModel ParentModel => _parent;
 
         [JsonIgnore]
         public String Path
@@ -182,6 +184,14 @@ namespace A2v10.Request
         }
     }
 
+    public class TargetModel
+    {
+        public String schema;
+        public String model;
+        public String view;
+        public String template;
+    }
+
     public abstract class RequestView : RequestBase
     {
         public String view;
@@ -189,6 +199,7 @@ namespace A2v10.Request
         public Boolean indirect;
         public String target;
         public String targetId;
+        public TargetModel targetModel;
 
         public String GetView()
         {

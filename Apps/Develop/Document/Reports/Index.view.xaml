@@ -1,21 +1,10 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
-    <List Striped="True">
-        <ListItem Icon="Table" Header="Продажи по менджерам" 
-                  Content="Еще один пример простого отчета" />
-        <ListItem Icon="Table" Header="Основной отчет" Content="Пример простого отчета" />
-        <ListItem Icon="Table" Header="Продажи по менджерам" 
-                  Content="Оборотная ведомость в отчетами и текстом" />
-        <ListItem Icon="Table" Header="Основной отчет" Content="Пример простого отчета" />
-        <ListItem Icon="Table" Header="Продажи по менджерам" 
-                  Content="Еще один пример простого отчета" />
-        <ListItem Icon="Table" Header="Основной отчет" Content="Пример простого отчета" />
-        <ListItem Icon="Table" Header="Продажи по менджерам" 
-                  Content="Еще один пример простого отчета" />
-        <ListItem Icon="Table" Header="Основной отчет" Content="Пример простого отчета" />
-        <ListItem Icon="Table" Header="Продажи по менджерам" 
-                  Content="Еще один пример простого отчета" />
-    </List>
+    <Repeater ItemsSource="{Bind Reports}">
+        <Hyperlink Icon="Approve" Content="{Bind Name}" Padding="10" Block="True"
+            Command="{BindCmd Open, 
+            Url='/Document/Reports/Show', Argument={Bind Id}}" />
+    </Repeater>
 </Page>
 
     

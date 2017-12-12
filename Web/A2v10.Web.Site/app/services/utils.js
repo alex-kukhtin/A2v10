@@ -120,6 +120,8 @@ app.modules['std:utils'] = function () {
 	function format(obj, dataType) {
 		if (!dataType)
             return obj;
+        if (!isDefined(obj))
+            return '';
 		switch (dataType) {
 			case "DateTime":
 				if (!isDate(obj)) {
