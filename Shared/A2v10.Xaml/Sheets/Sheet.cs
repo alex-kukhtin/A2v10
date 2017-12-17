@@ -10,7 +10,7 @@ namespace A2v10.Xaml
     public class Sheet : UIElement
     {
 
-        public List<SheetSection> Sections { get; set; } = new List<SheetSection>();
+        public SheetSections Sections { get; set; } = new SheetSections();
 
         SheetRows _header;
         SheetRows _footer;
@@ -63,7 +63,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var sheet = new TagBuilder("table", "sheet", IsInGrid);
+            var sheet = new TagBuilder("a2-sheet", null, IsInGrid);
             if (onRender != null)
                 onRender(sheet);
             MergeAttributes(sheet, context);
@@ -88,7 +88,8 @@ namespace A2v10.Xaml
         {
             if (_header == null)
                 return;
-            var thead = new TagBuilder("thead");
+            var thead = new TagBuilder("template");
+            thead.MergeAttribute("slot", "header");
             thead.RenderStart(context);
             foreach (var h in Header)
                 h.RenderElement(context);
@@ -97,18 +98,23 @@ namespace A2v10.Xaml
 
         void RenderBody(RenderContext context)
         {
+            var tbody = new TagBuilder("template");
+            tbody.MergeAttribute("slot", "body");
+            tbody.RenderStart(context);
             foreach (var s in Sections)
                 s.RenderElement(context, null);
+            tbody.RenderEnd(context);
         }
 
         void RenderFooter(RenderContext context)
         {
             if (_footer == null)
                 return;
-            var tfoot = new TagBuilder("tfoot");
+            var tfoot = new TagBuilder("template");
+            tfoot.MergeAttribute("slot", "footer");
             tfoot.RenderStart(context);
             foreach (var f in Footer)
-                f.RenderElement(context);
+                f.RenderElement (context);
             tfoot.RenderEnd(context);
         }
 
@@ -121,6 +127,8 @@ namespace A2v10.Xaml
             if (_footer != null)
                 foreach (var f in Footer)
                     f.SetParent(this);
+            foreach (var s in Sections)
+                s.SetParent(this);
         }
     }
 }

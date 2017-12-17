@@ -10,9 +10,11 @@ describe("DataModel", function () {
 
         // metadata
         cmn.defineObject(TCustomer, {
-            Id: Number,
-            Name: String,
-            Amount: Number
+            props: {
+                Id: Number,
+                Name: String,
+                Amount: Number
+            }
         }, /* array item */ false);
 
         let ctors = {
@@ -40,13 +42,17 @@ describe("DataModel", function () {
 
         // metadata
         cmn.defineObject(TCustomer, {
-            Id: Number,
-            Name: String,
-            Amount: Number
+            props: {
+                Id: Number,
+                Name: String,
+                Amount: Number
+            }
         }, /* array item */ true);
 
         cmn.defineObject(TRoot, {
-            Customers: TCustomerArray
+            props: {
+                Customers: TCustomerArray
+            }
         }, /* array item */ false);
 
         let ctors = {
@@ -81,6 +87,7 @@ describe("DataModel", function () {
             Customers: [],
             'Customers.$RowCount': 7
         });
+        console.dir(root);
         expect(root.Customers.length).toBe(0);
         expect(root.Customers.$RowCount).toBe(7);
     });

@@ -59,13 +59,16 @@ namespace A2v10.Data
 		public Boolean IsObject { get { return FieldType == FieldType.Object; } }
 		public Boolean IsMap { get { return FieldType == FieldType.Map; } }
 		public Boolean IsTree { get { return FieldType == FieldType.Tree; } }
+        public Boolean IsGroup { get { return FieldType == FieldType.Group; } }
 
-		public Boolean IsObjectLike { get { return IsArray || IsObject || IsTree; } }
+        public Boolean IsObjectLike { get { return IsArray || IsObject || IsTree || IsGroup; } }
 
 		public Boolean IsRefId { get { return SpecType == SpecType.RefId; } }
 		public Boolean IsParentId { get { return SpecType == SpecType.ParentId; } }
 		public Boolean IsId { get { return SpecType == SpecType.Id; } }
         public Boolean IsRowCount { get { return SpecType == SpecType.RowCount; } }
+        public Boolean IsItems { get { return SpecType == SpecType.Items; } }
+        public Boolean IsGroupMarker { get { return SpecType == SpecType.GroupMarker; } }
 
         private static void CheckField(String[] parts)
         {

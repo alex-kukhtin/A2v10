@@ -111,6 +111,8 @@ namespace A2v10.Data
                 sb.Append($"$hasChildren: '{meta.HasChildren}',");
             if (!String.IsNullOrEmpty(meta.Permissions))
                 sb.Append($"$permissions: '{meta.Permissions}',");
+            if (!String.IsNullOrEmpty(meta.Items))
+                sb.Append($"$items: '{meta.Items}',");
             StringBuilder lazyFields = new StringBuilder();
             foreach (var f in meta.Fields)
             {
@@ -142,6 +144,8 @@ namespace A2v10.Data
                 else if (fm.ItemType == FieldType.Tree)
                     sb.Append(fm.RefObject + "Array");
                 else if (fm.ItemType == FieldType.Object)
+                    sb.Append(fm.RefObject);
+                else if (fm.ItemType == FieldType.Group)
                     sb.Append(fm.RefObject);
                 else if (fm.DataType == DataType.Undefined)
                     throw new DataLoaderException($"Invalid data type for '{meta.Name}.{fd.Key}'");

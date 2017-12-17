@@ -1,16 +1,14 @@
 ﻿(function () {
 
-
-    // сделать простую СЕКЦИЮ для <tr></td>!!!!
     const sheetTemplate = `
-<table>
+<table class="sheet">
     <thead>
         <slot name="header"></slot>
     </thead>
     <slot name="body"></slot>
     <tfoot>
         <slot name="footer"></slot>
-    </tfoot>
+    </tfoot>    
 </table>
 `;
 
@@ -19,14 +17,6 @@
     <slot></slot>
 </tbody>
 `;
-
-    Vue.component("a2-sheet", {
-        template: sheetTemplate
-    });
-
-    Vue.component("a2-sheet-section", {
-        template: sheetSectionTemplate
-    });
 
     function* traverse(item, prop, lev) {
         if (prop in item) {
@@ -41,15 +31,22 @@
         }
     }
 
+    Vue.component('a2-sheet', {
+        template: sheetTemplate
+    });
+
+    Vue.component("a2-sheet-section", {
+        template: sheetSectionTemplate
+    });
+
     Vue.component('a2-sheet-section-tree', {
-        //template: sheetSectionTemplate,
         functional: true,
         name: 'a2-sheet-section',
         props: {
             itemsSource: Object,
             propName: String
         },
-        render: function (h, ctx) {
+        render(h, ctx) {
             const prop = ctx.props.propName;
             const source = ctx.props.itemsSource;
             if (!source) return;
@@ -83,8 +80,6 @@
                 compArr.push(h(slotElem.tag, slotElem.data, slotElem.children));
             }
             return h('tbody', {}, compArr);
-            //return compArr;
         }
     });
-
 })();

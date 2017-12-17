@@ -7,50 +7,127 @@
         td {
             padding:4px 6px;
             border:1px solid silver;
+            white-space:nowrap;
         }
         td.lev-2 {
-            padding-left:18px;
+            /*12 * 1 + 6 */
+            padding-left: 18px;
         }
-            td.lev-3 {
-                padding-left: 30px;
-            }
+
+        td > div {
+            width:18px;
+            height:18px;
+            background-color:yellow;
+            cursor:pointer;
+        }
+        td.lev-3 {
+            /*12 * 2 + 6 */
+            padding-left: 30px; 
+        }
+        td.has-children {
+            background-color:red;
+        }
+        td.has-children.collapsed {
+            background-color:cyan;
+        }
     </style>
 </head>
 <body>
     <div id="app" style="margin:50px;width:200px">
         <h4>Sheet With tree</h4>
         <h5>{{Report.Name}}</h5>
-        <a2-sheet>
-            <template slot="header">
-                <tr>
-                    <td>h1</td>
-                    <td>h2</td>
-                    <td>h3</td>
-                    <td>{{Report.Name}}</td>
-                </tr>
-            </template>
-            <template slot="footer">
-                <tr>
-                    <td>f1</td>
-                    <td>f2</td>
-                    <td>f3</td>
-                    <td>{{Report.Name}}</td>
-                </tr>
-            </template>
-            <template slot="body">
-                <a2-sheet-section prop-name="Menu">
-                    <template slot-scope="row">
-                        <tr>
-                            <td :class="'lev-' + row.item.$level">b1</td>
-                            <td>b2</td>
-                            <td>b3</td>
-                            <td>{{row.item.Name}}</td>
-                            <td @click="row.toggle()">{{row.item.$level}}</td>
-                        </tr>
-                    </template>
-                </a2-sheet-section>
-            </template>
+    <a2-sheet>
+        <template slot="header">
+            <tr>
+                <td></td>
+                <td>h1</td>
+                <td>h2</td>
+                <td>h3</td>
+                <td>{{Report.Name}}</td>
+            </tr>
+        </template>
+        <template slot="footer">
+            <tr>
+                <td>f1</td>
+                <td>f2</td>
+                <td>f3</td>
+                <td>{{Report.Name}}</td>
+            </tr>
+        </template>
+        <template slot="body">
+            <a2-sheet-section-tree prop-name="Menu" :items-source="$data">
+                <template slot-scope="row">
+                    <tr :class="row.cssClass()">
+                        <td :class="row.cssClass()">
+                            <div v-if="row.hasChildren()" @click.stop="row.toggle()"></div>
+                        </td>
+                        <td :class="'lev-' + row.item.$level">b1</td>
+                        <td>b2</td>
+                        <td>b3</td>
+                        <td :class="'lev-' + row.item.$level">{{row.item.Name}}</td>
+                        <td>{{row.item.$level}}</td>
+                        <td>{{row.item.$collapsed}}</td>
+                    </tr>
+                </template>
+            </a2-sheet-section-tree>
+            <a2-sheet-section>
+                <template>
+                    <tr>
+                        <td>section 1</td>
+                        <td>section 2</td>
+                        <td>section 3</td>
+                    </tr>
+                </template>
+            </a2-sheet-section>
+            <a2-sheet-section>
+                <template v-for="item in Menu">
+                    <tr>
+                        <td>{{item.Name}}</td>
+                        <td>section 2</td>
+                        <td>section 3</td>
+                    </tr>
+                </template>
+            </a2-sheet-section>
+            <div is=tbody>
+                <div is="tr">
+                    <div is="td" style="color:red" class="text-right">1</div>
+                    <div is="td">2</div>
+                    <div is="td">3</div>
+                </div>
+            </div>
+            <div is="tbody">
+                <div is="tr" v-for="item in Menu">
+                    <div is="td" class="test"></div>
+                    <div is="td">{{item.Name}}</div>
+                </div>
+            </div>
+            <div is=tbody>
+                <div is="tr">
+                    <div is="td">4</div>
+                    <div is="td">5</div>
+                    <div is="td">6</div>
+                </div>
+            </div>
+            <a2-sheet-section prop-name="Menu" :items-source="$data">
+                <template slot-scope="row">
+                    <tr :class="row.cssClass()">
+                        <td :class="row.cssClass()">
+                            <div v-if="row.hasChildren()" @click.stop="row.toggle()"></div>
+                        </td>
+                        <td :class="'lev-' + row.item.$level">b1</td>
+                        <td>b2</td>
+                        <td>b3</td>
+                        <td :class="'lev-' + row.item.$level">{{row.item.Name}}</td>
+                        <td>{{row.item.$level}}</td>
+                        <td>{{row.item.$collapsed}}</td>
+                    </tr>
+                </template>
+            </a2-sheet-section>
+        </template>
         </a2-sheet>
+        <p>
+            <pre>{{Menu}}</pre>
+        </p>
     </div>
 
     <!--

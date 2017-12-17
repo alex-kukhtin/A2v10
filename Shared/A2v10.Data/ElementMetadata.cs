@@ -14,9 +14,12 @@ namespace A2v10.Data
         public String RowNumber { get; private set; }
         public String HasChildren { get; private set; }
         public String Permissions { get; set; }
+        public String Items { get; set; }
 
         public Boolean IsArrayType { get; set; }
         public Boolean IsRowCount { get; set; }
+
+        public SortedList<String, Tuple<Int32, String>> Groups { get; private set; }
 
         internal IDictionary<String, FieldMetadata> Fields { get { return _fields; } }
 
@@ -48,6 +51,9 @@ namespace A2v10.Data
                     break;
                 case SpecType.Permissions:
                     Permissions = field.PropertyName;
+                    break;
+                case SpecType.Items:
+                    Items = field.PropertyName;
                     break;
             }
             return fm;

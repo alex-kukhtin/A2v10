@@ -108,6 +108,39 @@ begin
 		[Menu!TMenu!Array] = null
 end
 go
+
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'GroupModel')
+	drop procedure a2test.GroupModel
+go
+------------------------------------------------
+create procedure a2test.GroupModel
+@UserId bigint = null
+as
+begin
+	set nocount on;
+
+	declare @Table table(Company nvarchar(255), Agent nvarchar(255), Amount money);
+	insert into @Table (Company, Agent, Amount)
+	values
+		(N'Company 1', N'Agent 1', 400),
+		(N'Company 1', N'Agent 2', 100),
+		(N'Company 2', N'Agent 1', 40),
+		(N'Company 2', N'Agent 2', 10);
+
+	select [Model!TModel!Group] = null, 
+		Company,
+		Agent,
+		Amount = sum(Amount),
+		[Company!!GroupMarker] = grouping(Company),
+		[Agent!!GroupMarker] = grouping(Agent),
+		[Items!TModel!Items]=null	 -- array for nested elements
+	from @Table
+	group by rollup(Company, Agent)--, d.D_LONG1)
+	order by grouping(Company) desc, grouping(Agent) desc, Company, Agent;
+end
+go
+
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'MapRoot')
 	drop procedure a2test.MapRoot

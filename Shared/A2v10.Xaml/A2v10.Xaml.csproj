@@ -99,9 +99,9 @@
     <Compile Include="Sheets\Sheet.cs" />
     <Compile Include="Sheets\SheetCell.cs" />
     <Compile Include="Sheets\SheetColumn.cs" />
-    <Compile Include="Sheets\SheetElement.cs" />
     <Compile Include="Sheets\SheetRow.cs" />
     <Compile Include="Sheets\SheetSection.cs" />
+    <Compile Include="Sheets\SheetTreeSection.cs" />
     <Compile Include="Text\Break.cs" />
     <Compile Include="Text\Hyperlink.cs" />
     <Compile Include="Controls\List.cs" />

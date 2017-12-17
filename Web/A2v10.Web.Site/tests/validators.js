@@ -8,7 +8,7 @@ describe("Validators", function () {
         // not blank
         expect(
             val.validate(rule, null, 'string')
-        ).toBe(null);
+        ).toEqual([]);
 
         // blank
         expect(
@@ -23,7 +23,7 @@ describe("Validators", function () {
         // not blank
         expect(
             val.validate(rule, null, 'string')
-        ).toBe(null);
+        ).toEqual([]);
 
         // blank
         expect(
@@ -37,7 +37,7 @@ describe("Validators", function () {
         // not blank
         expect(
             val.validate(rule, null, 234)
-        ).toBe(null);
+        ).toEqual([]);
 
         // blank
         expect(
@@ -58,7 +58,7 @@ describe("Validators", function () {
         // valid
         expect(
             val.validate(rule, item, 'test')
-        ).toBe(null);
+        ).toEqual([]);
 
         // not valid
         expect(
@@ -83,7 +83,7 @@ describe("Validators", function () {
         // valid
         expect(
             val.validate(rules, item, 'test')
-        ).toBe(null);
+        ).toEqual([]);
 
         // not valid
         expect(
@@ -110,7 +110,7 @@ describe("Validators", function () {
         // valid
         expect(
             val.validate(rule, item, 'test')
-        ).toBe(null);
+        ).toEqual([]);
 
         // not valid
         expect(

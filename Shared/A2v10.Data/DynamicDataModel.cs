@@ -1,7 +1,10 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using A2v10.Infrastructure;
 
 namespace A2v10.Data
 {
@@ -103,7 +106,8 @@ namespace A2v10.Data
             }
             foreach (var sr in srcRoot)
             {
-                trgRoot.AddChecked(sr.Key, sr.Value);
+                if (!trgRoot.AddChecked(sr.Key, sr.Value))
+                    throw new DataLoaderException($"DataModel.Merge. Item with '{sr.Key}' already has been added");
             }
         }
     }

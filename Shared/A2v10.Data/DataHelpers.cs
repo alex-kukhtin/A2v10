@@ -26,6 +26,8 @@ namespace A2v10.Data
 					return DataType.Boolean;
                 case "Guid":
                     return DataType.String;
+                case "Byte":
+                    return DataType.Number;
 			}
 			throw new DataLoaderException($"Invalid data type {s}");
 		}
@@ -46,6 +48,8 @@ namespace A2v10.Data
 					return FieldType.Tree;
                 case "Items": // for tree element
                     return FieldType.Array;
+                case "Group":
+                    return FieldType.Group;
 			}
 			return FieldType.Scalar;
 		}
@@ -64,12 +68,13 @@ namespace A2v10.Data
 			d.Add(key, value);
 		}
 
-        public static void AddChecked(this ExpandoObject eo, String key, Object value)
+        public static Boolean AddChecked(this ExpandoObject eo, String key, Object value)
         {
             var d = eo as IDictionary<String, Object>;
             if (d.ContainsKey(key))
-                return;
+                return false;
             d.Add(key, value);
+            return true;
         }
 
         public static void AddToArray(this ExpandoObject eo, String key, ExpandoObject value)

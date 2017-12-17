@@ -137,6 +137,46 @@ namespace A2v10.Tests
             dt.AreArrayValueEqual("Item 1.1.1", 0, "Name");
         }
 
+        [TestMethod]
+        public async Task LoadGroupModel()
+        {
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.GroupModel");
+            var md = new MetadataTester(dm);
+            md.IsAllKeys("TRoot,TModel");
+            md.HasAllProperties("TRoot", "Model");
+            md.HasAllProperties("TModel", "Company,Agent,Amount,Items");
+
+            var dt = new DataTester(dm, "Model");
+            dt.AreValueEqual(550M, "Amount");
+            dt.IsNull("Company");
+            dt.IsNull("Agent");
+
+            dt = new DataTester(dm, "Model.Items");
+            dt.IsArray(2);
+            dt.AreArrayValueEqual("Company 1", 0, "Company");
+            dt.AreArrayValueEqual("Company 2", 1, "Company");
+            dt.AreArrayValueEqual(500M, 0, "Amount");
+            dt.AreArrayValueEqual(50M, 1, "Amount");
+
+            dt = new DataTester(dm, "Model.Items[0].Items");
+            dt.IsArray(2);
+            dt.AreArrayValueEqual("Company 1", 0, "Company");
+            dt.AreArrayValueEqual("Company 1", 1, "Company");
+            dt.AreArrayValueEqual("Agent 1", 0, "Agent");
+            dt.AreArrayValueEqual("Agent 2", 1, "Agent");
+            dt.AreArrayValueEqual(400M, 0, "Amount");
+            dt.AreArrayValueEqual(100M, 1, "Amount");
+
+            dt = new DataTester(dm, "Model.Items[1].Items");
+            dt.IsArray(2);
+            dt.AreArrayValueEqual("Company 2", 0, "Company");
+            dt.AreArrayValueEqual("Company 2", 1, "Company");
+            dt.AreArrayValueEqual("Agent 1", 0, "Agent");
+            dt.AreArrayValueEqual("Agent 2", 1, "Agent");
+            dt.AreArrayValueEqual(40M, 0, "Amount");
+            dt.AreArrayValueEqual(10M, 1, "Amount");
+        }
+
 
         [TestMethod]
         public async Task WriteSubObjectData()

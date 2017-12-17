@@ -7,22 +7,21 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
     [ContentProperty("Children")]
-    public class SheetSection : SheetElement
+    public class SheetSection : UIElement
     {
         public Object ItemsSource { get; set; }
 
-        public List<SheetElement> Children { get; } = new List<SheetElement>();
+        public SheetRows Children { get; } = new SheetRows();
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tbody = new TagBuilder("tbody");
-            MergeAttributes(tbody, context);
-            tbody.RenderStart(context);
+            var sect = new TagBuilder("a2-sheet-section");
+            MergeAttributes(sect, context);
+            sect.RenderStart(context);
+            var tml = new TagBuilder("template");
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
             {
-                var tml = new TagBuilder("template");
-                tml.MergeAttribute("v-if", "true");
                 tml.MergeAttribute("v-for", $"(item, itemIndex) of {isBind.GetPath(context)}");
                 tml.RenderStart(context);
                 using (var scope = new ScopeContext(context, "item"))
@@ -34,10 +33,12 @@ namespace A2v10.Xaml
             }
             else
             {
+                tml.RenderStart(context);
                 foreach (var r in Children)
                     r.RenderElement(context);
+                tml.RenderEnd(context);
             }
-            tbody.RenderEnd(context);
+            sect.RenderEnd(context);
         }
 
         protected override void OnEndInit()
@@ -47,4 +48,10 @@ namespace A2v10.Xaml
                 r.SetParent(this);
         }
     }
+
+    public class SheetSections : List<SheetSection>
+    {
+
+    }
+
 }

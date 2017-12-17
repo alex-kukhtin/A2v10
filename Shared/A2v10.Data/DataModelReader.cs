@@ -108,6 +108,7 @@ namespace A2v10.Data
             Object id = null;
             Int32 rowCount = 0;
             Boolean bHasRowCount = false;
+            List<Boolean> groupKeys = null;
             // from 1!
             for (int i = 1; i < rdr.FieldCount; i++) {
                 var dataVal = rdr.GetValue(i);
@@ -115,6 +116,14 @@ namespace A2v10.Data
                     dataVal = null;
                 var fn = GetAlias(rdr.GetName(i));
                 FieldInfo fi = new FieldInfo(fn);
+                if (fi.IsGroupMarker)
+                {
+                    if (groupKeys == null)
+                        groupKeys = new List<Boolean>();
+                    Boolean bVal = (dataVal != null) ? (dataVal.ToString() == "1") : false;
+                    groupKeys.Add(bVal);
+                    continue;
+                }
                 AddValueToRecord(currentRecord, fi, dataVal);
                 if (fi.IsRowCount) {
                     if (dataVal is Int32)
@@ -160,7 +169,12 @@ namespace A2v10.Data
                 }
             }
             if (!bAdded)
-                AddRecordToModel(currentRecord, rootFI, id);
+            {
+                if (rootFI.IsGroup)
+                    AddRecordToGroup(currentRecord, rootFI, groupKeys);
+                else
+                    AddRecordToModel(currentRecord, rootFI, id);
+            }
             else
                 CheckRecordRef(currentRecord, rootFI, id);
             if (bHasRowCount)
@@ -233,6 +247,30 @@ namespace A2v10.Data
                 _refMap.MergeObject(field.TypeName, id, currentRecord);
         }
 
+
+        void AddRecordToGroup(ExpandoObject currentRecord, FieldInfo field, List<Boolean> groupKeys)
+        {
+            if (groupKeys == null)
+                throw new DataLoaderException($"There is no groups property for '{field.TypeName}");
+            ElementMetadata elemMeta = GetOrCreateMetadata(field.TypeName);
+            if (String.IsNullOrEmpty(elemMeta.Items))
+                throw new DataLoaderException($"There is no 'Items' property for '{field.TypeName}");
+            GroupMetadata groupMeta = GetOrCreateGroupMetadata(field.TypeName);
+            if (groupMeta.IsRoot(groupKeys))
+            {
+                _root.Add(field.PropertyName, currentRecord);
+                groupMeta.CacheElement(groupMeta.RootKey, currentRecord); // current
+            }
+            else
+            {
+                // item1 - elemKey, item2 -> parentKey
+                var keys = groupMeta.GetKeys(groupKeys, currentRecord);
+                var parentRec = groupMeta.GetCachedElement(keys.Item2); // parent
+                parentRec.AddToArray(elemMeta.Items, currentRecord);
+                if (!groupMeta.IsLeaf(groupKeys))
+                    groupMeta.CacheElement(keys.Item1, currentRecord); // current
+            }
+        }
 
         void AddRecordToModel(ExpandoObject currentRecord, FieldInfo field, Object id)
         {
@@ -326,12 +364,15 @@ namespace A2v10.Data
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
             if (objectDef.IsArray || objectDef.IsTree)
                 typeMetadata.IsArrayType = true;
-            //if (objectDef.IsTree)
-            //typeMetadata.AddField(objectDef, DataType.Undefined);
             bool hasRowCount = false;
             for (int i=1; i<rdr.FieldCount; i++)
 			{
 				var fieldDef = new FieldInfo(GetAlias(rdr.GetName(i)));
+                if (fieldDef.IsGroupMarker)
+                {
+                    GetOrCreateGroupMetadata(objectDef.TypeName).AddMarkerMetadata(fieldDef.PropertyName);
+                    continue;
+                }
                 if (fieldDef.IsRowCount)
                     hasRowCount = true;
 				if (!fieldDef.IsVisible)
@@ -357,9 +398,23 @@ namespace A2v10.Data
                 _root.AddChecked($"{objectDef.PropertyName}.$RowCount", 0);
 		}
 
-		IDictionary<String, ElementMetadata> _metadata;
 
-		ElementMetadata GetOrCreateMetadata(String typeName)
+        IDictionary<String, GroupMetadata> _groupMetadata;
+        IDictionary<String, ElementMetadata> _metadata;
+
+        GroupMetadata GetOrCreateGroupMetadata(String typeName)
+        {
+            if (_groupMetadata == null)
+                _groupMetadata = new Dictionary<String, GroupMetadata>();
+            GroupMetadata groupMeta;
+            if (_groupMetadata.TryGetValue(typeName, out groupMeta))
+                return groupMeta;
+            groupMeta = new GroupMetadata();
+            _groupMetadata.Add(typeName, groupMeta);
+            return groupMeta;
+        }
+
+        ElementMetadata GetOrCreateMetadata(String typeName)
 		{
 			if (_metadata == null)
 				_metadata = new Dictionary<String, ElementMetadata>();

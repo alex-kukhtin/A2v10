@@ -7,7 +7,7 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
     [ContentProperty("Cells")]
-    public class SheetRow : SheetElement
+    public class SheetRow : UIElement
     {
         public SheetCells Cells { get; } = new SheetCells();
 

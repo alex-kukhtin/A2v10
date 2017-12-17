@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 

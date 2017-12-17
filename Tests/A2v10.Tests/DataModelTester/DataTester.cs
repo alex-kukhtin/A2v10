@@ -38,7 +38,13 @@ namespace A2v10.Tests.DataModelTester
 			Assert.AreEqual(expected, obj[property]);
 		}
 
-		public void IsArray(int length = -1)
+        public void IsNull(String property)
+        {
+            var obj = _instance as IDictionary<String, Object>;
+            Assert.IsNull(obj[property]);
+        }
+
+        public void IsArray(int length = -1)
 		{
 			Assert.IsTrue(_instanceArray != null && _instance == null);
 			if (length != -1)

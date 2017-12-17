@@ -160,7 +160,7 @@ namespace A2v10.Xaml
             input.MergeAttribute("prop-to-validate", pp.Prop);
         }
 
-        (String Path, String Prop) SplitToPathProp(String path)
+        internal (String Path, String Prop) SplitToPathProp(String path)
         {
             var result = (Path:"", Prop:"");
             String itemPath = String.Empty;
