@@ -847,7 +847,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171212-7078
+// 20171219-7079
 // services/datamodel.js
 
 (function () {
@@ -863,6 +863,8 @@ app.modules['std:validators'] = function() {
 	const PATH = '_path_';
 	const ROOT = '_root_';
     const ERRORS = '_errors_';
+
+    const ERR_STR = '#err#';
 
     const FLAG_VIEW = 1;
     const FLAG_EDIT = 2;
@@ -1077,6 +1079,20 @@ app.modules['std:validators'] = function() {
 			return !this.$valid;
         });
 
+        defPropertyGet(elem, "$groupName", function () {
+            if (!utils.isDefined(this.$level))
+                return ERR_STR;
+            // this.constructor.name = objectType;
+            const mi = this._root_.__modelInfo.Levels;
+            if (mi) {
+                const levs = mi[this.constructor.name];
+                if (levs && this.$level <= levs.length);
+                    return this[levs[this.$level - 1]];
+            }
+            console.error('invalid data for $groupName');
+            return ERR_STR;
+        });
+
 		let constructEvent = ctorname + '.construct';
 		elem._root_.$emit(constructEvent, elem);
 		if (elem._root_ === elem) {
@@ -1150,145 +1166,150 @@ app.modules['std:validators'] = function() {
 		return arr;
 	}
 
-	function _BaseArray(length) {
-		return new Array(length || 0);
+    function _BaseArray(length) {
+        let arr = new Array(length || 0);
+        addArrayProps(arr);
+        return arr;
 	}
 
-    _BaseArray.prototype = Array.prototype;
+    //_BaseArray.prototype = Array.prototype;
 
-	defineCommonProps(_BaseArray.prototype);
+    function addArrayProps(arr) {
 
-	_BaseArray.prototype.$new = function (src) {
-		let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-		newElem.$checked = false;
-		return newElem;
-	};
+        defineCommonProps(arr);
 
-    defPropertyGet(_BaseArray.prototype, "$selected", function () {
-        return this.find(elem => elem.$selected);
-    });
+        arr.$new = function (src) {
+            let newElem = new this._elem_(src || null, this._path_ + '[]', this);
+            newElem.$checked = false;
+            return newElem;
+        };
 
-	defPropertyGet(_BaseArray.prototype, "Count", function () {
-		return this.length;
-	});
-
-    defPropertyGet(_BaseArray.prototype, "$isEmpty", function () {
-        return !this.length;
-    });
-
-    defPropertyGet(_BaseArray.prototype, "$checked", function () {
-        return this.filter((el) => el.$checked);
-    });
-
-    _BaseArray.prototype.Selected = function (propName) {
-        let sel = this.$selected;
-        return sel ? sel[propName] : null;
-    };
-
-    _BaseArray.prototype.$loadLazy = function () {
-        return new Promise((resolve, reject) => {
-            if (this.$loaded) { resolve(self); return; }
-            if (!this.$parent) { resolve(this); return; }
-            const meta = this.$parent._meta_;
-            if (!meta.$lazy) { resolve(this); return; }
-            let propIx = this._path_.lastIndexOf('.');
-            let prop = this._path_.substring(propIx + 1);
-            if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
-            this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+        defPropertyGet(arr, "$selected", function () {
+            return this.find(elem => elem.$selected);
         });
-    }
 
-    _BaseArray.prototype.$append = function (src) {
-        const that = this;
-        function append(src, select) {
-            let addingEvent = that._path_ + '[].adding';
-            let newElem = that.$new(src);
-            // TODO: emit adding and check result
-            let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
-            if (er === false)
-                return; // disabled
-            let len = that.push(newElem);
-            let ne = that[len - 1]; // maybe newly created reactive element
-            let eventName = that._path_ + '[].add';
-            that._root_.$setDirty(true);
-            that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-            if (select) {
-                ne.$select();
-                emitSelect(that, ne);
-            }
-            // set RowNumber
-            if ('$rowNo' in newElem._meta_) {
-                let rowNoProp = newElem._meta_.$rowNo;
-                newElem[rowNoProp] = len; // 1-based
-            }
-            return ne;
-        }
-        if (utils.isArray(src)) {
-            let ra = [];
-            let lastElem = null;
-            src.forEach(function (elem) {
-                lastElem = append(elem, false);
-                ra.push(append(elem, false));
+        defPropertyGet(arr, "Count", function () {
+            return this.length;
+        });
+
+        defPropertyGet(arr, "$isEmpty", function () {
+            return !this.length;
+        });
+
+        defPropertyGet(arr, "$checked", function () {
+            return this.filter((el) => el.$checked);
+        });
+
+        arr.Selected = function (propName) {
+            let sel = this.$selected;
+            return sel ? sel[propName] : null;
+        };
+
+        arr.$loadLazy = function () {
+            return new Promise((resolve, reject) => {
+                if (this.$loaded) { resolve(self); return; }
+                if (!this.$parent) { resolve(this); return; }
+                const meta = this.$parent._meta_;
+                if (!meta.$lazy) { resolve(this); return; }
+                let propIx = this._path_.lastIndexOf('.');
+                let prop = this._path_.substring(propIx + 1);
+                if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+                this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
             });
-            if (lastElem) {
-                // last added element
-                lastElem.$select();
-            }
-            return ra;
-        } else
-            return append(src, true);
-
-	};
-
-    _BaseArray.prototype.$empty = function () {
-        if (this.$root.isReadOnly)
-            return;
-		this.splice(0, this.length);
-		return this;
-	};
-
-    _BaseArray.prototype.$clearSelected = function () {
-        let sel = this.$selected;
-        if (!sel) return; // already null
-        sel.$selected = false;
-        emitSelect(this, null);
-    };
-
-	_BaseArray.prototype.$remove = function (item) {
-		if (!item)
-			return;
-		let index = this.indexOf(item);
-		if (index === -1)
-			return;
-		this.splice(index, 1); // EVENT
-		let eventName = this._path_ + '[].remove';
-		this._root_.$setDirty(true);
-		this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-		if (index >= this.length)
-			index -= 1;
-        if (this.length > index) {
-            this[index].$select();
         }
-		// renumber rows
-		if ('$rowNo' in item._meta_) {
-			let rowNoProp = item._meta_.$rowNo;
-			for (let i = 0; i < this.length; i++) {
-				this[i][rowNoProp] = i + 1; // 1-based
-			}
-		}
-	};
 
-	_BaseArray.prototype.$copy = function (src) {
-        if (this.$root.isReadOnly)
-            return;
-		this.$empty();
-		if (utils.isArray(src)) {
-			for (let i = 0; i < src.length; i++) {
-				this.push(this.$new(src[i]));
-			}
-		}
-		return this;
-	};
+        arr.$append = function (src) {
+            const that = this;
+            function append(src, select) {
+                let addingEvent = that._path_ + '[].adding';
+                let newElem = that.$new(src);
+                // TODO: emit adding and check result
+                let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
+                if (er === false)
+                    return; // disabled
+                let len = that.push(newElem);
+                let ne = that[len - 1]; // maybe newly created reactive element
+                let eventName = that._path_ + '[].add';
+                that._root_.$setDirty(true);
+                that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
+                if (select) {
+                    ne.$select();
+                    emitSelect(that, ne);
+                }
+                // set RowNumber
+                if ('$rowNo' in newElem._meta_) {
+                    let rowNoProp = newElem._meta_.$rowNo;
+                    newElem[rowNoProp] = len; // 1-based
+                }
+                return ne;
+            }
+            if (utils.isArray(src)) {
+                let ra = [];
+                let lastElem = null;
+                src.forEach(function (elem) {
+                    lastElem = append(elem, false);
+                    ra.push(append(elem, false));
+                });
+                if (lastElem) {
+                    // last added element
+                    lastElem.$select();
+                }
+                return ra;
+            } else
+                return append(src, true);
+
+        };
+
+        arr.$empty = function () {
+            if (this.$root.isReadOnly)
+                return;
+            this.splice(0, this.length);
+            return this;
+        };
+
+        arr.$clearSelected = function () {
+            let sel = this.$selected;
+            if (!sel) return; // already null
+            sel.$selected = false;
+            emitSelect(this, null);
+        };
+
+        arr.$remove = function (item) {
+            if (!item)
+                return;
+            let index = this.indexOf(item);
+            if (index === -1)
+                return;
+            this.splice(index, 1); // EVENT
+            let eventName = this._path_ + '[].remove';
+            this._root_.$setDirty(true);
+            this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
+            if (index >= this.length)
+                index -= 1;
+            if (this.length > index) {
+                this[index].$select();
+            }
+            // renumber rows
+            if ('$rowNo' in item._meta_) {
+                let rowNoProp = item._meta_.$rowNo;
+                for (let i = 0; i < this.length; i++) {
+                    this[i][rowNoProp] = i + 1; // 1-based
+                }
+            }
+        };
+
+        arr.$copy = function (src) {
+            if (this.$root.isReadOnly)
+                return;
+            this.$empty();
+            if (utils.isArray(src)) {
+                for (let i = 0; i < src.length; i++) {
+                    this.push(this.$new(src[i]));
+                }
+            }
+            return this;
+        };
+    }
 
 	function defineCommonProps(obj) {
 		defHiddenGet(obj, "$host", function () {
@@ -3441,7 +3462,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7069
+// 20171219-7080
 // components/collectionview.js
 
 /*
@@ -3452,7 +3473,7 @@ TODO:
 (function () {
 
 
-	const log = require('std:log');
+    const log = require('std:log');
 
 	Vue.component('collection-view', {
 		store: component('std:store'),
@@ -4317,6 +4338,11 @@ Vue.component('a2-panel', {
         }
     }
 });
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171219-7079
+// components/sheet.js
+
 (function () {
 
     const sheetTemplate = `
@@ -4382,7 +4408,21 @@ Vue.component('a2-panel', {
                     cls += 'has-children';
                 if (this.item.$collapsed)
                     cls += ' collapsed';
+                cls += ' lev-' + this.item.$level;
                 return cls;
+            }
+
+            function rowCssClass() {
+                let cls = ''
+                if (this.hasChildren())
+                    cls += ' group';
+                if (this.item.$collapsed)
+                    cls += ' collapsed';
+                return cls;
+            }
+
+            function indentCssClass() {
+                return 'indent lev-' + this.item.$level;
             }
 
             function hasChildren() {
@@ -4395,7 +4435,7 @@ Vue.component('a2-panel', {
             let compArr = [];
 
             for (let v of traverse(source, prop, 1)) {
-                let slotElem = slot({ item: v, toggle: toggle, cssClass: cssClass, hasChildren: hasChildren })[0];
+                let slotElem = slot({ item: v, toggle, cssClass, hasChildren, rowCssClass, indentCssClass })[0];
                 compArr.push(h(slotElem.tag, slotElem.data, slotElem.children));
             }
             return h('tbody', {}, compArr);
@@ -4965,8 +5005,11 @@ Vue.directive('resize', {
                 let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
-				return new Promise(function (resolve, reject) {
-					var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
+                return new Promise(function (resolve, reject) {
+                    let dataToQuery = { baseUrl: self.$baseUrl };
+                    if (utils.isDefined(dat.Query))
+                        dataToQuery['query'] = dat.Query;
+                    let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
 							dat.$merge(data);

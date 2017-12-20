@@ -214,6 +214,12 @@ i,
 .ico-file-content:before {
   content: "\e9e1";
 }
+.ico-file-image:before {
+  content: "\e9e2";
+}
+.ico-file-preview:before {
+  content: "\e9e3";
+}
 .ico-filter:before {
   content: "\e988";
 }
@@ -325,6 +331,19 @@ i,
 }
 .ico-steps:before {
   content: "\ea27";
+}
+.ico-star:before {
+  content: "\e9b6";
+}
+.ico-star-outline:before {
+  content: "\e9b7";
+}
+.ico-star-yellow:before {
+  content: "\e9b6";
+  color: #dcb67a;
+}
+.ico-storyboard:before {
+  content: "\ea46";
 }
 .ico-gear:before {
   content: "\e98f";
@@ -1171,6 +1190,9 @@ pre.a2-code {
   font-size: 90%;
   margin: 0.1em;
 }
+.control-group.with-width .input-group {
+  width: 100%;
+}
 .control-group:hover .input-group,
 .control-group .input-group.focus {
   border-color: #0d82f8 !important;
@@ -1875,6 +1897,7 @@ table.data-grid > tbody > tr.bold td {
   padding: 0 3px;
   text-transform: lowercase;
   font-size: 100%;
+  white-space: nowrap;
 }
 .toolbar > .control-group .input-group > a {
   line-height: 1.5em;
@@ -3130,6 +3153,53 @@ table.sheet th {
 }
 table.sheet td {
   border-color: #e5e8eb;
+}
+table.sheet td.indent.lev-2 {
+  padding-left: 18px;
+}
+table.sheet td.indent.lev-2 {
+  padding-left: 30px;
+}
+table.sheet tr.row-title {
+  font-size: 120%;
+}
+table.sheet tr.row-title td {
+  border-style: none !important;
+  font-weight: 500;
+  padding: 8px 6px;
+}
+table.sheet tr.row-header {
+  background-color: #f5f5f5;
+}
+table.sheet tr.row-footer {
+  background-color: #f5f5f5;
+}
+table.sheet tr.row-total {
+  background-color: #fff9d3;
+}
+table.sheet tr.row-total td {
+  font-weight: 500;
+}
+table.sheet tr.group {
+  background-color: rgba(221, 248, 236, 0.5);
+  color: #208080;
+}
+table.sheet tr.group td {
+  font-weight: 500;
+}
+table.sheet .group-cell {
+  padding: 4px 2px;
+}
+table.sheet .group-cell > div {
+  cursor: pointer;
+}
+table.sheet .group-cell > div .ico:before {
+  content: "\e9cb";
+  /*tree-expanded*/
+}
+table.sheet .group-cell.collapsed > div .ico:before {
+  content: "\e9cd";
+  /*tree-collapsed*/
 }
 .app-exception {
   margin: 50px auto;

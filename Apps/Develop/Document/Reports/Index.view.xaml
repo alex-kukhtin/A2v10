@@ -1,10 +1,16 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
-    <Repeater ItemsSource="{Bind Reports}">
-        <Hyperlink Icon="Approve" Content="{Bind Name}" Padding="10" Block="True"
-            Command="{BindCmd Open, 
-            Url='/Document/Reports/Show', Argument={Bind Id}}" />
-    </Repeater>
+    <List ItemsSource="{Bind Reports}">
+        <ListItem Icon="FilePreview" Content="{Bind Name}" Padding="6,0">
+            <ListItem.Header>
+                <Hyperlink Content="{Bind Name}" Bold="True"
+                    Command="{BindCmd Open, Url='/Document/Reports/Show', Argument={Bind Id}}" />
+            </ListItem.Header>
+        </ListItem>
+    </List>
+    
+    <!--
+    -->
 </Page>
 
     

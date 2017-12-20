@@ -3,12 +3,78 @@
 @import "Variables.less";
 @import "Utlis.less";
 
+@cell-padding-v: 4px;
+@cell-padding-h: 6px;
 
 table.sheet {
     td, th {
-        padding: 4px 6px;
+        padding: @cell-padding-v @cell-padding-h;
     }
+
     td {
-        border-color:@table-brd-color;
+        border-color: @table-brd-color;
+    }
+
+    td.indent.lev-2 {
+        padding-left: 6px + 1 * 12px;
+    }
+
+    td.indent.lev-2 {
+        padding-left: 6px + 2 * 12px;
+    }
+
+
+    tr.row-title {
+        font-size: 120%;
+
+        td {
+            border-style: none !important;
+            font-weight: @font-bold;
+            padding: @cell-padding-v *2 @table-cell-padding-h;
+        }
+    }
+
+    tr.row-header {
+        background-color: #f5f5f5;
+    }
+
+    tr.row-footer {
+        background-color: #f5f5f5;
+    }
+
+    tr.row-total {
+        background-color: #fff9d3;
+        td {
+            font-weight:@font-bold;
+        }
+    }
+
+    tr.group {
+        background-color: rgba(221, 248, 236, 0.5);
+        color: #208080;
+
+        td {
+            font-weight: @font-bold;
+        }
+    }
+
+    .group-cell {
+        padding: 4px 2px;
+
+        > div {
+            cursor: pointer;
+
+            .ico:before {
+                content: "\e9cb"; /*tree-expanded*/
+            }
+        }
+
+        &.collapsed {
+            > div {
+                .ico:before {
+                    content: "\e9cd"; /*tree-collapsed*/
+                }
+            }
+        }
     }
 }

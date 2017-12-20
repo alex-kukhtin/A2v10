@@ -37,6 +37,8 @@ namespace A2v10.Data
             {
                 if (_dataModel != null)
                     return _dataModel;
+                if (_groupMetadata != null)
+                    _sys.Add("Levels", GroupMetadata.GetLevels(_groupMetadata));
                 _dataModel = new DynamicDataModel(_metadata, _root, _sys);
                 return _dataModel;
             }

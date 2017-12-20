@@ -3,7 +3,6 @@
 using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
@@ -16,7 +15,16 @@ namespace A2v10.Data
 
         IDictionary<String, ExpandoObject> _cache;
 
-        public String RootKey { get { return "[ROOT]\b"; } }
+        internal String RootKey { get { return "[ROOT]\b"; } }
+
+
+        public static IDictionary<String, IList<String>> GetLevels(IDictionary<String, GroupMetadata> dict)
+        {
+            var rv = new Dictionary<String, IList<String>>();
+            foreach (var x in dict)
+                rv.Add(x.Key, x.Value._fields);
+            return rv;
+        }
 
         public void AddMarkerMetadata(String fieldName)
         {

@@ -99,6 +99,7 @@
     <Compile Include="Sheets\Sheet.cs" />
     <Compile Include="Sheets\SheetCell.cs" />
     <Compile Include="Sheets\SheetColumn.cs" />
+    <Compile Include="Sheets\SheetGroupCell.cs" />
     <Compile Include="Sheets\SheetRow.cs" />
     <Compile Include="Sheets\SheetSection.cs" />
     <Compile Include="Sheets\SheetTreeSection.cs" />

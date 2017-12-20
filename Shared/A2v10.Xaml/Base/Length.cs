@@ -32,6 +32,8 @@ namespace A2v10.Xaml
             Double dblVal = 0;
             if (strVal == "Auto")
                 return new Length() { Value = "auto" };
+            else if (strVal.StartsWith("calc("))
+                return new Length() { Value = strVal };
             else if (strVal.EndsWith("%"))
                 return new Length() { Value = strVal };
             else if (strVal.EndsWith("px"))

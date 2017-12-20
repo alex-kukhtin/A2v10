@@ -14,6 +14,10 @@
         "view": "{{Report.View}}",
         "schema": "{{Report.Schema}}",
         "template": "{{Report.Template}}"
+      },
+      "query": {
+        "From": { "type": "Date" },
+        "To": { "type": "Date" }
       }
     }
   }

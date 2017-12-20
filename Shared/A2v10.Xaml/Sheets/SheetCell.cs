@@ -21,12 +21,26 @@ namespace A2v10.Xaml
             td.MergeAttribute("rowspan", RowSpan);
             if (Align != TextAlign.Left)
                 td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+            if (GroupIndent && IsInTreeSection)
+            {
+                td.MergeAttribute(":class", "row.indentCssClass()");
+            }
             MergeContent(td, context);
             td.RenderStart(context);
             RenderContent(context);
             td.RenderEnd(context);
         }
 
+        Boolean IsInTreeSection
+        {
+            get
+            {
+                var p = Parent as SheetRow;
+                if (p != null)
+                    return p.Parent is SheetTreeSection;
+                return false;
+            }
+        }
     }
 
     public class SheetCells : List<SheetCell>

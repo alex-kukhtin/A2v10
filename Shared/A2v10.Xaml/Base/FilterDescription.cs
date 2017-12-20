@@ -37,6 +37,15 @@ namespace A2v10.Xaml
                             return strVal.ToLowerInvariant();
                     }
                     throw new NotImplementedException($"Invalid value for Boolean FilterItem '{Value}'");
+                /*
+                case DataType.Date:
+                    {
+                        if (Value == null)
+                            return "require('std:utils').date.zero()";
+                        DateTime dt = (DateTime)Value;
+                        return $"'{dt.ToString("yyyy-MM-ddTHH\\:mm\\:ss.000Z")}'";
+                    }
+                */
                 default:
                     throw new NotImplementedException("type for FilterItem");
             }

@@ -213,8 +213,11 @@
                 let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
-				return new Promise(function (resolve, reject) {
-					var jsonData = utils.toJson({ baseUrl: self.$baseUrl });
+                return new Promise(function (resolve, reject) {
+                    let dataToQuery = { baseUrl: self.$baseUrl };
+                    if (utils.isDefined(dat.Query))
+                        dataToQuery['query'] = dat.Query;
+                    let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
 							dat.$merge(data);

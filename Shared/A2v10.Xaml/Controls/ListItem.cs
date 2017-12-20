@@ -10,7 +10,7 @@ namespace A2v10.Xaml
     public class ListItem : UIElement
     {
         public Object Content { get; set; }
-        public String Header { get; set; }
+        public Object Header { get; set; }
         public Icon Icon { get; set; }
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -54,8 +54,12 @@ namespace A2v10.Xaml
                     hTag.MergeAttribute("v-text", bHead.GetPathFormat(context));
                 }
                 hTag.RenderStart(context);
-                if (Header != null)
-                    context.Writer.Write(Header.ToString());
+                if (Header != null) {
+                    if (Header is UIElementBase)
+                        (Header as UIElementBase).RenderElement(context);
+                    else
+                       context.Writer.Write(Header.ToString());
+                }
                 hTag.RenderEnd(context);
             }
             if (HasBody)

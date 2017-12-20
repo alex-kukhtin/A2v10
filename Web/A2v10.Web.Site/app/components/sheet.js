@@ -1,4 +1,9 @@
-﻿(function () {
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171219-7079
+// components/sheet.js
+
+(function () {
 
     const sheetTemplate = `
 <table class="sheet">
@@ -63,7 +68,21 @@
                     cls += 'has-children';
                 if (this.item.$collapsed)
                     cls += ' collapsed';
+                cls += ' lev-' + this.item.$level;
                 return cls;
+            }
+
+            function rowCssClass() {
+                let cls = ''
+                if (this.hasChildren())
+                    cls += ' group';
+                if (this.item.$collapsed)
+                    cls += ' collapsed';
+                return cls;
+            }
+
+            function indentCssClass() {
+                return 'indent lev-' + this.item.$level;
             }
 
             function hasChildren() {
@@ -76,7 +95,7 @@
             let compArr = [];
 
             for (let v of traverse(source, prop, 1)) {
-                let slotElem = slot({ item: v, toggle: toggle, cssClass: cssClass, hasChildren: hasChildren })[0];
+                let slotElem = slot({ item: v, toggle, cssClass, hasChildren, rowCssClass, indentCssClass })[0];
                 compArr.push(h(slotElem.tag, slotElem.data, slotElem.children));
             }
             return h('tbody', {}, compArr);

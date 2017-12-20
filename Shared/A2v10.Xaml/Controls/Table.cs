@@ -28,7 +28,6 @@ namespace A2v10.Xaml
         public Boolean Compact { get; set; }
         public Boolean Hover { get; set; }
         public Boolean Striped { get; set; }
-        public Length Width { get; set; }
 
         public TableBackgroundStyle Background { get; set; }
 
@@ -89,8 +88,6 @@ namespace A2v10.Xaml
 
             if (GridLines != GridLinesVisibility.None)
                 table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
-            if (Width != null)
-                table.MergeStyle("width", Width.ToString());
 
             table.AddCssClassBool(Border, "bordered");
             table.AddCssClassBool(Compact, "compact");

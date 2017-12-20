@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using A2v10.Infrastructure;
+using Newtonsoft.Json;
 
 namespace A2v10.Data
 {
@@ -44,6 +45,8 @@ namespace A2v10.Data
                     val = val.ToString().ToLowerInvariant();
                 else if (val is String)
                     val = $"'{val}'";
+                else if (val is Object)
+                    val = JsonConvert.SerializeObject(val);
                 sb.Append($"{k.Key}: {val}\n");
             }
             sb.Append("});");

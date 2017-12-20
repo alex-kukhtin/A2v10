@@ -90,6 +90,8 @@ namespace A2v10.Data
             var trgRoot = Root;
             var srcRoot = src.Root as IDictionary<String, Object>;
             var rootObj = trgMeta["TRoot"];
+            var srcSystem = src.System as IDictionary<String, Object>;
+            var trgSystem = System;
             foreach (var sm in srcMeta)
             {
                 if (sm.Key != "TRoot")
@@ -109,6 +111,8 @@ namespace A2v10.Data
                 if (!trgRoot.AddChecked(sr.Key, sr.Value))
                     throw new DataLoaderException($"DataModel.Merge. Item with '{sr.Key}' already has been added");
             }
+            foreach (var sys in srcSystem)
+                trgSystem.AddChecked(sys.Key, sys.Value);
         }
     }
 }

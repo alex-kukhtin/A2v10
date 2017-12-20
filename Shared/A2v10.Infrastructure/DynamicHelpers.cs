@@ -161,5 +161,12 @@ namespace A2v10.Infrastructure
             return sb.ToString();
         }
 
+        public static ExpandoObject Merge(ExpandoObject that, ExpandoObject other)
+        {
+            var eo = new ExpandoObject();
+            eo.Append(that);
+            eo.Append(other);
+            return eo;
+        }
     }
 }

@@ -9,14 +9,15 @@
     </Page.Toolbar>
     <Sheet GridLines="Horizontal" Striped="True" Margin="10">
         <Sheet.Header>
-            <SheetRow>
+            <SheetRow Style="Title">
                 <SheetCell ColSpan="4" Content="{Bind Report.Name}"/>
             </SheetRow>
-            <SheetRow>
+            <SheetRow Style="Header">
                 <SheetCell>Id</SheetCell>
                 <SheetCell>Name</SheetCell>
                 <SheetCell>Date</SheetCell>
-                <SheetCell>Amount</SheetCell>
+                <SheetCell Align="Right">Amount</SheetCell>
+                <SheetCell/>
             </SheetRow>
         </Sheet.Header>
         <SheetSection ItemsSource="{Bind Customers}">
@@ -32,19 +33,12 @@
                     </Group>
                 </SheetCell>
             </SheetRow>
-            <SheetSection ItemsSource="{Bind SubItems}">
-                <SheetRow>
-                    <SheetCell Content="{Bind Name}"/>
-                    <SheetCell Content="{Bind Id}" />
-                    <SheetCell Content="{Bind Date, DataType=Date}" />
-                    <SheetCell Content="{Bind Amount, DataType=Currency}" Align="Right"/>
-                </SheetRow>
-            </SheetSection>
         </SheetSection>
         <Sheet.Footer>
-            <SheetRow>
+            <SheetRow Style="Total">
                 <SheetCell ColSpan="3">Итого</SheetCell>
-                <SheetCell Content="{Bind Customers.$TotalAmount, DataType=Currency}"></SheetCell>
+                <SheetCell Content="{Bind Customers.$TotalAmount, DataType=Currency}"/>
+                <SheetCell/>
             </SheetRow>
         </Sheet.Footer>
     </Sheet>

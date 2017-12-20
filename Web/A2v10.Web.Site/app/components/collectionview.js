@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171117-7069
+// 20171219-7080
 // components/collectionview.js
 
 /*
@@ -11,7 +11,7 @@ TODO:
 (function () {
 
 
-	const log = require('std:log');
+    const log = require('std:log');
 
 	Vue.component('collection-view', {
 		store: component('std:store'),

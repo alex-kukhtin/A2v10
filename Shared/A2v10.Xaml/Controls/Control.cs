@@ -18,6 +18,8 @@ namespace A2v10.Xaml
 
         public Int32 TabIndex { get; set; }
 
+        public Length Width { get; set; }
+
         Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
         public UIElementCollection AddOns { get { return _addOns.Value;} }
@@ -27,6 +29,11 @@ namespace A2v10.Xaml
             base.MergeAttributes(tag, context, mode);
             tag.AddCssClassBool(Block, "block");
             AddControlAttributes(tag, context);
+            if (Width != null)
+            {
+                tag.MergeStyle("width", Width.Value);
+                tag.AddCssClass("with-width");
+            }
         }
 
         private void AddControlAttributes(TagBuilder tag, RenderContext context)

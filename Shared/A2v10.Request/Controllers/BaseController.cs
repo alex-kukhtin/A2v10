@@ -43,7 +43,7 @@ namespace A2v10.Request
             await Render(rw, writer, loadPrms);
         }
 
-        async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms)
+        async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms, ExpandoObject queryParams)
         {
             if (!rw.indirect)
                 return rw;
@@ -58,6 +58,7 @@ namespace A2v10.Request
                 String loadProc = rw.LoadProcedure;
                 if (loadProc != null)
                 {
+                    loadPrms = DynamicHelpers.Merge(loadPrms, queryParams);
                     loadPrms.Set("Id", rw.Id);
                     var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
                     innerModel.Merge(newModel);
@@ -75,10 +76,15 @@ namespace A2v10.Request
                 rw.model = innerModel.Root.Resolve(rw.targetModel.model);
                 rw.view = innerModel.Root.Resolve(rw.targetModel.view);
                 rw.schema = innerModel.Root.Resolve(rw.targetModel.schema);
+                if (String.IsNullOrEmpty(rw.schema))
+                    rw.schema = null;
                 rw.template = innerModel.Root.Resolve(rw.targetModel.template);
+                if (String.IsNullOrEmpty(rw.template))
+                    rw.template = null;
                 String loadProc = rw.LoadProcedure;
                 if (loadProc != null)
                 {
+                    loadPrms = DynamicHelpers.Merge(loadPrms, queryParams);
                     loadPrms.Set("Id", rw.Id);
                     var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
                     innerModel.Merge(newModel);
@@ -98,7 +104,7 @@ namespace A2v10.Request
                 model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
             }
             if (rw.indirect)
-                rw = await LoadIndirect(rw, model, loadPrms);
+                rw = await LoadIndirect(rw, model, loadPrms, null);
 
             String viewName = rw.GetView();
             String rootId = "el" + Guid.NewGuid().ToString();

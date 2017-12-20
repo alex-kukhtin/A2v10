@@ -10,16 +10,10 @@ namespace A2v10.Xaml
     {
         public Object Content { get; set; }
 
-        public Boolean? Bold { get; set; }
-        public Boolean? Italic { get; set; }
-
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var span = new TagBuilder("span");
             MergeAttributes(span, context);
-            span.AddCssClassBoolNo(Bold, "bold");
-            span.AddCssClassBoolNo(Italic, "italic");
-            span.AddCssClassBool(Block, "block");
 
             var cbind = GetBinding(nameof(Content));
             if (cbind != null)
