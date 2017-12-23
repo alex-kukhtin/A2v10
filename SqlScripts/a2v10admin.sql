@@ -1,10 +1,10 @@
-/* 20171124-7053 */
+/* 20171223-7055 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 24 nov 2017 15:30
-module version : 7053
+Last updated : 23 dec 2017 15:00
+module version : 7055
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7053);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7055);
 else
-	update a2sys.Versions set [Version] = 7053 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7055 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -42,6 +42,8 @@ create procedure a2admin.[Ensure.Admin]
 as
 begin
 	set nocount on;
+	if not exists(select 1 from a2security.UserGroups where GroupId = 77 /*predefined*/ and UserId = @UserId)
+		throw 60000, N'The current user is not an administrator', 0;
 end
 go
 ------------------------------------------------
@@ -164,13 +166,13 @@ begin
 		[!TUser.Groups!ParentId] = ug.UserId
 	from a2security.UserGroups ug
 		inner join a2security.Groups g on ug.GroupId = g.Id
-	where ug.UserId = @Id;
+	where ug.UserId = @Id and g.Void = 0;
 
 	select [!TRole!Array] = null, [Id!!Id] = r.Id, [Name!!Name] = r.Name, [Memo] = r.Memo,
 		[!TUser.Roles!ParentId] = ur.UserId
 	from a2security.UserRoles ur
 		inner join a2security.Roles r on ur.RoleId = r.Id
-	where ur.UserId = @Id;
+	where ur.UserId = @Id and r.Void = 0;
 end
 go
 ------------------------------------------------
@@ -355,8 +357,8 @@ begin
 				case when @Order=N'Memo' and @Dir = @Desc then g.Memo end desc
 			)
 		from a2security.Groups g
-		where @Fragment is null or upper(g.[Name]) like @Fragment or upper(g.[Key]) like @Fragment
-			or upper(g.Memo) like @Fragment or cast(g.Id as nvarchar) like @Fragment
+		where g.Void = 0 and (@Fragment is null or upper(g.[Name]) like @Fragment or upper(g.[Key]) like @Fragment
+			or upper(g.Memo) like @Fragment or cast(g.Id as nvarchar) like @Fragment)
 	)
 
 	select [Groups!TGroup!Array]=null, *, [!!RowCount] = (select count(1) from T) 
@@ -387,7 +389,7 @@ begin
 		[UserCount]=(select count(1) from a2security.UserGroups ug where ug.GroupId = @Id),
 		[Users!TUser!Array] = null
 	from a2security.Groups g
-	where g.Id = @Id;
+	where g.Id = @Id and g.Void = 0;
 
 	/* users in group */
 	select [!TUser!Array] = null, [Id!!Id] = u.Id, [Name!!Name] = u.UserName, u.PersonName,
@@ -477,6 +479,26 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Group.Delete')
+	drop procedure [a2admin].[Group.Delete]
+go
+------------------------------------------------
+create procedure a2admin.[Group.Delete]
+@UserId bigint,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
+	delete from a2security.UserGroups where GroupId = @Id;
+	delete from a2security.UserRoles where GroupId = @Id;
+	update a2security.Groups set Void=1, [Key] = null where Id=@Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Group.Key.CheckDuplicate')
 	drop procedure [a2admin].[Group.Key.CheckDuplicate]
 go
@@ -556,8 +578,8 @@ begin
 				case when @Order=N'Memo' and @Dir = @Desc then r.Memo end desc
 			)
 		from a2security.Roles r
-		where @Fragment is null or upper(r.[Name]) like @Fragment or upper(r.[Key]) like @Fragment
-			or upper(r.Memo) like @Fragment or cast(r.Id as nvarchar) like @Fragment
+		where r.Void = 0 and (@Fragment is null or upper(r.[Name]) like @Fragment or upper(r.[Key]) like @Fragment
+			or upper(r.Memo) like @Fragment or cast(r.Id as nvarchar) like @Fragment)
 	)
 
 	select [Roles!TRole!Array]=null, *, [!!RowCount] = (select count(1) from T) 
@@ -587,7 +609,7 @@ begin
 		[Key] = r.[Key], [Memo]=r.Memo, [UsersGroups!TUserOrGroup!Array] = null,
 		[ElemCount]=(select count(1) from a2security.UserRoles ur where ur.RoleId = r.Id)
 	from a2security.Roles r
-	where r.Id = @Id;
+	where r.Id = @Id and r.Void = 0;
 
 	/* users in role */
 	select [!TUserOrGroup!Array] = null, [Id!!Id] = ur.Id, [!TRole.UsersGroups!ParentId] = ur.RoleId,
@@ -597,6 +619,25 @@ begin
 		left join a2security.ViewUsers u on ur.UserId = u.Id
 		left join a2security.Groups g on ur.GroupId = g.Id
 	where ur.RoleId = @Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Role.Delete')
+	drop procedure [a2admin].[Role.Delete]
+go
+------------------------------------------------
+create procedure a2admin.[Role.Delete]
+@UserId bigint,
+@Id bigint = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	exec a2admin.[Ensure.Admin] @UserId;
+	delete from a2security.UserRoles where RoleId = @Id;
+	update a2security.Roles set Void=1, [Key] = null where Id=@Id;
 end
 go
 ------------------------------------------------

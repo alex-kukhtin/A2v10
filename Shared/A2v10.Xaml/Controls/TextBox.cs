@@ -16,6 +16,8 @@ namespace A2v10.Xaml
 
         public Boolean Password { get; set; }
 
+        public Boolean AutoSize { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             CheckDisabledModel(context);
@@ -29,6 +31,8 @@ namespace A2v10.Xaml
                 MergeAttributeInt32(input, context, "rows", nameof(Rows), Rows);
             if (Password)
                 input.MergeAttribute(":password", "true");
+            if (AutoSize)
+                input.MergeAttribute(":auto-size", "true");
             MergeAlign(input, context, Align);
             MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
             MergeValue(input, context);

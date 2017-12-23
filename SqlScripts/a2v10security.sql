@@ -1,10 +1,10 @@
-﻿/* 20171103-7048 */
+﻿/* 20171221-7050 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 19 nov 2017 13:00
-module version : 7048
+Last updated : 23 dec 2017 13:40
+module version : 7050
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7048);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7050);
 else
-	update a2sys.Versions set [Version] = 7048 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7050 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -81,10 +81,17 @@ begin
 	(
 		Id	bigint not null constraint PK_Groups primary key
 			constraint DF_Groups_PK default(next value for a2security.SQ_Groups),
+		Void bit not null constraint DF_Groups_Void default(0),				
 		[Name] nvarchar(255) not null constraint UNQ_Groups_Name unique,
 		[Key] nvarchar(255) null,
 		Memo nvarchar(255) null
 	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Groups' and COLUMN_NAME=N'Void')
+begin
+	alter table a2security.Groups add Void bit not null constraint DF_Groups_Void default(0) with values;
 end
 go
 ------------------------------------------------
@@ -116,10 +123,17 @@ begin
 	(
 		Id	bigint not null constraint PK_Roles primary key
 			constraint DF_Roles_PK default(next value for a2security.SQ_Roles),
+		Void bit not null constraint DF_Roles_Void default(0),				
 		[Name] nvarchar(255) not null constraint UNQ_Roles_Name unique,
 		[Key] nvarchar(255) null,
 		Memo nvarchar(255) null
 	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Roles' and COLUMN_NAME=N'Void')
+begin
+	alter table a2security.Roles add Void bit not null constraint DF_Roles_Void default(0) with values;
 end
 go
 ------------------------------------------------
@@ -306,10 +320,10 @@ create procedure a2security.GetUserGroups
 as
 begin
 	set nocount on;
-	select r.Id, r.Name 
-	from a2security.UserGroups ur
-		inner join a2security.Groups r on ur.GroupId = r.Id
-	where ur.UserId = @UserId;
+	select g.Id, g.[Name]
+	from a2security.UserGroups ug
+		inner join a2security.Groups g on ug.GroupId = g.Id
+	where ug.UserId = @UserId and g.Void=0;
 end
 go
 ------------------------------------------------

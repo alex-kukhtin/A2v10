@@ -1,10 +1,10 @@
-/* 20171017-7048 */
+/* 20171223-7045 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 11 oct 2017 09:00
-module version : 7044
+Last updated : 23 dec 2017 15:00
+module version : 7045
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7044);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7045);
 else
-	update a2sys.Versions set [Version] = 7044 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7045 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -107,6 +107,20 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui' and ROUTINE_NAME=N'AppTitle.Load')
+	drop procedure a2ui.[AppTitle.Load]
+go
+------------------------------------------------
+create procedure a2ui.[AppTitle.Load]
+as
+begin
+	set nocount on;
+	select [AppTitle], [AppSubTitle]
+	from (select Name, Value=StringValue from a2sys.SysParams) as s
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
+end
+go
+-----------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_GetMenuFor') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 	drop function a2security.fn_GetMenuFor;
 go

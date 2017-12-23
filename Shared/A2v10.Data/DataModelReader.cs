@@ -80,7 +80,8 @@ namespace A2v10.Data
                 {
                     Int32 pageSize = (Int32)dataVal;
                     _sys.Add("PageSize", pageSize);
-                } else if (fn == "!!ReadOnly")
+                }
+                else if (fn == "!!ReadOnly")
                 {
                     Boolean ro = false;
                     if (dataVal is Boolean)
@@ -88,6 +89,10 @@ namespace A2v10.Data
                     else if (dataVal is Int32)
                         ro = ((Int32)dataVal) != 0;
                     _sys.Add("ReadOnly", ro);
+                }
+                else
+                {
+                    _sys.Add(fn, dataVal);
                 }
             }
         }

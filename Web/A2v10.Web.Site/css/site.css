@@ -1064,6 +1064,15 @@ pre.a2-code {
     3. .validator width
     4. .validator arrows
 */
+.validation-summary {
+  font-size: 0.95rem;
+  padding: 4px 6px;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #dca7a7;
+  box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
+  white-space: pre;
+}
 .control-group {
   display: block;
   margin-bottom: .5rem;
@@ -1220,11 +1229,11 @@ pre.a2-code {
 .control-group .control {
   border-style: none;
 }
-.control-group.required label:after {
+.control-group.required label:before {
   content: '\2731';
   display: inline-block;
   color: #dca7a7;
-  margin-left: 2px;
+  margin-right: 2px;
   vertical-align: 1px;
   font-size: 75%;
 }
@@ -1273,6 +1282,20 @@ pre.a2-code {
 }
 .a2-hyperlink.small i.ico {
   font-size: 12px;
+}
+.a2-label {
+  display: block;
+  font-size: 0.95rem;
+  color: #757575;
+  align-self: center;
+}
+.a2-label.required:before {
+  content: '\2731';
+  display: inline-block;
+  color: #dca7a7;
+  margin-right: 2px;
+  vertical-align: 1px;
+  font-size: 75%;
 }
 .btn {
   padding: .5rem .75rem;
@@ -2832,6 +2855,9 @@ TODO:
   position: absolute;
   border: 8px solid transparent;
 }
+.popover-wrapper > .popup-body pre.a2-code {
+  background-color: transparent;
+}
 .popover-wrapper.show > .popup-body {
   display: block;
 }
@@ -3146,6 +3172,12 @@ TODO:
 }
 .panel.panel-yellow > .panel-header .panel-collapse-handle {
   color: #9c793d;
+}
+table.sheet {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 table.sheet td,
 table.sheet th {

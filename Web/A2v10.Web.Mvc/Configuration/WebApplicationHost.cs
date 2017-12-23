@@ -1,16 +1,19 @@
-﻿using System;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
+
 using A2v10.Infrastructure;
+using System.Collections.Concurrent;
 
 namespace A2v10.Web.Mvc.Configuration
 {
 	public class WebApplicationHost : IApplicationHost
 	{
 		IProfiler _profiler;
-		IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 
 		public WebApplicationHost(IProfiler profiler)
 		{
@@ -25,15 +28,10 @@ namespace A2v10.Web.Mvc.Configuration
             if (String.IsNullOrEmpty(source))
                 source = "Default";
 
-            String cnnStr = null;
-            if (_cnnStrings.TryGetValue(source, out cnnStr))
-                return cnnStr;
             var strSet = ConfigurationManager.ConnectionStrings[source];
             if (strSet == null)
                 throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-            cnnStr = strSet.ConnectionString;
-            _cnnStrings.Add(source, strSet.ConnectionString);
-            return cnnStr;
+            return strSet.ConnectionString;
 		}
 
         public String AppPath

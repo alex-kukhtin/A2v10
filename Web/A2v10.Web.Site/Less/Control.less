@@ -13,6 +13,17 @@
     4. .validator arrows
 */
 
+.validation-summary {
+    font-size: 0.95rem;
+    padding: 4px 6px;
+    background-color: @danger-bg-color;
+    color: @danger-txt-color;
+    border: 1px solid @danger-brd-color;
+    box-shadow: 1px 4px 10px @danger-shadow-color;
+    white-space:pre;
+}
+
+
 .control-group {
     display: block;
     //background-color: aliceblue;
@@ -196,11 +207,11 @@
 }
 
 .control-group.required {
-    label:after {
+    label:before {
         content: '\2731';
         display: inline-block;
         color: @danger-brd-color;
-        margin-left:2px;
+        margin-right:2px;
         vertical-align:1px;
         font-size:75%;
     }
@@ -264,5 +275,21 @@
     font-size:92%;
     i.ico {
         font-size:12px;
+    }
+}
+
+.a2-label {
+    display: block;
+    font-size: 0.95rem;
+    color: @label-color;
+    align-self: center;
+
+    &.required:before {
+        content: '\2731';
+        display: inline-block;
+        color: @danger-brd-color;
+        margin-right: 2px;
+        vertical-align: 1px;
+        font-size: 75%;
     }
 }

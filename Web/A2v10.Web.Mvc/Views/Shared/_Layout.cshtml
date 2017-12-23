@@ -3,27 +3,31 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - A2v10</title>
-	<link href="/css/site.min.css" rel="stylesheet"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>A2:Web</title>
+    <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
-	<div id="app">
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container">
-				<i class="fa fa-user"></i>
-				<div class="navbar-collapse collapse">
-					@Html.Partial("_LoginPartial")
-				</div>
-			</div>
-		</div>
-		<div class="container body-content">
-			@RenderBody()
-			<hr />
-		</div>
-		<footer class="footer">
-			<p>&copy; @DateTime.Now.Year  @A2v10.Infrastructure.AppInfo.MainAssembly.Version</p>
-		</footer>
-	</div>
-	<script type="text/javascript" src="/scripts/vue.min.js?v=2.4.2"></script>
+    <div id="app" class="shell">
+        <header class="header">
+            <div class="h-block">
+                <!--<i class="bowtie-user"></i>-->
+                <a class="app-title" href='/' v-on:click.prevent="root" v-text="title"></a>
+                <span class="app-subtitle" v-text="subtitle"></span>
+            </div>
+            <div class="aligner"></div>
+        </header>
+        <div class="main-view">
+            <div class="content-view full-view">
+                @RenderBody()
+            </div>
+        </div>
+        <footer class="footer">
+            <div :class="{spinner: true, active:processing}"></div>
+            version: <span v-text="version"></span>
+        </footer>
+    </div>
+    <script type="text/javascript" src="/scripts/vue.min.js?v=2.4.2"></script>
+    @RenderSection("Scripts", false)
 </body>
 </html>

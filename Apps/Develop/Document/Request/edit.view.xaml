@@ -135,7 +135,8 @@
 				<!--
 				<Selector />
 				-->
-				<ComboBox Label="Доставку включить" Value="{Bind Document.DeliveryType}">
+                <Label Grid.Row="4" Grid.Col="1" Align="Right" Required="True">доставку включить</Label>
+				<ComboBox Grid.Row="4" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Document.DeliveryType}">
 					<ComboBoxItem Value="0">В итоги по документу</ComboBoxItem>
 					<ComboBoxItem Value="1">В себестоимость товара</ComboBoxItem>
 					<ComboBoxItem Value="2">В цену покупателя</ComboBoxItem>

@@ -103,6 +103,45 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;title&gt;A2:Web&lt;/title&gt;
+        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///    &lt;div id=&quot;app&quot; class=&quot;shell&quot;&gt;
+        ///        &lt;header class=&quot;header&quot;&gt;
+        ///       [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string login {
+            get {
+                return ResourceManager.GetString("login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (function () {
+        ///    new Vue({
+        ///        el: &quot;app&quot;,
+        ///        data: {
+        ///
+        ///        }
+        ///    });
+        ///})();.
+        /// </summary>
+        internal static string loginScript {
+            get {
+                return ResourceManager.GetString("loginScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /*20171010-7043*/
         ///
         ///(function () {
@@ -162,18 +201,23 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
+        ///&lt;html lang=&quot;ru&quot;&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
         ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        /// [rest of string was truncated]&quot;;.
+        ///    &lt;title&gt;$(Title)&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///        body {
+        ///            background-color: #e3e3e3;
+        ///        }
+        ///    &lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body scroll=&quot;none&quot;&gt;
+        ///    $(Viewer)
+        ///&lt;/body&gt;
+        ///&lt;/html&gt;
+        ///.
         /// </summary>
         internal static string stiReportViewer {
             get {

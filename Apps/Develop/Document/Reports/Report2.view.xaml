@@ -41,6 +41,13 @@
                 <SheetCell Content="{Bind Agent}"/>
                 <SheetCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
                 <SheetCell Content="{Bind StartDate, DataType=Date}" Align="Right"/>
+                <SheetCell>
+                    <Popover Icon="Eye" Placement="RightBottom">
+                        <Popup Width="250px">
+                            <Code Content="{Bind}" Multiline="True"/>
+                        </Popup>
+                    </Popover>
+                </SheetCell>
             </SheetRow>
         </SheetTreeSection>
         <SheetSection>

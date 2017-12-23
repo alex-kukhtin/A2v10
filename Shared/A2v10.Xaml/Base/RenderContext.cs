@@ -202,5 +202,16 @@ namespace A2v10.Xaml
                 return scope.Replace(result);
             return result;
         }
-	}
+
+        internal String GetEmptyPath()
+        {
+            if (_stackScope.Count == 0)
+                return null;
+            ScopeElem scope = _stackScope.Peek();
+            String result = scope.Scope;
+            if (scope.Replace != null)
+                return scope.Replace(result);
+            return result;
+        }
+    }
 }

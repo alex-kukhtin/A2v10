@@ -43,41 +43,89 @@ namespace ASP
             #line 3 "..\..\Views\Shared\Exception.cshtml"
   
     Layout = null;
-    ViewBag.Title = "Exception";
+ 
+
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n\r\n<h1");
+WriteLiteral("<!DOCTYPE html>\r\n");
+
+WriteLiteral("<html>\r\n<head>\r\n    <meta");
+
+WriteLiteral(" charset=\"utf-8\"");
+
+WriteLiteral(" />\r\n    <meta");
+
+WriteLiteral(" name=\"viewport\"");
+
+WriteLiteral(" content=\"width=device-width, initial-scale=1.0\"");
+
+WriteLiteral(@">
+    <title>Exception - A2:Web</title>
+    <style>
+        body {
+            margin: 1.67em;
+            font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
+            font-size:13px;
+            color:#333;
+        }
+        .trace {
+            font-family: Consolas, 'Courier New', Courier, monospace;
+            font-size:12px;
+        }
+        .text-danger {
+            color: #a94442;
+        }
+        h1, h2 {
+            margin:0.2em, 0;
+        }
+        h5 {
+            margin:0;
+        }
+    </style>
+</head>
+<body>
+    <h1");
 
 WriteLiteral(" class=\"text-danger\"");
 
-WriteLiteral(">Exception</h1>\r\n<h2");
+WriteLiteral(">An exception occurred</h1>\r\n    <h2");
 
 WriteLiteral(" class=\"text-danger\"");
 
 WriteLiteral(">");
 
             
-            #line 9 "..\..\Views\Shared\Exception.cshtml"
-                   Write(Model.Message);
+            #line 37 "..\..\Views\Shared\Exception.cshtml"
+                       Write(Model.Message);
 
             
             #line default
             #line hidden
-WriteLiteral("</h2>\r\n\r\n<h5>Трассировка стека</h5>\r\n<p>\r\n");
+WriteLiteral("</h2>\r\n\r\n    <h5>Stack trace</h5>\r\n    <p");
 
-WriteLiteral("    ");
+WriteLiteral(" class=\"trace\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("        ");
 
             
-            #line 13 "..\..\Views\Shared\Exception.cshtml"
-Write(Model.StackTrace);
+            #line 41 "..\..\Views\Shared\Exception.cshtml"
+   Write(Model.StackTrace);
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n</p>\r\n\r\n");
+WriteLiteral("\r\n    </p>\r\n</body>\r\n</html>\r\n");
 
+            
+            #line 45 "..\..\Views\Shared\Exception.cshtml"
+
+            
+            #line default
+            #line hidden
         }
     }
 }

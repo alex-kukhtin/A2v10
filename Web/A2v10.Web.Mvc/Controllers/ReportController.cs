@@ -1,15 +1,17 @@
-﻿using System;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+
+using System;
 using System.Web.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using A2v10.Infrastructure;
-using System.Net;
-using A2v10.Request;
-using Stimulsoft.Report.Mvc;
 using System.Dynamic;
+
 using Microsoft.AspNet.Identity;
+
+using Stimulsoft.Report.Mvc;
+
+using A2v10.Infrastructure;
+using A2v10.Request;
 using A2v10.Reports;
 
 namespace A2v10.Web.Mvc.Controllers
@@ -47,7 +49,9 @@ namespace A2v10.Web.Mvc.Controllers
                 vars.Set("Id", id);
                 TempData["StiVariables"] = vars;
                 ViewBag.locale = "uk"; // TODO
-                ViewBag.Title = "REPORT TITLE"; // TODO
+                ViewBag.Title = null;
+                if (iDataModel.System != null)
+                    ViewBag.Title = iDataModel.System.Get<String>("Title");
                 return View("StiReport");
             }
             catch (Exception ex)

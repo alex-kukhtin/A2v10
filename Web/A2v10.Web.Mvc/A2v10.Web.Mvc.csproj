@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
+    <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
     <Compile Include="Hooks\CreateUserHandler.cs" />
     <Compile Include="Hooks\SetPasswordHandler.cs" />
     <Compile Include="Identity\IdentityExtensions.cs" />
@@ -144,11 +145,6 @@
     </Compile>
     <Compile Include="Views\Account\ForgotPasswordConfirmation.generated.cs">
       <DependentUpon>ForgotPasswordConfirmation.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\Login.generated.cs">
-      <DependentUpon>Login.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -232,11 +228,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>_Layout.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shared\_LoginPartial.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>_LoginPartial.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\_ViewStart.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -257,10 +248,6 @@
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ForgotPasswordConfirmation.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\Login.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Login.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Account\Register.cshtml">
       <Generator>RazorGenerator</Generator>
@@ -309,10 +296,6 @@
     <Content Include="Views\Shared\Error.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Error.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Shared\_LoginPartial.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>_LoginPartial.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Shared\_Layout.cshtml">
       <Generator>RazorGenerator</Generator>

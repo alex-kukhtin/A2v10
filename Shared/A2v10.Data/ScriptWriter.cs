@@ -47,8 +47,9 @@ namespace A2v10.Data
                     val = $"'{val}'";
                 else if (val is Object)
                     val = JsonConvert.SerializeObject(val);
-                sb.Append($"{k.Key}: {val}\n");
+                sb.Append($" {k.Key}: {val},");
             }
+            sb.RemoveTailComma();
             sb.Append("});");
             return sb.ToString();
         }

@@ -49,96 +49,101 @@ WriteLiteral(" name=\"viewport\"");
 
 WriteLiteral(" content=\"width=device-width, initial-scale=1.0\"");
 
-WriteLiteral(">\r\n    <title>");
+WriteLiteral(">\r\n    <meta");
 
-            
-            #line 6 "..\..\Views\Shared\_Layout.cshtml"
-      Write(ViewBag.Title);
+WriteLiteral(" http-equiv=\"X-UA-Compatible\"");
 
-            
-            #line default
-            #line hidden
-WriteLiteral(" - A2v10</title>\r\n\t<link");
+WriteLiteral(" content=\"IE=edge\"");
+
+WriteLiteral(" />\r\n    <title>A2:Web</title>\r\n    <link");
 
 WriteLiteral(" href=\"/css/site.min.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
-WriteLiteral("/>\r\n</head>\r\n<body>\r\n\t<div");
+WriteLiteral(" />\r\n</head>\r\n<body>\r\n    <div");
 
 WriteLiteral(" id=\"app\"");
 
-WriteLiteral(">\r\n\t\t<div");
+WriteLiteral(" class=\"shell\"");
 
-WriteLiteral(" class=\"navbar navbar-inverse navbar-fixed-top\"");
+WriteLiteral(">\r\n        <header");
 
-WriteLiteral(">\r\n\t\t\t<div");
+WriteLiteral(" class=\"header\"");
 
-WriteLiteral(" class=\"container\"");
+WriteLiteral(">\r\n            <div");
 
-WriteLiteral(">\r\n\t\t\t\t<i");
+WriteLiteral(" class=\"h-block\"");
 
-WriteLiteral(" class=\"fa fa-user\"");
+WriteLiteral(">\r\n                <!--<i class=\"bowtie-user\"></i>-->\r\n                <a");
 
-WriteLiteral("></i>\r\n\t\t\t\t<div");
+WriteLiteral(" class=\"app-title\"");
 
-WriteLiteral(" class=\"navbar-collapse collapse\"");
+WriteLiteral(" href=\'/\'");
+
+WriteLiteral(" v-on:click.prevent=\"root\"");
+
+WriteLiteral(" v-text=\"title\"");
+
+WriteLiteral("></a>\r\n                <span");
+
+WriteLiteral(" class=\"app-subtitle\"");
+
+WriteLiteral(" v-text=\"subtitle\"");
+
+WriteLiteral("></span>\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"aligner\"");
+
+WriteLiteral("></div>\r\n        </header>\r\n        <div");
+
+WriteLiteral(" class=\"main-view\"");
+
+WriteLiteral(">\r\n            <div");
+
+WriteLiteral(" class=\"content-view full-view\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("\t\t\t\t\t");
+WriteLiteral("                ");
 
             
-            #line 15 "..\..\Views\Shared\_Layout.cshtml"
-               Write(Html.Partial("_LoginPartial"));
+            #line 22 "..\..\Views\Shared\_Layout.cshtml"
+           Write(RenderBody());
 
             
             #line default
             #line hidden
-WriteLiteral("\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<div");
-
-WriteLiteral(" class=\"container body-content\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("\t\t\t");
-
-            
-            #line 20 "..\..\Views\Shared\_Layout.cshtml"
-       Write(RenderBody());
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n\t\t\t<hr />\r\n\t\t</div>\r\n\t\t<footer");
+WriteLiteral("\r\n            </div>\r\n        </div>\r\n        <footer");
 
 WriteLiteral(" class=\"footer\"");
 
-WriteLiteral(">\r\n\t\t\t<p>&copy; ");
+WriteLiteral(">\r\n            <div");
 
-            
-            #line 24 "..\..\Views\Shared\_Layout.cshtml"
-                 Write(DateTime.Now.Year);
+WriteLiteral(" :class=\"{spinner: true, active:processing}\"");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("  ");
+WriteLiteral("></div>\r\n            version: <span");
 
-            
-            #line 24 "..\..\Views\Shared\_Layout.cshtml"
-                                     Write(A2v10.Infrastructure.AppInfo.MainAssembly.Version);
+WriteLiteral(" v-text=\"version\"");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("</p>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
+WriteLiteral("></span>\r\n        </footer>\r\n    </div>\r\n    <script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
 WriteLiteral(" src=\"/scripts/vue.min.js?v=2.4.2\"");
 
-WriteLiteral("></script>\r\n</body>\r\n</html>\r\n");
+WriteLiteral("></script>\r\n");
+
+WriteLiteral("    ");
+
+            
+            #line 31 "..\..\Views\Shared\_Layout.cshtml"
+Write(RenderSection("Scripts", false));
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n</body>\r\n</html>\r\n");
 
         }
     }

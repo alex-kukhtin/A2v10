@@ -1,13 +1,21 @@
-﻿using System;
-using System.Globalization;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Web.Helpers;
+using System.Text;
+using A2v10.Web.Mvc.Filters;
+using System.IO;
+using Newtonsoft.Json;
+
+using A2v10.Request;
+using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Models;
 using A2v10.Web.Mvc.Identity;
 
@@ -19,14 +27,25 @@ namespace A2v10.Web.Site.Controllers
         private AppSignInManager _signInManager;
         private AppUserManager _userManager;
 
+        IApplicationHost _host;
+        IDbContext _dbContext;
+
         public AccountController()
         {
+            // DI ready
+            var serviceLocator = ServiceLocator.Current;
+            _host = serviceLocator.GetService<IApplicationHost>();
+            _dbContext = serviceLocator.GetService<IDbContext>();
         }
 
         public AccountController(AppUserManager userManager, AppSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            // DI ready
+            var serviceLocator = ServiceLocator.Current;
+            _host = serviceLocator.GetService<IApplicationHost>();
+            _dbContext = serviceLocator.GetService<IDbContext>();
         }
 
         public AppSignInManager SignInManager
@@ -53,13 +72,66 @@ namespace A2v10.Web.Site.Controllers
             }
         }
 
-        //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public void Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            try
+            {
+                String cookieToken;
+                String formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+
+                AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(String.Empty, "a2ui.[AppTitle.Load]");
+
+                String html = ResourceHelper.LoginHtml;
+                StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
+                script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle.AppTitle}', subtitle: '{appTitle.AppSubTitle}' }}");
+                script.Replace("$(Token)", formToken);
+
+                Response.Cookies.Add(new HttpCookie(AntiForgeryConfig.CookieName, cookieToken));
+                Response.Write(html.Replace("$(LoginScript)", script.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+        }
+
+        // POST: /Account/Login
+        [ActionName("Login")]
+        [HttpPost]
+        [IsAjaxOnly]
+        [AllowAnonymous]
+        [ValidateJsonAntiForgeryToken]
+        public async Task<ActionResult> PostLogin()
+        {
+            LoginViewModel model;
+            using (var tr = new StreamReader(Request.InputStream))
+            {
+                String json = tr.ReadToEnd();
+                model = JsonConvert.DeserializeObject<LoginViewModel>(json);
+            }
+            String status = null;
+            var result = await SignInManager.PasswordSignInAsync(userName: model.Name, password: model.Password, isPersistent: model.RememberMe, shouldLockout: true);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    status = "Success";
+                    break;
+                case SignInStatus.LockedOut:
+                    await UpdateUser(model.Name);
+                    status = "LockedOut";
+                    break;
+                case SignInStatus.RequiresVerification:
+                    throw new NotImplementedException("SignInStatus.RequiresVerification");
+                case SignInStatus.Failure:
+                default:
+                    await UpdateUser(model.Name);
+                    status = "Failure";
+                    break;
+            }
+            return Json(new { Status = status });
         }
 
         async Task UpdateUser(String userName)
@@ -69,35 +141,6 @@ namespace A2v10.Web.Site.Controllers
             {
                 // may be locked out
                 await UserManager.UpdateUser(user);
-            }
-        }
-        //
-        // POST: /Account/Login
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var result = await SignInManager.PasswordSignInAsync(userName:model.Name, password:model.Password, isPersistent:model.RememberMe, shouldLockout: true);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    await UpdateUser(model.Name);
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    await UpdateUser(model.Name);
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
             }
         }
 

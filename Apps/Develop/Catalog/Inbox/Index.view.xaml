@@ -12,6 +12,13 @@
 		      Striped="True" Border="False" Sort="True" GridLines="Vertical"
               FixedHeader="True">
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap"/>
+        <DataGridColumn>
+            <Popover Placement="RightBottom" Icon="Eye">
+                <Popup Width="300">
+                    <Code Content="{Bind}" Multiline="True"/>
+                </Popup>
+            </Popover>
+        </DataGridColumn>
         <DataGridColumn Header="PId" Content="{Bind ProcessId}" Align="Right" Fit="True" Wrap="NoWrap"/>
         <DataGridColumn Header="Text" Content="{Bind Text}" Command="{BindCmd Open, Url='/catalog/inbox/open', Argument={Bind}}"/>
         <DataGridColumn Header="For" Content="{Bind For}"/>

@@ -31,7 +31,7 @@ namespace A2v10.Xaml
         internal String GetPathFormat(RenderContext context)
         {
             if (Path == null)
-                return null;
+                return context.GetEmptyPath(); // may be scoped
             String realPath = context.GetNormalizedPath(Path);
             if (String.IsNullOrEmpty(Format) && DataType == DataType.String)
                 return realPath;
@@ -44,11 +44,13 @@ namespace A2v10.Xaml
             return $"$format({realPath}, {dt}, {fmt})";
         }
 
+
+        private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
+
+        #region ISupportInitialize
         public void BeginInit()
         {
         }
-
-        private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
 
         public void EndInit()
         {
@@ -58,5 +60,6 @@ namespace A2v10.Xaml
             if (match.Groups.Count == 3)
                 Path = $"{match.Groups[1].Value}.Selected('{match.Groups[2].Value}')";
         }
+        #endregion
     }
 }

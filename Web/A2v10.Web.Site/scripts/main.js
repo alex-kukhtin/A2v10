@@ -2128,7 +2128,8 @@ Vue.component('validator-control', {
             itemToValidate: Object,
             propToValidate: String,
             placeholder: String,
-            password: Boolean
+            password: Boolean,
+            autoSize: Boolean
         },
         computed: {
             controlType() {
