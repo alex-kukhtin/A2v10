@@ -113,6 +113,7 @@ namespace A2v10.Xaml
                 return;
             cmd.MergeCommandAttributes(tag, context);
             tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
+            tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
         }
 
         internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, bool bInvert = false)

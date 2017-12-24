@@ -1,11 +1,15 @@
-﻿/*20170912-7031*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+/*20171234-7080*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
 	bind(el, binding, vnode) {
 
 		Vue.nextTick(function () {
-			const minWidth = 20;
+
+            const minWidth = 20;
+
 			function findHandle(el) {
 				for (ch of el.childNodes) {
 					if (ch.nodeType === Node.ELEMENT_NODE) {
@@ -16,12 +20,17 @@ Vue.directive('resize', {
 				return null;
 			}
 
-			let grid = el.parentElement;
+            let grid = el.parentElement;
+
+            let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
+            if (isNaN(minPaneWidth))
+                minPaneWidth = minWidth;
 
 			let parts = {
 				grid: grid,
 				handle: findHandle(grid),
-				resizing: false,
+                resizing: false,
+                minWidth: minPaneWidth,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
@@ -44,7 +53,7 @@ Vue.directive('resize', {
 				p.handle.style.display = 'none';
 				p.grid.style.cursor = 'default';
 				let x = p.offsetX(event);
-				if (x < minWidth) x = minWidth;
+				if (x < p.minWidth) x = p.minWidth;
 				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
 			}, false);
 
@@ -57,13 +66,13 @@ Vue.directive('resize', {
 				p.handle.style.left = x + 'px';
 			}, false);
 
-			el.addEventListener('mousedown', function (event) {
-				let p = el._parts;
+            el.addEventListener('mousedown', function (event) {
+                let p = el._parts;
 				if (p.resizing)
 					return;
 				event.preventDefault();
 				p.resizing = true;
-				let x = p.offsetX(event);
+                let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
 				p.handle.style.display = 'block';
 				p.grid.style.cursor = 'w-resize';
@@ -111,16 +120,6 @@ Vue.directive('resize', {
 				let x = event.clientX - rc.left;
 				if (x < minWidth) x = minWidth;
 				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
-			}, false);
-
-			el._parts.grid.addEventListener('mousemove', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				let rc = p.grid.getBoundingClientRect();
-				event.preventDefault();
-				let x = event.clientX - rc.left;
-				p.handle.style.left = x + 'px';
 			}, false);
 
 			el.addEventListener('mousedown', function (event) {

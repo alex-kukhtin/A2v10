@@ -43,7 +43,7 @@ namespace A2v10.Request
             await Render(rw, writer, loadPrms);
         }
 
-        async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms, ExpandoObject queryParams)
+        async Task<RequestView> LoadIndirect(RequestView rw, IDataModel innerModel, ExpandoObject loadPrms)
         {
             if (!rw.indirect)
                 return rw;
@@ -58,7 +58,6 @@ namespace A2v10.Request
                 String loadProc = rw.LoadProcedure;
                 if (loadProc != null)
                 {
-                    loadPrms = DynamicHelpers.Merge(loadPrms, queryParams);
                     loadPrms.Set("Id", rw.Id);
                     var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
                     innerModel.Merge(newModel);
@@ -84,7 +83,6 @@ namespace A2v10.Request
                 String loadProc = rw.LoadProcedure;
                 if (loadProc != null)
                 {
-                    loadPrms = DynamicHelpers.Merge(loadPrms, queryParams);
                     loadPrms.Set("Id", rw.Id);
                     var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
                     innerModel.Merge(newModel);
@@ -97,14 +95,23 @@ namespace A2v10.Request
         {
             String loadProc = rw.LoadProcedure;
             IDataModel model = null;
+            if (loadPrms != null)
+                loadPrms.Set("Id", rw.Id);
             if (loadProc != null)
             {
-                if (loadPrms != null)
-                    loadPrms.Set("Id", rw.Id);
-                model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+                ExpandoObject prms2 = loadPrms;
+                if (rw.indirect)
+                {
+                    // for indirect - @UserId and @Id only
+                    prms2 = new ExpandoObject();
+                    prms2.Set("Id", rw.Id);
+                    if (loadPrms != null)
+                        prms2.Set("UserId", loadPrms.Get<Int64>("UserId"));
+                }
+                model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
             }
             if (rw.indirect)
-                rw = await LoadIndirect(rw, model, loadPrms, null);
+                rw = await LoadIndirect(rw, model, loadPrms);
 
             String viewName = rw.GetView();
             String rootId = "el" + Guid.NewGuid().ToString();

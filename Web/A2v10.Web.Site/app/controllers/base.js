@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171207-7076
+// 20171224-7080
 // controllers/base.js
 
 (function () {
@@ -10,7 +10,7 @@
     const dataservice = require('std:dataservice');
 	const store = component('std:store');
 	const urltools = require('std:url');
-	const log = require('std:log');
+    const log = require('std:log');
 
     let __updateStartTime = 0;
     let __createStartTime = 0;
@@ -215,8 +215,12 @@
 				let dat = self.$data;
                 return new Promise(function (resolve, reject) {
                     let dataToQuery = { baseUrl: self.$baseUrl };
-                    if (utils.isDefined(dat.Query))
-                        dataToQuery['query'] = dat.Query;
+                    if (utils.isDefined(dat.Query)) {
+                        // special element -> use url
+                        dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
+                        let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
+                        window.history.replaceState(null, null, newUrl);
+                    }
                     let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
@@ -259,18 +263,25 @@
 				this.$remove(item, confirm);
 			},
 
-            $navigate(url, data) {
-				let dataToNavigate = data || 'new';
-                if (utils.isObjectExact(dataToNavigate))
-					dataToNavigate = dataToNavigate.$id;
-				let urlToNavigate = urltools.combine(url, dataToNavigate);
-				this.$store.commit('navigate', { url: urlToNavigate });
+            $href(url, data) {
+                let dataToHref = data;
+                if (utils.isObjectExact(dataToHref ))
+                    dataToHref = dataToHref.$id;
+                let retUrl = urltools.combine(url, dataToHref);
+                return retUrl;
+            },
+            $navigate(url, data, newWindow) {
+                let urlToNavigate = urltools.createUrlForNavigate(url, data);
+                if (newWindow === true)
+                    window.open(urlToNavigate, "_blank");
+                else
+				    this.$store.commit('navigate', { url: urlToNavigate });
             },
 
             $replaceId(newId) {
                 this.$store.commit('setnewid', { id: newId });
                 // and in the __baseUrl__
-                urlTools.replace()
+                //urlTools.replace()
                 this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
             },
 

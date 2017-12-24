@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171212-7078
+// 20171224-7080
 // components/list.js
 
 (function() {
@@ -23,7 +23,8 @@
         props: {
             itemsSource: Array,
             autoSelect: String,
-            mark: String
+            mark: String,
+            command: Function
         },
         computed: {
             isSelectFirstItem() {
@@ -92,6 +93,12 @@
                     case 33: // pgUp
                         break;
                     case 34: // pgDn
+                        break;
+                    case 13: // Enter
+                        if (utils.isFunction(this.command)) {
+                            // TODO:
+                            this.command();
+                        }
                         break;
                     default:
                         return;

@@ -26,6 +26,7 @@ namespace A2v10.Xaml
             var isBind = GetBinding(nameof(ItemsSource));
             ul.AddCssClassBool(Striped, "striped");
             ul.AddCssClassBool(Border, "border");
+            //ul.MergeAttribute(":command", "()=> $navigate()");
 
             var mbind = GetBinding(nameof(Mark));
             if (mbind != null)

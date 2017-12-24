@@ -13,6 +13,7 @@ namespace A2v10.Xaml
 
         #region Attached Properties
         static Lazy<IDictionary<Object, GridLength>> _attachedWidths = new Lazy<IDictionary<Object, GridLength>>(() => new Dictionary<Object, GridLength>());
+        static Lazy<IDictionary<Object, Length>> _attachedMinWidths = new Lazy<IDictionary<Object, Length>>(() => new Dictionary<Object, Length>());
 
         public static void SetWidth(Object obj, GridLength width)
         {
@@ -22,6 +23,16 @@ namespace A2v10.Xaml
         public static GridLength GetWidth(Object obj)
         {
             return AttachedHelpers.GetAttached(_attachedWidths, obj);
+        }
+
+        public static void SetMinWidth(Object obj, Length width)
+        {
+            AttachedHelpers.SetAttached(_attachedMinWidths, obj, width);
+        }
+
+        public static Length GetMinWidth(Object obj)
+        {
+            return AttachedHelpers.GetAttached(_attachedMinWidths, obj);
         }
         #endregion
 
@@ -53,6 +64,7 @@ namespace A2v10.Xaml
 
             new TagBuilder("div", "spl-handle")
                 .MergeAttribute(Orientation == Orientation.Vertical ? "v-resize" : "h-resize", String.Empty)
+                .MergeAttribute("data-min-width", GetMinWidth(Children[0])?.Value.ToString())
                 .Render(context);
 
             // second part
@@ -62,7 +74,8 @@ namespace A2v10.Xaml
             p2.RenderEnd(context);
 
             // drag-handle
-            new TagBuilder("div", "drag-handle").Render(context);
+            new TagBuilder("div", "drag-handle")
+                .Render(context);
 
             spl.RenderEnd(context);
         }

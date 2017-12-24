@@ -1,4 +1,6 @@
-﻿/*20170915-7033*/
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+/*20170915-7033*/
 /* platform/routex.js */
 
 (function () {

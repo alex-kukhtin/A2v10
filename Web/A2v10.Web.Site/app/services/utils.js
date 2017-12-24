@@ -115,7 +115,13 @@ app.modules['std:utils'] = function () {
 		else if (format)
 			return format(r, dataType);
 		return r;
-	}
+    }
+
+    function pad2(num) {
+        if (num < 10)
+            return '0' + num;
+        return '' + num;
+    }
 
 	function format(obj, dataType) {
 		if (!dataType)
@@ -139,6 +145,10 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
                 return obj.toLocaleDateString(dateLocale, dateOpts);
+            case "DateUrl":
+                if (dateIsZero(obj))
+                    return '';
+                return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
 			case "Time":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);

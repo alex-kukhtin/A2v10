@@ -2,11 +2,13 @@
 /* myClient template */
 
 const tu = require('std:utils').text;
+const du = require('std:utils').date;
 
 let template = {
     properties: {
         'TClient.$Mark': getMark,
-        'TClient.$Icon' : getIcon
+        'TClient.$Icon': getIcon,
+        'TReport.$Argument': getReportArgument
     },
     events: {
     },
@@ -26,6 +28,10 @@ function getMark() {
 
 function getIcon() {
     return this.Id < 102 ? "user" : 'file';
+}
+
+function getReportArgument() {
+    return { Id: this.Id, AgentId: this.$parent.$parent.Id, StartDate: du.today() };
 }
 
 function TestDocuments() {

@@ -50,20 +50,287 @@
 
 
 
-/*20171026-7054*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+// 20171204-7075
+// services/utils.js
+
+app.modules['std:utils'] = function () {
+
+    const dateLocale = 'uk-UA';
+    const dateOpts = {timeZone: 'UTC'};
+
+	return {
+		isArray: Array.isArray,
+		isFunction: isFunction,
+		isDefined: isDefined,
+		isObject: isObject,
+		isObjectExact: isObjectExact,
+		isDate: isDate,
+		isString: isString,
+        isNumber: isNumber,
+        isBoolean: isBoolean,
+		toString: toString,
+		notBlank: notBlank,
+		toJson: toJson,
+        isPrimitiveCtor: isPrimitiveCtor,
+        isDateCtor: isDateCtor,
+        isEmptyObject: isEmptyObject,
+        defineProperty: defProperty,
+		eval: eval,
+        format: format,
+        toNumber: toNumber,
+        getStringId: getStringId,
+		date: {
+			today: dateToday,
+			zero: dateZero,
+			parse: dateParse,
+			equal: dateEqual,
+			isZero: dateIsZero
+        },
+        text: {
+            contains: textContains,
+            containsText: textContainsText
+        }
+	};
+
+	function isFunction(value) { return typeof value === 'function'; }
+	function isDefined(value) { return typeof value !== 'undefined'; }
+	function isObject(value) { return value !== null && typeof value === 'object'; }
+	function isDate(value) { return value instanceof Date; }
+	function isString(value) { return typeof value === 'string'; }
+    function isNumber(value) { return typeof value === 'number'; }
+    function isBoolean(value) { return typeof value === 'boolean'; }
+	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
+
+	function isPrimitiveCtor(ctor) {
+		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
+    }
+
+    function isDateCtor(ctor) {
+        return ctor === Date;
+    }
+
+	function isEmptyObject(obj) {
+		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
+	}
+
+	function notBlank(val) {
+		if (!val)
+			return false;
+		if (isDate(val))
+			return !dateIsZero(val);
+		switch (typeof val) {
+			case 'string':
+				return val !== '';
+			case 'date':
+				return false;
+			case 'object':
+				if ('$id' in val) {
+					return !!val.$id;
+				}
+		}
+		return (val || '') !== '';
+	}
+
+	function toJson(data) {
+		return JSON.stringify(data, function (key, value) {
+			return key[0] === '$' || key[0] === '_' ? undefined : value;
+		}, 2);
+	}
+
+	function toString(obj) {
+		if (!isDefined(obj))
+			return '';
+		else if (obj === null)
+			return '';
+		else if (isObject(obj))
+			return toJson(obj);
+		return obj + '';
+	}
+
+    function eval(obj, path, dataType) {
+        if (!path)
+            return '';
+		let ps = (path || '').split('.');
+		let r = obj;
+		for (let i = 0; i < ps.length; i++) {
+			let pi = ps[i];
+			if (!(pi in r))
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
+			r = r[ps[i]];
+		}
+		if (isDate(r))
+			return format(r, dataType);
+		else if (isObject(r))
+			return toJson(r);
+		else if (format)
+			return format(r, dataType);
+		return r;
+    }
+
+    function pad2(num) {
+        if (num < 10)
+            return '0' + num;
+        return '' + num;
+    }
+
+	function format(obj, dataType) {
+		if (!dataType)
+            return obj;
+        if (!isDefined(obj))
+            return '';
+		switch (dataType) {
+			case "DateTime":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				if (dateIsZero(obj))
+					return '';
+                return obj.toLocaleDateString(dateLocale, dateOpts) + ' ' + obj.toLocaleTimeString(dateLocale, dateOpts);
+			case "Date":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				if (dateIsZero(obj))
+					return '';
+                return obj.toLocaleDateString(dateLocale, dateOpts);
+            case "DateUrl":
+                if (dateIsZero(obj))
+                    return '';
+                return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
+			case "Time":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				if (dateIsZero(obj))
+					return '';
+                return obj.toLocaleTimeString(dateLocale, dateOpts);
+			case "Currency":
+				if (!isNumber(obj)) {
+					console.error(`Invalid Currency for utils.format (${obj})`);
+					return obj;
+				}
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 2, useGrouping: true });
+            case "Number":
+                if (!isNumber(obj)) {
+                    console.error(`Invalid Number for utils.format (${obj})`);
+                    return obj;
+                }
+                return obj.toLocaleString(undefined, { minimumFractionDigits: 0, useGrouping: true });
+			default:
+				console.error(`Invalid DataType for utils.format (${dataType})`);
+		}
+		return obj;
+    }
+
+    function getStringId(obj) {
+        if (!obj)
+            return '0';
+        if (isNumber(obj))
+            return obj;
+        else if (isObjectExact(obj))
+            return obj.$id || 0;
+        return '0';
+    }
+
+    function toNumber(val) {
+        if (isString(val))
+            val = val.replace(/\s/g, '').replace(',', '.');
+        return isFinite(val) ? +val : 0;
+	}
+
+	function dateToday() {
+		let td = new Date();
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateZero() {
+		let td = new Date(0, 0, 1);
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateParse(str) {
+		str = str || '';
+		if (!str) return dateZero();
+		let today = dateToday();
+		let seg = str.split('.');
+		if (seg.length == 1) {
+			seg.push('' + (today.getMonth() + 1));
+			seg.push('' + today.getFullYear());
+		} else if (seg.length == 2) {
+			seg.push('' + today.getFullYear());
+		}
+		let td = new Date(+seg[2], +seg[1] - 1, +seg[0], 0, 0, 0, 0);
+		if (isNaN(td.getDate()))
+			return dateZero();
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return td;
+	}
+
+	function dateEqual(d1, d2) {
+		return d1.getFullYear() === d2.getFullYear() &&
+			d1.getMonth() === d2.getMonth() &&
+			d1.getDate() === d2.getDate();
+	}
+
+	function dateIsZero(d1) {
+		return dateEqual(d1, dateZero());
+    }
+
+    function textContains(text, probe) {
+        if (!probe)
+            return true;
+        if (!text)
+            return false;
+        return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
+    }
+
+    function textContainsText(obj, props, probe) {
+        if (!probe) return true;
+        if (!obj)
+            return false;
+        for (v of props.split(',')) {
+            if (textContains(obj[v], probe))
+                return true;
+        }
+        return false;
+    }
+
+    function defProperty(trg, prop, get, set /*todo!*/) {
+        Object.defineProperty(trg, prop, {
+            enumerable: true,
+            configurable: true, /* needed */
+            get: get
+        });
+    }
+
+};
+
+
+
+/*20171224-7080*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
 
+    const utils = require('std:utils');
+
     return {
         combine: combine,
-        makeQueryString: makeQueryString,
+        makeQueryString,
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
         makeBaseUrl,
         parseUrlAndQuery,
-        replaceId
+        replaceUrlQuery,
+        createUrlForNavigate
     };
 
     function normalize(elem) {
@@ -88,14 +355,23 @@ app.modules['std:url'] = function () {
         return '/' + args.map(normalize).filter(x => !!x).join('/');
     }
 
+    function toUrl(obj) {
+        if (utils.isDate(obj)) {
+            return utils.format(obj, "DateUrl");
+        } else if (utils.isObjectExact(obj)) {
+            return ('' + obj.$id) || '0'
+        }
+        return obj;
+    }
+
     function makeQueryString(obj) {
         if (!obj)
             return '';
         let esc = encodeURIComponent;
-        // skip special (starts with '_')
+        // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
-            .filter(k => k.startsWith('_') ? null : obj[k])
-            .map(k => esc(k) + '=' + esc(obj[k]))
+            .filter(k => k.startsWith('_') || k.startsWith('$') ? null : obj[k])
+            .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
             .join('&');
         return query ? '?' + query : '';
     }
@@ -133,9 +409,29 @@ app.modules['std:url'] = function () {
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');
             rv.url = a[0];
-            rv.query = Object.assign({}, query, parseQueryString(a[1]));
+            // from url then from query
+            rv.query = Object.assign({}, parseQueryString(a[1]), query);
         }
         return rv;
+    }
+    function replaceUrlQuery(url, query) {
+        if (!url)
+            url = window.location.pathname + window.location.search;
+        let pu = parseUrlAndQuery(url, query)
+        return pu.url + makeQueryString(pu.query);
+    }
+
+    function createUrlForNavigate(url, data) {
+        let urlId = data || 'new';
+        let qs = '';
+        if (utils.isDefined(urlId.$id))
+            urlId = urlId.$id;
+        else if (utils.isObjectExact(urlId)) {
+            urlId = data.Id;
+            delete data['Id'];
+            qs = makeQueryString(data);
+        }
+        return combine(url, urlId) + qs;
     }
 
     function replaceId(url, newId) {
@@ -291,6 +587,8 @@ app.modules['std:http'] = function () {
 
 
 
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
 /*20170915-7033*/
 /* platform/routex.js */
 
@@ -438,260 +736,6 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
-
-// 20171204-7075
-// services/utils.js
-
-app.modules['std:utils'] = function () {
-
-    const dateLocale = 'uk-UA';
-    const dateOpts = {timeZone: 'UTC'};
-
-	return {
-		isArray: Array.isArray,
-		isFunction: isFunction,
-		isDefined: isDefined,
-		isObject: isObject,
-		isObjectExact: isObjectExact,
-		isDate: isDate,
-		isString: isString,
-        isNumber: isNumber,
-        isBoolean: isBoolean,
-		toString: toString,
-		notBlank: notBlank,
-		toJson: toJson,
-        isPrimitiveCtor: isPrimitiveCtor,
-        isDateCtor: isDateCtor,
-        isEmptyObject: isEmptyObject,
-        defineProperty: defProperty,
-		eval: eval,
-        format: format,
-        toNumber: toNumber,
-        getStringId: getStringId,
-		date: {
-			today: dateToday,
-			zero: dateZero,
-			parse: dateParse,
-			equal: dateEqual,
-			isZero: dateIsZero
-        },
-        text: {
-            contains: textContains,
-            containsText: textContainsText
-        }
-	};
-
-	function isFunction(value) { return typeof value === 'function'; }
-	function isDefined(value) { return typeof value !== 'undefined'; }
-	function isObject(value) { return value !== null && typeof value === 'object'; }
-	function isDate(value) { return value instanceof Date; }
-	function isString(value) { return typeof value === 'string'; }
-    function isNumber(value) { return typeof value === 'number'; }
-    function isBoolean(value) { return typeof value === 'boolean'; }
-	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
-
-	function isPrimitiveCtor(ctor) {
-		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
-    }
-
-    function isDateCtor(ctor) {
-        return ctor === Date;
-    }
-
-	function isEmptyObject(obj) {
-		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
-	}
-
-	function notBlank(val) {
-		if (!val)
-			return false;
-		if (isDate(val))
-			return !dateIsZero(val);
-		switch (typeof val) {
-			case 'string':
-				return val !== '';
-			case 'date':
-				return false;
-			case 'object':
-				if ('$id' in val) {
-					return !!val.$id;
-				}
-		}
-		return (val || '') !== '';
-	}
-
-	function toJson(data) {
-		return JSON.stringify(data, function (key, value) {
-			return key[0] === '$' || key[0] === '_' ? undefined : value;
-		}, 2);
-	}
-
-	function toString(obj) {
-		if (!isDefined(obj))
-			return '';
-		else if (obj === null)
-			return '';
-		else if (isObject(obj))
-			return toJson(obj);
-		return obj + '';
-	}
-
-    function eval(obj, path, dataType) {
-        if (!path)
-            return '';
-		let ps = (path || '').split('.');
-		let r = obj;
-		for (let i = 0; i < ps.length; i++) {
-			let pi = ps[i];
-			if (!(pi in r))
-				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
-			r = r[ps[i]];
-		}
-		if (isDate(r))
-			return format(r, dataType);
-		else if (isObject(r))
-			return toJson(r);
-		else if (format)
-			return format(r, dataType);
-		return r;
-	}
-
-	function format(obj, dataType) {
-		if (!dataType)
-            return obj;
-        if (!isDefined(obj))
-            return '';
-		switch (dataType) {
-			case "DateTime":
-				if (!isDate(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
-					return obj;
-				}
-				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleDateString(dateLocale, dateOpts) + ' ' + obj.toLocaleTimeString(dateLocale, dateOpts);
-			case "Date":
-				if (!isDate(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
-					return obj;
-				}
-				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleDateString(dateLocale, dateOpts);
-			case "Time":
-				if (!isDate(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
-					return obj;
-				}
-				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleTimeString(dateLocale, dateOpts);
-			case "Currency":
-				if (!isNumber(obj)) {
-					console.error(`Invalid Currency for utils.format (${obj})`);
-					return obj;
-				}
-                return obj.toLocaleString(undefined, { minimumFractionDigits: 2, useGrouping: true });
-            case "Number":
-                if (!isNumber(obj)) {
-                    console.error(`Invalid Number for utils.format (${obj})`);
-                    return obj;
-                }
-                return obj.toLocaleString(undefined, { minimumFractionDigits: 0, useGrouping: true });
-			default:
-				console.error(`Invalid DataType for utils.format (${dataType})`);
-		}
-		return obj;
-    }
-
-    function getStringId(obj) {
-        if (!obj)
-            return '0';
-        if (isNumber(obj))
-            return obj;
-        else if (isObjectExact(obj))
-            return obj.$id || 0;
-        return '0';
-    }
-
-    function toNumber(val) {
-        if (isString(val))
-            val = val.replace(/\s/g, '').replace(',', '.');
-        return isFinite(val) ? +val : 0;
-	}
-
-	function dateToday() {
-		let td = new Date();
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
-		return td;
-	}
-
-	function dateZero() {
-		let td = new Date(0, 0, 1);
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
-		return td;
-	}
-
-	function dateParse(str) {
-		str = str || '';
-		if (!str) return dateZero();
-		let today = dateToday();
-		let seg = str.split('.');
-		if (seg.length == 1) {
-			seg.push('' + (today.getMonth() + 1));
-			seg.push('' + today.getFullYear());
-		} else if (seg.length == 2) {
-			seg.push('' + today.getFullYear());
-		}
-		let td = new Date(+seg[2], +seg[1] - 1, +seg[0], 0, 0, 0, 0);
-		if (isNaN(td.getDate()))
-			return dateZero();
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
-		return td;
-	}
-
-	function dateEqual(d1, d2) {
-		return d1.getFullYear() === d2.getFullYear() &&
-			d1.getMonth() === d2.getMonth() &&
-			d1.getDate() === d2.getDate();
-	}
-
-	function dateIsZero(d1) {
-		return dateEqual(d1, dateZero());
-    }
-
-    function textContains(text, probe) {
-        if (!probe)
-            return true;
-        if (!text)
-            return false;
-        return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
-    }
-
-    function textContainsText(obj, props, probe) {
-        if (!probe) return true;
-        if (!obj)
-            return false;
-        for (v of props.split(',')) {
-            if (textContains(obj[v], probe))
-                return true;
-        }
-        return false;
-    }
-
-    function defProperty(trg, prop, get, set /*todo!*/) {
-        Object.defineProperty(trg, prop, {
-            enumerable: true,
-            configurable: true, /* needed */
-            get: get
-        });
-    }
-
-};
-
-
-
 /*20171029-7060*/
 /* services/log.js */
 
@@ -3920,7 +3964,7 @@ TODO:
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171212-7078
+// 20171224-7080
 // components/list.js
 
 (function() {
@@ -3943,7 +3987,8 @@ TODO:
         props: {
             itemsSource: Array,
             autoSelect: String,
-            mark: String
+            mark: String,
+            command: Function
         },
         computed: {
             isSelectFirstItem() {
@@ -4012,6 +4057,12 @@ TODO:
                     case 33: // pgUp
                         break;
                     case 34: // pgDn
+                        break;
+                    case 13: // Enter
+                        if (utils.isFunction(this.command)) {
+                            // TODO:
+                            this.command();
+                        }
                         break;
                     default:
                         return;
@@ -4634,26 +4685,42 @@ Vue.directive('focus', {
 });
 
 
-/*20171117-7069*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+/*20171224-7080*/
 /* directives/lazy.js */
 
-Vue.directive('lazy', {
-    componentUpdated(el, binding, vnode) {
-        let arr = binding.value;
-        if (arr && arr.$loadLazy)
+(function () {
+
+    function updateLazy(arr) {
+        if (arr && arr.$loadLazy) {
             arr.$loadLazy();
+        }
     }
-});
+
+    Vue.directive('lazy', {
+        componentUpdated(el, binding, vnode) {
+            updateLazy(binding.value);
+        },
+        inserted(el, binding, vnode) {
+            updateLazy(binding.value);
+        }
+    });
+})();
 
 
-/*20170912-7031*/
+// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+/*20171234-7080*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
 	bind(el, binding, vnode) {
 
 		Vue.nextTick(function () {
-			const minWidth = 20;
+
+            const minWidth = 20;
+
 			function findHandle(el) {
 				for (ch of el.childNodes) {
 					if (ch.nodeType === Node.ELEMENT_NODE) {
@@ -4664,12 +4731,17 @@ Vue.directive('resize', {
 				return null;
 			}
 
-			let grid = el.parentElement;
+            let grid = el.parentElement;
+
+            let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
+            if (isNaN(minPaneWidth))
+                minPaneWidth = minWidth;
 
 			let parts = {
 				grid: grid,
 				handle: findHandle(grid),
-				resizing: false,
+                resizing: false,
+                minWidth: minPaneWidth,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
@@ -4692,7 +4764,7 @@ Vue.directive('resize', {
 				p.handle.style.display = 'none';
 				p.grid.style.cursor = 'default';
 				let x = p.offsetX(event);
-				if (x < minWidth) x = minWidth;
+				if (x < p.minWidth) x = p.minWidth;
 				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
 			}, false);
 
@@ -4705,13 +4777,13 @@ Vue.directive('resize', {
 				p.handle.style.left = x + 'px';
 			}, false);
 
-			el.addEventListener('mousedown', function (event) {
-				let p = el._parts;
+            el.addEventListener('mousedown', function (event) {
+                let p = el._parts;
 				if (p.resizing)
 					return;
 				event.preventDefault();
 				p.resizing = true;
-				let x = p.offsetX(event);
+                let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
 				p.handle.style.display = 'block';
 				p.grid.style.cursor = 'w-resize';
@@ -4761,16 +4833,6 @@ Vue.directive('resize', {
 				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
 			}, false);
 
-			el._parts.grid.addEventListener('mousemove', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				let rc = p.grid.getBoundingClientRect();
-				event.preventDefault();
-				let x = event.clientX - rc.left;
-				p.handle.style.left = x + 'px';
-			}, false);
-
 			el.addEventListener('mousedown', function (event) {
 				let p = el._parts;
 				if (p.resizing)
@@ -4793,7 +4855,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171207-7076
+// 20171224-7080
 // controllers/base.js
 
 (function () {
@@ -4803,7 +4865,7 @@ Vue.directive('resize', {
     const dataservice = require('std:dataservice');
 	const store = component('std:store');
 	const urltools = require('std:url');
-	const log = require('std:log');
+    const log = require('std:log');
 
     let __updateStartTime = 0;
     let __createStartTime = 0;
@@ -5008,8 +5070,12 @@ Vue.directive('resize', {
 				let dat = self.$data;
                 return new Promise(function (resolve, reject) {
                     let dataToQuery = { baseUrl: self.$baseUrl };
-                    if (utils.isDefined(dat.Query))
-                        dataToQuery['query'] = dat.Query;
+                    if (utils.isDefined(dat.Query)) {
+                        // special element -> use url
+                        dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
+                        let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
+                        window.history.replaceState(null, null, newUrl);
+                    }
                     let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
@@ -5052,18 +5118,25 @@ Vue.directive('resize', {
 				this.$remove(item, confirm);
 			},
 
-            $navigate(url, data) {
-				let dataToNavigate = data || 'new';
-                if (utils.isObjectExact(dataToNavigate))
-					dataToNavigate = dataToNavigate.$id;
-				let urlToNavigate = urltools.combine(url, dataToNavigate);
-				this.$store.commit('navigate', { url: urlToNavigate });
+            $href(url, data) {
+                let dataToHref = data;
+                if (utils.isObjectExact(dataToHref ))
+                    dataToHref = dataToHref.$id;
+                let retUrl = urltools.combine(url, dataToHref);
+                return retUrl;
+            },
+            $navigate(url, data, newWindow) {
+                let urlToNavigate = urltools.createUrlForNavigate(url, data);
+                if (newWindow === true)
+                    window.open(urlToNavigate, "_blank");
+                else
+				    this.$store.commit('navigate', { url: urlToNavigate });
             },
 
             $replaceId(newId) {
                 this.$store.commit('setnewid', { id: newId });
                 // and in the __baseUrl__
-                urlTools.replace()
+                //urlTools.replace()
                 this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
             },
 

@@ -65,6 +65,7 @@ namespace A2v10.Xaml
         public Boolean SaveRequired { get; set; }
         public Boolean ValidRequired { get; set; }
         public Boolean CheckReadOnly { get; set; }
+        public Boolean NewWindow { get; set; }
 
         public Confirm Confirm { get; set; }
 
@@ -82,6 +83,15 @@ namespace A2v10.Xaml
             Command = cmdType;
         }
 
+        internal String GetHrefForCommand(RenderContext context)
+        {
+            switch (Command)
+            {
+                case CommandType.Open:
+                    return $"$href({CommandUrl(context)}, {CommandArgument(context)})";
+            }
+            return null;
+        }
         internal String GetCommand(RenderContext context, Boolean indirect = false)
         {
             switch (Command)
@@ -136,7 +146,8 @@ namespace A2v10.Xaml
                         return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'this'}}";
                     }
                     else
-                        return $"$navigate({CommandUrl(context)}, {CommandArgument(context)})";
+                        return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {NewWindow.ToString().ToLowerInvariant()})";
+
                 case CommandType.Create:
                     return $"$navigate({CommandUrl(context)})";
 

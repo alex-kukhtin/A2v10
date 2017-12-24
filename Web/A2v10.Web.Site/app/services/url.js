@@ -1,17 +1,20 @@
-﻿/*20171026-7054*/
+﻿/*20171224-7080*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
 
+    const utils = require('std:utils');
+
     return {
         combine: combine,
-        makeQueryString: makeQueryString,
+        makeQueryString,
         parseQueryString: parseQueryString,
         normalizeRoot: normalizeRoot,
         idChangedOnly: idChangedOnly,
         makeBaseUrl,
         parseUrlAndQuery,
-        replaceId
+        replaceUrlQuery,
+        createUrlForNavigate
     };
 
     function normalize(elem) {
@@ -36,14 +39,23 @@ app.modules['std:url'] = function () {
         return '/' + args.map(normalize).filter(x => !!x).join('/');
     }
 
+    function toUrl(obj) {
+        if (utils.isDate(obj)) {
+            return utils.format(obj, "DateUrl");
+        } else if (utils.isObjectExact(obj)) {
+            return ('' + obj.$id) || '0'
+        }
+        return obj;
+    }
+
     function makeQueryString(obj) {
         if (!obj)
             return '';
         let esc = encodeURIComponent;
-        // skip special (starts with '_')
+        // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
-            .filter(k => k.startsWith('_') ? null : obj[k])
-            .map(k => esc(k) + '=' + esc(obj[k]))
+            .filter(k => k.startsWith('_') || k.startsWith('$') ? null : obj[k])
+            .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
             .join('&');
         return query ? '?' + query : '';
     }
@@ -81,9 +93,29 @@ app.modules['std:url'] = function () {
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');
             rv.url = a[0];
-            rv.query = Object.assign({}, query, parseQueryString(a[1]));
+            // from url then from query
+            rv.query = Object.assign({}, parseQueryString(a[1]), query);
         }
         return rv;
+    }
+    function replaceUrlQuery(url, query) {
+        if (!url)
+            url = window.location.pathname + window.location.search;
+        let pu = parseUrlAndQuery(url, query)
+        return pu.url + makeQueryString(pu.query);
+    }
+
+    function createUrlForNavigate(url, data) {
+        let urlId = data || 'new';
+        let qs = '';
+        if (utils.isDefined(urlId.$id))
+            urlId = urlId.$id;
+        else if (utils.isObjectExact(urlId)) {
+            urlId = data.Id;
+            delete data['Id'];
+            qs = makeQueryString(data);
+        }
+        return combine(url, urlId) + qs;
     }
 
     function replaceId(url, newId) {

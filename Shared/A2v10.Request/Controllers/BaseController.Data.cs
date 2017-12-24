@@ -158,14 +158,16 @@ namespace A2v10.Request
                 throw new RequestModelException("The data model is empty");
             loadPrms.Set("UserId", userId);
             loadPrms.Set("Id", rw.Id);
-            ExpandoObject queryParams = null;
-            if (dataToSave.HasProperty("query"))
+            ExpandoObject prms2 = loadPrms;
+            if (rw.indirect)
             {
-                // xtra parameters for INDIRECT query
-                queryParams = dataToSave.Get<ExpandoObject>("query");
+                // for indirect action - @UserId and @Id only
+                prms2 = new ExpandoObject();
+                prms2.Set("UserId", userId);
+                prms2.Set("Id", rw.Id);
             }
-            IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
-            rw = await LoadIndirect(rw, model, loadPrms, queryParams);
+            IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
+            rw = await LoadIndirect(rw, model, loadPrms);
             WriteDataModel(model, writer);
         }
 

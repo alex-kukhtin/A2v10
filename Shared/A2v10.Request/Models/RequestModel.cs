@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using A2v10.Infrastructure;
 using System.Dynamic;
 using System.Text.RegularExpressions;
+
+using Newtonsoft.Json;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Request
 {

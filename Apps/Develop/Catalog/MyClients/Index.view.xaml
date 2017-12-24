@@ -1,7 +1,7 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
     <Splitter>
-         <CollectionView Splitter.Width="30%" 
+         <CollectionView Splitter.Width="30%" Splitter.MinWidth="170"
                          ItemsSource="{Bind Clients}" Filter="Fragment" FilterDelegate="Filter"
                          RunAt="Client" Margin="0,6px,0,0">
             <Toolbar Style="Transparent">
@@ -48,6 +48,22 @@
                 <Code Multiline="True" Content="{Bind Clients.$selected}"></Code>
             </Tab>
             -->
+            <Tab Header="Отчеты">
+                <List ItemsSource="{Bind Clients.Selected(Reports)}">
+                    <ListItem Icon="FilePreview" Content="{Bind Name}" Padding="6,0">
+                        <ListItem.Header>
+                            <Hyperlink Content="{Bind Name}" Bold="True"
+                                Command="{BindCmd Open, Url='/Catalog/MyClients/Report', 
+                                Argument={Bind $Argument}}" />
+                        </ListItem.Header>
+                    </ListItem>
+                </List>
+                <!--
+                <DataGrid ItemsSource="{Bind Clients.Selected(Reports)}">
+                    <DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
+                </DataGrid>
+                -->
+            </Tab>
             <Tab Header="Test">
                 <Toolbar>
                     <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url='/Catalog/Suppliers/Edit', Argument={Bind Clients.Selected(Documents)}}">Изменить</Button>

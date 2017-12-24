@@ -4,7 +4,7 @@
         <ListItem Icon="FilePreview" Content="{Bind Name}" Padding="6,0">
             <ListItem.Header>
                 <Hyperlink Content="{Bind Name}" Bold="True"
-                    Command="{BindCmd Open, Url='/Document/Reports/Show', Argument={Bind Id}}" />
+                    Command="{BindCmd Open, Url='/Document/Reports/Show', Argument={Bind Id}, NewWindow=True}" />
             </ListItem.Header>
         </ListItem>
     </List>

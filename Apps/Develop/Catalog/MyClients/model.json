@@ -1,12 +1,21 @@
 ﻿/*catalog/index*/
 {
-	"schema": "a2v10demo",
-	"model": "MyClients",
-	"actions": {
+  "schema": "a2v10demo",
+  "model": "MyClients",
+  "actions": {
     "index": {
       "index": true,
       "view": "index.view",
       "template": "index.template"
+    },
+    "report": {
+      "model": "Report",
+      "indirect": true,
+      "targetModel": {
+        "model": "{{Report.Model}}",
+        "view": "{{Report.View}}",
+        "schema": "{{Report.Schema}}"
+      }
     }
-	}
+  }
 }
