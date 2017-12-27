@@ -156,6 +156,8 @@
     <Content Include="TestPages\xstore.js" />
     <Content Include="tests\platform.js" />
     <Content Include="tests\datamodel.js" />
+    <Content Include="tests\testdata.js" />
+    <Content Include="tests\urltools.js" />
     <Content Include="tests\validators.js" />
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171219-7079
+// 20171227-7082
 // services/datamodel.js
 
 (function () {
@@ -55,7 +55,9 @@
 		});
 	}
 
-	function ensureType(type, val) {
+    function ensureType(type, val) {
+        if (!utils.isDefined(val))
+            val = utils.defaultValue(type);
 		if (type === Number) {
 			return utils.toNumber(val);
         }
@@ -100,8 +102,8 @@
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
                     return;
-                if (this._src_[prop].$set && !val.$set) {
-                    // plain element to reactive
+                if (this._src_[prop] && this._src_[prop].$set) {
+                    // object
                     this._src_[prop].$merge(val, false);
                 } else {
                     this._src_[prop] = val;
@@ -232,19 +234,21 @@
 			return !this.$valid;
         });
 
-        defPropertyGet(elem, "$groupName", function () {
-            if (!utils.isDefined(this.$level))
-                return ERR_STR;
-            // this.constructor.name = objectType;
-            const mi = this._root_.__modelInfo.Levels;
-            if (mi) {
-                const levs = mi[this.constructor.name];
-                if (levs && this.$level <= levs.length);
+        if (elem._meta_.$group === true) {
+            defPropertyGet(elem, "$groupName", function () {
+                if (!utils.isDefined(this.$level))
+                    return ERR_STR;
+                // this.constructor.name == objectType;
+                const mi = this._root_.__modelInfo.Levels;
+                if (mi) {
+                    const levs = mi[this.constructor.name];
+                    if (levs && this.$level <= levs.length);
                     return this[levs[this.$level - 1]];
-            }
-            console.error('invalid data for $groupName');
-            return ERR_STR;
-        });
+                }
+                console.error('invalid data for $groupName');
+                return ERR_STR;
+            });
+        }
 
 		let constructEvent = ctorname + '.construct';
 		elem._root_.$emit(constructEvent, elem);
@@ -428,6 +432,8 @@
         };
 
         arr.$remove = function (item) {
+            if (this.$root.isReadOnly)
+                return;
             if (!item)
                 return;
             let index = this.indexOf(item);
@@ -687,7 +693,8 @@
 		return saveErrors(item, path, res);
 	}
 
-	function* enumData(root, path, name, index) {
+    function* enumData(root, path, name, index) {
+        index = index || '';
 		if (!path) {
 			// scalar value in root
 			yield { item: root, val: root[name], ix: index };
@@ -792,19 +799,19 @@
 	}
 
     function empty() {
-        if (this.$root.isReadOnly)
-            return;
-        // ctor(source path parent)
-        let newElem = new this.constructor({}, '', this._parent_);
-        this.$merge(newElem, true); // with event
+        this.$set({});
     }
 
     function setElement(src) {
+        if (this.$root.isReadOnly)
+            return;
         this.$merge(src, true);
     }
 
     function merge(src, fireChange) {
-		try {
+        try {
+            if (src === null)
+                src = {};
             this._root_._enableValidate_ = false;
             this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
@@ -820,7 +827,7 @@
 						else
 							trg.$RowCount = 0;
 					}
-					// try to select old value
+					//TODO: try to select old value
                 } else {
                     if (utils.isDateCtor(ctor))
                         platform.set(this, prop, new Date(src[prop]));

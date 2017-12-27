@@ -5,13 +5,13 @@
   "actions": {
     "index": {
       "index": true,
-      "view": "Index.view"
+      "view": "/Document/Reports/Index.view"
     },
     "show": {
       "indirect": true,
       "targetModel": {
         "model": "{{Report.Model}}",
-        "view": "{{Report.View}}",
+        "view": "/document/Reports/{{Report.View}}",
         "schema": "{{Report.Schema}}",
         "template": "{{Report.Template}}"
       },

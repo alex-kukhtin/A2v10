@@ -213,6 +213,12 @@ namespace A2v10.Request
         {
             ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
             String baseUrl = jsonData.Get<String>("baseUrl");
+            ExpandoObject execPrms = new ExpandoObject();
+            if (baseUrl.Contains("?"))
+            {
+                // add query params from baseUrl
+                execPrms.Append(HttpUtility.ParseQueryString(baseUrl.Split('?')[1]), toPascalCase:true);
+            }
             Object id = jsonData.Get<Object>("id");
             String propName = jsonData.Get<String>("prop");
             var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
@@ -222,7 +228,6 @@ namespace A2v10.Request
             String loadProc = action.LoadLazyProcedure(propName.ToPascalCase());
             if (loadProc == null)
                 throw new RequestModelException("The data model is empty");
-            ExpandoObject execPrms = new ExpandoObject();
             execPrms.Set("UserId", userId);
             execPrms.Set("Id", id);
             IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, loadProc, execPrms);

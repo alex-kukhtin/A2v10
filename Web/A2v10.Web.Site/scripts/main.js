@@ -52,7 +52,7 @@
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171204-7075
+// 20171227-7083
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -70,7 +70,8 @@ app.modules['std:utils'] = function () {
 		isString: isString,
         isNumber: isNumber,
         isBoolean: isBoolean,
-		toString: toString,
+        toString: toString,
+        defaultValue: defaultValue,
 		notBlank: notBlank,
 		toJson: toJson,
         isPrimitiveCtor: isPrimitiveCtor,
@@ -147,7 +148,18 @@ app.modules['std:utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return obj + '';
-	}
+    }
+
+    function defaultValue(type) {
+        switch (type) {
+            case Number: return 0;
+            case String: return '';
+            case Boolean: return false;
+            case Date: return dateZero();
+            default:
+                throw new Error(`There is no default value for type ${type}`);
+        }
+    }
 
     function eval(obj, path, dataType) {
         if (!path)
@@ -157,7 +169,7 @@ app.modules['std:utils'] = function () {
 		for (let i = 0; i < ps.length; i++) {
 			let pi = ps[i];
 			if (!(pi in r))
-				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
 			r = r[ps[i]];
 		}
 		if (isDate(r))
@@ -314,7 +326,7 @@ app.modules['std:utils'] = function () {
 
 
 
-/*20171224-7080*/
+/*20171227-7083*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -334,7 +346,6 @@ app.modules['std:url'] = function () {
     };
 
     function normalize(elem) {
-        // TODO: TEST
         elem = '' + elem || '';
         elem = elem.replace(/\\/g, '/');
         if (elem.startsWith('/'))
@@ -361,12 +372,12 @@ app.modules['std:url'] = function () {
         } else if (utils.isObjectExact(obj)) {
             return ('' + obj.$id) || '0'
         }
-        return obj;
+        return '' + obj;
     }
 
     function makeQueryString(obj) {
-        if (!obj)
-            return '';
+        if (!obj) return '';
+        if (!utils.isObjectExact(obj)) return '';
         let esc = encodeURIComponent;
         // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
@@ -377,10 +388,9 @@ app.modules['std:url'] = function () {
     }
 
     function parseQueryString(str) {
-        //TODO: TEST
         var obj = {};
         str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+            obj[decodeURIComponent(key)] = '' + decodeURIComponent(value);
         });
         return obj;
     }
@@ -405,6 +415,8 @@ app.modules['std:url'] = function () {
     }
 
     function parseUrlAndQuery(url, query) {
+        for (let p in query)
+            query[p] = '' + query[p]; // all values are string
         let rv = { url: url, query: query };
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');
@@ -891,7 +903,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171219-7079
+// 20171227-7082
 // services/datamodel.js
 
 (function () {
@@ -946,7 +958,9 @@ app.modules['std:validators'] = function() {
 		});
 	}
 
-	function ensureType(type, val) {
+    function ensureType(type, val) {
+        if (!utils.isDefined(val))
+            val = utils.defaultValue(type);
 		if (type === Number) {
 			return utils.toNumber(val);
         }
@@ -991,8 +1005,8 @@ app.modules['std:validators'] = function() {
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
                     return;
-                if (this._src_[prop].$set && !val.$set) {
-                    // plain element to reactive
+                if (this._src_[prop] && this._src_[prop].$set) {
+                    // object
                     this._src_[prop].$merge(val, false);
                 } else {
                     this._src_[prop] = val;
@@ -1123,19 +1137,21 @@ app.modules['std:validators'] = function() {
 			return !this.$valid;
         });
 
-        defPropertyGet(elem, "$groupName", function () {
-            if (!utils.isDefined(this.$level))
-                return ERR_STR;
-            // this.constructor.name = objectType;
-            const mi = this._root_.__modelInfo.Levels;
-            if (mi) {
-                const levs = mi[this.constructor.name];
-                if (levs && this.$level <= levs.length);
+        if (elem._meta_.$group === true) {
+            defPropertyGet(elem, "$groupName", function () {
+                if (!utils.isDefined(this.$level))
+                    return ERR_STR;
+                // this.constructor.name == objectType;
+                const mi = this._root_.__modelInfo.Levels;
+                if (mi) {
+                    const levs = mi[this.constructor.name];
+                    if (levs && this.$level <= levs.length);
                     return this[levs[this.$level - 1]];
-            }
-            console.error('invalid data for $groupName');
-            return ERR_STR;
-        });
+                }
+                console.error('invalid data for $groupName');
+                return ERR_STR;
+            });
+        }
 
 		let constructEvent = ctorname + '.construct';
 		elem._root_.$emit(constructEvent, elem);
@@ -1319,6 +1335,8 @@ app.modules['std:validators'] = function() {
         };
 
         arr.$remove = function (item) {
+            if (this.$root.isReadOnly)
+                return;
             if (!item)
                 return;
             let index = this.indexOf(item);
@@ -1578,7 +1596,8 @@ app.modules['std:validators'] = function() {
 		return saveErrors(item, path, res);
 	}
 
-	function* enumData(root, path, name, index) {
+    function* enumData(root, path, name, index) {
+        index = index || '';
 		if (!path) {
 			// scalar value in root
 			yield { item: root, val: root[name], ix: index };
@@ -1683,19 +1702,19 @@ app.modules['std:validators'] = function() {
 	}
 
     function empty() {
-        if (this.$root.isReadOnly)
-            return;
-        // ctor(source path parent)
-        let newElem = new this.constructor({}, '', this._parent_);
-        this.$merge(newElem, true); // with event
+        this.$set({});
     }
 
     function setElement(src) {
+        if (this.$root.isReadOnly)
+            return;
         this.$merge(src, true);
     }
 
     function merge(src, fireChange) {
-		try {
+        try {
+            if (src === null)
+                src = {};
             this._root_._enableValidate_ = false;
             this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
@@ -1711,7 +1730,7 @@ app.modules['std:validators'] = function() {
 						else
 							trg.$RowCount = 0;
 					}
-					// try to select old value
+					//TODO: try to select old value
                 } else {
                     if (utils.isDateCtor(ctor))
                         platform.set(this, prop, new Date(src[prop]));

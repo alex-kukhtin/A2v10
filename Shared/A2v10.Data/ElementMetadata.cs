@@ -18,6 +18,7 @@ namespace A2v10.Data
 
         public Boolean IsArrayType { get; set; }
         public Boolean IsRowCount { get; set; }
+        public Boolean IsGroup { get; set; }
 
         public SortedList<String, Tuple<Int32, String>> Groups { get; private set; }
 

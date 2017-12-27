@@ -69,6 +69,11 @@ namespace A2v10.Web.Mvc.Configuration
         public String MakeFullPath(Boolean bAdmin, String path, String fileName)
         {
             String appKey = bAdmin ? "admin" : AppKey ;
+            if (fileName.StartsWith("/"))
+            {
+                path = String.Empty;
+                fileName = fileName.Remove(0, 1);
+            }
             String fullPath = Path.Combine($"{AppPath}/{appKey}", path, fileName);
             return Path.GetFullPath(fullPath);
         }

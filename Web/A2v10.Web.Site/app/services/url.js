@@ -1,4 +1,4 @@
-﻿/*20171224-7080*/
+﻿/*20171227-7083*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -18,7 +18,6 @@ app.modules['std:url'] = function () {
     };
 
     function normalize(elem) {
-        // TODO: TEST
         elem = '' + elem || '';
         elem = elem.replace(/\\/g, '/');
         if (elem.startsWith('/'))
@@ -45,12 +44,12 @@ app.modules['std:url'] = function () {
         } else if (utils.isObjectExact(obj)) {
             return ('' + obj.$id) || '0'
         }
-        return obj;
+        return '' + obj;
     }
 
     function makeQueryString(obj) {
-        if (!obj)
-            return '';
+        if (!obj) return '';
+        if (!utils.isObjectExact(obj)) return '';
         let esc = encodeURIComponent;
         // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
@@ -61,10 +60,9 @@ app.modules['std:url'] = function () {
     }
 
     function parseQueryString(str) {
-        //TODO: TEST
         var obj = {};
         str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+            obj[decodeURIComponent(key)] = '' + decodeURIComponent(value);
         });
         return obj;
     }
@@ -89,6 +87,8 @@ app.modules['std:url'] = function () {
     }
 
     function parseUrlAndQuery(url, query) {
+        for (let p in query)
+            query[p] = '' + query[p]; // all values are string
         let rv = { url: url, query: query };
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');

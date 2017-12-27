@@ -117,6 +117,8 @@ namespace A2v10.Data
                 sb.Append($"$permissions: '{meta.Permissions}',");
             if (!String.IsNullOrEmpty(meta.Items))
                 sb.Append($"$items: '{meta.Items}',");
+            if (meta.IsGroup)
+                sb.Append($"$group: true,");
             StringBuilder lazyFields = new StringBuilder();
             foreach (var f in meta.Fields)
             {

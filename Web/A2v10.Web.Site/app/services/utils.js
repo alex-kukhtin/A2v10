@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171204-7075
+// 20171227-7083
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -18,7 +18,8 @@ app.modules['std:utils'] = function () {
 		isString: isString,
         isNumber: isNumber,
         isBoolean: isBoolean,
-		toString: toString,
+        toString: toString,
+        defaultValue: defaultValue,
 		notBlank: notBlank,
 		toJson: toJson,
         isPrimitiveCtor: isPrimitiveCtor,
@@ -95,7 +96,18 @@ app.modules['std:utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return obj + '';
-	}
+    }
+
+    function defaultValue(type) {
+        switch (type) {
+            case Number: return 0;
+            case String: return '';
+            case Boolean: return false;
+            case Date: return dateZero();
+            default:
+                throw new Error(`There is no default value for type ${type}`);
+        }
+    }
 
     function eval(obj, path, dataType) {
         if (!path)
@@ -105,7 +117,7 @@ app.modules['std:utils'] = function () {
 		for (let i = 0; i < ps.length; i++) {
 			let pi = ps[i];
 			if (!(pi in r))
-				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object `)
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
 			r = r[ps[i]];
 		}
 		if (isDate(r))

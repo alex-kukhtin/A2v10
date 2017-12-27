@@ -371,6 +371,8 @@ namespace A2v10.Data
 			var typeMetadata = GetOrCreateMetadata(objectDef.TypeName);
             if (objectDef.IsArray || objectDef.IsTree)
                 typeMetadata.IsArrayType = true;
+            if (objectDef.IsGroup)
+                typeMetadata.IsGroup = true;
             bool hasRowCount = false;
             for (int i=1; i<rdr.FieldCount; i++)
 			{
