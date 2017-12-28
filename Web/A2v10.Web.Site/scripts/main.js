@@ -913,7 +913,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171227-7082
+// 20171228-7084
 // services/datamodel.js
 
 (function () {
@@ -1356,6 +1356,7 @@ app.modules['std:validators'] = function() {
             let eventName = this._path_ + '[].remove';
             this._root_.$setDirty(true);
             this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
+            if (!this.length) return;
             if (index >= this.length)
                 index -= 1;
             if (this.length > index) {
