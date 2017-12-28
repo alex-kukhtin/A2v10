@@ -54,11 +54,15 @@
 					<Hyperlink Content="Ссылка в таблице" />
 				</TableRow>
 			</Table>
-			<PropertyGrid GridLines="Horizontal">
+			<PropertyGrid GridLines="Horizontal" Wrap="NoWrap">
 				<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
 				<PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>
-				<PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
+                <PropertyGridItem Name="Создан (Date)" Content="{Bind Document.DateCreated, DataType=Date}"/>
+                <PropertyGridItem Name="Изменен (Date)" Content="{Bind Document.DateModified, DataType=Date}"/>
+                <PropertyGridItem Name="Создан (Time)" Content="{Bind Document.DateCreated, DataType=Time}"/>
+                <PropertyGridItem Name="Изменен (Time)" Content="{Bind Document.DateModified, DataType=Time}"/>
+                <PropertyGridItem Name="Сумма" Bold="True"  Content="{Bind Document.Sum, DataType=Currency}"/>
 			</PropertyGrid>
             <Panel Collapsible="True" Header="Test Table" Style="Yellow" Padding="0, 6">
                 <Table GridLines="Horizontal" Width="100%" Striped="True">
@@ -165,7 +169,8 @@
                     <DataGridColumn Header="Row" Content="{Bind RowNo}" Align="Right" Fit="True"/>
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
 					<DataGridColumn Header="Qty" Content="{Bind Qty, DataType=Currency}" Align="Right" Editable="True"/>
-					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True"/>
+					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True" Editable="True"/>
+                    <DataGridColumn Header="Price (N)" Content="{Bind BasePrice, DataType=Number}" Align="Right" Fit="True"/>
                     <!--
 					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
                     -->

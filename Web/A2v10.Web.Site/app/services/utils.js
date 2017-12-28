@@ -1,12 +1,21 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171227-7083
+// 20171228-7084
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
     const dateLocale = 'uk-UA';
-    const dateOpts = {timeZone: 'UTC'};
+    const _2digit = '2-digit';
+
+    const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
+    const dateOptsTime = { timeZone: 'UTC', hour: _2digit, minute: _2digit };
+
+    const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
+    const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
+
+    const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, useGrouping: true }).format;
+    const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, useGrouping: true }).format;
 
 	return {
 		isArray: Array.isArray,
@@ -74,10 +83,11 @@ app.modules['std:utils'] = function () {
 				return val !== '';
 			case 'date':
 				return false;
-			case 'object':
-				if ('$id' in val) {
-					return !!val.$id;
-				}
+            case 'object':
+                if ('$id' in val) {
+                    return !!val.$id;
+                }
+                break;
 		}
 		return (val || '') !== '';
 	}
@@ -147,40 +157,40 @@ app.modules['std:utils'] = function () {
 					return obj;
 				}
 				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleDateString(dateLocale, dateOpts) + ' ' + obj.toLocaleTimeString(dateLocale, dateOpts);
+                    return '';
+                return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
 				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleDateString(dateLocale, dateOpts);
+                    return '';
+                return formatDate(obj);
             case "DateUrl":
                 if (dateIsZero(obj))
                     return '';
                 return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
-			case "Time":
-				if (!isDate(obj)) {
-					console.error(`Invalid Date for utils.format (${obj})`);
-					return obj;
-				}
-				if (dateIsZero(obj))
-					return '';
-                return obj.toLocaleTimeString(dateLocale, dateOpts);
-			case "Currency":
-				if (!isNumber(obj)) {
-					console.error(`Invalid Currency for utils.format (${obj})`);
-					return obj;
-				}
-                return obj.toLocaleString(undefined, { minimumFractionDigits: 2, useGrouping: true });
+            case "Time":
+                if (!isDate(obj)) {
+                    console.error(`Invalid Date for utils.format (${obj})`);
+                    return obj;
+                }
+                if (dateIsZero(obj))
+                    return '';
+                return formatTime(obj);
+            case "Currency":
+                if (!isNumber(obj)) {
+                    console.error(`Invalid Currency for utils.format (${obj})`);
+                    return obj;
+                }
+                return currencyFormat(obj);
             case "Number":
                 if (!isNumber(obj)) {
                     console.error(`Invalid Number for utils.format (${obj})`);
                     return obj;
                 }
-                return obj.toLocaleString(undefined, { minimumFractionDigits: 0, useGrouping: true });
+                return numberFormat(obj);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
