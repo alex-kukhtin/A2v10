@@ -13,7 +13,8 @@
 			description: String,
 			disabled: Boolean,
             tabIndex: Number,
-            dataType: String
+            dataType: String,
+            validatorOptions: Object
         },
         computed: {
 			path() {
@@ -53,7 +54,7 @@
 			},
 			hasDescr() {
 				return !!this.description;
-			}
+            }
         },
         methods: {
             valid() {

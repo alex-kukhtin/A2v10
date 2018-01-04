@@ -13,7 +13,7 @@
     <div id="app" class="shell" v-cloak>
         <header class="header">
             <div class="h-block">
-                <a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title"></a>
+                <a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
                 <span class="app-subtitle" v-text="info.subtitle"></span>
             </div>
             <div class="aligner"></div>
@@ -29,7 +29,7 @@
                     <label style="grid-row:1; grid-column:1" class="a2-label required text-right">Логин:</label>
                     <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
                         <div class="input-group">
-                            <input class="control" type="text" v-model="login"/>
+                            <input v-focus class="control" type="text" v-model="login" tabindex="1"/>
                             <div class="validator">
                                 <span class="error">введите логин</span>
                             </div>
@@ -38,7 +38,7 @@
                     <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
                     <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
                         <div class="input-group">
-                            <input class="control" type="password" v-model="password" />
+                            <input class="control" v-focus type="password" v-model="password" tabindex="2"/>
                             <div class="validator">
                                 <span class="error">введите пароль</span>
                             </div>

@@ -61,6 +61,7 @@
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\panel.js" />
     <Content Include="app\components\popover.js" />
+    <Content Include="app\components\selector.js" />
     <Content Include="app\components\sheet.js" />
     <Content Include="app\components\tab.js" />
     <Content Include="app\components\combobox.js" />

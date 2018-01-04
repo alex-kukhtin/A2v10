@@ -135,6 +135,9 @@
                         <Hyperlink Icon="Search" Command="{BindCmd Browse, Url='/common/agent/browse', Argument={Bind Document.Agent}, Data={Bind Document.$browseAgentData}}"/>
                         <Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}"/>
 					</TextBox.AddOns>
+                    <TextBox.Validator>
+                        <Validator Width="200" Placement="BottomLeft"/>
+                    </TextBox.Validator>
 				</TextBox>
 				<!--
 				<Selector />

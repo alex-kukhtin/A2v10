@@ -2020,7 +2020,8 @@ app.modules['std:popup'] = function () {
 			description: String,
 			disabled: Boolean,
             tabIndex: Number,
-            dataType: String
+            dataType: String,
+            validatorOptions: Object
         },
         computed: {
 			path() {
@@ -2060,7 +2061,7 @@ app.modules['std:popup'] = function () {
 			},
 			hasDescr() {
 				return !!this.description;
-			}
+            }
         },
         methods: {
             valid() {
@@ -2098,10 +2099,25 @@ app.modules['std:popup'] = function () {
 
 Vue.component('validator', {
     props: {
-        'invalid': Function,
-        'errors': Array
+        invalid: Function,
+        errors: Array,
+        options: Object
     },
-    template: '<div v-if="invalid()" class="validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+    template: '<div v-if="invalid()" class="validator" :class="cssClass" :style="cssStyle"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+    computed: {
+        cssStyle() {
+            let r = {};
+            if (this.options.width)
+                r.width = this.options.width;
+            return r;
+        },
+        cssClass() {
+            let r = {};
+            if (this.options.placement)
+                r[this.options.placement] = true;
+            return r;
+        }
+    }
 });
 
 
@@ -2152,7 +2168,7 @@ Vue.component('validator-control', {
 	<div class="input-group">
 		<input :type="controlType" v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -2164,7 +2180,7 @@ Vue.component('validator-control', {
 	<div class="input-group">
 		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -2176,7 +2192,7 @@ Vue.component('validator-control', {
 	<div class="input-group static">
 		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -2332,7 +2348,7 @@ Vue.component('validator-control', {
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />
         <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
 				<thead><tr>

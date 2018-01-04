@@ -19,7 +19,7 @@
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" />
         <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
 				<thead><tr>

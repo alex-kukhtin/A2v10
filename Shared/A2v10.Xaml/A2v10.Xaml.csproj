@@ -69,6 +69,7 @@
     <Compile Include="Base\XamlElement.cs" />
     <Compile Include="Base\XamlException.cs" />
     <Compile Include="Components\CollectionView.cs" />
+    <Compile Include="Components\Validator.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="Controls\CheckBoxBase.cs" />

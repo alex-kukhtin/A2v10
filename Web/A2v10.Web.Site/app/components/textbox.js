@@ -11,7 +11,7 @@
 	<div class="input-group">
 		<input :type="controlType" v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -23,7 +23,7 @@
 	<div class="input-group">
 		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -35,7 +35,7 @@
 	<div class="input-group static">
 		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
 		<slot></slot>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>

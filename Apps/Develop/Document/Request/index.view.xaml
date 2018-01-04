@@ -42,7 +42,7 @@
             <Popover Tip="Свойства корреспондента" Placement="Right" Text="{Bind Agent.Name}" 
                      If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
             -->
-            <Popover Tip="Свойства корреспондента" Placement="LeftTop" Text="{Bind Agent.Name}" 
+            <Popover Tip="Свойства корреспондента" Placement="BottomRight" Text="{Bind Agent.Name}" 
                      If="{Bind Agent.Id}" Url="{Bind $AgentPopoverUrl}"/>
         </DataGridColumn>
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>

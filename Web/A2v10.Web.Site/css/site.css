@@ -1143,6 +1143,60 @@ pre.a2-code {
   position: absolute;
   left: 3px;
 }
+.control-group .validator.bottom-right {
+  top: 100%;
+  bottom: auto;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+.control-group .validator.bottom-right:before {
+  bottom: auto;
+  top: -8px;
+  border-bottom: 8px solid #dca7a7;
+  border-top-width: 0;
+}
+.control-group .validator.bottom-right:after {
+  bottom: auto;
+  top: -6.5px;
+  border-bottom: 7px solid #f2dede;
+  border-top-width: 0;
+}
+.control-group .validator.top-left {
+  left: auto;
+  right: 0;
+}
+.control-group .validator.top-left:before {
+  right: 8px;
+  left: auto;
+}
+.control-group .validator.top-left:after {
+  right: 9px;
+  left: auto;
+}
+.control-group .validator.bottom-left {
+  top: 100%;
+  bottom: auto;
+  left: auto;
+  right: 0;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+.control-group .validator.bottom-left:before {
+  bottom: auto;
+  top: -8px;
+  border-bottom: 8px solid #dca7a7;
+  border-top-width: 0;
+  right: 8px;
+  left: auto;
+}
+.control-group .validator.bottom-left:after {
+  bottom: auto;
+  top: -6.5px;
+  border-bottom: 7px solid #f2dede;
+  border-top-width: 0;
+  right: 9px;
+  left: auto;
+}
 .control-group .input-group {
   border: 1px solid #bdc5d8;
   display: flex;

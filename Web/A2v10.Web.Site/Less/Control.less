@@ -7,6 +7,8 @@
 @control-bg-color:white;
 
 
+@validator-arrow-size:8px;
+
 /*TODO: 
     2. v-focus-parent directive
     3. .validator width
@@ -56,7 +58,7 @@
         background-color: @danger-bg-color;
         color: @danger-txt-color;
         border: 1px solid @danger-brd-color;
-        margin-bottom: 8px;
+        margin-bottom: @validator-arrow-size;
         text-align: left;
         box-shadow: 1px 4px 10px @danger-shadow-color;
         z-index: @validator-index;
@@ -72,9 +74,9 @@
 
         &:before {
             left: 7.5px;
-            margin-bottom: -8px;
-            border: 8px solid transparent;
-            border-top: 8px solid @danger-brd-color;
+            margin-bottom: -@validator-arrow-size;
+            border: @validator-arrow-size solid transparent;
+            border-top: @validator-arrow-size solid @danger-brd-color;
             border-bottom-width: 0
         }
 
@@ -98,6 +100,69 @@
                 position: absolute;
                 left: 3px;
             }
+        }
+    }
+
+    .validator.bottom-right {
+        top: 100%;
+        bottom: auto;
+        margin-top: @validator-arrow-size;
+        margin-bottom: 0;
+
+        &:before {
+            bottom: auto;
+            top: -@validator-arrow-size;
+            border-bottom: @validator-arrow-size solid @danger-brd-color;
+            border-top-width: 0;
+        }
+
+        &:after {
+            bottom: auto;
+            top: -6.5px;
+            border-bottom: 7px solid @danger-bg-color;
+            border-top-width: 0;
+        }
+    }
+
+    .validator.top-left {
+        left: auto;
+        right: 0;
+
+        &:before {
+            right: @validator-arrow-size;
+            left: auto;
+        }
+
+        &:after {
+            right: @validator-arrow-size + 1px;
+            left: auto;
+        }
+    }
+
+    .validator.bottom-left {
+        top: 100%;
+        bottom: auto;
+        left: auto;
+        right: 0;
+        margin-top: @validator-arrow-size;
+        margin-bottom: 0;
+
+        &:before {
+            bottom: auto;
+            top: -@validator-arrow-size;
+            border-bottom: @validator-arrow-size solid @danger-brd-color;
+            border-top-width: 0;
+            right: @validator-arrow-size;
+            left: auto;
+        }
+
+        &:after {
+            bottom: auto;
+            top: -6.5px;
+            border-bottom: 7px solid @danger-bg-color;
+            border-top-width: 0;
+            right: @validator-arrow-size + 1px;
+            left: auto;
         }
     }
 
@@ -128,21 +193,22 @@
             }
 
             > span:focus {
-                outline-style:none;
+                outline-style: none;
             }
         }
 
         > a, > .popover-wrapper {
             align-self: stretch;
             line-height: @control-height;
+
             .ico:before {
                 color: inherit;
             }
         }
 
         > .popover-wrapper {
-            display:inline-block;
-            margin-right:3px;
+            display: inline-block;
+            margin-right: 3px;
         }
 
         > a {
@@ -168,7 +234,7 @@
 
     &.with-width {
         .input-group {
-            width:100%;
+            width: 100%;
         }
     }
 

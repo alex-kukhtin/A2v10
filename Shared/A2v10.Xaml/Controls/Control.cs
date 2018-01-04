@@ -20,6 +20,8 @@ namespace A2v10.Xaml
 
         public Length Width { get; set; }
 
+        public Validator Validator { get; set; }
+
         Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
         public UIElementCollection AddOns { get { return _addOns.Value;} }
@@ -43,6 +45,10 @@ namespace A2v10.Xaml
             MergeBoolAttribute(tag, context, nameof(Required), Required);
             if (TabIndex != 0)
                 tag.MergeAttribute(":tab-index", TabIndex.ToString());
+            if (Validator != null)
+            {
+                Validator.MergeAttributes(tag);
+            }
         }
 
         internal void RenderAddOns(RenderContext context)
