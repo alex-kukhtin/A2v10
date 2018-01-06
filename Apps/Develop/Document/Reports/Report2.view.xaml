@@ -39,7 +39,7 @@
                 <SheetCell Content="{Bind $groupName}" GroupIndent="True"/>
                 <SheetCell Content="{Bind Company}"/>
                 <SheetCell Content="{Bind Agent}"/>
-                <SheetCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+                <SheetCell Content="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
                 <SheetCell Content="{Bind StartDate, DataType=Date}" Align="Right"/>
                 <SheetCell>
                     <Popover Icon="Eye" Placement="RightBottom">

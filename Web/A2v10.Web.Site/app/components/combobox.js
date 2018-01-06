@@ -1,4 +1,6 @@
-﻿/*20171027-7057*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/combobox.js*/
 
 (function () {
@@ -16,7 +18,7 @@
 					v-text="cmb.$name" :value="cmb"></option>
 			</slot>
 		</select>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>

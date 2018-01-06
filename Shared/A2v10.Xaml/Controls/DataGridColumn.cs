@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -80,6 +80,8 @@ namespace A2v10.Xaml
                     column.MergeAttribute("content", bindProp.Path /*!without context!*/);
                     if (bindProp.DataType != DataType.String)
                         column.MergeAttribute("data-type", bindProp.DataType.ToString());
+                    if (bindProp.HideZeros)
+                        column.MergeAttribute(":hide-zeros", "true");
                 }
                 else if (Content != null)
                     throw new XamlException($"The Content property must be a binding ({Content})");

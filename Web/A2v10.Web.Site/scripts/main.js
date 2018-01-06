@@ -50,9 +50,9 @@
 
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171228-7084
+// 20180106-7085
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -171,7 +171,7 @@ app.modules['std:utils'] = function () {
         }
     }
 
-    function eval(obj, path, dataType) {
+    function eval(obj, path, dataType, hideZeros) {
         if (!path)
             return '';
 		let ps = (path || '').split('.');
@@ -182,12 +182,12 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
 			r = r[ps[i]];
 		}
-		if (isDate(r))
-			return format(r, dataType);
+        if (isDate(r))
+            return format(r, dataType, hideZeros);
 		else if (isObject(r))
 			return toJson(r);
 		else if (format)
-			return format(r, dataType);
+			return format(r, dataType, hideZeros);
 		return r;
     }
 
@@ -197,7 +197,7 @@ app.modules['std:utils'] = function () {
         return '' + num;
     }
 
-	function format(obj, dataType) {
+	function format(obj, dataType, hideZeros) {
 		if (!dataType)
             return obj;
         if (!isDefined(obj))
@@ -236,12 +236,16 @@ app.modules['std:utils'] = function () {
                     console.error(`Invalid Currency for utils.format (${obj})`);
                     return obj;
                 }
+                if (hideZeros && obj === 0)
+                    return '';
                 return currencyFormat(obj);
             case "Number":
                 if (!isNumber(obj)) {
                     console.error(`Invalid Number for utils.format (${obj})`);
                     return obj;
                 }
+                if (hideZeros && obj === 0)
+                    return '';
                 return numberFormat(obj);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
@@ -814,8 +818,11 @@ app.modules['std:log'] = function () {
     }
 };
 
-/*20171027-7057*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*validators.js*/
+
 app.modules['std:validators'] = function() {
 
     const utils = require('std:utils');
@@ -848,6 +855,9 @@ app.modules['std:validators'] = function() {
         let retval = [];
         rules.forEach(function (rule) {
             const sev = rule.severity || ERROR;
+            if (utils.isFunction(rule.applyIf)) {
+                if (!rule.applyIf(item, val)) return;
+            }
             if (utils.isString(rule)) {
                 if (!validateStd('notBlank', val))
                     retval.push({ msg: rule, severity: ERROR });
@@ -2094,7 +2104,9 @@ app.modules['std:popup'] = function () {
     app.components['control'] = control;
 
 })();
-/* 20170919-7035 */
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/validator.js*/
 
 Vue.component('validator', {
@@ -2107,13 +2119,13 @@ Vue.component('validator', {
     computed: {
         cssStyle() {
             let r = {};
-            if (this.options.width)
+            if (this.options && this.options.width)
                 r.width = this.options.width;
             return r;
         },
         cssClass() {
             let r = {};
-            if (this.options.placement)
+            if (this.options && this.options.placement)
                 r[this.options.placement] = true;
             return r;
         }
@@ -2155,7 +2167,9 @@ Vue.component('validator-control', {
     }
 });
 */
-/*20171027-7057*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/textbox.js*/
 
 (function () {
@@ -2262,7 +2276,9 @@ Vue.component('validator-control', {
     });
 
 })();
-/*20171027-7057*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/combobox.js*/
 
 (function () {
@@ -2280,7 +2296,7 @@ Vue.component('validator-control', {
 					v-text="cmb.$name" :value="cmb"></option>
 			</slot>
 		</select>
-		<validator :invalid="invalid" :errors="errors"></validator>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
@@ -2486,9 +2502,9 @@ Vue.component('validator-control', {
 	});
 })();
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171209-7077
+// 20180106-7085
 // components/datagrid.js*/
 
 (function () {
@@ -2610,7 +2626,8 @@ Vue.component('validator-control', {
         props: {
             header: String,
 			content: String,
-			dataType: String,
+            dataType: String,
+            hideZeros: Boolean,
             icon: String,
             bindIcon: String,
             id: String,
@@ -2740,15 +2757,17 @@ Vue.component('validator-control', {
 
 			function normalizeArg(arg, eval) {
 				arg = arg || '';
-				if (arg === 'this')
-					arg = row;
-				else if (arg.startsWith('{')) {
-					arg = arg.substring(1, arg.length - 1);
-					if  (!(arg in row))
-						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
-					arg = row[arg];
-				} else if (arg && eval)
-					arg = utils.eval(row, arg, col.dataType);
+                if (arg === 'this')
+                    arg = row;
+                else if (arg.startsWith('{')) {
+                    arg = arg.substring(1, arg.length - 1);
+                    if (!(arg in row))
+                        throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+                    arg = row[arg];
+                } else if (arg && eval) {
+                    console.error(col.hideZeros);
+                    arg = utils.eval(row, arg, col.dataType, col.hideZeros);
+                }
 				return arg;
 			}
 
@@ -2762,7 +2781,7 @@ Vue.component('validator-control', {
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType, col.hideZeros)"></a>',
 					methods: {
                         doCommand(ev) {
                             if (ev) {
@@ -2791,12 +2810,12 @@ Vue.component('validator-control', {
 
             function isNegativeRed(col) {
                 if (col.dataType === 'Number' || col.dataType === 'Currency')
-                    if (utils.eval(row, col.content) < 0)
+                    if (utils.eval(row, col.content, col.dataType, col.hideZeros) < 0)
                         return true;
                 return false;
             }
 
-			let content = utils.eval(row, col.content, col.dataType);
+            let content = utils.eval(row, col.content, col.dataType, col.hideZeros);
             let chElems = [h('span', { 'class': { 'negative-red': isNegativeRed(col) } }, content)];
             let icoSingle = !col.content ? ' ico-single' : '';
             if (col.icon)
@@ -3017,7 +3036,8 @@ Vue.component('validator-control', {
 							pElem.count += cnt.c;
 						}
 					}
-				}
+                }
+                //console.dir(this.clientGroups);
 				this.doSortLocally();
 				// classic tree
 				let startTime = performance.now(); 
@@ -4899,9 +4919,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171224-7080
+// 20180106-7085
 // controllers/base.js
 
 (function () {
@@ -5023,7 +5043,7 @@ Vue.directive('resize', {
                 return root._canExec_(cmd, arg);
             },
 			$save() {
-                if (this.$data.$isReadOnly)
+                if (this.$data.$readOnly)
                     return;
                 let self = this;
                 let root = window.$$rootUrl;
@@ -5144,7 +5164,7 @@ Vue.directive('resize', {
 			},
 
             $remove(item, confirm) {
-                if (this.$data.$isReadOnly)
+                if (this.$data.$readOnly)
                     return;
 				if (!confirm)
 					item.$remove();
@@ -5156,11 +5176,11 @@ Vue.directive('resize', {
 				if (!utils.isArray(arr)) {
 					console.error('$removeSelected. The argument is not an array');
 				}
+                if (this.$data.$readOnly)
+                    return;
 				let item = arr.$selected;
 				if (!item)
 					return;
-                if (this.$data.$isReadOnly)
-                    return;
 				this.$remove(item, confirm);
 			},
 
@@ -5427,13 +5447,13 @@ Vue.directive('resize', {
 				return false;
 			},
 
-			$format(value, dataType, format) {
+			$format(value, dataType, format, options) {
 				if (!format && !dataType)
 					return value;
-				if (dataType)
-					value = utils.format(value, dataType);
+                if (dataType)
+                    value = utils.format(value, dataType, options && options.hideZeros);
 				if (format && format.indexOf('{0}') !== -1)
-					return format.replace('{0}', value);
+                    return format.replace('{0}', value);
 				return value;
             },
 

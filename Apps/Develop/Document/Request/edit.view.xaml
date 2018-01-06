@@ -105,7 +105,7 @@
 	</Page.Taskpad>
 	<TabPanel FullPage="True">
 		<Tab Header="Заявка" Badge="{Bind Document.Rows.Count}">
-            <Header>Заявка на поставку</Header>
+            <Header>Заявка на поставку 234</Header>
             <StackPanel Orientation="Horizontal">
                 <Static Label="Entity name" Bold="True"
                             Value="{Bind Entity.Name}"/>
@@ -173,7 +173,7 @@
                     <DataGridColumn Header="Entity" Content="{Bind Entity.Name}" />
 					<DataGridColumn Header="Qty" Content="{Bind Qty, DataType=Currency}" Align="Right" Editable="True"/>
 					<DataGridColumn Header="Price" Content="{Bind BasePrice, DataType=Currency}" Align="Right" Fit="True" Editable="True"/>
-                    <DataGridColumn Header="Price (N)" Content="{Bind BasePrice, DataType=Number}" Align="Right" Fit="True"/>
+                    <DataGridColumn Header="Price (N)" Content="{Bind BasePrice, DataType=Number, HideZeros=True}" Align="Right" Fit="True"/>
                     <!--
 					<DataGridColumn Header="Sum" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
                     -->
@@ -228,7 +228,7 @@
 
                         </TableRow>
                     </Table.Header>
-                    <TableRow>
+                    <TableRow Bold="{Bind $Bold}">
                         <TableCell Content="{Bind Id}"></TableCell>
                         <TableCell>
                             <TextBox Value="{Bind Entity.Name}">

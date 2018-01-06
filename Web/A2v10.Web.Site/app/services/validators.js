@@ -1,5 +1,8 @@
-﻿/*20171027-7057*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*validators.js*/
+
 app.modules['std:validators'] = function() {
 
     const utils = require('std:utils');
@@ -32,6 +35,9 @@ app.modules['std:validators'] = function() {
         let retval = [];
         rules.forEach(function (rule) {
             const sev = rule.severity || ERROR;
+            if (utils.isFunction(rule.applyIf)) {
+                if (!rule.applyIf(item, val)) return;
+            }
             if (utils.isString(rule)) {
                 if (!validateStd('notBlank', val))
                     retval.push({ msg: rule, severity: ERROR });

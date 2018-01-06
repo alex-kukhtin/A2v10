@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171224-7080
+// 20180106-7085
 // controllers/base.js
 
 (function () {
@@ -122,7 +122,7 @@
                 return root._canExec_(cmd, arg);
             },
 			$save() {
-                if (this.$data.$isReadOnly)
+                if (this.$data.$readOnly)
                     return;
                 let self = this;
                 let root = window.$$rootUrl;
@@ -243,7 +243,7 @@
 			},
 
             $remove(item, confirm) {
-                if (this.$data.$isReadOnly)
+                if (this.$data.$readOnly)
                     return;
 				if (!confirm)
 					item.$remove();
@@ -255,11 +255,11 @@
 				if (!utils.isArray(arr)) {
 					console.error('$removeSelected. The argument is not an array');
 				}
+                if (this.$data.$readOnly)
+                    return;
 				let item = arr.$selected;
 				if (!item)
 					return;
-                if (this.$data.$isReadOnly)
-                    return;
 				this.$remove(item, confirm);
 			},
 
@@ -526,13 +526,13 @@
 				return false;
 			},
 
-			$format(value, dataType, format) {
+			$format(value, dataType, format, options) {
 				if (!format && !dataType)
 					return value;
-				if (dataType)
-					value = utils.format(value, dataType);
+                if (dataType)
+                    value = utils.format(value, dataType, options && options.hideZeros);
 				if (format && format.indexOf('{0}') !== -1)
-					return format.replace('{0}', value);
+                    return format.replace('{0}', value);
 				return value;
             },
 

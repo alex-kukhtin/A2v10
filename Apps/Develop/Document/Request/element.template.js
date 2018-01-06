@@ -13,7 +13,8 @@ let template = {
         "TDocument.$PaneStyle"() {
             return this.Rows.Count > 3 ? "warning" : null;
         },
-        "TDocument.$Shipment": getShipment
+        "TDocument.$Shipment": getShipment,
+        "TRow.$Bold"() {return this.Id === 2170 }
 	},
 	methods: {
 		// new
@@ -38,7 +39,13 @@ let template = {
 		'Document.Rows[].Sum': 'Сумма должна быть больше нуля'
     */
 	validators: {
-		'Document.Agent': 'Выберите покупателя',
+        'Document.Agent': 'Выберите покупателя',
+        'Document.DeliveryType': {
+            valid: () => false, applyIf(doc) {
+                return doc.SNo === '111';
+            },
+            msg: 'Выберите доставку'
+        },
     },
 	commands: {
 		add100rows(doc) {

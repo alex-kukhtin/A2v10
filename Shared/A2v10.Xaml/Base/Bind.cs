@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public String Path { get; set; }
         public String Format { get; set; }
         public DataType DataType { get; set; }
+        public Boolean HideZeros { get; set; }
 
 		public Bind()
 		{
@@ -41,7 +42,10 @@ namespace A2v10.Xaml
                 fmt = $"'{Format.Replace("'", "\\'")}'";
             if (DataType != DataType.String)
                 dt = $"'{DataType.ToString()}'";
-            return $"$format({realPath}, {dt}, {fmt})";
+            String opts = "null";
+            if (HideZeros)
+                opts = "{ hideZeros: true }";
+            return $"$format({realPath}, {dt}, {fmt}, {opts})";
         }
 
 

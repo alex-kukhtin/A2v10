@@ -1,4 +1,6 @@
-﻿/* 20170919-7035 */
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/validator.js*/
 
 Vue.component('validator', {
@@ -11,13 +13,13 @@ Vue.component('validator', {
     computed: {
         cssStyle() {
             let r = {};
-            if (this.options.width)
+            if (this.options && this.options.width)
                 r.width = this.options.width;
             return r;
         },
         cssClass() {
             let r = {};
-            if (this.options.placement)
+            if (this.options && this.options.placement)
                 r[this.options.placement] = true;
             return r;
         }

@@ -504,6 +504,8 @@ table {
 td,
 th {
   padding: 0;
+  text-align: left;
+  font-weight: normal;
 }
 /* controls */
 /* header-footer */
@@ -1018,11 +1020,6 @@ select {
 }
 textarea {
   resize: none;
-}
-td,
-th {
-  text-align: left;
-  font-weight: normal;
 }
 a {
   color: #57a8fa;
@@ -1841,7 +1838,7 @@ table.data-grid > tbody > tr.cyan td {
   background-color: rgba(114, 234, 234, 0.15);
 }
 table.data-grid > tbody > tr.bold td {
-  font-weight: 500;
+  font-weight: 600;
 }
 .data-grid-container.fixed-header {
   height: 100%;
@@ -2344,6 +2341,9 @@ table th {
 }
 table col.fit {
   width: .1%;
+}
+table tr.bold > td {
+  font-weight: 600;
 }
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf !important;
@@ -3251,7 +3251,7 @@ table.sheet tr.row-title {
 }
 table.sheet tr.row-title td {
   border-style: none !important;
-  font-weight: 500;
+  font-weight: 600;
   padding: 8px 6px;
 }
 table.sheet tr.row-header {
@@ -3264,14 +3264,14 @@ table.sheet tr.row-total {
   background-color: #fff9d3;
 }
 table.sheet tr.row-total td {
-  font-weight: 500;
+  font-weight: 600;
 }
 table.sheet tr.group {
   background-color: rgba(221, 248, 236, 0.5);
   color: #208080;
 }
 table.sheet tr.group td {
-  font-weight: 500;
+  font-weight: 600;
 }
 table.sheet .group-cell {
   padding: 4px 2px;
@@ -3387,7 +3387,7 @@ h5,
   padding: .25rem .4rem;
   margin-left: 0.4rem;
   font-size: 85%;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   text-align: center;
   white-space: nowrap;

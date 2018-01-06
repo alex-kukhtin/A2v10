@@ -1,6 +1,8 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
+using System.Text;
 
 namespace A2v10.Xaml
 {
@@ -31,8 +33,23 @@ namespace A2v10.Xaml
                 onRender(td);
 
             MergeAttributes(td, context);
+
+            var boldBind = GetBinding(nameof(Bold));
+            var italicBind = GetBinding(nameof(Italic));
+            if (boldBind != null || italicBind != null)
+            {
+                var sb = new StringBuilder("{");
+                if (boldBind != null)
+                    sb.Append($"bold: {boldBind.GetPath(context)}, ");
+                if (italicBind != null)
+                    sb.Append($"italic: {italicBind.GetPath(context)}, ");
+                sb.RemoveTailComma();
+                sb.Append("}");
+                td.MergeAttribute(":class", sb.ToString());
+            }
             td.AddCssClassBoolNo(Bold, "bold");
             td.AddCssClassBoolNo(Italic, "italic");
+
             MergeContent(td, context);
 
             if (Align != TextAlign.Left)

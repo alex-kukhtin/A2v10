@@ -45,7 +45,7 @@
             <Popover Tip="Свойства корреспондента" Placement="BottomRight" Text="{Bind Agent.Name}" 
                      If="{Bind Agent.Id}" Url="{Bind $AgentPopoverUrl}"/>
         </DataGridColumn>
-		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
         <!--
 		<DataGridColumn Header="Договор" Content="{Bind Contract.FullName}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>

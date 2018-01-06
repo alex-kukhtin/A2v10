@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171209-7077
+// 20180106-7085
 // components/datagrid.js*/
 
 (function () {
@@ -122,7 +122,8 @@
         props: {
             header: String,
 			content: String,
-			dataType: String,
+            dataType: String,
+            hideZeros: Boolean,
             icon: String,
             bindIcon: String,
             id: String,
@@ -252,15 +253,17 @@
 
 			function normalizeArg(arg, eval) {
 				arg = arg || '';
-				if (arg === 'this')
-					arg = row;
-				else if (arg.startsWith('{')) {
-					arg = arg.substring(1, arg.length - 1);
-					if  (!(arg in row))
-						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
-					arg = row[arg];
-				} else if (arg && eval)
-					arg = utils.eval(row, arg, col.dataType);
+                if (arg === 'this')
+                    arg = row;
+                else if (arg.startsWith('{')) {
+                    arg = arg.substring(1, arg.length - 1);
+                    if (!(arg in row))
+                        throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
+                    arg = row[arg];
+                } else if (arg && eval) {
+                    console.error(col.hideZeros);
+                    arg = utils.eval(row, arg, col.dataType, col.hideZeros);
+                }
 				return arg;
 			}
 
@@ -274,7 +277,7 @@
 				let child = {
 					props: ['row', 'col'],
 					/*prevent*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType)"></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType, col.hideZeros)"></a>',
 					methods: {
                         doCommand(ev) {
                             if (ev) {
@@ -303,12 +306,12 @@
 
             function isNegativeRed(col) {
                 if (col.dataType === 'Number' || col.dataType === 'Currency')
-                    if (utils.eval(row, col.content) < 0)
+                    if (utils.eval(row, col.content, col.dataType, col.hideZeros) < 0)
                         return true;
                 return false;
             }
 
-			let content = utils.eval(row, col.content, col.dataType);
+            let content = utils.eval(row, col.content, col.dataType, col.hideZeros);
             let chElems = [h('span', { 'class': { 'negative-red': isNegativeRed(col) } }, content)];
             let icoSingle = !col.content ? ' ico-single' : '';
             if (col.icon)
@@ -529,7 +532,8 @@
 							pElem.count += cnt.c;
 						}
 					}
-				}
+                }
+                //console.dir(this.clientGroups);
 				this.doSortLocally();
 				// classic tree
 				let startTime = performance.now(); 

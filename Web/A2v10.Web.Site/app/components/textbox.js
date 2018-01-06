@@ -1,4 +1,6 @@
-﻿/*20171027-7057*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180106-7085*/
 /*components/textbox.js*/
 
 (function () {

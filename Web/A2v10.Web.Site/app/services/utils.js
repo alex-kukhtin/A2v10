@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171228-7084
+// 20180106-7085
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -119,7 +119,7 @@ app.modules['std:utils'] = function () {
         }
     }
 
-    function eval(obj, path, dataType) {
+    function eval(obj, path, dataType, hideZeros) {
         if (!path)
             return '';
 		let ps = (path || '').split('.');
@@ -130,12 +130,12 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
 			r = r[ps[i]];
 		}
-		if (isDate(r))
-			return format(r, dataType);
+        if (isDate(r))
+            return format(r, dataType, hideZeros);
 		else if (isObject(r))
 			return toJson(r);
 		else if (format)
-			return format(r, dataType);
+			return format(r, dataType, hideZeros);
 		return r;
     }
 
@@ -145,7 +145,7 @@ app.modules['std:utils'] = function () {
         return '' + num;
     }
 
-	function format(obj, dataType) {
+	function format(obj, dataType, hideZeros) {
 		if (!dataType)
             return obj;
         if (!isDefined(obj))
@@ -184,12 +184,16 @@ app.modules['std:utils'] = function () {
                     console.error(`Invalid Currency for utils.format (${obj})`);
                     return obj;
                 }
+                if (hideZeros && obj === 0)
+                    return '';
                 return currencyFormat(obj);
             case "Number":
                 if (!isNumber(obj)) {
                     console.error(`Invalid Number for utils.format (${obj})`);
                     return obj;
                 }
+                if (hideZeros && obj === 0)
+                    return '';
                 return numberFormat(obj);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
