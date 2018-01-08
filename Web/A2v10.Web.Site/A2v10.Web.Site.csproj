@@ -204,6 +204,7 @@
     <Content Include="Less\Debug.less" />
     <Content Include="Less\List.less" />
     <Content Include="Less\Sheet.less" />
+    <Content Include="Web.config.sample" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
