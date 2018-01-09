@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171118-7070
+// 20180109-7087
 // components/modal.js
 
 
@@ -79,8 +79,8 @@ TODO:
                 return !!this.dialog.style;
             },
             title: function () {
-                // todo
-                let defTitle = this.dialog.style === 'confirm' ? "Підтверження" : "Помилка";
+                // todo localization
+                let defTitle = this.dialog.style === 'confirm' ? "Подтверждение" : "Ошибка";
                 return this.dialog.title || defTitle;
             }, 
             bodyClass() {

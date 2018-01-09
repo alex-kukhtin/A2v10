@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180110-7087
 // controllers/base.js
 
 (function () {
@@ -82,6 +82,9 @@
             }
 		},
         methods: {
+            $marker() {
+                return true;
+            },
             $exec(cmd, arg, confirm, opts) {
                 if (this.$isReadOnly(opts)) return;
 
@@ -202,6 +205,7 @@
             },
 
             $reload(args) {
+                //console.dir('$reload was called for' + this.$baseUrl);
                 let self = this;
                 if (utils.isArray(args)) {
                     // reload lazy
@@ -503,11 +507,11 @@
 				let self = this;
 				// TODO: localize!!!
 				let dlg = {
-					message: "Element was modified. Save changes?",
-					title: "Confirm close",
+					message: "Элемент был изменен. Сохранить изменения?",
+					title: "Подтвердите закрытие",
 					buttons: [
 						{ text: "Сохранить", result: "save" },
-						{ text: "Don't save", result: "close" },
+						{ text: "Не сохранять", result: "close" },
 						{ text: "Отмена", result: false }
 					]
 				};
@@ -598,7 +602,7 @@
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
 			},
-			__queryChange(search) {
+            __queryChange(search) {
                 this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
             },
@@ -630,13 +634,16 @@
             this.$on('localQueryChange', this.__queryChange);
             this.__asyncCache__ = {};
             log.time('create time:', __createStartTime, false);
-		},
-		destroyed() {
-			eventBus.$emit('registerData', null);
-			eventBus.$off('beginRequest', this.__beginRequest);
-			eventBus.$off('endRequest', this.__endRequest);
-			eventBus.$off('queryChange', this.__queryChange);
-			this.$off('localQueryChange', this.__queryChange);
+        },
+        beforeDestroy() {
+        },
+        destroyed() {
+            //console.dir('base.js has been destroyed');
+            eventBus.$emit('registerData', null);
+            eventBus.$off('beginRequest', this.__beginRequest);
+            eventBus.$off('endRequest', this.__endRequest);
+            eventBus.$off('queryChange', this.__queryChange);
+            this.$off('localQueryChange', this.__queryChange);
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();

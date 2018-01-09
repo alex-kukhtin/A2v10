@@ -633,6 +633,10 @@ header,
   align-content: flex-start;
   align-items: center;
 }
+header .h-block,
+.header .h-block {
+  white-space: nowrap;
+}
 header .h-block a.app-title,
 .header .h-block a.app-title {
   color: inherit;
@@ -1027,7 +1031,8 @@ a {
   cursor: pointer;
 }
 a[disabled] {
-  opacity: 0.65;
+  pointer-events: none;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 a:hover {

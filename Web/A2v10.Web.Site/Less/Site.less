@@ -63,6 +63,7 @@ header, .header {
     align-items: center;
 
     .h-block {
+        white-space:nowrap;
         a.app-title {
             color: inherit;
             font-size: 18px;
@@ -333,8 +334,8 @@ a {
     cursor: pointer;
 
     &[disabled] {
-        //pointer-events:none;
-        opacity:0.65;
+        pointer-events:none; // disable click
+        opacity:0.5;
         cursor:not-allowed;
     }
 

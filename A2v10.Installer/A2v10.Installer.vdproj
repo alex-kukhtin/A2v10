@@ -87,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1D011F32B6F14FB2A5D175568ECBA85E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_204EACB57C334149235D50AEED08BBB7"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
         "MsmSig" = "8:_UNDEFINED"
@@ -147,6 +153,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3B8F61809E2046F8A8AF5DE3174250E6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3F528DFDE90749E4AB29FA083B251A57"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -190,6 +202,12 @@
         "Entry"
         {
         "MsmKey" = "8:_52C5D06EAE9E47B0ACBCB6BF88EC9875"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5A8D7E5760BE404A8E3B5F53117CDA23"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -251,6 +269,12 @@
         {
         "MsmKey" = "8:_6BBD6C19189EB38C1537F455084A9254"
         "OwnerKey" = "8:_12D95BCCCAACBF9514D211EA5AF5F27E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6DEB772159934366AC11E14D02C74717"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -579,6 +603,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D4DCD25BA3A4419AB4947D38EEC3B481"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D6E4A5155E00497CBB6410011FCCC86D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -591,8 +621,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_EB73D3D018454B808B21381A942AA61F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EF7116A856636601D0CEFA4A9E0A745F"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F5B96C8942AE4FD3AAE2966914BFAD94"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -861,7 +903,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:A2v10.Web.Runtime.msi"
+        "OutputFilename" = "8:Release\\A2v10.Web.Runtime.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -877,7 +919,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\A2v10.Installer.msi"
+        "OutputFilename" = "8:Release\\A2v10.Web.Runtime.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1091,6 +1133,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D011F32B6F14FB2A5D175568ECBA85E"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10security.sql"
+            "TargetName" = "8:a2v10security.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_204EACB57C334149235D50AEED08BBB7"
             {
             "AssemblyRegister" = "3:1"
@@ -1129,6 +1191,11 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Site, Version=10.0.7084.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_232ED0121B334D84873A3011B1168065"
+                    {
+                    "Name" = "8:A2v10.Web.Site.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Web.Site.dll"
             "TargetName" = "8:"
@@ -1270,6 +1337,26 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3B8F61809E2046F8A8AF5DE3174250E6"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10ui.sql"
+            "TargetName" = "8:a2v10ui.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3F528DFDE90749E4AB29FA083B251A57"
@@ -1433,6 +1520,26 @@
             "TargetName" = "8:bowtie.svg"
             "Tag" = "8:"
             "Folder" = "8:_F7D9FF055BE54A47B1A55C7AFE172C0D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5A8D7E5760BE404A8E3B5F53117CDA23"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10meta.sql"
+            "TargetName" = "8:a2v10meta.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1629,6 +1736,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DEB772159934366AC11E14D02C74717"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10system.sql"
+            "TargetName" = "8:a2v10system.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_704081A34F22B765787DA7ADA6BC83BA"
@@ -2309,6 +2436,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D4DCD25BA3A4419AB4947D38EEC3B481"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2msg.sql"
+            "TargetName" = "8:a2msg.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D6E4A5155E00497CBB6410011FCCC86D"
             {
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\scripts\\d3.min.js"
@@ -2360,6 +2507,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB73D3D018454B808B21381A942AA61F"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10workflow.sql"
+            "TargetName" = "8:a2v10workflow.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EF7116A856636601D0CEFA4A9E0A745F"
             {
             "AssemblyRegister" = "3:1"
@@ -2389,6 +2556,26 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F5B96C8942AE4FD3AAE2966914BFAD94"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10admin.sql"
+            "TargetName" = "8:a2v10admin.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FF64764C4354394B627542C0B19A8A02"
@@ -2493,6 +2680,17 @@
                             }
                         }
                     }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_700A39D0EB1B49B88280033DB7F60418"
+                    {
+                    "Name" = "8:sql"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_D56484F9252C45319DCF6A53FAB77FD5"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_F18DC6FD7C45400F8EAB21E5ED8B92F1"
                     {
                     "Name" = "8:scripts"
@@ -2522,15 +2720,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{BAD3407B-62D7-495A-BB74-ACFF3F031E14}"
-        "PackageCode" = "8:{491F7C17-9E98-4FA9-B85E-A14EF2CB7499}"
+        "ProductCode" = "8:{17620647-8429-4A01-B617-B5E7BA078A27}"
+        "PackageCode" = "8:{A6466101-593C-4EEB-A77C-7AD711140242}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7085"
+        "ProductVersion" = "8:10.0.7086"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

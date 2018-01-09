@@ -1,10 +1,14 @@
-﻿/*20171006-7041*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7087
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
     const eventBus = require('std:eventBus');
     const urlTools = require('std:url');
+
+    let fc = null;
 
 	return {
 		get: get,
@@ -72,15 +76,14 @@ app.modules['std:http'] = function () {
             xhr.send(data);
         });
     }
-
     function load(url, selector) {
+        let fc = selector ? selector.firstElementChild : null;
+        if (fc && fc.__vue__) {
+            fc.__vue__.$destroy();
+        };
         return new Promise(function (resolve, reject) {
             doRequest('GET', url)
                 .then(function (html) {
-					if (selector.firstChild && selector.firstChild.__vue__) {
-						//console.warn('destroy component');
-						selector.firstChild.__vue__.$destroy();
-					}
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body
@@ -100,8 +103,8 @@ app.modules['std:http'] = function () {
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
-                    if (selector.firstChild && selector.firstChild.__vue__) {
-                        let ve = selector.firstChild.__vue__;
+                    if (selector.firstElementChild && selector.firstElementChild.__vue__) {
+                        let ve = selector.firstElementChild.__vue__;
                         ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
                     }
                     resolve(true);

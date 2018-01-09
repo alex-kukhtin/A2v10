@@ -40,7 +40,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            var tb = new TagBuilder("div", "toolbar");
+            var tb = new TagBuilder("div", "toolbar", IsInGrid);
             if (onRender != null)
                 onRender(tb);
             if (Style != ToolbarStyle.Default)

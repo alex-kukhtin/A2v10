@@ -1,4 +1,6 @@
-﻿/*20170824-7019*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7087
 /*components/include.js*/
 
 (function () {
@@ -27,7 +29,20 @@
             requery() {
 				if (this.currentUrl) {
                     // Do not set loading. Avoid blinking
+                    this.__destroy();
                     http.load(this.currentUrl, this.$el).then(this.loaded);
+                }
+            },
+            __destroy() {
+                //console.warn('include has been destroyed');
+                let fc = this.$el.firstElementChild;
+                if (!fc) return;
+                let vue = fc.__vue__;
+                // Maybe collectionView created the wrapper!
+                if (vue && !vue.$marker)
+                    vue = vue.$parent;
+                if (vue && vue.$marker()) {
+                    vue.$destroy();
                 }
             }
         },
@@ -37,17 +52,14 @@
             }
 		},
         mounted() {
+            //console.warn('include has been mounted');
             if (this.src) {
-				this.currentUrl = this.src;
+                this.currentUrl = this.src;
                 http.load(this.src, this.$el).then(this.loaded);
             }
         },
         destroyed() {
-            let fc = this.$el.firstElementChild;
-			if (fc && fc.__vue__) {
-				//console.warn('desroy component');
-				fc.__vue__.$destroy();
-			}
+            this.__destroy(); // and for dialogs too
         },
         watch: {
 			src: function (newUrl, oldUrl) {
@@ -61,8 +73,8 @@
                 }
 				else {
 					this.loading = true; // hides the current view
-					this.currentUrl = newUrl;
-                    //console.warn('src was changed. load');
+                    this.currentUrl = newUrl;
+                    this.__destroy();
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },

@@ -1,4 +1,6 @@
-﻿/*20170927-7057*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180109-7087
 /* components/datepicker.js */
 
 
@@ -34,7 +36,7 @@
 						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
 					</tr>
 				</tbody>
-				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cьогодні</a></td></tr></tfoot>
+				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cегодня</a></td></tr></tfoot>
 			</table>
 		</div>
     </div>
@@ -98,7 +100,8 @@
 					cls += " other";
 				return cls;
 			},
-			dayTitle(day) {
+            dayTitle(day) {
+                // todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			__clickOutside() {

@@ -493,13 +493,17 @@ app.modules['std:url'] = function () {
 
 })();
 
-/*20171006-7041*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7087
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
     const eventBus = require('std:eventBus');
     const urlTools = require('std:url');
+
+    let fc = null;
 
 	return {
 		get: get,
@@ -567,15 +571,14 @@ app.modules['std:http'] = function () {
             xhr.send(data);
         });
     }
-
     function load(url, selector) {
+        let fc = selector ? selector.firstElementChild : null;
+        if (fc && fc.__vue__) {
+            fc.__vue__.$destroy();
+        };
         return new Promise(function (resolve, reject) {
             doRequest('GET', url)
                 .then(function (html) {
-					if (selector.firstChild && selector.firstChild.__vue__) {
-						//console.warn('destroy component');
-						selector.firstChild.__vue__.$destroy();
-					}
                     let dp = new DOMParser();
                     let rdoc = dp.parseFromString(html, 'text/html');
                     // first element from fragment body
@@ -595,8 +598,8 @@ app.modules['std:http'] = function () {
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
                     }
-                    if (selector.firstChild && selector.firstChild.__vue__) {
-                        let ve = selector.firstChild.__vue__;
+                    if (selector.firstElementChild && selector.firstElementChild.__vue__) {
+                        let ve = selector.firstElementChild.__vue__;
                         ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
                     }
                     resolve(true);
@@ -613,9 +616,9 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20170915-7033*/
+// 20180110-7087
 /* platform/routex.js */
 
 (function () {
@@ -651,7 +654,8 @@ app.modules['std:http'] = function () {
         return urlTools.normalizeRoot(path);
     }
 
-	const store = new Vuex.Store({
+    const store = new Vuex.Store({
+        strict : true,
 		state: {
             route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
@@ -675,7 +679,7 @@ app.modules['std:http'] = function () {
 			},
 			search: (state) => {
 				return urlTools.makeQueryString(state.query);
-			}		
+            }
 		},
 		mutations: {
             navigate(state, to) { // to: {url, query, title}
@@ -699,13 +703,14 @@ app.modules['std:http'] = function () {
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
+				// TODO: replaceUrl: boolean
 				// changes some fields or query
                 let root = window.$$rootUrl;
-				state.query = Object.assign({}, state.query, query);
-				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
-				// TODO: replaceUrl: boolean
-				//console.warn('set setquery: ' + newUrl);
-				window.history.replaceState(null, null, newUrl);
+                let oldUrl = root + this.getters.baseUrl;
+                state.query = Object.assign({}, state.query, query);
+                let newUrl = root + this.getters.baseUrl;
+                if (newUrl === oldUrl) return;
+                window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {
@@ -1940,7 +1945,9 @@ app.modules['std:popup'] = function () {
 };
 
 
-/*20170824-7019*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7087
 /*components/include.js*/
 
 (function () {
@@ -1969,7 +1976,20 @@ app.modules['std:popup'] = function () {
             requery() {
 				if (this.currentUrl) {
                     // Do not set loading. Avoid blinking
+                    this.__destroy();
                     http.load(this.currentUrl, this.$el).then(this.loaded);
+                }
+            },
+            __destroy() {
+                //console.warn('include has been destroyed');
+                let fc = this.$el.firstElementChild;
+                if (!fc) return;
+                let vue = fc.__vue__;
+                // Maybe collectionView created the wrapper!
+                if (vue && !vue.$marker)
+                    vue = vue.$parent;
+                if (vue && vue.$marker()) {
+                    vue.$destroy();
                 }
             }
         },
@@ -1979,17 +1999,14 @@ app.modules['std:popup'] = function () {
             }
 		},
         mounted() {
+            //console.warn('include has been mounted');
             if (this.src) {
-				this.currentUrl = this.src;
+                this.currentUrl = this.src;
                 http.load(this.src, this.$el).then(this.loaded);
             }
         },
         destroyed() {
-            let fc = this.$el.firstElementChild;
-			if (fc && fc.__vue__) {
-				//console.warn('desroy component');
-				fc.__vue__.$destroy();
-			}
+            this.__destroy(); // and for dialogs too
         },
         watch: {
 			src: function (newUrl, oldUrl) {
@@ -2003,8 +2020,8 @@ app.modules['std:popup'] = function () {
                 }
 				else {
 					this.loading = true; // hides the current view
-					this.currentUrl = newUrl;
-                    //console.warn('src was changed. load');
+                    this.currentUrl = newUrl;
+                    this.__destroy();
 					http.load(newUrl, this.$el).then(this.loaded);
 				}
             },
@@ -2343,7 +2360,9 @@ Vue.component('validator-control', {
         }
     });
 })();
-/*20170927-7057*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180109-7087
 /* components/datepicker.js */
 
 
@@ -2379,7 +2398,7 @@ Vue.component('validator-control', {
 						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
 					</tr>
 				</tbody>
-				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cьогодні</a></td></tr></tfoot>
+				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cегодня</a></td></tr></tfoot>
 			</table>
 		</div>
     </div>
@@ -2443,7 +2462,8 @@ Vue.component('validator-control', {
 					cls += " other";
 				return cls;
 			},
-			dayTitle(day) {
+            dayTitle(day) {
+                // todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			__clickOutside() {
@@ -4148,9 +4168,9 @@ TODO:
     });
 })();
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171118-7070
+// 20180109-7087
 // components/modal.js
 
 
@@ -4229,8 +4249,8 @@ TODO:
                 return !!this.dialog.style;
             },
             title: function () {
-                // todo
-                let defTitle = this.dialog.style === 'confirm' ? "Підтверження" : "Помилка";
+                // todo localization
+                let defTitle = this.dialog.style === 'confirm' ? "Подтверждение" : "Ошибка";
                 return this.dialog.title || defTitle;
             }, 
             bodyClass() {
@@ -4921,7 +4941,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180110-7087
 // controllers/base.js
 
 (function () {
@@ -5003,6 +5023,9 @@ Vue.directive('resize', {
             }
 		},
         methods: {
+            $marker() {
+                return true;
+            },
             $exec(cmd, arg, confirm, opts) {
                 if (this.$isReadOnly(opts)) return;
 
@@ -5123,6 +5146,7 @@ Vue.directive('resize', {
             },
 
             $reload(args) {
+                //console.dir('$reload was called for' + this.$baseUrl);
                 let self = this;
                 if (utils.isArray(args)) {
                     // reload lazy
@@ -5424,11 +5448,11 @@ Vue.directive('resize', {
 				let self = this;
 				// TODO: localize!!!
 				let dlg = {
-					message: "Element was modified. Save changes?",
-					title: "Confirm close",
+					message: "Элемент был изменен. Сохранить изменения?",
+					title: "Подтвердите закрытие",
 					buttons: [
 						{ text: "Сохранить", result: "save" },
-						{ text: "Don't save", result: "close" },
+						{ text: "Не сохранять", result: "close" },
 						{ text: "Отмена", result: false }
 					]
 				};
@@ -5519,7 +5543,7 @@ Vue.directive('resize', {
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
 			},
-			__queryChange(search) {
+            __queryChange(search) {
                 this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
 				this.$reload();
             },
@@ -5551,13 +5575,16 @@ Vue.directive('resize', {
             this.$on('localQueryChange', this.__queryChange);
             this.__asyncCache__ = {};
             log.time('create time:', __createStartTime, false);
-		},
-		destroyed() {
-			eventBus.$emit('registerData', null);
-			eventBus.$off('beginRequest', this.__beginRequest);
-			eventBus.$off('endRequest', this.__endRequest);
-			eventBus.$off('queryChange', this.__queryChange);
-			this.$off('localQueryChange', this.__queryChange);
+        },
+        beforeDestroy() {
+        },
+        destroyed() {
+            //console.dir('base.js has been destroyed');
+            eventBus.$emit('registerData', null);
+            eventBus.$off('beginRequest', this.__beginRequest);
+            eventBus.$off('endRequest', this.__endRequest);
+            eventBus.$off('queryChange', this.__queryChange);
+            this.$off('localQueryChange', this.__queryChange);
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();

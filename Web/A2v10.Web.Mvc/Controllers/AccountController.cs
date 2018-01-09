@@ -86,7 +86,7 @@ namespace A2v10.Web.Site.Controllers
 
                 String html = ResourceHelper.LoginHtml;
                 StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
-                script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle.AppTitle}', subtitle: '{appTitle.AppSubTitle}' }}");
+                script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}' }}");
                 script.Replace("$(Token)", formToken);
 
                 Response.Cookies.Add(new HttpCookie(AntiForgeryConfig.CookieName, cookieToken));

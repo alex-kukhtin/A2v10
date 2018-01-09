@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20170915-7033*/
+// 20180110-7087
 /* platform/routex.js */
 
 (function () {
@@ -36,7 +36,8 @@
         return urlTools.normalizeRoot(path);
     }
 
-	const store = new Vuex.Store({
+    const store = new Vuex.Store({
+        strict : true,
 		state: {
             route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
@@ -60,7 +61,7 @@
 			},
 			search: (state) => {
 				return urlTools.makeQueryString(state.query);
-			}		
+            }
 		},
 		mutations: {
             navigate(state, to) { // to: {url, query, title}
@@ -84,13 +85,14 @@
 				window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
+				// TODO: replaceUrl: boolean
 				// changes some fields or query
                 let root = window.$$rootUrl;
-				state.query = Object.assign({}, state.query, query);
-				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
-				// TODO: replaceUrl: boolean
-				//console.warn('set setquery: ' + newUrl);
-				window.history.replaceState(null, null, newUrl);
+                let oldUrl = root + this.getters.baseUrl;
+                state.query = Object.assign({}, state.query, query);
+                let newUrl = root + this.getters.baseUrl;
+                if (newUrl === oldUrl) return;
+                window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
 			popstate(state) {

@@ -58,16 +58,14 @@
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'application/json;charset=utf-8');
             xhr.setRequestHeader("__RequestVerificationToken", token);
-            console.dir(data);
             xhr.send(JSON.stringify(data));
         });
     }
 
     function parseQueryString(str) {
-        //TODO: TEST
         var obj = {};
         str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+            obj[decodeURIComponent(key)] = '' + decodeURIComponent(value);
         });
         return obj;
     }
