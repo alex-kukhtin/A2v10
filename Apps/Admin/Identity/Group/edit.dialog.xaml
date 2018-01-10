@@ -27,7 +27,7 @@
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
-        <Tab Header="Пользователи" Padding="5, 10">
+        <Tab Header="Пользователи" Padding="5, 10" Badge="{Bind Group.Users.Count}">
             <Toolbar Style="Transparent">
                 <Button Icon="Add" Content="Добавить" Command="{BindCmd Execute, CommandName=addUser, Argument={Bind Group.Users}}"/>
                 <Button Icon="Delete" Content="Удалить" Command="{BindCmd Command=RemoveSelected, Argument={Bind Group.Users}, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>

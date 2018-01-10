@@ -2350,6 +2350,9 @@ table col.fit {
 table tr.bold > td {
   font-weight: 600;
 }
+table td.gray {
+  background-color: #f8f8f8;
+}
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf !important;
 }
@@ -3398,6 +3401,13 @@ h5,
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25rem;
+}
+.xaml-exception {
+  padding: 6px;
+  display: inline-block;
+  background-color: #f2dede;
+  border: 1px solid #dca7a7;
+  color: #a94442;
 }
 .debug-panel {
   position: absolute;

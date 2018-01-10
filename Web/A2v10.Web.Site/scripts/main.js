@@ -32,6 +32,10 @@
         throw new Error('component "' + name + '" not found');
     }
 })();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7088
+// services/datamodel.js
 
 
 (function (elem) {
@@ -926,9 +930,9 @@ app.modules['std:validators'] = function() {
 
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171228-7084
+// 20170110-7088
 // services/datamodel.js
 
 (function () {
@@ -1178,7 +1182,8 @@ app.modules['std:validators'] = function() {
             });
         }
 
-		let constructEvent = ctorname + '.construct';
+        let constructEvent = ctorname + '.construct';
+        let _lastCaller = null;
 		elem._root_.$emit(constructEvent, elem);
 		if (elem._root_ === elem) {
 			// root element
@@ -1196,9 +1201,13 @@ app.modules['std:validators'] = function() {
 			elem._enableValidate_ = true;
             elem._needValidate_ = false;
             elem._modelLoad_ = (caller) => {
-                elem.$emit('Model.load', elem, caller);
-                elem._root_.$setDirty(false);
+                _lastCaller = caller;
+                elem._fireLoad_();
                 __initialized__ = true;
+            };
+            elem._fireLoad_ = () => {
+                elem.$emit('Model.load', elem, _lastCaller);
+                elem._root_.$setDirty(false);
             };
             defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
@@ -4941,7 +4950,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7087
+// 20180110-7088
 // controllers/base.js
 
 (function () {
@@ -5169,8 +5178,9 @@ Vue.directive('resize', {
                     let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
-							dat.$merge(data);
-							dat.$setDirty(false);
+                            dat.$merge(data);
+                            dat._fireLoad_();
+							//dat.$setDirty(false);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}

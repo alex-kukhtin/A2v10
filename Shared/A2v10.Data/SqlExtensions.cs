@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -8,17 +8,19 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace A2v10.Data
 {
 	public static class SqlExtensions
-	{
+    {
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
 		public static SqlCommand CreateCommandSP(this SqlConnection cnn, String command)
 		{
 			var cmd = cnn.CreateCommand();
-			cmd.CommandText = command;
 			cmd.CommandType = CommandType.StoredProcedure;
-			return cmd;
+            cmd.CommandText = command;
+            return cmd;
 		}
 
 		public static void RemoveDbName(this SqlParameter prm)

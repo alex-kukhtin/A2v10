@@ -1,4 +1,8 @@
-﻿
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7088
+// services/datamodel.js
+
 
 (function (elem) {
 	elem.closest = elem.closest || function (css) {

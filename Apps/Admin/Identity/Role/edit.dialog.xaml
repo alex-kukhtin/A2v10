@@ -28,7 +28,7 @@
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
-        <Tab Header="Пользователи и группы" Padding="5, 10">
+        <Tab Header="Пользователи и группы" Padding="5, 10" Badge="{Bind Role.UsersGroups.Count}">
             <Toolbar Style="Transparent">
                 <Button Icon="Add" Content="Добавить">
                     <Button.DropDown>

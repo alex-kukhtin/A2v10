@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -6,9 +6,15 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
 	[ContentProperty("Content")]
-	public abstract class ContentControl : Control
+	public class ContentControl : Control
 	{
 		public Object Content { get; set; }
+
+        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+        {
+            if (Content is UIElementBase)
+                (Content as UIElementBase).RenderElement(context, onRender);
+        }
 
         internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
         {

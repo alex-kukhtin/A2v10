@@ -7,6 +7,7 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+    [Serializable]
     public class ResourceDictionary : Dictionary<String, Object>
     {
 

@@ -19,7 +19,7 @@
                          Multiline="True" Rows="3"/>
             </Grid>
         </Tab>
-        <Tab Header="Группы" Padding="5, 10">
+        <Tab Header="Группы" Padding="5, 10" Badge="{Bind User.Groups.Count}">
             <Toolbar Style="Transparent">
                 <Button Icon="Add" Content="Добавить" Command="{BindCmd Dialog, Action=Append, Url='/Identity/Group/Browse', Argument={Bind User.Groups}}"/>
                 <Button Icon="Delete" Content="Удалить" Command="{BindCmd Command=RemoveSelected, Argument={Bind User.Groups}, Confirm='Вы действительно хотите удалить группу?'}"/>

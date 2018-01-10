@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171228-7084
+// 20170110-7088
 // services/datamodel.js
 
 (function () {
@@ -250,7 +250,8 @@
             });
         }
 
-		let constructEvent = ctorname + '.construct';
+        let constructEvent = ctorname + '.construct';
+        let _lastCaller = null;
 		elem._root_.$emit(constructEvent, elem);
 		if (elem._root_ === elem) {
 			// root element
@@ -268,9 +269,13 @@
 			elem._enableValidate_ = true;
             elem._needValidate_ = false;
             elem._modelLoad_ = (caller) => {
-                elem.$emit('Model.load', elem, caller);
-                elem._root_.$setDirty(false);
+                _lastCaller = caller;
+                elem._fireLoad_();
                 __initialized__ = true;
+            };
+            elem._fireLoad_ = () => {
+                elem.$emit('Model.load', elem, _lastCaller);
+                elem._root_.$setDirty(false);
             };
             defHiddenGet(elem, '$readOnly', isReadOnly);
 		}

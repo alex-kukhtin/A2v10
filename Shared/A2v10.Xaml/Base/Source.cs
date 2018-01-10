@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -40,13 +40,13 @@ namespace A2v10.Xaml
 			}
 			catch (Exception ex)
 			{
-				return null; //TODO: new Span() { CssClass = "xaml-alert alert alert-danger", Content = ex.Message };
+				return new Span() { CssClass = "xaml-exception", Content = ex.Message };
 			}
 
 			Object Load(String path, Uri baseUri)
 			{
 				String basePath = System.IO.Path.GetDirectoryName(baseUri.PathAndQuery);
-				String targetDir = System.IO.Path.Combine(basePath, path);
+				String targetDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, path));
 				if (System.IO.Path.GetExtension(targetDir).ToLowerInvariant() == ".js")
 				{
 					if (File.Exists(targetDir))

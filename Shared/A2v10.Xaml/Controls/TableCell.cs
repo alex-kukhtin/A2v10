@@ -21,6 +21,7 @@ namespace A2v10.Xaml
         public TextAlign Align { get; set; }
         public Boolean? Bold { get; set; }
         public Boolean? Italic { get; set; }
+        public Boolean Gray { get; set; }
 
         //public Boolean Validate { get; set; }
 
@@ -49,6 +50,7 @@ namespace A2v10.Xaml
             }
             td.AddCssClassBoolNo(Bold, "bold");
             td.AddCssClassBoolNo(Italic, "italic");
+            td.AddCssClassBool(Gray, "gray");
 
             MergeContent(td, context);
 

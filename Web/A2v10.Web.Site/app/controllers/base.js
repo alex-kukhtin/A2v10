@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7087
+// 20180110-7088
 // controllers/base.js
 
 (function () {
@@ -228,8 +228,9 @@
                     let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
-							dat.$merge(data);
-							dat.$setDirty(false);
+                            dat.$merge(data);
+                            dat._fireLoad_();
+							//dat.$setDirty(false);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}
