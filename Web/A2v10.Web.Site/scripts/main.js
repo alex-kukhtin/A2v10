@@ -2533,7 +2533,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180112-7089
 // components/datagrid.js*/
 
 (function () {
@@ -2589,7 +2589,7 @@ Vue.component('validator-control', {
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
-                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="gIndex + ':' + rowIndex" :mark="mark">
+                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
                             <slot name="row-details" :row="row"></slot>
                         </data-grid-row-details>
 					</template>
@@ -2600,7 +2600,7 @@ Vue.component('validator-control', {
 			<tbody>
                 <template v-for="(item, rowIndex) in $items">
 				    <data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
-                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex" :mark="mark">
+                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
                         <slot name="row-details" :row="item"></slot>
                     </data-grid-row-details>
                 </template>
@@ -3405,9 +3405,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+/*20180111-7089*/
 // components/treeview.js
 
 (function () {
@@ -3426,7 +3426,7 @@ Vue.component('popover', {
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
         <i v-if="options.hasIcon" :class="iconClass"/>
-        <a v-if="hasLink(item)" :href="dataHref" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
+        <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
         <span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
     </div>
     <ul v-if="isFolder" v-show="isExpanded">
@@ -4189,8 +4189,7 @@ TODO:
 
 /**
 TODO:
-    4. Large, Small
-    5. Set width v-modal-width=""
+    6. Drag It
 */
 
     const modalTemplate = `
@@ -5609,7 +5608,9 @@ Vue.directive('resize', {
     
 	app.components['baseController'] = base;
 })();
-/*20171031-7063*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180111-7089*/
 /* controllers/shell.js */
 
 (function () {
@@ -5689,7 +5690,7 @@ Vue.directive('resize', {
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.Name" @click.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -6016,7 +6017,10 @@ Vue.directive('resize', {
 			},
 			changeUser() {
 				alert('change user');
-			}
+            },
+            changePassword() {
+                alert('change password');
+            }
 		},
 		created() {
 			let me = this;

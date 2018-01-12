@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Security.Principal;
@@ -16,6 +16,15 @@ namespace A2v10.Web.Mvc.Identity
                 return null;
             var value = user.FindFirstValue("PersonName");
             return String.IsNullOrEmpty(value) ? identity.GetUserName() : value;
+        }
+
+        public static Boolean IsUserAdmin(this IIdentity identity)
+        {
+            var user = identity as ClaimsIdentity;
+            if (user == null)
+                return false;
+            var value = user.FindFirstValue("Admin");
+            return value == "Admin";
         }
     }
 }

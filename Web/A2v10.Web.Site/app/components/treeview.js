@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+/*20180111-7089*/
 // components/treeview.js
 
 (function () {
@@ -19,7 +19,7 @@
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
         <i v-if="options.hasIcon" :class="iconClass"/>
-        <a v-if="hasLink(item)" :href="dataHref" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
+        <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
         <span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
     </div>
     <ul v-if="isFolder" v-show="isExpanded">

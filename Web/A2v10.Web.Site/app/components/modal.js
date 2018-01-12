@@ -10,8 +10,7 @@
 
 /**
 TODO:
-    4. Large, Small
-    5. Set width v-modal-width=""
+    6. Drag It
 */
 
     const modalTemplate = `

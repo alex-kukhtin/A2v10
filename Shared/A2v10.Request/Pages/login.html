@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>A2:Web</title>
-    <link href="/css/site.min.css" rel="stylesheet" />
+    <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
@@ -19,9 +19,10 @@
             <div class="aligner"></div>
         </header>
         <div class="main-view">
+            <div class="load-indicator" v-show="processing"></div>
             <div class="content-view full-view" style="margin:8px;overflow:auto">
                 <h4 class="a2-header">Для входа в систему введите логин и пароль</h4>
-                <hr style="margin-top:1rem"/>
+                <hr style="margin-top:1rem" />
                 <div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
                     <span class="error" v-text="serverError"></span>
                 </div>
@@ -29,7 +30,7 @@
                     <label style="grid-row:1; grid-column:1" class="a2-label required text-right">Логин:</label>
                     <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
                         <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="login" tabindex="1"/>
+                            <input v-focus class="control" type="text" v-model="login" tabindex="1" />
                             <div class="validator">
                                 <span class="error">введите логин</span>
                             </div>
@@ -38,7 +39,7 @@
                     <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
                     <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="2"/>
+                            <input class="control" v-focus type="password" v-model="password" tabindex="2" />
                             <div class="validator">
                                 <span class="error">введите пароль</span>
                             </div>

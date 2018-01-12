@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -58,6 +60,7 @@ namespace A2v10.Runtime
         }
 
         public String AppVersion => AppInfo.MainAssembly.Version;
+        public String AppBuild => AppInfo.MainAssembly.Build;
 
         public String ConnectionString(String source)
         {

@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="rootUrl" content="$(RootUrl)" />
     <title></title>
-    <link href="/css/site.min.css" rel="stylesheet" />
+    <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
@@ -17,20 +17,23 @@
         <header class="header">
             <div class="h-block">
                 <!--<i class="bowtie-user"></i>-->
-                <a class="app-title" href='/' @click.prevent="root" v-text="title"></a>
+                <a class="app-title" href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
                 <span class="app-subtitle" v-text="subtitle"></span>
             </div>
             <div class="aligner"></div>
-            <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
+            <a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
             <div class="dropdown dir-down" v-dropdown>
                 <button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
                 <div class="dropdown-menu menu down-right">
-                    <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                    <div class="divider"></div>
-                    <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
+                    <a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> Профиль</a>
+                    <a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> Сменить пароль</a>
+                    <template v-if="userIsAdmin">
+                        <div class="divider"></div>
+                        <a @click.prevent="changeUser" class="dropdown-item" tabindex="-1"><i class="ico ico-switch"></i> Сменить пользователя</a>
+                    </template>
                     <div class="divider"></div>
                     <form id="logoutForm" method="post" action="/account/logoff">
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
+                        <a href="javascript:document.getElementById('logoutForm').submit()" tabindex="-1" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
                     </form>
                 </div>
             </div>
@@ -40,14 +43,14 @@
                   :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
-            <a href="/app/about" @click.prevent="about">о программе</a>
+            <a href="/app/about" @click.prevent="about" tabindex="-1">о программе</a>
             version: <span v-text="version"></span>
             <div class="right-part">
                 <div class="dropdown dir-up" v-dropdown>
                     <button class="btn btn-debug" toggle>отладка<span class="caret up"></span></button>
                     <div class="dropdown-menu menu up-right">
-                        <a @click.prevent="debugModel" class="dropdown-item"><i class="ico ico-database"></i> Модель данных</a>
-                        <a @click.prevent="debugTrace" class="dropdown-item"><i class="ico ico-log"></i> Трассировка</a>
+                        <a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> Модель данных</a>
+                        <a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-log"></i> Трассировка</a>
                         <div class="divider"></div>
                         <!--
                         <a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
@@ -64,8 +67,8 @@
         <a2-debug v-if="debugVisible"></a2-debug>
         -->
     </div>
-    <script type="text/javascript" src="/scripts/vue.js"></script>
-    <script type="text/javascript" src="/scripts/main.js"></script>
+    <script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
+    <script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
     <script type="text/javascript" src="/shellscript"></script>
 </body>
 </html>

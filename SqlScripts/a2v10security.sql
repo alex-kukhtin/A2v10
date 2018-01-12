@@ -1,10 +1,10 @@
-﻿/* 20171221-7050 */
+﻿/* 20171221-7051 */
 /*
 ------------------------------------------------
-Copyright © 2008-2017 Alex Kukhtin
+Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 23 dec 2017 13:40
-module version : 7050
+Last updated : 12 jan 2017
+module version : 7051
 */
 
 ------------------------------------------------
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7050);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7051);
 else
-	update a2sys.Versions set [Version] = 7050 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7051 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -204,8 +204,10 @@ create view a2security.ViewUsers
 as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
-		PersonName, Memo, Void
-	from a2security.Users
+		PersonName, Memo, Void, 
+		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
+	from a2security.Users u
+		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
 	where Void=0 and Id <> 0;
 go
 ------------------------------------------------

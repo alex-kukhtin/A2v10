@@ -3,7 +3,7 @@
     <Page.Toolbar>
         <Toolbar>
             <Button Icon="ArrowOpen"
-                    Command="{BindCmd OpenSelected, Url='{Bind Action}', Argument={Bind Inboxes}}">Открыть</Button>
+                    Command="{BindCmd OpenSelected, Url='/Catalog/Inbox/Open', Argument={Bind Inboxes}}">Открыть</Button>
             <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
         </Toolbar>

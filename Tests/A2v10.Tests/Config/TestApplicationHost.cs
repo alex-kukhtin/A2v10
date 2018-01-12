@@ -1,10 +1,9 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using A2v10.Infrastructure;
 
 namespace A2v10.Tests.Config
 {
@@ -66,5 +65,6 @@ namespace A2v10.Tests.Config
         }
 
         public String AppVersion => throw new NotImplementedException();
+        public String AppBuild => throw new NotImplementedException();
     }
 }

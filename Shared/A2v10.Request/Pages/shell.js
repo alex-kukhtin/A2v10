@@ -12,7 +12,8 @@
             version: '$(AppVersion)',
 			menu: menu.Menu[0].Menu,
 			title: menu.SysParams.AppTitle,
-			subtitle: menu.SysParams.AppSubTitle
+            subtitle: menu.SysParams.AppSubTitle,
+            userIsAdmin: $(Admin)
         }
     });
 

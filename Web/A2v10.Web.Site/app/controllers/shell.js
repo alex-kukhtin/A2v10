@@ -1,4 +1,6 @@
-﻿/*20171031-7063*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180111-7089*/
 /* controllers/shell.js */
 
 (function () {
@@ -78,7 +80,7 @@
 		template: `
 <ul class="nav-bar">
     <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" v-text="item.Name" @click.prevent="navigate(item)"></a>
+        <a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
     </li>
 </ul>
 `,
@@ -405,7 +407,10 @@
 			},
 			changeUser() {
 				alert('change user');
-			}
+            },
+            changePassword() {
+                alert('change password');
+            }
 		},
 		created() {
 			let me = this;

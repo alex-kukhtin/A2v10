@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180112-7089
 // components/datagrid.js*/
 
 (function () {
@@ -56,7 +56,7 @@
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
-                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="gIndex + ':' + rowIndex" :mark="mark">
+                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
                             <slot name="row-details" :row="row"></slot>
                         </data-grid-row-details>
 					</template>
@@ -67,7 +67,7 @@
 			<tbody>
                 <template v-for="(item, rowIndex) in $items">
 				    <data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
-                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="rowIndex" :mark="mark">
+                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
                         <slot name="row-details" :row="item"></slot>
                     </data-grid-row-details>
                 </template>

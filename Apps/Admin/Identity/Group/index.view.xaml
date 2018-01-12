@@ -28,6 +28,7 @@
             <!--
             <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
             -->
+            <Button Icon="HelpBlue" Toolbar.Align="Right">Справка</Button>
         </Toolbar>
     </Page.Toolbar>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"

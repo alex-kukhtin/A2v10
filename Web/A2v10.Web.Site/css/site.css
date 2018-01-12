@@ -1931,16 +1931,19 @@ table.data-grid > tbody > tr.bold td {
   padding: 3px 6px 4px 6px;
 }
 .toolbar .btn-tb:focus {
-  outline-style: none;
+  outline: 1px dotted #9dacca;
+  outline-offset: -2px;
 }
 .toolbar .btn-tb:hover {
   background-color: #fdf4bf;
   border-color: #e5c365;
+  outline: none;
 }
 .toolbar .btn-tb:active {
   background-color: #fff29d;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   border-color: #e5c365;
+  outline: none;
 }
 .toolbar .btn-tb:disabled {
   color: #777;

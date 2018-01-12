@@ -8,18 +8,19 @@
     display: flex;
     flex-wrap: wrap;
     //align-items: baseline; ???
-    align-items:center;
+    align-items: center;
     padding: 2px;
     overflow: visible;
     background-color: @toolbar-bg-color;
     color: @toolbar-txt-color;
 
     .checkbox {
-        margin:0 3px;
+        margin: 0 3px;
     }
+
     &.transparent {
         background-color: transparent;
-        padding:2px 0;
+        padding: 2px 0;
 
         .btn {
             color: @link-color;
@@ -36,18 +37,21 @@
         padding: 3px 6px 4px 6px;
 
         &:focus {
-            outline-style: none;
+            outline: 1px dotted darken(@toolbar-bg-color, 15%);
+            outline-offset:-2px;
         }
 
         &:hover {
             background-color: @hover-bg-color;
             border-color: @tb-hover-brd-color;
+            outline:none;
         }
 
         &:active {
             background-color: @tb-active-bg-color;
             box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
             border-color: @tb-hover-brd-color;
+            outline:none;
         }
 
         &:disabled {
@@ -58,6 +62,9 @@
             background-color: transparent;
             border-color: transparent;
         }
+    }
+
+    .btn-tb:focus {
     }
 
     button > i.ico {
@@ -90,7 +97,7 @@
             padding: 0 3px;
             text-transform: lowercase;
             font-size: 100%;
-            white-space:nowrap;
+            white-space: nowrap;
         }
 
         .input-group > a {

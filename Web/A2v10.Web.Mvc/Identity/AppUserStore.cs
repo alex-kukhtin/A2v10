@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using Microsoft.AspNet.Identity;
@@ -357,6 +357,8 @@ namespace A2v10.Web.Mvc.Identity
              */
 			IList<Claim> list = new List<Claim>();
             list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
+            if (user.IsAdmin)
+                list.Add(new Claim("Admin", "Admin"));
             /*
 			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
 			list.Add(new Claim("AppKey", user.ComputedAppKey));

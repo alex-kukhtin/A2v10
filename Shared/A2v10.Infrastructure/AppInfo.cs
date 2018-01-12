@@ -12,12 +12,14 @@ namespace A2v10.Infrastructure
 		public String ProductName { get; private set; }
 		public String Version { get; private set; }
 		public String Copyright { get; private set; }
+        public String Build { get; private set; }
 
 		public AssemblyDescription(AssemblyName an, String productName, String copyright)
 		{
 			Name = an.Name;
 			ProductName = productName;
 			Version = String.Format("{0}.{1}.{2}", an.Version.Major, an.Version.Minor, an.Version.Build);
+            Build = an.Version.Build.ToString();
 			Copyright = copyright.Replace("(C)", "©").Replace("(c)", "©");
 		}
 	}

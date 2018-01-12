@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using System.Dynamic;
 using System.Text;
-using System.Net;
 using System.Collections.Generic;
 
 using System.IO;
@@ -105,6 +104,7 @@ namespace A2v10.Web.Mvc.Controllers
                 var prms = new Dictionary<String, String>();
                 prms.Add("$(RootUrl)", RootUrl);
                 prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
+                prms.Add("$(Build)", _baseController.Host.AppBuild);
                 _baseController.Layout(Response.Output, prms);
             }
             catch (Exception ex)
@@ -227,7 +227,10 @@ namespace A2v10.Web.Mvc.Controllers
             Response.ContentType = "application/javascript";
             try
             {
-                await _baseController.ShellScript(UserId, admin, Response.Output);
+                Boolean isUserAdmin = User.Identity.IsUserAdmin();
+                if (admin && !isUserAdmin)
+                    throw new AccessViolationException("The current user is not an administrator");
+                await _baseController.ShellScript(UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
             }
             catch (Exception ex)
             {

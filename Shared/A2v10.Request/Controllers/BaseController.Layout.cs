@@ -25,7 +25,7 @@ namespace A2v10.Request
             writer.Write(sb.ToString());
         }
 
-        public async Task ShellScript(Int64 userId, Boolean bAdmin, TextWriter writer)
+        public async Task ShellScript(Int64 userId, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
         {
             String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
@@ -40,6 +40,7 @@ namespace A2v10.Request
             StringBuilder sb = new StringBuilder(shell);
             sb.Replace("$(Menu)", jsonMenu);
             sb.Replace("$(AppVersion)", _host.AppVersion);
+            sb.Replace("$(Admin)", userAdmin ? "true" : "false");
             writer.Write(sb.ToString());
         }
 

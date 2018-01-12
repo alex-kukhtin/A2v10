@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -84,13 +84,16 @@ namespace A2v10.Web.Site.Controllers
 
                 AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(String.Empty, "a2ui.[AppTitle.Load]");
 
-                String html = ResourceHelper.LoginHtml;
+                StringBuilder html = new StringBuilder(ResourceHelper.LoginHtml);
+                html.Replace("$(Build)", _host.AppBuild);
                 StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
                 script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}' }}");
                 script.Replace("$(Token)", formToken);
+                html.Replace("$(LoginScript)", script.ToString());
 
                 Response.Cookies.Add(new HttpCookie(AntiForgeryConfig.CookieName, cookieToken));
-                Response.Write(html.Replace("$(LoginScript)", script.ToString()));
+
+                Response.Write(html.ToString());
             }
             catch (Exception ex)
             {
