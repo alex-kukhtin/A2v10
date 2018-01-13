@@ -70,6 +70,22 @@ i,
 .ico-flag:before {
   content: "\e935";
 }
+.ico-flag-blue:before {
+  content: "\e935";
+  color: #1ba1e2 !important;
+}
+.ico-flag-red:before {
+  content: "\e935";
+  color: #e41400 !important;
+}
+.ico-flag-yellow:before {
+  content: "\e935";
+  color: #ffcc00 !important;
+}
+.ico-flag-green:before {
+  content: "\e935";
+  color: #16cd16 !important;
+}
 .ico-approve:before {
   content: "\e936";
 }
@@ -202,11 +218,24 @@ i,
 .ico-package-outline:before {
   content: "\e95d";
 }
+.ico-devices:before {
+  content: "\e958";
+}
 .ico-ellipsis:before {
   content: "\e9b4";
 }
 .ico-ellipsis-vertical:before {
   content: "\e9b5";
+}
+.ico-failure:before {
+  content: "\ea04";
+}
+.ico-failure-outline:before {
+  content: "\ea05";
+}
+.ico-failure-red:before {
+  content: "\ea04";
+  color: #e41400 !important;
 }
 .ico-file:before {
   content: "\e9dd";
@@ -323,6 +352,9 @@ i,
 .ico-search:before {
   content: "\e986";
 }
+.ico-security:before {
+  content: "\e989";
+}
 .ico-server:before {
   content: "\e956";
 }
@@ -380,14 +412,25 @@ i,
 .ico-success:before {
   content: "\ea12";
 }
+.ico-success-green:before {
+  content: "\ea12";
+  color: #16cd16 !important;
+}
 .ico-success-outline:before {
   content: "\ea13";
 }
 .ico-waiting:before {
+  content: "\ea15";
+}
+.ico-waiting-outline:before {
   content: "\ea14";
 }
 .ico-warning:before {
   content: "\ea16";
+}
+.ico-warning-yellow:before {
+  content: "\ea16";
+  color: #ffcc00 !important;
 }
 .ico-confirm:before {
   content: "\ea16";
@@ -1098,7 +1141,7 @@ pre.a2-code {
   margin: 0;
   left: -1px;
   width: auto;
-  min-width: 120px;
+  min-width: 60px;
   font-size: 96%;
   bottom: 100%;
   padding: 2px 6px 4px 6px;
@@ -1138,7 +1181,7 @@ pre.a2-code {
   list-style-type: none;
   padding-left: 6px;
   white-space: normal;
-  max-width: 190px;
+  max-width: 100%;
 }
 .control-group .validator .error:before {
   content: '\2022';
@@ -1271,7 +1314,7 @@ pre.a2-code {
   z-index: 92;
 }
 .control-group:hover .input-group {
-  z-index: 94;
+  z-index: 98;
 }
 .control-group input,
 .control-group select,
@@ -1306,7 +1349,7 @@ pre.a2-code {
 }
 .control-group.invalid .input-group {
   border-color: #dca7a7 !important;
-  background-color: #fff8f8;
+  background-color: #fff8f8 !important;
   z-index: 96;
 }
 .control-group.invalid .input-group:after {
@@ -1529,7 +1572,7 @@ pre.a2-code {
   background-color: #f5f5f5;
   left: 0;
   top: 100%;
-  z-index: 1070;
+  z-index: 1070 !important;
   margin-top: 0;
   margin-left: -1px;
   box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
@@ -2569,6 +2612,9 @@ table.prop-grid td.prop-value {
 table.prop-grid td.prop-value .control-group {
   margin: 0;
 }
+table.prop-grid.striped > tbody > tr:nth-of-type(even) {
+  background-color: rgba(208, 208, 208, 0.15);
+}
 table.prop-grid.grid-both td.prop-name,
 table.prop-grid.grid-vertical td.prop-name {
   padding-left: 6px;
@@ -3411,6 +3457,16 @@ h5,
   background-color: #f2dede;
   border: 1px solid #dca7a7;
   color: #a94442;
+}
+.shell-admin > .header {
+  background-color: #a84e37;
+}
+.shell-admin > .header > a.nav-admin:hover,
+.shell-admin > .header .btn:hover {
+  background-color: #cb7660;
+}
+.shell-admin > .header .show > .btn:hover {
+  background-color: #eaf0ff;
 }
 .debug-panel {
   position: absolute;

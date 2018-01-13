@@ -15,6 +15,7 @@ namespace A2v10.Xaml
          */
         public Object ItemsSource { get; set; }
         public Boolean Compact { get; set; }
+        public Boolean Striped { get; set; }
 
         public PropertyGridItems Children { get; set; } = new PropertyGridItems();
         public GridLinesVisibility GridLines { get; set; }
@@ -25,6 +26,7 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(table);
             table.AddCssClassBool(Compact, "compact");
+            table.AddCssClassBool(Striped, "striped");
             MergeAttributes(table, context);
             if (GridLines != GridLinesVisibility.None)
                 table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");

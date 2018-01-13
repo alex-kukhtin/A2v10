@@ -12,7 +12,7 @@ table.prop-grid {
 
     td {
         border-color: @table-brd-color;
-        line-height:normal;
+        line-height: normal;
     }
 
     col.prop-name {
@@ -26,9 +26,14 @@ table.prop-grid {
 
     td.prop-value {
         padding: @v-pading 0 @v-pading @h-padding;
+
         .control-group {
-            margin:0;
+            margin: 0;
         }
+    }
+
+    &.striped > tbody > tr:nth-of-type(even) {
+        background-color: @alter-bg-color;
     }
 
     &.grid-both, &.grid-vertical {

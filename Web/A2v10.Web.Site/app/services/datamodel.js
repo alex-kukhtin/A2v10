@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170110-7088
+// 20170113-7089
 // services/datamodel.js
 
 (function () {
@@ -391,6 +391,7 @@
                     return; // disabled
                 let len = that.push(newElem);
                 let ne = that[len - 1]; // maybe newly created reactive element
+                if ('$RowCount' in that) that.$RowCount += 1;
                 let eventName = that._path_ + '[].add';
                 that._root_.$setDirty(true);
                 that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
@@ -410,7 +411,7 @@
                 let lastElem = null;
                 src.forEach(function (elem) {
                     lastElem = append(elem, false);
-                    ra.push(append(elem, false));
+                    ra.push(lastElem);
                 });
                 if (lastElem) {
                     // last added element
@@ -426,6 +427,7 @@
             if (this.$root.isReadOnly)
                 return;
             this.splice(0, this.length);
+            if ('$RowCount' in this) this.$RowCount = 0;
             return this;
         };
 
@@ -444,7 +446,9 @@
             let index = this.indexOf(item);
             if (index === -1)
                 return;
-            this.splice(index, 1); // EVENT
+            this.splice(index, 1);
+            if ('$RowCount' in this) this.$RowCount -= 1;
+            // EVENT
             let eventName = this._path_ + '[].remove';
             this._root_.$setDirty(true);
             this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);

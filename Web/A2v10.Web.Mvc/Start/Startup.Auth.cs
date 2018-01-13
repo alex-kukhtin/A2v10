@@ -1,10 +1,13 @@
-﻿using A2v10.Web.Mvc.Identity;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
+using Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Owin;
-using System;
+
+using A2v10.Web.Mvc.Identity;
 
 namespace A2v10.Web.Mvc.Start
 {

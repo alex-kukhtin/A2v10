@@ -29,7 +29,7 @@
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
-            <col v-if="isMarkCell"/>
+            <col v-if="isMarkCell" class="fit"/>
 			<col v-if="isGrouping" class="fit"/>
             <col v-if="isRowDetailsCell" class="fit" />
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>

@@ -932,7 +932,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170110-7088
+// 20170113-7089
 // services/datamodel.js
 
 (function () {
@@ -1323,6 +1323,7 @@ app.modules['std:validators'] = function() {
                     return; // disabled
                 let len = that.push(newElem);
                 let ne = that[len - 1]; // maybe newly created reactive element
+                if ('$RowCount' in that) that.$RowCount += 1;
                 let eventName = that._path_ + '[].add';
                 that._root_.$setDirty(true);
                 that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
@@ -1342,7 +1343,7 @@ app.modules['std:validators'] = function() {
                 let lastElem = null;
                 src.forEach(function (elem) {
                     lastElem = append(elem, false);
-                    ra.push(append(elem, false));
+                    ra.push(lastElem);
                 });
                 if (lastElem) {
                     // last added element
@@ -1358,6 +1359,7 @@ app.modules['std:validators'] = function() {
             if (this.$root.isReadOnly)
                 return;
             this.splice(0, this.length);
+            if ('$RowCount' in this) this.$RowCount = 0;
             return this;
         };
 
@@ -1376,7 +1378,9 @@ app.modules['std:validators'] = function() {
             let index = this.indexOf(item);
             if (index === -1)
                 return;
-            this.splice(index, 1); // EVENT
+            this.splice(index, 1);
+            if ('$RowCount' in this) this.$RowCount -= 1;
+            // EVENT
             let eventName = this._path_ + '[].remove';
             this._root_.$setDirty(true);
             this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
@@ -2562,7 +2566,7 @@ Vue.component('validator-control', {
     <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
     <table :class="cssClass">
         <colgroup>
-            <col v-if="isMarkCell"/>
+            <col v-if="isMarkCell" class="fit"/>
 			<col v-if="isGrouping" class="fit"/>
             <col v-if="isRowDetailsCell" class="fit" />
             <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
@@ -3261,7 +3265,7 @@ Vue.component('a2-pager', {
         count() {
             return this.source.sourceCount;
         }
-	},
+    },
     methods: {
         setOffset(offset) {
             if (this.offset === offset)
@@ -3286,7 +3290,7 @@ Vue.component('a2-pager', {
             $ev.preventDefault();
             this.setOffset((page - 1) * this.source.pageSize);
         }
-	},
+    },
     render(h, ctx) {
         let contProps = {
             class: 'a2-pager'
@@ -3407,12 +3411,13 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180111-7089*/
+/*20180113-7089*/
 // components/treeview.js
 
 (function () {
 
     const utils = require('std:utils');
+    const eventBus = require('std:eventBus');
 
     /*TODO:
         4. select first item
@@ -3423,7 +3428,7 @@ Vue.component('popover', {
 <li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
-        <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
+        <a class="toggle" v-if="isFolder" href @click.prevent="toggle"></a>
         <span v-else class="toggle"/>
         <i v-if="options.hasIcon" :class="iconClass"/>
         <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
@@ -3458,6 +3463,7 @@ Vue.component('popover', {
                 return !!this.options.folderSelect;
             },
             doClick(item) {
+                eventBus.$emit('closeAllPopups');
                 if (this.isFolder && !this.isFolderSelect(item))
                     this.toggle();
                 else {
@@ -3717,8 +3723,9 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				if (this.isServer)
+                if (this.isServer) {
                     return this.ItemsSource.$RowCount;
+                }
 				return this.ItemsSource.length;
 			},
 			thisPager() {

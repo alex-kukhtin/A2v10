@@ -120,6 +120,7 @@ namespace A2v10.Web.Site.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    await UpdateUser(model.Name, success:true);
                     status = "Success";
                     break;
                 case SignInStatus.LockedOut:
@@ -137,12 +138,17 @@ namespace A2v10.Web.Site.Controllers
             return Json(new { Status = status });
         }
 
-        async Task UpdateUser(String userName)
+        async Task UpdateUser(String userName, Boolean? success = null)
         {
             var user = await UserManager.FindByNameAsync(userName);
             if (user != null)
             {
                 // may be locked out
+                if (success.HasValue)
+                {
+                    user.LastLoginDate = DateTime.Now;
+                    user.LastLoginHost = $"{Request.UserHostName} [{Request.UserHostAddress}]";
+                }
                 await UserManager.UpdateUser(user);
             }
         }

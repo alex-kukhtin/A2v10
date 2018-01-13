@@ -115,8 +115,9 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				if (this.isServer)
+                if (this.isServer) {
                     return this.ItemsSource.$RowCount;
+                }
 				return this.ItemsSource.length;
 			},
 			thisPager() {

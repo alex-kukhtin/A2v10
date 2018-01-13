@@ -39,7 +39,7 @@ Vue.component('a2-pager', {
         count() {
             return this.source.sourceCount;
         }
-	},
+    },
     methods: {
         setOffset(offset) {
             if (this.offset === offset)
@@ -64,7 +64,7 @@ Vue.component('a2-pager', {
             $ev.preventDefault();
             this.setOffset((page - 1) * this.source.pageSize);
         }
-	},
+    },
     render(h, ctx) {
         let contProps = {
             class: 'a2-pager'

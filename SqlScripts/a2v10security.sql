@@ -1,10 +1,9 @@
-﻿/* 20171221-7051 */
-/*
+﻿/*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 12 jan 2017
-module version : 7051
+Last updated : 13 jan 2017
+module version : 7052
 */
 
 ------------------------------------------------
@@ -23,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7051);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7052);
 else
-	update a2sys.Versions set [Version] = 7051 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7052 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -53,13 +52,15 @@ begin
 		TwoFactorEnabled bit not null constraint DF_Users_TwoFactorEnabled default(0),
 		Email nvarchar(255)	null,
 		EmailConfirmed bit not null constraint DF_Users_EmailConfirmed default(0),
-		PhoneNumber nvarchar(255)	null,
+		PhoneNumber nvarchar(255) null,
 		PhoneNumberConfirmed bit not null constraint DF_Users_PhoneNumberConfirmed default(0),
 		LockoutEnabled	bit	not null constraint DF_Users_LockoutEnabled default(1),
 		LockoutEndDateUtc datetimeoffset null,
 		AccessFailedCount int not null constraint DF_Users_AccessFailedCount default(0),
 		[Locale] nvarchar(32) not null constraint DF_Users_Locale default('uk_UA'),
 		PersonName nvarchar(255) null,
+		LastLoginDate datetime null,
+		LastLoginHost nvarchar(255) null,
 		Memo nvarchar(255) null
 	);
 end
@@ -68,6 +69,13 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Void')
 begin
 	alter table a2security.Users add Void bit not null constraint DF_Users_Void default(0) with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'LastLoginDate')
+begin
+	alter table a2security.Users add LastLoginDate datetime null;
+	alter table a2security.Users add LastLoginHost nvarchar(255) null;
 end
 go
 ------------------------------------------------
@@ -204,7 +212,7 @@ create view a2security.ViewUsers
 as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
-		PersonName, Memo, Void, 
+		PersonName, Memo, Void, LastLoginDate, LastLoginHost,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -309,6 +317,24 @@ begin
 	update a2security.ViewUsers set 
 		AccessFailedCount = @AccessFailedCount, LockoutEndDateUtc = @LockoutEndDateUtc
 	where Id=@Id;
+	--TODO: log
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UpdateUserLogin')
+	drop procedure a2security.UpdateUserLogin
+go
+------------------------------------------------
+create procedure a2security.UpdateUserLogin
+@Id bigint,
+@LastLoginDate datetime,
+@LastLoginHost nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set LastLoginDate = @LastLoginDate, LastLoginHost = @LastLoginHost where Id=@Id;
 	--TODO: log
 end
 go

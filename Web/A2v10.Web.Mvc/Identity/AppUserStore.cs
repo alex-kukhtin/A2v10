@@ -140,6 +140,12 @@ namespace A2v10.Web.Mvc.Identity
                 await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserPassword]", user);
                 user.ClearModified(UserModifiedFlag.Password);
             }
+            else if (user.IsLastLoginModified)
+            {
+                await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserLogin]", user);
+                user.ClearModified(UserModifiedFlag.LastLogin);
+
+            }
         }
 
 		#endregion

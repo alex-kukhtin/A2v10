@@ -11,9 +11,10 @@ namespace A2v10.Web.Mvc.Identity
 	[Flags]
 	public enum UserModifiedFlag
 	{
-		Default  = 0,
-		Lockout  = 0x0001,
-        Password = 0x0002
+		Default   = 0,
+		Lockout   = 0x0001,
+        Password  = 0x0002,
+        LastLogin = 0x0004
 	}
 
 	public class AppUser : IUser<Int64>
@@ -37,11 +38,26 @@ namespace A2v10.Web.Mvc.Identity
 		public Boolean EmailConfirmed { get; set; }
 		public Boolean PhoneNumberConfirmed { get; set; }
 
-		UserModifiedFlag _modifiedFlag;
+        DateTime? _lastLoginDate;
+        String _lastLoginHost;
+        public DateTime? LastLoginDate
+        {
+            get { return _lastLoginDate; }
+            set { _lastLoginDate = value; SetModified(UserModifiedFlag.LastLogin); }
+        }
+
+        public String LastLoginHost
+        {
+            get { return _lastLoginHost; }
+            set { _lastLoginHost = value; SetModified(UserModifiedFlag.LastLogin); }
+        }
+
+
+        UserModifiedFlag _modifiedFlag;
 
 		public void SetModified(UserModifiedFlag flag)
 		{
-			_modifiedFlag |= flag; ;
+			_modifiedFlag |= flag;
 		}
 
 		public void ClearModified(UserModifiedFlag flag)
@@ -49,21 +65,9 @@ namespace A2v10.Web.Mvc.Identity
 			_modifiedFlag &= ~flag;
 		}
 
-		public Boolean IsLockoutModified
-		{
-			get
-			{
-				return _modifiedFlag.HasFlag(UserModifiedFlag.Lockout);
-			}
-		}
-
-        public Boolean IsPasswordModified
-        {
-            get
-            {
-                return _modifiedFlag.HasFlag(UserModifiedFlag.Password);
-            }
-        }
+		public Boolean IsLockoutModified => _modifiedFlag.HasFlag(UserModifiedFlag.Lockout);
+        public Boolean IsPasswordModified => _modifiedFlag.HasFlag(UserModifiedFlag.Password);
+        public Boolean IsLastLoginModified => _modifiedFlag.HasFlag(UserModifiedFlag.LastLogin);
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 		{

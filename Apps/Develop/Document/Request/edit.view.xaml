@@ -54,7 +54,7 @@
 					<Hyperlink Content="Ссылка в таблице" />
 				</TableRow>
 			</Table>
-			<PropertyGrid GridLines="Horizontal" Wrap="NoWrap">
+			<PropertyGrid GridLines="Horizontal" Wrap="NoWrap" Striped="True">
 				<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
 				<PropertyGridItem Name="Создан" Content="{Bind Document.DateCreated, DataType=DateTime}"/>
 				<PropertyGridItem Name="Изменен" Content="{Bind Document.DateModified, DataType=DateTime}"/>

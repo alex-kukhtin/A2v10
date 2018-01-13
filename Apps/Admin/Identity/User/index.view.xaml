@@ -40,23 +40,35 @@
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
             DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
 			Striped="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="User"/>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="{Bind $Icon}"/>
         <DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap"
                         Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
 		<DataGridColumn Header="Имя" Content="{Bind PersonName}"/>
         <DataGridColumn Header="е-mail/Телефон">
             <StackPanel Orientation="Vertical">
-                <Text If="{Bind Email}" Wrap="NoWrap">
+                <Text If="{Bind Email}" Wrap="NoWrap" Size="Small">
                     <SpanIcon Icon="MessageOutline"/>
                     <Span Content="{Bind Email}"/>
                 </Text>
-                <Text If="{Bind Phone}" Wrap="NoWrap">
+                <Text If="{Bind Phone}" Wrap="NoWrap" Size="Small">
                     <SpanIcon Icon="Eye"/>
                     <Span Content="{Bind Phone}"/>
                 </Text>
             </StackPanel>
         </DataGridColumn>
         <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+        <DataGridColumn Header="Вход">
+            <StackPanel Orientation="Vertical" If="{Bind LastLoginHost}">
+                <Text Wrap="NoWrap" Size="Small">
+                    <SpanIcon Icon="Calendar"/>
+                    <Span Content="{Bind LastLoginDate, DataType=DateTime}"/>
+                </Text>
+                <Text Wrap="NoWrap" Size="Small">
+                    <SpanIcon Icon="Devices"/>
+                    <Span Content="{Bind LastLoginHost}"/>
+                </Text>
+            </StackPanel>
+        </DataGridColumn>
         <DataGridColumn Fit="True" Wrap="NoWrap">
             <Group>
                 <Hyperlink Icon="Edit" Tip="Свойства пользователя" 

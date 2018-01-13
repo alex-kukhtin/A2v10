@@ -1,4 +1,6 @@
-﻿using A2v10.Data;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using A2v10.Data;
 using A2v10.Infrastructure;
 using A2v10.Messaging;
 using A2v10.Web.Mvc.Configuration;

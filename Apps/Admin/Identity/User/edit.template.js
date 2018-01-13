@@ -5,7 +5,8 @@ const template = {
     properties: {
     },
     events: {
-        "User.Groups[].adding": onAdding
+        "User.Groups[].adding": onAddingGroup,
+        "User.Roles[].adding": onAddingRole
     },
     validators: {
         "User.Name": [
@@ -21,9 +22,15 @@ const template = {
 
 module.exports = template;
 
-function onAdding(array, elem) {
+function onAddingGroup(array, elem) {
     if (array.find(item => item.Id === elem.Id))
         return false; // такая группа уже есть
+    return true;
+}
+
+function onAddingRole(array, elem) {
+    if (array.find(item => item.Id === elem.Id))
+        return false; // такая роль уже есть
     return true;
 }
 

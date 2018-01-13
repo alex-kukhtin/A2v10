@@ -3,6 +3,9 @@
 
 const template = {
     properties: {
+        "TUser.$Icon"() {
+            return this.IsAdmin ? "gear-outline" : null;
+        }
     },
     events: {
     },

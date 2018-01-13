@@ -29,7 +29,7 @@
         </Tab>
         <Tab Header="Пользователи" Padding="5, 10" Badge="{Bind Group.Users.Count}">
             <Toolbar Style="Transparent">
-                <Button Icon="Add" Content="Добавить" Command="{BindCmd Execute, CommandName=addUser, Argument={Bind Group.Users}}"/>
+                <Button Icon="Add" Content="Добавить" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Browse', Argument={Bind Group.Users}}"/>
                 <Button Icon="Delete" Content="Удалить" Command="{BindCmd Command=RemoveSelected, Argument={Bind Group.Users}, Confirm='Ви дійсно бажаєте видалити користувача з групи?'}"/>
                 <Text Size="Small"  Toolbar.Align="Right">всего пользователей:
                     <Span Bold="True" Content="{Bind Group.Users.Count}"/>

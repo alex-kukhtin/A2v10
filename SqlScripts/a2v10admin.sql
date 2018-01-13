@@ -1,10 +1,9 @@
-/* 20171223-7055 */
 /*
 ------------------------------------------------
-Copyright © 2008-2017 Alex Kukhtin
+Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 23 dec 2017 15:00
-module version : 7055
+Last updated : 13 jan 2018 15:00
+module version : 7056
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7055);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7056);
 else
-	update a2sys.Versions set [Version] = 7055 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7056 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -108,9 +107,10 @@ begin
 		set @Fragment = N'%' + upper(@Fragment) + N'%';
 
 	-- list of users
-	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, [!!RowNumber])
+	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, IsAdmin, LastLoginDate, LastLoginHost, [!!RowNumber])
 	as(
-		select u.Id, u.UserName, u.PhoneNumber, u.Email, u.PersonName, Memo,
+		select u.Id, u.UserName, u.PhoneNumber, u.Email, u.PersonName, Memo, IsAdmin,
+			LastLoginDate, LastLoginHost,
 			[!!RowNumber] = row_number() over (
 			 order by
 				case when @Order=N'Id' and @Dir = @Asc then u.Id end asc,
@@ -168,7 +168,7 @@ begin
 		inner join a2security.Groups g on ug.GroupId = g.Id
 	where ug.UserId = @Id and g.Void = 0;
 
-	select [!TRole!Array] = null, [Id!!Id] = r.Id, [Name!!Name] = r.Name, [Memo] = r.Memo,
+	select [!TRole!Array] = null, [Id!!Id] = r.Id, [Name!!Name] = r.[Name], r.[Key], [Memo] = r.Memo, 
 		[!TUser.Roles!ParentId] = ur.UserId
 	from a2security.UserRoles ur
 		inner join a2security.Roles r on ur.RoleId = r.Id
@@ -613,7 +613,7 @@ begin
 
 	/* users in role */
 	select [!TUserOrGroup!Array] = null, [Id!!Id] = ur.Id, [!TRole.UsersGroups!ParentId] = ur.RoleId,
-		[UserId] = ur.UserId, [UserName] = u.UserName,
+		[UserId] = ur.UserId, [UserName] = u.UserName, u.PersonName,
 		GroupId = ur.GroupId, GroupName= g.[Name]		
 	from a2security.UserRoles ur
 		left join a2security.ViewUsers u on ur.UserId = u.Id
@@ -795,6 +795,16 @@ begin
 		insert(Id, Parent, [Name], [Url], Icon, [Order]) values (id, p0, [name], [url], icon, [order])
 	when not matched by source and target.Id >= 900 and target.Id < 1000 then 
 		delete;
+end
+go
+------------------------------------------------
+if not exists(select * from a2security.Users where Id <> 0)
+begin
+	set nocount on;
+	insert into a2security.Users(Id, UserName, SecurityStamp, PasswordHash, PersonName)
+	values (99, N'Admin', N'c9bb451a-9d2b-4b26-9499-2d7d408ce54e', N'AJcfzvC7DCiRrfPmbVoigR7J8fHoK/xdtcWwahHDYJfKSKSWwX5pu9ChtxmE7Rs4Vg==',
+		N'Администратор системы');
+	insert into a2security.UserGroups(UserId, GroupId) values (99, 77), (99, 1); /*predefined values*/
 end
 go
 ------------------------------------------------
