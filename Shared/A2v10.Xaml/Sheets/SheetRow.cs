@@ -1,8 +1,11 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Markup;
+
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
@@ -45,8 +48,36 @@ namespace A2v10.Xaml
         }
     }
 
+    [TypeConverter(typeof(SheetRowsConverter))]
     public class SheetRows : List<SheetRow>
     {
+    }
 
+    public class SheetRowsConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(String))
+                return true;
+            return false;
+        }
+
+        public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
+        {
+            if (value == null)
+                return null;
+            if (value is String)
+            {
+                SheetRows rows = new SheetRows();
+                SheetRow row = new SheetRow();
+                rows.Add(row);
+                foreach (var s in value.ToString().Split(','))
+                {
+                    row.Cells.Add(new SheetCell() { Content = s.Trim() });
+                }
+                return rows;
+            }
+            throw new XamlException($"Invalid SheetRows value '{value}'");
+        }
     }
 }

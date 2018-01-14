@@ -1,17 +1,18 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20180114-7091*/
 /*components/textbox.js*/
 
 (function () {
 
-    const utlis = require('std:utils');
+    const utils = require('std:utils');
 
     let textBoxTemplate =
 `<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input :type="controlType" v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<input ref="input" :type="controlType" v-focus 
+            v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -69,6 +70,15 @@
         computed: {
             controlType() {
                 return this.password ? "password" : "text";
+            }
+        },
+        methods: {
+            updateValue(value) {
+                this.item[this.prop] = utils.parse(value, this.dataType);
+                if (this.$refs.input.value != this.modelValue) {
+                    this.$refs.input.value = this.modelValue;
+                    this.$emit('change', this.item[this.prop]);
+                }
             }
         }
     });

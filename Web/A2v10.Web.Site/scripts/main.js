@@ -56,7 +56,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180114-7091
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -94,13 +94,15 @@ app.modules['std:utils'] = function () {
 		eval: eval,
         format: format,
         toNumber: toNumber,
+        parse: parse,
         getStringId: getStringId,
 		date: {
 			today: dateToday,
 			zero: dateZero,
 			parse: dateParse,
 			equal: dateEqual,
-			isZero: dateIsZero
+            isZero: dateIsZero,
+            formatDate: formatDate
         },
         text: {
             contains: textContains,
@@ -199,6 +201,17 @@ app.modules['std:utils'] = function () {
         if (num < 10)
             return '0' + num;
         return '' + num;
+    }
+
+    function parse(obj, dataType) {
+        switch (dataType) {
+            case 'Currency':
+            case 'Number':
+                return toNumber(obj);
+            case 'Date':
+                return dateParse(obj);
+        }
+        return obj;
     }
 
 	function format(obj, dataType, hideZeros) {
@@ -932,7 +945,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170113-7089
+// 20170114-7091
 // services/datamodel.js
 
 (function () {
@@ -1542,55 +1555,79 @@ app.modules['std:validators'] = function() {
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
-    function canExecuteCommand(cmd, ...args) {
-        let tml = this.$template;
-        if (tml && tml.commands) {
-            let cmdf = tml.commands[cmd];
-            if (!cmdf)
+    function canExecuteCommand(cmd, arg, opts) {
+        const tml = this.$template;
+        if (!tml) return false;
+        if (!tml.commands) return false;
+        const cmdf = tml.commands[cmd];
+        if (!cmdf) return false;
+
+        const optsCheckValid = opts && opts.validRequired === true;
+        const optsCheckRO = opts && opts.checkReadOnly === true;
+
+        if (cmdf.checkReadOnly === true || optsCheckRO) {
+            if (this.$root.$readOnly)
                 return false;
-            if (cmdf.checkReadOnly === true) {
-                if (this.$root.$readOnly)
-                    return false;
-            }
-            if (utils.isFunction(cmdf.canExec)) {
-                return cmdf.canExec.apply(this, args);
-            } else if (utils.isBoolean(cmdf.canExec)) {
-                return cmdf.canExec; // for debugging purposes
-            } else if (utils.isDefined(cmdf.canExec)) {
-                console.error(`${cmd}.canExec should be a function`);
-                return false;
-            }
-            return true;
         }
-        return false;
+        if (cmdf.validRequired === true || optsCheckValid) {
+            if (!this.$root.$valid)
+                return false;
+        }
+        if (utils.isFunction(cmdf.canExec)) {
+            return cmdf.canExec.call(this, arg);
+        } else if (utils.isBoolean(cmdf.canExec)) {
+            return cmdf.canExec; // for debugging purposes
+        } else if (utils.isDefined(cmdf.canExec)) {
+            console.error(`${cmd}.canExec should be a function`);
+            return false;
+        }
+        return true;
     }
 
-	function executeCommand(cmd, ...args) {
+	function executeCommand(cmd, arg, confirm, opts) {
 		try {
-			this._root_._enableValidate_ = false;
-			let tml = this.$template;
-			if (tml && tml.commands) {
-				let cmdf = tml.commands[cmd];
-				if (typeof cmdf === 'function') {
-					cmdf.apply(this, args);
-                    return;
-                } else if (utils.isObjectExact(cmdf)) {
-                    if (utils.isFunction(cmdf.canExec))
-                        if (!cmdf.canExec.apply(this, args))
-                            return;
-                    if (cmdf.saveRequired)
-                        alert('to implement: exec.saveRequired');
-                    if (cmdf.confirm) {
-                        let vm = this.$vm;
-                        vm.$confirm(cmdf.confirm)
-                            .then(() => cmdf.exec.apply(this, args));
-                    } else {
-                        cmdf.exec.apply(this, args);
-                    }
-                    return;
+            this._root_._enableValidate_ = false;
+            let vm = this.$vm;
+            const tml = this.$template;
+            if (!tml) return;
+            if (!tml.commands) return;
+            let cmdf = tml.commands[cmd];
+            if (!cmdf) {
+                console.error(`Command "${cmd}" not found`);
+                return;
+            }
+            const optConfirm = cmdf.confirm || confirm;
+            const optSaveRequired = cmdf.saveRequired || (opts && opts.saveRequired);
+            const optValidRequired = cmdf.validRequired || (opts && opts.validRequired);
+
+            if (optValidRequired && !vm.$data.$valid) return; // not valid
+
+            if (utils.isFunction(cmdf.canExec)) {
+                if (!cmdf.canExec.call(this, arg)) return;
+            }        
+
+            const doExec = function () {
+                const realExec = function () {
+                    if (utils.isFunction(cmdf))
+                        cmdf.call(this, arg);
+                    else if (utils.isFunction(cmdf.exec))
+                        cmdf.exec.call(this, arg);
+                    else
+                        console.error($`There is no method 'exec' in command '${cmd}'`);
                 }
-			}
-			console.error(`command "${cmd}" not found`);
+                if (optConfirm) {
+                    vm.$confirm(optConfirm).then(realExec);
+                } else {
+                    realExec();
+                }
+            }
+
+            if (optSaveRequired && vm.$isDirty)
+                vm.$save().then(doExec);
+            else
+                doExec();
+
+
 		} finally {
 			this._root_._enableValidate_ = true;
             this._root_._needValidate_ = true;
@@ -2045,14 +2082,16 @@ app.modules['std:popup'] = function () {
         }
     });
 })();
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20180114-7068
 // components/control.js
 
 (function () {
 
-	const control = {
+    const utils = require('std:utils');
+
+    const control = {
 		props: {
 			label: String,
 			required: Boolean,
@@ -2070,6 +2109,12 @@ app.modules['std:popup'] = function () {
             pathToValidate() {
                 return this.itemToValidate._path_ + '.' + this.propToValidate;
             },
+            modelValue() {
+                let val = this.item[this.prop];
+                if (this.dataType)
+                    return utils.format(val, this.dataType);
+                return val;
+            },
             errors() {
                 if (!this.item) return null;
 				let root = this.item._root_;
@@ -2080,7 +2125,7 @@ app.modules['std:popup'] = function () {
                 if (this.itemToValidate)
                     err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
                 else
-                    err = root._validate_(this.item, this.path, this.item[this.prop], this.deferUpdate);
+                    err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
                 return err;
             },
             inputClass() {
@@ -2092,7 +2137,7 @@ app.modules['std:popup'] = function () {
             },
             isNegative() {
                 if (this.dataType === 'Number' || this.dataType === 'Currency')
-                    if (this.item && this.item[this.prop] < 0)
+                    if (this.item && this.modelValue < 0)
                         return true;
                 return false;
             },
@@ -2199,18 +2244,19 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20180114-7091*/
 /*components/textbox.js*/
 
 (function () {
 
-    const utlis = require('std:utils');
+    const utils = require('std:utils');
 
     let textBoxTemplate =
 `<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input :type="controlType" v-focus v-model.lazy="item[prop]" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<input ref="input" :type="controlType" v-focus 
+            v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -2268,6 +2314,15 @@ Vue.component('validator-control', {
         computed: {
             controlType() {
                 return this.password ? "password" : "text";
+            }
+        },
+        methods: {
+            updateValue(value) {
+                this.item[this.prop] = utils.parse(value, this.dataType);
+                if (this.$refs.input.value != this.modelValue) {
+                    this.$refs.input.value = this.modelValue;
+                    this.$emit('change', this.item[this.prop]);
+                }
             }
         }
     });
@@ -2537,7 +2592,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180112-7089
+// 20180114-7091
 // components/datagrid.js*/
 
 (function () {
@@ -2813,8 +2868,18 @@ Vue.component('validator-control', {
                 let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
-					/*prevent*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType, col.hideZeros)"></a>',
+					/*@click.prevent, no stop*/
+                    template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.hideZeros)"></span></a>',
+                    computed: {
+                        hasIcon() { return col.icon || col.bindIcon; },
+                        iconClass() {
+                            if (col.bindIcon)
+                                return 'ico-' + utils.eval(row, col.bindIcon);
+                            else if (col.icon)
+                                return 'ico-' + col.icon;
+                            return null;
+                        } 
+                    },
 					methods: {
                         doCommand(ev) {
                             if (ev) {
@@ -4186,7 +4251,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180109-7087
+// 20180114-7091
 // components/modal.js
 
 
@@ -4277,7 +4342,7 @@ TODO:
             buttons: function () {
                 //console.warn(this.dialog.style);
                 let okText = this.dialog.okText || 'OK';
-                let cancelText = this.dialog.cancelText || 'Cancel';
+                let cancelText = this.dialog.cancelText || 'Отмена';
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
                 else if (this.dialog.style === 'alert')
@@ -4751,14 +4816,27 @@ Vue.directive('dropdown', {
 });
 
 
-/*20171029-7060*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180114-7091*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
 	bind(el, binding, vnode) {
 
+        function doSelect(event) {
+            let t = event.target;
+            if (t._selectDone)
+                return;
+            t._selectDone = true;
+            if (t.select) t.select();
+        }
+
 		el.addEventListener("focus", function (event) {
-			event.target.parentElement.classList.add('focus');
+            event.target.parentElement.classList.add('focus');
+            setTimeout(() => {
+                doSelect(event);
+            }, 0);
 		}, false);
 
 		el.addEventListener("blur", function (event) {
@@ -4767,12 +4845,8 @@ Vue.directive('focus', {
 			event.target.parentElement.classList.remove('focus');
 		}, false);
 
-		el.addEventListener("click", function (event) {
-			let t = event.target;
-			if (t._selectDone)
-				return;
-			t._selectDone = true;
-			if (t.select) t.select();
+        el.addEventListener("click", function (event) {
+            doSelect(event);
         }, false);
     },
     inserted(el) {
@@ -4956,7 +5030,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7088
+// 20180114-7091
 // controllers/base.js
 
 (function () {
@@ -5043,11 +5117,14 @@ Vue.directive('resize', {
             },
             $exec(cmd, arg, confirm, opts) {
                 if (this.$isReadOnly(opts)) return;
-
+                const root = this.$data;
+                root._exec_(cmd, arg, confirm, opts);
+                return;
+                /*
                 const doExec = () => {
                     let root = this.$data;
                     if (!confirm)
-                        root._exec_(cmd, arg);
+                        root._exec_(cmd, arg, confirm, opts);
                     else
                         this.$confirm(confirm).then(() => root._exec_(cmd, arg));
                 }
@@ -5057,6 +5134,7 @@ Vue.directive('resize', {
                 } else {
                     doExec();
                 }
+                */
             },
 
             $isReadOnly(opts) {
@@ -5078,7 +5156,7 @@ Vue.directive('resize', {
                 if (this.$isReadOnly(opts))
                     return false;
                 let root = this.$data;
-                return root._canExec_(cmd, arg);
+                return root._canExec_(cmd, arg, opts);
             },
 			$save() {
                 if (this.$data.$readOnly)
@@ -5325,8 +5403,8 @@ Vue.directive('resize', {
 					alert(msg.message);
 					return;
 				}
-				if (msg.indexOf('UI:') === 0)
-					this.$alert(msg.substring(3));
+                if (msg.indexOf('UI:') === 0)
+                    this.$alert(msg.substring(3).replace('\\n', '\n'));
 
 				else
 					alert(msg);
@@ -5375,6 +5453,12 @@ Vue.directive('resize', {
                             break;
                     }
                 }
+
+                if (opts && opts.validRequired && root.$invalid) {
+                    this.$alert('Сначала исправьте ошибки');
+                    return;
+                }
+
                 if (opts && opts.saveRequired && this.$isDirty) {
                     let dlgResult = null;
                     this.$save().then(() => { dlgResult = doDialog() });
@@ -6027,6 +6111,16 @@ Vue.directive('resize', {
             },
             changePassword() {
                 alert('change password');
+                const dlgData = {
+                    promise: null, data: { Id: -1 }
+                };
+                eventBus.$emit('modal', '/app/changePassword', dlgData);
+                dlgData.promise.then(function (result) {
+                    if (result === false)
+                        return;
+                    //alert(result);
+                    //console.dir(result);
+                });
             }
 		},
 		created() {

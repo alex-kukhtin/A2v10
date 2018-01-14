@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 
         public DropDownDirection Direction { get; set; }
 
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var menu = new TagBuilder("div", "dropdown-menu menu");
@@ -25,7 +26,7 @@ namespace A2v10.Xaml
             MergeAttributes(menu, context);
             if (Direction != DropDownDirection.DownLeft)
                 menu.AddCssClass(Direction.ToString().ToKebabCase());
-            menu.RenderStart(context); 
+            menu.RenderStart(context);
             RenderChildren(context);
             menu.RenderEnd(context);
         }

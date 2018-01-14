@@ -1,11 +1,24 @@
-﻿/*20171029-7060*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180114-7091*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
 	bind(el, binding, vnode) {
 
+        function doSelect(event) {
+            let t = event.target;
+            if (t._selectDone)
+                return;
+            t._selectDone = true;
+            if (t.select) t.select();
+        }
+
 		el.addEventListener("focus", function (event) {
-			event.target.parentElement.classList.add('focus');
+            event.target.parentElement.classList.add('focus');
+            setTimeout(() => {
+                doSelect(event);
+            }, 0);
 		}, false);
 
 		el.addEventListener("blur", function (event) {
@@ -14,12 +27,8 @@ Vue.directive('focus', {
 			event.target.parentElement.classList.remove('focus');
 		}, false);
 
-		el.addEventListener("click", function (event) {
-			let t = event.target;
-			if (t._selectDone)
-				return;
-			t._selectDone = true;
-			if (t.select) t.select();
+        el.addEventListener("click", function (event) {
+            doSelect(event);
         }, false);
     },
     inserted(el) {

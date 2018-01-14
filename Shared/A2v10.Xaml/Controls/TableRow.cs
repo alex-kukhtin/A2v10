@@ -87,9 +87,30 @@ namespace A2v10.Xaml
                 TableRowCollection trc = new TableRowCollection();
                 TableRow row = new TableRow();
                 trc.Add(row);
-                foreach (var s in value.ToString().Split(','))
+                foreach (var st in value.ToString().Split(','))
                 {
-                    row.Cells.Add(new TableCell() { Content = s.Trim() });
+                    var s = st.Trim();
+                    var cell = new TableCell();
+                    if (s.EndsWith(":R"))
+                    {
+                        cell.Content = s.Substring(0, s.Length - 2);
+                        cell.Align = TextAlign.Right;
+                    }
+                    else if (s.EndsWith(":C"))
+                    {
+                        cell.Content = s.Substring(0, s.Length - 2);
+                        cell.Align = TextAlign.Center;
+                    }
+                    else if (s.EndsWith(":L"))
+                    {
+                        cell.Content = s.Substring(0, s.Length - 2);
+                        cell.Align = TextAlign.Left;
+                    }
+                    else
+                    {
+                        cell.Content = s;
+                    }
+                    row.Cells.Add(cell);
                 }
                 return trc;
             }

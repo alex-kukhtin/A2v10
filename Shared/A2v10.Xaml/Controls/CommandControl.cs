@@ -12,5 +12,11 @@ namespace A2v10.Xaml
             base.MergeAttributes(tag, context, mode);
             MergeCommandAttribute(tag, context);
         }
+
+        internal void MergeAttributesBase(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+        {
+            // without commands
+            base.MergeAttributes(tag, context, mode);
+        }
     }
 }

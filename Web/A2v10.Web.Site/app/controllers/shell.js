@@ -410,6 +410,16 @@
             },
             changePassword() {
                 alert('change password');
+                const dlgData = {
+                    promise: null, data: { Id: -1 }
+                };
+                eventBus.$emit('modal', '/app/changePassword', dlgData);
+                dlgData.promise.then(function (result) {
+                    if (result === false)
+                        return;
+                    //alert(result);
+                    //console.dir(result);
+                });
             }
 		},
 		created() {

@@ -10,11 +10,34 @@ namespace A2v10.Xaml
     {
         public UIElementCollection Children { get; set; } = new UIElementCollection();
 
+        public Object ItemsSource { get; set; }
+
         internal virtual void RenderChildren(RenderContext context)
         {
-            foreach (var c in Children)
+            var isBind = GetBinding(nameof(ItemsSource));
+            if (isBind != null)
             {
-                c.RenderElement(context);
+                var tml = new TagBuilder("template");
+                tml.MergeAttribute("v-for", $"(xelem, xIndex) in {isBind.GetPath(context)}");
+                tml.RenderStart(context);
+                using (new ScopeContext(context, "xelem"))
+                {
+                    foreach (var c in Children)
+                    {
+                        c.RenderElement(context, (tag) =>
+                        {
+                            tag.MergeAttribute(":key", "xIndex");
+                        });
+                    }
+                }
+                tml.RenderEnd(context);
+            }
+            else
+            {
+                foreach (var c in Children)
+                {
+                    c.RenderElement(context);
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180112-7089
+// 20180114-7091
 // components/datagrid.js*/
 
 (function () {
@@ -276,8 +276,18 @@
                 let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
-					/*prevent*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()" v-text="eval(row, col.content, col.dataType, col.hideZeros)"></a>',
+					/*@click.prevent, no stop*/
+                    template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.hideZeros)"></span></a>',
+                    computed: {
+                        hasIcon() { return col.icon || col.bindIcon; },
+                        iconClass() {
+                            if (col.bindIcon)
+                                return 'ico-' + utils.eval(row, col.bindIcon);
+                            else if (col.icon)
+                                return 'ico-' + col.icon;
+                            return null;
+                        } 
+                    },
 					methods: {
                         doCommand(ev) {
                             if (ev) {

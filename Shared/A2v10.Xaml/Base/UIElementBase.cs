@@ -35,7 +35,9 @@ namespace A2v10.Xaml
             Margin = 0x02,
             Wrap = 0x04,
             Tip = 0x08,
-            All = Visibility | Margin | Wrap | Tip
+            Content = 0x10,
+            All = Visibility | Margin | Wrap | Tip | Content,
+            NoContent = Visibility | Margin |Wrap | Tip
         }
 
         internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
@@ -81,9 +83,14 @@ namespace A2v10.Xaml
 
         internal void RenderIcon(RenderContext context, Icon icon, String addClass = null)
         {
-            if (icon == Icon.NoIcon)
+            var iconBind = GetBinding("Icon");
+            if (icon == Icon.NoIcon && iconBind == null)
                 return;
-            var iTag = new TagBuilder("i", "ico ico-" + icon.ToString().ToKebabCase());
+            var iTag = new TagBuilder("i", "ico");
+            if (iconBind != null)
+                iTag.MergeAttribute(":class", $"'ico-' + {iconBind.GetPath(context)}");
+            else if (icon != Icon.NoIcon)
+                iTag.AddCssClass("ico-" + icon.ToString().ToKebabCase());
             iTag.AddCssClass(addClass);
             iTag.Render(context);
             context.RenderSpace(); // after icon - always

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180109-7087
+// 20180114-7091
 // components/modal.js
 
 
@@ -91,7 +91,7 @@ TODO:
             buttons: function () {
                 //console.warn(this.dialog.style);
                 let okText = this.dialog.okText || 'OK';
-                let cancelText = this.dialog.cancelText || 'Cancel';
+                let cancelText = this.dialog.cancelText || 'Отмена';
                 if (this.dialog.buttons)
                     return this.dialog.buttons;
                 else if (this.dialog.style === 'alert')

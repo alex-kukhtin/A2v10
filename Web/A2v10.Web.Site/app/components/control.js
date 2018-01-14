@@ -1,11 +1,13 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171105-7067
+// 20180114-7068
 // components/control.js
 
 (function () {
 
-	const control = {
+    const utils = require('std:utils');
+
+    const control = {
 		props: {
 			label: String,
 			required: Boolean,
@@ -23,6 +25,12 @@
             pathToValidate() {
                 return this.itemToValidate._path_ + '.' + this.propToValidate;
             },
+            modelValue() {
+                let val = this.item[this.prop];
+                if (this.dataType)
+                    return utils.format(val, this.dataType);
+                return val;
+            },
             errors() {
                 if (!this.item) return null;
 				let root = this.item._root_;
@@ -33,7 +41,7 @@
                 if (this.itemToValidate)
                     err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
                 else
-                    err = root._validate_(this.item, this.path, this.item[this.prop], this.deferUpdate);
+                    err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
                 return err;
             },
             inputClass() {
@@ -45,7 +53,7 @@
             },
             isNegative() {
                 if (this.dataType === 'Number' || this.dataType === 'Currency')
-                    if (this.item && this.item[this.prop] < 0)
+                    if (this.item && this.modelValue < 0)
                         return true;
                 return false;
             },

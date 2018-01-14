@@ -36,6 +36,30 @@ namespace A2v10.Request
         public IApplicationHost Host => _host;
         public Boolean Admin { get; set; }
 
+        public async Task RenderApplicationKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
+        {
+            var segs = pathInfo.Split('/');
+            if (segs.Length < 2)
+                throw new RequestModelException($"Invalid application Url: {pathInfo}");
+            if (segs[0] != "app")
+                throw new RequestModelException($"Invalid application Url: {pathInfo}");
+            switch (segs[1]) 
+            {
+                case "about":
+                    if (kind != RequestUrlKind.Page)
+                        throw new RequestModelException($"Invalid application Url: {pathInfo}");
+                    await RenderAbout(writer);
+                    break;
+                case "changepassword":
+                    if (kind != RequestUrlKind.Dialog)
+                        throw new RequestModelException($"Invalid application Url: {pathInfo}");
+                    await RenderChangePassword(writer);
+                    break;
+                default:
+                    throw new RequestModelException($"Invalid application Url: {pathInfo}");
+            }
+        }
+
         public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
         {
             RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, kind, pathInfo);

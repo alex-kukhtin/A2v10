@@ -41,6 +41,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BaseController.App.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BaseController.Data.cs" />
     <Compile Include="Controllers\BaseController.Image.cs" />
@@ -64,7 +65,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\about.html" />
     <Content Include="Pages\login.html" />
+    <Content Include="Pages\aboutScript.js" />
     <Content Include="Pages\loginScript.js" />
     <Content Include="Pages\stiReportViewer.html" />
     <Content Include="Pages\layoutAdmin.html" />

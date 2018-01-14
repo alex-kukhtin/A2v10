@@ -40,7 +40,7 @@
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
             DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
 			Striped="True" Sort="True" GridLines="Vertical">
-		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="{Bind $Icon}"/>
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="{Bind $Icon}" Wrap="NoWrap"/>
         <DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap"
                         Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
 		<DataGridColumn Header="Имя" Content="{Bind PersonName}"/>

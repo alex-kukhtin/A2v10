@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7088
+// 20180114-7091
 // controllers/base.js
 
 (function () {
@@ -87,11 +87,14 @@
             },
             $exec(cmd, arg, confirm, opts) {
                 if (this.$isReadOnly(opts)) return;
-
+                const root = this.$data;
+                root._exec_(cmd, arg, confirm, opts);
+                return;
+                /*
                 const doExec = () => {
                     let root = this.$data;
                     if (!confirm)
-                        root._exec_(cmd, arg);
+                        root._exec_(cmd, arg, confirm, opts);
                     else
                         this.$confirm(confirm).then(() => root._exec_(cmd, arg));
                 }
@@ -101,6 +104,7 @@
                 } else {
                     doExec();
                 }
+                */
             },
 
             $isReadOnly(opts) {
@@ -122,7 +126,7 @@
                 if (this.$isReadOnly(opts))
                     return false;
                 let root = this.$data;
-                return root._canExec_(cmd, arg);
+                return root._canExec_(cmd, arg, opts);
             },
 			$save() {
                 if (this.$data.$readOnly)
@@ -369,8 +373,8 @@
 					alert(msg.message);
 					return;
 				}
-				if (msg.indexOf('UI:') === 0)
-					this.$alert(msg.substring(3));
+                if (msg.indexOf('UI:') === 0)
+                    this.$alert(msg.substring(3).replace('\\n', '\n'));
 
 				else
 					alert(msg);
@@ -419,6 +423,12 @@
                             break;
                     }
                 }
+
+                if (opts && opts.validRequired && root.$invalid) {
+                    this.$alert('Сначала исправьте ошибки');
+                    return;
+                }
+
                 if (opts && opts.saveRequired && this.$isDirty) {
                     let dlgResult = null;
                     this.$save().then(() => { dlgResult = doDialog() });

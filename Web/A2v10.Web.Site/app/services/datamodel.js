@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170113-7089
+// 20170114-7091
 // services/datamodel.js
 
 (function () {
@@ -610,55 +610,79 @@
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
-    function canExecuteCommand(cmd, ...args) {
-        let tml = this.$template;
-        if (tml && tml.commands) {
-            let cmdf = tml.commands[cmd];
-            if (!cmdf)
+    function canExecuteCommand(cmd, arg, opts) {
+        const tml = this.$template;
+        if (!tml) return false;
+        if (!tml.commands) return false;
+        const cmdf = tml.commands[cmd];
+        if (!cmdf) return false;
+
+        const optsCheckValid = opts && opts.validRequired === true;
+        const optsCheckRO = opts && opts.checkReadOnly === true;
+
+        if (cmdf.checkReadOnly === true || optsCheckRO) {
+            if (this.$root.$readOnly)
                 return false;
-            if (cmdf.checkReadOnly === true) {
-                if (this.$root.$readOnly)
-                    return false;
-            }
-            if (utils.isFunction(cmdf.canExec)) {
-                return cmdf.canExec.apply(this, args);
-            } else if (utils.isBoolean(cmdf.canExec)) {
-                return cmdf.canExec; // for debugging purposes
-            } else if (utils.isDefined(cmdf.canExec)) {
-                console.error(`${cmd}.canExec should be a function`);
-                return false;
-            }
-            return true;
         }
-        return false;
+        if (cmdf.validRequired === true || optsCheckValid) {
+            if (!this.$root.$valid)
+                return false;
+        }
+        if (utils.isFunction(cmdf.canExec)) {
+            return cmdf.canExec.call(this, arg);
+        } else if (utils.isBoolean(cmdf.canExec)) {
+            return cmdf.canExec; // for debugging purposes
+        } else if (utils.isDefined(cmdf.canExec)) {
+            console.error(`${cmd}.canExec should be a function`);
+            return false;
+        }
+        return true;
     }
 
-	function executeCommand(cmd, ...args) {
+	function executeCommand(cmd, arg, confirm, opts) {
 		try {
-			this._root_._enableValidate_ = false;
-			let tml = this.$template;
-			if (tml && tml.commands) {
-				let cmdf = tml.commands[cmd];
-				if (typeof cmdf === 'function') {
-					cmdf.apply(this, args);
-                    return;
-                } else if (utils.isObjectExact(cmdf)) {
-                    if (utils.isFunction(cmdf.canExec))
-                        if (!cmdf.canExec.apply(this, args))
-                            return;
-                    if (cmdf.saveRequired)
-                        alert('to implement: exec.saveRequired');
-                    if (cmdf.confirm) {
-                        let vm = this.$vm;
-                        vm.$confirm(cmdf.confirm)
-                            .then(() => cmdf.exec.apply(this, args));
-                    } else {
-                        cmdf.exec.apply(this, args);
-                    }
-                    return;
+            this._root_._enableValidate_ = false;
+            let vm = this.$vm;
+            const tml = this.$template;
+            if (!tml) return;
+            if (!tml.commands) return;
+            let cmdf = tml.commands[cmd];
+            if (!cmdf) {
+                console.error(`Command "${cmd}" not found`);
+                return;
+            }
+            const optConfirm = cmdf.confirm || confirm;
+            const optSaveRequired = cmdf.saveRequired || (opts && opts.saveRequired);
+            const optValidRequired = cmdf.validRequired || (opts && opts.validRequired);
+
+            if (optValidRequired && !vm.$data.$valid) return; // not valid
+
+            if (utils.isFunction(cmdf.canExec)) {
+                if (!cmdf.canExec.call(this, arg)) return;
+            }        
+
+            const doExec = function () {
+                const realExec = function () {
+                    if (utils.isFunction(cmdf))
+                        cmdf.call(this, arg);
+                    else if (utils.isFunction(cmdf.exec))
+                        cmdf.exec.call(this, arg);
+                    else
+                        console.error($`There is no method 'exec' in command '${cmd}'`);
                 }
-			}
-			console.error(`command "${cmd}" not found`);
+                if (optConfirm) {
+                    vm.$confirm(optConfirm).then(realExec);
+                } else {
+                    realExec();
+                }
+            }
+
+            if (optSaveRequired && vm.$isDirty)
+                vm.$save().then(doExec);
+            else
+                doExec();
+
+
 		} finally {
 			this._root_._enableValidate_ = true;
             this._root_._needValidate_ = true;

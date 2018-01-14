@@ -11,12 +11,26 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var mi = new TagBuilder("a", "dropdown-item");
-            MergeAttributes(mi, context);
-
-            mi.RenderStart(context);
-            RenderIcon(context, Icon);
-            RenderContent(context);
-            mi.RenderEnd(context);
+            if (HasIcon)
+            {
+                MergeAttributes(mi, context, MergeAttrMode.NoContent);
+                mi.RenderStart(context);
+                RenderIcon(context, Icon);
+                var span = new TagBuilder("span");
+                MergeAttributesBase(span, context, MergeAttrMode.Content); // skip command!
+                span.RenderStart(context);
+                RenderContent(context);
+                span.RenderEnd(context);
+                mi.RenderEnd(context);
+            }
+            else {
+                MergeAttributes(mi, context, MergeAttrMode.All);
+                mi.RenderStart(context);
+                RenderContent(context);
+                mi.RenderEnd(context);
+            }
         }
+
+        Boolean HasIcon => GetBinding(nameof(Icon)) != null || Icon != Icon.NoIcon;
     }
 }

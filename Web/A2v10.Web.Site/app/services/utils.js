@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180106-7085
+// 20180114-7091
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -38,13 +38,15 @@ app.modules['std:utils'] = function () {
 		eval: eval,
         format: format,
         toNumber: toNumber,
+        parse: parse,
         getStringId: getStringId,
 		date: {
 			today: dateToday,
 			zero: dateZero,
 			parse: dateParse,
 			equal: dateEqual,
-			isZero: dateIsZero
+            isZero: dateIsZero,
+            formatDate: formatDate
         },
         text: {
             contains: textContains,
@@ -143,6 +145,17 @@ app.modules['std:utils'] = function () {
         if (num < 10)
             return '0' + num;
         return '' + num;
+    }
+
+    function parse(obj, dataType) {
+        switch (dataType) {
+            case 'Currency':
+            case 'Number':
+                return toNumber(obj);
+            case 'Date':
+                return dateParse(obj);
+        }
+        return obj;
     }
 
 	function format(obj, dataType, hideZeros) {

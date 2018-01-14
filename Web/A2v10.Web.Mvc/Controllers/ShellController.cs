@@ -124,7 +124,14 @@ namespace A2v10.Web.Mvc.Controllers
                 ExpandoObject loadPrms = new ExpandoObject();
                 loadPrms.Append(Request.QueryString, toPascalCase: true);
                 loadPrms.Set("UserId", UserId);
-                await _baseController.RenderElementKind(kind, pathInfo, loadPrms, Response.Output);
+                if (pathInfo.StartsWith("app/"))
+                {
+                    await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
+                }
+                else
+                {
+                    await _baseController.RenderElementKind(kind, pathInfo, loadPrms, Response.Output);
+                }
             }
             catch (Exception ex)
             {
