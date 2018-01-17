@@ -146,8 +146,12 @@ namespace A2v10.Xaml
                         tml.RenderStart(context);
                         using (var cts = new ScopeContext(context, "row"))
                         {
+                            var rNo = 0;
                             foreach (var row in Rows)
-                                row.RenderElement(context, (tag) => tag.MergeAttribute(":key", "rowIndex"));
+                            {
+                                row.RenderElement(context, (tag) => tag.MergeAttribute(":key", $"'r{rNo}:' + rowIndex"));
+                                rNo += 1;
+                            }
                         }
                         tml.RenderEnd(context);
                     }

@@ -945,7 +945,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170114-7091
+// 20170117-7092
 // services/datamodel.js
 
 (function () {
@@ -1606,12 +1606,13 @@ app.modules['std:validators'] = function() {
                 if (!cmdf.canExec.call(this, arg)) return;
             }        
 
+            let that = this;
             const doExec = function () {
                 const realExec = function () {
                     if (utils.isFunction(cmdf))
-                        cmdf.call(this, arg);
+                        cmdf.call(that, arg);
                     else if (utils.isFunction(cmdf.exec))
-                        cmdf.exec.call(this, arg);
+                        cmdf.exec.call(that, arg);
                     else
                         console.error($`There is no method 'exec' in command '${cmd}'`);
                 }
