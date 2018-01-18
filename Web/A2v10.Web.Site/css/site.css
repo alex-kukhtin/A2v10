@@ -1273,6 +1273,7 @@ pre.a2-code {
 }
 .control-group .input-group.static {
   background-color: #f8f8f8;
+  user-select: text;
 }
 .control-group .input-group.static > span {
   padding: 0 5px;

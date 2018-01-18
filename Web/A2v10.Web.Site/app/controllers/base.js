@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180118-7093
 // controllers/base.js
 
 (function () {
@@ -8,9 +8,11 @@
     const eventBus = require('std:eventBus');
     const utils = require('std:utils');
     const dataservice = require('std:dataservice');
-	const store = component('std:store');
 	const urltools = require('std:url');
     const log = require('std:log');
+
+    const store = component('std:store');
+    const documentTitle = component("std:doctitle");
 
     let __updateStartTime = 0;
     let __createStartTime = 0;
@@ -26,22 +28,6 @@
         });
     }
 
-	const documentTitle = {
-		render() {
-			return null;
-		},
-		props: ['page-title'],
-		watch: {
-			pageTitle(newValue) {
-				if (this.pageTitle)
-					document.title = this.pageTitle;
-			}
-		},
-		created() {
-			if (this.pageTitle)
-				document.title = this.pageTitle;
-		}
-	};
 
 	const base = Vue.extend({
 		// inDialog: Boolean (in derived class)
@@ -230,8 +216,8 @@
                         window.history.replaceState(null, null, newUrl);
                     }
                     let jsonData = utils.toJson(dataToQuery);
-					dataservice.post(url, jsonData).then(function (data) {
-						if (utils.isObject(data)) {
+                    dataservice.post(url, jsonData).then(function (data) {
+                        if (utils.isObject(data)) {
                             dat.$merge(data);
                             dat._fireLoad_();
 							//dat.$setDirty(false);

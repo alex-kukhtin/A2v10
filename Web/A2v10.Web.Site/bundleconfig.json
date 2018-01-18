@@ -34,6 +34,7 @@
       "app/components/panel.js",
       "app/components/sheet.js",
       "app/components/debug.js",
+      "app/components/doctitle.js",
       "app/directives/*.js",
       "app/controllers/base.js",
       "app/controllers/shell.js"

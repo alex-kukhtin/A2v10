@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180111-7089*/
+/*20180118-7093*/
 /* controllers/shell.js */
 
 (function () {
@@ -293,11 +293,24 @@
 			pendingRequest() { return this.requestsCount > 0; },
             hasModals() { return this.modals.length > 0; }
 		},
-		created() {
-			let opts = { title: null };
+        created() {
+            if (!this.menu) {
+                alert('access denied');
+                //window.location.assign('/account/login');
+                return;
+            }
+            let opts = { title: null };
             let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
-			this.$store.commit('setstate', { url: newUrl, title: opts.title });
+            this.$store.commit('setstate', { url: newUrl, title: opts.title });
+
+            let firstUrl = {
+                url: '',
+                title: '',
+            }
+            firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+            firstUrl.title = opts.title;
+            urlTools.firstUrl = firstUrl;
 
 			let me = this;
 
@@ -375,8 +388,7 @@
     	},
         methods: {
             about() {
-				// TODO: localization
-				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму...' }); // TODO 
+				this.$store.commit('navigate', { url: '/app/about' });
             },
 			root() {
                 let opts = { title: null };
@@ -461,7 +473,6 @@
 			eventBus.$on('endRequest', () => me.requestsCount -= 1);
 
 			eventBus.$on('closeAllPopups', popup.closeAll);
-
 		}
     });
 

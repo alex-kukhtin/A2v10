@@ -4,13 +4,19 @@
 
     'use strict';
 
-    const store = component('std:store');
     const eventBus = require('std:eventBus');
+
+    const store = component('std:store');
+    const documentTitle = component("std:doctitle");
+
 
     const vm = new Vue({
         el: "#$(PageGuid)",
         store: store,
         data: {
+        },
+        components: {
+            'a2-document-title': documentTitle
         },
         computed: {
         },

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7087
+// 20180118-7093
 /* platform/routex.js */
 
 (function () {
@@ -23,10 +23,10 @@
 
 	function makeBackUrl(url) {
 		let urlArr = url.split('/');
-		if (urlArr.length === 5)
-			return urlArr.slice(0, 3).join('/');
-		else if (url.length === 4)
-			return urlArr.slice(0, 2).join('/');
+        if (urlArr.length === 5)
+            return urlArr.slice(0, 3).join('/');
+        else if (url.length === 4)
+            return urlArr.slice(0, 2).join('/');
 		return url;
     }
 
@@ -116,18 +116,29 @@
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
 				window.history.replaceState(null, null, newUrl);
             },
-			close(state) {
-				if (window.history.length > 1) {
-					let oldUrl = window.location.pathname;
-					window.history.back();
-					// it is done?
-					setTimeout(() => {
-						if (window.location.pathname === oldUrl) {
-							store.commit('navigate', { url: makeBackUrl(state.route) });
-						}
-					}, 300);
-				} else
-					store.commit('navigate', { url: makeBackUrl(state.route) });
+            close(state) {
+
+                function navigateBack() {
+                    let url = makeBackUrl(state.route);
+                    if (url === state.route) {
+                        let firstUrl = urlTools.firstUrl;
+                        store.commit('navigate', { url: firstUrl.url, title: firstUrl.title });
+                    } else {
+                        store.commit('navigate', { url: url });
+                    }
+                }
+
+                if (window.history.length > 1) {
+                    let oldUrl = window.location.pathname;
+                    window.history.back();
+                    // it is done?
+                    setTimeout(() => {
+                        if (window.location.pathname === oldUrl) {
+                            navigateBack();
+                        }
+                    }, 300);
+                } else
+                    navigateBack();
 			}
 		}
 	});

@@ -10,7 +10,7 @@
         el: '#shell',
         data: {
             version: '$(AppVersion)',
-			menu: menu.Menu[0].Menu,
+			menu: menu.Menu ? menu.Menu[0].Menu : null,
 			title: menu.SysParams.AppTitle,
             subtitle: menu.SysParams.AppSubTitle,
             userIsAdmin: $(Admin)

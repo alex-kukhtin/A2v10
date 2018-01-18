@@ -357,7 +357,9 @@ app.modules['std:utils'] = function () {
 
 
 
-/*20171227-7083*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180118-7093*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -373,7 +375,8 @@ app.modules['std:url'] = function () {
         makeBaseUrl,
         parseUrlAndQuery,
         replaceUrlQuery,
-        createUrlForNavigate
+        createUrlForNavigate,
+        firstUrl: ''
     };
 
     function normalize(elem) {
@@ -445,9 +448,10 @@ app.modules['std:url'] = function () {
         return url;
     }
 
-    function parseUrlAndQuery(url, query) {
-        for (let p in query)
-            query[p] = '' + query[p]; // all values are string
+    function parseUrlAndQuery(url, querySrc) {
+        let query = {};
+        for (let p in querySrc)
+            query[p] = toUrl(querySrc[p]); // all values are string
         let rv = { url: url, query: query };
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');
@@ -635,7 +639,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7087
+// 20180118-7093
 /* platform/routex.js */
 
 (function () {
@@ -658,10 +662,10 @@ app.modules['std:http'] = function () {
 
 	function makeBackUrl(url) {
 		let urlArr = url.split('/');
-		if (urlArr.length === 5)
-			return urlArr.slice(0, 3).join('/');
-		else if (url.length === 4)
-			return urlArr.slice(0, 2).join('/');
+        if (urlArr.length === 5)
+            return urlArr.slice(0, 3).join('/');
+        else if (url.length === 4)
+            return urlArr.slice(0, 2).join('/');
 		return url;
     }
 
@@ -751,18 +755,29 @@ app.modules['std:http'] = function () {
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
 				window.history.replaceState(null, null, newUrl);
             },
-			close(state) {
-				if (window.history.length > 1) {
-					let oldUrl = window.location.pathname;
-					window.history.back();
-					// it is done?
-					setTimeout(() => {
-						if (window.location.pathname === oldUrl) {
-							store.commit('navigate', { url: makeBackUrl(state.route) });
-						}
-					}, 300);
-				} else
-					store.commit('navigate', { url: makeBackUrl(state.route) });
+            close(state) {
+
+                function navigateBack() {
+                    let url = makeBackUrl(state.route);
+                    if (url === state.route) {
+                        let firstUrl = urlTools.firstUrl;
+                        store.commit('navigate', { url: firstUrl.url, title: firstUrl.title });
+                    } else {
+                        store.commit('navigate', { url: url });
+                    }
+                }
+
+                if (window.history.length > 1) {
+                    let oldUrl = window.location.pathname;
+                    window.history.back();
+                    // it is done?
+                    setTimeout(() => {
+                        if (window.location.pathname === oldUrl) {
+                            navigateBack();
+                        }
+                    }, 300);
+                } else
+                    navigateBack();
 			}
 		}
 	});
@@ -3477,7 +3492,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180113-7089*/
+/*20180118-7093*/
 // components/treeview.js
 
 (function () {
@@ -3485,16 +3500,16 @@ Vue.component('popover', {
     const utils = require('std:utils');
     const eventBus = require('std:eventBus');
 
-    /*TODO:
-        4. select first item
-    */
+    /**
+     * .stop for toggle reqired!
+     */
     const treeItemComponent = {
         name: 'tree-item',
         template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
-        <a class="toggle" v-if="isFolder" href @click.prevent="toggle"></a>
+        <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
         <i v-if="options.hasIcon" :class="iconClass"/>
         <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
@@ -3544,6 +3559,8 @@ Vue.component('popover', {
                 return !this.isFolder || this.isFolderSelect(item);
             },
             toggle() {
+                // toggle with stop!
+                eventBus.$emit('closeAllPopups');
                 if (!this.isFolder)
                     return;
                 if (this.options.isDynamic) {
@@ -4661,8 +4678,10 @@ Vue.component('a2-panel', {
         }
     });
 })();
-/*20171031-7063*/
-/*components/debug.js*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20171118-7093
+// components/debug.js*/
 
 (function () {
 
@@ -4755,6 +4774,37 @@ Vue.component('a2-panel', {
     });
 })();
 
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20171118-7093
+// components/doctitle.js*/
+
+(function () {
+
+    const documentTitle = {
+        render() {
+            return null;
+        },
+        props: ['page-title'],
+        watch: {
+            pageTitle(newValue) {
+                this.setTitle();
+            }
+        },
+        methods: {
+            setTitle() {
+                if (this.pageTitle)
+                    document.title = this.pageTitle;
+            }
+        },
+        created() {
+            this.setTitle();
+        },
+    };
+
+    app.components['std:doctitle'] = documentTitle;
+
+})();
 /*20171029-7060*/
 /* directives/dropdown.js */
 
@@ -5031,7 +5081,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180118-7093
 // controllers/base.js
 
 (function () {
@@ -5039,9 +5089,11 @@ Vue.directive('resize', {
     const eventBus = require('std:eventBus');
     const utils = require('std:utils');
     const dataservice = require('std:dataservice');
-	const store = component('std:store');
 	const urltools = require('std:url');
     const log = require('std:log');
+
+    const store = component('std:store');
+    const documentTitle = component("std:doctitle");
 
     let __updateStartTime = 0;
     let __createStartTime = 0;
@@ -5057,22 +5109,6 @@ Vue.directive('resize', {
         });
     }
 
-	const documentTitle = {
-		render() {
-			return null;
-		},
-		props: ['page-title'],
-		watch: {
-			pageTitle(newValue) {
-				if (this.pageTitle)
-					document.title = this.pageTitle;
-			}
-		},
-		created() {
-			if (this.pageTitle)
-				document.title = this.pageTitle;
-		}
-	};
 
 	const base = Vue.extend({
 		// inDialog: Boolean (in derived class)
@@ -5261,8 +5297,8 @@ Vue.directive('resize', {
                         window.history.replaceState(null, null, newUrl);
                     }
                     let jsonData = utils.toJson(dataToQuery);
-					dataservice.post(url, jsonData).then(function (data) {
-						if (utils.isObject(data)) {
+                    dataservice.post(url, jsonData).then(function (data) {
+                        if (utils.isObject(data)) {
                             dat.$merge(data);
                             dat._fireLoad_();
 							//dat.$setDirty(false);
@@ -5702,7 +5738,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180111-7089*/
+/*20180118-7093*/
 /* controllers/shell.js */
 
 (function () {
@@ -5995,11 +6031,24 @@ Vue.directive('resize', {
 			pendingRequest() { return this.requestsCount > 0; },
             hasModals() { return this.modals.length > 0; }
 		},
-		created() {
-			let opts = { title: null };
+        created() {
+            if (!this.menu) {
+                alert('access denied');
+                //window.location.assign('/account/login');
+                return;
+            }
+            let opts = { title: null };
             let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
-			this.$store.commit('setstate', { url: newUrl, title: opts.title });
+            this.$store.commit('setstate', { url: newUrl, title: opts.title });
+
+            let firstUrl = {
+                url: '',
+                title: '',
+            }
+            firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+            firstUrl.title = opts.title;
+            urlTools.firstUrl = firstUrl;
 
 			let me = this;
 
@@ -6077,8 +6126,7 @@ Vue.directive('resize', {
     	},
         methods: {
             about() {
-				// TODO: localization
-				this.$store.commit('navigate', { url: '/app/about', title: 'Про програму...' }); // TODO 
+				this.$store.commit('navigate', { url: '/app/about' });
             },
 			root() {
                 let opts = { title: null };
@@ -6163,7 +6211,6 @@ Vue.directive('resize', {
 			eventBus.$on('endRequest', () => me.requestsCount -= 1);
 
 			eventBus.$on('closeAllPopups', popup.closeAll);
-
 		}
     });
 

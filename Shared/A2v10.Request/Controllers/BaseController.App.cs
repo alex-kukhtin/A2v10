@@ -30,7 +30,7 @@ namespace A2v10.Request
         Task RenderChangePassword(TextWriter writer)
         {
             throw new RequestModelException($"Show Change Password dialog");
-            return Task.FromResult(0);
+            //return Task.FromResult(0);
         }
     }
 }

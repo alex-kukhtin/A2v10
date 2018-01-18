@@ -1,4 +1,6 @@
-﻿/*20171227-7083*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180118-7093*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -14,7 +16,8 @@ app.modules['std:url'] = function () {
         makeBaseUrl,
         parseUrlAndQuery,
         replaceUrlQuery,
-        createUrlForNavigate
+        createUrlForNavigate,
+        firstUrl: ''
     };
 
     function normalize(elem) {
@@ -86,9 +89,10 @@ app.modules['std:url'] = function () {
         return url;
     }
 
-    function parseUrlAndQuery(url, query) {
-        for (let p in query)
-            query[p] = '' + query[p]; // all values are string
+    function parseUrlAndQuery(url, querySrc) {
+        let query = {};
+        for (let p in querySrc)
+            query[p] = toUrl(querySrc[p]); // all values are string
         let rv = { url: url, query: query };
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');

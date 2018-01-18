@@ -56,6 +56,7 @@
     <Content Include="app\components\control.js" />
     <Content Include="app\components\datepicker.js" />
     <Content Include="app\components\debug.js" />
+    <Content Include="app\components\doctitle.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\list.js" />
     <Content Include="app\components\pager.js" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180113-7089*/
+/*20180118-7093*/
 // components/treeview.js
 
 (function () {
@@ -8,16 +8,16 @@
     const utils = require('std:utils');
     const eventBus = require('std:eventBus');
 
-    /*TODO:
-        4. select first item
-    */
+    /**
+     * .stop for toggle reqired!
+     */
     const treeItemComponent = {
         name: 'tree-item',
         template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
-        <a class="toggle" v-if="isFolder" href @click.prevent="toggle"></a>
+        <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
         <i v-if="options.hasIcon" :class="iconClass"/>
         <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
@@ -67,6 +67,8 @@
                 return !this.isFolder || this.isFolderSelect(item);
             },
             toggle() {
+                // toggle with stop!
+                eventBus.$emit('closeAllPopups');
                 if (!this.isFolder)
                     return;
                 if (this.options.isDynamic) {

@@ -1,5 +1,7 @@
-﻿/*20171031-7063*/
-/*components/debug.js*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20171118-7093
+// components/debug.js*/
 
 (function () {
 
