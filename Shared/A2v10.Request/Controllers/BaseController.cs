@@ -24,11 +24,11 @@ namespace A2v10.Request
         public BaseController()
         {
             // DI ready
-            IServiceLocator current = ServiceLocator.Current;
-            _host = current.GetService<IApplicationHost>();
-            _dbContext = current.GetService<IDbContext>();
-            _renderer = current.GetService<IRenderer>();
-            _workflowEngine = current.GetService<IWorkflowEngine>();
+            IServiceLocator locator = ServiceLocator.Current;
+            _host = locator.GetService<IApplicationHost>();
+            _dbContext = locator.GetService<IDbContext>();
+            _renderer = locator.GetService<IRenderer>();
+            _workflowEngine = locator.GetService<IWorkflowEngine>();
         }
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -43,7 +43,7 @@ namespace A2v10.Request
                 throw new RequestModelException($"Invalid application Url: {pathInfo}");
             if (segs[0] != "app")
                 throw new RequestModelException($"Invalid application Url: {pathInfo}");
-            switch (segs[1]) 
+            switch (segs[1])
             {
                 case "about":
                     if (kind != RequestUrlKind.Page)
@@ -144,19 +144,21 @@ namespace A2v10.Request
 
             // TODO: use view engines
             // try xaml
-            String fileName = _host.MakeFullPath(Admin, rw.Path, rw.GetView() + ".xaml");
+            String fileName = rw.GetView() + ".xaml";
+            String filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
             bool bRendered = false;
-            if (System.IO.File.Exists(fileName))
+            if (System.IO.File.Exists(filePath))
             {
                 // render XAML
-                if (System.IO.File.Exists(fileName))
+                if (System.IO.File.Exists(filePath))
                 {
                     using (var strWriter = new StringWriter())
                     {
                         var ri = new RenderInfo()
                         {
                             RootId = rootId,
-                            FileName = fileName,
+                            FileName = filePath,
+                            FileTitle = fileName,
                             Writer = strWriter,
                             DataModel = model
                         };
@@ -170,15 +172,19 @@ namespace A2v10.Request
             else
             {
                 // try html
-                fileName = _host.MakeFullPath(Admin, rw.Path, rw.GetView() + ".html");
-                if (System.IO.File.Exists(fileName))
+                fileName = rw.GetView() + ".html";
+                filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
+                if (System.IO.File.Exists(filePath))
                 {
-                    using (var tr = new StreamReader(fileName))
+                    using (_host.Profiler.CurrentRequest.Start(ProfileAction.Render, $"render: {fileName}"))
                     {
-                        String htmlText = await tr.ReadToEndAsync();
-                        htmlText = htmlText.Replace("$(RootId)", rootId);
-                        writer.Write(htmlText);
-                        bRendered = true;
+                        using (var tr = new StreamReader(filePath))
+                        {
+                            String htmlText = await tr.ReadToEndAsync();
+                            htmlText = htmlText.Replace("$(RootId)", rootId);
+                            writer.Write(htmlText);
+                            bRendered = true;
+                        }
                     }
                 }
             }
@@ -246,7 +252,7 @@ $(RequiredModules)
 ";
             // TODO: may be data model from XAML ????
             const String emptyModel = "function modelData() {return null;}";
-    
+
             var header = new StringBuilder(scriptHeader);
             header.Replace("$(RootId)", rootId);
             header.Replace("$(DataModelText)", dataModelText);
@@ -323,8 +329,8 @@ $(RequiredModules)
                     continue;
                 if (_modulesWritten.Contains(moduleName))
                     continue;
-                var fileName = Path.ChangeExtension(moduleName, "js");
-                var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, fileName));
+                var fileName = moduleName.AddExtension("js");
+                var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, fileName.RemoveHeadSlash()));
                 if (!File.Exists(filePath))
                     throw new FileNotFoundException(filePath);
                 String moduleText = File.ReadAllText(filePath);
@@ -406,20 +412,29 @@ $(RequiredModules)
             }
         }
 
-        public static readonly JsonSerializerSettings StandardSerializerSettings = 
+        public static readonly JsonSerializerSettings StandardSerializerSettings =
             new JsonSerializerSettings() {
-                    Formatting = Formatting.Indented,
-                    StringEscapeHandling = StringEscapeHandling.EscapeHtml,
-                    DateFormatHandling = DateFormatHandling.IsoDateFormat,                    
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                };
+                Formatting = Formatting.Indented,
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            };
+
+        public void ProfileException(Exception ex)
+        {
+            using (Host.Profiler.CurrentRequest.Start(ProfileAction.Exception, ex.Message))
+            {
+                // do nothing
+            }
+        }
 
         public void WriteHtmlException(Exception ex, TextWriter writer)
         {
             if (ex.InnerException != null)
                 ex = ex.InnerException;
+            ProfileException(ex);
             var msg = WebUtility.HtmlEncode(ex.Message);
             var stackTrace = WebUtility.HtmlEncode(ex.StackTrace);
             if (IsDebugConfiguration)

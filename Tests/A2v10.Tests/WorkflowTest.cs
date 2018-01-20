@@ -19,13 +19,12 @@ namespace A2v10.Tests
     {
         IWorkflowEngine _workflow;
         IDbContext _dbContext;
-        TestConfig _config;
 
         public WorkflowTest()
         {
-            _config = new TestConfig(); // for register services;
-            _workflow = TestConfig.WorkflowEngine.Value;
-            _dbContext = TestConfig.DbContext.Value;
+            TestConfig.Start();
+            _dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            _workflow = ServiceLocator.Current.GetService<IWorkflowEngine>();
         }
 
         [TestMethod]
@@ -189,6 +188,46 @@ namespace A2v10.Tests
             dt.IsArray(1);
             dt.AreArrayValueEqual("Id:500 Text:ParamText", 0, "Message");
             dt.AreArrayValueEqual(userId, 0, "UserId");
+        }
+
+        [TestMethod]
+        public async Task LoadProcessModel()
+        {
+            Int64 modelId = 123; // predefined
+            Int64 userId = 50; // predefined
+            String bookmark = "Bookmark1";
+            var info = new StartWorkflowInfo()
+            {
+                Source = "file:Workflows/LoadModel_v1",
+                UserId = userId,
+                Schema = "a2test",
+                Model = "SimpleModel",
+                ActionBase = "simple/model",
+                ModelId = modelId
+            };
+            WorkflowResult result = await _workflow.StartWorkflow(info);
+            Assert.AreNotEqual(0, result.ProcessId);
+
+            var pm = await _dbContext.LoadModelAsync(String.Empty, "a2workflow.[Process.Load]",
+                new { UserId = userId, Id = result.ProcessId }
+            );
+
+            var dt = new DataTester(pm, "Process.Inboxes");
+            dt.IsArray(1);
+            dt.AreArrayValueEqual(bookmark, 0, "Bookmark");
+            dt.AreArrayValueEqual("User", 0, "For");
+            dt.AreArrayValueEqual("ObjectName", 0, "Text");
+            dt.AreArrayValueEqual(userId, 0, "ForId");
+            Int64 inboxId = dt.GetArrayValue<Int64>(0, "Id");
+
+            var rInfo = new ResumeWorkflowInfo()
+            {
+                Id = inboxId,
+                UserId = userId
+            };
+
+            var resumeResult = await _workflow.ResumeWorkflow(rInfo);
+            Assert.AreEqual(resumeResult.ProcessId, result.ProcessId);
         }
     }
 }

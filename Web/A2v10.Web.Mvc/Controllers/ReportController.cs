@@ -13,10 +13,12 @@ using Stimulsoft.Report.Mvc;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Reports;
+using A2v10.Web.Mvc.Filters;
 
 namespace A2v10.Web.Mvc.Controllers
 {
     [Authorize]
+    [ExecutingFilter]
     public class ReportController : Controller
     {
         A2v10.Request.BaseController _baseController = new BaseController();

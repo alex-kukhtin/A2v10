@@ -1,30 +1,43 @@
-﻿using A2v10.Data;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using A2v10.Data;
 using A2v10.Infrastructure;
 using A2v10.Workflow;
 using A2v10.Xaml;
-using System;
 
 namespace A2v10.Tests.Config
 {
 	public class TestConfig
 	{
-		public static Lazy<IProfiler> Profiler = new Lazy<IProfiler>(() => new TestProfiler());
-        public static Lazy<IApplicationHost> AppHost = new Lazy<IApplicationHost>(() => new TestApplicationHost(Profiler.Value));
-        public static Lazy<IDbContext> DbContext = new Lazy<IDbContext>(() => new SqlDbContext(AppHost.Value));
-        public static Lazy<IWorkflowEngine> WorkflowEngine = new Lazy<IWorkflowEngine>(() => new WorkflowEngine(AppHost.Value, DbContext.Value));
-        public static Lazy<IRenderer> Renderer = new Lazy<IRenderer>(() => new XamlRenderer());
+        private static IServiceLocator _currentService;
 
-        public TestConfig()
+        public static void Start()
         {
-            var cs = ServiceLocator.Current;
-            if (!cs.IsServiceRegistered<IDbContext>())
-                cs.RegisterService<IDbContext>(DbContext.Value);
-            if (!cs.IsServiceRegistered<IWorkflowEngine>())
-                cs.RegisterService<IWorkflowEngine>(WorkflowEngine.Value);
-            if (!cs.IsServiceRegistered<IApplicationHost>())
-                cs.RegisterService<IApplicationHost>(AppHost.Value);
-            if (!cs.IsServiceRegistered<IProfiler>())
-                cs.RegisterService<IProfiler>(Profiler.Value);
+            if (ServiceLocator.Start != null)
+                return;
+
+            ServiceLocator.Start = (IServiceLocator service) =>
+            {
+                var profiler = new TestProfiler();
+                var host = new TestApplicationHost(profiler);
+                var dbContext = new SqlDbContext(host);
+                var workflowEngine = new WorkflowEngine(host, dbContext);
+                var renderer = new XamlRenderer(profiler);
+
+                service.RegisterService<IDbContext>(dbContext);
+                service.RegisterService<IWorkflowEngine>(workflowEngine);
+                service.RegisterService<IApplicationHost>(host);
+                service.RegisterService<IProfiler>(profiler);
+                service.RegisterService<IRenderer>(renderer);
+                _currentService = service;
+            };
+
+            ServiceLocator.GetCurrentLocator = () =>
+            {
+                if (_currentService == null)
+                    new ServiceLocator();
+                return _currentService;
+            };
         }
     }
 }

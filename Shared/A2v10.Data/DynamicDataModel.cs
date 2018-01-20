@@ -55,9 +55,10 @@ namespace A2v10.Data
 			return true;
 		}
 
-		public T Eval<T>(String expression, T fallback = default(T))
-		{
-			return (this.Root).Eval<T>(expression, fallback);
+		public T Eval<T>(String expression)
+        {
+            T fallback = default(T);
+            return (this.Root).Eval<T>(expression, fallback);
 		}
 
         public String CreateScript()

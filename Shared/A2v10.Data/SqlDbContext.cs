@@ -49,7 +49,7 @@ namespace A2v10.Data
         public async Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null)
         {
             var modelReader = new DataModelReader();
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 await ReadDataAsync(source, command,
                     (prm) =>
@@ -72,7 +72,7 @@ namespace A2v10.Data
         public IDataModel LoadModel(String source, String command, Object prms = null)
         {
             var modelReader = new DataModelReader();
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 ReadData(source, command,
                     (prm) =>
@@ -92,7 +92,7 @@ namespace A2v10.Data
             return modelReader.DataModel;
         }
 
-        public async Task ReadDataAsync(String source, String command,
+        async Task ReadDataAsync(String source, String command,
             Action<SqlParameterCollection> setParams,
             Action<Int32, IDataReader> onRead,
             Action<Int32, IDataReader> onMetadata)
@@ -122,7 +122,7 @@ namespace A2v10.Data
             }
         }
 
-        public void ReadData(String source, String command,
+        void ReadData(String source, String command,
             Action<SqlParameterCollection> setParams,
             Action<Int32, IDataReader> onRead,
             Action<Int32, IDataReader> onMetadata)
@@ -156,7 +156,7 @@ namespace A2v10.Data
         {
             var dataReader = new DataModelReader();
             var dataWriter = new DataModelWriter();
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 var metadataCommand = command.Replace(".Update", ".Metadata");
                 using (var cnn = GetConnection(source))
@@ -199,7 +199,7 @@ namespace A2v10.Data
         {
             var dataReader = new DataModelReader();
             var dataWriter = new DataModelWriter();
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 var metadataCommand = command.Replace(".Update", ".Metadata");
                 using (var cnn = await GetConnectionAsync(source))
@@ -241,7 +241,7 @@ namespace A2v10.Data
 
         public async Task<T> LoadAsync<T>(String source, String command, Object prms = null) where T : class
         {
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 var helper = new LoadHelper<T>();
                 using (var cnn = await GetConnectionAsync(source))
@@ -266,7 +266,7 @@ namespace A2v10.Data
 
         public T Load<T>(String source, String command, Object prms = null) where T : class
         {
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 var helper = new LoadHelper<T>();
                 using (var cnn = GetConnection(source))
@@ -338,7 +338,7 @@ namespace A2v10.Data
 
         public async Task ExecuteAsync<T>(String source, String command, T element) where T : class
         {
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 using (var cnn = await GetConnectionAsync(source))
                 {
@@ -354,7 +354,7 @@ namespace A2v10.Data
 
         public void Execute<T>(String source, String command, T element) where T : class
         {
-            using (var p = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 using (var cnn = GetConnection(source))
                 {
@@ -371,7 +371,7 @@ namespace A2v10.Data
 
         public async Task<IList<T>> LoadListAsync<T>(String source, String command, Object prms) where T : class
         {
-            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var token = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 Type retType = typeof(T);
                 var props = retType.GetProperties();
@@ -459,7 +459,7 @@ namespace A2v10.Data
 
         public void SaveList<T>(String source, String command, Object prms, IEnumerable<T> list) where T : class
         {
-            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var token = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 using (var cnn = GetConnection(source))
                 {
@@ -475,7 +475,7 @@ namespace A2v10.Data
 
         public async Task SaveListAsync<T>(String source, String command, Object prms, IEnumerable<T> list) where T : class
         {
-            using (var token = _host.Profiler.Start(ProfileAction.Sql, command))
+            using (var token = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 using (var cnn = await GetConnectionAsync(source))
                 {

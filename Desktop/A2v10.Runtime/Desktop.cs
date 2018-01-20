@@ -116,7 +116,7 @@ namespace A2v10RuntimeNet
             IProfiler profiler = new DesktopProfiler();
             IApplicationHost host = new DesktopApplicationHost(profiler);
             IDbContext dbContext = new SqlDbContext(host);
-            IRenderer renderer = new XamlRenderer();
+            IRenderer renderer = new XamlRenderer(profiler);
             IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
             locator.RegisterService<IProfiler>(profiler);
             locator.RegisterService<IApplicationHost>(host);

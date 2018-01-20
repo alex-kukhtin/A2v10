@@ -13,7 +13,7 @@ namespace A2v10.Workflow
 
         protected override void Execute(CodeActivityContext context)
         {
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            IDbContext dbContext = context.GetExtension<IDbContext>();
             Int64 id = InboxId.Get(context);
             InboxInfo ii = new InboxInfo() {
                 Id = id

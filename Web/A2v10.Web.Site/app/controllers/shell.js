@@ -404,6 +404,7 @@
 			},
 			debugTrace() {
                 this.debugShowModel = false;
+
                 this.debugShowTrace = !this.debugShowTrace;
 			},
             debugModel() {

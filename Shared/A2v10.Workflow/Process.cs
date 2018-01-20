@@ -41,6 +41,8 @@ namespace A2v10.Workflow
 
         public IDataModel Model => GetModel();
 
+        internal IDbContext DbContext {get; set;}
+
         public IDictionary<String, Object> CreateParams(Object obj)
         {
             var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -86,14 +88,13 @@ namespace A2v10.Workflow
 
         private IDataModel GetModel()
         {
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
             if (_model != null)
                 return _model;
             String proc = $"[{this.Schema}].[{this.ModelName}.Load]";
             ExpandoObject loadPrms = new ExpandoObject();
             loadPrms.Set("Id", ModelId);
             loadPrms.Set("UserId", 0L);
-            _model = dbContext.LoadModel(this.DataSource, proc, loadPrms);
+            _model = DbContext.LoadModel(this.DataSource, proc, loadPrms);
             return _model;
         }
     }

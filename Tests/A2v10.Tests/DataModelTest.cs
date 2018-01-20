@@ -16,7 +16,8 @@ namespace A2v10.Tests
         IDbContext _dbContext;
         public DataModelTest()
         {
-            _dbContext = TestConfig.DbContext.Value;
+            TestConfig.Start();
+            _dbContext = ServiceLocator.Current.GetService<IDbContext>();
         }
 
         [TestMethod]

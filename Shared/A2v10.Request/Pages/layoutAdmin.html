@@ -45,7 +45,7 @@
                     <button class="btn btn-debug" toggle>отладка<span class="caret up"></span></button>
                     <div class="dropdown-menu menu up-right">
                         <a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> Модель данных</a>
-                        <a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-log"></i> Трассировка</a>
+                        <a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> Профилирование</a>
                         <div class="divider"></div>
                         <label class="checkbox">
                             <input type="checkbox" v-model="traceEnabled" />
@@ -58,6 +58,6 @@
     </div>
     <script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
     <script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
-    <script type="text/javascript" src="/shellscriptadmin"></script>
+    <script type="text/javascript" src="/shell/scriptadmin"></script>
 </body>
 </html>

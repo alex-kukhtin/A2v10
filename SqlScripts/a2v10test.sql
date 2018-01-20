@@ -1,4 +1,4 @@
-/* 20171122-7024 */
+/* 20170119-7094 */
 
 use a2v10test;
 go
@@ -16,12 +16,13 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'SimpleModel')
-	drop procedure a2test.SimpleModel
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'SimpleModel.Load')
+	drop procedure a2test.[SimpleModel.Load]
 go
 ------------------------------------------------
-create procedure a2test.SimpleModel
-@UserId bigint = null
+create procedure a2test.[SimpleModel.Load]
+@UserId bigint = null,
+@Id bigint = null
 as
 begin
 	set nocount on;

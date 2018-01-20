@@ -33,7 +33,7 @@ namespace A2v10.Workflow
             var process = Process.GetProcessFromContext(context.DataContext);
             var wfResult = context.GetExtension<WorkflowResult>();
             Inbox inbox = Inbox.Get<Inbox>(context);
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            IDbContext dbContext = context.GetExtension<IDbContext>();
             inbox.Create(dbContext, process.Id);
             InboxId.Set(context, inbox.Id);
             wfResult.InboxIds.Add(inbox.Id);
@@ -49,7 +49,9 @@ namespace A2v10.Workflow
         {
             if (!(obj is RequestResult))
                 throw new WorkflowException("Invalid ResponseType. Must be RequestResult");
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            IDbContext dbContext = context.GetExtension<IDbContext>();
+            Process process = Process.GetProcessFromContext(context.DataContext);
+            process.DbContext = dbContext;
             var rr = obj as RequestResult;
             Inbox inbox = Inbox.Get<Inbox>(context);
             inbox.Resumed(dbContext, rr.InboxId, rr.UserId, rr.Answer);
@@ -85,7 +87,7 @@ namespace A2v10.Workflow
             if (messageInfo == null)
                 return;
             var process = Process.GetProcessFromContext(context.DataContext);
-            IMessaging messaging = ServiceLocator.Current.GetService<IMessaging>();
+            IMessaging messaging = context.GetExtension<IMessaging>();
             IMessage msg = messaging.CreateMessage();
 
             msg.Template = messageInfo.Template;

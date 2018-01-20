@@ -23,13 +23,14 @@ namespace A2v10.Tests
         IDbContext _dbContext;
         public DatabaseTest()
         {
-            _dbContext = TestConfig.DbContext.Value;
+            TestConfig.Start();
+            _dbContext = ServiceLocator.Current.GetService<IDbContext>();
         }
 
         [TestMethod]
         public async Task LoadSimpleModel()
         {
-            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.SimpleModel");
+            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.[SimpleModel.Load]");
             var md = new MetadataTester(dm);
             md.IsAllKeys("TRoot,TModel");
             md.HasAllProperties("TRoot", "Model");

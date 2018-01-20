@@ -17,8 +17,10 @@ namespace A2v10.Tests
         IRenderer _renderer;
         public XamlTest()
         {
-            _renderer = TestConfig.Renderer.Value;
+            TestConfig.Start();
+            _renderer = ServiceLocator.Current.GetService<IRenderer>();
         }
+
         [TestMethod]
         public void SimpleRender()
         {

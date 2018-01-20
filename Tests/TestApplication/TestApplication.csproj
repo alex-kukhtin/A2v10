@@ -34,12 +34,7 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +46,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>
@@ -63,6 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Test\Workflows\RequestResultParams_v1.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test\Workflows\LoadModel_v1.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

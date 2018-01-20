@@ -18,11 +18,14 @@ using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Mvc.Identity;
+using A2v10.Web.Mvc.Filters;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+
     [Authorize]
-	public class ShellController : Controller
+    [ExecutingFilter]
+    public class ShellController : Controller, IControllerProfiler
 	{
         A2v10.Request.BaseController _baseController = new BaseController();
 
@@ -33,6 +36,9 @@ namespace A2v10.Web.Mvc.Controllers
                 return User.Identity.GetUserId<Int64>();
             }
         }
+
+
+        public IProfiler Profiler => _baseController.Host.Profiler;
 
         protected String RootUrl
         {
@@ -65,9 +71,9 @@ namespace A2v10.Web.Mvc.Controllers
                 _baseController.Admin = true;
             }
 
-            if (pathInfo.StartsWith("shellscript"))
+            if (pathInfo.StartsWith("shell"))
             {
-                await ShellScript(pathInfo.Contains("admin"));
+                await Shell(pathInfo, pathInfo.Contains("admin"));
             }
             else if (pathInfo.StartsWith("_page/"))
             {
@@ -229,6 +235,16 @@ namespace A2v10.Web.Mvc.Controllers
             }
         }
 
+        async Task Shell(String pathInfo, Boolean bAdmin)
+        {
+            if (pathInfo.StartsWith("shell/script"))
+                await ShellScript(bAdmin);
+            else if (pathInfo.StartsWith("shell/trace"))
+                ShellTrace();
+            else
+                throw new RequestModelException($"Invalid shell action: '{pathInfo}'");
+        }
+
         async Task ShellScript(Boolean admin)
         {
             Response.ContentType = "application/javascript";
@@ -247,10 +263,25 @@ namespace A2v10.Web.Mvc.Controllers
             }
         }
 
+        void ShellTrace()
+        {
+            try
+            {
+                String json = _baseController.Host.Profiler.GetJson();
+                Response.ContentType = "application/json";
+                Response.Write(json);
+            }
+            catch (Exception ex)
+            {
+                WriteExceptionStatus(ex);
+            }
+        }
+
         protected void WriteExceptionStatus(Exception ex)
         {
             if (ex.InnerException != null)
                 ex = ex.InnerException;
+            _baseController.ProfileException(ex);
             Response.SuppressContent = false;
             Response.StatusCode = 255; // CUSTOM ERROR!!!!
             Response.ContentType = "text/plain";

@@ -22,7 +22,7 @@ namespace A2v10.Infrastructure
 		ExpandoObject Root { get; }
         ExpandoObject System { get; }
 
-		T Eval<T>(String expression, T fallback = default(T));
+		T Eval<T>(String expression);
 		void Traverse(Func<Object, Boolean> callback);
         IDictionary<String, dynamic> GetDynamic();
 

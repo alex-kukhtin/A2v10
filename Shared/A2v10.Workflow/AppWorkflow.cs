@@ -46,6 +46,8 @@ namespace A2v10.Workflow
                 args.Add("Comment", info.Comment);
                 aw = Create(dbContext, root, args, def.Identity);
                 aw._application.Extensions.Add(result);
+                aw._application.Extensions.Add(dbContext);
+                process.DbContext = dbContext;
                 process.WorkflowId = aw._application.Id;
                 await process.Start(dbContext);
                 aw._application.Run(_wfTimeSpan);
@@ -77,6 +79,7 @@ namespace A2v10.Workflow
                 Activity root = def.LoadFromSource(host);
                 aw = Create(dbContext, root, null, def.Identity);
                 aw._application.Extensions.Add(result);
+                aw._application.Extensions.Add(dbContext);
                 WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
                 aw._application.Load(instance, _wfTimeSpan);
                 foreach (var bm in aw._application.GetBookmarks())

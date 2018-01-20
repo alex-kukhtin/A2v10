@@ -408,7 +408,7 @@ begin
 	where Id = @Id;
 
 	select [!TInbox!Array] = null, [Id!!Id] = Id, [!TProcess.Inboxes!ParentId] = ProcessId,
-		[Action], Bookmark, [For], ForId, ForId2, Expired, DateCreated
+		[Action], Bookmark, [For], ForId, ForId2, Expired, DateCreated, [Text]
 	from a2workflow.Inbox where ProcessId = @Id and Void=0;
 
 	select [!TWorkflow!Object] = null, [Id!!Id] = InstanceId, [!TProcess.Workflow!ParentId] = p.Id, 

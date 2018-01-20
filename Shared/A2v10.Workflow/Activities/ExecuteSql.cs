@@ -20,7 +20,7 @@ namespace A2v10.Workflow
             String command = Command.Get(context);
             String dataSource = DataSource.Get(context);
             Object prms = Params.Get(context);
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
+            IDbContext dbContext = context.GetExtension<IDbContext>();
             IDataModel dataModel = dbContext.LoadModel(dataSource, command, prms);
             this.Result.Set(context, dataModel);
         }

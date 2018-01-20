@@ -3,6 +3,11 @@
 
 const utils = require('std:utils');
 
+
+const cmn = require('/document/request/common.include');
+
+//alert(cmn.x);
+
 let template = {
 	properties: {
         "TRoot.Entity": { Id: 123, Name: 'entityName' },

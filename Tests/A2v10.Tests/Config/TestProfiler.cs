@@ -1,24 +1,36 @@
-﻿using A2v10.Infrastructure;
+﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using A2v10.Infrastructure;
 
 namespace A2v10.Tests.Config
 {
-	public class DummyToken : IDisposable
-	{
-		public void Dispose()
-		{
-			// do nothing
-		}
-	}
+    public class DummyRequest : IProfileRequest
+    {
+        public IDisposable Start(ProfileAction kind, String description)
+        {
+            return null;
+        }
+        public void Stop()
+        {
 
-	public class TestProfiler : IProfiler
+        }
+    }
+
+    public class TestProfiler : IProfiler
 	{
-		public IDisposable Start(ProfileAction kind, String description) {
-			return new DummyToken();
-		}
-	}
+        public Boolean Enabled { get; set; }
+        IProfileRequest _request;
+        public IProfileRequest BeginRequest(String address, String session)
+        {
+            _request = new DummyRequest();
+            return _request;
+        }
+
+        public IProfileRequest CurrentRequest => _request;
+
+        public String GetJson()
+        {
+            return null;
+        }
+    }
 }

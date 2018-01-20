@@ -96,6 +96,7 @@ namespace A2v10.Xaml
         ChartPivot,
         ChartStackedArea,
         ChartStackedBar,
+        ChartStackedLine,
         ChevronDown,
         ChevronLeft,
         ChevronLeftEnd,

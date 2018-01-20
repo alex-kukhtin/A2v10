@@ -1,5 +1,7 @@
-﻿/*20170819-7016*/
-/* dataservice.js */
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180110-7094
+// dataservice.js
 (function () {
 
 	let http = require('std:http');
@@ -7,10 +9,15 @@
 
 	function post(url, data) {
 		return http.post(url, data);
-	}
+    }
+
+    function get(url) {
+        return http.get(url);
+    }
 
 	app.modules['std:dataservice'] = {
-		post: post
+        post: post,
+        get: get
 	};
 })();
 

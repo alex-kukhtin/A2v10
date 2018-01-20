@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171118-7093
+// 20171120-7094
 // components/debug.js*/
 
 (function () {
@@ -12,15 +12,16 @@
     6.
      */
 
+    const dataService = require('std:dataservice');
+    const urlTools = require('std:url');
+    const eventBus = require('std:eventBus');
+
     const specKeys = {
         '$vm': null,
         '$host': null,
         '$root': null,
         '$parent': null
     };
-
-    function isSpecialKey(key) {
-    }
 
     function toJsonDebug(data) {
         return JSON.stringify(data, function (key, value) {
@@ -31,6 +32,30 @@
             return value;
         }, 2);
     }
+
+    const traceItem = {
+        name: 'a2-trace-item',
+        template: `
+<div v-if="hasElem" class="trace-item-body">
+    <span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
+    <ul class="a2-debug-trace-item">
+        <li v-for="itm in elem">
+            
+            <div class="rq-title"><span class="elapsed" v-text="itm.elapsed + ' ms'"/> <span v-text="itm.text"/></div>
+        </li>
+    </ul>
+</div>
+`,
+        props: {
+            name: String,
+            elem: Array
+        },
+        computed: {
+            hasElem() {
+                return this.elem && this.elem.length;
+            }
+        }
+    };
 
     Vue.component('a2-debug', {
         template: `
@@ -46,16 +71,32 @@
         <pre class="a2-code" v-text="modelJson()"></pre>
     </div>
     <div class="debug-trace debug-body" v-if="traceVisible">
-        pane for tracing
+        <ul class="a2-debug-trace">
+            <li v-for="r in trace">
+                <div class="rq-title"><span class="elapsed" v-text="r.elapsed + ' ms'"/> <span v-text="r.url" /></div>
+                <a2-trace-item name="Sql" :elem="r.items.Sql"></a2-trace-item>
+                <a2-trace-item name="Render" :elem="r.items.Render"></a2-trace-item>
+                <a2-trace-item name="Workflow" :elem="r.items.Workflow"></a2-trace-item>
+                <a2-trace-item class="exception" name="Exceptions" :elem="r.items.Exception"></a2-trace-item>
+            </li>
+        </ul>
     </div>
 </div>
 `,
+        components: {
+            'a2-trace-item': traceItem
+        },
         props: {
             modelVisible: Boolean,
             traceVisible: Boolean,
             modelStack: Array,
             counter: Number,
             close: Function
+        },
+        data() {
+            return {
+                trace: []
+            };
         },
         computed: {
             refreshCount() {
@@ -66,8 +107,11 @@
             },
             title() {
                 return this.modelVisible ? 'Модель данных'
-                    : this.traceVisible ? 'Трассировка'
+                    : this.traceVisible ? 'Профилирование'
                     : '';
+            },
+            traceView() {
+                return this.traceVisible;
             }
         },
         methods: {
@@ -81,15 +125,40 @@
                 return '';
             },
             refresh() {
-                if (!this.modelVisible)
-                    return;
-                this.$forceUpdate();
+                if (this.modelVisible)
+                    this.$forceUpdate();
+                else if (this.traceVisible)
+                    this.loadTrace()
+            },
+            loadTrace() {
+                const root = window.$$rootUrl;
+                const url = urlTools.combine(root, 'shell/trace');
+                const that = this;
+                dataService.post(url).then(function (result) {
+                    that.trace.splice(0, that.trace.length);
+                    if (!result) return;
+                    result.forEach((val) => {
+                        that.trace.push(val);
+                    });
+                });
             }
         },
         watch: {
             refreshCount() {
-                this.refresh();
+                // dataModel stack changed
+                this.$forceUpdate();
+            },
+            traceView(newVal) {
+                if (newVal)
+                    this.loadTrace();
             }
+        },
+        created() {
+            eventBus.$on('endRequest', (url) => {
+                if (url.indexOf('/shell/trace') != -1) return;
+                if (!this.traceVisible) return;
+                this.loadTrace();
+            });
         }
     });
 })();

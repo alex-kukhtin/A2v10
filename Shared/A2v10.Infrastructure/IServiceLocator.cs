@@ -14,10 +14,18 @@ namespace A2v10.Infrastructure
 
     public class ServiceLocator : IServiceLocator
     {
-        static Dictionary<Type, Object> _services = new Dictionary<Type, Object>();
-        static ServiceLocator _current = new ServiceLocator();
+        public static Action<IServiceLocator> Start { get; set; }
+        public static Func<IServiceLocator> GetCurrentLocator { get; set; }
 
-        public static IServiceLocator Current { get { return _current; } }
+
+        public ServiceLocator()
+        {
+            ServiceLocator.Start(this);
+        }
+
+        public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();
+
+        Dictionary<Type, Object> _services = new Dictionary<Type, Object>();
 
         public T GetService<T>() where T : class
         {

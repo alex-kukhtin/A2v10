@@ -119,6 +119,9 @@ i,
 .ico-chart-stacked-bar:before {
   content: "\e928";
 }
+.ico-chart-stacked-line:before {
+  content: "\e929";
+}
 .ico-chevron-down:before {
   content: "\e9a4";
 }
@@ -3530,10 +3533,50 @@ h5,
 .debug-panel .debug-body {
   overflow: auto;
   background-color: #f8f8f8;
+  user-select: text;
 }
 .debug-panel .debug-model pre {
   max-height: none;
 }
 .debug-panel .debug-trace {
-  padding: 6px;
+  padding: 6px, 0;
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  font-size: .9rem;
+}
+.debug-panel .debug-trace .rq-title {
+  display: flex;
+}
+.debug-panel .debug-trace .rq-title .elapsed {
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 6px;
+}
+.debug-panel .debug-trace .trace-item-body {
+  padding-left: 6px;
+}
+.debug-panel .debug-trace .trace-item-body .badge {
+  padding: .15rem .25rem;
+  margin-left: .2rem;
+  border-radius: .15rem;
+  background-color: #478fb1;
+}
+.debug-panel .debug-trace .trace-item-body .title {
+  color: #478fb1;
+}
+.debug-panel .debug-trace .trace-item-body.exception .badge {
+  background-color: #a94442;
+}
+.debug-panel .debug-trace .trace-item-body.exception .title {
+  color: #a94442;
+}
+.debug-panel .debug-trace ul {
+  margin: 0 0 0 10px;
+  padding: 0;
+}
+.debug-panel .debug-trace ul li {
+  list-style-type: none;
+}
+.debug-panel .debug-trace ul.a2-debug-trace > li {
+  border-bottom: 1px solid #bdc5d8;
+  padding: 2px 0;
 }

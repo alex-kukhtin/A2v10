@@ -9,6 +9,7 @@ namespace A2v10.Infrastructure
     {
         public String RootId;
         public String FileName;
+        public String FileTitle;
         public String Text;
         public TextWriter Writer;
         public IDataModel DataModel;
