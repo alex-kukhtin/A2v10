@@ -52,7 +52,8 @@ namespace A2v10.Tests.Config
             }
         }
 
-        public Boolean IsDebugConfiguration { get { return true; } }
+        public Boolean IsMultiTenant => false;
+        public Boolean IsDebugConfiguration => true;
 
         public String MakeFullPath(Boolean bAdmin, String path, String fileName)
         {

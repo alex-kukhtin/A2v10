@@ -13,7 +13,7 @@
                          Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
                 <Static Grid.Row="2" Grid.Col="1" Align="Right" TabIndex="1"
                         Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
-                <TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2"
+                <TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2" AutoSize="False"
                          Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
                 <ComboBox Grid.Row="3" TabIndex="3"
                          Grid.Col="1" Label="Примечание">

@@ -76,6 +76,7 @@
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
+    <Content Include="app\directives\autosize.js" />
     <Content Include="app\directives\dropdown.js" />
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />

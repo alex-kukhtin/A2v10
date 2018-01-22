@@ -1,7 +1,10 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171224-7080
+// 20180122-7095
 // components/list.js
+
+/* TODO:
+*/
 
 (function() {
 

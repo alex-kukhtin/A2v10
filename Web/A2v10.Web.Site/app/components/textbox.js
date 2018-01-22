@@ -24,7 +24,7 @@
         `<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -64,8 +64,7 @@
             itemToValidate: Object,
             propToValidate: String,
             placeholder: String,
-            password: Boolean,
-            autoSize: Boolean
+            password: Boolean
         },
         computed: {
             controlType() {
@@ -96,6 +95,7 @@
             itemToValidate: Object,
             propToValidate: String,
             placeholder: String,
+            autoSize: Boolean,
             rows:Number
         }
     });

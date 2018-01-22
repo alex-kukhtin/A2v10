@@ -11,6 +11,7 @@ namespace A2v10.Infrastructure
         String AppPath { get; }
         String AppKey { get; }
         Boolean IsDebugConfiguration { get; }
+        Boolean IsMultiTenant { get; }
 
         String ConnectionString(String source);
         String MakeFullPath(Boolean bAdmin, String path, String fileName);

@@ -1,6 +1,6 @@
 <!-- Demo page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
-    <List ItemsSource="{Bind Reports}">
+    <List ItemsSource="{Bind Reports}" Style="ThreeColumnsGrid">
         <ListItem Icon="FilePreview" Content="{Bind Name}" Padding="6,0">
             <ListItem.Header>
                 <Hyperlink Content="{Bind Name}" Bold="True"

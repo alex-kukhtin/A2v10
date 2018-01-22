@@ -26,5 +26,17 @@ namespace A2v10.Web.Mvc.Identity
             var value = user.FindFirstValue("Admin");
             return value == "Admin";
         }
+
+        public static Int32 GetUserTenantId(this IIdentity identity)
+        {
+            var user = identity as ClaimsIdentity;
+            if (user == null)
+                return 0;
+            var value = user.FindFirstValue("PersonName");
+            Int32 tenantId;
+            if (Int32.TryParse(value, out tenantId))
+                return tenantId;
+            return 0;
+        }
     }
 }

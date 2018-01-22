@@ -48,7 +48,19 @@
     }
 
     &.border {
-        border:1px solid @default-brd-color;
+        border: 1px solid @default-brd-color;
+    }
+
+    &.two-columns-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 6px;
+    }
+
+    &.three-columns-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 6px;
     }
 }
 

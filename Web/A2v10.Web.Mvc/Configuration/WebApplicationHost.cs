@@ -54,6 +54,17 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+        public Boolean IsMultiTenant
+        {
+            get
+            {
+                var mt = ConfigurationManager.AppSettings["multiTenant"];
+                if (String.IsNullOrEmpty(mt))
+                    return false;
+                return mt.ToLowerInvariant() == "true";
+            }
+        }
+
         public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
         {
             String fullPath = MakeFullPath(bAdmin, path, fileName);

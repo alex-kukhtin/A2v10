@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -6,6 +6,13 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
+    public enum ListStyle
+    {
+        List,
+        TwoColumnsGrid,
+        ThreeColumnsGrid
+    }
+
     [ContentProperty("Content")]
     public class List : Control, ITableControl
     {
@@ -18,6 +25,8 @@ namespace A2v10.Xaml
 
         public Length Height { get; set; }
 
+        public ListStyle Style { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var ul = new TagBuilder("a2-list", null, IsInGrid);
@@ -26,6 +35,7 @@ namespace A2v10.Xaml
             var isBind = GetBinding(nameof(ItemsSource));
             ul.AddCssClassBool(Striped, "striped");
             ul.AddCssClassBool(Border, "border");
+            ul.AddCssClass(Style.ToString().ToKebabCase());
             //ul.MergeAttribute(":command", "()=> $navigate()");
 
             var mbind = GetBinding(nameof(Mark));

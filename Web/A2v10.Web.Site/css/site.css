@@ -2281,6 +2281,16 @@ table.data-grid > tbody > tr.bold td {
 .a2-list.border {
   border: 1px solid #bdc5d8;
 }
+.a2-list.two-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 6px;
+}
+.a2-list.three-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 6px;
+}
 .generic-list-item {
   display: inline-grid;
   grid-template-rows: auto auto;

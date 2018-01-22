@@ -46,7 +46,6 @@ namespace A2v10.Runtime
             {
                 // TODO: CONFIG
                 return "demo"; //ConfigurationManager.AppSettings["appKey"];
-
             }
         }
 
@@ -58,6 +57,8 @@ namespace A2v10.Runtime
                 return true;
             }
         }
+
+        public Boolean IsMultiTenant => false;
 
         public String AppVersion => AppInfo.MainAssembly.Version;
         public String AppBuild => AppInfo.MainAssembly.Build;

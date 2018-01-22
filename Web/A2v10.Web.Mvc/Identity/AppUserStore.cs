@@ -363,6 +363,7 @@ namespace A2v10.Web.Mvc.Identity
              */
 			IList<Claim> list = new List<Claim>();
             list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
+            list.Add(new Claim("TenantId", user.TenantId.ToString()));
             if (user.IsAdmin)
                 list.Add(new Claim("Admin", "Admin"));
             /*
