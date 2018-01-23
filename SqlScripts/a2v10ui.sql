@@ -1,10 +1,10 @@
-/* 20171223-7045 */
+/* 20180123-7046 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 23 dec 2017 15:00
-module version : 7045
+Last updated : 23 jan 2018
+module version : 7046
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7045);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7046);
 else
-	update a2sys.Versions set [Version] = 7045 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7046 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -75,6 +75,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui
 go
 ------------------------------------------------
 create procedure a2ui.[Menu.User.Load]
+@TenantId int,
 @UserId bigint
 as
 begin

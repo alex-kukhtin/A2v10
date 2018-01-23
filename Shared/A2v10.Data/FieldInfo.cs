@@ -1,6 +1,7 @@
 ﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace A2v10.Data
@@ -38,10 +39,24 @@ namespace A2v10.Data
                 IsLazy = x[2].Contains("Lazy");
             }
             IsComplexField = PropertyName.Contains('.');
+            CheckReservedWords();
 		}
 
+        static HashSet<String> _reservedWords = new HashSet<String>()
+            {
+                "Parent"
+            };
 
-		public FieldInfo(FieldInfo source, String name)
+        void CheckReservedWords()
+        {
+
+            if (_reservedWords.Contains(PropertyName)) {
+                throw new DataLoaderException($"PropertyName '{PropertyName}' is a reserved word");
+            }
+        }
+
+
+        public FieldInfo(FieldInfo source, String name)
 		{
             // for complex fields only
 			PropertyName = name;

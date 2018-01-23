@@ -49,7 +49,7 @@
             </Tab>
             -->
             <Tab Header="Отчеты">
-                <List ItemsSource="{Bind Clients.Selected(Reports)}">
+                <List ItemsSource="{Bind Clients.Selected(Reports)}" Style="TwoColumnsGrid" Margin="6">
                     <ListItem Icon="FilePreview" Content="{Bind Name}" Padding="6,0">
                         <ListItem.Header>
                             <Hyperlink Content="{Bind Name}" Bold="True"

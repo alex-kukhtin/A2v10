@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 13 jan 2018 15:00
-module version : 7056
+Last updated : 23 jan 2018
+module version : 7057
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7056);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7057);
 else
-	update a2sys.Versions set [Version] = 7056 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7057 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -37,7 +37,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Ensure.Admin]
-@UserId bigint
+	@TenantId int,
+	@UserId bigint
 as
 begin
 	set nocount on;
@@ -51,12 +52,13 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Menu.Admin.Load]
+@TenantId int,
 @UserId bigint
 as
 begin
 	set nocount on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin] @TenantId, @UserId;
 	declare @RootId bigint;
 	select @RootId = Id from a2ui.Menu where Parent is null and [Name] = N'Admin';
 
@@ -88,6 +90,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Index]
+@TenantId int,
 @UserId bigint,
 @Order nvarchar(255) = N'Id',
 @Dir nvarchar(255) = N'desc',
@@ -98,7 +101,7 @@ as
 begin
 	set nocount on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	set @Asc = N'asc'; set @Desc = N'desc';
@@ -146,13 +149,14 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Load]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	select [User!TUser!Object]=null, 
 		[Id!!Id]=u.Id, [Name!!Name]=u.UserName, [Phone!!Phone]=u.PhoneNumber, [Email]=u.Email,
@@ -214,6 +218,7 @@ end
 go
 ------------------------------------------------
 create procedure [a2admin].[User.Update]
+	@TenantId int,
 	@UserId bigint,
 	@User a2admin.[User.TableType] readonly,
 	@Roles a2sys.[Id.TableType] readonly,
@@ -227,7 +232,7 @@ begin
 
 	declare @AllUsersGroupId bigint = 1; -- predefined
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @output table(op sysname, id bigint);
 	merge a2security.ViewUsers as target
@@ -272,7 +277,7 @@ begin
 			insert into a2security.UserGroups(UserId, GroupId) values (@RetId, @AllUsersGroupId);
 	end	
 	exec a2security.[Permission.UpdateUserInfo];
-	exec a2admin.[User.Load] @UserId, @RetId;
+	exec a2admin.[User.Load] @TenantId, @UserId, @RetId;
 end
 go
 ------------------------------------------------
@@ -281,9 +286,10 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Login.CheckDuplicate]
-@UserId bigint,
-@Id bigint,
-@Login nvarchar(255)
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint,
+	@Login nvarchar(255)
 as
 begin
 	set nocount on;
@@ -299,15 +305,16 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Delete]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 	delete from a2security.UserGroups where UserId = @Id;
 	delete from a2security.UserRoles where UserId = @Id;
 	update a2security.ViewUsers set Void=1 where Id=@Id;
@@ -319,17 +326,18 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Index]
-@UserId bigint,
-@Order nvarchar(255) = N'Id',
-@Dir nvarchar(255) = N'desc',
-@Offset int = 0,
-@PageSize int = 20,
-@Fragment nvarchar(255) = null
+	@TenantId int,
+	@UserId bigint,
+	@Order nvarchar(255) = N'Id',
+	@Dir nvarchar(255) = N'desc',
+	@Offset int = 0,
+	@PageSize int = 20,
+	@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	set @Asc = N'asc'; set @Desc = N'desc';
@@ -376,13 +384,14 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Load]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 	
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	select [Group!TGroup!Object]=null, [Id!!Id]=g.Id, [Name!!Name]=g.[Name], 
 		[Key] = g.[Key], [Memo]=g.Memo, 
@@ -436,6 +445,7 @@ end
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Update]
+	@TenantId int,
 	@UserId bigint,
 	@Group a2admin.[Group.TableType] readonly,
 	@Users a2sys.[Id.TableType] readonly,
@@ -446,7 +456,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @output table(op sysname, id bigint);
 
@@ -475,7 +485,7 @@ begin
 	when not matched by source and target.GroupId=@RetId then delete;
 		
 	exec a2security.[Permission.UpdateUserInfo];
-	exec a2admin.[Group.Load] @UserId, @RetId;
+	exec a2admin.[Group.Load] @TenantId, @UserId, @RetId;
 end
 go
 ------------------------------------------------
@@ -484,15 +494,16 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Delete]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 	delete from a2security.UserGroups where GroupId = @Id;
 	delete from a2security.UserRoles where GroupId = @Id;
 	update a2security.Groups set Void=1, [Key] = null where Id=@Id;
@@ -504,9 +515,10 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Key.CheckDuplicate]
-@UserId bigint,
-@Id bigint,
-@Key nvarchar(255)
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint,
+	@Key nvarchar(255)
 as
 begin
 	set nocount on;
@@ -522,9 +534,10 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Name.CheckDuplicate]
-@UserId bigint,
-@Id bigint,
-@Name nvarchar(255)
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint,
+	@Name nvarchar(255)
 as
 begin
 	set nocount on;
@@ -540,17 +553,18 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Index]
-@UserId bigint,
-@Order nvarchar(255) = N'Id',
-@Dir nvarchar(255) = N'desc',
-@Offset int = 0,
-@PageSize int = 20,
-@Fragment nvarchar(255) = null
+	@TenantId int,
+	@UserId bigint,
+	@Order nvarchar(255) = N'Id',
+	@Dir nvarchar(255) = N'desc',
+	@Offset int = 0,
+	@PageSize int = 20,
+	@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	set @Asc = N'asc'; set @Desc = N'desc';
@@ -597,13 +611,14 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Load]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 	
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	select [Role!TRole!Object]=null, [Id!!Id]=r.Id, [Name!!Name]=r.[Name], 
 		[Key] = r.[Key], [Memo]=r.Memo, [UsersGroups!TUserOrGroup!Array] = null,
@@ -627,15 +642,16 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Delete]
-@UserId bigint,
-@Id bigint = null
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 	delete from a2security.UserRoles where RoleId = @Id;
 	update a2security.Roles set Void=1, [Key] = null where Id=@Id;
 end
@@ -646,9 +662,10 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Key.CheckDuplicate]
-@UserId bigint,
-@Id bigint,
-@Key nvarchar(255)
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint,
+	@Key nvarchar(255)
 as
 begin
 	set nocount on;
@@ -664,9 +681,10 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Name.CheckDuplicate]
-@UserId bigint,
-@Id bigint,
-@Name nvarchar(255)
+	@TenantId int,
+	@UserId bigint,
+	@Id bigint,
+	@Name nvarchar(255)
 as
 begin
 	set nocount on;
@@ -725,6 +743,7 @@ end
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Update]
+	@TenantId int,
 	@UserId bigint,
 	@Role a2admin.[Role.TableType] readonly,
 	@UsersGroups a2admin.[UserGroup.TableType] readonly,
@@ -735,7 +754,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	exec a2admin.[Ensure.Admin] @UserId;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @output table(op sysname, id bigint);
 
@@ -765,7 +784,7 @@ begin
 	when not matched by source and target.RoleId=@RetId then
 		delete;
 
-	exec a2admin.[Role.Load] @UserId, @RetId;
+	exec a2admin.[Role.Load] @TenantId, @UserId, @RetId;
 end
 go
 ------------------------------------------------

@@ -1332,7 +1332,7 @@ pre.a2-code {
   z-index: 92;
 }
 .control-group:hover .input-group {
-  z-index: 98;
+  z-index: 90;
 }
 .control-group input,
 .control-group select,
@@ -1642,6 +1642,13 @@ pre.a2-code {
   border-bottom: 1px solid #ccc;
   padding: 2px 0;
   color: #777;
+}
+/* avoid validator blinking */
+.control-group.open:hover {
+  z-index: 98 !important;
+}
+.control-group.open .input-group.focus {
+  z-index: 98 !important;
 }
 /*
     TODO:

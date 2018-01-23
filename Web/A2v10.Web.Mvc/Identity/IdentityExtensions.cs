@@ -32,7 +32,7 @@ namespace A2v10.Web.Mvc.Identity
             var user = identity as ClaimsIdentity;
             if (user == null)
                 return 0;
-            var value = user.FindFirstValue("PersonName");
+            var value = user.FindFirstValue("TenantId");
             Int32 tenantId;
             if (Int32.TryParse(value, out tenantId))
                 return tenantId;

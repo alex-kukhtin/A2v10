@@ -2453,7 +2453,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180109-7087
+// 20180123-7096
 /* components/datepicker.js */
 
 
@@ -2469,10 +2469,10 @@ Vue.component('validator-control', {
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div  :class="cssClass()">
+<div  :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
-        <input v-focus v-model.lazy="model" :class="inputClass" />
+        <input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
         <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
@@ -2556,7 +2556,13 @@ Vue.component('validator-control', {
             dayTitle(day) {
                 // todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-			},
+            },
+            cssClass2() {
+                let cx = this.cssClass();
+                if (this.isOpen)
+                    cx += ' open'
+                return cx;
+            },
 			__clickOutside() {
 				this.isOpen = false;
 			}
@@ -2615,7 +2621,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180122-7096
 // components/datagrid.js*/
 
 (function () {
@@ -2724,9 +2730,9 @@ Vue.component('validator-control', {
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
     <div class="h-fill" v-if="fixedHeader">
-        {{header}}
+        {{headerText}}
     </div><div class="h-holder">
-		<slot>{{header}}</slot>
+		<slot>{{headerText}}</slot>
 	</div>
 </th>
 `;
@@ -2786,6 +2792,9 @@ Vue.component('validator-control', {
                         cssClass += ' ' + this.dir;
                 }
                 return cssClass;
+            },
+            headerText() {
+                return this.header || '\xa0';
             }
         },
 		methods: {

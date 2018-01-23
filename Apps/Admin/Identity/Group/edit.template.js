@@ -4,7 +4,7 @@
 const template = {
     properties: {
         "TGroup.$IdOrNew"() { return this.$isNew ? "Новая" : this.Id; },
-        "TGroup.$KeyDisabled"() { return this.Id < 100; }
+        "TGroup.$KeyDisabled"() { return this.Id !== 0 && this.Id < 100; }
     },
     events: {
         "Group.Users[].adding": onAddingUsers

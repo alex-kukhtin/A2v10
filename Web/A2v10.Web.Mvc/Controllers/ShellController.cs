@@ -29,13 +29,8 @@ namespace A2v10.Web.Mvc.Controllers
 	{
         A2v10.Request.BaseController _baseController = new BaseController();
 
-        public Int64 UserId
-        {
-            get
-            {
-                return User.Identity.GetUserId<Int64>();
-            }
-        }
+        public Int64 UserId => User.Identity.GetUserId<Int64>();
+        public Int32 TenantId => User.Identity.GetUserTenantId();
 
 
         public IProfiler Profiler => _baseController.Host.Profiler;
@@ -130,6 +125,7 @@ namespace A2v10.Web.Mvc.Controllers
                 ExpandoObject loadPrms = new ExpandoObject();
                 loadPrms.Append(Request.QueryString, toPascalCase: true);
                 loadPrms.Set("UserId", UserId);
+                loadPrms.Set("TenantId", TenantId);
                 if (pathInfo.StartsWith("app/"))
                 {
                     await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
@@ -167,7 +163,7 @@ namespace A2v10.Web.Mvc.Controllers
                 using (var tr = new StreamReader(Request.InputStream))
                 {
                     String json = tr.ReadToEnd();
-                    await _baseController.Data(command, UserId, json, Response.Output);
+                    await _baseController.Data(command, TenantId, UserId, json, Response.Output);
                 }
             }
             catch (Exception ex)
@@ -253,7 +249,7 @@ namespace A2v10.Web.Mvc.Controllers
                 Boolean isUserAdmin = User.Identity.IsUserAdmin();
                 if (admin && !isUserAdmin)
                     throw new AccessViolationException("The current user is not an administrator");
-                await _baseController.ShellScript(UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
+                await _baseController.ShellScript(TenantId, UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
             }
             catch (Exception ex)
             {

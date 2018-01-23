@@ -19,7 +19,8 @@
                          Grid.Col="1" Label="Примечание">
                     <ComboBoxItem Content="1" Value="1"></ComboBoxItem>
                 </ComboBox>
-                <DatePicker Grid.Row="3" Grid.Col="2" Label="Date" Value="{Bind Customer.Date}"/>
+                <DatePicker Grid.Row="3" Grid.Col="2" Label="Date" Disabled="True"
+                            Value="{Bind Customer.Date}"/>
             </Grid>
         </Tab>
         <Tab Header="Фото">

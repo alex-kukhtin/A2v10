@@ -40,6 +40,8 @@ namespace A2v10.Xaml
 
         public WrapMode Wrap { get; set; }
 
+        public Boolean? Sort { get; set; }
+
         Boolean _noPadding;
 
         internal void RenderColumn(RenderContext context, Int32 colIndex)
@@ -50,6 +52,8 @@ namespace A2v10.Xaml
             MergeBoolAttribute(column, context, nameof(Editable), Editable);
             if (_noPadding)
                 column.MergeAttribute(":no-padding", "true");
+            if (Sort != null)
+                column.MergeAttribute(":sort", Sort.Value.ToString().ToLowerInvariant());
             MergeBoolAttribute(column, context, nameof(Fit), Fit);
             if (Width != null)
                 column.MergeAttribute("width", Width.Value);

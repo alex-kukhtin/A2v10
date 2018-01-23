@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180109-7087
+// 20180123-7096
 /* components/datepicker.js */
 
 
@@ -16,10 +16,10 @@
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div  :class="cssClass()">
+<div  :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
-        <input v-focus v-model.lazy="model" :class="inputClass" />
+        <input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
         <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
@@ -103,7 +103,13 @@
             dayTitle(day) {
                 // todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-			},
+            },
+            cssClass2() {
+                let cx = this.cssClass();
+                if (this.isOpen)
+                    cx += ' open'
+                return cx;
+            },
 			__clickOutside() {
 				this.isOpen = false;
 			}

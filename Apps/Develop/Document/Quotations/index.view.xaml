@@ -58,7 +58,7 @@
 			</DataGrid.GroupBy>
             -->
 			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right"/>
-			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center"/>
+			<DataGridColumn Header="Дата" Content="{Bind DateFrom, DataType=Date}" Align="Center" Sort="False"/>
 			<DataGridColumn Header="Продукт" Content="{Bind ProductName}" Wrap="NoWrap"/>
 			<DataGridColumn Header="Страхователь" Content="{Bind InsurantName}"/>
             <DataGridColumn Header="Состояние" Content="{Bind StateName}" Wrap="NoWrap"/>

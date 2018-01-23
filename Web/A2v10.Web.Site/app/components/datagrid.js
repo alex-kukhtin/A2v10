@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180122-7096
 // components/datagrid.js*/
 
 (function () {
@@ -109,9 +109,9 @@
     const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
     <div class="h-fill" v-if="fixedHeader">
-        {{header}}
+        {{headerText}}
     </div><div class="h-holder">
-		<slot>{{header}}</slot>
+		<slot>{{headerText}}</slot>
 	</div>
 </th>
 `;
@@ -171,6 +171,9 @@
                         cssClass += ' ' + this.dir;
                 }
                 return cssClass;
+            },
+            headerText() {
+                return this.header || '\xa0';
             }
         },
 		methods: {
