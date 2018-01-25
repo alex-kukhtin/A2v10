@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180118-7093
+// 20180124-7098
 /* platform/routex.js */
 
 (function () {
@@ -144,8 +144,16 @@
 	});
 
 	function replaceUrlSearch(url, search) {
-		let parts = url.split('?');
-		return parts[0] + (search || '');
+        let parts = url.split('?');
+        if (parts.length > 1) {
+            // save queryString from url 
+            let qsurl = urlTools.parseQueryString(parts[1]);
+            let qssrch = urlTools.parseQueryString(search);
+            let qsres = Object.assign({}, qsurl, qssrch);
+            return parts[0] + urlTools.makeQueryString(qsres);
+        } else {
+            return parts[0] + (search || '');
+        }
 	}
 
 	function replaceUrlQuery(url, query) {

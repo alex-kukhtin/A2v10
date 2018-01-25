@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -14,6 +14,7 @@ using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
+using A2v10.Web.Mvc.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -28,6 +29,7 @@ namespace A2v10.Web.Mvc.Controllers
         }
 
         public Int64 UserId => User.Identity.GetUserId<Int64>();
+        public Int32 TenantId => User.Identity.GetUserTenantId();
 
         public async Task<ActionResult> Show(String Base, String Rep, String id)
         {
@@ -39,6 +41,7 @@ namespace A2v10.Web.Mvc.Controllers
                 String reportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
                 ExpandoObject prms = new ExpandoObject();
                 prms.Set("UserId", UserId);
+                prms.Set("TenantId", TenantId);
                 prms.Set("Id", id);
                 var iDataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
                 TempData["StiDataModel"] = iDataModel;
@@ -48,6 +51,7 @@ namespace A2v10.Web.Mvc.Controllers
                 if (vars == null)
                     vars = new ExpandoObject();
                 vars.Set("UserId", UserId);
+                vars.Set("TenantId", TenantId);
                 vars.Set("Id", id);
                 TempData["StiVariables"] = vars;
                 ViewBag.locale = "uk"; // TODO

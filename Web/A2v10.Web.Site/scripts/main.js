@@ -1,5 +1,7 @@
-/*20170814-7013*/
-/*app.js*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180125-7098
+// app.js
 
 "use script";
 
@@ -12,7 +14,9 @@
 
     window.require = require;
     window.component = component;
-    window.$$rootUrl = document.querySelector('meta[name=rootUrl]').content || '';
+
+    let rootElem = document.querySelector('meta[name=rootUrl]');
+    window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
 	function require(module) {
 		if (module in app.modules) {
@@ -56,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180125-7098
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -107,7 +111,8 @@ app.modules['std:utils'] = function () {
         text: {
             contains: textContains,
             containsText: textContainsText
-        }
+        },
+        debounce: debounce
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -351,6 +356,16 @@ app.modules['std:utils'] = function () {
             configurable: true, /* needed */
             get: get
         });
+    }
+
+    function debounce(fn, timeout) {
+        let timerId = null;
+        return function () {
+            clearTimeout(timerId);
+            timerId = setTimeout(() => {
+                fn.call()
+            }, timeout);
+        }
     }
 
 };
@@ -639,7 +654,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180118-7093
+// 20180124-7098
 /* platform/routex.js */
 
 (function () {
@@ -783,8 +798,16 @@ app.modules['std:http'] = function () {
 	});
 
 	function replaceUrlSearch(url, search) {
-		let parts = url.split('?');
-		return parts[0] + (search || '');
+        let parts = url.split('?');
+        if (parts.length > 1) {
+            // save queryString from url 
+            let qsurl = urlTools.parseQueryString(parts[1]);
+            let qssrch = urlTools.parseQueryString(search);
+            let qsres = Object.assign({}, qsurl, qssrch);
+            return parts[0] + urlTools.makeQueryString(qsres);
+        } else {
+            return parts[0] + (search || '');
+        }
 	}
 
 	function replaceUrlQuery(url, query) {
@@ -2453,8 +2476,8 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180123-7096
-/* components/datepicker.js */
+// 20180125-7098
+// components/datepicker.js
 
 
 (function () {
@@ -2469,7 +2492,7 @@ Vue.component('validator-control', {
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div  :class="cssClass2()">
+<div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
@@ -5212,7 +5235,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180118-7093
+// 20180124-7098
 // controllers/base.js
 
 (function () {
@@ -5650,11 +5673,16 @@ Vue.directive('resize', {
                     window.open(url, "_blank");
                 };
 
-                if (opts && opts.saveRequired && this.$isDirty) {
-                    this.$save().then(() => doReport());
+                if (opts && opts.validRequired && root.$invalid) {
+                    this.$alert('Сначала исправьте ошибки');
                     return;
                 }
-                doReport();
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doReport());
+                } else {
+                    doReport();
+                }
             },
 
 			$modalSaveAndClose(result, opts) {

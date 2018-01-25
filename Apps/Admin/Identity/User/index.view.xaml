@@ -41,7 +41,7 @@
             DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
 			Striped="True" Sort="True" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="{Bind $Icon}" Wrap="NoWrap"/>
-        <DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap"
+        <DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap" Fit="True"
                         Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
 		<DataGridColumn Header="Имя" Content="{Bind PersonName}"/>
         <DataGridColumn Header="е-mail/Телефон">

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180118-7093
+// 20180124-7098
 // controllers/base.js
 
 (function () {
@@ -438,11 +438,16 @@
                     window.open(url, "_blank");
                 };
 
-                if (opts && opts.saveRequired && this.$isDirty) {
-                    this.$save().then(() => doReport());
+                if (opts && opts.validRequired && root.$invalid) {
+                    this.$alert('Сначала исправьте ошибки');
                     return;
                 }
-                doReport();
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doReport());
+                } else {
+                    doReport();
+                }
             },
 
 			$modalSaveAndClose(result, opts) {

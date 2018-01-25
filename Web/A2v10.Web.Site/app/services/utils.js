@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180125-7098
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -51,7 +51,8 @@ app.modules['std:utils'] = function () {
         text: {
             contains: textContains,
             containsText: textContainsText
-        }
+        },
+        debounce: debounce
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -295,6 +296,16 @@ app.modules['std:utils'] = function () {
             configurable: true, /* needed */
             get: get
         });
+    }
+
+    function debounce(fn, timeout) {
+        let timerId = null;
+        return function () {
+            clearTimeout(timerId);
+            timerId = setTimeout(() => {
+                fn.call()
+            }, timeout);
+        }
     }
 
 };

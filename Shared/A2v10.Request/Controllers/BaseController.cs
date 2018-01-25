@@ -126,11 +126,14 @@ namespace A2v10.Request
                 ExpandoObject prms2 = loadPrms;
                 if (rw.indirect)
                 {
-                    // for indirect - @UserId and @Id only
+                    // for indirect - @TenantId, @UserId and @Id only
                     prms2 = new ExpandoObject();
                     prms2.Set("Id", rw.Id);
                     if (loadPrms != null)
+                    {
                         prms2.Set("UserId", loadPrms.Get<Int64>("UserId"));
+                        prms2.Set("TenantId", loadPrms.Get<Int32>("TenantId"));
+                    }
                 }
                 model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
             }

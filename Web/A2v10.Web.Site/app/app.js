@@ -1,5 +1,7 @@
-﻿/*20170814-7013*/
-/*app.js*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180125-7098
+// app.js
 
 "use script";
 
@@ -12,7 +14,9 @@
 
     window.require = require;
     window.component = component;
-    window.$$rootUrl = document.querySelector('meta[name=rootUrl]').content || '';
+
+    let rootElem = document.querySelector('meta[name=rootUrl]');
+    window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
 	function require(module) {
 		if (module in app.modules) {

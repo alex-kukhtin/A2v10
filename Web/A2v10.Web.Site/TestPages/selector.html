@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <meta name="rootUrl" content="" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="app" style="margin:50px;width:200px">
+        <h3>Selector</h3>
+
+        <a2-selector label="selector label" :item="$data" prop="Elem" display="Name" :fetch="loadData"
+                     description="description for selector" placeholder="Введите текст">
+            <a><i class="ico ico-search"></i></a>
+            <!--
+    <template slot="pane" slot-scope="root">
+        <div style="height:150px;overflow:auto;width:300px">
+            <table class="a2-table selector-table grid-both">
+                <tr v-for="(itm, itmIndex) in root.items" @mousedown.prevent="root.hit(itm)"
+                    :class="{active: root.isItemActive(itmIndex)}">
+                    <td>{{itm.Id}}</td>
+                    <td>{{itm.Name}}</td>
+                </tr>
+            </table>
+            <a>Create element here</a>
+            <ul class="selector-pane">
+                <li @mousedown.prevent="root.hit(itm)" :class="{active: root.isItemActive(itmIndex)}"
+                    v-for="(itm, itmIndex) in root.items" :key="itmIndex" v-text="root.itemName(itm)">}</li>
+            </ul>
+        </div>
+    </template>
+        -->
+        </a2-selector>
+
+        <!--
+            <code v-for="(itm, itmIndex) in root">{{itm}}</code>
+            <ul>
+                <li @mousedown.prevent="pane.hit(itm)" :class="{active: pane.isItemActive(itmIndex)}"
+                    v-for="(itm, itmIndex) in pane.items" :key="itmIndex" v-text="pane.itemName(itm)">}</li>
+            </ul>
+    -->
+
+        <div>
+            <code>{{Elem}}</code>
+        </div>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="../app/app.js"></script>
+    <script src="../app/services/utils.js"></script>
+    <script src="../app/services/popup.js"></script>
+    <script src="../app/components/control.js"></script>
+    <script src="../app/components/validator.js"></script>
+    <script src="../app/directives/focus.js"></script>
+    <script src="../app/components/selector.js"></script>
+
+    <script>
+        const popup = require('std:popup');
+
+        const elems = [
+            { Id: 200, Name: "C#" },
+            { Id: 201, Name: "C" },
+            { Id: 202, Name: "C++" },
+            { Id: 203, Name: "Java" },
+            { Id: 204, Name: "JavaScript" },
+            { Id: 205, Name: "Perl" },
+            { Id: 206, Name: "Pyton" },
+        ];
+
+        new Vue({
+            el: "#app",
+            data: {
+                Elem: elems[2]
+            },
+            methods: {
+                loadData(text) {
+                    let tx = text.toLowerCase();
+                    return new Promise((resolve) => {
+                        resolve(elems.filter((val) => val.Name.toLowerCase().indexOf(tx) !== -1));
+                    })
+                }
+            }
+        });
+
+        popup.startService();
+    </script>
+</body>
+</html>

@@ -1650,6 +1650,57 @@ pre.a2-code {
 .control-group.open .input-group.focus {
   z-index: 98 !important;
 }
+.input-group > .selector-pane {
+  border: 1px solid #9ba7b7;
+  position: absolute;
+  background-color: #fff;
+  left: 0;
+  top: 100%;
+  min-width: calc(100% + 2px);
+  width: auto;
+  height: auto;
+  min-height: 27px;
+  z-index: 1070 !important;
+  margin-top: 0;
+  margin-left: -1px;
+  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 0;
+  overflow: hidden;
+  display: block !important;
+}
+.input-group > .selector-pane ul.selector-pane {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  height: 100%;
+  max-height: 350px;
+}
+.input-group > .selector-pane ul.selector-pane li {
+  list-style: none;
+  padding: 3px 6px;
+  white-space: nowrap;
+}
+.input-group > .selector-pane ul.selector-pane li:hover {
+  background-color: #fdf4bf;
+}
+.input-group > .selector-pane ul.selector-pane li.active {
+  background-color: #cde6f7;
+}
+.input-group > .selector-pane a.create-elem {
+  padding: 4px;
+  display: block;
+  border-top: 1px solid #9ba7b7;
+  background-color: #f8f8f8;
+}
+.input-group > .selector-pane table.selector-table {
+  width: 100%;
+}
+.input-group > .selector-pane table.selector-table tr.active td {
+  background-color: #cde6f7;
+}
+.input-group > .selector-pane table.selector-table tr:hover td {
+  background-color: #fdf4bf;
+}
 /*
     TODO:
     1. do somthing with border: (td:first-child (left:none???)

@@ -1,0 +1,65 @@
+﻿
+@import "Variables.less";
+
+@al-height: 350px;
+
+.input-group > .selector-pane {
+    border: 1px solid @dropdown-brd-color;
+    position: absolute;
+    background-color: #fff;
+    left: 0;
+    top: 100%;
+    min-width: ~"calc(100% + 2px)";
+    width: auto;
+    height: auto;
+    min-height: 27px;
+    z-index: @popup-index !important;
+    margin-top: 0;
+    margin-left: -1px;
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
+    padding: 0;
+    overflow: hidden;
+    display: block !important;
+
+    ul.selector-pane {
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        height: 100%;
+        max-height: @al-height;
+
+        li {
+            list-style: none;
+            padding: 3px 6px;
+            white-space: nowrap;
+
+            &:hover {
+                background-color: @hover-bg-color;
+            }
+
+            &.active {
+                background-color: @active-bg-color;
+            }
+        }
+    }
+
+    a.create-elem {
+        padding: 4px;
+        display: block;
+        border-top: 1px solid @dropdown-brd-color;
+        background-color:#f8f8f8;
+    }
+
+    table.selector-table {
+        width:100%;
+        tr {
+            &.active td {
+                background-color: @active-bg-color;
+            }
+
+            &:hover td {
+                background-color: @hover-bg-color;
+            }
+        }
+    }
+}
