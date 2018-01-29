@@ -9,5 +9,7 @@ namespace A2v10.Request
     {
         public static String LoginHtml => Resources.login;
         public static String LoginScript => Resources.loginScript;
+        public static String RegisterTenantHtml => Resources.registerTenant;
+        public static String RegisterTenantScript => Resources.registerTenantScript;
     }
 }

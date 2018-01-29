@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Pages\about.html" />
+    <Content Include="Pages\registerTenantScript.js" />
+    <Content Include="Pages\registerTenant.html" />
     <Content Include="Pages\login.html" />
     <Content Include="Pages\aboutScript.js" />
     <Content Include="Pages\loginScript.js" />

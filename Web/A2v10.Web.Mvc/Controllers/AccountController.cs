@@ -18,6 +18,7 @@ using A2v10.Request;
 using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Models;
 using A2v10.Web.Mvc.Identity;
+using System.Configuration;
 
 namespace A2v10.Web.Site.Controllers
 {
@@ -82,7 +83,7 @@ namespace A2v10.Web.Site.Controllers
                 String formToken;
                 AntiForgery.GetTokens(null, out cookieToken, out formToken);
 
-                AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(String.Empty, "a2ui.[AppTitle.Load]");
+                AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 
                 StringBuilder html = new StringBuilder(ResourceHelper.LoginHtml);
                 html.Replace("$(Build)", _host.AppBuild);
@@ -147,7 +148,10 @@ namespace A2v10.Web.Site.Controllers
                 if (success.HasValue)
                 {
                     user.LastLoginDate = DateTime.Now;
-                    user.LastLoginHost = $"{Request.UserHostName} [{Request.UserHostAddress}]";
+                    if (Request.UserHostName == Request.UserHostAddress)
+                        user.LastLoginHost = $"{Request.UserHostName}";
+                    else
+                        user.LastLoginHost = $"{Request.UserHostName} [{Request.UserHostAddress}]";
                 }
                 await UserManager.UpdateUser(user);
             }
@@ -196,10 +200,78 @@ namespace A2v10.Web.Site.Controllers
             }
         }
 
+        [AllowAnonymous]
+        public void Register()
+        {
+            try
+            {
+                if (!_host.IsMultiTenant)
+                    throw new ConfigurationErrorsException("Turn on the multiTenant mode");
+                String cookieToken;
+                String formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+
+                StringBuilder html = new StringBuilder(ResourceHelper.RegisterTenantHtml);
+                html.Replace("$(Build)", _host.AppBuild);
+                StringBuilder script = new StringBuilder(ResourceHelper.RegisterTenantScript);
+                script.Replace("$(RegisterData)", $"{{ version: '{_host.AppVersion}', title: 'title', subtitle: 'subtitle' }}");
+                script.Replace("$(Token)", formToken);
+                html.Replace("$(RegisterScript)", script.ToString());
+
+                Response.Cookies.Add(new HttpCookie(AntiForgeryConfig.CookieName, cookieToken));
+
+                Response.Write(html.ToString());
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+
+        }
+
+        // POST: /Register/Login
+        [ActionName("Register")]
+        [HttpPost]
+        [IsAjaxOnly]
+        [AllowAnonymous]
+        [ValidateJsonAntiForgeryToken]
+        public async Task<ActionResult> RegisterLogin()
+        {
+            String status;
+            try
+            {
+                RegisterTenantModel model;
+                using (var tr = new StreamReader(Request.InputStream))
+                {
+                    String json = tr.ReadToEnd();
+                    model = JsonConvert.DeserializeObject<RegisterTenantModel>(json);
+                }
+                // create user with tenant
+                var user = new AppUser { UserName = model.Name, Email = model.Email, Tenant = -1 };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // email confirmation
+                    //String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    status = "Success";
+                } else
+                {
+                    status = String.Join(", ", result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                status = ex.Message;
+            }
+            return Json(new { Status =  status });
+        }
+
         //
         // GET: /Account/Register
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult Register2()
         {
             return View();
         }
@@ -209,7 +281,7 @@ namespace A2v10.Web.Site.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register2(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {

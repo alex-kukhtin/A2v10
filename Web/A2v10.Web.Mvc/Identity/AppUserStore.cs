@@ -86,20 +86,24 @@ namespace A2v10.Web.Mvc.Identity
 		}
 
 		IDbContext _dbContext;
+        IApplicationHost _host;
 
 		UserCache _cache;
 
-		public AppUserStore(IDbContext dbContext)
+		public AppUserStore(IDbContext dbContext, IApplicationHost host)
 		{
 			_dbContext = dbContext;
+            _host = host;
 			_cache = new UserCache();
 		}
+
+        internal String DataSource => _host.CatalogDataSource;
 
 		#region IUserStore
 
 		public async Task CreateAsync(AppUser user)
 		{
-			await _dbContext.ExecuteAsync(null, "[a2security].[CreateUser]", user);
+			await _dbContext.ExecuteAsync(DataSource, "[a2security].[CreateUser]", user);
 			CacheUser(user);
 		}
 
@@ -113,7 +117,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetById(userId);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserById]", new { Id = userId });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserById]", new { Id = userId });
 			CacheUser(user);
 			return user;
 		}
@@ -123,7 +127,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByName(userName);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserByName]", new { UserName = userName });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserByName]", new { UserName = userName });
 			CacheUser(user);
 			return user;
 		}
@@ -132,17 +136,17 @@ namespace A2v10.Web.Mvc.Identity
 		{
 			if (user.IsLockoutModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserLockout]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
             else if (user.IsPasswordModified)
             {
-                await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserPassword]", user);
+                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserPassword]", user);
                 user.ClearModified(UserModifiedFlag.Password);
             }
             else if (user.IsLastLoginModified)
             {
-                await _dbContext.ExecuteAsync<AppUser>(null, "[a2security].[UpdateUserLogin]", user);
+                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
                 user.ClearModified(UserModifiedFlag.LastLogin);
 
             }
@@ -308,7 +312,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByEmail(email);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(null, "[a2security].[FindUserByEmail]", new { Email = email });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserByEmail]", new { Email = email });
 			CacheUser(user);
 			return user;
 		}
@@ -363,7 +367,7 @@ namespace A2v10.Web.Mvc.Identity
              */
 			IList<Claim> list = new List<Claim>();
             list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
-            list.Add(new Claim("TenantId", user.TenantId.ToString()));
+            list.Add(new Claim("TenantId", user.Tenant.ToString()));
             if (user.IsAdmin)
                 list.Add(new Claim("Admin", "Admin"));
             /*
@@ -398,7 +402,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public async Task<IList<String>> GetRolesAsync(AppUser user)
 		{
-			var list = await _dbContext.LoadListAsync<AppRole>(null, "[a2security].[GetUserGroups]", new { UserId = user.Id });
+			var list = await _dbContext.LoadListAsync<AppRole>(DataSource, "[a2security].[GetUserGroups]", new { UserId = user.Id });
 			return list.Select<AppRole, String>(x => x.Name).ToList();
 		}
 

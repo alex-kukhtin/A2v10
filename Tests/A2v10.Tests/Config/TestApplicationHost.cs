@@ -54,6 +54,8 @@ namespace A2v10.Tests.Config
 
         public Boolean IsMultiTenant => false;
         public Boolean IsDebugConfiguration => true;
+        public Int32? TenantId { get; set; }
+        public String CatalogDataSource => null;
 
         public String MakeFullPath(Boolean bAdmin, String path, String fileName)
         {

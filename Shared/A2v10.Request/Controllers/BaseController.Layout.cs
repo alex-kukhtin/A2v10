@@ -25,7 +25,7 @@ namespace A2v10.Request
             writer.Write(sb.ToString());
         }
 
-        public async Task ShellScript(Int32 tenantId, Int64 userId, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
+        public async Task ShellScript(String dataSource, Int32 tenantId, Int64 userId, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
         {
             String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
@@ -34,7 +34,7 @@ namespace A2v10.Request
             loadPrms.Set("TenantId", tenantId);
 
             String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
-            IDataModel dm = await _dbContext.LoadModelAsync(String.Empty, proc, loadPrms);
+            IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
             String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), BaseController.StandardSerializerSettings);
 

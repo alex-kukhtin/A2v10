@@ -48,6 +48,14 @@ namespace A2v10.Web.Mvc.Models
         public Boolean RememberMe { get; set; }
     }
 
+    public class RegisterTenantModel
+    {
+        public Int32 Id { get; set; }
+        public String Name { get; set; }
+        public String Email { get; set; }
+        public String Password { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required]

@@ -12,6 +12,9 @@ namespace A2v10.Web.Mvc.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+            var iCtrlTenant = filterContext.Controller as IControllerTenant;
+            if (iCtrlTenant != null)
+                iCtrlTenant.StartTenant();
             var iCtrl = filterContext.Controller as IControllerProfiler;
             if (iCtrl == null)
                 return;
@@ -24,6 +27,7 @@ namespace A2v10.Web.Mvc.Filters
             base.OnResultExecuted(filterContext);
             if (_request != null)
                 _request.Stop();
+            ServiceLocator.Current.Stop();
         }
     }
 }

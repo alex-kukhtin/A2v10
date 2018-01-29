@@ -21,7 +21,8 @@ namespace A2v10.Web.Mvc.Identity
 		public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)
 		{
 			IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
-			AppUserStore store = new AppUserStore(dbContext);
+            IApplicationHost host = ServiceLocator.Current.GetService<IApplicationHost>();
+			AppUserStore store = new AppUserStore(dbContext, host);
 			AppUserManager manager = new AppUserManager(store);
 			manager.Construct(options);
 			return manager;

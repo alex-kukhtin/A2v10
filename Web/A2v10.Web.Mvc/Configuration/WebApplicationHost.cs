@@ -65,6 +65,25 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+
+        Int32 _tenantId;
+
+        public Int32? TenantId {
+            get {
+                if (!IsMultiTenant)
+                    return null;
+                return _tenantId;
+            }
+            set
+            {
+                if (!IsMultiTenant)
+                    return;
+                _tenantId = value.Value;
+            }
+        }
+
+        public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
+
         public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
         {
             String fullPath = MakeFullPath(bAdmin, path, fileName);

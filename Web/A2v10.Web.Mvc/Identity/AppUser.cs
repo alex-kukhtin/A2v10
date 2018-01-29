@@ -26,7 +26,7 @@ namespace A2v10.Web.Mvc.Identity
 
         public String PersonName { get; set; }
         public Boolean IsAdmin { get; set; }
-        public Int32 TenantId { get; set; }
+        public Int32 Tenant { get; set; }
 		public String Email { get; set; }
 		public String PhoneNumber { get; set; }
 

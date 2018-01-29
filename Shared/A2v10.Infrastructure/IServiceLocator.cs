@@ -10,6 +10,7 @@ namespace A2v10.Infrastructure
         T GetService<T>() where T:class;
         void RegisterService<T>(T service) where T:class;
         Boolean IsServiceRegistered<T>() where T : class;
+        void Stop();
     }
 
     public class ServiceLocator : IServiceLocator
@@ -21,6 +22,13 @@ namespace A2v10.Infrastructure
         public ServiceLocator()
         {
             ServiceLocator.Start(this);
+        }
+
+        public void Stop()
+        {
+            foreach (var s in _services)
+                if (s.Value is ISupportStopService)
+                    (s.Value as ISupportStopService).Stop();
         }
 
         public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();

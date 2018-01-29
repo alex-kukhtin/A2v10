@@ -13,11 +13,12 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Data
 {
-    public class SqlDbContext : IDbContext
+    public class SqlDbContext : IDbContext, ISupportStopService
     {
         IApplicationHost _host;
 
         const String RET_PARAM_NAME = "@RetId";
+        const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
 
         public SqlDbContext(IApplicationHost host)
         {
@@ -26,6 +27,7 @@ namespace A2v10.Data
 
         public String ConnectionString(String source)
         {
+            // TODO
             return _host.ConnectionString(source);
         }
 
@@ -34,7 +36,12 @@ namespace A2v10.Data
             var cnnStr = _host.ConnectionString(source);
             var cnn = new SqlConnection(cnnStr);
             await cnn.OpenAsync();
+            await SetTenantIdAsync(source, cnn);
             return cnn;
+        }
+
+        public void Stop()
+        {
         }
 
         public SqlConnection GetConnection(String source)
@@ -42,9 +49,41 @@ namespace A2v10.Data
             var cnnStr = _host.ConnectionString(source);
             var cnn = new SqlConnection(cnnStr);
             cnn.Open();
+            SetTenantId(source, cnn);
             return cnn;
         }
 
+        async Task SetTenantIdAsync(String source, SqlConnection cnn)
+        {
+            if (!_host.IsMultiTenant)
+                return;
+            if (source == _host.CatalogDataSource)
+                return;
+            using (_host.Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+            {
+                using (var cmd = cnn.CreateCommandSP(SET_TENANT_CMD))
+                {
+                    cmd.Parameters.AddWithValue("@TenantId", _host.TenantId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        void SetTenantId(String source, SqlConnection cnn)
+        {
+            if (!_host.IsMultiTenant)
+                return;
+            if (source == _host.CatalogDataSource)
+                return;
+            using (_host.Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+            {
+                using (var cmd = cnn.CreateCommandSP(SET_TENANT_CMD))
+                {
+                    cmd.Parameters.AddWithValue("@TenantId", _host.TenantId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public async Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null)
         {

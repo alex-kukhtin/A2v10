@@ -25,15 +25,21 @@ namespace A2v10.Web.Mvc.Controllers
 
     [Authorize]
     [ExecutingFilter]
-    public class ShellController : Controller, IControllerProfiler
+    public class ShellController : Controller, IControllerProfiler, IControllerTenant
 	{
         A2v10.Request.BaseController _baseController = new BaseController();
 
         public Int64 UserId => User.Identity.GetUserId<Int64>();
         public Int32 TenantId => User.Identity.GetUserTenantId();
+        public String CatalogDataSource => _baseController.Host.CatalogDataSource;
 
+        public ShellController()
+        {
+        }
 
+        #region IControllerProfiler
         public IProfiler Profiler => _baseController.Host.Profiler;
+        #endregion
 
         protected String RootUrl
         {
@@ -47,6 +53,14 @@ namespace A2v10.Web.Mvc.Controllers
                 return url;
             }
         }
+
+        #region IControllerTenant
+        public void StartTenant()
+        {
+            var host = ServiceLocator.Current.GetService<IApplicationHost>();
+            host.TenantId = TenantId;
+        }
+        #endregion
 
         public async Task Default(String pathInfo)
         {
@@ -249,7 +263,7 @@ namespace A2v10.Web.Mvc.Controllers
                 Boolean isUserAdmin = User.Identity.IsUserAdmin();
                 if (admin && !isUserAdmin)
                     throw new AccessViolationException("The current user is not an administrator");
-                await _baseController.ShellScript(TenantId, UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
+                await _baseController.ShellScript(CatalogDataSource, TenantId, UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
             }
             catch (Exception ex)
             {

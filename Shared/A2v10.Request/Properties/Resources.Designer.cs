@@ -61,21 +61,16 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;page absolute page-grid&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;page absolute page-grid&quot; id=&quot;$(PageGuid)&quot;&gt;
+        ///    &lt;a2-document-title page-title=&quot;О программе...&quot;&gt;&lt;/a2-document-title&gt;
         ///    &lt;div class=&quot;toolbar page-toolbar&quot;&gt;
-        ///        &lt;button class=&quot;btn btn-tb&quot;&gt;&lt;i class=&quot;ico ico-reload&quot;&gt;&lt;/i&gt; Обновить&lt;/button&gt;
+        ///        &lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$requery&quot;&gt;&lt;i class=&quot;ico ico-reload&quot;&gt;&lt;/i&gt; Обновить&lt;/button&gt;
         ///        &lt;div class=&quot;aligner&quot;&gt;&lt;/div&gt;
-        ///        &lt;button class=&quot;btn btn-tb&quot;&gt;&lt;i class=&quot;ico ico-close&quot;&gt;&lt;/i&gt; Закрыть&lt;/button&gt;
+        ///        &lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$close&quot;&gt;&lt;i class=&quot;ico ico-close&quot;&gt;&lt;/i&gt; Закрыть&lt;/button&gt;
         ///    &lt;/div&gt;
         ///    &lt;div class=&quot;page-content&quot;&gt;
         ///        &lt;div class=&quot;grid&quot;&gt;
-        ///            &lt;h3 class=&quot;a2-header&quot;&gt;A2:Web version 10&lt;/h3&gt;
-        ///        &lt;/div&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/div&gt;
-        ///&lt;script type=&quot;text/javascript&quot;&gt;
-        ///
-        ///&lt;/script&gt;.
+        ///            &lt;h3  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string about {
             get {
@@ -90,20 +85,24 @@ namespace A2v10.Request.Properties {
         ///
         ///    &apos;use strict&apos;;
         ///
+        ///    const eventBus = require(&apos;std:eventBus&apos;);
+        ///
+        ///    const store = component(&apos;std:store&apos;);
+        ///    const documentTitle = component(&quot;std:doctitle&quot;);
+        ///
+        ///
         ///    const vm = new Vue({
-        ///        el: &quot;#el&quot;,
+        ///        el: &quot;#$(PageGuid)&quot;,
+        ///        store: store,
         ///        data: {
+        ///        },
+        ///        components: {
+        ///            &apos;a2-document-title&apos;: documentTitle
         ///        },
         ///        computed: {
         ///        },
         ///        methods: {
-        ///        }
-        ///    });
-        ///
-        ///
-        ///    alert(&apos;app about loaded&apos;);
-        ///
-        ///})();.
+        ///            $clos [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string aboutScript {
             get {
@@ -198,6 +197,52 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;title&gt;A2:Web&lt;/title&gt;
+        ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///    &lt;div id=&quot;app&quot; class=&quot;shell&quot; v-cloak&gt;
+        ///        &lt;header clas [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string registerTenant {
+            get {
+                return ResourceManager.GetString("registerTenant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///
+        ///(function () {
+        ///
+        ///
+        ///    Vue.directive(&apos;focus&apos;, {
+        ///        bind(el, binding, vnode) {
+        ///
+        ///            el.addEventListener(&quot;focus&quot;, function (event) {
+        ///                event.target.parentElement.classList.add(&apos;focus&apos;);
+        ///            }, false);
+        ///
+        ///            el.addEventListener(&quot;blur&quot;, function (event) {
+        ///                let t = event.target;
+        ///                t._selectDone = false;
+        ///                event.target.parentElement.classList.remove(&apos;focus&apos; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string registerTenantScript {
+            get {
+                return ResourceManager.GetString("registerTenantScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /*20171010-7043*/
         ///
         ///(function () {
@@ -210,7 +255,7 @@ namespace A2v10.Request.Properties {
         ///        el: &apos;#shell&apos;,
         ///        data: {
         ///            version: &apos;$(AppVersion)&apos;,
-        ///			menu: menu.Menu[0].Menu,
+        ///			menu: menu.Menu ? menu.Menu[0].Menu : null,
         ///			title: menu.SysParams.AppTitle,
         ///            subtitle: menu.SysParams.AppSubTitle,
         ///            userIsAdmin: $(Admin)

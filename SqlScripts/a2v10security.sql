@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 13 jan 2017
-module version : 7052
+Last updated : 29 jan 2017
+module version : 7054
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7052);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7054);
 else
-	update a2sys.Versions set [Version] = 7052 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7054 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -34,6 +34,23 @@ end
 go
 ------------------------------------------------
 -- a2security schema
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Tenants')
+	create sequence a2security.SQ_Tenants as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants')
+begin
+	create table a2security.Tenants
+	(
+		Id	int not null constraint PK_Tenants primary key
+			constraint DF_Tenants_PK default(next value for a2security.SQ_Tenants),
+		[Admin] bigint null, -- admin user ID
+		[Source] nvarchar(255) null,
+		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate())
+	);
+end
+go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Users')
 	create sequence a2security.SQ_Users as bigint start with 100 increment by 1;
@@ -45,6 +62,8 @@ begin
 	(
 		Id	bigint not null constraint PK_Users primary key
 			constraint DF_Users_PK default(next value for a2security.SQ_Users),
+		Tenant int null 
+			constraint FK_Users_Tenant_Tenants foreign key references a2security.Tenants(Id),
 		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
 		Void bit not null constraint DF_Users_Void default(0),
 		SecurityStamp nvarchar(max)	not null,
@@ -76,6 +95,13 @@ if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2se
 begin
 	alter table a2security.Users add LastLoginDate datetime null;
 	alter table a2security.Users add LastLoginHost nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Tenant')
+begin
+	alter table a2security.Users add Tenant int null 
+			constraint FK_Users_Tenant_Tenants foreign key references a2security.Tenants(Id);
 end
 go
 ------------------------------------------------
@@ -212,7 +238,7 @@ create view a2security.ViewUsers
 as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
-		PersonName, Memo, Void, LastLoginDate, LastLoginHost,
+		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, 
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -228,15 +254,47 @@ create procedure a2security.CreateUser
 @PasswordHash nvarchar(max) = null,
 @SecurityStamp nvarchar(max),
 @Email nvarchar(255) = null,
-@PhoneNumber nvarchar(255) = null
+@PhoneNumber nvarchar(255) = null,
+@Tenant int = null
 as
 begin
+-- from account/register only
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
-	-- from account/register only
-	insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
-		values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
+	if @Tenant = -1
+	begin
+		declare @tenants table(id int);
+		declare @users table(id bigint);
+		declare @tenantId int;
+		declare @user bigint; 
+
+		begin tran;
+		insert into a2security.Tenants([Admin])
+			output inserted.Id into @tenants(id)
+			values (null);
+
+		select top(1) @tenantId = id from @tenants;
+
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant)
+			output inserted.Id into @users(id)
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId);			
+		select top(1) @user = id from @users;
+
+		update a2security.Tenants set [Admin]=@user where Id=@tenantId;
+
+		insert into a2security.UserGroups(UserId, GroupId) values (@user, 1 /*all users*/);
+		commit tran;
+	end
+	else
+	begin
+		begin tran;
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
+		insert into a2security.UserGroups(UserId, GroupId) values (@user, 1 /*all users*/);
+		commit tran;
+	end
+	exec a2security.[Permission.UpdateUserInfo];
 	--TODO: log
 end
 go

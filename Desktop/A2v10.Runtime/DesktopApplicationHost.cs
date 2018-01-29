@@ -59,6 +59,8 @@ namespace A2v10.Runtime
         }
 
         public Boolean IsMultiTenant => false;
+        public Int32? TenantId { get; set; }
+        public String CatalogDataSource => null;
 
         public String AppVersion => AppInfo.MainAssembly.Version;
         public String AppBuild => AppInfo.MainAssembly.Build;
