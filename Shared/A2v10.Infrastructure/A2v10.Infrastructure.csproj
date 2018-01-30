@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppInfo.cs" />
+    <Compile Include="BaseLocalizer.cs" />
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="IBackgroundTasksManager.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="IDataModel.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="IApplicationHost.cs" />
+    <Compile Include="ILocalizer.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessaging.cs" />
     <Compile Include="IModelHandler.cs" />

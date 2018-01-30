@@ -104,10 +104,21 @@ namespace A2v10.Web.Mvc.Identity
 		public async Task CreateAsync(AppUser user)
 		{
 			await _dbContext.ExecuteAsync(DataSource, "[a2security].[CreateUser]", user);
-			CacheUser(user);
-		}
+            if (_host.IsMultiTenant)
+            {
+                var createdUser = await FindByIdAsync(user.Id);
+                _host.TenantId = createdUser.Tenant;
+                // TODO: GetTenantSegment!!!!
+                await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
+                CacheUser(createdUser);
+            }
+            else
+            {
+                CacheUser(user);
+            }
+        }
 
-		public Task DeleteAsync(AppUser user)
+        public Task DeleteAsync(AppUser user)
 		{
 			throw new NotImplementedException();
 		}

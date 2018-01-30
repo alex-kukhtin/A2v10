@@ -1,8 +1,26 @@
 ﻿;
+@Home=Головна
 @Documents=Документи
+@Catalogs=Довідники
+@Sales=Продажі
+@Purchase=Закупівлі
+@Inventory=Запаси
+@Accounting=Бухгалтерія
 @Create=Створити
 @CreateDocument=Створити документ
+@Save=Зберегти
 @Reload=Оновити
 @Refresh=Оновити
 @Delete=Видалити
 @Close=Закрити
+;
+@Code=Код
+@Date=Дата
+@Sum=Сума
+@Qty=Кількість
+@Price=Ціна
+@No=Номер
+@Purchaser=Покупець
+@Memo=Примітка
+;
+@ConfirmDeleteDocument=Видалити документ?

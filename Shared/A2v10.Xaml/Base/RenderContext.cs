@@ -111,14 +111,20 @@ namespace A2v10.Xaml
 
         private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
         private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
+
         private UIElementBase _root;
         private IDataModel _dataModel;
+        private ILocalizer _localizer;
 
-        public RenderContext(TextWriter writer, UIElementBase root, IDataModel dataModel)
+        private String _currentLocale;
+
+        public RenderContext(UIElementBase root, RenderInfo ri)
         {
-            Writer = writer;
+            Writer = ri.Writer;
             _root = root;
-            _dataModel = dataModel;
+            _dataModel = ri.DataModel;
+            _localizer = ri.Localizer;
+            _currentLocale = ri.CurrentLocale;
         }
 
         public Boolean IsDialog
@@ -213,5 +219,13 @@ namespace A2v10.Xaml
                 return scope.Replace(result);
             return result;
         }
+
+        public String Localize(String text, Boolean replaceNewLine = true)
+        {
+            if (_localizer == null)
+                return text;
+            return _localizer.Localize(_currentLocale, text, replaceNewLine);
+        }
+
     }
 }

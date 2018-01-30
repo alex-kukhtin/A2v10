@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Config\TestConfig.cs" />
     <Compile Include="Config\TestApplicationHost.cs" />
+    <Compile Include="Config\TestLocalizer.cs" />
     <Compile Include="Config\TestProfiler.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="DataModelTest.cs" />

@@ -36,7 +36,7 @@ namespace A2v10.Xaml
             if (bindString != null)
                 resVal = bindString.GetPathFormat(context);
             else if (propValue != null)
-                resVal = $"'{propValue}'";
+                resVal = $"'{context.Localize(propValue)}'";
             return resVal;
         }
     }

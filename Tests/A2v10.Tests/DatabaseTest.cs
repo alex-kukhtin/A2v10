@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
+
+
 using System;
 using System.Threading.Tasks;
 using System.Dynamic;

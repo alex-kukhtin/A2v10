@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 29 jan 2017
-module version : 7054
+Last updated : 30 jan 2017
+module version : 7055
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7054);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7055);
 else
-	update a2sys.Versions set [Version] = 7054 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7055 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -255,19 +255,22 @@ create procedure a2security.CreateUser
 @SecurityStamp nvarchar(max),
 @Email nvarchar(255) = null,
 @PhoneNumber nvarchar(255) = null,
-@Tenant int = null
+@Tenant int = null,
+@RetId bigint output
 as
 begin
 -- from account/register only
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+	
+	declare @userId bigint; 
+
 	if @Tenant = -1
 	begin
 		declare @tenants table(id int);
 		declare @users table(id bigint);
 		declare @tenantId int;
-		declare @user bigint; 
 
 		begin tran;
 		insert into a2security.Tenants([Admin])
@@ -279,22 +282,28 @@ begin
 		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant)
 			output inserted.Id into @users(id)
 			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId);			
-		select top(1) @user = id from @users;
+		select top(1) @userId = id from @users;
 
-		update a2security.Tenants set [Admin]=@user where Id=@tenantId;
+		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
 
-		insert into a2security.UserGroups(UserId, GroupId) values (@user, 1 /*all users*/);
+		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
 		commit tran;
 	end
 	else
 	begin
 		begin tran;
+
 		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber)
+			output inserted.Id into @users(id)
 			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber);
-		insert into a2security.UserGroups(UserId, GroupId) values (@user, 1 /*all users*/);
+		select top(1) @userId = id from @users;
+
+		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
+
 		commit tran;
 	end
 	exec a2security.[Permission.UpdateUserInfo];
+	set @RetId = @userId;
 	--TODO: log
 end
 go

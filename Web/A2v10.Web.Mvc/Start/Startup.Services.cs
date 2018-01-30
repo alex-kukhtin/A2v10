@@ -19,7 +19,8 @@ namespace A2v10.Web.Mvc.Start
             {
                 IProfiler profiler = new WebProfiler();
                 IApplicationHost host = new WebApplicationHost(profiler);
-                IDbContext dbContext = new SqlDbContext(host);
+                ILocalizer localizer = new WebLocalizer(host);
+                IDbContext dbContext = new SqlDbContext(host, localizer);
                 IRenderer renderer = new XamlRenderer(profiler);
                 IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
                 IMessaging messaging = new MessageProcessor(host, dbContext);
@@ -30,6 +31,7 @@ namespace A2v10.Web.Mvc.Start
                 locator.RegisterService<IRenderer>(renderer);
                 locator.RegisterService<IWorkflowEngine>(workflowEngine);
                 locator.RegisterService<IMessaging>(messaging);
+                locator.RegisterService<ILocalizer>(localizer);
 
                 HttpContext.Current.Items.Add("ServiceLocator", locator);
             };

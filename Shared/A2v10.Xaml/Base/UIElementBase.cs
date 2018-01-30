@@ -78,7 +78,7 @@ namespace A2v10.Xaml
             if (content is UIElementBase)
                 (content as UIElementBase).RenderElement(context);
             else if (content != null)
-                context.Writer.Write(content.ToString().Replace("\\n", "\n"));
+                context.Writer.Write(context.Localize(content.ToString()));
         }
 
         internal void RenderIcon(RenderContext context, Icon icon, String addClass = null)
@@ -102,7 +102,7 @@ namespace A2v10.Xaml
             if (attrBind != null)
                 tag.MergeAttribute($":{attrName}", attrBind.GetPathFormat(context));
             else
-                tag.MergeAttribute(attrName, propValue);
+                tag.MergeAttribute(attrName, context.Localize(propValue));
         }
 
         internal void MergeAttributeInt32(TagBuilder tag, RenderContext context, String attrName, String propName, Int32? propValue)
@@ -194,7 +194,7 @@ namespace A2v10.Xaml
                     .Render(context);
             } else if (!String.IsNullOrEmpty(badge)) {
                 new TagBuilder("span", "badge")
-                    .SetInnerText(badge)
+                    .SetInnerText(context.Localize(badge))
                     .Render(context);
             }
         }

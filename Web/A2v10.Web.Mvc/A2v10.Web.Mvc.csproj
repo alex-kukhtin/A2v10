@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\WebLocalizer.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Filters\ExecutingFilterAttribute.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />

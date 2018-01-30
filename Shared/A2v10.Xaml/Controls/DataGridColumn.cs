@@ -134,7 +134,7 @@ namespace A2v10.Xaml
             if (bindProp != null)
                 tag.MergeAttribute(":" + attr, bindProp.GetPath(context));
             else if (propValue != null)
-                tag.MergeAttribute(attr, propValue.ToString());
+                tag.MergeAttribute(attr, context.Localize(propValue.ToString()));
         }
 
         void CreateEditable()

@@ -20,6 +20,7 @@ namespace A2v10.Request
         protected IDbContext _dbContext;
         protected IRenderer _renderer;
         protected IWorkflowEngine _workflowEngine;
+        protected ILocalizer _localizer;
 
         public BaseController()
         {
@@ -29,6 +30,7 @@ namespace A2v10.Request
             _dbContext = locator.GetService<IDbContext>();
             _renderer = locator.GetService<IRenderer>();
             _workflowEngine = locator.GetService<IWorkflowEngine>();
+            _localizer = locator.GetService<ILocalizer>();
         }
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -163,7 +165,9 @@ namespace A2v10.Request
                             FileName = filePath,
                             FileTitle = fileName,
                             Writer = strWriter,
-                            DataModel = model
+                            DataModel = model,
+                            Localizer = _localizer,
+                            CurrentLocale = null
                         };
                         _renderer.Render(ri);
                         // write markup

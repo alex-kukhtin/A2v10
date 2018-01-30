@@ -13,6 +13,8 @@ namespace A2v10.Infrastructure
         public String Text;
         public TextWriter Writer;
         public IDataModel DataModel;
+        public ILocalizer Localizer;
+        public String CurrentLocale;
     }
 
     public interface IRenderer

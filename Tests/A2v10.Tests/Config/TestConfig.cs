@@ -20,7 +20,8 @@ namespace A2v10.Tests.Config
             {
                 var profiler = new TestProfiler();
                 var host = new TestApplicationHost(profiler);
-                var dbContext = new SqlDbContext(host);
+                var localizer = new TestLocalizer();
+                var dbContext = new SqlDbContext(host, localizer);
                 var workflowEngine = new WorkflowEngine(host, dbContext);
                 var renderer = new XamlRenderer(profiler);
 

@@ -31,6 +31,15 @@ namespace A2v10.Data
         ExpandoObject _root = new ExpandoObject();
         ExpandoObject _sys = new ExpandoObject();
 
+        ILocalizer _localizer;
+        String _locale;
+
+        public DataModelReader(ILocalizer localizer, String locale)
+        {
+            _localizer = localizer;
+            _locale = locale;
+        }
+
         public IDataModel DataModel
         {
             get
@@ -244,6 +253,8 @@ namespace A2v10.Data
                 _refMap.Add(field.TypeName, value, refValue);
                 record.Add(field.PropertyName, refValue);
             }
+            else if (value is String)
+                record.Add(field.PropertyName, _localizer.Localize(_locale, value.ToString()));
             else
                 record.Add(field.PropertyName, value);
         }

@@ -36,7 +36,7 @@ namespace A2v10.Xaml
             }
 
             using (request.Start(ProfileAction.Render, $"render: {info.FileTitle}")) {
-                RenderContext ctx = new RenderContext(info.Writer, uiElem, info.DataModel);
+                RenderContext ctx = new RenderContext(uiElem, info);
                 ctx.RootId = info.RootId;
                 uiElem.RenderElement(ctx);
             }

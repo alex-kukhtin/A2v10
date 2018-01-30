@@ -16,13 +16,15 @@ namespace A2v10.Data
     public class SqlDbContext : IDbContext, ISupportStopService
     {
         IApplicationHost _host;
+        ILocalizer _localizer;
 
         const String RET_PARAM_NAME = "@RetId";
         const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
 
-        public SqlDbContext(IApplicationHost host)
+        public SqlDbContext(IApplicationHost host, ILocalizer localizer)
         {
             _host = host;
+            _localizer = localizer;
         }
 
         public String ConnectionString(String source)
@@ -87,7 +89,7 @@ namespace A2v10.Data
 
         public async Task<IDataModel> LoadModelAsync(String source, String command, Object prms = null)
         {
-            var modelReader = new DataModelReader();
+            var modelReader = new DataModelReader(_localizer, null);
             using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 await ReadDataAsync(source, command,
@@ -110,7 +112,7 @@ namespace A2v10.Data
 
         public IDataModel LoadModel(String source, String command, Object prms = null)
         {
-            var modelReader = new DataModelReader();
+            var modelReader = new DataModelReader(_localizer, null);
             using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
                 ReadData(source, command,
@@ -193,7 +195,7 @@ namespace A2v10.Data
 
         public IDataModel SaveModel(String source, String command, Object data, Object prms = null)
         {
-            var dataReader = new DataModelReader();
+            var dataReader = new DataModelReader(_localizer, null);
             var dataWriter = new DataModelWriter();
             using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {
@@ -236,7 +238,7 @@ namespace A2v10.Data
 
         public async Task<IDataModel> SaveModelAsync(String source, String command, Object data, Object prms = null)
         {
-            var dataReader = new DataModelReader();
+            var dataReader = new DataModelReader(_localizer, null);
             var dataWriter = new DataModelWriter();
             using (var p = _host.Profiler.CurrentRequest.Start(ProfileAction.Sql, command))
             {

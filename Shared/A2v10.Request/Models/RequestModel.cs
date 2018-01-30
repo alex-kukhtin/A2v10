@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
+using System.IO;
 
 namespace A2v10.Request
 {
@@ -513,10 +514,49 @@ namespace A2v10.Request
             return mi;
         }
 
+        static async Task<String> Redirect(IApplicationHost host, Boolean bAdmin, String path)
+        {
+            await StartWatcher(host, bAdmin);
+            if (_redirect == null)
+                return path;
+            String outPath;
+            if (_redirect.TryGetValue(path, out outPath))
+                return outPath;
+            return path;
+        }
+
+        static Boolean _redirectLoaded;
+        static FileSystemWatcher _redirectWatcher;
+        static IDictionary<String, String> _redirect;
+
+        static async Task StartWatcher(IApplicationHost host, Boolean bAdmin)
+        {
+            if (_redirectLoaded)
+                return;
+            String redFilePath = host.MakeFullPath(bAdmin, String.Empty, "redirect.json");
+            if (System.IO.File.Exists(redFilePath))
+            {
+                String json = await host.ReadTextFile(bAdmin, String.Empty, "redirect.json");
+                _redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(json);
+            }
+            if (host.IsDebugConfiguration && _redirectWatcher == null)
+            {
+                _redirectWatcher = new FileSystemWatcher(Path.GetDirectoryName(redFilePath), "*.json");
+                _redirectWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+                _redirectWatcher.Changed += (sender, e) =>
+                {
+                    _redirectLoaded = false;
+                };
+                _redirectWatcher.EnableRaisingEvents = true;
+            }
+            _redirectLoaded = true;
+        }
+
         public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
         {
             var mi = GetModelInfo(kind, normalizedUrl);
-            String jsonText = await host.ReadTextFile(bAdmin, mi.path, "model.json");
+            String pathForLoad = await Redirect(host, bAdmin, mi.path);
+            String jsonText = await host.ReadTextFile(bAdmin, pathForLoad, "model.json");
             var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
             rm.EndInit();
             rm._action = mi.action;
