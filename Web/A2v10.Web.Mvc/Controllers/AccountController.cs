@@ -88,7 +88,8 @@ namespace A2v10.Web.Site.Controllers
                 StringBuilder html = new StringBuilder(ResourceHelper.LoginHtml);
                 html.Replace("$(Build)", _host.AppBuild);
                 StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
-                script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}' }}");
+                String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
+                script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
                 script.Replace("$(Token)", formToken);
                 html.Replace("$(LoginScript)", script.ToString());
 
@@ -211,10 +212,12 @@ namespace A2v10.Web.Site.Controllers
                 String formToken;
                 AntiForgery.GetTokens(null, out cookieToken, out formToken);
 
+                AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
+
                 StringBuilder html = new StringBuilder(ResourceHelper.RegisterTenantHtml);
                 html.Replace("$(Build)", _host.AppBuild);
                 StringBuilder script = new StringBuilder(ResourceHelper.RegisterTenantScript);
-                script.Replace("$(RegisterData)", $"{{ version: '{_host.AppVersion}', title: 'title', subtitle: 'subtitle' }}");
+                script.Replace("$(RegisterData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle.AppTitle}', subtitle: '{appTitle.AppSubTitle}' }}");
                 script.Replace("$(Token)", formToken);
                 html.Replace("$(RegisterScript)", script.ToString());
 
@@ -247,16 +250,21 @@ namespace A2v10.Web.Site.Controllers
                     model = JsonConvert.DeserializeObject<RegisterTenantModel>(json);
                 }
                 // create user with tenant
-                var user = new AppUser { UserName = model.Name, Email = model.Email, Tenant = -1 };
+                var user = new AppUser {
+                    UserName = model.Name, Email = model.Email,
+                    PhoneNumber = model.Phone, PersonName = model.PersonName,
+                    Tenant = -1
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     // email confirmation
-                    //String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                    status = "Success";
-                } else
+                    String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    status = "ConfirmSent";
+                }
+                else
                 {
                     status = String.Join(", ", result.Errors);
                 }
@@ -309,13 +317,18 @@ namespace A2v10.Web.Site.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(Int64 userId, string code)
+        public async Task<ActionResult> ConfirmEmail(Int64 userId, String code)
         {
             if (userId == 0 || code == null)
             {
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                await UserManager.UpdateUser(user);
+            }
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -470,13 +483,7 @@ namespace A2v10.Web.Site.Controllers
         }
 
         #region Helpers
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
         {

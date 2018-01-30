@@ -38,8 +38,8 @@ namespace A2v10.Web.Mvc.Identity
 			// Configure validation logic for usernames
 			UserValidator = new UserValidator<AppUser, Int64>(this)
 			{
-				AllowOnlyAlphanumericUserNames = false
-				//RequireUniqueEmail = true /* there are no email required */
+				AllowOnlyAlphanumericUserNames = false,
+				RequireUniqueEmail = true
 			};
 
 			// Configure validation logic for passwords
@@ -57,22 +57,23 @@ namespace A2v10.Web.Mvc.Identity
 			DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			MaxFailedAccessAttemptsBeforeLockout = 5;
 
-			/*
+            /*
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
             {
                 MessageFormat = "Your security code is {0}"
             });
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
+            manager.SmsService = new SmsService();
+            */
+            RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<AppUser, Int64>
             {
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
-            manager.EmailService = new EmailService();
-            manager.SmsService = new SmsService();
-            */
-			var dataProtectionProvider = options.DataProtectionProvider;
+            EmailService = new EmailService();
+
+            var dataProtectionProvider = options.DataProtectionProvider;
 			if (dataProtectionProvider != null)
 			{
 				UserTokenProvider =

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="google" content="notranslate" />
     <title>A2:Web</title>
     <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -46,11 +47,13 @@
                         </div>
                     </div>
                     <label class="checkbox" style="grid-row:3;grid-column:2">
-                        <input type="checkbox" v-model="rememberMe" />
+                        <input type="checkbox" v-model="rememberMe" tabindex="3"/>
                         <span>Запомнить учетные данные</span>
                     </label>
                     <div style="grid-row:4;grid-column:2">
-                        <button @click.stop.prevent="submit" class="btn btn-default">Вход в систему</button>
+                        <button @click.stop.prevent="submit" class="btn btn-default" tabindex="4">Вход в систему</button>
+                        <a v-if="info.multiTenant" class="a2-hyperlink" href="/account/register" tabindex="5" style="margin:0 20px">Регистрация</a>
+                        <a v-if="false" class="a2-hyperlink" href="/account/forgotpassword" tabindex="6">Восстановление пароля</a>
                     </div>
                 </div>
             </div>

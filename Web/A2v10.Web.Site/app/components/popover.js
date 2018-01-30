@@ -1,4 +1,6 @@
-﻿/*20170913-7046*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+//20170913-7046
 /*components/popover.js*/
 
 Vue.component('popover', {

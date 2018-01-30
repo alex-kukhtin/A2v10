@@ -114,6 +114,7 @@
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
     <Compile Include="Hooks\CreateUserHandler.cs" />
     <Compile Include="Hooks\SetPasswordHandler.cs" />
+    <Compile Include="Identity\EmailService.cs" />
     <Compile Include="Identity\IdentityExtensions.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Configuration\WebApplicationHost.cs" />

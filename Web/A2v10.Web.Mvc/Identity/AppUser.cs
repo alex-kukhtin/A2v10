@@ -14,8 +14,9 @@ namespace A2v10.Web.Mvc.Identity
 		Default   = 0,
 		Lockout   = 0x0001,
         Password  = 0x0002,
-        LastLogin = 0x0004
-	}
+        LastLogin = 0x0004,
+        EmailConfirmed = 0x0008
+    }
 
 	public class AppUser : IUser<Int64>
 	{
@@ -69,6 +70,7 @@ namespace A2v10.Web.Mvc.Identity
 		public Boolean IsLockoutModified => _modifiedFlag.HasFlag(UserModifiedFlag.Lockout);
         public Boolean IsPasswordModified => _modifiedFlag.HasFlag(UserModifiedFlag.Password);
         public Boolean IsLastLoginModified => _modifiedFlag.HasFlag(UserModifiedFlag.LastLogin);
+        public Boolean IsEmailConfirmModified => _modifiedFlag.HasFlag(UserModifiedFlag.EmailConfirmed);
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 		{

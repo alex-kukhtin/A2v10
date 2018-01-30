@@ -160,6 +160,10 @@ namespace A2v10.Web.Mvc.Identity
                 await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
                 user.ClearModified(UserModifiedFlag.LastLogin);
 
+            } else if (user.IsEmailConfirmModified)
+            {
+                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
+                user.ClearModified(UserModifiedFlag.EmailConfirmed);
             }
         }
 
@@ -315,7 +319,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetEmailConfirmedAsync(AppUser user, bool confirmed)
 		{
 			user.EmailConfirmed = confirmed;
-			return Task.FromResult(0);
+            user.SetModified(UserModifiedFlag.EmailConfirmed);
+            return Task.FromResult(0);
 		}
 
 		public async Task<AppUser> FindByEmailAsync(String email)

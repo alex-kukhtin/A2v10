@@ -74,8 +74,9 @@
     const vm = new Vue({
         el: "#app",
         data: {
-            login: '',
             email: '',
+            name: '',
+            phone: '',
             password: '',
             confirm: '',
             processing: false,
@@ -86,10 +87,14 @@
         computed: {
             valid() {
                 if (!this.submitted) return true;
-                return this.validLogin && this.validPassword && this.validEmail && this.validConfirm;
+                return this.validName &&
+                    this.validPassword &&
+                    this.validEmail &&
+                    this.validPhone &&
+                    this.validConfirm;
             },
-            validLogin() {
-                return this.submitted ? !!this.login : true;
+            validName() {
+                return this.submitted ? !!this.name : true;
             },
             validEmail() {
                 return this.submitted ? !!this.email : true;
@@ -100,6 +105,9 @@
             validConfirm() {
                 return this.submitted ? !!this.confirm && (this.password == this.confirm) : true;
             },
+            validPhone() {
+                return this.submitted ? !!this.phone : true;
+            },
         },
         methods: {
             submit() {
@@ -109,8 +117,10 @@
                     return;
                 this.processing = true;
                 let dataToSend = {
-                    Name: this.login,
+                    Name: this.email, // !!!!
+                    PersonName: this.name,
                     Email: this.email,
+                    Phone: this.phone,
                     Password: this.password
                 };
                 const that = this;
@@ -118,7 +128,9 @@
                     .then(function (response) {
                         that.processing = false;
                         let result = response.Status;
-                        if (result === "Success")
+                        if (result === 'Success')
+                            that.navigate();
+                        else if (result == 'ConfirmSent')
                             that.navigate();
                         else if (result === 'Failure') 
                             that.failure('Неправильный логин или пароль');

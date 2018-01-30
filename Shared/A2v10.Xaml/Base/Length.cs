@@ -29,6 +29,7 @@ namespace A2v10.Xaml
 
         public static Length FromString(String strVal)
         {
+            strVal = strVal.Trim();
             Double dblVal = 0;
             if (strVal == "Auto")
                 return new Length() { Value = "auto" };

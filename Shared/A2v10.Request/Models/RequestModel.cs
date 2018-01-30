@@ -565,7 +565,7 @@ namespace A2v10.Request
             rm._command = mi.command;
             rm._report = mi.report;
             rm._data = mi.data;
-            rm._modelPath = mi.path;
+            rm._modelPath = pathForLoad;
             rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
             return rm;
         }

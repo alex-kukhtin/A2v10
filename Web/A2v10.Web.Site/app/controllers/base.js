@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180124-7098
+// 20180130-7100
 // controllers/base.js
 
 (function () {

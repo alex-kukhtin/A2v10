@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="google" content="notranslate" />
     <title>A2:Web</title>
     <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -21,50 +22,60 @@
         <div class="main-view">
             <div class="load-indicator" v-show="processing"></div>
             <div class="content-view full-view" style="margin:8px;overflow:auto">
-                <h4 class="a2-header">Регистрация</h4>
+                <h4 class="a2-header">Регистрация в системе</h4>
                 <hr style="margin-top:1rem" />
                 <div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
                     <span class="error" v-text="serverError"></span>
                 </div>
                 <div class="grid" style="grid-template-columns:auto 1fr; width:400px">
-                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">Логин:</label>
-                    <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
+                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
+                    <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
                         <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="login" tabindex="1" />
+                            <input v-focus class="control" type="text" v-model="email" tabindex="1" />
                             <div class="validator">
-                                <span class="error">введите логин администратора</span>
+                                <span class="error">введите e-mail</span>
                             </div>
                         </div>
                     </div>
-                    <label style="grid-row:2; grid-column:1" class="a2-label required text-right">е-mail:</label>
-                    <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validEmail}">
+                    <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Имя:</label>
+                    <div class="control-group" style="grid-row:2; grid-column:2" :class="{invalid: !validName}">
                         <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="email" tabindex="2" />
+                            <input v-focus class="control" type="text" v-model="name" tabindex="2" />
                             <div class="validator">
-                                <span class="error">введите e-mail администратора</span>
+                                <span class="error">введите имя</span>
                             </div>
                         </div>
                     </div>
-                    <label style="grid-row:3; grid-column:1" class="a2-label required text-right">Пароль:</label>
-                    <div class="control-group" style="grid-row:3;grid-column:2" :class="{invalid: !validPassword}">
+                    <label style="grid-row:3; grid-column:1" class="a2-label required text-right">Телефон:</label>
+                    <div class="control-group" style="grid-row:3; grid-column:2" :class="{invalid: !validPhone}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="3" />
+                            <input v-focus class="control" type="text" v-model="phone" tabindex="3" />
                             <div class="validator">
-                                <span class="error">введите пароль администратора</span>
+                                <span class="error">введите номер телефона</span>
                             </div>
                         </div>
                     </div>
-                    <label style="grid-row:4; grid-column:1" class="a2-label required text-right">Подтверждение:</label>
-                    <div class="control-group" style="grid-row:4;grid-column:2" :class="{invalid: !validConfirm}">
+                    <label style="grid-row:4; grid-column:1" class="a2-label required text-right">Пароль:</label>
+                    <div class="control-group" style="grid-row:4;grid-column:2" :class="{invalid: !validPassword}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="confirm" tabindex="4" />
+                            <input class="control" v-focus type="password" v-model="password" tabindex="4" />
+                            <div class="validator">
+                                <span class="error">введите пароль</span>
+                            </div>
+                        </div>
+                    </div>
+                    <label style="grid-row:5; grid-column:1" class="a2-label required text-right">Подтверждение:</label>
+                    <div class="control-group" style="grid-row:5; grid-column:2" :class="{invalid: !validConfirm}">
+                        <div class="input-group">
+                            <input class="control" v-focus type="password" v-model="confirm" tabindex="5" />
                             <div class="validator">
                                 <span class="error">введите правильное подтверждение пароля</span>
                             </div>
                         </div>
                     </div>
                     <div style="grid-row:6;grid-column:2">
-                        <button @click.stop.prevent="submit" tabindex="5" class="btn btn-default">Зарегистрироваться</button>
+                        <button @click.stop.prevent="submit" tabindex="6" class="btn btn-default">Регистрация</button>
+                        <a tabindex="7" href="/" class="a2-hyperlink" style="margin-left:20px">Вход в систему</a>
                     </div>
                 </div>
             </div>

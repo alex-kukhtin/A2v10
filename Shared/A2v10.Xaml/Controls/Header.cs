@@ -7,6 +7,7 @@ namespace A2v10.Xaml
     public class Header : UiContentElement
     {
         public ControlSize Size { get; set; }
+        public TextAlign Align { get; set; }
 
         public String Badge { get; set; }
 
@@ -22,6 +23,8 @@ namespace A2v10.Xaml
 
             var h = new TagBuilder(tagName, "a2-header", IsInGrid);
             MergeAttributes(h, context);
+            if (Align != TextAlign.Left)
+                h.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
             bool bHasBadge = GetBinding(nameof(Badge)) != null ||
                 !String.IsNullOrEmpty(Badge);
             if (!bHasBadge)

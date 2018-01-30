@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180118-7093*/
+/*20180130-7100*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -42,6 +42,7 @@ app.modules['std:url'] = function () {
     }
 
     function toUrl(obj) {
+        if (!utils.isDefined(obj)) return '';
         if (utils.isDate(obj)) {
             return utils.format(obj, "DateUrl");
         } else if (utils.isObjectExact(obj)) {
@@ -53,12 +54,14 @@ app.modules['std:url'] = function () {
     function makeQueryString(obj) {
         if (!obj) return '';
         if (!utils.isObjectExact(obj)) return '';
+
         let esc = encodeURIComponent;
+
         // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
-            .filter(k => k.startsWith('_') || k.startsWith('$') ? null : obj[k])
+            .filter(k => !k.startsWith('_') && !k.startsWith('$'))
             .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
-            .join('&');
+            .join('&');        
         return query ? '?' + query : '';
     }
 

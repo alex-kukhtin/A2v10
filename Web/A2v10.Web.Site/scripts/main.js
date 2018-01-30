@@ -374,7 +374,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180118-7093*/
+/*20180130-7100*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -416,6 +416,7 @@ app.modules['std:url'] = function () {
     }
 
     function toUrl(obj) {
+        if (!utils.isDefined(obj)) return '';
         if (utils.isDate(obj)) {
             return utils.format(obj, "DateUrl");
         } else if (utils.isObjectExact(obj)) {
@@ -427,12 +428,14 @@ app.modules['std:url'] = function () {
     function makeQueryString(obj) {
         if (!obj) return '';
         if (!utils.isObjectExact(obj)) return '';
+
         let esc = encodeURIComponent;
+
         // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
-            .filter(k => k.startsWith('_') || k.startsWith('$') ? null : obj[k])
+            .filter(k => !k.startsWith('_') && !k.startsWith('$'))
             .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
-            .join('&');
+            .join('&');        
         return query ? '?' + query : '';
     }
 
@@ -654,7 +657,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180124-7098
+// 20180130-7100
 /* platform/routex.js */
 
 (function () {
@@ -803,6 +806,7 @@ app.modules['std:http'] = function () {
             // save queryString from url 
             let qsurl = urlTools.parseQueryString(parts[1]);
             let qssrch = urlTools.parseQueryString(search);
+            //checkPredefined
             let qsres = Object.assign({}, qsurl, qssrch);
             return parts[0] + urlTools.makeQueryString(qsres);
         } else {
@@ -3344,7 +3348,9 @@ Vue.component('validator-control', {
         }
     });
 })();
-/*20171020-7053*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180130-7100
 /*components/pager.js*/
 
 /*
@@ -3408,7 +3414,8 @@ Vue.component('a2-pager', {
         },
         goto(page, $ev) {
             $ev.preventDefault();
-            this.setOffset((page - 1) * this.source.pageSize);
+            let offset = (page - 1) * this.source.pageSize;
+            this.setOffset(offset);
         }
     },
     render(h, ctx) {
@@ -3467,7 +3474,9 @@ Vue.component('a2-pager', {
 });
 
 
-/*20170913-7046*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+//20170913-7046
 /*components/popover.js*/
 
 Vue.component('popover', {
@@ -3728,9 +3737,9 @@ Vue.component('popover', {
     });
 })();
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171219-7080
+// 20180130-7100
 // components/collectionview.js
 
 /*
@@ -5235,7 +5244,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180124-7098
+// 20180130-7100
 // controllers/base.js
 
 (function () {

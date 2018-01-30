@@ -1,4 +1,6 @@
-﻿/*20171020-7053*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180130-7100
 /*components/pager.js*/
 
 /*
@@ -62,7 +64,8 @@ Vue.component('a2-pager', {
         },
         goto(page, $ev) {
             $ev.preventDefault();
-            this.setOffset((page - 1) * this.source.pageSize);
+            let offset = (page - 1) * this.source.pageSize;
+            this.setOffset(offset);
         }
     },
     render(h, ctx) {
