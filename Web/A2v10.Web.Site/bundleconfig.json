@@ -20,6 +20,7 @@
       "app/components/textbox.js",
       "app/components/combobox.js",
       "app/components/datepicker.js",
+      "app/components/selector.js",
       "app/components/datagrid.js",
       "app/components/pager.js",
       "app/components/popover.js",

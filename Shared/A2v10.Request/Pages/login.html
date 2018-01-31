@@ -22,18 +22,18 @@
         <div class="main-view">
             <div class="load-indicator" v-show="processing"></div>
             <div class="content-view full-view" style="margin:8px;overflow:auto">
-                <h4 class="a2-header">Для входа в систему введите логин и пароль</h4>
+                <h4 class="a2-header">Для входа в систему введите е-mail и пароль</h4>
                 <hr style="margin-top:1rem" />
                 <div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
                     <span class="error" v-text="serverError"></span>
                 </div>
                 <div class="grid" style="grid-template-columns:auto 1fr; width:400px">
-                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">Логин:</label>
+                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
                     <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
                         <div class="input-group">
                             <input v-focus class="control" type="text" v-model="login" tabindex="1" />
                             <div class="validator">
-                                <span class="error">введите логин</span>
+                                <span class="error">введите E-mail</span>
                             </div>
                         </div>
                     </div>

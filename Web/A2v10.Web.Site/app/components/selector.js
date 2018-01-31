@@ -13,6 +13,7 @@
 (function () {
     const popup = require('std:popup');
     const utils = require('std:utils');
+    const platform = require('std:platform');
 
     const baseControl = component('control');
 
@@ -66,8 +67,11 @@
             };
         },
         computed: {
+            $displayProp() {
+                return this.display;
+            },
             valueText() {
-                return this.item ? this.item[this.prop][this.display] : '';
+                return this.item ? this.item[this.prop][this.$displayProp] : '';
             },
             pane() {
                 return {
@@ -86,6 +90,11 @@
                 }, delay);
             }
         },
+        watch: {
+            valueText(newVal) {
+                this.query = this.valueText;
+            }
+        },
         methods: {
             __clickOutside() {
                 this.isOpen = false;
@@ -94,7 +103,7 @@
                 return ix === this.current;
             },
             itemName(itm) {
-                return itm[this.display];
+                return itm[this.$displayProp];
             },
             cancel() {
                 this.query = this.valueText;
@@ -159,13 +168,19 @@
                 this.loading = true;
                 this.fetchData(text).then((result) => {
                     this.loading = false;
-                    this.items = result;
+                    // first property from result
+                    let prop = Object.keys(result)[0];
+                    this.items = result[prop];
                 });
             },
             fetchData(text) {
+                let elem = this.item[this.prop];
+                return this.fetch.call(elem, text);
+                /*
                 return new Promise((resolve, reject) => {
-                    resolve(this.fetch(text));
+                    resolve(this.fetch.call(undefined, elem, text));
                 });
+                */
             }
         },
         mounted() {

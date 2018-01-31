@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180131-7101
 // controllers/base.js
 
 (function () {
@@ -39,7 +39,8 @@
 		data() {
 			return {
 				__init__: true,
-				__baseUrl__: '',
+                __baseUrl__: '',
+                __baseQuery__: {},
 				__requestsCount__: 0
 			};
 		},
@@ -47,6 +48,9 @@
 		computed: {
 			$baseUrl() {
 				return this.$data.__baseUrl__;
+            },
+            $baseQuery() {
+                return this.$data.__baseQuery__;
             },
             $indirectUrl() {
                 return this.$data.__modelInfo.__indirectUrl__ || '';
@@ -499,7 +503,7 @@
 
 			$searchChange() {
 				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
-				this.$data.__baseUrl__ = newUrl;
+                this.$data.__baseUrl__ = newUrl;
 				this.$reload();
 			},
 
@@ -605,7 +609,9 @@
 				this.$data.__requestsCount__ -= 1;
 			},
             __queryChange(search) {
-                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, search);
+                // preserve $baseQuery
+                let newQuery = Object.assign({}, urltools.parseQueryString(search), this.$baseQuery);
+                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(newQuery));
 				this.$reload();
             },
             __doInit__() {
@@ -621,13 +627,6 @@
             let out = { caller: null };
             eventBus.$emit('registerData', this, out);
             this.$caller = out.caller;
-			/*
-			TODO: а зачем это было ???
-			if (!this.inDialog) {
-				//alert(this.$data._query_);
-				//this.$data._query_ = route.query;
-			}
-			*/
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);

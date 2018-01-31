@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7087
+// 20180131-7101
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -106,6 +106,8 @@ app.modules['std:http'] = function () {
                     if (selector.firstElementChild && selector.firstElementChild.__vue__) {
                         let ve = selector.firstElementChild.__vue__;
                         ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
+                        // save initial search
+                        ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
                     }
                     resolve(true);
                 })

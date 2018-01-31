@@ -87,8 +87,11 @@ namespace A2v10.Web.Site.Controllers
 
                 StringBuilder html = new StringBuilder(ResourceHelper.LoginHtml);
                 html.Replace("$(Build)", _host.AppBuild);
-                StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
+
                 String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
+
+                StringBuilder script = new StringBuilder(ResourceHelper.LoginScript);
+                script.Replace("$(Utils)", ResourceHelper.pageUtils);
                 script.Replace("$(LoginData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
                 script.Replace("$(Token)", formToken);
                 html.Replace("$(LoginScript)", script.ToString());
@@ -217,6 +220,7 @@ namespace A2v10.Web.Site.Controllers
                 StringBuilder html = new StringBuilder(ResourceHelper.RegisterTenantHtml);
                 html.Replace("$(Build)", _host.AppBuild);
                 StringBuilder script = new StringBuilder(ResourceHelper.RegisterTenantScript);
+                script.Replace("$(Utils)", ResourceHelper.pageUtils);
                 script.Replace("$(RegisterData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle.AppTitle}', subtitle: '{appTitle.AppSubTitle}' }}");
                 script.Replace("$(Token)", formToken);
                 html.Replace("$(RegisterScript)", script.ToString());

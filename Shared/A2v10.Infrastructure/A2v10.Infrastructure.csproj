@@ -61,6 +61,7 @@
     <Compile Include="IWorkflowEngine.cs" />
     <Compile Include="PathHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleTypes.cs" />
     <Compile Include="StringHelpers.cs" />
     <Compile Include="Utilities\Parser.cs" />
   </ItemGroup>

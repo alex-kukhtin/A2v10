@@ -80,6 +80,7 @@
     <Content Include="app\directives\dropdown.js" />
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
+    <Content Include="app\directives\mask.js" />
     <Content Include="app\directives\resize.js" />
     <Content Include="app\platform\polyfills.js" />
     <Content Include="app\platform\routex.js" />

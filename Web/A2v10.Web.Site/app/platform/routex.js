@@ -81,8 +81,8 @@
                 let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
 				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
-				//console.warn('set query: ' + newUrl);
-				window.history.replaceState(null, null, newUrl);
+                //console.warn('set query: ' + newUrl);
+                window.history.replaceState(null, null, newUrl);
 			},
 			setquery(state, query) {
 				// TODO: replaceUrl: boolean
@@ -114,7 +114,7 @@
 				let newRoute = oldRoute.replace('/new', '/' + to.id);
 				state.route = newRoute;
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
-				window.history.replaceState(null, null, newUrl);
+                window.history.replaceState(null, null, newUrl);
             },
             close(state) {
 
@@ -145,16 +145,7 @@
 
 	function replaceUrlSearch(url, search) {
         let parts = url.split('?');
-        if (parts.length > 1) {
-            // save queryString from url 
-            let qsurl = urlTools.parseQueryString(parts[1]);
-            let qssrch = urlTools.parseQueryString(search);
-            //checkPredefined
-            let qsres = Object.assign({}, qsurl, qssrch);
-            return parts[0] + urlTools.makeQueryString(qsres);
-        } else {
-            return parts[0] + (search || '');
-        }
+        return parts[0] + (search || '');
 	}
 
 	function replaceUrlQuery(url, query) {

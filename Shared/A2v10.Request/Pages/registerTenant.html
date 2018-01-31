@@ -33,7 +33,7 @@
                         <div class="input-group">
                             <input v-focus class="control" type="text" v-model="email" tabindex="1" />
                             <div class="validator">
-                                <span class="error">введите e-mail</span>
+                                <span class="error">недопустимый e-mail</span>
                             </div>
                         </div>
                     </div>
@@ -67,9 +67,9 @@
                     <label style="grid-row:5; grid-column:1" class="a2-label required text-right">Подтверждение:</label>
                     <div class="control-group" style="grid-row:5; grid-column:2" :class="{invalid: !validConfirm}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="confirm" tabindex="5" />
+                            <input class="control" v-focus type="password" v-model="confirm" tabindex="5" title="Для подтверждения введите пароль еще раз"/>
                             <div class="validator">
-                                <span class="error">введите правильное подтверждение пароля</span>
+                                <span class="error">пароль и подтверждение не совпадают</span>
                             </div>
                         </div>
                     </div>

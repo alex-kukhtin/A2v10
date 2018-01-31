@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180130-7100*/
+/*20180131-7101*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -8,11 +8,11 @@ app.modules['std:url'] = function () {
     const utils = require('std:utils');
 
     return {
-        combine: combine,
+        combine,
         makeQueryString,
-        parseQueryString: parseQueryString,
-        normalizeRoot: normalizeRoot,
-        idChangedOnly: idChangedOnly,
+        parseQueryString,
+        normalizeRoot,
+        idChangedOnly,
         makeBaseUrl,
         parseUrlAndQuery,
         replaceUrlQuery,
@@ -59,7 +59,7 @@ app.modules['std:url'] = function () {
 
         // skip special (starts with '_' or '$')
         let query = Object.keys(obj)
-            .filter(k => !k.startsWith('_') && !k.startsWith('$'))
+            .filter(k => !k.startsWith('_') && !k.startsWith('$') && !!obj[k])
             .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
             .join('&');        
         return query ? '?' + query : '';
@@ -100,7 +100,7 @@ app.modules['std:url'] = function () {
         if (url.indexOf('?') !== -1) {
             let a = url.split('?');
             rv.url = a[0];
-            // from url then from query
+            // first from url then from query
             rv.query = Object.assign({}, parseQueryString(a[1]), query);
         }
         return rv;

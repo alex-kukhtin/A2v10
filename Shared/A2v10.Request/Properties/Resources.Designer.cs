@@ -120,9 +120,10 @@ namespace A2v10.Request.Properties {
         ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
         ///    &lt;title&gt;&lt;/title&gt;
         ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x [rest of string was truncated]&quot;;.
+        ///    &lt;link rel [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layout {
             get {
@@ -140,9 +141,10 @@ namespace A2v10.Request.Properties {
         ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
         ///    &lt;title&gt;&lt;/title&gt;
         ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x [rest of string was truncated]&quot;;.
+        ///    &lt;link rel [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layoutAdmin {
             get {
@@ -157,14 +159,14 @@ namespace A2v10.Request.Properties {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
         ///    &lt;title&gt;A2:Web&lt;/title&gt;
         ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
         ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
         ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///    &lt;div id=&quot;app&quot; class=&quot;shell&quot; v-cloak&gt;
-        ///        &lt;header clas [rest of string was truncated]&quot;;.
+        ///    &lt;div id= [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string login {
             get {
@@ -197,20 +199,42 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///    Vue.directive(&apos;focus&apos;, {
+        ///        bind(el, binding, vnode) {
+        ///
+        ///            el.addEventListener(&quot;focus&quot;, function (event) {
+        ///                event.target.parentElement.classList.add(&apos;focus&apos;);
+        ///            }, false);
+        ///
+        ///            el.addEventListener(&quot;blur&quot;, function (event) {
+        ///                let t = event.target;
+        ///                t._selectDone = false;
+        ///                event.target.parentElement.classList.remove(&apos;focus&apos;);
+        ///            }, f [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string pageUtils {
+            get {
+                return ResourceManager.GetString("pageUtils", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
         ///    &lt;title&gt;A2:Web&lt;/title&gt;
         ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
         ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
         ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///    &lt;div id=&quot;app&quot; class=&quot;shell&quot; v-cloak&gt;
-        ///        &lt;header clas [rest of string was truncated]&quot;;.
+        ///    &lt;div id= [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenant {
             get {

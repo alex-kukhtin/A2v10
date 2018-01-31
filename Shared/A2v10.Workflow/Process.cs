@@ -97,5 +97,13 @@ namespace A2v10.Workflow
             _model = DbContext.LoadModel(this.DataSource, proc, loadPrms);
             return _model;
         }
+
+        public Int64 FindRoleId(String key)
+        {
+            var boxedId = DbContext.Load<ElementId>(String.Empty, "a2workflow.[Role.FindByKey]", new { Key = key });
+            if (boxedId != null)
+                return boxedId.Id;
+            throw new WorkflowException($"Role with Key '{key}' not found");
+        }
     }
 }

@@ -30,22 +30,5 @@ namespace A2v10.Workflow
             var arg = new { Id = Id, UserId = UserId, Answer = Answer };
             dbContext.Execute(String.Empty, "a2workflow.[Inbox.Resume]", arg);
         }
-
-        internal class BoxedId
-        {
-            public Int64 Id { get; set; }
-        }
-
-        public static Int64 FindRoleId(String key)
-        {
-            throw new WorkflowException("TODO: Inbox.FindRoleId (dbContext ???)");
-            /*
-            IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
-            var boxedId = dbContext.Load<BoxedId>(String.Empty, "a2workflow.[Role.FindByKey]", new { Key = key });
-            if (boxedId != null)
-                return boxedId.Id;
-            throw new WorkflowException($"Role with Key '{key}' not found");
-            */
-        }
     }
 }

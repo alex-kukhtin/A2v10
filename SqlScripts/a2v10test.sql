@@ -1,4 +1,6 @@
-/* 20170119-7094 */
+-- Copyright © 2008-2018 Alex Kukhtin
+
+/* 20180131-7101 */
 
 use a2v10test;
 go
@@ -21,8 +23,9 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.[SimpleModel.Load]
-@UserId bigint = null,
-@Id bigint = null
+	@TenantId int = null,
+	@UserId bigint = null,
+	@Id bigint = null
 as
 begin
 	set nocount on;
@@ -35,7 +38,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.ArrayModel
-@UserId bigint = null
+	@TenantId int = null,
+	@UserId bigint = null
 as
 begin
 	set nocount on;
@@ -48,7 +52,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.ComplexModel
-@UserId bigint = null
+	@TenantId int = null,
+	@UserId bigint = null
 as
 begin
 	set nocount on;
@@ -88,7 +93,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.TreeModel
-@UserId bigint = null
+	@TenantId int = null,
+	@UserId bigint = null
 as
 begin
 	set nocount on;
@@ -116,7 +122,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.GroupModel
-@UserId bigint = null
+	@TenantId int = null,
+	@UserId bigint = null
 as
 begin
 	set nocount on;
@@ -163,7 +170,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.EmptyArray
-@UserId bigint = 0
+	@TenantId int = null,
+	@UserId bigint = 0
 as
 begin
 	set nocount on;
@@ -270,10 +278,11 @@ end
 go
 ------------------------------------------------
 create procedure a2test.[NestedObject.Update]
-@UserId bigint = null,
-@MainObject [a2test].[NestedMain.TableType] readonly,
-@SubObject [a2test].[NestedSub.TableType] readonly,
-@SubObjectArray [a2test].[NestedSubArray.TableType] readonly
+	@TenantId int = null,
+	@UserId bigint = null,
+	@MainObject [a2test].[NestedMain.TableType] readonly,
+	@SubObject [a2test].[NestedSub.TableType] readonly,
+	@SubObjectArray [a2test].[NestedSubArray.TableType] readonly
 as
 begin
 	set nocount on;
@@ -297,8 +306,9 @@ end
 go
 ------------------------------------------------
 create procedure a2test.[NewObject.Update]
-@UserId bigint = null,
-@MainObject [a2test].[NestedMain.TableType] readonly
+	@TenantId int = null,
+	@UserId bigint = null,
+	@MainObject [a2test].[NestedMain.TableType] readonly
 as
 begin
 	set nocount on;
@@ -330,7 +340,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.RefObjects
-@UserId bigint = null
+	@TenantId int = null,
+	@UserId bigint = null
 as
 begin
 	set nocount on;
@@ -348,8 +359,9 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.[Document.Load]
-@UserId bigint = null,
-@Id bigint = null
+	@TenantId int = null,
+	@UserId bigint = null,
+	@Id bigint = null
 as
 begin
 	set nocount on;
@@ -395,8 +407,9 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.[Document2.Load]
-@UserId bigint = null,
-@Id bigint = null
+	@TenantId int = null,
+	@UserId bigint = null,
+	@Id bigint = null
 as
 begin
 	set nocount on;
@@ -440,8 +453,9 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2te
 go
 ------------------------------------------------
 create procedure a2test.[Document.Aliases]
-@UserId bigint = null,
-@Id bigint = null
+	@TenantId int = null,
+	@UserId bigint = null,
+	@Id bigint = null
 as
 begin
 	set nocount on;

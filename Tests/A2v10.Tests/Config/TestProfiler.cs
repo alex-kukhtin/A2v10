@@ -21,10 +21,10 @@ namespace A2v10.Tests.Config
     public class TestProfiler : IProfiler
 	{
         public Boolean Enabled { get; set; }
-        IProfileRequest _request;
+        IProfileRequest _request = new DummyRequest();
+
         public IProfileRequest BeginRequest(String address, String session)
         {
-            _request = new DummyRequest();
             return _request;
         }
 

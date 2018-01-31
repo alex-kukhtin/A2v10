@@ -1673,7 +1673,7 @@ pre.a2-code {
   padding: 0;
   overflow: auto;
   height: 100%;
-  max-height: 350px;
+  max-height: 250px;
 }
 .input-group > .selector-pane ul.selector-pane li {
   list-style: none;
