@@ -9,6 +9,7 @@
 ;
 @Create=Створити
 @CreateDocument=Створити документ
+@Edit=Змінити
 @Save=Зберегти
 @SaveAndClose=Зберегти та закрити
 @Reload=Оновити
@@ -16,9 +17,17 @@
 @Delete=Видалити
 @Close=Закрити
 @Print=Друк
+@Search=Пошук
+;
+@General=Загальні
+@Properties=Властивості
+@Cancel=Скасувати
 ;
 @Code=Код
 @Date=Дата
+@Name=Назва
+@FullName=Повна назва
+@Tag=Ознака
 @Sum=Сума
 @Qty=Кількість
 @Price=Ціна
@@ -27,3 +36,6 @@
 @Memo=Примітка
 ;
 @ConfirmDeleteDocument=Видалити документ?
+;
+@Error.EnterName=Введіть назву елемента
+@Error.DuplicateCode=Елемент з таким кодом вже існує
