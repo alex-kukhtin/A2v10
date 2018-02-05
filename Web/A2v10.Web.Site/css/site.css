@@ -2150,7 +2150,7 @@ table.data-grid > tbody > tr.bold td {
   display: inline-block;
   flex-shrink: 0;
   /*fixed*/
-  width: 16px;
+  width: 20px;
   height: 16px;
   font-size: 16px;
   font-family: "Bowtie";

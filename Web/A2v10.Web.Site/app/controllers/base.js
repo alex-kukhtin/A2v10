@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180131-7101
+// 20180205-7102
 // controllers/base.js
 
 (function () {
@@ -557,7 +557,9 @@
                     jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
 
                 dataservice.post(url, jsonData).then(function (data) {
-                    for (let el of data[propName])
+                    let srcArray = data[propName];
+                    arr.$empty();
+                    for (let el of srcArray)
                         arr.push(arr.$new(el));
                 }).catch(function (msg) {
                     self.$alertUi(msg);

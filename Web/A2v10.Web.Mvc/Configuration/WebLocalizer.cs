@@ -50,7 +50,17 @@ namespace A2v10.Web.Mvc.Configuration
                         var split = line.Split('=');
                         if (split.Length == 2)
                         {
-                            map.Map.Add(split[0].Trim(), split[1].Trim());
+                            var key = split[0].Trim();
+                            var val = split[1].Trim();
+                            String mapVal;
+                            if (map.Map.TryGetValue(key, out mapVal))
+                            {
+                                map.Map[key] = val;
+                            }
+                            else
+                            {
+                                map.Map.Add(key, val);
+                            }
                         }
                     }
                 }
@@ -97,7 +107,7 @@ namespace A2v10.Web.Mvc.Configuration
         {
             // locale may be "uk_UA"
             var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-            var appPath = _host.AppPath;
+            var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "Localization"));
             CreateWatchers(dirPath, appPath);
             foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
             {

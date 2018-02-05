@@ -44,7 +44,9 @@ namespace A2v10.Data
 
         static HashSet<String> _reservedWords = new HashSet<String>()
             {
-                "Parent"
+                "Parent",
+                "Root",
+                "ParentId"
             };
 
         void CheckReservedWords()

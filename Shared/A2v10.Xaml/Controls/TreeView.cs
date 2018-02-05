@@ -32,6 +32,9 @@ namespace A2v10.Xaml
             var tipBind = GetBinding(nameof(Tip));
             if (tipBind != null)
                 sb.Append($"title: '{tipBind.GetPath(context)}',");
+            var iconBind = GetBinding(nameof(Icon));
+            if (iconBind != null)
+                sb.Append($"hasIcon: true, icon: '{iconBind.GetPath(context)}',");
         }
     }
 
@@ -52,6 +55,8 @@ namespace A2v10.Xaml
 
         public AutoSelectMode AutoSelect { get; set; }
 
+        public Boolean ExpandFirstItem { get; set; }
+
         public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -70,6 +75,8 @@ namespace A2v10.Xaml
             }
             if (AutoSelect != AutoSelectMode.None)
                 cont.MergeAttribute("auto-select", AutoSelect.ToString().ToKebabCase());
+            if (ExpandFirstItem)
+                cont.MergeAttribute(":expand-first-item", "true");
             cont.RenderStart(context);
             cont.RenderEnd(context);
         }

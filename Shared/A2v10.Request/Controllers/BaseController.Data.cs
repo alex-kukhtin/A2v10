@@ -195,6 +195,15 @@ namespace A2v10.Request
             writer.Write("{\"status\": \"OK\"}"); // JSON!
         }
 
+        void AddParamsFromUrl(ExpandoObject prms, String baseUrl)
+        {
+            if (baseUrl.Contains("?"))
+            {
+                // add query params from baseUrl
+                prms.Append(HttpUtility.ParseQueryString(baseUrl.Split('?')[1]), toPascalCase: true);
+            }
+        }
+
         async Task ExpandData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
         {
             ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
@@ -208,6 +217,7 @@ namespace A2v10.Request
             if (expandProc == null)
                 throw new RequestModelException("The data model is empty");
             ExpandoObject execPrms = new ExpandoObject();
+            AddParamsFromUrl(execPrms, baseUrl);
             execPrms.Set("UserId", userId);
             execPrms.Set("TenantId", tenantId);
             execPrms.Set("Id", id);
@@ -220,11 +230,7 @@ namespace A2v10.Request
             ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
             String baseUrl = jsonData.Get<String>("baseUrl");
             ExpandoObject execPrms = new ExpandoObject();
-            if (baseUrl.Contains("?"))
-            {
-                // add query params from baseUrl
-                execPrms.Append(HttpUtility.ParseQueryString(baseUrl.Split('?')[1]), toPascalCase:true);
-            }
+            AddParamsFromUrl(execPrms, baseUrl);
             Object id = jsonData.Get<Object>("id");
             String propName = jsonData.Get<String>("prop");
             var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);

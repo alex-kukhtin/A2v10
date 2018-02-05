@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5371E97D-8916-4D33-9BE7-C0C97209DD54}"
 EndProject
@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		changelog.MD = changelog.MD
 		readme.MD = readme.MD
 		THIRD-PARTY-NOTICES.md = THIRD-PARTY-NOTICES.md
 	EndProjectSection
@@ -100,7 +101,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Messaging", "Shared\A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{F64122AA-F558-4F74-9B7F-0C5603892DDB}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "A2v10.Installer", "A2v10.Installer\A2v10.Installer.vdproj", "{C9592E99-8DD0-4E9E-BCD9-4FBB692DD08A}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "A2v10.Web", "A2v10.Installer\A2v10.Installer.vdproj", "{C9592E99-8DD0-4E9E-BCD9-4FBB692DD08A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

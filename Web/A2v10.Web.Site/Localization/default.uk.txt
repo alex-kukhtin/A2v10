@@ -6,13 +6,16 @@
 @Purchase=Закупівлі
 @Inventory=Запаси
 @Accounting=Бухгалтерія
+;
 @Create=Створити
 @CreateDocument=Створити документ
 @Save=Зберегти
+@SaveAndClose=Зберегти та закрити
 @Reload=Оновити
 @Refresh=Оновити
 @Delete=Видалити
 @Close=Закрити
+@Print=Друк
 ;
 @Code=Код
 @Date=Дата

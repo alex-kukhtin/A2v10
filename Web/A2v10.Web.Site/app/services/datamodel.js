@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170117-7092
+// 20180205-7102
 // services/datamodel.js
 
 (function () {
@@ -347,7 +347,25 @@
         };
 
         defPropertyGet(arr, "$selected", function () {
-            return this.find(elem => elem.$selected);
+            for (let x of this.$elements) {
+                if (x.$selected) {
+                    return x;
+                }
+            }
+            return undefined;
+        });
+
+        defPropertyGet(arr, "$elements", function () {
+            function* elems(arr) {
+                for (let i = 0; i < arr.length; i++) {
+                    let val = arr[i];
+                    yield val;
+                    if (val.$items) {
+                        yield* elems(val.$items);
+                    }
+                }
+            }
+            return elems(this);
         });
 
         defPropertyGet(arr, "Count", function () {
@@ -569,7 +587,7 @@
         elem.prototype.$select = function (root) {
             let arr = root || this._parent_;
             let sel = arr.$selected;
-			if (sel === this) return;
+            if (sel === this) return;
             if (sel) sel.$selected = false;
             this.$selected = true;
             emitSelect(arr, this);

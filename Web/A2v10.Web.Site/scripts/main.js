@@ -980,7 +980,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20170117-7092
+// 20180205-7102
 // services/datamodel.js
 
 (function () {
@@ -1327,7 +1327,25 @@ app.modules['std:validators'] = function() {
         };
 
         defPropertyGet(arr, "$selected", function () {
-            return this.find(elem => elem.$selected);
+            for (let x of this.$elements) {
+                if (x.$selected) {
+                    return x;
+                }
+            }
+            return undefined;
+        });
+
+        defPropertyGet(arr, "$elements", function () {
+            function* elems(arr) {
+                for (let i = 0; i < arr.length; i++) {
+                    let val = arr[i];
+                    yield val;
+                    if (val.$items) {
+                        yield* elems(val.$items);
+                    }
+                }
+            }
+            return elems(this);
         });
 
         defPropertyGet(arr, "Count", function () {
@@ -1549,7 +1567,7 @@ app.modules['std:validators'] = function() {
         elem.prototype.$select = function (root) {
             let arr = root || this._parent_;
             let sel = arr.$selected;
-			if (sel === this) return;
+            if (sel === this) return;
             if (sel) sel.$selected = false;
             this.$selected = true;
             emitSelect(arr, this);
@@ -3728,7 +3746,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180118-7093*/
+/*20180205-7102*/
 // components/treeview.js
 
 (function () {
@@ -3847,6 +3865,11 @@ Vue.component('popover', {
                 return this.getHref ? this.getHref(this.item) : '';
             }
         },
+        watch: {
+            isFolder(newVal) {
+                // TODO: auto expand???
+            }
+        },
         updated(x) {
             // close expanded when reloaded
             if (this.options.isDynamic && this.open) {
@@ -3893,8 +3916,9 @@ Vue.component('popover', {
             isActive: Function,
             click: Function,
             expand: Function,
-			autoSelect: String,
-			getHref: Function
+            autoSelect: String,
+            getHref: Function,
+            expandFirstItem: Boolean
         },
         computed: {
             isSelectFirstItem() {
@@ -3915,10 +3939,16 @@ Vue.component('popover', {
         },
         created() {
             this.selectFirstItem();
+            if (this.expandFirstItem) {
+                this.$nextTick(() => {
+                    if (this.$children && this.$children[0] && this.$children[0].toggle) {
+                        this.$children[0].toggle();
+                    }
+                });
+            }
         },
         updated() {
             if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
-                // after reload
                 this.selectFirstItem();
             }
         }
@@ -5447,7 +5477,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180131-7101
+// 20180205-7102
 // controllers/base.js
 
 (function () {
@@ -6004,7 +6034,9 @@ Vue.directive('resize', {
                     jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
 
                 dataservice.post(url, jsonData).then(function (data) {
-                    for (let el of data[propName])
+                    let srcArray = data[propName];
+                    arr.$empty();
+                    for (let el of srcArray)
                         arr.push(arr.$new(el));
                 }).catch(function (msg) {
                     self.$alertUi(msg);

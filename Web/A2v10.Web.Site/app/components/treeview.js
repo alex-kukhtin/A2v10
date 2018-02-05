@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180118-7093*/
+/*20180205-7102*/
 // components/treeview.js
 
 (function () {
@@ -119,6 +119,11 @@
                 return this.getHref ? this.getHref(this.item) : '';
             }
         },
+        watch: {
+            isFolder(newVal) {
+                // TODO: auto expand???
+            }
+        },
         updated(x) {
             // close expanded when reloaded
             if (this.options.isDynamic && this.open) {
@@ -165,8 +170,9 @@
             isActive: Function,
             click: Function,
             expand: Function,
-			autoSelect: String,
-			getHref: Function
+            autoSelect: String,
+            getHref: Function,
+            expandFirstItem: Boolean
         },
         computed: {
             isSelectFirstItem() {
@@ -187,10 +193,16 @@
         },
         created() {
             this.selectFirstItem();
+            if (this.expandFirstItem) {
+                this.$nextTick(() => {
+                    if (this.$children && this.$children[0] && this.$children[0].toggle) {
+                        this.$children[0].toggle();
+                    }
+                });
+            }
         },
         updated() {
             if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
-                // after reload
                 this.selectFirstItem();
             }
         }
