@@ -3552,6 +3552,10 @@ h5,
   border: 1px solid #dca7a7;
   color: #a94442;
 }
+.a2-graphics {
+  display: block;
+  margin: auto;
+}
 .shell-admin > .header {
   background-color: #a84e37;
 }

@@ -64,7 +64,7 @@
             }
 		},
 		mutations: {
-            navigate(state, to) { // to: {url, query, title}
+            navigate: function(state, to) { // to: {url, query, title}
                 let root = window.$$rootUrl;
 				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
@@ -76,7 +76,7 @@
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
 			},
-			query(state, query) {
+			query: function(state, query) {
 				// changes all query
                 let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
@@ -84,7 +84,7 @@
                 //console.warn('set query: ' + newUrl);
                 window.history.replaceState(null, null, newUrl);
 			},
-			setquery(state, query) {
+			setquery: function(state, query) {
 				// TODO: replaceUrl: boolean
 				// changes some fields or query
                 let root = window.$$rootUrl;
@@ -95,20 +95,20 @@
                 window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
-			popstate(state) {
+			popstate: function(state) {
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-            setstate(state, to) { // to: {url, title}
+            setstate: function(state, to) { // to: {url, title}
                 window.history.replaceState(null, null, window.$$rootUrl + to.url);
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
             },
-            setnewid(state, to) {
+            setnewid: function(state, to) {
                 let root = window.$$rootUrl;
                 let oldRoute = state.route;
 				let newRoute = oldRoute.replace('/new', '/' + to.id);
@@ -116,7 +116,7 @@
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
                 window.history.replaceState(null, null, newUrl);
             },
-            close(state) {
+            close: function(state) {
 
                 function navigateBack() {
                     let url = makeBackUrl(state.route);

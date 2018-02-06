@@ -84,6 +84,7 @@
     <Compile Include="Controls\DataGridRowDetails.cs" />
     <Compile Include="Controls\DatePicker.cs" />
     <Compile Include="Controls\DropDownMenu.cs" />
+    <Compile Include="Controls\Graphics.cs" />
     <Compile Include="Controls\Image.cs" />
     <Compile Include="Controls\ImageList.cs" />
     <Compile Include="Controls\Label.cs" />

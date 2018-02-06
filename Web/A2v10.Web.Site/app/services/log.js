@@ -12,12 +12,12 @@ app.modules['std:log'] = function () {
 		warn: warning,
 		error: error,
 		time: countTime,
-        traceEnabled() {
+        traceEnabled: function() {
             if (!_sessionLoaded)
                 loadSession();
 			return _traceEnabled;
 		},
-		enableTrace(val) {
+		enableTrace: function(val) {
 			_traceEnabled = val;
             console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
             window.sessionStorage.setItem(traceEnabledKey, val);

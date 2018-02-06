@@ -723,7 +723,7 @@ app.modules['std:http'] = function () {
             }
 		},
 		mutations: {
-            navigate: function(state, to) { // to: {url, query, title}
+            navigate(state, to) { // to: {url, query, title}
                 let root = window.$$rootUrl;
 				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
@@ -735,7 +735,7 @@ app.modules['std:http'] = function () {
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
 			},
-			query: function(state, query) {
+			query(state, query) {
 				// changes all query
                 let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
@@ -743,7 +743,7 @@ app.modules['std:http'] = function () {
                 //console.warn('set query: ' + newUrl);
                 window.history.replaceState(null, null, newUrl);
 			},
-			setquery: function(state, query) {
+			setquery(state, query) {
 				// TODO: replaceUrl: boolean
 				// changes some fields or query
                 let root = window.$$rootUrl;
@@ -754,20 +754,20 @@ app.modules['std:http'] = function () {
                 window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
 			},
-			popstate: function(state) {
+			popstate(state) {
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-            setstate: function(state, to) { // to: {url, title}
+            setstate(state, to) { // to: {url, title}
                 window.history.replaceState(null, null, window.$$rootUrl + to.url);
                 state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
             },
-            setnewid: function(state, to) {
+            setnewid(state, to) {
                 let root = window.$$rootUrl;
                 let oldRoute = state.route;
 				let newRoute = oldRoute.replace('/new', '/' + to.id);
@@ -775,7 +775,7 @@ app.modules['std:http'] = function () {
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
                 window.history.replaceState(null, null, newUrl);
             },
-            close: function(state) {
+            close(state) {
 
                 function navigateBack() {
                     let url = makeBackUrl(state.route);
@@ -833,12 +833,12 @@ app.modules['std:log'] = function () {
 		warn: warning,
 		error: error,
 		time: countTime,
-        traceEnabled: function() {
+        traceEnabled() {
             if (!_sessionLoaded)
                 loadSession();
 			return _traceEnabled;
 		},
-		enableTrace: function(val) {
+		enableTrace(val) {
 			_traceEnabled = val;
             console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
             window.sessionStorage.setItem(traceEnabledKey, val);
@@ -4971,21 +4971,17 @@ Vue.component('a2-panel', {
 
     Vue.component("a2-graphics", {
         template:
-        `<div :id="id" class="a2-graphics"></div>`,
+        `<div :id="id"></div>`,
         props: {
             id: String,
-            render: Function
+            width: String,
+            height: String
         },
         computed: {
-            controller() {
-                return this.$root;
-            }
         },
         methods: {
         },
         mounted() {
-            const chart = d3.select('#' + this.id);
-            this.render.call(this.controller.$data, chart);
         }
     });
 })();
