@@ -6,9 +6,11 @@
 @Purchase=Закупівлі
 @Inventory=Запаси
 @Accounting=Бухгалтерія
+@Dashboard=Панель управління
 ;
 @Create=Створити
 @CreateDocument=Створити документ
+@CreateFolder=Створити папку
 @Edit=Змінити
 @Save=Зберегти
 @SaveAndClose=Зберегти та закрити
@@ -21,6 +23,9 @@
 ;
 @General=Загальні
 @Properties=Властивості
+@FolderProperties=Властивості папки
+@NewFilder=Нова папка
+@NewElement=Новий елемент
 @Cancel=Скасувати
 ;
 @Code=Код

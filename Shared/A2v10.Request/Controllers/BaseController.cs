@@ -217,7 +217,7 @@ namespace A2v10.Request
                 {
                     fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
                     AddRequiredModules(sbRequired, fileTemplateText);
-                    templateText = CreateTemplateForWrite(fileTemplateText);
+                    templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
                 }
                 dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
             }
@@ -263,7 +263,7 @@ $(RequiredModules)
             var header = new StringBuilder(scriptHeader);
             header.Replace("$(RootId)", rootId);
             header.Replace("$(DataModelText)", dataModelText);
-            header.Replace("$(TemplateText)", templateText);
+            header.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
             header.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
             output.Append(header);
             if (model != null)
