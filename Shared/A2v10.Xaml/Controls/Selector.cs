@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 
         public String DisplayProperty { get; set; }
 
+        public Size ListSize { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var input = new TagBuilder("a2-selector", null, IsInGrid);
@@ -20,6 +22,13 @@ namespace A2v10.Xaml
             if (!String.IsNullOrEmpty(Delegate))
                 input.MergeAttribute(":fetch", $"$delegate('{Delegate}')");
             input.MergeAttribute("display", DisplayProperty);
+            if (ListSize != null)
+            {
+                if (!ListSize.Width.IsEmpty)
+                    input.MergeAttribute("list-width", ListSize.Width.ToString());
+                if (!ListSize.Height.IsEmpty)
+                    input.MergeAttribute("list-height", ListSize.Height.ToString());
+            }
             MergeAttributes(input, context);
             MergeAlign(input, context, Align);
             MergeValue(input, context);

@@ -1346,6 +1346,13 @@ pre.a2-code {
 .control-group .control {
   border-style: none;
 }
+/* avoid validator blinking */
+.control-group.open:hover {
+  z-index: 98 !important;
+}
+.control-group.open .input-group.focus {
+  z-index: 98 !important;
+}
 .control-group.required label:before {
   content: '\2731';
   display: inline-block;
@@ -1643,15 +1650,8 @@ pre.a2-code {
   padding: 2px 0;
   color: #777;
 }
-/* avoid validator blinking */
-.control-group.open:hover {
-  z-index: 98 !important;
-}
-.control-group.open .input-group.focus {
-  z-index: 98 !important;
-}
 .input-group > .selector-pane {
-  border: 1px solid #9ba7b7;
+  border: 1px solid #0d82f8;
   position: absolute;
   background-color: #fff;
   left: 0;
@@ -1674,6 +1674,7 @@ pre.a2-code {
   overflow: auto;
   height: 100%;
   max-height: 250px;
+  min-height: 23px;
 }
 .input-group > .selector-pane ul.selector-pane li {
   list-style: none;

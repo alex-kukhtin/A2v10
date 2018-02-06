@@ -9,7 +9,7 @@ namespace A2v10.Xaml
     public class Splitter : Container
     {
         public Orientation Orientation { get; set; }
-
+        public Length Height { get; set; }
 
         #region Attached Properties
         static Lazy<IDictionary<Object, GridLength>> _attachedWidths = new Lazy<IDictionary<Object, GridLength>>(() => new Dictionary<Object, GridLength>());
@@ -46,6 +46,8 @@ namespace A2v10.Xaml
             if (onRender != null)
                 onRender(spl);
             MergeAttributes(spl, context);
+            if (Height != null)
+                spl.MergeStyle("height", Height.Value);
             spl.AddCssClass(Orientation.ToString().ToLowerInvariant());
             // width
             GridLength p1w = GetWidth(Children[0]) ?? GridLength.Fr1();

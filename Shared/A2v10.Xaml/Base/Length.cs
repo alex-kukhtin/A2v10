@@ -27,6 +27,8 @@ namespace A2v10.Xaml
             return Value;
         }
 
+        public Boolean IsEmpty => String.IsNullOrEmpty(Value);
+
         public static Length FromString(String strVal)
         {
             strVal = strVal.Trim();

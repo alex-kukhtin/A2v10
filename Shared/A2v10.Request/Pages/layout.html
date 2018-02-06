@@ -40,7 +40,7 @@
             </div>
         </header>
         <a2-main-view :menu="menu"></a2-main-view>
-        <a2-debug :model-stack="modelStack" :model-visible="debugShowModel" 
+        <a2-debug :model-stack="modelStack" :model-visible="debugShowModel"
                   :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
         <footer class="footer">
             <div :class="{spinner: true, active:processing}"></div>
@@ -57,7 +57,7 @@
                         <a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
                         -->
                         <label class="checkbox">
-                            <input type="checkbox" v-model="traceEnabled"/>
+                            <input type="checkbox" v-model="traceEnabled" />
                             <span>Трассировка</span>
                         </label>
                     </div>
@@ -69,6 +69,7 @@
         -->
     </div>
     <script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
+    <script type="text/javascript" src="/scripts/d3.min.js?v=$(Build)"></script>
     <script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
     <script type="text/javascript" src="/shell/script"></script>
 </body>

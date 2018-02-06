@@ -27,6 +27,7 @@
 @NewFilder=Нова папка
 @NewElement=Новий елемент
 @Cancel=Скасувати
+@Select=Обрати
 ;
 @Code=Код
 @Date=Дата

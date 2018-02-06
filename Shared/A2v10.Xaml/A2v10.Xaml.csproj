@@ -56,6 +56,7 @@
     <Compile Include="Base\ISupportBinding.cs" />
     <Compile Include="Base\ITableControl.cs" />
     <Compile Include="Base\RenderContext.cs" />
+    <Compile Include="Base\Size.cs" />
     <Compile Include="Base\SortDescription.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\StaticResource.cs" />

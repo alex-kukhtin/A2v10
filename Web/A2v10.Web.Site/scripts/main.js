@@ -2659,12 +2659,11 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180206-7104
 // components/selector.js
 
 /* TODO:
-    6. create element
-    7. create element text
+    7. create element text and command
     8. scrollIntoView for template (table)
     9. 
 */
@@ -2681,7 +2680,7 @@ Vue.component('validator-control', {
     Vue.component('a2-selector', {
         extends: baseControl,
         template: `
-<div :class="cssClass()">
+<div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
     <div class="input-group">
         <input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
@@ -2691,9 +2690,9 @@ Vue.component('validator-control', {
             :disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-        <div class="selector-pane" v-if="isOpen" ref="pane">
+        <div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
             <slot name='pane' :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
-                <ul class="selector-pane">
+                <ul class="selector-pane" :style="listStyle">
                     <li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
                         v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
                 </ul>
@@ -2713,7 +2712,9 @@ Vue.component('validator-control', {
             placeholder: String,
             delay: Number,
             minChars: Number,
-            fetch: Function
+            fetch: Function,
+            listWidth: String,
+            listHeight: String
         },
         data() {
             return {
@@ -2740,6 +2741,16 @@ Vue.component('validator-control', {
                     hit: this.hit
                 };
             },
+            paneStyle() {
+                if (this.listWidth)
+                    return { width: this.listWidth, minWidth: this.listWidth };
+                return null;
+            },
+            listStyle() {
+                if (this.listHeight)
+                    return { maxHeight: this.listHeight };
+                return null;
+            },
             debouncedUpdate() {
                 let delay = this.delay || DEFAULT_DELAY;
                 return utils.debounce(() => {
@@ -2757,6 +2768,12 @@ Vue.component('validator-control', {
         methods: {
             __clickOutside() {
                 this.isOpen = false;
+            },
+            cssClass2() {
+                let cx = this.cssClass();
+                if (this.isOpen)
+                    cx += ' open'
+                return cx;
             },
             isItemActive(ix) {
                 return ix === this.current;
@@ -2834,12 +2851,7 @@ Vue.component('validator-control', {
             },
             fetchData(text) {
                 let elem = this.item[this.prop];
-                return this.fetch.call(elem, text);
-                /*
-                return new Promise((resolve, reject) => {
-                    resolve(this.fetch.call(undefined, elem, text));
-                });
-                */
+                return this.fetch.call(elem, elem, text);
             }
         },
         mounted() {

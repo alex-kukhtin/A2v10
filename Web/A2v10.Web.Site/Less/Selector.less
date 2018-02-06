@@ -4,7 +4,8 @@
 @al-height: 250px;
 
 .input-group > .selector-pane {
-    border: 1px solid @dropdown-brd-color;
+    //border: 1px solid @dropdown-brd-color;
+    border: 1px solid @link-hover-color;
     position: absolute;
     background-color: #fff;
     left: 0;
@@ -27,6 +28,7 @@
         overflow: auto;
         height: 100%;
         max-height: @al-height;
+        min-height: 23px;
 
         li {
             list-style: none;
@@ -47,11 +49,12 @@
         padding: 4px;
         display: block;
         border-top: 1px solid @dropdown-brd-color;
-        background-color:#f8f8f8;
+        background-color: #f8f8f8;
     }
 
     table.selector-table {
-        width:100%;
+        width: 100%;
+
         tr {
             &.active td {
                 background-color: @active-bg-color;

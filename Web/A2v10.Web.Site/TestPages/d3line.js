@@ -43,12 +43,18 @@
         .attr('stroke-width', 1)
         .attr('fill', 'none');
 
+    chart.append('g')
+        .append('text')
+        .text('text node')
+        .attr('x', 400)
+        .attr('y', 120);
+
     // Add the scatterplot
     chart.selectAll("dot")
         .data(sine)
         .enter()
         .append("circle")
-        .attr("r", 4)
+        .attr("r", 2)
         .attr('fill', 'lime')
         .attr("cx", d => x(d[0]))
         .attr("cy", d => y(d[1]));

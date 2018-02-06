@@ -274,6 +274,17 @@
     }
 }
 
+/* avoid validator blinking */
+.control-group.open {
+    &:hover {
+        z-index: @hover-open-index !important;
+    }
+
+    .input-group.focus {
+        z-index: @hover-open-index !important;
+    }
+}
+
 .control-group.required {
     label:before {
         content: '\2731';
