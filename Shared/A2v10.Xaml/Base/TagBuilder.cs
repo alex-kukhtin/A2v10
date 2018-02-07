@@ -203,7 +203,7 @@ namespace A2v10.Xaml
 					break;
 				case TagRenderMode.Normal:
 					context.Writer.Write(CreateStartTag(context, false));
-					context.Writer.Write(InnerText);
+					context.Writer.Write(context.Localize(InnerText));
 					context.Writer.Write($"</{TagName}>");
 					break;
 				case TagRenderMode.EndTag:

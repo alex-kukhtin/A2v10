@@ -28,7 +28,7 @@ namespace A2v10.Xaml
             label.RenderStart(context);
 
             if (Content != null)
-                context.Writer.Write(Content.ToString());
+                context.Writer.Write(context.Localize(Content.ToString()));
 
             label.RenderEnd(context);
         }

@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace A2v10.Xaml
 {
@@ -55,6 +56,17 @@ namespace A2v10.Xaml
     public class GridLength
     {
         public String Value;
+
+        public GridLength()
+        {
+
+        }
+
+        public GridLength(String value)
+        {
+            Value = value;
+        }
+
         public override string ToString()
         {
             return Value;
@@ -68,15 +80,23 @@ namespace A2v10.Xaml
         {
             Double dblVal = 0;
             if (strVal == "Auto")
-                return new GridLength() { Value = "auto" };
-            else if (strVal.EndsWith("%"))
-                return new GridLength() { Value = strVal };
-            else if (strVal.EndsWith("px"))
-                return new GridLength() { Value = strVal };
+                return new GridLength("auto");
+            else if (strVal.StartsWith("MinMax"))
+            {
+                var re = new Regex(@"MinMax\s*\(\s*(\w+[%\*]?)\s*;\s*(\w+[%\*]?)\s*\)");
+                var match = re.Match(strVal.Trim());
+                if (match.Groups.Count != 3)
+                    throw new XamlException($"Invalid grid length value '{strVal}'");
+                GridLength gl1 = GridLength.FromString(match.Groups[1].Value);
+                GridLength gl2 = GridLength.FromString(match.Groups[2].Value);
+                return new GridLength($"minmax({gl1.ToString()},{gl2.ToString()})");
+            }
+            else if (strVal.EndsWith("%") || strVal.EndsWith("px") || strVal.EndsWith("vh") || strVal.EndsWith("vw"))
+                return new GridLength(strVal);
             if (strVal.EndsWith("*"))
-                return new GridLength() { Value = strVal.Trim().Replace("*", "fr") };
+                return new GridLength(strVal.Trim().Replace("*", "fr"));
             else if (Double.TryParse(strVal, out dblVal))
-                return new GridLength() { Value = strVal + "px" };
+                return new GridLength(strVal + "px");
             throw new XamlException($"Invalid grid length value '{strVal}'");
         }
     }

@@ -30,7 +30,7 @@ namespace A2v10.Xaml
             }
             option.RenderStart(context);
             if (Content != null)
-                context.Writer.Write(Content);
+                context.Writer.Write(context.Localize(Content));
             option.RenderEnd(context);
         }
     }

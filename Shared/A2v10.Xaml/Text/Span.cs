@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 
             span.RenderStart(context);
             if (Content is String)
-                context.Writer.Write(Content.ToString());
+                context.Writer.Write(context.Localize(Content.ToString()));
             span.RenderEnd(context);
         }
     }
