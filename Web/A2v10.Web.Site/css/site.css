@@ -2998,6 +2998,9 @@ TODO:
   left: 1px;
   right: 1px;
 }
+.dropdown.dir-down.show .btn:focus {
+  outline-style: none!important;
+}
 .dropdown.dir-down.show:after {
   bottom: 0;
 }
