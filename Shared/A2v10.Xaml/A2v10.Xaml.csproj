@@ -142,6 +142,10 @@
     <Compile Include="XamlRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>

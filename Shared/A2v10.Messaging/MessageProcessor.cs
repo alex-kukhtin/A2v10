@@ -8,6 +8,7 @@ using Newtonsoft.Json.Converters;
 
 using A2v10.Infrastructure;
 using System.Collections.Generic;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Messaging
 {

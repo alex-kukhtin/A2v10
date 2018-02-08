@@ -6,9 +6,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using A2v10.Infrastructure;
 using A2v10.Tests.Config;
-using A2v10.Tests.DataModelTester;
 using System.Threading.Tasks;
 using System.Dynamic;
+using A2v10.Data.Interfaces;
+using A2v10.Data.Tests;
 
 namespace A2v10.Tests
 {
@@ -102,7 +103,6 @@ namespace A2v10.Tests
             var resumeResult = await _workflow.ResumeWorkflow(rInfo);
             Assert.AreEqual(resumeResult.ProcessId, result.ProcessId);
             Assert.AreEqual(resumeResult.InboxIds.Count, 0);
-
 
             pm = await _dbContext.LoadModelAsync(String.Empty, "a2workflow.[Process.Load]",
                 new { UserId = userId, Id = result.ProcessId }

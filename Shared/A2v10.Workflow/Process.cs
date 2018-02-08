@@ -9,6 +9,7 @@ using System.Reflection;
 
 using A2v10.Infrastructure;
 using System.Threading.Tasks;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Workflow
 {
@@ -79,7 +80,7 @@ namespace A2v10.Workflow
 
         internal async Task Start(IDbContext dbContext)
         {
-            await dbContext.ExecuteAsync<Process>(null, "a2workflow.[Process.Create]", this);
+            await dbContext.ExecuteAsync(null, "a2workflow.[Process.Create]", this);
             if (this.Id == 0)
                 throw new WorkflowException("Failed to start process");
         }

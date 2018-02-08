@@ -47,8 +47,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\A2v10.Data\A2v10.Data.csproj">
-      <Project>{EDBF1CA8-989D-4B8D-AD01-F3260B544CD9}</Project>
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
+      <Project>{3CEFBA76-9ED3-40B4-A844-CC17D960202F}</Project>
       <Name>A2v10.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">

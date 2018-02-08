@@ -25,6 +25,7 @@
       <x:String>A2v10.Workflow</x:String>
       <x:String>A2v10.Infrastructure</x:String>
       <x:String>System.Dynamic</x:String>
+      <x:String>A2v10.Data.Interfaces</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -38,6 +39,7 @@
       <AssemblyReference>A2v10.Infrastructure</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>TestApplication</AssemblyReference>
+      <AssemblyReference>A2v10.Data.Interfaces</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
@@ -80,7 +82,7 @@
     </Flowchart.StartNode>
     <x:Reference>__ReferenceID0</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
-    <sads:DebugSymbol.Symbol>d0NjOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXExvYWRNb2RlbF92MS54YW1sBisDVA8CAQExCT4WAgELQQ1MFgIBAjQPOxQCAQxJE0l/AgEHRBNEWwIBAw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d0NjOlxHaXRcQTJ2MTBcVGVzdHNcVGVzdEFwcGxpY2F0aW9uXFRlc3RcV29ya2Zsb3dzXExvYWRNb2RlbF92MS54YW1sBi0DVg8CAQEzCUAWAgELQw1OFgIBAjYPPRQCAQxLE0t/AgEHRhNGWwIBAw==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

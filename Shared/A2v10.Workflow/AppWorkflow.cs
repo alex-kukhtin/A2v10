@@ -13,6 +13,7 @@ using Microsoft.Activities.Extensions.Tracking;
 using A2v10.Infrastructure;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Workflow
 {
@@ -202,7 +203,7 @@ namespace A2v10.Workflow
             _application.Completed = (e) =>
             {
                 RefreshWorkflowState();
-                _endEvent.Set();
+                // _endEvent.Set(); not now !!
             };
             _application.Unloaded = (e) =>
             {

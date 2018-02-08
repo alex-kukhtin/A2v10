@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Infrastructure
 {

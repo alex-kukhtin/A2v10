@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using A2v10.Infrastructure;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {

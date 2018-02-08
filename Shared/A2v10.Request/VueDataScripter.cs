@@ -1,44 +1,40 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
 
-namespace A2v10.Data
+namespace A2v10.Request
 {
-    internal class ScriptWriter
+    public class VueDataScripter : IDataScripter
     {
-        DynamicDataModel _model;
-
-        public ScriptWriter(DynamicDataModel model)
-        {
-            _model = model;
-        }
-
-        public String GetScript()
+        public String CreateScript(IDictionary<String, Object> sys, IDictionary<String, IDataMetadata> meta)
         {
             var sb = new StringBuilder();
             sb.AppendLine("function modelData(template, data) {");
             sb.AppendLine("\tconst cmn = require('std:datamodel');");
-            if (_model.Metadata != null) {
-                sb.Append(GetConstructors());
+            if (meta != null)
+            {
+                sb.Append(GetConstructors(meta));
             }
             sb.AppendLine("\tcmn.implementRoot(TRoot, template, ctors);");
             sb.AppendLine("\tlet root = new TRoot(data);");
-            sb.AppendLine(SetModelInfo());
+            sb.Append(SetModelInfo(sys));
+            sb.AppendLine();
             sb.AppendLine("\treturn root;");
             sb.AppendLine("}");
             return sb.ToString();
         }
 
-        public String SetModelInfo()
+        public StringBuilder SetModelInfo(IDictionary<String, Object> sys)
         {
-            if (_model.System == null)
+            if (sys == null)
                 return null;
             var sb = new StringBuilder("\tcmn.setModelInfo(root, {\n");
-            foreach (var k in _model.System as IDictionary<String, Object>)
+            foreach (var k in sys)
             {
                 var val = k.Value;
                 if (val is Boolean)
@@ -51,14 +47,13 @@ namespace A2v10.Data
             }
             sb.RemoveTailComma();
             sb.Append("});");
-            return sb.ToString();
+            return sb;
         }
 
-        public StringBuilder GetConstructors()
+        public StringBuilder GetConstructors(IDictionary<String, IDataMetadata> meta)
         {
-            if (_model.Metadata == null)
+            if (meta == null)
                 return null;
-            var meta = _model.Metadata as IDictionary<String, ElementMetadata>;
             var sb = new StringBuilder();
             foreach (var m in meta)
             {
@@ -78,7 +73,7 @@ namespace A2v10.Data
             return sb;
         }
 
-        public StringBuilder GetOneConstructor(String name, ElementMetadata ctor)
+        public StringBuilder GetOneConstructor(String name, IDataMetadata ctor)
         {
             var sb = new StringBuilder();
             String arrItem = ctor.IsArrayType ? "true" : "false";
@@ -102,7 +97,25 @@ namespace A2v10.Data
             return sb;
         }
 
-        public String GetSpecialProperties(ElementMetadata meta)
+        public StringBuilder GetProperties(IDataMetadata meta)
+        {
+            var sb = new StringBuilder();
+            foreach (var fd in meta.Fields)
+            {
+                var fm = fd.Value;
+                sb.AppendLine()
+                .Append($"'{fd.Key}'")
+                .Append(':')
+                .Append(fm.GetObjectType($"{meta.Name}.{fd.Key}"))
+                .Append(",");
+            }
+            if (sb.Length == 0)
+                return sb;
+            sb.RemoveTailComma();
+            return sb;
+        }
+
+        public String GetSpecialProperties(IDataMetadata meta)
         {
             StringBuilder sb = new StringBuilder();
             if (!String.IsNullOrEmpty(meta.Id))
@@ -134,35 +147,6 @@ namespace A2v10.Data
                 return null;
             sb.RemoveTailComma();
             return ",\n" + sb.ToString();
-        }
-
-        public StringBuilder GetProperties(ElementMetadata meta)
-        {
-            var sb = new StringBuilder();
-            foreach (var fd in meta.Fields) {
-                var fm = fd.Value;
-                sb.AppendLine()
-                .Append($"'{fd.Key}'")
-                .Append(':');
-                // TODO: special data type
-                if (fm.ItemType == FieldType.Array)
-                    sb.Append(fm.RefObject + "Array");
-                else if (fm.ItemType == FieldType.Tree)
-                    sb.Append(fm.RefObject + "Array");
-                else if (fm.ItemType == FieldType.Object)
-                    sb.Append(fm.RefObject);
-                else if (fm.ItemType == FieldType.Group)
-                    sb.Append(fm.RefObject);
-                else if (fm.DataType == DataType.Undefined)
-                    throw new DataLoaderException($"Invalid data type for '{meta.Name}.{fd.Key}'");
-                else
-                    sb.Append(fm.DataType);
-                sb.Append(",");
-            }
-            if (sb.Length == 0)
-                return sb;
-            sb.RemoveTailComma();
-            return sb;
         }
     }
 }

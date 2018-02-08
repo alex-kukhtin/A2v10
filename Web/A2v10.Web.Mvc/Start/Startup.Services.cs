@@ -1,8 +1,10 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using A2v10.Data;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Messaging;
+using A2v10.Request;
 using A2v10.Web.Mvc.Configuration;
 using A2v10.Workflow;
 using A2v10.Xaml;
@@ -20,10 +22,15 @@ namespace A2v10.Web.Mvc.Start
                 IProfiler profiler = new WebProfiler();
                 IApplicationHost host = new WebApplicationHost(profiler);
                 ILocalizer localizer = new WebLocalizer(host);
-                IDbContext dbContext = new SqlDbContext(host, localizer);
+                IDbContext dbContext = new SqlDbContext(
+                    profiler as IDataProfiler, 
+                    host as IDataConfiguration, 
+                    localizer as IDataLocalizer,
+                    host as ITenantManager);
                 IRenderer renderer = new XamlRenderer(profiler);
                 IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
                 IMessaging messaging = new MessageProcessor(host, dbContext);
+                IDataScripter scripter = new VueDataScripter();
 
                 locator.RegisterService<IDbContext>(dbContext);
                 locator.RegisterService<IProfiler>(profiler);
@@ -32,6 +39,7 @@ namespace A2v10.Web.Mvc.Start
                 locator.RegisterService<IWorkflowEngine>(workflowEngine);
                 locator.RegisterService<IMessaging>(messaging);
                 locator.RegisterService<ILocalizer>(localizer);
+                locator.RegisterService<IDataScripter>(scripter);
 
                 HttpContext.Current.Items.Add("ServiceLocator", locator);
             };

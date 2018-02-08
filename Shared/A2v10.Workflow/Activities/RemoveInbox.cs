@@ -2,6 +2,7 @@
 
 using System;
 using System.Activities;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Workflow

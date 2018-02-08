@@ -15,6 +15,7 @@ using A2v10.Request;
 using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Identity;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {

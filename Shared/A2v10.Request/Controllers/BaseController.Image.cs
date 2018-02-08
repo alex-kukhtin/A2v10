@@ -60,7 +60,7 @@ namespace A2v10.Request
                 ii.Mime = file.ContentType;
                 ii.Name = Path.GetFileName(file.FileName);
                 ii.Stream = file.InputStream;
-                await _dbContext.ExecuteAsync<ImageUpdateInfo>(rm.source, procedure, ii);
+                await _dbContext.ExecuteAsync(rm.source, procedure, ii);
                 retList.Add(ii.Id);
             }
             return retList;

@@ -1,6 +1,7 @@
 ﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Workflow

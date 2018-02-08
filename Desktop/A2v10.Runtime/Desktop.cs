@@ -6,15 +6,16 @@ using System.Dynamic;
 
 using ChakraHost.Hosting;
 
-using A2v10.Infrastructure;
 using A2v10.Runtime.Properties;
 using A2v10.Script;
 using A2v10.Request;
 using A2v10.Runtime;
-using A2v10.Data;
 using A2v10.Xaml;
 using A2v10.Workflow;
 using System.Web;
+using A2v10.Data.Interfaces;
+using A2v10.Data;
+using A2v10.Infrastructure;
 
 namespace A2v10RuntimeNet
 {
@@ -116,7 +117,10 @@ namespace A2v10RuntimeNet
             IProfiler profiler = new DesktopProfiler();
             IApplicationHost host = new DesktopApplicationHost(profiler);
             ILocalizer localizer = new DesktopLocalizer();
-            IDbContext dbContext = new SqlDbContext(host, localizer);
+            IDbContext dbContext = new SqlDbContext(
+                profiler as IDataProfiler,
+                host as IDataConfiguration,
+                localizer as IDataLocalizer);
             IRenderer renderer = new XamlRenderer(profiler);
             IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
             locator.RegisterService<IProfiler>(profiler);
@@ -132,7 +136,7 @@ namespace A2v10RuntimeNet
             ExpandoObject loadPrms = new ExpandoObject();
             loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
             // TODO: current user ID;
-            loadPrms.Set("UserId", 100);
+            //loadPrms.Set("UserId", 100);
             ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
         }
 

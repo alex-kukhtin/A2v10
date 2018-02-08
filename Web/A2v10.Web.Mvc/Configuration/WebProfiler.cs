@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
 
@@ -102,7 +103,7 @@ namespace A2v10.Web.Mvc.Configuration
         }
     }
 
-    public class WebProfiler : IProfiler
+    public class WebProfiler : IProfiler, IDataProfiler
 	{
         const String _sessionKey = "_Profile_";
         const Int32 _requestCount = 50;
@@ -158,5 +159,12 @@ namespace A2v10.Web.Mvc.Configuration
                 return null;
             return JsonConvert.SerializeObject(sessionArray);
         }
+
+        #region IDataProfiler
+        IDisposable IDataProfiler.Start(String command)
+        {
+            return CurrentRequest.Start(ProfileAction.Sql, command);
+        }
+        #endregion
     }
 }

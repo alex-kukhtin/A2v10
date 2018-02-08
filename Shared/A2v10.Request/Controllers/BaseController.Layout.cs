@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 using A2v10.Request.Properties;
 using A2v10.Infrastructure;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {

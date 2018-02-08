@@ -2,6 +2,7 @@
 
 
 using System;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Tests.Config
@@ -18,7 +19,7 @@ namespace A2v10.Tests.Config
         }
     }
 
-    public class TestProfiler : IProfiler
+    public class TestProfiler : IProfiler, IDataProfiler
 	{
         public Boolean Enabled { get; set; }
         IProfileRequest _request = new DummyRequest();
@@ -31,6 +32,11 @@ namespace A2v10.Tests.Config
         public IProfileRequest CurrentRequest => _request;
 
         public String GetJson()
+        {
+            return null;
+        }
+
+        IDisposable IDataProfiler.Start(String command)
         {
             return null;
         }

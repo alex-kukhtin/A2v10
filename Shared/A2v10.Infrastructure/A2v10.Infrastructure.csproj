@@ -45,8 +45,7 @@
     <Compile Include="IBackgroundTasksManager.cs" />
     <Compile Include="IControllerProfiler.cs" />
     <Compile Include="IControllerTenant.cs" />
-    <Compile Include="IDataModel.cs" />
-    <Compile Include="IDbContext.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="IApplicationHost.cs" />
     <Compile Include="ILocalizer.cs" />
     <Compile Include="IMessage.cs" />
@@ -67,6 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

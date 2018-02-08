@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Web.Mvc.Configuration
@@ -19,7 +20,7 @@ namespace A2v10.Web.Mvc.Configuration
         }
     }
 
-    public class WebLocalizer : BaseLocalizer
+    public class WebLocalizer : BaseLocalizer, IDataLocalizer
     {
         private IApplicationHost _host;
 
@@ -132,5 +133,9 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+        String IDataLocalizer.Localize(String content)
+        {
+            return Localize(null, content, true);
+        }
     }
 }

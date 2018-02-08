@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using System.IO;
 
 using A2v10.Infrastructure;
+using A2v10.Data.Interfaces;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace A2v10.Web.Mvc.Configuration
 {
-	public class WebApplicationHost : IApplicationHost
+	public class WebApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		IProfiler _profiler;
 
@@ -110,5 +113,45 @@ namespace A2v10.Web.Mvc.Configuration
 
         public String AppVersion => AppInfo.MainAssembly.Version;
         public String AppBuild => AppInfo.MainAssembly.Build;
+
+        const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
+
+        #region ITenantManager
+        public async Task SetTenantIdAsync(SqlConnection cnn, String source)
+        {
+            if (!IsMultiTenant)
+                return;
+            if (source == CatalogDataSource)
+                return;
+            using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cmd.CommandText = SET_TENANT_CMD;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TenantId", TenantId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public void SetTenantId(SqlConnection cnn, String source)
+        {
+            if (!IsMultiTenant)
+                return;
+            if (source == CatalogDataSource)
+                return;
+            using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cmd.CommandText = SET_TENANT_CMD;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TenantId", TenantId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        #endregion
     }
 }

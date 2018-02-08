@@ -11,6 +11,7 @@ using A2v10.Infrastructure;
 using System.Collections.Generic;
 using A2v10.Infrastructure.Utilities;
 using System.Net;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -21,6 +22,7 @@ namespace A2v10.Request
         protected IRenderer _renderer;
         protected IWorkflowEngine _workflowEngine;
         protected ILocalizer _localizer;
+        protected IDataScripter _scripter;
 
         public BaseController()
         {
@@ -31,6 +33,7 @@ namespace A2v10.Request
             _renderer = locator.GetService<IRenderer>();
             _workflowEngine = locator.GetService<IWorkflowEngine>();
             _localizer = locator.GetService<ILocalizer>();
+            _scripter = locator.GetService<IDataScripter>();
         }
 
         public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -267,7 +270,7 @@ $(RequiredModules)
             header.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
             output.Append(header);
             if (model != null)
-                output.Append(model.CreateScript());
+                output.Append(model.CreateScript(_scripter));
             else
                 output.Append(emptyModel);
             var footer = new StringBuilder(scriptFooter);

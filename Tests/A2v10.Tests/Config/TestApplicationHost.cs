@@ -3,11 +3,12 @@
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Tests.Config
 {
-	public class TestApplicationHost : IApplicationHost
+	public class TestApplicationHost : IApplicationHost, IDataConfiguration
 	{
 
 		IProfiler _profiler;
