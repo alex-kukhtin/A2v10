@@ -31,7 +31,7 @@
                     <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
                     <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
                         <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="login" tabindex="1" />
+                            <input v-focus class="control" type="text" v-model="login" tabindex="1" @keyup.enter="onLoginEnter"/>
                             <div class="validator">
                                 <span class="error">введите E-mail</span>
                             </div>
@@ -40,7 +40,7 @@
                     <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
                     <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="2" />
+                            <input class="control" v-focus type="password" v-model="password" tabindex="2" @keyup.enter="onPwdEnter" ref="pwd"/>
                             <div class="validator">
                                 <span class="error">введите пароль</span>
                             </div>

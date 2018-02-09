@@ -1,6 +1,10 @@
 ﻿### Change Log
 
-06 feb 2018 builds 7106
+09 feb 2018 builds 7107-7108
+* Xaml. Radio element added
+* Xaml. FieldSet element added
+
+07 feb 2018 builds 7106
 * Grid Columns now support MinMax syntax
 * Elements &lt;Span&gt;, &lt;Text&gt; now support Localization (fixed #4)
 

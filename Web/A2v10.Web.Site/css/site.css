@@ -3381,6 +3381,31 @@ TODO:
 .panel.panel-yellow > .panel-header .panel-collapse-handle {
   color: #9c793d;
 }
+.field-set {
+  margin: 0;
+  padding: .4rem .6rem;
+  border: 1px solid #bdc5d8;
+}
+.field-set legend {
+  font-size: 0.95rem;
+  color: #757575;
+}
+.field-set.vertical .field-set-item {
+  display: block;
+  margin-bottom: .4rem;
+}
+.field-set.vertical .field-set-item:last-child {
+  margin-bottom: 0;
+}
+.field-set.horizontal {
+  display: table;
+}
+.field-set.horizontal .field-set-item {
+  margin-right: 1rem;
+}
+.field-set.horizontal .field-set-item:last-child {
+  margin-right: 0;
+}
 table.sheet {
   -webkit-user-select: text;
   -moz-user-select: text;

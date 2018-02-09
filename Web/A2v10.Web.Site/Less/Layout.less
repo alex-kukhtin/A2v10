@@ -120,3 +120,38 @@
 .panel.panel-yellow {
     .panel-varaint(@pane-yellow-brd, @pane-yellow-bg, @pane-yellow-txt);
 }
+
+.field-set {
+    // flex does not work for <fieldset>
+    margin: 0;
+    padding: .4rem .6rem;
+    border: 1px solid @default-brd-color;
+
+    legend {
+        font-size: 0.95rem;
+        color: @label-color;
+    }
+
+    &.vertical {
+        .field-set-item {
+            display: block;
+            margin-bottom: .4rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &.horizontal {
+        display: table;
+
+        .field-set-item {
+            margin-right: 1rem;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

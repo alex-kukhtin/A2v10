@@ -12,7 +12,7 @@ namespace A2v10.Xaml
 
         public Object ItemsSource { get; set; }
 
-        internal virtual void RenderChildren(RenderContext context)
+        internal virtual void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
         {
             var isBind = GetBinding(nameof(ItemsSource));
             if (isBind != null)
@@ -36,7 +36,7 @@ namespace A2v10.Xaml
             {
                 foreach (var c in Children)
                 {
-                    c.RenderElement(context);
+                    c.RenderElement(context, onRenderStatic);
                 }
             }
         }

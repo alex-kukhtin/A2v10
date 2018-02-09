@@ -51,7 +51,7 @@ namespace A2v10.Xaml
             tb.RenderEnd(context);
         }
 
-        internal override void RenderChildren(RenderContext context)
+        internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
         {
             if (_attachedPart == null)
             {

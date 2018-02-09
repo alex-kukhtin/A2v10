@@ -122,7 +122,7 @@ namespace A2v10.Xaml
             grid.RenderEnd(context);
         }
 
-        internal override void RenderChildren(RenderContext context)
+        internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
         {
             foreach (var ch in Children)
             {

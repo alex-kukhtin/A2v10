@@ -62,6 +62,12 @@
                         alert(error);
                     });
             },
+            onLoginEnter() {
+                this.$refs.pwd.focus();
+            },
+            onPwdEnter() {
+                this.submit();
+            },
             navigate() {
                 let qs = parseQueryString(window.location.search);
                 let url = qs.ReturnUrl || '/';

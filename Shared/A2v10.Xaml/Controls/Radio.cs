@@ -8,11 +8,14 @@ namespace A2v10.Xaml
     {
         internal override string ControlType => "radio";
 
+        public Object CheckedValue { get; set; }
+
         internal override void MergeCheckBoxAttributes(TagBuilder tag, RenderContext context)
         {
             base.MergeCheckBoxAttributes(tag, context);
-            // TODO Merge Checked Value 
-            throw new NotImplementedException();
+            if (CheckedValue == null)
+                throw new XamlException("The CheckedValue attribute is required for Radio");
+            tag.MergeAttribute("value", CheckedValue.ToString());
         }
     }
 }
