@@ -4,7 +4,7 @@
 * Xaml. `<Radio>` element added
 * Xaml. `<FieldSet>` element added
 * Fix: `<Panel.Header>`, `<PropertyGridItem.Name>`, `<PropertyGrid.Content>` did not support localization. Fixed.
-* Dialogs are now draggable (fixed issue#2)
+* Dialogs are now draggable (fixed [#2](../../issues/2))
 
 07 feb 2018 builds 7106
 * Grid Columns now support MinMax syntax
