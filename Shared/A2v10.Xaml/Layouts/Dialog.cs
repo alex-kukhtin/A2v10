@@ -72,6 +72,7 @@ namespace A2v10.Xaml
         void RenderHeader(RenderContext context)
         {
             var header = new TagBuilder("div", "modal-header");
+            header.MergeAttribute("v-drag-window", String.Empty);
             header.RenderStart(context);
             var hdr = GetBinding(nameof(Title));
             if ((hdr != null) || (Title != null))

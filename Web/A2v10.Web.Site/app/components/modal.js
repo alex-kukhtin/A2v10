@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180114-7091
+// 20180209-7109
 // components/modal.js
 
 
@@ -17,7 +17,7 @@ TODO:
 <div class="modal-window">
     <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
     <div v-else class="modal-body">
-        <div class="modal-header"><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+        <div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
         <div :class="bodyClass">
             <i v-if="hasIcon" :class="iconClass" />
             <div v-text="dialog.message" />
@@ -44,6 +44,62 @@ TODO:
 			//alert(el.closest('.modal-window'));
 		}
 	};
+
+    const dragDialogDirective = {
+        inserted(el, binding) {
+
+            const mw = el.closest('.modal-window');
+            if (!mw)
+                return;
+            const opts = {
+                down: false,
+                init: {x: 0, y: 0, cx : 0, cy : 0 },
+                offset: {x: 0, y: 0 }
+            };
+
+            function onMouseDown(event) {
+                opts.down = true;
+                opts.offset.x = event.pageX;
+                opts.offset.y = event.pageY;
+                const cs = window.getComputedStyle(mw);
+                opts.init.x = Number.parseFloat(cs.marginLeft);
+                opts.init.y = Number.parseFloat(cs.marginTop);
+                opts.init.cx = Number.parseFloat(cs.width);
+                opts.init.cy = Number.parseFloat(cs.height);
+                document.addEventListener('mouseup', onRelease, false);
+                document.addEventListener('mousemove', onMouseMove, false);
+            };
+
+            function onRelease(event) {
+                opts.down = false;
+                document.removeEventListener('mouseup', onRelease);
+                document.removeEventListener('mousemove', onMouseMove);
+            }
+
+            function onMouseMove(event) {
+                if (!opts.down)
+                    return;
+                let dx = event.pageX - opts.offset.x;
+                let dy = event.pageY - opts.offset.y;
+                let mx = opts.init.x + dx;
+                let my = opts.init.y + dy;
+                // fit
+                let maxX = window.innerWidth - opts.init.cx;
+                let maxY = window.innerHeight - opts.init.cy;
+                if (my < 0) my = 0;
+                if (mx < 0) mx = 0;
+                if (mx > maxX) mx = maxX;
+                //if (my > maxY) my = maxY; // any value available
+                console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
+                mw.style.marginLeft = mx + 'px';
+                mw.style.marginTop = my + 'px';
+            }
+
+            el.addEventListener('mousedown', onMouseDown, false);
+        }
+    };
+
+    Vue.directive('drag-window', dragDialogDirective);
 
 	Vue.directive('modal-width', setWidthComponent);
 

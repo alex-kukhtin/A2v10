@@ -2423,6 +2423,7 @@ table.data-grid > tbody > tr.bold td {
 .modal-header {
   background-color: #fff29d;
   padding: 8px;
+  cursor: move;
   font-weight: bold;
   border-bottom: 1px solid #bdc5d8;
   min-height: 34px;

@@ -37,7 +37,7 @@ namespace A2v10.Xaml
                 nameCell.MergeAttribute("v-text", nameBind.GetPathFormat(context));
             nameCell.RenderStart(context);
             if (!String.IsNullOrEmpty(Name))
-                context.Writer.Write(Name);
+                context.Writer.Write(context.Localize(Name));
             nameCell.RenderEnd(context);
 
             var valCell = new TagBuilder("td", "prop-value");
@@ -49,7 +49,7 @@ namespace A2v10.Xaml
             if (Content is UIElementBase)
                 (Content as UIElementBase).RenderElement(context);
             else if (Content != null)
-                context.Writer.Write(Content.ToString());
+                context.Writer.Write(context.Localize(Content.ToString()));
             valCell.RenderEnd(context);
 
             tr.RenderEnd(context);
