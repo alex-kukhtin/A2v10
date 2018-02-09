@@ -8,7 +8,7 @@
 
 07 feb 2018 builds 7106
 * Grid Columns now support MinMax syntax
-* Elements `<Span>`, `<Text>` now support localization (fixed [#4](../../issues/4))
+* Elements `<Span>`, `<Text>` now support localization (fixed [#5](../../issues/5))
 
 06 feb 2018 builds 7103-7105
 * JavaScript template files now support localization
