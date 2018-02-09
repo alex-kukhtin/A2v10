@@ -23,12 +23,14 @@ namespace A2v10.Xaml
     public class Length
     {
         public String Value;
+
         public override string ToString()
         {
             return Value;
         }
 
         public Boolean IsEmpty => String.IsNullOrEmpty(Value);
+        public Boolean IsPixel => (Value != null) && Value.EndsWith("px");
 
         public static Length FromString(String strVal)
         {

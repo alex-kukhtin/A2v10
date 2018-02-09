@@ -1,5 +1,10 @@
 ﻿### Change Log
 
+10 feb 2018 builds 7110
+* `Splitter.MinWidth` is now supported for the second pane too (fixed [#12](../../issues/12))
+* Selector is not disabled for the ReadOnly DataModel. Fixed.
+* Unable to clean the filter after reload the page. Fixed.
+
 09 feb 2018 builds 7107-7109
 * Xaml. `<Radio>` element added
 * Xaml. `<FieldSet>` element added

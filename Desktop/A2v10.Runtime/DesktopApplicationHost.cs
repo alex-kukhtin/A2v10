@@ -49,6 +49,8 @@ namespace A2v10.Runtime
             }
         }
 
+        public String Theme => null;
+
 
         public bool IsDebugConfiguration
         {

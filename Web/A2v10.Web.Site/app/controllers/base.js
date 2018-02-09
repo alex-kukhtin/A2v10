@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180205-7102
+// 20180209-7110
 // controllers/base.js
 
 (function () {
@@ -611,9 +611,22 @@
 				this.$data.__requestsCount__ -= 1;
 			},
             __queryChange(search) {
-                // preserve $baseQuery
-                let newQuery = Object.assign({}, urltools.parseQueryString(search), this.$baseQuery);
-                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(newQuery));
+                // preserve $baseQuery (without data from search)
+                if (!utils.isObjectExact(search)) {
+                    console.error('base.__queryChange. invalid argument type');
+                }
+                let nq = Object.assign({}, this.$baseQuery);
+                for (let p in search) {
+                    if (search[p]) {
+                        // replace from search
+                        nq[p] = search[p];
+                    }
+                    else {
+                        // undefined element, delete from query
+                        delete nq[p];
+                    }
+                }
+                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
 				this.$reload();
             },
             __doInit__() {

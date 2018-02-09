@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20171234-7080*/
+/*20171234-7110*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -9,6 +9,7 @@ Vue.directive('resize', {
 		Vue.nextTick(function () {
 
             const minWidth = 20;
+            const handleWidth = 6;
 
 			function findHandle(el) {
 				for (ch of el.childNodes) {
@@ -23,18 +24,31 @@ Vue.directive('resize', {
             let grid = el.parentElement;
 
             let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
+            let minSecondPaneWidth = Number.parseFloat(el.getAttribute('second-min-width'));
             if (isNaN(minPaneWidth))
                 minPaneWidth = minWidth;
+            if (isNaN(minSecondPaneWidth))
+                minSecondPaneWidth = minWidth;
+
 
 			let parts = {
 				grid: grid,
 				handle: findHandle(grid),
                 resizing: false,
                 minWidth: minPaneWidth,
+                minWidth2: minSecondPaneWidth,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
-				}
+                },
+                fitX(x) {
+                    if (x < this.minWidth)
+                        x = this.minWidth;
+                    let tcx = this.grid.clientWidth;
+                    if (x + handleWidth + this.minWidth2 > tcx)
+                        x = tcx - this.minWidth2 - handleWidth;
+                    return x;
+                }
 			};
 
 			if (!parts.handle) {
@@ -44,38 +58,47 @@ Vue.directive('resize', {
 
 			el._parts = parts;
 
-			grid.addEventListener('mouseup', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				p.resizing = false;
-				event.preventDefault();
-				p.handle.style.display = 'none';
-				p.grid.style.cursor = 'default';
-				let x = p.offsetX(event);
-				if (x < p.minWidth) x = p.minWidth;
-				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
-			}, false);
+            function mouseUp(event) {
+                let p = el._parts;
+                if (!p.resizing)
+                    return;
 
-			grid.addEventListener('mousemove', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				event.preventDefault();
-				let x = p.offsetX(event);
-				p.handle.style.left = x + 'px';
-			}, false);
+                event.preventDefault();
+                p.handle.style.display = 'none';
+                p.grid.style.cursor = 'default';
+                let x = p.offsetX(event);
+                x = p.fitX(x);
+                p.grid.style.gridTemplateColumns = `${x}px ${handleWidth}px 1fr`;
+
+                document.removeEventListener('mouseup', mouseUp);
+                document.removeEventListener('mousemove', mouseMove);
+
+                p.resizing = false;
+            }
+
+            function mouseMove(event) {
+                let p = el._parts;
+                if (!p.resizing)
+                    return;
+                event.preventDefault();
+                let x = p.offsetX(event);
+                x = p.fitX(x);
+                p.handle.style.left = x + 'px';
+            }
+
 
             el.addEventListener('mousedown', function (event) {
                 let p = el._parts;
 				if (p.resizing)
 					return;
 				event.preventDefault();
-				p.resizing = true;
                 let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
 				p.handle.style.display = 'block';
 				p.grid.style.cursor = 'w-resize';
+                document.addEventListener('mouseup', mouseUp, false);
+                document.addEventListener('mousemove', mouseMove, false);
+                p.resizing = true;
 			}, false);
 		});
 		/*

@@ -16,6 +16,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
+            CheckDisabledModel(context);
             var input = new TagBuilder("a2-selector", null, IsInGrid);
             if (onRender != null)
                 onRender(input);
@@ -30,6 +31,7 @@ namespace A2v10.Xaml
                     input.MergeAttribute("list-height", ListSize.Height.ToString());
             }
             MergeAttributes(input, context);
+            MergeDisabled(input, context);
             MergeAlign(input, context, Align);
             MergeValue(input, context);
             input.RenderStart(context);

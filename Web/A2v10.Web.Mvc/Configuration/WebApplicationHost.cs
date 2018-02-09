@@ -57,6 +57,14 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+        public String Theme
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["theme"];
+            }
+        }
+
         public Boolean IsMultiTenant
         {
             get

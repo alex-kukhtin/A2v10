@@ -53,6 +53,10 @@ namespace A2v10.Xaml
             GridLength p1w = GetWidth(Children[0]) ?? GridLength.Fr1();
             GridLength p2w = GetWidth(Children[1]) ?? GridLength.Fr1();
 
+            Length p1mw = GetMinWidth(Children[0]);
+            if (p1mw != null && !p1mw.IsPixel)
+                throw new XamlException("Splitter.MinWidth must be specified in pixels");
+
             String rowsCols = Orientation == Orientation.Vertical ? "grid-template-columns" : "grid-template-rows";
             spl.MergeStyle(rowsCols, $"{p1w} 6px {p2w}");
 
@@ -67,6 +71,7 @@ namespace A2v10.Xaml
             new TagBuilder("div", "spl-handle")
                 .MergeAttribute(Orientation == Orientation.Vertical ? "v-resize" : "h-resize", String.Empty)
                 .MergeAttribute("data-min-width", GetMinWidth(Children[0])?.Value.ToString())
+                .MergeAttribute("second-min-width", GetMinWidth(Children[1])?.Value.ToString())
                 .Render(context);
 
             // second part

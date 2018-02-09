@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180209-7110
 /* platform/routex.js */
 
 (function () {
@@ -93,7 +93,7 @@
                 let newUrl = root + this.getters.baseUrl;
                 if (newUrl === oldUrl) return;
                 window.history.replaceState(null, null, newUrl);
-				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
+				eventBus.$emit('queryChange', state.query);
 			},
 			popstate: function(state) {
                 state.route = normalizedRoute();
@@ -148,7 +148,7 @@
         return parts[0] + (search || '');
 	}
 
-	function replaceUrlQuery(url, query) {
+    function replaceUrlQuery(url, query) {
 		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 

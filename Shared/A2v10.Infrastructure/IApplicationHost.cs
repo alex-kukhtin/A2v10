@@ -10,6 +10,7 @@ namespace A2v10.Infrastructure
 		IProfiler Profiler { get; }
         String AppPath { get; }
         String AppKey { get; }
+        String Theme { get; }
         Boolean IsDebugConfiguration { get; }
         Boolean IsMultiTenant { get; }
         Int32? TenantId { get; set; }

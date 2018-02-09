@@ -659,7 +659,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180209-7110
 /* platform/routex.js */
 
 (function () {
@@ -752,7 +752,7 @@ app.modules['std:http'] = function () {
                 let newUrl = root + this.getters.baseUrl;
                 if (newUrl === oldUrl) return;
                 window.history.replaceState(null, null, newUrl);
-				eventBus.$emit('queryChange', urlTools.makeQueryString(state.query));
+				eventBus.$emit('queryChange', state.query);
 			},
 			popstate: function(state) {
                 state.route = normalizedRoute();
@@ -807,7 +807,7 @@ app.modules['std:http'] = function () {
         return parts[0] + (search || '');
 	}
 
-	function replaceUrlQuery(url, query) {
+    function replaceUrlQuery(url, query) {
 		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
@@ -3969,7 +3969,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180209-7110
 // components/collectionview.js
 
 /*
@@ -4105,7 +4105,7 @@ TODO:
                     this.localQuery.offset = offset;
                     // for this BaseController only
                     if (!this.localQuery.order) this.localQuery.dir = undefined;
-                    this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+                    this.$root.$emit('localQueryChange', this.localQuery);
                 } else if (this.runAt === 'serverurl') {
                     this.$store.commit('setquery', { offset: offset });
                 } else {
@@ -4128,7 +4128,7 @@ TODO:
                 if (this.runAt === 'server') {
                     this.copyQueryToLocal(nq);
 					// for this BaseController only
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+					this.$root.$emit('localQueryChange', nq);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);
@@ -4168,7 +4168,7 @@ TODO:
                     // for this BaseController only
                     this.copyQueryToLocal(nq);
                     // console.dir(this.localQuery);
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+					this.$root.$emit('localQueryChange', nq);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);
@@ -5430,9 +5430,9 @@ Vue.directive('focus', {
 })();
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20171234-7080*/
+/*20171234-7110*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -5441,6 +5441,7 @@ Vue.directive('resize', {
 		Vue.nextTick(function () {
 
             const minWidth = 20;
+            const handleWidth = 6;
 
 			function findHandle(el) {
 				for (ch of el.childNodes) {
@@ -5455,18 +5456,31 @@ Vue.directive('resize', {
             let grid = el.parentElement;
 
             let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
+            let minSecondPaneWidth = Number.parseFloat(el.getAttribute('second-min-width'));
             if (isNaN(minPaneWidth))
                 minPaneWidth = minWidth;
+            if (isNaN(minSecondPaneWidth))
+                minSecondPaneWidth = minWidth;
+
 
 			let parts = {
 				grid: grid,
 				handle: findHandle(grid),
                 resizing: false,
                 minWidth: minPaneWidth,
+                minWidth2: minSecondPaneWidth,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
-				}
+                },
+                fitX(x) {
+                    if (x < this.minWidth)
+                        x = this.minWidth;
+                    let tcx = this.grid.clientWidth;
+                    if (x + handleWidth + this.minWidth2 > tcx)
+                        x = tcx - this.minWidth2 - handleWidth;
+                    return x;
+                }
 			};
 
 			if (!parts.handle) {
@@ -5476,38 +5490,47 @@ Vue.directive('resize', {
 
 			el._parts = parts;
 
-			grid.addEventListener('mouseup', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				p.resizing = false;
-				event.preventDefault();
-				p.handle.style.display = 'none';
-				p.grid.style.cursor = 'default';
-				let x = p.offsetX(event);
-				if (x < p.minWidth) x = p.minWidth;
-				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
-			}, false);
+            function mouseUp(event) {
+                let p = el._parts;
+                if (!p.resizing)
+                    return;
 
-			grid.addEventListener('mousemove', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				event.preventDefault();
-				let x = p.offsetX(event);
-				p.handle.style.left = x + 'px';
-			}, false);
+                event.preventDefault();
+                p.handle.style.display = 'none';
+                p.grid.style.cursor = 'default';
+                let x = p.offsetX(event);
+                x = p.fitX(x);
+                p.grid.style.gridTemplateColumns = `${x}px ${handleWidth}px 1fr`;
+
+                document.removeEventListener('mouseup', mouseUp);
+                document.removeEventListener('mousemove', mouseMove);
+
+                p.resizing = false;
+            }
+
+            function mouseMove(event) {
+                let p = el._parts;
+                if (!p.resizing)
+                    return;
+                event.preventDefault();
+                let x = p.offsetX(event);
+                x = p.fitX(x);
+                p.handle.style.left = x + 'px';
+            }
+
 
             el.addEventListener('mousedown', function (event) {
                 let p = el._parts;
 				if (p.resizing)
 					return;
 				event.preventDefault();
-				p.resizing = true;
                 let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
 				p.handle.style.display = 'block';
 				p.grid.style.cursor = 'w-resize';
+                document.addEventListener('mouseup', mouseUp, false);
+                document.addEventListener('mousemove', mouseMove, false);
+                p.resizing = true;
 			}, false);
 		});
 		/*
@@ -5576,7 +5599,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180205-7102
+// 20180209-7110
 // controllers/base.js
 
 (function () {
@@ -6187,9 +6210,22 @@ Vue.directive('resize', {
 				this.$data.__requestsCount__ -= 1;
 			},
             __queryChange(search) {
-                // preserve $baseQuery
-                let newQuery = Object.assign({}, urltools.parseQueryString(search), this.$baseQuery);
-                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(newQuery));
+                // preserve $baseQuery (without data from search)
+                if (!utils.isObjectExact(search)) {
+                    console.error('base.__queryChange. invalid argument type');
+                }
+                let nq = Object.assign({}, this.$baseQuery);
+                for (let p in search) {
+                    if (search[p]) {
+                        // replace from search
+                        nq[p] = search[p];
+                    }
+                    else {
+                        // undefined element, delete from query
+                        delete nq[p];
+                    }
+                }
+                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
 				this.$reload();
             },
             __doInit__() {

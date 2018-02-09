@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180209-7110
 // components/collectionview.js
 
 /*
@@ -136,7 +136,7 @@ TODO:
                     this.localQuery.offset = offset;
                     // for this BaseController only
                     if (!this.localQuery.order) this.localQuery.dir = undefined;
-                    this.$root.$emit('localQueryChange', this.$store.makeQueryString(this.localQuery));
+                    this.$root.$emit('localQueryChange', this.localQuery);
                 } else if (this.runAt === 'serverurl') {
                     this.$store.commit('setquery', { offset: offset });
                 } else {
@@ -159,7 +159,7 @@ TODO:
                 if (this.runAt === 'server') {
                     this.copyQueryToLocal(nq);
 					// for this BaseController only
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+					this.$root.$emit('localQueryChange', nq);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);
@@ -199,7 +199,7 @@ TODO:
                     // for this BaseController only
                     this.copyQueryToLocal(nq);
                     // console.dir(this.localQuery);
-					this.$root.$emit('localQueryChange', this.$store.makeQueryString(nq));
+					this.$root.$emit('localQueryChange', nq);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);

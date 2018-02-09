@@ -53,6 +53,9 @@ namespace A2v10.Tests.Config
             }
         }
 
+        public String Theme => null;
+
+
         public Boolean IsMultiTenant => false;
         public Boolean IsDebugConfiguration => true;
         public Int32? TenantId { get; set; }
