@@ -31,7 +31,7 @@
                     <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
                     <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
                         <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="login" tabindex="1" @keyup.enter="onLoginEnter"/>
+                            <input v-focus class="control" type="text" v-model="login" tabindex="1" @keyup.enter="onLoginEnter" />
                             <div class="validator">
                                 <span class="error">введите E-mail</span>
                             </div>
@@ -40,14 +40,14 @@
                     <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
                     <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
                         <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="2" @keyup.enter="onPwdEnter" ref="pwd"/>
+                            <input class="control" v-focus type="password" v-model="password" tabindex="2" @keyup.enter="onPwdEnter" ref="pwd" />
                             <div class="validator">
                                 <span class="error">введите пароль</span>
                             </div>
                         </div>
                     </div>
                     <label class="checkbox" style="grid-row:3;grid-column:2">
-                        <input type="checkbox" v-model="rememberMe" tabindex="3"/>
+                        <input type="checkbox" v-model="rememberMe" tabindex="3" />
                         <span>Запомнить учетные данные</span>
                     </label>
                     <div style="grid-row:4;grid-column:2">
@@ -63,6 +63,25 @@
             version: <span v-text="info.version"></span>
         </footer>
     </div>
+
+    <script type="text/javascript">
+        (function () {
+            function isNewBrowser() {
+                if (typeof CSS === 'undefined') return false;
+                return CSS.supports && CSS.supports("display", "grid");
+            }
+
+            if (!isNewBrowser()) {
+                var appElem = document.getElementById("app");
+                appElem.parentElement.removeChild(appElem);
+                var nsd = document.createElement("div");
+                nsd.classList.add("not-supported");
+                nsd.innerText = "We're sorry, but this browser is not supported.";
+                document.body.appendChild(nsd);
+            }
+        })();
+    </script>
+
     <script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
     <script type="text/javascript">
         $(LoginScript)

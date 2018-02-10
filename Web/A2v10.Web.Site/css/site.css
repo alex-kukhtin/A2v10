@@ -3581,6 +3581,15 @@ h5,
   border: 1px solid #dca7a7;
   color: #a94442;
 }
+.not-supported {
+  width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #dca7a7;
+}
 .a2-graphics {
   display: block;
   width: 100%;
