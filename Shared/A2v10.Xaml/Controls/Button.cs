@@ -43,7 +43,7 @@ namespace A2v10.Xaml
 
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
-            bool bHasDropDown = DropDown != null;
+            Boolean bHasDropDown = DropDown != null;
             if (bHasDropDown)
             {
                 DropDownDirection? dir = (DropDown as DropDownMenu)?.Direction;

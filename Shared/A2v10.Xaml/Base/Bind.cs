@@ -45,7 +45,7 @@ namespace A2v10.Xaml
             String opts = "null";
             if (HideZeros)
                 opts = "{ hideZeros: true }";
-            return $"$format({realPath}, {dt}, {fmt}, {opts})";
+            return $"$format({realPath}, {dt}, {context.Localize(fmt)}, {opts})";
         }
 
 

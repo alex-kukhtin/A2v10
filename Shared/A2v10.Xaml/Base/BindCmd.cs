@@ -77,8 +77,7 @@ namespace A2v10.Xaml
         }
         public BindCmd(String command)
         {
-            CommandType cmdType;
-            if (!Enum.TryParse<CommandType>(command, out cmdType))
+            if (!Enum.TryParse<CommandType>(command, out CommandType cmdType))
                 throw new XamlException($"Invalid command '{command}'");
             Command = cmdType;
         }
@@ -178,7 +177,7 @@ namespace A2v10.Xaml
                     if (Action == DialogAction.Unknown)
                         throw new XamlException($"Action required for {Command} command");
                     String action = Action.ToString().ToKebabCase();
-                    bool bNullable = false;
+                    Boolean bNullable = false;
                     if (Action == DialogAction.Show)
                         bNullable = true; // Nullable actions ???
                     if (indirect)

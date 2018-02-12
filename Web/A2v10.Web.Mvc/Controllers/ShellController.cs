@@ -296,7 +296,7 @@ namespace A2v10.Web.Mvc.Controllers
             Response.StatusCode = 255; // CUSTOM ERROR!!!!
             Response.ContentType = "text/plain";
             Response.StatusDescription = "Custom server error";
-            Response.Write(ex.Message);
+            Response.Write(_baseController.Localize(ex.Message));
         }
     }
 }

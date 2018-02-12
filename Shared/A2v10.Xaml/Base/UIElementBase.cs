@@ -123,7 +123,7 @@ namespace A2v10.Xaml
             tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
         }
 
-        internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, bool bInvert = false)
+        internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, Boolean bInvert = false)
         {
             String attrVal = null;
             var attrBind = GetBinding(propName);
@@ -145,7 +145,7 @@ namespace A2v10.Xaml
                 return;
             // split to path and property
             String path = valBind.GetPath(context);
-            var pp = SplitToPathProp(path);
+            (String Path, String Prop) pp = SplitToPathProp(path);
             if (String.IsNullOrEmpty(pp.Path) || String.IsNullOrEmpty(pp.Prop))
                 throw new XamlException($"invalid binding for {valueName} '{path}'");
             input.MergeAttribute(":item", pp.Path);
@@ -175,7 +175,7 @@ namespace A2v10.Xaml
             String itemProp = String.Empty;
             if (String.IsNullOrEmpty(path))
                 return result;
-            int ix = path.LastIndexOf('.');
+            Int32 ix = path.LastIndexOf('.');
             if (ix != -1)
             {
                 result.Prop = path.Substring(ix + 1);

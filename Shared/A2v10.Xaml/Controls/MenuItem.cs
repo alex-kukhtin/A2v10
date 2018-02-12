@@ -14,6 +14,8 @@ namespace A2v10.Xaml
             if (HasIcon)
             {
                 MergeAttributes(mi, context, MergeAttrMode.NoContent);
+                MergeDisabled(mi, context, nativeControl: true);
+                mi.MergeAttribute("v-disable", String.Empty);
                 mi.RenderStart(context);
                 RenderIcon(context, Icon);
                 var span = new TagBuilder("span");
@@ -25,6 +27,8 @@ namespace A2v10.Xaml
             }
             else {
                 MergeAttributes(mi, context, MergeAttrMode.All);
+                MergeDisabled(mi, context, nativeControl: true);
+                mi.MergeAttribute("v-disable", String.Empty);
                 mi.RenderStart(context);
                 RenderContent(context);
                 mi.RenderEnd(context);

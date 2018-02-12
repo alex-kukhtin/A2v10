@@ -24,7 +24,7 @@ Vue.directive('autoSize', {
             var needHeight = el.scrollHeight + ops.extraSpace;
             if (needHeight > ops.initHeight)
                 el.style.height = needHeight + "px";
-        }
+        };
 
         function onInput(event) {
             el._autosize();

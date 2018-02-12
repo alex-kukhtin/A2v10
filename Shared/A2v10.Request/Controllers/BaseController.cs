@@ -41,6 +41,11 @@ namespace A2v10.Request
         public IApplicationHost Host => _host;
         public Boolean Admin { get; set; }
 
+        public String Localize(String content)
+        {
+            return _localizer.Localize(null, content);
+        }
+
         public async Task RenderApplicationKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
         {
             var segs = pathInfo.Split('/');

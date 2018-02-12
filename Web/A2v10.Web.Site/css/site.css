@@ -1090,7 +1090,6 @@ a {
   cursor: pointer;
 }
 a[disabled] {
-  pointer-events: none;
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -2932,6 +2931,12 @@ TODO:
 }
 .menu .dropdown-item > .ico:before {
   color: #333;
+}
+.menu .dropdown-item[disabled] {
+  cursor: not-allowed;
+}
+.menu .dropdown-item[disabled]:hover {
+  background-color: transparent;
 }
 .menu .dropdown-item:hover {
   background-color: #fdf4bf;

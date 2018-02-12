@@ -5268,7 +5268,7 @@ Vue.directive('autoSize', {
             var needHeight = el.scrollHeight + ops.extraSpace;
             if (needHeight > ops.initHeight)
                 el.style.height = needHeight + "px";
-        }
+        };
 
         function onInput(event) {
             el._autosize();
@@ -5284,6 +5284,27 @@ Vue.directive('autoSize', {
         setTimeout(() => el._autosize(), 1);
     }
 });
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180212-7112*/
+/* directives/disable.js */
+
+Vue.directive('disable', {
+    bind(el, binding, vnode) {
+
+        function doDisable(event) {
+            if (this.getAttribute('disabled')) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                return false;
+            }
+        }
+        // with capture !!!
+        el.addEventListener("click", doDisable, true);
+    }
+});
+
 
 /*20171029-7060*/
 /* directives/dropdown.js */
