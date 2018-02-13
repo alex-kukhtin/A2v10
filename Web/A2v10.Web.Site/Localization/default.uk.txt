@@ -3,7 +3,7 @@
 @Documents=Документи
 @Catalogs=Довідники
 @Sales=Продажі
-@Purchase=Закупівлі
+@Purchase=Придбання
 @Inventory=Запаси
 @Accounting=Бухгалтерія
 @Dashboard=Панель управління
