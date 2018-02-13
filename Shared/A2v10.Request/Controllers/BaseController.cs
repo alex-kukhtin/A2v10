@@ -129,8 +129,13 @@ namespace A2v10.Request
         {
             String loadProc = rw.LoadProcedure;
             IDataModel model = null;
+            if (rw.parameters != null && loadPrms == null)
+                loadPrms = rw.parameters;
             if (loadPrms != null)
+            {
                 loadPrms.Set("Id", rw.Id);
+                loadPrms.Append(rw.parameters);
+            }
             if (loadProc != null)
             {
                 ExpandoObject prms2 = loadPrms;

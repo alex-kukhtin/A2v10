@@ -58,7 +58,7 @@ namespace A2v10.Request
         public String source; // or parent
         public Boolean index;
         public String template;
-        public IDictionary<String, Object> parameters;
+        public ExpandoObject parameters;
 
         [JsonIgnore]
         protected RequestModel _parent;

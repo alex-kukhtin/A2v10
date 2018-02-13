@@ -53,6 +53,7 @@ namespace A2v10.Request
             var prms = new ExpandoObject();
             prms.Set("UserId", userId);
             prms.Set("TenantId", tenantId);
+            prms.Append(rw.parameters);
             IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
             IModelHandler handler = rw.GetHookHandler(_host);
             if (handler != null)
