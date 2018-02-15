@@ -1,7 +1,12 @@
 {
   "name": "a2.v10",
   "author": "alex kukhtin",
+  "version": "10.0",
+  "description": "Platform",
   "dependencies": {
+    "vue": "^2.5.13",
+    "vuex": "^3.0.1",
+    "d3": "^4.13.0",
     "A2v10.Data": "alex-kukhtin/A2v10.Data"
   }
 }
