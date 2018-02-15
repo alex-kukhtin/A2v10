@@ -1,0 +1,7 @@
+{
+  "name": "a2.v10",
+  "author": "alex kukhtin",
+  "dependencies": {
+    "a2v10.data": "https://github.com/alex-kukhtin/A2v10.Data"
+  }
+}
