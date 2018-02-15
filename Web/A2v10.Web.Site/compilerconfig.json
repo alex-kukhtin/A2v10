@@ -2,5 +2,10 @@
   {
     "outputFile": "css/site.css",
     "inputFile": "Less/Site.less"
+  },
+  {
+    "outputFile": "css/site.magenta.css",
+    "inputFile": "Less/Site.magenta.less"
   }
+
 ]

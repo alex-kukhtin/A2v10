@@ -1,0 +1,126 @@
+﻿
+
+@font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
+@monospace-font: Consolas, 'Courier New', Courier, monospace;
+@font-size:13px;
+
+@text-color:#222;
+@default-brd-color: #bdc5d8;
+@light-brd-color: #cfd6e5;
+@icon-color: #333;
+
+@brand-bk_color: #5b1e5b;
+@dark-bk-color: #8591a2;
+@brand-hover-color: lighten(@brand-bk_color, 15%);
+@admin-brand-bk-color: #a84e37;
+@admin-brand-hover-color: lighten(@admin-brand-bk-color, 15%);
+@hover-bg-color: #fff8db;
+@active-bg-color: #ead6ea;
+@alter-bg-color: rgba(208, 208, 208, 0.15);
+
+@link-color: #892d89;
+@link-hover-color: darken(@link-color, 15%);
+
+@warning-base-color: #f0ad4e;
+@danger-base-color: #da533f;
+@success-base-color: #5db750;
+@info-base-color: #60bbe5;
+//@primary-base-color: #5f8ce0;
+@primary-base-color: #3470b4;
+
+@font-bold: 600;
+
+
+@cmn-danger-brd-color: #fc7c7c;
+@cmn-warning-brd-color: gold;
+@cmn-success-brd-color: #89e489;
+@cmn-info-brd-color: #72eaea;
+
+/* controls */
+//@control-height: 1.851em; // FF magic number ???
+//@control-height:1.6158em;
+@control-height:1.77em;
+@input-padding: 5px;
+@select-padding: 2px;
+@placeholder-color:#aaa;
+@disabled-bg-color: #f5f5f5;
+@label-color: #757575;
+
+/* header-footer */
+@header-height: 32px;
+@footer-height: 22px;
+@footer-bg-color:@navbar-bg-color;
+
+/* nav bar */
+@navbar-height: 32px;
+@navbar-bg-color: #f2f3f9;
+@navbar-highlight-color: darken(@navbar-bg-color, 3%);
+
+/* data grid */
+@data-grid-border-color:@default-brd-color;
+@sort-bg-color: rgba(238,238,238, 0.4);
+
+/* toolbar */
+@toolbar-bg-color: #dad8da;
+@toolbar-txt-color: #555;
+@tb-active-bg-color: #fff29d;
+@tb-hover-brd-color: #e5c365;
+
+/* table */
+@table-brd-color: #e5e8eb;
+@table-hdr-brd-color: #cbcdda;
+@table-cell-padding-v: 4px;
+@table-cell-padding-h: 6px;
+@table-cell-padding: @table-cell-padding-v @table-cell-padding-h;
+@table-cell-gray-color:#f8f8f8;
+
+/* tree-view*/
+@tv-icon-color: @dark-bk-color;
+
+@error-border-color: #ff6a00;
+
+/* dialog */
+@dialog-header-bg-color: #fff29d;
+
+@dropdown-brd-color: #9ba7b7;
+@dropdown-bg-color: #eaf0ff;
+
+/* z-index */
+@hover-open-index: 98;
+@invalid-index: 96;
+@focus-index: 92;
+@hover-index: 90;
+
+@modal-stack-index:100;
+@debug-index: 110;
+
+@footer-index: 1020;
+@validator-index: 1030;
+@modal-wrapper-index: 1050;
+@exception-index: 1060;
+@popup-index: 1070;
+
+
+
+@danger-txt-color: #a94442;
+@danger-bg-color: #f2dede;
+@danger-brd-color: darken(@danger-bg-color, 15%);
+@danger-shadow-color: rgba(169,68,66,0.3);
+
+@danger-btn-color: lighten(@danger-txt-color, 5%);
+
+/* mixins */
+.noselect() {
+    -webkit-touch-callout: none; //* iOS Safari */
+    -webkit-user-select: none; //* Chrome/Safari/Opera */
+    -moz-user-select: none; //* Firefox */
+    -ms-user-select: none; //* Internet Explorer/Edge */
+    user-select: none; 
+}
+
+.user-select() {
+    -webkit-user-select: text; //* Chrome/Safari/Opera */
+    -moz-user-select: text; //* Firefox */
+    -ms-user-select: text; //* Internet Explorer/Edge */
+    user-select: text;
+}

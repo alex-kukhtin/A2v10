@@ -355,7 +355,7 @@ $(RequiredModules)
                     throw new FileNotFoundException(filePath);
                 String moduleText = File.ReadAllText(filePath);
                 sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
-                    .AppendLine(moduleText)
+                    .AppendLine(_localizer.Localize(null, moduleText))
                     .AppendLine(tmlFooter)
                     .AppendLine();
                 _modulesWritten.Add(moduleName);

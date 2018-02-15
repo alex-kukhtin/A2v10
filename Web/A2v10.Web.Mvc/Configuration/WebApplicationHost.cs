@@ -61,7 +61,10 @@ namespace A2v10.Web.Mvc.Configuration
         {
             get
             {
-                return ConfigurationManager.AppSettings["theme"];
+                String theme = ConfigurationManager.AppSettings["theme"];
+                if (String.IsNullOrEmpty(theme))
+                    return "site";
+                return $"site.{theme.ToLowerInvariant()}";
             }
         }
 

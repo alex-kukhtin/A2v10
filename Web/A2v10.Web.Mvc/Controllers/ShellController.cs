@@ -119,6 +119,7 @@ namespace A2v10.Web.Mvc.Controllers
                 var prms = new Dictionary<String, String>();
                 prms.Add("$(RootUrl)", RootUrl);
                 prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
+                prms.Add("$(Theme)", _baseController.Host.Theme);
                 prms.Add("$(Build)", _baseController.Host.AppBuild);
                 _baseController.Layout(Response.Output, prms);
             }

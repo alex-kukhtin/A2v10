@@ -100,6 +100,10 @@
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="css\site.css" />
+    <Content Include="css\site.magenta.css" />
+    <Content Include="css\site.magenta.min.css">
+      <DependentUpon>site.magenta.css</DependentUpon>
+    </Content>
     <Content Include="css\site.min.css">
       <DependentUpon>site.css</DependentUpon>
     </Content>
@@ -214,6 +218,9 @@
     <Content Include="Web.config.sample" />
     <Content Include="Less\Admin.less" />
     <Content Include="Less\Selector.less" />
+    <Content Include="Less\Main.less" />
+    <None Include="Less\Site.magenta.less" />
+    <Content Include="Less\Variables.Magenta.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
