@@ -1,10 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -20,12 +16,15 @@ namespace A2v10.Xaml
             var tag = new TagBuilder("label", ControlType, IsInGrid);
             if (onRender != null)
                 onRender(tag);
-            MergeAttributes(tag, context);
+            MergeAttributes(tag, context, MergeAttrMode.NoTabIndex);
             if (IsLabelEmpty)
                 tag.AddCssClass("no-label");
             tag.RenderStart(context);
             var input = new TagBuilder("input");
             input.MergeAttribute("type", ControlType);
+            if (TabIndex != 0)
+                input.MergeAttribute("tabindex", TabIndex.ToString());
+            input.MergeAttribute("v-settabindex", String.Empty);
             MergeCheckBoxValue(input, context);
             MergeCheckBoxAttributes(input, context);
             input.Render(context, TagRenderMode.SelfClosing);

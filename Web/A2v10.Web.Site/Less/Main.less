@@ -113,7 +113,6 @@ header, .header {
 @side-bar-width: 250px;
 @side-bar-gap: 6px;
 @side-bar-collapsed-width: 20px;
-@side-bar-collapsed-bg-color: @navbar-bg-color;
 
 .content-view {
     position: absolute;
@@ -164,11 +163,12 @@ header, .header {
     position: absolute;
     left: 0;
     top: @header-height + @navbar-height;
+    margin: @side-bar-margin;
     bottom: @footer-height;
     width: @side-bar-width;
     padding: 16px 0 0 0;
-    margin: 0;
-    border-right: 1px solid @light-brd-color;
+    border-right: 1px solid @side-bar-brd-color;
+    background-color: @side-bar-bg-color;
 
     .side-bar-body, .tree-view {
         height: 100%;
@@ -244,7 +244,7 @@ footer, .footer {
 
         .menu {
             margin-bottom: -2px;
-            font-size: 13px;
+            font-size: @font-size;
         }
     }
 
@@ -295,7 +295,7 @@ footer, .footer {
 
 input, select, textarea {
     border-style: none;
-    font-size: 13px;
+    font-size: @font-size;
     color: @text-color;
 
     &:focus {

@@ -14,7 +14,7 @@ TODO:
 */
 
     const modalTemplate = `
-<div class="modal-window">
+<div class="modal-window" @keydown.tab="tabPress">
     <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
     <div v-else class="modal-body">
         <div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
@@ -124,6 +124,32 @@ TODO:
         methods: {
             modalClose(result) {
 				eventBus.$emit('modalClose', result);
+            },
+            tabPress(event) {
+                function createThisElems() {
+                    let qs = document.querySelectorAll('.modal-body [tabindex]');
+                    let ea = [];
+                    for (let i = 0; i < qs.length; i++)
+                        ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
+                    ea = ea.sort((a, b) => a.ti > b.ti);
+                    console.dir(ea);                    
+                    return ea;
+                };
+
+                if (this._tabElems === undefined) {
+                    this._tabElems = createThisElems();
+                }
+                if (!this._tabElems || !this._tabElems.length)
+                    return;
+                let maxIndex = this._tabElems[this._tabElems.length - 1].ti;
+                let aElem = document.activeElement;
+                let ti = +aElem.getAttribute("tabindex");
+                if (ti === maxIndex) {
+                    event.preventDefault();
+                    this._tabElems[0].el.focus();
+                } else if (ti === 0) {
+                    event.preventDefault();
+                }
             }
         },
         computed: {
@@ -160,6 +186,8 @@ TODO:
         },
         created() {
             document.addEventListener('keyup', this.keyUpHandler);
+        },
+        mounted() {
         },
         destroyed() {
             document.removeEventListener('keyup', this.keyUpHandler);

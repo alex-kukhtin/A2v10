@@ -41,3 +41,13 @@ Vue.directive('focus', {
     }
 });
 
+
+Vue.directive('settabindex', {
+    inserted(el) {
+        if (el.tabIndex === 1) {
+            setTimeout(() => {
+                if (el.focus) el.focus();
+            }, 0);
+        }
+    }
+});

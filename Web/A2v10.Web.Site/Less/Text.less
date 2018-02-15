@@ -1,0 +1,30 @@
+﻿
+
+.tag-label {
+    background-color: #999;
+    color: white;
+    font-size: 0.8rem;
+    padding: 0 .25rem .1rem .25rem;
+    border-radius: .2rem;
+    display:inline-block;
+
+    &.success, &.green {
+        background-color: @success-base-color;
+    }
+
+    &.warning, &.orange {
+        background-color: @warning-base-color;
+    }
+
+    &.danger, &.red {
+        background-color: @danger-base-color;
+    }
+
+    &.info, &.cyan {
+        background-color: @info-base-color;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

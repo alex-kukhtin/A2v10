@@ -364,13 +364,14 @@ table.data-grid > tbody {
     height: 100%;
     overflow: hidden;
     position: relative;
+    min-height: 2rem + 1px;
 
     > .data-grid-body.fixed-header {
-        margin-top: 27px;
+        margin-top: 2rem;
         overflow: hidden;
         overflow-y: auto;
         // 25px (header) + 27px(pager)
-        height: ~"calc(100% - 27px)";
+        height: ~"calc(100% - 2rem)";
         //border-bottom: 1px solid @table-hdr-brd-color;
         > table > thead {
             height: 0;
@@ -403,11 +404,15 @@ table.data-grid > tbody {
                     top: 0;
                     background-color: inherit;
                     width: 100%;
-                    min-height: 27px;
+                    min-height: 2rem;
                     margin-left: -1px;
                     border-left: 1px solid @table-hdr-brd-color;
                     border-bottom: 1px solid @table-hdr-brd-color;
                     border-top: 1px solid @table-hdr-brd-color;
+                }
+
+                &:first-child > .h-holder {
+                    border-left-style:none;
                 }
             }
         }

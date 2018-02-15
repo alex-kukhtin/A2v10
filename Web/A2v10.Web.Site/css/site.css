@@ -1,6 +1,7 @@
 ﻿/* controls */
 /* header-footer */
 /* nav bar */
+/* side bar */
 /* data grid */
 /* toolbar */
 /* table */
@@ -398,7 +399,7 @@ i,
 }
 .ico-star-yellow:before {
   content: "\e9b6";
-  color: #dcb67a;
+  color: #ffcc00;
 }
 .ico-storyboard:before {
   content: "\ea46";
@@ -634,6 +635,33 @@ td.valign-middle {
 }
 td.valign-bottom {
   vertical-align: bottom !important;
+}
+.tag-label {
+  background-color: #999;
+  color: white;
+  font-size: 0.8rem;
+  padding: 0 .25rem .1rem .25rem;
+  border-radius: .2rem;
+  display: inline-block;
+}
+.tag-label.success,
+.tag-label.green {
+  background-color: #5db750;
+}
+.tag-label.warning,
+.tag-label.orange {
+  background-color: #f0ad4e;
+}
+.tag-label.danger,
+.tag-label.red {
+  background-color: #da533f;
+}
+.tag-label.info,
+.tag-label.cyan {
+  background-color: #60bbe5;
+}
+.tag-label.hidden {
+  display: none;
 }
 html {
   font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -923,11 +951,12 @@ header .btn:hover,
   position: absolute;
   left: 0;
   top: 64px;
+  margin: 0;
   bottom: 22px;
   width: 250px;
   padding: 16px 0 0 0;
-  margin: 0;
   border-right: 1px solid #cfd6e5;
+  background-color: white;
 }
 .side-bar .side-bar-body,
 .side-bar .tree-view {
@@ -1970,12 +1999,13 @@ table.data-grid > tbody > tr.bold td {
   height: 100%;
   overflow: hidden;
   position: relative;
+  min-height: 3rem;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header {
-  margin-top: 27px;
+  margin-top: 2rem;
   overflow: hidden;
   overflow-y: auto;
-  height: calc(100% - 27px);
+  height: calc(100% - 2rem);
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead {
   height: 0;
@@ -2006,11 +2036,14 @@ table.data-grid > tbody > tr.bold td {
   top: 0;
   background-color: inherit;
   width: 100%;
-  min-height: 27px;
+  min-height: 2rem;
   margin-left: -1px;
   border-left: 1px solid #cbcdda;
   border-bottom: 1px solid #cbcdda;
   border-top: 1px solid #cbcdda;
+}
+.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th:first-child > .h-holder {
+  border-left-style: none;
 }
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header .h-holder {
   border-top-style: none !important;
@@ -2893,7 +2926,7 @@ label.checkbox.small span:after {
   flex-grow: 2;
 }
 .a2-pager > .a2-pager-title {
-  font-size: .9em;
+  font-size: .86rem;
   color: #777;
 }
 .a2-pager .a2-pager-dots {
@@ -3598,4 +3631,91 @@ h5,
 .a2-graphics {
   display: block;
   width: 100%;
+}
+.debug-panel {
+  position: absolute;
+  top: 32px;
+  bottom: 22px;
+  right: 0;
+  z-index: 110;
+  background-color: #f8f8f8;
+  border-left: 1px solid #bdc5d8;
+  width: 350px;
+  box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.debug-panel .debug-pane-header {
+  background-color: #fff29d;
+  padding: 2px 2px 2px 6px;
+  border-bottom: 1px solid #bdc5d8;
+}
+.debug-panel .debug-pane-header .debug-pane-title {
+  font-size: .95rem;
+}
+.debug-panel .debug-pane-header a.btn {
+  float: right;
+  padding: 0 2px;
+  color: #aaa;
+  border: 1px solid transparent;
+}
+.debug-panel .debug-pane-header a.btn:hover {
+  color: #555;
+  background-color: #fff9d0;
+  border-color: #e5c365;
+}
+.debug-panel .toolbar {
+  min-height: 29px;
+  border-bottom: 1px solid #bdc5d8;
+}
+.debug-panel .debug-body {
+  overflow: auto;
+  background-color: #f8f8f8;
+  user-select: text;
+}
+.debug-panel .debug-model pre {
+  max-height: none;
+}
+.debug-panel .debug-trace {
+  padding: 6px, 0;
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  font-size: .9rem;
+}
+.debug-panel .debug-trace .rq-title {
+  display: flex;
+}
+.debug-panel .debug-trace .rq-title .elapsed {
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 6px;
+}
+.debug-panel .debug-trace .trace-item-body {
+  padding-left: 6px;
+}
+.debug-panel .debug-trace .trace-item-body .badge {
+  padding: .15rem .25rem;
+  margin-left: .2rem;
+  border-radius: .15rem;
+  background-color: #478fb1;
+}
+.debug-panel .debug-trace .trace-item-body .title {
+  color: #478fb1;
+}
+.debug-panel .debug-trace .trace-item-body.exception .badge {
+  background-color: #a94442;
+}
+.debug-panel .debug-trace .trace-item-body.exception .title {
+  color: #a94442;
+}
+.debug-panel .debug-trace ul {
+  margin: 0 0 0 10px;
+  padding: 0;
+}
+.debug-panel .debug-trace ul li {
+  list-style-type: none;
+}
+.debug-panel .debug-trace ul.a2-debug-trace > li {
+  border-bottom: 1px solid #bdc5d8;
+  padding: 2px 0;
 }

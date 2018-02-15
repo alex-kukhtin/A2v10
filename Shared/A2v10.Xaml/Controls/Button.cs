@@ -91,10 +91,13 @@ namespace A2v10.Xaml
             }
             if (hasDropDown && !hasCommand)
                 button.MergeAttribute("toggle", String.Empty);
-            MergeAttributes(button, context);
+            MergeAttributes(button, context, MergeAttrMode.NoTabIndex); // dinamic
+            if (TabIndex != 0)
+                button.MergeAttribute("tabindex", TabIndex.ToString());
             if (!HasContent && (Icon != Icon.NoIcon))
                 button.AddCssClass("btn-icon");
             MergeDisabled(button, context, nativeControl: true);
+            button.MergeAttribute("v-settabindex", String.Empty);
             button.RenderStart(context);
             RenderIcon(context, Icon);
             RenderContent(context);

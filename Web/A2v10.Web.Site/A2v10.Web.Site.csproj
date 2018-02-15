@@ -219,8 +219,10 @@
     <Content Include="Less\Admin.less" />
     <Content Include="Less\Selector.less" />
     <Content Include="Less\Main.less" />
+    <Content Include="Less\Mixins.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
+    <Content Include="Less\Text.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

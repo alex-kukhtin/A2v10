@@ -31,6 +31,8 @@ namespace A2v10.Xaml
             base.MergeAttributes(tag, context, mode);
             tag.AddCssClassBool(Block, "block");
             AddControlAttributes(tag, context);
+            if (TabIndex != 0 && mode.HasFlag(MergeAttrMode.TabIndex))
+                tag.MergeAttribute(":tab-index", TabIndex.ToString());
             if (Width != null)
             {
                 tag.MergeStyle("width", Width.Value);
@@ -43,8 +45,6 @@ namespace A2v10.Xaml
             MergeBindingAttributeString(tag, context, "label", nameof(Label), Label);
             MergeBindingAttributeString(tag, context, "description", nameof(Description), Description);
             MergeBoolAttribute(tag, context, nameof(Required), Required);
-            if (TabIndex != 0)
-                tag.MergeAttribute(":tab-index", TabIndex.ToString());
             if (Validator != null)
             {
                 Validator.MergeAttributes(tag);

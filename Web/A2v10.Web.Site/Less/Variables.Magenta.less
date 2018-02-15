@@ -2,12 +2,15 @@
 
 @font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
 @monospace-font: Consolas, 'Courier New', Courier, monospace;
-@font-size:13px;
+@font-size: 14px;
 
 @text-color:#222;
 @default-brd-color: #bdc5d8;
 @light-brd-color: #cfd6e5;
 @icon-color: #333;
+
+// icons
+@icon-folder:#989;
 
 @brand-bk_color: #5b1e5b;
 @dark-bk-color: #8591a2;
@@ -16,17 +19,17 @@
 @admin-brand-hover-color: lighten(@admin-brand-bk-color, 15%);
 @hover-bg-color: #fff8db;
 @active-bg-color: #ead6ea;
-@alter-bg-color: rgba(208, 208, 208, 0.15);
+@alter-bg-color: rgba(208, 200, 208, 0.12);
 
-@link-color: #892d89;
-@link-hover-color: darken(@link-color, 15%);
+@link-color: #993399;
+@link-hover-color: darken(@link-color, 10%);
 
 @warning-base-color: #f0ad4e;
 @danger-base-color: #da533f;
 @success-base-color: #5db750;
 @info-base-color: #60bbe5;
 //@primary-base-color: #5f8ce0;
-@primary-base-color: #3470b4;
+@primary-base-color: #892d89;
 
 @font-bold: 600;
 
@@ -45,6 +48,7 @@
 @placeholder-color:#aaa;
 @disabled-bg-color: #f5f5f5;
 @label-color: #757575;
+@control-focus-color: @link-color;
 
 /* header-footer */
 @header-height: 32px;
@@ -53,8 +57,14 @@
 
 /* nav bar */
 @navbar-height: 32px;
-@navbar-bg-color: #f2f3f9;
+@navbar-bg-color: #f6eff6;
 @navbar-highlight-color: darken(@navbar-bg-color, 3%);
+
+/* side bar */
+@side-bar-bg-color: @navbar-bg-color;
+@side-bar-collapsed-bg-color: @navbar-bg-color;
+@side-bar-margin: 6px 0 0 0;
+@side-bar-brd-color:transparent;
 
 /* data grid */
 @data-grid-border-color:@default-brd-color;
@@ -109,18 +119,3 @@
 
 @danger-btn-color: lighten(@danger-txt-color, 5%);
 
-/* mixins */
-.noselect() {
-    -webkit-touch-callout: none; //* iOS Safari */
-    -webkit-user-select: none; //* Chrome/Safari/Opera */
-    -moz-user-select: none; //* Firefox */
-    -ms-user-select: none; //* Internet Explorer/Edge */
-    user-select: none; 
-}
-
-.user-select() {
-    -webkit-user-select: text; //* Chrome/Safari/Opera */
-    -moz-user-select: text; //* Firefox */
-    -ms-user-select: text; //* Internet Explorer/Edge */
-    user-select: text;
-}

@@ -9,6 +9,9 @@
 @light-brd-color: #cfd6e5;
 @icon-color: #333;
 
+@icon-folder: #dcb67a;
+
+
 @brand-bk_color: #4d6082;
 @dark-bk-color: #8591a2;
 @brand-hover-color: lighten(@brand-bk_color, 15%);
@@ -45,6 +48,7 @@
 @placeholder-color:#aaa;
 @disabled-bg-color: #f5f5f5;
 @label-color: #757575;
+@control-focus-color: @link-hover-color;
 
 /* header-footer */
 @header-height: 32px;
@@ -55,6 +59,12 @@
 @navbar-height: 32px;
 @navbar-bg-color: #f2f3f9;
 @navbar-highlight-color: darken(@navbar-bg-color, 3%);
+
+/* side bar */
+@side-bar-bg-color: white;
+@side-bar-collapsed-bg-color: @navbar-bg-color;
+@side-bar-margin: 0;
+@side-bar-brd-color: @light-brd-color;
 
 /* data grid */
 @data-grid-border-color:@default-brd-color;
@@ -109,18 +119,3 @@
 
 @danger-btn-color: lighten(@danger-txt-color, 5%);
 
-/* mixins */
-.noselect() {
-    -webkit-touch-callout: none; //* iOS Safari */
-    -webkit-user-select: none; //* Chrome/Safari/Opera */
-    -moz-user-select: none; //* Firefox */
-    -ms-user-select: none; //* Internet Explorer/Edge */
-    user-select: none; 
-}
-
-.user-select() {
-    -webkit-user-select: text; //* Chrome/Safari/Opera */
-    -moz-user-select: text; //* Firefox */
-    -ms-user-select: text; //* Internet Explorer/Edge */
-    user-select: text;
-}
