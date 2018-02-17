@@ -1,4 +1,9 @@
 ﻿;
+@About=Про программу
+@Version=Версія
+@Debug=Відладка
+@Quit=Вихід
+;
 @Home=Головна
 @Documents=Документи
 @Catalogs=Довідники
@@ -20,6 +25,7 @@
 @Close=Закрити
 @Print=Друк
 @Search=Пошук
+@Help=Допомога
 ;
 @General=Загальні
 @Properties=Властивості

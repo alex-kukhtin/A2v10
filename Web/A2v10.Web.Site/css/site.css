@@ -1005,26 +1005,31 @@ header .btn:hover,
 footer,
 .footer {
   position: absolute;
+  display: flex;
+  align-items: center;
   left: 0;
   bottom: 0;
   right: 0;
   height: 22px;
-  line-height: 20px;
   background-color: #f2f3f9;
   border-top: 1px solid #bdc5d8;
   z-index: 1020;
-  padding-left: 8px;
-  font-size: 12px;
-  vertical-align: middle;
+  padding: 0 2px 0 8px;
+  font-size: .86rem;
+  line-height: 1.5rem;
+  text-transform: lowercase;
 }
-footer .right-part,
-.footer .right-part {
-  display: inline-block;
-  float: right;
-  padding-right: 2px;
+footer .divider,
+.footer .divider {
+  flex-grow: 2;
 }
-footer .right-part .menu,
-.footer .right-part .menu {
+footer .debug-btn,
+.footer .debug-btn {
+  display: inline;
+  margin-left: 0.5rem;
+}
+footer .menu,
+.footer .menu {
   margin-bottom: -2px;
   font-size: 13px;
 }
@@ -1032,7 +1037,6 @@ footer button,
 .footer button {
   background-color: #b94e4c;
   font-size: inherit;
-  line-height: 14px;
   padding: 0 6px 1px 6px;
   color: white;
   text-transform: lowercase;
@@ -1232,41 +1236,9 @@ pre.a2-code {
   position: absolute;
   left: 3px;
 }
-.control-group .validator.bottom-right {
-  top: 100%;
-  bottom: auto;
-  margin-top: 8px;
-  margin-bottom: 0;
-}
-.control-group .validator.bottom-right:before {
-  bottom: auto;
-  top: -8px;
-  border-bottom: 8px solid #dca7a7;
-  border-top-width: 0;
-}
-.control-group .validator.bottom-right:after {
-  bottom: auto;
-  top: -6.5px;
-  border-bottom: 7px solid #f2dede;
-  border-top-width: 0;
-}
-.control-group .validator.top-left {
-  left: auto;
-  right: 0;
-}
-.control-group .validator.top-left:before {
-  right: 8px;
-  left: auto;
-}
-.control-group .validator.top-left:after {
-  right: 9px;
-  left: auto;
-}
 .control-group .validator.bottom-left {
   top: 100%;
   bottom: auto;
-  left: auto;
-  right: 0;
   margin-top: 8px;
   margin-bottom: 0;
 }
@@ -1275,10 +1247,42 @@ pre.a2-code {
   top: -8px;
   border-bottom: 8px solid #dca7a7;
   border-top-width: 0;
+}
+.control-group .validator.bottom-left:after {
+  bottom: auto;
+  top: -6.5px;
+  border-bottom: 7px solid #f2dede;
+  border-top-width: 0;
+}
+.control-group .validator.top-right {
+  left: auto;
+  right: 0;
+}
+.control-group .validator.top-right:before {
   right: 8px;
   left: auto;
 }
-.control-group .validator.bottom-left:after {
+.control-group .validator.top-right:after {
+  right: 9px;
+  left: auto;
+}
+.control-group .validator.bottom-right {
+  top: 100%;
+  bottom: auto;
+  left: auto;
+  right: 0;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+.control-group .validator.bottom-right:before {
+  bottom: auto;
+  top: -8px;
+  border-bottom: 8px solid #dca7a7;
+  border-top-width: 0;
+  right: 8px;
+  left: auto;
+}
+.control-group .validator.bottom-right:after {
   bottom: auto;
   top: -6.5px;
   border-bottom: 7px solid #f2dede;
@@ -3322,6 +3326,12 @@ TODO:
 }
 .grid .control-group {
   margin-bottom: 0;
+}
+.grid .a2-header {
+  margin: 0;
+}
+.grid > .grid {
+  padding: 0;
 }
 .stack-panel {
   display: flex;

@@ -50,7 +50,7 @@ namespace A2v10.Runtime
         }
 
         public String Theme => null;
-
+        public String HelpUrl => null;
 
         public bool IsDebugConfiguration
         {

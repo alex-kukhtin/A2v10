@@ -57,6 +57,8 @@ namespace A2v10.Web.Mvc.Configuration
             }
         }
 
+        public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"];
+
         public String Theme
         {
             get

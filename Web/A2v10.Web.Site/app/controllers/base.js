@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7110
+// 20180217-7117
 // controllers/base.js
 
 (function () {
@@ -194,7 +194,7 @@
                             val.result = result.Result.Value;
                             resolve(val.result);
                         });
-                    })
+                    });
                 });
             },
 
@@ -274,7 +274,7 @@
                 if (newWindow === true)
                     window.open(urlToNavigate, "_blank");
                 else
-				    this.$store.commit('navigate', { url: urlToNavigate });
+                    this.$store.commit('navigate', { url: urlToNavigate });
             },
 
             $replaceId(newId) {
@@ -312,7 +312,7 @@
                 let sel = arr.$selected;
                 if (!sel)
                     return;
-                this.$dbRemove(sel, confirm)
+                this.$dbRemove(sel, confirm);
             },
 
 			$openSelected(url, arr) {
@@ -410,7 +410,6 @@
                             return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
                         default: // simple show dialog
                             return __runDialog(url, arg, query, () => { });
-                            break;
                     }
                 }
 
@@ -421,7 +420,7 @@
 
                 if (opts && opts.saveRequired && this.$isDirty) {
                     let dlgResult = null;
-                    this.$save().then(() => { dlgResult = doDialog() });
+                    this.$save().then(() => { dlgResult = doDialog(); });
                     return dlgResult;
                 }
                 return doDialog();
@@ -499,7 +498,18 @@
 			$close() {
 				if (this.$saveModified())
 					this.$store.commit("close");
-			},
+            },
+
+            $showHelp(path) {
+                window.open(this.$helpHref(path), "_blank");
+            },
+
+            $helpHref(path) {
+                let helpUrlElem = document.querySelector('meta[name=helpUrl]');
+                if (!helpUrlElem || !helpUrlElem.content)
+                    console.error('help url is not specified');
+                return helpUrlElem.content + path;
+            },
 
 			$searchChange() {
 				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
@@ -597,11 +607,6 @@
 			$delegate(name) {
 				const root = this.$data;
 				return root._delegate_(name);
-				// TODO: get delegate from template
-                return function (item, filter) {
-                    console.warn('filter:' + item.Id + " filter:" + filter.Filter);
-                    return true;
-                };
 			},
 
 			__beginRequest() {

@@ -225,33 +225,37 @@ header, .header {
 
 footer, .footer {
     position: absolute;
+    display:flex;
+    align-items:center;
     left: 0;
     bottom: 0;
     right: 0;
     height: @footer-height;
-    line-height: @footer-height - 2px;
     background-color: @footer-bg-color;
     border-top: 1px solid @default-brd-color;
     z-index: @footer-index;
-    padding-left: 8px;
-    font-size: 12px;
-    vertical-align: middle;
+    padding: 0 2px 0 8px;
+    font-size: .86rem;
+    line-height:1.5rem;
+    text-transform:lowercase;
 
-    .right-part {
-        display: inline-block;
-        float: right;
-        padding-right: 2px;
+    .divider {
+        flex-grow:2;
+    }
 
-        .menu {
-            margin-bottom: -2px;
-            font-size: @font-size;
-        }
+    .debug-btn {
+        display:inline;
+        margin-left:0.5rem;
+    }
+
+    .menu {
+        margin-bottom: -2px;
+        font-size: @font-size;
     }
 
     button {
         background-color: @danger-btn-color;
         font-size: inherit;
-        line-height: 14px;
         padding: 0 6px 1px 6px;
         color: white;
         text-transform: lowercase;

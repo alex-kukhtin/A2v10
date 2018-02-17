@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Text;
@@ -17,7 +17,7 @@ namespace A2v10.Xaml
     public class Dialog : RootContainer
     {
         public String Title { get; set; }
-        public String HelpFile { get; set; }
+        public String HelpUrl { get; set; }
 
         public DialogSize Size { get; set; }
         public Length Width { get; set; }
@@ -111,18 +111,22 @@ namespace A2v10.Xaml
                 //<a class="btn-help"><i class="ico ico-help"></i>Справка</a>
                 var ha = new TagBuilder("a", "btn-help");
                 // TODO: Help path
-                var hbind = GetBinding(nameof(HelpFile));
+                var hbind = GetBinding(nameof(HelpUrl));
                 if (hbind != null)
                 {
+                    String hpath = hbind.GetPathFormat(context);
+                    ha.MergeAttribute("@click.prevent", $"$showHelp({hpath})");
+                    ha.MergeAttribute(":href", $"$helpHref({hpath})");
                 }
-                else if (!String.IsNullOrEmpty(HelpFile))
+                else if (!String.IsNullOrEmpty(HelpUrl))
                 {
+                    ha.MergeAttribute("@click.prevent", $"$showHelp('{HelpUrl}')");
+                    ha.MergeAttribute(":href", $"$helpHref('{HelpUrl}')");
                 }
                 ha.RenderStart(context);
                 new TagBuilder("i", "ico ico-help")
                     .Render(context);
-                // TODO: Localize ???
-                context.Writer.Write("Help");
+                context.Writer.Write(context.Localize("@[Help]"));
                 ha.RenderEnd(context);
                 new TagBuilder("div", "aligner").Render(context);
             }
@@ -132,12 +136,6 @@ namespace A2v10.Xaml
             footer.RenderEnd(context);
         }
 
-        Boolean HasHelp
-        {
-            get
-            {
-                return GetBinding(nameof(HelpFile)) != null || !String.IsNullOrEmpty(HelpFile);
-            }
-        }
+        Boolean HasHelp => GetBinding(nameof(HelpUrl)) != null || !String.IsNullOrEmpty(HelpUrl);
     }
 }

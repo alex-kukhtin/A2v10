@@ -10,10 +10,10 @@ namespace A2v10.Xaml
 
     public enum ValidatorPlacement
     {
-        TopRight = 0,
-        TopLeft,
-        BottomRight,
-        BottomLeft
+        TopLeft = 0,
+        TopRight,
+        BottomLeft,
+        BottomRight
     }
 
     public class Validator : XamlElement

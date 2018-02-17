@@ -54,7 +54,7 @@ namespace A2v10.Tests.Config
         }
 
         public String Theme => null;
-
+        public String HelpUrl => null;
 
         public Boolean IsMultiTenant => false;
         public Boolean IsDebugConfiguration => true;
