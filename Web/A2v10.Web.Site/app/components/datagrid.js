@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180122-7096
+// 20180218-7118
 // components/datagrid.js*/
 
 (function () {
@@ -301,8 +301,8 @@
 							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,
-						getHref() {
-							if (arg1 == '$dialog')
+                        getHref() {
+                            if (col.command && col.command.isDialog)
 								return null;
 							let id = arg2;
 							if (utils.isObjectExact(arg2))

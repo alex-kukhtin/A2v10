@@ -72,7 +72,7 @@ namespace A2v10.Xaml
             }
             else if (Content != null)
             {
-                context.Writer.Write(Content.ToString());
+                context.Writer.Write(context.Localize(Content.ToString()));
             }                
             po.RenderEnd(context);
         }

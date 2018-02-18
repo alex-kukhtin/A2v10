@@ -25,6 +25,10 @@
 
         <static :item="Document" prop="Date" :text="Document.Date"></static>
 
+
+        <p>
+            <button @click="close">close window</button>
+        </p>
     </div>
     <script src="../scripts/vue.js"></script>
     <script src="../scripts/main.js"></script>
@@ -42,6 +46,11 @@
                     Date : dt
                 }
                     
+            },
+            methods: {
+                close() {
+                    window.close();
+                }
             }
         });
 

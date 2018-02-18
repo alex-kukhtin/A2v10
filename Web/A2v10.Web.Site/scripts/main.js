@@ -777,7 +777,11 @@ app.modules['std:http'] = function () {
             },
             close: function(state) {
 
+
                 function navigateBack() {
+                    // TODO: ??? 
+                    window.close();
+                    /*
                     let url = makeBackUrl(state.route);
                     if (url === state.route) {
                         let firstUrl = urlTools.firstUrl;
@@ -785,6 +789,7 @@ app.modules['std:http'] = function () {
                     } else {
                         store.commit('navigate', { url: url });
                     }
+                    */
                 }
 
                 if (window.history.length > 1) {
@@ -2866,7 +2871,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180122-7096
+// 20180218-7118
 // components/datagrid.js*/
 
 (function () {
@@ -3167,8 +3172,8 @@ Vue.component('validator-control', {
 							col.command.cmd(arg1, arg2, arg3);
 						},
 						eval: utils.eval,
-						getHref() {
-							if (arg1 == '$dialog')
+                        getHref() {
+                            if (col.command && col.command.isDialog)
 								return null;
 							let id = arg2;
 							if (utils.isObjectExact(arg2))
@@ -4550,7 +4555,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7109
+// 20180218-7118
 // components/modal.js
 
 
@@ -4640,7 +4645,7 @@ TODO:
                 if (mx < 0) mx = 0;
                 if (mx > maxX) mx = maxX;
                 //if (my > maxY) my = maxY; // any value available
-                console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
+                //console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
                 mw.style.marginLeft = mx + 'px';
                 mw.style.marginTop = my + 'px';
             }
@@ -5658,7 +5663,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180217-7117
+// 20180218-7118
 // controllers/base.js
 
 (function () {
@@ -5929,8 +5934,9 @@ Vue.directive('resize', {
             },
             $navigate(url, data, newWindow) {
                 let urlToNavigate = urltools.createUrlForNavigate(url, data);
-                if (newWindow === true)
+                if (newWindow === true) {
                     window.open(urlToNavigate, "_blank");
+                }
                 else
                     this.$store.commit('navigate', { url: urlToNavigate });
             },

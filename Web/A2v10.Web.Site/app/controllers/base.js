@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180217-7117
+// 20180218-7118
 // controllers/base.js
 
 (function () {
@@ -271,8 +271,9 @@
             },
             $navigate(url, data, newWindow) {
                 let urlToNavigate = urltools.createUrlForNavigate(url, data);
-                if (newWindow === true)
+                if (newWindow === true) {
                     window.open(urlToNavigate, "_blank");
+                }
                 else
                     this.$store.commit('navigate', { url: urlToNavigate });
             },

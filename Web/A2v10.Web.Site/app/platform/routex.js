@@ -118,7 +118,11 @@
             },
             close: function(state) {
 
+
                 function navigateBack() {
+                    // TODO: ??? 
+                    window.close();
+                    /*
                     let url = makeBackUrl(state.route);
                     if (url === state.route) {
                         let firstUrl = urlTools.firstUrl;
@@ -126,6 +130,7 @@
                     } else {
                         store.commit('navigate', { url: url });
                     }
+                    */
                 }
 
                 if (window.history.length > 1) {

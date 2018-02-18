@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7109
+// 20180218-7118
 // components/modal.js
 
 
@@ -90,7 +90,7 @@ TODO:
                 if (mx < 0) mx = 0;
                 if (mx > maxX) mx = maxX;
                 //if (my > maxY) my = maxY; // any value available
-                console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
+                //console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
                 mw.style.marginLeft = mx + 'px';
                 mw.style.marginTop = my + 'px';
             }

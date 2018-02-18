@@ -58,7 +58,7 @@ namespace A2v10.Xaml
                     if (Header is UIElementBase)
                         (Header as UIElementBase).RenderElement(context);
                     else
-                       context.Writer.Write(Header.ToString());
+                       context.Writer.Write(context.Localize(Header.ToString()));
                 }
                 hTag.RenderEnd(context);
             }
@@ -72,7 +72,7 @@ namespace A2v10.Xaml
                 if (Content is UIElementBase)
                     (Content as UIElementBase).RenderElement(context);
                 else if (Content != null)
-                    context.Writer.Write(Content.ToString());
+                    context.Writer.Write(context.Localize(Content.ToString()));
                 hBody.RenderEnd(context);
             }
         }

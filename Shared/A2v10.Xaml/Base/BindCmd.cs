@@ -186,7 +186,7 @@ namespace A2v10.Xaml
                         if (!IsArgumentEmpty(context))
                             arg3 = CommandArgument(context);
                         // command, url, data
-                        return $"{{cmd:$dialog, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
+                        return $"{{cmd:$dialog, isDialog:true, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
                     }
                     return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context)}, {GetOptions(context)})";
 
