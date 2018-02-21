@@ -1,6 +1,5 @@
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// A2v10.Designer.cpp : Defines the class behaviors for the application.
-//
 
 #include "stdafx.h"
 #include "A2v10.Designer.h"

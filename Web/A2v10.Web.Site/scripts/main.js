@@ -1217,23 +1217,23 @@ app.modules['std:validators'] = function() {
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
-        });
+		});
 
-        if (elem._meta_.$group === true) {
-            defPropertyGet(elem, "$groupName", function () {
-                if (!utils.isDefined(this.$level))
-                    return ERR_STR;
-                // this.constructor.name == objectType;
-                const mi = this._root_.__modelInfo.Levels;
-                if (mi) {
-                    const levs = mi[this.constructor.name];
-                    if (levs && this.$level <= levs.length);
-                    return this[levs[this.$level - 1]];
-                }
-                console.error('invalid data for $groupName');
-                return ERR_STR;
-            });
-        }
+		if (elem._meta_.$group === true) {
+			defPropertyGet(elem, "$groupName", function () {
+				if (!utils.isDefined(this.$level))
+					return ERR_STR;
+				// this.constructor.name == objectType;
+				const mi = this._root_.__modelInfo.Levels;
+				if (mi) {
+					const levs = mi[this.constructor.name];
+					if (levs && this.$level <= levs.length)
+						return this[levs[this.$level - 1]];
+				}
+				console.error('invalid data for $groupName');
+				return ERR_STR;
+			});
+		}
 
         let constructEvent = ctorname + '.construct';
         let _lastCaller = null;
@@ -1370,18 +1370,18 @@ app.modules['std:validators'] = function() {
             return sel ? sel[propName] : null;
         };
 
-        arr.$loadLazy = function () {
-            return new Promise((resolve, reject) => {
-                if (this.$loaded) { resolve(self); return; }
-                if (!this.$parent) { resolve(this); return; }
-                const meta = this.$parent._meta_;
-                if (!meta.$lazy) { resolve(this); return; }
-                let propIx = this._path_.lastIndexOf('.');
-                let prop = this._path_.substring(propIx + 1);
-                if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
-                this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
-            });
-        }
+		arr.$loadLazy = function () {
+			return new Promise((resolve, reject) => {
+				if (this.$loaded) { resolve(self); return; }
+				if (!this.$parent) { resolve(this); return; }
+				const meta = this.$parent._meta_;
+				if (!meta.$lazy) { resolve(this); return; }
+				let propIx = this._path_.lastIndexOf('.');
+				let prop = this._path_.substring(propIx + 1);
+				if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+			});
+		};
 
         arr.$append = function (src) {
             const that = this;
@@ -1644,42 +1644,43 @@ app.modules['std:validators'] = function() {
 
 	function executeCommand(cmd, arg, confirm, opts) {
 		try {
-            this._root_._enableValidate_ = false;
-            let vm = this.$vm;
-            const tml = this.$template;
-            if (!tml) return;
-            if (!tml.commands) return;
-            let cmdf = tml.commands[cmd];
-            if (!cmdf) {
-                console.error(`Command "${cmd}" not found`);
-                return;
-            }
-            const optConfirm = cmdf.confirm || confirm;
-            const optSaveRequired = cmdf.saveRequired || (opts && opts.saveRequired);
-            const optValidRequired = cmdf.validRequired || (opts && opts.validRequired);
+			this._root_._enableValidate_ = false;
+			let vm = this.$vm;
+			const tml = this.$template;
+			if (!tml) return;
+			if (!tml.commands) return;
+			let cmdf = tml.commands[cmd];
+			if (!cmdf) {
+				console.error(`Command "${cmd}" not found`);
+				return;
+			}
+			const optConfirm = cmdf.confirm || confirm;
+			const optSaveRequired = cmdf.saveRequired || opts && opts.saveRequired;
+			const optValidRequired = cmdf.validRequired || opts && opts.validRequired;
 
-            if (optValidRequired && !vm.$data.$valid) return; // not valid
+			if (optValidRequired && !vm.$data.$valid) return; // not valid
 
-            if (utils.isFunction(cmdf.canExec)) {
-                if (!cmdf.canExec.call(this, arg)) return;
-            }        
+			if (utils.isFunction(cmdf.canExec)) {
+				if (!cmdf.canExec.call(this, arg)) return;
+			}        
 
-            let that = this;
-            const doExec = function () {
-                const realExec = function () {
-                    if (utils.isFunction(cmdf))
-                        cmdf.call(that, arg);
-                    else if (utils.isFunction(cmdf.exec))
-                        cmdf.exec.call(that, arg);
-                    else
-                        console.error($`There is no method 'exec' in command '${cmd}'`);
-                }
-                if (optConfirm) {
-                    vm.$confirm(optConfirm).then(realExec);
-                } else {
-                    realExec();
-                }
-            }
+			let that = this;
+			const doExec = function () {
+				const realExec = function () {
+					if (utils.isFunction(cmdf))
+						cmdf.call(that, arg);
+					else if (utils.isFunction(cmdf.exec))
+						cmdf.exec.call(that, arg);
+					else
+						console.error($`There is no method 'exec' in command '${cmd}'`);
+				};
+
+				if (optConfirm) {
+					vm.$confirm(optConfirm).then(realExec);
+				} else {
+					realExec();
+				}
+			};
 
             if (optSaveRequired && vm.$isDirty)
                 vm.$save().then(doExec);
@@ -1693,7 +1694,7 @@ app.modules['std:validators'] = function() {
 		}
 	}
 
-    function validateImpl(item, path, val, du) {
+	function validateImpl(item, path, val, du) {
 		if (!item) return null;
 		let tml = item._root_.$template;
 		if (!tml) return null;
@@ -1704,7 +1705,7 @@ app.modules['std:validators'] = function() {
 		return validators.validate(elemvals, item, val, du);
 	}
 
-    function saveErrors(item, path, errors) {
+	function saveErrors(item, path, errors) {
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)
@@ -2315,14 +2316,14 @@ Vue.component('validator-control', {
 
 (function () {
 
-    const utils = require('std:utils');
+	const utils = require('std:utils');
 
-    let textBoxTemplate =
-`<div :class="cssClass()">
+	let textBoxTemplate =
+		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus 
-            v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+			v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -2330,8 +2331,8 @@ Vue.component('validator-control', {
 </div>
 `;
 
-    let textAreaTemplate =
-        `<div :class="cssClass()">
+	let textAreaTemplate =
+		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
@@ -2342,8 +2343,8 @@ Vue.component('validator-control', {
 </div>
 `;
 
-    let staticTemplate =
-`<div :class="cssClass()">
+	let staticTemplate =
+		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
 		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
@@ -2359,72 +2360,72 @@ Vue.component('validator-control', {
 		<button @click="test" >*</button >
 	*/
 
-    let baseControl = component('control');
+	let baseControl = component('control');
 
-    Vue.component('textbox', {
-        extends: baseControl,
-        template: textBoxTemplate,
+	Vue.component('textbox', {
+		extends: baseControl,
+		template: textBoxTemplate,
 		props: {
 			item: {
 				type: Object, default() {
 					return {};
 				}
 			},
-            prop: String,
-            itemToValidate: Object,
-            propToValidate: String,
-            placeholder: String,
-            password: Boolean
-        },
-        computed: {
-            controlType() {
-                return this.password ? "password" : "text";
-            }
-        },
-        methods: {
-            updateValue(value) {
-                this.item[this.prop] = utils.parse(value, this.dataType);
-                if (this.$refs.input.value != this.modelValue) {
-                    this.$refs.input.value = this.modelValue;
-                    this.$emit('change', this.item[this.prop]);
-                }
-            }
-        }
-    });
+			prop: String,
+			itemToValidate: Object,
+			propToValidate: String,
+			placeholder: String,
+			password: Boolean
+		},
+		computed: {
+			controlType() {
+				return this.password ? "password" : "text";
+			}
+		},
+		methods: {
+			updateValue(value) {
+				this.item[this.prop] = utils.parse(value, this.dataType);
+				if (this.$refs.input.value !== this.modelValue) {
+					this.$refs.input.value = this.modelValue;
+					this.$emit('change', this.item[this.prop]);
+				}
+			}
+		}
+	});
 
-    Vue.component('a2-textarea', {
-        extends: baseControl,
-        template: textAreaTemplate,
-        props: {
-            item: {
-                type: Object, default() {
-                    return {};
-                }
-            },
-            prop: String,
-            itemToValidate: Object,
-            propToValidate: String,
-            placeholder: String,
-            autoSize: Boolean,
-            rows:Number
-        }
-    });
+	Vue.component('a2-textarea', {
+		extends: baseControl,
+		template: textAreaTemplate,
+		props: {
+			item: {
+				type: Object, default() {
+					return {};
+				}
+			},
+			prop: String,
+			itemToValidate: Object,
+			propToValidate: String,
+			placeholder: String,
+			autoSize: Boolean,
+			rows: Number
+		}
+	});
 
-    Vue.component('static', {
-        extends: baseControl,
-        template: staticTemplate,
-        props: {
-            item: {
-                type: Object, default() {
-                    return {};
-                }
-            },
-            prop: String,
-            itemToValidate: Object,
-            propToValidate: String,
-            text: [String, Number, Date]
-        }
-    });
+	Vue.component('static', {
+		extends: baseControl,
+		template: staticTemplate,
+		props: {
+			item: {
+				type: Object, default() {
+					return {};
+				}
+			},
+			prop: String,
+			itemToValidate: Object,
+			propToValidate: String,
+			text: [String, Number, Date]
+		}
+	});
 
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -2674,200 +2675,200 @@ Vue.component('validator-control', {
 */
 
 (function () {
-    const popup = require('std:popup');
-    const utils = require('std:utils');
-    const platform = require('std:platform');
+	const popup = require('std:popup');
+	const utils = require('std:utils');
+	const platform = require('std:platform');
 
-    const baseControl = component('control');
+	const baseControl = component('control');
 
-    const DEFAULT_DELAY = 300;
+	const DEFAULT_DELAY = 300;
 
-    Vue.component('a2-selector', {
-        extends: baseControl,
-        template: `
+	Vue.component('a2-selector', {
+		extends: baseControl,
+		template: `
 <div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
-    <div class="input-group">
-        <input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
-            @input="debouncedUpdate"
-            @blur.stop="cancel"
-            @keydown.stop="keyUp"
-            :disabled="disabled" />
+	<div class="input-group">
+		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
+			@input="debouncedUpdate"
+			@blur.stop="cancel"
+			@keydown.stop="keyUp"
+			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-        <div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
-            <slot name='pane' :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
-                <ul class="selector-pane" :style="listStyle">
-                    <li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
-                        v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
-                </ul>
-                <a class="create-elem a2-hyperlink a2-inline"><i class="ico ico-plus"/> новый элемент</a>
-            </slot>
-        </div>
-    </div>
+		<div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
+			<slot name='pane' :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
+				<ul class="selector-pane" :style="listStyle">
+					<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
+						v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
+				</ul>
+				<a class="create-elem a2-hyperlink a2-inline"><i class="ico ico-plus"/> новый элемент</a>
+			</slot>
+		</div>
+	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,
-        props: {
-            item: Object,
-            prop: String,
-            display: String,
-            itemToValidate: Object,
-            propToValidate: String,
-            placeholder: String,
-            delay: Number,
-            minChars: Number,
-            fetch: Function,
-            listWidth: String,
-            listHeight: String
-        },
-        data() {
-            return {
-                isOpen: false,
-                loading: false,
-                items: [],
-                query: '',
-                filter: '',
-                current: -1
-            };
-        },
-        computed: {
-            $displayProp() {
-                return this.display;
-            },
-            valueText() {
-                return this.item ? this.item[this.prop][this.$displayProp] : '';
-            },
-            pane() {
-                return {
-                    items: this.items,
-                    isItemActive: this.isItemActive,
-                    itemName: this.itemName,
-                    hit: this.hit
-                };
-            },
-            paneStyle() {
-                if (this.listWidth)
-                    return { width: this.listWidth, minWidth: this.listWidth };
-                return null;
-            },
-            listStyle() {
-                if (this.listHeight)
-                    return { maxHeight: this.listHeight };
-                return null;
-            },
-            debouncedUpdate() {
-                let delay = this.delay || DEFAULT_DELAY;
-                return utils.debounce(() => {
-                    this.current = -1;
-                    this.filter = this.query;
-                    this.update();
-                }, delay);
-            }
-        },
-        watch: {
-            valueText(newVal) {
-                this.query = this.valueText;
-            }
-        },
-        methods: {
-            __clickOutside() {
-                this.isOpen = false;
-            },
-            cssClass2() {
-                let cx = this.cssClass();
-                if (this.isOpen)
-                    cx += ' open'
-                return cx;
-            },
-            isItemActive(ix) {
-                return ix === this.current;
-            },
-            itemName(itm) {
-                return itm[this.$displayProp];
-            },
-            cancel() {
-                this.query = this.valueText;
-                this.isOpen = false;
-            },
-            keyUp(event) {
-                if (!this.isOpen) return;
-                switch (event.which) {
-                    case 27: // esc
-                        this.cancel();
-                        break;
-                    case 13: // enter
-                        if (this.current == -1) return;
-                        this.hit(this.items[this.current]);
-                        break;
-                    case 40: // down
-                        event.preventDefault();
-                        this.current += 1;
-                        if (this.current >= this.items.length)
-                            this.current = 0;
-                        this.scrollIntoView();
-                        break;
-                    case 38: // up
-                        event.preventDefault();
-                        this.current -= 1;
-                        if (this.current < 0)
-                            this.current = this.items.length - 1;
-                        this.scrollIntoView();
-                        break;
-                    default:
-                        return;
-                }
-            },
-            hit(itm) {
-                Vue.set(this.item, this.prop, itm);
-                this.query = this.valueText;
-                this.isOpen = false;
-            },
-            scrollIntoView() {
-                this.$nextTick(() => {
-                    let pane = this.$refs['pane'];
-                    if (!pane) return;
-                    let elem = pane.querySelector('.active');
-                    if (!elem) return;
-                    let pe = elem.parentElement;
-                    let t = elem.offsetTop;
-                    let b = t + elem.offsetHeight;
-                    let pt = pe.scrollTop;
-                    let pb = pt + pe.clientHeight;
-                    if (t < pt)
-                        pe.scrollTop = t;
-                    if (b > pb)
-                        pe.scrollTop = b - pe.clientHeight;
-                    //console.warn(`t:${t}, b:${b}, pt:${pt}, pb:${pb}`);
-                });
-            },
-            update() {
-                let text = this.query || '';
-                let chars = +(this.minChars || 0);
-                if (chars && text.length < chars) return;
-                this.isOpen = true;
-                this.loading = true;
-                this.fetchData(text).then((result) => {
-                    this.loading = false;
-                    // first property from result
-                    let prop = Object.keys(result)[0];
-                    this.items = result[prop];
-                });
-            },
-            fetchData(text) {
-                let elem = this.item[this.prop];
-                return this.fetch.call(elem, elem, text);
-            }
-        },
-        mounted() {
-            popup.registerPopup(this.$el);
-            this.query = this.valueText;
-            this.$el._close = this.__clickOutside;
-        },
-        beforeDestroy() {
-            popup.unregisterPopup(this.$el);
-        }
-    });
+		props: {
+			item: Object,
+			prop: String,
+			display: String,
+			itemToValidate: Object,
+			propToValidate: String,
+			placeholder: String,
+			delay: Number,
+			minChars: Number,
+			fetch: Function,
+			listWidth: String,
+			listHeight: String
+		},
+		data() {
+			return {
+				isOpen: false,
+				loading: false,
+				items: [],
+				query: '',
+				filter: '',
+				current: -1
+			};
+		},
+		computed: {
+			$displayProp() {
+				return this.display;
+			},
+			valueText() {
+				return this.item ? this.item[this.prop][this.$displayProp] : '';
+			},
+			pane() {
+				return {
+					items: this.items,
+					isItemActive: this.isItemActive,
+					itemName: this.itemName,
+					hit: this.hit
+				};
+			},
+			paneStyle() {
+				if (this.listWidth)
+					return { width: this.listWidth, minWidth: this.listWidth };
+				return null;
+			},
+			listStyle() {
+				if (this.listHeight)
+					return { maxHeight: this.listHeight };
+				return null;
+			},
+			debouncedUpdate() {
+				let delay = this.delay || DEFAULT_DELAY;
+				return utils.debounce(() => {
+					this.current = -1;
+					this.filter = this.query;
+					this.update();
+				}, delay);
+			}
+		},
+		watch: {
+			valueText(newVal) {
+				this.query = this.valueText;
+			}
+		},
+		methods: {
+			__clickOutside() {
+				this.isOpen = false;
+			},
+			cssClass2() {
+				let cx = this.cssClass();
+				if (this.isOpen)
+					cx += ' open';
+				return cx;
+			},
+			isItemActive(ix) {
+				return ix === this.current;
+			},
+			itemName(itm) {
+				return itm[this.$displayProp];
+			},
+			cancel() {
+				this.query = this.valueText;
+				this.isOpen = false;
+			},
+			keyUp(event) {
+				if (!this.isOpen) return;
+				switch (event.which) {
+					case 27: // esc
+						this.cancel();
+						break;
+					case 13: // enter
+						if (this.current === -1) return;
+						this.hit(this.items[this.current]);
+						break;
+					case 40: // down
+						event.preventDefault();
+						this.current += 1;
+						if (this.current >= this.items.length)
+							this.current = 0;
+						this.scrollIntoView();
+						break;
+					case 38: // up
+						event.preventDefault();
+						this.current -= 1;
+						if (this.current < 0)
+							this.current = this.items.length - 1;
+						this.scrollIntoView();
+						break;
+					default:
+						return;
+				}
+			},
+			hit(itm) {
+				Vue.set(this.item, this.prop, itm);
+				this.query = this.valueText;
+				this.isOpen = false;
+			},
+			scrollIntoView() {
+				this.$nextTick(() => {
+					let pane = this.$refs['pane'];
+					if (!pane) return;
+					let elem = pane.querySelector('.active');
+					if (!elem) return;
+					let pe = elem.parentElement;
+					let t = elem.offsetTop;
+					let b = t + elem.offsetHeight;
+					let pt = pe.scrollTop;
+					let pb = pt + pe.clientHeight;
+					if (t < pt)
+						pe.scrollTop = t;
+					if (b > pb)
+						pe.scrollTop = b - pe.clientHeight;
+					//console.warn(`t:${t}, b:${b}, pt:${pt}, pb:${pb}`);
+				});
+			},
+			update() {
+				let text = this.query || '';
+				let chars = +(this.minChars || 0);
+				if (chars && text.length < chars) return;
+				this.isOpen = true;
+				this.loading = true;
+				this.fetchData(text).then((result) => {
+					this.loading = false;
+					// first property from result
+					let prop = Object.keys(result)[0];
+					this.items = result[prop];
+				});
+			},
+			fetchData(text) {
+				let elem = this.item[this.prop];
+				return this.fetch.call(elem, elem, text);
+			}
+		},
+		mounted() {
+			popup.registerPopup(this.$el);
+			this.query = this.valueText;
+			this.$el._close = this.__clickOutside;
+		},
+		beforeDestroy() {
+			popup.unregisterPopup(this.$el);
+		}
+	});
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 

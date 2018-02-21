@@ -232,23 +232,23 @@
 		});
 		defPropertyGet(elem, "$invalid", function () {
 			return !this.$valid;
-        });
+		});
 
-        if (elem._meta_.$group === true) {
-            defPropertyGet(elem, "$groupName", function () {
-                if (!utils.isDefined(this.$level))
-                    return ERR_STR;
-                // this.constructor.name == objectType;
-                const mi = this._root_.__modelInfo.Levels;
-                if (mi) {
-                    const levs = mi[this.constructor.name];
-                    if (levs && this.$level <= levs.length);
-                    return this[levs[this.$level - 1]];
-                }
-                console.error('invalid data for $groupName');
-                return ERR_STR;
-            });
-        }
+		if (elem._meta_.$group === true) {
+			defPropertyGet(elem, "$groupName", function () {
+				if (!utils.isDefined(this.$level))
+					return ERR_STR;
+				// this.constructor.name == objectType;
+				const mi = this._root_.__modelInfo.Levels;
+				if (mi) {
+					const levs = mi[this.constructor.name];
+					if (levs && this.$level <= levs.length)
+						return this[levs[this.$level - 1]];
+				}
+				console.error('invalid data for $groupName');
+				return ERR_STR;
+			});
+		}
 
         let constructEvent = ctorname + '.construct';
         let _lastCaller = null;
@@ -385,18 +385,18 @@
             return sel ? sel[propName] : null;
         };
 
-        arr.$loadLazy = function () {
-            return new Promise((resolve, reject) => {
-                if (this.$loaded) { resolve(self); return; }
-                if (!this.$parent) { resolve(this); return; }
-                const meta = this.$parent._meta_;
-                if (!meta.$lazy) { resolve(this); return; }
-                let propIx = this._path_.lastIndexOf('.');
-                let prop = this._path_.substring(propIx + 1);
-                if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
-                this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
-            });
-        }
+		arr.$loadLazy = function () {
+			return new Promise((resolve, reject) => {
+				if (this.$loaded) { resolve(self); return; }
+				if (!this.$parent) { resolve(this); return; }
+				const meta = this.$parent._meta_;
+				if (!meta.$lazy) { resolve(this); return; }
+				let propIx = this._path_.lastIndexOf('.');
+				let prop = this._path_.substring(propIx + 1);
+				if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+			});
+		};
 
         arr.$append = function (src) {
             const that = this;
@@ -659,42 +659,43 @@
 
 	function executeCommand(cmd, arg, confirm, opts) {
 		try {
-            this._root_._enableValidate_ = false;
-            let vm = this.$vm;
-            const tml = this.$template;
-            if (!tml) return;
-            if (!tml.commands) return;
-            let cmdf = tml.commands[cmd];
-            if (!cmdf) {
-                console.error(`Command "${cmd}" not found`);
-                return;
-            }
-            const optConfirm = cmdf.confirm || confirm;
-            const optSaveRequired = cmdf.saveRequired || (opts && opts.saveRequired);
-            const optValidRequired = cmdf.validRequired || (opts && opts.validRequired);
+			this._root_._enableValidate_ = false;
+			let vm = this.$vm;
+			const tml = this.$template;
+			if (!tml) return;
+			if (!tml.commands) return;
+			let cmdf = tml.commands[cmd];
+			if (!cmdf) {
+				console.error(`Command "${cmd}" not found`);
+				return;
+			}
+			const optConfirm = cmdf.confirm || confirm;
+			const optSaveRequired = cmdf.saveRequired || opts && opts.saveRequired;
+			const optValidRequired = cmdf.validRequired || opts && opts.validRequired;
 
-            if (optValidRequired && !vm.$data.$valid) return; // not valid
+			if (optValidRequired && !vm.$data.$valid) return; // not valid
 
-            if (utils.isFunction(cmdf.canExec)) {
-                if (!cmdf.canExec.call(this, arg)) return;
-            }        
+			if (utils.isFunction(cmdf.canExec)) {
+				if (!cmdf.canExec.call(this, arg)) return;
+			}        
 
-            let that = this;
-            const doExec = function () {
-                const realExec = function () {
-                    if (utils.isFunction(cmdf))
-                        cmdf.call(that, arg);
-                    else if (utils.isFunction(cmdf.exec))
-                        cmdf.exec.call(that, arg);
-                    else
-                        console.error($`There is no method 'exec' in command '${cmd}'`);
-                }
-                if (optConfirm) {
-                    vm.$confirm(optConfirm).then(realExec);
-                } else {
-                    realExec();
-                }
-            }
+			let that = this;
+			const doExec = function () {
+				const realExec = function () {
+					if (utils.isFunction(cmdf))
+						cmdf.call(that, arg);
+					else if (utils.isFunction(cmdf.exec))
+						cmdf.exec.call(that, arg);
+					else
+						console.error($`There is no method 'exec' in command '${cmd}'`);
+				};
+
+				if (optConfirm) {
+					vm.$confirm(optConfirm).then(realExec);
+				} else {
+					realExec();
+				}
+			};
 
             if (optSaveRequired && vm.$isDirty)
                 vm.$save().then(doExec);
@@ -708,7 +709,7 @@
 		}
 	}
 
-    function validateImpl(item, path, val, du) {
+	function validateImpl(item, path, val, du) {
 		if (!item) return null;
 		let tml = item._root_.$template;
 		if (!tml) return null;
@@ -719,7 +720,7 @@
 		return validators.validate(elemvals, item, val, du);
 	}
 
-    function saveErrors(item, path, errors) {
+	function saveErrors(item, path, errors) {
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)

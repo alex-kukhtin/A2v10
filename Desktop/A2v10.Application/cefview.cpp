@@ -1,6 +1,5 @@
+// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
 
-// mainview.cpp : implementation of the CCefView class
-//
 
 #include "stdafx.h"
 // SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
