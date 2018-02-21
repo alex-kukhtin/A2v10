@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using A2v10.Data.Interfaces;
@@ -29,7 +30,7 @@ namespace A2v10.Web.Mvc.Configuration
             _host = host;
         }
 
-        static IDictionary<String, LocaleMapItem> _maps = new Dictionary<String, LocaleMapItem>();
+        static IDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
         static FileSystemWatcher _watcher_system;
         static FileSystemWatcher _watcher_app;
 

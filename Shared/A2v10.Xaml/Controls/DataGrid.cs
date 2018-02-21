@@ -6,14 +6,6 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-    public enum RowMarkerStyle
-    {
-        None,
-        Row,
-        Marker,
-        Both
-    }
-
     public enum HeadersVisibility
     {
         Column,
@@ -46,7 +38,7 @@ namespace A2v10.Xaml
 
         public RowMarkerStyle MarkerStyle { get; set; }
 
-        public Object Mark { get; set; }
+        public MarkStyle Mark { get; set; }
 
         public Boolean? RowBold { get; set; }
 
@@ -115,7 +107,7 @@ namespace A2v10.Xaml
             {
                 dataGrid.MergeAttribute("mark", mbind.GetPath(context));
             }
-            else if (Mark != null)
+            else if (Mark != MarkStyle.Default)
             {
                 throw new XamlException("The Mark property must be a binding");
             }

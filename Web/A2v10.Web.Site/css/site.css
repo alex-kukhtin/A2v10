@@ -1855,7 +1855,7 @@ table.data-grid td.red {
   background-color: rgba(254, 220, 220, 0.5) !important;
 }
 table.data-grid td.warning,
-table.data-grid td.yellow {
+table.data-grid td.orange {
   background-color: rgba(255, 216, 0, 0.15) !important;
 }
 table.data-grid td.success,
@@ -1980,7 +1980,7 @@ table.data-grid.compact td {
   padding: 2px 4px;
 }
 table.data-grid > tbody > tr.warning td,
-table.data-grid > tbody > tr.yellow td {
+table.data-grid > tbody > tr.orange td {
   background-color: rgba(255, 216, 0, 0.15);
 }
 table.data-grid > tbody > tr.danger td,
@@ -2635,6 +2635,42 @@ table.a2-table td.ctrl .radio {
 table.a2-table td.ctrl .stack-panel.horizontal .control-group + .control-group {
   border-left: 1px solid #ddd;
 }
+table.a2-table td.marker-cell {
+  padding: 0 !important;
+  width: 1px;
+  position: relative;
+}
+table.a2-table td.marker-cell .marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(208, 208, 208, 0.15);
+  border-left: 4px solid #ddd;
+  height: 20px;
+}
+table.a2-table td.marker-cell .marker.success,
+table.a2-table td.marker-cell .marker.green {
+  background-color: rgba(216, 255, 216, 0.5);
+  border-left-color: #89e489;
+}
+table.a2-table td.marker-cell .marker.danger,
+table.a2-table td.marker-cell .marker.red,
+table.a2-table td.marker-cell .marker.error {
+  background-color: rgba(254, 220, 220, 0.5);
+  border-left-color: #fc7c7c;
+}
+table.a2-table td.marker-cell .marker.warning,
+table.a2-table td.marker-cell .marker.orange {
+  background-color: rgba(255, 216, 0, 0.15);
+  border-left-color: gold;
+}
+table.a2-table td.marker-cell .marker.info,
+table.a2-table td.marker-cell .marker.cyan {
+  background-color: rgba(114, 234, 234, 0.15);
+  border-left-color: #72eaea;
+}
 table.a2-table td.row-divider {
   padding: 0;
   height: 1px;
@@ -2642,6 +2678,23 @@ table.a2-table td.row-divider {
 }
 table.a2-table tr:last-child td.row-divider {
   display: none;
+}
+table.a2-table tr.success td,
+table.a2-table tr.green td {
+  background-color: rgba(216, 255, 216, 0.5);
+}
+table.a2-table tr.info td,
+table.a2-table tr.cyan td {
+  background-color: rgba(114, 234, 234, 0.15);
+}
+table.a2-table tr.warning td,
+table.a2-table tr.orange td {
+  background-color: rgba(255, 216, 0, 0.15);
+}
+table.a2-table tr.danger td,
+table.a2-table tr.error td,
+table.a2-table tr.red td {
+  background-color: rgba(254, 220, 220, 0.5);
 }
 .a2-table.compact {
   font-size: 0.95rem;

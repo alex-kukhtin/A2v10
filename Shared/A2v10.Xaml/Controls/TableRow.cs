@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Markup;
 
+using A2v10.Infrastructure;
+
 namespace A2v10.Xaml
 {
 
@@ -24,12 +26,23 @@ namespace A2v10.Xaml
     {
         public TableCellCollection Cells { get; set; } = new TableCellCollection();
 
+        public MarkStyle Mark { get; set; }
+
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var row = new TagBuilder("tr");
             if (onRender != null)
                 onRender(row);
             MergeAttributes(row, context);
+
+            var markBind = GetBinding(nameof(Mark));
+            if (markBind != null)
+            {
+                row.MergeAttribute(":class", markBind.GetPathFormat(context));
+            }
+            else if (Mark != MarkStyle.Default)
+                row.AddCssClass(Mark.ToString().ToKebabCase());
+
             row.RenderStart(context);
             RenderCells(context);
             row.RenderEnd(context);
@@ -46,7 +59,7 @@ namespace A2v10.Xaml
             base.OnEndInit();
             TableCellCollection newCells = new TableCellCollection();
             foreach (var c in Cells) {
-                if (c is TableCell)
+                if (c is TableCell || c is TableMarkCell)
                     newCells.Add(c);
                 else
                     newCells.Add(new TableCell() { Content = c });

@@ -136,6 +136,44 @@ table.a2-table {
         }
     }
 
+    td.marker-cell {
+        padding: 0 !important;
+        width: 1px;
+        position: relative;
+
+        .marker {
+            // HACK!
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background-color: @alter-bg-color;
+            border-left: 4px solid #ddd;
+            height: 20px;
+
+            &.success, &.green {
+                background-color: @dg-success-bg-color;
+                border-left-color: @dg-success-brd-color;
+            }
+
+            &.danger, &.red, &.error {
+                background-color: @dg-danger-bg-color;
+                border-left-color: @dg-danger-brd-color;
+            }
+
+            &.warning, &.orange {
+                background-color: @dg-warning-bg-color;
+                border-left-color: @dg-warning-brd-color;
+            }
+
+            &.info, &.cyan {
+                background-color: @dg-info-bg-color;
+                border-left-color: @dg-info-brd-color;
+            }
+        }
+    }
+
     td.row-divider {
         padding: 0;
         height: 1px;
@@ -144,6 +182,30 @@ table.a2-table {
 
     tr:last-child td.row-divider {
         display: none;
+    }
+
+    tr.success, tr.green {
+        td {
+            background-color: @dg-success-bg-color;
+        }
+    }
+
+    tr.info, tr.cyan {
+        td {
+            background-color: @dg-info-bg-color;
+        }
+    }
+
+    tr.warning, tr.orange {
+        td {
+            background-color: @dg-warning-bg-color;
+        }
+    }
+
+    tr.danger, tr.error, tr.red {
+        td {
+            background-color: @dg-danger-bg-color;
+        }
     }
 }
 

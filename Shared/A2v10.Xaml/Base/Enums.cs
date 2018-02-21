@@ -72,6 +72,28 @@ namespace A2v10.Xaml
         FirstItem
     }
 
+    public enum RowMarkerStyle
+    {
+        None,
+        Row,
+        Marker,
+        Both
+    }
+
+    public enum MarkStyle
+    {
+        Default,
+        Success,
+        Green,
+        Warning,
+        Orange,
+        Info,
+        Cyan,
+        Danger,
+        Red,
+        Error
+    }
+
     public enum Icon
     {
         NoIcon = 0,

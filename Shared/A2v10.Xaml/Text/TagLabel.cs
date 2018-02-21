@@ -4,23 +4,10 @@ using System;
 
 namespace A2v10.Xaml
 {
-    public enum TagLabelStyle
-    {
-        Default,
-        Red,
-        Danger,
-        Warning,
-        Orange,
-        Success,
-        Green,
-        Info,
-        Cyan
-    }
-
     public class TagLabel : Inline
     {
         public String Content { get; set; }
-        public TagLabelStyle Style { get; set; }
+        public MarkStyle Style { get; set; }
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var span = new TagBuilder("span", "tag-label", IsInGrid);
@@ -35,7 +22,7 @@ namespace A2v10.Xaml
             {
                 span.MergeAttribute(":class", cStyle.GetPathFormat(context));
             }
-            else if (Style != TagLabelStyle.Default)
+            else if (Style != MarkStyle.Default)
             {
                 span.AddCssClass(Style.ToString().ToLowerInvariant());
             }
