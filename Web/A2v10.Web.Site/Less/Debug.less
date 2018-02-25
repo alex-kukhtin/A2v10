@@ -2,120 +2,120 @@
 
 @import "Utlis.less";
 
-@debug-pane-width:350px;
-@debug-pane-bg-color:#f8f8f8;
+@debug-pane-width: 350px;
+@debug-pane-bg-color: #f8f8f8;
 
 @debug-info-color: #478fb1;
 
 .debug-panel {
-    position: absolute;
-    right: 0;
-    top: @header-height;
-    bottom: @footer-height;
-    right: 0;
-    z-index: @debug-index;
-    background-color: @debug-pane-bg-color;
-    border-left: 1px solid @default-brd-color;
-    width: @debug-pane-width;
-    box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+	position: absolute;
+	right: 0;
+	top: @header-height;
+	bottom: @footer-height;
+	right: 0;
+	z-index: @debug-index;
+	background-color: @debug-pane-bg-color;
+	border-left: 1px solid @default-brd-color;
+	width: @debug-pane-width;
+	box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 
-    .debug-pane-header {
-        background-color: @dialog-header-bg-color;
-        padding: 2px 2px 2px 6px;
-        border-bottom: 1px solid @default-brd-color;
+	.debug-pane-header {
+		background-color: @dialog-header-bg-color;
+		padding: 2px 2px 2px 6px;
+		border-bottom: 1px solid @default-brd-color;
 
-        .debug-pane-title {
-            font-size: .95rem;
-        }
+		.debug-pane-title {
+			font-size: .95rem;
+		}
 
-        a.btn {
-            float: right;
-            padding: 0 2px;
-            color: #aaa;
-            border: 1px solid transparent;
+		a.btn {
+			float: right;
+			padding: 0 2px;
+			color: #aaa;
+			border: 1px solid transparent;
 
-            &:hover {
-                color: #555;
-                background-color: lighten(@dialog-header-bg-color, 10%);
-                border-color: @tb-hover-brd-color;
-            }
-        }
-    }
+			&:hover {
+				color: #555;
+				background-color: lighten(@dialog-header-bg-color, 10%);
+				border-color: @tb-hover-brd-color;
+			}
+		}
+	}
 
-    .toolbar {
-        min-height: 29px;
-        border-bottom: 1px solid @default-brd-color;
-    }
+	.toolbar {
+		min-height: 2.1rem;
+		border-bottom: 1px solid @default-brd-color;
+	}
 
-    .debug-body {
-        overflow: auto;
-        background-color: @debug-pane-bg-color;
-        user-select: text;
-    }
+	.debug-body {
+		overflow: auto;
+		background-color: @debug-pane-bg-color;
+		user-select: text;
+	}
 
-    .debug-model {
-        pre {
-            max-height: none;
-        }
-    }
+	.debug-model {
+		pre {
+			max-height: none;
+		}
+	}
 
-    .debug-trace {
-        padding: 6px, 0;
-        font-family: @monospace-font;
-        font-size: .9rem;
+	.debug-trace {
+		padding: 6px, 0;
+		font-family: @monospace-font;
+		font-size: .9rem;
 
-        .rq-title {
-            display: flex;
+		.rq-title {
+			display: flex;
 
-            .elapsed {
-                font-weight: bold;
-                white-space: nowrap;
-                margin-right: 6px;
-            }
-        }
+			.elapsed {
+				font-weight: bold;
+				white-space: nowrap;
+				margin-right: 6px;
+			}
+		}
 
-        .trace-item-body {
-            padding-left: 6px;
+		.trace-item-body {
+			padding-left: 6px;
 
-            .badge {
-                padding: .15rem .25rem;
-                margin-left: .2rem;
-                border-radius: .15rem;
-                background-color: @debug-info-color;
-            }
+			.badge {
+				padding: .15rem .25rem;
+				margin-left: .2rem;
+				border-radius: .15rem;
+				background-color: @debug-info-color;
+			}
 
-            .title {
-                color: @debug-info-color;
-            }
+			.title {
+				color: @debug-info-color;
+			}
 
-            &.exception {
-                .badge {
-                    background-color: @danger-txt-color;
-                }
+			&.exception {
+				.badge {
+					background-color: @danger-txt-color;
+				}
 
-                .title {
-                    color: @danger-txt-color;
-                }
-            }
-        }
+				.title {
+					color: @danger-txt-color;
+				}
+			}
+		}
 
-        ul {
-            margin: 0 0 0 10px;
-            padding: 0;
+		ul {
+			margin: 0 0 0 10px;
+			padding: 0;
 
-            li {
-                list-style-type: none;
-            }
-        }
+			li {
+				list-style-type: none;
+			}
+		}
 
-        ul.a2-debug-trace {
-            > li {
-                border-bottom: 1px solid @default-brd-color;
-                padding: 2px 0;
-            }
-        }
-    }
+		ul.a2-debug-trace {
+			> li {
+				border-bottom: 1px solid @default-brd-color;
+				padding: 2px 0;
+			}
+		}
+	}
 }

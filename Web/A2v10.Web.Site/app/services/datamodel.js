@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180205-7102
+// 20180225-7119
 // services/datamodel.js
 
 (function () {
@@ -15,20 +15,20 @@
 	const SRC = '_src_';
 	const PATH = '_path_';
 	const ROOT = '_root_';
-    const ERRORS = '_errors_';
+	const ERRORS = '_errors_';
 
-    const ERR_STR = '#err#';
+	const ERR_STR = '#err#';
 
-    const FLAG_VIEW = 1;
-    const FLAG_EDIT = 2;
-    const FLAG_DELETE = 4;
+	const FLAG_VIEW = 1;
+	const FLAG_EDIT = 2;
+	const FLAG_DELETE = 4;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-    const log = require('std:log');
+	const log = require('std:log');
 
-    let __initialized__ = false;
+	let __initialized__ = false;
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -55,12 +55,12 @@
 		});
 	}
 
-    function ensureType(type, val) {
-        if (!utils.isDefined(val))
-            val = utils.defaultValue(type);
+	function ensureType(type, val) {
+		if (!utils.isDefined(val))
+			val = utils.defaultValue(type);
 		if (type === Number) {
 			return utils.toNumber(val);
-        }
+		}
 		return val;
 	}
 
@@ -80,37 +80,37 @@
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-                let srcval = source[prop] || null;
+				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
-                break; 
-            case TMarker: // marker for dynamic property
-                let mp = trg._meta_.markerProps[prop];
-                shadow[prop] = mp;
-                break;
-            default:
+				break;
+			case TMarker: // marker for dynamic property
+				let mp = trg._meta_.markerProps[prop];
+				shadow[prop] = mp;
+				break;
+			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
 				break;
 		}
 		Object.defineProperty(trg, prop, {
 			enumerable: true,
 			configurable: true, /* needed */
-            get() {
+			get() {
 				return this._src_[prop];
 			},
 			set(val) {
 				//TODO: emit and handle changing event
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
-                    return;
-                if (this._src_[prop] && this._src_[prop].$set) {
-                    // object
-                    this._src_[prop].$merge(val, false);
-                } else {
-                    this._src_[prop] = val;
-                }
-                this._root_.$setDirty(true);
-                if (this._lockEvents_)
-                    return; // events locked
+					return;
+				if (this._src_[prop] && this._src_[prop].$set) {
+					// object
+					this._src_[prop].$merge(val, false);
+				} else {
+					this._src_[prop] = val;
+				}
+				this._root_.$setDirty(true);
+				if (this._lockEvents_)
+					return; // events locked
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -119,32 +119,32 @@
 		});
 	}
 
-    function TMarker() { }
+	function TMarker() { }
 
-    function createPrimitiveProperties(elem, ctor) {
-        const templ = elem._root_.$template;
-        if (!templ) return;
-        const props = templ._props_;
-        if (!props) return;
-        let objname = ctor.name;
-        if (objname in props) {
-            for (let p in props[objname]) {
-                let propInfo = props[objname][p];
-                if (utils.isPrimitiveCtor(propInfo)) {
-                    log.info(`create scalar property: ${objname}.${p}`);
-                    elem._meta_.props[p] = propInfo;
-                } else if (utils.isObjectExact(propInfo)) {
-                    if (!propInfo.get) { // plain object
-                        log.info(`create object property: ${objname}.${p}`);
-                        elem._meta_.props[p] = TMarker;
-                        if (!elem._meta_.markerProps)
-                            elem._meta_.markerProps = {};
-                        elem._meta_.markerProps[p] = propInfo;
-                    }
-                }
-            }
-        }
-    }
+	function createPrimitiveProperties(elem, ctor) {
+		const templ = elem._root_.$template;
+		if (!templ) return;
+		const props = templ._props_;
+		if (!props) return;
+		let objname = ctor.name;
+		if (objname in props) {
+			for (let p in props[objname]) {
+				let propInfo = props[objname][p];
+				if (utils.isPrimitiveCtor(propInfo)) {
+					log.info(`create scalar property: ${objname}.${p}`);
+					elem._meta_.props[p] = propInfo;
+				} else if (utils.isObjectExact(propInfo)) {
+					if (!propInfo.get) { // plain object
+						log.info(`create object property: ${objname}.${p}`);
+						elem._meta_.props[p] = TMarker;
+						if (!elem._meta_.markerProps)
+							elem._meta_.markerProps = {};
+						elem._meta_.markerProps[p] = propInfo;
+					}
+				}
+			}
+		}
+	}
 
 	function createObjProperties(elem, ctor) {
 		let templ = elem._root_.$template;
@@ -152,32 +152,32 @@
 		let props = templ._props_;
 		if (!props) return;
 		let objname = ctor.name;
-        if (objname in props) {
+		if (objname in props) {
 			for (let p in props[objname]) {
-                let propInfo = props[objname][p];
-                if (utils.isPrimitiveCtor(propInfo)) {
-                    continue;
-                }
-                else if (utils.isFunction(propInfo)) {
-                    log.info(`create property: ${objname}.${p}`);
-                    Object.defineProperty(elem, p, {
-                        configurable: false,
-                        enumerable: true,
-                        get: propInfo
-                    });
-                } else if (utils.isObjectExact(propInfo)) {
-                    if (propInfo.get) { // has get, maybe set
-                        log.info(`create property: ${objname}.${p}`);
-                        Object.defineProperty(elem, p, {
-                            configurable: false,
-                            enumerable: true,
-                            get: propInfo.get,
-                            set: propInfo.set
-                        });
-                    }
-                } else {
-                    alert('todo: invalid property type');
-                }
+				let propInfo = props[objname][p];
+				if (utils.isPrimitiveCtor(propInfo)) {
+					continue;
+				}
+				else if (utils.isFunction(propInfo)) {
+					log.info(`create property: ${objname}.${p}`);
+					Object.defineProperty(elem, p, {
+						configurable: false,
+						enumerable: true,
+						get: propInfo
+					});
+				} else if (utils.isObjectExact(propInfo)) {
+					if (propInfo.get) { // has get, maybe set
+						log.info(`create property: ${objname}.${p}`);
+						Object.defineProperty(elem, p, {
+							configurable: false,
+							enumerable: true,
+							get: propInfo.get,
+							set: propInfo.set
+						});
+					}
+				} else {
+					alert('todo: invalid property type');
+				}
 			}
 		}
 	}
@@ -193,29 +193,29 @@
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
-        defHidden(elem, '_lockEvents_', 0, true);
+		defHidden(elem, '_lockEvents_', 0, true);
 
-        let hasTemplProps = false;
-        const templ = elem._root_.$template;
-        if (templ && !utils.isEmptyObject(templ._props_))
-            hasTemplProps = true;
+		let hasTemplProps = false;
+		const templ = elem._root_.$template;
+		if (templ && !utils.isEmptyObject(templ._props_))
+			hasTemplProps = true;
 
-        if (hasTemplProps)
-            createPrimitiveProperties(elem, elem.constructor);
+		if (hasTemplProps)
+			createPrimitiveProperties(elem, elem.constructor);
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
-        }
+		}
 
-        if (hasTemplProps)
-            createObjProperties(elem, elem.constructor);
+		if (hasTemplProps)
+			createObjProperties(elem, elem.constructor);
 
-        if (path && path.endsWith(']'))
-            elem.$selected = false;
+		if (path && path.endsWith(']'))
+			elem.$selected = false;
 
-        defPropertyGet(elem, '$valid', function () {
+		defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
-                this._root_._validateAll_();
+				this._root_._validateAll_();
 			if (this._errors_)
 				return false;
 			for (var x in this) {
@@ -250,8 +250,8 @@
 			});
 		}
 
-        let constructEvent = ctorname + '.construct';
-        let _lastCaller = null;
+		let constructEvent = ctorname + '.construct';
+		let _lastCaller = null;
 		elem._root_.$emit(constructEvent, elem);
 		if (elem._root_ === elem) {
 			// root element
@@ -260,42 +260,42 @@
 			elem._query_ = {};
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
-                let rcp = m + '.$RowCount';
+				let rcp = m + '.$RowCount';
 				if (source && rcp in source) {
 					let rcv = source[rcp] || 0;
 					elem[m].$RowCount = rcv;
 				}
 			}
 			elem._enableValidate_ = true;
-            elem._needValidate_ = false;
-            elem._modelLoad_ = (caller) => {
-                _lastCaller = caller;
-                elem._fireLoad_();
-                __initialized__ = true;
-            };
-            elem._fireLoad_ = () => {
-                elem.$emit('Model.load', elem, _lastCaller);
-                elem._root_.$setDirty(false);
-            };
-            defHiddenGet(elem, '$readOnly', isReadOnly);
+			elem._needValidate_ = false;
+			elem._modelLoad_ = (caller) => {
+				_lastCaller = caller;
+				elem._fireLoad_();
+				__initialized__ = true;
+			};
+			elem._fireLoad_ = () => {
+				elem.$emit('Model.load', elem, _lastCaller);
+				elem._root_.$setDirty(false);
+			};
+			defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
-        if (startTime) {
-            log.time('create root time:', startTime, false);
-        }
+		if (startTime) {
+			log.time('create root time:', startTime, false);
+		}
 		return elem;
-    }
+	}
 
-    function isReadOnly() {
-        if ('__modelInfo' in this) {
-            let mi = this.__modelInfo;
-            if (utils.isDefined(mi.ReadOnly))
-                return mi.ReadOnly;
-        }
-        return false;
-    }
+	function isReadOnly() {
+		if ('__modelInfo' in this) {
+			let mi = this.__modelInfo;
+			if (utils.isDefined(mi.ReadOnly))
+				return mi.ReadOnly;
+		}
+		return false;
+	}
 
 	function createArray(source, path, ctor, arrctor, parent) {
-        let arr = new _BaseArray(source ? source.length : 0);
+		let arr = new _BaseArray(source ? source.length : 0);
 		let dotPath = path + '[]';
 		defHidden(arr, '_elem_', ctor);
 		defHidden(arr, PATH, path);
@@ -328,62 +328,62 @@
 		return arr;
 	}
 
-    function _BaseArray(length) {
-        let arr = new Array(length || 0);
-        addArrayProps(arr);
-        return arr;
+	function _BaseArray(length) {
+		let arr = new Array(length || 0);
+		addArrayProps(arr);
+		return arr;
 	}
 
-    //_BaseArray.prototype = Array.prototype;
+	//_BaseArray.prototype = Array.prototype;
 
-    function addArrayProps(arr) {
+	function addArrayProps(arr) {
 
-        defineCommonProps(arr);
+		defineCommonProps(arr);
 
-        arr.$new = function (src) {
-            let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-            newElem.$checked = false;
-            return newElem;
-        };
+		arr.$new = function (src) {
+			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
+			newElem.$checked = false;
+			return newElem;
+		};
 
-        defPropertyGet(arr, "$selected", function () {
-            for (let x of this.$elements) {
-                if (x.$selected) {
-                    return x;
-                }
-            }
-            return undefined;
-        });
+		defPropertyGet(arr, "$selected", function () {
+			for (let x of this.$elements) {
+				if (x.$selected) {
+					return x;
+				}
+			}
+			return undefined;
+		});
 
-        defPropertyGet(arr, "$elements", function () {
-            function* elems(arr) {
-                for (let i = 0; i < arr.length; i++) {
-                    let val = arr[i];
-                    yield val;
-                    if (val.$items) {
-                        yield* elems(val.$items);
-                    }
-                }
-            }
-            return elems(this);
-        });
+		defPropertyGet(arr, "$elements", function () {
+			function* elems(arr) {
+				for (let i = 0; i < arr.length; i++) {
+					let val = arr[i];
+					yield val;
+					if (val.$items) {
+						yield* elems(val.$items);
+					}
+				}
+			}
+			return elems(this);
+		});
 
-        defPropertyGet(arr, "Count", function () {
-            return this.length;
-        });
+		defPropertyGet(arr, "Count", function () {
+			return this.length;
+		});
 
-        defPropertyGet(arr, "$isEmpty", function () {
-            return !this.length;
-        });
+		defPropertyGet(arr, "$isEmpty", function () {
+			return !this.length;
+		});
 
-        defPropertyGet(arr, "$checked", function () {
-            return this.filter((el) => el.$checked);
-        });
+		defPropertyGet(arr, "$checked", function () {
+			return this.filter((el) => el.$checked);
+		});
 
-        arr.Selected = function (propName) {
-            let sel = this.$selected;
-            return sel ? sel[propName] : null;
-        };
+		arr.Selected = function (propName) {
+			let sel = this.$selected;
+			return sel ? sel[propName] : null;
+		};
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
@@ -398,105 +398,105 @@
 			});
 		};
 
-        arr.$append = function (src) {
-            const that = this;
-            function append(src, select) {
-                let addingEvent = that._path_ + '[].adding';
-                let newElem = that.$new(src);
-                // TODO: emit adding and check result
-                let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
-                if (er === false)
-                    return; // disabled
-                let len = that.push(newElem);
-                let ne = that[len - 1]; // maybe newly created reactive element
-                if ('$RowCount' in that) that.$RowCount += 1;
-                let eventName = that._path_ + '[].add';
-                that._root_.$setDirty(true);
-                that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-                if (select) {
-                    ne.$select();
-                    emitSelect(that, ne);
-                }
-                // set RowNumber
-                if ('$rowNo' in newElem._meta_) {
-                    let rowNoProp = newElem._meta_.$rowNo;
-                    newElem[rowNoProp] = len; // 1-based
-                }
-                return ne;
-            }
-            if (utils.isArray(src)) {
-                let ra = [];
-                let lastElem = null;
-                src.forEach(function (elem) {
-                    lastElem = append(elem, false);
-                    ra.push(lastElem);
-                });
-                if (lastElem) {
-                    // last added element
-                    lastElem.$select();
-                }
-                return ra;
-            } else
-                return append(src, true);
+		arr.$append = function (src) {
+			const that = this;
+			function append(src, select) {
+				let addingEvent = that._path_ + '[].adding';
+				let newElem = that.$new(src);
+				// TODO: emit adding and check result
+				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
+				if (er === false)
+					return; // disabled
+				let len = that.push(newElem);
+				let ne = that[len - 1]; // maybe newly created reactive element
+				if ('$RowCount' in that) that.$RowCount += 1;
+				let eventName = that._path_ + '[].add';
+				that._root_.$setDirty(true);
+				that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
+				if (select) {
+					ne.$select();
+					emitSelect(that, ne);
+				}
+				// set RowNumber
+				if ('$rowNo' in newElem._meta_) {
+					let rowNoProp = newElem._meta_.$rowNo;
+					newElem[rowNoProp] = len; // 1-based
+				}
+				return ne;
+			}
+			if (utils.isArray(src)) {
+				let ra = [];
+				let lastElem = null;
+				src.forEach(function (elem) {
+					lastElem = append(elem, false);
+					ra.push(lastElem);
+				});
+				if (lastElem) {
+					// last added element
+					lastElem.$select();
+				}
+				return ra;
+			} else
+				return append(src, true);
 
-        };
+		};
 
-        arr.$empty = function () {
-            if (this.$root.isReadOnly)
-                return;
-            this.splice(0, this.length);
-            if ('$RowCount' in this) this.$RowCount = 0;
-            return this;
-        };
+		arr.$empty = function () {
+			if (this.$root.isReadOnly)
+				return;
+			this.splice(0, this.length);
+			if ('$RowCount' in this) this.$RowCount = 0;
+			return this;
+		};
 
-        arr.$clearSelected = function () {
-            let sel = this.$selected;
-            if (!sel) return; // already null
-            sel.$selected = false;
-            emitSelect(this, null);
-        };
+		arr.$clearSelected = function () {
+			let sel = this.$selected;
+			if (!sel) return; // already null
+			sel.$selected = false;
+			emitSelect(this, null);
+		};
 
-        arr.$remove = function (item) {
-            if (this.$root.isReadOnly)
-                return;
-            if (!item)
-                return;
-            let index = this.indexOf(item);
-            if (index === -1)
-                return;
-            this.splice(index, 1);
-            if ('$RowCount' in this) this.$RowCount -= 1;
-            // EVENT
-            let eventName = this._path_ + '[].remove';
-            this._root_.$setDirty(true);
-            this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-            if (!this.length) return;
-            if (index >= this.length)
-                index -= 1;
-            if (this.length > index) {
-                this[index].$select();
-            }
-            // renumber rows
-            if ('$rowNo' in item._meta_) {
-                let rowNoProp = item._meta_.$rowNo;
-                for (let i = 0; i < this.length; i++) {
-                    this[i][rowNoProp] = i + 1; // 1-based
-                }
-            }
-        };
+		arr.$remove = function (item) {
+			if (this.$root.isReadOnly)
+				return;
+			if (!item)
+				return;
+			let index = this.indexOf(item);
+			if (index === -1)
+				return;
+			this.splice(index, 1);
+			if ('$RowCount' in this) this.$RowCount -= 1;
+			// EVENT
+			let eventName = this._path_ + '[].remove';
+			this._root_.$setDirty(true);
+			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
+			if (!this.length) return;
+			if (index >= this.length)
+				index -= 1;
+			if (this.length > index) {
+				this[index].$select();
+			}
+			// renumber rows
+			if ('$rowNo' in item._meta_) {
+				let rowNoProp = item._meta_.$rowNo;
+				for (let i = 0; i < this.length; i++) {
+					this[i][rowNoProp] = i + 1; // 1-based
+				}
+			}
+		};
 
-        arr.$copy = function (src) {
-            if (this.$root.isReadOnly)
-                return;
-            this.$empty();
-            if (utils.isArray(src)) {
-                for (let i = 0; i < src.length; i++) {
-                    this.push(this.$new(src[i]));
-                }
-            }
-            return this;
-        };
-    }
+		arr.$copy = function (src) {
+			if (this.$root.isReadOnly)
+				return;
+			this.$empty();
+			if (utils.isArray(src)) {
+				for (let i = 0; i < src.length; i++) {
+					this.push(this.$new(src[i]));
+				}
+			}
+			return this;
+		};
+	}
 
 	function defineCommonProps(obj) {
 		defHiddenGet(obj, "$host", function () {
@@ -511,19 +511,19 @@
 			return this._parent_;
 		});
 
-        defHiddenGet(obj, "$vm", function () {
-            if (this._root_ && this._root_._host_)
-                return this._root_._host_.$viewModel;
-            return null;
+		defHiddenGet(obj, "$vm", function () {
+			if (this._root_ && this._root_._host_)
+				return this._root_._host_.$viewModel;
+			return null;
 		});
 	}
 
 	function defineObject(obj, meta, arrayItem) {
 		defHidden(obj.prototype, META, meta);
 
-        obj.prototype.$merge = merge;
-        obj.prototype.$empty = empty;
-        obj.prototype.$set = setElement;
+		obj.prototype.$merge = merge;
+		obj.prototype.$empty = empty;
+		obj.prototype.$set = setElement;
 
 		defineCommonProps(obj.prototype);
 
@@ -531,9 +531,9 @@
 			return !this.$id;
 		});
 
-        defHiddenGet(obj.prototype, "$isEmpty", function () {
-            return !this.$id;
-        });
+		defHiddenGet(obj.prototype, "$isEmpty", function () {
+			return !this.$id;
+		});
 
 		defHiddenGet(obj.prototype, "$id", function () {
 			let idName = this._meta_.$id;
@@ -573,24 +573,24 @@
 		}
 	}
 
-    function emitSelect(arr, item) {
-        let selectEvent = arr._path_ + '[].select';
-        let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
-    }
+	function emitSelect(arr, item) {
+		let selectEvent = arr._path_ + '[].select';
+		let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
+	}
 
-    function defArrayItem(elem) {
+	function defArrayItem(elem) {
 
 		elem.prototype.$remove = function () {
 			let arr = this._parent_;
 			arr.$remove(this);
-        };
-        elem.prototype.$select = function (root) {
-            let arr = root || this._parent_;
-            let sel = arr.$selected;
-            if (sel === this) return;
-            if (sel) sel.$selected = false;
-            this.$selected = true;
-            emitSelect(arr, this);
+		};
+		elem.prototype.$select = function (root) {
+			let arr = root || this._parent_;
+			let sel = arr.$selected;
+			if (sel === this) return;
+			if (sel) sel.$selected = false;
+			this.$selected = true;
+			emitSelect(arr, this);
 		};
 	}
 
@@ -628,34 +628,34 @@
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
-    function canExecuteCommand(cmd, arg, opts) {
-        const tml = this.$template;
-        if (!tml) return false;
-        if (!tml.commands) return false;
-        const cmdf = tml.commands[cmd];
-        if (!cmdf) return false;
+	function canExecuteCommand(cmd, arg, opts) {
+		const tml = this.$template;
+		if (!tml) return false;
+		if (!tml.commands) return false;
+		const cmdf = tml.commands[cmd];
+		if (!cmdf) return false;
 
-        const optsCheckValid = opts && opts.validRequired === true;
-        const optsCheckRO = opts && opts.checkReadOnly === true;
+		const optsCheckValid = opts && opts.validRequired === true;
+		const optsCheckRO = opts && opts.checkReadOnly === true;
 
-        if (cmdf.checkReadOnly === true || optsCheckRO) {
-            if (this.$root.$readOnly)
-                return false;
-        }
-        if (cmdf.validRequired === true || optsCheckValid) {
-            if (!this.$root.$valid)
-                return false;
-        }
-        if (utils.isFunction(cmdf.canExec)) {
-            return cmdf.canExec.call(this, arg);
-        } else if (utils.isBoolean(cmdf.canExec)) {
-            return cmdf.canExec; // for debugging purposes
-        } else if (utils.isDefined(cmdf.canExec)) {
-            console.error(`${cmd}.canExec should be a function`);
-            return false;
-        }
-        return true;
-    }
+		if (cmdf.checkReadOnly === true || optsCheckRO) {
+			if (this.$root.$readOnly)
+				return false;
+		}
+		if (cmdf.validRequired === true || optsCheckValid) {
+			if (!this.$root.$valid)
+				return false;
+		}
+		if (utils.isFunction(cmdf.canExec)) {
+			return cmdf.canExec.call(this, arg);
+		} else if (utils.isBoolean(cmdf.canExec)) {
+			return cmdf.canExec; // for debugging purposes
+		} else if (utils.isDefined(cmdf.canExec)) {
+			console.error(`${cmd}.canExec should be a function`);
+			return false;
+		}
+		return true;
+	}
 
 	function executeCommand(cmd, arg, confirm, opts) {
 		try {
@@ -677,7 +677,7 @@
 
 			if (utils.isFunction(cmdf.canExec)) {
 				if (!cmdf.canExec.call(this, arg)) return;
-			}        
+			}
 
 			let that = this;
 			const doExec = function () {
@@ -697,15 +697,15 @@
 				}
 			};
 
-            if (optSaveRequired && vm.$isDirty)
-                vm.$save().then(doExec);
-            else
-                doExec();
+			if (optSaveRequired && vm.$isDirty)
+				vm.$save().then(doExec);
+			else
+				doExec();
 
 
 		} finally {
 			this._root_._enableValidate_ = true;
-            this._root_._needValidate_ = true;
+			this._root_._needValidate_ = true;
 		}
 	}
 
@@ -724,11 +724,11 @@
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)
-            item._errors_ = {}; // new empty object
-        if (errors && errors.length > 0)
+			item._errors_ = {}; // new empty object
+		if (errors && errors.length > 0)
 			item._errors_[path] = errors;
 		else if (path in item._errors_)
-            delete item._errors_[path];
+			delete item._errors_[path];
 		if (utils.isEmptyObject(item._errors_))
 			item._errors_ = null;
 		return errors;
@@ -742,13 +742,13 @@
 			if (path in item._errors_)
 				return item._errors_[path];
 			return null;
-        }
+		}
 		let res = validateImpl(item, path, val, ff);
 		return saveErrors(item, path, res);
 	}
 
-    function* enumData(root, path, name, index) {
-        index = index || '';
+	function* enumData(root, path, name, index) {
+		index = index || '';
 		if (!path) {
 			// scalar value in root
 			yield { item: root, val: root[name], ix: index };
@@ -778,11 +778,11 @@
 				}
 				return;
 			} else {
-                // simple element
-                if (!(prop in currentData)) {
-                    console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
-                }
-                let objto = currentData[prop];
+				// simple element
+				if (!(prop in currentData)) {
+					console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
+				}
+				let objto = currentData[prop];
 				if (last) {
 					if (objto)
 						yield { item: objto, val: objto[name], ix: index };
@@ -826,9 +826,9 @@
 
 	function validateAll() {
 		var me = this;
-        if (!me._host_) return;
-        if (!me._needValidate_) return;
-        me._needValidate_ = false;
+		if (!me._host_) return;
+		if (!me._needValidate_) return;
+		me._needValidate_ = false;
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;
@@ -846,35 +846,35 @@
 		//console.dir(allerrs);
 	}
 
-    function setDirty(val) {
-        if (this.$root.$readOnly)
-            return;
+	function setDirty(val) {
+		if (this.$root.$readOnly)
+			return;
 		this.$dirty = val;
 	}
 
-    function empty() {
-        this.$set({});
-    }
+	function empty() {
+		this.$set({});
+	}
 
-    function setElement(src) {
-        if (this.$root.isReadOnly)
-            return;
-        this.$merge(src, true);
-    }
+	function setElement(src) {
+		if (this.$root.isReadOnly)
+			return;
+		this.$merge(src, true);
+	}
 
-    function merge(src, fireChange) {
-        try {
-            if (src === null)
-                src = {};
-            this._root_._enableValidate_ = false;
-            this._lockEvents_ += 1;
+	function merge(src, fireChange) {
+		try {
+			if (src === null)
+				src = {};
+			this._root_._enableValidate_ = false;
+			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);
 					// copy rowCount
-                    if ('$RowCount' in trg) {
+					if ('$RowCount' in trg) {
 						let rcProp = prop + '.$RowCount';
 						if (rcProp in src)
 							trg.$RowCount = src[rcProp] || 0;
@@ -882,12 +882,12 @@
 							trg.$RowCount = 0;
 					}
 					//TODO: try to select old value
-                } else {
-                    if (utils.isDateCtor(ctor))
-                        platform.set(this, prop, new Date(src[prop]));
-                    else if (utils.isPrimitiveCtor(ctor)) {
-                        platform.set(this, prop, src[prop]);
-                    } else {
+				} else {
+					if (utils.isDateCtor(ctor))
+						platform.set(this, prop, new Date(src[prop]));
+					else if (utils.isPrimitiveCtor(ctor)) {
+						platform.set(this, prop, src[prop]);
+					} else {
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}
@@ -896,13 +896,13 @@
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
-            this._lockEvents_ -= 1;
-        }
-        if (fireChange) {
-            // emit .change event for all object
-            let eventName = this._path_ + '.change';
-            this._root_.$emit(eventName, this.$parent, this);
-        }
+			this._lockEvents_ -= 1;
+		}
+		if (fireChange) {
+			// emit .change event for all object
+			let eventName = this._path_ + '.change';
+			this._root_.$emit(eventName, this.$parent, this);
+		}
 	}
 
 	function implementRoot(root, template, ctors) {
@@ -910,8 +910,8 @@
 		root.prototype.$setDirty = setDirty;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
-        root.prototype._exec_ = executeCommand;
-        root.prototype._canExec_ = canExecuteCommand;
+		root.prototype._exec_ = executeCommand;
+		root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
@@ -931,7 +931,7 @@
 				xProp[typeName] = {};
 			xProp[typeName][propName] = pv;
 		}
-        template._props_ = xProp;
+		template._props_ = xProp;
         /*
         platform.defer(() => {
             console.dir('end init');

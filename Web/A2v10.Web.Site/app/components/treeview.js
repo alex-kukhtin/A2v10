@@ -1,19 +1,24 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180205-7102*/
+/*20180225-7119*/
 // components/treeview.js
+
+
+/*
+1. Check to delete isDynamic!
+*/
 
 (function () {
 
-    const utils = require('std:utils');
-    const eventBus = require('std:eventBus');
+	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 
     /**
-     * .stop for toggle reqired!
+     * .stop for toggle is required!
      */
-    const treeItemComponent = {
-        name: 'tree-item',
-        template: `
+	const treeItemComponent = {
+		name: 'tree-item',
+		template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
@@ -29,68 +34,68 @@
     </ul>   
 </li>
 `,
-        props: {
-            item: Object,
-            options: Object,
-            rootItems: Array,
-            /* callbacks */
-            click: Function,
-            expand: Function,
-            isActive: Function,
-            getHref: Function
-        },
-        data() {
-            return {
-                open: !this.options.isDynamic
-            };
-        },
-        methods: {
-            isFolderSelect(item) {
-                let fs = this.options.folderSelect;
-                if (utils.isFunction(fs))
-                    return fs(item);
-                return !!this.options.folderSelect;
-            },
-            doClick(item) {
-                eventBus.$emit('closeAllPopups');
-                if (this.isFolder && !this.isFolderSelect(item))
-                    this.toggle();
-                else {
-                    if (this.options.isDynamic) {
-                        item.$select(this.rootItems);
-                    } else {
-                        this.click(item);
-                    }
-                }
-            },
-            hasLink(item) {
-                return !this.isFolder || this.isFolderSelect(item);
-            },
-            toggle() {
-                // toggle with stop!
-                eventBus.$emit('closeAllPopups');
-                if (!this.isFolder)
-                    return;
-                if (this.options.isDynamic) {
-                    this.open = !this.open;
-                    this.expand(this.item, this.options.subitems);
-                } else {
-                    this.open = !this.open;
-                }
-            }
-        },
-        computed: {
-            isFolder: function () {
-                if (this.options.isDynamic && this.item.$hasChildren)
-                    return true;
-                let ch = this.item[this.options.subitems];
-                return ch && ch.length;
-            },
-            isExpanded: function () {
-                return this.isFolder && this.open;
-            },
-            isCollapsed: function () {
-                return this.isFolder && !this.open;
+		props: {
+			item: Object,
+			options: Object,
+			rootItems: Array,
+			/* callbacks */
+			click: Function,
+			expand: Function,
+			isActive: Function,
+			getHref: Function
+		},
+		data() {
+			return {
+				open: !this.options.isDynamic
+			};
+		},
+		methods: {
+			isFolderSelect(item) {
+				let fs = this.options.folderSelect;
+				if (utils.isFunction(fs))
+					return fs(item);
+				return !!this.options.folderSelect;
+			},
+			doClick(item) {
+				eventBus.$emit('closeAllPopups');
+				if (this.isFolder && !this.isFolderSelect(item))
+					this.toggle();
+				else {
+					if (this.options.isDynamic) {
+						item.$select(this.rootItems);
+					} else {
+						this.click(item);
+					}
+				}
+			},
+			hasLink(item) {
+				return !this.isFolder || this.isFolderSelect(item);
+			},
+			toggle() {
+				// toggle with stop!
+				eventBus.$emit('closeAllPopups');
+				if (!this.isFolder)
+					return;
+				if (this.options.isDynamic) {
+					this.open = !this.open;
+					this.expand(this.item, this.options.subitems);
+				} else {
+					this.open = !this.open;
+				}
+			}
+		},
+		computed: {
+			isFolder: function () {
+				if (this.options.isDynamic && utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
+					return true;
+				let ch = this.item[this.options.subitems];
+				return ch && ch.length;
+			},
+			isExpanded: function () {
+				return this.isFolder && this.open;
+			},
+			isCollapsed: function () {
+				return this.isFolder && !this.open;
 			},
 			title() {
 				var t = this.item[this.options.title];
@@ -98,43 +103,43 @@
 					t = this.item[this.options.label];
 				return t;
 			},
-            isItemSelected: function () {
-                if (this.options.isDynamic)
-                    return this.item.$selected; //$isSelected(this.rootItems);
-                if (!this.isActive)
-                    return false;
-                return this.isActive && this.isActive(this.item);
-            },
-            iconClass: function () {
-                let icons = this.options.staticIcons;
-                if (icons)
-                    return "ico ico-" + (this.isFolder ? icons[0] : icons[1]);
-                if (this.options.icon) {
-                    let icon = this.item[this.options.icon];
-                    return icon ? "ico ico-" + (icon || 'empty') : '';
-                }
-                return undefined;
-            },
+			isItemSelected: function () {
+				if (this.options.isDynamic)
+					return this.item.$selected; //$isSelected(this.rootItems);
+				if (!this.isActive)
+					return false;
+				return this.isActive && this.isActive(this.item);
+			},
+			iconClass: function () {
+				let icons = this.options.staticIcons;
+				if (icons)
+					return "ico ico-" + (this.isFolder ? icons[0] : icons[1]);
+				if (this.options.icon) {
+					let icon = this.item[this.options.icon];
+					return icon ? "ico ico-" + (icon || 'empty') : '';
+				}
+				return undefined;
+			},
 			dataHref() {
-                return this.getHref ? this.getHref(this.item) : '';
-            }
-        },
-        watch: {
-            isFolder(newVal) {
-                // TODO: auto expand???
-            }
-        },
-        updated(x) {
-            // close expanded when reloaded
-            if (this.options.isDynamic && this.open) {
-                if (this.item.$hasChildren) {
-                    let arr = this.item[this.options.subitems];
-                    if (!arr.$loaded)
-                        this.open = false;
-                }
-            }
-        }
-    };
+				return this.getHref ? this.getHref(this.item) : '';
+			}
+		},
+		watch: {
+			isFolder(newVal) {
+				// TODO: auto expand???
+			}
+		},
+		updated(x) {
+			// close expanded when reloaded
+			if (this.options.isDynamic && this.open) {
+				if (this.item.$hasChildren) {
+					let arr = this.item[this.options.subitems];
+					if (!arr.$loaded)
+						this.open = false;
+				}
+			}
+		}
+	};
 
     /*
     options: {
@@ -152,11 +157,11 @@
     }
     */
 
-    Vue.component('tree-view', {
-        components: {
-            'tree-item': treeItemComponent
-        },
-        template: `
+	Vue.component('tree-view', {
+		components: {
+			'tree-item': treeItemComponent
+		},
+		template: `
 <ul class="tree-view">
     <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
@@ -164,47 +169,47 @@
     </tree-item>
 </ul>
         `,
-        props: {
-            options: Object,
-            items: Array,
-            isActive: Function,
-            click: Function,
-            expand: Function,
-            autoSelect: String,
-            getHref: Function,
-            expandFirstItem: Boolean
-        },
-        computed: {
-            isSelectFirstItem() {
-                return this.autoSelect === 'first-item';
-            }
-        },
-        methods: {
-            selectFirstItem() {
-                if (!this.isSelectFirstItem)
-                    return;
-                let itms = this.items;
-                if (!itms.length)
-                    return;
-                let fe = itms[0];
-                if (fe.$select)
-                    fe.$select(this.items);
-            }
-        },
-        created() {
-            this.selectFirstItem();
-            if (this.expandFirstItem) {
-                this.$nextTick(() => {
-                    if (this.$children && this.$children[0] && this.$children[0].toggle) {
-                        this.$children[0].toggle();
-                    }
-                });
-            }
-        },
-        updated() {
-            if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
-                this.selectFirstItem();
-            }
-        }
-    });
+		props: {
+			options: Object,
+			items: Array,
+			isActive: Function,
+			click: Function,
+			expand: Function,
+			autoSelect: String,
+			getHref: Function,
+			expandFirstItem: Boolean
+		},
+		computed: {
+			isSelectFirstItem() {
+				return this.autoSelect === 'first-item';
+			}
+		},
+		methods: {
+			selectFirstItem() {
+				if (!this.isSelectFirstItem)
+					return;
+				let itms = this.items;
+				if (!itms.length)
+					return;
+				let fe = itms[0];
+				if (fe.$select)
+					fe.$select(this.items);
+			}
+		},
+		created() {
+			this.selectFirstItem();
+			if (this.expandFirstItem) {
+				this.$nextTick(() => {
+					if (this.$children && this.$children[0] && this.$children[0].toggle) {
+						this.$children[0].toggle();
+					}
+				});
+			}
+		},
+		updated() {
+			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
+				this.selectFirstItem();
+			}
+		}
+	});
 })();

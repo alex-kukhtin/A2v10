@@ -4,21 +4,21 @@ using System;
 
 namespace A2v10.Xaml
 {
-    public static class EnumExtensions
-    {
-        public static String AlignSelf(this VerticalAlign vAlign)
-        {
-            switch (vAlign)
-            {
-                case VerticalAlign.Top:
-                    return "start";
-                case VerticalAlign.Middle:
-                    return "center";
-                case VerticalAlign.Bottom:
-                    return "end";
-                default:
-                    return null;
-            }
-        }
-    }
+	public static class EnumExtensions
+	{
+		public static String AlignSelf(this VerticalAlign vAlign)
+		{
+			switch (vAlign)
+			{
+				case VerticalAlign.Top:
+					return "start";
+				case VerticalAlign.Middle:
+					return "center";
+				case VerticalAlign.Bottom:
+					return "end";
+				default:
+					return null;
+			}
+		}
+	}
 }

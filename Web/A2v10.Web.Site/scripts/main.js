@@ -985,7 +985,7 @@ app.modules['std:validators'] = function() {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180205-7102
+// 20180225-7119
 // services/datamodel.js
 
 (function () {
@@ -1000,20 +1000,20 @@ app.modules['std:validators'] = function() {
 	const SRC = '_src_';
 	const PATH = '_path_';
 	const ROOT = '_root_';
-    const ERRORS = '_errors_';
+	const ERRORS = '_errors_';
 
-    const ERR_STR = '#err#';
+	const ERR_STR = '#err#';
 
-    const FLAG_VIEW = 1;
-    const FLAG_EDIT = 2;
-    const FLAG_DELETE = 4;
+	const FLAG_VIEW = 1;
+	const FLAG_EDIT = 2;
+	const FLAG_DELETE = 4;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-    const log = require('std:log');
+	const log = require('std:log');
 
-    let __initialized__ = false;
+	let __initialized__ = false;
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -1040,12 +1040,12 @@ app.modules['std:validators'] = function() {
 		});
 	}
 
-    function ensureType(type, val) {
-        if (!utils.isDefined(val))
-            val = utils.defaultValue(type);
+	function ensureType(type, val) {
+		if (!utils.isDefined(val))
+			val = utils.defaultValue(type);
 		if (type === Number) {
 			return utils.toNumber(val);
-        }
+		}
 		return val;
 	}
 
@@ -1065,37 +1065,37 @@ app.modules['std:validators'] = function() {
 				shadow[prop] = source[prop] || false;
 				break;
 			case Date:
-                let srcval = source[prop] || null;
+				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
-                break; 
-            case TMarker: // marker for dynamic property
-                let mp = trg._meta_.markerProps[prop];
-                shadow[prop] = mp;
-                break;
-            default:
+				break;
+			case TMarker: // marker for dynamic property
+				let mp = trg._meta_.markerProps[prop];
+				shadow[prop] = mp;
+				break;
+			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
 				break;
 		}
 		Object.defineProperty(trg, prop, {
 			enumerable: true,
 			configurable: true, /* needed */
-            get() {
+			get() {
 				return this._src_[prop];
 			},
 			set(val) {
 				//TODO: emit and handle changing event
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
-                    return;
-                if (this._src_[prop] && this._src_[prop].$set) {
-                    // object
-                    this._src_[prop].$merge(val, false);
-                } else {
-                    this._src_[prop] = val;
-                }
-                this._root_.$setDirty(true);
-                if (this._lockEvents_)
-                    return; // events locked
+					return;
+				if (this._src_[prop] && this._src_[prop].$set) {
+					// object
+					this._src_[prop].$merge(val, false);
+				} else {
+					this._src_[prop] = val;
+				}
+				this._root_.$setDirty(true);
+				if (this._lockEvents_)
+					return; // events locked
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -1104,32 +1104,32 @@ app.modules['std:validators'] = function() {
 		});
 	}
 
-    function TMarker() { }
+	function TMarker() { }
 
-    function createPrimitiveProperties(elem, ctor) {
-        const templ = elem._root_.$template;
-        if (!templ) return;
-        const props = templ._props_;
-        if (!props) return;
-        let objname = ctor.name;
-        if (objname in props) {
-            for (let p in props[objname]) {
-                let propInfo = props[objname][p];
-                if (utils.isPrimitiveCtor(propInfo)) {
-                    log.info(`create scalar property: ${objname}.${p}`);
-                    elem._meta_.props[p] = propInfo;
-                } else if (utils.isObjectExact(propInfo)) {
-                    if (!propInfo.get) { // plain object
-                        log.info(`create object property: ${objname}.${p}`);
-                        elem._meta_.props[p] = TMarker;
-                        if (!elem._meta_.markerProps)
-                            elem._meta_.markerProps = {};
-                        elem._meta_.markerProps[p] = propInfo;
-                    }
-                }
-            }
-        }
-    }
+	function createPrimitiveProperties(elem, ctor) {
+		const templ = elem._root_.$template;
+		if (!templ) return;
+		const props = templ._props_;
+		if (!props) return;
+		let objname = ctor.name;
+		if (objname in props) {
+			for (let p in props[objname]) {
+				let propInfo = props[objname][p];
+				if (utils.isPrimitiveCtor(propInfo)) {
+					log.info(`create scalar property: ${objname}.${p}`);
+					elem._meta_.props[p] = propInfo;
+				} else if (utils.isObjectExact(propInfo)) {
+					if (!propInfo.get) { // plain object
+						log.info(`create object property: ${objname}.${p}`);
+						elem._meta_.props[p] = TMarker;
+						if (!elem._meta_.markerProps)
+							elem._meta_.markerProps = {};
+						elem._meta_.markerProps[p] = propInfo;
+					}
+				}
+			}
+		}
+	}
 
 	function createObjProperties(elem, ctor) {
 		let templ = elem._root_.$template;
@@ -1137,32 +1137,32 @@ app.modules['std:validators'] = function() {
 		let props = templ._props_;
 		if (!props) return;
 		let objname = ctor.name;
-        if (objname in props) {
+		if (objname in props) {
 			for (let p in props[objname]) {
-                let propInfo = props[objname][p];
-                if (utils.isPrimitiveCtor(propInfo)) {
-                    continue;
-                }
-                else if (utils.isFunction(propInfo)) {
-                    log.info(`create property: ${objname}.${p}`);
-                    Object.defineProperty(elem, p, {
-                        configurable: false,
-                        enumerable: true,
-                        get: propInfo
-                    });
-                } else if (utils.isObjectExact(propInfo)) {
-                    if (propInfo.get) { // has get, maybe set
-                        log.info(`create property: ${objname}.${p}`);
-                        Object.defineProperty(elem, p, {
-                            configurable: false,
-                            enumerable: true,
-                            get: propInfo.get,
-                            set: propInfo.set
-                        });
-                    }
-                } else {
-                    alert('todo: invalid property type');
-                }
+				let propInfo = props[objname][p];
+				if (utils.isPrimitiveCtor(propInfo)) {
+					continue;
+				}
+				else if (utils.isFunction(propInfo)) {
+					log.info(`create property: ${objname}.${p}`);
+					Object.defineProperty(elem, p, {
+						configurable: false,
+						enumerable: true,
+						get: propInfo
+					});
+				} else if (utils.isObjectExact(propInfo)) {
+					if (propInfo.get) { // has get, maybe set
+						log.info(`create property: ${objname}.${p}`);
+						Object.defineProperty(elem, p, {
+							configurable: false,
+							enumerable: true,
+							get: propInfo.get,
+							set: propInfo.set
+						});
+					}
+				} else {
+					alert('todo: invalid property type');
+				}
 			}
 		}
 	}
@@ -1178,29 +1178,29 @@ app.modules['std:validators'] = function() {
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
-        defHidden(elem, '_lockEvents_', 0, true);
+		defHidden(elem, '_lockEvents_', 0, true);
 
-        let hasTemplProps = false;
-        const templ = elem._root_.$template;
-        if (templ && !utils.isEmptyObject(templ._props_))
-            hasTemplProps = true;
+		let hasTemplProps = false;
+		const templ = elem._root_.$template;
+		if (templ && !utils.isEmptyObject(templ._props_))
+			hasTemplProps = true;
 
-        if (hasTemplProps)
-            createPrimitiveProperties(elem, elem.constructor);
+		if (hasTemplProps)
+			createPrimitiveProperties(elem, elem.constructor);
 
 		for (let propName in elem._meta_.props) {
 			defSource(elem, source, propName, parent);
-        }
+		}
 
-        if (hasTemplProps)
-            createObjProperties(elem, elem.constructor);
+		if (hasTemplProps)
+			createObjProperties(elem, elem.constructor);
 
-        if (path && path.endsWith(']'))
-            elem.$selected = false;
+		if (path && path.endsWith(']'))
+			elem.$selected = false;
 
-        defPropertyGet(elem, '$valid', function () {
+		defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
-                this._root_._validateAll_();
+				this._root_._validateAll_();
 			if (this._errors_)
 				return false;
 			for (var x in this) {
@@ -1235,8 +1235,8 @@ app.modules['std:validators'] = function() {
 			});
 		}
 
-        let constructEvent = ctorname + '.construct';
-        let _lastCaller = null;
+		let constructEvent = ctorname + '.construct';
+		let _lastCaller = null;
 		elem._root_.$emit(constructEvent, elem);
 		if (elem._root_ === elem) {
 			// root element
@@ -1245,42 +1245,42 @@ app.modules['std:validators'] = function() {
 			elem._query_ = {};
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
-                let rcp = m + '.$RowCount';
+				let rcp = m + '.$RowCount';
 				if (source && rcp in source) {
 					let rcv = source[rcp] || 0;
 					elem[m].$RowCount = rcv;
 				}
 			}
 			elem._enableValidate_ = true;
-            elem._needValidate_ = false;
-            elem._modelLoad_ = (caller) => {
-                _lastCaller = caller;
-                elem._fireLoad_();
-                __initialized__ = true;
-            };
-            elem._fireLoad_ = () => {
-                elem.$emit('Model.load', elem, _lastCaller);
-                elem._root_.$setDirty(false);
-            };
-            defHiddenGet(elem, '$readOnly', isReadOnly);
+			elem._needValidate_ = false;
+			elem._modelLoad_ = (caller) => {
+				_lastCaller = caller;
+				elem._fireLoad_();
+				__initialized__ = true;
+			};
+			elem._fireLoad_ = () => {
+				elem.$emit('Model.load', elem, _lastCaller);
+				elem._root_.$setDirty(false);
+			};
+			defHiddenGet(elem, '$readOnly', isReadOnly);
 		}
-        if (startTime) {
-            log.time('create root time:', startTime, false);
-        }
+		if (startTime) {
+			log.time('create root time:', startTime, false);
+		}
 		return elem;
-    }
+	}
 
-    function isReadOnly() {
-        if ('__modelInfo' in this) {
-            let mi = this.__modelInfo;
-            if (utils.isDefined(mi.ReadOnly))
-                return mi.ReadOnly;
-        }
-        return false;
-    }
+	function isReadOnly() {
+		if ('__modelInfo' in this) {
+			let mi = this.__modelInfo;
+			if (utils.isDefined(mi.ReadOnly))
+				return mi.ReadOnly;
+		}
+		return false;
+	}
 
 	function createArray(source, path, ctor, arrctor, parent) {
-        let arr = new _BaseArray(source ? source.length : 0);
+		let arr = new _BaseArray(source ? source.length : 0);
 		let dotPath = path + '[]';
 		defHidden(arr, '_elem_', ctor);
 		defHidden(arr, PATH, path);
@@ -1313,62 +1313,62 @@ app.modules['std:validators'] = function() {
 		return arr;
 	}
 
-    function _BaseArray(length) {
-        let arr = new Array(length || 0);
-        addArrayProps(arr);
-        return arr;
+	function _BaseArray(length) {
+		let arr = new Array(length || 0);
+		addArrayProps(arr);
+		return arr;
 	}
 
-    //_BaseArray.prototype = Array.prototype;
+	//_BaseArray.prototype = Array.prototype;
 
-    function addArrayProps(arr) {
+	function addArrayProps(arr) {
 
-        defineCommonProps(arr);
+		defineCommonProps(arr);
 
-        arr.$new = function (src) {
-            let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-            newElem.$checked = false;
-            return newElem;
-        };
+		arr.$new = function (src) {
+			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
+			newElem.$checked = false;
+			return newElem;
+		};
 
-        defPropertyGet(arr, "$selected", function () {
-            for (let x of this.$elements) {
-                if (x.$selected) {
-                    return x;
-                }
-            }
-            return undefined;
-        });
+		defPropertyGet(arr, "$selected", function () {
+			for (let x of this.$elements) {
+				if (x.$selected) {
+					return x;
+				}
+			}
+			return undefined;
+		});
 
-        defPropertyGet(arr, "$elements", function () {
-            function* elems(arr) {
-                for (let i = 0; i < arr.length; i++) {
-                    let val = arr[i];
-                    yield val;
-                    if (val.$items) {
-                        yield* elems(val.$items);
-                    }
-                }
-            }
-            return elems(this);
-        });
+		defPropertyGet(arr, "$elements", function () {
+			function* elems(arr) {
+				for (let i = 0; i < arr.length; i++) {
+					let val = arr[i];
+					yield val;
+					if (val.$items) {
+						yield* elems(val.$items);
+					}
+				}
+			}
+			return elems(this);
+		});
 
-        defPropertyGet(arr, "Count", function () {
-            return this.length;
-        });
+		defPropertyGet(arr, "Count", function () {
+			return this.length;
+		});
 
-        defPropertyGet(arr, "$isEmpty", function () {
-            return !this.length;
-        });
+		defPropertyGet(arr, "$isEmpty", function () {
+			return !this.length;
+		});
 
-        defPropertyGet(arr, "$checked", function () {
-            return this.filter((el) => el.$checked);
-        });
+		defPropertyGet(arr, "$checked", function () {
+			return this.filter((el) => el.$checked);
+		});
 
-        arr.Selected = function (propName) {
-            let sel = this.$selected;
-            return sel ? sel[propName] : null;
-        };
+		arr.Selected = function (propName) {
+			let sel = this.$selected;
+			return sel ? sel[propName] : null;
+		};
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
@@ -1383,105 +1383,105 @@ app.modules['std:validators'] = function() {
 			});
 		};
 
-        arr.$append = function (src) {
-            const that = this;
-            function append(src, select) {
-                let addingEvent = that._path_ + '[].adding';
-                let newElem = that.$new(src);
-                // TODO: emit adding and check result
-                let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
-                if (er === false)
-                    return; // disabled
-                let len = that.push(newElem);
-                let ne = that[len - 1]; // maybe newly created reactive element
-                if ('$RowCount' in that) that.$RowCount += 1;
-                let eventName = that._path_ + '[].add';
-                that._root_.$setDirty(true);
-                that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-                if (select) {
-                    ne.$select();
-                    emitSelect(that, ne);
-                }
-                // set RowNumber
-                if ('$rowNo' in newElem._meta_) {
-                    let rowNoProp = newElem._meta_.$rowNo;
-                    newElem[rowNoProp] = len; // 1-based
-                }
-                return ne;
-            }
-            if (utils.isArray(src)) {
-                let ra = [];
-                let lastElem = null;
-                src.forEach(function (elem) {
-                    lastElem = append(elem, false);
-                    ra.push(lastElem);
-                });
-                if (lastElem) {
-                    // last added element
-                    lastElem.$select();
-                }
-                return ra;
-            } else
-                return append(src, true);
+		arr.$append = function (src) {
+			const that = this;
+			function append(src, select) {
+				let addingEvent = that._path_ + '[].adding';
+				let newElem = that.$new(src);
+				// TODO: emit adding and check result
+				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
+				if (er === false)
+					return; // disabled
+				let len = that.push(newElem);
+				let ne = that[len - 1]; // maybe newly created reactive element
+				if ('$RowCount' in that) that.$RowCount += 1;
+				let eventName = that._path_ + '[].add';
+				that._root_.$setDirty(true);
+				that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
+				if (select) {
+					ne.$select();
+					emitSelect(that, ne);
+				}
+				// set RowNumber
+				if ('$rowNo' in newElem._meta_) {
+					let rowNoProp = newElem._meta_.$rowNo;
+					newElem[rowNoProp] = len; // 1-based
+				}
+				return ne;
+			}
+			if (utils.isArray(src)) {
+				let ra = [];
+				let lastElem = null;
+				src.forEach(function (elem) {
+					lastElem = append(elem, false);
+					ra.push(lastElem);
+				});
+				if (lastElem) {
+					// last added element
+					lastElem.$select();
+				}
+				return ra;
+			} else
+				return append(src, true);
 
-        };
+		};
 
-        arr.$empty = function () {
-            if (this.$root.isReadOnly)
-                return;
-            this.splice(0, this.length);
-            if ('$RowCount' in this) this.$RowCount = 0;
-            return this;
-        };
+		arr.$empty = function () {
+			if (this.$root.isReadOnly)
+				return;
+			this.splice(0, this.length);
+			if ('$RowCount' in this) this.$RowCount = 0;
+			return this;
+		};
 
-        arr.$clearSelected = function () {
-            let sel = this.$selected;
-            if (!sel) return; // already null
-            sel.$selected = false;
-            emitSelect(this, null);
-        };
+		arr.$clearSelected = function () {
+			let sel = this.$selected;
+			if (!sel) return; // already null
+			sel.$selected = false;
+			emitSelect(this, null);
+		};
 
-        arr.$remove = function (item) {
-            if (this.$root.isReadOnly)
-                return;
-            if (!item)
-                return;
-            let index = this.indexOf(item);
-            if (index === -1)
-                return;
-            this.splice(index, 1);
-            if ('$RowCount' in this) this.$RowCount -= 1;
-            // EVENT
-            let eventName = this._path_ + '[].remove';
-            this._root_.$setDirty(true);
-            this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-            if (!this.length) return;
-            if (index >= this.length)
-                index -= 1;
-            if (this.length > index) {
-                this[index].$select();
-            }
-            // renumber rows
-            if ('$rowNo' in item._meta_) {
-                let rowNoProp = item._meta_.$rowNo;
-                for (let i = 0; i < this.length; i++) {
-                    this[i][rowNoProp] = i + 1; // 1-based
-                }
-            }
-        };
+		arr.$remove = function (item) {
+			if (this.$root.isReadOnly)
+				return;
+			if (!item)
+				return;
+			let index = this.indexOf(item);
+			if (index === -1)
+				return;
+			this.splice(index, 1);
+			if ('$RowCount' in this) this.$RowCount -= 1;
+			// EVENT
+			let eventName = this._path_ + '[].remove';
+			this._root_.$setDirty(true);
+			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
+			if (!this.length) return;
+			if (index >= this.length)
+				index -= 1;
+			if (this.length > index) {
+				this[index].$select();
+			}
+			// renumber rows
+			if ('$rowNo' in item._meta_) {
+				let rowNoProp = item._meta_.$rowNo;
+				for (let i = 0; i < this.length; i++) {
+					this[i][rowNoProp] = i + 1; // 1-based
+				}
+			}
+		};
 
-        arr.$copy = function (src) {
-            if (this.$root.isReadOnly)
-                return;
-            this.$empty();
-            if (utils.isArray(src)) {
-                for (let i = 0; i < src.length; i++) {
-                    this.push(this.$new(src[i]));
-                }
-            }
-            return this;
-        };
-    }
+		arr.$copy = function (src) {
+			if (this.$root.isReadOnly)
+				return;
+			this.$empty();
+			if (utils.isArray(src)) {
+				for (let i = 0; i < src.length; i++) {
+					this.push(this.$new(src[i]));
+				}
+			}
+			return this;
+		};
+	}
 
 	function defineCommonProps(obj) {
 		defHiddenGet(obj, "$host", function () {
@@ -1496,19 +1496,19 @@ app.modules['std:validators'] = function() {
 			return this._parent_;
 		});
 
-        defHiddenGet(obj, "$vm", function () {
-            if (this._root_ && this._root_._host_)
-                return this._root_._host_.$viewModel;
-            return null;
+		defHiddenGet(obj, "$vm", function () {
+			if (this._root_ && this._root_._host_)
+				return this._root_._host_.$viewModel;
+			return null;
 		});
 	}
 
 	function defineObject(obj, meta, arrayItem) {
 		defHidden(obj.prototype, META, meta);
 
-        obj.prototype.$merge = merge;
-        obj.prototype.$empty = empty;
-        obj.prototype.$set = setElement;
+		obj.prototype.$merge = merge;
+		obj.prototype.$empty = empty;
+		obj.prototype.$set = setElement;
 
 		defineCommonProps(obj.prototype);
 
@@ -1516,9 +1516,9 @@ app.modules['std:validators'] = function() {
 			return !this.$id;
 		});
 
-        defHiddenGet(obj.prototype, "$isEmpty", function () {
-            return !this.$id;
-        });
+		defHiddenGet(obj.prototype, "$isEmpty", function () {
+			return !this.$id;
+		});
 
 		defHiddenGet(obj.prototype, "$id", function () {
 			let idName = this._meta_.$id;
@@ -1558,24 +1558,24 @@ app.modules['std:validators'] = function() {
 		}
 	}
 
-    function emitSelect(arr, item) {
-        let selectEvent = arr._path_ + '[].select';
-        let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
-    }
+	function emitSelect(arr, item) {
+		let selectEvent = arr._path_ + '[].select';
+		let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
+	}
 
-    function defArrayItem(elem) {
+	function defArrayItem(elem) {
 
 		elem.prototype.$remove = function () {
 			let arr = this._parent_;
 			arr.$remove(this);
-        };
-        elem.prototype.$select = function (root) {
-            let arr = root || this._parent_;
-            let sel = arr.$selected;
-            if (sel === this) return;
-            if (sel) sel.$selected = false;
-            this.$selected = true;
-            emitSelect(arr, this);
+		};
+		elem.prototype.$select = function (root) {
+			let arr = root || this._parent_;
+			let sel = arr.$selected;
+			if (sel === this) return;
+			if (sel) sel.$selected = false;
+			this.$selected = true;
+			emitSelect(arr, this);
 		};
 	}
 
@@ -1613,34 +1613,34 @@ app.modules['std:validators'] = function() {
 		console.error(`Delegate "${name}" not found in the template`);
 	}
 
-    function canExecuteCommand(cmd, arg, opts) {
-        const tml = this.$template;
-        if (!tml) return false;
-        if (!tml.commands) return false;
-        const cmdf = tml.commands[cmd];
-        if (!cmdf) return false;
+	function canExecuteCommand(cmd, arg, opts) {
+		const tml = this.$template;
+		if (!tml) return false;
+		if (!tml.commands) return false;
+		const cmdf = tml.commands[cmd];
+		if (!cmdf) return false;
 
-        const optsCheckValid = opts && opts.validRequired === true;
-        const optsCheckRO = opts && opts.checkReadOnly === true;
+		const optsCheckValid = opts && opts.validRequired === true;
+		const optsCheckRO = opts && opts.checkReadOnly === true;
 
-        if (cmdf.checkReadOnly === true || optsCheckRO) {
-            if (this.$root.$readOnly)
-                return false;
-        }
-        if (cmdf.validRequired === true || optsCheckValid) {
-            if (!this.$root.$valid)
-                return false;
-        }
-        if (utils.isFunction(cmdf.canExec)) {
-            return cmdf.canExec.call(this, arg);
-        } else if (utils.isBoolean(cmdf.canExec)) {
-            return cmdf.canExec; // for debugging purposes
-        } else if (utils.isDefined(cmdf.canExec)) {
-            console.error(`${cmd}.canExec should be a function`);
-            return false;
-        }
-        return true;
-    }
+		if (cmdf.checkReadOnly === true || optsCheckRO) {
+			if (this.$root.$readOnly)
+				return false;
+		}
+		if (cmdf.validRequired === true || optsCheckValid) {
+			if (!this.$root.$valid)
+				return false;
+		}
+		if (utils.isFunction(cmdf.canExec)) {
+			return cmdf.canExec.call(this, arg);
+		} else if (utils.isBoolean(cmdf.canExec)) {
+			return cmdf.canExec; // for debugging purposes
+		} else if (utils.isDefined(cmdf.canExec)) {
+			console.error(`${cmd}.canExec should be a function`);
+			return false;
+		}
+		return true;
+	}
 
 	function executeCommand(cmd, arg, confirm, opts) {
 		try {
@@ -1662,7 +1662,7 @@ app.modules['std:validators'] = function() {
 
 			if (utils.isFunction(cmdf.canExec)) {
 				if (!cmdf.canExec.call(this, arg)) return;
-			}        
+			}
 
 			let that = this;
 			const doExec = function () {
@@ -1682,15 +1682,15 @@ app.modules['std:validators'] = function() {
 				}
 			};
 
-            if (optSaveRequired && vm.$isDirty)
-                vm.$save().then(doExec);
-            else
-                doExec();
+			if (optSaveRequired && vm.$isDirty)
+				vm.$save().then(doExec);
+			else
+				doExec();
 
 
 		} finally {
 			this._root_._enableValidate_ = true;
-            this._root_._needValidate_ = true;
+			this._root_._needValidate_ = true;
 		}
 	}
 
@@ -1709,11 +1709,11 @@ app.modules['std:validators'] = function() {
 		if (!item._errors_ && !errors)
 			return; // already null
 		else if (!item._errors_ && errors)
-            item._errors_ = {}; // new empty object
-        if (errors && errors.length > 0)
+			item._errors_ = {}; // new empty object
+		if (errors && errors.length > 0)
 			item._errors_[path] = errors;
 		else if (path in item._errors_)
-            delete item._errors_[path];
+			delete item._errors_[path];
 		if (utils.isEmptyObject(item._errors_))
 			item._errors_ = null;
 		return errors;
@@ -1727,13 +1727,13 @@ app.modules['std:validators'] = function() {
 			if (path in item._errors_)
 				return item._errors_[path];
 			return null;
-        }
+		}
 		let res = validateImpl(item, path, val, ff);
 		return saveErrors(item, path, res);
 	}
 
-    function* enumData(root, path, name, index) {
-        index = index || '';
+	function* enumData(root, path, name, index) {
+		index = index || '';
 		if (!path) {
 			// scalar value in root
 			yield { item: root, val: root[name], ix: index };
@@ -1763,11 +1763,11 @@ app.modules['std:validators'] = function() {
 				}
 				return;
 			} else {
-                // simple element
-                if (!(prop in currentData)) {
-                    console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
-                }
-                let objto = currentData[prop];
+				// simple element
+				if (!(prop in currentData)) {
+					console.error(`Invalid Validator key. property '${prop}' not found in '${currentData.constructor.name}'`);
+				}
+				let objto = currentData[prop];
 				if (last) {
 					if (objto)
 						yield { item: objto, val: objto[name], ix: index };
@@ -1811,9 +1811,9 @@ app.modules['std:validators'] = function() {
 
 	function validateAll() {
 		var me = this;
-        if (!me._host_) return;
-        if (!me._needValidate_) return;
-        me._needValidate_ = false;
+		if (!me._host_) return;
+		if (!me._needValidate_) return;
+		me._needValidate_ = false;
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;
@@ -1831,35 +1831,35 @@ app.modules['std:validators'] = function() {
 		//console.dir(allerrs);
 	}
 
-    function setDirty(val) {
-        if (this.$root.$readOnly)
-            return;
+	function setDirty(val) {
+		if (this.$root.$readOnly)
+			return;
 		this.$dirty = val;
 	}
 
-    function empty() {
-        this.$set({});
-    }
+	function empty() {
+		this.$set({});
+	}
 
-    function setElement(src) {
-        if (this.$root.isReadOnly)
-            return;
-        this.$merge(src, true);
-    }
+	function setElement(src) {
+		if (this.$root.isReadOnly)
+			return;
+		this.$merge(src, true);
+	}
 
-    function merge(src, fireChange) {
-        try {
-            if (src === null)
-                src = {};
-            this._root_._enableValidate_ = false;
-            this._lockEvents_ += 1;
+	function merge(src, fireChange) {
+		try {
+			if (src === null)
+				src = {};
+			this._root_._enableValidate_ = false;
+			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);
 					// copy rowCount
-                    if ('$RowCount' in trg) {
+					if ('$RowCount' in trg) {
 						let rcProp = prop + '.$RowCount';
 						if (rcProp in src)
 							trg.$RowCount = src[rcProp] || 0;
@@ -1867,12 +1867,12 @@ app.modules['std:validators'] = function() {
 							trg.$RowCount = 0;
 					}
 					//TODO: try to select old value
-                } else {
-                    if (utils.isDateCtor(ctor))
-                        platform.set(this, prop, new Date(src[prop]));
-                    else if (utils.isPrimitiveCtor(ctor)) {
-                        platform.set(this, prop, src[prop]);
-                    } else {
+				} else {
+					if (utils.isDateCtor(ctor))
+						platform.set(this, prop, new Date(src[prop]));
+					else if (utils.isPrimitiveCtor(ctor)) {
+						platform.set(this, prop, src[prop]);
+					} else {
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}
@@ -1881,13 +1881,13 @@ app.modules['std:validators'] = function() {
 		} finally {
 			this._root_._enableValidate_ = true;
 			this._root_._needValidate_ = true;
-            this._lockEvents_ -= 1;
-        }
-        if (fireChange) {
-            // emit .change event for all object
-            let eventName = this._path_ + '.change';
-            this._root_.$emit(eventName, this.$parent, this);
-        }
+			this._lockEvents_ -= 1;
+		}
+		if (fireChange) {
+			// emit .change event for all object
+			let eventName = this._path_ + '.change';
+			this._root_.$emit(eventName, this.$parent, this);
+		}
 	}
 
 	function implementRoot(root, template, ctors) {
@@ -1895,8 +1895,8 @@ app.modules['std:validators'] = function() {
 		root.prototype.$setDirty = setDirty;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
-        root.prototype._exec_ = executeCommand;
-        root.prototype._canExec_ = canExecuteCommand;
+		root.prototype._exec_ = executeCommand;
+		root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
@@ -1916,7 +1916,7 @@ app.modules['std:validators'] = function() {
 				xProp[typeName] = {};
 			xProp[typeName][propName] = pv;
 		}
-        template._props_ = xProp;
+		template._props_ = xProp;
         /*
         platform.defer(() => {
             console.dir('end init');
@@ -3764,20 +3764,25 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180205-7102*/
+/*20180225-7119*/
 // components/treeview.js
+
+
+/*
+1. Check to delete isDynamic!
+*/
 
 (function () {
 
-    const utils = require('std:utils');
-    const eventBus = require('std:eventBus');
+	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 
     /**
-     * .stop for toggle reqired!
+     * .stop for toggle is required!
      */
-    const treeItemComponent = {
-        name: 'tree-item',
-        template: `
+	const treeItemComponent = {
+		name: 'tree-item',
+		template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
     :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
@@ -3793,68 +3798,68 @@ Vue.component('popover', {
     </ul>   
 </li>
 `,
-        props: {
-            item: Object,
-            options: Object,
-            rootItems: Array,
-            /* callbacks */
-            click: Function,
-            expand: Function,
-            isActive: Function,
-            getHref: Function
-        },
-        data() {
-            return {
-                open: !this.options.isDynamic
-            };
-        },
-        methods: {
-            isFolderSelect(item) {
-                let fs = this.options.folderSelect;
-                if (utils.isFunction(fs))
-                    return fs(item);
-                return !!this.options.folderSelect;
-            },
-            doClick(item) {
-                eventBus.$emit('closeAllPopups');
-                if (this.isFolder && !this.isFolderSelect(item))
-                    this.toggle();
-                else {
-                    if (this.options.isDynamic) {
-                        item.$select(this.rootItems);
-                    } else {
-                        this.click(item);
-                    }
-                }
-            },
-            hasLink(item) {
-                return !this.isFolder || this.isFolderSelect(item);
-            },
-            toggle() {
-                // toggle with stop!
-                eventBus.$emit('closeAllPopups');
-                if (!this.isFolder)
-                    return;
-                if (this.options.isDynamic) {
-                    this.open = !this.open;
-                    this.expand(this.item, this.options.subitems);
-                } else {
-                    this.open = !this.open;
-                }
-            }
-        },
-        computed: {
-            isFolder: function () {
-                if (this.options.isDynamic && this.item.$hasChildren)
-                    return true;
-                let ch = this.item[this.options.subitems];
-                return ch && ch.length;
-            },
-            isExpanded: function () {
-                return this.isFolder && this.open;
-            },
-            isCollapsed: function () {
-                return this.isFolder && !this.open;
+		props: {
+			item: Object,
+			options: Object,
+			rootItems: Array,
+			/* callbacks */
+			click: Function,
+			expand: Function,
+			isActive: Function,
+			getHref: Function
+		},
+		data() {
+			return {
+				open: !this.options.isDynamic
+			};
+		},
+		methods: {
+			isFolderSelect(item) {
+				let fs = this.options.folderSelect;
+				if (utils.isFunction(fs))
+					return fs(item);
+				return !!this.options.folderSelect;
+			},
+			doClick(item) {
+				eventBus.$emit('closeAllPopups');
+				if (this.isFolder && !this.isFolderSelect(item))
+					this.toggle();
+				else {
+					if (this.options.isDynamic) {
+						item.$select(this.rootItems);
+					} else {
+						this.click(item);
+					}
+				}
+			},
+			hasLink(item) {
+				return !this.isFolder || this.isFolderSelect(item);
+			},
+			toggle() {
+				// toggle with stop!
+				eventBus.$emit('closeAllPopups');
+				if (!this.isFolder)
+					return;
+				if (this.options.isDynamic) {
+					this.open = !this.open;
+					this.expand(this.item, this.options.subitems);
+				} else {
+					this.open = !this.open;
+				}
+			}
+		},
+		computed: {
+			isFolder: function () {
+				if (this.options.isDynamic && utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
+					return true;
+				let ch = this.item[this.options.subitems];
+				return ch && ch.length;
+			},
+			isExpanded: function () {
+				return this.isFolder && this.open;
+			},
+			isCollapsed: function () {
+				return this.isFolder && !this.open;
 			},
 			title() {
 				var t = this.item[this.options.title];
@@ -3862,43 +3867,43 @@ Vue.component('popover', {
 					t = this.item[this.options.label];
 				return t;
 			},
-            isItemSelected: function () {
-                if (this.options.isDynamic)
-                    return this.item.$selected; //$isSelected(this.rootItems);
-                if (!this.isActive)
-                    return false;
-                return this.isActive && this.isActive(this.item);
-            },
-            iconClass: function () {
-                let icons = this.options.staticIcons;
-                if (icons)
-                    return "ico ico-" + (this.isFolder ? icons[0] : icons[1]);
-                if (this.options.icon) {
-                    let icon = this.item[this.options.icon];
-                    return icon ? "ico ico-" + (icon || 'empty') : '';
-                }
-                return undefined;
-            },
+			isItemSelected: function () {
+				if (this.options.isDynamic)
+					return this.item.$selected; //$isSelected(this.rootItems);
+				if (!this.isActive)
+					return false;
+				return this.isActive && this.isActive(this.item);
+			},
+			iconClass: function () {
+				let icons = this.options.staticIcons;
+				if (icons)
+					return "ico ico-" + (this.isFolder ? icons[0] : icons[1]);
+				if (this.options.icon) {
+					let icon = this.item[this.options.icon];
+					return icon ? "ico ico-" + (icon || 'empty') : '';
+				}
+				return undefined;
+			},
 			dataHref() {
-                return this.getHref ? this.getHref(this.item) : '';
-            }
-        },
-        watch: {
-            isFolder(newVal) {
-                // TODO: auto expand???
-            }
-        },
-        updated(x) {
-            // close expanded when reloaded
-            if (this.options.isDynamic && this.open) {
-                if (this.item.$hasChildren) {
-                    let arr = this.item[this.options.subitems];
-                    if (!arr.$loaded)
-                        this.open = false;
-                }
-            }
-        }
-    };
+				return this.getHref ? this.getHref(this.item) : '';
+			}
+		},
+		watch: {
+			isFolder(newVal) {
+				// TODO: auto expand???
+			}
+		},
+		updated(x) {
+			// close expanded when reloaded
+			if (this.options.isDynamic && this.open) {
+				if (this.item.$hasChildren) {
+					let arr = this.item[this.options.subitems];
+					if (!arr.$loaded)
+						this.open = false;
+				}
+			}
+		}
+	};
 
     /*
     options: {
@@ -3916,11 +3921,11 @@ Vue.component('popover', {
     }
     */
 
-    Vue.component('tree-view', {
-        components: {
-            'tree-item': treeItemComponent
-        },
-        template: `
+	Vue.component('tree-view', {
+		components: {
+			'tree-item': treeItemComponent
+		},
+		template: `
 <ul class="tree-view">
     <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
@@ -3928,49 +3933,49 @@ Vue.component('popover', {
     </tree-item>
 </ul>
         `,
-        props: {
-            options: Object,
-            items: Array,
-            isActive: Function,
-            click: Function,
-            expand: Function,
-            autoSelect: String,
-            getHref: Function,
-            expandFirstItem: Boolean
-        },
-        computed: {
-            isSelectFirstItem() {
-                return this.autoSelect === 'first-item';
-            }
-        },
-        methods: {
-            selectFirstItem() {
-                if (!this.isSelectFirstItem)
-                    return;
-                let itms = this.items;
-                if (!itms.length)
-                    return;
-                let fe = itms[0];
-                if (fe.$select)
-                    fe.$select(this.items);
-            }
-        },
-        created() {
-            this.selectFirstItem();
-            if (this.expandFirstItem) {
-                this.$nextTick(() => {
-                    if (this.$children && this.$children[0] && this.$children[0].toggle) {
-                        this.$children[0].toggle();
-                    }
-                });
-            }
-        },
-        updated() {
-            if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
-                this.selectFirstItem();
-            }
-        }
-    });
+		props: {
+			options: Object,
+			items: Array,
+			isActive: Function,
+			click: Function,
+			expand: Function,
+			autoSelect: String,
+			getHref: Function,
+			expandFirstItem: Boolean
+		},
+		computed: {
+			isSelectFirstItem() {
+				return this.autoSelect === 'first-item';
+			}
+		},
+		methods: {
+			selectFirstItem() {
+				if (!this.isSelectFirstItem)
+					return;
+				let itms = this.items;
+				if (!itms.length)
+					return;
+				let fe = itms[0];
+				if (fe.$select)
+					fe.$select(this.items);
+			}
+		},
+		created() {
+			this.selectFirstItem();
+			if (this.expandFirstItem) {
+				this.$nextTick(() => {
+					if (this.$children && this.$children[0] && this.$children[0].toggle) {
+						this.$children[0].toggle();
+					}
+				});
+			}
+		},
+		updated() {
+			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
+				this.selectFirstItem();
+			}
+		}
+	});
 })();
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -5664,33 +5669,33 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180218-7118
+// 20180225-7119
 // controllers/base.js
 
 (function () {
 
-    const eventBus = require('std:eventBus');
-    const utils = require('std:utils');
-    const dataservice = require('std:dataservice');
+	const eventBus = require('std:eventBus');
+	const utils = require('std:utils');
+	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
-    const log = require('std:log');
+	const log = require('std:log');
 
-    const store = component('std:store');
-    const documentTitle = component("std:doctitle");
+	const store = component('std:store');
+	const documentTitle = component("std:doctitle");
 
-    let __updateStartTime = 0;
-    let __createStartTime = 0;
+	let __updateStartTime = 0;
+	let __createStartTime = 0;
 
-    function __runDialog(url, arg, query, cb) {
-        return new Promise(function (resolve, reject) {
-            const dlgData = { promise: null, data: arg, query: query };
-            eventBus.$emit('modal', url, dlgData);
-            dlgData.promise.then(function (result) {
-                cb(result);
-                resolve(result);
-            });
-        });
-    }
+	function __runDialog(url, arg, query, cb) {
+		return new Promise(function (resolve, reject) {
+			const dlgData = { promise: null, data: arg, query: query };
+			eventBus.$emit('modal', url, dlgData);
+			dlgData.promise.then(function (result) {
+				cb(result);
+				resolve(result);
+			});
+		});
+	}
 
 
 	const base = Vue.extend({
@@ -5703,8 +5708,8 @@ Vue.directive('resize', {
 		data() {
 			return {
 				__init__: true,
-                __baseUrl__: '',
-                __baseQuery__: {},
+				__baseUrl__: '',
+				__baseQuery__: {},
 				__requestsCount__: 0
 			};
 		},
@@ -5712,13 +5717,13 @@ Vue.directive('resize', {
 		computed: {
 			$baseUrl() {
 				return this.$data.__baseUrl__;
-            },
-            $baseQuery() {
-                return this.$data.__baseQuery__;
-            },
-            $indirectUrl() {
-                return this.$data.__modelInfo.__indirectUrl__ || '';
-            },
+			},
+			$baseQuery() {
+				return this.$data.__baseQuery__;
+			},
+			$indirectUrl() {
+				return this.$data.__modelInfo.__indirectUrl__ || '';
+			},
 			$query() {
 				return this.$data._query_;
 			},
@@ -5733,17 +5738,17 @@ Vue.directive('resize', {
 			},
 			$modelInfo() {
 				return this.$data.__modelInfo;
-            }
+			}
 		},
-        methods: {
-            $marker() {
-                return true;
-            },
-            $exec(cmd, arg, confirm, opts) {
-                if (this.$isReadOnly(opts)) return;
-                const root = this.$data;
-                root._exec_(cmd, arg, confirm, opts);
-                return;
+		methods: {
+			$marker() {
+				return true;
+			},
+			$exec(cmd, arg, confirm, opts) {
+				if (this.$isReadOnly(opts)) return;
+				const root = this.$data;
+				root._exec_(cmd, arg, confirm, opts);
+				return;
                 /*
                 const doExec = () => {
                     let root = this.$data;
@@ -5759,11 +5764,11 @@ Vue.directive('resize', {
                     doExec();
                 }
                 */
-            },
+			},
 
-            $isReadOnly(opts) {
-                return opts && opts.checkReadOnly && this.$data.$readOnly;
-            },
+			$isReadOnly(opts) {
+				return opts && opts.checkReadOnly && this.$data.$readOnly;
+			},
 
 			$execSelected(cmd, arg, confirm) {
 				let root = this.$data;
@@ -5775,42 +5780,42 @@ Vue.directive('resize', {
 					root._exec_(cmd, arg.$selected);
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
-            },
-            $canExecute(cmd, arg, opts) {
-                if (this.$isReadOnly(opts))
-                    return false;
-                let root = this.$data;
-                return root._canExec_(cmd, arg, opts);
-            },
+			},
+			$canExecute(cmd, arg, opts) {
+				if (this.$isReadOnly(opts))
+					return false;
+				let root = this.$data;
+				return root._canExec_(cmd, arg, opts);
+			},
 			$save() {
-                if (this.$data.$readOnly)
-                    return;
-                let self = this;
-                let root = window.$$rootUrl;
-                let url = root + '/_data/save';
-                let urlToSave = this.$indirectUrl || this.$baseUrl;
-                return new Promise(function (resolve, reject) {
-                    let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-                    let wasNew = self.$baseUrl.endsWith('/new');
+				if (this.$data.$readOnly)
+					return;
+				let self = this;
+				let root = window.$$rootUrl;
+				let url = root + '/_data/save';
+				let urlToSave = this.$indirectUrl || this.$baseUrl;
+				return new Promise(function (resolve, reject) {
+					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
+					let wasNew = self.$baseUrl.endsWith('/new');
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
 						self.$data.$setDirty(false);
 						// data is a full model. Resolve requires only single element.
-                        let dataToResolve;
-                        let newId;
-                        for (let p in data) {
-                            // always first element in the result
-                            dataToResolve = data[p];
-                            newId = self.$data[p].$id; // new element
-                            if (dataToResolve)
-                                break;
-                        }
-                        if (wasNew && newId) {
-                            // assign the new id to the route
-                            self.$store.commit('setnewid', { id: newId });
-                            // and in the __baseUrl__
-                            self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
-                        }
+						let dataToResolve;
+						let newId;
+						for (let p in data) {
+							// always first element in the result
+							dataToResolve = data[p];
+							newId = self.$data[p].$id; // new element
+							if (dataToResolve)
+								break;
+						}
+						if (wasNew && newId) {
+							// assign the new id to the route
+							self.$store.commit('setnewid', { id: newId });
+							// and in the __baseUrl__
+							self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+						}
 						resolve(dataToResolve); // single element (raw data)
 					}).catch(function (msg) {
 						self.$alertUi(msg);
@@ -5820,9 +5825,9 @@ Vue.directive('resize', {
 
 			$invoke(cmd, data, base) {
 				let self = this;
-                let root = window.$$rootUrl;
-                let url = root + '/_data/invoke';
-                let baseUrl = self.$indirectUrl || self.$baseUrl;
+				let root = window.$$rootUrl;
+				let url = root + '/_data/invoke';
+				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
 				return new Promise(function (resolve, reject) {
@@ -5839,55 +5844,55 @@ Vue.directive('resize', {
 				});
 			},
 
-            $asyncValid(cmd, data) {
-                const vm = this;
-                const cache = vm.__asyncCache__;
-                const djson = JSON.stringify(data);
-                let val = cache[cmd];
-                if (!val) {
-                    val = { data: '', result: null };
-                    cache[cmd] = val;
-                }
-                if (val.data === djson) {
-                    return val.result;
-                }
-                val.data = djson;
-                return new Promise(function (resolve, reject) {
-                    Vue.nextTick(() => {
-                        vm.$invoke(cmd, data).then((result) => {
-                            val.result = result.Result.Value;
-                            resolve(val.result);
-                        });
-                    });
-                });
-            },
+			$asyncValid(cmd, data) {
+				const vm = this;
+				const cache = vm.__asyncCache__;
+				const djson = JSON.stringify(data);
+				let val = cache[cmd];
+				if (!val) {
+					val = { data: '', result: null };
+					cache[cmd] = val;
+				}
+				if (val.data === djson) {
+					return val.result;
+				}
+				val.data = djson;
+				return new Promise(function (resolve, reject) {
+					Vue.nextTick(() => {
+						vm.$invoke(cmd, data).then((result) => {
+							val.result = result.Result.Value;
+							resolve(val.result);
+						});
+					});
+				});
+			},
 
-            $reload(args) {
-                //console.dir('$reload was called for' + this.$baseUrl);
-                let self = this;
-                if (utils.isArray(args)) {
-                    // reload lazy
-                    let propIx = args._path_.lastIndexOf('.');
-                    let prop = args._path_.substring(propIx + 1);
-                    args.$loaded = false; // reload
-                    return self.$loadLazy(args.$parent, prop);
-                }
-                let root = window.$$rootUrl;
+			$reload(args) {
+				//console.dir('$reload was called for' + this.$baseUrl);
+				let self = this;
+				if (utils.isArray(args)) {
+					// reload lazy
+					let propIx = args._path_.lastIndexOf('.');
+					let prop = args._path_.substring(propIx + 1);
+					args.$loaded = false; // reload
+					return self.$loadLazy(args.$parent, prop);
+				}
+				let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
-                return new Promise(function (resolve, reject) {
-                    let dataToQuery = { baseUrl: self.$baseUrl };
-                    if (utils.isDefined(dat.Query)) {
-                        // special element -> use url
-                        dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
-                        let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
-                        window.history.replaceState(null, null, newUrl);
-                    }
-                    let jsonData = utils.toJson(dataToQuery);
-                    dataservice.post(url, jsonData).then(function (data) {
-                        if (utils.isObject(data)) {
-                            dat.$merge(data);
-                            dat._fireLoad_();
+				return new Promise(function (resolve, reject) {
+					let dataToQuery = { baseUrl: self.$baseUrl };
+					if (utils.isDefined(dat.Query)) {
+						// special element -> use url
+						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
+						let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
+						window.history.replaceState(null, null, newUrl);
+					}
+					let jsonData = utils.toJson(dataToQuery);
+					dataservice.post(url, jsonData).then(function (data) {
+						if (utils.isObject(data)) {
+							dat.$merge(data);
+							dat._fireLoad_();
 							//dat.$setDirty(false);
 						} else {
 							throw new Error('Invalid response type for $reload');
@@ -5905,9 +5910,9 @@ Vue.directive('resize', {
 					eventBus.$emit('requery');
 			},
 
-            $remove(item, confirm) {
-                if (this.$data.$readOnly)
-                    return;
+			$remove(item, confirm) {
+				if (this.$data.$readOnly)
+					return;
 				if (!confirm)
 					item.$remove();
 				else
@@ -5918,80 +5923,80 @@ Vue.directive('resize', {
 				if (!utils.isArray(arr)) {
 					console.error('$removeSelected. The argument is not an array');
 				}
-                if (this.$data.$readOnly)
-                    return;
+				if (this.$data.$readOnly)
+					return;
 				let item = arr.$selected;
 				if (!item)
 					return;
 				this.$remove(item, confirm);
 			},
 
-            $href(url, data) {
-                let dataToHref = data;
-                if (utils.isObjectExact(dataToHref ))
-                    dataToHref = dataToHref.$id;
-                let retUrl = urltools.combine(url, dataToHref);
-                return retUrl;
-            },
-            $navigate(url, data, newWindow) {
-                let urlToNavigate = urltools.createUrlForNavigate(url, data);
-                if (newWindow === true) {
-                    window.open(urlToNavigate, "_blank");
-                }
-                else
-                    this.$store.commit('navigate', { url: urlToNavigate });
-            },
+			$href(url, data) {
+				let dataToHref = data;
+				if (utils.isObjectExact(dataToHref))
+					dataToHref = dataToHref.$id;
+				let retUrl = urltools.combine(url, dataToHref);
+				return retUrl;
+			},
+			$navigate(url, data, newWindow) {
+				let urlToNavigate = urltools.createUrlForNavigate(url, data);
+				if (newWindow === true) {
+					window.open(urlToNavigate, "_blank");
+				}
+				else
+					this.$store.commit('navigate', { url: urlToNavigate });
+			},
 
-            $replaceId(newId) {
-                this.$store.commit('setnewid', { id: newId });
-                // and in the __baseUrl__
-                //urlTools.replace()
-                this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
-            },
+			$replaceId(newId) {
+				this.$store.commit('setnewid', { id: newId });
+				// and in the __baseUrl__
+				//urlTools.replace()
+				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+			},
 
-            $dbRemove(elem, confirm) {
-                if (!elem)
-                    return;
-                let id = elem.$id;
-                let root = window.$$rootUrl;
-                const self = this;
-                function dbRemove() {
-                    let postUrl = root + '/_data/dbRemove';
-                    let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
-                    dataservice.post(postUrl, jsonData).then(function (data) {
-                        elem.$remove(); // without confirm
-                    }).catch(function (msg) {
-                        self.$alertUi(msg);
-                    });
-                }
-                if (confirm) {
-                    this.$confirm(confirm).then(function () {
-                        dbRemove();
-                    });
-                } else {
-                    dbRemove();
-                }
-            },
+			$dbRemove(elem, confirm) {
+				if (!elem)
+					return;
+				let id = elem.$id;
+				let root = window.$$rootUrl;
+				const self = this;
+				function dbRemove() {
+					let postUrl = root + '/_data/dbRemove';
+					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
+					dataservice.post(postUrl, jsonData).then(function (data) {
+						elem.$remove(); // without confirm
+					}).catch(function (msg) {
+						self.$alertUi(msg);
+					});
+				}
+				if (confirm) {
+					this.$confirm(confirm).then(function () {
+						dbRemove();
+					});
+				} else {
+					dbRemove();
+				}
+			},
 
-            $dbRemoveSelected(arr, confirm) {
-                let sel = arr.$selected;
-                if (!sel)
-                    return;
-                this.$dbRemove(sel, confirm);
-            },
+			$dbRemoveSelected(arr, confirm) {
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				this.$dbRemove(sel, confirm);
+			},
 
 			$openSelected(url, arr) {
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-                if (url.startsWith('{')) { // decorated. defer evaluate
+				if (url.startsWith('{')) { // decorated. defer evaluate
 					url = url.substring(1, url.length - 1);
-                    let nUrl = utils.eval(sel, url);
+					let nUrl = utils.eval(sel, url);
 					if (!nUrl)
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
 					url = nUrl;
-                }
+				}
 				this.$navigate(url, sel.$id);
 			},
 
@@ -5999,15 +6004,15 @@ Vue.directive('resize', {
 				return arr && !!arr.$selected;
 			},
 
-            $hasChecked(arr) {
-                return arr && arr.$checked && arr.$checked.length;
-            },
+			$hasChecked(arr) {
+				return arr && arr.$checked && arr.$checked.length;
+			},
 
 			$confirm(prms) {
 				if (utils.isString(prms))
-                    prms = { message: prms };
-                prms.style = 'confirm';
-                prms.message = prms.message || prms.msg; // message or msg
+					prms = { message: prms };
+				prms.style = 'confirm';
+				prms.message = prms.message || prms.msg; // message or msg
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
@@ -6028,105 +6033,105 @@ Vue.directive('resize', {
 					alert(msg.message);
 					return;
 				}
-                if (msg.indexOf('UI:') === 0)
-                    this.$alert(msg.substring(3).replace('\\n', '\n'));
+				if (msg.indexOf('UI:') === 0)
+					this.$alert(msg.substring(3).replace('\\n', '\n'));
 
 				else
 					alert(msg);
 			},
 
-            $showDialog(url, arg, query, opts) {
-                return this.$dialog('show', url, arg, query, opts);
-            },
+			$showDialog(url, arg, query, opts) {
+				return this.$dialog('show', url, arg, query, opts);
+			},
 
 
-            $dialog(command, url, arg, query, opts) {
-                if (this.$isReadOnly(opts))
-                    return;
-                function argIsNotAnArray() {
-                    if (!utils.isArray(arg)) {
-                        console.error(`$dialog.${command}. The argument is not an array`);
-                        return true;
-                    }
-                }
-                function argIsNotAnObject() {
-                    if (!utils.isObjectExact(arg)) {
-                        console.error(`$dialog.${command}. The argument is not an object`);
-                        return true;
-                    }
-                }
-                function doDialog() {
-                    // result always is raw data
-                    switch (command) {
-                        case 'append':
-                            if (argIsNotAnArray()) return;
-                            return __runDialog(url, 0, query, (result) => { arg.$append(result); });
-                        case 'browse':
-                            if (!utils.isObject(arg)) {
-                                console.error(`$dialog.${command}. The argument is not an object`);
-                                return;
-                            }
-                            return __runDialog(url, arg, query, (result) => { arg.$merge(result, true /*fire*/); });
-                        case 'edit-selected':
-                            if (argIsNotAnArray()) return;
-                            return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result, false /*fire*/); });
-                        case 'edit':
-                            if (argIsNotAnObject()) return;
-                            return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
-                        default: // simple show dialog
-                            return __runDialog(url, arg, query, () => { });
-                    }
-                }
+			$dialog(command, url, arg, query, opts) {
+				if (this.$isReadOnly(opts))
+					return;
+				function argIsNotAnArray() {
+					if (!utils.isArray(arg)) {
+						console.error(`$dialog.${command}. The argument is not an array`);
+						return true;
+					}
+				}
+				function argIsNotAnObject() {
+					if (!utils.isObjectExact(arg)) {
+						console.error(`$dialog.${command}. The argument is not an object`);
+						return true;
+					}
+				}
+				function doDialog() {
+					// result always is raw data
+					switch (command) {
+						case 'append':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, 0, query, (result) => { arg.$append(result); });
+						case 'browse':
+							if (!utils.isObject(arg)) {
+								console.error(`$dialog.${command}. The argument is not an object`);
+								return;
+							}
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result, true /*fire*/); });
+						case 'edit-selected':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result, false /*fire*/); });
+						case 'edit':
+							if (argIsNotAnObject()) return;
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
+						default: // simple show dialog
+							return __runDialog(url, arg, query, () => { });
+					}
+				}
 
-                if (opts && opts.validRequired && root.$invalid) {
-                    this.$alert('Сначала исправьте ошибки');
-                    return;
-                }
+				if (opts && opts.validRequired && root.$invalid) {
+					this.$alert('Сначала исправьте ошибки');
+					return;
+				}
 
-                if (opts && opts.saveRequired && this.$isDirty) {
-                    let dlgResult = null;
-                    this.$save().then(() => { dlgResult = doDialog(); });
-                    return dlgResult;
-                }
-                return doDialog();
-            },
+				if (opts && opts.saveRequired && this.$isDirty) {
+					let dlgResult = null;
+					this.$save().then(() => { dlgResult = doDialog(); });
+					return dlgResult;
+				}
+				return doDialog();
+			},
 
-            $report(rep, arg, opts) {
-                if (this.$isReadOnly(opts)) return;
-                doReport = () => {
-                    let id = arg;
-                    if (arg && utils.isObject(arg))
-                        id = arg.$id;
-                    const root = window.$$rootUrl;
-                    let url = root + '/report/show/' + id;
-                    let reportUrl = this.$indirectUrl || this.$baseUrl;
-                    let baseUrl = urltools.makeBaseUrl(reportUrl);
-                    url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
-                    // open in new window
-                    window.open(url, "_blank");
-                };
+			$report(rep, arg, opts) {
+				if (this.$isReadOnly(opts)) return;
+				doReport = () => {
+					let id = arg;
+					if (arg && utils.isObject(arg))
+						id = arg.$id;
+					const root = window.$$rootUrl;
+					let url = root + '/report/show/' + id;
+					let reportUrl = this.$indirectUrl || this.$baseUrl;
+					let baseUrl = urltools.makeBaseUrl(reportUrl);
+					url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
+					// open in new window
+					window.open(url, "_blank");
+				};
 
-                if (opts && opts.validRequired && root.$invalid) {
-                    this.$alert('Сначала исправьте ошибки');
-                    return;
-                }
+				if (opts && opts.validRequired && root.$invalid) {
+					this.$alert('Сначала исправьте ошибки');
+					return;
+				}
 
-                if (opts && opts.saveRequired && this.$isDirty) {
-                    this.$save().then(() => doReport());
-                } else {
-                    doReport();
-                }
-            },
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => doReport());
+				} else {
+					doReport();
+				}
+			},
 
 			$modalSaveAndClose(result, opts) {
-                if (this.$isDirty) {
-                    const root = this.$data;
-                    if (opts && opts.validRequired && root.$invalid) {
-                        this.$alert('Спочатку виправте помилки');
-                        return;
-                    }
-                    this.$save().then((result) => eventBus.$emit('modalClose', result));
-                }
+				if (this.$isDirty) {
+					const root = this.$data;
+					if (opts && opts.validRequired && root.$invalid) {
+						this.$alert('Спочатку виправте помилки');
+						return;
+					}
+					this.$save().then((result) => eventBus.$emit('modalClose', result));
+				}
 				else
 					eventBus.$emit('modalClose', result);
 			},
@@ -6135,23 +6140,23 @@ Vue.directive('resize', {
 				eventBus.$emit('modalClose', result);
 			},
 
-            $modalSelect(array) {
-                if (!('$selected' in array)) {
-                    console.error('invalid array for $modalSelect');
-                    return;
-                }
-                this.$modalClose(array.$selected);
-            },
+			$modalSelect(array) {
+				if (!('$selected' in array)) {
+					console.error('invalid array for $modalSelect');
+					return;
+				}
+				this.$modalClose(array.$selected);
+			},
 
-            $modalSelectChecked(array) {
-                if (!('$checked' in array)) {
-                    console.error('invalid array for $modalSelectChecked');
-                    return;
-                }
-                let chArray = array.$checked;
-                if (chArray.length > 0)
-                    this.$modalClose(chArray);
-            },
+			$modalSelectChecked(array) {
+				if (!('$checked' in array)) {
+					console.error('invalid array for $modalSelectChecked');
+					return;
+				}
+				let chArray = array.$checked;
+				if (chArray.length > 0)
+					this.$modalClose(chArray);
+			},
 
 			$saveAndClose() {
 				if (this.$isDirty)
@@ -6163,22 +6168,22 @@ Vue.directive('resize', {
 			$close() {
 				if (this.$saveModified())
 					this.$store.commit("close");
-            },
+			},
 
-            $showHelp(path) {
-                window.open(this.$helpHref(path), "_blank");
-            },
+			$showHelp(path) {
+				window.open(this.$helpHref(path), "_blank");
+			},
 
-            $helpHref(path) {
-                let helpUrlElem = document.querySelector('meta[name=helpUrl]');
-                if (!helpUrlElem || !helpUrlElem.content)
-                    console.error('help url is not specified');
-                return helpUrlElem.content + path;
-            },
+			$helpHref(path) {
+				let helpUrlElem = document.querySelector('meta[name=helpUrl]');
+				if (!helpUrlElem || !helpUrlElem.content)
+					console.error('help url is not specified');
+				return helpUrlElem.content + path;
+			},
 
 			$searchChange() {
 				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
-                this.$data.__baseUrl__ = newUrl;
+				this.$data.__baseUrl__ = newUrl;
 				this.$reload();
 			},
 
@@ -6214,60 +6219,61 @@ Vue.directive('resize', {
 			$format(value, dataType, format, options) {
 				if (!format && !dataType)
 					return value;
-                if (dataType)
-                    value = utils.format(value, dataType, options && options.hideZeros);
+				if (dataType)
+					value = utils.format(value, dataType, options && options.hideZeros);
 				if (format && format.indexOf('{0}') !== -1)
-                    return format.replace('{0}', value);
+					return format.replace('{0}', value);
 				return value;
-            },
-
-            $expand(elem, propName) {
-                let arr = elem[propName];
-                if (arr.$loaded)
-                    return;
-
-                let self = this,
-                    root = window.$$rootUrl,
-                    url = root + '/_data/expand',
-                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
-
-                dataservice.post(url, jsonData).then(function (data) {
-                    let srcArray = data[propName];
-                    arr.$empty();
-                    for (let el of srcArray)
-                        arr.push(arr.$new(el));
-                }).catch(function (msg) {
-                    self.$alertUi(msg);
-                 });
-
-                arr.$loaded = true;
 			},
 
-            $loadLazy(elem, propName) {
-                let self = this,
-                    root = window.$$rootUrl,
-                    url = root + '/_data/loadlazy',
-                    jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+			$expand(elem, propName) {
+				let arr = elem[propName];
+				if (arr.$loaded)
+					return;
+				if (!utils.isDefined(elem.$hasChildren))
+					return; // no $hasChildren property - static expand
+				let self = this,
+					root = window.$$rootUrl,
+					url = root + '/_data/expand',
+					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
 
-                return new Promise(function (resolve, reject) {
-                    let arr = elem[propName];
-                    if (arr.$loaded) {
-                        resolve(arr);
-                        return;
-                    }
-                    dataservice.post(url, jsonData).then(function (data) {
-                        if (propName in data) {
-                            arr.$empty();
-                            for (let el of data[propName])
-                                arr.push(arr.$new(el));
-                        }
-                        resolve(arr);
-                    }).catch(function (msg) {
-                        self.$alertUi(msg);
-                    });
-                    arr.$loaded = true;
-                });
-            },
+				dataservice.post(url, jsonData).then(function (data) {
+					let srcArray = data[propName];
+					arr.$empty();
+					for (let el of srcArray)
+						arr.push(arr.$new(el));
+				}).catch(function (msg) {
+					self.$alertUi(msg);
+				});
+
+				arr.$loaded = true;
+			},
+
+			$loadLazy(elem, propName) {
+				let self = this,
+					root = window.$$rootUrl,
+					url = root + '/_data/loadlazy',
+					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+
+				return new Promise(function (resolve, reject) {
+					let arr = elem[propName];
+					if (arr.$loaded) {
+						resolve(arr);
+						return;
+					}
+					dataservice.post(url, jsonData).then(function (data) {
+						if (propName in data) {
+							arr.$empty();
+							for (let el of data[propName])
+								arr.push(arr.$new(el));
+						}
+						resolve(arr);
+					}).catch(function (msg) {
+						self.$alertUi(msg);
+					});
+					arr.$loaded = true;
+				});
+			},
 
 			$delegate(name) {
 				const root = this.$data;
@@ -6280,68 +6286,68 @@ Vue.directive('resize', {
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
 			},
-            __queryChange(search) {
-                // preserve $baseQuery (without data from search)
-                if (!utils.isObjectExact(search)) {
-                    console.error('base.__queryChange. invalid argument type');
-                }
-                let nq = Object.assign({}, this.$baseQuery);
-                for (let p in search) {
-                    if (search[p]) {
-                        // replace from search
-                        nq[p] = search[p];
-                    }
-                    else {
-                        // undefined element, delete from query
-                        delete nq[p];
-                    }
-                }
-                this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+			__queryChange(search) {
+				// preserve $baseQuery (without data from search)
+				if (!utils.isObjectExact(search)) {
+					console.error('base.__queryChange. invalid argument type');
+				}
+				let nq = Object.assign({}, this.$baseQuery);
+				for (let p in search) {
+					if (search[p]) {
+						// replace from search
+						nq[p] = search[p];
+					}
+					else {
+						// undefined element, delete from query
+						delete nq[p];
+					}
+				}
+				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
 				this.$reload();
-            },
-            __doInit__() {
-                const root = this.$data;
-                if (!root._modelLoad_) return;
-                let caller = null;
-                if (this.$caller)
-                    caller = this.$caller.$data;
-                root._modelLoad_(caller);
-            }
+			},
+			__doInit__() {
+				const root = this.$data;
+				if (!root._modelLoad_) return;
+				let caller = null;
+				if (this.$caller)
+					caller = this.$caller.$data;
+				root._modelLoad_(caller);
+			}
 		},
 		created() {
-            let out = { caller: null };
-            eventBus.$emit('registerData', this, out);
-            this.$caller = out.caller;
+			let out = { caller: null };
+			eventBus.$emit('registerData', this, out);
+			this.$caller = out.caller;
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 
-            this.$on('localQueryChange', this.__queryChange);
-            this.__asyncCache__ = {};
-            log.time('create time:', __createStartTime, false);
-        },
-        beforeDestroy() {
-        },
-        destroyed() {
-            //console.dir('base.js has been destroyed');
-            eventBus.$emit('registerData', null);
-            eventBus.$off('beginRequest', this.__beginRequest);
-            eventBus.$off('endRequest', this.__endRequest);
-            eventBus.$off('queryChange', this.__queryChange);
-            this.$off('localQueryChange', this.__queryChange);
+			this.$on('localQueryChange', this.__queryChange);
+			this.__asyncCache__ = {};
+			log.time('create time:', __createStartTime, false);
+		},
+		beforeDestroy() {
+		},
+		destroyed() {
+			//console.dir('base.js has been destroyed');
+			eventBus.$emit('registerData', null);
+			eventBus.$off('beginRequest', this.__beginRequest);
+			eventBus.$off('endRequest', this.__endRequest);
+			eventBus.$off('queryChange', this.__queryChange);
+			this.$off('localQueryChange', this.__queryChange);
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();
-        },
-        beforeCreate() {
-            __createStartTime = performance.now();
-        },
+		},
+		beforeCreate() {
+			__createStartTime = performance.now();
+		},
 		updated() {
 			log.time('update time:', __updateStartTime, false);
 		}
-    });
-    
+	});
+
 	app.components['baseController'] = base;
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.

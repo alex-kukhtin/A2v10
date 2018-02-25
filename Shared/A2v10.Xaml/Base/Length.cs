@@ -7,147 +7,154 @@ using System.Text.RegularExpressions;
 
 namespace A2v10.Xaml
 {
-    public enum LengthType {
-        Pixel,
-        Percent
-    }
+	public enum LengthType
+	{
+		Pixel,
+		Percent
+	}
 
-    public enum GridLengthType
-    {
-        Pixel,
-        Percent,
-        Fraction
-    }
+	public enum GridLengthType
+	{
+		Pixel,
+		Percent,
+		Fraction
+	}
 
-    [TypeConverter(typeof(LengthConverter))]
-    public class Length
-    {
-        public String Value;
+	[TypeConverter(typeof(LengthConverter))]
+	public class Length
+	{
+		public String Value;
 
-        public override string ToString()
-        {
-            return Value;
-        }
+		public override string ToString()
+		{
+			return Value;
+		}
 
-        public Boolean IsEmpty => String.IsNullOrEmpty(Value);
-        public Boolean IsPixel => (Value != null) && Value.EndsWith("px");
+		public Boolean IsEmpty => String.IsNullOrEmpty(Value);
+		public Boolean IsPixel => (Value != null) && Value.EndsWith("px");
 
-        public static Length FromString(String strVal)
-        {
-            strVal = strVal.Trim();
-            Double dblVal = 0;
-            if (strVal == "Auto")
-                return new Length() { Value = "auto" };
-            else if (strVal.StartsWith("calc("))
-                return new Length() { Value = strVal };
-            else if (strVal.EndsWith("%"))
-                return new Length() { Value = strVal };
-            else if (strVal.EndsWith("px"))
-                return new Length() { Value = strVal };
-            else if (strVal.EndsWith("em"))
-                return new Length() { Value = strVal };
-            else if (strVal.EndsWith("rem"))
-                return new Length() { Value = strVal };
-            else if (Double.TryParse(strVal, out dblVal))
-                return new Length() { Value = strVal + "px" };
-            throw new XamlException($"Invalid length value '{strVal}'");
-        }
-    }
+		public static Length FromString(String strVal)
+		{
+			strVal = strVal.Trim();
+			Double dblVal = 0;
+			if (strVal == "Auto")
+				return new Length() { Value = "auto" };
+			else if (strVal.StartsWith("calc("))
+				return new Length() { Value = strVal };
+			else if (strVal.EndsWith("%"))
+				return new Length() { Value = strVal };
+			else if (strVal.EndsWith("px"))
+				return new Length() { Value = strVal };
+			else if (strVal.EndsWith("em"))
+				return new Length() { Value = strVal };
+			else if (strVal.EndsWith("rem"))
+				return new Length() { Value = strVal };
+			else if (Double.TryParse(strVal, out dblVal))
+				return new Length() { Value = strVal + "px" };
+			throw new XamlException($"Invalid length value '{strVal}'");
+		}
+	}
 
-    [TypeConverter(typeof(GridLengthConverter))]
-    public class GridLength
-    {
-        public String Value;
+	[TypeConverter(typeof(GridLengthConverter))]
+	public class GridLength
+	{
+		public String Value;
 
-        public GridLength()
-        {
+		public GridLength()
+		{
 
-        }
+		}
 
-        public GridLength(String value)
-        {
-            Value = value;
-        }
+		public GridLength(String value)
+		{
+			Value = value;
+		}
 
-        public override string ToString()
-        {
-            return Value;
-        }
+		public override string ToString()
+		{
+			return Value;
+		}
 
-        public static GridLength Fr1()
-        {
-            return new GridLength() { Value = "1fr" };
-        }
-        public static GridLength FromString(String strVal)
-        {
-            Double dblVal = 0;
-            if (strVal == "Auto")
-                return new GridLength("auto");
-            else if (strVal.StartsWith("MinMax"))
-            {
-                var re = new Regex(@"MinMax\s*\(\s*(\w+[%\*]?)\s*;\s*(\w+[%\*]?)\s*\)");
-                var match = re.Match(strVal.Trim());
-                if (match.Groups.Count != 3)
-                    throw new XamlException($"Invalid grid length value '{strVal}'");
-                GridLength gl1 = GridLength.FromString(match.Groups[1].Value);
-                GridLength gl2 = GridLength.FromString(match.Groups[2].Value);
-                return new GridLength($"minmax({gl1.ToString()},{gl2.ToString()})");
-            }
-            else if (strVal.EndsWith("%") || strVal.EndsWith("px") || strVal.EndsWith("vh") || strVal.EndsWith("vw"))
-                return new GridLength(strVal);
-            if (strVal.EndsWith("*"))
-                return new GridLength(strVal.Trim().Replace("*", "fr"));
-            else if (Double.TryParse(strVal, out dblVal))
-                return new GridLength(strVal + "px");
-            throw new XamlException($"Invalid grid length value '{strVal}'");
-        }
-    }
+		public static GridLength Fr1()
+		{
+			return new GridLength() { Value = "1fr" };
+		}
 
-    public class LengthConverter: TypeConverter
-    {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            if (sourceType == typeof(String))
-                return true;
-            else if (sourceType == typeof(Length))
-                return true;
-            return false;
-        }
+		public static GridLength FromString(String strVal)
+		{
+			Double dblVal = 0;
+			if (strVal == "Auto")
+				return new GridLength("auto");
+			else if (strVal.StartsWith("MinMax"))
+			{
+				var re = new Regex(@"MinMax\s*\(\s*(\w+[%\*]?)\s*;\s*(\w+[%\*]?)\s*\)");
+				var match = re.Match(strVal.Trim());
+				if (match.Groups.Count != 3)
+					throw new XamlException($"Invalid grid length value '{strVal}'");
+				GridLength gl1 = GridLength.FromString(match.Groups[1].Value);
+				GridLength gl2 = GridLength.FromString(match.Groups[2].Value);
+				return new GridLength($"minmax({gl1.ToString()},{gl2.ToString()})");
+			}
+			else if (strVal.EndsWith("%") ||
+					strVal.EndsWith("px") ||
+					strVal.EndsWith("vh") ||
+					strVal.EndsWith("vw") ||
+					strVal.EndsWith("em") ||
+					strVal.EndsWith("rem"))
+				return new GridLength(strVal);
+			if (strVal.EndsWith("*"))
+				return new GridLength(strVal.Trim().Replace("*", "fr"));
+			else if (Double.TryParse(strVal, out dblVal))
+				return new GridLength(strVal + "px");
+			throw new XamlException($"Invalid grid length value '{strVal}'");
+		}
+	}
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value == null)
-                return null;
-            if (value is String)
-            {
-                String strVal = value.ToString();
-                return Length.FromString(strVal);
-            }
-            throw new XamlException($"Invalid length value '{value}'");
-        }
-    }
+	public class LengthConverter : TypeConverter
+	{
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			if (sourceType == typeof(String))
+				return true;
+			else if (sourceType == typeof(Length))
+				return true;
+			return false;
+		}
 
-    public class GridLengthConverter : TypeConverter
-    {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            if (sourceType == typeof(String))
-                return true;
-            else if (sourceType == typeof(GridLength))
-                return true;
-            return false;
-        }
+		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		{
+			if (value == null)
+				return null;
+			if (value is String)
+			{
+				String strVal = value.ToString();
+				return Length.FromString(strVal);
+			}
+			throw new XamlException($"Invalid length value '{value}'");
+		}
+	}
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value == null)
-                return null;
-            if (value is String)
-            {
-                String strVal = value.ToString();
-                return GridLength.FromString(strVal);
-            }
-            throw new XamlException($"Invalid length value '{value}'");
-        }
-    }
+	public class GridLengthConverter : TypeConverter
+	{
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			if (sourceType == typeof(String))
+				return true;
+			else if (sourceType == typeof(GridLength))
+				return true;
+			return false;
+		}
+
+		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		{
+			if (value == null)
+				return null;
+			if (value is String)
+			{
+				String strVal = value.ToString();
+				return GridLength.FromString(strVal);
+			}
+			throw new XamlException($"Invalid length value '{value}'");
+		}
+	}
 }

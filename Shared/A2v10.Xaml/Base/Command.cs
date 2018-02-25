@@ -2,8 +2,8 @@
 
 namespace A2v10.Xaml
 {
-    // marker for binding
-    public class Command
-    {
-    }
+	// marker for binding
+	public class Command
+	{
+	}
 }

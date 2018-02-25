@@ -2535,6 +2535,20 @@ table.hover > tbody > tr:hover {
 table.hover > tbody > tr.active:hover {
   background-color: #ead6ea !important;
 }
+table.grid-vertical,
+table.grid-both {
+  /*
+	> tbody > tr > td:first-child, > thead > tr > td:first-child, > tfoot > tr > td:first-child {
+		border-left-width: 0;
+		border-left-style: none;
+	}
+
+	> tbody > tr > td:last-child, > thead > tr > td:last-child, > tfoot > tr > td:last-child {
+		border-right-width: 0;
+		border-right-style: none;
+	}
+	*/
+}
 table.grid-vertical > tbody > tr > td,
 table.grid-both > tbody > tr > td,
 table.grid-vertical > thead > tr > td,
@@ -2546,23 +2560,19 @@ table.grid-both > tfoot > tr > td {
   border-right-width: 1px;
   border-right-style: solid;
 }
-table.grid-vertical > tbody > tr > td:first-child,
-table.grid-both > tbody > tr > td:first-child,
-table.grid-vertical > thead > tr > td:first-child,
-table.grid-both > thead > tr > td:first-child,
-table.grid-vertical > tfoot > tr > td:first-child,
-table.grid-both > tfoot > tr > td:first-child {
-  border-left-width: 0;
-  border-left-style: none;
-}
-table.grid-vertical > tbody > tr > td:last-child,
-table.grid-both > tbody > tr > td:last-child,
-table.grid-vertical > thead > tr > td:last-child,
-table.grid-both > thead > tr > td:last-child,
-table.grid-vertical > tfoot > tr > td:last-child,
-table.grid-both > tfoot > tr > td:last-child {
-  border-right-width: 0;
-  border-right-style: none;
+table.grid-horizontal,
+table.grid-both {
+  /*
+	> tbody > tr:first-child > td, > thead > tr:first-child > td {
+		border-top-style: none;
+		border-top-width: 0;
+	}
+
+	> tbody > tr:last-child > td, > tfoot > tr:last-child > td {
+		border-bottom-style: none;
+		border-bottom-width: 0;
+	}
+	*/
 }
 table.grid-horizontal > tbody > tr > td,
 table.grid-both > tbody > tr > td,
@@ -2574,20 +2584,6 @@ table.grid-both > tfoot > tr > td {
   border-top-style: solid;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-}
-table.grid-horizontal > tbody > tr:first-child > td,
-table.grid-both > tbody > tr:first-child > td,
-table.grid-horizontal > thead > tr:first-child > td,
-table.grid-both > thead > tr:first-child > td {
-  border-top-style: none;
-  border-top-width: 0;
-}
-table.grid-horizontal > tbody > tr:last-child > td,
-table.grid-both > tbody > tr:last-child > td,
-table.grid-horizontal > tfoot > tr:last-child > td,
-table.grid-both > tfoot > tr:last-child > td {
-  border-bottom-style: none;
-  border-bottom-width: 0;
 }
 table.a2-table {
   table-layout: auto;
@@ -3729,7 +3725,7 @@ h5,
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 29px;
+  min-height: 2.1rem;
   border-bottom: 1px solid #bdc5d8;
 }
 .debug-panel .debug-body {

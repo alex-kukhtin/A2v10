@@ -10,9 +10,9 @@ namespace A2v10.Xaml
 	{
 
 		public String Path { get; set; }
-        public String Format { get; set; }
-        public DataType DataType { get; set; }
-        public Boolean HideZeros { get; set; }
+		public String Format { get; set; }
+		public DataType DataType { get; set; }
+		public Boolean HideZeros { get; set; }
 
 		public Bind()
 		{
@@ -23,47 +23,47 @@ namespace A2v10.Xaml
 			Path = path;
 		}
 
-        internal String GetPath(RenderContext context)
-        {
-            return context.GetNormalizedPath(Path);
-        }
+		internal String GetPath(RenderContext context)
+		{
+			return context.GetNormalizedPath(Path);
+		}
 
-        // for text bindings only
-        internal String GetPathFormat(RenderContext context)
-        {
-            if (Path == null)
-                return context.GetEmptyPath(); // may be scoped
-            String realPath = context.GetNormalizedPath(Path);
-            if (String.IsNullOrEmpty(Format) && DataType == DataType.String)
-                return realPath;
-            String fmt = "null";
-            String dt = "null";
-            if (!String.IsNullOrEmpty(Format))
-                fmt = $"'{Format.Replace("'", "\\'")}'";
-            if (DataType != DataType.String)
-                dt = $"'{DataType.ToString()}'";
-            String opts = "null";
-            if (HideZeros)
-                opts = "{ hideZeros: true }";
-            return $"$format({realPath}, {dt}, {context.Localize(fmt)}, {opts})";
-        }
+		// for text bindings only
+		internal String GetPathFormat(RenderContext context)
+		{
+			if (Path == null)
+				return context.GetEmptyPath(); // may be scoped
+			String realPath = context.GetNormalizedPath(Path);
+			if (String.IsNullOrEmpty(Format) && DataType == DataType.String)
+				return realPath;
+			String fmt = "null";
+			String dt = "null";
+			if (!String.IsNullOrEmpty(Format))
+				fmt = $"'{Format.Replace("'", "\\'")}'";
+			if (DataType != DataType.String)
+				dt = $"'{DataType.ToString()}'";
+			String opts = "null";
+			if (HideZeros)
+				opts = "{ hideZeros: true }";
+			return $"$format({realPath}, {dt}, {context.Localize(fmt)}, {opts})";
+		}
 
 
-        private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
+		private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
 
-        #region ISupportInitialize
-        public void BeginInit()
-        {
-        }
+		#region ISupportInitialize
+		public void BeginInit()
+		{
+		}
 
-        public void EndInit()
-        {
-            if (Path == null)
-                return;
-            var match = _selectedRegEx.Match(Path);
-            if (match.Groups.Count == 3)
-                Path = $"{match.Groups[1].Value}.Selected('{match.Groups[2].Value}')";
-        }
-        #endregion
-    }
+		public void EndInit()
+		{
+			if (Path == null)
+				return;
+			var match = _selectedRegEx.Match(Path);
+			if (match.Groups.Count == 3)
+				Path = $"{match.Groups[1].Value}.Selected('{match.Groups[2].Value}')";
+		}
+		#endregion
+	}
 }
