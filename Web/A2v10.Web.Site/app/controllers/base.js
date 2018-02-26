@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180225-7119
+// 20180226-7120
 // controllers/base.js
 
 (function () {
@@ -70,6 +70,9 @@
 			},
 			$modelInfo() {
 				return this.$data.__modelInfo;
+			},
+			$canSave() {
+				return this.$isDirty && !this.$isLoading;
 			}
 		},
 		methods: {
@@ -597,6 +600,10 @@
 							arr.$empty();
 							for (let el of data[propName])
 								arr.push(arr.$new(el));
+							let rcName = propName + '.$RowCount';
+							if (rcName in data) {
+								arr.$RowCount = data[rcName];
+							}
 						}
 						resolve(arr);
 					}).catch(function (msg) {
@@ -617,7 +624,7 @@
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
 			},
-			__queryChange(search) {
+			__queryChange(search, source) {
 				// preserve $baseQuery (without data from search)
 				if (!utils.isObjectExact(search)) {
 					console.error('base.__queryChange. invalid argument type');
@@ -634,7 +641,7 @@
 					}
 				}
 				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
-				this.$reload();
+				this.$reload(source);
 			},
 			__doInit__() {
 				const root = this.$data;

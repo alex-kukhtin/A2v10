@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180130-7100
+// 20180226-7121
 /*components/pager.js*/
 
 /*
@@ -22,104 +22,104 @@ Vue.component('a2-pager', {
 	props: {
 		source: Object
 	},
-    computed: {
-        pages() {
-            return Math.ceil(this.count / this.source.pageSize);
-        },
-        currentPage() {
-            return Math.ceil(this.offset / this.source.pageSize) + 1;
-        },
-        title() {
-            let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
-            if (!this.count)
-                return 'нет элементов';
-            return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
-        },
-        offset() {
-            return this.source.offset;
-        },
-        count() {
-            return this.source.sourceCount;
-        }
-    },
-    methods: {
-        setOffset(offset) {
-            if (this.offset === offset)
-                return;
-            this.source.$setOffset(offset);
-        },
-        isActive(page) {
-            return page === this.currentPage;
-        },
-        click(arg, $ev) {
-            $ev.preventDefault();
-            switch (arg) {
-                case 'prev':
-                    this.setOffset(this.offset - this.source.pageSize);
-                    break;
-                case 'next':
-                    this.setOffset(this.offset + this.source.pageSize);
-                    break;
-            }
-        },
-        goto(page, $ev) {
-            $ev.preventDefault();
-            let offset = (page - 1) * this.source.pageSize;
-            this.setOffset(offset);
-        }
-    },
-    render(h, ctx) {
-        let contProps = {
-            class: 'a2-pager'
-        };
-        let children = [];
-        const dotsClass = { 'class': 'a2-pager-dots' };
-        const renderBtn = (page) => {
-            return h('button', {
-                domProps: { innerText: page },
-                on: { click: ($ev) => this.goto(page, $ev) },
-                class: { active: this.isActive(page) }
-            });
-        };
-        // prev
-        children.push(h('button', {
-            on: { click: ($ev) => this.click('prev', $ev) },
-            attrs: { disabled: this.offset === 0 }
-        }, [h('i', { 'class': 'ico ico-chevron-left' })]
-        ));
-        // first
-        if (this.pages > 0)
-            children.push(renderBtn(1));
-        if (this.pages > 1)
-            children.push(renderBtn(2));
-        // middle
-        let ms = Math.max(this.currentPage - 2, 3);
-        let me = Math.min(ms + 5, this.pages - 1);
-        if (me - ms < 5)
-            ms = Math.max(me - 5, 3);
-        if (ms > 3)
-            children.push(h('span', dotsClass, '...'));
-        for (let mi = ms; mi < me; ++mi) {
-            children.push(renderBtn(mi));
-        }
-        if (me < this.pages - 1)
-            children.push(h('span', dotsClass, '...'));
-        // last
-        if (this.pages > 3)
-            children.push(renderBtn(this.pages - 1));
-        if (this.pages > 2)
-            children.push(renderBtn(this.pages));
-        // next
-        children.push(h('button', {
-            on: { click: ($ev) => this.click('next', $ev) },
-            attrs: { disabled: this.currentPage >= this.pages }
-        },
-            [h('i', { 'class': 'ico ico-chevron-right' })]
-        ));
+	computed: {
+		pages() {
+			return Math.ceil(this.count / this.source.pageSize);
+		},
+		currentPage() {
+			return Math.ceil(this.offset / this.source.pageSize) + 1;
+		},
+		title() {
+			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+			if (!this.count)
+				return 'нет элементов';
+			return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
+		},
+		offset() {
+			return this.source.offset;
+		},
+		count() {
+			return this.source.sourceCount;
+		}
+	},
+	methods: {
+		setOffset(offset) {
+			if (this.offset === offset)
+				return;
+			this.source.$setOffset(offset);
+		},
+		isActive(page) {
+			return page === this.currentPage;
+		},
+		click(arg, $ev) {
+			$ev.preventDefault();
+			switch (arg) {
+				case 'prev':
+					this.setOffset(this.offset - this.source.pageSize);
+					break;
+				case 'next':
+					this.setOffset(this.offset + this.source.pageSize);
+					break;
+			}
+		},
+		goto(page, $ev) {
+			$ev.preventDefault();
+			let offset = (page - 1) * this.source.pageSize;
+			this.setOffset(offset);
+		}
+	},
+	render(h, ctx) {
+		let contProps = {
+			class: 'a2-pager'
+		};
+		let children = [];
+		const dotsClass = { 'class': 'a2-pager-dots' };
+		const renderBtn = (page) => {
+			return h('button', {
+				domProps: { innerText: page },
+				on: { click: ($ev) => this.goto(page, $ev) },
+				class: { active: this.isActive(page) }
+			});
+		};
+		// prev
+		children.push(h('button', {
+			on: { click: ($ev) => this.click('prev', $ev) },
+			attrs: { disabled: this.offset === 0 }
+		}, [h('i', { 'class': 'ico ico-chevron-left' })]
+		));
+		// first
+		if (this.pages > 0)
+			children.push(renderBtn(1));
+		if (this.pages > 1)
+			children.push(renderBtn(2));
+		// middle
+		let ms = Math.max(this.currentPage - 2, 3);
+		let me = Math.min(ms + 5, this.pages - 1);
+		if (me - ms < 5)
+			ms = Math.max(me - 5, 3);
+		if (ms > 3)
+			children.push(h('span', dotsClass, '...'));
+		for (let mi = ms; mi < me; ++mi) {
+			children.push(renderBtn(mi));
+		}
+		if (me < this.pages - 1)
+			children.push(h('span', dotsClass, '...'));
+		// last
+		if (this.pages > 3)
+			children.push(renderBtn(this.pages - 1));
+		if (this.pages > 2)
+			children.push(renderBtn(this.pages));
+		// next
+		children.push(h('button', {
+			on: { click: ($ev) => this.click('next', $ev) },
+			attrs: { disabled: this.currentPage >= this.pages }
+		},
+			[h('i', { 'class': 'ico ico-chevron-right' })]
+		));
 
-        children.push(h('span', { class: 'a2-pager-divider' }));
-        children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
-        return h('div', contProps, children);
-    }
+		children.push(h('span', { class: 'a2-pager-divider' }));
+		children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
+		return h('div', contProps, children);
+	}
 });
 

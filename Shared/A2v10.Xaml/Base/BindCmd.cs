@@ -187,7 +187,7 @@ namespace A2v10.Xaml
 						if (!IsArgumentEmpty(context))
 							arg3 = CommandArgument(context);
 						// command, url, data
-						return $"{{cmd:$dialog, isDialog:true, arg1:'{action}', arg2:{CommandUrl(context)}, arg3: '{arg3}'}}";
+						return $"{{cmd:$dialog, isDialog:true, arg1:'{action}', arg2:{CommandUrl(context, decorate:true)}, arg3: '{arg3}'}}";
 					}
 					return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context)}, {GetOptions(context)})";
 
@@ -220,6 +220,8 @@ namespace A2v10.Xaml
 				sb.Append("validRequired: true,");
 			if (CheckReadOnly)
 				sb.Append("checkReadOnly: true,");
+			if (CheckArgument)
+				sb.Append("checkArgument: true,");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();
@@ -335,7 +337,7 @@ namespace A2v10.Xaml
 					if (context.IsDataModelIsReadOnly)
 						tag.MergeAttribute(":disabled", "true");
 					else
-						tag.MergeAttribute(":disabled", "$isPristine");
+						tag.MergeAttribute(":disabled", "!$canSave");
 					break;
 				case CommandType.Execute:
 					tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");

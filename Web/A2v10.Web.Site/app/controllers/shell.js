@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180118-7093*/
+/*20180226-7120*/
 /* controllers/shell.js */
 
 (function () {
@@ -10,8 +10,8 @@
 	const modal = component('std:modal');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
-    const log = require('std:log');
-    const utils = require('std:utils');
+	const log = require('std:log');
+	const utils = require('std:utils');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -22,35 +22,35 @@
 			let itm = menu[i];
 			if (func(itm))
 				return itm;
-            if (itm.Menu) {
-                if (parentMenu)
-                    parentMenu.Url = itm.Url;
+			if (itm.Menu) {
+				if (parentMenu)
+					parentMenu.Url = itm.Url;
 				let found = findMenu(itm.Menu, func);
 				if (found)
 					return found;
 			}
 		}
 		return null;
-    }
+	}
 
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
 		url = urlTools.combine(url);
 		let sUrl = url.split('/');
 		if (sUrl.length === 5 || sUrl.length === 4)
-            return url; // full qualified
+			return url; // full qualified
 		let routeLen = sUrl.length;
-        let seg1 = sUrl[1];
-        if (seg1 === 'app')
-            return url; // app
+		let seg1 = sUrl[1];
+		if (seg1 === 'app')
+			return url; // app
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.Url === seg1);
-        if (!am) {
-            // no segments - find first active menu
-            let parentMenu = { Url: '' };
-            am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
-            if (am) {
+		if (!am) {
+			// no segments - find first active menu
+			let parentMenu = { Url: '' };
+			am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
+			if (am) {
 				opts.title = am.Name;
 				return urlTools.combine(url, parentMenu.Url, am.Url);
 			}
@@ -98,25 +98,25 @@
 			itemHref: (item) => '/' + item.Url,
 			navigate(item) {
 				if (this.isActive(item))
-                    return;
-                let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
-                let savedUrl = localStorage.getItem(storageKey) || '';
-                if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
-                    // saved segment not found in current menu
-                    savedUrl = '';
-                }
+					return;
+				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
+				let savedUrl = localStorage.getItem(storageKey) || '';
+				if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+					// saved segment not found in current menu
+					savedUrl = '';
+				}
 				let opts = { title: null, seg2: savedUrl };
-                let url = makeMenuUrl(this.menu, item.Url, opts);
-				this.$store.commit('navigate', { url: url, title:  opts.title});
+				let url = makeMenuUrl(this.menu, item.Url, opts);
+				this.$store.commit('navigate', { url: url, title: opts.title });
 			}
 		}
 	};
 
 
 	const a2SideBar = {
-        // TODO: 
-        // 1. разные варианты меню
-        // 2. folderSelect как функция 
+		// TODO: 
+		// 1. разные варианты меню
+		// 2. folderSelect как функция 
 		template: `
 <div :class="cssClass">
     <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
@@ -166,10 +166,10 @@
 		methods: {
 			isActive(item) {
 				return this.seg1 === item.Url;
-            },
-            folderSelect(item) {
-                return !!item.Url;
-            },
+			},
+			folderSelect(item) {
+				return !!item.Url;
+			},
 			navigate(item) {
 				if (this.isActive(item))
 					return;
@@ -177,8 +177,14 @@
 				if (top) {
 					let url = urlTools.combine(top.Url, item.Url);
 					if (item.Url.indexOf('/') === -1) {
-                        // save only simple path
-                        localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
+						// save only simple path
+						try {
+							// avoid EDGE error QuotaExceeded
+							localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
+						}
+						catch (e) {
+							// do nothing
+						}
 					}
 					this.$store.commit('navigate', { url: url, title: item.Name });
 				}
@@ -192,7 +198,7 @@
 				}
 				return undefined;
 			},
-            toggle() {
+			toggle() {
 				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
 			}
 		}
@@ -214,7 +220,7 @@
 		computed: {
 			currentView() {
 				// TODO: compact
-                let root = window.$$rootUrl;
+				let root = window.$$rootUrl;
 				let url = store.getters.url;
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
@@ -241,7 +247,7 @@
 				// just trigger
 				me.needReload = true;
 				Vue.nextTick(() => me.needReload = false);
-            });
+			});
 		}
 	};
 
@@ -262,8 +268,8 @@
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
-            'a2-content-view': contentView,
-            'a2-modal': modal
+			'a2-content-view': contentView,
+			'a2-modal': modal
 		},
 		props: {
 			menu: Array
@@ -291,26 +297,26 @@
 				return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
 			},
 			pendingRequest() { return this.requestsCount > 0; },
-            hasModals() { return this.modals.length > 0; }
+			hasModals() { return this.modals.length > 0; }
 		},
-        created() {
-            if (!this.menu) {
-                alert('access denied');
-                //window.location.assign('/account/login');
-                return;
-            }
-            let opts = { title: null };
-            let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
+		created() {
+			if (!this.menu) {
+				alert('access denied');
+				//window.location.assign('/account/login');
+				return;
+			}
+			let opts = { title: null };
+			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
-            this.$store.commit('setstate', { url: newUrl, title: opts.title });
+			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
-            let firstUrl = {
-                url: '',
-                title: '',
-            }
-            firstUrl.url = makeMenuUrl(this.menu, '/', opts);
-            firstUrl.title = opts.title;
-            urlTools.firstUrl = firstUrl;
+			let firstUrl = {
+				url: '',
+				title: '',
+			}
+			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+			firstUrl.title = opts.title;
+			urlTools.firstUrl = firstUrl;
 
 			let me = this;
 
@@ -325,9 +331,9 @@
 				me.requestsCount -= 1;
 			});
 
-            eventBus.$on('modal', function (modal, prms) {
-                let id = utils.getStringId(prms ? prms.data : null);
-                let root = window.$$rootUrl;
+			eventBus.$on('modal', function (modal, prms) {
+				let id = utils.getStringId(prms ? prms.data : null);
+				let root = window.$$rootUrl;
 				let url = urlTools.combine(root, '/_dialog', modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
@@ -344,15 +350,15 @@
 					dlg.resolve(result);
 			});
 
-            eventBus.$on('modalCloseAll', function () {
-                while (me.modals.length) {
-                    let dlg = me.modals.pop();
-                    dlg.resolve(false);
-                }
-            });
+			eventBus.$on('modalCloseAll', function () {
+				while (me.modals.length) {
+					let dlg = me.modals.pop();
+					dlg.resolve(false);
+				}
+			});
 
 			eventBus.$on('confirm', function (prms) {
-                let dlg = prms.data;
+				let dlg = prms.data;
 				dlg.promise = new Promise(function (resolve) {
 					dlg.resolve = resolve;
 				});
@@ -363,17 +369,17 @@
 		}
 	};
 
-    const shell = Vue.extend({
-        components: {
-            'a2-main-view': a2MainView
+	const shell = Vue.extend({
+		components: {
+			'a2-main-view': a2MainView
 		},
 		store,
 		data() {
 			return {
-                requestsCount: 0,
-                debugShowTrace: false,
-                debugShowModel: false,
-                dataCounter: 0
+				requestsCount: 0,
+				debugShowTrace: false,
+				debugShowModel: false,
+				dataCounter: 0
 			};
 		},
 		computed: {
@@ -382,65 +388,65 @@
 				get() { return log.traceEnabled(); },
 				set(value) { log.enableTrace(value); }
 			},
-	        modelStack() {
-                return this.__dataStack__;
-            }
-    	},
-        methods: {
-            about() {
+			modelStack() {
+				return this.__dataStack__;
+			}
+		},
+		methods: {
+			about() {
 				this.$store.commit('navigate', { url: '/app/about' });
-            },
+			},
 			root() {
-                let opts = { title: null };
-                let currentUrl = this.$store.getters.url;
-                let menuUrl = makeMenuUrl(this.menu, '/', opts);
-                if (currentUrl === menuUrl) {
-                    return; // already in root
-                }
+				let opts = { title: null };
+				let currentUrl = this.$store.getters.url;
+				let menuUrl = makeMenuUrl(this.menu, '/', opts);
+				if (currentUrl === menuUrl) {
+					return; // already in root
+				}
 				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
 			},
 			debugOptions() {
 				alert('debug options');
 			},
 			debugTrace() {
-                this.debugShowModel = false;
+				this.debugShowModel = false;
 
-                this.debugShowTrace = !this.debugShowTrace;
+				this.debugShowTrace = !this.debugShowTrace;
 			},
-            debugModel() {
-                this.debugShowTrace = false;
-                this.debugShowModel = !this.debugShowModel;
-            },
-            debugClose() {
-                this.debugShowModel = false;
-                this.debugShowTrace = false;
-            },
+			debugModel() {
+				this.debugShowTrace = false;
+				this.debugShowModel = !this.debugShowModel;
+			},
+			debugClose() {
+				this.debugShowModel = false;
+				this.debugShowTrace = false;
+			},
 			profile() {
 				alert('user profile');
 			},
 			changeUser() {
 				alert('change user');
-            },
-            changePassword() {
-                alert('change password');
-                const dlgData = {
-                    promise: null, data: { Id: -1 }
-                };
-                eventBus.$emit('modal', '/app/changePassword', dlgData);
-                dlgData.promise.then(function (result) {
-                    if (result === false)
-                        return;
-                    //alert(result);
-                    //console.dir(result);
-                });
-            }
+			},
+			changePassword() {
+				alert('change password');
+				const dlgData = {
+					promise: null, data: { Id: -1 }
+				};
+				eventBus.$emit('modal', '/app/changePassword', dlgData);
+				dlgData.promise.then(function (result) {
+					if (result === false)
+						return;
+					//alert(result);
+					//console.dir(result);
+				});
+			}
 		},
 		created() {
 			let me = this;
 
 			me.__dataStack__ = [];
-	
-            window.addEventListener('popstate', function (event, a, b) {
+
+			window.addEventListener('popstate', function (event, a, b) {
 				eventBus.$emit('modalCloseAll');
 				if (me.__dataStack__.length > 0) {
 					let comp = me.__dataStack__[0];
@@ -456,15 +462,15 @@
 				me.$store.commit('popstate');
 			});
 
-            eventBus.$on('registerData', function (component, out) {
-                me.dataCounter += 1;
-                if (component) {
-                    if (me.__dataStack__.length > 0)
-                        out.caller = me.__dataStack__[0];
-                    me.__dataStack__.unshift(component);
-                } else {
-                    me.__dataStack__.shift(component);
-                }
+			eventBus.$on('registerData', function (component, out) {
+				me.dataCounter += 1;
+				if (component) {
+					if (me.__dataStack__.length > 0)
+						out.caller = me.__dataStack__[0];
+					me.__dataStack__.unshift(component);
+				} else {
+					me.__dataStack__.shift(component);
+				}
 			});
 
 
@@ -475,7 +481,7 @@
 
 			eventBus.$on('closeAllPopups', popup.closeAll);
 		}
-    });
+	});
 
-    app.components['std:shellController'] = shell;
+	app.components['std:shellController'] = shell;
 })();

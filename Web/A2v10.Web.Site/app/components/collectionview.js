@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7110
+// 20180226-7120
 // components/collectionview.js
 
 /*
@@ -11,7 +11,7 @@ TODO:
 (function () {
 
 
-    const log = require('std:log');
+	const log = require('std:log');
 
 	Vue.component('collection-view', {
 		store: component('std:store'),
@@ -52,7 +52,7 @@ TODO:
 					if (this.isServer)
 						this.filterChanged();
 				},
-				deep:true
+				deep: true
 			}
 		},
 		computed: {
@@ -80,9 +80,9 @@ TODO:
 			},
 			pagedSource() {
 				if (this.isServer)
-                    return this.ItemsSource;
-                if (!this.ItemsSource)
-                    return null;
+					return this.ItemsSource;
+				if (!this.ItemsSource)
+					return null;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
 
@@ -103,21 +103,22 @@ TODO:
 				}
 				// HACK!
 				this.filteredCount = arr.length;
-                // pager
-                if (this.pageSize > 0)
-				    arr = arr.slice(this.offset, this.offset + this.pageSize);
-                arr.$origin = this.ItemsSource;
-                if (arr.indexOf(arr.$origin.$selected) == -1) {
-                    // not found in target array
-                    arr.$origin.$clearSelected();
-                }
+				// pager
+				if (this.pageSize > 0)
+					arr = arr.slice(this.offset, this.offset + this.pageSize);
+				arr.$origin = this.ItemsSource;
+				if (arr.indexOf(arr.$origin.$selected) == -1) {
+					// not found in target array
+					arr.$origin.$clearSelected();
+				}
 				log.time('get paged source:', s);
 				return arr;
 			},
 			sourceCount() {
-                if (this.isServer) {
-                    return this.ItemsSource.$RowCount;
-                }
+				if (this.isServer) {
+					if (!this.ItemsSource) return 0;
+					return this.ItemsSource.$RowCount || 0;
+				}
 				return this.ItemsSource.length;
 			},
 			thisPager() {
@@ -131,35 +132,35 @@ TODO:
 			}
 		},
 		methods: {
-            $setOffset(offset) {
-                if (this.runAt === 'server') {
-                    this.localQuery.offset = offset;
-                    // for this BaseController only
-                    if (!this.localQuery.order) this.localQuery.dir = undefined;
-                    this.$root.$emit('localQueryChange', this.localQuery);
-                } else if (this.runAt === 'serverurl') {
-                    this.$store.commit('setquery', { offset: offset });
-                } else {
-                    this.localQuery.offset = offset;
-                }
-            },
+			$setOffset(offset) {
+				if (this.runAt === 'server') {
+					this.localQuery.offset = offset;
+					// for this BaseController only
+					if (!this.localQuery.order) this.localQuery.dir = undefined;
+					this.$root.$emit('localQueryChange', this.localQuery, this.ItemsSource);
+				} else if (this.runAt === 'serverurl') {
+					this.$store.commit('setquery', { offset: offset });
+				} else {
+					this.localQuery.offset = offset;
+				}
+			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
-            doSort(order) {
-                let nq = this.makeNewQuery();
+			doSort(order) {
+				let nq = this.makeNewQuery();
 				if (nq.order === order)
 					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
 				else {
 					nq.order = order;
 					nq.dir = 'asc';
-                }
-                if (!nq.order)
-                    nq.dir = null;
-                if (this.runAt === 'server') {
-                    this.copyQueryToLocal(nq);
+				}
+				if (!nq.order)
+					nq.dir = null;
+				if (this.runAt === 'server') {
+					this.copyQueryToLocal(nq);
 					// for this BaseController only
-					this.$root.$emit('localQueryChange', nq);
+					this.$root.$emit('localQueryChange', nq, this.ItemsSource);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);
@@ -168,38 +169,38 @@ TODO:
 					this.localQuery.dir = nq.dir;
 					this.localQuery.order = nq.order;
 				}
-            },
-            makeNewQuery() {
-                let nq = { dir: this.dir, order: this.order, offset: this.offset };
-                for (let x in this.filter) {
-                    let fVal = this.filter[x];
-                    if (fVal)
-                        nq[x] = fVal;
-                    else {
-                        nq[x] = undefined;
-                    }
-                }
-                return nq;
-            },
-            copyQueryToLocal(q) {
-                for (let x in q) {
-                    let fVal = q[x];
-                    if (x === 'offset')
-                        this.localQuery[x] = q[x];
-                    else
-                        this.localQuery[x] = fVal ? fVal : undefined;
-                }
-            },
+			},
+			makeNewQuery() {
+				let nq = { dir: this.dir, order: this.order, offset: this.offset };
+				for (let x in this.filter) {
+					let fVal = this.filter[x];
+					if (fVal)
+						nq[x] = fVal;
+					else {
+						nq[x] = undefined;
+					}
+				}
+				return nq;
+			},
+			copyQueryToLocal(q) {
+				for (let x in q) {
+					let fVal = q[x];
+					if (x === 'offset')
+						this.localQuery[x] = q[x];
+					else
+						this.localQuery[x] = fVal ? fVal : undefined;
+				}
+			},
 			filterChanged() {
-                // for server only
-                let nq = this.makeNewQuery();
-                nq.offset = 0;
-                if (!nq.order) nq.dir = undefined;
+				// for server only
+				let nq = this.makeNewQuery();
+				nq.offset = 0;
+				if (!nq.order) nq.dir = undefined;
 				if (this.runAt === 'server') {
-                    // for this BaseController only
-                    this.copyQueryToLocal(nq);
-                    // console.dir(this.localQuery);
-					this.$root.$emit('localQueryChange', nq);
+					// for this BaseController only
+					this.copyQueryToLocal(nq);
+					// console.dir(this.localQuery);
+					this.$root.$emit('localQueryChange', nq, this.ItemsSource);
 				}
 				else if (this.runAt === 'serverurl') {
 					this.$store.commit('setquery', nq);
