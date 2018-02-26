@@ -1,73 +1,74 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A2:Web" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="rootUrl" content="$(RootUrl)" />
-    <meta name="google" content="notranslate" />
-    <title></title>
-    <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A2:Web" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="rootUrl" content="$(RootUrl)" />
+	<meta name="google" content="notranslate" />
+	<title></title>
+	<link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-    <div id="shell" class="shell shell-admin">
-        <header class="header">
-            <div class="h-block">
-                <a class="app-title" href='/' @click.prevent="root" tabindex="-1"><i class="ico ico-dashboard-outline"></i><span v-text="title"></span></a>
-                <span class="app-subtitle" v-text="subtitle"></span>
-            </div>
-            <div class="aligner"></div>
-            <a class="nav-admin" href="/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
-            <div class="dropdown dir-down" v-dropdown>
-                <button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
-                <div class="dropdown-menu menu down-right">
-                    <a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                    <a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> Сменить пароль</a>
-                    <div class="divider"></div>
-                    <form id="logoutForm" method="post" action="/account/logoff">
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item" tabindex="-1"><i class="ico ico-exit"></i> @[Quit]</a>
-                    </form>
-                </div>
-            </div>
-        </header>
-        <a2-main-view :menu="menu"></a2-main-view>
-        <a2-debug :model-stack="modelStack" :model-visible="debugShowModel"
-                  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
-        <footer class="footer">
-            <div :class="{spinner: true, active:processing}"></div>
+	<div id="shell" class="shell shell-admin">
+		<header class="header">
+			<div class="h-block">
+				<a class="app-title" href='/' @click.prevent="root" tabindex="-1"><i class="ico ico-dashboard-outline"></i><span v-text="title"></span></a>
+				<span class="app-subtitle" v-text="subtitle"></span>
+			</div>
+			<div class="aligner"></div>
+			<a class="nav-admin" href="/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
+			<div class="dropdown dir-down" v-dropdown>
+				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
+				<div class="dropdown-menu menu down-right">
+					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
+					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> Сменить пароль</a>
+					<div class="divider"></div>
+					<form id="logoutForm" method="post" action="/account/logoff">
+						<a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item" tabindex="-1"><i class="ico ico-exit"></i> @[Quit]</a>
+					</form>
+				</div>
+			</div>
+		</header>
+		<a2-main-view :menu="menu"></a2-main-view>
+		<a2-debug :model-stack="modelStack" :model-visible="debugShowModel"
+				  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
+		<footer class="footer">
+			<div :class="{spinner: true, active:processing}"></div>
 
-            <span class="divider"></span>
+			<span class="divider"></span>
 
-            <a href="/app/about" @click.prevent="about" tabindex="-1">@[About]</a>
+			<a href="/app/about" @click.prevent="about" tabindex="-1">@[About]</a>
 
 
-            <span class="divider"></span>
+			<span class="divider"></span>
 
-            @[Version]&nbsp;
-            <span v-text="version"></span>
-            <div class="debug-btn dropdown dir-up" v-dropdown>
-                <button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
-                <div class="dropdown-menu menu up-right">
-                    <a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> Модель данных</a>
-                    <a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> Профилирование</a>
-                    <div class="divider"></div>
-                    <!--
-                <a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
-                -->
-                    <label class="checkbox">
-                        <input type="checkbox" v-model="traceEnabled" />
-                        <span>Трассировка</span>
-                    </label>
-                </div>
-            </div>
-        </footer>
-    </div>
-    <script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
-    <script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
-    <script type="text/javascript" src="/shell/scriptadmin"></script>
+			@[Version]&nbsp;
+			<span v-text="version"></span>
+			<div class="debug-btn dropdown dir-up" v-dropdown>
+				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
+				<div class="dropdown-menu menu up-right">
+					<a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> @[DataModel]</a>
+					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
+					<div class="divider"></div>
+					<!--
+					<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
+					-->
+					<label class="checkbox">
+						<input type="checkbox" v-model="traceEnabled" />
+						<span>@[Tracing]</span>
+					</label>
+				</div>
+			</div>
+		</footer>
+	</div>
+	<script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/shell/scriptadmin"></script>
 </body>
 </html>

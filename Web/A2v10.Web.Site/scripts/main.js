@@ -1,22 +1,22 @@
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180226-7120
 // app.js
 
-"use script";
+"use strict";
 
 (function () {
 
 	window.app = {
-        modules: {},
-        components: {}
-    };
+		modules: {},
+		components: {}
+	};
 
-    window.require = require;
-    window.component = component;
+	window.require = require;
+	window.component = component;
 
-    let rootElem = document.querySelector('meta[name=rootUrl]');
-    window.$$rootUrl = rootElem ? rootElem.content || '' : '';
+	let rootElem = document.querySelector('meta[name=rootUrl]');
+	window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
 	function require(module) {
 		if (module in app.modules) {
@@ -27,14 +27,14 @@
 			}
 			return am;
 		}
-        throw new Error('module "' + module + '" not found');
-    }
+		throw new Error('module "' + module + '" not found');
+	}
 
-    function component(name) {
-        if (name in app.components)
-            return app.components[name];
-        throw new Error('component "' + name + '" not found');
-    }
+	function component(name) {
+		if (name in app.components)
+			return app.components[name];
+		throw new Error('component "' + name + '" not found');
+	}
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -60,22 +60,22 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180226-7120
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
-    const dateLocale = 'uk-UA';
-    const _2digit = '2-digit';
+	const dateLocale = 'uk-UA';
+	const _2digit = '2-digit';
 
-    const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
-    const dateOptsTime = { timeZone: 'UTC', hour: _2digit, minute: _2digit };
+	const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
+	const dateOptsTime = { timeZone: 'UTC', hour: _2digit, minute: _2digit };
 
-    const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
-    const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
+	const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
+	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
-    const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, useGrouping: true }).format;
-    const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, useGrouping: true }).format;
+	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, useGrouping: true }).format;
+	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, useGrouping: true }).format;
 
 	return {
 		isArray: Array.isArray,
@@ -85,34 +85,34 @@ app.modules['std:utils'] = function () {
 		isObjectExact: isObjectExact,
 		isDate: isDate,
 		isString: isString,
-        isNumber: isNumber,
-        isBoolean: isBoolean,
-        toString: toString,
-        defaultValue: defaultValue,
+		isNumber: isNumber,
+		isBoolean: isBoolean,
+		toString: toString,
+		defaultValue: defaultValue,
 		notBlank: notBlank,
 		toJson: toJson,
-        isPrimitiveCtor: isPrimitiveCtor,
-        isDateCtor: isDateCtor,
-        isEmptyObject: isEmptyObject,
-        defineProperty: defProperty,
-		eval: eval,
-        format: format,
-        toNumber: toNumber,
-        parse: parse,
-        getStringId: getStringId,
+		isPrimitiveCtor: isPrimitiveCtor,
+		isDateCtor: isDateCtor,
+		isEmptyObject: isEmptyObject,
+		defineProperty: defProperty,
+		eval: evaluate,
+		format: format,
+		toNumber: toNumber,
+		parse: parse,
+		getStringId: getStringId,
 		date: {
 			today: dateToday,
 			zero: dateZero,
 			parse: dateParse,
 			equal: dateEqual,
-            isZero: dateIsZero,
-            formatDate: formatDate
-        },
-        text: {
-            contains: textContains,
-            containsText: textContainsText
-        },
-        debounce: debounce
+			isZero: dateIsZero,
+			formatDate: formatDate
+		},
+		text: {
+			contains: textContains,
+			containsText: textContainsText
+		},
+		debounce: debounce
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -120,17 +120,17 @@ app.modules['std:utils'] = function () {
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
 	function isString(value) { return typeof value === 'string'; }
-    function isNumber(value) { return typeof value === 'number'; }
-    function isBoolean(value) { return typeof value === 'boolean'; }
+	function isNumber(value) { return typeof value === 'number'; }
+	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
-    }
+	}
 
-    function isDateCtor(ctor) {
-        return ctor === Date;
-    }
+	function isDateCtor(ctor) {
+		return ctor === Date;
+	}
 
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -146,11 +146,11 @@ app.modules['std:utils'] = function () {
 				return val !== '';
 			case 'date':
 				return false;
-            case 'object':
-                if ('$id' in val) {
-                    return !!val.$id;
-                }
-                break;
+			case 'object':
+				if ('$id' in val) {
+					return !!val.$id;
+				}
+				break;
 		}
 		return (val || '') !== '';
 	}
@@ -169,22 +169,22 @@ app.modules['std:utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return obj + '';
-    }
+	}
 
-    function defaultValue(type) {
-        switch (type) {
-            case Number: return 0;
-            case String: return '';
-            case Boolean: return false;
-            case Date: return dateZero();
-            default:
-                throw new Error(`There is no default value for type ${type}`);
-        }
-    }
+	function defaultValue(type) {
+		switch (type) {
+			case Number: return 0;
+			case String: return '';
+			case Boolean: return false;
+			case Date: return dateZero();
+			default:
+				throw new Error(`There is no default value for type ${type}`);
+		}
+	}
 
-    function eval(obj, path, dataType, hideZeros) {
-        if (!path)
-            return '';
+	function evaluate(obj, path, dataType, hideZeros) {
+		if (!path)
+			return '';
 		let ps = (path || '').split('.');
 		let r = obj;
 		for (let i = 0; i < ps.length; i++) {
@@ -193,37 +193,37 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
 			r = r[ps[i]];
 		}
-        if (isDate(r))
-            return format(r, dataType, hideZeros);
+		if (isDate(r))
+			return format(r, dataType, hideZeros);
 		else if (isObject(r))
 			return toJson(r);
 		else if (format)
 			return format(r, dataType, hideZeros);
 		return r;
-    }
+	}
 
-    function pad2(num) {
-        if (num < 10)
-            return '0' + num;
-        return '' + num;
-    }
+	function pad2(num) {
+		if (num < 10)
+			return '0' + num;
+		return '' + num;
+	}
 
-    function parse(obj, dataType) {
-        switch (dataType) {
-            case 'Currency':
-            case 'Number':
-                return toNumber(obj);
-            case 'Date':
-                return dateParse(obj);
-        }
-        return obj;
-    }
+	function parse(obj, dataType) {
+		switch (dataType) {
+			case 'Currency':
+			case 'Number':
+				return toNumber(obj);
+			case 'Date':
+				return dateParse(obj);
+		}
+		return obj;
+	}
 
 	function format(obj, dataType, hideZeros) {
 		if (!dataType)
-            return obj;
-        if (!isDefined(obj))
-            return '';
+			return obj;
+		if (!isDefined(obj))
+			return '';
 		switch (dataType) {
 			case "DateTime":
 				if (!isDate(obj)) {
@@ -231,64 +231,64 @@ app.modules['std:utils'] = function () {
 					return obj;
 				}
 				if (dateIsZero(obj))
-                    return '';
-                return formatDate(obj) + ' ' + formatTime(obj);
+					return '';
+				return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
 				}
 				if (dateIsZero(obj))
-                    return '';
-                return formatDate(obj);
-            case "DateUrl":
-                if (dateIsZero(obj))
-                    return '';
-                return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
-            case "Time":
-                if (!isDate(obj)) {
-                    console.error(`Invalid Date for utils.format (${obj})`);
-                    return obj;
-                }
-                if (dateIsZero(obj))
-                    return '';
-                return formatTime(obj);
-            case "Currency":
-                if (!isNumber(obj)) {
-                    console.error(`Invalid Currency for utils.format (${obj})`);
-                    return obj;
-                }
-                if (hideZeros && obj === 0)
-                    return '';
-                return currencyFormat(obj);
-            case "Number":
-                if (!isNumber(obj)) {
-                    console.error(`Invalid Number for utils.format (${obj})`);
-                    return obj;
-                }
-                if (hideZeros && obj === 0)
-                    return '';
-                return numberFormat(obj);
+					return '';
+				return formatDate(obj);
+			case "DateUrl":
+				if (dateIsZero(obj))
+					return '';
+				return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
+			case "Time":
+				if (!isDate(obj)) {
+					console.error(`Invalid Date for utils.format (${obj})`);
+					return obj;
+				}
+				if (dateIsZero(obj))
+					return '';
+				return formatTime(obj);
+			case "Currency":
+				if (!isNumber(obj)) {
+					console.error(`Invalid Currency for utils.format (${obj})`);
+					return obj;
+				}
+				if (hideZeros && obj === 0)
+					return '';
+				return currencyFormat(obj);
+			case "Number":
+				if (!isNumber(obj)) {
+					console.error(`Invalid Number for utils.format (${obj})`);
+					return obj;
+				}
+				if (hideZeros && obj === 0)
+					return '';
+				return numberFormat(obj);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
-    }
+	}
 
-    function getStringId(obj) {
-        if (!obj)
-            return '0';
-        if (isNumber(obj))
-            return obj;
-        else if (isObjectExact(obj))
-            return obj.$id || 0;
-        return '0';
-    }
+	function getStringId(obj) {
+		if (!obj)
+			return '0';
+		if (isNumber(obj))
+			return obj;
+		else if (isObjectExact(obj))
+			return obj.$id || 0;
+		return '0';
+	}
 
-    function toNumber(val) {
-        if (isString(val))
-            val = val.replace(/\s/g, '').replace(',', '.');
-        return isFinite(val) ? +val : 0;
+	function toNumber(val) {
+		if (isString(val))
+			val = val.replace(/\s/g, '').replace(',', '.');
+		return isFinite(val) ? +val : 0;
 	}
 
 	function dateToday() {
@@ -329,44 +329,44 @@ app.modules['std:utils'] = function () {
 
 	function dateIsZero(d1) {
 		return dateEqual(d1, dateZero());
-    }
+	}
 
-    function textContains(text, probe) {
-        if (!probe)
-            return true;
-        if (!text)
-            return false;
-        return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
-    }
+	function textContains(text, probe) {
+		if (!probe)
+			return true;
+		if (!text)
+			return false;
+		return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
+	}
 
-    function textContainsText(obj, props, probe) {
-        if (!probe) return true;
-        if (!obj)
-            return false;
-        for (v of props.split(',')) {
-            if (textContains(obj[v], probe))
-                return true;
-        }
-        return false;
-    }
+	function textContainsText(obj, props, probe) {
+		if (!probe) return true;
+		if (!obj)
+			return false;
+		for (v of props.split(',')) {
+			if (textContains(obj[v], probe))
+				return true;
+		}
+		return false;
+	}
 
-    function defProperty(trg, prop, get, set /*todo!*/) {
-        Object.defineProperty(trg, prop, {
-            enumerable: true,
-            configurable: true, /* needed */
-            get: get
-        });
-    }
+	function defProperty(trg, prop, get, set /*todo!*/) {
+		Object.defineProperty(trg, prop, {
+			enumerable: true,
+			configurable: true, /* needed */
+			get: get
+		});
+	}
 
-    function debounce(fn, timeout) {
-        let timerId = null;
-        return function () {
-            clearTimeout(timerId);
-            timerId = setTimeout(() => {
-                fn.call()
-            }, timeout);
-        }
-    }
+	function debounce(fn, timeout) {
+		let timerId = null;
+		return function () {
+			clearTimeout(timerId);
+			timerId = setTimeout(() => {
+				fn.call()
+			}, timeout);
+		}
+	}
 
 };
 
@@ -3126,7 +3126,7 @@ Vue.component('validator-control', {
                 }
             };
 
-			function normalizeArg(arg, eval) {
+			function normalizeArg(arg, doEval) {
 				arg = arg || '';
                 if (arg === 'this')
                     arg = row;
@@ -3135,7 +3135,7 @@ Vue.component('validator-control', {
                     if (!(arg in row))
                         throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
                     arg = row[arg];
-                } else if (arg && eval) {
+				} else if (arg && doEval) {
                     console.error(col.hideZeros);
                     arg = utils.eval(row, arg, col.dataType, col.hideZeros);
                 }
@@ -3840,12 +3840,17 @@ Vue.component('popover', {
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
+				this.open = !this.open;
 				if (this.options.isDynamic) {
-					this.open = !this.open;
 					this.expand(this.item, this.options.subitems);
-				} else {
-					this.open = !this.open;
 				}
+			},
+			openElem() {
+				if (!this.isFolder)
+					return;
+				this.open = true;
+				if (this.isDynamic)
+					this.expand(this.item, this.options.subitems);
 			}
 		},
 		computed: {
@@ -3948,6 +3953,11 @@ Vue.component('popover', {
 				return this.autoSelect === 'first-item';
 			}
 		},
+		watch: {
+			items: function () {
+				this.doExpandFirst();
+			}
+		},
 		methods: {
 			selectFirstItem() {
 				if (!this.isSelectFirstItem)
@@ -3958,17 +3968,24 @@ Vue.component('popover', {
 				let fe = itms[0];
 				if (fe.$select)
 					fe.$select(this.items);
+			},
+			doExpandFirst() {
+				if (!this.expandFirstItem)
+					return;
+				this.$nextTick(() => {
+					if (!this.$children)
+						return;
+					this.$children.forEach((val) => {
+						if (val && val.openElem) {
+							val.openElem();
+						}
+					});
+				});
 			}
 		},
 		created() {
 			this.selectFirstItem();
-			if (this.expandFirstItem) {
-				this.$nextTick(() => {
-					if (this.$children && this.$children[0] && this.$children[0].toggle) {
-						this.$children[0].toggle();
-					}
-				});
-			}
+			this.doExpandFirst();
 		},
 		updated() {
 			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
@@ -4567,14 +4584,10 @@ TODO:
 
 (function () {
 
-    const eventBus = require('std:eventBus');
+	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
 
-/**
-TODO:
-    6. Drag It
-*/
-
-    const modalTemplate = `
+	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress">
     <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
     <div v-else class="modal-body">
@@ -4597,165 +4610,165 @@ TODO:
 			// alert(binding.value.cssClass);
 			let mw = el.closest('.modal-window');
 			if (mw) {
-                if (binding.value.width)
-				    mw.style.width = binding.value.width;
-                if (binding.value.cssClass)
-                    mw.classList.add(binding.value.cssClass);
-            }
+				if (binding.value.width)
+					mw.style.width = binding.value.width;
+				if (binding.value.cssClass)
+					mw.classList.add(binding.value.cssClass);
+			}
 			//alert(el.closest('.modal-window'));
 		}
 	};
 
-    const dragDialogDirective = {
-        inserted(el, binding) {
+	const dragDialogDirective = {
+		inserted(el, binding) {
 
-            const mw = el.closest('.modal-window');
-            if (!mw)
-                return;
-            const opts = {
-                down: false,
-                init: {x: 0, y: 0, cx : 0, cy : 0 },
-                offset: {x: 0, y: 0 }
-            };
+			const mw = el.closest('.modal-window');
+			if (!mw)
+				return;
+			const opts = {
+				down: false,
+				init: { x: 0, y: 0, cx: 0, cy: 0 },
+				offset: { x: 0, y: 0 }
+			};
 
-            function onMouseDown(event) {
-                opts.down = true;
-                opts.offset.x = event.pageX;
-                opts.offset.y = event.pageY;
-                const cs = window.getComputedStyle(mw);
-                opts.init.x = Number.parseFloat(cs.marginLeft);
-                opts.init.y = Number.parseFloat(cs.marginTop);
-                opts.init.cx = Number.parseFloat(cs.width);
-                opts.init.cy = Number.parseFloat(cs.height);
-                document.addEventListener('mouseup', onRelease, false);
-                document.addEventListener('mousemove', onMouseMove, false);
-            };
+			function onMouseDown(event) {
+				opts.down = true;
+				opts.offset.x = event.pageX;
+				opts.offset.y = event.pageY;
+				const cs = window.getComputedStyle(mw);
+				opts.init.x = Number.parseFloat(cs.marginLeft);
+				opts.init.y = Number.parseFloat(cs.marginTop);
+				opts.init.cx = Number.parseFloat(cs.width);
+				opts.init.cy = Number.parseFloat(cs.height);
+				document.addEventListener('mouseup', onRelease, false);
+				document.addEventListener('mousemove', onMouseMove, false);
+			};
 
-            function onRelease(event) {
-                opts.down = false;
-                document.removeEventListener('mouseup', onRelease);
-                document.removeEventListener('mousemove', onMouseMove);
-            }
+			function onRelease(event) {
+				opts.down = false;
+				document.removeEventListener('mouseup', onRelease);
+				document.removeEventListener('mousemove', onMouseMove);
+			}
 
-            function onMouseMove(event) {
-                if (!opts.down)
-                    return;
-                let dx = event.pageX - opts.offset.x;
-                let dy = event.pageY - opts.offset.y;
-                let mx = opts.init.x + dx;
-                let my = opts.init.y + dy;
-                // fit
-                let maxX = window.innerWidth - opts.init.cx;
-                let maxY = window.innerHeight - opts.init.cy;
-                if (my < 0) my = 0;
-                if (mx < 0) mx = 0;
-                if (mx > maxX) mx = maxX;
-                //if (my > maxY) my = maxY; // any value available
-                //console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
-                mw.style.marginLeft = mx + 'px';
-                mw.style.marginTop = my + 'px';
-            }
+			function onMouseMove(event) {
+				if (!opts.down)
+					return;
+				let dx = event.pageX - opts.offset.x;
+				let dy = event.pageY - opts.offset.y;
+				let mx = opts.init.x + dx;
+				let my = opts.init.y + dy;
+				// fit
+				let maxX = window.innerWidth - opts.init.cx;
+				let maxY = window.innerHeight - opts.init.cy;
+				if (my < 0) my = 0;
+				if (mx < 0) mx = 0;
+				if (mx > maxX) mx = maxX;
+				//if (my > maxY) my = maxY; // any value available
+				//console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
+				mw.style.marginLeft = mx + 'px';
+				mw.style.marginTop = my + 'px';
+			}
 
-            el.addEventListener('mousedown', onMouseDown, false);
-        }
-    };
+			el.addEventListener('mousedown', onMouseDown, false);
+		}
+	};
 
-    Vue.directive('drag-window', dragDialogDirective);
+	Vue.directive('drag-window', dragDialogDirective);
 
 	Vue.directive('modal-width', setWidthComponent);
 
-    const modalComponent = {
+	const modalComponent = {
 		template: modalTemplate,
-        props: {
-            dialog: Object
-        },
-        data() {
-            // always need a new instance of function (modal stack)
-            return {
-                keyUpHandler: function () {
-                    // escape
-                    if (event.which === 27) {
-                        eventBus.$emit('modalClose', false);
-                        event.stopPropagation();
-                        event.preventDefault();
-                    }
-                }
-            };
-        },
-        methods: {
-            modalClose(result) {
+		props: {
+			dialog: Object
+		},
+		data() {
+			// always need a new instance of function (modal stack)
+			return {
+				keyUpHandler: function () {
+					// escape
+					if (event.which === 27) {
+						eventBus.$emit('modalClose', false);
+						event.stopPropagation();
+						event.preventDefault();
+					}
+				}
+			};
+		},
+		methods: {
+			modalClose(result) {
 				eventBus.$emit('modalClose', result);
-            },
-            tabPress(event) {
-                function createThisElems() {
-                    let qs = document.querySelectorAll('.modal-body [tabindex]');
-                    let ea = [];
-                    for (let i = 0; i < qs.length; i++)
-                        ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
-                    ea = ea.sort((a, b) => a.ti > b.ti);
-                    console.dir(ea);                    
-                    return ea;
-                };
+			},
+			tabPress(event) {
+				function createThisElems() {
+					let qs = document.querySelectorAll('.modal-body [tabindex]');
+					let ea = [];
+					for (let i = 0; i < qs.length; i++)
+						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
+					ea = ea.sort((a, b) => a.ti > b.ti);
+					console.dir(ea);
+					return ea;
+				};
 
-                if (this._tabElems === undefined) {
-                    this._tabElems = createThisElems();
-                }
-                if (!this._tabElems || !this._tabElems.length)
-                    return;
-                let maxIndex = this._tabElems[this._tabElems.length - 1].ti;
-                let aElem = document.activeElement;
-                let ti = +aElem.getAttribute("tabindex");
-                if (ti === maxIndex) {
-                    event.preventDefault();
-                    this._tabElems[0].el.focus();
-                } else if (ti === 0) {
-                    event.preventDefault();
-                }
-            }
-        },
-        computed: {
-            isInclude: function () {
-                return !!this.dialog.url;
-            },
-            hasIcon() {
-                return !!this.dialog.style;
-            },
-            title: function () {
-                // todo localization
-                let defTitle = this.dialog.style === 'confirm' ? "Подтверждение" : "Ошибка";
-                return this.dialog.title || defTitle;
-            }, 
-            bodyClass() {
-                return 'modal-body ' + (this.dialog.style || '');
-            },
-            iconClass() {
-                return "ico ico-" + this.dialog.style;
-            },
-            buttons: function () {
-                //console.warn(this.dialog.style);
-                let okText = this.dialog.okText || 'OK';
-                let cancelText = this.dialog.cancelText || 'Отмена';
-                if (this.dialog.buttons)
-                    return this.dialog.buttons;
-                else if (this.dialog.style === 'alert')
-                    return [{ text: okText, result: false }];
-                return [
-                    { text: okText, result: true },
-                    { text: cancelText, result: false }
-                ];
-            }
-        },
-        created() {
-            document.addEventListener('keyup', this.keyUpHandler);
-        },
-        mounted() {
-        },
-        destroyed() {
-            document.removeEventListener('keyup', this.keyUpHandler);
-        }
-    };
+				if (this._tabElems === undefined) {
+					this._tabElems = createThisElems();
+				}
+				if (!this._tabElems || !this._tabElems.length)
+					return;
+				let maxIndex = this._tabElems[this._tabElems.length - 1].ti;
+				let aElem = document.activeElement;
+				let ti = +aElem.getAttribute("tabindex");
+				if (ti === maxIndex) {
+					event.preventDefault();
+					this._tabElems[0].el.focus();
+				} else if (ti === 0) {
+					event.preventDefault();
+				}
+			}
+		},
+		computed: {
+			isInclude: function () {
+				return !!this.dialog.url;
+			},
+			hasIcon() {
+				return !!this.dialog.style;
+			},
+			title: function () {
+				// todo localization
+				let defTitle = this.dialog.style === 'confirm' ? locale.$Confirm : locale.$Error;
+				return this.dialog.title || defTitle;
+			},
+			bodyClass() {
+				return 'modal-body ' + (this.dialog.style || '');
+			},
+			iconClass() {
+				return "ico ico-" + this.dialog.style;
+			},
+			buttons: function () {
+				//console.warn(this.dialog.style);
+				let okText = this.dialog.okText || locale.$Ok;
+				let cancelText = this.dialog.cancelText || locale.$Cancel;
+				if (this.dialog.buttons)
+					return this.dialog.buttons;
+				else if (this.dialog.style === 'alert')
+					return [{ text: okText, result: false }];
+				return [
+					{ text: okText, result: true },
+					{ text: cancelText, result: false }
+				];
+			}
+		},
+		created() {
+			document.addEventListener('keyup', this.keyUpHandler);
+		},
+		mounted() {
+		},
+		destroyed() {
+			document.removeEventListener('keyup', this.keyUpHandler);
+		}
+	};
 
-    app.components['std:modal'] = modalComponent;
+	app.components['std:modal'] = modalComponent;
 })();
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
@@ -5099,30 +5112,31 @@ Vue.component('a2-panel', {
     6.
      */
 
-    const dataService = require('std:dataservice');
-    const urlTools = require('std:url');
-    const eventBus = require('std:eventBus');
+	const dataService = require('std:dataservice');
+	const urlTools = require('std:url');
+	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
 
-    const specKeys = {
-        '$vm': null,
-        '$host': null,
-        '$root': null,
-        '$parent': null
-    };
+	const specKeys = {
+		'$vm': null,
+		'$host': null,
+		'$root': null,
+		'$parent': null
+	};
 
-    function toJsonDebug(data) {
-        return JSON.stringify(data, function (key, value) {
-            if (key[0] === '$')
-                return !(key in specKeys) ? value : undefined;
-            else if (key[0] === '_')
-                return undefined;
-            return value;
-        }, 2);
-    }
+	function toJsonDebug(data) {
+		return JSON.stringify(data, function (key, value) {
+			if (key[0] === '$')
+				return !(key in specKeys) ? value : undefined;
+			else if (key[0] === '_')
+				return undefined;
+			return value;
+		}, 2);
+	}
 
-    const traceItem = {
-        name: 'a2-trace-item',
-        template: `
+	const traceItem = {
+		name: 'a2-trace-item',
+		template: `
 <div v-if="hasElem" class="trace-item-body">
     <span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
     <ul class="a2-debug-trace-item">
@@ -5133,26 +5147,26 @@ Vue.component('a2-panel', {
     </ul>
 </div>
 `,
-        props: {
-            name: String,
-            elem: Array
-        },
-        computed: {
-            hasElem() {
-                return this.elem && this.elem.length;
-            }
-        }
-    };
+		props: {
+			name: String,
+			elem: Array
+		},
+		computed: {
+			hasElem() {
+				return this.elem && this.elem.length;
+			}
+		}
+	};
 
-    Vue.component('a2-debug', {
-        template: `
+	Vue.component('a2-debug', {
+		template: `
 <div class="debug-panel" v-if="paneVisible">
     <div class="debug-pane-header">
         <span class="debug-pane-title" v-text="title"></span>
         <a class="btn btn-close" @click.prevent="close">&#x2715</a>
     </div>
     <div class="toolbar">
-        <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> Обновить</button>
+        <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
     </div>
     <div class="debug-model debug-body" v-if="modelVisible">
         <pre class="a2-code" v-text="modelJson()"></pre>
@@ -5170,84 +5184,87 @@ Vue.component('a2-panel', {
     </div>
 </div>
 `,
-        components: {
-            'a2-trace-item': traceItem
-        },
-        props: {
-            modelVisible: Boolean,
-            traceVisible: Boolean,
-            modelStack: Array,
-            counter: Number,
-            close: Function
-        },
-        data() {
-            return {
-                trace: []
-            };
-        },
-        computed: {
-            refreshCount() {
-                return this.counter;
-            },
-            paneVisible() {
-                return this.modelVisible || this.traceVisible;
-            },
-            title() {
-                return this.modelVisible ? 'Модель данных'
-                    : this.traceVisible ? 'Профилирование'
-                    : '';
-            },
-            traceView() {
-                return this.traceVisible;
-            }
-        },
-        methods: {
-            modelJson() {
-                // method. not cached
-                if (!this.modelVisible)
-                    return;
-                if (this.modelStack.length) {
-                    return toJsonDebug(this.modelStack[0].$data);
-                }
-                return '';
-            },
-            refresh() {
-                if (this.modelVisible)
-                    this.$forceUpdate();
-                else if (this.traceVisible)
-                    this.loadTrace()
-            },
-            loadTrace() {
-                const root = window.$$rootUrl;
-                const url = urlTools.combine(root, 'shell/trace');
-                const that = this;
-                dataService.post(url).then(function (result) {
-                    that.trace.splice(0, that.trace.length);
-                    if (!result) return;
-                    result.forEach((val) => {
-                        that.trace.push(val);
-                    });
-                });
-            }
-        },
-        watch: {
-            refreshCount() {
-                // dataModel stack changed
-                this.$forceUpdate();
-            },
-            traceView(newVal) {
-                if (newVal)
-                    this.loadTrace();
-            }
-        },
-        created() {
-            eventBus.$on('endRequest', (url) => {
-                if (url.indexOf('/shell/trace') != -1) return;
-                if (!this.traceVisible) return;
-                this.loadTrace();
-            });
-        }
-    });
+		components: {
+			'a2-trace-item': traceItem
+		},
+		props: {
+			modelVisible: Boolean,
+			traceVisible: Boolean,
+			modelStack: Array,
+			counter: Number,
+			close: Function
+		},
+		data() {
+			return {
+				trace: []
+			};
+		},
+		computed: {
+			refreshCount() {
+				return this.counter;
+			},
+			paneVisible() {
+				return this.modelVisible || this.traceVisible;
+			},
+			title() {
+				return this.modelVisible ? locale.$DataModel
+					: this.traceVisible ? locale.$Profiling
+						: '';
+			},
+			traceView() {
+				return this.traceVisible;
+			}
+		},
+		methods: {
+			modelJson() {
+				// method. not cached
+				if (!this.modelVisible)
+					return;
+				if (this.modelStack.length) {
+					return toJsonDebug(this.modelStack[0].$data);
+				}
+				return '';
+			},
+			refresh() {
+				if (this.modelVisible)
+					this.$forceUpdate();
+				else if (this.traceVisible)
+					this.loadTrace()
+			},
+			loadTrace() {
+				const root = window.$$rootUrl;
+				const url = urlTools.combine(root, 'shell/trace');
+				const that = this;
+				dataService.post(url).then(function (result) {
+					that.trace.splice(0, that.trace.length);
+					if (!result) return;
+					result.forEach((val) => {
+						that.trace.push(val);
+					});
+				});
+			},
+			text(key) {
+				return locale[key];
+			}
+		},
+		watch: {
+			refreshCount() {
+				// dataModel stack changed
+				this.$forceUpdate();
+			},
+			traceView(newVal) {
+				if (newVal)
+					this.loadTrace();
+			}
+		},
+		created() {
+			eventBus.$on('endRequest', (url) => {
+				if (url.indexOf('/shell/trace') != -1) return;
+				if (!this.traceVisible) return;
+				this.loadTrace();
+			});
+		}
+	});
 })();
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -5502,7 +5519,7 @@ Vue.directive('settabindex', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20171234-7110*/
+/*20180226-7120*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -5510,11 +5527,11 @@ Vue.directive('resize', {
 
 		Vue.nextTick(function () {
 
-            const minWidth = 20;
-            const handleWidth = 6;
+			const minWidth = 20;
+			const handleWidth = 6;
 
 			function findHandle(el) {
-				for (ch of el.childNodes) {
+				for (let ch of el.childNodes) {
 					if (ch.nodeType === Node.ELEMENT_NODE) {
 						if (ch.classList.contains('drag-handle'))
 							return ch;
@@ -5523,34 +5540,34 @@ Vue.directive('resize', {
 				return null;
 			}
 
-            let grid = el.parentElement;
+			let grid = el.parentElement;
 
-            let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
-            let minSecondPaneWidth = Number.parseFloat(el.getAttribute('second-min-width'));
-            if (isNaN(minPaneWidth))
-                minPaneWidth = minWidth;
-            if (isNaN(minSecondPaneWidth))
-                minSecondPaneWidth = minWidth;
+			let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
+			let minSecondPaneWidth = Number.parseFloat(el.getAttribute('second-min-width'));
+			if (isNaN(minPaneWidth))
+				minPaneWidth = minWidth;
+			if (isNaN(minSecondPaneWidth))
+				minSecondPaneWidth = minWidth;
 
 
 			let parts = {
 				grid: grid,
 				handle: findHandle(grid),
-                resizing: false,
-                minWidth: minPaneWidth,
-                minWidth2: minSecondPaneWidth,
+				resizing: false,
+				minWidth: minPaneWidth,
+				minWidth2: minSecondPaneWidth,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
-                },
-                fitX(x) {
-                    if (x < this.minWidth)
-                        x = this.minWidth;
-                    let tcx = this.grid.clientWidth;
-                    if (x + handleWidth + this.minWidth2 > tcx)
-                        x = tcx - this.minWidth2 - handleWidth;
-                    return x;
-                }
+				},
+				fitX(x) {
+					if (x < this.minWidth)
+						x = this.minWidth;
+					let tcx = this.grid.clientWidth;
+					if (x + handleWidth + this.minWidth2 > tcx)
+						x = tcx - this.minWidth2 - handleWidth;
+					return x;
+				}
 			};
 
 			if (!parts.handle) {
@@ -5560,47 +5577,47 @@ Vue.directive('resize', {
 
 			el._parts = parts;
 
-            function mouseUp(event) {
-                let p = el._parts;
-                if (!p.resizing)
-                    return;
+			function mouseUp(event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
 
-                event.preventDefault();
-                p.handle.style.display = 'none';
-                p.grid.style.cursor = 'default';
-                let x = p.offsetX(event);
-                x = p.fitX(x);
-                p.grid.style.gridTemplateColumns = `${x}px ${handleWidth}px 1fr`;
+				event.preventDefault();
+				p.handle.style.display = 'none';
+				p.grid.style.cursor = 'default';
+				let x = p.offsetX(event);
+				x = p.fitX(x);
+				p.grid.style.gridTemplateColumns = `${x}px ${handleWidth}px 1fr`;
 
-                document.removeEventListener('mouseup', mouseUp);
-                document.removeEventListener('mousemove', mouseMove);
+				document.removeEventListener('mouseup', mouseUp);
+				document.removeEventListener('mousemove', mouseMove);
 
-                p.resizing = false;
-            }
+				p.resizing = false;
+			}
 
-            function mouseMove(event) {
-                let p = el._parts;
-                if (!p.resizing)
-                    return;
-                event.preventDefault();
-                let x = p.offsetX(event);
-                x = p.fitX(x);
-                p.handle.style.left = x + 'px';
-            }
+			function mouseMove(event) {
+				let p = el._parts;
+				if (!p.resizing)
+					return;
+				event.preventDefault();
+				let x = p.offsetX(event);
+				x = p.fitX(x);
+				p.handle.style.left = x + 'px';
+			}
 
 
-            el.addEventListener('mousedown', function (event) {
-                let p = el._parts;
+			el.addEventListener('mousedown', function (event) {
+				let p = el._parts;
 				if (p.resizing)
 					return;
 				event.preventDefault();
-                let x = p.offsetX(event);
+				let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
 				p.handle.style.display = 'block';
 				p.grid.style.cursor = 'w-resize';
-                document.addEventListener('mouseup', mouseUp, false);
-                document.addEventListener('mousemove', mouseMove, false);
-                p.resizing = true;
+				document.addEventListener('mouseup', mouseUp, false);
+				document.addEventListener('mousemove', mouseMove, false);
+				p.resizing = true;
 			}, false);
 		});
 		/*
@@ -5679,6 +5696,7 @@ Vue.directive('resize', {
 	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
 	const log = require('std:log');
+	const locale = window.$$locale;
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -6084,7 +6102,7 @@ Vue.directive('resize', {
 				}
 
 				if (opts && opts.validRequired && root.$invalid) {
-					this.$alert('Сначала исправьте ошибки');
+					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
 
@@ -6112,7 +6130,7 @@ Vue.directive('resize', {
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {
-					this.$alert('Сначала исправьте ошибки');
+					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
 
@@ -6127,7 +6145,7 @@ Vue.directive('resize', {
 				if (this.$isDirty) {
 					const root = this.$data;
 					if (opts && opts.validRequired && root.$invalid) {
-						this.$alert('Спочатку виправте помилки');
+						this.$alert(locale.$MakeValidFirst);
 						return;
 					}
 					this.$save().then((result) => eventBus.$emit('modalClose', result));
@@ -6191,14 +6209,13 @@ Vue.directive('resize', {
 				if (!this.$isDirty)
 					return true;
 				let self = this;
-				// TODO: localize!!!
 				let dlg = {
-					message: "Элемент был изменен. Сохранить изменения?",
-					title: "Подтвердите закрытие",
+					message: locale.$ElementWasChanged,
+					title: locale.$ConfirmClose,
 					buttons: [
-						{ text: "Сохранить", result: "save" },
-						{ text: "Не сохранять", result: "close" },
-						{ text: "Отмена", result: false }
+						{ text: locale.$Save, result: "save" },
+						{ text: locale.$NotSave, result: "close" },
+						{ text: locale.$Cancel, result: false }
 					]
 				};
 				this.$confirm(dlg).then(function (result) {

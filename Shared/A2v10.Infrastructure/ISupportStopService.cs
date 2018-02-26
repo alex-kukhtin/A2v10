@@ -4,8 +4,8 @@ using System;
 
 namespace A2v10.Infrastructure
 {
-    public interface ISupportStopService
-    {
-        void Stop();
-    }
+	public interface ISupportStopService
+	{
+		void Stop();
+	}
 }

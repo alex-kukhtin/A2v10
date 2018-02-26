@@ -1,0 +1,47 @@
+﻿
+@media print {
+	.header {
+		display:none;
+	}
+	.nav-bar {
+		display:none;
+	}
+	.side-bar {
+		display:none;
+	}
+	.footer {
+		display:none;
+	}
+
+	.content-view.partial-page {
+		position:static;
+	}
+	
+	.toolbar {
+		display:none;
+	}
+
+	.taskpad {
+		display:none;
+	}
+
+	.page.absolute {
+		position:static;
+		grid-template-columns:auto!important;
+		height:auto;
+		overflow:hidden;
+	}
+
+	table {
+		// disable print on each page
+		thead {
+			display:table-row-group;
+		}
+		tfoot {
+			display:table-row-group;
+		}
+		tr, td {
+			page-break-inside:avoid;
+		}
+	}
+}

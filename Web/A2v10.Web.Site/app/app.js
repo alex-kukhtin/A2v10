@@ -1,22 +1,22 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180226-7120
 // app.js
 
-"use script";
+"use strict";
 
 (function () {
 
 	window.app = {
-        modules: {},
-        components: {}
-    };
+		modules: {},
+		components: {}
+	};
 
-    window.require = require;
-    window.component = component;
+	window.require = require;
+	window.component = component;
 
-    let rootElem = document.querySelector('meta[name=rootUrl]');
-    window.$$rootUrl = rootElem ? rootElem.content || '' : '';
+	let rootElem = document.querySelector('meta[name=rootUrl]');
+	window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
 	function require(module) {
 		if (module in app.modules) {
@@ -27,12 +27,12 @@
 			}
 			return am;
 		}
-        throw new Error('module "' + module + '" not found');
-    }
+		throw new Error('module "' + module + '" not found');
+	}
 
-    function component(name) {
-        if (name in app.components)
-            return app.components[name];
-        throw new Error('component "' + name + '" not found');
-    }
+	function component(name) {
+		if (name in app.components)
+			return app.components[name];
+		throw new Error('component "' + name + '" not found');
+	}
 })();

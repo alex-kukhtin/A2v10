@@ -76,12 +76,17 @@
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
+				this.open = !this.open;
 				if (this.options.isDynamic) {
-					this.open = !this.open;
 					this.expand(this.item, this.options.subitems);
-				} else {
-					this.open = !this.open;
 				}
+			},
+			openElem() {
+				if (!this.isFolder)
+					return;
+				this.open = true;
+				if (this.isDynamic)
+					this.expand(this.item, this.options.subitems);
 			}
 		},
 		computed: {
@@ -184,6 +189,11 @@
 				return this.autoSelect === 'first-item';
 			}
 		},
+		watch: {
+			items: function () {
+				this.doExpandFirst();
+			}
+		},
 		methods: {
 			selectFirstItem() {
 				if (!this.isSelectFirstItem)
@@ -194,17 +204,24 @@
 				let fe = itms[0];
 				if (fe.$select)
 					fe.$select(this.items);
+			},
+			doExpandFirst() {
+				if (!this.expandFirstItem)
+					return;
+				this.$nextTick(() => {
+					if (!this.$children)
+						return;
+					this.$children.forEach((val) => {
+						if (val && val.openElem) {
+							val.openElem();
+						}
+					});
+				});
 			}
 		},
 		created() {
 			this.selectFirstItem();
-			if (this.expandFirstItem) {
-				this.$nextTick(() => {
-					if (this.$children && this.$children[0] && this.$children[0].toggle) {
-						this.$children[0].toggle();
-					}
-				});
-			}
+			this.doExpandFirst();
 		},
 		updated() {
 			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {

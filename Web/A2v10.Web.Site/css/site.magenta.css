@@ -3726,6 +3726,7 @@ h5,
 }
 .debug-panel .toolbar {
   min-height: 2.1rem;
+  height: 2.1rem;
   border-bottom: 1px solid #bdc5d8;
 }
 .debug-panel .debug-body {
@@ -3777,4 +3778,43 @@ h5,
 .debug-panel .debug-trace ul.a2-debug-trace > li {
   border-bottom: 1px solid #bdc5d8;
   padding: 2px 0;
+}
+@media print {
+  .header {
+    display: none;
+  }
+  .nav-bar {
+    display: none;
+  }
+  .side-bar {
+    display: none;
+  }
+  .footer {
+    display: none;
+  }
+  .content-view.partial-page {
+    position: static;
+  }
+  .toolbar {
+    display: none;
+  }
+  .taskpad {
+    display: none;
+  }
+  .page.absolute {
+    position: static;
+    grid-template-columns: auto!important;
+    height: auto;
+    overflow: hidden;
+  }
+  table thead {
+    display: table-row-group;
+  }
+  table tfoot {
+    display: table-row-group;
+  }
+  table tr,
+  table td {
+    page-break-inside: avoid;
+  }
 }

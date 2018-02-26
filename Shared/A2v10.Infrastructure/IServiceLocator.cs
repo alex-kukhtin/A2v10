@@ -5,52 +5,52 @@ using System.Collections.Generic;
 
 namespace A2v10.Infrastructure
 {
-    public interface IServiceLocator
-    {
-        T GetService<T>() where T:class;
-        void RegisterService<T>(T service) where T:class;
-        Boolean IsServiceRegistered<T>() where T : class;
-        void Stop();
-    }
+	public interface IServiceLocator
+	{
+		T GetService<T>() where T : class;
+		void RegisterService<T>(T service) where T : class;
+		Boolean IsServiceRegistered<T>() where T : class;
+		void Stop();
+	}
 
-    public class ServiceLocator : IServiceLocator
-    {
-        public static Action<IServiceLocator> Start { get; set; }
-        public static Func<IServiceLocator> GetCurrentLocator { get; set; }
+	public class ServiceLocator : IServiceLocator
+	{
+		public static Action<IServiceLocator> Start { get; set; }
+		public static Func<IServiceLocator> GetCurrentLocator { get; set; }
 
 
-        public ServiceLocator()
-        {
-            ServiceLocator.Start(this);
-        }
+		public ServiceLocator()
+		{
+			ServiceLocator.Start(this);
+		}
 
-        public void Stop()
-        {
-            foreach (var s in _services)
-                if (s.Value is ISupportStopService)
-                    (s.Value as ISupportStopService).Stop();
-        }
+		public void Stop()
+		{
+			foreach (var s in _services)
+				if (s.Value is ISupportStopService)
+					(s.Value as ISupportStopService).Stop();
+		}
 
-        public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();
+		public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();
 
-        Dictionary<Type, Object> _services = new Dictionary<Type, Object>();
+		Dictionary<Type, Object> _services = new Dictionary<Type, Object>();
 
-        public T GetService<T>() where T : class
-        {
-            Object result;
-            if (_services.TryGetValue(typeof(T), out result))
-                return result as T;
-            throw new InvalidOperationException($"Service '{typeof(T).FullName}' not registered");
-        }
+		public T GetService<T>() where T : class
+		{
+			Object result;
+			if (_services.TryGetValue(typeof(T), out result))
+				return result as T;
+			throw new InvalidOperationException($"Service '{typeof(T).FullName}' not registered");
+		}
 
-        public void RegisterService<T>(T service) where T:class
-        {
-            _services.Add(typeof(T), service);
-        }
+		public void RegisterService<T>(T service) where T : class
+		{
+			_services.Add(typeof(T), service);
+		}
 
-        public Boolean IsServiceRegistered<T>() where T : class
-        {
-            return _services.ContainsKey(typeof(T));
-        }
-    }
+		public Boolean IsServiceRegistered<T>() where T : class
+		{
+			return _services.ContainsKey(typeof(T));
+		}
+	}
 }

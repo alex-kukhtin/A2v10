@@ -2,8 +2,8 @@
 
 namespace A2v10.Infrastructure
 {
-    public interface IControllerProfiler
-    {
-        IProfiler Profiler { get; }
-    }
+	public interface IControllerProfiler
+	{
+		IProfiler Profiler { get; }
+	}
 }

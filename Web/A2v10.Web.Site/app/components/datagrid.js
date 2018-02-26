@@ -254,7 +254,7 @@
                 }
             };
 
-			function normalizeArg(arg, eval) {
+			function normalizeArg(arg, doEval) {
 				arg = arg || '';
                 if (arg === 'this')
                     arg = row;
@@ -263,7 +263,7 @@
                     if (!(arg in row))
                         throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
                     arg = row[arg];
-                } else if (arg && eval) {
+				} else if (arg && doEval) {
                     console.error(col.hideZeros);
                     arg = utils.eval(row, arg, col.dataType, col.hideZeros);
                 }

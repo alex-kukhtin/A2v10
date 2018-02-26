@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace A2v10.Infrastructure
 {
-    public interface IModelHandler
-    {
-        Task AfterSave(Object beforeData, Object afterData);
-    }
+	public interface IModelHandler
+	{
+		Task AfterSave(Object beforeData, Object afterData);
+	}
 }

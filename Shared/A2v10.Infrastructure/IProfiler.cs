@@ -8,23 +8,23 @@ namespace A2v10.Infrastructure
 	{
 		Sql,
 		Render,
-        Workflow,
-        Script,
-        Exception
+		Workflow,
+		Script,
+		Exception
 	};
 
-    public interface IProfileRequest
-    {
-        IDisposable Start(ProfileAction kind, String description);
-        void Stop();
-    }
-
-    public interface IProfiler
+	public interface IProfileRequest
 	{
-        Boolean Enabled { get; set; }
-        IProfileRequest BeginRequest(String address, String session);
-        IProfileRequest CurrentRequest { get; }
+		IDisposable Start(ProfileAction kind, String description);
+		void Stop();
+	}
 
-        String GetJson();
-    }
+	public interface IProfiler
+	{
+		Boolean Enabled { get; set; }
+		IProfileRequest BeginRequest(String address, String session);
+		IProfileRequest CurrentRequest { get; }
+
+		String GetJson();
+	}
 }

@@ -10,174 +10,174 @@ using System.Text.RegularExpressions;
 
 namespace A2v10.Infrastructure
 {
-    public static class DynamicHelpers
-    {
-        public static T Get<T>(this ExpandoObject obj, String name)
-        {
-            var d = obj as IDictionary<String, Object>;
-            if (d == null)
-                return default(T);
-            Object result;
-            if (d.TryGetValue(name, out result))
-            {
-                if (result is T)
-                    return (T)result;
-            }
-            return default(T);
-        }
+	public static class DynamicHelpers
+	{
+		public static T Get<T>(this ExpandoObject obj, String name)
+		{
+			var d = obj as IDictionary<String, Object>;
+			if (d == null)
+				return default(T);
+			Object result;
+			if (d.TryGetValue(name, out result))
+			{
+				if (result is T)
+					return (T)result;
+			}
+			return default(T);
+		}
 
-        public static void Set(this ExpandoObject obj, String name, Object value)
-        {
-            var d = obj as IDictionary<String, Object>;
-            if (d == null)
-                return;
-            if (d.ContainsKey(name))
-                d[name] = value;
-            else
-                d.Add(name, value);
-        }
+		public static void Set(this ExpandoObject obj, String name, Object value)
+		{
+			var d = obj as IDictionary<String, Object>;
+			if (d == null)
+				return;
+			if (d.ContainsKey(name))
+				d[name] = value;
+			else
+				d.Add(name, value);
+		}
 
-        public static Boolean HasProperty(this ExpandoObject obj, String name)
-        {
-            var d = obj as IDictionary<String, Object>;
-            if (d == null)
-                return false;
-            return d.ContainsKey(name);
-        }
+		public static Boolean HasProperty(this ExpandoObject obj, String name)
+		{
+			var d = obj as IDictionary<String, Object>;
+			if (d == null)
+				return false;
+			return d.ContainsKey(name);
+		}
 
-        public static void Append(this ExpandoObject obj, NameValueCollection coll, Boolean toPascalCase = false)
-        {
-            if (coll == null)
-                return;
-            var d = obj as IDictionary<String, Object>;
-            foreach (var key in coll.Keys)
-            {
-                var skey = key.ToString();
-                if (toPascalCase)
-                    skey = skey.ToPascalCase();
-                d.Add(skey, coll[key.ToString()]);
-            }
-        }
+		public static void Append(this ExpandoObject obj, NameValueCollection coll, Boolean toPascalCase = false)
+		{
+			if (coll == null)
+				return;
+			var d = obj as IDictionary<String, Object>;
+			foreach (var key in coll.Keys)
+			{
+				var skey = key.ToString();
+				if (toPascalCase)
+					skey = skey.ToPascalCase();
+				d.Add(skey, coll[key.ToString()]);
+			}
+		}
 
-        public static void Append(this ExpandoObject that, ExpandoObject other)
-        {
-            if (that == null)
-                return;
-            if (other == null)
-                return;
-            IDictionary<String, Object> thatD = that as IDictionary<String, Object>;
-            foreach (var k in other as IDictionary<String, Object>)
-                thatD.Add(k.Key, k.Value);
-        }
+		public static void Append(this ExpandoObject that, ExpandoObject other)
+		{
+			if (that == null)
+				return;
+			if (other == null)
+				return;
+			IDictionary<String, Object> thatD = that as IDictionary<String, Object>;
+			foreach (var k in other as IDictionary<String, Object>)
+				thatD.Add(k.Key, k.Value);
+		}
 
-        public static ExpandoObject RemoveEmptyArrays(this ExpandoObject obj)
-        {
-            if (obj == null)
-                return obj;
-            var dict = obj as IDictionary<String, Object>;
-            var arr = dict.Keys.ToList();
-            foreach (var key in arr)
-            {
-                var val = dict[key];
-                if (val is IList<ExpandoObject>)
-                {
-                    var list = val as IList<ExpandoObject>;
-                    if (list != null)
-                    {
-                        if (list.Count == 0)
-                            dict[key] = null;
-                        else
-                        {
-                            foreach (var l in list)
-                                l.RemoveEmptyArrays();
-                        }
-                    }
-                }
-                else if (val is ExpandoObject)
-                {
-                    (val as ExpandoObject).RemoveEmptyArrays();
-                }
-            }
-            return obj;
-        }
+		public static ExpandoObject RemoveEmptyArrays(this ExpandoObject obj)
+		{
+			if (obj == null)
+				return obj;
+			var dict = obj as IDictionary<String, Object>;
+			var arr = dict.Keys.ToList();
+			foreach (var key in arr)
+			{
+				var val = dict[key];
+				if (val is IList<ExpandoObject>)
+				{
+					var list = val as IList<ExpandoObject>;
+					if (list != null)
+					{
+						if (list.Count == 0)
+							dict[key] = null;
+						else
+						{
+							foreach (var l in list)
+								l.RemoveEmptyArrays();
+						}
+					}
+				}
+				else if (val is ExpandoObject)
+				{
+					(val as ExpandoObject).RemoveEmptyArrays();
+				}
+			}
+			return obj;
+		}
 
-        public static Object EvalExpression(this ExpandoObject root, String expression, Boolean throwIfError = false)
-        {
-            Object currentContext = root;
-            var arrRegEx = new Regex(@"(\w+)\[(\d+)\]{1}");
-            foreach (var exp in expression.Split('.'))
-            {
-                if (currentContext == null)
-                    return null;
-                String prop = exp.Trim();
-                var d = currentContext as IDictionary<String, Object>;
-                if (prop.Contains("["))
-                {
-                    var match = arrRegEx.Match(prop);
-                    prop = match.Groups[1].Value;
-                    if ((d != null) && d.ContainsKey(prop))
-                    {
-                        var x = d[prop] as IList<ExpandoObject>;
-                        currentContext = x[Int32.Parse(match.Groups[2].Value)];
-                    }
-                    else
-                    {
-                        if (throwIfError)
-                            throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
-                        return null;
-                    }
-                }
-                else
-                {
-                    if ((d != null) && d.ContainsKey(prop))
-                        currentContext = d[prop];
-                    else
-                    {
-                        if (throwIfError)
-                            throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
-                        return null;
-                    }
-                }
-            }
-            return currentContext;
-        }
+		public static Object EvalExpression(this ExpandoObject root, String expression, Boolean throwIfError = false)
+		{
+			Object currentContext = root;
+			var arrRegEx = new Regex(@"(\w+)\[(\d+)\]{1}");
+			foreach (var exp in expression.Split('.'))
+			{
+				if (currentContext == null)
+					return null;
+				String prop = exp.Trim();
+				var d = currentContext as IDictionary<String, Object>;
+				if (prop.Contains("["))
+				{
+					var match = arrRegEx.Match(prop);
+					prop = match.Groups[1].Value;
+					if ((d != null) && d.ContainsKey(prop))
+					{
+						var x = d[prop] as IList<ExpandoObject>;
+						currentContext = x[Int32.Parse(match.Groups[2].Value)];
+					}
+					else
+					{
+						if (throwIfError)
+							throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
+						return null;
+					}
+				}
+				else
+				{
+					if ((d != null) && d.ContainsKey(prop))
+						currentContext = d[prop];
+					else
+					{
+						if (throwIfError)
+							throw new ArgumentException($"Error in expression '{expression}'. Property '{prop}' not found");
+						return null;
+					}
+				}
+			}
+			return currentContext;
+		}
 
-        public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
-        {
-            if (expression == null)
-                return fallback;
-            Object result = root.EvalExpression(expression, throwIfError);
-            if (result == null)
-                return fallback;
-            if (result is T)
-                return (T) result;
-            return fallback;
-        }
+		public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
+		{
+			if (expression == null)
+				return fallback;
+			Object result = root.EvalExpression(expression, throwIfError);
+			if (result == null)
+				return fallback;
+			if (result is T)
+				return (T)result;
+			return fallback;
+		}
 
-        public static String Resolve(this ExpandoObject This, String source)
-        {
-            if (source == null)
-                return null;
-            var r = new Regex("\\{\\{(.+?)\\}\\}");
-            var ms = r.Matches(source);
-            if (ms.Count == 0)
-                return source;
-            var sb = new StringBuilder(source);
-            foreach (Match m in ms)
-            {
-                String key = m.Groups[1].Value;
-                String val = This.EvalExpression(key)?.ToString();
-                sb.Replace(m.Value, val);
-            }
-            return sb.ToString();
-        }
+		public static String Resolve(this ExpandoObject This, String source)
+		{
+			if (source == null)
+				return null;
+			var r = new Regex("\\{\\{(.+?)\\}\\}");
+			var ms = r.Matches(source);
+			if (ms.Count == 0)
+				return source;
+			var sb = new StringBuilder(source);
+			foreach (Match m in ms)
+			{
+				String key = m.Groups[1].Value;
+				String val = This.EvalExpression(key)?.ToString();
+				sb.Replace(m.Value, val);
+			}
+			return sb.ToString();
+		}
 
-        public static ExpandoObject Merge(ExpandoObject that, ExpandoObject other)
-        {
-            var eo = new ExpandoObject();
-            eo.Append(that);
-            eo.Append(other);
-            return eo;
-        }
-    }
+		public static ExpandoObject Merge(ExpandoObject that, ExpandoObject other)
+		{
+			var eo = new ExpandoObject();
+			eo.Append(that);
+			eo.Append(other);
+			return eo;
+		}
+	}
 }

@@ -3,6 +3,9 @@
 @Version=Версія
 @Debug=Відладка
 @Quit=Вихід
+@Tracing=Трасування
+@DataModel=Модель даних
+@Profiling=Профілювання
 ;
 @Home=Головна
 @Documents=Документи

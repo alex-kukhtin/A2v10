@@ -84,6 +84,7 @@
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\directives\mask.js" />
     <Content Include="app\directives\resize.js" />
+    <Content Include="app\localization\locale-uk.js" />
     <Content Include="app\platform\polyfills.js" />
     <Content Include="app\platform\routex.js" />
     <Content Include="app\platform\webvue.js" />
@@ -127,11 +128,11 @@
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />
     <Content Include="scripts\jasmine\jasmine.js" />
+    <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
-    <Content Include="scripts\mainfile.js" />
     <Content Include="TestPages\checkbox.html" />
     <Content Include="TestPages\collectionview2.html" />
     <Content Include="TestPages\collectionview.html" />
@@ -220,6 +221,7 @@
     <Content Include="Less\Selector.less" />
     <Content Include="Less\Main.less" />
     <Content Include="Less\Mixins.less" />
+    <Content Include="Less\Print.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

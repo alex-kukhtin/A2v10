@@ -10,6 +10,7 @@
 	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
 	const log = require('std:log');
+	const locale = window.$$locale;
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -415,7 +416,7 @@
 				}
 
 				if (opts && opts.validRequired && root.$invalid) {
-					this.$alert('Сначала исправьте ошибки');
+					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
 
@@ -443,7 +444,7 @@
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {
-					this.$alert('Сначала исправьте ошибки');
+					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
 
@@ -458,7 +459,7 @@
 				if (this.$isDirty) {
 					const root = this.$data;
 					if (opts && opts.validRequired && root.$invalid) {
-						this.$alert('Спочатку виправте помилки');
+						this.$alert(locale.$MakeValidFirst);
 						return;
 					}
 					this.$save().then((result) => eventBus.$emit('modalClose', result));
@@ -522,14 +523,13 @@
 				if (!this.$isDirty)
 					return true;
 				let self = this;
-				// TODO: localize!!!
 				let dlg = {
-					message: "Элемент был изменен. Сохранить изменения?",
-					title: "Подтвердите закрытие",
+					message: locale.$ElementWasChanged,
+					title: locale.$ConfirmClose,
 					buttons: [
-						{ text: "Сохранить", result: "save" },
-						{ text: "Не сохранять", result: "close" },
-						{ text: "Отмена", result: false }
+						{ text: locale.$Save, result: "save" },
+						{ text: locale.$NotSave, result: "close" },
+						{ text: locale.$Cancel, result: false }
 					]
 				};
 				this.$confirm(dlg).then(function (result) {

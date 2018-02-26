@@ -4,9 +4,9 @@ using System;
 
 namespace A2v10.Infrastructure
 {
-    public interface IMessaging
-    {
-        IMessage CreateMessage();
-        void QueueMessage(IMessage message);
-    }
+	public interface IMessaging
+	{
+		IMessage CreateMessage();
+		void QueueMessage(IMessage message);
+	}
 }

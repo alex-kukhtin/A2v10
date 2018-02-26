@@ -1,69 +1,76 @@
 [
-  {
-    "outputFileName": "Scripts/main.js",
-    "inputFiles": [
-      "app/app.js",
-      "app/platform/polyfills.js",
-      "app/services/utils.js",
-      "app/services/url.js",
-      "app/platform/webvue.js",
-      "app/services/http.js",
-      "app/platform/routex.js",
-      "app/services/log.js",
-      "app/services/validators.js",
-      "app/services/datamodel.js",
-      "app/services/dataservice.js",
-      "app/services/popup.js",
-      "app/components/include.js",
-      "app/components/control.js",
-      "app/components/validator.js",
-      "app/components/textbox.js",
-      "app/components/combobox.js",
-      "app/components/datepicker.js",
-      "app/components/selector.js",
-      "app/components/datagrid.js",
-      "app/components/pager.js",
-      "app/components/popover.js",
-      "app/components/treeview.js",
-      "app/components/collectionview.js",
-      "app/components/upload.js",
-      "app/components/tab.js",
-      "app/components/list.js",
-      "app/components/modal.js",
-      "app/components/image.js",
-      "app/components/taskpad.js",
-      "app/components/panel.js",
-      "app/components/sheet.js",
-      "app/components/graphics.js",
-      "app/components/debug.js",
-      "app/components/doctitle.js",
-      "app/directives/*.js",
-      "app/controllers/base.js",
-      "app/controllers/shell.js"
-    ],
-    "minify": { "enabled": false }
-  },
-  {
-    "outputFileName": "Scripts/vue.min.js",
-    "inputFiles": [
-      "bower_components/vue/dist/vue.min.js",
-      "bower_components/vuex/dist/vuex.min.js"
-    ],
-    "minify": { "enabled": false }
-  },
-  {
-    "outputFileName": "Scripts/vue.js",
-    "inputFiles": [
-      "bower_components/vue/dist/vue.js",
-      "bower_components/vuex/dist/vuex.js"
-    ],
-    "minify": { "enabled": false }
-  },
-  {
-    "outputFileName": "Scripts/d3.min.js",
-    "inputFiles": [
-      "bower_components/d3/d3.min.js"
-    ],
-    "minify": { "enabled": false }
-  }
+	{
+		"outputFileName": "Scripts/main.js",
+		"inputFiles": [
+			"app/app.js",
+			"app/platform/polyfills.js",
+			"app/services/utils.js",
+			"app/services/url.js",
+			"app/platform/webvue.js",
+			"app/services/http.js",
+			"app/platform/routex.js",
+			"app/services/log.js",
+			"app/services/validators.js",
+			"app/services/datamodel.js",
+			"app/services/dataservice.js",
+			"app/services/popup.js",
+			"app/components/include.js",
+			"app/components/control.js",
+			"app/components/validator.js",
+			"app/components/textbox.js",
+			"app/components/combobox.js",
+			"app/components/datepicker.js",
+			"app/components/selector.js",
+			"app/components/datagrid.js",
+			"app/components/pager.js",
+			"app/components/popover.js",
+			"app/components/treeview.js",
+			"app/components/collectionview.js",
+			"app/components/upload.js",
+			"app/components/tab.js",
+			"app/components/list.js",
+			"app/components/modal.js",
+			"app/components/image.js",
+			"app/components/taskpad.js",
+			"app/components/panel.js",
+			"app/components/sheet.js",
+			"app/components/graphics.js",
+			"app/components/debug.js",
+			"app/components/doctitle.js",
+			"app/directives/*.js",
+			"app/controllers/base.js",
+			"app/controllers/shell.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/vue.min.js",
+		"inputFiles": [
+			"bower_components/vue/dist/vue.min.js",
+			"bower_components/vuex/dist/vuex.min.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/vue.js",
+		"inputFiles": [
+			"bower_components/vue/dist/vue.js",
+			"bower_components/vuex/dist/vuex.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/d3.min.js",
+		"inputFiles": [
+			"bower_components/d3/d3.min.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/locale-uk.min.js",
+		"inputFiles": [
+			"app/localization/locale-uk.js"
+		],
+		"minify": { "enabled": false }
+	}
 ]
