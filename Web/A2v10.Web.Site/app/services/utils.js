@@ -46,7 +46,8 @@ app.modules['std:utils'] = function () {
 			parse: dateParse,
 			equal: dateEqual,
 			isZero: dateIsZero,
-			formatDate: formatDate
+			formatDate: formatDate,
+			add: dateAdd
 		},
 		text: {
 			contains: textContains,
@@ -270,6 +271,28 @@ app.modules['std:utils'] = function () {
 	function dateIsZero(d1) {
 		return dateEqual(d1, dateZero());
 	}
+
+	function dateAdd(dt, nm, unit) {
+		if (!isDate(dt))
+			return null;
+		var du = 0;
+		switch (unit) {
+			case 'day':
+				du = 1000 * 60 * 60 * 24;
+				break;
+			case 'hour':
+				du = 1000 * 60 * 60;
+				break;
+			case 'minute':
+				du = 1000 * 60;
+				break;
+			case 'second':
+				du = 1000;
+				break;
+		}
+		return new Date(dt.getTime() + nm * du);
+	}
+
 
 	function textContains(text, probe) {
 		if (!probe)

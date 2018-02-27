@@ -604,6 +604,7 @@
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
+							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);
 					}).catch(function (msg) {

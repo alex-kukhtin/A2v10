@@ -133,6 +133,7 @@
     <Content Include="scripts\main.min.js">
       <DependentUpon>main.js</DependentUpon>
     </Content>
+    <Content Include="script\test.min.js" />
     <Content Include="TestPages\checkbox.html" />
     <Content Include="TestPages\collectionview2.html" />
     <Content Include="TestPages\collectionview.html" />

@@ -1,73 +1,76 @@
 ﻿
 
 .input-group > .calendar {
-    border: 1px solid @dropdown-brd-color;
-    position: absolute;
-    background-color: #f5f5f5;
-    left: 0;
-    top: 100%;
-    z-index: @popup-index!important;
-    margin-top: 0;
-    margin-left: -1px;
-    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
-    padding:3px;
+	border: 1px solid @dropdown-brd-color;
+	position: absolute;
+	background-color: #f5f5f5;
+	left: 0;
+	top: 100%;
+	z-index: @popup-index !important;
+	margin-top: 0;
+	margin-left: -1px;
+	box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
+	padding: 3px;
 
-    td {
-        background-color:white;
-    }
+	td {
+		background-color: white;
+	}
 
-    td, th {
-        text-align: center;
-        vertical-align: central;
-    }
+	td, th {
+		text-align: center;
+		vertical-align: central;
+	}
 
-    a {
-        display: block;
-        padding: 1px 5px 3px 5px;
-        border: 1px solid transparent;
-        color: @text-color;
+	a {
+		display: block;
+		padding: 1px 5px 3px 5px;
+		border: 1px solid transparent;
+		color: @text-color;
 
-        &:hover {
-            background-color: @hover-bg-color;
-            border-color: @tb-hover-brd-color;
-        }
-    }
+		&:hover {
+			background-color: @hover-bg-color;
+			border-color: @tb-hover-brd-color;
+		}
+	}
 
-    tbody td {
-        &.today > a {
-            //background-color: @tb-active-bg-color;
-            font-weight: 500;
-            background-color: lighten(@tb-active-bg-color, 10%)
-        }
+	tbody td {
+		&.today > a {
+			//background-color: @tb-active-bg-color;
+			font-weight: 500;
+			background-color: lighten(@tb-active-bg-color, 10%)
+		}
 
-        &.active > a {
-            background-color: @active-bg-color;
-        }
+		&.active > a {
+			background-color: @active-bg-color;
+		}
 
-        &.other > a {
-            color: #c0c0c0;
-        }
-    }
+		&.other > a {
+			color: #c0c0c0;
+		}
+	}
 
 
-    thead th, tfoot td {
-        background-color: #f5f5f5;
-        border-style: none;
+	thead th, tfoot td {
+		background-color: #f5f5f5;
+		border-style: none;
 
-        > a {
-            padding: 2px 0;
-            color: @link-color;
+		> a {
+			padding: 2px 0;
+			color: @link-color;
 
-            &:hover {
-                color: @link-hover-color;
-            }
-        }
-    }
+			&:hover {
+				color: @link-hover-color;
+			}
+		}
+	}
 
-    tr.weekdays th {
-        border-bottom: 1px solid #ccc;
-        padding: 2px 0;
-        color: #777;
-    }
+	a.today {
+		text-transform:lowercase;
+	}
+
+	tr.weekdays th {
+		border-bottom: 1px solid #ccc;
+		padding: 2px 0;
+		color: #777;
+	}
 }
-

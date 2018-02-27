@@ -1,91 +1,91 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="google" content="notranslate" />
-    <meta name="helpUrl" content="$(HelpUrl)" />
-    <title>A2:Web</title>
-    <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="google" content="notranslate" />
+	<meta name="helpUrl" content="$(HelpUrl)" />
+	<title>A2:Web</title>
+	<link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-    <div id="app" class="shell" v-cloak>
-        <header class="header">
-            <div class="h-block">
-                <a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
-                <span class="app-subtitle" v-text="info.subtitle"></span>
-            </div>
-            <div class="aligner"></div>
-        </header>
-        <div class="main-view">
-            <div class="load-indicator" v-show="processing"></div>
-            <div class="content-view full-view" style="margin:8px;overflow:auto">
-                <h4 class="a2-header">Для входа в систему введите е-mail и пароль</h4>
-                <hr style="margin-top:1rem" />
-                <div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
-                    <span class="error" v-text="serverError"></span>
-                </div>
-                <div class="grid" style="grid-template-columns:auto 1fr; width:400px">
-                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
-                    <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
-                        <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="login" tabindex="1" @keyup.enter="onLoginEnter" />
-                            <div class="validator">
-                                <span class="error">введите E-mail</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
-                    <div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
-                        <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="2" @keyup.enter="onPwdEnter" ref="pwd" />
-                            <div class="validator">
-                                <span class="error">введите пароль</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="checkbox" style="grid-row:3;grid-column:2">
-                        <input type="checkbox" v-model="rememberMe" tabindex="3" />
-                        <span>Запомнить учетные данные</span>
-                    </label>
-                    <div style="grid-row:4;grid-column:2">
-                        <button @click.stop.prevent="submit" class="btn btn-default" tabindex="4">Вход в систему</button>
-                        <a v-if="info.multiTenant" class="a2-hyperlink" href="/account/register" tabindex="5" style="margin:0 20px">Регистрация</a>
-                        <a v-if="false" class="a2-hyperlink" href="/account/forgotpassword" tabindex="6">Восстановление пароля</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <footer class="footer">
-            <div :class="{spinner: true, active: processing}"></div>
-            version: <span v-text="info.version"></span>
-        </footer>
-    </div>
+	<div id="app" class="shell" v-cloak>
+		<header class="header">
+			<div class="h-block">
+				<a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
+				<span class="app-subtitle" v-text="info.subtitle"></span>
+			</div>
+			<div class="aligner"></div>
+		</header>
+		<div class="main-view">
+			<div class="load-indicator" v-show="processing"></div>
+			<div class="content-view full-view" style="margin:8px;overflow:auto">
+				<h4 class="a2-header">Для входа в систему введите е-mail и пароль</h4>
+				<hr style="margin-top:1rem" />
+				<div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
+					<span class="error" v-text="serverError"></span>
+				</div>
+				<div class="grid" style="grid-template-columns:auto 1fr; width:400px">
+					<label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
+					<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validLogin}">
+						<div class="input-group">
+							<input v-focus class="control" type="text" v-model="login" tabindex="1" @keyup.enter="onLoginEnter" />
+							<div class="validator">
+								<span class="error">введите E-mail</span>
+							</div>
+						</div>
+					</div>
+					<label style="grid-row:2; grid-column:1" class="a2-label required text-right">Пароль:</label>
+					<div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
+						<div class="input-group">
+							<input class="control" v-focus type="password" v-model="password" tabindex="2" @keyup.enter="onPwdEnter" ref="pwd" />
+							<div class="validator">
+								<span class="error">введите пароль</span>
+							</div>
+						</div>
+					</div>
+					<label class="checkbox" style="grid-row:3;grid-column:2">
+						<input type="checkbox" v-model="rememberMe" tabindex="3" />
+						<span>Запомнить учетные данные</span>
+					</label>
+					<div style="grid-row:4;grid-column:2">
+						<button @click.stop.prevent="submit" class="btn btn-default" tabindex="4">Вход в систему</button>
+						<a v-if="info.multiTenant" class="a2-hyperlink" href="/account/register" tabindex="5" style="margin:0 20px">Регистрация</a>
+						<a v-if="false" class="a2-hyperlink" href="/account/forgotpassword" tabindex="6">Восстановление пароля</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+			<div :class="{spinner: true, active: processing}"></div>
+			version: <span v-text="info.version"></span>
+		</footer>
+	</div>
 
-    <script type="text/javascript">
-        (function () {
-            function isNewBrowser() {
-                if (typeof CSS === 'undefined') return false;
-                return CSS.supports && CSS.supports("display", "grid");
-            }
+	<script type="text/javascript">
+		(function () {
+			function isNewBrowser() {
+				if (typeof CSS === 'undefined') return false;
+				return CSS.supports && CSS.supports("display", "grid");
+			}
 
-            if (!isNewBrowser()) {
-                var appElem = document.getElementById("app");
-                appElem.parentElement.removeChild(appElem);
-                var nsd = document.createElement("div");
-                nsd.classList.add("not-supported");
-                nsd.innerText = "We're sorry, but this browser is not supported.";
-                document.body.appendChild(nsd);
-            }
-        })();
-    </script>
+			if (!isNewBrowser()) {
+				var appElem = document.getElementById("app");
+				appElem.parentElement.removeChild(appElem);
+				var nsd = document.createElement("div");
+				nsd.classList.add("not-supported");
+				nsd.innerText = "We're sorry, but this browser is not supported.";
+				document.body.appendChild(nsd);
+			}
+		})();
+	</script>
 
-    <script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
-    <script type="text/javascript">
-        $(LoginScript)
-    </script>
+	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
+	<script type="text/javascript">
+		$(LoginScript)
+	</script>
 </body>
 </html>

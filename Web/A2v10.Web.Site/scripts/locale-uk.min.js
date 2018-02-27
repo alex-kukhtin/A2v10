@@ -20,7 +20,8 @@
 		$MakeValidFirst: 'Спочатку виправте помилки',
 		$ElementWasChanged: 'Елемент було змінено. Зберегти зміни?',
 		$Profiling: 'Профілювання',
-		$DataModel: 'Модель даних'
+		$DataModel: 'Модель даних',
+		$Today: 'Сьогодні'
 	};
 
 

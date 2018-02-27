@@ -379,17 +379,19 @@
 				requestsCount: 0,
 				debugShowTrace: false,
 				debugShowModel: false,
-				dataCounter: 0
+				dataCounter: 0,
+				traceEnabled: log.traceEnabled()
 			};
 		},
 		computed: {
 			processing() { return this.requestsCount > 0; },
-			traceEnabled: {
-				get() { return log.traceEnabled(); },
-				set(value) { log.enableTrace(value); }
-			},
 			modelStack() {
 				return this.__dataStack__;
+			}
+		},
+		watch: {
+			traceEnabled(val) {
+				log.enableTrace(val);
 			}
 		},
 		methods: {

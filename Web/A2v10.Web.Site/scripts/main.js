@@ -106,7 +106,8 @@ app.modules['std:utils'] = function () {
 			parse: dateParse,
 			equal: dateEqual,
 			isZero: dateIsZero,
-			formatDate: formatDate
+			formatDate: formatDate,
+			add: dateAdd
 		},
 		text: {
 			contains: textContains,
@@ -331,6 +332,28 @@ app.modules['std:utils'] = function () {
 		return dateEqual(d1, dateZero());
 	}
 
+	function dateAdd(dt, nm, unit) {
+		if (!isDate(dt))
+			return null;
+		var du = 0;
+		switch (unit) {
+			case 'day':
+				du = 1000 * 60 * 60 * 24;
+				break;
+			case 'hour':
+				du = 1000 * 60 * 60;
+				break;
+			case 'minute':
+				du = 1000 * 60;
+				break;
+			case 'second':
+				du = 1000;
+				break;
+		}
+		return new Date(dt.getTime() + nm * du);
+	}
+
+
 	function textContains(text, probe) {
 		if (!probe)
 			return true;
@@ -374,134 +397,134 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180131-7101*/
+/*20180227-7121*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
 
-    const utils = require('std:utils');
+	const utils = require('std:utils');
 
-    return {
-        combine,
-        makeQueryString,
-        parseQueryString,
-        normalizeRoot,
-        idChangedOnly,
-        makeBaseUrl,
-        parseUrlAndQuery,
-        replaceUrlQuery,
-        createUrlForNavigate,
-        firstUrl: ''
-    };
+	return {
+		combine,
+		makeQueryString,
+		parseQueryString,
+		normalizeRoot,
+		idChangedOnly,
+		makeBaseUrl,
+		parseUrlAndQuery,
+		replaceUrlQuery,
+		createUrlForNavigate,
+		firstUrl: ''
+	};
 
-    function normalize(elem) {
-        elem = '' + elem || '';
-        elem = elem.replace(/\\/g, '/');
-        if (elem.startsWith('/'))
-            elem = elem.substring(1);
-        if (elem.endsWith('/'))
-            elem = elem.substring(0, elem.length - 1);
-        return elem;
-    }
+	function normalize(elem) {
+		elem = '' + elem || '';
+		elem = elem.replace(/\\/g, '/');
+		if (elem.startsWith('/'))
+			elem = elem.substring(1);
+		if (elem.endsWith('/'))
+			elem = elem.substring(0, elem.length - 1);
+		return elem;
+	}
 
-    function normalizeRoot(path) {
-        let root = window.$$rootUrl;
-        if (root && path.startsWith(root))
-            return path.substring(root.length);
-        return path;
-    }
+	function normalizeRoot(path) {
+		let root = window.$$rootUrl;
+		if (root && path.startsWith(root))
+			return path.substring(root.length);
+		return path;
+	}
 
-    function combine(...args) {
-        return '/' + args.map(normalize).filter(x => !!x).join('/');
-    }
+	function combine(...args) {
+		return '/' + args.map(normalize).filter(x => !!x).join('/');
+	}
 
-    function toUrl(obj) {
-        if (!utils.isDefined(obj)) return '';
-        if (utils.isDate(obj)) {
-            return utils.format(obj, "DateUrl");
-        } else if (utils.isObjectExact(obj)) {
-            return ('' + obj.$id) || '0'
-        }
-        return '' + obj;
-    }
+	function toUrl(obj) {
+		if (!utils.isDefined(obj)) return '';
+		if (utils.isDate(obj)) {
+			return utils.format(obj, "DateUrl");
+		} else if (utils.isObjectExact(obj)) {
+			return ('' + obj.$id) || '0'
+		}
+		return '' + obj;
+	}
 
-    function makeQueryString(obj) {
-        if (!obj) return '';
-        if (!utils.isObjectExact(obj)) return '';
+	function makeQueryString(obj) {
+		if (!obj) return '';
+		if (!utils.isObjectExact(obj)) return '';
 
-        let esc = encodeURIComponent;
+		let esc = encodeURIComponent;
 
-        // skip special (starts with '_' or '$')
-        let query = Object.keys(obj)
-            .filter(k => !k.startsWith('_') && !k.startsWith('$') && !!obj[k])
-            .map(k => esc(k) + '=' + esc(toUrl(obj[k])))
-            .join('&');        
-        return query ? '?' + query : '';
-    }
+		// skip special (starts with '_' or '$')
+		let query = Object.keys(obj)
+			.filter(k => !k.startsWith('_') && !k.startsWith('$') && !!obj[k])
+			.map(k => esc(k) + '=' + esc(toUrl(obj[k])))
+			.join('&');
+		return query ? '?' + query : '';
+	}
 
-    function parseQueryString(str) {
-        var obj = {};
-        str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
-            obj[decodeURIComponent(key)] = '' + decodeURIComponent(value);
-        });
-        return obj;
-    }
+	function parseQueryString(str) {
+		var obj = {};
+		str.replace(/\??([^=&]+)=([^&]*)/g, function (m, key, value) {
+			obj[decodeURIComponent(key)] = '' + decodeURIComponent(value);
+		});
+		return obj;
+	}
 
-    function idChangedOnly(newUrl, oldUrl) {
-        let ns = (newUrl || '').split('/');
-        let os = (oldUrl || '').split('/');
-        if (ns.length !== os.length)
-            return false;
-        if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
-            if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
-                return true;
-        }
-        return false;
-    }
+	function idChangedOnly(newUrl, oldUrl) {
+		let ns = (newUrl || '').split('/');
+		let os = (oldUrl || '').split('/');
+		if (ns.length !== os.length)
+			return false;
+		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
+				return true;
+		}
+		return false;
+	}
 
-    function makeBaseUrl(url) {
-        let x = (url || '').split('/');
-        if (x.length === 6)
-            return x.slice(2, 4).join('/');
-        return url;
-    }
+	function makeBaseUrl(url) {
+		let x = (url || '').split('/');
+		if (x.length === 6)
+			return x.slice(2, 4).join('/');
+		return url;
+	}
 
-    function parseUrlAndQuery(url, querySrc) {
-        let query = {};
-        for (let p in querySrc)
-            query[p] = toUrl(querySrc[p]); // all values are string
-        let rv = { url: url, query: query };
-        if (url.indexOf('?') !== -1) {
-            let a = url.split('?');
-            rv.url = a[0];
-            // first from url then from query
-            rv.query = Object.assign({}, parseQueryString(a[1]), query);
-        }
-        return rv;
-    }
-    function replaceUrlQuery(url, query) {
-        if (!url)
-            url = window.location.pathname + window.location.search;
-        let pu = parseUrlAndQuery(url, query)
-        return pu.url + makeQueryString(pu.query);
-    }
+	function parseUrlAndQuery(url, querySrc) {
+		let query = {};
+		for (let p in querySrc)
+			query[p] = toUrl(querySrc[p]); // all values are string
+		let rv = { url: url, query: query };
+		if (url.indexOf('?') !== -1) {
+			let a = url.split('?');
+			rv.url = a[0];
+			// first from url then from query
+			rv.query = Object.assign({}, parseQueryString(a[1]), query);
+		}
+		return rv;
+	}
+	function replaceUrlQuery(url, query) {
+		if (!url)
+			url = window.location.pathname + window.location.search;
+		let pu = parseUrlAndQuery(url, query)
+		return pu.url + makeQueryString(pu.query);
+	}
 
-    function createUrlForNavigate(url, data) {
-        let urlId = data || 'new';
-        let qs = '';
-        if (utils.isDefined(urlId.$id))
-            urlId = urlId.$id;
-        else if (utils.isObjectExact(urlId)) {
-            urlId = data.Id;
-            delete data['Id'];
-            qs = makeQueryString(data);
-        }
-        return combine(url, urlId) + qs;
-    }
+	function createUrlForNavigate(url, data) {
+		let urlId = data || 'new';
+		let qs = '';
+		if (utils.isDefined(urlId.$id))
+			urlId = urlId.$id;
+		else if (utils.isObjectExact(urlId)) {
+			urlId = data.Id;
+			delete data['Id'];
+			qs = makeQueryString(data);
+		}
+		return combine(url, urlId) + qs;
+	}
 
-    function replaceId(url, newId) {
-        alert('todo::replaceId')
-    }
+	function replaceId(url, newId) {
+		alert('todo::replaceId')
+	}
 };
 
 
@@ -509,13 +532,15 @@ app.modules['std:url'] = function () {
 
 
 
-/*20170903-7024*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180227-7121*/
 /* platform/webvue.js */
 
 (function () {
 
-    function set(target, prop, value) {
-        Vue.set(target, prop, value);
+	function set(target, prop, value) {
+		Vue.set(target, prop, value);
 	}
 
 	function defer(func) {
@@ -523,10 +548,10 @@ app.modules['std:url'] = function () {
 	}
 
 
-    app.modules['std:platform'] = {
+	app.modules['std:platform'] = {
 		set: set,
 		defer: defer
-    };
+	};
 
 	app.modules['std:eventBus'] = new Vue({});
 
@@ -534,93 +559,93 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180131-7101
+// 20180227-7121
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
-    const eventBus = require('std:eventBus');
-    const urlTools = require('std:url');
+	const eventBus = require('std:eventBus');
+	const urlTools = require('std:url');
 
-    let fc = null;
+	let fc = null;
 
 	return {
 		get: get,
 		post: post,
-        load: load,
-        upload: upload
+		load: load,
+		upload: upload
 	};
 
-    function doRequest(method, url, data) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            
-            xhr.onload = function (response) {
+	function doRequest(method, url, data) {
+		return new Promise(function (resolve, reject) {
+			let xhr = new XMLHttpRequest();
+
+			xhr.onload = function (response) {
 				eventBus.$emit('endRequest', url);
-                if (xhr.status === 200) {
-                    let ct = xhr.getResponseHeader('content-type');
-                    let xhrResult = xhr.responseText;
-                    if (ct.indexOf('application/json') !== -1)
-                        xhrResult = JSON.parse(xhr.responseText);
-                    resolve(xhrResult);
-                }
-                else if (xhr.status === 255) {
-                    reject(xhr.responseText || xhr.statusText);
-                }
-                else
-                    reject(xhr.statusText);
-            };
-            xhr.onerror = function (response) {
+				if (xhr.status === 200) {
+					let ct = xhr.getResponseHeader('content-type');
+					let xhrResult = xhr.responseText;
+					if (ct.indexOf('application/json') !== -1)
+						xhrResult = JSON.parse(xhr.responseText);
+					resolve(xhrResult);
+				}
+				else if (xhr.status === 255) {
+					reject(xhr.responseText || xhr.statusText);
+				}
+				else
+					reject(xhr.statusText);
+			};
+			xhr.onerror = function (response) {
 				eventBus.$emit('endRequest', url);
-                reject(xhr.statusText);
-            };
-            xhr.open(method, url, true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('Accept', 'application/json, text/html');
+				reject(xhr.statusText);
+			};
+			xhr.open(method, url, true);
+			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xhr.setRequestHeader('Accept', 'application/json, text/html');
 			eventBus.$emit('beginRequest', url);
-            xhr.send(data);
-        });
-    }
+			xhr.send(data);
+		});
+	}
 
-    function get(url) {
-        return doRequest('GET', url);
-    }
+	function get(url) {
+		return doRequest('GET', url);
+	}
 
-    function post(url, data) {
-        return doRequest('POST', url, data);
-    }
+	function post(url, data) {
+		return doRequest('POST', url, data);
+	}
 
-    function upload(url, data) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.onload = function (response) {
-                if (xhr.status === 200) {
-                    let xhrResult = JSON.parse(xhr.responseText);
-                    resolve(xhrResult);
-                } else if (xhr.status === 255) {
-                    alert(xhr.responseText || xhr.statusText);
-                }
-            };
-            xhr.onerror = function (response) {
-                alert('Error');
-            };
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.send(data);
-        });
-    }
-    function load(url, selector) {
-        let fc = selector ? selector.firstElementChild : null;
-        if (fc && fc.__vue__) {
-            fc.__vue__.$destroy();
-        };
-        return new Promise(function (resolve, reject) {
-            doRequest('GET', url)
-                .then(function (html) {
-                    let dp = new DOMParser();
-                    let rdoc = dp.parseFromString(html, 'text/html');
-                    // first element from fragment body
+	function upload(url, data) {
+		return new Promise(function (resolve, reject) {
+			let xhr = new XMLHttpRequest();
+			xhr.onload = function (response) {
+				if (xhr.status === 200) {
+					let xhrResult = JSON.parse(xhr.responseText);
+					resolve(xhrResult);
+				} else if (xhr.status === 255) {
+					alert(xhr.responseText || xhr.statusText);
+				}
+			};
+			xhr.onerror = function (response) {
+				alert('Error');
+			};
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xhr.setRequestHeader('Accept', 'application/json');
+			xhr.send(data);
+		});
+	}
+	function load(url, selector) {
+		let fc = selector ? selector.firstElementChild : null;
+		if (fc && fc.__vue__) {
+			fc.__vue__.$destroy();
+		};
+		return new Promise(function (resolve, reject) {
+			doRequest('GET', url)
+				.then(function (html) {
+					let dp = new DOMParser();
+					let rdoc = dp.parseFromString(html, 'text/html');
+					// first element from fragment body
 					let srcElem = rdoc.body.firstElementChild;
 					let elemId = srcElem.id || null;
 					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
@@ -629,26 +654,26 @@ app.modules['std:http'] = function () {
 						resolve(false);
 						return;
 					}
-                    for (let i = 0; i < rdoc.scripts.length; i++) {
-                        let s = rdoc.scripts[i];
-                        if (s.type === 'text/javascript') {
-                            let newScript = document.createElement("script");
-                            newScript.text = s.text;
-                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
-                        }
-                    }
-                    if (selector.firstElementChild && selector.firstElementChild.__vue__) {
-                        let ve = selector.firstElementChild.__vue__;
-                        ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
-                        // save initial search
-                        ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
-                    }
-                    resolve(true);
-                })
-                .catch(function (error) {
-                    alert(error);
-                    resolve(false);
-                });
+					for (let i = 0; i < rdoc.scripts.length; i++) {
+						let s = rdoc.scripts[i];
+						if (s.type === 'text/javascript') {
+							let newScript = document.createElement("script");
+							newScript.text = s.text;
+							document.body.appendChild(newScript).parentNode.removeChild(newScript);
+						}
+					}
+					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
+						let ve = selector.firstElementChild.__vue__;
+						ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
+						// save initial search
+						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
+					}
+					resolve(true);
+				})
+				.catch(function (error) {
+					alert(error);
+					resolve(false);
+				});
 		});
 	}
 };
@@ -659,7 +684,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7110
+// 20180227-7121
 /* platform/routex.js */
 
 (function () {
@@ -673,7 +698,7 @@ app.modules['std:http'] = function () {
 
 	const titleStore = {};
 
-    function setTitle(to) {
+	function setTitle(to) {
 		if (to.title) {
 			document.title = to.title;
 			titleStore[to.url] = to.title;
@@ -682,23 +707,22 @@ app.modules['std:http'] = function () {
 
 	function makeBackUrl(url) {
 		let urlArr = url.split('/');
-        if (urlArr.length === 5)
-            return urlArr.slice(0, 3).join('/');
-        else if (url.length === 4)
-            return urlArr.slice(0, 2).join('/');
+		if (urlArr.length === 5)
+			return urlArr.slice(0, 3).join('/');
+		else if (url.length === 4)
+			return urlArr.slice(0, 2).join('/');
 		return url;
-    }
+	}
 
-    function normalizedRoute()
-    {
-        let path = window.location.pathname;
-        return urlTools.normalizeRoot(path);
-    }
+	function normalizedRoute() {
+		let path = window.location.pathname;
+		return urlTools.normalizeRoot(path);
+	}
 
-    const store = new Vuex.Store({
-        strict : true,
+	const store = new Vuex.Store({
+		strict: true,
 		state: {
-            route: normalizedRoute(),
+			route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
@@ -720,12 +744,12 @@ app.modules['std:http'] = function () {
 			},
 			search: (state) => {
 				return urlTools.makeQueryString(state.query);
-            }
+			}
 		},
 		mutations: {
-            navigate: function(state, to) { // to: {url, query, title}
-                let root = window.$$rootUrl;
-				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
+			navigate: function (state, to) { // to: {url, query, title}
+				let root = window.$$rootUrl;
+				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
 				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
@@ -735,52 +759,52 @@ app.modules['std:http'] = function () {
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
 			},
-			query: function(state, query) {
+			query: function (state, query) {
 				// changes all query
-                let root = window.$$rootUrl;
+				let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
 				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
-                //console.warn('set query: ' + newUrl);
-                window.history.replaceState(null, null, newUrl);
+				//console.warn('set query: ' + newUrl);
+				window.history.replaceState(null, null, newUrl);
 			},
-			setquery: function(state, query) {
+			setquery: function (state, query) {
 				// TODO: replaceUrl: boolean
 				// changes some fields or query
-                let root = window.$$rootUrl;
-                let oldUrl = root + this.getters.baseUrl;
-                state.query = Object.assign({}, state.query, query);
-                let newUrl = root + this.getters.baseUrl;
-                if (newUrl === oldUrl) return;
-                window.history.replaceState(null, null, newUrl);
+				let root = window.$$rootUrl;
+				let oldUrl = root + this.getters.baseUrl;
+				state.query = Object.assign({}, state.query, query);
+				let newUrl = root + this.getters.baseUrl;
+				if (newUrl === oldUrl) return;
+				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', state.query);
 			},
-			popstate: function(state) {
-                state.route = normalizedRoute();
+			popstate: function (state) {
+				state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-            setstate: function(state, to) { // to: {url, title}
-                window.history.replaceState(null, null, window.$$rootUrl + to.url);
-                state.route = normalizedRoute();
+			setstate: function (state, to) { // to: {url, title}
+				window.history.replaceState(null, null, window.$$rootUrl + to.url);
+				state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
-            },
-            setnewid: function(state, to) {
-                let root = window.$$rootUrl;
-                let oldRoute = state.route;
+			},
+			setnewid: function (state, to) {
+				let root = window.$$rootUrl;
+				let oldRoute = state.route;
 				let newRoute = oldRoute.replace('/new', '/' + to.id);
 				state.route = newRoute;
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
-                window.history.replaceState(null, null, newUrl);
-            },
-            close: function(state) {
+				window.history.replaceState(null, null, newUrl);
+			},
+			close: function (state) {
 
 
-                function navigateBack() {
-                    // TODO: ??? 
-                    window.close();
+				function navigateBack() {
+					// TODO: ??? 
+					window.close();
                     /*
                     let url = makeBackUrl(state.route);
                     if (url === state.route) {
@@ -790,29 +814,29 @@ app.modules['std:http'] = function () {
                         store.commit('navigate', { url: url });
                     }
                     */
-                }
+				}
 
-                if (window.history.length > 1) {
-                    let oldUrl = window.location.pathname;
-                    window.history.back();
-                    // it is done?
-                    setTimeout(() => {
-                        if (window.location.pathname === oldUrl) {
-                            navigateBack();
-                        }
-                    }, 300);
-                } else
-                    navigateBack();
+				if (window.history.length > 1) {
+					let oldUrl = window.location.pathname;
+					window.history.back();
+					// it is done?
+					setTimeout(() => {
+						if (window.location.pathname === oldUrl) {
+							navigateBack();
+						}
+					}, 300);
+				} else
+					navigateBack();
 			}
 		}
 	});
 
 	function replaceUrlSearch(url, search) {
-        let parts = url.split('?');
-        return parts[0] + (search || '');
+		let parts = url.split('?');
+		return parts[0] + (search || '');
 	}
 
-    function replaceUrlQuery(url, query) {
+	function replaceUrlQuery(url, query) {
 		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
@@ -824,30 +848,38 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-/*20171029-7060*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180227-7121*/
 /* services/log.js */
 
 app.modules['std:log'] = function () {
 
-    let _traceEnabled = false;
-    let _sessionLoaded = false;
-    const traceEnabledKey = 'traceEnabled';
+
+	let _traceEnabled = false;
+	let _sessionLoaded = false;
+	const traceEnabledKey = 'traceEnabled';
 
 	return {
 		info: info,
 		warn: warning,
 		error: error,
 		time: countTime,
-        traceEnabled: function() {
-            if (!_sessionLoaded)
-                loadSession();
+		traceEnabled: function () {
+			if (!_sessionLoaded)
+				loadSession();
 			return _traceEnabled;
 		},
-		enableTrace: function(val) {
+		enableTrace: function (val) {
 			_traceEnabled = val;
-            console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
-            window.sessionStorage.setItem(traceEnabledKey, val);
-        }
+			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
+			try {
+				window.sessionStorage.setItem(traceEnabledKey, val);
+			}
+			catch (err) {
+				// do nothing
+			}
+		}
 	};
 
 	function info(msg) {
@@ -867,134 +899,136 @@ app.modules['std:log'] = function () {
 	function countTime(msg, start, enable) {
 		if (!_traceEnabled && !enable) return;
 		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
-    }
+	}
 
-    function loadSession() {
-        let te = window.sessionStorage.getItem(traceEnabledKey);
-        if (te !== null) {
-            _traceEnabled = te === 'true';
-            if (_traceEnabled)
-                console.warn('tracing is enabled');
-        }
-        _sessionLoaded = true;
-    }
+	function loadSession() {
+		let te = window.sessionStorage.getItem(traceEnabledKey);
+		if (te !== null) {
+			_traceEnabled = te === 'true';
+			if (_traceEnabled)
+				console.warn('tracing is enabled');
+		}
+		_sessionLoaded = true;
+	}
 };
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20180227-7121*/
 /*validators.js*/
 
-app.modules['std:validators'] = function() {
+app.modules['std:validators'] = function () {
 
-    const utils = require('std:utils');
-    const ERROR = 'error';
+	const utils = require('std:utils');
+	const ERROR = 'error';
 
-    /* from angular.js !!! */
-    const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
-    const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
+	/* from angular.js !!! */
+	const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
 	return {
 		validate: validateItem
 	};
 
-    function validateStd(rule, val) {
-        switch (rule) {
-            case 'notBlank':
-                return utils.notBlank(val);
-            case "email":
-                return validEmail(val);
-            case "url":
-                return validUrl(val);
-            case "isTrue":
-                return val === true;
-        }
-        console.error(`invalid std rule: '${rule}'`);
-        return true;
-    }
+	function validateStd(rule, val) {
+		switch (rule) {
+			case 'notBlank':
+				return utils.notBlank(val);
+			case "email":
+				return validEmail(val);
+			case "url":
+				return validUrl(val);
+			case "isTrue":
+				return val === true;
+		}
+		console.error(`invalid std rule: '${rule}'`);
+		return true;
+	}
 
-    function validateImpl(rules, item, val, ff) {
-        let retval = [];
-        rules.forEach(function (rule) {
-            const sev = rule.severity || ERROR;
-            if (utils.isFunction(rule.applyIf)) {
-                if (!rule.applyIf(item, val)) return;
-            }
-            if (utils.isString(rule)) {
-                if (!validateStd('notBlank', val))
-                    retval.push({ msg: rule, severity: ERROR });
-            } else if (utils.isString(rule.valid)) {
-                if (!validateStd(rule.valid, val))
-                    retval.push({ msg: rule.msg, severity: sev });
-            } else if (utils.isFunction(rule.valid)) {
-                let vr = rule.valid(item, val);
-                if (vr && vr.then) {
-                    vr.then((result) => {
-                        let dm = { severity: sev, msg: rule.msg };
-                        let nu = false;
-                        if (utils.isString(result)) {
-                            dm.msg = result;
-                            retval.push(dm);
-                            nu = true;
-                        } else if (!result) {
-                            retval.push(dm);
-                            nu = true;
-                        }
-                        // need to update the validators
-                        item._root_._needValidate_ = true;
-                        if (nu && ff) ff();
-                    });
-                }
-                else if (utils.isString(vr)) {
-                    retval.push({ msg: vr, severity: sev });
-                }
-                else if (!vr) {
-                    retval.push({ msg: rule.msg, severity: sev });
-                }
-            } else {
-                console.error('invalid valid element type for rule');
-            }
-        });
-        return retval;
-    }
+	function validateImpl(rules, item, val, ff) {
+		let retval = [];
+		rules.forEach(function (rule) {
+			const sev = rule.severity || ERROR;
+			if (utils.isFunction(rule.applyIf)) {
+				if (!rule.applyIf(item, val)) return;
+			}
+			if (utils.isString(rule)) {
+				if (!validateStd('notBlank', val))
+					retval.push({ msg: rule, severity: ERROR });
+			} else if (utils.isString(rule.valid)) {
+				if (!validateStd(rule.valid, val))
+					retval.push({ msg: rule.msg, severity: sev });
+			} else if (utils.isFunction(rule.valid)) {
+				let vr = rule.valid(item, val);
+				if (vr && vr.then) {
+					vr.then((result) => {
+						let dm = { severity: sev, msg: rule.msg };
+						let nu = false;
+						if (utils.isString(result)) {
+							dm.msg = result;
+							retval.push(dm);
+							nu = true;
+						} else if (!result) {
+							retval.push(dm);
+							nu = true;
+						}
+						// need to update the validators
+						item._root_._needValidate_ = true;
+						if (nu && ff) ff();
+					});
+				}
+				else if (utils.isString(vr)) {
+					retval.push({ msg: vr, severity: sev });
+				}
+				else if (!vr) {
+					retval.push({ msg: rule.msg, severity: sev });
+				}
+			} else {
+				console.error('invalid valid element type for rule');
+			}
+		});
+		return retval;
+	}
 
-    function validateItem(rules, item, val, du) {
-        //console.warn(item);
-        let arr = [];
-        if (utils.isArray(rules))
-            arr = rules;
-        else if (utils.isObject(rules))
-            arr.push(rules);
-        else if (utils.isString(rules))
-            arr.push({ valid: 'notBlank', msg: rules });
-        let err = validateImpl(arr, item, val, du);
-        return err; // always array. may be defer
-    }
+	function validateItem(rules, item, val, du) {
+		//console.warn(item);
+		let arr = [];
+		if (utils.isArray(rules))
+			arr = rules;
+		else if (utils.isObject(rules))
+			arr.push(rules);
+		else if (utils.isString(rules))
+			arr.push({ valid: 'notBlank', msg: rules });
+		let err = validateImpl(arr, item, val, du);
+		return err; // always array. may be defer
+	}
 
 
-    function validEmail(addr) {
-        return addr === '' || EMAIL_REGEXP.test(addr);
-    }
+	function validEmail(addr) {
+		return addr === '' || EMAIL_REGEXP.test(addr);
+	}
 
-    function validUrl(url) {
-        return url === '' || URL_REGEXP.test(url);
-    }
+	function validUrl(url) {
+		return url === '' || URL_REGEXP.test(url);
+	}
 };
 
 
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180225-7119
+// 20180227-7121
 // services/datamodel.js
 
 (function () {
 
 	"use strict";
+
     /* TODO:
     1. changing event
     4. add plain properties
     */
+
 	const META = '_meta_';
 	const PARENT = '_parent_';
 	const SRC = '_src_';
@@ -1251,6 +1285,7 @@ app.modules['std:validators'] = function() {
 					elem[m].$RowCount = rcv;
 				}
 			}
+			elem._setModelInfo_ = setRootModelInfo;
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
@@ -1268,6 +1303,16 @@ app.modules['std:validators'] = function() {
 			log.time('create root time:', startTime, false);
 		}
 		return elem;
+	}
+
+
+	function setRootModelInfo(item, data) {
+		if (!data.$ModelInfo) return;
+		let elem = item || this;
+		for (let p in data.$ModelInfo) {
+			elem.$ModelInfo = data.$ModelInfo[p];
+			return; // first element only
+		}
 	}
 
 	function isReadOnly() {
@@ -1924,11 +1969,18 @@ app.modules['std:validators'] = function() {
         */
 	}
 
-	function setModelInfo(root, info) {
+	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
 			PageSize: 20
 		};
+		let mi = rawData.$ModelInfo;
+		if (!mi) return;
+		for (let p in mi) {
+			root[p].$ModelInfo = mi[p];
+		}
+		//console.dir(rawData.$ModelInfo);
+		//root._setModelInfo_()
 	}
 
 	app.modules['std:datamodel'] = {
@@ -2497,7 +2549,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180125-7121
 // components/datepicker.js
 
 
@@ -2509,15 +2561,16 @@ Vue.component('validator-control', {
 	const eventBus = require('std:eventBus');
 
 	const baseControl = component('control');
+	const locale = window.$$locale;
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
-    <div class="input-group">
-        <input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
-        <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
+	<div class="input-group">
+		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
+		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
@@ -2533,18 +2586,18 @@ Vue.component('validator-control', {
 						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
 					</tr>
 				</tbody>
-				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cегодня</a></td></tr></tfoot>
+				<tfoot><tr><td colspan="7"><a class="today" @click.stop.prevent='today' v-text='todayText'></a></td></tr></tfoot>
 			</table>
 		</div>
-    </div>
+	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,
 		props: {
 			item: Object,
 			prop: String,
-            itemToValidate: Object,
-            propToValidate: String,
+			itemToValidate: Object,
+			propToValidate: String,
 			// override control.align (default value)
 			align: { type: String, default: 'center' }
 		},
@@ -2597,16 +2650,16 @@ Vue.component('validator-control', {
 					cls += " other";
 				return cls;
 			},
-            dayTitle(day) {
-                // todo: localize
+			dayTitle(day) {
+				// todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-            },
-            cssClass2() {
-                let cx = this.cssClass();
-                if (this.isOpen)
-                    cx += ' open'
-                return cx;
-            },
+			},
+			cssClass2() {
+				let cx = this.cssClass();
+				if (this.isOpen)
+					cx += ' open'
+				return cx;
+			},
 			__clickOutside() {
 				this.isOpen = false;
 			}
@@ -2614,6 +2667,9 @@ Vue.component('validator-control', {
 		computed: {
 			modelDate() {
 				return this.item[this.prop];
+			},
+			todayText() {
+				return locale.$Today;
 			},
 			model: {
 				get() {
@@ -3996,7 +4052,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180227-7121
 // components/collectionview.js
 
 /*
@@ -4009,6 +4065,8 @@ TODO:
 
 	const log = require('std:log');
 
+	const DEFAULT_PAGE_SIZE = 20;
+
 	Vue.component('collection-view', {
 		store: component('std:store'),
 		template: `
@@ -4019,7 +4077,7 @@ TODO:
 `,
 		props: {
 			ItemsSource: Array,
-			pageSize: Number,
+			initialPageSize: Number,
 			initialFilter: Object,
 			initialSort: Object,
 			runAt: String,
@@ -4039,19 +4097,33 @@ TODO:
 			};
 		},
 		watch: {
+			/*
 			dir() {
-				// можно отслеживать вычисляемые свойства
-				//alert('dir changed');
+				// You can watch the computed properties too.
+				//console.warn('dir changed');
 			},
+			*/
 			filter: {
 				handler() {
 					if (this.isServer)
 						this.filterChanged();
 				},
 				deep: true
+			},
+			sourceCount() {
+				// HACK
+				//console.warn('source count changed');
+				if (this.isServer)
+					this.$setOffset(0); // always reload
 			}
 		},
 		computed: {
+			pageSize() {
+				if (this.initialPageSize > 0)
+					return this.initialPageSize;
+				let ps = this.getModelInfoProperty('$PageSize');
+				return ps ? ps : DEFAULT_PAGE_SIZE;
+			},
 			isServer() {
 				return this.runAt === 'serverurl' || this.runAt === 'server';
 			},
@@ -4060,8 +4132,14 @@ TODO:
 				return this.runAt === 'serverurl';
 			},
 			dir() {
-				if (this.isQueryUrl)
-					return this.$store.getters.query.dir;
+				if (this.isQueryUrl) {
+					let dir = this.$store.getters.query.dir;
+					if (!dir) dir = this.getModelInfoProperty('$SortDir');
+					return dir;
+				} else if (this.isServer) {
+					let sd = this.getModelInfoProperty('$SortDir');
+					return sd ? sd : this.localQuery.dir;
+				}
 				return this.localQuery.dir;
 			},
 			offset() {
@@ -4070,8 +4148,15 @@ TODO:
 				return this.localQuery.offset;
 			},
 			order() {
-				if (this.isQueryUrl)
-					return this.$store.getters.query.order;
+				if (this.isQueryUrl) {
+					let order = this.$store.getters.query.order;
+					if (!order) order = this.getModelInfoProperty('$SortOrder');
+					return order;
+				}
+				else if (this.isServer) {
+					let so = this.getModelInfoProperty('$SortOrder');
+					return so ? so : this.localQuery.dir;
+				}
 				return this.localQuery.order;
 			},
 			pagedSource() {
@@ -4139,6 +4224,14 @@ TODO:
 				} else {
 					this.localQuery.offset = offset;
 				}
+			},
+			getModelInfoProperty(propName) {
+				if (!this.ItemsSource) return undefined;
+				//console.dir(this.ItemsSource._path_);
+				const itmsrc = this.ItemsSource;
+				let mi = itmsrc.$ModelInfo;
+				if (!mi) return undefined;
+				return mi[propName];
 			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
@@ -5478,27 +5571,27 @@ Vue.directive('settabindex', {
     }
 });
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20171224-7080*/
+/*20180227-7121*/
 /* directives/lazy.js */
 
 (function () {
 
-    function updateLazy(arr) {
-        if (arr && arr.$loadLazy) {
-            arr.$loadLazy();
-        }
-    }
+	function updateLazy(arr) {
+		if (arr && arr.$loadLazy) {
+			arr.$loadLazy();
+		}
+	}
 
-    Vue.directive('lazy', {
-        componentUpdated(el, binding, vnode) {
-            updateLazy(binding.value);
-        },
-        inserted(el, binding, vnode) {
-            updateLazy(binding.value);
-        }
-    });
+	Vue.directive('lazy', {
+		componentUpdated(el, binding, vnode) {
+			updateLazy(binding.value);
+		},
+		inserted(el, binding, vnode) {
+			updateLazy(binding.value);
+		}
+	});
 })();
 
 
@@ -6290,6 +6383,7 @@ Vue.directive('resize', {
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
+							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);
 					}).catch(function (msg) {
@@ -6755,17 +6849,19 @@ Vue.directive('resize', {
 				requestsCount: 0,
 				debugShowTrace: false,
 				debugShowModel: false,
-				dataCounter: 0
+				dataCounter: 0,
+				traceEnabled: log.traceEnabled()
 			};
 		},
 		computed: {
 			processing() { return this.requestsCount > 0; },
-			traceEnabled: {
-				get() { return log.traceEnabled(); },
-				set(value) { log.enableTrace(value); }
-			},
 			modelStack() {
 				return this.__dataStack__;
+			}
+		},
+		watch: {
+			traceEnabled(val) {
+				log.enableTrace(val);
 			}
 		},
 		methods: {

@@ -67,9 +67,9 @@ namespace A2v10.Xaml
 			}
 
 			if (PageSize != null)
-				_outer.MergeAttribute(":page-size", PageSize.Value.ToString());
-			else
-				_outer.MergeAttribute(":page-size", "$modelInfo.PageSize");
+				_outer.MergeAttribute(":initial-page-size", PageSize.Value.ToString());
+			//else
+				//_outer.MergeAttribute(":page-size", "$modelInfo.PageSize");
 
 			_outer.RenderStart(context);
 			_inner = new TagBuilder("template");

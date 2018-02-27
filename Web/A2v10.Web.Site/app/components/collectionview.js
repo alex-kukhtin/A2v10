@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180227-7121
 // components/collectionview.js
 
 /*
@@ -13,6 +13,8 @@ TODO:
 
 	const log = require('std:log');
 
+	const DEFAULT_PAGE_SIZE = 20;
+
 	Vue.component('collection-view', {
 		store: component('std:store'),
 		template: `
@@ -23,7 +25,7 @@ TODO:
 `,
 		props: {
 			ItemsSource: Array,
-			pageSize: Number,
+			initialPageSize: Number,
 			initialFilter: Object,
 			initialSort: Object,
 			runAt: String,
@@ -43,19 +45,33 @@ TODO:
 			};
 		},
 		watch: {
+			/*
 			dir() {
-				// можно отслеживать вычисляемые свойства
-				//alert('dir changed');
+				// You can watch the computed properties too.
+				//console.warn('dir changed');
 			},
+			*/
 			filter: {
 				handler() {
 					if (this.isServer)
 						this.filterChanged();
 				},
 				deep: true
+			},
+			sourceCount() {
+				// HACK
+				//console.warn('source count changed');
+				if (this.isServer)
+					this.$setOffset(0); // always reload
 			}
 		},
 		computed: {
+			pageSize() {
+				if (this.initialPageSize > 0)
+					return this.initialPageSize;
+				let ps = this.getModelInfoProperty('$PageSize');
+				return ps ? ps : DEFAULT_PAGE_SIZE;
+			},
 			isServer() {
 				return this.runAt === 'serverurl' || this.runAt === 'server';
 			},
@@ -64,8 +80,14 @@ TODO:
 				return this.runAt === 'serverurl';
 			},
 			dir() {
-				if (this.isQueryUrl)
-					return this.$store.getters.query.dir;
+				if (this.isQueryUrl) {
+					let dir = this.$store.getters.query.dir;
+					if (!dir) dir = this.getModelInfoProperty('$SortDir');
+					return dir;
+				} else if (this.isServer) {
+					let sd = this.getModelInfoProperty('$SortDir');
+					return sd ? sd : this.localQuery.dir;
+				}
 				return this.localQuery.dir;
 			},
 			offset() {
@@ -74,8 +96,15 @@ TODO:
 				return this.localQuery.offset;
 			},
 			order() {
-				if (this.isQueryUrl)
-					return this.$store.getters.query.order;
+				if (this.isQueryUrl) {
+					let order = this.$store.getters.query.order;
+					if (!order) order = this.getModelInfoProperty('$SortOrder');
+					return order;
+				}
+				else if (this.isServer) {
+					let so = this.getModelInfoProperty('$SortOrder');
+					return so ? so : this.localQuery.dir;
+				}
 				return this.localQuery.order;
 			},
 			pagedSource() {
@@ -143,6 +172,14 @@ TODO:
 				} else {
 					this.localQuery.offset = offset;
 				}
+			},
+			getModelInfoProperty(propName) {
+				if (!this.ItemsSource) return undefined;
+				//console.dir(this.ItemsSource._path_);
+				const itmsrc = this.ItemsSource;
+				let mi = itmsrc.$ModelInfo;
+				if (!mi) return undefined;
+				return mi[propName];
 			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;

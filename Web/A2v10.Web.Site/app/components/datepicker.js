@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7098
+// 20180125-7121
 // components/datepicker.js
 
 
@@ -12,15 +12,16 @@
 	const eventBus = require('std:eventBus');
 
 	const baseControl = component('control');
+	const locale = window.$$locale;
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
-    <div class="input-group">
-        <input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
-        <a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
+	<div class="input-group">
+		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
+		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
 			<table>
@@ -36,18 +37,18 @@
 						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
 					</tr>
 				</tbody>
-				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>cегодня</a></td></tr></tfoot>
+				<tfoot><tr><td colspan="7"><a class="today" @click.stop.prevent='today' v-text='todayText'></a></td></tr></tfoot>
 			</table>
 		</div>
-    </div>
+	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,
 		props: {
 			item: Object,
 			prop: String,
-            itemToValidate: Object,
-            propToValidate: String,
+			itemToValidate: Object,
+			propToValidate: String,
 			// override control.align (default value)
 			align: { type: String, default: 'center' }
 		},
@@ -100,16 +101,16 @@
 					cls += " other";
 				return cls;
 			},
-            dayTitle(day) {
-                // todo: localize
+			dayTitle(day) {
+				// todo: localize
 				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-            },
-            cssClass2() {
-                let cx = this.cssClass();
-                if (this.isOpen)
-                    cx += ' open'
-                return cx;
-            },
+			},
+			cssClass2() {
+				let cx = this.cssClass();
+				if (this.isOpen)
+					cx += ' open'
+				return cx;
+			},
 			__clickOutside() {
 				this.isOpen = false;
 			}
@@ -117,6 +118,9 @@
 		computed: {
 			modelDate() {
 				return this.item[this.prop];
+			},
+			todayText() {
+				return locale.$Today;
 			},
 			model: {
 				get() {

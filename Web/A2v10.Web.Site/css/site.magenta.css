@@ -1677,6 +1677,9 @@ pre.a2-code {
 .input-group > .calendar tfoot td > a:hover {
   color: #732673;
 }
+.input-group > .calendar a.today {
+  text-transform: lowercase;
+}
 .input-group > .calendar tr.weekdays th {
   border-bottom: 1px solid #ccc;
   padding: 2px 0;

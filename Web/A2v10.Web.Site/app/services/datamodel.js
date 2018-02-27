@@ -1,15 +1,17 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180225-7119
+// 20180227-7121
 // services/datamodel.js
 
 (function () {
 
 	"use strict";
+
     /* TODO:
     1. changing event
     4. add plain properties
     */
+
 	const META = '_meta_';
 	const PARENT = '_parent_';
 	const SRC = '_src_';
@@ -266,6 +268,7 @@
 					elem[m].$RowCount = rcv;
 				}
 			}
+			elem._setModelInfo_ = setRootModelInfo;
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
@@ -283,6 +286,16 @@
 			log.time('create root time:', startTime, false);
 		}
 		return elem;
+	}
+
+
+	function setRootModelInfo(item, data) {
+		if (!data.$ModelInfo) return;
+		let elem = item || this;
+		for (let p in data.$ModelInfo) {
+			elem.$ModelInfo = data.$ModelInfo[p];
+			return; // first element only
+		}
 	}
 
 	function isReadOnly() {
@@ -939,11 +952,18 @@
         */
 	}
 
-	function setModelInfo(root, info) {
+	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
 			PageSize: 20
 		};
+		let mi = rawData.$ModelInfo;
+		if (!mi) return;
+		for (let p in mi) {
+			root[p].$ModelInfo = mi[p];
+		}
+		//console.dir(rawData.$ModelInfo);
+		//root._setModelInfo_()
 	}
 
 	app.modules['std:datamodel'] = {

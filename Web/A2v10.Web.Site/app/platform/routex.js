@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7110
+// 20180227-7121
 /* platform/routex.js */
 
 (function () {
@@ -14,7 +14,7 @@
 
 	const titleStore = {};
 
-    function setTitle(to) {
+	function setTitle(to) {
 		if (to.title) {
 			document.title = to.title;
 			titleStore[to.url] = to.title;
@@ -23,23 +23,22 @@
 
 	function makeBackUrl(url) {
 		let urlArr = url.split('/');
-        if (urlArr.length === 5)
-            return urlArr.slice(0, 3).join('/');
-        else if (url.length === 4)
-            return urlArr.slice(0, 2).join('/');
+		if (urlArr.length === 5)
+			return urlArr.slice(0, 3).join('/');
+		else if (url.length === 4)
+			return urlArr.slice(0, 2).join('/');
 		return url;
-    }
+	}
 
-    function normalizedRoute()
-    {
-        let path = window.location.pathname;
-        return urlTools.normalizeRoot(path);
-    }
+	function normalizedRoute() {
+		let path = window.location.pathname;
+		return urlTools.normalizeRoot(path);
+	}
 
-    const store = new Vuex.Store({
-        strict : true,
+	const store = new Vuex.Store({
+		strict: true,
 		state: {
-            route: normalizedRoute(),
+			route: normalizedRoute(),
 			query: urlTools.parseQueryString(window.location.search)
 		},
 		getters: {
@@ -61,12 +60,12 @@
 			},
 			search: (state) => {
 				return urlTools.makeQueryString(state.query);
-            }
+			}
 		},
 		mutations: {
-            navigate: function(state, to) { // to: {url, query, title}
-                let root = window.$$rootUrl;
-				let oldUrl =  root + state.route + urlTools.makeQueryString(state.query);
+			navigate: function (state, to) { // to: {url, query, title}
+				let root = window.$$rootUrl;
+				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url;
 				state.query = Object.assign({}, to.query);
 				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
@@ -76,52 +75,52 @@
 				h.replaceState(oldUrl, null, oldUrl);
 				h.pushState(oldUrl, null, newUrl);
 			},
-			query: function(state, query) {
+			query: function (state, query) {
 				// changes all query
-                let root = window.$$rootUrl;
+				let root = window.$$rootUrl;
 				state.query = Object.assign({}, query);
 				let newUrl = root + state.route + urlTools.makeQueryString(state.query);
-                //console.warn('set query: ' + newUrl);
-                window.history.replaceState(null, null, newUrl);
+				//console.warn('set query: ' + newUrl);
+				window.history.replaceState(null, null, newUrl);
 			},
-			setquery: function(state, query) {
+			setquery: function (state, query) {
 				// TODO: replaceUrl: boolean
 				// changes some fields or query
-                let root = window.$$rootUrl;
-                let oldUrl = root + this.getters.baseUrl;
-                state.query = Object.assign({}, state.query, query);
-                let newUrl = root + this.getters.baseUrl;
-                if (newUrl === oldUrl) return;
-                window.history.replaceState(null, null, newUrl);
+				let root = window.$$rootUrl;
+				let oldUrl = root + this.getters.baseUrl;
+				state.query = Object.assign({}, state.query, query);
+				let newUrl = root + this.getters.baseUrl;
+				if (newUrl === oldUrl) return;
+				window.history.replaceState(null, null, newUrl);
 				eventBus.$emit('queryChange', state.query);
 			},
-			popstate: function(state) {
-                state.route = normalizedRoute();
+			popstate: function (state) {
+				state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				if (state.route in titleStore) {
 					document.title = titleStore[state.route];
 				}
 			},
-            setstate: function(state, to) { // to: {url, title}
-                window.history.replaceState(null, null, window.$$rootUrl + to.url);
-                state.route = normalizedRoute();
+			setstate: function (state, to) { // to: {url, title}
+				window.history.replaceState(null, null, window.$$rootUrl + to.url);
+				state.route = normalizedRoute();
 				state.query = urlTools.parseQueryString(window.location.search);
 				setTitle(to);
-            },
-            setnewid: function(state, to) {
-                let root = window.$$rootUrl;
-                let oldRoute = state.route;
+			},
+			setnewid: function (state, to) {
+				let root = window.$$rootUrl;
+				let oldRoute = state.route;
 				let newRoute = oldRoute.replace('/new', '/' + to.id);
 				state.route = newRoute;
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
-                window.history.replaceState(null, null, newUrl);
-            },
-            close: function(state) {
+				window.history.replaceState(null, null, newUrl);
+			},
+			close: function (state) {
 
 
-                function navigateBack() {
-                    // TODO: ??? 
-                    window.close();
+				function navigateBack() {
+					// TODO: ??? 
+					window.close();
                     /*
                     let url = makeBackUrl(state.route);
                     if (url === state.route) {
@@ -131,29 +130,29 @@
                         store.commit('navigate', { url: url });
                     }
                     */
-                }
+				}
 
-                if (window.history.length > 1) {
-                    let oldUrl = window.location.pathname;
-                    window.history.back();
-                    // it is done?
-                    setTimeout(() => {
-                        if (window.location.pathname === oldUrl) {
-                            navigateBack();
-                        }
-                    }, 300);
-                } else
-                    navigateBack();
+				if (window.history.length > 1) {
+					let oldUrl = window.location.pathname;
+					window.history.back();
+					// it is done?
+					setTimeout(() => {
+						if (window.location.pathname === oldUrl) {
+							navigateBack();
+						}
+					}, 300);
+				} else
+					navigateBack();
 			}
 		}
 	});
 
 	function replaceUrlSearch(url, search) {
-        let parts = url.split('?');
-        return parts[0] + (search || '');
+		let parts = url.split('?');
+		return parts[0] + (search || '');
 	}
 
-    function replaceUrlQuery(url, query) {
+	function replaceUrlQuery(url, query) {
 		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
