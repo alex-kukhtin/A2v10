@@ -105,6 +105,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Image("/" + pathInfo); // with _image prefix
 			}
+			else if (pathInfo.StartsWith("_static_image/"))
+			{
+				StaticImage(pathInfo.Substring(14).Replace('-', '.'));
+			}
 			else
 			{
 				Index(); // root element (always)
@@ -189,6 +193,24 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		void StaticImage(String url)
+		{
+			try
+			{
+				ImageInfo info = _baseController.StaticImage(url);
+				if (info == null)
+					return;
+				Response.ContentType = info.Mime;
+				if (info.Stream == null)
+					return;
+				Response.BinaryWrite(info.Stream);
+			}
+			catch (Exception ex)
+			{
+				WriteImageException(ex);
+			}
+		}
+
 		async Task Image(String url)
 		{
 			if (Request.HttpMethod == "POST")
@@ -215,16 +237,21 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			catch (Exception ex)
 			{
-				Response.ContentType = "image/png";
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var b = new Bitmap(380, 30);
-				var g = Graphics.FromImage(b);
-				g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
-				g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
-				g.Save();
-				b.Save(Response.OutputStream, ImageFormat.Png);
+				WriteImageException(ex);
 			}
+		}
+
+		void WriteImageException(Exception ex)
+		{
+			Response.ContentType = "image/png";
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			var b = new Bitmap(380, 30);
+			var g = Graphics.FromImage(b);
+			g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+			g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+			g.Save();
+			b.Save(Response.OutputStream, ImageFormat.Png);
 		}
 
 		async Task SaveImage(String url)

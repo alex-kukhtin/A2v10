@@ -19,105 +19,105 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {
-    [Authorize]
-    [ExecutingFilter]
-    public class ReportController : Controller
-    {
-        A2v10.Request.BaseController _baseController = new BaseController();
+	[Authorize]
+	[ExecutingFilter]
+	public class ReportController : Controller
+	{
+		A2v10.Request.BaseController _baseController = new BaseController();
 
-        public ReportController()
-        {
-        }
+		public ReportController()
+		{
+		}
 
-        public Int64 UserId => User.Identity.GetUserId<Int64>();
-        public Int32 TenantId => User.Identity.GetUserTenantId();
+		public Int64 UserId => User.Identity.GetUserId<Int64>();
+		public Int32 TenantId => User.Identity.GetUserTenantId();
 
-        public async Task<ActionResult> Show(String Base, String Rep, String id)
-        {
-            try
-            {
-                var url = $"/_report/{Base}/{Rep}/{id}";
-                RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
-                var rep = rm.GetReport();
-                String reportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
-                ExpandoObject prms = new ExpandoObject();
-                prms.Set("UserId", UserId);
-                prms.Set("TenantId", TenantId);
-                prms.Set("Id", id);
-                var iDataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
-                TempData["StiDataModel"] = iDataModel;
-                TempData["StiFilePath"] = reportPath;
-                // after query
-                ExpandoObject vars = rep.variables;
-                if (vars == null)
-                    vars = new ExpandoObject();
-                vars.Set("UserId", UserId);
-                vars.Set("TenantId", TenantId);
-                vars.Set("Id", id);
-                TempData["StiVariables"] = vars;
-                ViewBag.locale = "uk"; // TODO
-                ViewBag.Title = null;
-                if (iDataModel.System != null)
-                    ViewBag.Title = iDataModel.System.Get<String>("Title");
-                return View("StiReport");
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                    ex = ex.InnerException;
-                return View("Exception", ex);
-            }
-        }
+		public async Task<ActionResult> Show(String Base, String Rep, String id)
+		{
+			try
+			{
+				var url = $"/_report/{Base}/{Rep}/{id}";
+				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
+				var rep = rm.GetReport();
+				String reportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+				ExpandoObject prms = new ExpandoObject();
+				prms.Set("UserId", UserId);
+				prms.Set("TenantId", TenantId);
+				prms.Set("Id", id);
+				var iDataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
+				TempData["StiDataModel"] = iDataModel;
+				TempData["StiFilePath"] = reportPath;
+				// after query
+				ExpandoObject vars = rep.variables;
+				if (vars == null)
+					vars = new ExpandoObject();
+				vars.Set("UserId", UserId);
+				vars.Set("TenantId", TenantId);
+				vars.Set("Id", id);
+				TempData["StiVariables"] = vars;
+				ViewBag.locale = "uk"; // TODO
+				ViewBag.Title = null;
+				if (iDataModel.System != null)
+					ViewBag.Title = iDataModel.System.Get<String>("Title");
+				return View("StiReport");
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				return View("Exception", ex);
+			}
+		}
 
-        public ActionResult GetReportSnapshot()
-        {
-            try
-            {
-                var path = TempData["StiFilePath"].ToString();
-                //TODO: image settings var rm = TempData["StiImage"] as ImageInfo;
-                //TODO: profile var token = Profiler.BeginReport("create");
-                var r = StiReportExtensions.CreateReport(path);
-                //Profiler.EndReport(token);
-                var iDataModel = TempData["StiDataModel"] as IDataModel;
-                if (iDataModel != null)
-                {
-                    var dynModel = iDataModel.GetDynamic();
-                    foreach (var x in dynModel)
-                        r.RegBusinessObject(x.Key, x.Value);
-                }
-                var vars = TempData["StiVariables"] as ExpandoObject;
-                if (vars != null)
-                    r.AddVariables(vars);
-                return StiMvcViewer.GetReportSnapshotResult(HttpContext, r);
-            }
-            catch (Exception ex)
-            {
-                String msg = ex.Message;
-                int x = msg.IndexOf(": error");
-                if (x != -1)
-                    msg = msg.Substring(x + 7).Trim();
-                return new ContentResult() { Content = "Error:" + msg };
-            }
-        }
+		public ActionResult GetReportSnapshot()
+		{
+			try
+			{
+				var path = TempData["StiFilePath"].ToString();
+				//TODO: image settings var rm = TempData["StiImage"] as ImageInfo;
+				//TODO: profile var token = Profiler.BeginReport("create");
+				var r = StiReportExtensions.CreateReport(path);
+				//Profiler.EndReport(token);
+				var iDataModel = TempData["StiDataModel"] as IDataModel;
+				if (iDataModel != null)
+				{
+					var dynModel = iDataModel.GetDynamic();
+					foreach (var x in dynModel)
+						r.RegBusinessObject(x.Key, x.Value);
+				}
+				var vars = TempData["StiVariables"] as ExpandoObject;
+				if (vars != null)
+					r.AddVariables(vars);
+				return StiMvcViewer.GetReportSnapshotResult(HttpContext, r);
+			}
+			catch (Exception ex)
+			{
+				String msg = ex.Message;
+				int x = msg.IndexOf(": error");
+				if (x != -1)
+					msg = msg.Substring(x + 7).Trim();
+				return new ContentResult() { Content = "Error:" + msg };
+			}
+		}
 
-        public ActionResult ViewerEvent()
-        {
-            return StiMvcViewer.ViewerEventResult(HttpContext);
-        }
+		public ActionResult ViewerEvent()
+		{
+			return StiMvcViewer.ViewerEventResult(HttpContext);
+		}
 
-        public ActionResult PrintReport()
-        {
-            return StiMvcViewer.PrintReportResult(HttpContext);
-        }
+		public ActionResult PrintReport()
+		{
+			return StiMvcViewer.PrintReportResult(HttpContext);
+		}
 
-        public FileResult ExportReport()
-        {
-            return StiMvcViewer.ExportReportResult(HttpContext);
-        }
+		public FileResult ExportReport()
+		{
+			return StiMvcViewer.ExportReportResult(HttpContext);
+		}
 
-        public ActionResult Interaction()
-        {
-            return StiMvcViewer.InteractionResult(HttpContext);
-        }
-    }
+		public ActionResult Interaction()
+		{
+			return StiMvcViewer.InteractionResult(HttpContext);
+		}
+	}
 }

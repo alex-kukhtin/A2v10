@@ -15,25 +15,25 @@ namespace A2v10.Web.Mvc.Start
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("favicon.ico");
 
-            routes.MapRoute(
-                name: "Account",
-                url: "Account/{action}",
-                defaults: new { controller = "Account" }
-           );
+			routes.MapRoute(
+				name: "Account",
+				url: "Account/{action}",
+				defaults: new { controller = "Account" }
+		   );
 
-            routes.MapRoute(
-                name: "Report",
-                url: "Report/{action}/{id}",
-                defaults: new { controller = "Report" }
-           );
+			routes.MapRoute(
+				name: "Report",
+				url: "Report/{action}/{id}",
+				defaults: new { controller = "Report" }
+		   );
 
-            routes.MapRoute(
-                name: "Default",
-                url: "{*pathInfo}",
-                defaults: new { controller = "Shell", action = "Default" },
-                /*avoid duplicate controller names*/
-                namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
-            );
-        }
-    }
+			routes.MapRoute(
+				name: "Default",
+				url: "{*pathInfo}",
+				defaults: new { controller = "Shell", action = "Default" },
+				/*avoid duplicate controller names*/
+				namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
+			);
+		}
+	}
 }

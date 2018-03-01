@@ -121,15 +121,15 @@
 				function navigateBack() {
 					// TODO: ??? 
 					window.close();
-                    /*
-                    let url = makeBackUrl(state.route);
-                    if (url === state.route) {
-                        let firstUrl = urlTools.firstUrl;
-                        store.commit('navigate', { url: firstUrl.url, title: firstUrl.title });
-                    } else {
-                        store.commit('navigate', { url: url });
-                    }
-                    */
+					/*
+					let url = makeBackUrl(state.route);
+					if (url === state.route) {
+						let firstUrl = urlTools.firstUrl;
+						store.commit('navigate', { url: firstUrl.url, title: firstUrl.title });
+					} else {
+						store.commit('navigate', { url: url });
+					}
+					*/
 				}
 
 				if (window.history.length > 1) {
