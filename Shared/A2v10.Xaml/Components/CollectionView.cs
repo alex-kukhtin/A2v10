@@ -44,7 +44,12 @@ namespace A2v10.Xaml
 		{
 			if (context.IsDialog && RunAt == RunMode.ServerUrl)
 				throw new XamlException("RunAt='ServerUrl' is not allowed in dialogs");
-			_outer = new TagBuilder("collection-view");
+			String cwTag = "collection-view";
+			if (RunAt == RunMode.Server)
+				cwTag = "collection-view-server";
+			else if (RunAt == RunMode.ServerUrl)
+				cwTag = "collection-view-server-url";
+			_outer = new TagBuilder(cwTag);
 			if (onRender != null)
 				onRender(_outer);
 			MergeAttributes(_outer, context);
@@ -52,7 +57,6 @@ namespace A2v10.Xaml
 			if (itemsSource != null)
 				_outer.MergeAttribute(":items-source", itemsSource.GetPath(context));
 
-			_outer.MergeAttribute("run-at", RunAt.ToString().ToLowerInvariant());
 			if (Sort != null)
 				_outer.MergeAttribute(":initial-sort", Sort.GetJsValue());
 			if (Filter != null)
@@ -67,9 +71,9 @@ namespace A2v10.Xaml
 			}
 
 			if (PageSize != null)
+			{
 				_outer.MergeAttribute(":initial-page-size", PageSize.Value.ToString());
-			//else
-				//_outer.MergeAttribute(":page-size", "$modelInfo.PageSize");
+			}
 
 			_outer.RenderStart(context);
 			_inner = new TagBuilder("template");

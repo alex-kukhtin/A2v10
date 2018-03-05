@@ -137,7 +137,7 @@
 			width: String,
 			fit: Boolean,
 			wrap: String,
-			command: Object,
+			command: Object
 		},
 		created() {
 			this.$parent.$addColumn(this);
@@ -386,7 +386,7 @@
 					cssClass += ' ' + this.row[this.mark];
 				}
 				if ((this.index + 1) % 2)
-					cssClass += ' even'
+					cssClass += ' even';
 				if (this.$parent.rowBold && this.row[this.$parent.rowBold])
 					cssClass += ' bold';
 				if (this.level)
@@ -440,7 +440,7 @@
 			visible() {
 				if (this.$parent.isRowDetailsCell)
 					return this.row.$details ? true : false;
-				return this.row == this.$parent.selected();
+				return this.row === this.$parent.selected();
 			}
 		}
 	};
@@ -491,7 +491,7 @@
 				return this.markStyle === 'marker' || this.markStyle === 'both';
 			},
 			isRowDetailsCell() {
-				return this.rowDetails && this.rowDetailsActivate == 'cell';
+				return this.rowDetails && this.rowDetailsActivate === 'cell';
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';

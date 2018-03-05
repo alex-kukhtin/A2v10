@@ -29,6 +29,14 @@
 		});
 	}
 
+	function getPagerInfo(mi) {
+		if (!mi) return undefined;
+		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
+		if (mi.Filter)
+			for (let p in mi.Filter)
+				x[p] = mi.Filter[p];
+		return x;
+	}
 
 	const base = Vue.extend({
 		// inDialog: Boolean (in derived class)
@@ -205,7 +213,7 @@
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
 				let self = this;
-				if (utils.isArray(args)) {
+				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
 					let propIx = args._path_.lastIndexOf('.');
 					let prop = args._path_.substring(propIx + 1);
@@ -215,8 +223,9 @@
 				let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
+				let mi = args ? getPagerInfo(args.$ModelInfo) : null;
 				return new Promise(function (resolve, reject) {
-					let dataToQuery = { baseUrl: self.$baseUrl };
+					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
 						// special element -> use url
 						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
@@ -227,8 +236,8 @@
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
 							dat.$merge(data);
+							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
-							//dat.$setDirty(false);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}
@@ -585,9 +594,10 @@
 
 			$loadLazy(elem, propName) {
 				let self = this,
+					mi = getPagerInfo(elem[propName].$ModelInfo),
 					root = window.$$rootUrl,
 					url = root + '/_data/loadlazy',
-					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+					jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
 					let arr = elem[propName];
@@ -624,6 +634,9 @@
 			},
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
+			},
+			__cwChange(source) {
+				this.$reload(source);
 			},
 			__queryChange(search, source) {
 				// preserve $baseQuery (without data from search)
@@ -663,6 +676,7 @@
 			eventBus.$on('queryChange', this.__queryChange);
 
 			this.$on('localQueryChange', this.__queryChange);
+			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
 			log.time('create time:', __createStartTime, false);
 		},
@@ -675,6 +689,7 @@
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
 			this.$off('localQueryChange', this.__queryChange);
+			this.$off('cwChange', this.__cwChange);
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();

@@ -1017,7 +1017,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180227-7121
+// 20180305-7122
 // services/datamodel.js
 
 (function () {
@@ -1308,8 +1308,9 @@ app.modules['std:validators'] = function () {
 
 	function setRootModelInfo(item, data) {
 		if (!data.$ModelInfo) return;
-		let elem = item || this;
+		let elem = item;
 		for (let p in data.$ModelInfo) {
+			if (!elem) elem = this[p];
 			elem.$ModelInfo = data.$ModelInfo[p];
 			return; // first element only
 		}
@@ -1413,6 +1414,14 @@ app.modules['std:validators'] = function () {
 		arr.Selected = function (propName) {
 			let sel = this.$selected;
 			return sel ? sel[propName] : null;
+		};
+
+		arr.$isLazy = function () {
+			const meta = this.$parent._meta_;
+			if (!meta.$lazy) return false;
+			let propIx = this._path_.lastIndexOf('.');
+			let prop = this._path_.substring(propIx + 1);
+			return meta.$lazy.indexOf(prop) !== -1;
 		};
 
 		arr.$loadLazy = function () {
@@ -3065,7 +3074,7 @@ Vue.component('validator-control', {
 			width: String,
 			fit: Boolean,
 			wrap: String,
-			command: Object,
+			command: Object
 		},
 		created() {
 			this.$parent.$addColumn(this);
@@ -3314,7 +3323,7 @@ Vue.component('validator-control', {
 					cssClass += ' ' + this.row[this.mark];
 				}
 				if ((this.index + 1) % 2)
-					cssClass += ' even'
+					cssClass += ' even';
 				if (this.$parent.rowBold && this.row[this.$parent.rowBold])
 					cssClass += ' bold';
 				if (this.level)
@@ -3368,7 +3377,7 @@ Vue.component('validator-control', {
 			visible() {
 				if (this.$parent.isRowDetailsCell)
 					return this.row.$details ? true : false;
-				return this.row == this.$parent.selected();
+				return this.row === this.$parent.selected();
 			}
 		}
 	};
@@ -3419,7 +3428,7 @@ Vue.component('validator-control', {
 				return this.markStyle === 'marker' || this.markStyle === 'both';
 			},
 			isRowDetailsCell() {
-				return this.rowDetails && this.rowDetailsActivate == 'cell';
+				return this.rowDetails && this.rowDetailsActivate === 'cell';
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
@@ -4052,7 +4061,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180227-7121
+// 20180305-7122
 // components/collectionview.js
 
 /*
@@ -4064,8 +4073,25 @@ TODO:
 
 
 	const log = require('std:log');
+	const utils = require('std:utils');
 
 	const DEFAULT_PAGE_SIZE = 20;
+
+	function getModelInfoProp(src, propName) {
+		if (!src) return undefined;
+		let mi = src.$ModelInfo;
+		if (!mi) return undefined;
+		return mi[propName];
+	}
+
+	function setModelInfoProp(src, propName, value) {
+		if (!src) return;
+		let mi = src.$ModelInfo;
+		if (!mi) return;
+		mi[propName] = value;
+	}
+
+	// client collection
 
 	Vue.component('collection-view', {
 		store: component('std:store'),
@@ -4096,74 +4122,22 @@ TODO:
 				localQuery: lq
 			};
 		},
-		watch: {
-			/*
-			dir() {
-				// You can watch the computed properties too.
-				//console.warn('dir changed');
-			},
-			*/
-			filter: {
-				handler() {
-					if (this.isServer)
-						this.filterChanged();
-				},
-				deep: true
-			},
-			sourceCount() {
-				// HACK
-				//console.warn('source count changed');
-				if (this.isServer)
-					this.$setOffset(0); // always reload
-			}
-		},
 		computed: {
 			pageSize() {
 				if (this.initialPageSize > 0)
 					return this.initialPageSize;
-				let ps = this.getModelInfoProperty('$PageSize');
-				return ps ? ps : DEFAULT_PAGE_SIZE;
-			},
-			isServer() {
-				return this.runAt === 'serverurl' || this.runAt === 'server';
-			},
-			isQueryUrl() {
-				// use window hash
-				return this.runAt === 'serverurl';
+				return DEFAULT_PAGE_SIZE;
 			},
 			dir() {
-				if (this.isQueryUrl) {
-					let dir = this.$store.getters.query.dir;
-					if (!dir) dir = this.getModelInfoProperty('$SortDir');
-					return dir;
-				} else if (this.isServer) {
-					let sd = this.getModelInfoProperty('$SortDir');
-					return sd ? sd : this.localQuery.dir;
-				}
 				return this.localQuery.dir;
 			},
 			offset() {
-				if (this.isQueryUrl)
-					return this.$store.getters.query.offset || 0;
 				return this.localQuery.offset;
 			},
 			order() {
-				if (this.isQueryUrl) {
-					let order = this.$store.getters.query.order;
-					if (!order) order = this.getModelInfoProperty('$SortOrder');
-					return order;
-				}
-				else if (this.isServer) {
-					let so = this.getModelInfoProperty('$SortOrder');
-					return so ? so : this.localQuery.dir;
-				}
 				return this.localQuery.order;
 			},
 			pagedSource() {
-				if (this.isServer)
-					return this.ItemsSource;
-				if (!this.ItemsSource)
-					return null;
 				let s = performance.now();
 				let arr = [].concat(this.ItemsSource);
 
@@ -4188,7 +4162,7 @@ TODO:
 				if (this.pageSize > 0)
 					arr = arr.slice(this.offset, this.offset + this.pageSize);
 				arr.$origin = this.ItemsSource;
-				if (arr.indexOf(arr.$origin.$selected) == -1) {
+				if (arr.indexOf(arr.$origin.$selected) === -1) {
 					// not found in target array
 					arr.$origin.$clearSelected();
 				}
@@ -4196,10 +4170,6 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				if (this.isServer) {
-					if (!this.ItemsSource) return 0;
-					return this.ItemsSource.$RowCount || 0;
-				}
 				return this.ItemsSource.length;
 			},
 			thisPager() {
@@ -4207,31 +4177,12 @@ TODO:
 			},
 			pages() {
 				let cnt = this.filteredCount;
-				if (this.isServer)
-					cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			}
 		},
 		methods: {
 			$setOffset(offset) {
-				if (this.runAt === 'server') {
-					this.localQuery.offset = offset;
-					// for this BaseController only
-					if (!this.localQuery.order) this.localQuery.dir = undefined;
-					this.$root.$emit('localQueryChange', this.localQuery, this.ItemsSource);
-				} else if (this.runAt === 'serverurl') {
-					this.$store.commit('setquery', { offset: offset });
-				} else {
-					this.localQuery.offset = offset;
-				}
-			},
-			getModelInfoProperty(propName) {
-				if (!this.ItemsSource) return undefined;
-				//console.dir(this.ItemsSource._path_);
-				const itmsrc = this.ItemsSource;
-				let mi = itmsrc.$ModelInfo;
-				if (!mi) return undefined;
-				return mi[propName];
+				this.localQuery.offset = offset;
 			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
@@ -4246,18 +4197,9 @@ TODO:
 				}
 				if (!nq.order)
 					nq.dir = null;
-				if (this.runAt === 'server') {
-					this.copyQueryToLocal(nq);
-					// for this BaseController only
-					this.$root.$emit('localQueryChange', nq, this.ItemsSource);
-				}
-				else if (this.runAt === 'serverurl') {
-					this.$store.commit('setquery', nq);
-				} else {
-					// local
-					this.localQuery.dir = nq.dir;
-					this.localQuery.order = nq.order;
-				}
+				// local
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
 			},
 			makeNewQuery() {
 				let nq = { dir: this.dir, order: this.order, offset: this.offset };
@@ -4279,21 +4221,6 @@ TODO:
 					else
 						this.localQuery[x] = fVal ? fVal : undefined;
 				}
-			},
-			filterChanged() {
-				// for server only
-				let nq = this.makeNewQuery();
-				nq.offset = 0;
-				if (!nq.order) nq.dir = undefined;
-				if (this.runAt === 'server') {
-					// for this BaseController only
-					this.copyQueryToLocal(nq);
-					// console.dir(this.localQuery);
-					this.$root.$emit('localQueryChange', nq, this.ItemsSource);
-				}
-				else if (this.runAt === 'serverurl') {
-					this.$store.commit('setquery', nq);
-				}
 			}
 		},
 		created() {
@@ -4301,12 +4228,205 @@ TODO:
 				this.localQuery.order = this.initialSort.order;
 				this.localQuery.dir = this.initialSort.dir;
 			}
-			if (this.isQueryUrl) {
-				// get filter values from query
-				let q = this.$store.getters.query;
-				for (let x in this.filter) {
-					if (x in q) this.filter[x] = q[x];
+			this.$on('sort', this.doSort);
+		}
+	});
+
+
+	// server collection view
+	Vue.component('collection-view-server', {
+		store: component('std:store'),
+		template: `
+<div>
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialFilter: Object
+		},
+
+		data() {
+			return {
+				filter: this.initialFilter
+			};
+		},
+
+		watch: {
+			filter: {
+				handler() {
+					this.filterChanged();
+				},
+				deep: true
+			}
+		},
+
+		computed: {
+			thisPager() {
+				return this;
+			},
+			pageSize() {
+				return getModelInfoProp(this.ItemsSource, 'PageSize');
+			},
+			dir() {
+				return  getModelInfoProp(this.ItemsSource, 'SortDir');
+			},
+			order() {
+				return getModelInfoProp(this.ItemsSource, 'SortOrder');
+			},
+			offset() {
+				return getModelInfoProp(this.ItemsSource, 'Offset');
+			},
+			pages() {
+				cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
+			},
+			sourceCount() {
+				if (!this.ItemsSource) return 0;
+				return this.ItemsSource.$RowCount || 0;
+			}
+		},
+		methods: {
+			$setOffset(offset) {
+				if (this.offset === offset)
+					return;
+				setModelInfoProp(this.ItemsSource, 'Offset', offset);
+				this.reload();
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				if (order === this.order) {
+					let dir = this.dir === 'asc' ? 'desc' : 'asc';
+					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
+				} else {
+					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
+					setModelInfoProp(this.ItemsSource, 'SortDir', 'asc');
 				}
+				this.reload();
+			},
+			filterChanged() {
+				this.ItemsSource.$ModelInfo.Filter = this.filter;
+				setModelInfoProp(this.ItemsSource, 'Offset', 0);
+				this.reload();
+			},
+			reload() {
+				this.$root.$emit('cwChange', this.ItemsSource);
+			}
+		},
+		created() {
+			// from datagrid, etc
+			this.$on('sort', this.doSort);
+		}
+	});
+
+
+	// server url collection view
+	Vue.component('collection-view-server-url', {
+		store: component('std:store'),
+		template: `
+<div>
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialFilter: Object
+		},
+		data() {
+			return {
+				filter: this.initialFilter
+			};
+		},
+		watch: {
+			filter: {
+				handler() {
+					this.filterChanged();
+				},
+				deep: true
+			}
+		},
+		computed: {
+			pageSize() {
+				let ps = getModelInfoProp(this.ItemsSource, 'PageSize');
+				return ps ? ps : DEFAULT_PAGE_SIZE;
+			},
+			dir() {
+				let dir = this.$store.getters.query.dir;
+				if (!dir) dir = getModelInfoProp(this.ItemsSource, 'SortDir');
+				return dir;
+			},
+			offset() {
+				let ofs = this.$store.getters.query.offset;
+				if (!utils.isDefined(ofs))
+					ofs = getModelInfoProp(this.ItemsSource, 'Offset');
+				return ofs || 0;
+			},
+			order() {
+				return getModelInfoProp(this.ItemsSource,'SortOrder');
+			},
+			sourceCount() {
+				if (!this.ItemsSource) return 0;
+				return this.ItemsSource.$RowCount || 0;
+			},
+			thisPager() {
+				return this;
+			},
+			pages() {
+				cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
+			}
+		},
+		methods: {
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			$setOffset(offset) {
+				if (this.offset === offset)
+					return;
+				setModelInfoProp(this.ItemsSource, "Offset", offset);
+				this.$store.commit('setquery', { offset: offset });
+			},
+			doSort(order) {
+				let nq = this.makeNewQuery();
+				if (nq.order === order)
+					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				else {
+					nq.order = order;
+					nq.dir = 'asc';
+				}
+				if (!nq.order)
+					nq.dir = null;
+				this.$store.commit('setquery', nq);
+			},
+			makeNewQuery() {
+				let nq = { dir: this.dir, order: this.order, offset: this.offset };
+				for (let x in this.filter) {
+					let fVal = this.filter[x];
+					if (fVal)
+						nq[x] = fVal;
+					else {
+						nq[x] = undefined;
+					}
+				}
+				return nq;
+			},
+			filterChanged() {
+				// for server only
+				let nq = this.makeNewQuery();
+				nq.offset = 0;
+				if (!nq.order) nq.dir = undefined;
+				this.$store.commit('setquery', nq);
+			}
+		},
+		created() {
+			// get filter values from query
+			let q = this.$store.getters.query;
+			for (let x in this.filter) {
+				if (x in q) this.filter[x] = q[x];
 			}
 			this.$on('sort', this.doSort);
 		}
@@ -5821,6 +5941,14 @@ Vue.directive('resize', {
 		});
 	}
 
+	function getPagerInfo(mi) {
+		if (!mi) return undefined;
+		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
+		if (mi.Filter)
+			for (let p in mi.Filter)
+				x[p] = mi.Filter[p];
+		return x;
+	}
 
 	const base = Vue.extend({
 		// inDialog: Boolean (in derived class)
@@ -5997,7 +6125,7 @@ Vue.directive('resize', {
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
 				let self = this;
-				if (utils.isArray(args)) {
+				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
 					let propIx = args._path_.lastIndexOf('.');
 					let prop = args._path_.substring(propIx + 1);
@@ -6007,8 +6135,9 @@ Vue.directive('resize', {
 				let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
+				let mi = args ? getPagerInfo(args.$ModelInfo) : null;
 				return new Promise(function (resolve, reject) {
-					let dataToQuery = { baseUrl: self.$baseUrl };
+					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
 						// special element -> use url
 						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
@@ -6019,8 +6148,8 @@ Vue.directive('resize', {
 					dataservice.post(url, jsonData).then(function (data) {
 						if (utils.isObject(data)) {
 							dat.$merge(data);
+							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
-							//dat.$setDirty(false);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}
@@ -6377,9 +6506,10 @@ Vue.directive('resize', {
 
 			$loadLazy(elem, propName) {
 				let self = this,
+					mi = getPagerInfo(elem[propName].$ModelInfo),
 					root = window.$$rootUrl,
 					url = root + '/_data/loadlazy',
-					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id, prop: propName });
+					jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
 					let arr = elem[propName];
@@ -6416,6 +6546,9 @@ Vue.directive('resize', {
 			},
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
+			},
+			__cwChange(source) {
+				this.$reload(source);
 			},
 			__queryChange(search, source) {
 				// preserve $baseQuery (without data from search)
@@ -6455,6 +6588,7 @@ Vue.directive('resize', {
 			eventBus.$on('queryChange', this.__queryChange);
 
 			this.$on('localQueryChange', this.__queryChange);
+			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
 			log.time('create time:', __createStartTime, false);
 		},
@@ -6467,6 +6601,7 @@ Vue.directive('resize', {
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
 			this.$off('localQueryChange', this.__queryChange);
+			this.$off('cwChange', this.__cwChange);
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();
