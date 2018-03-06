@@ -65,7 +65,7 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			var cont = new TagBuilder("tree-view", "tree-view", IsInGrid);
+			var cont = new TagBuilder("tree-view", null, IsInGrid);
 			MergeAttributes(cont, context);
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

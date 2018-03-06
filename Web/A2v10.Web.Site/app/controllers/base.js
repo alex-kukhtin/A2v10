@@ -5,6 +5,9 @@
 
 (function () {
 
+
+	// TODO: delete this.__queryChange
+
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
 	const dataservice = require('std:dataservice');
@@ -442,7 +445,8 @@
 
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
-				doReport = () => {
+
+				const doReport = () => {
 					let id = arg;
 					if (arg && utils.isObject(arg))
 						id = arg.$id;
@@ -594,10 +598,21 @@
 
 			$loadLazy(elem, propName) {
 				let self = this,
-					mi = getPagerInfo(elem[propName].$ModelInfo),
 					root = window.$$rootUrl,
 					url = root + '/_data/loadlazy',
-					jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
+					selfMi = elem[propName].$ModelInfo,
+					parentMi = elem.$parent.$ModelInfo;
+
+				// HACH. inherit filter from parent
+				if (parentMi && parentMi.Filter) {
+					if (!selfMi)
+						selfMi = parentMi;
+					else
+						selfMi.Filter = parentMi.Filter;
+				}
+
+				let mi = getPagerInfo(selfMi);
+				let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
 					let arr = elem[propName];
@@ -675,6 +690,7 @@
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 
+			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};

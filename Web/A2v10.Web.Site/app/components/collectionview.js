@@ -247,8 +247,16 @@ TODO:
 				this.reload();
 			},
 			filterChanged() {
-				this.ItemsSource.$ModelInfo.Filter = this.filter;
-				setModelInfoProp(this.ItemsSource, 'Offset', 0);
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) {
+					mi = { Filter: this.filter };
+					this.ItemsSource.$ModelInfo = mi;
+				}
+				else {
+					this.ItemsSource.$ModelInfo.Filter = this.filter;
+				}
+				if ('Offset' in mi)
+					setModelInfoProp(this.ItemsSource, 'Offset', 0);
 				this.reload();
 			},
 			reload() {
