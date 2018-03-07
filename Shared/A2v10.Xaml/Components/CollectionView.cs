@@ -58,10 +58,10 @@ namespace A2v10.Xaml
 				_outer.MergeAttribute(":items-source", itemsSource.GetPath(context));
 
 			if (Sort != null)
-				_outer.MergeAttribute(":initial-sort", Sort.GetJsValue());
+				_outer.MergeAttribute(":initial-sort", Sort.GetJsValue(context));
 			if (Filter != null)
 			{
-				_outer.MergeAttribute(":initial-filter", Filter.GetJsValue());
+				_outer.MergeAttribute(":initial-filter", Filter.GetJsValue(context));
 				if (RunAt == RunMode.Client)
 				{
 					if (String.IsNullOrEmpty(FilterDelegate))

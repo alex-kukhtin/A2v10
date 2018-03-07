@@ -6,10 +6,10 @@
 (function () {
 
 
-    const utils = require('std:utils');
+	const utils = require('std:utils');
 
-    let comboBoxTemplate =
-`<div :class="cssClass()">
+	let comboBoxTemplate =
+		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
@@ -24,7 +24,7 @@
 </div>
 `;
 
-    let baseControl = component('control');
+	let baseControl = component('control');
 
 	const defaultObj = {
 		_validate_() {
@@ -32,36 +32,38 @@
 		}
 	};
 
-    Vue.component('combobox', {
-        extends: baseControl,
+	Vue.component('combobox', {
+		extends: baseControl,
 		template: comboBoxTemplate,
 		props: {
 			prop: String,
 			item: {
-				type: Object, default() { return {}; } },
+				type: Object, default() { return {}; }
+			},
 			itemsSource: {
-				type: Array, default() { return []; } },
-            itemToValidate: Object,
-            propToValidate: String
+				type: Array, default() { return []; }
+			},
+			itemToValidate: Object,
+			propToValidate: String
 		},
 		computed: {
 			cmbValue: {
-                get() {
-                    let val = this.item ? this.item[this.prop] : null;
-                    if (!utils.isObjectExact(val))
+				get() {
+					let val = this.item ? this.item[this.prop] : null;
+					if (!utils.isObjectExact(val))
 						return val;
 					if (!('$id' in val))
 						return val;
-                    if (this.itemsSource.indexOf(val) !== -1) {
-                        return val;
-                    }
-                    // always return value from ItemsSource
-                    return this.itemsSource.find((x) => x.$id === val.$id);
-                },
+					if (this.itemsSource.indexOf(val) !== -1) {
+						return val;
+					}
+					// always return value from ItemsSource
+					return this.itemsSource.find((x) => x.$id === val.$id);
+				},
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
-            },
-        }
-    });
+			}
+		}
+	});
 })();

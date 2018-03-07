@@ -16,7 +16,7 @@ namespace A2v10.Xaml
 		public Boolean Collapsed { get; set; }
 		public String Title { get; set; }
 
-		public String GetJsValue()
+		public String GetJsValue(RenderContext context)
 		{
 			if (String.IsNullOrEmpty(GroupBy))
 				throw new XamlException("GroupBy property is required");
@@ -34,14 +34,14 @@ namespace A2v10.Xaml
 
 	public class GroupDescriptions : List<GroupDescription>, IJavaScriptSource
 	{
-		public String GetJsValue()
+		public String GetJsValue(RenderContext context)
 		{
 			if (Count == 0)
 				return null;
 			StringBuilder sb = new StringBuilder("[");
 			foreach (var d in this)
 			{
-				sb.Append(d.GetJsValue()).Append(',');
+				sb.Append(d.GetJsValue(context)).Append(',');
 			}
 			sb.RemoveTailComma();
 			sb.Append("]");

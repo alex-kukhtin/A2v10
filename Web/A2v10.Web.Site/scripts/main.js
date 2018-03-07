@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180307-7125
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -2497,10 +2497,10 @@ Vue.component('validator-control', {
 (function () {
 
 
-    const utils = require('std:utils');
+	const utils = require('std:utils');
 
-    let comboBoxTemplate =
-`<div :class="cssClass()">
+	let comboBoxTemplate =
+		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
@@ -2515,7 +2515,7 @@ Vue.component('validator-control', {
 </div>
 `;
 
-    let baseControl = component('control');
+	let baseControl = component('control');
 
 	const defaultObj = {
 		_validate_() {
@@ -2523,38 +2523,40 @@ Vue.component('validator-control', {
 		}
 	};
 
-    Vue.component('combobox', {
-        extends: baseControl,
+	Vue.component('combobox', {
+		extends: baseControl,
 		template: comboBoxTemplate,
 		props: {
 			prop: String,
 			item: {
-				type: Object, default() { return {}; } },
+				type: Object, default() { return {}; }
+			},
 			itemsSource: {
-				type: Array, default() { return []; } },
-            itemToValidate: Object,
-            propToValidate: String
+				type: Array, default() { return []; }
+			},
+			itemToValidate: Object,
+			propToValidate: String
 		},
 		computed: {
 			cmbValue: {
-                get() {
-                    let val = this.item ? this.item[this.prop] : null;
-                    if (!utils.isObjectExact(val))
+				get() {
+					let val = this.item ? this.item[this.prop] : null;
+					if (!utils.isObjectExact(val))
 						return val;
 					if (!('$id' in val))
 						return val;
-                    if (this.itemsSource.indexOf(val) !== -1) {
-                        return val;
-                    }
-                    // always return value from ItemsSource
-                    return this.itemsSource.find((x) => x.$id === val.$id);
-                },
+					if (this.itemsSource.indexOf(val) !== -1) {
+						return val;
+					}
+					// always return value from ItemsSource
+					return this.itemsSource.find((x) => x.$id === val.$id);
+				},
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
-            },
-        }
-    });
+			}
+		}
+	});
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -4061,7 +4063,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180305-7122
+// 20180307-7125
 // components/collectionview.js
 
 /*
@@ -4254,15 +4256,17 @@ TODO:
 		},
 
 		watch: {
-			filter: {
-				handler() {
+			jsonFilter: {
+				handler(newData, oldData) {
 					this.filterChanged();
-				},
-				deep: true
+				}
 			}
 		},
 
 		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
 			thisPager() {
 				return this;
 			},
@@ -4350,14 +4354,16 @@ TODO:
 			};
 		},
 		watch: {
-			filter: {
-				handler() {
+			jsonFilter: {
+				handler(newData, oldData) {
 					this.filterChanged();
-				},
-				deep: true
+				}
 			}
 		},
 		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
 			pageSize() {
 				let ps = getModelInfoProp(this.ItemsSource, 'PageSize');
 				return ps ? ps : DEFAULT_PAGE_SIZE;

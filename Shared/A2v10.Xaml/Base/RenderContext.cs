@@ -8,7 +8,7 @@ using System.IO;
 
 namespace A2v10.Xaml
 {
-	internal struct GridRowCol
+	public struct GridRowCol
 	{
 		private Int32? _row;
 		private Int32? _col;
@@ -61,7 +61,7 @@ namespace A2v10.Xaml
 		}
 	}
 
-	internal class GridContext : IDisposable
+	public class GridContext : IDisposable
 	{
 		RenderContext _renderContext;
 
@@ -105,7 +105,7 @@ namespace A2v10.Xaml
 		}
 	}
 
-	internal class RenderContext
+	public class RenderContext
 	{
 		public String RootId { get; set; }
 		public TextWriter Writer { get; private set; }

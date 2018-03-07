@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180305-7122
+// 20180307-7125
 // components/collectionview.js
 
 /*
@@ -193,15 +193,17 @@ TODO:
 		},
 
 		watch: {
-			filter: {
-				handler() {
+			jsonFilter: {
+				handler(newData, oldData) {
 					this.filterChanged();
-				},
-				deep: true
+				}
 			}
 		},
 
 		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
 			thisPager() {
 				return this;
 			},
@@ -289,14 +291,16 @@ TODO:
 			};
 		},
 		watch: {
-			filter: {
-				handler() {
+			jsonFilter: {
+				handler(newData, oldData) {
 					this.filterChanged();
-				},
-				deep: true
+				}
 			}
 		},
 		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
 			pageSize() {
 				let ps = getModelInfoProp(this.ItemsSource, 'PageSize');
 				return ps ? ps : DEFAULT_PAGE_SIZE;
