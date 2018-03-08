@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20180308-7126*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -46,6 +46,9 @@ app.modules['std:url'] = function () {
 		if (utils.isDate(obj)) {
 			return utils.format(obj, "DateUrl");
 		} else if (utils.isObjectExact(obj)) {
+			if (!utils.isDefined(obj.$id)) {
+				console.error(`$id is not defined for ${obj.constructor.name}`);
+			}
 			return ('' + obj.$id) || '0'
 		}
 		return '' + obj;

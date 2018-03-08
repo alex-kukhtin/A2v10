@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180206-7104
+// 20180208-7126
 // components/selector.js
 
 /* TODO:
@@ -155,7 +155,7 @@
 				}
 			},
 			hit(itm) {
-				Vue.set(this.item, this.prop, itm);
+				this.item[this.prop].$merge(itm, true); /*with event!*/
 				this.query = this.valueText;
 				this.isOpen = false;
 			},
