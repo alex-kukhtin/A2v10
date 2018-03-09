@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180305-7122
+// 20180309-7127
 // services/datamodel.js
 
 (function () {
@@ -100,19 +100,21 @@
 				return this._src_[prop];
 			},
 			set(val) {
+				let eventWasFired = false;
 				//TODO: emit and handle changing event
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
 					return;
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
-					this._src_[prop].$merge(val, false);
+					this._src_[prop].$set(val);
+					eventWasFired = true; // already fired
 				} else {
 					this._src_[prop] = val;
 				}
 				this._root_.$setDirty(true);
-				if (this._lockEvents_)
-					return; // events locked
+				if (this._lockEvents_) return; // events locked
+				if (eventWasFired) return; // was fired
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -566,6 +568,14 @@
 			return this[idName];
 		});
 
+		defHiddenGet(obj.prototype, "$id__", function () {
+			let idName = this._meta_.$id;
+			if (!idName) {
+				return undefined;
+			}
+			return this[idName];
+		});
+
 		defHiddenGet(obj.prototype, "$name", function () {
 			let nameName = this._meta_.$name;
 			if (!nameName) {
@@ -881,10 +891,11 @@
 	function setElement(src) {
 		if (this.$root.isReadOnly)
 			return;
-		this.$merge(src, true);
+		this.$merge(src);
 	}
 
-	function merge(src, fireChange) {
+	function merge(src) {
+		let oldId = this.$id__;
 		try {
 			if (src === null)
 				src = {};
@@ -920,7 +931,12 @@
 			this._root_._needValidate_ = true;
 			this._lockEvents_ -= 1;
 		}
+		let newId = this.$id__;
+		let fireChange = false;
+		if (utils.isDefined(newId) && utils.isDefined(oldId))
+			fireChange =  newId !== oldId; // check id, no fire event
 		if (fireChange) {
+			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
 			let eventName = this._path_ + '.change';
 			this._root_.$emit(eventName, this.$parent, this);
@@ -930,6 +946,7 @@
 	function implementRoot(root, template, ctors) {
 		root.prototype.$emit = emit;
 		root.prototype.$setDirty = setDirty;
+		root.prototype.$defer = platform.defer;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
 		root.prototype._exec_ = executeCommand;

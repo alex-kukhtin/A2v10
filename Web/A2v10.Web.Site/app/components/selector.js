@@ -1,18 +1,19 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180208-7126
+// 20180209-7127
 // components/selector.js
 
 /* TODO:
     7. create element text and command
     8. scrollIntoView for template (table)
-    9. 
+    9. blur/cancel
 */
 
 (function () {
 	const popup = require('std:popup');
 	const utils = require('std:utils');
 	const platform = require('std:platform');
+	const locale = window.$$locale;
 
 	const baseControl = component('control');
 
@@ -32,13 +33,16 @@
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
-			<slot name='pane' :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
+			<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
 				<ul class="selector-pane" :style="listStyle">
 					<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
 						v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
 				</ul>
-				<a class="create-elem a2-hyperlink a2-inline"><i class="ico ico-plus"/> новый элемент</a>
+				<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
 			</slot>
+		</div>
+		<div class="selector-pane" v-if="isOpenNew" @click.stop.prevent="dummy">
+			<slot name="new-pane"></slot>
 		</div>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
@@ -55,11 +59,13 @@
 			minChars: Number,
 			fetch: Function,
 			listWidth: String,
-			listHeight: String
+			listHeight: String,
+			createNew: Function
 		},
 		data() {
 			return {
 				isOpen: false,
+				isOpenNew: false,
 				loading: false,
 				items: [],
 				query: '',
@@ -73,6 +79,12 @@
 			},
 			valueText() {
 				return this.item ? this.item[this.prop][this.$displayProp] : '';
+			},
+			canNew() {
+				return !!this.createNew;
+			},
+			newText() {
+				return `${locale.$CreateLC} "${this.query}"`;
 			},
 			pane() {
 				return {
@@ -107,12 +119,16 @@
 			}
 		},
 		methods: {
+			dummy() {
+
+			},
 			__clickOutside() {
 				this.isOpen = false;
+				this.isOpenNew = false;
 			},
 			cssClass2() {
 				let cx = this.cssClass();
-				if (this.isOpen)
+				if (this.isOpen || this.isOpenNew)
 					cx += ' open';
 				return cx;
 			},
@@ -120,7 +136,7 @@
 				return ix === this.current;
 			},
 			itemName(itm) {
-				return itm[this.$displayProp];
+				return itm ? itm[this.$displayProp] : '';
 			},
 			cancel() {
 				this.query = this.valueText;
@@ -141,6 +157,7 @@
 						this.current += 1;
 						if (this.current >= this.items.length)
 							this.current = 0;
+						this.query = this.itemName(this.items[this.current]);
 						this.scrollIntoView();
 						break;
 					case 38: // up
@@ -148,6 +165,7 @@
 						this.current -= 1;
 						if (this.current < 0)
 							this.current = this.items.length - 1;
+						this.query = this.itemName(this.items[this.current]);
 						this.scrollIntoView();
 						break;
 					default:
@@ -155,9 +173,10 @@
 				}
 			},
 			hit(itm) {
-				this.item[this.prop].$merge(itm, true); /*with event!*/
+				this.item[this.prop].$merge(itm, true /*fire*/);
 				this.query = this.valueText;
 				this.isOpen = false;
+				this.isOpenNew = false;
 			},
 			scrollIntoView() {
 				this.$nextTick(() => {
@@ -182,6 +201,7 @@
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
 				this.isOpen = true;
+				this.isOpenNew = false;
 				this.loading = true;
 				this.fetchData(text).then((result) => {
 					this.loading = false;
@@ -193,6 +213,13 @@
 			fetchData(text) {
 				let elem = this.item[this.prop];
 				return this.fetch.call(elem, elem, text);
+			},
+			doNew() {
+				//console.dir(this.createNew);
+				this.isOpen = false;
+				if (this.createNew) {
+					this.createNew(this.query);
+				}
 			}
 		},
 		mounted() {

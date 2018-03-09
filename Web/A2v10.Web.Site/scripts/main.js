@@ -1020,7 +1020,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180305-7122
+// 20180309-7127
 // services/datamodel.js
 
 (function () {
@@ -1120,19 +1120,21 @@ app.modules['std:validators'] = function () {
 				return this._src_[prop];
 			},
 			set(val) {
+				let eventWasFired = false;
 				//TODO: emit and handle changing event
 				val = ensureType(this._meta_.props[prop], val);
 				if (val === this._src_[prop])
 					return;
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
-					this._src_[prop].$merge(val, false);
+					this._src_[prop].$set(val);
+					eventWasFired = true; // already fired
 				} else {
 					this._src_[prop] = val;
 				}
 				this._root_.$setDirty(true);
-				if (this._lockEvents_)
-					return; // events locked
+				if (this._lockEvents_) return; // events locked
+				if (eventWasFired) return; // was fired
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
@@ -1586,6 +1588,14 @@ app.modules['std:validators'] = function () {
 			return this[idName];
 		});
 
+		defHiddenGet(obj.prototype, "$id__", function () {
+			let idName = this._meta_.$id;
+			if (!idName) {
+				return undefined;
+			}
+			return this[idName];
+		});
+
 		defHiddenGet(obj.prototype, "$name", function () {
 			let nameName = this._meta_.$name;
 			if (!nameName) {
@@ -1901,10 +1911,11 @@ app.modules['std:validators'] = function () {
 	function setElement(src) {
 		if (this.$root.isReadOnly)
 			return;
-		this.$merge(src, true);
+		this.$merge(src);
 	}
 
-	function merge(src, fireChange) {
+	function merge(src) {
+		let oldId = this.$id__;
 		try {
 			if (src === null)
 				src = {};
@@ -1940,7 +1951,12 @@ app.modules['std:validators'] = function () {
 			this._root_._needValidate_ = true;
 			this._lockEvents_ -= 1;
 		}
+		let newId = this.$id__;
+		let fireChange = false;
+		if (utils.isDefined(newId) && utils.isDefined(oldId))
+			fireChange =  newId !== oldId; // check id, no fire event
 		if (fireChange) {
+			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
 			let eventName = this._path_ + '.change';
 			this._root_.$emit(eventName, this.$parent, this);
@@ -1950,6 +1966,7 @@ app.modules['std:validators'] = function () {
 	function implementRoot(root, template, ctors) {
 		root.prototype.$emit = emit;
 		root.prototype.$setDirty = setDirty;
+		root.prototype.$defer = platform.defer;
 		root.prototype.$merge = merge;
 		root.prototype.$template = template;
 		root.prototype._exec_ = executeCommand;
@@ -2038,19 +2055,19 @@ app.modules['std:popup'] = function () {
 	const __dropDowns__ = [];
 	let __started = false;
 
-    const __error = 'Perhaps you forgot to create a _close function for popup element';
+	const __error = 'Perhaps you forgot to create a _close function for popup element';
 
 
 	return {
 		startService: startService,
 		registerPopup: registerPopup,
 		unregisterPopup: unregisterPopup,
-        closeAll: closeAllPopups,
-        closest: closest,
-        closeInside: closeInside
+		closeAll: closeAllPopups,
+		closest: closest,
+		closeInside: closeInside
 	};
 
-    function registerPopup(el) {
+	function registerPopup(el) {
 		__dropDowns__.push(el);
 	}
 
@@ -2068,7 +2085,7 @@ app.modules['std:popup'] = function () {
 		__started = true;
 
 		document.body.addEventListener('click', closePopups);
-		document.body.addEventListener('contextmenu', closePopups);  
+		document.body.addEventListener('contextmenu', closePopups);
 		document.body.addEventListener('keydown', closeOnEsc);
 	}
 
@@ -2076,38 +2093,38 @@ app.modules['std:popup'] = function () {
 	function closest(node, css) {
 		if (node) return node.closest(css);
 		return null;
-	} 
+	}
 
 	function closeAllPopups() {
 		__dropDowns__.forEach((el) => {
 			if (el._close)
 				el._close(document);
 		});
-    }
+	}
 
-    function closeInside(el) {
-        if (!el) return;
-        // inside el only
-        let ch = el.querySelectorAll('.popover-wrapper');
-        for (let i = 0; i < ch.length; i++) {
-            let chel = ch[i];
-            if (chel._close) {
-                chel._close();
-            }
-        }
-    }
+	function closeInside(el) {
+		if (!el) return;
+		// inside el only
+		let ch = el.querySelectorAll('.popover-wrapper');
+		for (let i = 0; i < ch.length; i++) {
+			let chel = ch[i];
+			if (chel._close) {
+				chel._close();
+			}
+		}
+	}
 
 	function closePopups(ev) {
 		if (__dropDowns__.length === 0)
-            return;
+			return;
 		for (let i = 0; i < __dropDowns__.length; i++) {
-            let el = __dropDowns__[i];
+			let el = __dropDowns__[i];
 			if (closest(ev.target, '.dropdown-item') ||
 				ev.target.hasAttribute('close-dropdown') ||
 				closest(ev.target, '[dropdown-top]') !== el) {
-                if (!el._close) {
-                    throw new Error(__error);
-                }
+				if (!el._close) {
+					throw new Error(__error);
+				}
 				el._close(ev.target);
 			}
 		}
@@ -2735,19 +2752,20 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180208-7126
+// 20180209-7127
 // components/selector.js
 
 /* TODO:
     7. create element text and command
     8. scrollIntoView for template (table)
-    9. 
+    9. blur/cancel
 */
 
 (function () {
 	const popup = require('std:popup');
 	const utils = require('std:utils');
 	const platform = require('std:platform');
+	const locale = window.$$locale;
 
 	const baseControl = component('control');
 
@@ -2767,13 +2785,16 @@ Vue.component('validator-control', {
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
-			<slot name='pane' :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
+			<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
 				<ul class="selector-pane" :style="listStyle">
 					<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
 						v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
 				</ul>
-				<a class="create-elem a2-hyperlink a2-inline"><i class="ico ico-plus"/> новый элемент</a>
+				<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
 			</slot>
+		</div>
+		<div class="selector-pane" v-if="isOpenNew" @click.stop.prevent="dummy">
+			<slot name="new-pane"></slot>
 		</div>
 	</div>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
@@ -2790,11 +2811,13 @@ Vue.component('validator-control', {
 			minChars: Number,
 			fetch: Function,
 			listWidth: String,
-			listHeight: String
+			listHeight: String,
+			createNew: Function
 		},
 		data() {
 			return {
 				isOpen: false,
+				isOpenNew: false,
 				loading: false,
 				items: [],
 				query: '',
@@ -2808,6 +2831,12 @@ Vue.component('validator-control', {
 			},
 			valueText() {
 				return this.item ? this.item[this.prop][this.$displayProp] : '';
+			},
+			canNew() {
+				return !!this.createNew;
+			},
+			newText() {
+				return `${locale.$CreateLC} "${this.query}"`;
 			},
 			pane() {
 				return {
@@ -2842,12 +2871,16 @@ Vue.component('validator-control', {
 			}
 		},
 		methods: {
+			dummy() {
+
+			},
 			__clickOutside() {
 				this.isOpen = false;
+				this.isOpenNew = false;
 			},
 			cssClass2() {
 				let cx = this.cssClass();
-				if (this.isOpen)
+				if (this.isOpen || this.isOpenNew)
 					cx += ' open';
 				return cx;
 			},
@@ -2855,7 +2888,7 @@ Vue.component('validator-control', {
 				return ix === this.current;
 			},
 			itemName(itm) {
-				return itm[this.$displayProp];
+				return itm ? itm[this.$displayProp] : '';
 			},
 			cancel() {
 				this.query = this.valueText;
@@ -2876,6 +2909,7 @@ Vue.component('validator-control', {
 						this.current += 1;
 						if (this.current >= this.items.length)
 							this.current = 0;
+						this.query = this.itemName(this.items[this.current]);
 						this.scrollIntoView();
 						break;
 					case 38: // up
@@ -2883,6 +2917,7 @@ Vue.component('validator-control', {
 						this.current -= 1;
 						if (this.current < 0)
 							this.current = this.items.length - 1;
+						this.query = this.itemName(this.items[this.current]);
 						this.scrollIntoView();
 						break;
 					default:
@@ -2890,9 +2925,10 @@ Vue.component('validator-control', {
 				}
 			},
 			hit(itm) {
-				this.item[this.prop].$merge(itm, true); /*with event!*/
+				this.item[this.prop].$merge(itm, true /*fire*/);
 				this.query = this.valueText;
 				this.isOpen = false;
+				this.isOpenNew = false;
 			},
 			scrollIntoView() {
 				this.$nextTick(() => {
@@ -2917,6 +2953,7 @@ Vue.component('validator-control', {
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
 				this.isOpen = true;
+				this.isOpenNew = false;
 				this.loading = true;
 				this.fetchData(text).then((result) => {
 					this.loading = false;
@@ -2928,6 +2965,13 @@ Vue.component('validator-control', {
 			fetchData(text) {
 				let elem = this.item[this.prop];
 				return this.fetch.call(elem, elem, text);
+			},
+			doNew() {
+				//console.dir(this.createNew);
+				this.isOpen = false;
+				if (this.createNew) {
+					this.createNew(this.query);
+				}
 			}
 		},
 		mounted() {
@@ -6347,13 +6391,13 @@ Vue.directive('resize', {
 								console.error(`$dialog.${command}. The argument is not an object`);
 								return;
 							}
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result, true /*fire*/); });
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
-							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result, false /*fire*/); });
+							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
 						case 'edit':
 							if (argIsNotAnObject()) return;
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
 						default: // simple show dialog
 							return __runDialog(url, arg, query, () => { });
 					}

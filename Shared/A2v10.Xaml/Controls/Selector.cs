@@ -14,6 +14,10 @@ namespace A2v10.Xaml
 
 		public Size ListSize { get; set; }
 
+		public UIElement NewPane { get; set; }
+
+		public Command CreateNewCommand { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			CheckDisabledModel(context);
@@ -34,9 +38,35 @@ namespace A2v10.Xaml
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
 			MergeValue(input, context);
+			MergeCreateNew(input, context);
+
 			input.RenderStart(context);
 			RenderAddOns(context);
+			//RenderNewPane(context);
 			input.RenderEnd(context);
+		}
+
+		void MergeCreateNew(TagBuilder tag, RenderContext context)
+		{
+			var cmd = GetBindingCommand(nameof(CreateNewCommand));
+			if (cmd == null)
+				return;
+			tag.MergeAttribute(":create-new", "(currentText) => " + cmd.GetCommand(context, false, "currentText"));
+		}
+
+		void RenderNewPane(RenderContext context)
+		{
+			if (NewPane == null)
+				return;
+			var npTag = new TagBuilder("template");
+			npTag.MergeAttribute("slot", "new-pane");
+			npTag.MergeAttribute("slot-scope", "newNane");
+			npTag.RenderStart(context);
+			using (var ctx = new ScopeContext(context, "newPane.elem"))
+			{
+				NewPane.RenderElement(context);
+			}
+			npTag.RenderEnd(context);
 		}
 	}
 }

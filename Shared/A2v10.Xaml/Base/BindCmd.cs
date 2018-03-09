@@ -92,7 +92,7 @@ namespace A2v10.Xaml
 			}
 			return null;
 		}
-		internal String GetCommand(RenderContext context, Boolean indirect = false)
+		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null)
 		{
 			switch (Command)
 			{
@@ -166,6 +166,8 @@ namespace A2v10.Xaml
 					return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)}, {GetData(context)})";
 
 				case CommandType.Execute:
+					if (argument != null)
+						return $"$exec('{GetName()}', {argument}, {GetConfirm(context)}, {GetOptions(context)})";
 					return $"$exec('{GetName()}', {CommandArgument(context, nullable: true)}, {GetConfirm(context)}, {GetOptions(context)})";
 
 				case CommandType.ExecuteSelected:
@@ -387,6 +389,13 @@ namespace A2v10.Xaml
 						if (arg != null)
 							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})");
 					}
+					break;
+				case CommandType.Clear:
+					{
+						var arg = GetBinding(nameof(Argument));
+						if (arg != null)
+							tag.MergeAttribute("v-if", $"!({arg.GetPath(context)}.$isEmpty)");
+						}
 					break;
 			}
 		}

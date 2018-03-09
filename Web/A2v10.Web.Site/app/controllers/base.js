@@ -418,13 +418,13 @@
 								console.error(`$dialog.${command}. The argument is not an object`);
 								return;
 							}
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result, true /*fire*/); });
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
-							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result, false /*fire*/); });
+							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
 						case 'edit':
 							if (argIsNotAnObject()) return;
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result, false /*fire*/); });
+							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
 						default: // simple show dialog
 							return __runDialog(url, arg, query, () => { });
 					}
