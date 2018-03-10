@@ -22,134 +22,143 @@
 @pane-yellow-brd: darken(spin(@pane-yellow-bg, -10), 15%);
 
 .stack-panel {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-    &.vertical {
-    }
+	&.vertical {
+	}
 
-    &.horizontal {
-        flex-direction: row;
-    }
+	&.horizontal {
+		flex-direction: row;
+	}
 }
 
 .panel {
-    margin-bottom: 6px;
+	margin-bottom: 6px;
 
-    .panel-header {
-        padding: 5px 6px;
-        font-size: 110%;
-        display: flex;
-        justify-content: space-between;
-        cursor: pointer;
-        line-height:1.5rem;
+	.panel-header {
+		padding: 5px 6px;
+		font-size: 110%;
+		display: flex;
+		justify-content: space-between;
+		cursor: pointer;
+		line-height: 1.5rem;
 
-        .ico {
-            font-size: 1.2rem;
-            margin-right: 2px;
-        }
+		.ico {
+			font-size: 1.2rem;
+			margin-right: 2px;
+		}
 
-        .panel-collapse-handle {
-            font-size: 110%;
-            padding-top: 2px;
-            margin:0;
+		.panel-collapse-handle {
+			font-size: 110%;
+			padding-top: 2px;
+			margin: 0;
 
-            &:before {
-                content: "\e9a2"; // chevron-up
-            }
-        }
-    }
+			&:before {
+				content: "\e9a2"; // chevron-up
+			}
+		}
+	}
 
-    .panel-content {
-        > .prop-grid {
-            tr:first-child > td {
-                border-top-style: none;
-            }
+	.panel-content {
+		> .prop-grid {
+			tr:first-child > td {
+				border-top-style: none;
+			}
 
-            tr:last-child > td {
-                border-bottom-style: none;
-            }
-        }
-    }
+			tr:last-child > td {
+				border-bottom-style: none;
+			}
+		}
+	}
+}
+
+.panel.panel-background-light-gray {
+	background-color: #fcfcfc;
+}
+
+.panel.drop-shadow {
+	box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .panel.collapsed {
-    .panel-header {
-        border-bottom-style:none!important;
-        .panel-collapse-handle {
-            &:before {
-                content: "\e9a4"; // chevron-up
-            }
-        }
-    }
+	.panel-header {
+		border-bottom-style: none !important;
+
+		.panel-collapse-handle {
+			&:before {
+				content: "\e9a4"; // chevron-up
+			}
+		}
+	}
 }
 
 .panel-varaint(@border, @background, @text) {
-    border: 1px solid @border;
+	border: 1px solid @border;
 
-    > .panel-header {
-        color: @text;
-        background-color: @background;
-        border-bottom: 1px solid @border;
+	> .panel-header {
+		color: @text;
+		background-color: @background;
+		border-bottom: 1px solid @border;
 
-        .panel-collapse-handle {
-            color: @text;
-        }
-    }
+		.panel-collapse-handle {
+			color: @text;
+		}
+	}
 }
 
 
 .panel {
-    .panel-varaint(@pane-def-brd, @pane-def-bg, @pane-def-txt);
+	.panel-varaint(@pane-def-brd, @pane-def-bg, @pane-def-txt);
 }
 
 .panel.panel-cyan {
-    .panel-varaint(@pane-cyan-brd, @pane-cyan-bg, @pane-cyan-txt);
+	.panel-varaint(@pane-cyan-brd, @pane-cyan-bg, @pane-cyan-txt);
 }
 
 .panel.panel-green {
-    .panel-varaint(@pane-green-brd, @pane-green-bg, @pane-green-txt);
+	.panel-varaint(@pane-green-brd, @pane-green-bg, @pane-green-txt);
 }
 
 .panel.panel-red {
-    .panel-varaint(@pane-red-brd, @pane-red-bg, @pane-red-txt);
+	.panel-varaint(@pane-red-brd, @pane-red-bg, @pane-red-txt);
 }
 
 .panel.panel-yellow {
-    .panel-varaint(@pane-yellow-brd, @pane-yellow-bg, @pane-yellow-txt);
+	.panel-varaint(@pane-yellow-brd, @pane-yellow-bg, @pane-yellow-txt);
 }
 
 .field-set {
-    // flex does not work for <fieldset>
-    margin: 0;
-    padding: .4rem .6rem;
-    border: 1px solid @default-brd-color;
+	// flex does not work for <fieldset>
+	margin: 0;
+	padding: .4rem .6rem;
+	border: 1px solid @default-brd-color;
 
-    legend {
-        font-size: 0.95rem;
-        color: @label-color;
-    }
+	legend {
+		font-size: 0.95rem;
+		color: @label-color;
+	}
 
-    &.vertical {
-        .field-set-item {
-            display: block;
-            margin-bottom: .4rem;
+	&.vertical {
+		.field-set-item {
+			display: block;
+			margin-bottom: .4rem;
 
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-    }
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
 
-    &.horizontal {
-        display: table;
+	&.horizontal {
+		display: table;
 
-        .field-set-item {
-            margin-right: 1rem;
+		.field-set-item {
+			margin-right: 1rem;
 
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-    }
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
 }

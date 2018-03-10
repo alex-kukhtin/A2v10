@@ -3421,8 +3421,14 @@ TODO:
 .panel .panel-content > .prop-grid tr:last-child > td {
   border-bottom-style: none;
 }
+.panel.panel-background-light-gray {
+  background-color: #fcfcfc;
+}
+.panel.drop-shadow {
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
 .panel.collapsed .panel-header {
-  border-bottom-style: none!important;
+  border-bottom-style: none !important;
 }
 .panel.collapsed .panel-header .panel-collapse-handle:before {
   content: "\e9a4";
