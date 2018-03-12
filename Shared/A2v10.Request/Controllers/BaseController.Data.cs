@@ -52,7 +52,8 @@ namespace A2v10.Request
 			RequestView rw = rm.GetCurrentAction();
 			var prms = new ExpandoObject();
 			prms.Set("UserId", userId);
-			prms.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				prms.Set("TenantId", tenantId);
 			prms.Append(rw.parameters);
 			IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 			IModelHandler handler = rw.GetHookHandler(_host);
@@ -68,7 +69,8 @@ namespace A2v10.Request
 			String command = dataToInvoke.Get<String>("cmd");
 			ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
 			dataToExec.Set("UserId", userId);
-			dataToExec.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				dataToExec.Set("TenantId", tenantId);
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
 			await ExecuteCommand(cmd, dataToExec, writer);
@@ -161,7 +163,8 @@ namespace A2v10.Request
 			if (loadProc == null)
 				throw new RequestModelException("The data model is empty");
 			loadPrms.Set("UserId", userId);
-			loadPrms.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				loadPrms.Set("TenantId", tenantId);
 			loadPrms.Set("Id", rw.Id);
 			ExpandoObject prms2 = loadPrms;
 			if (rw.indirect)
@@ -169,7 +172,8 @@ namespace A2v10.Request
 				// for indirect action - @UserId and @Id only
 				prms2 = new ExpandoObject();
 				prms2.Set("UserId", userId);
-				prms2.Set("TenantId", tenantId);
+				if (_host.IsMultiTenant)
+					prms2.Set("TenantId", tenantId);
 				prms2.Set("Id", rw.Id);
 			}
 			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
@@ -191,7 +195,8 @@ namespace A2v10.Request
 				throw new RequestModelException("The data model is empty");
 			ExpandoObject execPrms = new ExpandoObject();
 			execPrms.Set("UserId", userId);
-			execPrms.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
 			await _dbContext.LoadModelAsync(action.CurrentSource, deleteProc, execPrms);
 			writer.Write("{\"status\": \"OK\"}"); // JSON!
@@ -221,7 +226,8 @@ namespace A2v10.Request
 			ExpandoObject execPrms = new ExpandoObject();
 			AddParamsFromUrl(execPrms, baseUrl);
 			execPrms.Set("UserId", userId);
-			execPrms.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, expandProc, execPrms);
 			WriteDataModel(model, writer);
@@ -243,7 +249,8 @@ namespace A2v10.Request
 			if (loadProc == null)
 				throw new RequestModelException("The data model is empty");
 			execPrms.Set("UserId", userId);
-			execPrms.Set("TenantId", tenantId);
+			if (_host.IsMultiTenant)
+				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
 
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, loadProc, execPrms);

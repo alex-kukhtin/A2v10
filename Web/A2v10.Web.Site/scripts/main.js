@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180307-7125
+// 20180312-71209
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -191,7 +191,7 @@ app.modules['std:utils'] = function () {
 		for (let i = 0; i < ps.length; i++) {
 			let pi = ps[i];
 			if (!(pi in r))
-				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`)
+				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`);
 			r = r[ps[i]];
 		}
 		if (isDate(r))
@@ -309,10 +309,10 @@ app.modules['std:utils'] = function () {
 		if (!str) return dateZero();
 		let today = dateToday();
 		let seg = str.split('.');
-		if (seg.length == 1) {
+		if (seg.length === 1) {
 			seg.push('' + (today.getMonth() + 1));
 			seg.push('' + today.getFullYear());
-		} else if (seg.length == 2) {
+		} else if (seg.length === 2) {
 			seg.push('' + today.getFullYear());
 		}
 		let td = new Date(+seg[2], +seg[1] - 1, +seg[0], 0, 0, 0, 0);
@@ -359,14 +359,14 @@ app.modules['std:utils'] = function () {
 			return true;
 		if (!text)
 			return false;
-		return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) != -1;
+		return (text || '').toString().toLowerCase().indexOf(probe.toLowerCase()) !== -1;
 	}
 
 	function textContainsText(obj, props, probe) {
 		if (!probe) return true;
 		if (!obj)
 			return false;
-		for (v of props.split(',')) {
+		for (let v of props.split(',')) {
 			if (textContains(obj[v], probe))
 				return true;
 		}
@@ -386,9 +386,9 @@ app.modules['std:utils'] = function () {
 		return function () {
 			clearTimeout(timerId);
 			timerId = setTimeout(() => {
-				fn.call()
+				fn.call();
 			}, timeout);
-		}
+		};
 	}
 
 };

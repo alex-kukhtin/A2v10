@@ -146,7 +146,8 @@ namespace A2v10.Web.Mvc.Controllers
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(Request.QueryString, toPascalCase: true);
 				loadPrms.Set("UserId", UserId);
-				loadPrms.Set("TenantId", TenantId);
+				if (_baseController.Host.IsMultiTenant)
+					loadPrms.Set("TenantId", TenantId);
 				if (pathInfo.StartsWith("app/"))
 				{
 					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);

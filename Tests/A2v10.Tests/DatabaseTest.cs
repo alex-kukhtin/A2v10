@@ -18,36 +18,36 @@ using A2v10.Data.Tests;
 
 namespace A2v10.Tests
 {
-    [TestClass]
-    [TestCategory("Database")]
-    public class DatabaseTest
-    {
+	[TestClass]
+	[TestCategory("Database")]
+	public class DatabaseTest
+	{
 
-        IDbContext _dbContext;
-        IDataScripter _scripter;
-        public DatabaseTest()
-        {
-            TestConfig.Start();
-            _dbContext = ServiceLocator.Current.GetService<IDbContext>();
-            _scripter = ServiceLocator.Current.GetService<IDataScripter>();
-        }
+		IDbContext _dbContext;
+		IDataScripter _scripter;
+		public DatabaseTest()
+		{
+			TestConfig.Start();
+			_dbContext = ServiceLocator.Current.GetService<IDbContext>();
+			_scripter = ServiceLocator.Current.GetService<IDataScripter>();
+		}
 
 
 
-        [TestMethod]
-        public async Task TestEmptyArrayMeta()
-        {
-            IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.EmptyArray");
-            var md = new MetadataTester(dm);
-            md.IsAllKeys("TRoot,TModel,TRow");
-            md.IsItemType("TRoot", "Model", FieldType.Object);
-            md.IsId("TModel", "Key");
-            md.IsName("TModel", "ModelName");
-            md.IsItemRefObject("TModel", "Rows", "TRow", FieldType.Array);
+		[TestMethod]
+		public async Task TestEmptyArrayMeta()
+		{
+			IDataModel dm = await _dbContext.LoadModelAsync(null, "a2test.EmptyArray");
+			var md = new MetadataTester(dm);
+			md.IsAllKeys("TRoot,TModel,TRow");
+			md.IsItemType("TRoot", "Model", FieldType.Object);
+			md.IsId("TModel", "Key");
+			md.IsName("TModel", "ModelName");
+			md.IsItemRefObject("TModel", "Rows", "TRow", FieldType.Array);
 
-            String script = dm.CreateScript(_scripter);
-            var pos = script.IndexOf("cmn.defineObject(TRow, {props: {}}, true);");
-            Assert.AreNotEqual(-1, pos, "Invalid script for array");
-        }
-    }
+			String script = dm.CreateScript(_scripter);
+			var pos = script.IndexOf("cmn.defineObject(TRow, {props: {}}, true);");
+			Assert.AreNotEqual(-1, pos, "Invalid script for array");
+		}
+	}
 }

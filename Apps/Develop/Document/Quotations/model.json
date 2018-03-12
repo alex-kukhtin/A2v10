@@ -1,8 +1,8 @@
 ﻿/*Document/quotations*/
 {
 	"source": "frontis",
-	"schema": "a2git",
-	"model": "Quotation.Casco",
+	"schema": "a2insurance",
+	"model": "Contract",
 	"actions": {
 		"index": {
 			"index": true,
@@ -11,6 +11,7 @@
 		},
 		"edit": {
 			"view": "edit.view",
+			"model": "Quotation.Casco.PremierForte3",
 			"template": "element.template"
 		}
 	}
