@@ -166,6 +166,12 @@ namespace A2v10.Xaml
 					return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)}, {GetData(context)})";
 
 				case CommandType.Execute:
+					if (indirect)
+					{
+						if (!IsArgumentEmpty(context))
+							return $"{{cmd:$exec, arg1:'{GetName()}', arg2:'{CommandArgument(context)}'}}";
+						return $"{{cmd:$exec, arg1:'{GetName()}', arg2:'this'}}";
+					}
 					if (argument != null)
 						return $"$exec('{GetName()}', {argument}, {GetConfirm(context)}, {GetOptions(context)})";
 					return $"$exec('{GetName()}', {CommandArgument(context, nullable: true)}, {GetConfirm(context)}, {GetOptions(context)})";

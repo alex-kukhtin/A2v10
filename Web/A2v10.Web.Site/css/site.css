@@ -1483,7 +1483,7 @@ pre.a2-code {
   font-size: 1.3rem;
 }
 .btn.sm {
-  padding: .4rem 1rem;
+  padding: .4rem;
   font-size: 0.95rem;
   line-height: 1;
 }
@@ -1782,6 +1782,9 @@ table.data-grid td.cell-editable {
 }
 table.data-grid td.cell-editable .control-group {
   margin: -1px;
+}
+table.data-grid td.small {
+  font-size: 0.86rem;
 }
 table.data-grid td.cell-validator {
   padding: 4px 4px;
@@ -3391,6 +3394,15 @@ TODO:
 }
 .stack-panel.horizontal {
   flex-direction: row;
+}
+.stack-panel.horizontal .divider {
+  flex-grow: 2;
+}
+.stack-panel.align-center {
+  align-items: center;
+}
+.stack-panel.align-baseline {
+  align-items: baseline;
 }
 .panel {
   margin-bottom: 6px;

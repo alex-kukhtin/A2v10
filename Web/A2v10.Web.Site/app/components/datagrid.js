@@ -132,6 +132,7 @@
 			noPadding: { type: Boolean, default: false },
 			validate: String,
 			sort: { type: Boolean, default: undefined },
+			small: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
@@ -193,6 +194,8 @@
 					cssClass += ' cell-editable';
 				if (this.wrap)
 					cssClass += ' ' + this.wrap;
+				if (this.small)
+					cssClass += ' ' + 'small';
 				return cssClass.trim();
 			}
 		}

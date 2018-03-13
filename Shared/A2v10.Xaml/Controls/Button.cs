@@ -61,7 +61,7 @@ namespace A2v10.Xaml
 		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp)
 		{
 			Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
-			var button = new TagBuilder("button", "btn");
+			var button = new TagBuilder("button", "btn", IsInGrid);
 			if (!Block && !(Parent is Toolbar))
 				button.AddCssClass("a2-inline");
 			if (Parent is Toolbar)

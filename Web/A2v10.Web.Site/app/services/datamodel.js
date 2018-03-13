@@ -112,7 +112,8 @@
 				} else {
 					this._src_[prop] = val;
 				}
-				this._root_.$setDirty(true);
+				if (!prop.startsWith('$$')) // skip special properties
+					this._root_.$setDirty(true);
 				if (this._lockEvents_) return; // events locked
 				if (eventWasFired) return; // was fired
 				if (!this._path_)
@@ -394,6 +395,10 @@
 
 		defPropertyGet(arr, "$checked", function () {
 			return this.filter((el) => el.$checked);
+		});
+
+		defPropertyGet(arr, "$hasSelected", function () {
+			return !!this.$selected;
 		});
 
 		arr.Selected = function (propName) {
@@ -902,6 +907,7 @@
 			this._root_._enableValidate_ = false;
 			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
+				if (prop.startsWith('$$')) continue; // skip special properties (saved)
 				let ctor = this._meta_.props[prop];
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
