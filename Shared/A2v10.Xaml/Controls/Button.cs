@@ -61,11 +61,14 @@ namespace A2v10.Xaml
 		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp)
 		{
 			Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
+			bool insideBar = Parent is Toolbar || Parent is CommandBar;
 			var button = new TagBuilder("button", "btn", IsInGrid);
-			if (!Block && !(Parent is Toolbar))
+			if (!Block && !insideBar)
 				button.AddCssClass("a2-inline");
 			if (Parent is Toolbar)
 				button.AddCssClass("btn-tb");
+			else if (Parent is CommandBar)
+				button.AddCssClass("btn-cb");
 			switch (Size)
 			{
 				case ControlSize.Large:
@@ -81,10 +84,8 @@ namespace A2v10.Xaml
 			if (IconAlign == IconAlign.Top)
 				button.AddCssClass("icon-top");
 
-			if (!(Parent is Toolbar))
-			{
+			if (!insideBar)
 				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
-			}
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);
 			MergeAttributes(button, context, MergeAttrMode.NoTabIndex); // dinamic

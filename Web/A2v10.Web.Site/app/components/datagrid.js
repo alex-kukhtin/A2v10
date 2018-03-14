@@ -132,6 +132,7 @@
 			noPadding: { type: Boolean, default: false },
 			validate: String,
 			sort: { type: Boolean, default: undefined },
+			sortProp: String,
 			small: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
@@ -144,14 +145,17 @@
 			this.$parent.$addColumn(this);
 		},
 		computed: {
+			sortProperty() {
+				return this.sortProp || this.content;
+			},
 			dir() {
-				return this.$parent.sortDir(this.content);
+				return this.$parent.sortDir(this.sortProperty);
 			},
 			fixedHeader() {
 				return this.$parent.fixedHeader;
 			},
 			isSortable() {
-				if (!this.content)
+				if (!this.sortProperty)
 					return false;
 				return typeof this.sort === 'undefined' ? this.$parent.isGridSortable : this.sort;
 			},
@@ -181,7 +185,7 @@
 			doSort() {
 				if (!this.isSortable)
 					return;
-				this.$parent.doSort(this.content);
+				this.$parent.doSort(this.sortProperty);
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180314-7131
 // controllers/base.js
 
 (function () {
@@ -603,16 +603,22 @@
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
-				// HACH. inherit filter from parent
+				// HACK. inherit filter from parent
+				/*
 				if (parentMi && parentMi.Filter) {
 					if (!selfMi)
 						selfMi = parentMi;
 					else
 						selfMi.Filter = parentMi.Filter;
 				}
+				*/
 
 				let mi = getPagerInfo(selfMi);
-				let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
+				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
+				let newUrl = xQuery.url + urltools.makeQueryString(mi);
+				//console.dir(newUrl);
+				//let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
+				let jsonData = utils.toJson({ baseUrl: newUrl, id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
 					let arr = elem[propName];

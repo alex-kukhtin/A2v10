@@ -8,7 +8,9 @@ namespace A2v10.Xaml
 	{
 		Default,
 		Baseline,
-		Center
+		Center,
+		Start,
+		End
 	}
 
 	public class StackPanel : Container, ITableControl

@@ -49,9 +49,11 @@ namespace A2v10.Xaml
 				cwTag = "collection-view-server";
 			else if (RunAt == RunMode.ServerUrl)
 				cwTag = "collection-view-server-url";
-			_outer = new TagBuilder(cwTag);
+			_outer = new TagBuilder(cwTag, "cw", IsInGrid);
 			if (onRender != null)
 				onRender(_outer);
+			if (Parent is Page)
+				_outer.AddCssClass("cw-absolute");
 			MergeAttributes(_outer, context);
 			Bind itemsSource = GetBinding(nameof(ItemsSource));
 			if (itemsSource != null)

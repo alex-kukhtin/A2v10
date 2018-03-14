@@ -3124,6 +3124,7 @@ Vue.component('validator-control', {
 			noPadding: { type: Boolean, default: false },
 			validate: String,
 			sort: { type: Boolean, default: undefined },
+			sortProp: String,
 			small: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
@@ -3136,14 +3137,17 @@ Vue.component('validator-control', {
 			this.$parent.$addColumn(this);
 		},
 		computed: {
+			sortProperty() {
+				return this.sortProp || this.content;
+			},
 			dir() {
-				return this.$parent.sortDir(this.content);
+				return this.$parent.sortDir(this.sortProperty);
 			},
 			fixedHeader() {
 				return this.$parent.fixedHeader;
 			},
 			isSortable() {
-				if (!this.content)
+				if (!this.sortProperty)
 					return false;
 				return typeof this.sort === 'undefined' ? this.$parent.isGridSortable : this.sort;
 			},
@@ -3173,7 +3177,7 @@ Vue.component('validator-control', {
 			doSort() {
 				if (!this.isSortable)
 					return;
-				this.$parent.doSort(this.content);
+				this.$parent.doSort(this.sortProperty);
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;
@@ -3696,7 +3700,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7121
+// 20180315-7131
 /*components/pager.js*/
 
 /*
@@ -3732,14 +3736,15 @@ Vue.component('a2-pager', {
 			return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
 		},
 		offset() {
-			return this.source.offset;
+			return +this.source.offset;
 		},
 		count() {
-			return this.source.sourceCount;
+			return +this.source.sourceCount;
 		}
 	},
 	methods: {
 		setOffset(offset) {
+			offset = +offset;
 			if (this.offset === offset)
 				return;
 			this.source.$setOffset(offset);
@@ -5815,10 +5820,16 @@ Vue.directive('settabindex', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180226-7120*/
+/*20180314-7131*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
+	unbind(el, binding, vnode) {
+		let p = el._parts;
+		if (p.mouseDown) {
+			el.removeEventListener('mousedown', p.mouseDown, false);
+		}
+	},
 	bind(el, binding, vnode) {
 
 		Vue.nextTick(function () {
@@ -5852,6 +5863,7 @@ Vue.directive('resize', {
 				resizing: false,
 				minWidth: minPaneWidth,
 				minWidth2: minSecondPaneWidth,
+				mouseDown: mouseDown,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
@@ -5877,7 +5889,6 @@ Vue.directive('resize', {
 				let p = el._parts;
 				if (!p.resizing)
 					return;
-
 				event.preventDefault();
 				p.handle.style.display = 'none';
 				p.grid.style.cursor = 'default';
@@ -5901,11 +5912,15 @@ Vue.directive('resize', {
 				p.handle.style.left = x + 'px';
 			}
 
-
-			el.addEventListener('mousedown', function (event) {
+			function mouseDown(event) {
 				let p = el._parts;
 				if (p.resizing)
 					return;
+				let t = event.target;
+				if (!t.classList.contains('spl-handle')) {
+					console.error('click out of splitter handle');
+					return;
+				}
 				event.preventDefault();
 				let x = p.offsetX(event);
 				p.handle.style.left = x + 'px';
@@ -5914,75 +5929,17 @@ Vue.directive('resize', {
 				document.addEventListener('mouseup', mouseUp, false);
 				document.addEventListener('mousemove', mouseMove, false);
 				p.resizing = true;
-			}, false);
-		});
-		/*
-		Vue.nextTick(function () {
-
-			const minWidth = 20;
-
-			function findHandle(el) {
-				for (ch of el.childNodes) {
-					if (ch.nodeType === Node.ELEMENT_NODE) {
-						if (ch.classList.contains('drag-handle'))
-							return ch;
-					}
-				}
-				return null;
 			}
+			el.addEventListener('mousedown', mouseDown, false);
 
-			let grid = el.parentElement;
-
-			let parts = {
-				grid: grid,
-				handle: findHandle(grid),
-				resizing: false
-			};
-
-			if (!parts.handle) {
-				console.error('Resize handle not found');
-				return;
-			}
-
-			el._parts = parts;
-
-			el._parts.grid.addEventListener('mouseup', function (event) {
-				let p = el._parts;
-				if (!p.resizing)
-					return;
-				p.resizing = false;
-				event.preventDefault();
-				p.handle.style.display = 'none';
-				p.grid.style.cursor = 'default';
-				let rc = p.getBoundingClientRect();
-				let x = event.clientX - rc.left;
-				if (x < minWidth) x = minWidth;
-				p.grid.style.gridTemplateColumns = x + 'px 6px 1fr';
-			}, false);
-
-			el.addEventListener('mousedown', function (event) {
-				let p = el._parts;
-				if (p.resizing)
-					return;
-				event.preventDefault();
-				p.resizing = true;
-				let rc = p.grid.getBoundingClientRect();
-				let x = event.offsetX + event.target.offsetLeft;
-				let x = event.clientX - rc.left;
-				p.handle.style.left = x + 'px';
-				p.handle.style.display = 'block';
-				p.grid.style.cursor = 'w-resize';
-			}, false);
 		});
-
-		*/
 	}
 });
 
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180314-7131
 // controllers/base.js
 
 (function () {
@@ -6585,16 +6542,22 @@ Vue.directive('resize', {
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
-				// HACH. inherit filter from parent
+				// HACK. inherit filter from parent
+				/*
 				if (parentMi && parentMi.Filter) {
 					if (!selfMi)
 						selfMi = parentMi;
 					else
 						selfMi.Filter = parentMi.Filter;
 				}
+				*/
 
 				let mi = getPagerInfo(selfMi);
-				let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
+				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
+				let newUrl = xQuery.url + urltools.makeQueryString(mi);
+				//console.dir(newUrl);
+				//let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
+				let jsonData = utils.toJson({ baseUrl: newUrl, id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
 					let arr = elem[propName];

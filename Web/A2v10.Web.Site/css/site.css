@@ -643,6 +643,7 @@ td.valign-bottom {
   padding: 0 .25rem .1rem .25rem;
   border-radius: .2rem;
   display: inline-block;
+  margin: 1px;
 }
 .tag-label.success,
 .tag-label.green {
@@ -1433,8 +1434,8 @@ pre.a2-code {
 .a2-inline + .a2-inline {
   margin-left: .4rem;
 }
-.a2-hyperlink.small {
-  font-size: 92%;
+.small {
+  font-size: .86rem;
 }
 .a2-hyperlink.small i.ico {
   font-size: 12px;
@@ -2025,6 +2026,11 @@ table.data-grid > tbody > tr.bold td {
   border-bottom-style: none;
   height: 0;
   visibility: hidden;
+  /*
+				&:first-child > .h-holder {
+					border-left-style: none;
+				}
+				*/
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th > .h-fill {
   padding: 0 6px;
@@ -2051,9 +2057,6 @@ table.data-grid > tbody > tr.bold td {
   border-left: 1px solid #cbcdda;
   border-bottom: 1px solid #cbcdda;
   border-top: 1px solid #cbcdda;
-}
-.data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th:first-child > .h-holder {
-  border-left-style: none;
 }
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header .h-holder {
   border-top-style: none !important;
@@ -2146,16 +2149,64 @@ table.data-grid > tbody > tr.bold td {
   white-space: nowrap;
 }
 .toolbar > .control-group .input-group > a {
-  line-height: 1.5em;
+  line-height: 1.65rem;
 }
 .toolbar > .control-group select,
 .toolbar > .control-group input {
-  height: 1.5em;
+  height: 1.65rem;
 }
 .dropdown.show > .btn {
   background-color: #eaf0ff;
   border-color: #9ba7b7;
   color: #555;
+}
+.commandbar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 0;
+  overflow: visible;
+  background-color: transparent;
+  color: #57a8fa;
+}
+.commandbar .btn-cb {
+  white-space: nowrap;
+  background-color: transparent;
+  text-transform: lowercase;
+  color: #222;
+  min-width: 0;
+  padding: 2px 4px 3px 4px;
+}
+.commandbar .btn-cb:focus {
+  outline: 1px dotted #9dacca;
+  outline-offset: -2px;
+}
+.commandbar .btn-cb:hover {
+  background-color: #fdf4bf;
+  border-color: #e5c365;
+  outline: none;
+}
+.commandbar .btn-cb:active {
+  background-color: #fff29d;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  border-color: #e5c365;
+  outline: none;
+}
+.commandbar .btn-cb:disabled {
+  color: #777;
+}
+.commandbar .btn-cb:disabled:hover {
+  background-color: transparent;
+  border-color: transparent;
+}
+.commandbar.visible-active {
+  display: none;
+}
+.active .commandbar.visible-active {
+  display: flex;
+}
+.data-grid td > .commandbar {
+  margin: -4px;
 }
 .tree-view {
   margin: 0;
@@ -2325,6 +2376,7 @@ table.data-grid > tbody > tr.bold td {
   grid-column: 1 / span 2;
   background-color: white;
   overflow: visible;
+  max-height: -webkit-fill-available;
 }
 .tab-panel .tab-content.yellow {
   background-color: lightyellow;
@@ -2947,11 +2999,11 @@ label.checkbox.small span:after {
   transform: scale(0.9, 0.9);
 }
 .a2-pager {
-  background-color: #f8f8f8;
+  background-color: white;
   padding: 2px 6px 2px 0;
   display: flex;
   align-items: center;
-  border: 1px solid #e5e8eb;
+  border-top: 1px solid #e5e8eb;
 }
 .a2-pager button {
   padding: 2px;
@@ -3398,11 +3450,20 @@ TODO:
 .stack-panel.horizontal .divider {
   flex-grow: 2;
 }
+.stack-panel.horizontal .control-group {
+  margin: 0;
+}
 .stack-panel.align-center {
   align-items: center;
 }
 .stack-panel.align-baseline {
   align-items: baseline;
+}
+.stack-panel.align-start {
+  align-items: flex-start;
+}
+.stack-panel.align-end {
+  align-items: flex-end;
 }
 .panel {
   margin-bottom: 6px;
@@ -3524,6 +3585,27 @@ TODO:
 }
 .field-set.horizontal .field-set-item:last-child {
   margin-right: 0;
+}
+.page.absolute > .cw-absolute {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.full-height-panel {
+  display: grid;
+  height: 100%;
+}
+.full-height-panel .data-grid-container {
+  height: auto;
+  max-height: -webkit-fill-available;
+}
+.full-height-panel .tab-item {
+  height: 100%;
+}
+.full-height-panel .cw {
+  height: 100%;
 }
 table.sheet {
   -webkit-user-select: text;

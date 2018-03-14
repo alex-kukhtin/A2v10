@@ -1,10 +1,10 @@
 ﻿
 
 @control-border: @default-brd-color;
-@control-bg-color:white;
+@control-bg-color: white;
 
 
-@validator-arrow-size:8px;
+@validator-arrow-size: 8px;
 
 /*TODO: 
     2. v-focus-parent directive
@@ -13,359 +13,363 @@
 */
 
 .validation-summary {
-    font-size: 0.95rem;
-    padding: 4px 6px;
-    background-color: @danger-bg-color;
-    color: @danger-txt-color;
-    border: 1px solid @danger-brd-color;
-    box-shadow: 1px 4px 10px @danger-shadow-color;
-    white-space:pre;
+	font-size: 0.95rem;
+	padding: 4px 6px;
+	background-color: @danger-bg-color;
+	color: @danger-txt-color;
+	border: 1px solid @danger-brd-color;
+	box-shadow: 1px 4px 10px @danger-shadow-color;
+	white-space: pre;
 }
 
 
 .control-group {
-    display: block;
-    //background-color: aliceblue;
-    margin-bottom: .5rem;
+	display: block;
+	//background-color: aliceblue;
+	margin-bottom: .5rem;
 
-    label {
-        font-size: 0.95rem;
-        color: @label-color;
-        margin-bottom: .15em;
-        display: block;
-    }
+	label {
+		font-size: 0.95rem;
+		color: @label-color;
+		margin-bottom: .15em;
+		display: block;
+	}
 
-    .descr {
-        display: inline-block;
-        font-size: 95%;
-        margin-bottom: 0.25em;
-        color: @label-color;
-    }
+	.descr {
+		display: inline-block;
+		font-size: 95%;
+		margin-bottom: 0.25em;
+		color: @label-color;
+	}
 
-    .validator {
-        position: absolute;
-        display: none;
-        margin: 0;
-        left: -1px;
-        width: auto;
-        min-width: 60px;
-        font-size: 96%;
-        bottom: 100%;
-        padding: 2px 6px 4px 6px;
-        background-color: @danger-bg-color;
-        color: @danger-txt-color;
-        border: 1px solid @danger-brd-color;
-        margin-bottom: @validator-arrow-size;
-        text-align: left;
-        box-shadow: 1px 4px 10px @danger-shadow-color;
-        z-index: @validator-index;
-        line-height: 1.2em;
-        font-weight: normal;
-        font-style: normal;
+	.validator {
+		position: absolute;
+		display: none;
+		margin: 0;
+		left: -1px;
+		width: auto;
+		min-width: 60px;
+		font-size: 96%;
+		bottom: 100%;
+		padding: 2px 6px 4px 6px;
+		background-color: @danger-bg-color;
+		color: @danger-txt-color;
+		border: 1px solid @danger-brd-color;
+		margin-bottom: @validator-arrow-size;
+		text-align: left;
+		box-shadow: 1px 4px 10px @danger-shadow-color;
+		z-index: @validator-index;
+		line-height: 1.2em;
+		font-weight: normal;
+		font-style: normal;
 
-        &:before, &:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-        }
+		&:before, &:after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+		}
 
-        &:before {
-            left: 7.5px;
-            margin-bottom: -@validator-arrow-size;
-            border: @validator-arrow-size solid transparent;
-            border-top: @validator-arrow-size solid @danger-brd-color;
-            border-bottom-width: 0
-        }
+		&:before {
+			left: 7.5px;
+			margin-bottom: -@validator-arrow-size;
+			border: @validator-arrow-size solid transparent;
+			border-top: @validator-arrow-size solid @danger-brd-color;
+			border-bottom-width: 0
+		}
 
-        &:after {
-            left: 8.5px;
-            margin-bottom: -7px;
-            border: 7px solid transparent;
-            border-top: 7px solid @danger-bg-color;
-            border-bottom-width: 0;
-        }
+		&:after {
+			left: 8.5px;
+			margin-bottom: -7px;
+			border: 7px solid transparent;
+			border-top: 7px solid @danger-bg-color;
+			border-bottom-width: 0;
+		}
 
-        .error {
-            display: list-item;
-            list-style-type: none;
-            padding-left: 6px;
-            white-space: normal;
-            max-width: 100%;
-            // custom bullet
-            &:before {
-                content: '\2022';
-                position: absolute;
-                left: 3px;
-            }
-        }
-    }
+		.error {
+			display: list-item;
+			list-style-type: none;
+			padding-left: 6px;
+			white-space: normal;
+			max-width: 100%;
+			// custom bullet
+			&:before {
+				content: '\2022';
+				position: absolute;
+				left: 3px;
+			}
+		}
+	}
 
-    .validator.bottom-left {
-        top: 100%;
-        bottom: auto;
-        margin-top: @validator-arrow-size;
-        margin-bottom: 0;
+	.validator.bottom-left {
+		top: 100%;
+		bottom: auto;
+		margin-top: @validator-arrow-size;
+		margin-bottom: 0;
 
-        &:before {
-            bottom: auto;
-            top: -@validator-arrow-size;
-            border-bottom: @validator-arrow-size solid @danger-brd-color;
-            border-top-width: 0;
-        }
+		&:before {
+			bottom: auto;
+			top: -@validator-arrow-size;
+			border-bottom: @validator-arrow-size solid @danger-brd-color;
+			border-top-width: 0;
+		}
 
-        &:after {
-            bottom: auto;
-            top: -6.5px;
-            border-bottom: 7px solid @danger-bg-color;
-            border-top-width: 0;
-        }
-    }
+		&:after {
+			bottom: auto;
+			top: -6.5px;
+			border-bottom: 7px solid @danger-bg-color;
+			border-top-width: 0;
+		}
+	}
 
-    .validator.top-right {
-        left: auto;
-        right: 0;
+	.validator.top-right {
+		left: auto;
+		right: 0;
 
-        &:before {
-            right: @validator-arrow-size;
-            left: auto;
-        }
+		&:before {
+			right: @validator-arrow-size;
+			left: auto;
+		}
 
-        &:after {
-            right: @validator-arrow-size + 1px;
-            left: auto;
-        }
-    }
+		&:after {
+			right: @validator-arrow-size + 1px;
+			left: auto;
+		}
+	}
 
-    .validator.bottom-right {
-        top: 100%;
-        bottom: auto;
-        left: auto;
-        right: 0;
-        margin-top: @validator-arrow-size;
-        margin-bottom: 0;
+	.validator.bottom-right {
+		top: 100%;
+		bottom: auto;
+		left: auto;
+		right: 0;
+		margin-top: @validator-arrow-size;
+		margin-bottom: 0;
 
-        &:before {
-            bottom: auto;
-            top: -@validator-arrow-size;
-            border-bottom: @validator-arrow-size solid @danger-brd-color;
-            border-top-width: 0;
-            right: @validator-arrow-size;
-            left: auto;
-        }
+		&:before {
+			bottom: auto;
+			top: -@validator-arrow-size;
+			border-bottom: @validator-arrow-size solid @danger-brd-color;
+			border-top-width: 0;
+			right: @validator-arrow-size;
+			left: auto;
+		}
 
-        &:after {
-            bottom: auto;
-            top: -6.5px;
-            border-bottom: 7px solid @danger-bg-color;
-            border-top-width: 0;
-            right: @validator-arrow-size + 1px;
-            left: auto;
-        }
-    }
+		&:after {
+			bottom: auto;
+			top: -6.5px;
+			border-bottom: 7px solid @danger-bg-color;
+			border-top-width: 0;
+			right: @validator-arrow-size + 1px;
+			left: auto;
+		}
+	}
 
-    .input-group {
-        border: 1px solid @control-border;
-        display: flex;
-        align-items: baseline;
-        background-color: @control-bg-color;
-        position: relative;
-        padding: 1px 0;
-        width: auto;
+	.input-group {
+		border: 1px solid @control-border;
+		display: flex;
+		align-items: baseline;
+		background-color: @control-bg-color;
+		position: relative;
+		padding: 1px 0;
+		width: auto;
 
-        input, select {
-            height: @control-height;
-            font-weight: inherit;
-            font-style: inherit;
-            min-width: 32px; // for EDGE
-        }
+		input, select {
+			height: @control-height;
+			font-weight: inherit;
+			font-style: inherit;
+			min-width: 32px; // for EDGE
+		}
 
-        &.static {
-            background-color: #f8f8f8;
-            user-select: text;
+		&.static {
+			background-color: #f8f8f8;
+			user-select: text;
 
-            > span {
-                padding: 0 5px;
-                line-height: @control-height;
-                display: block;
-                width: 100%;
-                min-height: @control-height;
-            }
+			> span {
+				padding: 0 5px;
+				line-height: @control-height;
+				display: block;
+				width: 100%;
+				min-height: @control-height;
+			}
 
-            > span:focus {
-                outline-style: none;
-            }
-        }
+			> span:focus {
+				outline-style: none;
+			}
+		}
 
-        > a, > .popover-wrapper {
-            align-self: stretch;
-            line-height: @control-height;
+		> a, > .popover-wrapper {
+			align-self: stretch;
+			line-height: @control-height;
 
-            .ico:before {
-                color: inherit;
-            }
-        }
+			.ico:before {
+				color: inherit;
+			}
+		}
 
-        > .popover-wrapper {
-            display: inline-block;
-            margin-right: 3px;
-        }
+		> .popover-wrapper {
+			display: inline-block;
+			margin-right: 3px;
+		}
 
-        > a {
-            color: @label-color;
-            padding: 0 3px;
+		> a {
+			color: @label-color;
+			padding: 0 3px;
 
-            &:hover {
-                text-decoration: none;
-                color: @control-focus-color;
-            }
-        }
+			&:hover {
+				text-decoration: none;
+				color: @control-focus-color;
+			}
+		}
 
-        .a2-inline {
-            margin-left: 0 !important;
-        }
+		.a2-inline {
+			margin-left: 0 !important;
+		}
 
-        .ico-clear {
-            // small patch
-            font-size: 90%;
-            margin: 0.1em;
-        }
-    }
+		.ico-clear {
+			// small patch
+			font-size: 90%;
+			margin: 0.1em;
+		}
+	}
 
-    &.with-width {
-        .input-group {
-            width: 100%;
-        }
-    }
+	&.with-width {
+		.input-group {
+			width: 100%;
+		}
+	}
 
-    &:hover .input-group,
-    .input-group.focus {
-        border-color: @control-focus-color !important;
-        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    /* можно запретить :hover */
-    &:hover .input-group.static {
-        border-color: @control-border !important;
-        box-shadow: none;
-    }
-    // для "схлопнутых" элементов
-    .input-group.focus {
-        z-index: @focus-index;
-    }
+	&:hover .input-group,
+	.input-group.focus {
+		border-color: @control-focus-color !important;
+		box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+	}
+	/* можно запретить :hover */
+	&:hover .input-group.static {
+		border-color: @control-border !important;
+		box-shadow: none;
+	}
+	// для "схлопнутых" элементов
+	.input-group.focus {
+		z-index: @focus-index;
+	}
 
-    &:hover .input-group {
-        // нельзя, иначе "всплывает" поверх выделенной ошибки
-        z-index: @hover-index;
-    }
+	&:hover .input-group {
+		// нельзя, иначе "всплывает" поверх выделенной ошибки
+		z-index: @hover-index;
+	}
 
-    input, select, textarea {
-        width: 100%;
-        background-color: transparent;
-    }
+	input, select, textarea {
+		width: 100%;
+		background-color: transparent;
+	}
 
-    select {
-        padding: 0 2px;
-    }
+	select {
+		padding: 0 2px;
+	}
 
-    .control {
-        border-style: none;
-    }
+	.control {
+		border-style: none;
+	}
 }
 
 /* avoid validator blinking */
 .control-group.open {
-    &:hover {
-        z-index: @hover-open-index !important;
-    }
+	&:hover {
+		z-index: @hover-open-index !important;
+	}
 
-    .input-group.focus {
-        z-index: @hover-open-index !important;
-    }
+	.input-group.focus {
+		z-index: @hover-open-index !important;
+	}
 }
 
 .control-group.required {
-    label:before {
-        content: '\2731';
-        display: inline-block;
-        color: @danger-brd-color;
-        margin-right:2px;
-        vertical-align:1px;
-        font-size:75%;
-    }
+	label:before {
+		content: '\2731';
+		display: inline-block;
+		color: @danger-brd-color;
+		margin-right: 2px;
+		vertical-align: 1px;
+		font-size: 75%;
+	}
 }
 
 .control-group.invalid {
-    label {
-        color: @danger-txt-color;
-    }
+	label {
+		color: @danger-txt-color;
+	}
 
-    &:hover .validator,
-    .input-group.focus .validator {
-        display: block;
-    }
+	&:hover .validator,
+	.input-group.focus .validator {
+		display: block;
+	}
 
-    &:hover .input-group,
-    .input-group.focus {
-        box-shadow: 1px 2px 4px @danger-shadow-color;
-    }
+	&:hover .input-group,
+	.input-group.focus {
+		box-shadow: 1px 2px 4px @danger-shadow-color;
+	}
 
-    .input-group {
-        border-color: @danger-brd-color !important;
-        background-color: #fff8f8 !important;
-        z-index: @invalid-index;
+	.input-group {
+		border-color: @danger-brd-color !important;
+		background-color: #fff8f8 !important;
+		z-index: @invalid-index;
 
-        &:after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            border: 4px solid @danger-txt-color;
-            border-left-color: transparent;
-            border-bottom-color: transparent;
-        }
+		&:after {
+			content: '';
+			position: absolute;
+			right: 0;
+			top: 0;
+			border: 4px solid @danger-txt-color;
+			border-left-color: transparent;
+			border-bottom-color: transparent;
+		}
 
-        .control {
-            background-color: #fff8f8;
-        }
-    }
+		.control {
+			background-color: #fff8f8;
+		}
+	}
 }
 
 .control-group.disabled {
-    .input-group {
-        background-color: @disabled-bg-color;
-    }
-    a {
-        pointer-events:none;
-    }
+	.input-group {
+		background-color: @disabled-bg-color;
+	}
+
+	a {
+		pointer-events: none;
+	}
 }
 
 .data-grid .control-group {
-    margin:0;
+	margin: 0;
 }
 
 
 .a2-inline + .a2-inline {
-  margin-left:.4rem;
+	margin-left: .4rem;
+}
+
+.small {
+	font-size: .86rem;
 }
 
 .a2-hyperlink.small {
-    font-size:92%;
-    i.ico {
-        font-size:12px;
-    }
+	i.ico {
+		font-size: 12px;
+	}
 }
 
 .a2-label {
-    display: block;
-    font-size: 0.95rem;
-    color: @label-color;
-    align-self: center;
+	display: block;
+	font-size: 0.95rem;
+	color: @label-color;
+	align-self: center;
 
-    &.required:before {
-        content: '\2731';
-        display: inline-block;
-        color: @danger-brd-color;
-        margin-right: 2px;
-        vertical-align: 1px;
-        font-size: 75%;
-    }
+	&.required:before {
+		content: '\2731';
+		display: inline-block;
+		color: @danger-brd-color;
+		margin-right: 2px;
+		vertical-align: 1px;
+		font-size: 75%;
+	}
 }

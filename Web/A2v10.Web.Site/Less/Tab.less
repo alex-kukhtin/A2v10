@@ -1,120 +1,124 @@
 ﻿
-@tab-brd-color:@default-brd-color;
-@tab-active-brd-color:gold;
-@tab-bg-color:#f8f8f8;
-@tab-hover-color:#eee;
-@tab-header-padding:.45rem 1rem .55rem 1rem;
+@tab-brd-color: @default-brd-color;
+@tab-active-brd-color: gold;
+@tab-bg-color: #f8f8f8;
+@tab-hover-color: #eee;
+@tab-header-padding: .45rem 1rem .55rem 1rem;
 
 .tab-panel {
-    padding: 0;
-    padding-top:6px;
-    align-self: stretch;
-    overflow: auto;
-    height: auto;
-    background-color: @tab-bg-color;
-    display: grid;
-    grid-gap: 0;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 1fr auto;
-    align-items: stretch;
-    height: 100%;
+	padding: 0;
+	padding-top: 6px;
+	align-self: stretch;
+	overflow: auto;
+	height: auto;
+	background-color: @tab-bg-color;
+	display: grid;
+	grid-gap: 0;
+	grid-template-rows: auto 1fr;
+	grid-template-columns: 1fr auto;
+	align-items: stretch;
+	height: 100%;
 
-    .tab-header {
-        background-color: @tab-bg-color;
-        margin: 0;
-        padding: 0 6px 0;
-        grid-row: 1;
-        grid-column: 1;
-        border-bottom: 1px solid @tab-brd-color;
+	.tab-header {
+		background-color: @tab-bg-color;
+		margin: 0;
+		padding: 0 6px 0;
+		grid-row: 1;
+		grid-column: 1;
+		border-bottom: 1px solid @tab-brd-color;
 
-        > li {
-            display: inline-block;
-            padding: @tab-header-padding;
-            list-style: none;
-            cursor: pointer;
-            border: 1px solid transparent;
-            border-top-width: 3px;
-            margin-bottom: -1px;
-            color: @link-color;
+		> li {
+			display: inline-block;
+			padding: @tab-header-padding;
+			list-style: none;
+			cursor: pointer;
+			border: 1px solid transparent;
+			border-top-width: 3px;
+			margin-bottom: -1px;
+			color: @link-color;
 
-            > .ico {
-                color: @icon-color;
-            }
+			> .ico {
+				color: @icon-color;
+			}
 
-            .badge {
-                vertical-align:bottom;
-            }
+			.badge {
+				vertical-align: bottom;
+			}
 
-            &:hover {
-                background-color: @tab-hover-color;
-                color: @link-hover-color;
-                border-bottom-color: @tab-brd-color;
-            }
+			&:hover {
+				background-color: @tab-hover-color;
+				color: @link-hover-color;
+				border-bottom-color: @tab-brd-color;
+			}
 
-            &.active {
-                background-color: white;
-                cursor: default;
-                border-top: 3px solid @tab-active-brd-color;
-                border-right: 1px solid @tab-brd-color;
-                border-left: 1px solid @tab-brd-color;
-                color: @text-color;
-            }
+			&.active {
+				background-color: white;
+				cursor: default;
+				border-top: 3px solid @tab-active-brd-color;
+				border-right: 1px solid @tab-brd-color;
+				border-left: 1px solid @tab-brd-color;
+				color: @text-color;
+			}
 
-            &.active.yellow {
-                background-color: lightyellow;
-            }
+			&.active.yellow {
+				background-color: lightyellow;
+			}
 
-            &.active:hover {
-                border-bottom-color: transparent;
-            }
+			&.active:hover {
+				border-bottom-color: transparent;
+			}
 
-            .noselect();
+			.noselect();
 
-            .a2-header {
-                display:inline;
-                margin:0;
-            }
-        }
-    }
+			.a2-header {
+				display: inline;
+				margin: 0;
+			}
+		}
+	}
 
-    .pane-header {
-        grid-row: 1;
-        grid-column: 2;
-        align-self: stretch;
-        border-bottom: 1px solid @tab-brd-color;
-        padding-right: 6px;
-        color: #777;
-        display:inline-flex;
-        align-items:center; 
-        .a2-header {
-            margin:0;
-        }
-    }
+	.pane-header {
+		grid-row: 1;
+		grid-column: 2;
+		align-self: stretch;
+		border-bottom: 1px solid @tab-brd-color;
+		padding-right: 6px;
+		color: #777;
+		display: inline-flex;
+		align-items: center;
 
-    .tab-content {
-        grid-row: 2;
-        grid-column: 1 / span 2;
-        background-color: white;
-        overflow:visible;
-    }
+		.a2-header {
+			margin: 0;
+		}
+	}
 
-    .tab-content.yellow {
-        background-color: lightyellow;
-    }
+	.tab-content {
+		grid-row: 2;
+		grid-column: 1 / span 2;
+		background-color: white;
+		overflow: visible;
+		// hack!
+		max-height: -webkit-fill-available;
+	}
+
+	.tab-content.yellow {
+		background-color: lightyellow;
+	}
 }
 
 .tab-panel.bordered {
-    > .tab-header {
-        padding-left:0;
-    }
-    > .tab-content {
-        border: 1px solid @tab-brd-color;
-        border-top:none;
-    }
+	> .tab-header {
+		padding-left: 0;
+	}
+
+	> .tab-content {
+		border: 1px solid @tab-brd-color;
+		border-top: none;
+	}
 }
 
 .tab-panel.full-page {
-    .tab-content {
-        overflow: auto;
-    }
+	.tab-content {
+		overflow: auto;
+	}
 }

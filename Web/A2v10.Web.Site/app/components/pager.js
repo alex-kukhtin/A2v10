@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7121
+// 20180315-7131
 /*components/pager.js*/
 
 /*
@@ -36,14 +36,15 @@ Vue.component('a2-pager', {
 			return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
 		},
 		offset() {
-			return this.source.offset;
+			return +this.source.offset;
 		},
 		count() {
-			return this.source.sourceCount;
+			return +this.source.sourceCount;
 		}
 	},
 	methods: {
 		setOffset(offset) {
+			offset = +offset;
 			if (this.offset === offset)
 				return;
 			this.source.$setOffset(offset);
