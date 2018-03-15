@@ -17,6 +17,7 @@ template: `
 		pages={{source.pages}} count={{source.sourceCount}}</code>
 </div>
 */
+const locale = window.$$locale;
 
 Vue.component('a2-pager', {
 	props: {
@@ -32,8 +33,8 @@ Vue.component('a2-pager', {
 		title() {
 			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
 			if (!this.count)
-				return 'нет элементов';
-			return `элементы: <b>${this.offset + 1}</b>-<b>${lastNo}</b> из <b>${this.count}</b>`;
+				return locale.$NoElements;
+			return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
 		},
 		offset() {
 			return +this.source.offset;

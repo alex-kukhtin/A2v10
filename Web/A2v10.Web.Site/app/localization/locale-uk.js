@@ -22,7 +22,10 @@
 		$Profiling: 'Профілювання',
 		$DataModel: 'Модель даних',
 		$Today: 'Сьогодні',
-		$CreateLC: 'cтворити'
+		$CreateLC: 'cтворити',
+		$NoElements: 'немає елементів',
+		$PagerElements: 'елементи',
+		$Of: 'з'
 	};
 
 

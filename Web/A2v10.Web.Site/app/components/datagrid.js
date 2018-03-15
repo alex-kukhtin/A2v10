@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7121
+// 20180315-7131
 // components/datagrid.js*/
 
 (function () {
@@ -26,25 +26,25 @@
 
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
-    <div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
-    <table :class="cssClass">
-        <colgroup>
-            <col v-if="isMarkCell" class="fit"/>
+	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
+	<table :class="cssClass">
+		<colgroup>
+			<col v-if="isMarkCell" class="fit"/>
 			<col v-if="isGrouping" class="fit"/>
-            <col v-if="isRowDetailsCell" class="fit" />
-            <col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
-        </colgroup>
-        <thead>
-            <tr v-show="isHeaderVisible">
-                <th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
-                <th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
+			<col v-if="isRowDetailsCell" class="fit" />
+			<col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+		</colgroup>
+		<thead>
+			<tr v-show="isHeaderVisible">
+				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
+				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isGrouping" class="group-cell">
 					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
 						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
 				</th>
-                <slot></slot>
-            </tr>
-        </thead>
+				<slot></slot>
+			</tr>
+		</thead>
 		<template v-if="isGrouping">
 			<tbody>
 				<template v-for="(g, gIndex) of $groups">
@@ -56,50 +56,50 @@
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
-                        <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
-                            <slot name="row-details" :row="row"></slot>
-                        </data-grid-row-details>
+						<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
+							<slot name="row-details" :row="row"></slot>
+						</data-grid-row-details>
 					</template>
 				</template>
 			</tbody>
 		</template>
 		<template v-else>
 			<tbody>
-                <template v-for="(item, rowIndex) in $items">
-				    <data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
-                    <data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
-                        <slot name="row-details" :row="item"></slot>
-                    </data-grid-row-details>
-                </template>
+				<template v-for="(item, rowIndex) in $items">
+					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
+					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
+						<slot name="row-details" :row="item"></slot>
+					</data-grid-row-details>
+				</template>
 			</tbody>
 		</template>
 		<slot name="footer"></slot>
-    </table>
-    </div>
+	</table>
+	</div>
 </div>
 `;
 
 	/* @click.prevent disables checkboxes & other controls in cells */
 	const dataGridRowTemplate = `
 <tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick">
-    <td v-if="isMarkCell" class="marker">
-        <div :class="markClass"></div>
-    </td>
-    <td v-if="detailsMarker" class="details-marker" @click.prevent="toggleDetails">
-        <i v-if="detailsIcon" class="ico" :class="detailsExpandClass" />
-    </td>
+	<td v-if="isMarkCell" class="marker">
+		<div :class="markClass"></div>
+	</td>
+	<td v-if="detailsMarker" class="details-marker" @click.prevent="toggleDetails">
+		<i v-if="detailsIcon" class="ico" :class="detailsExpandClass" />
+	</td>
 	<td class="group-marker" v-if="group"></td>
-    <data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
+	<data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
 	const dataGridRowDetailsTemplate = `
 <tr v-if="visible()" class="row-details">
-    <td v-if="isMarkCell" class="marker">
-        <div :class="markClass"></div>
-    </td>
-    <td :colspan='totalCols' class="details-cell">
-        <div class="details-wrapper"><slot></slot></div>
-    </td>
+	<td v-if="isMarkCell" class="marker">
+		<div :class="markClass"></div>
+	</td>
+	<td :colspan='totalCols' class="details-cell">
+		<div class="details-wrapper"><slot></slot></div>
+	</td>
 </tr>
 `;
     /**
@@ -108,9 +108,9 @@
      */
 	const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-    <div class="h-fill" v-if="fixedHeader">
-        {{headerText}}
-    </div><div class="h-holder">
+	<div class="h-fill" v-if="fixedHeader">
+		{{headerText}}
+	</div><div class="h-holder">
 		<slot>{{headerText}}</slot>
 	</div>
 </th>
@@ -262,16 +262,21 @@
 			};
 
 			function normalizeArg(arg, doEval) {
+				if (utils.isBoolean(arg) || utils.isNumber(arg))
+					return arg;
 				arg = arg || '';
 				if (arg === 'this')
 					arg = row;
 				else if (arg.startsWith('{')) {
 					arg = arg.substring(1, arg.length - 1);
-					if (!(arg in row))
-						throw new Error(`Property '${arg1}' not found in ${row.constructor.name} object`);
-					arg = row[arg];
+					if (arg.indexOf('.') !== -1)
+						arg = utils.eval(row, arg);
+					else {
+						if (!(arg in row))
+							throw new Error(`Property '${arg}' not found in ${row.constructor.name} object`);
+						arg = row[arg];
+					}
 				} else if (arg && doEval) {
-					console.error(col.hideZeros);
 					arg = utils.eval(row, arg, col.dataType, col.hideZeros);
 				}
 				return arg;
@@ -564,7 +569,7 @@
 				for (let itm of this.$items) {
 					let root = grmap;
 					for (let gr of grBy) {
-						let key = itm[gr.prop];
+						let key = utils.eval(itm, gr.prop);
 						if (!utils.isDefined(key)) key = '';
 						if (key === '') key = "Unknown";
 						if (!(key in root)) root[key] = {};
