@@ -113,25 +113,7 @@
 	};
 
 
-	const a2SideBar = {
-		// TODO: 
-		// 1. разные варианты меню
-		// 2. folderSelect как функция 
-		template: `
-<div :class="cssClass">
-    <a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
-    <div class="side-bar-body" v-if="bodyIsVisible">
-        <tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
-            :options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-                subitems: 'Menu',
-                icon:'Icon', wrapLabel: true, hasIcon: true}">
-        </tree-view>
-    </div>
-    <div v-else class="side-bar-title" @click.prevent="toggle">
-        <span class="side-bar-label" v-text="title"></span>
-    </div>
-</div>
-`,
+	const sideBarBase = {
 		props: {
 			menu: Array
 		},
@@ -139,20 +121,7 @@
 			seg0: () => store.getters.seg0,
 			seg1: () => store.getters.seg1,
 			cssClass() {
-				return 'side-bar ' + (this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded');
-			},
-			bodyIsVisible() {
-				return !this.$parent.sideBarCollapsed;
-			},
-			title() {
-				let sm = this.sideMenu;
-				if (!sm)
-					return UNKNOWN_TITLE;
-				let seg1 = this.seg1;
-				let am = findMenu(sm, (mi) => mi.Url === seg1);
-				if (am)
-					return am.Name || UNKNOWN_TITLE;
-				return UNKNOWN_TITLE;
+				return this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded';
 			},
 			sideMenu() {
 				let top = this.topMenu;
@@ -166,9 +135,6 @@
 		methods: {
 			isActive(item) {
 				return this.seg1 === item.Url;
-			},
-			folderSelect(item) {
-				return !!item.Url;
 			},
 			navigate(item) {
 				if (this.isActive(item))
@@ -200,6 +166,73 @@
 			},
 			toggle() {
 				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
+				try {
+					// avoid EDGE error QuotaExceeded
+					localStorage.setItem('sideBarCollapsed', this.$parent.sideBarCollapsed);
+				}
+				catch (e) {
+					// do nothing
+				}
+			}
+		}
+	};
+
+	const a2SideBarCompact = {
+		template: `
+<div class='side-bar-compact' :class="cssClass">
+	<a href role="button" class="collapse-button" @click.prevent="toggle"></a>
+	<ul class='side-menu'>
+		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm)}" :key="itmIx">
+			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>
+		</li>
+	</ul>
+</div>
+`,
+		mixins: [sideBarBase],
+		computed: {
+		},
+		methods: {
+		}
+	};
+
+	const a2SideBar = {
+		// TODO: 
+		// 1. разные варианты меню
+		// 2. folderSelect как функция 
+		template: `
+<div class="side-bar" :class="cssClass">
+	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
+	<div class="side-bar-body" v-if="bodyIsVisible">
+		<tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
+			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
+			subitems: 'Menu',
+			icon:'Icon', wrapLabel: true, hasIcon: true}">
+		</tree-view>
+	</div>
+	<div v-else class="side-bar-title" @click.prevent="toggle">
+		<span class="side-bar-label" v-text="title"></span>
+	</div>
+</div>
+`,
+		mixins: [sideBarBase],
+		computed: {
+			bodyIsVisible() {
+				return !this.$parent.sideBarCollapsed;
+			},
+			title() {
+				let sm = this.sideMenu;
+				if (!sm)
+					return UNKNOWN_TITLE;
+				let seg1 = this.seg1;
+				let am = findMenu(sm, (mi) => mi.Url === seg1);
+				if (am)
+					return am.Name || UNKNOWN_TITLE;
+				return UNKNOWN_TITLE;
+			}
+		},
+		methods: {
+			folderSelect(item) {
+				return !!item.Url;
 			}
 		}
 	};
@@ -254,25 +287,27 @@
 	const a2MainView = {
 		store,
 		template: `
-<div :class="cssClass">
-    <a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
-    <a2-side-bar :menu="menu" v-show="sideBarVisible"></a2-side-bar>
-    <a2-content-view></a2-content-view>
-    <div class="load-indicator" v-show="pendingRequest"></div>
-    <div class="modal-stack" v-if="hasModals">
-        <div class="modal-wrapper" v-for="dlg in modals">
-            <a2-modal :dialog="dlg"></a2-modal>
-        </div>
-    </div>
+<div :class="cssClass" class="main-view">
+	<a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
+	<component :is="sideBarComponent" :menu="menu" v-show="sideBarVisible"></component>
+	<a2-content-view></a2-content-view>
+	<div class="load-indicator" v-show="pendingRequest"></div>
+	<div class="modal-stack" v-if="hasModals">
+		<div class="modal-wrapper" v-for="dlg in modals">
+			<a2-modal :dialog="dlg"></a2-modal>
+		</div>
+	</div>
 </div>`,
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
+			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
 			'a2-modal': modal
 		},
 		props: {
-			menu: Array
+			menu: Array,
+			sideBarMode: String
 		},
 		data() {
 			return {
@@ -285,6 +320,18 @@
 			route() {
 				return this.$store.getters.route;
 			},
+			isSideBarCompact() {
+				return this.sideBarMode === 'Compact';
+			},
+			sideBarInitialCollapsed() {
+				let sb = localStorage.getItem('sideBarCollapsed');
+				if (sb === 'true')
+					return true;
+				return false;
+			},
+			sideBarComponent() {
+				return this.isSideBarCompact ? 'a2-side-bar-compact' : 'a2-side-bar';
+			},
 			navBarVisible() {
 				let route = this.route;
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
@@ -294,7 +341,8 @@
 				return route.seg0 !== 'app' && route.len === 3;
 			},
 			cssClass() {
-				return 'main-view ' + (this.sideBarCollapsed ? 'side-bar-collapsed' : 'side-bar-expanded');
+				let clpscls = this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-';
+				return clpscls + (this.sideBarCollapsed ? 'collapsed' : 'expanded');
 			},
 			pendingRequest() { return this.requestsCount > 0; },
 			hasModals() { return this.modals.length > 0; }
@@ -305,6 +353,7 @@
 				//window.location.assign('/account/login');
 				return;
 			}
+			this.sideBarCollapsed = this.sideBarInitialCollapsed;
 			let opts = { title: null };
 			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;
@@ -312,8 +361,9 @@
 
 			let firstUrl = {
 				url: '',
-				title: '',
-			}
+				title: ''
+			};
+
 			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
 			firstUrl.title = opts.title;
 			urlTools.firstUrl = firstUrl;

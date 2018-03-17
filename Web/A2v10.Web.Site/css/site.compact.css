@@ -784,10 +784,7 @@ header .btn:hover,
   top: 70px;
 }
 .side-bar-collapsed .content-view.partial-page {
-  left: 26px;
-}
-.side-bar-compact-collapsed .content-view.partial-page {
-  left: 58px;
+  left: 56px;
 }
 .content-view.full-page {
   top: 64px;
@@ -3745,20 +3742,20 @@ h5,
 .side-bar {
   position: absolute;
   left: 0;
-  top: 64px;
+  top: 70px;
   margin: 0;
   bottom: 22px;
   width: 250px;
-  padding: 16px 0 0 0;
-  border-right: 1px solid #cfd6e5;
-  background-color: white;
+  padding: 6px;
+  background-color: #96b6ef;
 }
 .side-bar .side-bar-body,
 .side-bar .tree-view {
   height: 100%;
 }
 .side-bar .side-bar-title {
-  background-color: #f2f3f9;
+  display: none;
+  background-color: #89a7dd;
   white-space: nowrap;
   height: 100%;
   cursor: pointer;
@@ -3782,90 +3779,20 @@ h5,
 .side-bar .collapse-handle:hover {
   color: #0d82f8;
   text-decoration: none;
-  background-color: #f2f3f9;
+  background-color: #89a7dd;
 }
 .side-bar .collapse-handle:before {
   content: "\e9a3";
 }
 .side-bar.collapsed {
-  width: 20px;
-  background-color: #f2f3f9;
+  width: 50px;
+  background-color: #89a7dd;
 }
 .side-bar.collapsed .collapse-handle {
   padding-right: 6px;
 }
 .side-bar.collapsed .collapse-handle:before {
   content: "\e9a5";
-}
-.side-bar-compact {
-  position: absolute;
-  left: 0;
-  top: 70px;
-  margin: 0;
-  padding: 0;
-  bottom: 22px;
-  width: 250px;
-  background-color: #9ab3e0;
-}
-.side-bar-compact .collapse-button {
-  display: block;
-  position: absolute;
-  right: -6px;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background-color: #4d6082;
-  border-radius: 50%;
-  z-index: 2000;
-}
-.side-bar-compact .collapse-button:after {
-  content: "\e9ab";
-  font-family: 'Bowtie';
-  display: block;
-  color: white;
-  font-size: 16px;
-  padding: 2px;
-}
-.side-bar-compact .collapse-button:hover {
-  background-color: #7186ab;
-}
-.side-bar-compact .side-menu {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.side-bar-compact .side-menu li {
-  margin: 6px;
-  font-size: 15px;
-}
-.side-bar-compact .side-menu li > a {
-  display: block;
-  padding: 6px;
-  color: white;
-}
-.side-bar-compact .side-menu li > a .ico {
-  font-size: 16px;
-}
-.side-bar-compact .side-menu li.active > a {
-  background-color: white;
-  color: #777;
-}
-.side-bar-compact .side-menu li:hover {
-  background-color: #86a4da;
-}
-.side-bar-compact.collapsed {
-  width: 52px;
-}
-.side-bar-compact.collapsed ul li a > span {
-  display: none;
-}
-.side-bar-compact.collapsed ul li a .ico {
-  display: block;
-  font-size: 20px;
-  padding: 3px 5px;
-}
-.side-bar-compact.collapsed .collapse-button:after {
-  content: "\e9ad";
 }
 .debug-panel {
   position: absolute;

@@ -51,7 +51,7 @@ header, .header {
     right: 0;
     height: @header-height;
     padding: 0 4px 0 8px;
-    background-color: @brand-bk_color;
+    background-color: @brand-bk-color;
     color: white;
     display: flex;
     align-content: flex-start;
@@ -109,11 +109,6 @@ header, .header {
     }
 }
 
-
-@side-bar-width: 250px;
-@side-bar-gap: 6px;
-@side-bar-collapsed-width: 20px;
-
 .content-view {
     position: absolute;
     left: 0;
@@ -130,6 +125,10 @@ header, .header {
 
 .side-bar-collapsed .content-view.partial-page {
     left: @side-bar-collapsed-width + @side-bar-gap;
+}
+
+.side-bar-compact-collapsed .content-view.partial-page {
+	left: @side-bar-compact-collapsed-width + @side-bar-gap;
 }
 
 .content-view.full-page {
@@ -158,70 +157,6 @@ header, .header {
 @import "Splitter.less";
 @import "Taskpad.less";
 
-
-.side-bar {
-    position: absolute;
-    left: 0;
-    top: @header-height + @navbar-height;
-    margin: @side-bar-margin;
-    bottom: @footer-height;
-    width: @side-bar-width;
-    padding: 16px 0 0 0;
-    border-right: 1px solid @side-bar-brd-color;
-    background-color: @side-bar-bg-color;
-
-    .side-bar-body, .tree-view {
-        height: 100%;
-    }
-
-    .side-bar-title {
-        background-color: @side-bar-collapsed-bg-color;
-        white-space: nowrap;
-        height: 100%;
-        cursor: pointer;
-        font-size: 14px;
-        padding-left: 2px;
-
-        .side-bar-label {
-            display: block;
-            padding-left: 10px;
-            transform: rotate(90deg);
-        }
-    }
-
-    .collapse-handle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: auto;
-        padding: 2px 4px;
-        color: @default-brd-color;
-        font-size: 110%;
-
-        &:hover {
-            color: @link-hover-color;
-            text-decoration: none;
-            background-color: @side-bar-collapsed-bg-color;
-        }
-
-        &:before {
-            content: "\e9a3"; // chevron-left
-        }
-    }
-
-    &.collapsed {
-        width: @side-bar-collapsed-width;
-        background-color: @side-bar-collapsed-bg-color;
-
-        .collapse-handle {
-            padding-right: 6px;
-
-            &:before {
-                content: "\e9a5"; // chevron-right
-            }
-        }
-    }
-}
 
 footer, .footer {
     position: absolute;

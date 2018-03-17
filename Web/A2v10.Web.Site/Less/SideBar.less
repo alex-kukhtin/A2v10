@@ -1,0 +1,155 @@
+﻿.side-bar {
+	position: absolute;
+	left: 0;
+	top: @header-height + @navbar-height;
+	margin: @side-bar-margin;
+	bottom: @footer-height;
+	width: @side-bar-width;
+	padding: 16px 0 0 0;
+	border-right: 1px solid @side-bar-brd-color;
+	background-color: @side-bar-bg-color;
+
+	.side-bar-body, .tree-view {
+		height: 100%;
+	}
+
+	.side-bar-title {
+		background-color: @side-bar-collapsed-bg-color;
+		white-space: nowrap;
+		height: 100%;
+		cursor: pointer;
+		font-size: 14px;
+		padding-left: 2px;
+
+		.side-bar-label {
+			display: block;
+			padding-left: 10px;
+			transform: rotate(90deg);
+		}
+	}
+
+	.collapse-handle {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: auto;
+		padding: 2px 4px;
+		color: @default-brd-color;
+		font-size: 110%;
+
+		&:hover {
+			color: @link-hover-color;
+			text-decoration: none;
+			background-color: @side-bar-collapsed-bg-color;
+		}
+
+		&:before {
+			content: "\e9a3"; // chevron-left
+		}
+	}
+
+	&.collapsed {
+		width: @side-bar-collapsed-width;
+		background-color: @side-bar-collapsed-bg-color;
+
+		.collapse-handle {
+			padding-right: 6px;
+
+			&:before {
+				content: "\e9a5"; // chevron-right
+			}
+		}
+	}
+}
+
+.side-bar-compact {
+	position: absolute;
+	left: 0;
+	top: @header-height + @navbar-height + 6px;
+	margin: 0;
+	padding: 0;
+	bottom: @footer-height;
+	width: @side-bar-width;
+	background-color: @side-bar-compact-bg-color;
+
+	.collapse-button {
+		display: block;
+		position: absolute;
+		right: -6px;
+		top: 50%;
+		width: 20px;
+		height: 20px;
+		background-color: @brand-bk-color;
+		border-radius: 50%;
+		z-index: 2000;
+
+		&:after {
+			content: "\e9ab";
+			font-family: 'Bowtie';
+			display: block;
+			color: white;
+			font-size: 16px;
+			padding: 2px;
+		}
+
+		&:hover {
+			background-color: @brand-hover-color;
+		}
+	}
+
+	.side-menu {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+
+		li {
+			margin: 6px;
+			font-size: 15px;
+
+			> a {
+				display: block;
+				padding: 6px;
+				color: white;
+
+				.ico {
+					font-size: 16px;
+				}
+			}
+
+			&.active {
+				> a {
+					background-color: white;
+					color: #777;
+				}
+			}
+
+			&:hover {
+				background-color: @side-bar-compact-hover-bg-color;
+			}
+		}
+	}
+
+	&.collapsed {
+		width: @side-bar-compact-collapsed-width;
+
+		ul li {
+			a {
+				> span {
+					display: none;
+				}
+
+				.ico {
+					display: block;
+					font-size: 20px;
+					padding: 3px 5px;
+				}
+			}
+		}
+
+		.collapse-button {
+			&:after {
+				content: "\e9ad";
+			}
+		}
+	}
+}
