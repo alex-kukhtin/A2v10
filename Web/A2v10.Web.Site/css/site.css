@@ -641,7 +641,6 @@ td.valign-bottom {
   color: white;
   font-size: 0.8rem;
   padding: 0 .25rem .1rem .25rem;
-  border-radius: .2rem;
   display: inline-block;
   margin: 1px;
 }
@@ -782,12 +781,14 @@ header .btn:hover,
 .content-view.partial-page {
   left: 256px;
   top: 70px;
+  transition: left 0.1s ease-out;
 }
 .side-bar-collapsed .content-view.partial-page {
   left: 26px;
 }
 .side-bar-compact-collapsed .content-view.partial-page {
   left: 58px;
+  transition: left 0.1s ease-out;
 }
 .content-view.full-page {
   top: 64px;
@@ -3017,7 +3018,7 @@ TODO:
 }
 .menu .dropdown-item > .ico {
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 4px;
   color: inherit;
   min-width: 16px;
 }
@@ -3033,10 +3034,17 @@ TODO:
 .menu .dropdown-item:hover {
   background-color: #fdf4bf;
 }
-.menu > .divider {
+.menu .divider {
   height: 1px;
   margin: 4px 6px;
   background-color: #b9c1cc;
+}
+.menu .group-title {
+  color: #8591a2;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #b9c1cc;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 .dropdown-menu {
   display: none;
@@ -3097,7 +3105,7 @@ TODO:
   right: 1px;
 }
 .dropdown.dir-down.show .btn:focus {
-  outline-style: none!important;
+  outline-style: none !important;
 }
 .dropdown.dir-down.show:after {
   bottom: 0;
@@ -3806,15 +3814,17 @@ h5,
   bottom: 22px;
   width: 250px;
   background-color: #9ab3e0;
+  transition: width 0.1s ease-out;
 }
 .side-bar-compact .collapse-button {
   display: block;
   position: absolute;
-  right: -6px;
+  right: -8px;
   top: 50%;
   width: 20px;
   height: 20px;
-  background-color: #4d6082;
+  background-color: white;
+  border: 1px solid #9ab3e0;
   border-radius: 50%;
   z-index: 2000;
 }
@@ -3822,12 +3832,12 @@ h5,
   content: "\e9ab";
   font-family: 'Bowtie';
   display: block;
-  color: white;
+  color: #9ab3e0;
   font-size: 16px;
-  padding: 2px;
+  padding: 1px;
 }
 .side-bar-compact .collapse-button:hover {
-  background-color: #7186ab;
+  background-color: #fdf4bf;
 }
 .side-bar-compact .side-menu {
   height: 100%;
@@ -3837,14 +3847,15 @@ h5,
 .side-bar-compact .side-menu li {
   margin: 6px;
   font-size: 15px;
+  white-space: nowrap;
 }
 .side-bar-compact .side-menu li > a {
   display: block;
-  padding: 6px;
+  padding: 10px 6px;
   color: white;
 }
 .side-bar-compact .side-menu li > a .ico {
-  font-size: 16px;
+  font-size: 20px;
 }
 .side-bar-compact .side-menu li.active > a {
   background-color: white;
@@ -3855,17 +3866,41 @@ h5,
 }
 .side-bar-compact.collapsed {
   width: 52px;
+  transition: width 0.1s ease-out;
 }
 .side-bar-compact.collapsed ul li a > span {
   display: none;
 }
 .side-bar-compact.collapsed ul li a .ico {
-  display: block;
-  font-size: 20px;
-  padding: 3px 5px;
+  display: inline-block;
+  width: auto;
+  margin-left: 5px;
 }
 .side-bar-compact.collapsed .collapse-button:after {
   content: "\e9ad";
+}
+.a2-new-btn {
+  margin-right: 10px;
+}
+.a2-new-btn .btn {
+  padding: 4px 8px;
+}
+.a2-new-btn .super-menu {
+  display: grid;
+  grid-gap: 1rem;
+  margin: .5rem;
+}
+.a2-new-btn .super-menu.cols-4 {
+  grid-template-columns: auto auto auto auto;
+}
+.a2-new-btn .super-menu.cols-3 {
+  grid-template-columns: auto auto auto;
+}
+.a2-new-btn .super-menu.cols-2 {
+  grid-template-columns: auto auto;
+}
+.a2-new-btn .super-menu.cols-1 {
+  grid-template-columns: auto;
 }
 .debug-panel {
   position: absolute;

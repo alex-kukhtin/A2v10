@@ -76,10 +76,28 @@ namespace A2v10.Xaml
 			MergeDisabled(combo, context);
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
+			{
 				combo.MergeAttribute(":items-source", isBind.GetPath(context));
+				if (_children != null)
+				{
+					if (Children.Count != 1)
+					{
+						throw new XamlException("The ComboBox with the specified ItemsSource must have only one ComboBoxItem element");
+					}
+					var elem = Children[0];
+					var contBind = elem.GetBinding("Content");
+					if (contBind == null)
+						throw new XamlException("ComboBoxItem. Content binging must be specified");
+					combo.MergeAttribute(":name-prop", $"'{contBind.GetPath(context)}'");
+					var valBind = elem.GetBinding("Value");
+					if (valBind == null)
+						throw new XamlException("ComboBoxItem. Value binging must be specified");
+					combo.MergeAttribute(":value-prop", $"'{valBind.GetPath(context)}'");
+				}
+			}
 			MergeValue(combo, context);
 			combo.RenderStart(context);
-			if (_children != null)
+			if (_children != null && isBind == null)
 			{
 				foreach (var ch in Children)
 					ch.RenderElement(context);

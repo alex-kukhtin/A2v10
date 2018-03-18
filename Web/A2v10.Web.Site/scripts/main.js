@@ -2517,7 +2517,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20180318-7134*/
 /*components/combobox.js*/
 
 (function () {
@@ -2532,7 +2532,7 @@ Vue.component('validator-control', {
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
-					v-text="cmb.$name" :value="cmb"></option>
+					v-text="getName(cmb)" :value="getValue(cmb)"></option>
 			</slot>
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -2561,7 +2561,9 @@ Vue.component('validator-control', {
 				type: Array, default() { return []; }
 			},
 			itemToValidate: Object,
-			propToValidate: String
+			propToValidate: String,
+			nameProp: String,
+			valueProp: String
 		},
 		computed: {
 			cmbValue: {
@@ -2569,17 +2571,28 @@ Vue.component('validator-control', {
 					let val = this.item ? this.item[this.prop] : null;
 					if (!utils.isObjectExact(val))
 						return val;
-					if (!('$id' in val))
+					let vProp = this.valueProp || '$id';
+					if (!(vProp in val))
 						return val;
 					if (this.itemsSource.indexOf(val) !== -1) {
 						return val;
 					}
 					// always return value from ItemsSource
-					return this.itemsSource.find((x) => x.$id === val.$id);
+					return this.itemsSource.find((x) => x[vProp] === val[vProp]);
 				},
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
+			}
+		},
+		methods: {
+			getName(itm) {
+				let n = this.nameProp ? utils.eval(itm, this.nameProp) : itm.$name;
+				return n;
+			},
+			getValue(itm) {
+				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
+				return v;
 			}
 		}
 	});
@@ -5376,6 +5389,90 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+/*20180318-7134*/
+/*components/newbutton.js*/
+
+(function () {
+
+	const store = component('std:store');
+	const urltools = require('std:url');
+	const eventBus = require('std:eventBus');
+
+	const newButtonTemplate =
+`<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
+	<button class="btn" toggle><i class="ico ico-plus"></i></button>
+	<div class="dropdown-menu menu down-right">
+		<div class="super-menu" :class="cssClass">
+			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
+				<div class="group-title" v-text="m.Name"></div>
+				<template v-for="(itm, ix) in m.Menu">
+					<div class="divider" v-if=isDivider(itm)></div>
+					<a v-else @click.prevent='doCommand(itm.Url)' 
+						class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.Icon"></i><span v-text="itm.Name"></span></a>
+				</template>
+			</div>
+		</div>
+	</div>
+</div>
+`;
+
+	Vue.component('a2-new-button', {
+		template: newButtonTemplate,
+		store: store,
+		props: {
+			menu: Array
+		},
+		computed: {
+			isVisible() {
+				return !!this.menu;
+			},
+			topMenu() {
+				return this.menu ? this.menu[0].Menu : null;
+			},
+			columns() {
+				let descr = this.menu ? this.menu[0].Description : '';
+				try {
+					return +JSON.parse(descr).columns || 1;
+				} catch (err) {
+					return 1;
+				}
+			},
+			cssClass() {
+				return 'cols-' + this.columns;
+			}
+		},
+		created() {
+		},
+		methods: {
+			isDivider(itm) {
+				return itm.Name === '-';
+			},
+			doCommand(cmd) {
+				cmd = cmd || '';
+				if (cmd.startsWith('navigate:')) {
+					this.navigate(cmd.substring(9));
+				} else if (cmd.startsWith('dialog:')) {
+					this.dialog(cmd.substring(7));
+				} else {
+					alert('invalid command:' + cmd);
+				}
+			},
+			navigate(url) {
+				let urlToNavigate = urltools.createUrlForNavigate(url);
+				this.$store.commit('navigate', { url: urlToNavigate });
+			},
+			dialog(url) {
+				const dlgData = { promise: null};
+				eventBus.$emit('modal', url, dlgData);
+				dlgData.promise.then(function (result) {
+					// todo: resolve?
+				});
+			}
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 // 20180206-7105
 // components/graphics.js
 
@@ -6673,7 +6770,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180226-7120*/
+/*20180318-7134*/
 /* controllers/shell.js */
 
 (function () {
@@ -6710,7 +6807,7 @@ Vue.directive('resize', {
 		opts = opts || {};
 		url = urlTools.combine(url);
 		let sUrl = url.split('/');
-		if (sUrl.length === 5 || sUrl.length === 4)
+		if (sUrl.length >= 4)
 			return url; // full qualified
 		let routeLen = sUrl.length;
 		let seg1 = sUrl[1];
@@ -6752,9 +6849,9 @@ Vue.directive('resize', {
 	const a2NavBar = {
 		template: `
 <ul class="nav-bar">
-    <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
-    </li>
+	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
+		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
+	</li>
 </ul>
 `,
 		props: {

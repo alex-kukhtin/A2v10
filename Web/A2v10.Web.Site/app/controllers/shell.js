@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180226-7120*/
+/*20180318-7134*/
 /* controllers/shell.js */
 
 (function () {
@@ -37,7 +37,7 @@
 		opts = opts || {};
 		url = urlTools.combine(url);
 		let sUrl = url.split('/');
-		if (sUrl.length === 5 || sUrl.length === 4)
+		if (sUrl.length >= 4)
 			return url; // full qualified
 		let routeLen = sUrl.length;
 		let seg1 = sUrl[1];
@@ -79,9 +79,9 @@
 	const a2NavBar = {
 		template: `
 <ul class="nav-bar">
-    <li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-        <a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
-    </li>
+	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
+		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
+	</li>
 </ul>
 `,
 		props: {

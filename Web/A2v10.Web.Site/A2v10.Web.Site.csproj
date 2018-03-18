@@ -60,6 +60,7 @@
     <Content Include="app\components\graphics.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\list.js" />
+    <Content Include="app\components\newbutton.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\panel.js" />
     <Content Include="app\components\popover.js" />
@@ -230,6 +231,7 @@
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />
     <Content Include="Less\Variables.Compact.less" />
+    <Content Include="Less\SuperMenu.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

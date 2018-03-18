@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20180318-7134*/
 /*components/combobox.js*/
 
 (function () {
@@ -15,7 +15,7 @@
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
-					v-text="cmb.$name" :value="cmb"></option>
+					v-text="getName(cmb)" :value="getValue(cmb)"></option>
 			</slot>
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -44,7 +44,9 @@
 				type: Array, default() { return []; }
 			},
 			itemToValidate: Object,
-			propToValidate: String
+			propToValidate: String,
+			nameProp: String,
+			valueProp: String
 		},
 		computed: {
 			cmbValue: {
@@ -52,17 +54,28 @@
 					let val = this.item ? this.item[this.prop] : null;
 					if (!utils.isObjectExact(val))
 						return val;
-					if (!('$id' in val))
+					let vProp = this.valueProp || '$id';
+					if (!(vProp in val))
 						return val;
 					if (this.itemsSource.indexOf(val) !== -1) {
 						return val;
 					}
 					// always return value from ItemsSource
-					return this.itemsSource.find((x) => x.$id === val.$id);
+					return this.itemsSource.find((x) => x[vProp] === val[vProp]);
 				},
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
+			}
+		},
+		methods: {
+			getName(itm) {
+				let n = this.nameProp ? utils.eval(itm, this.nameProp) : itm.$name;
+				return n;
+			},
+			getValue(itm) {
+				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
+				return v;
 			}
 		}
 	});

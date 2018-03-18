@@ -71,29 +71,31 @@
 	bottom: @footer-height;
 	width: @side-bar-width;
 	background-color: @side-bar-compact-bg-color;
+	transition: width .1s ease-out;
 
 	.collapse-button {
 		display: block;
 		position: absolute;
-		right: -6px;
+		right: -8px;
 		top: 50%;
 		width: 20px;
 		height: 20px;
-		background-color: @brand-bk-color;
+		background-color: white;
+		border: 1px solid @side-bar-compact-bg-color;
 		border-radius: 50%;
 		z-index: 2000;
 
 		&:after {
-			content: "\e9ab";
+			content: "\e9ab"; // chevron double left
 			font-family: 'Bowtie';
 			display: block;
-			color: white;
+			color: @side-bar-compact-bg-color;
 			font-size: 16px;
-			padding: 2px;
+			padding: 1px;
 		}
 
 		&:hover {
-			background-color: @brand-hover-color;
+			background-color: @hover-bg-color;
 		}
 	}
 
@@ -105,14 +107,15 @@
 		li {
 			margin: 6px;
 			font-size: 15px;
+			white-space:nowrap;
 
 			> a {
 				display: block;
-				padding: 6px;
+				padding: 10px 6px;
 				color: white;
 
 				.ico {
-					font-size: 16px;
+					font-size: 20px;
 				}
 			}
 
@@ -131,24 +134,26 @@
 
 	&.collapsed {
 		width: @side-bar-compact-collapsed-width;
+		transition: width .1s ease-out;
 
 		ul li {
 			a {
+
 				> span {
 					display: none;
 				}
 
 				.ico {
-					display: block;
-					font-size: 20px;
-					padding: 3px 5px;
+					display: inline-block;
+					width:auto;
+					margin-left:5px;
 				}
 			}
 		}
 
 		.collapse-button {
 			&:after {
-				content: "\e9ad";
+				content: "\e9ad"; // chevron double right
 			}
 		}
 	}
