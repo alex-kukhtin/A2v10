@@ -134,7 +134,7 @@ namespace A2v10.Request
 			if (loadPrms != null)
 			{
 				loadPrms.Set("Id", rw.Id);
-				loadPrms.Append(rw.parameters);
+				loadPrms.AppendAndReplace(rw.parameters);
 			}
 			if (loadProc != null)
 			{

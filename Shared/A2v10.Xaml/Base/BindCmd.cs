@@ -36,6 +36,7 @@ namespace A2v10.Xaml
 		Select,
 		SelectChecked,
 		Report,
+		Export
 	}
 
 	public enum DialogAction
@@ -138,20 +139,26 @@ namespace A2v10.Xaml
 				case CommandType.DbRemoveSelected:
 					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";
 
+				case CommandType.Export:
+					return $"$export()";
+
 				case CommandType.Open:
-					var nwin = NewWindow.ToString().ToLowerInvariant();
-					if (indirect)
 					{
-						if (!IsArgumentEmpty(context))
-							return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'{CommandArgument(context)}, arg3:{nwin}'}}";
-						return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'this', arg3:{nwin}}}";
+						var nwin = NewWindow.ToString().ToLowerInvariant();
+						if (indirect)
+						{
+							if (!IsArgumentEmpty(context))
+								return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'{CommandArgument(context)}, arg3:{nwin}'}}";
+							return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'this', arg3:{nwin}}}";
+						}
+						else
+							return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {nwin})";
 					}
-					else
-						return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {nwin})";
-
 				case CommandType.Create:
-					return $"$navigate({CommandUrl(context)})";
-
+					{
+						var nwin = NewWindow.ToString().ToLowerInvariant();
+						return $"$navigate({CommandUrl(context)}, null, {nwin})";
+					}
 				case CommandType.Remove:
 					if (indirect)
 					{

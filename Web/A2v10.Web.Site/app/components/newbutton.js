@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180319-7135*/
 /*components/newbutton.js*/
 
 (function () {
@@ -11,7 +11,7 @@
 
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
-	<button class="btn" toggle><i class="ico ico-plus"></i></button>
+	<button class="btn btn-success" toggle><i class="ico ico-plus"></i></button>
 	<div class="dropdown-menu menu down-right">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">

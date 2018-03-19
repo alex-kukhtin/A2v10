@@ -105,6 +105,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Image("/" + pathInfo); // with _image prefix
 			}
+			else if (pathInfo.StartsWith("_export/"))
+			{
+				await Export("/" + pathInfo);
+			}
 			else if (pathInfo.StartsWith("_static_image/"))
 			{
 				StaticImage(pathInfo.Substring(14).Replace('-', '.'));
@@ -209,6 +213,25 @@ namespace A2v10.Web.Mvc.Controllers
 			catch (Exception ex)
 			{
 				WriteImageException(ex);
+			}
+		}
+
+		async Task Export(String path)
+		{
+			// HTTP GET
+			try
+			{
+				ExpandoObject prms = new ExpandoObject();
+				ExpandoObject loadPrms = new ExpandoObject();
+				loadPrms.Append(Request.QueryString, toPascalCase: true);
+				loadPrms.Set("UserId", UserId);
+				if (_baseController.Host.IsMultiTenant)
+					loadPrms.Set("TenantId", TenantId);
+				await _baseController.Export(path, TenantId, UserId, loadPrms, Response);
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex);
 			}
 		}
 

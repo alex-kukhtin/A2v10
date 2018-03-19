@@ -639,7 +639,7 @@ td.valign-bottom {
 .tag-label {
   background-color: #999;
   color: white;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   padding: 0 .25rem .1rem .25rem;
   display: inline-block;
   margin: 1px;
@@ -781,14 +781,12 @@ header .btn:hover,
 .content-view.partial-page {
   left: 256px;
   top: 70px;
-  transition: left 0.1s ease-out;
 }
 .side-bar-collapsed .content-view.partial-page {
   left: 26px;
 }
 .side-bar-compact-collapsed .content-view.partial-page {
   left: 58px;
-  transition: left 0.1s ease-out;
 }
 .content-view.full-page {
   top: 64px;
@@ -1652,6 +1650,7 @@ pre.a2-code {
   padding: 0;
   overflow: hidden;
   display: block !important;
+  max-height: 278px;
 }
 .input-group > .selector-pane ul.selector-pane {
   margin: 0;
@@ -3856,6 +3855,9 @@ h5,
 }
 .side-bar-compact .side-menu li > a .ico {
   font-size: 20px;
+  display: inline-block;
+  margin-left: 5px;
+  width: auto;
 }
 .side-bar-compact .side-menu li.active > a {
   background-color: white;
@@ -3871,11 +3873,6 @@ h5,
 .side-bar-compact.collapsed ul li a > span {
   display: none;
 }
-.side-bar-compact.collapsed ul li a .ico {
-  display: inline-block;
-  width: auto;
-  margin-left: 5px;
-}
 .side-bar-compact.collapsed .collapse-button:after {
   content: "\e9ad";
 }
@@ -3883,7 +3880,7 @@ h5,
   margin-right: 10px;
 }
 .a2-new-btn .btn {
-  padding: 4px 8px;
+  padding: 4px 7px;
 }
 .a2-new-btn .super-menu {
   display: grid;

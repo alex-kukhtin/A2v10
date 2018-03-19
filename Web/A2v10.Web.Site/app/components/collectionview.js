@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180307-7125
+// 20180319-7135
 // components/collectionview.js
 
 /*
@@ -374,7 +374,17 @@ TODO:
 			}
 		},
 		created() {
-			// get filter values from query
+			// get filter values from modelInfo and then from query
+			let mi = this.ItemsSource.$ModelInfo;
+			if (mi) {
+				let q = mi.Filter;
+				if (q) {
+					for (let x in this.filter) {
+						if (x in q) this.filter[x] = q[x];
+					}
+				}
+			}
+
 			let q = this.$store.getters.query;
 			for (let x in this.filter) {
 				if (x in q) this.filter[x] = q[x];

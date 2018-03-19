@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180227-7121
+// 20180319-7135
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -17,13 +17,17 @@ app.modules['std:http'] = function () {
 		upload: upload
 	};
 
-	function doRequest(method, url, data) {
+	function doRequest(method, url, data, raw) {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			xhr.onload = function (response) {
 				eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
+					if (raw) {
+						resolve(xhr.response);
+						return;
+					}
 					let ct = xhr.getResponseHeader('content-type');
 					let xhrResult = xhr.responseText;
 					if (ct.indexOf('application/json') !== -1)
@@ -43,6 +47,8 @@ app.modules['std:http'] = function () {
 			xhr.open(method, url, true);
 			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			xhr.setRequestHeader('Accept', 'application/json, text/html');
+			if (raw)
+				xhr.responseType = "blob";
 			eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
@@ -52,8 +58,8 @@ app.modules['std:http'] = function () {
 		return doRequest('GET', url);
 	}
 
-	function post(url, data) {
-		return doRequest('POST', url, data);
+	function post(url, data, raw) {
+		return doRequest('POST', url, data, raw);
 	}
 
 	function upload(url, data) {

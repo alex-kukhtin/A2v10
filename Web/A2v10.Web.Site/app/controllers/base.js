@@ -301,6 +301,14 @@
 				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 			},
 
+			$export() {
+				const self = this;
+				const root = window.$$rootUrl;
+				let url = self.$baseUrl;
+				url = url.replace('/_page/', '/_export/');
+				window.location = root + url;
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;

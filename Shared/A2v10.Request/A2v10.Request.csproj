@@ -44,6 +44,7 @@
     <Compile Include="Controllers\BaseController.App.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BaseController.Data.cs" />
+    <Compile Include="Controllers\BaseController.Export.cs" />
     <Compile Include="Controllers\BaseController.Image.cs" />
     <Compile Include="Controllers\BaseController.Layout.cs" />
     <Compile Include="Controllers\ResourceHelper.cs" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Interop\A2v10.Interop.csproj">
+      <Project>{39661034-47aa-4bdf-9b19-c835b614b545}</Project>
+      <Name>A2v10.Interop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

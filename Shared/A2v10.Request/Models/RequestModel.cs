@@ -30,7 +30,8 @@ namespace A2v10.Request
 		Command,
 		Data,
 		Image,
-		Report
+		Report,
+		Export
 	}
 
 	public enum RequestDataAction
@@ -99,6 +100,19 @@ namespace A2v10.Request
 					return null;
 				String action = index ? "Index" : "Load";
 				return $"[{CurrentSchema}].[{cm}.{action}]";
+			}
+		}
+
+		[JsonIgnore]
+		public String ExportProcedure
+		{
+			get
+			{
+				var cm = CurrentModel;
+				if (String.IsNullOrEmpty(cm))
+					return null;
+				String action = index ? "Index" : "Load";
+				return $"[{CurrentSchema}].[{cm}.{action}.Export]";
 			}
 		}
 
@@ -243,8 +257,22 @@ namespace A2v10.Request
 		}
 	}
 
+	public enum RequestExportFormat
+	{
+		unknown,
+		xlsx
+	}
+
+	public class RequestExport
+	{
+		public String fileName;
+		public String template;
+		public RequestExportFormat format;
+	}
+
 	public class RequestAction : RequestView
 	{
+		public RequestExport export { get; set; }
 	}
 
 	public class RequestDialog : RequestView
@@ -382,8 +410,7 @@ namespace A2v10.Request
 					throw new RequestModelException($"There are no actions in model '{_modelPath}'");
 				if (String.IsNullOrEmpty(_action))
 					throw new RequestModelException($"Invalid empty action in url for model {_modelPath}");
-				RequestAction ma;
-				if (actions.TryGetValue(_action.ToLowerInvariant(), out ma))
+				if (actions.TryGetValue(_action.ToLowerInvariant(), out RequestAction ma))
 					return ma;
 				throw new RequestModelException($"Action '{_action}' not found in model {_modelPath}");
 			}
@@ -507,6 +534,9 @@ namespace A2v10.Request
 				case RequestUrlKind.Report:
 					mi.report = action;
 					break;
+				case RequestUrlKind.Export:
+					mi.action = action;
+					break;
 				default:
 					throw new RequestModelException($"Invalid action kind ({kind})");
 			}
@@ -598,6 +628,11 @@ namespace A2v10.Request
 			else if (baseUrl.StartsWith("/_report"))
 			{
 				kind = RequestUrlKind.Report;
+				baseUrl = baseUrl.Substring(9);
+			}
+			else if (baseUrl.StartsWith("/_export"))
+			{
+				kind = RequestUrlKind.Export;
 				baseUrl = baseUrl.Substring(9);
 			}
 			else

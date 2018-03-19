@@ -562,7 +562,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180227-7121
+// 20180319-7135
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -579,13 +579,17 @@ app.modules['std:http'] = function () {
 		upload: upload
 	};
 
-	function doRequest(method, url, data) {
+	function doRequest(method, url, data, raw) {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			xhr.onload = function (response) {
 				eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
+					if (raw) {
+						resolve(xhr.response);
+						return;
+					}
 					let ct = xhr.getResponseHeader('content-type');
 					let xhrResult = xhr.responseText;
 					if (ct.indexOf('application/json') !== -1)
@@ -605,6 +609,8 @@ app.modules['std:http'] = function () {
 			xhr.open(method, url, true);
 			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			xhr.setRequestHeader('Accept', 'application/json, text/html');
+			if (raw)
+				xhr.responseType = "blob";
 			eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
@@ -614,8 +620,8 @@ app.modules['std:http'] = function () {
 		return doRequest('GET', url);
 	}
 
-	function post(url, data) {
-		return doRequest('POST', url, data);
+	function post(url, data, raw) {
+		return doRequest('POST', url, data, raw);
 	}
 
 	function upload(url, data) {
@@ -2029,24 +2035,24 @@ app.modules['std:validators'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7094
+// 20180319-7135
 // dataservice.js
 (function () {
 
 	let http = require('std:http');
 	let utils = require('std:utils');
 
-	function post(url, data) {
-		return http.post(url, data);
-    }
+	function post(url, data, raw) {
+		return http.post(url, data, raw);
+	}
 
-    function get(url) {
-        return http.get(url);
-    }
+	function get(url) {
+		return http.get(url);
+	}
 
 	app.modules['std:dataservice'] = {
-        post: post,
-        get: get
+		post: post,
+		get: get
 	};
 })();
 
@@ -4143,7 +4149,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180307-7125
+// 20180319-7135
 // components/collectionview.js
 
 /*
@@ -4517,7 +4523,17 @@ TODO:
 			}
 		},
 		created() {
-			// get filter values from query
+			// get filter values from modelInfo and then from query
+			let mi = this.ItemsSource.$ModelInfo;
+			if (mi) {
+				let q = mi.Filter;
+				if (q) {
+					for (let x in this.filter) {
+						if (x in q) this.filter[x] = q[x];
+					}
+				}
+			}
+
 			let q = this.$store.getters.query;
 			for (let x in this.filter) {
 				if (x in q) this.filter[x] = q[x];
@@ -5389,7 +5405,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180319-7135*/
 /*components/newbutton.js*/
 
 (function () {
@@ -5400,7 +5416,7 @@ Vue.component('a2-panel', {
 
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
-	<button class="btn" toggle><i class="ico ico-plus"></i></button>
+	<button class="btn btn-success" toggle><i class="ico ico-plus"></i></button>
 	<div class="dropdown-menu menu down-right">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
@@ -6341,6 +6357,14 @@ Vue.directive('resize', {
 				// and in the __baseUrl__
 				//urlTools.replace()
 				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+			},
+
+			$export() {
+				const self = this;
+				const root = window.$$rootUrl;
+				let url = self.$baseUrl;
+				url = url.replace('/_page/', '/_export/');
+				window.location = root + url;
 			},
 
 			$dbRemove(elem, confirm) {

@@ -121,7 +121,7 @@ header, .header {
 	left: @side-bar-width + @side-bar-gap;
 	top: 70px; //64px + 6px;
 	//background-color:aliceblue;
-	transition: left .1s ease-out;
+	//transition: left .1s ease-out; // если разрешить - некрасиво при переходах из full-page (без SideBar)
 }
 
 .side-bar-collapsed .content-view.partial-page {
@@ -130,7 +130,7 @@ header, .header {
 
 .side-bar-compact-collapsed .content-view.partial-page {
 	left: @side-bar-compact-collapsed-width + @side-bar-gap;
-	transition: left .1s ease-out;
+	//transition: left .1s ease-out; // если разрешить - некрасиво при переходах из full-page (без SideBar)
 }
 
 .content-view.full-page {
