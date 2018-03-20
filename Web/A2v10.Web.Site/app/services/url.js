@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180308-7126*/
+/*20180320-7138*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -49,7 +49,7 @@ app.modules['std:url'] = function () {
 			if (!utils.isDefined(obj.$id)) {
 				console.error(`$id is not defined for ${obj.constructor.name}`);
 			}
-			return ('' + obj.$id) || '0'
+			return ('' + obj.$id) || '0';
 		}
 		return '' + obj;
 	}
@@ -111,7 +111,7 @@ app.modules['std:url'] = function () {
 	function replaceUrlQuery(url, query) {
 		if (!url)
 			url = window.location.pathname + window.location.search;
-		let pu = parseUrlAndQuery(url, query)
+		let pu = parseUrlAndQuery(url, query);
 		return pu.url + makeQueryString(pu.query);
 	}
 
@@ -124,12 +124,14 @@ app.modules['std:url'] = function () {
 			urlId = data.Id;
 			delete data['Id'];
 			qs = makeQueryString(data);
+			if (!utils.isDefined(urlId))
+				urlId = 'new';
 		}
 		return combine(url, urlId) + qs;
 	}
 
 	function replaceId(url, newId) {
-		alert('todo::replaceId')
+		alert('todo::replaceId');
 	}
 };
 

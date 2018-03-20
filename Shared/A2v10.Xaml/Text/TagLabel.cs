@@ -5,11 +5,35 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+
+	public enum TagLabelStyle
+	{
+		Default,
+		Success,
+		Green,
+		Warning,
+		Orange,
+		Info,
+		Cyan,
+		Danger,
+		Red,
+		Error,
+		Purple,
+		Pink,
+		Gold,
+		Blue,
+		Salmon,
+		Seagreen,
+		Tan,
+		Magenta
+	}
+
 	[ContentProperty("Content")]
 	public class TagLabel : Inline
 	{
 		public String Content { get; set; }
-		public MarkStyle Style { get; set; }
+		public TagLabelStyle Style { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var span = new TagBuilder("span", "tag-label", IsInGrid);
@@ -24,7 +48,7 @@ namespace A2v10.Xaml
 			{
 				span.MergeAttribute(":class", cStyle.GetPathFormat(context));
 			}
-			else if (Style != MarkStyle.Default)
+			else if (Style != TagLabelStyle.Default)
 			{
 				span.AddCssClass(Style.ToString().ToLowerInvariant());
 			}

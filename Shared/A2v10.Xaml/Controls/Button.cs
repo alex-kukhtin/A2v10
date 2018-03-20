@@ -65,7 +65,7 @@ namespace A2v10.Xaml
 			var button = new TagBuilder("button", "btn", IsInGrid);
 			if (!Block && !insideBar)
 				button.AddCssClass("a2-inline");
-			if (Parent is Toolbar)
+			if (Parent is Toolbar && Style == ButtonStyle.Default)
 				button.AddCssClass("btn-tb");
 			else if (Parent is CommandBar)
 				button.AddCssClass("btn-cb");
@@ -84,7 +84,8 @@ namespace A2v10.Xaml
 			if (IconAlign == IconAlign.Top)
 				button.AddCssClass("icon-top");
 
-			if (!insideBar)
+			//if (!insideBar)
+			if (Style != ButtonStyle.Default)
 				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);

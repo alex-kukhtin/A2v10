@@ -266,6 +266,16 @@ TODO:
 			}
 		},
 		created() {
+			// get filter values from modelInfo
+			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
+			if (mi) {
+				let q = mi.Filter;
+				if (q) {
+					for (let x in this.filter) {
+						if (x in q) this.filter[x] = q[x];
+					}
+				}
+			}
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
 		}

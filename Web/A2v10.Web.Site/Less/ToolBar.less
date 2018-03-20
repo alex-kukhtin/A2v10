@@ -20,9 +20,18 @@
 		background-color: transparent;
 		padding: 2px 0;
 
-		.btn {
+		.btn-tb {
 			color: @link-color;
 		}
+
+		.divider {
+			border-right-color: lighten(@toolbar-bg-color, 6%);
+			background-color: lighten(@toolbar-bg-color, 12%);
+		}
+	}
+
+	.btn {
+		padding: 3px 6px 4px 6px;
 	}
 
 	.btn-tb {
@@ -32,7 +41,6 @@
 		text-transform: lowercase;
 		color: @text-color;
 		min-width: 0;
-		padding: 3px 6px 4px 6px;
 
 		&:focus {
 			outline: 1px dotted darken(@toolbar-bg-color, 15%);
@@ -65,7 +73,7 @@
 	.btn-tb:focus {
 	}
 
-	button > i.ico {
+	.btn-tb > i.ico {
 		display: inline-block;
 		margin-right: 2px;
 		color: @icon-color;

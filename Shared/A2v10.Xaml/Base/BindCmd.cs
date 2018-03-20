@@ -157,7 +157,7 @@ namespace A2v10.Xaml
 				case CommandType.Create:
 					{
 						var nwin = NewWindow.ToString().ToLowerInvariant();
-						return $"$navigate({CommandUrl(context)}, null, {nwin})";
+						return $"$navigate({CommandUrl(context)}, {CommandArgument(context, nullable:true)}, {nwin})";
 					}
 				case CommandType.Remove:
 					if (indirect)
