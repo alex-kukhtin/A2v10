@@ -9,10 +9,10 @@
 /* dialog */
 /* z-index */
 /*
-@hover-open-index: 98;
-@invalid-index: 96;
-@focus-index: 92;
-@hover-index: 90;
+@hover-open-index: auto;
+@invalid-index: auto;
+@focus-index: auto;
+@hover-index: auto;
 */
 /* mixins */
 /* icon colors */
@@ -1376,10 +1376,10 @@ pre.a2-code {
   box-shadow: none;
 }
 .control-group .input-group.focus {
-  z-index: auto;
+  z-index: 92;
 }
 .control-group:hover .input-group {
-  z-index: auto;
+  z-index: 90;
 }
 .control-group input,
 .control-group select,
@@ -1395,10 +1395,10 @@ pre.a2-code {
 }
 /* avoid validator blinking */
 .control-group.open:hover {
-  z-index: auto !important;
+  z-index: 99 !important;
 }
 .control-group.open .input-group.focus {
-  z-index: auto !important;
+  z-index: 99 !important;
 }
 .control-group.required label:before {
   content: '\2731';
@@ -1418,11 +1418,12 @@ pre.a2-code {
 .control-group.invalid:hover .input-group,
 .control-group.invalid .input-group.focus {
   box-shadow: 0 0 2px 1px rgba(169, 68, 66, 0.3);
+  z-index: 98;
 }
 .control-group.invalid .input-group {
   border-color: #dca7a7 !important;
   background-color: #fff8f8 !important;
-  z-index: auto;
+  z-index: 94;
 }
 .control-group.invalid .input-group:after {
   content: '';
@@ -2607,6 +2608,18 @@ table tr.bold > td {
 }
 table td.gray {
   background-color: #f8f8f8;
+}
+.table-separate-border {
+  border-collapse: separate;
+}
+.table-cell-spacing-small {
+  border-spacing: 2px;
+}
+.table-cell-spacing-medium {
+  border-spacing: 6px;
+}
+.table-cell-spacing-large {
+  border-spacing: 10px;
 }
 table.hover > tbody > tr:hover {
   background-color: #fdf4bf !important;

@@ -4339,7 +4339,8 @@ TODO:
 
 		data() {
 			return {
-				filter: this.initialFilter
+				filter: this.initialFilter,
+				lockChange: true
 			};
 		},
 
@@ -4400,6 +4401,8 @@ TODO:
 				this.reload();
 			},
 			filterChanged() {
+				if (this.lockChange) return;
+				//console.warn('filter change');
 				let mi = this.ItemsSource.$ModelInfo;
 				if (!mi) {
 					mi = { Filter: this.filter };
@@ -4426,6 +4429,10 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
+				this.$nextTick(() => {
+					//console.warn('unlock');
+					this.lockChange = false;
+				});
 			}
 			// from datagrid, etc
 			this.$on('sort', this.doSort);

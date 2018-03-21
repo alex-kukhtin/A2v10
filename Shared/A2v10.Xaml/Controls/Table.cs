@@ -16,6 +16,14 @@ namespace A2v10.Xaml
 		Rose
 	}
 
+	public enum CellSpacingMode
+	{
+		None,
+		Small,
+		Medium,
+		Large
+	}
+
 
 	[ContentProperty("Rows")]
 	public class Table : Control, ITableControl
@@ -30,6 +38,7 @@ namespace A2v10.Xaml
 		public Boolean Striped { get; set; }
 
 		public TableBackgroundStyle Background { get; set; }
+		public CellSpacingMode CellSpacing { get; set; }
 
 		public TableRowCollection Header
 		{
@@ -85,7 +94,11 @@ namespace A2v10.Xaml
 			MergeAttributes(table, context);
 			if (Background != TableBackgroundStyle.None)
 				table.AddCssClass("bk-" + Background.ToString().ToKebabCase());
-
+			if (CellSpacing != CellSpacingMode.None)
+			{
+				table.AddCssClass("table-separate-border");
+				table.AddCssClass("table-cell-spacing-" + CellSpacing.ToString().ToLowerInvariant());
+			}
 			if (GridLines != GridLinesVisibility.None)
 				table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
 

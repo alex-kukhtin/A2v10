@@ -210,7 +210,7 @@ namespace A2v10.Xaml
 			if (path.StartsWith("Parent."))
 				return path;
 			if (path.StartsWith(rootKey))
-				return path.Substring(rootKey.Length);
+				return "$data." + path.Substring(rootKey.Length);
 			ScopeElem scope = _stackScope.Peek();
 			String result = scope.Scope;
 			if (!String.IsNullOrEmpty(path))

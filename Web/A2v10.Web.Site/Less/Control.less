@@ -346,13 +346,14 @@
 	}
 
 	&:hover .validator,
-	.input-group.focus .validator {
+		.input-group.focus .validator {
 		display: block;
 	}
 
 	&:hover .input-group,
 	.input-group.focus {
 		box-shadow: @danger-box-shadow;
+		z-index:@invalid-hover-index;
 	}
 
 	.input-group {

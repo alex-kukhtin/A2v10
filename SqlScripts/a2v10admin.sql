@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 23 jan 2018
-module version : 7057
+Last updated : 21 mar 2018
+module version : 7058
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7057);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7058);
 else
-	update a2sys.Versions set [Version] = 7057 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7058 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -37,7 +37,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Ensure.Admin]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint
 as
 begin
@@ -52,7 +52,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Menu.Admin.Load]
-@TenantId int,
+@TenantId int = null,
 @UserId bigint
 as
 begin
@@ -90,7 +90,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Index]
-@TenantId int,
+@TenantId int = null,
 @UserId bigint,
 @Order nvarchar(255) = N'Id',
 @Dir nvarchar(255) = N'desc',
@@ -149,7 +149,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Load]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -218,7 +218,7 @@ end
 go
 ------------------------------------------------
 create procedure [a2admin].[User.Update]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@User a2admin.[User.TableType] readonly,
 	@Roles a2sys.[Id.TableType] readonly,
@@ -286,7 +286,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Login.CheckDuplicate]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
 	@Login nvarchar(255)
@@ -305,7 +305,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[User.Delete]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -326,7 +326,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Index]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Order nvarchar(255) = N'Id',
 	@Dir nvarchar(255) = N'desc',
@@ -384,7 +384,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Load]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -445,7 +445,7 @@ end
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Update]
-	@TenantId int,
+	@TenantId  int = null,
 	@UserId bigint,
 	@Group a2admin.[Group.TableType] readonly,
 	@Users a2sys.[Id.TableType] readonly,
@@ -494,7 +494,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Delete]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -515,7 +515,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Key.CheckDuplicate]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
 	@Key nvarchar(255)
@@ -534,7 +534,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Group.Name.CheckDuplicate]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
 	@Name nvarchar(255)
@@ -553,7 +553,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Index]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Order nvarchar(255) = N'Id',
 	@Dir nvarchar(255) = N'desc',
@@ -611,7 +611,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Load]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -642,7 +642,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Delete]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint = null
 as
@@ -662,7 +662,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Key.CheckDuplicate]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
 	@Key nvarchar(255)
@@ -681,7 +681,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Name.CheckDuplicate]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
 	@Name nvarchar(255)
@@ -743,7 +743,7 @@ end
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Update]
-	@TenantId int,
+	@TenantId int = null,
 	@UserId bigint,
 	@Role a2admin.[Role.TableType] readonly,
 	@UsersGroups a2admin.[UserGroup.TableType] readonly,
