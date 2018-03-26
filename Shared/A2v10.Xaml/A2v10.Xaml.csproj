@@ -87,6 +87,8 @@
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Layouts\CommandBar.cs" />
     <Compile Include="Layouts\FullHeightPanel.cs" />
+    <Compile Include="Layouts\Include.cs" />
+    <Compile Include="Layouts\Partial.cs" />
     <Compile Include="Text\TagLabel.cs" />
     <Compile Include="Layouts\DropDownMenu.cs" />
     <Compile Include="Controls\Graphics.cs" />

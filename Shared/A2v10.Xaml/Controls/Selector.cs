@@ -7,15 +7,12 @@ namespace A2v10.Xaml
 	public class Selector : ValuedControl, ITableControl
 	{
 		public TextAlign Align { get; set; }
-
 		public String Delegate { get; set; }
-
 		public String DisplayProperty { get; set; }
+		public String Placeholder { get; set; }
 
 		public Size ListSize { get; set; }
-
 		public UIElement NewPane { get; set; }
-
 		public Command CreateNewCommand { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -37,6 +34,7 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
+			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);
 			MergeCreateNew(input, context);
 

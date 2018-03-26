@@ -42,7 +42,8 @@ namespace A2v10.Web.Mvc.Controllers
 				String reportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
 				ExpandoObject prms = new ExpandoObject();
 				prms.Set("UserId", UserId);
-				prms.Set("TenantId", TenantId);
+				if (_baseController.Host.IsMultiTenant)
+					prms.Set("TenantId", TenantId);
 				prms.Set("Id", id);
 				var iDataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
 				TempData["StiDataModel"] = iDataModel;
@@ -52,7 +53,8 @@ namespace A2v10.Web.Mvc.Controllers
 				if (vars == null)
 					vars = new ExpandoObject();
 				vars.Set("UserId", UserId);
-				vars.Set("TenantId", TenantId);
+				if (_baseController.Host.IsMultiTenant)
+					vars.Set("TenantId", TenantId);
 				vars.Set("Id", id);
 				TempData["StiVariables"] = vars;
 				ViewBag.locale = "uk"; // TODO
