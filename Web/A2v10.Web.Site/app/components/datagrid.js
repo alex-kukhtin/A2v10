@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180315-7131
+// 20180327-7141
 // components/datagrid.js*/
 
 (function () {
@@ -134,6 +134,7 @@
 			sort: { type: Boolean, default: undefined },
 			sortProp: String,
 			small: { type: Boolean, default: undefined },
+			bold: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
@@ -200,6 +201,8 @@
 					cssClass += ' ' + this.wrap;
 				if (this.small)
 					cssClass += ' ' + 'small';
+				if (this.bold)
+					cssClass += ' ' + 'bold';
 				return cssClass.trim();
 			}
 		}
@@ -330,9 +333,11 @@
 				return h(tag, cellProps, [ix + 1]);
 
 			function isNegativeRed(col) {
-				if (col.dataType === 'Number' || col.dataType === 'Currency')
-					if (utils.eval(row, col.content, col.dataType, col.hideZeros) < 0)
+				if (col.dataType === 'Number' || col.dataType === 'Currency') {
+					let val = utils.eval(row, col.content, col.dataType, col.hideZeros, true /*skip format*/);
+					if (val < 0)
 						return true;
+				}
 				return false;
 			}
 

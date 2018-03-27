@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180312-71209
+// 20180327-7141
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -107,7 +107,8 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
-			add: dateAdd
+			add: dateAdd,
+			compare: dateCompare
 		},
 		text: {
 			contains: textContains,
@@ -183,7 +184,7 @@ app.modules['std:utils'] = function () {
 		}
 	}
 
-	function evaluate(obj, path, dataType, hideZeros) {
+	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
 		if (!path)
 			return '';
 		let ps = (path || '').split('.');
@@ -194,6 +195,7 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`);
 			r = r[ps[i]];
 		}
+		if (skipFormat) return r;
 		if (isDate(r))
 			return format(r, dataType, hideZeros);
 		else if (isObject(r))
@@ -351,6 +353,13 @@ app.modules['std:utils'] = function () {
 				break;
 		}
 		return new Date(dt.getTime() + nm * du);
+	}
+
+	function dateCompare(d1, d2) {
+		if (!isDate(d1) || !isDate(d2)) return null;
+		let t1 = d1.getTime();
+		let t2 = d2.getTime();
+		return t1 - t2;
 	}
 
 
@@ -2666,7 +2675,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7121
+// 20180327-7141
 // components/datepicker.js
 
 
@@ -2754,7 +2763,7 @@ Vue.component('validator-control', {
 			},
 			wdTitle(d) {
 				let dt = this.days[0][d - 1];
-				return dt.toLocaleString("uk-UA", { weekday: "short" });
+				return dt.toLocaleString(locale.$Locale, { weekday: "short" });
 			},
 			dayClass(day) {
 				let cls = '';
@@ -2769,7 +2778,7 @@ Vue.component('validator-control', {
 			},
 			dayTitle(day) {
 				// todo: localize
-				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			cssClass2() {
 				let cx = this.cssClass();
@@ -2792,7 +2801,7 @@ Vue.component('validator-control', {
 				get() {
 					if (utils.date.isZero(this.modelDate))
 						return '';
-					return this.modelDate.toLocaleString("uk-UA", { year: 'numeric', month: '2-digit', day: '2-digit' });
+					return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);
@@ -2802,7 +2811,7 @@ Vue.component('validator-control', {
 				}
 			},
 			title() {
-				let mn = this.modelDate.toLocaleString("uk-UA", { month: "long", year: 'numeric' });
+				let mn = this.modelDate.toLocaleString(locale.$Locale, { month: "long", year: 'numeric' });
 				return mn.charAt(0).toUpperCase() + mn.slice(1);
 			},
 			days() {
@@ -2818,7 +2827,9 @@ Vue.component('validator-control', {
 				for (let r = 0; r < 6; r++) {
 					let row = [];
 					for (let c = 0; c < 7; c++) {
-						row.push(new Date(dt));
+						let xd = new Date(dt);
+						xd.setHours(0, -xd.getTimezoneOffset(), 0, 0);
+						row.push(new Date(xd));
 						dt.setDate(dt.getDate() + 1);
 					}
 					arr.push(row);
@@ -3072,7 +3083,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180315-7131
+// 20180327-7141
 // components/datagrid.js*/
 
 (function () {
@@ -3206,6 +3217,7 @@ Vue.component('validator-control', {
 			sort: { type: Boolean, default: undefined },
 			sortProp: String,
 			small: { type: Boolean, default: undefined },
+			bold: { type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
@@ -3272,6 +3284,8 @@ Vue.component('validator-control', {
 					cssClass += ' ' + this.wrap;
 				if (this.small)
 					cssClass += ' ' + 'small';
+				if (this.bold)
+					cssClass += ' ' + 'bold';
 				return cssClass.trim();
 			}
 		}
@@ -3402,9 +3416,11 @@ Vue.component('validator-control', {
 				return h(tag, cellProps, [ix + 1]);
 
 			function isNegativeRed(col) {
-				if (col.dataType === 'Number' || col.dataType === 'Currency')
-					if (utils.eval(row, col.content, col.dataType, col.hideZeros) < 0)
+				if (col.dataType === 'Number' || col.dataType === 'Currency') {
+					let val = utils.eval(row, col.content, col.dataType, col.hideZeros, true /*skip format*/);
+					if (val < 0)
 						return true;
+				}
 				return false;
 			}
 
@@ -4461,7 +4477,6 @@ TODO:
 			},
 			filterChanged() {
 				if (this.lockChange) return;
-				//console.warn('filter change');
 				let mi = this.ItemsSource.$ModelInfo;
 				if (!mi) {
 					mi = { Filter: this.filter };
@@ -4488,11 +4503,10 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
-				this.$nextTick(() => {
-					//console.warn('unlock');
-					this.lockChange = false;
-				});
 			}
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
 		}
@@ -6136,7 +6150,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180314-7131
+// 20180327-7141
 // controllers/base.js
 
 (function () {
@@ -6172,8 +6186,11 @@ Vue.directive('resize', {
 		if (!mi) return undefined;
 		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
 		if (mi.Filter)
-			for (let p in mi.Filter)
-				x[p] = mi.Filter[p];
+			for (let p in mi.Filter) {
+				let fVal = mi.Filter[p];
+				if (!fVal) continue; // empty value, skip it
+				x[p] = fVal;
+			}
 		return x;
 	}
 

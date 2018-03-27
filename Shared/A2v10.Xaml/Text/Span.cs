@@ -18,7 +18,9 @@ namespace A2v10.Xaml
 
 			var cbind = GetBinding(nameof(Content));
 			if (cbind != null)
+			{
 				span.MergeAttribute("v-text", cbind.GetPathFormat(context));
+			}
 			span.AddCssClassBool(Small, "small");
 
 			span.RenderStart(context);

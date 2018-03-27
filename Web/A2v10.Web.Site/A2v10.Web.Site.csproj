@@ -172,6 +172,7 @@
     <Content Include="tests\platform.js" />
     <Content Include="tests\datamodel.js" />
     <Content Include="tests\testdata.js" />
+    <Content Include="tests\datetools.js" />
     <Content Include="tests\urltools.js" />
     <Content Include="tests\validators.js" />
     <Content Include="scripts\vue.js" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180314-7131
+// 20180327-7141
 // controllers/base.js
 
 (function () {
@@ -36,8 +36,11 @@
 		if (!mi) return undefined;
 		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
 		if (mi.Filter)
-			for (let p in mi.Filter)
-				x[p] = mi.Filter[p];
+			for (let p in mi.Filter) {
+				let fVal = mi.Filter[p];
+				if (!fVal) continue; // empty value, skip it
+				x[p] = fVal;
+			}
 		return x;
 	}
 

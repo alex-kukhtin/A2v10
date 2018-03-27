@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180312-71209
+// 20180327-7141
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -47,7 +47,8 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
-			add: dateAdd
+			add: dateAdd,
+			compare: dateCompare
 		},
 		text: {
 			contains: textContains,
@@ -123,7 +124,7 @@ app.modules['std:utils'] = function () {
 		}
 	}
 
-	function evaluate(obj, path, dataType, hideZeros) {
+	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
 		if (!path)
 			return '';
 		let ps = (path || '').split('.');
@@ -134,6 +135,7 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`);
 			r = r[ps[i]];
 		}
+		if (skipFormat) return r;
 		if (isDate(r))
 			return format(r, dataType, hideZeros);
 		else if (isObject(r))
@@ -291,6 +293,13 @@ app.modules['std:utils'] = function () {
 				break;
 		}
 		return new Date(dt.getTime() + nm * du);
+	}
+
+	function dateCompare(d1, d2) {
+		if (!isDate(d1) || !isDate(d2)) return null;
+		let t1 = d1.getTime();
+		let t2 = d2.getTime();
+		return t1 - t2;
 	}
 
 

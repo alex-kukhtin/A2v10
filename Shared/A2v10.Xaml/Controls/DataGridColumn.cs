@@ -45,6 +45,7 @@ namespace A2v10.Xaml
 		public String SortProperty { get; set; }
 
 		public Boolean? Small { get; set; }
+		public Boolean? Bold { get; set; }
 
 		Boolean _noPadding;
 
@@ -62,6 +63,8 @@ namespace A2v10.Xaml
 				column.MergeAttribute("sort-prop", SortProperty);
 			if (Small != null)
 				column.MergeAttribute(":small", Small.Value.ToString().ToLowerInvariant());
+			if (Bold != null)
+				column.MergeAttribute(":bold", Bold.Value.ToString().ToLowerInvariant());
 			MergeBoolAttribute(column, context, nameof(Fit), Fit);
 			if (Width != null)
 				column.MergeAttribute("width", Width.Value);

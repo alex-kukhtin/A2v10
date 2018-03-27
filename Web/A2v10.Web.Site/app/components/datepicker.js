@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180125-7121
+// 20180327-7141
 // components/datepicker.js
 
 
@@ -88,7 +88,7 @@
 			},
 			wdTitle(d) {
 				let dt = this.days[0][d - 1];
-				return dt.toLocaleString("uk-UA", { weekday: "short" });
+				return dt.toLocaleString(locale.$Locale, { weekday: "short" });
 			},
 			dayClass(day) {
 				let cls = '';
@@ -103,7 +103,7 @@
 			},
 			dayTitle(day) {
 				// todo: localize
-				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			cssClass2() {
 				let cx = this.cssClass();
@@ -126,7 +126,7 @@
 				get() {
 					if (utils.date.isZero(this.modelDate))
 						return '';
-					return this.modelDate.toLocaleString("uk-UA", { year: 'numeric', month: '2-digit', day: '2-digit' });
+					return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);
@@ -136,7 +136,7 @@
 				}
 			},
 			title() {
-				let mn = this.modelDate.toLocaleString("uk-UA", { month: "long", year: 'numeric' });
+				let mn = this.modelDate.toLocaleString(locale.$Locale, { month: "long", year: 'numeric' });
 				return mn.charAt(0).toUpperCase() + mn.slice(1);
 			},
 			days() {
@@ -152,7 +152,9 @@
 				for (let r = 0; r < 6; r++) {
 					let row = [];
 					for (let c = 0; c < 7; c++) {
-						row.push(new Date(dt));
+						let xd = new Date(dt);
+						xd.setHours(0, -xd.getTimezoneOffset(), 0, 0);
+						row.push(new Date(xd));
 						dt.setDate(dt.getDate() + 1);
 					}
 					arr.push(row);
