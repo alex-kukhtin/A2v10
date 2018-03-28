@@ -251,7 +251,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				ImageInfo info = await _baseController.Image(url, UserId);
+				ImageInfo info = await _baseController.Image(TenantId, url, UserId);
 				if (info == null)
 					return;
 				Response.ContentType = info.Mime;
@@ -286,7 +286,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var files = Request.Files;
-				var list = await _baseController.SaveImages(url, files, UserId);
+				var list = await _baseController.SaveImages(TenantId, url, files, UserId);
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);

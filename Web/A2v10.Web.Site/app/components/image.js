@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180301-7122
+// 20180327-7142
 // components/image.js
 
 (function () {
@@ -11,15 +11,15 @@
     3. Photo, Base for list
     4. multiple for list
     5. css
+    <span v-text="href"></span>
+    <span>{{newElem}}</span>
      */
 
 	var url = require('std:url');
 
 	Vue.component('a2-image', {
 		template: `
-<div>
-    <span v-text="href"></span>
-    <span>{{newElem}}</span>
+<div class="a2-image">
     <img v-if="isImageVisible" :src="href" style="width:auto;height:auto;max-width:300px" @click.prevent="clickOnImage"/>
     <a @click.prevent="removeImage">x</a>
     <a2-upload v-if="isUploadVisible" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem"/>
@@ -44,6 +44,7 @@
 					return undefined;
 				let root = window.$rootUrl;
 				let id = this.item[this.prop];
+				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			isImageVisible() {
@@ -66,7 +67,7 @@
 					this.item[this.prop] = undefined;
 			},
 			clickOnImage: function () {
-				alert('click on image');
+				//alert('click on image');
 			}
 		},
 		created() {

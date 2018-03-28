@@ -167,7 +167,7 @@ namespace A2v10RuntimeNet
                     }
                     else if (url.StartsWith("_image/"))
                     {
-                        controller.Image("/" + url, userId).Wait(); // with _image prefix
+                        controller.Image(tenantId, "/" + url, userId).Wait(); // with _image prefix
                     }
                     else
                     {

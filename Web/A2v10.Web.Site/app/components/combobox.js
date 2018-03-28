@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180328-7142*/
 /*components/combobox.js*/
 
 (function () {
@@ -9,7 +9,7 @@
 	const utils = require('std:utils');
 
 	let comboBoxTemplate =
-		`<div :class="cssClass()">
+`<div :class="cssClass()" v-lazy="itemsSource">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">

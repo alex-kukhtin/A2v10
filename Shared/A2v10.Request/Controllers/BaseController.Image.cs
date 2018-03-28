@@ -19,6 +19,7 @@ namespace A2v10.Request
 
 	public class ImageUpdateInfo
 	{
+		public Int32 TenantId { get; set; }
 		public Int64 UserId { get; set; }
 		public String Key { get; set; }
 		public Object Id { get; set; }
@@ -29,12 +30,14 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public async Task<ImageInfo> Image(String pathInfo, Int64 userId)
+		public async Task<ImageInfo> Image(Int32 tenantId, String pathInfo, Int64 userId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			// [{source}].[{schema}].[{base}.{key}.Load]
 			String key = rm.ModelAction.ToPascalCase();
+			if (_host.IsMultiTenant)
+				prms.Set("TenantId", tenantId);
 			prms.Set("UserId", userId);
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
@@ -43,13 +46,15 @@ namespace A2v10.Request
 		}
 
 
-		public async Task<IList<Object>> SaveImages(String pathInfo, HttpFileCollectionBase files, Int64 userId)
+		public async Task<IList<Object>> SaveImages(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
 			ImageUpdateInfo ii = new ImageUpdateInfo();
+			// TODO: is not tenantId ???
+			ii.TenantId = tenantId;
 			ii.UserId = userId;
 			ii.Id = rm._id;
 			ii.Key = key;

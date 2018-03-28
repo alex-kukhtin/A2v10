@@ -414,6 +414,11 @@
 			return meta.$lazy.indexOf(prop) !== -1;
 		};
 
+		arr.$load = function () {
+			if (!this.$isLazy) return;
+			arr.$loadLazy();
+		};
+
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
 				if (this.$loaded) { resolve(self); return; }

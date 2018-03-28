@@ -1451,6 +1451,11 @@ app.modules['std:validators'] = function () {
 			return meta.$lazy.indexOf(prop) !== -1;
 		};
 
+		arr.$load = function () {
+			if (!this.$isLazy) return;
+			arr.$loadLazy();
+		};
+
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
 				if (this.$loaded) { resolve(self); return; }
@@ -2593,7 +2598,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180328-7142*/
 /*components/combobox.js*/
 
 (function () {
@@ -2602,7 +2607,7 @@ Vue.component('validator-control', {
 	const utils = require('std:utils');
 
 	let comboBoxTemplate =
-		`<div :class="cssClass()">
+`<div :class="cssClass()" v-lazy="itemsSource">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
@@ -5187,7 +5192,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180301-7122
+// 20180327-7142
 // components/image.js
 
 (function () {
@@ -5198,15 +5203,15 @@ TODO:
     3. Photo, Base for list
     4. multiple for list
     5. css
+    <span v-text="href"></span>
+    <span>{{newElem}}</span>
      */
 
 	var url = require('std:url');
 
 	Vue.component('a2-image', {
 		template: `
-<div>
-    <span v-text="href"></span>
-    <span>{{newElem}}</span>
+<div class="a2-image">
     <img v-if="isImageVisible" :src="href" style="width:auto;height:auto;max-width:300px" @click.prevent="clickOnImage"/>
     <a @click.prevent="removeImage">x</a>
     <a2-upload v-if="isUploadVisible" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem"/>
@@ -5231,6 +5236,7 @@ TODO:
 					return undefined;
 				let root = window.$rootUrl;
 				let id = this.item[this.prop];
+				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			isImageVisible() {
@@ -5253,7 +5259,7 @@ TODO:
 					this.item[this.prop] = undefined;
 			},
 			clickOnImage: function () {
-				alert('click on image');
+				//alert('click on image');
 			}
 		},
 		created() {
