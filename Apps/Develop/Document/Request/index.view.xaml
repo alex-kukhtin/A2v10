@@ -37,7 +37,7 @@
                 DoubleClick="{BindCmd OpenSelected, Url='/Document/Request/Edit', Argument={Bind Documents}}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
 		<DataGridColumn Header="Номер" Content="{Bind SNo}" />
-		<DataGridColumn Header="Котрагент">
+		<DataGridColumn Header="Котрагент" SortProperty="Agent.Name">
             <!--
             <Popover Tip="Свойства корреспондента" Placement="Right" Text="{Bind Agent.Name}" 
                      If="{Bind Agent.Id}" Url="{Bind Agent.Id, Format='/catalog/customers/demo/{0}'}"/>
@@ -47,14 +47,15 @@
         </DataGridColumn>
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}" Command="{BindCmd Open, Url='/document/request/edit'}"/>
-        <!--
+	<!--
 		<DataGridColumn Header="Договор" Content="{Bind Contract.FullName}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
 		<DataGridColumn Header="Contract Id" Content="{Bind Contract.Id}" Command="{BindCmd Open, Url='/common/contract/show', Argument={Bind Contract.Id}}"/>
         -->
 		<DataGridColumn Header="Comp" Content="{Bind Company.Id}" />
-        <!--
+		<!--
 		<DataGridColumn Header="Договор">
-			<Popover Icon="InfoOutline" Background="Cyan" Text="{Bind Contract.FullName}" Placement="Left" If="{Bind Contract.Id}">
+			<Popover Icon="InfoOutline" Background="Cyan"
+					 Text="{Bind Contract.FullName}" Placement="TopLeft" If="{Bind Contract.Id}">
 				<Popup Width="230px">
 					<Text>Информация о договоре
 						<Break/>"<Span Content="{Bind Contract.FullName}" Bold="True"></Span>"
@@ -65,7 +66,7 @@
 				</Popup>					
 			</Popover>
 		</DataGridColumn>
-        -->
+		-->
 	</DataGrid>
 </Page>
 

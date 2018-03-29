@@ -406,7 +406,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180320-7138*/
+/*20180329-7143*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -423,7 +423,8 @@ app.modules['std:url'] = function () {
 		parseUrlAndQuery,
 		replaceUrlQuery,
 		createUrlForNavigate,
-		firstUrl: ''
+		firstUrl: '',
+		encodeUrl: encodeURIComponent
 	};
 
 	function normalize(elem) {
@@ -1037,7 +1038,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180309-7127
+// 20180329-7143
 // services/datamodel.js
 
 (function () {
@@ -1452,8 +1453,8 @@ app.modules['std:validators'] = function () {
 		};
 
 		arr.$load = function () {
-			if (!this.$isLazy) return;
-			arr.$loadLazy();
+			if (!this.$isLazy()) return;
+			platform.defer(() => this.$loadLazy());
 		};
 
 		arr.$loadLazy = function () {
@@ -3127,8 +3128,10 @@ Vue.component('validator-control', {
 				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isGrouping" class="group-cell">
-					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
-						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+					<div class="h-group">
+						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
+							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+					</div>
 				</th>
 				<slot></slot>
 			</tr>
@@ -3196,8 +3199,7 @@ Vue.component('validator-control', {
      */
 	const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-	<div class="h-fill" v-if="fixedHeader">
-		{{headerText}}
+	<div class="h-fill" v-if="fixedHeader" v-text="headerText">
 	</div><div class="h-holder">
 		<slot>{{headerText}}</slot>
 	</div>
@@ -6436,7 +6438,12 @@ Vue.directive('resize', {
 					return;
 				this.$remove(item, confirm);
 			},
-
+			$mailto(arg, subject) {
+				let href = 'mailto:' + arg;
+				if (subject)
+					href += '?subject=' + urltools.encodeUrl(subject);
+				return href;
+			},
 			$href(url, data) {
 				let dataToHref = data;
 				if (utils.isObjectExact(dataToHref))

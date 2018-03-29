@@ -280,7 +280,12 @@
 					return;
 				this.$remove(item, confirm);
 			},
-
+			$mailto(arg, subject) {
+				let href = 'mailto:' + arg;
+				if (subject)
+					href += '?subject=' + urltools.encodeUrl(subject);
+				return href;
+			},
 			$href(url, data) {
 				let dataToHref = data;
 				if (utils.isObjectExact(dataToHref))

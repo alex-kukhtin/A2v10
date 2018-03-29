@@ -30,7 +30,7 @@
         <TabPanel.Header>
             <Header Size="Small" Badge="Предварительная">Котировка "Пермьер-форте"</Header>
         </TabPanel.Header>
-        <Tab Header="Котировка">
+        <Tab Header="Котировка" Height="500px">
 			<Grid Columns="130, 1*">
 				<TextBox Required="True" Label="Код" Grid.Col="1" Value="{Bind Contract.Id}" Align="Right"/>
                 <TextBox Required="True" Label="Страхователь" Grid.Col="2" Grid.ColSpan="2" Value="{Bind Contract.InsurantName}">
@@ -77,7 +77,7 @@
 				<Tab>
 					<Tab.Header>
 						<Group>
-                            <Popover Icon="ErrorOutline" Placement="Bottom"
+                            <Popover Icon="ErrorOutline" Placement="BottomRight"
                                      If="{Bind $invalid}"></Popover>
                             <Header Size="Small" Content="{Bind $Number, Format='Перелік {0}'}" Badge="{Bind Vehicles.Count}"/>
                             <Hyperlink Size="Small" Margin="0 0 0 10" Icon="DeleteBox" Command="{BindCmd Remove, Confirm='Видалити перелік?'}"/>
@@ -91,24 +91,22 @@
                         valid: <Span Content="{Bind $valid}"></Span>
                         invalid: <Span Content="{Bind $invalid}"></Span>
                     </Text>
-                    <!--
 					<DataGrid ItemsSource="{Bind Vehicles}">
 						<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 					</DataGrid>
-					-->
                     <Text>
                         vehicles count: <Span Content="{Bind Vehicles.length}"></Span>,
                         vehicles valid: <Span Content="{Bind Vehicles.$valid}"></Span>,
                         vehicles invalid: <Span Content="{Bind Vehicles.$invalid}"></Span>
                     </Text>
-                    <CollectionView ItemsSource="{Bind Vehicles}" PageSize="10">
-                        <!--
+                    <CollectionView ItemsSource="{Bind Vehicles}" PageSize="5">
+						<!--
 						<Code Content="{Bind Parent.ItemsSource}"></Code>
+						-->
 						<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
 							<DataGridColumn Header="Id" Content="{Bind Id}"></DataGridColumn>
 						</DataGrid>
                         <Pager Source="{Bind Parent.Pager}"></Pager>
-                        -->
                         <Table GridLines="Both" Border="True" Compact="True"
                                ItemsSource="{Bind Parent.ItemsSource}" Columns="Fit,Fit,Fit,200,300,Fit">
 							<Table.Header>
@@ -175,8 +173,6 @@
 						</Table>
 						<Pager Source="{Bind Parent.Pager}"></Pager>
 					</CollectionView>
-					<!--
-					-->
 				</Tab>
 			</TabPanel>
 		</Tab>
@@ -184,9 +180,7 @@
 		<Tab Header="Фото"></Tab>
 		<Tab Header="Протокол"></Tab>
 		<Tab Header="Отладка">
-			<Code Multiline="True" Content="{Bind Contract}"></Code>
+			<Code Multiline="True" Content="{Bind CategoriesOSGO}"></Code>
 		</Tab>
 	</TabPanel>
 </Page>
-
-    

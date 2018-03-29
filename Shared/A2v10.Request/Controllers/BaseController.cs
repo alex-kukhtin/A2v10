@@ -245,27 +245,27 @@ namespace A2v10.Request
 $(RequiredModules)
 
 (function() {
-    const DataModelController = component('baseController');
+	const DataModelController = component('baseController');
 
-    const rawData = $(DataModelText);
-    const template = $(TemplateText);
+	const rawData = $(DataModelText);
+	const template = $(TemplateText);
 ";
 			const String scriptFooter =
 @"
-    const vm = new DataModelController({
-        el:'#$(RootId)',
-        props: {
-            inDialog: {type: Boolean, default: $(IsDialog)},
-            pageTitle: {type: String}
-        },
-        data: modelData(template, rawData)
-    });
+const vm = new DataModelController({
+	el:'#$(RootId)',
+	props: {
+		inDialog: {type: Boolean, default: $(IsDialog)},
+		pageTitle: {type: String}
+	},
+	data: modelData(template, rawData)
+});
 
-    vm.$data._host_ = {
-        $viewModel: vm
-    };
+	vm.$data._host_ = {
+		$viewModel: vm
+	};
 
-    vm.__doInit__();
+	vm.__doInit__();
 
 })();
 </script>

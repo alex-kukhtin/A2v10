@@ -36,7 +36,8 @@ namespace A2v10.Xaml
 		Select,
 		SelectChecked,
 		Report,
-		Export
+		Export,
+		MailTo
 	}
 
 	public enum DialogAction
@@ -90,6 +91,8 @@ namespace A2v10.Xaml
 			{
 				case CommandType.Open:
 					return $"$href({CommandUrl(context)}, {CommandArgument(context)})";
+				case CommandType.MailTo:
+					return $"$mailto({CommandArgument(context)}, {GetData(context)})";
 			}
 			return null;
 		}
@@ -141,6 +144,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Export:
 					return $"$export()";
+
+				case CommandType.MailTo:
+					return null;
 
 				case CommandType.Open:
 					{
@@ -279,7 +285,7 @@ namespace A2v10.Xaml
 			if (dataBind != null)
 				return dataBind.GetPath(context);
 			else if (Data != null)
-				return Data;
+				return $"'{Data}'";
 			return nullString;
 		}
 

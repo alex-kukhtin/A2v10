@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180320-7138*/
+/*20180329-7143*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -17,7 +17,8 @@ app.modules['std:url'] = function () {
 		parseUrlAndQuery,
 		replaceUrlQuery,
 		createUrlForNavigate,
-		firstUrl: ''
+		firstUrl: '',
+		encodeUrl: encodeURIComponent
 	};
 
 	function normalize(elem) {

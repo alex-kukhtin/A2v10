@@ -39,8 +39,10 @@
 				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isGrouping" class="group-cell">
-					<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
-						@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+					<div class="h-group">
+						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
+							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+					</div>
 				</th>
 				<slot></slot>
 			</tr>
@@ -108,8 +110,7 @@
      */
 	const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
-	<div class="h-fill" v-if="fixedHeader">
-		{{headerText}}
+	<div class="h-fill" v-if="fixedHeader" v-text="headerText">
 	</div><div class="h-holder">
 		<slot>{{headerText}}</slot>
 	</div>

@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			var span = new TagBuilder("span");
+			var span = new TagBuilder("span", null, IsInGrid);
 			MergeAttributes(span, context);
 
 			var cbind = GetBinding(nameof(Content));

@@ -374,6 +374,9 @@ i,
 .ico-queue:before {
   content: "\e92a";
 }
+.ico-query:before {
+  content: "\eaa9";
+}
 .ico-save:before {
   content: "\e982";
   color: #034989;
@@ -532,6 +535,9 @@ i,
 .ico-exit:before {
   content: "\e96e";
 }
+.ico-external:before {
+  content: "\e9d0";
+}
 .ico-log:before {
   content: "\ea25";
 }
@@ -541,11 +547,17 @@ i,
 .ico-list:before {
   content: "\e9dc";
 }
+.ico-list-bullet:before {
+  content: "\e94d";
+}
 .ico-wrench:before {
   content: "\e991";
 }
 .ico-image:before {
-  content: "\ea2b";
+  content: "\e95c";
+}
+.ico-items:before {
+  content: "\eaad";
 }
 .ico-process:before,
 .ico-share:before {

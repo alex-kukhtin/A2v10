@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180309-7127
+// 20180329-7143
 // services/datamodel.js
 
 (function () {
@@ -415,8 +415,8 @@
 		};
 
 		arr.$load = function () {
-			if (!this.$isLazy) return;
-			arr.$loadLazy();
+			if (!this.$isLazy()) return;
+			platform.defer(() => this.$loadLazy());
 		};
 
 		arr.$loadLazy = function () {
