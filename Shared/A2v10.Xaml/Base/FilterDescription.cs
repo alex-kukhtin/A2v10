@@ -90,7 +90,7 @@ namespace A2v10.Xaml
 			sb.Append("{");
 			foreach (var itm in Items)
 			{
-				sb.Append($"{itm.Property.EncodeJs()}: {itm.GetJsValue(context)}, ");
+				sb.Append($"{itm.Property.EncodeJs()}: {itm.GetJsValue(context)},");
 			}
 			sb.RemoveTailComma();
 			sb.Append("}");

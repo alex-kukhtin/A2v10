@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7127
+// 20180330-7144
 // components/selector.js
 
 /* TODO:
@@ -178,6 +178,12 @@
 				this.isOpen = false;
 				this.isOpenNew = false;
 			},
+			clear() {
+				this.item[this.prop].$empty();
+				this.query = '';
+				this.isOpen = false;
+				this.isOpenNew = false;
+			},
 			scrollIntoView() {
 				this.$nextTick(() => {
 					let pane = this.$refs['pane'];
@@ -200,8 +206,13 @@
 				let text = this.query || '';
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
+				this.items = [];
 				this.isOpen = true;
 				this.isOpenNew = false;
+				if (text === '') {
+					this.clear();
+					return;
+				}
 				this.loading = true;
 				this.fetchData(text).then((result) => {
 					this.loading = false;

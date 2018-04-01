@@ -7,11 +7,6 @@
 @DataModel=Модель даних
 @Profiling=Профілювання
 ;
-@ResetPassword=Відновлення паролю
-@ResetPasswordBody=Для відновлення паролю перейдіть <a href="{0}">до посилання</a>
-@ConfirmEMail=Підтвердження е-mail
-@ConfirmEMailBody=Для підтвердження е-mail перейдіть <a href="{0}">до посилання</a>
-;
 @Home=Головна
 @Documents=Документи
 @Catalogs=Довідники

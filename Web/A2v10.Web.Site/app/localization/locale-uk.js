@@ -26,7 +26,8 @@
 		$CreateLC: 'cтворити',
 		$NoElements: 'немає елементів',
 		$PagerElements: 'елементи',
-		$Of: 'з'
+		$Of: 'з',
+		$Register: 'Реєстрація'
 	};
 
 

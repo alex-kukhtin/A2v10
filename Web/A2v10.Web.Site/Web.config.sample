@@ -13,10 +13,19 @@
 		<add key="webpages:Enabled" value="false" />
 	</appSettings>
 	<system.web>
+		<globalization uiCulture="uk-UA" />
 		<authentication mode="None" />
 		<compilation debug="true" targetFramework="4.6.1" />
 		<httpRuntime targetFramework="4.6.1" />
 	</system.web>
+	<system.net>
+		<mailSettings>
+			<smtp from="from@address.domain" deliveryMethod="SpecifiedPickupDirectory">
+				<specifiedPickupDirectory pickupDirectoryLocation="c:\temp\pickup" />
+				<network host="smtpHost" port="111" userName="smtpUserName" password="smtpUserPassword" enableSsl="false" />
+			</smtp>
+		</mailSettings>
+	</system.net>
 	<system.webServer>
 		<modules>
 			<remove name="FormsAuthentication" />

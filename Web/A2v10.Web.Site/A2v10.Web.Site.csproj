@@ -124,6 +124,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Content Include="Localization\default.ru.txt" />
+    <Content Include="Localization\default.en.txt" />
     <Content Include="Localization\default.uk.txt" />
     <Content Include="Localization\en.xml" />
     <Content Include="Localization\ru.xml" />

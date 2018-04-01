@@ -13,18 +13,18 @@
 		el: "#app",
 		data: {
 			email: '',
-			password: '',
-			rememberMe: false,
 			processing: false,
 			info: $(PageData),
 			submitted: false,
 			serverError: '',
-			emailError: ''
+			emailError: '',
+			showConfirm: false,
+			confirmText: ''
 		},
 		computed: {
 			valid() {
 				if (!this.submitted) return true;
-				return this.validEmail && this.validPassword;
+				return this.validEmail;
 			},
 			validEmail() {
 				if (!this.submitted) return true;
@@ -35,14 +35,11 @@
 					this.emailError = this.locale.$EnterEMail;
 					return false;
 				} else if (!validEmail(this.email)) {
-					this.emailError = this.locale.$InvalidEMailError;
+					this.emailError = this.locale.$InvalidEMail;
 					return false;
 				}
 				this.emailError = '';
 				return true;
-			},
-			validPassword() {
-				return this.submitted ? !!this.password : true;
 			},
 			locale() {
 				return window.$$locale;
@@ -56,21 +53,19 @@
 					return;
 				this.processing = true;
 				let dataToSend = {
-					Name: this.email,
-					Password: this.password,
-					RememberMe: this.rememberMe
+					Name: this.email
 				};
 				const that = this;
-				post('/account/login', dataToSend)
+				post('/account/forgotPassword', dataToSend)
 					.then(function (response) {
 						that.processing = false;
 						let result = response.Status;
-						if (result === "Success")
-							that.navigate();
-						else if (result === 'Failure')
-							that.failure(that.locale.$InvalidLoginError);
-						else if (result === 'LockedOut')
-							that.failure(that.locale.$UserLockuotError);
+						if (result === 'Success') {
+							that.confirmText = that.locale.$ConfirmReset.replace('{0}', that.email);
+							that.showConfirm = true;
+						} else if (result === 'NotFound') {
+							that.serverError = that.locale.$InvalidEMailError;
+						}
 						else
 							alert(result);
 					})
@@ -79,19 +74,7 @@
 						alert(error);
 					});
 			},
-			onLoginEnter() {
-				this.$refs.pwd.focus();
-			},
-			onPwdEnter() {
-				this.submit();
-			},
-			navigate() {
-				let qs = parseQueryString(window.location.search);
-				let url = qs.ReturnUrl || '/';
-				window.location.assign(url);
-			},
 			failure(msg) {
-				this.password = '';
 				this.submitted = false;
 				this.serverError = msg;
 			},

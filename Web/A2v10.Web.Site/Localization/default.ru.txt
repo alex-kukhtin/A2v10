@@ -1,8 +1,61 @@
 ﻿;
+@About=О программе
+@Version=Версия
+@Debug=Отладка
+@Quit=Выход
+@Tracing=Трассировка
+@DataModel=Модель данних
+@Profiling=Профилирование
+;
+@ResetPassword=Восстановление пароля
+@ResetPasswordMailText=Для восстановления пароля перейдите <a href="{0}">по ссылке</a>
+@ConfirmEMail=Подтверждение е-mail
+@ConfirmEMailMailText=Для подтверждения е-mail перейдите <a href="{0}">по ссылке</a>
+;
+@Home=Главная
 @Documents=Документы
+@Catalogs=Справочники
+@Sales=Продажи
+@Purchase=Закупки
+@Inventory=Запасы
+@Accounting=Бухгалтерия
+@Dashboard=Панель управления
+;
 @Create=Создать
-@CreateDocument=Создать документ
+@CreateDocument=Создать докуменрт
+@CreateFolder=Создать папку
+@Edit=Изменить
+@Save=Сохранить
+@SaveAndClose=Сохранить и закрыть
 @Reload=Обновить
 @Refresh=Обновить
 @Delete=Удалить
 @Close=Закрыть
+@Print=Печать
+@Search=Поиск
+@Help=Помощь
+;
+@General=Общие
+@Properties=Свойства
+@FolderProperties=Свойства папки
+@NewFilder=Новая папка
+@NewElement=Новый элемент
+@Cancel=Отмена
+@Select=Выбрать
+;
+@Code=Код
+@Date=Дата
+@Name=Наименование
+@FullName=Полное наименование
+@Tag=Признак
+@Sum=Сумма
+@Qty=Количество
+@Price=Цена
+@No=Номер
+@Purchaser=Покупатель
+@Memo=Примечание
+;
+@ConfirmDeleteDocument=Удалить документ?
+;
+@Error.EnterName=Введите наименование элемента
+@Error.DuplicateCode=Элемент с таким кодом уже существует

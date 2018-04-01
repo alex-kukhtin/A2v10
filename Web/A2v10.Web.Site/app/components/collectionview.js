@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180319-7135
+// 20180330-7144
 // components/collectionview.js
 
 /*
@@ -30,10 +30,29 @@ TODO:
 		mi[propName] = value;
 	}
 
+	function makeNewQueryFunc(that) {
+		let nq = { dir: that.dir, order: that.order, offset: that.offset };
+		for (let x in that.filter) {
+			let fVal = that.filter[x];
+			if (utils.isObjectExact(fVal)) {
+				if (!('Id' in fVal)) {
+					console.error('The object in the Filter does not have Id property');
+				}
+				nq[x] = fVal.Id;
+			}
+			else if (fVal)
+				nq[x] = fVal;
+			else {
+				nq[x] = undefined;
+			}
+		}
+		return nq;
+	}
+
 	// client collection
 
 	Vue.component('collection-view', {
-		store: component('std:store'),
+		//store: component('std:store'),
 		template: `
 <div>
 	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
@@ -141,16 +160,7 @@ TODO:
 				this.localQuery.order = nq.order;
 			},
 			makeNewQuery() {
-				let nq = { dir: this.dir, order: this.order, offset: this.offset };
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
-				return nq;
+				return makeNewQueryFunc(this);
 			},
 			copyQueryToLocal(q) {
 				for (let x in q) {
@@ -174,7 +184,7 @@ TODO:
 
 	// server collection view
 	Vue.component('collection-view-server', {
-		store: component('std:store'),
+		//store: component('std:store'),
 		template: `
 <div>
 	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
@@ -286,7 +296,6 @@ TODO:
 		}
 	});
 
-
 	// server url collection view
 	Vue.component('collection-view-server-url', {
 		store: component('std:store'),
@@ -302,7 +311,8 @@ TODO:
 		},
 		data() {
 			return {
-				filter: this.initialFilter
+				filter: this.initialFilter,
+				lockChange: true
 			};
 		},
 		watch: {
@@ -347,6 +357,10 @@ TODO:
 			}
 		},
 		methods: {
+			commit(query) {
+				//console.dir(this.$root.$store);
+				this.$store.commit('setquery', query);
+			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
@@ -354,7 +368,7 @@ TODO:
 				if (this.offset === offset)
 					return;
 				setModelInfoProp(this.ItemsSource, "Offset", offset);
-				this.$store.commit('setquery', { offset: offset });
+				this.commit({ offset: offset });
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
@@ -366,26 +380,19 @@ TODO:
 				}
 				if (!nq.order)
 					nq.dir = null;
-				this.$store.commit('setquery', nq);
+				this.commit(nq);
 			},
 			makeNewQuery() {
-				let nq = { dir: this.dir, order: this.order, offset: this.offset };
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
-				return nq;
+				return makeNewQueryFunc(this);
 			},
 			filterChanged() {
+				if (this.lockChange) return;
 				// for server only
 				let nq = this.makeNewQuery();
 				nq.offset = 0;
 				if (!nq.order) nq.dir = undefined;
-				this.$store.commit('setquery', nq);
+				//console.warn('filter changed');
+				this.commit(nq);
 			}
 		},
 		created() {
@@ -398,12 +405,15 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
+			} else {
+				let q = this.$store.getters.query;
+				for (let x in this.filter) {
+					if (x in q) this.filter[x] = q[x];
+				}
 			}
-
-			let q = this.$store.getters.query;
-			for (let x in this.filter) {
-				if (x in q) this.filter[x] = q[x];
-			}
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
 			this.$on('sort', this.doSort);
 		}
 	});

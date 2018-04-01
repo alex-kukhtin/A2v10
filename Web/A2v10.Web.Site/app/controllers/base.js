@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180330-7144
 // controllers/base.js
 
 (function () {
@@ -411,6 +411,7 @@
 			$dialog(command, url, arg, query, opts) {
 				if (this.$isReadOnly(opts))
 					return;
+				const that = this;
 				function argIsNotAnArray() {
 					if (!utils.isArray(arg)) {
 						console.error(`$dialog.${command}. The argument is not an array`);
@@ -423,6 +424,16 @@
 						return true;
 					}
 				}
+
+				function simpleMerge(target, src) {
+					for (let p in target) {
+						if (p in src) 
+							target[p] = src[p];
+						else
+							target[p] = undefined;
+					}
+				}
+
 				function doDialog() {
 					// result always is raw data
 					switch (command) {
@@ -434,7 +445,13 @@
 								console.error(`$dialog.${command}. The argument is not an object`);
 								return;
 							}
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge)
+									arg.$merge(result);
+								else {
+									simpleMerge(arg, result);
+								}
+							});
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
 							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
@@ -472,7 +489,7 @@
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
 					// open in new window
-					window.open(url, "_blank");
+					window.open(url, '_blank');
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {

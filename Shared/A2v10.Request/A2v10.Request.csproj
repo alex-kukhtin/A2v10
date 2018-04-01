@@ -73,7 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Pages\about.html" />
+    <Content Include="Pages\confirmEMail.html" />
+    <Content Include="Pages\error.html" />
+    <Content Include="Pages\forgotPassword.html" />
+    <Content Include="Pages\forgotPasswordScript.js" />
+    <Content Include="Pages\initLayout.html" />
+    <Content Include="Pages\simpleScript.js" />
     <Content Include="Pages\pageUtils.js" />
+    <Content Include="Pages\resetPasswordScript.js" />
+    <Content Include="Pages\resetPassword.html" />
     <Content Include="Pages\registerTenantScript.js" />
     <Content Include="Pages\registerTenant.html" />
     <Content Include="Pages\login.html" />
@@ -84,6 +92,9 @@
     <Content Include="Pages\layout.html" />
     <Content Include="Pages\shellAdmin.js" />
     <Content Include="Pages\shell.js" />
+    <Content Include="Resources\locale-ru.js" />
+    <Content Include="Resources\locale-en.js" />
+    <Content Include="Resources\locale-uk.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 (function () {
 
@@ -12,17 +12,15 @@
 		el: "#app",
 		data: {
 			email: '',
-			name: '',
-			phone: '',
 			password: '',
 			confirm: '',
 			processing: false,
 			info: $(PageData),
+			serverInfo: $(ServerInfo),
 			submitted: false,
 			serverError: '',
 			emailError: '',
-			showConfirm: false,
-			confirmRegisterText: ''
+			showConfirm: false
 		},
 		computed: {
 			locale() {
@@ -30,14 +28,9 @@
 			},
 			valid() {
 				if (!this.submitted) return true;
-				return this.validName &&
+				return this.validEmail &&
 					this.validPassword &&
-					this.validEmail &&
-					this.validPhone &&
 					this.validConfirm;
-			},
-			validName() {
-				return this.submitted ? !!this.name : true;
 			},
 			validEmail() {
 				if (!this.submitted) return true;
@@ -56,9 +49,6 @@
 			},
 			validConfirm() {
 				return this.submitted ? !!this.confirm && (this.password === this.confirm) : true;
-			},
-			validPhone() {
-				return this.submitted ? !!this.phone : true;
 			}
 		},
 		methods: {
@@ -70,20 +60,20 @@
 				this.processing = true;
 				let dataToSend = {
 					Name: this.email, // !!!!
-					PersonName: this.name,
-					Email: this.email,
-					Phone: this.phone,
-					Password: this.password
+					Password: this.password,
+					Confirm: this.confirm,
+					Code: this.serverInfo.token
 				};
 				const that = this;
-				post('/account/register', dataToSend)
+				post('/account/resetPassword', dataToSend)
 					.then(function (response) {
 						that.processing = false;
 						let result = response.Status;
 						if (result === 'Success')
 							that.navigate();
-						else if (result === 'ConfirmSent')
-							that.confirmSent();
+						else if (result === 'Error') {
+							that.serverError = that.locale.$ResetPasswordError;
+						}
 						else
 							alert(result);
 					})
@@ -93,13 +83,9 @@
 					});
 			},
 			navigate() {
-				let qs = parseQueryString(window.location.search);
-				let url = qs.ReturnUrl || '/';
-				window.location.assign(url);
-			},
-			confirmSent() {
-				this.confirmRegisterText = this.locale.$ConfirmRegister.replace('{0}', this.email);
 				this.showConfirm = true;
+				//let url = '/';
+				//window.location.assign(url);
 			},
 			failure(msg) {
 				this.password = '';

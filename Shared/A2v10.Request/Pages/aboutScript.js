@@ -2,34 +2,34 @@
 
 (function () {
 
-    'use strict';
+	'use strict';
 
-    const eventBus = require('std:eventBus');
+	const eventBus = require('std:eventBus');
 
-    const store = component('std:store');
-    const documentTitle = component("std:doctitle");
+	const store = component('std:store');
+	const documentTitle = component("std:doctitle");
 
 
-    const vm = new Vue({
-        el: "#$(PageGuid)",
-        store: store,
-        data: {
-        },
-        components: {
-            'a2-document-title': documentTitle
-        },
-        computed: {
-        },
-        methods: {
-            $close() {
-                this.$store.commit("close");
-            },
-            $requery() {
-                eventBus.$emit('requery');
-            }
-        },
-        destroyed() {
-        }
-    });
+	const vm = new Vue({
+		el: "#$(PageGuid)",
+		store: store,
+		data: {
+		},
+		components: {
+			'a2-document-title': documentTitle
+		},
+		computed: {
+		},
+		methods: {
+			$close() {
+				this.$store.commit("close");
+			},
+			$requery() {
+				eventBus.$emit('requery');
+			}
+		},
+		destroyed() {
+		}
+	});
 
 })();

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 21 mar 2018
-module version : 7058
+Last updated : 30 mar 2018
+module version : 7059
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7058);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7059);
 else
-	update a2sys.Versions set [Version] = 7058 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7059 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')

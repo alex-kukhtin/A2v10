@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="$(Lang)">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="google" content="notranslate" />
+	<meta name="helpUrl" content="$(HelpUrl)" />
+	<title>A2:Web</title>
+	<link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+	<div id="app" class="shell" v-cloak>
+		<header class="header">
+			<div class="h-block">
+				<a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
+				<span class="app-subtitle" v-text="info.subtitle"></span>
+			</div>
+			<div class="aligner"></div>
+		</header>
+		<div class="main-view">
+			<div class="load-indicator" v-show="processing"></div>
+			$(Partial)
+		</div>
+		<footer class="footer" style="padding-right:8px">
+			<div :class="{spinner: true, active: processing}"></div>
+			<div class="divider"></div>
+			<span v-text="locale.$Version"></span>&nbsp;
+			<span v-text="info.version"></span>
+		</footer>
+	</div>
+
+	<script type="text/javascript">
+		(function () {
+			function isNewBrowser() {
+				if (typeof CSS === 'undefined') return false;
+				return CSS.supports && CSS.supports("display", "grid");
+			}
+
+			if (!isNewBrowser()) {
+				var appElem = document.getElementById("app");
+				appElem.parentElement.removeChild(appElem);
+				var nsd = document.createElement("div");
+				nsd.classList.add("not-supported");
+				nsd.innerText = "We're sorry, but this browser is not supported.";
+				document.body.appendChild(nsd);
+			}
+		})();
+	</script>
+
+	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
+	<script type="text/javascript">
+		$(PageScript)
+	</script>
+</body>
+</html>

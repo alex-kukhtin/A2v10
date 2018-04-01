@@ -13,7 +13,7 @@
 	color: @toolbar-txt-color;
 
 	.checkbox {
-		margin: 0 3px;
+		margin: 0 6px;
 	}
 
 	&.transparent {
@@ -73,12 +73,6 @@
 	.btn-tb:focus {
 	}
 
-	.btn-tb > i.ico {
-		display: inline-block;
-		margin-right: 2px;
-		color: @icon-color;
-	}
-
 	.a2-header {
 		margin: 0;
 	}
@@ -100,7 +94,7 @@
 
 		label {
 			align-self: center;
-			padding: 0 3px;
+			margin: 0 4px 0 0;
 			text-transform: lowercase;
 			font-size: 100%;
 			white-space: nowrap;
@@ -114,6 +108,16 @@
 			height: @tb-control-height;
 		}
 	}
+
+	.control-group + .control-group {
+		margin-left:6px;
+	}
+}
+
+.btn-tb > i.ico {
+	display: inline-block;
+	margin-right: 2px;
+	color: @icon-color;
 }
 
 .dropdown.show > .btn {

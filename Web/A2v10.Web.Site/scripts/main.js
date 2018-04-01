@@ -406,7 +406,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180329-7143*/
+/*20180330-7144*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -453,12 +453,24 @@ app.modules['std:url'] = function () {
 		if (utils.isDate(obj)) {
 			return utils.format(obj, "DateUrl");
 		} else if (utils.isObjectExact(obj)) {
-			if (!utils.isDefined(obj.$id)) {
+			if (obj.constructor.name === 'Object') {
+				if (!utils.isDefined(obj.Id))
+					console.error('Id is not defined for Filter object');
+				return '' + (obj.Id || '');
+			} else if (!utils.isDefined(obj.$id)) {
 				console.error(`$id is not defined for ${obj.constructor.name}`);
 			}
-			return ('' + obj.$id) || '0';
+			return '' + (obj.$id || '0');
 		}
 		return '' + obj;
+	}
+
+	function isEmptyForUrl(obj) {
+		if (!obj) return true;
+		let objUrl = toUrl(obj);
+		if (!objUrl) return true;
+		if (objUrl === '0') return true;
+		return false;
 	}
 
 	function makeQueryString(obj) {
@@ -469,7 +481,7 @@ app.modules['std:url'] = function () {
 
 		// skip special (starts with '_' or '$')
 		let query = Object.keys(obj)
-			.filter(k => !k.startsWith('_') && !k.startsWith('$') && !!obj[k])
+			.filter(k => !k.startsWith('_') && !k.startsWith('$') && !isEmptyForUrl(obj[k]))
 			.map(k => esc(k) + '=' + esc(toUrl(obj[k])))
 			.join('&');
 		return query ? '?' + query : '';
@@ -2320,99 +2332,100 @@ app.modules['std:popup'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180215-7116
+// 20180330-7144
 // components/control.js
 
 (function () {
 
-    const utils = require('std:utils');
+	const utils = require('std:utils');
 
-    const control = {
+	const control = {
 		props: {
 			label: String,
 			required: Boolean,
 			align: { type: String, default: 'left' },
 			description: String,
 			disabled: Boolean,
-            tabIndex: Number,
-            dataType: String,
-            validatorOptions: Object
-        },
-        computed: {
+			tabIndex: Number,
+			dataType: String,
+			validatorOptions: Object
+		},
+		computed: {
 			path() {
-                return this.item._path_ + '.' + this.prop;
-            },
-            pathToValidate() {
-                return this.itemToValidate._path_ + '.' + this.propToValidate;
-            },
-            modelValue() {
-                let val = this.item[this.prop];
-                if (this.dataType)
-                    return utils.format(val, this.dataType);
-                return val;
-            },
-            errors() {
-                if (!this.item) return null;
+				return this.item._path_ + '.' + this.prop;
+			},
+			pathToValidate() {
+				return this.itemToValidate._path_ + '.' + this.propToValidate;
+			},
+			modelValue() {
+				if (!this.item) return null;
+				let val = this.item[this.prop];
+				if (this.dataType)
+					return utils.format(val, this.dataType);
+				return val;
+			},
+			errors() {
+				if (!this.item) return null;
 				let root = this.item._root_;
 				if (!root) return null;
 				if (!root._validate_)
-                    return null;
-                let err;
-                if (this.itemToValidate)
-                    err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
-                else
-                    err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
-                return err;
-            },
-            inputClass() {
-                let cls = '';
-                if (this.align !== 'left')
-                    cls += 'text-' + this.align;
-                if (this.isNegative) cls += ' negative-red';
-                return cls;
-            },
-            isNegative() {
-                if (this.dataType === 'Number' || this.dataType === 'Currency')
-                    if (this.item && this.modelValue < 0)
-                        return true;
-                return false;
-            },
+					return null;
+				let err;
+				if (this.itemToValidate)
+					err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
+				else
+					err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
+				return err;
+			},
+			inputClass() {
+				let cls = '';
+				if (this.align !== 'left')
+					cls += 'text-' + this.align;
+				if (this.isNegative) cls += ' negative-red';
+				return cls;
+			},
+			isNegative() {
+				if (this.dataType === 'Number' || this.dataType === 'Currency')
+					if (this.item && this.modelValue < 0)
+						return true;
+				return false;
+			},
 			hasLabel() {
 				return !!this.label;
 			},
 			hasDescr() {
 				return !!this.description;
-            }
-        },
-        methods: {
-            valid() {
-                // method! no cache!
-                return !this.invalid();
-            },
-            invalid() {
-                // method! no cache!
-                let err = this.errors;
-                if (!err) return false;
-                return err.length > 0;
-            },
-            cssClass() {
-                // method! no cached!!!
-                let cls = 'control-group' + (this.invalid() ? ' invalid' : ' valid');
-                if (this.required) cls += ' required';
-                if (this.disabled) cls += ' disabled';
-                return cls;
-            },
-            deferUpdate() {
-                this.$children.forEach((val) => val.$forceUpdate());
-                this.$forceUpdate();
-            },
-            test() {
-                alert('from base control');
-            }
-        }
-    };
+			}
+		},
+		methods: {
+			valid() {
+				// method! no cache!
+				return !this.invalid();
+			},
+			invalid() {
+				// method! no cache!
+				let err = this.errors;
+				if (!err) return false;
+				return err.length > 0;
+			},
+			cssClass() {
+				// method! no cached!!!
+				let cls = 'control-group' + (this.invalid() ? ' invalid' : ' valid');
+				if (this.required) cls += ' required';
+				if (this.disabled) cls += ' disabled';
+				return cls;
+			},
+			deferUpdate() {
+				this.$children.forEach((val) => val.$forceUpdate());
+				this.$forceUpdate();
+			},
+			test() {
+				alert('from base control');
+			}
+		}
+	};
 
-    app.components['control'] = control;
+	app.components['control'] = control;
 
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -2855,7 +2868,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180209-7127
+// 20180330-7144
 // components/selector.js
 
 /* TODO:
@@ -3033,6 +3046,12 @@ Vue.component('validator-control', {
 				this.isOpen = false;
 				this.isOpenNew = false;
 			},
+			clear() {
+				this.item[this.prop].$empty();
+				this.query = '';
+				this.isOpen = false;
+				this.isOpenNew = false;
+			},
 			scrollIntoView() {
 				this.$nextTick(() => {
 					let pane = this.$refs['pane'];
@@ -3055,8 +3074,13 @@ Vue.component('validator-control', {
 				let text = this.query || '';
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
+				this.items = [];
 				this.isOpen = true;
 				this.isOpenNew = false;
+				if (text === '') {
+					this.clear();
+					return;
+				}
 				this.loading = true;
 				this.fetchData(text).then((result) => {
 					this.loading = false;
@@ -4233,7 +4257,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180319-7135
+// 20180330-7144
 // components/collectionview.js
 
 /*
@@ -4263,10 +4287,29 @@ TODO:
 		mi[propName] = value;
 	}
 
+	function makeNewQueryFunc(that) {
+		let nq = { dir: that.dir, order: that.order, offset: that.offset };
+		for (let x in that.filter) {
+			let fVal = that.filter[x];
+			if (utils.isObjectExact(fVal)) {
+				if (!('Id' in fVal)) {
+					console.error('The object in the Filter does not have Id property');
+				}
+				nq[x] = fVal.Id;
+			}
+			else if (fVal)
+				nq[x] = fVal;
+			else {
+				nq[x] = undefined;
+			}
+		}
+		return nq;
+	}
+
 	// client collection
 
 	Vue.component('collection-view', {
-		store: component('std:store'),
+		//store: component('std:store'),
 		template: `
 <div>
 	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
@@ -4374,16 +4417,7 @@ TODO:
 				this.localQuery.order = nq.order;
 			},
 			makeNewQuery() {
-				let nq = { dir: this.dir, order: this.order, offset: this.offset };
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
-				return nq;
+				return makeNewQueryFunc(this);
 			},
 			copyQueryToLocal(q) {
 				for (let x in q) {
@@ -4407,7 +4441,7 @@ TODO:
 
 	// server collection view
 	Vue.component('collection-view-server', {
-		store: component('std:store'),
+		//store: component('std:store'),
 		template: `
 <div>
 	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
@@ -4519,7 +4553,6 @@ TODO:
 		}
 	});
 
-
 	// server url collection view
 	Vue.component('collection-view-server-url', {
 		store: component('std:store'),
@@ -4535,7 +4568,8 @@ TODO:
 		},
 		data() {
 			return {
-				filter: this.initialFilter
+				filter: this.initialFilter,
+				lockChange: true
 			};
 		},
 		watch: {
@@ -4580,6 +4614,10 @@ TODO:
 			}
 		},
 		methods: {
+			commit(query) {
+				//console.dir(this.$root.$store);
+				this.$store.commit('setquery', query);
+			},
 			sortDir(order) {
 				return order === this.order ? this.dir : undefined;
 			},
@@ -4587,7 +4625,7 @@ TODO:
 				if (this.offset === offset)
 					return;
 				setModelInfoProp(this.ItemsSource, "Offset", offset);
-				this.$store.commit('setquery', { offset: offset });
+				this.commit({ offset: offset });
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
@@ -4599,26 +4637,19 @@ TODO:
 				}
 				if (!nq.order)
 					nq.dir = null;
-				this.$store.commit('setquery', nq);
+				this.commit(nq);
 			},
 			makeNewQuery() {
-				let nq = { dir: this.dir, order: this.order, offset: this.offset };
-				for (let x in this.filter) {
-					let fVal = this.filter[x];
-					if (fVal)
-						nq[x] = fVal;
-					else {
-						nq[x] = undefined;
-					}
-				}
-				return nq;
+				return makeNewQueryFunc(this);
 			},
 			filterChanged() {
+				if (this.lockChange) return;
 				// for server only
 				let nq = this.makeNewQuery();
 				nq.offset = 0;
 				if (!nq.order) nq.dir = undefined;
-				this.$store.commit('setquery', nq);
+				//console.warn('filter changed');
+				this.commit(nq);
 			}
 		},
 		created() {
@@ -4631,12 +4662,15 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
+			} else {
+				let q = this.$store.getters.query;
+				for (let x in this.filter) {
+					if (x in q) this.filter[x] = q[x];
+				}
 			}
-
-			let q = this.$store.getters.query;
-			for (let x in this.filter) {
-				if (x in q) this.filter[x] = q[x];
-			}
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
 			this.$on('sort', this.doSort);
 		}
 	});
@@ -6158,7 +6192,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180330-7144
 // controllers/base.js
 
 (function () {
@@ -6569,6 +6603,7 @@ Vue.directive('resize', {
 			$dialog(command, url, arg, query, opts) {
 				if (this.$isReadOnly(opts))
 					return;
+				const that = this;
 				function argIsNotAnArray() {
 					if (!utils.isArray(arg)) {
 						console.error(`$dialog.${command}. The argument is not an array`);
@@ -6581,6 +6616,16 @@ Vue.directive('resize', {
 						return true;
 					}
 				}
+
+				function simpleMerge(target, src) {
+					for (let p in target) {
+						if (p in src) 
+							target[p] = src[p];
+						else
+							target[p] = undefined;
+					}
+				}
+
 				function doDialog() {
 					// result always is raw data
 					switch (command) {
@@ -6592,7 +6637,13 @@ Vue.directive('resize', {
 								console.error(`$dialog.${command}. The argument is not an object`);
 								return;
 							}
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge)
+									arg.$merge(result);
+								else {
+									simpleMerge(arg, result);
+								}
+							});
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
 							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
@@ -6630,7 +6681,7 @@ Vue.directive('resize', {
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
 					// open in new window
-					window.open(url, "_blank");
+					window.open(url, '_blank');
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {

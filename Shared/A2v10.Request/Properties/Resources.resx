@@ -124,11 +124,35 @@
   <data name="aboutScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\aboutScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="confirmEMail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\confirmEMail.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\error.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="forgotPassword" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\forgotPassword.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="forgotPasswordScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\forgotPasswordScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="initLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\initLayout.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="layout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\layout.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="layoutAdmin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\layoutAdmin.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="locale_en" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\locale-en.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="locale_ru" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\locale-ru.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="locale_uk" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\locale-uk.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="login" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\login.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -145,11 +169,20 @@
   <data name="registerTenantScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\registerTenantScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="resetPassword" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\resetPassword.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="resetPasswordScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\resetPasswordScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="shell" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\shell.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="shellAdmin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\shellAdmin.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="simpleScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\simpleScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="stiReportViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\stiReportViewer.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

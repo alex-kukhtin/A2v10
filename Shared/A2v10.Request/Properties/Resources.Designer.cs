@@ -83,26 +83,30 @@ namespace A2v10.Request.Properties {
         ///
         ///(function () {
         ///
-        ///    &apos;use strict&apos;;
+        ///	&apos;use strict&apos;;
         ///
-        ///    const eventBus = require(&apos;std:eventBus&apos;);
+        ///	const eventBus = require(&apos;std:eventBus&apos;);
         ///
-        ///    const store = component(&apos;std:store&apos;);
-        ///    const documentTitle = component(&quot;std:doctitle&quot;);
+        ///	const store = component(&apos;std:store&apos;);
+        ///	const documentTitle = component(&quot;std:doctitle&quot;);
         ///
         ///
-        ///    const vm = new Vue({
-        ///        el: &quot;#$(PageGuid)&quot;,
-        ///        store: store,
-        ///        data: {
-        ///        },
-        ///        components: {
-        ///            &apos;a2-document-title&apos;: documentTitle
-        ///        },
-        ///        computed: {
-        ///        },
-        ///        methods: {
-        ///            $clos [rest of string was truncated]&quot;;.
+        ///	const vm = new Vue({
+        ///		el: &quot;#$(PageGuid)&quot;,
+        ///		store: store,
+        ///		data: {
+        ///		},
+        ///		components: {
+        ///			&apos;a2-document-title&apos;: documentTitle
+        ///		},
+        ///		computed: {
+        ///		},
+        ///		methods: {
+        ///			$close() {
+        ///				this.$store.commit(&quot;close&quot;);
+        ///			},
+        ///			$requery() {
+        ///				eventBus.$emit(&apos;re [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string aboutScript {
             get {
@@ -111,19 +115,140 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string confirmEMail {
+            get {
+                return ResourceManager.GetString("confirmEMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string error {
+            get {
+                return ResourceManager.GetString("error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string forgotPassword {
+            get {
+                return ResourceManager.GetString("forgotPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const token = &apos;$(Token)&apos;;
+        ///
+        ///
+        ///	$(Utils)
+        ///	$(Locale)
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			email: &apos;&apos;,
+        ///			processing: false,
+        ///			info: $(PageData),
+        ///			submitted: false,
+        ///			serverError: &apos;&apos;,
+        ///			emailError: &apos;&apos;,
+        ///			showConfirm: false,
+        ///			confirmText: &apos;&apos;
+        ///		},
+        ///		computed: {
+        ///			valid() {
+        ///				if (!this.submitted) return true;
+        ///				return this.validEmail;
+        ///			},
+        ///			validEmail() {
+        ///				if (!this.submitted) r [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string forgotPasswordScript {
+            get {
+                return ResourceManager.GetString("forgotPasswordScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
+        ///&lt;html lang=&quot;$(Lang)&quot;&gt;
         ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
-        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel [rest of string was truncated]&quot;;.
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
+        ///	&lt;title&gt;A2:Web&lt;/title&gt;
+        ///	&lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///	&lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///	&lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-i [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string initLayout {
+            get {
+                return ResourceManager.GetString("initLayout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;$(Locale)&quot;&gt;
+        ///&lt;head&gt;
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;title&gt;&lt;/title&gt;
+        ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(B [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layout {
             get {
@@ -133,18 +258,18 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
+        ///&lt;html lang=&quot;$(Locale)&quot;&gt;
         ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///    &lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
-        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel [rest of string was truncated]&quot;;.
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;A2:Web&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;title&gt;&lt;/title&gt;
+        ///	&lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///	&lt;link rel=&quot;shortcut ic [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layoutAdmin {
             get {
@@ -153,20 +278,110 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
-        ///    &lt;title&gt;A2:Web&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        ///&lt;/head&gt;
-        ///&lt;body&gt;
-        ///    &lt;div id= [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20180401-7145
+        ///// locale-en.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const locale = {
+        ///		$Locale: &apos;en-US&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Cancel&apos;,
+        ///		$Login: &apos;Log in&apos;,
+        ///		$Confirm: &apos;Confirm&apos;,
+        ///		$LoginPrompt: &apos;Login to system&apos;,
+        ///		$LoginLink: &apos;Link to login&apos;,
+        ///		$RegisterPrompt: &apos;Register in the system.&apos;,
+        ///		$ForgotPrompt: &apos;Reset password&apos;,
+        ///		$Version: &apos;Version&apos;,
+        ///		$Password: &apos;Password&apos;,
+        ///		$RememberCredentials: &apos;Remember my credentials&apos;,
+        ///	 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string locale_en {
+            get {
+                return ResourceManager.GetString("locale_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20180401-7145
+        ///// locale-ru.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const locale = {
+        ///		$Locale: &apos;ru-RU&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Отмена&apos;,
+        ///		$Login: &apos;Войти&apos;,
+        ///		$Confirm: &apos;Подтверждение&apos;,
+        ///		$LoginPrompt: &apos;Вход в систему&apos;,
+        ///		$LoginLink: &apos;На страницу входа&apos;,
+        ///		$RegisterPrompt: &apos;Регистрация в системе&apos;,
+        ///		$ForgotPrompt: &apos;Восстановление пароля&apos;,
+        ///		$Version: &apos;Версия&apos;,
+        ///		$Password: &apos;Пароль&apos;,
+        ///		$RememberCredentials: &apos;Запромнить учетные [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string locale_ru {
+            get {
+                return ResourceManager.GetString("locale_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20180401-7145
+        ///// locale-uk.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const locale = {
+        ///		$Locale: &apos;uk-UA&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Скасувати&apos;,
+        ///		$Login: &apos;Увійти&apos;,
+        ///		$Confirm: &apos;Підтвердження&apos;,
+        ///		$LoginPrompt: &apos;Вхід в систему&apos;,
+        ///		$LoginLink: &apos;До сторінки входу&apos;,
+        ///		$RegisterPrompt: &apos;Реєстрація в системі&apos;,
+        ///		$ForgotPrompt: &apos;Відновлення паролю&apos;,
+        ///		$Version: &apos;Версія&apos;,
+        ///		$Password: &apos;Пароль&apos;,
+        ///		$RememberCredentials: &apos;Запам\&apos;ятати облік [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string locale_uk {
+            get {
+                return ResourceManager.GetString("locale_uk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$LoginPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;form&gt;
+        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:auto 1fr; width:400px&quot;&gt;
+        ///			&lt;label style=&quot;grid-row:1; grid-column:1&quot; class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
+        ///	 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string login {
             get {
@@ -180,17 +395,31 @@ namespace A2v10.Request.Properties {
         ///(function () {
         ///
         ///
-        ///    Vue.directive(&apos;focus&apos;, {
-        ///        bind(el, binding, vnode) {
+        ///	const token = &apos;$(Token)&apos;;
         ///
-        ///            el.addEventListener(&quot;focus&quot;, function (event) {
-        ///                event.target.parentElement.classList.add(&apos;focus&apos;);
-        ///            }, false);
         ///
-        ///            el.addEventListener(&quot;blur&quot;, function (event) {
-        ///                let t = event.target;
-        ///                t._selectDone = false;
-        ///                event.target.parentElement.classList.remove(&apos;focus&apos; [rest of string was truncated]&quot;;.
+        ///	$(Utils)
+        ///	$(Locale)
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			email: &apos;&apos;,
+        ///			password: &apos;&apos;,
+        ///			rememberMe: false,
+        ///			processing: false,
+        ///			info: $(PageData),
+        ///			submitted: false,
+        ///			serverError: &apos;&apos;,
+        ///			emailError: &apos;&apos;
+        ///		},
+        ///		computed: {
+        ///			valid() {
+        ///				if (!this.submitted) return true;
+        ///				return this.validEmail &amp;&amp; this.validPassword;
+        ///			},
+        ///			validEmail() {
+        ///				if ( [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string loginScript {
             get {
@@ -201,18 +430,22 @@ namespace A2v10.Request.Properties {
         /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
-        ///    Vue.directive(&apos;focus&apos;, {
-        ///        bind(el, binding, vnode) {
+        ///Vue.directive(&apos;focus&apos;, {
+        ///	bind(el, binding, vnode) {
         ///
-        ///            el.addEventListener(&quot;focus&quot;, function (event) {
-        ///                event.target.parentElement.classList.add(&apos;focus&apos;);
-        ///            }, false);
+        ///		el.addEventListener(&quot;focus&quot;, function (event) {
+        ///			event.target.parentElement.classList.add(&apos;focus&apos;);
+        ///		}, false);
         ///
-        ///            el.addEventListener(&quot;blur&quot;, function (event) {
-        ///                let t = event.target;
-        ///                t._selectDone = false;
-        ///                event.target.parentElement.classList.remove(&apos;focus&apos;);
-        ///            }, f [rest of string was truncated]&quot;;.
+        ///		el.addEventListener(&quot;blur&quot;, function (event) {
+        ///			let t = event.target;
+        ///			t._selectDone = false;
+        ///			event.target.parentElement.classList.remove(&apos;focus&apos;);
+        ///		}, false);
+        ///
+        ///		el.addEventListener(&quot;click&quot;, function (event) {
+        ///			let t = event.target;
+        ///			if (t._select [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pageUtils {
             get {
@@ -221,20 +454,15 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
-        ///    &lt;title&gt;A2:Web&lt;/title&gt;
-        ///    &lt;link href=&quot;/css/site.min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        ///    &lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
-        ///&lt;/head&gt;
-        ///&lt;body&gt;
-        ///    &lt;div id= [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$RegisterPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;form&gt;
+        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:auto 1fr; width:400px&quot;&gt;
+        ///			&lt;label style=&quot;grid-row:1; grid-column:1&quot; class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenant {
             get {
@@ -248,17 +476,32 @@ namespace A2v10.Request.Properties {
         ///(function () {
         ///
         ///
-        ///    Vue.directive(&apos;focus&apos;, {
-        ///        bind(el, binding, vnode) {
+        ///	const token = &apos;$(Token)&apos;;
         ///
-        ///            el.addEventListener(&quot;focus&quot;, function (event) {
-        ///                event.target.parentElement.classList.add(&apos;focus&apos;);
-        ///            }, false);
+        ///	$(Utils)
+        ///	$(Locale)
         ///
-        ///            el.addEventListener(&quot;blur&quot;, function (event) {
-        ///                let t = event.target;
-        ///                t._selectDone = false;
-        ///                event.target.parentElement.classList.remove(&apos;focus&apos; [rest of string was truncated]&quot;;.
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			email: &apos;&apos;,
+        ///			name: &apos;&apos;,
+        ///			phone: &apos;&apos;,
+        ///			password: &apos;&apos;,
+        ///			confirm: &apos;&apos;,
+        ///			processing: false,
+        ///			info: $(PageData),
+        ///			submitted: false,
+        ///			serverError: &apos;&apos;,
+        ///			emailError: &apos;&apos;
+        ///		},
+        ///		computed: {
+        ///			locale() {
+        ///				return window.$$locale;
+        ///			},
+        ///			valid() {
+        ///				if (!this.submitted) return true;
+        ///				return th [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenantScript {
             get {
@@ -267,24 +510,86 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /*20171010-7043*/
+        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ResetPasswordTitle&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;form&gt;
+        ///		&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///			&lt;p v-text=&quot;locale.$ResetPasswordSuccess&quot;&gt;
+        ///			&lt;/p&gt;
+        ///			&lt;a tabindex=&quot;1&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///		&lt;/div&gt;
+        ///		&lt;div  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string resetPassword {
+            get {
+                return ResourceManager.GetString("resetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
         ///
         ///(function () {
         ///
-        ///    const Shell = component(&apos;std:shellController&apos;);
+        ///
+        ///	const token = &apos;$(Token)&apos;;
+        ///
+        ///	$(Utils)
+        ///	$(Locale)
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			email: &apos;&apos;,
+        ///			password: &apos;&apos;,
+        ///			confirm: &apos;&apos;,
+        ///			processing: false,
+        ///			info: $(PageData),
+        ///			serverInfo: $(ServerInfo),
+        ///			submitted: false,
+        ///			serverError: &apos;&apos;,
+        ///			emailError: &apos;&apos;,
+        ///			showConfirm: false
+        ///		},
+        ///		computed: {
+        ///			locale() {
+        ///				return window.$$locale;
+        ///			},
+        ///			valid() {
+        ///				if (!this.submitted) r [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string resetPasswordScript {
+            get {
+                return ResourceManager.GetString("resetPasswordScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ////*20180317-7132*/
+        ///
+        ///(function () {
+        ///
+        ///	const Shell = component(&apos;std:shellController&apos;);
         ///
         ///	const menu = $(Menu);
         ///
-        ///    const shell = new Shell({
-        ///        el: &apos;#shell&apos;,
-        ///        data: {
-        ///            version: &apos;$(AppVersion)&apos;,
+        ///	const shell = new Shell({
+        ///		el: &apos;#shell&apos;,
+        ///		data: {
+        ///			version: &apos;$(AppVersion)&apos;,
         ///			menu: menu.Menu ? menu.Menu[0].Menu : null,
+        ///			newMenu: menu.NewMenu,
         ///			title: menu.SysParams.AppTitle,
-        ///            subtitle: menu.SysParams.AppSubTitle,
-        ///            userIsAdmin: $(Admin)
-        ///        }
-        ///    });
+        ///			subtitle: menu.SysParams.AppSubTitle,
+        ///			sideBarMode: menu.SysParams.SideBarMode,
+        ///			userIsAdmin: $(Admin)
+        ///		}
+        ///	});
         ///
         ///	window.$rootUrl = &apos;&apos;;
         ///
@@ -322,6 +627,32 @@ namespace A2v10.Request.Properties {
         internal static string shellAdmin {
             get {
                 return ResourceManager.GetString("shellAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///(function () {
+        ///
+        ///	$(Locale)
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			info: $(PageData),
+        ///		},
+        ///		computed: {
+        ///			locale() {
+        ///				return window.$$locale;
+        ///			}
+        ///		}
+        ///	});
+        ///})();.
+        /// </summary>
+        internal static string simpleScript {
+            get {
+                return ResourceManager.GetString("simpleScript", resourceCulture);
             }
         }
         

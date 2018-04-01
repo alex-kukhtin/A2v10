@@ -31,7 +31,6 @@ namespace A2v10.Web.Mvc.Models
 	public class ForgotViewModel
 	{
 		[Required]
-		[Display(Name = "Email")]
 		public string Email { get; set; }
 	}
 
@@ -60,22 +59,17 @@ namespace A2v10.Web.Mvc.Models
 
 	public class RegisterViewModel
 	{
-		[Required]
 		[Display(Name = "Name")]
 		public string Name { get; set; }
 
-		[Display(Name = "Email")]
 		[EmailAddress]
 		public string Email { get; set; }
 
 		[Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
-		[Display(Name = "Password")]
 		public string Password { get; set; }
 
 		[DataType(DataType.Password)]
-		[Display(Name = "Confirm password")]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 		public string ConfirmPassword { get; set; }
 	}
@@ -83,29 +77,22 @@ namespace A2v10.Web.Mvc.Models
 	public class ResetPasswordViewModel
 	{
 		[Required]
-		[EmailAddress]
-		[Display(Name = "Email")]
-		public string Email { get; set; }
+		public string Name { get; set; }
 
 		[Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
-		[Display(Name = "Password")]
 		public string Password { get; set; }
 
 		[DataType(DataType.Password)]
-		[Display(Name = "Confirm password")]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-		public string ConfirmPassword { get; set; }
+		public String ConfirmPassword { get; set; }
 
-		public string Code { get; set; }
+		public String Code { get; set; }
 	}
 
 	public class ForgotPasswordViewModel
 	{
 		[Required]
-		[EmailAddress]
-		[Display(Name = "Email")]
-		public string Email { get; set; }
+		public String Name { get; set; }
 	}
 }

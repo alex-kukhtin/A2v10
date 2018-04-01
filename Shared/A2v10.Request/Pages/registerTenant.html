@@ -1,94 +1,66 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="google" content="notranslate" />
-    <meta name="helpUrl" content="$(HelpUrl)" />
-    <title>A2:Web</title>
-    <link href="/css/site.min.css?v=$(Build)" rel="stylesheet" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-</head>
-<body>
-    <div id="app" class="shell" v-cloak>
-        <header class="header">
-            <div class="h-block">
-                <a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
-                <span class="app-subtitle" v-text="info.subtitle"></span>
-            </div>
-            <div class="aligner"></div>
-        </header>
-        <div class="main-view">
-            <div class="load-indicator" v-show="processing"></div>
-            <div class="content-view full-view" style="margin:8px;overflow:auto">
-                <h4 class="a2-header">Регистрация в системе</h4>
-                <hr style="margin-top:1rem" />
-                <div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
-                    <span class="error" v-text="serverError"></span>
-                </div>
-                <div class="grid" style="grid-template-columns:auto 1fr; width:400px">
-                    <label style="grid-row:1; grid-column:1" class="a2-label required text-right">E-mail:</label>
-                    <div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
-                        <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="email" tabindex="1" />
-                            <div class="validator">
-                                <span class="error">недопустимый e-mail</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label style="grid-row:2; grid-column:1" class="a2-label required text-right">Имя:</label>
-                    <div class="control-group" style="grid-row:2; grid-column:2" :class="{invalid: !validName}">
-                        <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="name" tabindex="2" />
-                            <div class="validator">
-                                <span class="error">введите имя</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label style="grid-row:3; grid-column:1" class="a2-label required text-right">Телефон:</label>
-                    <div class="control-group" style="grid-row:3; grid-column:2" :class="{invalid: !validPhone}">
-                        <div class="input-group">
-                            <input v-focus class="control" type="text" v-model="phone" tabindex="3" />
-                            <div class="validator">
-                                <span class="error">введите номер телефона</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label style="grid-row:4; grid-column:1" class="a2-label required text-right">Пароль:</label>
-                    <div class="control-group" style="grid-row:4;grid-column:2" :class="{invalid: !validPassword}">
-                        <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="password" tabindex="4" />
-                            <div class="validator">
-                                <span class="error">введите пароль</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label style="grid-row:5; grid-column:1" class="a2-label required text-right">Подтверждение:</label>
-                    <div class="control-group" style="grid-row:5; grid-column:2" :class="{invalid: !validConfirm}">
-                        <div class="input-group">
-                            <input class="control" v-focus type="password" v-model="confirm" tabindex="5" title="Для подтверждения введите пароль еще раз"/>
-                            <div class="validator">
-                                <span class="error">пароль и подтверждение не совпадают</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="grid-row:6;grid-column:2">
-                        <button @click.stop.prevent="submit" tabindex="6" class="btn btn-default">Регистрация</button>
-                        <a tabindex="7" href="/" class="a2-hyperlink" style="margin-left:20px">Вход в систему</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <footer class="footer">
-            <div :class="{spinner: true, active: processing}"></div>
-            version: <span v-text="info.version"></span>
-        </footer>
-    </div>
-    <script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
-    <script type="text/javascript">
-        $(RegisterScript)
-    </script>
-</body>
-</html>
+﻿<div class="content-view full-view" style="margin:8px;overflow:auto">
+	<h4 class="a2-header" v-text="locale.$RegisterPrompt"></h4>
+	<hr style="margin-top:1rem" />
+	<div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
+		<span class="error" v-text="serverError"></span>
+	</div>
+	<form>
+		<div v-if="showConfirm">
+			<p v-text="confirmRegisterText"></p>
+			<p v-text="locale.$CheckEMail"></p>
+			<a tabindex="3" href="/" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
+		</div>
+		<div v-else class="grid" style="grid-template-columns:auto 1fr; width:400px">
+			<label style="grid-row:1; grid-column:1" class="a2-label required text-right" v-text="locale.$Email"></label>
+			<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
+				<div class="input-group">
+					<input v-focus class="control" type="text" v-model="email" tabindex="1" autocomplete="email"/>
+					<div class="validator">
+						<span class="error" v-text="emailError"></span>
+					</div>
+				</div>
+			</div>
+			<label style="grid-row:2; grid-column:1" class="a2-label required text-right" v-text="locale.$Name"></label>
+			<div class="control-group" style="grid-row:2; grid-column:2" :class="{invalid: !validName}">
+				<div class="input-group">
+					<input v-focus class="control" type="text" v-model="name" tabindex="2" autocomplete="off"/>
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterName"></span>
+					</div>
+				</div>
+			</div>
+			<label style="grid-row:3; grid-column:1" class="a2-label required text-right" v-text="locale.$Phone"></label>
+			<div class="control-group" style="grid-row:3; grid-column:2" :class="{invalid: !validPhone}">
+				<div class="input-group">
+					<input v-focus class="control" type="text" v-model="phone" tabindex="3" autocomplete="tel"/>
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterPhone"></span>
+					</div>
+				</div>
+			</div>
+			<label style="grid-row:4; grid-column:1" class="a2-label required text-right" v-text="locale.$Password"></label>
+			<div class="control-group" style="grid-row:4;grid-column:2" :class="{invalid: !validPassword}">
+				<div class="input-group">
+					<input class="control" v-focus type="password" v-model="password" tabindex="4" autocomplete="off"/>
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterPassword"></span>
+					</div>
+				</div>
+			</div>
+			<label style="grid-row:5; grid-column:1" class="a2-label required text-right" v-text="locale.$Confirm"></label>
+			<div class="control-group" style="grid-row:5; grid-column:2" :class="{invalid: !validConfirm}">
+				<div class="input-group">
+					<input class="control" v-focus type="password" v-model="confirm" autocomplete="off"
+						   tabindex="5" :title="locale.$PasswordTip" />
+					<div class="validator">
+						<span class="error" v-text="locale.$MatchError"></span>
+					</div>
+				</div>
+			</div>
+			<div style="grid-row:6;grid-column:2">
+				<button @click.stop.prevent="submit" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
+				<a tabindex="7" href="/" class="a2-hyperlink" style="margin-left:10px" v-text="locale.$LoginLink"></a>
+			</div>
+		</div>
+	</form>
+</div>

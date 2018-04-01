@@ -10,133 +10,132 @@ using A2v10.Infrastructure;
 namespace A2v10.Web.Mvc.Configuration
 {
 
-    class LocaleMapItem
-    {
-        public IDictionary<String, String> Map { get; }
-        public Boolean Loaded { get; set; }
+	class LocaleMapItem
+	{
+		public IDictionary<String, String> Map { get; }
+		public Boolean Loaded { get; set; }
 
-        public LocaleMapItem()
-        {
-            Map = new Dictionary<String, String>();
-        }
-    }
+		public LocaleMapItem()
+		{
+			Map = new Dictionary<String, String>();
+		}
+	}
 
-    public class WebLocalizer : BaseLocalizer, IDataLocalizer
-    {
-        private IApplicationHost _host;
+	public class WebLocalizer : BaseLocalizer, IDataLocalizer
+	{
+		private IApplicationHost _host;
 
-        public WebLocalizer(IApplicationHost host)
-        {
-            _host = host;
-        }
+		public WebLocalizer(IApplicationHost host)
+		{
+			_host = host;
+		}
 
-        static IDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
-        static FileSystemWatcher _watcher_system;
-        static FileSystemWatcher _watcher_app;
+		static IDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
+		static FileSystemWatcher _watcher_system;
+		static FileSystemWatcher _watcher_app;
 
-        protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
-        {
-            var map = GetCurrentMap(locale);
-            if (map.Loaded)
-                return map.Map;
+		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
+		{
+			var map = GetCurrentMap(locale);
+			if (map.Loaded)
+				return map.Map;
 
-            foreach (var path in GetLocalizerFilePath(locale))
-            {
-                var lines = File.ReadAllLines(path);
-                foreach (var line in lines)
-                {
-                    if (!String.IsNullOrWhiteSpace(line))
-                    {
-                        if (line.StartsWith(";"))
-                            continue;
-                        var split = line.Split('=');
-                        if (split.Length == 2)
-                        {
-                            var key = split[0].Trim();
-                            var val = split[1].Trim();
-                            String mapVal;
-                            if (map.Map.TryGetValue(key, out mapVal))
-                            {
-                                map.Map[key] = val;
-                            }
-                            else
-                            {
-                                map.Map.Add(key, val);
-                            }
-                        }
-                    }
-                }
-            }
-            map.Loaded = true;
-            return map.Map;
-        }
+			foreach (var path in GetLocalizerFilePath(locale))
+			{
+				var lines = File.ReadAllLines(path);
+				foreach (var line in lines)
+				{
+					if (!String.IsNullOrWhiteSpace(line))
+					{
+						if (line.StartsWith(";"))
+							continue;
+						int pos = line.IndexOf('=');
+						if (pos != -1)
+						{
+							var key = line.Substring(0, pos);
+							var val = line.Substring(pos + 1);
+							if (map.Map.TryGetValue(key, out String mapVal))
+								map.Map[key] = val;
+							else
+								map.Map.Add(key, val);
+						}
+						else
+						{
+							throw new InvalidDataException($"Invalid dictionary string '{line}'");
+						}
+					}
+				}
+			}
+			map.Loaded = true;
+			return map.Map;
+		}
 
-        LocaleMapItem GetCurrentMap(String locale)
-        {
-            LocaleMapItem result;
-            if (_maps.TryGetValue(locale, out result))
-            {
-                return result;
-            }
-            result = new LocaleMapItem();
-            _maps.Add(locale, result);
-            return result;
-        }
+		LocaleMapItem GetCurrentMap(String locale)
+		{
+			LocaleMapItem result;
+			if (_maps.TryGetValue(locale, out result))
+			{
+				return result;
+			}
+			result = new LocaleMapItem();
+			_maps.Add(locale, result);
+			return result;
+		}
 
-        void CreateWatchers(String dirPath, String appPath)
-        {
-            if (_watcher_system != null)
-                return;
-            if (!_host.IsDebugConfiguration)
-                return;
-            _watcher_system = new FileSystemWatcher(dirPath, "*.txt");
-            _watcher_system.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
-            _watcher_system.Changed += _watcher_Changed;
-            _watcher_system.EnableRaisingEvents = true;
+		void CreateWatchers(String dirPath, String appPath)
+		{
+			if (_watcher_system != null)
+				return;
+			if (!_host.IsDebugConfiguration)
+				return;
+			_watcher_system = new FileSystemWatcher(dirPath, "*.txt");
+			_watcher_system.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+			_watcher_system.Changed += _watcher_Changed;
+			_watcher_system.EnableRaisingEvents = true;
 
-            _watcher_app = new FileSystemWatcher(appPath, "*.txt");
-            _watcher_app.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
-            _watcher_app.Changed += _watcher_Changed;
-            _watcher_app.EnableRaisingEvents = true;
-        }
+			_watcher_app = new FileSystemWatcher(appPath, "*.txt");
+			_watcher_app.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+			_watcher_app.Changed += _watcher_Changed;
+			_watcher_app.EnableRaisingEvents = true;
+		}
 
-        private void _watcher_Changed(Object sender, FileSystemEventArgs e)
-        {
-            _maps.Clear();
-        }
+		private void _watcher_Changed(Object sender, FileSystemEventArgs e)
+		{
+			_maps.Clear();
+		}
 
-        IEnumerable<String> GetLocalizerFilePath(String locale)
-        {
-            // locale may be "uk_UA"
-            var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-            var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "Localization"));
-            CreateWatchers(dirPath, appPath);
-            foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-            {
-                yield return s;
-            }
-            foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-            {
-                yield return s;
-            }
-            // simple locale: uk
-            if (locale.Length > 2)
-            {
-                locale = locale.Substring(0, 2);
-            }
-            foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-            {
-                yield return s;
-            }
-            foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-            {
-                yield return s;
-            }
-        }
+		IEnumerable<String> GetLocalizerFilePath(String locale)
+		{
+			// locale may be "uk_UA"
+			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
+			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "Localization"));
+			CreateWatchers(dirPath, appPath);
+			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+			{
+				yield return s;
+			}
+			foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+			{
+				yield return s;
+			}
+			// simple locale: uk
+			if (locale.Length > 2)
+			{
+				locale = locale.Substring(0, 2);
+			}
+			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+			{
+				yield return s;
+			}
+			foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+			{
+				yield return s;
+			}
+		}
 
-        String IDataLocalizer.Localize(String content)
-        {
-            return Localize(null, content, true);
-        }
-    }
+		String IDataLocalizer.Localize(String content)
+		{
+			return Localize(null, content, true);
+		}
+	}
 }

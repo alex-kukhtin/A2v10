@@ -139,36 +139,6 @@
     <Compile Include="Start\Startup.Services.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />
-    <Compile Include="Views\Account\ConfirmEmail.generated.cs">
-      <DependentUpon>ConfirmEmail.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ForgotPassword.generated.cs">
-      <DependentUpon>ForgotPassword.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ForgotPasswordConfirmation.generated.cs">
-      <DependentUpon>ForgotPasswordConfirmation.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\Register.generated.cs">
-      <DependentUpon>Register.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ResetPassword.generated.cs">
-      <DependentUpon>ResetPassword.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\ResetPasswordConfirmation.generated.cs">
-      <DependentUpon>ResetPasswordConfirmation.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Views\Account\SendCode.generated.cs">
       <DependentUpon>SendCode.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -243,30 +213,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ConfirmEmail.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\ForgotPassword.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ForgotPassword.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ForgotPasswordConfirmation.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\Register.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Register.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\ResetPassword.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ResetPassword.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ResetPasswordConfirmation.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Account\SendCode.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>SendCode.generated.cs</LastGenOutput>

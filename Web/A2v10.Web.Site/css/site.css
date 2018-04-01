@@ -1495,7 +1495,7 @@ pre.a2-code {
   opacity: 0.65;
   cursor: not-allowed;
 }
-.btn.btn-icon .ico {
+.btn.btn-icon > .ico {
   margin-right: 0;
 }
 .btn:active {
@@ -2108,7 +2108,7 @@ table.data-grid > tbody > tr.bold td {
   color: #555;
 }
 .toolbar .checkbox {
-  margin: 0 3px;
+  margin: 0 6px;
 }
 .toolbar.transparent {
   background-color: transparent;
@@ -2153,11 +2153,6 @@ table.data-grid > tbody > tr.bold td {
   background-color: transparent;
   border-color: transparent;
 }
-.toolbar .btn-tb > i.ico {
-  display: inline-block;
-  margin-right: 2px;
-  color: #333;
-}
 .toolbar .a2-header {
   margin: 0;
 }
@@ -2177,7 +2172,7 @@ table.data-grid > tbody > tr.bold td {
 }
 .toolbar > .control-group label {
   align-self: center;
-  padding: 0 3px;
+  margin: 0 4px 0 0;
   text-transform: lowercase;
   font-size: 100%;
   white-space: nowrap;
@@ -2188,6 +2183,14 @@ table.data-grid > tbody > tr.bold td {
 .toolbar > .control-group select,
 .toolbar > .control-group input {
   height: 1.65rem;
+}
+.toolbar .control-group + .control-group {
+  margin-left: 6px;
+}
+.btn-tb > i.ico {
+  display: inline-block;
+  margin-right: 2px;
+  color: #333;
 }
 .dropdown.show > .btn {
   background-color: #eaf0ff;

@@ -22,7 +22,7 @@ namespace A2v10.Web.Mvc.Identity
 		public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)
 		{
 			IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
-            IApplicationHost host = ServiceLocator.Current.GetService<IApplicationHost>();
+			IApplicationHost host = ServiceLocator.Current.GetService<IApplicationHost>();
 			AppUserStore store = new AppUserStore(dbContext, host);
 			AppUserManager manager = new AppUserManager(store);
 			manager.Construct(options);
@@ -58,7 +58,7 @@ namespace A2v10.Web.Mvc.Identity
 			DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            /*
+			/*
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
@@ -67,14 +67,14 @@ namespace A2v10.Web.Mvc.Identity
             });
             manager.SmsService = new SmsService();
             */
-            RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<AppUser, Int64>
-            {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is {0}"
-            });
-            EmailService = new EmailService();
+			RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<AppUser, Int64>
+			{
+				Subject = "Security Code",
+				BodyFormat = "Your security code is {0}"
+			});
+			EmailService = new EmailService();
 
-            var dataProtectionProvider = options.DataProtectionProvider;
+			var dataProtectionProvider = options.DataProtectionProvider;
 			if (dataProtectionProvider != null)
 			{
 				UserTokenProvider =

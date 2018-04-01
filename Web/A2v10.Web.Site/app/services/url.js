@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180329-7143*/
+/*20180330-7144*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -47,12 +47,24 @@ app.modules['std:url'] = function () {
 		if (utils.isDate(obj)) {
 			return utils.format(obj, "DateUrl");
 		} else if (utils.isObjectExact(obj)) {
-			if (!utils.isDefined(obj.$id)) {
+			if (obj.constructor.name === 'Object') {
+				if (!utils.isDefined(obj.Id))
+					console.error('Id is not defined for Filter object');
+				return '' + (obj.Id || '');
+			} else if (!utils.isDefined(obj.$id)) {
 				console.error(`$id is not defined for ${obj.constructor.name}`);
 			}
-			return ('' + obj.$id) || '0';
+			return '' + (obj.$id || '0');
 		}
 		return '' + obj;
+	}
+
+	function isEmptyForUrl(obj) {
+		if (!obj) return true;
+		let objUrl = toUrl(obj);
+		if (!objUrl) return true;
+		if (objUrl === '0') return true;
+		return false;
 	}
 
 	function makeQueryString(obj) {
@@ -63,7 +75,7 @@ app.modules['std:url'] = function () {
 
 		// skip special (starts with '_' or '$')
 		let query = Object.keys(obj)
-			.filter(k => !k.startsWith('_') && !k.startsWith('$') && !!obj[k])
+			.filter(k => !k.startsWith('_') && !k.startsWith('$') && !isEmptyForUrl(obj[k]))
 			.map(k => esc(k) + '=' + esc(toUrl(obj[k])))
 			.join('&');
 		return query ? '?' + query : '';
