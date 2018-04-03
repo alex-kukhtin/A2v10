@@ -182,7 +182,7 @@ namespace A2v10.Request
 			{
 				if (_parent == null)
 					throw new ArgumentNullException(nameof(_parent));
-				if (schema == null)
+				if (source == null)
 					return _parent.source;
 				return source;
 			}

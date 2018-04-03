@@ -85,6 +85,7 @@
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\directives\mask.js" />
     <Content Include="app\directives\resize.js" />
+    <Content Include="app\localization\locale-ru.js" />
     <Content Include="app\localization\locale-uk.js" />
     <Content Include="app\platform\polyfills.js" />
     <Content Include="app\platform\routex.js" />
@@ -134,6 +135,7 @@
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />
     <Content Include="scripts\jasmine\jasmine.js" />
+    <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
     <Content Include="TestPages\checkbox.html" />

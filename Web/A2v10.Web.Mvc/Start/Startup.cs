@@ -11,7 +11,8 @@ namespace A2v10.Web.Mvc.Start
 		public void Configuration(IAppBuilder app)
 		{
 			ConfigureAuth(app);
-            StartServices();
+			StartServices();
+			SetLicenses();
 		}
 	}
 }

@@ -32,25 +32,30 @@
   <ItemGroup>
     <Reference Include="Stimulsoft.Base, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Base.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Base.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report.Mvc, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.Mvc.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.Mvc.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report.Web, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.Web.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.Web.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReportEngine.cs" />
     <Compile Include="StiReportExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

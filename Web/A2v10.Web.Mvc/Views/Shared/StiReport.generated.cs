@@ -42,6 +42,12 @@ namespace ASP
     #line default
     #line hidden
     
+    #line 3 "..\..\Views\Shared\StiReport.cshtml"
+    using Stimulsoft.Report.Web;
+    
+    #line default
+    #line hidden
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "2.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/StiReport.cshtml")]
     public partial class _Views_Shared_StiReport_cshtml : System.Web.Mvc.WebViewPage<dynamic>
@@ -52,95 +58,100 @@ namespace ASP
         public override void Execute()
         {
             
-            #line 3 "..\..\Views\Shared\StiReport.cshtml"
+            #line 4 "..\..\Views\Shared\StiReport.cshtml"
   
-    Layout = null;
-    String locale = String.IsNullOrEmpty(ViewBag.Lang) ? "uk" : ViewBag.Lang;
-    String localeFile = $"~/Localization/{locale}.xml";
+	Layout = null;
+	String locale = String.IsNullOrEmpty(ViewBag.Lang) ? "uk" : ViewBag.Lang;
+	String localeFile = $"~/Localization/{locale}.xml";
 
             
             #line default
             #line hidden
 WriteLiteral("\r\n<!DOCTYPE html>\r\n<html");
 
-WriteLiteral(" lang=\"ru\"");
+WriteAttribute("lang", Tuple.Create(" lang=\"", 261), Tuple.Create("\"", 281)
+            
+            #line 10 "..\..\Views\Shared\StiReport.cshtml"
+, Tuple.Create(Tuple.Create("", 268), Tuple.Create<System.Object, System.Int32>(ViewBag.Lang
+            
+            #line default
+            #line hidden
+, 268), false)
+);
 
-WriteLiteral(">\r\n<head>\r\n    <meta");
+WriteLiteral(">\r\n<head>\r\n\t<meta");
 
 WriteLiteral(" charset=\"utf-8\"");
 
-WriteLiteral(" />\r\n    <meta");
+WriteLiteral(" />\r\n\t<meta");
 
 WriteLiteral(" http-equiv=\"X-UA-Compatible\"");
 
 WriteLiteral(" content=\"IE=edge\"");
 
-WriteLiteral(" />\r\n    <title>");
+WriteLiteral(" />\r\n\t<title>");
 
             
-            #line 13 "..\..\Views\Shared\StiReport.cshtml"
+            #line 14 "..\..\Views\Shared\StiReport.cshtml"
       Write(ViewBag.Title);
 
             
             #line default
             #line hidden
-WriteLiteral("</title>\r\n    <style>\r\n        body {\r\n            background-color: #e3e3e3;\r\n  " +
-"      }\r\n    </style>\r\n</head>\r\n<body");
+WriteLiteral("</title>\r\n\t<style>\r\n\t\tbody {\r\n\t\t\tbackground-color: #e3e3e3;\r\n\t\t}\r\n\t</style>\r\n</he" +
+"ad>\r\n<body");
 
 WriteLiteral(" scroll=\"none\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("    ");
+WriteLiteral("\t");
 
             
-            #line 21 "..\..\Views\Shared\StiReport.cshtml"
+            #line 22 "..\..\Views\Shared\StiReport.cshtml"
 Write(Html.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer",
-            new StiMvcViewerOptions()
-            {
-                Theme = StiTheme.Office2013,
-                Localization = localeFile,
-                Server = new StiMvcViewerOptions.ServerOptions()
-                {
-                    Controller = "StiReport",
-                    RequestTimeout = 300,
-                    UseRelativeUrls = true
-                },
-                Actions = new StiMvcViewerOptions.ActionOptions()
-                {
-                    GetReportSnapshot = "GetReportSnapshot",
-                    ViewerEvent = "ViewerEvent",
-                    PrintReport = "PrintReport",
-                    ExportReport = "ExportReport",
-                    Interaction = "Interaction",
-                },
-                Appearance = new StiMvcViewerOptions.AppearanceOptions()
-                {
-                    BackgroundColor = System.Drawing.Color.FromArgb(0x00e3e3e3),
-                    ShowTooltips = false,
-                    ScrollbarsMode = true,
-                    FullScreenMode = true,
-                },
-                Toolbar = new StiMvcViewerOptions.ToolbarOptions()
-                {
-                    MenuAnimation = false,
-                    ShowFullScreenButton = false,
-                    ShowMenuMode = StiShowMenuMode.Click,
-                    FontFamily = "Segoe UI,Tahoma,Arial,Verdana,Sans-Serif",
-                    FontColor = System.Drawing.Color.FromArgb(0x00333333),
-                    ShowBookmarksButton = false,
-                    ShowParametersButton = true,
-                    ShowSendEmailButton = false,
-                },
-                Exports = new StiMvcViewerOptions.ExportOptions()
-                {
-                    DefaultSettings = new StiMvcViewerOptions.ExportSettings()
-                    {
-                        ExportToPdf = StiReportExtensions.GetDefaultPdfSettings(),
-                        ExportToExcel = StiReportExtensions.GetDefaultXlSettings()
-                    }
-                }
-            }));
+				new StiMvcViewerOptions()
+				{
+					Theme = StiViewerTheme.Office2013LightGrayBlue,
+					Localization = localeFile,
+					Server = new StiMvcViewerOptions.ServerOptions()
+					{
+						Controller = "StiReport",
+						RequestTimeout = 300,
+						UseRelativeUrls = true
+					},
+					Actions = new StiMvcViewerOptions.ActionOptions()
+					{
+						GetReport = "GetReport",
+						ViewerEvent = "ViewerEvent",
+						PrintReport = "PrintReport",
+						ExportReport = "ExportReport",
+						Interaction = "Interaction",
+					},
+					Appearance = new StiMvcViewerOptions.AppearanceOptions()
+					{
+						BackgroundColor = System.Drawing.Color.FromArgb(0x00e3e3e3),
+						ShowTooltips = false,
+						ScrollbarsMode = true,
+						FullScreenMode = true,
+					},
+					Toolbar = new StiMvcViewerOptions.ToolbarOptions()
+					{
+						MenuAnimation = false,
+						ShowFullScreenButton = false,
+						ShowMenuMode = StiShowMenuMode.Click,
+						FontFamily = "Segoe UI,Tahoma,Arial,Verdana,Sans-Serif",
+						FontColor = System.Drawing.Color.FromArgb(0x00333333),
+						ShowBookmarksButton = false,
+						ShowParametersButton = true,
+						ShowSendEmailButton = false,
+					},
+					Exports = new StiMvcViewerOptions.ExportOptions()
+					{
+						DefaultSettings = StiReportExtensions.GetExportSettings()
+					}
+				}
+			));
 
             
             #line default

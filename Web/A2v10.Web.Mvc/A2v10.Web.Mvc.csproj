@@ -67,19 +67,23 @@
     </Reference>
     <Reference Include="Stimulsoft.Base, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Base.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Base.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report.Mvc, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.Mvc.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.Mvc.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stimulsoft.Report.Web, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Vendors\Stimulsoft\Stimulsoft.Report.Web.dll</HintPath>
+      <HintPath>..\..\..\Vendors\Stimulsoft_2018\Stimulsoft.Report.Web.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -100,6 +104,10 @@
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
@@ -136,6 +144,7 @@
     <Compile Include="Start\RouteConfig.cs" />
     <Compile Include="Start\Startup.Auth.cs" />
     <Compile Include="Start\Startup.cs" />
+    <Compile Include="Start\Startup.Licenses.cs" />
     <Compile Include="Start\Startup.Services.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />

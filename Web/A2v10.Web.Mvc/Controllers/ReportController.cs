@@ -71,7 +71,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		public ActionResult GetReportSnapshot()
+		public ActionResult GetReport()
 		{
 			try
 			{
@@ -90,7 +90,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var vars = TempData["StiVariables"] as ExpandoObject;
 				if (vars != null)
 					r.AddVariables(vars);
-				return StiMvcViewer.GetReportSnapshotResult(HttpContext, r);
+				return StiMvcViewer.GetReportResult(r);
 			}
 			catch (Exception ex)
 			{
@@ -104,22 +104,22 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public ActionResult ViewerEvent()
 		{
-			return StiMvcViewer.ViewerEventResult(HttpContext);
+			return StiMvcViewer.ViewerEventResult();
 		}
 
 		public ActionResult PrintReport()
 		{
-			return StiMvcViewer.PrintReportResult(HttpContext);
+			return StiMvcViewer.PrintReportResult();
 		}
 
-		public FileResult ExportReport()
+		public ActionResult ExportReport()
 		{
-			return StiMvcViewer.ExportReportResult(HttpContext);
+			return StiMvcViewer.ExportReportResult();
 		}
 
 		public ActionResult Interaction()
 		{
-			return StiMvcViewer.InteractionResult(HttpContext);
+			return StiMvcViewer.InteractionResult();
 		}
 	}
 }
