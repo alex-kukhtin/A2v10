@@ -16,13 +16,14 @@
      */
 
 	var url = require('std:url');
+	const locale = window.$$locale;
 
 	Vue.component('a2-image', {
 		template: `
 <div class="a2-image">
-    <img v-if="isImageVisible" :src="href" style="width:auto;height:auto;max-width:300px" @click.prevent="clickOnImage"/>
-    <a @click.prevent="removeImage">x</a>
-    <a2-upload v-if="isUploadVisible" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem"/>
+	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
+	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
+	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip"/>
 </div>
 `,
 		props: {
@@ -31,7 +32,9 @@
 			prop: String,
 			newItem: Boolean,
 			inArray: Boolean,
-			source: Array
+			source: Array,
+			width: String,
+			height: String
 		},
 		data() {
 			return {
@@ -47,8 +50,20 @@
 				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
-			isImageVisible() {
-				return !this.newItem;
+			tip() {
+				return locale.$ClickToDownloadPicture;
+			},
+			cssStyle() {
+				return { width: this.width, height: this.height };
+			},
+			uploadStyle() {
+				let w = { width: this.width, height: this.height };
+				if (!w.width) w.width = w.height;
+				if (!w.height) w.height = w.width;
+				return w;
+			},
+			hasImage() {
+				return !!this.href;
 			},
 			isUploadVisible: function () {
 				if (this.newItem)

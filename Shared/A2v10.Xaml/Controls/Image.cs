@@ -9,14 +9,22 @@ namespace A2v10.Xaml
 		public Object Source { get; set; }
 		public String Base { get; set; }
 
+		public Length Width { get; set; }
+		public Length Height { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("a2-image");
 			if (onRender != null)
 				onRender(tag);
+			MergeAttributes(tag, context);
 			var contBind = GetBinding(nameof(Source));
 			if (contBind == null)
 				throw new XamlException("Source binding is required for the Image element");
+			if (Width != null)
+				tag.MergeAttribute("width", Width.Value);
+			if (Height != null)
+				tag.MergeAttribute("height", Height.Value);
 			MergeValueItemProp(tag, context, nameof(Source));
 			MergeBindingAttributeString(tag, context, "base", nameof(Base), Base);
 			tag.Render(context);

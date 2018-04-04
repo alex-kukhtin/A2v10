@@ -80,5 +80,12 @@
 			"app/localization/locale-ru.js"
 		],
 		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/locale-en.min.js",
+		"inputFiles": [
+			"app/localization/locale-en.js"
+		],
+		"minify": { "enabled": false }
 	}
 ]

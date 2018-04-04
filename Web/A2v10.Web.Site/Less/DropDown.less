@@ -91,6 +91,7 @@ TODO:
 .dropdown {
 	position: relative;
 	overflow: visible;
+	display:inline-block;
 
 	.dropdown-menu.down-right {
 		right: 0;
@@ -121,14 +122,14 @@ TODO:
 .toolbar > .dropdown {
 	display: inline-block;
 	overflow: visible;
+}
 
+
+.dropdown {
 	.menu {
 		margin-top: @button-gap;
 		margin-bottom: @button-gap;
 	}
-}
-
-.dropdown {
 
 	&.show:after {
 		content: '';

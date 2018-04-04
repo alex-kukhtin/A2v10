@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180330-7144*/
+/*20180404-7148*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -140,6 +140,8 @@ app.modules['std:url'] = function () {
 			if (!utils.isDefined(urlId))
 				urlId = 'new';
 		}
+		if (url.endsWith('new') && urlId === 'new')
+			urlId = '';
 		return combine(url, urlId) + qs;
 	}
 

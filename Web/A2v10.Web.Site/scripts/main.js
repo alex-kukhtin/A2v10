@@ -406,7 +406,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180330-7144*/
+/*20180404-7148*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -546,6 +546,8 @@ app.modules['std:url'] = function () {
 			if (!utils.isDefined(urlId))
 				urlId = 'new';
 		}
+		if (url.endsWith('new') && urlId === 'new')
+			urlId = '';
 		return combine(url, urlId) + qs;
 	}
 
@@ -4680,76 +4682,79 @@ TODO:
 /* services/upload.js */
 
 
-(function() {
+(function () {
 
-    var url = require('std:url');
-    var http = require('std:http');
+	var url = require('std:url');
+	var http = require('std:http');
 
-    Vue.component("a2-upload", {
+	Vue.component("a2-upload", {
         /* TODO:
          1. Accept for images/upload - may be accept property ???
          4. ControllerName (_image ???)
         */
-        template: `
-            <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-                <input type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
-            </label>
-        `,
-        props: {
-            item: Object,
-            prop: String,
-            base: String,
-            newItem: Boolean
-        },
-        data: function () {
-            return {
-                hover: false
-            };
-        },
-        computed: {
-            cssClass() {
-                return 'file-upload' + (this.hover ? ' hover' : '');
-            },
-            isMultiple() {
-                return !!this.newItem;
-            }
-        },
-        methods: {
-            dragOver(ev) {
-                this.hover = true;
-                ev.preventDefault();
-            },
-            dragLeave(ev) {
-                this.hover = false;
-                ev.preventDefault();
-            },
-            uploadImage(ev) {
-                let root = window.$rootUrl;
-                let id = this.item[this.prop];
-                let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
-                var fd = new FormData();
-                for (let file of ev.target.files) {
-                    fd.append('file', file, file.name);
-                }
-                http.upload(imgUrl, fd).then((result) => {                    
-                    // result = {status: '', ids:[]}
-                    ev.target.value = ''; // clear current selection
-                    if (result.status === 'OK') {
-                        // TODO: // multiple
-                        if (this.newItem) {
-                            let p0 = this.item.$parent;
-                            for (let id of result.ids) {
-                                let ni = p0.$append();
-                                ni[this.prop] = id;
-                            }
-                        } else {
-                            this.item[this.prop] = result.ids[0];
-                        }
-                    }
-                });
-            }
-        }
-    });
+		template: `
+<label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
+	<input type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
+	<i class="ico ico-image"></i>
+	<span class="upload-tip" v-text="tip" v-if="tip"></span>
+</label>
+		`,
+		props: {
+			item: Object,
+			prop: String,
+			base: String,
+			newItem: Boolean,
+			tip: String
+		},
+		data: function () {
+			return {
+				hover: false
+			};
+		},
+		computed: {
+			cssClass() {
+				return 'file-upload' + (this.hover ? ' hover' : '');
+			},
+			isMultiple() {
+				return !!this.newItem;
+			}
+		},
+		methods: {
+			dragOver(ev) {
+				this.hover = true;
+				ev.preventDefault();
+			},
+			dragLeave(ev) {
+				this.hover = false;
+				ev.preventDefault();
+			},
+			uploadImage(ev) {
+				let root = window.$rootUrl;
+				let id = this.item[this.prop];
+				let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
+				var fd = new FormData();
+				for (let file of ev.target.files) {
+					fd.append('file', file, file.name);
+				}
+				http.upload(imgUrl, fd).then((result) => {
+					// result = {status: '', ids:[]}
+					ev.target.value = ''; // clear current selection
+					if (result.status === 'OK') {
+						// TODO: // multiple
+						if (this.newItem) {
+							let p0 = this.item.$parent;
+							for (let id of result.ids) {
+								let ni = p0.$append();
+								ni[this.prop] = id;
+							}
+						} else {
+							this.item[this.prop] = result.ids[0];
+						}
+					}
+				});
+			}
+		}
+	});
 
 })();
 
@@ -5244,13 +5249,14 @@ TODO:
      */
 
 	var url = require('std:url');
+	const locale = window.$$locale;
 
 	Vue.component('a2-image', {
 		template: `
 <div class="a2-image">
-    <img v-if="isImageVisible" :src="href" style="width:auto;height:auto;max-width:300px" @click.prevent="clickOnImage"/>
-    <a @click.prevent="removeImage">x</a>
-    <a2-upload v-if="isUploadVisible" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem"/>
+	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
+	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
+	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip"/>
 </div>
 `,
 		props: {
@@ -5259,7 +5265,9 @@ TODO:
 			prop: String,
 			newItem: Boolean,
 			inArray: Boolean,
-			source: Array
+			source: Array,
+			width: String,
+			height: String
 		},
 		data() {
 			return {
@@ -5275,8 +5283,20 @@ TODO:
 				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
-			isImageVisible() {
-				return !this.newItem;
+			tip() {
+				return locale.$ClickToDownloadPicture;
+			},
+			cssStyle() {
+				return { width: this.width, height: this.height };
+			},
+			uploadStyle() {
+				let w = { width: this.width, height: this.height };
+				if (!w.width) w.width = w.height;
+				if (!w.height) w.height = w.width;
+				return w;
+			},
+			hasImage() {
+				return !!this.href;
 			},
 			isUploadVisible: function () {
 				if (this.newItem)
@@ -5608,6 +5628,7 @@ Vue.component('a2-panel', {
 				}
 			},
 			navigate(url) {
+				//let urlToNavigate = urltools.createUrlForNavigate(url);
 				this.$store.commit('navigate', { url: url });
 			},
 			dialog(url) {

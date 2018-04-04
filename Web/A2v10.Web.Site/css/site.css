@@ -993,6 +993,68 @@ header .btn:hover,
   padding-left: 10px;
   transform: rotate(90deg);
 }
+.a2-image {
+  display: flex;
+  position: relative;
+}
+.a2-image .remove-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid #8591a2;
+  color: #8591a2;
+  text-align: center;
+}
+.a2-image .remove-image:hover {
+  background-color: #fdf4bf;
+}
+.a2-image .remove-image:active {
+  background-color: #fff29d;
+}
+.a2-image img {
+  margin: auto;
+}
+.a2-image .file-upload {
+  margin: auto;
+}
+.file-upload {
+  display: block;
+  padding: 0;
+  background-color: lemonchiffon;
+  border: 2px dotted #bdc5d8;
+  position: relative;
+  color: #bdc5d8;
+}
+.file-upload.hover {
+  border-color: gold;
+}
+.file-upload input {
+  width: 100%;
+  height: 100%;
+  font-size: 1px;
+  opacity: 0;
+  display: inherit;
+  padding: 0;
+}
+.file-upload .ico {
+  position: absolute;
+  font-size: 5rem;
+  top: calc(50% - 2.5rem);
+  left: calc(50% - 2.5rem);
+}
+.file-upload .upload-tip {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: 1rem;
+  text-align: center;
+}
 footer,
 .footer {
   position: absolute;
@@ -1023,6 +1085,7 @@ footer .menu,
 .footer .menu {
   margin-bottom: -2px;
   font-size: 13px;
+  text-transform: none;
 }
 footer button,
 .footer button {
@@ -1712,6 +1775,11 @@ pre.a2-code {
   border-bottom: 1px solid #ccc;
   padding: 2px 0;
   color: #777;
+}
+.drop-up .input-group > .calendar {
+  top: auto;
+  bottom: 100%;
+  box-shadow: 5px -5px 10px 0 rgba(0, 0, 0, 0.2);
 }
 .input-group > .selector-pane {
   border: 1px solid #0d82f8;
@@ -2706,21 +2774,21 @@ table.a2-table.bordered {
   outline: 1px solid #ddd;
   max-width: calc(100% - 2px);
 }
-table.a2-table tbody > tr > td {
+table.a2-table > tbody > tr > td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #ddd;
 }
-table.a2-table tbody > tr > td label {
+table.a2-table > tbody > tr > td label {
   display: inline-block;
 }
-table.a2-table tbody > tr > td .control-group {
+table.a2-table > tbody > tr > td .control-group {
   margin: -1px -1px -2px -1px;
 }
-table.a2-table tbody > tr > td .control-group .input-group {
+table.a2-table > tbody > tr > td .control-group .input-group {
   border-color: #ddd;
 }
-table.a2-table tbody > tr > td .a2-table {
+table.a2-table > tbody > tr > td .a2-table {
   margin: -1px;
 }
 table.a2-table > thead > tr > td,
@@ -2806,65 +2874,65 @@ table.a2-table tr.red td {
   font-size: 0.95rem;
   line-height: normal;
 }
-.a2-table.compact tbody > tr > td,
+.a2-table.compact > tbody > tr > td,
 .a2-table.compact thead > tr > td,
 .a2-table.compact tfoot > tr > td {
   padding: 2px 4px;
 }
-.a2-table.compact tbody > tr > td .input-group,
+.a2-table.compact > tbody > tr > td .input-group,
 .a2-table.compact thead > tr > td .input-group,
 .a2-table.compact tfoot > tr > td .input-group {
   padding: 0;
 }
-.a2-table.compact tbody > tr > td .input-group input,
+.a2-table.compact > tbody > tr > td .input-group input,
 .a2-table.compact thead > tr > td .input-group input,
 .a2-table.compact tfoot > tr > td .input-group input {
   height: 1.67em;
 }
-.a2-table.compact tbody > tr > td .input-group.static > span,
+.a2-table.compact > tbody > tr > td .input-group.static > span,
 .a2-table.compact thead > tr > td .input-group.static > span,
 .a2-table.compact tfoot > tr > td .input-group.static > span {
   line-height: 1.67em;
   min-height: 1.67em;
 }
-.a2-table.compact tbody > tr > td.row-divider,
+.a2-table.compact > tbody > tr > td.row-divider,
 .a2-table.compact thead > tr > td.row-divider,
 .a2-table.compact tfoot > tr > td.row-divider {
   padding: 0;
 }
-.a2-table.compact tbody > tr > td.ctrl,
+.a2-table.compact > tbody > tr > td.ctrl,
 .a2-table.compact thead > tr > td.ctrl,
 .a2-table.compact tfoot > tr > td.ctrl {
   padding: 0;
   vertical-align: top;
 }
-.a2-table.compact tbody > tr > td.ctrl .checkbox,
+.a2-table.compact > tbody > tr > td.ctrl .checkbox,
 .a2-table.compact thead > tr > td.ctrl .checkbox,
 .a2-table.compact tfoot > tr > td.ctrl .checkbox,
-.a2-table.compact tbody > tr > td.ctrl .radio,
+.a2-table.compact > tbody > tr > td.ctrl .radio,
 .a2-table.compact thead > tr > td.ctrl .radio,
 .a2-table.compact tfoot > tr > td.ctrl .radio {
   margin: 0 6px 0 4px;
 }
-.a2-table.compact tbody > tr > td.ctrl .checkbox :before,
+.a2-table.compact > tbody > tr > td.ctrl .checkbox :before,
 .a2-table.compact thead > tr > td.ctrl .checkbox :before,
 .a2-table.compact tfoot > tr > td.ctrl .checkbox :before,
-.a2-table.compact tbody > tr > td.ctrl .radio :before,
+.a2-table.compact > tbody > tr > td.ctrl .radio :before,
 .a2-table.compact thead > tr > td.ctrl .radio :before,
 .a2-table.compact tfoot > tr > td.ctrl .radio :before,
-.a2-table.compact tbody > tr > td.ctrl .checkbox :after,
+.a2-table.compact > tbody > tr > td.ctrl .checkbox :after,
 .a2-table.compact thead > tr > td.ctrl .checkbox :after,
 .a2-table.compact tfoot > tr > td.ctrl .checkbox :after,
-.a2-table.compact tbody > tr > td.ctrl .radio :after,
+.a2-table.compact > tbody > tr > td.ctrl .radio :after,
 .a2-table.compact thead > tr > td.ctrl .radio :after,
 .a2-table.compact tfoot > tr > td.ctrl .radio :after {
   width: 13px;
   height: 13px;
 }
-.a2-table.compact tbody > tr > td.ctrl .checkbox > span,
+.a2-table.compact > tbody > tr > td.ctrl .checkbox > span,
 .a2-table.compact thead > tr > td.ctrl .checkbox > span,
 .a2-table.compact tfoot > tr > td.ctrl .checkbox > span,
-.a2-table.compact tbody > tr > td.ctrl .radio > span,
+.a2-table.compact > tbody > tr > td.ctrl .radio > span,
 .a2-table.compact thead > tr > td.ctrl .radio > span,
 .a2-table.compact tfoot > tr > td.ctrl .radio > span {
   padding-left: 18px;
@@ -3170,6 +3238,7 @@ TODO:
 .dropdown {
   position: relative;
   overflow: visible;
+  display: inline-block;
 }
 .dropdown .dropdown-menu.down-right {
   right: 0;
@@ -3194,7 +3263,7 @@ TODO:
   display: inline-block;
   overflow: visible;
 }
-.toolbar > .dropdown .menu {
+.dropdown .menu {
   margin-top: -1px;
   margin-bottom: -1px;
 }
@@ -3807,23 +3876,6 @@ h5,
   color: #777;
   font-weight: bold;
   font-family: inherit;
-}
-.file-upload {
-  display: block;
-  width: 100px;
-  height: 100px;
-  padding: 0;
-  background-color: lemonchiffon;
-  border: 2px dotted silver;
-}
-.file-upload.hover {
-  border-color: gold;
-}
-.file-upload input {
-  width: 100%;
-  height: 100%;
-  font-size: 1px;
-  opacity: 0;
 }
 .badge {
   display: inline-block;

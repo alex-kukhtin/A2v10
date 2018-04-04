@@ -69,6 +69,7 @@
 				}
 			},
 			navigate(url) {
+				//let urlToNavigate = urltools.createUrlForNavigate(url);
 				this.$store.commit('navigate', { url: url });
 			},
 			dialog(url) {

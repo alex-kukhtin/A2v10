@@ -12,7 +12,6 @@ namespace A2v10.Web.Mvc.Start
 		{
 			ConfigureAuth(app);
 			StartServices();
-			SetLicenses();
 		}
 	}
 }

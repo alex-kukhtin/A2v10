@@ -44,23 +44,23 @@ namespace A2v10.Xaml
 
 		internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
-			if ((mode & MergeAttrMode.Visibility) != 0)
+			if (mode.HasFlag(MergeAttrMode.Visibility))
 			{
 				MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
 				MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
 				// emulate v-hide
 				MergeBindingAttributeBool(tag, context, "v-show", nameof(Hide), Hide, bInvert: true);
 			}
-			if ((mode & MergeAttrMode.Tip) != 0)
+			if (mode.HasFlag(MergeAttrMode.Tip))
 			{
 				MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
 			}
-			if ((mode & MergeAttrMode.Wrap) != 0)
+			if (mode.HasFlag(MergeAttrMode.Wrap))
 			{
 				if (Wrap != WrapMode.Default)
 					tag.AddCssClass(Wrap.ToString().ToKebabCase());
 			}
-			if ((mode & MergeAttrMode.Margin) != 0)
+			if (mode.HasFlag(MergeAttrMode.Margin))
 			{
 				if (Margin != null)
 					Margin.MergeStyles("margin", tag);

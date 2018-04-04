@@ -85,6 +85,7 @@
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\directives\mask.js" />
     <Content Include="app\directives\resize.js" />
+    <Content Include="app\localization\locale-en.js" />
     <Content Include="app\localization\locale-ru.js" />
     <Content Include="app\localization\locale-uk.js" />
     <Content Include="app\platform\polyfills.js" />
@@ -135,6 +136,7 @@
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />
     <Content Include="scripts\jasmine\jasmine.js" />
+    <Content Include="scripts\locale-en.min.js" />
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
@@ -231,6 +233,7 @@
     <Content Include="Less\Site.Compact.less" />
     <Content Include="Less\SideBar.less" />
     <Content Include="Less\SideBar.Compact.less" />
+    <Content Include="Less\Image.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

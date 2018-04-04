@@ -27,7 +27,8 @@
 		$NoElements: 'немає елементів',
 		$PagerElements: 'елементи',
 		$Of: 'з',
-		$Register: 'Реєстрація'
+		$Register: 'Реєстрація',
+		$ClickToDownloadPicture: 'Клацніть щоб завантажити картинку'
 	};
 
 

@@ -159,7 +159,7 @@ header, .header {
 @import "Page.less";
 @import "Splitter.less";
 @import "Taskpad.less";
-
+@import "Image.less";
 
 footer, .footer {
 	position: absolute;
@@ -189,6 +189,7 @@ footer, .footer {
 	.menu {
 		margin-bottom: -2px;
 		font-size: @font-size;
+		text-transform:none;
 	}
 
 	button {
@@ -436,25 +437,6 @@ h5, .h5 {
 	font-family: inherit;
 }
 
-.file-upload {
-	display: block;
-	width: 100px;
-	height: 100px;
-	padding: 0;
-	background-color: lemonchiffon;
-	border: 2px dotted silver;
-
-	&.hover {
-		border-color: gold;
-	}
-
-	input {
-		width: 100%;
-		height: 100%;
-		font-size: 1px;
-		opacity: 0;
-	}
-}
 
 .badge {
 	display: inline-block;

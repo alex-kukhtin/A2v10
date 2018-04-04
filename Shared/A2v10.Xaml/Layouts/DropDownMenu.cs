@@ -5,30 +5,30 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-    public enum DropDownDirection
-    {
-        DownLeft,
-        DownRight,
-        UpLeft,
-        UpRight
-    }
+	public enum DropDownDirection
+	{
+		DownLeft,
+		DownRight,
+		UpLeft,
+		UpRight
+	}
 
-    public class DropDownMenu : Container
-    {
+	public class DropDownMenu : Container
+	{
 
-        public DropDownDirection Direction { get; set; }
+		public DropDownDirection Direction { get; set; }
 
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            var menu = new TagBuilder("div", "dropdown-menu menu");
-            menu.MergeAttribute("role", "menu");
-            MergeAttributes(menu, context);
-            if (Direction != DropDownDirection.DownLeft)
-                menu.AddCssClass(Direction.ToString().ToKebabCase());
-            menu.RenderStart(context);
-            RenderChildren(context);
-            menu.RenderEnd(context);
-        }
-    }
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			var menu = new TagBuilder("div", "dropdown-menu menu");
+			menu.MergeAttribute("role", "menu");
+			MergeAttributes(menu, context);
+			if (Direction != DropDownDirection.DownLeft)
+				menu.AddCssClass(Direction.ToString().ToKebabCase());
+			menu.RenderStart(context);
+			RenderChildren(context);
+			menu.RenderEnd(context);
+		}
+	}
 }

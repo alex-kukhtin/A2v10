@@ -27,7 +27,8 @@
 		$NoElements: 'нет элементов',
 		$PagerElements: 'элементы',
 		$Of: 'из',
-		$Register: 'Регистрация'
+		$Register: 'Регистрация',
+		$ClickToDownloadPicture: 'Щелкните чтобы загрузить картинку'
 	};
 
 

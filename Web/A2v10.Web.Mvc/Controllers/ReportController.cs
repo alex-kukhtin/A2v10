@@ -5,6 +5,8 @@ using System;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Dynamic;
+using System.IO;
+using System.Web.Hosting;
 
 using Microsoft.AspNet.Identity;
 
@@ -34,6 +36,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public async Task<ActionResult> Show(String Base, String Rep, String id)
 		{
+			SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base}/{Rep}/{id}";
@@ -68,6 +71,21 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				return View("Exception", ex);
+			}
+		}
+
+		private Boolean _licenseSet = false;
+
+		private void SetupLicense()
+		{
+			if (_licenseSet)
+				return;
+			_licenseSet = true;
+			var serverPath = HostingEnvironment.MapPath("~");
+			String licPath = Path.Combine(serverPath, "licenses", "stimulsoft.license.key");
+			if (System.IO.File.Exists(licPath))
+			{
+				Stimulsoft.Base.StiLicense.LoadFromFile(licPath);
 			}
 		}
 

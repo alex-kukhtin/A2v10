@@ -144,7 +144,6 @@
     <Compile Include="Start\RouteConfig.cs" />
     <Compile Include="Start\Startup.Auth.cs" />
     <Compile Include="Start\Startup.cs" />
-    <Compile Include="Start\Startup.Licenses.cs" />
     <Compile Include="Start\Startup.Services.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />
