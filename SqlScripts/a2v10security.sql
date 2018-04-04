@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 30 jan 2017
-module version : 7056
+Last updated : 04 apr 2018
+module version : 7057
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7056);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7057);
 else
-	update a2sys.Versions set [Version] = 7056 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7057 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -47,8 +47,22 @@ begin
 			constraint DF_Tenants_PK default(next value for a2security.SQ_Tenants),
 		[Admin] bigint null, -- admin user ID
 		[Source] nvarchar(255) null,
+		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
+		LastTransactionDate datetime null,
 		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate())
 	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'TransactionCount')
+begin
+	alter table a2security.Tenants add [TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'LastTransactionDate')
+begin
+	alter table a2security.Tenants add [LastTransactionDate] datetime null;
 end
 go
 ------------------------------------------------
