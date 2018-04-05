@@ -12,9 +12,11 @@ namespace A2v10.Xaml
 		public Length Width { get; set; }
 		public Length Height { get; set; }
 
+		public Boolean ReadOnly { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			var tag = new TagBuilder("a2-image");
+			var tag = new TagBuilder("a2-image", null, IsInGrid);
 			if (onRender != null)
 				onRender(tag);
 			MergeAttributes(tag, context);
@@ -25,6 +27,7 @@ namespace A2v10.Xaml
 				tag.MergeAttribute("width", Width.Value);
 			if (Height != null)
 				tag.MergeAttribute("height", Height.Value);
+			MergeBindingAttributeBool(tag, context, ":read-only", nameof(ReadOnly), ReadOnly);
 			MergeValueItemProp(tag, context, nameof(Source));
 			MergeBindingAttributeString(tag, context, "base", nameof(Base), Base);
 			tag.Render(context);

@@ -24,6 +24,8 @@ namespace A2v10.Request
 
 		public static String pageUtils => Resources.pageUtils;
 
+		public static String StiReportHtml => Resources.stiReport;
+
 		public static String locale
 		{
 			get

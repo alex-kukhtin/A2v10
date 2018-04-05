@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180405-7149
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -31,6 +31,7 @@ app.modules['std:utils'] = function () {
 		defaultValue: defaultValue,
 		notBlank: notBlank,
 		toJson: toJson,
+		fromJson: JSON.parse,
 		isPrimitiveCtor: isPrimitiveCtor,
 		isDateCtor: isDateCtor,
 		isEmptyObject: isEmptyObject,

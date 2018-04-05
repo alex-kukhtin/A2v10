@@ -18,9 +18,27 @@ using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
+using Stimulsoft.Report.Web;
+using System.Text;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+	class ReportInfo
+	{
+		public IDataModel DataModel;
+		public String ReportPath;
+		public ExpandoObject Variables;
+	}
+
+	public class EmptyView : IView, IViewDataContainer
+	{
+		public ViewDataDictionary ViewData { get; set; }
+		public void Render(ViewContext viewContext, TextWriter writer)
+		{
+			// do nothing
+		}
+	}
+
 	[Authorize]
 	[ExecutingFilter]
 	public class ReportController : Controller
@@ -34,43 +52,129 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 
-		public async Task<ActionResult> Show(String Base, String Rep, String id)
+		[HttpGet]
+		public async Task Show(String Base, String Rep, String id)
 		{
 			SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base}/{Rep}/{id}";
-				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
-				var rep = rm.GetReport();
-				String reportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
-				ExpandoObject prms = new ExpandoObject();
-				prms.Set("UserId", UserId);
-				if (_baseController.Host.IsMultiTenant)
-					prms.Set("TenantId", TenantId);
-				prms.Set("Id", id);
-				var iDataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
-				TempData["StiDataModel"] = iDataModel;
-				TempData["StiFilePath"] = reportPath;
-				// after query
-				ExpandoObject vars = rep.variables;
-				if (vars == null)
-					vars = new ExpandoObject();
-				vars.Set("UserId", UserId);
-				if (_baseController.Host.IsMultiTenant)
-					vars.Set("TenantId", TenantId);
-				vars.Set("Id", id);
-				TempData["StiVariables"] = vars;
-				ViewBag.locale = "uk"; // TODO
-				ViewBag.Title = null;
-				if (iDataModel.System != null)
-					ViewBag.Title = iDataModel.System.Get<String>("Title");
-				return View("StiReport");
+				ReportInfo ri = await GetReportInfo(url, id);
+
+				TempData["StiDataModel"] = ri.DataModel;
+				TempData["StiFilePath"] = ri.ReportPath;
+				TempData["StiVariables"] = ri.Variables;
+
+				var view = new EmptyView();
+				var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
+				var hh = new HtmlHelper(vc, view);
+				var result = hh.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer", ViewerOptions);
+
+				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
+				sb.Replace("$(StiReport)", result.ToHtmlString());
+				sb.Replace("$(Lang)", _baseController.CurrentLang);
+				if (ri.DataModel.System != null)
+					sb.Replace("$(Title)", ri.DataModel.System.Get<String>("Title"));
+				else
+					sb.Replace("$(Title)", "A2:Web");
+
+				Response.Output.Write(sb.ToString());
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				Response.Write(ex.Message);
+			}
+		}
+
+		async Task<ReportInfo> GetReportInfo(String url, String id)
+		{
+			var ri = new ReportInfo();
+			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
+			var rep = rm.GetReport();
+			ri.ReportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+			ExpandoObject prms = new ExpandoObject();
+			prms.Set("UserId", UserId);
+			if (_baseController.Host.IsMultiTenant)
+				prms.Set("TenantId", TenantId);
+			prms.Set("Id", id);
+			ri.DataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
+
+			// after query
+			ExpandoObject vars = rep.variables;
+			if (vars == null)
+				vars = new ExpandoObject();
+			vars.Set("UserId", UserId);
+			if (_baseController.Host.IsMultiTenant)
+				vars.Set("TenantId", TenantId);
+			vars.Set("Id", id);
+			ri.Variables = vars;
+
+			return ri;
+		}
+
+		public async Task<ActionResult> Export(String Base, String Rep, String id)
+		{
+			SetupLicense();
+			try
+			{
+				var url = $"/_report/{Base}/{Rep}/{id}";
+				ReportInfo ri = await GetReportInfo(url, id);
 			}
 			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				return View("Exception", ex);
+			}
+			return new EmptyResult();
+		}
+
+		private StiMvcViewerOptions ViewerOptions {
+			get {
+				String localeFile = $"~/Localization/uk.xml"; // TODO
+				return new StiMvcViewerOptions()
+				{
+					Theme = StiViewerTheme.Office2013LightGrayBlue,
+					Localization = localeFile,
+					Server = new StiMvcViewerOptions.ServerOptions()
+					{
+						Controller = "StiReport",
+						RequestTimeout = 300,
+						UseRelativeUrls = true
+					},
+					Actions = new StiMvcViewerOptions.ActionOptions()
+					{
+						GetReport = "GetReport",
+						ViewerEvent = "ViewerEvent",
+						PrintReport = "PrintReport",
+						ExportReport = "ExportReport",
+						Interaction = "Interaction",
+					},
+					Appearance = new StiMvcViewerOptions.AppearanceOptions()
+					{
+						BackgroundColor = System.Drawing.Color.FromArgb(0x00e3e3e3),
+						ShowTooltips = false,
+						ScrollbarsMode = true,
+						FullScreenMode = true,
+					},
+					Toolbar = new StiMvcViewerOptions.ToolbarOptions()
+					{
+						MenuAnimation = false,
+						ShowFullScreenButton = false,
+						ShowMenuMode = StiShowMenuMode.Click,
+						FontFamily = "Segoe UI,Tahoma,Arial,Verdana,Sans-Serif",
+						FontColor = System.Drawing.Color.FromArgb(0x00333333),
+						ShowBookmarksButton = false,
+						ShowParametersButton = true,
+						ShowSendEmailButton = false,
+					},
+					Exports = new StiMvcViewerOptions.ExportOptions()
+					{
+						DefaultSettings = StiReportExtensions.GetExportSettings()
+					}
+				};
 			}
 		}
 

@@ -996,6 +996,8 @@ header .btn:hover,
 .a2-image {
   display: flex;
   position: relative;
+  height: 0;
+  /*TODO: check aspect ratio */
 }
 .a2-image .remove-image {
   position: absolute;
@@ -1020,6 +1022,8 @@ header .btn:hover,
 }
 .a2-image .file-upload {
   margin: auto;
+  max-width: 250px;
+  max-height: 250px;
 }
 .file-upload {
   display: block;

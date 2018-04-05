@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7142
+// 20180405-7149
 // components/image.js
 
 (function () {
@@ -22,8 +22,8 @@
 		template: `
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
-	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip"/>
+	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
+	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly'/>
 </div>
 `,
 		props: {
@@ -34,7 +34,8 @@
 			inArray: Boolean,
 			source: Array,
 			width: String,
-			height: String
+			height: String,
+			readOnly: Boolean
 		},
 		data() {
 			return {
@@ -51,6 +52,7 @@
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			tip() {
+				if (this.readOnly) return '';
 				return locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
@@ -65,9 +67,13 @@
 			hasImage() {
 				return !!this.href;
 			},
+			hasRemove() {
+				if (this.readOnly) return false;
+				return this.hasImage;
+			},
 			isUploadVisible: function () {
-				if (this.newItem)
-					return true;
+				if (this.newItem) return true;
+				if (this.readOnly) return false;
 				return !this.inArray && !this.item[this.prop];
 			},
 			itemForUpload() {

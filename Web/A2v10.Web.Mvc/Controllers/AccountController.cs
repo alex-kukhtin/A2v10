@@ -176,7 +176,7 @@ namespace A2v10.Web.Site.Controllers
 		// POST: /Account/VerifyCode
 		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[ValidateJsonAntiForgeryToken]
 		public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -422,7 +422,7 @@ namespace A2v10.Web.Site.Controllers
 		// POST: /Account/SendCode
 		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		[ValidateJsonAntiForgeryToken]
 		public async Task<ActionResult> SendCode(SendCodeViewModel model)
 		{
 			if (!ModelState.IsValid)

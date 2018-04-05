@@ -115,19 +115,15 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
-        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ConfirmEMailPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
-        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
-        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;div&gt;
+        ///		&lt;p v-text=&quot;locale.$ConfirmEMailText&quot; style=&quot;margin-bottom:30px&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;1&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
         ///	&lt;/div&gt;
-        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
-        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
-        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
-        ///	&lt;/div&gt;
-        ///	&lt;div v [rest of string was truncated]&quot;;.
+        ///&lt;/div&gt;
+        ///.
         /// </summary>
         internal static string confirmEMail {
             get {
@@ -138,17 +134,14 @@ namespace A2v10.Request.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 
         ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
-        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$Error&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
-        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
-        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;div&gt;
+        ///		&lt;p v-text=&quot;locale.$ErrorText&quot; style=&quot;margin-bottom:30px&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/account/login&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
         ///	&lt;/div&gt;
-        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
-        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
-        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
-        ///	&lt;/div&gt;
-        ///	&lt;div v [rest of string was truncated]&quot;;.
+        ///&lt;/div&gt;
+        ///.
         /// </summary>
         internal static string error {
             get {
@@ -292,16 +285,16 @@ namespace A2v10.Request.Properties {
         ///		$Locale: &apos;en-US&apos;,
         ///		$Ok: &apos;OK&apos;,
         ///		$Cancel: &apos;Cancel&apos;,
+        ///		$Error: &apos;Error&apos;,
         ///		$Login: &apos;Log in&apos;,
         ///		$Confirm: &apos;Confirm&apos;,
         ///		$LoginPrompt: &apos;Login to system&apos;,
         ///		$LoginLink: &apos;Link to login&apos;,
         ///		$RegisterPrompt: &apos;Register in the system.&apos;,
         ///		$ForgotPrompt: &apos;Reset password&apos;,
+        ///		$ConfirmEMailPrompt: &apos;Confirm е-mail&apos;,
         ///		$Version: &apos;Version&apos;,
-        ///		$Password: &apos;Password&apos;,
-        ///		$RememberCredentials: &apos;Remember my credentials&apos;,
-        ///	 [rest of string was truncated]&quot;;.
+        ///		$Password: &apos;Pas [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_en {
             get {
@@ -324,15 +317,15 @@ namespace A2v10.Request.Properties {
         ///		$Locale: &apos;ru-RU&apos;,
         ///		$Ok: &apos;OK&apos;,
         ///		$Cancel: &apos;Отмена&apos;,
+        ///		$Error: &apos;Ошибка&apos;,
         ///		$Login: &apos;Войти&apos;,
         ///		$Confirm: &apos;Подтверждение&apos;,
         ///		$LoginPrompt: &apos;Вход в систему&apos;,
         ///		$LoginLink: &apos;На страницу входа&apos;,
         ///		$RegisterPrompt: &apos;Регистрация в системе&apos;,
         ///		$ForgotPrompt: &apos;Восстановление пароля&apos;,
-        ///		$Version: &apos;Версия&apos;,
-        ///		$Password: &apos;Пароль&apos;,
-        ///		$RememberCredentials: &apos;Запромнить учетные [rest of string was truncated]&quot;;.
+        ///		$ConfirmEMailPrompt: &apos;Подтверждение е-mail&apos;,
+        ///		$Version: &apos;Версия&apos;, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_ru {
             get {
@@ -355,15 +348,15 @@ namespace A2v10.Request.Properties {
         ///		$Locale: &apos;uk-UA&apos;,
         ///		$Ok: &apos;OK&apos;,
         ///		$Cancel: &apos;Скасувати&apos;,
+        ///		$Error: &apos;Помилка&apos;,
         ///		$Login: &apos;Увійти&apos;,
         ///		$Confirm: &apos;Підтвердження&apos;,
         ///		$LoginPrompt: &apos;Вхід в систему&apos;,
         ///		$LoginLink: &apos;До сторінки входу&apos;,
         ///		$RegisterPrompt: &apos;Реєстрація в системі&apos;,
         ///		$ForgotPrompt: &apos;Відновлення паролю&apos;,
-        ///		$Version: &apos;Версія&apos;,
-        ///		$Password: &apos;Пароль&apos;,
-        ///		$RememberCredentials: &apos;Запам\&apos;ятати облік [rest of string was truncated]&quot;;.
+        ///		$ConfirmEMailPrompt: &apos;Підтвердження е-mail&apos;,
+        ///		$Version: &apos;Версія&apos; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_uk {
             get {
@@ -461,8 +454,10 @@ namespace A2v10.Request.Properties {
         ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
         ///	&lt;/div&gt;
         ///	&lt;form&gt;
-        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:auto 1fr; width:400px&quot;&gt;
-        ///			&lt;label style=&quot;grid-row:1; grid-column:1&quot; class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt; [rest of string was truncated]&quot;;.
+        ///		&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///			&lt;p v-text=&quot;confirmRegisterText&quot;&gt;&lt;/p&gt;
+        ///			&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///			&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenant {
             get {
@@ -471,7 +466,7 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
         ///(function () {
         ///
@@ -493,15 +488,14 @@ namespace A2v10.Request.Properties {
         ///			info: $(PageData),
         ///			submitted: false,
         ///			serverError: &apos;&apos;,
-        ///			emailError: &apos;&apos;
+        ///			emailError: &apos;&apos;,
+        ///			showConfirm: false,
+        ///			confirmRegisterText: &apos;&apos;,
+        ///			passwordError: &apos;&apos;
         ///		},
         ///		computed: {
         ///			locale() {
-        ///				return window.$$locale;
-        ///			},
-        ///			valid() {
-        ///				if (!this.submitted) return true;
-        ///				return th [rest of string was truncated]&quot;;.
+        ///				return window.$$locale [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenantScript {
             get {
@@ -641,6 +635,7 @@ namespace A2v10.Request.Properties {
         ///		el: &quot;#app&quot;,
         ///		data: {
         ///			info: $(PageData),
+        ///			processing: false
         ///		},
         ///		computed: {
         ///			locale() {
@@ -658,27 +653,27 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html lang=&quot;ru&quot;&gt;
+        ///&lt;html lang=&quot;$(Lang)&quot;&gt;
         ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///    &lt;title&gt;$(Title)&lt;/title&gt;
-        ///    &lt;style&gt;
-        ///        body {
-        ///            background-color: #e3e3e3;
-        ///        }
-        ///    &lt;/style&gt;
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;title&gt;$(Title)&lt;/title&gt;
+        ///	&lt;link rel=&quot;shortcut icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///	&lt;link rel=&quot;icon&quot; href=&quot;/favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;
+        ///	&lt;style&gt;
+        ///		body {
+        ///			background-color: #e3e3e3;
+        ///		}
+        ///	&lt;/style&gt;
         ///&lt;/head&gt;
         ///&lt;body scroll=&quot;none&quot;&gt;
-        ///    $(Viewer)
-        ///&lt;/body&gt;
-        ///&lt;/html&gt;
-        ///.
+        ///	$ [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string stiReportViewer {
+        internal static string stiReport {
             get {
-                return ResourceManager.GetString("stiReportViewer", resourceCulture);
+                return ResourceManager.GetString("stiReport", resourceCulture);
             }
         }
     }

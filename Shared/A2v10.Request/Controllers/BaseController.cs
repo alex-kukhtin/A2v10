@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using A2v10.Infrastructure.Utilities;
 using System.Net;
 using A2v10.Data.Interfaces;
+using System.Threading;
 
 namespace A2v10.Request
 {
@@ -40,6 +41,16 @@ namespace A2v10.Request
 		public IDbContext DbContext => _dbContext;
 		public IApplicationHost Host => _host;
 		public Boolean Admin { get; set; }
+
+		public String CurrentLang
+		{
+			get
+			{
+				var culture = Thread.CurrentThread.CurrentUICulture;
+				var lang = culture.TwoLetterISOLanguageName;
+				return lang;
+			}
+		}
 
 		public String Localize(String content)
 		{

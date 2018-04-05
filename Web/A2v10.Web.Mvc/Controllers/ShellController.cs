@@ -131,7 +131,7 @@ namespace A2v10.Web.Mvc.Controllers
 				prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
 				prms.Add("$(Theme)", _baseController.Host.Theme);
 				prms.Add("$(Build)", _baseController.Host.AppBuild);
-				prms.Add("$(Locale)", CurrentLang);
+				prms.Add("$(Locale)", _baseController.CurrentLang);
 				_baseController.Layout(Response.Output, prms);
 			}
 			catch (Exception ex)
@@ -353,16 +353,5 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.StatusDescription = "Custom server error";
 			Response.Write(_baseController.Localize(ex.Message));
 		}
-
-		String CurrentLang
-		{
-			get
-			{
-				var culture = Thread.CurrentThread.CurrentUICulture;
-				var lang = culture.TwoLetterISOLanguageName;
-				return lang;
-			}
-		}
-
 	}
 }

@@ -40,6 +40,7 @@
 		$EnterName: 'enter user name',
 		$EnterPassword: 'enter password',
 		$MatchError: 'the password does not match the confirmation',
+		$PasswordLength: 'the password must be at least 6 characters long',
 		$InvalidLoginError: 'Invalid е-mail or password',
 		$InvalidEMailError: 'Invalid е-mail',
 		$UserLockuotError: 'The user has been locked out.\nTry again in a few minutes',

@@ -184,7 +184,7 @@
   <data name="simpleScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\simpleScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="stiReportViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Pages\stiReportViewer.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="stiReport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\stiReport.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

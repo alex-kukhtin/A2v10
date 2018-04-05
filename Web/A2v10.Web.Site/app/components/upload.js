@@ -1,5 +1,8 @@
-﻿/*20170923-7038*/
-/* services/upload.js */
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180405-7149
+// components/upload.js
+
 
 
 (function () {
@@ -14,7 +17,7 @@
         */
 		template: `
 <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-	<input type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
+	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
 	<i class="ico ico-image"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
@@ -24,7 +27,8 @@
 			prop: String,
 			base: String,
 			newItem: Boolean,
-			tip: String
+			tip: String,
+			readOnly: Boolean
 		},
 		data: function () {
 			return {
@@ -37,6 +41,9 @@
 			},
 			isMultiple() {
 				return !!this.newItem;
+			},
+			canUpload() {
+				return !this.readOnly;
 			}
 		},
 		methods: {

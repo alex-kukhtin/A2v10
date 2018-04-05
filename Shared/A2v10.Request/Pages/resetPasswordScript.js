@@ -20,7 +20,8 @@
 			submitted: false,
 			serverError: '',
 			emailError: '',
-			showConfirm: false
+			showConfirm: false,
+			passwordError: ''
 		},
 		computed: {
 			locale() {
@@ -45,7 +46,17 @@
 				return true;
 			},
 			validPassword() {
-				return this.submitted ? !!this.password : true;
+				if (!this.submitted) return true;
+				if (!this.password) {
+					this.passwordError = this.locale.$EnterPassword;
+					return false;
+				}
+				else if (this.password.length < 6) {
+					this.passwordError = this.locale.$PasswordLength;
+					return false;
+				}
+				this.passwordError = '';
+				return true;
 			},
 			validConfirm() {
 				return this.submitted ? !!this.confirm && (this.password === this.confirm) : true;

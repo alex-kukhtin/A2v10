@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180405-7149
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -91,6 +91,7 @@ app.modules['std:utils'] = function () {
 		defaultValue: defaultValue,
 		notBlank: notBlank,
 		toJson: toJson,
+		fromJson: JSON.parse,
 		isPrimitiveCtor: isPrimitiveCtor,
 		isDateCtor: isDateCtor,
 		isEmptyObject: isEmptyObject,
@@ -4678,8 +4679,11 @@ TODO:
 	});
 
 })();
-/*20170923-7038*/
-/* services/upload.js */
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180405-7149
+// components/upload.js
+
 
 
 (function () {
@@ -4694,7 +4698,7 @@ TODO:
         */
 		template: `
 <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-	<input type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
+	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
 	<i class="ico ico-image"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
@@ -4704,7 +4708,8 @@ TODO:
 			prop: String,
 			base: String,
 			newItem: Boolean,
-			tip: String
+			tip: String,
+			readOnly: Boolean
 		},
 		data: function () {
 			return {
@@ -4717,6 +4722,9 @@ TODO:
 			},
 			isMultiple() {
 				return !!this.newItem;
+			},
+			canUpload() {
+				return !this.readOnly;
 			}
 		},
 		methods: {
@@ -5233,7 +5241,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7142
+// 20180405-7149
 // components/image.js
 
 (function () {
@@ -5255,8 +5263,8 @@ TODO:
 		template: `
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
-	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip"/>
+	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
+	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly'/>
 </div>
 `,
 		props: {
@@ -5267,7 +5275,8 @@ TODO:
 			inArray: Boolean,
 			source: Array,
 			width: String,
-			height: String
+			height: String,
+			readOnly: Boolean
 		},
 		data() {
 			return {
@@ -5284,6 +5293,7 @@ TODO:
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			tip() {
+				if (this.readOnly) return '';
 				return locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
@@ -5298,9 +5308,13 @@ TODO:
 			hasImage() {
 				return !!this.href;
 			},
+			hasRemove() {
+				if (this.readOnly) return false;
+				return this.hasImage;
+			},
 			isUploadVisible: function () {
-				if (this.newItem)
-					return true;
+				if (this.newItem) return true;
+				if (this.readOnly) return false;
 				return !this.inArray && !this.item[this.prop];
 			},
 			itemForUpload() {
