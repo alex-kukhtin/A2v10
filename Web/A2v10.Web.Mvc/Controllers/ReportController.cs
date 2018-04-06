@@ -99,6 +99,7 @@ namespace A2v10.Web.Mvc.Controllers
 			if (_baseController.Host.IsMultiTenant)
 				prms.Set("TenantId", TenantId);
 			prms.Set("Id", id);
+			prms.AppendAndReplace(rep.parameters);
 			ri.DataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
 
 			// after query

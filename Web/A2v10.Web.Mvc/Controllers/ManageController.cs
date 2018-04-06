@@ -217,7 +217,7 @@ namespace A2v10.Web.Site.Controllers
 
         //
         // GET: /Manage/ChangePassword
-        public ActionResult ChangePassword()
+        public ActionResult ChangePassword22()
         {
             return View();
         }
@@ -226,7 +226,7 @@ namespace A2v10.Web.Site.Controllers
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<ActionResult> ChangePassword22(ChangePasswordViewModel2 model)
         {
             if (!ModelState.IsValid)
             {
@@ -256,6 +256,7 @@ namespace A2v10.Web.Site.Controllers
 
         //
         // POST: /Manage/SetPassword
+		/*
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
@@ -278,6 +279,7 @@ namespace A2v10.Web.Site.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+		*/
 
         //
         // GET: /Manage/ManageLogins

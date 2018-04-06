@@ -25,8 +25,8 @@
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
-					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> Сменить пароль</a>
+					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> @[Profile]</a>
+					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
 					<div class="divider"></div>
 					<form id="logoutForm" method="post" action="/account/logoff">
 						<a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item" tabindex="-1"><i class="ico ico-exit"></i> @[Quit]</a>

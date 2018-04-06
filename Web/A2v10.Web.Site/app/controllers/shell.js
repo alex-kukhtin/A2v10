@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180406-7150*/
 /* controllers/shell.js */
 
 (function () {
@@ -12,6 +12,7 @@
 	const urlTools = require('std:url');
 	const log = require('std:log');
 	const utils = require('std:utils');
+	const locale = window.$$locale;
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -82,6 +83,8 @@
 	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
+	<li class="aligner"></li>
+	<li :title="locale.$Help"><a href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -89,7 +92,8 @@
 		},
 		computed:
 		{
-			seg0: () => store.getters.seg0
+			seg0: () => store.getters.seg0,
+			locale() { return locale }
 		},
 		methods: {
 			isActive(item) {
@@ -108,6 +112,15 @@
 				let opts = { title: null, seg2: savedUrl };
 				let url = makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
+			},
+			showHelp() {
+				window.open(this.helpHref(), "_blank");
+			},
+			helpHref() {
+				let am = this.menu.find(x => this.isActive(x));
+				if (am && am.Help)
+					return urlTools.helpHref(am.Help);
+				return urlTools.helpHref('');
 			}
 		}
 	};
@@ -480,7 +493,6 @@
 				alert('change user');
 			},
 			changePassword() {
-				alert('change password');
 				const dlgData = {
 					promise: null, data: { Id: -1 }
 				};

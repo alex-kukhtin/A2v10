@@ -17,6 +17,7 @@
 		$Refresh: 'Обновить',
 		$Confirm: 'Подтверждение',
 		$Error: 'Ошибка',
+		$Help: 'Помощь',
 		$ConfirmClose: 'Подтверждение закрытия',
 		$MakeValidFirst: 'Сначала исправьте ошибки',
 		$ElementWasChanged: 'Элемент был изменен. Сохранить изменения?',
@@ -28,7 +29,10 @@
 		$PagerElements: 'элементы',
 		$Of: 'из',
 		$Register: 'Регистрация',
-		$ClickToDownloadPicture: 'Щелкните чтобы загрузить картинку'
+		$ClickToDownloadPicture: 'Щелкните чтобы загрузить картинку',
+		$EnterPassword: 'Введите пароль',
+		$MatchError: 'пароль не совпадает с подтверждением',
+		$PasswordLength: 'пароль должен иметь длину не менее 6 символов'
 	};
 
 

@@ -252,7 +252,7 @@ namespace A2v10.Xaml
 		String GetOptionsValid(RenderContext context)
 		{
 			if (!ValidRequired)
-				return String.Empty;
+				return nullString;
 			StringBuilder sb = new StringBuilder("{");
 			if (ValidRequired)
 			{

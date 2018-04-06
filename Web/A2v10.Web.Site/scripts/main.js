@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180505-7150
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -352,6 +352,8 @@ app.modules['std:utils'] = function () {
 			case 'second':
 				du = 1000;
 				break;
+			default:
+				throw new Error('Invalid unit value for utils.date.add');
 		}
 		return new Date(dt.getTime() + nm * du);
 	}
@@ -407,7 +409,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180404-7148*/
+/*20180406-7150*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -425,7 +427,8 @@ app.modules['std:url'] = function () {
 		replaceUrlQuery,
 		createUrlForNavigate,
 		firstUrl: '',
-		encodeUrl: encodeURIComponent
+		encodeUrl: encodeURIComponent,
+		helpHref
 	};
 
 	function normalize(elem) {
@@ -550,6 +553,13 @@ app.modules['std:url'] = function () {
 		if (url.endsWith('new') && urlId === 'new')
 			urlId = '';
 		return combine(url, urlId) + qs;
+	}
+
+	function helpHref(path) {
+		let helpUrlElem = document.querySelector('meta[name=helpUrl]');
+		if (!helpUrlElem || !helpUrlElem.content)
+			console.error('help url is not specified');
+		return helpUrlElem.content + (path || '');
 	}
 
 	function replaceId(url, newId) {
@@ -1053,7 +1063,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180329-7143
+// 20180406-7150
 // services/datamodel.js
 
 (function () {
@@ -1124,6 +1134,13 @@ app.modules['std:validators'] = function () {
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
 		let shadow = trg._src_;
 		source = source || {};
+		if (utils.isObjectExact(propCtor)) {
+			//console.warn(`${prop}:${propCtor.len}`);
+			if ("type" in propCtor)
+				propCtor = propCtor.type;
+			else
+				throw new Error(`Invalid _meta_ for '${prop}'`);
+		}
 		switch (propCtor) {
 			case Number:
 				shadow[prop] = source[prop] || 0;
@@ -1487,6 +1504,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$append = function (src) {
 			const that = this;
+
 			function append(src, select) {
 				let addingEvent = that._path_ + '[].adding';
 				let newElem = that.$new(src);
@@ -1611,6 +1629,7 @@ app.modules['std:validators'] = function () {
 		obj.prototype.$merge = merge;
 		obj.prototype.$empty = empty;
 		obj.prototype.$set = setElement;
+		obj.prototype.$maxLength = getMaxLength;
 
 		defineCommonProps(obj.prototype);
 
@@ -1957,6 +1976,15 @@ app.modules['std:validators'] = function () {
 		this.$merge(src);
 	}
 
+	function getMaxLength(prop) {
+		let m = this._meta_.props;
+		if (!m) return undefined;
+		let x = m[prop];
+		if (utils.isObjectExact(x))
+			return x.len;
+		return undefined;
+	}
+
 	function merge(src) {
 		let oldId = this.$id__;
 		try {
@@ -1967,6 +1995,8 @@ app.modules['std:validators'] = function () {
 			for (var prop in this._meta_.props) {
 				if (prop.startsWith('$$')) continue; // skip special properties (saved)
 				let ctor = this._meta_.props[prop];
+				if (ctor.type)
+					ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);
@@ -2335,7 +2365,7 @@ app.modules['std:popup'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180406-7150
 // components/control.js
 
 (function () {
@@ -2398,6 +2428,11 @@ app.modules['std:popup'] = function () {
 			},
 			hasDescr() {
 				return !!this.description;
+			},
+			maxLength() {
+				if (!this.item) return undefined;
+				if (!this.item.$maxLength) return undefined;
+				return this.item.$maxLength(this.prop);
 			}
 		},
 		methods: {
@@ -2508,7 +2543,10 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus 
-			v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+			v-bind:value="modelValue" 
+					v-on:change="onChange($event.target.value)" 
+					v-on:input="onInput($event.target.value)"
+				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -2520,7 +2558,7 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -2560,7 +2598,8 @@ Vue.component('validator-control', {
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean
+			password: Boolean,
+			updateTrigger: String
 		},
 		computed: {
 			controlType() {
@@ -2574,6 +2613,14 @@ Vue.component('validator-control', {
 					this.$refs.input.value = this.modelValue;
 					this.$emit('change', this.item[this.prop]);
 				}
+			},
+			onInput(value) {
+				if (this.updateTrigger === 'input')
+					this.updateValue(value);
+			},
+			onChange(value) {
+				if (this.updateTrigger !== 'input')
+					this.updateValue(value);
 			}
 		}
 	});
@@ -5047,7 +5094,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180218-7118
+// 20180406-7150
 // components/modal.js
 
 
@@ -5172,10 +5219,12 @@ TODO:
 				function createThisElems() {
 					let qs = document.querySelectorAll('.modal-body [tabindex]');
 					let ea = [];
-					for (let i = 0; i < qs.length; i++)
+					for (let i = 0; i < qs.length; i++) {
+						//TODO: check visibilty!
 						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
+					}
 					ea = ea.sort((a, b) => a.ti > b.ti);
-					console.dir(ea);
+					//console.dir(ea);
 					return ea;
 				};
 
@@ -6782,10 +6831,7 @@ Vue.directive('resize', {
 			},
 
 			$helpHref(path) {
-				let helpUrlElem = document.querySelector('meta[name=helpUrl]');
-				if (!helpUrlElem || !helpUrlElem.content)
-					console.error('help url is not specified');
-				return helpUrlElem.content + path;
+				return urltools.helpHref(path);
 			},
 
 			$searchChange() {
@@ -6987,7 +7033,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180318-7134*/
+/*20180406-7150*/
 /* controllers/shell.js */
 
 (function () {
@@ -6999,6 +7045,7 @@ Vue.directive('resize', {
 	const urlTools = require('std:url');
 	const log = require('std:log');
 	const utils = require('std:utils');
+	const locale = window.$$locale;
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -7069,6 +7116,8 @@ Vue.directive('resize', {
 	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
+	<li class="aligner"></li>
+	<li :title="locale.$Help"><a href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -7076,7 +7125,8 @@ Vue.directive('resize', {
 		},
 		computed:
 		{
-			seg0: () => store.getters.seg0
+			seg0: () => store.getters.seg0,
+			locale() { return locale }
 		},
 		methods: {
 			isActive(item) {
@@ -7095,6 +7145,15 @@ Vue.directive('resize', {
 				let opts = { title: null, seg2: savedUrl };
 				let url = makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
+			},
+			showHelp() {
+				window.open(this.helpHref(), "_blank");
+			},
+			helpHref() {
+				let am = this.menu.find(x => this.isActive(x));
+				if (am && am.Help)
+					return urlTools.helpHref(am.Help);
+				return urlTools.helpHref('');
 			}
 		}
 	};
@@ -7467,7 +7526,6 @@ Vue.directive('resize', {
 				alert('change user');
 			},
 			changePassword() {
-				alert('change password');
 				const dlgData = {
 					promise: null, data: { Id: -1 }
 				};

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 04 apr 2018
-module version : 7057
+Last updated : 06 apr 2018
+module version : 7058
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7057);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7058);
 else
-	update a2sys.Versions set [Version] = 7057 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7058 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -477,6 +477,26 @@ begin
 	end
 	close #tmpcrs;
 	deallocate #tmpcrs;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.ChangePassword.Load')
+	drop procedure a2security.[User.ChangePassword.Load]
+go
+------------------------------------------------
+create procedure a2security.[User.ChangePassword.Load]
+	@TenantId int = 0,
+	@UserId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	select [User!TUser!Object] = null, [Id!!Id] = Id, [Name!!Name] = UserName, 
+		[OldPassword] = cast(null as nvarchar(255)),
+		[NewPassword] = cast(null as nvarchar(255)),
+		[ConfirmPassword] = cast(null as nvarchar(255)) 
+	from a2security.Users where Id=@UserId;
 end
 go
 ------------------------------------------------

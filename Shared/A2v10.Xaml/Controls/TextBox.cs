@@ -4,19 +4,26 @@ using System;
 
 namespace A2v10.Xaml
 {
+	public enum UpdateTrigger
+	{
+		Default,
+		Blur,
+		Input
+	}
+
 	public class TextBox : ValuedControl, ITableControl
 	{
 		public String Placeholder { get; set; }
 
-		public TextAlign Align { get; set; }
-
-		public Boolean Multiline { get; set; }
 
 		public Int32? Rows { get; set; }
 
 		public Boolean Password { get; set; }
-
 		public Boolean AutoSize { get; set; }
+		public Boolean Multiline { get; set; }
+		public TextAlign Align { get; set; }
+		public UpdateTrigger UpdateTrigger { get; set; }
+
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -33,6 +40,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":password", "true");
 			if (AutoSize)
 				input.MergeAttribute(":auto-size", "true");
+			if (UpdateTrigger != UpdateTrigger.Default)
+				input.MergeAttribute("update-trigger", UpdateTrigger.ToString().ToLowerInvariant());
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);

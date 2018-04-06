@@ -28,11 +28,11 @@
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
-					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> Профиль</a>
-					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> Сменить пароль</a>
+					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> @[Profile]</a>
+					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
 					<template v-if="userIsAdmin">
 						<div class="divider"></div>
-						<a @click.prevent="changeUser" class="dropdown-item" tabindex="-1"><i class="ico ico-switch"></i> Сменить пользователя</a>
+						<a @click.prevent="changeUser" class="dropdown-item" tabindex="-1"><i class="ico ico-switch"></i> @[SubstUser]</a>
 					</template>
 					<div class="divider"></div>
 					<form id="logoutForm" method="post" action="/account/logoff">

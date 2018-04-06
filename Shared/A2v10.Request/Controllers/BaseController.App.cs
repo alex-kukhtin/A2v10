@@ -7,30 +7,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using A2v10.Request.Properties;
+using System.Dynamic;
+using A2v10.Infrastructure;
+using Newtonsoft.Json;
 
 namespace A2v10.Request
 {
-    public partial class BaseController
-    {
-        Task RenderAbout(TextWriter writer)
-        {
-            var aboutHtml = new StringBuilder(Resources.about);
-            var aboutScript = new StringBuilder(Resources.aboutScript);
-            var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
-            aboutScript.Replace("$(PageGuid)", pageGuid);
+	public partial class BaseController
+	{
+		Task RenderAbout(TextWriter writer)
+		{
+			var aboutHtml = new StringBuilder(Resources.about);
+			var aboutScript = new StringBuilder(Resources.aboutScript);
+			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
+			aboutScript.Replace("$(PageGuid)", pageGuid);
 
-            aboutHtml.Replace("$(PageGuid)", pageGuid);
-            aboutHtml.Replace("$(AboutScript)", aboutScript.ToString());
+			aboutHtml.Replace("$(PageGuid)", pageGuid);
+			aboutHtml.Replace("$(AboutScript)", aboutScript.ToString());
 
-            writer.Write(aboutHtml.ToString());
+			writer.Write(aboutHtml.ToString());
 
-            return Task.FromResult(0);
-        }
+			return Task.FromResult(0);
+		}
 
-        Task RenderChangePassword(TextWriter writer)
-        {
-            throw new RequestModelException($"Show Change Password dialog");
-            //return Task.FromResult(0);
-        }
-    }
+		async Task RenderChangePassword(TextWriter writer, ExpandoObject loadPrms)
+		{
+			var dm = await _dbContext.LoadModelAsync(_host.CatalogDataSource, "a2security.[User.ChangePassword.Load]", loadPrms);
+
+			var changeHtml = new StringBuilder(_localizer.Localize(null, Resources.changePassword));
+			var changeScript = new StringBuilder();
+			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
+			changeScript.Replace("$(PageGuid)", pageGuid);
+
+			changeHtml.Replace("$(PageGuid)", pageGuid);
+			var scripter = new VueDataScripter();
+
+			var dataModelText = JsonConvert.SerializeObject(dm.Root, StandardSerializerSettings);
+
+			changeHtml.Replace("$(Data)", dataModelText);
+			changeHtml.Replace("$(PageScript)", dm.CreateScript(scripter));
+
+			writer.Write(changeHtml.ToString());
+		}
+	}
 }

@@ -17,6 +17,7 @@
 		$Refresh: 'Refresh',
 		$Confirm: 'Confirm',
 		$Error: 'Error',
+		$Help: 'Help',
 		$ConfirmClose: 'Confirm close',
 		$MakeValidFirst: 'First correct the errors',
 		$ElementWasChanged: 'The element has been changed. Save changes?',
@@ -28,7 +29,10 @@
 		$PagerElements: 'items',
 		$Of: 'of',
 		$Register: 'Registraton',
-		$ClickToDownloadPicture: 'Click to download picture'
+		$ClickToDownloadPicture: 'Click to download picture',
+		$EnterPassword: 'Enter password',
+		$MatchError: 'the password does not match the confirmation',
+		$PasswordLength: 'the password must be at least 6 characters long'
 	};
 
 

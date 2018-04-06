@@ -17,6 +17,7 @@
 		$Refresh: 'Оновити',
 		$Confirm: 'Підтведження',
 		$Error: 'Помилка',
+		$Help: 'Допомога',
 		$ConfirmClose: 'Підтведження закриття',
 		$MakeValidFirst: 'Спочатку виправте помилки',
 		$ElementWasChanged: 'Елемент було змінено. Зберегти зміни?',
@@ -28,7 +29,10 @@
 		$PagerElements: 'елементи',
 		$Of: 'з',
 		$Register: 'Реєстрація',
-		$ClickToDownloadPicture: 'Клацніть щоб завантажити картинку'
+		$ClickToDownloadPicture: 'Клацніть щоб завантажити картинку',
+		$EnterPassword: 'Введіть пароль',
+		$MatchError: 'пароль та підтвердження не співпадають',
+		$PasswordLength: 'пароль має містити принаймні 6 символів'
 	};
 
 

@@ -6,6 +6,10 @@
 @Tracing=Tracing
 @DataModel=Data model
 @Profiling=Profiling
+@Profile=Profile
+@ChangePassword=Change password
+@SubstUser=Change user
+@User=User
 ;
 @Home=Home
 @Documents=Documents
@@ -15,6 +19,15 @@
 @Inventory=Inventory
 @Accounting=Accounting
 @Dashboard=Dashboard
+;
+@ResetPassword=Password recovery
+@ResetPasswordMailText=To reset your password, click <a href="{0}">here</a> please
+@ConfirmEMail=Confirm е-mail
+@ConfirmEMailMailText=T confirm your е-mail, click <a href="{0}">here</a> please
+@SetNewPassword=Set new password
+@OldPassword=Old password
+@NewPassword=New password
+@SetPassword=Set password
 ;
 @Create=Create
 @CreateDocument=Create document
@@ -50,6 +63,7 @@
 @Purchaser=Purchaser
 @Memo=Memo
 ;
+@Confirm=Confirm
 @ConfirmDeleteDocument=Delete document?
 ;
 @Error.EnterName=Enter item name

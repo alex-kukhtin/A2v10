@@ -6,11 +6,19 @@
 @Tracing=Трассировка
 @DataModel=Модель данних
 @Profiling=Профилирование
+@Profile=Профиль
+@ChangePassword=Сменить пароль
+@SubstUser=Сменить пользователя
+@User=Пользователь
+@OldPassword=Старый пароль
+@NewPassword=Новый пароль
+@SetPassword=Установить пароль
 ;
 @ResetPassword=Восстановление пароля
 @ResetPasswordMailText=Для восстановления пароля перейдите <a href="{0}">по ссылке</a>
 @ConfirmEMail=Подтверждение е-mail
 @ConfirmEMailMailText=Для подтверждения е-mail перейдите <a href="{0}">по ссылке</a>
+@SetNewPassword=Установка пароля
 ;
 @Home=Главная
 @Documents=Документы
@@ -55,6 +63,7 @@
 @Purchaser=Покупатель
 @Memo=Примечание
 ;
+@Confirm=Подтверждение
 @ConfirmDeleteDocument=Удалить документ?
 ;
 @Error.EnterName=Введите наименование элемента

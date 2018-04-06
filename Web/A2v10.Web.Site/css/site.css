@@ -878,6 +878,13 @@ header .btn:hover,
   color: #0d82f8;
   border-bottom: 3px solid #57a8fa;
 }
+.nav-bar li.aligner:hover {
+  background-color: #f2f3f9;
+}
+.nav-bar li a.btn-help {
+  font-size: 1rem;
+  text-transform: lowercase;
+}
 .page {
   width: 100%;
   height: 100%;
@@ -996,8 +1003,6 @@ header .btn:hover,
 .a2-image {
   display: flex;
   position: relative;
-  height: 0;
-  /*TODO: check aspect ratio */
 }
 .a2-image .remove-image {
   position: absolute;
@@ -2617,10 +2622,10 @@ table.data-grid > tbody > tr.bold td {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   background-color: white;
 }
-.modal-stack .modal-wrapper .modal-window.small {
+.modal-stack .modal-wrapper .modal-window.modal-small {
   width: 300px;
 }
-.modal-stack .modal-wrapper .modal-window.large {
+.modal-stack .modal-wrapper .modal-window.modal-large {
   width: 800px;
 }
 .modal-stack .modal-body .app-exception {

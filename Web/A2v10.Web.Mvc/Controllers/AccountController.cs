@@ -21,6 +21,7 @@ using A2v10.Web.Mvc.Identity;
 using System.Configuration;
 using A2v10.Data.Interfaces;
 using System.Threading;
+using System.Security;
 
 namespace A2v10.Web.Site.Controllers
 {
@@ -394,6 +395,44 @@ namespace A2v10.Web.Site.Controllers
 					{
 						status = String.Join(", ", result.Errors);
 					}
+				}
+			}
+			catch (Exception ex)
+			{
+				status = ex.Message;
+			}
+			return Json(new { Status = status });
+		}
+
+		[HttpPost]
+		[Authorize]
+		[IsAjaxOnly]
+		public async Task<ActionResult> ChangePassword()
+		{
+			String status;
+			try
+			{
+				ChangePasswordViewModel model;
+				using (var tr = new StreamReader(Request.InputStream))
+				{
+					String json = tr.ReadToEnd();
+					model = JsonConvert.DeserializeObject<ChangePasswordViewModel>(json);
+				}
+				if (User.Identity.GetUserId<Int64>() != model.Id)
+					throw new SecurityException("Invalid User Id");
+				var user = await UserManager.FindByIdAsync(model.Id);
+				if (user == null)
+					throw new SecurityException("User not found");
+
+				var ir = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
+				if (ir.Succeeded)
+				{
+					await UserManager.UpdateAsync(user);
+					status = "Success";
+				}
+				else
+				{
+					status = String.Join(", ", ir.Errors);
 				}
 			}
 			catch (Exception ex)

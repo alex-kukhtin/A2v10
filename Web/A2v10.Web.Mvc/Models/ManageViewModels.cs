@@ -39,7 +39,7 @@ namespace A2v10.Web.Mvc.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ChangePasswordViewModel2
     {
         [Required]
         [DataType(DataType.Password)]

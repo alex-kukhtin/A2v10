@@ -90,6 +90,15 @@ namespace A2v10.Web.Mvc.Models
 		public String Code { get; set; }
 	}
 
+	public class ChangePasswordViewModel
+	{
+		public Int64 Id { get; set; }
+		[DataType(DataType.Password)]
+		public String OldPassword { get; set; }
+		[DataType(DataType.Password)]
+		public String NewPassword { get; set; }
+	}
+
 	public class ForgotPasswordViewModel
 	{
 		[Required]

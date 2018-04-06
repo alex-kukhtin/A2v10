@@ -15,16 +15,16 @@ namespace A2v10.Request
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("function modelData(template, data) {");
-			sb.AppendLine("\tconst cmn = require('std:datamodel');");
+			sb.AppendLine("const cmn = require('std:datamodel');");
 			if (meta != null)
 			{
 				sb.Append(GetConstructors(meta));
 			}
-			sb.AppendLine("\tcmn.implementRoot(TRoot, template, ctors);");
-			sb.AppendLine("\tlet root = new TRoot(data);");
+			sb.AppendLine("cmn.implementRoot(TRoot, template, ctors);");
+			sb.AppendLine("let root = new TRoot(data);");
 			sb.Append(SetModelInfo(sys));
 			sb.AppendLine();
-			sb.AppendLine("\treturn root;");
+			sb.AppendLine("return root;");
 			sb.AppendLine("}");
 			return sb.ToString();
 		}
@@ -33,7 +33,7 @@ namespace A2v10.Request
 		{
 			if (sys == null)
 				return null;
-			var sb = new StringBuilder("\tcmn.setModelInfo(root, {\n");
+			var sb = new StringBuilder("cmn.setModelInfo(root, {\n");
 			foreach (var k in sys)
 			{
 				var val = k.Value;
@@ -79,7 +79,7 @@ namespace A2v10.Request
 			String arrItem = ctor.IsArrayType ? "true" : "false";
 
 			sb.AppendLine($"function {name}(source, path, parent) {{")
-			.AppendLine("\tcmn.createObject(this, source, path, parent);")
+			.AppendLine("cmn.createObject(this, source, path, parent);")
 			.AppendLine("}")
 			// metadata
 			.Append($"cmn.defineObject({name}, {{props: {{")
@@ -103,10 +103,12 @@ namespace A2v10.Request
 			foreach (var fd in meta.Fields)
 			{
 				var fm = fd.Value;
-				sb.AppendLine()
-				.Append($"'{fd.Key}'")
+				String propObj = fm.GetObjectType($"{meta.Name}.{fd.Key}");
+				if (propObj == "String")
+					propObj = $"{{type:String, len:{fm.Length}}}";
+				sb.Append($"'{fd.Key}'")
 				.Append(':')
-				.Append(fm.GetObjectType($"{meta.Name}.{fd.Key}"))
+				.Append(propObj)
 				.Append(",");
 			}
 			if (sb.Length == 0)

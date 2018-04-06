@@ -1,10 +1,10 @@
-/* 20180123-7046 */
+/* 20180406-7048 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 Alex Kukhtin
 
-Last updated : 21 mar 2018
-module version : 7047
+Last updated : 06 apr 2018
+module version : 7048
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7047);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7048);
 else
-	update a2sys.Versions set [Version] = 7047 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7048 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -48,11 +48,19 @@ begin
 		Url nvarchar(255) null,
 		Icon nvarchar(255) null,
 		Model nvarchar(255) null,
+		Help nvarchar(255) null,
 		[Order] int not null constraint DF_Menu_Order default(0),
 		[Description] nvarchar(255) null
 	);
 end
 go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Help')
+begin
+	alter table a2ui.Menu add Help nvarchar(255) null;
+end
+go
+
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Menu.Acl')
 begin
@@ -94,7 +102,7 @@ begin
 	)
 	select [Menu!TMenu!Tree] = null, [Id!!Id]=RT.Id, [!TMenu.Menu!ParentId]=RT.ParentId,
 		[Menu!TMenu!Array] = null,
-		m.Name, m.Url, m.Icon, m.[Description]
+		m.Name, m.Url, m.Icon, m.[Description], m.Help
 	from RT 
 		inner join a2security.[Menu.Acl] a on a.Menu = RT.Id
 		inner join a2ui.Menu m on RT.Id=m.Id
@@ -102,9 +110,9 @@ begin
 	order by RT.[Level], m.[Order], RT.[Id];
 
 	-- system parameters
-	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle]
+	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode]
 	from (select Name, Value=StringValue from a2sys.SysParams) as s
-		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle], [SideBarMode])) as p;
 end
 go
 ------------------------------------------------

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180505-7150
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -292,6 +292,8 @@ app.modules['std:utils'] = function () {
 			case 'second':
 				du = 1000;
 				break;
+			default:
+				throw new Error('Invalid unit value for utils.date.add');
 		}
 		return new Date(dt.getTime() + nm * du);
 	}

@@ -12,7 +12,10 @@
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus 
-			v-bind:value="modelValue" v-on:change="updateValue($event.target.value)" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+			v-bind:value="modelValue" 
+					v-on:change="onChange($event.target.value)" 
+					v-on:input="onInput($event.target.value)"
+				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -24,7 +27,7 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex"/>
+		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -64,7 +67,8 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean
+			password: Boolean,
+			updateTrigger: String
 		},
 		computed: {
 			controlType() {
@@ -78,6 +82,14 @@
 					this.$refs.input.value = this.modelValue;
 					this.$emit('change', this.item[this.prop]);
 				}
+			},
+			onInput(value) {
+				if (this.updateTrigger === 'input')
+					this.updateValue(value);
+			},
+			onChange(value) {
+				if (this.updateTrigger !== 'input')
+					this.updateValue(value);
 			}
 		}
 	});

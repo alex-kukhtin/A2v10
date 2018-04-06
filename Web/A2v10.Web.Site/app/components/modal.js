@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180218-7118
+// 20180406-7150
 // components/modal.js
 
 
@@ -125,10 +125,12 @@
 				function createThisElems() {
 					let qs = document.querySelectorAll('.modal-body [tabindex]');
 					let ea = [];
-					for (let i = 0; i < qs.length; i++)
+					for (let i = 0; i < qs.length; i++) {
+						//TODO: check visibilty!
 						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
+					}
 					ea = ea.sort((a, b) => a.ti > b.ti);
-					console.dir(ea);
+					//console.dir(ea);
 					return ea;
 				};
 

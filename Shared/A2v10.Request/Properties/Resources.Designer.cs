@@ -115,6 +115,23 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot;&gt;
+        ///	&lt;div class=&quot;modal-header&quot; v-drag-window&gt;
+        ///		&lt;span&gt;Свойства поставщика&lt;/span&gt;
+        ///		&lt;button class=&quot;btnclose&quot; @click.prevent=&quot;$modalClose(false)&quot;&gt;&amp;#x2715;&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div class=&quot;load-indicator&quot; v-show=&quot;$isLoading&quot;&gt;&lt;/div&gt;
+        ///	&lt;div class=&quot;modal-content&quot;&gt;
+        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:1fr 1fr &quot;&gt;
+        ///			&lt;textbox label=&quot;Наименование&quot; :validator-options=&quot;{placement: &apos;bottom-left&apos;}&quot; :tab-index=&quot;1&quot; :item=&quot;Agent&quot; prop=&quot;Name&quot; style=&quot;grid-row:1;grid-column:1 /  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string changePassword {
+            get {
+                return ResourceManager.GetString("changePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ConfirmEMailPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
@@ -547,14 +564,15 @@ namespace A2v10.Request.Properties {
         ///			submitted: false,
         ///			serverError: &apos;&apos;,
         ///			emailError: &apos;&apos;,
-        ///			showConfirm: false
+        ///			showConfirm: false,
+        ///			passwordError: &apos;&apos;
         ///		},
         ///		computed: {
         ///			locale() {
         ///				return window.$$locale;
         ///			},
         ///			valid() {
-        ///				if (!this.submitted) r [rest of string was truncated]&quot;;.
+        ///			 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string resetPasswordScript {
             get {
@@ -665,11 +683,10 @@ namespace A2v10.Request.Properties {
         ///	&lt;style&gt;
         ///		body {
         ///			background-color: #e3e3e3;
-        ///		}
-        ///	&lt;/style&gt;
-        ///&lt;/head&gt;
-        ///&lt;body scroll=&quot;none&quot;&gt;
-        ///	$ [rest of string was truncated]&quot;;.
+        ///			width:100%;
+        ///			height:100%;
+        ///			padding:0;
+        ///	 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string stiReport {
             get {

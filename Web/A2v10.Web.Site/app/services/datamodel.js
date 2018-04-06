@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180329-7143
+// 20180406-7150
 // services/datamodel.js
 
 (function () {
@@ -71,6 +71,13 @@
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
 		let shadow = trg._src_;
 		source = source || {};
+		if (utils.isObjectExact(propCtor)) {
+			//console.warn(`${prop}:${propCtor.len}`);
+			if ("type" in propCtor)
+				propCtor = propCtor.type;
+			else
+				throw new Error(`Invalid _meta_ for '${prop}'`);
+		}
 		switch (propCtor) {
 			case Number:
 				shadow[prop] = source[prop] || 0;
@@ -434,6 +441,7 @@
 
 		arr.$append = function (src) {
 			const that = this;
+
 			function append(src, select) {
 				let addingEvent = that._path_ + '[].adding';
 				let newElem = that.$new(src);
@@ -558,6 +566,7 @@
 		obj.prototype.$merge = merge;
 		obj.prototype.$empty = empty;
 		obj.prototype.$set = setElement;
+		obj.prototype.$maxLength = getMaxLength;
 
 		defineCommonProps(obj.prototype);
 
@@ -904,6 +913,15 @@
 		this.$merge(src);
 	}
 
+	function getMaxLength(prop) {
+		let m = this._meta_.props;
+		if (!m) return undefined;
+		let x = m[prop];
+		if (utils.isObjectExact(x))
+			return x.len;
+		return undefined;
+	}
+
 	function merge(src) {
 		let oldId = this.$id__;
 		try {
@@ -914,6 +932,8 @@
 			for (var prop in this._meta_.props) {
 				if (prop.startsWith('$$')) continue; // skip special properties (saved)
 				let ctor = this._meta_.props[prop];
+				if (ctor.type)
+					ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);

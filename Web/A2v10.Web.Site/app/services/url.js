@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180404-7148*/
+/*20180406-7150*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -18,7 +18,8 @@ app.modules['std:url'] = function () {
 		replaceUrlQuery,
 		createUrlForNavigate,
 		firstUrl: '',
-		encodeUrl: encodeURIComponent
+		encodeUrl: encodeURIComponent,
+		helpHref
 	};
 
 	function normalize(elem) {
@@ -143,6 +144,13 @@ app.modules['std:url'] = function () {
 		if (url.endsWith('new') && urlId === 'new')
 			urlId = '';
 		return combine(url, urlId) + qs;
+	}
+
+	function helpHref(path) {
+		let helpUrlElem = document.querySelector('meta[name=helpUrl]');
+		if (!helpUrlElem || !helpUrlElem.content)
+			console.error('help url is not specified');
+		return helpUrlElem.content + (path || '');
 	}
 
 	function replaceId(url, newId) {

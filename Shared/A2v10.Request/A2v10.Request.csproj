@@ -72,6 +72,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\changePassword.html" />
     <Content Include="Pages\about.html" />
     <Content Include="Pages\confirmEMail.html" />
     <Content Include="Pages\error.html" />

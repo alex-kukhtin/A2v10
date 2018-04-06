@@ -32,7 +32,7 @@ namespace ASP
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "2.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Manage/ChangePassword.cshtml")]
-    public partial class _Views_Manage_ChangePassword_cshtml : System.Web.Mvc.WebViewPage<A2v10.Web.Mvc.Models.ChangePasswordViewModel>
+    public partial class _Views_Manage_ChangePassword_cshtml : System.Web.Mvc.WebViewPage<A2v10.Web.Mvc.Models.ChangePasswordViewModel2>
     {
         public _Views_Manage_ChangePassword_cshtml()
         {

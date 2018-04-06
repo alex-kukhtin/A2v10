@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180406-7150
 // components/control.js
 
 (function () {
@@ -63,6 +63,11 @@
 			},
 			hasDescr() {
 				return !!this.description;
+			},
+			maxLength() {
+				if (!this.item) return undefined;
+				if (!this.item.$maxLength) return undefined;
+				return this.item.$maxLength(this.prop);
 			}
 		},
 		methods: {

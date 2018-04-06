@@ -556,10 +556,7 @@
 			},
 
 			$helpHref(path) {
-				let helpUrlElem = document.querySelector('meta[name=helpUrl]');
-				if (!helpUrlElem || !helpUrlElem.content)
-					console.error('help url is not specified');
-				return helpUrlElem.content + path;
+				return urltools.helpHref(path);
 			},
 
 			$searchChange() {

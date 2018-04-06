@@ -14,6 +14,7 @@
 		$Cancel: 'Cancel',
 		$Error: 'Error',
 		$Login: 'Log in',
+		$User: 'User',
 		$Confirm: 'Confirm',
 		$LoginPrompt: 'Login to system',
 		$LoginLink: 'Link to login',

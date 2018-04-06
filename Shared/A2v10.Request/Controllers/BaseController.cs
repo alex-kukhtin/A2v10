@@ -74,7 +74,7 @@ namespace A2v10.Request
 				case "changepassword":
 					if (kind != RequestUrlKind.Dialog)
 						throw new RequestModelException($"Invalid application Url: {pathInfo}");
-					await RenderChangePassword(writer);
+					await RenderChangePassword(writer, loadPrms);
 					break;
 				default:
 					throw new RequestModelException($"Invalid application Url: {pathInfo}");
