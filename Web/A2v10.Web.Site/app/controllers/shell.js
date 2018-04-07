@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180406-7150*/
+/*20180407-7151*/
 /* controllers/shell.js */
 
 (function () {
@@ -84,7 +84,7 @@
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
 	<li class="aligner"></li>
-	<li :title="locale.$Help"><a href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+	<li :title="locale.$Help"><a :href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -265,7 +265,6 @@
 		},
 		computed: {
 			currentView() {
-				// TODO: compact
 				let root = window.$$rootUrl;
 				let url = store.getters.url;
 				let len = store.getters.len;

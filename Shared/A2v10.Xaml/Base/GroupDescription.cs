@@ -1,11 +1,13 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Markup;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -32,6 +34,8 @@ namespace A2v10.Xaml
 		}
 	}
 
+	[ContentProperty("Items")]
+	[TypeConverter(typeof(GroupDescriptionsConverter))]
 	public class GroupDescriptions : List<GroupDescription>, IJavaScriptSource
 	{
 		public String GetJsValue(RenderContext context)
@@ -48,4 +52,31 @@ namespace A2v10.Xaml
 			return sb.ToString();
 		}
 	}
+
+	internal class GroupDescriptionsConverter : TypeConverter
+	{
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			if (sourceType == typeof(String))
+				return true;
+			return false;
+		}
+
+		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		{
+			if (value == null)
+				return null;
+			if (value is String)
+			{
+				var coll = new GroupDescriptions();
+				var gd = new GroupDescription();
+				gd.GroupBy = value.ToString();
+				gd.Count = true;
+				coll.Add(gd);
+				return coll;
+			}
+			throw new XamlException($"Invalid GroupDescriptions value '{value}'");
+		}
+	}
+
 }

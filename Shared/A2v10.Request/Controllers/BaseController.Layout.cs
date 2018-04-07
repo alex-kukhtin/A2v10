@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using A2v10.Request.Properties;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace A2v10.Request
 {
@@ -23,6 +24,7 @@ namespace A2v10.Request
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
+			sb.Replace("$(AssetsStyleSheets)", AppStyleSheetsLink);
 			writer.Write(sb.ToString());
 		}
 
@@ -47,5 +49,41 @@ namespace A2v10.Request
 			writer.Write(sb.ToString());
 		}
 
+		String AppStyleSheetsLink
+		{
+			get
+			{
+				// TODO _host AssestsDistionary
+				var fp = _host.MakeFullPath(Admin, "_assets", "");
+				if (!Directory.Exists(fp))
+					return String.Empty;
+				foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
+				{
+					// at least one file
+					return $"<link  href=\"/shell/appstyles\" rel=\"stylesheet\" />";
+				}
+				return String.Empty;
+			}
+		}
+
+		public String GetAppStyleConent()
+		{
+			var fp = _host.MakeFullPath(Admin, "_assets", "");
+			if (!Directory.Exists(fp))
+				return String.Empty;
+			StringBuilder sb = new StringBuilder();
+			foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
+			{
+				var fileName = f.ToLowerInvariant();
+				if (!fileName.EndsWith(".min.css")) {
+					String minFile = fileName.Replace(".css", ".min.css");
+					if (File.Exists(minFile))
+						continue; // min.css found
+				}
+				var txt = File.ReadAllText(fileName);
+				sb.AppendLine(txt);
+			}
+			return sb.ToString();
+		}
 	}
 }

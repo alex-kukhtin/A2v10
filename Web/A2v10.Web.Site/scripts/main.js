@@ -3163,7 +3163,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180407-7151
 // components/datagrid.js*/
 
 (function () {
@@ -3187,13 +3187,22 @@ Vue.component('validator-control', {
 	const utils = require('std:utils');
 	const log = require('std:log');
 
+	/* group marker
+				<th v-if="isGrouping" class="group-cell" style="display:none">
+					<div class="h-group">
+						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a
+							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
+					</div>
+				</th>
+			<col v-if="isGrouping" class="fit"/>
+	 */
+
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<table :class="cssClass">
 		<colgroup>
 			<col v-if="isMarkCell" class="fit"/>
-			<col v-if="isGrouping" class="fit"/>
 			<col v-if="isRowDetailsCell" class="fit" />
 			<col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
 		</colgroup>
@@ -3201,12 +3210,6 @@ Vue.component('validator-control', {
 			<tr v-show="isHeaderVisible">
 				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
-				<th v-if="isGrouping" class="group-cell">
-					<div class="h-group">
-						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a 
-							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
-					</div>
-				</th>
 				<slot></slot>
 			</tr>
 		</thead>
@@ -3214,7 +3217,7 @@ Vue.component('validator-control', {
 			<tbody>
 				<template v-for="(g, gIndex) of $groups">
 					<tr v-if="isGroupGroupVisible(g)" :class="'group lev-' + g.level" :key="gIndex">
-						<td @click.prevent='toggleGroup(g)' :colspan="columns.length + 1">
+						<td @click.prevent='toggleGroup(g)' :colspan="groupColumns">
 						<span :class="{expmark: true, expanded: g.expanded}" />
 						<span class="grtitle" v-text="groupTitle(g)" />
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
@@ -3244,7 +3247,9 @@ Vue.component('validator-control', {
 </div>
 `;
 
-	/* @click.prevent disables checkboxes & other controls in cells */
+	/* @click.prevent disables checkboxes & other controls in cells 
+	<td class="group-marker" v-if="group"></td>
+	 */
 	const dataGridRowTemplate = `
 <tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick">
 	<td v-if="isMarkCell" class="marker">
@@ -3253,7 +3258,6 @@ Vue.component('validator-control', {
 	<td v-if="detailsMarker" class="details-marker" @click.prevent="toggleDetails">
 		<i v-if="detailsIcon" class="ico" :class="detailsExpandClass" />
 	</td>
-	<td class="group-marker" v-if="group"></td>
 	<data-grid-cell v-for="(col, colIndex) in cols" :key="colIndex" :row="row" :col="col" :index="index" />
 </tr>`;
 
@@ -3696,6 +3700,11 @@ Vue.component('validator-control', {
 			},
 			isGrouping() {
 				return this.groupBy;
+			},
+			groupColumns() {
+				return this.columns.length + //1 +
+					(this.isMarkCell ? 1 : 0) +
+					(this.isRowDetailsCell ? 1 : 0);
 			},
 			$groupCount() {
 				if (utils.isObjectExact(this.groupBy))
@@ -4608,7 +4617,7 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :GroupBy="groupBy">
 	</slot>
 </div>
 `,
@@ -4619,6 +4628,7 @@ TODO:
 		data() {
 			return {
 				filter: this.initialFilter,
+				groupBy: null,
 				lockChange: true
 			};
 		},
@@ -7033,7 +7043,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180406-7150*/
+/*20180407-7151*/
 /* controllers/shell.js */
 
 (function () {
@@ -7117,7 +7127,7 @@ Vue.directive('resize', {
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
 	<li class="aligner"></li>
-	<li :title="locale.$Help"><a href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+	<li :title="locale.$Help"><a :href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -7298,7 +7308,6 @@ Vue.directive('resize', {
 		},
 		computed: {
 			currentView() {
-				// TODO: compact
 				let root = window.$$rootUrl;
 				let url = store.getters.url;
 				let len = store.getters.len;

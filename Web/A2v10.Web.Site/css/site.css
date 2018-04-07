@@ -1860,7 +1860,7 @@ table.data-grid {
   width: 100%;
 }
 table.data-grid col.fit {
-  width: 1px;
+  width: .1%;
 }
 table.data-grid.striped > tbody > tr.even {
   background-color: rgba(208, 208, 208, 0.15);
@@ -2013,6 +2013,9 @@ table.data-grid td.marker > .info,
 table.data-grid td.marker > .cyan {
   background-color: rgba(114, 234, 234, 0.15);
   border-left-color: #72eaea;
+}
+table.data-grid th.details-marker {
+  width: 22px;
 }
 table.data-grid td.details-marker {
   padding: 0;
@@ -2314,10 +2317,10 @@ table.data-grid > tbody > tr.bold td {
   border-color: transparent;
 }
 .commandbar.visible-active {
-  display: none;
+  visibility: hidden;
 }
 .active .commandbar.visible-active {
-  display: flex;
+  visibility: visible;
 }
 .data-grid td > .commandbar {
   margin: -4px;

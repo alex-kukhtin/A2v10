@@ -193,6 +193,10 @@ namespace A2v10.Interop
 			foreach (var dataSet in _dataSetRows)
 			{
 				IList<ExpandoObject> list = _dataModel.Eval<List<ExpandoObject>>(dataSet.Key);
+				if (list == null)
+				{
+					throw new InteropException($"The data model does not have a '{dataSet.Key}' property ");
+				}
 				RowSetDef def = dataSet.Value;
 				UInt32 count = 0;
 				Row lr = null;

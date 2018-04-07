@@ -301,7 +301,7 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :GroupBy="groupBy">
 	</slot>
 </div>
 `,
@@ -312,6 +312,7 @@ TODO:
 		data() {
 			return {
 				filter: this.initialFilter,
+				groupBy: null,
 				lockChange: true
 			};
 		},

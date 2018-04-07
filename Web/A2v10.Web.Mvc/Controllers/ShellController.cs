@@ -306,6 +306,8 @@ namespace A2v10.Web.Mvc.Controllers
 				await ShellScript(bAdmin);
 			else if (pathInfo.StartsWith("shell/trace"))
 				ShellTrace();
+			else if (pathInfo.StartsWith("shell/appstyles"))
+				ShellAppStyles();
 			else
 				throw new RequestModelException($"Invalid shell action: '{pathInfo}'");
 		}
@@ -340,6 +342,12 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				WriteExceptionStatus(ex);
 			}
+		}
+
+		void ShellAppStyles()
+		{
+			Response.ContentType = "text/css";
+			Response.Write(_baseController.GetAppStyleConent());
 		}
 
 		protected void WriteExceptionStatus(Exception ex)

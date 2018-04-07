@@ -45,7 +45,7 @@ table.data-grid {
 	width: 100%;
 
 	col.fit {
-		width: 1px;
+		width: .1%; //BUG?
 	}
 
 	&.striped {
@@ -226,6 +226,10 @@ table.data-grid {
 			background-color: @dg-info-bg-color;
 			border-left-color: @dg-info-brd-color;
 		}
+	}
+
+	th.details-marker {
+		width:22px;
 	}
 
 	td.details-marker {
