@@ -43,7 +43,7 @@
 			</div>
 		</header>
 		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode"></a2-main-view>
-		<a2-debug :model-stack="modelStack" :model-visible="debugShowModel"
+		<a2-debug :model-stack="modelStack" :model-visible="debugShowModel" v-if="isDebug"
 				  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
 		<footer class="footer">
 			<div :class="{spinner: true, active:processing}"></div>
@@ -57,7 +57,7 @@
 
 			@[Version]&nbsp;
 			<span v-text="version"></span>
-			<div class="debug-btn dropdown dir-up" v-dropdown>
+			<div class="debug-btn dropdown dir-up" v-dropdown v-if="isDebug">
 				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
 				<div class="dropdown-menu menu up-right">
 					<a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> @[DataModel]</a>
@@ -73,11 +73,8 @@
 				</div>
 			</div>
 		</footer>
-		<!--
-		<a2-debug v-if="debugVisible"></a2-debug>
-		-->
 	</div>
-	<script type="text/javascript" src="/scripts/vue.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/d3.min.js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>

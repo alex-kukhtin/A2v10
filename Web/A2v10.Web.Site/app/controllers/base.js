@@ -309,14 +309,6 @@
 				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 			},
 
-			$export() {
-				const self = this;
-				const root = window.$$rootUrl;
-				let url = self.$baseUrl;
-				url = url.replace('/_page/', '/_export/');
-				window.location = root + url;
-			},
-
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -476,20 +468,34 @@
 				return doDialog();
 			},
 
+			$export() {
+				const self = this;
+				const root = window.$$rootUrl;
+				let url = self.$baseUrl;
+				url = url.replace('/_page/', '/_export/');
+				window.location = root + url;
+			},
+
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
+
+				let cmd = opts.export ? 'export' : 'show';
 
 				const doReport = () => {
 					let id = arg;
 					if (arg && utils.isObject(arg))
 						id = arg.$id;
 					const root = window.$$rootUrl;
-					let url = root + '/report/show/' + id;
+					let url = `${root}/report/${cmd}/${id}`;
 					let reportUrl = this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
-					url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
+					let qry = { base: baseUrl, rep: rep };
+					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					window.open(url, '_blank');
+					if (opts.export)
+						window.location = url;
+					else
+						window.open(url, '_blank');
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {

@@ -31,6 +31,16 @@ namespace A2v10.Reports
 			};
 		}
 
+		public static StiPdfExportSettings GetPdfExportSettings()
+		{
+			var pdf = new StiPdfExportSettings();
+			pdf.UseUnicode = true;
+			pdf.EmbeddedFonts = true;
+			pdf.ImageResolution = 300;
+			pdf.ImageCompressionMethod = StiPdfImageCompressionMethod.Flate;
+			return pdf;
+		}
+
 		public static StiDefaultExportSettings GetExportSettings()
 		{
 			var settings = new StiDefaultExportSettings();
@@ -71,12 +81,14 @@ namespace A2v10.Reports
 			}
 		}
 
-		public static StiReport CreateReport(String path)
+		public static StiReport CreateReport(String path, String repName)
 		{
 			var r = new Stimulsoft.Report.StiReport();
 			r.Load(path);
 			r.AddReferencedAssemblies();
 			r.SubstDataSources();
+			if (!String.IsNullOrEmpty(repName))
+				r.ReportName = repName;
 			return r;
 		}
 

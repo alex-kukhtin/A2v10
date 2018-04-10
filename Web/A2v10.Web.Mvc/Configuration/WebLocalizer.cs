@@ -108,7 +108,7 @@ namespace A2v10.Web.Mvc.Configuration
 		{
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "Localization"));
+			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "_localization"));
 			CreateWatchers(dirPath, appPath);
 			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
 			{

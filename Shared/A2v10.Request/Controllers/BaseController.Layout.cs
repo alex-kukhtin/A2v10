@@ -46,6 +46,7 @@ namespace A2v10.Request
 			sb.Replace("$(Menu)", jsonMenu);
 			sb.Replace("$(AppVersion)", _host.AppVersion);
 			sb.Replace("$(Admin)", userAdmin ? "true" : "false");
+			sb.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false");
 			writer.Write(sb.ToString());
 		}
 

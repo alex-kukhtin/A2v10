@@ -917,6 +917,7 @@ app.modules['std:log'] = function () {
 			return _traceEnabled;
 		},
 		enableTrace: function (val) {
+			if (!window.$$debug) return;
 			_traceEnabled = val;
 			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
 			try {
@@ -5104,7 +5105,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180406-7150
+// 20180410-7153
 // components/modal.js
 
 
@@ -5115,18 +5116,18 @@ TODO:
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress">
-    <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
-    <div v-else class="modal-body">
-        <div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
-        <div :class="bodyClass">
-            <i v-if="hasIcon" :class="iconClass" />
-            <div v-text="dialog.message" />
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
-        </div>
-    </div>
-</div>        
+	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+	<div v-else class="modal-body">
+		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+		<div :class="bodyClass">
+			<i v-if="hasIcon" :class="iconClass" />
+			<div v-text="dialog.message" />
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+		</div>
+	</div>
+</div>
 `;
 
 	const setWidthComponent = {
@@ -5238,19 +5239,32 @@ TODO:
 					return ea;
 				};
 
+
 				if (this._tabElems === undefined) {
 					this._tabElems = createThisElems();
 				}
 				if (!this._tabElems || !this._tabElems.length)
 					return;
-				let maxIndex = this._tabElems[this._tabElems.length - 1].ti;
+				let back = event.shiftKey;
+				let lastItm = this._tabElems.length - 1;
+				let maxIndex = this._tabElems[lastItm].ti;
 				let aElem = document.activeElement;
 				let ti = +aElem.getAttribute("tabindex");
-				if (ti === maxIndex) {
+				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
+				if (ti == 0) {
 					event.preventDefault();
-					this._tabElems[0].el.focus();
-				} else if (ti === 0) {
-					event.preventDefault();
+					return;
+				}
+				if (back) {
+					if (ti === 1) {
+						event.preventDefault();
+						this._tabElems[lastItm].el.focus();
+					}
+				} else {
+					if (ti === maxIndex) {
+						event.preventDefault();
+						this._tabElems[0].el.focus();
+					}
 				}
 			}
 		},
@@ -6594,14 +6608,6 @@ Vue.directive('resize', {
 				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 			},
 
-			$export() {
-				const self = this;
-				const root = window.$$rootUrl;
-				let url = self.$baseUrl;
-				url = url.replace('/_page/', '/_export/');
-				window.location = root + url;
-			},
-
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -6761,20 +6767,34 @@ Vue.directive('resize', {
 				return doDialog();
 			},
 
+			$export() {
+				const self = this;
+				const root = window.$$rootUrl;
+				let url = self.$baseUrl;
+				url = url.replace('/_page/', '/_export/');
+				window.location = root + url;
+			},
+
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
+
+				let cmd = opts.export ? 'export' : 'show';
 
 				const doReport = () => {
 					let id = arg;
 					if (arg && utils.isObject(arg))
 						id = arg.$id;
 					const root = window.$$rootUrl;
-					let url = root + '/report/show/' + id;
+					let url = `${root}/report/${cmd}/${id}`;
 					let reportUrl = this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
-					url = url + urltools.makeQueryString({ base: baseUrl, rep: rep });
+					let qry = { base: baseUrl, rep: rep };
+					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					window.open(url, '_blank');
+					if (opts.export)
+						window.location = url;
+					else
+						window.open(url, '_blank');
 				};
 
 				if (opts && opts.validRequired && root.$invalid) {
@@ -7043,7 +7063,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180407-7151*/
+/*20180408-7152*/
 /* controllers/shell.js */
 
 (function () {
@@ -7516,11 +7536,13 @@ Vue.directive('resize', {
 				alert('debug options');
 			},
 			debugTrace() {
+				if (!window.$$debug) return;
 				this.debugShowModel = false;
 
 				this.debugShowTrace = !this.debugShowTrace;
 			},
 			debugModel() {
+				if (!window.$$debug) return;
 				this.debugShowTrace = false;
 				this.debugShowModel = !this.debugShowModel;
 			},

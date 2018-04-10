@@ -21,6 +21,7 @@ app.modules['std:log'] = function () {
 			return _traceEnabled;
 		},
 		enableTrace: function (val) {
+			if (!window.$$debug) return;
 			_traceEnabled = val;
 			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
 			try {

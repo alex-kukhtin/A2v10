@@ -20,6 +20,9 @@ using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
 using Stimulsoft.Report.Web;
 using System.Text;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Export;
+using System.Web;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -27,6 +30,7 @@ namespace A2v10.Web.Mvc.Controllers
 	{
 		public IDataModel DataModel;
 		public String ReportPath;
+		public String Name;
 		public ExpandoObject Variables;
 	}
 
@@ -61,9 +65,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var url = $"/_report/{Base}/{Rep}/{id}";
 				ReportInfo ri = await GetReportInfo(url, id);
 
-				TempData["StiDataModel"] = ri.DataModel;
-				TempData["StiFilePath"] = ri.ReportPath;
-				TempData["StiVariables"] = ri.Variables;
+				TempData["StiReportInfo"] = ri;
 
 				var view = new EmptyView();
 				var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
@@ -94,12 +96,15 @@ namespace A2v10.Web.Mvc.Controllers
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 			var rep = rm.GetReport();
 			ri.ReportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+
 			ExpandoObject prms = new ExpandoObject();
 			prms.Set("UserId", UserId);
 			if (_baseController.Host.IsMultiTenant)
 				prms.Set("TenantId", TenantId);
 			prms.Set("Id", id);
 			prms.AppendAndReplace(rep.parameters);
+
+			// TODO: make defer for AZURE!
 			ri.DataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
 
 			// after query
@@ -111,10 +116,12 @@ namespace A2v10.Web.Mvc.Controllers
 				vars.Set("TenantId", TenantId);
 			vars.Set("Id", id);
 			ri.Variables = vars;
-
+			ri.Name = _baseController.Localize(String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);
 			return ri;
 		}
 
+		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Export(String Base, String Rep, String id)
 		{
 			SetupLicense();
@@ -122,12 +129,27 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var url = $"/_report/{Base}/{Rep}/{id}";
 				ReportInfo ri = await GetReportInfo(url, id);
+				var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
+				if (ri.DataModel != null)
+				{
+					var dynModel = ri.DataModel.GetDynamic();
+					foreach (var x in dynModel)
+						r.RegBusinessObject(x.Key, x.Value);
+				}
+				if (ri.Variables != null)
+					r.AddVariables(ri.Variables);
+				var ms = new MemoryStream();
+				// saveFileDialog: true -> download
+				// saveFileDialog: false -> show
+				return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog:true);
 			}
 			catch (Exception ex)
 			{
+				Response.ContentType = "text/plain";
+				Response.ContentEncoding = Encoding.UTF8;
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				return View("Exception", ex);
+				Response.Write(ex.Message);
 			}
 			return new EmptyResult();
 		}
@@ -198,19 +220,20 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				var path = TempData["StiFilePath"].ToString();
 				//TODO: image settings var rm = TempData["StiImage"] as ImageInfo;
 				//TODO: profile var token = Profiler.BeginReport("create");
-				var r = StiReportExtensions.CreateReport(path);
-				//Profiler.EndReport(token);
-				var iDataModel = TempData["StiDataModel"] as IDataModel;
-				if (iDataModel != null)
+				var ri = TempData["StiReportInfo"] as ReportInfo;
+				if (ri == null)
+					throw new InvalidProgramException("invalid data");
+				var path = ri.ReportPath;
+				var r = StiReportExtensions.CreateReport(path, ri.Name);
+				if (ri.DataModel != null)
 				{
-					var dynModel = iDataModel.GetDynamic();
+					var dynModel = ri.DataModel.GetDynamic();
 					foreach (var x in dynModel)
 						r.RegBusinessObject(x.Key, x.Value);
 				}
-				var vars = TempData["StiVariables"] as ExpandoObject;
+				var vars = ri.Variables;
 				if (vars != null)
 					r.AddVariables(vars);
 				return StiMvcViewer.GetReportResult(r);

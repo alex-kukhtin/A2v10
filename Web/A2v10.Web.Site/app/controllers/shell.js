@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180407-7151*/
+/*20180408-7152*/
 /* controllers/shell.js */
 
 (function () {
@@ -473,11 +473,13 @@
 				alert('debug options');
 			},
 			debugTrace() {
+				if (!window.$$debug) return;
 				this.debugShowModel = false;
 
 				this.debugShowTrace = !this.debugShowTrace;
 			},
 			debugModel() {
+				if (!window.$$debug) return;
 				this.debugShowTrace = false;
 				this.debugShowModel = !this.debugShowModel;
 			},

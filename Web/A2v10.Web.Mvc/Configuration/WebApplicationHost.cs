@@ -111,7 +111,16 @@ namespace A2v10.Web.Mvc.Configuration
 			}
 		}
 
-		public Boolean IsDebugConfiguration { get { return true; } }
+		public Boolean IsDebugConfiguration
+		{
+			get
+			{
+				var debug = ConfigurationManager.AppSettings["configuration"];
+				if (String.IsNullOrEmpty(debug))
+					return true; // default is 'debug'
+				return debug.ToLowerInvariant() == "debug";
+			}
+		}
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{

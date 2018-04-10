@@ -132,6 +132,7 @@ namespace A2v10.Web.Mvc.Controllers
 				prms.Add("$(Theme)", _baseController.Host.Theme);
 				prms.Add("$(Build)", _baseController.Host.AppBuild);
 				prms.Add("$(Locale)", _baseController.CurrentLang);
+				prms.Add("$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min.");
 				_baseController.Layout(Response.Output, prms);
 			}
 			catch (Exception ex)

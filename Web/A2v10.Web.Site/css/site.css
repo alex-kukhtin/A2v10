@@ -661,6 +661,7 @@ td.valign-bottom {
   padding: 0 .25rem .1rem .25rem;
   display: inline-block;
   margin: 1px;
+  line-height: normal;
 }
 .tag-label.success,
 .tag-label.green {
@@ -671,7 +672,8 @@ td.valign-bottom {
   background-color: #f0ad4e;
 }
 .tag-label.danger,
-.tag-label.red {
+.tag-label.red,
+.tag-label.error {
   background-color: #da533f;
 }
 .tag-label.info,
@@ -1003,6 +1005,7 @@ header .btn:hover,
 .a2-image {
   display: flex;
   position: relative;
+  align-items: flex-start;
 }
 .a2-image .remove-image {
   position: absolute;
@@ -2021,6 +2024,7 @@ table.data-grid td.details-marker {
   padding: 0;
   padding: 4px;
   width: 22px;
+  min-width: 22px;
   cursor: pointer;
 }
 table.data-grid td.details-marker .ico {
@@ -4016,6 +4020,7 @@ h5,
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: auto;
 }
 .side-bar-compact .side-menu li {
   margin: 6px;

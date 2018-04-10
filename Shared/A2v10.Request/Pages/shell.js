@@ -1,5 +1,5 @@
 ﻿
-/*20180317-7132*/
+/*20180408-7152*/
 
 (function () {
 
@@ -16,10 +16,11 @@
 			title: menu.SysParams.AppTitle,
 			subtitle: menu.SysParams.AppSubTitle,
 			sideBarMode: menu.SysParams.SideBarMode,
-			userIsAdmin: $(Admin)
+			userIsAdmin: $(Admin),
+			isDebug: $(Debug)
 		}
 	});
 
 	window.$rootUrl = '';
-
+	window.$$debug = $(Debug);
 })();

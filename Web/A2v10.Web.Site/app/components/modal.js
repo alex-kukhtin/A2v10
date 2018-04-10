@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180406-7150
+// 20180410-7153
 // components/modal.js
 
 
@@ -11,18 +11,18 @@
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress">
-    <include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
-    <div v-else class="modal-body">
-        <div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
-        <div :class="bodyClass">
-            <i v-if="hasIcon" :class="iconClass" />
-            <div v-text="dialog.message" />
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
-        </div>
-    </div>
-</div>        
+	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+	<div v-else class="modal-body">
+		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+		<div :class="bodyClass">
+			<i v-if="hasIcon" :class="iconClass" />
+			<div v-text="dialog.message" />
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+		</div>
+	</div>
+</div>
 `;
 
 	const setWidthComponent = {
@@ -134,19 +134,32 @@
 					return ea;
 				};
 
+
 				if (this._tabElems === undefined) {
 					this._tabElems = createThisElems();
 				}
 				if (!this._tabElems || !this._tabElems.length)
 					return;
-				let maxIndex = this._tabElems[this._tabElems.length - 1].ti;
+				let back = event.shiftKey;
+				let lastItm = this._tabElems.length - 1;
+				let maxIndex = this._tabElems[lastItm].ti;
 				let aElem = document.activeElement;
 				let ti = +aElem.getAttribute("tabindex");
-				if (ti === maxIndex) {
+				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
+				if (ti == 0) {
 					event.preventDefault();
-					this._tabElems[0].el.focus();
-				} else if (ti === 0) {
-					event.preventDefault();
+					return;
+				}
+				if (back) {
+					if (ti === 1) {
+						event.preventDefault();
+						this._tabElems[lastItm].el.focus();
+					}
+				} else {
+					if (ti === maxIndex) {
+						event.preventDefault();
+						this._tabElems[0].el.focus();
+					}
 				}
 			}
 		},

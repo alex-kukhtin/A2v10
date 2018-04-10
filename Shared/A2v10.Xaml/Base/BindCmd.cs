@@ -69,6 +69,7 @@ namespace A2v10.Xaml
 		public Boolean CheckReadOnly { get; set; }
 		public Boolean NewWindow { get; set; }
 		public Boolean CheckArgument { get; set; }
+		public Boolean Export { get; set; }
 
 		public Confirm Confirm { get; set; }
 
@@ -142,8 +143,6 @@ namespace A2v10.Xaml
 				case CommandType.DbRemoveSelected:
 					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";
 
-				case CommandType.Export:
-					return $"$export()";
 
 				case CommandType.MailTo:
 					return null;
@@ -196,6 +195,9 @@ namespace A2v10.Xaml
 				case CommandType.Report:
 					return $"$report('{GetReportName()}', {CommandArgument(context, nullable: true)}, {GetOptions(context)})";
 
+				case CommandType.Export:
+					return $"$export()";
+
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)
 						throw new XamlException($"Action required for {Command} command");
@@ -220,14 +222,14 @@ namespace A2v10.Xaml
 		String GetName()
 		{
 			if (String.IsNullOrEmpty(CommandName))
-				throw new XamlException($"CommandName required for {Command} command");
+				throw new XamlException($"'CommandName' is required for '{Command}' command");
 			return CommandName;
 		}
 
 		String GetReportName()
 		{
 			if (String.IsNullOrEmpty(Report))
-				throw new XamlException($"ReportName required for {Command} command");
+				throw new XamlException($"'Report' is required for '{Command}' command");
 			return Report;
 		}
 
@@ -244,6 +246,8 @@ namespace A2v10.Xaml
 				sb.Append("checkReadOnly: true,");
 			if (CheckArgument)
 				sb.Append("checkArgument: true,");
+			if (Export)
+				sb.Append("export: true,");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();

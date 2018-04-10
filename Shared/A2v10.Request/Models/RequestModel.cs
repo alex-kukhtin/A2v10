@@ -315,6 +315,7 @@ namespace A2v10.Request
 	public class RequestReport : RequestBase
 	{
 		public String report;
+		public String name;
 		public String procedure;
 
 		public ExpandoObject variables;
