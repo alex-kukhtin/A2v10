@@ -68,6 +68,7 @@
 
 	function defSource(trg, source, prop, parent) {
 		let propCtor = trg._meta_.props[prop];
+		if (propCtor.type) propCtor = propCtor.type;
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
 		let shadow = trg._src_;
 		source = source || {};
@@ -109,7 +110,9 @@
 			set(val) {
 				let eventWasFired = false;
 				//TODO: emit and handle changing event
-				val = ensureType(this._meta_.props[prop], val);
+				let ctor = this._meta_.props[prop];
+				if (ctor.type) ctor = ctor.type;
+				val = ensureType(ctor, val);
 				if (val === this._src_[prop])
 					return;
 				if (this._src_[prop] && this._src_[prop].$set) {
@@ -932,8 +935,7 @@
 			for (var prop in this._meta_.props) {
 				if (prop.startsWith('$$')) continue; // skip special properties (saved)
 				let ctor = this._meta_.props[prop];
-				if (ctor.type)
-					ctor = ctor.type;
+				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);

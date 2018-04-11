@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7150
+// 20180410-7154
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -116,11 +116,15 @@ app.modules['std:utils'] = function () {
 
 	function defaultValue(type) {
 		switch (type) {
+			case undefined: return undefined;
 			case Number: return 0;
 			case String: return '';
 			case Boolean: return false;
 			case Date: return dateZero();
+			case Object: return null;
 			default:
+				if (typeof type === 'function')
+					return null; // complex object
 				throw new Error(`There is no default value for type ${type}`);
 		}
 	}

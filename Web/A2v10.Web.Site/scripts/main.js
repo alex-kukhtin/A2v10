@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7150
+// 20180410-7154
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -176,11 +176,15 @@ app.modules['std:utils'] = function () {
 
 	function defaultValue(type) {
 		switch (type) {
+			case undefined: return undefined;
 			case Number: return 0;
 			case String: return '';
 			case Boolean: return false;
 			case Date: return dateZero();
+			case Object: return null;
 			default:
+				if (typeof type === 'function')
+					return null; // complex object
 				throw new Error(`There is no default value for type ${type}`);
 		}
 	}
@@ -1132,6 +1136,7 @@ app.modules['std:validators'] = function () {
 
 	function defSource(trg, source, prop, parent) {
 		let propCtor = trg._meta_.props[prop];
+		if (propCtor.type) propCtor = propCtor.type;
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
 		let shadow = trg._src_;
 		source = source || {};
@@ -1173,7 +1178,9 @@ app.modules['std:validators'] = function () {
 			set(val) {
 				let eventWasFired = false;
 				//TODO: emit and handle changing event
-				val = ensureType(this._meta_.props[prop], val);
+				let ctor = this._meta_.props[prop];
+				if (ctor.type) ctor = ctor.type;
+				val = ensureType(ctor, val);
 				if (val === this._src_[prop])
 					return;
 				if (this._src_[prop] && this._src_[prop].$set) {
@@ -1996,8 +2003,7 @@ app.modules['std:validators'] = function () {
 			for (var prop in this._meta_.props) {
 				if (prop.startsWith('$$')) continue; // skip special properties (saved)
 				let ctor = this._meta_.props[prop];
-				if (ctor.type)
-					ctor = ctor.type;
+				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
 					trg.$copy(src[prop]);
@@ -6737,9 +6743,9 @@ Vue.directive('resize', {
 								return;
 							}
 							return __runDialog(url, arg, query, (result) => {
-								if (arg.$merge)
+								if (arg.$merge) {
 									arg.$merge(result);
-								else {
+								} else {
 									simpleMerge(arg, result);
 								}
 							});

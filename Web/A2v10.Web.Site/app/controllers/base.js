@@ -438,9 +438,9 @@
 								return;
 							}
 							return __runDialog(url, arg, query, (result) => {
-								if (arg.$merge)
+								if (arg.$merge) {
 									arg.$merge(result);
-								else {
+								} else {
 									simpleMerge(arg, result);
 								}
 							});

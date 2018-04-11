@@ -30,7 +30,7 @@ namespace A2v10.Web.Mvc.Configuration
 			_host = host;
 		}
 
-		static IDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
+		static ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
 		static FileSystemWatcher _watcher_system;
 		static FileSystemWatcher _watcher_app;
 
@@ -72,14 +72,7 @@ namespace A2v10.Web.Mvc.Configuration
 
 		LocaleMapItem GetCurrentMap(String locale)
 		{
-			LocaleMapItem result;
-			if (_maps.TryGetValue(locale, out result))
-			{
-				return result;
-			}
-			result = new LocaleMapItem();
-			_maps.Add(locale, result);
-			return result;
+			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem());
 		}
 
 		void CreateWatchers(String dirPath, String appPath)
