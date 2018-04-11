@@ -124,16 +124,15 @@ namespace A2v10.Request
 			return $"[{CurrentSchema}].[{cm}.{propName}]";
 		}
 
-		[JsonIgnore]
-		public String DeleteProcedure
+		public String DeleteProcedure(String prop)
 		{
-			get
-			{
-				var cm = CurrentModel;
-				if (String.IsNullOrEmpty(cm))
-					return null;
-				return $"[{CurrentSchema}].[{cm}.Delete]";
-			}
+			var cm = CurrentModel;
+			if (String.IsNullOrEmpty(cm))
+				return null;
+			String suffix = prop;
+			if (!String.IsNullOrEmpty(suffix))
+				suffix = "." + suffix;
+			return $"[{CurrentSchema}].[{cm}{suffix}.Delete]";
 		}
 
 		[JsonIgnore]

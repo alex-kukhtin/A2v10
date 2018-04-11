@@ -117,7 +117,6 @@
 			},
 			close: function (state) {
 
-
 				function navigateBack() {
 					// TODO: ??? 
 					window.close();

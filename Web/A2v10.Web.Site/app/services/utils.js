@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180410-7154
+// 20180411-7155
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -284,6 +284,13 @@ app.modules['std:utils'] = function () {
 			return null;
 		var du = 0;
 		switch (unit) {
+			case 'year':
+				// TODO: check getTimezone
+				return new Date(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+			case 'month':
+				// save day of month
+				throw new Error('yet not implemented');
+				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
 				break;

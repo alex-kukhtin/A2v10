@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180411-7155
 // controllers/base.js
 
 (function () {
@@ -145,7 +145,7 @@
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-					let wasNew = self.$baseUrl.endsWith('/new');
+					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
 						self.$data.$setDirty(false);
@@ -313,11 +313,24 @@
 				if (!elem)
 					return;
 				let id = elem.$id;
+				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
 				const self = this;
+
+				function lastProperty(path) {
+					let pos = path.lastIndexOf('.');
+					if (pos === -1)
+						return undefined;
+					return path.substring(pos + 1);
+				}
+
 				function dbRemove() {
 					let postUrl = root + '/_data/dbRemove';
-					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
+					let jsonObj = { baseUrl: self.$baseUrl, id: id };
+					if (lazy) {
+						jsonObj.prop = lastProperty(elem.$parent._path_);
+					}
+					let jsonData = utils.toJson(jsonObj);
 					dataservice.post(postUrl, jsonData).then(function (data) {
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {

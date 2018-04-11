@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180410-7154
+// 20180411-7155
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -344,6 +344,13 @@ app.modules['std:utils'] = function () {
 			return null;
 		var du = 0;
 		switch (unit) {
+			case 'year':
+				// TODO: check getTimezone
+				return new Date(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+			case 'month':
+				// save day of month
+				throw new Error('yet not implemented');
+				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
 				break;
@@ -413,7 +420,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180406-7150*/
+/*20180411-7155*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -504,8 +511,10 @@ app.modules['std:url'] = function () {
 	}
 
 	function idChangedOnly(newUrl, oldUrl) {
-		let ns = (newUrl || '').split('/');
-		let os = (oldUrl || '').split('/');
+		let n1 = (newUrl || '').split('?')[0];
+		let o1 = (oldUrl || '').split('?')[0];
+		let ns = n1.split('/');
+		let os = o1.split('/');
 		if (ns.length !== os.length)
 			return false;
 		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
@@ -850,7 +859,6 @@ app.modules['std:http'] = function () {
 				window.history.replaceState(null, null, newUrl);
 			},
 			close: function (state) {
-
 
 				function navigateBack() {
 					// TODO: ??? 
@@ -6305,7 +6313,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180411-7155
 // controllers/base.js
 
 (function () {
@@ -6450,7 +6458,7 @@ Vue.directive('resize', {
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-					let wasNew = self.$baseUrl.endsWith('/new');
+					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data);
 						self.$data.$setDirty(false);
@@ -6618,11 +6626,24 @@ Vue.directive('resize', {
 				if (!elem)
 					return;
 				let id = elem.$id;
+				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
 				const self = this;
+
+				function lastProperty(path) {
+					let pos = path.lastIndexOf('.');
+					if (pos === -1)
+						return undefined;
+					return path.substring(pos + 1);
+				}
+
 				function dbRemove() {
 					let postUrl = root + '/_data/dbRemove';
-					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: id });
+					let jsonObj = { baseUrl: self.$baseUrl, id: id };
+					if (lazy) {
+						jsonObj.prop = lastProperty(elem.$parent._path_);
+					}
+					let jsonData = utils.toJson(jsonObj);
 					dataservice.post(postUrl, jsonData).then(function (data) {
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {

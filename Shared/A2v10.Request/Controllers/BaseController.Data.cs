@@ -73,6 +73,7 @@ namespace A2v10.Request
 				dataToExec.Set("TenantId", tenantId);
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
+			dataToExec.Append(cmd.parameters);
 			await ExecuteCommand(cmd, dataToExec, writer);
 		}
 
@@ -186,11 +187,12 @@ namespace A2v10.Request
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");
 			Object id = jsonData.Get<Object>("id");
+			String propName = jsonData.Get<String>("prop");
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var action = rm.GetCurrentAction();
 			if (action == null)
 				throw new RequestModelException("There are no current action");
-			String deleteProc = action.DeleteProcedure;
+			String deleteProc = action.DeleteProcedure(propName);
 			if (deleteProc == null)
 				throw new RequestModelException("The data model is empty");
 			ExpandoObject execPrms = new ExpandoObject();

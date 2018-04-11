@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180406-7150*/
+/*20180411-7155*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -91,8 +91,10 @@ app.modules['std:url'] = function () {
 	}
 
 	function idChangedOnly(newUrl, oldUrl) {
-		let ns = (newUrl || '').split('/');
-		let os = (oldUrl || '').split('/');
+		let n1 = (newUrl || '').split('?')[0];
+		let o1 = (oldUrl || '').split('?')[0];
+		let ns = n1.split('/');
+		let os = o1.split('/');
 		if (ns.length !== os.length)
 			return false;
 		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
