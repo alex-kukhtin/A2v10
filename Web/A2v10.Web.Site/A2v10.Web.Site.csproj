@@ -69,6 +69,7 @@
     <Content Include="app\components\tab.js" />
     <Content Include="app\components\combobox.js" />
     <Content Include="app\components\taskpad.js" />
+    <Content Include="app\components\toastr.js" />
     <Content Include="app\components\upload.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
@@ -239,6 +240,7 @@
     <Content Include="Less\Text.less" />
     <Content Include="Less\Variables.Compact.less" />
     <Content Include="Less\SuperMenu.less" />
+    <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -276,12 +278,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" />
+  <Import Project="..\..\packages\BuildBundlerMinifier.2.6.375\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.6.375\build\BuildBundlerMinifier.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets'))" />
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.6.375\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.6.375\build\BuildBundlerMinifier.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

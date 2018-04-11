@@ -9,10 +9,11 @@ using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
+using System.Web.Hosting;
 
 namespace A2v10.Web.Mvc.Configuration
 {
-	public class WebApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration
+	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		IProfiler _profiler;
 
@@ -43,6 +44,8 @@ namespace A2v10.Web.Mvc.Configuration
 				String path = ConfigurationManager.AppSettings["appPath"];
 				if (path == null)
 					throw new ConfigurationErrorsException("Configuration parameter 'appSettings/appPath' not defined");
+				if (path.StartsWith("~"))
+					path = HostingEnvironment.MapPath(path);
 				return path;
 			}
 		}

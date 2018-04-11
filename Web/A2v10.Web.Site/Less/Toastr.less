@@ -1,0 +1,50 @@
+﻿
+@toastr-width:300px;
+
+.toastr-stack {
+	display:none; // TODO: доделать!
+	position: absolute;
+	z-index: @toastr-z-index;
+	width: @toastr-width;
+	left: ~"calc(50% - 150px)";
+	bottom: 0;
+
+	.toastr-list {
+		padding: 0;
+		margin: 0;
+	}
+
+	li.toast {
+		display: flex;
+		align-items:center;
+		color: white;
+		font-size: 1.1rem;
+		padding: 10px;
+		list-style: none;
+		margin: 10px 0;
+		box-shadow: 0 0 12px #999;
+
+		&.warning {
+			background-color: @warning-base-color;
+		}
+
+		&.success {
+			background-color: @success-base-color;
+		}
+
+		&.danger {
+			background-color: @danger-base-color;
+		}
+
+		&.info {
+			background-color: @info-base-color;
+		}
+
+		.ico {
+			display: inline-block;
+			font-size: 1.45rem;
+			margin-right: 8px;
+			color:white;
+		}
+	}
+}

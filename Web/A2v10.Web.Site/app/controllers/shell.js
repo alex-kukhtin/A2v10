@@ -8,6 +8,7 @@
 	const store = component('std:store');
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
+	const toastr = component('std:toastr');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
 	const log = require('std:log');
@@ -309,13 +310,15 @@
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>
+	<a2-toastr></a2-toastr>
 </div>`,
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
 			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
-			'a2-modal': modal
+			'a2-modal': modal,
+			'a2-toastr' : toastr
 		},
 		props: {
 			menu: Array,

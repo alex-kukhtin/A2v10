@@ -5328,6 +5328,57 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20180411-7156
+// components/toastr.js
+
+
+(function () {
+
+	const locale = window.$$locale;
+
+	const toastrTemplate = `
+<div class="toastr-stack" >
+	<ul class="toast-list">
+		<li class="toast success">
+			<i class="ico ico-check"></i><span>i am the toast 1</span>
+		</li>
+		<li class="toast warning">
+			<i class="ico ico-warning-outline"></i><span>i am the toast warning</span>
+		</li>
+		<li class="toast info">
+			<i class="ico ico-info-outline"></i><span>Документ сохранен успешно и записан в базу данных!</span>
+		</li>
+		<li class="toast danger">
+			<i class="ico ico-error-outline-nocolor"></i><span>Документ сохранен c ошибкой. Проверьте все, что можно</span>
+		</li>
+	</ul>
+</div>
+`;
+
+	const toastrComponent = {
+		template: toastrTemplate,
+		props: {
+		},
+		data() {
+			return {
+			};
+		},
+		methods: {
+		},
+		computed: {
+		},
+		created() {
+		},
+		mounted() {
+		},
+		destroyed() {
+		}
+	};
+
+	app.components['std:toastr'] = toastrComponent;
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 // 20180405-7149
 // components/image.js
 
@@ -7098,6 +7149,7 @@ Vue.directive('resize', {
 	const store = component('std:store');
 	const eventBus = require('std:eventBus');
 	const modal = component('std:modal');
+	const toastr = component('std:toastr');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
 	const log = require('std:log');
@@ -7399,13 +7451,15 @@ Vue.directive('resize', {
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>
+	<a2-toastr></a2-toastr>
 </div>`,
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
 			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
-			'a2-modal': modal
+			'a2-modal': modal,
+			'a2-toastr' : toastr
 		},
 		props: {
 			menu: Array,

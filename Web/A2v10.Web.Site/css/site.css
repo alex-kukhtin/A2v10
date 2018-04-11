@@ -139,6 +139,9 @@ i,
 .ico-chart-stacked-line:before {
   content: "\e929";
 }
+.ico-check:before {
+  content: "\e978";
+}
 .ico-chevron-down:before {
   content: "\e9a4";
 }
@@ -366,6 +369,9 @@ i,
 .ico-error-outline:before {
   content: "\ea03";
   color: #a94442;
+}
+.ico-error-outline-nocolor:before {
+  content: "\ea03";
 }
 .ico-requery:before {
   content: "\e90e";
@@ -2698,6 +2704,46 @@ table.data-grid > tbody > tr.bold td {
 .modal-body.confirm > div,
 .modal-body.alert > div {
   white-space: pre-line;
+}
+.toastr-stack {
+  display: none;
+  position: absolute;
+  z-index: 1080;
+  width: 300px;
+  left: calc(50% - 150px);
+  bottom: 0;
+}
+.toastr-stack .toastr-list {
+  padding: 0;
+  margin: 0;
+}
+.toastr-stack li.toast {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 1.1rem;
+  padding: 10px;
+  list-style: none;
+  margin: 10px 0;
+  box-shadow: 0 0 12px #999;
+}
+.toastr-stack li.toast.warning {
+  background-color: #f0ad4e;
+}
+.toastr-stack li.toast.success {
+  background-color: #5db750;
+}
+.toastr-stack li.toast.danger {
+  background-color: #da533f;
+}
+.toastr-stack li.toast.info {
+  background-color: #60bbe5;
+}
+.toastr-stack li.toast .ico {
+  display: inline-block;
+  font-size: 1.45rem;
+  margin-right: 8px;
+  color: white;
 }
 table th {
   border: 1px solid #e5e8eb;
