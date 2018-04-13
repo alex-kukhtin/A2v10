@@ -76,5 +76,14 @@ namespace A2v10.Xaml
 			foreach (var ch in rightList)
 				ch.RenderElement(context);
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var c in Children)
+			{
+				AttachedHelpers.RemoveAttached(_attachedPart, c);
+			}
+		}
 	}
 }

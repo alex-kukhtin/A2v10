@@ -45,5 +45,12 @@ namespace A2v10.Xaml
 			RenderChildren(context);
 			panel.RenderEnd(context);
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var c in Children)
+				AttachedHelpers.RemoveAttached(_attachedFill, c);
+		}
 	}
 }

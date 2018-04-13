@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180414-7157
 // components/collectionview.js
 
 /*
@@ -406,11 +406,11 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
-			} else {
-				let q = this.$store.getters.query;
-				for (let x in this.filter) {
-					if (x in q) this.filter[x] = q[x];
-				}
+			}
+			// then query from url
+			let q = this.$store.getters.query;
+			for (let x in this.filter) {
+				if (x in q) this.filter[x] = q[x];
 			}
 			this.$nextTick(() => {
 				this.lockChange = false;

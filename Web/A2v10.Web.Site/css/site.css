@@ -668,6 +668,7 @@ td.valign-bottom {
   display: inline-block;
   margin: 1px;
   line-height: normal;
+  white-space: nowrap;
 }
 .tag-label.success,
 .tag-label.green {
@@ -1441,11 +1442,13 @@ pre.a2-code {
   display: inline-block;
   margin-right: 3px;
 }
-.control-group .input-group > a {
+.control-group .input-group > a,
+.control-group .input-group > .dropdown > a {
   color: #757575;
   padding: 0 3px;
 }
-.control-group .input-group > a:hover {
+.control-group .input-group > a:hover,
+.control-group .input-group > .dropdown > a:hover {
   text-decoration: none;
   color: #0d82f8;
 }
@@ -1878,6 +1881,8 @@ table.data-grid td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #e5e8eb;
+  word-break: break-all;
+  word-break: break-word;
 }
 table.data-grid td > i.ico,
 table.data-grid td > a > i.ico {
@@ -3355,6 +3360,12 @@ TODO:
 }
 .dropdown.show > .btn:hover {
   background-color: #eaf0ff;
+}
+.hlink-dd-wrapper:focus {
+  outline: none !important;
+}
+.hlink-dd-wrapper.show:after {
+  display: none!important;
 }
 .popover-wrapper {
   position: relative;

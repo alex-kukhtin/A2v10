@@ -67,7 +67,8 @@ namespace A2v10.Infrastructure
 				return;
 			IDictionary<String, Object> thatD = that as IDictionary<String, Object>;
 			foreach (var k in other as IDictionary<String, Object>)
-				thatD.Add(k.Key, k.Value);
+				if (!thatD.ContainsKey(k.Key))
+					thatD.Add(k.Key, k.Value);
 		}
 
 		public static void AppendAndReplace(this ExpandoObject that, ExpandoObject other)

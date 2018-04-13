@@ -27,7 +27,10 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" 
+			v-on:change="onChange($event.target.value)" 
+			v-on:input="onInput($event.target.value)"
+			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -67,8 +70,7 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean,
-			updateTrigger: String
+			password: Boolean
 		},
 		computed: {
 			controlType() {
@@ -109,6 +111,27 @@
 			placeholder: String,
 			autoSize: Boolean,
 			rows: Number
+		},
+		computed: {
+			modelValue2() {
+				if (!this.item) return null;
+				return this.item[this.prop];
+			}
+		},
+		methods: {
+			updateValue(value) {
+				if (this.item[this.prop] === value) return;
+				this.item[this.prop] = value;
+				this.$emit('change', this.item[this.prop]);
+			},
+			onInput(value) {
+				if (this.updateTrigger === 'input')
+					this.updateValue(value);
+			},
+			onChange(value) {
+				if (this.updateTrigger !== 'input')
+					this.updateValue(value);
+			}
 		}
 	});
 

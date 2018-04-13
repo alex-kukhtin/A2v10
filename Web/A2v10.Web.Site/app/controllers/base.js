@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180411-7155
+// 20180413-7156
 // controllers/base.js
 
 (function () {
@@ -734,6 +734,7 @@
 				if (this.$caller)
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
+				root._seal_(root);
 			}
 		},
 		created() {

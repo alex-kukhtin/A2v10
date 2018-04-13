@@ -1076,7 +1076,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180406-7150
+// 20180413-7156
 // services/datamodel.js
 
 (function () {
@@ -1274,7 +1274,7 @@ app.modules['std:validators'] = function () {
 	}
 
 	function createObject(elem, source, path, parent) {
-		const ctorname = elem.constructor.name;
+		const ctorname = elem.constructor.name;		
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -1370,6 +1370,7 @@ app.modules['std:validators'] = function () {
 				elem._root_.$setDirty(false);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
+			elem._seal_ = seal;
 		}
 		if (startTime) {
 			log.time('create root time:', startTime, false);
@@ -1377,6 +1378,20 @@ app.modules['std:validators'] = function () {
 		return elem;
 	}
 
+	function seal(elem) {
+		Object.seal(elem);
+		for (let p in elem._meta_.props) {
+			let ctor = elem._meta_.props[p];
+			if (ctor.type) ctor = ctor.type;
+			if (utils.isPrimitiveCtor(ctor)) continue;
+			let val = elem[p];
+			if (utils.isArray(val)) {
+				val.forEach(itm => seal(itm));
+			} else if (utils.isObjectExact(val)) {
+				seal(val);
+			}
+		}
+	}
 
 	function setRootModelInfo(item, data) {
 		if (!data.$ModelInfo) return;
@@ -2396,7 +2411,8 @@ app.modules['std:popup'] = function () {
 			disabled: Boolean,
 			tabIndex: Number,
 			dataType: String,
-			validatorOptions: Object
+			validatorOptions: Object,
+			updateTrigger: String
 		},
 		computed: {
 			path() {
@@ -2573,7 +2589,10 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-model.lazy="item[prop]" :rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" 
+			v-on:change="onChange($event.target.value)" 
+			v-on:input="onInput($event.target.value)"
+			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -2613,8 +2632,7 @@ Vue.component('validator-control', {
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean,
-			updateTrigger: String
+			password: Boolean
 		},
 		computed: {
 			controlType() {
@@ -2655,6 +2673,27 @@ Vue.component('validator-control', {
 			placeholder: String,
 			autoSize: Boolean,
 			rows: Number
+		},
+		computed: {
+			modelValue2() {
+				if (!this.item) return null;
+				return this.item[this.prop];
+			}
+		},
+		methods: {
+			updateValue(value) {
+				if (this.item[this.prop] === value) return;
+				this.item[this.prop] = value;
+				this.$emit('change', this.item[this.prop]);
+			},
+			onInput(value) {
+				if (this.updateTrigger === 'input')
+					this.updateValue(value);
+			},
+			onChange(value) {
+				if (this.updateTrigger !== 'input')
+					this.updateValue(value);
+			}
 		}
 	});
 
@@ -4331,7 +4370,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
+// 20180414-7157
 // components/collectionview.js
 
 /*
@@ -4737,11 +4776,11 @@ TODO:
 						if (x in q) this.filter[x] = q[x];
 					}
 				}
-			} else {
-				let q = this.$store.getters.query;
-				for (let x in this.filter) {
-					if (x in q) this.filter[x] = q[x];
-				}
+			}
+			// then query from url
+			let q = this.$store.getters.query;
+			for (let x in this.filter) {
+				if (x in q) this.filter[x] = q[x];
 			}
 			this.$nextTick(() => {
 				this.lockChange = false;
@@ -6364,7 +6403,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180411-7155
+// 20180413-7156
 // controllers/base.js
 
 (function () {
@@ -7098,6 +7137,7 @@ Vue.directive('resize', {
 				if (this.$caller)
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
+				root._seal_(root);
 			}
 		},
 		created() {

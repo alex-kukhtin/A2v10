@@ -7,42 +7,48 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-    [Serializable]
-    public class ResourceDictionary : Dictionary<String, Object>
-    {
+	[Serializable]
+	public class ResourceDictionary : Dictionary<String, Object>
+	{
 
-    }
+	}
 
-    public abstract class RootContainer : Container, IUriContext
-    {
-        #region IUriContext
-        public Uri BaseUri { get; set; }
-        #endregion
+	public abstract class RootContainer : Container, IUriContext, IDisposable
+	{
+		#region IUriContext
+		public Uri BaseUri { get; set; }
+		#endregion
 
-        protected ResourceDictionary _resources;
+		#region IDisposable
+		public void Dispose()
+		{
+			OnDispose();
+		}
+		#endregion
+		protected ResourceDictionary _resources;
 
-        public ResourceDictionary Resources
-        {
-            get
-            {
-                if (_resources == null)
-                    _resources = new ResourceDictionary();
-                return _resources;
-            }
-            set
-            {
-                _resources = value;
-            }
-        }
+		public ResourceDictionary Resources
+		{
+			get
+			{
+				if (_resources == null)
+					_resources = new ResourceDictionary();
+				return _resources;
+			}
+			set
+			{
+				_resources = value;
+			}
+		}
 
-        public Object FindResource(String key)
-        {
-            if (_resources == null)
-                return null;
-            Object resrc;
-            if (_resources.TryGetValue(key, out resrc))
-                return resrc;
-            return null;
-        }
-    }
+		public Object FindResource(String key)
+		{
+			if (_resources == null)
+				return null;
+			Object resrc;
+			if (_resources.TryGetValue(key, out resrc))
+				return resrc;
+			return null;
+		}
+	}
 }

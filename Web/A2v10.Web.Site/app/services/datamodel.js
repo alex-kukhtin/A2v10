@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180406-7150
+// 20180413-7156
 // services/datamodel.js
 
 (function () {
@@ -198,7 +198,7 @@
 	}
 
 	function createObject(elem, source, path, parent) {
-		const ctorname = elem.constructor.name;
+		const ctorname = elem.constructor.name;		
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -294,6 +294,7 @@
 				elem._root_.$setDirty(false);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
+			elem._seal_ = seal;
 		}
 		if (startTime) {
 			log.time('create root time:', startTime, false);
@@ -301,6 +302,20 @@
 		return elem;
 	}
 
+	function seal(elem) {
+		Object.seal(elem);
+		for (let p in elem._meta_.props) {
+			let ctor = elem._meta_.props[p];
+			if (ctor.type) ctor = ctor.type;
+			if (utils.isPrimitiveCtor(ctor)) continue;
+			let val = elem[p];
+			if (utils.isArray(val)) {
+				val.forEach(itm => seal(itm));
+			} else if (utils.isObjectExact(val)) {
+				seal(val);
+			}
+		}
+	}
 
 	function setRootModelInfo(item, data) {
 		if (!data.$ModelInfo) return;

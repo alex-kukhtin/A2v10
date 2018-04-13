@@ -167,6 +167,7 @@ namespace A2v10.Request
 			if (_host.IsMultiTenant)
 				loadPrms.Set("TenantId", tenantId);
 			loadPrms.Set("Id", rw.Id);
+			loadPrms.Append(rw.parameters);
 			ExpandoObject prms2 = loadPrms;
 			if (rw.indirect)
 			{
@@ -200,6 +201,7 @@ namespace A2v10.Request
 			if (_host.IsMultiTenant)
 				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
+			execPrms.Append(action.parameters);
 			await _dbContext.LoadModelAsync(action.CurrentSource, deleteProc, execPrms);
 			writer.Write("{\"status\": \"OK\"}"); // JSON!
 		}
@@ -231,6 +233,7 @@ namespace A2v10.Request
 			if (_host.IsMultiTenant)
 				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
+			execPrms.Append(action.parameters);
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, expandProc, execPrms);
 			WriteDataModel(model, writer);
 		}
@@ -254,6 +257,7 @@ namespace A2v10.Request
 			if (_host.IsMultiTenant)
 				execPrms.Set("TenantId", tenantId);
 			execPrms.Set("Id", id);
+			//execPrms.Append(action.parameters); // not needed
 
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, loadProc, execPrms);
 			WriteDataModel(model, writer);

@@ -69,6 +69,15 @@ namespace A2v10.Xaml
 			return AttachedHelpers.GetAttached(_attachedVAlign, obj);
 		}
 
+		internal static void RemoveAttached(Object obj)
+		{
+			AttachedHelpers.RemoveAttached(_attachedRow, obj);
+			AttachedHelpers.RemoveAttached(_attachedColumn, obj);
+			AttachedHelpers.RemoveAttached(_attachedRowSpan, obj);
+			AttachedHelpers.RemoveAttached(_attachedColSpan, obj);
+			AttachedHelpers.RemoveAttached(_attachedVAlign, obj);
+		}
+
 		#endregion
 
 
@@ -132,6 +141,13 @@ namespace A2v10.Xaml
 					ch.RenderElement(context);
 				}
 			}
+		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var ch in Children)
+				RemoveAttached(ch);
 		}
 	}
 

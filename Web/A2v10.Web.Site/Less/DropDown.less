@@ -165,3 +165,17 @@ TODO:
 		background-color: @dropdown-bg-color;
 	}
 }
+
+.hlink-dd-wrapper {
+	&:focus {
+		outline: none !important;
+	}
+
+	&.show:after {
+		display:none!important;
+	}
+
+	&.show .menu {
+		//margin-top:2px;
+	}
+}

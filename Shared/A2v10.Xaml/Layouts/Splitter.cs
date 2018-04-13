@@ -95,5 +95,15 @@ namespace A2v10.Xaml
 			if (Orientation == Orientation.Horizontal)
 				throw new XamlException("The horizontal splitter is not yet supported");
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var c in Children)
+			{
+				AttachedHelpers.RemoveAttached(_attachedWidths, c);
+				AttachedHelpers.RemoveAttached(_attachedMinWidths, c);
+			}
+		}
 	}
 }

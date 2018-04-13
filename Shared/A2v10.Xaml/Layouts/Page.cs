@@ -93,5 +93,17 @@ namespace A2v10.Xaml
 				dt.Render(context);
 			}
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			if (Toolbar != null)
+				Toolbar.OnDispose();
+			if (Taskpad != null)
+				Taskpad.OnDispose();
+			if (Pager != null)
+				Pager.OnDispose();
+		}
+
 	}
 }

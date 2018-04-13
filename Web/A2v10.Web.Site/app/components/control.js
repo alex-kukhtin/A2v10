@@ -16,7 +16,8 @@
 			disabled: Boolean,
 			tabIndex: Number,
 			dataType: String,
-			validatorOptions: Object
+			validatorOptions: Object,
+			updateTrigger: String
 		},
 		computed: {
 			path() {

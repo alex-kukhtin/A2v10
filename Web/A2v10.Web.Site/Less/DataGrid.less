@@ -58,6 +58,8 @@ table.data-grid {
 		padding: 4px 6px;
 		vertical-align: top;
 		border-color: @table-brd-color;
+		word-break: break-all; // EDGE fix
+		word-break: break-word;
 
 		> i.ico, > a > i.ico {
 			//float:left; /*for right aligned icons ??? */
@@ -89,7 +91,7 @@ table.data-grid {
 	}
 
 	td.small {
-		font-size:0.86rem;
+		font-size: 0.86rem;
 	}
 
 	td.cell-validator {
@@ -229,14 +231,14 @@ table.data-grid {
 	}
 
 	th.details-marker {
-		width:22px;
+		width: 22px;
 	}
 
 	td.details-marker {
 		padding: 0;
 		padding: 4px;
 		width: 22px;
-		min-width:22px;
+		min-width: 22px;
 		cursor: pointer;
 
 		.ico {

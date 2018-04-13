@@ -50,6 +50,11 @@ namespace A2v10.Xaml
 		{
 		}
 
+		internal virtual void OnDispose()
+		{
+
+		}
+
 		internal void SetParent(XamlElement parent)
 		{
 			Parent = parent;
