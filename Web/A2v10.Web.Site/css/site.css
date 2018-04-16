@@ -2711,10 +2711,9 @@ table.data-grid > tbody > tr.bold td {
   white-space: pre-line;
 }
 .toastr-stack {
-  display: none;
   position: absolute;
   z-index: 1080;
-  width: 300px;
+  width: 320px;
   left: calc(50% - 150px);
   bottom: 0;
 }
@@ -2723,6 +2722,7 @@ table.data-grid > tbody > tr.bold td {
   margin: 0;
 }
 .toastr-stack li.toast {
+  transition: all 0.5s;
   display: flex;
   align-items: center;
   color: white;
@@ -2749,6 +2749,14 @@ table.data-grid > tbody > tr.bold td {
   font-size: 1.45rem;
   margin-right: 8px;
   color: white;
+}
+.toastr-stack .list-enter,
+.toastr-stack .list-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.toastr-stack .list-leave-active {
+  position: absolute;
 }
 table th {
   border: 1px solid #e5e8eb;

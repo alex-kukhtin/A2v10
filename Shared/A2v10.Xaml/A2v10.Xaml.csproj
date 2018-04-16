@@ -62,6 +62,7 @@
     <Compile Include="Base\StaticResource.cs" />
     <Compile Include="Base\TagBuilder.cs" />
     <Compile Include="Base\Thickness.cs" />
+    <Compile Include="Base\Toast.cs" />
     <Compile Include="Base\UiContentElement.cs" />
     <Compile Include="Base\UIElement.cs" />
     <Compile Include="Base\UIElementBase.cs" />

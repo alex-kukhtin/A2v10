@@ -1076,7 +1076,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180413-7156
+// 20180416-7158
 // services/datamodel.js
 
 (function () {
@@ -1085,7 +1085,6 @@ app.modules['std:validators'] = function () {
 
     /* TODO:
     1. changing event
-    4. add plain properties
     */
 
 	const META = '_meta_';
@@ -2040,9 +2039,13 @@ app.modules['std:validators'] = function () {
 					}
 					//TODO: try to select old value
 				} else {
-					if (utils.isDateCtor(ctor))
-						platform.set(this, prop, new Date(src[prop]));
-					else if (utils.isPrimitiveCtor(ctor)) {
+					if (utils.isDateCtor(ctor)) {
+						let dt = src[prop];
+						if (!dt)
+							platform.set(this, prop, utils.date.zero());
+						else
+							platform.set(this, prop, new Date(src[prop]));
+					} else if (utils.isPrimitiveCtor(ctor)) {
 						platform.set(this, prop, src[prop]);
 					} else {
 						let newsrc = new ctor(src[prop], prop, this);
@@ -5367,22 +5370,37 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180411-7156
+// 20180416-7158
 // components/toastr.js
 
 
 (function () {
 
 	const locale = window.$$locale;
+	const eventBus = require('std:eventBus');
+
+	const toastTemplate = `
+<li class="toast" :class="toast.style">
+	<i class="ico" :class="icoCssClass"></i>
+	<span v-text="toast.text" />
+</li>
+`;
 
 	const toastrTemplate = `
 <div class="toastr-stack" >
-	<ul class="toast-list">
+	<transition-group name="list" tag="ul">
+		<a2-toast v-for="(t,k) in items" :key="k" :toast="t"></a2-toast>
+	</transition-group>
+</div>
+`;
+
+	/*
+	{{toast}}
 		<li class="toast success">
-			<i class="ico ico-check"></i><span>i am the toast 1</span>
+			<i class="ico ico-check"></i><span>i am the toast 1 (11)</span>
 		</li>
 		<li class="toast warning">
-			<i class="ico ico-warning-outline"></i><span>i am the toast warning</span>
+			<i class="ico ico-warning-outline"></i><span>i am the toast warning (test for bundle)</span>
 		</li>
 		<li class="toast info">
 			<i class="ico ico-info-outline"></i><span>Документ сохранен успешно и записан в базу данных!</span>
@@ -5390,27 +5408,58 @@ TODO:
 		<li class="toast danger">
 			<i class="ico ico-error-outline-nocolor"></i><span>Документ сохранен c ошибкой. Проверьте все, что можно</span>
 		</li>
-	</ul>
-</div>
-`;
+	 */
+
+	const toastComponent = {
+		template: toastTemplate,
+		props: {
+			toast: Object
+		},
+		computed: {
+			icoCssClass() {
+				switch (this.toast.style) {
+					case 'success' : return 'ico-check';
+					case 'danger':
+					case 'error':
+						return 'ico-error-outline-nocolor';
+					case 'warning': return 'ico-warning-outline';
+					case 'info': return 'ico-info-outline';
+				}
+				return 'ico-dot';
+			}
+		}
+	};
 
 	const toastrComponent = {
 		template: toastrTemplate,
+		components: {
+			'a2-toast': toastComponent
+		},
 		props: {
 		},
 		data() {
 			return {
+				items: [],
+				currentIndex: 0
 			};
 		},
 		methods: {
-		},
-		computed: {
+			showToast(toast) {
+				toast.$index = ++this.currentIndex;
+				this.items.unshift(toast);
+
+				setTimeout(() => {
+					this.removeToast(toast.$index);
+				}, 2000);
+			},
+			removeToast(tstIndex) {
+				let ix = this.items.findIndex(x => x.$index === tstIndex);
+				if (ix === -1) return;
+				this.items.splice(ix, 1);
+			}
 		},
 		created() {
-		},
-		mounted() {
-		},
-		destroyed() {
+			eventBus.$on('toast', this.showToast)
 		}
 	};
 
@@ -6539,7 +6588,7 @@ Vue.directive('resize', {
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
-			$save() {
+			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
 				let self = this;
@@ -6569,6 +6618,8 @@ Vue.directive('resize', {
 							self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 						}
 						resolve(dataToResolve); // single element (raw data)
+						if (opts && opts.toast)
+							self.$toast(opts.toast);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
@@ -6811,6 +6862,11 @@ Vue.directive('resize', {
 					alert(msg);
 			},
 
+			$toast(toast) {
+				if (!toast) return;
+				eventBus.$emit('toast', toast);
+			},
+
 			$showDialog(url, arg, query, opts) {
 				return this.$dialog('show', url, arg, query, opts);
 			},
@@ -6961,9 +7017,9 @@ Vue.directive('resize', {
 					this.$modalClose(chArray);
 			},
 
-			$saveAndClose() {
+			$saveAndClose(opts) {
 				if (this.$isDirty)
-					this.$save().then(() => this.$close());
+					this.$save(opts).then(() => this.$close());
 				else
 					this.$close();
 			},

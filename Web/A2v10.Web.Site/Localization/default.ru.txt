@@ -65,6 +65,7 @@
 ;
 @Confirm=Подтверждение
 @ConfirmDeleteDocument=Удалить документ?
+@DocumentSaved=Документ сохранен успешно
 ;
 @Error.EnterName=Введите наименование элемента
 @Error.DuplicateCode=Элемент с таким кодом уже существует

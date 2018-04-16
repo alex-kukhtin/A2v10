@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+	</style>
+</head>
+<body>
+
+	<div id="app" style="padding:20px;overflow:auto;background-color:aliceblue;border:1px solid blue" v-cloak>
+		<h3>Toaster Component</h3>
+		<div>
+			<label>Toast text</label>
+			<input type="tel" v-model="toastText"/>
+		</div>
+		<div>
+			<button class="btn" @click="showToast('success')">Show success toast!</button>
+			<button class="btn" @click="showToast('danger')">Show danger toast!</button>
+			<button class="btn" @click="showToast('warning')">Show warning toast!</button>
+			<button class="btn" @click="showToast('info')">Show info toast!</button>
+		</div>
+
+		<a2-toastr></a2-toastr>
+	</div>
+
+
+	<script type="text/javascript" src="../scripts/vue.js"></script>
+	<script type="text/javascript" src="../app/app.js"></script>
+	<script type="text/javascript" src="../app/platform/webvue.js"></script>
+	<script type="text/javascript" src="../app/components/toastr.js"></script>
+
+	<script>
+
+		let toastr = app.components['std:toastr'];
+		const eventBus = require('std:eventBus');
+
+		new Vue({
+			el: "#app",
+			data: {
+				toastText: ''
+			},
+			computed: {
+			},
+			components: {
+				'a2-toastr': toastr
+			},
+			methods: {
+				showToast(style) {
+					eventBus.$emit('toast', { style: style, text: this.toastText || 'i am the toast'});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

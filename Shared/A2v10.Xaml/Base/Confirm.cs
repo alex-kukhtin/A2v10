@@ -28,17 +28,6 @@ namespace A2v10.Xaml
 				cancelText = $", cancelText:{cancelText}";
 			return $"{{message: {msg}{title}{okText}{cancelText}}}";
 		}
-
-		internal String GetBindingString(RenderContext context, String propertyName, String propValue)
-		{
-			String resVal = null;
-			var bindString = GetBinding(propertyName);
-			if (bindString != null)
-				resVal = bindString.GetPathFormat(context);
-			else if (propValue != null)
-				resVal = $"'{context.Localize(propValue)}'";
-			return resVal;
-		}
 	}
 
 	public class ConfirmConverter : TypeConverter

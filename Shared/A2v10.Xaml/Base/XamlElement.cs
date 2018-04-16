@@ -10,43 +10,43 @@ namespace A2v10.Xaml
 
 		internal XamlElement Parent { get; private set; }
 
-        BindImpl _bindImpl;
+		BindImpl _bindImpl;
 
-        #region ISupportBinding
-        public BindImpl BindImpl
-        {
-            get
-            {
-                if (_bindImpl == null)
-                    _bindImpl = new BindImpl();
-                return _bindImpl;
-            }
-        }
+		#region ISupportBinding
+		public BindImpl BindImpl
+		{
+			get
+			{
+				if (_bindImpl == null)
+					_bindImpl = new BindImpl();
+				return _bindImpl;
+			}
+		}
 
-        public Bind GetBinding(String name)
-        {
-            return _bindImpl?.GetBinding(name);
-        }
+		public Bind GetBinding(String name)
+		{
+			return _bindImpl?.GetBinding(name);
+		}
 
-        public void RemoveBinding(String name)
-        {
-            _bindImpl?.RemoveBinding(name);
-        }
+		public void RemoveBinding(String name)
+		{
+			_bindImpl?.RemoveBinding(name);
+		}
 
-        public void SetBinding(String name, BindBase bind)
-        {
-            if (bind == null)
-                return;
-            BindImpl.SetBinding(name, bind);
-        }
+		public void SetBinding(String name, BindBase bind)
+		{
+			if (bind == null)
+				return;
+			BindImpl.SetBinding(name, bind);
+		}
 
-        public BindCmd GetBindingCommand(String name)
-        {
-            return _bindImpl?.GetBindingCommand(name);
-        }
-        #endregion
+		public BindCmd GetBindingCommand(String name)
+		{
+			return _bindImpl?.GetBindingCommand(name);
+		}
+		#endregion
 
-        protected virtual void OnEndInit()
+		protected virtual void OnEndInit()
 		{
 		}
 
@@ -61,17 +61,29 @@ namespace A2v10.Xaml
 		}
 
 
-        internal void MergeBoolAttribute(TagBuilder tag, RenderContext context, String propName, Boolean value)
-        {
-            var attrBind = GetBinding(propName);
-            // bool attrs always with ':'
-            String attrName = $":{propName.ToLowerInvariant()}";
-            if (attrBind != null)
-                tag.MergeAttribute(attrName, attrBind.GetPath(context));
-            else if (value)
-                tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant());
+		internal void MergeBoolAttribute(TagBuilder tag, RenderContext context, String propName, Boolean value)
+		{
+			var attrBind = GetBinding(propName);
+			// bool attrs always with ':'
+			String attrName = $":{propName.ToLowerInvariant()}";
+			if (attrBind != null)
+				tag.MergeAttribute(attrName, attrBind.GetPath(context));
+			else if (value)
+				tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant());
 
-        }
+		}
+
+		internal String GetBindingString(RenderContext context, String propertyName, String propValue)
+		{
+			String resVal = null;
+			var bindString = GetBinding(propertyName);
+			if (bindString != null)
+				resVal = bindString.GetPathFormat(context);
+			else if (propValue != null)
+				resVal = $"'{context.Localize(propValue)}'";
+			return resVal;
+		}
+
 
 		#region ISupportInitialize
 		public void BeginInit()

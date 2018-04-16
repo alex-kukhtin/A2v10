@@ -72,6 +72,7 @@ namespace A2v10.Xaml
 		public Boolean Export { get; set; }
 
 		public Confirm Confirm { get; set; }
+		public Toast Toast { get; set; }
 
 		public String Data { get; set; }
 
@@ -111,7 +112,7 @@ namespace A2v10.Xaml
 					return "$requery()";
 
 				case CommandType.Save:
-					return "$save()";
+					return $"$save({{toast: {GetToast(context)}}})";
 
 				case CommandType.Clear:
 					return $"{CommandArgument(context)}.$empty()";
@@ -122,7 +123,7 @@ namespace A2v10.Xaml
 				case CommandType.SaveAndClose:
 					if (context.IsDialog)
 						return $"$modalSaveAndClose(null, {GetOptionsValid(context)})";
-					return "$saveAndClose()";
+					return $"$saveAndClose({{toast: {GetToast(context)}}})";
 
 				case CommandType.OpenSelected:
 					return $"$openSelected({CommandUrl(context, decorate: true)}, {CommandArgument(context)})";
@@ -298,6 +299,13 @@ namespace A2v10.Xaml
 			if (Confirm == null)
 				return nullString;
 			return Confirm.GetJsValue(context);
+		}
+
+		String GetToast(RenderContext context)
+		{
+			if (Toast == null)
+				return nullString;
+			return Toast.GetJsValue(context);
 		}
 
 		Boolean IsArgumentEmpty(RenderContext context)

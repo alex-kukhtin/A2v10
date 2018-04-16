@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180413-7156
+// 20180416-7158
 // services/datamodel.js
 
 (function () {
@@ -9,7 +9,6 @@
 
     /* TODO:
     1. changing event
-    4. add plain properties
     */
 
 	const META = '_meta_';
@@ -964,9 +963,13 @@
 					}
 					//TODO: try to select old value
 				} else {
-					if (utils.isDateCtor(ctor))
-						platform.set(this, prop, new Date(src[prop]));
-					else if (utils.isPrimitiveCtor(ctor)) {
+					if (utils.isDateCtor(ctor)) {
+						let dt = src[prop];
+						if (!dt)
+							platform.set(this, prop, utils.date.zero());
+						else
+							platform.set(this, prop, new Date(src[prop]));
+					} else if (utils.isPrimitiveCtor(ctor)) {
 						platform.set(this, prop, src[prop]);
 					} else {
 						let newsrc = new ctor(src[prop], prop, this);

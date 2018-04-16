@@ -65,6 +65,7 @@
 ;
 @Confirm=Confirm
 @ConfirmDeleteDocument=Delete document?
+@DocumentSaved=Document saved successfully
 ;
 @Error.EnterName=Enter item name
 @Error.DuplicateCode=Duplicate code

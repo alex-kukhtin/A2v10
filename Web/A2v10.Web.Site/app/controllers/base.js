@@ -136,7 +136,7 @@
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
-			$save() {
+			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
 				let self = this;
@@ -166,6 +166,8 @@
 							self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 						}
 						resolve(dataToResolve); // single element (raw data)
+						if (opts && opts.toast)
+							self.$toast(opts.toast);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
@@ -408,6 +410,11 @@
 					alert(msg);
 			},
 
+			$toast(toast) {
+				if (!toast) return;
+				eventBus.$emit('toast', toast);
+			},
+
 			$showDialog(url, arg, query, opts) {
 				return this.$dialog('show', url, arg, query, opts);
 			},
@@ -558,9 +565,9 @@
 					this.$modalClose(chArray);
 			},
 
-			$saveAndClose() {
+			$saveAndClose(opts) {
 				if (this.$isDirty)
-					this.$save().then(() => this.$close());
+					this.$save(opts).then(() => this.$close());
 				else
 					this.$close();
 			},
