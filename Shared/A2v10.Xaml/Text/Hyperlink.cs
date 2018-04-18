@@ -43,12 +43,14 @@ namespace A2v10.Xaml
 		{
 			Boolean bHasDropDown = DropDown != null;
 
-			var tag = new TagBuilder("a", "a2-hyperlink a2-inline", inGrid);
+			var tag = new TagBuilder("a", "a2-hyperlink", inGrid);
 			if (onRender != null)
 				onRender(tag);
 			MergeAttributes(tag, context);
 			MergeCommandAttribute(tag, context);
 			tag.AddCssClassBool(Block, "block");
+			if (!Block)
+				tag.AddCssClass("a2-inline");
 
 			if (Size != ControlSize.Default)
 			{

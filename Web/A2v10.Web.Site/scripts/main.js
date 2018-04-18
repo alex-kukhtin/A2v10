@@ -3580,7 +3580,7 @@ Vue.component('validator-control', {
 			}
 
 			let content = utils.eval(row, col.content, col.dataType, col.hideZeros);
-			let chElems = [h('span', { 'class': { 'negative-red': isNegativeRed(col) } }, content)];
+			let chElems = [h('span', { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } }, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)
 				chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
@@ -3634,9 +3634,10 @@ Vue.component('validator-control', {
 		},
 		methods: {
 			rowClass() {
-				let cssClass = '';
-				const isActive = this.row.$selected; //this.row == this.$parent.selected();
-				if (isActive) cssClass += 'active';
+				let cssClass = 'dg-row';
+				const isActive = !!this.row.$selected;
+				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
+				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
 					cssClass += ' ' + this.row[this.mark];
 				}

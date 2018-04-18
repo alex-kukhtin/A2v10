@@ -58,8 +58,6 @@ table.data-grid {
 		padding: 4px 6px;
 		vertical-align: top;
 		border-color: @table-brd-color;
-		word-break: break-all; // EDGE fix
-		word-break: break-word;
 
 		> i.ico, > a > i.ico {
 			//float:left; /*for right aligned icons ??? */
@@ -71,7 +69,13 @@ table.data-grid {
 				//float:none;
 			}
 		}
+
+		.dg-cell {
+			word-break: break-all; // EDGE fix
+			word-break: break-word;
+		}
 	}
+
 
 	th {
 		border-color: @table-hdr-brd-color;
@@ -315,15 +319,15 @@ table.data-grid {
 		border-style: none;
 	}
 
-	> tr.lev-2 .group-marker {
+	tr.lev-2 .group-marker {
 		//padding-left: @group-padding * 2 + @group-padding / 2;
 	}
 
-	> tr.lev-3 .group-marker {
+	tr.lev-3 .group-marker {
 		//padding-left: @group-padding * 3 + @group-padding / 2;
 	}
 
-	> tr:last-child > td {
+	tr.dg-row:last-child > td {
 		border-bottom: 1px solid @table-brd-color;
 	}
 }

@@ -1926,8 +1926,6 @@ table.data-grid td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #e5e8eb;
-  word-break: break-all;
-  word-break: break-word;
 }
 table.data-grid td > i.ico,
 table.data-grid td > a > i.ico {
@@ -1937,6 +1935,10 @@ table.data-grid td > a > i.ico {
 table.data-grid td > i.ico.ico-single,
 table.data-grid td > a > i.ico.ico-single {
   padding-right: 0;
+}
+table.data-grid td .dg-cell {
+  word-break: break-all;
+  word-break: break-word;
 }
 table.data-grid th {
   border-color: #cbcdda;
@@ -2144,7 +2146,7 @@ table.data-grid td.group-marker {
   padding: 0;
   border-style: none;
 }
-table.data-grid > tr:last-child > td {
+table.data-grid tr.dg-row:last-child > td {
   border-bottom: 1px solid #e5e8eb;
 }
 table.data-grid.compact {
