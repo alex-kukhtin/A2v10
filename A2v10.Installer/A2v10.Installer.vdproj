@@ -2686,7 +2686,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -3939,7 +3939,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
         "ProductCode" = "8:{376966CE-437D-46EC-863A-5E0C7FD11849}"
-        "PackageCode" = "8:{CDD69347-0D9D-47CC-B5F3-3B8003FA045C}"
+        "PackageCode" = "8:{ACA68146-8F20-46E1-9117-4C8386C6048C}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

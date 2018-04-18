@@ -12,7 +12,6 @@
 
 # project specific
 *.license.key
-*.config
 #Web/A2v10\.Web\.Site/Web.config
 
 # Build results
