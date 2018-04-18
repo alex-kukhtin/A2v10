@@ -34,6 +34,26 @@ namespace A2v10.Xaml
 		{
 			return AttachedHelpers.GetAttached(_attachedPart, obj);
 		}
+
+		internal static void CheckAttachedObjects()
+		{
+			var tbType = typeof(Toolbar);
+			AttachedHelpers.CheckParentAttached(_attachedPart, tbType);
+		}
+
+		internal static void ClearAttachedObjects()
+		{
+			if (_attachedPart.IsValueCreated) _attachedPart.Value.Clear();
+		}
+
+#if DEBUG
+		internal static void DebugCheckAttached()
+		{
+			if (_attachedPart.IsValueCreated && _attachedPart.Value.Count > 0)
+				throw new XamlException("Toolbar. Invalid attached state");
+		}
+#endif
+
 		#endregion
 
 		public ToolbarStyle Style { get; set; }

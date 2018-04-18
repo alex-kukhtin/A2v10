@@ -78,6 +78,36 @@ namespace A2v10.Xaml
 			AttachedHelpers.RemoveAttached(_attachedVAlign, obj);
 		}
 
+		internal static void CheckAttachedObjects()
+		{
+			var gridType = typeof(Grid);
+			AttachedHelpers.CheckParentAttached(_attachedRow, gridType);
+			AttachedHelpers.CheckParentAttached(_attachedColumn, gridType);
+			AttachedHelpers.CheckParentAttached(_attachedRowSpan, gridType);
+			AttachedHelpers.CheckParentAttached(_attachedColSpan, gridType);
+			AttachedHelpers.CheckParentAttached(_attachedVAlign, gridType);
+		}
+
+		internal static void ClearAttachedObjects()
+		{
+			if (_attachedRow.IsValueCreated) _attachedRow.Value.Clear();
+			if (_attachedColumn.IsValueCreated) _attachedColumn.Value.Clear();
+			if (_attachedRowSpan.IsValueCreated) _attachedRowSpan.Value.Clear();
+			if (_attachedColSpan.IsValueCreated) _attachedColSpan.Value.Clear();
+			if (_attachedVAlign.IsValueCreated) _attachedVAlign.Value.Clear();
+		}
+
+#if DEBUG
+		internal static void DebugCheckAttached()
+		{
+			if (_attachedRow.IsValueCreated && _attachedRow.Value.Count > 0 ||
+				_attachedColumn.IsValueCreated && _attachedColumn.Value.Count > 0 ||
+				_attachedColSpan.IsValueCreated && _attachedColSpan.Value.Count > 0 || 
+				_attachedRowSpan.IsValueCreated && _attachedRowSpan.Value.Count > 0
+			)
+				throw new XamlException("Grid. Invalid attached state");
+		}
+#endif
 		#endregion
 
 

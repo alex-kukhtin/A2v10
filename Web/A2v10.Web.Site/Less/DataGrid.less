@@ -315,15 +315,15 @@ table.data-grid {
 		border-style: none;
 	}
 
-	tr.lev-2 .group-marker {
+	> tr.lev-2 .group-marker {
 		//padding-left: @group-padding * 2 + @group-padding / 2;
 	}
 
-	tr.lev-3 .group-marker {
+	> tr.lev-3 .group-marker {
 		//padding-left: @group-padding * 3 + @group-padding / 2;
 	}
 
-	tr:last-child > td {
+	> tr:last-child > td {
 		border-bottom: 1px solid @table-brd-color;
 	}
 }
@@ -341,31 +341,31 @@ table.data-grid.compact {
 
 table.data-grid > tbody {
 	> tr.warning, > tr.orange {
-		td {
+		> td {
 			background-color: @dg-warning-bg-color;
 		}
 	}
 
 	> tr.danger, > tr.error, > tr.red {
-		td {
+		> td {
 			background-color: @dg-danger-bg-color;
 		}
 	}
 
 	> tr.success, > tr.green {
-		td {
+		> td {
 			background-color: @dg-success-bg-color;
 		}
 	}
 
 	> tr.info, > tr.cyan {
-		td {
+		> td {
 			background-color: @dg-info-bg-color;
 		}
 	}
 
 	> tr.bold {
-		td {
+		> td {
 			font-weight: @font-bold;
 		}
 	}
@@ -441,15 +441,15 @@ table.data-grid > tbody {
 				border-left-style: none !important;
 			}
 
-			tbody > tr > td:first-child {
+			> tbody > tr > td:first-child {
 				border-left-style: none !important;
 			}
 
-			tbody > tr > td:last-child {
+			> tbody > tr > td:last-child {
 				border-right-style: none !important;
 			}
 
-			tbody > tr:last-child > td {
+			> tbody > tr:last-child > td {
 				//border-bottom-style: none !important;
 			}
 		}

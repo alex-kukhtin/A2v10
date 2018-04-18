@@ -60,12 +60,9 @@ namespace A2v10.Xaml
 
 			if (isGridPage)
 			{
-				if (Toolbar != null)
-					Toolbar.RenderElement(context, (tag) => tag.AddCssClass("page-toolbar"));
-				if (Taskpad != null)
-					Taskpad.RenderElement(context, (tag) => tag.AddCssClass("page-taskpad"));
-				if (Pager != null)
-					Pager.RenderElement(context, (tag) => tag.AddCssClass("page-pager"));
+				Toolbar?.RenderElement(context, (tag) => tag.AddCssClass("page-toolbar"));
+				Taskpad?.RenderElement(context, (tag) => tag.AddCssClass("page-taskpad"));
+				Pager?.RenderElement(context, (tag) => tag.AddCssClass("page-pager"));
 				var content = new TagBuilder("div", "page-content").RenderStart(context);
 				RenderChildren(context);
 				content.RenderEnd(context);
@@ -97,12 +94,9 @@ namespace A2v10.Xaml
 		internal override void OnDispose()
 		{
 			base.OnDispose();
-			if (Toolbar != null)
-				Toolbar.OnDispose();
-			if (Taskpad != null)
-				Taskpad.OnDispose();
-			if (Pager != null)
-				Pager.OnDispose();
+			Toolbar?.OnDispose();
+			Taskpad?.OnDispose();
+			Pager?.OnDispose();
 		}
 
 	}

@@ -20,6 +20,26 @@ namespace A2v10.Xaml
 		{
 			return AttachedHelpers.GetAttached(_attachedFill, obj);
 		}
+
+		internal static void CheckAttachedObjects()
+		{
+			var fhType = typeof(FullHeightPanel);
+			AttachedHelpers.CheckParentAttached(_attachedFill, fhType);
+		}
+
+		internal static void ClearAttachedObjects()
+		{
+			if (_attachedFill.IsValueCreated) _attachedFill.Value.Clear();
+		}
+
+#if DEBUG
+		internal static void DebugCheckAttached()
+		{
+			if (_attachedFill.IsValueCreated && _attachedFill.Value.Count > 0)
+				throw new XamlException("FullHeightPanel. Invalid attached state");
+		}
+#endif
+
 		#endregion
 
 		String GetRows()

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180407-7151
+// 20180417-7159
 // components/datagrid.js*/
 
 (function () {
@@ -390,7 +390,7 @@
 				return prdv && this.row[prdv];
 			},
 			detailsExpandClass() {
-				return this.row.$details ? "ico-minus-circle" : "ico-plus-circle";
+				return this.row._uiprops_.$details ? "ico-minus-circle" : "ico-plus-circle";
 			},
 			totalColumns() {
 				console.error('implement me');
@@ -429,7 +429,7 @@
 			toggleDetails($event) {
 				//$event.stopImmediatePropagation();
 				if (!this.detailsIcon) return;
-				Vue.set(this.row, "$details", !this.row.$details);
+				Vue.set(this.row._uiprops_, "$details", !this.row._uiprops_.$details);
 			}
 		}
 	};
@@ -461,7 +461,7 @@
 		methods: {
 			visible() {
 				if (this.$parent.isRowDetailsCell)
-					return this.row.$details ? true : false;
+					return this.row._uiprops_.$details ? true : false;
 				return this.row === this.$parent.selected();
 			}
 		}

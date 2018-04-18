@@ -23,6 +23,7 @@ using System.Text;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Export;
 using System.Web;
+using System.Configuration;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -208,18 +209,18 @@ namespace A2v10.Web.Mvc.Controllers
 			if (_licenseSet)
 				return;
 			_licenseSet = true;
-			var serverPath = HostingEnvironment.MapPath("~");
-			String licPath = Path.Combine(serverPath, "licenses", "stimulsoft.license.key");
-			if (System.IO.File.Exists(licPath))
-			{
-				Stimulsoft.Base.StiLicense.LoadFromFile(licPath);
-			}
+			var lic = ConfigurationManager.AppSettings["stimulsoft.license"];
+			if (!String.IsNullOrEmpty(lic))
+				Stimulsoft.Base.StiLicense.LoadFromString(lic);
 		}
 
 		public ActionResult GetReport()
 		{
 			try
 			{
+				var rp = StiMvcViewer.GetRequestParams();
+				var Rep = rp.GetString("Rep");
+				var Base = rp.GetString("Base");
 				//TODO: image settings var rm = TempData["StiImage"] as ImageInfo;
 				//TODO: profile var token = Profiler.BeginReport("create");
 				var ri = TempData["StiReportInfo"] as ReportInfo;

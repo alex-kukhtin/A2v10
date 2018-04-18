@@ -95,5 +95,12 @@ namespace A2v10.Xaml
 			foreach (var ch in Children)
 				ch.SetParent(this);
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var c in Children)
+				c.OnDispose();
+		}
 	}
 }

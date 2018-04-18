@@ -30,5 +30,17 @@ namespace A2v10.Xaml
 				return;
 			dict.Value.Remove(obj);
 		}
+
+		internal static void CheckParentAttached<T>(Lazy<IDictionary<Object, T>> dict, Type checkType)
+		{
+			if (!dict.IsValueCreated)
+				return;
+			foreach (var elem in dict.Value)
+			{
+				var xe = (elem.Key as XamlElement);
+				if (xe.Parent.GetType() != checkType)
+					throw new XamlException($"Invalid Parent type for '{elem.Key.GetType().Name}'. Actual: '{xe.Parent.GetType().Name}'. Expected: {checkType.Name}");
+			}
+		}
 	}
 }

@@ -8,6 +8,7 @@ namespace A2v10.Infrastructure
 	public interface IServiceLocator
 	{
 		T GetService<T>() where T : class;
+		Object GetService(Type type);
 		void RegisterService<T>(T service) where T : class;
 		Boolean IsServiceRegistered<T>() where T : class;
 		void Stop();
@@ -41,6 +42,15 @@ namespace A2v10.Infrastructure
 			if (_services.TryGetValue(typeof(T), out result))
 				return result as T;
 			throw new InvalidOperationException($"Service '{typeof(T).FullName}' not registered");
+		}
+
+
+		public Object GetService(Type type)
+		{
+			Object result;
+			if (_services.TryGetValue(type, out result))
+				return result;
+			throw new InvalidOperationException($"Service '{type.FullName}' not registered");
 		}
 
 		public void RegisterService<T>(T service) where T : class

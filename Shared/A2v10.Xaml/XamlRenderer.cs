@@ -39,7 +39,23 @@ namespace A2v10.Xaml
 			{
 				RenderContext ctx = new RenderContext(uiElem, info);
 				ctx.RootId = info.RootId;
+
 				uiElem.RenderElement(ctx);
+
+				try
+				{
+					Grid.CheckAttachedObjects();
+					Splitter.CheckAttachedObjects();
+					FullHeightPanel.CheckAttachedObjects();
+					Toolbar.CheckAttachedObjects();
+				} catch (XamlException)
+				{
+					Grid.ClearAttachedObjects();
+					Splitter.ClearAttachedObjects();
+					FullHeightPanel.ClearAttachedObjects();
+					Toolbar.ClearAttachedObjects();
+					throw;
+				}
 			}
 
 			var disp = uiElem as IDisposable;
@@ -47,6 +63,12 @@ namespace A2v10.Xaml
 			{
 				disp.Dispose();
 			}
+#if DEBUG
+			Grid.DebugCheckAttached();
+			Splitter.DebugCheckAttached();
+			FullHeightPanel.DebugCheckAttached();
+			Toolbar.DebugCheckAttached();
+#endif
 		}
 	}
 }

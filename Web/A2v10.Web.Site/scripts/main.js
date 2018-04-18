@@ -60,12 +60,13 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180411-7155
+// 20180417-7159
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
-	const dateLocale = 'uk-UA';
+	const locale = window.$$locale;
+	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
 	const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
@@ -109,7 +110,8 @@ app.modules['std:utils'] = function () {
 			isZero: dateIsZero,
 			formatDate: formatDate,
 			add: dateAdd,
-			compare: dateCompare
+			compare: dateCompare,
+			endOfMonth: endOfMonth
 		},
 		text: {
 			contains: textContains,
@@ -339,6 +341,10 @@ app.modules['std:utils'] = function () {
 		return dateEqual(d1, dateZero());
 	}
 
+	function endOfMonth(dt) {
+		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+	}
+
 	function dateAdd(dt, nm, unit) {
 		if (!isDate(dt))
 			return null;
@@ -349,7 +355,13 @@ app.modules['std:utils'] = function () {
 				return new Date(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
 			case 'month':
 				// save day of month
-				throw new Error('yet not implemented');
+				let newMonth = dt.getMonth() + nm;
+				let day = dt.getDate();
+				var ldm = new Date(dt.getFullYear(), newMonth + 1, 0).getDate();
+				if (day > ldm)
+					day = ldm;
+				var dtx = new Date(dt.getFullYear(), newMonth, day);
+				return dtx;
 				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
@@ -1076,7 +1088,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180416-7158
+// 20180417-7159
 // services/datamodel.js
 
 (function () {
@@ -1284,6 +1296,7 @@ app.modules['std:validators'] = function () {
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
 		defHidden(elem, '_lockEvents_', 0, true);
+		elem._uiprops_ = {};
 
 		let hasTemplProps = false;
 		const templ = elem._root_.$template;
@@ -3220,7 +3233,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180407-7151
+// 20180417-7159
 // components/datagrid.js*/
 
 (function () {
@@ -3610,7 +3623,7 @@ Vue.component('validator-control', {
 				return prdv && this.row[prdv];
 			},
 			detailsExpandClass() {
-				return this.row.$details ? "ico-minus-circle" : "ico-plus-circle";
+				return this.row._uiprops_.$details ? "ico-minus-circle" : "ico-plus-circle";
 			},
 			totalColumns() {
 				console.error('implement me');
@@ -3649,7 +3662,7 @@ Vue.component('validator-control', {
 			toggleDetails($event) {
 				//$event.stopImmediatePropagation();
 				if (!this.detailsIcon) return;
-				Vue.set(this.row, "$details", !this.row.$details);
+				Vue.set(this.row._uiprops_, "$details", !this.row._uiprops_.$details);
 			}
 		}
 	};
@@ -3681,7 +3694,7 @@ Vue.component('validator-control', {
 		methods: {
 			visible() {
 				if (this.$parent.isRowDetailsCell)
-					return this.row.$details ? true : false;
+					return this.row._uiprops_.$details ? true : false;
 				return this.row === this.$parent.selected();
 			}
 		}

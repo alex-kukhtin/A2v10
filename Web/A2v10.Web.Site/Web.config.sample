@@ -9,8 +9,7 @@
 		<add key="appPath" value="c:/inetpub/wwwroot/a2demo/apps" />
 		<add key="appKey" value="demo" />
 		<add key="helpUrl" value="http://a2help.azurewebsites.net" />
-		<add key="webpages:Version" value="3.0.0.0" />
-		<add key="webpages:Enabled" value="false" />
+		<add key="stimulsoft.license" value="license key here" />
 	</appSettings>
 	<system.web>
 		<globalization uiCulture="uk-UA" />

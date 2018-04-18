@@ -1,11 +1,12 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180411-7155
+// 20180417-7159
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
-	const dateLocale = 'uk-UA';
+	const locale = window.$$locale;
+	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
 	const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
@@ -49,7 +50,8 @@ app.modules['std:utils'] = function () {
 			isZero: dateIsZero,
 			formatDate: formatDate,
 			add: dateAdd,
-			compare: dateCompare
+			compare: dateCompare,
+			endOfMonth: endOfMonth
 		},
 		text: {
 			contains: textContains,
@@ -279,6 +281,10 @@ app.modules['std:utils'] = function () {
 		return dateEqual(d1, dateZero());
 	}
 
+	function endOfMonth(dt) {
+		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+	}
+
 	function dateAdd(dt, nm, unit) {
 		if (!isDate(dt))
 			return null;
@@ -289,7 +295,13 @@ app.modules['std:utils'] = function () {
 				return new Date(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
 			case 'month':
 				// save day of month
-				throw new Error('yet not implemented');
+				let newMonth = dt.getMonth() + nm;
+				let day = dt.getDate();
+				var ldm = new Date(dt.getFullYear(), newMonth + 1, 0).getDate();
+				if (day > ldm)
+					day = ldm;
+				var dtx = new Date(dt.getFullYear(), newMonth, day);
+				return dtx;
 				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180416-7158
+// 20180417-7159
 // services/datamodel.js
 
 (function () {
@@ -208,6 +208,7 @@
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
 		defHidden(elem, '_lockEvents_', 0, true);
+		elem._uiprops_ = {};
 
 		let hasTemplProps = false;
 		const templ = elem._root_.$template;

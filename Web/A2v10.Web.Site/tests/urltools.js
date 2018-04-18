@@ -34,7 +34,7 @@
     it("make query string (date)", function () {
         let today = utils.date.today();
         let strToday = utils.format(today, 'DateUrl')
-        expect(url.makeQueryString({ From: today, To: utils.date.zero() })).toBe('?From=' + strToday + '&To=');
+        expect(url.makeQueryString({ From: today, To: utils.date.zero() })).toBe('?From=' + strToday);
     });
 
     it("parse query string (simple)", function () {

@@ -10,48 +10,48 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            if (Content is UIElementBase)
-                (Content as UIElementBase).RenderElement(context, onRender);
-        }
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			if (Content is UIElementBase)
+				(Content as UIElementBase).RenderElement(context, onRender);
+		}
 
-        internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
-        {
-            base.MergeAttributes(tag, context, mode);
-            if (mode.HasFlag(MergeAttrMode.Content))
-            {
-                var contBind = GetBinding(nameof(Content));
-                if (contBind != null)
-                    tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
-            }
-        }
+		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+		{
+			base.MergeAttributes(tag, context, mode);
+			if (mode.HasFlag(MergeAttrMode.Content))
+			{
+				var contBind = GetBinding(nameof(Content));
+				if (contBind != null)
+					tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
+			}
+		}
 
-        internal void RenderContent(RenderContext context)
-        {
-            RenderContent(context, Content);
-        }
+		internal void RenderContent(RenderContext context)
+		{
+			RenderContent(context, Content);
+		}
 
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
 			XamlElement xamlElem = Content as XamlElement;
 			if (xamlElem != null)
-				xamlElem.SetParent(this); 
+				xamlElem.SetParent(this);
 		}
 
-        internal Boolean HasContent
-        {
-            get
-            {
-                if (GetBinding(nameof(Content)) != null)
-                    return true;
-                if (Content is String)
-                    return !String.IsNullOrWhiteSpace(Content.ToString());
-                if (Content != null)
-                    return true;
-                return false;
-            }
-        }
+		internal Boolean HasContent
+		{
+			get
+			{
+				if (GetBinding(nameof(Content)) != null)
+					return true;
+				if (Content is String)
+					return !String.IsNullOrWhiteSpace(Content.ToString());
+				if (Content != null)
+					return true;
+				return false;
+			}
+		}
 	}
 }

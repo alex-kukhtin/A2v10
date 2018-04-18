@@ -34,6 +34,29 @@ namespace A2v10.Xaml
 		{
 			return AttachedHelpers.GetAttached(_attachedMinWidths, obj);
 		}
+
+		internal static void CheckAttachedObjects()
+		{
+			var splType = typeof(Splitter);
+			AttachedHelpers.CheckParentAttached(_attachedWidths, splType);
+			AttachedHelpers.CheckParentAttached(_attachedMinWidths, splType);
+		}
+
+		internal static void ClearAttachedObjects()
+		{
+			if (_attachedWidths.IsValueCreated) _attachedWidths.Value.Clear();
+			if (_attachedMinWidths.IsValueCreated) _attachedMinWidths.Value.Clear();
+		}
+
+#if DEBUG
+		internal static void DebugCheckAttached()
+		{
+			if (_attachedWidths.IsValueCreated && _attachedWidths.Value.Count > 0 ||
+				_attachedMinWidths.IsValueCreated && _attachedMinWidths.Value.Count > 0)
+				throw new XamlException("Splitter. Invalid attached state");
+		}
+#endif
+
 		#endregion
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)

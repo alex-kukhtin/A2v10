@@ -203,5 +203,21 @@ namespace A2v10.Xaml
 				foreach (var c in Columns)
 					c.SetParent(this);
 		}
+
+		internal override void OnDispose()
+		{
+			base.OnDispose();
+			foreach (var c in Rows)
+				c.OnDispose();
+			if (_header != null)
+				foreach (var h in Header)
+					h.OnDispose();
+			if (_footer != null)
+				foreach (var f in Footer)
+					f.OnDispose();
+			if (_columns != null)
+				foreach (var c in Columns)
+					c.OnDispose();
+		}
 	}
 }
