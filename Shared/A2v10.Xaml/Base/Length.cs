@@ -33,6 +33,16 @@ namespace A2v10.Xaml
 		public Boolean IsEmpty => String.IsNullOrEmpty(Value);
 		public Boolean IsPixel => (Value != null) && Value.EndsWith("px");
 
+		internal static bool IsValidLength(String strVal)
+		{
+			return (strVal.EndsWith("%") ||
+					strVal.EndsWith("px") ||
+					strVal.EndsWith("vh") ||
+					strVal.EndsWith("vw") ||
+					strVal.EndsWith("em") ||
+					strVal.EndsWith("rem"));
+		}
+
 		public static Length FromString(String strVal)
 		{
 			strVal = strVal.Trim();
@@ -43,13 +53,7 @@ namespace A2v10.Xaml
 				return new Length() { Value = strVal };
 			else if (strVal.StartsWith("calc("))
 				return new Length() { Value = strVal };
-			else if (strVal.EndsWith("%"))
-				return new Length() { Value = strVal };
-			else if (strVal.EndsWith("px"))
-				return new Length() { Value = strVal };
-			else if (strVal.EndsWith("em"))
-				return new Length() { Value = strVal };
-			else if (strVal.EndsWith("rem"))
+			else if (IsValidLength(strVal))
 				return new Length() { Value = strVal };
 			else if (Double.TryParse(strVal, out dblVal))
 				return new Length() { Value = strVal + "px" };
@@ -97,13 +101,8 @@ namespace A2v10.Xaml
 				GridLength gl2 = GridLength.FromString(match.Groups[2].Value);
 				return new GridLength($"minmax({gl1.ToString()},{gl2.ToString()})");
 			}
-			else if (strVal.EndsWith("%") ||
-					strVal.EndsWith("px") ||
-					strVal.EndsWith("vh") ||
-					strVal.EndsWith("vw") ||
-					strVal.EndsWith("em") ||
-					strVal.EndsWith("rem"))
-				return new GridLength(strVal);
+			else if (Length.IsValidLength(strVal))
+				return new GridLength() { Value = strVal };
 			if (strVal.EndsWith("*"))
 				return new GridLength(strVal.Trim().Replace("*", "fr"));
 			else if (Double.TryParse(strVal, out dblVal))
