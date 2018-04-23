@@ -1,0 +1,43 @@
+﻿{
+	"schema": "a2demo",
+	"model": "Invoice",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view",
+			"export": {
+				"format": "xlsx",
+				"template": "index.template",
+				"fileName": "Перелік документів"
+			}
+		},
+		"edit": {
+			"model": "Document",
+			/*
+      "parameters": {
+        "Kind": "TEST"
+      },*/
+			"view": "invoice.view",
+			"template": "invoice.template"
+		}
+	},
+	"commands": {
+		"createShipment": {
+			"type": "sql",
+			"procedure": "Invoice.CreateShipment"
+		},
+		"fetchCustomer": {
+			"type": "sql",
+			"procedure": "Agent.Fetch"
+		}
+	},
+	"reports": {
+		"invoice": {
+			"type": "stimulsoft",
+			"report": "invoice",
+					"model": "Document",
+					"name": "@[Invoice]"
+		}
+	}
+}

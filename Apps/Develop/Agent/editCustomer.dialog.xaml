@@ -1,0 +1,71 @@
+<!-- Edit Customer -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+	Title="Свойства покупателя" Height="400">
+	<Dialog.Buttons>
+		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}" TabIndex="28"/>
+		<Button Content="Отмена" Command="{BindCmd Close}" TabIndex="29"/>
+	</Dialog.Buttons>
+	<TabPanel FullPage="True">
+		<Tab Header="Общие">
+			<Grid Columns="1*, 1*" Rows="Auto, Auto, Auto, 1*, Auto">
+				<FieldSet Orientation="Horizontal" Grid.Row="1" Grid.ColSpan="2" Title="Тип">
+					<Radio Label="Юридическое лицо" Value="{Bind Agent.Type}" CheckedValue="C" TabIndex="1"/>
+					<Radio Label="Физическое лицо" Value="{Bind Agent.Type}" CheckedValue="P"/>
+				</FieldSet>
+				<TextBox Grid.Row="2" Grid.ColSpan="2" Label="Наименование" TabIndex="2"
+						Value="{Bind Agent.Name}" />
+				<TextBox Grid.Row="3" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" TabIndex="3"/>
+				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" 
+					TabIndex="4"
+					Rows="3" Multiline="True"/>
+			</Grid>
+		</Tab>
+		<Tab Header="Validators" Padding="30, 10">
+			<Grid>
+				<TextBox Grid.Row="1" Label="TopLeft" Value="{Bind Agent.Name}" UpdateTrigger="Input" TabIndex="1">
+					<TextBox.Validator>
+						<Validator Placement="TopLeft" />
+					</TextBox.Validator>
+				</TextBox>
+				<Static Grid.Row="2" Label="BottomLeft" Value="{Bind Agent.Name}" TabIndex="2">
+					<Static.Validator>
+						<Validator Placement="BottomLeft" />
+					</Static.Validator>
+				</Static>
+				<TextBox Grid.Row="3" Label="TopRight" Value="{Bind Agent.Name}" TabIndex="3">
+					<TextBox.Validator>
+						<Validator Placement="TopRight" />
+					</TextBox.Validator>
+				</TextBox>
+				<TextBox Grid.Row="4" Label="BottomRight" Value="{Bind Agent.Name}" TabIndex="4">
+					<TextBox.Validator>
+						<Validator Placement="BottomRight" />
+					</TextBox.Validator>
+				</TextBox>
+			</Grid>
+		</Tab>
+		<Tab Header="Адрес">
+			<Grid Columns="1*, 1*">
+				<ComboBox Label="Страна" Grid.Row="1" ItemsSource="{Bind Countries}"
+						Value="{Bind Agent.Address.Country}">
+					<ComboBoxItem Content="{Bind Name}" Value="{Bind Code}"/>
+				</ComboBox>
+				<ComboBox Label="Город" Grid.Row="2"
+						 Value="{Bind Agent.Address.City}" ItemsSource="{Bind Root.$Cities}">
+					<ComboBoxItem Content="{Bind Name}" Value="{Bind Name}"/>
+				</ComboBox>
+				<ComboBox Label="Улица" Grid.Row="3"
+						 Value="{Bind Agent.Address.Street}" ItemsSource="{Bind Root.$Streets}">
+					<ComboBoxItem Content="{Bind Name}" Value="{Bind Name}"/>
+				</ComboBox>
+				<TextBox Label="Дом" Grid.Row="1" Grid.Col="2" Value="{Bind Agent.Address.Build}"/>
+				<TextBox Label="Квартира" Grid.Row="2" Grid.Col="2" Value="{Bind Agent.Address.Appt}"/>
+				<!--
+				<Hyperlink Grid.Row="3" Grid.Col="3" Command="{BindCmd MailTo, Argument={Bind Agent.Address.Appt}, Data='i am the &lt;script/&gt; subject' }" Content="{Bind Agent.Address.Appt}"/>
+				-->
+			</Grid>
+		</Tab>
+	</TabPanel>
+</Dialog>
+
+    

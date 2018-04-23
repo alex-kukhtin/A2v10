@@ -1,0 +1,22 @@
+﻿{
+  "schema": "a2demo",
+  "model": "Waybill",
+  "actions": {
+    "index": {
+      "index": true,
+      "view": "index.view",
+      "template": "index.template"
+    },
+    "edit": {
+      "model": "Document",
+      "view": "waybill.view",
+      "template": "waybill.template"
+    }
+  },
+  "reports": {
+    "waybill": {
+      "report": "waybill",
+      "model": "Document"
+    }
+  }
+}

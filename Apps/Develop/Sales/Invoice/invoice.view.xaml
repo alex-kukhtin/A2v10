@@ -1,0 +1,131 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      Title="{Bind Document.Id, Format='@[Reload] [{0}]'}">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">@[Save]</Button>
+			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" 
+				Command="{BindCmd SaveAndClose}">@[SaveAndClose]</Button>
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">@[Reload]</Button>
+			<Separator/>
+			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
+			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}}" If="{Bind Document.Done}"/>
+			<Button Icon="Print" Content="@[Print]" Command="{BindCmd Report, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
+			<Button Icon="Download" Content="@[Export]" Command="{BindCmd Report, Export=True, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
+			<Button Icon="Close" Toolbar.Align="Right"
+				Command="{BindCmd Close}">@[Close]</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Width="290">
+			<ContentControl Content="{Source Path='../../Document/Info'}"/>
+			<Panel Header="Отгрузки" Padding="6" Icon="Link"
+					Style="Yellow" Collapsible="True" If="{Bind Document.Done}">
+				<Table If="{Bind !Document.$canShipment}" Compact="True" Width="100%" 
+					GridLines="Horizontal"
+					Header=",Код:R,Дата:C,Номер:R,Сумма:R" Columns="Fit,Auto,Auto,Auto"
+					ItemsSource="{Bind Document.Shipment}">
+					<TableRow Mark="{Bind $Mark}">
+						<TableMarkCell Mark="{Bind $Mark}"/>
+						<TableCell Align="Right" Wrap="NoWrap">
+							<Hyperlink Icon="FileContent" Content="{Bind Id}" Command="{BindCmd Open, Url='/Sales/Waybill/Edit', Argument={Bind}}"></Hyperlink>
+						</TableCell>
+						<TableCell Content="{Bind Date, DataType=Date}" Align="Center"/>
+						<TableCell Content="{Bind No}" Align="Right"/>
+						<TableCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
+					</TableRow>
+				</Table>
+				<Hyperlink Icon="FileContent" If="{Bind Document.$canShipment}" Content="Создать документ" 
+                           Command="{BindCmd Execute, CommandName='createShipment', Argument={Bind Document}, Confirm='Создать расходную накладную?'}" 
+                           Padding="6" Block="True"/>
+			</Panel>
+			<Panel Header="Оплаты" Style="Green" Icon="Link"
+                   Collapsible="True" If="{Bind Document.Done}">
+				<Hyperlink Icon="FileContent" Content="Создать документ" 
+					Command="{BindCmd Execute, CommandName='createPayment', Argument={Bind Document}, Confirm='Создать документ оплаты?'}" 
+					Padding="6" Block="True"/>
+			</Panel>
+		</Taskpad>
+	</Page.Taskpad>
+	<Grid Columns="12rem, 12rem, 150, 1*">
+		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
+		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}"/>
+		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right"/>
+		<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right"/>
+		<!--
+		-->
+		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
+			Label="@[Purchaser]" Value="{Bind Document.Agent}" 
+				CreateNewCommand="{BindCmd Execute, CommandName='createNewCustomer'}"
+				Delegate="fetchCustomers" DisplayProperty="Name">
+			<Selector.AddOns>
+				<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
+				<Hyperlink Icon="Menu">
+					<Hyperlink.DropDown>
+						<DropDownMenu Direction="DownLeft">
+							<MenuItem Icon="Search" Content="Выбрать" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
+							<MenuItem Icon="Edit" Content="Изменить" Command="{BindCmd Dialog, Action=Edit, Argument={Bind Document.Agent}, Url='/Agent/EditCustomer'}"/>
+							<MenuItem Icon="Clear" Content="Очистить" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+				<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" />
+			</Selector.AddOns>
+		</Selector>
+		<Block Grid.Row="4" Grid.ColSpan="4">
+			<Toolbar Style="Transparent">
+				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+			</Toolbar>
+			<Table ItemsSource="{Bind Document.Rows}" CellSpacing="None"
+              Width="100%" GridLines="Both" Border="True" Background="Paper"
+              Columns="Fit,100,Auto,Fit,100,100,100,Fit">
+				<Table.Header>
+					<TableRow>
+						<TableCell Wrap="NoWrap">№ п.п.</TableCell>
+						<TableCell>Артикул</TableCell>
+						<TableCell>Товар</TableCell>
+						<TableCell Wrap="NoWrap">Ед. изм.</TableCell>
+						<TableCell>@[Qty]</TableCell>
+						<TableCell>@[Price]</TableCell>
+						<TableCell>@[Sum]</TableCell>
+						<TableCell/>
+					</TableRow>
+				</Table.Header>
+				<Table.Footer>
+					<TableRow>
+						<TableCell ColSpan="6">Итого</TableCell>
+						<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
+						<TableCell />
+					</TableRow>
+				</Table.Footer>
+				<TableRow>
+					<TableCell Content="{Bind RowNo}" Align="Right"/>
+					<TextBox Value="{Bind Entity.Article}"/>
+					<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
+						<TextBox.AddOns>
+							<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
+						</TextBox.AddOns>
+					</TextBox>
+					<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
+					<TextBox Value="{Bind Qty, DataType=Number}" Align="Right"/>
+					<TextBox Value="{Bind Price, DataType=Currency}" Align="Right"/>
+					<TextBox Value="{Bind Sum, DataType=Currency}" Align="Right"/>
+					<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+				</TableRow>
+			</Table>
+		</Block>
+		<TextBox Grid.Row="6" Grid.ColSpan="4" Label="@[Memo]" Multiline="True" AutoSize="True"
+			Value="{Bind Document.Memo}" Rows="3" UpdateTrigger="Input"/>
+		<!--
+			<Code Grid.Row="7" Content="{Bind Document.Memo}"></Code>
+		-->
+	</Grid>
+	<!--
+	<Table>
+		<TableRow>
+			<DatePicker Value="{Bind Document.Date}" Direction="Up"/>
+		</TableRow>
+	</Table>
+	-->
+</Page>
+

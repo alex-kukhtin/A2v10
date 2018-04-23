@@ -1,0 +1,38 @@
+<!-- Edit Supplier -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+        Title="Свойства поставщика" HelpUrl="/catalog/agents">
+	<Dialog.Buttons>
+		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
+		<Button Content="Отмена" Command="{BindCmd Close}"/>
+	</Dialog.Buttons>
+	<TabPanel>
+		<Tab Header="Общие">
+			<Grid Columns="1*, 1*">
+				<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" Value="{Bind Agent.Name}" TabIndex="1">
+					<TextBox.Validator>
+						<Validator Placement="BottomLeft" />
+					</TextBox.Validator>
+				</TextBox>
+				<TextBox Grid.Row="2" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}"/>
+				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" Rows="3" Multiline="True"/>
+			</Grid>
+			<!--
+			<StackPanel Orientation="Horizontal">
+				<CheckBox Label="Show tab" Value="{Bind Root.$$tabVisible}"/>
+				<Code Content="{Bind Root.$$tabVisible}"/>
+			</StackPanel>
+			-->
+		</Tab>
+		<!--
+		<Tab Header="Another tab (If)" If="{Bind Root.$$tabVisible}">
+			<Header Content="Tab with IF"/>
+		</Tab>
+		<Tab Header="Another tab (Show)" Show="{Bind Root.$$tabVisible}">
+			<Header Content="Tab with Show"/>
+		</Tab>
+		<Tab Header="Another tab (Hide)" Hide="{Bind Root.$$tabVisible}">
+			<Header Content="Tab with Hide"/>
+		</Tab>
+		-->
+	</TabPanel>
+</Dialog>

@@ -1,0 +1,42 @@
+<!-- Edit Customer -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Выбор покупателя" Width="70vw" Height="60vh" Padding="6">
+	<Dialog.Buttons>
+		<Button Content="Выбрать" Command="{BindCmd Select, Argument={Bind Agents}}"/>
+		<Button Content="Отмена" Command="{BindCmd Close}"/>
+	</Dialog.Buttons>
+	<Dialog.Resources>
+		<sys:String x:Key="OpenUrl">/Agent/EditCustomer</sys:String>
+		<Confirm x:Key="SureDelete">Действительно удалить покупателя?</Confirm>
+	</Dialog.Resources>
+	<CollectionView ItemsSource="{Bind Agents}" RunAt="Server" Filter="Fragment">
+		<Toolbar Style="Transparent">
+			<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" 
+                     Placeholder="фрагмент имени или кода ЕГРПОУ" Width="300">
+				<TextBox.AddOns>
+					<Hyperlink Icon="Search"/>
+				</TextBox.AddOns>
+			</TextBox>
+
+			<Button Icon="Add" Toolbar.Align="Right" Tip="Создать покупателя" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Agents}}">Создать</Button>
+			<Button Icon="Edit" Toolbar.Align="Right" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents}}">Изменить</Button>
+			<Button Icon="Delete" Toolbar.Align="Right" Command="{BindCmd DbRemoveSelected, Argument={Bind Agents}, Confirm={StaticResource SureDelete}}">Удалить</Button>
+		</Toolbar>
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+                DoubleClick="{BindCmd Select, Argument={Bind Agents}}" Height="300">
+			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
+			<DataGridColumn Header="Наименование" Content="{Bind Name}"/>
+			<DataGridColumn Header="Код ЕДРПОУ" Content="{Bind Code}" Fit="True" Align="Right"/>
+			<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+			<DataGridColumn Fit="True">
+				<Hyperlink Icon="Delete" Size="Small" Command="{BindCmd DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+			</DataGridColumn>
+		</DataGrid>
+		<Pager Source="{Bind Parent.Pager}" />
+	</CollectionView>
+</Dialog>
+
+    

@@ -3453,6 +3453,7 @@ TODO:
   border: 1px solid #aaa;
   min-width: 150px;
   min-height: 30px;
+  text-align: left;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
   z-index: 1070;
 }

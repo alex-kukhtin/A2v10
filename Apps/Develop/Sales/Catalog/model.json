@@ -1,0 +1,11 @@
+﻿{
+	"source": "Catalog",
+	"schema": "a2demo",
+	"model": "Catalogs",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view"
+		}
+	}
+}

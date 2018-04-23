@@ -1,0 +1,42 @@
+﻿{
+	"schema": "a2demo",
+	"dialogs": {
+		"browseCustomer": {
+			"index": true,
+			"model": "Customer.Browse",
+			"view": "browseCustomer.dialog"
+		},
+		"browseSupplier": {
+			"index": true,
+			"model": "Supplier",
+			"view": "browseSupplier.dialog"
+		},
+		"editCustomer": {
+			"model": "Agent",
+			"view": "editCustomer.dialog",
+			"template": "editCustomer.template"
+		},
+		"editSupplier": {
+			"model": "Agent",
+			"view": "editSupplier.dialog",
+			"template": "editSupplier.template"
+		},
+		"editFolder": {
+			"model": "Agent",
+			"view": "editFolder.dialog",
+			"template": "editFolder.template"
+		}
+	},
+	"popups": {
+		"state": {
+			"model": "Agent.State",
+			"view": "state.popup"
+		}
+	},
+	"commands": {
+		"duplicateCode": {
+			"type": "sql",
+			"procedure": "Agent.Code.CheckDuplicate"
+		}
+	}
+}

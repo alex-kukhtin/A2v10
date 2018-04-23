@@ -1,0 +1,19 @@
+<!-- AgentState Popop-->
+<Popup xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<!--
+	<Code Multiline="True" Content="{Bind Agent}" />
+	-->
+	<TagLabel Content="Заборгованність" />
+	<Table Striped="True" Compact="True" GridLines="None" Wrap="NoWrap">
+		<TableRow>
+			<Label Wrap="NoWrap">Кредиторская</Label>
+			<TableCell Content="{Bind -Agent.Id, DataType=Currency}" Bold="True" Align="Right" />
+		</TableRow>
+		<TableRow>
+			<Label>Дебеторская</Label>
+			<TableCell Content="{Bind Agent.Id, DataType=Currency}" Bold="True" Align="Right" />
+		</TableRow>
+	</Table>
+</Popup>
+
+    

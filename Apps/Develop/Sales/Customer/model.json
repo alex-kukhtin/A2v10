@@ -1,0 +1,11 @@
+﻿{
+  "schema": "a2demo",
+  "model": "Customer",
+  "actions": {
+    "index": {
+      "index": true,
+      "template": "index.template",
+      "view": "index.view"
+    }
+  }
+}

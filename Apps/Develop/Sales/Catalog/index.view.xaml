@@ -1,0 +1,12 @@
+﻿<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Splitter>
+		<List Splitter.Width="300" Height="100%" Background="LightGray"
+			  ItemsSource="{Bind Catalogs}" AutoSelect="FirstItem">
+			<ListItem Icon="{Bind Icon}" Header="{Bind Name}" Padding="8"
+				Content="{Bind Memo}"/>
+		</List>
+		<Include FullHeight="True"
+			Source="{Bind Catalogs.$selected.Url}" Argument="{Bind Catalogs.$selected.Id}"  If="{Bind Catalogs.$hasSelected}"/>
+	</Splitter>
+</Page>

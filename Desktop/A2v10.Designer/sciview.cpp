@@ -466,7 +466,7 @@ void CJsEditView::SetupEditor()
 	}
 
 
-	const char* jsInstr1 = "abstract boolean break byte case catch char class const continue debugger default delete do double else enum export extends final finally float for from function goto if implements import in instanceof int interface let long native new null of package private protected public return short static super switch synchronized this throw throws transient try typeof var void volatile while with true false prototype";
+	const char* jsInstr1 = "abstract boolean break byte case catch char class const continue debugger default delete do double else enum export extends final finally float for from function goto if implements import in instanceof int interface let long native new null of package private protected public return short static super switch synchronized this throw throws transient try typeof var void volatile while with true false prototype await async";
 	const char* jsType1 = "Array Date eval hasOwnProperty Infinity isFinite isNaN isPrototypeOf Math NaN Number Object String toString undefined valueOf alert confirm";
 
 	SendMessage(SCI_SETKEYWORDS, 0, reinterpret_cast<LPARAM>(jsInstr1));

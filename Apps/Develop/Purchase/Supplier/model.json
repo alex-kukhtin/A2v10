@@ -1,0 +1,10 @@
+﻿{
+  "schema": "a2demo",
+  "model": "Supplier",
+  "actions": {
+    "index": {
+      "index": true,
+      "view": "index.view"
+    }
+  }
+}

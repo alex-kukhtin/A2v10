@@ -47,6 +47,7 @@
     <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
+    <None Include="Develop\Agent\model.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Catalog\Inbox\model.json" />
     <None Include="Develop\Catalog\MyClients\model.json" />
@@ -62,6 +63,17 @@
     <None Include="Develop\Document\Quotations\model.json" />
     <None Include="Develop\Document\Request\model.json" />
     <None Include="Develop\Home\model.json" />
+    <None Include="Develop\Purchase\Goods\model.json" />
+    <None Include="Develop\Purchase\Supplier\model.json" />
+    <None Include="Develop\Purchase\WaybillIn\model.json" />
+    <None Include="Develop\Purchase\WaybillIn\waybillin.mrt" />
+    <None Include="Develop\Sales\Catalog\model.json" />
+    <None Include="Develop\Sales\Customer\model.json" />
+    <None Include="Develop\Sales\Invoice\index.template.xlsx" />
+    <None Include="Develop\Sales\Invoice\Invoice.mrt" />
+    <None Include="Develop\Sales\Invoice\model.json" />
+    <None Include="Develop\Sales\Waybill\model.json" />
+    <None Include="Develop\Sales\Waybill\waybill.mrt" />
     <None Include="Develop\solution.json" />
     <None Include="model.schema.json" />
   </ItemGroup>
@@ -72,6 +84,9 @@
     <Content Include="Admin\Identity\User\create.template.js" />
     <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
+    <Content Include="Develop\Agent\editCustomer.template.js" />
+    <Content Include="Develop\Agent\editFolder.template.js" />
+    <Content Include="Develop\Agent\editSupplier.template.js" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
     <Content Include="Develop\Catalog\Customers\index.template.js" />
     <Content Include="Develop\Catalog\Inbox\index.template.js" />
@@ -96,6 +111,13 @@
     <Content Include="Develop\Document\Request\entityChoice.template.js" />
     <Content Include="Develop\Document\Request\index.template.js" />
     <Content Include="Develop\demo_test.js" />
+    <Content Include="Develop\Purchase\WaybillIn\index.template.js" />
+    <Content Include="Develop\Purchase\WaybillIn\waybillin.template.js" />
+    <Content Include="Develop\Sales\Customer\index.template.js" />
+    <Content Include="Develop\Sales\Invoice\index.template.js" />
+    <Content Include="Develop\Sales\Invoice\invoice.template.js" />
+    <Content Include="Develop\Sales\Waybill\index.template.js" />
+    <Content Include="Develop\Sales\Waybill\waybill.template.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\Index.view.xaml">
@@ -266,6 +288,72 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Develop\Localization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Agent\browseCustomer.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Agent\browseSupplier.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Agent\editCustomer.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Agent\editFolder.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Agent\editSupplier.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Agent\state.popup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Purchase\Goods\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Purchase\Supplier\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Purchase\WaybillIn\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Purchase\WaybillIn\waybillIn.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Catalog\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Customer\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Invoice\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Invoice\invoice.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Waybill\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Sales\Waybill\waybill.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

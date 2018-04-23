@@ -1,0 +1,38 @@
+<!-- Goods index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib">
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/Entity/EditGoods</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Tip="Создать товар" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Создать</Button>
+			<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Изменить</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Entities}, Confirm='Удалить товар?'}">Удалить</Button>
+			<Separator />
+			<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" Placeholder="фрагмент имени или артикула" Width="260">
+				<TextBox.AddOns>
+					<Hyperlink Icon="Search"/>
+				</TextBox.AddOns>
+			</TextBox>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Entities}}" Tip="Обновить данные">Обновить</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Entities}" RunAt="ServerUrl" Filter="Fragment"/>
+	</Page.CollectionView>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
+		<DataGridColumn Header="Артикул" Content="{Bind Article}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Наименование" Content="{Bind Name}"/>
+		<DataGridColumn Header="Ед. изм." Content="{Bind Unit.Short}" Fit="True" Align="Center"/>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+	</DataGrid>
+</Page>

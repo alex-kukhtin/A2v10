@@ -1,0 +1,88 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">Сохранить</Button>
+			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Separator/>
+			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}, SaveRequired=True, Confirm='Провести документ?'}" If="{Bind !Document.Done}"/>
+			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
+			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}"/>
+			<Button Icon="Close" Toolbar.Align="Right"
+                    Command="{BindCmd Close}">Закрыть</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Width="290">
+			<ContentControl Content="{Source Path='../../Document/Info'}"/>
+			<Panel Header="Основание" Icon="Link" If="{Bind Document.$HasParent}" Style="Default" Padding="6" Collapsible="True">
+				<Hyperlink Icon="FileLink"
+                           Content="{Bind Document.ParentDoc.$Name}"
+                           Command="{BindCmd Open, Url='/Sales/Invoice/Edit', Argument={Bind Document.ParentDoc}}"/>
+			</Panel>
+		</Taskpad>
+	</Page.Taskpad>
+	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
+		Документ проведено в обліку. Редагування неможливе.
+	</Alert>
+	<Grid Columns="150, 150, 150, 1*">
+		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Расходная накладная</Header>
+		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}"/>
+		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right"/>
+		<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right"/>
+		<TextBox Grid.Row="3" Grid.ColSpan="3"
+			Label="Покупатель" Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
+			<TextBox.AddOns>
+				<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
+			</TextBox.AddOns>
+		</TextBox>
+		<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}"/>
+		<Block Grid.Row="5" Grid.ColSpan="4">
+			<Toolbar Style="Transparent">
+				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+			</Toolbar>
+			<Table ItemsSource="{Bind Document.Rows}"
+                    Width="100%" GridLines="Both" Border="True" Background="Paper"
+                    Columns="Fit,100,Auto,Fit,100,100,100,Fit">
+				<Table.Header>
+					<TableRow>
+						<TableCell Wrap="NoWrap">№ п.п.</TableCell>
+						<TableCell>Артикул</TableCell>
+						<TableCell>Товар</TableCell>
+						<TableCell Wrap="NoWrap">Ед. изм.</TableCell>
+						<TableCell>Количество</TableCell>
+						<TableCell>Цена</TableCell>
+						<TableCell>Сумма</TableCell>
+						<TableCell/>
+					</TableRow>
+				</Table.Header>
+				<Table.Footer>
+					<TableRow>
+						<TableCell ColSpan="6">Итого</TableCell>
+						<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
+						<TableCell />
+					</TableRow>
+				</Table.Footer>
+				<TableRow>
+					<TableCell Content="{Bind RowNo}" Align="Right"/>
+					<TextBox Value="{Bind Entity.Article}"/>
+					<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
+						<TextBox.AddOns>
+							<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
+						</TextBox.AddOns>
+					</TextBox>
+					<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
+					<TextBox Value="{Bind Qty, DataType=Number}" Align="Right"/>
+					<TextBox Value="{Bind Price, DataType=Currency}" Align="Right"/>
+					<TextBox Value="{Bind Sum, DataType=Currency}" Align="Right"/>
+					<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+				</TableRow>
+			</Table>
+		</Block>
+		<TextBox Grid.Row="6" Grid.ColSpan="4" Label="Примечание" Multiline="True"
+                 Value="{Bind Document.Memo}" Rows="3"/>
+	</Grid>
+</Page>
+
+    

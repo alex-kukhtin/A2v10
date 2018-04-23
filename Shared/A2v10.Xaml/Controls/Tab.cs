@@ -5,52 +5,58 @@ using System.Collections.Generic;
 
 namespace A2v10.Xaml
 {
-    public class TabCollection : List<Tab>
-    {
-    }
+	public class TabCollection : List<Tab>
+	{
+	}
 
-    /*
+	/*
      * TODO:
      * 1. Можно добавить раскраску. атрибут tab-style="yellow", а в Tab.less есть такой класс
      */
 
-    public class Tab : Container
-    {
-        public Object Header { get; set; }
+	public class Tab : Container
+	{
+		public Object Header { get; set; }
 
-        public String Badge { get; set; }
+		public String Badge { get; set; }
 
-        public Length Height { get; set; }
+		public Length Height { get; set; }
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            var tab = new TagBuilder("a2-tab-item");
-            if (onRender != null)
-                onRender(tab);
-            MergeAttributes(tab, context);
-            var headerBind = GetBinding(nameof(Header));
-            if (headerBind != null)
-                tab.MergeAttribute(":header", headerBind.GetPathFormat(context));
-            else if (Header is String)
-                tab.MergeAttribute("header", context.Localize(Header?.ToString()));
-            var badgeBind = GetBinding(nameof(Badge));
-            if (badgeBind != null)
-                tab.MergeAttribute(":badge", badgeBind.GetPathFormat(context));
-            else if (Badge != null)
-                tab.MergeAttribute("badge", Badge);
-            if (Height != null)
-                tab.MergeStyle("height", Height.Value);
-            tab.RenderStart(context);
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			var tab = new TagBuilder("a2-tab-item");
+			if (onRender != null)
+				onRender(tab);
+			MergeAttributes(tab, context, MergeAttrMode.SpecialTab);
+			var headerBind = GetBinding(nameof(Header));
+			if (headerBind != null)
+				tab.MergeAttribute(":header", headerBind.GetPathFormat(context));
+			else if (Header is String)
+				tab.MergeAttribute("header", context.Localize(Header?.ToString()));
+			var badgeBind = GetBinding(nameof(Badge));
+			if (badgeBind != null)
+				tab.MergeAttribute(":badge", badgeBind.GetPathFormat(context));
+			else if (Badge != null)
+				tab.MergeAttribute("badge", Badge);
+			if (Height != null)
+				tab.MergeStyle("height", Height.Value);
 
-            RenderChildren(context);
+			// show/hide support
+			MergeBindingAttributeBool(tab, context, ":show", nameof(Show), Show);
+			// emulate v-hide
+			MergeBindingAttributeBool(tab, context, ":show", nameof(Hide), Hide, bInvert: true);
 
-            tab.RenderEnd(context);
-        }
+			tab.RenderStart(context);
 
-        internal void RenderTemplate(RenderContext context)
-        {
-            // without outer tag
-            RenderChildren(context);
-        }
-    }
+			RenderChildren(context);
+
+			tab.RenderEnd(context);
+		}
+
+		internal void RenderTemplate(RenderContext context)
+		{
+			// without outer tag
+			RenderChildren(context);
+		}
+	}
 }

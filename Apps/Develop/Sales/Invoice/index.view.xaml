@@ -1,0 +1,100 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib">
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/Sales/Invoice/Edit</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar Style="Transparent">
+			<Button Icon="Add" Tip="Создать счет2" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='@[ConfirmDeleteDocument]'}">@[Delete]</Button>
+			<Button Icon="Download" Content="Експорт" Command="{BindCmd Export}"/>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
+			<Button Icon="Menu">
+				<Button.DropDown>
+					<DropDownMenu>
+						<MenuItem Content="Drop down item" Icon="Package"></MenuItem>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
+			<!--
+			<Button Style="Green" Icon="Plus" Content="Create new" Toolbar.Align="Right">
+				<Button.DropDown>
+					<DropDownMenu Direction="DownRight">
+						<MenuItem Content="First element"></MenuItem>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
+			-->
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl"/>
+	</Page.CollectionView>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+	<Block Padding="0, 0, 0, 20" If="False">
+		<Button Style="Green" Icon="Plus" Content="Create new">
+			<Button.DropDown>
+				<DropDownMenu Direction="DownLeft">
+					<MenuItem Content="First element"></MenuItem>
+				</DropDownMenu>
+			</Button.DropDown>
+		</Button>
+		<TagLabel Style="Red">Red</TagLabel>
+		<TagLabel Style="Orange">Orange</TagLabel>
+		<TagLabel Style="Green">Green</TagLabel>
+		<TagLabel Style="Cyan">Cyan</TagLabel>
+		<TagLabel Style="Gold">Gold</TagLabel>
+		<TagLabel Style="Purple">Purple</TagLabel>
+		<TagLabel Style="Pink">Pink</TagLabel>
+		<TagLabel Style="Blue">Blue</TagLabel>
+		<TagLabel Style="Salmon">Salmon</TagLabel>
+		<TagLabel Style="Seagreen">Seagreen</TagLabel>
+		<TagLabel Style="Tan">Tan</TagLabel>
+		<TagLabel Style="Magenta">Magenta</TagLabel>
+	</Block>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
+				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="Agent.Name">
+		<DataGridColumn Header="@[Code]" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url={StaticResource OpenUrl}}"  Icon="{Bind $Icon}" Wrap="NoWrap"/>
+		<DataGridColumn Fit="True">
+			<TagLabel Content="{Bind $State}" Style="{Bind $StateStyle}"/>
+		</DataGridColumn>
+		<DataGridColumn Header="@[Date]" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" />
+		<DataGridColumn Header="@[No]" Content="{Bind No}" Fit="True" Align="Right"/>
+		<DataGridColumn Header="@[Purchaser]" Content="{Bind Agent.Name}" Width="100"/>
+		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
+		<DataGridColumn Fit="True">
+			<CommandBar Visibility="Active">
+				<Button Icon="ArrowOpen" Tip="Открыть"/>
+				<Button Icon="Edit" Tip="Изменить"/>
+				<Button Icon="Copy" Tip="Копировать"/>
+				<Button Icon="Clear" Tip="Удалить"/>
+			</CommandBar>
+		</DataGridColumn>
+		<!--
+        <DataGridColumn Header="Создал/Изменил" Content="{Bind DateModified, DataType=DateTime}"/>
+        -->
+		<DataGrid.RowDetails>
+			<DataGridRowDetails Visible="{Bind $HasDetails}" Activate="Cell">
+				<StackPanel Orientation="Horizontal">
+					<Label Margin="0,6,0,0">Отгрузки:</Label>
+					<StackPanel Orientation="Vertical">
+						<Repeater ItemsSource="{Bind $Shipment}">
+							<Hyperlink Icon="FileLink" 
+								Command="{BindCmd Open, Url='/Sales/Waybill/Edit', Argument={Bind}}"
+								Content="{Bind $DocName}" />
+						</Repeater>
+					</StackPanel>
+				</StackPanel>
+			</DataGridRowDetails>
+		</DataGrid.RowDetails>
+	</DataGrid>
+</Page>

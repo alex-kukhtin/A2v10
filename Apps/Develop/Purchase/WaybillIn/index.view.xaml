@@ -1,0 +1,81 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/Purchase/WaybillIn/Edit</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Tip="Создать накладную" Command="{BindCmd Create, Url={StaticResource OpenUrl}}">Создать</Button>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
+			<!--
+			<Separator />
+			<ComboBox Label="Группировка" Value="{Bind Parent.GroupBy}">
+				<ComboBoxItem Content="&lt;Без группировки&gt;" />
+				<ComboBoxItem Content="Контрагент">
+					<ComboBoxItem.Value>
+						<GroupDescription GroupBy="Agent.Name" Count="True"/>
+					</ComboBoxItem.Value>
+				</ComboBoxItem>
+				<ComboBoxItem Content="Склад">
+					<ComboBoxItem.Value>
+						<GroupDescription GroupBy="DepTo.Name" Count="True"/>
+					</ComboBoxItem.Value>
+				</ComboBoxItem>
+			</ComboBox>
+			<Code Content="{Bind Parent.GroupBy}"/>
+			-->
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="Menu" Toolbar.Align="Right" Tip="Действия">
+				<Button.DropDown>
+					<DropDownMenu Direction="DownRight">
+						<MenuItem Icon="Add" Content="Создать"/>
+						<MenuItem Icon="Edit" Content="Изменить"/>
+						<Separator />
+						<MenuItem Icon="Copy" Content="Копировать"/>
+						<Separator />
+						<MenuItem Icon="Edit" Content="Удалить"/>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl"/>
+	</Page.CollectionView>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+	<!--
+    <Grid Columns="MinMax(50vh; 1*), 1*">
+        <Graphics Delegate="DrawSine"/>
+        <Panel Grid.Col="2" Header="Panel" Grid.VAlign="Top" Collapsible="True">
+            <Graphics Delegate="DrawSine"/>
+        </Panel>
+    </Grid>
+	GroupBy="Agent.Name" 
+    -->
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"
+			Command="{BindCmd Open, Url={StaticResource OpenUrl}}"/>
+		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" />
+		<DataGridColumn Header="Номер" Content="{Bind No}" Fit="True" Align="Right"/>
+		<DataGridColumn Header="Поставщик" Content="{Bind Agent.Name}" />
+		<DataGridColumn Header="Склад" Content="{Bind DepTo.Name}" />
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<DataGrid.RowDetails>
+			<DataGridRowDetails Activate="Cell">
+				<Button Content="Click me"/>
+			</DataGridRowDetails>
+		</DataGrid.RowDetails>
+	</DataGrid>
+</Page>
+
+    

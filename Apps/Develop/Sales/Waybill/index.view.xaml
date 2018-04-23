@@ -1,0 +1,74 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/Sales/Waybill/Edit</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Tip="Создать накладную" Command="{BindCmd Create, Url={StaticResource OpenUrl}}">Создать</Button>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
+			<Separator />
+			<TextBox Label="Контрагент:" Value="{Bind Parent.Filter.Agent.Name}">
+				<TextBox.AddOns>
+					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Parent.Filter.Agent}, Url='/Agent/BrowseCustomer'}"/>
+					<Hyperlink Icon="Clear" Command="{BindCmd Execute, CommandName=clearFilter, Argument={Bind Parent.Filter.Agent}}"/>
+				</TextBox.AddOns>
+			</TextBox>
+			<!--
+			<TextBox Label="text 2">
+				
+			</TextBox>
+			<CheckBox Label="check"/>
+			-->
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<!--
+			<Button Icon="Download" Tip="Download"/>
+			<Code Content="{Bind Parent.Filter}"></Code>
+			-->
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<FilterItem Property="Agent" DataType="Object" />
+				</FilterDescription>
+			</CollectionView.Filter>
+		</CollectionView>
+	</Page.CollectionView>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
+				MarkerStyle="Both" Mark="{Bind $Mark}">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"
+			Command="{BindCmd Open, Url={StaticResource OpenUrl}}" Icon="{Bind $Icon}"/>
+		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="Номер" Content="{Bind No}" Fit="True" Align="Right" Wrap="NoWrap"/>
+		<DataGridColumn Header="Покупатель">
+			<Popover Placement="BottomRight" If="{Bind Agent.Id}"
+				Text="{Bind Agent.Name}" Url="{Bind $AgentPopoverUrl}"/>
+		</DataGridColumn>
+		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<DataGrid.RowDetails>
+			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Cell">
+				<StackPanel Orientation="Horizontal">
+					<Label Margin="0,6,0,0">Основание:</Label>
+					<Hyperlink Icon="FileLink"
+						Command="{BindCmd Open, Url='/Sales/Invoice/Edit', 
+						Argument={Bind ParentDoc}}"
+						Content="{Bind ParentDoc.$Name}" />
+				</StackPanel>
+			</DataGridRowDetails>
+		</DataGrid.RowDetails>
+	</DataGrid>
+</Page>
