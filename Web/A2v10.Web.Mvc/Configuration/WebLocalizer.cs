@@ -81,15 +81,21 @@ namespace A2v10.Web.Mvc.Configuration
 				return;
 			if (!_host.IsDebugConfiguration)
 				return;
-			_watcher_system = new FileSystemWatcher(dirPath, "*.txt");
-			_watcher_system.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
-			_watcher_system.Changed += _watcher_Changed;
-			_watcher_system.EnableRaisingEvents = true;
+			if (!String.IsNullOrEmpty(dirPath))
+			{
+				_watcher_system = new FileSystemWatcher(dirPath, "*.txt");
+				_watcher_system.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+				_watcher_system.Changed += _watcher_Changed;
+				_watcher_system.EnableRaisingEvents = true;
+			}
 
-			_watcher_app = new FileSystemWatcher(appPath, "*.txt");
-			_watcher_app.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
-			_watcher_app.Changed += _watcher_Changed;
-			_watcher_app.EnableRaisingEvents = true;
+			if (!String.IsNullOrEmpty(appPath))
+			{
+				_watcher_app = new FileSystemWatcher(appPath, "*.txt");
+				_watcher_app.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+				_watcher_app.Changed += _watcher_Changed;
+				_watcher_app.EnableRaisingEvents = true;
+			}
 		}
 
 		private void _watcher_Changed(Object sender, FileSystemEventArgs e)
@@ -102,27 +108,36 @@ namespace A2v10.Web.Mvc.Configuration
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
 			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "_localization"));
+			if (!Directory.Exists(dirPath))
+				dirPath = null;
+			if (!Directory.Exists(appPath))
+				appPath = null;
 			CreateWatchers(dirPath, appPath);
-			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+			if (dirPath != null)
 			{
-				yield return s;
+				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+					yield return s;
 			}
-			foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+			if (appPath != null)
 			{
-				yield return s;
+				foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+					yield return s;
 			}
 			// simple locale: uk
 			if (locale.Length > 2)
 			{
 				locale = locale.Substring(0, 2);
 			}
-			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+			if (dirPath != null)
 			{
-				yield return s;
+				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+					yield return s;
 			}
-			foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+			if (appPath != null)
 			{
-				yield return s;
+				foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+
+					yield return s;
 			}
 		}
 

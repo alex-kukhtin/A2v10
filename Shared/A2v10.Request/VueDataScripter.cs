@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,7 +44,7 @@ namespace A2v10.Request
 					val = $"'{val}'";
 				else if (val is Object)
 					val = JsonConvert.SerializeObject(val);
-				sb.Append($" {k.Key}: {val},");
+				sb.Append($"'{k.Key}': {val},");
 			}
 			sb.RemoveTailComma();
 			sb.Append("}, rawData);");
