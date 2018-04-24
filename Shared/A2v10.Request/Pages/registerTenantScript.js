@@ -95,6 +95,8 @@
 							that.navigate();
 						else if (result === 'ConfirmSent')
 							that.confirmSent();
+						else if (result === 'AlreadyTaken')
+							that.alreadyTaken();
 						else
 							alert(result);
 					})
@@ -111,6 +113,9 @@
 			confirmSent() {
 				this.confirmRegisterText = this.locale.$ConfirmRegister.replace('{0}', this.email);
 				this.showConfirm = true;
+			},
+			alreadyTaken() {
+				this.serverError = this.locale.$AlreadyTaken.replace('{0}', this.email);
 			},
 			failure(msg) {
 				this.password = '';

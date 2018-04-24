@@ -23,7 +23,7 @@
 		$ConfirmEMailPrompt: 'Підтвердження е-mail',
 		$Version: 'Версія',
 		$Password: 'Пароль',
-		$RememberCredentials: 'Запам\'ятати облікові дані',
+		$RememberCredentials: 'Залишатися в системі',
 		$PasswordRecovery: 'Відновлення паролю',
 		$Register: 'Зареєструватися',
 		$RegisterLink: 'Реєстрація',
@@ -44,6 +44,7 @@
 		$InvalidLoginError: 'Неправильний е-mail або пароль',
 		$InvalidEMailError: 'Неправильний е-mail',
 		$UserLockuotError: 'Користувача заблоковано.\nСпробуйте ще через декілька хвилин',
+		$EmailNotConfirmed: 'e-mail не підтверджено.\nПеревірте пошту ще через декілька хвилин',
 		$PasswordTip: 'Для підтвердження введіть пароль ще раз',
 		$CheckEMail: 'Через декілька хвилин перевірте пошту.',
 		$ConfirmReset: 'На адресу {0} було відправлено посилання для відновлення паролю.',
@@ -51,7 +52,8 @@
 		$ResetPasswordSuccess: 'Пароль встановлено успішно',
 		$ResetPasswordError: 'Помилка відновлення паролю',
 		$ErrorText: 'При обробці запиту виникла помилка.',
-		$ConfirmEMailText: 'Адресу е-mail підтверджено успішно.'
+		$ConfirmEMailText: 'Адресу е-mail підтверджено успішно.',
+		$AlreadyTaken: 'е-mail {0} неправильний або вже використовується'
 	};
 
 

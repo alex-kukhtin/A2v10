@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180417-7159
+// 20180423-7162
 // components/datagrid.js*/
 
 (function () {
@@ -149,6 +149,9 @@
 		},
 		created() {
 			this.$parent.$addColumn(this);
+		},
+		destroyed() {
+			this.$parent.$removeColumn(this);
 		},
 		computed: {
 			sortProperty() {
@@ -629,6 +632,11 @@
 			},
 			$addColumn(column) {
 				this.columns.push(column);
+			},
+			$removeColumn(column) {
+				let ix = this.columns.indexOf(column);
+				if (ix !== -1)
+					this.columns.splice(ix, 1);
 			},
 			columnClass(column) {
 				let cls = '';

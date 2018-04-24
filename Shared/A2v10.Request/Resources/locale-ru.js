@@ -23,7 +23,7 @@
 		$ConfirmEMailPrompt: 'Подтверждение е-mail',
 		$Version: 'Версия',
 		$Password: 'Пароль',
-		$RememberCredentials: 'Запромнить учетные данные',
+		$RememberCredentials: 'Оставаться в системе',
 		$PasswordRecovery: 'Восстановление пароля',
 		$Register: 'Зарегистрироваться',
 		$RegisterLink: 'Регистрация',
@@ -43,7 +43,8 @@
 		$PasswordLength: 'пароль должен иметь длину не менее 6 символов',
 		$InvalidLoginError: 'Неправильный е-mail или пароль',
 		$InvalidEMailError: 'Неправильный е-mail',
-		$UserLockuotError:'Пользователь заблокирован.\nПопробуйте еще через несколько минут',
+		$UserLockuotError: 'Пользователь заблокирован.\nПопробуйте еще через несколько минут',
+		$EmailNotConfirmed: 'Адрес e-mail не подтвержден.\nПроверьте почту через несколько минут',
 		$PasswordTip: 'Для подтверждения введите пароль еще раз',
 		$CheckEMail: 'Через некоторое время проверьте почту.',
 		$ConfirmReset: 'На адрес {0} была отправлена ссылка для восстановления пароля.',
@@ -51,7 +52,8 @@
 		$ResetPasswordSuccess: 'Пароль успешно установлен.',
 		$ResetPasswordError: 'Ошибка восстановления пароля',
 		$ErrorText: 'При обработке запроса возникла ошибка.',
-		$ConfirmEMailText: 'Адрес е-mail подтвержден успешно.'
+		$ConfirmEMailText: 'Адрес е-mail подтвержден успешно.',
+		$AlreadyTaken: 'е-mail {0} неправильный или уже используется'
 	};
 
 

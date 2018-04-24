@@ -87,39 +87,39 @@ namespace A2v10.Web.Mvc.Identity
 		}
 
 		IDbContext _dbContext;
-        IApplicationHost _host;
+		IApplicationHost _host;
 
 		UserCache _cache;
 
 		public AppUserStore(IDbContext dbContext, IApplicationHost host)
 		{
 			_dbContext = dbContext;
-            _host = host;
+			_host = host;
 			_cache = new UserCache();
 		}
 
-        internal String DataSource => _host.CatalogDataSource;
+		internal String DataSource => _host.CatalogDataSource;
 
 		#region IUserStore
 
 		public async Task CreateAsync(AppUser user)
 		{
 			await _dbContext.ExecuteAsync(DataSource, "[a2security].[CreateUser]", user);
-            if (_host.IsMultiTenant)
-            {
-                var createdUser = await FindByIdAsync(user.Id);
-                _host.TenantId = createdUser.Tenant;
-                // TODO: GetTenantSegment!!!!
-                await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
-                CacheUser(createdUser);
-            }
-            else
-            {
-                CacheUser(user);
-            }
-        }
+			if (_host.IsMultiTenant)
+			{
+				var createdUser = await FindByIdAsync(user.Id);
+				_host.TenantId = createdUser.Tenant;
+				// TODO: GetTenantSegment!!!!
+				await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
+				CacheUser(createdUser);
+			}
+			else
+			{
+				CacheUser(user);
+			}
+		}
 
-        public Task DeleteAsync(AppUser user)
+		public Task DeleteAsync(AppUser user)
 		{
 			throw new NotImplementedException();
 		}
@@ -151,22 +151,23 @@ namespace A2v10.Web.Mvc.Identity
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
-            else if (user.IsPasswordModified)
-            {
-                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserPassword]", user);
-                user.ClearModified(UserModifiedFlag.Password);
-            }
-            else if (user.IsLastLoginModified)
-            {
-                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
-                user.ClearModified(UserModifiedFlag.LastLogin);
+			else if (user.IsPasswordModified)
+			{
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserPassword]", user);
+				user.ClearModified(UserModifiedFlag.Password);
+			}
+			else if (user.IsLastLoginModified)
+			{
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
+				user.ClearModified(UserModifiedFlag.LastLogin);
 
-            } else if (user.IsEmailConfirmModified)
-            {
-                await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
-                user.ClearModified(UserModifiedFlag.EmailConfirmed);
-            }
-        }
+			}
+			else if (user.IsEmailConfirmModified)
+			{
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
+				user.ClearModified(UserModifiedFlag.EmailConfirmed);
+			}
+		}
 
 		#endregion
 
@@ -271,8 +272,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetPasswordHashAsync(AppUser user, String passwordHash)
 		{
 			user.PasswordHash = passwordHash;
-            user.SetModified(UserModifiedFlag.Password);
-            return Task.FromResult(0);
+			user.SetModified(UserModifiedFlag.Password);
+			return Task.FromResult(0);
 		}
 
 		public Task<String> GetPasswordHashAsync(AppUser user)
@@ -320,8 +321,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetEmailConfirmedAsync(AppUser user, bool confirmed)
 		{
 			user.EmailConfirmed = confirmed;
-            user.SetModified(UserModifiedFlag.EmailConfirmed);
-            return Task.FromResult(0);
+			user.SetModified(UserModifiedFlag.EmailConfirmed);
+			return Task.FromResult(0);
 		}
 
 		public async Task<AppUser> FindByEmailAsync(String email)
@@ -364,8 +365,8 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetSecurityStampAsync(AppUser user, String stamp)
 		{
 			user.SecurityStamp = stamp;
-            user.SetModified(UserModifiedFlag.Password);
-            return Task.FromResult(0);
+			user.SetModified(UserModifiedFlag.Password);
+			return Task.FromResult(0);
 		}
 
 		public Task<String> GetSecurityStampAsync(AppUser user)
@@ -383,15 +384,15 @@ namespace A2v10.Web.Mvc.Identity
              * var user = HttpContext.Current.User.Identity as ClaimsIdentity;
              */
 			IList<Claim> list = new List<Claim>();
-            list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
-            list.Add(new Claim("TenantId", user.Tenant.ToString()));
-            if (user.IsAdmin)
-                list.Add(new Claim("Admin", "Admin"));
-            /*
+			list.Add(new Claim("PersonName", user.PersonName ?? String.Empty));
+			list.Add(new Claim("TenantId", user.Tenant.ToString()));
+			if (user.IsAdmin)
+				list.Add(new Claim("Admin", "Admin"));
+			/*
 			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
 			list.Add(new Claim("AppKey", user.ComputedAppKey));
 			*/
-            return Task.FromResult(list);
+			return Task.FromResult(list);
 		}
 
 		public Task AddClaimAsync(AppUser user, Claim claim)

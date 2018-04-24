@@ -47,6 +47,8 @@ namespace A2v10.Xaml
 		public Boolean? Small { get; set; }
 		public Boolean? Bold { get; set; }
 
+		public Boolean? If { get; set; }
+
 		Boolean _noPadding;
 
 		internal void RenderColumn(RenderContext context, Int32 colIndex)
@@ -54,6 +56,9 @@ namespace A2v10.Xaml
 			CheckValid();
 			var column = new TagBuilder("data-grid-column");
 			MergeBindingAttribute(context, column, "header", nameof(Header), Header);
+
+			MergeBindingAttributeBool(column, context, "v-if", nameof(If), If);
+
 			MergeBoolAttribute(column, context, nameof(Editable), Editable);
 			if (_noPadding)
 				column.MergeAttribute(":no-padding", "true");

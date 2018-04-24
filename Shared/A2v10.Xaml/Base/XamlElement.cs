@@ -84,6 +84,21 @@ namespace A2v10.Xaml
 			return resVal;
 		}
 
+		internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, Boolean bInvert = false)
+		{
+			String attrVal = null;
+			var attrBind = GetBinding(propName);
+			if (attrBind != null)
+				attrVal = attrBind.GetPath(context);
+			else if (propValue != null)
+				attrVal = propValue.ToString().ToLowerInvariant();
+			if (attrVal == null)
+				return;
+			if (bInvert)
+				attrVal = "!" + attrVal;
+			tag.MergeAttribute(attrName, attrVal);
+		}
+
 
 		#region ISupportInitialize
 		public void BeginInit()

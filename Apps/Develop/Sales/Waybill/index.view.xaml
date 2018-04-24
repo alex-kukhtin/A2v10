@@ -29,6 +29,7 @@
 			<!--
 			<Button Icon="Download" Tip="Download"/>
 			<Code Content="{Bind Parent.Filter}"></Code>
+			<CheckBox Label="Show column" Value="{Bind Root.$$ColumnVisible}"/>
 			-->
 		</Toolbar>
 	</Page.Toolbar>
@@ -59,6 +60,9 @@
 		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<!--
+		<DataGridColumn Header="Dynamic" Content="{Bind Memo}" If="{Bind Root.$$ColumnVisible}" />
+		-->
 		<DataGrid.RowDetails>
 			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Cell">
 				<StackPanel Orientation="Horizontal">

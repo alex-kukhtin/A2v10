@@ -993,8 +993,8 @@ app.modules['std:validators'] = function () {
 	const utils = require('std:utils');
 	const ERROR = 'error';
 
-	/* from angular.js !!! */
-	const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+	const EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
 	return {
@@ -3233,7 +3233,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180417-7159
+// 20180423-7162
 // components/datagrid.js*/
 
 (function () {
@@ -3382,6 +3382,9 @@ Vue.component('validator-control', {
 		},
 		created() {
 			this.$parent.$addColumn(this);
+		},
+		destroyed() {
+			this.$parent.$removeColumn(this);
 		},
 		computed: {
 			sortProperty() {
@@ -3862,6 +3865,11 @@ Vue.component('validator-control', {
 			},
 			$addColumn(column) {
 				this.columns.push(column);
+			},
+			$removeColumn(column) {
+				let ix = this.columns.indexOf(column);
+				if (ix !== -1)
+					this.columns.splice(ix, 1);
 			},
 			columnClass(column) {
 				let cls = '';

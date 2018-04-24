@@ -23,7 +23,7 @@
 		$ConfirmEMailPrompt: 'Confirm е-mail',
 		$Version: 'Version',
 		$Password: 'Password',
-		$RememberCredentials: 'Remember my credentials',
+		$RememberCredentials: 'Stay signed in',
 		$PasswordRecovery: 'Password recovery',
 		$Register: 'Register',
 		$RegisterLink: 'Register',
@@ -45,6 +45,7 @@
 		$InvalidLoginError: 'Invalid е-mail or password',
 		$InvalidEMailError: 'Invalid е-mail',
 		$UserLockuotError: 'The user has been locked out.\nTry again in a few minutes',
+		$EmailNotConfirmed: 'A e-mail is not confirmed.\nCheck mail in a few minutes',
 		$PasswordTip: 'To confirm, enter password again',
 		$CheckEMail: 'Check your mail in a little time.',
 		$ConfirmReset: 'A password recovery link was sent to {0}.',
@@ -52,7 +53,8 @@
 		$ResetPasswordSuccess: 'Password has been successfully reset.',
 		$ResetPasswordError: 'Password recovery failed',
 		$ErrorText: 'An error occurred while processing your request.',
-		$ConfirmEMailText: 'Email has been successfully confirmed.'
+		$ConfirmEMailText: 'Email has been successfully confirmed.',
+		$AlreadyTaken: 'е-mail {0} is invalid or aleady taken'
 	};
 
 

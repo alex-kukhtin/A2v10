@@ -127,21 +127,6 @@ namespace A2v10.Xaml
 			tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
 		}
 
-		internal void MergeBindingAttributeBool(TagBuilder tag, RenderContext context, String attrName, String propName, Boolean? propValue, Boolean bInvert = false)
-		{
-			String attrVal = null;
-			var attrBind = GetBinding(propName);
-			if (attrBind != null)
-				attrVal = attrBind.GetPath(context);
-			else if (propValue != null)
-				attrVal = propValue.ToString().ToLowerInvariant();
-			if (attrVal == null)
-				return;
-			if (bInvert)
-				attrVal = "!" + attrVal;
-			tag.MergeAttribute(attrName, attrVal);
-		}
-
 		internal void MergeValueItemProp(TagBuilder input, RenderContext context, String valueName)
 		{
 			var valBind = GetBinding(valueName);

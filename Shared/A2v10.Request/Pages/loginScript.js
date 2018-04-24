@@ -71,6 +71,8 @@
 							that.failure(that.locale.$InvalidLoginError);
 						else if (result === 'LockedOut')
 							that.failure(that.locale.$UserLockuotError);
+						else if (result === 'EmailNotConfirmed')
+							that.failure(that.locale.$EmailNotConfirmed);
 						else
 							alert(result);
 					})

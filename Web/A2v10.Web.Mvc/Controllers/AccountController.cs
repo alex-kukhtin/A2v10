@@ -22,6 +22,7 @@ using System.Configuration;
 using A2v10.Data.Interfaces;
 using System.Threading;
 using System.Security;
+using System.ComponentModel.DataAnnotations;
 
 namespace A2v10.Web.Site.Controllers
 {
@@ -118,6 +119,8 @@ namespace A2v10.Web.Site.Controllers
 
 		// GET: /Account/Login
 		[AllowAnonymous]
+		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public void Login()
 		{
 			SendPage(ResourceHelper.LoginHtml, ResourceHelper.LoginScript);
@@ -137,12 +140,20 @@ namespace A2v10.Web.Site.Controllers
 				String json = tr.ReadToEnd();
 				model = JsonConvert.DeserializeObject<LoginViewModel>(json);
 			}
+			var user = await UserManager.FindByNameAsync(model.Name);
+			if (user == null)
+				return Json(new { Status = "Failure" });
+
+			if (!user.EmailConfirmed)
+				return Json(new { Status = "EmailNotConfirmed" });
+
 			String status = null;
+
 			var result = await SignInManager.PasswordSignInAsync(userName: model.Name, password: model.Password, isPersistent: model.RememberMe, shouldLockout: true);
 			switch (result)
 			{
 				case SignInStatus.Success:
-					await UpdateUser(model.Name, success: true);
+					await UpdateUser(user, success: true);
 					status = "Success";
 					break;
 				case SignInStatus.LockedOut:
@@ -204,6 +215,8 @@ namespace A2v10.Web.Site.Controllers
 		}
 
 		[AllowAnonymous]
+		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public void Register()
 		{
 			if (!_host.IsMultiTenant)
@@ -231,6 +244,10 @@ namespace A2v10.Web.Site.Controllers
 					String json = tr.ReadToEnd();
 					model = JsonConvert.DeserializeObject<RegisterTenantModel>(json);
 				}
+
+				if (!IsEmailValid(model.Name) || !IsEmailValid(model.Email))
+					throw new InvalidDataException("AlreadyTaken");
+
 				// create user with tenant
 				var user = new AppUser
 				{
@@ -258,6 +275,13 @@ namespace A2v10.Web.Site.Controllers
 				else
 				{
 					status = String.Join(", ", result.Errors);
+					foreach (var e in result.Errors) {
+						if (e.Contains("is already taken"))
+						{
+							status = "AlreadyTaken";
+							break;
+						}
+					}
 				}
 			}
 			catch (Exception ex)
@@ -271,6 +295,7 @@ namespace A2v10.Web.Site.Controllers
 		// GET: /Account/ConfirmEmail
 		[AllowAnonymous]
 		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public async Task ConfirmEmail(Int64? userId, String code)
 		{
 			try
@@ -298,6 +323,7 @@ namespace A2v10.Web.Site.Controllers
 
 		[AllowAnonymous]
 		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public void ForgotPassword()
 		{
 			SendPage(ResourceHelper.ForgotPasswordHtml, ResourceHelper.ForgotPasswordScript);
@@ -337,7 +363,6 @@ namespace A2v10.Web.Site.Controllers
 						.Replace("{0}", callbackUrl);
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 					status = "Success";
-
 				}
 			}
 			catch (Exception ex)
@@ -351,6 +376,7 @@ namespace A2v10.Web.Site.Controllers
 		// GET: /Account/ResetPassword
 		[AllowAnonymous]
 		[HttpGet]
+		[OutputCache(Duration = 0)]
 		public void ResetPassword(string code)
 		{
 			if (code == null)
@@ -530,17 +556,22 @@ namespace A2v10.Web.Site.Controllers
 			var user = await UserManager.FindByNameAsync(userName);
 			if (user != null)
 			{
-				// may be locked out
-				if (success.HasValue)
-				{
-					user.LastLoginDate = DateTime.Now;
-					if (Request.UserHostName == Request.UserHostAddress)
-						user.LastLoginHost = $"{Request.UserHostName}";
-					else
-						user.LastLoginHost = $"{Request.UserHostName} [{Request.UserHostAddress}]";
-				}
-				await UserManager.UpdateUser(user);
+				await UpdateUser(user, success);
 			}
+		}
+
+		async Task UpdateUser(AppUser user, Boolean? success = null)
+		{ 
+			// may be locked out
+			if (success.HasValue)
+			{
+				user.LastLoginDate = DateTime.Now;
+				if (Request.UserHostName == Request.UserHostAddress)
+					user.LastLoginHost = $"{Request.UserHostName}";
+				else
+					user.LastLoginHost = $"{Request.UserHostName} [{Request.UserHostAddress}]";
+			}
+			await UserManager.UpdateUser(user);
 		}
 
 		String CurrentLang
@@ -551,6 +582,12 @@ namespace A2v10.Web.Site.Controllers
 				var lang = culture.TwoLetterISOLanguageName;
 				return lang;
 			}
+		}
+
+		bool IsEmailValid(String mail)
+		{
+			var ema = new EmailAddressAttribute();
+			return ema.IsValid(mail);
 		}
 
 		#endregion

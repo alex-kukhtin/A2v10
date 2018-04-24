@@ -14,7 +14,7 @@
 			<label style="grid-row:1; grid-column:1" class="a2-label required text-right" v-text="locale.$Email"></label>
 			<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
 				<div class="input-group">
-					<input v-focus class="control" type="text" v-model="email" tabindex="1" autocomplete="email"/>
+					<input v-focus class="control" type="text" v-model="email" tabindex="1" autocomplete="email" spellcheck="false"/>
 					<div class="validator">
 						<span class="error" v-text="emailError"></span>
 					</div>
