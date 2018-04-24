@@ -6,19 +6,20 @@
 Vue.directive('focus', {
 	bind(el, binding, vnode) {
 
-        function doSelect(event) {
-            let t = event.target;
-            if (t._selectDone)
-                return;
-            t._selectDone = true;
-            if (t.select) t.select();
-        }
+		function doSelect(event) {
+			let t = event.target;
+			if (t._selectDone)
+				return;
+			t._selectDone = true;
+			if (t.select) t.select();
+		}
 
 		el.addEventListener("focus", function (event) {
-            event.target.parentElement.classList.add('focus');
-            setTimeout(() => {
-                doSelect(event);
-            }, 0);
+			event.target.parentElement.classList.add('focus');
+			if (el.__opts && el.__opts.mask) return;
+			setTimeout(() => {
+				doSelect(event);
+			}, 0);
 		}, false);
 
 		el.addEventListener("blur", function (event) {
@@ -27,27 +28,28 @@ Vue.directive('focus', {
 			event.target.parentElement.classList.remove('focus');
 		}, false);
 
-        el.addEventListener("click", function (event) {
-            doSelect(event);
-        }, false);
-    },
-    inserted(el) {
-        if (el.tabIndex === 1) {
-            setTimeout(() => {
-                if (el.focus) el.focus();
-                if (el.select) el.select();
-            }, 0);
-        }
-    }
+		el.addEventListener("click", function (event) {
+			if (el.__opts && el.__opts.mask) return;
+			doSelect(event);
+		}, false);
+	},
+	inserted(el) {
+		if (el.tabIndex === 1) {
+			setTimeout(() => {
+				if (el.focus) el.focus();
+				if (el.select) el.select();
+			}, 0);
+		}
+	}
 });
 
 
 Vue.directive('settabindex', {
-    inserted(el) {
-        if (el.tabIndex === 1) {
-            setTimeout(() => {
-                if (el.focus) el.focus();
-            }, 0);
-        }
-    }
+	inserted(el) {
+		if (el.tabIndex === 1) {
+			setTimeout(() => {
+				if (el.focus) el.focus();
+			}, 0);
+		}
+	}
 });

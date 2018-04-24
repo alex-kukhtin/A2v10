@@ -1,17 +1,18 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180114-7091*/
+/*20180424-7163*/
 /*components/textbox.js*/
 
 (function () {
 
 	const utils = require('std:utils');
+	const mask = require('std:mask');
 
 	let textBoxTemplate =
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input ref="input" :type="controlType" v-focus 
+		<input ref="input" :type="controlType" v-focus
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
@@ -42,7 +43,7 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
-		<span v-focus v-text="text" :class="inputClass" :tabindex="tabIndex"/>
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -79,7 +80,10 @@
 		},
 		methods: {
 			updateValue(value) {
-				this.item[this.prop] = utils.parse(value, this.dataType);
+				if (this.mask)
+					this.item[this.prop] = mask.getUnmasked(this.mask, value);
+				else
+					this.item[this.prop] = utils.parse(value, this.dataType);
 				if (this.$refs.input.value !== this.modelValue) {
 					this.$refs.input.value = this.modelValue;
 					this.$emit('change', this.item[this.prop]);
@@ -148,6 +152,13 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			text: [String, Number, Date]
+		}, 
+		computed: {
+			textProp() {
+				if (this.mask && this.text)
+					return mask.getMasked(this.mask, this.text);
+				return this.text;
+			}
 		}
 	});
 

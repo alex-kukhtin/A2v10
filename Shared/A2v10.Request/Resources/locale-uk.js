@@ -35,7 +35,7 @@
 		$Phone: 'Телефон',
 		$Name: 'Ім\'я',
 		$EnterEMail: 'введіть e-mail',
-		$InvalidEMail: 'некоректний e-mail',
+		$InvalidEMail: 'неправильний e-mail',
 		$EnterPhone: 'введіть номер телефону',
 		$EnterName: 'введіть ім\'я користувача',
 		$EnterPassword: 'введіть пароль',

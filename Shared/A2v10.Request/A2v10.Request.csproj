@@ -96,6 +96,7 @@
     <Content Include="Resources\locale-ru.js" />
     <Content Include="Resources\locale-en.js" />
     <Content Include="Resources\locale-uk.js" />
+    <None Include="Resources\mask.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

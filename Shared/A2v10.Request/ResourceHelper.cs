@@ -23,6 +23,7 @@ namespace A2v10.Request
 		public static String ConfirmEMailHtml => Resources.confirmEMail;
 
 		public static String pageUtils => Resources.pageUtils;
+		public static String mask => Resources.mask;
 
 		public static String StiReportHtml => Resources.stiReport;
 

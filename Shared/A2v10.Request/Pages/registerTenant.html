@@ -32,7 +32,9 @@
 			<label style="grid-row:3; grid-column:1" class="a2-label required text-right" v-text="locale.$Phone"></label>
 			<div class="control-group" style="grid-row:3; grid-column:2" :class="{invalid: !validPhone}">
 				<div class="input-group">
-					<input v-focus class="control" type="text" v-model="phone" tabindex="3" autocomplete="tel"/>
+					<input class="control" type="text" v-model="maskedPhone"
+						v-on:change="onPhoneChange($event.target.value)"
+						tabindex="3" autocomplete="tel" ref="phoneInput"/>
 					<div class="validator">
 						<span class="error" v-text="locale.$EnterPhone"></span>
 					</div>

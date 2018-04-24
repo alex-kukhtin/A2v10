@@ -1,0 +1,27 @@
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180424-7163*/
+/* directives/mask.js */
+
+(function () {
+
+
+	// TODO: Как-то по другому
+	const maskTools = require('std:mask');
+
+	Vue.directive('mask', {
+		bind(el, binding, vnode) {
+			if (!binding.value) return;
+			const mask = binding.value;
+			if (!mask)
+				return;
+			maskTools.mountElement(el, mask);
+			el.value = maskTools.getMasked(mask, el.value);
+			el.addEventListener('change', changeHandler, false);
+		},
+		unbind(el) {
+			maskTools.unmountElement(el);
+		}
+	});
+})();
+

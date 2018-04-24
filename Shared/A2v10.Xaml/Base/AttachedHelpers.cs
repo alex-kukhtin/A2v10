@@ -35,9 +35,12 @@ namespace A2v10.Xaml
 		{
 			if (!dict.IsValueCreated)
 				return;
+			if (dict.Value == null) return;
 			foreach (var elem in dict.Value)
 			{
 				var xe = (elem.Key as XamlElement);
+				if (xe == null || xe.Parent == null)
+					continue;
 				if (xe.Parent.GetType() != checkType)
 					throw new XamlException($"Invalid Parent type for '{elem.Key.GetType().Name}'. Actual: '{xe.Parent.GetType().Name}'. Expected: {checkType.Name}");
 			}

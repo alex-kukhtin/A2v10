@@ -101,6 +101,7 @@ namespace A2v10.Web.Site.Controllers
 				StringBuilder script = new StringBuilder(rsrcScript);
 				script.Replace("$(Utils)", ResourceHelper.pageUtils);
 				script.Replace("$(Locale)", ResourceHelper.locale);
+				script.Replace("$(Mask)", ResourceHelper.mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
 				script.Replace("$(ServerInfo)", serverInfo != null ? serverInfo : "null");

@@ -7,6 +7,12 @@
 
 	$(Utils)
 	$(Locale)
+	$(Mask)
+
+	const maskTools = maskTool();
+
+	// TODO: from LOCALE or WEB.CONFIG
+	const currentMask = '+38 (0##) ###-##-##';
 
 	const vm = new Vue({
 		el: "#app",
@@ -28,6 +34,10 @@
 		computed: {
 			locale() {
 				return window.$$locale;
+			},
+			maskedPhone() {
+				return this.phone ?
+					maskTools.getMasked(currentMask, this.phone) : this.phone;
 			},
 			valid() {
 				if (!this.submitted) return true;
@@ -124,7 +134,17 @@
 			},
 			reload() {
 				window.location.reload();
+			},
+			onPhoneChange(value) {
+				this.phone = maskTools.getUnmasked(currentMask, value);
+				if (this.$refs.phoneInput.value !== this.maskedPhone) {
+					this.$refs.phoneInput.value = this.maskedPhone;
+					this.$emit('change', this.phone);
+				}
 			}
+		},
+		mounted() {
+			maskTools.mountElement(this.$refs.phoneInput, currentMask);
 		}
 	});
 })();

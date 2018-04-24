@@ -1,11 +1,12 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180406-7150
+// 20180424-7163
 // components/control.js
 
 (function () {
 
 	const utils = require('std:utils');
+	const mask = require('std:mask');
 
 	const control = {
 		props: {
@@ -17,7 +18,8 @@
 			tabIndex: Number,
 			dataType: String,
 			validatorOptions: Object,
-			updateTrigger: String
+			updateTrigger: String,
+			mask: String
 		},
 		computed: {
 			path() {
@@ -31,6 +33,8 @@
 				let val = this.item[this.prop];
 				if (this.dataType)
 					return utils.format(val, this.dataType);
+				else if (this.mask && val)
+					return mask.getMasked(this.mask, val);
 				return val;
 			},
 			errors() {
@@ -70,6 +74,14 @@
 				if (!this.item.$maxLength) return undefined;
 				return this.item.$maxLength(this.prop);
 			}
+		},
+		mounted() {
+			if (!this.mask) return;
+			mask.mountElement(this.$refs.input, this.mask);
+		},
+		beforeDestroy() {
+			if (!this.mask) return;
+			mask.unmountElement(this.$refs.input, this.mask);
 		},
 		methods: {
 			valid() {

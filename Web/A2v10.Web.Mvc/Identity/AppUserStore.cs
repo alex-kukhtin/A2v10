@@ -231,10 +231,10 @@ namespace A2v10.Web.Mvc.Identity
 				user.LockoutEndDateUtc = lockoutEnd;
 				user.SetModified(UserModifiedFlag.Lockout);
 			}
-			return Task.FromResult<int>(0);
+			return Task.FromResult<Int32>(0);
 		}
 
-		public Task<int> IncrementAccessFailedCountAsync(AppUser user)
+		public Task<Int32> IncrementAccessFailedCountAsync(AppUser user)
 		{
 			user.AccessFailedCount += 1;
 			user.SetModified(UserModifiedFlag.Lockout);
@@ -251,7 +251,7 @@ namespace A2v10.Web.Mvc.Identity
 			return Task.FromResult(0);
 		}
 
-		public Task<int> GetAccessFailedCountAsync(AppUser user)
+		public Task<Int32> GetAccessFailedCountAsync(AppUser user)
 		{
 			return Task.FromResult(user.AccessFailedCount);
 		}

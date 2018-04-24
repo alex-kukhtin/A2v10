@@ -163,6 +163,9 @@
   <data name="loginScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\loginScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mask.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="pageUtils" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\pageUtils.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

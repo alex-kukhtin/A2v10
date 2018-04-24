@@ -14,6 +14,7 @@
 				"app/services/datamodel.js",
 				"app/services/dataservice.js",
 				"app/services/popup.js",
+				"app/services/mask.js",
 				"app/components/include.js",
 				"app/components/control.js",
 				"app/components/validator.js",

@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+	</style>
+</head>
+<body>
+
+	<div id="app" style="padding:20px;width:270px;overflow:auto;background-color:aliceblue;border:1px solid blue" v-cloak>
+		<h3>MASK Component</h3>
+		<div class="control-group">
+			<label>Phone number</label>
+			<div class="input-group">
+				<input type="text" v-model="phone" v-mask="'+38 (0##) ###-##-##'" placeholder="+38 (099) 999-99-99" />
+			</div>
+		</div>
+		<div>
+			<label>Model value</label>
+			<span v-text="phone"></span>
+		</div>
+
+		<hr />
+
+
+		<div v-if="isVisibleMask">
+			<textbox label="text box editor" prop="Phone" :item="Agent" update-trigger="blur" mask="+38 (0##) ###-##-##" placeholder="введите номер телефона">
+			</textbox>
+		</div>
+
+		<static label="static text box" prop="Name" :item="Agent" :text="Agent.Phone" mask="+38 (0##) ###-##-##">
+
+		</static>
+
+		<hr />
+		<pre v-text="$data"></pre>
+
+		<button class="btn btn-primary" @click="hideMask">Toggle mask</button>
+	</div>
+
+	<script>
+		window.$$locale = {
+		};
+	</script>
+
+	<script type="text/javascript" src="../scripts/vue.js"></script>
+	<script type="text/javascript" src="../app/app.js"></script>
+	<script type="text/javascript" src="../app/platform/webvue.js"></script>
+	<script type="text/javascript" src="../app/services/utils.js"></script>
+	<script type="text/javascript" src="../app/services/mask.js"></script>
+	<script type="text/javascript" src="../app/components/validator.js"></script>
+	<script type="text/javascript" src="../app/directives/focus.js"></script>
+	<script type="text/javascript" src="../app/directives/mask.js"></script>
+	<script type="text/javascript" src="../app/components/control.js"></script>
+	<script type="text/javascript" src="../app/components/textbox.js"></script>
+
+	<script>
+
+		new Vue({
+			el: "#app",
+			data: {
+				isVisibleMask: true,
+				phone: '+380445556677',
+				Agent: {
+					Name: '',
+					Phone: '' //'+380445556677'
+				}
+			},
+			computed: {
+			},
+			components: {
+			},
+			methods: {
+				hideMask() {
+					this.isVisibleMask = !this.isVisibleMask;
+				}
+			}
+		});
+	</script>
+</body>
+</html>

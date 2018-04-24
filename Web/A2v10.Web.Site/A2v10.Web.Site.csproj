@@ -84,7 +84,7 @@
     <Content Include="app\directives\dropdown.js" />
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
-    <Content Include="app\directives\mask.js" />
+    <None Include="app\directives\mask.nojs" />
     <Content Include="app\directives\resize.js" />
     <Content Include="app\localization\locale-en.js" />
     <Content Include="app\localization\locale-ru.js" />
@@ -96,6 +96,7 @@
     <Content Include="app\services\dataservice.js" />
     <Content Include="app\services\http.js" />
     <Content Include="app\services\log.js" />
+    <Content Include="app\services\mask.js" />
     <Content Include="app\services\popup.js" />
     <Content Include="app\services\url.js" />
     <Content Include="app\services\utils.js" />
@@ -155,6 +156,7 @@
     <Content Include="TestPages\generator.js" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\listcomponent.html" />
+    <Content Include="TestPages\mask.html" />
     <Content Include="TestPages\pagelayout.html" />
     <Content Include="TestPages\pager2.html" />
     <Content Include="TestPages\pager2.js" />

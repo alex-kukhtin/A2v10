@@ -115,15 +115,16 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot; v-modal-width=&quot;{cssClass:&apos;modal-small&apos;}&quot;&gt;
         ///	&lt;div class=&quot;modal-header&quot; v-drag-window&gt;
-        ///		&lt;span&gt;Свойства поставщика&lt;/span&gt;
+        ///		&lt;span&gt;@[SetNewPassword]&lt;/span&gt;
         ///		&lt;button class=&quot;btnclose&quot; @click.prevent=&quot;$modalClose(false)&quot;&gt;&amp;#x2715;&lt;/button&gt;
         ///	&lt;/div&gt;
         ///	&lt;div class=&quot;load-indicator&quot; v-show=&quot;$isLoading&quot;&gt;&lt;/div&gt;
         ///	&lt;div class=&quot;modal-content&quot;&gt;
-        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:1fr 1fr &quot;&gt;
-        ///			&lt;textbox label=&quot;Наименование&quot; :validator-options=&quot;{placement: &apos;bottom-left&apos;}&quot; :tab-index=&quot;1&quot; :item=&quot;Agent&quot; prop=&quot;Name&quot; style=&quot;grid-row:1;grid-column:1 /  [rest of string was truncated]&quot;;.
+        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:1fr&quot;&gt;
+        ///			&lt;static label=&quot;@[User]&quot; :text=&quot;User.Name&quot; style=&quot;grid-row:1&quot;&gt;&lt;/static&gt;
+        ///			&lt;textbox label=&quot;@[OldPassword]&quot; :password=&quot;t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string changePassword {
             get {
@@ -304,14 +305,14 @@ namespace A2v10.Request.Properties {
         ///		$Cancel: &apos;Cancel&apos;,
         ///		$Error: &apos;Error&apos;,
         ///		$Login: &apos;Log in&apos;,
+        ///		$User: &apos;User&apos;,
         ///		$Confirm: &apos;Confirm&apos;,
         ///		$LoginPrompt: &apos;Login to system&apos;,
         ///		$LoginLink: &apos;Link to login&apos;,
         ///		$RegisterPrompt: &apos;Register in the system.&apos;,
         ///		$ForgotPrompt: &apos;Reset password&apos;,
         ///		$ConfirmEMailPrompt: &apos;Confirm е-mail&apos;,
-        ///		$Version: &apos;Version&apos;,
-        ///		$Password: &apos;Pas [rest of string was truncated]&quot;;.
+        ///		$Version: &apos;Version&apos;,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_en {
             get {
@@ -336,13 +337,13 @@ namespace A2v10.Request.Properties {
         ///		$Cancel: &apos;Отмена&apos;,
         ///		$Error: &apos;Ошибка&apos;,
         ///		$Login: &apos;Войти&apos;,
+        ///		$User: &apos;Пользователь&apos;,
         ///		$Confirm: &apos;Подтверждение&apos;,
         ///		$LoginPrompt: &apos;Вход в систему&apos;,
         ///		$LoginLink: &apos;На страницу входа&apos;,
         ///		$RegisterPrompt: &apos;Регистрация в системе&apos;,
         ///		$ForgotPrompt: &apos;Восстановление пароля&apos;,
-        ///		$ConfirmEMailPrompt: &apos;Подтверждение е-mail&apos;,
-        ///		$Version: &apos;Версия&apos;, [rest of string was truncated]&quot;;.
+        ///		$ConfirmEMailPrompt: &apos;Подтверждение е-mai [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_ru {
             get {
@@ -367,13 +368,13 @@ namespace A2v10.Request.Properties {
         ///		$Cancel: &apos;Скасувати&apos;,
         ///		$Error: &apos;Помилка&apos;,
         ///		$Login: &apos;Увійти&apos;,
+        ///		$User: &apos;Користувач&apos;,
         ///		$Confirm: &apos;Підтвердження&apos;,
         ///		$LoginPrompt: &apos;Вхід в систему&apos;,
         ///		$LoginLink: &apos;До сторінки входу&apos;,
         ///		$RegisterPrompt: &apos;Реєстрація в системі&apos;,
         ///		$ForgotPrompt: &apos;Відновлення паролю&apos;,
-        ///		$ConfirmEMailPrompt: &apos;Підтвердження е-mail&apos;,
-        ///		$Version: &apos;Версія&apos; [rest of string was truncated]&quot;;.
+        ///		$ConfirmEMailPrompt: &apos;Підтвердження е-mail [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_uk {
             get {
@@ -434,6 +435,42 @@ namespace A2v10.Request.Properties {
         internal static string loginScript {
             get {
                 return ResourceManager.GetString("loginScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ////*20180424-7163*/
+        ////* services/mask.js */
+        ///
+        ///app.modules[&apos;std:mask&apos;] = function () {
+        ///
+        ///
+        ///	const PLACE_CHAR = &apos;_&apos;;
+        ///
+        ///	return {
+        ///		getMasked,
+        ///		getUnmasked,
+        ///		mountElement,
+        ///		unmountElement
+        ///	};
+        ///
+        ///	function isMaskChar(ch) {
+        ///		return ch === &apos;#&apos; || ch === &apos;@&apos;;
+        ///	}
+        ///
+        ///	function isSpaceChar(ch) {
+        ///		return &apos;- ()&apos;.indexOf(ch) !== -1;
+        ///	}
+        ///
+        ///	function isValidChar(mask, char) {
+        ///		if (mask === &apos;#&apos;) {
+        ///			return char &gt;= &apos;0&apos; &amp;&amp; char &lt;= &apos;9&apos; || char = [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string mask {
+            get {
+                return ResourceManager.GetString("mask", resourceCulture);
             }
         }
         
@@ -582,7 +619,7 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ////*20180317-7132*/
+        ////*20180408-7152*/
         ///
         ///(function () {
         ///
@@ -599,13 +636,13 @@ namespace A2v10.Request.Properties {
         ///			title: menu.SysParams.AppTitle,
         ///			subtitle: menu.SysParams.AppSubTitle,
         ///			sideBarMode: menu.SysParams.SideBarMode,
-        ///			userIsAdmin: $(Admin)
+        ///			userIsAdmin: $(Admin),
+        ///			isDebug: $(Debug)
         ///		}
         ///	});
         ///
         ///	window.$rootUrl = &apos;&apos;;
-        ///
-        ///})();.
+        ///	window.$$debug = $(Deb [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shell {
             get {
