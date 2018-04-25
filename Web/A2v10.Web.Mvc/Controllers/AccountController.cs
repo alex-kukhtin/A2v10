@@ -395,7 +395,7 @@ namespace A2v10.Web.Site.Controllers
 		[ValidateJsonAntiForgeryToken]
 		public async Task<ActionResult> ResetPasswordPOST()
 		{
-			String status;
+			String status = null;
 			try
 			{
 				ResetPasswordViewModel model;
@@ -420,7 +420,13 @@ namespace A2v10.Web.Site.Controllers
 					}
 					else
 					{
-						status = String.Join(", ", result.Errors);
+						foreach ( var e in result.Errors)
+						{
+							if (e.Contains("Invalid token"))
+								status = "InvalidToken";
+						}
+						if (status == null)
+							status = String.Join(", ", result.Errors);
 					}
 				}
 			}

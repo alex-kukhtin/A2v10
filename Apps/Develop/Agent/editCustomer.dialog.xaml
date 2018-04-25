@@ -63,6 +63,7 @@
 				<!--
 				<Hyperlink Grid.Row="3" Grid.Col="3" Command="{BindCmd MailTo, Argument={Bind Agent.Address.Appt}, Data='i am the &lt;script/&gt; subject' }" Content="{Bind Agent.Address.Appt}"/>
 				-->
+				<TextBox Label="Телефон" Grid.Row="4" Grid.Col="1" Value="{Bind Agent.Address.Build}" Mask="+38 (0##) ###-##-##" Placeholder="+38 (000) 000-00-00"/>
 			</Grid>
 		</Tab>
 	</TabPanel>

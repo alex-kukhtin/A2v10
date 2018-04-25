@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 30 mar 2018
-module version : 7059
+Last updated : 25 apr 2018
+module version : 7163
 */
 ------------------------------------------------
 set noexec off;
@@ -821,8 +821,8 @@ if not exists(select * from a2security.Users where Id <> 0)
 begin
 	set nocount on;
 	insert into a2security.Users(Id, UserName, SecurityStamp, PasswordHash, PersonName)
-	values (99, N'Admin', N'c9bb451a-9d2b-4b26-9499-2d7d408ce54e', N'AJcfzvC7DCiRrfPmbVoigR7J8fHoK/xdtcWwahHDYJfKSKSWwX5pu9ChtxmE7Rs4Vg==',
-		N'Администратор системы');
+	values (99, N'admin@admin.com', N'c9bb451a-9d2b-4b26-9499-2d7d408ce54e', N'AJcfzvC7DCiRrfPmbVoigR7J8fHoK/xdtcWwahHDYJfKSKSWwX5pu9ChtxmE7Rs4Vg==',
+		N'System administrator');
 	insert into a2security.UserGroups(UserId, GroupId) values (99, 77), (99, 1); /*predefined values*/
 end
 go

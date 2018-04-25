@@ -85,6 +85,9 @@
 						else if (result === 'Error') {
 							that.serverError = that.locale.$ResetPasswordError;
 						}
+						else if (result === 'InvalidToken') {
+							that.serverError = that.locale.$ResetPasswordError;
+						}
 						else
 							alert(result);
 					})

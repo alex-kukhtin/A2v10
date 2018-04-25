@@ -35,7 +35,7 @@
 					this.emailError = this.locale.$EnterEMail;
 					return false;
 				} else if (!validEmail(this.email)) {
-					this.emailError = this.locale.$InvalidEMailError;
+					this.emailError = this.locale.$InvalidEMail;
 					return false;
 				}
 				this.emailError = '';
@@ -50,6 +50,7 @@
 		},
 		methods: {
 			submit() {
+				//console.dir('submit called');
 				this.submitted = true;
 				this.serverError = '';
 				if (!this.valid)
@@ -84,7 +85,7 @@
 			onLoginEnter() {
 				this.$refs.pwd.focus();
 			},
-			onPwdEnter() {
+			onPwdEnter(ev) {
 				this.submit();
 			},
 			navigate() {

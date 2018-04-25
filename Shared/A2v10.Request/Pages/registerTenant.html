@@ -34,7 +34,7 @@
 				<div class="input-group">
 					<input class="control" type="text" v-model="maskedPhone"
 						v-on:change="onPhoneChange($event.target.value)"
-						tabindex="3" autocomplete="tel" ref="phoneInput"/>
+						tabindex="3" autocomplete="tel" ref="phoneInput" placeholder="+38 (000) 000-00-00"/>
 					<div class="validator">
 						<span class="error" v-text="locale.$EnterPhone"></span>
 					</div>

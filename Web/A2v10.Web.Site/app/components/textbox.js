@@ -12,7 +12,7 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input ref="input" :type="controlType" v-focus
+		<input ref="input" :type="controlType" v-focus autocomplete="off"
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
