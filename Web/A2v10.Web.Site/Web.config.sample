@@ -19,7 +19,7 @@
 	</system.web>
 	<system.net>
 		<mailSettings>
-			<smtp from="from@address.domain" deliveryMethod="SpecifiedPickupDirectory">
+			<smtp from="from@address.domain" deliveryMethod="SpecifiedPickupDirectory" deliveryFormat="International">
 				<specifiedPickupDirectory pickupDirectoryLocation="c:\temp\pickup" />
 				<network host="smtpHost" port="111" userName="smtpUserName" password="smtpUserPassword" enableSsl="false" />
 			</smtp>

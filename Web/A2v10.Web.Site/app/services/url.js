@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180411-7155*/
+/*20180425-7164*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -150,8 +150,10 @@ app.modules['std:url'] = function () {
 
 	function helpHref(path) {
 		let helpUrlElem = document.querySelector('meta[name=helpUrl]');
-		if (!helpUrlElem || !helpUrlElem.content)
-			console.error('help url is not specified');
+		if (!helpUrlElem || !helpUrlElem.content) {
+			console.warn('help url is not specified');
+			return '';
+		}
 		return helpUrlElem.content + (path || '');
 	}
 

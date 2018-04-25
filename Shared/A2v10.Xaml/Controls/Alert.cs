@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			var tag = new TagBuilder("div", "alert", IsInGrid);
+			var tag = new TagBuilder("div", "a2-alert", IsInGrid);
 			MergeAttributes(tag, context);
 			if (Style != AlertStyle.Default)
 				tag.AddCssClass(Style.ToString().ToLowerInvariant());

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20180425-7165*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -11,6 +11,8 @@ app.modules['std:validators'] = function () {
 	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 	const EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
+
+	const validateMap = new WeakMap();
 
 	return {
 		validate: validateItem
@@ -45,8 +47,21 @@ app.modules['std:validators'] = function () {
 				if (!validateStd(rule.valid, val))
 					retval.push({ msg: rule.msg, severity: sev });
 			} else if (utils.isFunction(rule.valid)) {
+				if (rule.async) {
+					if (validateMap.has(item)) {
+						if (validateMap.get(item) === val) {
+							// Let's skip already validated values
+							return;
+						}
+					}
+				}
 				let vr = rule.valid(item, val);
 				if (vr && vr.then) {
+					if (!rule.async) {
+						console.error('Async rules should be marked async:true');
+						return;
+					}
+					validateMap.set(item, val);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;

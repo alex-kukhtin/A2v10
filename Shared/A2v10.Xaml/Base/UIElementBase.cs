@@ -141,6 +141,8 @@ namespace A2v10.Xaml
 			input.MergeAttribute("prop", pp.Prop);
 			if (valBind.DataType != DataType.String)
 				input.MergeAttribute("data-type", valBind.DataType.ToString());
+			if (!String.IsNullOrEmpty(valBind.Mask))
+				input.MergeAttribute("mask", valBind.Mask);
 		}
 
 		internal void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)

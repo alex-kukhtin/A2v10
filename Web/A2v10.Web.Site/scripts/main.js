@@ -432,7 +432,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180411-7155*/
+/*20180425-7164*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -582,8 +582,10 @@ app.modules['std:url'] = function () {
 
 	function helpHref(path) {
 		let helpUrlElem = document.querySelector('meta[name=helpUrl]');
-		if (!helpUrlElem || !helpUrlElem.content)
-			console.error('help url is not specified');
+		if (!helpUrlElem || !helpUrlElem.content) {
+			console.warn('help url is not specified');
+			return '';
+		}
 		return helpUrlElem.content + (path || '');
 	}
 
@@ -985,7 +987,7 @@ app.modules['std:log'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20180425-7165*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -996,6 +998,8 @@ app.modules['std:validators'] = function () {
 	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 	const EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
+
+	const validateMap = new WeakMap();
 
 	return {
 		validate: validateItem
@@ -1030,8 +1034,21 @@ app.modules['std:validators'] = function () {
 				if (!validateStd(rule.valid, val))
 					retval.push({ msg: rule.msg, severity: sev });
 			} else if (utils.isFunction(rule.valid)) {
+				if (rule.async) {
+					if (validateMap.has(item)) {
+						if (validateMap.get(item) === val) {
+							// Let's skip already validated values
+							return;
+						}
+					}
+				}
 				let vr = rule.valid(item, val);
 				if (vr && vr.then) {
+					if (!rule.async) {
+						console.error('Async rules should be marked async:true');
+						return;
+					}
+					validateMap.set(item, val);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
@@ -2265,7 +2282,7 @@ app.modules['std:popup'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180424-7163*/
+/*20180425-7164*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -2301,7 +2318,7 @@ app.modules['std:mask'] = function () {
 		for (let i = 0; i < mask.length; i++) {
 			let mc = mask[i];
 			let ch = value[j];
-			if (mc == ch) {
+			if (mc === ch) {
 				str += ch;
 				j++;
 			} else if (isMaskChar(mc)) {
@@ -2345,6 +2362,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function unmountElement(el, mask) {
+		if (!el) return;
 		delete el.__opts;
 		el.removeEventListener('keydown', keydownHandler);
 		el.removeEventListener('blur', blurHandler);
@@ -2384,7 +2402,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function setCaretPosition(input, pos, fit) {
-		if (!input) return
+		if (!input) return;
 		if (input.offsetWidth === 0 || input.offsetHeight === 0) {
 			return; // Input's hidden
 		}
@@ -2395,8 +2413,20 @@ app.modules['std:mask'] = function () {
 		}
 	}
 
+	function setRangeText(input, text, s, e) {
+		if (input.setRangeText) {
+			input.setRangeText(text, s, e);
+			return;
+		}
+		let val = input.value;
+		let r = val.substring(0, s);
+		r += text;
+		r += val.substring(e);
+		input.value = r;
+	}
+
 	function clearRangeText(input) {
-		input.setRangeText('', input.selectionStart, input.selectionEnd);
+		setRangeText(input, '', input.selectionStart, input.selectionEnd);
 	}
 
 	function setCurrentChar(input, char) {
@@ -2405,8 +2435,8 @@ app.modules['std:mask'] = function () {
 		pos = fitCaret(mask, pos, 'r');
 		let cm = mask[pos];
 		if (isValidChar(cm, char)) {
-			input.setRangeText(char, pos, pos + 1);
-			let np = fitCaret(mask, pos + 1, 'r')
+			setRangeText(input, char, pos, pos + 1);
+			let np = fitCaret(mask, pos + 1, 'r');
 			input.setSelectionRange(np, np);
 		}
 	}
@@ -6726,7 +6756,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180413-7156
+// 20180425-7164
 // controllers/base.js
 
 (function () {
@@ -6740,6 +6770,7 @@ Vue.directive('resize', {
 	const urltools = require('std:url');
 	const log = require('std:log');
 	const locale = window.$$locale;
+	const mask = require('std:mask');
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -7345,13 +7376,16 @@ Vue.directive('resize', {
 				return false;
 			},
 
-			$format(value, dataType, format, options) {
-				if (!format && !dataType)
+			$format(value, opts) {
+				if (!opts) return value;
+				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
-				if (dataType)
-					value = utils.format(value, dataType, options && options.hideZeros);
-				if (format && format.indexOf('{0}') !== -1)
-					return format.replace('{0}', value);
+				if (opts.mask)
+					return value ? mask.getMasked(opts.mask, value) : value;
+				if (opts.dataType)
+					return utils.format(value, opts.dataType, opts.hideZeros);
+				if (opts.format && opts.format.indexOf('{0}') !== -1)
+					return opts.format.replace('{0}', value);
 				return value;
 			},
 

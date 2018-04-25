@@ -601,6 +601,10 @@ th {
   text-align: left;
   font-weight: normal;
 }
+button,
+input[type=button] {
+  background-color: #ddd;
+}
 .block {
   display: block;
   width: 100%;
@@ -714,7 +718,7 @@ td.valign-bottom {
 .tag-label.hidden {
   display: none;
 }
-.alert {
+.a2-alert {
   display: block;
   padding: 6px;
   margin: 4px;
@@ -723,40 +727,40 @@ td.valign-bottom {
   border-left: 5px solid #bdc5d8;
   background-color: #f5f5f5;
 }
-.alert .ico {
+.a2-alert .ico {
   font-size: 1.2rem;
   margin-right: 2px;
 }
-.alert.warning {
+.a2-alert.warning {
   background-color: #fef8db;
   border-left-color: #fcd891;
   color: #9c793d;
 }
-.alert.warning .ico {
+.a2-alert.warning .ico {
   color: #9c793d;
 }
-.alert.success {
+.a2-alert.success {
   background-color: #e0f3d2;
   border-left-color: #aae396;
   color: #3d723e;
 }
-.alert.success .ico {
+.a2-alert.success .ico {
   color: #3d723e;
 }
-.alert.danger {
+.a2-alert.danger {
   background-color: #f3dddd;
   border-left-color: #dfa4ae;
   color: #ab403f;
 }
-.alert.danger .ico {
+.a2-alert.danger .ico {
   color: #ab403f;
 }
-.alert.info {
+.a2-alert.info {
   background-color: #dbeef6;
   border-left-color: #9ec5e7;
   color: #317293;
 }
-.alert.info .ico {
+.a2-alert.info .ico {
   color: #317293;
 }
 html {

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180413-7156
+// 20180425-7164
 // controllers/base.js
 
 (function () {
@@ -14,6 +14,7 @@
 	const urltools = require('std:url');
 	const log = require('std:log');
 	const locale = window.$$locale;
+	const mask = require('std:mask');
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -619,13 +620,16 @@
 				return false;
 			},
 
-			$format(value, dataType, format, options) {
-				if (!format && !dataType)
+			$format(value, opts) {
+				if (!opts) return value;
+				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
-				if (dataType)
-					value = utils.format(value, dataType, options && options.hideZeros);
-				if (format && format.indexOf('{0}') !== -1)
-					return format.replace('{0}', value);
+				if (opts.mask)
+					return value ? mask.getMasked(opts.mask, value) : value;
+				if (opts.dataType)
+					return utils.format(value, opts.dataType, opts.hideZeros);
+				if (opts.format && opts.format.indexOf('{0}') !== -1)
+					return opts.format.replace('{0}', value);
 				return value;
 			},
 

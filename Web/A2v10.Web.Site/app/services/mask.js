@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180424-7163*/
+/*20180425-7164*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -36,7 +36,7 @@ app.modules['std:mask'] = function () {
 		for (let i = 0; i < mask.length; i++) {
 			let mc = mask[i];
 			let ch = value[j];
-			if (mc == ch) {
+			if (mc === ch) {
 				str += ch;
 				j++;
 			} else if (isMaskChar(mc)) {
@@ -80,6 +80,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function unmountElement(el, mask) {
+		if (!el) return;
 		delete el.__opts;
 		el.removeEventListener('keydown', keydownHandler);
 		el.removeEventListener('blur', blurHandler);
@@ -119,7 +120,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function setCaretPosition(input, pos, fit) {
-		if (!input) return
+		if (!input) return;
 		if (input.offsetWidth === 0 || input.offsetHeight === 0) {
 			return; // Input's hidden
 		}
@@ -130,8 +131,20 @@ app.modules['std:mask'] = function () {
 		}
 	}
 
+	function setRangeText(input, text, s, e) {
+		if (input.setRangeText) {
+			input.setRangeText(text, s, e);
+			return;
+		}
+		let val = input.value;
+		let r = val.substring(0, s);
+		r += text;
+		r += val.substring(e);
+		input.value = r;
+	}
+
 	function clearRangeText(input) {
-		input.setRangeText('', input.selectionStart, input.selectionEnd);
+		setRangeText(input, '', input.selectionStart, input.selectionEnd);
 	}
 
 	function setCurrentChar(input, char) {
@@ -140,8 +153,8 @@ app.modules['std:mask'] = function () {
 		pos = fitCaret(mask, pos, 'r');
 		let cm = mask[pos];
 		if (isValidChar(cm, char)) {
-			input.setRangeText(char, pos, pos + 1);
-			let np = fitCaret(mask, pos + 1, 'r')
+			setRangeText(input, char, pos, pos + 1);
+			let np = fitCaret(mask, pos + 1, 'r');
 			input.setSelectionRange(np, np);
 		}
 	}

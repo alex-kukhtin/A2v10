@@ -23,7 +23,6 @@ namespace A2v10.Xaml
 		public Boolean Multiline { get; set; }
 		public TextAlign Align { get; set; }
 		public UpdateTrigger UpdateTrigger { get; set; }
-		public String Mask { get; set; }
 
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -45,7 +44,6 @@ namespace A2v10.Xaml
 				input.MergeAttribute("update-trigger", UpdateTrigger.ToString().ToLowerInvariant());
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
-			MergeBindingAttributeString(input, context, "mask", nameof(Mask), Mask);
 			MergeValue(input, context);
 			input.RenderStart(context);
 			RenderAddOns(context);
@@ -55,9 +53,11 @@ namespace A2v10.Xaml
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
-			if (GetBinding(nameof(Mask)) != null || Mask != null && UpdateTrigger == UpdateTrigger.Input)
+			if (UpdateTrigger == UpdateTrigger.Input)
 			{
-				throw new XamlException("TextBox. UpdateTrigger='Input' is not compatible with the Masked input future");
+				var valBind = GetBinding(nameof(Value));
+				if (valBind != null && !String.IsNullOrEmpty(valBind.Mask))
+					throw new XamlException("TextBox. UpdateTrigger='Input' is not compatible with the Masked input future");
 			}
 		}
 	}

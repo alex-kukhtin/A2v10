@@ -1,18 +1,22 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.ComponentModel;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace A2v10.Xaml
 {
 	public class Bind : BindBase, ISupportInitialize
 	{
+		const String NullString = "null";
 
 		public String Path { get; set; }
 		public String Format { get; set; }
 		public DataType DataType { get; set; }
 		public Boolean HideZeros { get; set; }
+		public String Mask { get; set; }
 
 		public Bind()
 		{
@@ -34,18 +38,20 @@ namespace A2v10.Xaml
 			if (Path == null)
 				return context.GetEmptyPath(); // may be scoped
 			String realPath = context.GetNormalizedPath(Path);
-			if (String.IsNullOrEmpty(Format) && DataType == DataType.String)
+			if (String.IsNullOrEmpty(Format) && DataType == DataType.String && String.IsNullOrEmpty(Mask))
 				return realPath;
-			String fmt = "null";
-			String dt = "null";
-			if (!String.IsNullOrEmpty(Format))
-				fmt = $"'{Format.Replace("'", "\\'")}'";
+			var opts = new StringBuilder("{");
 			if (DataType != DataType.String)
-				dt = $"'{DataType.ToString()}'";
-			String opts = "null";
+				opts.Append($"dataType: '{DataType.ToString()}',");
+			if (!String.IsNullOrEmpty(Format))
+				opts.Append($"format: '{context.Localize(Format.Replace("'", "\\'"))}',");
+			if (!String.IsNullOrEmpty(Mask))
+				opts.Append($"mask: '{context.Localize(Mask.Replace("'", "\\'"))}',");
 			if (HideZeros)
-				opts = "{ hideZeros: true }";
-			return $"$format({realPath}, {dt}, {context.Localize(fmt)}, {opts})";
+				opts.Append("hideZeros: true,");
+			opts.RemoveTailComma();
+			opts.Append("}");
+			return $"$format({realPath}, {opts})";
 		}
 
 

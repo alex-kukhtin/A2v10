@@ -18,7 +18,7 @@
                 <TextBox Grid.Row="2" Grid.ColSpan="2" Label="Имя" 
                          Value="{Bind User.PersonName}" TabIndex="2"/>
                 <TextBox Grid.Row="3" Grid.Col="1" Label="e-mail" Value="{Bind User.Email}" TabIndex="3"/>
-                <TextBox Grid.Row="3" Grid.Col="2" Label="Телефон" Value="{Bind User.Phone}" TabIndex="4"/>
+                <TextBox Grid.Row="3" Grid.Col="2" Label="Телефон" Value="{Bind User.Phone}" TabIndex="4" Mask="+38 (0##) ###-##-##" />
                 <TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind User.Memo}" TabIndex="5" 
                          Multiline="True" Rows="3"/>
             </Grid>
