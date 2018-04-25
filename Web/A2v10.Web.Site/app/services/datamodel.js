@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180417-7159
+// 20180426-7166
 // services/datamodel.js
 
 (function () {
@@ -395,6 +395,13 @@
 				}
 			}
 			return undefined;
+		});
+
+		defPropertyGet(arr, "$selectedIndex", function () {
+			for (let i = 0; i < this.length; i++) {
+				if (this[i].$selected) return i;
+			}
+			return -1;
 		});
 
 		defPropertyGet(arr, "$elements", function () {

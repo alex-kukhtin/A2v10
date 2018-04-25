@@ -60,7 +60,7 @@
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
-						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark"></data-grid-row>
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
 						<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
@@ -71,7 +71,7 @@
 		<template v-else>
 			<tbody>
 				<template v-for="(item, rowIndex) in $items">
-					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" />
+					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
 					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
 						<slot name="row-details" :row="item"></slot>
 					</data-grid-row-details>
@@ -88,7 +88,7 @@
 	<td class="group-marker" v-if="group"></td>
 	 */
 	const dataGridRowTemplate = `
-<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr">
 	<td v-if="isMarkCell" class="marker">
 		<div :class="markClass"></div>
 	</td>
@@ -731,6 +731,16 @@
 				// lev 1-based
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
+			}
+		},
+		updated() {
+			let src = this.itemsSource;
+			if (!src) return;
+			let ix = src.$selectedIndex;
+			let rows = this.$refs.row;
+			if (ix != -1 && rows && ix < rows.length) {
+				let tr = rows[ix].$refs.tr;
+				tr.scrollIntoView(true); // top of elems
 			}
 		}
 	});
