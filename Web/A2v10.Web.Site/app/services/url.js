@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180425-7164*/
+/*20180426-7167*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -13,13 +13,15 @@ app.modules['std:url'] = function () {
 		parseQueryString,
 		normalizeRoot,
 		idChangedOnly,
+		idOrCopyChanged,
 		makeBaseUrl,
 		parseUrlAndQuery,
 		replaceUrlQuery,
 		createUrlForNavigate,
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
-		helpHref
+		helpHref,
+		replaceSegment: replaceSegment
 	};
 
 	function normalize(elem) {
@@ -104,6 +106,22 @@ app.modules['std:url'] = function () {
 		return false;
 	}
 
+	function idOrCopyChanged(newUrl, oldUrl) {
+		let n1 = (newUrl || '').split('?')[0];
+		let o1 = (oldUrl || '').split('?')[0];
+		let ns = n1.split('/');
+		let os = o1.split('/');
+		if (ns.length !== os.length)
+			return false;
+		// remove id
+		ns.pop();
+		os.pop();
+		if (ns.pop() === 'edit' && os.pop() === 'copy') {
+			return ns.join('/') === os.join('/');
+		}
+		return false;
+	}
+
 	function makeBaseUrl(url) {
 		let x = (url || '').split('/');
 		if (x.length === 6)
@@ -159,6 +177,15 @@ app.modules['std:url'] = function () {
 
 	function replaceId(url, newId) {
 		alert('todo::replaceId');
+	}
+
+	function replaceSegment(url, id, action) {
+		let parts = url.split('/');
+		if (action) parts.pop();
+		if (id) parts.pop();
+		if (action) parts.push(action);
+		if (id) parts.push(id);
+		return parts.join('/');
 	}
 };
 

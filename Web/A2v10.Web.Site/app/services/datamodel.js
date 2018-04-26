@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180426-7167
 // services/datamodel.js
 
 (function () {
@@ -294,6 +294,7 @@
 				elem._root_.$setDirty(false);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
+			defHiddenGet(elem, '$isCopy', isModelIsCopy);
 			elem._seal_ = seal;
 		}
 		if (startTime) {
@@ -332,6 +333,15 @@
 			let mi = this.__modelInfo;
 			if (utils.isDefined(mi.ReadOnly))
 				return mi.ReadOnly;
+		}
+		return false;
+	}
+
+	function isModelIsCopy() {
+		if ('__modelInfo' in this) {
+			let mi = this.__modelInfo;
+			if (utils.isDefined(mi.Copy))
+				return mi.Copy;
 		}
 		return false;
 	}

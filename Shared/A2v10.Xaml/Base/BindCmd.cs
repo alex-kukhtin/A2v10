@@ -47,7 +47,8 @@ namespace A2v10.Xaml
 		EditSelected,
 		Show,
 		Browse,
-		Append, // create in dialog and append to array
+		Append, // create in dialog and append to array,
+		Copy
 	}
 
 

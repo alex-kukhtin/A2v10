@@ -15,7 +15,8 @@ namespace A2v10.Interop
 		{
 			var type = instance.GetType();
 			var minject = type.GetMethod("Inject", BindingFlags.Public | BindingFlags.Instance);
-			if (minject == null) return;
+			if (minject == null)
+				return;
 			var injprms = minject.GetParameters();
 			var injparsToCall = new List<Object>();
 
@@ -36,7 +37,7 @@ namespace A2v10.Interop
 		Object CallInvoke(Object instance, ExpandoObject parameters)
 		{
 			var type = instance.GetType();
-			var method = type.GetMethod("Invoke", System.Reflection.BindingFlags.Public | BindingFlags.Instance);
+			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance);
 			if (method == null)
 				throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
 
@@ -71,15 +72,7 @@ namespace A2v10.Interop
 						var px = pi.ParameterType;
 						if (px.IsNullableType())
 							px = px.GetNonNullableType();
-						if (px == typeof(DateTime))
-						{
-							// convert date to Local
-							//parsToCall.Add(((DateTime)srcObj).ToLocalTime());
-							parsToCall.Add((DateTime)srcObj);
-
-						}
-						else
-							parsToCall.Add(Convert.ChangeType(srcObj, pi.ParameterType));
+						parsToCall.Add(Convert.ChangeType(srcObj, pi.ParameterType));
 					}
 				}
 				else

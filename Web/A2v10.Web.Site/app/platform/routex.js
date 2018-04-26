@@ -110,7 +110,7 @@
 			setnewid: function (state, to) {
 				let root = window.$$rootUrl;
 				let oldRoute = state.route;
-				let newRoute = oldRoute.replace('/new', '/' + to.id);
+				let newRoute = urlTools.replaceSegment(oldRoute, to.id, to.action);
 				state.route = newRoute;
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
 				window.history.replaceState(null, null, newUrl);

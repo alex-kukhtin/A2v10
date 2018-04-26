@@ -438,7 +438,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180425-7164*/
+/*20180426-7167*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -451,13 +451,15 @@ app.modules['std:url'] = function () {
 		parseQueryString,
 		normalizeRoot,
 		idChangedOnly,
+		idOrCopyChanged,
 		makeBaseUrl,
 		parseUrlAndQuery,
 		replaceUrlQuery,
 		createUrlForNavigate,
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
-		helpHref
+		helpHref,
+		replaceSegment: replaceSegment
 	};
 
 	function normalize(elem) {
@@ -542,6 +544,22 @@ app.modules['std:url'] = function () {
 		return false;
 	}
 
+	function idOrCopyChanged(newUrl, oldUrl) {
+		let n1 = (newUrl || '').split('?')[0];
+		let o1 = (oldUrl || '').split('?')[0];
+		let ns = n1.split('/');
+		let os = o1.split('/');
+		if (ns.length !== os.length)
+			return false;
+		// remove id
+		ns.pop();
+		os.pop();
+		if (ns.pop() === 'edit' && os.pop() === 'copy') {
+			return ns.join('/') === os.join('/');
+		}
+		return false;
+	}
+
 	function makeBaseUrl(url) {
 		let x = (url || '').split('/');
 		if (x.length === 6)
@@ -597,6 +615,15 @@ app.modules['std:url'] = function () {
 
 	function replaceId(url, newId) {
 		alert('todo::replaceId');
+	}
+
+	function replaceSegment(url, id, action) {
+		let parts = url.split('/');
+		if (action) parts.pop();
+		if (id) parts.pop();
+		if (action) parts.push(action);
+		if (id) parts.push(id);
+		return parts.join('/');
 	}
 };
 
@@ -873,7 +900,7 @@ app.modules['std:http'] = function () {
 			setnewid: function (state, to) {
 				let root = window.$$rootUrl;
 				let oldRoute = state.route;
-				let newRoute = oldRoute.replace('/new', '/' + to.id);
+				let newRoute = urlTools.replaceSegment(oldRoute, to.id, to.action);
 				state.route = newRoute;
 				let newUrl = root + newRoute + urlTools.makeQueryString(state.query);
 				window.history.replaceState(null, null, newUrl);
@@ -1111,7 +1138,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180426-7167
 // services/datamodel.js
 
 (function () {
@@ -1405,6 +1432,7 @@ app.modules['std:validators'] = function () {
 				elem._root_.$setDirty(false);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
+			defHiddenGet(elem, '$isCopy', isModelIsCopy);
 			elem._seal_ = seal;
 		}
 		if (startTime) {
@@ -1443,6 +1471,15 @@ app.modules['std:validators'] = function () {
 			let mi = this.__modelInfo;
 			if (utils.isDefined(mi.ReadOnly))
 				return mi.ReadOnly;
+		}
+		return false;
+	}
+
+	function isModelIsCopy() {
+		if ('__modelInfo' in this) {
+			let mi = this.__modelInfo;
+			if (utils.isDefined(mi.Copy))
+				return mi.Copy;
 		}
 		return false;
 	}
@@ -2533,7 +2570,7 @@ app.modules['std:mask'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180326-7140
+// 20180426-7167
 /*components/include.js*/
 
 (function () {
@@ -2605,6 +2642,9 @@ app.modules['std:mask'] = function () {
 					this.currentUrl = newUrl;
 				}
 				else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
+					// Id has changed after save. No need to reload.
+					this.currentUrl = newUrl;
+				} else if (urlTools.idOrCopyChanged(newUrl, oldUrl)) {
 					// Id has changed after save. No need to reload.
 					this.currentUrl = newUrl;
 				}
@@ -3525,7 +3565,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180426-7167
 // components/datagrid.js*/
 
 (function () {
@@ -3947,7 +3987,7 @@ Vue.component('validator-control', {
 				return cssClass.trim();
 			},
 			rowSelect(row) {
-				console.dir('select');
+				//console.dir('select');
 				if (row.$select)
 					row.$select();
 			},
@@ -6796,7 +6836,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180425-7164
+// 20180426-7167
 // controllers/base.js
 
 (function () {
@@ -6940,6 +6980,7 @@ Vue.directive('resize', {
 				let root = window.$$rootUrl;
 				let url = root + '/_data/save';
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
+				const isCopy = this.$data.$isCopy;
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
@@ -6960,7 +7001,12 @@ Vue.directive('resize', {
 							// assign the new id to the route
 							self.$store.commit('setnewid', { id: newId });
 							// and in the __baseUrl__
-							self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId);
+						} else if (isCopy) {
+							// TODO: get action ????
+							self.$store.commit('setnewid', { id: newId, action: 'edit' });
+							// and in the __baseUrl__
+							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
 						resolve(dataToResolve); // single element (raw data)
 						if (opts && opts.toast)
@@ -7099,13 +7145,6 @@ Vue.directive('resize', {
 				}
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
-			},
-
-			$replaceId(newId) {
-				this.$store.commit('setnewid', { id: newId });
-				// and in the __baseUrl__
-				//urlTools.replace()
-				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 			},
 
 			$dbRemove(elem, confirm) {
@@ -7267,6 +7306,10 @@ Vue.directive('resize', {
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+						case 'copy':
+							if (argIsNotAnObject()) return;
+							let arr = arg.$parent;
+							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
 						default: // simple show dialog
 							return __runDialog(url, arg, query, () => { });
 					}
@@ -7321,7 +7364,9 @@ Vue.directive('resize', {
 				}
 
 				if (opts && opts.saveRequired && this.$isDirty) {
-					this.$save().then(() => doReport());
+					this.$save().then(() => {
+						doReport();
+					});
 				} else {
 					doReport();
 				}

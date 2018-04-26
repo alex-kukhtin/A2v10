@@ -58,6 +58,7 @@ namespace A2v10.Request
 		public String schema; // or parent
 		public String source; // or parent
 		public Boolean index;
+		public Boolean copy;
 		public String template;
 		public ExpandoObject parameters;
 
@@ -98,7 +99,9 @@ namespace A2v10.Request
 				var cm = CurrentModel;
 				if (String.IsNullOrEmpty(cm))
 					return null;
-				String action = index ? "Index" : "Load";
+				String action = 
+					index ? "Index" : 
+					copy  ? "Copy"  : "Load";
 				return $"[{CurrentSchema}].[{cm}.{action}]";
 			}
 		}

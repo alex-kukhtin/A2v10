@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180326-7140
+// 20180426-7167
 /*components/include.js*/
 
 (function () {
@@ -72,6 +72,9 @@
 					this.currentUrl = newUrl;
 				}
 				else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
+					// Id has changed after save. No need to reload.
+					this.currentUrl = newUrl;
+				} else if (urlTools.idOrCopyChanged(newUrl, oldUrl)) {
 					// Id has changed after save. No need to reload.
 					this.currentUrl = newUrl;
 				}

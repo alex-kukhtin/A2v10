@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180425-7164
+// 20180426-7167
 // controllers/base.js
 
 (function () {
@@ -144,6 +144,7 @@
 				let root = window.$$rootUrl;
 				let url = root + '/_data/save';
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
+				const isCopy = this.$data.$isCopy;
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
@@ -164,7 +165,12 @@
 							// assign the new id to the route
 							self.$store.commit('setnewid', { id: newId });
 							// and in the __baseUrl__
-							self.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
+							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId);
+						} else if (isCopy) {
+							// TODO: get action ????
+							self.$store.commit('setnewid', { id: newId, action: 'edit' });
+							// and in the __baseUrl__
+							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
 						resolve(dataToResolve); // single element (raw data)
 						if (opts && opts.toast)
@@ -303,13 +309,6 @@
 				}
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
-			},
-
-			$replaceId(newId) {
-				this.$store.commit('setnewid', { id: newId });
-				// and in the __baseUrl__
-				//urlTools.replace()
-				this.$data.__baseUrl__ = self.$data.__baseUrl__.replace('/new', '/' + newId);
 			},
 
 			$dbRemove(elem, confirm) {
@@ -471,6 +470,10 @@
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+						case 'copy':
+							if (argIsNotAnObject()) return;
+							let arr = arg.$parent;
+							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
 						default: // simple show dialog
 							return __runDialog(url, arg, query, () => { });
 					}
@@ -525,7 +528,9 @@
 				}
 
 				if (opts && opts.saveRequired && this.$isDirty) {
-					this.$save().then(() => doReport());
+					this.$save().then(() => {
+						doReport();
+					});
 				} else {
 					doReport();
 				}
