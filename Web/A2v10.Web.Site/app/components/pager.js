@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180315-7131
+// 20180426-7166
 /*components/pager.js*/
 
 /*
@@ -71,6 +71,7 @@ Vue.component('a2-pager', {
 		}
 	},
 	render(h, ctx) {
+		if (this.source.pageSize == -1) return; // invisible
 		let contProps = {
 			class: 'a2-pager'
 		};

@@ -1,9 +1,11 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+	[ContentProperty("Pane")]
 	public class Selector : ValuedControl, ITableControl
 	{
 		public TextAlign Align { get; set; }
@@ -14,6 +16,8 @@ namespace A2v10.Xaml
 		public Size ListSize { get; set; }
 		public UIElement NewPane { get; set; }
 		public Command CreateNewCommand { get; set; }
+
+		public UIElement ItemsPanel { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -29,7 +33,9 @@ namespace A2v10.Xaml
 				if (!ListSize.Width.IsEmpty)
 					input.MergeAttribute("list-width", ListSize.Width.ToString());
 				if (!ListSize.Height.IsEmpty)
+				{
 					input.MergeAttribute("list-height", ListSize.Height.ToString());
+				}
 			}
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
@@ -41,6 +47,7 @@ namespace A2v10.Xaml
 			input.RenderStart(context);
 			RenderAddOns(context);
 			//RenderNewPane(context);
+			RenderPaneTemplate(context);
 			input.RenderEnd(context);
 		}
 
@@ -65,6 +72,35 @@ namespace A2v10.Xaml
 				NewPane.RenderElement(context);
 			}
 			npTag.RenderEnd(context);
+		}
+
+		void RenderPaneTemplate(RenderContext context)
+		{
+			if (ItemsPanel == null)
+				return;
+			if (!(ItemsPanel is DataGrid))
+				throw new XamlException("Only DataGrid panel is supported");
+			var dg = ItemsPanel as DataGrid;
+			var tml = new TagBuilder("template");
+			tml.MergeAttribute("slot", "pane");
+			tml.MergeAttribute("slot-scope", "root");
+			tml.RenderStart(context);
+			using (var ctx = new ScopeContext(context, "itm"))
+			{
+				ItemsPanel.RenderElement(context, (tag) =>
+				{
+					tag.MergeAttribute(":is-item-active", "root.isItemActive");
+					tag.MergeAttribute(":hit-item", "root.hit");
+					tag.MergeAttribute(":items-source", "root.items");
+					if (ListSize != null && !ListSize.Height.IsEmpty && dg.FixedHeader)
+					{
+						// for fixed headers only
+						tag.MergeStyle("height", ListSize.Height.ToString());
+						tag.MergeStyle("max-height", ListSize.Height.ToString());
+					}
+				});
+			}
+			tml.RenderEnd(context);
 		}
 	}
 }

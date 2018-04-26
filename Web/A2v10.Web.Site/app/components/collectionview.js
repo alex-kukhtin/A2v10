@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180414-7157
+// 20180426-7166
 // components/collectionview.js
 
 /*
@@ -84,7 +84,7 @@ TODO:
 			pageSize() {
 				if (this.initialPageSize > 0)
 					return this.initialPageSize;
-				return DEFAULT_PAGE_SIZE;
+				return -1; // invisible pager
 			},
 			dir() {
 				return this.localQuery.dir;

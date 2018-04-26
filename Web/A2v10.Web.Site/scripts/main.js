@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180417-7159
+// 20180426-7166
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -75,8 +75,8 @@ app.modules['std:utils'] = function () {
 	const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
 	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
-	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, useGrouping: true }).format;
-	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, useGrouping: true }).format;
+	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
+	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
 	return {
 		isArray: Array.isArray,
@@ -98,6 +98,7 @@ app.modules['std:utils'] = function () {
 		isEmptyObject: isEmptyObject,
 		defineProperty: defProperty,
 		eval: evaluate,
+		simpleEval: simpleEval,
 		format: format,
 		toNumber: toNumber,
 		parse: parse,
@@ -191,8 +192,8 @@ app.modules['std:utils'] = function () {
 		}
 	}
 
-	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
-		if (!path)
+	function simpleEval(obj, path) {
+		if (!path || !obj)
 			return '';
 		let ps = (path || '').split('.');
 		let r = obj;
@@ -202,6 +203,11 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`);
 			r = r[ps[i]];
 		}
+		return r;
+	}
+
+	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
+		let r = simpleEval(obj, path);
 		if (skipFormat) return r;
 		if (isDate(r))
 			return format(r, dataType, hideZeros);
@@ -3273,14 +3279,9 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
-// components/selector.js
+// 20180426-7166
 
-/* TODO:
-    7. create element text and command
-    8. scrollIntoView for template (table)
-    9. blur/cancel
-*/
+// components/selector.js
 
 (function () {
 	const popup = require('std:popup');
@@ -3305,14 +3306,16 @@ Vue.component('validator-control', {
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-		<div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
-			<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
-				<ul class="selector-pane" :style="listStyle">
-					<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
-						v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
-				</ul>
-				<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
-			</slot>
+		<div class="selector-pane" v-if="isOpen" ref="pane">
+			<div class="selector-body" :style="bodyStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :slotStyle="slotStyle">
+					<ul class="selector-ul">
+						<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
+							v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
+					</ul>
+				</slot>
+			</div>
+			<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
 		</div>
 		<div class="selector-pane" v-if="isOpenNew" @click.stop.prevent="dummy">
 			<slot name="new-pane"></slot>
@@ -3347,11 +3350,8 @@ Vue.component('validator-control', {
 			};
 		},
 		computed: {
-			$displayProp() {
-				return this.display;
-			},
 			valueText() {
-				return this.item ? this.item[this.prop][this.$displayProp] : '';
+				return this.item ? utils.simpleEval(this.item[this.prop], this.display) : '';
 			},
 			canNew() {
 				return !!this.createNew;
@@ -3367,15 +3367,23 @@ Vue.component('validator-control', {
 					hit: this.hit
 				};
 			},
-			paneStyle() {
+			bodyStyle() {
+				let s = {};
 				if (this.listWidth)
-					return { width: this.listWidth, minWidth: this.listWidth };
-				return null;
-			},
-			listStyle() {
+					s.width = this.listWidth;
 				if (this.listHeight)
-					return { maxHeight: this.listHeight };
-				return null;
+					s.maxHeight = this.listHeight;
+				return s;
+			},
+			slotStyle() {
+				let r = {};
+				if (this.listWidth) {
+					r.width = this.listWidth;
+					r.minWidth = this.listWidth;
+				}
+				if (this.listHeight)
+					r.maxHeight = this.maxHeight;
+				return r;
 			},
 			debouncedUpdate() {
 				let delay = this.delay || DEFAULT_DELAY;
@@ -3409,7 +3417,7 @@ Vue.component('validator-control', {
 				return ix === this.current;
 			},
 			itemName(itm) {
-				return itm ? itm[this.$displayProp] : '';
+				return utils.simpleEval(itm, this.display);
 			},
 			cancel() {
 				this.query = this.valueText;
@@ -3446,13 +3454,19 @@ Vue.component('validator-control', {
 				}
 			},
 			hit(itm) {
-				this.item[this.prop].$merge(itm, true /*fire*/);
+				let obj = this.item[this.prop];
+				if (obj.$merge)
+					obj.$merge(itm, true /*fire*/);
+				else
+					platform.set(this.item, this.prop, itm);
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
 			},
 			clear() {
-				this.item[this.prop].$empty();
+				let obj = this.item[this.prop];
+				if (obj.$empty)
+					obj.$empty();
 				this.query = '';
 				this.isOpen = false;
 				this.isOpenNew = false;
@@ -3463,23 +3477,14 @@ Vue.component('validator-control', {
 					if (!pane) return;
 					let elem = pane.querySelector('.active');
 					if (!elem) return;
-					let pe = elem.parentElement;
-					let t = elem.offsetTop;
-					let b = t + elem.offsetHeight;
-					let pt = pe.scrollTop;
-					let pb = pt + pe.clientHeight;
-					if (t < pt)
-						pe.scrollTop = t;
-					if (b > pb)
-						pe.scrollTop = b - pe.clientHeight;
-					//console.warn(`t:${t}, b:${b}, pt:${pt}, pb:${pb}`);
+					elem.scrollIntoView(false);
 				});
 			},
 			update() {
 				let text = this.query || '';
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
-				this.items = [];
+				//this.items = [];
 				this.isOpen = true;
 				this.isOpenNew = false;
 				if (text === '') {
@@ -3492,6 +3497,8 @@ Vue.component('validator-control', {
 					// first property from result
 					let prop = Object.keys(result)[0];
 					this.items = result[prop];
+				}).catch(() => {
+					this.items = [];
 				});
 			},
 			fetchData(text) {
@@ -3518,7 +3525,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180423-7162
+// 20180426-7166
 // components/datagrid.js*/
 
 (function () {
@@ -3578,7 +3585,7 @@ Vue.component('validator-control', {
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
-						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
 						<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
@@ -3589,7 +3596,7 @@ Vue.component('validator-control', {
 		<template v-else>
 			<tbody>
 				<template v-for="(item, rowIndex) in $items">
-					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
+					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row" :is-item-active="isItemActive" :hit-item="hitItem"/>
 					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
 						<slot name="row-details" :row="item"></slot>
 					</data-grid-row-details>
@@ -3606,7 +3613,7 @@ Vue.component('validator-control', {
 	<td class="group-marker" v-if="group"></td>
 	 */
 	const dataGridRowTemplate = `
-<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr" @mousedown.prevent="mouseDown(row)">
 	<td v-if="isMarkCell" class="marker">
 		<div :class="markClass"></div>
 	</td>
@@ -3894,7 +3901,9 @@ Vue.component('validator-control', {
 			index: Number,
 			mark: String,
 			group: Boolean,
-			level: Number
+			level: Number,
+			isItemActive: Function,
+			hitItem: Function
 		},
 		computed: {
 			isMarkCell() {
@@ -3923,7 +3932,7 @@ Vue.component('validator-control', {
 		methods: {
 			rowClass() {
 				let cssClass = 'dg-row';
-				const isActive = !!this.row.$selected;
+				const isActive = this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
@@ -3938,7 +3947,13 @@ Vue.component('validator-control', {
 				return cssClass.trim();
 			},
 			rowSelect(row) {
-				row.$select();
+				console.dir('select');
+				if (row.$select)
+					row.$select();
+			},
+			mouseDown(row) {
+				if (this.hitItem)
+					this.hitItem(row);
 			},
 			doDblClick($event) {
 				// deselect text
@@ -4009,7 +4024,9 @@ Vue.component('validator-control', {
 			groupBy: [Array, Object],
 			rowDetails: Boolean,
 			rowDetailsActivate: String,
-			rowDetailsVisible: [String /*path*/, Boolean]
+			rowDetailsVisible: [String /*path*/, Boolean],
+			isItemActive: Function,
+			hitItem: Function,
 		},
 		template: dataGridTemplate,
 		components: {
@@ -4265,7 +4282,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180315-7131
+// 20180426-7166
 /*components/pager.js*/
 
 /*
@@ -4336,6 +4353,7 @@ Vue.component('a2-pager', {
 		}
 	},
 	render(h, ctx) {
+		if (this.source.pageSize == -1) return; // invisible
 		let contProps = {
 			class: 'a2-pager'
 		};
@@ -4690,7 +4708,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180414-7157
+// 20180426-7166
 // components/collectionview.js
 
 /*
@@ -4774,7 +4792,7 @@ TODO:
 			pageSize() {
 				if (this.initialPageSize > 0)
 					return this.initialPageSize;
-				return DEFAULT_PAGE_SIZE;
+				return -1; // invisible pager
 			},
 			dir() {
 				return this.localQuery.dir;

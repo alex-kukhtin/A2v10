@@ -20,15 +20,18 @@
 	padding: 0;
 	overflow: hidden;
 	display: block !important;
-	max-height: @al-height + 28px;
 
-	ul.selector-pane {
-		margin: 0;
-		padding: 0;
-		overflow: auto;
-		height: 100%;
+	.selector-body {
 		max-height: @al-height;
 		min-height: 23px;
+		overflow: auto;
+	}
+
+	ul.selector-ul {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		height: 100%;
 
 		li {
 			list-style: none;
@@ -50,19 +53,5 @@
 		display: block;
 		border-top: 1px solid @dropdown-brd-color;
 		background-color: #f8f8f8;
-	}
-
-	table.selector-table {
-		width: 100%;
-
-		tr {
-			&.active td {
-				background-color: @active-bg-color;
-			}
-
-			&:hover td {
-				background-color: @hover-bg-color;
-			}
-		}
 	}
 }

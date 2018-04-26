@@ -1868,25 +1868,27 @@ pre.a2-code {
   padding: 0;
   overflow: hidden;
   display: block !important;
-  max-height: 278px;
 }
-.input-group > .selector-pane ul.selector-pane {
-  margin: 0;
-  padding: 0;
-  overflow: auto;
-  height: 100%;
+.input-group > .selector-pane .selector-body {
   max-height: 250px;
   min-height: 23px;
+  overflow: auto;
 }
-.input-group > .selector-pane ul.selector-pane li {
+.input-group > .selector-pane ul.selector-ul {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+.input-group > .selector-pane ul.selector-ul li {
   list-style: none;
   padding: 3px 6px;
   white-space: nowrap;
 }
-.input-group > .selector-pane ul.selector-pane li:hover {
+.input-group > .selector-pane ul.selector-ul li:hover {
   background-color: #fdf4bf;
 }
-.input-group > .selector-pane ul.selector-pane li.active {
+.input-group > .selector-pane ul.selector-ul li.active {
   background-color: #cde6f7;
 }
 .input-group > .selector-pane a.create-elem {
@@ -1894,15 +1896,6 @@ pre.a2-code {
   display: block;
   border-top: 1px solid #9ba7b7;
   background-color: #f8f8f8;
-}
-.input-group > .selector-pane table.selector-table {
-  width: 100%;
-}
-.input-group > .selector-pane table.selector-table tr.active td {
-  background-color: #cde6f7;
-}
-.input-group > .selector-pane table.selector-table tr:hover td {
-  background-color: #fdf4bf;
 }
 /*
     TODO:

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180417-7159
+// 20180426-7166
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -15,8 +15,8 @@ app.modules['std:utils'] = function () {
 	const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
 	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
-	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, useGrouping: true }).format;
-	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, useGrouping: true }).format;
+	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
+	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
 	return {
 		isArray: Array.isArray,
@@ -38,6 +38,7 @@ app.modules['std:utils'] = function () {
 		isEmptyObject: isEmptyObject,
 		defineProperty: defProperty,
 		eval: evaluate,
+		simpleEval: simpleEval,
 		format: format,
 		toNumber: toNumber,
 		parse: parse,
@@ -131,8 +132,8 @@ app.modules['std:utils'] = function () {
 		}
 	}
 
-	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
-		if (!path)
+	function simpleEval(obj, path) {
+		if (!path || !obj)
 			return '';
 		let ps = (path || '').split('.');
 		let r = obj;
@@ -142,6 +143,11 @@ app.modules['std:utils'] = function () {
 				throw new Error(`Property '${pi}' not found in ${r.constructor.name} object`);
 			r = r[ps[i]];
 		}
+		return r;
+	}
+
+	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
+		let r = simpleEval(obj, path);
 		if (skipFormat) return r;
 		if (isDate(r))
 			return format(r, dataType, hideZeros);

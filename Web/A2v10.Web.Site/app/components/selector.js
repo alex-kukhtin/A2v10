@@ -1,13 +1,8 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180330-7144
-// components/selector.js
+// 20180426-7166
 
-/* TODO:
-    7. create element text and command
-    8. scrollIntoView for template (table)
-    9. blur/cancel
-*/
+// components/selector.js
 
 (function () {
 	const popup = require('std:popup');
@@ -32,14 +27,16 @@
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-		<div class="selector-pane" v-if="isOpen" ref="pane" :style="paneStyle">
-			<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit">
-				<ul class="selector-pane" :style="listStyle">
-					<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
-						v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
-				</ul>
-				<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
-			</slot>
+		<div class="selector-pane" v-if="isOpen" ref="pane">
+			<div class="selector-body" :style="bodyStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :slotStyle="slotStyle">
+					<ul class="selector-ul">
+						<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
+							v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
+					</ul>
+				</slot>
+			</div>
+			<a v-if='canNew' class="create-elem a2-hyperlink a2-inline" @mousedown.stop.prevent="doNew()"><i class="ico ico-plus"/> <span v-text="newText"></span></a>
 		</div>
 		<div class="selector-pane" v-if="isOpenNew" @click.stop.prevent="dummy">
 			<slot name="new-pane"></slot>
@@ -74,11 +71,8 @@
 			};
 		},
 		computed: {
-			$displayProp() {
-				return this.display;
-			},
 			valueText() {
-				return this.item ? this.item[this.prop][this.$displayProp] : '';
+				return this.item ? utils.simpleEval(this.item[this.prop], this.display) : '';
 			},
 			canNew() {
 				return !!this.createNew;
@@ -94,15 +88,23 @@
 					hit: this.hit
 				};
 			},
-			paneStyle() {
+			bodyStyle() {
+				let s = {};
 				if (this.listWidth)
-					return { width: this.listWidth, minWidth: this.listWidth };
-				return null;
-			},
-			listStyle() {
+					s.width = this.listWidth;
 				if (this.listHeight)
-					return { maxHeight: this.listHeight };
-				return null;
+					s.maxHeight = this.listHeight;
+				return s;
+			},
+			slotStyle() {
+				let r = {};
+				if (this.listWidth) {
+					r.width = this.listWidth;
+					r.minWidth = this.listWidth;
+				}
+				if (this.listHeight)
+					r.maxHeight = this.maxHeight;
+				return r;
 			},
 			debouncedUpdate() {
 				let delay = this.delay || DEFAULT_DELAY;
@@ -136,7 +138,7 @@
 				return ix === this.current;
 			},
 			itemName(itm) {
-				return itm ? itm[this.$displayProp] : '';
+				return utils.simpleEval(itm, this.display);
 			},
 			cancel() {
 				this.query = this.valueText;
@@ -173,13 +175,19 @@
 				}
 			},
 			hit(itm) {
-				this.item[this.prop].$merge(itm, true /*fire*/);
+				let obj = this.item[this.prop];
+				if (obj.$merge)
+					obj.$merge(itm, true /*fire*/);
+				else
+					platform.set(this.item, this.prop, itm);
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
 			},
 			clear() {
-				this.item[this.prop].$empty();
+				let obj = this.item[this.prop];
+				if (obj.$empty)
+					obj.$empty();
 				this.query = '';
 				this.isOpen = false;
 				this.isOpenNew = false;
@@ -190,23 +198,14 @@
 					if (!pane) return;
 					let elem = pane.querySelector('.active');
 					if (!elem) return;
-					let pe = elem.parentElement;
-					let t = elem.offsetTop;
-					let b = t + elem.offsetHeight;
-					let pt = pe.scrollTop;
-					let pb = pt + pe.clientHeight;
-					if (t < pt)
-						pe.scrollTop = t;
-					if (b > pb)
-						pe.scrollTop = b - pe.clientHeight;
-					//console.warn(`t:${t}, b:${b}, pt:${pt}, pb:${pb}`);
+					elem.scrollIntoView(false);
 				});
 			},
 			update() {
 				let text = this.query || '';
 				let chars = +(this.minChars || 0);
 				if (chars && text.length < chars) return;
-				this.items = [];
+				//this.items = [];
 				this.isOpen = true;
 				this.isOpenNew = false;
 				if (text === '') {
@@ -219,6 +218,8 @@
 					// first property from result
 					let prop = Object.keys(result)[0];
 					this.items = result[prop];
+				}).catch(() => {
+					this.items = [];
 				});
 			},
 			fetchData(text) {

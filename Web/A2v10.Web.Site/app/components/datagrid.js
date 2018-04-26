@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180423-7162
+// 20180426-7167
 // components/datagrid.js*/
 
 (function () {
@@ -60,7 +60,7 @@
 						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
-						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
 						<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
@@ -71,7 +71,7 @@
 		<template v-else>
 			<tbody>
 				<template v-for="(item, rowIndex) in $items">
-					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row"/>
+					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row" :is-item-active="isItemActive" :hit-item="hitItem"/>
 					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
 						<slot name="row-details" :row="item"></slot>
 					</data-grid-row-details>
@@ -88,7 +88,7 @@
 	<td class="group-marker" v-if="group"></td>
 	 */
 	const dataGridRowTemplate = `
-<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr" @mousedown.prevent="mouseDown(row)">
 	<td v-if="isMarkCell" class="marker">
 		<div :class="markClass"></div>
 	</td>
@@ -376,7 +376,9 @@
 			index: Number,
 			mark: String,
 			group: Boolean,
-			level: Number
+			level: Number,
+			isItemActive: Function,
+			hitItem: Function
 		},
 		computed: {
 			isMarkCell() {
@@ -405,7 +407,7 @@
 		methods: {
 			rowClass() {
 				let cssClass = 'dg-row';
-				const isActive = !!this.row.$selected;
+				const isActive = this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
@@ -420,7 +422,13 @@
 				return cssClass.trim();
 			},
 			rowSelect(row) {
-				row.$select();
+				//console.dir('select');
+				if (row.$select)
+					row.$select();
+			},
+			mouseDown(row) {
+				if (this.hitItem)
+					this.hitItem(row);
 			},
 			doDblClick($event) {
 				// deselect text
@@ -491,7 +499,9 @@
 			groupBy: [Array, Object],
 			rowDetails: Boolean,
 			rowDetailsActivate: String,
-			rowDetailsVisible: [String /*path*/, Boolean]
+			rowDetailsVisible: [String /*path*/, Boolean],
+			isItemActive: Function,
+			hitItem: Function,
 		},
 		template: dataGridTemplate,
 		components: {
