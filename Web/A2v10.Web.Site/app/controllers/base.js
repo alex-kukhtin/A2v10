@@ -163,12 +163,14 @@
 						}
 						if (wasNew && newId) {
 							// assign the new id to the route
-							self.$store.commit('setnewid', { id: newId });
+							if (!self.inDialog)
+								self.$store.commit('setnewid', { id: newId });
 							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId);
 						} else if (isCopy) {
 							// TODO: get action ????
-							self.$store.commit('setnewid', { id: newId, action: 'edit' });
+							if (!self.inDialog)
+								self.$store.commit('setnewid', { id: newId, action: 'edit' });
 							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
