@@ -2,6 +2,8 @@
 
 @al-height: 250px;
 
+// default placement: bottom-left
+
 .input-group > .selector-pane {
 	//border: 1px solid @dropdown-brd-color;
 	border: 1px solid @link-hover-color;
@@ -20,6 +22,11 @@
 	padding: 0;
 	overflow: hidden;
 	display: block !important;
+
+	&.panel-bottom-right {
+		left:auto;
+		right:-1px;
+	}
 
 	.selector-body {
 		max-height: @al-height;
@@ -55,3 +62,4 @@
 		background-color: #f8f8f8;
 	}
 }
+

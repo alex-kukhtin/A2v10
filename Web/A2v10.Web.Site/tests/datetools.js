@@ -124,10 +124,36 @@
 		expect(eom.getDate()).toBe(29);
 	});
 
+	it('date diff (month) ', function () {
+		let d1 = new Date(2018, 1, 2); // 2 feb
+		let d2 = new Date(2018, 5, 15);
+		let f = du.diff("month", d1, d2);
+		expect(f).toBe(4);
+
+		d1 = new Date(2018, 1, 2); // 2 feb
+		d2 = new Date(2019, 5, 15);
+		f = du.diff("month", d1, d2);
+		expect(f).toBe(16);
+
+		d1 = new Date(2018, 1, 2); // 2 feb
+		d2 = new Date(2019, 5, 15);
+		f = du.diff("month", d1, d2);
+		expect(f).toBe(16);
+
+		f = du.diff("month", d2, d1);
+		expect(f).toBe(16);
+
+		d1 = new Date(2018, 1, 15); // 15 feb
+		d2 = new Date(2019, 2, 1); // 1 jun
+		f = du.diff("month", d1, d2);
+		expect(f).toBe(15);
+	});
+
 	it('format date', function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let f = du.formatDate(d1);
 		expect(f).toBe('01.02.2018');
 	});
+
 });
 

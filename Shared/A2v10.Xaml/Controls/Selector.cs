@@ -1,11 +1,19 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Windows.Markup;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-	[ContentProperty("Pane")]
+
+	public enum SelectorPanelPlacement {
+		Default,
+		BottomLeft = Default,
+		BottomRight
+	}
+
+
 	public class Selector : ValuedControl, ITableControl
 	{
 		public TextAlign Align { get; set; }
@@ -18,6 +26,7 @@ namespace A2v10.Xaml
 		public Command CreateNewCommand { get; set; }
 
 		public UIElement ItemsPanel { get; set; }
+		public SelectorPanelPlacement PanelPlacement { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -28,6 +37,8 @@ namespace A2v10.Xaml
 			if (!String.IsNullOrEmpty(Delegate))
 				input.MergeAttribute(":fetch", $"$delegate('{Delegate}')");
 			input.MergeAttribute("display", DisplayProperty);
+			if (PanelPlacement != SelectorPanelPlacement.Default)
+				input.MergeAttribute("placement", PanelPlacement.ToString().ToKebabCase());
 			if (ListSize != null)
 			{
 				if (!ListSize.Width.IsEmpty)

@@ -1,8 +1,10 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180427-7170
 
 // components/selector.js
+
+/*TODO*/
 
 (function () {
 	const popup = require('std:popup');
@@ -27,7 +29,7 @@
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-		<div class="selector-pane" v-if="isOpen" ref="pane">
+		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
 				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :slotStyle="slotStyle">
 					<ul class="selector-ul">
@@ -57,7 +59,8 @@
 			fetch: Function,
 			listWidth: String,
 			listHeight: String,
-			createNew: Function
+			createNew: Function,
+			placement: String
 		},
 		data() {
 			return {
@@ -88,10 +91,15 @@
 					hit: this.hit
 				};
 			},
+			paneClass() {
+				if (this.placement)
+					return "panel-" + this.placement;
+			},
 			bodyStyle() {
 				let s = {};
-				if (this.listWidth)
-					s.width = this.listWidth;
+				if (this.listWidth) {
+					s.minWidth = this.listWidth;
+				}
 				if (this.listHeight)
 					s.maxHeight = this.listHeight;
 				return s;

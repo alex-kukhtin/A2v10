@@ -60,7 +60,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180427-7169
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -111,6 +111,7 @@ app.modules['std:utils'] = function () {
 			isZero: dateIsZero,
 			formatDate: formatDate,
 			add: dateAdd,
+			diff: dateDiff,
 			compare: dateCompare,
 			endOfMonth: endOfMonth
 		},
@@ -349,6 +350,30 @@ app.modules['std:utils'] = function () {
 
 	function endOfMonth(dt) {
 		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+	}
+
+	function dateDiff(unit, d1, d2) {
+		switch (unit) {
+			case "month":
+				if (d1.getTime() > d2.getTime())
+					[d1, d2] = [d2, d1];
+				if (d1.getFullYear() === d2.getFullYear())
+					return d2.getMonth() - d1.getMonth();
+				let month = 0;
+				let year = d1.getFullYear();
+				while (year < d2.getFullYear()) {
+					let day = d2.getDate();
+					let dayOfMonth = endOfMonth(new Date(year + 1, d1.getMonth(), 1, 0, 0, 0, 0)).getDate();
+					if (day > dayOfMonth)
+						day = dayOfMonth;
+					d1 = new Date(year + 1, d1.getMonth(), day, 0, 0, 0, 0);
+					year = d1.getFullYear();
+					month += 12;
+				}
+				month += d2.getMonth() - d1.getMonth();
+				return month;
+		}
+		throw new Error('Invalid unit value for utils.date.diff');
 	}
 
 	function dateAdd(dt, nm, unit) {
@@ -3319,9 +3344,11 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180427-7170
 
 // components/selector.js
+
+/*TODO*/
 
 (function () {
 	const popup = require('std:popup');
@@ -3346,7 +3373,7 @@ Vue.component('validator-control', {
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
-		<div class="selector-pane" v-if="isOpen" ref="pane">
+		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
 				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :slotStyle="slotStyle">
 					<ul class="selector-ul">
@@ -3376,7 +3403,8 @@ Vue.component('validator-control', {
 			fetch: Function,
 			listWidth: String,
 			listHeight: String,
-			createNew: Function
+			createNew: Function,
+			placement: String
 		},
 		data() {
 			return {
@@ -3407,10 +3435,15 @@ Vue.component('validator-control', {
 					hit: this.hit
 				};
 			},
+			paneClass() {
+				if (this.placement)
+					return "panel-" + this.placement;
+			},
 			bodyStyle() {
 				let s = {};
-				if (this.listWidth)
-					s.width = this.listWidth;
+				if (this.listWidth) {
+					s.minWidth = this.listWidth;
+				}
 				if (this.listHeight)
 					s.maxHeight = this.listHeight;
 				return s;

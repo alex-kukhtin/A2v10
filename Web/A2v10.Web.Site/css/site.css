@@ -642,6 +642,9 @@ input[type=button] {
 .text-small {
   font-size: .9rem;
 }
+.text-gray {
+  color: #8591a2;
+}
 .negative-red {
   color: #da533f !important;
 }
@@ -665,7 +668,7 @@ td.valign-bottom {
   vertical-align: bottom !important;
 }
 .tag-label {
-  background-color: #999;
+  background-color: #8f94b0;
   color: white;
   font-size: 0.86rem;
   padding: 0 .25rem .1rem .25rem;
@@ -1869,6 +1872,10 @@ pre.a2-code {
   overflow: hidden;
   display: block !important;
 }
+.input-group > .selector-pane.panel-bottom-right {
+  left: auto;
+  right: -1px;
+}
 .input-group > .selector-pane .selector-body {
   max-height: 250px;
   min-height: 23px;
@@ -2897,6 +2904,7 @@ table.a2-table > tbody > tr > td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #ddd;
+  height: 27px;
 }
 table.a2-table > tbody > tr > td label {
   display: inline-block;
@@ -2997,6 +3005,7 @@ table.a2-table tr.red td {
 .a2-table.compact thead > tr > td,
 .a2-table.compact tfoot > tr > td {
   padding: 2px 4px;
+  height: 23px;
 }
 .a2-table.compact > tbody > tr > td .input-group,
 .a2-table.compact thead > tr > td .input-group,
@@ -3018,6 +3027,7 @@ table.a2-table tr.red td {
 .a2-table.compact thead > tr > td.row-divider,
 .a2-table.compact tfoot > tr > td.row-divider {
   padding: 0;
+  height: 1px;
 }
 .a2-table.compact > tbody > tr > td.ctrl,
 .a2-table.compact thead > tr > td.ctrl,
@@ -3866,6 +3876,12 @@ TODO:
 }
 .a2-include.full-height .cw {
   height: 100%;
+}
+.scrollable-pane {
+  overflow: auto;
+}
+.bordered-pane {
+  border: 1px solid #bdc5d8;
 }
 table.sheet {
   -webkit-user-select: text;

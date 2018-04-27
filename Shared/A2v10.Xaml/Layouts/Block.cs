@@ -11,6 +11,11 @@ namespace A2v10.Xaml
 
 		public UIElementCollection Children { get; set; } = new UIElementCollection();
 
+		public Length Height { get; set; }
+		public Boolean Border { get; set; }
+		public Boolean Scroll { get; set; }
+		public TextAlign Align { get; set; }
+
 		internal virtual void RenderChildren(RenderContext context)
 		{
 			foreach (var c in Children)
@@ -25,6 +30,11 @@ namespace A2v10.Xaml
 			if (onRender != null)
 				onRender(div);
 			MergeAttributes(div, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
+			if (Height != null)
+				div.MergeStyle("height", Height.Value);
+			div.AddCssClassBool(Border, "bordered-pane");
+			div.AddCssClassBool(Scroll, "scrollable-pane");
+			MergeAlign(div, context, Align);
 			div.RenderStart(context);
 			RenderChildren(context);
 			div.RenderEnd(context);

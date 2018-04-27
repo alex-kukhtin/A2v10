@@ -6,11 +6,13 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Dynamic;
 using System.IO;
-using System.Web.Hosting;
+using System.Text;
+using System.Configuration;
 
 using Microsoft.AspNet.Identity;
 
 using Stimulsoft.Report.Mvc;
+using Stimulsoft.Report.Web;
 
 using A2v10.Infrastructure;
 using A2v10.Request;
@@ -18,12 +20,7 @@ using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
-using Stimulsoft.Report.Web;
-using System.Text;
-using Stimulsoft.Report;
-using Stimulsoft.Report.Export;
-using System.Web;
-using System.Configuration;
+
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -64,9 +61,8 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var url = $"/_report/{Base}/{Rep}/{id}";
-				ReportInfo ri = await GetReportInfo(url, id);
-
-				TempData["StiReportInfo"] = ri;
+				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
+				var rep = rm.GetReport();
 
 				var view = new EmptyView();
 				var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
@@ -76,10 +72,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
 				sb.Replace("$(StiReport)", result.ToHtmlString());
 				sb.Replace("$(Lang)", _baseController.CurrentLang);
-				if (ri.DataModel.System != null)
-					sb.Replace("$(Title)", ri.DataModel.System.Get<String>("Title"));
-				else
-					sb.Replace("$(Title)", "A2:Web");
+				sb.Replace("$(Title)", _baseController.Localize(rep.name != null ? rep.name : Rep)); 
 
 				Response.Output.Write(sb.ToString());
 			}
@@ -214,16 +207,20 @@ namespace A2v10.Web.Mvc.Controllers
 				Stimulsoft.Base.StiLicense.LoadFromString(lic);
 		}
 
-		public ActionResult GetReport()
+		public async Task<ActionResult> GetReport()
 		{
 			try
 			{
 				var rp = StiMvcViewer.GetRequestParams();
-				var Rep = rp.GetString("Rep");
-				var Base = rp.GetString("Base");
-				//TODO: image settings var rm = TempData["StiImage"] as ImageInfo;
+				var Rep = rp.HttpContext.Request.Params["Rep"];
+				var Base = rp.HttpContext.Request.Params["Base"];
+				var id = rp.Routes["Id"];
+				var url = $"/_report/{Base}/{Rep}/{id}";
+
 				//TODO: profile var token = Profiler.BeginReport("create");
-				var ri = TempData["StiReportInfo"] as ReportInfo;
+
+				ReportInfo ri = await GetReportInfo(url, id);
+				//TODO: image settings var rm = rm.ImageInfo;
 				if (ri == null)
 					throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
