@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180428-7171
 // components/datagrid.js*/
 
 (function () {
@@ -299,6 +299,7 @@
 				let arg1 = normalizeArg(col.command.arg1, false);
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
 				let arg3 = normalizeArg(col.command.arg3, false);
+				let arg4 = col.command.arg4; // without normalize
 				let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
@@ -321,7 +322,7 @@
 								//ev.stopImmediatePropagation();
 								//ev.preventDefault();
 							}
-							col.command.cmd(arg1, arg2, arg3);
+							col.command.cmd(arg1, arg2, arg3, arg4);
 						},
 						eval: utils.eval,
 						getHref() {

@@ -2766,11 +2766,11 @@ table.data-grid > tbody > tr.bold > td {
   z-index: 1080;
   width: 320px;
   left: calc(50% - 150px);
-  bottom: 0;
+  bottom: 10px;
 }
-.toastr-stack .toastr-list {
-  padding: 0;
+.toastr-stack > ul {
   margin: 0;
+  padding: 0;
 }
 .toastr-stack li.toast {
   transition: all 0.5s;
@@ -2780,7 +2780,7 @@ table.data-grid > tbody > tr.bold > td {
   font-size: 1.1rem;
   padding: 10px;
   list-style: none;
-  margin: 10px 0;
+  margin-top: 10px;
   box-shadow: 0 0 12px #999;
 }
 .toastr-stack li.toast.warning {
@@ -3307,11 +3307,12 @@ TODO:
   border: 1px solid #9ba7b7;
 }
 .menu .dropdown-item {
-  display: block;
+  display: flex;
   cursor: pointer;
   padding: 4px 6px;
   white-space: nowrap;
   color: #222;
+  align-items: baseline;
 }
 .menu .dropdown-item:hover {
   text-decoration: none;
@@ -4187,21 +4188,25 @@ h5,
 .a2-new-btn .btn {
   padding: 4px 7px;
 }
-.a2-new-btn .super-menu {
+.super-menu {
   display: grid;
   grid-gap: 1rem;
   margin: .5rem;
 }
-.a2-new-btn .super-menu.cols-4 {
+.super-menu.with-width .dropdown-item {
+  white-space: normal;
+  line-height: 1;
+}
+.super-menu.cols-4 {
   grid-template-columns: auto auto auto auto;
 }
-.a2-new-btn .super-menu.cols-3 {
+.super-menu.cols-3 {
   grid-template-columns: auto auto auto;
 }
-.a2-new-btn .super-menu.cols-2 {
+.super-menu.cols-2 {
   grid-template-columns: auto auto;
 }
-.a2-new-btn .super-menu.cols-1 {
+.super-menu.cols-1 {
   grid-template-columns: auto;
 }
 .debug-panel {

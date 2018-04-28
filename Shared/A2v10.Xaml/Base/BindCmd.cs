@@ -58,6 +58,7 @@ namespace A2v10.Xaml
 
 		public CommandType Command { get; set; }
 		public String Argument { get; set; }
+		public String UpdateAfter { get; set; }
 		public String Url { get; set; }
 		public DialogAction Action { get; set; }
 
@@ -99,6 +100,8 @@ namespace A2v10.Xaml
 			}
 			return null;
 		}
+		internal String NewWindowJS => NewWindow.ToString().ToLowerInvariant();
+
 		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null)
 		{
 			switch (Command)
@@ -150,27 +153,23 @@ namespace A2v10.Xaml
 					return null;
 
 				case CommandType.Open:
-					{
-						var nwin = NewWindow.ToString().ToLowerInvariant();
-						if (indirect)
-						{
-							if (!IsArgumentEmpty(context))
-								return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'{CommandArgument(context)}, arg3:{nwin}'}}";
-							return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'this', arg3:{nwin}}}";
-						}
-						else
-							return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {nwin})";
-					}
-				case CommandType.Create:
-					{
-						var nwin = NewWindow.ToString().ToLowerInvariant();
-						return $"$navigate({CommandUrl(context)}, {CommandArgument(context, nullable:true)}, {nwin})";
-					}
-				case CommandType.Remove:
 					if (indirect)
 					{
-						return $"{{cmd:$remove, arg1:'this'}}";
+						var argSting = "this";
+						if (!IsArgumentEmpty(context))
+							argSting = CommandArgument(context);
+						// arg4 may contain a single quote!!!
+						return $"{{cmd:$navigate, eval: true, arg1:{CommandUrl(context, true)}, arg2:'{argSting}', arg3:{NewWindowJS}, arg4:{UpdateAfterArgument(context)}}}";
 					}
+					else
+						return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
+
+				case CommandType.Create:
+					return $"$navigate({CommandUrl(context)}, {CommandArgument(context, nullable:true)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
+
+				case CommandType.Remove:
+					if (indirect)
+						return $"{{cmd:$remove, arg1:'this'}}";
 					else
 						return $"$remove({CommandArgumentOrThis(context)}, {GetConfirm(context)})";
 
@@ -267,6 +266,15 @@ namespace A2v10.Xaml
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();
+		}
+
+		String UpdateAfterArgument(RenderContext context)
+		{
+			if (!NewWindow) return nullString;
+			var uaBind = GetBinding(nameof(UpdateAfter));
+			if (uaBind != null)
+				return uaBind.GetPath(context);
+			return nullString;
 		}
 
 		String CommandArgument(RenderContext context, Boolean nullable = false)

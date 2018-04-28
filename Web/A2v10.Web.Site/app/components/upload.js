@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180428-7171
 // components/upload.js
 
 
@@ -56,7 +56,7 @@
 				ev.preventDefault();
 			},
 			uploadImage(ev) {
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
 				var fd = new FormData();

@@ -6,26 +6,34 @@
 	.btn {
 		padding: 4px 7px;
 	}
+}
 
-	.super-menu {
-		display: grid;
-		grid-gap: 1rem;
-		margin: .5rem;
+.super-menu {
+	display: grid;
+	grid-gap: 1rem;
+	margin: .5rem;
 
-		&.cols-4 {
-			grid-template-columns: auto auto auto auto;
-		}
-
-		&.cols-3 {
-			grid-template-columns: auto auto auto;
-		}
-
-		&.cols-2 {
-			grid-template-columns: auto auto;
-		}
-
-		&.cols-1 {
-			grid-template-columns: auto;
+	&.with-width {
+		.dropdown-item {
+			white-space:normal;
+			line-height:1;
 		}
 	}
+
+	&.cols-4 {
+		grid-template-columns: auto auto auto auto;
+	}
+
+	&.cols-3 {
+		grid-template-columns: auto auto auto;
+	}
+
+	&.cols-2 {
+		grid-template-columns: auto auto;
+	}
+
+	&.cols-1 {
+		grid-template-columns: auto;
+	}
 }
+

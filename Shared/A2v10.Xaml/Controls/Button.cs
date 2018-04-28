@@ -44,10 +44,16 @@ namespace A2v10.Xaml
 			{
 				DropDownDirection? dir = (DropDown as DropDownMenu)?.Direction;
 				Boolean bDropUp = (dir == DropDownDirection.UpLeft) || (dir == DropDownDirection.UpRight);
+				bool insideBar = Parent is Toolbar || Parent is CommandBar;
+
 				var wrap = new TagBuilder("div", "dropdown")
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
-					.MergeAttribute("v-dropdown", String.Empty)
-					.RenderStart(context);
+					.MergeAttribute("v-dropdown", String.Empty);
+
+				if (!Block && !insideBar)
+					wrap.AddCssClass("a2-inline");
+
+				wrap.RenderStart(context);
 				RenderButton(context, true, bDropUp);
 				DropDown.RenderElement(context);
 				wrap.RenderEnd(context);

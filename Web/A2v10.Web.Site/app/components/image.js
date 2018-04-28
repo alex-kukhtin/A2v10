@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180428-7171
 // components/image.js
 
 (function () {
@@ -46,7 +46,7 @@
 			href: function () {
 				if (this.newItem)
 					return undefined;
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
@@ -106,7 +106,7 @@
 		},
 		computed: {
 			href: function () {
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				return url.combine(root, '_static_image', this.url.replace(/\./g, '-'));
 			}
 		}

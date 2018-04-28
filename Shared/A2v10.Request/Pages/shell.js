@@ -21,6 +21,6 @@
 		}
 	});
 
-	window.$rootUrl = '';
+	window.$$rootUrl = '';
 	window.$$debug = $(Debug);
 })();

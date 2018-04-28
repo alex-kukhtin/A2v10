@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180428-7171
 // app.js
 
 "use strict";
@@ -9,7 +9,8 @@
 
 	window.app = {
 		modules: {},
-		components: {}
+		components: {},
+		nextToken: nextToken
 	};
 
 	window.require = require;
@@ -34,5 +35,11 @@
 		if (name in app.components)
 			return app.components[name];
 		throw new Error('component "' + name + '" not found');
+	}
+
+	let currentToken = 1603;
+
+	function nextToken() {
+		return '' + (currentToken++);
 	}
 })();

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180428-7171
 // controllers/base.js
 
 (function () {
@@ -175,13 +175,31 @@
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
 						resolve(dataToResolve); // single element (raw data)
-						if (opts && opts.toast)
-							self.$toast(opts.toast);
+						let toast = opts && opts.toast ? opts.toast : null;
+						if (toast)
+							self.$toast(toast);
+						self.$notifyOpener(toast, newId);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
 				});
 			},
+
+			$notifyOpener(toast, id) {
+				if (!window.opener) return;
+				let rq = window.opener.require;
+				if (!rq) return;
+				let bus = rq('std:eventBus');
+				if (!bus) return;
+				let dat = {
+					token: window.$$token.token,
+					update: window.$$token.update,
+					toast: toast,
+					id: id
+				};
+				bus.$emit('childrenSaved', dat);
+			},
+
 
 			$invoke(cmd, data, base) {
 				let self = this;
@@ -255,6 +273,7 @@
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
+							resolve(dat);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}
@@ -304,10 +323,11 @@
 				let retUrl = urltools.combine(url, dataToHref);
 				return retUrl;
 			},
-			$navigate(url, data, newWindow) {
+			$navigate(url, data, newWindow, update) {
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
-					window.open(urlToNavigate, "_blank");
+					let nwin = window.open(urlToNavigate, "_blank");
+					nwin.$$token = { token: this.__currentToken__, update: update };
 				}
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
@@ -753,6 +773,18 @@
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
 				root._seal_(root);
+			}, 
+			__notified(token) {
+				if (!token) return;
+				if (this.__currentToken__ !== token.token) return;
+				if (token.toast)
+					this.$toast(token.toast);
+				this.$reload(token.update || null).then(function (array) {
+					if (!token.id) return;
+					if (!utils.isArray(array)) return;
+					let el = array.find(itm => itm.$id === token.id);
+					if (el && el.$select) el.$select();
+				});
 			}
 		},
 		created() {
@@ -763,11 +795,13 @@
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
+			eventBus.$on('childrenSaved', this.__notified);
 
 			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
+			this.__currentToken__ = window.app.nextToken();
 			log.time('create time:', __createStartTime, false);
 		},
 		beforeDestroy() {
@@ -778,6 +812,8 @@
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
+			eventBus.$off('childrenSaved', this.__notified);
+
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
 		},

@@ -55,7 +55,7 @@ namespace A2v10.Xaml
 		}
 
 
-		private static Regex _selectedRegEx = new Regex(@"(\w+)\.Selected\((\w+)\)", RegexOptions.Compiled);
+		private static Regex _selectedRegEx = new Regex(@"([\w\.]+)\.Selected\((\w+)\)", RegexOptions.Compiled);
 
 		#region ISupportInitialize
 		public void BeginInit()

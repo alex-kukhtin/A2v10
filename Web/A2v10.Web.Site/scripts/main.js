@@ -1,6 +1,6 @@
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180226-7120
+// 20180428-7171
 // app.js
 
 "use strict";
@@ -9,7 +9,8 @@
 
 	window.app = {
 		modules: {},
-		components: {}
+		components: {},
+		nextToken: nextToken
 	};
 
 	window.require = require;
@@ -34,6 +35,12 @@
 		if (name in app.components)
 			return app.components[name];
 		throw new Error('component "' + name + '" not found');
+	}
+
+	let currentToken = 1603;
+
+	function nextToken() {
+		return '' + (currentToken++);
 	}
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -3598,7 +3605,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180428-7171
 // components/datagrid.js*/
 
 (function () {
@@ -3897,6 +3904,7 @@ Vue.component('validator-control', {
 				let arg1 = normalizeArg(col.command.arg1, false);
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
 				let arg3 = normalizeArg(col.command.arg3, false);
+				let arg4 = col.command.arg4; // without normalize
 				let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
@@ -3919,7 +3927,7 @@ Vue.component('validator-control', {
 								//ev.stopImmediatePropagation();
 								//ev.preventDefault();
 							}
-							col.command.cmd(arg1, arg2, arg3);
+							col.command.cmd(arg1, arg2, arg3, arg4);
 						},
 						eval: utils.eval,
 						getHref() {
@@ -5203,7 +5211,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180428-7171
 // components/upload.js
 
 
@@ -5259,7 +5267,7 @@ TODO:
 				ev.preventDefault();
 			},
 			uploadImage(ev) {
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
 				var fd = new FormData();
@@ -5463,7 +5471,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180122-7165
+// 20180428-7171
 // components/list.js
 
 /* TODO:
@@ -5582,6 +5590,7 @@ TODO:
 				this.selectFirstItem();
 			}
 			let src = this.itemsSource;
+			if (!src) return;
 			let ix = src.$selectedIndex;
 			if (ix != -1 && this.$refs.li)
 				this.$refs.li[ix].scrollIntoView(true); // top of elems
@@ -5897,7 +5906,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180405-7149
+// 20180428-7171
 // components/image.js
 
 (function () {
@@ -5943,7 +5952,7 @@ TODO:
 			href: function () {
 				if (this.newItem)
 					return undefined;
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				if (!id) return undefined;
 				return url.combine(root, '_image', this.base, this.prop, id);
@@ -6003,7 +6012,7 @@ TODO:
 		},
 		computed: {
 			href: function () {
-				let root = window.$rootUrl;
+				let root = window.$$rootUrl;
 				return url.combine(root, '_static_image', this.url.replace(/\./g, '-'));
 			}
 		}
@@ -6544,6 +6553,74 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20180428-7171
+// components/megamenu.js
+
+
+(function () {
+
+	const menuTemplate =
+`<div class="dropdown-menu menu" role="menu">
+	<div class="super-menu" :class="cssClass" :style="cssStyle">
+		<div v-for="(m, mx) of topMenu" :key="mx" class="menu-group">
+			<div class="group-title" v-text="m.Name"></div>
+			<template v-for="(itm, ix) in m.menu">
+				<div class="divider" v-if=isDivider(itm) ></div>
+				<slot name="item" :menuItem="itm" v-else></slot>
+			</template>
+		</div>
+	</div>
+</div>
+`;
+
+	Vue.component('mega-menu', {
+		template: menuTemplate,
+		props: {
+			itemsSource: Array,
+			groupBy: String,
+			columns: Number,
+			width: String
+		},
+		data() {
+			return {
+
+			};
+		},
+		computed: {
+			cssClass() {
+				let cls = 'cols-' + (this.columns || 1);
+				if (this.width)
+					cls += ' with-width';
+				return cls;
+			},
+			cssStyle() {
+				if (this.width)
+					return { width: this.width };
+				return undefined;
+			},
+			topMenu() {
+				if (!this.itemsSource) return {};
+				return this.itemsSource.reduce((acc, itm) => {
+					let g = itm[this.groupBy] || '';
+					let ma = acc[g];
+					if (ma)
+						ma.menu.push(itm);
+					else
+						acc[g] = { Name: g, menu: [itm] };
+					return acc;
+				}, {});
+			}
+		},
+		methods: {
+			isDivider(itm) {
+				return itm.Name === '-';
+			}
+		}
+	});
+
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 /*20180122-7095*/
 /* directives/autosize.js */
 
@@ -6869,7 +6946,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180428-7171
 // controllers/base.js
 
 (function () {
@@ -7044,13 +7121,31 @@ Vue.directive('resize', {
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
 						resolve(dataToResolve); // single element (raw data)
-						if (opts && opts.toast)
-							self.$toast(opts.toast);
+						let toast = opts && opts.toast ? opts.toast : null;
+						if (toast)
+							self.$toast(toast);
+						self.$notifyOpener(toast, newId);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
 				});
 			},
+
+			$notifyOpener(toast, id) {
+				if (!window.opener) return;
+				let rq = window.opener.require;
+				if (!rq) return;
+				let bus = rq('std:eventBus');
+				if (!bus) return;
+				let dat = {
+					token: window.$$token.token,
+					update: window.$$token.update,
+					toast: toast,
+					id: id
+				};
+				bus.$emit('childrenSaved', dat);
+			},
+
 
 			$invoke(cmd, data, base) {
 				let self = this;
@@ -7124,6 +7219,7 @@ Vue.directive('resize', {
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
+							resolve(dat);
 						} else {
 							throw new Error('Invalid response type for $reload');
 						}
@@ -7173,10 +7269,11 @@ Vue.directive('resize', {
 				let retUrl = urltools.combine(url, dataToHref);
 				return retUrl;
 			},
-			$navigate(url, data, newWindow) {
+			$navigate(url, data, newWindow, update) {
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
-					window.open(urlToNavigate, "_blank");
+					let nwin = window.open(urlToNavigate, "_blank");
+					nwin.$$token = { token: this.__currentToken__, update: update };
 				}
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
@@ -7622,6 +7719,18 @@ Vue.directive('resize', {
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
 				root._seal_(root);
+			}, 
+			__notified(token) {
+				if (!token) return;
+				if (this.__currentToken__ !== token.token) return;
+				if (token.toast)
+					this.$toast(token.toast);
+				this.$reload(token.update || null).then(function (array) {
+					if (!token.id) return;
+					if (!utils.isArray(array)) return;
+					let el = array.find(itm => itm.$id === token.id);
+					if (el && el.$select) el.$select();
+				});
 			}
 		},
 		created() {
@@ -7632,11 +7741,13 @@ Vue.directive('resize', {
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
+			eventBus.$on('childrenSaved', this.__notified);
 
 			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
+			this.__currentToken__ = window.app.nextToken();
 			log.time('create time:', __createStartTime, false);
 		},
 		beforeDestroy() {
@@ -7647,6 +7758,8 @@ Vue.directive('resize', {
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
+			eventBus.$off('childrenSaved', this.__notified);
+
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
 		},

@@ -96,6 +96,15 @@ namespace A2v10.Xaml
 		Error
 	}
 
+	public enum DropDownDirection
+	{
+		DownLeft,
+		DownRight,
+		UpLeft,
+		UpRight
+	}
+
+
 	public enum Icon
 	{
 		NoIcon = 0,

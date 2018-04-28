@@ -60,6 +60,7 @@
     <Content Include="app\components\graphics.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\list.js" />
+    <Content Include="app\components\megamenu.js" />
     <Content Include="app\components\newbutton.js" />
     <Content Include="app\components\pager.js" />
     <Content Include="app\components\panel.js" />

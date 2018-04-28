@@ -10,6 +10,7 @@ namespace A2v10.Xaml
 	{
 		public Orientation Orientation { get; set; }
 		public Length Height { get; set; }
+		public Length MinWidth { get; set; }
 
 		#region Attached Properties
 		static Lazy<IDictionary<Object, GridLength>> _attachedWidths = new Lazy<IDictionary<Object, GridLength>>(() => new Dictionary<Object, GridLength>());
@@ -71,6 +72,8 @@ namespace A2v10.Xaml
 			MergeAttributes(spl, context);
 			if (Height != null)
 				spl.MergeStyle("height", Height.Value);
+			if (MinWidth != null)
+				spl.MergeStyle("min-width", MinWidth.Value);
 			spl.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			// width
 			GridLength p1w = GetWidth(Children[0]) ?? GridLength.Fr1();

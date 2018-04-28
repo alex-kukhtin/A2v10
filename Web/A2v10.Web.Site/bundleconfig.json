@@ -40,6 +40,7 @@
 				"app/components/graphics.js",
 				"app/components/debug.js",
 				"app/components/doctitle.js",
+				"app/components/megamenu.js",
 				"app/directives/*.js",
 				"app/controllers/base.js",
 				"app/controllers/shell.js"
