@@ -98,7 +98,6 @@ namespace A2v10.Web.Mvc.Controllers
 			prms.Set("Id", id);
 			prms.AppendAndReplace(rep.parameters);
 
-			// TODO: make defer for AZURE!
 			ri.DataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
 
 			// after query

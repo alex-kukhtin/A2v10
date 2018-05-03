@@ -5,19 +5,13 @@ using System;
 
 namespace A2v10.Xaml
 {
-	public abstract class Inline : UIElementBase
+	public abstract class Inline : UIElement
 	{
 		public Boolean Block { get; set; }
-		public Boolean? Bold { get; set; }
-		public Boolean? Italic { get; set; }
-		public String CssClass { get; set; }
 
 		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			base.MergeAttributes(tag, context, mode);
-			tag.AddCssClass(CssClass);
-			tag.AddCssClassBoolNo(Bold, "bold");
-			tag.AddCssClassBoolNo(Italic, "italic");
 			tag.AddCssClassBool(Block, "block");
 		}
 	}

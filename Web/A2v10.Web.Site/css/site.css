@@ -1298,7 +1298,7 @@ pre.a2-code {
 }
 .control-group label {
   font-size: 0.95rem;
-  color: #757575;
+  color: #777;
   margin-bottom: .15em;
   display: block;
 }
@@ -1306,7 +1306,7 @@ pre.a2-code {
   display: inline-block;
   font-size: 95%;
   margin-bottom: 0.25em;
-  color: #757575;
+  color: #777;
 }
 .control-group .validator {
   position: absolute;
@@ -1496,7 +1496,7 @@ pre.a2-code {
 }
 .control-group .input-group > a,
 .control-group .input-group > .dropdown > a {
-  color: #757575;
+  color: #777;
   padding: 0 3px;
 }
 .control-group .input-group > a:hover,
@@ -1524,10 +1524,10 @@ pre.a2-code {
   box-shadow: none;
 }
 .control-group .input-group.focus {
-  z-index: 92;
+  z-index: auto;
 }
 .control-group:hover .input-group {
-  z-index: 90;
+  z-index: auto;
 }
 .control-group input,
 .control-group select,
@@ -1543,10 +1543,10 @@ pre.a2-code {
 }
 /* avoid validator blinking */
 .control-group.open:hover {
-  z-index: 99 !important;
+  z-index: auto !important;
 }
 .control-group.open .input-group.focus {
-  z-index: 99 !important;
+  z-index: auto !important;
 }
 .control-group.required label:before {
   content: '\2731';
@@ -1566,12 +1566,12 @@ pre.a2-code {
 .control-group.invalid:hover .input-group,
 .control-group.invalid .input-group.focus {
   box-shadow: 0 0 2px 1px rgba(169, 68, 66, 0.3);
-  z-index: 98;
+  z-index: auto;
 }
 .control-group.invalid .input-group {
   border-color: #dca7a7 !important;
   background-color: #fff8f8 !important;
-  z-index: 94;
+  z-index: auto;
 }
 .control-group.invalid .input-group:after {
   content: '';
@@ -1606,7 +1606,7 @@ pre.a2-code {
 .a2-label {
   display: block;
   font-size: 0.95rem;
-  color: #757575;
+  color: #777;
   align-self: center;
 }
 .a2-label.required:before {
@@ -2864,6 +2864,15 @@ table.grid-both > tfoot > tr > td {
   border-right-width: 1px;
   border-right-style: solid;
 }
+table.grid-vertical > tbody > tr > td .control-group .input-group,
+table.grid-both > tbody > tr > td .control-group .input-group,
+table.grid-vertical > thead > tr > td .control-group .input-group,
+table.grid-both > thead > tr > td .control-group .input-group,
+table.grid-vertical > tfoot > tr > td .control-group .input-group,
+table.grid-both > tfoot > tr > td .control-group .input-group {
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
 table.grid-horizontal,
 table.grid-both {
   /*
@@ -2889,6 +2898,15 @@ table.grid-both > tfoot > tr > td {
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }
+table.grid-horizontal > tbody > tr > td .control-group .input-group,
+table.grid-both > tbody > tr > td .control-group .input-group,
+table.grid-horizontal > thead > tr > td .control-group .input-group,
+table.grid-both > thead > tr > td .control-group .input-group,
+table.grid-horizontal > tfoot > tr > td .control-group .input-group,
+table.grid-both > tfoot > tr > td .control-group .input-group {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
 table.a2-table {
   table-layout: auto;
 }
@@ -2904,16 +2922,12 @@ table.a2-table > tbody > tr > td {
   padding: 4px 6px;
   vertical-align: top;
   border-color: #ddd;
-  height: 27px;
 }
 table.a2-table > tbody > tr > td label {
   display: inline-block;
 }
 table.a2-table > tbody > tr > td .control-group {
-  margin: -1px -1px -2px -1px;
-}
-table.a2-table > tbody > tr > td .control-group .input-group {
-  border-color: #ddd;
+  margin: 0;
 }
 table.a2-table > tbody > tr > td .a2-table {
   margin: -1px;
@@ -2927,11 +2941,11 @@ table.a2-table tfoot > tr > td {
 }
 table.a2-table td.ctrl {
   padding: 0;
-  vertical-align: top;
+  vertical-align: baseline;
 }
 table.a2-table td.ctrl .checkbox,
 table.a2-table td.ctrl .radio {
-  margin: 2px 6px;
+  margin: 0 6px;
 }
 table.a2-table td.ctrl .stack-panel.horizontal .control-group + .control-group {
   border-left: 1px solid #ddd;
@@ -3033,7 +3047,7 @@ table.a2-table tr.red td {
 .a2-table.compact thead > tr > td.ctrl,
 .a2-table.compact tfoot > tr > td.ctrl {
   padding: 0;
-  vertical-align: top;
+  vertical-align: baseline;
 }
 .a2-table.compact > tbody > tr > td.ctrl .checkbox,
 .a2-table.compact thead > tr > td.ctrl .checkbox,
@@ -3833,7 +3847,7 @@ TODO:
 }
 .field-set legend {
   font-size: 0.95rem;
-  color: #757575;
+  color: #777;
 }
 .field-set.vertical .field-set-item {
   display: block;
@@ -4164,6 +4178,7 @@ h5,
   display: inline-block;
   margin-left: 5px;
   width: auto;
+  margin-right: 10px;
 }
 .side-bar-compact .side-menu li.active > a {
   background-color: white;

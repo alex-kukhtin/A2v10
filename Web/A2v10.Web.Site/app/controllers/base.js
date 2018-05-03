@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180503-7173
 // controllers/base.js
 
 (function () {
@@ -178,15 +178,15 @@
 						let toast = opts && opts.toast ? opts.toast : null;
 						if (toast)
 							self.$toast(toast);
-						self.$notifyOpener(toast, newId);
+						self.$notifyOwner(newId, toast);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
 				});
 			},
-
-			$notifyOpener(toast, id) {
+			$notifyOwner(id, toast) {
 				if (!window.opener) return;
+				if (!window.$$token) return;
 				let rq = window.opener.require;
 				if (!rq) return;
 				let bus = rq('std:eventBus');
@@ -194,7 +194,7 @@
 				let dat = {
 					token: window.$$token.token,
 					update: window.$$token.update,
-					toast: toast,
+					toast: toast || null,
 					id: id
 				};
 				bus.$emit('childrenSaved', dat);

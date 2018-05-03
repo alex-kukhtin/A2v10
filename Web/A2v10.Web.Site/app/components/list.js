@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180502-7173
 // components/list.js
 
 /* TODO:
@@ -122,7 +122,7 @@
 			if (!src) return;
 			let ix = src.$selectedIndex;
 			if (ix != -1 && this.$refs.li)
-				this.$refs.li[ix].scrollIntoView(true); // top of elems
+				this.$refs.li[ix].scrollIntoViewCheck();
 		}
 	});
 })();

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180502-7173
 // components/datagrid.js*/
 
 (function () {
@@ -751,7 +751,7 @@
 			let rows = this.$refs.row;
 			if (ix != -1 && rows && ix < rows.length) {
 				let tr = rows[ix].$refs.tr;
-				tr.scrollIntoView(true); // top of elems
+				tr.scrollIntoViewCheck();
 			}
 		}
 	});

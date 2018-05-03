@@ -30,7 +30,7 @@
 				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
 					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> @[Profile]</a>
-					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
+					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> @[ChangePassword]</a>
 					<template v-if="userIsAdmin">
 						<div class="divider"></div>
 						<a @click.prevent="changeUser" class="dropdown-item" tabindex="-1"><i class="ico ico-switch"></i> @[SubstUser]</a>

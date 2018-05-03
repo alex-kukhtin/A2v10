@@ -6,8 +6,7 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
 	[ContentProperty("Inlines")]
-
-	public class Text : UIElementBase
+	public class Text : UIElement
 	{
 		public InlineCollection Inlines { get; } = new InlineCollection();
 

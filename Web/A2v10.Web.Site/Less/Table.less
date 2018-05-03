@@ -60,6 +60,10 @@ table.grid-vertical, table.grid-both {
 		border-left-style: solid;
 		border-right-width: 1px;
 		border-right-style: solid;
+		.control-group .input-group {
+			border-right-color:transparent;
+			border-left-color:transparent;
+		}
 	}
 
 	/*
@@ -81,8 +85,12 @@ table.grid-horizontal, table.grid-both {
 		border-top-style: solid;
 		border-bottom-width: 1px;
 		border-bottom-style: solid;
-	}
 
+		.control-group .input-group {
+			border-top-color: transparent;
+			border-bottom-color: transparent;
+		}
+	}
 	/*
 	> tbody > tr:first-child > td, > thead > tr:first-child > td {
 		border-top-style: none;
@@ -115,17 +123,18 @@ table.a2-table {
 		padding: 4px 6px;
 		vertical-align: top;
 		border-color: @a2-table-brd-color;
-		height:27px;
+		//height:27px;
 
 		label {
 			display: inline-block;
 		}
 
 		.control-group {
-			margin: -1px -1px -2px -1px;
+			//margin: -1px -1px -2px -1px;
+			margin:0;
 
 			.input-group {
-				border-color: @a2-table-brd-color;
+				//border-color: @a2-table-brd-color;
 				//border-style: none;
 				//border-color:transparent;
 			}
@@ -145,10 +154,10 @@ table.a2-table {
 
 	td.ctrl {
 		padding: 0;
-		vertical-align: top;
+		vertical-align: baseline;
 
 		.checkbox, .radio {
-			margin: 2px 6px;
+			margin: 0 6px;
 		}
 
 		.stack-panel.horizontal {
@@ -261,7 +270,7 @@ table.a2-table {
 
 		&.ctrl {
 			padding: 0;
-			vertical-align: top;
+			vertical-align: baseline;
 
 			.checkbox, .radio {
 				margin: 0 6px 0 4px;

@@ -6,7 +6,7 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
 	[ContentProperty("Children")]
-	public class Block : UIElementBase, ITableControl
+	public class Block : UIElement, ITableControl
 	{
 
 		public UIElementCollection Children { get; set; } = new UIElementCollection();

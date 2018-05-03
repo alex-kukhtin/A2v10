@@ -123,12 +123,12 @@
     <Compile Include="Controls\List.cs" />
     <Compile Include="Controls\MenuItem.cs" />
     <Compile Include="Controls\Pager.cs" />
-    <Compile Include="Controls\Repeater.cs" />
+    <Compile Include="Layouts\Repeater.cs" />
     <Compile Include="Controls\Separator.cs" />
-    <Compile Include="Controls\Tab.cs" />
+    <Compile Include="Layouts\Tab.cs" />
     <Compile Include="Controls\TableCell.cs" />
     <Compile Include="Controls\TableRow.cs" />
-    <Compile Include="Controls\TabPanel.cs" />
+    <Compile Include="Layouts\TabPanel.cs" />
     <Compile Include="Controls\TextBox.cs" />
     <Compile Include="Controls\ValuedControl.cs" />
     <Compile Include="Layouts\Block.cs" />

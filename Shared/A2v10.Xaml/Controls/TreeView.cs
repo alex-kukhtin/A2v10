@@ -12,7 +12,7 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-	public class TreeViewItem : UIElementBase
+	public class TreeViewItem : UIElement
 	{
 		public Object ItemsSource { get; set; }
 

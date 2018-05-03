@@ -45,8 +45,8 @@
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180110-7088
-// services/datamodel.js
+// 20180502-7174
+// platform/polyfills.js
 
 
 (function (elem) {
@@ -60,6 +60,24 @@
 		}
 		return null;
 	}
+
+	elem.scrollIntoViewCheck = elem.scrollIntoViewCheck || function () {
+		let el = this;
+		let elRect = el.getBoundingClientRect();
+		let pElem = el.parentElement;
+		while (pElem) {
+			if (pElem.offsetHeight < pElem.scrollHeight)
+				break;
+			pElem = pElem.parentElement;
+		}
+		let parentRect = pElem.getBoundingClientRect();
+		if (elRect.top < parentRect.top)
+			el.scrollIntoView(true);
+		else if (elRect.bottom > parentRect.bottom)
+			el.scrollIntoView(false);
+	}
+
+
 })(Element.prototype);
 
 
@@ -3351,7 +3369,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180427-7170
+// 20180502-7173
 
 // components/selector.js
 
@@ -3605,7 +3623,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180502-7173
 // components/datagrid.js*/
 
 (function () {
@@ -4356,7 +4374,7 @@ Vue.component('validator-control', {
 			let rows = this.$refs.row;
 			if (ix != -1 && rows && ix < rows.length) {
 				let tr = rows[ix].$refs.tr;
-				tr.scrollIntoView(true); // top of elems
+				tr.scrollIntoViewCheck();
 			}
 		}
 	});
@@ -5471,7 +5489,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180502-7173
 // components/list.js
 
 /* TODO:
@@ -5593,7 +5611,7 @@ TODO:
 			if (!src) return;
 			let ix = src.$selectedIndex;
 			if (ix != -1 && this.$refs.li)
-				this.$refs.li[ix].scrollIntoView(true); // top of elems
+				this.$refs.li[ix].scrollIntoViewCheck();
 		}
 	});
 })();
@@ -6946,7 +6964,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20180503-7173
 // controllers/base.js
 
 (function () {
@@ -7124,15 +7142,15 @@ Vue.directive('resize', {
 						let toast = opts && opts.toast ? opts.toast : null;
 						if (toast)
 							self.$toast(toast);
-						self.$notifyOpener(toast, newId);
+						self.$notifyOwner(newId, toast);
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});
 				});
 			},
-
-			$notifyOpener(toast, id) {
+			$notifyOwner(id, toast) {
 				if (!window.opener) return;
+				if (!window.$$token) return;
 				let rq = window.opener.require;
 				if (!rq) return;
 				let bus = rq('std:eventBus');
@@ -7140,7 +7158,7 @@ Vue.directive('resize', {
 				let dat = {
 					token: window.$$token.token,
 					update: window.$$token.update,
-					toast: toast,
+					toast: toast || null,
 					id: id
 				};
 				bus.$emit('childrenSaved', dat);

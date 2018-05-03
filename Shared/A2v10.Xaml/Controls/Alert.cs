@@ -16,7 +16,7 @@ namespace A2v10.Xaml
 	}
 
 	[ContentProperty("Content")]
-	public class Alert : UIElementBase
+	public class Alert : UIElement
 	{
 		public Object Content { get; set; }
 		public AlertStyle Style { get; set; }
