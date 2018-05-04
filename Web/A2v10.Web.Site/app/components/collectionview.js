@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180504-7175
 // components/collectionview.js
 
 /*
@@ -34,14 +34,21 @@ TODO:
 		let nq = { dir: that.dir, order: that.order, offset: that.offset };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
-			if (utils.isObjectExact(fVal)) {
+			if (x === 'Period') {
+				nq[x] = utils.period.format(fVal, 'DateUrl');
+			}
+			else if (utils.isDate(fVal)) {
+				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (utils.isObjectExact(fVal)) {
 				if (!('Id' in fVal)) {
 					console.error('The object in the Filter does not have Id property');
 				}
 				nq[x] = fVal.Id;
 			}
-			else if (fVal)
+			else if (fVal) {
 				nq[x] = fVal;
+			}
 			else {
 				nq[x] = undefined;
 			}
@@ -403,18 +410,34 @@ TODO:
 				let q = mi.Filter;
 				if (q) {
 					for (let x in this.filter) {
-						if (x in q) this.filter[x] = q[x];
+						if (x in q) {
+							let iv = this.filter[x];
+							if (utils.isDate(iv)) {
+								this.filter[x] = utils.date.tryParse(q[x]);
+							} else {
+								this.filter[x] = q[x];
+							}
+						}
 					}
 				}
 			}
 			// then query from url
 			let q = this.$store.getters.query;
 			for (let x in this.filter) {
-				if (x in q) this.filter[x] = q[x];
+				if (x in q) {
+					let iv = this.filter[x];
+					if (utils.isDate(iv)) {
+						this.filter[x] = utils.date.tryParse(q[x]);
+					} else {
+						this.filter[x] = q[x];
+					}
+				}
 			}
+
 			this.$nextTick(() => {
 				this.lockChange = false;
 			});
+
 			this.$on('sort', this.doSort);
 		}
 	});

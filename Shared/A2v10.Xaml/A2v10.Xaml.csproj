@@ -85,6 +85,7 @@
     <Compile Include="Controls\DataGridColumn.cs" />
     <Compile Include="Controls\DataGridRowDetails.cs" />
     <Compile Include="Controls\DatePicker.cs" />
+    <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Layouts\CommandBar.cs" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180504-7175
 // services/datamodel.js
 
 (function () {
@@ -1047,6 +1047,28 @@
         */
 	}
 
+	function checkFilterDates(x) {
+		function checkDates(f) {
+			Object.keys(f).forEach(k => {
+				let v = f[k];
+				if (utils.isObjectExact(v)) {
+					checkDates(v);
+				}
+				else if (k === 'From' || k === 'To') {
+					if (v)
+						f[k] = new Date(v);
+					else
+						f[k] = utils.date.zero();
+				}
+			});
+		}
+
+		let fil = x.Filter;
+		if (!fil) return x;
+		checkDates(fil);
+		return x;
+	}
+
 	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
@@ -1055,6 +1077,8 @@
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
 		for (let p in mi) {
+			// HACK! check filter dates
+			//root[p].$ModelInfo = checkFilterDates(mi[p]);
 			root[p].$ModelInfo = mi[p];
 		}
 		//console.dir(rawData.$ModelInfo);

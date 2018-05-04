@@ -20,6 +20,10 @@
 					</DropDownMenu>
 				</Button.DropDown>
 			</Button>
+			<DatePicker Value="{Bind Parent.Filter.From}" Width="10rem"/>
+			<PeriodPicker>
+				
+			</PeriodPicker>
 			<!--
 			<Button Style="Green" Icon="Plus" Content="Create new" Toolbar.Align="Right">
 				<Button.DropDown>
@@ -32,7 +36,14 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>
-		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl"/>
+		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<FilterItem Property="From" DataType="Date" />
+					<FilterItem Property="To" DataType="Date" />
+				</FilterDescription>
+			</CollectionView.Filter>
+		</CollectionView>
 	</Page.CollectionView>
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" />

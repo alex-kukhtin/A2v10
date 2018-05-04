@@ -85,7 +85,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180427-7169
+// 20180504-7175
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -132,13 +132,18 @@ app.modules['std:utils'] = function () {
 			today: dateToday,
 			zero: dateZero,
 			parse: dateParse,
+			tryParse: dateTryParse,
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
 			add: dateAdd,
 			diff: dateDiff,
+			create: dateCreate,
 			compare: dateCompare,
 			endOfMonth: endOfMonth
+		},
+		period: {
+			format: formatPeriod
 		},
 		text: {
 			contains: textContains,
@@ -317,6 +322,15 @@ app.modules['std:utils'] = function () {
 		return obj;
 	}
 
+	function formatPeriod(obj, dataType) {
+		let from = obj.From;
+		let to = obj.To;
+		if (from.getTime() === to.getTime())
+			return format(from, dataType);
+		return format(from, dataType) + '-' + format(to, dataType);
+	}
+
+
 	function getStringId(obj) {
 		if (!obj)
 			return '0';
@@ -343,6 +357,15 @@ app.modules['std:utils'] = function () {
 		let td = new Date(0, 0, 1);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
+	}
+
+	function dateTryParse(str) {
+		if (!str) return dateZero();
+		if (str.length === 8)
+			return new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		let dt = new Date(str);
+		if (!isNaN(dt.getTime())) return dt;
+		return str;
 	}
 
 	function dateParse(str) {
@@ -375,6 +398,10 @@ app.modules['std:utils'] = function () {
 
 	function endOfMonth(dt) {
 		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+	}
+
+	function dateCreate(year, month, day) {
+		return new Date(year, month - 1, day, 0, 0, 0, 0);
 	}
 
 	function dateDiff(unit, d1, d2) {
@@ -1188,7 +1215,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20180504-7175
 // services/datamodel.js
 
 (function () {
@@ -2235,6 +2262,28 @@ app.modules['std:validators'] = function () {
         */
 	}
 
+	function checkFilterDates(x) {
+		function checkDates(f) {
+			Object.keys(f).forEach(k => {
+				let v = f[k];
+				if (utils.isObjectExact(v)) {
+					checkDates(v);
+				}
+				else if (k === 'From' || k === 'To') {
+					if (v)
+						f[k] = new Date(v);
+					else
+						f[k] = utils.date.zero();
+				}
+			});
+		}
+
+		let fil = x.Filter;
+		if (!fil) return x;
+		checkDates(fil);
+		return x;
+	}
+
 	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
@@ -2243,6 +2292,8 @@ app.modules['std:validators'] = function () {
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
 		for (let p in mi) {
+			// HACK! check filter dates
+			//root[p].$ModelInfo = checkFilterDates(mi[p]);
 			root[p].$ModelInfo = mi[p];
 		}
 		//console.dir(rawData.$ModelInfo);
@@ -3366,6 +3417,74 @@ Vue.component('validator-control', {
 		}
 	});
 })();
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180327-7141
+// components/periodpicker.js
+
+
+(function () {
+
+	const popup = require('std:popup');
+
+	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
+
+	const baseControl = component('control');
+	const locale = window.$$locale;
+
+	Vue.component('a2-period-picker', {
+		extends: baseControl,
+		template: `
+<div class="control-group" @click.prevent="toggle">
+	<label v-if="hasLabel" v-text="label" />
+	<div class="input-group">
+		PERIOD HERE
+		<div v-if="isOpen" class="calendar">
+			popup text here
+		</div>
+	</div>
+</div>
+`,
+		props: {
+			item: Object,
+			propFrom: String,
+			propTo: String
+		},
+		data() {
+			return {
+				isOpen: false
+			};
+		},
+		methods: {
+			dummy() {
+			},
+			toggle(ev) {
+				console.dir(this.item);
+				this.item.From = new Date(2018, 4, 1);
+				this.item.To = new Date(2018, 4, 15);
+				//alert(1);
+				if (!this.isOpen) {
+					// close other popups
+					eventBus.$emit('closeAllPopups');
+				}
+				this.isOpen = !this.isOpen;
+			},
+			__clickOutside() {
+				this.isOpen = false;
+			}
+		},
+		mounted() {
+			popup.registerPopup(this.$el);
+			this.$el._close = this.__clickOutside;
+		},
+		beforeDestroy() {
+			popup.unregisterPopup(this.$el);
+		}
+	});
+})();
+
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -4807,7 +4926,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20180504-7175
 // components/collectionview.js
 
 /*
@@ -4841,14 +4960,21 @@ TODO:
 		let nq = { dir: that.dir, order: that.order, offset: that.offset };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
-			if (utils.isObjectExact(fVal)) {
+			if (x === 'Period') {
+				nq[x] = utils.period.format(fVal, 'DateUrl');
+			}
+			else if (utils.isDate(fVal)) {
+				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (utils.isObjectExact(fVal)) {
 				if (!('Id' in fVal)) {
 					console.error('The object in the Filter does not have Id property');
 				}
 				nq[x] = fVal.Id;
 			}
-			else if (fVal)
+			else if (fVal) {
 				nq[x] = fVal;
+			}
 			else {
 				nq[x] = undefined;
 			}
@@ -5210,18 +5336,34 @@ TODO:
 				let q = mi.Filter;
 				if (q) {
 					for (let x in this.filter) {
-						if (x in q) this.filter[x] = q[x];
+						if (x in q) {
+							let iv = this.filter[x];
+							if (utils.isDate(iv)) {
+								this.filter[x] = utils.date.tryParse(q[x]);
+							} else {
+								this.filter[x] = q[x];
+							}
+						}
 					}
 				}
 			}
 			// then query from url
 			let q = this.$store.getters.query;
 			for (let x in this.filter) {
-				if (x in q) this.filter[x] = q[x];
+				if (x in q) {
+					let iv = this.filter[x];
+					if (utils.isDate(iv)) {
+						this.filter[x] = utils.date.tryParse(q[x]);
+					} else {
+						this.filter[x] = q[x];
+					}
+				}
 			}
+
 			this.$nextTick(() => {
 				this.lockChange = false;
 			});
+
 			this.$on('sort', this.doSort);
 		}
 	});

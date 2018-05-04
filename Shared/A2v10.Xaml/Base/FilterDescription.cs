@@ -42,15 +42,11 @@ namespace A2v10.Xaml
 					if (bind == null)
 						return "null";
 					return bind.GetPathFormat(context);
-				/*
-                case DataType.Date:
-                    {
-                        if (Value == null)
-                            return "require('std:utils').date.zero()";
-                        DateTime dt = (DateTime)Value;
-                        return $"'{dt.ToString("yyyy-MM-ddTHH\\:mm\\:ss.000Z")}'";
-                    }
-                */
+				case DataType.Date:
+					if (Value == null)
+						return "require('std:utils').date.zero()";
+					DateTime dt = (DateTime) Value;
+					return $"require('std:utils').date.create({dt.Year}, {dt.Month}, {dt.Day})";
 				default:
 					throw new NotImplementedException("type for FilterItem");
 			}

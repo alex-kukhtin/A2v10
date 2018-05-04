@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180427-7169
+// 20180504-7175
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -47,13 +47,18 @@ app.modules['std:utils'] = function () {
 			today: dateToday,
 			zero: dateZero,
 			parse: dateParse,
+			tryParse: dateTryParse,
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
 			add: dateAdd,
 			diff: dateDiff,
+			create: dateCreate,
 			compare: dateCompare,
 			endOfMonth: endOfMonth
+		},
+		period: {
+			format: formatPeriod
 		},
 		text: {
 			contains: textContains,
@@ -232,6 +237,15 @@ app.modules['std:utils'] = function () {
 		return obj;
 	}
 
+	function formatPeriod(obj, dataType) {
+		let from = obj.From;
+		let to = obj.To;
+		if (from.getTime() === to.getTime())
+			return format(from, dataType);
+		return format(from, dataType) + '-' + format(to, dataType);
+	}
+
+
 	function getStringId(obj) {
 		if (!obj)
 			return '0';
@@ -258,6 +272,15 @@ app.modules['std:utils'] = function () {
 		let td = new Date(0, 0, 1);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
+	}
+
+	function dateTryParse(str) {
+		if (!str) return dateZero();
+		if (str.length === 8)
+			return new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		let dt = new Date(str);
+		if (!isNaN(dt.getTime())) return dt;
+		return str;
 	}
 
 	function dateParse(str) {
@@ -290,6 +313,10 @@ app.modules['std:utils'] = function () {
 
 	function endOfMonth(dt) {
 		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+	}
+
+	function dateCreate(year, month, day) {
+		return new Date(year, month - 1, day, 0, 0, 0, 0);
 	}
 
 	function dateDiff(unit, d1, d2) {
