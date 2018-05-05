@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180504-7175
+// 20180505-7175
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -18,6 +18,40 @@ app.modules['std:utils'] = function () {
 	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
+
+	function TPeriod() {
+		this.From = dateZero();
+		this.To = dateZero();
+	}
+
+	TPeriod.prototype.assign = function (v) {
+		this.From = dateTryParse(v.From);
+		this.To = dateTryParse(v.To);
+		return this;
+	}
+
+	TPeriod.prototype.fromUrl = function (v) {
+		let px = (v || '').split('-');
+		let df = px[0];
+		let dt = px.length > 1 ? px[1] : px[0];
+		this.From = dateTryParse(df)
+		this.To = dateTryParse(dt);
+		return this;
+	}
+
+	TPeriod.prototype.format = function(dataType) {
+		let from = this.From;
+		let to = this.To;
+		if (from.getTime() === to.getTime())
+			return format(from, dataType);
+		return format(from, dataType) + '-' + format(to, dataType);
+	}
+
+	TPeriod.prototype.in = function (dt) {
+		let t = dt.getTime();
+		return t >= this.From.getTime() && t <= this.To.getTime();
+	}
+
 	return {
 		isArray: Array.isArray,
 		isFunction: isFunction,
@@ -25,6 +59,7 @@ app.modules['std:utils'] = function () {
 		isObject: isObject,
 		isObjectExact: isObjectExact,
 		isDate: isDate,
+		isPeriod: isPeriod,
 		isString: isString,
 		isNumber: isNumber,
 		isBoolean: isBoolean,
@@ -58,7 +93,7 @@ app.modules['std:utils'] = function () {
 			endOfMonth: endOfMonth
 		},
 		period: {
-			format: formatPeriod
+			zero() { return new TPeriod(); }
 		},
 		text: {
 			contains: textContains,
@@ -71,6 +106,7 @@ app.modules['std:utils'] = function () {
 	function isDefined(value) { return typeof value !== 'undefined'; }
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
+	function isPeriod(value) { return value instanceof TPeriod; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
@@ -215,6 +251,12 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatTime(obj);
+			case "Period":
+				if (!isPeriod(obj)) {
+					console.error(`Invalid Period for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.format('Date');
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Currency for utils.format (${obj})`);
@@ -235,14 +277,6 @@ app.modules['std:utils'] = function () {
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
-	}
-
-	function formatPeriod(obj, dataType) {
-		let from = obj.From;
-		let to = obj.To;
-		if (from.getTime() === to.getTime())
-			return format(from, dataType);
-		return format(from, dataType) + '-' + format(to, dataType);
 	}
 
 
@@ -276,10 +310,16 @@ app.modules['std:utils'] = function () {
 
 	function dateTryParse(str) {
 		if (!str) return dateZero();
-		if (str.length === 8)
-			return new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
-		let dt = new Date(str);
-		if (!isNaN(dt.getTime())) return dt;
+		let dt;
+		if (str.length === 8) {
+			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		} else {
+			dt = new Date(str);
+		}
+		if (!isNaN(dt.getTime())) {
+			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+			return dt;
+		}
 		return str;
 	}
 
@@ -316,7 +356,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateCreate(year, month, day) {
-		return new Date(year, month - 1, day, 0, 0, 0, 0);
+		let dt = new Date(year, month - 1, day, 0, 0, 0, 0);
+		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		return dt;
 	}
 
 	function dateDiff(unit, d1, d2) {

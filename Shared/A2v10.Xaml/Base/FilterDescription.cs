@@ -44,9 +44,13 @@ namespace A2v10.Xaml
 					return bind.GetPathFormat(context);
 				case DataType.Date:
 					if (Value == null)
-						return "require('std:utils').date.zero()";
+						return "utils.date.zero()";
 					DateTime dt = (DateTime) Value;
-					return $"require('std:utils').date.create({dt.Year}, {dt.Month}, {dt.Day})";
+					return $"utils.date.create({dt.Year}, {dt.Month}, {dt.Day})";
+				case DataType.Period:
+					if (Value == null)
+						return "utils.period.zero()";
+					return "null"; // TODO: initial value
 				default:
 					throw new NotImplementedException("type for FilterItem");
 			}

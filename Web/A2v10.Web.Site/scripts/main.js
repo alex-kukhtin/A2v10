@@ -85,7 +85,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180504-7175
+// 20180505-7175
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -103,6 +103,40 @@ app.modules['std:utils'] = function () {
 	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
+
+	function TPeriod() {
+		this.From = dateZero();
+		this.To = dateZero();
+	}
+
+	TPeriod.prototype.assign = function (v) {
+		this.From = dateTryParse(v.From);
+		this.To = dateTryParse(v.To);
+		return this;
+	}
+
+	TPeriod.prototype.fromUrl = function (v) {
+		let px = (v || '').split('-');
+		let df = px[0];
+		let dt = px.length > 1 ? px[1] : px[0];
+		this.From = dateTryParse(df)
+		this.To = dateTryParse(dt);
+		return this;
+	}
+
+	TPeriod.prototype.format = function(dataType) {
+		let from = this.From;
+		let to = this.To;
+		if (from.getTime() === to.getTime())
+			return format(from, dataType);
+		return format(from, dataType) + '-' + format(to, dataType);
+	}
+
+	TPeriod.prototype.in = function (dt) {
+		let t = dt.getTime();
+		return t >= this.From.getTime() && t <= this.To.getTime();
+	}
+
 	return {
 		isArray: Array.isArray,
 		isFunction: isFunction,
@@ -110,6 +144,7 @@ app.modules['std:utils'] = function () {
 		isObject: isObject,
 		isObjectExact: isObjectExact,
 		isDate: isDate,
+		isPeriod: isPeriod,
 		isString: isString,
 		isNumber: isNumber,
 		isBoolean: isBoolean,
@@ -143,7 +178,7 @@ app.modules['std:utils'] = function () {
 			endOfMonth: endOfMonth
 		},
 		period: {
-			format: formatPeriod
+			zero() { return new TPeriod(); }
 		},
 		text: {
 			contains: textContains,
@@ -156,6 +191,7 @@ app.modules['std:utils'] = function () {
 	function isDefined(value) { return typeof value !== 'undefined'; }
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
+	function isPeriod(value) { return value instanceof TPeriod; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
@@ -300,6 +336,12 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatTime(obj);
+			case "Period":
+				if (!isPeriod(obj)) {
+					console.error(`Invalid Period for utils.format (${obj})`);
+					return obj;
+				}
+				return obj.format('Date');
 			case "Currency":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Currency for utils.format (${obj})`);
@@ -320,14 +362,6 @@ app.modules['std:utils'] = function () {
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
 		return obj;
-	}
-
-	function formatPeriod(obj, dataType) {
-		let from = obj.From;
-		let to = obj.To;
-		if (from.getTime() === to.getTime())
-			return format(from, dataType);
-		return format(from, dataType) + '-' + format(to, dataType);
 	}
 
 
@@ -361,10 +395,16 @@ app.modules['std:utils'] = function () {
 
 	function dateTryParse(str) {
 		if (!str) return dateZero();
-		if (str.length === 8)
-			return new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
-		let dt = new Date(str);
-		if (!isNaN(dt.getTime())) return dt;
+		let dt;
+		if (str.length === 8) {
+			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		} else {
+			dt = new Date(str);
+		}
+		if (!isNaN(dt.getTime())) {
+			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+			return dt;
+		}
 		return str;
 	}
 
@@ -401,7 +441,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateCreate(year, month, day) {
-		return new Date(year, month - 1, day, 0, 0, 0, 0);
+		let dt = new Date(year, month - 1, day, 0, 0, 0, 0);
+		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		return dt;
 	}
 
 	function dateDiff(unit, d1, d2) {
@@ -1215,7 +1257,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180504-7175
+// 20180505-7175
 // services/datamodel.js
 
 (function () {
@@ -2262,28 +2304,6 @@ app.modules['std:validators'] = function () {
         */
 	}
 
-	function checkFilterDates(x) {
-		function checkDates(f) {
-			Object.keys(f).forEach(k => {
-				let v = f[k];
-				if (utils.isObjectExact(v)) {
-					checkDates(v);
-				}
-				else if (k === 'From' || k === 'To') {
-					if (v)
-						f[k] = new Date(v);
-					else
-						f[k] = utils.date.zero();
-				}
-			});
-		}
-
-		let fil = x.Filter;
-		if (!fil) return x;
-		checkDates(fil);
-		return x;
-	}
-
 	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
@@ -2292,8 +2312,6 @@ app.modules['std:validators'] = function () {
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
 		for (let p in mi) {
-			// HACK! check filter dates
-			//root[p].$ModelInfo = checkFilterDates(mi[p]);
 			root[p].$ModelInfo = mi[p];
 		}
 		//console.dir(rawData.$ModelInfo);
@@ -3246,6 +3264,126 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20180505-7175
+// components/calendar.js
+
+(function () {
+
+	const utils = require('std:utils');
+	const locale = window.$$locale;
+
+	Vue.component('a2-calendar', {
+		template: `
+<div @click.stop.prevent="dummy">
+	<table class="calendar-pane">
+		<thead><tr>
+				<th><a  v-if="hasPrev" @click.stop.prevent='prevMonth'><i class="ico ico-triangle-left"></i></a></th>
+				<th colspan="5"  class="month-title"><span v-text="title"></span></th>
+				<th><a v-if="hasNext" @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>					
+			</tr>
+			<tr class="weekdays"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
+		</thead>
+		<tbody>
+			<tr v-for="row in days">
+				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
+			</tr>
+		</tbody>
+		<tfoot><tr><td colspan="7" class="calendar-footer">
+			<slot><a v-if="showToday" class="today" @click.stop.prevent='today' v-text='todayText'></a></slot></td></tr></tfoot>
+	</table>
+</div>
+`,
+		props: {
+			showToday: { type: Boolean, default: true },
+			pos: String,
+			model: Date,
+			setMonth: Function,
+			setDay: Function,
+			getDayClass: Function
+		},
+		computed: {
+			days() {
+				let dt = new Date(this.model);
+				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				let d = dt.getDate();
+				dt.setDate(1); // 1-st day of month
+				let w = dt.getDay() - 1; // weekday
+				if (w === -1) w = 6;
+				else if (w === 0) w = 7;
+				dt.setDate(-w + 1);
+				let arr = [];
+				for (let r = 0; r < 6; r++) {
+					let row = [];
+					for (let c = 0; c < 7; c++) {
+						let xd = new Date(dt);
+						xd.setHours(0, -xd.getTimezoneOffset(), 0, 0);
+						row.push(new Date(xd));
+						dt.setDate(dt.getDate() + 1);
+					}
+					arr.push(row);
+				}
+				return arr;
+			},
+			hasPrev() {
+				return this.pos !== 'right';
+			},
+			hasNext() {
+				return this.pos !== 'left';
+			},
+			title() {
+				let mn = this.model.toLocaleString(locale.$Locale, { month: "long", year: 'numeric' });
+				return mn.charAt(0).toUpperCase() + mn.slice(1);
+			},
+			todayText() {
+				return locale.$Today;
+			}
+		},
+		methods: {
+			dummy() { },
+			nextMonth() {
+				let dt = new Date(this.model);
+				dt.setMonth(dt.getMonth() + 1);
+				this.setMonth(dt, this.pos);
+			},
+			prevMonth() {
+				let dt = new Date(this.model);
+				dt.setMonth(dt.getMonth() - 1);
+				this.setMonth(dt, this.pos);
+			},
+			wdTitle(d) {
+				let dt = this.days[0][d - 1];
+				return dt.toLocaleString(locale.$Locale, { weekday: "short" });
+			},
+			today() {
+
+			},
+			selectDay(d) {
+				this.setDay(d, this.pos);
+			},
+			dayClass(day) {
+				let cls = '';
+				if (day.getMonth() !== this.model.getMonth())
+					cls += " other";
+				if (this.getDayClass) {
+					cls += this.getDayClass(day);
+					return cls;
+				}
+				let tls = utils.date;
+				if (tls.equal(day, tls.today()))
+					cls += ' today';
+				if (tls.equal(day, this.model))
+					cls += ' active';
+				return cls;
+			},
+			dayTitle(day) {
+				// todo: localize
+				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+			},
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 // 20180327-7141
 // components/datepicker.js
 
@@ -3270,10 +3408,10 @@ Vue.component('validator-control', {
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
-			<table>
+			<table class="calendar-pane">
 				<thead><tr>
 						<th><a @click.stop.prevent='prevMonth'><i class="ico ico-triangle-left"></i></a></th>
-						<th colspan="5"><span v-text="title"></span></th>
+						<th colspan="5" class="month-title"><span v-text="title"></span></th>
 						<th><a @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>					
 					</tr>
 					<tr class="weekdays"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
@@ -3420,7 +3558,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180327-7141
+// 20180505-7175
 // components/periodpicker.js
 
 
@@ -3437,39 +3575,87 @@ Vue.component('validator-control', {
 	Vue.component('a2-period-picker', {
 		extends: baseControl,
 		template: `
-<div class="control-group" @click.prevent="toggle">
+<div class="control-group period-picker" @click.stop.prevent="toggle($event)">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		PERIOD HERE
-		<div v-if="isOpen" class="calendar">
-			popup text here
+		<span class="period-text" v-text="text"/>
+		<span class="caret"/>
+		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
+			<a2-calendar :show-today="false" pos="left" class="d-left" :model="prevModelDate" :set-month="setMonth" :get-day-class="dayClass">
+				<button class="btn btn-primary btn-apply">Применить</button>
+			</a2-calendar>
+			<a2-calendar :show-today="false" pos="right" class="d-right" :model="modelDate" :set-month="setMonth" :get-day-class="dayClass"/>
+			<ul class="period-menu">
+				<li><a href="">Сегодня</a></li>
+				<li><a href="">Вчера</a></li>
+				<li class="active"><a href="">Последние 7 дней</a></li>
+				<li><a href="">Последние 30 дней</a></li>
+				<li><a href="">C начала месяца</a></li>
+				<li><a href="">C начала года</a></li>
+				<li><a href="">За все время</a></li>
+				<li><a href="">Произвольно</a></li>
+			</ul>
 		</div>
 	</div>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,
 		props: {
 			item: Object,
-			propFrom: String,
-			propTo: String
+			prop: String
 		},
 		data() {
 			return {
-				isOpen: false
+				isOpen: true, //TODO: false
+				modelDate: utils.date.today()
 			};
+		},
+		computed: {
+			text() {
+				return this.period.format('Date');
+			},
+			period() {
+				let period = this.item[this.prop];
+				if (!utils.isPeriod(period))
+					console.error('PeriodPicker. Value is not a Period');
+				return period;
+			},
+			prevModelDate() {
+				return utils.date.add(this.modelDate, -1, 'month')
+			}
 		},
 		methods: {
 			dummy() {
 			},
+			setMonth(d, pos) {
+				if (pos === 'left')
+					this.modelDate = utils.date.add(d, 1, 'month'); // prev month
+				else
+					this.modelDate = d;
+			},
+			dayClass(day) {
+				let cls = '';
+				let period = this.item[this.prop];
+				if (period.in(day)) {
+					console.dir(day);
+					cls += ' active';
+				}
+				return cls;
+			},
 			toggle(ev) {
-				console.dir(this.item);
-				this.item.From = new Date(2018, 4, 1);
-				this.item.To = new Date(2018, 4, 15);
+				/*
+				let period = this.item[this.prop];
+				console.dir(period);
+				period.From = utils.date.create(2018, 5, 1);
+				period.To = utils.date.create(2018, 5, 15);
 				//alert(1);
+				*/
 				if (!this.isOpen) {
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 				}
 				this.isOpen = !this.isOpen;
+				console.dir(this.isOpen);
 			},
 			__clickOutside() {
 				this.isOpen = false;
@@ -4926,7 +5112,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180504-7175
+// 20180505-7175
 // components/collectionview.js
 
 /*
@@ -4960,8 +5146,8 @@ TODO:
 		let nq = { dir: that.dir, order: that.order, offset: that.offset };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
-			if (x === 'Period') {
-				nq[x] = utils.period.format(fVal, 'DateUrl');
+			if (utils.isPeriod(fVal)) {
+				nq[x] = fVal.format('DateUrl');
 			}
 			else if (utils.isDate(fVal)) {
 				nq[x] = utils.format(fVal, 'DateUrl');
@@ -5340,7 +5526,11 @@ TODO:
 							let iv = this.filter[x];
 							if (utils.isDate(iv)) {
 								this.filter[x] = utils.date.tryParse(q[x]);
-							} else {
+							}
+							else if (utils.isPeriod(iv)) {
+								iv.assign(q[x]);
+							}
+							else {
 								this.filter[x] = q[x];
 							}
 						}
@@ -5352,12 +5542,17 @@ TODO:
 			for (let x in this.filter) {
 				if (x in q) {
 					let iv = this.filter[x];
-					if (utils.isDate(iv)) {
+					if (utils.isPeriod(iv)) {
+						this.filter[x] = iv.fromUrl(q[x]);
+					}
+					else if (utils.isDate(iv)) {
 						this.filter[x] = utils.date.tryParse(q[x]);
-					} else {
+					}
+					else {
 						this.filter[x] = q[x];
 					}
 				}
+				//console.dir(this.filter);
 			}
 
 			this.$nextTick(() => {

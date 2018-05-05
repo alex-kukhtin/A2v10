@@ -258,6 +258,8 @@ $(RequiredModules)
 (function() {
 	const DataModelController = component('baseController');
 
+	const utils = require('std:utils');
+
 	const rawData = $(DataModelText);
 	const template = $(TemplateText);
 ";
@@ -269,7 +271,10 @@ const vm = new DataModelController({
 		inDialog: {type: Boolean, default: $(IsDialog)},
 		pageTitle: {type: String}
 	},
-	data: modelData(template, rawData)
+	data: modelData(template, rawData),
+	computed: {
+		utils() { return utils; }
+	},
 });
 
 	vm.$data._host_ = {

@@ -4,7 +4,7 @@ using System;
 
 namespace A2v10.Xaml
 {
-	public class PeriodPicker : Control, ITableControl
+	public class PeriodPicker : ValuedControl, ITableControl
 	{
 
 		public TextAlign Align { get; set; }
@@ -19,7 +19,7 @@ namespace A2v10.Xaml
 			MergeAttributes(tag, context);
 			MergeDisabled(tag, context);
 			MergeAlign(tag, context, Align);
-			tag.MergeAttribute(":item", "Parent.Filter");
+			MergeValue(tag, context);
 			if (Direction != DatePickerDropDownDirection.Down)
 				tag.AddCssClass("drop-" + Direction.ToString().ToLowerInvariant());
 			tag.RenderStart(context);

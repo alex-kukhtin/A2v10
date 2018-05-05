@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180504-7175
+// 20180505-7175
 // components/collectionview.js
 
 /*
@@ -34,8 +34,8 @@ TODO:
 		let nq = { dir: that.dir, order: that.order, offset: that.offset };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
-			if (x === 'Period') {
-				nq[x] = utils.period.format(fVal, 'DateUrl');
+			if (utils.isPeriod(fVal)) {
+				nq[x] = fVal.format('DateUrl');
 			}
 			else if (utils.isDate(fVal)) {
 				nq[x] = utils.format(fVal, 'DateUrl');
@@ -414,7 +414,11 @@ TODO:
 							let iv = this.filter[x];
 							if (utils.isDate(iv)) {
 								this.filter[x] = utils.date.tryParse(q[x]);
-							} else {
+							}
+							else if (utils.isPeriod(iv)) {
+								iv.assign(q[x]);
+							}
+							else {
 								this.filter[x] = q[x];
 							}
 						}
@@ -426,12 +430,17 @@ TODO:
 			for (let x in this.filter) {
 				if (x in q) {
 					let iv = this.filter[x];
-					if (utils.isDate(iv)) {
+					if (utils.isPeriod(iv)) {
+						this.filter[x] = iv.fromUrl(q[x]);
+					}
+					else if (utils.isDate(iv)) {
 						this.filter[x] = utils.date.tryParse(q[x]);
-					} else {
+					}
+					else {
 						this.filter[x] = q[x];
 					}
 				}
+				//console.dir(this.filter);
 			}
 
 			this.$nextTick(() => {

@@ -20,10 +20,14 @@
 					</DropDownMenu>
 				</Button.DropDown>
 			</Button>
-			<DatePicker Value="{Bind Parent.Filter.From}" Width="10rem"/>
-			<PeriodPicker>
+			<DatePicker Value="{Bind Parent.Filter.Period.From}" Width="10rem"/>
+			<PeriodPicker Value="{Bind Parent.Filter.Period}">
 				
 			</PeriodPicker>
+			<!--
+			<Static Value="{Bind Parent.Filter.Period, DataType=Period}"/>
+			<Code Content="{Bind Parent.Filter.Period}"></Code>
+			-->
 			<!--
 			<Button Style="Green" Icon="Plus" Content="Create new" Toolbar.Align="Right">
 				<Button.DropDown>
@@ -39,8 +43,11 @@
 		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
 			<CollectionView.Filter>
 				<FilterDescription>
+					<!--
 					<FilterItem Property="From" DataType="Date" />
 					<FilterItem Property="To" DataType="Date" />
+					-->
+					<FilterItem Property="Period" DataType="Period" />
 				</FilterDescription>
 			</CollectionView.Filter>
 		</CollectionView>
@@ -77,10 +84,10 @@
 		<DataGridColumn Fit="True">
 			<TagLabel Content="{Bind $State}" Style="{Bind $StateStyle}"/>
 		</DataGridColumn>
-		<DataGridColumn Header="@[Date]" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" />
-		<DataGridColumn Header="@[No]" Content="{Bind No}" Fit="True" Align="Right"/>
+		<DataGridColumn Header="@[Date]" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="@[No]" Content="{Bind No}" Fit="True" Align="Right" Wrap="NoWrap"/>
 		<DataGridColumn Header="@[Purchaser]" Content="{Bind Agent.Name}" Width="100"/>
-		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True"/>
+		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
 		<DataGridColumn Fit="True">
 			<CommandBar Visibility="Active">

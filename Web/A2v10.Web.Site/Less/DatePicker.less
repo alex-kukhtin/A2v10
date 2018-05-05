@@ -1,17 +1,29 @@
 ﻿
 
+@elem-margin: 10px;
+
 .input-group > .calendar {
+	display: flex;
+	flex-direction: row;
 	border: 1px solid @dropdown-brd-color;
 	position: absolute;
-	background-color: #f5f5f5;
+	//background-color: #f5f5f5;
+	background-color:white;
 	left: 0;
 	top: 100%;
 	z-index: @popup-index !important;
 	margin-top: 0;
 	margin-left: -1px;
-	box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
-	padding: 3px;
+	//box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
+	padding: @elem-margin;
 
+	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
+
+	&.period-picker {
+	}
+}
+
+.calendar-pane {
 	td {
 		background-color: white;
 	}
@@ -19,6 +31,15 @@
 	td, th {
 		text-align: center;
 		vertical-align: central;
+	}
+
+	.calendar-footer {
+		text-align: left;
+	}
+
+	.month-title {
+		font-weight: bold;
+		line-height: 2rem;
 	}
 
 	a {
@@ -45,13 +66,17 @@
 		}
 
 		&.other > a {
-			color: #c0c0c0;
+			//color: @light-gray-color;
+			opacity: 0.33;
 		}
 	}
 
+	tbody > tr:first-child > td {
+		padding-top: 6px;
+	}
 
 	thead th, tfoot td {
-		background-color: #f5f5f5;
+		//background-color: #f5f5f5;
 		border-style: none;
 
 		> a {
@@ -69,15 +94,64 @@
 	}
 
 	tr.weekdays th {
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid @light-gray-color;
 		padding: 2px 0;
-		color: #777;
+	}
+
+	.btn-apply {
+		margin-top:@elem-margin;
 	}
 }
-
 
 .drop-up .input-group > .calendar {
 	top: auto;
 	bottom: 100%;
 	box-shadow: 5px -5px 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+
+.period-picker {
+	cursor: pointer;
+
+	.d-left, .d-right {
+		margin-right: @elem-margin;
+	}
+
+	.period-text {
+		padding: 0 0 0 5px;
+		line-height: @control-height;
+		display: block;
+		width: 100%;
+		min-height: @control-height;
+		white-space: nowrap;
+	}
+
+	.caret {
+		margin-right: 4px;
+	}
+
+	.period-menu {
+		margin: 0;
+		padding: 0;
+		border-left: 1px solid @light-gray-color;
+		list-style: none;
+
+
+		li > a {
+			padding: 0 @elem-margin;
+			line-height: 2rem;
+			cursor: pointer;
+			white-space: nowrap;
+			color:@text-color;
+		}
+
+		li:hover {
+			background-color:@hover-bg-color;
+		}
+
+		li.active {
+			background-color: @active-bg-color;
+		}
+	}
 }

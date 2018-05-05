@@ -24,10 +24,10 @@
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen" @click.stop.prevent="dummy">
-			<table>
+			<table class="calendar-pane">
 				<thead><tr>
 						<th><a @click.stop.prevent='prevMonth'><i class="ico ico-triangle-left"></i></a></th>
-						<th colspan="5"><span v-text="title"></span></th>
+						<th colspan="5" class="month-title"><span v-text="title"></span></th>
 						<th><a @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>					
 					</tr>
 					<tr class="weekdays"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>

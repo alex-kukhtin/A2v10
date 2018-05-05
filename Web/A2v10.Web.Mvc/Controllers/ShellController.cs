@@ -150,7 +150,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				Response.ContentType = "text/html";
 				ExpandoObject loadPrms = new ExpandoObject();
-				loadPrms.Append(Request.QueryString, toPascalCase: true);
+				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				loadPrms.Set("UserId", UserId);
 				if (_baseController.Host.IsMultiTenant)
 					loadPrms.Set("TenantId", TenantId);
@@ -225,7 +225,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				ExpandoObject prms = new ExpandoObject();
 				ExpandoObject loadPrms = new ExpandoObject();
-				loadPrms.Append(Request.QueryString, toPascalCase: true);
+				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				loadPrms.Set("UserId", UserId);
 				if (_baseController.Host.IsMultiTenant)
 					loadPrms.Set("TenantId", TenantId);

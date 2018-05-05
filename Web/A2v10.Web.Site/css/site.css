@@ -1514,7 +1514,6 @@ pre.a2-code {
 .control-group.with-width .input-group {
   width: 100%;
 }
-.control-group:hover .input-group,
 .control-group .input-group.focus {
   border-color: #0d82f8 !important;
   box-shadow: 0 0 2px 1px rgba(13, 130, 248, 0.3);
@@ -1788,71 +1787,121 @@ pre.a2-code {
   border-color: #60bbe5;
 }
 .input-group > .calendar {
-  border: 1px solid #9ba7b7;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #bdc5d8;
   position: absolute;
-  background-color: #f5f5f5;
+  background-color: white;
   left: 0;
   top: 100%;
   z-index: 1070 !important;
   margin-top: 0;
   margin-left: -1px;
-  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
-  padding: 3px;
+  padding: 10px;
+  box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
 }
-.input-group > .calendar td {
+.calendar-pane td {
   background-color: white;
 }
-.input-group > .calendar td,
-.input-group > .calendar th {
+.calendar-pane td,
+.calendar-pane th {
   text-align: center;
   vertical-align: central;
 }
-.input-group > .calendar a {
+.calendar-pane .calendar-footer {
+  text-align: left;
+}
+.calendar-pane .month-title {
+  font-weight: bold;
+  line-height: 2rem;
+}
+.calendar-pane a {
   display: block;
   padding: 1px 5px 3px 5px;
   border: 1px solid transparent;
   color: #222;
 }
-.input-group > .calendar a:hover {
+.calendar-pane a:hover {
   background-color: #fdf4bf;
   border-color: #e5c365;
 }
-.input-group > .calendar tbody td.today > a {
+.calendar-pane tbody td.today > a {
   font-weight: 500;
   background-color: #fff9d0;
 }
-.input-group > .calendar tbody td.active > a {
+.calendar-pane tbody td.active > a {
   background-color: #cde6f7;
 }
-.input-group > .calendar tbody td.other > a {
-  color: #c0c0c0;
+.calendar-pane tbody td.other > a {
+  opacity: 0.33;
 }
-.input-group > .calendar thead th,
-.input-group > .calendar tfoot td {
-  background-color: #f5f5f5;
+.calendar-pane tbody > tr:first-child > td {
+  padding-top: 6px;
+}
+.calendar-pane thead th,
+.calendar-pane tfoot td {
   border-style: none;
 }
-.input-group > .calendar thead th > a,
-.input-group > .calendar tfoot td > a {
+.calendar-pane thead th > a,
+.calendar-pane tfoot td > a {
   padding: 2px 0;
   color: #57a8fa;
 }
-.input-group > .calendar thead th > a:hover,
-.input-group > .calendar tfoot td > a:hover {
+.calendar-pane thead th > a:hover,
+.calendar-pane tfoot td > a:hover {
   color: #0d82f8;
 }
-.input-group > .calendar a.today {
+.calendar-pane a.today {
   text-transform: lowercase;
 }
-.input-group > .calendar tr.weekdays th {
-  border-bottom: 1px solid #ccc;
+.calendar-pane tr.weekdays th {
+  border-bottom: 1px solid #ddd;
   padding: 2px 0;
-  color: #777;
+}
+.calendar-pane .btn-apply {
+  margin-top: 10px;
 }
 .drop-up .input-group > .calendar {
   top: auto;
   bottom: 100%;
   box-shadow: 5px -5px 10px 0 rgba(0, 0, 0, 0.2);
+}
+.period-picker {
+  cursor: pointer;
+}
+.period-picker .d-left,
+.period-picker .d-right {
+  margin-right: 10px;
+}
+.period-picker .period-text {
+  padding: 0 0 0 5px;
+  line-height: 1.77em;
+  display: block;
+  width: 100%;
+  min-height: 1.77em;
+  white-space: nowrap;
+}
+.period-picker .caret {
+  margin-right: 4px;
+}
+.period-picker .period-menu {
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #ddd;
+  list-style: none;
+}
+.period-picker .period-menu li > a {
+  padding: 0 10px;
+  line-height: 2rem;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #222;
+}
+.period-picker .period-menu li:hover {
+  background-color: #fdf4bf;
+}
+.period-picker .period-menu li.active {
+  background-color: #cde6f7;
 }
 .input-group > .selector-pane {
   border: 1px solid #0d82f8;
@@ -1901,7 +1950,7 @@ pre.a2-code {
 .input-group > .selector-pane a.create-elem {
   padding: 4px;
   display: block;
-  border-top: 1px solid #9ba7b7;
+  border-top: 1px solid #bdc5d8;
   background-color: #f8f8f8;
 }
 /*
@@ -2340,7 +2389,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .dropdown.show > .btn {
   background-color: #eaf0ff;
-  border-color: #9ba7b7;
+  border-color: #bdc5d8;
   color: #555;
 }
 .commandbar {
@@ -3318,7 +3367,7 @@ TODO:
   top: 100%;
   min-width: 160px;
   box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
-  border: 1px solid #9ba7b7;
+  border: 1px solid #bdc5d8;
 }
 .menu .dropdown-item {
   display: flex;
@@ -3352,12 +3401,12 @@ TODO:
 .menu .divider {
   height: 1px;
   margin: 4px 6px;
-  background-color: #b9c1cc;
+  background-color: #dde1eb;
 }
 .menu .group-title {
   color: #8591a2;
   padding-bottom: 2px;
-  border-bottom: 1px solid #b9c1cc;
+  border-bottom: 1px solid #dde1eb;
   font-weight: bold;
   margin-bottom: 4px;
 }

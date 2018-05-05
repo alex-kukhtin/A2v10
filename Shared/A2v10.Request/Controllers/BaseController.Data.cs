@@ -11,6 +11,8 @@ using Newtonsoft.Json.Converters;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
+using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace A2v10.Request
 {
@@ -152,7 +154,7 @@ namespace A2v10.Request
 				baseUrl = parts[0];
 				// parts[1] contains query parameters
 				var qryParams = HttpUtility.ParseQueryString(parts[1]);
-				loadPrms.Append(qryParams, toPascalCase: true);
+				loadPrms.Append(CheckPeriod(qryParams), toPascalCase: true);
 			}
 
 			if (baseUrl == null)
@@ -206,12 +208,36 @@ namespace A2v10.Request
 			writer.Write("{\"status\": \"OK\"}"); // JSON!
 		}
 
+		public NameValueCollection CheckPeriod(NameValueCollection coll)
+		{
+			var res = new NameValueCollection();
+			foreach (var key in coll.Keys)
+			{
+				var k = key?.ToString();
+				if (k.ToLowerInvariant() == "period")
+				{
+					// parse period
+					var ps = coll[k].Split('-');
+					res.Remove("From"); // replace prev value
+					res.Remove("To");
+					res.Add("From", ps[0]);
+					res.Add("To", ps.Length == 2 ? ps[1] : ps[0]);
+				}
+				else
+				{
+					res.Add(k, coll[k]);
+				}
+			}
+			return res;
+		}
+
 		void AddParamsFromUrl(ExpandoObject prms, String baseUrl)
 		{
 			if (baseUrl.Contains("?"))
 			{
 				// add query params from baseUrl
-				prms.Append(HttpUtility.ParseQueryString(baseUrl.Split('?')[1]), toPascalCase: true);
+				var nvc = HttpUtility.ParseQueryString(baseUrl.Split('?')[1]);
+				prms.Append(CheckPeriod(nvc), toPascalCase: true);
 			}
 		}
 

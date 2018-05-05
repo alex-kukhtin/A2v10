@@ -17,7 +17,6 @@ namespace A2v10.Request
 			var sb = new StringBuilder();
 			sb.AppendLine("function modelData(template, data) {");
 			sb.AppendLine("const cmn = require('std:datamodel');");
-			sb.AppendLine("const du = require('std:utils').date;");
 			if (meta != null)
 			{
 				sb.Append(GetConstructors(meta));

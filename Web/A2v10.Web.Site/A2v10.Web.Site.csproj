@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\components\calendar.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
     <Content Include="app\components\datepicker.js" />

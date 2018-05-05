@@ -20,6 +20,7 @@
 				"app/components/validator.js",
 				"app/components/textbox.js",
 				"app/components/combobox.js",
+				"app/components/calendar.js",
 				"app/components/datepicker.js",
 				"app/components/periodpicker.js",
 				"app/components/selector.js",

@@ -42,7 +42,8 @@ namespace A2v10.Xaml
 		Number,
 		Currency,
 		Boolean,
-		Object
+		Object,
+		Period
 	}
 
 	public enum ControlSize
