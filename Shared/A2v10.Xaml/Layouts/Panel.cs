@@ -19,12 +19,15 @@ namespace A2v10.Xaml
 		Yellow
 	}
 
-	public enum PaneBackgroundStyle
+	public enum ShadowStyle
 	{
 		None,
-		LightGray
+		Shadow1,
+		Shadow2,
+		Shadow3,
+		Shadow4,
+		Shadow5
 	}
-
 
 	public class Panel : Container, ITableControl
 	{
@@ -38,9 +41,9 @@ namespace A2v10.Xaml
 
 		public Icon Icon { get; set; }
 
-		public PaneBackgroundStyle Background { get; set; }
+		public BackgroundStyle Background { get; set; }
 
-		public Boolean DropShadow { get; set; }
+		public ShadowStyle DropShadow { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -55,9 +58,13 @@ namespace A2v10.Xaml
 			else if (Style != PaneStyle.Default)
 				panel.MergeAttribute("panel-style", Style.ToString().ToLowerInvariant());
 			MergeAttributes(panel, context, MergeAttrMode.Visibility);
-			if (Background != PaneBackgroundStyle.None)
-				panel.AddCssClass("panel-background-" + Background.ToString().ToKebabCase());
-			panel.AddCssClassBool(DropShadow, "drop-shadow");
+			if (Background != BackgroundStyle.None)
+				panel.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			if (DropShadow != ShadowStyle.None)
+			{
+				panel.AddCssClass("drop-shadow");
+				panel.AddCssClass(DropShadow.ToString().ToLowerInvariant());
+			}
 			panel.RenderStart(context);
 			RenderHeader(context);
 			var content = new TagBuilder("div", "panel-content");

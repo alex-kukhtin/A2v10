@@ -3,6 +3,8 @@
 using System;
 using System.Windows.Markup;
 
+using A2v10.Infrastructure;
+
 namespace A2v10.Xaml
 {
 	[ContentProperty("Children")]
@@ -14,6 +16,7 @@ namespace A2v10.Xaml
 		public Pager Pager { get; set; }
 		public String Title { get; set; }
 
+		public BackgroundStyle Background { get; set; }
 		public CollectionView CollectionView { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -44,6 +47,7 @@ namespace A2v10.Xaml
 				{
 					tag.AddCssClass("page").AddCssClass("absolute");
 					addGridAction(tag);
+					AddBackground(tag);
 					tag.MergeAttribute("id", context.RootId);
 				});
 			}
@@ -52,6 +56,7 @@ namespace A2v10.Xaml
 				page = new TagBuilder("div", "page absolute");
 				page.MergeAttribute("id", context.RootId);
 				addGridAction(page);
+				AddBackground(page);
 				page.RenderStart(context);
 			}
 
@@ -78,6 +83,12 @@ namespace A2v10.Xaml
 					throw new InvalidProgramException();
 				page.RenderEnd(context);
 			}
+		}
+
+		void AddBackground(TagBuilder tag)
+		{
+			if (Background != BackgroundStyle.None)
+				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 		}
 
 		void RenderTitle(RenderContext context)

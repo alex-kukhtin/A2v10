@@ -105,6 +105,12 @@ namespace A2v10.Xaml
 		UpRight
 	}
 
+	public enum BackgroundStyle
+	{
+		None,
+		LightGray
+	}
+
 	public enum Icon
 	{
 		NoIcon = 0,

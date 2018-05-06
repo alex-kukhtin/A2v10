@@ -13,12 +13,6 @@ namespace A2v10.Xaml
 		ThreeColumnsGrid
 	}
 
-	public enum ListBackgroundStyle
-	{
-		None,
-		LightGray
-	}
-
 
 	[ContentProperty("Content")]
 	public class List : Control, ITableControl
@@ -31,7 +25,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 
 		public Length Height { get; set; }
-		public ListBackgroundStyle Background { get; set; }
+		public BackgroundStyle Background { get; set; }
 
 		public ListStyle Style { get; set; }
 
@@ -46,8 +40,8 @@ namespace A2v10.Xaml
 			ul.AddCssClass(Style.ToString().ToKebabCase());
 			//ul.MergeAttribute(":command", "()=> $navigate()");
 
-			if (Background != ListBackgroundStyle.None)
-				ul.AddCssClass("list-background-" + Background.ToString().ToKebabCase());
+			if (Background != BackgroundStyle.None)
+				ul.AddCssClass("background-" + Background.ToString().ToKebabCase());
 
 			var mbind = GetBinding(nameof(Mark));
 			if (mbind != null)
