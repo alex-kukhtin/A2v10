@@ -13,6 +13,7 @@ TODO:
 
 	const log = require('std:log');
 	const utils = require('std:utils');
+	const period = require('std:period');
 
 	const DEFAULT_PAGE_SIZE = 20;
 
@@ -34,7 +35,7 @@ TODO:
 		let nq = { dir: that.dir, order: that.order, offset: that.offset };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
-			if (utils.isPeriod(fVal)) {
+			if (period.isPeriod(fVal)) {
 				nq[x] = fVal.format('DateUrl');
 			}
 			else if (utils.isDate(fVal)) {
@@ -415,7 +416,7 @@ TODO:
 							if (utils.isDate(iv)) {
 								this.filter[x] = utils.date.tryParse(q[x]);
 							}
-							else if (utils.isPeriod(iv)) {
+							else if (period.isPeriod(iv)) {
 								iv.assign(q[x]);
 							}
 							else {
@@ -430,7 +431,7 @@ TODO:
 			for (let x in this.filter) {
 				if (x in q) {
 					let iv = this.filter[x];
-					if (utils.isPeriod(iv)) {
+					if (period.isPeriod(iv)) {
 						this.filter[x] = iv.fromUrl(q[x]);
 					}
 					else if (utils.isDate(iv)) {

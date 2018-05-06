@@ -259,6 +259,7 @@ $(RequiredModules)
 	const DataModelController = component('baseController');
 
 	const utils = require('std:utils');
+	const uPeriod = require('std:period');
 
 	const rawData = $(DataModelText);
 	const template = $(TemplateText);
@@ -273,7 +274,8 @@ const vm = new DataModelController({
 	},
 	data: modelData(template, rawData),
 	computed: {
-		utils() { return utils; }
+		utils() { return utils; },
+		period() { return uPeriod; }
 	},
 });
 

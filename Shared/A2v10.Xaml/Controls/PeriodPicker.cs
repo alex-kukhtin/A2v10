@@ -2,6 +2,8 @@
 
 using System;
 
+using A2v10.Infrastructure;
+
 namespace A2v10.Xaml
 {
 	public class PeriodPicker : ValuedControl, ITableControl
@@ -9,7 +11,7 @@ namespace A2v10.Xaml
 
 		public TextAlign Align { get; set; }
 
-		public DatePickerDropDownDirection Direction { get; set; }
+		public DatePickerDropDownPlacement Placement { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -20,8 +22,8 @@ namespace A2v10.Xaml
 			MergeDisabled(tag, context);
 			MergeAlign(tag, context, Align);
 			MergeValue(tag, context);
-			if (Direction != DatePickerDropDownDirection.Down)
-				tag.AddCssClass("drop-" + Direction.ToString().ToLowerInvariant());
+			if (Placement != DatePickerDropDownPlacement.BottomLeft)
+				tag.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			tag.RenderStart(context);
 			RenderAddOns(context);
 			tag.RenderEnd(context);

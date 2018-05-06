@@ -6,6 +6,7 @@
 				"app/platform/polyfills.js",
 				"app/services/utils.js",
 				"app/services/url.js",
+				"app/services/period.js",
 				"app/platform/webvue.js",
 				"app/services/http.js",
 				"app/platform/routex.js",

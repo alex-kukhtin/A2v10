@@ -35,5 +35,15 @@
 
 })(Element.prototype);
 
+(function (date) {
+
+	date.isZero = date.isZero || function () {
+		let td = new Date(0, 0, 1, 0, 0, 0, 0);
+		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		return this.getTime() === td.getTime();
+	}
+
+})(Date.prototype);
+
 
 

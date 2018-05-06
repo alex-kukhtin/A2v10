@@ -1684,7 +1684,6 @@ pre.a2-code {
 }
 .btn-default {
   background-color: #e8e8e8;
-  border-color: #ccc;
 }
 .btn-default:not([disabled]):hover {
   background-color: #e0e0e0;
@@ -1697,7 +1696,6 @@ pre.a2-code {
 }
 .btn.btn-primary {
   background-color: #3470b4;
-  border: 1px solid #265285;
   color: white;
 }
 .btn.btn-primary:active {
@@ -1708,12 +1706,10 @@ pre.a2-code {
 }
 .btn.btn-primary[disabled] {
   color: #f5f5f5;
-  border-color: #3470b4;
 }
 .btn.btn-orange,
 .btn.btn-warning {
   background-color: #f0ad4e;
-  border: 1px solid #eb9316;
   color: white;
 }
 .btn.btn-orange:active,
@@ -1727,12 +1723,10 @@ pre.a2-code {
 .btn.btn-orange[disabled],
 .btn.btn-warning[disabled] {
   color: #f5f5f5;
-  border-color: #f0ad4e;
 }
 .btn.btn-green,
 .btn.btn-success {
   background-color: #5db750;
-  border: 1px solid #458f3b;
   color: white;
 }
 .btn.btn-green:active,
@@ -1746,12 +1740,10 @@ pre.a2-code {
 .btn.btn-green[disabled],
 .btn.btn-success[disabled] {
   color: #f5f5f5;
-  border-color: #5db750;
 }
 .btn.btn-red,
 .btn.btn-danger {
   background-color: #da533f;
-  border: 1px solid #b83724;
   color: white;
 }
 .btn.btn-red:active,
@@ -1765,12 +1757,10 @@ pre.a2-code {
 .btn.btn-red[disabled],
 .btn.btn-danger[disabled] {
   color: #f5f5f5;
-  border-color: #da533f;
 }
 .btn.btn-cyan,
 .btn.btn-info {
   background-color: #60bbe5;
-  border: 1px solid #2ba5dc;
   color: white;
 }
 .btn.btn-cyan:active,
@@ -1784,7 +1774,6 @@ pre.a2-code {
 .btn.btn-cyan[disabled],
 .btn.btn-info[disabled] {
   color: #f5f5f5;
-  border-color: #60bbe5;
 }
 .input-group > .calendar {
   display: flex;
@@ -1809,7 +1798,7 @@ pre.a2-code {
   vertical-align: central;
 }
 .calendar-pane .calendar-footer {
-  text-align: left;
+  text-align: center;
 }
 .calendar-pane .month-title {
   font-weight: bold;
@@ -1858,9 +1847,6 @@ pre.a2-code {
   border-bottom: 1px solid #ddd;
   padding: 2px 0;
 }
-.calendar-pane .btn-apply {
-  margin-top: 10px;
-}
 .drop-up .input-group > .calendar {
   top: auto;
   bottom: 100%;
@@ -1868,10 +1854,6 @@ pre.a2-code {
 }
 .period-picker {
   cursor: pointer;
-}
-.period-picker .d-left,
-.period-picker .d-right {
-  margin-right: 10px;
 }
 .period-picker .period-text {
   padding: 0 0 0 5px;
@@ -1887,12 +1869,13 @@ pre.a2-code {
 .period-picker .period-menu {
   margin: 0;
   padding: 0;
-  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
   list-style: none;
 }
 .period-picker .period-menu li > a {
+  display: block;
   padding: 0 10px;
-  line-height: 2rem;
+  line-height: 1.8rem;
   cursor: pointer;
   white-space: nowrap;
   color: #222;
@@ -1902,6 +1885,38 @@ pre.a2-code {
 }
 .period-picker .period-menu li.active {
   background-color: #cde6f7;
+}
+.period-picker .period-pane {
+  display: grid;
+  grid-gap: 10px;
+}
+.period-picker .period-footer {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+.period-picker .period-footer .btn {
+  padding: 4px 6px;
+}
+.period-picker .period-footer .btn + .btn {
+  margin-left: 10px;
+}
+.control-group.drop-bottom-right .input-group > .calendar {
+  left: auto;
+  right: -1px;
+}
+.control-group.drop-top-left .input-group > .calendar {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 1px;
+}
+.control-group.drop-top-right .input-group > .calendar {
+  top: auto;
+  left: auto;
+  right: -1px;
+  bottom: 100%;
+  margin-bottom: 1px;
 }
 .input-group > .selector-pane {
   border: 1px solid #0d82f8;
@@ -2307,7 +2322,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar.transparent {
   background-color: transparent;
-  padding: 2px 0;
+  padding: 2px 2px 2px 0;
 }
 .toolbar.transparent .btn-tb {
   color: #57a8fa;
@@ -2316,10 +2331,11 @@ table.data-grid > tbody > tr.bold > td {
   border-right-color: #e3e7f0;
   background-color: #f7f8fb;
 }
-.toolbar .btn {
+.toolbar > .btn {
   padding: 3px 6px 4px 6px;
 }
 .toolbar .btn-tb {
+  padding: 3px 6px 4px 6px;
   white-space: nowrap;
   background-color: transparent;
   text-transform: lowercase;
@@ -2782,9 +2798,6 @@ table.data-grid > tbody > tr.bold > td {
 }
 .modal-footer .btn + .btn {
   margin-left: 8px;
-}
-.modal-footer .aligner {
-  flex-grow: 1;
 }
 .modal-footer .btn-help {
   cursor: pointer;

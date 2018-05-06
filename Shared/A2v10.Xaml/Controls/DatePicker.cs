@@ -2,14 +2,17 @@
 
 
 using System;
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
 
-	public enum DatePickerDropDownDirection
+	public enum DatePickerDropDownPlacement
 	{
-		Down,
-		Up
+		BottomLeft,
+		BottomRight,
+		TopLeft,
+		TopRight
 	}
 
 	public class DatePicker : ValuedControl, ITableControl
@@ -17,7 +20,7 @@ namespace A2v10.Xaml
 
 		public TextAlign Align { get; set; }
 
-		public DatePickerDropDownDirection Direction { get; set; }
+		public DatePickerDropDownPlacement Placement { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -28,8 +31,8 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
-			if (Direction != DatePickerDropDownDirection.Down)
-				input.AddCssClass("drop-" + Direction.ToString().ToLowerInvariant());
+			if (Placement  != DatePickerDropDownPlacement.BottomLeft)
+				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			MergeValue(input, context);
 			input.RenderStart(context);
 			RenderAddOns(context);

@@ -20,23 +20,8 @@
 					</DropDownMenu>
 				</Button.DropDown>
 			</Button>
-			<DatePicker Value="{Bind Parent.Filter.Period.From}" Width="10rem"/>
-			<PeriodPicker Value="{Bind Parent.Filter.Period}">
-				
-			</PeriodPicker>
-			<!--
-			<Static Value="{Bind Parent.Filter.Period, DataType=Period}"/>
-			<Code Content="{Bind Parent.Filter.Period}"></Code>
-			-->
-			<!--
-			<Button Style="Green" Icon="Plus" Content="Create new" Toolbar.Align="Right">
-				<Button.DropDown>
-					<DropDownMenu Direction="DownRight">
-						<MenuItem Content="First element"></MenuItem>
-					</DropDownMenu>
-				</Button.DropDown>
-			</Button>
-			-->
+			<DatePicker Value="{Bind Parent.Filter.Period.From}"/>
+			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>

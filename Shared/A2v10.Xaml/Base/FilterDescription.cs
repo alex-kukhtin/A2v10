@@ -49,7 +49,7 @@ namespace A2v10.Xaml
 					return $"utils.date.create({dt.Year}, {dt.Month}, {dt.Day})";
 				case DataType.Period:
 					if (Value == null)
-						return "utils.period.zero()";
+						return "period.zero()";
 					return "null"; // TODO: initial value
 				default:
 					throw new NotImplementedException("type for FilterItem");

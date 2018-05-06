@@ -24,8 +24,8 @@
 				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
 			</tr>
 		</tbody>
-		<tfoot><tr><td colspan="7" class="calendar-footer">
-			<slot><a v-if="showToday" class="today" @click.stop.prevent='today' v-text='todayText'></a></slot></td></tr></tfoot>
+		<tfoot v-if="showToday" ><tr><td colspan="7" class="calendar-footer">
+			<a class="today" @click.stop.prevent='today' v-text='todayText'></a></td></tr></tfoot>
 	</table>
 </div>
 `,
@@ -91,7 +91,7 @@
 				return dt.toLocaleString(locale.$Locale, { weekday: "short" });
 			},
 			today() {
-
+				this.setDay(utils.date.today());
 			},
 			selectDay(d) {
 				this.setDay(d, this.pos);

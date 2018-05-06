@@ -19,39 +19,6 @@ app.modules['std:utils'] = function () {
 	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
 
-	function TPeriod() {
-		this.From = dateZero();
-		this.To = dateZero();
-	}
-
-	TPeriod.prototype.assign = function (v) {
-		this.From = dateTryParse(v.From);
-		this.To = dateTryParse(v.To);
-		return this;
-	}
-
-	TPeriod.prototype.fromUrl = function (v) {
-		let px = (v || '').split('-');
-		let df = px[0];
-		let dt = px.length > 1 ? px[1] : px[0];
-		this.From = dateTryParse(df)
-		this.To = dateTryParse(dt);
-		return this;
-	}
-
-	TPeriod.prototype.format = function(dataType) {
-		let from = this.From;
-		let to = this.To;
-		if (from.getTime() === to.getTime())
-			return format(from, dataType);
-		return format(from, dataType) + '-' + format(to, dataType);
-	}
-
-	TPeriod.prototype.in = function (dt) {
-		let t = dt.getTime();
-		return t >= this.From.getTime() && t <= this.To.getTime();
-	}
-
 	return {
 		isArray: Array.isArray,
 		isFunction: isFunction,
@@ -59,7 +26,6 @@ app.modules['std:utils'] = function () {
 		isObject: isObject,
 		isObjectExact: isObjectExact,
 		isDate: isDate,
-		isPeriod: isPeriod,
 		isString: isString,
 		isNumber: isNumber,
 		isBoolean: isBoolean,
@@ -92,9 +58,6 @@ app.modules['std:utils'] = function () {
 			compare: dateCompare,
 			endOfMonth: endOfMonth
 		},
-		period: {
-			zero() { return new TPeriod(); }
-		},
 		text: {
 			contains: textContains,
 			containsText: textContainsText
@@ -106,7 +69,6 @@ app.modules['std:utils'] = function () {
 	function isDefined(value) { return typeof value !== 'undefined'; }
 	function isObject(value) { return value !== null && typeof value === 'object'; }
 	function isDate(value) { return value instanceof Date; }
-	function isPeriod(value) { return value instanceof TPeriod; }
 	function isString(value) { return typeof value === 'string'; }
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
@@ -252,7 +214,7 @@ app.modules['std:utils'] = function () {
 					return '';
 				return formatTime(obj);
 			case "Period":
-				if (!isPeriod(obj)) {
+				if (!obj.format) {
 					console.error(`Invalid Period for utils.format (${obj})`);
 					return obj;
 				}

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180403-7147
+// 20180506-7175
 // locale-ru.js
 
 "use strict";
@@ -12,6 +12,7 @@
 		$Locale: 'ru-RU',
 		$Ok: 'OK',
 		$Cancel: 'Отмена',
+		$Apply: 'Применить',
 		$Save: 'Сохранить',
 		$NotSave: 'Не сохранять',
 		$Refresh: 'Обновить',
@@ -24,6 +25,7 @@
 		$Profiling: 'Профилирование',
 		$DataModel: 'Модель данных',
 		$Today: 'Сегодня',
+		$Yesterday: 'Вчера',
 		$CreateLC: 'создать',
 		$NoElements: 'нет элементов',
 		$PagerElements: 'элементы',
@@ -33,7 +35,15 @@
 		$EnterPassword: 'Введите пароль',
 		$MatchError: 'пароль не совпадает с подтверждением',
 		$PasswordLength: 'пароль должен иметь длину не менее 6 символов',
-		$InvalidOldPassword: 'Неправильний старый пароль'
+		$InvalidOldPassword: 'Неправильний старый пароль',
+		$Last7Days: 'Последние 7 дней',
+		$Last30Days: 'Последние 30 дней',
+		$MonthToDate: 'C начала месяца',
+		$PrevMonth: 'Предыдущий месяц',
+		$QuartToDate: 'C начала квартала',
+		$PrevQuart: 'Предыдущий квартал',
+		$YearToDate: 'C начала года',
+		$AllPeriodData: 'За все время'
 	};
 
 

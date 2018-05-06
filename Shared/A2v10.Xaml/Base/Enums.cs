@@ -105,7 +105,6 @@ namespace A2v10.Xaml
 		UpRight
 	}
 
-
 	public enum Icon
 	{
 		NoIcon = 0,
