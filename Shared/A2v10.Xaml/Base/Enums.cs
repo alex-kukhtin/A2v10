@@ -108,7 +108,8 @@ namespace A2v10.Xaml
 	public enum BackgroundStyle
 	{
 		None,
-		LightGray
+		LightGray,
+		WhiteSmoke
 	}
 
 	public enum Icon

@@ -14,6 +14,7 @@ namespace A2v10.Xaml
     {
         Default,
         Title,
+		Parameter,
         Header,
         Footer,
         Total

@@ -7,6 +7,7 @@ app.modules['std:period'] = function () {
 
 	const utils = require('std:utils');
 	const date = utils.date;
+	const locale = window.$$locale;
 
 	function TPeriod(source) {
 		if (source && 'From' in source) {
@@ -16,6 +17,12 @@ app.modules['std:period'] = function () {
 			this.From = date.zero();
 			this.To = date.zero();
 		}
+		Object.defineProperty(this, 'Name', {
+			enumerable: true,
+			get() {
+				return this.format('Date') || locale.$AllPeriodData;
+			}
+		});
 	}
 
 	TPeriod.prototype.assign = function (v) {

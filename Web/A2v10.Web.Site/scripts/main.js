@@ -529,7 +529,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180426-7167*/
+/*20180507-7178*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -663,8 +663,10 @@ app.modules['std:url'] = function () {
 
 	function parseUrlAndQuery(url, querySrc) {
 		let query = {};
-		for (let p in querySrc)
+		for (let p in querySrc) {
+			if (p.startsWith('_')) continue;
 			query[p] = toUrl(querySrc[p]); // all values are string
+		}
 		let rv = { url: url, query: query };
 		if (url.indexOf('?') !== -1) {
 			let a = url.split('?');
@@ -735,6 +737,7 @@ app.modules['std:period'] = function () {
 
 	const utils = require('std:utils');
 	const date = utils.date;
+	const locale = window.$$locale;
 
 	function TPeriod(source) {
 		if (source && 'From' in source) {
@@ -744,6 +747,12 @@ app.modules['std:period'] = function () {
 			this.From = date.zero();
 			this.To = date.zero();
 		}
+		Object.defineProperty(this, 'Name', {
+			enumerable: true,
+			get() {
+				return this.format('Date') || locale.$AllPeriodData;
+			}
+		});
 	}
 
 	TPeriod.prototype.assign = function (v) {
