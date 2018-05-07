@@ -535,6 +535,7 @@ app.modules['std:utils'] = function () {
 app.modules['std:url'] = function () {
 
 	const utils = require('std:utils');
+	const period = require('std:period');
 
 	return {
 		combine,
@@ -578,6 +579,8 @@ app.modules['std:url'] = function () {
 		if (!utils.isDefined(obj)) return '';
 		if (utils.isDate(obj)) {
 			return utils.format(obj, "DateUrl");
+		} else if (period.isPeriod(obj)) {
+			return obj.format('DateUrl');
 		} else if (utils.isObjectExact(obj)) {
 			if (obj.constructor.name === 'Object') {
 				if (!utils.isDefined(obj.Id))
@@ -725,7 +728,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180507-7177
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -733,9 +736,14 @@ app.modules['std:period'] = function () {
 	const utils = require('std:utils');
 	const date = utils.date;
 
-	function TPeriod() {
-		this.From = date.zero();
-		this.To = date.zero();
+	function TPeriod(source) {
+		if (source && 'From' in source) {
+			this.From = date.tryParse(source.From);
+			this.To = date.tryParse(source.To);
+		} else {
+			this.From = date.zero();
+			this.To = date.zero();
+		}
 	}
 
 	TPeriod.prototype.assign = function (v) {
@@ -769,7 +777,7 @@ app.modules['std:period'] = function () {
 		let to = this.To;
 		if (from.getTime() === to.getTime())
 			return utils.format(from, dataType);
-		if (dataType == "DateUrl")
+		if (dataType === "DateUrl")
 			return utils.format(from, dataType) + '-' + utils.format(to, dataType);
 		return utils.format(from, dataType) + ' - ' + (utils.format(to, dataType) || '???');
 	}
@@ -797,6 +805,7 @@ app.modules['std:period'] = function () {
 
 	return {
 		isPeriod,
+		constructor: TPeriod,
 		zero: zeroPeriod,
 		create: createPeriod 
 	};
@@ -1377,7 +1386,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180507-7177
 // services/datamodel.js
 
 (function () {
@@ -1405,6 +1414,7 @@ app.modules['std:validators'] = function () {
 	const validators = require('std:validators');
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const period = require('std:period');
 
 	let __initialized__ = false;
 
@@ -1472,6 +1482,9 @@ app.modules['std:validators'] = function () {
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];
 				shadow[prop] = mp;
+				break;
+			case period.constructor:
+				shadow[prop] = new propCtor(source[prop]);
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
@@ -1574,7 +1587,7 @@ app.modules['std:validators'] = function () {
 	}
 
 	function createObject(elem, source, path, parent) {
-		const ctorname = elem.constructor.name;		
+		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -1686,6 +1699,7 @@ app.modules['std:validators'] = function () {
 			let ctor = elem._meta_.props[p];
 			if (ctor.type) ctor = ctor.type;
 			if (utils.isPrimitiveCtor(ctor)) continue;
+			if (ctor === period.constructor) continue;
 			let val = elem[p];
 			if (utils.isArray(val)) {
 				val.forEach(itm => seal(itm));
@@ -4782,7 +4796,7 @@ Vue.component('validator-control', {
 			if (!src) return;
 			let ix = src.$selectedIndex;
 			let rows = this.$refs.row;
-			if (ix != -1 && rows && ix < rows.length) {
+			if (ix !== -1 && rows && ix < rows.length) {
 				let tr = rows[ix].$refs.tr;
 				tr.scrollIntoViewCheck();
 			}
@@ -7144,7 +7158,9 @@ Vue.directive('disable', {
 });
 
 
-/*20171029-7060*/
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180507-7077*/
 /* directives/dropdown.js */
 
 
@@ -7166,7 +7182,7 @@ Vue.directive('dropdown', {
 		el._close = function (ev) {
 			if (el._hide)
 				el._hide();
-            el.classList.remove('show');
+			el.classList.remove('show');
 		};
 
 		el.addEventListener('click', function (event) {
@@ -7178,23 +7194,23 @@ Vue.directive('dropdown', {
 			}
 			if (trg === el._btn) {
 				event.preventDefault();
-                event.stopPropagation();
+				event.stopPropagation();
 				let isVisible = el.classList.contains('show');
 				if (isVisible) {
 					if (el._hide)
 						el._hide();
-                    el.classList.remove('show');
-                } else {
-                    // not nested popup
-                    let outer = popup.closest(el, '.popup-body');
-                    if (outer) {
-                        popup.closeInside(outer);
-                    } else {
-                        popup.closeAll();
-                    }
+					el.classList.remove('show');
+				} else {
+					// not nested popup
+					let outer = popup.closest(el, '.popup-body');
+					if (outer) {
+						popup.closeInside(outer);
+					} else {
+						popup.closeAll();
+					}
 					if (el._show)
 						el._show();
-                    el.classList.add('show');
+					el.classList.add('show');
 				}
 			}
 		});
@@ -7407,7 +7423,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180503-7173
+// 20180507-7175
 // controllers/base.js
 
 (function () {

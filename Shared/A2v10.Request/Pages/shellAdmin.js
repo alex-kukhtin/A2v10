@@ -16,6 +16,7 @@
         }
     });
 
-	window.$$rootUrl = '';
+	window.$$rootUrl = '/admin';
+	window.$$debug = $(Debug);
 
 })();

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 25 apr 2018
-module version : 7163
+Last updated : 07 may 2018
+module version : 7164
 */
 ------------------------------------------------
 set noexec off;
@@ -139,7 +139,9 @@ begin
 		where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
 	order by [!!RowNumber];
 
-	select [!$System!] = null, [!!PageSize] = 20;
+	select [!$System!] = null, [!Users!PageSize] = @PageSize, 
+		[!Users!SortOrder] = @Order, [!Users!SortDir] = @Dir,
+		[!Users!Offset] = @Offset, [!Users.Fragment!Filter] = @Fragment;
 end
 go
 
@@ -375,7 +377,10 @@ begin
 	order by [!!RowNumber];
 
 
-	select [!$System!] = null, [!!PageSize] = 20;
+	select [!$System!] = null, [!Groups!PageSize] = @PageSize, 
+		[!Groups!SortOrder] = @Order, [!Groups!SortDir] = @Dir,
+		[!Groups!Offset] = @Offset, [!Groups.Fragment!Filter] = @Fragment;
+
 end
 go
 ------------------------------------------------
@@ -602,7 +607,9 @@ begin
 	order by [!!RowNumber]; 
 
 
-	select [!$System!] = null, [!!PageSize] = 20;
+	select [!$System!] = null, [!Roles!PageSize] = @PageSize, 
+		[!Roles!SortOrder] = @Order, [!Roles!SortDir] = @Dir,
+		[!Roles!Offset] = @Offset, [!Roles.Fragment!Filter] = @Fragment;
 end
 go
 ------------------------------------------------

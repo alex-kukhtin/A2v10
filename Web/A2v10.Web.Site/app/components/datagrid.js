@@ -749,7 +749,7 @@
 			if (!src) return;
 			let ix = src.$selectedIndex;
 			let rows = this.$refs.row;
-			if (ix != -1 && rows && ix < rows.length) {
+			if (ix !== -1 && rows && ix < rows.length) {
 				let tr = rows[ix].$refs.tr;
 				tr.scrollIntoViewCheck();
 			}

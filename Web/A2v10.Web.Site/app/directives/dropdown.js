@@ -1,4 +1,6 @@
-﻿/*20171029-7060*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180507-7077*/
 /* directives/dropdown.js */
 
 
@@ -20,7 +22,7 @@ Vue.directive('dropdown', {
 		el._close = function (ev) {
 			if (el._hide)
 				el._hide();
-            el.classList.remove('show');
+			el.classList.remove('show');
 		};
 
 		el.addEventListener('click', function (event) {
@@ -32,23 +34,23 @@ Vue.directive('dropdown', {
 			}
 			if (trg === el._btn) {
 				event.preventDefault();
-                event.stopPropagation();
+				event.stopPropagation();
 				let isVisible = el.classList.contains('show');
 				if (isVisible) {
 					if (el._hide)
 						el._hide();
-                    el.classList.remove('show');
-                } else {
-                    // not nested popup
-                    let outer = popup.closest(el, '.popup-body');
-                    if (outer) {
-                        popup.closeInside(outer);
-                    } else {
-                        popup.closeAll();
-                    }
+					el.classList.remove('show');
+				} else {
+					// not nested popup
+					let outer = popup.closest(el, '.popup-body');
+					if (outer) {
+						popup.closeInside(outer);
+					} else {
+						popup.closeAll();
+					}
 					if (el._show)
 						el._show();
-                    el.classList.add('show');
+					el.classList.add('show');
 				}
 			}
 		});

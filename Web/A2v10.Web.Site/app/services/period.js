@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180507-7177
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -8,9 +8,14 @@ app.modules['std:period'] = function () {
 	const utils = require('std:utils');
 	const date = utils.date;
 
-	function TPeriod() {
-		this.From = date.zero();
-		this.To = date.zero();
+	function TPeriod(source) {
+		if (source && 'From' in source) {
+			this.From = date.tryParse(source.From);
+			this.To = date.tryParse(source.To);
+		} else {
+			this.From = date.zero();
+			this.To = date.zero();
+		}
 	}
 
 	TPeriod.prototype.assign = function (v) {
@@ -44,7 +49,7 @@ app.modules['std:period'] = function () {
 		let to = this.To;
 		if (from.getTime() === to.getTime())
 			return utils.format(from, dataType);
-		if (dataType == "DateUrl")
+		if (dataType === "DateUrl")
 			return utils.format(from, dataType) + '-' + utils.format(to, dataType);
 		return utils.format(from, dataType) + ' - ' + (utils.format(to, dataType) || '???');
 	}
@@ -72,6 +77,7 @@ app.modules['std:period'] = function () {
 
 	return {
 		isPeriod,
+		constructor: TPeriod,
 		zero: zeroPeriod,
 		create: createPeriod 
 	};

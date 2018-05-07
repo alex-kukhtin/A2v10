@@ -6,6 +6,7 @@
 app.modules['std:url'] = function () {
 
 	const utils = require('std:utils');
+	const period = require('std:period');
 
 	return {
 		combine,
@@ -49,6 +50,8 @@ app.modules['std:url'] = function () {
 		if (!utils.isDefined(obj)) return '';
 		if (utils.isDate(obj)) {
 			return utils.format(obj, "DateUrl");
+		} else if (period.isPeriod(obj)) {
+			return obj.format('DateUrl');
 		} else if (utils.isObjectExact(obj)) {
 			if (obj.constructor.name === 'Object') {
 				if (!utils.isDefined(obj.Id))

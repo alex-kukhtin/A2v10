@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180507-7177
 // services/datamodel.js
 
 (function () {
@@ -28,6 +28,7 @@
 	const validators = require('std:validators');
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const period = require('std:period');
 
 	let __initialized__ = false;
 
@@ -95,6 +96,9 @@
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];
 				shadow[prop] = mp;
+				break;
+			case period.constructor:
+				shadow[prop] = new propCtor(source[prop]);
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
@@ -197,7 +201,7 @@
 	}
 
 	function createObject(elem, source, path, parent) {
-		const ctorname = elem.constructor.name;		
+		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
 			startTime = performance.now();
@@ -309,6 +313,7 @@
 			let ctor = elem._meta_.props[p];
 			if (ctor.type) ctor = ctor.type;
 			if (utils.isPrimitiveCtor(ctor)) continue;
+			if (ctor === period.constructor) continue;
 			let val = elem[p];
 			if (utils.isArray(val)) {
 				val.forEach(itm => seal(itm));

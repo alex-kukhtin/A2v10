@@ -28,25 +28,29 @@ namespace A2v10.Xaml
 					.MergeAttribute("v-dropdown", String.Empty);
 				if (onRender != null)
 					onRender(wrap);
+				MergeAttributes(wrap, context, MergeAttrMode.Visibility);
 				wrap.RenderStart(context);
-				RenderHyperlink(context, false, null);
+				RenderHyperlink(context, false, null, true);
 				DropDown.RenderElement(context);
 				wrap.RenderEnd(context);
 			}
 			else
 			{
-				RenderHyperlink(context, IsInGrid, onRender);
+				RenderHyperlink(context, IsInGrid, onRender, false);
 			}
 		}
 
-		void RenderHyperlink(RenderContext context, bool inGrid, Action<TagBuilder> onRender = null)
+		void RenderHyperlink(RenderContext context, bool inGrid, Action<TagBuilder> onRender = null, bool inside = false)
 		{
 			Boolean bHasDropDown = DropDown != null;
 
 			var tag = new TagBuilder("a", "a2-hyperlink", inGrid);
 			if (onRender != null)
 				onRender(tag);
-			MergeAttributes(tag, context);
+			var attrMode = MergeAttrMode.All;
+			if (inside)
+				attrMode &= ~MergeAttrMode.Visibility;
+			MergeAttributes(tag, context, attrMode);
 			MergeCommandAttribute(tag, context);
 			tag.AddCssClassBool(Block, "block");
 			if (!Block)
