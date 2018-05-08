@@ -220,8 +220,17 @@ namespace A2v10.Request
 					var ps = coll[k].Split('-');
 					res.Remove("From"); // replace prev value
 					res.Remove("To");
-					res.Add("From", ps[0]);
-					res.Add("To", ps.Length == 2 ? ps[1] : ps[0]);
+					if (ps[0].ToLowerInvariant() == "all")
+					{
+						// from js! utils.date.minDate/maxDate
+						res.Add("From", "19010101");
+						res.Add("To", "29991231"); 
+					}
+					else
+					{
+						res.Add("From", ps[0]);
+						res.Add("To", ps.Length == 2 ? ps[1] : ps[0]);
+					}
 				}
 				else
 				{

@@ -17,6 +17,7 @@
 	//box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
 	padding: @elem-margin;
 	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
+	color:@text-color;
 }
 
 
@@ -35,7 +36,7 @@
 	}
 
 	.month-title {
-		font-weight: bold;
+		font-weight: 500;
 		line-height: 2rem;
 	}
 
@@ -47,7 +48,7 @@
 
 		&:hover {
 			background-color: @hover-bg-color;
-			border-color: @tb-hover-brd-color;
+			//border-color: @tb-hover-brd-color;
 		}
 	}
 
@@ -66,6 +67,16 @@
 			//color: @light-gray-color;
 			opacity: 0.33;
 		}
+
+		&.period-start > a {
+			//border-left: 1px solid @primary-base-color;
+			background-color: darken(@active-bg-color, 7%);
+		}
+
+		&.period-end > a {
+			//border-right: 1px solid @primary-base-color;
+			background-color: darken(@active-bg-color, 7%);
+		}
 	}
 
 	tbody > tr:first-child > td {
@@ -75,6 +86,7 @@
 	thead th, tfoot td {
 		//background-color: #f5f5f5;
 		border-style: none;
+		color: #555;
 
 		> a {
 			padding: 2px 0;
@@ -130,7 +142,7 @@
 		li > a {
 			display: block;
 			padding: 0 @elem-margin;
-			line-height: 1.8rem;
+			line-height: 1.9rem;
 			cursor: pointer;
 			white-space: nowrap;
 			color: @text-color;
@@ -148,6 +160,19 @@
 	.period-pane {
 		display: grid;
 		grid-gap: @elem-margin;
+	}
+
+	@keyframes blink {
+		from { opacity:1 }
+		to { opacity:0 }
+	}
+
+	.current-period {
+		font-weight: 500;
+		color: #555;
+		&.processing {
+			animation: blink .5s infinite alternate ease-in-out;
+		}
 	}
 
 	.period-footer {

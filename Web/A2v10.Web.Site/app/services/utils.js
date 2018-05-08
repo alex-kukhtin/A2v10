@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180508-7178
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -56,7 +56,9 @@ app.modules['std:utils'] = function () {
 			diff: dateDiff,
 			create: dateCreate,
 			compare: dateCompare,
-			endOfMonth: endOfMonth
+			endOfMonth: endOfMonth,
+			minDate: dateCreate(1901, 1, 1),
+			maxDate: dateCreate(2999, 12, 31)
 		},
 		text: {
 			contains: textContains,
@@ -364,7 +366,6 @@ app.modules['std:utils'] = function () {
 					day = ldm;
 				var dtx = new Date(dt.getFullYear(), newMonth, day);
 				return dtx;
-				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
 				break;

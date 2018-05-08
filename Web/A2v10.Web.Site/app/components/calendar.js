@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180508-7178
 // components/calendar.js
 
 (function () {
@@ -21,7 +21,9 @@
 		</thead>
 		<tbody>
 			<tr v-for="row in days">
-				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
+				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" 
+					@mouseover="mouseOver(day)"
+					v-text="day.getDate()" :title="dayTitle(day)"/></td>
 			</tr>
 		</tbody>
 		<tfoot v-if="showToday" ><tr><td colspan="7" class="calendar-footer">
@@ -35,7 +37,8 @@
 			model: Date,
 			setMonth: Function,
 			setDay: Function,
-			getDayClass: Function
+			getDayClass: Function,
+			hover: Function
 		},
 		computed: {
 			days() {
@@ -115,6 +118,10 @@
 				// todo: localize
 				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
+			mouseOver(day) {
+				if (this.hover)
+					this.hover(day);
+			}
 		}
 	});
 })();

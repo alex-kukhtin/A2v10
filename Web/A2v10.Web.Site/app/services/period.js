@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180507-7177
+// 20180508-7179
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -11,16 +11,22 @@ app.modules['std:period'] = function () {
 
 	function TPeriod(source) {
 		if (source && 'From' in source) {
-			this.From = date.tryParse(source.From);
-			this.To = date.tryParse(source.To);
+			if (!source.From && !source.To) {
+				this.From = date.minDate;
+				this.To = date.maxDate;
+			}
+			else {
+				this.From = date.tryParse(source.From);
+				this.To = date.tryParse(source.To);
+			}
 		} else {
-			this.From = date.zero();
-			this.To = date.zero();
+			this.From = date.minDate;
+			this.To = date.maxDate;
 		}
 		Object.defineProperty(this, 'Name', {
 			enumerable: true,
 			get() {
-				return this.format('Date') || locale.$AllPeriodData;
+				return this.format('Date');
 			}
 		});
 	}
@@ -30,8 +36,13 @@ app.modules['std:period'] = function () {
 			this.From = v.From;
 			this.To = v.To;
 		} else {
-			this.From = date.tryParse(v.From);
-			this.To = date.tryParse(v.To);
+			if (v.From === null && v.To === null) {
+				this.From = date.minDate;
+				this.To = date.maxDate;
+			} else {
+				this.From = date.tryParse(v.From);
+				this.To = date.tryParse(v.To);
+			}
 		}
 		this.normalize();
 		return this;
@@ -44,6 +55,11 @@ app.modules['std:period'] = function () {
 
 	TPeriod.prototype.fromUrl = function (v) {
 		let px = (v || '').split('-');
+		if (px[0].toLowerCase() === 'all') {
+			this.From = date.minDate;
+			this.To = date.maxDate;
+			return this;
+		}
 		let df = px[0];
 		let dt = px.length > 1 ? px[1] : px[0];
 		this.From = date.tryParse(df)
@@ -51,7 +67,15 @@ app.modules['std:period'] = function () {
 		return this;
 	}
 
+	TPeriod.prototype.isAllData = function () {
+		return this.From.getTime() === date.minDate.getTime() &&
+			this.To.getTime() === date.maxDate.getTime();
+	}
+
 	TPeriod.prototype.format = function (dataType) {
+		//console.warn(`${this.From.getTime()}-${date.minDate.getTime()} : ${this.To.getTime()}-${date.maxDate.getTime()}`);
+		if (this.isAllData())
+			return dataType === 'DateUrl' ? 'All' : locale.$AllPeriodData;
 		let from = this.From;
 		let to = this.To;
 		if (from.getTime() === to.getTime())
@@ -63,8 +87,9 @@ app.modules['std:period'] = function () {
 
 	TPeriod.prototype.in = function (dt) {
 		let t = dt.getTime();
-		let noTo = this.To.getTime() === date.zero().getTime();
-		return t >= this.From.getTime() && (t <= this.To.getTime() || noTo);
+		let zd = utils.date.zero().getTime();
+		if (this.From.getTime() === zd || this.To.getTime() === zd) return;
+		return t >= this.From.getTime() && t <= this.To.getTime();
 	}
 
 	TPeriod.prototype.normalize = function () {
@@ -86,6 +111,7 @@ app.modules['std:period'] = function () {
 		isPeriod,
 		constructor: TPeriod,
 		zero: zeroPeriod,
+		all: allDataPeriod,
 		create: createPeriod 
 	};
 
@@ -93,7 +119,11 @@ app.modules['std:period'] = function () {
 		return new TPeriod();
 	}
 
-	function createPeriod(key) {
+	function allDataPeriod() {
+		return createPeriod('allData');
+	}
+
+	function createPeriod(key, from, to) {
 		let today = date.today();
 		let p = zeroPeriod();
 		switch (key) {
@@ -150,7 +180,11 @@ app.modules['std:period'] = function () {
 				p.set(dy1, today);
 				break;
 			case 'allData':
-				// zero period
+				// full period
+				p.set(date.minDate, date.maxDate);
+				break;
+			case "custom":
+				p.set(from, to);
 				break;
 			default:
 				console.error('invalid menu key: ' + key);

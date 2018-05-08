@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180508-7178
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -151,7 +151,9 @@ app.modules['std:utils'] = function () {
 			diff: dateDiff,
 			create: dateCreate,
 			compare: dateCompare,
-			endOfMonth: endOfMonth
+			endOfMonth: endOfMonth,
+			minDate: dateCreate(1901, 1, 1),
+			maxDate: dateCreate(2999, 12, 31)
 		},
 		text: {
 			contains: textContains,
@@ -459,7 +461,6 @@ app.modules['std:utils'] = function () {
 					day = ldm;
 				var dtx = new Date(dt.getFullYear(), newMonth, day);
 				return dtx;
-				break;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
 				break;
@@ -730,7 +731,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180507-7177
+// 20180508-7179
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -741,16 +742,22 @@ app.modules['std:period'] = function () {
 
 	function TPeriod(source) {
 		if (source && 'From' in source) {
-			this.From = date.tryParse(source.From);
-			this.To = date.tryParse(source.To);
+			if (!source.From && !source.To) {
+				this.From = date.minDate;
+				this.To = date.maxDate;
+			}
+			else {
+				this.From = date.tryParse(source.From);
+				this.To = date.tryParse(source.To);
+			}
 		} else {
-			this.From = date.zero();
-			this.To = date.zero();
+			this.From = date.minDate;
+			this.To = date.maxDate;
 		}
 		Object.defineProperty(this, 'Name', {
 			enumerable: true,
 			get() {
-				return this.format('Date') || locale.$AllPeriodData;
+				return this.format('Date');
 			}
 		});
 	}
@@ -760,8 +767,13 @@ app.modules['std:period'] = function () {
 			this.From = v.From;
 			this.To = v.To;
 		} else {
-			this.From = date.tryParse(v.From);
-			this.To = date.tryParse(v.To);
+			if (v.From === null && v.To === null) {
+				this.From = date.minDate;
+				this.To = date.maxDate;
+			} else {
+				this.From = date.tryParse(v.From);
+				this.To = date.tryParse(v.To);
+			}
 		}
 		this.normalize();
 		return this;
@@ -774,6 +786,11 @@ app.modules['std:period'] = function () {
 
 	TPeriod.prototype.fromUrl = function (v) {
 		let px = (v || '').split('-');
+		if (px[0].toLowerCase() === 'all') {
+			this.From = date.minDate;
+			this.To = date.maxDate;
+			return this;
+		}
 		let df = px[0];
 		let dt = px.length > 1 ? px[1] : px[0];
 		this.From = date.tryParse(df)
@@ -781,7 +798,15 @@ app.modules['std:period'] = function () {
 		return this;
 	}
 
+	TPeriod.prototype.isAllData = function () {
+		return this.From.getTime() === date.minDate.getTime() &&
+			this.To.getTime() === date.maxDate.getTime();
+	}
+
 	TPeriod.prototype.format = function (dataType) {
+		//console.warn(`${this.From.getTime()}-${date.minDate.getTime()} : ${this.To.getTime()}-${date.maxDate.getTime()}`);
+		if (this.isAllData())
+			return dataType === 'DateUrl' ? 'All' : locale.$AllPeriodData;
 		let from = this.From;
 		let to = this.To;
 		if (from.getTime() === to.getTime())
@@ -793,8 +818,9 @@ app.modules['std:period'] = function () {
 
 	TPeriod.prototype.in = function (dt) {
 		let t = dt.getTime();
-		let noTo = this.To.getTime() === date.zero().getTime();
-		return t >= this.From.getTime() && (t <= this.To.getTime() || noTo);
+		let zd = utils.date.zero().getTime();
+		if (this.From.getTime() === zd || this.To.getTime() === zd) return;
+		return t >= this.From.getTime() && t <= this.To.getTime();
 	}
 
 	TPeriod.prototype.normalize = function () {
@@ -816,6 +842,7 @@ app.modules['std:period'] = function () {
 		isPeriod,
 		constructor: TPeriod,
 		zero: zeroPeriod,
+		all: allDataPeriod,
 		create: createPeriod 
 	};
 
@@ -823,7 +850,11 @@ app.modules['std:period'] = function () {
 		return new TPeriod();
 	}
 
-	function createPeriod(key) {
+	function allDataPeriod() {
+		return createPeriod('allData');
+	}
+
+	function createPeriod(key, from, to) {
 		let today = date.today();
 		let p = zeroPeriod();
 		switch (key) {
@@ -880,7 +911,11 @@ app.modules['std:period'] = function () {
 				p.set(dy1, today);
 				break;
 			case 'allData':
-				// zero period
+				// full period
+				p.set(date.minDate, date.maxDate);
+				break;
+			case "custom":
+				p.set(from, to);
 				break;
 			default:
 				console.error('invalid menu key: ' + key);
@@ -3407,7 +3442,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180508-7178
 // components/calendar.js
 
 (function () {
@@ -3428,7 +3463,9 @@ Vue.component('validator-control', {
 		</thead>
 		<tbody>
 			<tr v-for="row in days">
-				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
+				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" 
+					@mouseover="mouseOver(day)"
+					v-text="day.getDate()" :title="dayTitle(day)"/></td>
 			</tr>
 		</tbody>
 		<tfoot v-if="showToday" ><tr><td colspan="7" class="calendar-footer">
@@ -3442,7 +3479,8 @@ Vue.component('validator-control', {
 			model: Date,
 			setMonth: Function,
 			setDay: Function,
-			getDayClass: Function
+			getDayClass: Function,
+			hover: Function
 		},
 		computed: {
 			days() {
@@ -3522,6 +3560,10 @@ Vue.component('validator-control', {
 				// todo: localize
 				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
+			mouseOver(day) {
+				if (this.hover)
+					this.hover(day);
+			}
 		}
 	});
 })();
@@ -3639,7 +3681,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180507-7179
 // components/periodpicker.js
 
 
@@ -3654,6 +3696,8 @@ Vue.component('validator-control', {
 	const baseControl = component('control');
 	const locale = window.$$locale;
 
+	const DEFAULT_DEBOUNCE = 150;
+
 	Vue.component('a2-period-picker', {
 		extends: baseControl,
 		template: `
@@ -3667,11 +3711,11 @@ Vue.component('validator-control', {
 				<li v-for='(mi, ix) in menu' :key="ix" :class="{active: isSelectedMenu(mi.key)}"><a v-text='mi.name' @click.stop.prevent="selectMenu(mi.key)"></a></li>
 			</ul>
 			<a2-calendar style="grid-area: 1 / 2" :show-today="false" pos="left" :model="prevModelDate" 
-				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass"/>
+				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass" :hover="mouseHover"/>
 			<a2-calendar style="grid-area: 1 / 3; margin-left:6px":show-today="false" pos="right" :model="modelDate" 
-				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass"/>
+				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass" :hover="mouseHover"/>
 			<div class="period-footer" style="grid-area: 2 / 2 / auto / span 2">
-				<span v-text="currentText" />
+				<span class="current-period" v-text="currentText" :class="{processing: selection}"/>
 				<span class="aligner"></span>
 				<button class="btn btn-primary" @click.stop.prevent="apply" v-text="locale.$Apply" :disabled="applyDisabled"/>
 				<button class="btn btn-default" @click.stop.prevent="close" v-text="locale.$Cancel" />
@@ -3690,7 +3734,9 @@ Vue.component('validator-control', {
 				isOpen: false,
 				selection: '',
 				modelDate: utils.date.today(),
-				currentPeriod: uPeriod.zero()
+				currentPeriod: uPeriod.zero(),
+				selectEnd: utils.date.zero(),
+				timerId: null
 			};
 		},
 		computed: {
@@ -3698,7 +3744,7 @@ Vue.component('validator-control', {
 				return window.$$locale;
 			},
 			text() {
-				return this.period.format('Date') || locale.$AllPeriodData;
+				return this.period.format('Date');
 			},
 			period() {
 				let period = this.item[this.prop];
@@ -3710,7 +3756,7 @@ Vue.component('validator-control', {
 				return utils.date.add(this.modelDate, -1, 'month')
 			},
 			currentText() {
-				return this.currentPeriod.format('Date') || locale.$AllPeriodData;
+				return this.currentPeriod.format('Date');
 			},
 			applyDisabled() {
 				return this.selection === 'start';
@@ -3744,7 +3790,8 @@ Vue.component('validator-control', {
 					this.selection = 'start';
 					this.currentPeriod.From = d;
 					this.currentPeriod.To = utils.date.zero();
-				} else if (this.selection == 'start') {
+					this.selectEnd = utils.date.zero();
+				} else if (this.selection === 'start') {
 					this.currentPeriod.To = d;
 					this.currentPeriod.normalize();
 					this.selection = '';
@@ -3752,9 +3799,15 @@ Vue.component('validator-control', {
 			},
 			dayClass(day) {
 				let cls = '';
-				if (this.currentPeriod.in(day)) {
+				let px = this.currentPeriod;
+				if (this.selection)
+					px = uPeriod.create('custom', this.currentPeriod.From, this.selectEnd);
+				if (px.in(day))
 					cls += ' active';
-				}
+				if (px.From.getTime() === day.getTime())
+					cls += ' period-start';
+				if (px.To.getTime() === day.getTime())
+					cls += ' period-end';
 				return cls;
 			},
 			close() {
@@ -3770,9 +3823,11 @@ Vue.component('validator-control', {
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					this.modelDate = this.period.To; // TODO: calc start month
-					if (this.modelDate.isZero())
+					if (this.modelDate.isZero() || this.modelDate.getTime() === utils.date.maxDate.getTime())
 						this.modelDate = utils.date.today();
 					this.currentPeriod.assign(this.period);
+					this.selection = '';
+					this.selectEnd = utils.date.zero();
 				}
 				this.isOpen = !this.isOpen;
 			},
@@ -3787,6 +3842,14 @@ Vue.component('validator-control', {
 				let p = uPeriod.create(key);
 				this.currentPeriod.assign(p);
 				this.apply();
+			},
+			mouseHover(day) {
+				if (!this.selection) return;
+				if (this.selectEnd.getTime() === day.getTime()) return;
+				clearTimeout(this.timerId);
+				this.timerId = setTimeout(() => {
+					this.selectEnd = day;
+				}, DEFAULT_DEBOUNCE);
 			}
 		},
 		mounted() {

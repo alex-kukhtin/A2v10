@@ -1788,6 +1788,7 @@ pre.a2-code {
   margin-left: -1px;
   padding: 10px;
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
+  color: #222;
 }
 .calendar-pane td {
   background-color: white;
@@ -1801,7 +1802,7 @@ pre.a2-code {
   text-align: center;
 }
 .calendar-pane .month-title {
-  font-weight: bold;
+  font-weight: 500;
   line-height: 2rem;
 }
 .calendar-pane a {
@@ -1812,7 +1813,6 @@ pre.a2-code {
 }
 .calendar-pane a:hover {
   background-color: #fdf4bf;
-  border-color: #e5c365;
 }
 .calendar-pane tbody td.today > a {
   font-weight: 500;
@@ -1824,12 +1824,19 @@ pre.a2-code {
 .calendar-pane tbody td.other > a {
   opacity: 0.33;
 }
+.calendar-pane tbody td.period-start > a {
+  background-color: #aed7f2;
+}
+.calendar-pane tbody td.period-end > a {
+  background-color: #aed7f2;
+}
 .calendar-pane tbody > tr:first-child > td {
   padding-top: 6px;
 }
 .calendar-pane thead th,
 .calendar-pane tfoot td {
   border-style: none;
+  color: #555;
 }
 .calendar-pane thead th > a,
 .calendar-pane tfoot td > a {
@@ -1875,7 +1882,7 @@ pre.a2-code {
 .period-picker .period-menu li > a {
   display: block;
   padding: 0 10px;
-  line-height: 1.8rem;
+  line-height: 1.9rem;
   cursor: pointer;
   white-space: nowrap;
   color: #222;
@@ -1889,6 +1896,21 @@ pre.a2-code {
 .period-picker .period-pane {
   display: grid;
   grid-gap: 10px;
+}
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.period-picker .current-period {
+  font-weight: 500;
+  color: #555;
+}
+.period-picker .current-period.processing {
+  animation: blink 0.5s infinite alternate ease-in-out;
 }
 .period-picker .period-footer {
   display: flex;
@@ -2319,6 +2341,9 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar .checkbox {
   margin: 0 6px;
+}
+.toolbar.no-wrap {
+  flex-wrap: nowrap;
 }
 .toolbar.transparent {
   background-color: transparent;
@@ -3536,7 +3561,7 @@ TODO:
   min-width: 150px;
   min-height: 30px;
   text-align: left;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
   z-index: 1070;
 }
 .popover-wrapper > .popup-body > .arrow {
