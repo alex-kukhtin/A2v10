@@ -25,6 +25,7 @@ namespace A2v10.Request
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
 			sb.Replace("$(AssetsStyleSheets)", AppStyleSheetsLink);
+			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			writer.Write(sb.ToString());
 		}
 
@@ -67,24 +68,49 @@ namespace A2v10.Request
 			}
 		}
 
-		public String GetAppStyleConent()
+		String AppScriptsLink
+		{
+			get
+			{
+				var fp = _host.MakeFullPath(Admin, "_assets", "");
+				if (!Directory.Exists(fp))
+					return String.Empty;
+				foreach (var f in Directory.EnumerateFiles(fp, "*.js"))
+				{
+					// at least one file
+					return $"<script type=\"text/javascript\" src=\"/shell/appscripts\"></script>";
+				}
+				return String.Empty;
+			}
+		}
+
+		void GetAppFiles(String ext, TextWriter writer)
 		{
 			var fp = _host.MakeFullPath(Admin, "_assets", "");
 			if (!Directory.Exists(fp))
-				return String.Empty;
-			StringBuilder sb = new StringBuilder();
-			foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
+				return;
+			foreach (var f in Directory.EnumerateFiles(fp, $"*.{ext}"))
 			{
 				var fileName = f.ToLowerInvariant();
-				if (!fileName.EndsWith(".min.css")) {
-					String minFile = fileName.Replace(".css", ".min.css");
+				if (!fileName.EndsWith($".min.{ext}"))
+				{
+					String minFile = fileName.Replace($".{ext}", $".min.{ext}");
 					if (File.Exists(minFile))
-						continue; // min.css found
+						continue; // min.{ext} found
 				}
 				var txt = File.ReadAllText(fileName);
-				sb.AppendLine(txt);
+				writer.Write(txt);
 			}
-			return sb.ToString();
+		}
+
+		public void GetAppStyleConent(TextWriter writer)
+		{
+			GetAppFiles("css", writer);
+		}
+
+		public void GetAppScriptConent(TextWriter writer)
+		{
+			GetAppFiles("js", writer);
 		}
 	}
 }

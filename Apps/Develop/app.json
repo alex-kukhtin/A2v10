@@ -1,0 +1,16 @@
+﻿{
+	/* comment here */
+	"title": "Демонстрационное приложение для отладки",
+	"version": "10.0.7001",
+	"copyright": "Copyright © 2015-2018 Alex Kukhtin",
+	"links": [
+		{
+			"title": "link1",
+			"url": "url1"
+		},
+		{
+			"title": "link2",
+			"url": "url2"
+		}
+	]
+}

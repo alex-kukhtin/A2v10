@@ -14,6 +14,7 @@
 		el: "#$(PageGuid)",
 		store: store,
 		data: {
+			appData: $(AppData)
 		},
 		components: {
 			'a2-document-title': documentTitle

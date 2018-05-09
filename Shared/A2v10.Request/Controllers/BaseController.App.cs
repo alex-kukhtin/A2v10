@@ -22,12 +22,27 @@ namespace A2v10.Request
 			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
 			aboutScript.Replace("$(PageGuid)", pageGuid);
 
+			aboutScript.Replace("$(AppData)", GetAppData());
+
 			aboutHtml.Replace("$(PageGuid)", pageGuid);
 			aboutHtml.Replace("$(AboutScript)", aboutScript.ToString());
 
 			writer.Write(aboutHtml.ToString());
 
 			return Task.FromResult(0);
+		}
+
+		String GetAppData()
+		{
+			var appPath = _host.MakeFullPath(Admin, "", "app.json");
+			if (File.Exists(appPath))
+			{
+				String appText = File.ReadAllText(appPath);
+				// validate
+				Object app = JsonConvert.DeserializeObject<ExpandoObject>(appText);
+				return JsonConvert.SerializeObject(app);
+			}
+			return "undefined";
 		}
 
 		async Task RenderChangePassword(TextWriter writer, ExpandoObject loadPrms)

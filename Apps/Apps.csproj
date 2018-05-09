@@ -67,6 +67,7 @@
     <None Include="Develop\Purchase\Supplier\model.json" />
     <None Include="Develop\Purchase\WaybillIn\model.json" />
     <None Include="Develop\Purchase\WaybillIn\waybillin.mrt" />
+    <None Include="Develop\redirect.json" />
     <None Include="Develop\Sales\Catalog\model.json" />
     <None Include="Develop\Sales\Customer\model.json" />
     <None Include="Develop\Sales\Invoice\index.template.xlsx" />
@@ -74,6 +75,7 @@
     <None Include="Develop\Sales\Invoice\model.json" />
     <None Include="Develop\Sales\Waybill\model.json" />
     <None Include="Develop\Sales\Waybill\waybill.mrt" />
+    <None Include="Develop\app.json" />
     <None Include="Develop\solution.json" />
     <None Include="model.schema.json" />
   </ItemGroup>
@@ -118,6 +120,10 @@
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
     <Content Include="Develop\Sales\Waybill\index.template.js" />
     <Content Include="Develop\Sales\Waybill\waybill.template.js" />
+    <Content Include="Develop\_assets\app.min.js" />
+    <Content Include="Develop\_assets\app.css" />
+    <Content Include="Develop\_assets\app.js" />
+    <Content Include="Develop\_assets\app.min.css" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\Index.view.xaml">
