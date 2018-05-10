@@ -20,7 +20,7 @@ using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
-
+using System.Threading;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -147,9 +147,11 @@ namespace A2v10.Web.Mvc.Controllers
 			return new EmptyResult();
 		}
 
+		private String LocaleKey => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+
 		private StiMvcViewerOptions ViewerOptions {
 			get {
-				String localeFile = $"~/Localization/uk.xml"; // TODO
+				String localeFile = $"~/Localization/{LocaleKey}.xml";
 				return new StiMvcViewerOptions()
 				{
 					Theme = StiViewerTheme.Office2013LightGrayBlue,
