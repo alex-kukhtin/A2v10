@@ -2674,7 +2674,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .a2-list .a2-list-item {
   cursor: pointer;
-  padding: 4px 6px 6px 6px;
+  padding: 8px 8px 8px 6px;
   border-left: 4px solid transparent;
 }
 .a2-list .a2-list-item:hover {
@@ -2712,12 +2712,14 @@ table.data-grid > tbody > tr.bold > td {
 .a2-list.two-columns-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 6px;
+  grid-gap: 1rem;
+  padding: 1rem 1rem 0 1rem;
 }
 .a2-list.three-columns-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 6px;
+  grid-gap: 1rem;
+  padding: 1rem 1rem 0 1rem;
 }
 .generic-list-item {
   display: inline-grid;
@@ -2731,10 +2733,10 @@ table.data-grid > tbody > tr.bold > td {
   grid-row: 1 / span 2;
   grid-column: 1;
   align-self: start;
-  font-size: 1.5rem;
-  margin-right: 6px;
+  font-size: 1.7rem;
+  margin-right: 12px;
   margin-top: 2px;
-  color: #8591a2;
+  color: #999;
   /*
         padding:4px;
         background-color:blue;

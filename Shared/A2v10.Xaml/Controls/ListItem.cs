@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 			if (onRender != null)
 				onRender(div);
 			MergeAttributes(div, context);
-			MergeCommandAttribute(div, context);
+			MergeCommandAttribute(div, context, withHref:false);
 			div.RenderStart(context);
 			RenderIconBlock(context);
 			RenderBody(context);

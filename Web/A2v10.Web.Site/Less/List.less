@@ -1,4 +1,6 @@
 ﻿
+@list-body-color:#999;
+
 .a2-list {
 	list-style-type: none;
 	padding: 0;
@@ -7,7 +9,7 @@
 
 	.a2-list-item {
 		cursor: pointer;
-		padding: 4px 6px 6px 6px;
+		padding: 8px 8px 8px 6px;
 		border-left: 4px solid transparent;
 
 		&:hover {
@@ -52,13 +54,15 @@
 	&.two-columns-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-gap: 6px;
+		grid-gap: 1rem;
+		padding: 1rem 1rem 0 1rem;
 	}
 
 	&.three-columns-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
-		grid-gap: 6px;
+		grid-gap: 1rem;
+		padding: 1rem 1rem 0 1rem;
 	}
 }
 
@@ -74,10 +78,10 @@
 		grid-row: 1 / span 2;
 		grid-column: 1;
 		align-self: start;
-		font-size: 1.5rem;
-		margin-right: 6px;
+		font-size: 1.7rem;
+		margin-right: 12px;
 		margin-top: 2px;
-		color: @tv-icon-color;
+		color: @list-body-color;
 		/*
         padding:4px;
         background-color:blue;
@@ -96,7 +100,7 @@
 		grid-row: 2;
 		grid-column: 2;
 		font-size: .9rem;
-		color: #999;
+		color: @list-body-color;
 	}
 
 	.list-item-commands {

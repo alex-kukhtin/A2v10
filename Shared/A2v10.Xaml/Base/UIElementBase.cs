@@ -117,14 +117,15 @@ namespace A2v10.Xaml
 				tag.MergeAttribute($":{attrName}", propValue.ToString());
 		}
 
-		internal void MergeCommandAttribute(TagBuilder tag, RenderContext context)
+		internal void MergeCommandAttribute(TagBuilder tag, RenderContext context, Boolean withHref = true)
 		{
 			var cmd = GetBindingCommand("Command");
 			if (cmd == null)
 				return;
 			cmd.MergeCommandAttributes(tag, context);
 			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
-			tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
+			if (withHref)
+				tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
 		}
 
 		internal void MergeValueItemProp(TagBuilder input, RenderContext context, String valueName)
