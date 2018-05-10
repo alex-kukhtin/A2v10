@@ -8,6 +8,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 
 using A2v10.Web.Mvc.Identity;
+using System.Configuration;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -38,7 +39,8 @@ namespace A2v10.Web.Mvc.Start
 							return user.GetUserId<Int64>();
 						},
 						regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager))
-				}
+				},
+				CookieName = GetApplicationCookieName()
 			});
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
@@ -68,6 +70,12 @@ namespace A2v10.Web.Mvc.Start
 			//    ClientId = "",
 			//    ClientSecret = ""
 			//});
+
+			String GetApplicationCookieName()
+			{
+				var key= ConfigurationManager.AppSettings["AppKey"];
+				return $"{key}.ASP.NET.ApplicationCookie";
+			}
 		}
 	}
 }
