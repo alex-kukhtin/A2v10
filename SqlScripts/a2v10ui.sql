@@ -141,16 +141,16 @@ begin
 	declare @tx table (Id bigint, Parent bit);
 
 	-- all children
-	with Ñ(Id, ParentId)
+	with C(Id, ParentId)
 	as
 	(
 		select @MenuId, cast(null as bigint) 
 		union all
 		select m.Id, m.Parent
-			from a2ui.Menu m inner join Ñ on m.Parent=Ñ.Id
+			from a2ui.Menu m inner join C on m.Parent=C.Id
 	)
 	insert into @tx(Id, Parent)
-		select Id, 0 from Ñ
+		select Id, 0 from C
 		group by Id;
 
 	-- all parent 

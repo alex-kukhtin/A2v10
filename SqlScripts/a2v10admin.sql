@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 07 may 2018
-module version : 7164
+Last updated : 10 may 2018
+module version : 7165
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7059);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7165);
 else
-	update a2sys.Versions set [Version] = 7059 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7165 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -827,9 +827,9 @@ go
 if not exists(select * from a2security.Users where Id <> 0)
 begin
 	set nocount on;
-	insert into a2security.Users(Id, UserName, SecurityStamp, PasswordHash, PersonName)
+	insert into a2security.Users(Id, UserName, SecurityStamp, PasswordHash, PersonName, EmailConfirmed)
 	values (99, N'admin@admin.com', N'c9bb451a-9d2b-4b26-9499-2d7d408ce54e', N'AJcfzvC7DCiRrfPmbVoigR7J8fHoK/xdtcWwahHDYJfKSKSWwX5pu9ChtxmE7Rs4Vg==',
-		N'System administrator');
+		N'System administrator', 1);
 	insert into a2security.UserGroups(UserId, GroupId) values (99, 77), (99, 1); /*predefined values*/
 end
 go
