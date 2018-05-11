@@ -15,6 +15,7 @@
 	const log = require('std:log');
 	const locale = window.$$locale;
 	const mask = require('std:mask');
+	const modelInfo = require('std:modelInfo');
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -31,18 +32,6 @@
 				resolve(result);
 			});
 		});
-	}
-
-	function getPagerInfo(mi) {
-		if (!mi) return undefined;
-		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
-		if (mi.Filter)
-			for (let p in mi.Filter) {
-				let fVal = mi.Filter[p];
-				if (!fVal) continue; // empty value, skip it
-				x[p] = fVal;
-			}
-		return x;
 	}
 
 	const base = Vue.extend({
@@ -247,6 +236,7 @@
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
+				//debugger;
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -258,7 +248,16 @@
 				let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
-				let mi = args ? getPagerInfo(args.$ModelInfo) : null;
+
+				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
+				if (!args && !mi) {
+					// try to get first $ModelInfo
+					let modInfo = this.$data._findRootModelInfo();
+					if (modInfo) {
+						mi = modelInfo.get(modInfo);
+					}
+				}
+
 				return new Promise(function (resolve, reject) {
 					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
@@ -538,8 +537,9 @@
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts.export)
+					if (opts.export) {
 						window.location = url;
+					}
 					else
 						window.open(url, '_blank');
 				};
@@ -700,7 +700,7 @@
 				}
 				*/
 
-				let mi = getPagerInfo(selfMi);
+				let mi = modelInfo.get(selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
 				let newUrl = xQuery.url + urltools.makeQueryString(mi);
 				//console.dir(newUrl);
@@ -762,7 +762,9 @@
 						delete nq[p];
 					}
 				}
-				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+				//this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+				let mi = source ? source.$ModelInfo : this.$data._findRootModelInfo();
+				modelInfo.copyfromQuery(mi, nq);
 				this.$reload(source);
 			},
 			__doInit__() {

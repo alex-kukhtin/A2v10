@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180511-7186
 // components/collectionview.js
 
 /*
@@ -55,6 +55,24 @@ TODO:
 			}
 		}
 		return nq;
+	}
+
+	function modelInfoToFilter(q, filter) {
+		if (!q) return;
+		for (let x in filter) {
+			if (x in q) {
+				let iv = filter[x];
+				if (period.isPeriod(iv)) {
+					filter[x] = iv.fromUrl(q[x]);
+				}
+				else if (utils.isDate(iv)) {
+					filter[x] = utils.date.tryParse(q[x]);
+				}
+				else {
+					filter[x] = q[x];
+				}
+			}
+		}
 	}
 
 	// client collection
@@ -289,12 +307,7 @@ TODO:
 			// get filter values from modelInfo
 			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
 			if (mi) {
-				let q = mi.Filter;
-				if (q) {
-					for (let x in this.filter) {
-						if (x in q) this.filter[x] = q[x];
-					}
-				}
+				modelInfoToFilter(mi.Filter, this.filter);
 			}
 			this.$nextTick(() => {
 				this.lockChange = false;
@@ -408,41 +421,11 @@ TODO:
 			// get filter values from modelInfo and then from query
 			let mi = this.ItemsSource.$ModelInfo;
 			if (mi) {
-				let q = mi.Filter;
-				if (q) {
-					for (let x in this.filter) {
-						if (x in q) {
-							let iv = this.filter[x];
-							if (utils.isDate(iv)) {
-								this.filter[x] = utils.date.tryParse(q[x]);
-							}
-							else if (period.isPeriod(iv)) {
-								iv.assign(q[x]);
-							}
-							else {
-								this.filter[x] = q[x];
-							}
-						}
-					}
-				}
+				modelInfoToFilter(mi.Filter, this.filter);
 			}
 			// then query from url
 			let q = this.$store.getters.query;
-			for (let x in this.filter) {
-				if (x in q) {
-					let iv = this.filter[x];
-					if (period.isPeriod(iv)) {
-						this.filter[x] = iv.fromUrl(q[x]);
-					}
-					else if (utils.isDate(iv)) {
-						this.filter[x] = utils.date.tryParse(q[x]);
-					}
-					else {
-						this.filter[x] = q[x];
-					}
-				}
-				//console.dir(this.filter);
-			}
+			modelInfoToFilter(q, this.filter)
 
 			this.$nextTick(() => {
 				this.lockChange = false;

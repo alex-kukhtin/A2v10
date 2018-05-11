@@ -1,4 +1,6 @@
-﻿/*20171029-7060*/
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20171029-7060*/
 /* services/popup.js */
 
 app.modules['std:popup'] = function () {

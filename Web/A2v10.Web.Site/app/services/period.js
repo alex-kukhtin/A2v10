@@ -54,6 +54,12 @@ app.modules['std:period'] = function () {
 	}
 
 	TPeriod.prototype.fromUrl = function (v) {
+		if (utils.isObject(v) && 'From' in v) {
+			this.From = date.tryParse(v.From);
+			this.To = date.tryParse(v.To);
+			this.normalize();
+			return this;
+		}
 		let px = (v || '').split('-');
 		if (px[0].toLowerCase() === 'all') {
 			this.From = date.minDate;

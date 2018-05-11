@@ -47,7 +47,7 @@ namespace A2v10.Xaml
 				{
 					tag.AddCssClass("page").AddCssClass("absolute");
 					addGridAction(tag);
-					AddBackground(tag);
+					AddAttributes(tag);
 					tag.MergeAttribute("id", context.RootId);
 				});
 			}
@@ -56,7 +56,7 @@ namespace A2v10.Xaml
 				page = new TagBuilder("div", "page absolute");
 				page.MergeAttribute("id", context.RootId);
 				addGridAction(page);
-				AddBackground(page);
+				AddAttributes(page);
 				page.RenderStart(context);
 			}
 
@@ -85,10 +85,11 @@ namespace A2v10.Xaml
 			}
 		}
 
-		void AddBackground(TagBuilder tag)
+		void AddAttributes(TagBuilder tag)
 		{
 			if (Background != BackgroundStyle.None)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			tag.AddCssClass(CssClass);
 		}
 
 		void RenderTitle(RenderContext context)

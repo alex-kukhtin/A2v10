@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180507-7177
+// 20180511-7186
 // services/datamodel.js
 
 (function () {
@@ -286,6 +286,7 @@
 				}
 			}
 			elem._setModelInfo_ = setRootModelInfo;
+			elem._findRootModelInfo = findRootModelInfo;
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
@@ -331,6 +332,15 @@
 			elem.$ModelInfo = data.$ModelInfo[p];
 			return; // first element only
 		}
+	}
+
+	function findRootModelInfo() {
+		for (let p in this._meta_.props) {
+			let x = this[p];
+			if (x.$ModelInfo)
+				return x.$ModelInfo;
+		}
+		return null;
 	}
 
 	function isReadOnly() {

@@ -42,6 +42,7 @@
 @Print=Печать
 @Search=Поиск
 @Help=Помощь
+@Export=Экспорт
 ;
 @General=Общие
 @Properties=Свойства

@@ -785,6 +785,12 @@ app.modules['std:period'] = function () {
 	}
 
 	TPeriod.prototype.fromUrl = function (v) {
+		if (utils.isObject(v) && 'From' in v) {
+			this.From = date.tryParse(v.From);
+			this.To = date.tryParse(v.To);
+			this.normalize();
+			return this;
+		}
 		let px = (v || '').split('-');
 		if (px[0].toLowerCase() === 'all') {
 			this.From = date.minDate;
@@ -923,6 +929,45 @@ app.modules['std:period'] = function () {
 		return p;
 	}
 };
+
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180511-7186*/
+/* services/modelinfo.js */
+
+app.modules['std:modelInfo'] = function () {
+
+	return {
+		copyfromQuery: copyFromQuery,
+		get: getPagerInfo
+	};
+
+	function copyFromQuery(mi, q) {
+		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order };
+		for (let p in psq) {
+			mi[p] = psq[p];
+		}
+		if (mi.Filter) {
+			for (let p in mi.Filter) {
+				mi.Filter[p] = q[p];
+			}
+		}
+	}
+
+	function getPagerInfo(mi) {
+		if (!mi) return undefined;
+		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder };
+		if (mi.Filter)
+			for (let p in mi.Filter) {
+				let fVal = mi.Filter[p];
+				if (!fVal) continue; // empty value, skip it
+				x[p] = fVal;
+			}
+		return x;
+	}
+};
+
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -1430,7 +1475,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180507-7177
+// 20180511-7186
 // services/datamodel.js
 
 (function () {
@@ -1716,6 +1761,7 @@ app.modules['std:validators'] = function () {
 				}
 			}
 			elem._setModelInfo_ = setRootModelInfo;
+			elem._findRootModelInfo = findRootModelInfo;
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
@@ -1761,6 +1807,15 @@ app.modules['std:validators'] = function () {
 			elem.$ModelInfo = data.$ModelInfo[p];
 			return; // first element only
 		}
+	}
+
+	function findRootModelInfo() {
+		for (let p in this._meta_.props) {
+			let x = this[p];
+			if (x.$ModelInfo)
+				return x.$ModelInfo;
+		}
+		return null;
 	}
 
 	function isReadOnly() {
@@ -2530,6 +2585,8 @@ app.modules['std:validators'] = function () {
 
 
 
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 /*20171029-7060*/
 /* services/popup.js */
@@ -5303,7 +5360,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180505-7175
+// 20180511-7186
 // components/collectionview.js
 
 /*
@@ -5358,6 +5415,24 @@ TODO:
 			}
 		}
 		return nq;
+	}
+
+	function modelInfoToFilter(q, filter) {
+		if (!q) return;
+		for (let x in filter) {
+			if (x in q) {
+				let iv = filter[x];
+				if (period.isPeriod(iv)) {
+					filter[x] = iv.fromUrl(q[x]);
+				}
+				else if (utils.isDate(iv)) {
+					filter[x] = utils.date.tryParse(q[x]);
+				}
+				else {
+					filter[x] = q[x];
+				}
+			}
+		}
 	}
 
 	// client collection
@@ -5592,12 +5667,7 @@ TODO:
 			// get filter values from modelInfo
 			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
 			if (mi) {
-				let q = mi.Filter;
-				if (q) {
-					for (let x in this.filter) {
-						if (x in q) this.filter[x] = q[x];
-					}
-				}
+				modelInfoToFilter(mi.Filter, this.filter);
 			}
 			this.$nextTick(() => {
 				this.lockChange = false;
@@ -5711,41 +5781,11 @@ TODO:
 			// get filter values from modelInfo and then from query
 			let mi = this.ItemsSource.$ModelInfo;
 			if (mi) {
-				let q = mi.Filter;
-				if (q) {
-					for (let x in this.filter) {
-						if (x in q) {
-							let iv = this.filter[x];
-							if (utils.isDate(iv)) {
-								this.filter[x] = utils.date.tryParse(q[x]);
-							}
-							else if (period.isPeriod(iv)) {
-								iv.assign(q[x]);
-							}
-							else {
-								this.filter[x] = q[x];
-							}
-						}
-					}
-				}
+				modelInfoToFilter(mi.Filter, this.filter);
 			}
 			// then query from url
 			let q = this.$store.getters.query;
-			for (let x in this.filter) {
-				if (x in q) {
-					let iv = this.filter[x];
-					if (period.isPeriod(iv)) {
-						this.filter[x] = iv.fromUrl(q[x]);
-					}
-					else if (utils.isDate(iv)) {
-						this.filter[x] = utils.date.tryParse(q[x]);
-					}
-					else {
-						this.filter[x] = q[x];
-					}
-				}
-				//console.dir(this.filter);
-			}
+			modelInfoToFilter(q, this.filter)
 
 			this.$nextTick(() => {
 				this.lockChange = false;
@@ -7510,6 +7550,7 @@ Vue.directive('resize', {
 	const log = require('std:log');
 	const locale = window.$$locale;
 	const mask = require('std:mask');
+	const modelInfo = require('std:modelInfo');
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -7526,18 +7567,6 @@ Vue.directive('resize', {
 				resolve(result);
 			});
 		});
-	}
-
-	function getPagerInfo(mi) {
-		if (!mi) return undefined;
-		let x = { PageSize: mi.PageSize, Offset: mi.Offset, Dir: mi.SortDir, Order: mi.SortOrder };
-		if (mi.Filter)
-			for (let p in mi.Filter) {
-				let fVal = mi.Filter[p];
-				if (!fVal) continue; // empty value, skip it
-				x[p] = fVal;
-			}
-		return x;
 	}
 
 	const base = Vue.extend({
@@ -7742,6 +7771,7 @@ Vue.directive('resize', {
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
+				//debugger;
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -7753,7 +7783,16 @@ Vue.directive('resize', {
 				let root = window.$$rootUrl;
 				let url = root + '/_data/reload';
 				let dat = self.$data;
-				let mi = args ? getPagerInfo(args.$ModelInfo) : null;
+
+				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
+				if (!args && !mi) {
+					// try to get first $ModelInfo
+					let modInfo = this.$data._findRootModelInfo();
+					if (modInfo) {
+						mi = modelInfo.get(modInfo);
+					}
+				}
+
 				return new Promise(function (resolve, reject) {
 					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
@@ -8033,8 +8072,9 @@ Vue.directive('resize', {
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts.export)
+					if (opts.export) {
 						window.location = url;
+					}
 					else
 						window.open(url, '_blank');
 				};
@@ -8195,7 +8235,7 @@ Vue.directive('resize', {
 				}
 				*/
 
-				let mi = getPagerInfo(selfMi);
+				let mi = modelInfo.get(selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
 				let newUrl = xQuery.url + urltools.makeQueryString(mi);
 				//console.dir(newUrl);
@@ -8257,7 +8297,9 @@ Vue.directive('resize', {
 						delete nq[p];
 					}
 				}
-				this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+				//this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+				let mi = source ? source.$ModelInfo : this.$data._findRootModelInfo();
+				modelInfo.copyfromQuery(mi, nq);
 				this.$reload(source);
 			},
 			__doInit__() {
