@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180328-7142*/
+/*20180520-7191*/
 /*components/combobox.js*/
 
 (function () {
@@ -13,13 +13,13 @@
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<div class="select-wrapper">
-			<div v-text="wrapText" class="select-text"/>
+			<div v-text="wrapText" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
+		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="wrapText">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
-					v-text="getName(cmb)" :value="getValue(cmb)"></option>
+					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
 			</slot>
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -51,43 +51,74 @@
 			propToValidate: String,
 			nameProp: String,
 			valueProp: String,
-			showvalue: Boolean
+			showvalue: Boolean,
+			align: String
 		},
 		computed: {
 			cmbValue: {
 				get() {
-					let val = this.item ? this.item[this.prop] : null;
-					if (!utils.isObjectExact(val))
-						return val;
-					let vProp = this.valueProp || '$id';
-					if (!(vProp in val))
-						return val;
-					if (this.itemsSource.indexOf(val) !== -1) {
-						return val;
-					}
-					// always return value from ItemsSource
-					return this.itemsSource.find((x) => x[vProp] === val[vProp]);
+					return this.getComboValue();
 				},
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
 			},
 			wrapText() {
-				let itm = this.item ? this.item[this.prop] : null;
-				if (this.showvalue)
-					return this.getValue(itm);
-				return this.getName(itm);
+				return this.showvalue ? this.getComboValue() : this.getText();
+			},
+			wrapClass() {
+				let cls = '';
+				if (this.align && this.align !== 'left')
+					cls += 'text-' + this.align;
+				return cls;
 			}
 		},
 		methods: {
-			getName(itm) {
+			getName(itm, trim) {
 				let n = this.nameProp ? utils.eval(itm, this.nameProp) : itm.$name;
 				return n;
 			},
 			getValue(itm) {
 				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
 				return v;
+			},
+			getComboValue() {
+				let val = this.item ? this.item[this.prop] : null;
+				if (!utils.isObjectExact(val))
+					return val;
+				let vProp = this.valueProp || '$id';
+				if (!(vProp in val))
+					return val;
+				if (this.itemsSource.indexOf(val) !== -1) {
+					return val;
+				}
+				// always return value from ItemsSource
+				return this.itemsSource.find(x => x[vProp] === val[vProp]);
+			},
+			getText() {
+				let cv = this.getComboValue();
+				if (utils.isObjectExact(cv))
+					return this.getName(cv);
+				if (this.itemsSource && this.itemsSource.length) {
+					let vProp = this.valueProp || '$id';
+					let ob = this.itemsSource.find(x => x[vProp] === cv);
+					return ob ? this.getName(ob) : '';
+				} else {
+					// get text from select directly.
+					let sel = this.$refs.sel;
+					if (!sel) return '';
+					let ops = sel.options;
+					let si = sel.selectedIndex;
+					if (si < 0 || si >= ops.length) return '';
+					return ops[si].text;
+				}
 			}
+		},
+		mounted() {
+			// litle hack. $refs are unavailable during init.
+			let t = this.getText();
+			if (t)
+				this.$refs.wrap.innerText = t;
 		}
 	});
 })();

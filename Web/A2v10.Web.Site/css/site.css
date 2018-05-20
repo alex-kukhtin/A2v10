@@ -1483,10 +1483,13 @@ pre.a2-code {
 .control-group .input-group .select-wrapper .select-text {
   line-height: 1.77em;
   flex-grow: 2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .control-group .input-group .select-wrapper .caret {
   display: block;
-  margin-top: 0.8em;
+  margin-top: 0.7em;
 }
 .control-group .input-group.static {
   background-color: #f8f8f8;
