@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180511-7186
+// 20180520-7189
 // services/datamodel.js
 
 (function () {
@@ -112,6 +112,7 @@
 			},
 			set(val) {
 				let eventWasFired = false;
+				let skipDirty = prop.startsWith('$$');
 				//TODO: emit and handle changing event
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;
@@ -125,8 +126,8 @@
 				} else {
 					this._src_[prop] = val;
 				}
-				if (!prop.startsWith('$$')) // skip special properties
-					this._root_.$setDirty(true);
+				if (!skipDirty) // skip special properties
+					this._root_.$setDirty(true, this._path_);
 				if (this._lockEvents_) return; // events locked
 				if (eventWasFired) return; // was fired
 				if (!this._path_)
@@ -207,7 +208,7 @@
 			startTime = performance.now();
 		parent = parent || elem;
 		defHidden(elem, SRC, {});
-		defHidden(elem, PATH, path);
+		defHidden(elem, PATH, path || '');
 		defHidden(elem, ROOT, parent._root_ || parent);
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
@@ -947,9 +948,12 @@
 		//console.dir(allerrs);
 	}
 
-	function setDirty(val) {
+	function setDirty(val, path) {
 		if (this.$root.$readOnly)
 			return;
+		if (path && path.toLowerCase().startsWith('query'))
+			return;
+		// TODO: template.options.skipDirty
 		this.$dirty = val;
 	}
 
@@ -972,7 +976,16 @@
 		return undefined;
 	}
 
-	function merge(src) {
+	function isSkipMerge(root, prop) {
+		if (prop.startsWith('$$')) return true; // special properties
+		let t = root.$template;
+		let opts = t && t.options;
+		let bo = opts && opts.bindOnce;
+		if (!bo) return false;
+		return bo.indexOf(prop) !== -1;
+	}
+
+	function merge(src, afterSave) {
 		let oldId = this.$id__;
 		try {
 			if (src === null)
@@ -980,7 +993,7 @@
 			this._root_._enableValidate_ = false;
 			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
-				if (prop.startsWith('$$')) continue; // skip special properties (saved)
+				if (afterSave && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];

@@ -1,47 +1,68 @@
 ﻿
 @media print {
 	.header {
-		display:none;
+		display: none;
 	}
+
 	.nav-bar {
-		display:none;
+		display: none;
 	}
+
 	.side-bar {
-		display:none;
+		display: none;
 	}
+
 	.footer {
-		display:none;
+		display: none;
 	}
 
 	.content-view.partial-page {
-		position:static;
+		position: static;
 	}
-	
+
 	.toolbar {
-		display:none;
+		display: none;
 	}
 
 	.taskpad {
-		display:none;
+		display: none;
 	}
 
 	.page.absolute {
-		position:static;
-		grid-template-columns:auto!important;
-		height:auto;
-		overflow:hidden;
+		position: static;
+		grid-template-columns: auto !important;
+		height: auto;
+		overflow: hidden;
 	}
 
 	table {
 		// disable print on each page
 		thead {
-			display:table-row-group;
+			display: table-row-group;
 		}
+
 		tfoot {
-			display:table-row-group;
+			display: table-row-group;
 		}
+
 		tr, td {
-			page-break-inside:avoid;
+			page-break-inside: avoid;
+			border-color: #999 !important;
+			border-width: 1px !important;
+
+			.input-group {
+				border-style: none !important;
+			}
 		}
+	}
+
+	.control-group {
+		.input-group {
+			border-color: #999;
+		}
+	}
+
+	table.a2-table > tbody > tr > td .control-group {
+		margin:1px;
 	}
 }

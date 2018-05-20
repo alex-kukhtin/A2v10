@@ -1456,9 +1456,9 @@ pre.a2-code {
   display: flex;
   align-items: baseline;
   background-color: white;
-  position: relative;
   padding: 1px 0;
   width: auto;
+  position: relative;
 }
 .control-group .input-group input,
 .control-group .input-group select {
@@ -1466,6 +1466,27 @@ pre.a2-code {
   font-weight: inherit;
   font-style: inherit;
   min-width: 32px;
+}
+.control-group .input-group select {
+  opacity: 0;
+  cursor: pointer;
+}
+.control-group .input-group .select-wrapper {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  display: flex;
+  padding: 0 5px;
+}
+.control-group .input-group .select-wrapper .select-text {
+  line-height: 1.77em;
+  flex-grow: 2;
+}
+.control-group .input-group .select-wrapper .caret {
+  display: block;
+  margin-top: 0.8em;
 }
 .control-group .input-group.static {
   background-color: #f8f8f8;
@@ -4445,7 +4466,7 @@ h5,
   }
   .page.absolute {
     position: static;
-    grid-template-columns: auto!important;
+    grid-template-columns: auto !important;
     height: auto;
     overflow: hidden;
   }
@@ -4458,5 +4479,17 @@ h5,
   table tr,
   table td {
     page-break-inside: avoid;
+    border-color: #999 !important;
+    border-width: 1px !important;
+  }
+  table tr .input-group,
+  table td .input-group {
+    border-style: none !important;
+  }
+  .control-group .input-group {
+    border-color: #999;
+  }
+  table.a2-table > tbody > tr > td .control-group {
+    margin: 1px;
   }
 }

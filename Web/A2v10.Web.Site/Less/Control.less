@@ -218,12 +218,38 @@
 		position: relative;
 		padding: 1px 0;
 		width: auto;
+		position: relative;
 
 		input, select {
 			height: @control-height;
 			font-weight: inherit;
 			font-style: inherit;
 			min-width: 32px; // for EDGE
+		}
+
+		select {
+			opacity: 0;
+			cursor: pointer;
+		}
+
+		.select-wrapper {
+			position: absolute;
+			left: 1px;
+			top: 1px;
+			right: 1px;
+			bottom: 1px;
+			display: flex;
+			padding: 0 5px;
+
+			.select-text {
+				line-height: @control-height;
+				flex-grow: 2;
+			}
+
+			.caret {
+				display: block;
+				margin-top:0.8em;
+			}
 		}
 
 		&.static {
@@ -283,7 +309,6 @@
 			width: 100%;
 		}
 	}
-
 	// TODO: HOVER???
 	//&:hover .input-group,
 	.input-group.focus {

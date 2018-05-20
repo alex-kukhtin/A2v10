@@ -46,6 +46,7 @@ namespace A2v10.Xaml
 	{
 		public Object ItemsSource { get; set; }
 		public String DisplayProperty { get; set; }
+		public Boolean ShowValue { get; set; }
 
 		ComboBoxItems _children;
 
@@ -73,6 +74,7 @@ namespace A2v10.Xaml
 			combo.MergeAttribute("v-cloak", String.Empty);
 			combo.MergeAttribute("display", DisplayProperty);
 			MergeAttributes(combo, context);
+			MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);
 			MergeDisabled(combo, context);
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

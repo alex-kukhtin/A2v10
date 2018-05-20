@@ -12,6 +12,10 @@
 `<div :class="cssClass()" v-lazy="itemsSource">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
+		<div class="select-wrapper">
+			<div v-text="wrapText" class="select-text"/>
+			<span class="caret"/>
+		</div>
 		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
@@ -46,7 +50,8 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			nameProp: String,
-			valueProp: String
+			valueProp: String,
+			showvalue: Boolean
 		},
 		computed: {
 			cmbValue: {
@@ -66,6 +71,12 @@
 				set(value) {
 					if (this.item) this.item[this.prop] = value;
 				}
+			},
+			wrapText() {
+				let itm = this.item ? this.item[this.prop] : null;
+				if (this.showvalue)
+					return this.getValue(itm);
+				return this.getName(itm);
 			}
 		},
 		methods: {
