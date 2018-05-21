@@ -5941,7 +5941,7 @@ TODO:
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180423-7161 */
+/* 20180521-7192 */
 /*components/tab.js*/
 
 /*
@@ -6085,6 +6085,12 @@ TODO:
 				this.activeTab = item;
 				if (this.items)
 					this._index = this.items.indexOf(item);
+			},
+			nextTab() {
+				alert('next');
+			},
+			prevTab() {
+				alert('prev');
 			},
 			isActiveTab(item) {
 				return item === this.activeTab;
@@ -6448,6 +6454,113 @@ TODO:
 	};
 
 	app.components['std:modal'] = modalComponent;
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+
+/* 20180521-7192 */
+/*components/wizard.js*/
+
+/*
+TODO:
+1. double chevron + vertical align
+2. next/finish text
+3. disable buttons
+4. WizardPage class
+5. check validators for this page (and for tabs too)
+*/
+
+(function () {
+
+
+	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
+
+	const wizardPageTemplate = `
+<div class="wizard-page" v-if="isActive">
+	<slot />
+</div>
+`;
+
+	const wizardPanelTemplate = `
+<div class="wizard-panel">
+	<ul class="wizard-header">
+		<li v-for="(p, px) in pages" :class="pageClass(p)"><a @click.prevent="selectPage(p)">Step</a></li>
+	</ul>
+	<div class="wizard-content">
+		<slot />
+	</div>
+	<div class="modal-footer">
+		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel">Cancel</button>
+		<button class="btn a2-inline"><i class="ico ico-chevron-left"/>Назад</button>
+		<button class="btn a2-inline">Далі<i class="ico ico-chevron-right"/></button>
+	</div>
+</div>
+`;
+
+	Vue.component('a2-wizard-panel', {
+		template: wizardPanelTemplate,
+		props: {
+			items: Array,
+			header: String
+		},
+		data() {
+			return {
+				pages: [],
+				activePage: null
+			};
+		},
+		computed: {
+			$locale() {
+				return locale;
+			}
+		},
+		methods: {
+			selectPage(page) {
+				this.activePage = page;
+			},
+			pageClass(page) {
+				let cls = '';
+				if (page === this.activePage)
+					cls += ' active';
+				return cls;
+			},
+			close() {
+				eventBus.$emit('modalClose');
+			},
+			$addPage(page) {
+				this.pages.push(page);
+			},
+			$removePage(page) {
+				let ix = this.pages.indexOf(page);
+				if (ix !== -1)
+					this.pages.splice(ix, 1);
+			}
+		},
+		mounted() {
+			if (this.pages.length > 0)
+				this.activePage = this.pages[0];
+		}
+	});
+
+	Vue.component("a2-wizard-page", {
+		template: wizardPageTemplate,
+		props: {
+
+		},
+		computed: {
+			isActive() {
+				return this === this.$parent.activePage;
+			}
+		},
+		created() {
+			this.$parent.$addPage(this);
+		},
+		destroyed() {
+			this.$parent.$removePage(this);
+		}
+	});
+
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -7590,7 +7703,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180520-7189
+// 20180521-7192
 // controllers/base.js
 
 (function () {
@@ -8050,7 +8163,7 @@ Vue.directive('resize', {
 
 				function simpleMerge(target, src) {
 					for (let p in target) {
-						if (p in src) 
+						if (p in src)
 							target[p] = src[p];
 						else
 							target[p] = undefined;
@@ -8167,7 +8280,7 @@ Vue.directive('resize', {
 
 			$modalSelect(array) {
 				if (!('$selected' in array)) {
-					console.error('invalid array for $modalSelect');
+					console.error('Invalid array for $modalSelect');
 					return;
 				}
 				this.$modalClose(array.$selected);
@@ -8424,7 +8537,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180408-7152*/
+/*20180521-7192*/
 /* controllers/shell.js */
 
 (function () {
@@ -8509,7 +8622,7 @@ Vue.directive('resize', {
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
 	<li class="aligner"></li>
-	<li :title="locale.$Help"><a :href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -8546,6 +8659,10 @@ Vue.directive('resize', {
 				if (am && am.Help)
 					return urlTools.helpHref(am.Help);
 				return urlTools.helpHref('');
+			},
+			hasHelp() {
+				let am = this.menu.find(x => this.isActive(x));
+				return am && am.Help;
 			}
 		}
 	};

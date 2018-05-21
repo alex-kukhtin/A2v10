@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180520-7189
+// 20180521-7192
 // controllers/base.js
 
 (function () {
@@ -460,7 +460,7 @@
 
 				function simpleMerge(target, src) {
 					for (let p in target) {
-						if (p in src) 
+						if (p in src)
 							target[p] = src[p];
 						else
 							target[p] = undefined;
@@ -577,7 +577,7 @@
 
 			$modalSelect(array) {
 				if (!('$selected' in array)) {
-					console.error('invalid array for $modalSelect');
+					console.error('Invalid array for $modalSelect');
 					return;
 				}
 				this.$modalClose(array.$selected);

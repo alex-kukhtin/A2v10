@@ -25,6 +25,10 @@ namespace A2v10.Xaml
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
+		internal virtual void OnCreateContent(TagBuilder tag)
+		{
+		}
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var dialog = new TagBuilder("div", "modal");
@@ -38,6 +42,7 @@ namespace A2v10.Xaml
 			RenderLoadIndicator(context);
 
 			var content = new TagBuilder("div", "modal-content");
+			OnCreateContent(content);
 			if (Height != null)
 				content.MergeStyle("height", Height.Value);
 			if (Padding != null)

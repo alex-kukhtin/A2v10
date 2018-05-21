@@ -2,14 +2,12 @@
 
 using System.IO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using A2v10.Request.Properties;
 using System.Dynamic;
-using A2v10.Infrastructure;
 using Newtonsoft.Json;
+
+using A2v10.Request.Properties;
 
 namespace A2v10.Request
 {
@@ -17,7 +15,7 @@ namespace A2v10.Request
 	{
 		Task RenderAbout(TextWriter writer)
 		{
-			var aboutHtml = new StringBuilder(Resources.about);
+			var aboutHtml = new StringBuilder(_localizer.Localize(null, Resources.about));
 			var aboutScript = new StringBuilder(Resources.aboutScript);
 			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
 			aboutScript.Replace("$(PageGuid)", pageGuid);

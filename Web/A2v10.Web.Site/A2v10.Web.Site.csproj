@@ -74,6 +74,7 @@
     <Content Include="app\components\taskpad.js" />
     <Content Include="app\components\toastr.js" />
     <Content Include="app\components\upload.js" />
+    <Content Include="app\components\wizard.js" />
     <Content Include="app\controllers\shell.js" />
     <Content Include="app\controllers\base.js" />
     <Content Include="app\components\datagrid.js" />
@@ -162,6 +163,7 @@
     <Content Include="TestPages\formcontrol2.html" />
     <Content Include="TestPages\datepicker.js" />
     <Content Include="TestPages\generator.js" />
+    <Content Include="TestPages\timeline.html" />
     <Content Include="TestPages\icons.html" />
     <Content Include="TestPages\listcomponent.html" />
     <Content Include="TestPages\mask.html" />
@@ -246,6 +248,7 @@
     <Content Include="Less\SideBar.less" />
     <Content Include="Less\SideBar.Compact.less" />
     <Content Include="Less\Image.less" />
+    <Content Include="Less\Wizard.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

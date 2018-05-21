@@ -1,0 +1,33 @@
+﻿
+
+
+.wizard-panel {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	height: 100%;
+
+	.modal-footer {
+		grid-row: 3;
+	}
+}
+
+.wizard-header {
+	padding: 6px;
+	margin: 0;
+	list-style: none;
+	display: flex;
+	grid-row:1;
+
+	li {
+		padding: 10px;
+	}
+
+	li.active {
+		background-color: aqua;
+	}
+}
+
+.wizard-content {
+	padding:0 6px;
+}
+

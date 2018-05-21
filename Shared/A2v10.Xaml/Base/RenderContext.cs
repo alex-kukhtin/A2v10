@@ -128,13 +128,8 @@ namespace A2v10.Xaml
 			_currentLocale = ri.CurrentLocale;
 		}
 
-		public Boolean IsDialog
-		{
-			get
-			{
-				return _root is Dialog;
-			}
-		}
+		public Boolean IsDialog => _root is Dialog;
+		public Boolean IsWizard => _root is Wizard;
 
 		public Boolean IsDataModelIsReadOnly
 		{

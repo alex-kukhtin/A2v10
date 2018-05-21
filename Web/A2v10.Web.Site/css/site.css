@@ -2872,6 +2872,30 @@ table.data-grid > tbody > tr.bold > td {
 .modal-body.alert > div {
   white-space: pre-line;
 }
+.wizard-panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+.wizard-panel .modal-footer {
+  grid-row: 3;
+}
+.wizard-header {
+  padding: 6px;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  grid-row: 1;
+}
+.wizard-header li {
+  padding: 10px;
+}
+.wizard-header li.active {
+  background-color: aqua;
+}
+.wizard-content {
+  padding: 0 6px;
+}
 .toastr-stack {
   position: absolute;
   z-index: 1080;

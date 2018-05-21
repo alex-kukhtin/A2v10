@@ -32,12 +32,18 @@
 			"procedure": "Agent.Fetch"
 		}
 	},
+	"dialogs": {
+		"wizard": {
+			"model": "Agent",
+			"view": "demo.wizard"
+		}
+	},
 	"reports": {
 		"invoice": {
 			"type": "stimulsoft",
 			"report": "invoice",
-					"model": "Document",
-					"name": "@[Invoice]"
+			"model": "Document",
+			"name": "@[Invoice]"
 		}
 	}
 }

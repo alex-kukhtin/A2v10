@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180423-7161 */
+/* 20180521-7192 */
 /*components/tab.js*/
 
 /*
@@ -145,6 +145,12 @@ TODO:
 				this.activeTab = item;
 				if (this.items)
 					this._index = this.items.indexOf(item);
+			},
+			nextTab() {
+				alert('next');
+			},
+			prevTab() {
+				alert('prev');
 			},
 			isActiveTab(item) {
 				return item === this.activeTab;

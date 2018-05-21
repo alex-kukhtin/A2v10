@@ -51,7 +51,6 @@ namespace A2v10.Xaml
 		Copy
 	}
 
-
 	public class BindCmd : BindBase
 	{
 		private const String nullString = "null";

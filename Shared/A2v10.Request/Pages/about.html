@@ -1,20 +1,20 @@
 ﻿<div class="page absolute page-grid" id="$(PageGuid)">
-    <a2-document-title page-title="О программе..."></a2-document-title>
-    <div class="toolbar page-toolbar">
-        <button class="btn btn-tb" @click.prevent="$requery"><i class="ico ico-reload"></i> Обновить</button>
-        <div class="aligner"></div>
-        <button class="btn btn-tb" @click.prevent="$close"><i class="ico ico-close"></i> Закрыть</button>
-    </div>
-    <div class="page-content">
-        <div class="grid">
-            <h3 class="a2-header">A2:Web version 10</h3>
-        </div>
+	<a2-document-title page-title="@[About]"></a2-document-title>
+	<div class="toolbar page-toolbar">
+		<button class="btn btn-tb" @click.prevent="$requery"><i class="ico ico-reload"></i> @[Refresh]</button>
+		<div class="aligner"></div>
+		<button class="btn btn-tb" @click.prevent="$close"><i class="ico ico-close"></i> @[Close]</button>
+	</div>
+	<div class="page-content">
+		<div class="grid">
+			<h3 class="a2-header">A2:Web version 10</h3>
+		</div>
 
 		<div>
 			<pre v-text="appData"></pre>
 		</div>
-    </div>
+	</div>
 </div>
 <script type="text/javascript">
-$(AboutScript)
+	$(AboutScript)
 </script>

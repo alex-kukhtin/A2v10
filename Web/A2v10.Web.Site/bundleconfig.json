@@ -35,6 +35,7 @@
 				"app/components/tab.js",
 				"app/components/list.js",
 				"app/components/modal.js",
+				"app/components/wizard.js",
 				"app/components/toastr.js",
 				"app/components/image.js",
 				"app/components/taskpad.js",

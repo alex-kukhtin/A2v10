@@ -7,7 +7,7 @@
 	</Page.Resources>
 	<Page.Toolbar>
 		<Toolbar Style="Transparent">
-			<Button Icon="Add" Tip="Создать счет2" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
+			<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
 			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='@[ConfirmDeleteDocument]'}">@[Delete]</Button>
 			<Button Icon="Download" Content="Експорт" Command="{BindCmd Export}"/>
@@ -21,6 +21,7 @@
 				</Button.DropDown>
 			</Button>
 			<DatePicker Value="{Bind Parent.Filter.Period.From}"/>
+			<Button Icon="DashboardOutline" Content="Wizard" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/Wizard'}"></Button>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
 		</Toolbar>
 	</Page.Toolbar>
