@@ -20,7 +20,7 @@ namespace A2v10.Request
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, path);
 			var action = rm.CurrentAction;
-			var export = action.export;
+			var export = action.Export;
 			if (export == null)
 				throw new RequestModelException($"There is no export in '{rm.ModelAction}' action");
 
@@ -49,8 +49,10 @@ namespace A2v10.Request
 		void SetResponseInfo(HttpResponseBase response, RequestExport export)
 		{
 			response.ContentType = MimeMapping.GetMimeMapping(export.format.ToString());
-			var cdh = new ContentDispositionHeaderValue("attachment");
-			cdh.FileNameStar = _localizer.Localize(null, export.fileName) + '.' + export.format.ToString();
+			var cdh = new ContentDispositionHeaderValue("attachment")
+			{
+				FileNameStar = _localizer.Localize(null, export.fileName) + '.' + export.format.ToString()
+			};
 			response.Headers.Add("Content-Disposition", cdh.ToString());
 		}
 	}

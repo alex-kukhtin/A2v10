@@ -35,7 +35,7 @@ namespace A2v10.Infrastructure.Utilities
         {
             public TokenId id;
             public String Text;
-            public int pos;
+            public Int32 pos;
 
             public String UnquotedText
             {
@@ -49,13 +49,13 @@ namespace A2v10.Infrastructure.Utilities
         }
 
         String text = null;
-        int textPos = 0;
-        int textLen = 0;
-        char ch;
+        Int32 textPos = 0;
+        readonly Int32 textLen = 0;
+        Char ch;
 
         public Token token;
 
-        public Tokenizer(String source, int textPos = 0)
+        public Tokenizer(String source, Int32 textPos = 0)
         {
             text = source;
             textLen = text.Length;
@@ -63,12 +63,12 @@ namespace A2v10.Infrastructure.Utilities
             NextToken();
         }
 
-        public int GetTextPos()
+        public Int32 GetTextPos()
         {
             return textPos;
         }
 
-        void SetTextPos(int pos)
+        void SetTextPos(Int32 pos)
         {
             textPos = pos;
             ch = textPos < textLen ? text[textPos] : '\0';
@@ -86,7 +86,7 @@ namespace A2v10.Infrastructure.Utilities
             ch = textPos > 0 ? text[textPos] : '\0';
         }
 
-        bool IsCrLf()
+        Boolean IsCrLf()
         {
             return ch == '\r' || ch == '\n';
         }
@@ -99,7 +99,7 @@ namespace A2v10.Infrastructure.Utilities
         public void NextToken()
         {
             while (Char.IsWhiteSpace(ch)) NextChar();
-            int tokenPos = textPos;
+            Int32 tokenPos = textPos;
             TokenId t = TokenId.Null;
             switch (ch)
             {

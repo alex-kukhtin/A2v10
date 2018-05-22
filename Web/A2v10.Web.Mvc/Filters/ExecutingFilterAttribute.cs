@@ -12,11 +12,9 @@ namespace A2v10.Web.Mvc.Filters
 		public override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
-			var iCtrlTenant = filterContext.Controller as IControllerTenant;
-			if (iCtrlTenant != null)
+			if (filterContext.Controller is IControllerTenant iCtrlTenant)
 				iCtrlTenant.StartTenant();
-			var iCtrl = filterContext.Controller as IControllerProfiler;
-			if (iCtrl == null)
+			if (!(filterContext.Controller is IControllerProfiler iCtrl))
 				return;
 			var ctrl = filterContext.Controller as Controller;
 			_request = iCtrl.Profiler.BeginRequest(ctrl.Request.Url.PathAndQuery, ctrl.Session.SessionID);

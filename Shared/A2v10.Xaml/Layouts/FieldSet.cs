@@ -13,9 +13,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var div = new TagBuilder("fieldset", "field-set", IsInGrid);
-            if (onRender != null)
-                onRender(div);
-            MergeAttributes(div, context);
+			onRender?.Invoke(div);
+			MergeAttributes(div, context);
             div.AddCssClass(Orientation.ToString().ToLowerInvariant());
             div.RenderStart(context);
             RenderTitle(context);

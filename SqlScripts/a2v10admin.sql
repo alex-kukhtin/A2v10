@@ -1,6 +1,6 @@
-/*
+п»ї/*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright В© 2008-2018 Alex Kukhtin
 
 Last updated : 10 may 2018
 module version : 7165
@@ -801,11 +801,11 @@ begin
 	insert into @menu(id, p0, [name], [url], icon, [order])
 	values
 		(900, null, N'Admin',           null,        null,     0),
-		(901, 900,  N'Администратор',   N'identity', null,     10),
-		(902, 900,  N'Бизнес процессы', N'process',  null,     20),
-		(910, 901,  N'Пользователи',    N'user',     N'user',  10),
-		(911, 901,  N'Группы',          N'group',    N'users', 10),
-		(912, 901,  N'Роли',            N'role',     N'users', 20);
+		(901, 900,  N'РџРѕР»СЊР·РѕРІР°С‚РµР»Рё',   N'identity', null,     10),
+		(902, 900,  N'Р‘РёР·РЅРµСЃ РїСЂРѕС†РµСЃСЃС‹', N'process',  null,     20),
+		(910, 901,  N'РџРѕР»СЊР·РѕРІР°С‚РµР»Рё',    N'user',     N'user',  10),
+		(911, 901,  N'Р“СЂСѓРїРїС‹',          N'group',    N'users', 10),
+		(912, 901,  N'Р РѕР»Рё',            N'role',     N'users', 20);
 			
 	merge a2ui.Menu as target
 	using @menu as source

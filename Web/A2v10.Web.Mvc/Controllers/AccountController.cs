@@ -84,9 +84,7 @@ namespace A2v10.Web.Site.Controllers
 		{
 			try
 			{
-				String cookieToken;
-				String formToken;
-				AntiForgery.GetTokens(null, out cookieToken, out formToken);
+				AntiForgery.GetTokens(null, out String cookieToken, out String formToken);
 
 				AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 
@@ -104,7 +102,7 @@ namespace A2v10.Web.Site.Controllers
 				script.Replace("$(Mask)", ResourceHelper.mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
-				script.Replace("$(ServerInfo)", serverInfo != null ? serverInfo : "null");
+				script.Replace("$(ServerInfo)", serverInfo ?? "null");
 				script.Replace("$(Token)", formToken);
 				layout.Replace("$(PageScript)", script.ToString());
 
@@ -175,7 +173,7 @@ namespace A2v10.Web.Site.Controllers
 		//
 		// GET: /Account/VerifyCode
 		[AllowAnonymous]
-		public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
+		public async Task<ActionResult> VerifyCode(String provider, String returnUrl, Boolean rememberMe)
 		{
 			// Require that the user has already logged in via username/password or external login
 			if (!await SignInManager.HasBeenVerifiedAsync())
@@ -357,7 +355,7 @@ namespace A2v10.Web.Site.Controllers
 				else
 				{
 					String code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-					var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+					var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 					String subject = _localizer.Localize(null, "@[ResetPassword]");
 					String body = _localizer
 						.Localize(null, "@[ResetPasswordBody]")
@@ -378,7 +376,7 @@ namespace A2v10.Web.Site.Controllers
 		[AllowAnonymous]
 		[HttpGet]
 		[OutputCache(Duration = 0)]
-		public void ResetPassword(string code)
+		public void ResetPassword(String code)
 		{
 			if (code == null)
 				return;
@@ -478,7 +476,7 @@ namespace A2v10.Web.Site.Controllers
 		//
 		// GET: /Account/SendCode
 		[AllowAnonymous]
-		public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
+		public async Task<ActionResult> SendCode(String returnUrl, Boolean rememberMe)
 		{
 			var userId = await SignInManager.GetVerifiedUserIdAsync();
 			if (userId == 0)
@@ -507,7 +505,7 @@ namespace A2v10.Web.Site.Controllers
 			{
 				return View("Error");
 			}
-			return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+			return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
 		}
 
 		[HttpPost]
@@ -518,7 +516,7 @@ namespace A2v10.Web.Site.Controllers
 		}
 
 
-		protected override void Dispose(bool disposing)
+		protected override void Dispose(Boolean disposing)
 		{
 			if (disposing)
 			{
@@ -549,7 +547,7 @@ namespace A2v10.Web.Site.Controllers
 			}
 		}
 
-		private ActionResult RedirectToLocal(string returnUrl)
+		private ActionResult RedirectToLocal(String returnUrl)
 		{
 			if (Url.IsLocalUrl(returnUrl))
 			{
@@ -591,7 +589,7 @@ namespace A2v10.Web.Site.Controllers
 			}
 		}
 
-		bool IsEmailValid(String mail)
+		Boolean IsEmailValid(String mail)
 		{
 			var ema = new EmailAddressAttribute();
 			return ema.IsValid(mail);

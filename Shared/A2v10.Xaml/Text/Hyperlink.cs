@@ -26,8 +26,7 @@ namespace A2v10.Xaml
 				var wrap = new TagBuilder("div", "dropdown hlink-dd-wrapper", IsInGrid)
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
 					.MergeAttribute("v-dropdown", String.Empty);
-				if (onRender != null)
-					onRender(wrap);
+				onRender?.Invoke(wrap);
 				MergeAttributes(wrap, context, MergeAttrMode.Visibility);
 				wrap.RenderStart(context);
 				RenderHyperlink(context, false, null, true);
@@ -40,13 +39,12 @@ namespace A2v10.Xaml
 			}
 		}
 
-		void RenderHyperlink(RenderContext context, bool inGrid, Action<TagBuilder> onRender = null, bool inside = false)
+		void RenderHyperlink(RenderContext context, Boolean inGrid, Action<TagBuilder> onRender = null, Boolean inside = false)
 		{
 			Boolean bHasDropDown = DropDown != null;
 
 			var tag = new TagBuilder("a", "a2-hyperlink", inGrid);
-			if (onRender != null)
-				onRender(tag);
+			onRender?.Invoke(tag);
 			var attrMode = MergeAttrMode.All;
 			if (inside)
 				attrMode &= ~MergeAttrMode.Visibility;

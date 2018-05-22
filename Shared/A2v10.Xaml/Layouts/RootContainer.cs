@@ -45,8 +45,7 @@ namespace A2v10.Xaml
 		{
 			if (_resources == null)
 				return null;
-			Object resrc;
-			if (_resources.TryGetValue(key, out resrc))
+			if (_resources.TryGetValue(key, out Object resrc))
 				return resrc;
 			return null;
 		}

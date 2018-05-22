@@ -24,8 +24,10 @@ namespace A2v10.Tests
 		[TestMethod]
 		public void SimpleRender()
 		{
-			var ri = new RenderInfo();
-			ri.RootId = Guid.NewGuid().ToString();
+			var ri = new RenderInfo
+			{
+				RootId = Guid.NewGuid().ToString()
+			};
 			using (var sv = new StringWriter())
 			{
 				ri.Writer = sv;
@@ -35,8 +37,10 @@ namespace A2v10.Tests
 
 		String Render(String text)
 		{
-			var ri = new RenderInfo();
-			ri.RootId = Guid.NewGuid().ToString();
+			var ri = new RenderInfo
+			{
+				RootId = Guid.NewGuid().ToString()
+			};
 			using (var sv = new StringWriter())
 			{
 				ri.Writer = sv;

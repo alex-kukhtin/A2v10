@@ -27,8 +27,7 @@ namespace A2v10.Messaging
 
 		public IMessage Get(String key)
 		{
-			IMessage message;
-			if (_messages.TryGetValue(key, out message))
+			if (_messages.TryGetValue(key, out IMessage message))
 				return message;
 			return null;
 		}

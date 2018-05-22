@@ -10,8 +10,8 @@ namespace A2v10.Workflow
 {
     public class WorkflowEngine : IWorkflowEngine
     {
-        IDbContext _dbContext;
-        IApplicationHost _host;
+        readonly IDbContext _dbContext;
+        readonly IApplicationHost _host;
 
         public WorkflowEngine(IApplicationHost host, IDbContext context)
         {

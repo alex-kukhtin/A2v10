@@ -32,8 +32,7 @@ namespace A2v10.Xaml
 		{
 			CheckDisabledModel(context);
 			var input = new TagBuilder("a2-selector", null, IsInGrid);
-			if (onRender != null)
-				onRender(input);
+			onRender?.Invoke(input);
 			if (!String.IsNullOrEmpty(Delegate))
 				input.MergeAttribute(":fetch", $"$delegate('{Delegate}')");
 			input.MergeAttribute("display", DisplayProperty);

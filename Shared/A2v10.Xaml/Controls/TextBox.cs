@@ -30,8 +30,7 @@ namespace A2v10.Xaml
 			CheckDisabledModel(context);
 			var tagName = Multiline ? "a2-textarea" : "textbox";
 			var input = new TagBuilder(tagName, null, IsInGrid);
-			if (onRender != null)
-				onRender(input);
+			onRender?.Invoke(input);
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			if (Multiline)

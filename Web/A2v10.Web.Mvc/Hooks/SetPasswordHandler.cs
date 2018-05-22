@@ -16,9 +16,9 @@ namespace A2v10.Web.Mvc.Hooks
 {
 	public class SetPasswordHandler : IModelHandler
 	{
-		IApplicationHost _host;
-		IOwinContext _context;
-		AppUserManager _userManager;
+		readonly IApplicationHost _host;
+		readonly IOwinContext _context;
+		readonly AppUserManager _userManager;
 		public SetPasswordHandler(IApplicationHost host)
 		{
 			_host = host;

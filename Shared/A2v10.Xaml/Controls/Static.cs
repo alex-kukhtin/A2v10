@@ -11,8 +11,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var input = new TagBuilder("static", null, IsInGrid);
-			if (onRender != null)
-				onRender(input);
+			onRender?.Invoke(input);
 			MergeAttributes(input, context);
 			MergeValue(input, context); // item, prop for validator
 			MergeAlign(input, context, Align);

@@ -52,14 +52,16 @@ namespace A2v10.Request
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
-			ImageUpdateInfo ii = new ImageUpdateInfo();
-			// TODO: is not tenantId ???
-			ii.TenantId = tenantId;
-			ii.UserId = userId;
-			ii.Id = rm._id;
-			ii.Key = key;
+			ImageUpdateInfo ii = new ImageUpdateInfo
+			{
+				// TODO: is not tenantId ???
+				TenantId = tenantId,
+				UserId = userId,
+				Id = rm._id,
+				Key = key
+			};
 			var retList = new List<Object>();
-			for (int i = 0; i < files.Count; i++)
+			for (Int32 i = 0; i < files.Count; i++)
 			{
 				HttpPostedFileBase file = files[i];
 				ii.Mime = file.ContentType;

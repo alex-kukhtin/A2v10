@@ -31,8 +31,7 @@ namespace A2v10.Xaml
 		{
 			if (_bindings == null)
 				return null;
-			BindBase bind = null;
-			if (_bindings.TryGetValue(name, out bind))
+			if (_bindings.TryGetValue(name, out BindBase bind))
 			{
 				if (bind is Bind)
 					return bind as Bind;
@@ -45,8 +44,7 @@ namespace A2v10.Xaml
 		{
 			if (_bindings == null)
 				return null;
-			BindBase bind = null;
-			if (_bindings.TryGetValue(name, out bind))
+			if (_bindings.TryGetValue(name, out BindBase bind))
 			{
 				if (bind is BindCmd)
 					return bind as BindCmd;

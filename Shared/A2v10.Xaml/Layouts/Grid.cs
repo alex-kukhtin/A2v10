@@ -147,8 +147,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var grid = new TagBuilder("div", "grid", IsInGrid);
-			if (onRender != null)
-				onRender(grid);
+			onRender?.Invoke(grid);
 			MergeAttributes(grid, context);
 			if (Height != null)
 				grid.MergeStyle("height", Height.Value);
@@ -194,8 +193,10 @@ namespace A2v10.Xaml
 			var coll = new RowDefinitions();
 			foreach (var row in val.Split(','))
 			{
-				var rd = new RowDefinition();
-				rd.Height = GridLength.FromString(row.Trim());
+				var rd = new RowDefinition
+				{
+					Height = GridLength.FromString(row.Trim())
+				};
 				coll.Add(rd);
 			}
 			return coll;
@@ -224,8 +225,10 @@ namespace A2v10.Xaml
 			var coll = new ColumnDefinitions();
 			foreach (var row in val.Split(','))
 			{
-				var cd = new ColumnDefinition();
-				cd.Width = GridLength.FromString(row.Trim());
+				var cd = new ColumnDefinition
+				{
+					Width = GridLength.FromString(row.Trim())
+				};
 				coll.Add(cd);
 			}
 			return coll;
@@ -244,7 +247,7 @@ namespace A2v10.Xaml
 
 	public class RowDefinitionsConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -253,7 +256,7 @@ namespace A2v10.Xaml
 			return false;
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;
@@ -269,7 +272,7 @@ namespace A2v10.Xaml
 
 	public class ColumnDefinitionsConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -278,7 +281,7 @@ namespace A2v10.Xaml
 			return false;
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;

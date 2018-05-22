@@ -10,7 +10,7 @@ namespace BuildSql
 {
 	public class SqlFileBuilder
 	{
-		String _path;
+		readonly String _path;
 		public SqlFileBuilder(String path)
 		{
 			_path = path;

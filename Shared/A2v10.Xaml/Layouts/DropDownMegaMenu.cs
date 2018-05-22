@@ -34,8 +34,8 @@ namespace A2v10.Xaml
 
 			if (Children.Count != 1)
 				throw new XamlException("DropDownMegaMenu. MenuItem must be specified");
-			var mi = Children[0] as MenuItem;
-			if (mi == null)
+
+			if (!(Children[0] is MenuItem mi))
 				throw new XamlException("DropDownMegaMenu. MenuItem must be specified");
 
 			var tml = new TagBuilder("template");

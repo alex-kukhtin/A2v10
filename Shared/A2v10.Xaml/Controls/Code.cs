@@ -13,9 +13,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var code = new TagBuilder(Multiline ? "pre" : "code", null, IsInGrid);
-            if (onRender != null)
-                onRender(code);
-            if (Multiline)
+			onRender?.Invoke(code);
+			if (Multiline)
                 code.AddCssClass("pre-scrollable");
             if (Height != null)
                 code.MergeStyle("max-height", Height.Value);

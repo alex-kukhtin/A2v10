@@ -14,9 +14,8 @@ namespace A2v10.Xaml
         {
             CheckDisabledModel(context);
             var tag = new TagBuilder("label", ControlType, IsInGrid);
-            if (onRender != null)
-                onRender(tag);
-            MergeAttributes(tag, context, MergeAttrMode.NoTabIndex);
+			onRender?.Invoke(tag);
+			MergeAttributes(tag, context, MergeAttrMode.NoTabIndex);
             if (IsLabelEmpty)
                 tag.AddCssClass("no-label");
             tag.RenderStart(context);

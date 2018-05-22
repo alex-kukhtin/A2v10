@@ -18,8 +18,7 @@ namespace A2v10.Xaml
 		{
 			if (!dict.IsValueCreated)
 				return default(T);
-			T val;
-			if (dict.Value.TryGetValue(obj, out val))
+			if (dict.Value.TryGetValue(obj, out T val))
 				return val;
 			return default(T);
 		}

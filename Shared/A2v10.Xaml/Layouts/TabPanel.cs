@@ -27,8 +27,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var panel = new TagBuilder("a2-tab-panel", null, IsInGrid);
-			if (onRender != null)
-				onRender(panel);
+			onRender?.Invoke(panel);
 			MergeAttributes(panel, context);
 			panel.AddCssClassBool(Border, "bordered");
 			panel.AddCssClassBool(FullPage, "full-page");
@@ -63,8 +62,7 @@ namespace A2v10.Xaml
 
 		void RenderHeaderTemplate(RenderContext context)
 		{
-			var tabHeader = Tabs[0].Header as UIElementBase;
-			if (tabHeader == null)
+			if (!(Tabs[0].Header is UIElementBase tabHeader))
 				return;
 			var tml = new TagBuilder("template");
 			tml.MergeAttribute("slot", "header");

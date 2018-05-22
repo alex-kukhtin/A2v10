@@ -17,8 +17,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("a2-image", null, IsInGrid);
-			if (onRender != null)
-				onRender(tag);
+			onRender?.Invoke(tag);
 			MergeAttributes(tag, context);
 			var contBind = GetBinding(nameof(Source));
 			if (contBind == null)

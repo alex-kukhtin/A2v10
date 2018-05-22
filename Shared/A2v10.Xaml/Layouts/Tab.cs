@@ -25,8 +25,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tab = new TagBuilder("a2-tab-item");
-			if (onRender != null)
-				onRender(tab);
+			onRender?.Invoke(tab);
 			MergeAttributes(tab, context, MergeAttrMode.SpecialTab);
 			var headerBind = GetBinding(nameof(Header));
 			if (headerBind != null)

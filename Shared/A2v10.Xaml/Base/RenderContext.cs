@@ -113,11 +113,11 @@ namespace A2v10.Xaml
 		private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
 		private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
 
-		private UIElementBase _root;
+		readonly private UIElementBase _root;
 		private IDataModel _dataModel;
 		private ILocalizer _localizer;
 
-		private String _currentLocale;
+		readonly private String _currentLocale;
 
 		public RenderContext(UIElementBase root, RenderInfo ri)
 		{

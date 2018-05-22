@@ -33,11 +33,13 @@ namespace A2v10.Reports
 
 		public static StiPdfExportSettings GetPdfExportSettings()
 		{
-			var pdf = new StiPdfExportSettings();
-			pdf.UseUnicode = true;
-			pdf.EmbeddedFonts = true;
-			pdf.ImageResolution = 300;
-			pdf.ImageCompressionMethod = StiPdfImageCompressionMethod.Flate;
+			var pdf = new StiPdfExportSettings
+			{
+				UseUnicode = true,
+				EmbeddedFonts = true,
+				ImageResolution = 300,
+				ImageCompressionMethod = StiPdfImageCompressionMethod.Flate
+			};
 			return pdf;
 		}
 
@@ -58,8 +60,8 @@ namespace A2v10.Reports
 
 		public static void AddReferencedAssemblies(this StiReport report)
 		{
-			int asCount = 1;
-			int len = report.ReferencedAssemblies.Length;
+			Int32 asCount = 1;
+			Int32 len = report.ReferencedAssemblies.Length;
 			var ra = new String[len + asCount];
 			Array.Copy(report.ReferencedAssemblies, ra, len);
 			ra[len] = "A2v10.Infrastructure";
@@ -71,8 +73,7 @@ namespace A2v10.Reports
 			var cns = ConfigurationManager.ConnectionStrings;
 			foreach (var db in report.Dictionary.Databases)
 			{
-				var dbs = db as StiSqlDatabase;
-				if (dbs != null)
+				if (db is StiSqlDatabase dbs)
 				{
 					var st = cns[dbs.Name];
 					if (st != null)

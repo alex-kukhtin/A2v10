@@ -28,10 +28,10 @@ namespace A2v10.Interop
 	{
 		internal SharedStringItem Item;
 		internal String Expression;
-		internal int iIndex;
-		bool bParsed = false;
+		internal Int32 iIndex;
+		Boolean bParsed = false;
 
-		internal SharedStringDef(SharedStringItem itm, int ix)
+		internal SharedStringDef(SharedStringItem itm, Int32 ix)
 		{
 			Item = itm;
 			iIndex = ix;
@@ -61,7 +61,7 @@ namespace A2v10.Interop
 		Dictionary<String, SharedStringDef> _sharedStringMap;
 		Dictionary<Int32, SharedStringDef> _sharedStringIndexMap;
 
-		String _templateFile;
+		readonly String _templateFile;
 		String _resultFile;
 
 		Boolean _sharedStringModified = false;
@@ -99,8 +99,7 @@ namespace A2v10.Interop
 				var defName = workBook.DefinedNames.FirstChild;
 				while (defName != null)
 				{
-					var dn = defName as DefinedName;
-					if (dn != null)
+					if (defName is DefinedName dn)
 					{
 						CheckDefinedName(dn);
 					}
@@ -121,7 +120,7 @@ namespace A2v10.Interop
 		void PrepareSharedStringTable()
 		{
 			var sslist = _sharedStringTable.Elements<SharedStringItem>().ToList();
-			for (int i = 0; i < sslist.Count; i++)
+			for (Int32 i = 0; i < sslist.Count; i++)
 			{
 				var ssitem = sslist[i];
 				String str = ssitem.Text.Text;
@@ -130,7 +129,7 @@ namespace A2v10.Interop
 				if (_sharedStringMap == null)
 					_sharedStringMap = new Dictionary<String, SharedStringDef>();
 				if (_sharedStringIndexMap == null)
-					_sharedStringIndexMap = new Dictionary<int, SharedStringDef>();
+					_sharedStringIndexMap = new Dictionary<Int32, SharedStringDef>();
 				var ssd = new SharedStringDef(ssitem, i);
 				_sharedStringMap.Add(str, ssd);
 				_sharedStringIndexMap.Add(i, ssd);
@@ -144,12 +143,12 @@ namespace A2v10.Interop
 				return;
 			String propName = name.Substring(1, name.Length - 2);
 			String showRef = dn.Text;
-			int exclPos = showRef.IndexOf('!');
+			Int32 exclPos = showRef.IndexOf('!');
 			if (exclPos == -1)
 				return;
 			String shtName = showRef.Substring(0, exclPos);
 			String shtRef = showRef.Substring(exclPos + 1);
-			int colonPos = shtRef.IndexOf(':');
+			Int32 colonPos = shtRef.IndexOf(':');
 			if (colonPos == -1)
 				return;
 			String startRef = shtRef.Substring(0, colonPos); // ссылка на первую строку дипазона
@@ -172,9 +171,11 @@ namespace A2v10.Interop
 			}
 			if (_dataSetRows == null)
 				_dataSetRows = new Dictionary<String, RowSetDef>();
-			RowSetDef rd = new RowSetDef();
-			rd.FirstRow = startRow;
-			rd.RowCount = endRow - startRow + 1;
+			RowSetDef rd = new RowSetDef
+			{
+				FirstRow = startRow,
+				RowCount = endRow - startRow + 1
+			};
 			_dataSetRows.Add(propName, rd);
 		}
 
@@ -231,8 +232,7 @@ namespace A2v10.Interop
 				return;
 			String addr = cell.CellValue.Text.ToString();
 			// это номер строки из SharedStrings
-			Int32 strIndex = 0;
-			if (!Int32.TryParse(addr, out strIndex))
+			if (!Int32.TryParse(addr, out Int32 strIndex))
 				return;
 			if (!_sharedStringIndexMap.ContainsKey(strIndex))
 				return;
@@ -259,8 +259,10 @@ namespace A2v10.Interop
 			else if (obj is DateTime)
 			{
 				DateTime dt = (DateTime)obj;
-				var cv = new CellValue();
-				cv.Text = dt.ToOADate().ToString(CultureInfo.InvariantCulture);
+				var cv = new CellValue
+				{
+					Text = dt.ToOADate().ToString(CultureInfo.InvariantCulture)
+				};
 				// CellValues.Date supported in Office2010 only
 				cell.DataType = CellValues.Number; 
 				cell.CellValue = cv;
@@ -318,7 +320,7 @@ namespace A2v10.Interop
 				var row = _sheetData.Elements<Row>().First<Row>(r => r.RowIndex == rd.FirstRow);
 				rd.Rows = new List<Row>();
 				rd.RowsForClone = new List<Row>();
-				for (int i = 0; i < rd.RowCount; i++)
+				for (Int32 i = 0; i < rd.RowCount; i++)
 				{
 					rd.Rows.Add(row);
 					rd.RowsForClone.Add(row.Clone() as Row); // и для клонирования тоже!
@@ -332,7 +334,7 @@ namespace A2v10.Interop
 				lastRow = rd.Rows[rd.Rows.Count - 1];
 				// индекс следующей вставляемой строки
 				UInt32 nri = rd.Rows[0].RowIndex.Value + rd.RowCount;
-				for (int i = 0; i < rd.Rows.Count; i++)
+				for (Int32 i = 0; i < rd.Rows.Count; i++)
 				{
 					var sr = rd.RowsForClone[i];
 					var nr = sr.Clone() as Row;

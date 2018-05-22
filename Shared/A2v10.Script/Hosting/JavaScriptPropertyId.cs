@@ -41,12 +41,11 @@
 		///     Requires an active script context.
 		///     </para>
 		/// </remarks>
-		public string Name
+		public String Name
 		{
 			get
 			{
-				string name;
-				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out name));
+				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out String name));
 				return name;
 			}
 		}
@@ -66,10 +65,9 @@
 		///     The name of the property ID to get or create. The name may consist of only digits.
 		/// </param>
 		/// <returns>The property ID in this runtime for the given name.</returns>
-		public static JavaScriptPropertyId FromString(string name)
+		public static JavaScriptPropertyId FromString(String name)
 		{
-			JavaScriptPropertyId id;
-			Native.ThrowIfError(Native.JsGetPropertyIdFromName(name, out id));
+			Native.ThrowIfError(Native.JsGetPropertyIdFromName(name, out JavaScriptPropertyId id));
 			return id;
 		}
 
@@ -79,7 +77,7 @@
 		/// <param name="left">The first property ID to compare.</param>
 		/// <param name="right">The second property ID to compare.</param>
 		/// <returns>Whether the two property IDs are the same.</returns>
-		public static bool operator ==(JavaScriptPropertyId left, JavaScriptPropertyId right)
+		public static Boolean operator ==(JavaScriptPropertyId left, JavaScriptPropertyId right)
 		{
 			return left.Equals(right);
 		}
@@ -90,7 +88,7 @@
 		/// <param name="left">The first property ID to compare.</param>
 		/// <param name="right">The second property ID to compare.</param>
 		/// <returns>Whether the two property IDs are not the same.</returns>
-		public static bool operator !=(JavaScriptPropertyId left, JavaScriptPropertyId right)
+		public static Boolean operator !=(JavaScriptPropertyId left, JavaScriptPropertyId right)
 		{
 			return !left.Equals(right);
 		}
@@ -100,7 +98,7 @@
 		/// </summary>
 		/// <param name="other">The other property ID to compare.</param>
 		/// <returns>Whether the two property IDs are the same.</returns>
-		public bool Equals(JavaScriptPropertyId other)
+		public Boolean Equals(JavaScriptPropertyId other)
 		{
 			return id == other.id;
 		}
@@ -110,9 +108,9 @@
 		/// </summary>
 		/// <param name="obj">The other property ID to compare.</param>
 		/// <returns>Whether the two property IDs are the same.</returns>
-		public override bool Equals(object obj)
+		public override Boolean Equals(Object obj)
 		{
-			if (ReferenceEquals(null, obj))
+			if (obj is null)
 			{
 				return false;
 			}
@@ -124,7 +122,7 @@
 		///     The hash code.
 		/// </summary>
 		/// <returns>The hash code of the property ID.</returns>
-		public override int GetHashCode()
+		public override Int32 GetHashCode()
 		{
 			return id.ToInt32();
 		}
@@ -133,7 +131,7 @@
 		///     Converts the property ID to a string.
 		/// </summary>
 		/// <returns>The name of the property ID.</returns>
-		public override string ToString()
+		public override String ToString()
 		{
 			return Name;
 		}

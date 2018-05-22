@@ -21,8 +21,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", "stack-panel", IsInGrid);
-			if (onRender != null)
-				onRender(div);
+			onRender?.Invoke(div);
 			MergeAttributes(div, context);
 			div.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			if (AlignItems != StackPanelAlignItems.Default)

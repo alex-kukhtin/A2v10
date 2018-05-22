@@ -27,8 +27,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", null, IsInGrid);
-			if (onRender != null)
-				onRender(div);
+			onRender?.Invoke(div);
 			MergeAttributes(div, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
 			if (Height != null)
 				div.MergeStyle("height", Height.Value);

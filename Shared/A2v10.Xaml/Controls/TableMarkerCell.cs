@@ -13,9 +13,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var td = new TagBuilder("td", "marker-cell");
-            if (onRender != null)
-                onRender(td);
-            td.RenderStart(context);
+			onRender?.Invoke(td);
+			td.RenderStart(context);
             var div = new TagBuilder("div", "marker");
             var markBind = GetBinding(nameof(Mark));
             if (markBind != null)

@@ -105,12 +105,14 @@ namespace A2v10.Request
 
 		async Task StartWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
 		{
-			var swi = new StartWorkflowInfo();
-			swi.DataSource = cmd.CurrentSource;
-			swi.Schema = cmd.CurrentSchema;
-			swi.Model = cmd.CurrentModel;
-			swi.ModelId = dataToStart.Get<Int64>("Id");
-			swi.ActionBase = cmd.ActionBase;
+			var swi = new StartWorkflowInfo
+			{
+				DataSource = cmd.CurrentSource,
+				Schema = cmd.CurrentSchema,
+				Model = cmd.CurrentModel,
+				ModelId = dataToStart.Get<Int64>("Id"),
+				ActionBase = cmd.ActionBase
+			};
 			if (swi.ModelId == 0)
 				throw new RequestModelException("ModelId must be specified");
 			if (!String.IsNullOrEmpty(cmd.file))
@@ -125,8 +127,10 @@ namespace A2v10.Request
 
 		async Task ResumeWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
 		{
-			var rwi = new ResumeWorkflowInfo();
-			rwi.Id = dataToStart.Get<Int64>("Id");
+			var rwi = new ResumeWorkflowInfo
+			{
+				Id = dataToStart.Get<Int64>("Id")
+			};
 			if (rwi.Id == 0)
 				throw new RequestModelException("InboxId must be specified");
 			rwi.UserId = dataToStart.Get<Int64>("UserId");

@@ -31,8 +31,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var row = new TagBuilder("tr");
-			if (onRender != null)
-				onRender(row);
+			onRender?.Invoke(row);
 			MergeAttributes(row, context);
 
 			var markBind = GetBinding(nameof(Mark));
@@ -92,7 +91,7 @@ namespace A2v10.Xaml
 
 	public class TableRowCollectionConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;

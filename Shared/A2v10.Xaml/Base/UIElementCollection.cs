@@ -18,7 +18,7 @@ namespace A2v10.Xaml
 
 	public class UICollectionConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -27,20 +27,24 @@ namespace A2v10.Xaml
 			return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;
 			if (value is String)
 			{
-				var x = new UIElementCollection();
-				x.Add(new Span() { Content = value });
+				var x = new UIElementCollection
+				{
+					new Span() { Content = value }
+				};
 				return x;
 			}
 			else if (value is UIElementBase)
 			{
-				var x = new UIElementCollection();
-				x.Add(value as UIElementBase);
+				var x = new UIElementCollection
+				{
+					value as UIElementBase
+				};
 				return x;
 			}
 			return base.ConvertFrom(context, culture, value);

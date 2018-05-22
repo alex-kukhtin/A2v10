@@ -37,8 +37,10 @@ namespace A2v10.Xaml
 
 			using (request.Start(ProfileAction.Render, $"render: {info.FileTitle}"))
 			{
-				RenderContext ctx = new RenderContext(uiElem, info);
-				ctx.RootId = info.RootId;
+				RenderContext ctx = new RenderContext(uiElem, info)
+				{
+					RootId = info.RootId
+				};
 
 				uiElem.RenderElement(ctx);
 
@@ -58,8 +60,7 @@ namespace A2v10.Xaml
 				}
 			}
 
-			var disp = uiElem as IDisposable;
-			if (disp != null)
+			if (uiElem is IDisposable disp)
 			{
 				disp.Dispose();
 			}

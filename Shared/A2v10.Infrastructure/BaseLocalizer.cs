@@ -27,8 +27,7 @@ namespace A2v10.Infrastructure
 			if (locale == null)
 				locale = DefaultLocale;
 			var dict = GetLocalizerDictionary(locale);
-			String value;
-			if (dict.TryGetValue(key, out value))
+			if (dict.TryGetValue(key, out String value))
 				return value;
 			return key;
 		}
@@ -41,14 +40,14 @@ namespace A2v10.Infrastructure
 			if (replaceNewLine)
 				s = content.Replace("\\n", "\n");
 			var sb = new StringBuilder();
-			int xpos = 0;
+			Int32 xpos = 0;
 			String key;
 			do
 			{
-				int start = s.IndexOf("@[", xpos);
+				Int32 start = s.IndexOf("@[", xpos);
 				if (start == -1)
 					break;
-				int end = s.IndexOf("]", start + 2);
+				Int32 end = s.IndexOf("]", start + 2);
 				if (end == -1)
 				{
 					break;

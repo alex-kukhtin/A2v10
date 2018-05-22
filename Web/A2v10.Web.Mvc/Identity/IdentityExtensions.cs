@@ -7,36 +7,32 @@ using Microsoft.AspNet.Identity;
 
 namespace A2v10.Web.Mvc.Identity
 {
-    public static class IdentityExtensions
-    {
-        public static string GetUserPersonName(this IIdentity identity)
-        {
-            var user = identity as ClaimsIdentity;
-            if (user == null)
-                return null;
-            var value = user.FindFirstValue("PersonName");
-            return String.IsNullOrEmpty(value) ? identity.GetUserName() : value;
-        }
+	public static class IdentityExtensions
+	{
+		public static String GetUserPersonName(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			var value = user.FindFirstValue("PersonName");
+			return String.IsNullOrEmpty(value) ? identity.GetUserName() : value;
+		}
 
-        public static Boolean IsUserAdmin(this IIdentity identity)
-        {
-            var user = identity as ClaimsIdentity;
-            if (user == null)
-                return false;
-            var value = user.FindFirstValue("Admin");
-            return value == "Admin";
-        }
+		public static Boolean IsUserAdmin(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return false;
+			var value = user.FindFirstValue("Admin");
+			return value == "Admin";
+		}
 
-        public static Int32 GetUserTenantId(this IIdentity identity)
-        {
-            var user = identity as ClaimsIdentity;
-            if (user == null)
-                return 0;
-            var value = user.FindFirstValue("TenantId");
-            Int32 tenantId;
-            if (Int32.TryParse(value, out tenantId))
-                return tenantId;
-            return 0;
-        }
-    }
+		public static Int32 GetUserTenantId(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return 0;
+			var value = user.FindFirstValue("TenantId");
+			if (Int32.TryParse(value, out Int32 tenantId))
+				return tenantId;
+			return 0;
+		}
+	}
 }

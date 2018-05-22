@@ -26,20 +26,19 @@ namespace A2v10.Xaml
 
 			// render page OR colleciton view
 
-			Action<TagBuilder> addGridAction = (tag) =>
+			void addGridAction(TagBuilder tag)
 			{
 				if (!isGridPage)
 					return;
 				tag.AddCssClass("page-grid");
 				if (Taskpad != null)
 				{
-					var tp = Taskpad as Taskpad;
-					if (tp != null && tp.Width != null)
+					if (Taskpad is Taskpad tp && tp.Width != null)
 					{
 						tag.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
 					}
 				}
-			};
+			}
 
 			if (CollectionView != null)
 			{

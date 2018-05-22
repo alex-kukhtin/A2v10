@@ -35,8 +35,7 @@ namespace A2v10.Xaml
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
-			XamlElement xamlElem = Content as XamlElement;
-			if (xamlElem != null)
+			if (Content is XamlElement xamlElem)
 				xamlElem.SetParent(this);
 		}
 

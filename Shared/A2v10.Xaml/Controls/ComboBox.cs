@@ -69,8 +69,7 @@ namespace A2v10.Xaml
 		{
 			CheckDisabledModel(context);
 			var combo = new TagBuilder("select", null, IsInGrid);
-			if (onRender != null)
-				onRender(combo);
+			onRender?.Invoke(combo);
 			combo.MergeAttribute("is", "combobox");
 			combo.MergeAttribute("v-cloak", String.Empty);
 			combo.MergeAttribute("display", DisplayProperty);

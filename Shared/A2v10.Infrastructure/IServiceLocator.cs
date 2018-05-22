@@ -38,8 +38,7 @@ namespace A2v10.Infrastructure
 
 		public T GetService<T>() where T : class
 		{
-			Object result;
-			if (_services.TryGetValue(typeof(T), out result))
+			if (_services.TryGetValue(typeof(T), out Object result))
 				return result as T;
 			throw new InvalidOperationException($"Service '{typeof(T).FullName}' not registered");
 		}
@@ -47,8 +46,7 @@ namespace A2v10.Infrastructure
 
 		public Object GetService(Type type)
 		{
-			Object result;
-			if (_services.TryGetValue(type, out result))
+			if (_services.TryGetValue(type, out Object result))
 				return result;
 			throw new InvalidOperationException($"Service '{type.FullName}' not registered");
 		}

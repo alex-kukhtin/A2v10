@@ -136,11 +136,11 @@ namespace A2v10.Xaml
 				return;
 			// split to path and property
 			String path = valBind.GetPath(context);
-			(String Path, String Prop) pp = SplitToPathProp(path);
-			if (String.IsNullOrEmpty(pp.Path) || String.IsNullOrEmpty(pp.Prop))
+			(String Path, String Prop) = SplitToPathProp(path);
+			if (String.IsNullOrEmpty(Path) || String.IsNullOrEmpty(Prop))
 				throw new XamlException($"invalid binding for {valueName} '{path}'");
-			input.MergeAttribute(":item", pp.Path);
-			input.MergeAttribute("prop", pp.Prop);
+			input.MergeAttribute(":item", Path);
+			input.MergeAttribute("prop", Prop);
 			if (valBind.DataType != DataType.String)
 				input.MergeAttribute("data-type", valBind.DataType.ToString());
 			if (!String.IsNullOrEmpty(valBind.Mask))
@@ -154,11 +154,11 @@ namespace A2v10.Xaml
 				return;
 			// split to path and property
 			String path = valBind.GetPath(context);
-			var pp = SplitToPathProp(path);
-			if (String.IsNullOrEmpty(pp.Path) || String.IsNullOrEmpty(pp.Prop))
+			var (Path, Prop) = SplitToPathProp(path);
+			if (String.IsNullOrEmpty(Path) || String.IsNullOrEmpty(Prop))
 				throw new XamlException($"invalid binding for {valueName} '{path}'");
-			input.MergeAttribute(":item-to-validate", pp.Path);
-			input.MergeAttribute("prop-to-validate", pp.Prop);
+			input.MergeAttribute(":item-to-validate", Path);
+			input.MergeAttribute("prop-to-validate", Prop);
 		}
 
 		internal (String Path, String Prop) SplitToPathProp(String path)

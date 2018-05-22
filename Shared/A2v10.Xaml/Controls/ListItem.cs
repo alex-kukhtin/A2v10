@@ -18,8 +18,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", "generic-list-item", IsInGrid);
-			if (onRender != null)
-				onRender(div);
+			onRender?.Invoke(div);
 			MergeAttributes(div, context);
 			MergeCommandAttribute(div, context, withHref:false);
 			div.RenderStart(context);

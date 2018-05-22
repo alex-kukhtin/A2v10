@@ -26,8 +26,7 @@ namespace A2v10.Xaml
 		{
 			CheckDisabledModel(context);
 			var input = new TagBuilder("a2-date-picker", null, IsInGrid);
-			if (onRender != null)
-				onRender(input);
+			onRender?.Invoke(input);
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);

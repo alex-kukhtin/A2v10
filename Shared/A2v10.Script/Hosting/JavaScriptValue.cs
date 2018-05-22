@@ -44,8 +44,7 @@
         {
             get
             {
-                JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetUndefinedValue(out value));
+                Native.ThrowIfError(Native.JsGetUndefinedValue(out JavaScriptValue value));
                 return value;
             }
         }
@@ -60,8 +59,7 @@
         {
             get
             {
-                JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetNullValue(out value));
+                Native.ThrowIfError(Native.JsGetNullValue(out JavaScriptValue value));
                 return value;
             }
         }
@@ -76,9 +74,8 @@
         {
             get
             {
-                JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetTrueValue(out value));
-                return value;
+				Native.ThrowIfError(Native.JsGetTrueValue(out JavaScriptValue value));
+				return value;
             }
         }
 
@@ -92,9 +89,8 @@
         {
             get
             {
-                JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetFalseValue(out value));
-                return value;
+				Native.ThrowIfError(Native.JsGetFalseValue(out JavaScriptValue value));
+				return value;
             }
         }
 
@@ -108,16 +104,15 @@
         {
             get
             {
-                JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetGlobalObject(out value));
-                return value;
+				Native.ThrowIfError(Native.JsGetGlobalObject(out JavaScriptValue value));
+				return value;
             }
         }
 
         /// <summary>
         ///     Gets a value indicating whether the value is valid.
         /// </summary>
-        public bool IsValid
+        public Boolean IsValid
         {
             get { return reference != IntPtr.Zero; }
         }
@@ -133,9 +128,8 @@
         {
             get
             {
-                JavaScriptValueType type;
-                Native.ThrowIfError(Native.JsGetValueType(this, out type));
-                return type;
+				Native.ThrowIfError(Native.JsGetValueType(this, out JavaScriptValueType type));
+				return type;
             }
         }
 
@@ -146,12 +140,11 @@
         ///     Requires an active script context.
         /// </remarks>
         /// <returns>The length of the string.</returns>
-        public int StringLength
+        public Int32 StringLength
         {
             get
             {
-                int length;
-                Native.ThrowIfError(Native.JsGetStringLength(this, out length));
+                Native.ThrowIfError(Native.JsGetStringLength(this, out Int32 length));
                 return length;
             }
         }
@@ -166,9 +159,8 @@
         {
             get
             {
-                JavaScriptValue prototypeReference;
-                Native.ThrowIfError(Native.JsGetPrototype(this, out prototypeReference));
-                return prototypeReference;
+				Native.ThrowIfError(Native.JsGetPrototype(this, out JavaScriptValue prototypeReference));
+				return prototypeReference;
             }
 
             set
@@ -183,13 +175,12 @@
         /// <remarks>
         ///     Requires an active script context.
         /// </remarks>
-        public bool IsExtensionAllowed
+        public Boolean IsExtensionAllowed
         {
             get
             {
-                bool allowed;
-                Native.ThrowIfError(Native.JsGetExtensionAllowed(this, out allowed));
-                return allowed;
+				Native.ThrowIfError(Native.JsGetExtensionAllowed(this, out Boolean allowed));
+				return allowed;
             }
         }
 
@@ -199,13 +190,12 @@
         /// <remarks>
         ///     Requires an active script context.
         /// </remarks>
-        public bool HasExternalData
+        public Boolean HasExternalData
         {
             get
             {
-                bool hasExternalData;
-                Native.ThrowIfError(Native.JsHasExternalData(this, out hasExternalData));
-                return hasExternalData;
+				Native.ThrowIfError(Native.JsHasExternalData(this, out Boolean hasExternalData));
+				return hasExternalData;
             }
         }
 
@@ -219,9 +209,8 @@
         {
             get
             {
-                IntPtr data;
-                Native.ThrowIfError(Native.JsGetExternalData(this, out data));
-                return data;
+				Native.ThrowIfError(Native.JsGetExternalData(this, out IntPtr data));
+				return data;
             }
 
             set
@@ -238,11 +227,10 @@
         /// </remarks>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
-        public static JavaScriptValue FromBoolean(bool value)
+        public static JavaScriptValue FromBoolean(Boolean value)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsBoolToBoolean(value, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsBoolToBoolean(value, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -253,11 +241,10 @@
         /// </remarks>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The new <c>Number</c> value.</returns>
-        public static JavaScriptValue FromDouble(double value)
+        public static JavaScriptValue FromDouble(Double value)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsDoubleToNumber(value, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsDoubleToNumber(value, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -268,10 +255,9 @@
         /// </remarks>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The new <c>Number</c> value.</returns>
-        public static JavaScriptValue FromInt32(int value)
+        public static JavaScriptValue FromInt32(Int32 value)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsIntToNumber(value, out reference));
+            Native.ThrowIfError(Native.JsIntToNumber(value, out JavaScriptValue reference));
             return reference;
         }
 
@@ -283,11 +269,10 @@
         /// </remarks>
         /// <param name="value">The string  to convert to a <c>String</c> value.</param>
         /// <returns>The new <c>String</c> value.</returns>
-        public static JavaScriptValue FromString(string value)
+        public static JavaScriptValue FromString(String value)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsPointerToString(value, new UIntPtr((uint)value.Length), out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsPointerToString(value, new UIntPtr((UInt32)value.Length), out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -299,9 +284,8 @@
         /// <returns>The new <c>Object</c>.</returns>
         public static JavaScriptValue CreateObject()
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateObject(out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateObject(out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -317,9 +301,8 @@
         /// <returns>The new <c>Object</c>.</returns>
         public static JavaScriptValue CreateExternalObject(IntPtr data, JavaScriptObjectFinalizeCallback finalizer)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateExternalObject(data, finalizer, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateExternalObject(data, finalizer, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -332,9 +315,8 @@
         /// <returns>The new function object.</returns>
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateFunction(function, IntPtr.Zero, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateFunction(function, IntPtr.Zero, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -348,9 +330,8 @@
         /// <returns>The new function object.</returns>
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function, IntPtr callbackData)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateFunction(function, callbackData, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateFunction(function, callbackData, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -361,11 +342,10 @@
         /// </remarks>
         /// <param name="length">The initial length of the array.</param>
         /// <returns>The new array object.</returns>
-        public static JavaScriptValue CreateArray(uint length)
+        public static JavaScriptValue CreateArray(UInt32 length)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateArray(length, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateArray(length, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -378,9 +358,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -393,9 +372,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateRangeError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateRangeError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateRangeError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -408,9 +386,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateReferenceError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateReferenceError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateReferenceError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -423,9 +400,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateSyntaxError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateSyntaxError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateSyntaxError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -438,9 +414,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateTypeError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateTypeError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateTypeError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -453,9 +428,8 @@
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateUriError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateURIError(message, out reference));
-            return reference;
+			Native.ThrowIfError(Native.JsCreateURIError(message, out JavaScriptValue reference));
+			return reference;
         }
 
         /// <summary>
@@ -467,11 +441,10 @@
         ///     until Release is called
         /// </remarks>
         /// <returns>The object's new reference count.</returns>
-        public uint AddRef()
+        public UInt32 AddRef()
         {
-            uint count;
-            Native.ThrowIfError(Native.JsAddRef(this, out count));
-            return count;
+			Native.ThrowIfError(Native.JsAddRef(this, out UInt32 count));
+			return count;
         }
 
         /// <summary>
@@ -481,11 +454,10 @@
         ///     Removes a reference that was created by AddRef.
         /// </remarks>
         /// <returns>The object's new reference count.</returns>
-        public uint Release()
+        public UInt32 Release()
         {
-            uint count;
-            Native.ThrowIfError(Native.JsRelease(this, out count));
-            return count;
+			Native.ThrowIfError(Native.JsRelease(this, out UInt32 count));
+			return count;
         }
 
         /// <summary>
@@ -495,11 +467,10 @@
         ///     Requires an active script context.
         /// </remarks>
         /// <returns>The converted value.</returns>
-        public bool ToBoolean()
+        public Boolean ToBoolean()
         {
-            bool value;
-            Native.ThrowIfError(Native.JsBooleanToBool(this, out value));
-            return value;
+			Native.ThrowIfError(Native.JsBooleanToBool(this, out Boolean value));
+			return value;
         }
 
         /// <summary>
@@ -515,11 +486,10 @@
         ///     </para>
         /// </remarks>
         /// <returns>The <c>double</c> value.</returns>
-        public double ToDouble()
+        public Double ToDouble()
         {
-            double value;
-            Native.ThrowIfError(Native.JsNumberToDouble(this, out value));
-            return value;
+			Native.ThrowIfError(Native.JsNumberToDouble(this, out Double value));
+			return value;
         }
 
         /// <summary>
@@ -535,12 +505,10 @@
         ///     </para>
         /// </remarks>
         /// <returns>The string.</returns>
-        public new string ToString()
+        public new String ToString()
         {
-            IntPtr buffer;
-            UIntPtr length;
-            Native.ThrowIfError(Native.JsStringToPointer(this, out buffer, out length));
-            return Marshal.PtrToStringUni(buffer, (int)length);
+			Native.ThrowIfError(Native.JsStringToPointer(this, out IntPtr buffer, out UIntPtr length));
+			return Marshal.PtrToStringUni(buffer, (Int32)length);
         }
 
         /// <summary>
@@ -552,9 +520,8 @@
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToBoolean()
         {
-            JavaScriptValue booleanReference;
-            Native.ThrowIfError(Native.JsConvertValueToBoolean(this, out booleanReference));
-            return booleanReference;
+			Native.ThrowIfError(Native.JsConvertValueToBoolean(this, out JavaScriptValue booleanReference));
+			return booleanReference;
         }
 
         /// <summary>
@@ -566,9 +533,8 @@
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToNumber()
         {
-            JavaScriptValue numberReference;
-            Native.ThrowIfError(Native.JsConvertValueToNumber(this, out numberReference));
-            return numberReference;
+			Native.ThrowIfError(Native.JsConvertValueToNumber(this, out JavaScriptValue numberReference));
+			return numberReference;
         }
 
         /// <summary>
@@ -580,9 +546,8 @@
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToString()
         {
-            JavaScriptValue stringReference;
-            Native.ThrowIfError(Native.JsConvertValueToString(this, out stringReference));
-            return stringReference;
+			Native.ThrowIfError(Native.JsConvertValueToString(this, out JavaScriptValue stringReference));
+			return stringReference;
         }
 
         /// <summary>
@@ -594,9 +559,8 @@
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToObject()
         {
-            JavaScriptValue objectReference;
-            Native.ThrowIfError(Native.JsConvertValueToObject(this, out objectReference));
-            return objectReference;
+			Native.ThrowIfError(Native.JsConvertValueToObject(this, out JavaScriptValue objectReference));
+			return objectReference;
         }
 
         /// <summary>
@@ -620,9 +584,8 @@
         /// <returns>The property descriptor.</returns>
         public JavaScriptValue GetOwnPropertyDescriptor(JavaScriptPropertyId propertyId)
         {
-            JavaScriptValue descriptorReference;
-            Native.ThrowIfError(Native.JsGetOwnPropertyDescriptor(this, propertyId, out descriptorReference));
-            return descriptorReference;
+			Native.ThrowIfError(Native.JsGetOwnPropertyDescriptor(this, propertyId, out JavaScriptValue descriptorReference));
+			return descriptorReference;
         }
 
         /// <summary>
@@ -634,9 +597,8 @@
         /// <returns>An array of property names.</returns>
         public JavaScriptValue GetOwnPropertyNames()
         {
-            JavaScriptValue propertyNamesReference;
-            Native.ThrowIfError(Native.JsGetOwnPropertyNames(this, out propertyNamesReference));
-            return propertyNamesReference;
+			Native.ThrowIfError(Native.JsGetOwnPropertyNames(this, out JavaScriptValue propertyNamesReference));
+			return propertyNamesReference;
         }
 
         /// <summary>
@@ -647,11 +609,10 @@
         /// </remarks>
         /// <param name="propertyId">The ID of the property.</param>
         /// <returns>Whether the object (or a prototype) has the property.</returns>
-        public bool HasProperty(JavaScriptPropertyId propertyId)
+        public Boolean HasProperty(JavaScriptPropertyId propertyId)
         {
-            bool hasProperty;
-            Native.ThrowIfError(Native.JsHasProperty(this, propertyId, out hasProperty));
-            return hasProperty;
+			Native.ThrowIfError(Native.JsHasProperty(this, propertyId, out Boolean hasProperty));
+			return hasProperty;
         }
 
         /// <summary>
@@ -664,9 +625,8 @@
         /// <returns>The value of the property.</returns>
         public JavaScriptValue GetProperty(JavaScriptPropertyId id)
         {
-            JavaScriptValue propertyReference;
-            Native.ThrowIfError(Native.JsGetProperty(this, id, out propertyReference));
-            return propertyReference;
+			Native.ThrowIfError(Native.JsGetProperty(this, id, out JavaScriptValue propertyReference));
+			return propertyReference;
         }
 
         /// <summary>
@@ -678,7 +638,7 @@
         /// <param name="id">The ID of the property.</param>
         /// <param name="value">The new value of the property.</param>
         /// <param name="useStrictRules">The property set should follow strict mode rules.</param>
-        public void SetProperty(JavaScriptPropertyId id, JavaScriptValue value, bool useStrictRules)
+        public void SetProperty(JavaScriptPropertyId id, JavaScriptValue value, Boolean useStrictRules)
         {
             Native.ThrowIfError(Native.JsSetProperty(this, id, value, useStrictRules));
         }
@@ -692,11 +652,10 @@
         /// <param name="propertyId">The ID of the property.</param>
         /// <param name="useStrictRules">The property set should follow strict mode rules.</param>
         /// <returns>Whether the property was deleted.</returns>
-        public JavaScriptValue DeleteProperty(JavaScriptPropertyId propertyId, bool useStrictRules)
+        public JavaScriptValue DeleteProperty(JavaScriptPropertyId propertyId, Boolean useStrictRules)
         {
-            JavaScriptValue returnReference;
-            Native.ThrowIfError(Native.JsDeleteProperty(this, propertyId, useStrictRules, out returnReference));
-            return returnReference;
+			Native.ThrowIfError(Native.JsDeleteProperty(this, propertyId, useStrictRules, out JavaScriptValue returnReference));
+			return returnReference;
         }
 
         /// <summary>
@@ -708,11 +667,10 @@
         /// <param name="propertyId">The ID of the property.</param>
         /// <param name="propertyDescriptor">The property descriptor.</param>
         /// <returns>Whether the property was defined.</returns>
-        public bool DefineProperty(JavaScriptPropertyId propertyId, JavaScriptValue propertyDescriptor)
+        public Boolean DefineProperty(JavaScriptPropertyId propertyId, JavaScriptValue propertyDescriptor)
         {
-            bool result;
-            Native.ThrowIfError(Native.JsDefineProperty(this, propertyId, propertyDescriptor, out result));
-            return result;
+			Native.ThrowIfError(Native.JsDefineProperty(this, propertyId, propertyDescriptor, out Boolean result));
+			return result;
         }
 
         /// <summary>
@@ -723,11 +681,10 @@
         /// </remarks>
         /// <param name="index">The index to test.</param>
         /// <returns>Whether the object has an value at the specified index.</returns>
-        public bool HasIndexedProperty(JavaScriptValue index)
+        public Boolean HasIndexedProperty(JavaScriptValue index)
         {
-            bool hasProperty;
-            Native.ThrowIfError(Native.JsHasIndexedProperty(this, index, out hasProperty));
-            return hasProperty;
+			Native.ThrowIfError(Native.JsHasIndexedProperty(this, index, out Boolean hasProperty));
+			return hasProperty;
         }
 
         /// <summary>
@@ -740,9 +697,8 @@
         /// <returns>The retrieved value.</returns>
         public JavaScriptValue GetIndexedProperty(JavaScriptValue index)
         {
-            JavaScriptValue propertyReference;
-            Native.ThrowIfError(Native.JsGetIndexedProperty(this, index, out propertyReference));
-            return propertyReference;
+			Native.ThrowIfError(Native.JsGetIndexedProperty(this, index, out JavaScriptValue propertyReference));
+			return propertyReference;
         }
 
         /// <summary>
@@ -783,11 +739,10 @@
         /// </remarks>
         /// <param name="other">The object to compare.</param>
         /// <returns>Whether the values are equal.</returns>
-        public bool Equals(JavaScriptValue other)
+        public Boolean Equals(JavaScriptValue other)
         {
-            bool equals;
-            Native.ThrowIfError(Native.JsEquals(this, other, out equals));
-            return equals;
+			Native.ThrowIfError(Native.JsEquals(this, other, out Boolean equals));
+			return equals;
         }
 
         /// <summary>
@@ -803,11 +758,10 @@
         /// </remarks>
         /// <param name="other">The object to compare.</param>
         /// <returns>Whether the values are strictly equal.</returns>
-        public bool StrictEquals(JavaScriptValue other)
+        public Boolean StrictEquals(JavaScriptValue other)
         {
-            bool equals;
-            Native.ThrowIfError(Native.JsStrictEquals(this, other, out equals));
-            return equals;
+			Native.ThrowIfError(Native.JsStrictEquals(this, other, out Boolean equals));
+			return equals;
         }
 
         /// <summary>
@@ -820,14 +774,12 @@
         /// <returns>The <c>Value</c> returned from the function invocation, if any.</returns>
         public JavaScriptValue CallFunction(params JavaScriptValue[] arguments)
         {
-            JavaScriptValue returnReference;
-
-            if (arguments.Length > ushort.MaxValue)
+            if (arguments.Length > UInt16.MaxValue)
             {
                 throw new ArgumentOutOfRangeException("arguments");
             }
 
-            Native.ThrowIfError(Native.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
+            Native.ThrowIfError(Native.JsCallFunction(this, arguments, (UInt16)arguments.Length, out JavaScriptValue returnReference));
             return returnReference;
         }
 
@@ -841,14 +793,13 @@
         /// <returns>The <c>Value</c> returned from the function invocation.</returns>
         public JavaScriptValue ConstructObject(params JavaScriptValue[] arguments)
         {
-            JavaScriptValue returnReference;
 
-            if (arguments.Length > ushort.MaxValue)
-            {
-                throw new ArgumentOutOfRangeException("arguments");
-            }
+			if (arguments.Length > UInt16.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException("arguments");
+			}
 
-            Native.ThrowIfError(Native.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));
+			Native.ThrowIfError(Native.JsConstructObject(this, arguments, (UInt16)arguments.Length, out JavaScriptValue returnReference));
             return returnReference;
         }
     }

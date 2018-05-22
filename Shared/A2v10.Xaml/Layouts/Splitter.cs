@@ -67,8 +67,7 @@ namespace A2v10.Xaml
              * 2. Ширина колонок
             */
 			var spl = new TagBuilder("div", "splitter");
-			if (onRender != null)
-				onRender(spl);
+			onRender?.Invoke(spl);
 			MergeAttributes(spl, context);
 			if (Height != null)
 				spl.MergeStyle("height", Height.Value);

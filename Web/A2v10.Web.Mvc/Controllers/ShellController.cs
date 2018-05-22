@@ -125,14 +125,16 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				Response.ContentType = "text/html";
-				var prms = new Dictionary<String, String>();
-				prms.Add("$(RootUrl)", RootUrl);
-				prms.Add("$(HelpUrl)", _baseController.Host.HelpUrl);
-				prms.Add("$(PersonName)", User.Identity.GetUserPersonName());
-				prms.Add("$(Theme)", _baseController.Host.Theme);
-				prms.Add("$(Build)", _baseController.Host.AppBuild);
-				prms.Add("$(Locale)", _baseController.CurrentLang);
-				prms.Add("$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min.");
+				var prms = new Dictionary<String, String>
+				{
+					{ "$(RootUrl)", RootUrl },
+					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
+					{ "$(PersonName)", User.Identity.GetUserPersonName() },
+					{ "$(Theme)", _baseController.Host.Theme },
+					{ "$(Build)", _baseController.Host.AppBuild },
+					{ "$(Locale)", _baseController.CurrentLang },
+					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }
+				};
 				_baseController.Layout(Response.Output, prms);
 			}
 			catch (Exception ex)

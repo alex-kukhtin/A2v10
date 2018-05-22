@@ -28,7 +28,7 @@ namespace A2v10.Workflow
 
         internal void Resumed(IDbContext dbContext, Int64 Id, Int64 UserId, String Answer)
         {
-            var arg = new { Id = Id, UserId = UserId, Answer = Answer };
+            var arg = new { Id, UserId, Answer };
             dbContext.Execute(String.Empty, "a2workflow.[Inbox.Resume]", arg);
         }
     }

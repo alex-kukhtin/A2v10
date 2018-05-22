@@ -21,12 +21,12 @@ namespace A2v10.Xaml
 		public String InnerText { get; set; }
 
 		Boolean _bRender = false;
-        Boolean _inGrid = false;
+		readonly Boolean _inGrid = false;
 
 		public TagBuilder(String tagName = "div", String classes = null, Boolean inGrid = false)
 		{
 			TagName = tagName;
-            _inGrid = inGrid;
+			_inGrid = inGrid;
 			if (!String.IsNullOrEmpty(classes))
 				AddCssClass(classes);
 		}
@@ -70,14 +70,14 @@ namespace A2v10.Xaml
 			return this;
 		}
 
-        public TagBuilder AddCssClassBoolNo(Boolean? bAdd, String value)
-        {
-            if (!bAdd.HasValue)
-                return this;
-            return AddCssClass(bAdd.Value ? value : "no-" + value);
-        }
+		public TagBuilder AddCssClassBoolNo(Boolean? bAdd, String value)
+		{
+			if (!bAdd.HasValue)
+				return this;
+			return AddCssClass(bAdd.Value ? value : "no-" + value);
+		}
 
-        public TagBuilder AddCssClass(String value)
+		public TagBuilder AddCssClass(String value)
 		{
 			if (String.IsNullOrEmpty(value))
 				return this;
@@ -125,21 +125,20 @@ namespace A2v10.Xaml
 			return this;
 		}
 
-        public TagBuilder MergeStyles(IEnumerable<StringKeyValuePair> pairs)
-        {
-            if (pairs == null)
-                return this;
-            foreach (var kvp in pairs)
-                MergeStyle(kvp.Key, kvp.Value);
-            return this;
-        }
+		public TagBuilder MergeStyles(IEnumerable<StringKeyValuePair> pairs)
+		{
+			if (pairs == null)
+				return this;
+			foreach (var kvp in pairs)
+				MergeStyle(kvp.Key, kvp.Value);
+			return this;
+		}
 
 		public String GetAttribute(String key)
 		{
 			if (_attributes == null)
 				return null;
-			String attr;
-			if (_attributes.TryGetValue(key, out attr))
+			if (_attributes.TryGetValue(key, out String attr))
 				return attr;
 			return null;
 		}
@@ -152,14 +151,14 @@ namespace A2v10.Xaml
 			return this;
 		}
 
-		public TagBuilder MergeAttribute(String key, Int32? value, bool replaceExisting = false)
+		public TagBuilder MergeAttribute(String key, Int32? value, Boolean replaceExisting = false)
 		{
 			if (!value.HasValue)
 				return this;
 			return MergeAttribute(key, value.Value.ToString(), replaceExisting);
 		}
 
-		public TagBuilder MergeAttribute(String key, String value, bool replaceExisting = false)
+		public TagBuilder MergeAttribute(String key, String value, Boolean replaceExisting = false)
 		{
 			CheckRendered();
 			if (value == null)
@@ -191,7 +190,7 @@ namespace A2v10.Xaml
 			return String.Empty;
 		}
 
-		public TagBuilder Render(RenderContext context, TagRenderMode mode = TagRenderMode.Normal, bool addSpace = false)
+		public TagBuilder Render(RenderContext context, TagRenderMode mode = TagRenderMode.Normal, Boolean addSpace = false)
 		{
 			switch (mode)
 			{
@@ -210,10 +209,10 @@ namespace A2v10.Xaml
 					context.Writer.Write($"</{TagName}>");
 					break;
 			}
-            if (addSpace)
+			if (addSpace)
 				context.Writer.WriteLine();
-            _bRender = true;
-            return this;
+			_bRender = true;
+			return this;
 		}
 
 		public TagBuilder RenderStart(RenderContext context)
@@ -221,7 +220,7 @@ namespace A2v10.Xaml
 			return Render(context, TagRenderMode.StartTag);
 		}
 
-		public TagBuilder RenderEnd(RenderContext context, bool addSpace = false)
+		public TagBuilder RenderEnd(RenderContext context, Boolean addSpace = false)
 		{
 			Render(context, TagRenderMode.EndTag);
 			if (addSpace)
@@ -231,11 +230,12 @@ namespace A2v10.Xaml
 
 		String GetAttributes()
 		{
-            if (_attributes == null)
-                return String.Empty;
+			if (_attributes == null)
+				return String.Empty;
 			return " " + String.Join(" ",
 				_attributes.Select(
-					(item) => {
+					(item) =>
+					{
 						return String.IsNullOrEmpty(item.Value)
 							? item.Key :
 							$"{item.Key}=\"{item.Value}\"";
@@ -244,8 +244,8 @@ namespace A2v10.Xaml
 
 		String GetStyles()
 		{
-            if (_styles == null)
-                return String.Empty;
+			if (_styles == null)
+				return String.Empty;
 			return " style=\"" + String.Join(";",
 				_styles.Select(
 					(item) =>
@@ -254,10 +254,10 @@ namespace A2v10.Xaml
 					})) + "\"";
 		}
 
-		String CreateStartTag(RenderContext context, bool bSelfClosing)
+		String CreateStartTag(RenderContext context, Boolean bSelfClosing)
 		{
 			var sb = new StringBuilder(255);
-            this.MergeStyles(_inGrid ? context.GetGridAttributes() : null);
+			this.MergeStyles(_inGrid ? context.GetGridAttributes() : null);
 			sb.Append("<")
 				.Append(TagName)
 				.Append(GetCssClasses())

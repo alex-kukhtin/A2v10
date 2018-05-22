@@ -32,8 +32,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var ul = new TagBuilder("a2-list", null, IsInGrid);
-			if (onRender != null)
-				onRender(ul);
+			onRender?.Invoke(ul);
 			var isBind = GetBinding(nameof(ItemsSource));
 			ul.AddCssClassBool(Striped, "striped");
 			ul.AddCssClassBool(Border, "border");

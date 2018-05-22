@@ -89,8 +89,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var table = new TagBuilder("table", "a2-table", IsInGrid);
-			if (onRender != null)
-				onRender(table);
+			onRender?.Invoke(table);
 			MergeAttributes(table, context);
 			if (Background != TableBackgroundStyle.None)
 				table.AddCssClass("bk-" + Background.ToString().ToKebabCase());

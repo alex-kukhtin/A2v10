@@ -61,8 +61,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tb = new TagBuilder("div", "toolbar", IsInGrid);
-			if (onRender != null)
-				onRender(tb);
+			onRender?.Invoke(tb);
 			if (Style != ToolbarStyle.Default)
 				tb.AddCssClass(Style.ToString().ToKebabCase());
 			MergeAttributes(tb, context);

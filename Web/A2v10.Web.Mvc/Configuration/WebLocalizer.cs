@@ -49,7 +49,7 @@ namespace A2v10.Web.Mvc.Configuration
 					{
 						if (line.StartsWith(";"))
 							continue;
-						int pos = line.IndexOf('=');
+						Int32 pos = line.IndexOf('=');
 						if (pos != -1)
 						{
 							var key = line.Substring(0, pos);
@@ -83,16 +83,20 @@ namespace A2v10.Web.Mvc.Configuration
 				return;
 			if (!String.IsNullOrEmpty(dirPath))
 			{
-				_watcher_system = new FileSystemWatcher(dirPath, "*.txt");
-				_watcher_system.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+				_watcher_system = new FileSystemWatcher(dirPath, "*.txt")
+				{
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
+				};
 				_watcher_system.Changed += _watcher_Changed;
 				_watcher_system.EnableRaisingEvents = true;
 			}
 
 			if (!String.IsNullOrEmpty(appPath))
 			{
-				_watcher_app = new FileSystemWatcher(appPath, "*.txt");
-				_watcher_app.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess;
+				_watcher_app = new FileSystemWatcher(appPath, "*.txt")
+				{
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
+				};
 				_watcher_app.Changed += _watcher_Changed;
 				_watcher_app.EnableRaisingEvents = true;
 			}

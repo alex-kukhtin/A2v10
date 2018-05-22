@@ -24,7 +24,7 @@ namespace A2v10.Tests
 	{
 
 		IDbContext _dbContext;
-		IDataScripter _scripter;
+		readonly IDataScripter _scripter;
 		public DatabaseTest()
 		{
 			TestConfig.Start();

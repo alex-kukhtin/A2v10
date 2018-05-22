@@ -20,12 +20,11 @@ namespace A2v10.Xaml
 			Path = path;
 		}
 
-		public override object ProvideValue(IServiceProvider serviceProvider)
+		public override Object ProvideValue(IServiceProvider serviceProvider)
 		{
 			try
 			{
-				IProvideValueTarget iTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
-				if (iTarget == null)
+				if (!(serviceProvider.GetService(typeof(IProvideValueTarget)) is IProvideValueTarget iTarget))
 					return null;
 				var targetProp = iTarget.TargetProperty as PropertyInfo;
 				if (targetProp == null)

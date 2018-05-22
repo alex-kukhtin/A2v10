@@ -30,8 +30,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var td = new TagBuilder("td");
-			if (onRender != null)
-				onRender(td);
+			onRender?.Invoke(td);
 
 			MergeAttributes(td, context);
 

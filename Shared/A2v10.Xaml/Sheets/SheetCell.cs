@@ -35,10 +35,9 @@ namespace A2v10.Xaml
         {
             get
             {
-                var p = Parent as SheetRow;
-                if (p != null)
-                    return p.Parent is SheetTreeSection;
-                return false;
+				if (Parent is SheetRow p)
+					return p.Parent is SheetTreeSection;
+				return false;
             }
         }
     }

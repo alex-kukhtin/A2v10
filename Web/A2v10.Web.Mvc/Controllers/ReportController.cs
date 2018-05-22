@@ -72,7 +72,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
 				sb.Replace("$(StiReport)", result.ToHtmlString());
 				sb.Replace("$(Lang)", _baseController.CurrentLang);
-				sb.Replace("$(Title)", _baseController.Localize(rep.name != null ? rep.name : Rep)); 
+				sb.Replace("$(Title)", _baseController.Localize(rep.name ?? Rep)); 
 
 				Response.Output.Write(sb.ToString());
 			}
@@ -240,7 +240,7 @@ namespace A2v10.Web.Mvc.Controllers
 			catch (Exception ex)
 			{
 				String msg = ex.Message;
-				int x = msg.IndexOf(": error");
+				Int32 x = msg.IndexOf(": error");
 				if (x != -1)
 					msg = msg.Substring(x + 7).Trim();
 				return new ContentResult() { Content = "Error:" + msg };

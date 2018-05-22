@@ -26,9 +26,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var tr = new TagBuilder("tr");
-            if (onRender != null)
-                onRender(tr);
-            MergeAttributes(tr, context);
+			onRender?.Invoke(tr);
+			MergeAttributes(tr, context);
             tr.RenderStart(context);
 
             var nameCell = new TagBuilder("td", "prop-name");

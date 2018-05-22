@@ -47,8 +47,7 @@
         {
             get
             {
-                JavaScriptContext reference;
-                Native.ThrowIfError(Native.JsGetCurrentContext(out reference));
+                Native.ThrowIfError(Native.JsGetCurrentContext(out JavaScriptContext reference));
                 return reference;
             }
 
@@ -77,12 +76,11 @@
         ///     Requires an active script context.
         ///     </para>
         /// </remarks>
-        public static bool HasException
+        public static Boolean HasException
         {
             get
             {
-                bool hasException;
-                Native.ThrowIfError(Native.JsHasException(out hasException));
+                Native.ThrowIfError(Native.JsHasException(out Boolean hasException));
                 return hasException;
             }
         }
@@ -94,8 +92,7 @@
         {
             get
             {
-                JavaScriptRuntime handle;
-                Native.ThrowIfError(Native.JsGetRuntime(this, out handle));
+                Native.ThrowIfError(Native.JsGetRuntime(this, out JavaScriptRuntime handle));
                 return handle;
             }
         }
@@ -103,7 +100,7 @@
         /// <summary>
         ///     Gets a value indicating whether the context is a valid context or not.
         /// </summary>
-        public bool IsValid
+        public Boolean IsValid
         {
             get { return reference != IntPtr.Zero; }
         }
@@ -130,10 +127,9 @@
         ///     The next system tick when there will be more idle work to do. Returns the 
         ///     maximum number of ticks if there no upcoming idle work to do.
         /// </returns>
-        public static uint Idle()
+        public static UInt32 Idle()
         {
-            uint ticks;
-            Native.ThrowIfError(Native.JsIdle(out ticks));
+            Native.ThrowIfError(Native.JsIdle(out UInt32 ticks));
             return ticks;
         }
 
@@ -149,17 +145,15 @@
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static JavaScriptValue ParseScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
+        public static JavaScriptValue ParseScript(String script, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            JavaScriptValue result;
-            Native.ThrowIfError(Native.JsParseScript(script, sourceContext, sourceName, out result));
+            Native.ThrowIfError(Native.JsParseScript(script, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
-		public static JavaScriptValue ParseScriptLibrary(string script)
+		public static JavaScriptValue ParseScriptLibrary(String script)
 		{
-			JavaScriptValue result;
-			Native.ThrowIfError(Native.JsParseScriptWithAttributes(script, JavaScriptSourceContext.None, String.Empty, JsParseScriptAttributes.JsParseScriptAttributeLibraryCode, out result));
+			Native.ThrowIfError(Native.JsParseScriptWithAttributes(script, JavaScriptSourceContext.None, String.Empty, JsParseScriptAttributes.JsParseScriptAttributeLibraryCode, out JavaScriptValue result));
 			return result;
 		}
 
@@ -177,10 +171,9 @@
 		/// </param>
 		/// <param name="sourceName">The location the script came from.</param>
 		/// <returns>A <c>Function</c> representing the script code.</returns>
-		public static JavaScriptValue ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
+		public static JavaScriptValue ParseScript(String script, Byte[] buffer, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            JavaScriptValue result;
-            Native.ThrowIfError(Native.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            Native.ThrowIfError(Native.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -192,9 +185,9 @@
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static JavaScriptValue ParseScript(string script)
+        public static JavaScriptValue ParseScript(String script)
         {
-            return ParseScript(script, JavaScriptSourceContext.None, string.Empty);
+            return ParseScript(script, JavaScriptSourceContext.None, String.Empty);
         }
 
         /// <summary>
@@ -206,9 +199,9 @@
         /// <param name="script">The script to parse.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static JavaScriptValue ParseScript(string script, byte[] buffer)
+        public static JavaScriptValue ParseScript(String script, Byte[] buffer)
         {
-            return ParseScript(script, buffer, JavaScriptSourceContext.None, string.Empty);
+            return ParseScript(script, buffer, JavaScriptSourceContext.None, String.Empty);
         }
 
         /// <summary>
@@ -223,10 +216,9 @@
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static JavaScriptValue RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
+        public static JavaScriptValue RunScript(String script, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            JavaScriptValue result;
-            Native.ThrowIfError(Native.JsRunScript(script, sourceContext, sourceName, out result));
+            Native.ThrowIfError(Native.JsRunScript(script, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -243,10 +235,9 @@
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static JavaScriptValue RunScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
+        public static JavaScriptValue RunScript(String script, Byte[] buffer, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            JavaScriptValue result;
-            Native.ThrowIfError(Native.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            Native.ThrowIfError(Native.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -258,9 +249,9 @@
         /// </remarks>
         /// <param name="script">The script to run.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static JavaScriptValue RunScript(string script)
+        public static JavaScriptValue RunScript(String script)
         {
-            return RunScript(script, JavaScriptSourceContext.None, string.Empty);
+            return RunScript(script, JavaScriptSourceContext.None, String.Empty);
         }
 
         /// <summary>
@@ -272,9 +263,9 @@
         /// <param name="script">The source code of the serialized script.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static JavaScriptValue RunScript(string script, byte[] buffer)
+        public static JavaScriptValue RunScript(String script, Byte[] buffer)
         {
-            return RunScript(script, buffer, JavaScriptSourceContext.None, string.Empty);
+            return RunScript(script, buffer, JavaScriptSourceContext.None, String.Empty);
         }
 
         /// <summary>
@@ -295,9 +286,9 @@
         /// <returns>
         ///     The size of the buffer, in bytes, required to hold the serialized script.
         /// </returns>
-        public static ulong SerializeScript(string script, byte[] buffer)
+        public static UInt64 SerializeScript(String script, Byte[] buffer)
         {
-            var bufferSize = (ulong)buffer.Length;
+            var bufferSize = (UInt64)buffer.Length;
             Native.ThrowIfError(Native.JsSerializeScript(script, buffer, ref bufferSize));
             return bufferSize;
         }
@@ -321,8 +312,7 @@
         /// <returns>The exception for the runtime of the current context.</returns>
         public static JavaScriptValue GetAndClearException()
         {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsGetAndClearException(out reference));
+            Native.ThrowIfError(Native.JsGetAndClearException(out JavaScriptValue reference));
             return reference;
         }
 
@@ -353,10 +343,9 @@
         ///     Calling AddRef ensures that the context will not be freed until Release is called.
         /// </remarks>
         /// <returns>The object's new reference count.</returns>
-        public uint AddRef()
+        public UInt32 AddRef()
         {
-            uint count;
-            Native.ThrowIfError(Native.JsContextAddRef(this, out count));
+            Native.ThrowIfError(Native.JsContextAddRef(this, out UInt32 count));
             return count;
         }
 
@@ -367,10 +356,9 @@
         ///     Removes a reference to a context that was created by AddRef.
         /// </remarks>
         /// <returns>The object's new reference count.</returns>
-        public uint Release()
+        public UInt32 Release()
         {
-            uint count;
-            Native.ThrowIfError(Native.JsContextRelease(this, out count));
+            Native.ThrowIfError(Native.JsContextRelease(this, out UInt32 count));
             return count;
         }
 
@@ -388,7 +376,7 @@
             /// <summary>
             ///     Whether the structure has been disposed.
             /// </summary>
-            private bool disposed;
+            private Boolean disposed;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="Scope"/> struct. 

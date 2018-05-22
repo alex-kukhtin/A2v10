@@ -22,7 +22,8 @@ namespace A2v10.Tests.Config
     public class TestProfiler : IProfiler, IDataProfiler
 	{
         public Boolean Enabled { get; set; }
-        IProfileRequest _request = new DummyRequest();
+
+		readonly IProfileRequest _request = new DummyRequest();
 
         public IProfileRequest BeginRequest(String address, String session)
         {

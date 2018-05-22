@@ -23,9 +23,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var table = new TagBuilder("table", "prop-grid", IsInGrid);
-            if (onRender != null)
-                onRender(table);
-            table.AddCssClassBool(Compact, "compact");
+			onRender?.Invoke(table);
+			table.AddCssClassBool(Compact, "compact");
             table.AddCssClassBool(Striped, "striped");
             MergeAttributes(table, context);
             if (GridLines != GridLinesVisibility.None)

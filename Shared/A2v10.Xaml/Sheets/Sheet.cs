@@ -64,9 +64,8 @@ namespace A2v10.Xaml
         internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
         {
             var sheet = new TagBuilder("a2-sheet", null, IsInGrid);
-            if (onRender != null)
-                onRender(sheet);
-            MergeAttributes(sheet, context);
+			onRender?.Invoke(sheet);
+			MergeAttributes(sheet, context);
             if (GridLines != GridLinesVisibility.None)
                 sheet.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
             sheet.AddCssClassBool(Hover, "hover");

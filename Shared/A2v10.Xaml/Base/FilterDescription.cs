@@ -75,9 +75,11 @@ namespace A2v10.Xaml
 		{
 			foreach (var x in from.Split(','))
 			{
-				var item = new FilterItem();
-				item.DataType = DataType.String;
-				item.Property = x.Trim();
+				var item = new FilterItem
+				{
+					DataType = DataType.String,
+					Property = x.Trim()
+				};
 				Items.Add(item);
 			}
 		}
@@ -100,7 +102,7 @@ namespace A2v10.Xaml
 
 	internal class FilterDescriptionConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -109,7 +111,7 @@ namespace A2v10.Xaml
 			return false;
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;

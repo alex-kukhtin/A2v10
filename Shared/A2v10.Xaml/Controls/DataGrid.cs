@@ -63,8 +63,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var dataGrid = new TagBuilder("data-grid", null, IsInGrid);
-			if (onRender != null)
-				onRender(dataGrid);
+			onRender?.Invoke(dataGrid);
 			MergeBindingAttributeBool(dataGrid, context, ":compact", nameof(Compact), Compact);
 			MergeAttributes(dataGrid, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
 			if (Height != null)

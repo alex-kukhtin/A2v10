@@ -11,7 +11,7 @@ namespace A2v10.Tests.Config
 	public class TestApplicationHost : IApplicationHost, IDataConfiguration
 	{
 
-		IProfiler _profiler;
+		readonly IProfiler _profiler;
 		public TestApplicationHost(IProfiler profiler)
 		{
 			_profiler = profiler;
@@ -19,12 +19,12 @@ namespace A2v10.Tests.Config
 
 		public String ConnectionString(String source)
 		{
-            if (String.IsNullOrEmpty(source))
-                source = "Default";
-            var cnnStr = ConfigurationManager.ConnectionStrings[source];
-            if (cnnStr == null)
-                throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-            return cnnStr.ConnectionString;
+			if (String.IsNullOrEmpty(source))
+				source = "Default";
+			var cnnStr = ConfigurationManager.ConnectionStrings[source];
+			if (cnnStr == null)
+				throw new ConfigurationErrorsException($"Connection string '{source}' not found");
+			return cnnStr.ConnectionString;
 		}
 
 		public IProfiler Profiler
@@ -35,43 +35,43 @@ namespace A2v10.Tests.Config
 			}
 		}
 
-        public String AppPath
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["appPath"];
-            }
-        }
+		public String AppPath
+		{
+			get
+			{
+				return ConfigurationManager.AppSettings["appPath"];
+			}
+		}
 
-        public String AppKey
-        {
-            get
-            {
-                // TODO: ???
-                return ConfigurationManager.AppSettings["appKey"];
+		public String AppKey
+		{
+			get
+			{
+				// TODO: ???
+				return ConfigurationManager.AppSettings["appKey"];
 
-            }
-        }
+			}
+		}
 
-        public String Theme => null;
-        public String HelpUrl => null;
+		public String Theme => null;
+		public String HelpUrl => null;
 
-        public Boolean IsMultiTenant => false;
-        public Boolean IsDebugConfiguration => true;
-        public Int32? TenantId { get; set; }
-        public String CatalogDataSource => null;
+		public Boolean IsMultiTenant => false;
+		public Boolean IsDebugConfiguration => true;
+		public Int32? TenantId { get; set; }
+		public String CatalogDataSource => null;
 
-        public String MakeFullPath(Boolean bAdmin, String path, String fileName)
-        {
-            throw new NotImplementedException();
-        }
+		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
+		{
+			throw new NotImplementedException();
+		}
 
-        public Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
-        {
-            throw new NotImplementedException();
-        }
+		public Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
+		{
+			throw new NotImplementedException();
+		}
 
-        public String AppVersion => throw new NotImplementedException();
-        public String AppBuild => throw new NotImplementedException();
-    }
+		public String AppVersion => throw new NotImplementedException();
+		public String AppBuild => throw new NotImplementedException();
+	}
 }
