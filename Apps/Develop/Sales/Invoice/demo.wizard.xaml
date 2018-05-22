@@ -1,28 +1,29 @@
 <!-- Demo wizard -->
 <Wizard xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Wizard demo" Width="600" Height="400">
-	<!--
-    <Wizard.Buttons>
-		<Button Content="Cancel" Command="{BindCmd Close}"/>
-		<Button Content="Prev" Command="{BindCmd WizardPrev}"/>
-        <Button Content="Next" Command="{BindCmd WizardNext}"/>
-		<Button Content="Finish" Command="{BindCmd Close}"/>
-	</Wizard.Buttons>
-	-->
-    <Wizard.Resources>
-        <sys:String x:Key="OpenUrl">/Agent/EditSupplier</sys:String>
-        <Confirm x:Key="SureDelete">Действительно удалить поставщика?</Confirm>
-    </Wizard.Resources>
-	<!--
-	<WizardPage Header="Step 1">
-		
+		Title="Wizard demo" Width="600" Height="400">
+	<WizardPage Header="Step # 1">
+		<Grid>
+			<TextBox Label="Name" Value="{Bind Agent.Name}"/>
+		</Grid>
 	</WizardPage>
-	<WizardPage Header="Step 2">
-		
+	<WizardPage Header="Step # 2">
+		<Grid>
+			<TextBox Label="Code" Value="{Bind Agent.Code}"/>
+		</Grid>
 	</WizardPage>
-	-->
+	<WizardPage Header="Step # 3">
+		<Paragraph>
+			Paragraph text here
+			<Span Bold="True">Span Bold text</Span>
+			Paragraph text here
+			<Hyperlink>Hyperlink</Hyperlink>
+			<Break />
+			Paragraph text here
+			<Span Italic="True">Span Italic text</Span>
+			<Line/>
+			Paragraph text here
+		</Paragraph>
+	</WizardPage>
 </Wizard>
 
     

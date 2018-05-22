@@ -2835,7 +2835,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .modal-footer {
   padding: 8px;
-  background-color: #f5f5f5;
+  background-color: #f8f8f8;
   border-top: 1px solid #ddd;
   display: flex;
   justify-content: flex-end;
@@ -2881,20 +2881,54 @@ table.data-grid > tbody > tr.bold > td {
   grid-row: 3;
 }
 .wizard-header {
-  padding: 6px;
+  padding: 6px 6px 6px 4px;
   margin: 0;
   list-style: none;
   display: flex;
   grid-row: 1;
+  background-color: #f8f8f8;
 }
 .wizard-header li {
-  padding: 10px;
+  padding: 0 1rem;
+  line-height: 36px;
+  background-color: white;
+  position: relative;
+  height: 36px;
+  border-color: white;
+  margin-left: 24px;
+}
+.wizard-header li > a {
+  border-color: white;
+  margin-right: 4px;
+  color: #777;
+}
+.wizard-header li > a:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -18px;
+  border: 18px solid transparent;
+  border-color: inherit;
+  border-right-width: 0;
+  border-left-color: transparent;
+}
+.wizard-header li > a:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border: 18px solid transparent;
+  border-right-width: 0;
+  border-left-color: inherit;
+}
+.wizard-header li:first-child > a:before {
+  border-left-color: inherit;
 }
 .wizard-header li.active {
   background-color: aqua;
 }
-.wizard-content {
-  padding: 0 6px;
+.wizard-header li.active > a {
+  border-color: aqua;
 }
 .toastr-stack {
   position: absolute;

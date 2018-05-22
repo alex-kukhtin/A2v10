@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7173
+// 20180522-7192
 
 // components/selector.js
 
@@ -25,7 +25,7 @@
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
 			@input="debouncedUpdate"
 			@blur.stop="cancel"
-			@keydown.stop="keyUp"
+			@keyup.stop="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -156,6 +156,8 @@
 				if (!this.isOpen) return;
 				switch (event.which) {
 					case 27: // esc
+						event.stopImmediatePropagation();
+						event.preventDefault();
 						this.cancel();
 						break;
 					case 13: // enter
@@ -184,21 +186,23 @@
 			},
 			hit(itm) {
 				let obj = this.item[this.prop];
-				if (obj.$merge)
-					obj.$merge(itm, true /*fire*/);
-				else
-					platform.set(this.item, this.prop, itm);
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
+				this.$nextTick(() => {
+					if (obj.$merge)
+						obj.$merge(itm, true /*fire*/);
+					else
+						platform.set(this.item, this.prop, itm);
+				});
 			},
 			clear() {
-				let obj = this.item[this.prop];
-				if (obj.$empty)
-					obj.$empty();
 				this.query = '';
 				this.isOpen = false;
 				this.isOpenNew = false;
+				let obj = this.item[this.prop];
+				if (obj.$empty)
+					obj.$empty();
 			},
 			scrollIntoView() {
 				this.$nextTick(() => {

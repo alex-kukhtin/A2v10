@@ -909,11 +909,13 @@
 		yield* enumData(root, dp, dn, '');
 	}
 
-	function validateOneElement(root, path, vals) {
+	function validateOneElement(root, path, vals, force) {
 		if (!vals)
 			return;
 		let errs = [];
 		for (let elem of dataForVal(root, path)) {
+			if (force)
+				validators.removeWeak(elem.item);
 			let res = validators.validate(vals, elem.item, elem.val);
 			saveErrors(elem.item, path, res);
 			if (res && res.length) {
@@ -926,7 +928,13 @@
 		return errs.length ? errs : null;
 	}
 
-	function validateAll() {
+	function forceValidateAll() {
+		let me = this;
+		me._needValidate_ = true;
+		me._validateAll_(true);
+	}
+
+	function validateAll(force) {
 		var me = this;
 		if (!me._host_) return;
 		if (!me._needValidate_) return;
@@ -938,7 +946,7 @@
 		if (!vals) return;
 		let allerrs = [];
 		for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val]);
+			let err1 = validateOneElement(me, val, vals[val], force);
 			if (err1) {
 				allerrs.push({ x: val, e: err1 });
 			}
@@ -1051,6 +1059,7 @@
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
+		root.prototype.$forceValidate = forceValidateAll;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};

@@ -28,7 +28,9 @@ TODO:
 	const wizardPanelTemplate = `
 <div class="wizard-panel">
 	<ul class="wizard-header">
-		<li v-for="(p, px) in pages" :class="pageClass(p)"><a @click.prevent="selectPage(p)">Step</a></li>
+		<li v-for="(p, px) in pages" :class="pageClass(p)" @click.prevent="selectPage(p)">
+			<a><i class="ico ico-error-outline"/><span v-text="p.header"/></a>
+		</li>
 	</ul>
 	<div class="wizard-content">
 		<slot />
@@ -44,8 +46,6 @@ TODO:
 	Vue.component('a2-wizard-panel', {
 		template: wizardPanelTemplate,
 		props: {
-			items: Array,
-			header: String
 		},
 		data() {
 			return {
@@ -83,21 +83,37 @@ TODO:
 		mounted() {
 			if (this.pages.length > 0)
 				this.activePage = this.pages[0];
+		},
+		beforeDestroy() {
+
 		}
 	});
 
 	Vue.component("a2-wizard-page", {
 		template: wizardPageTemplate,
 		props: {
-
+			header: String
+		},
+		data() {
+			return {
+				controls: []
+			};
 		},
 		computed: {
 			isActive() {
 				return this === this.$parent.activePage;
 			}
 		},
+		methods: {
+			$registerControl(control) {
+				this.controls.push(control);
+			}
+		},
 		created() {
 			this.$parent.$addPage(this);
+		},
+		beforeDestroy() {
+			this.controls.splice(0, this.controls.length);
 		},
 		destroyed() {
 			this.$parent.$removePage(this);

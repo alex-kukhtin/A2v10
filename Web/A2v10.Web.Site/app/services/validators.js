@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180425-7165*/
+/*20180522-7192*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -15,7 +15,8 @@ app.modules['std:validators'] = function () {
 	const validateMap = new WeakMap();
 
 	return {
-		validate: validateItem
+		validate: validateItem,
+		removeWeak,
 	};
 
 	function validateStd(rule, val) {
@@ -31,6 +32,11 @@ app.modules['std:validators'] = function () {
 		}
 		console.error(`invalid std rule: '${rule}'`);
 		return true;
+	}
+
+	function removeWeak(item) {
+		if (validateMap.has(item))
+			validateMap.set(item, undefined);
 	}
 
 	function validateImpl(rules, item, val, ff) {

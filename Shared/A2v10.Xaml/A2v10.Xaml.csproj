@@ -94,6 +94,7 @@
     <Compile Include="Layouts\FullHeightPanel.cs" />
     <Compile Include="Layouts\Include.cs" />
     <Compile Include="Layouts\Partial.cs" />
+    <Compile Include="Layouts\WizardPage.cs" />
     <Compile Include="Text\Paragraph.cs" />
     <Compile Include="Text\TagLabel.cs" />
     <Compile Include="Layouts\DropDownMenu.cs" />

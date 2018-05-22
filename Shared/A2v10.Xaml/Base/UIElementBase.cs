@@ -40,7 +40,8 @@ namespace A2v10.Xaml
 			All = Visibility | Margin | Wrap | Tip | Content | TabIndex,
 			NoContent = Visibility | Margin | Wrap | Tip | TabIndex,
 			NoTabIndex = Visibility | Margin | Wrap | Tip | Content,
-			SpecialTab = Visibility | Margin | Wrap | Tip
+			SpecialTab = Visibility | Margin | Wrap | Tip,
+			SpecialWizardPage = Margin | Wrap | Tip
 		}
 
 		internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)

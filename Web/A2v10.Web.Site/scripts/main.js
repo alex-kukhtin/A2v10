@@ -1357,7 +1357,7 @@ app.modules['std:log'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180425-7165*/
+/*20180522-7192*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -1372,7 +1372,8 @@ app.modules['std:validators'] = function () {
 	const validateMap = new WeakMap();
 
 	return {
-		validate: validateItem
+		validate: validateItem,
+		removeWeak,
 	};
 
 	function validateStd(rule, val) {
@@ -1388,6 +1389,11 @@ app.modules['std:validators'] = function () {
 		}
 		console.error(`invalid std rule: '${rule}'`);
 		return true;
+	}
+
+	function removeWeak(item) {
+		if (validateMap.has(item))
+			validateMap.set(item, undefined);
 	}
 
 	function validateImpl(rules, item, val, ff) {
@@ -2384,11 +2390,13 @@ app.modules['std:validators'] = function () {
 		yield* enumData(root, dp, dn, '');
 	}
 
-	function validateOneElement(root, path, vals) {
+	function validateOneElement(root, path, vals, force) {
 		if (!vals)
 			return;
 		let errs = [];
 		for (let elem of dataForVal(root, path)) {
+			if (force)
+				validators.removeWeak(elem.item);
 			let res = validators.validate(vals, elem.item, elem.val);
 			saveErrors(elem.item, path, res);
 			if (res && res.length) {
@@ -2401,7 +2409,13 @@ app.modules['std:validators'] = function () {
 		return errs.length ? errs : null;
 	}
 
-	function validateAll() {
+	function forceValidateAll() {
+		let me = this;
+		me._needValidate_ = true;
+		me._validateAll_(true);
+	}
+
+	function validateAll(force) {
 		var me = this;
 		if (!me._host_) return;
 		if (!me._needValidate_) return;
@@ -2413,7 +2427,7 @@ app.modules['std:validators'] = function () {
 		if (!vals) return;
 		let allerrs = [];
 		for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val]);
+			let err1 = validateOneElement(me, val, vals[val], force);
 			if (err1) {
 				allerrs.push({ x: val, e: err1 });
 			}
@@ -2526,6 +2540,7 @@ app.modules['std:validators'] = function () {
 		root.prototype._delegate_ = getDelegate;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
+		root.prototype.$forceValidate = forceValidateAll;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};
@@ -3977,7 +3992,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7173
+// 20180522-7192
 
 // components/selector.js
 
@@ -4002,7 +4017,7 @@ Vue.component('validator-control', {
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
 			@input="debouncedUpdate"
 			@blur.stop="cancel"
-			@keydown.stop="keyUp"
+			@keyup.stop="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -4133,6 +4148,8 @@ Vue.component('validator-control', {
 				if (!this.isOpen) return;
 				switch (event.which) {
 					case 27: // esc
+						event.stopImmediatePropagation();
+						event.preventDefault();
 						this.cancel();
 						break;
 					case 13: // enter
@@ -4161,21 +4178,23 @@ Vue.component('validator-control', {
 			},
 			hit(itm) {
 				let obj = this.item[this.prop];
-				if (obj.$merge)
-					obj.$merge(itm, true /*fire*/);
-				else
-					platform.set(this.item, this.prop, itm);
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
+				this.$nextTick(() => {
+					if (obj.$merge)
+						obj.$merge(itm, true /*fire*/);
+					else
+						platform.set(this.item, this.prop, itm);
+				});
 			},
 			clear() {
-				let obj = this.item[this.prop];
-				if (obj.$empty)
-					obj.$empty();
 				this.query = '';
 				this.isOpen = false;
 				this.isOpenNew = false;
+				let obj = this.item[this.prop];
+				if (obj.$empty)
+					obj.$empty();
 			},
 			scrollIntoView() {
 				this.$nextTick(() => {
@@ -6485,7 +6504,9 @@ TODO:
 	const wizardPanelTemplate = `
 <div class="wizard-panel">
 	<ul class="wizard-header">
-		<li v-for="(p, px) in pages" :class="pageClass(p)"><a @click.prevent="selectPage(p)">Step</a></li>
+		<li v-for="(p, px) in pages" :class="pageClass(p)" @click.prevent="selectPage(p)">
+			<a><i class="ico ico-error-outline"/><span v-text="p.header"/></a>
+		</li>
 	</ul>
 	<div class="wizard-content">
 		<slot />
@@ -6501,8 +6522,6 @@ TODO:
 	Vue.component('a2-wizard-panel', {
 		template: wizardPanelTemplate,
 		props: {
-			items: Array,
-			header: String
 		},
 		data() {
 			return {
@@ -6540,21 +6559,37 @@ TODO:
 		mounted() {
 			if (this.pages.length > 0)
 				this.activePage = this.pages[0];
+		},
+		beforeDestroy() {
+
 		}
 	});
 
 	Vue.component("a2-wizard-page", {
 		template: wizardPageTemplate,
 		props: {
-
+			header: String
+		},
+		data() {
+			return {
+				controls: []
+			};
 		},
 		computed: {
 			isActive() {
 				return this === this.$parent.activePage;
 			}
 		},
+		methods: {
+			$registerControl(control) {
+				this.controls.push(control);
+			}
+		},
 		created() {
 			this.$parent.$addPage(this);
+		},
+		beforeDestroy() {
+			this.controls.splice(0, this.controls.length);
 		},
 		destroyed() {
 			this.$parent.$removePage(this);

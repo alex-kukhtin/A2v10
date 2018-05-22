@@ -1,5 +1,7 @@
 ﻿
 
+@wizard-header-height:36px;
+@wizard-heder-bg-color:#f8f8f8;
 
 .wizard-panel {
 	display: grid;
@@ -12,22 +14,64 @@
 }
 
 .wizard-header {
-	padding: 6px;
+	padding: 6px 6px 6px 4px;
 	margin: 0;
 	list-style: none;
 	display: flex;
-	grid-row:1;
+	grid-row: 1;
+	background-color:@wizard-heder-bg-color;
 
 	li {
-		padding: 10px;
+		padding: 0 1rem;
+		line-height:@wizard-header-height;
+		background-color: white;
+		position: relative;
+		height: @wizard-header-height;
+		border-color: white;
+		margin-left: 24px;
+
+
+		> a {
+			border-color: white;
+			margin-right: 4px;
+			color:#777;
+
+			&:before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: -@wizard-header-height / 2;
+				border: @wizard-header-height / 2 solid transparent;
+				border-color: inherit;
+				border-right-width: 0;
+				border-left-color: transparent;
+			}
+
+			&:after {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 100%;
+				border: @wizard-header-height / 2 solid transparent;
+				border-right-width: 0;
+				border-left-color: inherit;
+			}
+		}
+
+		&:first-child > a:before {
+			border-left-color:inherit;
+		}
 	}
 
 	li.active {
 		background-color: aqua;
+
+		> a {
+			border-color: aqua;
+		}
 	}
 }
 
 .wizard-content {
-	padding:0 6px;
 }
 
