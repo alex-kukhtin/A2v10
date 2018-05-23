@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using A2v10.Infrastructure;
 
@@ -23,10 +24,13 @@ namespace A2v10.Xaml
 		}
 
 		#region Attached Properties
-		static Lazy<IDictionary<Object, ToolbarAlign>> _attachedPart = new Lazy<IDictionary<Object, ToolbarAlign>>(() => new Dictionary<Object, ToolbarAlign>());
+		[ThreadStatic]
+		static IDictionary<Object, ToolbarAlign> _attachedPart;
 
 		public static void SetAlign(Object obj, ToolbarAlign aln)
 		{
+			if (_attachedPart == null)
+				_attachedPart = new Dictionary<Object, ToolbarAlign>();
 			AttachedHelpers.SetAttached(_attachedPart, obj, aln);
 		}
 
@@ -35,24 +39,10 @@ namespace A2v10.Xaml
 			return AttachedHelpers.GetAttached(_attachedPart, obj);
 		}
 
-		internal static void CheckAttachedObjects()
+		internal static void ClearAttached()
 		{
-			var tbType = typeof(Toolbar);
-			AttachedHelpers.CheckParentAttached(_attachedPart, tbType);
+			_attachedPart = null;
 		}
-
-		internal static void ClearAttachedObjects()
-		{
-			if (_attachedPart.IsValueCreated) _attachedPart.Value.Clear();
-		}
-
-#if DEBUG
-		internal static void DebugCheckAttached()
-		{
-			if (_attachedPart.IsValueCreated && _attachedPart.Value.Count > 0)
-				throw new XamlException("Toolbar. Invalid attached state");
-		}
-#endif
 
 		#endregion
 
@@ -94,15 +84,6 @@ namespace A2v10.Xaml
 			// Те, что справа
 			foreach (var ch in rightList)
 				ch.RenderElement(context);
-		}
-
-		internal override void OnDispose()
-		{
-			base.OnDispose();
-			foreach (var c in Children)
-			{
-				AttachedHelpers.RemoveAttached(_attachedPart, c);
-			}
 		}
 	}
 }

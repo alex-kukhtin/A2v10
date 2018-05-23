@@ -997,7 +997,7 @@ header .btn:hover,
   pointer-events: none;
 }
 .splitter .spl-handle:hover {
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 .splitter.vertical .spl-handle {
   border-left: 1px solid #cfd6e5;
@@ -1265,7 +1265,7 @@ a:active {
 pre {
   font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.85em;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   padding: 6px;
   white-space: pre-wrap;
   word-break: break-all;
@@ -1492,7 +1492,7 @@ pre.a2-code {
   margin-top: 0.7em;
 }
 .control-group .input-group.static {
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   user-select: text;
 }
 .control-group .input-group.static > span {
@@ -2012,7 +2012,7 @@ pre.a2-code {
   padding: 4px;
   display: block;
   border-top: 1px solid #bdc5d8;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 /*
     TODO:
@@ -2596,7 +2596,7 @@ table.data-grid > tbody > tr.bold > td {
   align-self: stretch;
   overflow: auto;
   height: auto;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   display: grid;
   grid-gap: 0;
   grid-template-rows: auto 1fr;
@@ -2605,12 +2605,12 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
 }
 .tab-panel .tab-header {
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   margin: 0;
   padding: 0 6px 0;
   grid-row: 1;
   grid-column: 1;
-  border-bottom: 1px solid #bdc5d8;
+  border-bottom: 1px solid #ddd;
 }
 .tab-panel .tab-header > li {
   display: inline-block;
@@ -2637,14 +2637,14 @@ table.data-grid > tbody > tr.bold > td {
 .tab-panel .tab-header > li:hover {
   background-color: #eee;
   color: #57a8fa;
-  border-bottom-color: #bdc5d8;
+  border-bottom-color: #ddd;
 }
 .tab-panel .tab-header > li.active {
   background-color: white;
   cursor: default;
   border-top: 3px solid gold;
-  border-right: 1px solid #bdc5d8;
-  border-left: 1px solid #bdc5d8;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
   color: #222;
 }
 .tab-panel .tab-header > li.active.yellow {
@@ -2661,7 +2661,7 @@ table.data-grid > tbody > tr.bold > td {
   grid-row: 1;
   grid-column: 2;
   align-self: stretch;
-  border-bottom: 1px solid #bdc5d8;
+  border-bottom: 1px solid #ddd;
   padding-right: 6px;
   color: #777;
   display: inline-flex;
@@ -2684,7 +2684,7 @@ table.data-grid > tbody > tr.bold > td {
   padding-left: 0;
 }
 .tab-panel.bordered > .tab-content {
-  border: 1px solid #bdc5d8;
+  border: 1px solid #ddd;
   border-top: none;
 }
 .tab-panel.full-page .tab-content {
@@ -2835,7 +2835,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .modal-footer {
   padding: 8px;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   border-top: 1px solid #ddd;
   display: flex;
   justify-content: flex-end;
@@ -2886,7 +2886,7 @@ table.data-grid > tbody > tr.bold > td {
   list-style: none;
   display: flex;
   grid-row: 1;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 .wizard-header li {
   padding: 0 1rem;
@@ -2895,7 +2895,7 @@ table.data-grid > tbody > tr.bold > td {
   position: relative;
   height: 36px;
   border-color: white;
-  margin-left: 24px;
+  margin-left: 20px;
 }
 .wizard-header li > a {
   border-color: white;
@@ -2906,29 +2906,32 @@ table.data-grid > tbody > tr.bold > td {
   content: "";
   position: absolute;
   top: 0;
-  left: -18px;
+  left: -12px;
   border: 18px solid transparent;
   border-color: inherit;
   border-right-width: 0;
   border-left-color: transparent;
+  border-left-width: 12px;
 }
 .wizard-header li > a:after {
   content: "";
+  padding: 0;
   position: absolute;
   top: 0;
   left: 100%;
   border: 18px solid transparent;
   border-right-width: 0;
   border-left-color: inherit;
+  border-left-width: 12px;
 }
 .wizard-header li:first-child > a:before {
   border-left-color: inherit;
 }
 .wizard-header li.active {
-  background-color: aqua;
+  background-color: #cde6f7;
 }
 .wizard-header li.active > a {
-  border-color: aqua;
+  border-color: #cde6f7;
 }
 .toastr-stack {
   position: absolute;
@@ -2988,7 +2991,7 @@ table tr.bold > td {
   font-weight: 600;
 }
 table td.gray {
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 .table-separate-border {
   border-collapse: separate;
@@ -3379,7 +3382,7 @@ input[type="radio"]:disabled + span {
 input[type="checkbox"]:disabled + span::before,
 input[type="radio"]:disabled + span::before {
   border-color: #aaa;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 input[type="checkbox"]:disabled + span::after,
 input[type="radio"]:disabled + span::after {
@@ -3450,11 +3453,11 @@ label.checkbox.small span:after {
 }
 .a2-pager button[disabled] {
   color: #ccc;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   cursor: not-allowed;
 }
 .a2-pager button[disabled]:hover {
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
 }
 .a2-pager button.active {
   background-color: #cde6f7;
@@ -4421,7 +4424,7 @@ h5,
   bottom: 22px;
   right: 0;
   z-index: 110;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   border-left: 1px solid #bdc5d8;
   width: 350px;
   box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -4455,7 +4458,7 @@ h5,
 }
 .debug-panel .debug-body {
   overflow: auto;
-  background-color: #f8f8f8;
+  background-color: #f9f9f9;
   user-select: text;
 }
 .debug-panel .debug-model pre {

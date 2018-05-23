@@ -58,7 +58,7 @@
 						 Value="{Bind Agent.Address.Street}" ItemsSource="{Bind Root.$Streets}">
 					<ComboBoxItem Content="{Bind Name}" Value="{Bind Name}"/>
 				</ComboBox>
-				<TextBox Label="Дом" Grid.Row="1" Grid.Col="2" Value="{Bind Agent.Address.Build}"/>
+				<TextBox Label="Дом22" Grid.Row="1" Grid.Col="2" Value="{Bind Agent.Address.Build}"/>
 				<TextBox Label="Квартира" Grid.Row="2" Grid.Col="2" Value="{Bind Agent.Address.Appt}"/>
 				<!--
 				<Hyperlink Grid.Row="3" Grid.Col="3" Command="{BindCmd MailTo, Argument={Bind Agent.Address.Appt}, Data='i am the &lt;script/&gt; subject' }" Content="{Bind Agent.Address.Appt}"/>

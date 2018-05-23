@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,13 @@ namespace A2v10.Xaml
 	public class FullHeightPanel : Container
 	{
 		#region Attached Properties
-		static Lazy<IDictionary<Object, Boolean>> _attachedFill = new Lazy<IDictionary<Object, Boolean>>(() => new Dictionary<Object, Boolean>());
+		[ThreadStatic]
+		static IDictionary<Object, Boolean> _attachedFill;
 
 		public static void SetFill(Object obj, Boolean fill)
 		{
+			if (_attachedFill == null)
+				_attachedFill = new Dictionary<Object, Boolean>();
 			AttachedHelpers.SetAttached(_attachedFill, obj, fill);
 		}
 
@@ -21,24 +25,10 @@ namespace A2v10.Xaml
 			return AttachedHelpers.GetAttached(_attachedFill, obj);
 		}
 
-		internal static void CheckAttachedObjects()
+		internal static void ClearAttached()
 		{
-			var fhType = typeof(FullHeightPanel);
-			AttachedHelpers.CheckParentAttached(_attachedFill, fhType);
+			_attachedFill = null;
 		}
-
-		internal static void ClearAttachedObjects()
-		{
-			if (_attachedFill.IsValueCreated) _attachedFill.Value.Clear();
-		}
-
-#if DEBUG
-		internal static void DebugCheckAttached()
-		{
-			if (_attachedFill.IsValueCreated && _attachedFill.Value.Count > 0)
-				throw new XamlException("FullHeightPanel. Invalid attached state");
-		}
-#endif
 
 		#endregion
 
@@ -64,13 +54,6 @@ namespace A2v10.Xaml
 			panel.RenderStart(context);
 			RenderChildren(context);
 			panel.RenderEnd(context);
-		}
-
-		internal override void OnDispose()
-		{
-			base.OnDispose();
-			foreach (var c in Children)
-				AttachedHelpers.RemoveAttached(_attachedFill, c);
 		}
 	}
 }

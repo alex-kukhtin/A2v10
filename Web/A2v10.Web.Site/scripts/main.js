@@ -3992,7 +3992,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180522-7192
+// 20180523-7193
 
 // components/selector.js
 
@@ -4015,9 +4015,7 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
-			@input="debouncedUpdate"
-			@blur.stop="cancel"
-			@keyup.stop="keyUp"
+			@input="debouncedUpdate" @blur.stop="cancel" @keydown="keyDown" @keyup="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -4145,12 +4143,19 @@ Vue.component('validator-control', {
 				this.isOpen = false;
 			},
 			keyUp(event) {
-				if (!this.isOpen) return;
+				if (this.isOpen && event.which === 27) {
+					event.preventDefault();
+					event.stopPropagation();
+					this.cancel();
+				}
+			},
+			keyDown(event) {
+				if (!this.isOpen)
+					return;
+				event.stopPropagation();
 				switch (event.which) {
 					case 27: // esc
-						event.stopImmediatePropagation();
 						event.preventDefault();
-						this.cancel();
 						break;
 					case 13: // enter
 						if (this.current === -1) return;
@@ -6513,8 +6518,8 @@ TODO:
 	</div>
 	<div class="modal-footer">
 		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel">Cancel</button>
-		<button class="btn a2-inline"><i class="ico ico-chevron-left"/>Назад</button>
-		<button class="btn a2-inline">Далі<i class="ico ico-chevron-right"/></button>
+		<button class="btn a2-inline"><i class="ico ico-chevron-left"/><span v-text="$locale.$Back"/></button>
+		<button class="btn a2-inline"><span v-text="nextFinishText"/><i class="ico ico-chevron-right"/></button>
 	</div>
 </div>
 `;
@@ -6532,6 +6537,10 @@ TODO:
 		computed: {
 			$locale() {
 				return locale;
+			},
+			nextFinishText() {
+				let pgs = this.pages;
+				return this.activePage === pgs[pgs.length - 1] ? locale.$Finish : locale.$Next;
 			}
 		},
 		methods: {

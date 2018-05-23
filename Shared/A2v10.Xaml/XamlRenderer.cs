@@ -44,32 +44,16 @@ namespace A2v10.Xaml
 
 				uiElem.RenderElement(ctx);
 
-				try
-				{
-					Grid.CheckAttachedObjects();
-					Splitter.CheckAttachedObjects();
-					FullHeightPanel.CheckAttachedObjects();
-					Toolbar.CheckAttachedObjects();
-				} catch (XamlException)
-				{
-					Grid.ClearAttachedObjects();
-					Splitter.ClearAttachedObjects();
-					FullHeightPanel.ClearAttachedObjects();
-					Toolbar.ClearAttachedObjects();
-					throw;
-				}
+				Grid.ClearAttached();
+				Splitter.ClearAttached();
+				FullHeightPanel.ClearAttached();
+				Toolbar.ClearAttached();
 			}
 
 			if (uiElem is IDisposable disp)
 			{
 				disp.Dispose();
 			}
-#if DEBUG
-			Grid.DebugCheckAttached();
-			Splitter.DebugCheckAttached();
-			FullHeightPanel.DebugCheckAttached();
-			Toolbar.DebugCheckAttached();
-#endif
 		}
 	}
 }

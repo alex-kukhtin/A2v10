@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace A2v10.Xaml
@@ -13,11 +14,15 @@ namespace A2v10.Xaml
 		public Length MinWidth { get; set; }
 
 		#region Attached Properties
-		static Lazy<IDictionary<Object, GridLength>> _attachedWidths = new Lazy<IDictionary<Object, GridLength>>(() => new Dictionary<Object, GridLength>());
-		static Lazy<IDictionary<Object, Length>> _attachedMinWidths = new Lazy<IDictionary<Object, Length>>(() => new Dictionary<Object, Length>());
+		[ThreadStatic]
+		static IDictionary<Object, GridLength> _attachedWidths;
+		[ThreadStatic]
+		static IDictionary<Object, Length> _attachedMinWidths;
 
 		public static void SetWidth(Object obj, GridLength width)
 		{
+			if (_attachedWidths == null)
+				_attachedWidths = new Dictionary<Object, GridLength>();
 			AttachedHelpers.SetAttached(_attachedWidths, obj, width);
 		}
 
@@ -28,6 +33,8 @@ namespace A2v10.Xaml
 
 		public static void SetMinWidth(Object obj, Length width)
 		{
+			if (_attachedMinWidths == null)
+				_attachedMinWidths = new Dictionary<Object, Length>();
 			AttachedHelpers.SetAttached(_attachedMinWidths, obj, width);
 		}
 
@@ -36,27 +43,11 @@ namespace A2v10.Xaml
 			return AttachedHelpers.GetAttached(_attachedMinWidths, obj);
 		}
 
-		internal static void CheckAttachedObjects()
+		internal static void ClearAttached()
 		{
-			var splType = typeof(Splitter);
-			AttachedHelpers.CheckParentAttached(_attachedWidths, splType);
-			AttachedHelpers.CheckParentAttached(_attachedMinWidths, splType);
+			_attachedWidths = null;
+			_attachedMinWidths = null;
 		}
-
-		internal static void ClearAttachedObjects()
-		{
-			if (_attachedWidths.IsValueCreated) _attachedWidths.Value.Clear();
-			if (_attachedMinWidths.IsValueCreated) _attachedMinWidths.Value.Clear();
-		}
-
-#if DEBUG
-		internal static void DebugCheckAttached()
-		{
-			if (_attachedWidths.IsValueCreated && _attachedWidths.Value.Count > 0 ||
-				_attachedMinWidths.IsValueCreated && _attachedMinWidths.Value.Count > 0)
-				throw new XamlException("Splitter. Invalid attached state");
-		}
-#endif
 
 		#endregion
 
@@ -119,16 +110,6 @@ namespace A2v10.Xaml
 				throw new XamlException("The splitter must have two panels");
 			if (Orientation == Orientation.Horizontal)
 				throw new XamlException("The horizontal splitter is not yet supported");
-		}
-
-		internal override void OnDispose()
-		{
-			base.OnDispose();
-			foreach (var c in Children)
-			{
-				AttachedHelpers.RemoveAttached(_attachedWidths, c);
-				AttachedHelpers.RemoveAttached(_attachedMinWidths, c);
-			}
 		}
 	}
 }

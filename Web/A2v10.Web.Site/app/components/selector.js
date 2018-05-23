@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180522-7192
+// 20180523-7193
 
 // components/selector.js
 
@@ -23,9 +23,7 @@
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
-			@input="debouncedUpdate"
-			@blur.stop="cancel"
-			@keyup.stop="keyUp"
+			@input="debouncedUpdate" @blur.stop="cancel" @keydown="keyDown" @keyup="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -153,12 +151,19 @@
 				this.isOpen = false;
 			},
 			keyUp(event) {
-				if (!this.isOpen) return;
+				if (this.isOpen && event.which === 27) {
+					event.preventDefault();
+					event.stopPropagation();
+					this.cancel();
+				}
+			},
+			keyDown(event) {
+				if (!this.isOpen)
+					return;
+				event.stopPropagation();
 				switch (event.which) {
 					case 27: // esc
-						event.stopImmediatePropagation();
 						event.preventDefault();
-						this.cancel();
 						break;
 					case 13: // enter
 						if (this.current === -1) return;

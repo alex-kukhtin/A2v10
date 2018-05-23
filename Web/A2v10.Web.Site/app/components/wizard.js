@@ -37,8 +37,8 @@ TODO:
 	</div>
 	<div class="modal-footer">
 		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel">Cancel</button>
-		<button class="btn a2-inline"><i class="ico ico-chevron-left"/>Назад</button>
-		<button class="btn a2-inline">Далі<i class="ico ico-chevron-right"/></button>
+		<button class="btn a2-inline"><i class="ico ico-chevron-left"/><span v-text="$locale.$Back"/></button>
+		<button class="btn a2-inline"><span v-text="nextFinishText"/><i class="ico ico-chevron-right"/></button>
 	</div>
 </div>
 `;
@@ -56,6 +56,10 @@ TODO:
 		computed: {
 			$locale() {
 				return locale;
+			},
+			nextFinishText() {
+				let pgs = this.pages;
+				return this.activePage === pgs[pgs.length - 1] ? locale.$Finish : locale.$Next;
 			}
 		},
 		methods: {

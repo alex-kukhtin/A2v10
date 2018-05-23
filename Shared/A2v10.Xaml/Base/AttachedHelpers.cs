@@ -7,42 +7,21 @@ namespace A2v10.Xaml
 {
 	internal static class AttachedHelpers
 	{
-		internal static void SetAttached<T>(Lazy<IDictionary<Object, T>> dict, Object obj, T val)
+		internal static void SetAttached<T>(IDictionary<Object, T> dict, Object obj, T val)
 		{
-			if (dict.Value.ContainsKey(obj))
-				dict.Value[obj] = val;
+			if (dict.ContainsKey(obj))
+				dict[obj] = val;
 			else
-				dict.Value.Add(obj, val);
+				dict.Add(obj, val);
 		}
-		internal static T GetAttached<T>(Lazy<IDictionary<Object, T>> dict, Object obj)
+
+		internal static T GetAttached<T>(IDictionary<Object, T> dict, Object obj)
 		{
-			if (!dict.IsValueCreated)
+			if (dict == null)
 				return default(T);
-			if (dict.Value.TryGetValue(obj, out T val))
+			if (dict.TryGetValue(obj, out T val))
 				return val;
 			return default(T);
-		}
-
-		internal static void RemoveAttached<T>(Lazy<IDictionary<Object, T>> dict, Object obj)
-		{
-			if (!dict.IsValueCreated)
-				return;
-			dict.Value.Remove(obj);
-		}
-
-		internal static void CheckParentAttached<T>(Lazy<IDictionary<Object, T>> dict, Type checkType)
-		{
-			if (!dict.IsValueCreated)
-				return;
-			if (dict.Value == null) return;
-			foreach (var elem in dict.Value)
-			{
-				var xe = (elem.Key as XamlElement);
-				if (xe == null || xe.Parent == null)
-					continue;
-				if (xe.Parent.GetType() != checkType)
-					throw new XamlException($"Invalid Parent type for '{elem.Key.GetType().Name}'. Actual: '{xe.Parent.GetType().Name}'. Expected: {checkType.Name}");
-			}
 		}
 	}
 }
