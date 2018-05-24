@@ -1369,7 +1369,7 @@ app.modules['std:validators'] = function () {
 	const EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
-	const validateMap = new WeakMap();
+	let validateMap = new WeakMap();
 
 	return {
 		validate: validateItem,
@@ -1391,9 +1391,8 @@ app.modules['std:validators'] = function () {
 		return true;
 	}
 
-	function removeWeak(item) {
-		if (validateMap.has(item))
-			validateMap.set(item, undefined);
+	function removeWeak() {
+		validateMap = new WeakMap();
 	}
 
 	function validateImpl(rules, item, val, ff) {
@@ -1411,9 +1410,12 @@ app.modules['std:validators'] = function () {
 					retval.push({ msg: rule.msg, severity: sev });
 			} else if (utils.isFunction(rule.valid)) {
 				if (rule.async) {
-					if (validateMap.has(item)) {
-						if (validateMap.get(item) === val) {
+					if (validateMap.has(rule)) {
+						let vmv = validateMap.get(rule);
+						if (vmv.val === val) {
 							// Let's skip already validated values
+							if (vmv.result)
+								retval.push(vmv.result);
 							return;
 						}
 					}
@@ -1424,16 +1426,19 @@ app.modules['std:validators'] = function () {
 						console.error('Async rules should be marked async:true');
 						return;
 					}
-					validateMap.set(item, val);
+					let valRes = { val: val, result: null };
+					validateMap.set(rule, valRes);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
 						if (utils.isString(result)) {
 							dm.msg = result;
+							valRes.result = dm;
 							retval.push(dm);
 							nu = true;
 						} else if (!result) {
 							retval.push(dm);
+							valRes.result = dm;
 							nu = true;
 						}
 						// need to update the validators
@@ -2390,13 +2395,11 @@ app.modules['std:validators'] = function () {
 		yield* enumData(root, dp, dn, '');
 	}
 
-	function validateOneElement(root, path, vals, force) {
+	function validateOneElement(root, path, vals) {
 		if (!vals)
 			return;
 		let errs = [];
 		for (let elem of dataForVal(root, path)) {
-			if (force)
-				validators.removeWeak(elem.item);
 			let res = validators.validate(vals, elem.item, elem.val);
 			saveErrors(elem.item, path, res);
 			if (res && res.length) {
@@ -2420,6 +2423,8 @@ app.modules['std:validators'] = function () {
 		if (!me._host_) return;
 		if (!me._needValidate_) return;
 		me._needValidate_ = false;
+		if (force)
+			validators.removeWeak();
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;
@@ -2427,7 +2432,7 @@ app.modules['std:validators'] = function () {
 		if (!vals) return;
 		let allerrs = [];
 		for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val], force);
+			let err1 = validateOneElement(me, val, vals[val]);
 			if (err1) {
 				allerrs.push({ x: val, e: err1 });
 			}
@@ -6487,8 +6492,6 @@ TODO:
 
 /*
 TODO:
-1. double chevron + vertical align
-2. next/finish text
 3. disable buttons
 4. WizardPage class
 5. check validators for this page (and for tabs too)
@@ -6510,16 +6513,16 @@ TODO:
 <div class="wizard-panel">
 	<ul class="wizard-header">
 		<li v-for="(p, px) in pages" :class="pageClass(p)" @click.prevent="selectPage(p)">
-			<a><i class="ico ico-error-outline"/><span v-text="p.header"/></a>
+			<a><span v-text="p.header"/><i class="ico ico-error-outline"/></a>
 		</li>
 	</ul>
 	<div class="wizard-content">
 		<slot />
 	</div>
 	<div class="modal-footer">
-		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel">Cancel</button>
-		<button class="btn a2-inline"><i class="ico ico-chevron-left"/><span v-text="$locale.$Back"/></button>
-		<button class="btn a2-inline"><span v-text="nextFinishText"/><i class="ico ico-chevron-right"/></button>
+		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
+		<button class="btn a2-inline" v-text="$locale.$Back" :disabled="backDisabled" @click.stop="back"/>
+		<button class="btn a2-inline" v-text="nextFinishText" @click.stop="nextFinish"/>
 	</div>
 </div>
 `;
@@ -6541,6 +6544,9 @@ TODO:
 			nextFinishText() {
 				let pgs = this.pages;
 				return this.activePage === pgs[pgs.length - 1] ? locale.$Finish : locale.$Next;
+			},
+			backDisabled() {
+				return this.activePage === this.pages[0];
 			}
 		},
 		methods: {
@@ -6555,6 +6561,12 @@ TODO:
 			},
 			close() {
 				eventBus.$emit('modalClose');
+			},
+			back() {
+				alert('back');
+			},
+			nextFinish() {
+				alert('next/finish');
 			},
 			$addPage(page) {
 				this.pages.push(page);

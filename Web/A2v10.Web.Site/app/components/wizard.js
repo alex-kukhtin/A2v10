@@ -6,8 +6,6 @@
 
 /*
 TODO:
-1. double chevron + vertical align
-2. next/finish text
 3. disable buttons
 4. WizardPage class
 5. check validators for this page (and for tabs too)
@@ -29,16 +27,16 @@ TODO:
 <div class="wizard-panel">
 	<ul class="wizard-header">
 		<li v-for="(p, px) in pages" :class="pageClass(p)" @click.prevent="selectPage(p)">
-			<a><i class="ico ico-error-outline"/><span v-text="p.header"/></a>
+			<a><span v-text="p.header"/><i class="ico ico-error-outline"/></a>
 		</li>
 	</ul>
 	<div class="wizard-content">
 		<slot />
 	</div>
 	<div class="modal-footer">
-		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel">Cancel</button>
-		<button class="btn a2-inline"><i class="ico ico-chevron-left"/><span v-text="$locale.$Back"/></button>
-		<button class="btn a2-inline"><span v-text="nextFinishText"/><i class="ico ico-chevron-right"/></button>
+		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
+		<button class="btn a2-inline" v-text="$locale.$Back" :disabled="backDisabled" @click.stop="back"/>
+		<button class="btn a2-inline" v-text="nextFinishText" @click.stop="nextFinish"/>
 	</div>
 </div>
 `;
@@ -60,6 +58,9 @@ TODO:
 			nextFinishText() {
 				let pgs = this.pages;
 				return this.activePage === pgs[pgs.length - 1] ? locale.$Finish : locale.$Next;
+			},
+			backDisabled() {
+				return this.activePage === this.pages[0];
 			}
 		},
 		methods: {
@@ -74,6 +75,12 @@ TODO:
 			},
 			close() {
 				eventBus.$emit('modalClose');
+			},
+			back() {
+				alert('back');
+			},
+			nextFinish() {
+				alert('next/finish');
 			},
 			$addPage(page) {
 				this.pages.push(page);

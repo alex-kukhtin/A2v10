@@ -909,13 +909,11 @@
 		yield* enumData(root, dp, dn, '');
 	}
 
-	function validateOneElement(root, path, vals, force) {
+	function validateOneElement(root, path, vals) {
 		if (!vals)
 			return;
 		let errs = [];
 		for (let elem of dataForVal(root, path)) {
-			if (force)
-				validators.removeWeak(elem.item);
 			let res = validators.validate(vals, elem.item, elem.val);
 			saveErrors(elem.item, path, res);
 			if (res && res.length) {
@@ -939,6 +937,8 @@
 		if (!me._host_) return;
 		if (!me._needValidate_) return;
 		me._needValidate_ = false;
+		if (force)
+			validators.removeWeak();
 		var startTime = performance.now();
 		let tml = me.$template;
 		if (!tml) return;
@@ -946,7 +946,7 @@
 		if (!vals) return;
 		let allerrs = [];
 		for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val], force);
+			let err1 = validateOneElement(me, val, vals[val]);
 			if (err1) {
 				allerrs.push({ x: val, e: err1 });
 			}

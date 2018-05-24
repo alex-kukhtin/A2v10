@@ -9,7 +9,7 @@
 			<label style="grid-row:1; grid-column:1" class="a2-label required text-right" v-text="locale.$Email"></label>
 			<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
 				<div class="input-group">
-					<input v-focus class="control" type="text" v-model="email" tabindex="1" @keyup.enter="onLoginEnter" autocomplete="email" spellcheck="false"/>
+					<input v-focus class="control" name="email" type="text" v-model="email" tabindex="1" @keyup.enter="onLoginEnter" autocomplete="email" spellcheck="false"/>
 					<div class="validator">
 						<span class="error" v-text="emailError"></span>
 					</div>
@@ -18,7 +18,7 @@
 			<label style="grid-row:2; grid-column:1" class="a2-label required text-right" v-text="locale.$Password"></label>
 			<div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
 				<div class="input-group">
-					<input class="control" v-focus type="password" v-model="password" autocomplete="current-password" tabindex="2" @keydown.enter.stop.prevent="onPwdEnter" ref="pwd" />
+					<input class="control" v-focus type="password" name="password" v-model="password" autocomplete="current-password" tabindex="2" @keydown.enter.stop.prevent="onPwdEnter" ref="pwd" />
 					<div class="validator">
 						<span class="error" v-text="locale.$EnterPassword"></span>
 					</div>

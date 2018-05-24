@@ -11,8 +11,8 @@
 *.userprefs
 
 # project specific
-*.license.key
-#Web/A2v10\.Web\.Site/Web.config
+*.Debug.config
+Web/A2v10\.Web\.Site/Web.config
 
 # Build results
 [Dd]ebug/

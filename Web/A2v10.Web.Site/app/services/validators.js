@@ -12,7 +12,7 @@ app.modules['std:validators'] = function () {
 	const EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	const URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
 
-	const validateMap = new WeakMap();
+	let validateMap = new WeakMap();
 
 	return {
 		validate: validateItem,
@@ -34,9 +34,8 @@ app.modules['std:validators'] = function () {
 		return true;
 	}
 
-	function removeWeak(item) {
-		if (validateMap.has(item))
-			validateMap.set(item, undefined);
+	function removeWeak() {
+		validateMap = new WeakMap();
 	}
 
 	function validateImpl(rules, item, val, ff) {
@@ -54,9 +53,12 @@ app.modules['std:validators'] = function () {
 					retval.push({ msg: rule.msg, severity: sev });
 			} else if (utils.isFunction(rule.valid)) {
 				if (rule.async) {
-					if (validateMap.has(item)) {
-						if (validateMap.get(item) === val) {
+					if (validateMap.has(rule)) {
+						let vmv = validateMap.get(rule);
+						if (vmv.val === val) {
 							// Let's skip already validated values
+							if (vmv.result)
+								retval.push(vmv.result);
 							return;
 						}
 					}
@@ -67,16 +69,19 @@ app.modules['std:validators'] = function () {
 						console.error('Async rules should be marked async:true');
 						return;
 					}
-					validateMap.set(item, val);
+					let valRes = { val: val, result: null };
+					validateMap.set(rule, valRes);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
 						if (utils.isString(result)) {
 							dm.msg = result;
+							valRes.result = dm;
 							retval.push(dm);
 							nu = true;
 						} else if (!result) {
 							retval.push(dm);
+							valRes.result = dm;
 							nu = true;
 						}
 						// need to update the validators

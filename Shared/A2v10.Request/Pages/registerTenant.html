@@ -14,7 +14,7 @@
 			<label style="grid-row:1; grid-column:1" class="a2-label required text-right" v-text="locale.$Email"></label>
 			<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
 				<div class="input-group">
-					<input v-focus class="control" type="text" v-model="email" tabindex="1" autocomplete="email" spellcheck="false"/>
+					<input v-focus class="control" type="text" name="email" v-model="email" tabindex="1" autocomplete="email" spellcheck="false"/>
 					<div class="validator">
 						<span class="error" v-text="emailError"></span>
 					</div>
@@ -23,7 +23,7 @@
 			<label style="grid-row:2; grid-column:1" class="a2-label required text-right" v-text="locale.$Name"></label>
 			<div class="control-group" style="grid-row:2; grid-column:2" :class="{invalid: !validName}">
 				<div class="input-group">
-					<input v-focus class="control" type="text" v-model="name" tabindex="2" autocomplete="off"/>
+					<input v-focus class="control" type="text" name="name" v-model="name" tabindex="2" autocomplete="off"/>
 					<div class="validator">
 						<span class="error" v-text="locale.$EnterName"></span>
 					</div>
@@ -32,7 +32,7 @@
 			<label style="grid-row:3; grid-column:1" class="a2-label required text-right" v-text="locale.$Phone"></label>
 			<div class="control-group" style="grid-row:3; grid-column:2" :class="{invalid: !validPhone}">
 				<div class="input-group">
-					<input class="control" type="text" v-model="maskedPhone"
+					<input class="control" type="text" name="phone" v-model="maskedPhone"
 						v-on:change="onPhoneChange($event.target.value)"
 						tabindex="3" autocomplete="tel" ref="phoneInput" placeholder="+38 (000) 000-00-00"/>
 					<div class="validator">
@@ -43,7 +43,7 @@
 			<label style="grid-row:4; grid-column:1" class="a2-label required text-right" v-text="locale.$Password"></label>
 			<div class="control-group" style="grid-row:4;grid-column:2" :class="{invalid: !validPassword}">
 				<div class="input-group">
-					<input class="control" v-focus type="password" v-model="password" tabindex="4" autocomplete="off"/>
+					<input class="control" v-focus type="password" name="password" v-model="password" tabindex="4" autocomplete="off"/>
 					<div class="validator">
 						<span class="error" v-text="passwordError"></span>
 					</div>
@@ -52,7 +52,7 @@
 			<label style="grid-row:5; grid-column:1" class="a2-label required text-right" v-text="locale.$Confirm"></label>
 			<div class="control-group" style="grid-row:5; grid-column:2" :class="{invalid: !validConfirm}">
 				<div class="input-group">
-					<input class="control" v-focus type="password" v-model="confirm" autocomplete="off"
+					<input class="control" v-focus type="password" name="confirm" v-model="confirm" autocomplete="off"
 						   tabindex="5" :title="locale.$PasswordTip" />
 					<div class="validator">
 						<span class="error" v-text="locale.$MatchError"></span>
