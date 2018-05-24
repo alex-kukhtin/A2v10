@@ -1009,52 +1009,55 @@ header .btn:hover,
   height: 100%;
   cursor: w-resize;
 }
+/*see: taskpad.js*/
 .taskpad {
   overflow: hidden;
-  border-left: 1px solid #cfd6e5;
+  border-left: 1px solid #ddd;
   position: relative;
 }
 .taskpad .taskpad-body {
   overflow: auto;
-  height: calc(100% - 16px);
-  margin-top: 16px;
-  margin-left: 6px;
-  margin-right: 6px;
+  height: calc(100% - 24px);
+  margin-top: 24px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.taskpad .taskpad-collapse-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 6px 6px 2px 8px;
+  color: #57a8fa;
+  font-size: 120%;
 }
 .taskpad.expanded {
   margin-left: 6px;
 }
-.taskpad.expanded .taskpad-collapse-handle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: auto;
-  padding: 1px 4px;
-  color: #bdc5d8;
-  font-size: 110%;
-}
 .taskpad.expanded .taskpad-collapse-handle:hover {
   color: #57a8fa;
   text-decoration: none;
-  background-color: #f2f3f9;
+  background-color: #f9f9f9;
 }
 .taskpad.expanded .taskpad-collapse-handle:before {
   content: "\e9a5";
 }
 .taskpad.collapsed {
-  background-color: #f2f3f9;
+  background-color: #f9f9f9;
   margin-left: 3px;
 }
 .taskpad.collapsed .taskpad-collapse-handle:before {
   content: "\e9a3";
 }
 .taskpad .taskpad-title {
-  background-color: #f2f3f9;
+  background-color: #f9f9f9;
   white-space: nowrap;
   height: 100%;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   padding-left: 2px;
+  padding-top: 24px;
+  color: #777;
 }
 .taskpad .taskpad-title .taskpad-label {
   display: block;
@@ -3917,20 +3920,18 @@ TODO:
   align-items: flex-end;
 }
 .panel {
-  margin-bottom: 6px;
+  margin-bottom: 12px;
   background-color: white;
 }
 .panel .panel-header {
-  padding: 5px 6px;
-  font-size: 110%;
+  padding: 4px 6px;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
   line-height: 1.5rem;
 }
 .panel .panel-header .ico {
-  font-size: 1.2rem;
-  margin-right: 2px;
+  margin-right: 3px;
 }
 .panel .panel-header .panel-collapse-handle {
   font-size: 110%;
@@ -3947,7 +3948,10 @@ TODO:
   border-bottom-style: none;
 }
 .panel.drop-shadow {
-  border-style: none!important;
+  border-style: none !important;
+}
+.panel.drop-shadow .panel-header {
+  border-color: #ddd !important;
 }
 .shadow1 {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);

@@ -39,20 +39,20 @@
 }
 
 .panel {
-	margin-bottom: 6px;
+	margin-bottom: 12px;
 	background-color:white;
 
 	.panel-header {
-		padding: 5px 6px;
-		font-size: 110%;
+		padding: 4px 6px;
+		//font-size: 110%;
 		display: flex;
 		justify-content: space-between;
 		cursor: pointer;
 		line-height: 1.5rem;
 
 		.ico {
-			font-size: 1.2rem;
-			margin-right: 2px;
+			//font-size: 1.2rem;
+			margin-right: 3px;
 		}
 
 		.panel-collapse-handle {
@@ -80,7 +80,11 @@
 }
 
 .panel.drop-shadow {
-	border-style: none!important;
+	border-style: none !important;
+
+	.panel-header {
+		border-color: @light-gray-color!important;
+	}
 }
 
 .shadow1 {

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180521-7192
+// 20180524-7195
 // controllers/base.js
 
 (function () {
@@ -376,7 +376,7 @@
 				this.$dbRemove(sel, confirm);
 			},
 
-			$openSelected(url, arr) {
+			$openSelected(url, arr, newwin, update) {
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
@@ -388,7 +388,7 @@
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
 					url = nUrl;
 				}
-				this.$navigate(url, sel.$id);
+				this.$navigate(url, sel.$id, newwin, update);
 			},
 
 			$hasSelected(arr) {

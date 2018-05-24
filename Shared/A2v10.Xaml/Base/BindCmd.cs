@@ -99,6 +99,7 @@ namespace A2v10.Xaml
 			}
 			return null;
 		}
+
 		internal String NewWindowJS => NewWindow.ToString().ToLowerInvariant();
 
 		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null)
@@ -129,7 +130,7 @@ namespace A2v10.Xaml
 					return $"$saveAndClose({{toast: {GetToast(context)}}})";
 
 				case CommandType.OpenSelected:
-					return $"$openSelected({CommandUrl(context, decorate: true)}, {CommandArgument(context)})";
+					return $"$openSelected({CommandUrl(context, decorate: true)}, {CommandArgument(context)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
 
 
 				case CommandType.Select:

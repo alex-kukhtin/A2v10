@@ -1,71 +1,77 @@
 ﻿
 
-@taskpad-collapsed-bg-color: @navbar-bg-color;
-@taskpad-gap: 6px;
-@taskpad-collapsed-width: 20px;
+@taskpad-collapsed-bg-color: @whitesmoke-gray-bg-color;
+@taskpad-brd-color: @light-gray-color;
+@taskpad-gap: 12px;
+@taskpad-collapsed-width: 36px; /*see: taskpad.js*/
 
-@handle-size: 16px;
+@handle-size: 24px;
 
 .taskpad {
-    overflow: hidden;
-    border-left: 1px solid @light-brd-color;
-    position: relative;
+	overflow: hidden;
+	border-left: 1px solid @taskpad-brd-color;
+	position: relative;
 
-    .taskpad-body {
-        //background-color: azure;
-        overflow: auto;
-        height: ~"calc(100% - 16px)"; // margin-top
-        margin-top: @handle-size;
-        margin-left: @taskpad-gap; // ???
-        margin-right:@taskpad-gap; // ???
-    }
+	.taskpad-body {
+		//background-color: azure;
+		overflow: auto;
+		height: ~"calc(100% - 24px)"; // margin-top
+		margin-top: @handle-size;
+		padding-left: @taskpad-gap; // ???
+		padding-right: @taskpad-gap; // ???
+	}
 
-    &.expanded {
-        margin-left: 6px;
+	.taskpad-collapse-handle {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		padding: 6px 6px 2px 8px;
+		color: @link-color;
+		font-size: 120%;
+	}
 
-        .taskpad-collapse-handle {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: auto;
-            padding: 1px 4px;
-            color: @default-brd-color;
-            font-size: 110%;
+	&.expanded {
+		margin-left: 6px;
 
-            &:hover {
-                color: @link-hover-color;
-                text-decoration: none;
-                background-color: @taskpad-collapsed-bg-color;
-            }
+		.taskpad-collapse-handle {
+			&:hover {
+				color: @link-hover-color;
+				text-decoration: none;
+				background-color: @taskpad-collapsed-bg-color;
+			}
 
-            &:before {
-                content: "\e9a5"; // chevron-left
-            }
-        }
-    }
+			&:before {
+				content: "\e9a5"; // chevron-left
+			}
+		}
+	}
 
-    &.collapsed {
-        background-color:@taskpad-collapsed-bg-color;
-        margin-left:3px;
-        .taskpad-collapse-handle {
-            &:before {
-                content: "\e9a3"; // chevron-right
-            }
-        }
-    }
+	&.collapsed {
+		background-color: @taskpad-collapsed-bg-color;
+		margin-left: 3px;
 
-    .taskpad-title {
-        background-color: @taskpad-collapsed-bg-color;
-        white-space: nowrap;
-        height: 100%;
-        cursor: pointer;
-        font-size: 14px;
-        padding-left: 2px;
+		.taskpad-collapse-handle {
+			&:before {
+				content: "\e9a3"; // chevron-right
+			}
+		}
+	}
 
-        .taskpad-label {
-            display: block;
-            padding-left: 10px;
-            transform: rotate(90deg);
-        }
-    }
+	.taskpad-title {
+		background-color: @taskpad-collapsed-bg-color;
+		white-space: nowrap;
+		height: 100%;
+		cursor: pointer;
+		font-size: 16px;
+		padding-left: 2px;
+		padding-top: 24px;
+		color: @label-color;
+
+		.taskpad-label {
+			display: block;
+			padding-left: 10px;
+			transform: rotate(90deg);
+		}
+	}
 }

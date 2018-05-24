@@ -103,6 +103,7 @@
     <Content Include="Develop\Common\Agent\index.template.js" />
     <Content Include="Develop\Common\another.js" />
     <Content Include="Develop\Common\module1.js" />
+    <Content Include="Develop\Document\common.js" />
     <Content Include="Develop\Document\Quotations\element.template.js" />
     <Content Include="Develop\Document\Quotations\index.template.js" />
     <Content Include="Develop\Document\Quotations\edit.view.html" />
@@ -366,6 +367,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Develop\Document\info.xaml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -122,6 +122,8 @@ namespace A2v10.Web.Site.Controllers
 		[OutputCache(Duration = 0)]
 		public void Login()
 		{
+			Session.Abandon();
+			ClearAllCookies();
 			SendPage(ResourceHelper.LoginHtml, ResourceHelper.LoginScript);
 		}
 
@@ -153,6 +155,7 @@ namespace A2v10.Web.Site.Controllers
 			{
 				case SignInStatus.Success:
 					await UpdateUser(user, success: true);
+					ClearRVTCookie();
 					status = "Success";
 					break;
 				case SignInStatus.LockedOut:
@@ -181,6 +184,24 @@ namespace A2v10.Web.Site.Controllers
 				return View("Error");
 			}
 			return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+		}
+
+		void ClearAllCookies()
+		{
+			var expires = DateTime.Now.AddDays(-1d);
+			foreach (var key in Request.Cookies.AllKeys)
+			{
+				var c = Response.Cookies[key];
+				if (c != null)
+					c.Expires = expires;
+			}
+		}
+
+		void ClearRVTCookie()
+		{
+			var cc = Response.Cookies["__RequestVerificationToken"];
+			if (cc != null)
+				cc.Expires = DateTime.Now.AddDays(-1d);
 		}
 
 		//

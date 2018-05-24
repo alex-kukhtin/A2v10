@@ -1,0 +1,27 @@
+<!-- Document.Info -->
+<Panel xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		Header="Информация о документе" Style="Info" Icon="InfoOutline"
+		Collapsible="True" Padding="0, 6" DropShadow="Shadow1">
+	<PropertyGrid GridLines="Horizontal" Compact="True" >
+		<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
+		<PropertyGridItem Name="Создан">
+			<Text>
+				<SpanIcon Icon="History"/>
+				<Span Content="{Bind Document.DateCreated, DataType=DateTime}"/>
+				<Break />
+				<SpanIcon Icon="User"/>
+				<Span Content="{Bind Document.UserCreated.Name}"/>
+			</Text>
+		</PropertyGridItem>
+		<PropertyGridItem Name="Изменен">
+			<Text>
+				<SpanIcon Icon="History"/>
+				<Span Content="{Bind Document.DateModified, DataType=DateTime}"/>
+				<Break />
+				<SpanIcon Icon="User"/>
+				<Span Content="{Bind Document.UserModified.Name}"/>
+			</Text>
+		</PropertyGridItem>
+	</PropertyGrid>
+</Panel>
+    

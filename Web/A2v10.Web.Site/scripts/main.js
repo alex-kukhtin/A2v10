@@ -6829,9 +6829,9 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171116-7069
+// 20180524-7195
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
@@ -6843,7 +6843,7 @@ Vue.component("a2-taskpad", {
 		</slot>
 	</div>
 	<div v-else class="taskpad-title" @click.prevent="toggle">
-		<span class="taskpad-label">Задачи</span>
+		<span class="taskpad-label" v-text="tasksText"></span>
 	</div>
 </div>
 `,
@@ -6858,6 +6858,9 @@ Vue.component("a2-taskpad", {
 			let cls = "taskpad";
 			if (this.expanded) cls += ' expanded'; else cls += ' collapsed';
 			return cls;
+		},
+		tasksText() {
+			return window.$$locale.$Tasks;
 		}
 	},
 	methods: {
@@ -6868,7 +6871,7 @@ Vue.component("a2-taskpad", {
 			if (this.expanded)
 				topStyle.gridTemplateColumns = this.__savedCols;
 			else
-				topStyle.gridTemplateColumns = "1fr 20px";
+				topStyle.gridTemplateColumns = "1fr 36px"; // TODO: ???
 		}
 	},
 	mounted() {
@@ -7759,7 +7762,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180521-7192
+// 20180524-7195
 // controllers/base.js
 
 (function () {
@@ -8135,7 +8138,7 @@ Vue.directive('resize', {
 				this.$dbRemove(sel, confirm);
 			},
 
-			$openSelected(url, arr) {
+			$openSelected(url, arr, newwin, update) {
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)
@@ -8147,7 +8150,7 @@ Vue.directive('resize', {
 						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
 					url = nUrl;
 				}
-				this.$navigate(url, sel.$id);
+				this.$navigate(url, sel.$id, newwin, update);
 			},
 
 			$hasSelected(arr) {

@@ -17,7 +17,7 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
-		<Taskpad Width="290">
+		<Taskpad Width="290" Background="WhiteSmoke">
 			<ContentControl Content="{Source Path='../../Document/Info'}"/>
 			<Panel Header="Отгрузки" Padding="6" Icon="Link"
 					Style="Yellow" Collapsible="True" If="{Bind Document.Done}">
