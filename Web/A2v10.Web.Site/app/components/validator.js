@@ -4,26 +4,26 @@
 /*components/validator.js*/
 
 Vue.component('validator', {
-    props: {
-        invalid: Function,
-        errors: Array,
-        options: Object
-    },
-    template: '<div v-if="invalid()" class="validator" :class="cssClass" :style="cssStyle"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
-    computed: {
-        cssStyle() {
-            let r = {};
-            if (this.options && this.options.width)
-                r.width = this.options.width;
-            return r;
-        },
-        cssClass() {
-            let r = {};
-            if (this.options && this.options.placement)
-                r[this.options.placement] = true;
-            return r;
-        }
-    }
+	props: {
+		invalid: Function,
+		errors: Array,
+		options: Object
+	},
+	template: '<div v-if="invalid()" class="validator" :class="cssClass" :style="cssStyle"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+	computed: {
+		cssStyle() {
+			let r = {};
+			if (this.options && this.options.width)
+				r.width = this.options.width;
+			return r;
+		},
+		cssClass() {
+			let r = {};
+			if (this.options && this.options.placement)
+				r[this.options.placement] = true;
+			return r;
+		}
+	}
 });
 
 

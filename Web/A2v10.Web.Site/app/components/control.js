@@ -88,10 +88,14 @@
 				// method! no cache!
 				return !this.invalid();
 			},
-			invalid() {
+			invalid(out) {
 				// method! no cache!
 				let err = this.errors;
 				if (!err) return false;
+				if (out) {
+					out.warn = err.every(r => r.severity === 'warning');
+					out.info = err.every(r => r.info === 'info');
+				}
 				return err.length > 0;
 			},
 			cssClass() {
