@@ -18,8 +18,10 @@ const template = {
 	},
 	validators: {
 		"Agent.Name": 'Введите наименование',
-		"Agent.Code":
+		"Agent.Code": [
+			'Введите код',
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" },
+		],
 		'Agent.Memo': { valid: 'notBlank', msg: 'Введите примечание', severity:'warning'}
 	}
 };

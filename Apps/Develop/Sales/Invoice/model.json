@@ -35,7 +35,8 @@
 	"dialogs": {
 		"wizard": {
 			"model": "Agent",
-			"view": "demo.wizard"
+			"view": "demo.wizard",
+			"template": "/Agent/editCustomer.template"
 		}
 	},
 	"reports": {

@@ -2883,8 +2883,11 @@ table.data-grid > tbody > tr.bold > td {
 .wizard-panel .modal-footer {
   grid-row: 3;
 }
+.wizard-panel .modal-footer .btn {
+  width: 8rem;
+}
 .wizard-header {
-  padding: 6px 6px 6px 4px;
+  padding: 6px 6px 6px 0;
   margin: 0;
   list-style: none;
   display: flex;
@@ -2892,29 +2895,39 @@ table.data-grid > tbody > tr.bold > td {
   background-color: #f9f9f9;
 }
 .wizard-header li {
-  padding: 0 1rem;
-  line-height: 36px;
+  padding: 0 .7rem;
   background-color: white;
   position: relative;
-  height: 36px;
+  height: 38px;
   border-color: white;
-  margin-left: 20px;
+  margin-left: 16px;
 }
 .wizard-header li > a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
   border-color: white;
   margin-right: 4px;
-  color: #777;
+  color: #8591a2;
+  line-height: 1.2rem;
+}
+.wizard-header li > a .wizard-header-title {
+  font-weight: bold;
+}
+.wizard-header li > a .wizard-header-descr {
+  font-size: 0.9rem;
 }
 .wizard-header li > a:before {
   content: "";
   position: absolute;
   top: 0;
-  left: -12px;
-  border: 18px solid transparent;
+  left: -10px;
+  border: 19px solid transparent;
   border-color: inherit;
   border-right-width: 0;
   border-left-color: transparent;
-  border-left-width: 12px;
+  border-left-width: 10px;
 }
 .wizard-header li > a:after {
   content: "";
@@ -2922,10 +2935,10 @@ table.data-grid > tbody > tr.bold > td {
   position: absolute;
   top: 0;
   left: 100%;
-  border: 18px solid transparent;
+  border: 19px solid transparent;
   border-right-width: 0;
   border-left-color: inherit;
-  border-left-width: 12px;
+  border-left-width: 10px;
 }
 .wizard-header li:first-child > a:before {
   border-left-color: inherit;
@@ -3645,9 +3658,9 @@ TODO:
   position: absolute;
   cursor: default;
   color: #222;
-  padding: 6px;
+  padding: 4px 6px 6px 6px;
   background-color: #fffce9;
-  border: 1px solid #aaa;
+  border: 1px solid #ddd;
   min-width: 150px;
   min-height: 30px;
   text-align: left;
@@ -3682,7 +3695,7 @@ TODO:
 .popover-wrapper.po-right-bottom > .popup-body > .arrow {
   left: -18px;
   top: 6px;
-  border-right-color: #aaa;
+  border-right-color: #ddd;
 }
 .popover-wrapper.po-right-bottom > .popup-body > .arrow:after {
   left: -7px;
@@ -3698,7 +3711,7 @@ TODO:
 .popover-wrapper.po-right-top > .popup-body > .arrow {
   left: -18px;
   bottom: 6px;
-  border-right-color: #aaa;
+  border-right-color: #ddd;
 }
 .popover-wrapper.po-right-top > .popup-body > .arrow:after {
   left: -7px;
@@ -3714,7 +3727,7 @@ TODO:
 .popover-wrapper.po-left-bottom > .popup-body > .arrow {
   right: -18px;
   top: 6px;
-  border-left-color: #aaa;
+  border-left-color: #ddd;
 }
 .popover-wrapper.po-left-bottom > .popup-body > .arrow:after {
   left: -9px;
@@ -3730,7 +3743,7 @@ TODO:
 .popover-wrapper.po-left-top > .popup-body > .arrow {
   right: -18px;
   bottom: 6px;
-  border-left-color: #aaa;
+  border-left-color: #ddd;
 }
 .popover-wrapper.po-left-top > .popup-body > .arrow:after {
   left: -9px;
@@ -3746,7 +3759,7 @@ TODO:
 .popover-wrapper.po-top-right > .popup-body > .arrow {
   left: 6px;
   bottom: -18px;
-  border-top-color: #aaa;
+  border-top-color: #ddd;
 }
 .popover-wrapper.po-top-right > .popup-body > .arrow:after {
   left: -8px;
@@ -3762,7 +3775,7 @@ TODO:
 .popover-wrapper.po-top-left > .popup-body > .arrow {
   right: 6px;
   bottom: -18px;
-  border-top-color: #aaa;
+  border-top-color: #ddd;
 }
 .popover-wrapper.po-top-left > .popup-body > .arrow:after {
   left: -8px;
@@ -3778,7 +3791,7 @@ TODO:
 .popover-wrapper.po-bottom-right > .popup-body > .arrow {
   left: 6px;
   top: -18px;
-  border-bottom-color: #aaa;
+  border-bottom-color: #ddd;
 }
 .popover-wrapper.po-bottom-right > .popup-body > .arrow:after {
   left: -8px;
@@ -3794,7 +3807,7 @@ TODO:
 .popover-wrapper.po-bottom-left > .popup-body > .arrow {
   right: 6px;
   top: -18px;
-  border-bottom-color: #aaa;
+  border-bottom-color: #ddd;
 }
 .popover-wrapper.po-bottom-left > .popup-body > .arrow:after {
   left: -8px;
@@ -4031,7 +4044,7 @@ TODO:
 }
 .field-set {
   margin: 0;
-  padding: .4rem .6rem;
+  padding: .4rem .6rem, .6rem .6rem;
   border: 1px solid #bdc5d8;
 }
 .field-set legend {

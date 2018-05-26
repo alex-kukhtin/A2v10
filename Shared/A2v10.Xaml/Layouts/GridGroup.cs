@@ -4,11 +4,11 @@ using System;
 
 namespace A2v10.Xaml
 {
-	public class Group : Container, ITableControl
+	public class GridGroup : Container
 	{
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			RenderChildren(context);
+			throw new XamlException("A GridGroup can only be a direct child of the Grid");
 		}
 	}
 }

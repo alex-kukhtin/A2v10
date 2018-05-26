@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180424-7163
+// 20180425-7197
 // components/control.js
 
 (function () {
@@ -76,10 +76,16 @@
 			}
 		},
 		mounted() {
+			// direct parent only
+			if (this.$parent.$registerControl)
+				this.$parent.$registerControl(this);
 			if (!this.mask) return;
 			mask.mountElement(this.$refs.input, this.mask);
 		},
 		beforeDestroy() {
+			// direct parent only
+			if (this.$parent.$unregisterControl)
+				this.$parent.$unregisterControl(this);
 			if (!this.mask) return;
 			mask.unmountElement(this.$refs.input, this.mask);
 		},

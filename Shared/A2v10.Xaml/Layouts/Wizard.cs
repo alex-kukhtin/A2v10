@@ -6,6 +6,8 @@ namespace A2v10.Xaml
 {
 	public class Wizard : Dialog
 	{
+		public Command FinishCommand { get; set; }
+
 		internal override void OnCreateContent(TagBuilder tag)
 		{
 			tag.AddCssClass("wizard");
@@ -14,6 +16,7 @@ namespace A2v10.Xaml
 		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			var wiz = new TagBuilder("a2-wizard-panel");
+			MergeCommand(wiz, context);
 			wiz.RenderStart(context);
 			foreach (var p in Children)
 			{
@@ -22,6 +25,14 @@ namespace A2v10.Xaml
 				p.RenderElement(context);
 			}
 			wiz.RenderEnd(context);
+		}
+
+		void MergeCommand(TagBuilder tag, RenderContext context)
+		{
+			var cmd = GetBindingCommand(nameof(FinishCommand));
+			if (cmd == null)
+				return;
+			tag.MergeAttribute(":finish", $"() => {cmd.GetCommand(context)}");
 		}
 	}
 }

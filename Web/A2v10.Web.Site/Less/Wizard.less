@@ -1,8 +1,8 @@
 ﻿
 
-@wizard-header-height:36px;
+@wizard-header-height:38px;
 @wizard-heder-bg-color: @whitesmoke-gray-bg-color;
-@wizard-arrow-width:12px;
+@wizard-arrow-width:10px;
 
 .wizard-panel {
 	display: grid;
@@ -11,11 +11,14 @@
 
 	.modal-footer {
 		grid-row: 3;
+		.btn {
+			width:8rem;
+		}
 	}
 }
 
 .wizard-header {
-	padding: 6px 6px 6px 4px;
+	padding: 6px 6px 6px 0;
 	margin: 0;
 	list-style: none;
 	display: flex;
@@ -23,19 +26,30 @@
 	background-color: @wizard-heder-bg-color;
 
 	li {
-		padding: 0 1rem;
-		line-height: @wizard-header-height;
+		padding: 0 .7rem;
 		background-color: white;
 		position: relative;
 		height: @wizard-header-height;
 		border-color: white;
-		margin-left: 20px;
-
+		margin-left: 16px;
 
 		> a {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			height: 100%;
 			border-color: white;
 			margin-right: 4px;
-			color: #777;
+			color: @dark-bk-color;
+			line-height:1.2rem;
+
+			.wizard-header-title {
+				font-weight: bold;
+			}
+
+			.wizard-header-descr {
+				font-size: 0.9rem;
+			}
 
 			&:before {
 				content: "";

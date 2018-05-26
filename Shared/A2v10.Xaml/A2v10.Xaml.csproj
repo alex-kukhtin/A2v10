@@ -89,6 +89,7 @@
     <Compile Include="Controls\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Layouts\CommandBar.cs" />
+    <Compile Include="Layouts\GridGroup.cs" />
     <Compile Include="Layouts\Wizard.cs" />
     <Compile Include="Layouts\DropDownMegaMenu.cs" />
     <Compile Include="Layouts\FullHeightPanel.cs" />

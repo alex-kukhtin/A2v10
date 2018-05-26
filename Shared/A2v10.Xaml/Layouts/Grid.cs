@@ -1,7 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -150,9 +149,27 @@ namespace A2v10.Xaml
 			foreach (var ch in Children)
 			{
 				ch.IsInGrid = true;
-				using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch), GetVAlign(ch)))
+				if (ch is GridGroup gg)
 				{
-					ch.RenderElement(context);
+					var grpTemplate = new TagBuilder("template");
+					gg.MergeAttributes(grpTemplate, context, MergeAttrMode.Visibility);
+					grpTemplate.RenderStart(context);
+					foreach (var gc in gg.Children)
+					{
+						gc.IsInGrid = true;
+						using (context.GridContext(GetRow(gc), GetCol(gc), GetRowSpan(gc), GetColSpan(gc), GetVAlign(gc)))
+						{
+							gc.RenderElement(context);
+						}
+					}
+					grpTemplate.RenderEnd(context);
+				}
+				else
+				{
+					using (context.GridContext(GetRow(ch), GetCol(ch), GetRowSpan(ch), GetColSpan(ch), GetVAlign(ch)))
+					{
+						ch.RenderElement(context);
+					}
 				}
 			}
 		}
