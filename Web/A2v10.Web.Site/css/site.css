@@ -2651,7 +2651,7 @@ table.data-grid > tbody > tr.bold > td {
   color: #222;
 }
 .tab-panel .tab-header > li.active.yellow {
-  background-color: lightyellow;
+  background-color: #fefcf0;
 }
 .tab-panel .tab-header > li.active:hover {
   border-bottom-color: transparent;
@@ -2659,6 +2659,12 @@ table.data-grid > tbody > tr.bold > td {
 .tab-panel .tab-header > li .a2-header {
   display: inline;
   margin: 0;
+}
+.tab-panel .tab-item.full-height {
+  height: 100%;
+}
+.tab-panel .tab-item.full-height > div {
+  height: 100%;
 }
 .tab-panel .pane-header {
   grid-row: 1;
@@ -2883,9 +2889,6 @@ table.data-grid > tbody > tr.bold > td {
 .wizard-panel .modal-footer {
   grid-row: 3;
 }
-.wizard-panel .modal-footer .btn {
-  width: 8rem;
-}
 .wizard-header {
   padding: 6px 6px 6px 0;
   margin: 0;
@@ -2909,13 +2912,15 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
   border-color: white;
   margin-right: 4px;
-  color: #8591a2;
   line-height: 1.2rem;
+  color: white;
 }
 .wizard-header li > a .wizard-header-title {
+  color: #8591a2;
   font-weight: bold;
 }
 .wizard-header li > a .wizard-header-descr {
+  color: #8591a2;
   font-size: 0.9rem;
 }
 .wizard-header li > a:before {
@@ -2940,6 +2945,11 @@ table.data-grid > tbody > tr.bold > td {
   border-left-color: inherit;
   border-left-width: 10px;
 }
+.wizard-header li > a > .ico {
+  position: absolute;
+  right: 0;
+  top: 4px;
+}
 .wizard-header li:first-child > a:before {
   border-left-color: inherit;
 }
@@ -2948,6 +2958,19 @@ table.data-grid > tbody > tr.bold > td {
 }
 .wizard-header li.active > a {
   border-color: #cde6f7;
+}
+.wizard-header li.disabled {
+  background-color: #eee;
+}
+.wizard-header li.disabled > a {
+  border-color: #eee;
+  cursor: not-allowed;
+}
+.wizard-header li.invalid {
+  background-color: #fff8f8;
+}
+.wizard-header li.invalid > a {
+  border-color: #fff8f8;
 }
 .toastr-stack {
   position: absolute;
@@ -3279,6 +3302,9 @@ table.a2-table.bk-cyan {
 }
 table.a2-table.bk-rose {
   background-color: #fff8f8;
+}
+table.a2-table.bk-white-smoke {
+  background-color: #f9f9f9;
 }
 table.prop-grid {
   width: 100%;
@@ -4098,7 +4124,7 @@ TODO:
   overflow: auto;
 }
 .bordered-pane {
-  border: 1px solid #bdc5d8;
+  border: 1px solid #ddd;
 }
 .background-light-gray {
   background-color: #e9e9e9;

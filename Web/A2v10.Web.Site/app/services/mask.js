@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180425-7164*/
+/*20180428-7199*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -44,6 +44,43 @@ app.modules['std:mask'] = function () {
 				j++;
 			} else {
 				str += mc;
+			}
+		}
+		return str;
+	}
+
+	function fitMask(mask, value) {
+		let str = '';
+		let j = 0;
+
+		function nextValueChar() {
+			let ch;
+			while (true) {
+				ch = value[j];
+				if (!ch) return PLACE_CHAR;
+				// TODO: this is for digits only!
+				j++;
+				if (ch >= '0' && ch <= '9') {
+					return ch;
+				}
+			}
+			return PLACE_CHAR;
+		}
+
+		let ch = nextValueChar();
+		
+		for (let i = 0; i < mask.length; i++) {
+			let mc = mask[i];
+			if (isSpaceChar(mc)) {
+				str += mc;
+			}
+			else if (isMaskChar(mc)) {
+				str += ch;
+				ch = nextValueChar() 
+			} else {
+				str += mc;
+				if (mc == ch)
+					ch = nextValueChar();
 			}
 		}
 		return str;
@@ -199,6 +236,13 @@ app.modules['std:mask'] = function () {
 				handled = true;
 				break;
 			default:
+				if (e.keyCode === 17)
+					break; // Ctrl
+				if (e.keyCode === 86 && e.ctrlKey) { // Ctrl+V
+					break;
+				} else if (e.keyCode === 67 && e.ctrlKey) { // Ctrl+C
+					break;
+				}
 				if (e.which >= 112 && e.which <= 123)
 					break; // f1-f12
 				if (e.key.length === 1)
@@ -226,6 +270,9 @@ app.modules['std:mask'] = function () {
 
 	function pasteHandler(e) {
 		e.preventDefault();
+		let dat = e.clipboardData.getData('text/plain');
+		if (!dat) return;
+		this.value = fitMask(this.__opts.mask, dat);
 	}
 
 

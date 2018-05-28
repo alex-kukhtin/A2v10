@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180521-7192 */
+/* 20180528-7200 */
 /*components/tab.js*/
 
 /*
@@ -22,14 +22,16 @@ TODO:
         </li>
     </ul >
     */
+	const utils = require('std:utils');
 
 	const tabPanelTemplate = `
 <div class="tab-panel">
-    <template v-if="static">
+	<template v-if="static">
 		<ul class="tab-header">
 			<li :class="tab.tabCssClass" v-for="(tab, tabIndex) in tabs" :key="tabIndex" @click.prevent="select(tab)" v-show="tab.isVisible">
 				<i v-if="tab.hasIcon" :class="tab.iconCss" ></i>
 				<span v-text="tab.header"></span><span class="badge" v-if="tab.hasBadge" v-text="tab.badge"></span>
+				<i v-if="tab.isInvalid()" class="ico ico-error-outline"/>
 			</li>
 		</ul>
 		<slot name="title" />
@@ -56,7 +58,7 @@ TODO:
 `;
 
 	const tabItemTemplate = `
-<div class="tab-item" v-if="isActive">
+<div class="tab-item" v-show="isActive">
 	<slot />
 </div>
 `;
@@ -70,7 +72,14 @@ TODO:
 			badge: [String, Number, Object],
 			icon: String,
 			tabStyle: String,
-			show: undefined
+			show: undefined,
+			itemToValidate: Object,
+			propToValidate: String
+		},
+		data() {
+			return {
+				controls:[]
+			};
 		},
 		computed: {
 			hasIcon() {
@@ -92,6 +101,25 @@ TODO:
 				if (typeof this.show === 'boolean')
 					return this.show;
 				return true;
+			}
+		},
+		methods: {
+			isInvalid() {
+				if (!this.controls.length) return false;
+				for (let c of this.controls) {
+					if (c.invalid()) {
+						return true;
+					}
+				}
+				return false;
+			},
+			$registerControl(control) {
+				this.controls.push(control);
+			},
+			$unregisterControl(control) {
+				let ix = this.controls.indexOf(control);
+				if (ix !== -1)
+					this.controls.splice(ix, 1);
 			}
 		},
 		created() {

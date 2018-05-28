@@ -4,7 +4,7 @@
 		FinishCommand="{BindCmd SaveAndClose, ValidRequired=True}">
 	<WizardPage Header="Step # 1" Description="Enter credentials">
 		<Grid Columns="2*, 1*">
-			<GridGroup If="{Bind Agent.Memo}">
+			<GridGroup>
 				<TextBox Grid.Col="1" Label="Name" Value="{Bind Agent.Name}" Description="Name for parnter"/>
 				<Text Grid.VAlign="Middle" Grid.Col="2" Small="True"> There is a parnter name for use in documents, browsers, selectors, etc.</Text>
 			</GridGroup>

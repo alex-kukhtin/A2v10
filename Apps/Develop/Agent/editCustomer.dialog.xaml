@@ -6,7 +6,7 @@
 		<Button Content="Отмена" Command="{BindCmd Close}" TabIndex="29"/>
 	</Dialog.Buttons>
 	<TabPanel FullPage="True">
-		<Tab Header="Общие">
+		<Tab Header="Общие" FullHeight="True">
 			<Grid Columns="1*, 1*" Rows="Auto, Auto, Auto, 1*, Auto">
 				<FieldSet Orientation="Horizontal" Grid.Row="1" Grid.ColSpan="2" Title="Тип">
 					<Radio Label="Юридическое лицо" Value="{Bind Agent.Type}" CheckedValue="C" TabIndex="1"/>

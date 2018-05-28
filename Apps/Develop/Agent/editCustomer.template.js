@@ -6,7 +6,9 @@
 const template = {
 	properties: {
 		"TRoot.$Cities": getCities,
-		"TRoot.$Streets": getStreets
+		"TRoot.$Streets": getStreets,
+		'TAgent.$Page0Valid': isPage0Valid,
+		'TAgent.$Page3Valid': isPage3Valid
 	},
 	events: {
 		"Model.load": modelLoad,
@@ -22,7 +24,8 @@ const template = {
 			'Введите код',
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" },
 		],
-		'Agent.Memo': { valid: 'notBlank', msg: 'Введите примечание', severity:'warning'}
+		'Agent.Memo': { valid: 'notBlank', msg: 'Введите примечание', severity:'warning'},
+		'Agent.Address.Build': 'Введите номер дома'
 	}
 };
 
@@ -66,6 +69,14 @@ function getStreets() {
 	if (!city) return null;
 	city.Streets.$load(); // ensure lazy
 	return city.Streets;
+}
+
+function isPage0Valid() {
+	return !!this.Name;
+}
+
+function isPage3Valid() {
+	return this.Name === 'VALID';
 }
 
 module.exports = template;

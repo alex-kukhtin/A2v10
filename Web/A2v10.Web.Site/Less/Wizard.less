@@ -3,6 +3,8 @@
 @wizard-header-height:38px;
 @wizard-heder-bg-color: @whitesmoke-gray-bg-color;
 @wizard-arrow-width:10px;
+@disabled-wiz-bg-color: #eee;
+@invalid-wiz-bg-color:#fff8f8;
 
 .wizard-panel {
 	display: grid;
@@ -12,7 +14,7 @@
 	.modal-footer {
 		grid-row: 3;
 		.btn {
-			width:8rem;
+			//width:8rem;
 		}
 	}
 }
@@ -40,14 +42,16 @@
 			height: 100%;
 			border-color: white;
 			margin-right: 4px;
-			color: @dark-bk-color;
-			line-height:1.2rem;
+			line-height: 1.2rem;
+			color: white;
 
 			.wizard-header-title {
+				color: @dark-bk-color;
 				font-weight: bold;
 			}
 
 			.wizard-header-descr {
+				color: @dark-bk-color;
 				font-size: 0.9rem;
 			}
 
@@ -74,6 +78,12 @@
 				border-left-color: inherit;
 				border-left-width: @wizard-arrow-width;
 			}
+
+			> .ico {
+				position: absolute;
+				right: 0;
+				top: 4px;
+			}
 		}
 
 		&:first-child > a:before {
@@ -86,6 +96,23 @@
 
 		> a {
 			border-color: @active-bg-color;
+		}
+	}
+
+	li.disabled {
+		background-color: @disabled-wiz-bg-color;
+
+		> a {
+			border-color: @disabled-wiz-bg-color;
+			cursor: not-allowed;
+		}
+	}
+
+	li.invalid {
+		background-color: @invalid-wiz-bg-color;
+
+		> a {
+			border-color: @invalid-wiz-bg-color;
 		}
 	}
 }

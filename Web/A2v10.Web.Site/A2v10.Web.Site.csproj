@@ -256,7 +256,9 @@
     <Content Include="Less\SuperMenu.less" />
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="app\server\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
       <Project>{478240ab-9772-4f70-8e31-bd0303cbf836}</Project>

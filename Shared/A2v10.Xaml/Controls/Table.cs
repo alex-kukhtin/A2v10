@@ -13,7 +13,8 @@ namespace A2v10.Xaml
 		Paper,
 		Yellow,
 		Cyan,
-		Rose
+		Rose,
+		WhiteSmoke
 	}
 
 	public enum CellSpacingMode

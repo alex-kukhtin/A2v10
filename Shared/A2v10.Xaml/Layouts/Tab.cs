@@ -17,15 +17,17 @@ namespace A2v10.Xaml
 	public class Tab : Container
 	{
 		public Object Header { get; set; }
-
 		public String Badge { get; set; }
 
 		public Length Height { get; set; }
+		public Boolean FullHeight { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tab = new TagBuilder("a2-tab-item");
 			onRender?.Invoke(tab);
+			// tab.MergeAttribute("tab-style", "yellow");
+			tab.AddCssClassBool(FullHeight, "full-height");
 			MergeAttributes(tab, context, MergeAttrMode.SpecialTab);
 			var headerBind = GetBinding(nameof(Header));
 			if (headerBind != null)

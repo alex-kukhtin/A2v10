@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180520-7189
+// 20180528-7200
 // services/datamodel.js
 
 (function () {
@@ -609,6 +609,10 @@
 				return this._root_._host_.$viewModel;
 			return null;
 		});
+
+		obj.$isValid = function (props) {
+			return true;
+		}
 	}
 
 	function defineObject(obj, meta, arrayItem) {

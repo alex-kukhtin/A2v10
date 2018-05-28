@@ -143,7 +143,10 @@ namespace A2v10.Xaml
 			input.MergeAttribute("prop", Prop);
 			if (valBind.DataType != DataType.String)
 				input.MergeAttribute("data-type", valBind.DataType.ToString());
-			if (!String.IsNullOrEmpty(valBind.Mask))
+			var maskBind = valBind.GetBinding("Mask");
+			if (maskBind != null)
+				input.MergeAttribute(":mask", maskBind.GetPathFormat(context));
+			else if (!String.IsNullOrEmpty(valBind.Mask))
 				input.MergeAttribute("mask", valBind.Mask);
 		}
 
