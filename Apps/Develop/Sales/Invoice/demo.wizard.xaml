@@ -1,7 +1,7 @@
 ﻿<!-- Demo wizard -->
 <Wizard xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
 		Title="Wizard demo" Width="600" Height="400"
-		FinishCommand="{BindCmd SaveAndClose, ValidRequired=True}">
+		FinishCommand="{BindCmd SaveAndClose, ValidRequired=True}" HelpUrl="/catalogs/agents">
 	<WizardPage Header="Step # 1" Description="Enter credentials">
 		<Grid Columns="2*, 1*">
 			<GridGroup>

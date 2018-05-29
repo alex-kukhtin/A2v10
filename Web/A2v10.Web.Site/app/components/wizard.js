@@ -32,6 +32,10 @@ TODO:
 		<slot />
 	</div>
 	<div class="modal-footer">
+		<template v-if="helpLink">
+			<a class="btn-help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
+			<div class="aligner"/>
+		</template>
 		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>
 		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
@@ -42,7 +46,8 @@ TODO:
 	Vue.component('a2-wizard-panel', {
 		template: wizardPanelTemplate,
 		props: {
-			finish: Function
+			finish: Function,
+			helpLink: String
 		},
 		data() {
 			return {
@@ -139,6 +144,10 @@ TODO:
 				let ix = this.pages.indexOf(page);
 				if (ix !== -1)
 					this.pages.splice(ix, 1);
+			},
+			$showHelp() {
+				if (!this.helpLink) return;
+				window.open(this.helpLink, "_blank");
 			}
 		},
 		mounted() {

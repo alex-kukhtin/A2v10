@@ -17,6 +17,7 @@ namespace A2v10.Xaml
 		{
 			var wiz = new TagBuilder("a2-wizard-panel");
 			MergeCommand(wiz, context);
+			MergeHelp(wiz, context);
 			wiz.RenderStart(context);
 			foreach (var p in Children)
 			{
@@ -33,6 +34,32 @@ namespace A2v10.Xaml
 			if (cmd == null)
 				return;
 			tag.MergeAttribute(":finish", $"() => {cmd.GetCommand(context)}");
+		}
+
+		void MergeHelp(TagBuilder tag, RenderContext context)
+		{
+			if (!HasHelp) return;
+			var hbind = GetBinding(nameof(HelpUrl));
+			String hPath = null;
+			if (hbind != null)
+			{
+				hPath = hbind.GetPathFormat(context);
+			}
+			else if (!String.IsNullOrEmpty(HelpUrl))
+			{
+				hPath = $"'{HelpUrl}'";
+			}
+			tag.MergeAttribute(":help-link", $"$helpHref({hPath})");
+		}
+
+		protected override void RenderHelp(RenderContext context)
+		{
+			// do nothing
+		}
+
+		protected override void RenderFooter(RenderContext context)
+		{
+			// do nothing
 		}
 	}
 }
