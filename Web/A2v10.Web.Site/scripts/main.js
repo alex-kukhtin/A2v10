@@ -4305,7 +4305,12 @@ Vue.component('validator-control', {
 				//console.dir(this.createNew);
 				this.isOpen = false;
 				if (this.createNew) {
-					this.createNew(this.query);
+					let elem = this.item[this.prop];
+					let arg = {
+						elem: elem,
+						text: this.query
+					};
+					this.createNew(arg);
 				}
 			}
 		},
