@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180528-7200
+// 20180601-7203
 // services/datamodel.js
 
 (function () {
@@ -933,7 +933,7 @@
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
-		me._validateAll_(true);
+		return me._validateAll_(true);
 	}
 
 	function validateAll(force) {
@@ -957,6 +957,7 @@
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
+		return allerrs;
 		//console.dir(allerrs);
 	}
 

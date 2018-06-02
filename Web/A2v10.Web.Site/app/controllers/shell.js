@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180521-7192*/
+/*20180602-7203*/
 /* controllers/shell.js */
 
 (function () {
@@ -510,6 +510,9 @@
 						return;
 					//alert(result);
 					//console.dir(result);
+					eventBus.$emit('toast', { text: locale.$ChangePasswordSuccess, style: 'success'
+				});
+
 				});
 			}
 		},

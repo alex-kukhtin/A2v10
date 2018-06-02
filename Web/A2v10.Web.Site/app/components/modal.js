@@ -4,6 +4,12 @@
 // components/modal.js
 
 
+/*
+			<ul v-if="hasList">
+				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
+			</ul>
+ */
+
 (function () {
 
 	const eventBus = require('std:eventBus');
@@ -16,7 +22,12 @@
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
 			<i v-if="hasIcon" :class="iconClass" />
-			<div v-text="dialog.message" />
+			<div class="modal-body-content">
+				<div v-text="dialog.message" />
+				<ul v-if="hasList" class="modal-error-list">
+					<li v-for="(itm, ix) in dialog.list" :key="ix" v-text="itm"/>
+				</ul>
+			</div>
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
@@ -180,6 +191,9 @@
 			},
 			iconClass() {
 				return "ico ico-" + this.dialog.style;
+			},
+			hasList() {
+				return this.dialog.list && this.dialog.list.length;
 			},
 			buttons: function () {
 				//console.warn(this.dialog.style);

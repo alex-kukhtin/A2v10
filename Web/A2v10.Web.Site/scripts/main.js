@@ -1395,6 +1395,20 @@ app.modules['std:validators'] = function () {
 		validateMap = new WeakMap();
 	}
 
+	function addToWeak(rule, item, val) {
+		let valMap;
+		if (validateMap.has(rule)) {
+			valMap = validateMap.get(rule);
+		} else {
+			valMap = new WeakMap(); // internal
+			validateMap.set(rule, valMap);
+		}
+		let valRes = { val: val, result: null };
+		valMap.set(item, valRes);
+		return valRes;
+	}
+
+
 	function validateImpl(rules, item, val, ff) {
 		let retval = [];
 		rules.forEach(function (rule) {
@@ -1411,13 +1425,24 @@ app.modules['std:validators'] = function () {
 			} else if (utils.isFunction(rule.valid)) {
 				if (rule.async) {
 					if (validateMap.has(rule)) {
-						let vmv = validateMap.get(rule);
-						if (vmv.val === val) {
-							// Let's skip already validated values
-							if (vmv.result)
-								retval.push(vmv.result);
+						let vmset = validateMap.get(rule);
+						if (vmset.has(item)) {
+							let vmv = vmset.get(item);
+							if (vmv.val === val) {
+								// Let's skip already validated values
+								if (vmv.result)
+									retval.push(vmv.result);
+								return;
+							}
+						} else {
+							// First call. Save valid value.
+							addToWeak(rule, item, val);
 							return;
 						}
+					} else {
+						// First call. Save valid value.
+						addToWeak(rule, item, val);
+						return;
 					}
 				}
 				let vr = rule.valid(item, val);
@@ -1426,8 +1451,7 @@ app.modules['std:validators'] = function () {
 						console.error('Async rules should be marked async:true');
 						return;
 					}
-					let valRes = { val: val, result: null };
-					validateMap.set(rule, valRes);
+					let valRes = addToWeak(rule, item, val);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
@@ -1486,7 +1510,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180528-7200
+// 20180601-7203
 // services/datamodel.js
 
 (function () {
@@ -2419,7 +2443,7 @@ app.modules['std:validators'] = function () {
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
-		me._validateAll_(true);
+		return me._validateAll_(true);
 	}
 
 	function validateAll(force) {
@@ -2443,6 +2467,7 @@ app.modules['std:validators'] = function () {
 		}
 		var e = performance.now();
 		log.time('validation time:', startTime);
+		return allerrs;
 		//console.dir(allerrs);
 	}
 
@@ -3157,7 +3182,7 @@ app.modules['std:mask'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180425-7197
+// 20180602-7203
 // components/control.js
 
 (function () {
@@ -3209,7 +3234,7 @@ app.modules['std:mask'] = function () {
 			},
 			inputClass() {
 				let cls = '';
-				if (this.align !== 'left')
+				if (this.align && this.align !== 'left')
 					cls += 'text-' + this.align;
 				if (this.isNegative) cls += ' negative-red';
 				return cls;
@@ -3511,7 +3536,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180520-7191*/
+/*20180602-7193*/
 /*components/combobox.js*/
 
 (function () {
@@ -3524,10 +3549,10 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<div class="select-wrapper">
-			<div v-text="wrapText" class="select-text" ref="wrap" :class="wrapClass"/>
+			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="wrapText">
+		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
@@ -3574,9 +3599,6 @@ Vue.component('validator-control', {
 					if (this.item) this.item[this.prop] = value;
 				}
 			},
-			wrapText() {
-				return this.showvalue ? this.getComboValue() : this.getText();
-			},
 			wrapClass() {
 				let cls = '';
 				if (this.align && this.align !== 'left')
@@ -3592,6 +3614,9 @@ Vue.component('validator-control', {
 			getValue(itm) {
 				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
 				return v;
+			},
+			getWrapText() {
+				return this.showvalue ? this.getComboValue() : this.getText();
 			},
 			getComboValue() {
 				let val = this.item ? this.item[this.prop] : null;
@@ -6375,6 +6400,12 @@ TODO:
 // components/modal.js
 
 
+/*
+			<ul v-if="hasList">
+				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
+			</ul>
+ */
+
 (function () {
 
 	const eventBus = require('std:eventBus');
@@ -6387,7 +6418,12 @@ TODO:
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
 			<i v-if="hasIcon" :class="iconClass" />
-			<div v-text="dialog.message" />
+			<div class="modal-body-content">
+				<div v-text="dialog.message" />
+				<ul v-if="hasList" class="modal-error-list">
+					<li v-for="(itm, ix) in dialog.list" :key="ix" v-text="itm"/>
+				</ul>
+			</div>
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
@@ -6551,6 +6587,9 @@ TODO:
 			},
 			iconClass() {
 				return "ico ico-" + this.dialog.style;
+			},
+			hasList() {
+				return this.dialog.list && this.dialog.list.length;
 			},
 			buttons: function () {
 				//console.warn(this.dialog.style);
@@ -7944,7 +7983,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180524-7195
+// 20180602-7203
 // controllers/base.js
 
 (function () {
@@ -7976,6 +8015,16 @@ Vue.directive('resize', {
 				resolve(result);
 			});
 		});
+	}
+
+	function makeErrors(errs) {
+		let ra = [];
+		for (let x of errs) {
+			for (let y of x.e) {
+				ra.push(y.msg);
+			}
+		}
+		return ra.length ? ra : null;
 	}
 
 	const base = Vue.extend({
@@ -8353,10 +8402,10 @@ Vue.directive('resize', {
 				return dlgData.promise;
 			},
 
-			$alert(msg, title) {
+			$alert(msg, title, list) {
 				let dlgData = {
 					promise: null, data: {
-						message: msg, title: title, style: 'alert'
+						message: msg, title: title, style: 'alert', list: list
 					}
 				};
 				eventBus.$emit('confirm', dlgData);
@@ -8506,7 +8555,9 @@ Vue.directive('resize', {
 				if (this.$isDirty) {
 					const root = this.$data;
 					if (opts && opts.validRequired && root.$invalid) {
-						this.$alert(locale.$MakeValidFirst);
+						let errs = makeErrors(root.$forceValidate());
+						//console.dir(errs);
+						this.$alert(locale.$MakeValidFirst, undefined, errs);
 						return;
 					}
 					this.$save().then((result) => eventBus.$emit('modalClose', result));
@@ -8778,7 +8829,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180521-7192*/
+/*20180602-7203*/
 /* controllers/shell.js */
 
 (function () {
@@ -9288,6 +9339,9 @@ Vue.directive('resize', {
 						return;
 					//alert(result);
 					//console.dir(result);
+					eventBus.$emit('toast', { text: locale.$ChangePasswordSuccess, style: 'success'
+				});
+
 				});
 			}
 		},

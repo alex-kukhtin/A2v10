@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180425-7197
+// 20180602-7203
 // components/control.js
 
 (function () {
@@ -52,7 +52,7 @@
 			},
 			inputClass() {
 				let cls = '';
-				if (this.align !== 'left')
+				if (this.align && this.align !== 'left')
 					cls += 'text-' + this.align;
 				if (this.isNegative) cls += ' negative-red';
 				return cls;

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180524-7195
+// 20180602-7203
 // controllers/base.js
 
 (function () {
@@ -32,6 +32,16 @@
 				resolve(result);
 			});
 		});
+	}
+
+	function makeErrors(errs) {
+		let ra = [];
+		for (let x of errs) {
+			for (let y of x.e) {
+				ra.push(y.msg);
+			}
+		}
+		return ra.length ? ra : null;
 	}
 
 	const base = Vue.extend({
@@ -409,10 +419,10 @@
 				return dlgData.promise;
 			},
 
-			$alert(msg, title) {
+			$alert(msg, title, list) {
 				let dlgData = {
 					promise: null, data: {
-						message: msg, title: title, style: 'alert'
+						message: msg, title: title, style: 'alert', list: list
 					}
 				};
 				eventBus.$emit('confirm', dlgData);
@@ -562,7 +572,9 @@
 				if (this.$isDirty) {
 					const root = this.$data;
 					if (opts && opts.validRequired && root.$invalid) {
-						this.$alert(locale.$MakeValidFirst);
+						let errs = makeErrors(root.$forceValidate());
+						//console.dir(errs);
+						this.$alert(locale.$MakeValidFirst, undefined, errs);
 						return;
 					}
 					this.$save().then((result) => eventBus.$emit('modalClose', result));

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180520-7191*/
+/*20180602-7193*/
 /*components/combobox.js*/
 
 (function () {
@@ -13,10 +13,10 @@
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<div class="select-wrapper">
-			<div v-text="wrapText" class="select-text" ref="wrap" :class="wrapClass"/>
+			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :class="inputClass" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="wrapText">
+		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
@@ -63,9 +63,6 @@
 					if (this.item) this.item[this.prop] = value;
 				}
 			},
-			wrapText() {
-				return this.showvalue ? this.getComboValue() : this.getText();
-			},
 			wrapClass() {
 				let cls = '';
 				if (this.align && this.align !== 'left')
@@ -81,6 +78,9 @@
 			getValue(itm) {
 				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
 				return v;
+			},
+			getWrapText() {
+				return this.showvalue ? this.getComboValue() : this.getText();
 			},
 			getComboValue() {
 				let val = this.item ? this.item[this.prop] : null;

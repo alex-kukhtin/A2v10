@@ -38,6 +38,20 @@ app.modules['std:validators'] = function () {
 		validateMap = new WeakMap();
 	}
 
+	function addToWeak(rule, item, val) {
+		let valMap;
+		if (validateMap.has(rule)) {
+			valMap = validateMap.get(rule);
+		} else {
+			valMap = new WeakMap(); // internal
+			validateMap.set(rule, valMap);
+		}
+		let valRes = { val: val, result: null };
+		valMap.set(item, valRes);
+		return valRes;
+	}
+
+
 	function validateImpl(rules, item, val, ff) {
 		let retval = [];
 		rules.forEach(function (rule) {
@@ -54,13 +68,24 @@ app.modules['std:validators'] = function () {
 			} else if (utils.isFunction(rule.valid)) {
 				if (rule.async) {
 					if (validateMap.has(rule)) {
-						let vmv = validateMap.get(rule);
-						if (vmv.val === val) {
-							// Let's skip already validated values
-							if (vmv.result)
-								retval.push(vmv.result);
+						let vmset = validateMap.get(rule);
+						if (vmset.has(item)) {
+							let vmv = vmset.get(item);
+							if (vmv.val === val) {
+								// Let's skip already validated values
+								if (vmv.result)
+									retval.push(vmv.result);
+								return;
+							}
+						} else {
+							// First call. Save valid value.
+							addToWeak(rule, item, val);
 							return;
 						}
+					} else {
+						// First call. Save valid value.
+						addToWeak(rule, item, val);
+						return;
 					}
 				}
 				let vr = rule.valid(item, val);
@@ -69,8 +94,7 @@ app.modules['std:validators'] = function () {
 						console.error('Async rules should be marked async:true');
 						return;
 					}
-					let valRes = { val: val, result: null };
-					validateMap.set(rule, valRes);
+					let valRes = addToWeak(rule, item, val);
 					vr.then((result) => {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
