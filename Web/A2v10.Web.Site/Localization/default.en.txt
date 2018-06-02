@@ -1,5 +1,7 @@
 ﻿;
 @About=About
+@Confidentiality=Confidentiality
+@Contacts=Contacts
 @Version=Version
 @Debug=Debug
 @Quit=Quit

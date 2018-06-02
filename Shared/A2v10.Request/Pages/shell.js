@@ -17,8 +17,15 @@
 			subtitle: menu.SysParams.AppSubTitle,
 			sideBarMode: menu.SysParams.SideBarMode,
 			userIsAdmin: $(Admin),
-			isDebug: $(Debug)
+			isDebug: $(Debug),
+			appData: $(AppData)
+		},
+		computed: {
+			appLinks() {
+				return this.appData ? this.appData.links : null;
+			}
 		}
+
 	});
 
 	window.$$rootUrl = '';

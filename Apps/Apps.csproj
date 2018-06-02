@@ -75,7 +75,7 @@
     <None Include="Develop\Sales\Invoice\model.json" />
     <None Include="Develop\Sales\Waybill\model.json" />
     <None Include="Develop\Sales\Waybill\waybill.mrt" />
-    <None Include="Develop\app.json" />
+    <None Include="Develop\app_.json" />
     <None Include="Develop\solution.json" />
     <None Include="model.schema.json" />
   </ItemGroup>
@@ -125,6 +125,7 @@
     <Content Include="Develop\_assets\app.css" />
     <Content Include="Develop\_assets\app.js" />
     <Content Include="Develop\_assets\app.min.css" />
+    <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\Index.view.xaml">

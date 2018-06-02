@@ -249,6 +249,7 @@
     <Content Include="Less\SideBar.Compact.less" />
     <Content Include="Less\Image.less" />
     <Content Include="Less\Wizard.less" />
+    <Content Include="Less\AppPages.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

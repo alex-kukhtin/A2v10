@@ -1089,6 +1089,8 @@ header .btn:hover,
 }
 .a2-image img {
   margin: auto;
+  width: auto;
+  height: auto;
 }
 .a2-image .file-upload {
   margin: auto;
@@ -1191,6 +1193,11 @@ footer .spinner.active,
   border-color: #57a8fa;
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
+}
+footer .app-links a,
+.footer .app-links a {
+  display: inline-block;
+  margin: 0 10px;
 }
 @keyframes spin {
   0% {
@@ -4314,6 +4321,24 @@ h5,
 .a2-graphics {
   display: block;
   width: 100%;
+}
+.about-source-list {
+  list-style-position: inside;
+  font-size: 0.96rem;
+  padding: 0;
+  list-style-type: none;
+}
+.about-source-list li {
+  padding: 4px 0 4px 16px;
+  margin: 2px;
+  background-color: #f5fbff;
+}
+.about-source-list li .bold {
+  font-size: 1rem;
+}
+.about-source-list a {
+  float: right;
+  margin-right: 16px;
 }
 .side-bar {
   position: absolute;

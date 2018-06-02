@@ -140,6 +140,7 @@ namespace A2v10.Web.Mvc.Configuration
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
 		public String AppBuild => AppInfo.MainAssembly.Build;
+		public String Copyright => AppInfo.MainAssembly.Copyright;
 
 		const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
 

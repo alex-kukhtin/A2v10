@@ -77,7 +77,11 @@ namespace A2v10.Request
 					await RenderChangePassword(writer, loadPrms);
 					break;
 				default:
-					throw new RequestModelException($"Invalid application Url: {pathInfo}");
+					// find page
+					if (kind != RequestUrlKind.Page)
+						throw new RequestModelException($"Invalid application Url: {pathInfo}");
+					await RenderAppPage(writer, segs[1]);
+					break;
 			}
 		}
 

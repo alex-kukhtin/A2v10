@@ -7,12 +7,29 @@
 	</div>
 	<div class="page-content">
 		<div class="grid">
-			<h3 class="a2-header">A2:Web version 10</h3>
+			<h3 class="a2-header" v-text="appData.title"></h3>
+
+			<h4 class="a2-header" v-text="appData.copyright"></h4>
+			<h4 class="a2-header">@[Version] {{appData.version}}</h4>
+
+			<div>
+				Створено з використанням програмного забезпечення з відкритим сирцевим кодом
+				<ul class="about-source-list">
+					<li><span class="bold">A2v10</span> Copyright © 2014-2018 Alex Kukhtin <a target="_blank" href="https://github.com/alex-kukhtin/A2v10">домашня сторінка</a></li>
+					<li><span class="bold">Json.NET</span> Copyright © 2007 James Newton-King <a target="_blank" href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md">ліцензія</a><a target="_blank" href="https://www.newtonsoft.com/json">домашня сторінка</a></li>
+					<li><span class="bold">Chakra Core</span> Copyright © 2007 Microsoft Corporation <a target="_blank" href="https://github.com/Microsoft/ChakraCore/blob/master/LICENSE.txt">ліцензія</a><a target="_blank" href="https://github.com/Microsoft/ChakraCore">домашня сторінка</a></li>
+					<li><span class="bold">Vue.js</span> Copyright © 2014-2018 Evan You <a target="_blank" href="https://github.com/vuejs/vue/blob/dev/LICENSE">ліцензія</a><a target="_blank" href="https://vuejs.org">домашня сторінка</a></li>
+					<li><span class="bold">Vuex.js</span> Copyright © 2015-2018 Evan You <a target="_blank" href="https://github.com/vuejs/vuex/blob/dev/LICENSE">ліцензія</a><a target="_blank" href="https://github.com/vuejs/vuex">домашня сторінка</a></li>
+					<li><span class="bold">D3</span> Copyright © 2010-2017 Mike Bostock <a target="_blank" href="https://github.com/d3/d3/blob/master/LICENSE">ліцензія</a><a target="_blank" href="https://d3js.org">домашня сторінка</a></li>
+				</ul>
+			</div>
 		</div>
 
-		<div>
-			<pre v-text="appData"></pre>
-		</div>
+		<!--
+	<div>
+		<pre v-text="appData"></pre>
+	</div>
+		-->
 	</div>
 </div>
 <script type="text/javascript">

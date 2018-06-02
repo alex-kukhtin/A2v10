@@ -1,5 +1,7 @@
 ﻿;
 @About=Про программу
+@Confidentiality=Конфедіційність
+@Contacts=Конакти
 @Version=Версія
 @Debug=Відладка
 @Quit=Вихід

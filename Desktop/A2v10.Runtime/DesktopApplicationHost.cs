@@ -66,6 +66,7 @@ namespace A2v10.Runtime
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
 		public String AppBuild => AppInfo.MainAssembly.Build;
+		public String Copyright => AppInfo.MainAssembly.Copyright;
 
 		public String ConnectionString(String source)
 		{

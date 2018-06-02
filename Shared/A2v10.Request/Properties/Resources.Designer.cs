@@ -62,19 +62,77 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;page absolute page-grid&quot; id=&quot;$(PageGuid)&quot;&gt;
-        ///    &lt;a2-document-title page-title=&quot;О программе...&quot;&gt;&lt;/a2-document-title&gt;
-        ///    &lt;div class=&quot;toolbar page-toolbar&quot;&gt;
-        ///        &lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$requery&quot;&gt;&lt;i class=&quot;ico ico-reload&quot;&gt;&lt;/i&gt; Обновить&lt;/button&gt;
-        ///        &lt;div class=&quot;aligner&quot;&gt;&lt;/div&gt;
-        ///        &lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$close&quot;&gt;&lt;i class=&quot;ico ico-close&quot;&gt;&lt;/i&gt; Закрыть&lt;/button&gt;
-        ///    &lt;/div&gt;
-        ///    &lt;div class=&quot;page-content&quot;&gt;
-        ///        &lt;div class=&quot;grid&quot;&gt;
-        ///            &lt;h3  [rest of string was truncated]&quot;;.
+        ///	&lt;a2-document-title page-title=&quot;@[About]&quot;&gt;&lt;/a2-document-title&gt;
+        ///	&lt;div class=&quot;toolbar page-toolbar&quot;&gt;
+        ///		&lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$requery&quot;&gt;&lt;i class=&quot;ico ico-reload&quot;&gt;&lt;/i&gt; @[Refresh]&lt;/button&gt;
+        ///		&lt;div class=&quot;aligner&quot;&gt;&lt;/div&gt;
+        ///		&lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$close&quot;&gt;&lt;i class=&quot;ico ico-close&quot;&gt;&lt;/i&gt; @[Close]&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div class=&quot;page-content&quot;&gt;
+        ///		&lt;div class=&quot;grid&quot;&gt;
+        ///			&lt;h3 class=&quot;a2-header&quot;&gt;A2:Web version 10&lt;/h3&gt;
+        ///		&lt;/di [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string about {
             get {
                 return ResourceManager.GetString("about", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///(function () {
+        ///
+        ///	&apos;use strict&apos;;
+        ///
+        ///	const eventBus = require(&apos;std:eventBus&apos;);
+        ///
+        ///	const store = component(&apos;std:store&apos;);
+        ///	const documentTitle = component(&quot;std:doctitle&quot;);
+        ///
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#$(PageGuid)&quot;,
+        ///		store: store,
+        ///		data: {
+        ///			appData: $(AppData)
+        ///		},
+        ///		components: {
+        ///			&apos;a2-document-title&apos;: documentTitle
+        ///		},
+        ///		computed: {
+        ///		},
+        ///		methods: {
+        ///			$close() {
+        ///				this.$store.commit(&quot;close&quot;);
+        ///			},
+        ///			$requery() { [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string aboutScript {
+            get {
+                return ResourceManager.GetString("aboutScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;page absolute page-grid&quot; id=&quot;$(PageGuid)&quot;&gt;
+        ///	&lt;a2-document-title page-title=&quot;@[About]&quot;&gt;&lt;/a2-document-title&gt;
+        ///	&lt;div class=&quot;toolbar page-toolbar&quot;&gt;
+        ///		&lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$requery&quot;&gt;&lt;i class=&quot;ico ico-reload&quot;&gt;&lt;/i&gt; @[Refresh]&lt;/button&gt;
+        ///		&lt;div class=&quot;aligner&quot;&gt;&lt;/div&gt;
+        ///		&lt;button class=&quot;btn btn-tb&quot; @click.prevent=&quot;$close&quot;&gt;&lt;i class=&quot;ico ico-close&quot;&gt;&lt;/i&gt; @[Close]&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div class=&quot;page-content&quot;&gt;
+        ///		$(AppPageContent)
+        ///	&lt;/div&gt;
+        ///&lt;/div&gt;
+        ///&lt;script type=&quot;text/javascript&quot;&gt;
+        ///	$(App [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string appPage {
+            get {
+                return ResourceManager.GetString("appPage", resourceCulture);
             }
         }
         
@@ -108,9 +166,9 @@ namespace A2v10.Request.Properties {
         ///			$requery() {
         ///				eventBus.$emit(&apos;re [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string aboutScript {
+        internal static string appPageScript {
             get {
-                return ResourceManager.GetString("aboutScript", resourceCulture);
+                return ResourceManager.GetString("appPageScript", resourceCulture);
             }
         }
         
@@ -444,7 +502,7 @@ namespace A2v10.Request.Properties {
         ////*20180424-7163*/
         ////* services/mask.js */
         ///
-        ///app.modules[&apos;std:mask&apos;] = function () {
+        ///function maskTool() {
         ///
         ///
         ///	const PLACE_CHAR = &apos;_&apos;;
@@ -466,7 +524,8 @@ namespace A2v10.Request.Properties {
         ///
         ///	function isValidChar(mask, char) {
         ///		if (mask === &apos;#&apos;) {
-        ///			return char &gt;= &apos;0&apos; &amp;&amp; char &lt;= &apos;9&apos; || char = [rest of string was truncated]&quot;;.
+        ///			return char &gt;= &apos;0&apos; &amp;&amp; char &lt;= &apos;9&apos; || char === PLACE_CHAR;
+        ///		 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string mask {
             get {
@@ -529,6 +588,12 @@ namespace A2v10.Request.Properties {
         ///
         ///	$(Utils)
         ///	$(Locale)
+        ///	$(Mask)
+        ///
+        ///	const maskTools = maskTool();
+        ///
+        ///	// TODO: from LOCALE or WEB.CONFIG
+        ///	const currentMask = &apos;+38 (0##) ###-##-##&apos;;
         ///
         ///	const vm = new Vue({
         ///		el: &quot;#app&quot;,
@@ -543,13 +608,7 @@ namespace A2v10.Request.Properties {
         ///			submitted: false,
         ///			serverError: &apos;&apos;,
         ///			emailError: &apos;&apos;,
-        ///			showConfirm: false,
-        ///			confirmRegisterText: &apos;&apos;,
-        ///			passwordError: &apos;&apos;
-        ///		},
-        ///		computed: {
-        ///			locale() {
-        ///				return window.$$locale [rest of string was truncated]&quot;;.
+        ///			showCo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenantScript {
             get {
@@ -637,12 +696,12 @@ namespace A2v10.Request.Properties {
         ///			subtitle: menu.SysParams.AppSubTitle,
         ///			sideBarMode: menu.SysParams.SideBarMode,
         ///			userIsAdmin: $(Admin),
-        ///			isDebug: $(Debug)
+        ///			isDebug: $(Debug),
+        ///			appData: $(AppData)
         ///		}
         ///	});
         ///
-        ///	window.$rootUrl = &apos;&apos;;
-        ///	window.$$debug = $(Deb [rest of string was truncated]&quot;;.
+        ///	window.$$rootUrl = &apos;&apos; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shell {
             get {
@@ -669,7 +728,8 @@ namespace A2v10.Request.Properties {
         ///        }
         ///    });
         ///
-        ///	window.$rootUrl = &apos;&apos;;
+        ///	window.$$rootUrl = &apos;/admin&apos;;
+        ///	window.$$debug = $(Debug);
         ///
         ///})();.
         /// </summary>

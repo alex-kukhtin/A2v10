@@ -72,6 +72,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\appPageScript.js" />
+    <Content Include="Pages\appPage.html" />
     <Content Include="Pages\changePassword.html" />
     <Content Include="Pages\about.html" />
     <Content Include="Pages\confirmEMail.html" />

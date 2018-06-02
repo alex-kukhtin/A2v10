@@ -50,7 +50,10 @@
 
 			<span class="divider"></span>
 
-			<a href="/app/about" @click.prevent="about" tabindex="-1">@[About]</a>
+			<div class="app-links">
+				<a href="/app/about" @click.prevent="about" tabindex="-1">@[About]</a>
+				<a v-for="(lnk, lx) in appLinks" :href="lnk.url" :key="lx" @click.prevent="appLink(lnk)" tabindex="-1" v-text="lnk.title">@[About]</a>
+			</div>
 
 
 			<span class="divider"></span>

@@ -189,7 +189,7 @@ footer, .footer {
 	.menu {
 		margin-bottom: -2px;
 		font-size: @font-size;
-		text-transform:none;
+		text-transform: none;
 	}
 
 	button {
@@ -220,6 +220,13 @@ footer, .footer {
 			border-color: @link-hover-color;
 			border-top-color: #ccc;
 			animation: spin 1.5s linear infinite;
+		}
+	}
+
+	.app-links {
+		a {
+			display:inline-block;
+			margin:0 10px;
 		}
 	}
 }
@@ -477,3 +484,5 @@ h5, .h5 {
 	display: block;
 	width: 100%;
 }
+
+@import "AppPages.less";

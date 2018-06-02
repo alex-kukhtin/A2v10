@@ -5,12 +5,16 @@
 	"copyright": "Copyright © 2015-2018 Alex Kukhtin",
 	"links": [
 		{
-			"title": "link1",
-			"url": "url1"
+			"title": "Контакти",
+			"url": "/app/contacts"
 		},
+			{
+				"title": "@[Confidentiality]",
+				"url": "/app/сonfidentiality"
+			},
 		{
-			"title": "link2",
-			"url": "url2"
+			"title": "Умови використання",
+			"url": "/app/termsofuse"
 		}
 	]
 }

@@ -56,7 +56,7 @@
 				return locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
-				return { width: this.width, height: this.height };
+				return { maxWidth: this.width, maxHeight: this.height };
 			},
 			uploadStyle() {
 				let w = { width: this.width, height: this.height };

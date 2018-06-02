@@ -73,5 +73,6 @@ namespace A2v10.Tests.Config
 
 		public String AppVersion => throw new NotImplementedException();
 		public String AppBuild => throw new NotImplementedException();
+		public String Copyright => throw new NotImplementedException();
 	}
 }

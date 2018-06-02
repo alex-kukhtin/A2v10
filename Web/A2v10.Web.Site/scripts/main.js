@@ -6994,7 +6994,7 @@ TODO:
 				return locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
-				return { width: this.width, height: this.height };
+				return { maxWidth: this.width, maxHeight: this.height };
 			},
 			uploadStyle() {
 				let w = { width: this.width, height: this.height };
@@ -8829,7 +8829,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180602-7203*/
+/*20180602-7204*/
 /* controllers/shell.js */
 
 (function () {
@@ -9295,6 +9295,9 @@ Vue.directive('resize', {
 		methods: {
 			about() {
 				this.$store.commit('navigate', { url: '/app/about' });
+			},
+			appLink(lnk) {
+				this.$store.commit('navigate', { url: lnk.url });
 			},
 			root() {
 				let opts = { title: null };
