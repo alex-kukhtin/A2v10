@@ -18,6 +18,8 @@
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" 
 					TabIndex="4"
 					Rows="3" Multiline="True"/>
+
+				<CheckBox Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 			</Grid>
 		</Tab>
 		<Tab Header="Validators" Padding="30, 10">
@@ -58,13 +60,15 @@
 						 Value="{Bind Agent.Address.Street}" ItemsSource="{Bind Root.$Streets}">
 					<ComboBoxItem Content="{Bind Name}" Value="{Bind Name}"/>
 				</ComboBox>
-				<TextBox Label="Дом22" Grid.Row="1" Grid.Col="2" Value="{Bind Agent.Address.Build}"/>
+				<TextBox Label="Дом22" Grid.Row="1" Grid.Col="2" Value="{Bind Agent.Address.Build}" TabIndex="2"/>
 				<TextBox Label="Квартира" Grid.Row="2" Grid.Col="2" Value="{Bind Agent.Address.Appt}"/>
 				<!--
 				<Hyperlink Grid.Row="3" Grid.Col="3" Command="{BindCmd MailTo, Argument={Bind Agent.Address.Appt}, Data='i am the &lt;script/&gt; subject' }" Content="{Bind Agent.Address.Appt}"/>
+				+38 (0##) ###-##-##
 				-->
-				<TextBox Label="Телефон" Grid.Row="4" Grid.Col="1" Value="{Bind Agent.Address.Build, Mask='+38 (0##) ###-##-##'}" Placeholder="+38 (000) 000-00-00"/>
-				<Static Label="Телефон" Grid.Row="4" Grid.Col="2" Value="{Bind Agent.Address.Build, Mask='+38 (0##) ###-##-##'}"/>
+				<TextBox Label="Телефон" Grid.Row="4" Grid.Col="1" Value="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}" Placeholder="{Bind Agent.$Placeholder}" TabIndex="1"/>
+				<Static Label="Телефон" Grid.Row="4" Grid.Col="2" Value="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"/>
+				<CheckBox Grid.Row="5" Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 			</Grid>
 		</Tab>
 	</TabPanel>

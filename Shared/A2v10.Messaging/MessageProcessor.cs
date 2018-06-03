@@ -5,10 +5,10 @@ using System.Dynamic;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
-using A2v10.Infrastructure;
 using System.Collections.Generic;
+
 using A2v10.Data.Interfaces;
+using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
 {

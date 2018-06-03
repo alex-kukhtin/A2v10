@@ -46,6 +46,7 @@
     <Compile Include="IControllerProfiler.cs" />
     <Compile Include="IControllerTenant.cs" />
     <Compile Include="IInvokeTarget.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="IApplicationHost.cs" />
     <Compile Include="ILocalizer.cs" />

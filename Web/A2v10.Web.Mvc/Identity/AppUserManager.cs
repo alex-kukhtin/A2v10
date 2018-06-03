@@ -72,7 +72,8 @@ namespace A2v10.Web.Mvc.Identity
 				Subject = "Security Code",
 				BodyFormat = "Your security code is {0}"
 			});
-			EmailService = new EmailService();
+			ILogger logger = ServiceLocator.Current.GetService<ILogger>();
+			EmailService = new EmailService(logger);
 
 			var dataProtectionProvider = options.DataProtectionProvider;
 			if (dataProtectionProvider != null)

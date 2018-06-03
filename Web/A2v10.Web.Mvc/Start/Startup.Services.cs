@@ -32,6 +32,7 @@ namespace A2v10.Web.Mvc.Start
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
 				IMessaging messaging = new MessageProcessor(host, dbContext);
 				IDataScripter scripter = new VueDataScripter();
+				ILogger logger = new WebLogger(host, dbContext);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -41,6 +42,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IMessaging>(messaging);
 				locator.RegisterService<ILocalizer>(localizer);
 				locator.RegisterService<IDataScripter>(scripter);
+				locator.RegisterService<ILogger>(logger);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

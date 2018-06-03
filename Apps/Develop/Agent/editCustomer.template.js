@@ -8,14 +8,21 @@ const template = {
 		"TRoot.$Cities": getCities,
 		"TRoot.$Streets": getStreets,
 		'TAgent.$Page0Valid': isPage0Valid,
-		'TAgent.$Page3Valid': isPage3Valid
+		'TAgent.$Page3Valid': isPage3Valid,
+		'TAgent.$Bit1': Boolean,
+		'TAgent.$Mask'() {
+			return this.$Bit1 ? '### ### ###' : '+38 (0##) ###-##-##';
+		},
+		'TAgent.$Placeholder'() {
+			return this.$Bit1 ? '000 000 000' : '+38 (000) 000-00-00';
+		}
 	},
 	events: {
 		"Model.load": modelLoad,
 		/**
 		 * clear dependent values
 		 */
-		"Agent.Address.Country.change": (addr) => { addr.City = ''; },
+		"Agent.Address.Country.change": (addr) => { addr.City = ''; addr.Street = '' },
 		"Agent.Address.City.change": (addr) => { addr.Street = ''; }
 	},
 	validators: {

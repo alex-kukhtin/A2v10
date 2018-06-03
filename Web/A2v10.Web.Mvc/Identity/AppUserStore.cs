@@ -307,7 +307,10 @@ namespace A2v10.Web.Mvc.Identity
 
 		public Task<String> GetEmailAsync(AppUser user)
 		{
-			return Task.FromResult(user.Email);
+			String mail = user.Email;
+			if (String.IsNullOrEmpty(mail))
+				mail = user.UserName; // user name as email
+			return Task.FromResult(mail);
 		}
 
 		public Task<Boolean> GetEmailConfirmedAsync(AppUser user)

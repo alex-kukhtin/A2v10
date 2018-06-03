@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 06 apr 2018
-module version : 7058
+Last updated : 03 jun 2018
+module version : 7059
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7058);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7059);
 else
-	update a2sys.Versions set [Version] = 7058 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7059 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -241,6 +241,22 @@ begin
 	);
 end
 go
+
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Log')
+begin
+	create table a2security.[Log]
+	(
+		Id	bigint not null identity(100, 1) constraint PK_Log primary key,
+		UserId bigint not null
+			constraint FK_Log_UserId_Users foreign key references a2security.Users(Id),
+		EventTime	datetime not null
+			constraint DF_Log_EventTime default(getdate()),
+		Severity nchar(1) not null,
+		[Message] nvarchar(max) null,
+	);
+end
+go
 ------------------------------------------------
 if exists(select * from INFORMATION_SCHEMA.VIEWS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'ViewUsers')
 begin
@@ -257,70 +273,6 @@ as
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
 	where Void=0 and Id <> 0;
-go
-------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUser')
-	drop procedure a2security.CreateUser
-go
-------------------------------------------------
-create procedure a2security.CreateUser
-@UserName nvarchar(255),
-@PasswordHash nvarchar(max) = null,
-@SecurityStamp nvarchar(max),
-@Email nvarchar(255) = null,
-@PhoneNumber nvarchar(255) = null,
-@Tenant int = null,
-@PersonName nvarchar(255) = null,
-@RetId bigint output
-as
-begin
--- from account/register only
-	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-	
-	declare @userId bigint; 
-
-	if @Tenant = -1
-	begin
-		declare @tenants table(id int);
-		declare @users table(id bigint);
-		declare @tenantId int;
-
-		begin tran;
-		insert into a2security.Tenants([Admin])
-			output inserted.Id into @tenants(id)
-			values (null);
-
-		select top(1) @tenantId = id from @tenants;
-
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName)
-			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName);			
-		select top(1) @userId = id from @users;
-
-		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
-
-		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
-		commit tran;
-	end
-	else
-	begin
-		begin tran;
-
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName)
-			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName);
-		select top(1) @userId = id from @users;
-
-		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
-
-		commit tran;
-	end
-	exec a2security.[Permission.UpdateUserInfo];
-	set @RetId = @userId;
-	--TODO: log
-end
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserById')
@@ -480,6 +432,70 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUser')
+	drop procedure a2security.CreateUser
+go
+------------------------------------------------
+create procedure a2security.CreateUser
+@UserName nvarchar(255),
+@PasswordHash nvarchar(max) = null,
+@SecurityStamp nvarchar(max),
+@Email nvarchar(255) = null,
+@PhoneNumber nvarchar(255) = null,
+@Tenant int = null,
+@PersonName nvarchar(255) = null,
+@RetId bigint output
+as
+begin
+-- from account/register only
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	
+	declare @userId bigint; 
+
+	if @Tenant = -1
+	begin
+		declare @tenants table(id int);
+		declare @users table(id bigint);
+		declare @tenantId int;
+
+		begin tran;
+		insert into a2security.Tenants([Admin])
+			output inserted.Id into @tenants(id)
+			values (null);
+
+		select top(1) @tenantId = id from @tenants;
+
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName)
+			output inserted.Id into @users(id)
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName);			
+		select top(1) @userId = id from @users;
+
+		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
+
+		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
+		commit tran;
+	end
+	else
+	begin
+		begin tran;
+
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName)
+			output inserted.Id into @users(id)
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName);
+		select top(1) @userId = id from @users;
+
+		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
+
+		commit tran;
+	end
+	exec a2security.[Permission.UpdateUserInfo];
+	set @RetId = @userId;
+	--TODO: log
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.ChangePassword.Load')
 	drop procedure a2security.[User.ChangePassword.Load]
 go
@@ -497,6 +513,20 @@ begin
 		[NewPassword] = cast(null as nvarchar(255)),
 		[ConfirmPassword] = cast(null as nvarchar(255)) 
 	from a2security.Users where Id=@UserId;
+end
+go
+------------------------------------------------
+create or alter procedure [a2security].[WriteLog]
+	@UserId bigint = null,
+	@Severity int,
+	@Message nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.[Log] (UserId, Severity, [Message]) 
+		values (isnull(@UserId, 0 /*system user*/), char(@Severity), @Message);
 end
 go
 ------------------------------------------------

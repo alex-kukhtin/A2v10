@@ -330,6 +330,7 @@ namespace A2v10.Web.Site.Controllers
 				{
 					var user = await UserManager.FindByIdAsync(userId.Value);
 					await UserManager.UpdateUser(user);
+					//await UserManager.SendEmailAsync(user.Id, subject, body);
 					SendPage(ResourceHelper.ConfirmEMailHtml, ResourceHelper.SimpleScript);
 					return;
 				}

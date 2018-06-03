@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180602-7203
+// 20180603-7206
 // components/control.js
 
 (function () {
@@ -117,6 +117,13 @@
 			},
 			test() {
 				alert('from base control');
+			}
+		},
+		watch: {
+			mask() {
+				mask.setMask(this.$refs.input, this.mask);
+				if (this.updateValue)
+					this.updateValue(this.$refs.input.value);
 			}
 		}
 	};
