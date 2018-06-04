@@ -1,4 +1,4 @@
--- Copyright � 2008-2018 Alex Kukhtin
+﻿-- Copyright © 2008-2018 Alex Kukhtin
 
 /* 20180131-7101 */
 

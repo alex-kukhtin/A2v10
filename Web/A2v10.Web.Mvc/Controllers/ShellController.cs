@@ -133,7 +133,8 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(Theme)", _baseController.Host.Theme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },
-					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }
+					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." },
+					{ "$(Description)", _baseController.Host.AppDescription }
 				};
 				_baseController.Layout(Response.Output, prms);
 			}

@@ -53,6 +53,9 @@ namespace A2v10.Tests.Config
 			}
 		}
 
+		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
+
+
 		public String Theme => null;
 		public String HelpUrl => null;
 

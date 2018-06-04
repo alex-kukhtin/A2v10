@@ -1,7 +1,7 @@
-/* 20180603-7050 */
+﻿/* 20180603-7050 */
 /*
 ------------------------------------------------
-Copyright � 2008-2018 Alex Kukhtin
+Copyright © 2008-2018 Alex Kukhtin
 
 Last updated : 03 jun 2018
 module version : 7050

@@ -49,6 +49,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{2F3BE304-2E99-46CB-B3B0-597BC222DE37}"
 	ProjectSection(SolutionItems) = preProject
 		SqlScripts\a2v10admin.sql = SqlScripts\a2v10admin.sql
+		SqlScripts\a2v10messaging.sql = SqlScripts\a2v10messaging.sql
 		SqlScripts\a2v10meta.sql = SqlScripts\a2v10meta.sql
 		SqlScripts\a2v10security.sql = SqlScripts\a2v10security.sql
 		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql
@@ -116,6 +117,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F2179EED-B181-4893-B209-700C496FADF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildSql", "Tools\BuildSql\BuildSql.csproj", "{0E7FD5E8-15D5-4C2B-983F-1930848B19ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UiSamples", "UiSamples", "{BB1D9A68-B755-434F-9B24-CD45EA8DCBC5}"
+	ProjectSection(SolutionItems) = preProject
+		UiSamples\odoo.css = UiSamples\odoo.css
+		UiSamples\odoo.html = UiSamples\odoo.html
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

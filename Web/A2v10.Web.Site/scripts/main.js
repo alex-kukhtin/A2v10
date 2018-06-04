@@ -8392,6 +8392,15 @@ Vue.directive('resize', {
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
+			$navigateSimple(url, newWindow) {
+				if (newWindow === true) {
+					let nwin = window.open(url, "_blank");
+					nwin.$$token = { token: this.__currentToken__, update: update };
+				}
+				else
+					this.$store.commit('navigate', { url: url });
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;

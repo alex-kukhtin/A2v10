@@ -34,16 +34,15 @@ namespace A2v10.Xaml
 		public Object Header { get; set; }
 
 		public Boolean Collapsible { get; set; }
-
 		public Boolean? Collapsed { get; set; }
 
 		public PaneStyle Style { get; set; }
-
 		public Icon Icon { get; set; }
 
 		public BackgroundStyle Background { get; set; }
 
 		public ShadowStyle DropShadow { get; set; }
+		public Length Height { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -60,6 +59,8 @@ namespace A2v10.Xaml
 			MergeAttributes(panel, context, MergeAttrMode.Visibility);
 			if (Background != BackgroundStyle.None)
 				panel.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			if (Height != null)
+				panel.MergeStyle("height", Height.Value);
 			if (DropShadow != ShadowStyle.None)
 			{
 				panel.AddCssClass("drop-shadow");

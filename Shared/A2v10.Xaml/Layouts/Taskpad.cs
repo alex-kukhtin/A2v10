@@ -10,6 +10,7 @@ namespace A2v10.Xaml
 
 		public Length Width { get; set; }
 		public BackgroundStyle Background { get; set; }
+		public Boolean? Collapsible { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -19,6 +20,8 @@ namespace A2v10.Xaml
 
 			if (Background != BackgroundStyle.None)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
+
+			tag.AddCssClassBoolNo(Collapsible, "collapsible");
 
 			tag.RenderStart(context);
 			RenderChildren(context);

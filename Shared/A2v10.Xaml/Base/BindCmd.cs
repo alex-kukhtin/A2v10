@@ -37,7 +37,8 @@ namespace A2v10.Xaml
 		SelectChecked,
 		Report,
 		Export,
-		MailTo
+		MailTo,
+		Navigate
 	}
 
 	public enum DialogAction
@@ -151,6 +152,9 @@ namespace A2v10.Xaml
 
 				case CommandType.MailTo:
 					return null;
+
+				case CommandType.Navigate:
+					return $"$navigateSimple({CommandUrl(context)}, {NewWindowJS})";
 
 				case CommandType.Open:
 					if (indirect)

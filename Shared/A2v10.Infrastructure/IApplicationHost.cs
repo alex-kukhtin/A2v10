@@ -10,6 +10,7 @@ namespace A2v10.Infrastructure
 		IProfiler Profiler { get; }
 		String AppPath { get; }
 		String AppKey { get; }
+		String AppDescription { get; }
 		String Theme { get; }
 		String HelpUrl { get; }
 		Boolean IsDebugConfiguration { get; }

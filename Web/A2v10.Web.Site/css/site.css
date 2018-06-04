@@ -743,12 +743,12 @@ td.valign-bottom {
   color: #9c793d;
 }
 .a2-alert.success {
-  background-color: #e0f3d2;
-  border-left-color: #aae396;
-  color: #3d723e;
+  background-color: #dff0d8;
+  border-left-color: #d6e9c6;
+  color: #3c763d;
 }
 .a2-alert.success .ico {
-  color: #3d723e;
+  color: #3c763d;
 }
 .a2-alert.danger {
   background-color: #f3dddd;
@@ -759,12 +759,12 @@ td.valign-bottom {
   color: #ab403f;
 }
 .a2-alert.info {
-  background-color: #dbeef6;
-  border-left-color: #9ec5e7;
-  color: #317293;
+  background-color: #d9edf7;
+  border-left-color: #bce8f1;
+  color: #31708f;
 }
 .a2-alert.info .ico {
-  color: #317293;
+  color: #31708f;
 }
 html {
   font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -938,6 +938,7 @@ header .btn:hover,
 .nav-bar li.active a {
   color: #57a8fa;
   border-bottom: 3px solid #57a8fa;
+  font-weight: 500;
 }
 .nav-bar li.aligner:hover {
   background-color: #f2f3f9;
@@ -1030,6 +1031,12 @@ header .btn:hover,
   padding: 6px 6px 2px 8px;
   color: #57a8fa;
   font-size: 120%;
+}
+.taskpad.no-collapsible .taskpad-collapse-handle {
+  display: none;
+}
+.taskpad.no-collapsible .taskpad-body {
+  margin-top: 0;
 }
 .taskpad.expanded {
   margin-left: 6px;
@@ -3950,6 +3957,9 @@ TODO:
 .grid > .grid {
   padding: 0;
 }
+.grid > .panel {
+  margin-bottom: 0;
+}
 .stack-panel {
   display: flex;
   flex-direction: column;
@@ -4042,26 +4052,26 @@ TODO:
   color: #777;
 }
 .panel.panel-cyan {
-  border: 1px solid #9ec5e7;
+  border: 1px solid #bce8f1;
 }
 .panel.panel-cyan > .panel-header {
-  color: #317293;
-  background-color: #dbeef6;
-  border-bottom: 1px solid #9ec5e7;
+  color: #31708f;
+  background-color: #d9edf7;
+  border-bottom: 1px solid #bce8f1;
 }
 .panel.panel-cyan > .panel-header .panel-collapse-handle {
-  color: #317293;
+  color: #31708f;
 }
 .panel.panel-green {
-  border: 1px solid #aae396;
+  border: 1px solid #d6e9c6;
 }
 .panel.panel-green > .panel-header {
-  color: #3d723e;
-  background-color: #e0f3d2;
-  border-bottom: 1px solid #aae396;
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-bottom: 1px solid #d6e9c6;
 }
 .panel.panel-green > .panel-header .panel-collapse-handle {
-  color: #3d723e;
+  color: #3c763d;
 }
 .panel.panel-red {
   border: 1px solid #dfa4ae;

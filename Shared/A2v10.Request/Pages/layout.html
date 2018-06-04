@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="A2:Web" />
+	<meta name="description" content="$(Description)" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="format-detection" content="telephone=no" />
 	<meta name="rootUrl" content="$(RootUrl)" />
@@ -29,7 +29,9 @@
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
+					<!--
 					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> @[Profile]</a>
+					-->
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> @[ChangePassword]</a>
 					<template v-if="userIsAdmin">
 						<div class="divider"></div>
