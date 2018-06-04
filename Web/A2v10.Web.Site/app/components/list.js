@@ -12,7 +12,7 @@
 
 	Vue.component("a2-list", {
 		template:
-`<ul class="a2-list" v-lazy="itemsSource">
+			`<ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in itemsSource" :key="listItemIndex" 
 				@click.prevent="select(listItem)" @keydown="keyDown" 
@@ -28,7 +28,10 @@
 			itemsSource: Array,
 			autoSelect: String,
 			mark: String,
-			command: Function
+			command: Function,
+			selectable: {
+				type: Boolean, default: true
+			}
 		},
 		computed: {
 			isSelectFirstItem() {
@@ -53,6 +56,7 @@
 				return cls;
 			},
 			select(item) {
+				if (!this.selectable) return;
 				if (item.$select) item.$select();
 			},
 			selectStatic() {
@@ -62,6 +66,7 @@
 			selectFirstItem() {
 				if (!this.isSelectFirstItem)
 					return;
+				if (!this.selectable) return;
 				// from source (not $origin!)
 				let src = this.itemsSource;
 				if (!src.length)

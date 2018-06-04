@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Windows.Markup;
 
@@ -15,6 +16,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 		public Boolean Scroll { get; set; }
 		public TextAlign Align { get; set; }
+		public TextColorStyle Color { get; set; }
 
 		internal virtual void RenderChildren(RenderContext context)
 		{
@@ -33,6 +35,8 @@ namespace A2v10.Xaml
 				div.MergeStyle("height", Height.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
+			if (Color != TextColorStyle.Default)
+				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			MergeAlign(div, context, Align);
 			div.RenderStart(context);
 			RenderChildren(context);

@@ -11,6 +11,12 @@ namespace A2v10.Xaml
 		Center
 	}
 
+	public enum TextColorStyle
+	{
+		Default = 0,
+		Gray
+	}
+
 	public enum VerticalAlign
 	{
 		Default,
@@ -109,7 +115,8 @@ namespace A2v10.Xaml
 	{
 		None,
 		LightGray,
-		WhiteSmoke
+		WhiteSmoke,
+		White
 	}
 
 	public enum Icon

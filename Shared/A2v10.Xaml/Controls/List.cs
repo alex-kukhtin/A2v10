@@ -21,6 +21,7 @@ namespace A2v10.Xaml
 		public UIElementCollection Content { get; set; } = new UIElementCollection();
 		public AutoSelectMode AutoSelect { get; set; }
 		public Boolean Striped { get; set; }
+		public Boolean? Select { get; set; }
 		public Object Mark { get; set; }
 		public Boolean Border { get; set; }
 
@@ -36,6 +37,8 @@ namespace A2v10.Xaml
 			var isBind = GetBinding(nameof(ItemsSource));
 			ul.AddCssClassBool(Striped, "striped");
 			ul.AddCssClassBool(Border, "border");
+			if (Select != null)
+				ul.MergeAttribute(":selectable", Select.Value.ToString().ToLowerInvariant());
 			ul.AddCssClass(Style.ToString().ToKebabCase());
 			//ul.MergeAttribute(":command", "()=> $navigate()");
 

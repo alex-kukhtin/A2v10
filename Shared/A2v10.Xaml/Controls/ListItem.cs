@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public Object Content { get; set; }
 		public Object Header { get; set; }
 		public Icon Icon { get; set; }
+		public Object Footer { get; set; }
 
 		public Command Command { get; set; }
 
@@ -29,6 +30,7 @@ namespace A2v10.Xaml
 
 		Boolean HasHeader => GetBinding(nameof(Header)) != null || Header != null;
 		Boolean HasBody => GetBinding(nameof(Content)) != null || Content != null;
+		Boolean HasFooter => GetBinding(nameof(Footer)) != null || Footer != null;
 
 		void RenderIconBlock(RenderContext context)
 		{
@@ -77,6 +79,24 @@ namespace A2v10.Xaml
 				else if (Content != null)
 					context.Writer.Write(context.Localize(Content.ToString()));
 				hBody.RenderEnd(context);
+			}
+			if (HasFooter)
+			{
+				var fTag = new TagBuilder("div", "list-item-footer");
+				var bFoot = GetBinding(nameof(Footer));
+				if (bFoot != null)
+				{
+					fTag.MergeAttribute("v-text", bFoot.GetPathFormat(context));
+				}
+				fTag.RenderStart(context);
+				if (Footer != null)
+				{
+					if (Footer is UIElementBase)
+						(Footer as UIElementBase).RenderElement(context);
+					else
+						context.Writer.Write(context.Localize(Footer.ToString()));
+				}
+				fTag.RenderEnd(context);
 			}
 		}
 	}

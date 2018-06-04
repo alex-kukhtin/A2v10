@@ -718,6 +718,9 @@ td.valign-bottom {
 .tag-label.magenta {
   background-color: darkmagenta;
 }
+.tag-label.lightgray {
+  background-color: #ccc;
+}
 .tag-label.hidden {
   display: none;
 }
@@ -806,7 +809,7 @@ button:focus {
 }
 hr {
   margin: 0.3em 0;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-bottom-style: none;
 }
 header,
@@ -2794,12 +2797,21 @@ table.data-grid > tbody > tr.bold > td {
   display: block;
   grid-row: 1;
   grid-column: 2;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  font-size: 1.05rem;
+}
+.generic-list-item .list-item-footer {
+  display: block;
+  grid-row: 3;
+  grid-column: 2;
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: #999;
 }
 .generic-list-item .list-item-body {
   grid-row: 2;
   grid-column: 2;
-  font-size: .9rem;
+  font-size: 0.95rem;
   color: #999;
 }
 .generic-list-item .list-item-commands {
@@ -3329,6 +3341,9 @@ table.a2-table.bk-rose {
 }
 table.a2-table.bk-white-smoke {
   background-color: #f9f9f9;
+}
+table.a2-table.bk-white {
+  background-color: white;
 }
 table.prop-grid {
   width: 100%;
@@ -4150,6 +4165,9 @@ TODO:
 .scrollable-pane {
   overflow: auto;
 }
+.text-color-gray {
+  color: #777;
+}
 .bordered-pane {
   border: 1px solid #ddd;
 }
@@ -4158,6 +4176,9 @@ TODO:
 }
 .background-white-smoke {
   background-color: #f9f9f9;
+}
+.background-white {
+  background-color: white;
 }
 table.sheet {
   -webkit-user-select: text;

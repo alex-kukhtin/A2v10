@@ -25,7 +25,8 @@ namespace A2v10.Xaml
 		Salmon,
 		Seagreen,
 		Tan,
-		Magenta
+		Magenta,
+		LightGray
 	}
 
 	[ContentProperty("Content")]
