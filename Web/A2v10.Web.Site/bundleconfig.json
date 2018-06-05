@@ -44,6 +44,7 @@
 				"app/components/newbutton.js",
 				"app/components/graphics.js",
 				"app/components/debug.js",
+				"app/components/feedback.js",
 				"app/components/doctitle.js",
 				"app/components/megamenu.js",
 				"app/directives/*.js",

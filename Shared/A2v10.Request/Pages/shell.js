@@ -1,5 +1,5 @@
 ﻿
-/*20180408-7152*/
+/*20180605-7210*/
 
 (function () {
 
@@ -13,6 +13,7 @@
 			version: '$(AppVersion)',
 			menu: menu.Menu ? menu.Menu[0].Menu : null,
 			newMenu: menu.NewMenu,
+			settingsMenu: menu.SettingsMenu,
 			title: menu.SysParams.AppTitle,
 			subtitle: menu.SysParams.AppSubTitle,
 			sideBarMode: menu.SysParams.SideBarMode,

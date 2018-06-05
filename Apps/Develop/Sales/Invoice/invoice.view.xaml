@@ -48,6 +48,7 @@
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid Columns="12rem, 12rem, 150, 1*">
+		<Alert Style="Danger">Русский текст фывфвв</Alert>
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
 		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}"/>
 		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right"/>

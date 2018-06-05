@@ -91,10 +91,9 @@
 		props: {
 			menu: Array
 		},
-		computed:
-		{
+		computed: {
 			seg0: () => store.getters.seg0,
-			locale() { return locale }
+			locale() { return locale; }
 		},
 		methods: {
 			isActive(item) {
@@ -322,7 +321,7 @@
 			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
-			'a2-toastr' : toastr
+			'a2-toastr': toastr
 		},
 		props: {
 			menu: Array,
@@ -413,6 +412,17 @@
 				me.modals.push(dlg);
 			});
 
+			eventBus.$on('modaldirect', function (modal, prms) {
+				let root = window.$$rootUrl;
+				let url = urlTools.combine(root, '/_dialog', modal);
+				let dlg = { title: "dialog", url: url, prms: prms.data };
+				dlg.promise = new Promise(function (resolve, reject) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
+
 			eventBus.$on('modalClose', function (result) {
 				let dlg = me.modals.pop();
 				if (result)
@@ -448,6 +458,7 @@
 				requestsCount: 0,
 				debugShowTrace: false,
 				debugShowModel: false,
+				feedbackVisible: false,
 				dataCounter: 0,
 				traceEnabled: log.traceEnabled()
 			};
@@ -485,17 +496,27 @@
 			debugTrace() {
 				if (!window.$$debug) return;
 				this.debugShowModel = false;
-
+				this.feedbackVisible = false;
 				this.debugShowTrace = !this.debugShowTrace;
 			},
 			debugModel() {
 				if (!window.$$debug) return;
 				this.debugShowTrace = false;
+				this.feedbackVisible = false;
 				this.debugShowModel = !this.debugShowModel;
 			},
 			debugClose() {
 				this.debugShowModel = false;
 				this.debugShowTrace = false;
+				this.feedbackVisible = false;
+			},
+			showFeedback() {
+				this.debugShowModel = false;
+				this.debugShowTrace = false;
+				this.feedbackVisible = !this.feedbackVisible;
+			},
+			feedbackClose() {
+				this.feedbackVisible = false;
 			},
 			profile() {
 				alert('user profile');
@@ -513,8 +534,9 @@
 						return;
 					//alert(result);
 					//console.dir(result);
-					eventBus.$emit('toast', { text: locale.$ChangePasswordSuccess, style: 'success'
-				});
+					eventBus.$emit('toast', {
+						text: locale.$ChangePasswordSuccess, style: 'success'
+					});
 
 				});
 			}

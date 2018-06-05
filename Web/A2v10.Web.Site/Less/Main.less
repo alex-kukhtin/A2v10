@@ -82,11 +82,19 @@ header, .header {
 
 	> a.nav-admin {
 		color: inherit;
-		padding: 4px 6px;
+		padding: 6px 8px;
 
 		&:hover {
 			background-color: @brand-hover-color;
 		}
+	}
+
+	> a.middle {
+		//margin-right:10px;
+	}
+
+	> a.open {
+		background-color: @brand-hover-color;
 	}
 
 	> .dropdown {
@@ -100,6 +108,7 @@ header, .header {
 
 	.btn {
 		background-color: transparent;
+		white-space:nowrap;
 		color: white;
 		padding: 4px;
 		height: @header-height - 4px;
@@ -224,6 +233,7 @@ footer, .footer {
 	}
 
 	.app-links {
+		white-space:nowrap;
 		a {
 			display:inline-block;
 			margin:0 10px;

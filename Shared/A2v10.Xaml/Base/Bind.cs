@@ -32,20 +32,30 @@ namespace A2v10.Xaml
 			return context.GetNormalizedPath(Path);
 		}
 
+
 		// for text bindings only
 		internal String GetPathFormat(RenderContext context)
 		{
 			if (Path == null)
 				return context.GetEmptyPath(); // may be scoped
 			String realPath = context.GetNormalizedPath(Path);
-			if (String.IsNullOrEmpty(Format) && DataType == DataType.String && String.IsNullOrEmpty(Mask))
+			var maskBind = GetBinding(nameof(Mask));
+			if (String.IsNullOrEmpty(Format) && 
+				DataType == DataType.String && 
+				String.IsNullOrEmpty(Mask) && 
+				maskBind == null 
+				&& !HideZeros)
 				return realPath;
 			var opts = new StringBuilder("{");
 			if (DataType != DataType.String)
 				opts.Append($"dataType: '{DataType.ToString()}',");
 			if (!String.IsNullOrEmpty(Format))
 				opts.Append($"format: '{context.Localize(Format.Replace("'", "\\'"))}',");
-			if (!String.IsNullOrEmpty(Mask))
+			if (maskBind != null)
+			{
+				opts.Append($"mask: {maskBind.GetPathFormat(context)},");
+			}
+			else if (!String.IsNullOrEmpty(Mask))
 				opts.Append($"mask: '{context.Localize(Mask.Replace("'", "\\'"))}',");
 			if (HideZeros)
 				opts.Append("hideZeros: true,");

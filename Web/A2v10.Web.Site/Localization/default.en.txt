@@ -6,6 +6,8 @@
 @Debug=Debug
 @Quit=Quit
 @Tracing=Tracing
+@Settings=Settings
+@Feedback=Feedback
 @DataModel=Data model
 @Profiling=Profiling
 @Profile=Profile

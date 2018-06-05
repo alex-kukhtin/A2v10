@@ -6,6 +6,8 @@
 @Debug=Отладка
 @Quit=Выход
 @Tracing=Трассировка
+@Settings=Настройка
+@Feedback=Зворотній зв'язок
 @DataModel=Модель данних
 @Profiling=Профилирование
 @Profile=Профиль

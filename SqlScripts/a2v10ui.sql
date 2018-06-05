@@ -1,10 +1,10 @@
-/* 20180406-7048 */
+/* 20180605-7050 */
 /*
 ------------------------------------------------
-Copyright © 2008-2017 Alex Kukhtin
+Copyright Â© 2008-2018 Alex Kukhtin
 
-Last updated : 06 apr 2018
-module version : 7048
+Last updated : 05 jun 2018
+module version : 7050
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7048);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7050);
 else
-	update a2sys.Versions set [Version] = 7048 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7050 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -74,6 +74,20 @@ begin
 		CanView bit null,
 		[Permissions] as cast(CanView as int)
 		constraint PK_MenuAcl primary key(Menu, UserId)
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Feedback')
+begin
+	create table a2ui.Feedback
+	(
+		Id	bigint identity(1, 1) not null constraint PK_Feedback primary key,
+		[Date] datetime not null
+			constraint DF_Feedback_Date default(getdate()),
+		UserId bigint not null
+			constraint FK_Feedback_UserId_Users foreign key references a2security.Users(Id),
+		[Text] nvarchar(255) null
 	);
 end
 go
@@ -227,6 +241,22 @@ begin
 			values (source.[ObjectId], source.UserId, source.CanView)
 	when not matched by source then
 		delete;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui' and ROUTINE_NAME=N'SaveFeedback')
+	drop procedure a2ui.SaveFeedback
+go
+------------------------------------------------
+create procedure a2ui.SaveFeedback
+@UserId bigint,
+@Text nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2ui.Feedback(UserId, [Text]) values (@UserId, @Text);
 end
 go
 ------------------------------------------------

@@ -69,6 +69,7 @@
 				<TextBox Label="Телефон" Grid.Row="4" Grid.Col="1" Value="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}" Placeholder="{Bind Agent.$Placeholder}" TabIndex="1"/>
 				<Static Label="Телефон" Grid.Row="4" Grid.Col="2" Value="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"/>
 				<CheckBox Grid.Row="5" Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
+				<Span Content="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"></Span>
 			</Grid>
 		</Tab>
 	</TabPanel>

@@ -852,10 +852,14 @@ header .h-block .app-subtitle,
 header > a.nav-admin,
 .header > a.nav-admin {
   color: inherit;
-  padding: 4px 6px;
+  padding: 6px 8px;
 }
 header > a.nav-admin:hover,
 .header > a.nav-admin:hover {
+  background-color: #7186ab;
+}
+header > a.open,
+.header > a.open {
   background-color: #7186ab;
 }
 header > .dropdown,
@@ -870,6 +874,7 @@ header > .dropdown .menu,
 header .btn,
 .header .btn {
   background-color: transparent;
+  white-space: nowrap;
   color: white;
   padding: 4px;
   height: 28px;
@@ -1203,6 +1208,10 @@ footer .spinner.active,
   border-color: #57a8fa;
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
+}
+footer .app-links,
+.footer .app-links {
+  white-space: nowrap;
 }
 footer .app-links a,
 .footer .app-links a {
@@ -3188,7 +3197,7 @@ table.a2-table > tfoot > tr > td {
 }
 table.a2-table td.ctrl {
   padding: 0;
-  vertical-align: baseline;
+  vertical-align: top;
 }
 table.a2-table td.ctrl .checkbox,
 table.a2-table td.ctrl .radio {
@@ -3196,6 +3205,9 @@ table.a2-table td.ctrl .radio {
 }
 table.a2-table td.ctrl .stack-panel.horizontal .control-group + .control-group {
   border-left: 1px solid #ddd;
+}
+table.a2-table td.ctrl .control-group:hover .input-group.static {
+  border-color: transparent !important;
 }
 table.a2-table td.marker-cell {
   padding: 0 !important;
@@ -3611,7 +3623,6 @@ TODO:
   color: #8591a2;
   padding-bottom: 2px;
   border-bottom: 1px solid #dde1eb;
-  font-weight: bold;
   margin-bottom: 4px;
 }
 .dropdown-menu {
@@ -4500,9 +4511,6 @@ h5,
 .side-bar-compact.collapsed .collapse-button:after {
   content: "\e9ad";
 }
-.a2-new-btn {
-  margin-right: 10px;
-}
 .a2-new-btn .btn {
   padding: 4px 7px;
 }
@@ -4614,6 +4622,51 @@ h5,
 .debug-panel .debug-trace ul.a2-debug-trace > li {
   border-bottom: 1px solid #bdc5d8;
   padding: 2px 0;
+}
+.feedback-panel {
+  position: absolute;
+  top: 32px;
+  bottom: 22px;
+  right: 0;
+  z-index: 110;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  width: 350px;
+  box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.feedback-panel .feedback-pane-header {
+  background-color: #fff29d;
+  padding: 2px 2px 2px 6px;
+  border-bottom: 1px solid #ddd;
+}
+.feedback-panel .feedback-pane-header .feedback-pane-title {
+  font-size: .95rem;
+}
+.feedback-panel .feedback-pane-header a.btn {
+  float: right;
+  padding: 0 2px;
+  color: #aaa;
+  border: 1px solid transparent;
+}
+.feedback-panel .feedback-pane-header a.btn:hover {
+  color: #555;
+  background-color: #fff9d0;
+  border-color: #e5c365;
+}
+.feedback-panel .feedback-body {
+  overflow: hidden;
+  user-select: text;
+  padding: 10px;
+}
+.feedback-panel .feedback-body .btn {
+  margin: 0.5rem 0;
+  display: block;
+}
+.feedback-panel .feedback-body .thanks {
+  margin: 0.5rem 0 1rem 0;
 }
 @media print {
   .header {

@@ -13,6 +13,7 @@ using A2v10.Request.Properties;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Text.RegularExpressions;
+using A2v10.Request.Models;
 
 namespace A2v10.Request
 {
@@ -112,6 +113,11 @@ namespace A2v10.Request
 		public void GetAppScriptConent(TextWriter writer)
 		{
 			GetAppFiles("js", writer);
+		}
+
+		public async Task SaveFeedback(SaveFeedbackModel model)
+		{
+			await _dbContext.ExecuteAsync(_host.CatalogDataSource, "a2ui.SaveFeedback", model);
 		}
 	}
 }

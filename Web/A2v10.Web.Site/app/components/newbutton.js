@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180319-7135*/
+/*20180605-7210*/
 /*components/newbutton.js*/
 
 (function () {
@@ -11,7 +11,7 @@
 
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
-	<button class="btn btn-success" toggle><i class="ico ico-plus"></i></button>
+	<button class="btn" :class="btnClass" toggle><i class="ico" :class="iconClass"></i></button>
 	<div class="dropdown-menu menu down-right">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
@@ -31,7 +31,9 @@
 		template: newButtonTemplate,
 		store: store,
 		props: {
-			menu: Array
+			menu: Array,
+			icon: String,
+			btnStyle: String
 		},
 		computed: {
 			isVisible() {
@@ -40,8 +42,15 @@
 			topMenu() {
 				return this.menu ? this.menu[0].Menu : null;
 			},
+			iconClass() {
+				return this.icon ? 'ico-' + this.icon : '';
+			},
+			btnClass() {
+				return this.btnStyle ? 'btn-' + this.btnStyle : '';
+			},
 			columns() {
 				let descr = this.menu ? this.menu[0].Description : '';
+				if (!descr) return 1;
 				try {
 					return +JSON.parse(descr).columns || 1;
 				} catch (err) {
@@ -74,7 +83,7 @@
 			},
 			dialog(url) {
 				const dlgData = { promise: null};
-				eventBus.$emit('modal', url, dlgData);
+				eventBus.$emit('modaldirect', url, dlgData);
 				dlgData.promise.then(function (result) {
 					// todo: resolve?
 				});

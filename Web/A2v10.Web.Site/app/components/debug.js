@@ -129,7 +129,7 @@
 				if (this.modelVisible)
 					this.$forceUpdate();
 				else if (this.traceVisible)
-					this.loadTrace()
+					this.loadTrace();
 			},
 			loadTrace() {
 				const root = window.$$rootUrl;
@@ -159,7 +159,7 @@
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
-				if (url.indexOf('/shell/trace') != -1) return;
+				if (url.indexOf('/shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();
 			});

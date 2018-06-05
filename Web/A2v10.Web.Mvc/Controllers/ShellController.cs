@@ -20,6 +20,8 @@ using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Web.Mvc.Filters;
+using A2v10.Web.Mvc.Models;
+using A2v10.Request.Models;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -314,6 +316,8 @@ namespace A2v10.Web.Mvc.Controllers
 				ShellAppStyles();
 			else if (pathInfo.StartsWith("shell/appscripts"))
 				ShellAppScripts();
+			else if (pathInfo.StartsWith("shell/savefeedback"))
+				await ShellSaveFeedback();
 			else
 				throw new RequestModelException($"Invalid shell action: '{pathInfo}'");
 		}
@@ -360,6 +364,26 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			Response.ContentType = "text/javascript";
 			_baseController.GetAppScriptConent(Response.Output);
+		}
+
+		async Task ShellSaveFeedback()
+		{
+			Response.ContentType = "application/json";
+			try
+			{
+				String json = null;
+				using (var tr = new StreamReader(Request.InputStream))
+				{
+					json = tr.ReadToEnd();
+				}
+				var model = JsonConvert.DeserializeObject<SaveFeedbackModel>(json);
+				model.UserId = this.UserId;
+				await _baseController.SaveFeedback(model);
+				Response.Output.Write($"{{\"status\": \"OK\"}}");
+			} catch (Exception ex)
+			{
+				WriteExceptionStatus(ex);
+			}
 		}
 
 

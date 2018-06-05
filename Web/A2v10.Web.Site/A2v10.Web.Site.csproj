@@ -58,6 +58,7 @@
     <Content Include="app\components\datepicker.js" />
     <Content Include="app\components\debug.js" />
     <Content Include="app\components\doctitle.js" />
+    <Content Include="app\components\feedback.js" />
     <Content Include="app\components\graphics.js" />
     <Content Include="app\components\image.js" />
     <Content Include="app\components\list.js" />
@@ -250,6 +251,7 @@
     <Content Include="Less\Image.less" />
     <Content Include="Less\Wizard.less" />
     <Content Include="Less\AppPages.less" />
+    <Content Include="Less\Feedback.less" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

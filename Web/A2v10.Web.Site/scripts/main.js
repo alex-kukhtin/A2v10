@@ -7345,7 +7345,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180319-7135*/
+/*20180605-7210*/
 /*components/newbutton.js*/
 
 (function () {
@@ -7356,7 +7356,7 @@ Vue.component('a2-panel', {
 
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
-	<button class="btn btn-success" toggle><i class="ico ico-plus"></i></button>
+	<button class="btn" :class="btnClass" toggle><i class="ico" :class="iconClass"></i></button>
 	<div class="dropdown-menu menu down-right">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
@@ -7376,7 +7376,9 @@ Vue.component('a2-panel', {
 		template: newButtonTemplate,
 		store: store,
 		props: {
-			menu: Array
+			menu: Array,
+			icon: String,
+			btnStyle: String
 		},
 		computed: {
 			isVisible() {
@@ -7385,8 +7387,15 @@ Vue.component('a2-panel', {
 			topMenu() {
 				return this.menu ? this.menu[0].Menu : null;
 			},
+			iconClass() {
+				return this.icon ? 'ico-' + this.icon : '';
+			},
+			btnClass() {
+				return this.btnStyle ? 'btn-' + this.btnStyle : '';
+			},
 			columns() {
 				let descr = this.menu ? this.menu[0].Description : '';
+				if (!descr) return 1;
 				try {
 					return +JSON.parse(descr).columns || 1;
 				} catch (err) {
@@ -7419,7 +7428,7 @@ Vue.component('a2-panel', {
 			},
 			dialog(url) {
 				const dlgData = { promise: null};
-				eventBus.$emit('modal', url, dlgData);
+				eventBus.$emit('modaldirect', url, dlgData);
 				dlgData.promise.then(function (result) {
 					// todo: resolve?
 				});
@@ -7589,7 +7598,7 @@ Vue.component('a2-panel', {
 				if (this.modelVisible)
 					this.$forceUpdate();
 				else if (this.traceVisible)
-					this.loadTrace()
+					this.loadTrace();
 			},
 			loadTrace() {
 				const root = window.$$rootUrl;
@@ -7619,10 +7628,116 @@ Vue.component('a2-panel', {
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
-				if (url.indexOf('/shell/trace') != -1) return;
+				if (url.indexOf('/shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();
 			});
+		}
+	});
+})();
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180605-7210
+// components/feedback.js*/
+
+(function () {
+
+    /**
+     * TODO
+    1. Trace window
+    2. Dock right/left
+    6.
+     */
+
+	const dataService = require('std:dataservice');
+	const urlTools = require('std:url');
+	const locale = window.$$locale;
+	const utils = require('std:utils');
+
+	Vue.component('a2-feedback', {
+		template: `
+<div class="feedback-panel" v-if="visible">
+    <div class="feedback-pane-header">
+        <span class="feedback-pane-title">Зворотній зв'язок</span>
+        <a class="btn btn-close" @click.prevent="close">&#x2715</a>
+    </div>
+    <div class="feedback-body">
+		<template v-if="shown">
+			<div>Дякуємо, що знайшли час та натхнення, щоб повідомити нам про ваші враження від нашого сервісу.</div>
+			<div style="margin-bottom:20px" />
+			<div class="control-group" style="">
+				<label>Чи подобається вам наш сервіс</label> 
+				<div class="input-group">
+					<textarea rows="3" maxlength="255" v-model="value" style="height: 55px;" v-auto-size="true"></textarea>  
+				</div>
+			</div>
+			<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit">Відправити пропозицію</button>
+		</template>
+		<template v-else>
+			<div class="thanks">
+				Дякуємо, що ви знайшли час для допомоги нам в покращенні сервісу. 
+				<br/></br>Ми опрацюємо ваші пропозиції найближчим часом. 
+				В разі виникнення додаткових питань - зв'яжемося з вами.
+			</div>
+			<button class="btn btn-primary" @click.prevent="close">Закрити</button>
+		</template>
+	</div>
+</div>
+`,
+		components: {
+		},
+		props: {
+			visible: Boolean,
+			modelStack: Array,
+			close: Function
+		},
+		data() {
+			return {
+				value: "",
+				shown: true
+			};
+		},
+		computed: {
+			noValue() { return !this.value;}
+		},
+		methods: {
+			text(key) {
+				return locale[key];
+			},
+			refresh() {
+			},
+			loadfeedbacks() {
+
+			},
+			submit() {
+				const root = window.$$rootUrl;
+				const url = urlTools.combine(root, 'shell/savefeedback');
+				const that = this;
+				let jsonData = utils.toJson({ text: this.value });
+				dataService.post(url, jsonData).then(function (result) {
+					//that.trace.splice(0, that.trace.length);
+					console.dir(result);
+					that.shown = false;
+					//result.forEach((val) => {
+						//that.trace.push(val);
+					//});
+				}).catch(function (result) {
+					console.dir(result);
+					alert('Щось пішло не так. Спробуйте ще через декілька хвилин');
+				});
+
+			}
+		},
+		watch: {
+			visible(val) {
+				if (!val) return;
+				this.shown = true;
+				// load my feedbacks
+				this.loadfeedbacks();
+			}
+		},
+		created() {
 		}
 	});
 })();
@@ -9001,10 +9116,9 @@ Vue.directive('resize', {
 		props: {
 			menu: Array
 		},
-		computed:
-		{
+		computed: {
 			seg0: () => store.getters.seg0,
-			locale() { return locale }
+			locale() { return locale; }
 		},
 		methods: {
 			isActive(item) {
@@ -9232,7 +9346,7 @@ Vue.directive('resize', {
 			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
-			'a2-toastr' : toastr
+			'a2-toastr': toastr
 		},
 		props: {
 			menu: Array,
@@ -9323,6 +9437,17 @@ Vue.directive('resize', {
 				me.modals.push(dlg);
 			});
 
+			eventBus.$on('modaldirect', function (modal, prms) {
+				let root = window.$$rootUrl;
+				let url = urlTools.combine(root, '/_dialog', modal);
+				let dlg = { title: "dialog", url: url, prms: prms.data };
+				dlg.promise = new Promise(function (resolve, reject) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
+
 			eventBus.$on('modalClose', function (result) {
 				let dlg = me.modals.pop();
 				if (result)
@@ -9358,6 +9483,7 @@ Vue.directive('resize', {
 				requestsCount: 0,
 				debugShowTrace: false,
 				debugShowModel: false,
+				feedbackVisible: false,
 				dataCounter: 0,
 				traceEnabled: log.traceEnabled()
 			};
@@ -9395,17 +9521,27 @@ Vue.directive('resize', {
 			debugTrace() {
 				if (!window.$$debug) return;
 				this.debugShowModel = false;
-
+				this.feedbackVisible = false;
 				this.debugShowTrace = !this.debugShowTrace;
 			},
 			debugModel() {
 				if (!window.$$debug) return;
 				this.debugShowTrace = false;
+				this.feedbackVisible = false;
 				this.debugShowModel = !this.debugShowModel;
 			},
 			debugClose() {
 				this.debugShowModel = false;
 				this.debugShowTrace = false;
+				this.feedbackVisible = false;
+			},
+			showFeedback() {
+				this.debugShowModel = false;
+				this.debugShowTrace = false;
+				this.feedbackVisible = !this.feedbackVisible;
+			},
+			feedbackClose() {
+				this.feedbackVisible = false;
 			},
 			profile() {
 				alert('user profile');
@@ -9423,8 +9559,9 @@ Vue.directive('resize', {
 						return;
 					//alert(result);
 					//console.dir(result);
-					eventBus.$emit('toast', { text: locale.$ChangePasswordSuccess, style: 'success'
-				});
+					eventBus.$emit('toast', {
+						text: locale.$ChangePasswordSuccess, style: 'success'
+					});
 
 				});
 			}
