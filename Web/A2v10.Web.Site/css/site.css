@@ -1320,6 +1320,9 @@ pre.a2-code {
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   white-space: pre;
 }
+.validation-summary .error {
+  white-space: normal;
+}
 .control-group {
   display: block;
   margin-bottom: .5rem;
@@ -4363,6 +4366,19 @@ h5,
 .a2-graphics {
   display: block;
   width: 100%;
+}
+.a2-changelog {
+  padding: 1rem;
+}
+.a2-changelog ol {
+  margin-top: 4px;
+}
+.a2-changelog h4 {
+  font-size: 1em;
+  margin: 0.5rem 0;
+  color: #777;
+  font-weight: bold;
+  font-family: inherit;
 }
 .about-source-list {
   list-style-position: inside;

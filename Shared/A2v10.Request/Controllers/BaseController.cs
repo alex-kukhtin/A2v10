@@ -483,7 +483,10 @@ const vm = new DataModelController({
 			if (IsDebugConfiguration)
 				writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
 			else
+			{
+				msg = Localize("@[Error.Exception]");
 				writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
+			}
 		}
 	}
 }

@@ -74,3 +74,5 @@
 ;
 @Error.EnterName=Enter item name
 @Error.DuplicateCode=Duplicate code
+@Error.Exception=Something went wrong as expected :-(
+

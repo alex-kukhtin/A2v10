@@ -104,11 +104,13 @@ namespace A2v10.Web.Mvc.Identity
 			await _dbContext.ExecuteAsync(DataSource, "[a2security].[CreateUser]", user);
 			if (_host.IsMultiTenant)
 			{
+				/*
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
 				// TODO: GetTenantSegment!!!!
 				await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
 				CacheUser(createdUser);
+				*/
 			}
 			else
 			{
@@ -163,10 +165,25 @@ namespace A2v10.Web.Mvc.Identity
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
 				user.ClearModified(UserModifiedFlag.EmailConfirmed);
+				if (user.EmailConfirmed)
+				{
+					await CreateTenantUser(user);
+				}
 			}
 		}
 
 		#endregion
+
+		async Task CreateTenantUser(AppUser user)
+		{
+			if (_host.IsMultiTenant)
+			{
+				var createdUser = await FindByIdAsync(user.Id);
+				_host.TenantId = createdUser.Tenant;
+				// TODO: GetTenantSegment!!!!
+				await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
+			}
+		}
 
 		void CacheUser(AppUser user)
 		{

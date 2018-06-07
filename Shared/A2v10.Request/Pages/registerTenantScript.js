@@ -86,6 +86,7 @@
 			submit() {
 				this.submitted = true;
 				this.serverError = '';
+				this.email = this.email.trim();
 				if (!this.valid)
 					return;
 				this.processing = true;
@@ -107,6 +108,8 @@
 							that.confirmSent();
 						else if (result === 'AlreadyTaken')
 							that.alreadyTaken();
+						else if (result === 'DDOS')
+							that.ddos();
 						else
 							alert(result);
 					})
@@ -126,6 +129,9 @@
 			},
 			alreadyTaken() {
 				this.serverError = this.locale.$AlreadyTaken.replace('{0}', this.email);
+			},
+			ddos() {
+				this.serverError = this.locale.$TryLater;
 			},
 			failure(msg) {
 				this.password = '';

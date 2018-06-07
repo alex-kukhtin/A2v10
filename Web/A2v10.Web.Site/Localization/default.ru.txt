@@ -1,5 +1,5 @@
 ﻿;
-@About=О программе
+@About=О системе
 @Confidentiality=Конфедициальность
 @Contacts=Конакты
 @Version=Версия
@@ -74,3 +74,4 @@
 ;
 @Error.EnterName=Введите наименование элемента
 @Error.DuplicateCode=Элемент с таким кодом уже существует
+@Error.Exception=Что-то пошло не так, как ожидалось :-(

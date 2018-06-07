@@ -23,6 +23,8 @@ using A2v10.Data.Interfaces;
 using System.Threading;
 using System.Security;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace A2v10.Web.Site.Controllers
 {
@@ -93,6 +95,9 @@ namespace A2v10.Web.Site.Controllers
 				layout.Replace("$(Build)", _host.AppBuild);
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
+				layout.Replace("$(Title)", appTitle.AppTitle);
+				layout.Replace("$(Description)", _host.AppDescription);
+
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 
@@ -247,6 +252,56 @@ namespace A2v10.Web.Site.Controllers
 			SendPage(ResourceHelper.RegisterTenantHtml, ResourceHelper.RegisterTenantScript);
 		}
 
+		static ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
+
+		public Int32 IsDDOS()
+		{
+			String host = Request.UserHostAddress;
+			var now = DateTime.Now;
+			if (_ddosChecker.TryGetValue(host, out DateTime time)) {
+				var timeOffest = now - time;
+				if (timeOffest.TotalSeconds < 60)
+				{
+					//_ddosChecker.AddOrUpdate(host, now, (key, value) => now);
+					return Convert.ToInt32(timeOffest.TotalSeconds);
+				}
+				else
+				{
+					// remove current
+					_ddosChecker.TryRemove(host, out DateTime xVal);
+					return 0;
+				}
+			}
+			else
+			{
+				_ddosChecker.AddOrUpdate(host, now, (key, value) => now);
+			}
+			ClearDDOSCache();
+			return 0;
+		}
+
+		void ClearDDOSCache()
+		{
+			var now = DateTime.Now;
+			// clear old values
+			var keysForDelete = new List<String>();
+			foreach (var dd in _ddosChecker)
+			{
+				var offset = now - dd.Value;
+				if (offset.Seconds > 120)
+					keysForDelete.Add(dd.Key);
+			}
+			foreach (var key in keysForDelete)
+				_ddosChecker.TryRemove(key, out DateTime outVal);
+		}
+
+		void SaveDDOSTime()
+		{
+			String host = Request.UserHostAddress;
+			var now = DateTime.Now;
+			_ddosChecker.AddOrUpdate(host, now, (key, value) => now);
+		}
+
 		// POST: /Register/Login
 		[ActionName("Register")]
 		[HttpPost]
@@ -256,6 +311,9 @@ namespace A2v10.Web.Site.Controllers
 		public async Task<ActionResult> RegisterPOST()
 		{
 			String status;
+			var seconds = IsDDOS();
+			if (seconds > 0)
+				return Json(new { Status = "DDOS" }); //, Seconds = seconds });
 			try
 			{
 				RegisterTenantModel model;
@@ -280,6 +338,7 @@ namespace A2v10.Web.Site.Controllers
 				var result = await UserManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
 				{
+					SaveDDOSTime();
 					// email confirmation
 					String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
