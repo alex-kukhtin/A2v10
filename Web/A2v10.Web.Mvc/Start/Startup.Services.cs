@@ -8,8 +8,10 @@ using A2v10.Infrastructure;
 using A2v10.Messaging;
 using A2v10.Request;
 using A2v10.Web.Mvc.Configuration;
+using A2v10.Web.Mvc.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;
+using Microsoft.AspNet.Identity;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -33,6 +35,7 @@ namespace A2v10.Web.Mvc.Start
 				IMessaging messaging = new MessageProcessor(host, dbContext);
 				IDataScripter scripter = new VueDataScripter();
 				ILogger logger = new WebLogger(host, dbContext);
+				IMessageService emailService = new EmailService(logger);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -43,6 +46,8 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<ILocalizer>(localizer);
 				locator.RegisterService<IDataScripter>(scripter);
 				locator.RegisterService<ILogger>(logger);
+				locator.RegisterService<IMessageService>(emailService);
+				locator.RegisterService<IIdentityMessageService>(emailService as IIdentityMessageService);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

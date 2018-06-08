@@ -18,12 +18,13 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		protected IApplicationHost _host;
-		protected IDbContext _dbContext;
-		protected IRenderer _renderer;
-		protected IWorkflowEngine _workflowEngine;
-		protected ILocalizer _localizer;
-		protected IDataScripter _scripter;
+		protected readonly IApplicationHost _host;
+		protected readonly IDbContext _dbContext;
+		protected readonly IRenderer _renderer;
+		protected readonly IWorkflowEngine _workflowEngine;
+		protected readonly ILocalizer _localizer;
+		protected readonly IDataScripter _scripter;
+		protected readonly IMessageService _messageService;
 
 		public BaseController()
 		{
@@ -35,6 +36,7 @@ namespace A2v10.Request
 			_workflowEngine = locator.GetService<IWorkflowEngine>();
 			_localizer = locator.GetService<ILocalizer>();
 			_scripter = locator.GetService<IDataScripter>();
+			_messageService = locator.GetService<IMessageService>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -487,6 +489,15 @@ const vm = new DataModelController({
 				msg = Localize("@[Error.Exception]");
 				writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
 			}
+		}
+
+		public void SendSupportEMail(String body)
+		{
+			String to = Host.SupportEmail;
+			if (String.IsNullOrEmpty(to))
+				return;
+			String subject = "Feedback from service";
+			_messageService.Send(to, subject, body);
 		}
 	}
 }

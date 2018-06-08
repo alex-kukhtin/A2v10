@@ -41,6 +41,7 @@ namespace A2v10.Runtime
 		}
 
 		public String AppDescription => "A2.Web";
+		public String SupportEmail => null;
 
 		public String AppKey
 		{

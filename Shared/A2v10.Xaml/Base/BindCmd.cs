@@ -135,7 +135,7 @@ namespace A2v10.Xaml
 
 
 				case CommandType.Select:
-					return $"$modalSelect({CommandArgument(context)})";
+					return $"$modalSelect({CommandArgument(context)}, {GetOptionsValid(context)})";
 
 				case CommandType.SelectChecked:
 					return $"$modalSelectChecked({CommandArgument(context)})";
@@ -408,7 +408,7 @@ namespace A2v10.Xaml
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptionsValid(context)})");
 					}
 					break;
 				case CommandType.RemoveSelected:

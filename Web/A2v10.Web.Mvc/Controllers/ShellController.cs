@@ -22,6 +22,8 @@ using A2v10.Web.Mvc.Identity;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Models;
 using A2v10.Request.Models;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -380,7 +382,15 @@ namespace A2v10.Web.Mvc.Controllers
 				model.UserId = this.UserId;
 				await _baseController.SaveFeedback(model);
 				Response.Output.Write($"{{\"status\": \"OK\"}}");
-			} catch (Exception ex)
+
+				var context = HttpContext.GetOwinContext();
+				var userManager = context.GetUserManager<AppUserManager>();
+				var appUser = userManager.FindById(this.UserId);
+
+				String text = $"UserId: {appUser.Id}<br>UserName: {appUser.PersonName}<br>Login: {appUser.UserName}<br></br><p>{model.Text}</p>";
+				_baseController.SendSupportEMail(text);
+			}
+			catch (Exception ex)
 			{
 				WriteExceptionStatus(ex);
 			}

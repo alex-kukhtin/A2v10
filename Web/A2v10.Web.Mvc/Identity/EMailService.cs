@@ -2,6 +2,7 @@
 
 using System;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
 using Microsoft.AspNet.Identity;
@@ -9,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Identity
 {
-	class EmailService : IIdentityMessageService
+	class EmailService : IIdentityMessageService, IMessageService
 	{
 		private readonly ILogger _logger;
 		public EmailService(ILogger logger)
@@ -38,20 +39,28 @@ namespace A2v10.Web.Mvc.Identity
 
 		public Task SendAsync(IdentityMessage message)
 		{
+			Send(message.Destination, message.Subject, message.Body);
+			return Task.FromResult(0);
+		}
+
+		public void Send(String to, String subject, String body)
+		{
 			try
 			{
 				using (var client = new SmtpClient())
 				{
 					using (var mm = new MailMessage())
 					{
-						mm.To.Add(new MailAddress(message.Destination));
-						mm.Subject = message.Subject;
-						mm.Body = message.Body;
+						mm.To.Add(new MailAddress(to));
+						mm.Subject = subject;
+						mm.Body = body;
 						mm.IsBodyHtml = true;
+						mm.BodyEncoding = Encoding.UTF8;
+						mm.SubjectEncoding = Encoding.UTF8;
 						// sync variant. avoid exception loss
-						_logger.LogMessaging(GetJsonResult("send", message.Destination));
+						_logger.LogMessaging(GetJsonResult("send", to));
 						client.Send(mm);
-						_logger.LogMessaging(GetJsonResult("result", message.Destination, "success"));
+						_logger.LogMessaging(GetJsonResult("result", to, "success"));
 					}
 				}
 			}
@@ -60,10 +69,10 @@ namespace A2v10.Web.Mvc.Identity
 				String msg = ex.Message;
 				if (ex.InnerException != null)
 					msg = ex.InnerException.Message;
-				_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", message.Destination, "exception", msg)));
+				_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", to, "exception", msg)));
 				throw; // rethrow
 			}
-			return Task.FromResult(0);
 		}
+
 	}
 }

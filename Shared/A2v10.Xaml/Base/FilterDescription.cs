@@ -21,6 +21,8 @@ namespace A2v10.Xaml
 		internal String GetJsValue(RenderContext context)
 		{
 			var bind = GetBinding(nameof(Value));
+			if (bind != null)
+				return bind.GetPathFormat(context);
 			switch (DataType)
 			{
 				case DataType.String:

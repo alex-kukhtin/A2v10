@@ -410,7 +410,11 @@
 				this.$navigate(url, sel.$id, newwin, update);
 			},
 
-			$hasSelected(arr) {
+			$hasSelected(arr, opts) {
+				if (opts && opts.validRequired) {
+					let root = this.$data;
+					if (!root.$valid) return false;
+				}
 				return arr && !!arr.$selected;
 			},
 
@@ -596,10 +600,14 @@
 				eventBus.$emit('modalClose', result);
 			},
 
-			$modalSelect(array) {
+			$modalSelect(array, opts) {
 				if (!('$selected' in array)) {
 					console.error('Invalid array for $modalSelect');
 					return;
+				}
+				if (opts && opts.validRequired) {
+					let root = this.$data;
+					if (!root.$valid) return;
 				}
 				this.$modalClose(array.$selected);
 			},

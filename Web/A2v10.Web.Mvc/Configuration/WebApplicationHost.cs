@@ -62,6 +62,7 @@ namespace A2v10.Web.Mvc.Configuration
 
 		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"];
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
+		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 
 		public String Theme
 		{

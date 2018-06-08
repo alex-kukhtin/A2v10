@@ -54,6 +54,7 @@ namespace A2v10.Tests.Config
 		}
 
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
+		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 
 
 		public String Theme => null;
