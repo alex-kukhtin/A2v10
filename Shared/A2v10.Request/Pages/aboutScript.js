@@ -20,6 +20,9 @@
 			'a2-document-title': documentTitle
 		},
 		computed: {
+			locale() {
+				return window.$$locale;
+			}
 		},
 		methods: {
 			$close() {

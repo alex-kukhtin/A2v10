@@ -12,6 +12,7 @@
 		$Locale: 'ru-RU',
 		$Ok: 'OK',
 		$Cancel: 'Отмена',
+		$Close: 'Закрыть',
 		$Apply: 'Применить',
 		$Back: 'Назад',
 		$Next: 'Далее',
@@ -48,7 +49,10 @@
 		$QuartToDate: 'C начала квартала',
 		$PrevQuart: 'Предыдущий квартал',
 		$YearToDate: 'C начала года',
-		$AllPeriodData: 'За все время'
+		$AllPeriodData: 'За все время',
+		$License: 'лицензия',
+		$HomePage: 'домашняя страница',
+		$CreatedOpenSource: 'Создано с использованием программного обеспечения с открытым исходным кодом'
 	};
 
 

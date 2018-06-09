@@ -8,8 +8,11 @@
 	<appSettings>
 		<add key="appPath" value="c:/inetpub/wwwroot/a2demo/apps" />
 		<add key="appKey" value="demo" />
-		<add key="helpUrl" value="http://a2help.azurewebsites.net" />
+		<add key="helpUrl" value="http://help.mydomain.com" />
 		<add key="stimulsoft.license" value="license key here" />
+		<add key="appDescription" value="app description here" />
+		<add key="supportEmail" value="support@mydomain.com" />
+		<add key="configuration" value="debug" />
 	</appSettings>
 	<system.web>
 		<globalization uiCulture="uk-UA" />
@@ -61,7 +64,7 @@
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.2.5.0" newVersion="5.2.5.0" />
+				<bindingRedirect oldVersion="0.0.0.0-5.2.6.0" newVersion="5.2.6.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" culture="neutral" />

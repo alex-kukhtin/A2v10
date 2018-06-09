@@ -539,6 +539,15 @@
 					});
 
 				});
+			},
+			$alert(msg, title, list) {
+				let dlgData = {
+					promise: null, data: {
+						message: msg, title: title, style: 'alert', list: list
+					}
+				};
+				eventBus.$emit('confirm', dlgData);
+				return dlgData.promise;
 			}
 		},
 		created() {

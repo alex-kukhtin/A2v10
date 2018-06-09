@@ -12,6 +12,7 @@
 		$Locale: 'uk-UA',
 		$Ok: 'OK',
 		$Cancel: 'Скасувати',
+		$Close: 'Закрити',
 		$Apply: 'Застосувати',
 		$Back: 'Назад',
 		$Next: 'Далі',
@@ -48,8 +49,11 @@
 		$QuartToDate: 'З початку квартала',
 		$PrevQuart: 'Попередній квартал',
 		$YearToDate: 'З початку року',
-		$AllPeriodData: 'За весь час'
-	};
+		$AllPeriodData: 'За весь час',
+		$License: 'ліцензія',
+		$HomePage: 'домашня сторінка',
+		$CreatedOpenSource: 'Створено з використанням програмного забезпечення з відкритим сирцевим кодом'
+};
 
 
 	window.$$locale = locale;

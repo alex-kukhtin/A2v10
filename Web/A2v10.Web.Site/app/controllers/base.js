@@ -342,7 +342,7 @@
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
 
-			$navigateSimple(url, newWindow) {
+			$navigateSimple(url, newWindow, update) {
 				if (newWindow === true) {
 					let nwin = window.open(url, "_blank");
 					nwin.$$token = { token: this.__currentToken__, update: update };

@@ -75,7 +75,7 @@
     <None Include="Develop\Sales\Invoice\model.json" />
     <None Include="Develop\Sales\Waybill\model.json" />
     <None Include="Develop\Sales\Waybill\waybill.mrt" />
-    <None Include="Develop\app_.json" />
+    <None Include="Develop\app.json" />
     <None Include="Develop\solution.json" />
     <None Include="model.schema.json" />
   </ItemGroup>

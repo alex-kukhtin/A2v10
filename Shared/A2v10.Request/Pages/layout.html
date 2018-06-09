@@ -26,7 +26,7 @@
 			<div class="aligner"></div>
 			<a2-new-button :menu="newMenu" icon="plus" btn-style="success"></a2-new-button>
 			<a2-new-button :menu="settingsMenu" icon="gear-outline" title="@[Settings]"></a2-new-button>
-			<a class="nav-admin middle" tabindex="-1" @click.prevent="showFeedback" title="@[Feedback]" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
+			<a class="nav-admin middle" v-if="hasFeedback" tabindex="-1" @click.prevent="showFeedback" title="@[Feedback]" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
 			<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
@@ -49,7 +49,7 @@
 		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode"></a2-main-view>
 		<a2-debug :model-stack="modelStack" :model-visible="debugShowModel" v-if="isDebug"
 				  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
-		<a2-feedback :model-stack="modelStack" :visible="feedbackVisible" :close="feedbackClose"></a2-feedback>
+		<a2-feedback v-if="hasFeedback" :model-stack="modelStack" :visible="feedbackVisible" :close="feedbackClose" :source="feedback"></a2-feedback>
 		<footer class="footer">
 			<div :class="{spinner: true, active:processing}"></div>
 

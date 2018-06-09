@@ -24,9 +24,14 @@
 		computed: {
 			appLinks() {
 				return this.appData ? this.appData.links : null;
+			},
+			feedback() {
+				return this.appData ? this.appData.feedback : null;
+			},
+			hasFeedback() {
+				return this.appData && this.appData.feedback;
 			}
 		}
-
 	});
 
 	window.$$rootUrl = '';
