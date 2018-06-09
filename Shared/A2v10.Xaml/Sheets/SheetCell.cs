@@ -5,45 +5,45 @@ using System.Collections.Generic;
 
 namespace A2v10.Xaml
 {
-    public class SheetCell : UiContentElement
-    {
-        public Int32? ColSpan { get; set; }
-        public Int32? RowSpan { get; set; }
-        public TextAlign Align { get; set; }
+	public class SheetCell : UiContentElement
+	{
+		public Int32? ColSpan { get; set; }
+		public Int32? RowSpan { get; set; }
+		public TextAlign Align { get; set; }
 
-        public Boolean GroupIndent { get; set; } // ???
+		public Boolean GroupIndent { get; set; } // ???
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            var td = new TagBuilder("td");
-            MergeAttributes(td, context);
-            td.MergeAttribute("colspan", ColSpan);
-            td.MergeAttribute("rowspan", RowSpan);
-            if (Align != TextAlign.Left)
-                td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
-            if (GroupIndent && IsInTreeSection)
-            {
-                td.MergeAttribute(":class", "row.indentCssClass()");
-            }
-            MergeContent(td, context);
-            td.RenderStart(context);
-            RenderContent(context);
-            td.RenderEnd(context);
-        }
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			var td = new TagBuilder("td");
+			MergeAttributes(td, context);
+			td.MergeAttribute("colspan", ColSpan);
+			td.MergeAttribute("rowspan", RowSpan);
+			if (Align != TextAlign.Left)
+				td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+			if (GroupIndent && IsInTreeSection)
+			{
+				td.MergeAttribute(":class", "row.indentCssClass()");
+			}
+			MergeContent(td, context);
+			td.RenderStart(context);
+			RenderContent(context);
+			td.RenderEnd(context);
+		}
 
-        Boolean IsInTreeSection
-        {
-            get
-            {
+		Boolean IsInTreeSection
+		{
+			get
+			{
 				if (Parent is SheetRow p)
 					return p.Parent is SheetTreeSection;
 				return false;
-            }
-        }
-    }
+			}
+		}
+	}
 
-    public class SheetCells : List<SheetCell>
-    {
+	public class SheetCells : List<SheetCell>
+	{
 
-    }
+	}
 }

@@ -31,7 +31,7 @@
 			<div class="control-group" style="">
 				<label v-html="source.labelText" /> 
 				<div class="input-group">
-					<textarea rows="3" maxlength="255" v-model="value" style="height: 55px;" v-auto-size="true" />
+					<textarea rows="5" maxlength="2048" v-model="value" style="height: 92px;max-height:400px" v-auto-size="true" />
 				</div>
 			</div>
 			<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit" v-text="source.buttonText" />

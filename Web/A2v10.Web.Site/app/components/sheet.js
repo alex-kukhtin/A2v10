@@ -5,100 +5,100 @@
 
 (function () {
 
-    const sheetTemplate = `
+	const sheetTemplate = `
 <table class="sheet">
-    <thead>
-        <slot name="header"></slot>
-    </thead>
-    <slot name="body"></slot>
-    <tfoot>
-        <slot name="footer"></slot>
-    </tfoot>    
+	<thead>
+		<slot name="header"></slot>
+	</thead>
+	<slot name="body"></slot>
+	<tfoot>
+		<slot name="footer"></slot>
+	</tfoot>    
 </table>
 `;
 
-    const sheetSectionTemplate = `
+	const sheetSectionTemplate = `
 <tbody>
-    <slot></slot>
+	<slot></slot>
 </tbody>
 `;
 
-    function* traverse(item, prop, lev) {
-        if (prop in item) {
-            let arr = item[prop];
-            for (let i = 0; i < arr.length; i++) {
-                let elem = arr[i];
-                elem.$level = lev;
-                yield elem;
-                if (!elem.$collapsed)
-                    yield* traverse(elem, prop, lev + 1);
-            };
-        }
-    }
+	function* traverse(item, prop, lev) {
+		if (prop in item) {
+			let arr = item[prop];
+			for (let i = 0; i < arr.length; i++) {
+				let elem = arr[i];
+				elem.$level = lev;
+				yield elem;
+				if (!elem.$collapsed)
+					yield* traverse(elem, prop, lev + 1);
+			};
+		}
+	}
 
-    Vue.component('a2-sheet', {
-        template: sheetTemplate
-    });
+	Vue.component('a2-sheet', {
+		template: sheetTemplate
+	});
 
-    Vue.component("a2-sheet-section", {
-        template: sheetSectionTemplate
-    });
+	Vue.component("a2-sheet-section", {
+		template: sheetSectionTemplate
+	});
 
-    Vue.component('a2-sheet-section-tree', {
-        functional: true,
-        name: 'a2-sheet-section',
-        props: {
-            itemsSource: Object,
-            propName: String
-        },
-        render(h, ctx) {
-            const prop = ctx.props.propName;
-            const source = ctx.props.itemsSource;
-            if (!source) return;
-            if (!prop) return;
+	Vue.component('a2-sheet-section-tree', {
+		functional: true,
+		name: 'a2-sheet-section',
+		props: {
+			itemsSource: Object,
+			propName: String
+		},
+		render(h, ctx) {
+			const prop = ctx.props.propName;
+			const source = ctx.props.itemsSource;
+			if (!source) return;
+			if (!prop) return;
 
-            function toggle() {
-                let clpsed = this.item.$collapsed || false;
-                Vue.set(this.item, "$collapsed", !clpsed);
-            }
+			function toggle() {
+				let clpsed = this.item.$collapsed || false;
+				Vue.set(this.item, "$collapsed", !clpsed);
+			}
 
-            function cssClass() {
-                let cls = '';
-                if (this.hasChildren())
-                    cls += 'has-children';
-                if (this.item.$collapsed)
-                    cls += ' collapsed';
-                cls += ' lev-' + this.item.$level;
-                return cls;
-            }
+			function cssClass() {
+				let cls = '';
+				if (this.hasChildren())
+					cls += 'has-children';
+				if (this.item.$collapsed)
+					cls += ' collapsed';
+				cls += ' lev-' + this.item.$level;
+				return cls;
+			}
 
-            function rowCssClass() {
-                let cls = ''
-                if (this.hasChildren())
-                    cls += ' group';
-                if (this.item.$collapsed)
-                    cls += ' collapsed';
-                return cls;
-            }
+			function rowCssClass() {
+				let cls = ''
+				if (this.hasChildren())
+					cls += ' group';
+				if (this.item.$collapsed)
+					cls += ' collapsed';
+				return cls;
+			}
 
-            function indentCssClass() {
-                return 'indent lev-' + this.item.$level;
-            }
+			function indentCssClass() {
+				return 'indent lev-' + this.item.$level;
+			}
 
-            function hasChildren() {
-                let chElems = this.item[prop];
-                return chElems && chElems.length > 0;
-            }
+			function hasChildren() {
+				let chElems = this.item[prop];
+				return chElems && chElems.length > 0;
+			}
 
-            const slot = ctx.data.scopedSlots.default;
+			const slot = ctx.data.scopedSlots.default;
 
-            let compArr = [];
+			let compArr = [];
 
-            for (let v of traverse(source, prop, 1)) {
-                let slotElem = slot({ item: v, toggle, cssClass, hasChildren, rowCssClass, indentCssClass })[0];
-                compArr.push(h(slotElem.tag, slotElem.data, slotElem.children));
-            }
-            return h('tbody', {}, compArr);
-        }
-    });
+			for (let v of traverse(source, prop, 1)) {
+				let slotElem = slot({ item: v, toggle, cssClass, hasChildren, rowCssClass, indentCssClass })[0];
+				compArr.push(h(slotElem.tag, slotElem.data, slotElem.children));
+			}
+			return h('tbody', {}, compArr);
+		}
+	});
 })();
