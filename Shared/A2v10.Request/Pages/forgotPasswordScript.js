@@ -49,6 +49,7 @@
 			submit() {
 				this.submitted = true;
 				this.serverError = '';
+				this.email = this.email.trim();
 				if (!this.valid)
 					return;
 				this.processing = true;

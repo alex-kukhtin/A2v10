@@ -38,7 +38,8 @@ namespace A2v10.Xaml
 		Report,
 		Export,
 		MailTo,
-		Navigate
+		Navigate,
+		Help
 	}
 
 	public enum DialogAction
@@ -97,6 +98,8 @@ namespace A2v10.Xaml
 					return $"$href({CommandUrl(context)}, {CommandArgument(context)})";
 				case CommandType.MailTo:
 					return $"$mailto({CommandArgument(context)}, {GetData(context)})";
+				case CommandType.Help:
+					return $"$helpHref({CommandUrl(context)})";
 			}
 			return null;
 		}
@@ -155,6 +158,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Navigate:
 					return $"$navigateSimple({CommandUrl(context)}, {NewWindowJS})";
+
+				case CommandType.Help:
+					return $"$showHelp({CommandUrl(context)})";
 
 				case CommandType.Open:
 					if (indirect)

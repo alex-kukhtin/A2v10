@@ -53,8 +53,16 @@
 .ico-arrow-up:before {
   content: "\e900";
 }
+.ico-arrow-up-green:before {
+  content: "\e900";
+  color: #16cd16;
+}
 .ico-arrow-down:before {
   content: "\e902";
+}
+.ico-arrow-down-red:before {
+  content: "\e902";
+  color: #e41400;
 }
 .ico-arrow-left:before {
   content: "\e901";

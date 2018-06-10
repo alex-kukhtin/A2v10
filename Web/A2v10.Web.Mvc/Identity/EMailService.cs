@@ -2,6 +2,7 @@
 
 using System;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
@@ -51,12 +52,17 @@ namespace A2v10.Web.Mvc.Identity
 				{
 					using (var mm = new MailMessage())
 					{
+						var encUTF8 = Encoding.GetEncoding("utf-8");
 						mm.To.Add(new MailAddress(to));
+						mm.BodyTransferEncoding = TransferEncoding.Base64;
 						mm.Subject = subject;
 						mm.Body = body;
+
 						mm.IsBodyHtml = true;
-						mm.BodyEncoding = Encoding.UTF8;
-						mm.SubjectEncoding = Encoding.UTF8;
+						mm.BodyEncoding = encUTF8;
+						mm.SubjectEncoding = encUTF8;
+						mm.HeadersEncoding = encUTF8;
+
 						// sync variant. avoid exception loss
 						_logger.LogMessaging(GetJsonResult("send", to));
 						client.Send(mm);
@@ -66,13 +72,17 @@ namespace A2v10.Web.Mvc.Identity
 			}
 			catch (Exception ex)
 			{
-				String msg = ex.Message;
-				if (ex.InnerException != null)
-					msg = ex.InnerException.Message;
-				_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", to, "exception", msg)));
+				LogException(to, ex);
 				throw; // rethrow
 			}
 		}
 
+		void LogException(String to, Exception ex)
+		{
+			String msg = ex.Message;
+			if (ex.InnerException != null)
+				msg = ex.InnerException.Message;
+			_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", to, "exception", msg)));
+		}
 	}
 }

@@ -7,7 +7,7 @@
 @Quit=Выход
 @Tracing=Трассировка
 @Settings=Настройка
-@Feedback=Зворотній зв'язок
+@Feedback=Обратная связь
 @DataModel=Модель данних
 @Profiling=Профилирование
 @Profile=Профиль
