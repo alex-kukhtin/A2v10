@@ -1,10 +1,10 @@
-/* 20180605-7050 */
+/* 20180611-7051 */
 /*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 05 jun 2018
-module version : 7050
+Last updated : 11 jun 2018
+module version : 7051
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7050);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7051);
 else
-	update a2sys.Versions set [Version] = 7050 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7051 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -87,8 +87,14 @@ begin
 			constraint DF_Feedback_Date default(getdate()),
 		UserId bigint not null
 			constraint FK_Feedback_UserId_Users foreign key references a2security.Users(Id),
-		[Text] nvarchar(255) null
+		[Text] nvarchar(max) null
 	);
+end
+go
+------------------------------------------------
+if (255 = (select CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Feedback' and COLUMN_NAME=N'Text'))
+begin
+	alter table a2ui.Feedback alter column [Text] nvarchar(max) null;
 end
 go
 ------------------------------------------------
