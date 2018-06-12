@@ -8,6 +8,8 @@ using System.Dynamic;
 using System.IO;
 using System.Text;
 using System.Configuration;
+using System.Threading;
+using System.Collections.Generic;
 
 using Microsoft.AspNet.Identity;
 
@@ -20,7 +22,7 @@ using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
-using System.Threading;
+using A2v10.Interop;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -30,6 +32,9 @@ namespace A2v10.Web.Mvc.Controllers
 		public String ReportPath;
 		public String Name;
 		public ExpandoObject Variables;
+		public RequestReportType Type;
+		public IList<String> XmlSchemaPathes;
+		public String Encoding;
 	}
 
 	public class EmptyView : IView, IViewDataContainer
@@ -89,7 +94,20 @@ namespace A2v10.Web.Mvc.Controllers
 			var ri = new ReportInfo();
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 			var rep = rm.GetReport();
-			ri.ReportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+			ri.Type = rep.type;
+			if (rep.HasPath)
+				ri.ReportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+			if (rep.type == RequestReportType.xml)
+			{
+				if (rep.xmlSchemas != null)
+				{
+					ri.XmlSchemaPathes = new List<String>();
+					foreach (var schema in rep.xmlSchemas)
+						ri.XmlSchemaPathes.Add(_baseController.Host.MakeFullPath(false, rep.Path, schema + ".xsd"));
+				}
+
+				ri.Encoding = rep.encoding;
+			}
 
 			ExpandoObject prms = new ExpandoObject();
 			prms.Set("UserId", UserId);
@@ -109,7 +127,10 @@ namespace A2v10.Web.Mvc.Controllers
 				vars.Set("TenantId", TenantId);
 			vars.Set("Id", id);
 			ri.Variables = vars;
-			ri.Name = _baseController.Localize(String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);
+			var repName = _baseController.Localize(String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);
+			if (ri.DataModel != null && ri.DataModel.Root != null)
+				repName = ri.DataModel.Root.Resolve(repName);
+			ri.Name = repName;
 			return ri;
 		}
 
@@ -122,29 +143,58 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var url = $"/_report/{Base}/{Rep}/{id}";
 				ReportInfo ri = await GetReportInfo(url, id);
-				var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
-				if (ri.DataModel != null)
-				{
-					var dynModel = ri.DataModel.GetDynamic();
-					foreach (var x in dynModel)
-						r.RegBusinessObject(x.Key, x.Value);
+
+				switch (ri.Type) {
+					case RequestReportType.stimulsoft:
+						return ExportStiReport(ri);
+					case RequestReportType.xml:
+						return ExportXmlReport(ri);
 				}
-				if (ri.Variables != null)
-					r.AddVariables(ri.Variables);
-				var ms = new MemoryStream();
-				// saveFileDialog: true -> download
-				// saveFileDialog: false -> show
-				return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog:true);
 			}
 			catch (Exception ex)
 			{
-				Response.ContentType = "text/plain";
+				Response.ContentType = "text/html";
 				Response.ContentEncoding = Encoding.UTF8;
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				Response.Write(ex.Message);
 			}
 			return new EmptyResult();
+		}
+
+		ActionResult ExportStiReport(ReportInfo ri)
+		{
+			var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
+			if (ri.DataModel != null)
+			{
+				var dynModel = ri.DataModel.GetDynamic();
+				foreach (var x in dynModel)
+					r.RegBusinessObject(x.Key, x.Value);
+			}
+			if (ri.Variables != null)
+				r.AddVariables(ri.Variables);
+			var ms = new MemoryStream();
+			// saveFileDialog: true -> download
+			// saveFileDialog: false -> show
+			return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: true);
+		}
+
+		ActionResult ExportXmlReport(ReportInfo ri)
+		{
+			if (ri.XmlSchemaPathes == null)
+				throw new RequestModelException("The xml-schemes are not specified");
+			foreach (var path in ri.XmlSchemaPathes)
+			{
+				if (!System.IO.File.Exists(path))
+					throw new RequestModelException($"File not found '{path}'");
+			}
+			if (String.IsNullOrEmpty(ri.Encoding))
+				throw new RequestModelException("The xml encoding is not specified");
+			var xmlCreator = new XmlCreator(ri.XmlSchemaPathes, ri.DataModel, ri.Encoding);
+			var bytes = xmlCreator.CreateXml();
+			if (xmlCreator.HasErrors)
+				throw new Exception(xmlCreator.ErrorText);
+			return File(bytes, "text/xml", $"{ri.Name}.xml");
 		}
 
 		private String LocaleKey => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;

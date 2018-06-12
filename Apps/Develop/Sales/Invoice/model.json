@@ -44,7 +44,14 @@
 			"type": "stimulsoft",
 			"report": "invoice",
 			"model": "Document",
-			"name": "@[Invoice]"
+			"name": "@[Invoice] {{Document.No}}"
+		},
+		"testxml": {
+			"type": "xml",
+			"model": "TestXml",
+			"name": "{{Params.Name}}",
+			"xmlSchemas": [ "F0103306", "../common_types" ],
+			"encoding": "windows-1251"
 		}
 	}
 }

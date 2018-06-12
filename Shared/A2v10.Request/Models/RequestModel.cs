@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
 using System.IO;
+using System.Text;
 
 namespace A2v10.Request
 {
@@ -315,11 +316,20 @@ namespace A2v10.Request
 		}
 	}
 
+	public enum RequestReportType
+	{
+		stimulsoft,
+		xml
+	}
+
 	public class RequestReport : RequestBase
 	{
 		public String report;
 		public String name;
 		public String procedure;
+		public IList<String> xmlSchemas;
+		public RequestReportType type;
+		public String encoding;
 
 		public ExpandoObject variables;
 
@@ -337,6 +347,9 @@ namespace A2v10.Request
 				return $"[{CurrentSchema}].[{cm}.Report]";
 			}
 		}
+
+		[JsonIgnore]
+		public Boolean HasPath => type == RequestReportType.stimulsoft;
 	}
 
 	public class RequestImage : RequestBase

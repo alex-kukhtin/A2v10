@@ -8172,7 +8172,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180602-7203
+// 20180612-7223
 // controllers/base.js
 
 (function () {
@@ -8718,8 +8718,8 @@ Vue.directive('resize', {
 
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
-
-				let cmd = opts.export ? 'export' : 'show';
+			
+				let cmd = opts && opts.export ? 'export' : 'show';
 
 				const doReport = () => {
 					let id = arg;
@@ -8732,7 +8732,7 @@ Vue.directive('resize', {
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts.export) {
+					if (opts && opts.export) {
 						window.location = url;
 					}
 					else

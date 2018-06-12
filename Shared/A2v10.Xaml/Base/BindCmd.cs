@@ -246,7 +246,7 @@ namespace A2v10.Xaml
 
 		String GetOptions(RenderContext context)
 		{
-			if (!SaveRequired && !ValidRequired && !CheckReadOnly)
+			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export)
 				return nullString;
 			StringBuilder sb = new StringBuilder("{");
 			if (SaveRequired)

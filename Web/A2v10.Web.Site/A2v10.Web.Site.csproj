@@ -152,6 +152,7 @@
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
+    <Content Include="TestPages\Test.xml" />
     <Content Include="TestPages\checkbox.html" />
     <Content Include="TestPages\collectionview2.html" />
     <Content Include="TestPages\collectionview.html" />

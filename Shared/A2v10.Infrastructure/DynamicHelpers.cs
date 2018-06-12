@@ -24,6 +24,18 @@ namespace A2v10.Infrastructure
 			return default(T);
 		}
 
+
+		public static Object GetObject(this ExpandoObject obj, String name)
+		{
+			if (!(obj is IDictionary<String, Object> d))
+				return null;
+			if (d.TryGetValue(name, out Object result))
+			{
+				return result;
+			}
+			return null;
+		}
+
 		public static void Set(this ExpandoObject obj, String name, Object value)
 		{
 			if (!(obj is IDictionary<String, Object> d))
