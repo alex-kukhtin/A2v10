@@ -35,6 +35,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public RequestReportType Type;
 		public IList<String> XmlSchemaPathes;
 		public String Encoding;
+		public Boolean Validate;
 	}
 
 	public class EmptyView : IView, IViewDataContainer
@@ -107,6 +108,7 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 
 				ri.Encoding = rep.encoding;
+				ri.Validate = rep.validate;
 			}
 
 			ExpandoObject prms = new ExpandoObject();
@@ -191,9 +193,10 @@ namespace A2v10.Web.Mvc.Controllers
 			if (String.IsNullOrEmpty(ri.Encoding))
 				throw new RequestModelException("The xml encoding is not specified");
 			var xmlCreator = new XmlCreator(ri.XmlSchemaPathes, ri.DataModel, ri.Encoding);
+			xmlCreator.Validate = ri.Validate;
 			var bytes = xmlCreator.CreateXml();
 			if (xmlCreator.HasErrors)
-				throw new Exception(xmlCreator.ErrorText);
+				throw new Exception(xmlCreator.ErrorMessage);
 			return File(bytes, "text/xml", $"{ri.Name}.xml");
 		}
 

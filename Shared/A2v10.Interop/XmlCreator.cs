@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -24,6 +25,8 @@ namespace A2v10.Interop
 		private readonly XmlSchemaSet _schemaSet;
 		private readonly IList<String> _validationErrors;
 
+		public Boolean Validate { get; set; }
+
 		public XmlCreator(IList<String> schemaPathes, IDataModel dataModel, String encoding)
 		{
 			_schemaPathes = schemaPathes;
@@ -31,11 +34,12 @@ namespace A2v10.Interop
 			_encoding = encoding;
 			_schemaSet = new XmlSchemaSet();
 			_validationErrors = new List<String>();
+			Validate = true;
 		}
 
 		public Boolean HasErrors => _validationErrors.Count > 0;
 
-		public String ErrorText
+		public String ErrorMessage
 		{
 			get
 			{
@@ -49,7 +53,7 @@ namespace A2v10.Interop
 			void eventHandler(Object sender, ValidationEventArgs e)
 			{
 				if (e.Exception != null)
-					throw e.Exception;
+					_validationErrors.Add(e.Exception.Message);
 			}
 
 			foreach (var f in _schemaPathes)
@@ -65,7 +69,7 @@ namespace A2v10.Interop
 			return CreateXmlFromSchema();
 		}
 
-		public void Validate(Stream stream)
+		public void DoValidate(Stream stream)
 		{
 			stream.Seek(0, SeekOrigin.Begin);
 			XDocument doc = XDocument.Load(stream);
@@ -97,7 +101,8 @@ namespace A2v10.Interop
 					}
 					writer.WriteEndDocument();
 				}
-				Validate(ms);
+				if (Validate)
+					DoValidate(ms);
 				ms.Seek(0, SeekOrigin.Begin);
 				return ms.ToArray();
 			}
@@ -180,6 +185,11 @@ namespace A2v10.Interop
 			writer.WriteEndElement();
 		}
 
+		void WriteNil(XmlWriter writer)
+		{
+			writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+		}
+
 		void WriteSimpleElement(XmlWriter writer, XmlSchemaElement elem, ExpandoObject model)
 		{
 			if (elem.FixedValue != null)
@@ -189,11 +199,18 @@ namespace A2v10.Interop
 			}
 			Object val = model.Get<Object>(elem.Name);
 			if (val != null)
-				writer.WriteString(val.ToString());
+			{
+				var strVal = TypedValue(elem.SchemaTypeName.Name, val);
+				if (String.IsNullOrEmpty(strVal) && elem.IsNillable)
+					WriteNil(writer);
+				else
+					writer.WriteString(strVal);
+			}
 			else if (elem.IsNillable)
-				writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+				WriteNil(writer);
 			else
 			{
+				// TODO: check nullability ????
 				//throw new XmlCreatorException($"Value for the field '{elem.Name}' is not nullable");
 			}
 		}
@@ -208,11 +225,27 @@ namespace A2v10.Interop
 				if (val != null)
 				{
 					writer.WriteStartElement(se.Name);
-					writer.WriteString(val.ToString());
+					writer.WriteString(TypedValue(se.SchemaTypeName.Name, val));
 					writer.WriteEndElement();
 					return;
 				}
 			}
+		}
+
+		String TypedValue(String typeName, Object val)
+		{
+			if (val == null)
+				return null;
+			switch (typeName)
+			{
+				case "DGdecimal2":
+					var dVal = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", val); ;
+				case "DGchk":
+					var bVal = Convert.ToBoolean(val);
+					return bVal ? "1" : "0";
+			}
+			return val.ToString();
 		}
 
 		String FirstSchema

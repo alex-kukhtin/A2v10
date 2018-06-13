@@ -13,6 +13,7 @@ using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using A2v10.Interop;
 
 namespace A2v10.Request
 {
@@ -92,6 +93,9 @@ namespace A2v10.Request
 				case CommandType.resumeProcess:
 					await ResumeWorkflow(cmd, dataToExec, writer);
 					break;
+				case CommandType.clr:
+					ExecuteClrCommand(cmd, dataToExec, writer);
+					break;
 				default:
 					throw new RequestModelException($"Invalid command type '{cmd.type}'");
 			}
@@ -101,6 +105,15 @@ namespace A2v10.Request
 		{
 			IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
 			WriteDataModel(model, writer);
+		}
+
+		void ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
+		{
+			if (String.IsNullOrEmpty(cmd.clrType))
+				throw new RequestModelException($"clrType must be specified for command '{cmd.command}'");
+			var invoker = new ClrInvoker();
+			var result = invoker.Invoke(cmd.clrType, dataToExec);
+			writer.Write(JsonConvert.SerializeObject(result, StandardSerializerSettings));
 		}
 
 		async Task StartWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
@@ -120,7 +133,7 @@ namespace A2v10.Request
 			swi.Comment = dataToStart.Get<String>("Comment");
 			swi.UserId = dataToStart.Get<Int64>("UserId");
 			if (swi.Source == null)
-				throw new RequestModelException($"file or clrtype must be specified");
+				throw new RequestModelException($"File or clrType must be specified");
 			WorkflowResult wr = await _workflowEngine.StartWorkflow(swi);
 			WriteJsonResult(writer, wr);
 		}

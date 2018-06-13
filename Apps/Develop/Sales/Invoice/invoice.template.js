@@ -18,6 +18,7 @@ const template = {
 	},
 	events: {
 		'Model.load': modelLoad,
+		'Model.saved'(root) { console.dir(root);},
 		'Document.Rows[].add': (arr, row) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
 		'Document.Agent.change': (doc) => { console.dir('Agent.change'); },

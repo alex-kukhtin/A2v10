@@ -292,6 +292,7 @@ namespace A2v10.Request
 	{
 		none,
 		sql,
+		clr,
 		startProcess,
 		resumeProcess
 	}
@@ -302,6 +303,7 @@ namespace A2v10.Request
 		public CommandType type;
 		public String procedure;
 		public String file;
+		public String clrType;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
@@ -330,6 +332,7 @@ namespace A2v10.Request
 		public IList<String> xmlSchemas;
 		public RequestReportType type;
 		public String encoding;
+		public Boolean validate;
 
 		public ExpandoObject variables;
 
