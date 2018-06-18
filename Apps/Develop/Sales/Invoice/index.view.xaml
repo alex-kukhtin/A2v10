@@ -23,6 +23,7 @@
 			<DatePicker Value="{Bind Parent.Filter.Period.From}"/>
 			<Button Icon="DashboardOutline" Content="Wizard" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/Wizard'}"/>
 			<Button Icon="FileLink" Content="XML" Command="{BindCmd Report, Report='TestXml', Export=True, Argument={Bind Documents.$selected}}"/>
+			<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
 		</Toolbar>
 	</Page.Toolbar>
