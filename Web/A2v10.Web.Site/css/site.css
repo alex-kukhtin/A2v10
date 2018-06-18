@@ -4405,6 +4405,9 @@ h5,
   float: right;
   margin-right: 16px;
 }
+.app-page {
+  user-select: text;
+}
 .side-bar {
   position: absolute;
   left: 0;
