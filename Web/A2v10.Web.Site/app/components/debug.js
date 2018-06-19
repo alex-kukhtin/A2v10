@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171120-7094
+// 20180619-7227
 // components/debug.js*/
 
 (function () {
@@ -16,6 +16,9 @@
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+	const utils = require('std:utils');
+
+	const isZero = utils.date.isZero;
 
 	const specKeys = {
 		'$vm': null,
@@ -30,6 +33,7 @@
 				return !(key in specKeys) ? value : undefined;
 			else if (key[0] === '_')
 				return undefined;
+			if (isZero(this[key])) return null;
 			return value;
 		}, 2);
 	}

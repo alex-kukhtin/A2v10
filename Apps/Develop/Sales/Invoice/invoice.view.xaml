@@ -120,6 +120,16 @@
 		<!--
 			<Code Grid.Row="7" Content="{Bind Document.Memo}"></Code>
 		-->
+		<FieldSet Grid.Row="7" Grid.ColSpan="4">
+			<Radio Value="{Bind Document.No}" CheckedValue="3">Number 3</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="2">Number 2</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="3" Disabled="True">Number 3</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="2" Disabled="True">Number 2</Radio>
+			<CheckBox Value="{Bind Document.$checked}">CheckBox 1</CheckBox>
+			<CheckBox Value="False">CheckBox 2</CheckBox>
+			<CheckBox Value="{Bind Document.$checked}" Disabled="True">CheckBox 1</CheckBox>
+			<CheckBox Value="False" Disabled="True">CheckBox 2</CheckBox>
+		</FieldSet>
 	</Grid>
 	<!--
 	<Table>

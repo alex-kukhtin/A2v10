@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180507-7178*/
+/*20180619-7227*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -127,8 +127,9 @@ app.modules['std:url'] = function () {
 
 	function makeBaseUrl(url) {
 		let x = (url || '').split('/');
-		if (x.length === 6)
-			return x.slice(2, 4).join('/');
+		let len = x.length;
+		if (len >= 6)
+			return x.slice(2, len - 2).join('/');
 		return url;
 	}
 

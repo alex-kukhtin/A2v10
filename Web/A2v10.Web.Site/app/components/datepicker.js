@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180506-7175
+// 20180619-7227
 // components/datepicker.js
 
 

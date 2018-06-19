@@ -72,7 +72,7 @@ label.checkbox, label.radio {
 }
 
 label.radio {
-	span::before {
+	span::before, span::after {
 		border-radius: 50%;
 	}
 }
@@ -101,7 +101,7 @@ input[type="radio"] {
 
 	&:disabled + span::after {
 		color: @disabled-txt-color;
-		border-color: @disabled-txt-color;
+		border-color: transparent;
 	}
 }
 
@@ -133,7 +133,6 @@ input[type="radio"] {
 	&:checked + span::after {
 		content: '';
 		border: 8px solid @checkmark-color;
-		border-radius: 50%;
 		text-align: center;
 		width: 0;
 		height: 0;
@@ -144,7 +143,7 @@ input[type="radio"] {
 		.tab-focus();
 	}
 
-	&:disabled + span::after {
+	&:disabled:checked + span::after {
 		border-color: @disabled-txt-color;
 	}
 }

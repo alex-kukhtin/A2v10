@@ -9,6 +9,7 @@ const template = {
 		'TDocument.Sum': cmn.docTotalSum,
 		//'TDocument.$DatePlusOne'() { return utils.date.add(this.Date, -2, 'day');},
 		'TDocument.$canShipment': canShipment,
+		'TDocument.$checked': Boolean,
 		'TDocLink.$Mark'() { return this.Done ? 'success' : null; }
 	},
 	validators: {

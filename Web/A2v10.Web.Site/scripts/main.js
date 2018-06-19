@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180508-7178
+// 20180619-7227
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -204,6 +204,7 @@ app.modules['std:utils'] = function () {
 
 	function toJson(data) {
 		return JSON.stringify(data, function (key, value) {
+			if (dateIsZero(this[key])) return undefined; // value is string!
 			return key[0] === '$' || key[0] === '_' ? undefined : value;
 		}, 2);
 	}
@@ -362,7 +363,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(0, 0, 1);
+		let td = new Date(0, 0, 1, 0, 0, 0, 0);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
 	}
@@ -407,6 +408,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateIsZero(d1) {
+		if (!isDate(d1)) return false;
 		return dateEqual(d1, dateZero());
 	}
 
@@ -530,7 +532,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180507-7178*/
+/*20180619-7227*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -657,8 +659,9 @@ app.modules['std:url'] = function () {
 
 	function makeBaseUrl(url) {
 		let x = (url || '').split('/');
-		if (x.length === 6)
-			return x.slice(2, 4).join('/');
+		let len = x.length;
+		if (len >= 6)
+			return x.slice(2, len - 2).join('/');
 		return url;
 	}
 
@@ -3854,7 +3857,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180506-7175
+// 20180619-7227
 // components/datepicker.js
 
 
@@ -7469,7 +7472,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171120-7094
+// 20180619-7227
 // components/debug.js*/
 
 (function () {
@@ -7485,6 +7488,9 @@ Vue.component('a2-panel', {
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+	const utils = require('std:utils');
+
+	const isZero = utils.date.isZero;
 
 	const specKeys = {
 		'$vm': null,
@@ -7499,6 +7505,7 @@ Vue.component('a2-panel', {
 				return !(key in specKeys) ? value : undefined;
 			else if (key[0] === '_')
 				return undefined;
+			if (isZero(this[key])) return null;
 			return value;
 		}, 2);
 	}

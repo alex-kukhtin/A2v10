@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180508-7178
+// 20180619-7227
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -109,6 +109,7 @@ app.modules['std:utils'] = function () {
 
 	function toJson(data) {
 		return JSON.stringify(data, function (key, value) {
+			if (dateIsZero(this[key])) return undefined; // value is string!
 			return key[0] === '$' || key[0] === '_' ? undefined : value;
 		}, 2);
 	}
@@ -267,7 +268,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(0, 0, 1);
+		let td = new Date(0, 0, 1, 0, 0, 0, 0);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
 	}
@@ -312,6 +313,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateIsZero(d1) {
+		if (!isDate(d1)) return false;
 		return dateEqual(d1, dateZero());
 	}
 

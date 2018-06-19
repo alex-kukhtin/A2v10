@@ -3461,7 +3461,8 @@ label.checkbox.no-label span,
 label.radio.no-label span {
   padding-left: 15px;
 }
-label.radio span::before {
+label.radio span::before,
+label.radio span::after {
   border-radius: 50%;
 }
 input[type="checkbox"],
@@ -3490,7 +3491,7 @@ input[type="radio"]:disabled + span::before {
 input[type="checkbox"]:disabled + span::after,
 input[type="radio"]:disabled + span::after {
   color: #aaa;
-  border-color: #aaa;
+  border-color: transparent;
 }
 input[type="checkbox"]:checked + span::after {
   content: '\e977';
@@ -3514,7 +3515,6 @@ input[type="checkbox"]:focus + span::before {
 input[type="radio"]:checked + span::after {
   content: '';
   border: 8px solid #555;
-  border-radius: 50%;
   text-align: center;
   width: 0;
   height: 0;
@@ -3524,7 +3524,7 @@ input[type="radio"]:focus + span::before {
   outline: thin dotted #999;
   outline-offset: 0;
 }
-input[type="radio"]:disabled + span::after {
+input[type="radio"]:disabled:checked + span::after {
   border-color: #aaa;
 }
 label.checkbox.small {
