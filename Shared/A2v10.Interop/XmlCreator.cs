@@ -123,13 +123,19 @@ namespace A2v10.Interop
 				{
 					writer.WriteStartElement(elem.Name);
 					writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
+					Boolean writen = false;
 					foreach (var av in arr[i] as IDictionary<String, Object>)
 					{
-						if (elem.Name.EndsWith(av.Key) && av.Value != null)
+						if ((kp.Key + av.Key ==  elem.Name) && av.Value != null)
 						{
-							writer.WriteString(av.Value.ToString());
+							var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
+							writer.WriteString(typedVal);
+							writen = true;
+							break;
 						}
 					}
+					if (!writen)
+						writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
 					writer.WriteEndElement();
 				}
 			}
@@ -224,9 +230,13 @@ namespace A2v10.Interop
 				var val = model.Get<Object>(se.Name);
 				if (val != null)
 				{
-					writer.WriteStartElement(se.Name);
-					writer.WriteString(TypedValue(se.SchemaTypeName.Name, val));
-					writer.WriteEndElement();
+					var typedVal = TypedValue(se.SchemaTypeName.Name, val);
+					if (typedVal != null)
+					{
+						writer.WriteStartElement(se.Name);
+						writer.WriteString(typedVal);
+						writer.WriteEndElement();
+					}
 					return;
 				}
 			}
@@ -238,12 +248,23 @@ namespace A2v10.Interop
 				return null;
 			switch (typeName)
 			{
+				case "DGpercentAlloc":
+					var dVal1 = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal1); ;
 				case "DGdecimal2":
-					var dVal = Convert.ToDecimal(val);
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", val); ;
+				case "Decimal2Column":
+					var dVal2 = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2); ;
+				case "DGdecimal3":
+				case "Decimal3Column":
+					var dVal3 = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
+				case "DGdecimal0":
+					var dVal0 = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0}", dVal0); ;
 				case "DGchk":
 					var bVal = Convert.ToBoolean(val);
-					return bVal ? "1" : "0";
+					return bVal ? "1" : null;
 			}
 			return val.ToString();
 		}
