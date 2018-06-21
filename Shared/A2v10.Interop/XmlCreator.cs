@@ -236,8 +236,8 @@ namespace A2v10.Interop
 						writer.WriteStartElement(se.Name);
 						writer.WriteString(typedVal);
 						writer.WriteEndElement();
+						return;
 					}
-					return;
 				}
 			}
 		}

@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var option = new TagBuilder("option");
+			MergeAttributes(option, context, MergeAttrMode.Visibility);
 			if (Value != null)
 			{
 				if (Value is IJavaScriptSource)

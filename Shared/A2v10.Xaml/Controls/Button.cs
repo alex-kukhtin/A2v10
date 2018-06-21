@@ -49,26 +49,27 @@ namespace A2v10.Xaml
 				var wrap = new TagBuilder("div", "dropdown")
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
 					.MergeAttribute("v-dropdown", String.Empty);
-
+				onRender?.Invoke(wrap);
 				if (!Block && !insideBar)
 					wrap.AddCssClass("a2-inline");
 
 				wrap.RenderStart(context);
-				RenderButton(context, true, bDropUp);
+				RenderButton(context, true, bDropUp, onRender);
 				DropDown.RenderElement(context);
 				wrap.RenderEnd(context);
 			}
 			else
 			{
-				RenderButton(context, false, false);
+				RenderButton(context, false, false, onRender);
 			}
 		}
 
-		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp)
+		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp, Action<TagBuilder> onRender)
 		{
 			Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
 			bool insideBar = Parent is Toolbar || Parent is CommandBar;
 			var button = new TagBuilder("button", "btn", IsInGrid);
+			onRender?.Invoke(button);
 			if (!Block && !insideBar)
 				button.AddCssClass("a2-inline");
 			if (Parent is Toolbar && Style == ButtonStyle.Default)

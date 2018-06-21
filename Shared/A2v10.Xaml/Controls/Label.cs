@@ -5,32 +5,33 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-    [ContentProperty("Content")]
-    public class Label : UIElement
-    {
-        public String Content { get; set; }
-        public TextAlign Align { get; set; }
-        public Boolean Required { get; set; }
+	[ContentProperty("Content")]
+	public class Label : UIElement
+	{
+		public String Content { get; set; }
+		public TextAlign Align { get; set; }
+		public Boolean Required { get; set; }
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            var label = new TagBuilder("div", "a2-label", IsInGrid);
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			var label = new TagBuilder("div", "a2-label", IsInGrid);
+			onRender?.Invoke(label);
 
-            var contBind = GetBinding(nameof(Content));
-            if (contBind != null)
-                label.MergeAttribute("v-text", contBind.GetPathFormat(context));
+			var contBind = GetBinding(nameof(Content));
+			if (contBind != null)
+				label.MergeAttribute("v-text", contBind.GetPathFormat(context));
 
-            MergeAttributes(label, context);
-            if (Align != TextAlign.Left)
-                label.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
-            label.AddCssClassBool(Required, "required");
+			MergeAttributes(label, context);
+			if (Align != TextAlign.Left)
+				label.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+			label.AddCssClassBool(Required, "required");
 
-            label.RenderStart(context);
+			label.RenderStart(context);
 
-            if (Content != null)
-                context.Writer.Write(context.Localize(Content.ToString()));
+			if (Content != null)
+				context.Writer.Write(context.Localize(Content.ToString()));
 
-            label.RenderEnd(context);
-        }
-    }
+			label.RenderEnd(context);
+		}
+	}
 }
