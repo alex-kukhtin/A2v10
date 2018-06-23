@@ -1,8 +1,10 @@
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
 #include "sciview.h"
 #include "moduleview.h"
+#include "moduledoc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -26,6 +28,7 @@ IMPLEMENT_DYNCREATE(CModuleView, CJsEditView)
 
 BEGIN_MESSAGE_MAP(CModuleView, CJsEditView)
 	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
+	ON_MESSAGE(WMI_FILL_PROPS, OnWmiFillProps)
 	ON_COMMAND(ID_DEBUG_RUN, OnDebugRun)
 	ON_COMMAND(ID_DEBUG_RUN_INT, OnDebugRunInt)
 	ON_COMMAND(ID_DEBUG_STEP_INTO, OnDebugStepInto)
@@ -133,3 +136,18 @@ LRESULT CModuleView::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam)
 	SendMessage(SCI_SCROLLCARET, 0, 0L); // scroll into
 	return 0L;
 }
+
+// afx_msg
+LRESULT CModuleView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam != WMI_FILL_PROPS_WPARAM)
+		return 0L;
+	auto pDoc = GetDocument();
+	FILL_PROPS_INFO* pInfo = reinterpret_cast<FILL_PROPS_INFO*>(lParam);
+	pInfo->wndTarget = GetSafeHwnd();
+	pInfo->elemTarget = pDoc;
+	pInfo->elem = reinterpret_cast<DWORD_PTR>(pDoc->GetJsHandle());
+	pInfo->parent = 0;
+	return (LRESULT)WMI_FILL_PROPS_RESULT_OK;
+}
+

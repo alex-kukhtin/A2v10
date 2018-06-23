@@ -57,6 +57,7 @@ protected:
 	CA2FormDocument* m_pDoc;
 	CFormItemList m_children;
 	CFormItem* m_pParent;
+
 public:
 	CFormItem();
 

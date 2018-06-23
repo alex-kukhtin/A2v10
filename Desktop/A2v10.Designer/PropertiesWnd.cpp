@@ -709,6 +709,7 @@ void CA2PropertyGridCtrl::FillPropertiesInternal()
 		return;
 	JavaScriptPropertyId catPropId = JavaScriptPropertyId::FromString(L"category");
 	JavaScriptPropertyId metaPropId = JavaScriptPropertyId::FromString(L"_meta_");
+	JavaScriptPropertyId readOnlyPropId = JavaScriptPropertyId::FromString(L"readOnly");
 
 	auto props = jsValue.GetProperty(metaPropId);
 	if (props.ValueType() != JsValueType::JsObject)
@@ -732,13 +733,17 @@ void CA2PropertyGridCtrl::FillPropertiesInternal()
 		CString category = info.GetProperty(catPropId).ToStringCheck();
 		if (category.IsEmpty())
 			category = DEFAULT_CATEGORY;
+		bool bReadOnly = info.GetProperty(readOnlyPropId).ToBool();
 		CA2PropertyGridProperty* pProp = NULL;
 		if (!catMap.Lookup(category, pProp)) {
 			pProp = new CA2PropertyGridProperty(category);
 			AddProperty(pProp, FALSE, FALSE);
 			catMap.SetAt(category, pProp);
 		}
-		pProp->AddSubItem(GetPropertyValue(name, info, false));
+		auto propSubItem = GetPropertyValue(name, info, false);
+		if (bReadOnly)
+			propSubItem->AllowEdit(FALSE);
+		pProp->AddSubItem(propSubItem);
 	}
 
 	// and attached now

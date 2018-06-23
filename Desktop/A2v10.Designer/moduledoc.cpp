@@ -11,6 +11,9 @@ IMPLEMENT_DYNCREATE(CModuleDoc, CDocument)
 
 CModuleDoc::CModuleDoc()
 {
+	auto jsForm = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
+	auto jsCreate = jsForm.GetProperty(L"__createElement");
+	m_jsValue = jsCreate.CallFunction(jsForm, JavaScriptValue::FromString(L"Module"));
 }
 
 BOOL CModuleDoc::OnNewDocument()
@@ -29,6 +32,14 @@ BEGIN_MESSAGE_MAP(CModuleDoc, CDocument)
 END_MESSAGE_MAP()
 
 // virtual 
+void CModuleDoc::SetPathName(LPCTSTR lpszPathName, BOOL bAddToMRU /*= TRUE*/)
+{
+	__super::SetPathName(lpszPathName, bAddToMRU);
+	m_jsValue.SetProperty(L"Name", PathFindFileNameW(lpszPathName));
+	m_jsValue.SetProperty(L"FullPath", lpszPathName);
+}
+
+// virtual 
 void CModuleDoc::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 {
 	if (bModified && IsModified())
@@ -37,7 +48,7 @@ void CModuleDoc::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 		UpdateAllViews(NULL, HINT_DOCUMENT_MODIFIED, 0L);
 	}
 	__super::SetModifiedFlag(bModified);
-	UpdateFrameCounts();        // will cause name change in views
+	UpdateFrameCounts(); // will cause name change in views
 }
 
 // virtual 

@@ -192,8 +192,10 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			if (String.IsNullOrEmpty(ri.Encoding))
 				throw new RequestModelException("The xml encoding is not specified");
-			var xmlCreator = new XmlCreator(ri.XmlSchemaPathes, ri.DataModel, ri.Encoding);
-			xmlCreator.Validate = ri.Validate;
+			var xmlCreator = new XmlCreator(ri.XmlSchemaPathes, ri.DataModel, ri.Encoding)
+			{
+				Validate = ri.Validate
+			};
 			var bytes = xmlCreator.CreateXml();
 			if (xmlCreator.HasErrors)
 				throw new Exception(xmlCreator.ErrorMessage);

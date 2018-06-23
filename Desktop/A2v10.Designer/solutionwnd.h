@@ -28,11 +28,13 @@ protected:
 	CSolutionTree m_wndTree;
 	CImageList m_ClassViewImages;
 	UINT m_nCurrSort;
+	CString m_path;
 
-	void LoadSolution();
+	void LoadSolution(LPCWSTR path);
 	void CloseSolution();
 	void LoadSolutionImpl();
 	void InsertCollection(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask);
+	void InsertDirectories(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask);
 
 // Overrides
 public:

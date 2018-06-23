@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7174
+// 20180623-7233
 // platform/polyfills.js
 
 
@@ -14,7 +14,7 @@
 				node = node.parentElement;
 		}
 		return null;
-	}
+	};
 
 	elem.scrollIntoViewCheck = elem.scrollIntoViewCheck || function () {
 		let el = this;
@@ -30,7 +30,7 @@
 			el.scrollIntoView(true);
 		else if (elRect.bottom > parentRect.bottom)
 			el.scrollIntoView(false);
-	}
+	};
 
 
 })(Element.prototype);
@@ -41,7 +41,7 @@
 		let td = new Date(0, 0, 1, 0, 0, 0, 0);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return this.getTime() === td.getTime();
-	}
+	};
 
 })(Date.prototype);
 

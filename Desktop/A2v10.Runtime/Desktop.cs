@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Globalization;
 using System.IO;
@@ -19,11 +20,11 @@ using A2v10.Infrastructure;
 
 namespace A2v10RuntimeNet
 {
-    public static class Desktop
-    {
+	public static class Desktop
+	{
 		static IScriptContext _scriptContext;
 
-		public static bool HasError { get; set; }
+		public static Boolean HasError { get; set; }
 		public static String LastErrorMessage { get; set; }
 
 		public static void Start()
@@ -52,21 +53,21 @@ namespace A2v10RuntimeNet
 			{
 				Resources.Application,
 				Resources.Form_form,
-                Resources.Solution
+				Resources.Solution
 			};
 			ParseLibraryElements(app);
 		}
 
-        public static void LoadModuleContext()
-        {
-            String[] app =
-            {
-                Resources.App_context,
-            };
-            ParseLibraryElements(app);
-        }
+		public static void LoadModuleContext()
+		{
+			String[] app =
+			{
+				Resources.App_context,
+			};
+			ParseLibraryElements(app);
+		}
 
-        static IScriptContext ScriptContext
+		static IScriptContext ScriptContext
 		{
 			get
 			{
@@ -99,91 +100,92 @@ namespace A2v10RuntimeNet
 			}
 		}
 
-        public static void OpenSolution(String fileName)
-        {
-            try
-            {
-                throw new Exception($"opens file {fileName} (from C#)");
-            }
-            catch (Exception ex)
-            {
-                SetLastError(ex);
-            }
-        }
+		public static void OpenSolution(String fileName)
+		{
+			try
+			{
+				throw new Exception($"opens file {fileName} (from C#)");
+			}
+			catch (Exception ex)
+			{
+				SetLastError(ex);
+			}
+		}
 
-        public static void StartDesktopServices()
-        {
-            IServiceLocator locator = ServiceLocator.Current;
-            IProfiler profiler = new DesktopProfiler();
-            IApplicationHost host = new DesktopApplicationHost(profiler);
-            ILocalizer localizer = new DesktopLocalizer();
-            IDbContext dbContext = new SqlDbContext(
-                profiler as IDataProfiler,
-                host as IDataConfiguration,
-                localizer as IDataLocalizer);
-            IRenderer renderer = new XamlRenderer(profiler);
-            IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
-            locator.RegisterService<IProfiler>(profiler);
-            locator.RegisterService<IApplicationHost>(host);
-            locator.RegisterService<IDbContext>(dbContext);
-            locator.RegisterService<IRenderer>(renderer);
-            locator.RegisterService<IWorkflowEngine>(wfEngine);
+		public static void StartDesktopServices()
+		{
+			IServiceLocator locator = ServiceLocator.Current;
+			IProfiler profiler = new DesktopProfiler();
+			IApplicationHost host = new DesktopApplicationHost(profiler);
+			ILocalizer localizer = new DesktopLocalizer();
+			IDbContext dbContext = new SqlDbContext(
+				profiler as IDataProfiler,
+				host as IDataConfiguration,
+				localizer as IDataLocalizer);
+			IRenderer renderer = new XamlRenderer(profiler);
+			IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
+			locator.RegisterService<IProfiler>(profiler);
+			locator.RegisterService<IApplicationHost>(host);
+			locator.RegisterService<IDbContext>(dbContext);
+			locator.RegisterService<IRenderer>(renderer);
+			locator.RegisterService<IWorkflowEngine>(wfEngine);
 
-        }
+		}
 
-        static void Render(BaseController ctrl, RequestUrlKind kind, String path, String search, TextWriter writer)
-        {
-            ExpandoObject loadPrms = new ExpandoObject();
-            loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
-            // TODO: current user ID;
-            //loadPrms.Set("UserId", 100);
-            ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
-        }
+		static void Render(BaseController ctrl, RequestUrlKind kind, String path, String search, TextWriter writer)
+		{
+			ExpandoObject loadPrms = new ExpandoObject();
+			loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
+			// TODO: current user ID;
+			//loadPrms.Set("UserId", 100);
+			ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
+		}
 
 
-        public static String ProcessRequest(String url, String search, String postData)
-        {
-            var controller = new BaseController();
-            if (url.StartsWith("admin/"))
-            {
-                url = url.Substring(6);
-                controller.Admin = true;
-            }
-            Int64 userId = 100; // TODO: userId
-            Int32 tenantId = 0; // TODO: tenantId
-            try
-            {
-                using (var writer = new StringWriter()) {
-                    if (url.StartsWith("_page/"))
-                        Render(controller, RequestUrlKind.Page, url.Substring(6), search, writer);
-                    else if (url.StartsWith("_dialog/"))
-                        Render(controller, RequestUrlKind.Dialog, url.Substring(8), search, writer);
-                    else if (url.StartsWith("_popup/"))
-                        Render(controller, RequestUrlKind.Popup, url.Substring(7), search, writer);
-                    else if (url.StartsWith("_data/"))
-                    {
-                        var command = url.Substring(6);
-                        controller.Data(command, tenantId, userId, postData, writer).Wait();
-                    }
-                    else if (url.StartsWith("_image/"))
-                    {
-                        controller.Image(tenantId, "/" + url, userId).Wait(); // with _image prefix
-                    }
-                    else
-                    {
-                        // TODO: exception
-                        writer.Write($"<div>page '{url}' not found.</div>");
-                    }
-                    return writer.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                    ex = ex.InnerException;
-                // TODO:: /exception
-                return $"<div>{ex.Message}</div>";
-            }
-        }
+		public static String ProcessRequest(String url, String search, String postData)
+		{
+			var controller = new BaseController();
+			if (url.StartsWith("admin/"))
+			{
+				url = url.Substring(6);
+				controller.Admin = true;
+			}
+			Int64 userId = 100; // TODO: userId
+			Int32 tenantId = 0; // TODO: tenantId
+			try
+			{
+				using (var writer = new StringWriter())
+				{
+					if (url.StartsWith("_page/"))
+						Render(controller, RequestUrlKind.Page, url.Substring(6), search, writer);
+					else if (url.StartsWith("_dialog/"))
+						Render(controller, RequestUrlKind.Dialog, url.Substring(8), search, writer);
+					else if (url.StartsWith("_popup/"))
+						Render(controller, RequestUrlKind.Popup, url.Substring(7), search, writer);
+					else if (url.StartsWith("_data/"))
+					{
+						var command = url.Substring(6);
+						controller.Data(command, tenantId, userId, postData, writer).Wait();
+					}
+					else if (url.StartsWith("_image/"))
+					{
+						controller.Image(tenantId, "/" + url, userId).Wait(); // with _image prefix
+					}
+					else
+					{
+						// TODO: exception
+						writer.Write($"<div>page '{url}' not found.</div>");
+					}
+					return writer.ToString();
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				// TODO:: /exception
+				return $"<div>{ex.Message}</div>";
+			}
+		}
 	}
 }

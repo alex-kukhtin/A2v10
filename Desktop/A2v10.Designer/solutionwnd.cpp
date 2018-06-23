@@ -19,6 +19,7 @@
 #define IMAGE_DETAILS  6
 #define IMAGE_FORM     7
 #define IMAGE_VIEW     8
+#define IMAGE_ENDPOINT 9
 
 #define MASK_COLUMNS	0x01
 
@@ -338,8 +339,9 @@ void CSolutionWnd::CreatePropertyIds()
 }
 
 
-void CSolutionWnd::LoadSolution()
+void CSolutionWnd::LoadSolution(LPCWSTR path)
 {
+	m_path = path;
 	try 
 	{
 		CreatePropertyIds();
@@ -368,16 +370,20 @@ void CSolutionWnd::LoadSolutionImpl()
 		TVI_ROOT, TVI_LAST);
 
 	// TODO: localization
-	HTREEITEM m_hTables = m_wndTree.InsertItem(L"Tables", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
+	HTREEITEM hTables = m_wndTree.InsertItem(L"Tables", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
 	auto tables = root.GetProperty(L"Tables");
-	InsertCollection(tables, m_hTables, IMAGE_TABLE, MASK_COLUMNS);
+	InsertCollection(tables, hTables, IMAGE_TABLE, MASK_COLUMNS);
 
 	// TODO: localization
-	HTREEITEM m_hViews = m_wndTree.InsertItem(L"Views", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
+	HTREEITEM hViews = m_wndTree.InsertItem(L"Views", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
 	auto views = root.GetProperty(L"Views");
-	InsertCollection(views, m_hViews, IMAGE_VIEW, MASK_COLUMNS);
+	InsertCollection(views, hViews, IMAGE_VIEW, MASK_COLUMNS);
 
-	HTREEITEM m_hModels = m_wndTree.InsertItem(L"Models", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
+	HTREEITEM hDataModels = m_wndTree.InsertItem(L"Data Models", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
+
+	HTREEITEM hEndPoints = m_wndTree.InsertItem(L"Endpoints", IMAGE_FOLDER, IMAGE_FOLDER, hRoot);
+	auto endPoints = root.GetProperty(L"Endpoints");
+	InsertDirectories(endPoints, hEndPoints, IMAGE_ENDPOINT, MASK_COLUMNS);
 
 	/*
 
@@ -407,6 +413,13 @@ void CSolutionWnd::LoadSolutionImpl()
 	*/
 	m_wndTree.Expand(hRoot, TVE_EXPAND);
 }
+
+void CSolutionWnd::InsertDirectories(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask)
+{
+	if (m_path.IsEmpty())
+		return;
+}
+
 
 void CSolutionWnd::CloseSolution()
 {
@@ -507,7 +520,7 @@ void CSolutionWnd::DoLoad()
 		auto loadFunc = solution.GetProperty(L"__loadSolution");
 		if (loadFunc.ValueType() == JsValueType::JsFunction)
 			loadFunc.CallFunction(solution, JavaScriptValue::FromString((LPCWSTR)jsonText));
-		LoadSolution();
+		LoadSolution(strPath);
 		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
 	}
 	catch (JavaScriptException& ex)
@@ -528,7 +541,7 @@ void CSolutionWnd::DoCreate()
 		auto loadFunc = solution.GetProperty(L"__loadSolution");
 		if (loadFunc.ValueType() == JsValueType::JsFunction)
 			loadFunc.CallFunction(solution, JavaScriptValue::FromString(L"{\"Name\": \"New Solution\"}"));
-		LoadSolution();
+		LoadSolution(NULL);
 		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
 	}
 	catch (JavaScriptException& ex)
