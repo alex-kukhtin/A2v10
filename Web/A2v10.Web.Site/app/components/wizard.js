@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180528-7200 */
+/* 20180629-7234 */
 /*components/wizard.js*/
 
 /*
@@ -38,7 +38,7 @@ TODO:
 		</template>
 		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>
-		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
+		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled()"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
 	</div>
 </div>
 `;
@@ -70,11 +70,6 @@ TODO:
 			backDisabled() {
 				return this.activePage === this.pages[0];
 			},
-			nextDisabled() {
-				if (!this.activePage) return false;
-				if (this.activePage.$invalid) return true;
-				return false;
-			},
 			nextFinishClass() {
 				let pgs = this.pages;
 				return this.activePage === pgs[pgs.length - 1] ? 'btn-primary' : '';
@@ -82,13 +77,18 @@ TODO:
 			}
 		},
 		methods: {
+			nextDisabled() {
+				if (!this.activePage) return false;
+				if (this.activePage.$invalid()) return true;
+				return false;
+			},
 			setActivePage(page) {
 				if (this.activePage) this.activePage.visit = true;
 				this.activePage = page;
 				this.activePage.state = 'edit';
 			},
 			selectPage(page) {
-				if (this.$nextPage(page) && !this.nextDisabled) {
+				if (this.$nextPage(page) && !this.nextDisabled()) {
 					this.setActivePage(page);
 					return;
 				}
@@ -99,7 +99,7 @@ TODO:
 				let cls = '';
 				//if (page.state === 'init') {
 				if (!page.visit) {
-					if (this.$nextPage(page) && !this.nextDisabled)
+					if (this.$nextPage(page) && !this.nextDisabled())
 						return cls;
 					cls = 'disabled';
 				}
@@ -119,7 +119,7 @@ TODO:
 				this.setActivePage(pgs[ix - 1]);
 			},
 			nextFinish() {
-				if (this.nextDisabled) return;
+				if (this.nextDisabled()) return;
 				let pgs = this.pages;
 				let ix = pgs.indexOf(this.activePage);
 				if (ix === pgs.length - 1) {
@@ -148,6 +148,9 @@ TODO:
 			$showHelp() {
 				if (!this.helpLink) return;
 				window.open(this.helpLink, "_blank");
+			},
+			_pendingValidate() {
+				this.$forceUpdate();
 			}
 		},
 		mounted() {
@@ -156,7 +159,11 @@ TODO:
 				this.activePage.state = 'edit';
 			}
 		},
+		created() {
+			eventBus.$on('pendingValidate', this._pendingValidate);
+		},
 		beforeDestroy() {
+			eventBus.$off('pendingValidate', this._pendingValidate);
 		}
 	});
 
@@ -181,17 +188,6 @@ TODO:
 			isNextPage() {
 				return $parent.$nextPage(this);
 			},
-			$invalid() {
-				if (!this.controls.length) return false;
-				for (let c of this.controls) {
-					if (c.invalid()) {
-						this.wasInvalid = true;
-						return true;
-					}
-				}
-				this.wasInvalid = false;
-				return false;
-			},
 			errorIcon() {
 				if (!this.visit) return false;
 				// ther are no controls here
@@ -199,6 +195,17 @@ TODO:
 			}
 		},
 		methods: {
+			$invalid() {
+				if (!this.controls.length) return false;
+				for (let c of this.controls) {
+					if (c.invalid() || c.pending()) {
+						this.wasInvalid = true;
+						return true;
+					}
+				}
+				this.wasInvalid = false;
+				return false;
+			},
 			$registerControl(control) {
 				this.controls.push(control);
 			},

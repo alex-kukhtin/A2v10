@@ -1360,12 +1360,13 @@ app.modules['std:log'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180522-7192*/
+/*20180629-7234*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
 
 	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 	const ERROR = 'error';
 
 	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -1376,7 +1377,7 @@ app.modules['std:validators'] = function () {
 
 	return {
 		validate: validateItem,
-		removeWeak,
+		removeWeak
 	};
 
 	function validateStd(rule, val) {
@@ -1414,6 +1415,7 @@ app.modules['std:validators'] = function () {
 
 	function validateImpl(rules, item, val, ff) {
 		let retval = [];
+		retval.pending = 0;
 		rules.forEach(function (rule) {
 			const sev = rule.severity || ERROR;
 			if (utils.isFunction(rule.applyIf)) {
@@ -1450,6 +1452,7 @@ app.modules['std:validators'] = function () {
 				}
 				let vr = rule.valid(item, val);
 				if (vr && vr.then) {
+					retval.pending += 1;
 					if (!rule.async) {
 						console.error('Async rules should be marked async:true');
 						return;
@@ -1471,6 +1474,8 @@ app.modules['std:validators'] = function () {
 						// need to update the validators
 						item._root_._needValidate_ = true;
 						if (nu && ff) ff();
+						retval.pending -= 1;
+						eventBus.$emit('pendingValidate');
 					});
 				}
 				else if (utils.isString(vr)) {
@@ -2751,7 +2756,7 @@ app.modules['std:popup'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180603-7206*/
+/*20180629-7234*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -2816,7 +2821,6 @@ app.modules['std:mask'] = function () {
 					return ch;
 				}
 			}
-			return PLACE_CHAR;
 		}
 
 		let ch = nextValueChar();
@@ -2828,10 +2832,10 @@ app.modules['std:mask'] = function () {
 			}
 			else if (isMaskChar(mc)) {
 				str += ch;
-				ch = nextValueChar() 
+				ch = nextValueChar();
 			} else {
 				str += mc;
-				if (mc == ch)
+				if (mc === ch)
 					ch = nextValueChar();
 			}
 		}
@@ -2984,7 +2988,7 @@ app.modules['std:mask'] = function () {
 		}
 	}
 
-	function isAccel(e) {
+	function isAccel(e, input) {
 		if (e.which >= 112 && e.which <= 123)
 			return true; // f1-f12
 		if (e.which === 16 || e.which === 17)
@@ -2992,6 +2996,18 @@ app.modules['std:mask'] = function () {
 		if (e.which >= 112 && e.which <= 123)
 			return true; // f1-f12
 		if (e.which === 9) return true; // tab
+		if (e.which === 13) {
+			fireChange(input);
+			setTimeout(() => {
+				let d = 'l'; // last
+				if (!input.value) {
+					input.value = getMasked(input.__opts.mask, '');
+					d = 'r'; // first
+				}
+				setCaretPosition(input, d === 'r' ? 0 : 32768, d);
+			}, 10);
+			return true; // enter
+		}
 		if (e.ctrlKey) {
 			switch (e.which) {
 				case 86: // V
@@ -3017,7 +3033,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function keydownHandler(e) {
-		if (isAccel(e)) return;
+		if (isAccel(e, this)) return;
 		let handled = false;
 		if (clearSelectionFull(e, this)) return;
 		let pos = getCaretPosition(this);
@@ -3071,7 +3087,7 @@ app.modules['std:mask'] = function () {
 		fireChange(this);
 	}
 
-	function focusHandler(e) {
+	function focusHandler(/*e*/) {
 		if (!this.value)
 			this.value = getMasked(this.__opts.mask, '');
 		setTimeout(() => {
@@ -3245,7 +3261,7 @@ app.modules['std:mask'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180603-7206
+// 20180629-7234
 // components/control.js
 
 (function () {
@@ -3348,6 +3364,9 @@ app.modules['std:mask'] = function () {
 					out.info = err.every(r => r.info === 'info');
 				}
 				return err.length > 0;
+			},
+			pending() {
+				return this.errors && this.errors.pending > 0;
 			},
 			cssClass() {
 				// method! no cached!!!
@@ -6695,7 +6714,7 @@ TODO:
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180528-7200 */
+/* 20180629-7234 */
 /*components/wizard.js*/
 
 /*
@@ -6732,7 +6751,7 @@ TODO:
 		</template>
 		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>
-		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
+		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled()"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
 	</div>
 </div>
 `;
@@ -6764,11 +6783,6 @@ TODO:
 			backDisabled() {
 				return this.activePage === this.pages[0];
 			},
-			nextDisabled() {
-				if (!this.activePage) return false;
-				if (this.activePage.$invalid) return true;
-				return false;
-			},
 			nextFinishClass() {
 				let pgs = this.pages;
 				return this.activePage === pgs[pgs.length - 1] ? 'btn-primary' : '';
@@ -6776,13 +6790,18 @@ TODO:
 			}
 		},
 		methods: {
+			nextDisabled() {
+				if (!this.activePage) return false;
+				if (this.activePage.$invalid()) return true;
+				return false;
+			},
 			setActivePage(page) {
 				if (this.activePage) this.activePage.visit = true;
 				this.activePage = page;
 				this.activePage.state = 'edit';
 			},
 			selectPage(page) {
-				if (this.$nextPage(page) && !this.nextDisabled) {
+				if (this.$nextPage(page) && !this.nextDisabled()) {
 					this.setActivePage(page);
 					return;
 				}
@@ -6793,7 +6812,7 @@ TODO:
 				let cls = '';
 				//if (page.state === 'init') {
 				if (!page.visit) {
-					if (this.$nextPage(page) && !this.nextDisabled)
+					if (this.$nextPage(page) && !this.nextDisabled())
 						return cls;
 					cls = 'disabled';
 				}
@@ -6813,7 +6832,7 @@ TODO:
 				this.setActivePage(pgs[ix - 1]);
 			},
 			nextFinish() {
-				if (this.nextDisabled) return;
+				if (this.nextDisabled()) return;
 				let pgs = this.pages;
 				let ix = pgs.indexOf(this.activePage);
 				if (ix === pgs.length - 1) {
@@ -6842,6 +6861,9 @@ TODO:
 			$showHelp() {
 				if (!this.helpLink) return;
 				window.open(this.helpLink, "_blank");
+			},
+			_pendingValidate() {
+				this.$forceUpdate();
 			}
 		},
 		mounted() {
@@ -6850,7 +6872,11 @@ TODO:
 				this.activePage.state = 'edit';
 			}
 		},
+		created() {
+			eventBus.$on('pendingValidate', this._pendingValidate);
+		},
 		beforeDestroy() {
+			eventBus.$off('pendingValidate', this._pendingValidate);
 		}
 	});
 
@@ -6875,17 +6901,6 @@ TODO:
 			isNextPage() {
 				return $parent.$nextPage(this);
 			},
-			$invalid() {
-				if (!this.controls.length) return false;
-				for (let c of this.controls) {
-					if (c.invalid()) {
-						this.wasInvalid = true;
-						return true;
-					}
-				}
-				this.wasInvalid = false;
-				return false;
-			},
 			errorIcon() {
 				if (!this.visit) return false;
 				// ther are no controls here
@@ -6893,6 +6908,17 @@ TODO:
 			}
 		},
 		methods: {
+			$invalid() {
+				if (!this.controls.length) return false;
+				for (let c of this.controls) {
+					if (c.invalid() || c.pending()) {
+						this.wasInvalid = true;
+						return true;
+					}
+				}
+				this.wasInvalid = false;
+				return false;
+			},
 			$registerControl(control) {
 				this.controls.push(control);
 			},

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180603-7206*/
+/*20180629-7234*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -65,7 +65,6 @@ app.modules['std:mask'] = function () {
 					return ch;
 				}
 			}
-			return PLACE_CHAR;
 		}
 
 		let ch = nextValueChar();
@@ -77,10 +76,10 @@ app.modules['std:mask'] = function () {
 			}
 			else if (isMaskChar(mc)) {
 				str += ch;
-				ch = nextValueChar() 
+				ch = nextValueChar();
 			} else {
 				str += mc;
-				if (mc == ch)
+				if (mc === ch)
 					ch = nextValueChar();
 			}
 		}
@@ -233,7 +232,7 @@ app.modules['std:mask'] = function () {
 		}
 	}
 
-	function isAccel(e) {
+	function isAccel(e, input) {
 		if (e.which >= 112 && e.which <= 123)
 			return true; // f1-f12
 		if (e.which === 16 || e.which === 17)
@@ -241,6 +240,18 @@ app.modules['std:mask'] = function () {
 		if (e.which >= 112 && e.which <= 123)
 			return true; // f1-f12
 		if (e.which === 9) return true; // tab
+		if (e.which === 13) {
+			fireChange(input);
+			setTimeout(() => {
+				let d = 'l'; // last
+				if (!input.value) {
+					input.value = getMasked(input.__opts.mask, '');
+					d = 'r'; // first
+				}
+				setCaretPosition(input, d === 'r' ? 0 : 32768, d);
+			}, 10);
+			return true; // enter
+		}
 		if (e.ctrlKey) {
 			switch (e.which) {
 				case 86: // V
@@ -266,7 +277,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function keydownHandler(e) {
-		if (isAccel(e)) return;
+		if (isAccel(e, this)) return;
 		let handled = false;
 		if (clearSelectionFull(e, this)) return;
 		let pos = getCaretPosition(this);
@@ -320,7 +331,7 @@ app.modules['std:mask'] = function () {
 		fireChange(this);
 	}
 
-	function focusHandler(e) {
+	function focusHandler(/*e*/) {
 		if (!this.value)
 			this.value = getMasked(this.__opts.mask, '');
 		setTimeout(() => {

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180603-7206
+// 20180629-7234
 // components/control.js
 
 (function () {
@@ -103,6 +103,9 @@
 					out.info = err.every(r => r.info === 'info');
 				}
 				return err.length > 0;
+			},
+			pending() {
+				return this.errors && this.errors.pending > 0;
 			},
 			cssClass() {
 				// method! no cached!!!

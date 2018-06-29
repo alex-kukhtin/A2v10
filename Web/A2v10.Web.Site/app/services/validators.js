@@ -1,11 +1,12 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180522-7192*/
+/*20180629-7234*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
 
 	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 	const ERROR = 'error';
 
 	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -16,7 +17,7 @@ app.modules['std:validators'] = function () {
 
 	return {
 		validate: validateItem,
-		removeWeak,
+		removeWeak
 	};
 
 	function validateStd(rule, val) {
@@ -54,6 +55,7 @@ app.modules['std:validators'] = function () {
 
 	function validateImpl(rules, item, val, ff) {
 		let retval = [];
+		retval.pending = 0;
 		rules.forEach(function (rule) {
 			const sev = rule.severity || ERROR;
 			if (utils.isFunction(rule.applyIf)) {
@@ -90,6 +92,7 @@ app.modules['std:validators'] = function () {
 				}
 				let vr = rule.valid(item, val);
 				if (vr && vr.then) {
+					retval.pending += 1;
 					if (!rule.async) {
 						console.error('Async rules should be marked async:true');
 						return;
@@ -111,6 +114,8 @@ app.modules['std:validators'] = function () {
 						// need to update the validators
 						item._root_._needValidate_ = true;
 						if (nu && ff) ff();
+						retval.pending -= 1;
+						eventBus.$emit('pendingValidate');
 					});
 				}
 				else if (utils.isString(vr)) {
