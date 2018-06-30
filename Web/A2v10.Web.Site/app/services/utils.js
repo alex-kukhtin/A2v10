@@ -332,8 +332,11 @@ app.modules['std:utils'] = function () {
 			case "month":
 				if (d1.getTime() > d2.getTime())
 					[d1, d2] = [d2, d1];
+				let delta = 0;
+				if (d2.getDate() < d1.getDate())
+					delta = -1;
 				if (d1.getFullYear() === d2.getFullYear())
-					return d2.getMonth() - d1.getMonth();
+					return d2.getMonth() - d1.getMonth() + delta;
 				let month = 0;
 				let year = d1.getFullYear();
 				while (year < d2.getFullYear()) {
@@ -346,7 +349,7 @@ app.modules['std:utils'] = function () {
 					month += 12;
 				}
 				month += d2.getMonth() - d1.getMonth();
-				return month;
+				return month + delta;
 		}
 		throw new Error('Invalid unit value for utils.date.diff');
 	}

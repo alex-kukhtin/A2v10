@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180613-7224
+// 20180630-7235
 // controllers/base.js
 
 (function () {
@@ -189,7 +189,7 @@
 				if (!window.$$token) return;
 				let rq = window.opener.require;
 				if (!rq) return;
-				let bus = rq('std:eventBus');
+				const bus = rq('std:eventBus');
 				if (!bus) return;
 				let dat = {
 					token: window.$$token.token,
@@ -327,11 +327,7 @@
 				return href;
 			},
 			$href(url, data) {
-				let dataToHref = data;
-				if (utils.isObjectExact(dataToHref))
-					dataToHref = dataToHref.$id;
-				let retUrl = urltools.combine(url, dataToHref);
-				return retUrl;
+				return urltools.createUrlForNavigate(url, data);
 			},
 			$navigate(url, data, newWindow, update) {
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180629-7234*/
+/*20180630-7235*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -64,6 +64,13 @@ app.modules['std:validators'] = function () {
 			if (utils.isString(rule)) {
 				if (!validateStd('notBlank', val))
 					retval.push({ msg: rule, severity: ERROR });
+			} else if (utils.isFunction(rule)) {
+				let vr = rule(item, val);
+				if (utils.isString(vr) && vr) {
+					retval.push({ msg: vr, severity: sev });
+				} else if (utils.isObject(vr)) {
+					retval.push({ msg: vr.msg, severity: vr.severity || sev });
+				}
 			} else if (utils.isString(rule.valid)) {
 				if (!validateStd(rule.valid, val))
 					retval.push({ msg: rule.msg, severity: sev });
@@ -137,6 +144,8 @@ app.modules['std:validators'] = function () {
 		if (utils.isArray(rules))
 			arr = rules;
 		else if (utils.isObject(rules))
+			arr.push(rules);
+		else if (utils.isFunction(rules))
 			arr.push(rules);
 		else if (utils.isString(rules))
 			arr.push({ valid: 'notBlank', msg: rules });

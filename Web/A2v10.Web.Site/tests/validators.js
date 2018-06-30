@@ -3,17 +3,23 @@ describe("Validators", function () {
 
 	const val = require('std:validators');
 
+	let blankArray = [];
+	blankArray.pending = 0;
+
 	it("notBlank (string - rule as string)", function () {
 		let rule = 'blank message';
 		// not blank
 		expect(
 			val.validate(rule, null, 'string')
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// blank
+
+		let result = [{ msg: 'blank message', severity: 'error' }];
+		result.pending = 0;
 		expect(
 			val.validate(rule, null, '')
-		).toEqual([{ msg: 'blank message', severity: 'error' }]);
+		).toEqual(result);
 
 	});
 
@@ -23,12 +29,14 @@ describe("Validators", function () {
 		// not blank
 		expect(
 			val.validate(rule, null, 'string')
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// blank
+		let result = [{ msg: 'another message', severity: 'warning' }];
+		result.pending = 0;
 		expect(
 			val.validate(rule, null, '')
-		).toEqual([{ msg: 'another message', severity: 'warning' }]);
+		).toEqual(result);
 	});
 
 	it("notBlank (number - rule as string)", function () {
@@ -37,13 +45,14 @@ describe("Validators", function () {
 		// not blank
 		expect(
 			val.validate(rule, null, 234)
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// blank
+		let result = [{ msg: 'blank message', severity: 'error' }];
+		result.pending = 0
 		expect(
 			val.validate(rule, null, 0)
-		).toEqual([{ msg: 'blank message', severity: 'error' }]);
-		expect(true).toBe(true);
+		).toEqual(result);
 	});
 
 	it("rule.valid as function", function () {
@@ -58,12 +67,36 @@ describe("Validators", function () {
 		// valid
 		expect(
 			val.validate(rule, item, 'test')
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// not valid
+		let result = [{ msg: 'error message', severity: 'error' }];
+		result.pending = 0;
 		expect(
 			val.validate(rule, item, 'test1')
-		).toEqual([{ msg: 'error message', severity: 'error' }]);
+		).toEqual(result);
+
+	});
+
+	it("rule as function", function () {
+		function isValid(item, val) {
+			return item.test === val ? "" : "invalid element";
+		}
+
+		let rule = isValid;
+		let item = { test: 'test' };
+
+		// valid
+		expect(
+			val.validate(rule, item, 'test')
+		).toEqual(blankArray);
+
+		// not valid
+		let result = [{ msg: 'invalid element', severity: 'error' }];
+		result.pending = 0;
+		expect(
+			val.validate(rule, item, 'test1')
+		).toEqual(result);
 
 	});
 
@@ -83,19 +116,24 @@ describe("Validators", function () {
 		// valid
 		expect(
 			val.validate(rules, item, 'test')
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// not valid
+		let result = [{ msg: 'error message', severity: 'error' }];
+		result.pending = 0;
 		expect(
 			val.validate(rules, item, 'test1')
-		).toEqual([{ msg: 'error message', severity: 'error' }]);
+		).toEqual(result);
+
+		result = [
+			{ msg: 'valid is blank', severity: 'error' },
+			{ msg: "error message", severity: 'error' }
+		];
+		result.pending = 0;
 
 		expect(
 			val.validate(rules, item, '')
-		).toEqual([
-			{ msg: 'valid is blank', severity: 'error' },
-			{ msg: "error message", severity: 'error' }
-		]);
+		).toEqual(result);
 	});
 
 	it("valid function that returns a string", function () {
@@ -110,12 +148,14 @@ describe("Validators", function () {
 		// valid
 		expect(
 			val.validate(rule, item, 'test')
-		).toEqual([]);
+		).toEqual(blankArray);
 
 		// not valid
+		let result = [{ msg: 'error test1', severity: 'info' }];
+		result.pending = 0;
 		expect(
 			val.validate(rule, item, 'test1')
-		).toEqual([{ msg: 'error test1', severity: 'info' }]);
+		).toEqual(result);
 	});
 
 });

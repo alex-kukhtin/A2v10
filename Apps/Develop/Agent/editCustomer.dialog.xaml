@@ -16,7 +16,7 @@
 						Value="{Bind Agent.Name}" />
 				<TextBox Grid.Row="3" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" TabIndex="3"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" 
-					TabIndex="4"
+					TabIndex="4" Bold="True" Italic="True"
 					Rows="3" Multiline="True"/>
 
 				<CheckBox Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>

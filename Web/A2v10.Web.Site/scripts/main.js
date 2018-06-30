@@ -427,8 +427,11 @@ app.modules['std:utils'] = function () {
 			case "month":
 				if (d1.getTime() > d2.getTime())
 					[d1, d2] = [d2, d1];
+				let delta = 0;
+				if (d2.getDate() < d1.getDate())
+					delta = -1;
 				if (d1.getFullYear() === d2.getFullYear())
-					return d2.getMonth() - d1.getMonth();
+					return d2.getMonth() - d1.getMonth() + delta;
 				let month = 0;
 				let year = d1.getFullYear();
 				while (year < d2.getFullYear()) {
@@ -441,7 +444,7 @@ app.modules['std:utils'] = function () {
 					month += 12;
 				}
 				month += d2.getMonth() - d1.getMonth();
-				return month;
+				return month + delta;
 		}
 		throw new Error('Invalid unit value for utils.date.diff');
 	}
@@ -1360,7 +1363,7 @@ app.modules['std:log'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180629-7234*/
+/*20180630-7235*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -1424,6 +1427,13 @@ app.modules['std:validators'] = function () {
 			if (utils.isString(rule)) {
 				if (!validateStd('notBlank', val))
 					retval.push({ msg: rule, severity: ERROR });
+			} else if (utils.isFunction(rule)) {
+				let vr = rule(item, val);
+				if (utils.isString(vr) && vr) {
+					retval.push({ msg: vr, severity: sev });
+				} else if (utils.isObject(vr)) {
+					retval.push({ msg: vr.msg, severity: vr.severity || sev });
+				}
 			} else if (utils.isString(rule.valid)) {
 				if (!validateStd(rule.valid, val))
 					retval.push({ msg: rule.msg, severity: sev });
@@ -1497,6 +1507,8 @@ app.modules['std:validators'] = function () {
 		if (utils.isArray(rules))
 			arr = rules;
 		else if (utils.isObject(rules))
+			arr.push(rules);
+		else if (utils.isFunction(rules))
 			arr.push(rules);
 		else if (utils.isString(rules))
 			arr.push({ valid: 'notBlank', msg: rules });
@@ -8205,7 +8217,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180613-7224
+// 20180630-7235
 // controllers/base.js
 
 (function () {
@@ -8394,7 +8406,7 @@ Vue.directive('resize', {
 				if (!window.$$token) return;
 				let rq = window.opener.require;
 				if (!rq) return;
-				let bus = rq('std:eventBus');
+				const bus = rq('std:eventBus');
 				if (!bus) return;
 				let dat = {
 					token: window.$$token.token,
@@ -8532,11 +8544,7 @@ Vue.directive('resize', {
 				return href;
 			},
 			$href(url, data) {
-				let dataToHref = data;
-				if (utils.isObjectExact(dataToHref))
-					dataToHref = dataToHref.$id;
-				let retUrl = urltools.combine(url, dataToHref);
-				return retUrl;
+				return urltools.createUrlForNavigate(url, data);
 			},
 			$navigate(url, data, newWindow, update) {
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);

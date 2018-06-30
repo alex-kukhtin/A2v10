@@ -126,17 +126,22 @@
 
 	it('date diff (month) ', function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
-		let d2 = new Date(2018, 5, 15);
+		let d2 = new Date(2018, 5, 15); // 15 jun
 		let f = du.diff("month", d1, d2);
 		expect(f).toBe(4);
 
 		d1 = new Date(2018, 1, 2); // 2 feb
-		d2 = new Date(2019, 5, 15);
+		d2 = new Date(2018, 5, 1); // 1 jun
+		f = du.diff("month", d1, d2);
+		expect(f).toBe(3);
+
+		d1 = new Date(2018, 1, 2); // 2 feb
+		d2 = new Date(2019, 5, 15); // 15 jun
 		f = du.diff("month", d1, d2);
 		expect(f).toBe(16);
 
 		d1 = new Date(2018, 1, 2); // 2 feb
-		d2 = new Date(2019, 5, 15);
+		d2 = new Date(2019, 5, 2); // 2 jun
 		f = du.diff("month", d1, d2);
 		expect(f).toBe(16);
 
@@ -144,7 +149,7 @@
 		expect(f).toBe(16);
 
 		d1 = new Date(2018, 1, 15); // 15 feb
-		d2 = new Date(2019, 2, 1); // 1 jun
+		d2 = new Date(2019, 5, 1); // 1 jun
 		f = du.diff("month", d1, d2);
 		expect(f).toBe(15);
 	});

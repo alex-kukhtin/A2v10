@@ -298,7 +298,7 @@ namespace A2v10.Web.Mvc.Controllers
 				Int32 x = msg.IndexOf(": error");
 				if (x != -1)
 					msg = msg.Substring(x + 7).Trim();
-				return new ContentResult() { Content = "Error:" + msg };
+				return new HttpStatusCodeResult(500, msg);
 			}
 		}
 
