@@ -48,7 +48,7 @@
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid Columns="12rem, 12rem, 150, 1*">
-		<Alert Style="Danger">Русский текст фывфвв</Alert>
+		<Alert Style="Danger">Русский текст</Alert>
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
 		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}"/>
 		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right"/>
@@ -121,10 +121,10 @@
 			<Code Grid.Row="7" Content="{Bind Document.Memo}"></Code>
 		-->
 		<FieldSet Grid.Row="7" Grid.ColSpan="4">
-			<Radio Value="{Bind Document.No}" CheckedValue="3">Number 3</Radio>
-			<Radio Value="{Bind Document.No}" CheckedValue="2">Number 2</Radio>
-			<Radio Value="{Bind Document.No}" CheckedValue="3" Disabled="True">Number 3</Radio>
-			<Radio Value="{Bind Document.No}" CheckedValue="2" Disabled="True">Number 2</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="3" Style="Default">Number 3</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="2" Style="Default">Number 2</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="3" Disabled="True" Style="Default">Number 3</Radio>
+			<Radio Value="{Bind Document.No}" CheckedValue="2" Disabled="True" Style="Default">Number 2</Radio>
 			<CheckBox Value="{Bind Document.$checked}">CheckBox 1</CheckBox>
 			<CheckBox Value="False">CheckBox 2</CheckBox>
 			<CheckBox Value="{Bind Document.$checked}" Disabled="True">CheckBox 1</CheckBox>

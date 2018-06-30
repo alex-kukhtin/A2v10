@@ -3537,6 +3537,15 @@ input[type="radio"]:focus + span::before {
 input[type="radio"]:disabled:checked + span::after {
   border-color: #aaa;
 }
+.checkbox input[type="radio"]:checked + span::after {
+  content: '\e977';
+  border: 1px solid transparent;
+  text-align: center;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  transform: none;
+}
 label.checkbox.small {
   font-size: 0.9em;
 }

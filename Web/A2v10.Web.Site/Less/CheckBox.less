@@ -148,6 +148,19 @@ input[type="radio"] {
 	}
 }
 
+// radio like checkbox
+.checkbox input[type="radio"] {
+	&:checked + span::after {
+		content: '\e977';
+		border:1px solid transparent;
+		text-align: center;
+		width: 14px;
+		height: 14px;
+		line-height:14px;
+		transform: none;
+	}
+}
+
 // test for small
 label.checkbox.small {
 	font-size: 0.9em;

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180601-7203
+// 20180630-7236
 // services/datamodel.js
 
 (function () {
@@ -119,6 +119,7 @@
 				val = ensureType(ctor, val);
 				if (val === this._src_[prop])
 					return;
+				let oldVal = this._src_[prop];
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
 					this._src_[prop].$set(val);
@@ -133,7 +134,7 @@
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
-				this._root_.$emit(eventName, this, val);
+				this._root_.$emit(eventName, this, val, oldVal);
 			}
 		});
 	}
