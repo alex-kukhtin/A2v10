@@ -11,13 +11,13 @@ using System.Collections.Generic;
 
 namespace A2v10.Request
 {
-	public class ImageInfo
+	public class AttachmentInfo
 	{
 		public String Mime { get; set; }
 		public Byte[] Stream { get; set; }
 	}
 
-	public class ImageUpdateInfo
+	public class AttachmentUpdateInfo
 	{
 		public Int32 TenantId { get; set; }
 		public Int64 UserId { get; set; }
@@ -30,7 +30,7 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public async Task<ImageInfo> Image(Int32 tenantId, String pathInfo, Int64 userId)
+		public async Task<AttachmentInfo> Attachment(Int32 tenantId, String pathInfo, Int64 userId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
@@ -42,17 +42,17 @@ namespace A2v10.Request
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Load]";
-			return await _dbContext.LoadAsync<ImageInfo>(rm.source, procedure, prms);
+			return await _dbContext.LoadAsync<AttachmentInfo>(rm.source, procedure, prms);
 		}
 
 
-		public async Task<IList<Object>> SaveImages(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)
+		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
-			ImageUpdateInfo ii = new ImageUpdateInfo
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo
 			{
 				// TODO: is not tenantId ???
 				TenantId = tenantId,
@@ -73,9 +73,9 @@ namespace A2v10.Request
 			return retList;
 		}
 
-		public ImageInfo StaticImage(String url)
+		public AttachmentInfo StaticImage(String url)
 		{
-			var ii = new ImageInfo();
+			var ii = new AttachmentInfo();
 			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, url.RemoveHeadSlash()));
 			ii.Stream = File.ReadAllBytes(filePath);
 			ii.Mime = MimeMapping.GetMimeMapping(filePath);

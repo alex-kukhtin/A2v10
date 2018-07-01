@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7173
+// 20180701-7237
 // components/datagrid.js*/
 
 (function () {
@@ -502,7 +502,7 @@
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
-			hitItem: Function,
+			hitItem: Function
 		},
 		template: dataGridTemplate,
 		components: {

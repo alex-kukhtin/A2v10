@@ -110,6 +110,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Image("/" + pathInfo); // with _image prefix
 			}
+			else if (pathInfo.StartsWith("_upload/"))
+			{
+				await Upload("/" + pathInfo); // with _image prefix
+			}
 			else if (pathInfo.StartsWith("_export/"))
 			{
 				await Export("/" + pathInfo);
@@ -211,12 +215,10 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				ImageInfo info = _baseController.StaticImage(url);
-				if (info == null)
+				AttachmentInfo info = _baseController.StaticImage(url);
+				if (info == null || info.Stream == null)
 					return;
 				Response.ContentType = info.Mime;
-				if (info.Stream == null)
-					return;
 				Response.BinaryWrite(info.Stream);
 			}
 			catch (Exception ex)
@@ -252,15 +254,33 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else
 			{
-				await LoadImage(url);
+				await LoadAttachment(url);
 			}
 		}
 
-		async Task LoadImage(String url)
+		async Task Upload(String url)
+		{
+			if (Request.HttpMethod != "POST")
+				throw new RequestModelException("Invalid HttpMethod for upload");
+			if (IsNotAjax())
+				return;
+			Response.ContentType = "application/json";
+			try
+			{
+				var files = Request.Files;
+				await _baseController.SaveUploads(TenantId, url, files, UserId, Response.Output);
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex);
+			}
+		}
+
+		async Task LoadAttachment(String url)
 		{
 			try
 			{
-				ImageInfo info = await _baseController.Image(TenantId, url, UserId);
+				AttachmentInfo info = await _baseController.Attachment(TenantId, url, UserId);
 				if (info == null)
 					return;
 				Response.ContentType = info.Mime;
@@ -295,7 +315,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var files = Request.Files;
-				var list = await _baseController.SaveImages(TenantId, url, files, UserId);
+				var list = await _baseController.SaveAttachments(TenantId, url, files, UserId);
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);

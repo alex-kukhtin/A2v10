@@ -1002,7 +1002,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180319-7135
+// 20180701-7237
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1068,11 +1068,13 @@ app.modules['std:http'] = function () {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 			xhr.onload = function (response) {
+				eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
 					let xhrResult = JSON.parse(xhr.responseText);
 					resolve(xhrResult);
 				} else if (xhr.status === 255) {
 					alert(xhr.responseText || xhr.statusText);
+					reject(xhr.responseText || xhr.statusText);
 				}
 			};
 			xhr.onerror = function (response) {
@@ -1081,6 +1083,7 @@ app.modules['std:http'] = function () {
 			xhr.open("POST", url, true);
 			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			xhr.setRequestHeader('Accept', 'application/json');
+			eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
 	}
@@ -4453,7 +4456,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7173
+// 20180701-7237
 // components/datagrid.js*/
 
 (function () {
@@ -4955,7 +4958,7 @@ Vue.component('validator-control', {
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
-			hitItem: Function,
+			hitItem: Function
 		},
 		template: dataGridTemplate,
 		components: {
@@ -6082,18 +6085,17 @@ TODO:
 
 (function () {
 
-	var url = require('std:url');
-	var http = require('std:http');
+	const url = require('std:url');
+	const http = require('std:http');
 
 	Vue.component("a2-upload", {
         /* TODO:
-         1. Accept for images/upload - may be accept property ???
          4. ControllerName (_image ???)
         */
 		template: `
 <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
-	<i class="ico ico-image"></i>
+	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" />
+	<i class="ico" :class="icoClass"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
 		`,
@@ -6103,7 +6105,8 @@ TODO:
 			base: String,
 			newItem: Boolean,
 			tip: String,
-			readOnly: Boolean
+			readOnly: Boolean,
+			accept: String
 		},
 		data: function () {
 			return {
@@ -6119,6 +6122,9 @@ TODO:
 			},
 			canUpload() {
 				return !this.readOnly;
+			},
+			icoClass() {
+				return this.accept === 'image/*' ? 'ico-image' : 'ico-upload';
 			}
 		},
 		methods: {
@@ -7075,7 +7081,8 @@ TODO:
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
 	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if="isUploadVisible" :style="uploadStyle" :item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly'/>
+	<a2-upload v-if="isUploadVisible" :style="uploadStyle" accept="image/*"
+		:item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly'/>
 </div>
 `,
 		props: {
@@ -7161,6 +7168,125 @@ TODO:
 				let root = window.$$rootUrl;
 				return url.combine(root, '_static_image', this.url.replace(/\./g, '-'));
 			}
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180701-7237
+// components/attachments.js
+
+(function () {
+
+    /**
+     TODO:
+    2. if/else - image/upload
+    3. Photo, Base for list
+    4. multiple for list
+    5. css
+    <span v-text="href"></span>
+    <span>{{newElem}}</span>
+     */
+
+	const url = require('std:url');
+	const http = require('std:http');
+	const locale = window.$$locale;
+
+	const uploadAttachment = {
+		template: `
+<label :class="cssClass" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
+	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
+	<i class="ico ico-upload"></i>
+	<span class="upload-tip" v-text="tip" v-if="tip"></span>
+</label>
+		`,
+		data() {
+			return {
+				hover: false
+			};
+		},
+		props: {
+			accept: String,
+			tip: String,
+			url: String,
+			source: Object
+		},
+		computed: {
+			cssClass() {
+				return 'file-upload' + (this.hover ? ' hover' : '');
+			},
+			canUpload() {
+				return true;
+			},
+			isMultiple() {
+				return false;
+			}
+		},
+		methods: {
+			dragOver(ev) {
+				this.hover = true;
+			},
+			dragLeave(ev) {
+				this.hover = false;
+			},
+			uploadImage(ev) {
+				let root = window.$$rootUrl;
+				let id = 1; //%%%%this.item[this.prop];
+				let uploadUrl = url.combine(root, '_upload', this.url, id);
+				var fd = new FormData();
+				for (let file of ev.target.files) {
+					fd.append('file', file, file.name);
+				}
+				this.$refs.inputFile.value = '';
+				http.upload(uploadUrl, fd).then((result) => {
+					ev.target.value = ''; // clear current selected files
+					this.source.$merge(result);
+				});
+			}
+		}
+	};
+
+
+	Vue.component('a2-attachments', {
+		template: `
+<div class="a2-attachments">
+	<ul>
+		<li><a @click.prevent="clickFile">filename</a></li>
+	</ul>
+	<a2-upload-attachment v-if="isUploadVisible" :source="source"
+		:url="url" :tip="tip" :read-only='readOnly' :accept="accept"/>
+</div>
+`,
+		components: {
+			'a2-upload-attachment': uploadAttachment
+		},
+		props: {
+			url: String,
+			source: Object,
+			readOnly: Boolean,
+			accept: String
+		},
+		computed: {
+			tip() {
+				if (this.readOnly) return '';
+				return locale.$ClickToDownloadFile;
+			},
+			isUploadVisible: function () {
+				return true;
+			}
+		},
+		methods: {
+			removeFile: function () {
+				if (this.inArray)
+					this.item.$remove();
+				else
+					this.item[this.prop] = undefined;
+			},
+			clickFile() {
+				alert('click file here');
+			}
+		},
+		created() {
 		}
 	});
 })();

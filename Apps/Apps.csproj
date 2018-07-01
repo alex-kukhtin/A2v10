@@ -51,6 +51,7 @@
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Catalog\Inbox\model.json" />
     <None Include="Develop\Catalog\MyClients\model.json" />
+    <None Include="Develop\Catalog\Upload\model.json" />
     <None Include="Develop\Common\Agent\model.json" />
     <None Include="Develop\Document\Reports\model.json" />
     <None Include="Develop\Document\Request\index.view.xaml">
@@ -117,6 +118,7 @@
     <Content Include="Develop\Purchase\WaybillIn\index.template.js" />
     <Content Include="Develop\Purchase\WaybillIn\waybillin.template.js" />
     <Content Include="Develop\Sales\Customer\index.template.js" />
+    <Content Include="Develop\Sales\Invoice\upload.template.js" />
     <Content Include="Develop\Sales\Invoice\index.template.js" />
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
     <Content Include="Develop\Sales\Waybill\index.template.js" />
@@ -373,6 +375,12 @@
     <Content Include="Develop\Document\info.xaml">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\Invoice\upload.wizard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

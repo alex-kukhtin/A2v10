@@ -70,6 +70,8 @@
 				<Static Label="Телефон" Grid.Row="4" Grid.Col="2" Value="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"/>
 				<CheckBox Grid.Row="5" Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 				<Span Content="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"></Span>
+
+				<Image Source="{Bind Agent.Image}" Base="/Catalog/Customer"/>
 			</Grid>
 		</Tab>
 	</TabPanel>

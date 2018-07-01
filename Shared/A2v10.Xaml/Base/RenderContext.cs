@@ -201,7 +201,11 @@ namespace A2v10.Xaml
 				throw new ArgumentNullException(nameof(path));
 			const String rootKey = "Root.";
 			if (_stackScope.Count == 0)
+			{
+				if (path == "Root")
+					return "$data";
 				return path.Replace(rootKey, "$data.");
+			}
 			if (path.StartsWith("Parent."))
 				return path;
 			if (path.StartsWith(rootKey))

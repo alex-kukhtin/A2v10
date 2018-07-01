@@ -1156,6 +1156,18 @@ header .btn:hover,
   bottom: 0;
   padding-bottom: 1rem;
   text-align: center;
+  font-size: 0.95rem;
+}
+.a2-attachments .file-upload {
+  height: 5rem;
+}
+.a2-attachments .file-upload .ico {
+  font-size: 1.5rem;
+  top: 1rem;
+  left: calc(50% - 1rem);
+}
+.a2-attachments .file-upload .upload-tip {
+  padding-bottom: 0.2rem;
 }
 footer,
 .footer {

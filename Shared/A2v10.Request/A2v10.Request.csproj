@@ -47,6 +47,7 @@
     <Compile Include="Controllers\BaseController.Export.cs" />
     <Compile Include="Controllers\BaseController.Image.cs" />
     <Compile Include="Controllers\BaseController.Layout.cs" />
+    <Compile Include="Controllers\BaseController.Upload.cs" />
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="ResourceHelper.cs" />
     <Compile Include="Models\RequestModel.cs" />

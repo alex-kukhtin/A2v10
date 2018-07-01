@@ -37,6 +37,7 @@
 		$Of: 'of',
 		$Register: 'Registraton',
 		$ClickToDownloadPicture: 'Click to download picture',
+		$ClickToDownloadFile: 'Click to download file',
 		$EnterPassword: 'Enter password',
 		$MatchError: 'the password does not match the confirmation',
 		$PasswordLength: 'the password must be at least 6 characters long',

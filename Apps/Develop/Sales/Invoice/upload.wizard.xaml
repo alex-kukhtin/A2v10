@@ -1,0 +1,27 @@
+﻿<!-- Demo wizard -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+		Title="Download demo" Width="900" Height="500"
+		HelpUrl="/catalogs/agents" Padding="20">
+	<Block If="{Bind !Test.Rows.$isEmpty}">
+		<DataGrid ItemsSource="{Bind Test.Rows}" Striped="True" GridLines="Vertical" Hover="True">
+			<DataGridColumn Header="Name" Content="{Bind Name}" />
+			<DataGridColumn Header="Group" Content="{Bind Group}"/>
+			<DataGridColumn Header="Article" Content="{Bind Article}" />
+			<DataGridColumn Header="Code" Content="{Bind Code}" />
+			<DataGridColumn Header="Remains" Content="{Bind Rem, DataType=Number}" Align="Right"/>
+		</DataGrid>
+	</Block>
+	<Block If="{Bind Test.Rows.$isEmpty}">
+		<Paragraph>
+			Загрузка объектов учета в базу данных
+			<Span Bold="True">Здесь жирный текст</Span>
+		</Paragraph>
+		<Attachments Url="/Sales/Invoice/uploadFile"
+					 Margin="20" Source="{Bind Root}"
+					 Accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+		<Paragraph>
+			Поддерживаются только файлы формата xlsx (Excel 2007 и выше). Загрузить
+			<Hyperlink Command="{BindCmd Navigate, Url='/files/Список товаров.xlsx'}">образец файла</Hyperlink>.
+		</Paragraph>
+	</Block>
+</Dialog>

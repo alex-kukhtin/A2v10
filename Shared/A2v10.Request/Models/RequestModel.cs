@@ -31,6 +31,7 @@ namespace A2v10.Request
 		Command,
 		Data,
 		Image,
+		Upload,
 		Report,
 		Export
 	}
@@ -50,6 +51,7 @@ namespace A2v10.Request
 		public String path;
 		public String data;
 		public String report;
+		public String upload;
 	}
 
 
@@ -100,9 +102,9 @@ namespace A2v10.Request
 				var cm = CurrentModel;
 				if (String.IsNullOrEmpty(cm))
 					return null;
-				String action = 
-					index ? "Index" : 
-					copy  ? "Copy"  : "Load";
+				String action =
+					index ? "Index" :
+					copy ? "Copy" : "Load";
 				return $"[{CurrentSchema}].[{cm}.{action}]";
 			}
 		}
@@ -355,6 +357,18 @@ namespace A2v10.Request
 		public Boolean HasPath => type == RequestReportType.stimulsoft;
 	}
 
+	public enum RequestUploadParseType
+	{
+		none,
+		excel
+	}
+
+
+	public class RequestUpload : RequestBase
+	{
+		public RequestUploadParseType parse;
+	}
+
 	public class RequestImage : RequestBase
 	{
 		public String key;
@@ -367,6 +381,7 @@ namespace A2v10.Request
 		private String _popup;
 		private String _command;
 		private String _report;
+		private String _upload;
 		private String _data;
 		private RequestUrlKind _kind;
 
@@ -392,6 +407,8 @@ namespace A2v10.Request
 		public Dictionary<String, RequestCommand> Commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
 		[JsonProperty("reports")]
 		public Dictionary<String, RequestReport> Reports { get; set; } = new Dictionary<String, RequestReport>(StringComparer.InvariantCultureIgnoreCase);
+		[JsonProperty("uploads")]
+		public Dictionary<String, RequestUpload> Uploads { get; set; } = new Dictionary<String, RequestUpload>(StringComparer.InvariantCultureIgnoreCase);
 
 
 		[JsonIgnore]
@@ -499,6 +516,8 @@ namespace A2v10.Request
 				p.SetParent(this);
 			foreach (var r in Reports.Values)
 				r.SetParent(this);
+			foreach (var u in Uploads.Values)
+				u.SetParent(this);
 		}
 
 		public RequestCommand GetCommand(String command)
@@ -513,6 +532,13 @@ namespace A2v10.Request
 			if (Reports.TryGetValue(_report, out RequestReport rep))
 				return rep;
 			throw new RequestModelException($"Report '{_report}' not found");
+		}
+
+		public RequestUpload GetUpload()
+		{
+			if (Uploads.TryGetValue(_upload, out RequestUpload upload))
+				return upload;
+			throw new RequestModelException($"Upload '{_upload}' not found");
 		}
 
 		public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)
@@ -551,6 +577,9 @@ namespace A2v10.Request
 					break;
 				case RequestUrlKind.Image:
 					mi.action = action;
+					break;
+				case RequestUrlKind.Upload:
+					mi.upload = action;
 					break;
 				case RequestUrlKind.Report:
 					mi.report = action;
@@ -617,6 +646,7 @@ namespace A2v10.Request
 			rm._popup = mi.popup;
 			rm._command = mi.command;
 			rm._report = mi.report;
+			rm._upload = mi.upload;
 			rm._data = mi.data;
 			rm._modelPath = pathForLoad;
 			rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
@@ -646,6 +676,11 @@ namespace A2v10.Request
 			{
 				kind = RequestUrlKind.Image;
 				baseUrl = baseUrl.Substring(8);
+			}
+			else if (baseUrl.StartsWith("/_upload"))
+			{
+				kind = RequestUrlKind.Upload;
+				baseUrl = baseUrl.Substring(9);
 			}
 			else if (baseUrl.StartsWith("/_report"))
 			{

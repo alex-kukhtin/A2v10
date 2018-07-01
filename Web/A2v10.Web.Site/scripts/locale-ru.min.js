@@ -37,6 +37,7 @@
 		$Of: 'из',
 		$Register: 'Регистрация',
 		$ClickToDownloadPicture: 'Щелкните чтобы загрузить картинку',
+		$ClickToDownloadFile: 'Щелкните чтобы загрузить файл',
 		$EnterPassword: 'Введите пароль',
 		$MatchError: 'пароль не совпадает с подтверждением',
 		$PasswordLength: 'пароль должен иметь длину не менее 6 символов',

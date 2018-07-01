@@ -2,7 +2,7 @@
 .a2-image {
 	display: flex;
 	position: relative;
-	align-items:flex-start;
+	align-items: flex-start;
 
 	.remove-image {
 		position: absolute;
@@ -27,14 +27,14 @@
 
 	img {
 		margin: auto;
-		width:auto;
-		height:auto;
+		width: auto;
+		height: auto;
 	}
 
 	.file-upload {
 		margin: auto;
-		max-width:250px;
-		max-height:250px;
+		max-width: 250px;
+		max-height: 250px;
 	}
 }
 
@@ -71,8 +71,26 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		bottom:0;
-		padding-bottom:1rem;
-		text-align:center;
+		bottom: 0;
+		padding-bottom: 1rem;
+		text-align: center;
+		font-size:0.95rem;
+	}
+}
+
+.a2-attachments {
+
+	.file-upload {
+		height: 5rem;
+
+		.ico {
+			font-size: 1.5rem;
+			top: 1rem;
+			left: ~"calc(50% - 1rem)";
+		}
+
+		.upload-tip {
+			padding-bottom: 0.2rem;
+		}
 	}
 }

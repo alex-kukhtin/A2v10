@@ -7,18 +7,17 @@
 
 (function () {
 
-	var url = require('std:url');
-	var http = require('std:http');
+	const url = require('std:url');
+	const http = require('std:http');
 
 	Vue.component("a2-upload", {
         /* TODO:
-         1. Accept for images/upload - may be accept property ???
          4. ControllerName (_image ???)
         */
 		template: `
 <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
-	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" accept="image/*" />
-	<i class="ico ico-image"></i>
+	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" />
+	<i class="ico" :class="icoClass"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
 		`,
@@ -28,7 +27,8 @@
 			base: String,
 			newItem: Boolean,
 			tip: String,
-			readOnly: Boolean
+			readOnly: Boolean,
+			accept: String
 		},
 		data: function () {
 			return {
@@ -44,6 +44,9 @@
 			},
 			canUpload() {
 				return !this.readOnly;
+			},
+			icoClass() {
+				return this.accept === 'image/*' ? 'ico-image' : 'ico-upload';
 			}
 		},
 		methods: {

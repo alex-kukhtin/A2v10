@@ -25,6 +25,7 @@
 			<Button Icon="FileLink" Content="XML" Command="{BindCmd Report, Report='TestXml', Export=True, Argument={Bind Documents.$selected}}"/>
 			<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
+			<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>

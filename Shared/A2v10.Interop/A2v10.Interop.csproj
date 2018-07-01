@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClrInvoker.cs" />
+    <Compile Include="ExcelParser.cs" />
     <Compile Include="ExcelReportGenerator.cs" />
     <Compile Include="InteropException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
