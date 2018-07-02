@@ -118,6 +118,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Export("/" + pathInfo);
 			}
+			else if (pathInfo.StartsWith("file/"))
+			{
+				LoadFile(pathInfo.Substring(5));
+			}
 			else if (pathInfo.StartsWith("_static_image/"))
 			{
 				StaticImage(pathInfo.Substring(14).Replace('-', '.'));
@@ -243,6 +247,29 @@ namespace A2v10.Web.Mvc.Controllers
 			catch (Exception ex)
 			{
 				WriteExceptionStatus(ex);
+			}
+		}
+
+		void LoadFile(String path)
+		{
+			// HTTP GET
+			try
+			{
+				Int32 ix = path.LastIndexOf('-');
+				if (ix != -1)
+					path = path.Substring(0, ix) + "." + path.Substring(ix + 1);
+				String fullPath = _baseController.Host.MakeFullPath(false, "_files/" + path, "");
+				if (!System.IO.File.Exists(fullPath))
+					throw new FileNotFoundException($"File not found '{path}'");
+				Response.ContentType = MimeMapping.GetMimeMapping(path);
+				using (var stream = System.IO.File.OpenRead(fullPath))
+				{
+					stream.CopyTo(Response.OutputStream);
+				}
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteHtmlException(ex, Response.Output);
 			}
 		}
 

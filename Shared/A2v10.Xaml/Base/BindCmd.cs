@@ -39,6 +39,7 @@ namespace A2v10.Xaml
 		Export,
 		MailTo,
 		Navigate,
+		Download,
 		Help
 	}
 
@@ -158,6 +159,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Navigate:
 					return $"$navigateSimple({CommandUrl(context)}, {NewWindowJS})";
+
+				case CommandType.Download:
+					return $"$download({CommandUrl(context)})";
 
 				case CommandType.Help:
 					return $"$showHelp({CommandUrl(context)})";

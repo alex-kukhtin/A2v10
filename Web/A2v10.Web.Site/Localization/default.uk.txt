@@ -75,3 +75,4 @@
 @Error.EnterName=Введіть назву елемента
 @Error.DuplicateCode=Елемент з таким кодом вже існує
 @Error.Exception=Щось пішло не так, як очікувалося :-(
+@Error.FileFormatException=Некоректний формат файлу

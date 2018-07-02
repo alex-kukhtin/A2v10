@@ -1073,7 +1073,6 @@ app.modules['std:http'] = function () {
 					let xhrResult = JSON.parse(xhr.responseText);
 					resolve(xhrResult);
 				} else if (xhr.status === 255) {
-					alert(xhr.responseText || xhr.statusText);
 					reject(xhr.responseText || xhr.statusText);
 				}
 			};
@@ -1087,6 +1086,7 @@ app.modules['std:http'] = function () {
 			xhr.send(data);
 		});
 	}
+
 	function load(url, selector) {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
@@ -3123,6 +3123,30 @@ app.modules['std:mask'] = function () {
 		var evt = document.createEvent('HTMLEvents');
 		evt.initEvent('change', false, true);
 		input.dispatchEvent(evt);
+	}
+};
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+/*20180702-7237*/
+/* services/tools.js */
+
+app.modules['std:tools'] = function () {
+
+	const eventBus = require('std:eventBus');
+
+	return {
+		alert
+	};
+
+	function alert(msg, title, list) {
+		let dlgData = {
+			promise: null, data: {
+				message: msg, title: title, style: 'alert', list: list
+			}
+		};
+		eventBus.$emit('confirm', dlgData);
+		return dlgData.promise;
 	}
 };
 
@@ -6159,6 +6183,8 @@ TODO:
 							this.item[this.prop] = result.ids[0];
 						}
 					}
+				}).catch(result => {
+					alert(result);
 				});
 			}
 		}
@@ -7191,11 +7217,12 @@ TODO:
 	const url = require('std:url');
 	const http = require('std:http');
 	const locale = window.$$locale;
+	const tools = require('std:tools');
 
 	const uploadAttachment = {
 		template: `
 <label :class="cssClass" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
-	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
+	<input v-if='canUpload' type="file" @change="uploadFile" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
 	<i class="ico ico-upload"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
@@ -7229,7 +7256,7 @@ TODO:
 			dragLeave(ev) {
 				this.hover = false;
 			},
-			uploadImage(ev) {
+			uploadFile(ev) {
 				let root = window.$$rootUrl;
 				let id = 1; //%%%%this.item[this.prop];
 				let uploadUrl = url.combine(root, '_upload', this.url, id);
@@ -7241,18 +7268,25 @@ TODO:
 				http.upload(uploadUrl, fd).then((result) => {
 					ev.target.value = ''; // clear current selected files
 					this.source.$merge(result);
+				}).catch(msg => {
+					if (msg.indexOf('UI:') === 0)
+						tools.alert(msg.substring(3).replace('\\n', '\n'));
+					else
+						alert(msg);
 				});
 			}
 		}
 	};
 
+	/*
+	<ul>
+		<li><a @click.prevent="clickFile">filename</a></li>
+	</ul>
+	*/
 
 	Vue.component('a2-attachments', {
 		template: `
 <div class="a2-attachments">
-	<ul>
-		<li><a @click.prevent="clickFile">filename</a></li>
-	</ul>
 	<a2-upload-attachment v-if="isUploadVisible" :source="source"
 		:url="url" :tip="tip" :read-only='readOnly' :accept="accept"/>
 </div>
@@ -8344,7 +8378,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180630-7235
+// 20180702-7237
 // controllers/base.js
 
 (function () {
@@ -8692,6 +8726,12 @@ Vue.directive('resize', {
 					this.$store.commit('navigate', { url: url });
 			},
 
+			$download(url) {
+				const root = window.$$rootUrl;
+				url = urltools.combine('/file', url.replace('.', '-'));
+				window.location = root + url;
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -8774,6 +8814,7 @@ Vue.directive('resize', {
 			},
 
 			$alert(msg, title, list) {
+				// TODO: tools
 				let dlgData = {
 					promise: null, data: {
 						message: msg, title: title, style: 'alert', list: list

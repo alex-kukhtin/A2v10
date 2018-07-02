@@ -18,11 +18,12 @@
 	const url = require('std:url');
 	const http = require('std:http');
 	const locale = window.$$locale;
+	const tools = require('std:tools');
 
 	const uploadAttachment = {
 		template: `
 <label :class="cssClass" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
-	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
+	<input v-if='canUpload' type="file" @change="uploadFile" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
 	<i class="ico ico-upload"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
@@ -56,7 +57,7 @@
 			dragLeave(ev) {
 				this.hover = false;
 			},
-			uploadImage(ev) {
+			uploadFile(ev) {
 				let root = window.$$rootUrl;
 				let id = 1; //%%%%this.item[this.prop];
 				let uploadUrl = url.combine(root, '_upload', this.url, id);
@@ -68,18 +69,25 @@
 				http.upload(uploadUrl, fd).then((result) => {
 					ev.target.value = ''; // clear current selected files
 					this.source.$merge(result);
+				}).catch(msg => {
+					if (msg.indexOf('UI:') === 0)
+						tools.alert(msg.substring(3).replace('\\n', '\n'));
+					else
+						alert(msg);
 				});
 			}
 		}
 	};
 
+	/*
+	<ul>
+		<li><a @click.prevent="clickFile">filename</a></li>
+	</ul>
+	*/
 
 	Vue.component('a2-attachments', {
 		template: `
 <div class="a2-attachments">
-	<ul>
-		<li><a @click.prevent="clickFile">filename</a></li>
-	</ul>
 	<a2-upload-attachment v-if="isUploadVisible" :source="source"
 		:url="url" :tip="tip" :read-only='readOnly' :accept="accept"/>
 </div>

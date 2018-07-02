@@ -12,18 +12,34 @@ using System.Dynamic;
 using System.Collections.Generic;
 
 using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 
 namespace A2v10.Interop
 {
 	public class ExcelParser : IDisposable
 	{
 
+		public String ErrorMessage { get; set; }
+
 		public void Dispose()
 		{
 		}
 
 		public Object ParseFile(Stream stream, ITableDescription table)
+		{
+			try
+			{
+				return ParseFileImpl(stream, table);
+			}
+			catch (FileFormatException ex)
+			{
+				String msg = ErrorMessage;
+				if (String.IsNullOrEmpty(msg))
+					msg = ex.Message;
+				throw new InteropException(msg);
+			}
+		}
+
+		Object ParseFileImpl(Stream stream, ITableDescription table)
 		{
 			if (table == null)
 				throw new ArgumentNullException(nameof(table));
@@ -88,7 +104,7 @@ namespace A2v10.Interop
 			Int32 ci = 0;
 			refs = refs.ToUpper();
 			for (Int32 ix = 0; ix < refs.Length && refs[ix] >= 'A'; ix++)
-				ci = (ci * 26) + ((Int32)refs[ix] - 64);
+				ci = (ci * 26) + ((Int32) refs[ix] - 64);
 			return ci;
 		}
 	}

@@ -41,6 +41,7 @@ namespace A2v10.Request
 		{
 			using (var xp = new ExcelParser())
 			{
+				xp.ErrorMessage = "UI:@[Error.FileFormatException]";
 				IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table)  => {
 					return xp.ParseFile(stream, table);
 				});

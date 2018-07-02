@@ -106,6 +106,7 @@
     <Content Include="app\services\modelinfo.js" />
     <Content Include="app\services\period.js" />
     <Content Include="app\services\popup.js" />
+    <Content Include="app\services\tools.js" />
     <Content Include="app\services\url.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />

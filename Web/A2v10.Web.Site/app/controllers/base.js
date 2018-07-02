@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180630-7235
+// 20180702-7237
 // controllers/base.js
 
 (function () {
@@ -348,6 +348,12 @@
 					this.$store.commit('navigate', { url: url });
 			},
 
+			$download(url) {
+				const root = window.$$rootUrl;
+				url = urltools.combine('/file', url.replace('.', '-'));
+				window.location = root + url;
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -430,6 +436,7 @@
 			},
 
 			$alert(msg, title, list) {
+				// TODO: tools
 				let dlgData = {
 					promise: null, data: {
 						message: msg, title: title, style: 'alert', list: list

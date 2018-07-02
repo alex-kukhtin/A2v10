@@ -81,6 +81,8 @@
 							this.item[this.prop] = result.ids[0];
 						}
 					}
+				}).catch(result => {
+					alert(result);
 				});
 			}
 		}

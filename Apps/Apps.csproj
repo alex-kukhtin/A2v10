@@ -298,6 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Develop\Localization\" />
+    <Folder Include="Develop\_files\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Agent\browseCustomer.dialog.xaml">

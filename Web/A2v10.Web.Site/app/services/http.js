@@ -71,7 +71,6 @@ app.modules['std:http'] = function () {
 					let xhrResult = JSON.parse(xhr.responseText);
 					resolve(xhrResult);
 				} else if (xhr.status === 255) {
-					alert(xhr.responseText || xhr.statusText);
 					reject(xhr.responseText || xhr.statusText);
 				}
 			};
@@ -85,6 +84,7 @@ app.modules['std:http'] = function () {
 			xhr.send(data);
 		});
 	}
+
 	function load(url, selector) {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
