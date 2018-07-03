@@ -129,7 +129,10 @@ namespace A2v10.Interop
 						if ((kp.Key + av.Key ==  elem.Name) && av.Value != null)
 						{
 							var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
-							writer.WriteString(typedVal);
+							if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
+								WriteNil(writer);
+							else
+								writer.WriteString(typedVal);
 							writen = true;
 							break;
 						}

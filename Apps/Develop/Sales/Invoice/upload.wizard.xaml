@@ -24,8 +24,7 @@
 			Загрузка объектов учета в базу данных
 			<Span Bold="True">Здесь жирный текст</Span>
 		</Paragraph>
-		<Attachments Url="/Sales/Invoice/uploadFile"
-					 Source="{Bind Root}"
+		<Attachments Url="/Sales/Invoice/uploadFile" Delegate="uploadFile"
 					 Accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
 		<Paragraph>
 			Поддерживаются только файлы формата xlsx (Excel 2007 и выше). Загрузить

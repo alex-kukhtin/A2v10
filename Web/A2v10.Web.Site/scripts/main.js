@@ -7199,7 +7199,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180701-7237
+// 20180703-7238
 // components/attachments.js
 
 (function () {
@@ -7236,7 +7236,8 @@ TODO:
 			accept: String,
 			tip: String,
 			url: String,
-			source: Object
+			source: Object,
+			delegate: Function
 		},
 		computed: {
 			cssClass() {
@@ -7267,7 +7268,9 @@ TODO:
 				this.$refs.inputFile.value = '';
 				http.upload(uploadUrl, fd).then((result) => {
 					ev.target.value = ''; // clear current selected files
-					this.source.$merge(result);
+					if (this.delegate)
+						this.delegate.call(this.source, result);
+					//this.source.$merge(result);
 				}).catch(msg => {
 					if (msg.indexOf('UI:') === 0)
 						tools.alert(msg.substring(3).replace('\\n', '\n'));
@@ -7287,7 +7290,7 @@ TODO:
 	Vue.component('a2-attachments', {
 		template: `
 <div class="a2-attachments">
-	<a2-upload-attachment v-if="isUploadVisible" :source="source"
+	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate"
 		:url="url" :tip="tip" :read-only='readOnly' :accept="accept"/>
 </div>
 `,
@@ -7298,7 +7301,8 @@ TODO:
 			url: String,
 			source: Object,
 			readOnly: Boolean,
-			accept: String
+			accept: String,
+			delegate: Function
 		},
 		computed: {
 			tip() {

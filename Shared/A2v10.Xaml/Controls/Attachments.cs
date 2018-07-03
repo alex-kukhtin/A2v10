@@ -9,18 +9,21 @@ namespace A2v10.Xaml
 		public String Url { get; set; }
 		public String Accept { get; set; }
 
-		public Object Source { get; set; }
+		public String Delegate { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("a2-attachments", null, IsInGrid);
 			onRender?.Invoke(tag);
 			MergeAttributes(tag, context);
-			var srcBind = GetBinding(nameof(Source));
-			if (srcBind == null)
-				throw new XamlException("Source binding is required for the Attachments element");
+			tag.MergeAttribute(":source", "$data");
+
 			MergeBindingAttributeString(tag, context, "url", nameof(Url), Url);
-			tag.MergeAttribute(":source", srcBind.GetPath(context));
+
+			if (String.IsNullOrEmpty(Delegate))
+				throw new XamlException("Delegate is required for Attachments element");
+			tag.MergeAttribute(":delegate", $"$delegate('{Delegate}')");
+
 			MergeBindingAttributeString(tag, context, "accept", nameof(Accept), Accept);
 			tag.Render(context);
 		}
