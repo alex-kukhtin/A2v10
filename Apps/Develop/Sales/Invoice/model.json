@@ -38,11 +38,11 @@
 			"view": "demo.wizard",
 			"template": "/Agent/editCustomer.template"
 		},
-			"uploadWizard": {
-				"model": "Upload",
-				"view": "upload.wizard",
-				"template": "upload.template"
-			}
+		"uploadWizard": {
+			"model": "Upload",
+			"view": "upload.wizard",
+			"template": "upload.template"
+		}
 	},
 	"reports": {
 		"invoice": {
@@ -60,9 +60,9 @@
 		}
 	},
 	"uploads": {
-			"uploadFile": {
-							"model": "Test.Upload",
-							"parse": "excel"
-			}
+		"uploadFile": {
+			"model": "Test.Upload",
+			"parse": "excel"
+		}
 	}
 }
