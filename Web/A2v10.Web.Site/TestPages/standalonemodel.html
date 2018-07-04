@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body>
+	<div id="page1">
+		<h4>Edit element</h4>
+		<fieldset>
+			<label>Name</label>
+			<input v-model="Agent.Name" />
+			<label>Memo</label>
+			<input v-model="Agent.Memo" />
+		</fieldset>
+		<hr />
+		<pre v-text="$data"></pre>
+	</div>
+
+	<script src="../scripts/vue.js"></script>
+	<script src="../scripts/locale-uk.min.js"></script>
+	<script src="../scripts/commonsite.js"></script>
+
+	<script src="/_model/catalog/customers/edit/0"></script>
+
+
+	<script type="text/javascript">
+
+		const http = require('std:http');
+
+		let cm = window.$currentModule();
+
+		console.dir(cm);
+
+		const vm = new Vue({
+			el: "#page1",
+			data: cm.dataModel,
+			methods: {
+				load() {
+					http.post('/_data/reload', JSON.stringify({ baseUrl: '/_page/catalog/customers/edit/141' }))
+						.then((result) => {
+							debugger;
+							this.Agent = result.Agent
+						});
+				}
+			},
+			mounted: function() {
+				this.load();
+			}
+		});
+
+
+	</script>
+</body>
+</html>

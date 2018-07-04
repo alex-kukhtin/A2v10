@@ -7,18 +7,23 @@
 			"index": true,
 			"template": "index.template",
 			"view": "Index.view"
+		},
+		"edit": {
+			"model": "Agent",
+			"schema": "a2demo",
+			"template": "edit.template"
 		}
 	},
-  "popups": {
-    "demo": {
-      "index": true,
-      "view": "demo.popup"
-    }
-  },
-  "commands": {
-    "invokeSql": {
-      "type": "sql",
-      "procedure": "Catalog.Invoke"
-    }
-  }
+	"popups": {
+		"demo": {
+			"index": true,
+			"view": "demo.popup"
+		}
+	},
+	"commands": {
+		"invokeSql": {
+			"type": "sql",
+			"procedure": "Catalog.Invoke"
+		}
+	}
 }

@@ -26,6 +26,8 @@ namespace A2v10.Request
 		protected readonly IDataScripter _scripter;
 		protected readonly IMessageService _messageService;
 
+		const String NO_VIEW = "\b_NO_VIEW_\b";
+
 		public BaseController()
 		{
 			// DI ready
@@ -85,6 +87,14 @@ namespace A2v10.Request
 					await RenderAppPage(writer, segs[1]);
 					break;
 			}
+		}
+
+		public async Task RenderModel(String pathInfo, ExpandoObject loadPrms, TextWriter writer)
+		{
+			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, RequestUrlKind.Page, pathInfo);
+			RequestView rw = rm.GetCurrentAction(RequestUrlKind.Page);
+			rw.view = NO_VIEW; // no view here
+			await Render(rw, writer, loadPrms);
 		}
 
 		public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
@@ -172,11 +182,18 @@ namespace A2v10.Request
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
 
-			String viewName = rw.GetView();
 			String rootId = "el" + Guid.NewGuid().ToString();
+			String modelScript = null;
 
-			String modelScript = await WriteModelScript(rw, model, rootId);
+			String viewName = rw.GetView();
+			if (viewName == NO_VIEW)
+			{
+				modelScript = await WriteModelScriptModel(rw, model, rootId);
+				writer.Write(modelScript);
+				return;
+			}
 
+			modelScript = await WriteModelScript(rw, model, rootId);
 			// TODO: use view engines
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
@@ -233,6 +250,51 @@ namespace A2v10.Request
 		}
 
 
+		async Task<String> WriteModelScriptModel(RequestView rw, IDataModel model, String rootId)
+		{
+			StringBuilder output = new StringBuilder();
+			String dataModelText = "null";
+			String templateText = "{}";
+			StringBuilder sbRequired = new StringBuilder();
+			if (model != null)
+			{
+				// write model script
+				String fileTemplateText = null;
+				if (rw.template != null)
+				{
+					fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
+					AddRequiredModules(sbRequired, fileTemplateText);
+					templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
+				}
+				dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
+			}
+
+const String scriptText =
+@"
+'use strict';
+window.$currentModule = function() {
+	$(RequiredModules)
+
+
+	$(ModelScript)
+
+	const rawData = $(DataModelText);
+	const template = $(TemplateText);
+	return {
+		dataModel: modelData(template, rawData)
+	};
+};";
+			const String emptyModel = "function modelData() {return null;}";
+			var text = new StringBuilder(scriptText);
+			text.Replace("$(DataModelText)", dataModelText);
+			text.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
+			text.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
+			String modelScript = model !=null ? model.CreateScript(_scripter) : emptyModel;
+			text.Replace("$(ModelScript)", modelScript);
+			output.Append(text);
+			return output.ToString();
+		}
+
 		async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
 		{
 			StringBuilder output = new StringBuilder();
@@ -253,7 +315,7 @@ namespace A2v10.Request
 			}
 
 
-			const String scriptHeader =
+const String scriptHeader =
 @"
 <script type=""text/javascript"">
 
@@ -270,7 +332,7 @@ $(RequiredModules)
 	const rawData = $(DataModelText);
 	const template = $(TemplateText);
 ";
-			const String scriptFooter =
+const String scriptFooter =
 @"
 const vm = new DataModelController({
 	el:'#$(RootId)',
@@ -473,6 +535,14 @@ const vm = new DataModelController({
 			{
 				// do nothing
 			}
+		}
+
+		public void WriteScriptException(Exception ex, TextWriter writer)
+		{
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			ProfileException(ex);
+			writer.Write($"alert(`{ex.Message.Replace("\\", "\\\\").Replace("'", "\\'")}`)");
 		}
 
 		public void WriteHtmlException(Exception ex, TextWriter writer)

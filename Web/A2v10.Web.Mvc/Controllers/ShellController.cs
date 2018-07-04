@@ -93,6 +93,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
 			}
+			else if (pathInfo.StartsWith("_model/"))
+			{
+				await RenderModel(pathInfo.Substring(7));
+			}
 			else if (pathInfo.StartsWith("_dialog/"))
 			{
 				await Render(pathInfo.Substring(8), RequestUrlKind.Dialog);
@@ -153,6 +157,24 @@ namespace A2v10.Web.Mvc.Controllers
 			catch (Exception ex)
 			{
 				_baseController.WriteHtmlException(ex, Response.Output);
+			}
+		}
+
+		async Task RenderModel(String pathInfo)
+		{
+			try
+			{
+				Response.ContentType = "text/javascript";
+				ExpandoObject loadPrms = new ExpandoObject();
+				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
+				loadPrms.Set("UserId", UserId);
+				if (_baseController.Host.IsMultiTenant)
+					loadPrms.Set("TenantId", TenantId);
+				await _baseController.RenderModel(pathInfo, loadPrms, Response.Output);
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteScriptException(ex, Response.Output);
 			}
 		}
 

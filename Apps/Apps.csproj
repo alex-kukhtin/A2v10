@@ -91,6 +91,7 @@
     <Content Include="Develop\Agent\editFolder.template.js" />
     <Content Include="Develop\Agent\editSupplier.template.js" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
+    <Content Include="Develop\Catalog\Customers\edit.template.js" />
     <Content Include="Develop\Catalog\Customers\index.template.js" />
     <Content Include="Develop\Catalog\Inbox\index.template.js" />
     <Content Include="Develop\Catalog\MyClients\index.template.js" />
