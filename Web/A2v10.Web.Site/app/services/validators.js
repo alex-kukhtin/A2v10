@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180630-7235*/
+/*20180705-7241*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -47,11 +47,20 @@ app.modules['std:validators'] = function () {
 			valMap = new WeakMap(); // internal
 			validateMap.set(rule, valMap);
 		}
+		if (utils.isObjectExact(val) && '$id' in val)
+			val = val.$id;
 		let valRes = { val: val, result: null };
 		valMap.set(item, valRes);
 		return valRes;
 	}
 
+
+	function getValForCompare(o1) {
+		if (utils.isObjectExact(o1) && '$id' in o1) {
+			return o1.$id;
+		}
+		return o1;
+	}
 
 	function validateImpl(rules, item, val, ff) {
 		let retval = [];
@@ -80,7 +89,8 @@ app.modules['std:validators'] = function () {
 						let vmset = validateMap.get(rule);
 						if (vmset.has(item)) {
 							let vmv = vmset.get(item);
-							if (vmv.val === val) {
+
+							if (vmv.val === getValForCompare(val)) {
 								// Let's skip already validated values
 								if (vmv.result)
 									retval.push(vmv.result);
