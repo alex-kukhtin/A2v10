@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 	{
 		Unknown,
 		Close,
+		CloseOk,
 		SaveAndClose,
 		Reload,
 		Refresh,
@@ -128,6 +129,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Close:
 					return context.IsDialog ? "$modalClose()" : "$close()";
+
+				case CommandType.CloseOk:
+					return context.IsDialog ? "$modalClose(true)" : throw new XamlException("The command 'CloseOk' is allowed for Dialogs only");
 
 				case CommandType.SaveAndClose:
 					if (context.IsDialog)

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180602-7204*/
+/*20180705-7240*/
 /* controllers/shell.js */
 
 (function () {
