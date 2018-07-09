@@ -122,7 +122,7 @@ namespace A2v10.Xaml
 					return "$requery()";
 
 				case CommandType.Save:
-					return $"$save({{toast: {GetToast(context)}}})";
+					return $"$save({{toast: {GetToast(context)}, options:{GetOptionsValid(context)}}})";
 
 				case CommandType.Clear:
 					return $"{CommandArgument(context)}.$empty()";

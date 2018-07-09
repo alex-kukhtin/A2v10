@@ -8392,7 +8392,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180702-7237
+// 20180709-7243
 // controllers/base.js
 
 (function () {
@@ -8536,6 +8536,12 @@ Vue.directive('resize', {
 				let url = root + '/_data/save';
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
 				const isCopy = this.$data.$isCopy;
+				const validRequired = !!opts && opts.options && opts.options.validRequired;
+				if (validRequired && this.$data.$invalid) {
+					let errs = makeErrors(this.$data.$forceValidate());
+					this.$alert(locale.$MakeValidFirst, undefined, errs);
+					return;
+				}
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
