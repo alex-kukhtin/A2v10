@@ -612,6 +612,9 @@ button,
 input[type=button] {
   background-color: #ddd;
 }
+input[type=text]::-ms-clear {
+  display: none;
+}
 .block {
   display: block;
   width: 100%;
@@ -1577,6 +1580,7 @@ pre.a2-code {
 .control-group .input-group > .dropdown > a {
   color: #777;
   padding: 0 3px;
+  display: inline-block;
 }
 .control-group .input-group > a:hover,
 .control-group .input-group > .dropdown > a:hover {
@@ -1674,6 +1678,7 @@ pre.a2-code {
 }
 .control-group.disabled a {
   pointer-events: none;
+  opacity: 0.5;
 }
 .data-grid .control-group {
   margin: 0;
@@ -3216,6 +3221,9 @@ table.a2-table > tbody > tr > td label {
 }
 table.a2-table > tbody > tr > td .control-group {
   margin: 0;
+}
+table.a2-table > tbody > tr > td .control-group .input-group select {
+  width: auto;
 }
 table.a2-table > tbody > tr > td .a2-table {
   margin: -1px;
