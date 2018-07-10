@@ -24,6 +24,8 @@ namespace A2v10RuntimeNet
 	{
 		static IScriptContext _scriptContext;
 
+		static IServiceLocator _currentService;
+
 		public static Boolean HasError { get; set; }
 		public static String LastErrorMessage { get; set; }
 
@@ -114,22 +116,30 @@ namespace A2v10RuntimeNet
 
 		public static void StartDesktopServices()
 		{
-			IServiceLocator locator = ServiceLocator.Current;
-			IProfiler profiler = new DesktopProfiler();
-			IApplicationHost host = new DesktopApplicationHost(profiler);
-			ILocalizer localizer = new DesktopLocalizer();
-			IDbContext dbContext = new SqlDbContext(
-				profiler as IDataProfiler,
-				host as IDataConfiguration,
-				localizer as IDataLocalizer);
-			IRenderer renderer = new XamlRenderer(profiler);
-			IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
-			locator.RegisterService<IProfiler>(profiler);
-			locator.RegisterService<IApplicationHost>(host);
-			locator.RegisterService<IDbContext>(dbContext);
-			locator.RegisterService<IRenderer>(renderer);
-			locator.RegisterService<IWorkflowEngine>(wfEngine);
+			ServiceLocator.GetCurrentLocator = () =>
+			{
+				if (_currentService == null)
+					_currentService = new ServiceLocator();
+				return _currentService;
+			};
 
+			ServiceLocator.Start = (IServiceLocator service) =>
+			{
+				IProfiler profiler = new DesktopProfiler();
+				IApplicationHost host = new DesktopApplicationHost(profiler);
+				ILocalizer localizer = new DesktopLocalizer();
+				IDbContext dbContext = new SqlDbContext(
+					profiler as IDataProfiler,
+					host as IDataConfiguration,
+					localizer as IDataLocalizer);
+				IRenderer renderer = new XamlRenderer(profiler);
+				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
+				service.RegisterService<IProfiler>(profiler);
+				service.RegisterService<IApplicationHost>(host);
+				service.RegisterService<IDbContext>(dbContext);
+				service.RegisterService<IRenderer>(renderer);
+				service.RegisterService<IWorkflowEngine>(wfEngine);
+			};
 		}
 
 		static void Render(BaseController ctrl, RequestUrlKind kind, String path, String search, TextWriter writer)
