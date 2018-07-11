@@ -13,6 +13,7 @@ using A2v10.Infrastructure.Utilities;
 using System.Net;
 using A2v10.Data.Interfaces;
 using System.Threading;
+using System.Web;
 
 namespace A2v10.Request
 {
@@ -34,11 +35,11 @@ namespace A2v10.Request
 			IServiceLocator locator = ServiceLocator.Current;
 			_host = locator.GetService<IApplicationHost>();
 			_dbContext = locator.GetService<IDbContext>();
-			_renderer = locator.GetService<IRenderer>();
-			_workflowEngine = locator.GetService<IWorkflowEngine>();
+			_renderer = locator.GetServiceOrNull<IRenderer>();
+			_workflowEngine = locator.GetServiceOrNull<IWorkflowEngine>();
 			_localizer = locator.GetService<ILocalizer>();
 			_scripter = locator.GetService<IDataScripter>();
-			_messageService = locator.GetService<IMessageService>();
+			_messageService = locator.GetServiceOrNull<IMessageService>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -192,6 +193,9 @@ namespace A2v10.Request
 				writer.Write(modelScript);
 				return;
 			}
+
+			if (_renderer == null)
+				throw new InvalidOperationException("Service 'IRenderer' not registered");
 
 			modelScript = await WriteModelScript(rw, model, rootId);
 			// TODO: use view engines
@@ -563,6 +567,8 @@ const vm = new DataModelController({
 
 		public void SendSupportEMail(String body)
 		{
+			if (_messageService == null)
+				throw new InvalidOperationException($"Service 'IMessageService' not registered");
 			String to = Host.SupportEmail;
 			if (String.IsNullOrEmpty(to))
 				return;

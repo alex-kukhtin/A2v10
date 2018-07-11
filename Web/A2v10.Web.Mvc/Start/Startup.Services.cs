@@ -7,7 +7,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Messaging;
 using A2v10.Request;
-using A2v10.Web.Mvc.Configuration;
+using A2v10.Web.Config;
 using A2v10.Web.Mvc.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;

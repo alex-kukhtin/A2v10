@@ -114,8 +114,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\WebLocalizer.cs" />
-    <Compile Include="Configuration\WebLogger.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Filters\ExecutingFilterAttribute.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
@@ -125,8 +123,6 @@
     <Compile Include="Identity\EmailService.cs" />
     <Compile Include="Identity\IdentityExtensions.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
-    <Compile Include="Configuration\WebApplicationHost.cs" />
-    <Compile Include="Configuration\WebProfiler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
@@ -311,6 +307,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
       <Name>A2v10.Xaml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj">
+      <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
+      <Name>A2v10.Web.Config</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -7,7 +7,7 @@ using System.IO;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
-namespace A2v10.Web.Mvc.Configuration
+namespace A2v10.Web.Config
 {
 
 	class LocaleMapItem

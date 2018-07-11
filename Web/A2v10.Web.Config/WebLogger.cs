@@ -4,7 +4,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using System;
 
-namespace A2v10.Web.Mvc.Configuration
+namespace A2v10.Web.Config
 {
 	public class WebLogger : ILogger
 	{

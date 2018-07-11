@@ -118,6 +118,8 @@ namespace A2v10.Request
 
 		async Task StartWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
 		{
+			if (_workflowEngine == null)
+				throw new InvalidOperationException($"Service 'IWorkflowEngine' not registered");
 			var swi = new StartWorkflowInfo
 			{
 				DataSource = cmd.CurrentSource,
@@ -140,6 +142,8 @@ namespace A2v10.Request
 
 		async Task ResumeWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)
 		{
+			if (_workflowEngine == null)
+				throw new InvalidOperationException($"Service 'IWorkflowEngine' not registered");
 			var rwi = new ResumeWorkflowInfo
 			{
 				Id = dataToStart.Get<Int64>("Id")
