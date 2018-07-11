@@ -27,7 +27,7 @@ namespace A2v10.Request
 			}
 		}
 
-		public async Task StandaloneLoadData(HttpRequestBase request, HttpResponseBase response, String pathInfo)
+		public async Task StandaloneLoadData(HttpRequestBase request, HttpResponseBase response)
 		{
 			if (request.HttpMethod != "POST")
 				return;
@@ -94,6 +94,14 @@ namespace A2v10.Request
 				response.StatusDescription = "Custom server error";
 				response.Write(Localize(ex.Message));
 			}
+		}
+
+
+		public async Task StandaloneSaveData(HttpRequestBase request, HttpResponseBase response)
+		{
+			if (request.HttpMethod != "POST")
+				return;
+			response.ContentType = "application/json";
 		}
 	}
 }
