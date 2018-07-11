@@ -14,7 +14,7 @@
 			<input v-model="Agent.Memo" />
 		</fieldset>
 		<hr />
-		<pre v-text="$data"></pre>
+		<pre v-text="$data.Agent"></pre>
 	</div>
 
 	<script src="../scripts/vue.js"></script>
@@ -28,27 +28,27 @@
 
 		const http = require('std:http');
 
+		const DataModelController = component('standaloneController');
+
 		let cm = window.$currentModule();
+
 
 		console.dir(cm);
 
-		const vm = new Vue({
+		const vm = new DataModelController({
 			el: "#page1",
 			data: cm.dataModel,
 			methods: {
 				load() {
 					http.post('/_data/reload', JSON.stringify({ baseUrl: '/_page/catalog/customers/edit/141' }))
 						.then((result) => {
-							debugger;
 							this.Agent = result.Agent
 						});
 				}
-			},
-			mounted: function() {
-				this.load();
 			}
 		});
 
+		DataModelController.init(vm, '/catalog/customers/edit', function () { this.$load(141); });
 
 	</script>
 </body>

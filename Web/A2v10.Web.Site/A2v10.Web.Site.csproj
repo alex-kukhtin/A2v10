@@ -85,6 +85,7 @@
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
+    <Content Include="app\controllers\standalone.js" />
     <Content Include="app\directives\autosize.js" />
     <Content Include="app\directives\disable.js" />
     <Content Include="app\directives\dropdown.js" />

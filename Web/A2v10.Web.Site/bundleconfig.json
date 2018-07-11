@@ -101,20 +101,21 @@
 	},
 	{
 		"outputFileName": "Scripts/commonsite.js",
-		"inputFiles": [
-			"app/app.js",
-			"app/platform/polyfills.js",
-			"app/services/utils.js",
-			"app/services/url.js",
-			"app/services/period.js",
-			"app/services/modelinfo.js",
-			"app/platform/webvue.js",
-			"app/services/http.js",
-			"app/services/log.js",
-			"app/services/validators.js",
-			"app/services/datamodel.js",
-			"app/services/dataservice.js"
-		],
+			"inputFiles": [
+				"app/app.js",
+				"app/platform/polyfills.js",
+				"app/services/utils.js",
+				"app/services/url.js",
+				"app/services/period.js",
+				"app/services/modelinfo.js",
+				"app/platform/webvue.js",
+				"app/services/http.js",
+				"app/services/log.js",
+				"app/services/validators.js",
+				"app/services/datamodel.js",
+				"app/services/dataservice.js",
+				"app/controllers/standalone.js"
+			],
 		"minify": { "enabled": false }
 	}
 ]

@@ -468,14 +468,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		protected void WriteExceptionStatus(Exception ex)
 		{
-			if (ex.InnerException != null)
-				ex = ex.InnerException;
-			_baseController.ProfileException(ex);
-			Response.SuppressContent = false;
-			Response.StatusCode = 255; // CUSTOM ERROR!!!!
-			Response.ContentType = "text/plain";
-			Response.StatusDescription = "Custom server error";
-			Response.Write(_baseController.Localize(ex.Message));
+			_baseController.WriteExceptionStatus(ex, Response);
 		}
 	}
 }

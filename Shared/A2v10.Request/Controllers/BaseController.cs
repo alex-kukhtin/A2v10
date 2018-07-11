@@ -565,6 +565,19 @@ const vm = new DataModelController({
 			}
 		}
 
+
+		public void WriteExceptionStatus(Exception ex, HttpResponseBase response)
+		{
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			ProfileException(ex);
+			response.SuppressContent = false;
+			response.StatusCode = 255; // CUSTOM ERROR!!!!
+			response.ContentType = "text/plain";
+			response.StatusDescription = "Custom server error";
+			response.Write(Localize(ex.Message));
+		}
+
 		public void SendSupportEMail(String body)
 		{
 			if (_messageService == null)
