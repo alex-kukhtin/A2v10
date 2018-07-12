@@ -21,12 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_01D378F25E4C4BCDAB5E4B117865270C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_07B90C38354348AABFAB15627836398E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -214,12 +208,6 @@
         "Entry"
         {
         "MsmKey" = "8:_232ED0121B334D84873A3011B1168065"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_247294D77E0840449D6D5AA0A32D0232"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -621,12 +609,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9AFB958CBA614B26A34AF049EEA77EE2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9C927A6A432B4A7CA17744306F2D299A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -885,12 +867,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E5CFF3E0A8D545F6817C42E42AC7FAE3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E5FCD81A13A1459C8EF21389ABC83A73"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -899,12 +875,6 @@
         {
         "MsmKey" = "8:_E70480515A1DE66EE6315EB12027BE6A"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EA89C4F30CB34D03805303D7BDB3C363"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1364,26 +1334,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01D378F25E4C4BCDAB5E4B117865270C"
-            {
-            "SourcePath" = "8:..\\bin\\libEGL.dll"
-            "TargetName" = "8:libEGL.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_07B90C38354348AABFAB15627836398E"
             {
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\scripts\\locale-ru.min.js"
@@ -1740,26 +1690,6 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_247294D77E0840449D6D5AA0A32D0232"
-            {
-            "SourcePath" = "8:..\\bin\\libcef_dll_wrapper.lib"
-            "TargetName" = "8:libcef_dll_wrapper.lib"
-            "Tag" = "8:"
-            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2816,26 +2746,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AFB958CBA614B26A34AF049EEA77EE2"
-            {
-            "SourcePath" = "8:..\\bin\\libGLESv2.dll"
-            "TargetName" = "8:libGLESv2.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9C927A6A432B4A7CA17744306F2D299A"
             {
             "AssemblyRegister" = "3:1"
@@ -3408,26 +3318,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5CFF3E0A8D545F6817C42E42AC7FAE3"
-            {
-            "SourcePath" = "8:..\\bin\\libcef.lib"
-            "TargetName" = "8:libcef.lib"
-            "Tag" = "8:"
-            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5FCD81A13A1459C8EF21389ABC83A73"
             {
             "SourcePath" = "8:..\\bin\\A2v10.Locale.Uk.dll"
@@ -3477,26 +3367,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EA89C4F30CB34D03805303D7BDB3C363"
-            {
-            "SourcePath" = "8:..\\bin\\libcef.dll"
-            "TargetName" = "8:libcef.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB73D3D018454B808B21381A942AA61F"
@@ -3850,7 +3720,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
         "ProductCode" = "8:{58E5E071-95CC-4AD5-9500-6EBEBA346316}"
-        "PackageCode" = "8:{20ADCA79-F4F3-42FE-AF8D-481A2E19CE86}"
+        "PackageCode" = "8:{7BF76BEF-CCEA-42CB-9586-AD9F86F8D1DE}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
