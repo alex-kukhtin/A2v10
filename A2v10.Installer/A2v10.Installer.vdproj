@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_01D378F25E4C4BCDAB5E4B117865270C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07B90C38354348AABFAB15627836398E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -124,6 +130,12 @@
         "Entry"
         {
         "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
+        "OwnerKey" = "8:_55D963A73963A4A0B8317CADD9F61BDF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
         "OwnerKey" = "8:_33E114CD464DB89891E0C66B69D689D5"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -202,6 +214,12 @@
         "Entry"
         {
         "MsmKey" = "8:_232ED0121B334D84873A3011B1168065"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_247294D77E0840449D6D5AA0A32D0232"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -353,6 +371,12 @@
         {
         "MsmKey" = "8:_52C5D06EAE9E47B0ACBCB6BF88EC9875"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_55D963A73963A4A0B8317CADD9F61BDF"
+        "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -538,6 +562,12 @@
         "Entry"
         {
         "MsmKey" = "8:_78763B8B6B085F021F6282159B4C8FCE"
+        "OwnerKey" = "8:_55D963A73963A4A0B8317CADD9F61BDF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_78763B8B6B085F021F6282159B4C8FCE"
         "OwnerKey" = "8:_E70480515A1DE66EE6315EB12027BE6A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -586,6 +616,12 @@
         "Entry"
         {
         "MsmKey" = "8:_9A73E26A97704F2BAAE4EABAB52D65AC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9AFB958CBA614B26A34AF049EEA77EE2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -689,6 +725,12 @@
         {
         "MsmKey" = "8:_B21C455D5E53C308BBC4D31376F84522"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B21C455D5E53C308BBC4D31376F84522"
+        "OwnerKey" = "8:_55D963A73963A4A0B8317CADD9F61BDF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -843,6 +885,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E5CFF3E0A8D545F6817C42E42AC7FAE3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E5FCD81A13A1459C8EF21389ABC83A73"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -851,6 +899,12 @@
         {
         "MsmKey" = "8:_E70480515A1DE66EE6315EB12027BE6A"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EA89C4F30CB34D03805303D7BDB3C363"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1061,6 +1115,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9E22DD00D8073A082E955E29365BDE8A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_55D963A73963A4A0B8317CADD9F61BDF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1304,6 +1364,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01D378F25E4C4BCDAB5E4B117865270C"
+            {
+            "SourcePath" = "8:..\\bin\\libEGL.dll"
+            "TargetName" = "8:libEGL.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_07B90C38354348AABFAB15627836398E"
             {
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\scripts\\locale-ru.min.js"
@@ -1328,7 +1408,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_08550F6CFED173D2078D348741E9D67A"
@@ -1359,7 +1439,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_09A3E508FA0945709F38BF56549174BA"
@@ -1565,7 +1645,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_204EACB57C334149235D50AEED08BBB7"
@@ -1647,7 +1727,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Web.Site, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Web.Site, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_232ED0121B334D84873A3011B1168065"
@@ -1660,6 +1740,26 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_247294D77E0840449D6D5AA0A32D0232"
+            {
+            "SourcePath" = "8:..\\bin\\libcef_dll_wrapper.lib"
+            "TargetName" = "8:libcef_dll_wrapper.lib"
+            "Tag" = "8:"
+            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1740,7 +1840,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2EC6F2BBEED3426D8CFE355DF2831DEF"
@@ -1833,7 +1933,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3291FCB53626433093FD7B62353667D1"
@@ -1864,7 +1964,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Runtime, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Runtime, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_33E114CD464DB89891E0C66B69D689D5"
@@ -1926,7 +2026,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_384353D2B8F24D19A02EDA3203073AD1"
@@ -2126,6 +2226,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_55D963A73963A4A0B8317CADD9F61BDF"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:A2v10.Web.Config, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_55D963A73963A4A0B8317CADD9F61BDF"
+                    {
+                    "Name" = "8:A2v10.Web.Config.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:A2v10.Web.Config.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_55EE28BC0E336C4A66F58F2227596415"
             {
             "AssemblyRegister" = "3:1"
@@ -2283,7 +2414,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Web.Mvc, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Web.Mvc, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_5ED8701D8D9A48249DC6C98B212D8671"
@@ -2487,7 +2618,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Interop, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Interop, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7358069E141C54049479FF853F6CE688"
@@ -2685,6 +2816,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9AFB958CBA614B26A34AF049EEA77EE2"
+            {
+            "SourcePath" = "8:..\\bin\\libGLESv2.dll"
+            "TargetName" = "8:libGLESv2.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9C927A6A432B4A7CA17744306F2D299A"
             {
             "AssemblyRegister" = "3:1"
@@ -2782,7 +2933,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Script, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Script, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A8435CFF9BF935F5B34A040065866CC3"
@@ -2864,7 +3015,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B21C455D5E53C308BBC4D31376F84522"
@@ -3037,7 +3188,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C47573131DFEB42CFF5F8655FC925B9D"
@@ -3257,6 +3408,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5CFF3E0A8D545F6817C42E42AC7FAE3"
+            {
+            "SourcePath" = "8:..\\bin\\libcef.lib"
+            "TargetName" = "8:libcef.lib"
+            "Tag" = "8:"
+            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5FCD81A13A1459C8EF21389ABC83A73"
             {
             "SourcePath" = "8:..\\bin\\A2v10.Locale.Uk.dll"
@@ -3281,7 +3452,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Messaging, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Messaging, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_E70480515A1DE66EE6315EB12027BE6A"
@@ -3306,6 +3477,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EA89C4F30CB34D03805303D7BDB3C363"
+            {
+            "SourcePath" = "8:..\\bin\\libcef.dll"
+            "TargetName" = "8:libcef.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_492E0ECB752C4C44B3FF77F2AA74D136"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB73D3D018454B808B21381A942AA61F"
@@ -3383,7 +3574,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7243.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7244.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F1F0EEC026283B24209C2523DA109BED"
@@ -3658,15 +3849,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{C2E96251-087B-4097-A73C-94BD3CDEA898}"
-        "PackageCode" = "8:{9E1807EC-502B-440D-AD7F-39419288405C}"
+        "ProductCode" = "8:{58E5E071-95CC-4AD5-9500-6EBEBA346316}"
+        "PackageCode" = "8:{20ADCA79-F4F3-42FE-AF8D-481A2E19CE86}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7243"
+        "ProductVersion" = "8:10.0.7244"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
