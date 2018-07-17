@@ -896,6 +896,14 @@ header .btn:hover,
 .header .btn:hover {
   background-color: #7186ab;
 }
+header .user-name .person-name,
+.header .user-name .person-name {
+  display: inline-block;
+  vertical-align: bottom;
+  overflow: hidden;
+  max-width: 20rem;
+  text-overflow: ellipsis;
+}
 .content-view {
   position: absolute;
   left: 0;

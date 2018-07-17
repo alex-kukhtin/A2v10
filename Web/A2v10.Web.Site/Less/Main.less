@@ -108,7 +108,7 @@ header, .header {
 
 	.btn {
 		background-color: transparent;
-		white-space:nowrap;
+		white-space: nowrap;
 		color: white;
 		padding: 4px;
 		height: @header-height - 4px;
@@ -116,6 +116,14 @@ header, .header {
 		&:hover {
 			background-color: @brand-hover-color;
 		}
+	}
+
+	.user-name .person-name {
+		display: inline-block;
+		vertical-align: bottom;
+		overflow: hidden;
+		max-width: 20rem;
+		text-overflow: ellipsis;
 	}
 }
 

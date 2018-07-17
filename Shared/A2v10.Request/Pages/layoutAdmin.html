@@ -23,7 +23,7 @@
 			<div class="aligner"></div>
 			<a class="nav-admin" href="/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
-				<button class="btn" toggle><i class="ico ico-user"></i> $(PersonName)<span class="caret"></span></button>
+				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span class="person-name">$(PersonName)</span><span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
 					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> @[Profile]</a>
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
