@@ -29,7 +29,7 @@
 			<a class="nav-admin middle" v-if="hasFeedback" tabindex="-1" @click.prevent="showFeedback" title="@[Feedback]" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
 			<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
-				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span class="person-name">$(PersonName)</span><span class="caret"></span></button>
+				<button class="btn user-name" toggle><i class="ico ico-user"></i> <span class="person-name">$(PersonName)</span><span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
 					<!--
 					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> @[Profile]</a>
