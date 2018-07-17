@@ -3230,9 +3230,6 @@ table.a2-table > tbody > tr > td label {
 table.a2-table > tbody > tr > td .control-group {
   margin: 0;
 }
-table.a2-table > tbody > tr > td .control-group .input-group select {
-  width: auto;
-}
 table.a2-table > tbody > tr > td .a2-table {
   margin: -1px;
 }
@@ -4757,6 +4754,9 @@ h5,
   }
   .content-view.partial-page {
     position: static;
+  }
+  .page.page-grid .page-content {
+    overflow: hidden;
   }
   .toolbar {
     display: none;
