@@ -4321,6 +4321,7 @@ table.sheet .group-cell.collapsed > div .ico:before {
   color: #a94442;
   border: 1px solid #dca7a7;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  user-select: text;
 }
 .app-exception .message {
   padding: 15px 10px;

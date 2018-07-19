@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180709-7243
+// 20180719-7249
 // controllers/base.js
 
 (function () {
@@ -56,7 +56,8 @@
 				__init__: true,
 				__baseUrl__: '',
 				__baseQuery__: {},
-				__requestsCount__: 0
+				__requestsCount__: 0,
+				__lockQuery__: true
 			};
 		},
 
@@ -73,6 +74,9 @@
 			$query() {
 				return this.$data._query_;
 			},
+			$jsonQuery() {
+				return utils.toJson(this.$data.Query);
+			},
 			$isDirty() {
 				return this.$data.$dirty;
 			},
@@ -87,6 +91,12 @@
 			},
 			$canSave() {
 				return this.$isDirty && !this.$isLoading;
+			}
+		},
+		watch: {
+			$jsonQuery(newData, oldData) {
+				//console.warn(newData);
+				this.$nextTick(() => this.$reload());
 			}
 		},
 		methods: {
