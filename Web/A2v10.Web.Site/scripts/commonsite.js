@@ -582,9 +582,9 @@ app.modules['std:url'] = function () {
 	}
 
 	function toUrl(obj) {
-		if (!utils.isDefined(obj)) return '';
+		if (!utils.isDefined(obj) || obj === null) return '';
 		if (utils.isDate(obj)) {
-			return utils.format(obj, "DateUrl");
+			return utils.format(obj, "DateUrl");		
 		} else if (period.isPeriod(obj)) {
 			return obj.format('DateUrl');
 		} else if (utils.isObjectExact(obj)) {
@@ -939,7 +939,7 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180511-7186*/
+/*20180725-7250*/
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -964,12 +964,11 @@ app.modules['std:modelInfo'] = function () {
 	function getPagerInfo(mi) {
 		if (!mi) return undefined;
 		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder };
-		if (mi.Filter)
+		if (mi.Filter) {
 			for (let p in mi.Filter) {
-				let fVal = mi.Filter[p];
-				if (!fVal) continue; // empty value, skip it
-				x[p] = fVal;
+				x[p] = mi.Filter[p];
 			}
+		}
 		return x;
 	}
 };

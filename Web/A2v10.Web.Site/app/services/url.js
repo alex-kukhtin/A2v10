@@ -47,9 +47,9 @@ app.modules['std:url'] = function () {
 	}
 
 	function toUrl(obj) {
-		if (!utils.isDefined(obj)) return '';
+		if (!utils.isDefined(obj) || obj === null) return '';
 		if (utils.isDate(obj)) {
-			return utils.format(obj, "DateUrl");
+			return utils.format(obj, "DateUrl");		
 		} else if (period.isPeriod(obj)) {
 			return obj.format('DateUrl');
 		} else if (utils.isObjectExact(obj)) {

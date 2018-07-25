@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180511-7186
+// 20180725-7250
 // components/collectionview.js
 
 /*
@@ -45,7 +45,7 @@ TODO:
 				if (!('Id' in fVal)) {
 					console.error('The object in the Filter does not have Id property');
 				}
-				nq[x] = fVal.Id;
+				nq[x] = fVal.Id ? fVal.Id : undefined;
 			}
 			else if (fVal) {
 				nq[x] = fVal;
@@ -68,6 +68,8 @@ TODO:
 				else if (utils.isDate(iv)) {
 					filter[x] = utils.date.tryParse(q[x]);
 				}
+				else if (utils.isObjectExact(iv)) 
+					iv.Id = q[x];
 				else {
 					filter[x] = q[x];
 				}

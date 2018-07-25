@@ -241,6 +241,8 @@
 			},
 			fetchData(text) {
 				let elem = this.item[this.prop];
+				if (!('$vm' in elem))
+					elem.$vm = this.$root; // plain object hack
 				return this.fetch.call(elem, elem, text);
 			},
 			doNew() {
