@@ -94,7 +94,7 @@ namespace A2v10.Request
 					await ResumeWorkflow(cmd, dataToExec, writer);
 					break;
 				case CommandType.clr:
-					ExecuteClrCommand(cmd, dataToExec, writer);
+					await ExecuteClrCommand(cmd, dataToExec, writer);
 					break;
 				default:
 					throw new RequestModelException($"Invalid command type '{cmd.type}'");
@@ -107,12 +107,16 @@ namespace A2v10.Request
 			WriteDataModel(model, writer);
 		}
 
-		void ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
+		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
 		{
 			if (String.IsNullOrEmpty(cmd.clrType))
 				throw new RequestModelException($"clrType must be specified for command '{cmd.command}'");
 			var invoker = new ClrInvoker();
-			var result = invoker.Invoke(cmd.clrType, dataToExec);
+			Object result;
+			if (cmd.async)
+				result = await invoker.InvokeAsync(cmd.clrType, dataToExec);
+			else
+				result = invoker.Invoke(cmd.clrType, dataToExec);
 			writer.Write(JsonConvert.SerializeObject(result, StandardSerializerSettings));
 		}
 

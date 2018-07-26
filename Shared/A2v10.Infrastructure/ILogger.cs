@@ -33,6 +33,7 @@ namespace A2v10.Infrastructure
 	{
 		void LogSecurity(LogEntry enry);
 		void LogMessaging(LogEntry enry);
+		void LogApi(LogEntry entry);
 	}
 
 	public static class LoggerExtensions
@@ -40,6 +41,16 @@ namespace A2v10.Infrastructure
 		public static void LogMessaging(this ILogger logger, String message)
 		{
 			logger.LogMessaging(new LogEntry(LogSeverity.Information, message));
+		}
+
+		public static void LogApi(this ILogger logger, String message)
+		{
+			logger.LogApi(new LogEntry(LogSeverity.Information, message));
+		}
+
+		public static void LogApiError(this ILogger logger, String message)
+		{
+			logger.LogApi(new LogEntry(LogSeverity.Error, message));
 		}
 	}
 }

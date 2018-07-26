@@ -33,7 +33,8 @@ namespace A2v10.Request
 		Image,
 		Upload,
 		Report,
-		Export
+		Export,
+		Api
 	}
 
 	public enum RequestDataAction
@@ -306,6 +307,8 @@ namespace A2v10.Request
 		public String procedure;
 		public String file;
 		public String clrType;
+		public Boolean async;
+		public String wrapper;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
@@ -413,6 +416,8 @@ namespace A2v10.Request
 
 		[JsonIgnore]
 		public String ModelAction => _action;
+		[JsonIgnore]
+		public String ModelCommand => _command;
 
 		public RequestDataAction DataAction
 		{
@@ -486,7 +491,13 @@ namespace A2v10.Request
 			}
 		}
 
-		public RequestCommand CurrentCommand => throw new NotImplementedException();
+		public RequestCommand CurrentCommand
+		{
+			get
+			{
+				return GetCommand(_command);
+			}
+		}
 
 		public RequestView GetCurrentAction()
 		{
@@ -547,6 +558,7 @@ namespace A2v10.Request
 			// {pathInfo}/dialog/id - DIALOG
 			// {pathInfo}/command/id - COMMAND
 			// {pathInfo}/image/id - IMAGE
+			// {pathInfo}/action/ - api
 
 			var mi = new RequestModelInfo();
 			String[] urlParts = normalizedUrl.Split('/');
@@ -586,6 +598,9 @@ namespace A2v10.Request
 					break;
 				case RequestUrlKind.Export:
 					mi.action = action;
+					break;
+				case RequestUrlKind.Api:
+					mi.command = action;
 					break;
 				default:
 					throw new RequestModelException($"Invalid action kind ({kind})");
@@ -650,6 +665,14 @@ namespace A2v10.Request
 			rm._data = mi.data;
 			rm._modelPath = pathForLoad;
 			rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
+			return rm;
+		}
+
+		public static async Task<RequestModel> CreateFromApiUrl(IApplicationHost host, String apiUrl)
+		{
+			apiUrl = apiUrl.ToLowerInvariant();
+			var rm = await CreateFromUrl(host, false, RequestUrlKind.Api, apiUrl + "/0" /*id*/);
+			rm._kind = RequestUrlKind.Api;
 			return rm;
 		}
 

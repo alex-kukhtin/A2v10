@@ -1,0 +1,8 @@
+﻿{
+	"commands": {
+			"callback": {
+				"type": "clr",
+				"clrType": "clr-type:A2v10.Request.BaseController;assembly=A2v10.Request"
+			}
+	}
+}

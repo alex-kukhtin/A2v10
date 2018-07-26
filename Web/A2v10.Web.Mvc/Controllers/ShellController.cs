@@ -224,7 +224,6 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "application/json";
 			try
 			{
-
 				using (var tr = new StreamReader(Request.InputStream))
 				{
 					String json = tr.ReadToEnd();

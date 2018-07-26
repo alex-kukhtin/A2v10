@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
-
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using A2v10.Infrastructure;
+using Newtonsoft.Json;
 
 namespace A2v10.Interop
 {
@@ -34,13 +36,8 @@ namespace A2v10.Interop
 			minject.Invoke(instance, injparsToCall.ToArray());
 		}
 
-		Object CallInvoke(Object instance, ExpandoObject parameters)
+		Object[] GetParameters(MethodInfo method, ExpandoObject parameters)
 		{
-			var type = instance.GetType();
-			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance);
-			if (method == null)
-				throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
-
 			var mtdParams = method.GetParameters();
 			var prmsD = parameters as IDictionary<String, Object>;
 
@@ -62,10 +59,8 @@ namespace A2v10.Interop
 					}
 					else if (srcObj is ExpandoObject && !pi.ParameterType.IsPrimitive)
 					{
-						// TODO: Object convert
-						//var strJson = JsonConvert.SerializeObject(srcObj, jssToJson);
-						//parsToCall.Add(JsonConvert.DeserializeObject(strJson, pi.ParameterType, jssFromJson));
-						//parsToCall.Add(srcObj);
+						var strJson = JsonConvert.SerializeObject(srcObj);
+						parsToCall.Add(JsonConvert.DeserializeObject(strJson, pi.ParameterType));
 					}
 					else
 					{
@@ -80,35 +75,78 @@ namespace A2v10.Interop
 					parsToCall.Add(pi.DefaultValue);
 				}
 			}
-			return method.Invoke(instance, parsToCall.ToArray());
+
+			return parsToCall.ToArray();
+		}
+
+		async Task<Object> CallInvokeAsync(Object instance, ExpandoObject parameters)
+		{
+			var type = instance.GetType();
+			var method = type.GetMethod("InvokeAsync", BindingFlags.Public | BindingFlags.Instance);
+			if (method == null)
+				throw new InteropException($"Method: 'InvokeAsync' is not found in type '{type.FullName}'");
+			var parsToCall = GetParameters(method, parameters);
+			return await (Task<Object>) method.Invoke(instance, parsToCall);
+		}
+
+		Object CallInvoke(Object instance, ExpandoObject parameters)
+		{
+			var type = instance.GetType();
+			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance);
+			if (method == null)
+				throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
+			var parsToCall = GetParameters(method, parameters);
+			return method.Invoke(instance, parsToCall);
+		}
+
+		public (String assembly, String type) ParseClrType(String clrType)
+		{
+			var regex = new Regex(@"^\s*clr-type\s*:\s*([\w\.]+)\s*;\s*assembly\s*=\s*([\w\.]+)\s*$");
+			var match = regex.Match(clrType);
+			if (match.Groups.Count != 3)
+			{
+				String errorMsg = $"Invalid hook definition: '{clrType}'. Expected: 'clr-type:TypeName;assembly=AssemblyName'";
+				throw new InteropException(errorMsg);
+			}
+			String assemblyName = match.Groups[2].Value.Trim();
+			String typeName = match.Groups[1].Value.Trim();
+			return (assemblyName, typeName);
+		}
+
+		public Object CreateInstance(String clrType)
+		{
+			var clr = ParseClrType(clrType);
+
+			Object instance = null;
+			try
+			{
+				instance = System.Activator.CreateInstance(clr.assembly, clr.type).Unwrap() as Object;
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				throw new InteropException($"Could not create type '{clr.type}'. exception: '{ex.Message}'");
+			}
+			if (!(instance is IInvokeTarget))
+			{
+				throw new InteropException($"The type: '{clr.type}' must implement interface 'IInvokeTarget'");
+			}
+			return instance;
 		}
 
 		public Object Invoke(String clrType, ExpandoObject parameters)
 		{
-			var names = clrType.Split(';');
-			if (names.Length != 2)
-				throw new InteropException($"Invalid type name: {clrType}. Must be: 'FullTypeName; assembly=AssemblyName'");
-			String assemblyName = names[1].Trim();
-			String typeName = names[0].Trim();
-			var assNames = assemblyName.Split('=');
-			if (assNames.Length != 2 || assNames[0].Trim() != "assembly")
-				throw new InteropException($"Invalid type name: {clrType}. Must be: 'FullTypeName; assembly=AssemblyName'");
-			assemblyName = assNames[1].Trim();
-			Object instance = null;
-			try
-			{
-				instance = System.Activator.CreateInstance(assemblyName, typeName).Unwrap() as Object;
-			}
-			catch (Exception /*ex*/)
-			{
-				throw new InteropException($"Could not create type '{typeName}'");
-			}
-			if (!(instance is IInvokeTarget))
-			{
-				throw new InteropException($"The type: '{typeName}' must implement interface 'IInvokeTarget'");
-			}
+			Object instance = CreateInstance(clrType);
 			CallInject(instance);
 			return CallInvoke(instance, parameters);
+		}
+
+		public async Task<Object> InvokeAsync(String clrType, ExpandoObject parameters)
+		{
+			Object instance = CreateInstance(clrType);
+			CallInject(instance);
+			return await CallInvokeAsync(instance, parameters);
 		}
 	}
 }

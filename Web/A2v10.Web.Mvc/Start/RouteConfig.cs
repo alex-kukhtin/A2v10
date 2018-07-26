@@ -19,13 +19,19 @@ namespace A2v10.Web.Mvc.Start
 				name: "Account",
 				url: "Account/{action}",
 				defaults: new { controller = "Account" }
-		   );
+			);
 
 			routes.MapRoute(
 				name: "Report",
 				url: "Report/{action}/{id}",
 				defaults: new { controller = "Report" }
-		   );
+			);
+
+			routes.MapRoute(
+				name: "Api",
+				url: "Api/{*pathInfo}",
+				defaults: new { controller = "Api", action="Default" }
+			);
 
 			routes.MapRoute(
 				name: "Default",
