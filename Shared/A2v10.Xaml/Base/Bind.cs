@@ -17,6 +17,7 @@ namespace A2v10.Xaml
 		public DataType DataType { get; set; }
 		public Boolean HideZeros { get; set; }
 		public String Mask { get; set; }
+		public Boolean NegativeRed { get; set; }
 
 		public Bind()
 		{

@@ -20,6 +20,8 @@ namespace A2v10.Xaml
 			if (cbind != null)
 			{
 				span.MergeAttribute("v-text", cbind.GetPathFormat(context));
+				if (cbind.NegativeRed)
+					span.MergeAttribute(":class", $"$getNegativeRedClass({cbind.GetPath(context)})");
 			}
 			span.AddCssClassBool(Small, "small");
 

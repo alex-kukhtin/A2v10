@@ -71,6 +71,8 @@ namespace A2v10.Request
 			String baseUrl = dataToInvoke.Get<String>("baseUrl");
 			String command = dataToInvoke.Get<String>("cmd");
 			ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
+			if (dataToExec == null)
+				dataToExec = new ExpandoObject();
 			dataToExec.Set("UserId", userId);
 			if (_host.IsMultiTenant)
 				dataToExec.Set("TenantId", tenantId);

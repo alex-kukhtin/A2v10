@@ -1,15 +1,23 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 
 namespace A2v10.Xaml
 {
 	public class Partial : RootContainer
 	{
+		public BackgroundStyle Background { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var page = new TagBuilder("div", "page partial");
 			page.MergeAttribute("id", context.RootId);
+
+			if (Background != BackgroundStyle.None)
+				page.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			page.AddCssClass(CssClass);
+
 			page.RenderStart(context);
 			RenderChildren(context);
 			page.RenderEnd(context);

@@ -8406,7 +8406,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180719-7249
+// 20180727-7258
 // controllers/base.js
 
 (function () {
@@ -8422,6 +8422,7 @@ Vue.directive('resize', {
 	const locale = window.$$locale;
 	const mask = require('std:mask');
 	const modelInfo = require('std:modelInfo');
+	const platform = require('std:platform');
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle");
@@ -9115,6 +9116,12 @@ Vue.directive('resize', {
 				return value;
 			},
 
+			$getNegativeRedClass(value) {
+				if (utils.isNumber(value))
+					return value < 0 ? 'negative-red' : '';
+				return 
+			},
+
 			$expand(elem, propName) {
 				let arr = elem[propName];
 				if (arr.$loaded)
@@ -9191,6 +9198,8 @@ Vue.directive('resize', {
 				const root = this.$data;
 				return root._delegate_(name);
 			},
+
+			$defer: platform.defer,
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
