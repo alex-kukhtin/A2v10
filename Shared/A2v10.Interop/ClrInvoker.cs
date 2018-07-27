@@ -43,7 +43,7 @@ namespace A2v10.Interop
 
 			List<Object> parsToCall = new List<Object>();
 
-			for (int i = 0; i < mtdParams.Length; i++)
+			for (Int32 i = 0; i < mtdParams.Length; i++)
 			{
 				var pi = mtdParams[i];
 				if (pi.Name == "UserId" && pi.ParameterType == typeof(Int64))
@@ -115,22 +115,22 @@ namespace A2v10.Interop
 
 		public Object CreateInstance(String clrType)
 		{
-			var clr = ParseClrType(clrType);
+			var (assembly, type) = ParseClrType(clrType);
 
 			Object instance = null;
 			try
 			{
-				instance = System.Activator.CreateInstance(clr.assembly, clr.type).Unwrap() as Object;
+				instance = System.Activator.CreateInstance(assembly, type).Unwrap() as Object;
 			}
 			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				throw new InteropException($"Could not create type '{clr.type}'. exception: '{ex.Message}'");
+				throw new InteropException($"Could not create type '{type}'. exception: '{ex.Message}'");
 			}
 			if (!(instance is IInvokeTarget))
 			{
-				throw new InteropException($"The type: '{clr.type}' must implement interface 'IInvokeTarget'");
+				throw new InteropException($"The type: '{type}' must implement interface 'IInvokeTarget'");
 			}
 			return instance;
 		}
