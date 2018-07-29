@@ -1360,6 +1360,7 @@ pre.a2-code {
 .control-group {
   display: block;
   margin-bottom: .5rem;
+  position: relative;
   /* можно запретить :hover */
 }
 .control-group label {
@@ -1604,6 +1605,16 @@ pre.a2-code {
 }
 .control-group.with-width .input-group {
   width: 100%;
+}
+.control-group.with-popover {
+  margin-right: 20px;
+}
+.control-group.with-popover .popover-wrapper {
+  font-weight: normal;
+  font-style: normal;
+  position: absolute;
+  right: -20px;
+  top: calc(50% - 9px);
 }
 .control-group .input-group.focus {
   border-color: #57a8fa !important;

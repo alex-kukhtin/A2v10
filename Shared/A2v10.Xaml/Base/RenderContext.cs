@@ -110,6 +110,8 @@ namespace A2v10.Xaml
 		public String RootId { get; set; }
 		public TextWriter Writer { get; private set; }
 
+		public Boolean IsDebugConfiguration { get; }
+
 		private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
 		private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
 
@@ -126,6 +128,7 @@ namespace A2v10.Xaml
 			_dataModel = ri.DataModel;
 			_localizer = ri.Localizer;
 			_currentLocale = ri.CurrentLocale;
+			IsDebugConfiguration = ri.IsDebugConfiguration;
 		}
 
 		public Boolean IsDialog => _root is Dialog;

@@ -16,6 +16,7 @@ namespace A2v10.Infrastructure
 		public IDataModel DataModel;
 		public ILocalizer Localizer;
 		public String CurrentLocale;
+		public Boolean IsDebugConfiguration;
 	}
 
 	public interface IRenderer

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180424-7163*/
+/*20180729-7259*/
 /*components/textbox.js*/
 
 (function () {
@@ -12,7 +12,7 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input ref="input" :type="controlType" v-focus autocomplete="off"
+		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
@@ -20,6 +20,7 @@
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -28,13 +29,14 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" 
+		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -43,10 +45,11 @@
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex"/>
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;

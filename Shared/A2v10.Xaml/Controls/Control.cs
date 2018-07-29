@@ -22,6 +22,10 @@ namespace A2v10.Xaml
 
 		public Validator Validator { get; set; }
 
+		public Popover Popover { get; set; }
+
+		public String TestId { get; set; }
+
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
 		public UIElementCollection AddOns { get { return _addOns.Value; } }
@@ -30,6 +34,8 @@ namespace A2v10.Xaml
 		{
 			base.MergeAttributes(tag, context, mode);
 			tag.AddCssClassBool(Block, "block");
+			if (Popover != null)
+				tag.AddCssClass("with-popover");
 			AddControlAttributes(tag, context);
 			if (TabIndex != 0 && mode.HasFlag(MergeAttrMode.TabIndex))
 				tag.MergeAttribute(":tab-index", TabIndex.ToString());
@@ -38,6 +44,8 @@ namespace A2v10.Xaml
 				tag.MergeStyle("width", Width.Value);
 				tag.AddCssClass("with-width");
 			}
+			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
+				tag.MergeAttribute("test-id", TestId);
 		}
 
 		private void AddControlAttributes(TagBuilder tag, RenderContext context)
@@ -53,6 +61,7 @@ namespace A2v10.Xaml
 
 		internal void RenderAddOns(RenderContext context)
 		{
+			RenderPopover(context);
 			if (!_addOns.IsValueCreated)
 				return;
 			foreach (var ctl in AddOns)
@@ -64,6 +73,17 @@ namespace A2v10.Xaml
 					MergeDisabled(tag, context, nativeControl: true);
 				});
 			}
+		}
+
+		internal void RenderPopover(RenderContext context)
+		{
+			if (Popover == null)
+				return;
+			var tag = new TagBuilder("template");
+			tag.MergeAttribute("slot", "popover");
+			tag.RenderStart(context);
+			Popover.RenderElement(context);
+			tag.RenderEnd(context);
 		}
 
 		internal virtual void MergeDisabled(TagBuilder tag, RenderContext context, Boolean nativeControl = false)

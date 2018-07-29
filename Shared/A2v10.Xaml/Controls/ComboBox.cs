@@ -106,6 +106,7 @@ namespace A2v10.Xaml
 				foreach (var ch in Children)
 					ch.RenderElement(context);
 			}
+			RenderPopover(context);
 			combo.RenderEnd(context);
 		}
 

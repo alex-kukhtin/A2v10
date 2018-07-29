@@ -218,7 +218,8 @@ namespace A2v10.Request
 							Writer = strWriter,
 							DataModel = model,
 							Localizer = _localizer,
-							CurrentLocale = null
+							CurrentLocale = null,
+							IsDebugConfiguration = _host.IsDebugConfiguration
 						};
 						_renderer.Render(ri);
 						// write markup

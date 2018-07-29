@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180602-7193*/
+/*20180729-7259*/
 /*components/combobox.js*/
 
 (function () {
@@ -16,7 +16,7 @@
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()">
+		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()" :id="testId">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
@@ -24,6 +24,7 @@
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;

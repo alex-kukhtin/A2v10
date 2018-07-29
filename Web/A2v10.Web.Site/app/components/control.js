@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180629-7234
+// 20180729-7259
 // components/control.js
 
 (function () {
@@ -19,7 +19,8 @@
 			dataType: String,
 			validatorOptions: Object,
 			updateTrigger: String,
-			mask: String
+			mask: String,
+			testId: String
 		},
 		computed: {
 			path() {

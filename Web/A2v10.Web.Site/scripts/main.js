@@ -3310,7 +3310,7 @@ app.modules['std:tools'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180629-7234
+// 20180729-7259
 // components/control.js
 
 (function () {
@@ -3329,7 +3329,8 @@ app.modules['std:tools'] = function () {
 			dataType: String,
 			validatorOptions: Object,
 			updateTrigger: String,
-			mask: String
+			mask: String,
+			testId: String
 		},
 		computed: {
 			path() {
@@ -3509,7 +3510,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180424-7163*/
+/*20180729-7259*/
 /*components/textbox.js*/
 
 (function () {
@@ -3521,7 +3522,7 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input ref="input" :type="controlType" v-focus autocomplete="off"
+		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
@@ -3529,6 +3530,7 @@ Vue.component('validator-control', {
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -3537,13 +3539,14 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" 
+		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -3552,10 +3555,11 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex"/>
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -3674,7 +3678,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180602-7193*/
+/*20180729-7259*/
 /*components/combobox.js*/
 
 (function () {
@@ -3690,7 +3694,7 @@ Vue.component('validator-control', {
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()">
+		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()" :id="testId">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
@@ -3698,6 +3702,7 @@ Vue.component('validator-control', {
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
@@ -4221,7 +4226,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180523-7193
+// 20180729-7259
 
 // components/selector.js
 
@@ -4243,7 +4248,7 @@ Vue.component('validator-control', {
 <div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
+		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
 			@input="debouncedUpdate" @blur.stop="cancel" @keydown="keyDown" @keyup="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
@@ -4263,6 +4268,7 @@ Vue.component('validator-control', {
 			<slot name="new-pane"></slot>
 		</div>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,
@@ -5378,20 +5384,20 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-//20170913-7046
+//20180729-7259
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
-<div v-dropdown class="popover-wrapper">
+<div v-dropdown class="popover-wrapper" :style="{top: top}">
 	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
-	<div class="popup-body">
+	<div class="popup-body" :style="{width: width}">
 		<div class="arrow" />
 		<div v-if="visible">
 			<include :src="popoverUrl"/>
 		</div>
 		<slot />
-	</div>	
+	</div>
 </div>
 `,
 	/*
@@ -5410,17 +5416,19 @@ Vue.component('popover', {
 		icon: String,
 		url: String,
 		content: String,
-		title:String
+		title: String,
+		width: String,
+		top: String
 	},
-    computed: {
-        hasIcon() {
-            return !!this.icon;
-        },
-        iconClass() {
-            let cls = "ico po-ico";
-            if (this.icon)
-                cls += ' ico-' + this.icon;
-            return cls;
+	computed: {
+		hasIcon() {
+			return !!this.icon;
+		},
+		iconClass() {
+			let cls = "ico po-ico";
+			if (this.icon)
+				cls += ' ico-' + this.icon;
+			return cls;
 		},
 		visible() {
 			return this.url && this.state === 'shown';

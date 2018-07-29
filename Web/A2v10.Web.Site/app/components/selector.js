@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180523-7193
+// 20180729-7259
 
 // components/selector.js
 
@@ -22,7 +22,7 @@
 <div :class="cssClass2()">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
-		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder"
+		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
 			@input="debouncedUpdate" @blur.stop="cancel" @keydown="keyDown" @keyup="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
@@ -42,6 +42,7 @@
 			<slot name="new-pane"></slot>
 		</div>
 	</div>
+	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `,

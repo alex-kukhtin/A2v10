@@ -12,12 +12,32 @@
 					<Radio Label="Юридическое лицо" Value="{Bind Agent.Type}" CheckedValue="C" TabIndex="1"/>
 					<Radio Label="Физическое лицо" Value="{Bind Agent.Type}" CheckedValue="P"/>
 				</FieldSet>
-				<TextBox Grid.Row="2" Grid.ColSpan="2" Label="Наименование" TabIndex="2"
-						Value="{Bind Agent.Name}" />
+				<TextBox Grid.Row="2" Grid.ColSpan="2" Label="Наименование 234" TabIndex="2" TestId="name"
+						Value="{Bind Agent.Name}" Description="Наименование покупателя">
+					<TextBox.Popover>
+						<Popover Icon="HelpOutline" Placement="BottomLeft" Width="200px">
+							<Text>Всплывающий элемент возле редактора:
+								<Span Content="{Bind Agent.Name}" Bold="True"/>
+							</Text>
+						</Popover>
+					</TextBox.Popover>
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search"></Hyperlink>
+						<Hyperlink Icon="Clear"></Hyperlink>
+					</TextBox.AddOns>
+				</TextBox>
 				<TextBox Grid.Row="3" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" TabIndex="3"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" 
-					TabIndex="4" Bold="True" Italic="True"
-					Rows="3" Multiline="True"/>
+					TabIndex="4" Bold="True" Italic="True" TestId="memo"
+					Rows="3" Multiline="True">
+					<TextBox.Popover>
+						<Popover Icon="HelpOutline" Placement="LeftTop" Width="250px">
+							<Text>Всплывающий элемент возле редактора:
+								<Span Content="{Bind Agent.Name}" Bold="True"/>
+							</Text>
+						</Popover>
+					</TextBox.Popover>
+				</TextBox>
 
 				<CheckBox Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 			</Grid>
@@ -49,8 +69,15 @@
 		<Tab Header="Адрес">
 			<Grid Columns="1*, 1*">
 				<ComboBox Label="Страна" Grid.Row="1" ItemsSource="{Bind Countries}"
-						Value="{Bind Agent.Address.Country}">
+						Value="{Bind Agent.Address.Country}" TestId="country">
 					<ComboBoxItem Content="{Bind Name}" Value="{Bind Code}"/>
+					<ComboBox.Popover>
+						<Popover Icon="HelpOutline" Placement="BottomLeft" Width="200px" Top="22">
+							<Text>Всплывающий элемент возле комбика:
+								<Span Content="{Bind Agent.Name}" Bold="True"/>
+							</Text>
+						</Popover>
+					</ComboBox.Popover>
 				</ComboBox>
 				<ComboBox Label="Город" Grid.Row="2"
 						 Value="{Bind Agent.Address.City}" ItemsSource="{Bind Root.$Cities}">
@@ -71,7 +98,7 @@
 				<CheckBox Grid.Row="5" Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 				<Span Content="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"></Span>
 
-				<Image Source="{Bind Agent.Image}" Base="/Catalog/Customer"/>
+				<Image Source="{Bind Agent.Image}" Base="/Catalog/Customer" Width="120"/>
 			</Grid>
 		</Tab>
 	</TabPanel>
