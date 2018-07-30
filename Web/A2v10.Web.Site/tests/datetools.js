@@ -1,4 +1,6 @@
-﻿describe("Date tools", function () {
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+describe("Date tools", function () {
 
 	const utils = require('std:utils');
 	const du = utils.date;
@@ -158,6 +160,13 @@
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let f = du.formatDate(d1);
 		expect(f).toBe('01.02.2018');
+	});
+
+	it('from days', function () {
+		let f = du.fromDays(25327);
+		expect(f.getTime()).toBe(new Date('Mon May 05 1969 03:00:00 GMT+0300').getTime());
+		f = du.fromDays(23451);
+		expect(f.getTime()).toBe(new Date('Mon Mar 16 1964 03:00:00 GMT+0300').getTime());
 	});
 
 });

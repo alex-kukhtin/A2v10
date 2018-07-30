@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180619-7227
+// 20180730-7260
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -153,7 +153,8 @@ app.modules['std:utils'] = function () {
 			compare: dateCompare,
 			endOfMonth: endOfMonth,
 			minDate: dateCreate(1901, 1, 1),
-			maxDate: dateCreate(2999, 12, 31)
+			maxDate: dateCreate(2999, 12, 31),
+			fromDays: fromDays
 		},
 		text: {
 			contains: textContains,
@@ -449,6 +450,12 @@ app.modules['std:utils'] = function () {
 		throw new Error('Invalid unit value for utils.date.diff');
 	}
 
+	function fromDays(days) {
+		let dt = new Date(1900, 0, days, 0, 0, 0, 0);
+		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		return dt;
+	}
+
 	function dateAdd(dt, nm, unit) {
 		if (!isDate(dt))
 			return null;
@@ -530,7 +537,6 @@ app.modules['std:utils'] = function () {
 	}
 
 };
-
 
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
