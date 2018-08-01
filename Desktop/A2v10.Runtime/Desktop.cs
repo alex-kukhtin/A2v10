@@ -175,7 +175,7 @@ namespace A2v10RuntimeNet
 					else if (url.StartsWith("_data/"))
 					{
 						var command = url.Substring(6);
-						controller.Data(command, tenantId, userId, postData, writer).Wait();
+						controller.Data(command, tenantId, userId, postData, null /**/).Wait();
 					}
 					else if (url.StartsWith("_image/"))
 					{

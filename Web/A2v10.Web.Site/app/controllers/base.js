@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180727-7258
+// 20180801-7261
 // controllers/base.js
 
 (function () {
@@ -228,11 +228,12 @@
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
 					dataservice.post(url, jsonData).then(function (data) {
-						if (utils.isObject(data)) {
+						if (utils.isObject(data))
 							resolve(data);
-						} else {
+						else if (utils.isString(data))
+							resolve(data);
+						else
 							throw new Error('Invalid response type for $invoke');
-						}
 					}).catch(function (msg) {
 						self.$alertUi(msg);
 					});

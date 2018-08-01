@@ -227,7 +227,7 @@ namespace A2v10.Web.Mvc.Controllers
 				using (var tr = new StreamReader(Request.InputStream))
 				{
 					String json = tr.ReadToEnd();
-					await _baseController.Data(command, TenantId, UserId, json, Response.Output);
+					await _baseController.Data(command, TenantId, UserId, json, Response);
 				}
 			}
 			catch (Exception ex)

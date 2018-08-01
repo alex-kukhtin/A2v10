@@ -438,6 +438,8 @@ const vm = new DataModelController({
 					continue;
 				if (moduleName.ToLowerInvariant().StartsWith("std:"))
 					continue;
+				if (moduleName.ToLowerInvariant().StartsWith("app:"))
+					continue;
 				if (_modulesWritten.Contains(moduleName))
 					continue;
 				var fileName = moduleName.AddExtension("js");

@@ -296,6 +296,7 @@ namespace A2v10.Request
 		none,
 		sql,
 		clr,
+		xml,
 		startProcess,
 		resumeProcess
 	}
@@ -309,9 +310,24 @@ namespace A2v10.Request
 		public String clrType;
 		public Boolean async;
 		public String wrapper;
+		public IList<String> xmlSchemas;
+		public String encoding;
+		public Boolean validate;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
+
+		[JsonIgnore]
+		public String XmlProcedure
+		{
+			get
+			{
+				var cm = CurrentModel;
+				if (String.IsNullOrEmpty(cm))
+					return null;
+				return $"[{CurrentSchema}].[{cm}.Report]";
+			}
+		}
 
 		[JsonIgnore]
 		public String ActionBase

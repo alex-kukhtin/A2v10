@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180701-7237
+// 20180801-7261
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -14,7 +14,8 @@ app.modules['std:http'] = function () {
 		get: get,
 		post: post,
 		load: load,
-		upload: upload
+		upload: upload,
+		localpost
 	};
 
 	function doRequest(method, url, data, raw) {
@@ -124,6 +125,37 @@ app.modules['std:http'] = function () {
 					alert(error);
 					resolve(false);
 				});
+		});
+	}
+
+	function localpost(command, data) {
+		return new Promise(function (resolve, reject) {
+			let xhr = new XMLHttpRequest();
+
+			xhr.onload = function (response) {
+				if (xhr.status === 200) {
+					let ct = xhr.getResponseHeader('content-type');
+					let xhrResult = xhr.responseText;
+					if (ct.indexOf('application/json') !== -1)
+						xhrResult = JSON.parse(xhr.responseText);
+					resolve(xhrResult);
+				}
+				else if (xhr.status === 255) {
+					reject(xhr.responseText || xhr.statusText);
+				}
+				else {
+					reject(xhr.statusText);
+				}
+			};
+			xhr.onerror = function (response) {
+				reject(response);
+			};
+			let url = "http://127.0.0.1:64031/" + command;
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xhr.setRequestHeader('Accept', 'text/plain');
+			xhr.setRequestHeader('Content-Type', 'text/plain');
+			xhr.send(data);
 		});
 	}
 };

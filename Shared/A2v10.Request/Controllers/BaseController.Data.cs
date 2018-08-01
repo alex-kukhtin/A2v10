@@ -14,32 +14,33 @@ using A2v10.Data.Interfaces;
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using A2v10.Interop;
+using System.Text;
 
 namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		public async Task Data(String command, Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		public async Task Data(String command, Int32 tenantId, Int64 userId, String json, HttpResponseBase response)
 		{
 			switch (command.ToLowerInvariant())
 			{
 				case "save":
-					await SaveData(tenantId, userId, json, writer);
+					await SaveData(tenantId, userId, json, response.Output);
 					break;
 				case "reload":
-					await ReloadData(tenantId, userId, json, writer);
+					await ReloadData(tenantId, userId, json, response.Output);
 					break;
 				case "dbremove":
-					await DbRemove(tenantId, userId, json, writer);
+					await DbRemove(tenantId, userId, json, response.Output);
 					break;
 				case "expand":
-					await ExpandData(tenantId, userId, json, writer);
+					await ExpandData(tenantId, userId, json, response.Output);
 					break;
 				case "loadlazy":
-					await LoadLazyData(tenantId, userId, json, writer);
+					await LoadLazyData(tenantId, userId, json, response.Output);
 					break;
 				case "invoke":
-					await InvokeData(tenantId, userId, json, writer);
+					await InvokeData(tenantId, userId, json, response);
 					break;
 				default:
 					throw new RequestModelException($"Invalid data action {command}");
@@ -65,7 +66,7 @@ namespace A2v10.Request
 			WriteDataModel(model, writer);
 		}
 
-		async Task InvokeData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task InvokeData(Int32 tenantId, Int64 userId, String json, HttpResponseBase response)
 		{
 			ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToInvoke.Get<String>("baseUrl");
@@ -79,24 +80,27 @@ namespace A2v10.Request
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
 			dataToExec.Append(cmd.parameters);
-			await ExecuteCommand(cmd, dataToExec, writer);
+			await ExecuteCommand(cmd, dataToExec, response);
 		}
 
-		async Task ExecuteCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
+		async Task ExecuteCommand(RequestCommand cmd, ExpandoObject dataToExec, HttpResponseBase response)
 		{
 			switch (cmd.type)
 			{
 				case CommandType.sql:
-					await ExecuteSqlCommand(cmd, dataToExec, writer);
+					await ExecuteSqlCommand(cmd, dataToExec, response.Output);
 					break;
 				case CommandType.startProcess:
-					await StartWorkflow(cmd, dataToExec, writer);
+					await StartWorkflow(cmd, dataToExec, response.Output);
 					break;
 				case CommandType.resumeProcess:
-					await ResumeWorkflow(cmd, dataToExec, writer);
+					await ResumeWorkflow(cmd, dataToExec, response.Output);
 					break;
 				case CommandType.clr:
-					await ExecuteClrCommand(cmd, dataToExec, writer);
+					await ExecuteClrCommand(cmd, dataToExec, response.Output);
+					break;
+				case CommandType.xml:
+					await ExecuteXmlCommand(cmd, dataToExec, response);
 					break;
 				default:
 					throw new RequestModelException($"Invalid command type '{cmd.type}'");
@@ -107,6 +111,39 @@ namespace A2v10.Request
 		{
 			IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
 			WriteDataModel(model, writer);
+		}
+
+		async Task ExecuteXmlCommand(RequestCommand cmd, ExpandoObject dataToExec, HttpResponseBase response)
+		{
+			List<String> xmlSchemaPathes = null;
+			if (cmd.xmlSchemas != null)
+			{
+				xmlSchemaPathes = new List<String>();
+				foreach (var schema in cmd.xmlSchemas)
+					xmlSchemaPathes.Add(Host.MakeFullPath(false, cmd.Path, schema + ".xsd"));
+			}
+
+			if(xmlSchemaPathes == null)
+				throw new RequestModelException("The xml-schemes are not specified");
+
+			foreach (var path in xmlSchemaPathes)
+			{
+				if (!System.IO.File.Exists(path))
+					throw new RequestModelException($"File not found '{path}'");
+			}
+			if (String.IsNullOrEmpty(cmd.encoding))
+				throw new RequestModelException("The xml encoding is not specified");
+
+			IDataModel dm = await DbContext.LoadModelAsync(cmd.CurrentSource, cmd.XmlProcedure, dataToExec);
+
+			var xmlCreator = new XmlCreator(xmlSchemaPathes, dm, cmd.encoding)
+			{
+				Validate = cmd.validate
+			};
+			var bytes = xmlCreator.CreateXml();
+			response.ContentType = "text/xml";
+			var chars = Encoding.UTF8.GetString(bytes).ToCharArray();
+			response.Write(chars, 0, chars.Length);
 		}
 
 		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
