@@ -131,12 +131,10 @@ namespace A2v10.Request
 				if (!System.IO.File.Exists(path))
 					throw new RequestModelException($"File not found '{path}'");
 			}
-			if (String.IsNullOrEmpty(cmd.encoding))
-				throw new RequestModelException("The xml encoding is not specified");
 
 			IDataModel dm = await DbContext.LoadModelAsync(cmd.CurrentSource, cmd.XmlProcedure, dataToExec);
 
-			var xmlCreator = new XmlCreator(xmlSchemaPathes, dm, cmd.encoding)
+			var xmlCreator = new XmlCreator(xmlSchemaPathes, dm, "UTF-8")
 			{
 				Validate = cmd.validate
 			};

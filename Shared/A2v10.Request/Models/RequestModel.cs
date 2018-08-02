@@ -311,7 +311,6 @@ namespace A2v10.Request
 		public Boolean async;
 		public String wrapper;
 		public IList<String> xmlSchemas;
-		public String encoding;
 		public Boolean validate;
 
 		[JsonIgnore]
