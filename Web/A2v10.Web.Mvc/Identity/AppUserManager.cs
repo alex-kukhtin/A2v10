@@ -58,13 +58,13 @@ namespace A2v10.Web.Mvc.Identity
 			DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			MaxFailedAccessAttemptsBeforeLockout = 5;
 
-			/*
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
-            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
+            RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<AppUser, Int64>
             {
                 MessageFormat = "Your security code is {0}"
             });
+			/*
             manager.SmsService = new SmsService();
             */
 			RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<AppUser, Int64>
@@ -72,8 +72,8 @@ namespace A2v10.Web.Mvc.Identity
 				Subject = "Security Code",
 				BodyFormat = "Your security code is {0}"
 			});
-			ILogger logger = ServiceLocator.Current.GetService<ILogger>();
-			EmailService = ServiceLocator.Current.GetService<IIdentityMessageService>(); // new EmailService(logger);
+			//ILogger logger = ServiceLocator.Current.GetService<ILogger>();
+			//EmailService = ServiceLocator.Current.GetService<IIdentityMessageService>(); // new EmailService(logger);
 
 			var dataProtectionProvider = options.DataProtectionProvider;
 			if (dataProtectionProvider != null)

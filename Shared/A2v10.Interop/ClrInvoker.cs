@@ -105,7 +105,7 @@ namespace A2v10.Interop
 			var match = regex.Match(clrType);
 			if (match.Groups.Count != 3)
 			{
-				String errorMsg = $"Invalid hook definition: '{clrType}'. Expected: 'clr-type:TypeName;assembly=AssemblyName'";
+				String errorMsg = $"Invalid clrType definition: '{clrType}'. Expected: 'clr-type:TypeName;assembly=AssemblyName'";
 				throw new InteropException(errorMsg);
 			}
 			String assemblyName = match.Groups[2].Value.Trim();

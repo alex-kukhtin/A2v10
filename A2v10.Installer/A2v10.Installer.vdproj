@@ -88,6 +88,12 @@
         "Entry"
         {
         "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
+        "OwnerKey" = "8:_BECACD20198C4B9EA789F7BA0F0F5604"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
         "OwnerKey" = "8:_F1F0EEC026283B24209C2523DA109BED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -515,12 +521,6 @@
         {
         "MsmKey" = "8:_7358069E141C54049479FF853F6CE688"
         "OwnerKey" = "8:_5ED8701D8D9A48249DC6C98B212D8671"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_749D3B9047CD8CA8C0B8661A05D8B42D"
-        "OwnerKey" = "8:_BECACD20198C4B9EA789F7BA0F0F5604"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -965,12 +965,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_BECACD20198C4B9EA789F7BA0F0F5604"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_749D3B9047CD8CA8C0B8661A05D8B42D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2594,37 +2588,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_749D3B9047CD8CA8C0B8661A05D8B42D"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Data.Interfaces, Version=10.0.7141.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_749D3B9047CD8CA8C0B8661A05D8B42D"
-                    {
-                    "Name" = "8:A2v10.Data.Interfaces.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:A2v10.Data.Interfaces.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_78763B8B6B085F021F6282159B4C8FCE"
             {
             "AssemblyRegister" = "3:1"
@@ -3801,7 +3764,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
         "ProductCode" = "8:{EDB453E0-20BA-4C2E-ADAB-1CC8F422A5C7}"
-        "PackageCode" = "8:{B041FA33-3B9A-4F4B-B8E1-4D519C38C637}"
+        "PackageCode" = "8:{EA8842B7-57F8-4EA1-A99B-9D69B883F98C}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

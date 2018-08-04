@@ -169,6 +169,10 @@ namespace A2v10.Web.Mvc.Identity
 				{
 					await CreateTenantUser(user);
 				}
+			} else if (user.IsPhoneNumberConfirmModified)
+			{
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmPhoneNumber]", user);
+				user.ClearModified(UserModifiedFlag.PhoneNumberConfirmed);
 			}
 		}
 
@@ -374,6 +378,7 @@ namespace A2v10.Web.Mvc.Identity
 		public Task SetPhoneNumberConfirmedAsync(AppUser user, Boolean confirmed)
 		{
 			user.PhoneNumberConfirmed = confirmed;
+			user.SetModified(UserModifiedFlag.PhoneNumberConfirmed);
 			return Task.FromResult(0);
 		}
 		#endregion
