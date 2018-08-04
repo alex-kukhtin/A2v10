@@ -1,5 +1,5 @@
 ﻿
-/*20180605-7210*/
+/*20180804-7264*/
 
 (function () {
 
@@ -30,6 +30,15 @@
 			},
 			hasFeedback() {
 				return this.appData && this.appData.feedback;
+			},
+			profileItems() {
+				return this.appData ? this.appData.profileMenu : null;
+			}
+		},
+		methods: {
+			doProfileMenu(itm) {
+				//console.dir(this);
+				this.navigate(itm.url);
 			}
 		}
 	});

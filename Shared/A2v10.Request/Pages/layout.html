@@ -31,9 +31,7 @@
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn user-name" toggle><i class="ico ico-user"></i> <span class="person-name">$(PersonName)</span><span class="caret"></span></button>
 				<div class="dropdown-menu menu down-right">
-					<!--
-					<a @click.prevent="profile" class="dropdown-item" tabindex="-1"><i class="ico ico-user"></i> @[Profile]</a>
-					-->
+					<a v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> @[ChangePassword]</a>
 					<template v-if="userIsAdmin">
 						<div class="divider"></div>

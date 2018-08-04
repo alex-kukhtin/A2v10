@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="AppInfo.cs" />
     <Compile Include="BaseLocalizer.cs" />
+    <Compile Include="ClrHelpers.cs" />
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="IBackgroundTasksManager.cs" />

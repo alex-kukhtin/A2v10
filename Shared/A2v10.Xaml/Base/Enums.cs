@@ -78,7 +78,8 @@ namespace A2v10.Xaml
 	public enum AutoSelectMode
 	{
 		None,
-		FirstItem
+		FirstItem,
+		ItemId
 	}
 
 	public enum RowMarkerStyle

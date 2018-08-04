@@ -36,7 +36,7 @@ namespace A2v10.Workflow
 			{
 				if (String.IsNullOrEmpty(Name))
 					return 1;
-				int pos = Name.LastIndexOf("_v");
+				Int32 pos = Name.LastIndexOf("_v");
 				if (pos == -1)
 					return 1;
 				return Int32.Parse(Name.Substring(pos + 2));
@@ -61,10 +61,9 @@ namespace A2v10.Workflow
 			Source = source.Trim();
 			if (Source.StartsWith("clr:"))
 			{
-				Type = WorkflowType.ClrType;
-				String[] clrTypes = Source.Substring(4).Split(';');
-				Name = clrTypes[0].Trim();
-				Assembly = clrTypes[1].Trim().Replace("assembly", String.Empty).Replace("=", String.Empty);
+				var (assembly, type) = ClrHelpers.ParseClrType(source);
+				Name = type;
+				Assembly = assembly;
 			}
 			else if (Source.StartsWith("file:"))
 			{
@@ -104,7 +103,7 @@ namespace A2v10.Workflow
 			var hash = algorithm.ComputeHash(Encoding.UTF8.GetBytes(Definition));
 			StringBuilder sb = new StringBuilder(Name);
 			sb.Append("_");
-			foreach (byte b in hash)
+			foreach (Byte b in hash)
 			{
 				sb.Append(b.ToString("x2"));
 			}

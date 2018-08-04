@@ -6460,7 +6460,7 @@ TODO:
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180502-7173
+// 20180804-7264
 // components/list.js
 
 /* TODO:
@@ -6494,9 +6494,6 @@ TODO:
 			}
 		},
 		computed: {
-			isSelectFirstItem() {
-				return this.autoSelect === 'first-item';
-			},
 			selectedSource() {
 				// method! not cached
 				let src = this.itemsSource;
@@ -6524,24 +6521,39 @@ TODO:
 				console.dir(this);
 			},
 			selectFirstItem() {
-				if (!this.isSelectFirstItem)
-					return;
+				if (!this.autoSelect) return;
 				if (!this.selectable) return;
-				// from source (not $origin!)
 				let src = this.itemsSource;
-				if (!src.length)
+				if (!src || !src.length)
 					return;
-				let fe = src[0];
-				this.select(fe);
+				if (this.autoSelect === 'first-item') {
+					// from source (not $origin!)
+					let fe = src[0];
+					this.select(fe);
+					return;
+				} else if (this.autoSelect === 'item-id') {
+					let rootId = this.$root.$modelInfo.Id;
+					if (!utils.isDefined(rootId)) {
+						console.error('Id not found in Root.modelInfo');
+						return;
+					}
+					let fe = src.find(itm => itm.$id === rootId);
+					if (!fe) {
+						console.error(`Element with id=${rootId} not found`);
+						fe = src[0];
+					}
+					if (fe)
+						this.select(fe);
+				}
 			},
 			keyDown(e) {
 				const next = (delta) => {
 					let index;
 					index = this.itemsSource.indexOf(this.selectedSource);
-					if (index == -1)
+					if (index === -1)
 						return;
 					index += delta;
-					if (index == -1)
+					if (index === -1)
 						return;
 					if (index < this.itemsSource.length)
 						this.select(this.itemsSource[index]);
@@ -6580,13 +6592,13 @@ TODO:
 			this.selectFirstItem();
 		},
 		updated() {
-			if (!this.selectedSource && this.isSelectFirstItem) {
+			if (!this.selectedSource && this.autoSelect) {
 				this.selectFirstItem();
 			}
 			let src = this.itemsSource;
 			if (!src) return;
 			let ix = src.$selectedIndex;
-			if (ix != -1 && this.$refs.li)
+			if (ix !== -1 && this.$refs.li)
 				this.$refs.li[ix].scrollIntoViewCheck();
 		}
 	});
@@ -9345,7 +9357,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180705-7240*/
+/*20180804-7264*/
 /* controllers/shell.js */
 
 (function () {
@@ -9825,6 +9837,9 @@ Vue.directive('resize', {
 			},
 			appLink(lnk) {
 				this.$store.commit('navigate', { url: lnk.url });
+			},
+			navigate(url) {
+				this.$store.commit('navigate', { url: url });
 			},
 			root() {
 				let opts = { title: null };

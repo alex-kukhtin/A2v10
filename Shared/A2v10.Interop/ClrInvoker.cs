@@ -99,23 +99,9 @@ namespace A2v10.Interop
 			return method.Invoke(instance, parsToCall);
 		}
 
-		public (String assembly, String type) ParseClrType(String clrType)
-		{
-			var regex = new Regex(@"^\s*clr-type\s*:\s*([\w\.]+)\s*;\s*assembly\s*=\s*([\w\.]+)\s*$");
-			var match = regex.Match(clrType);
-			if (match.Groups.Count != 3)
-			{
-				String errorMsg = $"Invalid clrType definition: '{clrType}'. Expected: 'clr-type:TypeName;assembly=AssemblyName'";
-				throw new InteropException(errorMsg);
-			}
-			String assemblyName = match.Groups[2].Value.Trim();
-			String typeName = match.Groups[1].Value.Trim();
-			return (assemblyName, typeName);
-		}
-
 		public Object CreateInstance(String clrType)
 		{
-			var (assembly, type) = ParseClrType(clrType);
+			var (assembly, type) = ClrHelpers.ParseClrType(clrType);
 
 			Object instance = null;
 			try

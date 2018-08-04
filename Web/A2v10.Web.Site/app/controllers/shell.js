@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180705-7240*/
+/*20180804-7264*/
 /* controllers/shell.js */
 
 (function () {
@@ -480,6 +480,9 @@
 			},
 			appLink(lnk) {
 				this.$store.commit('navigate', { url: lnk.url });
+			},
+			navigate(url) {
+				this.$store.commit('navigate', { url: url });
 			},
 			root() {
 				let opts = { title: null };
