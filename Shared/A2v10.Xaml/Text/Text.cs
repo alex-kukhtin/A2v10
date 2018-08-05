@@ -25,7 +25,6 @@ namespace A2v10.Xaml
 			tag.RenderStart(context);
 			Inlines.Render(context);
 			tag.RenderEnd(context);
-			//throw new NotImplementedException();
 		}
 	}
 }

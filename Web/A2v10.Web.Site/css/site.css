@@ -746,7 +746,7 @@ td.valign-bottom {
   border-left: 5px solid #bdbdbd;
   background-color: #f5f5f5;
 }
-.a2-alert .ico {
+.a2-alert > .ico {
   font-size: 1.2rem;
   margin-right: 2px;
 }
@@ -755,7 +755,7 @@ td.valign-bottom {
   border-left-color: #fcd891;
   color: #9c793d;
 }
-.a2-alert.warning .ico {
+.a2-alert.warning > .ico {
   color: #9c793d;
 }
 .a2-alert.success {
@@ -763,7 +763,7 @@ td.valign-bottom {
   border-left-color: #d6e9c6;
   color: #3c763d;
 }
-.a2-alert.success .ico {
+.a2-alert.success > .ico {
   color: #3c763d;
 }
 .a2-alert.danger {
@@ -771,7 +771,7 @@ td.valign-bottom {
   border-left-color: #dfa4ae;
   color: #ab403f;
 }
-.a2-alert.danger .ico {
+.a2-alert.danger > .ico {
   color: #ab403f;
 }
 .a2-alert.info {
@@ -779,7 +779,7 @@ td.valign-bottom {
   border-left-color: #bce8f1;
   color: #31708f;
 }
-.a2-alert.info .ico {
+.a2-alert.info > .ico {
   color: #31708f;
 }
 html {

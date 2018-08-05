@@ -8,7 +8,7 @@ namespace A2v10.Xaml
 	{
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			new TagBuilder("hr").Render(context, TagRenderMode.SelfClosing);
+			new TagBuilder("hr", null, IsInGrid).Render(context, TagRenderMode.SelfClosing);
 		}
 	}
 }

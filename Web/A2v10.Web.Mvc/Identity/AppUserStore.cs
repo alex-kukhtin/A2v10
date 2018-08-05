@@ -359,10 +359,13 @@ namespace A2v10.Web.Mvc.Identity
 		#endregion
 
 		#region IUserPhoneNumberStore
-		public Task SetPhoneNumberAsync(AppUser user, String phoneNumber)
+		public async Task SetPhoneNumberAsync(AppUser user, String phoneNumber)
 		{
-			user.PhoneNumber = phoneNumber;
-			return Task.FromResult(0);
+			if (user.PhoneNumber != phoneNumber)
+			{
+				user.PhoneNumber = phoneNumber;
+				await SetPhoneNumberConfirmedAsync(user, false);
+			}
 		}
 
 		public Task<String> GetPhoneNumberAsync(AppUser user)
@@ -421,12 +424,12 @@ namespace A2v10.Web.Mvc.Identity
 
 		public Task AddClaimAsync(AppUser user, Claim claim)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("AddClaimAsync");
 		}
 
 		public Task RemoveClaimAsync(AppUser user, Claim claim)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("RemoveClaimAsync");
 		}
 		#endregion
 
