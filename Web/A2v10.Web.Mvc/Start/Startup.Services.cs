@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using System;
 using System.Web;
 
 using A2v10.Data;
@@ -36,6 +37,7 @@ namespace A2v10.Web.Mvc.Start
 				IDataScripter scripter = new VueDataScripter();
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new EmailService(logger);
+				ISmsService smsService = new SmsService(dbContext, logger);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -47,7 +49,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IDataScripter>(scripter);
 				locator.RegisterService<ILogger>(logger);
 				locator.RegisterService<IMessageService>(emailService);
-				locator.RegisterService<IIdentityMessageService>(emailService as IIdentityMessageService);
+				locator.RegisterService<ISmsService>(smsService);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

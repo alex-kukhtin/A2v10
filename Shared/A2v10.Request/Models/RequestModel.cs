@@ -549,7 +549,10 @@ namespace A2v10.Request
 		public RequestCommand GetCommand(String command)
 		{
 			if (Commands.TryGetValue(command, out RequestCommand cmd))
+			{
+				cmd.command = command;
 				return cmd;
+			}
 			throw new RequestModelException($"Command '{command}' not found in model.json");
 		}
 

@@ -1,22 +1,41 @@
 ﻿{
-  "schema": "a2demo",
-  "model": "Waybill",
-  "actions": {
-    "index": {
-      "index": true,
-      "view": "index.view",
-      "template": "index.template"
-    },
-    "edit": {
-      "model": "Document",
-      "view": "waybill.view",
-      "template": "waybill.template"
-    }
-  },
-  "reports": {
-    "waybill": {
-      "report": "waybill",
-      "model": "Document"
-    }
-  }
+	"schema": "a2demo",
+	"model": "Waybill",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view",
+			"template": "index.template"
+		},
+		"edit": {
+			"model": "Document",
+			"view": "waybill.view",
+			"template": "waybill.template"
+		}
+	},
+	"dialogs": {
+		"confirmPhone": {
+			"model": "ConfirmPhone",
+			"view": "confirm.dialog",
+			"template": "confirm.template"
+		}
+	},
+	"commands": {
+		"sendVerifyCode": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SendVerifyCodeSmsHandler;assembly=A2v10.Web.Mvc",
+			"async": true
+		},
+			"confirmVerifyCode": {
+				"type": "clr",
+				"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SetPhoneNumberHandler;assembly=A2v10.Web.Mvc",
+				"async": true
+			}
+	},
+	"reports": {
+		"waybill": {
+			"report": "waybill",
+			"model": "Document"
+		}
+	}
 }

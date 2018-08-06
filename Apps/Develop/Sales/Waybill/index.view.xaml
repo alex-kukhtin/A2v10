@@ -26,6 +26,7 @@
 			-->
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="MessageOutline" Tip="Подтвердить телефон" Command="{BindCmd Dialog, Action=Show, Url='/sales/waybill/confirmPhone'}">Подтвердить телефон</Button>
 			<!--
 			<Button Icon="Download" Tip="Download"/>
 			<Code Content="{Bind Parent.Filter}"></Code>

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 03 jun 2018
-module version : 7059
+Last updated : 06 aug 2018
+module version : 7266
 */
 
 ------------------------------------------------
@@ -269,6 +269,7 @@ as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
+		PhoneNumberConfirmed,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -385,6 +386,28 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	update a2security.ViewUsers set EmailConfirmed = 1 where Id=@Id;
+	--TODO: log
+end
+go
+
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'ConfirmPhoneNumber')
+	drop procedure a2security.ConfirmPhoneNumber
+go
+------------------------------------------------
+create procedure a2security.ConfirmPhoneNumber
+@Id bigint,
+@PhoneNumber nvarchar(255),
+@PhoneNumberConfirmed bit,
+@SecurityStamp nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set PhoneNumber = @PhoneNumber,
+		PhoneNumberConfirmed = @PhoneNumberConfirmed, SecurityStamp=@SecurityStamp
+	where Id=@Id;
 	--TODO: log
 end
 go

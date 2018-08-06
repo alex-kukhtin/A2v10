@@ -16,7 +16,7 @@ namespace A2v10.Web.Mvc.Identity
 		Password = 0x0002,
 		LastLogin = 0x0004,
 		EmailConfirmed = 0x0008,
-		PhoneNumberConfirmed = 0x0010
+		PhoneNumber = 0x0010
 	}
 
 	public class AppUser : IUser<Int64>
@@ -72,7 +72,7 @@ namespace A2v10.Web.Mvc.Identity
 		public Boolean IsPasswordModified     => _modifiedFlag.HasFlag(UserModifiedFlag.Password);
 		public Boolean IsLastLoginModified    => _modifiedFlag.HasFlag(UserModifiedFlag.LastLogin);
 		public Boolean IsEmailConfirmModified => _modifiedFlag.HasFlag(UserModifiedFlag.EmailConfirmed);
-		public Boolean IsPhoneNumberConfirmModified => _modifiedFlag.HasFlag(UserModifiedFlag.PhoneNumberConfirmed);
+		public Boolean IsPhoneNumberModified => _modifiedFlag.HasFlag(UserModifiedFlag.PhoneNumber);
 
 		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 		{

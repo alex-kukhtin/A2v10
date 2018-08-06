@@ -72,10 +72,12 @@ namespace A2v10.Web.Mvc.Identity
 				Subject = "Security Code",
 				BodyFormat = "Your security code is {0}"
 			});
-			//ILogger logger = ServiceLocator.Current.GetService<ILogger>();
-			//EmailService = ServiceLocator.Current.GetService<IIdentityMessageService>(); // new EmailService(logger);
+
+			EmailService = ServiceLocator.Current.GetService<IMessageService>() as IIdentityMessageService;
+			SmsService = ServiceLocator.Current.GetService<ISmsService>() as IIdentityMessageService;
 
 			var dataProtectionProvider = options.DataProtectionProvider;
+
 			if (dataProtectionProvider != null)
 			{
 				UserTokenProvider =

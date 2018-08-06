@@ -145,23 +145,29 @@ namespace A2v10.Web.Mvc.Identity
 
 		public async Task UpdateAsync(AppUser user)
 		{
+			if (user.IsPhoneNumberModified)
+			{
+				// verify Phone number
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmPhoneNumber]", user);
+				user.ClearModified(UserModifiedFlag.PhoneNumber | UserModifiedFlag.LastLogin | UserModifiedFlag.Password);
+			}
 			if (user.IsLockoutModified)
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
-			else if (user.IsPasswordModified)
+			if (user.IsPasswordModified)
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserPassword]", user);
 				user.ClearModified(UserModifiedFlag.Password);
 			}
-			else if (user.IsLastLoginModified)
+			if (user.IsLastLoginModified)
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
 				user.ClearModified(UserModifiedFlag.LastLogin);
 
 			}
-			else if (user.IsEmailConfirmModified)
+			if (user.IsEmailConfirmModified)
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
 				user.ClearModified(UserModifiedFlag.EmailConfirmed);
@@ -169,10 +175,6 @@ namespace A2v10.Web.Mvc.Identity
 				{
 					await CreateTenantUser(user);
 				}
-			} else if (user.IsPhoneNumberConfirmModified)
-			{
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmPhoneNumber]", user);
-				user.ClearModified(UserModifiedFlag.PhoneNumberConfirmed);
 			}
 		}
 
@@ -359,13 +361,14 @@ namespace A2v10.Web.Mvc.Identity
 		#endregion
 
 		#region IUserPhoneNumberStore
-		public async Task SetPhoneNumberAsync(AppUser user, String phoneNumber)
+		public Task SetPhoneNumberAsync(AppUser user, String phoneNumber)
 		{
 			if (user.PhoneNumber != phoneNumber)
 			{
 				user.PhoneNumber = phoneNumber;
-				await SetPhoneNumberConfirmedAsync(user, false);
+				user.SetModified(UserModifiedFlag.PhoneNumber);
 			}
+			return Task.FromResult(0);
 		}
 
 		public Task<String> GetPhoneNumberAsync(AppUser user)
@@ -380,8 +383,11 @@ namespace A2v10.Web.Mvc.Identity
 
 		public Task SetPhoneNumberConfirmedAsync(AppUser user, Boolean confirmed)
 		{
-			user.PhoneNumberConfirmed = confirmed;
-			user.SetModified(UserModifiedFlag.PhoneNumberConfirmed);
+			if (user.PhoneNumberConfirmed != confirmed)
+			{
+				user.PhoneNumberConfirmed = confirmed;
+				user.SetModified(UserModifiedFlag.PhoneNumber);
+			}
 			return Task.FromResult(0);
 		}
 		#endregion
@@ -389,8 +395,11 @@ namespace A2v10.Web.Mvc.Identity
 		#region IUserSecurityStampStore
 		public Task SetSecurityStampAsync(AppUser user, String stamp)
 		{
-			user.SecurityStamp = stamp;
-			user.SetModified(UserModifiedFlag.Password);
+			if (user.SecurityStamp != stamp)
+			{
+				user.SecurityStamp = stamp;
+				user.SetModified(UserModifiedFlag.Password);
+			}
 			return Task.FromResult(0);
 		}
 

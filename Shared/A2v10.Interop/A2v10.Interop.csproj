@@ -37,6 +37,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -52,6 +53,7 @@
     <Compile Include="ExcelParser.cs" />
     <Compile Include="ExcelReportGenerator.cs" />
     <Compile Include="InteropException.cs" />
+    <Compile Include="Ip2SmsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlCreator.cs" />
     <Compile Include="XmlCreatorException.cs" />

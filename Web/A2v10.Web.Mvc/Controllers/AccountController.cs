@@ -5,26 +5,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading;
+using System.Security;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Web.Helpers;
+using System.Text;
+using System.IO;
+
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using System.Web.Helpers;
-using System.Text;
-using A2v10.Web.Mvc.Filters;
-using System.IO;
+
 using Newtonsoft.Json;
 
 using A2v10.Request;
 using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Models;
 using A2v10.Web.Mvc.Identity;
-using System.Configuration;
 using A2v10.Data.Interfaces;
-using System.Threading;
-using System.Security;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+using A2v10.Web.Mvc.Filters;
 
 namespace A2v10.Web.Site.Controllers
 {
@@ -178,19 +179,6 @@ namespace A2v10.Web.Site.Controllers
 			return Json(new { Status = status });
 		}
 
-		//
-		// GET: /Account/VerifyCode
-		[AllowAnonymous]
-		public async Task<ActionResult> VerifyCode(String provider, String returnUrl, Boolean rememberMe)
-		{
-			// Require that the user has already logged in via username/password or external login
-			if (!await SignInManager.HasBeenVerifiedAsync())
-			{
-				return View("Error");
-			}
-			return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-		}
-
 		void ClearAllCookies()
 		{
 			var expires = DateTime.Now.AddDays(-1d);
@@ -209,7 +197,18 @@ namespace A2v10.Web.Site.Controllers
 				cc.Expires = DateTime.Now.AddDays(-1d);
 		}
 
-		//
+		// GET: /Account/VerifyCode
+		[AllowAnonymous]
+		public async Task<ActionResult> VerifyCode(String provider, String returnUrl, Boolean rememberMe)
+		{
+			// Require that the user has already logged in via username/password or external login
+			if (!await SignInManager.HasBeenVerifiedAsync())
+			{
+				return View("Error");
+			}
+			return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+		}
+
 		// POST: /Account/VerifyCode
 		[HttpPost]
 		[AllowAnonymous]
@@ -557,7 +556,7 @@ namespace A2v10.Web.Site.Controllers
 		//
 		// GET: /Account/SendCode
 		[AllowAnonymous]
-		public async Task<ActionResult> SendCode(String returnUrl, Boolean rememberMe)
+		public async Task<ActionResult> SendCode(String returnUrl, Boolean? rememberMe)
 		{
 			var userId = await SignInManager.GetVerifiedUserIdAsync();
 			if (userId == 0)
@@ -566,7 +565,8 @@ namespace A2v10.Web.Site.Controllers
 			}
 			var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
 			var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-			return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+			var rm = rememberMe != null ? rememberMe.Value : false;
+			return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rm });
 		}
 
 		//
