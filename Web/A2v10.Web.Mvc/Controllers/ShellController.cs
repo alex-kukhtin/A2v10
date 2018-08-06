@@ -145,7 +145,7 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					{ "$(RootUrl)", RootUrl },
 					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
-					{ "$(PersonName)", User.Identity.GetUserPersonName() },
+					{ "$(PersonName)", Server.HtmlEncode(User.Identity.GetUserPersonName()) },
 					{ "$(Theme)", _baseController.Host.Theme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },
