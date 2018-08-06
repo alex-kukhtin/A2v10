@@ -69,10 +69,14 @@ namespace A2v10.Web.Mvc.Hooks
 
 		public async Task<Object> InvokeAsync(Int64 UserId, String PhoneNumber, String Code)
 		{
-			await _userManager.ChangePhoneNumberAsync(UserId, PhoneNumber, Code);
-			var user = await _userManager.FindByIdAsync(UserId);
-			await _userManager.UpdateAsync(user);
-			return "success";
+			var result = await _userManager.ChangePhoneNumberAsync(UserId, PhoneNumber, Code);
+			if (result.Succeeded)
+			{
+				var user = await _userManager.FindByIdAsync(UserId);
+				await _userManager.UpdateAsync(user);
+				return "success";
+			}
+			return String.Join(", ", result.Errors);
 		}
 	}
 }
