@@ -6,17 +6,26 @@
 
 	const vm = new Vue({
 		el: "#app",
+		components: {
+			"a2-document-title": {
+				props: {
+					pageTitle: String
+				},
+				created() {
+					if (this.pageTitle)
+						document.title = this.pageTitle;
+				}
+			}
+		},
 		data: {
 			info: $(PageData),
-			appLinks: $(AppLinks),
-			processing: false
+			processing: false,
+			appLinks: $(AppLinks)
 		},
 		computed: {
 			locale() {
 				return window.$$locale;
 			}
-		},
-		methods: {
 		}
 	});
 })();

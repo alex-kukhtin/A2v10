@@ -83,6 +83,7 @@
     <Content Include="Pages\error.html" />
     <Content Include="Pages\forgotPassword.html" />
     <Content Include="Pages\forgotPasswordScript.js" />
+    <Content Include="Pages\appLinkScript.js" />
     <Content Include="Pages\stiReport.html" />
     <Content Include="Pages\initLayout.html" />
     <Content Include="Pages\simpleScript.js" />

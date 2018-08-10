@@ -8043,28 +8043,28 @@ Vue.component('a2-panel', {
 
 (function () {
 
-    const documentTitle = {
-        render() {
-            return null;
-        },
-        props: ['page-title'],
-        watch: {
-            pageTitle(newValue) {
-                this.setTitle();
-            }
-        },
-        methods: {
-            setTitle() {
-                if (this.pageTitle)
-                    document.title = this.pageTitle;
-            }
-        },
-        created() {
-            this.setTitle();
-        },
-    };
+	const documentTitle = {
+		render() {
+			return null;
+		},
+		props: ['page-title'],
+		watch: {
+			pageTitle(newValue) {
+				this.setTitle();
+			}
+		},
+		methods: {
+			setTitle() {
+				if (this.pageTitle)
+					document.title = this.pageTitle;
+			}
+		},
+		created() {
+			this.setTitle();
+		},
+	};
 
-    app.components['std:doctitle'] = documentTitle;
+	app.components['std:doctitle'] = documentTitle;
 
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.

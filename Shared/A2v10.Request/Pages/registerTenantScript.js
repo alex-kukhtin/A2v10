@@ -24,6 +24,7 @@
 			confirm: '',
 			processing: false,
 			info: $(PageData),
+			appLinks: $(AppLinks),
 			submitted: false,
 			serverError: '',
 			emailError: '',

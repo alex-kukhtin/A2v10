@@ -27,7 +27,7 @@ using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
 using A2v10.Web.Mvc.Filters;
 
-namespace A2v10.Web.Site.Controllers
+namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
 	public class AccountController : Controller
@@ -91,7 +91,7 @@ namespace A2v10.Web.Site.Controllers
 
 				AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 
-				StringBuilder layout = new StringBuilder(ResourceHelper.InitLayoutHtml);
+				StringBuilder layout = new StringBuilder(_localizer.Localize(null, ResourceHelper.InitLayoutHtml));
 				layout.Replace("$(Lang)", CurrentLang);
 				layout.Replace("$(Build)", _host.AppBuild);
 				StringBuilder html = new StringBuilder(rsrcHtml);
@@ -108,6 +108,7 @@ namespace A2v10.Web.Site.Controllers
 				script.Replace("$(Mask)", ResourceHelper.mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
+				script.Replace("$(AppLinks)", _localizer.Localize(null, ControllerHelpers.AppLinks(_host)));
 				script.Replace("$(ServerInfo)", serverInfo ?? "null");
 				script.Replace("$(Token)", formToken);
 				layout.Replace("$(PageScript)", script.ToString());

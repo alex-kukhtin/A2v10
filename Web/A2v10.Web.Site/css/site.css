@@ -3413,6 +3413,18 @@ table.a2-table.bk-white-smoke {
 table.a2-table.bk-white {
   background-color: white;
 }
+.app-link-table {
+  border-collapse: collapse;
+}
+.app-link-table td,
+.app-link-table th {
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+}
+.app-link-table th {
+  font-weight: bold;
+  color: #777;
+}
 table.prop-grid {
   width: 100%;
 }
@@ -4464,6 +4476,18 @@ h5,
 }
 .app-page {
   user-select: text;
+}
+.app-page .pre-block {
+  display: block;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.main-view.app-link > .app-page {
+  position: absolute;
+  top: 32px;
+  overflow: auto;
+  bottom: 22px;
 }
 .side-bar {
   position: absolute;

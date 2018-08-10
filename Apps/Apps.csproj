@@ -48,6 +48,7 @@
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Agent\model.json" />
+    <None Include="Develop\links.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Catalog\Inbox\model.json" />
     <None Include="Develop\Catalog\MyClients\model.json" />

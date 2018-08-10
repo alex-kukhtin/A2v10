@@ -115,6 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\AppLinkController.cs" />
+    <Compile Include="Controllers\ControllerHelpers.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Filters\ExecutingFilterAttribute.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />

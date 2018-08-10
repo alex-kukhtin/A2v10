@@ -14,7 +14,7 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		Task RenderAbout(TextWriter writer)
+		public Task RenderAbout(TextWriter writer)
 		{
 			var aboutHtml = new StringBuilder(_localizer.Localize(null, Resources.about));
 			var aboutScript = new StringBuilder(Resources.aboutScript);

@@ -16,6 +16,7 @@
 			confirm: '',
 			processing: false,
 			info: $(PageData),
+			appLinks: $(AppLinks),
 			serverInfo: $(ServerInfo),
 			submitted: false,
 			serverError: '',

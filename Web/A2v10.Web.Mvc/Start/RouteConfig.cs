@@ -22,6 +22,12 @@ namespace A2v10.Web.Mvc.Start
 			);
 
 			routes.MapRoute(
+				name: "AppLink",
+				url: "AppLink/{*pathInfo}",
+				defaults: new { controller = "AppLink", action="Default" }
+			);
+
+			routes.MapRoute(
 				name: "Report",
 				url: "Report/{action}/{id}",
 				defaults: new { controller = "Report" }

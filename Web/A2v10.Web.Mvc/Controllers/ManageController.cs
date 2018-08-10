@@ -9,7 +9,7 @@ using Microsoft.Owin.Security;
 using A2v10.Web.Mvc.Models;
 using A2v10.Web.Mvc.Identity;
 
-namespace A2v10.Web.Site.Controllers
+namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
 	public class ManageController : Controller

@@ -5,7 +5,7 @@
 		<span class="error" v-text="serverError"></span>
 	</div>
 	<form>
-		<div v-if="showConfirm">
+		<div v-if="showConfirm" class="user-select">
 			<p v-text="confirmRegisterText"></p>
 			<p v-text="locale.$CheckEMail"></p>
 			<a tabindex="3" href="/" class="a2-hyperlink" v-text="locale.$LoginLink"></a>

@@ -124,6 +124,9 @@
   <data name="aboutScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\aboutScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="appLinkScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\appLinkScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="appPage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\appPage.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="$(Description)" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
 	<meta name="google" content="notranslate" />
 	<meta name="helpUrl" content="$(HelpUrl)" />
 	<title>$(Title)</title>
@@ -16,18 +17,26 @@
 	<div id="app" class="shell" v-cloak>
 		<header class="header">
 			<div class="h-block">
-				<a class="app-title" href='/' v-on:click.prevent="reload" v-text="info.title" tabindex="-1"></a>
+				<a class="app-title" href='/' v-text="info.title" tabindex="-1"></a>
 				<span class="app-subtitle" v-text="info.subtitle"></span>
 			</div>
 			<div class="aligner"></div>
 		</header>
-		<div class="main-view">
+		<div class="main-view app-link">
 			<div class="load-indicator" v-show="processing"></div>
 			$(Partial)
 		</div>
 		<footer class="footer" style="padding-right:8px">
 			<div :class="{spinner: true, active: processing}"></div>
 			<div class="divider"></div>
+
+			<div class="app-links">
+				<a v-for="(lnk, lx) in appLinks" :href="lnk.url" :key="lx" tabindex="-1" v-text="lnk.title">@[About]</a>
+			</div>
+
+
+			<span class="divider"></span>
+
 			<span v-text="locale.$Version"></span>&nbsp;
 			<span v-text="info.version"></span>
 		</footer>
