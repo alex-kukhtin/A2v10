@@ -148,6 +148,8 @@ namespace A2v10.Web.Mvc.Controllers
 				String json = tr.ReadToEnd();
 				model = JsonConvert.DeserializeObject<LoginViewModel>(json);
 			}
+			// LOWER CASE!
+			model.Name = model.Name.ToLower();
 			var user = await UserManager.FindByNameAsync(model.Name);
 			if (user == null)
 				return Json(new { Status = "Failure" });
@@ -323,8 +325,11 @@ namespace A2v10.Web.Mvc.Controllers
 					model = JsonConvert.DeserializeObject<RegisterTenantModel>(json);
 				}
 
+				// LOWER case
+				model.Name = model.Name.ToLower();
+
 				if (!IsEmailValid(model.Name) || !IsEmailValid(model.Email))
-					throw new InvalidDataException("AlreadyTaken");
+					throw new InvalidDataException("Invalid email");
 
 				// create user with tenant
 				var user = new AppUser
@@ -335,20 +340,24 @@ namespace A2v10.Web.Mvc.Controllers
 					PersonName = model.PersonName,
 					Tenant = -1
 				};
+
+				if (String.IsNullOrEmpty(user.Email))
+					user.Email = model.Name;
 				var result = await UserManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
 				{
-					SaveDDOSTime();
 					// email confirmation
 					String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
 
 					String subject = _localizer.Localize(null, "@[ConfirmEMail]");
-					String body = _localizer
-						.Localize(null, "@[ConfirmEMailBody]")
+					String body = GetEMailBody("confirmemail", "@[ConfirmEMailBody]")
 						.Replace("{0}", callbackUrl);
 
 					await UserManager.SendEmailAsync(user.Id, subject, body);
+
+					SaveDDOSTime();
+
 					status = "ConfirmSent";
 				}
 				else
@@ -675,6 +684,21 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			var ema = new EmailAddressAttribute();
 			return ema.IsValid(mail);
+		}
+
+		String GetEMailBody(String code, String dictName)
+		{
+			String emailFile = _host.MakeFullPath(false, "_emails", $"{code}.{CurrentLang}.html");
+			String body;
+			if (System.IO.File.Exists(emailFile))
+			{
+				body = System.IO.File.ReadAllText(emailFile);
+			} else {
+				body = _localizer.Localize(null, dictName);
+			}
+			if (body.IndexOf("{0}") == - 1)
+				throw new InvalidDataException($"Invalid email template for {code}");
+			return body;
 		}
 
 		#endregion

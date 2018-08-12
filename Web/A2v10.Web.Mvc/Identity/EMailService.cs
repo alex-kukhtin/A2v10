@@ -3,6 +3,7 @@
 using System;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
@@ -44,24 +45,43 @@ namespace A2v10.Web.Mvc.Identity
 			return Task.FromResult(0);
 		}
 
+		void HackSubjectEncoding(MailMessage mm, String subject)
+		{
+			var msgPI = mm.GetType().GetField("message", BindingFlags.Instance | BindingFlags.NonPublic);
+			if (msgPI == null) return;
+			Object msg = msgPI.GetValue(mm);
+			if (msg == null) return;
+			var subjPI = msg.GetType().GetField("subject", BindingFlags.Instance | BindingFlags.NonPublic);
+			if (subjPI == null) return;
+			String encodedSubject = Convert.ToBase64String(Encoding.UTF8.GetBytes(subject));
+			String subjString = $"=?UTF-8?B?{encodedSubject}?=";
+			subjPI.SetValue(msg, subjString);
+		}
+
 		public void Send(String to, String subject, String body)
 		{
 			try
 			{
 				using (var client = new SmtpClient())
 				{
+					client.DeliveryFormat = SmtpDeliveryFormat.International;
 					using (var mm = new MailMessage())
 					{
-						var encUTF8 = Encoding.GetEncoding("utf-8");
 						mm.To.Add(new MailAddress(to));
 						mm.BodyTransferEncoding = TransferEncoding.Base64;
-						mm.Subject = subject;
+						mm.SubjectEncoding = Encoding.Unicode;
+						mm.HeadersEncoding = Encoding.UTF8;
+						mm.BodyEncoding = Encoding.UTF8;
+
+						mm.Subject =  subject;
+						HackSubjectEncoding(mm, subject);
+
 						mm.Body = body;
 
 						mm.IsBodyHtml = true;
-						mm.BodyEncoding = encUTF8;
-						mm.SubjectEncoding = encUTF8;
-						mm.HeadersEncoding = encUTF8;
+
+						var av = AlternateView.CreateAlternateViewFromString(body, Encoding.UTF8, "text/html");
+						mm.AlternateViews.Add(av);
 
 						// sync variant. avoid exception loss
 						_logger.LogMessaging(GetJsonResult("send", to));

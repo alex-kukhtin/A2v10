@@ -131,6 +131,7 @@
     <Content Include="Develop\_assets\app.css" />
     <Content Include="Develop\_assets\app.js" />
     <Content Include="Develop\_assets\app.min.css" />
+    <Content Include="Develop\_emails\confirmemail.uk.html" />
     <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>
