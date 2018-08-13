@@ -53,7 +53,8 @@ namespace A2v10.Web.Mvc.Identity
 			if (msg == null) return;
 			var subjPI = msg.GetType().GetField("subject", BindingFlags.Instance | BindingFlags.NonPublic);
 			if (subjPI == null) return;
-			String encodedSubject = Convert.ToBase64String(Encoding.UTF8.GetBytes(subject));
+			// without line breaks!
+			String encodedSubject = Convert.ToBase64String(Encoding.UTF8.GetBytes(subject), Base64FormattingOptions.None);
 			String subjString = $"=?UTF-8?B?{encodedSubject}?=";
 			subjPI.SetValue(msg, subjString);
 		}
@@ -80,8 +81,9 @@ namespace A2v10.Web.Mvc.Identity
 
 						mm.IsBodyHtml = true;
 
-						var av = AlternateView.CreateAlternateViewFromString(body, Encoding.UTF8, "text/html");
-						mm.AlternateViews.Add(av);
+						//????
+						//var av = AlternateView.CreateAlternateViewFromString(body, Encoding.UTF8, "text/html");
+						//mm.AlternateViews.Add(av);
 
 						// sync variant. avoid exception loss
 						_logger.LogMessaging(GetJsonResult("send", to));

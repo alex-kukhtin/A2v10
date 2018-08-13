@@ -304,6 +304,13 @@ namespace A2v10.Web.Mvc.Controllers
 			_ddosChecker.AddOrUpdate(host, now, (key, value) => now);
 		}
 
+		void RemoveDDOSTime()
+		{
+			String host = Request.UserHostAddress;
+			_ddosChecker.TryRemove(host, out DateTime dt);
+		}
+
+
 		// POST: /Register/Login
 		[ActionName("Register")]
 		[HttpPost]
@@ -366,6 +373,7 @@ namespace A2v10.Web.Mvc.Controllers
 					foreach (var e in result.Errors) {
 						if (e.Contains("is already taken"))
 						{
+							RemoveDDOSTime();
 							status = "AlreadyTaken";
 							break;
 						}

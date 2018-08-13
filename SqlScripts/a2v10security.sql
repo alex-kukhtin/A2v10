@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 06 aug 2018
-module version : 7266
+Last updated : 13 aug 2018
+module version : 7270
 */
 
 ------------------------------------------------
@@ -49,7 +49,8 @@ begin
 		[Source] nvarchar(255) null,
 		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
 		LastTransactionDate datetime null,
-		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate())
+		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate()),
+		TrialPeriodExpired datetime null
 	);
 end
 go
@@ -57,6 +58,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'TransactionCount')
 begin
 	alter table a2security.Tenants add [TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'TrialPeriodExpired')
+begin
+	alter table a2security.Tenants add TrialPeriodExpired datetime null;
 end
 go
 ------------------------------------------------

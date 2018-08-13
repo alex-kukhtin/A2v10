@@ -17,10 +17,12 @@ namespace A2v10.Interop
 {
 	class Ip2SmsConfig
 	{
+#pragma warning disable IDE1006 // Naming Styles
 		public String requestUrl { get; set; }
 		public String login { get; set; }
 		public String password { get; set; }
 		public String alpha { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
 	}
 
 	public class Ip2SmsResponse

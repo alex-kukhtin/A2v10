@@ -29,9 +29,9 @@ namespace A2v10.Web.Mvc.Identity
 		public async Task SendSmsAsync(String phone, String message, String extId)
 		{
 			//throw new NotImplementedException("SendMessageAsync is not implemented");
-			Ip2SmsResponse result = await _smsApi.SendSmsAsync(phone, message, extId) as Ip2SmsResponse;
-			if (result == null)
+			if (!(await _smsApi.SendSmsAsync(phone, message, extId) is Ip2SmsResponse result))
 				throw new InvalidProgramException("SendSms error");
+
 			if (result.State?.ToLower(CultureInfo.InvariantCulture) != "accepted")
 				throw new InvalidProgramException($"SendSms error. Error='{result.Error ?? "unknown"}'");
 		}
