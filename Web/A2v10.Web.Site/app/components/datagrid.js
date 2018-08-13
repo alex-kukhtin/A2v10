@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180701-7237
+// 20180813-7271
 // components/datagrid.js*/
 
 (function () {
@@ -651,7 +651,7 @@
 			},
 			columnClass(column) {
 				let cls = '';
-				if (column.fit || (column.controlType === 'validator'))
+				if (column.fit || column.controlType === 'validator')
 					cls += 'fit';
 				if (utils.isDefined(column.dir))
 					cls += ' sorted';

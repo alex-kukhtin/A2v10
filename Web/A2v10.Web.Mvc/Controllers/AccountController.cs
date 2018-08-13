@@ -355,7 +355,7 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					// email confirmation
 					String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, protocol: Request.Url.Scheme);
+					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, Request.Url.Scheme);
 
 					String subject = _localizer.Localize(null, "@[ConfirmEMail]");
 					String body = GetEMailBody("confirmemail", "@[ConfirmEMailBody]")

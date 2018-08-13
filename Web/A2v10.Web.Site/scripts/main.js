@@ -1580,7 +1580,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180630-7236
+// 20180713-7271
 // services/datamodel.js
 
 (function () {
@@ -2060,7 +2060,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
-				if (this.$loaded) { resolve(self); return; }
+				if (this.$loaded) { resolve(this); return; }
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;
 				if (!meta.$lazy) { resolve(this); return; }
@@ -2193,7 +2193,7 @@ app.modules['std:validators'] = function () {
 
 		obj.$isValid = function (props) {
 			return true;
-		}
+		};
 	}
 
 	function defineObject(obj, meta, arrayItem) {
@@ -4535,7 +4535,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180701-7237
+// 20180813-7271
 // components/datagrid.js*/
 
 (function () {
@@ -5186,7 +5186,7 @@ Vue.component('validator-control', {
 			},
 			columnClass(column) {
 				let cls = '';
-				if (column.fit || (column.controlType === 'validator'))
+				if (column.fit || column.controlType === 'validator')
 					cls += 'fit';
 				if (utils.isDefined(column.dir))
 					cls += ' sorted';
@@ -5721,7 +5721,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180725-7250
+// 20180813-7271
 // components/collectionview.js
 
 /*
@@ -6024,6 +6024,20 @@ TODO:
 			},
 			reload() {
 				this.$root.$emit('cwChange', this.ItemsSource);
+			},
+			updateFilter() {
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) return;
+				let fi = mi.Filter;
+				if (!fi) return;
+				this.lockChange = true;
+				for (var prop in this.filter) {
+					if (prop in fi)
+						this.filter[prop] = fi[prop];
+				}
+				this.$nextTick(() => {
+					this.lockChange = false;
+				});
 			}
 		},
 		created() {
@@ -6037,6 +6051,9 @@ TODO:
 			});
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
+		},
+		updated() {
+			this.updateFilter();
 		}
 	});
 
@@ -6148,7 +6165,7 @@ TODO:
 			}
 			// then query from url
 			let q = this.$store.getters.query;
-			modelInfoToFilter(q, this.filter)
+			modelInfoToFilter(q, this.filter);
 
 			this.$nextTick(() => {
 				this.lockChange = false;
@@ -8464,7 +8481,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180801-7261
+// 20180813-7271
 // controllers/base.js
 
 (function () {
@@ -9178,7 +9195,7 @@ Vue.directive('resize', {
 			$getNegativeRedClass(value) {
 				if (utils.isNumber(value))
 					return value < 0 ? 'negative-red' : '';
-				return 
+				return ''; 
 			},
 
 			$expand(elem, propName) {

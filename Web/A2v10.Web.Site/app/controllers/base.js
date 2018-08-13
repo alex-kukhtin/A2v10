@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180801-7261
+// 20180813-7271
 // controllers/base.js
 
 (function () {
@@ -714,7 +714,7 @@
 			$getNegativeRedClass(value) {
 				if (utils.isNumber(value))
 					return value < 0 ? 'negative-red' : '';
-				return 
+				return ''; 
 			},
 
 			$expand(elem, propName) {

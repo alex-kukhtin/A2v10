@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180630-7236
+// 20180713-7271
 // services/datamodel.js
 
 (function () {
@@ -480,7 +480,7 @@
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
-				if (this.$loaded) { resolve(self); return; }
+				if (this.$loaded) { resolve(this); return; }
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;
 				if (!meta.$lazy) { resolve(this); return; }
@@ -613,7 +613,7 @@
 
 		obj.$isValid = function (props) {
 			return true;
-		}
+		};
 	}
 
 	function defineObject(obj, meta, arrayItem) {

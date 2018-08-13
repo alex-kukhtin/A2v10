@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180725-7250
+// 20180813-7271
 // components/collectionview.js
 
 /*
@@ -303,6 +303,20 @@ TODO:
 			},
 			reload() {
 				this.$root.$emit('cwChange', this.ItemsSource);
+			},
+			updateFilter() {
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) return;
+				let fi = mi.Filter;
+				if (!fi) return;
+				this.lockChange = true;
+				for (var prop in this.filter) {
+					if (prop in fi)
+						this.filter[prop] = fi[prop];
+				}
+				this.$nextTick(() => {
+					this.lockChange = false;
+				});
 			}
 		},
 		created() {
@@ -316,6 +330,9 @@ TODO:
 			});
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
+		},
+		updated() {
+			this.updateFilter();
 		}
 	});
 
@@ -427,7 +444,7 @@ TODO:
 			}
 			// then query from url
 			let q = this.$store.getters.query;
-			modelInfoToFilter(q, this.filter)
+			modelInfoToFilter(q, this.filter);
 
 			this.$nextTick(() => {
 				this.lockChange = false;
