@@ -29,7 +29,7 @@
 		</mailSettings>
 	</system.net>
 	<system.webServer>
-		<modules>
+		<modules runAllManagedModulesForAllRequests="true">
 			<remove name="FormsAuthentication" />
 		</modules>
 		<staticContent>

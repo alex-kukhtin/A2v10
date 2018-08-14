@@ -40,6 +40,12 @@ namespace A2v10.Web.Mvc.Start
 			);
 
 			routes.MapRoute(
+				name: "Static",
+				url: "Static/{*pathInfo}",
+				defaults: new { controller = "Static", action = "Default" }
+			);
+
+			routes.MapRoute(
 				name: "Default",
 				url: "{*pathInfo}",
 				defaults: new { controller = "Shell", action = "Default" },

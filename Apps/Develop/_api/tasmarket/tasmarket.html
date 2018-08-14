@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="BookkeepeR" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="google" content="notranslate" />
+	<title></title>
+	<style>
+		body {
+			font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			font-size:15px;
+		}
+		.btn {
+			background-color:#0648b8;
+			height:36px;
+			color:white;
+			border:none;
+			text-transform:uppercase;
+			padding:0 24px;
+		}
+	</style>
+</head>
+<body>
+	<h2 class="center">BookkeepeR SaaS</h2>
+
+	<div>
+
+	</div>
+
+	<div class="center">
+		<span>Лише</span>
+		<span style="font-weight:bold;font-size:20pt">295.00</span>
+		<span>гривень на місяць</span>
+	</div>
+
+	<div>
+		<button class="btn" id="submit">Замовити</button>
+	</div>
+
+	<script>
+		(function () {
+			var submit = document.getElementById('submit');
+			submit.addEventListener('click', function () {
+				var pw = parent;
+				if (!pw) return;
+
+				var data = {
+					amount: 295.00
+				};
+
+				pw.postMessage(JSON.stringify({ type: 'sendData', data: data }), '*');
+			});
+		})();
+	</script>
+</body>
+</html>

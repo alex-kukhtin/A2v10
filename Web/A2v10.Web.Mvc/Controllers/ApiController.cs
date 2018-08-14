@@ -16,6 +16,9 @@ using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Security.Principal;
 using A2v10.Infrastructure;
+using System.Web;
+using System.Net.Http;
+using System.Net;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -57,9 +60,81 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 
+		[HttpGet]
+		[ActionName("Default")]
+		public async Task DefaultGET(String pathInfo)
+		{
+			try
+			{
+				_logger.LogApi($"get: {pathInfo}");
+				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
+				var ac = rm.CurrentCommand;
+				switch (ac.type)
+				{
+					case CommandType.file:
+						if (ac.file == null)
+							throw new RequestModelException($"'file' is required for '{ac.command}' command");
+						GetFile(ac);
+						break;
+					default:
+						throw new NotImplementedException();
+				}
+			} catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				Response.ContentType = "text/plain";
+				Response.Output.Write(ex.Message);
+			}
+		}
+
+		void GetFile(RequestCommand cmd)
+		{
+			String fullPath = _baseController.Host.MakeFullPath(false, cmd.Path, cmd.file);
+			String htmlPath = fullPath + ".html";
+			if (!System.IO.File.Exists(htmlPath))
+				throw new FileNotFoundException($"File not found '{fullPath}'");
+			Response.ContentType = MimeMapping.GetMimeMapping(htmlPath);
+			using (var stream = System.IO.File.OpenRead(htmlPath))
+			{
+				stream.CopyTo(Response.OutputStream);
+			}
+		}
+
+		//runAllManagedModulesForAllRequests="true" is required!
+		[HttpOptions]
+		[ActionName("Default")]
+		public async Task DefaultOptions(String pathInfo)
+		{
+			try
+			{
+				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
+				var ac = rm.CurrentCommand;
+
+				if (!String.IsNullOrEmpty(ac.allowAddress))
+				{
+					if (!ac.allowAddress.Contains(Request.UserHostAddress))
+						return;
+				}
+
+				Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+				Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With");
+				Response.AddHeader("Access-Control-Allow‌​-Credentials", "true");
+				Response.AddHeader("Access-Control-Max-Age", "60");
+				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				_logger.LogApiError(ex.Message);
+
+			}
+		}
 
 		[HttpPost]
-		public async Task Default(String pathInfo)
+		[ActionName("Default")]
+		public async Task DefaultPOST(String pathInfo)
 		{
 			try
 			{
@@ -67,6 +142,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 				Response.ContentType = "application/json";
+				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
 
 				String json = null;
 				Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure

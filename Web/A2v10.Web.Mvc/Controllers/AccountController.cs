@@ -444,6 +444,8 @@ namespace A2v10.Web.Mvc.Controllers
 					String json = tr.ReadToEnd();
 					model = JsonConvert.DeserializeObject<ForgotPasswordViewModel>(json);
 				}
+				// LOWER CASE!
+				model.Name = model.Name.ToLower();
 				var user = await UserManager.FindByNameAsync(model.Name);
 				if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
 				{
@@ -500,6 +502,8 @@ namespace A2v10.Web.Mvc.Controllers
 					String json = tr.ReadToEnd();
 					model = JsonConvert.DeserializeObject<ResetPasswordViewModel>(json);
 				}
+				// LOWER CASE!
+				model.Name = model.Name.ToLower();
 				var user = await UserManager.FindByNameAsync(model.Name);
 				if (user == null || String.IsNullOrEmpty(model.Code))
 				{

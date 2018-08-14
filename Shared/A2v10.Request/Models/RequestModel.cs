@@ -297,6 +297,7 @@ namespace A2v10.Request
 		sql,
 		clr,
 		xml,
+		file,
 		startProcess,
 		resumeProcess
 	}
@@ -310,8 +311,13 @@ namespace A2v10.Request
 		public String clrType;
 		public Boolean async;
 		public String wrapper;
+
 		public IList<String> xmlSchemas;
 		public Boolean validate;
+
+		// for api
+		public String allowOrigin;
+		public String allowAddress;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
