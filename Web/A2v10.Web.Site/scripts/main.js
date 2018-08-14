@@ -1580,7 +1580,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180713-7271
+// 20180714-7273
 // services/datamodel.js
 
 (function () {
@@ -2592,6 +2592,8 @@ app.modules['std:validators'] = function () {
 				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
+					if (trg.$loaded)
+						trg.$loaded = false; // may be lazy
 					trg.$copy(src[prop]);
 					// copy rowCount
 					if ('$RowCount' in trg) {
