@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 13 aug 2018
-module version : 7270
+Last updated : 16 aug 2018
+module version : 7275
 */
 
 ------------------------------------------------
@@ -505,6 +505,17 @@ begin
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
+
+		if exists(select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA = N'a2security' and ROUTINE_NAME=N'OnCreateNewUser')
+		begin
+			declare @sql nvarchar(255);
+			declare @prms nvarchar(255);
+			set @sql = N'a2security.OnCreateNewUser @TenantId, @UserId';
+			set @prms = N'@TenantId int, @UserId bigint';
+
+			exec sp_executesql @sql, @prms, @tenantId, @userId;
+		end
+
 		commit tran;
 	end
 	else
