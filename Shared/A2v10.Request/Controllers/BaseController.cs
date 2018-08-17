@@ -303,19 +303,19 @@ window.$currentModule = function() {
 		async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
 		{
 			StringBuilder output = new StringBuilder();
-			String dataModelText = "null";
+			String dataModelText = "{}";
 			String templateText = "{}";
 			StringBuilder sbRequired = new StringBuilder();
+			// write model script
+			String fileTemplateText = null;
+			if (rw.template != null)
+			{
+				fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
+				AddRequiredModules(sbRequired, fileTemplateText);
+				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
+			}
 			if (model != null)
 			{
-				// write model script
-				String fileTemplateText = null;
-				if (rw.template != null)
-				{
-					fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
-					AddRequiredModules(sbRequired, fileTemplateText);
-					templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
-				}
 				dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
 			}
 
@@ -361,9 +361,6 @@ const vm = new DataModelController({
 })();
 </script>
 ";
-			// TODO: may be data model from XAML ????
-			const String emptyModel = "function modelData() {return null;}";
-
 			var header = new StringBuilder(scriptHeader);
 			header.Replace("$(RootId)", rootId);
 			header.Replace("$(DataModelText)", dataModelText);
@@ -373,7 +370,7 @@ const vm = new DataModelController({
 			if (model != null)
 				output.Append(model.CreateScript(_scripter));
 			else
-				output.Append(emptyModel);
+				output.Append(_scripter.CreateEmptyStript());
 			var footer = new StringBuilder(scriptFooter);
 			footer.Replace("$(RootId)", rootId);
 			footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());

@@ -89,6 +89,7 @@
     <Compile Include="Controls\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\Attachments.cs" />
+    <Compile Include="Layouts\IFrame.cs" />
     <Compile Include="Layouts\CommandBar.cs" />
     <Compile Include="Layouts\GridGroup.cs" />
     <Compile Include="Layouts\Wizard.cs" />

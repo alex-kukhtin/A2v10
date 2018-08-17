@@ -1204,13 +1204,16 @@ footer .divider,
 footer .debug-btn,
 .footer .debug-btn {
   display: inline;
-  margin-left: 0.5rem;
 }
 footer .menu,
 .footer .menu {
   margin-bottom: -2px;
   font-size: 13px;
   text-transform: none;
+}
+footer .version-info,
+.footer .version-info {
+  margin-right: 6px;
 }
 footer button,
 .footer button {
@@ -4268,6 +4271,10 @@ TODO:
 }
 .background-white {
   background-color: white;
+}
+iframe.a2-iframe {
+  width: 100%;
+  height: 100%;
 }
 table.sheet {
   -webkit-user-select: text;

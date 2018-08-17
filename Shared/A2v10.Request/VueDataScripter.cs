@@ -30,6 +30,21 @@ namespace A2v10.Request
 			return sb.ToString();
 		}
 
+		public String CreateEmptyStript()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine("function modelData(template, data) {");
+			sb.AppendLine("const cmn = require('std:datamodel');");
+			sb.AppendLine("function TRoot(source, path, parent) {");
+			sb.AppendLine("cmn.createObject(this, source, path, parent);}");
+			sb.AppendLine("cmn.defineObject(TRoot, { props: { } }, false);");
+			sb.AppendLine("const ctors = {TRoot};");
+			sb.AppendLine("cmn.implementRoot(TRoot, template, ctors);");
+			sb.AppendLine("let root = new TRoot(data);");
+			sb.AppendLine("cmn.setModelInfo(root, {}, rawData); return root;}");
+			return sb.ToString();
+		}
+
 		public StringBuilder SetModelInfo(IDictionary<String, Object> sys)
 		{
 			if (sys == null)

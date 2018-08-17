@@ -58,11 +58,10 @@
 				<a v-for="(lnk, lx) in appLinks" :href="lnk.url" :key="lx" @click.prevent="appLink(lnk)" tabindex="-1" v-text="lnk.title">@[About]</a>
 			</div>
 
-
 			<span class="divider"></span>
 
-			@[Version]&nbsp;
-			<span v-text="version"></span>
+			<span class="version-info">@[Version] <span v-text="version"></span>
+			</span>
 			<div class="debug-btn dropdown dir-up" v-dropdown v-if="isDebug">
 				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
 				<div class="dropdown-menu menu up-right">
