@@ -71,7 +71,7 @@ Vue.component('a2-pager', {
 		}
 	},
 	render(h, ctx) {
-		if (this.source.pageSize == -1) return; // invisible
+		if (this.source.pageSize === -1) return; // invisible
 		let contProps = {
 			class: 'a2-pager'
 		};

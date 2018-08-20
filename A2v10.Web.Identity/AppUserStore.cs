@@ -1,16 +1,17 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace A2v10.Web.Mvc.Identity
+using Microsoft.AspNet.Identity;
+
+using A2v10.Data.Interfaces;
+using A2v10.Infrastructure;
+
+namespace A2v10.Web.Identity
 {
 	public class AppUserStore :
 		IDisposable,
@@ -83,10 +84,12 @@ namespace A2v10.Web.Mvc.Identity
 			}
 		}
 
-		IDbContext _dbContext;
-		IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly IApplicationHost _host;
 
-		UserCache _cache;
+		private UserCache _cache;
+
+		private String _customSchema;
 
 		public AppUserStore(IDbContext dbContext, IApplicationHost host)
 		{
@@ -95,20 +98,27 @@ namespace A2v10.Web.Mvc.Identity
 			_cache = new UserCache();
 		}
 
+		public String DbSchema => _customSchema ?? "a2security";
+
+		public void SetCustomSchema(String schema)
+		{
+			_customSchema = schema;
+		}
+
 		internal String DataSource => _host.CatalogDataSource;
 
 		#region IUserStore
 
 		public async Task CreateAsync(AppUser user)
 		{
-			await _dbContext.ExecuteAsync(DataSource, "[a2security].[CreateUser]", user);
+			await _dbContext.ExecuteAsync(DataSource, $"[{DbSchema}].[CreateUser]", user);
 			if (_host.IsMultiTenant)
 			{
 				/*
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
 				// TODO: GetTenantSegment!!!!
-				await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
+				await _dbContext.ExecuteAsync(null, $"[{DbSchema}].[CreateTenantUser]", createdUser);
 				CacheUser(createdUser);
 				*/
 			}
@@ -128,7 +138,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetById(userId);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserById]", new { Id = userId });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserById]", new { Id = userId });
 			CacheUser(user);
 			return user;
 		}
@@ -138,7 +148,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByName(userName);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserByName]", new { UserName = userName });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByName]", new { UserName = userName });
 			CacheUser(user);
 			return user;
 		}
@@ -148,28 +158,28 @@ namespace A2v10.Web.Mvc.Identity
 			if (user.IsPhoneNumberModified)
 			{
 				// verify Phone number
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmPhoneNumber]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[ConfirmPhoneNumber]", user);
 				user.ClearModified(UserModifiedFlag.PhoneNumber | UserModifiedFlag.LastLogin | UserModifiedFlag.Password);
 			}
 			if (user.IsLockoutModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLockout]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[UpdateUserLockout]", user);
 				user.ClearModified(UserModifiedFlag.Lockout);
 			}
 			if (user.IsPasswordModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserPassword]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[UpdateUserPassword]", user);
 				user.ClearModified(UserModifiedFlag.Password);
 			}
 			if (user.IsLastLoginModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[UpdateUserLogin]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[UpdateUserLogin]", user);
 				user.ClearModified(UserModifiedFlag.LastLogin);
 
 			}
 			if (user.IsEmailConfirmModified)
 			{
-				await _dbContext.ExecuteAsync<AppUser>(DataSource, "[a2security].[ConfirmEmail]", user);
+				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[ConfirmEmail]", user);
 				user.ClearModified(UserModifiedFlag.EmailConfirmed);
 				if (user.EmailConfirmed)
 				{
@@ -187,7 +197,7 @@ namespace A2v10.Web.Mvc.Identity
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
 				// TODO: GetTenantSegment!!!!
-				await _dbContext.ExecuteAsync(null, "[a2security].[CreateTenantUser]", createdUser);
+				await _dbContext.ExecuteAsync(null, $"[{DbSchema}].[CreateTenantUser]", createdUser);
 			}
 		}
 
@@ -353,7 +363,7 @@ namespace A2v10.Web.Mvc.Identity
 			AppUser user = _cache.GetByEmail(email);
 			if (user != null)
 				return user;
-			user = await _dbContext.LoadAsync<AppUser>(DataSource, "[a2security].[FindUserByEmail]", new { Email = email });
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByEmail]", new { Email = email });
 			CacheUser(user);
 			return user;
 		}
@@ -456,7 +466,7 @@ namespace A2v10.Web.Mvc.Identity
 
 		public async Task<IList<String>> GetRolesAsync(AppUser user)
 		{
-			var list = await _dbContext.LoadListAsync<AppRole>(DataSource, "[a2security].[GetUserGroups]", new { UserId = user.Id });
+			var list = await _dbContext.LoadListAsync<AppRole>(DataSource, $"[{DbSchema}].[GetUserGroups]", new { UserId = user.Id });
 			return list.Select<AppRole, String>(x => x.Name).ToList();
 		}
 

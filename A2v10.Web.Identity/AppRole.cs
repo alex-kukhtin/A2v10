@@ -4,7 +4,7 @@ using System;
 
 using Microsoft.AspNet.Identity;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	public class AppRole : IRole<Int64>
 	{

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180603-7206*/
+/*20180820-7278*/
 /* services/mask.js */
 
 function maskTool() {
@@ -80,7 +80,7 @@ function maskTool() {
 				ch = nextValueChar()
 			} else {
 				str += mc;
-				if (mc == ch)
+				if (mc === ch)
 					ch = nextValueChar();
 			}
 		}

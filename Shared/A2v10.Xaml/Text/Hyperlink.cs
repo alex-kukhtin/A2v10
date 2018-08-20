@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 
 		public Command Command { get; set; }
 
-		public UIElement DropDown { get; set; }
+		public UIElementBase DropDown { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{

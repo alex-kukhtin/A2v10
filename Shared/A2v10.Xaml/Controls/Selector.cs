@@ -22,10 +22,10 @@ namespace A2v10.Xaml
 		public String Placeholder { get; set; }
 
 		public Size ListSize { get; set; }
-		public UIElement NewPane { get; set; }
+		public UIElementBase NewPane { get; set; }
 		public Command CreateNewCommand { get; set; }
 
-		public UIElement ItemsPanel { get; set; }
+		public UIElementBase ItemsPanel { get; set; }
 		public SelectorPanelPlacement PanelPlacement { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)

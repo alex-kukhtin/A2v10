@@ -4,46 +4,46 @@ using System;
 
 namespace A2v10.Xaml
 {
-    public class Header : UiContentElement
-    {
-        public ControlSize Size { get; set; }
-        public TextAlign Align { get; set; }
+	public class Header : UiContentElement
+	{
+		public ControlSize Size { get; set; }
+		public TextAlign Align { get; set; }
 
-        public String Badge { get; set; }
+		public String Badge { get; set; }
 
-        internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-        {
-            String tagName = "h3";
-            switch (Size)
-            {
-                case ControlSize.Large: tagName = "h2"; break;
-                case ControlSize.Small: tagName = "h4"; break;
-                case ControlSize.Mini: tagName = "h5"; break;
-            }
+		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		{
+			String tagName = "h3";
+			switch (Size)
+			{
+				case ControlSize.Large: tagName = "h2"; break;
+				case ControlSize.Small: tagName = "h4"; break;
+				case ControlSize.Mini: tagName = "h5"; break;
+			}
 
-            var h = new TagBuilder(tagName, "a2-header", IsInGrid);
-            MergeAttributes(h, context);
-            if (Align != TextAlign.Left)
-                h.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
-            bool bHasBadge = GetBinding(nameof(Badge)) != null ||
-                !String.IsNullOrEmpty(Badge);
-            if (!bHasBadge)
-                MergeContent(h, context);
-            h.RenderStart(context);
-            if (bHasBadge)
-            {
-                var span = new TagBuilder("span");
-                MergeContent(span, context);
-                span.RenderStart(context);
-                RenderContent(context);
-                span.RenderEnd(context);
-            }
-            else
-            {
-                RenderContent(context);
-            }
-            RenderBadge(context, Badge);
-            h.RenderEnd(context);
-        }
-    }
+			var h = new TagBuilder(tagName, "a2-header", IsInGrid);
+			MergeAttributes(h, context);
+			if (Align != TextAlign.Left)
+				h.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+			bool bHasBadge = GetBinding(nameof(Badge)) != null ||
+				!String.IsNullOrEmpty(Badge);
+			if (!bHasBadge)
+				MergeContent(h, context);
+			h.RenderStart(context);
+			if (bHasBadge)
+			{
+				var span = new TagBuilder("span");
+				MergeContent(span, context);
+				span.RenderStart(context);
+				RenderContent(context);
+				span.RenderEnd(context);
+			}
+			else
+			{
+				RenderContent(context);
+			}
+			RenderBadge(context, Badge);
+			h.RenderEnd(context);
+		}
+	}
 }

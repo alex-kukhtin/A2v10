@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
+// 20180820-7277
 // controllers/base.js
 
 (function () {
@@ -364,6 +364,14 @@
 				}
 				else
 					this.$store.commit('navigate', { url: url });
+			},
+
+			$navigateExternal(url, newWindow) {
+				if (newWindow === true) {
+					let nwin = window.open(url, "_blank");
+				}
+				else
+					window.location.assign(url);
 			},
 
 			$download(url) {

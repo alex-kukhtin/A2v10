@@ -157,7 +157,7 @@
 				let aElem = document.activeElement;
 				let ti = +aElem.getAttribute("tabindex");
 				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
-				if (ti == 0) {
+				if (ti === 0) {
 					event.preventDefault();
 					return;
 				}

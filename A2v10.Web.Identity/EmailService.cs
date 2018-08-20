@@ -6,13 +6,16 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using A2v10.Infrastructure;
+
 using Microsoft.AspNet.Identity;
+
 using Newtonsoft.Json;
 
-namespace A2v10.Web.Mvc.Identity
+using A2v10.Infrastructure;
+
+namespace A2v10.Web.Identity
 {
-	class EmailService : IIdentityMessageService, IMessageService
+	public class EmailService : IIdentityMessageService, IMessageService
 	{
 		private readonly ILogger _logger;
 		public EmailService(ILogger logger)

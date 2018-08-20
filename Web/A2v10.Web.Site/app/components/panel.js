@@ -1,11 +1,11 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7064
+// 20180820-7277
 // components/panel.js
 
 Vue.component('a2-panel', {
-    template:
-`<div :class="cssClass">
+	template:
+		`<div :class="cssClass">
     <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
 	    <span v-if="collapsible" class="ico panel-collapse-handle"></span>
@@ -13,53 +13,53 @@ Vue.component('a2-panel', {
     <slot v-if="expanded"></slot>
 </div>
 `,
-    props: {
-        initialCollapsed: Boolean,
-        collapsible: Boolean,
-        panelStyle: String,
-        noHeader: Boolean
-    },
-    data() {
-        return {
-            collapsed: this.initialCollapsed
-        };
-    },
-    computed: {
-        cssClass() {
-            let cls = "panel";
-            if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
-            if (this.panelStyle) {
-                switch (this.panelStyle.toLowerCase()) {
-                    case "red":
-                    case "danger":
-                    case "error":
-                        cls += ' panel-red';
-                        break;
-                    case "info":
-                    case "cyan":
-                        cls += ' panel-cyan';
-                        break;
-                    case "green":
-                    case "success":
-                        cls += ' panel-green';
-                        break;
-                    case "warning":
-                    case "yellow":
-                        cls += ' panel-yellow';
-                        break;
-                }
-            }
-            return cls;
-        },
-        expanded() {
-            return !this.collapsed;
-        }
-    },
-    methods: {
-        toggle() {
-            if (!this.collapsible)
-                return;
-            this.collapsed = !this.collapsed;
-        }
-    }
+	props: {
+		initialCollapsed: Boolean,
+		collapsible: Boolean,
+		panelStyle: String,
+		noHeader: Boolean
+	},
+	data() {
+		return {
+			collapsed: this.initialCollapsed
+		};
+	},
+	computed: {
+		cssClass() {
+			let cls = "panel";
+			if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
+			if (this.panelStyle) {
+				switch (this.panelStyle.toLowerCase()) {
+					case "red":
+					case "danger":
+					case "error":
+						cls += ' panel-red';
+						break;
+					case "info":
+					case "cyan":
+						cls += ' panel-cyan';
+						break;
+					case "green":
+					case "success":
+						cls += ' panel-green';
+						break;
+					case "warning":
+					case "yellow":
+						cls += ' panel-yellow';
+						break;
+				}
+			}
+			return cls;
+		},
+		expanded() {
+			return !this.collapsed;
+		}
+	},
+	methods: {
+		toggle() {
+			if (!this.collapsible)
+				return;
+			this.collapsed = !this.collapsed;
+		}
+	}
 });

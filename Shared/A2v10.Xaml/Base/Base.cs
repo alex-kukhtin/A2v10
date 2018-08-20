@@ -4,9 +4,9 @@ using System;
 
 namespace A2v10.Xaml
 {
-    public struct StringKeyValuePair
-    {
-        public String Key;
-        public String Value;
-    }
+	public struct StringKeyValuePair
+	{
+		public String Key;
+		public String Value;
+	}
 }

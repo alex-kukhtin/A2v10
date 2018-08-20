@@ -1,6 +1,5 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-using System;
 using System.Web;
 
 using A2v10.Data;
@@ -9,10 +8,9 @@ using A2v10.Infrastructure;
 using A2v10.Messaging;
 using A2v10.Request;
 using A2v10.Web.Config;
-using A2v10.Web.Mvc.Identity;
+using A2v10.Web.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;
-using Microsoft.AspNet.Identity;
 
 namespace A2v10.Web.Mvc.Start
 {

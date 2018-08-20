@@ -7,23 +7,14 @@ namespace A2v10.Xaml
 	public abstract class Control : UIElement
 	{
 		public Boolean Block { get; set; }
-
 		public String Label { get; set; }
-
 		public String Description { get; set; }
-
 		public Boolean Required { get; set; }
-
 		public Boolean Disabled { get; set; }
-
 		public Int32 TabIndex { get; set; }
-
 		public Length Width { get; set; }
-
 		public Validator Validator { get; set; }
-
 		public Popover Popover { get; set; }
-
 		public String TestId { get; set; }
 
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();

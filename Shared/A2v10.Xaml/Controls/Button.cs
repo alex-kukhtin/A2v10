@@ -29,7 +29,7 @@ namespace A2v10.Xaml
 	{
 		public Icon Icon { get; set; }
 
-		public UIElement DropDown { get; set; }
+		public UIElementBase DropDown { get; set; }
 
 		public ButtonStyle Style { get; set; }
 

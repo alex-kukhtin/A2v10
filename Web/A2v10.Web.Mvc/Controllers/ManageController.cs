@@ -1,57 +1,30 @@
-﻿using System;
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using A2v10.Web.Mvc.Models;
-using A2v10.Web.Mvc.Identity;
+using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
-	public class ManageController : Controller
+	public class ManageController : IdentityController
 	{
-		private AppSignInManager _signInManager;
-		private AppUserManager _userManager;
 
 		public ManageController()
 		{
+
 		}
 
 		public ManageController(AppUserManager userManager, AppSignInManager signInManager)
+			:base(userManager, signInManager)
 		{
-			UserManager = userManager;
-			SignInManager = signInManager;
 		}
 
-		public AppSignInManager SignInManager
-		{
-			get
-			{
-				return _signInManager ?? HttpContext.GetOwinContext().Get<AppSignInManager>();
-			}
-			private set
-			{
-				_signInManager = value;
-			}
-		}
-
-		public AppUserManager UserManager
-		{
-			get
-			{
-				return _userManager ?? HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-			}
-			private set
-			{
-				_userManager = value;
-			}
-		}
-
-		//
 		// GET: /Manage/Index
 		public async Task<ActionResult> Index(ManageMessageId? message)
 		{
@@ -318,28 +291,9 @@ namespace A2v10.Web.Mvc.Controllers
 			return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
 		}
 
-		protected override void Dispose(Boolean disposing)
-		{
-			if (disposing && _userManager != null)
-			{
-				_userManager.Dispose();
-				_userManager = null;
-			}
-
-			base.Dispose(disposing);
-		}
-
 		#region Helpers
 		// Used for XSRF protection when adding external logins
 		private const String XsrfKey = "XsrfId";
-
-		private IAuthenticationManager AuthenticationManager
-		{
-			get
-			{
-				return HttpContext.GetOwinContext().Authentication;
-			}
-		}
 
 		private void AddErrors(IdentityResult result)
 		{

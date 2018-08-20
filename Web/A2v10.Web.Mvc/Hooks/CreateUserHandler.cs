@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Web;
 using System.Dynamic;
 using System.Threading.Tasks;
@@ -8,7 +10,7 @@ using Microsoft.Owin;
 using Microsoft.AspNet.Identity.Owin;
 
 using A2v10.Infrastructure;
-using A2v10.Web.Mvc.Identity;
+using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Hooks
 {

@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 using Microsoft.AspNet.Identity;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	[Flags]
 	public enum UserModifiedFlag
@@ -40,6 +40,7 @@ namespace A2v10.Web.Mvc.Identity
 		public Boolean TwoFactorEnabled { get; set; }
 		public Boolean EmailConfirmed { get; set; }
 		public Boolean PhoneNumberConfirmed { get; set; }
+		public String RegisterHost { get; set; }
 
 		DateTime? _lastLoginDate;
 		String _lastLoginHost;
@@ -54,7 +55,6 @@ namespace A2v10.Web.Mvc.Identity
 			get { return _lastLoginHost; }
 			set { _lastLoginHost = value; SetModified(UserModifiedFlag.LastLogin); }
 		}
-
 
 		UserModifiedFlag _modifiedFlag;
 

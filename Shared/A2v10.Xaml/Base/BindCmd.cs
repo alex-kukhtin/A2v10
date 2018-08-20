@@ -40,6 +40,7 @@ namespace A2v10.Xaml
 		Export,
 		MailTo,
 		Navigate,
+		NavigateExternal,
 		Download,
 		Help
 	}
@@ -102,6 +103,8 @@ namespace A2v10.Xaml
 					return $"$mailto({CommandArgument(context)}, {GetData(context)})";
 				case CommandType.Help:
 					return $"$helpHref({CommandUrl(context)})";
+				case CommandType.NavigateExternal:
+					return $"{CommandUrl(context, decorate:false, skipCheck:true)}";
 			}
 			return null;
 		}
@@ -163,6 +166,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Navigate:
 					return $"$navigateSimple({CommandUrl(context)}, {NewWindowJS})";
+
+				case CommandType.NavigateExternal:
+					return $"$navigateExternal({CommandUrl(context, decorate:false, skipCheck:true)}, {NewWindowJS})";
 
 				case CommandType.Download:
 					return $"$download({CommandUrl(context)})";
@@ -364,7 +370,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		String CommandUrl(RenderContext context, Boolean decorate = false)
+		String CommandUrl(RenderContext context, Boolean decorate = false, Boolean skipCheck = false)
 		{
 			var urlBind = GetBinding(nameof(Url));
 			if (urlBind != null)
@@ -376,8 +382,11 @@ namespace A2v10.Xaml
 			if (String.IsNullOrEmpty(Url))
 				throw new NotImplementedException($"Url required for {Command} command");
 			// TODO: check URL format
-			if (!Url.StartsWith("/"))
-				throw new NotImplementedException($"Url '{Url}' must start with '/'");
+			if (!skipCheck)
+			{
+				if (!Url.StartsWith("/"))
+					throw new NotImplementedException($"Url '{Url}' must start with '/'");
+			}
 			return $"'{Url.ToLowerInvariant()}'";
 		}
 

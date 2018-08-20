@@ -2,7 +2,6 @@
 
 using System;
 using System.Web.Mvc;
-using System.Threading;
 using System.Threading.Tasks;
 
 using System.Dynamic;
@@ -12,18 +11,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Web;
 
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 using Newtonsoft.Json;
+
 using A2v10.Infrastructure;
 using A2v10.Request;
-using A2v10.Web.Mvc.Identity;
+using A2v10.Web.Identity;
 using A2v10.Web.Mvc.Filters;
-using A2v10.Web.Mvc.Models;
 using A2v10.Request.Models;
-using System.Web;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace A2v10.Web.Mvc.Controllers
 {

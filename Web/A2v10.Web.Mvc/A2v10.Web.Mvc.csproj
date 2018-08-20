@@ -49,9 +49,6 @@
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.Security.Cookies.4.0.0\lib\net451\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.OAuth.4.0.0\lib\net451\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -127,18 +124,10 @@
     <Compile Include="Hooks\SetPasswordHandler.cs" />
     <Compile Include="Hooks\SetPersonNameHandler.cs" />
     <Compile Include="Hooks\SetPhoneHandler.cs" />
-    <Compile Include="Identity\EmailService.cs" />
-    <Compile Include="Identity\IdentityExtensions.cs" />
-    <Compile Include="Identity\SmsService.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
-    <Compile Include="Identity\AppRole.cs" />
-    <Compile Include="Identity\AppSignInManager.cs" />
-    <Compile Include="Identity\AppUser.cs" />
-    <Compile Include="Identity\AppUserManager.cs" />
-    <Compile Include="Identity\AppUserStore.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -283,6 +272,10 @@
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
       <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
       <Name>A2v10.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\A2v10.Web.Identity\A2v10.Web.Identity.csproj">
+      <Project>{92F77940-FFF7-4833-88E3-1FC3290803FB}</Project>
+      <Name>A2v10.Web.Identity</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>

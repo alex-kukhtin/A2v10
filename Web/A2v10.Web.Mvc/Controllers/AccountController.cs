@@ -16,24 +16,21 @@ using System.IO;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 
 using Newtonsoft.Json;
 
 using A2v10.Request;
 using A2v10.Infrastructure;
 using A2v10.Web.Mvc.Models;
-using A2v10.Web.Mvc.Identity;
 using A2v10.Data.Interfaces;
 using A2v10.Web.Mvc.Filters;
+using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
-	public class AccountController : Controller
+	public class AccountController : IdentityController
 	{
-		private AppSignInManager _signInManager;
-		private AppUserManager _userManager;
 
 		IApplicationHost _host;
 		IDbContext _dbContext;
@@ -49,38 +46,13 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		public AccountController(AppUserManager userManager, AppSignInManager signInManager)
+			: base(userManager, signInManager)
 		{
-			UserManager = userManager;
-			SignInManager = signInManager;
 			// DI ready
 			var serviceLocator = ServiceLocator.Current;
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
-		}
-
-		public AppSignInManager SignInManager
-		{
-			get
-			{
-				return _signInManager ?? HttpContext.GetOwinContext().Get<AppSignInManager>();
-			}
-			private set
-			{
-				_signInManager = value;
-			}
-		}
-
-		public AppUserManager UserManager
-		{
-			get
-			{
-				return _userManager ?? HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-			}
-			private set
-			{
-				_userManager = value;
-			}
 		}
 
 		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null)
@@ -345,7 +317,8 @@ namespace A2v10.Web.Mvc.Controllers
 					Email = model.Email,
 					PhoneNumber = model.Phone,
 					PersonName = model.PersonName,
-					Tenant = -1
+					Tenant = -1,
+					RegisterHost = Request.UrlReferrer.Host
 				};
 
 				if (String.IsNullOrEmpty(user.Email))
@@ -618,29 +591,7 @@ namespace A2v10.Web.Mvc.Controllers
 			return RedirectToLocal("~/");
 		}
 
-
-		protected override void Dispose(Boolean disposing)
-		{
-			if (disposing)
-			{
-				if (_userManager != null)
-				{
-					_userManager.Dispose();
-					_userManager = null;
-				}
-
-				if (_signInManager != null)
-				{
-					_signInManager.Dispose();
-					_signInManager = null;
-				}
-			}
-
-			base.Dispose(disposing);
-		}
-
 		#region Helpers
-		private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
 		private void AddErrors(IdentityResult result)
 		{

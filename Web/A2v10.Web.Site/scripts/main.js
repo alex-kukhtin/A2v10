@@ -5373,7 +5373,7 @@ Vue.component('a2-pager', {
 		}
 	},
 	render(h, ctx) {
-		if (this.source.pageSize == -1) return; // invisible
+		if (this.source.pageSize === -1) return; // invisible
 		let contProps = {
 			class: 'a2-pager'
 		};
@@ -6789,7 +6789,7 @@ TODO:
 				let aElem = document.activeElement;
 				let ti = +aElem.getAttribute("tabindex");
 				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
-				if (ti == 0) {
+				if (ti === 0) {
 					event.preventDefault();
 					return;
 				}
@@ -7479,12 +7479,12 @@ Vue.component("a2-taskpad", {
 
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171031-7064
+// 20180820-7277
 // components/panel.js
 
 Vue.component('a2-panel', {
-    template:
-`<div :class="cssClass">
+	template:
+		`<div :class="cssClass">
     <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
         <slot name='header'></slot>
 	    <span v-if="collapsible" class="ico panel-collapse-handle"></span>
@@ -7492,55 +7492,55 @@ Vue.component('a2-panel', {
     <slot v-if="expanded"></slot>
 </div>
 `,
-    props: {
-        initialCollapsed: Boolean,
-        collapsible: Boolean,
-        panelStyle: String,
-        noHeader: Boolean
-    },
-    data() {
-        return {
-            collapsed: this.initialCollapsed
-        };
-    },
-    computed: {
-        cssClass() {
-            let cls = "panel";
-            if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
-            if (this.panelStyle) {
-                switch (this.panelStyle.toLowerCase()) {
-                    case "red":
-                    case "danger":
-                    case "error":
-                        cls += ' panel-red';
-                        break;
-                    case "info":
-                    case "cyan":
-                        cls += ' panel-cyan';
-                        break;
-                    case "green":
-                    case "success":
-                        cls += ' panel-green';
-                        break;
-                    case "warning":
-                    case "yellow":
-                        cls += ' panel-yellow';
-                        break;
-                }
-            }
-            return cls;
-        },
-        expanded() {
-            return !this.collapsed;
-        }
-    },
-    methods: {
-        toggle() {
-            if (!this.collapsible)
-                return;
-            this.collapsed = !this.collapsed;
-        }
-    }
+	props: {
+		initialCollapsed: Boolean,
+		collapsible: Boolean,
+		panelStyle: String,
+		noHeader: Boolean
+	},
+	data() {
+		return {
+			collapsed: this.initialCollapsed
+		};
+	},
+	computed: {
+		cssClass() {
+			let cls = "panel";
+			if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
+			if (this.panelStyle) {
+				switch (this.panelStyle.toLowerCase()) {
+					case "red":
+					case "danger":
+					case "error":
+						cls += ' panel-red';
+						break;
+					case "info":
+					case "cyan":
+						cls += ' panel-cyan';
+						break;
+					case "green":
+					case "success":
+						cls += ' panel-green';
+						break;
+					case "warning":
+					case "yellow":
+						cls += ' panel-yellow';
+						break;
+				}
+			}
+			return cls;
+		},
+		expanded() {
+			return !this.collapsed;
+		}
+	},
+	methods: {
+		toggle() {
+			if (!this.collapsible)
+				return;
+			this.collapsed = !this.collapsed;
+		}
+	}
 });
 // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
@@ -8490,7 +8490,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
+// 20180820-7277
 // controllers/base.js
 
 (function () {
@@ -8854,6 +8854,14 @@ Vue.directive('resize', {
 				}
 				else
 					this.$store.commit('navigate', { url: url });
+			},
+
+			$navigateExternal(url, newWindow) {
+				if (newWindow === true) {
+					let nwin = window.open(url, "_blank");
+				}
+				else
+					window.location.assign(url);
 			},
 
 			$download(url) {

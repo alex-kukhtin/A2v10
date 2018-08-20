@@ -5,7 +5,7 @@ using System.Security.Principal;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	public static class IdentityExtensions
 	{

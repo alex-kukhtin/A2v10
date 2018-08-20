@@ -29,7 +29,6 @@
 		$RegisterLink: 'Register',
 		$ResetPasswordTitle: 'Reset password',
 		$ForgotPassword: 'Forgot password?',
-		$ConfirmEMailPrompt: 'Confirm е-mail',
 		$ResetPassword: 'Set password',
 		$EMailLink: 'Send Link',
 		$Email: 'E-mail',

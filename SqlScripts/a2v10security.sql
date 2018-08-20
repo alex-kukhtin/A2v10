@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 16 aug 2018
-module version : 7275
+Last updated : 20 aug 2018
+module version : 7277
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7059);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7277);
 else
-	update a2sys.Versions set [Version] = 7059 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7277 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -101,7 +101,8 @@ begin
 		PersonName nvarchar(255) null,
 		LastLoginDate datetime null,
 		LastLoginHost nvarchar(255) null,
-		Memo nvarchar(255) null
+		Memo nvarchar(255) null,
+		RegisterHost nvarchar(255) null
 	);
 end
 go
@@ -116,6 +117,12 @@ if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2se
 begin
 	alter table a2security.Users add LastLoginDate datetime null;
 	alter table a2security.Users add LastLoginHost nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'RegisterHost')
+begin
+	alter table a2security.Users add RegisterHost nvarchar(255) null;
 end
 go
 ------------------------------------------------
@@ -276,7 +283,7 @@ as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
-		PhoneNumberConfirmed,
+		PhoneNumberConfirmed, RegisterHost,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -474,6 +481,7 @@ create procedure a2security.CreateUser
 @PhoneNumber nvarchar(255) = null,
 @Tenant int = null,
 @PersonName nvarchar(255) = null,
+@RegisterHost nvarchar(255) = null,
 @RetId bigint output
 as
 begin
@@ -497,9 +505,9 @@ begin
 
 		select top(1) @tenantId = id from @tenants;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName);			
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost);			
 		select top(1) @userId = id from @users;
 
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
@@ -522,9 +530,9 @@ begin
 	begin
 		begin tran;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost);
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);

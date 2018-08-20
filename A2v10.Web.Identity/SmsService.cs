@@ -2,15 +2,15 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Globalization;
 
 using Microsoft.AspNet.Identity;
 
 using A2v10.Infrastructure;
 using A2v10.Interop;
 using A2v10.Data.Interfaces;
-using System.Globalization;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	public class SmsService : ISmsService, IIdentityMessageService
 	{

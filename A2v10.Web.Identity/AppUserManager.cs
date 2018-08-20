@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	public class AppUserManager : UserManager<AppUser, Int64>
 	{
@@ -34,7 +34,7 @@ namespace A2v10.Web.Mvc.Identity
 			await Store.UpdateAsync(user);
 		}
 
-		void Construct(IdentityFactoryOptions<AppUserManager> options)
+		public void Construct(IdentityFactoryOptions<AppUserManager> options)
 		{
 			// Configure validation logic for usernames
 			UserValidator = new UserValidator<AppUser, Int64>(this)

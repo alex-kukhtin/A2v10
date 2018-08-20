@@ -4,13 +4,12 @@ using System;
 using System.Threading.Tasks;
 using System.Web;
 using System.Dynamic;
-using System.Security.Claims;
 
 using Microsoft.Owin;
+using Microsoft.AspNet.Identity.Owin;
 
 using A2v10.Infrastructure;
-using A2v10.Web.Mvc.Identity;
-using Microsoft.AspNet.Identity.Owin;
+using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Hooks
 {

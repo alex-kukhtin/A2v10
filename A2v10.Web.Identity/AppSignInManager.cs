@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 using System.Threading.Tasks;
 
-namespace A2v10.Web.Mvc.Identity
+namespace A2v10.Web.Identity
 {
 	public class AppSignInManager : SignInManager<AppUser, Int64>
 	{
