@@ -88,6 +88,16 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public Boolean IsRegistrationEnabled
+		{
+			get
+			{
+				var mt = ConfigurationManager.AppSettings["registration"];
+				if (String.IsNullOrEmpty(mt))
+					return true;
+				return mt.ToLowerInvariant() == "true";
+			}
+		}
 
 		Int32 _tenantId;
 

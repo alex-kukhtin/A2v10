@@ -62,7 +62,7 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(Description)", _host.AppDescription);
 
 			StringBuilder script = new StringBuilder(ResourceHelper.AppLinksScript);
-			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false }}");
+			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false, registation: false }}");
 			script.Replace("$(Locale)", ResourceHelper.locale);
 			script.Replace("$(AppLinks)", _localizer.Localize(null, ControllerHelpers.AppLinks(_host)));
 			layout.Replace("$(PageScript)", script.ToString());

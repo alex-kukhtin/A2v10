@@ -73,13 +73,14 @@ namespace A2v10.Web.Mvc.Controllers
 
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
+				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();
 
 				StringBuilder script = new StringBuilder(rsrcScript);
 				script.Replace("$(Utils)", ResourceHelper.pageUtils);
 				script.Replace("$(Locale)", ResourceHelper.locale);
 				script.Replace("$(Mask)", ResourceHelper.mask);
 
-				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode} }}");
+				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
 				script.Replace("$(AppLinks)", _localizer.Localize(null, ControllerHelpers.AppLinks(_host)));
 				script.Replace("$(ServerInfo)", serverInfo ?? "null");
 				script.Replace("$(Token)", formToken);
@@ -223,6 +224,11 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write("Turn on the multiTenant mode");
 				return;
 			}
+			if (!_host.IsRegistrationEnabled)
+			{
+				Response.Write("Registration is disabled in this site");
+				return;
+			}
 			SendPage(ResourceHelper.RegisterTenantHtml, ResourceHelper.RegisterTenantScript);
 		}
 
@@ -295,6 +301,8 @@ namespace A2v10.Web.Mvc.Controllers
 			var seconds = IsDDOS();
 			if (seconds > 0)
 				return Json(new { Status = "DDOS" }); //, Seconds = seconds });
+			if (!_host.IsRegistrationEnabled)
+				return Json(new { Status = "DISABLED" }); //
 			try
 			{
 				RegisterTenantModel model;
