@@ -1,4 +1,4 @@
 ﻿
 module.exports = {
-    x: 5
-}
+	x: 5
+};

@@ -40,7 +40,7 @@ let template = {
     delegates: {
         TestFilter(val, filter) {
             console.dir(val);
-            return val.Name.toLowerCase().indexOf(filter.Filter.toLowerCase()) != -1;
+            return val.Name.toLowerCase().indexOf(filter.Filter.toLowerCase()) !== -1;
         }
     },
     commands: {

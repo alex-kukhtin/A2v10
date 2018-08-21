@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180410-7153
+// 20180821-7280
 // components/modal.js
 
 
@@ -75,7 +75,7 @@
 				opts.init.cy = Number.parseFloat(cs.height);
 				document.addEventListener('mouseup', onRelease, false);
 				document.addEventListener('mousemove', onMouseMove, false);
-			};
+			}
 
 			function onRelease(event) {
 				opts.down = false;
@@ -143,7 +143,7 @@
 					ea = ea.sort((a, b) => a.ti > b.ti);
 					//console.dir(ea);
 					return ea;
-				};
+				}
 
 
 				if (this._tabElems === undefined) {

@@ -22,7 +22,7 @@ const template = {
 };
 
 function doFilter(item, filter) {
-	return item.SNo.indexOf(filter.Filter) != -1;
+	return item.SNo.indexOf(filter.Filter) !== -1;
 }
 
 function getAgentPopoverUrl() {

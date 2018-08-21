@@ -1,10 +1,10 @@
 ﻿
 (function () {
 
-    const chart = d3.select('#chart')
-        .append('svg')
-        .style('width', 500)
-        .style('height', 400)
+	const chart = d3.select('#chart')
+		.append('svg')
+		.style('width', 500)
+		.style('height', 400);
 
     const sine = d3.range(0, 40)
         .map(k => {

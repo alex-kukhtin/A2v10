@@ -57,7 +57,7 @@
 		state: {
 			// todo:
 			route: window.location.pathname,
-			search: '',
+			search: ''
 		},
 		getters: {
 			route(state) {

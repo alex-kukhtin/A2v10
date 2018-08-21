@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180629-7234*/
+/*20180821-7280*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -56,7 +56,7 @@ app.modules['std:mask'] = function () {
 
 		function nextValueChar() {
 			let ch;
-			while (true) {
+			for (; ;) {
 				ch = value[j];
 				if (!ch) return PLACE_CHAR;
 				// TODO: this is for digits only!

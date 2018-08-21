@@ -49,7 +49,7 @@ describe("Validators", function () {
 
 		// blank
 		let result = [{ msg: 'blank message', severity: 'error' }];
-		result.pending = 0
+		result.pending = 0;
 		expect(
 			val.validate(rule, null, 0)
 		).toEqual(result);

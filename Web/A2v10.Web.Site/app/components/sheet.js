@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-// 20171219-7079
+// 20180821-7280
 // components/sheet.js
 
 (function () {
@@ -32,7 +32,7 @@
 				yield elem;
 				if (!elem.$collapsed)
 					yield* traverse(elem, prop, lev + 1);
-			};
+			}
 		}
 	}
 
@@ -73,7 +73,7 @@
 			}
 
 			function rowCssClass() {
-				let cls = ''
+				let cls = '';
 				if (this.hasChildren())
 					cls += ' group';
 				if (this.item.$collapsed)

@@ -2790,7 +2790,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Web.Identity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Web.Identity, Version=10.0.7279.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_8A6451B76FEDEFCAF54BF020C5C24AFC"
@@ -3890,15 +3890,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{1A0B9258-C97C-4267-AA62-788ACD714D96}"
-        "PackageCode" = "8:{95C3B5F8-734E-4783-BA23-865B9286068D}"
+        "ProductCode" = "8:{E36A5537-F639-4AD9-A718-BEECE463EAC7}"
+        "PackageCode" = "8:{01F6323C-CDB2-459A-B0D3-4E445C9D8308}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7279"
+        "ProductVersion" = "8:10.0.7280"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

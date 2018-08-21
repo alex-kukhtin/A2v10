@@ -89,7 +89,7 @@
 			}
 		},
 		created() {
-			eventBus.$on('toast', this.showToast)
+			eventBus.$on('toast', this.showToast);
 		}
 	};
 

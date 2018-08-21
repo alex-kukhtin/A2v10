@@ -64,12 +64,12 @@ async function addGroup(array) {
     let groups = await vm.$showDialog('/Identity/Group/Browse');
     if (!utils.isArray(groups))
         groups = [groups];
-    groups.forEach(function (group) {
-        if (array.find((ug) => ug.GroupId === group.Id)) {
-            return;
-        }
-        array.$append({ GroupId: group.Id, GroupName: group.Name });
-    })
+	groups.forEach(function (group) {
+		if (array.find((ug) => ug.GroupId === group.Id)) {
+			return;
+		}
+		array.$append({ GroupId: group.Id, GroupName: group.Name });
+	});
 }
 
 module.exports = template;

@@ -21,7 +21,7 @@ module.exports = {
     docUnApply: {
         confirm: '@[Sure.UnApplyDocument]',
         exec: unApplyDocument
-    },
+    }
 };
 
 // document properties

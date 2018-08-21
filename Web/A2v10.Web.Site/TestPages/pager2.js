@@ -12,7 +12,7 @@
                 class: 'a2-pager'
             };
             let children = [];
-            const dotsClass = { 'class': 'a2-pager-dots' }
+			const dotsClass = { 'class': 'a2-pager-dots' };
             const renderBtn = (page) => {
                 return h('button', {
                     domProps: { innerText: page },
@@ -27,20 +27,20 @@
                 }, [h('i',{ 'class': 'ico ico-chevron-left' })]
             ));            
             // first
-            children.push(renderBtn(1))
-            if (this.pages > 1)
-                children.push(renderBtn(2))
+			children.push(renderBtn(1));
+			if (this.pages > 1)
+				children.push(renderBtn(2));
             // middle
             let ms = Math.max(this.currentPage - 2, 3);
             let me = Math.min(ms + 5, this.pages - 1);
-            if ((me - ms) < 5)
+            if (me - ms < 5)
                ms = Math.max(me - 5, 3);
             if (ms > 3)
                 children.push(h('span', dotsClass, '...'));
             for (let mi = ms; mi < me; ++mi) {
                 children.push(renderBtn(mi));
             }
-            if (me < (this.pages - 1))
+            if (me < this.pages - 1)
                 children.push(h('span', dotsClass, '...'));
             // last
             if (this.pages > 3) 
@@ -50,7 +50,7 @@
             // next
             children.push(h('button', {
                     on: { click: ($ev) => this.click('next', $ev) },
-                    attrs: { disabled: this.currentPage == this.pages }
+                    attrs: { disabled: this.currentPage === this.pages }
                 }, 
                 [h('i',{ 'class': 'ico ico-chevron-right' })]
             ));

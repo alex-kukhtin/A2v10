@@ -13,7 +13,7 @@ const template = {
         'TDocLink.$DocName': linkDocName,
         "TDocument.$State"() { return this.Done ? 'Проведен' : ''; },
         "TDocument.$StateStyle"() { return this.Done ? 'info' : 'hidden'; }
-    },
+    }
 };
 
 

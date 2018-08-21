@@ -33,7 +33,7 @@
 		},
 		computed: {
 			iconClass() {
-				return "ico po-ico" + this.icon ? (' ico-' + this.icon) : '';
+				return "ico po-ico" + this.icon ? ' ico-' + this.icon : '';
 			},
 			visible() {
 				return this.url && this.state === 'shown';

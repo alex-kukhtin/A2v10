@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180709-7243
+// 20180821-7280
 // controllers/standalone.js
 
 (function () {
@@ -395,7 +395,7 @@
 
 		if (callback)
 			callback.call(vm);
-	}
+	};
 
 	app.components['standaloneController'] = standalone;
 })();

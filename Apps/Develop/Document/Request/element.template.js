@@ -19,7 +19,7 @@ let template = {
             return this.Rows.Count > 3 ? "warning" : null;
         },
         "TDocument.$Shipment": getShipment,
-        "TRow.$Bold"() {return this.Id === 2170 }
+		"TRow.$Bold"() { return this.Id === 2170; }
 	},
 	methods: {
 		// new
@@ -50,7 +50,7 @@ let template = {
                 return doc.SNo === '111';
             },
             msg: 'Выберите доставку'
-        },
+        }
     },
 	commands: {
 		add100rows(doc) {
@@ -94,7 +94,7 @@ function documentSumProperty() {
 }
 
 function filterRows(row, filter) {
-	return row.Entity.Name.indexOf(filter.Filter) != -1;
+	return row.Entity.Name.indexOf(filter.Filter) !== -1;
 }
 
 function getShipment() {

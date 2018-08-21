@@ -3,25 +3,25 @@
 	init();
 
 	return {
-        properties: {
+		properties: {
 			"TEntity.Price": getEntityPrice,
 			"TEntity.$HasPrices": function () {
-			    return this.Prices && this.Prices.length > 0;
+				return this.Prices && this.Prices.length > 0;
 			}
 		},
-        events: {
-            "Model.load": modelLoad,
-		    "Entities.load": onload,
-		    "Entities[].Qty.change": qtyChange
-	    }
-        //commands: {
-        //	"addSelected": addSelected,
-        //}
-    };
+		events: {
+			"Model.load": modelLoad,
+			"Entities.load": onload,
+			"Entities[].Qty.change": qtyChange
+		}
+		//commands: {
+		//	"addSelected": addSelected,
+		//}
+	};
 
-    function modelLoad(root, caller) {
-        console.dir(caller);
-    }
+	function modelLoad(root, caller) {
+		console.dir(caller);
+	}
 
 	function onload() {
 		//alert(vm.$caller.Document.Contract.PriceKind.Id);
@@ -29,51 +29,51 @@
 	}
 
 	function qtyChange(ent) {
-	    var i, row;
-	    var pos = -1;
-	    var trg = vm.$caller.Document.Rows;
-	    // находим объект учёта в документе
-	    for (i = 0; i < trg.length; i++) {
-	        if (trg[i].Entity.Id == ent.Id) {
-	            pos = i;
-	            break;
-	        }
-	    }
-	    if (ent.Qty > 0) {
-            // добавляем в документ
-	        if (pos >= 0) {
-	            // Такой объект учёта уже есть в документе
-	            row = trg[pos];
-	        } else {
-	            // Такого объекта учёта нет - добавляем
-	            row = trg.$append();
-	            row.Entity = ent;
-	            row.FUnits = ent.FUnits;
-	            rowsAdded(trg, row);
-            }
-	        row.BasePrice = ent.Price;
-	        row.Qty = ent.Qty;
-	        if (!ent.Warehouse.$isEmpty) {
-	            row.Warehouse = ent.Warehouse;
-	        }
-	    } else {
-	        // удаляем из документа
-	        if (pos >= 0) {
-	            row = trg[pos];
-	            vm.$remove(row);
-	        }
-	    }
+		var i, row;
+		var pos = -1;
+		var trg = vm.$caller.Document.Rows;
+		// находим объект учёта в документе
+		for (i = 0; i < trg.length; i++) {
+			if (trg[i].Entity.Id === ent.Id) {
+				pos = i;
+				break;
+			}
+		}
+		if (ent.Qty > 0) {
+			// добавляем в документ
+			if (pos >= 0) {
+				// Такой объект учёта уже есть в документе
+				row = trg[pos];
+			} else {
+				// Такого объекта учёта нет - добавляем
+				row = trg.$append();
+				row.Entity = ent;
+				row.FUnits = ent.FUnits;
+				rowsAdded(trg, row);
+			}
+			row.BasePrice = ent.Price;
+			row.Qty = ent.Qty;
+			if (!ent.Warehouse.$isEmpty) {
+				row.Warehouse = ent.Warehouse;
+			}
+		} else {
+			// удаляем из документа
+			if (pos >= 0) {
+				row = trg[pos];
+				vm.$remove(row);
+			}
+		}
 	}
 
 	function rowsAdded(array, row) {
-	    var ix = array.indexOf(row);
-	    if (ix === 0)
-	        return;
-	    /* наследуем значения из предыдущей строки */
-	    var prevRow = array[ix - 1];
-	    row.DeliveryOn = prevRow.DeliveryOn;
-	    if (row.Warehouse.$isEmpty && !prevRow.Warehouse.$isEmpty)
-	        row.Warehouse = prevRow.Warehouse;
+		var ix = array.indexOf(row);
+		if (ix === 0)
+			return;
+		/* наследуем значения из предыдущей строки */
+		var prevRow = array[ix - 1];
+		row.DeliveryOn = prevRow.DeliveryOn;
+		if (row.Warehouse.$isEmpty && !prevRow.Warehouse.$isEmpty)
+			row.Warehouse = prevRow.Warehouse;
 	}
 
 	function init() {
@@ -102,7 +102,7 @@
 	//}
 
 	function getEntityPrice() {
-	    var ent = this;
+		var ent = this;
 		if (!ent.Prices.length)
 			return undefined;
 		if (!ent.Prices.$selected) {

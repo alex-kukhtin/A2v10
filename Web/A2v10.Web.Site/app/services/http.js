@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180801-7261
+// 20180821-7280
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -90,7 +90,7 @@ app.modules['std:http'] = function () {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
 			fc.__vue__.$destroy();
-		};
+		}
 		return new Promise(function (resolve, reject) {
 			doRequest('GET', url)
 				.then(function (html) {

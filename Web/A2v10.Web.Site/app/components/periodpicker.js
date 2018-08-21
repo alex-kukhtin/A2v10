@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180507-7179
+// 20180821-7280
 // components/periodpicker.js
 
 
@@ -72,7 +72,7 @@
 				return period;
 			},
 			prevModelDate() {
-				return utils.date.add(this.modelDate, -1, 'month')
+				return utils.date.add(this.modelDate, -1, 'month');
 			},
 			currentText() {
 				return this.currentPeriod.format('Date');

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180508-7179
+// 20180821-7280
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -46,12 +46,12 @@ app.modules['std:period'] = function () {
 		}
 		this.normalize();
 		return this;
-	}
+	};
 
 	TPeriod.prototype.equal = function (p) {
 		return this.From.getTime() === p.From.getTime() &&
 			this.To.getTime() === p.To.getTime();
-	}
+	};
 
 	TPeriod.prototype.fromUrl = function (v) {
 		if (utils.isObject(v) && 'From' in v) {
@@ -68,15 +68,15 @@ app.modules['std:period'] = function () {
 		}
 		let df = px[0];
 		let dt = px.length > 1 ? px[1] : px[0];
-		this.From = date.tryParse(df)
+		this.From = date.tryParse(df);
 		this.To = date.tryParse(dt);
 		return this;
-	}
+	};
 
 	TPeriod.prototype.isAllData = function () {
 		return this.From.getTime() === date.minDate.getTime() &&
 			this.To.getTime() === date.maxDate.getTime();
-	}
+	};
 
 	TPeriod.prototype.format = function (dataType) {
 		//console.warn(`${this.From.getTime()}-${date.minDate.getTime()} : ${this.To.getTime()}-${date.maxDate.getTime()}`);
@@ -89,26 +89,26 @@ app.modules['std:period'] = function () {
 		if (dataType === "DateUrl")
 			return utils.format(from, dataType) + '-' + utils.format(to, dataType);
 		return utils.format(from, dataType) + ' - ' + (utils.format(to, dataType) || '???');
-	}
+	};
 
 	TPeriod.prototype.in = function (dt) {
 		let t = dt.getTime();
 		let zd = utils.date.zero().getTime();
 		if (this.From.getTime() === zd || this.To.getTime() === zd) return;
 		return t >= this.From.getTime() && t <= this.To.getTime();
-	}
+	};
 
 	TPeriod.prototype.normalize = function () {
 		if (this.From.getTime() > this.To.getTime())
 			[this.From, this.To] = [this.To, this.From];
 		return this;
-	}
+	};
 
 	TPeriod.prototype.set = function (from, to) {
 		this.From = from;
 		this.To = to;
 		return this.normalize();
-	}
+	};
 
 
 	function isPeriod(value) { return value instanceof TPeriod; }

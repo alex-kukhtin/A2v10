@@ -27,13 +27,13 @@
     });
 
     it("make query string (object)", function () {
-        let cust = td.createCustomer({ Id: 1234 })
+		let cust = td.createCustomer({ Id: 1234 });
         expect(url.makeQueryString({ Customer: cust, y: 6 })).toBe('?Customer=1234&y=6');
     });
 
     it("make query string (date)", function () {
         let today = utils.date.today();
-        let strToday = utils.format(today, 'DateUrl')
+		let strToday = utils.format(today, 'DateUrl');
         expect(url.makeQueryString({ From: today, To: utils.date.zero() })).toBe('?From=' + strToday);
     });
 
@@ -54,9 +54,9 @@
     });
 
     it('replace url query', function () {
-        expect(url.replaceUrlQuery('/s1/s2?x=5&y=6', { y: 7, x: 8 })).toEqual('/s1/s2?x=8&y=7')
-        expect(url.replaceUrlQuery('/s1/s2?x=5&y=6')).toEqual('/s1/s2?x=5&y=6')
-        expect(url.replaceUrlQuery('/s1/s2', { x: 5, y: 6 })).toEqual('/s1/s2?x=5&y=6')
+		expect(url.replaceUrlQuery('/s1/s2?x=5&y=6', { y: 7, x: 8 })).toEqual('/s1/s2?x=8&y=7');
+		expect(url.replaceUrlQuery('/s1/s2?x=5&y=6')).toEqual('/s1/s2?x=5&y=6');
+		expect(url.replaceUrlQuery('/s1/s2', { x: 5, y: 6 })).toEqual('/s1/s2?x=5&y=6');
     });
 
     it('id change only', function () {

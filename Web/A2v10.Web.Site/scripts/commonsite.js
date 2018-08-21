@@ -40,7 +40,7 @@
 	let currentToken = 1603;
 
 	function nextToken() {
-		return '' + (currentToken++);
+		return '' + currentToken++;
 	}
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
@@ -750,7 +750,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180508-7179
+// 20180821-7280
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -796,12 +796,12 @@ app.modules['std:period'] = function () {
 		}
 		this.normalize();
 		return this;
-	}
+	};
 
 	TPeriod.prototype.equal = function (p) {
 		return this.From.getTime() === p.From.getTime() &&
 			this.To.getTime() === p.To.getTime();
-	}
+	};
 
 	TPeriod.prototype.fromUrl = function (v) {
 		if (utils.isObject(v) && 'From' in v) {
@@ -818,15 +818,15 @@ app.modules['std:period'] = function () {
 		}
 		let df = px[0];
 		let dt = px.length > 1 ? px[1] : px[0];
-		this.From = date.tryParse(df)
+		this.From = date.tryParse(df);
 		this.To = date.tryParse(dt);
 		return this;
-	}
+	};
 
 	TPeriod.prototype.isAllData = function () {
 		return this.From.getTime() === date.minDate.getTime() &&
 			this.To.getTime() === date.maxDate.getTime();
-	}
+	};
 
 	TPeriod.prototype.format = function (dataType) {
 		//console.warn(`${this.From.getTime()}-${date.minDate.getTime()} : ${this.To.getTime()}-${date.maxDate.getTime()}`);
@@ -839,26 +839,26 @@ app.modules['std:period'] = function () {
 		if (dataType === "DateUrl")
 			return utils.format(from, dataType) + '-' + utils.format(to, dataType);
 		return utils.format(from, dataType) + ' - ' + (utils.format(to, dataType) || '???');
-	}
+	};
 
 	TPeriod.prototype.in = function (dt) {
 		let t = dt.getTime();
 		let zd = utils.date.zero().getTime();
 		if (this.From.getTime() === zd || this.To.getTime() === zd) return;
 		return t >= this.From.getTime() && t <= this.To.getTime();
-	}
+	};
 
 	TPeriod.prototype.normalize = function () {
 		if (this.From.getTime() > this.To.getTime())
 			[this.From, this.To] = [this.To, this.From];
 		return this;
-	}
+	};
 
 	TPeriod.prototype.set = function (from, to) {
 		this.From = from;
 		this.To = to;
 		return this.normalize();
-	}
+	};
 
 
 	function isPeriod(value) { return value instanceof TPeriod; }
@@ -1014,7 +1014,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180801-7261
+// 20180821-7280
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1104,7 +1104,7 @@ app.modules['std:http'] = function () {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
 			fc.__vue__.$destroy();
-		};
+		}
 		return new Promise(function (resolve, reject) {
 			doRequest('GET', url)
 				.then(function (html) {
@@ -1422,7 +1422,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180714-7273
+// 20180821-7280
 // services/datamodel.js
 
 (function () {
@@ -2413,7 +2413,6 @@ app.modules['std:validators'] = function () {
 	}
 
 	function isSkipMerge(root, prop) {
-		if (prop.startsWith('$$')) return true; // special properties
 		let t = root.$template;
 		let opts = t && t.options;
 		let bo = opts && opts.bindOnce;
@@ -2429,6 +2428,7 @@ app.modules['std:validators'] = function () {
 			this._root_._enableValidate_ = false;
 			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
+				if (prop.startsWith('$$')) continue; // always skip
 				if (afterSave && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;
@@ -2565,7 +2565,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180709-7243
+// 20180821-7280
 // controllers/standalone.js
 
 (function () {
@@ -2960,7 +2960,7 @@ app.modules['std:validators'] = function () {
 
 		if (callback)
 			callback.call(vm);
-	}
+	};
 
 	app.components['standaloneController'] = standalone;
 })();

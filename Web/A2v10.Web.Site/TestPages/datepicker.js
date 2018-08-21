@@ -122,7 +122,7 @@
 				dt.setDate(1); // 1-st day of month
 				let w = dt.getDay() - 1; // weekday
 				if (w === -1) w = 6;
-				else if (w == 0) w = 7;
+				else if (w === 0) w = 7;
 				dt.setDate(-w + 1);
 				let arr = [];
 				for (let r = 0; r < 6; r++) {

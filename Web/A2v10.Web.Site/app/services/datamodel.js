@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180714-7273
+// 20180821-7280
 // services/datamodel.js
 
 (function () {
@@ -991,7 +991,6 @@
 	}
 
 	function isSkipMerge(root, prop) {
-		if (prop.startsWith('$$')) return true; // special properties
 		let t = root.$template;
 		let opts = t && t.options;
 		let bo = opts && opts.bindOnce;
@@ -1007,6 +1006,7 @@
 			this._root_._enableValidate_ = false;
 			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
+				if (prop.startsWith('$$')) continue; // always skip
 				if (afterSave && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;

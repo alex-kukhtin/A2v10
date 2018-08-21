@@ -48,7 +48,7 @@ async function createShipment(doc) {
 	const vm = doc.$vm;
 	let result = await vm.$invoke('createShipment', { Id: doc.Id });
 	if (result.Document) {
-		vm.$navigate('/sales/waybill/edit', result.Document.Id)
+		vm.$navigate('/sales/waybill/edit', result.Document.Id);
         /*
         А можно не открывать, а просто показать
         doc.Shipment.$append(result.Document);

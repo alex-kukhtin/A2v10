@@ -37,7 +37,7 @@
                 yield elem;
                 if (!elem.$collapsed)
                     yield* traverse(elem, prop, lev + 1);
-            };
+            }
         }
     }
 

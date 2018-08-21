@@ -84,7 +84,7 @@ const template = {
 
 function filterDelegate(item, filter) {
 	// фильтрация элементов
-	return item.Id.toString().indexOf(filter.Filter) != -1;
+	return item.Id.toString().indexOf(filter.Filter) !== -1;
 }
 
 module.exports = template;

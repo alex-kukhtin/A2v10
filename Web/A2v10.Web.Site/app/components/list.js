@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180804-7264
+// 20180821-7280
 // components/list.js
 
 /* TODO:
@@ -18,7 +18,7 @@
 				@click.prevent="select(listItem)" @keydown="keyDown" 
 				ref="li">
 			<slot name="items" :item="listItem" />
-	    </li>
+		</li>
 	</template>
 	<template v-else>
 		<slot />
@@ -64,6 +64,7 @@
 				if (!this.autoSelect) return;
 				if (!this.selectable) return;
 				let src = this.itemsSource;
+				if (src.$selected) return; // already selected
 				if (!src || !src.length)
 					return;
 				if (this.autoSelect === 'first-item') {

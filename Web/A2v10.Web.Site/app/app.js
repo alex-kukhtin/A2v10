@@ -40,6 +40,6 @@
 	let currentToken = 1603;
 
 	function nextToken() {
-		return '' + (currentToken++);
+		return '' + currentToken++;
 	}
 })();

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20171118-7093
+// 20180821-7280
 // components/doctitle.js*/
 
 (function () {
@@ -23,7 +23,7 @@
 		},
 		created() {
 			this.setTitle();
-		},
+		}
 	};
 
 	app.components['std:doctitle'] = documentTitle;

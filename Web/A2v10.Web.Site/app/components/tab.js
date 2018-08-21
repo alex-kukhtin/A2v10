@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180528-7200 */
+/* 20180821-7280 */
 /*components/tab.js*/
 
 /*
@@ -89,7 +89,7 @@ TODO:
 				return !!this.badge;
 			},
 			iconCss() {
-				return this.icon ? ("ico ico-" + this.icon) : '';
+				return this.icon ? "ico ico-" + this.icon : '';
 			},
 			isActive() {
 				return this === this.$parent.activeTab;

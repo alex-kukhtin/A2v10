@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180619-7227
+// 20180821-7280
 // components/datepicker.js
 
 
@@ -75,7 +75,7 @@
 			cssClass2() {
 				let cx = this.cssClass();
 				if (this.isOpen)
-					cx += ' open'
+					cx += ' open';
 				return cx;
 			},
 			__clickOutside() {
