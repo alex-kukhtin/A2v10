@@ -6,14 +6,14 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
 	[ContentProperty("Content")]
-	public class Span : Inline
+	public class Badge : Inline
 	{
 		public Object Content { get; set; }
 		public Boolean Small { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			var span = new TagBuilder("span", null, IsInGrid);
+			var span = new TagBuilder("span", "a2-badge", IsInGrid);
 			onRender?.Invoke(span);
 			MergeAttributes(span, context);
 

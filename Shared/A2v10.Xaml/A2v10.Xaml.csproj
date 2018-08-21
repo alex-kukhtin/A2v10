@@ -86,6 +86,7 @@
     <Compile Include="Controls\DataGridRowDetails.cs" />
     <Compile Include="Controls\DatePicker.cs" />
     <Compile Include="Controls\PeriodPicker.cs" />
+    <Compile Include="Controls\StateCard.cs" />
     <Compile Include="Controls\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\Attachments.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Layouts\Partial.cs" />
     <Compile Include="Layouts\WizardPage.cs" />
     <Compile Include="Text\Paragraph.cs" />
+    <Compile Include="Text\Badge.cs" />
     <Compile Include="Text\TagLabel.cs" />
     <Compile Include="Layouts\DropDownMenu.cs" />
     <Compile Include="Controls\Graphics.cs" />

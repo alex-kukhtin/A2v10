@@ -19,16 +19,6 @@ namespace A2v10.Xaml
 		Yellow
 	}
 
-	public enum ShadowStyle
-	{
-		None,
-		Shadow1,
-		Shadow2,
-		Shadow3,
-		Shadow4,
-		Shadow5
-	}
-
 	public class Panel : Container, ITableControl
 	{
 		public Object Header { get; set; }

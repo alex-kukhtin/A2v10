@@ -696,7 +696,7 @@ td.valign-bottom {
 }
 .tag-label.warning,
 .tag-label.orange {
-  background-color: #f0ad4e;
+  background-color: #ffb74d;
 }
 .tag-label.danger,
 .tag-label.red,
@@ -1821,16 +1821,16 @@ pre.a2-code {
 }
 .btn.btn-orange,
 .btn.btn-warning {
-  background-color: #f0ad4e;
+  background-color: #ffb74d;
   color: white;
 }
 .btn.btn-orange:active,
 .btn.btn-warning:active {
-  background-color: #ed9c28 !important;
+  background-color: #ffa624 !important;
 }
 .btn.btn-orange:not([disabled]):hover,
 .btn.btn-warning:not([disabled]):hover {
-  background-color: #eea236;
+  background-color: #ffad33;
 }
 .btn.btn-orange[disabled],
 .btn.btn-warning[disabled] {
@@ -3099,7 +3099,7 @@ table.data-grid > tbody > tr.bold > td {
   box-shadow: 0 0 12px #999;
 }
 .toastr-stack li.toast.warning {
-  background-color: #f0ad4e;
+  background-color: #ffb74d;
 }
 .toastr-stack li.toast.success {
   background-color: #5db750;
@@ -4046,6 +4046,59 @@ TODO:
 .popover-wrapper.po-blue.po-bottom-right > .popup-body > .arrow:after {
   border-bottom-color: #e5f1fe;
 }
+.a2-state-card {
+  position: relative;
+  background-color: white;
+  color: #aaa;
+}
+.a2-state-card .a2-state-card-header {
+  line-height: 1;
+  margin: 0.7rem;
+}
+.a2-state-card .a2-state-card-footer {
+  font-size: 95%;
+  margin: 0.7rem;
+}
+.a2-state-card .a2-state-card-text {
+  font-size: 32px;
+  line-height: 1.466666;
+  font-weight: 500;
+  margin: 0.7rem;
+}
+.a2-state-card .a2-card-icon {
+  position: absolute;
+  right: 1.46666rem;
+  top: 1.46666rem;
+  font-size: 4.39998rem;
+  color: rgba(179, 179, 179, 0.25);
+}
+.a2-state-card .a2-badge {
+  padding: 0 4px;
+  margin: 0 2px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.a2-state-card.a2-state-card-styled {
+  color: white;
+}
+.a2-state-card.a2-state-card-styled .a2-card-icon {
+  color: rgba(255, 255, 255, 0.25);
+}
+.a2-state-card.a2-state-card-yellow {
+  background-color: #ffb74d;
+}
+.a2-state-card.a2-state-card-green {
+  background-color: #5db750;
+}
+.a2-state-card.a2-state-card-cyan {
+  background-color: #60bbe5;
+}
+.a2-state-card.a2-state-card-red {
+  background-color: #da533f;
+}
+.a2-state-card.a2-state-card-primary {
+  background-color: #3470b4;
+}
 .grid {
   display: grid;
   padding: 10px 10px 15px 10px;
@@ -4449,6 +4502,7 @@ h5,
 .a2-graphics {
   display: block;
   width: 100%;
+  line-height: 0;
 }
 .a2-changelog {
   padding: 1rem;
@@ -4462,6 +4516,12 @@ h5,
   color: #777;
   font-weight: bold;
   font-family: inherit;
+}
+.tooltip {
+  position: absolute;
+  padding: 6px;
+  background-color: white;
+  border: 1px solid #ccc;
 }
 .about-source-list {
   list-style-position: inside;

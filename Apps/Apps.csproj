@@ -48,6 +48,7 @@
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
     <None Include="Develop\Agent\model.json" />
+    <None Include="Develop\Dashboard\model.json" />
     <None Include="Develop\links.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />
     <None Include="Develop\Catalog\Inbox\model.json" />
@@ -108,6 +109,7 @@
     <Content Include="Develop\Common\Agent\index.template.js" />
     <Content Include="Develop\Common\another.js" />
     <Content Include="Develop\Common\module1.js" />
+    <Content Include="Develop\Dashboard\homepage.template.js" />
     <Content Include="Develop\Document\common.js" />
     <Content Include="Develop\Document\Quotations\element.template.js" />
     <Content Include="Develop\Document\Quotations\index.template.js" />
@@ -393,6 +395,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Sales\Waybill\confirm.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Dashboard\HomePage.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

@@ -120,6 +120,16 @@ namespace A2v10.Xaml
 		White
 	}
 
+	public enum ShadowStyle
+	{
+		None,
+		Shadow1,
+		Shadow2,
+		Shadow3,
+		Shadow4,
+		Shadow5
+	}
+
 	public enum Icon
 	{
 		NoIcon = 0,

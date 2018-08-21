@@ -378,6 +378,7 @@ pre.a2-code {
 @import "Pager.less";
 @import "DropDown.less";
 @import "Popover.less";
+@import "Card.less";
 @import "Grid.less";
 @import "Layout.less";
 
@@ -505,6 +506,7 @@ h5, .h5 {
 .a2-graphics {
 	display: block;
 	width: 100%;
+	line-height:0;
 }
 
 .a2-changelog {
@@ -521,6 +523,13 @@ h5, .h5 {
 		font-weight: bold;
 		font-family: inherit;
 	}
+}
+
+.tooltip {
+	position:absolute;
+	padding:6px;
+	background-color:white;
+	border:1px solid #ccc;
 }
 
 @import "AppPages.less";
