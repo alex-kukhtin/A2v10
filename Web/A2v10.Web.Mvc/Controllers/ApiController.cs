@@ -19,6 +19,8 @@ using A2v10.Infrastructure;
 using System.Web;
 using System.Net.Http;
 using System.Net;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -69,12 +71,18 @@ namespace A2v10.Web.Mvc.Controllers
 				_logger.LogApi($"get: {pathInfo}");
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
+
+				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
+
 				switch (ac.type)
 				{
 					case CommandType.file:
 						if (ac.file == null)
 							throw new RequestModelException($"'file' is required for '{ac.command}' command");
 						GetFile(ac);
+						break;
+					case CommandType.clr:
+						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper));
 						break;
 					default:
 						throw new NotImplementedException();
@@ -86,6 +94,30 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = "text/plain";
 				Response.Output.Write(ex.Message);
 			}
+		}
+
+		ExpandoObject GetDataToInvokeGet(String wrapper)
+		{
+			var dataToInvoke = new ExpandoObject();
+			Int64? userId = UserId;
+			if (userId != null)
+				dataToInvoke.Set("UserId", userId.Value);
+			Int32? tenantId = TenantId;
+			if (tenantId != null)
+				dataToInvoke.Set("TenantId", tenantId.Value);
+			var qs = Request.QueryString;
+			if (qs.HasKeys())
+			{
+				foreach (var k in qs.AllKeys)
+					dataToInvoke.Set(k, qs[k]);
+			}
+			if (!String.IsNullOrEmpty(wrapper))
+			{
+				ExpandoObject wrap = new ExpandoObject();
+				wrap.Set(wrapper, dataToInvoke);
+				dataToInvoke = wrap;
+			}
+			return dataToInvoke;
 		}
 
 		void GetFile(RequestCommand cmd)
@@ -203,6 +235,14 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			if (result is String)
 				writer.Write(result.ToString());
+			else if (result is XDocument xDoc)
+			{
+				Response.ContentType = "text/xml";
+				using (var xmlWriter = XmlWriter.Create(writer))
+				{
+					xDoc.WriteTo(xmlWriter);
+				}
+			}
 			else
 				writer.Write(JsonConvert.SerializeObject(result, BaseController.StandardSerializerSettings));
 		}
