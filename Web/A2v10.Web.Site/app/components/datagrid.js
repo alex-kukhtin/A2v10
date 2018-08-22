@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
+// 20180822-7281
 // components/datagrid.js*/
 
 (function () {
@@ -86,9 +86,11 @@
 
 	/* @click.prevent disables checkboxes & other controls in cells 
 	<td class="group-marker" v-if="group"></td>
+
+	@mousedown.prevent???? зачем то было???
 	 */
 	const dataGridRowTemplate = `
-<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr" @mousedown.prevent="mouseDown(row)">
+<tr @click="rowSelect(row)" :class="rowClass()" v-on:dblclick.prevent="doDblClick" ref="tr" @mousedown="mouseDown(row)">
 	<td v-if="isMarkCell" class="marker">
 		<div :class="markClass"></div>
 	</td>

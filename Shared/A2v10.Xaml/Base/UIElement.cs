@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
 		public String CssClass { get; set; }
+		public Boolean? UserSelect { get; set; }
 
 
 		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
@@ -33,6 +34,7 @@ namespace A2v10.Xaml
 			}
 			tag.AddCssClassBoolNo(Bold, "bold");
 			tag.AddCssClassBoolNo(Italic, "italic");
+			tag.AddCssClassBoolNo(UserSelect, "user-select");
 			tag.AddCssClass(CssClass);
 		}
 	}

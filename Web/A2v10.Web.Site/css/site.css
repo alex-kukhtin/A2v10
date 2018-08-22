@@ -680,6 +680,9 @@ td.valign-bottom {
 .user-select {
   user-select: text;
 }
+.no-user-select {
+  user-select: none;
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;

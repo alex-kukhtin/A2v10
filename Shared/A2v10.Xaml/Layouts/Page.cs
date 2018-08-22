@@ -89,6 +89,7 @@ namespace A2v10.Xaml
 			if (Background != BackgroundStyle.None)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			tag.AddCssClass(CssClass);
+			tag.AddCssClassBoolNo(UserSelect, "user-select");
 		}
 
 		void RenderTitle(RenderContext context)
