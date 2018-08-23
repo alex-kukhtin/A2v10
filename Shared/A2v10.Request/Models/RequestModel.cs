@@ -347,7 +347,8 @@ namespace A2v10.Request
 	public enum RequestReportType
 	{
 		stimulsoft,
-		xml
+		xml,
+		json
 	}
 
 	public class RequestReport : RequestBase

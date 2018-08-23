@@ -111,6 +111,25 @@ namespace A2v10.Interop
 
 		public void ProcessArray(XmlWriter writer, XmlSchemaElement elem, Object model, Int32 level)
 		{
+			Boolean WriteArrayItem(String key, IDictionary<String, Object> dict)
+			{
+				Boolean written = false;
+				foreach (var av in dict)
+				{
+					if ((key + av.Key == elem.Name) && av.Value != null)
+					{
+						var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
+						if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
+							WriteNil(writer);
+						else
+							writer.WriteString(typedVal);
+						written = true;
+						break;
+					}
+				}
+				return written;
+			}
+
 			if (model == null)
 				return;
 			var d = model as IDictionary<String, Object>;
@@ -125,9 +144,13 @@ namespace A2v10.Interop
 						{
 							writer.WriteStartElement(elem.Name);
 							writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
-							Boolean writen = false;
+							Boolean written = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
+							/*
 							foreach (var av in arr[i] as IDictionary<String, Object>)
 							{
+								Boolean wasWritten = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
+								if (wasWritten)
+									written = true;
 								if ((kp.Key + av.Key == elem.Name) && av.Value != null)
 								{
 									var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
@@ -139,7 +162,19 @@ namespace A2v10.Interop
 									break;
 								}
 							}
-							if (!writen)
+							*/
+							if (!written)
+								writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+							writer.WriteEndElement();
+						}
+						break;
+					case IList<ExpandoObject> arrExp:
+						for (var i = 0; i < arrExp.Count; i++)
+						{
+							writer.WriteStartElement(elem.Name);
+							writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
+							Boolean written = WriteArrayItem(kp.Key, arrExp[i] as IDictionary<String, Object>);
+							if (!written)
 								writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
 							writer.WriteEndElement();
 						}
@@ -292,6 +327,10 @@ namespace A2v10.Interop
 				case "Decimal2Column":
 					var dVal2 = Convert.ToDecimal(val);
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2); ;
+				case "DGdecimal2_P":
+				case "Decimal2Column_P":
+					var dVal2p = Convert.ToDecimal(val);
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2p);
 				case "DGdecimal3":
 				case "Decimal3Column":
 					var dVal3 = Convert.ToDecimal(val);
@@ -300,6 +339,7 @@ namespace A2v10.Interop
 					var dVal0 = Convert.ToDecimal(val);
 					return String.Format(CultureInfo.InvariantCulture, "{0:0}", dVal0); ;
 				case "DGchk":
+				case "ChkColumn":
 					var bVal = Convert.ToBoolean(val);
 					return bVal ? "1" : null;
 			}
