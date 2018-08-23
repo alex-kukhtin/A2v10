@@ -1014,7 +1014,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180823-7285
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1043,9 +1043,9 @@ app.modules['std:http'] = function () {
 						resolve(xhr.response);
 						return;
 					}
-					let ct = xhr.getResponseHeader('content-type');
+					let ct = xhr.getResponseHeader('content-type') || '';
 					let xhrResult = xhr.responseText;
-					if (ct.indexOf('application/json') !== -1)
+					if (ct && ct.indexOf('application/json') !== -1)
 						xhrResult = JSON.parse(xhr.responseText);
 					resolve(xhrResult);
 				}
@@ -1422,7 +1422,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180823-7285
 // services/datamodel.js
 
 (function () {
@@ -1665,8 +1665,15 @@ app.modules['std:validators'] = function () {
 				if (x[0] === '$' || x[0] === '_')
 					continue;
 				let sx = this[x];
-				if (utils.isObject(sx) && '$valid' in sx) {
-					let sx = this[x];
+				if (utils.isArray(sx)) {
+					for (let i = 0; i < sx.length; i++) {
+						let ax = sx[i];
+						if (utils.isObject(ax) && '$valid' in ax) {
+							if (!ax.$valid)
+								return false;
+						}
+					}
+				} else if (utils.isObject(sx) && '$valid' in sx) {
 					if (!sx.$valid)
 						return false;
 				}

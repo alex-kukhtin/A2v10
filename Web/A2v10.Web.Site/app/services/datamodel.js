@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180823-7285
 // services/datamodel.js
 
 (function () {
@@ -243,8 +243,15 @@
 				if (x[0] === '$' || x[0] === '_')
 					continue;
 				let sx = this[x];
-				if (utils.isObject(sx) && '$valid' in sx) {
-					let sx = this[x];
+				if (utils.isArray(sx)) {
+					for (let i = 0; i < sx.length; i++) {
+						let ax = sx[i];
+						if (utils.isObject(ax) && '$valid' in ax) {
+							if (!ax.$valid)
+								return false;
+						}
+					}
+				} else if (utils.isObject(sx) && '$valid' in sx) {
 					if (!sx.$valid)
 						return false;
 				}

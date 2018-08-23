@@ -35,6 +35,8 @@
 				</div>
 			</div>
 			<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit" v-text="source.buttonText" />
+			<include v-if="source.externalFragment" :src="source.externalFragment"/>
+			
 		</template>
 		<template v-else>
 			<div class="thanks" v-html="source.thanks" />
@@ -59,7 +61,7 @@
 		},
 		computed: {
 			noValue() { return !this.value; },
-			closeText() { return locale.$Close;}
+			closeText() { return locale.$Close; }
 		},
 		methods: {
 			text(key) {

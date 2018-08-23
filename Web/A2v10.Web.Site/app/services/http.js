@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180823-7285
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -29,9 +29,9 @@ app.modules['std:http'] = function () {
 						resolve(xhr.response);
 						return;
 					}
-					let ct = xhr.getResponseHeader('content-type');
+					let ct = xhr.getResponseHeader('content-type') || '';
 					let xhrResult = xhr.responseText;
-					if (ct.indexOf('application/json') !== -1)
+					if (ct && ct.indexOf('application/json') !== -1)
 						xhrResult = JSON.parse(xhr.responseText);
 					resolve(xhrResult);
 				}

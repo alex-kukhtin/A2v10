@@ -125,6 +125,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				LoadFile(pathInfo.Substring(5));
 			}
+			else if (pathInfo.StartsWith("fragment/"))
+			{
+				LoadFragment(pathInfo.Substring(9));
+			}
 			else if (pathInfo.StartsWith("_static_image/"))
 			{
 				StaticImage(pathInfo.Substring(14).Replace('-', '.'));
@@ -282,6 +286,30 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!System.IO.File.Exists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
+				using (var stream = System.IO.File.OpenRead(fullPath))
+				{
+					stream.CopyTo(Response.OutputStream);
+				}
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteHtmlException(ex, Response.Output);
+			}
+		}
+
+		void LoadFragment(String path)
+		{
+			// HTTP GET
+			try
+			{
+				Int32 ix = path.LastIndexOf('-');
+				if (ix != -1)
+					path = path.Substring(0, ix) + "." + path.Substring(ix + 1);
+				path += $".{_baseController.CurrentLang}.html";
+				String fullPath = _baseController.Host.MakeFullPath(false, "_fragments/" + path, "");
+				if (!System.IO.File.Exists(fullPath))
+					throw new FileNotFoundException($"File not found '{path}'");
+				Response.ContentType = "text/html";
 				using (var stream = System.IO.File.OpenRead(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);
