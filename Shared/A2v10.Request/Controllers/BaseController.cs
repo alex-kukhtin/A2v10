@@ -445,7 +445,7 @@ const vm = new DataModelController({
 					throw new FileNotFoundException(filePath);
 				String moduleText = File.ReadAllText(filePath);
 				sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
-					.AppendLine(_localizer.Localize(null, moduleText))
+					.AppendLine(_localizer.Localize(null, moduleText, replaceNewLine:false))
 					.AppendLine(tmlFooter)
 					.AppendLine();
 				_modulesWritten.Add(moduleName);
