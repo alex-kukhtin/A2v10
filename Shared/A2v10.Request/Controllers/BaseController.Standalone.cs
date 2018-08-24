@@ -37,7 +37,7 @@ namespace A2v10.Request
 				String json = null;
 				using (var tr = new StreamReader(request.InputStream))
 					json = tr.ReadToEnd();
-				await ReloadData(0, 0, json, response.Output);
+				await ReloadData(null, json, response.Output);
 			}
 			catch (Exception ex)
 			{
@@ -56,7 +56,7 @@ namespace A2v10.Request
 				using (var tr = new StreamReader(request.InputStream))
 					json = tr.ReadToEnd();
 				response.ContentType = "application/json";
-				await SaveData(0, 0, json, response.Output);
+				await SaveData(null, json, response.Output);
 			}
 			catch (Exception ex) {
 				WriteExceptionStatus(ex, response);

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using System.Configuration;
 
 namespace A2v10.Web.Identity
 {
@@ -419,26 +420,55 @@ namespace A2v10.Web.Identity
 		}
 		#endregion
 
+
+		async Task AddAppClaims(AppUser user, List<Claim> list, String claims)
+		{
+			foreach (var s in claims.Split(','))
+			{
+				var claim = s.Trim().ToLowerInvariant();
+				switch (claim)
+				{
+					case "groups":
+						await AddGroupsToClaims(user, list);
+						break;
+				}
+			}
+		}
+
+		async Task AddGroupsToClaims(AppUser user, List<Claim> claims)
+		{
+			var groups = await _dbContext.LoadListAsync<AppRole>(DataSource, $"[{DbSchema}].[GetUserGroups]", new { UserId = user.Id });
+			var glist = groups.Where(role => role.Key != null && role.Key != "Users").Select(role => role.Key.ToLowerInvariant());
+			String gstr = String.Join(",", glist);
+			claims.Add(new Claim("groups", gstr));
+		}
+
 		#region IUserClaimStore 
-		public Task<IList<Claim>> GetClaimsAsync(AppUser user)
+		public async Task<IList<Claim>> GetClaimsAsync(AppUser user)
 		{
 			//TODO:
 			/* добавляем все элементы, которые могут быть нужны БЕЗ загрузки объекта 
              * доступ через 
              * var user = HttpContext.Current.User.Identity as ClaimsIdentity;
              */
-			IList<Claim> list = new List<Claim>
+			List<Claim> list = new List<Claim>
 			{
 				new Claim("PersonName", user.PersonName ?? String.Empty),
 				new Claim("TenantId", user.Tenant.ToString())
 			};
 			if (user.IsAdmin)
 				list.Add(new Claim("Admin", "Admin"));
+
 			/*
 			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
 			list.Add(new Claim("AppKey", user.ComputedAppKey));
 			*/
-			return Task.FromResult(list);
+
+			// there is not http context!
+			var claims = ConfigurationManager.AppSettings["useClaims"];
+			if (!String.IsNullOrEmpty(claims))
+				await AddAppClaims(user, list, claims);
+			return list;
 		}
 
 		public Task AddClaimAsync(AppUser user, Claim claim)
@@ -454,20 +484,27 @@ namespace A2v10.Web.Identity
 
 		#region IUserRoleStore
 
+		IList<String> _userRoles = null;
+
 		public Task AddToRoleAsync(AppUser user, String roleName)
 		{
+			_userRoles = null;
 			throw new NotImplementedException();
 		}
 
 		public Task RemoveFromRoleAsync(AppUser user, String roleName)
 		{
+			_userRoles = null;
 			throw new NotImplementedException();
 		}
 
 		public async Task<IList<String>> GetRolesAsync(AppUser user)
 		{
+			if (_userRoles != null)
+				return _userRoles;
 			var list = await _dbContext.LoadListAsync<AppRole>(DataSource, $"[{DbSchema}].[GetUserGroups]", new { UserId = user.Id });
-			return list.Select<AppRole, String>(x => x.Name).ToList();
+			_userRoles =  list.Select<AppRole, String>(x => x.Name).ToList();
+			return _userRoles;
 		}
 
 		public async Task<Boolean> IsInRoleAsync(AppUser user, String roleName)

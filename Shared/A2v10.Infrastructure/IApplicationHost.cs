@@ -17,6 +17,7 @@ namespace A2v10.Infrastructure
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsMultiTenant { get; }
 		Boolean IsRegistrationEnabled { get; }
+		String UseClaims { get; }
 		Int32? TenantId { get; set; }
 		String CatalogDataSource { get; }
 

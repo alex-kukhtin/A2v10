@@ -20,34 +20,34 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		public async Task Data(String command, Int32 tenantId, Int64 userId, String json, HttpResponseBase response)
+		public async Task Data(String command, Action<ExpandoObject> setParams /*Int32 tenantId, Int64 userId*/, String json, HttpResponseBase response)
 		{
 			switch (command.ToLowerInvariant())
 			{
 				case "save":
-					await SaveData(tenantId, userId, json, response.Output);
+					await SaveData(setParams, json, response.Output);
 					break;
 				case "reload":
-					await ReloadData(tenantId, userId, json, response.Output);
+					await ReloadData(setParams, json, response.Output);
 					break;
 				case "dbremove":
-					await DbRemove(tenantId, userId, json, response.Output);
+					await DbRemove(setParams, json, response.Output);
 					break;
 				case "expand":
-					await ExpandData(tenantId, userId, json, response.Output);
+					await ExpandData(setParams, json, response.Output);
 					break;
 				case "loadlazy":
-					await LoadLazyData(tenantId, userId, json, response.Output);
+					await LoadLazyData(setParams, json, response.Output);
 					break;
 				case "invoke":
-					await InvokeData(tenantId, userId, json, response);
+					await InvokeData(setParams, json, response);
 					break;
 				default:
 					throw new RequestModelException($"Invalid data action {command}");
 			}
 		}
 
-		async Task SaveData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task SaveData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToSave.Get<String>("baseUrl");
@@ -55,9 +55,7 @@ namespace A2v10.Request
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
 			var prms = new ExpandoObject();
-			prms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				prms.Set("TenantId", tenantId);
+			setParams?.Invoke(prms);
 			prms.Append(rw.parameters);
 			IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 			IModelHandler handler = rw.GetHookHandler(_host);
@@ -66,7 +64,7 @@ namespace A2v10.Request
 			WriteDataModel(model, writer);
 		}
 
-		async Task InvokeData(Int32 tenantId, Int64 userId, String json, HttpResponseBase response)
+		async Task InvokeData(Action<ExpandoObject> setParams, String json, HttpResponseBase response)
 		{
 			ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToInvoke.Get<String>("baseUrl");
@@ -74,9 +72,7 @@ namespace A2v10.Request
 			ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
 			if (dataToExec == null)
 				dataToExec = new ExpandoObject();
-			dataToExec.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				dataToExec.Set("TenantId", tenantId);
+			setParams?.Invoke(dataToExec);
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
 			dataToExec.Append(cmd.parameters);
@@ -204,7 +200,7 @@ namespace A2v10.Request
 			writer.Write(JsonConvert.SerializeObject(data, StandardSerializerSettings));
 		}
 
-		async Task ReloadData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task ReloadData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToSave.Get<String>("baseUrl");
@@ -227,9 +223,7 @@ namespace A2v10.Request
 			String loadProc = rw.LoadProcedure;
 			if (loadProc == null)
 				throw new RequestModelException("The data model is empty");
-			loadPrms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				loadPrms.Set("TenantId", tenantId);
+			setParams?.Invoke(loadPrms);
 			loadPrms.Set("Id", rw.Id);
 			loadPrms.Append(rw.parameters);
 			ExpandoObject prms2 = loadPrms;
@@ -237,9 +231,7 @@ namespace A2v10.Request
 			{
 				// for indirect action - @UserId and @Id only
 				prms2 = new ExpandoObject();
-				prms2.Set("UserId", userId);
-				if (_host.IsMultiTenant)
-					prms2.Set("TenantId", tenantId);
+				setParams?.Invoke(prms2);
 				prms2.Set("Id", rw.Id);
 			}
 			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
@@ -247,7 +239,7 @@ namespace A2v10.Request
 			WriteDataModel(model, writer);
 		}
 
-		async Task DbRemove(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task DbRemove(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");
@@ -261,9 +253,7 @@ namespace A2v10.Request
 			if (deleteProc == null)
 				throw new RequestModelException("The data model is empty");
 			ExpandoObject execPrms = new ExpandoObject();
-			execPrms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				execPrms.Set("TenantId", tenantId);
+			setParams?.Invoke(execPrms);
 			execPrms.Set("Id", id);
 			execPrms.Append(action.parameters);
 			await _dbContext.LoadModelAsync(action.CurrentSource, deleteProc, execPrms);
@@ -312,7 +302,7 @@ namespace A2v10.Request
 			}
 		}
 
-		async Task ExpandData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task ExpandData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");
@@ -326,16 +316,14 @@ namespace A2v10.Request
 				throw new RequestModelException("The data model is empty");
 			ExpandoObject execPrms = new ExpandoObject();
 			AddParamsFromUrl(execPrms, baseUrl);
-			execPrms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				execPrms.Set("TenantId", tenantId);
+			setParams?.Invoke(execPrms);
 			execPrms.Set("Id", id);
 			execPrms.Append(action.parameters);
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, expandProc, execPrms);
 			WriteDataModel(model, writer);
 		}
 
-		async Task LoadLazyData(Int32 tenantId, Int64 userId, String json, TextWriter writer)
+		async Task LoadLazyData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");
@@ -350,9 +338,7 @@ namespace A2v10.Request
 			String loadProc = action.LoadLazyProcedure(propName.ToPascalCase());
 			if (loadProc == null)
 				throw new RequestModelException("The data model is empty");
-			execPrms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				execPrms.Set("TenantId", tenantId);
+			setParams?.Invoke(execPrms);
 			execPrms.Set("Id", id);
 			//execPrms.Append(action.parameters); // not needed
 

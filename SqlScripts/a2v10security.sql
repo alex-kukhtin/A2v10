@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 20 aug 2018
-module version : 7277
+Last updated : 24 aug 2018
+module version : 7286
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7277);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7286);
 else
-	update a2sys.Versions set [Version] = 7277 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7286 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -436,7 +436,7 @@ create procedure a2security.GetUserGroups
 as
 begin
 	set nocount on;
-	select g.Id, g.[Name]
+	select g.Id, g.[Name], g.[Key]
 	from a2security.UserGroups ug
 		inner join a2security.Groups g on ug.GroupId = g.Id
 	where ug.UserId = @UserId and g.Void=0;

@@ -30,14 +30,12 @@ namespace A2v10.Request
 			writer.Write(sb.ToString());
 		}
 
-		public async Task ShellScript(String dataSource, Int32 tenantId, Int64 userId, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
+		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
 		{
 			String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
 			ExpandoObject loadPrms = new ExpandoObject();
-			loadPrms.Set("UserId", userId);
-			if (_host.IsMultiTenant)
-				loadPrms.Set("TenantId", tenantId);
+			setParams?.Invoke(loadPrms);
 
 			String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);

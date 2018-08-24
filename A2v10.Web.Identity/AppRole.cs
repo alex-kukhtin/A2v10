@@ -11,6 +11,7 @@ namespace A2v10.Web.Identity
 		#region IRole<Int64>
 		public Int64 Id { get; set; }
 		public String Name { get; set; }
+		public String Key { get; set; }
 		#endregion
 	}
 }

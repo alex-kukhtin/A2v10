@@ -30,15 +30,13 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public async Task<AttachmentInfo> Attachment(Int32 tenantId, String pathInfo, Int64 userId)
+		public async Task<AttachmentInfo> Attachment(String pathInfo, Action<ExpandoObject> setParams)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			// [{source}].[{schema}].[{base}.{key}.Load]
 			String key = rm.ModelAction.ToPascalCase();
-			if (_host.IsMultiTenant)
-				prms.Set("TenantId", tenantId);
-			prms.Set("UserId", userId);
+			setParams?.Invoke(prms);
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Load]";

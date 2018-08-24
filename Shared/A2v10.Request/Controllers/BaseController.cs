@@ -202,7 +202,7 @@ namespace A2v10.Request
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
 			String filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
-			bool bRendered = false;
+			Boolean bRendered = false;
 			if (System.IO.File.Exists(filePath))
 			{
 				// render XAML
@@ -423,7 +423,7 @@ const vm = new DataModelController({
 				return;
 			if (_modulesWritten == null)
 				_modulesWritten = new HashSet<String>();
-			int iIndex = 0;
+			Int32 iIndex = 0;
 			while (true)
 			{
 				String moduleName = FindModuleNameFromString(clientScript, ref iIndex);
@@ -453,16 +453,16 @@ const vm = new DataModelController({
 			}
 		}
 
-		public static String FindModuleNameFromString(String text, ref int pos)
+		public static String FindModuleNameFromString(String text, ref Int32 pos)
 		{
 			String funcName = "require";
-			int rPos = text.IndexOf(funcName, pos);
+			Int32 rPos = text.IndexOf(funcName, pos);
 			if (rPos == -1)
 				return null; // не продолжаем, ничего не нашли
 			pos = rPos + funcName.Length;
 			// проверим, что мы не в комментарии
-			int oc = text.LastIndexOf("/*", rPos);
-			int cc = text.LastIndexOf("*/", rPos);
+			Int32 oc = text.LastIndexOf("/*", rPos);
+			Int32 cc = text.LastIndexOf("*/", rPos);
 			if (oc != -1)
 			{
 				// есть открывающий комментарий
@@ -475,7 +475,7 @@ const vm = new DataModelController({
 					return String.Empty; // закрывающий левее открывающего, мы внутри
 				}
 			}
-			int startLine = text.LastIndexOfAny(new Char[] { '\r', '\n' }, rPos);
+			Int32 startLine = text.LastIndexOfAny(new Char[] { '\r', '\n' }, rPos);
 			oc = text.LastIndexOf("//", rPos);
 			if ((oc != 1) && (oc > startLine))
 				return String.Empty; // есть однострочный и он после начала строки

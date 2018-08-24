@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using System;
 using System.Web;
 
 using A2v10.Data;
@@ -54,6 +55,8 @@ namespace A2v10.Web.Mvc.Start
 
 			ServiceLocator.GetCurrentLocator = () =>
 			{
+				if (HttpContext.Current == null)
+					throw new InvalidProgramException("There is no http context");
 				var locator = HttpContext.Current.Items["ServiceLocator"];
 				if (locator == null)
 					new ServiceLocator();

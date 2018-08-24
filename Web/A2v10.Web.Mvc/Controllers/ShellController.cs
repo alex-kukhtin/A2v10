@@ -170,9 +170,7 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = "text/javascript";
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-				loadPrms.Set("UserId", UserId);
-				if (_baseController.Host.IsMultiTenant)
-					loadPrms.Set("TenantId", TenantId);
+				SetSqlQueryParams(loadPrms);
 				await _baseController.RenderModel(pathInfo, loadPrms, Response.Output);
 			}
 			catch (Exception ex)
@@ -191,9 +189,7 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = "text/html";
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-				loadPrms.Set("UserId", UserId);
-				if (_baseController.Host.IsMultiTenant)
-					loadPrms.Set("TenantId", TenantId);
+				SetSqlQueryParams(loadPrms);
 				if (pathInfo.StartsWith("app/"))
 				{
 					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
@@ -230,7 +226,7 @@ namespace A2v10.Web.Mvc.Controllers
 				using (var tr = new StreamReader(Request.InputStream))
 				{
 					String json = tr.ReadToEnd();
-					await _baseController.Data(command, TenantId, UserId, json, Response);
+					await _baseController.Data(command, SetSqlQueryParams, json, Response);
 				}
 			}
 			catch (Exception ex)
@@ -255,6 +251,28 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		void SetSqlQueryParams(ExpandoObject prms)
+		{
+			prms.Set("UserId", UserId);
+			if (_baseController.Host.IsMultiTenant)
+				prms.Set("TenantId", TenantId);
+			SetClaimsToParams(prms);
+		}
+
+		void SetClaimsToParams(ExpandoObject prms)
+		{
+			if (_baseController.Host.AppKey.ToUpperInvariant() == "admin")
+				return; // no claims for admin application
+			String claims = _baseController.Host.UseClaims;
+			if (String.IsNullOrEmpty(claims))
+				return;
+			foreach (var s in claims.Split(','))
+			{
+				var strClaim = s.Trim().ToLowerInvariant();
+				prms.Set(strClaim.ToPascalCase(), User.Identity.GetUserClaim(strClaim));
+			}
+		}
+
 		async Task Export(String path)
 		{
 			// HTTP GET
@@ -263,9 +281,7 @@ namespace A2v10.Web.Mvc.Controllers
 				ExpandoObject prms = new ExpandoObject();
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-				loadPrms.Set("UserId", UserId);
-				if (_baseController.Host.IsMultiTenant)
-					loadPrms.Set("TenantId", TenantId);
+				SetSqlQueryParams(loadPrms);
 				await _baseController.Export(path, TenantId, UserId, loadPrms, Response);
 			}
 			catch (Exception ex)
@@ -343,7 +359,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var files = Request.Files;
-				await _baseController.SaveUploads(TenantId, url, files, UserId, Response.Output);
+				await _baseController.SaveUploads(url, files, SetSqlQueryParams, Response.Output);
 			}
 			catch (Exception ex)
 			{
@@ -355,7 +371,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				AttachmentInfo info = await _baseController.Attachment(TenantId, url, UserId);
+				AttachmentInfo info = await _baseController.Attachment(url, SetSqlQueryParams);
 				if (info == null)
 					return;
 				Response.ContentType = info.Mime;
@@ -427,7 +443,7 @@ namespace A2v10.Web.Mvc.Controllers
 				Boolean isUserAdmin = User.Identity.IsUserAdmin();
 				if (admin && !isUserAdmin)
 					throw new AccessViolationException("The current user is not an administrator");
-				await _baseController.ShellScript(CatalogDataSource, TenantId, UserId, User.Identity.IsUserAdmin(), admin, Response.Output);
+				await _baseController.ShellScript(CatalogDataSource, SetSqlQueryParams, User.Identity.IsUserAdmin(), admin, Response.Output);
 			}
 			catch (Exception ex)
 			{

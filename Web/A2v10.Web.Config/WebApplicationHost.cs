@@ -99,6 +99,8 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
+
 		Int32 _tenantId;
 
 		public Int32? TenantId

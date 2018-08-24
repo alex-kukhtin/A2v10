@@ -160,8 +160,6 @@ namespace A2v10RuntimeNet
 				url = url.Substring(6);
 				controller.Admin = true;
 			}
-			Int64 userId = 100; // TODO: userId
-			Int32 tenantId = 0; // TODO: tenantId
 			try
 			{
 				using (var writer = new StringWriter())
@@ -175,11 +173,11 @@ namespace A2v10RuntimeNet
 					else if (url.StartsWith("_data/"))
 					{
 						var command = url.Substring(6);
-						controller.Data(command, tenantId, userId, postData, null /**/).Wait();
+						controller.Data(command, null/*tenantId, userId*/, postData, null /**/).Wait();
 					}
 					else if (url.StartsWith("_image/"))
 					{
-						controller.Attachment(tenantId, "/" + url, userId).Wait(); // with _image prefix
+						controller.Attachment("/" + url, null /*setParams*/).Wait(); // with _image prefix
 					}
 					else
 					{

@@ -27,12 +27,21 @@ namespace A2v10.Web.Identity
 
 		public static Int32 GetUserTenantId(this IIdentity identity)
 		{
+			if (identity == null)
+				return 0;
 			if (!(identity is ClaimsIdentity user))
 				return 0;
 			var value = user.FindFirstValue("TenantId");
 			if (Int32.TryParse(value, out Int32 tenantId))
 				return tenantId;
 			return 0;
+		}
+
+		public static String GetUserClaim(this IIdentity identity, String claim)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			return user.FindFirstValue(claim);
 		}
 	}
 }

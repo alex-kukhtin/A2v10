@@ -66,6 +66,8 @@ namespace A2v10.Tests.Config
 		public Int32? TenantId { get; set; }
 		public String CatalogDataSource => null;
 
+		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
+
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
 			throw new NotImplementedException();

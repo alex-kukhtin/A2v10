@@ -21,6 +21,7 @@ using System.Net.Http;
 using System.Net;
 using System.Xml.Linq;
 using System.Xml;
+using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -45,22 +46,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		public Int32? TenantId
-		{
-			get
-			{
-				IIdentity identity = User.Identity;
-				if (identity == null)
-					return null;
-				if (!(identity is ClaimsIdentity user))
-					return null;
-				var value = user.FindFirstValue("TenantId");
-				if (Int32.TryParse(value, out Int32 tenantId))
-					return tenantId;
-				return null;
-			}
-		}
-
+		public Int32 TenantId => User.Identity.GetUserTenantId();
 
 		[HttpGet]
 		[ActionName("Default")]
@@ -96,15 +82,20 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		void SetIdentityParams(ExpandoObject prms)
+		{
+			Int64? userId = UserId;
+			if (userId != null)
+				prms.Set("UserId", userId.Value);
+			Int32 tenantId = TenantId;
+			if (tenantId != 0)
+				prms.Set("TenantId", tenantId);
+		}
+
 		ExpandoObject GetDataToInvokeGet(String wrapper)
 		{
 			var dataToInvoke = new ExpandoObject();
-			Int64? userId = UserId;
-			if (userId != null)
-				dataToInvoke.Set("UserId", userId.Value);
-			Int32? tenantId = TenantId;
-			if (tenantId != null)
-				dataToInvoke.Set("TenantId", tenantId.Value);
+			SetIdentityParams(dataToInvoke);
 			var qs = Request.QueryString;
 			if (qs.HasKeys())
 			{
@@ -192,12 +183,7 @@ namespace A2v10.Web.Mvc.Controllers
 					wrap.Set(ac.wrapper, dataToInvoke);
 					dataToInvoke = wrap;
 				}
-				Int64? userId = UserId;
-				if (userId != null)
-					dataToInvoke.Set("UserId", userId.Value);
-				Int32? tenantId = TenantId;
-				if (tenantId != null)
-					dataToInvoke.Set("TenantId", tenantId.Value);
+				SetIdentityParams(dataToInvoke);
 				await ExecuteCommand(ac, dataToInvoke);
 			}
 			catch (Exception ex)

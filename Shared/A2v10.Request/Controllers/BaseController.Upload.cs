@@ -15,7 +15,7 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		public async Task SaveUploads(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, TextWriter writer)
+		public async Task SaveUploads(String pathInfo, HttpFileCollectionBase files, Action<ExpandoObject> setParams, TextWriter writer)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
@@ -24,10 +24,8 @@ namespace A2v10.Request
 			if (ru.parse == RequestUploadParseType.excel)
 			{
 				ExpandoObject savePrms = new ExpandoObject();
-				savePrms.Set("UserId", userId);
+				setParams?.Invoke(savePrms);
 				savePrms.Set("Id", ru.Id);
-				if (Host.IsMultiTenant)
-					savePrms.Set("TenantId", tenantId);
 				var dm =  await SaveExcel(ru, files[0].InputStream, savePrms);
 				WriteDataModel(dm, writer);
 			}
