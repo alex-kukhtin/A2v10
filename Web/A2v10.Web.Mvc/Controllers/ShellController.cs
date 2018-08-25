@@ -86,7 +86,10 @@ namespace A2v10.Web.Mvc.Controllers
 
 			if (pathInfo.StartsWith("shell"))
 			{
-				await Shell(pathInfo, pathInfo.Contains("admin"));
+				Boolean adminShell = pathInfo.Contains("admin");
+				if (adminShell)
+					_baseController.Admin = true;
+				await Shell(pathInfo, adminShell);
 			}
 			else if (pathInfo.StartsWith("_page/"))
 			{
@@ -261,7 +264,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		void SetClaimsToParams(ExpandoObject prms)
 		{
-			if (_baseController.Host.AppKey.ToUpperInvariant() == "admin")
+			if (_baseController.Admin)
 				return; // no claims for admin application
 			String claims = _baseController.Host.UseClaims;
 			if (String.IsNullOrEmpty(claims))
