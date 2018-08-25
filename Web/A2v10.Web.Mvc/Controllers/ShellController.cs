@@ -192,13 +192,14 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = "text/html";
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-				SetSqlQueryParams(loadPrms);
 				if (pathInfo.StartsWith("app/"))
 				{
+					SetUserTenantToParams(loadPrms); // without claims
 					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
 				}
 				else
 				{
+					SetSqlQueryParams(loadPrms);
 					await _baseController.RenderElementKind(kind, pathInfo, loadPrms, Response.Output);
 				}
 			}
@@ -256,10 +257,15 @@ namespace A2v10.Web.Mvc.Controllers
 
 		void SetSqlQueryParams(ExpandoObject prms)
 		{
+			SetUserTenantToParams(prms);
+			SetClaimsToParams(prms);
+		}
+
+		void SetUserTenantToParams(ExpandoObject prms)
+		{
 			prms.Set("UserId", UserId);
 			if (_baseController.Host.IsMultiTenant)
 				prms.Set("TenantId", TenantId);
-			SetClaimsToParams(prms);
 		}
 
 		void SetClaimsToParams(ExpandoObject prms)
