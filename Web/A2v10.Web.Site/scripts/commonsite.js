@@ -1422,6 +1422,467 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20180813-7271
+// components/collectionview.js
+
+/*
+TODO:
+11. GroupBy
+*/
+
+(function () {
+
+
+	const log = require('std:log');
+	const utils = require('std:utils');
+	const period = require('std:period');
+
+	const DEFAULT_PAGE_SIZE = 20;
+
+	function getModelInfoProp(src, propName) {
+		if (!src) return undefined;
+		let mi = src.$ModelInfo;
+		if (!mi) return undefined;
+		return mi[propName];
+	}
+
+	function setModelInfoProp(src, propName, value) {
+		if (!src) return;
+		let mi = src.$ModelInfo;
+		if (!mi) return;
+		mi[propName] = value;
+	}
+
+	function makeNewQueryFunc(that) {
+		let nq = { dir: that.dir, order: that.order, offset: that.offset };
+		for (let x in that.filter) {
+			let fVal = that.filter[x];
+			if (period.isPeriod(fVal)) {
+				nq[x] = fVal.format('DateUrl');
+			}
+			else if (utils.isDate(fVal)) {
+				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (utils.isObjectExact(fVal)) {
+				if (!('Id' in fVal)) {
+					console.error('The object in the Filter does not have Id property');
+				}
+				nq[x] = fVal.Id ? fVal.Id : undefined;
+			}
+			else if (fVal) {
+				nq[x] = fVal;
+			}
+			else {
+				nq[x] = undefined;
+			}
+		}
+		return nq;
+	}
+
+	function modelInfoToFilter(q, filter) {
+		if (!q) return;
+		for (let x in filter) {
+			if (x in q) {
+				let iv = filter[x];
+				if (period.isPeriod(iv)) {
+					filter[x] = iv.fromUrl(q[x]);
+				}
+				else if (utils.isDate(iv)) {
+					filter[x] = utils.date.tryParse(q[x]);
+				}
+				else if (utils.isObjectExact(iv)) 
+					iv.Id = q[x];
+				else {
+					filter[x] = q[x];
+				}
+			}
+		}
+	}
+
+	// client collection
+
+	Vue.component('collection-view', {
+		template: `
+<div>
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialPageSize: Number,
+			initialFilter: Object,
+			initialSort: Object,
+			runAt: String,
+			filterDelegate: Function
+		},
+		data() {
+			let lq = Object.assign({}, {
+				offset: 0,
+				dir: 'asc',
+				order: ''
+			}, this.initialFilter);
+
+			return {
+				filter: this.initialFilter,
+				filteredCount: 0,
+				localQuery: lq
+			};
+		},
+		computed: {
+			pageSize() {
+				if (this.initialPageSize > 0)
+					return this.initialPageSize;
+				return -1; // invisible pager
+			},
+			dir() {
+				return this.localQuery.dir;
+			},
+			offset() {
+				return this.localQuery.offset;
+			},
+			order() {
+				return this.localQuery.order;
+			},
+			pagedSource() {
+				let s = performance.now();
+				let arr = [].concat(this.ItemsSource);
+
+				if (this.filterDelegate) {
+					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
+				}
+				// sort
+				if (this.order && this.dir) {
+					let p = this.order;
+					let d = this.dir === 'asc';
+					arr.sort((a, b) => {
+						if (a[p] === b[p])
+							return 0;
+						else if (a[p] < b[p])
+							return d ? -1 : 1;
+						return d ? 1 : -1;
+					});
+				}
+				// HACK!
+				this.filteredCount = arr.length;
+				// pager
+				if (this.pageSize > 0)
+					arr = arr.slice(this.offset, this.offset + this.pageSize);
+				arr.$origin = this.ItemsSource;
+				if (arr.indexOf(arr.$origin.$selected) === -1) {
+					// not found in target array
+					arr.$origin.$clearSelected();
+				}
+				log.time('get paged source:', s);
+				return arr;
+			},
+			sourceCount() {
+				return this.ItemsSource.length;
+			},
+			thisPager() {
+				return this;
+			},
+			pages() {
+				let cnt = this.filteredCount;
+				return Math.ceil(cnt / this.pageSize);
+			}
+		},
+		methods: {
+			$setOffset(offset) {
+				this.localQuery.offset = offset;
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				let nq = this.makeNewQuery();
+				if (nq.order === order)
+					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				else {
+					nq.order = order;
+					nq.dir = 'asc';
+				}
+				if (!nq.order)
+					nq.dir = null;
+				// local
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
+			},
+			makeNewQuery() {
+				return makeNewQueryFunc(this);
+			},
+			copyQueryToLocal(q) {
+				for (let x in q) {
+					let fVal = q[x];
+					if (x === 'offset')
+						this.localQuery[x] = q[x];
+					else
+						this.localQuery[x] = fVal ? fVal : undefined;
+				}
+			}
+		},
+		created() {
+			if (this.initialSort) {
+				this.localQuery.order = this.initialSort.order;
+				this.localQuery.dir = this.initialSort.dir;
+			}
+			this.$on('sort', this.doSort);
+		}
+	});
+
+
+	// server collection view
+	Vue.component('collection-view-server', {
+		template: `
+<div>
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialFilter: Object
+		},
+
+		data() {
+			return {
+				filter: this.initialFilter,
+				lockChange: true
+			};
+		},
+
+		watch: {
+			jsonFilter: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			}
+		},
+
+		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
+			thisPager() {
+				return this;
+			},
+			pageSize() {
+				return getModelInfoProp(this.ItemsSource, 'PageSize');
+			},
+			dir() {
+				return  getModelInfoProp(this.ItemsSource, 'SortDir');
+			},
+			order() {
+				return getModelInfoProp(this.ItemsSource, 'SortOrder');
+			},
+			offset() {
+				return getModelInfoProp(this.ItemsSource, 'Offset');
+			},
+			pages() {
+				cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
+			},
+			sourceCount() {
+				if (!this.ItemsSource) return 0;
+				return this.ItemsSource.$RowCount || 0;
+			}
+		},
+		methods: {
+			$setOffset(offset) {
+				if (this.offset === offset)
+					return;
+				setModelInfoProp(this.ItemsSource, 'Offset', offset);
+				this.reload();
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				if (order === this.order) {
+					let dir = this.dir === 'asc' ? 'desc' : 'asc';
+					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
+				} else {
+					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
+					setModelInfoProp(this.ItemsSource, 'SortDir', 'asc');
+				}
+				this.reload();
+			},
+			filterChanged() {
+				if (this.lockChange) return;
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) {
+					mi = { Filter: this.filter };
+					this.ItemsSource.$ModelInfo = mi;
+				}
+				else {
+					this.ItemsSource.$ModelInfo.Filter = this.filter;
+				}
+				if ('Offset' in mi)
+					setModelInfoProp(this.ItemsSource, 'Offset', 0);
+				this.reload();
+			},
+			reload() {
+				this.$root.$emit('cwChange', this.ItemsSource);
+			},
+			updateFilter() {
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) return;
+				let fi = mi.Filter;
+				if (!fi) return;
+				this.lockChange = true;
+				for (var prop in this.filter) {
+					if (prop in fi)
+						this.filter[prop] = fi[prop];
+				}
+				this.$nextTick(() => {
+					this.lockChange = false;
+				});
+			}
+		},
+		created() {
+			// get filter values from modelInfo
+			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
+			if (mi) {
+				modelInfoToFilter(mi.Filter, this.filter);
+			}
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
+			// from datagrid, etc
+			this.$on('sort', this.doSort);
+		},
+		updated() {
+			this.updateFilter();
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180426-7166
+/*statdalony/pager.js*/
+
+Vue.component('a2-pager', {
+	props: {
+		source: Object,
+		noElements: String,
+		elements: String
+	},
+	computed: {
+		pages() {
+			return Math.ceil(this.count / this.source.pageSize);
+		},
+		currentPage() {
+			return Math.ceil(this.offset / this.source.pageSize) + 1;
+		},
+		title() {
+			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+			if (!this.count)
+				return this.noElements;
+			return `${this.elements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> з <b>${this.count}</b>`;
+		},
+		offset() {
+			return +this.source.offset;
+		},
+		count() {
+			return +this.source.sourceCount;
+		}
+	},
+	methods: {
+		setOffset(offset) {
+			offset = +offset;
+			if (this.offset === offset)
+				return;
+			this.source.$setOffset(offset);
+		},
+		isActive(page) {
+			return page === this.currentPage;
+		},
+		click(arg, $ev) {
+			$ev.preventDefault();
+			switch (arg) {
+				case 'prev':
+					if (this.offset === 0) return;
+					this.setOffset(this.offset - this.source.pageSize);
+					break;
+				case 'next':
+					if (this.currentPage >= this.pages) return;
+					this.setOffset(this.offset + this.source.pageSize);
+					break;
+			}
+		},
+		goto(page, $ev) {
+			$ev.preventDefault();
+			let offset = (page - 1) * this.source.pageSize;
+			this.setOffset(offset);
+		}
+	},
+	render(h, ctx) {
+		if (this.source.pageSize === -1) return; // invisible
+		let contProps = {
+			class: 'pagination pagination-sm'
+		};
+		let children = [];
+		const dotsClass = { 'class': 'pagination-dots' };
+		const renderBtn = (page) => {
+			return h('li', { class: { active: this.isActive(page) }},
+				[h('a', {
+					domProps: { innerText: page },
+					on: { click: ($ev) => this.goto(page, $ev) },
+					attrs: { href:"#" }
+				})]
+			);
+		};
+		// prev
+		children.push(h('li', { class: { disabled: this.offset === 0 } },
+			[h('a', {
+				on: { click: ($ev) => this.click('prev', $ev) },
+				attrs: { 'aria-label': 'Previous', href: '#' },
+				domProps: { innerHTML: '&laquo;' }
+			})]
+		));
+		// first
+		if (this.pages > 0)
+			children.push(renderBtn(1));
+		if (this.pages > 1)
+			children.push(renderBtn(2));
+		// middle
+		let ms = Math.max(this.currentPage - 2, 3);
+		let me = Math.min(ms + 5, this.pages - 1);
+		if (me - ms < 5)
+			ms = Math.max(me - 5, 3);
+		if (ms > 3)
+			children.push(h('li', dotsClass, [h('span', null, '...')]));
+		for (let mi = ms; mi < me; ++mi) {
+			children.push(renderBtn(mi));
+		}
+		if (me < this.pages - 1)
+			children.push(h('li', dotsClass, [h('span', null, '...')]));
+		// last
+		if (this.pages > 3)
+			children.push(renderBtn(this.pages - 1));
+		if (this.pages > 2)
+			children.push(renderBtn(this.pages));
+		// next
+		children.push(h('li', {
+			class: { disabled: this.currentPage >= this.pages }
+		}, [h('a', {
+			on: { click: ($ev) => this.click('next', $ev) },
+			attrs: { 'aria-label': 'Previous', href: '#' },
+			domProps: { innerHTML: '&raquo;' }
+		})]
+		));
+
+		/*
+		children.push(h('span', { class: 'a2-pager-divider' }));
+		children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
+		*/
+		return h('ul', contProps, children);
+	}
+});
+
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 // 20180823-7285
 // services/datamodel.js
 
@@ -2572,7 +3033,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180827-7290
 // controllers/standalone.js
 
 (function () {
@@ -2606,7 +3067,8 @@ app.modules['std:validators'] = function () {
 				__init__: true,
 				__baseUrl__: '',
 				__baseQuery__: {},
-				__requestsCount__: 0
+				__requestsCount__: 0,
+				$$currentTab: '' /*for bootstrap tab*/
 			};
 		},
 
@@ -2657,6 +3119,11 @@ app.modules['std:validators'] = function () {
 				return root._canExec_(cmd, arg, opts);
 			},
 
+			$format(value, dataType, hideZeros) {
+				if (!dataType) return value;
+				return utils.format(value, dataType, hideZeros);
+			},
+
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -2699,7 +3166,7 @@ app.modules['std:validators'] = function () {
 			$invoke(cmd, data, base) {
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/_data/invoke';
+				let url = root + '/data/invoke';
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
@@ -2775,7 +3242,7 @@ app.modules['std:validators'] = function () {
 					return self.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
-				let url = root + '/_data/reload';
+				let url = root + '/data/reload';
 				let dat = self.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
@@ -2837,7 +3304,7 @@ app.modules['std:validators'] = function () {
 				}
 
 				function dbRemove() {
-					let postUrl = root + '/_data/dbRemove';
+					let postUrl = root + '/data/dbRemove';
 					let jsonObj = { baseUrl: self.$baseUrl, id: id };
 					if (lazy) {
 						jsonObj.prop = lastProperty(elem.$parent._path_);
@@ -2862,7 +3329,7 @@ app.modules['std:validators'] = function () {
 			$loadLazy(elem, propName) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/loadlazy',
+					url = root + '/data/loadlazy',
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
@@ -2924,6 +3391,9 @@ app.modules['std:validators'] = function () {
 				if (!root._modelLoad_) return;
 				root._modelLoad_();
 				root._seal_(root);
+			},
+			_cwChange(args) {
+				this.$reload(args);
 			}
 		},
 		created() {
@@ -2936,6 +3406,8 @@ app.modules['std:validators'] = function () {
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
 			log.time('create time:', __createStartTime, false);
+
+			this.$on('cwChange', this._cwChange);
 		},
 		beforeDestroy() {
 		},

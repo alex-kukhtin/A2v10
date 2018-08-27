@@ -14,12 +14,15 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		public async Task StandaloneLoadModel(HttpResponseBase response, String pathInfo)
+		public async Task StandaloneLoadModel(HttpResponseBase response, String pathInfo, Int64 userId)
 		{
 			try
 			{
 				response.ContentType = "text/javascript";
-				await RenderModel(pathInfo, null, response.Output);
+				var exp = new ExpandoObject();
+				if (userId != 0)
+					exp.Set("UserId", userId);
+				await RenderModel(pathInfo, exp, response.Output);
 			}
 			catch (Exception ex)
 			{
@@ -38,6 +41,24 @@ namespace A2v10.Request
 				using (var tr = new StreamReader(request.InputStream))
 					json = tr.ReadToEnd();
 				await ReloadData(null, json, response.Output);
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex, response);
+			}
+		}
+
+		public async Task StandaloneLoadLazyData(HttpRequestBase request, HttpResponseBase response, Int64 userId)
+		{
+			if (request.HttpMethod != "POST")
+				return;
+			response.ContentType = "application/json";
+			try
+			{
+				String json = null;
+				using (var tr = new StreamReader(request.InputStream))
+					json = tr.ReadToEnd();
+				await LoadLazyData((prms)=> prms.Set("UserId", userId), json, response.Output);
 			}
 			catch (Exception ex)
 			{

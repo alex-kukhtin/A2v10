@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20180827-7290
 // controllers/standalone.js
 
 (function () {
@@ -34,7 +34,8 @@
 				__init__: true,
 				__baseUrl__: '',
 				__baseQuery__: {},
-				__requestsCount__: 0
+				__requestsCount__: 0,
+				$$currentTab: '' /*for bootstrap tab*/
 			};
 		},
 
@@ -85,6 +86,11 @@
 				return root._canExec_(cmd, arg, opts);
 			},
 
+			$format(value, dataType, hideZeros) {
+				if (!dataType) return value;
+				return utils.format(value, dataType, hideZeros);
+			},
+
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -127,7 +133,7 @@
 			$invoke(cmd, data, base) {
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/_data/invoke';
+				let url = root + '/data/invoke';
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
@@ -203,7 +209,7 @@
 					return self.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
-				let url = root + '/_data/reload';
+				let url = root + '/data/reload';
 				let dat = self.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
@@ -265,7 +271,7 @@
 				}
 
 				function dbRemove() {
-					let postUrl = root + '/_data/dbRemove';
+					let postUrl = root + '/data/dbRemove';
 					let jsonObj = { baseUrl: self.$baseUrl, id: id };
 					if (lazy) {
 						jsonObj.prop = lastProperty(elem.$parent._path_);
@@ -290,7 +296,7 @@
 			$loadLazy(elem, propName) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/loadlazy',
+					url = root + '/data/loadlazy',
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
@@ -352,6 +358,9 @@
 				if (!root._modelLoad_) return;
 				root._modelLoad_();
 				root._seal_(root);
+			},
+			_cwChange(args) {
+				this.$reload(args);
 			}
 		},
 		created() {
@@ -364,6 +373,8 @@
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
 			log.time('create time:', __createStartTime, false);
+
+			this.$on('cwChange', this._cwChange);
 		},
 		beforeDestroy() {
 		},

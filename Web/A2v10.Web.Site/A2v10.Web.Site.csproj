@@ -53,6 +53,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\calendar.js" />
+    <Content Include="app\standalone\collectionview.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
     <Content Include="app\components\datepicker.js" />
@@ -85,7 +86,7 @@
     <Content Include="app\components\textbox.js" />
     <Content Include="app\components\treeview.js" />
     <Content Include="app\components\validator.js" />
-    <Content Include="app\controllers\standalone.js" />
+    <Content Include="app\standalone\controller.js" />
     <Content Include="app\directives\autosize.js" />
     <Content Include="app\directives\disable.js" />
     <Content Include="app\directives\dropdown.js" />
@@ -111,6 +112,7 @@
     <Content Include="app\services\url.js" />
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
+    <Content Include="app\standalone\pager.js" />
     <Content Include="css\bowtie.css" />
     <Content Include="css\fonts\bowtie.svg" />
     <Content Include="Content\jasmine\jasmine.css" />

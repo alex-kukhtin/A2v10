@@ -112,9 +112,12 @@
 				"app/services/http.js",
 				"app/services/log.js",
 				"app/services/validators.js",
+				"app/standalone/collectionview.js",
+				"app/standalone/pager.js",
 				"app/services/datamodel.js",
 				"app/services/dataservice.js",
-				"app/controllers/standalone.js"
+				"app/standalone/filters.js",
+				"app/standalone/controller.js"
 			],
 		"minify": { "enabled": false }
 	}
