@@ -63,7 +63,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 
-				StringBuilder layout = new StringBuilder(_localizer.Localize(null, ResourceHelper.InitLayoutHtml));
+				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", ResourceHelper.InitLayoutHtml)));
 				layout.Replace("$(Lang)", CurrentLang);
 				layout.Replace("$(Build)", _host.AppBuild);
 				StringBuilder html = new StringBuilder(rsrcHtml);
@@ -96,6 +96,14 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		String GetRedirectedPage(String pageName, String fallback)
+		{
+			String path = _host.MakeFullPath(false, "_platform/", $"{pageName}.{CurrentLang}.html");
+			if (System.IO.File.Exists(path))
+				return System.IO.File.ReadAllText(path);
+			return fallback;
+		}
+
 		// GET: /Account/Login
 		[AllowAnonymous]
 		[HttpGet]
@@ -104,7 +112,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			Session.Abandon();
 			ClearAllCookies();
-			SendPage(ResourceHelper.LoginHtml, ResourceHelper.LoginScript);
+			String page = GetRedirectedPage("login", ResourceHelper.LoginHtml);
+			SendPage(page, ResourceHelper.LoginScript);
 		}
 
 		// POST: /Account/Login
@@ -229,7 +238,8 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write("Registration is disabled in this site");
 				return;
 			}
-			SendPage(ResourceHelper.RegisterTenantHtml, ResourceHelper.RegisterTenantScript);
+			String page = GetRedirectedPage("register", ResourceHelper.RegisterTenantHtml);
+			SendPage(page, ResourceHelper.RegisterTenantScript);
 		}
 
 		static ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
