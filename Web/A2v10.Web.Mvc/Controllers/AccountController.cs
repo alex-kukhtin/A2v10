@@ -99,9 +99,20 @@ namespace A2v10.Web.Mvc.Controllers
 		String GetRedirectedPage(String pageName, String fallback)
 		{
 			String path = _host.MakeFullPath(false, "_platform/", $"{pageName}.{CurrentLang}.html");
-			if (System.IO.File.Exists(path))
-				return System.IO.File.ReadAllText(path);
-			return fallback;
+			if (!System.IO.File.Exists(path))
+				return fallback;
+			String text = System.IO.File.ReadAllText(path) + "\r\n";
+			Int32 ix = text.IndexOf("@PartialFile:");
+			if (ix == -1)
+				return text;
+			StringBuilder sb = new StringBuilder();
+			Int32 spIndex = text.IndexOfAny(" \n\r<>".ToCharArray(), ix);
+			sb.Append(text.Substring(0, ix));
+			String partialFileName = text.Substring(ix + 13, spIndex - ix - 13);
+			String partialPath = _host.MakeFullPath(false, "_platform/", $"{partialFileName}.{CurrentLang}.html");
+			sb.Append(System.IO.File.ReadAllText(partialPath));
+			sb.Append(text.Substring(spIndex));
+			return sb.ToString();
 		}
 
 		// GET: /Account/Login
