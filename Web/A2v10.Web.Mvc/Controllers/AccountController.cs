@@ -71,6 +71,10 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(Title)", appTitle.AppTitle);
 				layout.Replace("$(Description)", _host.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
+				String host = null;
+				if (Request.UrlReferrer != null)
+					host = Request.UrlReferrer.Host;
+				layout.Replace("@(SiteMeta)", GetSiteMetaTags(host));
 
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
@@ -95,6 +99,19 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				Response.Write(ex.Message);
 			}
+		}
+
+		String GetSiteMetaTags(String host)
+		{
+			if (host == null)
+				host = "localhost";
+			Int32 dotPos = host.IndexOfAny(".:".ToCharArray());
+			if (dotPos != -1)
+				host = host.Substring(0, dotPos);
+			String path = _host.MakeFullPath(false, "_meta/", $"{host}.meta");
+			if (System.IO.File.Exists(path))
+				return System.IO.File.ReadAllText(path);
+			return String.Empty;
 		}
 
 		String GetRedirectedPage(String pageName, String fallback)
