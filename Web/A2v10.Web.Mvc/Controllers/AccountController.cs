@@ -422,7 +422,7 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}
-			catch (Exception ex)
+			catch (Exception /*ex*/)
 			{
 				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}

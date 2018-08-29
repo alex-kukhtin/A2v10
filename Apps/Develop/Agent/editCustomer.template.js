@@ -72,7 +72,7 @@ function getStreets() {
 	let addr = root.Agent.Address;
 	let cntry = root.Countries.find(c => c.Code === addr.Country);
 	if (!cntry) return null;
-	let city = cntry.Cities.find(c => c.Name == addr.City);
+	let city = cntry.Cities.find(c => c.Name === addr.City);
 	if (!city) return null;
 	city.Streets.$load(); // ensure lazy
 	return city.Streets;

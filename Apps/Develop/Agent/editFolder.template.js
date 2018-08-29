@@ -8,7 +8,7 @@ const template = {
         "Model.load": modelLoad
     },
     validators: {
-        "Agent.Name": 'Введите наименование',
+        "Agent.Name": 'Введите наименование'
     }
 };
 

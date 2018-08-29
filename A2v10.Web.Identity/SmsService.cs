@@ -28,7 +28,6 @@ namespace A2v10.Web.Identity
 
 		public async Task SendSmsAsync(String phone, String message, String extId)
 		{
-			//throw new NotImplementedException("SendMessageAsync is not implemented");
 			if (!(await _smsApi.SendSmsAsync(phone, message, extId) is Ip2SmsResponse result))
 				throw new InvalidProgramException("SendSms error");
 

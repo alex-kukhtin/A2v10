@@ -48,7 +48,16 @@ namespace A2v10.Web.Mvc.Hooks
 				Body = "Your security code is: " + code,
 				UserId = UserId
 			};
-			await _userManager.SmsService.SendAsync(message);
+			try
+			{
+				await _userManager.SmsService.SendAsync(message);
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				return $"error:{ex.Message}";
+			}
 			return "success";
 		}
 	}
