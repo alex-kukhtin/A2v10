@@ -18,6 +18,7 @@ namespace A2v10.Infrastructure
 		Boolean IsMultiTenant { get; }
 		Boolean IsRegistrationEnabled { get; }
 		String UseClaims { get; }
+		String SiteReferrer { get; }
 		Int32? TenantId { get; set; }
 		String CatalogDataSource { get; }
 
