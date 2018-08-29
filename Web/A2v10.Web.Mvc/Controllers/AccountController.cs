@@ -108,7 +108,7 @@ namespace A2v10.Web.Mvc.Controllers
 			Int32 dotPos = host.IndexOfAny(".:".ToCharArray());
 			if (dotPos != -1)
 				host = host.Substring(0, dotPos);
-			String path = _host.MakeFullPath(false, "_meta/", $"{host}.meta");
+			String path = _host.MakeFullPath(false, "_meta/", $"{host}.head");
 			if (System.IO.File.Exists(path))
 				return System.IO.File.ReadAllText(path);
 			return String.Empty;
