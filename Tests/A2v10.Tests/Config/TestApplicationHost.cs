@@ -67,7 +67,6 @@ namespace A2v10.Tests.Config
 		public String CatalogDataSource => null;
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
-		public String SiteReferrer => null;
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{

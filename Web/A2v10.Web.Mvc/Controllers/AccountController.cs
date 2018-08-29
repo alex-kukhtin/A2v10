@@ -71,7 +71,7 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(Title)", appTitle.AppTitle);
 				layout.Replace("$(Description)", _host.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
-				layout.Replace("@(SiteMeta)", GetSiteMetaTags(_host.SiteReferrer));
+				layout.Replace("@(SiteMeta)", GetSiteMetaTags());
 
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
@@ -98,8 +98,9 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		String GetSiteMetaTags(String host)
+		String GetSiteMetaTags()
 		{
+			var host = Request.Headers["Host"];
 			if (host == null)
 				return String.Empty;
 			Int32 dotPos = host.IndexOfAny(".:".ToCharArray());

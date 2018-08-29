@@ -100,7 +100,6 @@ namespace A2v10.Web.Config
 		}
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
-		public String SiteReferrer => ConfigurationManager.AppSettings["siteReferrer"];
 
 		Int32 _tenantId;
 

@@ -66,7 +66,6 @@ namespace A2v10.Runtime
 		public Boolean IsMultiTenant => false;
 		public Boolean IsRegistrationEnabled => false;
 		public String UseClaims => null;
-		public String SiteReferrer => null;
 		public Int32? TenantId { get; set; }
 		public String CatalogDataSource => null;
 
