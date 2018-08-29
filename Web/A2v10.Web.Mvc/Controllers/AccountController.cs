@@ -55,7 +55,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_localizer = serviceLocator.GetService<ILocalizer>();
 		}
 
-		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null)
+		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null, String errorMessage = null)
 		{
 			try
 			{
@@ -70,6 +70,7 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(Partial)", html.ToString());
 				layout.Replace("$(Title)", appTitle.AppTitle);
 				layout.Replace("$(Description)", _host.AppDescription);
+				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
@@ -400,23 +401,30 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				if (userId == null || code == null)
 				{
-					SendPage(ResourceHelper.ErrorHtml, ResourceHelper.SimpleScript);
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 					return;
 				}
+				var user = await UserManager.FindByIdAsync(userId.Value);
+				if (user.EmailConfirmed)
+				{
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript, null, "@[EMailAlreadyConfirmed]");
+					return;
+				}
+
 				var result = await UserManager.ConfirmEmailAsync(userId.Value, code);
 				if (result.Succeeded)
 				{
-					var user = await UserManager.FindByIdAsync(userId.Value);
+					user = await UserManager.FindByIdAsync(userId.Value);
 					await UserManager.UpdateUser(user);
 					//await UserManager.SendEmailAsync(user.Id, subject, body);
-					SendPage(ResourceHelper.ConfirmEMailHtml, ResourceHelper.SimpleScript);
+					SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
 					return;
 				}
-				SendPage(ResourceHelper.ErrorHtml, ResourceHelper.SimpleScript);
+				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}
-			catch (Exception /*ex*/)
+			catch (Exception ex)
 			{
-				SendPage(ResourceHelper.ErrorHtml, ResourceHelper.SimpleScript);
+				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}
 		}
 
@@ -425,7 +433,8 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public void ForgotPassword()
 		{
-			SendPage(ResourceHelper.ForgotPasswordHtml, ResourceHelper.ForgotPasswordScript);
+			String page = GetRedirectedPage("forgotpassword", ResourceHelper.ForgotPasswordHtml);
+			SendPage(page, ResourceHelper.ForgotPasswordScript);
 		}
 
 		//
@@ -483,7 +492,8 @@ namespace A2v10.Web.Mvc.Controllers
 			if (code == null)
 				return;
 			String serverInfo = $"{{token: '{code}'}}";
-			SendPage(ResourceHelper.ResetPasswordHtml, ResourceHelper.ResetPasswordScript, serverInfo);
+			String page = GetRedirectedPage("resetpassword", ResourceHelper.ResetPasswordHtml);
+			SendPage(page, ResourceHelper.ResetPasswordScript, serverInfo);
 		}
 
 		//

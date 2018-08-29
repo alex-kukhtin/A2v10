@@ -22,6 +22,7 @@
 @ResetPasswordBody=Для відновлення паролю перейдіть <a href="{0}">до посилання</a>
 @ConfirmEMail=Підтвердження е-mail
 @ConfirmEMailBody=Для підтвердження е-mail перейдіть <a href="{0}">до посилання</a>
+@EMailAlreadyConfirmed=Ваш e-mail вже підтверджено.
 @SetNewPassword=Встановлення паролю
 ;
 @Home=Головна

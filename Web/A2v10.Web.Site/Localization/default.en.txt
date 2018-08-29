@@ -27,7 +27,8 @@
 @ResetPassword=Password recovery
 @ResetPasswordMailText=To reset your password, click <a href="{0}">here</a> please
 @ConfirmEMail=Confirm е-mail
-@ConfirmEMailMailText=T confirm your е-mail, click <a href="{0}">here</a> please
+@ConfirmEMailMailText=To confirm your е-mail, click <a href="{0}">here</a> please
+@EMailAlreadyConfirmed=Your e-mail already confirmed.
 @SetNewPassword=Set new password
 @OldPassword=Old password
 @NewPassword=New password
