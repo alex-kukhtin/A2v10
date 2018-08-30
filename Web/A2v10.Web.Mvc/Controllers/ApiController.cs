@@ -58,6 +58,9 @@ namespace A2v10.Web.Mvc.Controllers
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 
+				if (ac.allowOrigin == null)
+					throw new RequestModelException($"'allowOrigin' is required for '{ac.command}' command");
+
 				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
 
 				switch (ac.type)

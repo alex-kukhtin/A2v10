@@ -103,9 +103,10 @@ namespace A2v10.Web.Mvc.Controllers
 			var host = Request.Headers["Host"];
 			if (host == null)
 				return String.Empty;
-			Int32 dotPos = host.IndexOfAny(".:".ToCharArray());
+			Int32 dotPos = host.IndexOfAny(":".ToCharArray());
 			if (dotPos != -1)
 				host = host.Substring(0, dotPos);
+			host = host.Replace('.', '_').ToLowerInvariant();
 			String path = _host.MakeFullPath(false, "_meta/", $"{host}.head");
 			if (System.IO.File.Exists(path))
 				return System.IO.File.ReadAllText(path);
