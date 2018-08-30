@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180823-7285
+// 20180830-7299
 // services/datamodel.js
 
 (function () {
@@ -974,6 +974,8 @@
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
+		if (isNoDirty(this.$root))
+			return;
 		// TODO: template.options.skipDirty
 		this.$dirty = val;
 	}
@@ -1003,6 +1005,12 @@
 		let bo = opts && opts.bindOnce;
 		if (!bo) return false;
 		return bo.indexOf(prop) !== -1;
+	}
+
+	function isNoDirty(root) {
+		let t = root.$template;
+		let opts = t && t.options;
+		return opts && opts.noDirty;
 	}
 
 	function merge(src, afterSave) {

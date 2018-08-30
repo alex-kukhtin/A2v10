@@ -1587,7 +1587,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180823-7285
+// 20180830-7299
 // services/datamodel.js
 
 (function () {
@@ -2561,6 +2561,8 @@ app.modules['std:validators'] = function () {
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
+		if (isNoDirty(this.$root))
+			return;
 		// TODO: template.options.skipDirty
 		this.$dirty = val;
 	}
@@ -2590,6 +2592,12 @@ app.modules['std:validators'] = function () {
 		let bo = opts && opts.bindOnce;
 		if (!bo) return false;
 		return bo.indexOf(prop) !== -1;
+	}
+
+	function isNoDirty(root) {
+		let t = root.$template;
+		let opts = t && t.options;
+		return opts && opts.noDirty;
 	}
 
 	function merge(src, afterSave) {

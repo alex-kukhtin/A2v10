@@ -24,6 +24,7 @@
 @ConfirmEMailBody=Для підтвердження е-mail перейдіть <a href="{0}">до посилання</a>
 @EMailAlreadyConfirmed=Ваш e-mail вже підтверджено.
 @SetNewPassword=Встановлення паролю
+@InviteEMail=Ласкаво просимо до Bookkeeper!
 ;
 @Home=Головна
 @Documents=Документи

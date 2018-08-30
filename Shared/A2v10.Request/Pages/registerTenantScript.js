@@ -111,6 +111,8 @@
 							that.alreadyTaken();
 						else if (result === 'DDOS')
 							that.ddos();
+						else if (result === 'InvalidEmail')
+							that.invalidEmail();
 						else
 							alert(result);
 					})
@@ -133,6 +135,9 @@
 			},
 			ddos() {
 				this.serverError = this.locale.$TryLater;
+			},
+			invalidEmail() {
+				this.serverError = this.locale.$InvalidEMailError;
 			},
 			failure(msg) {
 				this.password = '';

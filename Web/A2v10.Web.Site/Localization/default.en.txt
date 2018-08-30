@@ -33,6 +33,7 @@
 @OldPassword=Old password
 @NewPassword=New password
 @SetPassword=Set password
+@InviteEMail=Welcome!
 ;
 @Create=Create
 @CreateDocument=Create document

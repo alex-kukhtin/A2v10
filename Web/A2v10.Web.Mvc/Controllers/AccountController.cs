@@ -354,7 +354,10 @@ namespace A2v10.Web.Mvc.Controllers
 				model.Name = model.Name.ToLower();
 
 				if (!IsEmailValid(model.Name) || !IsEmailValid(model.Email))
-					throw new InvalidDataException("Invalid email");
+				{
+					RemoveDDOSTime();
+					throw new InvalidDataException("InvalidEmail");
+				}
 
 				// create user with tenant
 				var user = new AppUser
@@ -432,7 +435,16 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					user = await UserManager.FindByIdAsync(userId.Value);
 					await UserManager.UpdateUser(user);
-					//await UserManager.SendEmailAsync(user.Id, subject, body);
+
+					String subject = _localizer.Localize(null, "@[InviteEMail]");
+					String body = GetEMailBody("invite", null);
+					if (!String.IsNullOrEmpty(body))
+					{
+						var inviteCallback = Url.Action("Default", "Shell", routeValues:null, protocol: Request.Url.Scheme);
+						body = body.Replace("{0}", inviteCallback);
+						await UserManager.SendEmailAsync(user.Id, subject, body);
+					}
+
 					SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
 					return;
 				}
@@ -712,6 +724,8 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				body = System.IO.File.ReadAllText(emailFile);
 			} else {
+				if (dictName == null)
+					return null;
 				body = _localizer.Localize(null, dictName);
 			}
 			if (body.IndexOf("{0}") == - 1)
