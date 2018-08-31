@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 24 aug 2018
-module version : 7286
+Last updated : 31 aug 2018
+module version : 7299
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7286);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7299);
 else
-	update a2sys.Versions set [Version] = 7286 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7299 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -50,7 +50,9 @@ begin
 		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
 		LastTransactionDate datetime null,
 		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate()),
-		TrialPeriodExpired datetime null
+		TrialPeriodExpired datetime null,
+		DataSize float null,
+		[State] nvarchar(128) null
 	);
 end
 go
@@ -71,6 +73,14 @@ if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2se
 begin
 	alter table a2security.Tenants add [LastTransactionDate] datetime null;
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'DataSize')
+	alter table a2security.Tenants add DataSize float null;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'State')
+	alter table a2security.Tenants add [State] nvarchar(128) null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Users')
@@ -102,7 +112,8 @@ begin
 		LastLoginDate datetime null,
 		LastLoginHost nvarchar(255) null,
 		Memo nvarchar(255) null,
-		RegisterHost nvarchar(255) null
+		RegisterHost nvarchar(255) null,
+		[Guid] uniqueidentifier null
 	);
 end
 go
@@ -123,6 +134,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'RegisterHost')
 begin
 	alter table a2security.Users add RegisterHost nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Guid')
+begin
+	alter table a2security.Users add [Guid] uniqueidentifier null
 end
 go
 ------------------------------------------------
