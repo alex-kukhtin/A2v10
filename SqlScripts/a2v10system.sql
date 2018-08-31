@@ -1,11 +1,11 @@
-﻿/* 20180113-7046 */
+﻿/* 20180831-7047 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 13 jan 2018
-module version : 7046
+Last updated : 31 aug 2018
+module version : 7047
 */
 ------------------------------------------------
 set noexec off;
@@ -39,9 +39,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7046);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7047);
 else
-	update a2sys.Versions set [Version] = 7046 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7047 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -50,8 +50,15 @@ begin
 	(
 		Name sysname not null constraint PK_SysParams primary key,
 		StringValue nvarchar(255) null,
-		IntValue int null
+		IntValue int null,
+		DateValue datetime null
 	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams' and COLUMN_NAME=N'DateValue')
+begin
+	alter table a2sys.SysParams add DateValue datetime null;
 end
 go
 ------------------------------------------------
