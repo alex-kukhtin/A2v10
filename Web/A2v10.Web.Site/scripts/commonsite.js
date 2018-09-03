@@ -1014,7 +1014,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180823-7285
+// 20180903-7300
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1069,8 +1069,8 @@ app.modules['std:http'] = function () {
 		});
 	}
 
-	function get(url) {
-		return doRequest('GET', url);
+	function get(url, raw) {
+		return doRequest('GET', url, null, raw);
 	}
 
 	function post(url, data, raw) {
