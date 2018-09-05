@@ -3,7 +3,7 @@
 Copyright © 2008-2018 Alex Kukhtin
 
 Last updated : 05 sep 2018
-module version : 7300
+module version : 7301
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7300);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7301);
 else
-	update a2sys.Versions set [Version] = 7300 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7301 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -375,6 +375,43 @@ begin
 	where PhoneNumber=@PhoneNumber;
 end
 go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserByLogin')
+	drop procedure a2security.FindUserByLogin
+go
+------------------------------------------------
+create procedure a2security.[FindUserByLogin]
+@LoginProvider nvarchar(255),
+@ProviderKey nvarchar(max)
+as
+begin
+	set nocount on;
+	declare @UserId bigint;
+	select @UserId = [User] from a2security.UserLogins where LoginProvider = @LoginProvider and ProviderKey = @ProviderKey;
+	select * from a2security.ViewUsers with(nolock)
+	where Id=@UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'AddUserLogin')
+	drop procedure a2security.[AddUserLogin]
+go
+------------------------------------------------
+create or alter procedure a2security.AddUserLogin
+@UserId bigint,
+@LoginProvider nvarchar(255),
+@ProviderKey nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	insert into a2security.UserLogins([User], [LoginProvider], [ProviderKey]) 
+		values (@UserId, @LoginProvider, @ProviderKey); 
+end
+go
+
+
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UpdateUserPassword')
 	drop procedure a2security.UpdateUserPassword

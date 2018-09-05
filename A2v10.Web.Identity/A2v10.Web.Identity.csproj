@@ -78,6 +78,7 @@
     <Compile Include="AppUserManager.cs" />
     <Compile Include="AppUserStore.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="Services\ExternalLoginManager.cs" />
     <Compile Include="IdentityController.cs" />
     <Compile Include="IdentityExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

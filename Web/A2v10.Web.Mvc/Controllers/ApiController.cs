@@ -22,6 +22,7 @@ using System.Net;
 using System.Xml.Linq;
 using System.Xml;
 using A2v10.Web.Identity;
+using System.Text;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -121,10 +122,10 @@ namespace A2v10.Web.Mvc.Controllers
 			if (!System.IO.File.Exists(htmlPath))
 				throw new FileNotFoundException($"File not found '{fullPath}'");
 			Response.ContentType = MimeMapping.GetMimeMapping(htmlPath);
-			using (var stream = System.IO.File.OpenRead(htmlPath))
-			{
-				stream.CopyTo(Response.OutputStream);
-			}
+			StringBuilder sb = new StringBuilder(System.IO.File.ReadAllText(htmlPath));
+			String serverUrl = Request.Url.GetLeftPart(UriPartial.Authority);
+			sb.Replace("$(ServerUrl)", serverUrl);
+			Response.Write(sb.ToString());
 		}
 
 		//runAllManagedModulesForAllRequests="true" is required!
