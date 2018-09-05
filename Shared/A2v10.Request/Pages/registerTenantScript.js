@@ -109,6 +109,8 @@
 							that.confirmSent();
 						else if (result === 'AlreadyTaken')
 							that.alreadyTaken();
+						else if (result === 'PhoneNumberAlreadyTaken')
+							that.phoneAlreadyTaken();
 						else if (result === 'DDOS')
 							that.ddos();
 						else if (result === 'InvalidEmail')
@@ -132,6 +134,9 @@
 			},
 			alreadyTaken() {
 				this.serverError = this.locale.$AlreadyTaken.replace('{0}', this.email);
+			},
+			phoneAlreadyTaken() {
+				this.serverError = this.locale.$PhoneNumberAlreadyTaken.replace('{0}', this.maskedPhone);
 			},
 			ddos() {
 				this.serverError = this.locale.$TryLater;

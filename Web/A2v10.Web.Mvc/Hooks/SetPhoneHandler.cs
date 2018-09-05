@@ -38,6 +38,12 @@ namespace A2v10.Web.Mvc.Hooks
 
 		public async Task<Object> InvokeAsync(Int64 UserId, String PhoneNumber)
 		{
+			var userByPhone = await _userManager.FindAsync(new UserLoginInfo("PhoneNumber", PhoneNumber));
+			if (userByPhone != null && userByPhone.Id != UserId)
+			{
+				return "phoneAlreadyTaken";
+			}
+
 			String code = await _userManager.GenerateChangePhoneNumberTokenAsync(UserId, PhoneNumber);
 			if (_userManager.SmsService == null)
 				throw new ArgumentNullException("UserManager.SmsService");

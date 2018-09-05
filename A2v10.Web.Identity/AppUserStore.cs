@@ -31,7 +31,6 @@ namespace A2v10.Web.Identity
 		class UserCache
 		{
 			Dictionary<String, AppUser> _mapNames = new Dictionary<String, AppUser>();
-			Dictionary<String, AppUser> _mapEmails = new Dictionary<String, AppUser>();
 			Dictionary<Int64, AppUser> _mapIds = new Dictionary<Int64, AppUser>();
 
 			public AppUser GetById(Int64 id)
@@ -49,8 +48,17 @@ namespace A2v10.Web.Identity
 
 			public AppUser GetByEmail(String email)
 			{
-				if (_mapEmails.TryGetValue(email, out AppUser user))
-					return user;
+				foreach (var u in _mapIds)
+					if (u.Value.Email == email)
+						return u.Value;
+				return null;
+			}
+
+			public AppUser GetByPhoneNumber(String phone)
+			{
+				foreach (var u in _mapIds)
+					if (u.Value.PhoneNumber == phone)
+						return u.Value;
 				return null;
 			}
 
@@ -71,10 +79,6 @@ namespace A2v10.Web.Identity
 				if (!_mapNames.ContainsKey(user.UserName))
 				{
 					_mapNames.Add(user.UserName, user);
-				}
-				if (!String.IsNullOrWhiteSpace(user.Email) && !_mapEmails.ContainsKey(user.Email))
-				{
-					_mapEmails.Add(user.Email, user);
 				}
 				else
 				{
@@ -245,6 +249,8 @@ namespace A2v10.Web.Identity
 
 		public Task<AppUser> FindAsync(UserLoginInfo login)
 		{
+			if (login.LoginProvider == "PhoneNumber")
+				return FindByPhoneNumberAsync(login.ProviderKey);
 			throw new NotImplementedException();
 		}
 		#endregion
@@ -370,6 +376,17 @@ namespace A2v10.Web.Identity
 		}
 
 		#endregion
+
+		public async Task<AppUser> FindByPhoneNumberAsync(String phone)
+		{
+			AppUser user = _cache.GetByPhoneNumber(phone);
+			if (user != null)
+				return user;
+			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByPhoneNumber]", new { PhoneNumber = phone });
+			CacheUser(user);
+			return user;
+		}
+
 
 		#region IUserPhoneNumberStore
 		public Task SetPhoneNumberAsync(AppUser user, String phoneNumber)

@@ -372,7 +372,17 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (String.IsNullOrEmpty(user.Email))
 					user.Email = model.Name;
+
+				var phoneUser = await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Phone));
+				if (phoneUser != null)
+				{
+					RemoveDDOSTime();
+					throw new InvalidDataException("PhoneNumberAlreadyTaken");
+				}
+
+
 				var result = await UserManager.CreateAsync(user, model.Password);
+
 				if (result.Succeeded)
 				{
 					// email confirmation

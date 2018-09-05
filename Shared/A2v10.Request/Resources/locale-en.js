@@ -54,6 +54,7 @@
 		$ErrorText: 'An error occurred while processing your request.',
 		$ConfirmEMailText: 'Email has been successfully confirmed.',
 		$AlreadyTaken: 'е-mail {0} is invalid or aleady taken',
+		$PhoneNumberAlreadyTaken: 'Phone number {0} is invalid or aleady taken',
 		$TryLater: 'Too many login attempts in a short time.\nTry to register in five minutes'
 	};
 

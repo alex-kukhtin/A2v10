@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 31 aug 2018
-module version : 7299
+Last updated : 05 sep 2018
+module version : 7300
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7299);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7300);
 else
-	update a2sys.Versions set [Version] = 7299 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7300 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -114,6 +114,19 @@ begin
 		Memo nvarchar(255) null,
 		RegisterHost nvarchar(255) null,
 		[Guid] uniqueidentifier null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserLogins')
+begin
+	create table a2security.UserLogins
+	(
+		[User] bigint not null 
+			constraint FK_UserLogins_User_Users foreign key references a2security.Users(Id),
+		[LoginProvider] nvarchar(255) not null,
+		[ProviderKey] nvarchar(max) not null,
+		constraint PK_UserLogins primary key([User], LoginProvider)
 	);
 end
 go
@@ -346,6 +359,20 @@ begin
 	set nocount on;
 	select * from a2security.ViewUsers with(nolock)
 	where Email=@Email;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserByPhoneNumber')
+	drop procedure a2security.FindUserByPhoneNumber
+go
+------------------------------------------------
+create procedure a2security.FindUserByPhoneNumber
+@PhoneNumber nvarchar(255)
+as
+begin
+	set nocount on;
+	select * from a2security.ViewUsers with(nolock)
+	where PhoneNumber=@PhoneNumber;
 end
 go
 ------------------------------------------------
