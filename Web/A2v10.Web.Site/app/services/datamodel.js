@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180830-7299
+// 20180907-7302
 // services/datamodel.js
 
 (function () {
@@ -941,7 +941,10 @@
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
-		return me._validateAll_(true);
+		var retArr = me._validateAll_(false);
+		me._validateAll_(true); // and validate async again
+		return retArr;
+
 	}
 
 	function validateAll(force) {
@@ -1062,7 +1065,7 @@
 		let newId = this.$id__;
 		let fireChange = false;
 		if (utils.isDefined(newId) && utils.isDefined(oldId))
-			fireChange =  newId !== oldId; // check id, no fire event
+			fireChange = newId !== oldId; // check id, no fire event
 		if (fireChange) {
 			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
@@ -1130,3 +1133,4 @@
 		enumData: enumData
 	};
 })();
+

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{92F77940-FFF7-4833-88E3-1FC3290803FB}</ProjectGuid>
+    <ProjectGuid>{7C10EE54-7B2C-4D76-B5DE-802F26BD53AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>A2v10.Web.Identity</RootNamespace>
@@ -89,15 +89,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shared\A2v10.Interop\A2v10.Interop.csproj">
+    <ProjectReference Include="..\..\Shared\A2v10.Interop\A2v10.Interop.csproj">
       <Project>{39661034-47aa-4bdf-9b19-c835b614b545}</Project>
       <Name>A2v10.Interop</Name>
     </ProjectReference>

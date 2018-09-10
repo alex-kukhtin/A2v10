@@ -1587,7 +1587,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180830-7299
+// 20180907-7302
 // services/datamodel.js
 
 (function () {
@@ -2528,7 +2528,10 @@ app.modules['std:validators'] = function () {
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
-		return me._validateAll_(true);
+		var retArr = me._validateAll_(false);
+		me._validateAll_(true); // and validate async again
+		return retArr;
+
 	}
 
 	function validateAll(force) {
@@ -2649,7 +2652,7 @@ app.modules['std:validators'] = function () {
 		let newId = this.$id__;
 		let fireChange = false;
 		if (utils.isDefined(newId) && utils.isDefined(oldId))
-			fireChange =  newId !== oldId; // check id, no fire event
+			fireChange = newId !== oldId; // check id, no fire event
 		if (fireChange) {
 			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
@@ -2717,6 +2720,8 @@ app.modules['std:validators'] = function () {
 		enumData: enumData
 	};
 })();
+
+
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 // 20180319-7135
@@ -8510,7 +8515,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180820-7277
+// 20180907-7302
 // controllers/base.js
 
 (function () {
@@ -8616,6 +8621,7 @@ Vue.directive('resize', {
 			},
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
+				if (this.$isLoading) return;
 				const root = this.$data;
 				root._exec_(cmd, arg, confirm, opts);
 				return;
@@ -8641,6 +8647,7 @@ Vue.directive('resize', {
 			},
 
 			$execSelected(cmd, arg, confirm) {
+				if (this.$isLoading) return;
 				let root = this.$data;
 				if (!utils.isArray(arg)) {
 					console.error('Invalid argument for $execSelected');
@@ -8652,6 +8659,7 @@ Vue.directive('resize', {
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
 			$canExecute(cmd, arg, opts) {
+				if (this.$isLoading) return false;
 				if (this.$isReadOnly(opts))
 					return false;
 				let root = this.$data;
@@ -8775,7 +8783,6 @@ Vue.directive('resize', {
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
-				//debugger;
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -8829,8 +8836,8 @@ Vue.directive('resize', {
 			},
 
 			$remove(item, confirm) {
-				if (this.$data.$readOnly)
-					return;
+				if (this.$data.$readOnly) return;
+				if (this.$isLoading) return;
 				if (!confirm)
 					item.$remove();
 				else
@@ -8893,6 +8900,7 @@ Vue.directive('resize', {
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
+				if (this.$isLoading) return;
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
@@ -8928,6 +8936,7 @@ Vue.directive('resize', {
 			},
 
 			$dbRemoveSelected(arr, confirm) {
+				if (this.$isLoading) return;
 				let sel = arr.$selected;
 				if (!sel)
 					return;
@@ -9077,6 +9086,7 @@ Vue.directive('resize', {
 			},
 
 			$export() {
+				if (this.$isLoading) return;
 				const self = this;
 				const root = window.$$rootUrl;
 				let url = self.$baseUrl;
@@ -9086,7 +9096,8 @@ Vue.directive('resize', {
 
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
-			
+				if (this.$isLoading) return;
+
 				let cmd = opts && opts.export ? 'export' : 'show';
 
 				const doReport = () => {
@@ -9232,7 +9243,7 @@ Vue.directive('resize', {
 			$getNegativeRedClass(value) {
 				if (utils.isNumber(value))
 					return value < 0 ? 'negative-red' : '';
-				return ''; 
+				return '';
 			},
 
 			$expand(elem, propName) {
@@ -9352,7 +9363,7 @@ Vue.directive('resize', {
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
 				root._seal_(root);
-			}, 
+			},
 			__notified(token) {
 				if (!token) return;
 				if (this.__currentToken__ !== token.token) return;
@@ -9409,6 +9420,7 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
+
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 /*20180804-7264*/

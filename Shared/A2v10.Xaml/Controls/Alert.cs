@@ -26,7 +26,10 @@ namespace A2v10.Xaml
 		{
 			var tag = new TagBuilder("div", "a2-alert", IsInGrid);
 			MergeAttributes(tag, context);
-			if (Style != AlertStyle.Default)
+			var bindStyle = GetBinding(nameof(Style));
+			if (bindStyle != null)
+				tag.MergeAttribute(":class", bindStyle.GetPath(context));
+			else if (Style != AlertStyle.Default)
 				tag.AddCssClass(Style.ToString().ToLowerInvariant());
 			tag.RenderStart(context);
 			RenderIcon(context, Icon);

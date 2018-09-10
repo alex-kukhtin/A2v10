@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180820-7277
+// 20180907-7302
 // controllers/base.js
 
 (function () {
@@ -106,6 +106,7 @@
 			},
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
+				if (this.$isLoading) return;
 				const root = this.$data;
 				root._exec_(cmd, arg, confirm, opts);
 				return;
@@ -131,6 +132,7 @@
 			},
 
 			$execSelected(cmd, arg, confirm) {
+				if (this.$isLoading) return;
 				let root = this.$data;
 				if (!utils.isArray(arg)) {
 					console.error('Invalid argument for $execSelected');
@@ -142,6 +144,7 @@
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
 			$canExecute(cmd, arg, opts) {
+				if (this.$isLoading) return false;
 				if (this.$isReadOnly(opts))
 					return false;
 				let root = this.$data;
@@ -265,7 +268,6 @@
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
-				//debugger;
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -319,8 +321,8 @@
 			},
 
 			$remove(item, confirm) {
-				if (this.$data.$readOnly)
-					return;
+				if (this.$data.$readOnly) return;
+				if (this.$isLoading) return;
 				if (!confirm)
 					item.$remove();
 				else
@@ -383,6 +385,7 @@
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
+				if (this.$isLoading) return;
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
@@ -418,6 +421,7 @@
 			},
 
 			$dbRemoveSelected(arr, confirm) {
+				if (this.$isLoading) return;
 				let sel = arr.$selected;
 				if (!sel)
 					return;
@@ -567,6 +571,7 @@
 			},
 
 			$export() {
+				if (this.$isLoading) return;
 				const self = this;
 				const root = window.$$rootUrl;
 				let url = self.$baseUrl;
@@ -576,7 +581,8 @@
 
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
-			
+				if (this.$isLoading) return;
+
 				let cmd = opts && opts.export ? 'export' : 'show';
 
 				const doReport = () => {
@@ -722,7 +728,7 @@
 			$getNegativeRedClass(value) {
 				if (utils.isNumber(value))
 					return value < 0 ? 'negative-red' : '';
-				return ''; 
+				return '';
 			},
 
 			$expand(elem, propName) {
@@ -842,7 +848,7 @@
 					caller = this.$caller.$data;
 				root._modelLoad_(caller);
 				root._seal_(root);
-			}, 
+			},
 			__notified(token) {
 				if (!token) return;
 				if (this.__currentToken__ !== token.token) return;

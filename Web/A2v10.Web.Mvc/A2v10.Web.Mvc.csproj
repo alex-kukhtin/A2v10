@@ -275,10 +275,6 @@
       <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
       <Name>A2v10.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\A2v10.Web.Identity\A2v10.Web.Identity.csproj">
-      <Project>{92F77940-FFF7-4833-88E3-1FC3290803FB}</Project>
-      <Name>A2v10.Web.Identity</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
@@ -314,6 +310,10 @@
     <ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj">
       <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
       <Name>A2v10.Web.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Web.Identity\A2v10.Web.Identity.csproj">
+      <Project>{7c10ee54-7b2c-4d76-b5de-802f26bd53ad}</Project>
+      <Name>A2v10.Web.Identity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
