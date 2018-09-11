@@ -78,3 +78,4 @@
 @Error.DuplicateCode=Элемент с таким кодом уже существует
 @Error.Exception=Что-то пошло не так, как ожидалось :-(
 @Error.FileFormatException=Некорректный формат файла
+@Error.DataReadOnly=База данных только для чтения

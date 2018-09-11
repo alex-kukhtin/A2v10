@@ -45,6 +45,7 @@
     <Compile Include="WebLocalizer.cs" />
     <Compile Include="WebLogger.cs" />
     <Compile Include="WebProfiler.cs" />
+    <Compile Include="WebUserStateManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">

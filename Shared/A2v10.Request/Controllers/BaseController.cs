@@ -26,6 +26,7 @@ namespace A2v10.Request
 		protected readonly ILocalizer _localizer;
 		protected readonly IDataScripter _scripter;
 		protected readonly IMessageService _messageService;
+		protected readonly IUserStateManager _userStateManager;
 
 		const String NO_VIEW = "\b_NO_VIEW_\b";
 
@@ -40,6 +41,7 @@ namespace A2v10.Request
 			_localizer = locator.GetService<ILocalizer>();
 			_scripter = locator.GetService<IDataScripter>();
 			_messageService = locator.GetServiceOrNull<IMessageService>();
+			_userStateManager = locator.GetServiceOrNull<IUserStateManager>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -182,6 +184,13 @@ namespace A2v10.Request
 			}
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
+
+			if (_userStateManager != null)
+			{
+				Int64 userId = loadPrms.Get<Int64>("UserId");
+				if (_userStateManager.IsReadOnly(userId))
+					model.SetReadOnly();
+			}
 
 			String rootId = "el" + Guid.NewGuid().ToString();
 			String modelScript = null;

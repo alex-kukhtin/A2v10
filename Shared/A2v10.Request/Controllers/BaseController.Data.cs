@@ -47,6 +47,15 @@ namespace A2v10.Request
 			}
 		}
 
+		void CheckUserState(ExpandoObject prms)
+		{
+			if (_userStateManager == null)
+				return;
+			Int64 userId = prms.Get<Int64>("UserId");
+			if (_userStateManager.IsReadOnly(userId))
+				throw new RequestModelException("UI:@[Error.DataReadOnly]");
+		}
+
 		async Task SaveData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
@@ -57,6 +66,7 @@ namespace A2v10.Request
 			var prms = new ExpandoObject();
 			setParams?.Invoke(prms);
 			prms.Append(rw.parameters);
+			CheckUserState(prms);
 			IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 			IModelHandler handler = rw.GetHookHandler(_host);
 			if (handler != null)
@@ -256,6 +266,7 @@ namespace A2v10.Request
 			setParams?.Invoke(execPrms);
 			execPrms.Set("Id", id);
 			execPrms.Append(action.parameters);
+			CheckUserState(execPrms);
 			await _dbContext.LoadModelAsync(action.CurrentSource, deleteProc, execPrms);
 			writer.Write("{\"status\": \"OK\"}"); // JSON!
 		}

@@ -52,6 +52,7 @@
     <Compile Include="IMessageService.cs" />
     <Compile Include="ISmsService.cs" />
     <Compile Include="IUserId.cs" />
+    <Compile Include="IUserStateManager.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="IApplicationHost.cs" />
     <Compile Include="ILocalizer.cs" />

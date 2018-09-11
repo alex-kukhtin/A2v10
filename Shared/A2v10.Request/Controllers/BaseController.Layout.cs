@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using A2v10.Request.Properties;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
-using System.Text.RegularExpressions;
 using A2v10.Request.Models;
 
 namespace A2v10.Request
@@ -40,6 +39,8 @@ namespace A2v10.Request
 			String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
+			SetUserStatePermission(dm);
+
 			String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), BaseController.StandardSerializerSettings);
 
 			StringBuilder sb = new StringBuilder(shell);
@@ -49,6 +50,13 @@ namespace A2v10.Request
 			sb.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false");
 			sb.Replace("$(AppData)", GetAppData());
 			writer.Write(sb.ToString());
+		}
+
+		void SetUserStatePermission(IDataModel model)
+		{
+			if (_userStateManager == null)
+				return;
+			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
 		}
 
 		String AppStyleSheetsLink

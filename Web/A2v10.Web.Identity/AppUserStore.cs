@@ -233,7 +233,7 @@ namespace A2v10.Web.Identity
 		#region IUserLoginStore
 		public async Task AddLoginAsync(AppUser user, UserLoginInfo login)
 		{
-			await _dbContext.ExecuteAsync(DataSource, $"[{DbSchema}].[AddUserLogin]", new { UserId = user.Id, LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey });
+			await _dbContext.ExecuteAsync(DataSource, $"[{DbSchema}].[AddUserLogin]", new { UserId = user.Id, login.LoginProvider, login.ProviderKey });
 		}
 
 		public Task RemoveLoginAsync(AppUser user, UserLoginInfo login)
@@ -251,7 +251,7 @@ namespace A2v10.Web.Identity
 		{
 			if (login.LoginProvider == "PhoneNumber")
 				return await FindByPhoneNumberAsync(login.ProviderKey);
-			var user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByLogin]", new { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey });
+			var user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByLogin]", new { login.LoginProvider, login.ProviderKey });
 			return user;
 		}
 		#endregion

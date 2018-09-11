@@ -38,6 +38,7 @@ namespace A2v10.Web.Mvc.Start
 				IMessageService emailService = new EmailService(logger);
 				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
+				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -51,6 +52,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IMessageService>(emailService);
 				locator.RegisterService<ISmsService>(smsService);
 				locator.RegisterService<IExternalLoginManager>(externalLoginManager);
+				locator.RegisterService<IUserStateManager>(userStateManager);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};
