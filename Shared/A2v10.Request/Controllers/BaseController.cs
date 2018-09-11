@@ -185,7 +185,7 @@ namespace A2v10.Request
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
 
-			if (_userStateManager != null)
+			if (_userStateManager != null && model != null)
 			{
 				Int64 userId = loadPrms.Get<Int64>("UserId");
 				if (_userStateManager.IsReadOnly(userId))
