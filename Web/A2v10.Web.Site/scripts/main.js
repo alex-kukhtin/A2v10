@@ -1587,7 +1587,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180907-7302
+// 20180912-7306
 // services/datamodel.js
 
 (function () {
@@ -1895,6 +1895,7 @@ app.modules['std:validators'] = function () {
 				elem._root_.$setDirty(false);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
+			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
 			elem._seal_ = seal;
 		}
@@ -1942,8 +1943,19 @@ app.modules['std:validators'] = function () {
 	function isReadOnly() {
 		if ('__modelInfo' in this) {
 			let mi = this.__modelInfo;
-			if (utils.isDefined(mi.ReadOnly))
-				return mi.ReadOnly;
+			if (utils.isDefined(mi.ReadOnly) && mi.ReadOnly)
+				return true;
+			if (utils.isDefined(mi.StateReadOnly) && mi.StateReadOnly)
+				return true;
+		}
+		return false;
+	}
+
+	function isStateReadOnly() {
+		if ('__modelInfo' in this) {
+			let mi = this.__modelInfo;
+			if (utils.isDefined(mi.StateReadOnly) && mi.StateReadOnly)
+				return true;
 		}
 		return false;
 	}
