@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 05 sep 2018
-module version : 7301
+Last updated : 28 sep 2018
+module version : 7308
 */
 
 ------------------------------------------------
@@ -405,13 +405,13 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
-
-	insert into a2security.UserLogins([User], [LoginProvider], [ProviderKey]) 
-		values (@UserId, @LoginProvider, @ProviderKey); 
+	if not exists(select * from a2security.UserLogins where [User]=@UserId and LoginProvider=@LoginProvider)
+	begin
+		insert into a2security.UserLogins([User], [LoginProvider], [ProviderKey]) 
+			values (@UserId, @LoginProvider, @ProviderKey);
+	end
 end
 go
-
-
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UpdateUserPassword')
 	drop procedure a2security.UpdateUserPassword

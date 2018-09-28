@@ -70,7 +70,10 @@ namespace A2v10.Web.Identity
 		{
 			var foundUser = await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", user.PhoneNumber));
 			if (foundUser != null)
-				throw new InvalidOperationException("PhoneNumber already taken");
+			{
+				await UserManager.AddLoginAsync(foundUser.Id, new UserLoginInfo(loginProvider, user.ProviderKey));
+				return true;
+			}
 
 			var userToCreate = new AppUser
 			{
@@ -83,7 +86,6 @@ namespace A2v10.Web.Identity
 			};
 
 			var result = await UserManager.CreateAsync(userToCreate, user.Password);
-
 			if (!result.Succeeded)
 				return false;
 			var createdUser = UserManager.FindByName(userToCreate.UserName);
