@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180815-7274
+// 20180930-7309
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -139,6 +139,7 @@ app.modules['std:utils'] = function () {
 		toNumber: toNumber,
 		parse: parse,
 		getStringId: getStringId,
+		isEqual: isEqual,
 		date: {
 			today: dateToday,
 			zero: dateZero,
@@ -182,6 +183,13 @@ app.modules['std:utils'] = function () {
 
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
+	}
+
+	function isEqual(o1, o2) {
+		if (o1 === o2) return true;
+		if (isDate(o1) && isDate(o2))
+			return o1.getTime() === o2.getTime();
+		return false;
 	}
 
 	function notBlank(val) {
@@ -346,8 +354,15 @@ app.modules['std:utils'] = function () {
 			return '0';
 		if (isNumber(obj))
 			return obj;
-		else if (isObjectExact(obj))
-			return obj.$id || 0;
+		else if (isObjectExact(obj)) {
+			if ('$id' in obj)
+				return obj.$id || 0;
+			else if ("Id" in obj)
+				return obj.Id || 0;
+			else {
+				console.error('Id or @id not found in object');
+			}
+		}
 		return '0';
 	}
 
@@ -374,6 +389,8 @@ app.modules['std:utils'] = function () {
 		let dt;
 		if (str.length === 8) {
 			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		} else if (str.startsWith('\"\\/\"')) {
+			dt = new Date(str.substring(4, str.length - 4));
 		} else {
 			dt = new Date(str);
 		}
@@ -952,14 +969,15 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180725-7250*/
+// 20180930-7309
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
 
 	return {
 		copyfromQuery: copyFromQuery,
-		get: getPagerInfo
+		get: getPagerInfo,
+		reconcile: reconcile
 	};
 
 	function copyFromQuery(mi, q) {
@@ -983,6 +1001,19 @@ app.modules['std:modelInfo'] = function () {
 			}
 		}
 		return x;
+	}
+
+	function reconcile(mi) {
+		if (!mi) return;
+		if (!mi.Filter) return;
+		for (let p in mi.Filter) {
+			let fv = mi.Filter[p];
+			if (typeof fv === 'string' && fv.startsWith('\"\\/\"')) {
+				let dx = new Date(fv.substring(4, fv.length - 4));
+				mi.Filter[p] = dx;
+				//console.dir(mi.Filter[p]);
+			}
+		}
 	}
 };
 
@@ -1883,7 +1914,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180912-7306
+// 20180930-7309
 // services/datamodel.js
 
 (function () {

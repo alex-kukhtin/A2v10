@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180815-7274
+// 20180930-7309
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -139,6 +139,7 @@ app.modules['std:utils'] = function () {
 		toNumber: toNumber,
 		parse: parse,
 		getStringId: getStringId,
+		isEqual: isEqual,
 		date: {
 			today: dateToday,
 			zero: dateZero,
@@ -182,6 +183,13 @@ app.modules['std:utils'] = function () {
 
 	function isEmptyObject(obj) {
 		return !obj || Object.keys(obj).length === 0 && obj.constructor === Object;
+	}
+
+	function isEqual(o1, o2) {
+		if (o1 === o2) return true;
+		if (isDate(o1) && isDate(o2))
+			return o1.getTime() === o2.getTime();
+		return false;
 	}
 
 	function notBlank(val) {
@@ -346,8 +354,15 @@ app.modules['std:utils'] = function () {
 			return '0';
 		if (isNumber(obj))
 			return obj;
-		else if (isObjectExact(obj))
-			return obj.$id || 0;
+		else if (isObjectExact(obj)) {
+			if ('$id' in obj)
+				return obj.$id || 0;
+			else if ("Id" in obj)
+				return obj.Id || 0;
+			else {
+				console.error('Id or @id not found in object');
+			}
+		}
 		return '0';
 	}
 
@@ -374,6 +389,8 @@ app.modules['std:utils'] = function () {
 		let dt;
 		if (str.length === 8) {
 			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
+		} else if (str.startsWith('\"\\/\"')) {
+			dt = new Date(str.substring(4, str.length - 4));
 		} else {
 			dt = new Date(str);
 		}
@@ -952,14 +969,15 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180725-7250*/
+// 20180930-7309
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
 
 	return {
 		copyfromQuery: copyFromQuery,
-		get: getPagerInfo
+		get: getPagerInfo,
+		reconcile: reconcile
 	};
 
 	function copyFromQuery(mi, q) {
@@ -983,6 +1001,19 @@ app.modules['std:modelInfo'] = function () {
 			}
 		}
 		return x;
+	}
+
+	function reconcile(mi) {
+		if (!mi) return;
+		if (!mi.Filter) return;
+		for (let p in mi.Filter) {
+			let fv = mi.Filter[p];
+			if (typeof fv === 'string' && fv.startsWith('\"\\/\"')) {
+				let dx = new Date(fv.substring(4, fv.length - 4));
+				mi.Filter[p] = dx;
+				//console.dir(mi.Filter[p]);
+			}
+		}
 	}
 };
 
@@ -1587,7 +1618,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180912-7306
+// 20180930-7309
 // services/datamodel.js
 
 (function () {
@@ -4576,7 +4607,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180822-7281
+// 20180929-7309
 // components/datagrid.js*/
 
 (function () {
@@ -4717,7 +4748,7 @@ Vue.component('validator-control', {
 			sort: { type: Boolean, default: undefined },
 			sortProp: String,
 			small: { type: Boolean, default: undefined },
-			bold: { type: Boolean, default: undefined },
+			bold: String, //{ type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
@@ -4776,6 +4807,7 @@ Vue.component('validator-control', {
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;
+
 				if (this.mark) {
 					let mark = row[this.mark];
 					if (mark)
@@ -4783,12 +4815,23 @@ Vue.component('validator-control', {
 				}
 				if (editable && this.controlType !== 'checkbox')
 					cssClass += ' cell-editable';
+
+				function addClassBool(bind, cls) {
+					if (!bind) return;
+					if (bind === 'true')
+						cssClass += cls;
+					else if (bind.startsWith('{')) {
+						var prop = bind.substring(1, bind.length - 1);
+						if (utils.simpleEval(row, prop))
+							cssClass += cls;
+					}
+				}
+
 				if (this.wrap)
 					cssClass += ' ' + this.wrap;
 				if (this.small)
-					cssClass += ' ' + 'small';
-				if (this.bold)
-					cssClass += ' ' + 'bold';
+					cssClass += ' small';
+				addClassBool(this.bold, ' bold');
 				return cssClass.trim();
 			}
 		}
@@ -5979,13 +6022,14 @@ TODO:
 		//store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :ParentCollectionView="parentCw">
 	</slot>
 </div>
 `,
 		props: {
 			ItemsSource: Array,
-			initialFilter: Object
+			initialFilter: Object,
+			persistentFilter: Array
 		},
 
 		data() {
@@ -6029,6 +6073,13 @@ TODO:
 			sourceCount() {
 				if (!this.ItemsSource) return 0;
 				return this.ItemsSource.$RowCount || 0;
+			},
+			parentCw() {
+				// find parent collection view;
+				let p = this.$parent;
+				while (p && p.$options && p.$options._componentTag && !p.$options._componentTag.startsWith('collection-view-server'))
+					p = p.$parent;
+				return p;
 			}
 		},
 		methods: {
@@ -6061,6 +6112,23 @@ TODO:
 				else {
 					this.ItemsSource.$ModelInfo.Filter = this.filter;
 				}
+				if (this.persistentFilter && this.persistentFilter.length) {
+					let parentProp = this.ItemsSource._path_;
+					let propIx = parentProp.lastIndexOf('.');
+					parentProp = parentProp.substring(propIx + 1);
+					for (let topElem of this.ItemsSource.$parent.$parent) {
+						if (!topElem[parentProp].$ModelInfo)
+							topElem[parentProp].$ModelInfo = mi;
+						else {
+							for (let pp of this.persistentFilter) {
+								if (!utils.isEqual(topElem[parentProp].$ModelInfo.Filter[pp], this.filter[pp])) {
+									topElem[parentProp].$ModelInfo.Filter[pp] = this.filter[pp];
+									topElem[parentProp].$loaded = false;
+								}
+							}
+						}
+					}
+				}
 				if ('Offset' in mi)
 					setModelInfoProp(this.ItemsSource, 'Offset', 0);
 				this.reload();
@@ -6069,6 +6137,7 @@ TODO:
 				this.$root.$emit('cwChange', this.ItemsSource);
 			},
 			updateFilter() {
+				// modelInfo to filter
 				let mi = this.ItemsSource.$ModelInfo;
 				if (!mi) return;
 				let fi = mi.Filter;
@@ -6159,6 +6228,9 @@ TODO:
 			pages() {
 				cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
+			},
+			Filter() {
+				return this.filter;
 			}
 		},
 		methods: {
@@ -8527,7 +8599,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180907-7302
+// 20180930-7309
 // controllers/base.js
 
 (function () {
@@ -9074,7 +9146,13 @@ Vue.directive('resize', {
 							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
 						case 'edit':
 							if (argIsNotAnObject()) return;
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge)
+									arg.$merge(result);
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
 							let arr = arg.$parent;
@@ -9288,13 +9366,14 @@ Vue.directive('resize', {
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
-				// HACK. inherit filter from parent
+				// HACK. inherit filter from parent modelInfo
 				/*
+				?????
 				if (parentMi && parentMi.Filter) {
-					if (!selfMi)
-						selfMi = parentMi;
+					if (selfMi)
+						modelInfo.mergeFilter(selfMi.Filter, parentMi.Filter);
 					else
-						selfMi.Filter = parentMi.Filter;
+						selfMi = parentMi;
 				}
 				*/
 
@@ -9320,6 +9399,7 @@ Vue.directive('resize', {
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
+							modelInfo.reconcile(data.$ModelInfo[propName]);
 							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);

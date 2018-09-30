@@ -17,6 +17,7 @@ namespace A2v10.Xaml
 		public String Property { get; set; }
 		public Object Value { get; set; }
 		public DataType DataType { get; set; }
+		public Boolean Persistent { get; set; }
 
 		internal String GetJsValue(RenderContext context)
 		{
@@ -98,6 +99,20 @@ namespace A2v10.Xaml
 			}
 			sb.RemoveTailComma();
 			sb.Append("}");
+			return sb.ToString();
+		}
+
+		public String GetPersistentValue(RenderContext context)
+		{
+			var sb = new StringBuilder();
+			sb.Append("[");
+			foreach (var itm in Items)
+			{
+				if (itm.Persistent)
+					sb.Append($"'{itm.Property.EncodeJs()}',");
+			}
+			sb.RemoveTailComma();
+			sb.Append("]");
 			return sb.ToString();
 		}
 	}

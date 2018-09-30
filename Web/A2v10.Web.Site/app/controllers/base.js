@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180907-7302
+// 20180930-7309
 // controllers/base.js
 
 (function () {
@@ -547,7 +547,13 @@
 							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
 						case 'edit':
 							if (argIsNotAnObject()) return;
-							return __runDialog(url, arg, query, (result) => { arg.$merge(result); });
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge)
+									arg.$merge(result);
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
 							let arr = arg.$parent;
@@ -761,13 +767,14 @@
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
-				// HACK. inherit filter from parent
+				// HACK. inherit filter from parent modelInfo
 				/*
+				?????
 				if (parentMi && parentMi.Filter) {
-					if (!selfMi)
-						selfMi = parentMi;
+					if (selfMi)
+						modelInfo.mergeFilter(selfMi.Filter, parentMi.Filter);
 					else
-						selfMi.Filter = parentMi.Filter;
+						selfMi = parentMi;
 				}
 				*/
 
@@ -793,6 +800,7 @@
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
+							modelInfo.reconcile(data.$ModelInfo[propName]);
 							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);

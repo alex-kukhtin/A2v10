@@ -215,13 +215,14 @@ TODO:
 		//store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :ParentCollectionView="parentCw">
 	</slot>
 </div>
 `,
 		props: {
 			ItemsSource: Array,
-			initialFilter: Object
+			initialFilter: Object,
+			persistentFilter: Array
 		},
 
 		data() {
@@ -265,6 +266,13 @@ TODO:
 			sourceCount() {
 				if (!this.ItemsSource) return 0;
 				return this.ItemsSource.$RowCount || 0;
+			},
+			parentCw() {
+				// find parent collection view;
+				let p = this.$parent;
+				while (p && p.$options && p.$options._componentTag && !p.$options._componentTag.startsWith('collection-view-server'))
+					p = p.$parent;
+				return p;
 			}
 		},
 		methods: {
@@ -297,6 +305,23 @@ TODO:
 				else {
 					this.ItemsSource.$ModelInfo.Filter = this.filter;
 				}
+				if (this.persistentFilter && this.persistentFilter.length) {
+					let parentProp = this.ItemsSource._path_;
+					let propIx = parentProp.lastIndexOf('.');
+					parentProp = parentProp.substring(propIx + 1);
+					for (let topElem of this.ItemsSource.$parent.$parent) {
+						if (!topElem[parentProp].$ModelInfo)
+							topElem[parentProp].$ModelInfo = mi;
+						else {
+							for (let pp of this.persistentFilter) {
+								if (!utils.isEqual(topElem[parentProp].$ModelInfo.Filter[pp], this.filter[pp])) {
+									topElem[parentProp].$ModelInfo.Filter[pp] = this.filter[pp];
+									topElem[parentProp].$loaded = false;
+								}
+							}
+						}
+					}
+				}
 				if ('Offset' in mi)
 					setModelInfoProp(this.ItemsSource, 'Offset', 0);
 				this.reload();
@@ -305,6 +330,7 @@ TODO:
 				this.$root.$emit('cwChange', this.ItemsSource);
 			},
 			updateFilter() {
+				// modelInfo to filter
 				let mi = this.ItemsSource.$ModelInfo;
 				if (!mi) return;
 				let fi = mi.Filter;
@@ -395,6 +421,9 @@ TODO:
 			pages() {
 				cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
+			},
+			Filter() {
+				return this.filter;
 			}
 		},
 		methods: {

@@ -6,23 +6,20 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.IO;
 using System.Dynamic;
+using System.Web;
+using System.Xml;
+using System.Xml.Linq;
+using System.Text;
+
+using Microsoft.AspNet.Identity;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Interop;
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
-using System.Security.Principal;
-using A2v10.Infrastructure;
-using System.Web;
-using System.Net.Http;
-using System.Net;
-using System.Xml.Linq;
-using System.Xml;
 using A2v10.Web.Identity;
-using System.Text;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -112,6 +109,7 @@ namespace A2v10.Web.Mvc.Controllers
 				wrap.Set(wrapper, dataToInvoke);
 				dataToInvoke = wrap;
 			}
+			_logger.LogApi($"getdata: {JsonConvert.SerializeObject(dataToInvoke)}");
 			return dataToInvoke;
 		}
 
@@ -165,7 +163,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				_logger.LogApi($"call: {pathInfo}");
+				_logger.LogApi($"post: {pathInfo}");
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 				Response.ContentType = "application/json";

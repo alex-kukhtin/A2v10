@@ -76,6 +76,7 @@ namespace A2v10.Xaml
 		public Boolean NewWindow { get; set; }
 		public Boolean CheckArgument { get; set; }
 		public Boolean Export { get; set; }
+		public Boolean ReloadAfter { get; set; }
 
 		public Confirm Confirm { get; set; }
 		public Toast Toast { get; set; }
@@ -260,7 +261,7 @@ namespace A2v10.Xaml
 
 		String GetOptions(RenderContext context)
 		{
-			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export)
+			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export && !CheckArgument && !ReloadAfter)
 				return nullString;
 			StringBuilder sb = new StringBuilder("{");
 			if (SaveRequired)
@@ -273,6 +274,8 @@ namespace A2v10.Xaml
 				sb.Append("checkArgument: true,");
 			if (Export)
 				sb.Append("export: true,");
+			if (ReloadAfter)
+				sb.Append("reloadAfter: true,");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();

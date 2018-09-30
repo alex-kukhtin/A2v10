@@ -1,14 +1,15 @@
 ﻿
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180725-7250*/
+// 20180930-7309
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
 
 	return {
 		copyfromQuery: copyFromQuery,
-		get: getPagerInfo
+		get: getPagerInfo,
+		reconcile: reconcile
 	};
 
 	function copyFromQuery(mi, q) {
@@ -32,6 +33,19 @@ app.modules['std:modelInfo'] = function () {
 			}
 		}
 		return x;
+	}
+
+	function reconcile(mi) {
+		if (!mi) return;
+		if (!mi.Filter) return;
+		for (let p in mi.Filter) {
+			let fv = mi.Filter[p];
+			if (typeof fv === 'string' && fv.startsWith('\"\\/\"')) {
+				let dx = new Date(fv.substring(4, fv.length - 4));
+				mi.Filter[p] = dx;
+				//console.dir(mi.Filter[p]);
+			}
+		}
 	}
 };
 

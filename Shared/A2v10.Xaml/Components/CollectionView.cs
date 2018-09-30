@@ -63,6 +63,7 @@ namespace A2v10.Xaml
 			if (Filter != null)
 			{
 				_outer.MergeAttribute(":initial-filter", Filter.GetJsValue(context));
+				_outer.MergeAttribute(":persistent-filter", Filter.GetPersistentValue(context));
 				if (RunAt == RunMode.Client)
 				{
 					if (String.IsNullOrEmpty(FilterDelegate))

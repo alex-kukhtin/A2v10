@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180822-7281
+// 20180929-7309
 // components/datagrid.js*/
 
 (function () {
@@ -141,7 +141,7 @@
 			sort: { type: Boolean, default: undefined },
 			sortProp: String,
 			small: { type: Boolean, default: undefined },
-			bold: { type: Boolean, default: undefined },
+			bold: String, //{ type: Boolean, default: undefined },
 			mark: String,
 			controlType: String,
 			width: String,
@@ -200,6 +200,7 @@
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;
+
 				if (this.mark) {
 					let mark = row[this.mark];
 					if (mark)
@@ -207,12 +208,23 @@
 				}
 				if (editable && this.controlType !== 'checkbox')
 					cssClass += ' cell-editable';
+
+				function addClassBool(bind, cls) {
+					if (!bind) return;
+					if (bind === 'true')
+						cssClass += cls;
+					else if (bind.startsWith('{')) {
+						var prop = bind.substring(1, bind.length - 1);
+						if (utils.simpleEval(row, prop))
+							cssClass += cls;
+					}
+				}
+
 				if (this.wrap)
 					cssClass += ' ' + this.wrap;
 				if (this.small)
-					cssClass += ' ' + 'small';
-				if (this.bold)
-					cssClass += ' ' + 'bold';
+					cssClass += ' small';
+				addClassBool(this.bold, ' bold');
 				return cssClass.trim();
 			}
 		}
