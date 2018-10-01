@@ -118,7 +118,7 @@ namespace A2v10.Interop
 				{
 					if ((key + av.Key == elem.Name) && av.Value != null)
 					{
-						var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
+						var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value, elem.IsNillable);
 						if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
 							WriteNil(writer);
 						else
@@ -257,7 +257,7 @@ namespace A2v10.Interop
 			Object val = model.Get<Object>(attr.Name);
 			if (val != null)
 			{
-				var strVal = TypedValue(attr.SchemaTypeName.Name, val);
+				var strVal = TypedValue(attr.SchemaTypeName.Name, val, false);
 				if (!String.IsNullOrEmpty(strVal))
 					writer.WriteAttributeString(attr.Name, strVal);
 			}
@@ -278,7 +278,7 @@ namespace A2v10.Interop
 			Object val = model.Get<Object>(elem.Name);
 			if (val != null)
 			{
-				var strVal = TypedValue(elem.SchemaTypeName.Name, val);
+				var strVal = TypedValue(elem.SchemaTypeName.Name, val, elem.IsNillable);
 				if (String.IsNullOrEmpty(strVal) && elem.IsNillable)
 					WriteNil(writer);
 				else
@@ -302,7 +302,7 @@ namespace A2v10.Interop
 				var val = model.Get<Object>(se.Name);
 				if (val != null)
 				{
-					var typedVal = TypedValue(se.SchemaTypeName.Name, val);
+					var typedVal = TypedValue(se.SchemaTypeName.Name, val, se.IsNillable);
 					if (typedVal != null)
 					{
 						writer.WriteStartElement(se.Name);
@@ -314,7 +314,7 @@ namespace A2v10.Interop
 			}
 		}
 
-		String TypedValue(String typeName, Object val)
+		String TypedValue(String typeName, Object val, Boolean isNillable)
 		{
 			if (val == null)
 				return null;
@@ -337,6 +337,8 @@ namespace A2v10.Interop
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
 				case "DGdecimal0":
 					var dVal0 = Convert.ToDecimal(val);
+					if (isNillable && dVal0 == 0)
+						return null;
 					return String.Format(CultureInfo.InvariantCulture, "{0:0}", dVal0); ;
 				case "DGchk":
 				case "ChkColumn":

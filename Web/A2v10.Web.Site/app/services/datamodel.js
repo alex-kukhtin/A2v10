@@ -511,6 +511,14 @@
 		};
 
 		arr.$append = function (src) {
+			return this.$insert(src, 'end');
+		};
+
+		arr.$prepend = function (src) {
+			return this.$insert(src, 'start');
+		};
+
+		arr.$insert = function (src, to) {
 			const that = this;
 
 			function append(src, select) {
@@ -520,8 +528,19 @@
 				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
 				if (er === false)
 					return; // disabled
-				let len = that.push(newElem);
-				let ne = that[len - 1]; // maybe newly created reactive element
+				let len = that.length;
+				let ne = null;
+				switch (to) {
+					case 'end':
+						len = that.push(newElem);
+						ne = that[len - 1]; // maybe newly created reactive element
+						break;
+					case 'start':
+						that.unshift(newElem);
+						ne = that[0];
+						len = 1; 
+						break;
+				}
 				if ('$RowCount' in that) that.$RowCount += 1;
 				let eventName = that._path_ + '[].add';
 				that._root_.$setDirty(true);
@@ -533,7 +552,8 @@
 				// set RowNumber
 				if ('$rowNo' in newElem._meta_) {
 					let rowNoProp = newElem._meta_.$rowNo;
-					newElem[rowNoProp] = len; // 1-based
+					for (let i = 0; i < that.length; i++)
+						that[i][rowNoProp] = i + 1; // 1-based
 				}
 				return ne;
 			}

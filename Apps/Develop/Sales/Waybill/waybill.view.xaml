@@ -41,6 +41,7 @@
 		<Block Grid.Row="5" Grid.ColSpan="4">
 			<Toolbar Style="Transparent">
 				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+				<Button Icon="Add" Content="В начало" Command="{BindCmd Prepend, Argument={Bind Document.Rows}}"/>
 			</Toolbar>
 			<Table ItemsSource="{Bind Document.Rows}"
                     Width="100%" GridLines="Both" Border="True" Background="Paper"

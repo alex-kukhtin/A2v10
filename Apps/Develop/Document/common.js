@@ -50,7 +50,7 @@ function documentCreate(doc, kind) {
 	if (doc.Rows.$isEmpty)
 		doc.Rows.$append();
     const dat = { Id: doc.Id, Kind: doc.Kind };
-    vm.$invoke("nextDocNo", dat, '/Document').then(r => doc.No = r.Result.DocNo);
+    //vm.$invoke("nextDocNo", dat, '/Document').then(r => doc.No = r.Result.DocNo);
 }
 
 // document commands

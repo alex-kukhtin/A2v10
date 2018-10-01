@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181001-7310
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -386,6 +386,7 @@ app.modules['std:utils'] = function () {
 
 	function dateTryParse(str) {
 		if (!str) return dateZero();
+		if (isDate(str)) return str;
 		let dt;
 		if (str.length === 8) {
 			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
@@ -2425,6 +2426,14 @@ Vue.component('a2-pager', {
 		};
 
 		arr.$append = function (src) {
+			return this.$insert(src, 'end');
+		};
+
+		arr.$prepend = function (src) {
+			return this.$insert(src, 'start');
+		};
+
+		arr.$insert = function (src, to) {
 			const that = this;
 
 			function append(src, select) {
@@ -2434,8 +2443,19 @@ Vue.component('a2-pager', {
 				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
 				if (er === false)
 					return; // disabled
-				let len = that.push(newElem);
-				let ne = that[len - 1]; // maybe newly created reactive element
+				let len = that.length;
+				let ne = null;
+				switch (to) {
+					case 'end':
+						len = that.push(newElem);
+						ne = that[len - 1]; // maybe newly created reactive element
+						break;
+					case 'start':
+						that.unshift(newElem);
+						ne = that[0];
+						len = 1; 
+						break;
+				}
 				if ('$RowCount' in that) that.$RowCount += 1;
 				let eventName = that._path_ + '[].add';
 				that._root_.$setDirty(true);
@@ -2447,7 +2467,8 @@ Vue.component('a2-pager', {
 				// set RowNumber
 				if ('$rowNo' in newElem._meta_) {
 					let rowNoProp = newElem._meta_.$rowNo;
-					newElem[rowNoProp] = len; // 1-based
+					for (let i = 0; i < that.length; i++)
+						that[i][rowNoProp] = i + 1; // 1-based
 				}
 				return ne;
 			}

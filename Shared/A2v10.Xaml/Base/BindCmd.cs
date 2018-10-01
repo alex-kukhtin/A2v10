@@ -28,6 +28,7 @@ namespace A2v10.Xaml
 		DbRemoveSelected,
 		DbRemove,
 		Append,
+		Prepend,
 		Browse,
 		Execute,
 		ExecuteSelected,
@@ -200,6 +201,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Append:
 					return $"{CommandArgument(context)}.$append()";
+
+				case CommandType.Prepend:
+					return $"{CommandArgument(context)}.$prepend()";
 
 				case CommandType.Browse:
 					return $"$dialog('browse', {CommandUrl(context)}, {CommandArgument(context)}, {GetData(context)})";
@@ -416,6 +420,7 @@ namespace A2v10.Xaml
 					tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
 					break;
 				case CommandType.Append:
+				case CommandType.Prepend:
 				case CommandType.Remove:
 					if (context.IsDataModelIsReadOnly)
 						tag.MergeAttribute(":disabled", "true");

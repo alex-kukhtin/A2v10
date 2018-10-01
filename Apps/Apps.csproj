@@ -47,6 +47,7 @@
     <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
+    <None Include="bundleconfig.json" />
     <None Include="Develop\Agent\model.json" />
     <None Include="Develop\Dashboard\model.json" />
     <None Include="Develop\links.json" />
@@ -130,10 +131,14 @@
     <Content Include="Develop\Sales\Waybill\confirm.template.js" />
     <Content Include="Develop\Sales\Waybill\index.template.js" />
     <Content Include="Develop\Sales\Waybill\waybill.template.js" />
-    <Content Include="Develop\_assets\app.min.js" />
+    <Content Include="Develop\_assets\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
     <Content Include="Develop\_assets\app.css" />
     <Content Include="Develop\_assets\app.js" />
-    <Content Include="Develop\_assets\app.min.css" />
+    <Content Include="Develop\_assets\app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <Content Include="Develop\_emails\confirmemail.uk.html" />
     <Content Include="Develop\_pages\contacts.uk.html" />
     <Content Include="Develop\_api\tasmarket\tasmarket.html" />

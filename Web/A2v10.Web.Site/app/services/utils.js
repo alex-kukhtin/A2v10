@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181001-7310
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -291,6 +291,7 @@ app.modules['std:utils'] = function () {
 
 	function dateTryParse(str) {
 		if (!str) return dateZero();
+		if (isDate(str)) return str;
 		let dt;
 		if (str.length === 8) {
 			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);
