@@ -331,3 +331,12 @@ table.a2-table.bk-white {
 		color:#777;
 	}
 }
+
+.child-border {
+	border-top: 1px solid @a2-table-brd-color;
+	border-bottom: 1px solid @a2-table-brd-color;
+
+	> .a2-table > thead > tr:first-child td {
+		border-top-style:none;
+	}
+}

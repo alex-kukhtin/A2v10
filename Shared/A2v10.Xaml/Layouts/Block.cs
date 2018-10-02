@@ -26,6 +26,17 @@ namespace A2v10.Xaml
 			}
 		}
 
+		void AddHackedBorder(TagBuilder pane)
+		{
+			if (!Scroll) return;
+			if (Children.Count != 1) return;
+			if (Children[0] is Table tab)
+			{
+				if (tab.Border || tab.GridLines == GridLinesVisibility.Both || tab.GridLines == GridLinesVisibility.Horizontal)
+					pane.AddCssClass("child-border");
+			}
+		}
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", null, IsInGrid);
@@ -35,6 +46,7 @@ namespace A2v10.Xaml
 				div.MergeStyle("height", Height.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
+			AddHackedBorder(div);
 			if (Color != TextColorStyle.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			MergeAlign(div, context, Align);
