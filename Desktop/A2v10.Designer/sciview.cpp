@@ -43,7 +43,7 @@ std::string CSciEditView::GetTextA()
 	std::string ansiText;
 	ansiText.resize(len + 1);
 	//LPSTR buff = ansiText.GetBuffer(len + 1);
-	SendMessage(SCI_GETTEXT, len + 1 /*with \0!*/, reinterpret_cast<LPARAM>(ansiText.data()));
+	SendMessage(SCI_GETTEXT, len + 1/*with \0!*/, reinterpret_cast<LPARAM>(ansiText.data()));
 	return ansiText;
 }
 

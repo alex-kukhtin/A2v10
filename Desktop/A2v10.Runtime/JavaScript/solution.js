@@ -32,7 +32,7 @@
 		copyProps(this, src);
 	}
 
-	Column.prototype.type = "Table";
+	Column.prototype.type = "Column";
 	Column.prototype._meta_ = {
 		Name: {
 			category: cats.general,

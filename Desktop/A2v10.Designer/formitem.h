@@ -4,6 +4,7 @@
 
 class CFormItem;
 class CA2FormDocument;
+class CItemRegisterMap;
 class tinyxml2::XMLElement;
 
 // TRACK MASK
@@ -29,7 +30,6 @@ private:
 	RENDER_INFO& operator=(const RENDER_INFO&); // declare only
 };
 
-
 class CA2FormView;
 
 class CFormItemList : public CList<CFormItem*>
@@ -39,13 +39,7 @@ public:
 	void Clear();
 };
 
-class CItemRegister
-{
-public:
-	CItemRegister(LPCTSTR szClassName, CRuntimeClass* pClass);
-};
-
-class CItemRegisterMap : public CMap<CString, LPCWSTR, CRuntimeClass*, CRuntimeClass*&> {};
+typedef CList<CFormItem*> CFormItemWeakList;
 
 class CFormItem : public CObject
 {
@@ -53,26 +47,49 @@ class CFormItem : public CObject
 protected:
 	CRect m_position;
 	JavaScriptValue m_jsValue;
-	tinyxml2::XMLElement* m_pNode;
-	CA2FormDocument* m_pDoc;
-	CFormItemList m_children;
+	
 	CFormItem* m_pParent;
+	CA2FormDocument* m_pDoc;
+
+	tinyxml2::XMLElement* m_pNode;
+	CFormItemList m_children;
 
 public:
-	CFormItem();
 
-	void Construct(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
+	enum Shape {
+		_undefined = -1,
+		_pointer = 0,
+		_button = 1,
+		_checkbox = 2,
+		_radio = 3,
+		_combobox = 4,
+		_datagrid = 5,
+		_textbox = 6,
+		_canvas = 100,
+		_grid = 101,
+		_dockpanel = 102,
+		_stackPanel = 103,
+		_form = 500,
+	};
+
+	CFormItem();
 
 	GUID m_guid;
 
-	static CFormItem* CreateNode(LPCWSTR szClassName, CFormItem* pParent = nullptr);
-	static CItemRegisterMap& Register(LPCWSTR szClassName, CRuntimeClass* pRuntimeClass);
+	static CItemRegisterMap& Register(LPCWSTR szClassName, CRuntimeClass* pRuntimeClass, CFormItem::Shape shape);
+
+	static CFormItem* CreateNode(LPCWSTR szClassName);
+	static CFormItem* CreateElement(CFormItem::Shape shape, CFormItem* pParent);
+	static CFormItem* CreateObjectRuntime(CRuntimeClass* pRuntimeClass, CFormItem* pParent);
 
 	virtual void ConstructObject();
+	void ConstructFromXml(CA2FormDocument* pDoc, tinyxml2::XMLElement* pNode);
 
 	JsValueRef GetJsHandle() { return (JsValueRef)m_jsValue; }
 	CFormItem* GetParent() { return m_pParent; }
 	CFormItem* FindByGuid(const GUID& guid);
+
+	void OnChanged();
 
 	virtual ~CFormItem();
 
@@ -94,6 +111,20 @@ public:
 
 	virtual void Invalidate();
 	virtual void SetPosition(const CRect& rect);
+	virtual void AddChildItem(CFormItem* pItem);
 private:
 
+};
+
+class CItemRegister
+{
+public:
+	CItemRegister(LPCTSTR szClassName, CRuntimeClass* pClass, CFormItem::Shape shape);
+};
+
+class CItemRegisterMap
+{
+public:
+	CMap<CString, LPCWSTR, CRuntimeClass*, CRuntimeClass*&> m_str2RC;
+	CMap<CFormItem::Shape, CFormItem::Shape, CRuntimeClass*, CRuntimeClass*&> m_shape2RC;
 };

@@ -195,6 +195,8 @@
     <ClInclude Include="a2formview.h" />
     <ClInclude Include="A2v10.Designer.h" />
     <ClInclude Include="a2formdoc.h" />
+    <ClInclude Include="button.h" />
+    <ClInclude Include="checkbox.h" />
     <ClInclude Include="childfrm.h" />
     <ClInclude Include="commandwnd.h" />
     <ClInclude Include="consolewnd.h" />
@@ -224,6 +226,8 @@
     <ClCompile Include="a2formview.cpp" />
     <ClCompile Include="A2v10.Designer.cpp" />
     <ClCompile Include="a2formdoc.cpp" />
+    <ClCompile Include="button.cpp" />
+    <ClCompile Include="checkbox.cpp" />
     <ClCompile Include="childfrm.cpp" />
     <ClCompile Include="commandwnd.cpp" />
     <ClCompile Include="consolewnd.cpp" />
@@ -256,6 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\A2v10.Designer.ico" />
+    <Image Include="res\consoletoolbar.bmp" />
     <Image Include="res\debugtoolbar.bmp" />
     <Image Include="res\explorer_hc.bmp" />
     <Image Include="res\fileview.bmp" />

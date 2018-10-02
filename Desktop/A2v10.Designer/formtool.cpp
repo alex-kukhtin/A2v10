@@ -15,25 +15,26 @@
 // static 
 CList<CFormTool*> CFormTool::s_toolsList;
 // static 
-CFormTool::Shape CFormTool::s_currentShape = CFormTool::_pointer;
+CFormItem::Shape CFormTool::s_currentShape = CFormItem::_pointer;
 
 UINT CFormTool::s_currentId = ID_TOOLBOX_POINTER;
 
-CFormTool::CFormTool(Shape shape, UINT nID)
+CFormTool::CFormTool(CFormItem::Shape shape, UINT nID)
 	: m_eShape(shape), m_nID(nID)
 {
 	s_toolsList.AddTail(this);
 }
 
 static CFormSelectTool selectTool;
-static CFormTool buttonTool(CFormTool::_button, ID_TOOLBOX_BUTTON);
-static CFormTool checkBoxTool(CFormTool::_checkbox, ID_TOOLBOX_CHECK);
-static CFormTool comboBoxTool(CFormTool::_combobox, ID_TOOLBOX_COMBOBOX);
-static CFormTool dataGridTool(CFormTool::_datagrid, ID_TOOLBOX_DATAGRID);
-static CFormTool radioButtonTool(CFormTool::_radio, ID_TOOLBOX_RADIO);
+static CFormTool buttonTool  (CFormItem::_button, ID_TOOLBOX_BUTTON);
+static CFormTool textBoxTool (CFormItem::_textbox, ID_TOOLBOX_TEXTBOX);
+static CFormTool checkBoxTool(CFormItem::_checkbox, ID_TOOLBOX_CHECK);
+static CFormTool radioTool   (CFormItem::_radio, ID_TOOLBOX_RADIO);
+static CFormTool comboBoxTool(CFormItem::_combobox, ID_TOOLBOX_COMBOBOX);
+static CFormTool dataGridTool(CFormItem::_datagrid, ID_TOOLBOX_DATAGRID);
 
-static CFormTool canvasTool(CFormTool::_canvas, ID_TOOLBOX_CANVAS);
-static CFormTool gridTool(CFormTool::_grid, ID_TOOLBOX_GRID);
+static CFormTool canvasTool(CFormItem::_canvas, ID_TOOLBOX_CANVAS);
+static CFormTool gridTool(CFormItem::_grid, ID_TOOLBOX_GRID);
 
 // static 
 void CFormTool::SetShape(UINT nID)
@@ -48,7 +49,7 @@ void CFormTool::SetShape(UINT nID)
 		}
 	}
 	s_currentId = 0;
-	s_currentShape = CFormTool::_undefined;
+	s_currentShape = CFormItem::_undefined;
 }
 
 // static 
@@ -69,6 +70,18 @@ CFormTool* CFormTool::FindTool()
 	return NULL;
 }
 
+// static
+CFormItem* CFormTool::CreateItem(CFormItem::Shape shape, const CRect& rect, CFormItem* pParent)
+{
+	CFormItem* pItem = CFormItem::CreateElement(shape, pParent);
+	if (!pItem) {
+		AfxMessageBox(L"Can't create element");
+		return nullptr;
+	}
+	pItem->SetPosition(rect);
+	return pItem;
+}
+
 // virtual 
 void CFormTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoint& point)
 {
@@ -83,14 +96,16 @@ void CFormTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoint& poi
 	nr.NormalizeRect();
 	pView->ClientToDoc(nr);
 	pView->ClientToDoc(local);
-	CA2FormDocument* pDoc = pView->GetDocument();
-	CFormItem* pParent = pDoc->ObjectAt(local);
+	auto pDoc = pView->GetDocument();
+	auto pParent = pDoc->ObjectAt(local);
 	//if (pParent)
 		//pParent = pParent->GetCreateTarget();
 	// Convert to doc coords and snap to grid if needed
-	//pView->PrepareNewRect(nr);
+	pView->PrepareNewRect(nr);
 	// Create new object and select it 
-	//pDoc->CreateItem(m_eShape, nr, pParent);
+	auto pNewItem = CreateItem(m_eShape, nr, pParent);
+	pView->SelectItem(pNewItem);
+
 	if ((nFlags & MK_SHIFT) == 0)
 		OnCancel();
 }
@@ -109,7 +124,7 @@ void CFormTool::OnCancel()
 
 
 CFormSelectTool::CFormSelectTool()
-	: CFormTool(CFormTool::_pointer, ID_TOOLBOX_POINTER)
+	: CFormTool(CFormItem::_pointer, ID_TOOLBOX_POINTER)
 {
 }
 
@@ -122,24 +137,18 @@ void CFormSelectTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoin
 	bool bLocked = pDoc->IsLocked();
 	CPoint local(point);
 	pView->ClientToDoc(local);
-	// TEMP
-	CFormItem* pItem = pDoc->m_pRoot;
-	if (HandleOneObject(pView, point))
-		return;
-	/*
-	//CFormItem* pItem = pDoc->ObjectAt(local);
-	int cnt = pDoc->m_selectionList.GetCount();
+	CFormItem* pItem = pDoc->ObjectAt(local);
+	int cnt = pView->m_selection.GetCount();
 	if (cnt == 0) {
 
 	}
 	else if (cnt > 1) {
 		if (!bLocked && MoveObjects(pView, point))
 			return;
-
 	}
 	else if (cnt == 1) {
 		if (!bLocked && HandleOneObject(pView, point))
-			return; // уже обработали
+			return; // already done
 	}
 	if (pItem)
 	{
@@ -151,31 +160,26 @@ void CFormSelectTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoin
 	}
 	else
 	{
-		// пустое место, выделим корневой элемент
+		// no selection, select root
 		pView->SelectItem(pDoc->m_pRoot);
 	}
-	*/
 }
 
 bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 {
 	CA2FormDocument* pDoc = pView->GetDocument();
 	ATLASSERT(pDoc);
-	/*
-	//if (pView->IsInsideEditor())
-	//return FALSE;
+	if (pView->IsInsideEditor())
+		return false;
+	ATLASSERT(pView->m_selection.GetCount() == 1);
 
-	ASSERT(pDoc->m_selectionList.GetCount() == 1);
-	// один выделенный объект
-	*/
-
+	// one object selected
 	if (GetAsyncKeyState(GetSystemMetrics(SM_SWAPBUTTON) ? VK_RBUTTON : VK_LBUTTON) >= 0)
 		return FALSE; // Left button already released
 
-	CFormItem* pItem = pDoc->m_pRoot;
-	/*
-	CFormItem* pItem = pDoc->m_selectionList.GetHead();
+	CFormItem* pItem = pView->m_selection.GetHead();
 	ATLASSERT(pItem);
+	/*
 	if (!pItem->m_bFirstClick) {
 	if (pItem->OnLButtonDown(pView, 0, point))
 	return TRUE;
@@ -184,7 +188,7 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 	// для линии pItem->OnLButtonDown уже все, что можно сделал
 	// поэтому просто уходим
 	//if (pItem->GetFlags() & VFITEM_ISLINE)
-	//return FALSE;
+	//	return FALSE;
 	CRect tr(pItem->GetPosition());
 	pView->DocToClient(tr);
 	CRectTrackerEx tracker(tr, CRectTracker::resizeOutside);
@@ -197,13 +201,13 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 		tracker.m_sizeMin = pItem->GetMinTrackSize();
 		pView->DocToClient(tracker.m_sizeMin);
 		if (!bLocked && tracker.Track(pView, point)) {
-			// изменили положение объекта
+			// object position has changed
 			CRect nr(tracker.m_rect);
 			nr.NormalizeRect();
 			pView->ClientToDoc(nr);
 			pDoc->m_undo.DoAction(CFormUndo::_change, pItem);
 			pItem->MoveTo(nr, pView, hit);
-			return TRUE;
+			return true;
 		}
 	}
 	return false;
@@ -212,8 +216,8 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 bool CFormSelectTool::MoveObjects(CA2FormView* pView, const CPoint& point)
 {
 	CA2FormDocument* pDoc = pView->GetDocument();
-	//if (pView->IsInsideEditor())
-	//return FALSE;
+	if (pView->IsInsideEditor())
+		return false;
 	// несколько выделенных объектов, работаем только с Move
 	CPoint local(point);
 	pView->ClientToDoc(local);

@@ -8,7 +8,7 @@
 #define new DEBUG_NEW
 #endif
 
-CItemRegister form(L"Form", RUNTIME_CLASS(CFormElement));
+CItemRegister form(L"Form", RUNTIME_CLASS(CFormElement), CFormItem::_form);
 
 IMPLEMENT_DYNCREATE(CFormElement, CFormItem)
 

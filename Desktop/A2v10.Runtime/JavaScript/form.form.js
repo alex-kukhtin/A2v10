@@ -47,7 +47,16 @@
 	}
 	TextBox.prototype.type = "TextBox";
 	TextBox.prototype._meta_ = {
+		Value: { category: "Text", type: "string" }
+	};
 
+	//*** Button
+	function Button() {
+
+	}
+	Button.prototype.type = "Button";
+	Button.prototype._meta_ = {
+		Content: {category: "Text", type: "string"}
 	};
 
 	//*** CheckBox
@@ -63,6 +72,7 @@
 	designer.form.__registerElement(Form);
 	designer.form.__registerElement(Grid);
 	designer.form.__registerElement(TextBox);
+	designer.form.__registerElement(Button);
 	designer.form.__registerElement(CheckBox);
 })();
 

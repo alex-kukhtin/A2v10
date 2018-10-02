@@ -13,6 +13,8 @@ protected: // create from serialization only
 	DECLARE_DYNCREATE(CA2FormView)
 
 	// Attributes
+	CFormItemWeakList m_selection;
+
 public:
 	CA2FormDocument* GetDocument() const;
 	void ClientToDoc(CRect& rect);
@@ -22,6 +24,9 @@ public:
 
 
 	void SelectItem(CFormItem* pItem, bool bAdd = false);
+	bool IsInsideEditor() const;
+	void PrepareNewRect(CRect& nr);
+	CFormItem* GetSelectedItem();
 
 public:
 	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL) override;

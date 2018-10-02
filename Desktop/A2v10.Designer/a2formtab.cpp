@@ -4,6 +4,7 @@
 #include "a2formdoc.h"
 #include "a2formtab.h"
 
+#include "formitem.h"
 #include "a2formview.h"
 #include "sciview.h"
 #include "xamlview.h"

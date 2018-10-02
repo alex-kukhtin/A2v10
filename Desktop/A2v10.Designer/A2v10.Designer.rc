@@ -84,26 +84,31 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\A2v10.Designer.ico"
 
-IDR_JSMODULE			ICON                    "res\\jsmodule.ico"
-IDR_FORM				ICON					"res\\form.ico"
+IDR_JSMODULE            ICON                    "res\\jsmodule.ico"
+
+IDR_FORM                ICON                    "res\\form.ico"
 
 IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
 
 IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
 
 ID_WND_SOLUTION         ICON                    "res\\wndsolution.ico"
+
 ID_WND_PROPERTIES       ICON                    "res\\wndproperties.ico"
+
 ID_WND_TOOLBOX          ICON                    "res\\wndtoolbox.ico"
+
 ID_WND_COMMAND          ICON                    "res\\wndcommand.ico"
-ID_WND_OUTLINE			ICON					"res\\wndoutline.ico"
-ID_WND_CONSOLE			ICON					"res\\wndconsole.ico"
+
+ID_WND_OUTLINE          ICON                    "res\\wndoutline.ico"
+
+ID_WND_CONSOLE          ICON                    "res\\wndconsole.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
-
 
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 
@@ -116,13 +121,19 @@ IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
 
 IDR_MAINFRAME           BITMAP                  "res\\maintoolbar.bmp"
+
 ID_WND_SOLUTION         BITMAP                  "res\\imagelistsolution.bmp"
+
 IDR_TOOLBOX             BITMAP                  "res\\formtoolbox.bmp"
+
 IDR_PROPERTIES          BITMAP                  "res\\propstoolbar.bmp"
+
 IDR_SOLUTION            BITMAP                  "res\\sort.bmp"
 
-IDR_WND_CONSOLE			BITMAP					"res\\consoletoolbar.bmp"
-IDR_DEBUG				BITMAP					"res\\debugtoolbar.bmp"
+IDR_WND_CONSOLE         BITMAP                  "res\\consoletoolbar.bmp"
+
+IDR_DEBUG               BITMAP                  "res\\debugtoolbar.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -153,30 +164,30 @@ END
 
 IDR_DEBUG TOOLBAR 16, 16
 BEGIN
-	BUTTON	ID_DEBUG_RUN
+    BUTTON      ID_DEBUG_RUN
     SEPARATOR
-	BUTTON	ID_DEBUG_STEP_INTO
-	BUTTON	ID_DEBUG_STEP_OVER
-	BUTTON  ID_DEBUG_STEP_OUT
+    BUTTON      ID_DEBUG_STEP_INTO
+    BUTTON      ID_DEBUG_STEP_OVER
+    BUTTON      ID_DEBUG_STEP_OUT
 END
 
 IDR_TOOLBOX TOOLBAR 16, 16
 BEGIN
-	BUTTON      ID_TOOLBOX_POINTER
-	BUTTON      ID_TOOLBOX_BUTTON
-	BUTTON      ID_TOOLBOX_CHECK
-	BUTTON      ID_TOOLBOX_COMBOBOX
-	BUTTON      ID_TOOLBOX_DATAGRID
-	SEPARATOR
-	BUTTON      ID_TOOLBOX_CANVAS
-	BUTTON      ID_TOOLBOX_GRID
-	//BUTTON      ID_TOOLBOX_DOCKPANEL
+    BUTTON      ID_TOOLBOX_POINTER
+    BUTTON      ID_TOOLBOX_BUTTON
+    BUTTON      ID_TOOLBOX_TEXTBOX
+    BUTTON      ID_TOOLBOX_CHECK
+    BUTTON      ID_TOOLBOX_COMBOBOX
+    BUTTON      ID_TOOLBOX_DATAGRID
+    SEPARATOR
+    BUTTON      ID_TOOLBOX_CANVAS
+    BUTTON      ID_TOOLBOX_GRID
 END
 
 IDR_WND_CONSOLE TOOLBAR 16, 16
 BEGIN
-	BUTTON ID_EDIT_COPY
-	BUTTON ID_EDIT_CLEAR_ALL
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_CLEAR_ALL
 END
 
 IDR_SORT TOOLBAR 16, 16
@@ -196,9 +207,9 @@ BEGIN
     BUTTON      ID_PROP_ALPHABETICAL
 END
 
-IDR_SOLUTION	TOOLBAR 16, 16
+IDR_SOLUTION TOOLBAR 16, 16
 BEGIN
-	BUTTON      ID_SOLUTION_ADD
+    BUTTON      ID_SOLUTION_ADD
 END
 
 
@@ -211,21 +222,21 @@ IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
-		POPUP "&New"
-		BEGIN
-			MENUITEM "&Solution...",		ID_FILE_NEW_SOLUTION
-			MENUITEM "&File\tCtrl+N",       ID_FILE_NEW
-		END
-		POPUP "&Open"
-		BEGIN
-			MENUITEM "&Solution...",		ID_FILE_OPEN_SOLUTION
-			MENUITEM "&File...\tCtrl+O",	ID_FILE_OPEN
-		END
+        POPUP "&New"
+        BEGIN
+            MENUITEM "&Solution...",                ID_FILE_NEW_SOLUTION
+            MENUITEM "&File\tCtrl+N",               ID_FILE_NEW
+        END
+        POPUP "&Open"
+        BEGIN
+            MENUITEM "&Solution...",                ID_FILE_OPEN_SOLUTION
+            MENUITEM "&File...\tCtrl+O",            ID_FILE_OPEN
+        END
         MENUITEM "&Close",                      ID_FILE_CLOSE
-		MENUITEM "Close Solu&tion",				ID_FILE_CLOSE_SOLUTION
-		MENUITEM SEPARATOR
+        MENUITEM "Close Solu&tion",             ID_FILE_CLOSE_SOLUTION
+        MENUITEM SEPARATOR
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
-		MENUITEM "Save &Solution",				ID_FILE_SAVE_SOLUTION
+        MENUITEM "Save &Solution",              ID_FILE_SAVE_SOLUTION
         MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
         MENUITEM "Save A&ll...\tCtrl+Shift+S",  ID_FILE_SAVE_ALL
         MENUITEM SEPARATOR
@@ -258,8 +269,8 @@ BEGIN
         MENUITEM "Toolbo&x\tCtrl+Alt+X",        ID_VIEW_TOOLBOX
         MENUITEM SEPARATOR
         MENUITEM "&Command Window\tCtrl+Alt+A", ID_VIEW_COMMAND
-		MENUITEM "Co&nsole Window\tCtrl+Alt+C", ID_VIEW_CONSOLE
-		MENUITEM "Properties &Window\tF4",      ID_VIEW_PROPERTIES
+        MENUITEM "Co&nsole Window\tCtrl+Alt+C", ID_VIEW_CONSOLE
+        MENUITEM "Properties &Window\tF4",      ID_VIEW_PROPERTIES
         MENUITEM "&Document Outline\tCtrl+Alt+T", ID_VIEW_OUTLINE
         MENUITEM SEPARATOR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
@@ -298,11 +309,11 @@ END
 
 IDR_JSMODULE MENU
 BEGIN
-	POPUP "&Module"
-	BEGIN
-		MENUITEM "&Start/Continue Debugging\tF5", ID_DEBUG_RUN
-		MENUITEM "&Copy\tCtrl+C", ID_EDIT_COPY
-	END
+    POPUP "&Module"
+    BEGIN
+        MENUITEM "&Start/Continue Debugging\tF5", ID_DEBUG_RUN
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+    END
 END
 
 IDR_POPUP_EDIT MENU
@@ -317,12 +328,12 @@ END
 
 IDM_POPUP_SOLUTION MENU
 BEGIN
-	POPUP "_Add_"
-	BEGIN
-		MENUITEM "Table", ID_SOLUTION_ADD_TABLE
-		MENUITEM "View",  ID_SOLUTION_ADD_VIEW
-		MENUITEM "Column", ID_SOLUTION_ADD_COLUMN
-	END
+    POPUP "_Add_"
+    BEGIN
+        MENUITEM "Table",                       ID_SOLUTION_ADD_TABLE
+        MENUITEM "View",                        ID_SOLUTION_ADD_VIEW
+        MENUITEM "Column",                      ID_SOLUTION_ADD_COLUMN
+    END
 END
 
 IDR_POPUP_SORT MENU
@@ -376,8 +387,8 @@ END
 IDR_MAINFRAME ACCELERATORS
 BEGIN
     "A",            ID_VIEW_COMMAND,        VIRTKEY, CONTROL, ALT
-	"C",			ID_VIEW_CONSOLE,		VIRTKEY, CONTROL, ALT
-	"F",            ID_EDIT_FIND,           VIRTKEY, CONTROL
+    "C",            ID_VIEW_CONSOLE,        VIRTKEY, CONTROL, ALT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL
     "F",            ID_EDIT_FIND_IN_FILES,  VIRTKEY, SHIFT, CONTROL
     "L",            ID_VIEW_SOLUTION,       VIRTKEY, CONTROL, ALT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
@@ -402,15 +413,10 @@ BEGIN
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
     VK_F1,          ID_APP_ABOUT,           VIRTKEY, CONTROL
     VK_F10,         ID_DEBUG_STEP_OVER,     VIRTKEY 
-    VK_F11,         ID_DEBUG_STEP_INTO,     VIRTKEY
-	VK_F11,			ID_DEBUG_STEP_OUT,		VIRTKEY, SHIFT
+    VK_F11,         ID_DEBUG_STEP_INTO,     VIRTKEY 
+    VK_F11,         ID_DEBUG_STEP_OUT,      VIRTKEY, SHIFT
 END
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -438,8 +444,8 @@ BEGIN
             VALUE "FileDescription", "A2v10.Designer"
             VALUE "FileVersion", "10.0.7233.0"
             VALUE "InternalName", "A2v10.Designer.exe"
-			VALUE "LegalCopyright", "© 2007-2018 Alex Kukhtin.  All rights reserved."
-			VALUE "OriginalFilename", "A2v10.Designer.exe"
+            VALUE "LegalCopyright", "© 2007-2018 Alex Kukhtin.  All rights reserved."
+            VALUE "OriginalFilename", "A2v10.Designer.exe"
             VALUE "ProductName", "A2"
             VALUE "ProductVersion", "10.0.0.0"
         END
@@ -449,24 +455,6 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
-BEGIN
-END
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// AFX_DIALOG_LAYOUT
-//
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -484,9 +472,8 @@ END
 STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "A2v10.Designer"
-	/*title/newdocname/description/filter part/extension/doctype (reg)/full docname (reg)*/
-	IDR_JSMODULE			"\nmodule\nJavaScript file\nJavaScript Files (*.js)\n.js\n\n"
-	IDR_FORM				"\nform\nForm file\nForm Files (*.xaml)\n.xaml\n\n"
+    IDR_JSMODULE            "\nmodule\nJavaScript file\nJavaScript Files (*.js)\n.js\n\n"
+    IDR_FORM                "\nform\nForm file\nForm Files (*.xaml)\n.xaml\n\n"
 END
 
 STRINGTABLE
@@ -502,23 +489,22 @@ BEGIN
     ID_WND_COMMAND          "Command"
     ID_WND_SOLUTION         "Solution"
     ID_WND_OUTLINE          "Outline"
-	ID_WND_CONSOLE			"Console"
+    ID_WND_CONSOLE          "Console"
 END
-
 
 STRINGTABLE
 BEGIN
-	ID_TOOLBOX_POINTER      "Pointer"
-	ID_TOOLBOX_BUTTON       "Button"
+    ID_TOOLBOX_POINTER      "Pointer"
+    ID_TOOLBOX_BUTTON       "Button"
+	ID_TOOLBOX_TEXTBOX      "TextBox"
 	ID_TOOLBOX_CHECK        "CheckBox"
-	ID_TOOLBOX_RADIO        "RadioButton"
-	ID_TOOLBOX_COMBOBOX     "ComboBox"
-	ID_TOOLBOX_DATAGRID     "DataGrid"
-	ID_TOOLBOX_DATEPICKER   "DatePicker"
-	ID_TOOLBOX_CANVAS       "Canvas"
-	ID_TOOLBOX_GRID         "Grid"
+    ID_TOOLBOX_RADIO        "RadioButton"
+    ID_TOOLBOX_COMBOBOX     "ComboBox"
+    ID_TOOLBOX_DATAGRID     "DataGrid"
+    ID_TOOLBOX_DATEPICKER   "DatePicker"
+    ID_TOOLBOX_CANVAS       "Canvas"
+    ID_TOOLBOX_GRID         "Grid"
 END
-
 
 STRINGTABLE
 BEGIN
@@ -544,18 +530,20 @@ END
 
 STRINGTABLE
 BEGIN
-	ID_DEBUG_RUN			"Start\continue execution\nStart debugging"
-	ID_DEBUG_STEP_INTO		"Step into next function call\nStep into"
-	ID_DEBUG_STEP_OVER		"Step over next function call\nStep over"
-	ID_DEBUG_STEP_OUT		"Step out of current function\nStep out"
+    ID_DEBUG_RUN            "Start\\continue execution\nStart debugging"
+    ID_DEBUG_STEP_INTO      "Step into next function call\nStep into"
+    ID_DEBUG_STEP_OVER      "Step over next function call\nStep over"
 END
 
+STRINGTABLE
+BEGIN
+    ID_DEBUG_STEP_OUT       "Step out of current function\nStep out"
+END
 
 STRINGTABLE
 BEGIN
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
 END
-
 
 STRINGTABLE
 BEGIN

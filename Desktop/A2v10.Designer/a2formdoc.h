@@ -4,6 +4,7 @@
 
 struct RENDER_INFO;
 class CFormItem;
+typedef CList<CFormItem*> CFormItemWeakList;
 class CXamlEditView;
 
 #include "formundo.h"
@@ -26,7 +27,7 @@ public:
 	void ClearRoot();
 	void ClearSelection();
 
-	void DrawContent(const RENDER_INFO& ri);
+	void DrawContent(const RENDER_INFO& ri, CFormItemWeakList& selection);
 
 	bool IsLocked() const;
 	CFormItem* ObjectAt(CPoint point);
@@ -52,7 +53,7 @@ public:
 #endif // SHARED_HANDLERS
 
 protected:
-	void DrawSelection(const RENDER_INFO& ri);
+	void DrawSelection(const RENDER_INFO& ri, CFormItemWeakList& selection);
 	void CreateRootElement();
 	void Xml2Form();
 	void Clear();
@@ -65,6 +66,7 @@ protected:
 
 	afx_msg void OnUpdateEditUndo(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditRedo(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFileSave(CCmdUI* pCmdUI);
 #ifdef SHARED_HANDLERS
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);

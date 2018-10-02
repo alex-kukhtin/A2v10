@@ -165,15 +165,15 @@ void CFormUndo::DoUndo(CA2FormDocument* pDoc)
 	CUndoItem* pUndo = m_undoStack.RemoveHead();
 	switch (pUndo->m_action) {
 	case _create:
-		// это созданные элементы, удалим их
+		// create -> remove
 		pUndo->RemoveItems(pDoc);
 		break;
 	case _delete:
-		// это удаленные элементы, воссоздадим их
+		// delete -> reincarnate
 		pUndo->Reincarnate(pDoc);
 		break;
 	case _change:
-		// это измененные элементы, вернем свойства из клонов
+		// change -> unchange
 		pUndo->Unchange(pDoc);
 		break;
 	default:
@@ -192,15 +192,15 @@ void CFormUndo::DoRedo(CA2FormDocument* pDoc)
 	CUndoItem* pRedo = m_redoStack.RemoveHead();
 	switch (pRedo->m_action) {
 	case _create:
-		// снова создадим элементы
+		// create -> reincarnate
 		pRedo->Reincarnate(pDoc);
 		break;
 	case _delete:
-		// снова удалим элементы
+		// delete -> delete
 		pRedo->RemoveItems(pDoc);
 		break;
 	case _change:
-		// вернем изменения
+		// change -> unchange
 		pRedo->Unchange(pDoc);
 		break;
 	default:

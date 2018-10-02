@@ -5,25 +5,10 @@ class CA2FormView;
 class CFormTool : public CObject
 {
 public:
-
-	enum Shape {
-		_undefined = -1,
-		_pointer = 0,
-		_button = 1,
-		_checkbox = 2,
-		_radio = 3,
-		_combobox = 4,
-		_datagrid = 5,
-		_canvas = 100,
-		_grid = 101,
-		_dockpanel = 102,
-		_stackPanel = 103,
-	};
-
-	CFormTool(Shape shape, UINT nID);
+	CFormTool(CFormItem::Shape shape, UINT nID);
 	virtual ~CFormTool() {};
 
-	Shape m_eShape;
+	CFormItem::Shape m_eShape;
 	UINT m_nID;
 
 	// Overridables
@@ -33,11 +18,12 @@ public:
 
 	static CFormTool* FindTool();
 	static CList<CFormTool*> s_toolsList;
-	static Shape s_currentShape;
+	static CFormItem::Shape s_currentShape;
 	static UINT s_currentId;
 
 	static void SetShape(UINT nID);
 	static bool IsShape(UINT nID);
+	static CFormItem* CreateItem(CFormItem::Shape shape, const CRect& rect, CFormItem* pParent);
 };
 
 class CFormSelectTool : public CFormTool

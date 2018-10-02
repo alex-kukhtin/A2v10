@@ -11,6 +11,7 @@
 #include "sciview.h"
 #include "moduleview.h"
 #include "a2formdoc.h"
+#include "formitem.h"
 #include "a2formview.h"
 #include "a2formtab.h"
 

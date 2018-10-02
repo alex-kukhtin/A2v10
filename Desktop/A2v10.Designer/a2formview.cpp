@@ -72,6 +72,10 @@ BOOL CA2FormView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 	return __super::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
+bool CA2FormView::IsInsideEditor() const
+{
+	return false;
+}
 
 // virtual 
 void CA2FormView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
@@ -90,19 +94,27 @@ void CA2FormView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	switch (lHint) {
 	case HINT_INVALIDATE_ITEM :
-	{
-		CFormItem* pItem = reinterpret_cast<CFormItem*>(pHint);
-		if (pItem) {
-			CRect rect(pItem->GetPosition());
-			DocToClient(rect);
-			rect.InflateRect(CX_HANDLE_SIZE, CX_HANDLE_SIZE);
-			InvalidateRect(rect);
+		{
+			CFormItem* pItem = reinterpret_cast<CFormItem*>(pHint);
+			if (pItem) {
+				CRect rect(pItem->GetPosition());
+				DocToClient(rect);
+				rect.InflateRect(CX_HANDLE_SIZE, CX_HANDLE_SIZE);
+				InvalidateRect(rect);
+			}
 		}
-	}
-	break;
-	default:
-		Invalidate();
 		break;
+	case HINT_CLEAR_SELECTION:
+		m_selection.RemoveAll();
+		break;
+	case HINT_UPDATE_SELECTION:
+		{
+			Invalidate();
+		}
+		break;
+		default:
+			Invalidate();
+			break;
 	}
 	/*
 	if (GetDocument()->IsLoading())
@@ -117,19 +129,6 @@ void CA2FormView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	break;
 	case HINT_SELECT_ITEM:
 	case HINT_CREATE_ITEM:
-	case HINT_INVALIDATE_ITEM:
-	{
-		CFormItem* pItem = reinterpret_cast<CFormItem*>(pHint);
-		if (pItem) {
-			CRect rect(pItem->GetPosition());
-			DocToClient(rect);
-			rect.InflateRect(CX_HANDLE_SIZE, CX_HANDLE_SIZE);
-			InvalidateRect(rect);
-		}
-	}
-	break;
-	default:
-		Invalidate();
 	}
 	*/
 }
@@ -147,32 +146,24 @@ BOOL CA2FormView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
 
-	if (CFormTool::s_currentShape != CFormTool::_pointer)
+	if (CFormTool::s_currentShape != CFormItem::_pointer)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
-	/*
-	int cnt = pDoc->GetSelectionCount();
+	int cnt = m_selection.GetCount();
 	if (cnt == 0)
 		return __super::OnSetCursor(pWnd, nHitTest, message);
-	*/
 
-	/*
 	CPoint pt;
 	GetCursorPos(&pt);
 	ScreenToClient(&pt);
 	ClientToDoc(pt);
-	*/
-	//CFormItem* pItem = GetDocument()->ObjectAt(pt);
-	//if (!pItem)
-		//return __super::OnSetCursor(pWnd, nHitTest, message);
 
-	CFormItem* pItem = GetDocument()->m_pRoot; // SELECTED ITEM;
+	CFormItem* pItem = m_selection.GetHead(); // SELECTED ITEM;
 	CRect rect(pItem->GetPosition());
 	DocToClient(rect);
 	CRectTrackerEx tracker(rect, CRectTracker::resizeOutside, false);
 	tracker.m_dwDrawStyle = pItem->GetTrackMask();
 	if (tracker.SetCursorEx(this, nHitTest)) {
-		//ATLTRACE(L"hit %d, %d\n", pt.x, pt.y);
 		return TRUE;
 	}
 
@@ -307,7 +298,7 @@ void CA2FormView::OnDraw(CDC* pDC)
 
 	RENDER_INFO ri;
 	ri.pDC = pDrawDC;
-	GetDocument()->DrawContent(ri);
+	GetDocument()->DrawContent(ri, m_selection);
 
 	if (pDrawDC != pDC) {
 		pDC->SetViewportOrg(0, 0);
@@ -326,8 +317,8 @@ void CA2FormView::ClientToDoc(CRect& rect)
 	CClientDC dc(this);
 	OnPrepareDC(&dc, nullptr);
 	dc.DPtoLP(rect);
-	ASSERT(rect.left <= rect.right);
-	ASSERT(rect.bottom >= rect.top);
+	ATLASSERT(rect.left <= rect.right);
+	ATLASSERT(rect.bottom >= rect.top);
 }
 
 void CA2FormView::DocToClient(CRect& rect)
@@ -335,8 +326,8 @@ void CA2FormView::DocToClient(CRect& rect)
 	CClientDC dc(this);
 	OnPrepareDC(&dc, nullptr);
 	dc.LPtoDP(rect);
-	ASSERT(rect.left <= rect.right);
-	ASSERT(rect.bottom >= rect.top);
+	ATLASSERT(rect.left <= rect.right);
+	ATLASSERT(rect.bottom >= rect.top);
 }
 
 void CA2FormView::DocToClient(CSize& size)
@@ -446,7 +437,7 @@ LRESULT CA2FormView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 	auto pDoc = GetDocument();
 	FILL_PROPS_INFO* pInfo = reinterpret_cast<FILL_PROPS_INFO*>(lParam);
 	pInfo->wndTarget = GetSafeHwnd();
-	CFormItem* pItem = pDoc->m_pRoot;//TODO : selection pDoc->GetSelectedItem();
+	CFormItem* pItem = GetSelectedItem();
 	if (pItem) {
 		pInfo->elemTarget = pItem;
 		pInfo->elem = reinterpret_cast<DWORD_PTR>(pItem->GetJsHandle());
@@ -509,13 +500,24 @@ void CA2FormView::OnLButtonDown(UINT nFlags, CPoint point)
 	pTool->OnLButtonDown(this, nFlags, point);
 }
 
+void CA2FormView::SelectItem(CFormItem* pItem, bool bAdd /*= false*/)
+{
+	if (!bAdd) {
+		OnUpdate(this, HINT_UPDATE_SELECTION, nullptr);
+		m_selection.RemoveAll();
+	}
+	if (!pItem || IsSelected(pItem))
+		return;
+	m_selection.AddTail(pItem);
+	OnUpdate(this, HINT_INVALIDATE_ITEM, pItem);
+}
 
 
 bool CA2FormView::TrackOutline(CPoint point)
 {
+	if (!m_selection.IsEmpty() || IsInsideEditor() || GetDocument()->IsLocked())
+		return false;
 	/*
-	if (!m_selection.IsEmpty() || m_bInsideEditor || GetDocument()->IsControlsLocked())
-	return false;
 	CRect rc(m_trackerRect);
 	CPoint ptVpOrg = -GetDeviceScrollPosition();
 	rc.OffsetRect(ptVpOrg);
@@ -635,4 +637,16 @@ void CA2FormView::OnEditRedo()
 	SetFocus();
 	CA2FormDocument* pDoc = GetDocument();
 	pDoc->m_undo.DoRedo(pDoc);
+}
+
+void CA2FormView::PrepareNewRect(CRect& nr)
+{
+
+}
+
+CFormItem* CA2FormView::GetSelectedItem() 
+{
+	if (m_selection.IsEmpty())
+		return nullptr;
+	return m_selection.GetHead();
 }

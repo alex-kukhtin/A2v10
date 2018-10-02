@@ -9,7 +9,7 @@
 
 IMPLEMENT_DYNCREATE(CGridElement, CFormItem)
 
-CItemRegister grid(L"Grid", RUNTIME_CLASS(CGridElement));
+CItemRegister grid(L"Grid", RUNTIME_CLASS(CGridElement), CFormItem::_grid);
 
 // virtual 
 void CGridElement::Draw(const RENDER_INFO& ri)
