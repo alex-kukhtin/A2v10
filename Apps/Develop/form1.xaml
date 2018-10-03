@@ -1,7 +1,9 @@
-﻿<Form xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="459" Height="323">
-	<Grid/>
-	<TextBox/>
-	<TextBox/>
-	<TextBox/>
-	<Button/>
+﻿<Form xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="560" Height="378">
+	<Grid>
+		<TextBox Grid.Row="3" Grid.Col="2"/>
+	</Grid>
+	<Grid>
+		<Button Grid.Row="3" Grid.Col="1"/>
+		<CheckBox Grid.Row="3" Grid.Col="3"/>
+	</Grid>
 </Form>

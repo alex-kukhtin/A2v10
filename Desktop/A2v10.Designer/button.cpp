@@ -1,3 +1,4 @@
+// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 #include "formitem.h"
@@ -23,8 +24,7 @@ void CButtonElement::Draw(const RENDER_INFO& ri)
 }
 
 // virtual 
-void CButtonElement::Xml2Properties()
+void CButtonElement ::Measure(const CSize& available)
 {
-	for (auto pAttr = m_pNode->FirstAttribute(); pAttr; pAttr = pAttr->Next()) {
-	}
+	m_desiredSize.SetSize(3000, 1800);
 }

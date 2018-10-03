@@ -1,3 +1,5 @@
+// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
+
 #pragma once
 
 
@@ -14,17 +16,24 @@
 #define RTRE_MIDDLE      0x00000100
 #define RTRE_ALL         0x000001FF
 
+class CFormItem;
+
 class CRectTrackerEx : public CRectTracker
 {
+	CFormItem* m_pItem;
+	CDC* m_pDC;
+	const POINT* m_pOffset;
 public:
-	CRectTrackerEx(LPCRECT lpSrcRect, UINT nStyle, bool bPartial = false);
+	CRectTrackerEx(LPCRECT lpSrcRect, UINT nStyle, CFormItem* pItem = nullptr, CDC* pDC = nullptr, const POINT* pPoint = nullptr, bool bPartial = false);
 	CRectTrackerEx(bool bPartial = false);
 	void DrawEx(CDC* pDC, bool bOutline);
 	void DrawItem(CDC* pDC, bool bOutline);
 	BOOL SetCursorEx(CWnd* pWnd, UINT nHitTest) const;
-	virtual UINT GetHandleMask() const;
 	DWORD GetDrawMask(int hit) const { return DWORD(1L << hit); }
 	BOOL CanHitHandled(int hit) { return m_dwDrawStyle & GetDrawMask(hit); }
+
+	virtual UINT GetHandleMask() const override;
+	virtual void AdjustRect(int nHandle, LPRECT lpRect) override;
 
 protected:
 	bool m_bPartial;

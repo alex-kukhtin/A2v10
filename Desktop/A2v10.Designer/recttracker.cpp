@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 #include "recttracker.h"
+#include "formitem.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -11,16 +12,16 @@
 
 CBrush CRectTrackerEx::m_brHatch;
 
-CRectTrackerEx::CRectTrackerEx(LPCRECT lpSrcRect, UINT nStyle, bool bPartial /* = false */)
-	: CRectTracker(lpSrcRect, nStyle),
-	m_bPartial(bPartial)
+CRectTrackerEx::CRectTrackerEx(LPCRECT lpSrcRect, UINT nStyle, CFormItem* pItem /*= nullptr*/, CDC* pDC /*= nullptr*/, const POINT* pPoint /*= nullptr*/, bool bPartial /* = false */)
+	: CRectTracker(lpSrcRect, nStyle), m_pItem(pItem), m_pDC(pDC), 
+	  m_pOffset(pPoint), m_bPartial(bPartial)
 {
 	m_nHandleSize = CX_HANDLE_SIZE;
 	m_dwDrawStyle = RTRE_ALL;
 }
 
 CRectTrackerEx::CRectTrackerEx(bool bPartial /*= false*/)
-	: CRectTracker(), m_bPartial(bPartial)
+	: CRectTracker(), m_bPartial(bPartial), m_pItem(nullptr)
 {
 	m_nHandleSize = CX_HANDLE_SIZE;
 }
@@ -118,6 +119,23 @@ void CRectTrackerEx::DrawItem(CDC* pDC, bool bOutline)
 	// cleanup pDC state
 	pDC->SelectObject(oldPen);
 	VERIFY(pDC->RestoreDC(-1));
+}
+
+// virtual 
+void CRectTrackerEx::AdjustRect(int nHandle, LPRECT lpRect)
+{
+	if (nHandle != hitMiddle)
+		return;
+	if (!m_pItem || !m_pDC || !m_pOffset) 
+		return;
+	CPoint offset(*m_pOffset);
+	CRect xr(lpRect);
+	m_pDC->DPtoLP(&xr);
+	m_pDC->DPtoLP(&offset);
+	if (m_pItem->DoAdjustTrackRect(&xr, offset)) {
+		m_pDC->LPtoDP(&xr);
+		::CopyRect(lpRect, &xr);
+	}
 }
 
 void CRectTrackerEx::DrawEx(CDC* pDC, bool bOutline)

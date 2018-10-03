@@ -57,6 +57,7 @@ protected:
 	void CreateRootElement();
 	void Xml2Form();
 	void Clear();
+	void DoLayout();
 	CXamlEditView* GetXamlEditView();
 	void ParseXml(const char* szXml);
 	void LoadDocument(CFile* pFile, CXamlEditView* pView);

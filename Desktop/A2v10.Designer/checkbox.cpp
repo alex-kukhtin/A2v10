@@ -21,10 +21,3 @@ void CCheckBoxElement::Draw(const RENDER_INFO& ri)
 	ri.pDC->Rectangle(rc);
 	ri.pDC->DrawText(ElementName(), -1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
 }
-
-// virtual 
-void CCheckBoxElement::Xml2Properties()
-{
-	for (auto pAttr = m_pNode->FirstAttribute(); pAttr; pAttr = pAttr->Next()) {
-	}
-}

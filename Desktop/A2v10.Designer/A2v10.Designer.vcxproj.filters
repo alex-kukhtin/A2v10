@@ -34,6 +34,9 @@
     <Filter Include="Header Files\FormDesigner\Controls">
       <UniqueIdentifier>{4699c157-75fb-4357-8124-7da4aa524d3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\FormDesigner\Layouts">
+      <UniqueIdentifier>{b5fb1e06-8edb-41d5-87af-544efe7b6359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A2v10.Designer.h">
@@ -203,9 +206,6 @@
     <ClCompile Include="xamlview.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Source Files\FormDesigner</Filter>
-    </ClCompile>
     <ClCompile Include="formundo.cpp">
       <Filter>Source Files\FormDesigner</Filter>
     </ClCompile>
@@ -217,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="checkbox.cpp">
       <Filter>Source Files\FormDesigner\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Source Files\FormDesigner\Layouts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,6 @@ class CCheckBoxElement : public CFormItem
 public:
 	virtual LPCWSTR ElementName() override { return L"CheckBox"; }
 	virtual void Draw(const RENDER_INFO& ri) override;
-	virtual void Xml2Properties() override;
 };
 
 

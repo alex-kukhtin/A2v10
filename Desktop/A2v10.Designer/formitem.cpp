@@ -1,3 +1,5 @@
+// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
+
 #include "stdafx.h"
 #include "formitem.h"
 #include "recttracker.h"
@@ -18,7 +20,7 @@ CItemRegister::CItemRegister(LPCTSTR szClassName, CRuntimeClass* pClass, CFormIt
 IMPLEMENT_DYNAMIC(CFormItem, CObject)
 
 CFormItem::CFormItem()
-: m_pDoc(nullptr), m_pNode(nullptr), m_position(0, 0, 0, 0), m_pParent(nullptr)
+: m_pDoc(nullptr), m_pNode(nullptr), m_position(0, 0, 0, 0), m_pParent(nullptr), m_desiredSize(0, 0)
 {
 	VERIFY(SUCCEEDED(::CoCreateGuid(&m_guid)));
 }
@@ -101,8 +103,7 @@ CFormItem* CFormItem::CreateObjectRuntime(CRuntimeClass* pRuntimeClass, CFormIte
 // static 
 CItemRegisterMap& CFormItem::Register(LPCWSTR szClassName, CRuntimeClass* pRuntimeClass, CFormItem::Shape shape)
 {
-	// статическая переменная должна быть локальной
-	// тогда она создается при первом обращении
+	// static variable must be local! It is created by demand
 	static CItemRegisterMap sMap;
 	if (szClassName != NULL) {
 		sMap.m_str2RC.SetAt(szClassName, pRuntimeClass);
@@ -188,19 +189,45 @@ void CFormItem::DrawChildren(const RENDER_INFO& ri)
 // virtual
 void CFormItem::Xml2Properties()
 {
-
+	for (auto pAttr = m_pNode->FirstAttribute(); pAttr; pAttr = pAttr->Next()) {
+		if (m_pParent->CheckAttached(pAttr, this))
+			continue;
+	}
 }
 
 // virtual 
 void CFormItem::Properties2Xml()
 {
+	ATLASSERT(m_pNode);
+	m_pParent->SetAttachedPropertyToXml(this);
+}
 
+// virtual 
+void CFormItem::SetAttachedPropertyToXml(CFormItem* pItem)
+{
+	// do nothing
 }
 
 // virtual
 void CFormItem::OnJsPropertyChange(LPCWSTR szPropName)
 {
 
+}
+
+bool CFormItem::DoAdjustTrackRect(LPRECT rect, const CPoint& offset)
+{
+	if (m_pParent) {
+		CRect newRect = m_pParent->AdjustTrackRect(this, rect, offset);
+		::CopyRect(rect, newRect);
+		return true;
+	}
+	return false;
+}
+
+// virtual 
+CRect CFormItem::AdjustTrackRect(CFormItem* pItem, const CRect& rect, const CPoint& offset)
+{
+	return rect;
 }
 
 // virtual 
@@ -213,15 +240,15 @@ CFormItem& CFormItem::operator=(const CFormItem& other)
 }
 
 // virtual 
-CFormItem* CFormItem::ObjectAt(CPoint point)
+CFormItem* CFormItem::ObjectAt(CPoint local)
 {
 	POSITION pos = m_children.GetTailPosition();
 	while (pos) {
-		CFormItem* pItem = m_children.GetPrev(pos)->ObjectAt(point);
+		CFormItem* pItem = m_children.GetPrev(pos)->ObjectAt(local);
 		if (pItem)
 			return pItem;
 	}
-	if (m_position.PtInRect(point))
+	if (m_position.PtInRect(local))
 		return this;
 	return nullptr;
 }
@@ -233,20 +260,6 @@ void CFormItem::Invalidate()
 	m_pDoc->UpdateAllViews(NULL, HINT_INVALIDATE_ITEM, reinterpret_cast<CObject*>(this));
 }
 
-// position is in logical
-void CFormItem::MoveTo(const CRect& position, CA2FormView* pView, int hitHandle)
-{
-	CRect np(position);
-	//if (hitHandle != -1 && GetDocument()->IsSnapToGrid())
-	  //SnapRect(np, hitHandle, m_position);
-	np.NormalizeRect();
-	if (np == m_position)
-		return;
-	Invalidate(); // old position
-	SetPosition(np);
-	Invalidate(); // new position
-}
-
 
 void CFormItem::MoveTo(const CRect& newPos)
 {
@@ -254,6 +267,10 @@ void CFormItem::MoveTo(const CRect& newPos)
 		return;
 	Invalidate(); // old position
 	SetPosition(newPos);
+	if (m_pParent)
+		m_pParent->OnSetPositionChild(this);
+	Properties2Xml();
+	OnChanged();
 	Invalidate(); // new position
 }
 
@@ -263,15 +280,33 @@ void CFormItem::OnChanged()
 	m_pDoc->SetModifiedXml();
 }
 
-// virtual 
-void CFormItem::SetPosition(const CRect& rect)
+bool CFormItem::CheckAttached(const tinyxml2::XMLAttribute* attr, CFormItem* pItem)
 {
-	if (m_position == rect)
-		return;
-	m_position = rect;
-	Properties2Xml();
-	OnChanged();
+	CString name = attr->Name();
+	int dotPos = name.Find(L'.');
+	if (dotPos == -1)
+		return false;
+	CString objName = name.Left(dotPos);
+	if (objName.Compare(ElementName()) != 0)
+		return false;
+	CString propName = name.Right(name.GetLength() - dotPos - 1);
+	int val = attr->IntValue();
+	AddAttachedProperty(propName, val, pItem);
+	return true;
 }
+
+// virtual 
+void CFormItem::AddAttachedProperty(const wchar_t* name, int value, CFormItem* pItem)
+{
+	// do nothing
+}
+
+// virtual 
+void CFormItem::OnSetPositionChild(CFormItem* pItem)
+{
+
+}
+
 
 // virtual 
 void CFormItem::AddChildItem(CFormItem* pItem)
@@ -281,6 +316,36 @@ void CFormItem::AddChildItem(CFormItem* pItem)
 	pItem->ConstructObject();
 	m_children.AddTail(pItem);
 	OnChanged();
+}
+
+
+// virtual 
+void CFormItem::Measure(const CSize& available)
+{
+	CSize chSize(0, 0);
+	POSITION pos = m_children.GetHeadPosition();
+	while (pos) {
+		CFormItem* pItem = m_children.GetNext(pos);
+		pItem->Measure(CSize(0, 0));
+		CSize itmSize = pItem->m_desiredSize;
+		if (itmSize.cx > chSize.cx)
+			itmSize.cx = chSize.cx;
+		chSize.cy += itmSize.cy;
+	}
+	m_desiredSize = chSize;
+}
+
+// virtual 
+void CFormItem::Arrange(const CRect& position)
+{	
+	CRect rc(0, 0, 0, 0);
+	POSITION pos = m_children.GetHeadPosition();
+	// from top to bottom
+	while (pos) {
+		auto pItem = m_children.GetNext(pos);
+		pItem->Arrange(rc);
+		rc.OffsetRect(0, pItem->GetPosition().Size().cy);
+	}	
 }
 
 //virtual 
@@ -293,8 +358,8 @@ CFormItemList::~CFormItemList()
 void CFormItemList::Clear()
 {
 	POSITION pos = GetHeadPosition();
-	while (pos) {
+	while (pos)
 		delete GetNext(pos);
-	}
 	RemoveAll();
 }
+

@@ -19,17 +19,14 @@ void CTextBoxElement::Draw(const RENDER_INFO& ri)
 	//int top = __Row * 1800; 
 	CRect rc(m_position);
 	ri.pDC->Rectangle(rc);
-	ri.pDC->DrawText(ElementName() , -1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+	CString strText;
+	strText.Format(L"%d:%d", m_position.left, m_position.top);
+	ri.pDC->DrawText(strText , -1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
 }
 
 // virtual 
-void CTextBoxElement::Xml2Properties()
+void CTextBoxElement::Measure(const CSize& available) 
 {
-	for (auto pAttr = m_pNode->FirstAttribute(); pAttr; pAttr = pAttr->Next()) {
-		CString attrName = pAttr->Name();
-		if (attrName == L"Grid.Row") {
-			// TODO: for TESTING
-			__Row = pAttr->IntValue();
-		}
-	}
+	m_desiredSize.SetSize(5000, 1800);
 }
+

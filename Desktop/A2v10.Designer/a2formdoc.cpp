@@ -1,3 +1,4 @@
+// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
@@ -162,6 +163,7 @@ void CA2FormDocument::LoadDocument(CFile* pFile, CXamlEditView* pView)
 		// set text to Scintilla view
 		ansiText.ReleaseBuffer();
 		Xml2Form();
+		DoLayout();
 	}
 	catch (CXmlError& error) {
 		// set invalid text to view ????
@@ -169,6 +171,13 @@ void CA2FormDocument::LoadDocument(CFile* pFile, CXamlEditView* pView)
 		error.ReportError();
 		THROW(new CUserException());
 	}
+}
+
+void CA2FormDocument::DoLayout() 
+{
+	ATLASSERT(m_pRoot);
+	m_pRoot->Measure(CSize(-1, -1));
+	m_pRoot->Arrange(CRect(0, 0, 0, 0));
 }
 
 void CA2FormDocument::SetXmlFromXmlText()
@@ -280,6 +289,7 @@ void CA2FormDocument::SetModifiedFlag(BOOL bModified /*= TRUE*/)
 void CA2FormDocument::DrawContent(const RENDER_INFO& ri, CFormItemWeakList& selection)
 {
 	ATLASSERT(m_pRoot != nullptr);
+	if (!m_pRoot) return;
 	ri.pDC->SetBkMode(TRANSPARENT);
 	HGDIOBJ pOldFont = ri.pDC->SelectObject(CTheme::GetUIFont(CTheme::FontUiDefault));
 

@@ -78,7 +78,9 @@ CFormItem* CFormTool::CreateItem(CFormItem::Shape shape, const CRect& rect, CFor
 		AfxMessageBox(L"Can't create element");
 		return nullptr;
 	}
-	pItem->SetPosition(rect);
+	CRect newRect(rect);
+	pItem->DoAdjustTrackRect(newRect, CPoint(0, 0));
+	pItem->MoveTo(newRect);
 	return pItem;
 }
 
@@ -94,10 +96,20 @@ void CFormTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoint& poi
 	CRect nr(tracker.m_rect);
 	CPoint local(point);
 	nr.NormalizeRect();
-	pView->ClientToDoc(nr);
-	pView->ClientToDoc(local);
+
 	auto pDoc = pView->GetDocument();
+
+	CClientDC dc(pView);
+	pView->OnPrepareDC(&dc, nullptr);
+	dc.DPtoLP(&local); // ClientToDoc
+	dc.DPtoLP(nr);	   // ClientToDoc
+
 	auto pParent = pDoc->ObjectAt(local);
+	if (!pParent) {
+		OnCancel();
+		return;
+	}
+
 	//if (pParent)
 		//pParent = pParent->GetCreateTarget();
 	// Convert to doc coords and snap to grid if needed
@@ -135,8 +147,12 @@ void CFormSelectTool::OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoin
 	CA2FormDocument* pDoc = pView->GetDocument();
 	ATLASSERT(pDoc);
 	bool bLocked = pDoc->IsLocked();
+
 	CPoint local(point);
-	pView->ClientToDoc(local);
+	CClientDC dc(pView);
+	pView->OnPrepareDC(&dc, nullptr);
+	dc.DPtoLP(&local); // ClientToDoc
+
 	CFormItem* pItem = pDoc->ObjectAt(local);
 	int cnt = pView->m_selection.GetCount();
 	if (cnt == 0) {
@@ -190,8 +206,10 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 	//if (pItem->GetFlags() & VFITEM_ISLINE)
 	//	return FALSE;
 	CRect tr(pItem->GetPosition());
-	pView->DocToClient(tr);
-	CRectTrackerEx tracker(tr, CRectTracker::resizeOutside);
+	CClientDC dc(pView);
+	pView->OnPrepareDC(&dc);
+	dc.LPtoDP(&tr); // DocToClient	
+	CRectTrackerEx tracker(tr, CRectTracker::resizeOutside, pItem, &dc, &point);
 	tracker.m_dwDrawStyle = pItem->GetTrackMask();
 	int hit = tracker.HitTest(point);
 	if (hit == CRectTracker::hitMiddle && (tracker.m_dwDrawStyle == RTRE_SIZEONLY))
@@ -202,11 +220,13 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 		pView->DocToClient(tracker.m_sizeMin);
 		if (!bLocked && tracker.Track(pView, point)) {
 			// object position has changed
-			CRect nr(tracker.m_rect);
-			nr.NormalizeRect();
-			pView->ClientToDoc(nr);
+			CRect newRect(tracker.m_rect);
+			newRect.NormalizeRect();
+			pView->ClientToDoc(newRect);
+			//TODO: avoid round errors!!!!
+			//pItem->DoAdjustTrackRect(&newRect, CPoint(0, 0));
 			pDoc->m_undo.DoAction(CFormUndo::_change, pItem);
-			pItem->MoveTo(nr, pView, hit);
+			pItem->MoveTo(newRect);
 			return true;
 		}
 	}

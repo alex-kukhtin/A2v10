@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -46,6 +46,7 @@ class CFormItem : public CObject
 	DECLARE_DYNAMIC(CFormItem)
 protected:
 	CRect m_position;
+	CSize m_desiredSize;
 	JavaScriptValue m_jsValue;
 	
 	CFormItem* m_pParent;
@@ -87,9 +88,14 @@ public:
 
 	JsValueRef GetJsHandle() { return (JsValueRef)m_jsValue; }
 	CFormItem* GetParent() { return m_pParent; }
+	tinyxml2::XMLElement* GetXmlNode() { return m_pNode; }
 	CFormItem* FindByGuid(const GUID& guid);
 
 	void OnChanged();
+	bool CheckAttached(const tinyxml2::XMLAttribute* attr, CFormItem* pItem);
+	bool DoAdjustTrackRect(LPRECT rect, const CPoint& offset);
+	const CRect& GetPosition() const { return m_position; }
+	void SetPosition(const CRect& pos) { m_position = pos; }
 
 	virtual ~CFormItem();
 
@@ -97,21 +103,24 @@ public:
 	virtual void Xml2Properties();
 	virtual void Properties2Xml();
 	virtual DWORD GetTrackMask() const { return RTRE_ALL; }
-	virtual const CRect& GetPosition() const {return m_position; }
 	virtual CFormItem* ObjectAt(CPoint point);
 	virtual CSize GetMinTrackSize() const;
-	virtual void MoveTo(const CRect& position, CA2FormView* pView, int hitHandle);
 	virtual void MoveTo(const CRect& newPos);
 	virtual void OnJsPropertyChange(LPCWSTR szPropName);
 
 	virtual void Draw(const RENDER_INFO& ri) abstract;
 	virtual void DrawChildren(const RENDER_INFO& ri);
+	virtual void AddAttachedProperty(const wchar_t* name, int value, CFormItem* pItem);
+	virtual void SetAttachedPropertyToXml(CFormItem* pItem);
 	virtual CFormItem* Clone();
 	virtual CFormItem& operator=(const CFormItem& other);
 
 	virtual void Invalidate();
-	virtual void SetPosition(const CRect& rect);
 	virtual void AddChildItem(CFormItem* pItem);
+	virtual void Measure(const CSize& available);
+	virtual void Arrange(const CRect& position);
+	virtual CRect AdjustTrackRect(CFormItem* pItem, const CRect& rect, const CPoint& offset);
+	virtual void OnSetPositionChild(CFormItem* pItem);
 private:
 
 };
