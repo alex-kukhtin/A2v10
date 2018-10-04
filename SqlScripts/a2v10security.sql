@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 28 sep 2018
-module version : 7308
+Last updated : 04 oct 2018
+module version : 7312
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7301);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7312);
 else
-	update a2sys.Versions set [Version] = 7301 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7312 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -397,7 +397,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2se
 	drop procedure a2security.[AddUserLogin]
 go
 ------------------------------------------------
-create or alter procedure a2security.AddUserLogin
+create procedure a2security.AddUserLogin
 @UserId bigint,
 @LoginProvider nvarchar(255),
 @ProviderKey nvarchar(max)
@@ -646,7 +646,11 @@ begin
 end
 go
 ------------------------------------------------
-create or alter procedure [a2security].[WriteLog]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
+	drop procedure a2security.[WriteLog]
+go
+------------------------------------------------
+create procedure [a2security].[WriteLog]
 	@UserId bigint = null,
 	@Severity int,
 	@Message nvarchar(max)
