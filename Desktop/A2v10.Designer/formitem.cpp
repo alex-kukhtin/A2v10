@@ -224,11 +224,26 @@ bool CFormItem::DoAdjustTrackRect(LPRECT rect, const CPoint& offset)
 	return false;
 }
 
+void CFormItem::DoFitItemRect(LPRECT rect)
+{
+	if (m_pParent) {
+		CRect newRect = m_pParent->FitItemRect(this, rect);
+		::CopyRect(rect, newRect);
+	}
+}
+
 // virtual 
 CRect CFormItem::AdjustTrackRect(CFormItem* pItem, const CRect& rect, const CPoint& offset)
 {
 	return rect;
 }
+
+// virtual 
+CRect CFormItem::FitItemRect(CFormItem* pItem, const CRect& rect)
+{
+	return rect;
+}
+
 
 // virtual 
 CFormItem& CFormItem::operator=(const CFormItem& other)

@@ -94,6 +94,8 @@ public:
 	void OnChanged();
 	bool CheckAttached(const tinyxml2::XMLAttribute* attr, CFormItem* pItem);
 	bool DoAdjustTrackRect(LPRECT rect, const CPoint& offset);
+	void DoFitItemRect(LPRECT rect);
+
 	const CRect& GetPosition() const { return m_position; }
 	void SetPosition(const CRect& pos) { m_position = pos; }
 
@@ -120,6 +122,7 @@ public:
 	virtual void Measure(const CSize& available);
 	virtual void Arrange(const CRect& position);
 	virtual CRect AdjustTrackRect(CFormItem* pItem, const CRect& rect, const CPoint& offset);
+	virtual CRect FitItemRect(CFormItem* pItem, const CRect& rect);
 	virtual void OnSetPositionChild(CFormItem* pItem);
 private:
 

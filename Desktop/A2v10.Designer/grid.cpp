@@ -9,34 +9,63 @@
 #define new DEBUG_NEW
 #endif
 
-//TODO: FIT ROW AND COLUMNS WIDTH
-
-#define ROWS 3
-#define COLS 3
+#define FIT_DELTA 50
 
 IMPLEMENT_DYNCREATE(CGridElement, CFormItem)
 
 CItemRegister grid(L"Grid", RUNTIME_CLASS(CGridElement), CFormItem::_grid);
 
+CGridElement::CGridElement()
+{
+	m_rows.Add(3600);
+	m_rows.Add(2000);
+	m_rows.Add(4000);
+
+	m_cols.Add(14000);
+	m_cols.Add(10000);
+	m_cols.Add(20000);
+}
+
+CRect CGridElement::CellRect(CPoint pos)
+{
+	CPoint topLeft(0, 0);
+	for (int r = 0; r < pos.y && r < Rows(); r++)
+		topLeft.y += RowHeight(r);
+	for (int c = 0; c < pos.x && c < Cols(); c++)
+		topLeft.x += ColWidth(c);
+	CRect cellRect = CRect(topLeft, CSize(ColWidth(pos.x), RowHeight(pos.y)));
+	cellRect.OffsetRect(m_position.TopLeft());
+	return cellRect;
+}
+
+int CGridElement::RowHeight(int row)
+{
+	ATLASSERT(row >= 0 && row < Rows());
+	return m_rows.GetAt(row);
+}
+
+int CGridElement::ColWidth(int col)
+{
+	ATLASSERT(col >= 0 && col < Cols());
+	return m_cols.GetAt(col);
+}
+
+
 // virtual 
 void CGridElement::Draw(const RENDER_INFO& ri)
 {
 	CBrushSDC brush(ri.pDC, RGB(255, 248, 255));
-	//CRect rc(m_pParent->GetPosition());
-	//rc.DeflateRect(1200, 1200);
 	CRect rc = m_position;
 	ri.pDC->Rectangle(rc);
-	int gw = rc.Width() / COLS;
-	int gh = rc.Height() / COLS;
 	int cx = rc.left;
 	int cy = rc.top;
-	for (int i = 0; i < ROWS; i++) {
-		cx += gw;
+	for (int c = 0; c < Cols(); c++) {
+		cx += ColWidth(c);
 		ri.pDC->MoveTo(cx, rc.top);
 		ri.pDC->LineTo(cx, rc.bottom);
 	}
-	for (int j = 0; j < COLS; j++) {
-		cy += gh;
+	for (int r = 0; r < Rows(); r++) {
+		cy += RowHeight(r);
 		ri.pDC->MoveTo(rc.left, cy);
 		ri.pDC->LineTo(rc.right, cy);
 	}
@@ -57,84 +86,85 @@ void CGridElement::AddAttachedProperty(const wchar_t* name, int value, CFormItem
 void CGridElement::Measure(const CSize& available)
 {
 	CSize szParent = m_pParent->GetPosition().Size();
-	m_desiredSize.SetSize(szParent.cx, 3600 * ROWS);
+	int cx = 0;
+	int cy = 0;
+	for (int r = 0; r < m_rows.GetCount(); r++)
+		cy += RowHeight(r);
+	for (int c = 0; c < m_cols.GetCount(); c++)
+		cx += ColWidth(c);
+	m_desiredSize.SetSize(cx, cy);
 }
 
 // virtual 
 void CGridElement::Arrange(const CRect& position)
 {
 	m_position = CRect(position.TopLeft(), m_desiredSize);
-	POSITION pos = m_children.GetHeadPosition();
-	CSize szPos = m_position.Size();
-	int rowSize = szPos.cy / COLS;
-	int colSize = szPos.cx / ROWS;
 	int row;
 	int col;
+	POSITION pos = m_children.GetHeadPosition();
 	while (pos) {
 		CFormItem* pItem = m_children.GetNext(pos);
-		// TODO:
 		if (m_attachedRow.Lookup(pItem, row) && m_attachedCol.Lookup(pItem, col)) {
 			row -= 1;
 			col -= 1;
-			CRect itemRect(m_position.left + col * colSize, m_position.top + row * rowSize, 0, 0);
-			itemRect.bottom = itemRect.top + rowSize;
-			itemRect.right = itemRect.left + colSize;
+			CRect itemRect(CellRect(row, col));
 			pItem->SetPosition(itemRect);
 		}
 	}
 }
 
-int getColNo(int x, int colsize) 
+CPoint CGridElement::CellFromPoint(CPoint pt)
 {
-	int x1 = 0;
-	int x2 = colsize;
-	int delta = 100;
-	for (int c = 0; c < COLS; c++) {
-		if (x >= x1 - delta && x <= x2 + delta)
-			return c;
-		x1 += colsize;
-		x2 += colsize;
+	CPoint cell(Cols() - 1, Rows() - 1);
+	CPoint pos(m_position.TopLeft());
+	for (int c = 0; c < Cols(); c++) {
+		int left = pos.x - FIT_DELTA;
+		int right = pos.x + ColWidth(c) + FIT_DELTA;
+		if (pt.x >= left && pt.x <= right) {
+			cell.x = c;
+			break;
+		}
+		pos.x += ColWidth(c);
 	}
-	return 0;
+	for (int r = 0; r < Rows(); r++) {
+		int top = pos.y - FIT_DELTA;
+		int bottom = pos.y + RowHeight(r) + FIT_DELTA;
+		if (pt.y >= top && pt.y <= bottom) {
+			cell.y = r;
+			break;
+		}
+		pos.y += RowHeight(r);
+	}
+	return cell;
 }
 
 // virtual 
 CRect CGridElement::AdjustTrackRect(CFormItem* pItem, const CRect& rect, const CPoint& offset)
 {
 	CPoint pt(rect.left, rect.top);
-	CSize szPos = m_position.Size();
-	pt.x += offset.x - pItem->GetPosition().left;
-	pt.y += offset.y - pItem->GetPosition().top;
-	int rowSize = szPos.cy / ROWS;
-	int colSize = szPos.cx / COLS;
-	int row = (pt.y - m_position.top) / rowSize;
-	//int col = (pt.x - m_position.left) / colSize;
-	int col = getColNo(pt.x - m_position.left, colSize);
-	if (col > COLS - 1)
-		col = COLS - 1;
-	if (col < 0)
-		col = 0;
-	if (row > ROWS - 1)
-		row = ROWS - 1;
-	if (row < 0)
-		row = 0;
-	CRect newRect(m_position.left + col * colSize, m_position.top + row * rowSize, 0, 0);
-	newRect.bottom = newRect.top + rowSize;
-	newRect.right = newRect.left + colSize;
-	return newRect;
+	CRect itemRect = pItem->GetPosition();
+	pt.x += offset.x - itemRect.left;
+	pt.y += offset.y - itemRect.top;
+	CPoint cell = CellFromPoint(pt);
+	return CellRect(cell);
+}
+
+// virtual 
+CRect CGridElement::FitItemRect(CFormItem* pItem, const CRect& rect)
+{
+	CPoint ptCenter(rect.left + rect.Width() / 2, rect.top + rect.Height() / 2);
+	CPoint cell = CellFromPoint(ptCenter);
+	return CellRect(cell);
 }
 
 // virtual 
 void CGridElement::OnSetPositionChild(CFormItem* pItem)
 {
-	CRect itemPos = pItem->GetPosition();
-	CSize szPos = m_position.Size();
-	int rowSize = szPos.cy / ROWS;
-	int colSize = szPos.cx / COLS;
-	int row = (itemPos.top - m_position.top) / rowSize;
-	int col = (itemPos.left - m_position.left) / colSize;
-	m_attachedRow.SetAt(pItem, row + 1);
-	m_attachedCol.SetAt(pItem, col + 1);
+	CRect rect = pItem->GetPosition();
+	CPoint ptCenter(rect.left + rect.Width() / 2, rect.top + rect.Height() / 2);
+	CPoint cell = CellFromPoint(ptCenter);
+	m_attachedRow.SetAt(pItem, cell.y + 1);
+	m_attachedCol.SetAt(pItem, cell.x + 1);
 }
 
 // virtual 

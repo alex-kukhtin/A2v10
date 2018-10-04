@@ -14,7 +14,6 @@ public:
 	// Overridables
 	virtual void OnLButtonDown(CA2FormView* pView, UINT nFlags, const CPoint& point);
 	virtual void OnLButtonDblClk(CA2FormView* pView, UINT nFlags, const CPoint& point);
-	virtual void OnCancel();
 
 	static CFormTool* FindTool();
 	static CList<CFormTool*> s_toolsList;
@@ -23,6 +22,7 @@ public:
 
 	static void SetShape(UINT nID);
 	static bool IsShape(UINT nID);
+	static void OnCancel();
 	static CFormItem* CreateItem(CFormItem::Shape shape, const CRect& rect, CFormItem* pParent);
 };
 

@@ -217,8 +217,10 @@ void CA2FormDocument::SaveDocument(CFile* pFile, CXamlEditView* pView)
 		BYTE hdr[3] = { 0xef, 0xbb, 0xbf }; // UTF-8 signature
 		pFile->Write(hdr, 3);
 		pFile->Write((LPCSTR) utf8Text.c_str(), utf8Text.length() - 1); // null terminator
-		Xml2Form(); // always
 		m_undo.Clear();
+		Xml2Form(); // always
+		DoLayout();
+		CFormTool::OnCancel();
 	}
 	catch (CXmlError& err) {
 		err.ReportError();

@@ -128,7 +128,7 @@ void CFormTool::OnLButtonDblClk(CA2FormView* pView, UINT nFlags, const CPoint& p
 
 }
 
-// virtual 
+// static
 void CFormTool::OnCancel()
 {
 	CFormTool::SetShape(ID_TOOLBOX_POINTER);
@@ -224,6 +224,7 @@ bool CFormSelectTool::HandleOneObject(CA2FormView* pView, const CPoint& point)
 			newRect.NormalizeRect();
 			pView->ClientToDoc(newRect);
 			//TODO: avoid round errors!!!!
+			pItem->DoFitItemRect(newRect);
 			//pItem->DoAdjustTrackRect(&newRect, CPoint(0, 0));
 			pDoc->m_undo.DoAction(CFormUndo::_change, pItem);
 			pItem->MoveTo(newRect);
