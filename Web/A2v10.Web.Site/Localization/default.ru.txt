@@ -8,7 +8,7 @@
 @Tracing=Трассировка
 @Settings=Настройка
 @Feedback=Обратная связь
-@DataModel=Модель данних
+@DataModel=Модель данных
 @Profiling=Профилирование
 @Profile=Профиль
 @ChangePassword=Сменить пароль
