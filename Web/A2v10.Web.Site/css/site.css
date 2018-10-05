@@ -652,6 +652,9 @@ input[type=text]::-ms-clear {
 .text-small {
   font-size: 0.9rem;
 }
+.text-big {
+  font-size: 1.25rem;
+}
 .text-gray {
   color: #8591a2;
 }

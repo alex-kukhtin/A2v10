@@ -11,6 +11,7 @@ namespace A2v10.Xaml
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("div", "a2-popup");
+			tag.MergeAttribute("ondblclick", "event.stopPropagation()");
 			tag.MergeAttribute("id", context.RootId);
 			MergeAttributes(tag, context, MergeAttrMode.Margin);
 			if (Width != null)

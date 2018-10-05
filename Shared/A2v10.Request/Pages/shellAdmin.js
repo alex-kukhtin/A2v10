@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180810-7269*/
+/*20181005-7312*/
 
 (function () {
 
@@ -11,7 +11,7 @@
 	const shell = new Shell({
 		el: '#shell',
 		data: {
-			title: menu.SysParams.AppTitle,
+			title: menu.SysParams ? menu.SysParams.AppTitle : '',
 			subtitle: 'администратор',
 			version: '$(AppVersion)',
 			menu: menu.Menu[0].Menu

@@ -1,5 +1,5 @@
 ﻿
-/*20180804-7264*/
+/*20181005-7312*/
 
 (function () {
 
@@ -14,9 +14,9 @@
 			menu: menu.Menu ? menu.Menu[0].Menu : null,
 			newMenu: menu.NewMenu,
 			settingsMenu: menu.SettingsMenu,
-			title: menu.SysParams.AppTitle,
-			subtitle: menu.SysParams.AppSubTitle,
-			sideBarMode: menu.SysParams.SideBarMode,
+			title: menu.SysParams ? menu.SysParams.AppTitle : '',
+			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
+			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
 			userIsAdmin: $(Admin),
 			isDebug: $(Debug),
 			appData: $(AppData)

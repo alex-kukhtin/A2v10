@@ -40,6 +40,10 @@
 				</TextBox>
 
 				<CheckBox Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
+				<Text Big="True">Здесь отображается большой текст</Text>
+				<Text>Текст с
+					<Span Big="True">большим</Span> и
+					<Span Bold="True">жирным</Span> фрагментом</Text>
 			</Grid>
 		</Tab>
 		<Tab Header="Validators" Padding="30, 10">

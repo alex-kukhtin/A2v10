@@ -10,6 +10,7 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 		public Boolean Small { get; set; }
+		public Boolean Big { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -25,6 +26,7 @@ namespace A2v10.Xaml
 					span.MergeAttribute(":class", $"$getNegativeRedClass({cbind.GetPath(context)})");
 			}
 			span.AddCssClassBool(Small, "small");
+			span.AddCssClassBool(Big, "text-big");
 
 			span.RenderStart(context);
 			if (Content is String)

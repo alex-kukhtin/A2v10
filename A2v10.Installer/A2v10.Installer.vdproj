@@ -2924,6 +2924,11 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Net.Shim, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_9C927A6A432B4A7CA17744306F2D299A"
+                    {
+                    "Name" = "8:A2v10.Net.Shim.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\bin\\A2v10.Net.Shim.dll"
             "TargetName" = "8:"
@@ -3885,15 +3890,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{369EBFF5-93BF-4D4C-A4F5-BA19204C1C92}"
-        "PackageCode" = "8:{0102C22D-A23F-425D-87BD-9E8AEF31073D}"
+        "ProductCode" = "8:{F2D96CEF-D963-4034-9C00-AA2A8813A82F}"
+        "PackageCode" = "8:{9FB5F83D-E4EA-4DDC-A718-2332AED0E74D}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7311"
+        "ProductVersion" = "8:10.0.7312"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

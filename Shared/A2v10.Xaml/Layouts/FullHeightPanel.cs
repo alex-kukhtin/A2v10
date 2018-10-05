@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Xaml
 {
@@ -32,6 +31,8 @@ namespace A2v10.Xaml
 
 		#endregion
 
+		public Length MinWidth { get; set; }
+
 		String GetRows()
 		{
 			StringBuilder sb = new StringBuilder(); 
@@ -50,6 +51,8 @@ namespace A2v10.Xaml
 		{
 			var panel = new TagBuilder("div", "full-height-panel", IsInGrid);
 			MergeAttributes(panel, context);
+			if (MinWidth != null)
+				panel.MergeStyleUnit("min-width", MinWidth.Value);
 			panel.MergeStyle("grid-template-rows", GetRows());
 			panel.RenderStart(context);
 			RenderChildren(context);

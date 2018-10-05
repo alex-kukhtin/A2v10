@@ -27,6 +27,7 @@ const template = {
 	},
 	validators: {
 		"Agent.Name": 'Введите наименование',
+		'Agent.$Bit1': 'Установите значение',
 		"Agent.Code": [
 			'Введите код',
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" }
