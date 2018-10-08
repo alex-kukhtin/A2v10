@@ -21,6 +21,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
+		private readonly A2v10.Request.BaseController _baseController;
 
 		public AppLinkController()
 		{
@@ -29,6 +30,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_baseController = new A2v10.Request.BaseController();
 		}
 
 		public String CurrentLang => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
@@ -38,6 +40,12 @@ namespace A2v10.Web.Mvc.Controllers
 			var page = pathInfo.ToLowerInvariant();
 			try
 			{
+				if (pathInfo.ToLowerInvariant() == "appstyles")
+				{
+					AppStyles();
+					return;
+				}
+
 				String path = _host.MakeFullPath(false, "_pages", $"{page}.{CurrentLang}.html");
 				if (!System.IO.File.Exists(path))
 					throw new IOException($"Application page not found ({page}.{CurrentLang}).");
@@ -56,6 +64,7 @@ namespace A2v10.Web.Mvc.Controllers
 			StringBuilder layout = new StringBuilder(_localizer.Localize(null, ResourceHelper.InitLayoutHtml));
 			layout.Replace("$(Lang)", CurrentLang);
 			layout.Replace("$(Build)", _host.AppBuild);
+			layout.Replace("$(AssetsStyleSheets)", AppStyleSheetsLink);
 
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
@@ -68,6 +77,29 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(PageScript)", script.ToString());
 
 			Response.Write(layout.ToString());
+		}
+
+		String AppStyleSheetsLink
+		{
+			get
+			{
+				// TODO _host AssestsDistionary
+				var fp = _host.MakeFullPath(false, "_assets", "");
+				if (!Directory.Exists(fp))
+					return String.Empty;
+				foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
+				{
+					// at least one file
+					return $"<link  href=\"/applink/appstyles\" rel=\"stylesheet\" />";
+				}
+				return String.Empty;
+			}
+		}
+
+		public void AppStyles()
+		{
+			Response.ContentType = "text/css";
+			_baseController.GetAppStyleConent(Response.Output);
 		}
 	}
 }

@@ -22,6 +22,14 @@
 	display: flex;
 	flex-direction: column;
 
+	&.left {
+		left: 0;
+		right: auto;
+		border-left: none;
+		border-right: 1px solid @default-brd-color;
+		box-shadow: 5px 0 10px 0 rgba(0,0,0, 0.2);
+	}
+
 	.debug-pane-header {
 		background-color: @dialog-header-bg-color;
 		padding: 2px 2px 2px 6px;
@@ -30,7 +38,6 @@
 		.debug-pane-title {
 			font-size: .95rem;
 		}
-
 		// TODO: JOIN WITH FEEDBACK
 		a.btn {
 			float: right;
@@ -47,8 +54,8 @@
 	}
 
 	.toolbar {
-		min-height: 2.1rem;
-		height: 2.1rem;
+		min-height: 2.25rem;
+		height: 2.25rem;
 		border-bottom: 1px solid @default-brd-color;
 	}
 

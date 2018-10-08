@@ -402,7 +402,6 @@
 }
 .ico-save-outline:before {
   content: "\e981";
-  color: #034989;
 }
 .ico-save-close:before {
   content: "\e985";
@@ -410,7 +409,6 @@
 }
 .ico-save-close-outline:before {
   content: "\e983";
-  color: #034989;
 }
 .ico-search:before {
   content: "\e986";
@@ -605,8 +603,16 @@
 .ico-pane-left:before {
   content: "\eab1";
 }
+.ico-pane-left-blue:before {
+  content: "\eab1";
+  color: #1ba1e2 !important;
+}
 .ico-pane-right:before {
   content: "\eab2";
+}
+.ico-pane-right-blue:before {
+  content: "\eab2";
+  color: #1ba1e2 !important;
 }
 * {
   box-sizing: border-box;
@@ -4757,6 +4763,13 @@ h5,
   display: flex;
   flex-direction: column;
 }
+.debug-panel.left {
+  left: 0;
+  right: auto;
+  border-left: none;
+  border-right: 1px solid #bdc5d8;
+  box-shadow: 5px 0 10px 0 rgba(0, 0, 0, 0.2);
+}
 .debug-panel .debug-pane-header {
   background-color: #fff29d;
   padding: 2px 2px 2px 6px;
@@ -4777,8 +4790,8 @@ h5,
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 2.1rem;
-  height: 2.1rem;
+  min-height: 2.25rem;
+  height: 2.25rem;
   border-bottom: 1px solid #bdc5d8;
 }
 .debug-panel .debug-body {

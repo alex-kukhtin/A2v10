@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180619-7227
+// 20181008-7314
 // components/debug.js*/
 
 (function () {
@@ -64,13 +64,15 @@
 
 	Vue.component('a2-debug', {
 		template: `
-<div class="debug-panel" v-if="paneVisible">
+<div class="debug-panel" v-if="paneVisible" :class="panelClass">
     <div class="debug-pane-header">
         <span class="debug-pane-title" v-text="title"></span>
         <a class="btn btn-close" @click.prevent="close">&#x2715</a>
     </div>
     <div class="toolbar">
         <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+		<div class="aligner"></div>
+        <button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
     </div>
     <div class="debug-model debug-body" v-if="modelVisible">
         <pre class="a2-code" v-text="modelJson()"></pre>
@@ -100,7 +102,8 @@
 		},
 		data() {
 			return {
-				trace: []
+				trace: [],
+				left: false
 			};
 		},
 		computed: {
@@ -117,6 +120,12 @@
 			},
 			traceView() {
 				return this.traceVisible;
+			},
+			toggleIcon() {
+				return this.left ? 'ico-pane-right' : 'ico-pane-left';
+			},
+			panelClass() {
+				return this.left ? 'left' : 'right';
 			}
 		},
 		methods: {
@@ -134,6 +143,9 @@
 					this.$forceUpdate();
 				else if (this.traceVisible)
 					this.loadTrace();
+			},
+			toggle() {
+				this.left = !this.left;
 			},
 			loadTrace() {
 				const root = window.$$rootUrl;

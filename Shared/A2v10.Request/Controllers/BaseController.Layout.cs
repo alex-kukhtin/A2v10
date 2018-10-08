@@ -59,7 +59,7 @@ namespace A2v10.Request
 			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
 		}
 
-		String AppStyleSheetsLink
+		public String AppStyleSheetsLink
 		{
 			get
 			{
