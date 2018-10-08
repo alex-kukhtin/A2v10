@@ -32,8 +32,8 @@ const RES_DEF resArray[] =
 	{L"app/css/site.min.css",   IDWEB_SITE_MAIN_CSS,	 mimeCss   },
 	{L"app/scripts/vue.js",	    IDWEB_SCRIPT_VUE_JS,	 mimeJs    },
 	{L"app/scripts/main.js",	IDWEB_SCRIPT_MAIN_JS,	 mimeJs    },
-	{L"app/css/fonts/bowtie.woff", IDWEB_FONT_BOWTIE_FONT,  mimeWoff },
-	{L"app/css/fonts/bowtie.ttf",  IDWEB_FONT_BOWTIE_FONT2,  mimeTtf }
+	{L"app/css/fonts/a2v10.woff", IDWEB_FONT_A2V10_FONT,  mimeWoff },
+	{L"app/css/fonts/a2v10.ttf",  IDWEB_FONT_A2V10_FONT2,  mimeTtf }
 
 };
 

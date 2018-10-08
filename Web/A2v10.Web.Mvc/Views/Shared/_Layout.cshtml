@@ -1,33 +1,33 @@
 ﻿<!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>A2:Web</title>
-    <link href="/css/site.min.css" rel="stylesheet" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>A2:Web</title>
+	<link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="app" class="shell">
-        <header class="header">
-            <div class="h-block">
-                <!--<i class="bowtie-user"></i>-->
-                <a class="app-title" href='/' v-on:click.prevent="root" v-text="title"></a>
-                <span class="app-subtitle" v-text="subtitle"></span>
-            </div>
-            <div class="aligner"></div>
-        </header>
-        <div class="main-view">
-            <div class="content-view full-view">
-                @RenderBody()
-            </div>
-        </div>
-        <footer class="footer">
-            <div :class="{spinner: true, active:processing}"></div>
-            version: <span v-text="version"></span>
-        </footer>
-    </div>
-    <script type="text/javascript" src="/scripts/vue.min.js?v=2.5.16"></script>
-    @RenderSection("Scripts", false)
+	<div id="app" class="shell">
+		<header class="header">
+			<div class="h-block">
+				<!--<i class="ico-user"></i>-->
+				<a class="app-title" href='/' v-on:click.prevent="root" v-text="title"></a>
+				<span class="app-subtitle" v-text="subtitle"></span>
+			</div>
+			<div class="aligner"></div>
+		</header>
+		<div class="main-view">
+			<div class="content-view full-view">
+				@RenderBody()
+			</div>
+		</div>
+		<footer class="footer">
+			<div :class="{spinner: true, active:processing}"></div>
+			version: <span v-text="version"></span>
+		</footer>
+	</div>
+	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.16"></script>
+	@RenderSection("Scripts", false)
 </body>
 </html>

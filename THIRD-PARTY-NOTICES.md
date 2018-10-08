@@ -11,7 +11,6 @@ A2v10 uses third party material from the projects listed below.
 * Vuex - https://github.com/vuejs/vuex
 * D3: Data-Driven Documents - https://d3js.org
 * Jasmine - https://github.com/jasmine/jasmine
-* Icon font generator - https://github.com/chryw/vsfi/tree/bowtie-sfx
 
 ---
  

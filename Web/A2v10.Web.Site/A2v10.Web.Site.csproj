@@ -113,8 +113,7 @@
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="app\standalone\pager.js" />
-    <Content Include="css\bowtie.css" />
-    <Content Include="css\fonts\bowtie.svg" />
+    <Content Include="css\fonts\A2v10.svg" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="css\site.compact.css" />
@@ -230,15 +229,11 @@
     <Content Include="Less\ToolBar.less" />
     <Content Include="Less\TreeView.less" />
     <Content Include="Less\Nav.less" />
-    <Content Include="Less\Bowtie.less" />
     <Content Include="Less\Tab.less" />
     <Content Include="Less\Grid.less" />
     <Content Include="Less\DropDown.less" />
     <Content Include="Less\Page.less" />
     <Content Include="Less\Button.less" />
-    <Content Include="css\fonts\bowtie.eot" />
-    <Content Include="css\fonts\bowtie.ttf" />
-    <Content Include="css\fonts\bowtie.woff" />
     <Content Include="Less\Table.less" />
     <Content Include="Less\CheckBox.less" />
     <Content Include="Less\Popover.less" />
@@ -265,6 +260,11 @@
     <Content Include="Less\AppPages.less" />
     <Content Include="Less\Feedback.less" />
     <Content Include="Less\Card.less" />
+    <Content Include="Less\Font.less" />
+    <Content Include="css\fonts\A2v10.eot" />
+    <Content Include="css\fonts\A2v10.ttf" />
+    <Content Include="css\fonts\A2v10.woff" />
+    <Content Include="css\fonts\A2v10.woff2" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />

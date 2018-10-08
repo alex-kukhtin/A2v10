@@ -75,7 +75,7 @@ WriteLiteral(">\r\n            <div");
 
 WriteLiteral(" class=\"h-block\"");
 
-WriteLiteral(">\r\n                <!--<i class=\"bowtie-user\"></i>-->\r\n                <a");
+WriteLiteral(">\r\n                <!--<i class=\"ico-user\"></i>-->\r\n                <a");
 
 WriteLiteral(" class=\"app-title\"");
 

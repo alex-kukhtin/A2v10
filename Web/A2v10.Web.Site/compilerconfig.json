@@ -8,5 +8,9 @@
 		"outputFile": "css/site.compact.css",
 		"inputFile": "Less/Site.compact.less"
 	}
+	{
+		"outputFile": "css/site.magenta.css",
+		"inputFile": "Less/Site.magenta.less"
+	}
 	*/
 ]

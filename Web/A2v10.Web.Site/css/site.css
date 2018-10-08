@@ -17,14 +17,14 @@
 /* mixins */
 /* icon colors */
 @font-face {
-  font-family: 'Bowtie';
-  src: url('/css/fonts/bowtie.eot');
-  src: url('/css/fonts/bowtie.eot?#iefix') format('eot'), url('/css/fonts/bowtie.woff') format('woff'), url('/css/fonts/bowtie.ttf') format('truetype'), url('/css/fonts/bowtie.svg#bowtie') format('svg');
+  font-family: 'A2v10';
+  src: url('/css/fonts/a2v10.eot');
+  src: url('/css/fonts/a2v10.eot?#iefix') format('eot'), url('/css/fonts/a2v10.woff') format('woff'), url('/css/fonts/a2v10.ttf') format('truetype'), url('/css/fonts/a2v10.svg#a2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 .ico {
-  font-family: 'Bowtie';
+  font-family: 'A2v10';
   speak: none;
   font-size: 14px;
   font-style: normal;
@@ -122,6 +122,9 @@
 .ico-calendar:before {
   content: "\e93d";
 }
+.ico-call:before {
+  content: "\ea19";
+}
 .ico-chart-area:before {
   content: "\e922";
 }
@@ -148,6 +151,9 @@
 }
 .ico-check:before {
   content: "\e978";
+}
+.ico-check-bold:before {
+  content: "\e977";
 }
 .ico-chevron-down:before {
   content: "\e9a4";
@@ -394,8 +400,16 @@
   content: "\e982";
   color: #034989;
 }
+.ico-save-outline:before {
+  content: "\e981";
+  color: #034989;
+}
 .ico-save-close:before {
   content: "\e985";
+  color: #034989;
+}
+.ico-save-close-outline:before {
+  content: "\e983";
   color: #034989;
 }
 .ico-search:before {
@@ -587,6 +601,12 @@
 }
 .ico-unlock-outline:before {
   content: "\e98d";
+}
+.ico-pane-left:before {
+  content: "\eab1";
+}
+.ico-pane-right:before {
+  content: "\eab2";
 }
 * {
   box-sizing: border-box;
@@ -2325,7 +2345,7 @@ table.data-grid tr.group td {
   padding-left: 0;
 }
 table.data-grid tr.group td .expmark:after {
-  font-family: 'Bowtie';
+  font-family: 'A2v10';
   content: '\e9cd';
   /*tree-collapsed*/
   width: 16px;
@@ -2640,7 +2660,7 @@ table.data-grid > tbody > tr.bold > td {
   width: 20px;
   height: 16px;
   font-size: 16px;
-  font-family: "Bowtie";
+  font-family: "A2v10";
   color: #8591a2;
 }
 .tree-view li > .overlay:hover {
@@ -3515,7 +3535,7 @@ label.radio span::before {
 label.checkbox span::after,
 label.radio span::after {
   content: '';
-  font-family: 'Bowtie';
+  font-family: 'A2v10';
   font-size: 85%;
   position: absolute;
   display: inline-block;
@@ -4650,7 +4670,7 @@ h5,
 }
 .side-bar-compact .collapse-button:after {
   content: "\e9ab";
-  font-family: 'Bowtie';
+  font-family: 'A2v10';
   display: block;
   color: #9ab3e0;
   font-size: 16px;
