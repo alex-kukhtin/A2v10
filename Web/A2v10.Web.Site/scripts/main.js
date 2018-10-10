@@ -8632,7 +8632,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181010-7315
 // controllers/base.js
 
 (function () {
@@ -9226,7 +9226,7 @@ Vue.directive('resize', {
 				const doReport = () => {
 					let id = arg;
 					if (arg && utils.isObject(arg))
-						id = arg.$id;
+						id = utils.getStringId(arg);
 					const root = window.$$rootUrl;
 					let url = `${root}/report/${cmd}/${id}`;
 					let reportUrl = this.$indirectUrl || this.$baseUrl;

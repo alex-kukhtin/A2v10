@@ -130,6 +130,14 @@ namespace A2v10.Xaml
 		Shadow5
 	}
 
+	public enum RenderMode
+	{
+		Show,
+		Hide,
+		ReadOnly,
+		Debug
+	}
+
 	public enum Icon
 	{
 		NoIcon = 0,
@@ -148,6 +156,7 @@ namespace A2v10.Xaml
 		ArrowSort,
 		Attach,
 		Ban,
+		BankAccount,
 		Calendar,
 		Call,
 		ChartArea,
@@ -161,8 +170,10 @@ namespace A2v10.Xaml
 		Check,
 		ChevronDown,
 		ChevronLeft,
+		ChevronDoubleLeft,
 		ChevronLeftEnd,
 		ChevronRight,
+		ChevronDoubleRight,
 		ChevronRightEnd,
 		ChevronUp,
 		Clear,

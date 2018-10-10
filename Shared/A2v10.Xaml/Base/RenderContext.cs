@@ -144,6 +144,14 @@ namespace A2v10.Xaml
 			}
 		}
 
+		public Object CalcDataModelExpression(String expression)
+		{
+			//TODO:
+			//if (_dataModel == null)
+				//return null;
+			return null; // _dataModel.CalcExpression(expression);
+		}
+
 		public void RenderSpace()
 		{
 			Writer.Write(" ");
