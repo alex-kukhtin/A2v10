@@ -68,7 +68,7 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(Build)", _host.AppBuild);
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
-				layout.Replace("$(Title)", appTitle.AppTitle);
+				layout.Replace("$(Title)", appTitle?.AppTitle);
 				layout.Replace("$(Description)", _host.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 				layout.Replace("@(SiteMeta)", GetSiteMetaTags());

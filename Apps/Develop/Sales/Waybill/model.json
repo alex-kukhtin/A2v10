@@ -34,7 +34,8 @@
 	},
 	"reports": {
 		"waybill": {
-			"report": "waybill",
+					"report": "waybill",
+					"name":  "Заголовок отчета",
 			"model": "Document"
 		}
 	}
