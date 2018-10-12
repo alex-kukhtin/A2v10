@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 	public class SpanIcon : Inline
 	{
 		public Icon Icon { get; set; }
+		public Length Size { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -21,6 +22,8 @@ namespace A2v10.Xaml
 				span.MergeAttribute(":class", iconBind.GetPathFormat(context));
 			else if (Icon != Icon.NoIcon)
 				span.MergeAttribute(":class", $"'ico-{Icon.ToString().ToKebabCase()}'");
+			if (Size != null)
+				span.MergeStyle("font-size", Size.Value);
 			span.Render(context, TagRenderMode.Normal, addSpace: true);
 		}
 	}

@@ -2484,6 +2484,13 @@ table.data-grid > tbody > tr.bold > td {
 .data-grid-container.fixed-header.bordered > .data-grid-body.fixed-header > tbody > tr > td:last-child {
   border-right-style: none !important;
 }
+.data-grid-container > .data-grid-body > .data-grid-empty {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  margin-top: 1px;
+}
 .toolbar {
   display: flex;
   flex-wrap: wrap;

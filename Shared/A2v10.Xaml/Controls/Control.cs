@@ -99,6 +99,8 @@ namespace A2v10.Xaml
 				return true;
 			if (rm == RenderMode.Debug)
 				return context.IsDebugConfiguration ? false : true;
+			if (rm == RenderMode.Show)
+				return false; // skip read only
 			if (context.IsDataModelIsReadOnly || rm == RenderMode.ReadOnly)
 			{
 				Disabled = true;

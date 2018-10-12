@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
+// 20181012-7316
 // components/collectionview.js
 
 /*

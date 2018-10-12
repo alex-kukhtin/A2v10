@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180929-7309
+// 20181012-7316
 // components/datagrid.js*/
 
 (function () {
@@ -37,6 +37,9 @@
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
+	<div class="data-grid-empty" v-if="$isEmpty">
+		<slot name="empty" />
+	</div>
 	<table :class="cssClass">
 		<colgroup>
 			<col v-if="isMarkCell" class="fit"/>
@@ -634,6 +637,15 @@
 				this.clientGroups = grArray;
 				log.time('datagrid grouping time:', startTime);
 				return this.clientGroups;
+			},
+			$isEmpty() {
+				if (!this.itemsSource) return false;
+				let mi = this.itemsSource.$ModelInfo;
+				if (!mi) return false;
+				if ('HasRows' in mi) {
+					return mi.HasRows === false;
+				}
+				return false;
 			}
 		},
 		watch: {

@@ -22,44 +22,6 @@ namespace A2v10.Xaml
 
 		public String Tip { get; set; }
 
-		internal virtual Boolean SkipRender(RenderContext context)
-		{
-			var rm = GetRenderMode(context);
-			if (rm == null)
-				return false;
-			if (rm == RenderMode.Hide)
-				return true;
-			if (rm == RenderMode.Debug)
-				return context.IsDebugConfiguration ? false : true;
-			return false;
-		}
-
-		internal RenderMode? GetRenderMode(RenderContext context)
-		{
-			var renderBind = GetBinding(nameof(Render));
-			if (renderBind == null && Render == null)
-				return null;
-			if (renderBind != null)
-			{
-				var rm = context.CalcDataModelExpression(renderBind.Path);
-				if (rm is String rmString)
-				{
-					if (Enum.TryParse<RenderMode>(rmString, out RenderMode rmResult))
-					{
-						return rmResult;
-					}
-					throw new XamlException($"Invalid RenderMode '{rmResult}', Expected 'Show', 'Hide', 'ReadOnly' or 'Debug'");
-				}
-				else if (rm is Boolean rmBool)
-					return rmBool ? RenderMode.Show : RenderMode.Hide;
-			}
-			else if (Render != null)
-			{
-				return Render;
-			}
-			return null;
-		}
-
 		internal abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
 
 		[Flags]
@@ -239,5 +201,45 @@ namespace A2v10.Xaml
 			else if (align != TextAlign.Default)
 				input.MergeAttribute("align", align.ToString().ToLowerInvariant());
 		}
+
+		internal virtual Boolean SkipRender(RenderContext context)
+		{
+			var rm = GetRenderMode(context);
+			if (rm == null)
+				return false;
+			if (rm == RenderMode.Hide)
+				return true;
+			if (rm == RenderMode.Debug)
+				return context.IsDebugConfiguration ? false : true;
+			return false;
+		}
+
+		internal RenderMode? GetRenderMode(RenderContext context)
+		{
+			var renderBind = GetBinding(nameof(Render));
+			if (renderBind == null && Render == null)
+				return null;
+			if (renderBind != null)
+			{
+				var rm = context.CalcDataModelExpression(renderBind.Path);
+				if (rm is String rmString)
+				{
+					if (Enum.TryParse<RenderMode>(rmString, out RenderMode rmResult))
+					{
+						return rmResult;
+					}
+					throw new XamlException($"Invalid RenderMode '{rmResult}', Expected 'Show', 'Hide', 'ReadOnly' or 'Debug'");
+				}
+				else if (rm is Boolean rmBool)
+					return rmBool ? RenderMode.Show : RenderMode.Hide;
+			}
+			else if (Render != null)
+			{
+				return Render;
+			}
+			return null;
+		}
+
+
 	}
 }

@@ -191,7 +191,7 @@ namespace A2v10.Xaml
 						return $"$navigate({CommandUrl(context)}, {CommandArgument(context)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
 
 				case CommandType.Create:
-					return $"$navigate({CommandUrl(context)}, {CommandArgument(context, nullable:true)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
+					return $"$navigate({CommandUrl(context)}, {CommandArgument(context, nullable:true)}, {NewWindowJS}, {UpdateAfterArgument(context)}, {GetOptions(context)})";
 
 				case CommandType.Remove:
 					if (indirect)
@@ -407,7 +407,12 @@ namespace A2v10.Xaml
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
 							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})");
-					}
+					} else if (CheckReadOnly)
+						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})");
+					break;
+				case CommandType.Create:
+					if (CheckReadOnly)
+						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})");
 					break;
 				case CommandType.Save:
 				case CommandType.SaveAndClose:

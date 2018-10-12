@@ -349,7 +349,8 @@
 			$href(url, data) {
 				return urltools.createUrlForNavigate(url, data);
 			},
-			$navigate(url, data, newWindow, update) {
+			$navigate(url, data, newWindow, update, opts) {
+				if (this.$isReadOnly(opts)) return;
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
 					let nwin = window.open(urlToNavigate, "_blank");
