@@ -13,6 +13,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var div = new TagBuilder("a2-include");
 			MergeAttributes(div, context);
 			var src = GetBinding(nameof(Source));

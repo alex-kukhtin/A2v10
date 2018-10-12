@@ -16,6 +16,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var menu = new TagBuilder("mega-menu");
 			MergeAttributes(menu, context);
 			if (Direction != DropDownDirection.DownLeft)

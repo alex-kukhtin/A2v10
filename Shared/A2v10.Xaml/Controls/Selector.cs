@@ -30,7 +30,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			CheckDisabledModel(context);
+			if (CheckDisabledModel(context))
+				return;
 			var input = new TagBuilder("a2-selector", null, IsInGrid);
 			onRender?.Invoke(input);
 			if (!String.IsNullOrEmpty(Delegate))

@@ -17,6 +17,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var tb = new TagBuilder("div", "commandbar", IsInGrid);
 			onRender?.Invoke(tb);
 			if (Visibility != CommandBarVisibility.Default)

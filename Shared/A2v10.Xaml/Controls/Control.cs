@@ -92,13 +92,19 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal void CheckDisabledModel(RenderContext context)
+		internal Boolean CheckDisabledModel(RenderContext context)
 		{
-			if (context.IsDataModelIsReadOnly)
+			var rm = GetRenderMode(context);
+			if (rm == RenderMode.Hide)
+				return true;
+			if (rm == RenderMode.Debug)
+				return context.IsDebugConfiguration ? false : true;
+			if (context.IsDataModelIsReadOnly || rm == RenderMode.ReadOnly)
 			{
 				Disabled = true;
 				RemoveBinding(nameof(Disabled));
 			}
+			return false;
 		}
 	}
 }

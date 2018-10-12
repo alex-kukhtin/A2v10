@@ -49,6 +49,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var panel = new TagBuilder("div", "full-height-panel", IsInGrid);
 			MergeAttributes(panel, context);
 			if (MinWidth != null)

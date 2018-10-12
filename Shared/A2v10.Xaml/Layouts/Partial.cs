@@ -11,6 +11,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var page = new TagBuilder("div", "page partial");
 			page.MergeAttribute("id", context.RootId);
 

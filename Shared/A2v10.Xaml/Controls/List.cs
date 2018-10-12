@@ -32,6 +32,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var ul = new TagBuilder("a2-list", null, IsInGrid);
 			onRender?.Invoke(ul);
 			var isBind = GetBinding(nameof(ItemsSource));

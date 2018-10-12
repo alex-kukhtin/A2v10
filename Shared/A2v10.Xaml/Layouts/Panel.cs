@@ -36,6 +36,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var panel = new TagBuilder("a2-panel", null, IsInGrid);
 			MergeBindingAttributeBool(panel, context, ":initial-collapsed", nameof(Collapsed), Collapsed);
 			MergeBindingAttributeBool(panel, context, ":collapsible", nameof(Collapsible), Collapsible);

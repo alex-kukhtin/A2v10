@@ -8,6 +8,8 @@ namespace A2v10.Xaml
 	{
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var section = new TagBuilder("a2-sheet-section-tree");
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

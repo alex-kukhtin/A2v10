@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			if (Content is UIElementBase)
 				(Content as UIElementBase).RenderElement(context, onRender);
 		}

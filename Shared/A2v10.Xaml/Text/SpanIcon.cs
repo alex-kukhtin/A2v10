@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var span = new TagBuilder("i", "ico ico-inline", IsInGrid);
 			MergeAttributes(span, context);
 			var iconBind = GetBinding(nameof(Icon));

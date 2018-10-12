@@ -13,6 +13,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var menu = new TagBuilder("div", "dropdown-menu menu");
 			menu.MergeAttribute("role", "menu");
 			MergeAttributes(menu, context);

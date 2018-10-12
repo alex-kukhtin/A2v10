@@ -17,6 +17,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var tag = new TagBuilder("span", null, IsInGrid);
 			MergeAttributes(tag, context);
 			if (Size != TextSize.Normal)

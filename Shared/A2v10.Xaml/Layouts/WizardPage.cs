@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var wp = new TagBuilder("a2-wizard-page");
 			MergeAttributes(wp, context, MergeAttrMode.SpecialWizardPage);
 			MergeBindingAttributeString(wp, context, "header", nameof(Header), Header);

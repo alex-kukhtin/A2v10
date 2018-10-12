@@ -13,6 +13,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			String tagName = "h3";
 			switch (Size)
 			{
@@ -25,7 +27,7 @@ namespace A2v10.Xaml
 			MergeAttributes(h, context);
 			if (Align != TextAlign.Left)
 				h.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
-			bool bHasBadge = GetBinding(nameof(Badge)) != null ||
+			Boolean bHasBadge = GetBinding(nameof(Badge)) != null ||
 				!String.IsNullOrEmpty(Badge);
 			if (!bHasBadge)
 				MergeContent(h, context);

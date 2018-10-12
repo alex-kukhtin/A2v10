@@ -24,6 +24,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var tab = new TagBuilder("a2-tab-item");
 			onRender?.Invoke(tab);
 			// tab.MergeAttribute("tab-style", "yellow");

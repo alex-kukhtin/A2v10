@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var tag = new TagBuilder("p", null, IsInGrid);
 			MergeAttributes(tag, context);
 			tag.AddCssClassBool(Small, "text-small");

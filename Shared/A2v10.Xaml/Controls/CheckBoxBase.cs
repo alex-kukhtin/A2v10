@@ -13,7 +13,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			CheckDisabledModel(context);
+			if (CheckDisabledModel(context))
+				return;
 			var tag = new TagBuilder("label", ControlType, IsInGrid);
 			onRender?.Invoke(tag);
 			MergeAttributes(tag, context, MergeAttrMode.NoTabIndex);

@@ -21,6 +21,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			TagBuilder page = null;
 			Boolean isGridPage = (Toolbar != null) || (Taskpad != null) || (Pager != null);
 

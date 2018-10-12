@@ -28,6 +28,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var panel = new TagBuilder("div", "a2-state-card", IsInGrid);
 			onRender?.Invoke(panel);
 			MergeAttributes(panel, context);

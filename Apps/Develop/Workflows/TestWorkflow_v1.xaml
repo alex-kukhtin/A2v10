@@ -72,9 +72,9 @@
 {
   Bookmark = "Logist",
   For = "Role",
-  ForId = Inbox.FindRoleId("Logist"),
+  ForId = Process.FindRoleId("Manager"),
   Action = "document/request/forOwner",
-  Text = "Задача для логиста"
+  Text = "Задача для менеджера"
 }</mca:CSharpValue>
                 </InArgument>
               </aw:Request.Inbox>
@@ -101,7 +101,7 @@
     <x:Reference>__ReferenceID0</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID2</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhjOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAgpA2kPAgEBLwlBFgIBD0QNVhoCAQZaE1pnAgECMg85FAIBFD4PPmMCARBHE04UAgELUxNTZwIBBw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAgpA2kPAgEBLwlBFgIBD0QNVhoCAQZaE1pnAgECMg85FAIBFD4PPmMCARBHE04UAgELUxNTZwIBBw==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

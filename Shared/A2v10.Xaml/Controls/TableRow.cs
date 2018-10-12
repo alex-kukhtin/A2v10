@@ -30,6 +30,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var row = new TagBuilder("tr");
 			onRender?.Invoke(row);
 			MergeAttributes(row, context);
@@ -81,6 +83,8 @@ namespace A2v10.Xaml
 	{
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var table = (this.Parent as Table);
 			var cols = Math.Max(table.Columns.Count, 1);
 			var tr = new TagBuilder("tr").RenderStart(context);

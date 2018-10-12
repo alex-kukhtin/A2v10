@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var option = new TagBuilder("option");
 			MergeAttributes(option, context, MergeAttrMode.Visibility);
 			if (Value != null)
@@ -68,7 +70,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			CheckDisabledModel(context);
+			if (CheckDisabledModel(context))
+				return;
 			var combo = new TagBuilder("select", null, IsInGrid);
 			onRender?.Invoke(combo);
 			combo.MergeAttribute("is", "combobox");

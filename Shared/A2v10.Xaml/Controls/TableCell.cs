@@ -29,6 +29,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var td = new TagBuilder("td");
 			onRender?.Invoke(td);
 

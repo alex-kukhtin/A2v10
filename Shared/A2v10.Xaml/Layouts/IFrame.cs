@@ -12,6 +12,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var div = new TagBuilder("iframe", "a2-iframe", IsInGrid);
 			onRender?.Invoke(div);
 			MergeAttributes(div, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);

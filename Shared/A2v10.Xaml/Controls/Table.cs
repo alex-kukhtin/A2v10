@@ -89,6 +89,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var table = new TagBuilder("table", "a2-table", IsInGrid);
 			onRender?.Invoke(table);
 			MergeAttributes(table, context);

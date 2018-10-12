@@ -13,6 +13,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var span = new TagBuilder("span", "a2-badge", IsInGrid);
 			onRender?.Invoke(span);
 			MergeAttributes(span, context);

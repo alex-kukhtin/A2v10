@@ -24,7 +24,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			CheckDisabledModel(context);
+			if (CheckDisabledModel(context))
+				return;
 			var input = new TagBuilder("a2-date-picker", null, IsInGrid);
 			onRender?.Invoke(input);
 			MergeAttributes(input, context);

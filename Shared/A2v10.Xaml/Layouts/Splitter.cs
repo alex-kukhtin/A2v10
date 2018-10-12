@@ -57,6 +57,8 @@ namespace A2v10.Xaml
              * 1. Horizontal splitter
              * 2. Ширина колонок
             */
+			if (SkipRender(context))
+				return;
 			var spl = new TagBuilder("div", "splitter");
 			onRender?.Invoke(spl);
 			MergeAttributes(spl, context);

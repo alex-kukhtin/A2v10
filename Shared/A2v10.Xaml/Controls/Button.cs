@@ -39,6 +39,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (CheckDisabledModel(context))
+				return;
 			Boolean bHasDropDown = DropDown != null;
 			if (bHasDropDown)
 			{

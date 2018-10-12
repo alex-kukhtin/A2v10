@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var label = new TagBuilder("div", "a2-label", IsInGrid);
 			onRender?.Invoke(label);
 

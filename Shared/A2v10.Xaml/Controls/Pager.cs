@@ -9,6 +9,8 @@ namespace A2v10.Xaml
 		public Object Source { get; set; }
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			//<a2-pager :source = "Parent.pager" />
 			var pager = new TagBuilder("a2-pager");
 			onRender?.Invoke(pager);

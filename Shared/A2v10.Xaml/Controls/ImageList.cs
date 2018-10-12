@@ -15,6 +15,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var list = new TagBuilder("div", "image-list");
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind == null)

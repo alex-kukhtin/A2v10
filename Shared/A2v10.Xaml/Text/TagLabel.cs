@@ -37,6 +37,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			if (SkipRender(context))
+				return;
 			var span = new TagBuilder("span", "tag-label", IsInGrid);
 			MergeAttributes(span, context);
 

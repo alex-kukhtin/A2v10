@@ -45,7 +45,9 @@ namespace A2v10.Xaml
 				if (rm is String rmString)
 				{
 					if (Enum.TryParse<RenderMode>(rmString, out RenderMode rmResult))
+					{
 						return rmResult;
+					}
 					throw new XamlException($"Invalid RenderMode '{rmResult}', Expected 'Show', 'Hide', 'ReadOnly' or 'Debug'");
 				}
 				else if (rm is Boolean rmBool)

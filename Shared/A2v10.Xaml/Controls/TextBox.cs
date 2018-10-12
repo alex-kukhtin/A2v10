@@ -27,7 +27,8 @@ namespace A2v10.Xaml
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			CheckDisabledModel(context);
+			if (CheckDisabledModel(context))
+				return;
 			var tagName = Multiline ? "a2-textarea" : "textbox";
 			var input = new TagBuilder(tagName, null, IsInGrid);
 			onRender?.Invoke(input);
