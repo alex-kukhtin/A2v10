@@ -92,6 +92,11 @@ namespace A2v10.Xaml
 			}
 		}
 
+		internal virtual Boolean SkipCheckReadOnly()
+		{
+			return false;
+		}
+
 		internal Boolean CheckDisabledModel(RenderContext context)
 		{
 			var rm = GetRenderMode(context);
@@ -103,6 +108,8 @@ namespace A2v10.Xaml
 				return false; // skip read only
 			if (context.IsDataModelIsReadOnly || rm == RenderMode.ReadOnly)
 			{
+				if (SkipCheckReadOnly())
+					return false;
 				Disabled = true;
 				RemoveBinding(nameof(Disabled));
 			}

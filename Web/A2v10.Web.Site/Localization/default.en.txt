@@ -18,6 +18,7 @@
 @NewPassword=New password
 @SetPassword=Set password
 @Error=Error
+@Warning=Warning
 ;
 @Home=Home
 @Documents=Documents

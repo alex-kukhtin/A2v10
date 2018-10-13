@@ -18,6 +18,7 @@
 @NewPassword=Новий пароль
 @SetPassword=Встановити пароль
 @Error=Помилка
+@Warning=Попередження
 ;
 @ResetPassword=Відновлення паролю
 @ResetPasswordBody=Для відновлення паролю перейдіть <a href="{0}">до посилання</a>

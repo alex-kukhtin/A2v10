@@ -1,6 +1,8 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 
+using System;
+
 namespace A2v10.Xaml
 {
 	public abstract class CommandControl : ContentControl
@@ -17,6 +19,14 @@ namespace A2v10.Xaml
 		{
 			// without commands
 			base.MergeAttributes(tag, context, mode);
+		}
+
+		internal override Boolean SkipCheckReadOnly()
+		{
+			var cmdBind = GetBindingCommand(nameof(Command));
+			if (cmdBind != null)
+				return cmdBind.IsSkipCheckReadOnly();
+			return false;
 		}
 	}
 }

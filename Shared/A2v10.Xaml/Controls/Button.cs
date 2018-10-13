@@ -46,7 +46,7 @@ namespace A2v10.Xaml
 			{
 				DropDownDirection? dir = (DropDown as DropDownMenu)?.Direction;
 				Boolean bDropUp = (dir == DropDownDirection.UpLeft) || (dir == DropDownDirection.UpRight);
-				bool insideBar = Parent is Toolbar || Parent is CommandBar;
+				Boolean insideBar = Parent is Toolbar || Parent is CommandBar;
 
 				var wrap = new TagBuilder("div", "dropdown")
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
@@ -69,7 +69,7 @@ namespace A2v10.Xaml
 		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp, Action<TagBuilder> onRender)
 		{
 			Boolean hasCommand = GetBindingCommand(nameof(Command)) != null;
-			bool insideBar = Parent is Toolbar || Parent is CommandBar;
+			Boolean insideBar = Parent is Toolbar || Parent is CommandBar;
 			var button = new TagBuilder("button", "btn", IsInGrid);
 			onRender?.Invoke(button);
 			if (!Block && !insideBar)

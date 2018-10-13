@@ -156,6 +156,7 @@ namespace A2v10.Xaml
 		ArrowSort,
 		Attach,
 		Ban,
+		Bank,
 		BankAccount,
 		Calendar,
 		Call,

@@ -480,5 +480,22 @@ namespace A2v10.Xaml
 					break;
 			}
 		}
+
+		internal Boolean IsSkipCheckReadOnly()
+		{
+			switch (Command)
+			{
+				case CommandType.Close:
+				case CommandType.Refresh:
+				case CommandType.Reload:
+				case CommandType.Export:
+				case CommandType.Report:
+				case CommandType.Requery:
+				case CommandType.MailTo:
+				case CommandType.Help:
+					return true;
+			}
+			return false;
+		}
 	}
 }
