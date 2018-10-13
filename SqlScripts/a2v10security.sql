@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 04 oct 2018
-module version : 7312
+Last updated : 13 oct 2018
+module version : 7317
 */
 
 ------------------------------------------------
@@ -112,8 +112,9 @@ begin
 		LastLoginDate datetime null,
 		LastLoginHost nvarchar(255) null,
 		Memo nvarchar(255) null,
+		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
 		RegisterHost nvarchar(255) null,
-		[Guid] uniqueidentifier null
+		[Guid] uniqueidentifier null,
 	);
 end
 go
@@ -134,6 +135,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Void')
 begin
 	alter table a2security.Users add Void bit not null constraint DF_Users_Void default(0) with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'ChangePasswordEnabled')
+begin
+	alter table a2security.Users add ChangePasswordEnabled bit not null constraint DF_Users_ChangePasswordEnabled default(1) with values;
 end
 go
 ------------------------------------------------
@@ -313,7 +320,7 @@ as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
-		PhoneNumberConfirmed, RegisterHost,
+		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -638,6 +645,10 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	if 1 <> (select ChangePasswordEnabled from a2security.Users where Id=@UserId)
+	begin
+		raiserror (N'UI:@[ChangePasswordDisabled]', 16, -1) with nowait;
+	end
 	select [User!TUser!Object] = null, [Id!!Id] = Id, [Name!!Name] = UserName, 
 		[OldPassword] = cast(null as nvarchar(255)),
 		[NewPassword] = cast(null as nvarchar(255)),

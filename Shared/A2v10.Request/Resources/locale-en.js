@@ -51,8 +51,9 @@
 		$ConfirmRegister: 'A email confirm link was sent to {0}.',
 		$ResetPasswordSuccess: 'Password has been successfully reset.',
 		$ResetPasswordError: 'Password recovery failed',
+		$ResetPasswordNotAllowed: 'Reset password not allowed',
 		$ErrorText: 'An error occurred while processing your request.',
-		$ConfirmEMailText: 'Email has been successfully confirmed.',
+		$ConfirmEMailText: 'Email has been successfully confirmed',
 		$AlreadyTaken: 'е-mail {0} is invalid or aleady taken',
 		$PhoneNumberAlreadyTaken: 'Phone number {0} is invalid or aleady taken',
 		$TryLater: 'Too many login attempts in a short time.\nTry to register in five minutes'

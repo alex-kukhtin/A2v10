@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 using A2v10.Request.Properties;
 using A2v10.Infrastructure;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -69,22 +70,34 @@ namespace A2v10.Request
 
 		async Task RenderChangePassword(TextWriter writer, ExpandoObject loadPrms)
 		{
-			var dm = await _dbContext.LoadModelAsync(_host.CatalogDataSource, "a2security.[User.ChangePassword.Load]", loadPrms);
+			try
+			{
+				var dm = await _dbContext.LoadModelAsync(_host.CatalogDataSource, "a2security.[User.ChangePassword.Load]", loadPrms);
+				var changeHtml = new StringBuilder(_localizer.Localize(null, Resources.changePassword));
+				var changeScript = new StringBuilder();
+				var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
+				changeScript.Replace("$(PageGuid)", pageGuid);
 
-			var changeHtml = new StringBuilder(_localizer.Localize(null, Resources.changePassword));
-			var changeScript = new StringBuilder();
-			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
-			changeScript.Replace("$(PageGuid)", pageGuid);
+				changeHtml.Replace("$(PageGuid)", pageGuid);
+				var scripter = new VueDataScripter();
 
-			changeHtml.Replace("$(PageGuid)", pageGuid);
-			var scripter = new VueDataScripter();
+				String dataModelText = "{}";
+				if (dm != null)
+					dataModelText = JsonConvert.SerializeObject(dm.Root, StandardSerializerSettings);
 
-			var dataModelText = JsonConvert.SerializeObject(dm.Root, StandardSerializerSettings);
+				changeHtml.Replace("$(Data)", dataModelText);
+				changeHtml.Replace("$(PageScript)", dm.CreateScript(scripter));
 
-			changeHtml.Replace("$(Data)", dataModelText);
-			changeHtml.Replace("$(PageScript)", dm.CreateScript(scripter));
+				writer.Write(changeHtml.ToString());
+			}
+			catch (Exception ex)
+			{
 
-			writer.Write(changeHtml.ToString());
+				String error = ex.Message;
+				if (ex.Message.StartsWith("UI:"))
+					error = _localizer.Localize(null, ex.Message.Substring(3));
+				RenderErrorDialog(writer, error);
+			}
 		}
 	}
 }

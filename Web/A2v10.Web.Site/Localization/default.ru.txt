@@ -17,6 +17,7 @@
 @OldPassword=Старый пароль
 @NewPassword=Новый пароль
 @SetPassword=Установить пароль
+@Error=Ошибка
 ;
 @ResetPassword=Восстановление пароля
 @ResetPasswordMailText=Для восстановления пароля перейдите <a href="{0}">по ссылке</a>
@@ -25,6 +26,7 @@
 @EMailAlreadyConfirmed=Ваш e-mail уже подтвержден.
 @SetNewPassword=Установка пароля
 @InviteEMail=Добро пожаловать!
+@ChangePasswordDisabled=Смена пароля запрещена
 ;
 @Home=Главная
 @Documents=Документы

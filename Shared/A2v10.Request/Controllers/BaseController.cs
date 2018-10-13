@@ -14,6 +14,7 @@ using System.Net;
 using A2v10.Data.Interfaces;
 using System.Threading;
 using System.Web;
+using A2v10.Request.Properties;
 
 namespace A2v10.Request
 {
@@ -596,6 +597,16 @@ const vm = new DataModelController({
 				return;
 			String subject = "Feedback from service";
 			_messageService.Send(to, subject, body);
+		}
+
+		void RenderErrorDialog(TextWriter writer, String message)
+		{
+			var errorHtml = new StringBuilder(_localizer.Localize(null, Resources.errorDialog));
+			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
+			errorHtml.Replace("$(PageGuid)", pageGuid);
+			errorHtml.Replace("$(ErrorMessage)", message);
+			writer.Write(errorHtml.ToString());
+
 		}
 	}
 }

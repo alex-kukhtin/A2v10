@@ -501,6 +501,8 @@ namespace A2v10.Web.Mvc.Controllers
 					// Don't reveal that the user does not exist or is not confirmed
 					status = _host.IsDebugConfiguration ? "NotFound" : "Success";
 				}
+				else if (!user.ChangePasswordEnabled)
+					status = "NotAllowed";
 				else
 				{
 					String code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -606,6 +608,9 @@ namespace A2v10.Web.Mvc.Controllers
 				var user = await UserManager.FindByIdAsync(model.Id);
 				if (user == null)
 					throw new SecurityException("User not found");
+
+				if (!user.ChangePasswordEnabled)
+					throw new SecurityException("Change password not allowed");
 
 				var ir = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
 				if (ir.Succeeded)

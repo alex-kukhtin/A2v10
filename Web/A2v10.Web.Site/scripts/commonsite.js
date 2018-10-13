@@ -1915,7 +1915,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181013-7317
 // services/datamodel.js
 
 (function () {
@@ -2521,15 +2521,15 @@ Vue.component('a2-pager', {
 			if (!this.length) return;
 			if (index >= this.length)
 				index -= 1;
-			if (this.length > index) {
-				this[index].$select();
-			}
 			// renumber rows
 			if ('$rowNo' in item._meta_) {
 				let rowNoProp = item._meta_.$rowNo;
 				for (let i = 0; i < this.length; i++) {
 					this[i][rowNoProp] = i + 1; // 1-based
 				}
+			}
+			if (this.length > index) {
+				this[index].$select();
 			}
 		};
 

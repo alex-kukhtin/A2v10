@@ -1,0 +1,34 @@
+﻿<div class="modal" id="$(PageGuid)">
+	<div class="modal-header" v-drag-window>
+		<span>@[Error]</span>
+		<button class="btnclose" @click.prevent="$modalClose(false)">&#x2715;</button>
+	</div>
+	<div class="modal-body confirm">
+		<i class="ico ico-confirm"></i> 
+		<div class="modal-body-content">
+			<div>$(ErrorMessage)</div>
+		</div>
+	</div>	
+	<div class="modal-footer">
+		<button class="btn a2-inline" @click.prevent="$modalClose()" v-settabindex>@[Close]</button>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+	(function () {
+
+		const locale = window.$$locale;
+		const DataModelController = component('baseController');
+
+		const vm = new DataModelController({
+			el: '#$(PageGuid)',
+			computed: {
+				locale() {
+					return locale;
+				},
+			}
+		});
+	})();
+</script>

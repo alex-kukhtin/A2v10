@@ -131,17 +131,16 @@ namespace A2v10.Web.Config
 			if (locale.Length > 2)
 			{
 				locale = locale.Substring(0, 2);
-			}
-			if (dirPath != null)
-			{
-				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-					yield return s;
-			}
-			if (appPath != null)
-			{
-				foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-
-					yield return s;
+				if (dirPath != null)
+				{
+					foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+						yield return s;
+				}
+				if (appPath != null)
+				{
+					foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
+						yield return s;
+				}
 			}
 		}
 

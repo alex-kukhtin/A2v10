@@ -40,6 +40,7 @@ namespace A2v10.Web.Identity
 		public Boolean TwoFactorEnabled { get; set; }
 		public Boolean EmailConfirmed { get; set; }
 		public Boolean PhoneNumberConfirmed { get; set; }
+		public Boolean ChangePasswordEnabled { get; set; }
 		public String RegisterHost { get; set; }
 
 		DateTime? _lastLoginDate;

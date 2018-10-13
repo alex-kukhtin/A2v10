@@ -67,6 +67,8 @@
 							that.showConfirm = true;
 						} else if (result === 'NotFound') {
 							that.serverError = that.locale.$InvalidEMailError;
+						} else if (result === 'NotAllowed') {
+							that.serverError = that.locale.$ResetPasswordNotAllowed;
 						}
 						else
 							alert(result);

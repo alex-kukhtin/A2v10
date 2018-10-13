@@ -1619,7 +1619,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181013-7317
 // services/datamodel.js
 
 (function () {
@@ -2225,15 +2225,15 @@ app.modules['std:validators'] = function () {
 			if (!this.length) return;
 			if (index >= this.length)
 				index -= 1;
-			if (this.length > index) {
-				this[index].$select();
-			}
 			// renumber rows
 			if ('$rowNo' in item._meta_) {
 				let rowNoProp = item._meta_.$rowNo;
 				for (let i = 0; i < this.length; i++) {
 					this[i][rowNoProp] = i + 1; // 1-based
 				}
+			}
+			if (this.length > index) {
+				this[index].$select();
 			}
 		};
 
@@ -6996,14 +6996,8 @@ TODO:
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20180629-7234 */
+/* 20181013-7317 */
 /*components/wizard.js*/
-
-/*
-TODO:
-1. btn-primary
-2. btn-width
- */
 
 (function () {
 
@@ -7031,9 +7025,9 @@ TODO:
 			<a class="btn-help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
 			<div class="aligner"/>
 		</template>
-		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" />
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>
-		<button class="btn a2-inline" :class="nextFinishClass" @click.stop="nextFinish" :disabled="nextDisabled()"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
+		<button class="btn a2-inline btn-primary" @click.stop="nextFinish" :disabled="nextDisabled()"><span v-text="nextFinishText"/> <i class="ico" :class="nextFinishIco""/></button>
+		<button class="btn a2-inline" @click.prevent="close" v-text="$locale.$Cancel" style="margin-left:2rem"/>
 	</div>
 </div>
 `;
@@ -7064,11 +7058,6 @@ TODO:
 			},
 			backDisabled() {
 				return this.activePage === this.pages[0];
-			},
-			nextFinishClass() {
-				let pgs = this.pages;
-				return this.activePage === pgs[pgs.length - 1] ? 'btn-primary' : '';
-
 			}
 		},
 		methods: {
@@ -7092,7 +7081,6 @@ TODO:
 			},
 			pageClass(page) {
 				let cls = '';
-				//if (page.state === 'init') {
 				if (!page.visit) {
 					if (this.$nextPage(page) && !this.nextDisabled())
 						return cls;
@@ -7191,7 +7179,10 @@ TODO:
 		},
 		methods: {
 			$invalid() {
-				if (!this.controls.length) return false;
+				if (!this.controls.length) {
+					this.wasInvalid = false;
+					return false;
+				}
 				for (let c of this.controls) {
 					if (c.invalid() || c.pending()) {
 						this.wasInvalid = true;

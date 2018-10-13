@@ -17,6 +17,7 @@
 @OldPassword=Старий пароль
 @NewPassword=Новий пароль
 @SetPassword=Встановити пароль
+@Error=Помилка
 ;
 @ResetPassword=Відновлення паролю
 @ResetPasswordBody=Для відновлення паролю перейдіть <a href="{0}">до посилання</a>
@@ -24,7 +25,8 @@
 @ConfirmEMailBody=Для підтвердження е-mail перейдіть <a href="{0}">до посилання</a>
 @EMailAlreadyConfirmed=Ваш e-mail вже підтверджено.
 @SetNewPassword=Встановлення паролю
-@InviteEMail=Ласкаво просимо до Bookkeeper!
+@InviteEMail=Ласкаво просимо!
+@ChangePasswordDisabled=Зміну пароля заборонено!
 ;
 @Home=Головна
 @Documents=Документи

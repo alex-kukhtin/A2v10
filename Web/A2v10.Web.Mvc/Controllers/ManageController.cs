@@ -106,36 +106,6 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		//
-		// POST: /Manage/EnableTwoFactorAuthentication
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> EnableTwoFactorAuthentication()
-		{
-			await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<Int64>(), true);
-			var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<Int64>());
-			if (user != null)
-			{
-				await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-			}
-			return RedirectToAction("Index", "Manage");
-		}
-
-		//
-		// POST: /Manage/DisableTwoFactorAuthentication
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> DisableTwoFactorAuthentication()
-		{
-			await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<Int64>(), false);
-			var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<Int64>());
-			if (user != null)
-			{
-				await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-			}
-			return RedirectToAction("Index", "Manage");
-		}
-
-		//
 		// GET: /Manage/VerifyPhoneNumber
 		public async Task<ActionResult> VerifyPhoneNumber(String phoneNumber)
 		{
@@ -196,29 +166,6 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		//
-		// POST: /Manage/ChangePassword
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ChangePassword22(ChangePasswordViewModel2 model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-			var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId<Int64>(), model.OldPassword, model.NewPassword);
-			if (result.Succeeded)
-			{
-				var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<Int64>());
-				if (user != null)
-				{
-					await UserManager.UpdateUser(user);
-					await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-				}
-				return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-			}
-			AddErrors(result);
-			return View(model);
-		}
 
 		//
 		// GET: /Manage/SetPassword

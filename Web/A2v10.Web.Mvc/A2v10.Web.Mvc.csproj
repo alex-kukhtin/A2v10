@@ -154,11 +154,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Views\Manage\ChangePassword.generated.cs">
-      <DependentUpon>ChangePassword.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Views\Manage\Index.generated.cs">
       <DependentUpon>Index.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -166,11 +161,6 @@
     </Compile>
     <Compile Include="Views\Manage\ManageLogins.generated.cs">
       <DependentUpon>ManageLogins.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Manage\SetPassword.generated.cs">
-      <DependentUpon>SetPassword.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -218,10 +208,6 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>VerifyCode.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Manage\ChangePassword.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ChangePassword.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Manage\Index.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Index.generated.cs</LastGenOutput>
@@ -229,10 +215,6 @@
     <Content Include="Views\Manage\ManageLogins.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ManageLogins.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Manage\SetPassword.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>SetPassword.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml">
       <Generator>RazorGenerator</Generator>

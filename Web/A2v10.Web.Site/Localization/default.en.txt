@@ -14,6 +14,10 @@
 @ChangePassword=Change password
 @SubstUser=Change user
 @User=User
+@OldPassword=Old password
+@NewPassword=New password
+@SetPassword=Set password
+@Error=Error
 ;
 @Home=Home
 @Documents=Documents
@@ -34,6 +38,7 @@
 @NewPassword=New password
 @SetPassword=Set password
 @InviteEMail=Welcome!
+@ChangePasswordDisabled=Change password is disabled
 ;
 @Create=Create
 @CreateDocument=Create document
