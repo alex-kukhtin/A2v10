@@ -493,6 +493,8 @@ namespace A2v10.Xaml
 				case CommandType.Requery:
 				case CommandType.MailTo:
 				case CommandType.Help:
+				case CommandType.Execute:
+				case CommandType.ExecuteSelected:
 					return true;
 			}
 			return false;

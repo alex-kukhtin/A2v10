@@ -626,6 +626,9 @@
   content: "\eab2";
   color: #1ba1e2 !important;
 }
+.ico-workflow1:before {
+  content: "\eabb";
+}
 * {
   box-sizing: border-box;
 }

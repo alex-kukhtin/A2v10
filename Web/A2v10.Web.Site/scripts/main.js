@@ -2402,6 +2402,10 @@ app.modules['std:validators'] = function () {
 
 		const optsCheckValid = opts && opts.validRequired === true;
 		const optsCheckRO = opts && opts.checkReadOnly === true;
+		const optsCheckArg = opts && opts.checkArgument === true;
+
+		if (optsCheckArg && !arg)
+			return false;
 
 		if (cmdf.checkReadOnly === true || optsCheckRO) {
 			if (this.$root.$readOnly)

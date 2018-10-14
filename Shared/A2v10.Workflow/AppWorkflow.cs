@@ -34,15 +34,22 @@ namespace A2v10.Workflow
 		public static async Task<WorkflowResult> StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
 		{
 			AppWorkflow aw = null;
+			var profiler = host.Profiler;
 			var result = new WorkflowResult
 			{
 				InboxIds = new List<Int64>()
 			};
 			try
 			{
-				var def = WorkflowDefinition.Create(info.Source);
-				Activity root = def.LoadFromSource(host);
-				Process process = Process.Create(def, info);
+				WorkflowDefinition def = null;
+				Activity root = null;
+				Process process = null;
+				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{info.Source}'"))
+				{
+					def = WorkflowDefinition.Create(info.Source);
+					root = def.LoadFromSource(host);
+					process = Process.Create(def, info);
+				}
 				// workflow arguments
 				IDictionary<String, Object> args = new Dictionary<String, Object>
 				{
@@ -55,9 +62,13 @@ namespace A2v10.Workflow
 				process.DbContext = dbContext;
 				process.WorkflowId = aw._application.Id;
 				await process.Start(dbContext);
-				aw._application.Run(_wfTimeSpan);
-				result.ProcessId = process.Id;
-				return result;
+
+				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Run. Process.Id = {process.Id}, Workflow.Id={process.WorkflowId}"))
+				{
+					aw._application.Run(_wfTimeSpan);
+					result.ProcessId = process.Id;
+					return result;
+				}
 			}
 			catch (Exception ex)
 			{

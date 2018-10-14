@@ -176,13 +176,13 @@ namespace A2v10.Request
 				ActionBase = cmd.ActionBase
 			};
 			if (swi.ModelId == 0)
-				throw new RequestModelException("ModelId must be specified");
+				throw new RequestModelException("Id must be specified to 'startProcess' command");
 			if (!String.IsNullOrEmpty(cmd.file))
 				swi.Source = $"file:{cmd.file}";
 			swi.Comment = dataToStart.Get<String>("Comment");
 			swi.UserId = dataToStart.Get<Int64>("UserId");
 			if (swi.Source == null)
-				throw new RequestModelException($"File or clrType must be specified");
+				throw new RequestModelException($"File or clrType must be specified to 'startProcess' command");
 			WorkflowResult wr = await _workflowEngine.StartWorkflow(swi);
 			WriteJsonResult(writer, wr);
 		}

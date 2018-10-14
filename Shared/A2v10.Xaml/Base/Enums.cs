@@ -321,6 +321,7 @@ namespace A2v10.Xaml
 		Warning,
 		WarningOutline,
 		WarningYellow,
+		Workflow1,
 		Wrench
 	}
 }

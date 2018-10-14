@@ -44,6 +44,8 @@ namespace A2v10.Web.Mvc.Hooks
 				throw new SecurityException("Set password failed." + errors);
 			}
 			var user = await _userManager.FindByIdAsync(userId);
+			user.EmailConfirmed = true;
+			user.SetModified(UserModifiedFlag.EmailConfirmed);
 			await _userManager.UpdateAsync(user);
 		}
 	}

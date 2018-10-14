@@ -66,6 +66,7 @@ namespace A2v10.Web.Mvc.Controllers
 				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", ResourceHelper.InitLayoutHtml)));
 				layout.Replace("$(Lang)", CurrentLang);
 				layout.Replace("$(Build)", _host.AppBuild);
+				layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
 				layout.Replace("$(Title)", appTitle?.AppTitle);
@@ -83,7 +84,7 @@ namespace A2v10.Web.Mvc.Controllers
 				script.Replace("$(Mask)", ResourceHelper.mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
-				script.Replace("$(AppLinks)", _localizer.Localize(null, ControllerHelpers.AppLinks(_host)));
+				script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
 				script.Replace("$(ServerInfo)", serverInfo ?? "null");
 				script.Replace("$(Token)", formToken);
 				layout.Replace("$(PageScript)", script.ToString());
@@ -673,7 +674,7 @@ namespace A2v10.Web.Mvc.Controllers
 			return RedirectToLocal("~/");
 		}
 
-		#region Helpers
+		#region helpers
 
 		private void AddErrors(IdentityResult result)
 		{

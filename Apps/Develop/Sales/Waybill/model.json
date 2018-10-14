@@ -30,6 +30,10 @@
 				"type": "clr",
 				"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SetPhoneNumberHandler;assembly=A2v10.Web.Mvc",
 				"async": true
+			},
+			"startWorkflow": {
+							"type": "startProcess",
+								"file": "Workflows/TestWorkflow_v1"
 			}
 	},
 	"reports": {

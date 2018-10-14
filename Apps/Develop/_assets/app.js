@@ -1,6 +1,5 @@
 ﻿/* application scripts here */
 
 (function() {
-
 })();
 

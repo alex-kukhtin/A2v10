@@ -24,7 +24,7 @@ namespace A2v10.Request
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
-			sb.Replace("$(AssetsStyleSheets)", AppStyleSheetsLink);
+			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			writer.Write(sb.ToString());
 		}
@@ -57,23 +57,6 @@ namespace A2v10.Request
 			if (_userStateManager == null)
 				return;
 			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
-		}
-
-		public String AppStyleSheetsLink
-		{
-			get
-			{
-				// TODO _host AssestsDistionary
-				var fp = _host.MakeFullPath(Admin, "_assets", "");
-				if (!Directory.Exists(fp))
-					return String.Empty;
-				foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
-				{
-					// at least one file
-					return $"<link  href=\"/shell/appstyles\" rel=\"stylesheet\" />";
-				}
-				return String.Empty;
-			}
 		}
 
 		String AppScriptsLink

@@ -16,7 +16,8 @@ const template = {
 		clearFilter(f) {
 			f.Id = 0;
 			f.Name = '';
-		}
+		},
+		startWorkflow
 	}
 };
 
@@ -38,4 +39,11 @@ function agentPopoverUrl() {
 }
 
 module.exports = template;
+
+async function startWorkflow(doc) {
+	let vm = this.$vm;
+	let result = await vm.$invoke('startWorkflow', { Id: doc.Id });
+	console.dir(result);
+	vm.$toast({ text: 'Workflow start successfully', style: 'success' });
+}
 

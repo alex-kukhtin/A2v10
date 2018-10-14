@@ -182,6 +182,12 @@ namespace A2v10.Request
 					}
 				}
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
+				if (!String.IsNullOrEmpty(rw.Id))
+				{
+					var modelId = model.FirstElementId ?? String.Empty;
+					if (rw.Id != modelId.ToString())
+						throw new RequestModelException($"Element not found. Id={rw.Id}");
+				}
 			}
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
