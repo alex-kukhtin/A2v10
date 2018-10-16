@@ -158,6 +158,7 @@ namespace A2v10.Xaml
 		Ban,
 		Bank,
 		BankAccount,
+		BankUah,
 		Calendar,
 		Call,
 		ChartArea,

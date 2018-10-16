@@ -629,6 +629,9 @@
 .ico-workflow1:before {
   content: "\eabb";
 }
+.ico-bank-uah:before {
+  content: "\eabc";
+}
 * {
   box-sizing: border-box;
 }
