@@ -76,6 +76,8 @@ namespace A2v10.Xaml
 			else
 				RenderChildren(context);
 
+			new TagBuilder("div", "page-canvas").MergeAttribute("id", "page-canvas").Render(context);
+
 			if (CollectionView != null)
 				CollectionView.RenderEnd(context);
 			else

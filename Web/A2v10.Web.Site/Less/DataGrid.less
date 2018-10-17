@@ -29,7 +29,7 @@
 @group-txt-color: #777;
 @group-brd-color: @table-hdr-brd-color;
 
-@header-height:calc(2rem + 1px); // 2rem + 1px
+@dg-header-height:calc(2rem + 1px); // 2rem + 1px
 
 
 .data-grid-container {
@@ -48,7 +48,7 @@
 		border-left: 1px solid @table-hdr-brd-color;
 		width: 0;
 		z-index: 1;
-		height: @header-height;
+		height: @dg-header-height;
 	}
 }
 
@@ -391,7 +391,7 @@ table.data-grid > tbody {
 	height: 100%;
 	overflow: hidden;
 	position: relative;
-	min-height: @header-height;
+	min-height: @dg-header-height;
 
 	> .data-grid-body.fixed-header {
 		margin-top: 2rem;
@@ -474,7 +474,7 @@ table.data-grid > tbody {
 
 .data-grid-container > .data-grid-body > .data-grid-empty {
 	position:absolute;
-	top:@header-height;
+	top:@dg-header-height;
 	left:0;
 	right:0;
 	margin-top:1px;

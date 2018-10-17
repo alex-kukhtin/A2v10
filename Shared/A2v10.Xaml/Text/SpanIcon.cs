@@ -10,13 +10,17 @@ namespace A2v10.Xaml
 	{
 		public Icon Icon { get; set; }
 		public Length Size { get; set; }
+		public Boolean Gray { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
-			var span = new TagBuilder("i", "ico ico-inline", IsInGrid);
+			var span = new TagBuilder("i", "ico", IsInGrid);
+			if (!Block)
+				span.AddCssClass("ico-inline");
 			MergeAttributes(span, context);
+			span.AddCssClassBool(Gray, "text-gray");
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
 				span.MergeAttribute(":class", iconBind.GetPathFormat(context));

@@ -13,6 +13,7 @@ namespace A2v10.Xaml
 		public UIElementCollection Children { get; set; } = new UIElementCollection();
 
 		public Length Height { get; set; }
+		public Length Width { get; set; }
 		public Boolean Border { get; set; }
 		public Boolean Scroll { get; set; }
 		public TextAlign Align { get; set; }
@@ -46,6 +47,8 @@ namespace A2v10.Xaml
 			MergeAttributes(div, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
 			if (Height != null)
 				div.MergeStyle("height", Height.Value);
+			if (Width != null)
+				div.MergeStyle("width", Width.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
 			AddHackedBorder(div);

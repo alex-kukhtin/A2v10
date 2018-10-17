@@ -700,7 +700,7 @@ input[type=text]::-ms-clear {
   font-size: 1.25rem;
 }
 .text-gray {
-  color: #8591a2;
+  color: #ccc;
 }
 .negative-red {
   color: #da533f !important;
@@ -881,7 +881,7 @@ header,
   left: 0;
   top: 0;
   right: 0;
-  height: 27px;
+  height: 32px;
   padding: 0 4px 0 8px;
   background-color: #4d6082;
   color: white;
@@ -940,7 +940,7 @@ header .btn,
   white-space: nowrap;
   color: white;
   padding: 4px;
-  height: 23px;
+  height: 28px;
 }
 header .btn:hover,
 .header .btn:hover {
@@ -990,7 +990,7 @@ header .user-name .person-name,
   position: absolute;
   left: 0;
   right: 0;
-  top: 27px;
+  top: 32px;
   height: 32px;
   line-height: 32px;
   font-size: 15px;
@@ -1054,6 +1054,10 @@ header .user-name .person-name,
   grid-row: 2;
   grid-column: 1;
   overflow: auto;
+}
+.page-canvas {
+  pointer-events: none;
+  display: none;
 }
 .splitter {
   display: grid;
@@ -1145,7 +1149,7 @@ header .user-name .person-name,
   font-size: 16px;
   padding-left: 2px;
   padding-top: 24px;
-  color: #777;
+  color: #999;
 }
 .taskpad .taskpad-title .taskpad-label {
   display: block;
@@ -1419,7 +1423,7 @@ pre.a2-code {
 }
 .control-group label {
   font-size: 0.95rem;
-  color: #777;
+  color: #999;
   margin-bottom: 0.15em;
   display: block;
 }
@@ -1427,7 +1431,7 @@ pre.a2-code {
   display: inline-block;
   font-size: 95%;
   margin-bottom: 0.25em;
-  color: #777;
+  color: #999;
 }
 .control-group .validator {
   position: absolute;
@@ -1641,7 +1645,7 @@ pre.a2-code {
 }
 .control-group .input-group > a,
 .control-group .input-group > .dropdown > a {
-  color: #777;
+  color: #999;
   padding: 0 3px;
   display: inline-block;
 }
@@ -1768,7 +1772,7 @@ pre.a2-code {
 .a2-label {
   display: block;
   font-size: 0.95rem;
-  color: #777;
+  color: #999;
   align-self: center;
 }
 .a2-label.required:before {
@@ -2172,7 +2176,7 @@ pre.a2-code {
   border-left: 1px solid #cbcdda;
   width: 0;
   z-index: 1;
-  height: 27px;
+  height: calc(2rem + 1px);
 }
 table.data-grid {
   cursor: default;
@@ -2442,7 +2446,7 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
   overflow: hidden;
   position: relative;
-  min-height: 27px;
+  min-height: calc(2rem + 1px);
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header {
   margin-top: 2rem;
@@ -2504,7 +2508,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container > .data-grid-body > .data-grid-empty {
   position: absolute;
-  top: 27px;
+  top: calc(2rem + 1px);
   left: 0;
   right: 0;
   margin-top: 1px;
@@ -4335,7 +4339,7 @@ TODO:
 }
 .field-set legend {
   font-size: 0.95rem;
-  color: #777;
+  color: #999;
 }
 .field-set.vertical .field-set-item {
   display: block;
@@ -4497,7 +4501,7 @@ table.sheet .group-cell.collapsed > div .ico:before {
   position: absolute;
   left: 0;
   right: 0;
-  top: 25px;
+  top: 30px;
   height: 4px;
   width: 100%;
   overflow: hidden;
@@ -4633,7 +4637,7 @@ h5,
 .side-bar {
   position: absolute;
   left: 0;
-  top: 59px;
+  top: 64px;
   margin: 0;
   bottom: 22px;
   width: 250px;
@@ -4688,7 +4692,7 @@ h5,
 .side-bar-compact {
   position: absolute;
   left: 0;
-  top: 65px;
+  top: 70px;
   margin: 0;
   padding: 0;
   bottom: 22px;
@@ -4785,7 +4789,7 @@ h5,
 }
 .debug-panel {
   position: absolute;
-  top: 27px;
+  top: 32px;
   bottom: 22px;
   right: 0;
   z-index: 110;
@@ -4880,7 +4884,7 @@ h5,
 }
 .feedback-panel {
   position: absolute;
-  top: 27px;
+  top: 32px;
   bottom: 22px;
   right: 0;
   z-index: 110;
