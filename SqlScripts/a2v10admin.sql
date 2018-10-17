@@ -1,4 +1,4 @@
-﻿/*
+/*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
@@ -795,17 +795,57 @@ begin
 end
 go
 ------------------------------------------------
+create or alter procedure a2admin.[Process.Index]
+	@TenantId int = null,
+	@UserId bigint,
+	@Order nvarchar(255) = N'Id',
+	@Dir nvarchar(255) = N'desc',
+	@Offset int = 0,
+	@PageSize int = 20,
+	@Fragment nvarchar(255) = null
+as
+begin
+	set nocount on;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
+
+	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	set @Asc = N'asc'; set @Desc = N'desc';
+	set @Dir = isnull(@Dir, @Asc);
+	if @Fragment is not null
+		set @Fragment = N'%' + upper(@Fragment) + N'%';
+
+	-- list of processes
+	with T([Id!!Id], [Kind!!Name], Base, [Owner], DateCreated, DateModified, [!!RowNumber])
+	as(
+		select p.Id, p.Kind, p.ActionBase, u.UserName, p.DateCreated, p.DateModified
+			,[!!RowNumber] = row_number() over (order by p.Id)
+		from a2workflow.Processes p
+			left join a2security.Users u on p.[Owner]=u.Id
+	)
+	select [Processes!TProcess!Array]=null, *, [!!RowCount] = (select count(1) from T)
+	from T
+	where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
+	order by [!!RowNumber];
+
+	select [!$System!] = null, [!Processes!PageSize] = @PageSize, 
+		[!Processes!SortOrder] = @Order, [!Processes!SortDir] = @Dir,
+		[!Processes!Offset] = @Offset, [!Processes.Fragment!Filter] = @Fragment;
+end
+go
+------------------------------------------------
 begin
 	-- create admin menu
 	declare @menu table(id bigint, p0 bigint, [name] nvarchar(255), [url] nvarchar(255), icon nvarchar(255), [order] int);
 	insert into @menu(id, p0, [name], [url], icon, [order])
 	values
-		(900, null, N'Admin',           null,        null,     0),
-		(901, 900,  N'Пользователи',   N'identity', null,     10),
-		(902, 900,  N'Бизнес процессы', N'process',  null,     20),
-		(910, 901,  N'Пользователи',    N'user',     N'user',  10),
-		(911, 901,  N'Группы',          N'group',    N'users', 10),
-		(912, 901,  N'Роли',            N'role',     N'users', 20);
+		(900, null,	N'Admin',           null,			null,     0),
+		(901, 900,	N'Пользователи',	N'identity',	null,     10),
+		(902, 900,	N'Бизнес процессы', N'workflow',	null,     20),
+		(910, 901,	N'Пользователи',	N'user',		N'user',  10),
+		(911, 901,	N'Группы',			N'group',		N'users', 20),
+		(912, 901,	N'Роли',			N'role',		N'users', 30),
+		(921, 902,	N'Процессы',		N'process',		N'query', 10),
+		(922, 902,	N'Задачи',			N'inbox',		N'queue', 20);
 			
 	merge a2ui.Menu as target
 	using @menu as source
@@ -842,5 +882,3 @@ go
 ------------------------------------------------
 set noexec off;
 go
-
-
