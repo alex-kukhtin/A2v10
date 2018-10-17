@@ -881,7 +881,7 @@ header,
   left: 0;
   top: 0;
   right: 0;
-  height: 32px;
+  height: 27px;
   padding: 0 4px 0 8px;
   background-color: #4d6082;
   color: white;
@@ -940,7 +940,7 @@ header .btn,
   white-space: nowrap;
   color: white;
   padding: 4px;
-  height: 28px;
+  height: 23px;
 }
 header .btn:hover,
 .header .btn:hover {
@@ -990,7 +990,7 @@ header .user-name .person-name,
   position: absolute;
   left: 0;
   right: 0;
-  top: 32px;
+  top: 27px;
   height: 32px;
   line-height: 32px;
   font-size: 15px;
@@ -2165,6 +2165,15 @@ pre.a2-code {
 .data-grid-container.bordered {
   border: 1px solid #bdc5d8;
 }
+.data-grid-container .data-grid-header-border {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-left: 1px solid #cbcdda;
+  width: 0;
+  z-index: 1;
+  height: 27px;
+}
 table.data-grid {
   cursor: default;
   width: 100%;
@@ -2433,7 +2442,7 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
   overflow: hidden;
   position: relative;
-  min-height: 3rem;
+  min-height: 27px;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header {
   margin-top: 2rem;
@@ -2495,7 +2504,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container > .data-grid-body > .data-grid-empty {
   position: absolute;
-  top: 2rem;
+  top: 27px;
   left: 0;
   right: 0;
   margin-top: 1px;
@@ -4488,7 +4497,7 @@ table.sheet .group-cell.collapsed > div .ico:before {
   position: absolute;
   left: 0;
   right: 0;
-  top: 30px;
+  top: 25px;
   height: 4px;
   width: 100%;
   overflow: hidden;
@@ -4624,7 +4633,7 @@ h5,
 .side-bar {
   position: absolute;
   left: 0;
-  top: 64px;
+  top: 59px;
   margin: 0;
   bottom: 22px;
   width: 250px;
@@ -4679,7 +4688,7 @@ h5,
 .side-bar-compact {
   position: absolute;
   left: 0;
-  top: 70px;
+  top: 65px;
   margin: 0;
   padding: 0;
   bottom: 22px;
@@ -4776,7 +4785,7 @@ h5,
 }
 .debug-panel {
   position: absolute;
-  top: 32px;
+  top: 27px;
   bottom: 22px;
   right: 0;
   z-index: 110;
@@ -4871,7 +4880,7 @@ h5,
 }
 .feedback-panel {
   position: absolute;
-  top: 32px;
+  top: 27px;
   bottom: 22px;
   right: 0;
   z-index: 110;

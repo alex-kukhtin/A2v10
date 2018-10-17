@@ -82,7 +82,6 @@
     <None Include="Develop\app.json" />
     <None Include="Develop\solution.json" />
     <None Include="Develop\_api\payment\model.json" />
-    <None Include="Develop\_api\tasmarket\model.json" />
     <None Include="model.schema.json" />
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +140,6 @@
     </Content>
     <Content Include="Develop\_emails\confirmemail.uk.html" />
     <Content Include="Develop\_pages\contacts.uk.html" />
-    <Content Include="Develop\_api\tasmarket\tasmarket.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\Index.view.xaml">

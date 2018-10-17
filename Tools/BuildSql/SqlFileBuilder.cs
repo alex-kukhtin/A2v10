@@ -11,6 +11,7 @@ namespace BuildSql
 	public class SqlFileBuilder
 	{
 		readonly String _path;
+
 		public SqlFileBuilder(String path)
 		{
 			_path = path;
@@ -42,6 +43,7 @@ namespace BuildSql
 				Console.WriteLine($"Writing {item.outputFile}");
 				using (var sw = new StreamWriter(fw))
 				{
+					WriteVersion(item, sw);
 					sw.Write($"{nl}{nl}/* {item.outputFile} */{nl}{nl}");
 					foreach (var f in item.inputFiles)
 					{
@@ -52,6 +54,17 @@ namespace BuildSql
 					}
 				}
 			}
+		}
+
+		void WriteVersion(ConfigItem item, StreamWriter writer)
+		{
+			if (String.IsNullOrEmpty(item.version))
+				return;
+			// write version
+			var nl = Environment.NewLine;
+			Console.WriteLine($"version: {item.version}");
+			String msg = $"/*{nl}version: {item.version}{nl}generated: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}{nl}*/";
+			writer.WriteLine(msg);
 		}
 	}
 }

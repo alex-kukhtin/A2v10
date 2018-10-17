@@ -35,9 +35,11 @@
 		<DataGridColumn Header="Ед. изм." Content="{Bind Unit.Short}" Fit="True" Align="Center"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
 		<DataGrid.EmptyPanel>
-			<Block Margin="50px,100px" Align="Center">
+			<Block Align="Center">
 				<SpanIcon Icon="CommentUrgent" Block="True" Size="4rem" Margin="1rem"></SpanIcon>
-				<Text>Объекты учета пока не созданы. Чтобы создать объект учета, нажмите первую кнопочку на панели инструментов.</Text>
+				<Text>Объекты учета пока не созданы.</Text>
+				<Break />
+				<Button Icon="Call" Style="Success" Content="Создать новый объект учета" Margin="50px"/>
 			</Block>
 		</DataGrid.EmptyPanel>
 	</DataGrid>

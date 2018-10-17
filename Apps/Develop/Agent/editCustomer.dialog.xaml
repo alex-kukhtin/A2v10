@@ -105,6 +105,16 @@
 				<Image Source="{Bind Agent.Image}" Base="/Catalog/Customer" Width="120"/>
 			</Grid>
 		</Tab>
+		<Tab Header="DataGrid">
+			<Block Scroll="True" Height="200px" Margin="20px">
+				
+				<DataGrid FixedHeader="True">
+					<DataGridColumn Header="First"/>
+					<DataGridColumn Header="Second"/>
+					<DataGridColumn Header="Third"/>
+				</DataGrid>
+			</Block>
+		</Tab>
 	</TabPanel>
 </Dialog>
 

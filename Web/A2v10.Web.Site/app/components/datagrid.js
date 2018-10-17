@@ -36,6 +36,7 @@
 
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
+	<div class="data-grid-header-border" v-if="fixedHeader" />
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<div class="data-grid-empty" v-if="$isEmpty">
 		<slot name="empty" />
