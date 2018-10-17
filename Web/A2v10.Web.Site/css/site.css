@@ -1057,7 +1057,13 @@ header .user-name .person-name,
 }
 .page-canvas {
   pointer-events: none;
+  position: absolute;
+  display: block;
+}
+.page-canvas-outer {
+  pointer-events: none;
   display: none;
+  position: relative;
 }
 .splitter {
   display: grid;
