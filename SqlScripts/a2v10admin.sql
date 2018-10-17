@@ -1,9 +1,9 @@
-/*
+﻿/*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 10 may 2018
-module version : 7165
+Last updated : 17 oct 2018
+module version : 7167
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7165);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7167);
 else
-	update a2sys.Versions set [Version] = 7165 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7167 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -808,17 +808,17 @@ begin
 	set nocount on;
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
-	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	set @Asc = N'asc'; set @Desc = N'desc';
-	set @Dir = isnull(@Dir, @Asc);
-	if @Fragment is not null
-		set @Fragment = N'%' + upper(@Fragment) + N'%';
+	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	--set @Asc = N'asc'; set @Desc = N'desc';
+	--set @Dir = isnull(@Dir, @Asc);
+	--if @Fragment is not null
+	--	set @Fragment = N'%' + upper(@Fragment) + N'%';
 
 	-- list of processes
 	with T([Id!!Id], [Kind!!Name], Base, [Owner], DateCreated, DateModified, [!!RowNumber])
 	as(
 		select p.Id, p.Kind, p.ActionBase, u.UserName, p.DateCreated, p.DateModified
-			,[!!RowNumber] = row_number() over (order by p.Id)
+			,[!!RowNumber] = row_number() over (order by p.Id desc)
 		from a2workflow.Processes p
 			left join a2security.Users u on p.[Owner]=u.Id
 	)
@@ -833,19 +833,58 @@ begin
 end
 go
 ------------------------------------------------
+create or alter procedure a2admin.[Inbox.Index]
+	@TenantId int = null,
+	@UserId bigint,
+	@Order nvarchar(255) = N'Id',
+	@Dir nvarchar(255) = N'desc',
+	@Offset int = 0,
+	@PageSize int = 20,
+	@Fragment nvarchar(255) = null
+as
+begin
+	set nocount on;
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
+
+	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	--set @Asc = N'asc'; set @Desc = N'desc';
+	--set @Dir = isnull(@Dir, @Asc);
+	--if @Fragment is not null
+	--	set @Fragment = N'%' + upper(@Fragment) + N'%';
+
+	-- list of inboxes
+	with T([Id!!Id], [Bookmark!!Name], ProcessId, [Role], [User], [Text], DateCreated, DateRemoved, [!!RowNumber])
+	as(
+		select i.Id, i.Bookmark, i.ProcessId, i.[For], u.UserName, i.[Text], i.DateCreated, i.DateRemoved
+			,[!!RowNumber] = row_number() over (order by i.Id desc)
+		from a2workflow.Inbox i
+			left join a2security.Users u on i.ForId=u.Id
+		where @Fragment is null or i.ProcessId=try_cast(@Fragment as bigint)
+	)
+	select [Inboxes!TInbox!Array]=null, *, [!!RowCount] = (select count(1) from T)
+	from T
+	where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
+	order by [!!RowNumber];
+
+	select [!$System!] = null, [!Inboxes!PageSize] = @PageSize, 
+		[!Inboxes!SortOrder] = @Order, [!Inboxes!SortDir] = @Dir,
+		[!Inboxes!Offset] = @Offset, [!Inboxes.Fragment!Filter] = @Fragment;
+end
+go
+------------------------------------------------
 begin
 	-- create admin menu
 	declare @menu table(id bigint, p0 bigint, [name] nvarchar(255), [url] nvarchar(255), icon nvarchar(255), [order] int);
 	insert into @menu(id, p0, [name], [url], icon, [order])
 	values
-		(900, null,	N'Admin',           null,			null,     0),
-		(901, 900,	N'Пользователи',	N'identity',	null,     10),
-		(902, 900,	N'Бизнес процессы', N'workflow',	null,     20),
-		(910, 901,	N'Пользователи',	N'user',		N'user',  10),
-		(911, 901,	N'Группы',			N'group',		N'users', 20),
-		(912, 901,	N'Роли',			N'role',		N'users', 30),
-		(921, 902,	N'Процессы',		N'process',		N'query', 10),
-		(922, 902,	N'Задачи',			N'inbox',		N'queue', 20);
+		(900, null,	N'Admin',           null,			null,		0),
+		(901, 900,	N'Пользователи',	N'identity',	null,		10),
+		(902, 900,	N'Бизнес процессы', N'workflow',	null,		20),
+		(910, 901,	N'Пользователи',	N'user',		N'user',	10),
+		(911, 901,	N'Группы',			N'group',		N'users',	20),
+		(912, 901,	N'Роли',			N'role',		N'users',	30),
+		(921, 902,	N'Процессы',		N'process',		N'process', 10),
+		(922, 902,	N'Задачи',			N'inbox',		N'queue',	20);
 			
 	merge a2ui.Menu as target
 	using @menu as source
@@ -882,3 +921,5 @@ go
 ------------------------------------------------
 set noexec off;
 go
+
+
