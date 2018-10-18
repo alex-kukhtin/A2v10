@@ -12,12 +12,12 @@ namespace A2v10.Web.Config
 
 	class LocaleMapItem
 	{
-		public IDictionary<String, String> Map { get; }
+		public ConcurrentDictionary<String, String> Map { get; }
 		public Boolean Loaded { get; set; }
 
 		public LocaleMapItem()
 		{
-			Map = new Dictionary<String, String>();
+			Map = new ConcurrentDictionary<String, String>();
 		}
 	}
 
@@ -39,6 +39,7 @@ namespace A2v10.Web.Config
 			var map = GetCurrentMap(locale);
 			if (map.Loaded)
 				return map.Map;
+			map.Loaded = true;
 
 			foreach (var path in GetLocalizerFilePath(locale))
 			{
@@ -54,10 +55,7 @@ namespace A2v10.Web.Config
 						{
 							var key = line.Substring(0, pos);
 							var val = line.Substring(pos + 1);
-							if (map.Map.TryGetValue(key, out String mapVal))
-								map.Map[key] = val;
-							else
-								map.Map.Add(key, val);
+							map.Map.AddOrUpdate(key, val, (k, oldVal) => val);
 						}
 						else
 						{
@@ -66,7 +64,6 @@ namespace A2v10.Web.Config
 					}
 				}
 			}
-			map.Loaded = true;
 			return map.Map;
 		}
 

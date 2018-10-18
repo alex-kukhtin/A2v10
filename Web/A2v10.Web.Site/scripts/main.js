@@ -4632,7 +4632,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181012-7316
+// 20181018-7322
 // components/datagrid.js*/
 
 (function () {
@@ -5276,6 +5276,8 @@ Vue.component('validator-control', {
 				let mi = this.itemsSource.$ModelInfo;
 				if (!mi) return false;
 				if ('HasRows' in mi) {
+					if (this.itemsSource.length)
+						return false;
 					return mi.HasRows === false;
 				}
 				return false;
