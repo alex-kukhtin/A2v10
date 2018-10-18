@@ -73,11 +73,20 @@
 .ico-arrow-export:before {
   content: "\e908";
 }
+.ico-export-excel:before {
+  content: "\e913";
+}
 .ico-arrow-open:before {
   content: "\e909";
 }
 .ico-arrow-sort:before {
   content: "\e90a";
+}
+.ico-import:before {
+  content: "\e904";
+}
+.ico-export:before {
+  content: "\e905";
 }
 .ico-ban:before {
   content: "\ea0a";
@@ -546,6 +555,9 @@
 }
 .ico-upload:before {
   content: "\e910";
+}
+.ico-brand-excel:before {
+  content: "\e913";
 }
 .ico-user:before {
   content: "\e998";

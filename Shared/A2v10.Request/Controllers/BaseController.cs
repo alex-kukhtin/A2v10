@@ -182,7 +182,7 @@ namespace A2v10.Request
 					}
 				}
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
-				if (!String.IsNullOrEmpty(rw.Id))
+				if (!String.IsNullOrEmpty(rw.Id) && !rw.copy)
 				{
 					var modelId = model.FirstElementId ?? String.Empty;
 					if (rw.Id != modelId.ToString())
