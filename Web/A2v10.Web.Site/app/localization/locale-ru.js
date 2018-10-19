@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180524-7195
+// 20181019-7323
 // locale-ru.js
 
 "use strict";
@@ -53,7 +53,8 @@
 		$AllPeriodData: 'За все время',
 		$License: 'лицензия',
 		$HomePage: 'домашняя страница',
-		$CreatedOpenSource: 'Создано с использованием программного обеспечения с открытым исходным кодом'
+		$CreatedOpenSource: 'Создано с использованием программного обеспечения с открытым исходным кодом',
+		$Unknown: 'Не указано'
 	};
 
 

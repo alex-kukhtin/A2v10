@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181012-7316
+// 20181019-7323
 // components/collectionview.js
 
 /*
@@ -32,7 +32,7 @@ TODO:
 	}
 
 	function makeNewQueryFunc(that) {
-		let nq = { dir: that.dir, order: that.order, offset: that.offset };
+		let nq = { dir: that.dir, order: that.order, offset: that.offset, group: that.GroupBy };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
 			if (period.isPeriod(fVal)) {
@@ -367,23 +367,29 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :GroupBy="groupBy">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :Grouping="thisGrouping">
 	</slot>
 </div>
 `,
 		props: {
 			ItemsSource: Array,
-			initialFilter: Object
+			initialFilter: Object,
+			initialGroup: Object
 		},
 		data() {
 			return {
 				filter: this.initialFilter,
-				groupBy: null,
+				GroupBy: '',
 				lockChange: true
 			};
 		},
 		watch: {
 			jsonFilter: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			},
+			GroupBy: {
 				handler(newData, oldData) {
 					this.filterChanged();
 				}
@@ -416,6 +422,9 @@ TODO:
 				return this.ItemsSource.$RowCount || 0;
 			},
 			thisPager() {
+				return this;
+			},
+			thisGrouping() {
 				return this;
 			},
 			pages() {
@@ -470,6 +479,9 @@ TODO:
 			let mi = this.ItemsSource.$ModelInfo;
 			if (mi) {
 				modelInfoToFilter(mi.Filter, this.filter);
+				if (mi.GroupBy) {
+					this.GroupBy = mi.GroupBy;
+				}
 			}
 			// then query from url
 			let q = this.$store.getters.query;

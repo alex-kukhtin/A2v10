@@ -1019,6 +1019,7 @@ header .user-name .person-name,
   padding: 0 8px;
   margin: 0;
   height: 100%;
+  white-space: nowrap;
 }
 .nav-bar li a:hover {
   text-decoration: none;
@@ -2418,7 +2419,7 @@ table.data-grid tr.group td .grtitle {
 table.data-grid tr.group td .grcount {
   float: right;
   font-size: 85%;
-  background-color: #8f94b0;
+  background-color: #999;
   color: white;
   padding: 2px 4px;
   border-radius: 4px;

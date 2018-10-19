@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180526-7195
+// 20181019-7323
 // locale-uk.js
 
 "use strict";
@@ -53,8 +53,9 @@
 		$AllPeriodData: 'За весь час',
 		$License: 'ліцензія',
 		$HomePage: 'домашня сторінка',
-		$CreatedOpenSource: 'Створено з використанням програмного забезпечення з відкритим сирцевим кодом'
-};
+		$CreatedOpenSource: 'Створено з використанням програмного забезпечення з відкритим сирцевим кодом',
+		$Unknown: 'Не вказано'
+	};
 
 
 	window.$$locale = locale;

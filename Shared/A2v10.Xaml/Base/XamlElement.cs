@@ -60,6 +60,26 @@ namespace A2v10.Xaml
 			Parent = parent;
 		}
 
+		protected virtual T FindInside<T>() where T: class
+		{
+			if (this is T)
+				return this as T;
+			return null;
+		}
+
+		internal T FindParent<T>() where T:class
+		{
+			var p = Parent;
+			while (p != null)
+			{
+				var t = p.FindInside<T>();
+				if (t != null)
+					return t;
+				p = p.Parent;
+			}
+			return default(T);
+		}
+
 
 		internal void MergeBoolAttribute(TagBuilder tag, RenderContext context, String propName, Boolean value)
 		{

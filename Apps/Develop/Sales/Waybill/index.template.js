@@ -12,6 +12,8 @@ const template = {
 		"TDocument.$HasParent"() { return this.ParentDoc.Id !== 0; },
 		"TDocParent.$Name": parentName
 	},
+	events: {
+	},
 	commands: {
 		clearFilter(f) {
 			f.Id = 0;
@@ -20,7 +22,6 @@ const template = {
 		startWorkflow
 	}
 };
-
 
 function mark() {
 	return this.Done ? "success" : '';

@@ -109,13 +109,37 @@ namespace A2v10.Xaml
 			}
 		}
 
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			Toolbar?.SetParent(this);
+			Taskpad?.SetParent(this);
+			Pager?.SetParent(this);
+			CollectionView?.SetParent(this);
+		}
+
 		internal override void OnDispose()
 		{
 			base.OnDispose();
 			Toolbar?.OnDispose();
 			Taskpad?.OnDispose();
 			Pager?.OnDispose();
+			CollectionView?.OnDispose();
 		}
 
+		protected override T FindInside<T>()
+		{
+			if (this is T)
+				return this as T;
+			else if (Toolbar is T)
+				return Toolbar as T;
+			else if (CollectionView is T)
+				return CollectionView as T;
+			else if (Taskpad is T)
+				return Taskpad as T;
+			else if (Pager is T)
+				return Pager as T;
+			return null;
+		}
 	}
 }

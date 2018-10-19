@@ -970,7 +970,7 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181019-7323
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -982,7 +982,7 @@ app.modules['std:modelInfo'] = function () {
 	};
 
 	function copyFromQuery(mi, q) {
-		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order };
+		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order, GroupBy: q.group };
 		for (let p in psq) {
 			mi[p] = psq[p];
 		}
@@ -995,7 +995,7 @@ app.modules['std:modelInfo'] = function () {
 
 	function getPagerInfo(mi) {
 		if (!mi) return undefined;
-		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder };
+		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder, group: mi.GroupBy };
 		if (mi.Filter) {
 			for (let p in mi.Filter) {
 				x[p] = mi.Filter[p];
@@ -3813,7 +3813,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180729-7259*/
+/*20181013-7223*/
 /*components/combobox.js*/
 
 (function () {
@@ -3918,14 +3918,17 @@ Vue.component('validator-control', {
 					let ob = this.itemsSource.find(x => x[vProp] === cv);
 					return ob ? this.getName(ob) : '';
 				} else {
-					// get text from select directly.
-					let sel = this.$refs.sel;
-					if (!sel) return '';
-					let ops = sel.options;
-					let si = sel.selectedIndex;
-					if (si < 0 || si >= ops.length) return '';
-					return ops[si].text;
+					return this.getOptionsText();
 				}
+			},
+			getOptionsText() {
+					// get text from select directly.
+				let sel = this.$refs.sel;
+				if (!sel) return '';
+				let ops = sel.options;
+				let si = sel.selectedIndex;
+				if (si < 0 || si >= ops.length) return '';
+				return ops[si].text;
 			}
 		},
 		mounted() {
@@ -4632,7 +4635,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181018-7322
+// 20181019-7323
 // components/datagrid.js*/
 
 (function () {
@@ -4655,6 +4658,7 @@ Vue.component('validator-control', {
 
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const locale = window.$$locale;
 
 	/* group marker
 				<th v-if="isGrouping" class="group-cell" style="display:none">
@@ -4693,7 +4697,7 @@ Vue.component('validator-control', {
 						<td @click.prevent='toggleGroup(g)' :colspan="groupColumns">
 						<span :class="{expmark: true, expanded: g.expanded}" />
 						<span class="grtitle" v-text="groupTitle(g)" />
-						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
+						<span v-if="isGroupCountVisible(g)" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
@@ -5147,7 +5151,7 @@ Vue.component('validator-control', {
 			markStyle: String,
 			rowBold: String,
 			doubleclick: Function,
-			groupBy: [Array, Object],
+			groupBy: [Array, Object, String],
 			rowDetails: Boolean,
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
@@ -5209,7 +5213,9 @@ Vue.component('validator-control', {
 					(this.isRowDetailsCell ? 1 : 0);
 			},
 			$groupCount() {
-				if (utils.isObjectExact(this.groupBy))
+				if (utils.isString(this.groupBy))
+					return this.groupBy.split('-').length;
+				else if (utils.isObjectExact(this.groupBy))
 					return 1;
 				else
 					return this.groupBy.length;
@@ -5244,14 +5250,22 @@ Vue.component('validator-control', {
 				let startTime = performance.now();
 				let grmap = {};
 				let grBy = this.groupBy;
-				if (utils.isObjectExact(grBy))
+				if (utils.isString(grBy)) {
+					let rarr = [];
+					for (let vs of grBy.split('-'))
+						rarr.push({ prop: vs.trim(), count: true });
+					grBy = rarr;
+				}
+				else if (utils.isObjectExact(grBy))
 					grBy = [grBy];
 				for (let itm of this.$items) {
 					let root = grmap;
 					for (let gr of grBy) {
 						let key = utils.eval(itm, gr.prop);
+						if (utils.isDate(key))
+							key = utils.format(key, "Date");
 						if (!utils.isDefined(key)) key = '';
-						if (key === '') key = "Unknown";
+						if (key === '') key = locale.$Unknown || "Unknown";
 						if (!(key in root)) root[key] = {};
 						root = root[key];
 					}
@@ -5370,6 +5384,11 @@ Vue.component('validator-control', {
 			},
 			toggleGroup(g) {
 				g.expanded = !g.expanded;
+			},
+			isGroupCountVisible(g) {
+				if (g && g.source && utils.isDefined(g.source.count))
+					return g.source.count;
+				return true;
 			},
 			isGroupGroupVisible(g) {
 				if (!g.group)
@@ -5847,7 +5866,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181012-7316
+// 20181019-7323
 // components/collectionview.js
 
 /*
@@ -5879,7 +5898,7 @@ TODO:
 	}
 
 	function makeNewQueryFunc(that) {
-		let nq = { dir: that.dir, order: that.order, offset: that.offset };
+		let nq = { dir: that.dir, order: that.order, offset: that.offset, group: that.GroupBy };
 		for (let x in that.filter) {
 			let fVal = that.filter[x];
 			if (period.isPeriod(fVal)) {
@@ -6214,23 +6233,29 @@ TODO:
 		store: component('std:store'),
 		template: `
 <div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :GroupBy="groupBy">
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :Grouping="thisGrouping">
 	</slot>
 </div>
 `,
 		props: {
 			ItemsSource: Array,
-			initialFilter: Object
+			initialFilter: Object,
+			initialGroup: Object
 		},
 		data() {
 			return {
 				filter: this.initialFilter,
-				groupBy: null,
+				GroupBy: '',
 				lockChange: true
 			};
 		},
 		watch: {
 			jsonFilter: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			},
+			GroupBy: {
 				handler(newData, oldData) {
 					this.filterChanged();
 				}
@@ -6263,6 +6288,9 @@ TODO:
 				return this.ItemsSource.$RowCount || 0;
 			},
 			thisPager() {
+				return this;
+			},
+			thisGrouping() {
 				return this;
 			},
 			pages() {
@@ -6317,6 +6345,9 @@ TODO:
 			let mi = this.ItemsSource.$ModelInfo;
 			if (mi) {
 				modelInfoToFilter(mi.Filter, this.filter);
+				if (mi.GroupBy) {
+					this.GroupBy = mi.GroupBy;
+				}
 			}
 			// then query from url
 			let q = this.$store.getters.query;

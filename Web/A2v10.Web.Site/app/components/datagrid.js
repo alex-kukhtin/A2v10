@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181018-7322
+// 20181019-7323
 // components/datagrid.js*/
 
 (function () {
@@ -23,6 +23,7 @@
 
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const locale = window.$$locale;
 
 	/* group marker
 				<th v-if="isGrouping" class="group-cell" style="display:none">
@@ -61,7 +62,7 @@
 						<td @click.prevent='toggleGroup(g)' :colspan="groupColumns">
 						<span :class="{expmark: true, expanded: g.expanded}" />
 						<span class="grtitle" v-text="groupTitle(g)" />
-						<span v-if="g.source.count" class="grcount" v-text="g.count" /></td>
+						<span v-if="isGroupCountVisible(g)" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
@@ -515,7 +516,7 @@
 			markStyle: String,
 			rowBold: String,
 			doubleclick: Function,
-			groupBy: [Array, Object],
+			groupBy: [Array, Object, String],
 			rowDetails: Boolean,
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
@@ -577,7 +578,9 @@
 					(this.isRowDetailsCell ? 1 : 0);
 			},
 			$groupCount() {
-				if (utils.isObjectExact(this.groupBy))
+				if (utils.isString(this.groupBy))
+					return this.groupBy.split('-').length;
+				else if (utils.isObjectExact(this.groupBy))
 					return 1;
 				else
 					return this.groupBy.length;
@@ -612,14 +615,22 @@
 				let startTime = performance.now();
 				let grmap = {};
 				let grBy = this.groupBy;
-				if (utils.isObjectExact(grBy))
+				if (utils.isString(grBy)) {
+					let rarr = [];
+					for (let vs of grBy.split('-'))
+						rarr.push({ prop: vs.trim(), count: true });
+					grBy = rarr;
+				}
+				else if (utils.isObjectExact(grBy))
 					grBy = [grBy];
 				for (let itm of this.$items) {
 					let root = grmap;
 					for (let gr of grBy) {
 						let key = utils.eval(itm, gr.prop);
+						if (utils.isDate(key))
+							key = utils.format(key, "Date");
 						if (!utils.isDefined(key)) key = '';
-						if (key === '') key = "Unknown";
+						if (key === '') key = locale.$Unknown || "Unknown";
 						if (!(key in root)) root[key] = {};
 						root = root[key];
 					}
@@ -738,6 +749,11 @@
 			},
 			toggleGroup(g) {
 				g.expanded = !g.expanded;
+			},
+			isGroupCountVisible(g) {
+				if (g && g.source && utils.isDefined(g.source.count))
+					return g.source.count;
+				return true;
 			},
 			isGroupGroupVisible(g) {
 				if (!g.group)

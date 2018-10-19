@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180729-7259*/
+/*20181013-7223*/
 /*components/combobox.js*/
 
 (function () {
@@ -105,14 +105,17 @@
 					let ob = this.itemsSource.find(x => x[vProp] === cv);
 					return ob ? this.getName(ob) : '';
 				} else {
-					// get text from select directly.
-					let sel = this.$refs.sel;
-					if (!sel) return '';
-					let ops = sel.options;
-					let si = sel.selectedIndex;
-					if (si < 0 || si >= ops.length) return '';
-					return ops[si].text;
+					return this.getOptionsText();
 				}
+			},
+			getOptionsText() {
+					// get text from select directly.
+				let sel = this.$refs.sel;
+				if (!sel) return '';
+				let ops = sel.options;
+				let si = sel.selectedIndex;
+				if (si < 0 || si >= ops.length) return '';
+				return ops[si].text;
 			}
 		},
 		mounted() {

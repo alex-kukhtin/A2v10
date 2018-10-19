@@ -970,7 +970,7 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180930-7309
+// 20181019-7323
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -982,7 +982,7 @@ app.modules['std:modelInfo'] = function () {
 	};
 
 	function copyFromQuery(mi, q) {
-		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order };
+		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order, GroupBy: q.group };
 		for (let p in psq) {
 			mi[p] = psq[p];
 		}
@@ -995,7 +995,7 @@ app.modules['std:modelInfo'] = function () {
 
 	function getPagerInfo(mi) {
 		if (!mi) return undefined;
-		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder };
+		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder, group: mi.GroupBy };
 		if (mi.Filter) {
 			for (let p in mi.Filter) {
 				x[p] = mi.Filter[p];

@@ -33,6 +33,15 @@
 			<Code Content="{Bind Parent.Filter}"></Code>
 			<CheckBox Label="Show column" Value="{Bind Root.$$ColumnVisible}"/>
 			-->
+			<ComboBox Value="{Bind Parent.Grouping.GroupBy}">
+				<ComboBoxItem Content="Без группировки" Value=""/>
+				<ComboBoxItem Content="По контрагентам" Value="Agent.Name"/>
+				<ComboBoxItem Content="По датам" Value="Date"/>
+				<ComboBoxItem Content="По контрагентам + по датам" Value="Agent.Name-Date"/>
+			</ComboBox>
+			<!--
+			<Code Content="{Bind Documents.$ModelInfo}"></Code>
+			-->
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>
@@ -47,10 +56,11 @@
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" />
 	</Page.Pager>
+	<!--="{Bind Parent.GroupBy}-->
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
-				MarkerStyle="Both" Mark="{Bind $Mark}">
+				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"
 			Command="{BindCmd Open, Url={StaticResource OpenUrl}}" Icon="{Bind $Icon}"/>
 		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"/>
