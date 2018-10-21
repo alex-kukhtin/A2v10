@@ -23,6 +23,7 @@ namespace A2v10.Xaml
 		public Boolean Multiline { get; set; }
 		public TextAlign Align { get; set; }
 		public UpdateTrigger UpdateTrigger { get; set; }
+		public Boolean? SpellCheck { get; set; }
 
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -42,6 +43,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":auto-size", "true");
 			if (UpdateTrigger != UpdateTrigger.Default)
 				input.MergeAttribute("update-trigger", UpdateTrigger.ToString().ToLowerInvariant());
+			if (SpellCheck != null)
+				input.MergeAttribute(":spell-check", SpellCheck.Value.ToString().ToLowerInvariant());
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);

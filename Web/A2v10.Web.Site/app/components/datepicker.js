@@ -18,7 +18,7 @@
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()" class="date-picker">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>

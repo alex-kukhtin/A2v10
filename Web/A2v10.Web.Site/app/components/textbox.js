@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180729-7259*/
+/*20181021-7324*/
 /*components/textbox.js*/
 
 (function () {
@@ -9,14 +9,14 @@
 	const mask = require('std:mask');
 
 	let textBoxTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
-				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -26,13 +26,13 @@
 `;
 
 	let textAreaTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
-			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -42,8 +42,8 @@
 `;
 
 	let staticTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group static">
 		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>
@@ -74,7 +74,8 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean
+			password: Boolean,
+			spellCheck: { type: Boolean, default: undefined }
 		},
 		computed: {
 			controlType() {
@@ -117,7 +118,8 @@
 			propToValidate: String,
 			placeholder: String,
 			autoSize: Boolean,
-			rows: Number
+			rows: Number,
+			spellCheck: { type: Boolean, default:undefined }
 		},
 		computed: {
 			modelValue2() {

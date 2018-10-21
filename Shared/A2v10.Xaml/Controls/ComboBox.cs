@@ -110,6 +110,7 @@ namespace A2v10.Xaml
 					ch.RenderElement(context);
 			}
 			RenderPopover(context);
+			RenderHint(context);
 			combo.RenderEnd(context);
 		}
 

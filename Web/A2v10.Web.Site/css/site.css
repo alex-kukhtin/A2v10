@@ -4143,6 +4143,16 @@ TODO:
 .popover-wrapper.po-blue.po-bottom-right > .popup-body > .arrow:after {
   border-bottom-color: #e5f1fe;
 }
+.popover-wrapper.hint {
+  margin-left: 6px;
+  color: #999;
+}
+.popover-wrapper.hint > .popover-title {
+  border-bottom: none;
+}
+.popover-wrapper.hint .ico {
+  font-size: 12px;
+}
 .a2-state-card {
   position: relative;
   background-color: white;

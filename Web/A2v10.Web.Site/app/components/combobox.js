@@ -10,7 +10,7 @@
 
 	let comboBoxTemplate =
 `<div :class="cssClass()" v-lazy="itemsSource">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<div class="select-wrapper">
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>

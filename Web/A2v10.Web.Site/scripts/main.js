@@ -3645,7 +3645,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180729-7259*/
+/*20181021-7324*/
 /*components/textbox.js*/
 
 (function () {
@@ -3654,14 +3654,14 @@ Vue.component('validator-control', {
 	const mask = require('std:mask');
 
 	let textBoxTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 					v-on:change="onChange($event.target.value)" 
 					v-on:input="onInput($event.target.value)"
-				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -3671,13 +3671,13 @@ Vue.component('validator-control', {
 `;
 
 	let textAreaTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
-			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength"/>
+			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -3687,8 +3687,8 @@ Vue.component('validator-control', {
 `;
 
 	let staticTemplate =
-		`<div :class="cssClass()">
-	<label v-if="hasLabel" v-text="label" />
+`<div :class="cssClass()">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group static">
 		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>
@@ -3719,7 +3719,8 @@ Vue.component('validator-control', {
 			itemToValidate: Object,
 			propToValidate: String,
 			placeholder: String,
-			password: Boolean
+			password: Boolean,
+			spellCheck: { type: Boolean, default: undefined }
 		},
 		computed: {
 			controlType() {
@@ -3762,7 +3763,8 @@ Vue.component('validator-control', {
 			propToValidate: String,
 			placeholder: String,
 			autoSize: Boolean,
-			rows: Number
+			rows: Number,
+			spellCheck: { type: Boolean, default:undefined }
 		},
 		computed: {
 			modelValue2() {
@@ -3823,7 +3825,7 @@ Vue.component('validator-control', {
 
 	let comboBoxTemplate =
 `<div :class="cssClass()" v-lazy="itemsSource">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<div class="select-wrapper">
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
@@ -4086,7 +4088,7 @@ Vue.component('validator-control', {
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()" class="date-picker">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>

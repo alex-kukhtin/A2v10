@@ -16,6 +16,7 @@ namespace A2v10.Xaml
 		public Validator Validator { get; set; }
 		public Popover Popover { get; set; }
 		public String TestId { get; set; }
+		public Popover Hint { get; set; }
 
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
@@ -53,6 +54,7 @@ namespace A2v10.Xaml
 		internal void RenderAddOns(RenderContext context)
 		{
 			RenderPopover(context);
+			RenderHint(context);
 			if (!_addOns.IsValueCreated)
 				return;
 			foreach (var ctl in AddOns)
@@ -74,6 +76,22 @@ namespace A2v10.Xaml
 			tag.MergeAttribute("slot", "popover");
 			tag.RenderStart(context);
 			Popover.RenderElement(context);
+			tag.RenderEnd(context);
+		}
+
+		internal void RenderHint(RenderContext context)
+		{
+			if (Hint == null)
+				return;
+			if (Hint.Icon == Icon.NoIcon)
+				Hint.Icon = Icon.Help;
+			var tag = new TagBuilder("template");
+			tag.MergeAttribute("slot", "hint");
+			tag.RenderStart(context);
+			Hint.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("hint");
+			});
 			tag.RenderEnd(context);
 		}
 

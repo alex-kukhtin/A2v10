@@ -2,6 +2,8 @@
 
 
 using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Markup;
 using A2v10.Infrastructure;
 
@@ -30,6 +32,7 @@ namespace A2v10.Xaml
 	}
 
 	[ContentProperty("Content")]
+	[TypeConverter(typeof(PopoverConverter))]
 	public class Popover : Inline
 	{
 		public PopupPlacement Placement { get; set; }
@@ -48,6 +51,7 @@ namespace A2v10.Xaml
 			if (SkipRender(context))
 				return;
 			var po = new TagBuilder("popover", "a2-inline", IsInGrid);
+			onRender?.Invoke(po);
 			MergeAttributes(po, context, MergeAttrMode.All);
 			po.AddCssClass("po-" + Placement.ToString().ToKebabCase());
 			if (Background != PopoverBackgroundStyle.Default)
@@ -94,4 +98,31 @@ namespace A2v10.Xaml
 				Background = PopoverBackgroundStyle.Default;
 		}
 	}
+
+	internal class PopoverConverter : TypeConverter
+	{
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			if (sourceType == typeof(String))
+				return true;
+			else if (sourceType == typeof(Popover))
+				return true;
+			return false;
+		}
+
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
+		{
+			if (value == null)
+				return null;
+			if (value is String strValue)
+				return new Popover()
+				{
+					Content = strValue
+				};
+			else if (value is Popover)
+				return value;
+			throw new XamlException($"Invalid Popover converter value '{value}'");
+		}
+	}
+
 }
