@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181010-7315
+// 20181020-7325
 // controllers/base.js
 
 (function () {
@@ -221,7 +221,7 @@
 			},
 
 
-			$invoke(cmd, data, base) {
+			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
 				let url = root + '/_data/invoke';
@@ -238,7 +238,11 @@
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
-						self.$alertUi(msg);
+						if (opts && opts.catchError) {
+							reject(msg);
+						} else {
+							self.$alertUi(msg);
+						}
 					});
 				});
 			},

@@ -107,6 +107,8 @@ namespace A2v10.Xaml
 				return true;
 			else if (sourceType == typeof(Popover))
 				return true;
+			else if (sourceType == typeof(UIElement))
+				return true;
 			return false;
 		}
 
@@ -121,6 +123,11 @@ namespace A2v10.Xaml
 				};
 			else if (value is Popover)
 				return value;
+			else if (value is UIElement uiValue)
+				return new Popover() {
+					Content = uiValue,
+					Icon = Icon.HelpOutline
+				};
 			throw new XamlException($"Invalid Popover converter value '{value}'");
 		}
 	}

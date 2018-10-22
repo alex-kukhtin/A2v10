@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20181022-7325
 // components/periodpicker.js
 
 
@@ -46,7 +46,11 @@
 `,
 		props: {
 			item: Object,
-			prop: String
+			prop: String,
+			showAll: {
+				type: Boolean,
+				default: true
+			}
 		},
 		data() {
 			return {
@@ -81,7 +85,7 @@
 				return this.selection === 'start';
 			},
 			menu() {
-				return [
+				let menu = [
 					{ name: locale.$Today, key: 'today' },
 					{ name: locale.$Yesterday, key: 'yesterday' },
 					{ name: locale.$Last7Days, key: 'last7' },
@@ -90,9 +94,12 @@
 					{ name: locale.$PrevMonth, key: 'prevMonth' },
 					{ name: locale.$QuartToDate, key: 'startQuart' },
 					{ name: locale.$PrevQuart, key: 'prevQuart' },
-					{ name: locale.$YearToDate, key: 'startYear' },
-					{ name: locale.$AllPeriodData, key: 'allData' }
+					{ name: locale.$YearToDate, key: 'startYear' }
 				];
+				if (this.showAll) {
+					menu.push({ name: locale.$AllPeriodData, key: 'allData' });
+				}
+				return menu;
 			}
 		},
 		methods: {

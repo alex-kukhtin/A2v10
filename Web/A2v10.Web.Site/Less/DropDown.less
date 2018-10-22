@@ -169,12 +169,17 @@ TODO:
 }
 
 .hlink-dd-wrapper {
+
+	> a.a2-hyperlink {
+		border-bottom: 1px dotted @link-color;
+	}
+
 	&:focus {
 		outline: none !important;
 	}
 
 	&.show:after {
-		display:none!important;
+		display: none !important;
 	}
 
 	&.show .menu {

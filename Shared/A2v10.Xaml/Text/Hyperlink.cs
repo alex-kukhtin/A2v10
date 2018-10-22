@@ -63,8 +63,11 @@ namespace A2v10.Xaml
 					case ControlSize.Small:
 						tag.AddCssClass("small");
 						break;
+					case ControlSize.Large:
+						tag.AddCssClass("large");
+						break;
 					default:
-						throw new XamlException("Only ControlSize.Small is supported for the Hyperlink");
+						throw new XamlException("Only ControlSize.Small or ControlSize.Large is supported for the Hyperlink");
 				}
 			}
 
@@ -97,7 +100,7 @@ namespace A2v10.Xaml
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
-			if (DropDown != null && GetBinding(nameof(Command)) != null)
+			if (DropDown != null && GetBindingCommand(nameof(Command)) != null)
 				throw new XamlException("Hyperlink. The DropDown and Command can't be specified at the same time");
 		}
 	}

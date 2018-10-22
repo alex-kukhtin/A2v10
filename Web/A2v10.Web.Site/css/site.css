@@ -1785,8 +1785,14 @@ pre.a2-code {
 .small {
   font-size: 0.86rem;
 }
+.large {
+  font-size: 1.15rem;
+}
 .a2-hyperlink.small i.ico {
   font-size: 12px;
+}
+.a2-hyperlink.large i.ico {
+  font-size: 15px;
 }
 .a2-label {
   display: block;
@@ -2082,6 +2088,7 @@ pre.a2-code {
 .period-picker .period-pane {
   display: grid;
   grid-gap: 10px;
+  font-size: 1rem;
 }
 @keyframes blink {
   from {
@@ -2109,6 +2116,26 @@ pre.a2-code {
 }
 .period-picker .period-footer .btn + .btn {
   margin-left: 10px;
+}
+.period-picker.pp-hyperlink .input-group {
+  border-style: none;
+}
+.period-picker.pp-hyperlink .input-group .period-text {
+  min-height: auto;
+  border-bottom: 1px dotted #57a8fa;
+  color: #57a8fa;
+}
+.period-picker.pp-hyperlink .input-group .caret {
+  display: none;
+}
+.period-picker.pp-large {
+  font-size: 1.2rem;
+}
+.period-picker.pp-small {
+  font-size: 0.95rem;
+}
+.period-picker.pp-mini {
+  font-size: 0.86rem;
 }
 .control-group.drop-bottom-right .input-group > .calendar {
   left: auto;
@@ -3879,11 +3906,14 @@ TODO:
 .dropdown.show > .btn:hover {
   background-color: #eaf0ff;
 }
+.hlink-dd-wrapper > a.a2-hyperlink {
+  border-bottom: 1px dotted #57a8fa;
+}
 .hlink-dd-wrapper:focus {
   outline: none !important;
 }
 .hlink-dd-wrapper.show:after {
-  display: none!important;
+  display: none !important;
 }
 .popover-wrapper {
   position: relative;

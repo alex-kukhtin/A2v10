@@ -160,16 +160,23 @@
 	.period-pane {
 		display: grid;
 		grid-gap: @elem-margin;
+		font-size:1rem;
 	}
 
 	@keyframes blink {
-		from { opacity:1 }
-		to { opacity:0 }
+		from {
+			opacity: 1
+		}
+
+		to {
+			opacity: 0
+		}
 	}
 
 	.current-period {
 		font-weight: 500;
 		color: #555;
+
 		&.processing {
 			animation: blink .5s infinite alternate ease-in-out;
 		}
@@ -188,6 +195,34 @@
 		.btn + .btn {
 			margin-left: @elem-margin;
 		}
+	}
+
+	&.pp-hyperlink {
+		.input-group {
+			border-style: none;
+
+			.period-text {
+				min-height: auto;
+				border-bottom: 1px dotted @link-color;
+				color: @link-color;
+			}
+
+			.caret {
+				display: none;
+			}
+		}
+	}
+
+	&.pp-large {
+		font-size: 1.2rem;
+	}
+
+	&.pp-small {
+		font-size: .95rem;
+	}
+
+	&.pp-mini {
+		font-size: .86rem;
 	}
 }
 

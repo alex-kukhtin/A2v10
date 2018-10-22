@@ -4182,7 +4182,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20181022-7325
 // components/periodpicker.js
 
 
@@ -4228,7 +4228,11 @@ Vue.component('validator-control', {
 `,
 		props: {
 			item: Object,
-			prop: String
+			prop: String,
+			showAll: {
+				type: Boolean,
+				default: true
+			}
 		},
 		data() {
 			return {
@@ -4263,7 +4267,7 @@ Vue.component('validator-control', {
 				return this.selection === 'start';
 			},
 			menu() {
-				return [
+				let menu = [
 					{ name: locale.$Today, key: 'today' },
 					{ name: locale.$Yesterday, key: 'yesterday' },
 					{ name: locale.$Last7Days, key: 'last7' },
@@ -4272,9 +4276,12 @@ Vue.component('validator-control', {
 					{ name: locale.$PrevMonth, key: 'prevMonth' },
 					{ name: locale.$QuartToDate, key: 'startQuart' },
 					{ name: locale.$PrevQuart, key: 'prevQuart' },
-					{ name: locale.$YearToDate, key: 'startYear' },
-					{ name: locale.$AllPeriodData, key: 'allData' }
+					{ name: locale.$YearToDate, key: 'startYear' }
 				];
+				if (this.showAll) {
+					menu.push({ name: locale.$AllPeriodData, key: 'allData' });
+				}
+				return menu;
 			}
 		},
 		methods: {
@@ -8675,7 +8682,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181010-7315
+// 20181020-7325
 // controllers/base.js
 
 (function () {
@@ -8896,7 +8903,7 @@ Vue.directive('resize', {
 			},
 
 
-			$invoke(cmd, data, base) {
+			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
 				let url = root + '/_data/invoke';
@@ -8913,7 +8920,11 @@ Vue.directive('resize', {
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
-						self.$alertUi(msg);
+						if (opts && opts.catchError) {
+							reject(msg);
+						} else {
+							self.$alertUi(msg);
+						}
 					});
 				});
 			},

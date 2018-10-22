@@ -6,12 +6,21 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
+	public enum PeriodPickerStyle
+	{
+		Default,
+		Hyperlink
+	}
+
 	public class PeriodPicker : ValuedControl, ITableControl
 	{
 
 		public TextAlign Align { get; set; }
 
 		public DatePickerDropDownPlacement Placement { get; set; }
+		public PeriodPickerStyle Style { get; set; }
+		public ControlSize Size { get; set; }
+		public Boolean? ShowAllData { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -19,6 +28,12 @@ namespace A2v10.Xaml
 				return;
 			var tag = new TagBuilder("a2-period-picker", null, IsInGrid);
 			onRender?.Invoke(tag);
+			if (Style != PeriodPickerStyle.Default)
+				tag.AddCssClass($"pp-{Style.ToString().ToLowerInvariant()}");
+			if (Size != ControlSize.Default)
+				tag.AddCssClass($"pp-{Size.ToString().ToLowerInvariant()}");
+			if (ShowAllData != null)
+				tag.MergeAttribute(":show-all", ShowAllData.ToString().ToLowerInvariant());
 			MergeAttributes(tag, context);
 			MergeDisabled(tag, context);
 			MergeAlign(tag, context, Align);
