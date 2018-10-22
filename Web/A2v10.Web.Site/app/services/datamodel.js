@@ -67,6 +67,7 @@
 	}
 
 	function defSource(trg, source, prop, parent) {
+
 		let propCtor = trg._meta_.props[prop];
 		if (propCtor.type) propCtor = propCtor.type;
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
@@ -98,7 +99,7 @@
 				shadow[prop] = mp;
 				break;
 			case period.constructor:
-				shadow[prop] = new propCtor(source[prop]);
+				shadow[prop] = new propCtor(source[prop], );
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);

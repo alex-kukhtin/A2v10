@@ -12,6 +12,13 @@ namespace A2v10.Xaml
 		Hyperlink
 	}
 
+	public enum DisplayMode
+	{
+		Date,
+		Name,
+		NameDate
+	}
+
 	public class PeriodPicker : ValuedControl, ITableControl
 	{
 
@@ -21,6 +28,7 @@ namespace A2v10.Xaml
 		public PeriodPickerStyle Style { get; set; }
 		public ControlSize Size { get; set; }
 		public Boolean? ShowAllData { get; set; }
+		public DisplayMode Display { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -34,6 +42,8 @@ namespace A2v10.Xaml
 				tag.AddCssClass($"pp-{Size.ToString().ToLowerInvariant()}");
 			if (ShowAllData != null)
 				tag.MergeAttribute(":show-all", ShowAllData.ToString().ToLowerInvariant());
+			if (Display != DisplayMode.Date)
+				tag.MergeAttribute("display", Display.ToString().ToLowerInvariant());
 			MergeAttributes(tag, context);
 			MergeDisabled(tag, context);
 			MergeAlign(tag, context, Align);

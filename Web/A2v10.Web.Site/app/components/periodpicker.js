@@ -50,7 +50,8 @@
 			showAll: {
 				type: Boolean,
 				default: true
-			}
+			},
+			display: String
 		},
 		data() {
 			return {
@@ -67,6 +68,10 @@
 				return window.$$locale;
 			},
 			text() {
+				if (this.display === 'name')
+					return this.period.text();
+				else if (this.display === 'namedate')
+					return `${this.period.text(true)} [${this.period.format('Date')}]`;
 				return this.period.format('Date');
 			},
 			period() {
@@ -85,21 +90,7 @@
 				return this.selection === 'start';
 			},
 			menu() {
-				let menu = [
-					{ name: locale.$Today, key: 'today' },
-					{ name: locale.$Yesterday, key: 'yesterday' },
-					{ name: locale.$Last7Days, key: 'last7' },
-					{ name: locale.$Last30Days, key: 'last30' },
-					{ name: locale.$MonthToDate, key: 'startMonth' },
-					{ name: locale.$PrevMonth, key: 'prevMonth' },
-					{ name: locale.$QuartToDate, key: 'startQuart' },
-					{ name: locale.$PrevQuart, key: 'prevQuart' },
-					{ name: locale.$YearToDate, key: 'startYear' }
-				];
-				if (this.showAll) {
-					menu.push({ name: locale.$AllPeriodData, key: 'allData' });
-				}
-				return menu;
+				return uPeriod.predefined(this.showAll);
 			}
 		},
 		methods: {
@@ -141,8 +132,17 @@
 			},
 			apply() {
 				// apply period here
-				this.period.assign(this.currentPeriod);
+				if (!this.period.equal(this.currentPeriod)) {
+					this.period.assign(this.currentPeriod);
+					this.fireEvent();
+				}
 				this.isOpen = false;
+			},
+			fireEvent() {
+				let root = this.item.$root;
+				if (!root) return;
+				let eventName = this.item._path_ + '.' + this.prop + '.change';
+				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {
 				if (!this.isOpen) {

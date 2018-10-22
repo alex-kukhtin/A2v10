@@ -21,6 +21,9 @@
 							</Text>
 						</Popover>
 					</TextBox.Popover>
+					<TextBox.Hint>
+						<Popover>I am the popover for Agent.Name</Popover>
+					</TextBox.Hint>
 					<TextBox.AddOns>
 						<Hyperlink Icon="Search"></Hyperlink>
 						<Hyperlink Icon="Clear"></Hyperlink>

@@ -768,7 +768,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20181022-7325
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -777,7 +777,8 @@ app.modules['std:period'] = function () {
 	const date = utils.date;
 	const locale = window.$$locale;
 
-	function TPeriod(source) {
+	function TPeriod(source, callback) {
+		this.callback = callback;
 		if (source && 'From' in source) {
 			if (!source.From && !source.To) {
 				this.From = date.minDate;
@@ -817,8 +818,7 @@ app.modules['std:period'] = function () {
 	};
 
 	TPeriod.prototype.equal = function (p) {
-		return this.From.getTime() === p.From.getTime() &&
-			this.To.getTime() === p.To.getTime();
+		return date.equal(this.From, p.From) && date.equal(this.To, p.To);
 	};
 
 	TPeriod.prototype.fromUrl = function (v) {
@@ -859,6 +859,26 @@ app.modules['std:period'] = function () {
 		return utils.format(from, dataType) + ' - ' + (utils.format(to, dataType) || '???');
 	};
 
+	TPeriod.prototype.text = function (showCustom) {
+		//console.warn(`${this.From.getTime()}-${date.minDate.getTime()} : ${this.To.getTime()}-${date.maxDate.getTime()}`);
+		if (this.isAllData())
+			return locale.$AllPeriodData;
+		// $PrevMonth, key: 'prevMonth
+		let menu = predefined(false);
+		for (let mi of menu) {
+			//console.dir(mi);
+			let np = createPeriod(mi.key);
+			if (this.equal(np)) {
+				return mi.name;
+			}
+		}
+		if (showCustom)
+			return 'Довільно';
+		let from = this.From;
+		let to = this.To;
+		return utils.format(from, 'Date') + ' - ' + (utils.format(to, 'Date') || '???');
+	};
+
 	TPeriod.prototype.in = function (dt) {
 		let t = dt.getTime();
 		let zd = utils.date.zero().getTime();
@@ -886,7 +906,8 @@ app.modules['std:period'] = function () {
 		constructor: TPeriod,
 		zero: zeroPeriod,
 		all: allDataPeriod,
-		create: createPeriod 
+		create: createPeriod,
+		predefined: predefined
 	};
 
 	function zeroPeriod() {
@@ -895,6 +916,27 @@ app.modules['std:period'] = function () {
 
 	function allDataPeriod() {
 		return createPeriod('allData');
+	}
+
+	function predefined (showAll) {
+		let menu = [
+			{ name: locale.$Today, key: 'today' },
+			{ name: locale.$Yesterday, key: 'yesterday' },
+			{ name: locale.$Last7Days, key: 'last7' },
+			{ name: locale.$Last30Days, key: 'last30' },
+			//{ name: locale.$MonthToDate, key: 'startMonth' },
+			{ name: locale.$CurrMonth, key: 'currMonth' },
+			{ name: locale.$PrevMonth, key: 'prevMonth' },
+			//{ name: locale.$QuartToDate, key: 'startQuart' },
+			{ name: locale.$CurrQuart, key: 'currQuart' },
+			{ name: locale.$PrevQuart, key: 'prevQuart' },
+			//{ name: locale.$YearToDate, key: 'startYear' }
+			{name: locale.$CurrYear, key: 'currYear'}
+		];
+		if (showAll) {
+			menu.push({ name: locale.$AllPeriodData, key: 'allData' });
+		}
+		return menu;
 	}
 
 	function createPeriod(key, from, to) {
@@ -923,16 +965,33 @@ app.modules['std:period'] = function () {
 				p.set(d1, today);
 				break;
 			case 'prevMonth': {
-				let d1 = date.create(today.getFullYear(), today.getMonth(), 1);
-				let d2 = date.create(today.getFullYear(), today.getMonth() + 1, 1);
-				p.set(d1, date.add(d2, -1, 'day'));
-			}
+					let d1 = date.create(today.getFullYear(), today.getMonth(), 1);
+					let d2 = date.create(today.getFullYear(), today.getMonth() + 1, 1);
+					p.set(d1, date.add(d2, -1, 'day'));
+				}
+				break;
+			case 'currMonth': {
+					let d1 = date.create(today.getFullYear(), today.getMonth() + 1, 1);
+					let d2 = date.create(today.getFullYear(), today.getMonth() + 2, 1);
+					p.set(d1, date.add(d2, -1, 'day'));
+				}
 				break;
 			case 'startQuart': {
 				let q = Math.floor(today.getMonth() / 3);
 				let m = q * 3;
 				let d1 = date.create(today.getFullYear(), m + 1, 1);
 				p.set(d1, today);
+			}
+				break;
+			case 'currQuart': {
+				let year = today.getFullYear();
+				let q = Math.floor(today.getMonth() / 3);
+				let m1 = q * 3;
+				let m2 = (q + 1) * 3;
+				let d1 = date.create(year, m1 + 1, 1);
+				let d2 = date.add(date.create(year, m2 + 1, 1), -1, 'day');
+				//console.dir(d1 + ':' + d2);
+				p.set(d1, d2);
 			}
 				break;
 			case 'prevQuart': {
@@ -952,6 +1011,12 @@ app.modules['std:period'] = function () {
 			case 'startYear':
 				let dy1 = date.create(today.getFullYear(), 1, 1);
 				p.set(dy1, today);
+				break;
+			case 'currYear': {
+					let dy1 = date.create(today.getFullYear(), 1, 1);
+					let dy2 = date.create(today.getFullYear(), 12, 31);
+					p.set(dy1, dy2);
+				}
 				break;
 			case 'allData':
 				// full period
@@ -1982,6 +2047,7 @@ Vue.component('a2-pager', {
 	}
 
 	function defSource(trg, source, prop, parent) {
+
 		let propCtor = trg._meta_.props[prop];
 		if (propCtor.type) propCtor = propCtor.type;
 		let pathdot = trg._path_ ? trg._path_ + '.' : '';
@@ -2013,7 +2079,7 @@ Vue.component('a2-pager', {
 				shadow[prop] = mp;
 				break;
 			case period.constructor:
-				shadow[prop] = new propCtor(source[prop]);
+				shadow[prop] = new propCtor(source[prop], );
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);
