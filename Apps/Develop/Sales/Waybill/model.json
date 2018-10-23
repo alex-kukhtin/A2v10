@@ -32,8 +32,11 @@
 				"async": true
 			},
 			"startWorkflow": {
-							"type": "startProcess",
-								"file": "Workflows/TestWorkflow_v1"
+				"type": "startProcess",
+				"file": "Workflows/TestWorkflow_v1"
+			},
+			"resumeWorkflow": {
+				"type": "resumeProcess"
 			}
 	},
 	"reports": {

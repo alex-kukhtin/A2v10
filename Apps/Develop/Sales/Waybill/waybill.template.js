@@ -7,11 +7,13 @@ const du = utils.date;
 const cmn = require('document/common');
 
 const template = {
-    properties: {
+	properties: {
+		'TRoot.$Answer': String,
         'TRow.Sum': cmn.rowSum,
         'TDocument.Sum': cmn.docTotalSum,
         'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
-        'TDocParent.$Name': docParentName
+		'TDocParent.$Name': docParentName,
+		'TRoot.$HasInbox'() { return !!this.Inbox;}
     },
     validators: {
         'Document.Agent': 'Выберите покупателя',
@@ -26,7 +28,8 @@ const template = {
     },
     commands: {
         apply: cmn.docApply,
-		unApply: cmn.docUnApply
+		unApply: cmn.docUnApply,
+		resumeWorkflow
 	}
 };
 
@@ -40,4 +43,13 @@ function modelLoad(root) {
 function docParentName() {
     const doc = this;
     return `№ ${doc.No} от ${du.formatDate(doc.Date)}, ${utils.format(doc.Sum, 'Currency')} грн.`;
+}
+
+async function resumeWorkflow() {
+	const root = this;
+	const vm = this.$vm;
+	//alert(root.$Comment);
+	let result = await vm.$invoke('resumeWorkflow', { Id: root.Inbox.Id, Answer: root.$Answer}, '/sales/waybill')
+	console.dir(result);
+	alert('ok');
 }

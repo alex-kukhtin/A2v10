@@ -1,0 +1,18 @@
+﻿{
+	"schema": "a2demo",
+	"model": "Inbox",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view"
+		},
+			"open": {
+				"model": "Inbox",
+				"indirect": true,
+				/*"target": "{{Inbox.Action}}",*/
+				"target": "sales/waybill/{{Inbox.Command}}",
+				"targetId": "{{Inbox.ModelId}}"
+			}
+	}
+}

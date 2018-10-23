@@ -44,7 +44,7 @@
     </Flowchart.Variables>
     <Flowchart.StartNode>
       <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
-        <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
+        <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" TrackAfter="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
           <aw:Request.Inbox>
             <InArgument x:TypeArguments="aw:Inbox">
               <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
@@ -62,6 +62,14 @@
               <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
             </OutArgument>
           </aw:Request.Result>
+          <aw:Request.TrackBefore>
+            <InArgument x:TypeArguments="aw:TrackRecord">
+              <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+		{
+  Message = "I am the track for:" + Process.ModelName + ":" + Process.ModelId
+		}</mca:CSharpValue>
+            </InArgument>
+          </aw:Request.TrackBefore>
         </aw:Request>
         <FlowStep.Next>
           <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
@@ -101,7 +109,7 @@
     <x:Reference>__ReferenceID0</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID2</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAgpA2kPAgEBLwlBFgIBD0QNVhoCAQZaE1pnAgECMg85FAIBFD4PPmMCARBHE04UAgELUxNTZwIBBw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAkpA3EPAgEBLwlJFgIBD0wNXhoCAQZiE2JnAgECMg85FAIBGD4PPmMCARRDD0YWAgEQTxNWFAIBC1sTW2cCAQc=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

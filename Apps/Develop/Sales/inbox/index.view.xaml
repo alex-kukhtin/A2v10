@@ -1,0 +1,45 @@
+<!-- Invoice index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/sales/inbox/open', Argument={Bind Inbox}, NewWindow=False}">Открыть</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Inbox}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<!--
+					<FilterItem Property="From" DataType="Date" />
+					<FilterItem Property="To" DataType="Date" />
+					-->
+					<FilterItem Property="Period" DataType="Period" />
+				</FilterDescription>
+			</CollectionView.Filter>
+		</CollectionView>
+	</Page.CollectionView>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				DoubleClick="{BindCmd OpenSelected, Url='/sales/inbox/open', Argument={Bind Inbox}}">
+		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url='/sales/inbox/open'}"  Icon="Workflow1" Wrap="NoWrap"/>
+		<DataGridColumn Header="Text" Content="{Bind Text}" />
+		<DataGridColumn Header="Bookmark" Content="{Bind Bookmark}" />
+		<DataGridColumn Header="Action" Content="{Bind Action}" />
+		<DataGridColumn Header="For" Content="{Bind For}" />
+		<DataGridColumn Header="ForId" Content="{Bind ForId}" />
+		<DataGridColumn Header="DateCreated" Content="{Bind DateCreated, DataType=DateTime}" />
+		<DataGridColumn Fit="True">
+			<CommandBar Visibility="Active">
+				<Button Icon="ArrowOpen" Tip="Открыть"/>
+				<Button Icon="Edit" Tip="Изменить"/>
+				<Button Icon="Copy" Tip="Копировать"/>
+				<Button Icon="Clear" Tip="Удалить"/>
+			</CommandBar>
+		</DataGridColumn>
+	</DataGrid>
+</Page>

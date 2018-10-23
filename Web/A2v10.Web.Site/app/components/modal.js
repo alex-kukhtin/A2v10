@@ -196,8 +196,8 @@
 			},
 			iconClass() {
 				let ico = this.dialog.style;
-				if (ico == 'info')
-					ico = 'info-blue'
+				if (ico === 'info')
+					ico = 'info-blue';
 				return "ico ico-" + ico;
 			},
 			hasList() {

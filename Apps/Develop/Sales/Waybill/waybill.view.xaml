@@ -1,8 +1,8 @@
-<!-- Invoice index -->
+<!-- Waybill view -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.Toolbar>
 		<Toolbar>
-			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">Сохранить</Button>
+			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">Сохранить 2</Button>
 			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
 			<Separator/>
@@ -20,6 +20,10 @@
 				<Hyperlink Icon="FileLink"
                            Content="{Bind Document.ParentDoc.$Name}"
                            Command="{BindCmd Open, Url='/Sales/Invoice/Edit', Argument={Bind Document.ParentDoc}}"/>
+			</Panel>
+			<Panel If="{Bind Root.$HasInbox}" Header="Workflow" Style="Danger" Padding="10">
+				<TextBox Value="{Bind Root.$Answer}"/>
+				<Button Style="Cyan" Command="{BindCmd Execute, CommandName='resumeWorkflow'}">Продолжить</Button>
 			</Panel>
 		</Taskpad>
 	</Page.Taskpad>

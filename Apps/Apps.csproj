@@ -74,6 +74,7 @@
     <None Include="Develop\redirect.json" />
     <None Include="Develop\Sales\Catalog\model.json" />
     <None Include="Develop\Sales\Customer\model.json" />
+    <None Include="Develop\Sales\inbox\model.json" />
     <None Include="Develop\Sales\Invoice\index.template.xlsx" />
     <None Include="Develop\Sales\Invoice\Invoice.mrt" />
     <None Include="Develop\Sales\Invoice\model.json" />
@@ -125,6 +126,7 @@
     <Content Include="Develop\Purchase\WaybillIn\index.template.js" />
     <Content Include="Develop\Purchase\WaybillIn\waybillin.template.js" />
     <Content Include="Develop\Sales\Customer\index.template.js" />
+    <Content Include="Develop\Sales\inbox\index.template.js" />
     <Content Include="Develop\Sales\Invoice\upload.template.js" />
     <Content Include="Develop\Sales\Invoice\index.template.js" />
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
@@ -406,6 +408,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Dashboard\HomePage.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\inbox\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
