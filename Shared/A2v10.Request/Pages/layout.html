@@ -60,7 +60,8 @@
 
 			<span class="divider"></span>
 
-			<span class="version-info">@[Version] <span v-text="version"></span>
+			<span class="version-info">
+				@[Version] <span v-text="version"></span>
 			</span>
 			<div class="debug-btn dropdown dir-up" v-dropdown v-if="isDebug">
 				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
@@ -69,8 +70,8 @@
 					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
 					<div class="divider"></div>
 					<!--
-					<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
-					-->
+				<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
+				-->
 					<label class="checkbox">
 						<input type="checkbox" v-model="traceEnabled" />
 						<span>@[Tracing]</span>
@@ -78,6 +79,7 @@
 				</div>
 			</div>
 		</footer>
+		<a2-iframe-target></a2-iframe-target>
 	</div>
 	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/d3.min.js?v=$(Build)"></script>

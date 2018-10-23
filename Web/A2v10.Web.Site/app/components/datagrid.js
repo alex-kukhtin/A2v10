@@ -521,7 +521,8 @@
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
-			hitItem: Function
+			hitItem: Function,
+			emptyPanelCallback: Function
 		},
 		template: dataGridTemplate,
 		components: {
@@ -671,6 +672,10 @@
 			},
 			'itemsSource.length'() {
 				this.handleSort();
+			},
+			'$isEmpty'(newval, oldval) {
+				if (this.emptyPanelCallback)
+					this.emptyPanelCallback.call(this.$root.$data, newval);
 			}
 		},
 		methods: {

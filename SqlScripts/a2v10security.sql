@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 13 oct 2018
-module version : 7317
+Last updated : 23 oct 2018
+module version : 7318
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7312);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7318);
 else
-	update a2sys.Versions set [Version] = 7312 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7318 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -672,6 +672,19 @@ begin
 	set xact_abort on;
 	insert into a2security.[Log] (UserId, Severity, [Message]) 
 		values (isnull(@UserId, 0 /*system user*/), char(@Severity), @Message);
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UserStateInfo.Load')
+	drop procedure a2security.[UserStateInfo.Load]
+go
+------------------------------------------------
+create procedure a2security.[UserStateInfo.Load]
+@TenantId int = null,
+@UserId bigint
+as
+begin
+	select [UserState!TUserState!Object] = null;
 end
 go
 ------------------------------------------------

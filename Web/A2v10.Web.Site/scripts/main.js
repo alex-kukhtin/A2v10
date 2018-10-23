@@ -5231,7 +5231,8 @@ Vue.component('validator-control', {
 			rowDetailsActivate: String,
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
-			hitItem: Function
+			hitItem: Function,
+			emptyPanelCallback: Function
 		},
 		template: dataGridTemplate,
 		components: {
@@ -5381,6 +5382,10 @@ Vue.component('validator-control', {
 			},
 			'itemsSource.length'() {
 				this.handleSort();
+			},
+			'$isEmpty'(newval, oldval) {
+				if (this.emptyPanelCallback)
+					this.emptyPanelCallback.call(this.$root.$data, newval);
 			}
 		},
 		methods: {
@@ -8431,6 +8436,37 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20180605-7327
+// components/iframetarget.js*/
+
+(function () {
+
+	const eventBus = require('std:eventBus');
+
+	Vue.component('a2-iframe-target', {
+		template: `
+<div class="frame-stack" v-if="visible">
+	<iframe width="100%" height="100%" :src="iFrameUrl" frameborder="0" />
+</div>
+`,
+		data() {
+			return {
+				iFrameUrl: ''
+			};
+		},
+		computed: {
+			visible() { return !!this.iFrameUrl; },
+		},
+		created() {
+			eventBus.$on('openframe', (url) => {
+				alert(url);
+				this.iFrameUrl = url;
+			});
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 /*20180122-7095*/
 /* directives/autosize.js */
 
@@ -8758,7 +8794,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7326
+// 20181023-7327
 // controllers/base.js
 
 (function () {
@@ -9189,6 +9225,15 @@ Vue.directive('resize', {
 				if (!sel)
 					return;
 				this.$dbRemove(sel, confirm);
+			},
+
+			$openSelectedFrame(url, arr) {
+				url = url || '';
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				let urlToNavigate = urltools.createUrlForNavigate(url, sel.$id);
+				eventBus.$emit('openframe', urlToNavigate);
 			},
 
 			$openSelected(url, arr, newwin, update) {

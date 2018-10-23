@@ -4477,6 +4477,19 @@ iframe.a2-iframe {
   width: 100%;
   height: 100%;
 }
+.frame-stack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 20px 20px 50px 20px;
+}
+.frame-stack iframe {
+  border: none;
+  background-color: white;
+}
 table.sheet {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -4942,14 +4955,14 @@ h5,
   color: #a94442;
 }
 .debug-panel .debug-trace ul {
-  margin: 0 0 0 10px;
+  margin: 0 5px 0 10px;
   padding: 0;
 }
 .debug-panel .debug-trace ul li {
   list-style-type: none;
 }
 .debug-panel .debug-trace ul.a2-debug-trace > li {
-  border-bottom: 1px solid #bdc5d8;
+  border-bottom: 1px dotted #ccc;
   padding: 2px 0;
 }
 .feedback-panel {

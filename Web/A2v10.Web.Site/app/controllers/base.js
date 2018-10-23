@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7326
+// 20181023-7327
 // controllers/base.js
 
 (function () {
@@ -431,6 +431,15 @@
 				if (!sel)
 					return;
 				this.$dbRemove(sel, confirm);
+			},
+
+			$openSelectedFrame(url, arr) {
+				url = url || '';
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				let urlToNavigate = urltools.createUrlForNavigate(url, sel.$id);
+				eventBus.$emit('openframe', urlToNavigate);
 			},
 
 			$openSelected(url, arr, newwin, update) {

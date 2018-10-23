@@ -49,6 +49,7 @@ namespace A2v10.Xaml
 		public DataGridRowDetails RowDetails { get; set; }
 
 		public UIElement EmptyPanel { get; set; }
+		public String EmptyPanelDelegate { get; set; }
 
 		GroupDescriptions _groupBy;
 		public GroupDescriptions GroupBy
@@ -94,6 +95,9 @@ namespace A2v10.Xaml
 			MergeBoolAttribute(dataGrid, context, nameof(Border), Border);
 			MergeBoolAttribute(dataGrid, context, nameof(Sort), Sort);
 			dataGrid.MergeAttribute(":route-query", "$query"); // always!
+			if (!String.IsNullOrEmpty(EmptyPanelDelegate))
+				dataGrid.MergeAttribute(":empty-panel-callback", $"$delegate('{EmptyPanelDelegate}')");
+
 
 			var dblClickBind = GetBindingCommand(nameof(DoubleClick));
 			if (dblClickBind != null)

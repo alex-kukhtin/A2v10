@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 		Clear,
 		Open,
 		OpenSelected,
+		OpenSelectedFrame,
 		DbRemoveSelected,
 		DbRemove,
 		Append,
@@ -146,6 +147,8 @@ namespace A2v10.Xaml
 				case CommandType.OpenSelected:
 					return $"$openSelected({CommandUrl(context, decorate: true)}, {CommandArgument(context)}, {NewWindowJS}, {UpdateAfterArgument(context)})";
 
+				case CommandType.OpenSelectedFrame:
+					return $"$openSelectedFrame({CommandUrl(context, decorate: true)}, {CommandArgument(context)}, {UpdateAfterArgument(context)})";
 
 				case CommandType.Select:
 					return $"$modalSelect({CommandArgument(context)}, {GetOptionsValid(context)})";
@@ -438,6 +441,7 @@ namespace A2v10.Xaml
 					}
 					break;
 				case CommandType.OpenSelected:
+				case CommandType.OpenSelectedFrame:
 				case CommandType.Select:
 				case CommandType.ExecuteSelected:
 				case CommandType.DbRemoveSelected:

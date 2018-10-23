@@ -42,6 +42,7 @@
 			<!--
 			<Code Content="{Bind Documents.$ModelInfo}"></Code>
 			-->
+			<Button Icon="ArrowOpen" Content="Открыть во фрейме" Command="{BindCmd OpenSelectedFrame, Argument={Bind Documents}, Url='/sales/waybill/edit'}"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>
