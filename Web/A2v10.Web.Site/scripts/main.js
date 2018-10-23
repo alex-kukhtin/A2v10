@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181001-7310
+// 20181023-7328
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -160,6 +160,10 @@ app.modules['std:utils'] = function () {
 		text: {
 			contains: textContains,
 			containsText: textContainsText
+		},
+		func: {
+			curry,
+			debounce
 		},
 		debounce: debounce
 	};
@@ -559,6 +563,12 @@ app.modules['std:utils'] = function () {
 				fn.call();
 			}, timeout);
 		};
+	}
+
+	function curry(fn, ...args) {
+		return (..._arg) => {
+			return fn(...args, ..._arg);
+		}
 	}
 
 };
