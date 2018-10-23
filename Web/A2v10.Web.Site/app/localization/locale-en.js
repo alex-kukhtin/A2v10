@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181022-7325
+// 20181023-7326
 // locale-en.js
 
 "use strict";
@@ -22,6 +22,7 @@
 		$NotSave: 'Don\'t save',
 		$Refresh: 'Refresh',
 		$Confirm: 'Confirm',
+		$Message: 'Message',
 		$Error: 'Error',
 		$Help: 'Help',
 		$ConfirmClose: 'Confirm close',

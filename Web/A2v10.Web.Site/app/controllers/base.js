@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181020-7325
+// 20181023-7326
 // controllers/base.js
 
 (function () {
@@ -463,11 +463,16 @@
 			$confirm(prms) {
 				if (utils.isString(prms))
 					prms = { message: prms };
-				prms.style = 'confirm';
+				prms.style = prms.style || 'confirm';
 				prms.message = prms.message || prms.msg; // message or msg
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
+			},
+
+			$msg(msg, title, style) {
+				let prms = { message: msg, title: title, style: style || 'info' };
+				return this.$confirm(prms);
 			},
 
 			$alert(msg, title, list) {

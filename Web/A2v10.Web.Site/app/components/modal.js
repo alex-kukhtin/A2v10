@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20181023-7326
 // components/modal.js
 
 
@@ -23,7 +23,7 @@
 		<div :class="bodyClass">
 			<i v-if="hasIcon" :class="iconClass" />
 			<div class="modal-body-content">
-				<div v-text="dialog.message" />
+				<div v-html="messageText()" />
 				<ul v-if="hasList" class="modal-error-list">
 					<li v-for="(itm, ix) in dialog.list" :key="ix" v-text="itm"/>
 				</ul>
@@ -132,6 +132,9 @@
 			modalClose(result) {
 				eventBus.$emit('modalClose', result);
 			},
+			messageText() {
+				return this.dialog.message || ''.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+			},
 			tabPress(event) {
 				function createThisElems() {
 					let qs = document.querySelectorAll('.modal-body [tabindex]');
@@ -183,14 +186,19 @@
 			},
 			title: function () {
 				// todo localization
-				let defTitle = this.dialog.style === 'confirm' ? locale.$Confirm : locale.$Error;
-				return this.dialog.title || defTitle;
+				if (this.dialog.title)
+					return this.dialog.title;
+				return this.dialog.style === 'confirm' ? locale.$Confirm :
+					this.dialog.style === 'info' ? locale.$Message : locale.$Error;
 			},
 			bodyClass() {
 				return 'modal-body ' + (this.dialog.style || '');
 			},
 			iconClass() {
-				return "ico ico-" + this.dialog.style;
+				let ico = this.dialog.style;
+				if (ico == 'info')
+					ico = 'info-blue'
+				return "ico ico-" + ico;
 			},
 			hasList() {
 				return this.dialog.list && this.dialog.list.length;
@@ -202,6 +210,8 @@
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
+					return [{ text: okText, result: false }];
+				else if (this.dialog.style === 'info')
 					return [{ text: okText, result: false }];
 				return [
 					{ text: okText, result: true },

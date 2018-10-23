@@ -3092,18 +3092,21 @@ table.data-grid > tbody > tr.bold > td {
   text-decoration: none;
 }
 .modal-body.confirm,
-.modal-body.alert {
+.modal-body.alert,
+.modal-body.info {
   margin: 16px 8px;
   display: flex;
 }
 .modal-body.confirm > .ico,
-.modal-body.alert > .ico {
+.modal-body.alert > .ico,
+.modal-body.info > .ico {
   font-size: 24px;
   display: inline-block;
   margin: 0 12px;
 }
 .modal-body.confirm > div,
-.modal-body.alert > div {
+.modal-body.alert > div,
+.modal-body.info > div {
   white-space: pre-line;
 }
 .wizard-panel {
