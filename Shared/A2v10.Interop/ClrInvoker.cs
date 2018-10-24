@@ -67,7 +67,10 @@ namespace A2v10.Interop
 						var px = pi.ParameterType;
 						if (px.IsNullableType())
 							px = px.GetNonNullableType();
-						parsToCall.Add(Convert.ChangeType(srcObj, pi.ParameterType));
+						if (pi.ParameterType.IsAssignableFrom(srcObj.GetType()))
+							parsToCall.Add(srcObj);
+						else
+							parsToCall.Add(Convert.ChangeType(srcObj, pi.ParameterType));
 					}
 				}
 				else

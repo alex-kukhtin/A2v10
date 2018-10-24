@@ -11,6 +11,8 @@ namespace A2v10.Xaml
 
 		public String Delegate { get; set; }
 
+		public Object Argument { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -27,6 +29,9 @@ namespace A2v10.Xaml
 			tag.MergeAttribute(":delegate", $"$delegate('{Delegate}')");
 
 			MergeBindingAttributeString(tag, context, "accept", nameof(Accept), Accept);
+			var argBind = GetBinding(nameof(Argument));
+			if (argBind != null)
+				tag.MergeAttribute(":argument", argBind.GetPath(context));
 			tag.Render(context);
 		}
 	}

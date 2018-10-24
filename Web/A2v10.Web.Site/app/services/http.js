@@ -32,7 +32,7 @@ app.modules['std:http'] = function () {
 					let ct = xhr.getResponseHeader('content-type') || '';
 					let xhrResult = xhr.responseText;
 					if (ct && ct.indexOf('application/json') !== -1)
-						xhrResult = JSON.parse(xhr.responseText);
+						xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
 					resolve(xhrResult);
 				}
 				else if (xhr.status === 255) {
@@ -69,7 +69,7 @@ app.modules['std:http'] = function () {
 			xhr.onload = function (response) {
 				eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
-					let xhrResult = JSON.parse(xhr.responseText);
+					let xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
 					resolve(xhrResult);
 				} else if (xhr.status === 255) {
 					reject(xhr.responseText || xhr.statusText);

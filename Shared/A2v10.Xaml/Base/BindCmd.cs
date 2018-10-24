@@ -141,7 +141,7 @@ namespace A2v10.Xaml
 
 				case CommandType.SaveAndClose:
 					if (context.IsDialog)
-						return $"$modalSaveAndClose(null, {GetOptionsValid(context)})";
+						return $"$modalSaveAndClose(true, {GetOptionsValid(context)})";
 					return $"$saveAndClose({{toast: {GetToast(context)}}})";
 
 				case CommandType.OpenSelected:

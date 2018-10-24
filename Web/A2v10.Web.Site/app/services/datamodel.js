@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181013-7317
+// 20181024-7328
 // services/datamodel.js
 
 (function () {
@@ -99,7 +99,7 @@
 				shadow[prop] = mp;
 				break;
 			case period.constructor:
-				shadow[prop] = new propCtor(source[prop], );
+				shadow[prop] = new propCtor(source[prop]);
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181008-7314
+// 20181024-7328
 // components/debug.js*/
 
 (function () {
@@ -24,7 +24,8 @@
 		'$vm': null,
 		'$host': null,
 		'$root': null,
-		'$parent': null
+		'$parent': null,
+		'$items':null
 	};
 
 	function toJsonDebug(data) {

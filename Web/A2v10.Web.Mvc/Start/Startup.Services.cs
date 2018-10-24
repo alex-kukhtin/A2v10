@@ -5,6 +5,7 @@ using System.Web;
 
 using A2v10.Data;
 using A2v10.Data.Interfaces;
+using A2v10.Data.Providers;
 using A2v10.Infrastructure;
 using A2v10.Messaging;
 using A2v10.Request;
@@ -39,6 +40,7 @@ namespace A2v10.Web.Mvc.Start
 				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
+				IExternalDataProvider dataProvider = new ExternalDataContext();
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -53,6 +55,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<ISmsService>(smsService);
 				locator.RegisterService<IExternalLoginManager>(externalLoginManager);
 				locator.RegisterService<IUserStateManager>(userStateManager);
+				locator.RegisterService<IExternalDataProvider>(dataProvider);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

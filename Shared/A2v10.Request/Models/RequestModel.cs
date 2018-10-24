@@ -385,13 +385,15 @@ namespace A2v10.Request
 	public enum RequestUploadParseType
 	{
 		none,
-		excel
+		excel,
 	}
 
 
 	public class RequestUpload : RequestBase
 	{
 		public RequestUploadParseType parse;
+		public String clrType;
+		public Boolean async;
 	}
 
 	public class RequestImage : RequestBase

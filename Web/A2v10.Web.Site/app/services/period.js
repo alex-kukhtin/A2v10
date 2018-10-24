@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181022-7325
+// 20181024-7328
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -9,8 +9,7 @@ app.modules['std:period'] = function () {
 	const date = utils.date;
 	const locale = window.$$locale;
 
-	function TPeriod(source, callback) {
-		this.callback = callback;
+	function TPeriod(source) {
 		if (source && 'From' in source) {
 			if (!source.From && !source.To) {
 				this.From = date.minDate;

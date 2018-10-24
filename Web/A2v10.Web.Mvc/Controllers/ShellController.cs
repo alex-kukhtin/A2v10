@@ -255,6 +255,13 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		void SetQueryStringAndSqlQueryParams(ExpandoObject prms)
+		{
+			SetUserTenantToParams(prms);
+			SetClaimsToParams(prms);
+			prms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
+		}
+
 		void SetSqlQueryParams(ExpandoObject prms)
 		{
 			SetUserTenantToParams(prms);
@@ -368,7 +375,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var files = Request.Files;
-				await _baseController.SaveUploads(url, files, SetSqlQueryParams, Response.Output);
+				await _baseController.SaveUploads(url, files, SetQueryStringAndSqlQueryParams, Response.Output);
 			}
 			catch (Exception ex)
 			{

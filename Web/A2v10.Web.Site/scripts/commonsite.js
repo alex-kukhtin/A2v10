@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7328
+// 20181024-7329
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -436,7 +436,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function endOfMonth(dt) {
-		return new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+		var dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		return dt;
 	}
 
 	function dateCreate(year, month, day) {
@@ -501,6 +503,7 @@ app.modules['std:utils'] = function () {
 				if (day > ldm)
 					day = ldm;
 				var dtx = new Date(dt.getFullYear(), newMonth, day);
+				dtx.setHours(0, -dtx.getTimezoneOffset(), 0, 0);
 				return dtx;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
@@ -568,9 +571,8 @@ app.modules['std:utils'] = function () {
 	function curry(fn, ...args) {
 		return (..._arg) => {
 			return fn(...args, ..._arg);
-		}
+		};
 	}
-
 };
 
 
@@ -778,7 +780,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181022-7325
+// 20181024-7328
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -787,8 +789,7 @@ app.modules['std:period'] = function () {
 	const date = utils.date;
 	const locale = window.$$locale;
 
-	function TPeriod(source, callback) {
-		this.callback = callback;
+	function TPeriod(source) {
 		if (source && 'From' in source) {
 			if (!source.From && !source.To) {
 				this.From = date.minDate;
@@ -1153,7 +1154,7 @@ app.modules['std:http'] = function () {
 					let ct = xhr.getResponseHeader('content-type') || '';
 					let xhrResult = xhr.responseText;
 					if (ct && ct.indexOf('application/json') !== -1)
-						xhrResult = JSON.parse(xhr.responseText);
+						xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
 					resolve(xhrResult);
 				}
 				else if (xhr.status === 255) {
@@ -1190,7 +1191,7 @@ app.modules['std:http'] = function () {
 			xhr.onload = function (response) {
 				eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
-					let xhrResult = JSON.parse(xhr.responseText);
+					let xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
 					resolve(xhrResult);
 				} else if (xhr.status === 255) {
 					reject(xhr.responseText || xhr.statusText);
@@ -1990,7 +1991,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181013-7317
+// 20181024-7328
 // services/datamodel.js
 
 (function () {
@@ -2089,7 +2090,7 @@ Vue.component('a2-pager', {
 				shadow[prop] = mp;
 				break;
 			case period.constructor:
-				shadow[prop] = new propCtor(source[prop], );
+				shadow[prop] = new propCtor(source[prop]);
 				break;
 			default:
 				shadow[prop] = new propCtor(source[prop] || null, pathdot + prop, trg);

@@ -1,11 +1,11 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181019-7323
+// 20181024-7328
 // components/collectionview.js
 
 /*
 TODO:
-11. GroupBy
+11. GroupBy for server, client (url is done)
 */
 
 (function () {
@@ -331,7 +331,7 @@ TODO:
 			},
 			updateFilter() {
 				// modelInfo to filter
-				let mi = this.ItemsSource.$ModelInfo;
+				let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
 				if (!mi) return;
 				let fi = mi.Filter;
 				if (!fi) return;

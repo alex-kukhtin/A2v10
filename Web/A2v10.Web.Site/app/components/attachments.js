@@ -38,7 +38,8 @@
 			tip: String,
 			url: String,
 			source: Object,
-			delegate: Function
+			delegate: Function,
+			argument: [Object, String, Number]
 		},
 		computed: {
 			cssClass() {
@@ -60,8 +61,11 @@
 			},
 			uploadFile(ev) {
 				let root = window.$$rootUrl;
+
 				let id = 1; //%%%%this.item[this.prop];
-				let uploadUrl = url.combine(root, '_upload', this.url, id);
+				let uploadUrl = url.combine(root, '_upload', this.url);
+				let na = this.argument ? Object.assign({}, this.argument) : { Id: id };
+				uploadUrl = url.createUrlForNavigate(uploadUrl, na);
 				var fd = new FormData();
 				for (let file of ev.target.files) {
 					fd.append('file', file, file.name);
@@ -92,7 +96,7 @@
 		template: `
 <div class="a2-attachments">
 	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate"
-		:url="url" :tip="tip" :read-only='readOnly' :accept="accept"/>
+		:url="url" :tip="tip" :read-only='readOnly' :accept="accept" :argument="argument"/>
 </div>
 `,
 		components: {
@@ -103,7 +107,8 @@
 			source: Object,
 			readOnly: Boolean,
 			accept: String,
-			delegate: Function
+			delegate: Function,
+			argument: [Object, String, Number]
 		},
 		computed: {
 			tip() {
