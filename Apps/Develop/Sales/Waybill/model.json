@@ -26,23 +26,33 @@
 			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SendVerifyCodeSmsHandler;assembly=A2v10.Web.Mvc",
 			"async": true
 		},
-			"confirmVerifyCode": {
-				"type": "clr",
-				"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SetPhoneNumberHandler;assembly=A2v10.Web.Mvc",
-				"async": true
-			},
-			"startWorkflow": {
-				"type": "startProcess",
-				"file": "Workflows/TestWorkflow_v1"
-			},
-			"resumeWorkflow": {
-				"type": "resumeProcess"
+		"confirmVerifyCode": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SetPhoneNumberHandler;assembly=A2v10.Web.Mvc",
+			"async": true
+		},
+		"startWorkflow": {
+			"type": "startProcess",
+			"file": "Workflows/TestWorkflow_v1"
+		},
+		"resumeWorkflow": {
+			"type": "resumeProcess"
+		},
+		"attachReport": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Reports.Actions.AttachStiReport;assembly=A2v10.Reports",
+			"async": true,
+			"parameters": {
+				"Report": "sales/waybill/waybill",
+				"Model": "Document",
+				"Schema": "a2demo"
 			}
+		}
 	},
 	"reports": {
 		"waybill": {
-					"report": "waybill",
-					"name":  "Заголовок отчета",
+			"report": "waybill",
+			"name": "Заголовок отчета",
 			"model": "Document"
 		}
 	}

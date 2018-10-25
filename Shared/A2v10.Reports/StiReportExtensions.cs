@@ -8,6 +8,8 @@ using Stimulsoft.Report;
 using Stimulsoft.Report.Dictionary;
 using Stimulsoft.Report.Web;
 
+using A2v10.Data.Interfaces;
+
 namespace A2v10.Reports
 {
 	public static class StiReportExtensions
@@ -93,11 +95,22 @@ namespace A2v10.Reports
 			return r;
 		}
 
+		public static void AddDataModel(this StiReport report, IDataModel dm)
+		{
+			if (dm == null)
+				return;
+			var dynModel = dm.GetDynamic();
+			foreach (var x in dynModel)
+			{
+				report.RegBusinessObject(x.Key, x.Value);
+			}
+		}
+
 		public static void AddVariables(this StiReport report, IDictionary<String, Object> vars)
 		{
-			if (report?.Dictionary?.Variables?.Items == null)
-				return;
 			if (vars == null)
+				return;
+			if (report?.Dictionary?.Variables?.Items == null)
 				return;
 			foreach (var vp in vars)
 			{

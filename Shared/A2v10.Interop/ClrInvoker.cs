@@ -13,6 +13,11 @@ namespace A2v10.Interop
 {
 	public class ClrInvoker
 	{
+		Object DefaultValue(Type tp)
+		{
+			return tp.IsValueType ? Activator.CreateInstance(tp) : null;
+		}
+
 		void CallInject(Object instance)
 		{
 			var type = instance.GetType();
@@ -55,7 +60,7 @@ namespace A2v10.Interop
 				{
 					if (srcObj == null)
 					{
-						parsToCall.Add(pi.DefaultValue);
+						parsToCall.Add(DefaultValue(pi.ParameterType));
 					}
 					else if (srcObj is ExpandoObject && !pi.ParameterType.IsPrimitive)
 					{
@@ -75,7 +80,7 @@ namespace A2v10.Interop
 				}
 				else
 				{
-					parsToCall.Add(pi.DefaultValue);
+					parsToCall.Add(DefaultValue(pi.ParameterType));
 				}
 			}
 

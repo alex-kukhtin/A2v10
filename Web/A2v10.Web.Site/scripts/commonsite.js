@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7329
+// 20181025-7330
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -159,7 +159,8 @@ app.modules['std:utils'] = function () {
 		},
 		text: {
 			contains: textContains,
-			containsText: textContainsText
+			containsText: textContainsText,
+			sanitize
 		},
 		func: {
 			curry,
@@ -530,6 +531,10 @@ app.modules['std:utils'] = function () {
 		return t1 - t2;
 	}
 
+	function sanitize(text) {
+		let t = '' + text || '';
+		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+	}
 
 	function textContains(text, probe) {
 		if (!probe)

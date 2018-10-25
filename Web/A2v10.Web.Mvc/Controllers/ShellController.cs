@@ -116,6 +116,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Image("/" + pathInfo); // with _image prefix
 			}
+			else if (pathInfo.StartsWith("_attachment/"))
+			{
+				await Attachment("/" + pathInfo); // with _image prefix
+			}
 			else if (pathInfo.StartsWith("_upload/"))
 			{
 				await Upload("/" + pathInfo); // with _image prefix
@@ -351,6 +355,13 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				_baseController.WriteHtmlException(ex, Response.Output);
 			}
+		}
+
+
+		async Task Attachment(String url)
+		{
+			//_baseController.RenderModel
+			Response.Output.WriteLine(url);
 		}
 
 		async Task Image(String url)

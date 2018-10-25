@@ -101,6 +101,7 @@
     <Compile Include="Layouts\WizardPage.cs" />
     <Compile Include="Text\Paragraph.cs" />
     <Compile Include="Text\Badge.cs" />
+    <Compile Include="Text\Html.cs" />
     <Compile Include="Text\TagLabel.cs" />
     <Compile Include="Layouts\DropDownMenu.cs" />
     <Compile Include="Controls\Graphics.cs" />

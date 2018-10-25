@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7329
+// 20181025-7330
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -159,7 +159,8 @@ app.modules['std:utils'] = function () {
 		},
 		text: {
 			contains: textContains,
-			containsText: textContainsText
+			containsText: textContainsText,
+			sanitize
 		},
 		func: {
 			curry,
@@ -530,6 +531,10 @@ app.modules['std:utils'] = function () {
 		return t1 - t2;
 	}
 
+	function sanitize(text) {
+		let t = '' + text || '';
+		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+	}
 
 	function textContains(text, probe) {
 		if (!probe)
@@ -6901,7 +6906,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7326
+// 20181025-7330
 // components/modal.js
 
 
@@ -6915,6 +6920,7 @@ TODO:
 
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+	const utils = require('std:utils');
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress">
@@ -7034,7 +7040,7 @@ TODO:
 				eventBus.$emit('modalClose', result);
 			},
 			messageText() {
-				return this.dialog.message || ''.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+				return utils.text.sanitize(this.dialog.message);
 			},
 			tabPress(event) {
 				function createThisElems() {
@@ -8811,7 +8817,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7327
+// 20181025-7330
 // controllers/base.js
 
 (function () {
@@ -9198,6 +9204,17 @@ Vue.directive('resize', {
 				window.location = root + url;
 			},
 
+			$attachment(url, arg, opts, newwindow) {
+				const root = window.$$rootUrl;
+				let cmd = opts && opts.export ? 'export' : 'show';
+				let newurl = urltools.combine(root, '_attachment', url, cmd);
+				newurl = urltools.createUrlForNavigate(newurl, arg);
+				if (opts && opts.newWindow)
+					window.open(url, '_blank');
+				else
+					window.location.assign(url);
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -9278,6 +9295,10 @@ Vue.directive('resize', {
 
 			$hasChecked(arr) {
 				return arr && arr.$checked && arr.$checked.length;
+			},
+
+			$sanitize(text) {
+				return utils.text.$sanitize(text);
 			},
 
 			$confirm(prms) {
@@ -9419,7 +9440,11 @@ Vue.directive('resize', {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
-				let cmd = opts && opts.export ? 'export' : 'show';
+				let cmd = 'show';
+				if (opts && opts.export)
+					cmd = 'export';
+				else if (ops && opts.attach)
+					cmd = 'attach';
 
 				const doReport = () => {
 					let id = arg;
@@ -9432,9 +9457,10 @@ Vue.directive('resize', {
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts && opts.export) {
+					if (opts && opts.export)
 						window.location = url;
-					}
+					else if (opts && opts.attach)
+						return; // просто ничего не делаем
 					else
 						window.open(url, '_blank');
 				};

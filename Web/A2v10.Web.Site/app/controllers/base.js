@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7327
+// 20181025-7330
 // controllers/base.js
 
 (function () {
@@ -387,6 +387,17 @@
 				window.location = root + url;
 			},
 
+			$attachment(url, arg, opts, newwindow) {
+				const root = window.$$rootUrl;
+				let cmd = opts && opts.export ? 'export' : 'show';
+				let newurl = urltools.combine(root, '_attachment', url, cmd);
+				newurl = urltools.createUrlForNavigate(newurl, arg);
+				if (opts && opts.newWindow)
+					window.open(url, '_blank');
+				else
+					window.location.assign(url);
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -467,6 +478,10 @@
 
 			$hasChecked(arr) {
 				return arr && arr.$checked && arr.$checked.length;
+			},
+
+			$sanitize(text) {
+				return utils.text.$sanitize(text);
 			},
 
 			$confirm(prms) {
@@ -608,7 +623,11 @@
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
-				let cmd = opts && opts.export ? 'export' : 'show';
+				let cmd = 'show';
+				if (opts && opts.export)
+					cmd = 'export';
+				else if (ops && opts.attach)
+					cmd = 'attach';
 
 				const doReport = () => {
 					let id = arg;
@@ -621,9 +640,10 @@
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts && opts.export) {
+					if (opts && opts.export)
 						window.location = url;
-					}
+					else if (opts && opts.attach)
+						return; // просто ничего не делаем
 					else
 						window.open(url, '_blank');
 				};

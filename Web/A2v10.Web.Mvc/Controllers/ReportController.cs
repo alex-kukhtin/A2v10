@@ -170,17 +170,12 @@ namespace A2v10.Web.Mvc.Controllers
 		ActionResult ExportStiReport(ReportInfo ri)
 		{
 			var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
-			if (ri.DataModel != null)
-			{
-				var dynModel = ri.DataModel.GetDynamic();
-				foreach (var x in dynModel)
-					r.RegBusinessObject(x.Key, x.Value);
-			}
+			r.AddDataModel(ri.DataModel);
 			if (ri.Variables != null)
 				r.AddVariables(ri.Variables);
-			var ms = new MemoryStream();
+			// var ms = new MemoryStream();
 			// saveFileDialog: true -> download
-			// saveFileDialog: false -> show
+			// saveFileDialog: false -> show			
 			return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: true);
 		}
 
@@ -290,12 +285,7 @@ namespace A2v10.Web.Mvc.Controllers
 					throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
 				var r = StiReportExtensions.CreateReport(path, ri.Name);
-				if (ri.DataModel != null)
-				{
-					var dynModel = ri.DataModel.GetDynamic();
-					foreach (var x in dynModel)
-						r.RegBusinessObject(x.Key, x.Value);
-				}
+				r.AddDataModel(ri.DataModel);
 				var vars = ri.Variables;
 				if (vars != null)
 					r.AddVariables(vars);

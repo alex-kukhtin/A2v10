@@ -44,6 +44,7 @@ namespace A2v10.Xaml
 		Navigate,
 		NavigateExternal,
 		Download,
+		Attachment,
 		Help
 	}
 
@@ -178,6 +179,9 @@ namespace A2v10.Xaml
 				case CommandType.Download:
 					return $"$download({CommandUrl(context)})";
 
+				case CommandType.Attachment:
+					return $"$attachment({CommandUrl(context)}, {CommandArgument(context)}, {GetOptions(context)})";
+
 				case CommandType.Help:
 					return $"$showHelp({CommandUrl(context)})";
 
@@ -268,7 +272,7 @@ namespace A2v10.Xaml
 
 		String GetOptions(RenderContext context)
 		{
-			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export && !CheckArgument && !ReloadAfter)
+			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export && !NewWindow && !CheckArgument && !ReloadAfter)
 				return nullString;
 			StringBuilder sb = new StringBuilder("{");
 			if (SaveRequired)
@@ -281,6 +285,8 @@ namespace A2v10.Xaml
 				sb.Append("checkArgument: true,");
 			if (Export)
 				sb.Append("export: true,");
+			if (NewWindow)
+				sb.Append("newWindow: true,");
 			if (ReloadAfter)
 				sb.Append("reloadAfter: true,");
 			sb.RemoveTailComma();

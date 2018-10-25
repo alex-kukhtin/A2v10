@@ -18,20 +18,28 @@ namespace A2v10.Xaml
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind == null)
 				return;
-			var div = new TagBuilder("div", null, IsInGrid);
+			var div = new TagBuilder("template", null, IsInGrid);
 			onRender?.Invoke(div);
 			MergeAttributes(div, context);
 			div.MergeAttribute("v-for", $"(elem, elemIndex) in {isBind.GetPath(context)}");
-			div.MergeAttribute(":key", "elemIndex");
 			div.RenderStart(context);
 			if (Content != null)
 			{
 				using (new ScopeContext(context, "elem"))
 				{
-					Content.RenderElement(context);
+					Content.RenderElement(context, (tag)=> {
+						tag.MergeAttribute(":key", "elemIndex");
+					}
+					);
 				}
 			}
 			div.RenderEnd(context);
+		}
+
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			Content?.SetParent(this);
 		}
 	}
 }

@@ -19,7 +19,8 @@ const template = {
 			f.Id = 0;
 			f.Name = '';
 		},
-		startWorkflow
+		startWorkflow,
+		attachReport
 	}
 };
 
@@ -48,3 +49,10 @@ async function startWorkflow(doc) {
 	vm.$toast({ text: 'Workflow start successfully', style: 'success' });
 }
 
+async function attachReport(doc) {
+	const vm = this.$vm;
+	let result = await vm.$invoke('attachReport', { Id: doc.Id });
+	console.dir(result);
+	alert('attach result:' + result);
+	doc.Attachments.$append({ Id: result.Id });
+}

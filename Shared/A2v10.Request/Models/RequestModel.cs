@@ -31,6 +31,7 @@ namespace A2v10.Request
 		Command,
 		Data,
 		Image,
+		Attachment,
 		Upload,
 		Report,
 		Export,
@@ -615,6 +616,7 @@ namespace A2v10.Request
 					mi.data = action;
 					break;
 				case RequestUrlKind.Image:
+				case RequestUrlKind.Attachment:
 					mi.action = action;
 					break;
 				case RequestUrlKind.Upload:
@@ -726,6 +728,11 @@ namespace A2v10.Request
 			{
 				kind = RequestUrlKind.Image;
 				baseUrl = baseUrl.Substring(8);
+			}
+			else if (baseUrl.StartsWith("/_attachment"))
+			{
+				kind = RequestUrlKind.Attachment;
+				baseUrl = baseUrl.Substring(13);
 			}
 			else if (baseUrl.StartsWith("/_upload"))
 			{

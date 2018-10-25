@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7326
+// 20181025-7330
 // components/modal.js
 
 
@@ -14,6 +14,7 @@
 
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+	const utils = require('std:utils');
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress">
@@ -133,7 +134,7 @@
 				eventBus.$emit('modalClose', result);
 			},
 			messageText() {
-				return this.dialog.message || ''.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+				return utils.text.sanitize(this.dialog.message);
 			},
 			tabPress(event) {
 				function createThisElems() {
