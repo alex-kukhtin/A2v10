@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181026-7330
+// 20181026-7331
 // controllers/base.js
 
 (function () {
@@ -485,7 +485,7 @@
 			},
 
 			$sanitize(text) {
-				return utils.text.$sanitize(text);
+				return utils.text.sanitize(text);
 			},
 
 			$confirm(prms) {
