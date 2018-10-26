@@ -53,6 +53,7 @@ async function attachReport(doc) {
 	const vm = this.$vm;
 	let result = await vm.$invoke('attachReport', { Id: doc.Id });
 	console.dir(result);
-	alert('attach result:' + result);
+	//alert('attach result:' + result);
+	vm.$toast("Успешно добавлено");
 	doc.Attachments.$append({ Id: result.Id });
 }

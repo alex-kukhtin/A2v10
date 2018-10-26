@@ -105,7 +105,7 @@
 				<CheckBox Grid.Row="5" Value="{Bind Agent.$Bit1}">Switch mask</CheckBox>
 				<Span Content="{Bind Agent.Address.Build, Mask={Bind Agent.$Mask}}"></Span>
 
-				<Image Source="{Bind Agent.Image}" Base="/Catalog/Customer" Width="120"/>
+				<Image Source="{Bind Agent.Image}" Base="/Agent" Width="120"/>
 			</Grid>
 		</Tab>
 		<Tab Header="DataGrid">

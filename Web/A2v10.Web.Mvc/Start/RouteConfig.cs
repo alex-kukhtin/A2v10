@@ -34,6 +34,12 @@ namespace A2v10.Web.Mvc.Start
 			);
 
 			routes.MapRoute(
+				name: "Attachment",
+				url: "Attachment/{action}/{id}",
+				defaults: new { controller = "Attachment" }
+			);
+
+			routes.MapRoute(
 				name: "Api",
 				url: "Api/{*pathInfo}",
 				defaults: new { controller = "Api", action="Default" }

@@ -77,7 +77,7 @@
 		<DataGridColumn Header="" Fit="True">
 			<CommandBar If="{Bind !Attachments.$isEmpty}">
 				<Repeater ItemsSource="{Bind Attachments}">
-					<Button Icon="FilePreview" Command="{BindCmd Attachment, Url='/Sales/Waybill', Argument={Bind}}" />
+					<Button Icon="FilePreview" Command="{BindCmd Attachment, Url='/Sales/Waybill/Attachment', Argument={Bind}, Export=True}" />
 				</Repeater>
 			</CommandBar>
 		</DataGridColumn>

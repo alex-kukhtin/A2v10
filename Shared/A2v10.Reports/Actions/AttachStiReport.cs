@@ -31,6 +31,7 @@ namespace A2v10.Reports.Actions
 			r.AddDataModel(dm);
 			using (var ms = new MemoryStream())
 			{
+				r.Render();
 				r.ExportDocument(StiExportFormat.Pdf, ms, StiReportExtensions.GetDefaultPdfSettings());
 				ms.Seek(0, SeekOrigin.Begin);
 				AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
@@ -39,8 +40,11 @@ namespace A2v10.Reports.Actions
 					TenantId = TenantId,
 					Id = Id,
 					Mime = "application/pdf",
-					Stream = ms
+					Stream = ms,
+					Name = r.ReportName
 				};
+				if (String.IsNullOrEmpty(ai.Name))
+					ai.Name = "Attachment";
 				await _dbContext.ExecuteAsync(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
 				return new { ai.Id };
 			}

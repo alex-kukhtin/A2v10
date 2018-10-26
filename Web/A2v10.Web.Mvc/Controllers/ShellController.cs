@@ -118,7 +118,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else if (pathInfo.StartsWith("_attachment/"))
 			{
-				await Attachment("/" + pathInfo); // with _image prefix
+				await Attachment("/" + pathInfo); // with _attachment/ prefix
 			}
 			else if (pathInfo.StartsWith("_upload/"))
 			{
@@ -360,8 +360,20 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task Attachment(String url)
 		{
-			//_baseController.RenderModel
-			Response.Output.WriteLine(url);
+			try
+			{
+				AttachmentInfo info = await _baseController.DownloadAttachment(url, SetSqlQueryParams);
+				if (info == null)
+					return;
+				Response.ContentType = info.Mime;
+				if (info.Stream == null)
+					return;
+				Response.BinaryWrite(info.Stream);
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteHtmlException(ex, Response.Output);
+			}
 		}
 
 		async Task Image(String url)
@@ -372,7 +384,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else
 			{
-				await LoadAttachment(url);
+				await LoadImage(url);
 			}
 		}
 
@@ -394,11 +406,11 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		async Task LoadAttachment(String url)
+		async Task LoadImage(String url)
 		{
 			try
 			{
-				AttachmentInfo info = await _baseController.Attachment(url, SetSqlQueryParams);
+				AttachmentInfo info = await _baseController.DownloadAttachment(url, SetSqlQueryParams);
 				if (info == null)
 					return;
 				Response.ContentType = info.Mime;

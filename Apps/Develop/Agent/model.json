@@ -1,5 +1,6 @@
 ﻿{
 	"schema": "a2demo",
+	"model": "Agent",
 	"dialogs": {
 		"browseCustomer": {
 			"index": true,

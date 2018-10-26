@@ -55,5 +55,10 @@
 			"name": "Заголовок отчета",
 			"model": "Document"
 		}
+	},
+	"attachments": {
+			"default": {
+
+			}
 	}
 }

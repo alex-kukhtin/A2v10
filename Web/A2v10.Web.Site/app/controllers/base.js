@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181025-7330
+// 20181026-7330
 // controllers/base.js
 
 (function () {
@@ -387,15 +387,19 @@
 				window.location = root + url;
 			},
 
-			$attachment(url, arg, opts, newwindow) {
+			$attachment(url, arg, opts) {
 				const root = window.$$rootUrl;
 				let cmd = opts && opts.export ? 'export' : 'show';
-				let newurl = urltools.combine(root, '_attachment', url, cmd);
-				newurl = urltools.createUrlForNavigate(newurl, arg);
+				let id = arg;
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
+				let attUrl = urltools.combine(root, 'attachment', cmd, id);
+				let qry = { base: url};
+				attUrl = attUrl + urltools.makeQueryString(qry);
 				if (opts && opts.newWindow)
-					window.open(url, '_blank');
+					window.open(attUrl, '_blank');
 				else
-					window.location.assign(url);
+					window.location.assign(attUrl);
 			},
 
 			$dbRemove(elem, confirm) {
@@ -522,8 +526,10 @@
 					alert(msg);
 			},
 
-			$toast(toast) {
+			$toast(toast, style) {
 				if (!toast) return;
+				if (utils.isString(toast))
+					toast = { text: toast, style: style || 'success' };
 				eventBus.$emit('toast', toast);
 			},
 
@@ -626,7 +632,7 @@
 				let cmd = 'show';
 				if (opts && opts.export)
 					cmd = 'export';
-				else if (ops && opts.attach)
+				else if (opts && opts.attach)
 					cmd = 'attach';
 
 				const doReport = () => {

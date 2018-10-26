@@ -616,6 +616,8 @@ namespace A2v10.Request
 					mi.data = action;
 					break;
 				case RequestUrlKind.Image:
+					mi.action = action;
+					break;
 				case RequestUrlKind.Attachment:
 					mi.action = action;
 					break;
