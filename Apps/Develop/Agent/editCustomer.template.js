@@ -39,6 +39,7 @@ const template = {
 
 function modelLoad(root, caller) {
 	const ag = root.Agent;
+	console.dir(root.$ctrl);
 	if (!ag.$isNew) return;
 	ag.Type = 'C';
 	ag.Kind = 'Customer';

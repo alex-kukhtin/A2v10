@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20181027-7333
 // components/debug.js*/
 
 (function () {
@@ -22,6 +22,7 @@
 
 	const specKeys = {
 		'$vm': null,
+		'$ctrl': null,
 		'$host': null,
 		'$root': null,
 		'$parent': null,

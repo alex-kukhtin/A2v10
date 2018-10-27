@@ -64,7 +64,8 @@ namespace A2v10.Xaml
 	public enum TextSize
 	{
 		Normal,
-		Small
+		Small,
+		Big
 	}
 
 	public enum WrapMode

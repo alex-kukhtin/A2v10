@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181025-7330
+// 20181027-7333
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -437,8 +437,8 @@ app.modules['std:utils'] = function () {
 	}
 
 	function endOfMonth(dt) {
-		var dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
-		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+		dte.setHours(0, -dte.getTimezoneOffset(), 0, 0);
 		return dt;
 	}
 
@@ -533,7 +533,8 @@ app.modules['std:utils'] = function () {
 
 	function sanitize(text) {
 		let t = '' + text || '';
-		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+			.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
 	}
 
 	function textContains(text, probe) {
@@ -1700,7 +1701,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20181027-7333
 // services/datamodel.js
 
 (function () {
@@ -2351,6 +2352,36 @@ app.modules['std:validators'] = function () {
 			return null;
 		});
 
+		function createController(vm) {
+			let ctrl = {};
+			if (vm) {
+				ctrl = {
+					$invoke: vm.$invoke,
+					$close: vm.$close,
+					$modalClose: vm.$modalClose,
+					$msg: vm.$msg,
+					$alert: vm.$alert,
+					$showDialog: vm.$showDialog,
+					$asyncValid: vm.$asyncValid,
+					$toast: vm.$toast,
+					$requery: vm.$requery,
+					$reload: vm.$reload,
+					$notifyOwner: vm.$notifyOwner
+				};
+				defPropertyGet(ctrl, '$isDirty', () => vm.$isDirty);
+				defPropertyGet(ctrl, '$isPristine', () => vm.$isPristine);
+			}
+			Object.seal(ctrl);
+			return ctrl;
+		}
+
+		defHiddenGet(obj, "$ctrl", function () {
+			if (this.__ctrl__)
+				return __ctrl__;
+			this.__ctrl__ = createController(this.$vm);
+			return this.__ctrl__;
+		});
+
 		obj.$isValid = function (props) {
 			return true;
 		};
@@ -2363,6 +2394,7 @@ app.modules['std:validators'] = function () {
 		obj.prototype.$empty = empty;
 		obj.prototype.$set = setElement;
 		obj.prototype.$maxLength = getMaxLength;
+		obj.prototype.__ctrl__ = null;
 
 		defineCommonProps(obj.prototype);
 
@@ -8064,7 +8096,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20181027-7333
 // components/debug.js*/
 
 (function () {
@@ -8086,6 +8118,7 @@ Vue.component('a2-panel', {
 
 	const specKeys = {
 		'$vm': null,
+		'$ctrl': null,
 		'$host': null,
 		'$root': null,
 		'$parent': null,

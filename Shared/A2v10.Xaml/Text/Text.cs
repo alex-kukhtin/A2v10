@@ -11,9 +11,10 @@ namespace A2v10.Xaml
 		public InlineCollection Inlines { get; } = new InlineCollection();
 
 		public TextSize Size { get; set; }
-		public Boolean Gray { get; set; }
 		public Boolean Small { get; set; }
 		public Boolean Big { get; set; }
+
+		public Boolean Gray { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -23,9 +24,12 @@ namespace A2v10.Xaml
 			MergeAttributes(tag, context);
 			if (Size != TextSize.Normal)
 				tag.AddCssClass("text-" + Size.ToString().ToLowerInvariant());
+			else
+			{
+				tag.AddCssClassBool(Small, "text-small");
+				tag.AddCssClassBool(Big, "text-big");
+			}
 			tag.AddCssClassBool(Gray, "text-gray");
-			tag.AddCssClassBool(Small, "text-small");
-			tag.AddCssClassBool(Big, "text-big");
 			tag.RenderStart(context);
 			Inlines.Render(context);
 			tag.RenderEnd(context);

@@ -1686,7 +1686,7 @@ pre.a2-code {
 .control-group.with-popover {
   margin-right: 20px;
 }
-.control-group.with-popover .popover-wrapper {
+.control-group.with-popover > .popover-wrapper {
   font-weight: normal;
   font-style: normal;
   position: absolute;
