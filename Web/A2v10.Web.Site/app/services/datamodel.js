@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20181028-7334
 // services/datamodel.js
 
 (function () {
@@ -9,6 +9,7 @@
 
     /* TODO:
     1. changing event
+	2. propFromPath usage
     */
 
 	const META = '_meta_';
@@ -64,6 +65,11 @@
 			return utils.toNumber(val);
 		}
 		return val;
+	}
+
+	function propFromPath(path) {
+		let propIx = path.lastIndexOf('.');
+		return path.substring(propIx + 1);
 	}
 
 	function defSource(trg, source, prop, parent) {
@@ -135,7 +141,7 @@
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
-				this._root_.$emit(eventName, this, val, oldVal);
+				this._root_.$emit(eventName, this, val, oldVal, prop);
 			}
 		});
 	}
@@ -787,7 +793,7 @@
 			// fire event
 			log.info('handle: ' + event);
 			let func = events[event];
-			let rv = func.call(undefined, ...arr);
+			let rv = func.call(this, ...arr);
 			if (rv === false)
 				log.info(event + ' returns false');
 			return rv;
@@ -1053,6 +1059,7 @@
 
 	function empty() {
 		this.$set({});
+		return this;
 	}
 
 	function setElement(src) {
@@ -1138,7 +1145,7 @@
 			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
 			let eventName = this._path_ + '.change';
-			this._root_.$emit(eventName, this.$parent, this);
+			this._root_.$emit(eventName, this.$parent, this, this, propFromPath(this._path_));
 		}
 	}
 

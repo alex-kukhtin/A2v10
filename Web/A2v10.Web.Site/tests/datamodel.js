@@ -166,6 +166,26 @@ describe("DataModel", function () {
 		expect(arr[0] === newCust);
 	});
 
+	it("$rowNumber (array)", function () {
+		// array with row number
+		let root = td.createCustomerArray({ Customers: [{ Name: "FIRST", RowNo:1 }, { Name: "SECOND", RowNo:2 }] });
+		let arr = root.Customers;
+		expect(arr.length).toBe(2);
+		expect(arr[0].RowNo).toBe(1);
+		expect(arr[1].RowNo).toBe(2);
+
+		let newCust = arr.$append({ Name: 'THIRD' });
+		expect(arr.length).toBe(3);
+		expect(arr[2] === newCust);
+		expect(arr[2].RowNo).toBe(3);
+
+		newCust = arr.$prepend({ Name: 'FOURTH' });
+		expect(arr.length).toBe(4);
+		expect(arr[0] === newCust);
+		expect(arr[0].RowNo).toBe(1);
+		expect(arr[3].RowNo).toBe(4);
+	});
+
 });
 
 

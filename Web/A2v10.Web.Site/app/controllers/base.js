@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181026-7331
+// 20181028-7334
 // controllers/base.js
 
 (function () {
@@ -499,7 +499,7 @@
 			},
 
 			$msg(msg, title, style) {
-				let prms = { message: msg, title: title, style: style || 'info' };
+				let prms = { message: msg, title: title || locale.$Message, style: style || 'info' };
 				return this.$confirm(prms);
 			},
 

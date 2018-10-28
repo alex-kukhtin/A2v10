@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20181028-7334
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -379,6 +379,7 @@ app.modules['std:utils'] = function () {
 
 	function dateToday() {
 		let td = new Date();
+		td.setHours(0, 0, 0, 0);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
 	}
@@ -401,6 +402,7 @@ app.modules['std:utils'] = function () {
 			dt = new Date(str);
 		}
 		if (!isNaN(dt.getTime())) {
+			dt.setHours(0, 0, 0, 0);
 			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
 			return dt;
 		}
@@ -437,9 +439,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function endOfMonth(dt) {
-		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0, 0, 0, 0);
 		dte.setHours(0, -dte.getTimezoneOffset(), 0, 0);
-		return dt;
+		return dte;
 	}
 
 	function dateCreate(year, month, day) {
@@ -1997,7 +1999,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20181028-7334
 // services/datamodel.js
 
 (function () {
@@ -2006,6 +2008,7 @@ Vue.component('a2-pager', {
 
     /* TODO:
     1. changing event
+	2. propFromPath usage
     */
 
 	const META = '_meta_';
@@ -2061,6 +2064,11 @@ Vue.component('a2-pager', {
 			return utils.toNumber(val);
 		}
 		return val;
+	}
+
+	function propFromPath(path) {
+		let propIx = path.lastIndexOf('.');
+		return path.substring(propIx + 1);
 	}
 
 	function defSource(trg, source, prop, parent) {
@@ -2132,7 +2140,7 @@ Vue.component('a2-pager', {
 				if (!this._path_)
 					return;
 				let eventName = this._path_ + '.' + prop + '.change';
-				this._root_.$emit(eventName, this, val, oldVal);
+				this._root_.$emit(eventName, this, val, oldVal, prop);
 			}
 		});
 	}
@@ -2784,7 +2792,7 @@ Vue.component('a2-pager', {
 			// fire event
 			log.info('handle: ' + event);
 			let func = events[event];
-			let rv = func.call(undefined, ...arr);
+			let rv = func.call(this, ...arr);
 			if (rv === false)
 				log.info(event + ' returns false');
 			return rv;
@@ -3050,6 +3058,7 @@ Vue.component('a2-pager', {
 
 	function empty() {
 		this.$set({});
+		return this;
 	}
 
 	function setElement(src) {
@@ -3135,7 +3144,7 @@ Vue.component('a2-pager', {
 			//console.warn(`fire change. old:${oldId}, new:${newId}`);
 			// emit .change event for all object
 			let eventName = this._path_ + '.change';
-			this._root_.$emit(eventName, this.$parent, this);
+			this._root_.$emit(eventName, this.$parent, this, this, propFromPath(this._path_));
 		}
 	}
 

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20181028-7334
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -284,6 +284,7 @@ app.modules['std:utils'] = function () {
 
 	function dateToday() {
 		let td = new Date();
+		td.setHours(0, 0, 0, 0);
 		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
 	}
@@ -306,6 +307,7 @@ app.modules['std:utils'] = function () {
 			dt = new Date(str);
 		}
 		if (!isNaN(dt.getTime())) {
+			dt.setHours(0, 0, 0, 0);
 			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
 			return dt;
 		}
@@ -342,9 +344,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function endOfMonth(dt) {
-		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0);
+		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0, 0, 0, 0);
 		dte.setHours(0, -dte.getTimezoneOffset(), 0, 0);
-		return dt;
+		return dte;
 	}
 
 	function dateCreate(year, month, day) {

@@ -117,13 +117,19 @@ describe("Date tools", function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let eom = du.endOfMonth(d1);
 		expect(eom.getDate()).toBe(28);
+
 		d1.setMonth(2); // mar
 		eom = du.endOfMonth(d1);
 		expect(eom.getDate()).toBe(31);
+
 		d1.setYear(2016); // leap
 		d1.setMonth(1); // feb
 		eom = du.endOfMonth(d1);
 		expect(eom.getDate()).toBe(29);
+
+		d1 = new Date(2018, 9, 28);
+		eom = du.endOfMonth(d1);
+		expect(eom.getDate()).toBe(31);
 	});
 
 	it('date diff (month) ', function () {
