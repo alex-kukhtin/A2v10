@@ -531,7 +531,7 @@ void CSolutionWnd::DoLoad()
 		m_strFilePath = strPath;
 }
 
-void CSolutionWnd::DoCreate()
+void CSolutionWnd::DoCreate(LPCWSTR szFolder, LPCWSTR szName)
 {
 	// TODO: check is modified
 	try
@@ -539,8 +539,12 @@ void CSolutionWnd::DoCreate()
 		// load empty solution
 		auto solution = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
 		auto loadFunc = solution.GetProperty(L"__loadSolution");
-		if (loadFunc.ValueType() == JsValueType::JsFunction)
-			loadFunc.CallFunction(solution, JavaScriptValue::FromString(L"{\"Name\": \"New Solution\"}"));
+		if (loadFunc.ValueType() == JsValueType::JsFunction) {
+			// TODO: spec symbols!!!!
+			CString nameJS;
+			nameJS.Format(L"{\"Name\": \"%s\"}", szName);
+			loadFunc.CallFunction(solution, JavaScriptValue::FromString(nameJS));
+		}
 		LoadSolution(NULL);
 		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
 	}

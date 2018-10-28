@@ -46,6 +46,7 @@
 
 #include "../include/A2v10.Base.h"
 #include "../include/A2v10.Net.Shim.h"
+#include <afxcontrolbars.h>
 
 
 

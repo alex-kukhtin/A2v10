@@ -138,6 +138,9 @@
     <ClInclude Include="checkbox.h">
       <Filter>Header Files\FormDesigner\Controls</Filter>
     </ClInclude>
+    <ClInclude Include="solutioncreatedlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Designer.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="grid.cpp">
       <Filter>Source Files\FormDesigner\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="solutioncreatedlg.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

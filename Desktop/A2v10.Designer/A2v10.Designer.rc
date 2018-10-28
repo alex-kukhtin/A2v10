@@ -69,6 +69,69 @@ END
 
 
 /////////////////////////////////////////////////////////////////////////////
+// Ukrainian (Ukraine) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
+LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SOLUTION_CREATE DIALOGEX 0, 0, 299, 250
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Create Solution"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Template:",IDC_STATIC,7,7,30,12,SS_CENTERIMAGE
+    CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_NOLABELWRAP | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,7,20,285,135
+    LTEXT           "Location:",IDC_STATIC,7,177,30,13,SS_CENTERIMAGE
+    EDITTEXT        IDC_FOLDER,43,177,193,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_BROWSE,242,176,50,15
+    LTEXT           "Name:",IDC_STATIC,7,197,22,13,SS_CENTERIMAGE
+    EDITTEXT        IDC_NAME,43,197,120,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,185,229,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,242,229,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_SOLUTION_CREATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 292
+        VERTGUIDE, 43
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 243
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_SOLUTION_CREATE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // Ukrainian (Ukraine) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
 // English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
@@ -495,9 +558,9 @@ END
 STRINGTABLE
 BEGIN
     ID_TOOLBOX_POINTER      "Pointer"
+    ID_TOOLBOX_TEXTBOX      "TextBox"
     ID_TOOLBOX_BUTTON       "Button"
-	ID_TOOLBOX_TEXTBOX      "TextBox"
-	ID_TOOLBOX_CHECK        "CheckBox"
+    ID_TOOLBOX_CHECK        "CheckBox"
     ID_TOOLBOX_RADIO        "RadioButton"
     ID_TOOLBOX_COMBOBOX     "ComboBox"
     ID_TOOLBOX_DATAGRID     "DataGrid"

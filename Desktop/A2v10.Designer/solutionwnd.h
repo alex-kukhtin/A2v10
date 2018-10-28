@@ -42,7 +42,7 @@ public:
 
 	void DoSave();
 	void DoLoad();
-	void DoCreate();
+	void DoCreate(LPCWSTR szFolder, LPCWSTR szName);
 	void DoClose();
 	bool IsLoaded();
 

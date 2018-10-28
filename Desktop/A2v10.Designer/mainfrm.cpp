@@ -7,6 +7,7 @@
 
 #include "MainFrm.h"
 #include "resource.h"
+#include "solutioncreatedlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -528,7 +529,11 @@ void CMainFrame::OnSolutionLoad()
 // afx_msg
 void CMainFrame::OnSolutionNew()
 {
-	m_wndSolution.DoCreate();
+	CSolutionCreateDlg dlg;
+	if (dlg.DoModal() != IDOK)
+		return;
+	AfxMessageBox(dlg.m_strFolder);
+	m_wndSolution.DoCreate(dlg.m_strFolder, dlg.m_strName);
 }
 
 // afx_msg
