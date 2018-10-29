@@ -328,6 +328,8 @@ namespace A2v10.Xaml
 		UnpinOutline,
 		Upload,
 		User,
+		UserMinus,
+		UserPlus,
 		Users,
 		Waiting,
 		WaitingOutline,
