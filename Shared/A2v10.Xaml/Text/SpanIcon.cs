@@ -23,7 +23,7 @@ namespace A2v10.Xaml
 			span.AddCssClassBool(Gray, "text-gray");
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
-				span.MergeAttribute(":class", iconBind.GetPathFormat(context));
+				span.MergeAttribute(":class", $"'ico-' + {iconBind.GetPathFormat(context)}");
 			else if (Icon != Icon.NoIcon)
 				span.MergeAttribute(":class", $"'ico-{Icon.ToString().ToKebabCase()}'");
 			if (Size != null)

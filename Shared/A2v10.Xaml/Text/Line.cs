@@ -10,7 +10,9 @@ namespace A2v10.Xaml
 		{
 			if (SkipRender(context))
 				return;
-			new TagBuilder("hr", null, IsInGrid).Render(context, TagRenderMode.SelfClosing);
+			var hr = new TagBuilder("hr", null, IsInGrid);
+			MergeAttributes(hr, context, MergeAttrMode.Visibility | MergeAttrMode.Margin);
+			hr.Render(context, TagRenderMode.SelfClosing);
 		}
 	}
 }

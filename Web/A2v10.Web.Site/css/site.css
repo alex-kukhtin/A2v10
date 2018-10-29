@@ -206,6 +206,12 @@
 .ico-comment-add:before {
   content: "\e92e";
 }
+.ico-address-book:before {
+  content: "\e960";
+}
+.ico-address-card:before {
+  content: "\e961";
+}
 .ico-comment-discussion:before {
   content: "\e92f";
 }
@@ -308,6 +314,9 @@
 }
 .ico-file-link:before {
   content: "\e9e4";
+}
+.ico-file-user:before {
+  content: "\e9e5";
 }
 .ico-file-error:before {
   content: "\e9de";
@@ -643,6 +652,19 @@
 }
 .ico-bank-uah:before {
   content: "\eabc";
+}
+.ico-currency-uah:before {
+  content: "\e91a";
+}
+.ico-currency-usd:before {
+  content: "\e91b";
+}
+.ico-currency-euro:before {
+  content: "\e91c";
+}
+/* d,e reserved */
+.ico-currency-other:before {
+  content: "\e91f";
 }
 * {
   box-sizing: border-box;
