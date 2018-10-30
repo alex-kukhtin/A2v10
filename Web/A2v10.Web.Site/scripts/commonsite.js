@@ -1999,7 +1999,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181028-7334
+// 20181030-7336
 // services/datamodel.js
 
 (function () {
@@ -2660,6 +2660,7 @@ Vue.component('a2-pager', {
 			let ctrl = {};
 			if (vm) {
 				ctrl = {
+					$save: vm.$save,
 					$invoke: vm.$invoke,
 					$close: vm.$close,
 					$modalClose: vm.$modalClose,

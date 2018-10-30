@@ -375,6 +375,28 @@
 	}
 }
 
+.control-group.combo-hyperlink {
+	.input-group {
+		border-style: none;
+
+		.select-wrapper {
+			right: auto;
+			padding:0;
+			.select-text {
+				color: @link-color;
+				border-bottom: 1px dotted @link-color;
+			}
+
+			.caret {
+				display: none;
+			}
+		}
+	}
+
+	.input-group.focus {
+		box-shadow:none;
+	}
+}
 /* avoid validator blinking */
 .control-group.open {
 	&:hover {

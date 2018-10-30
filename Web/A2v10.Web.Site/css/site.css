@@ -1753,6 +1753,23 @@ pre.a2-code {
 .control-group.italic textarea {
   font-style: italic;
 }
+.control-group.combo-hyperlink .input-group {
+  border-style: none;
+}
+.control-group.combo-hyperlink .input-group .select-wrapper {
+  right: auto;
+  padding: 0;
+}
+.control-group.combo-hyperlink .input-group .select-wrapper .select-text {
+  color: #57a8fa;
+  border-bottom: 1px dotted #57a8fa;
+}
+.control-group.combo-hyperlink .input-group .select-wrapper .caret {
+  display: none;
+}
+.control-group.combo-hyperlink .input-group.focus {
+  box-shadow: none;
+}
 /* avoid validator blinking */
 .control-group.open:hover {
   z-index: auto !important;

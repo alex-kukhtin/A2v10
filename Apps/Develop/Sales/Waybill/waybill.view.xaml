@@ -41,7 +41,7 @@
 				<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 			</TextBox.AddOns>
 		</TextBox>
-		<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}"/>
+		<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}" Style="Hyperlink"/>
 		<Block Grid.Row="5" Grid.ColSpan="4">
 			<Toolbar Style="Transparent">
 				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>

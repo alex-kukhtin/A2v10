@@ -44,6 +44,12 @@ namespace A2v10.Xaml
 
 	}
 
+	public enum ComboBoxStyle
+	{
+		Default,
+		Hyperlink
+	}
+
 	[ContentProperty("Children")]
 	public class ComboBox : ValuedControl, ITableControl
 	{
@@ -51,6 +57,7 @@ namespace A2v10.Xaml
 		public String DisplayProperty { get; set; }
 		public Boolean ShowValue { get; set; }
 		public TextAlign Align { get; set; }
+		public ComboBoxStyle Style { get; set; }
 
 		ComboBoxItems _children;
 
@@ -77,6 +84,8 @@ namespace A2v10.Xaml
 			combo.MergeAttribute("is", "combobox");
 			combo.MergeAttribute("v-cloak", String.Empty);
 			combo.MergeAttribute("display", DisplayProperty);
+			if (Style != ComboBoxStyle.Default)
+				combo.AddCssClass($"combo-{Style.ToString().ToLowerInvariant()}");
 			MergeAttributes(combo, context);
 			MergeAlign(combo, context, Align);
 			MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);
