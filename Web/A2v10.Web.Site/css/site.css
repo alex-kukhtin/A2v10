@@ -91,6 +91,10 @@
 .ico-ban:before {
   content: "\ea0a";
 }
+.ico-ban-red:before {
+  content: "\ea0a";
+  color: #a94442;
+}
 .ico-bank-account:before {
   content: "\e994";
 }
@@ -582,6 +586,13 @@
 }
 .ico-eye:before {
   content: "\e99e";
+}
+.ico-eye-disabled:before {
+  content: "\e99f";
+}
+.ico-eye-disabled-red:before {
+  content: "\e99f";
+  color: #a94442;
 }
 .ico-delete:before {
   content: "\e94f";
