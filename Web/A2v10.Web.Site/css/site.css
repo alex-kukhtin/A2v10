@@ -4284,6 +4284,9 @@ TODO:
   font-size: 4.39998rem;
   color: hsla(0, 0%, 70%, 0.25);
 }
+.a2-state-card .a2-card-icon:before {
+  color: inherit;
+}
 .a2-state-card .a2-badge {
   padding: 0 4px;
   margin: 0 2px;
