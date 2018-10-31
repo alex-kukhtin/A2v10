@@ -1117,6 +1117,10 @@ header .user-name .person-name,
   display: none;
   position: relative;
 }
+.page.partial {
+  height: auto;
+  min-height: 100%;
+}
 .splitter {
   display: grid;
   position: relative;

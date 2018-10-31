@@ -184,9 +184,13 @@ namespace A2v10.Request
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
 				if (!String.IsNullOrEmpty(rw.Id) && !rw.copy)
 				{
-					var modelId = model.FirstElementId ?? String.Empty;
-					if (rw.Id != modelId.ToString())
-						throw new RequestModelException($"Element not found. Id={rw.Id}");
+					var me = model.MainElement;
+					if (me.Metadata != null)
+					{
+						var modelId = me.Id ?? String.Empty;
+						if (rw.Id != modelId.ToString())
+							throw new RequestModelException($"Element not found. Id={rw.Id}");
+					}
 				}
 			}
 			if (rw.indirect)
@@ -369,7 +373,8 @@ const vm = new DataModelController({
 });
 
 	vm.$data._host_ = {
-		$viewModel: vm
+		$viewModel: vm,
+		$ctrl: vm.__createController__(vm)
 	};
 
 	vm.__doInit__();
@@ -383,10 +388,10 @@ const vm = new DataModelController({
 			header.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
 			header.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
 			output.Append(header);
-			if (model != null)
-				output.Append(model.CreateScript(_scripter));
-			else
+			if (model == null || model.IsEmpty)
 				output.Append(_scripter.CreateEmptyStript());
+			else
+				output.Append(model.CreateScript(_scripter));
 			var footer = new StringBuilder(scriptFooter);
 			footer.Replace("$(RootId)", rootId);
 			footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());

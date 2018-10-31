@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181028-7334
+// 20181031-7339
 // controllers/base.js
 
 (function () {
@@ -899,8 +899,37 @@
 				let caller = null;
 				if (this.$caller)
 					caller = this.$caller.$data;
+				this.__createController__();
 				root._modelLoad_(caller);
-				root._seal_(root);
+			},
+			__createController__() {
+				let ctrl = {
+					$save: this.$save,
+					$invoke: this.$invoke,
+					$close: this.$close,
+					$modalClose: this.$modalClose,
+					$msg: this.$msg,
+					$alert: this.$alert,
+					$showDialog: this.$showDialog,
+					$asyncValid: this.$asyncValid,
+					$toast: this.$toast,
+					$requery: this.$requery,
+					$reload: this.$reload,
+					$notifyOwner: this.$notifyOwner,
+					$defer: platform.defer
+				};
+				Object.defineProperty(ctrl, "$isDirty", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isDirty
+				});
+				Object.defineProperty(ctrl, "$isPristine", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isPristine
+				});
+				Object.seal(ctrl);
+				return ctrl;
 			},
 			__notified(token) {
 				if (!token) return;

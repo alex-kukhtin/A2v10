@@ -127,6 +127,7 @@
     <Content Include="Develop\Purchase\WaybillIn\waybillin.template.js" />
     <Content Include="Develop\Sales\Customer\index.template.js" />
     <Content Include="Develop\Sales\inbox\index.template.js" />
+    <Content Include="Develop\Sales\Invoice\empty.template.js" />
     <Content Include="Develop\Sales\Invoice\upload.template.js" />
     <Content Include="Develop\Sales\Invoice\index.template.js" />
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
@@ -414,6 +415,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Sales\inbox\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\Invoice\empty.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\Invoice\empty.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

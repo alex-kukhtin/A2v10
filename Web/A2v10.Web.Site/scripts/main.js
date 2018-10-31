@@ -1703,7 +1703,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181030-7336
+// 20181031-7339
 // services/datamodel.js
 
 (function () {
@@ -2014,13 +2014,15 @@ app.modules['std:validators'] = function () {
 				__initialized__ = true;
 			};
 			elem._fireLoad_ = () => {
-				elem.$emit('Model.load', elem, _lastCaller);
-				elem._root_.$setDirty(false);
+				platform.defer(() => {
+					elem.$emit('Model.load', elem, _lastCaller);
+					elem._root_.$setDirty(false);
+				});
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
-			elem._seal_ = seal;
+			elem._seal_ = seal
 		}
 		if (startTime) {
 			log.time('create root time:', startTime, false);
@@ -2360,35 +2362,10 @@ app.modules['std:validators'] = function () {
 			return null;
 		});
 
-		function createController(vm) {
-			let ctrl = {};
-			if (vm) {
-				ctrl = {
-					$save: vm.$save,
-					$invoke: vm.$invoke,
-					$close: vm.$close,
-					$modalClose: vm.$modalClose,
-					$msg: vm.$msg,
-					$alert: vm.$alert,
-					$showDialog: vm.$showDialog,
-					$asyncValid: vm.$asyncValid,
-					$toast: vm.$toast,
-					$requery: vm.$requery,
-					$reload: vm.$reload,
-					$notifyOwner: vm.$notifyOwner
-				};
-				defPropertyGet(ctrl, '$isDirty', () => vm.$isDirty);
-				defPropertyGet(ctrl, '$isPristine', () => vm.$isPristine);
-			}
-			Object.seal(ctrl);
-			return ctrl;
-		}
-
 		defHiddenGet(obj, "$ctrl", function () {
-			if (this.__ctrl__)
-				return __ctrl__;
-			this.__ctrl__ = createController(this.$vm);
-			return this.__ctrl__;
+			if (this._root_ && this._root_._host_)
+				return this._root_._host_.$ctrl;
+			return null;
 		});
 
 		obj.$isValid = function (props) {
@@ -2403,7 +2380,6 @@ app.modules['std:validators'] = function () {
 		obj.prototype.$empty = empty;
 		obj.prototype.$set = setElement;
 		obj.prototype.$maxLength = getMaxLength;
-		obj.prototype.__ctrl__ = null;
 
 		defineCommonProps(obj.prototype);
 
@@ -8860,7 +8836,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181028-7334
+// 20181031-7339
 // controllers/base.js
 
 (function () {
@@ -9759,8 +9735,37 @@ Vue.directive('resize', {
 				let caller = null;
 				if (this.$caller)
 					caller = this.$caller.$data;
+				this.__createController__();
 				root._modelLoad_(caller);
-				root._seal_(root);
+			},
+			__createController__() {
+				let ctrl = {
+					$save: this.$save,
+					$invoke: this.$invoke,
+					$close: this.$close,
+					$modalClose: this.$modalClose,
+					$msg: this.$msg,
+					$alert: this.$alert,
+					$showDialog: this.$showDialog,
+					$asyncValid: this.$asyncValid,
+					$toast: this.$toast,
+					$requery: this.$requery,
+					$reload: this.$reload,
+					$notifyOwner: this.$notifyOwner,
+					$defer: platform.defer
+				};
+				Object.defineProperty(ctrl, "$isDirty", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isDirty
+				});
+				Object.defineProperty(ctrl, "$isPristine", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isPristine
+				});
+				Object.seal(ctrl);
+				return ctrl;
 			},
 			__notified(token) {
 				if (!token) return;

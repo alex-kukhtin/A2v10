@@ -20,6 +20,11 @@
       },*/
 			"view": "invoice.view",
 			"template": "invoice.template"
+		},
+		"empty": {
+			"model": "Empty",
+			"view": "empty.view",
+			"template": "empty.template"
 		}
 	},
 	"commands": {
@@ -30,6 +35,13 @@
 		"fetchCustomer": {
 			"type": "sql",
 			"procedure": "Agent.Fetch"
+		},
+		"testCommand": {
+			"type": "sql",
+			"procedure": "Agent.Fetch",
+			"parameters": {
+				"Kind": "Customer"
+			}
 		}
 	},
 	"dialogs": {
@@ -42,6 +54,10 @@
 			"model": "Upload",
 			"view": "upload.wizard",
 			"template": "upload.template"
+		},
+		"emptyDialog": {
+			"model": "Empty",
+			"view": "empty.dialog"
 		}
 	},
 	"reports": {

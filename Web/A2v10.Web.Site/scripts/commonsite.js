@@ -1999,7 +1999,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181030-7336
+// 20181031-7339
 // services/datamodel.js
 
 (function () {
@@ -2310,13 +2310,15 @@ Vue.component('a2-pager', {
 				__initialized__ = true;
 			};
 			elem._fireLoad_ = () => {
-				elem.$emit('Model.load', elem, _lastCaller);
-				elem._root_.$setDirty(false);
+				platform.defer(() => {
+					elem.$emit('Model.load', elem, _lastCaller);
+					elem._root_.$setDirty(false);
+				});
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
-			elem._seal_ = seal;
+			elem._seal_ = seal
 		}
 		if (startTime) {
 			log.time('create root time:', startTime, false);
@@ -2656,35 +2658,10 @@ Vue.component('a2-pager', {
 			return null;
 		});
 
-		function createController(vm) {
-			let ctrl = {};
-			if (vm) {
-				ctrl = {
-					$save: vm.$save,
-					$invoke: vm.$invoke,
-					$close: vm.$close,
-					$modalClose: vm.$modalClose,
-					$msg: vm.$msg,
-					$alert: vm.$alert,
-					$showDialog: vm.$showDialog,
-					$asyncValid: vm.$asyncValid,
-					$toast: vm.$toast,
-					$requery: vm.$requery,
-					$reload: vm.$reload,
-					$notifyOwner: vm.$notifyOwner
-				};
-				defPropertyGet(ctrl, '$isDirty', () => vm.$isDirty);
-				defPropertyGet(ctrl, '$isPristine', () => vm.$isPristine);
-			}
-			Object.seal(ctrl);
-			return ctrl;
-		}
-
 		defHiddenGet(obj, "$ctrl", function () {
-			if (this.__ctrl__)
-				return __ctrl__;
-			this.__ctrl__ = createController(this.$vm);
-			return this.__ctrl__;
+			if (this._root_ && this._root_._host_)
+				return this._root_._host_.$ctrl;
+			return null;
 		});
 
 		obj.$isValid = function (props) {
@@ -2699,7 +2676,6 @@ Vue.component('a2-pager', {
 		obj.prototype.$empty = empty;
 		obj.prototype.$set = setElement;
 		obj.prototype.$maxLength = getMaxLength;
-		obj.prototype.__ctrl__ = null;
 
 		defineCommonProps(obj.prototype);
 

@@ -528,7 +528,7 @@ as
 begin
 	set nocount on;
 
-	select [Document!TDocument!Object] = null, [Id!!Id] = d.Id, Kind, [Date], [No], [Sum], Tag, d.Memo,
+	select [Document!TDocument!MainObject] = null, [Id!!Id] = d.Id, Kind, [Date], [No], [Sum], Tag, d.Memo,
 		[Agent!TAgent!RefId] = Agent, [DepFrom!TAgent!RefId] = DepFrom, [DepTo!TAgent!RefId] = DepTo,
 		Done,
 		DateCreated, DateModified, [UserCreated!TUser!RefId] = UserCreated, [UserModified!TUser!RefId] = UserModified,
@@ -2264,6 +2264,15 @@ begin
 	select Mime, [Name], Stream = [Data] from 
 		a2demo.Attachments a inner join a2demo.DocAttachments da on da.Attachment = a.Id
 	where da.Id = @Id;
+end
+go
+------------------------------------------------
+create or alter procedure a2demo.[Empty.Load]
+@UserId bigint,
+@Id bigint = 0
+as
+begin
+	set nocount on;
 end
 go
 ------------------------------------------------
