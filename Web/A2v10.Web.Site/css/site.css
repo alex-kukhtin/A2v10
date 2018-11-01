@@ -3972,6 +3972,9 @@ TODO:
 .dropdown.dir-up.show:after {
   top: 0;
 }
+.dropdown .btn {
+  height: 100%;
+}
 .dropdown .btn-caret {
   border-left: 1px solid #222;
 }
