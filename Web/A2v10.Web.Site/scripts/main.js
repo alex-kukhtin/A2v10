@@ -9238,6 +9238,27 @@ Vue.directive('resize', {
 					window.location.assign(attUrl);
 			},
 
+			$eusign(baseurl, arg) {
+				// id => attachment id
+				// open dialog with eu-sign frame
+				function rawDialog(url) {
+					return new Promise(function (resolve, reject) {
+						const dlgData = {
+							promise: null, data: arg, query: { base: baseurl }, raw: true
+						};
+						eventBus.$emit('modal', url, dlgData);
+						dlgData.promise.then(function (result) {
+							cb(result);
+							resolve(result);
+						});
+					});
+				}
+				const root = window.$$rootUrl;
+				rawDialog('/eusign/index').then(function (resolve, reject) {
+					alert('promise resolved');
+				});
+			},
+
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
@@ -10227,8 +10248,11 @@ Vue.directive('resize', {
 
 			eventBus.$on('modal', function (modal, prms) {
 				let id = utils.getStringId(prms ? prms.data : null);
+				let raw = prms && prms.raw;
 				let root = window.$$rootUrl;
 				let url = urlTools.combine(root, '/_dialog', modal, id);
+				if (raw)
+					url = urlTools.combine(root, modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
 				let dlg = { title: "dialog", url: url, prms: prms.data };
 				dlg.promise = new Promise(function (resolve, reject) {

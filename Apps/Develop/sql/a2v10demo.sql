@@ -218,10 +218,10 @@ begin
 			constraint DF_Documents_Sum default(0),
 		[Tag]  nvarchar(255) null,
 		[Memo] nvarchar(255) null,
-		DateCreated datetime not null constraint DF_Documents_DateCreated default(getdate()),
+		DateCreated datetime not null constraint DF_Documents_DateCreated default(getutcdate()),
 		UserCreated bigint not null
 			constraint FK_Documents_UserCreated_Users foreign key references a2security.Users(Id),
-		DateModified datetime not null constraint DF_Documents_DateModified default(getdate()),
+		DateModified datetime not null constraint DF_Documents_DateModified default(getutcdate()),
 		UserModified bigint not null
 			constraint FK_Documents_UserModified_Users foreign key references a2security.Users(Id)
 	);
@@ -531,7 +531,7 @@ begin
 	select [Document!TDocument!MainObject] = null, [Id!!Id] = d.Id, Kind, [Date], [No], [Sum], Tag, d.Memo,
 		[Agent!TAgent!RefId] = Agent, [DepFrom!TAgent!RefId] = DepFrom, [DepTo!TAgent!RefId] = DepTo,
 		Done,
-		DateCreated, DateModified, [UserCreated!TUser!RefId] = UserCreated, [UserModified!TUser!RefId] = UserModified,
+		[DateCreated!!UtcDate] = DateCreated, [DateModified!!UtcDate] = DateModified, [UserCreated!TUser!RefId] = UserCreated, [UserModified!TUser!RefId] = UserModified,
 		[Rows!TRow!Array] = null,
 		[Shipment!TDocLink!Array] = null,
 		[ParentDoc!TDocParent!RefId] = Parent
@@ -950,7 +950,7 @@ begin
 			target.[Agent] = source.Agent,
 			target.DepFrom = source.DepFrom,
 			target.DepTo = source.DepTo,
-			target.[DateModified] = getdate(),
+			target.[DateModified] = getutcdate(),
 			target.[UserModified] = @UserId
 	when not matched by target then 
 		insert (Kind, [Date], [No], [Sum], Memo, Agent, DepFrom, DepTo, UserCreated, UserModified)

@@ -45,7 +45,8 @@ namespace A2v10.Xaml
 		NavigateExternal,
 		Download,
 		Attachment,
-		Help
+		Help,
+		EUSign
 	}
 
 	public enum DialogAction
@@ -251,7 +252,8 @@ namespace A2v10.Xaml
 						return $"{{cmd:$dialog, isDialog:true, arg1:'{action}', arg2:{CommandUrl(context, decorate:true)}, arg3: '{arg3}'}}";
 					}
 					return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context)}, {GetOptions(context)})";
-
+				case CommandType.EUSign:
+					return $"$eusign({CommandUrl(context)}, {CommandArgument(context)})";
 				default:
 					throw new NotImplementedException($"command '{Command}' yet not implemented");
 			}

@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AttachmentController.cs" />
+    <Compile Include="Controllers\EuSignController.cs" />
     <Compile Include="Controllers\StaticController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\AppLinkController.cs" />

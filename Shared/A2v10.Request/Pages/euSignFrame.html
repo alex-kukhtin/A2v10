@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="$(Locale)">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="$(Description)" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<link href="/css/$(Theme).min.css?v=$(Build)" rel="stylesheet" />
+</head>
+<body>
+	<div id="frame" v-cloak>
+		<div class="grid" style="grid-template-columns:1fr 1fr">
+			<div class="control-group" style="grid-column:1; grid-row:1">
+				<label>
+					Центр сертіфікації ключів
+
+				</label>
+				<select class="input-group"></select>
+			</div>
+			<div>
+				<input type="file" v-on:change.stop.prevent="handleFile"/>
+			</div>
+			<div class="control-group" style="grid-column:1; grid-row:2">
+				<label>Пароль на ключ</label>
+				<div class="input-group">
+					<input type="password" v-model="password" />
+				</div>
+			</div>
+			<button class="btn btn-primary btn-sm" @click.stop.prevent="readKey">Зчитати ключ</button>
+		</div>
+		<iframe id="pdfFile" style="width:100%;height:350px;" frameborder="0" :src="frameSrc"></iframe>
+
+	</div>
+	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
+	<script type="text/javascript" src="/scripts/eusign/euutils.js"></script>
+	<script type="text/javascript" src="/Scripts/eusign/euscpt.js"></script>
+	<script type="text/javascript" src="/Scripts/eusign/euscpm.js"></script>
+	<script async type="text/javascript" src="/scripts/eusign/euscp.js"></script>
+	<script type="text/javascript">
+		$(FrameScript)
+	</script>
+</body>
+</html>

@@ -264,3 +264,13 @@ paket-files/
 __pycache__/
 *.pyc
 *.msi
+
+# EU SIGN
+/Web/A2v10.Web.Site/scripts/eusign/euutils.js
+/Web/A2v10.Web.Site/scripts/eusign/euscpt.js
+/Web/A2v10.Web.Site/scripts/eusign/euscpm.js
+/Web/A2v10.Web.Site/scripts/eusign/euscp.js
+/Web/A2v10.Web.Site/scripts/eusign/CAs.json
+/Web/A2v10.Web.Site/scripts/eusign/CACertificates.p7b
+/Web/A2v10.Web.Site/handlers/ProxyHandler.ashx
+/Web/A2v10.Web.Site/handlers/ProxyHandler.ashx.cs

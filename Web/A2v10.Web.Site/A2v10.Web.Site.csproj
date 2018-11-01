@@ -48,6 +48,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="handlers\ProxyHandler.ashx.cs">
+      <DependentUpon>ProxyHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +117,7 @@
     <Content Include="app\services\utils.js" />
     <Content Include="app\services\validators.js" />
     <Content Include="app\standalone\pager.js" />
+    <Content Include="Content\Images\book.svg" />
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
@@ -129,8 +133,15 @@
     <Content Include="css\site.min.css">
       <DependentUpon>site.css</DependentUpon>
     </Content>
+    <Content Include="eusign.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Less\Data_URI.css">
+      <DependentUpon>Data_URI.less</DependentUpon>
+    </Content>
+    <Content Include="Less\Data_URI.min.css">
+      <DependentUpon>Data_URI.css</DependentUpon>
+    </Content>
     <Content Include="Less\Variables.less" />
     <Content Include="Less\Site.less" />
     <Content Include="bower.json" />
@@ -266,15 +277,19 @@
     <Content Include="css\fonts\A2v10.ttf" />
     <Content Include="css\fonts\A2v10.woff" />
     <Content Include="css\fonts\A2v10.woff2" />
+    <Content Include="Less\Data_URI.less" />
+    <Content Include="handlers\ProxyHandler.ashx" />
     <None Include="Less\Site.magenta.less" />
     <Content Include="Less\Variables.Magenta.less" />
     <Content Include="Less\Text.less" />
     <Content Include="Less\Variables.Compact.less" />
     <Content Include="Less\SuperMenu.less" />
     <Content Include="Less\Toastr.less" />
+    <Content Include="Less\StyleSheet1.less" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\server\" />
+    <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">

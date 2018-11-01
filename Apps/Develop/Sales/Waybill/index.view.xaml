@@ -44,6 +44,7 @@
 			<Code Content="{Bind Documents.$ModelInfo}"></Code>
 			-->
 			<Button Icon="ArrowOpen" Content="Открыть во фрейме" Command="{BindCmd OpenSelectedFrame, Argument={Bind Documents}, Url='/sales/waybill/edit'}"/>
+			<Button Icon="FileSignature" Content="Подписать" Command="{BindCmd EUSign, Argument={Bind Documents.$selected.Attachments[0]}, Url='/Sales/Waybill/Attachment'}" />
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>

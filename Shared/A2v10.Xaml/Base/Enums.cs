@@ -240,6 +240,7 @@ namespace A2v10.Xaml
 		FileImport,
 		FileLink,
 		FilePreview,
+		FileSignature,
 		FileUser,
 		Filter,
 		FilterOutline,

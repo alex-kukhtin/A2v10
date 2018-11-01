@@ -40,6 +40,12 @@ namespace A2v10.Web.Mvc.Start
 			);
 
 			routes.MapRoute(
+				name: "EUSign",
+				url: "EUSign/{action}/{id}",
+				defaults: new { controller = "EUSign" }
+			);
+
+			routes.MapRoute(
 				name: "Api",
 				url: "Api/{*pathInfo}",
 				defaults: new { controller = "Api", action="Default" }

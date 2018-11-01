@@ -266,20 +266,95 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot; v-modal-width=&quot;{cssClass:&apos;modal-small&apos;}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot;&gt;
         ///	&lt;div class=&quot;modal-header&quot; v-drag-window&gt;
-        ///		&lt;span&gt;@[SetNewPassword]&lt;/span&gt;
+        ///		&lt;span&gt;@[Error]&lt;/span&gt;
         ///		&lt;button class=&quot;btnclose&quot; @click.prevent=&quot;$modalClose(false)&quot;&gt;&amp;#x2715;&lt;/button&gt;
         ///	&lt;/div&gt;
-        ///	&lt;div class=&quot;load-indicator&quot; v-show=&quot;$isLoading&quot;&gt;&lt;/div&gt;
-        ///	&lt;div class=&quot;modal-content&quot;&gt;
-        ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:1fr&quot;&gt;
-        ///			&lt;static label=&quot;@[User]&quot; :text=&quot;User.Name&quot; style=&quot;grid-row:1&quot;&gt;&lt;/static&gt;
-        ///			&lt;textbox label=&quot;@[OldPassword]&quot; :password=&quot;t [rest of string was truncated]&quot;;.
+        ///	&lt;div class=&quot;modal-body confirm&quot;&gt;
+        ///		&lt;i class=&quot;ico ico-confirm&quot;&gt;&lt;/i&gt; 
+        ///		&lt;div class=&quot;modal-body-content&quot;&gt;
+        ///			&lt;div&gt;$(ErrorMessage)&lt;/div&gt;
+        ///		&lt;/div&gt;
+        ///	&lt;/div&gt;	
+        ///	&lt;div class=&quot;modal-footer&quot;&gt;
+        ///		&lt;button class=&quot;btn a2-inline&quot; @click.prevent=&quot;$modalClose()&quot; v-settabindex&gt;@[Close]&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///&lt;/div&gt;
+        ///
+        ///
+        ///&lt;script typ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string errorDialog {
             get {
                 return ResourceManager.GetString("errorDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;modal&quot; id=&quot;$(PageGuid)&quot; v-modal-width=&quot;{width:&apos;900px&apos;}&quot;&gt;
+        ///	&lt;div class=&quot;modal-header&quot; v-drag-window&gt;
+        ///		&lt;span&gt;Електронний підпис&lt;/span&gt;
+        ///		&lt;button class=&quot;btnclose&quot; @click.prevent=&quot;$modalClose(false)&quot;&gt;&amp;#x2715;&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div class=&quot;modal-body&quot;&gt;
+        ///		&lt;iframe style=&quot;width:100%;height:600px;border:none&quot; frameborder=&quot;0&quot; :src=&quot;frameUrl&quot;&gt;&lt;/iframe&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div class=&quot;modal-footer&quot;&gt;
+        ///		&lt;button class=&quot;btn a2-inline&quot; @click.prevent=&quot;$modalClose()&quot; v-settabindex&gt;@[Close]&lt;/button&gt;
+        ///	&lt;/div&gt;
+        ///&lt;/div&gt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string euSignDialog {
+            get {
+                return ResourceManager.GetString("euSignDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;$(Locale)&quot;&gt;
+        ///&lt;head&gt;
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///	&lt;div id=&quot;frame&quot; v-cloak&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.min.js?v=2.5.13&quot;&gt;&lt;/s [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string euSignFrame {
+            get {
+                return ResourceManager.GetString("euSignFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///// global scope!
+        ///function EUSignCPModuleInitialized(isInitialized) {
+        ///	console.info(&apos;EUSign library initialized&apos;);
+        ///	var URL_XML_HTTP_PROXY_SERVICE = &quot;/Handlers/ProxyHandler.ashx&quot;;
+        ///
+        ///	if (isInitialized) {
+        ///		euSign.Initialize();
+        ///		euSign.SetJavaStringCompliant(true);
+        ///		euSign.SetCharset(&quot;UTF-16LE&quot;);
+        ///		euSign.SetXMLHTTPProxyService(URL_XML_HTTP_PROXY_SERVICE);
+        ///
+        ///		var settings = euSign.CreateFileStoreSettings();
+        ///		settings.SetPath [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string euSignFrameScript {
+            get {
+                return ResourceManager.GetString("euSignFrameScript", resourceCulture);
             }
         }
         

@@ -4,13 +4,9 @@
 		"inputFile": "Less/Site.less"
 	}
 	/*
-	{
-		"outputFile": "css/site.compact.css",
-		"inputFile": "Less/Site.compact.less"
-	}
-	{
-		"outputFile": "css/site.magenta.css",
-		"inputFile": "Less/Site.magenta.less"
-	}
+  {
+    "outputFile": "Less/Data_URI.css",
+    "inputFile": "Less/Data_URI.less"
+  }
 	*/
 ]

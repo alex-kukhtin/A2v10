@@ -322,6 +322,9 @@
 .ico-file-user:before {
   content: "\e9e5";
 }
+.ico-file-signature:before {
+  content: "\e9e6";
+}
 .ico-file-error:before {
   content: "\e9de";
 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BaseController.EUSign.cs" />
     <Compile Include="Controllers\BaseController.Standalone.cs" />
     <Compile Include="Controllers\BaseController.App.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -77,8 +78,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\euSignFrameScript.js" />
     <Content Include="Pages\appPageScript.js" />
     <Content Include="Pages\appPage.html" />
+    <Content Include="Pages\euSignFrame.html" />
+    <Content Include="Pages\euSignDialog.html" />
     <Content Include="Pages\errorDialog.html" />
     <Content Include="Pages\changePassword.html" />
     <Content Include="Pages\about.html" />
