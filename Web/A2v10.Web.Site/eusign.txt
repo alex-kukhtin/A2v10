@@ -8,4 +8,4 @@
 ~/scripts/eusing/euutils.js
 
 
-~/handlers/ProxyHandler.ashx
+~/handlers/ProxyHandler.*

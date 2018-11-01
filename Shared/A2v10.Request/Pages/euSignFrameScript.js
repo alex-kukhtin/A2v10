@@ -73,7 +73,7 @@ function onError(err) {
 				let that = this;
 
 				let pwd = this.password;
-				let addr = ['acskidd.gov.ua'];
+				let addr = ['ca.ksystems.com.ua', 'masterkey.ua', 'acskidd.gov.ua'];
 
 				function getPrivateKeyCertificatesByCMP(key, onSuccess) {
 					var keyInfo = euSign.GetKeyInfoBinary(key, pwd);
