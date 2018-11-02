@@ -10,29 +10,35 @@
 </head>
 <body>
 	<div id="frame" v-cloak>
-		<div class="grid" style="grid-template-columns:1fr 1fr">
-			<div class="control-group" style="grid-column:1; grid-row:1">
-				<label>
-					Центр сертіфікації ключів
-
-				</label>
-				<select class="input-group"></select>
-			</div>
-			<div>
-				<input type="file" v-on:change.stop.prevent="handleFile"/>
-			</div>
-			<div class="control-group" style="grid-column:1; grid-row:2">
-				<label>Пароль на ключ</label>
-				<div class="input-group">
-					<input type="password" v-model="password" />
+		<div style="margin: 0 16px;" v-if="noKey">
+			<h3 class="a2-header">Оберіть файл з особистим ключем для підпису файлу</h3>
+			<div class="stack-panel horizontal align-start" style="margin:16px 0">
+				<input type="file" v-on:change.stop.prevent="handleFile" style="width:200px"/>
+				<div class="control-group" style="margin-right:20px">
+					<div class="input-group" style="padding:3px 0 4px 0;width:200px">
+						<input type="password" v-model="password" placeholder="Введіть пароль на ключ"/>
+					</div>
 				</div>
+				<button class="btn btn-primary btn-sm" @click.stop.prevent="readKey" :disabled="readKeyDisabled">
+					Зчитати ключ
+				</button>
 			</div>
-			<button class="btn btn-primary btn-sm" @click.stop.prevent="readKey">Зчитати ключ</button>
+			<div style="color:brown;padding:6px 0">Увага! Обаний ключ та пароль ніколи не пересилаються на сервер. Вони завжди залишаються на цьому комп'ютері!</div>
 		</div>
-		<iframe id="pdfFile" style="width:100%;height:350px;" frameborder="0" :src="frameSrc"></iframe>
-
+		<div style="margin:0 16px" v-else>
+			<h3 class="a2-header">Власник ключа та сертіфікат</h3>
+			<div><span v-text="keyOwner"></span></div>
+			<div class="stack-panel horizontal align-start">
+				<button class="btn btn-success btn-sm" @click.stop.prevent="signFile">
+					Підписати файл
+				</button>
+			</div>
+		</div>
+		<iframe id="pdfFile" style="width:100%;height:550px;" frameborder="0" :src="frameSrc"></iframe>
 	</div>
 	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.13"></script>
+	<script type="text/javascript" src="/scripts/locale-uk.min.js"></script>
+	<script type="text/javascript" src="/scripts/commonsite.js"></script>
 	<script type="text/javascript" src="/scripts/eusign/euutils.js"></script>
 	<script type="text/javascript" src="/Scripts/eusign/euscpt.js"></script>
 	<script type="text/javascript" src="/Scripts/eusign/euscpm.js"></script>

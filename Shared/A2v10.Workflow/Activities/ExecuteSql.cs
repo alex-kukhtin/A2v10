@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Activities;
@@ -6,7 +6,7 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Workflow
 {
-	public class ExecuteSql : NativeActivity<IDbContext>
+	public class ExecuteSql : NativeActivity<IDataModel>
 	{
 		[RequiredArgument]
 		public InArgument<String> Command { get; set; }
@@ -22,7 +22,7 @@ namespace A2v10.Workflow
 			Object prms = Params.Get(context);
 			IDbContext dbContext = context.GetExtension<IDbContext>();
 			IDataModel dataModel = dbContext.LoadModel(dataSource, command, prms);
-			this.Result.Set(context, dataModel);
+			Result.Set(context, dataModel);
 		}
 	}
 }

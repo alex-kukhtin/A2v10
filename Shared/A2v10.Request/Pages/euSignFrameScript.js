@@ -55,6 +55,14 @@ function onError(err) {
 }
 
 (function () {
+	const http = require('std:http');
+	const urltools = require('std:url');
+
+	const currentElem = {
+		id: $(Id),
+		base: '$(Base)'
+	};
+
 	const vm = new Vue({
 		el: "#frame",
 		data: {
@@ -64,6 +72,12 @@ function onError(err) {
 			file: null
 		},
 		computed: {
+			readKeyDisabled() {
+				return !(this.file && this.password);
+			},
+			noKey() {
+				return !this.keyOwner;
+			}
 		},
 		methods: {
 			handleFile(e) {
@@ -100,6 +114,40 @@ function onError(err) {
 				euSign.ReadFile(this.file, function (file) {
 					readPrivateKey(file.file.name, new Uint8Array(file.data), pwd);
 				}, onError);
+			},
+			signFile() {
+				alert('sign file here');
+				const that = this;
+				let url = '/eusign/loadraw/' + currentElem.id + '?base=' + currentElem.base;
+				http.post(url, null, true).then(function (result) {
+					let fr = new FileReader();
+					fr.onloadend = function (evt) {
+						if (evt.target.readyState !== FileReader.DONE)
+							return;
+						let data = new Uint8Array(evt.target.result);
+						try {
+							let sign = euSign.SignData(data, false);
+							console.dir(sign);
+							let verify = euSign.VerifyData(data, sign);
+							console.dir(verify);
+							that.saveSignature(sign);
+						} catch (err) {
+							alert(err);
+						}
+					};
+					fr.readAsArrayBuffer(result);
+				});
+			},
+			saveSignature(sign) {
+				const that = this;
+				let formData = new FormData();
+				let url = '/eusign/savesignature/' + currentElem.id + '?base=' + currentElem.base;
+				formData.append("file", new Blob([sign]), "blob");
+				formData.append("signer", that.keyOwner);
+				http.upload(url, formData, true).then(function (result) {
+					console.dir(result);
+					alert('success');
+				});
 			}
 		},
 		created() {

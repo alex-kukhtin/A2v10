@@ -46,6 +46,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -286,7 +287,6 @@
     <Content Include="Less\Variables.Compact.less" />
     <Content Include="Less\SuperMenu.less" />
     <Content Include="Less\Toastr.less" />
-    <Content Include="Less\StyleSheet1.less" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\server\" />
