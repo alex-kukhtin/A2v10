@@ -2776,7 +2776,7 @@ table.data-grid > tbody > tr.bold > td {
   visibility: visible;
 }
 .data-grid td > .commandbar {
-  margin: -4px;
+  margin: -3px;
 }
 .tree-view {
   margin: 0;

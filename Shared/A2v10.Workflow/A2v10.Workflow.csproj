@@ -58,6 +58,7 @@
     <Compile Include="Inbox.cs" />
     <Compile Include="InboxInfo.cs" />
     <Compile Include="MessageInfo.cs" />
+    <Compile Include="ModelStateInfo.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeActivity.cs" />

@@ -4,6 +4,7 @@ using System;
 using System.Activities;
 using System.Activities.Tracking;
 using System.Diagnostics;
+using System.Dynamic;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
@@ -18,6 +19,8 @@ namespace A2v10.Workflow
 
 		public InArgument<MessageInfo> SendBefore { get; set; }
 		public InArgument<MessageInfo> SendAfter { get; set; }
+		public InArgument<ModelStateInfo> StateBefore { get; set; }
+		public InArgument<ModelStateInfo> StateAfter { get; set; }
 
 		public OutArgument<Int64> InboxId { get; set; }
 
@@ -41,6 +44,8 @@ namespace A2v10.Workflow
 			DoTrack(dbContext, TrackBefore.Get<TrackRecord>(context), context);
 			// send before
 			SendMessage(SendBefore.Get<MessageInfo>(context), inbox, context);
+			// state before
+			DoModelState(dbContext, StateBefore.Get<ModelStateInfo>(context), context, inbox.Id);
 			TrackRecord(context, $"Inbox created {{Id: {inbox.Id}}}.");
 			context.CreateBookmark(inbox.Bookmark, new BookmarkCallback(this.ContinueAt));
 		}
@@ -60,6 +65,8 @@ namespace A2v10.Workflow
 			DoTrack(dbContext, TrackAfter.Get<TrackRecord>(context), context, rr.UserId);
 			// send after
 			SendMessage(SendAfter.Get<MessageInfo>(context), inbox, context);
+			// state after
+			DoModelState(dbContext, StateAfter.Get<ModelStateInfo>(context), context, rr.InboxId, rr.UserId);
 			this.Result.Set(context, rr);
 		}
 
@@ -104,6 +111,22 @@ namespace A2v10.Workflow
 
 			messaging.QueueMessage(msg);
 			TrackRecord(context, $"Message queued successfully {{Id: {msg.Id}}}");
+		}
+
+		void DoModelState(IDbContext dbContext, ModelStateInfo state, NativeActivityContext context, Int64? inboxId = null, Int64? userId = null)
+		{
+			if (state == null)
+				return;
+			var prms = new ExpandoObject();
+			var process = Process.GetProcessFromContext(context.DataContext);
+			prms.Set("Id", process.ModelId);
+			prms.Set("State", state.State);
+			prms.Set("Process", process.Id);
+			if (inboxId != null)
+				prms.Set("Inbox", inboxId.Value);
+			if (userId != null)
+				prms.Set("UserId", userId.Value);
+			dbContext.LoadModel(state.DataSource, state.Procedure, prms);
 		}
 	}
 }
