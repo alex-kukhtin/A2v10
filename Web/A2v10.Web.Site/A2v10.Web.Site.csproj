@@ -98,6 +98,12 @@
     <Content Include="app\directives\dropdown.js" />
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="app\directives\mask.nojs" />
     <Content Include="app\directives\resize.js" />
     <Content Include="app\localization\locale-en.js" />
@@ -223,15 +229,6 @@
     <Content Include="TestPages\datagridwithdata.html" />
     <Content Include="TestPages\datagrid.html" />
     <Content Include="TestPages\formcontrol.html" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -260,6 +257,9 @@
     <Content Include="Less\Debug.less" />
     <Content Include="Less\List.less" />
     <Content Include="Less\Sheet.less" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.config.sample" />
     <Content Include="Less\Admin.less" />
     <Content Include="Less\Selector.less" />

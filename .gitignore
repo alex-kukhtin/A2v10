@@ -274,3 +274,6 @@ __pycache__/
 /Web/A2v10.Web.Site/scripts/eusign/CACertificates.p7b
 /Web/A2v10.Web.Site/handlers/ProxyHandler.ashx
 /Web/A2v10.Web.Site/handlers/ProxyHandler.ashx.cs
+# Web.config
+/Web/A2v10.Web.Site/Web.config
+
