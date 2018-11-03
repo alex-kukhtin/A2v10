@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181028-7334
+// 20181103-7342
 // services/utils.js
 
 app.modules['std:utils'] = function () {

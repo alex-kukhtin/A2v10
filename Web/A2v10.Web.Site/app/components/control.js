@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180729-7259
+// 20181103-7342
 // components/control.js
 
 (function () {
@@ -20,6 +20,7 @@
 			validatorOptions: Object,
 			updateTrigger: String,
 			mask: String,
+			hideZeros: Boolean,
 			testId: String
 		},
 		computed: {
@@ -33,7 +34,7 @@
 				if (!this.item) return null;
 				let val = this.item[this.prop];
 				if (this.dataType)
-					return utils.format(val, this.dataType);
+					return utils.format(val, this.dataType, this.hideZeros);
 				else if (this.mask && val)
 					return mask.getMasked(this.mask, val);
 				return val;

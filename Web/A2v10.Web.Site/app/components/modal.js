@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181025-7330
+// 20181103-7342
 // components/modal.js
 
 
@@ -20,7 +20,7 @@
 <div class="modal-window" @keydown.tab="tabPress">
 	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
 	<div v-else class="modal-body">
-		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
 			<i v-if="hasIcon" :class="iconClass" />
 			<div class="modal-body-content">
@@ -31,7 +31,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"/>
 		</div>
 	</div>
 </div>
@@ -211,17 +211,19 @@
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false }];
+					return [{ text: okText, result: false, tabindex:1 }];
 				else if (this.dialog.style === 'info')
-					return [{ text: okText, result: false }];
+					return [{ text: okText, result: false, tabindex:1 }];
 				return [
-					{ text: okText, result: true },
-					{ text: cancelText, result: false }
+					{ text: okText, result: true, tabindex:2 },
+					{ text: cancelText, result: false, tabindex:1 }
 				];
 			}
 		},
 		created() {
 			document.addEventListener('keyup', this.keyUpHandler);
+			if (document.activeElement)
+				document.activeElement.blur();
 		},
 		mounted() {
 		},

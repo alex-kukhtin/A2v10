@@ -144,6 +144,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":mask", maskBind.GetPathFormat(context));
 			else if (!String.IsNullOrEmpty(valBind.Mask))
 				input.MergeAttribute("mask", valBind.Mask);
+			if (valBind.HideZeros)
+				input.MergeAttribute(":hide-zeros", "true");
 		}
 
 		internal void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)

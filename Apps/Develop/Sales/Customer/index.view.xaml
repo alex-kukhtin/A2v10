@@ -11,7 +11,7 @@
 		<CollectionView ItemsSource="{Bind Agents}" RunAt="Server" Filter="Fragment"/>
 	</Page.CollectionView>
 	<Splitter>
-		<Block Splitter.Width="30%" Splitter.MinWidth="150">
+		<Block Splitter.Width="20%" Splitter.MinWidth="300">
 			<Toolbar>
 				<Button Icon="Add" Tip="Создать папку" Command="{BindCmd Execute, CommandName=AddTopFolder, Argument={Bind Agents}}" />
 				<Button Icon="Edit" Command="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}" />
@@ -24,6 +24,7 @@
 		</Block>
 		<Block Splitter.MinWidth="150">
 			<Toolbar>
+				<TextBox Label="Метка:"></TextBox>
 				<Button Icon="Add" Content="@[Create]" Tip="Создать контрагента" 
 					Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Agents.Selected(Children)}}"/>
 				<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents.Selected(Children)}}" />

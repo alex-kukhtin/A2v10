@@ -713,6 +713,11 @@ input[type=button] {
 input[type=text]::-ms-clear {
   display: none;
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .block {
   display: block;
   width: 100%;
@@ -2640,6 +2645,9 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar.no-wrap {
   flex-wrap: nowrap;
+}
+.toolbar > .control-group.first-elem {
+  margin-left: 6px;
 }
 .toolbar.transparent {
   background-color: transparent;

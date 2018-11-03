@@ -30,7 +30,6 @@ const template = {
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
 		"Document.Rows[].adding"(arr, a) {
 			console.dir(a);
-			return false;
 		}
     },
     commands: {

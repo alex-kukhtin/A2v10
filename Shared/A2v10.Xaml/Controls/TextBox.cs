@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 		public Int32? Rows { get; set; }
 
 		public Boolean Password { get; set; }
+		public Boolean Number { get; set; }
 		public Boolean AutoSize { get; set; }
 		public Boolean Multiline { get; set; }
 		public TextAlign Align { get; set; }
@@ -39,6 +40,8 @@ namespace A2v10.Xaml
 				MergeAttributeInt32(input, context, "rows", nameof(Rows), Rows);
 			if (Password)
 				input.MergeAttribute(":password", "true");
+			if (Number)
+				input.MergeAttribute(":number", "true");
 			if (AutoSize)
 				input.MergeAttribute(":auto-size", "true");
 			if (UpdateTrigger != UpdateTrigger.Default)

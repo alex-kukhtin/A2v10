@@ -36,6 +36,7 @@ Vue.directive('resize', {
 			if (isNaN(minSecondPaneWidth))
 				minSecondPaneWidth = minWidth;
 
+			//console.dir(minPaneWidth);
 
 			let parts = {
 				grid: grid,

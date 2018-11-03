@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181028-7334
+// 20181103-7342
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -3545,7 +3545,7 @@ app.modules['std:tools'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180729-7259
+// 20181103-7342
 // components/control.js
 
 (function () {
@@ -3565,6 +3565,7 @@ app.modules['std:tools'] = function () {
 			validatorOptions: Object,
 			updateTrigger: String,
 			mask: String,
+			hideZeros: Boolean,
 			testId: String
 		},
 		computed: {
@@ -3578,7 +3579,7 @@ app.modules['std:tools'] = function () {
 				if (!this.item) return null;
 				let val = this.item[this.prop];
 				if (this.dataType)
-					return utils.format(val, this.dataType);
+					return utils.format(val, this.dataType, this.hideZeros);
 				else if (this.mask && val)
 					return mask.getMasked(this.mask, val);
 				return val;
@@ -3745,7 +3746,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181021-7324*/
+/*20181103-7342*/
 /*components/textbox.js*/
 
 (function () {
@@ -3759,8 +3760,9 @@ Vue.component('validator-control', {
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
-					v-on:change="onChange($event.target.value)" 
-					v-on:input="onInput($event.target.value)"
+				v-on:change="onChange($event.target.value)" 
+				v-on:input="onInput($event.target.value)"
+				v-on:keypress="onKey($event)"
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -3820,11 +3822,12 @@ Vue.component('validator-control', {
 			propToValidate: String,
 			placeholder: String,
 			password: Boolean,
+			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined }
 		},
 		computed: {
 			controlType() {
-				return this.password ? "password" : "text";
+				return this.password ? 'password' : 'text';
 			}
 		},
 		methods: {
@@ -3833,8 +3836,9 @@ Vue.component('validator-control', {
 					this.item[this.prop] = mask.getUnmasked(this.mask, value);
 				else
 					this.item[this.prop] = utils.parse(value, this.dataType);
-				if (this.$refs.input.value !== this.modelValue) {
-					this.$refs.input.value = this.modelValue;
+				let mv = this.modelValue;
+				if (this.$refs.input.value !== mv) {
+					this.$refs.input.value = mv;
 					this.$emit('change', this.item[this.prop]);
 				}
 			},
@@ -3845,6 +3849,13 @@ Vue.component('validator-control', {
 			onChange(value) {
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
+			},
+			onKey(event) {
+				if (!this.number) return;
+				if (event.charCode < 48 || event.charCode > 57) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
 			}
 		}
 	});
@@ -6924,7 +6935,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181025-7330
+// 20181103-7342
 // components/modal.js
 
 
@@ -6944,7 +6955,7 @@ TODO:
 <div class="modal-window" @keydown.tab="tabPress">
 	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
 	<div v-else class="modal-body">
-		<div class="modal-header" v-drag-window><span v-text="title"></span><button class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
 			<i v-if="hasIcon" :class="iconClass" />
 			<div class="modal-body-content">
@@ -6955,7 +6966,7 @@ TODO:
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"></button>
+			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"/>
 		</div>
 	</div>
 </div>
@@ -7135,17 +7146,19 @@ TODO:
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false }];
+					return [{ text: okText, result: false, tabindex:1 }];
 				else if (this.dialog.style === 'info')
-					return [{ text: okText, result: false }];
+					return [{ text: okText, result: false, tabindex:1 }];
 				return [
-					{ text: okText, result: true },
-					{ text: cancelText, result: false }
+					{ text: okText, result: true, tabindex:2 },
+					{ text: cancelText, result: false, tabindex:1 }
 				];
 			}
 		},
 		created() {
 			document.addEventListener('keyup', this.keyUpHandler);
+			if (document.activeElement)
+				document.activeElement.blur();
 		},
 		mounted() {
 		},
@@ -8753,6 +8766,7 @@ Vue.directive('resize', {
 			if (isNaN(minSecondPaneWidth))
 				minSecondPaneWidth = minWidth;
 
+			//console.dir(minPaneWidth);
 
 			let parts = {
 				grid: grid,

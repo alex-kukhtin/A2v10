@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181021-7324*/
+/*20181103-7342*/
 /*components/textbox.js*/
 
 (function () {
@@ -14,8 +14,9 @@
 	<div class="input-group">
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
-					v-on:change="onChange($event.target.value)" 
-					v-on:input="onInput($event.target.value)"
+				v-on:change="onChange($event.target.value)" 
+				v-on:input="onInput($event.target.value)"
+				v-on:keypress="onKey($event)"
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -75,11 +76,12 @@
 			propToValidate: String,
 			placeholder: String,
 			password: Boolean,
+			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined }
 		},
 		computed: {
 			controlType() {
-				return this.password ? "password" : "text";
+				return this.password ? 'password' : 'text';
 			}
 		},
 		methods: {
@@ -88,8 +90,9 @@
 					this.item[this.prop] = mask.getUnmasked(this.mask, value);
 				else
 					this.item[this.prop] = utils.parse(value, this.dataType);
-				if (this.$refs.input.value !== this.modelValue) {
-					this.$refs.input.value = this.modelValue;
+				let mv = this.modelValue;
+				if (this.$refs.input.value !== mv) {
+					this.$refs.input.value = mv;
 					this.$emit('change', this.item[this.prop]);
 				}
 			},
@@ -100,6 +103,13 @@
 			onChange(value) {
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
+			},
+			onKey(event) {
+				if (!this.number) return;
+				if (event.charCode < 48 || event.charCode > 57) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
 			}
 		}
 	});
