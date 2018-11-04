@@ -2276,6 +2276,26 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'EUSign.Load')
+	drop procedure a2demo.[EUSign.Load]
+go
+------------------------------------------------
+create procedure a2demo.[EUSign.Load]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint = 0
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	select [Attachment!TAttachment!MainObject] = null, [Id!!Id] = @Id, AttId=a.Id
+	from a2demo.Attachments a 
+	inner join a2demo.DocAttachments d on d.Attachment = a.Id
+	where d.Id = @Id;
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2demo to public;

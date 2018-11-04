@@ -108,6 +108,8 @@ namespace A2v10.Xaml
 	public class RenderContext
 	{
 		public String RootId { get; set; }
+		public String Path { get; set; }
+
 		public TextWriter Writer { get; private set; }
 
 		public Boolean IsDebugConfiguration { get; }

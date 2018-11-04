@@ -95,7 +95,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181103-7342
+// 20181104-7343
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -179,7 +179,7 @@ app.modules['std:utils'] = function () {
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
-		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date;
+		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === File || ctor === Object;
 	}
 
 	function isDateCtor(ctor) {
@@ -1703,7 +1703,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181031-7339
+// 20181104-7343
 // services/datamodel.js
 
 (function () {
@@ -1802,6 +1802,10 @@ app.modules['std:validators'] = function () {
 			case Date:
 				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
+				break;
+			case File:
+			case Object:
+				shadow[prop] = null;
 				break;
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];
@@ -3746,7 +3750,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181103-7342*/
+/*20181104-7343*/
 /*components/textbox.js*/
 
 (function () {
@@ -3758,6 +3762,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
+		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
@@ -6573,6 +6578,30 @@ TODO:
 				}).catch(result => {
 					alert(result);
 				});
+			}
+		}
+	});
+
+	Vue.component("a2-simple-upload", {
+		template: `
+<label>
+	<input type="file" @change="uploadChange" />
+</label>
+		`,
+		props: {
+			item: Object,
+			prop: String
+		},
+		data: function () {
+			return {
+			};
+		},
+		computed: {
+		},
+		methods: {
+			uploadChange(ev) {
+				let files = ev.target.files;
+				this.item[this.prop] = files[0];
 			}
 		}
 	});

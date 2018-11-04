@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181103-7342*/
+/*20181104-7343*/
 /*components/textbox.js*/
 
 (function () {
@@ -12,6 +12,7 @@
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
+		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 

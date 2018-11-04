@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 		Large = 2,
 	}
 
-	public class Dialog : RootContainer
+	public class Dialog : RootContainer, ISupportTwoPhaseRendering
 	{
 		public String Title { get; set; }
 		public String HelpUrl { get; set; }
@@ -145,6 +145,16 @@ namespace A2v10.Xaml
 			context.Writer.Write(context.Localize("@[Help]"));
 			ha.RenderEnd(context);
 			new TagBuilder("div", "aligner").Render(context);
+		}
+
+		public void RenderSecondPhase(RenderContext context)
+		{
+			if (Children.Count != 1)
+				throw new XamlException("Invalid dialog for two-phase rendering");
+			var eusignFrame = Children[0] as EUSignFrame;
+			if (eusignFrame == null)
+				throw new XamlException("Invalid dialog for two-phase rendering");
+			eusignFrame.RenderTwoPhaseContent(context);
 		}
 	}
 }

@@ -156,7 +156,7 @@ namespace A2v10.Request
 			return rw;
 		}
 
-		protected async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms)
+		protected async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
 		{
 			String loadProc = rw.LoadProcedure;
 			IDataModel model = null;
@@ -222,6 +222,7 @@ namespace A2v10.Request
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
 			String filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
+			String basePath = rw.ParentModel.BasePath;
 			Boolean bRendered = false;
 			if (System.IO.File.Exists(filePath))
 			{
@@ -235,11 +236,13 @@ namespace A2v10.Request
 							RootId = rootId,
 							FileName = filePath,
 							FileTitle = fileName,
+							Path = basePath,
 							Writer = strWriter,
 							DataModel = model,
 							Localizer = _localizer,
 							CurrentLocale = null,
-							IsDebugConfiguration = _host.IsDebugConfiguration
+							IsDebugConfiguration = _host.IsDebugConfiguration,
+							SecondPhase = secondPhase
 						};
 						_renderer.Render(ri);
 						// write markup

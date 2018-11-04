@@ -286,6 +286,17 @@ namespace A2v10.Request
 	public class RequestDialog : RequestView
 	{
 		public override Boolean IsDialog { get { return true; } }
+		[JsonProperty("twoPhase")]
+		public Boolean TwoPhase { get; set; }
+
+		public void CheckPhase(Boolean phase2)
+		{
+			if (!TwoPhase) return;
+			if (phase2) return;
+			// no model, no template for the first phase
+			model = String.Empty;
+			template = null;
+		}
 	}
 
 	public class RequestPopup : RequestView
@@ -297,6 +308,7 @@ namespace A2v10.Request
 		none,
 		sql,
 		clr,
+		script,
 		xml,
 		file,
 		startProcess,
@@ -418,6 +430,9 @@ namespace A2v10.Request
 		[JsonIgnore]
 		internal String _id;
 
+		[JsonIgnore]
+		internal Boolean Phase2;
+
 		public String model; // data model
 		public String schema; // schema for data model
 		public String source; // connection string for data model
@@ -443,7 +458,10 @@ namespace A2v10.Request
 		public String ModelAction => _action;
 		[JsonIgnore]
 		public String ModelCommand => _command;
+		[JsonIgnore]
+		public String ModelDialog => _dialog;
 
+		[JsonIgnore]
 		public RequestDataAction DataAction
 		{
 			get
@@ -457,6 +475,7 @@ namespace A2v10.Request
 			}
 		}
 
+		[JsonIgnore]
 		public String BaseUrl
 		{
 			get
@@ -471,6 +490,22 @@ namespace A2v10.Request
 						throw new RequestModelException($"Invalid RequestKind '{_kind}' for indirect query");
 				}
 				return $"/{kind}/{_modelPath}/{_action}/{_id}";
+			}
+		}
+
+		[JsonIgnore]
+		public String BasePath
+		{
+			get
+			{
+				switch (_kind)
+				{
+					case RequestUrlKind.Page:
+						return $"{_modelPath}/{_action}/{_id}";
+					case RequestUrlKind.Dialog:
+						return $"{_modelPath}/{_dialog}/{_id}";
+				}
+				return null;
 			}
 		}
 
@@ -497,7 +532,10 @@ namespace A2v10.Request
 				if (String.IsNullOrEmpty(_dialog))
 					throw new RequestModelException($"Invalid empty dialog in url for {_modelPath}");
 				if (Dialogs.TryGetValue(_dialog, out RequestDialog da))
+				{
+					da.CheckPhase(Phase2);
 					return da;
+				}
 				throw new RequestModelException($"Dialog '{_dialog}' not found in model {_modelPath}");
 			}
 		}
@@ -695,6 +733,7 @@ namespace A2v10.Request
 			rm._upload = mi.upload;
 			rm._data = mi.data;
 			rm._modelPath = pathForLoad;
+			rm._kind = kind;
 			rm._id = ((mi.id == "0") || (mi.id == "new")) ? null : mi.id;
 			return rm;
 		}

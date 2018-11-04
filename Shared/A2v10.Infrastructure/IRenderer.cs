@@ -11,12 +11,14 @@ namespace A2v10.Infrastructure
 		public String RootId;
 		public String FileName;
 		public String FileTitle;
+		public String Path;
 		public String Text;
 		public TextWriter Writer;
 		public IDataModel DataModel;
 		public ILocalizer Localizer;
 		public String CurrentLocale;
 		public Boolean IsDebugConfiguration;
+		public Boolean SecondPhase;
 	}
 
 	public interface IRenderer

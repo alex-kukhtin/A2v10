@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseController.EUSign.cs" />
+    <Compile Include="Controllers\BaseController.Invoke.cs" />
     <Compile Include="Controllers\BaseController.Standalone.cs" />
     <Compile Include="Controllers\BaseController.App.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -78,6 +79,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\euSignFrameScript_old.js" />
+    <Content Include="Pages\euSignFrame_old.html" />
     <Content Include="Pages\euSignFrameScript.js" />
     <Content Include="Pages\appPageScript.js" />
     <Content Include="Pages\appPage.html" />

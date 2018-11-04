@@ -88,4 +88,28 @@
 		}
 	});
 
+	Vue.component("a2-simple-upload", {
+		template: `
+<label>
+	<input type="file" @change="uploadChange" />
+</label>
+		`,
+		props: {
+			item: Object,
+			prop: String
+		},
+		data: function () {
+			return {
+			};
+		},
+		computed: {
+		},
+		methods: {
+			uploadChange(ev) {
+				let files = ev.target.files;
+				this.item[this.prop] = files[0];
+			}
+		}
+	});
+
 })();

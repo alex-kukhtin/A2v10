@@ -54,6 +54,7 @@
     <Compile Include="Base\GroupDescription.cs" />
     <Compile Include="Base\IJavaScriptSource.cs" />
     <Compile Include="Base\ISupportBinding.cs" />
+    <Compile Include="Base\ISupportTwoPhaseRendering.cs" />
     <Compile Include="Base\ITableControl.cs" />
     <Compile Include="Base\RenderContext.cs" />
     <Compile Include="Base\Size.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Controls\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\Attachments.cs" />
+    <Compile Include="Controls\UploadFile.cs" />
+    <Compile Include="Layouts\EUSignFrame.cs" />
     <Compile Include="Layouts\IFrame.cs" />
     <Compile Include="Layouts\CommandBar.cs" />
     <Compile Include="Layouts\GridGroup.cs" />

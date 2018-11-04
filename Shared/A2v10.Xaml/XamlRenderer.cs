@@ -39,10 +39,20 @@ namespace A2v10.Xaml
 			{
 				RenderContext ctx = new RenderContext(uiElem, info)
 				{
-					RootId = info.RootId
+					RootId = info.RootId,
+					Path = info.Path
 				};
 
-				uiElem.RenderElement(ctx);
+				if (info.SecondPhase)
+				{
+					if (!(uiElem is ISupportTwoPhaseRendering twoPhaseRender))
+						throw new XamlException("The two-phase rendering is not available");
+					twoPhaseRender.RenderSecondPhase(ctx);
+				}
+				else
+				{
+					uiElem.RenderElement(ctx);
+				}
 
 				Grid.ClearAttached();
 				Splitter.ClearAttached();

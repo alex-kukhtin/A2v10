@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181031-7339
+// 20181104-7343
 // services/datamodel.js
 
 (function () {
@@ -99,6 +99,10 @@
 			case Date:
 				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
+				break;
+			case File:
+			case Object:
+				shadow[prop] = null;
 				break;
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];

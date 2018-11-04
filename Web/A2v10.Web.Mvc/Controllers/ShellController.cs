@@ -128,6 +128,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Export("/" + pathInfo);
 			}
+			else if (pathInfo.StartsWith("_iframe/"))
+			{
+				await IFrame("/" + pathInfo);
+			}
 			else if (pathInfo.StartsWith("file/"))
 			{
 				LoadFile(pathInfo.Substring(5));
@@ -290,6 +294,21 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var strClaim = s.Trim().ToLowerInvariant();
 				prms.Set(strClaim.ToPascalCase(), User.Identity.GetUserClaim(strClaim));
+			}
+		}
+
+		async Task IFrame(String path)
+		{
+			// HTTP GET
+			try
+			{
+				ExpandoObject loadPrms = new ExpandoObject();
+				SetSqlQueryParams(loadPrms);
+				await _baseController.RenderEUSignIFrame(Response.Output, path, loadPrms);
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteHtmlException(ex, Response.Output);
 			}
 		}
 

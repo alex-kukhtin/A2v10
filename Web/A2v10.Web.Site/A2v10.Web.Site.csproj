@@ -59,6 +59,7 @@
     <Content Include="app\app.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\iframetarget.js" />
+    <Content Include="app\services\eusign.js" />
     <Content Include="app\standalone\collectionview.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
@@ -169,6 +170,7 @@
     <Content Include="Localization\uk.xml" />
     <Content Include="scripts\commonsite.js" />
     <Content Include="scripts\d3.min.js" />
+    <Content Include="scripts\eusign.js" />
     <Content Include="scripts\jasmine\boot.js" />
     <Content Include="scripts\jasmine\console.js" />
     <Content Include="scripts\jasmine\jasmine-html.js" />

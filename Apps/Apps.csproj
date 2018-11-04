@@ -132,6 +132,7 @@
     <Content Include="Develop\Sales\Invoice\index.template.js" />
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
     <Content Include="Develop\Sales\Waybill\confirm.template.js" />
+    <Content Include="Develop\Sales\Waybill\eusign.template.js" />
     <Content Include="Develop\Sales\Waybill\index.template.js" />
     <Content Include="Develop\Sales\Waybill\waybill.template.js" />
     <Content Include="Develop\_assets\app.min.js">
@@ -427,6 +428,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Sales\Invoice\empty.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\Waybill\eusign.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

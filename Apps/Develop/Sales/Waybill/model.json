@@ -18,6 +18,12 @@
 			"model": "ConfirmPhone",
 			"view": "confirm.dialog",
 			"template": "confirm.template"
+		},
+		"euSign": {
+			"view": "eusign.dialog",
+			"model": "EUSign",
+			"template": "eusign.template",
+			"twoPhase": true
 		}
 	},
 	"commands": {
@@ -57,8 +63,8 @@
 		}
 	},
 	"attachments": {
-			"default": {
+		"default": {
 
-			}
+		}
 	}
 }
