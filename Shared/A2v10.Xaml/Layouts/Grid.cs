@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 
+using A2v10.Infrastructure;
+
 namespace A2v10.Xaml
 {
 	public class Grid : Container
@@ -97,6 +99,11 @@ namespace A2v10.Xaml
 
 		public Length Height { get; set; }
 
+		public BackgroundStyle Background { get; set; }
+
+		public ShadowStyle DropShadow { get; set; }
+
+
 		RowDefinitions _rows;
 		ColumnDefinitions _columns;
 
@@ -141,6 +148,14 @@ namespace A2v10.Xaml
 				grid.MergeStyle("grid-template-rows", _rows.ToAttribute());
 			if (_columns != null)
 				grid.MergeStyle("grid-template-columns", _columns.ToAttribute());
+			if (Background != BackgroundStyle.None)
+				grid.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			if (DropShadow != ShadowStyle.None)
+			{
+				grid.AddCssClass("drop-shadow");
+				grid.AddCssClass(DropShadow.ToString().ToLowerInvariant());
+			}
+
 			grid.RenderStart(context);
 			RenderChildren(context);
 			grid.RenderEnd(context);

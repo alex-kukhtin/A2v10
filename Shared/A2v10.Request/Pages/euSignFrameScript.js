@@ -49,3 +49,11 @@ function EUSignCPModuleLoaded() {
 
 const euSign = EUSignCP();
 const euSignUtils = Utils(euSign);
+
+
+(function () {
+	const popup = require('std:popup');
+	const eventBus = require('std:eventBus');
+	popup.startService();
+	eventBus.$on('closeAllPopups', popup.closeAll);
+})();

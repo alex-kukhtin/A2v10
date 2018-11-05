@@ -48,24 +48,42 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		[HttpGet]
-		public async Task Export(String Base, String id)
+		public Task Export(String Base, String id)
 		{
+			return Download(Base, id, false);
+		}
+
+		[HttpPost]
+		public Task Raw(String Base, String id)
+		{
+			return Download(Base, id, true);
+		}
+
+		async Task Download(String Base, String id, Boolean raw)
+		{ 
 			try
 			{
 				var url = $"/_attachment{Base}/{id}";
 				var ai = await _baseController.DownloadAttachment(url, SetParams);
 				if (ai == null)
 					throw new RequestModelException($"Attachment not found. (Id:{id})");
-				Response.ContentType = ai.Mime;
 
-				String repName = ai.Name;
-				if (String.IsNullOrEmpty(repName))
-					repName = "Attachment";
-				var cdh = new ContentDispositionHeaderValue("attachment")
+				if (raw)
 				{
-					FileNameStar = _baseController.Localize(repName) + Mime2Extension(ai.Mime)
-				};
-				Response.Headers.Add("Content-Disposition", cdh.ToString());
+					Response.ContentType = "application/octet-stream";
+				}
+				else
+				{
+					Response.ContentType = raw ? "application/octet-stream" : ai.Mime;
+					String repName = ai.Name;
+					if (String.IsNullOrEmpty(repName))
+						repName = "Attachment";
+					var cdh = new ContentDispositionHeaderValue("attachment")
+					{
+						FileNameStar = _baseController.Localize(repName) + Mime2Extension(ai.Mime)
+					};
+					Response.Headers.Add("Content-Disposition", cdh.ToString());
+				}
 				Response.BinaryWrite(ai.Stream);
 			}
 			catch (Exception ex)
@@ -73,6 +91,7 @@ namespace A2v10.Web.Mvc.Controllers
 				_baseController.WriteHtmlException(ex, Response.Output);
 			}
 		}
+
 
 		String Mime2Extension(String mime)
 		{

@@ -5,20 +5,29 @@
 		<Button Content="Закрити" Command="{BindCmd Close}" />
 	</Dialog.Buttons>
 	<EUSignFrame Height="500">
-		<Grid Columns="1*, 1*, 150">
-			<Header Grid.ColSpan="3" >Підписати документ</Header>
-			<UploadFile Value="{Bind Attachment.$File}"/>
-			<TextBox Label="Пароль на ключ" Password="True" Placeholder="Введіть пароль на ключ" Value="{Bind Attachment.$Password}">
-				<TextBox.Hint>
-					Пароль та ключ ніколи не передаються на сервер. Вони залишаються на цьому компьютері
-				</TextBox.Hint>
-			</TextBox>
-			<Button Content="Зчитати ключ" Size="Small" Icon="Security" Style="Primary"
-					Command="{BindCmd Execute, CommandName='readKey' }"/>
-			<Code Content="{Bind Attachment}">
-				
+		<Block Margin="10">
+			<Grid Columns="150, 200, 120, 1*" Background="WhiteSmoke" DropShadow="Shadow1">
+				<Header Size="Small" Grid.ColSpan="4"  Grid.Row="1">Завантаження електронного ключа та зчитування сертіфікатів</Header>
+				<UploadFile Value="{Bind Attachment.$File}" Grid.Row="2" Grid.Col="1"/>
+				<TextBox Grid.Row="2" Grid.Col="2" UpdateTrigger="Input"
+					Password="True" Placeholder="Введіть пароль на ключ" Value="{Bind Attachment.$Password}" />
+				<Button Grid.Row="2" Grid.Col="3"
+					Content="Зчитати ключ" Size="Small" Icon="Access" Style="Primary"
+						Command="{BindCmd Execute, CommandName='readKey' }"/>
+				<Span Grid.Row="3" Grid.ColSpan="4" Small="True" Color="Danger">
+					Увага! Пароль та ключ НІКОЛИ не передаються на сервер. Вони залишаються на цьому компьютері.
+				</Span>
+			</Grid>
+			<Grid Columns="200, 1*, 150">
+				<Button Icon="FileSignature" Content="Підписати документ" Command="{BindCmd Execute, CommandName=signFile}"/>
+			</Grid>
+			
+			<Code Content="{Bind Attachment}" Grid.ColSpan="3" Grid.Row="3">
+
 			</Code>
-			<Button Icon="FileSignature" Content="Підписати документ" Command="{BindCmd Execute, CommandName=signFile}"/>
-		</Grid>
+			<Panel If="{Bind $isLoading}" Header="Loading" Style="Danger">
+				<Text>I am the text for loading </Text>
+			</Panel>
+		</Block>
 	</EUSignFrame>
 </Dialog>

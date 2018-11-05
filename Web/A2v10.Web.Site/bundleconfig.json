@@ -124,7 +124,7 @@
 			"app/standalone/pager.js",
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
-			"app/standalone/filters.js",
+			//"app/standalone/filters.js",
 			"app/standalone/controller.js"
 		],
 		"minify": { "enabled": false }

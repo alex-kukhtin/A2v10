@@ -14,7 +14,8 @@ namespace A2v10.Xaml
 	public enum TextColorStyle
 	{
 		Default = 0,
-		Gray
+		Gray,
+		Danger
 	}
 
 	public enum VerticalAlign

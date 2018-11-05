@@ -6504,6 +6504,8 @@ TODO:
 	const url = require('std:url');
 	const http = require('std:http');
 
+	const locale = window.$$locale;
+
 	Vue.component("a2-upload", {
         /* TODO:
          4. ControllerName (_image ???)
@@ -6584,24 +6586,47 @@ TODO:
 
 	Vue.component("a2-simple-upload", {
 		template: `
-<label>
-	<input type="file" @change="uploadChange" />
+<label class="a2-simple-upload" :class="labelClass">
+	<i class="ico" :class='icon'></i>
+	<input type="file" @change="uploadChange" ref="file"/>
+	<span v-text="labelText" class="upload-text"></span>
+	<button class="btnclose" @click.prevent="clear" v-if="file">&#x2715;</button>
 </label>
 		`,
 		props: {
 			item: Object,
-			prop: String
+			prop: String,
+			text: String
 		},
 		data: function () {
 			return {
 			};
 		},
 		computed: {
+			labelText() {
+				if (this.file) return this.file.name;
+				return this.text || locale.$ChooseFile;
+			},
+			icon() {
+				return this.file && this.file.name ? 'ico-file' : 'ico-attach';
+			},
+			file() {
+				return this.item ? this.item[this.prop] : null;
+			},
+			labelClass() {
+				return this.file ? 'has-file' : undefined;
+			}
 		},
 		methods: {
+			clear() {
+				if (!this.item) return;
+				this.item[this.prop] = null;
+				this.$refs.file.value = '';
+			},
 			uploadChange(ev) {
 				let files = ev.target.files;
 				this.item[this.prop] = files[0];
+				console.dir(this.item[this.prop]);
 			}
 		}
 	});

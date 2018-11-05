@@ -2,6 +2,7 @@
 
 const utils = require('std:utils');
 const eusign = require('std:eusign');
+const http = require('std:http');
 
 const template = {
 	properties: {
@@ -43,6 +44,13 @@ function canReadKey() {
 	return att.$Password && att.$File;
 }
 
-function signFile() {
-
+async function signFile() {
+	const vm = this.$vm;
+	const att = this.Attachment;
+	let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id); // raw
+	console.dir('blob:'); console.dir(blob);
+	let sign = eusign.signData(blob);
+	console.dir('signed:'); console.dir(sign);
+	let verify = eusign.verifyData(blob , sign);
+	console.dir('verify:'); console.dir(verify);
 }

@@ -891,6 +891,12 @@ td.valign-bottom {
 .a2-alert.info > .ico {
   color: #31708f;
 }
+.text-color-gray {
+  color: #777;
+}
+.text-color-danger {
+  color: #a94442;
+}
 html {
   font-family: system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif;
   font-size: 13px;
@@ -1304,6 +1310,46 @@ header .user-name .person-name,
 }
 .a2-attachments .file-upload .upload-tip {
   padding-bottom: 0.2rem;
+}
+.a2-simple-upload {
+  display: block;
+  height: 27px;
+  line-height: 25px;
+  padding: 0;
+}
+.a2-simple-upload .ico {
+  margin-right: 3px;
+  font-size: 14px;
+  color: #999;
+}
+.a2-simple-upload .btnclose {
+  float: right;
+  margin: 3px 0;
+}
+.a2-simple-upload .btnclose:hover {
+  background-color: #c1e2b3;
+}
+.a2-simple-upload .upload-text {
+  color: #57a8fa;
+  border-bottom: 1px dotted #57a8fa;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.a2-simple-upload input[type=file] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.a2-simple-upload.has-file {
+  background-color: #dff0d8;
+  border: 1px solid #c1e2b3;
+  padding: 0 3px 0 4px;
+}
+.a2-simple-upload.has-file .upload-text {
+  color: inherit;
+  border-bottom-style: none;
+  cursor: default;
 }
 footer,
 .footer {
@@ -1890,6 +1936,9 @@ pre.a2-code {
   opacity: 0.65;
   cursor: not-allowed;
 }
+.btn > .ico {
+  margin-right: 0.2em;
+}
 .btn.btn-icon > .ico {
   margin-right: 0;
 }
@@ -1909,6 +1958,7 @@ pre.a2-code {
   padding: 0.4rem;
   font-size: 0.95rem;
   line-height: 1;
+  min-height: 27px;
 }
 .btn.sm > .ico {
   font-size: 12px;
@@ -4334,7 +4384,7 @@ TODO:
 }
 .grid {
   display: grid;
-  padding: 10px 10px 15px 10px;
+  padding: 10px;
   grid-gap: 10px;
   align-items: flex-end;
   grid-template-columns: auto;
@@ -4542,9 +4592,6 @@ TODO:
 }
 .scrollable-pane {
   overflow: auto;
-}
-.text-color-gray {
-  color: #777;
 }
 .bordered-pane {
   border: 1px solid #ddd;

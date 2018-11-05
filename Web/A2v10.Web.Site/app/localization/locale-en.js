@@ -58,7 +58,8 @@
 		$License: 'license',
 		$HomePage: 'homepage',
 		$CreatedOpenSource: 'Created using the following open source software',
-		$Unknown: 'Unknown'
+		$Unknown: 'Unknown',
+		$ChooseFile: 'Choose file'
 	};
 
 
