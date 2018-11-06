@@ -690,6 +690,26 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2demo' and TABLE_NAME=N'Signatures')
+begin
+	create table a2demo.Signatures
+	(
+		Id bigint not null identity(100, 1) constraint PK_Signatures primary key,
+		Attachment	bigint not null
+			constraint FK_Signatures_Attachment_Attachments foreign key references a2demo.Attachments(Id)
+			on delete cascade,				
+		[User] bigint not null
+			constraint FK_Signatures_User_Users foreign key references a2security.Users(Id),
+		Kind nvarchar(255),
+		[Signature] varbinary(max),
+		[UtcTime] datetime,
+		Issuer nvarchar(255),
+		[Subject] nvarchar(255),
+		Serial nvarchar(255)
+	);
+end
+go
+------------------------------------------------
 create or alter procedure a2demo.[Document.SaveAttachment]
 @UserId bigint,
 @TenantId int = null,
@@ -1640,6 +1660,22 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Waybill.Load')
+	drop procedure a2demo.[Waybill.Load]
+go
+------------------------------------------------
+create procedure a2demo.[Waybill.Load]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint = null,
+	@Kind nvarchar(255) = null
+as
+begin
+	set nocount on;
+	exec a2demo.[Document.Load] @TenantId, @UserId, @Id, @Kind;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'WaybillIn.Index')
 	drop procedure a2demo.[WaybillIn.Index]
 go
@@ -2267,6 +2303,67 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Waybill.Attachment.SaveSignature')
+	drop procedure a2demo.[Waybill.Attachment.SaveSignature]
+go
+------------------------------------------------
+create procedure a2demo.[Waybill.Attachment.SaveSignature]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@Key nvarchar(255) = null,
+	@Time datetime = null,
+	@Stream varbinary(max) = null,
+	@Kind nvarchar(255),
+	@Issuer nvarchar(255),
+	@Subject nvarchar(255),
+	@Serial nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @attId bigint;
+	declare @signid bigint;
+	select @attId = Attachment from a2demo.DocAttachments where Id = @Id;
+
+	declare @rtable table (Id bigint);
+	select @signId = Id from a2demo.Signatures where Attachment = @attId and [Kind] = @Kind;
+	if @signId is null
+	begin
+		insert into a2demo.Signatures ([User], Attachment, [Kind], [Signature], UtcTime, Issuer, [Subject], [Serial])
+		output inserted.Id into @rtable(Id)
+		values (@UserId, @attId, @Kind, @Stream, @Time, @Issuer, @Subject, @Serial);
+		select top(1) @signId = Id from @rtable;
+	end
+	else
+	begin
+		update a2demo.Signatures set [Signature] = @Stream, UtcTime=@Time, [Subject]=@Subject, [Serial]=@Serial,
+			Issuer = @Issuer, [User] = @UserId
+		where Attachment = @attId and Kind = @Kind;
+	end
+	select Id = @signId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Waybill.Attachment.LoadSignature')
+	drop procedure a2demo.[Waybill.Attachment.LoadSignature]
+go
+------------------------------------------------
+create procedure a2demo.[Waybill.Attachment.LoadSignature]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@Key nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select [Stream] = [Signature] from a2demo.Signatures where Id = @Id;
+end
+go
+------------------------------------------------
 create or alter procedure a2demo.[Empty.Load]
 @UserId bigint,
 @Id bigint = 0
@@ -2289,10 +2386,17 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
-	select [Attachment!TAttachment!MainObject] = null, [Id!!Id] = @Id, AttId=a.Id
+	declare @attId bigint;
+	select @attId = Attachment from a2demo.DocAttachments where Id=@Id;
+	select [Attachment!TAttachment!Object] = null, [Id] = @Id, [AttId!!Id] = a.Id,
+		[Signatures!TSignature!Array] = null
 	from a2demo.Attachments a 
-	inner join a2demo.DocAttachments d on d.Attachment = a.Id
-	where d.Id = @Id;
+	where Id=@attId;
+
+	select [!TSignature!Array] = null, [Id!!Id] = Id, [!TAttachment.Signatures!ParentId]=Attachment,
+	[Kind], Issuer, [Subject], [Serial]
+	from a2demo.Signatures 
+	where Attachment = @attId;
 end
 go
 ------------------------------------------------

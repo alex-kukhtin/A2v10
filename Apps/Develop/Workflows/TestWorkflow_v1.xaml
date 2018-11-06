@@ -1,5 +1,6 @@
 ﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="TestWorkflow_v1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:adi="clr-namespace:A2v10.Data.Interfaces;assembly=A2v10.Data.Interfaces"
  xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:aw="clr-namespace:A2v10.Workflow;assembly=A2v10.Workflow"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,6 +14,7 @@
   <x:Members>
     <x:Property Name="Process" Type="InArgument(aw:Process)" />
     <x:Property Name="Comment" Type="InArgument(x:String)" />
+    <x:Property Name="argument1" Type="InArgument(x:String)" />
   </x:Members>
   <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
   <sap2010:WorkflowViewState.IdRef>Apps.Crm.Workflows.TestTimer_v1_1</sap2010:WorkflowViewState.IdRef>
@@ -23,6 +25,7 @@
       <x:String>System.Linq</x:String>
       <x:String>System.Text</x:String>
       <x:String>A2v10.Workflow</x:String>
+      <x:String>A2v10.Data.Interfaces</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -35,54 +38,41 @@
       <AssemblyReference>A2v10.Workflow</AssemblyReference>
       <AssemblyReference>A2v10.Xaml</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>A2v10.Data.Interfaces</AssemblyReference>
       <AssemblyReference>Apps</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
     <Flowchart.Variables>
       <Variable x:TypeArguments="aw:RequestResult" Name="Answer" />
+      <Variable x:TypeArguments="adi:IDataModel" Name="DataModel" />
     </Flowchart.Variables>
     <Flowchart.StartNode>
-      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
-        <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" TrackAfter="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
-          <aw:Request.Inbox>
-            <InArgument x:TypeArguments="aw:Inbox">
-              <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
+      <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_7">
+        <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+          <Assign.To>
+            <OutArgument x:TypeArguments="adi:IDataModel">
+              <mca:CSharpReference x:TypeArguments="adi:IDataModel">DataModel</mca:CSharpReference>
+            </OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="adi:IDataModel">
+              <mca:CSharpValue x:TypeArguments="adi:IDataModel">Process.Model</mca:CSharpValue>
+            </InArgument>
+          </Assign.Value>
+        </Assign>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+            <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" TrackAfter="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
+              <aw:Request.Inbox>
+                <InArgument x:TypeArguments="aw:Inbox">
+                  <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
 {
   Text = "Task number one",
   Bookmark = "ForOwner",
   Action = "document/request/forOwner",
   For = "User",
   ForId = Process.Owner
-}</mca:CSharpValue>
-            </InArgument>
-          </aw:Request.Inbox>
-          <aw:Request.Result>
-            <OutArgument x:TypeArguments="aw:RequestResult">
-              <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
-            </OutArgument>
-          </aw:Request.Result>
-          <aw:Request.TrackBefore>
-            <InArgument x:TypeArguments="aw:TrackRecord">
-              <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
-		{
-  Message = "I am the track for:" + Process.ModelName + ":" + Process.ModelId
-		}</mca:CSharpValue>
-            </InArgument>
-          </aw:Request.TrackBefore>
-        </aw:Request>
-        <FlowStep.Next>
-          <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
-            <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_2">
-              <aw:Request.Inbox>
-                <InArgument x:TypeArguments="aw:Inbox">
-                  <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
-{
-  Bookmark = "Logist",
-  For = "Role",
-  ForId = Process.FindRoleId("Manager"),
-  Action = "document/request/forOwner",
-  Text = "Задача для менеджера"
 }</mca:CSharpValue>
                 </InArgument>
               </aw:Request.Inbox>
@@ -91,16 +81,47 @@
                   <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
                 </OutArgument>
               </aw:Request.Result>
+              <aw:Request.TrackBefore>
+                <InArgument x:TypeArguments="aw:TrackRecord">
+                  <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+		{
+  Message = "I am the track for:" + Process.ModelName + ":" + Process.ModelId
+		}</mca:CSharpValue>
+                </InArgument>
+              </aw:Request.TrackBefore>
             </aw:Request>
             <FlowStep.Next>
-              <FlowDecision x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
-                <FlowDecision.Condition>
-                  <mca:CSharpValue x:TypeArguments="x:Boolean">Answer.Answer == "OK"</mca:CSharpValue>
-                </FlowDecision.Condition>
-                <FlowDecision.False>
-                  <x:Reference>__ReferenceID0</x:Reference>
-                </FlowDecision.False>
-              </FlowDecision>
+              <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+                <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_2">
+                  <aw:Request.Inbox>
+                    <InArgument x:TypeArguments="aw:Inbox">
+                      <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
+{
+  Bookmark = "Logist",
+  For = "Role",
+  ForId = Process.FindRoleId("Manager"),
+  Action = "document/request/forOwner",
+  Text = "Задача для менеджера"
+}</mca:CSharpValue>
+                    </InArgument>
+                  </aw:Request.Inbox>
+                  <aw:Request.Result>
+                    <OutArgument x:TypeArguments="aw:RequestResult">
+                      <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
+                    </OutArgument>
+                  </aw:Request.Result>
+                </aw:Request>
+                <FlowStep.Next>
+                  <FlowDecision x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+                    <FlowDecision.Condition>
+                      <mca:CSharpValue x:TypeArguments="x:Boolean">Answer.Answer == "OK"</mca:CSharpValue>
+                    </FlowDecision.Condition>
+                    <FlowDecision.False>
+                      <x:Reference>__ReferenceID0</x:Reference>
+                    </FlowDecision.False>
+                  </FlowDecision>
+                </FlowStep.Next>
+              </FlowStep>
             </FlowStep.Next>
           </FlowStep>
         </FlowStep.Next>
@@ -109,10 +130,18 @@
     <x:Reference>__ReferenceID0</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID2</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAkpA3EPAgEBLwlJFgIBD0wNXhoCAQZiE2JnAgECMg85FAIBGD4PPmMCARRDD0YWAgEQTxNWFAIBC1sTW2cCAQc=</sads:DebugSymbol.Symbol>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAwtA4cBDwIBATQJPxICAShCDVwaAgEVXxFxHgIBCHUXdWsCAQI8DzxgAgEvNw83ZAIBKUUTTBQCASJRE1FnAgEcVhNZFgIBFmIXaRQCAQ9uF25rAgEJ</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="Request_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -131,41 +160,51 @@
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <av:Point x:Key="ShapeLocation">265,276.5</av:Point>
+            <av:Point x:Key="ShapeLocation">265,456.5</av:Point>
             <av:Size x:Key="ShapeSize">70,87</av:Size>
-            <av:PointCollection x:Key="FalseConnector">335,320 430,320 430,140 400,140</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">335,500 430,500 430,270 400,270</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">200,209</av:Point>
+            <av:Point x:Key="ShapeLocation">200,349</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">300,231 300,276.5</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,371 300,456.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_3">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">200,129</av:Point>
+            <av:Point x:Key="ShapeLocation">200,259</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">300,151 300,209</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,281 300,349</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="614,636">
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">179,139</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,201 300,259</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="625,636">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
             <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
             <av:Size x:Key="ShapeSize">60,75</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,129</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,139</av:PointCollection>
+            <x:Double x:Key="Width">610.895</x:Double>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Apps.Crm.Workflows.TestTimer_v1_1" sap:VirtualizedContainerService.HintSize="654,716" />
+      <sap2010:ViewStateData Id="Apps.Crm.Workflows.TestTimer_v1_1" sap:VirtualizedContainerService.HintSize="665,716" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

@@ -4612,6 +4612,26 @@ iframe.a2-iframe {
 iframe.eusign-iframe {
   width: 100%;
   border-style: none;
+  display: block;
+}
+.eusign-loader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(128, 128, 128, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.eusign-loader .big-spinner {
+  width: 64px;
+  height: 64px;
+  border: 5px solid #57a8fa;
+  border-radius: 50%;
+  border-top-color: #ccc;
+  animation: spin 1.5s linear infinite;
 }
 .frame-stack {
   position: absolute;

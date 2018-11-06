@@ -132,6 +132,7 @@
     <Content Include="Develop\Sales\Invoice\index.template.js" />
     <Content Include="Develop\Sales\Invoice\invoice.template.js" />
     <Content Include="Develop\Sales\Waybill\confirm.template.js" />
+    <Content Include="Develop\Sales\Waybill\checkeusign.template.js" />
     <Content Include="Develop\Sales\Waybill\eusign.template.js" />
     <Content Include="Develop\Sales\Waybill\index.template.js" />
     <Content Include="Develop\Sales\Waybill\waybill.template.js" />
@@ -152,6 +153,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>
@@ -434,6 +439,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Sales\Waybill\eusign.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\Waybill\checkeusign.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

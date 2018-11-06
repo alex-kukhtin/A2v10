@@ -3,22 +3,17 @@
 const utils = require('std:utils');
 const eusign = require('std:eusign');
 const http = require('std:http');
+const eventBus = require('std:eventBus');
 
 const template = {
 	properties: {
-		'TAttachment.$Password': String,
-		'TAttachment.$File': File,
-		'TAttachment.$Info': Object
+		'TRoot.$libraryLoaded': Boolean
 	},
 	events: {
 		"Model.load": modelLoad
 	},
 	commands: {
-		readKey: {
-			exec: readKey,
-			canExec: canReadKey
-		},
-		signFile
+		verifySignature
 	},
 	delegates: {
 	}
@@ -27,8 +22,13 @@ const template = {
 module.exports = template;
 
 
-function modelLoad() {
-	console.dir(eusign);
+function modelLoad(root) {
+	eusign.beginRequest();
+	console.dir(root);
+	eventBus.$on('eusign.loaded', function () {
+		root.$libraryLoaded = true;
+		eusign.endRequest();
+	});
 }
 
 async function readKey() {
@@ -49,24 +49,20 @@ function canReadKey() {
 	return att.$Password && att.$File;
 }
 
-async function signFile() {
+async function verifySignature() {
 	const vm = this.$vm;
 	const att = this.Attachment;
+	const sign = this.Attachment.Signatures[0];
+	eusign.beginRequest();
 	eusign.beginRequest();
 	try {
 		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
 		console.dir('blob:'); console.dir(blob);
-		let sign = eusign.signData(blob);
-		console.dir('signed:'); console.dir(sign);
-		let verify = eusign.verifyData(blob, sign);
+		let signature = await eusign.loadSignature('/sales/waybill/attachment', sign.Id);
+		console.dir('signature:'); console.dir(signature);
+		let verify = eusign.verifyData(blob, signature);
 		console.dir('verify:'); console.dir(verify);
-		let saved = eusign.saveSignature({
-			id: att.Id,
-			kind: 'customer',
-			signature: sign,
-			ownerInfo: verify,
-			base: '/sales/waybill/attachment'
-		});
+		alert('ok');
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));
 	} finally {

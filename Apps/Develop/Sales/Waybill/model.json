@@ -24,6 +24,12 @@
 			"model": "EUSign",
 			"template": "eusign.template",
 			"twoPhase": true
+		},
+		"checkEuSign": {
+			"view": "checkeusign.dialog",
+			"model": "EUSign",
+			"template": "checkeusign.template",
+			"twoPhase": true
 		}
 	},
 	"commands": {

@@ -79,8 +79,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Pages\euSignFrameScript_old.js" />
-    <Content Include="Pages\euSignFrame_old.html" />
     <Content Include="Pages\euSignFrameScript.js" />
     <Content Include="Pages\appPageScript.js" />
     <Content Include="Pages\appPage.html" />

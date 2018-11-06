@@ -108,6 +108,13 @@
 		"minify": { "enabled": false }
 	},
 	{
+		"outputFileName": "Scripts/iframe.js",
+		"inputFiles": [
+			"app/controllers/iframe.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
 		"outputFileName": "Scripts/commonsite.js",
 		"inputFiles": [
 			"app/app.js",

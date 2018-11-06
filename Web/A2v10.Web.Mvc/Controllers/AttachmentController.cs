@@ -12,6 +12,8 @@ using A2v10.Request;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Infrastructure;
+using System.Globalization;
+using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -59,6 +61,25 @@ namespace A2v10.Web.Mvc.Controllers
 			return Download(Base, id, true);
 		}
 
+		[HttpPost]
+		public async Task Signature(String Base, String id)
+		{
+			try
+			{
+				var url = $"/_attachment{Base}/{id}";
+				var si = await _baseController.DownloadSignature(url, SetParams);
+				if (si == null)
+					throw new RequestModelException($"Signature not found. (Id:{id})");
+
+				Response.ContentType = "application/octet-stream";
+				Response.BinaryWrite(si.Stream);
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteExceptionStatus(ex, Response);
+			}
+		}
+
 		async Task Download(String Base, String id, Boolean raw)
 		{ 
 			try
@@ -88,10 +109,51 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			catch (Exception ex)
 			{
-				_baseController.WriteHtmlException(ex, Response.Output);
+				if (raw)
+					_baseController.WriteExceptionStatus(ex, Response);
+				else
+					_baseController.WriteHtmlException(ex, Response.Output);
 			}
 		}
 
+		[HttpPost]
+		public async Task Sign(String Base, String id)
+		{
+			try
+			{
+				var url = $"/_attachment{Base}/{id}";
+				if (Request.Files.Count != 1)
+					throw new RequestModelException("There is no file here");
+				var stream = Request.Files[0].InputStream;
+				// save signature
+				//subjCN, issuer, serial, time
+				var prms = new ExpandoObject();
+				SetParams(prms);
+
+				String strTime = Request.Form["time"];
+				if (strTime != null)
+				{
+					var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					time = time.AddMilliseconds(Double.Parse(strTime));
+					prms.Set("Time", time);
+				}
+
+				prms.Set("Stream", stream);
+				prms.Set("Issuer", Request.Form["issuer"]);
+				prms.Set("Serial", Request.Form["serial"]);
+				prms.Set("Subject", Request.Form["subjCN"]);
+				prms.Set("Kind", Request.Form["kind"]);
+
+				var ri = await _baseController.SaveSignature(url, prms);
+
+				Response.ContentType = "application/json";
+				Response.Write(JsonConvert.SerializeObject(new { status = "success", id = ri.Id }));
+			}
+			catch (Exception ex)
+			{
+				_baseController.WriteExceptionStatus(ex, Response);
+			}
+		}
 
 		String Mime2Extension(String mime)
 		{

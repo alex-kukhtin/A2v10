@@ -5,9 +5,10 @@ using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using System.Collections.Generic;
 
 using A2v10.Infrastructure;
-using System.Collections.Generic;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -29,6 +30,16 @@ namespace A2v10.Request
 		public Stream Stream { get; set; }
 	}
 
+	public class ReturnSignatureInfo
+	{
+		public Int64 Id { get; set; }
+	}
+
+	public class SignatureInfo
+	{
+		public Byte[] Stream { get; set; }
+	}
+
 	public partial class BaseController
 	{
 		public async Task<AttachmentInfo> DownloadAttachment(String pathInfo, Action<ExpandoObject> setParams)
@@ -42,6 +53,30 @@ namespace A2v10.Request
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Load]";
 			return await _dbContext.LoadAsync<AttachmentInfo>(rm.source, procedure, prms);
+		}
+
+		public async Task<SignatureInfo> DownloadSignature(String pathInfo, Action<ExpandoObject> setParams)
+		{
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			// [{source}].[{schema}].[{base}.{key}.LoadSignature]
+			ExpandoObject prms = new ExpandoObject();
+			setParams?.Invoke(prms);
+			String key = rm.ModelAction.ToPascalCase();
+			prms.Set("Id", rm._id);
+			prms.Set("Key", key);
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.LoadSignature]";
+			return await _dbContext.LoadAsync<SignatureInfo>(rm.source, procedure, prms);
+		}
+
+		public async Task<ReturnSignatureInfo> SaveSignature(String pathInfo, ExpandoObject prms)
+		{
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			// [{source}].[{schema}].[{base}.{key}.SaveSignature]
+			String key = rm.ModelAction.ToPascalCase();
+			prms.Set("Id", rm._id);
+			prms.Set("Key", key);
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.SaveSignature]";
+			return await _dbContext.LoadAsync<ReturnSignatureInfo>(rm.source, procedure, prms);
 		}
 
 		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)

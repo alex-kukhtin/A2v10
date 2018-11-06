@@ -28,7 +28,15 @@ namespace A2v10.Xaml
 			var div = new TagBuilder("div");
 			div.MergeAttribute("id", context.RootId);
 			div.RenderStart(context);
+
 			Content.RenderElement(context);
+
+			var loader = new TagBuilder("div", "eusign-loader");
+			loader.MergeAttribute("v-if", "$isLoading");
+			loader.RenderStart(context);
+			new TagBuilder("div", "big-spinner").Render(context);
+			loader.RenderEnd(context);
+
 			div.RenderEnd(context);
 		}
 	}

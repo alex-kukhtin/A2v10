@@ -151,8 +151,7 @@ namespace A2v10.Xaml
 		{
 			if (Children.Count != 1)
 				throw new XamlException("Invalid dialog for two-phase rendering");
-			var eusignFrame = Children[0] as EUSignFrame;
-			if (eusignFrame == null)
+			if (!(Children[0] is EUSignFrame eusignFrame))
 				throw new XamlException("Invalid dialog for two-phase rendering");
 			eusignFrame.RenderTwoPhaseContent(context);
 		}

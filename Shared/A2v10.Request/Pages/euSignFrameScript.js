@@ -3,6 +3,9 @@
 "use strict";
 
 // global scope!
+
+const eventBus = require('std:eventBus');
+
 function EUSignCPModuleInitialized(isInitialized) {
 	console.info('EUSign library initialized');
 	var URL_XML_HTTP_PROXY_SERVICE = "/Handlers/ProxyHandler.ashx";
@@ -37,6 +40,8 @@ function EUSignCPModuleInitialized(isInitialized) {
 		settings.SetEnabled(true);
 		euSign.SetOCSPAccessInfoModeSettings(settings);
 
+		getCerts();
+
 	}
 	else {
 		alert("Криптографічну бібліотеку не ініціалізовано");
@@ -45,15 +50,35 @@ function EUSignCPModuleInitialized(isInitialized) {
 
 function EUSignCPModuleLoaded() {
 	console.info('EUSign library loaded');
+	eventBus.$emit('eusign.loaded');
 }
 
 const euSign = EUSignCP();
 const euSignUtils = Utils(euSign);
 
+function getCerts()
+{
+	const CERTS_URL = '/scripts/eusign/CACertificates.p7b';
+	const SESSION_STORAGE_NAME = 'CACertificates';
 
-(function () {
-	const popup = require('std:popup');
-	const eventBus = require('std:eventBus');
-	popup.startService();
-	eventBus.$on('closeAllPopups', popup.closeAll);
-})();
+	function _onSuccess(certs) {
+		if (euSignUtils.IsSessionStorageSupported()) {
+			euSignUtils.SetSessionStorageItem(SESSION_STORAGE_NAME, certs);
+		}
+		euSign.SaveCertificates(certs);
+	}
+
+	function _onFail(error) {
+		console.error(error);
+	}
+
+	if (euSignUtils.IsSessionStorageSupported()) {
+		let certs = euSignUtils.GetSessionStorageItem(SESSION_STORAGE_NAME, true, false);
+		if (certs) {
+			euSign.SaveCertificates(certs);
+			return;
+		}
+	}
+
+	euSignUtils.GetDataFromServerAsync(CERTS_URL, _onSuccess, _onFail, true);
+}

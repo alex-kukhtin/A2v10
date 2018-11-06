@@ -36,7 +36,10 @@ app.modules['std:http'] = function () {
 					resolve(xhrResult);
 				}
 				else if (xhr.status === 255) {
-					reject(xhr.responseText || xhr.statusText);
+					if (raw)
+						reject(xhr.statusText); // response is blob!
+					else
+						reject(xhr.responseText || xhr.statusText);
 				}
 				else
 					reject(xhr.statusText);
