@@ -137,35 +137,27 @@ namespace A2v10.Interop
 			{
 				if (!elem.Name.StartsWith(kp.Key))
 					continue;
+				Boolean fullElement = kp.Key == elem.Name;
 				switch (kp.Value)
 				{
 					case IList<Object> arr:
 						for (var i = 0; i < arr.Count; i++)
 						{
-							writer.WriteStartElement(elem.Name);
-							writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
-							Boolean written = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
-							/*
-							foreach (var av in arr[i] as IDictionary<String, Object>)
+							if (fullElement)
 							{
-								Boolean wasWritten = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
-								if (wasWritten)
-									written = true;
-								if ((kp.Key + av.Key == elem.Name) && av.Value != null)
-								{
-									var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value);
-									if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
-										WriteNil(writer);
-									else
-										writer.WriteString(typedVal);
-									writen = true;
-									break;
-								}
+								var wrapper = new ExpandoObject();
+								wrapper.Set(elem.Name, arr[i]);
+								ProcessElement(writer, elem, level + 1, wrapper, simple: false);
 							}
-							*/
-							if (!written)
-								writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
-							writer.WriteEndElement();
+							else
+							{
+								writer.WriteStartElement(elem.Name);
+								writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
+								Boolean written = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
+								if (!written)
+									writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+								writer.WriteEndElement();
+							}
 						}
 						break;
 					case IList<ExpandoObject> arrExp:
