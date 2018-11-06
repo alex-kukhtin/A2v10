@@ -2696,7 +2696,7 @@ table.data-grid > tbody > tr.bold > td {
 .toolbar.no-wrap {
   flex-wrap: nowrap;
 }
-.toolbar > .control-group.first-elem {
+.toolbar > .control-group.first-elem label {
   margin-left: 6px;
 }
 .toolbar.transparent {
