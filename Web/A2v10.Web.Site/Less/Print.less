@@ -55,7 +55,13 @@
 			border-width: 1px !important;
 
 			.input-group {
-				border-style: none !important;
+				border-style: none;
+			}
+		}
+
+		td.ctrl {
+			.input-group {
+				border-color:#999;
 			}
 		}
 	}
@@ -63,10 +69,46 @@
 	.control-group {
 		.input-group {
 			border-color: #999;
+
+			.add-on, a {
+				display: none;
+			}
+		}
+	}
+
+	.control-group.invalid {
+		.input-group {
+			border-color:#999!important;
+		}
+		.input-group:before, .input-group:after {
+			display: none !important;
+		}
+	}
+
+	table.grid-horizontal, table.grid-both td.ctrl {
+
+		.control-group, control-group.invalid {
+			.input-group {
+				border-top-style:none!important;
+				border-bottom-style:none!important;
+			}
+		}
+	}
+	table.grid-vertical, table.grid-both td.ctrl {
+
+		.control-group, control-group.invalid {
+			.input-group {
+				border-left-style: none !important;
+				border-right-style: none !important;
+			}
 		}
 	}
 
 	table.a2-table > tbody > tr > td .control-group {
 		margin:1px;
+	}
+
+	.a2-alert {
+		display:none;
 	}
 }

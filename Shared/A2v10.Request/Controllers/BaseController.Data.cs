@@ -65,7 +65,7 @@ namespace A2v10.Request
 			prms.Append(rw.parameters);
 			CheckUserState(prms);
 			IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
-			IModelHandler handler = rw.GetHookHandler(_host);
+			IModelHandler handler = rw.GetHookHandler();
 			if (handler != null)
 				await handler.AfterSave(data, model.Root);
 			WriteDataModel(model, writer);

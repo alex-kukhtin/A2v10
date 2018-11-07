@@ -10,6 +10,7 @@ using Microsoft.Owin;
 
 using A2v10.Infrastructure;
 using A2v10.Web.Identity;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Hooks
 {
@@ -71,6 +72,7 @@ namespace A2v10.Web.Mvc.Hooks
 	public class SetPhoneNumberHandler : IInvokeTarget
 	{
 		IApplicationHost _host;
+		IDbContext _dbContext;
 		readonly IOwinContext _context;
 		readonly AppUserManager _userManager;
 
@@ -81,9 +83,10 @@ namespace A2v10.Web.Mvc.Hooks
 			_userManager = _context.GetUserManager<AppUserManager>();
 		}
 
-		public void Inject(IApplicationHost host)
+		public void Inject(IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
+			_dbContext = dbContext;
 		}
 
 		public async Task<Object> InvokeAsync(Int64 UserId, String PhoneNumber, String Code)

@@ -8,5 +8,6 @@ namespace A2v10.Infrastructure
 	public interface IModelHandler
 	{
 		Task AfterSave(Object beforeData, Object afterData);
+		// Inject
 	}
 }

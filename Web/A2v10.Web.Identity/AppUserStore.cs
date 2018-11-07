@@ -122,8 +122,7 @@ namespace A2v10.Web.Identity
 				/*
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
-				// TODO: GetTenantSegment!!!!
-				await _dbContext.ExecuteAsync(null, $"[{DbSchema}].[CreateTenantUser]", createdUser);
+				await _dbContext.ExecuteAsync(_host.TenantDataSource, $"[{DbSchema}].[CreateTenantUser]", createdUser);
 				CacheUser(createdUser);
 				*/
 			}
@@ -201,8 +200,7 @@ namespace A2v10.Web.Identity
 			{
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
-				// TODO: GetTenantSegment!!!!
-				await _dbContext.ExecuteAsync(null, $"[{DbSchema}].[CreateTenantUser]", createdUser);
+				await _dbContext.ExecuteAsync(_host.TenantDataSource, $"[{DbSchema}].[CreateTenantUser]", createdUser);
 			}
 		}
 

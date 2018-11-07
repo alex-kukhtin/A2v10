@@ -120,6 +120,7 @@ namespace A2v10.Web.Config
 		}
 
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
+		public String TenantDataSource => null;
 
 		public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
 		{

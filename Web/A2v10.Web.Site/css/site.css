@@ -1831,7 +1831,7 @@ pre.a2-code {
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .select-text {
   color: #57a8fa;
-  border-bottom: 1px dotted #57a8fa;
+  border-bottom: 2px dotted #57a8fa;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .caret {
   display: none;
@@ -5211,12 +5211,43 @@ h5,
   }
   table tr .input-group,
   table td .input-group {
-    border-style: none !important;
+    border-style: none;
+  }
+  table td.ctrl .input-group {
+    border-color: #999;
   }
   .control-group .input-group {
     border-color: #999;
   }
+  .control-group .input-group .add-on,
+  .control-group .input-group a {
+    display: none;
+  }
+  .control-group.invalid .input-group {
+    border-color: #999 !important;
+  }
+  .control-group.invalid .input-group:before,
+  .control-group.invalid .input-group:after {
+    display: none !important;
+  }
+  table.grid-horizontal .control-group .input-group,
+  table.grid-both td.ctrl .control-group .input-group,
+  table.grid-horizontal control-group.invalid .input-group,
+  table.grid-both td.ctrl control-group.invalid .input-group {
+    border-top-style: none!important;
+    border-bottom-style: none!important;
+  }
+  table.grid-vertical .control-group .input-group,
+  table.grid-both td.ctrl .control-group .input-group,
+  table.grid-vertical control-group.invalid .input-group,
+  table.grid-both td.ctrl control-group.invalid .input-group {
+    border-left-style: none !important;
+    border-right-style: none !important;
+  }
   table.a2-table > tbody > tr > td .control-group {
     margin: 1px;
+  }
+  .a2-alert {
+    display: none;
   }
 }

@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using System.IO;
 using System.Text;
+using A2v10.Data.Interfaces;
+using A2v10.Interop;
 
 namespace A2v10.Request
 {
@@ -240,7 +242,7 @@ namespace A2v10.Request
 			return $"~/{Path}/{GetView()}{extension}";
 		}
 
-		public IModelHandler GetHookHandler(IApplicationHost host)
+		public IModelHandler GetHookHandler()
 		{
 			if (String.IsNullOrEmpty(hook))
 				return null;
@@ -253,13 +255,17 @@ namespace A2v10.Request
 			}
 			String assemblyName = match.Groups[2].Value;
 			String typeName = match.Groups[1].Value;
+
 			var modelHandler = System.Activator.CreateInstance(assemblyName: assemblyName, typeName: typeName,
 				ignoreCase: false, bindingAttr: 0,
-				binder: null, args: new Object[] { host },
+				binder: null, 
+				args: null,
 				culture: null,
 				activationAttributes: null).Unwrap();
 			if (!(modelHandler is IModelHandler))
 				throw new RequestModelException($"{typeName} must implement interface IModelHandler");
+
+			ClrInvoker.CallInject(modelHandler);
 			return modelHandler as IModelHandler;
 		}
 	}

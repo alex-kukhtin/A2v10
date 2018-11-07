@@ -16,14 +16,19 @@ namespace A2v10.Web.Mvc.Hooks
 {
 	public class SetPasswordHandler : IModelHandler
 	{
-		readonly IApplicationHost _host;
+		IApplicationHost _host;
 		readonly IOwinContext _context;
 		readonly AppUserManager _userManager;
-		public SetPasswordHandler(IApplicationHost host)
+
+		public SetPasswordHandler()
 		{
-			_host = host;
 			_context = HttpContext.Current.GetOwinContext();
 			_userManager = _context.GetUserManager<AppUserManager>();
+		}
+
+		public void Inject(IApplicationHost host)
+		{
+			_host = host;
 		}
 
 		public async Task AfterSave(Object beforeData, Object afterData)

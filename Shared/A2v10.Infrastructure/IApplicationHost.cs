@@ -8,6 +8,7 @@ namespace A2v10.Infrastructure
 	public interface IApplicationHost
 	{
 		IProfiler Profiler { get; }
+
 		String AppPath { get; }
 		String AppKey { get; }
 		String AppDescription { get; }
@@ -15,13 +16,17 @@ namespace A2v10.Infrastructure
 		String Theme { get; }
 		String HelpUrl { get; }
 		Boolean IsDebugConfiguration { get; }
-		Boolean IsMultiTenant { get; }
 		Boolean IsRegistrationEnabled { get; }
+
 		String UseClaims { get; }
+
+		Boolean IsMultiTenant { get; }
 		Int32? TenantId { get; set; }
-		String CatalogDataSource { get; }
 
 		String ConnectionString(String source);
+		String CatalogDataSource { get; }
+		String TenantDataSource { get; }
+
 		String MakeFullPath(Boolean bAdmin, String path, String fileName);
 		Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName);
 

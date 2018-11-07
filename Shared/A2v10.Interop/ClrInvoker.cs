@@ -18,7 +18,7 @@ namespace A2v10.Interop
 			return tp.IsValueType ? Activator.CreateInstance(tp) : null;
 		}
 
-		void CallInject(Object instance)
+		public static void CallInject(Object instance)
 		{
 			var type = instance.GetType();
 			var minject = type.GetMethod("Inject", BindingFlags.Public | BindingFlags.Instance);
