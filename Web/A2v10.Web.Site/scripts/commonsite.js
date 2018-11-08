@@ -3221,8 +3221,490 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180827-7290
-// controllers/standalone.js
+// 20180426-7167
+/*components/include.js*/
+
+(function () {
+
+	const http = require('std:http');
+	const urlTools = require('std:url');
+
+	function _destroyElement(el) {
+		let fc = el.firstElementChild;
+		if (!fc) return;
+		let vue = fc.__vue__;
+		// Maybe collectionView created the wrapper!
+		if (vue && !vue.$marker)
+			vue = vue.$parent;
+		if (vue && vue.$marker()) {
+			vue.$destroy();
+		}
+	}
+
+	Vue.component('include', {
+		template: '<div :class="implClass"></div>',
+		props: {
+			src: String,
+			cssClass: String,
+			needReload: Boolean
+		},
+		data() {
+			return {
+				loading: true,
+				currentUrl: '',
+				_needReload: true
+			};
+		},
+		methods: {
+			loaded(ok) {
+				this.loading = false;
+			},
+			requery() {
+				if (this.currentUrl) {
+					// Do not set loading. Avoid blinking
+					this.__destroy();
+					http.load(this.currentUrl, this.$el).then(this.loaded);
+				}
+			},
+			__destroy() {
+				//console.warn('include has been destroyed');
+				_destroyElement(this.$el);
+			}
+		},
+		computed: {
+			implClass() {
+				return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
+			}
+		},
+		mounted() {
+			//console.warn('include has been mounted');
+			if (this.src) {
+				this.currentUrl = this.src;
+				http.load(this.src, this.$el).then(this.loaded);
+			}
+		},
+		destroyed() {
+			this.__destroy(); // and for dialogs too
+		},
+		watch: {
+			src: function (newUrl, oldUrl) {
+				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+					// Only the search has changed. No need to reload.
+					this.currentUrl = newUrl;
+				}
+				else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
+					// Id has changed after save. No need to reload.
+					this.currentUrl = newUrl;
+				} else if (urlTools.idOrCopyChanged(newUrl, oldUrl)) {
+					// Id has changed after save. No need to reload.
+					this.currentUrl = newUrl;
+				}
+				else {
+					this.loading = true; // hides the current view
+					this.currentUrl = newUrl;
+					this.__destroy();
+					http.load(newUrl, this.$el).then(this.loaded);
+				}
+			},
+			needReload(val) {
+				// works like a trigger
+				if (val) this.requery();
+			}
+		}
+	});
+
+
+	Vue.component('a2-include', {
+		template: '<div class="a2-include"></div>',
+		props: {
+			source: String,
+			arg: undefined
+		},
+		data() {
+			return {
+				needLoad: 0
+			};
+		},
+		methods: {
+			__destroy() {
+				//console.warn('include has been destroyed');
+				_destroyElement(this.$el);
+			},
+			loaded() {
+
+			},
+			makeUrl() {
+				let arg = this.arg || '0';
+				return urlTools.combine('_page', this.source, arg);
+			},
+			load() {
+				let url = this.makeUrl();
+				this.__destroy();
+				http.load(url, this.$el).then(this.loaded);
+			}
+		},
+		watch: {
+			source(newVal, oldVal) {
+				//console.warn(`source changed ${newVal}, ${oldVal}`);
+				this.needLoad += 1;
+			},
+			arg(newVal, oldVal) {
+				//console.warn(`arg changed ${newVal}, ${oldVal}`);
+				this.needLoad += 1;
+			},
+			needLoad() {
+				//console.warn(`load iteration: ${this.needLoad}`);
+				this.load();
+			}
+		},
+		mounted() {
+			if (this.source) {
+				this.currentUrl = this.makeUrl(this.source);
+				http.load(this.currentUrl, this.$el).then(this.loaded);
+			}
+		},
+		destroyed() {
+			this.__destroy(); // and for dialogs too
+		}
+	});
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181103-7342
+// components/modal.js
+
+
+/*
+			<ul v-if="hasList">
+				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
+			</ul>
+ */
+
+(function () {
+
+	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
+	const utils = require('std:utils');
+
+	const modalTemplate = `
+<div class="modal-window" @keydown.tab="tabPress">
+	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+	<div v-else class="modal-body">
+		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
+		<div :class="bodyClass">
+			<i v-if="hasIcon" :class="iconClass" />
+			<div class="modal-body-content">
+				<div v-html="messageText()" />
+				<ul v-if="hasList" class="modal-error-list">
+					<li v-for="(itm, ix) in dialog.list" :key="ix" v-text="itm"/>
+				</ul>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"/>
+		</div>
+	</div>
+</div>
+`;
+
+	const setWidthComponent = {
+		inserted(el, binding) {
+			// TODO: width or cssClass???
+			//alert('set width-created:' + binding.value);
+			// alert(binding.value.cssClass);
+			let mw = el.closest('.modal-window');
+			if (mw) {
+				if (binding.value.width)
+					mw.style.width = binding.value.width;
+				if (binding.value.cssClass)
+					mw.classList.add(binding.value.cssClass);
+			}
+			//alert(el.closest('.modal-window'));
+		}
+	};
+
+	const dragDialogDirective = {
+		inserted(el, binding) {
+
+			const mw = el.closest('.modal-window');
+			if (!mw)
+				return;
+			const opts = {
+				down: false,
+				init: { x: 0, y: 0, cx: 0, cy: 0 },
+				offset: { x: 0, y: 0 }
+			};
+
+			function onMouseDown(event) {
+				opts.down = true;
+				opts.offset.x = event.pageX;
+				opts.offset.y = event.pageY;
+				const cs = window.getComputedStyle(mw);
+				opts.init.x = Number.parseFloat(cs.marginLeft);
+				opts.init.y = Number.parseFloat(cs.marginTop);
+				opts.init.cx = Number.parseFloat(cs.width);
+				opts.init.cy = Number.parseFloat(cs.height);
+				document.addEventListener('mouseup', onRelease, false);
+				document.addEventListener('mousemove', onMouseMove, false);
+			}
+
+			function onRelease(event) {
+				opts.down = false;
+				document.removeEventListener('mouseup', onRelease);
+				document.removeEventListener('mousemove', onMouseMove);
+			}
+
+			function onMouseMove(event) {
+				if (!opts.down)
+					return;
+				let dx = event.pageX - opts.offset.x;
+				let dy = event.pageY - opts.offset.y;
+				let mx = opts.init.x + dx;
+				let my = opts.init.y + dy;
+				// fit
+				let maxX = window.innerWidth - opts.init.cx;
+				let maxY = window.innerHeight - opts.init.cy;
+				if (my < 0) my = 0;
+				if (mx < 0) mx = 0;
+				if (mx > maxX) mx = maxX;
+				//if (my > maxY) my = maxY; // any value available
+				//console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
+				mw.style.marginLeft = mx + 'px';
+				mw.style.marginTop = my + 'px';
+			}
+
+			el.addEventListener('mousedown', onMouseDown, false);
+		}
+	};
+
+	Vue.directive('drag-window', dragDialogDirective);
+
+	Vue.directive('modal-width', setWidthComponent);
+
+	const modalComponent = {
+		template: modalTemplate,
+		props: {
+			dialog: Object
+		},
+		data() {
+			// always need a new instance of function (modal stack)
+			return {
+				keyUpHandler: function () {
+					// escape
+					if (event.which === 27) {
+						eventBus.$emit('modalClose', false);
+						event.stopPropagation();
+						event.preventDefault();
+					}
+				}
+			};
+		},
+		methods: {
+			modalClose(result) {
+				eventBus.$emit('modalClose', result);
+			},
+			messageText() {
+				return utils.text.sanitize(this.dialog.message);
+			},
+			tabPress(event) {
+				function createThisElems() {
+					let qs = document.querySelectorAll('.modal-body [tabindex]');
+					let ea = [];
+					for (let i = 0; i < qs.length; i++) {
+						//TODO: check visibilty!
+						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
+					}
+					ea = ea.sort((a, b) => a.ti > b.ti);
+					//console.dir(ea);
+					return ea;
+				}
+
+
+				if (this._tabElems === undefined) {
+					this._tabElems = createThisElems();
+				}
+				if (!this._tabElems || !this._tabElems.length)
+					return;
+				let back = event.shiftKey;
+				let lastItm = this._tabElems.length - 1;
+				let maxIndex = this._tabElems[lastItm].ti;
+				let aElem = document.activeElement;
+				let ti = +aElem.getAttribute("tabindex");
+				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
+				if (ti === 0) {
+					event.preventDefault();
+					return;
+				}
+				if (back) {
+					if (ti === 1) {
+						event.preventDefault();
+						this._tabElems[lastItm].el.focus();
+					}
+				} else {
+					if (ti === maxIndex) {
+						event.preventDefault();
+						this._tabElems[0].el.focus();
+					}
+				}
+			}
+		},
+		computed: {
+			isInclude: function () {
+				return !!this.dialog.url;
+			},
+			hasIcon() {
+				return !!this.dialog.style;
+			},
+			title: function () {
+				// todo localization
+				if (this.dialog.title)
+					return this.dialog.title;
+				return this.dialog.style === 'confirm' ? locale.$Confirm :
+					this.dialog.style === 'info' ? locale.$Message : locale.$Error;
+			},
+			bodyClass() {
+				return 'modal-body ' + (this.dialog.style || '');
+			},
+			iconClass() {
+				let ico = this.dialog.style;
+				if (ico === 'info')
+					ico = 'info-blue';
+				return "ico ico-" + ico;
+			},
+			hasList() {
+				return this.dialog.list && this.dialog.list.length;
+			},
+			buttons: function () {
+				//console.warn(this.dialog.style);
+				let okText = this.dialog.okText || locale.$Ok;
+				let cancelText = this.dialog.cancelText || locale.$Cancel;
+				if (this.dialog.buttons)
+					return this.dialog.buttons;
+				else if (this.dialog.style === 'alert')
+					return [{ text: okText, result: false, tabindex:1 }];
+				else if (this.dialog.style === 'info')
+					return [{ text: okText, result: false, tabindex:1 }];
+				return [
+					{ text: okText, result: true, tabindex:2 },
+					{ text: cancelText, result: false, tabindex:1 }
+				];
+			}
+		},
+		created() {
+			document.addEventListener('keyup', this.keyUpHandler);
+			if (document.activeElement)
+				document.activeElement.blur();
+		},
+		mounted() {
+		},
+		destroyed() {
+			document.removeEventListener('keyup', this.keyUpHandler);
+		}
+	};
+
+	app.components['std:modal'] = modalComponent;
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20180416-7158
+// components/toastr.js
+
+
+(function () {
+
+	const locale = window.$$locale;
+	const eventBus = require('std:eventBus');
+
+	const toastTemplate = `
+<li class="toast" :class="toast.style">
+	<i class="ico" :class="icoCssClass"></i>
+	<span v-text="toast.text" />
+</li>
+`;
+
+	const toastrTemplate = `
+<div class="toastr-stack" >
+	<transition-group name="list" tag="ul">
+		<a2-toast v-for="(t,k) in items" :key="k" :toast="t"></a2-toast>
+	</transition-group>
+</div>
+`;
+
+	/*
+	{{toast}}
+		<li class="toast success">
+			<i class="ico ico-check"></i><span>i am the toast 1 (11)</span>
+		</li>
+		<li class="toast warning">
+			<i class="ico ico-warning-outline"></i><span>i am the toast warning (test for bundle)</span>
+		</li>
+		<li class="toast info">
+			<i class="ico ico-info-outline"></i><span>Документ сохранен успешно и записан в базу данных!</span>
+		</li>
+		<li class="toast danger">
+			<i class="ico ico-error-outline-nocolor"></i><span>Документ сохранен c ошибкой. Проверьте все, что можно</span>
+		</li>
+	 */
+
+	const toastComponent = {
+		template: toastTemplate,
+		props: {
+			toast: Object
+		},
+		computed: {
+			icoCssClass() {
+				switch (this.toast.style) {
+					case 'success' : return 'ico-check';
+					case 'danger':
+					case 'error':
+						return 'ico-error-outline-nocolor';
+					case 'warning': return 'ico-warning-outline';
+					case 'info': return 'ico-info-outline';
+				}
+				return 'ico-dot';
+			}
+		}
+	};
+
+	const toastrComponent = {
+		template: toastrTemplate,
+		components: {
+			'a2-toast': toastComponent
+		},
+		props: {
+		},
+		data() {
+			return {
+				items: [],
+				currentIndex: 0
+			};
+		},
+		methods: {
+			showToast(toast) {
+				toast.$index = ++this.currentIndex;
+				this.items.unshift(toast);
+
+				setTimeout(() => {
+					this.removeToast(toast.$index);
+				}, 2000);
+			},
+			removeToast(tstIndex) {
+				let ix = this.items.findIndex(x => x.$index === tstIndex);
+				if (ix === -1) return;
+				this.items.splice(ix, 1);
+			}
+		},
+		created() {
+			eventBus.$on('toast', this.showToast);
+		}
+	};
+
+	app.components['std:toastr'] = toastrComponent;
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181108-7350
+// standalone/controller.js
 
 (function () {
 
@@ -3245,6 +3727,18 @@ Vue.component('a2-pager', {
 			}
 		}
 		return ra.length ? ra : null;
+	}
+
+	function __runDialog(url, arg, query, cb) {
+		return new Promise(function (resolve, reject) {
+			const dlgData = { promise: null, data: arg, query: query };
+			eventBus.$emit('modal', url, dlgData);
+			dlgData.promise.then(function (result) {
+				if (cb)
+					cb(result);
+				resolve(result);
+			});
+		});
 	}
 
 	const standalone = Vue.extend({
@@ -3568,6 +4062,25 @@ Vue.component('a2-pager', {
 				return root._delegate_(name);
 			},
 
+			$attachment(url, arg, opts) {
+				const root = window.$$rootUrl;
+				let cmd = opts && opts.export ? 'export' : 'show';
+				let id = arg;
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
+				let attUrl = urltools.combine(root, 'attachment', cmd, id);
+				let qry = { base: url };
+				attUrl = attUrl + urltools.makeQueryString(qry);
+				if (opts && opts.newWindow)
+					window.open(attUrl, '_blank');
+				else
+					window.location.assign(attUrl);
+			},
+
+			$showDialog(url, arg, query) {
+				return __runDialog(url, arg, query);
+			},
+
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
 			},
@@ -3630,4 +4143,112 @@ Vue.component('a2-pager', {
 	};
 
 	app.components['standaloneController'] = standalone;
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181108-7350
+// standalone/shell.js
+
+(function () {
+
+	const eventBus = require('std:eventBus');
+	const modal = component('std:modal');
+	const toastr = component('std:toastr');
+	const urlTools = require('std:url');
+	const utils = require('std:utils');
+	const locale = window.$$locale;
+
+
+	const a2MainView = {
+		template: `
+<div class="main-view">
+	<div class="modal-wrapper" v-for="dlg in modals">
+		<a2-modal :dialog="dlg"></a2-modal>
+	</div>
+	<div class="fade" :class="{show: hasModals, 'modal-backdrop': hasModals}"/>
+	<a2-toastr></a2-toastr>
+</div>`,
+		components: {
+			'a2-modal': modal,
+			'a2-toastr': toastr
+		},
+		props: {
+		},
+		data() {
+			return {
+				requestsCount: 0,
+				modals: []
+			};
+		},
+		computed: {
+			hasModals() { return this.modals.length > 0; }
+		},
+		created() {
+
+			let me = this;
+			eventBus.$on('beginRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount += 1;
+			});
+			eventBus.$on('endRequest', function () {
+				if (me.hasModals)
+					return;
+				me.requestsCount -= 1;
+			});
+
+			eventBus.$on('modal', function (modal, prms) {
+				let id = utils.getStringId(prms ? prms.data : null);
+				let raw = prms && prms.raw;
+				let root = window.$$rootUrl;
+				let url = urlTools.combine(root, '/data/dialog', modal, id);
+				if (raw)
+					url = urlTools.combine(root, modal, id);
+				//url = store.replaceUrlQuery(url, prms.query);  // TODO: убрать store????
+				let dlg = { title: "dialog", url: url, prms: prms.data };
+				dlg.promise = new Promise(function (resolve, reject) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
+
+
+			eventBus.$on('modalClose', function (result) {
+				let dlg = me.modals.pop();
+				if (result)
+					dlg.resolve(result);
+			});
+
+			eventBus.$on('modalCloseAll', function () {
+				while (me.modals.length) {
+					let dlg = me.modals.pop();
+					dlg.resolve(false);
+				}
+			});
+
+			eventBus.$on('confirm', function (prms) {
+				let dlg = prms.data;
+				dlg.promise = new Promise(function (resolve) {
+					dlg.resolve = resolve;
+				});
+				prms.promise = dlg.promise;
+				me.modals.push(dlg);
+			});
+
+		}
+	};
+
+	new Vue({
+		el: "#shell",
+		components: {
+			'a2-main-view': a2MainView
+		},
+		data() {
+			return {
+			};
+		},
+		created() {
+		}
+	});
 })();

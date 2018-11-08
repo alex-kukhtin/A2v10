@@ -1,0 +1,10 @@
+﻿{
+	"schema": "a2demo",
+	"model": "Site",
+	"actions": {
+		"index": {
+			"model": "",
+			"view": "index.view"
+		}
+	}
+}

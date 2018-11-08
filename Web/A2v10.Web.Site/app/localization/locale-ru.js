@@ -7,8 +7,7 @@
 
 (function () {
 
-
-	const locale = {
+	window.$$locale = {
 		$Locale: 'ru-RU',
 		$Ok: 'OK',
 		$Cancel: 'Отмена',
@@ -61,8 +60,4 @@
 		$Unknown: 'Не указано',
 		$ChooseFile: 'Выберите файл'
 	};
-
-
-	window.$$locale = locale;
-
 })();

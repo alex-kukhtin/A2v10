@@ -1,5 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using System;
+using System.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -14,6 +16,8 @@ namespace A2v10.Web.Mvc.Start
 			routes.IgnoreRoute("Scripts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("favicon.ico");
+
+			var siteMode = ConfigurationManager.AppSettings["siteMode"];
 
 			routes.MapRoute(
 				name: "Account",
@@ -57,6 +61,14 @@ namespace A2v10.Web.Mvc.Start
 				defaults: new { controller = "Static", action = "Default" }
 			);
 
+			if (siteMode == "site")
+				RegisterSiteRoutes(routes);
+			else
+				RegisterAppRoutes(routes);
+		}
+
+		static void RegisterAppRoutes(RouteCollection routes)
+		{
 			routes.MapRoute(
 				name: "Default",
 				url: "{*pathInfo}",
@@ -65,5 +77,17 @@ namespace A2v10.Web.Mvc.Start
 				namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
 			);
 		}
+
+		static void RegisterSiteRoutes(RouteCollection routes)
+		{
+			routes.MapRoute(
+				name: "Default",
+				url: "{*pathInfo}",
+				defaults: new { controller = "Site", action = "Default" },
+				/*avoid duplicate controller names*/
+				namespaces: new[] { "A2v10.Web.Mvc.Controllers" }
+			);
+		}
+
 	}
 }

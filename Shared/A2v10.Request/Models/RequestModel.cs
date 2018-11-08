@@ -67,6 +67,7 @@ namespace A2v10.Request
 		public Boolean index;
 		public Boolean copy;
 		public String template;
+		public String script;
 		public ExpandoObject parameters;
 
 		[JsonIgnore]

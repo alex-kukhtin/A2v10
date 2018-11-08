@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180827-7290
-// controllers/standalone.js
+// 20181108-7350
+// standalone/controller.js
 
 (function () {
 
@@ -24,6 +24,18 @@
 			}
 		}
 		return ra.length ? ra : null;
+	}
+
+	function __runDialog(url, arg, query, cb) {
+		return new Promise(function (resolve, reject) {
+			const dlgData = { promise: null, data: arg, query: query };
+			eventBus.$emit('modal', url, dlgData);
+			dlgData.promise.then(function (result) {
+				if (cb)
+					cb(result);
+				resolve(result);
+			});
+		});
 	}
 
 	const standalone = Vue.extend({
@@ -345,6 +357,25 @@
 			$delegate(name) {
 				const root = this.$data;
 				return root._delegate_(name);
+			},
+
+			$attachment(url, arg, opts) {
+				const root = window.$$rootUrl;
+				let cmd = opts && opts.export ? 'export' : 'show';
+				let id = arg;
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
+				let attUrl = urltools.combine(root, 'attachment', cmd, id);
+				let qry = { base: url };
+				attUrl = attUrl + urltools.makeQueryString(qry);
+				if (opts && opts.newWindow)
+					window.open(attUrl, '_blank');
+				else
+					window.location.assign(attUrl);
+			},
+
+			$showDialog(url, arg, query) {
+				return __runDialog(url, arg, query);
 			},
 
 			__beginRequest() {

@@ -9,7 +9,7 @@
 		},
 		"edit": {
 			"model": "Document",
-			"view": "waybill.view",
+			"view": "waybill{{Document.Version}}.view",
 			"template": "waybill.template"
 		}
 	},

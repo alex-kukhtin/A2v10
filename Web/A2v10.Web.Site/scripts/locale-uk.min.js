@@ -7,8 +7,7 @@
 
 (function () {
 
-
-	const locale = {
+	window.$$locale = {
 		$Locale: 'uk-UA',
 		$Ok: 'OK',
 		$Cancel: 'Скасувати',
@@ -61,8 +60,5 @@
 		$Unknown: 'Не вказано',
 		$ChooseFile: 'Оберіть файл'
 	};
-
-
-	window.$$locale = locale;
 
 })();

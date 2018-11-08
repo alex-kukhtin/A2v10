@@ -7,8 +7,7 @@
 
 (function () {
 
-
-	const locale = {
+	window.$$locale = {
 		$Locale: 'en-US',
 		$Ok: 'OK',
 		$Cancel: 'Cancel',
@@ -61,8 +60,5 @@
 		$Unknown: 'Unknown',
 		$ChooseFile: 'Choose file'
 	};
-
-
-	window.$$locale = locale;
 
 })();

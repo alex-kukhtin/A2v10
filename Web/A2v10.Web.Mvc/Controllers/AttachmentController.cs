@@ -19,10 +19,9 @@ namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
 	[ExecutingFilter]
-
 	public class AttachmentController : Controller
 	{
-		A2v10.Request.BaseController _baseController = new BaseController();
+		A2v10.Request.AttachmentController _baseController = new A2v10.Request.AttachmentController();
 
 		public AttachmentController()
 		{
@@ -32,134 +31,33 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 
 		[HttpGet]
-		public async Task Show(String Base, String id)
+		public Task Show(String Base, String id)
 		{
-			try
-			{
-				var url = $"/_attachment{Base}/{id}";
-				var ai = await _baseController.DownloadAttachment(url, SetParams);
-				if (ai == null)
-					throw new RequestModelException($"Attachment not found. (Id:{id})");
-				Response.ContentType = ai.Mime;
-				Response.BinaryWrite(ai.Stream);
-			}
-			catch (Exception ex)
-			{
-				_baseController.WriteHtmlException(ex, Response.Output);
-			}
+			return _baseController.Show(Base, id, Response, SetParams);
 		}
 
 		[HttpGet]
 		public Task Export(String Base, String id)
 		{
-			return Download(Base, id, false);
+			return _baseController.Download(Base, id, false, Response, SetParams);
 		}
 
 		[HttpPost]
 		public Task Raw(String Base, String id)
 		{
-			return Download(Base, id, true);
+			return _baseController.Download(Base, id, true, Response, SetParams);
 		}
 
 		[HttpPost]
-		public async Task Signature(String Base, String id)
+		public Task Signature(String Base, String id)
 		{
-			try
-			{
-				var url = $"/_attachment{Base}/{id}";
-				var si = await _baseController.DownloadSignature(url, SetParams);
-				if (si == null)
-					throw new RequestModelException($"Signature not found. (Id:{id})");
-
-				Response.ContentType = "application/octet-stream";
-				Response.BinaryWrite(si.Stream);
-			}
-			catch (Exception ex)
-			{
-				_baseController.WriteExceptionStatus(ex, Response);
-			}
-		}
-
-		async Task Download(String Base, String id, Boolean raw)
-		{ 
-			try
-			{
-				var url = $"/_attachment{Base}/{id}";
-				var ai = await _baseController.DownloadAttachment(url, SetParams);
-				if (ai == null)
-					throw new RequestModelException($"Attachment not found. (Id:{id})");
-
-				if (raw)
-				{
-					Response.ContentType = "application/octet-stream";
-				}
-				else
-				{
-					Response.ContentType = raw ? "application/octet-stream" : ai.Mime;
-					String repName = ai.Name;
-					if (String.IsNullOrEmpty(repName))
-						repName = "Attachment";
-					var cdh = new ContentDispositionHeaderValue("attachment")
-					{
-						FileNameStar = _baseController.Localize(repName) + Mime2Extension(ai.Mime)
-					};
-					Response.Headers.Add("Content-Disposition", cdh.ToString());
-				}
-				Response.BinaryWrite(ai.Stream);
-			}
-			catch (Exception ex)
-			{
-				if (raw)
-					_baseController.WriteExceptionStatus(ex, Response);
-				else
-					_baseController.WriteHtmlException(ex, Response.Output);
-			}
+			return _baseController.Signature(Base, id, Response, SetParams);
 		}
 
 		[HttpPost]
-		public async Task Sign(String Base, String id)
+		public Task Sign(String Base, String id)
 		{
-			try
-			{
-				var url = $"/_attachment{Base}/{id}";
-				if (Request.Files.Count != 1)
-					throw new RequestModelException("There is no file here");
-				var stream = Request.Files[0].InputStream;
-				// save signature
-				//subjCN, issuer, serial, time
-				var prms = new ExpandoObject();
-				SetParams(prms);
-
-				String strTime = Request.Form["time"];
-				if (strTime != null)
-				{
-					var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-					time = time.AddMilliseconds(Double.Parse(strTime));
-					prms.Set("Time", time);
-				}
-
-				prms.Set("Stream", stream);
-				prms.Set("Issuer", Request.Form["issuer"]);
-				prms.Set("Serial", Request.Form["serial"]);
-				prms.Set("Subject", Request.Form["subjCN"]);
-				prms.Set("Kind", Request.Form["kind"]);
-
-				var ri = await _baseController.SaveSignature(url, prms);
-
-				Response.ContentType = "application/json";
-				Response.Write(JsonConvert.SerializeObject(new { status = "success", id = ri.Id }));
-			}
-			catch (Exception ex)
-			{
-				_baseController.WriteExceptionStatus(ex, Response);
-			}
-		}
-
-		String Mime2Extension(String mime)
-		{
-			if (mime.ToLowerInvariant().EndsWith("pdf"))
-				return ".pdf";
-			return String.Empty;
+			return _baseController.Sign(Base, id, Request, Response, SetParams);
 		}
 
 		void SetParams(ExpandoObject prms)

@@ -41,6 +41,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AttachmentController.cs" />
     <Compile Include="Controllers\BaseController.EUSign.cs" />
     <Compile Include="Controllers\BaseController.Invoke.cs" />
     <Compile Include="Controllers\BaseController.Standalone.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Controllers\BaseController.Layout.cs" />
     <Compile Include="Controllers\BaseController.Attachments.cs" />
     <Compile Include="Controllers\BaseController.Upload.cs" />
+    <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Helpers\HostHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="ResourceHelper.cs" />

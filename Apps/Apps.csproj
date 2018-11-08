@@ -60,6 +60,8 @@
     <None Include="Develop\Document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="VueSite\blog\model.json" />
+    <None Include="VueSite\index\model.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\model.json" />
@@ -95,6 +97,10 @@
     <Content Include="Develop\Agent\editCustomer.template.js" />
     <Content Include="Develop\Agent\editFolder.template.js" />
     <Content Include="Develop\Agent\editSupplier.template.js" />
+    <Content Include="VueSite\blog\blog.html" />
+    <Content Include="VueSite\blog\blog.js" />
+    <Content Include="VueSite\index\index.view.html" />
+    <Content Include="VueSite\layout.html" />
     <Content Include="Develop\Catalog\Buildings\index.view.html" />
     <Content Include="Develop\Catalog\Customers\edit.template.js" />
     <Content Include="Develop\Catalog\Customers\index.template.js" />
