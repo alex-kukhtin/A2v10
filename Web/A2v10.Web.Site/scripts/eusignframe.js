@@ -1541,467 +1541,6 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
-// components/collectionview.js
-
-/*
-TODO:
-11. GroupBy
-*/
-
-(function () {
-
-
-	const log = require('std:log');
-	const utils = require('std:utils');
-	const period = require('std:period');
-
-	const DEFAULT_PAGE_SIZE = 20;
-
-	function getModelInfoProp(src, propName) {
-		if (!src) return undefined;
-		let mi = src.$ModelInfo;
-		if (!mi) return undefined;
-		return mi[propName];
-	}
-
-	function setModelInfoProp(src, propName, value) {
-		if (!src) return;
-		let mi = src.$ModelInfo;
-		if (!mi) return;
-		mi[propName] = value;
-	}
-
-	function makeNewQueryFunc(that) {
-		let nq = { dir: that.dir, order: that.order, offset: that.offset };
-		for (let x in that.filter) {
-			let fVal = that.filter[x];
-			if (period.isPeriod(fVal)) {
-				nq[x] = fVal.format('DateUrl');
-			}
-			else if (utils.isDate(fVal)) {
-				nq[x] = utils.format(fVal, 'DateUrl');
-			}
-			else if (utils.isObjectExact(fVal)) {
-				if (!('Id' in fVal)) {
-					console.error('The object in the Filter does not have Id property');
-				}
-				nq[x] = fVal.Id ? fVal.Id : undefined;
-			}
-			else if (fVal) {
-				nq[x] = fVal;
-			}
-			else {
-				nq[x] = undefined;
-			}
-		}
-		return nq;
-	}
-
-	function modelInfoToFilter(q, filter) {
-		if (!q) return;
-		for (let x in filter) {
-			if (x in q) {
-				let iv = filter[x];
-				if (period.isPeriod(iv)) {
-					filter[x] = iv.fromUrl(q[x]);
-				}
-				else if (utils.isDate(iv)) {
-					filter[x] = utils.date.tryParse(q[x]);
-				}
-				else if (utils.isObjectExact(iv)) 
-					iv.Id = q[x];
-				else {
-					filter[x] = q[x];
-				}
-			}
-		}
-	}
-
-	// client collection
-
-	Vue.component('collection-view', {
-		template: `
-<div>
-	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
-	</slot>
-</div>
-`,
-		props: {
-			ItemsSource: Array,
-			initialPageSize: Number,
-			initialFilter: Object,
-			initialSort: Object,
-			runAt: String,
-			filterDelegate: Function
-		},
-		data() {
-			let lq = Object.assign({}, {
-				offset: 0,
-				dir: 'asc',
-				order: ''
-			}, this.initialFilter);
-
-			return {
-				filter: this.initialFilter,
-				filteredCount: 0,
-				localQuery: lq
-			};
-		},
-		computed: {
-			pageSize() {
-				if (this.initialPageSize > 0)
-					return this.initialPageSize;
-				return -1; // invisible pager
-			},
-			dir() {
-				return this.localQuery.dir;
-			},
-			offset() {
-				return this.localQuery.offset;
-			},
-			order() {
-				return this.localQuery.order;
-			},
-			pagedSource() {
-				let s = performance.now();
-				let arr = [].concat(this.ItemsSource);
-
-				if (this.filterDelegate) {
-					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
-				}
-				// sort
-				if (this.order && this.dir) {
-					let p = this.order;
-					let d = this.dir === 'asc';
-					arr.sort((a, b) => {
-						if (a[p] === b[p])
-							return 0;
-						else if (a[p] < b[p])
-							return d ? -1 : 1;
-						return d ? 1 : -1;
-					});
-				}
-				// HACK!
-				this.filteredCount = arr.length;
-				// pager
-				if (this.pageSize > 0)
-					arr = arr.slice(this.offset, this.offset + this.pageSize);
-				arr.$origin = this.ItemsSource;
-				if (arr.indexOf(arr.$origin.$selected) === -1) {
-					// not found in target array
-					arr.$origin.$clearSelected();
-				}
-				log.time('get paged source:', s);
-				return arr;
-			},
-			sourceCount() {
-				return this.ItemsSource.length;
-			},
-			thisPager() {
-				return this;
-			},
-			pages() {
-				let cnt = this.filteredCount;
-				return Math.ceil(cnt / this.pageSize);
-			}
-		},
-		methods: {
-			$setOffset(offset) {
-				this.localQuery.offset = offset;
-			},
-			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
-			},
-			doSort(order) {
-				let nq = this.makeNewQuery();
-				if (nq.order === order)
-					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
-				else {
-					nq.order = order;
-					nq.dir = 'asc';
-				}
-				if (!nq.order)
-					nq.dir = null;
-				// local
-				this.localQuery.dir = nq.dir;
-				this.localQuery.order = nq.order;
-			},
-			makeNewQuery() {
-				return makeNewQueryFunc(this);
-			},
-			copyQueryToLocal(q) {
-				for (let x in q) {
-					let fVal = q[x];
-					if (x === 'offset')
-						this.localQuery[x] = q[x];
-					else
-						this.localQuery[x] = fVal ? fVal : undefined;
-				}
-			}
-		},
-		created() {
-			if (this.initialSort) {
-				this.localQuery.order = this.initialSort.order;
-				this.localQuery.dir = this.initialSort.dir;
-			}
-			this.$on('sort', this.doSort);
-		}
-	});
-
-
-	// server collection view
-	Vue.component('collection-view-server', {
-		template: `
-<div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
-	</slot>
-</div>
-`,
-		props: {
-			ItemsSource: Array,
-			initialFilter: Object
-		},
-
-		data() {
-			return {
-				filter: this.initialFilter,
-				lockChange: true
-			};
-		},
-
-		watch: {
-			jsonFilter: {
-				handler(newData, oldData) {
-					this.filterChanged();
-				}
-			}
-		},
-
-		computed: {
-			jsonFilter() {
-				return utils.toJson(this.filter);
-			},
-			thisPager() {
-				return this;
-			},
-			pageSize() {
-				return getModelInfoProp(this.ItemsSource, 'PageSize');
-			},
-			dir() {
-				return  getModelInfoProp(this.ItemsSource, 'SortDir');
-			},
-			order() {
-				return getModelInfoProp(this.ItemsSource, 'SortOrder');
-			},
-			offset() {
-				return getModelInfoProp(this.ItemsSource, 'Offset');
-			},
-			pages() {
-				cnt = this.sourceCount;
-				return Math.ceil(cnt / this.pageSize);
-			},
-			sourceCount() {
-				if (!this.ItemsSource) return 0;
-				return this.ItemsSource.$RowCount || 0;
-			}
-		},
-		methods: {
-			$setOffset(offset) {
-				if (this.offset === offset)
-					return;
-				setModelInfoProp(this.ItemsSource, 'Offset', offset);
-				this.reload();
-			},
-			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
-			},
-			doSort(order) {
-				if (order === this.order) {
-					let dir = this.dir === 'asc' ? 'desc' : 'asc';
-					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
-				} else {
-					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
-					setModelInfoProp(this.ItemsSource, 'SortDir', 'asc');
-				}
-				this.reload();
-			},
-			filterChanged() {
-				if (this.lockChange) return;
-				let mi = this.ItemsSource.$ModelInfo;
-				if (!mi) {
-					mi = { Filter: this.filter };
-					this.ItemsSource.$ModelInfo = mi;
-				}
-				else {
-					this.ItemsSource.$ModelInfo.Filter = this.filter;
-				}
-				if ('Offset' in mi)
-					setModelInfoProp(this.ItemsSource, 'Offset', 0);
-				this.reload();
-			},
-			reload() {
-				this.$root.$emit('cwChange', this.ItemsSource);
-			},
-			updateFilter() {
-				let mi = this.ItemsSource.$ModelInfo;
-				if (!mi) return;
-				let fi = mi.Filter;
-				if (!fi) return;
-				this.lockChange = true;
-				for (var prop in this.filter) {
-					if (prop in fi)
-						this.filter[prop] = fi[prop];
-				}
-				this.$nextTick(() => {
-					this.lockChange = false;
-				});
-			}
-		},
-		created() {
-			// get filter values from modelInfo
-			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
-			if (mi) {
-				modelInfoToFilter(mi.Filter, this.filter);
-			}
-			this.$nextTick(() => {
-				this.lockChange = false;
-			});
-			// from datagrid, etc
-			this.$on('sort', this.doSort);
-		},
-		updated() {
-			this.updateFilter();
-		}
-	});
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20180426-7166
-/*statdalony/pager.js*/
-
-Vue.component('a2-pager', {
-	props: {
-		source: Object,
-		noElements: String,
-		elements: String
-	},
-	computed: {
-		pages() {
-			return Math.ceil(this.count / this.source.pageSize);
-		},
-		currentPage() {
-			return Math.ceil(this.offset / this.source.pageSize) + 1;
-		},
-		title() {
-			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
-			if (!this.count)
-				return this.noElements;
-			return `${this.elements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> з <b>${this.count}</b>`;
-		},
-		offset() {
-			return +this.source.offset;
-		},
-		count() {
-			return +this.source.sourceCount;
-		}
-	},
-	methods: {
-		setOffset(offset) {
-			offset = +offset;
-			if (this.offset === offset)
-				return;
-			this.source.$setOffset(offset);
-		},
-		isActive(page) {
-			return page === this.currentPage;
-		},
-		click(arg, $ev) {
-			$ev.preventDefault();
-			switch (arg) {
-				case 'prev':
-					if (this.offset === 0) return;
-					this.setOffset(this.offset - this.source.pageSize);
-					break;
-				case 'next':
-					if (this.currentPage >= this.pages) return;
-					this.setOffset(this.offset + this.source.pageSize);
-					break;
-			}
-		},
-		goto(page, $ev) {
-			$ev.preventDefault();
-			let offset = (page - 1) * this.source.pageSize;
-			this.setOffset(offset);
-		}
-	},
-	render(h, ctx) {
-		if (this.source.pageSize === -1) return; // invisible
-		let contProps = {
-			class: 'pagination pagination-sm'
-		};
-		let children = [];
-		const dotsClass = { 'class': 'pagination-dots' };
-		const renderBtn = (page) => {
-			return h('li', { class: { active: this.isActive(page) }},
-				[h('a', {
-					domProps: { innerText: page },
-					on: { click: ($ev) => this.goto(page, $ev) },
-					attrs: { href:"#" }
-				})]
-			);
-		};
-		// prev
-		children.push(h('li', { class: { disabled: this.offset === 0 } },
-			[h('a', {
-				on: { click: ($ev) => this.click('prev', $ev) },
-				attrs: { 'aria-label': 'Previous', href: '#' },
-				domProps: { innerHTML: '&laquo;' }
-			})]
-		));
-		// first
-		if (this.pages > 0)
-			children.push(renderBtn(1));
-		if (this.pages > 1)
-			children.push(renderBtn(2));
-		// middle
-		let ms = Math.max(this.currentPage - 2, 3);
-		let me = Math.min(ms + 5, this.pages - 1);
-		if (me - ms < 5)
-			ms = Math.max(me - 5, 3);
-		if (ms > 3)
-			children.push(h('li', dotsClass, [h('span', null, '...')]));
-		for (let mi = ms; mi < me; ++mi) {
-			children.push(renderBtn(mi));
-		}
-		if (me < this.pages - 1)
-			children.push(h('li', dotsClass, [h('span', null, '...')]));
-		// last
-		if (this.pages > 3)
-			children.push(renderBtn(this.pages - 1));
-		if (this.pages > 2)
-			children.push(renderBtn(this.pages));
-		// next
-		children.push(h('li', {
-			class: { disabled: this.currentPage >= this.pages }
-		}, [h('a', {
-			on: { click: ($ev) => this.click('next', $ev) },
-			attrs: { 'aria-label': 'Previous', href: '#' },
-			domProps: { innerHTML: '&raquo;' }
-		})]
-		));
-
-		/*
-		children.push(h('span', { class: 'a2-pager-divider' }));
-		children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
-		*/
-		return h('ul', contProps, children);
-	}
-});
-
-
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
 // 20181104-7343
 // services/datamodel.js
 
@@ -3221,486 +2760,156 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
-/*components/include.js*/
+/*20181105-7344*/
+/* services/eusign.js */
 
-(function () {
+app.modules['std:eusign'] = function () {
 
 	const http = require('std:http');
-	const urlTools = require('std:url');
-
-	function _destroyElement(el) {
-		let fc = el.firstElementChild;
-		if (!fc) return;
-		let vue = fc.__vue__;
-		// Maybe collectionView created the wrapper!
-		if (vue && !vue.$marker)
-			vue = vue.$parent;
-		if (vue && vue.$marker()) {
-			vue.$destroy();
-		}
-	}
-
-	Vue.component('include', {
-		template: '<div :class="implClass"></div>',
-		props: {
-			src: String,
-			cssClass: String,
-			needReload: Boolean
-		},
-		data() {
-			return {
-				loading: true,
-				currentUrl: '',
-				_needReload: true
-			};
-		},
-		methods: {
-			loaded(ok) {
-				this.loading = false;
-			},
-			requery() {
-				if (this.currentUrl) {
-					// Do not set loading. Avoid blinking
-					this.__destroy();
-					http.load(this.currentUrl, this.$el).then(this.loaded);
-				}
-			},
-			__destroy() {
-				//console.warn('include has been destroyed');
-				_destroyElement(this.$el);
-			}
-		},
-		computed: {
-			implClass() {
-				return `include ${this.cssClass || ''} ${this.loading ? 'loading' : ''}`;
-			}
-		},
-		mounted() {
-			//console.warn('include has been mounted');
-			if (this.src) {
-				this.currentUrl = this.src;
-				http.load(this.src, this.$el).then(this.loaded);
-			}
-		},
-		destroyed() {
-			this.__destroy(); // and for dialogs too
-		},
-		watch: {
-			src: function (newUrl, oldUrl) {
-				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
-					// Only the search has changed. No need to reload.
-					this.currentUrl = newUrl;
-				}
-				else if (urlTools.idChangedOnly(newUrl, oldUrl)) {
-					// Id has changed after save. No need to reload.
-					this.currentUrl = newUrl;
-				} else if (urlTools.idOrCopyChanged(newUrl, oldUrl)) {
-					// Id has changed after save. No need to reload.
-					this.currentUrl = newUrl;
-				}
-				else {
-					this.loading = true; // hides the current view
-					this.currentUrl = newUrl;
-					this.__destroy();
-					http.load(newUrl, this.$el).then(this.loaded);
-				}
-			},
-			needReload(val) {
-				// works like a trigger
-				if (val) this.requery();
-			}
-		}
-	});
-
-
-	Vue.component('a2-include', {
-		template: '<div class="a2-include"></div>',
-		props: {
-			source: String,
-			arg: undefined
-		},
-		data() {
-			return {
-				needLoad: 0
-			};
-		},
-		methods: {
-			__destroy() {
-				//console.warn('include has been destroyed');
-				_destroyElement(this.$el);
-			},
-			loaded() {
-
-			},
-			makeUrl() {
-				let arg = this.arg || '0';
-				return urlTools.combine('_page', this.source, arg);
-			},
-			load() {
-				let url = this.makeUrl();
-				this.__destroy();
-				http.load(url, this.$el).then(this.loaded);
-			}
-		},
-		watch: {
-			source(newVal, oldVal) {
-				//console.warn(`source changed ${newVal}, ${oldVal}`);
-				this.needLoad += 1;
-			},
-			arg(newVal, oldVal) {
-				//console.warn(`arg changed ${newVal}, ${oldVal}`);
-				this.needLoad += 1;
-			},
-			needLoad() {
-				//console.warn(`load iteration: ${this.needLoad}`);
-				this.load();
-			}
-		},
-		mounted() {
-			if (this.source) {
-				this.currentUrl = this.makeUrl(this.source);
-				http.load(this.currentUrl, this.$el).then(this.loaded);
-			}
-		},
-		destroyed() {
-			this.__destroy(); // and for dialogs too
-		}
-	});
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20181103-7342
-// components/modal.js
-
-
-/*
-			<ul v-if="hasList">
-				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
-			</ul>
- */
-
-(function () {
-
+	const urltools = require('std:url');
+	const platform = require('std:platform');
 	const eventBus = require('std:eventBus');
-	const locale = window.$$locale;
 	const utils = require('std:utils');
 
-	const modalTemplate = `
-<div class="modal-window" @keydown.tab="tabPress">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
-	<div v-else class="modal-body">
-		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
-		<div :class="bodyClass">
-			<i v-if="hasIcon" :class="iconClass" />
-			<div class="modal-body-content">
-				<div v-html="messageText()" />
-				<ul v-if="hasList" class="modal-error-list">
-					<li v-for="(itm, ix) in dialog.list" :key="ix" v-text="itm"/>
-				</ul>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button class="btn btn-default" v-for="(btn, index) in buttons"  :key="index" @click.prevent="modalClose(btn.result)" v-text="btn.text"/>
-		</div>
-	</div>
-</div>
-`;
-
-	const setWidthComponent = {
-		inserted(el, binding) {
-			// TODO: width or cssClass???
-			//alert('set width-created:' + binding.value);
-			// alert(binding.value.cssClass);
-			let mw = el.closest('.modal-window');
-			if (mw) {
-				if (binding.value.width)
-					mw.style.width = binding.value.width;
-				if (binding.value.cssClass)
-					mw.classList.add(binding.value.cssClass);
-			}
-			//alert(el.closest('.modal-window'));
-		}
+	const EUSIGN_URL = 'eusign';
+	return {
+		loadAttachment,
+		loadSignature,
+		readKey,
+		signData,
+		verifyData,
+		saveSignature,
+		getMessage,
+		beginRequest() { eventBus.$emit('beginRequest', EUSIGN_URL); },
+		endRequest() { eventBus.$emit('endRequest', EUSIGN_URL); }
 	};
 
-	const dragDialogDirective = {
-		inserted(el, binding) {
+	function customOwnerInfo(ownerInfo, timeInfo) {
+		let rw = {
+			subjCN: ownerInfo.GetSubjCN(),
+			serial: ownerInfo.GetSerial(),
+			issuerCN: ownerInfo.GetIssuerCN(),
+			time: null
+		};
+		if (timeInfo && timeInfo.IsTimeAvail)
+			rw.time = timeInfo.GetTime();
 
-			const mw = el.closest('.modal-window');
-			if (!mw)
-				return;
-			const opts = {
-				down: false,
-				init: { x: 0, y: 0, cx: 0, cy: 0 },
-				offset: { x: 0, y: 0 }
-			};
+		return rw;
+	}
 
-			function onMouseDown(event) {
-				opts.down = true;
-				opts.offset.x = event.pageX;
-				opts.offset.y = event.pageY;
-				const cs = window.getComputedStyle(mw);
-				opts.init.x = Number.parseFloat(cs.marginLeft);
-				opts.init.y = Number.parseFloat(cs.marginTop);
-				opts.init.cx = Number.parseFloat(cs.width);
-				opts.init.cy = Number.parseFloat(cs.height);
-				document.addEventListener('mouseup', onRelease, false);
-				document.addEventListener('mousemove', onMouseMove, false);
+	function readKey(pwd, file) {
+
+		eventBus.$emit('beginRequest', EUSIGN_URL);
+
+		return new Promise(function (resolve, reject) {
+
+			let addr = ['ca.ksystems.com.ua', 'masterkey.ua', 'acskidd.gov.ua'];
+
+			function getPrivateKeyCertificatesByCMP(key, onSuccess) {
+				var keyInfo = euSign.GetKeyInfoBinary(key, pwd);
+				console.dir(keyInfo);
+				var certs = euSign.GetCertificatesByKeyInfo(keyInfo, addr);
+				console.dir(certs);
+				onSuccess(certs);
 			}
 
-			function onRelease(event) {
-				opts.down = false;
-				document.removeEventListener('mouseup', onRelease);
-				document.removeEventListener('mousemove', onMouseMove);
+			function readPrivateKey(name, key, password) {
+				getPrivateKeyCertificatesByCMP(key, function (certs) {
+					euSign.SaveCertificates(certs);
+					euSign.ReadPrivateKeyBinary(key, password);
+					const ownerInfo = euSign.GetPrivateKeyOwnerInfo();
+					console.dir(ownerInfo);
+					let rw = customOwnerInfo(ownerInfo);
+					eventBus.$emit('endRequest', EUSIGN_URL);
+					resolve(rw);
+				});
 			}
 
-			function onMouseMove(event) {
-				if (!opts.down)
-					return;
-				let dx = event.pageX - opts.offset.x;
-				let dy = event.pageY - opts.offset.y;
-				let mx = opts.init.x + dx;
-				let my = opts.init.y + dy;
-				// fit
-				let maxX = window.innerWidth - opts.init.cx;
-				let maxY = window.innerHeight - opts.init.cy;
-				if (my < 0) my = 0;
-				if (mx < 0) mx = 0;
-				if (mx > maxX) mx = maxX;
-				//if (my > maxY) my = maxY; // any value available
-				//console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
-				mw.style.marginLeft = mx + 'px';
-				mw.style.marginTop = my + 'px';
-			}
+			setTimeout(() => {
+				euSign.ReadFile(file, function (file) {
+					readPrivateKey(file.file.name, new Uint8Array(file.data), pwd);
+				}, function (error) {
+					eventBus.$emit('endRequest', EUSIGN_URL);
+					reject(error);
+				});
+			}, 20 /*???*/);
+		});
+	}
 
-			el.addEventListener('mousedown', onMouseDown, false);
-		}
-	};
 
-	Vue.directive('drag-window', dragDialogDirective);
+	function loadSignature(url, id) {
+		return loadRaw(url, id, 'signature');
+	}
 
-	Vue.directive('modal-width', setWidthComponent);
+	function loadAttachment(url, id) {
+		return loadRaw(url, id, 'raw');
+	}
 
-	const modalComponent = {
-		template: modalTemplate,
-		props: {
-			dialog: Object
-		},
-		data() {
-			// always need a new instance of function (modal stack)
-			return {
-				keyUpHandler: function () {
-					// escape
-					if (event.which === 27) {
-						eventBus.$emit('modalClose', false);
-						event.stopPropagation();
-						event.preventDefault();
+	function loadRaw(url, id, controller) {
+		return new Promise(async function (resolve, reject) {
+			let postUrl = `/attachment/${controller}/${id}` + urltools.makeQueryString({ base: url });
+			try {
+				let result = await http.post(postUrl, null, true); // raw
+				let fr = new FileReader();
+				fr.onloadend = function (evt) {
+					if (evt.target.readyState !== FileReader.DONE)
+						return;
+					let data = new Uint8Array(evt.target.result);
+					try {
+						resolve(data);
+					} catch (err) {
+						reject(err);
 					}
-				}
-			};
-		},
-		methods: {
-			modalClose(result) {
-				eventBus.$emit('modalClose', result);
-			},
-			messageText() {
-				return utils.text.sanitize(this.dialog.message);
-			},
-			tabPress(event) {
-				function createThisElems() {
-					let qs = document.querySelectorAll('.modal-body [tabindex]');
-					let ea = [];
-					for (let i = 0; i < qs.length; i++) {
-						//TODO: check visibilty!
-						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
-					}
-					ea = ea.sort((a, b) => a.ti > b.ti);
-					//console.dir(ea);
-					return ea;
-				}
-
-
-				if (this._tabElems === undefined) {
-					this._tabElems = createThisElems();
-				}
-				if (!this._tabElems || !this._tabElems.length)
-					return;
-				let back = event.shiftKey;
-				let lastItm = this._tabElems.length - 1;
-				let maxIndex = this._tabElems[lastItm].ti;
-				let aElem = document.activeElement;
-				let ti = +aElem.getAttribute("tabindex");
-				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
-				if (ti === 0) {
-					event.preventDefault();
-					return;
-				}
-				if (back) {
-					if (ti === 1) {
-						event.preventDefault();
-						this._tabElems[lastItm].el.focus();
-					}
-				} else {
-					if (ti === maxIndex) {
-						event.preventDefault();
-						this._tabElems[0].el.focus();
-					}
-				}
+				};
+				fr.readAsArrayBuffer(result);
+			} catch (err) {
+				reject(err);
 			}
-		},
-		computed: {
-			isInclude: function () {
-				return !!this.dialog.url;
-			},
-			hasIcon() {
-				return !!this.dialog.style;
-			},
-			title: function () {
-				// todo localization
-				if (this.dialog.title)
-					return this.dialog.title;
-				return this.dialog.style === 'confirm' ? locale.$Confirm :
-					this.dialog.style === 'info' ? locale.$Message : locale.$Error;
-			},
-			bodyClass() {
-				return 'modal-body ' + (this.dialog.style || '');
-			},
-			iconClass() {
-				let ico = this.dialog.style;
-				if (ico === 'info')
-					ico = 'info-blue';
-				return "ico ico-" + ico;
-			},
-			hasList() {
-				return this.dialog.list && this.dialog.list.length;
-			},
-			buttons: function () {
-				//console.warn(this.dialog.style);
-				let okText = this.dialog.okText || locale.$Ok;
-				let cancelText = this.dialog.cancelText || locale.$Cancel;
-				if (this.dialog.buttons)
-					return this.dialog.buttons;
-				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false, tabindex:1 }];
-				else if (this.dialog.style === 'info')
-					return [{ text: okText, result: false, tabindex:1 }];
-				return [
-					{ text: okText, result: true, tabindex:2 },
-					{ text: cancelText, result: false, tabindex:1 }
-				];
+		});
+	}
+
+	function signData(data) {
+		return euSign.SignData(data, false);
+	}
+
+	function verifyData(data, sign) {
+		let verify = euSign.VerifyData(data, sign);
+		let ownerInfo = verify.GetOwnerInfo();
+		let timeInfo = verify.GetTimeInfo();
+		return customOwnerInfo(ownerInfo, timeInfo);
+	}
+
+	function getMessage(err) {
+		let msg = err;
+		if (err.GetMessage)
+			msg = err.GetMessage();
+		if (utils.isDefined(err.message))
+			msg = err.message;
+		return msg;
+	}
+
+	function saveSignature(prms) {
+		return new Promise(function (resolve, reject) {
+			let formData = new FormData();
+			let postUrl = `/attachment/sign/${prms.id}` + urltools.makeQueryString({ base: prms.base });
+			formData.append("file", new Blob([prms.signature]), "blob");
+			formData.append("kind", prms.kind || '');
+			if (prms.ownerInfo) {
+				formData.append("subjCN", prms.ownerInfo.subjCN);
+				formData.append("issuer", prms.ownerInfo.issuerCN);
+				formData.append("serial", prms.ownerInfo.serial);
+				formData.append("time", prms.ownerInfo.time.getTime());
 			}
-		},
-		created() {
-			document.addEventListener('keyup', this.keyUpHandler);
-			if (document.activeElement)
-				document.activeElement.blur();
-		},
-		mounted() {
-		},
-		destroyed() {
-			document.removeEventListener('keyup', this.keyUpHandler);
-		}
-	};
+			http.upload(postUrl, formData, true).then(function (result) {
+				console.dir(result);
+				resolve(result);
+			}).catch(function(error) {
+				reject(error);
+			});
+		});
+	}
 
-	app.components['std:modal'] = modalComponent;
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20180416-7158
-// components/toastr.js
-
-
-(function () {
-
-	const locale = window.$$locale;
-	const eventBus = require('std:eventBus');
-
-	const toastTemplate = `
-<li class="toast" :class="toast.style">
-	<i class="ico" :class="icoCssClass"></i>
-	<span v-text="toast.text" />
-</li>
-`;
-
-	const toastrTemplate = `
-<div class="toastr-stack" >
-	<transition-group name="list" tag="ul">
-		<a2-toast v-for="(t,k) in items" :key="k" :toast="t"></a2-toast>
-	</transition-group>
-</div>
-`;
-
-	/*
-	{{toast}}
-		<li class="toast success">
-			<i class="ico ico-check"></i><span>i am the toast 1 (11)</span>
-		</li>
-		<li class="toast warning">
-			<i class="ico ico-warning-outline"></i><span>i am the toast warning (test for bundle)</span>
-		</li>
-		<li class="toast info">
-			<i class="ico ico-info-outline"></i><span>Документ сохранен успешно и записан в базу данных!</span>
-		</li>
-		<li class="toast danger">
-			<i class="ico ico-error-outline-nocolor"></i><span>Документ сохранен c ошибкой. Проверьте все, что можно</span>
-		</li>
-	 */
-
-	const toastComponent = {
-		template: toastTemplate,
-		props: {
-			toast: Object
-		},
-		computed: {
-			icoCssClass() {
-				switch (this.toast.style) {
-					case 'success' : return 'ico-check';
-					case 'danger':
-					case 'error':
-						return 'ico-error-outline-nocolor';
-					case 'warning': return 'ico-warning-outline';
-					case 'info': return 'ico-info-outline';
-				}
-				return 'ico-dot';
-			}
-		}
-	};
-
-	const toastrComponent = {
-		template: toastrTemplate,
-		components: {
-			'a2-toast': toastComponent
-		},
-		props: {
-		},
-		data() {
-			return {
-				items: [],
-				currentIndex: 0
-			};
-		},
-		methods: {
-			showToast(toast) {
-				toast.$index = ++this.currentIndex;
-				this.items.unshift(toast);
-
-				setTimeout(() => {
-					this.removeToast(toast.$index);
-				}, 2000);
-			},
-			removeToast(tstIndex) {
-				let ix = this.items.findIndex(x => x.$index === tstIndex);
-				if (ix === -1) return;
-				this.items.splice(ix, 1);
-			}
-		},
-		created() {
-			eventBus.$on('toast', this.showToast);
-		}
-	};
-
-	app.components['std:toastr'] = toastrComponent;
-})();
+};
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 // 20181108-7350
@@ -4163,112 +3372,4 @@ Vue.component('a2-pager', {
 	};
 
 	app.components['standaloneController'] = standalone;
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20181108-7350
-// standalone/shell.js
-
-(function () {
-
-	const eventBus = require('std:eventBus');
-	const modal = component('std:modal');
-	const toastr = component('std:toastr');
-	const urlTools = require('std:url');
-	const utils = require('std:utils');
-	const locale = window.$$locale;
-
-
-	const a2MainView = {
-		template: `
-<div class="main-view">
-	<div class="modal-wrapper" v-for="dlg in modals">
-		<a2-modal :dialog="dlg"></a2-modal>
-	</div>
-	<div class="fade" :class="{show: hasModals, 'modal-backdrop': hasModals}"/>
-	<a2-toastr></a2-toastr>
-</div>`,
-		components: {
-			'a2-modal': modal,
-			'a2-toastr': toastr
-		},
-		props: {
-		},
-		data() {
-			return {
-				requestsCount: 0,
-				modals: []
-			};
-		},
-		computed: {
-			hasModals() { return this.modals.length > 0; }
-		},
-		created() {
-
-			let me = this;
-			eventBus.$on('beginRequest', function () {
-				if (me.hasModals)
-					return;
-				me.requestsCount += 1;
-			});
-			eventBus.$on('endRequest', function () {
-				if (me.hasModals)
-					return;
-				me.requestsCount -= 1;
-			});
-
-			eventBus.$on('modal', function (modal, prms) {
-				let id = utils.getStringId(prms ? prms.data : null);
-				let raw = prms && prms.raw;
-				let root = window.$$rootUrl;
-				let url = urlTools.combine(root, '/model/dialog', modal, id);
-				if (raw)
-					url = urlTools.combine(root, modal, id);
-				//url = store.replaceUrlQuery(url, prms.query);  // TODO: убрать store????
-				let dlg = { title: "dialog", url: url, prms: prms.data };
-				dlg.promise = new Promise(function (resolve, reject) {
-					dlg.resolve = resolve;
-				});
-				prms.promise = dlg.promise;
-				me.modals.push(dlg);
-			});
-
-
-			eventBus.$on('modalClose', function (result) {
-				let dlg = me.modals.pop();
-				if (result)
-					dlg.resolve(result);
-			});
-
-			eventBus.$on('modalCloseAll', function () {
-				while (me.modals.length) {
-					let dlg = me.modals.pop();
-					dlg.resolve(false);
-				}
-			});
-
-			eventBus.$on('confirm', function (prms) {
-				let dlg = prms.data;
-				dlg.promise = new Promise(function (resolve) {
-					dlg.resolve = resolve;
-				});
-				prms.promise = dlg.promise;
-				me.modals.push(dlg);
-			});
-
-		}
-	};
-
-	new Vue({
-		el: "#shell",
-		components: {
-			'a2-main-view': a2MainView
-		},
-		data() {
-			return {
-			};
-		},
-		created() {
-		}
-	});
 })();

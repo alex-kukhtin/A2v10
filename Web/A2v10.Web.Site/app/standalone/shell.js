@@ -55,7 +55,7 @@
 				let id = utils.getStringId(prms ? prms.data : null);
 				let raw = prms && prms.raw;
 				let root = window.$$rootUrl;
-				let url = urlTools.combine(root, '/data/dialog', modal, id);
+				let url = urlTools.combine(root, '/model/dialog', modal, id);
 				if (raw)
 					url = urlTools.combine(root, modal, id);
 				//url = store.replaceUrlQuery(url, prms.query);  // TODO: убрать store????

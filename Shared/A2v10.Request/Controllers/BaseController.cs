@@ -29,7 +29,7 @@ namespace A2v10.Request
 		protected readonly IMessageService _messageService;
 		protected readonly IUserStateManager _userStateManager;
 
-		const String NO_VIEW = "\b_NO_VIEW_\b";
+		public const String NO_VIEW = "\b_NO_VIEW_\b";
 
 		public BaseController()
 		{
@@ -156,7 +156,7 @@ namespace A2v10.Request
 			return rw;
 		}
 
-		protected async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
+		protected internal async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
 		{
 			String loadProc = rw.LoadProcedure;
 			IDataModel model = null;
@@ -195,6 +195,12 @@ namespace A2v10.Request
 			}
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
+
+			if (model?.Root != null) {
+				rw.view = model.Root.Resolve(rw.view);
+				rw.template = model.Root.Resolve(rw.template);
+			}
+
 
 			if (_userStateManager != null && model != null)
 			{

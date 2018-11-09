@@ -298,7 +298,7 @@ namespace A2v10.Request.Properties {
         ///		&lt;button class=&quot;btnclose&quot; @click.prevent=&quot;$modalClose(false)&quot;&gt;&amp;#x2715;&lt;/button&gt;
         ///	&lt;/div&gt;
         ///	&lt;div class=&quot;modal-body&quot;&gt;
-        ///		&lt;iframe style=&quot;width:100%;height:600px;border:none&quot; frameborder=&quot;0&quot; :src=&quot;frameUrl&quot;&gt;&lt;/iframe&gt;
+        ///		&lt;iframe style=&quot;width:100%;height:700px;border:none&quot; frameborder=&quot;0&quot; :src=&quot;frameUrl&quot;&gt;&lt;/iframe&gt;
         ///	&lt;/div&gt;
         ///	&lt;div class=&quot;modal-footer&quot;&gt;
         ///		&lt;button class=&quot;btn a2-inline&quot; @click.prevent=&quot;$modalClose()&quot; v-settabindex&gt;@[Close]&lt;/button&gt;
@@ -313,7 +313,7 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html lang=&quot;$(Locale)&quot;&gt;
+        ///&lt;html lang=&quot;$(Locale)&quot; style=&quot;height:100%&quot;&gt;
         ///&lt;head&gt;
         ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
         ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
@@ -323,9 +323,8 @@ namespace A2v10.Request.Properties {
         ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///	&lt;div id=&quot;frame&quot; v-cloak&gt;
-        ///	&lt;/div&gt;
-        ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.min.js?v=2.5.13&quot;&gt;&lt;/s [rest of string was truncated]&quot;;.
+        ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.js?v=2.5.13&quot;&gt;&lt;/script&gt;
+        ///	&lt;script typ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string euSignFrame {
             get {
@@ -339,6 +338,9 @@ namespace A2v10.Request.Properties {
         ///&quot;use strict&quot;;
         ///
         ///// global scope!
+        ///
+        ///const eventBus = require(&apos;std:eventBus&apos;);
+        ///
         ///function EUSignCPModuleInitialized(isInitialized) {
         ///	console.info(&apos;EUSign library initialized&apos;);
         ///	var URL_XML_HTTP_PROXY_SERVICE = &quot;/Handlers/ProxyHandler.ashx&quot;;
@@ -349,8 +351,7 @@ namespace A2v10.Request.Properties {
         ///		euSign.SetCharset(&quot;UTF-16LE&quot;);
         ///		euSign.SetXMLHTTPProxyService(URL_XML_HTTP_PROXY_SERVICE);
         ///
-        ///		var settings = euSign.CreateFileStoreSettings();
-        ///		settings.SetPath [rest of string was truncated]&quot;;.
+        ///		var settings = euSig [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string euSignFrameScript {
             get {
@@ -894,6 +895,28 @@ namespace A2v10.Request.Properties {
         internal static string simpleScript {
             get {
                 return ResourceManager.GetString("simpleScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	let cm = window.$currentModule();
+        ///
+        ///	const DialogController = component(&apos;standaloneController&apos;);
+        ///
+        ///	const vm = new DialogController({
+        ///		el: &quot;$(PageGuid)&quot;,
+        ///		data: cm.dataModel
+        ///	});
+        ///})();.
+        /// </summary>
+        internal static string standaloneDialogScript {
+            get {
+                return ResourceManager.GetString("standaloneDialogScript", resourceCulture);
             }
         }
         

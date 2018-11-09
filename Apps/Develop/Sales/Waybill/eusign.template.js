@@ -8,7 +8,8 @@ const template = {
 	properties: {
 		'TAttachment.$Password': String,
 		'TAttachment.$File': File,
-		'TAttachment.$Info': Object
+		'TAttachment.$Info': Object,
+		'TAttachment.$FrameUrl'() { return '/attachment/show/' + this.Id + '?base=/sales/waybill/attachment';}
 	},
 	events: {
 		"Model.load": modelLoad

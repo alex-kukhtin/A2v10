@@ -378,6 +378,26 @@
 				return __runDialog(url, arg, query);
 			},
 
+			$modalClose(result) {
+				eventBus.$emit('modalClose', result);
+			},
+
+			$modalSaveAndClose(result, opts) {
+				if (this.$isDirty) {
+					const root = this.$data;
+					if (opts && opts.validRequired && root.$invalid) {
+						let errs = makeErrors(root.$forceValidate());
+						//console.dir(errs);
+						alert(locale.$MakeValidFirst, undefined, errs);
+						return;
+					}
+					this.$save().then((result) => eventBus.$emit('modalClose', result));
+				}
+				else
+					eventBus.$emit('modalClose', result);
+			},
+
+
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
 			},

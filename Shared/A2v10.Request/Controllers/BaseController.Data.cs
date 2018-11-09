@@ -52,10 +52,14 @@ namespace A2v10.Request
 			if (_userStateManager.IsReadOnly(userId))
 				throw new RequestModelException("UI:@[Error.DataReadOnly]");
 		}
-
-		async Task SaveData(Action<ExpandoObject> setParams, String json, TextWriter writer)
+		internal Task SaveData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+			return SaveDataObj(setParams, dataToSave, writer);
+		}
+
+		internal async Task SaveDataObj(Action<ExpandoObject> setParams, ExpandoObject dataToSave, TextWriter writer)
+		{
 			String baseUrl = dataToSave.Get<String>("baseUrl");
 			ExpandoObject data = dataToSave.Get<ExpandoObject>("data");
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
@@ -76,7 +80,7 @@ namespace A2v10.Request
 			writer.Write(JsonConvert.SerializeObject(data, StandardSerializerSettings));
 		}
 
-		async Task ReloadData(Action<ExpandoObject> setParams, String json, TextWriter writer)
+		internal async Task ReloadData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToSave.Get<String>("baseUrl");
@@ -200,7 +204,7 @@ namespace A2v10.Request
 			WriteDataModel(model, writer);
 		}
 
-		async Task LoadLazyData(Action<ExpandoObject> setParams, String json, TextWriter writer)
+		internal async Task LoadLazyData(Action<ExpandoObject> setParams, String json, TextWriter writer)
 		{
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");

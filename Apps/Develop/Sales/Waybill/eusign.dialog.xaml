@@ -4,7 +4,7 @@
 	<Dialog.Buttons>
 		<Button Content="Закрити" Command="{BindCmd Close}" />
 	</Dialog.Buttons>
-	<EUSignFrame Height="500">
+	<EUSignFrame Height="700">
 		<Block Margin="10">
 			<Grid Columns="150, 200, 120, 1*" Background="WhiteSmoke" DropShadow="Shadow1">
 				<Header Size="Small" Grid.ColSpan="4"  Grid.Row="1">Завантаження електронного ключа та зчитування сертіфікатів</Header>
@@ -21,7 +21,11 @@
 			<Grid Columns="200, 1*, 150">
 				<Button Icon="FileSignature" Content="Підписати документ" Command="{BindCmd Execute, CommandName=signFile}"/>
 			</Grid>
-			
+
+			<Block Height="300" Border="True">
+				<IFrame Source="{Bind Attachment.$FrameUrl}" />
+			</Block>
+
 			<Code Content="{Bind Attachment}" Grid.ColSpan="3" Grid.Row="3">
 
 			</Code>
