@@ -1,0 +1,33 @@
+﻿@model A2v10.Request.ViewInfo
+@{
+	var dataModel = Model.DataModel;
+	ViewBag.Title = "Home page";
+}
+<div id="@Model.PageId">
+	<div>
+		<a href="/blog">Go to the blog page</a>
+	</div>
+	<div>
+		I am the index page (RAZOR)
+	</div>
+	<div>ModelId = <span>@(dataModel.Eval<Int32>("Home.Id"))</span></div>
+
+	<div>
+		from Vue:<code v-text="Home.$ItemId"></code>
+		<input type="text" v-model="Home.Text" />
+		<button v-on:click="$exec('sayHello')">Say hello!</button>
+		<button v-on:click="$reload">Reload me</button>
+		<hr />
+		dirty: <span v-text="$isDirty"></span>
+		valid: <span v-text="Home.$valid"></span>
+	</div>
+
+	<hr />
+	<code>
+		@Model.Script
+	</code>
+</div>
+
+@section scripts {
+	@Html.RenderVueModelScript()
+}

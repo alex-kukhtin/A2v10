@@ -61,7 +61,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="VueSite\blog\model.json" />
-    <None Include="VueSite\index\model.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Catalog\Customers\model.json" />

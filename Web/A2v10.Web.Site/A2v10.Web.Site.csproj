@@ -44,10 +44,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="handlers\ProxyHandler.ashx.cs">
@@ -61,6 +82,7 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\services\eusign.js" />
+    <Content Include="app\site\controller.js" />
     <Content Include="app\standalone\collectionview.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
@@ -101,7 +123,24 @@
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\standalone\shell.js" />
+    <Content Include="App_apps\VueSite\_Layout.js" />
+    <Content Include="App_apps\VueSite\Index\index.view.cshtml" />
     <Content Include="Less\Upload.less" />
+    <Content Include="App_apps\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_apps\VueSite\_ViewStart.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_apps\VueSite\_Layout.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_apps\VueSite\Blog\index.cshtml" />
+    <Content Include="App_apps\VueSite\Index\model.json" />
+    <Content Include="App_apps\VueSite\Blog\model.json" />
+    <Content Include="App_apps\VueSite\Index\index.template.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -171,6 +210,7 @@
     <Content Include="Localization\en.xml" />
     <Content Include="Localization\ru.xml" />
     <Content Include="Localization\uk.xml" />
+    <Content Include="scripts\a2v10-vue-site.js" />
     <Content Include="scripts\commonsite.js" />
     <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\eusign.js" />

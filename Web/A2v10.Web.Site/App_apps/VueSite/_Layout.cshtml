@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>@ViewBag.Title</title>
+</head>
+<body>
+
+	<div class="nav">Navigation</div>
+
+	@RenderBody()
+
+	<script type="text/javascript" src="/scripts/vue.js?v=2.5.16"></script>
+	<script type="text/javascript" src="~/scripts/locale-uk.min.js"></script>
+	<script type="text/javascript" src="~/scripts/a2v10-vue-site.js"></script>
+
+	@RenderSection("scripts", false)
+</body>
+</html>

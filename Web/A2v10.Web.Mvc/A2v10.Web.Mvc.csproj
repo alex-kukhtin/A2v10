@@ -119,6 +119,7 @@
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\AppLinkController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Filters\ExecutingFilterAttribute.cs" />
     <Compile Include="Filters\HttpOptionsAttribute.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />

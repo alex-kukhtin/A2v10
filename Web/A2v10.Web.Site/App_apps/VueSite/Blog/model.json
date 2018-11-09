@@ -4,7 +4,7 @@
 	"actions": {
 		"index": {
 			"model": "",
-			"view": "index.view"
+			"view": "index"
 		}
 	}
 }

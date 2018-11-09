@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request.Properties;
 using Newtonsoft.Json;
@@ -20,6 +20,7 @@ namespace A2v10.Request
 		public String View;
 		public String Script;
 		public String PageId;
+		public IDataModel DataModel;
 	}
 
 	public class StandaloneController

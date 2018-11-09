@@ -33,6 +33,8 @@ namespace A2v10.Web.Config
 		}
 		public Boolean IsReadOnly(Int64 userId)
 		{
+			if (userId == 0)
+				return false;
 			if (!(HttpContext.Current.Session[_sessionKey] is UserState userState))
 				userState = SetUserState(userId);
 			return userState.ReadOnly;

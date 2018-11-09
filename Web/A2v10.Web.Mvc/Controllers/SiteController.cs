@@ -15,12 +15,11 @@ namespace A2v10.Web.Mvc.Controllers
 	{
 		private readonly A2v10.Request.SiteController _siteController = new A2v10.Request.SiteController();
 
-		public async Task Default(String pathInfo)
+		public async Task<ActionResult> Default(String pathInfo)
 		{
-			var path = pathInfo;
-			if (String.IsNullOrEmpty(path))
-				path = "index";
-			await _siteController.Render($"/_page/{path}/index/id", Response);
+			var viewInfo = await _siteController.LoadView(pathInfo);
+
+			return View(viewInfo.View, viewInfo);
 		}
 	}
 }

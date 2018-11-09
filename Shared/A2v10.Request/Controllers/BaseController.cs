@@ -156,7 +156,7 @@ namespace A2v10.Request
 			return rw;
 		}
 
-		protected internal async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
+		internal async Task<IDataModel> GetDataModelForView(RequestView rw, ExpandoObject loadPrms)
 		{
 			String loadProc = rw.LoadProcedure;
 			IDataModel model = null;
@@ -196,11 +196,12 @@ namespace A2v10.Request
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
 
-			if (model?.Root != null) {
+			if (model?.Root != null)
+			{
+				// side effect!
 				rw.view = model.Root.Resolve(rw.view);
 				rw.template = model.Root.Resolve(rw.template);
 			}
-
 
 			if (_userStateManager != null && model != null)
 			{
@@ -208,6 +209,12 @@ namespace A2v10.Request
 				if (_userStateManager.IsReadOnly(userId))
 					model.SetReadOnly();
 			}
+			return model;
+		}
+
+		protected internal async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
+		{
+			IDataModel model = await GetDataModelForView(rw, loadPrms);
 
 			String rootId = "el" + Guid.NewGuid().ToString();
 			String modelScript = null;
@@ -215,7 +222,7 @@ namespace A2v10.Request
 			String viewName = rw.GetView();
 			if (viewName == NO_VIEW)
 			{
-				modelScript = await WriteModelScriptModel(rw, model, rootId);
+				modelScript = await GetModelScriptModel(rw, model, rootId);
 				writer.Write(modelScript);
 				return;
 			}
@@ -284,7 +291,7 @@ namespace A2v10.Request
 		}
 
 
-		async Task<String> WriteModelScriptModel(RequestView rw, IDataModel model, String rootId)
+		internal async Task<String> GetModelScriptModel(RequestView rw, IDataModel model, String rootId)
 		{
 			StringBuilder output = new StringBuilder();
 			String dataModelText = "null";
