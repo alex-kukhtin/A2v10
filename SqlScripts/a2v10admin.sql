@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 17 oct 2018
-module version : 7167
+Last updated : 11 nov 2018
+module version : 7168
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7167);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7168);
 else
-	update a2sys.Versions set [Version] = 7167 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7168 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -110,7 +110,7 @@ begin
 		set @Fragment = N'%' + upper(@Fragment) + N'%';
 
 	-- list of users
-	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, IsAdmin, LastLoginDate, LastLoginHost, [!!RowNumber])
+	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, IsAdmin, [LastLoginDate!!UtcDate], LastLoginHost, [!!RowNumber])
 	as(
 		select u.Id, u.UserName, u.PhoneNumber, u.Email, u.PersonName, Memo, IsAdmin,
 			LastLoginDate, LastLoginHost,

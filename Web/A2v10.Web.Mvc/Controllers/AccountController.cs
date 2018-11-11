@@ -707,7 +707,7 @@ namespace A2v10.Web.Mvc.Controllers
 			// may be locked out
 			if (success.HasValue)
 			{
-				user.LastLoginDate = DateTime.Now;
+				user.LastLoginDate = DateTime.UtcNow;
 				if (Request.UserHostName == Request.UserHostAddress)
 					user.LastLoginHost = $"{Request.UserHostName}";
 				else

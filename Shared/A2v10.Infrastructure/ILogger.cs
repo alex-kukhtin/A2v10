@@ -18,7 +18,10 @@ namespace A2v10.Infrastructure
 	public class LogEntry
 	{
 		public LogSeverity Severity { get; }
+
 		public String Message { get; }
+
+		public Char SeverityChar => (Char) Severity;
 
 		public LogEntry(LogSeverity severity, String message)
 		{

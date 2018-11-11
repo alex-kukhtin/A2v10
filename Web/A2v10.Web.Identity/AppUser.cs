@@ -45,16 +45,26 @@ namespace A2v10.Web.Identity
 
 		DateTime? _lastLoginDate;
 		String _lastLoginHost;
+
 		public DateTime? LastLoginDate
 		{
 			get { return _lastLoginDate; }
-			set { _lastLoginDate = value; SetModified(UserModifiedFlag.LastLogin); }
+			set {
+				if (_lastLoginDate == value)
+					return;
+				_lastLoginDate = value;
+				SetModified(UserModifiedFlag.LastLogin);
+			}
 		}
 
 		public String LastLoginHost
 		{
 			get { return _lastLoginHost; }
-			set { _lastLoginHost = value; SetModified(UserModifiedFlag.LastLogin); }
+			set {
+				if (_lastLoginHost == value)
+					return;
+				_lastLoginHost = value;
+				SetModified(UserModifiedFlag.LastLogin); }
 		}
 
 		UserModifiedFlag _modifiedFlag;

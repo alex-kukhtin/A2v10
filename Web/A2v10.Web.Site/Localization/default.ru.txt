@@ -13,6 +13,8 @@
 @Profile=Профиль
 @ChangePassword=Сменить пароль
 @SubstUser=Сменить пользователя
+@AllUsers=Все пользователи
+@AdminUsers=Администраторы
 @User=Пользователь
 @OldPassword=Старый пароль
 @NewPassword=Новый пароль

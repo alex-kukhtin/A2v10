@@ -168,7 +168,8 @@ namespace A2v10.Web.Identity
 			if (user.IsLockoutModified)
 			{
 				await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[UpdateUserLockout]", user);
-				user.ClearModified(UserModifiedFlag.Lockout);
+				// do not call last login here
+				user.ClearModified(UserModifiedFlag.Lockout | UserModifiedFlag.LastLogin);
 			}
 			if (user.IsPasswordModified)
 			{

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 23 oct 2018
-module version : 7318
+Last updated : 11 nov 2018
+module version : 7319
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7318);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7319);
 else
-	update a2sys.Versions set [Version] = 7318 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7319 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -109,7 +109,7 @@ begin
 		AccessFailedCount int not null constraint DF_Users_AccessFailedCount default(0),
 		[Locale] nvarchar(32) not null constraint DF_Users_Locale default('uk_UA'),
 		PersonName nvarchar(255) null,
-		LastLoginDate datetime null,
+		LastLoginDate datetime null, /*UTC*/
 		LastLoginHost nvarchar(255) null,
 		Memo nvarchar(255) null,
 		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
@@ -292,7 +292,16 @@ begin
 	);
 end
 go
-
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'LogCodes')
+begin
+	create table a2security.[LogCodes]
+	(
+		Code int not null constraint PK_LogCodes primary key,
+		[Name] nvarchar(32) not null
+	);
+end
+go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Log')
 begin
@@ -301,11 +310,27 @@ begin
 		Id	bigint not null identity(100, 1) constraint PK_Log primary key,
 		UserId bigint not null
 			constraint FK_Log_UserId_Users foreign key references a2security.Users(Id),
+		Code int not null
+			constraint FK_Log_Code_Codes foreign key references a2security.LogCodes(Code),
 		EventTime	datetime not null
-			constraint DF_Log_EventTime default(getdate()),
+			constraint DF_Log_UtcEventTime default(getutcdate()),
 		Severity nchar(1) not null,
-		[Message] nvarchar(max) null,
+		[Message] nvarchar(max) sparse null
 	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Log' and COLUMN_NAME=N'Code')
+begin
+	alter table a2security.[Log] add Code int not null
+		constraint FK_Log_Code_Codes foreign key references a2security.LogCodes(Code);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' and parent_object_id = object_id(N'a2security.Log'))
+begin
+	alter table a2security.[Log] drop constraint DF_Log_EventTime;
+	alter table a2security.[Log] add constraint DF_Log_UtcEventTime default(getutcdate()) for EventTime with values;
 end
 go
 ------------------------------------------------
@@ -434,7 +459,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
-	--TODO: log
+	exec a2security.[WriteLog] @Id, N'I', 15; /*PasswordUpdated*/
 end
 go
 ------------------------------------------------
@@ -454,7 +479,9 @@ begin
 	update a2security.ViewUsers set 
 		AccessFailedCount = @AccessFailedCount, LockoutEndDateUtc = @LockoutEndDateUtc
 	where Id=@Id;
-	--TODO: log
+	declare @msg nvarchar(255);
+	set @msg = N'AccessFailedCount: ' + cast(@AccessFailedCount as nvarchar(255));
+	exec a2security.[WriteLog] @Id, N'E', 18, /*AccessFailedCount*/ @msg;
 end
 go
 ------------------------------------------------
@@ -472,7 +499,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	update a2security.ViewUsers set LastLoginDate = @LastLoginDate, LastLoginHost = @LastLoginHost where Id=@Id;
-	--TODO: log
+	exec a2security.[WriteLog] @Id, N'I', 1; /*Login*/
 end
 go
 ------------------------------------------------
@@ -487,8 +514,12 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+
 	update a2security.ViewUsers set EmailConfirmed = 1 where Id=@Id;
-	--TODO: log
+
+	declare @msg nvarchar(255);
+	select @msg = N'Email: ' + Email from a2security.ViewUsers where Id=@Id;
+	exec a2security.[WriteLog] @Id, N'I', 26, /*EmailConfirmed*/ @msg;
 end
 go
 
@@ -510,7 +541,10 @@ begin
 	update a2security.ViewUsers set PhoneNumber = @PhoneNumber,
 		PhoneNumberConfirmed = @PhoneNumberConfirmed, SecurityStamp=@SecurityStamp
 	where Id=@Id;
-	--TODO: log
+
+	declare @msg nvarchar(255);
+	set @msg = N'PhoneNumber: ' + @PhoneNumber;
+	exec a2security.[WriteLog] @Id, N'I', 27, /*PhoneNumberConfirmed*/ @msg;
 end
 go
 
@@ -629,7 +663,10 @@ begin
 	end
 	exec a2security.[Permission.UpdateUserInfo];
 	set @RetId = @userId;
-	--TODO: log
+
+	declare @msg nvarchar(255);
+	set @msg = N'User: ' + @UserName;
+	exec a2security.[WriteLog] @RetId, N'I', 2, /*UserCreated*/ @msg;
 end
 go
 ------------------------------------------------
@@ -663,15 +700,16 @@ go
 ------------------------------------------------
 create procedure [a2security].[WriteLog]
 	@UserId bigint = null,
-	@Severity int,
-	@Message nvarchar(max)
+	@SeverityChar nchar(1),
+	@Code int = null,
+	@Message nvarchar(max) = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
-	insert into a2security.[Log] (UserId, Severity, [Message]) 
-		values (isnull(@UserId, 0 /*system user*/), char(@Severity), @Message);
+	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
+		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
 end
 go
 ------------------------------------------------
@@ -688,15 +726,38 @@ begin
 end
 go
 ------------------------------------------------
+begin
+	set nocount on;
+	declare @codes table (Code int, [Name] nvarchar(32))
+
+	insert into @codes(Code, [Name])
+	values
+		(1,  N'Login'		        ), 
+		(2,  N'UserCreated'		    ), 
+		(15, N'PasswordUpdated'     ), 
+		(18, N'AccessFailedCount'   ), 
+		(26, N'EmailConfirmed'      ), 
+		(27, N'PhoneNumberConfirmed');
+
+	merge into a2security.[LogCodes] t
+	using @codes s on s.Code = t.Code
+	when matched then update set
+		[Name]=s.[Name]
+	when not matched by target then insert 
+		(Code, [Name]) values (s.Code, s.[Name])
+	when not matched by source then delete;
+end
+go
+------------------------------------------------
 set nocount on;
 begin
 	-- predefined users and groups
 	if not exists(select * from a2security.Users where Id = 0)
 		insert into a2security.Users (Id, UserName, SecurityStamp) values (0, N'System', N'System');
 	if not exists(select * from a2security.Groups where Id = 1)
-		insert into a2security.Groups(Id, [Key], [Name]) values (1, N'Users', N'Все пользователи');
+		insert into a2security.Groups(Id, [Key], [Name]) values (1, N'Users', N'@[AllUsers]');
 	if not exists(select * from a2security.Groups where Id = 77)
-		insert into a2security.Groups(Id, [Key], [Name]) values (77, N'Admins', N'Администраторы');
+		insert into a2security.Groups(Id, [Key], [Name]) values (77, N'Admins', N'@[AdminUsers]');
 end
 go
 ------------------------------------------------
