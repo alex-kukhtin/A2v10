@@ -5568,7 +5568,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20181112-7353
 /*components/pager.js*/
 
 /*
@@ -5655,7 +5655,7 @@ Vue.component('a2-pager', {
 		// prev
 		children.push(h('button', {
 			on: { click: ($ev) => this.click('prev', $ev) },
-			attrs: { disabled: this.offset === 0 }
+			attrs: { disabled: this.offset === 0, 'aria-label': 'Previous page' }
 		}, [h('i', { 'class': 'ico ico-chevron-left' })]
 		));
 		// first
@@ -5683,9 +5683,9 @@ Vue.component('a2-pager', {
 		// next
 		children.push(h('button', {
 			on: { click: ($ev) => this.click('next', $ev) },
-			attrs: { disabled: this.currentPage >= this.pages }
+			attrs: { disabled: this.currentPage >= this.pages, 'aria-label': 'Next Page'  }
 		},
-			[h('i', { 'class': 'ico ico-chevron-right' })]
+			[h('i', { 'class': 'ico ico-chevron-right'})]
 		));
 
 		children.push(h('span', { class: 'a2-pager-divider' }));
@@ -8014,7 +8014,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180718-7248*/
+/*20181112-7353*/
 /*components/newbutton.js*/
 
 (function () {
@@ -8025,7 +8025,7 @@ Vue.component('a2-panel', {
 
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
-	<button class="btn" :class="btnClass" toggle><i class="ico" :class="iconClass"></i></button>
+	<button class="btn btn-icon" :class="btnClass" toggle aria-label="New"><i class="ico" :class="iconClass"></i></button>
 	<div class="dropdown-menu menu down-right">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
@@ -9949,7 +9949,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180804-7264*/
+/*20181112-7353*/
 /* controllers/shell.js */
 
 (function () {
@@ -10034,7 +10034,7 @@ Vue.directive('resize', {
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
 	<li class="aligner"></li>
-	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -10146,7 +10146,7 @@ Vue.directive('resize', {
 	const a2SideBarCompact = {
 		template: `
 <div class='side-bar-compact' :class="cssClass">
-	<a href role="button" class="collapse-button" @click.prevent="toggle"></a>
+	<a href role="button" aria-label="Expand/Collapse Side bar" class="collapse-button" @click.prevent="toggle"></a>
 	<ul class='side-menu'>
 		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm)}" :key="itmIx">
 			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>

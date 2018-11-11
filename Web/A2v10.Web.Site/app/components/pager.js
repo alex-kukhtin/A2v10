@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180426-7166
+// 20181112-7353
 /*components/pager.js*/
 
 /*
@@ -87,7 +87,7 @@ Vue.component('a2-pager', {
 		// prev
 		children.push(h('button', {
 			on: { click: ($ev) => this.click('prev', $ev) },
-			attrs: { disabled: this.offset === 0 }
+			attrs: { disabled: this.offset === 0, 'aria-label': 'Previous page' }
 		}, [h('i', { 'class': 'ico ico-chevron-left' })]
 		));
 		// first
@@ -115,9 +115,9 @@ Vue.component('a2-pager', {
 		// next
 		children.push(h('button', {
 			on: { click: ($ev) => this.click('next', $ev) },
-			attrs: { disabled: this.currentPage >= this.pages }
+			attrs: { disabled: this.currentPage >= this.pages, 'aria-label': 'Next Page'  }
 		},
-			[h('i', { 'class': 'ico ico-chevron-right' })]
+			[h('i', { 'class': 'ico ico-chevron-right'})]
 		));
 
 		children.push(h('span', { class: 'a2-pager-divider' }));
