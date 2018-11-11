@@ -10,8 +10,8 @@
 			"open": {
 				"model": "Inbox",
 				"indirect": true,
-				/*"target": "{{Inbox.Action}}",*/
-				"target": "sales/waybill/{{Inbox.Command}}",
+				"target": "{{Inbox.Action}}",
+				//"target": "sales/waybill/{{Inbox.Command}}",
 				"targetId": "{{Inbox.ModelId}}"
 			}
 	}

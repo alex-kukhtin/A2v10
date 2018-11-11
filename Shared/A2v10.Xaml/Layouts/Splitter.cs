@@ -55,7 +55,6 @@ namespace A2v10.Xaml
 		{
 			/* TODO: 
              * 1. Horizontal splitter
-             * 2. Ширина колонок
             */
 			if (SkipRender(context))
 				return;
@@ -71,17 +70,13 @@ namespace A2v10.Xaml
 			GridLength p1w = GetWidth(Children[0]) ?? GridLength.Fr1();
 			GridLength p2w = GetWidth(Children[1]) ?? GridLength.Fr1();
 
-			Length p1mw = GetMinWidth(Children[0]);
-			if (p1mw != null && !p1mw.IsPixel)
-				throw new XamlException("Splitter.MinWidth must be specified in pixels");
-
 			String rowsCols = Orientation == Orientation.Vertical ? "grid-template-columns" : "grid-template-rows";
 			spl.MergeStyle(rowsCols, $"{p1w} 6px {p2w}");
 
 			spl.RenderStart(context);
 
 			// first part
-			var p1 = new TagBuilder("div", "spl-part");
+			var p1 = new TagBuilder("div", "spl-part spl-first");
 			p1.RenderStart(context);
 			Children[0].RenderElement(context);
 			p1.RenderEnd(context);
@@ -93,7 +88,7 @@ namespace A2v10.Xaml
 				.Render(context);
 
 			// second part
-			var p2 = new TagBuilder("div", "spl-part");
+			var p2 = new TagBuilder("div", "spl-part spl-second");
 			p2.RenderStart(context);
 			Children[1].RenderElement(context);
 			p2.RenderEnd(context);

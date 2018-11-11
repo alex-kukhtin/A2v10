@@ -710,6 +710,9 @@ button,
 input[type=button] {
   background-color: #ddd;
 }
+span {
+  word-break: break-word;
+}
 input[type=text]::-ms-clear {
   display: none;
 }
@@ -3109,6 +3112,8 @@ table.data-grid > tbody > tr.bold > td {
   grid-column: 2;
   margin-bottom: 4px;
   font-size: 1.05rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .generic-list-item .list-item-footer {
   display: block;
@@ -4785,6 +4790,7 @@ h5,
   color: #777;
   font-weight: bold;
   font-family: inherit;
+  word-break: break-word;
 }
 .badge {
   display: inline-block;

@@ -54,6 +54,7 @@
     <Compile Include="Activities\RemoveInbox.cs" />
     <Compile Include="Activities\Request.cs" />
     <Compile Include="Activities\RequestResult.cs" />
+    <Compile Include="Activities\Track.cs" />
     <Compile Include="AppWorkflow.cs" />
     <Compile Include="Inbox.cs" />
     <Compile Include="InboxInfo.cs" />

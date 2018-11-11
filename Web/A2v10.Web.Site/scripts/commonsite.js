@@ -2002,7 +2002,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181104-7343
+// 20181111-7352
 // services/datamodel.js
 
 (function () {
@@ -2011,7 +2011,6 @@ Vue.component('a2-pager', {
 
     /* TODO:
     1. changing event
-	2. propFromPath usage
     */
 
 	const META = '_meta_';
@@ -2160,6 +2159,7 @@ Vue.component('a2-pager', {
 		const props = templ._props_;
 		if (!props) return;
 		let objname = ctor.name;
+
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
@@ -2502,8 +2502,7 @@ Vue.component('a2-pager', {
 		arr.$isLazy = function () {
 			const meta = this.$parent._meta_;
 			if (!meta.$lazy) return false;
-			let propIx = this._path_.lastIndexOf('.');
-			let prop = this._path_.substring(propIx + 1);
+			let prop = propFromPath(this._path_);
 			return meta.$lazy.indexOf(prop) !== -1;
 		};
 
@@ -2518,8 +2517,7 @@ Vue.component('a2-pager', {
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;
 				if (!meta.$lazy) { resolve(this); return; }
-				let propIx = this._path_.lastIndexOf('.');
-				let prop = this._path_.substring(propIx + 1);
+				let prop = propFromPath(this._path_);
 				if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
 				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
 			});
@@ -3125,8 +3123,7 @@ Vue.component('a2-pager', {
 		if (utils.isDefined(newId) && utils.isDefined(oldId))
 			fireChange = newId !== oldId; // check id, no fire event
 		if (fireChange) {
-			//console.warn(`fire change. old:${oldId}, new:${newId}`);
-			// emit .change event for all object
+			// emit .change event for entire object
 			let eventName = this._path_ + '.change';
 			this._root_.$emit(eventName, this.$parent, this, this, propFromPath(this._path_));
 		}

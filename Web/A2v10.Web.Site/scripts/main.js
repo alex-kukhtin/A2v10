@@ -1706,7 +1706,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181104-7343
+// 20181111-7352
 // services/datamodel.js
 
 (function () {
@@ -1715,7 +1715,6 @@ app.modules['std:validators'] = function () {
 
     /* TODO:
     1. changing event
-	2. propFromPath usage
     */
 
 	const META = '_meta_';
@@ -1864,6 +1863,7 @@ app.modules['std:validators'] = function () {
 		const props = templ._props_;
 		if (!props) return;
 		let objname = ctor.name;
+
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
@@ -2206,8 +2206,7 @@ app.modules['std:validators'] = function () {
 		arr.$isLazy = function () {
 			const meta = this.$parent._meta_;
 			if (!meta.$lazy) return false;
-			let propIx = this._path_.lastIndexOf('.');
-			let prop = this._path_.substring(propIx + 1);
+			let prop = propFromPath(this._path_);
 			return meta.$lazy.indexOf(prop) !== -1;
 		};
 
@@ -2222,8 +2221,7 @@ app.modules['std:validators'] = function () {
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;
 				if (!meta.$lazy) { resolve(this); return; }
-				let propIx = this._path_.lastIndexOf('.');
-				let prop = this._path_.substring(propIx + 1);
+				let prop = propFromPath(this._path_);
 				if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
 				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
 			});
@@ -2829,8 +2827,7 @@ app.modules['std:validators'] = function () {
 		if (utils.isDefined(newId) && utils.isDefined(oldId))
 			fireChange = newId !== oldId; // check id, no fire event
 		if (fireChange) {
-			//console.warn(`fire change. old:${oldId}, new:${newId}`);
-			// emit .change event for all object
+			// emit .change event for entire object
 			let eventName = this._path_ + '.change';
 			this._root_.$emit(eventName, this.$parent, this, this, propFromPath(this._path_));
 		}
@@ -8787,7 +8784,7 @@ Vue.directive('settabindex', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180314-7131*/
+/*20181111-7252*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -8797,11 +8794,52 @@ Vue.directive('resize', {
 			el.removeEventListener('mousedown', p.mouseDown, false);
 		}
 	},
+	update(el) {
+
+		const MIN_WIDTH = 20;
+
+		if (!el._parts) return;
+		let p = el._parts;
+		if (p.init) return;
+		p.init = true;
+
+		let dataMinWidth = el.getAttribute('data-min-width');
+		let secondMinWidth = el.getAttribute('second-min-width');
+
+		let minPaneWidth = getPixelWidth(p.grid, dataMinWidth);
+		let minSecondPaneWidth = getPixelWidth(p.grid, secondMinWidth);
+		if (isNaN(minPaneWidth))
+			minPaneWidth = MIN_WIDTH;
+		if (isNaN(minSecondPaneWidth))
+			minSecondPaneWidth = MIN_WIDTH;
+		p.minWidth = minPaneWidth;
+		p.minWidth2 = minSecondPaneWidth;
+
+		let pane1 = p.grid.querySelector('.spl-first');
+		let p1w = Math.max(p.minWidth, pane1.clientWidth);
+		p.grid.style.gridTemplateColumns = `${p1w}px ${p.handleWidth}px 1fr`;
+
+		p.grid.style.visibility = 'visible';
+
+		function getPixelWidth(grid, w) {
+			w = w || '';
+			if (w.indexOf('px') !== -1) {
+				return Number.parseFloat(w);
+			}
+			let temp = document.createElement('div');
+			temp.style.width = w;
+			temp.style.position = 'absolute';
+			temp.style.visibility = 'hidden';
+			grid.appendChild(temp);
+			let cw = temp.clientWidth;
+			temp.remove();
+			return cw;
+		}
+	},
 	bind(el, binding, vnode) {
 
 		Vue.nextTick(function () {
 
-			const minWidth = 20;
 			const handleWidth = 6;
 
 			function findHandle(el) {
@@ -8815,23 +8853,17 @@ Vue.directive('resize', {
 			}
 
 			let grid = el.parentElement;
-
-			let minPaneWidth = Number.parseFloat(el.getAttribute('data-min-width'));
-			let minSecondPaneWidth = Number.parseFloat(el.getAttribute('second-min-width'));
-			if (isNaN(minPaneWidth))
-				minPaneWidth = minWidth;
-			if (isNaN(minSecondPaneWidth))
-				minSecondPaneWidth = minWidth;
-
-			//console.dir(minPaneWidth);
+			grid.style.visibility = 'hidden'; // avoid flickering 
 
 			let parts = {
+				handleWidth: handleWidth,
 				grid: grid,
 				handle: findHandle(grid),
 				resizing: false,
-				minWidth: minPaneWidth,
-				minWidth2: minSecondPaneWidth,
+				minWidth: 0,
+				minWidth2: 0,
 				mouseDown: mouseDown,
+				init: false,
 				offsetX(event) {
 					let rc = this.grid.getBoundingClientRect();
 					return event.clientX - rc.left;
@@ -8899,7 +8931,6 @@ Vue.directive('resize', {
 				p.resizing = true;
 			}
 			el.addEventListener('mousedown', mouseDown, false);
-
 		});
 	}
 });
