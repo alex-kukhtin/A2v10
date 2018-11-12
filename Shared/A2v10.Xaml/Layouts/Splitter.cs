@@ -71,7 +71,7 @@ namespace A2v10.Xaml
 			GridLength p2w = GetWidth(Children[1]) ?? GridLength.Fr1();
 
 			String rowsCols = Orientation == Orientation.Vertical ? "grid-template-columns" : "grid-template-rows";
-			spl.MergeStyle(rowsCols, $"{p1w} 6px {p2w}");
+			spl.MergeStyle(rowsCols, $"{p1w} 5px {p2w}");
 
 			spl.RenderStart(context);
 
@@ -83,6 +83,7 @@ namespace A2v10.Xaml
 
 			new TagBuilder("div", "spl-handle")
 				.MergeAttribute(Orientation == Orientation.Vertical ? "v-resize" : "h-resize", String.Empty)
+				.MergeAttribute("first-pane-width", p1w?.Value.ToString())
 				.MergeAttribute("data-min-width", GetMinWidth(Children[0])?.Value.ToString())
 				.MergeAttribute("second-min-width", GetMinWidth(Children[1])?.Value.ToString())
 				.Render(context);
