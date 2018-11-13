@@ -18,6 +18,13 @@ namespace A2v10.Xaml
 		Danger
 	}
 
+	public enum FloatMode
+	{
+		None,
+		Left,
+		Right
+	}
+
 	public enum VerticalAlign
 	{
 		Default,

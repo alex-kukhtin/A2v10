@@ -389,13 +389,13 @@
 			let me = this;
 
 			eventBus.$on('beginRequest', function () {
-				if (me.hasModals)
-					return;
+				//if (me.hasModals)
+					//return;
 				me.requestsCount += 1;
 			});
 			eventBus.$on('endRequest', function () {
-				if (me.hasModals)
-					return;
+				//if (me.hasModals)
+					//return;
 				me.requestsCount -= 1;
 			});
 

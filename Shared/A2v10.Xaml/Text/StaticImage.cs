@@ -4,7 +4,7 @@ using System;
 
 namespace A2v10.Xaml
 {
-	public class StaticImage : UIElementBase
+	public class StaticImage : Inline
 	{
 		public String Url { get; set; }
 

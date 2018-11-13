@@ -11,6 +11,7 @@ namespace A2v10.Xaml
 	{
 		public Boolean Block { get; set; }
 		public TextColorStyle Color { get; set; }
+		public FloatMode Float { get; set; }
 
 		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
@@ -18,6 +19,8 @@ namespace A2v10.Xaml
 			tag.AddCssClassBool(Block, "block");
 			if (Color != TextColorStyle.Default)
 				tag.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
+			if (Float != FloatMode.None)
+				tag.AddCssClass("float-" + Float.ToString().ToLowerInvariant());
 		}
 	}
 }

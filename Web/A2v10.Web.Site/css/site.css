@@ -793,6 +793,12 @@ td.valign-bottom {
 .no-user-select {
   user-select: none;
 }
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;
@@ -3225,6 +3231,9 @@ ul.news-list > li {
 }
 .modal-footer .btn-help:hover {
   text-decoration: none;
+}
+.modal-footer .divider {
+  flex-grow: 2;
 }
 .modal-body.confirm,
 .modal-body.alert,

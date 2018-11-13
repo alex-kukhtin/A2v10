@@ -1706,16 +1706,12 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181111-7352
+// 20181112-7355
 // services/datamodel.js
 
 (function () {
 
 	"use strict";
-
-    /* TODO:
-    1. changing event
-    */
 
 	const META = '_meta_';
 	const PARENT = '_parent_';
@@ -1829,13 +1825,16 @@ app.modules['std:validators'] = function () {
 			set(val) {
 				let eventWasFired = false;
 				let skipDirty = prop.startsWith('$$');
-				//TODO: emit and handle changing event
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;
 				val = ensureType(ctor, val);
 				if (val === this._src_[prop])
 					return;
 				let oldVal = this._src_[prop];
+				let changingEvent = (this._path_ || 'Root') + '.' + prop + '.changing';
+				let ret = this._root_.$emit(changingEvent, this, val, oldVal, prop);
+				if (ret === false)
+					return;
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
 					this._src_[prop].$set(val);
@@ -1847,9 +1846,7 @@ app.modules['std:validators'] = function () {
 					this._root_.$setDirty(true, this._path_);
 				if (this._lockEvents_) return; // events locked
 				if (eventWasFired) return; // was fired
-				if (!this._path_)
-					return;
-				let eventName = this._path_ + '.' + prop + '.change';
+				let eventName = (this._path_ || 'Root') + '.' + prop + '.change';
 				this._root_.$emit(eventName, this, val, oldVal, prop);
 			}
 		});
@@ -10351,13 +10348,13 @@ Vue.directive('resize', {
 			let me = this;
 
 			eventBus.$on('beginRequest', function () {
-				if (me.hasModals)
-					return;
+				//if (me.hasModals)
+					//return;
 				me.requestsCount += 1;
 			});
 			eventBus.$on('endRequest', function () {
-				if (me.hasModals)
-					return;
+				//if (me.hasModals)
+					//return;
 				me.requestsCount -= 1;
 			});
 

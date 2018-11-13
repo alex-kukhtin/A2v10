@@ -32,7 +32,7 @@
 	</Alert>
 	<Grid Columns="150, 150, 150, 1*">
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}" Render="Show">Расходная накладная</Header>
-		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}" Render="{Bind 'Document.Id == 164 ? `ReadOnly` : `Hide`'}"/>
+		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.$Date}" Render="{Bind 'Document.Id == 164 ? `Show` : `Hide`'}"/>
 		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right" Number="True"/>
 		<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right"/>
 		<TextBox Grid.Row="3" Grid.ColSpan="3"

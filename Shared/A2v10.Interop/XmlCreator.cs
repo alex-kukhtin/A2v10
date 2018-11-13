@@ -336,6 +336,11 @@ namespace A2v10.Interop
 				case "ChkColumn":
 					var bVal = Convert.ToBoolean(val);
 					return bVal ? "1" : null;
+				case "DGMonth":
+					var intVal = Convert.ToInt32(val);
+					if (intVal == 0)
+						return null;
+					return intVal.ToString();
 			}
 			return val.ToString();
 		}

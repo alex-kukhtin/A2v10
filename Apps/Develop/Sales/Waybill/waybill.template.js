@@ -9,11 +9,15 @@ const cmn = require('document/common');
 const template = {
 	properties: {
 		'TRoot.$Answer': String,
-        'TRow.Sum': cmn.rowSum,
-        'TDocument.Sum': cmn.docTotalSum,
-        'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
+		'TRow.Sum': cmn.rowSum,
+		'TDocument.Sum': cmn.docTotalSum,
+		'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
 		'TDocParent.$Name': docParentName,
-		'TRoot.$HasInbox'() { return !!this.Inbox;}
+		'TRoot.$HasInbox'() { return !!this.Inbox; },
+		'TDocument.$Date': {
+			get() { return this.Date; },
+			set: setDocumentDate
+		}
     },
     validators: {
         'Document.Agent': 'Выберите покупателя',
@@ -59,4 +63,12 @@ async function resumeWorkflow() {
 	let result = await vm.$invoke('resumeWorkflow', { Id: root.Inbox.Id, Answer: root.$Answer}, '/sales/waybill');
 	console.dir(result);
 	alert('ok');
+}
+
+function setDocumentDate(newDate) {
+	console.dir(this);
+	const vm = this.$vm;
+	vm.$confirm('are you sure?').then(() => {
+		this.Date = newDate;
+	});
 }
