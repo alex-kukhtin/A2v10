@@ -37,11 +37,13 @@ namespace A2v10.Request
 			var rw = rm.GetCurrentAction();
 			var loadPrms = new ExpandoObject();
 			var pageId = $"el{Guid.NewGuid()}";
+			var dmrw = await _baseController.GetDataModelForView(rw, loadPrms);
+			rw = dmrw.RequestView;
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
 				View = $"~/App_apps/{host.AppKey}/{rw.Path}/{rw.GetView()}.cshtml",
-				DataModel = await _baseController.GetDataModelForView(rw, loadPrms),
+				DataModel = dmrw.Model
 			};
 			viewInfo.Script = await _baseController.GetModelScriptModel(rw, viewInfo.DataModel, pageId);
 			return viewInfo;

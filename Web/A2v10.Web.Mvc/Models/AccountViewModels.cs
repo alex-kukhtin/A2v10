@@ -55,6 +55,7 @@ namespace A2v10.Web.Mvc.Models
 		public String Password { get; set; }
 		public String PersonName { get; set; }
 		public String Phone { get; set; }
+		public String Referral { get; set; }
 	}
 
 	public class RegisterViewModel

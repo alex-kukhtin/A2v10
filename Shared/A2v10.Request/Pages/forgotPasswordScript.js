@@ -84,6 +84,9 @@
 			},
 			reload() {
 				window.location.reload();
+			},
+			getReferUrl(url) {
+				return getReferralUrl(url);
 			}
 		}
 	});

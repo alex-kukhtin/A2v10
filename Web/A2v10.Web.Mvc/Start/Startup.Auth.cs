@@ -1,7 +1,10 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
+using System.Web.Helpers;
+using System.Security.Claims;
+using System.Web;
 
 using Owin;
 using Microsoft.AspNet.Identity;
@@ -23,27 +26,44 @@ namespace A2v10.Web.Mvc.Start
 
 			// Enable the application to use a cookie to store information for the signed in user
 			// and to use a cookie to temporarily store information about a user logging in with a third party login provider
-			// Configure the sign in cookie
-			app.UseCookieAuthentication(new CookieAuthenticationOptions
+
+			var authProvider = new CookieAuthenticationProvider
 			{
-				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-				LoginPath = new PathString("/account/login"),                
-				Provider = new CookieAuthenticationProvider
-				{
-					// Enables the application to validate the security stamp when the user logs in.
-					// This is a security feature which is used when you change a password or add an external login to your account.  
-					OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<AppUserManager, AppUser, Int64>
+				// Enables the application to validate the security stamp when the user logs in.
+				// This is a security feature which is used when you change a password or add an external login to your account.  
+				OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<AppUserManager, AppUser, Int64>
 					(
 						validateInterval: TimeSpan.FromMinutes(30),
 						getUserIdCallback: (user) =>
 						{
 							return user.GetUserId<Int64>();
 						},
-						regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager))
-				},
+						regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager)
+					)
+			};
+
+			var originalHandler = authProvider.OnApplyRedirect;
+
+			authProvider.OnApplyRedirect = (context) =>
+			{
+				var refer = context.Request.Query["ref"];
+				var loginPath = context.Options.LoginPath;
+				String qs = $"{context.Options.ReturnUrlParameter}={HttpUtility.UrlEncode(context.Request.Path.Value)}";
+				if (refer != null)
+					qs += $"&ref={HttpUtility.UrlEncode(refer)}";
+				String url = loginPath.Add(new QueryString(qs));
+				context.Response.Redirect(url);
+			};
+
+			app.UseCookieAuthentication(new CookieAuthenticationOptions
+			{
+				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+				LoginPath = new PathString("/account/login"),
+				Provider = authProvider,
 				CookieName = GetApplicationCookieName()
 			});
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+			//AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier; // 
 
 			// Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
 			//app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
@@ -74,7 +94,7 @@ namespace A2v10.Web.Mvc.Start
 
 			String GetApplicationCookieName()
 			{
-				var key= ConfigurationManager.AppSettings["AppKey"];
+				var key = ConfigurationManager.AppSettings["AppKey"];
 				return $"{key}.ASP.NET.ApplicationCookie";
 			}
 		}

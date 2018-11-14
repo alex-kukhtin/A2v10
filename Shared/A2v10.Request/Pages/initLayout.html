@@ -19,7 +19,7 @@
 	<div id="app" class="shell" v-cloak>
 		<header class="header">
 			<div class="h-block">
-				<a class="app-title" href='/' v-text="info.title" tabindex="-1"></a>
+				<a class="app-title" :href="getReferUrl('/')" v-text="info.title" tabindex="-1"></a>
 				<span class="app-subtitle" v-text="info.subtitle"></span>
 			</div>
 			<div class="aligner"></div>

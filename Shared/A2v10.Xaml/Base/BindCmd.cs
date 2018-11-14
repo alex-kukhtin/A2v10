@@ -405,7 +405,7 @@ namespace A2v10.Xaml
 				if (!Url.StartsWith("/"))
 					throw new NotImplementedException($"Url '{Url}' must start with '/'");
 			}
-			return $"'{Url.ToLowerInvariant()}'";
+			return $"'{Url}'";
 		}
 
 		internal void MergeCommandAttributes(TagBuilder tag, RenderContext context)

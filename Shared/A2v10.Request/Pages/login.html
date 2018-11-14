@@ -30,8 +30,8 @@
 			</label>
 			<div style="grid-row:4;grid-column:2;white-space:nowrap">
 				<button @click.stop.prevent="submit" class="btn btn-default" id="submit" tabindex="4" style="width:110px;margin-right:5px" v-text="locale.$Login" ref="submit"></button>
-				<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" href="/account/register" tabindex="5" style="margin:0 5px" v-text="locale.$RegisterLink"></a>
-				<a class="a2-hyperlink" href="/account/forgotpassword" tabindex="6" style="margin:0 5px" v-text="locale.$ForgotPassword"></a>
+				<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="5" style="margin:0 5px" v-text="locale.$RegisterLink"></a>
+				<a class="a2-hyperlink" :href="getReferUrl('/account/forgotpassword')" tabindex="6" style="margin:0 5px" v-text="locale.$ForgotPassword"></a>
 			</div>
 		</div>
 	</form>

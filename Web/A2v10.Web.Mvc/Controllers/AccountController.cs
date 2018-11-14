@@ -32,9 +32,9 @@ namespace A2v10.Web.Mvc.Controllers
 	public class AccountController : IdentityController
 	{
 
-		IApplicationHost _host;
-		IDbContext _dbContext;
-		ILocalizer _localizer; 
+		private readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly ILocalizer _localizer;
 
 		public AccountController()
 		{
@@ -353,6 +353,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				// LOWER case
 				model.Name = model.Name.ToLower();
+				model.Referral = model.Referral.ToLower();
 
 				if (!IsEmailValid(model.Name) || !IsEmailValid(model.Email))
 				{

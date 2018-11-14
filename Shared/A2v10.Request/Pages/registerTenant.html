@@ -61,7 +61,7 @@
 			</div>
 			<div style="grid-row:6;grid-column:2">
 				<button @click.stop.prevent="submit" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
-				<a tabindex="7" href="/" class="a2-hyperlink" style="margin-left:10px" v-text="locale.$LoginLink"></a>
+				<a tabindex="7" :href="getReferUrl('/')" class="a2-hyperlink" style="margin-left:10px" v-text="locale.$LoginLink"></a>
 			</div>
 		</div>
 	</form>

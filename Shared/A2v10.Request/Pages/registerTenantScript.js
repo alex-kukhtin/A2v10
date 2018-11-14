@@ -81,6 +81,10 @@
 			},
 			validPhone() {
 				return this.submitted ? !!this.phone : true;
+			},
+			refer() {
+				let qs = parseQueryString(window.location.search.toLowerCase());
+				return qs.ref || '';
 			}
 		},
 		methods: {
@@ -96,7 +100,8 @@
 					PersonName: this.name,
 					Email: this.email,
 					Phone: this.phone,
-					Password: this.password
+					Password: this.password,
+					Referral: this.refer
 				};
 				const that = this;
 				post('/account/register', dataToSend)
@@ -158,6 +163,9 @@
 					this.$refs.phoneInput.value = this.maskedPhone;
 					this.$emit('change', this.phone);
 				}
+			},
+			getReferUrl(url) {
+				return getReferralUrl(url);
 			}
 		},
 		mounted() {

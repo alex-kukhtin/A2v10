@@ -66,6 +66,14 @@ function parseQueryString(str) {
 }
 
 
+function getReferralUrl(url) {
+	let qs = parseQueryString(window.location.search.toLowerCase());
+	let ref = qs.ref || '';
+	if (ref)
+		return `${url}?ref=${ref}`;
+	return url;
+}
+
 function validEmail(addr) {
 
 	// from chromium ? https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript

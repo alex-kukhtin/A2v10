@@ -29,6 +29,12 @@ namespace A2v10.Request
 		protected readonly IMessageService _messageService;
 		protected readonly IUserStateManager _userStateManager;
 
+		public class DataModelAndView
+		{
+			public IDataModel Model;
+			public RequestView RequestView;
+		}
+
 		public const String NO_VIEW = "\b_NO_VIEW_\b";
 
 		public BaseController()
@@ -156,8 +162,12 @@ namespace A2v10.Request
 			return rw;
 		}
 
-		internal async Task<IDataModel> GetDataModelForView(RequestView rw, ExpandoObject loadPrms)
+		internal async Task<DataModelAndView> GetDataModelForView(RequestView rw, ExpandoObject loadPrms)
 		{
+			var dmv = new DataModelAndView()
+			{
+				RequestView = rw
+			};
 			String loadProc = rw.LoadProcedure;
 			IDataModel model = null;
 			if (rw.parameters != null && loadPrms == null)
@@ -195,7 +205,6 @@ namespace A2v10.Request
 			}
 			if (rw.indirect)
 				rw = await LoadIndirect(rw, model, loadPrms);
-
 			if (model?.Root != null)
 			{
 				// side effect!
@@ -209,12 +218,17 @@ namespace A2v10.Request
 				if (_userStateManager.IsReadOnly(userId))
 					model.SetReadOnly();
 			}
-			return model;
+			dmv.Model = model;
+			dmv.RequestView = rw;
+			return dmv;
 		}
 
-		protected internal async Task Render(RequestView rw, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
+		protected internal async Task Render(RequestView rwArg, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
 		{
-			IDataModel model = await GetDataModelForView(rw, loadPrms);
+			var dmAndView = await GetDataModelForView(rwArg, loadPrms);
+
+			IDataModel model = dmAndView.Model;
+			var rw = dmAndView.RequestView;
 
 			String rootId = "el" + Guid.NewGuid().ToString();
 			String modelScript = null;
