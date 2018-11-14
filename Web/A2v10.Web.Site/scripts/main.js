@@ -7693,6 +7693,7 @@ TODO:
 			url: String,
 			source: Object,
 			delegate: Function,
+			errorDelegate: Function,
 			argument: [Object, String, Number]
 		},
 		computed: {
@@ -7731,7 +7732,9 @@ TODO:
 						this.delegate.call(this.source, result);
 					//this.source.$merge(result);
 				}).catch(msg => {
-					if (msg.indexOf('UI:') === 0)
+					if (this.errorDelegate)
+						this.errorDelegate.call(this.source, msg);
+					else if (msg.indexOf('UI:') === 0)
 						tools.alert(msg.substring(3).replace('\\n', '\n'));
 					else
 						alert(msg);
@@ -7749,7 +7752,7 @@ TODO:
 	Vue.component('a2-attachments', {
 		template: `
 <div class="a2-attachments">
-	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate"
+	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate" :error-delegate="errorDelegate"
 		:url="url" :tip="tip" :read-only='readOnly' :accept="accept" :argument="argument"/>
 </div>
 `,
@@ -7762,6 +7765,7 @@ TODO:
 			readOnly: Boolean,
 			accept: String,
 			delegate: Function,
+			errorDelegate: Function,
 			argument: [Object, String, Number]
 		},
 		computed: {

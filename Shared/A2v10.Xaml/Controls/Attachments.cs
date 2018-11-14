@@ -10,6 +10,7 @@ namespace A2v10.Xaml
 		public String Accept { get; set; }
 
 		public String Delegate { get; set; }
+		public String ErrorDelegate { get; set; }
 
 		public Object Argument { get; set; }
 
@@ -27,6 +28,8 @@ namespace A2v10.Xaml
 			if (String.IsNullOrEmpty(Delegate))
 				throw new XamlException("Delegate is required for Attachments element");
 			tag.MergeAttribute(":delegate", $"$delegate('{Delegate}')");
+			if (ErrorDelegate != null)
+				tag.MergeAttribute(":error-delegate", $"$delegate('{ErrorDelegate}')");
 
 			MergeBindingAttributeString(tag, context, "accept", nameof(Accept), Accept);
 			var argBind = GetBinding(nameof(Argument));
