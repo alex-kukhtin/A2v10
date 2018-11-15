@@ -157,7 +157,7 @@ namespace A2v10.Request
 					{
 						// from js! utils.date.minDate/maxDate
 						res.Add("From", "19010101");
-						res.Add("To", "29991231"); 
+						res.Add("To", "29991231");
 					}
 					else
 					{

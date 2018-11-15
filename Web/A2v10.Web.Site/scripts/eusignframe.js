@@ -1219,7 +1219,7 @@ app.modules['std:http'] = function () {
 		});
 	}
 
-	function load(url, selector) {
+	function load(url, selector, baseUrl) {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
 			fc.__vue__.$destroy();
@@ -1248,7 +1248,7 @@ app.modules['std:http'] = function () {
 					}
 					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
 						let ve = selector.firstElementChild.__vue__;
-						ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
+						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
 					}
@@ -2906,8 +2906,8 @@ app.modules['std:eusign'] = function () {
 };
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181108-7350
-// standalone/controller.js
+// 20181111-7351
+// /site/controller.js
 
 (function () {
 
@@ -2915,12 +2915,8 @@ app.modules['std:eusign'] = function () {
 	const utils = require('std:utils');
 	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
-	const log = require('std:log');
 	const locale = window.$$locale;
 	const modelInfo = require('std:modelInfo');
-
-	let __updateStartTime = 0;
-	let __createStartTime = 0;
 
 	function makeErrors(errs) {
 		let ra = [];
@@ -2944,7 +2940,7 @@ app.modules['std:eusign'] = function () {
 		});
 	}
 
-	const standalone = Vue.extend({
+	const siteController = Vue.extend({
 		// inDialog: Boolean (in derived class)
 		// pageTitle: String (in derived class)
 		data() {
@@ -3092,29 +3088,6 @@ app.modules['std:eusign'] = function () {
 				});
 			},
 
-			$load(id) {
-				let self = this;
-				let root = window.$$rootUrl;
-				let url = root + '/data/load';
-				let dat = self.$data;
-				return new Promise(function (resolve, reject) {
-					let dataToQuery = { baseUrl: urltools.combine(self.$baseUrl, id) };
-					let jsonData = utils.toJson(dataToQuery);
-					dataservice.post(url, jsonData).then(function (data) {
-						if (utils.isObject(data)) {
-							dat.$merge(data);
-							dat._setModelInfo_(undefined, data);
-							dat._fireLoad_();
-							resolve(dat);
-						} else {
-							throw new Error('Invalid response type for load');
-						}
-					}).catch(function (msg) {
-						alert(msg);
-					});
-				});
-			},
-
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
 				//debugger;
@@ -3127,7 +3100,7 @@ app.modules['std:eusign'] = function () {
 					return self.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
-				let url = root + '/data/reload';
+				let url = root + '/_data/reload';
 				let dat = self.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
@@ -3145,7 +3118,7 @@ app.modules['std:eusign'] = function () {
 						// special element -> use url
 						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
 						let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
-						window.history.replaceState(null, null, newUrl);
+						//window.history.replaceState(null, null, newUrl);
 					}
 					let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
@@ -3329,7 +3302,6 @@ app.modules['std:eusign'] = function () {
 
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
-			log.time('create time:', __createStartTime, false);
 
 			this.$on('cwChange', this._cwChange);
 		},
@@ -3340,21 +3312,11 @@ app.modules['std:eusign'] = function () {
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
-		},
-		beforeUpdate() {
-			__updateStartTime = performance.now();
-		},
-		beforeCreate() {
-			__createStartTime = performance.now();
-		},
-		updated() {
-			log.time('update time:', __updateStartTime, false);
 		}
 	});
 
-	standalone.init = function (vm, baseUrl, callback) {
-		vm.$data.__baseUrl__ = urltools.combine('_page', baseUrl);
-
+	siteController.init = function (vm, baseUrl, callback) {
+		vm.$data.__baseUrl__ = baseUrl;
 		vm.$data._host_ = {
 			$viewModel: vm
 		};
@@ -3365,5 +3327,5 @@ app.modules['std:eusign'] = function () {
 			callback.call(vm);
 	};
 
-	app.components['standaloneController'] = standalone;
+	app.components['siteController'] = siteController;
 })();

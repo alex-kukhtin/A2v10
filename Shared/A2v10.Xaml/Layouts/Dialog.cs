@@ -33,6 +33,7 @@ namespace A2v10.Xaml
 		{
 			var dialog = new TagBuilder("div", "modal");
 			dialog.MergeAttribute("id", context.RootId);
+			dialog.AddCssClassBoolNo(UserSelect, "user-select");
 
 			SetSize(dialog);
 

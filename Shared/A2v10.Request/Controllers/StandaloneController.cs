@@ -20,6 +20,7 @@ namespace A2v10.Request
 		public String View;
 		public String Script;
 		public String PageId;
+		public String Id;
 		public IDataModel DataModel;
 	}
 
@@ -113,7 +114,8 @@ namespace A2v10.Request
 			ViewInfo viewInfo = new ViewInfo()
 			{
 				View = $"{rw.Path}/{rw.GetView()}",
-				PageId = $"el{Guid.NewGuid()}"
+				PageId = $"el{Guid.NewGuid()}",
+				Id = rw.Id
 			};
 
 			var modelParams = new ExpandoObject();

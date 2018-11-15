@@ -799,7 +799,8 @@ namespace A2v10.Request
 			}
 			else
 			{
-				throw new RequestModelException($"Invalid base url: {baseUrl}");
+				// default : page
+				kind = RequestUrlKind.Page;
 			}
 			var rm = await CreateFromUrl(host, bAdmin, kind, baseUrl);
 			rm._kind = kind;

@@ -1219,7 +1219,7 @@ app.modules['std:http'] = function () {
 		});
 	}
 
-	function load(url, selector) {
+	function load(url, selector, baseUrl) {
 		let fc = selector ? selector.firstElementChild : null;
 		if (fc && fc.__vue__) {
 			fc.__vue__.$destroy();
@@ -1248,7 +1248,7 @@ app.modules['std:http'] = function () {
 					}
 					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
 						let ve = selector.firstElementChild.__vue__;
-						ve.$data.__baseUrl__ = urlTools.normalizeRoot(url);
+						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
 					}

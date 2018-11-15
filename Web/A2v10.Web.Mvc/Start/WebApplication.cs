@@ -22,10 +22,11 @@ namespace A2v10.Web.Mvc.Start
 			var siteMode = ConfigurationManager.AppSettings["siteMode"];
 			if (siteMode == "site") {
 				var razor = ViewEngines.Engines[0] as RazorViewEngine;
+				var appKey = ConfigurationManager.AppSettings["appKey"];
 				razor.PartialViewLocationFormats = new String[]
 				{
-				"~/App_Apps/VueSite/{1}/{0}.cshtml",
-				"~/App_Apps/VueSite/Shared/{0}.cshtml",
+					$"~/App_Apps/{appKey}/{{1}}/{{0}}.cshtml",
+					$"~/App_Apps/{appKey}/Shared/{{0}}.cshtml",
 				};
 			}
 		}

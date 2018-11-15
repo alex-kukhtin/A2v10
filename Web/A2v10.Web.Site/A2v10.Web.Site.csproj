@@ -82,7 +82,9 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\services\eusign.js" />
+    <Content Include="app\site\collectionview.js" />
     <Content Include="app\site\controller.js" />
+    <Content Include="app\site\pager.js" />
     <Content Include="app\standalone\collectionview.js" />
     <Content Include="app\components\collectionview.js" />
     <Content Include="app\components\control.js" />
@@ -340,6 +342,10 @@
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
+      <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>
+      <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
       <Project>{478240ab-9772-4f70-8e31-bd0303cbf836}</Project>
       <Name>A2v10.Web.Mvc</Name>

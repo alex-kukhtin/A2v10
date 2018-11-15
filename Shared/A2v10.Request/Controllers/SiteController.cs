@@ -20,6 +20,8 @@ namespace A2v10.Request
 		{
 		}
 
+		public Func<Int64> UserId { get; set; }
+
 		public String NormalizeUrl(String url)
 		{
 			if (String.IsNullOrEmpty(url))
@@ -30,20 +32,38 @@ namespace A2v10.Request
 			return url;
 		}
 
-		public async Task<ViewInfo> LoadView(String pathInfo)
+		public ExpandoObject CreateParams()
+		{
+			var loadPrms = new ExpandoObject();
+			if (UserId != null)
+				loadPrms.Set("UserId", UserId());
+			return loadPrms;
+		}
+
+		public Task<ViewInfo> LoadView(String pathInfo)
+		{
+			return LoadViewKind(pathInfo, RequestUrlKind.Page);
+		}
+
+		public Task<ViewInfo> LoadDialog(String pathInfo)
+		{
+			return LoadViewKind(pathInfo, RequestUrlKind.Dialog);
+		}
+
+		async Task<ViewInfo> LoadViewKind(String pathInfo, RequestUrlKind kind)
 		{
 			var host = _baseController.Host;
-			var rm = await RequestModel.CreateFromUrl(host, false, RequestUrlKind.Page, NormalizeUrl(pathInfo));
+			var rm = await RequestModel.CreateFromUrl(host, false, kind, NormalizeUrl(pathInfo));
 			var rw = rm.GetCurrentAction();
-			var loadPrms = new ExpandoObject();
 			var pageId = $"el{Guid.NewGuid()}";
-			var dmrw = await _baseController.GetDataModelForView(rw, loadPrms);
+			var dmrw = await _baseController.GetDataModelForView(rw, CreateParams());
 			rw = dmrw.RequestView;
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
 				View = $"~/App_apps/{host.AppKey}/{rw.Path}/{rw.GetView()}.cshtml",
-				DataModel = dmrw.Model
+				DataModel = dmrw.Model,
+				Id = rw.Id
 			};
 			viewInfo.Script = await _baseController.GetModelScriptModel(rw, viewInfo.DataModel, pageId);
 			return viewInfo;
@@ -82,5 +102,23 @@ namespace A2v10.Request
 			Response.ContentType = "text/html";
 			Response.Write(html.ToString());
 		}
+
+		public async Task Data(String command, HttpRequestBase Request, HttpResponseBase Response)
+		{
+			Response.ContentType = "application/json";
+			using (var tr = new StreamReader(Request.InputStream))
+			{
+				String json = tr.ReadToEnd();
+				await _baseController.Data(command, SetParams, json, Response);
+			}
+		}
+
+		void SetParams(ExpandoObject prms)
+		{
+			if (UserId != null) {
+				prms.Set("UserId", UserId());
+			}
+		}
+
 	}
 }

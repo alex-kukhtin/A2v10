@@ -156,7 +156,7 @@
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
 			"scripts/eusign.js",
-			"app/standalone/controller.js"
+			"app/site/controller.js"
 		],
 		"minify": { "enabled": false }
 	},
@@ -173,6 +173,8 @@
 			"app/services/http.js",
 			"app/services/log.js",
 			"app/services/validators.js",
+			"app/site/collectionview.js",
+			"app/site/pager.js",
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
 			"app/site/controller.js"
