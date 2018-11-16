@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20181116-7357
 // components/list.js
 
 /* TODO:
@@ -9,6 +9,7 @@
 (function () {
 
 	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 
 	Vue.component("a2-list", {
 		template:

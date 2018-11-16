@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181112-7353*/
+/*20181116-7357*/
 /* controllers/shell.js */
 
 (function () {
@@ -93,11 +93,15 @@
 		},
 		computed: {
 			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
 			locale() { return locale; }
 		},
 		methods: {
 			isActive(item) {
 				return this.seg0 === item.Url;
+			},
+			isActive2(item) {
+				return this.seg1 === item.Url;
 			},
 			itemHref: (item) => '/' + item.Url,
 			navigate(item) {
@@ -118,6 +122,11 @@
 			},
 			helpHref() {
 				let am = this.menu.find(x => this.isActive(x));
+				if (am && am.Menu) {
+					let am2 = am.Menu.find(x => this.isActive2(x));
+					if (am2 && am2.Help)
+						return urlTools.helpHref(am2.Help);
+				}
 				if (am && am.Help)
 					return urlTools.helpHref(am.Help);
 				return urlTools.helpHref('');
