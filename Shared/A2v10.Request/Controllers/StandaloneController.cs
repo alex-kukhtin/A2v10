@@ -18,6 +18,7 @@ namespace A2v10.Request
 	public class ViewInfo
 	{
 		public String View;
+		public String Path;
 		public String Script;
 		public String PageId;
 		public String Id;

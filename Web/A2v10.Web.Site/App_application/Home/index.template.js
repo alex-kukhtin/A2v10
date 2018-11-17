@@ -10,6 +10,7 @@ const template = {
 	commands: {
 		sayHello() {
 			alert('hello!');
+			this.Home.Text = 'Hello from tempalte!';
 		}
 	}
 };

@@ -12,14 +12,14 @@
 	const utils = require('std:utils');
 	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
-	const log = require('std:log');
+	const log = require('std:log', true /*no error*/);
 	const locale = window.$$locale;
 	const mask = require('std:mask');
 	const modelInfo = require('std:modelInfo');
 	const platform = require('std:platform');
 
 	const store = component('std:store');
-	const documentTitle = component("std:doctitle");
+	const documentTitle = component("std:doctitle", true /*no error*/);
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -155,7 +155,8 @@
 					return;
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/_data/save';
+				const routing = require('std:routing'); // defer loading
+				let url = `${root}/${routing.dataUrl()}/save`;
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
 				const isCopy = this.$data.$isCopy;
 				const validRequired = !!opts && opts.options && opts.options.validRequired;
@@ -224,7 +225,8 @@
 			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/_data/invoke';
+				const routing = require('std:routing');
+				let url = `${root}/${routing.dataUrl()}/invoke`;
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
@@ -281,7 +283,8 @@
 					return self.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
-				let url = root + '/_data/reload';
+				const routing = require('std:routing'); // defer loading
+				let url = `${root}/${routing.dataUrl()}/reload`;
 				let dat = self.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
@@ -914,10 +917,12 @@
 				modelInfo.copyfromQuery(mi, nq);
 				this.$reload(source);
 			},
-			__doInit__() {
+			__doInit__(baseUrl) {
 				const root = this.$data;
 				if (!root._modelLoad_) return;
 				let caller = null;
+				if (baseUrl)
+					root.__baseUrl__ = baseUrl;
 				if (this.$caller)
 					caller = this.$caller.$data;
 				this.__createController__();
@@ -980,7 +985,8 @@
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
-			log.time('create time:', __createStartTime, false);
+			if (log)
+				log.time('create time:', __createStartTime, false);
 		},
 		beforeDestroy() {
 		},
@@ -1002,7 +1008,8 @@
 			__createStartTime = performance.now();
 		},
 		updated() {
-			log.time('update time:', __updateStartTime, false);
+			if (log)
+				log.time('update time:', __updateStartTime, false);
 		}
 	});
 

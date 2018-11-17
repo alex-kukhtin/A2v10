@@ -18,6 +18,7 @@
 			"app/services/popup.js",
 			"app/services/mask.js",
 			"app/services/tools.js",
+			"app/services/routing.js",
 			"app/components/include.js",
 			"app/components/control.js",
 			"app/components/validator.js",
@@ -169,15 +170,18 @@
 			"app/services/url.js",
 			"app/services/period.js",
 			"app/services/modelinfo.js",
+			"app/services/mask.js",
 			"app/platform/webvue.js",
 			"app/services/http.js",
-			"app/services/log.js",
+			"app/services/routing.js",
+			//"app/services/log.js",
 			"app/services/validators.js",
-			"app/site/collectionview.js",
-			"app/site/pager.js",
+			//"app/site/collectionview.js",
+			//"app/site/pager.js",
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
-			"app/site/controller.js"
+			"app/site/store.js",
+			"app/controllers/base.js"
 		],
 		"minify": { "enabled": false }
 	}

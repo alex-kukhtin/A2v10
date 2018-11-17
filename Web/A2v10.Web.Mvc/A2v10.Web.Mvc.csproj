@@ -295,6 +295,10 @@
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
       <Name>A2v10.Xaml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
+      <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>
+      <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj">
       <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
       <Name>A2v10.Web.Config</Name>

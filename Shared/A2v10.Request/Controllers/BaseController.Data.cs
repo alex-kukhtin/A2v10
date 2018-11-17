@@ -61,6 +61,8 @@ namespace A2v10.Request
 		internal async Task SaveDataObj(Action<ExpandoObject> setParams, ExpandoObject dataToSave, TextWriter writer)
 		{
 			String baseUrl = dataToSave.Get<String>("baseUrl");
+			if (NormalizeBaseUrl != null)
+				baseUrl = NormalizeBaseUrl(baseUrl);
 			ExpandoObject data = dataToSave.Get<ExpandoObject>("data");
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
@@ -94,6 +96,9 @@ namespace A2v10.Request
 				var qryParams = HttpUtility.ParseQueryString(parts[1]);
 				loadPrms.Append(CheckPeriod(qryParams), toPascalCase: true);
 			}
+
+			if (NormalizeBaseUrl != null)
+				baseUrl = NormalizeBaseUrl(baseUrl);
 
 			if (baseUrl == null)
 				throw new RequestModelException("There are not base url for command 'reload'");

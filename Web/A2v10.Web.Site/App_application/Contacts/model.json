@@ -1,0 +1,8 @@
+﻿{
+	"actions": {
+		"index": {
+			"model": "",
+			"view": "index"
+		}
+	}
+}

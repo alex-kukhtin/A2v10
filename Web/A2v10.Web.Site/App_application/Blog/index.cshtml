@@ -1,0 +1,22 @@
+﻿@model A2v10.Request.ViewInfo
+@{
+	ViewBag.Title = "Blog page";
+}
+@section meta {
+	<meta name="description" content="BLOG page description" />
+}
+<div id="@Model.PageId">
+	<div>
+		<a href="/">Go to the home page</a>
+	</div>
+	<div>
+		I am the blog page (RAZOR)
+	</div>
+	<div>
+		<button v-on:click="$reload">Reload me</button>
+	</div>
+</div>
+
+@section scripts {
+	@Html.RenderVueModelScript()
+}

@@ -75,6 +75,11 @@ namespace A2v10.Tests.Config
 			throw new NotImplementedException();
 		}
 
+		public String MakeRelativePath(String path, String fileName)
+		{
+			throw new NotImplementedException();
+		}
+
 		public Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
 		{
 			throw new NotImplementedException();

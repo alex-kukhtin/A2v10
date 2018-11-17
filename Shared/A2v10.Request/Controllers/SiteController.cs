@@ -14,18 +14,23 @@ namespace A2v10.Request
 {
 	public class SiteController
 	{
-		BaseController _baseController = new BaseController();
+
+		private readonly BaseController _baseController;
 
 		public SiteController()
 		{
+			_baseController = new BaseController();
+			//_baseController.NormalizeBaseUrl = NormalizeUrl;
 		}
 
 		public Func<Int64> UserId { get; set; }
 
-		public String NormalizeUrl(String url)
+		String NormalizeUrl(String url)
 		{
+			if (url != null && url.StartsWith("/"))
+				url = url.Substring(1);
 			if (String.IsNullOrEmpty(url))
-				return "index/index/0";
+				return "home/index/0";
 			var urlSegments = url.Split('/');
 			if (urlSegments.Length == 1)
 				return url + "/index/0";
@@ -42,6 +47,7 @@ namespace A2v10.Request
 
 		public Task<ViewInfo> LoadView(String pathInfo)
 		{
+			pathInfo = NormalizeUrl(pathInfo);
 			return LoadViewKind(pathInfo, RequestUrlKind.Page);
 		}
 
@@ -61,11 +67,12 @@ namespace A2v10.Request
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
-				View = $"~/App_apps/{host.AppKey}/{rw.Path}/{rw.GetView()}.cshtml",
+				View = host.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
+				Path = rw.Path,
 				DataModel = dmrw.Model,
 				Id = rw.Id
 			};
-			viewInfo.Script = await _baseController.GetModelScriptModel(rw, viewInfo.DataModel, pageId);
+			viewInfo.Script = await _baseController.WriteModelScript(rw, viewInfo.DataModel, pageId);
 			return viewInfo;
 		}
 
@@ -120,5 +127,22 @@ namespace A2v10.Request
 			}
 		}
 
+		public async Task<Boolean> ProcessRequest(String pathInfo, HttpRequestBase Request, HttpResponseBase Response)
+		{
+			if (pathInfo == null)
+				return false;
+			if (pathInfo.StartsWith("_data/"))
+			{
+				String command = pathInfo.Substring(6);
+				await Data(command, Request, Response);
+				return true;
+			}
+			return false;
+		}
+
+		public void WriteExceptionStatus(Exception ex, HttpResponseBase response)
+		{
+			_baseController.WriteExceptionStatus(ex, response);
+		}
 	}
 }

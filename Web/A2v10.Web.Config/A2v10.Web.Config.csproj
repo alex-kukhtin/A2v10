@@ -56,6 +56,10 @@
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
+      <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
+      <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

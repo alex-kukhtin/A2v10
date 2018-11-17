@@ -19,7 +19,7 @@
 	let rootElem = document.querySelector('meta[name=rootUrl]');
 	window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
-	function require(module) {
+	function require(module, noerror) {
 		if (module in app.modules) {
 			let am = app.modules[module];
 			if (typeof am === 'function') {
@@ -28,12 +28,16 @@
 			}
 			return am;
 		}
+		if (noerror)
+			return null;
 		throw new Error('module "' + module + '" not found');
 	}
 
-	function component(name) {
+	function component(name, noerror) {
 		if (name in app.components)
 			return app.components[name];
+		if (noerror)
+			return {};
 		throw new Error('component "' + name + '" not found');
 	}
 
@@ -1105,6 +1109,362 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+/*20180821-7280*/
+/* services/mask.js */
+
+app.modules['std:mask'] = function () {
+
+
+	const PLACE_CHAR = '_';
+
+	return {
+		getMasked,
+		getUnmasked,
+		mountElement,
+		unmountElement,
+		setMask
+	};
+
+	function isMaskChar(ch) {
+		return ch === '#' || ch === '@';
+	}
+
+	function isSpaceChar(ch) {
+		return '- ()'.indexOf(ch) !== -1;
+	}
+
+	function isValidChar(mask, char) {
+		if (mask === '#') {
+			return char >= '0' && char <= '9' || char === PLACE_CHAR;
+		}
+		return false; // todo: alpha
+	}
+
+	function getMasked(mask, value) {
+		let str = '';
+		let j = 0;
+		for (let i = 0; i < mask.length; i++) {
+			let mc = mask[i];
+			let ch = value[j];
+			if (mc === ch) {
+				str += ch;
+				j++;
+			} else if (isMaskChar(mc)) {
+				str += ch || PLACE_CHAR;
+				j++;
+			} else {
+				str += mc;
+			}
+		}
+		return str;
+	}
+
+	function fitMask(mask, value) {
+		let str = '';
+		let j = 0;
+
+		function nextValueChar() {
+			let ch;
+			for (; ;) {
+				ch = value[j];
+				if (!ch) return PLACE_CHAR;
+				// TODO: this is for digits only!
+				j++;
+				if (ch >= '0' && ch <= '9') {
+					return ch;
+				}
+			}
+		}
+
+		let ch = nextValueChar();
+		
+		for (let i = 0; i < mask.length; i++) {
+			let mc = mask[i];
+			if (isSpaceChar(mc)) {
+				str += mc;
+			}
+			else if (isMaskChar(mc)) {
+				str += ch;
+				ch = nextValueChar();
+			} else {
+				str += mc;
+				if (mc === ch)
+					ch = nextValueChar();
+			}
+		}
+		return str;
+	}
+
+	function getUnmasked(mask, value) {
+		let str = '';
+		for (let i = 0; i < mask.length; i++) {
+			let mc = mask[i];
+			let ch = value[i];
+			if (isSpaceChar(mc)) continue;
+			if (isMaskChar(mc)) {
+				if (ch && ch !== PLACE_CHAR) {
+					str += ch;
+				} else {
+					return '';
+				}
+			} else {
+				str += mc;
+			}
+		}
+		return str;
+	}
+
+	function mountElement(el, mask) {
+		if (!el) return; // static, etc
+		el.__opts = {
+			mask: mask
+		};
+		el.addEventListener('keydown', keydownHandler, false);
+		el.addEventListener('blur', blurHandler, false);
+		el.addEventListener('focus', focusHandler, false);
+		el.addEventListener('paste', pasteHandler, false);
+	}
+
+	function unmountElement(el, mask) {
+		if (!el) return;
+		delete el.__opts;
+		el.removeEventListener('keydown', keydownHandler);
+		el.removeEventListener('blur', blurHandler);
+		el.removeEventListener('focus', focusHandler);
+		el.removeEventListener('paste', pasteHandler);
+	}
+
+	function setMask(el, mask) {
+		if (!el) return;
+		if (!mask) {
+			// remove mask
+			unmountElement(el, mask);
+			el.value = '';
+		} else if (el.__opts) {
+			// change mask
+			el.__opts.mask = mask;
+			//console.dir('set new mask');
+			el.value = getMasked(mask, '');
+		} else {
+			// set new
+			mountElement(el, mask);
+			el.value = getMasked(mask, '');
+		}
+	}
+
+	function getCaretPosition(input) {
+		if (!input)
+			return 0;
+		if (input.selectionStart !== undefined) {
+			if (input.selectionStart !== input.selectionEnd)
+				input.setSelectionRange(input.selectionStart, input.selectionStart);
+			return input.selectionStart;
+		}
+		return 0;
+	}
+
+	function fitCaret(mask, pos, fit) {
+		if (pos >= mask.length)
+			return pos + 1; // after text
+		let mc = mask[pos];
+		if (isMaskChar(mc))
+			return pos;
+		if (fit === 'r') {
+			for (let i = pos + 1; i < mask.length; i++) {
+				if (isMaskChar(mask[i])) return i;
+			}
+			return mask.length + 1;
+		} else if (fit === 'l') {
+			for (let i = pos - 1; i >= 0; i--) {
+				if (isMaskChar(mask[i])) return i;
+			}
+			return fitCaret(mask, 0, 'r'); // first
+		}
+		throw new Error(`mask.fitCaret. Invalid fit value '${fit}'`);
+	}
+
+	function setCaretPosition(input, pos, fit) {
+		//console.dir('set position');
+		if (!input) return;
+		if (input.offsetWidth === 0 || input.offsetHeight === 0) {
+			return; // Input's hidden
+		}
+		if (input.setSelectionRange) {
+			let mask = input.__opts.mask;
+			pos = fitCaret(mask, pos, fit);
+			input.setSelectionRange(pos, pos);
+		}
+	}
+
+	function setRangeText(input, text, s, e) {
+		//console.dir('set range text');
+		if (input.setRangeText) {
+			input.setRangeText(text, s, e);
+			return;
+		}
+		let val = input.value;
+		let r = val.substring(0, s);
+		r += text;
+		r += val.substring(e);
+		input.value = r;
+	}
+
+	function clearRangeText(input) {
+		setRangeText(input, '', input.selectionStart, input.selectionEnd);
+	}
+
+	function clearSelectionFull(ev, input) {
+		if (ev.which !== 46) return false;
+		let s = input.selectionStart;
+		let e = input.selectionEnd;
+		let l = input.value.length;
+		if (s === 0 && e === l) {
+			//console.dir(`s: ${s}, e:${e} v:${input.value.length}`);
+			input.value = getMasked(input.__opts.mask, '');
+			setCaretPosition(input, 0, 'r');
+			ev.preventDefault();
+			ev.stopPropagation();
+			return true;
+		}
+		return false;
+	}
+
+	function setCurrentChar(input, char) {
+		let pos = getCaretPosition(input);
+		let mask = input.__opts.mask;
+		pos = fitCaret(mask, pos, 'r');
+		let cm = mask[pos];
+		if (isValidChar(cm, char)) {
+			setRangeText(input, char, pos, pos + 1);
+			let np = fitCaret(mask, pos + 1, 'r');
+			input.setSelectionRange(np, np);
+		}
+	}
+
+	function isAccel(e, input) {
+		if (e.which >= 112 && e.which <= 123)
+			return true; // f1-f12
+		if (e.which === 16 || e.which === 17)
+			return true; // ctrl || shift
+		if (e.which >= 112 && e.which <= 123)
+			return true; // f1-f12
+		if (e.which === 9) return true; // tab
+		if (e.which === 13) {
+			fireChange(input);
+			setTimeout(() => {
+				let d = 'l'; // last
+				if (!input.value) {
+					input.value = getMasked(input.__opts.mask, '');
+					d = 'r'; // first
+				}
+				setCaretPosition(input, d === 'r' ? 0 : 32768, d);
+			}, 10);
+			return true; // enter
+		}
+		if (e.ctrlKey) {
+			switch (e.which) {
+				case 86: // V
+				case 67: // C
+				case 65: // A
+				case 88: // X
+				case 90: // Z
+				case 45: // Ins
+					return true;
+			}
+		} else if (e.shiftKey) {
+			switch (e.which) {
+				case 45: // ins
+				case 46: // del
+				case 37: // left
+				case 39: // right
+				case 36: // home
+				case 35: // end
+					return true;
+			}
+		}
+		return false;
+	}
+
+	function keydownHandler(e) {
+		if (isAccel(e, this)) return;
+		let handled = false;
+		if (clearSelectionFull(e, this)) return;
+		let pos = getCaretPosition(this);
+		//console.dir(e.which);
+		switch (e.which) {
+			case 37: /* left */
+				setCaretPosition(this, pos - 1, 'l');
+				handled = true;
+				break;
+			case 39: /* right */
+				setCaretPosition(this, pos + 1, 'r');
+				handled = true;
+				break;
+			case 38: /* up */
+			case 40: /* down */
+			case 33: /* pgUp */
+			case 34: /* pgDn* */
+				handled = true;
+				break;
+			case 36: /*home*/
+				setCaretPosition(this, 0, 'r');
+				handled = true;
+				break;
+			case 35: /*end*/
+				setCaretPosition(this, this.__opts.mask.length, 'l');
+				handled = true;
+				break;
+			case 46: /*delete*/
+				setCurrentChar(this, PLACE_CHAR);
+				handled = true;
+				break;
+			case 8: /*backspace*/
+				setCaretPosition(this, pos - 1, 'l');
+				setCurrentChar(this, PLACE_CHAR);
+				setCaretPosition(this, pos - 1, 'l');
+				handled = true;
+				break;
+			default:
+				if (e.key.length === 1)
+					setCurrentChar(this, e.key);
+				handled = true;
+				break;
+		}
+		if (handled) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
+
+	function blurHandler(e) {
+		fireChange(this);
+	}
+
+	function focusHandler(/*e*/) {
+		if (!this.value)
+			this.value = getMasked(this.__opts.mask, '');
+		setTimeout(() => {
+			setCaretPosition(this, 0, 'r');
+		}, 10);
+	}
+
+	function pasteHandler(e) {
+		e.preventDefault();
+		let dat = e.clipboardData.getData('text/plain');
+		if (!dat) return;
+		this.value = fitMask(this.__opts.mask, dat);
+	}
+
+
+	function fireChange(input) {
+		var evt = document.createEvent('HTMLEvents');
+		evt.initEvent('change', false, true);
+		input.dispatchEvent(evt);
+	}
+};
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 /*20180227-7121*/
 /* platform/webvue.js */
 
@@ -1297,68 +1657,19 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2018 Alex Kukhtin. All rights reserved.
 
 /*20180227-7121*/
-/* services/log.js */
+/* services/routing.js */
 
-app.modules['std:log'] = function () {
-
-
-	let _traceEnabled = false;
-	let _sessionLoaded = false;
-	const traceEnabledKey = 'traceEnabled';
+app.modules['std:routing'] = function () {
 
 	return {
-		info: info,
-		warn: warning,
-		error: error,
-		time: countTime,
-		traceEnabled: function () {
-			if (!_sessionLoaded)
-				loadSession();
-			return _traceEnabled;
-		},
-		enableTrace: function (val) {
-			if (!window.$$debug) return;
-			_traceEnabled = val;
-			console.warn('tracing is ' + (_traceEnabled ? 'enabled' : 'disabled'));
-			try {
-				window.sessionStorage.setItem(traceEnabledKey, val);
-			}
-			catch (err) {
-				// do nothing
-			}
-		}
+		dataUrl
 	};
 
-	function info(msg) {
-		if (!_traceEnabled) return;
-		console.info(msg);
-	}
-
-	function warning(msg) {
-		if (!_traceEnabled) return;
-		console.warn(msg);
-	}
-
-	function error(msg) {
-		console.error(msg); // always
-	}
-
-	function countTime(msg, start, enable) {
-		if (!_traceEnabled && !enable) return;
-		console.warn(msg + ' ' + (performance.now() - start).toFixed(2) + ' ms');
-	}
-
-	function loadSession() {
-		let te = window.sessionStorage.getItem(traceEnabledKey);
-		if (te !== null) {
-			_traceEnabled = te === 'true';
-			if (_traceEnabled)
-				console.warn('tracing is enabled');
-		}
-		_sessionLoaded = true;
+	function dataUrl(msg) {
+		return '_data';
 	}
 };
 
@@ -1541,469 +1852,6 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180813-7271
-// components/collectionview.js
-
-/*
-TODO:
-11. GroupBy
-*/
-
-(function () {
-
-
-	const log = require('std:log');
-	const utils = require('std:utils');
-	const period = require('std:period');
-
-	const DEFAULT_PAGE_SIZE = 20;
-
-	function getModelInfoProp(src, propName) {
-		if (!src) return undefined;
-		let mi = src.$ModelInfo;
-		if (!mi) return undefined;
-		return mi[propName];
-	}
-
-	function setModelInfoProp(src, propName, value) {
-		if (!src) return;
-		let mi = src.$ModelInfo;
-		if (!mi) return;
-		mi[propName] = value;
-	}
-
-	function makeNewQueryFunc(that) {
-		let nq = { dir: that.dir, order: that.order, offset: that.offset };
-		for (let x in that.filter) {
-			let fVal = that.filter[x];
-			if (period.isPeriod(fVal)) {
-				nq[x] = fVal.format('DateUrl');
-			}
-			else if (utils.isDate(fVal)) {
-				nq[x] = utils.format(fVal, 'DateUrl');
-			}
-			else if (utils.isObjectExact(fVal)) {
-				if (!('Id' in fVal)) {
-					console.error('The object in the Filter does not have Id property');
-				}
-				nq[x] = fVal.Id ? fVal.Id : undefined;
-			}
-			else if (fVal) {
-				nq[x] = fVal;
-			}
-			else {
-				nq[x] = undefined;
-			}
-		}
-		return nq;
-	}
-
-	function modelInfoToFilter(q, filter) {
-		if (!q) return;
-		for (let x in filter) {
-			if (x in q) {
-				let iv = filter[x];
-				if (period.isPeriod(iv)) {
-					filter[x] = iv.fromUrl(q[x]);
-				}
-				else if (utils.isDate(iv)) {
-					filter[x] = utils.date.tryParse(q[x]);
-				}
-				else if (utils.isObjectExact(iv)) 
-					iv.Id = q[x];
-				else {
-					filter[x] = q[x];
-				}
-			}
-		}
-	}
-
-	// client collection
-
-	Vue.component('collection-view', {
-		template: `
-<div>
-	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
-	</slot>
-</div>
-`,
-		props: {
-			ItemsSource: Array,
-			initialPageSize: Number,
-			initialFilter: Object,
-			initialSort: Object,
-			runAt: String,
-			filterDelegate: Function
-		},
-		data() {
-			let lq = Object.assign({}, {
-				offset: 0,
-				dir: 'asc',
-				order: ''
-			}, this.initialFilter);
-
-			return {
-				filter: this.initialFilter,
-				filteredCount: 0,
-				localQuery: lq
-			};
-		},
-		computed: {
-			pageSize() {
-				if (this.initialPageSize > 0)
-					return this.initialPageSize;
-				return -1; // invisible pager
-			},
-			dir() {
-				return this.localQuery.dir;
-			},
-			offset() {
-				return this.localQuery.offset;
-			},
-			order() {
-				return this.localQuery.order;
-			},
-			pagedSource() {
-				let s = performance.now();
-				let arr = [].concat(this.ItemsSource);
-
-				if (this.filterDelegate) {
-					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
-				}
-				// sort
-				if (this.order && this.dir) {
-					let p = this.order;
-					let d = this.dir === 'asc';
-					arr.sort((a, b) => {
-						if (a[p] === b[p])
-							return 0;
-						else if (a[p] < b[p])
-							return d ? -1 : 1;
-						return d ? 1 : -1;
-					});
-				}
-				// HACK!
-				this.filteredCount = arr.length;
-				// pager
-				if (this.pageSize > 0)
-					arr = arr.slice(this.offset, this.offset + this.pageSize);
-				arr.$origin = this.ItemsSource;
-				if (arr.indexOf(arr.$origin.$selected) === -1) {
-					// not found in target array
-					arr.$origin.$clearSelected();
-				}
-				log.time('get paged source:', s);
-				return arr;
-			},
-			sourceCount() {
-				return this.ItemsSource.length;
-			},
-			thisPager() {
-				return this;
-			},
-			pages() {
-				let cnt = this.filteredCount;
-				return Math.ceil(cnt / this.pageSize);
-			}
-		},
-		methods: {
-			$setOffset(offset) {
-				this.localQuery.offset = offset;
-			},
-			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
-			},
-			doSort(order) {
-				let nq = this.makeNewQuery();
-				if (nq.order === order)
-					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
-				else {
-					nq.order = order;
-					nq.dir = 'asc';
-				}
-				if (!nq.order)
-					nq.dir = null;
-				// local
-				this.localQuery.dir = nq.dir;
-				this.localQuery.order = nq.order;
-			},
-			makeNewQuery() {
-				return makeNewQueryFunc(this);
-			},
-			copyQueryToLocal(q) {
-				for (let x in q) {
-					let fVal = q[x];
-					if (x === 'offset')
-						this.localQuery[x] = q[x];
-					else
-						this.localQuery[x] = fVal ? fVal : undefined;
-				}
-			}
-		},
-		created() {
-			if (this.initialSort) {
-				this.localQuery.order = this.initialSort.order;
-				this.localQuery.dir = this.initialSort.dir;
-			}
-			this.$on('sort', this.doSort);
-		}
-	});
-
-
-	// server collection view
-	Vue.component('collection-view-server', {
-		template: `
-<div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter">
-	</slot>
-</div>
-`,
-		props: {
-			ItemsSource: Array,
-			initialFilter: Object
-		},
-
-		data() {
-			return {
-				filter: this.initialFilter,
-				lockChange: true
-			};
-		},
-
-		watch: {
-			jsonFilter: {
-				handler(newData, oldData) {
-					this.filterChanged();
-				}
-			}
-		},
-
-		computed: {
-			jsonFilter() {
-				return utils.toJson(this.filter);
-			},
-			thisPager() {
-				return this;
-			},
-			pageSize() {
-				return getModelInfoProp(this.ItemsSource, 'PageSize');
-			},
-			dir() {
-				return  getModelInfoProp(this.ItemsSource, 'SortDir');
-			},
-			order() {
-				return getModelInfoProp(this.ItemsSource, 'SortOrder');
-			},
-			offset() {
-				return getModelInfoProp(this.ItemsSource, 'Offset');
-			},
-			pages() {
-				cnt = this.sourceCount;
-				return Math.ceil(cnt / this.pageSize);
-			},
-			sourceCount() {
-				if (!this.ItemsSource) return 0;
-				return this.ItemsSource.$RowCount || 0;
-			}
-		},
-		methods: {
-			$setOffset(offset) {
-				if (this.offset === offset)
-					return;
-				setModelInfoProp(this.ItemsSource, 'Offset', offset);
-				this.reload();
-			},
-			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
-			},
-			doSort(order) {
-				if (order === this.order) {
-					let dir = this.dir === 'asc' ? 'desc' : 'asc';
-					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
-				} else {
-					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
-					setModelInfoProp(this.ItemsSource, 'SortDir', 'asc');
-				}
-				this.reload();
-			},
-			filterChanged() {
-				if (this.lockChange) return;
-				let mi = this.ItemsSource.$ModelInfo;
-				if (!mi) {
-					mi = { Filter: this.filter };
-					this.ItemsSource.$ModelInfo = mi;
-				}
-				else {
-					this.ItemsSource.$ModelInfo.Filter = this.filter;
-				}
-				if ('Offset' in mi)
-					setModelInfoProp(this.ItemsSource, 'Offset', 0);
-				this.reload();
-			},
-			reload() {
-				this.$root.$emit('cwChange', this.ItemsSource);
-			},
-			updateFilter() {
-				let mi = this.ItemsSource.$ModelInfo;
-				if (!mi) return;
-				let fi = mi.Filter;
-				if (!fi) return;
-				this.lockChange = true;
-				for (var prop in this.filter) {
-					if (prop in fi)
-						this.filter[prop] = fi[prop];
-				}
-				this.$nextTick(() => {
-					this.lockChange = false;
-				});
-			}
-		},
-		created() {
-			// get filter values from modelInfo
-			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
-			if (mi) {
-				modelInfoToFilter(mi.Filter, this.filter);
-			}
-			this.$nextTick(() => {
-				this.lockChange = false;
-			});
-			// from datagrid, etc
-			this.$on('sort', this.doSort);
-		},
-		updated() {
-			this.updateFilter();
-		}
-	});
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20180426-7166
-/*site/pager.js*/
-
-/*TODO: make bootstrap!*/
-
-Vue.component('a2-pager', {
-	props: {
-		source: Object,
-		noElements: String,
-		elements: String
-	},
-	computed: {
-		pages() {
-			return Math.ceil(this.count / this.source.pageSize);
-		},
-		currentPage() {
-			return Math.ceil(this.offset / this.source.pageSize) + 1;
-		},
-		title() {
-			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
-			if (!this.count)
-				return this.noElements;
-			return `${this.elements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> з <b>${this.count}</b>`;
-		},
-		offset() {
-			return +this.source.offset;
-		},
-		count() {
-			return +this.source.sourceCount;
-		}
-	},
-	methods: {
-		setOffset(offset) {
-			offset = +offset;
-			if (this.offset === offset)
-				return;
-			this.source.$setOffset(offset);
-		},
-		isActive(page) {
-			return page === this.currentPage;
-		},
-		click(arg, $ev) {
-			$ev.preventDefault();
-			switch (arg) {
-				case 'prev':
-					if (this.offset === 0) return;
-					this.setOffset(this.offset - this.source.pageSize);
-					break;
-				case 'next':
-					if (this.currentPage >= this.pages) return;
-					this.setOffset(this.offset + this.source.pageSize);
-					break;
-			}
-		},
-		goto(page, $ev) {
-			$ev.preventDefault();
-			let offset = (page - 1) * this.source.pageSize;
-			this.setOffset(offset);
-		}
-	},
-	render(h, ctx) {
-		if (this.source.pageSize === -1) return; // invisible
-		let contProps = {
-			class: 'pagination pagination-sm'
-		};
-		let children = [];
-		const dotsClass = { 'class': 'pagination-dots' };
-		const renderBtn = (page) => {
-			return h('li', { class: { active: this.isActive(page) }},
-				[h('a', {
-					domProps: { innerText: page },
-					on: { click: ($ev) => this.goto(page, $ev) },
-					attrs: { href:"#" }
-				})]
-			);
-		};
-		// prev
-		children.push(h('li', { class: { disabled: this.offset === 0 } },
-			[h('a', {
-				on: { click: ($ev) => this.click('prev', $ev) },
-				attrs: { 'aria-label': 'Previous', href: '#' },
-				domProps: { innerHTML: '&laquo;' }
-			})]
-		));
-		// first
-		if (this.pages > 0)
-			children.push(renderBtn(1));
-		if (this.pages > 1)
-			children.push(renderBtn(2));
-		// middle
-		let ms = Math.max(this.currentPage - 2, 3);
-		let me = Math.min(ms + 5, this.pages - 1);
-		if (me - ms < 5)
-			ms = Math.max(me - 5, 3);
-		if (ms > 3)
-			children.push(h('li', dotsClass, [h('span', null, '...')]));
-		for (let mi = ms; mi < me; ++mi) {
-			children.push(renderBtn(mi));
-		}
-		if (me < this.pages - 1)
-			children.push(h('li', dotsClass, [h('span', null, '...')]));
-		// last
-		if (this.pages > 3)
-			children.push(renderBtn(this.pages - 1));
-		if (this.pages > 2)
-			children.push(renderBtn(this.pages));
-		// next
-		children.push(h('li', {
-			class: { disabled: this.currentPage >= this.pages }
-		}, [h('a', {
-			on: { click: ($ev) => this.click('next', $ev) },
-			attrs: { 'aria-label': 'Previous', href: '#' },
-			domProps: { innerHTML: '&raquo;' }
-		})]
-		));
-
-		/*
-		children.push(h('span', { class: 'a2-pager-divider' }));
-		children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
-		*/
-		return h('ul', contProps, children);
-	}
-});
-
-
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
 // 20181112-7355
 // services/datamodel.js
 
@@ -2027,10 +1875,20 @@ Vue.component('a2-pager', {
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-	const log = require('std:log');
+	const log = require('std:log', true);
 	const period = require('std:period');
 
 	let __initialized__ = false;
+
+	function loginfo(msg) {
+		if (!log) return;
+		log.info(msg);
+	}
+
+	function logtime(msg, time) {
+		if (!log) return;
+		log.time(msg, time);
+	}
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -2163,11 +2021,11 @@ Vue.component('a2-pager', {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
 				if (utils.isPrimitiveCtor(propInfo)) {
-					log.info(`create scalar property: ${objname}.${p}`);
+					loginfo(`create scalar property: ${objname}.${p}`);
 					elem._meta_.props[p] = propInfo;
 				} else if (utils.isObjectExact(propInfo)) {
 					if (!propInfo.get) { // plain object
-						log.info(`create object property: ${objname}.${p}`);
+						loginfo(`create object property: ${objname}.${p}`);
 						elem._meta_.props[p] = TMarker;
 						if (!elem._meta_.markerProps)
 							elem._meta_.markerProps = {};
@@ -2191,7 +2049,7 @@ Vue.component('a2-pager', {
 					continue;
 				}
 				else if (utils.isFunction(propInfo)) {
-					log.info(`create property: ${objname}.${p}`);
+					loginfo(`create property: ${objname}.${p}`);
 					Object.defineProperty(elem, p, {
 						configurable: false,
 						enumerable: true,
@@ -2199,7 +2057,7 @@ Vue.component('a2-pager', {
 					});
 				} else if (utils.isObjectExact(propInfo)) {
 					if (propInfo.get) { // has get, maybe set
-						log.info(`create property: ${objname}.${p}`);
+						loginfo(`create property: ${objname}.${p}`);
 						Object.defineProperty(elem, p, {
 							configurable: false,
 							enumerable: true,
@@ -2327,7 +2185,7 @@ Vue.component('a2-pager', {
 			elem._seal_ = seal
 		}
 		if (startTime) {
-			log.time('create root time:', startTime, false);
+			logtime('create root time:', startTime, false);
 		}
 		return elem;
 	}
@@ -2764,18 +2622,18 @@ Vue.component('a2-pager', {
 				this._needValidate_ = true;
 			}
 		}
-		log.info('emit: ' + event);
+		loginfo('emit: ' + event);
 		let templ = this.$template;
 		if (!templ) return;
 		let events = templ.events;
 		if (!events) return;
 		if (event in events) {
 			// fire event
-			log.info('handle: ' + event);
+			loginfo('handle: ' + event);
 			let func = events[event];
 			let rv = func.call(this, ...arr);
 			if (rv === false)
-				log.info(event + ' returns false');
+				loginfo(event + ' returns false');
 			return rv;
 		}
 	}
@@ -3021,7 +2879,7 @@ Vue.component('a2-pager', {
 			}
 		}
 		var e = performance.now();
-		log.time('validation time:', startTime);
+		logtime('validation time:', startTime);
 		return allerrs;
 		//console.dir(allerrs);
 	}
@@ -3217,17 +3075,48 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181111-7351
-// /site/controller.js
+// 20181117-7358
+/*site/store.js*/
+
+app.components['std:store'] = {
+};
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181031-7339
+// controllers/base.js
 
 (function () {
+
+
+	// TODO: delete this.__queryChange
 
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
 	const dataservice = require('std:dataservice');
 	const urltools = require('std:url');
+	const log = require('std:log', true /*no error*/);
 	const locale = window.$$locale;
+	const mask = require('std:mask');
 	const modelInfo = require('std:modelInfo');
+	const platform = require('std:platform');
+
+	const store = component('std:store');
+	const documentTitle = component("std:doctitle", true /*no error*/);
+
+	let __updateStartTime = 0;
+	let __createStartTime = 0;
+
+	function __runDialog(url, arg, query, cb) {
+		return new Promise(function (resolve, reject) {
+			const dlgData = { promise: null, data: arg, query: query };
+			eventBus.$emit('modal', url, dlgData);
+			dlgData.promise.then(function (result) {
+				cb(result);
+				resolve(result);
+			});
+		});
+	}
 
 	function makeErrors(errs) {
 		let ra = [];
@@ -3239,28 +3128,20 @@ Vue.component('a2-pager', {
 		return ra.length ? ra : null;
 	}
 
-	function __runDialog(url, arg, query, cb) {
-		return new Promise(function (resolve, reject) {
-			const dlgData = { promise: null, data: arg, query: query };
-			eventBus.$emit('modal', url, dlgData);
-			dlgData.promise.then(function (result) {
-				if (cb)
-					cb(result);
-				resolve(result);
-			});
-		});
-	}
-
-	const siteController = Vue.extend({
+	const base = Vue.extend({
 		// inDialog: Boolean (in derived class)
 		// pageTitle: String (in derived class)
+		store: store,
+		components: {
+			'a2-document-title': documentTitle
+		},
 		data() {
 			return {
 				__init__: true,
 				__baseUrl__: '',
 				__baseQuery__: {},
 				__requestsCount__: 0,
-				$$currentTab: '' /*for bootstrap tab*/
+				__lockQuery__: true
 			};
 		},
 
@@ -3276,6 +3157,9 @@ Vue.component('a2-pager', {
 			},
 			$query() {
 				return this.$data._query_;
+			},
+			$jsonQuery() {
+				return utils.toJson(this.$data.Query);
 			},
 			$isDirty() {
 				return this.$data.$dirty;
@@ -3293,37 +3177,77 @@ Vue.component('a2-pager', {
 				return this.$isDirty && !this.$isLoading;
 			}
 		},
+		watch: {
+			$jsonQuery(newData, oldData) {
+				//console.warn(newData);
+				this.$nextTick(() => this.$reload());
+			}
+		},
 		methods: {
+			$marker() {
+				return true;
+			},
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
+				if (this.$isLoading) return;
 				const root = this.$data;
 				root._exec_(cmd, arg, confirm, opts);
+				return;
+                /*
+                const doExec = () => {
+                    let root = this.$data;
+                    if (!confirm)
+                        root._exec_(cmd, arg, confirm, opts);
+                    else
+                        this.$confirm(confirm).then(() => root._exec_(cmd, arg));
+                }
+
+                if (opts && opts.saveRequired && this.$isDirty) {
+                    this.$save().then(() => doExec());
+                } else {
+                    doExec();
+                }
+                */
 			},
 
 			$isReadOnly(opts) {
 				return opts && opts.checkReadOnly && this.$data.$readOnly;
 			},
 
+			$execSelected(cmd, arg, confirm) {
+				if (this.$isLoading) return;
+				let root = this.$data;
+				if (!utils.isArray(arg)) {
+					console.error('Invalid argument for $execSelected');
+					return;
+				}
+				if (!confirm)
+					root._exec_(cmd, arg.$selected);
+				else
+					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
+			},
 			$canExecute(cmd, arg, opts) {
+				if (this.$isLoading) return false;
 				if (this.$isReadOnly(opts))
 					return false;
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
-
-			$format(value, dataType, hideZeros) {
-				if (!dataType) return value;
-				return utils.format(value, dataType, hideZeros);
-			},
-
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/data/save';
+				const routing = require('std:routing'); // defer loading
+				let url = `${root}/${routing.dataUrl()}/save`;
 				let urlToSave = this.$indirectUrl || this.$baseUrl;
 				const isCopy = this.$data.$isCopy;
+				const validRequired = !!opts && opts.options && opts.options.validRequired;
+				if (validRequired && this.$data.$invalid) {
+					let errs = makeErrors(this.$data.$forceValidate());
+					this.$alert(locale.$MakeValidFirst, undefined, errs);
+					return;
+				}
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
@@ -3342,36 +3266,68 @@ Vue.component('a2-pager', {
 								break;
 						}
 						if (wasNew && newId) {
-							// assign the new id to the __baseUrl__
+							// assign the new id to the route
+							if (!self.inDialog)
+								self.$store.commit('setnewid', { id: newId });
+							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId);
 						} else if (isCopy) {
+							// TODO: get action ????
+							if (!self.inDialog)
+								self.$store.commit('setnewid', { id: newId, action: 'edit' });
 							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
 						resolve(dataToResolve); // single element (raw data)
+						let toast = opts && opts.toast ? opts.toast : null;
+						if (toast)
+							self.$toast(toast);
+						self.$notifyOwner(newId, toast);
 					}).catch(function (msg) {
-						alert(msg);
+						self.$alertUi(msg);
 					});
 				});
 			},
+			$notifyOwner(id, toast) {
+				if (!window.opener) return;
+				if (!window.$$token) return;
+				let rq = window.opener.require;
+				if (!rq) return;
+				const bus = rq('std:eventBus');
+				if (!bus) return;
+				let dat = {
+					token: window.$$token.token,
+					update: window.$$token.update,
+					toast: toast || null,
+					id: id
+				};
+				bus.$emit('childrenSaved', dat);
+			},
 
-			$invoke(cmd, data, base) {
+
+			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
-				let url = root + '/data/invoke';
+				const routing = require('std:routing');
+				let url = `${root}/${routing.dataUrl()}/invoke`;
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
 					dataservice.post(url, jsonData).then(function (data) {
-						if (utils.isObject(data)) {
+						if (utils.isObject(data))
 							resolve(data);
-						} else {
+						else if (utils.isString(data))
+							resolve(data);
+						else
 							throw new Error('Invalid response type for $invoke');
-						}
 					}).catch(function (msg) {
-						alert(msg);
+						if (opts && opts.catchError) {
+							reject(msg);
+						} else {
+							self.$alertUi(msg);
+						}
 					});
 				});
 			},
@@ -3401,7 +3357,6 @@ Vue.component('a2-pager', {
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
-				//debugger;
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -3411,7 +3366,8 @@ Vue.component('a2-pager', {
 					return self.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
-				let url = root + '/_data/reload';
+				const routing = require('std:routing'); // defer loading
+				let url = `${root}/${routing.dataUrl()}/reload`;
 				let dat = self.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
@@ -3429,7 +3385,7 @@ Vue.component('a2-pager', {
 						// special element -> use url
 						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
 						let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
-						//window.history.replaceState(null, null, newUrl);
+						window.history.replaceState(null, null, newUrl);
 					}
 					let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
@@ -3442,24 +3398,121 @@ Vue.component('a2-pager', {
 							throw new Error('Invalid response type for $reload');
 						}
 					}).catch(function (msg) {
-						alert(msg);
+						self.$alertUi(msg);
 					});
 				});
 			},
 
+			$requery() {
+				if (this.inDialog)
+					alert('$requery command is not supported in dialogs');
+				else
+					eventBus.$emit('requery');
+			},
+
 			$remove(item, confirm) {
-				if (this.$data.$readOnly)
-					return;
+				if (this.$data.$readOnly) return;
+				if (this.$isLoading) return;
 				if (!confirm)
 					item.$remove();
 				else
 					this.$confirm(confirm).then(() => item.$remove());
 			},
 
+			$removeSelected(arr, confirm) {
+				if (!utils.isArray(arr)) {
+					console.error('$removeSelected. The argument is not an array');
+				}
+				if (this.$data.$readOnly)
+					return;
+				let item = arr.$selected;
+				if (!item)
+					return;
+				this.$remove(item, confirm);
+			},
+			$mailto(arg, subject) {
+				let href = 'mailto:' + arg;
+				if (subject)
+					href += '?subject=' + urltools.encodeUrl(subject);
+				return href;
+			},
+			$href(url, data) {
+				return urltools.createUrlForNavigate(url, data);
+			},
+			$navigate(url, data, newWindow, update, opts) {
+				if (this.$isReadOnly(opts)) return;
+				let urlToNavigate = urltools.createUrlForNavigate(url, data);
+				if (newWindow === true) {
+					let nwin = window.open(urlToNavigate, "_blank");
+					nwin.$$token = { token: this.__currentToken__, update: update };
+				}
+				else
+					this.$store.commit('navigate', { url: urlToNavigate });
+			},
+
+			$navigateSimple(url, newWindow, update) {
+				if (newWindow === true) {
+					let nwin = window.open(url, "_blank");
+					nwin.$$token = { token: this.__currentToken__, update: update };
+				}
+				else
+					this.$store.commit('navigate', { url: url });
+			},
+
+			$navigateExternal(url, newWindow) {
+				if (newWindow === true) {
+					let nwin = window.open(url, "_blank");
+				}
+				else
+					window.location.assign(url);
+			},
+
+			$download(url) {
+				const root = window.$$rootUrl;
+				url = urltools.combine('/file', url.replace('.', '-'));
+				window.location = root + url;
+			},
+
+			$attachment(url, arg, opts) {
+				const root = window.$$rootUrl;
+				let cmd = opts && opts.export ? 'export' : 'show';
+				let id = arg;
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
+				let attUrl = urltools.combine(root, 'attachment', cmd, id);
+				let qry = { base: url};
+				attUrl = attUrl + urltools.makeQueryString(qry);
+				if (opts && opts.newWindow)
+					window.open(attUrl, '_blank');
+				else
+					window.location.assign(attUrl);
+			},
+
+			$eusign(baseurl, arg) {
+				// id => attachment id
+				// open dialog with eu-sign frame
+				function rawDialog(url) {
+					return new Promise(function (resolve, reject) {
+						const dlgData = {
+							promise: null, data: arg, query: { base: baseurl }, raw: true
+						};
+						eventBus.$emit('modal', url, dlgData);
+						dlgData.promise.then(function (result) {
+							cb(result);
+							resolve(result);
+						});
+					});
+				}
+				const root = window.$$rootUrl;
+				rawDialog('/eusign/index').then(function (resolve, reject) {
+					alert('promise resolved');
+				});
+			},
 
 			$dbRemove(elem, confirm) {
 				if (!elem)
 					return;
+				if (this.$isLoading) return;
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
@@ -3473,7 +3526,7 @@ Vue.component('a2-pager', {
 				}
 
 				function dbRemove() {
-					let postUrl = root + '/data/dbRemove';
+					let postUrl = root + '/_data/dbRemove';
 					let jsonObj = { baseUrl: self.$baseUrl, id: id };
 					if (lazy) {
 						jsonObj.prop = lastProperty(elem.$parent._path_);
@@ -3482,7 +3535,7 @@ Vue.component('a2-pager', {
 					dataservice.post(postUrl, jsonData).then(function (data) {
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {
-						alert(msg);
+						self.$alertUi(msg);
 					});
 				}
 				if (confirm) {
@@ -3494,21 +3547,386 @@ Vue.component('a2-pager', {
 				}
 			},
 
+			$dbRemoveSelected(arr, confirm) {
+				if (this.$isLoading) return;
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				this.$dbRemove(sel, confirm);
+			},
+
+			$openSelectedFrame(url, arr) {
+				url = url || '';
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				let urlToNavigate = urltools.createUrlForNavigate(url, sel.$id);
+				eventBus.$emit('openframe', urlToNavigate);
+			},
+
+			$openSelected(url, arr, newwin, update) {
+				url = url || '';
+				let sel = arr.$selected;
+				if (!sel)
+					return;
+				if (url.startsWith('{')) { // decorated. defer evaluate
+					url = url.substring(1, url.length - 1);
+					let nUrl = utils.eval(sel, url);
+					if (!nUrl)
+						throw new Error(`Property '${url}' not found in ${sel.constructor.name} object`);
+					url = nUrl;
+				}
+				this.$navigate(url, sel.$id, newwin, update);
+			},
+
+			$hasSelected(arr, opts) {
+				if (opts && opts.validRequired) {
+					let root = this.$data;
+					if (!root.$valid) return false;
+				}
+				return arr && !!arr.$selected;
+			},
+
+			$hasChecked(arr) {
+				return arr && arr.$checked && arr.$checked.length;
+			},
+
+			$sanitize(text) {
+				return utils.text.sanitize(text);
+			},
+
+			$confirm(prms) {
+				if (utils.isString(prms))
+					prms = { message: prms };
+				prms.style = prms.style || 'confirm';
+				prms.message = prms.message || prms.msg; // message or msg
+				let dlgData = { promise: null, data: prms };
+				eventBus.$emit('confirm', dlgData);
+				return dlgData.promise;
+			},
+
+			$msg(msg, title, style) {
+				let prms = { message: msg, title: title || locale.$Message, style: style || 'info' };
+				return this.$confirm(prms);
+			},
+
+			$alert(msg, title, list) {
+				// TODO: tools
+				let dlgData = {
+					promise: null, data: {
+						message: msg, title: title, style: 'alert', list: list
+					}
+				};
+				eventBus.$emit('confirm', dlgData);
+				return dlgData.promise;
+			},
+
+			$alertUi(msg) {
+				if (msg instanceof Error) {
+					alert(msg.message);
+					return;
+				}
+				if (msg.indexOf('UI:') === 0)
+					this.$alert(msg.substring(3).replace('\\n', '\n'));
+
+				else
+					alert(msg);
+			},
+
+			$toast(toast, style) {
+				if (!toast) return;
+				if (utils.isString(toast))
+					toast = { text: toast, style: style || 'success' };
+				eventBus.$emit('toast', toast);
+			},
+
+			$showDialog(url, arg, query, opts) {
+				return this.$dialog('show', url, arg, query, opts);
+			},
+
+
+			$dialog(command, url, arg, query, opts) {
+				if (this.$isReadOnly(opts))
+					return;
+				const that = this;
+				function argIsNotAnArray() {
+					if (!utils.isArray(arg)) {
+						console.error(`$dialog.${command}. The argument is not an array`);
+						return true;
+					}
+				}
+				function argIsNotAnObject() {
+					if (!utils.isObjectExact(arg)) {
+						console.error(`$dialog.${command}. The argument is not an object`);
+						return true;
+					}
+				}
+
+				function simpleMerge(target, src) {
+					for (let p in target) {
+						if (p in src)
+							target[p] = src[p];
+						else
+							target[p] = undefined;
+					}
+				}
+
+				function doDialog() {
+					// result always is raw data
+					switch (command) {
+						case 'append':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, 0, query, (result) => { arg.$append(result); });
+						case 'browse':
+							if (!utils.isObject(arg)) {
+								console.error(`$dialog.${command}. The argument is not an object`);
+								return;
+							}
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge) {
+									arg.$merge(result);
+								} else {
+									simpleMerge(arg, result);
+								}
+							});
+						case 'edit-selected':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
+						case 'edit':
+							if (argIsNotAnObject()) return;
+							return __runDialog(url, arg, query, (result) => {
+								if (arg.$merge)
+									arg.$merge(result);
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
+						case 'copy':
+							if (argIsNotAnObject()) return;
+							let arr = arg.$parent;
+							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
+						default: // simple show dialog
+							return __runDialog(url, arg, query, () => { });
+					}
+				}
+
+				if (opts && opts.validRequired && root.$invalid) {
+					this.$alert(locale.$MakeValidFirst);
+					return;
+				}
+
+				if (opts && opts.saveRequired && this.$isDirty) {
+					let dlgResult = null;
+					this.$save().then(() => { dlgResult = doDialog(); });
+					return dlgResult;
+				}
+				return doDialog();
+			},
+
+			$export() {
+				if (this.$isLoading) return;
+				const self = this;
+				const root = window.$$rootUrl;
+				let url = self.$baseUrl;
+				url = url.replace('/_page/', '/_export/');
+				window.location = root + url;
+			},
+
+			$report(rep, arg, opts) {
+				if (this.$isReadOnly(opts)) return;
+				if (this.$isLoading) return;
+
+				let cmd = 'show';
+				if (opts && opts.export)
+					cmd = 'export';
+				else if (opts && opts.attach)
+					cmd = 'attach';
+
+				const doReport = () => {
+					let id = arg;
+					if (arg && utils.isObject(arg))
+						id = utils.getStringId(arg);
+					const root = window.$$rootUrl;
+					let url = `${root}/report/${cmd}/${id}`;
+					let reportUrl = this.$indirectUrl || this.$baseUrl;
+					let baseUrl = urltools.makeBaseUrl(reportUrl);
+					let qry = { base: baseUrl, rep: rep };
+					url = url + urltools.makeQueryString(qry);
+					// open in new window
+					if (opts && opts.export)
+						window.location = url;
+					else if (opts && opts.attach)
+						return; // просто ничего не делаем
+					else
+						window.open(url, '_blank');
+				};
+
+				if (opts && opts.validRequired && root.$invalid) {
+					this.$alert(locale.$MakeValidFirst);
+					return;
+				}
+
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => {
+						doReport();
+					});
+				} else {
+					doReport();
+				}
+			},
+
+			$modalSaveAndClose(result, opts) {
+				if (this.$isDirty) {
+					const root = this.$data;
+					if (opts && opts.validRequired && root.$invalid) {
+						let errs = makeErrors(root.$forceValidate());
+						//console.dir(errs);
+						this.$alert(locale.$MakeValidFirst, undefined, errs);
+						return;
+					}
+					this.$save().then((result) => eventBus.$emit('modalClose', result));
+				}
+				else
+					eventBus.$emit('modalClose', result);
+			},
+
+			$modalClose(result) {
+				eventBus.$emit('modalClose', result);
+			},
+
+			$modalSelect(array, opts) {
+				if (!('$selected' in array)) {
+					console.error('Invalid array for $modalSelect');
+					return;
+				}
+				if (opts && opts.validRequired) {
+					let root = this.$data;
+					if (!root.$valid) return;
+				}
+				this.$modalClose(array.$selected);
+			},
+
+			$modalSelectChecked(array) {
+				if (!('$checked' in array)) {
+					console.error('invalid array for $modalSelectChecked');
+					return;
+				}
+				let chArray = array.$checked;
+				if (chArray.length > 0)
+					this.$modalClose(chArray);
+			},
+
+			$saveAndClose(opts) {
+				if (this.$isDirty)
+					this.$save(opts).then(() => this.$close());
+				else
+					this.$close();
+			},
+
+			$close() {
+				if (this.$saveModified())
+					this.$store.commit("close");
+			},
+
+			$showHelp(path) {
+				window.open(this.$helpHref(path), "_blank");
+			},
+
+			$helpHref(path) {
+				return urltools.helpHref(path);
+			},
+
+			$searchChange() {
+				let newUrl = this.$store.replaceUrlSearch(this.$baseUrl);
+				this.$data.__baseUrl__ = newUrl;
+				this.$reload();
+			},
+
+			$saveModified() {
+				if (!this.$isDirty)
+					return true;
+				let self = this;
+				let dlg = {
+					message: locale.$ElementWasChanged,
+					title: locale.$ConfirmClose,
+					buttons: [
+						{ text: locale.$Save, result: "save" },
+						{ text: locale.$NotSave, result: "close" },
+						{ text: locale.$Cancel, result: false }
+					]
+				};
+				this.$confirm(dlg).then(function (result) {
+					if (result === 'close') {
+						// close without saving
+						self.$data.$setDirty(false);
+						self.$close();
+					} else if (result === 'save') {
+						// save then close
+						self.$save().then(function () {
+							self.$close();
+						});
+					}
+				});
+				return false;
+			},
+
+			$format(value, opts) {
+				if (!opts) return value;
+				if (!opts.format && !opts.dataType && !opts.mask)
+					return value;
+				if (opts.mask)
+					return value ? mask.getMasked(opts.mask, value) : value;
+				if (opts.dataType)
+					return utils.format(value, opts.dataType, opts.hideZeros);
+				if (opts.format && opts.format.indexOf('{0}') !== -1)
+					return opts.format.replace('{0}', value);
+				return value;
+			},
+
+			$getNegativeRedClass(value) {
+				if (utils.isNumber(value))
+					return value < 0 ? 'negative-red' : '';
+				return '';
+			},
+
+			$expand(elem, propName) {
+				let arr = elem[propName];
+				if (arr.$loaded)
+					return;
+				if (!utils.isDefined(elem.$hasChildren))
+					return; // no $hasChildren property - static expand
+				let self = this,
+					root = window.$$rootUrl,
+					url = root + '/_data/expand',
+					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+
+				dataservice.post(url, jsonData).then(function (data) {
+					let srcArray = data[propName];
+					arr.$empty();
+					for (let el of srcArray)
+						arr.push(arr.$new(el));
+				}).catch(function (msg) {
+					self.$alertUi(msg);
+				});
+
+				arr.$loaded = true;
+			},
 
 			$loadLazy(elem, propName) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/data/loadlazy',
+					url = root + '/_data/loadlazy',
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
-				// HACK. inherit filter from parent
+				// HACK. inherit filter from parent modelInfo
 				/*
+				?????
 				if (parentMi && parentMi.Filter) {
-					if (!selfMi)
-						selfMi = parentMi;
+					if (selfMi)
+						modelInfo.mergeFilter(selfMi.Filter, parentMi.Filter);
 					else
-						selfMi.Filter = parentMi.Filter;
+						selfMi = parentMi;
 				}
 				*/
 
@@ -3534,11 +3952,12 @@ Vue.component('a2-pager', {
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
+							modelInfo.reconcile(data.$ModelInfo[propName]);
 							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);
 					}).catch(function (msg) {
-						alert(msg);
+						self.$alertUi(msg);
 					});
 					arr.$loaded = true;
 				});
@@ -3549,44 +3968,7 @@ Vue.component('a2-pager', {
 				return root._delegate_(name);
 			},
 
-			$attachment(url, arg, opts) {
-				const root = window.$$rootUrl;
-				let cmd = opts && opts.export ? 'export' : 'show';
-				let id = arg;
-				if (arg && utils.isObject(arg))
-					id = utils.getStringId(arg);
-				let attUrl = urltools.combine(root, 'attachment', cmd, id);
-				let qry = { base: url };
-				attUrl = attUrl + urltools.makeQueryString(qry);
-				if (opts && opts.newWindow)
-					window.open(attUrl, '_blank');
-				else
-					window.location.assign(attUrl);
-			},
-
-			$showDialog(url, arg, query) {
-				return __runDialog(url, arg, query);
-			},
-
-			$modalClose(result) {
-				eventBus.$emit('modalClose', result);
-			},
-
-			$modalSaveAndClose(result, opts) {
-				if (this.$isDirty) {
-					const root = this.$data;
-					if (opts && opts.validRequired && root.$invalid) {
-						let errs = makeErrors(root.$forceValidate());
-						//console.dir(errs);
-						alert(locale.$MakeValidFirst, undefined, errs);
-						return;
-					}
-					this.$save().then((result) => eventBus.$emit('modalClose', result));
-				}
-				else
-					eventBus.$emit('modalClose', result);
-			},
-
+			$defer: platform.defer,
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;
@@ -3594,27 +3976,100 @@ Vue.component('a2-pager', {
 			__endRequest() {
 				this.$data.__requestsCount__ -= 1;
 			},
-			__doInit__() {
+			__cwChange(source) {
+				this.$reload(source);
+			},
+			__queryChange(search, source) {
+				// preserve $baseQuery (without data from search)
+				if (!utils.isObjectExact(search)) {
+					console.error('base.__queryChange. invalid argument type');
+				}
+				let nq = Object.assign({}, this.$baseQuery);
+				for (let p in search) {
+					if (search[p]) {
+						// replace from search
+						nq[p] = search[p];
+					}
+					else {
+						// undefined element, delete from query
+						delete nq[p];
+					}
+				}
+				//this.$data.__baseUrl__ = this.$store.replaceUrlSearch(this.$baseUrl, urltools.makeQueryString(nq));
+				let mi = source ? source.$ModelInfo : this.$data._findRootModelInfo();
+				modelInfo.copyfromQuery(mi, nq);
+				this.$reload(source);
+			},
+			__doInit__(baseUrl) {
 				const root = this.$data;
 				if (!root._modelLoad_) return;
-				root._modelLoad_();
-				root._seal_(root);
+				let caller = null;
+				if (baseUrl)
+					root.__baseUrl__ = baseUrl;
+				if (this.$caller)
+					caller = this.$caller.$data;
+				this.__createController__();
+				root._modelLoad_(caller);
 			},
-			_cwChange(args) {
-				this.$reload(args);
+			__createController__() {
+				let ctrl = {
+					$save: this.$save,
+					$invoke: this.$invoke,
+					$close: this.$close,
+					$modalClose: this.$modalClose,
+					$msg: this.$msg,
+					$alert: this.$alert,
+					$showDialog: this.$showDialog,
+					$asyncValid: this.$asyncValid,
+					$toast: this.$toast,
+					$requery: this.$requery,
+					$reload: this.$reload,
+					$notifyOwner: this.$notifyOwner,
+					$defer: platform.defer
+				};
+				Object.defineProperty(ctrl, "$isDirty", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isDirty
+				});
+				Object.defineProperty(ctrl, "$isPristine", {
+					enumerable: true,
+					configurable: true, /* needed */
+					get: () => this.$isPristine
+				});
+				Object.seal(ctrl);
+				return ctrl;
+			},
+			__notified(token) {
+				if (!token) return;
+				if (this.__currentToken__ !== token.token) return;
+				if (token.toast)
+					this.$toast(token.toast);
+				this.$reload(token.update || null).then(function (array) {
+					if (!token.id) return;
+					if (!utils.isArray(array)) return;
+					let el = array.find(itm => itm.$id === token.id);
+					if (el && el.$select) el.$select();
+				});
 			}
 		},
 		created() {
 			let out = { caller: null };
 			eventBus.$emit('registerData', this, out);
+			this.$caller = out.caller;
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
+			eventBus.$on('queryChange', this.__queryChange);
+			eventBus.$on('childrenSaved', this.__notified);
 
+			// TODO: delete this.__queryChange
+			this.$on('localQueryChange', this.__queryChange);
+			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
-
-			this.$on('cwChange', this._cwChange);
+			if (log)
+				log.time('create time:', __createStartTime, false);
 		},
 		beforeDestroy() {
 		},
@@ -3623,20 +4078,23 @@ Vue.component('a2-pager', {
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
+			eventBus.$off('queryChange', this.__queryChange);
+			eventBus.$off('childrenSaved', this.__notified);
+
+			this.$off('localQueryChange', this.__queryChange);
+			this.$off('cwChange', this.__cwChange);
+		},
+		beforeUpdate() {
+			__updateStartTime = performance.now();
+		},
+		beforeCreate() {
+			__createStartTime = performance.now();
+		},
+		updated() {
+			if (log)
+				log.time('update time:', __updateStartTime, false);
 		}
 	});
 
-	siteController.init = function (vm, baseUrl, callback) {
-		vm.$data.__baseUrl__ = baseUrl;
-		vm.$data._host_ = {
-			$viewModel: vm
-		};
-
-		vm.__doInit__();
-
-		if (callback)
-			callback.call(vm);
-	};
-
-	app.components['siteController'] = siteController;
+	app.components['baseController'] = base;
 })();

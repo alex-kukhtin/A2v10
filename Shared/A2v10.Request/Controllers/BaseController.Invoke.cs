@@ -23,6 +23,8 @@ namespace A2v10.Request
 		{
 			ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToInvoke.Get<String>("baseUrl");
+			if (NormalizeBaseUrl != null)
+				baseUrl = NormalizeBaseUrl(baseUrl);
 			String command = dataToInvoke.Get<String>("cmd");
 			ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
 			if (dataToExec == null)
@@ -63,6 +65,8 @@ namespace A2v10.Request
 
 		async Task ExecuteSqlCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)
 		{
+			if (String.IsNullOrEmpty(cmd.procedure))
+				throw new RequestModelException("A procedure must be specified for sql-type command");
 			IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
 			WriteDataModel(model, writer);
 		}

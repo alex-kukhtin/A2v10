@@ -23,10 +23,20 @@
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-	const log = require('std:log');
+	const log = require('std:log', true);
 	const period = require('std:period');
 
 	let __initialized__ = false;
+
+	function loginfo(msg) {
+		if (!log) return;
+		log.info(msg);
+	}
+
+	function logtime(msg, time) {
+		if (!log) return;
+		log.time(msg, time);
+	}
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -159,11 +169,11 @@
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
 				if (utils.isPrimitiveCtor(propInfo)) {
-					log.info(`create scalar property: ${objname}.${p}`);
+					loginfo(`create scalar property: ${objname}.${p}`);
 					elem._meta_.props[p] = propInfo;
 				} else if (utils.isObjectExact(propInfo)) {
 					if (!propInfo.get) { // plain object
-						log.info(`create object property: ${objname}.${p}`);
+						loginfo(`create object property: ${objname}.${p}`);
 						elem._meta_.props[p] = TMarker;
 						if (!elem._meta_.markerProps)
 							elem._meta_.markerProps = {};
@@ -187,7 +197,7 @@
 					continue;
 				}
 				else if (utils.isFunction(propInfo)) {
-					log.info(`create property: ${objname}.${p}`);
+					loginfo(`create property: ${objname}.${p}`);
 					Object.defineProperty(elem, p, {
 						configurable: false,
 						enumerable: true,
@@ -195,7 +205,7 @@
 					});
 				} else if (utils.isObjectExact(propInfo)) {
 					if (propInfo.get) { // has get, maybe set
-						log.info(`create property: ${objname}.${p}`);
+						loginfo(`create property: ${objname}.${p}`);
 						Object.defineProperty(elem, p, {
 							configurable: false,
 							enumerable: true,
@@ -323,7 +333,7 @@
 			elem._seal_ = seal
 		}
 		if (startTime) {
-			log.time('create root time:', startTime, false);
+			logtime('create root time:', startTime, false);
 		}
 		return elem;
 	}
@@ -760,18 +770,18 @@
 				this._needValidate_ = true;
 			}
 		}
-		log.info('emit: ' + event);
+		loginfo('emit: ' + event);
 		let templ = this.$template;
 		if (!templ) return;
 		let events = templ.events;
 		if (!events) return;
 		if (event in events) {
 			// fire event
-			log.info('handle: ' + event);
+			loginfo('handle: ' + event);
 			let func = events[event];
 			let rv = func.call(this, ...arr);
 			if (rv === false)
-				log.info(event + ' returns false');
+				loginfo(event + ' returns false');
 			return rv;
 		}
 	}
@@ -1017,7 +1027,7 @@
 			}
 		}
 		var e = performance.now();
-		log.time('validation time:', startTime);
+		logtime('validation time:', startTime);
 		return allerrs;
 		//console.dir(allerrs);
 	}

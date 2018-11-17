@@ -10,6 +10,7 @@ using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
 using System.Data;
 using System.Web.Hosting;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Config
 {
@@ -142,6 +143,19 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public String MakeRelativePath(String path, String fileName)
+		{
+			if (fileName.StartsWith("/"))
+			{
+				path = String.Empty;
+				fileName = fileName.Remove(0, 1);
+			}
+			String appKey = AppConfig.AppKey();
+			String appPath = AppConfig.AppPath();
+			String fullPath = Path.Combine($"{appPath}{appKey}", path, fileName);
+			return fullPath;
+		}
+
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
 			String appKey = bAdmin ? "admin" : AppKey;
@@ -150,7 +164,9 @@ namespace A2v10.Web.Config
 				path = String.Empty;
 				fileName = fileName.Remove(0, 1);
 			}
-			String fullPath = Path.Combine($"{AppPath}/{appKey}", path, fileName);
+			if (appKey != null)
+				appKey = "/" + appKey;
+			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
 			return Path.GetFullPath(fullPath);
 		}
 

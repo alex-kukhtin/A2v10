@@ -19,7 +19,7 @@
 	let rootElem = document.querySelector('meta[name=rootUrl]');
 	window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
-	function require(module) {
+	function require(module, noerror) {
 		if (module in app.modules) {
 			let am = app.modules[module];
 			if (typeof am === 'function') {
@@ -28,12 +28,16 @@
 			}
 			return am;
 		}
+		if (noerror)
+			return null;
 		throw new Error('module "' + module + '" not found');
 	}
 
-	function component(name) {
+	function component(name, noerror) {
 		if (name in app.components)
 			return app.components[name];
+		if (noerror)
+			return {};
 		throw new Error('component "' + name + '" not found');
 	}
 
@@ -1564,10 +1568,20 @@ app.modules['std:validators'] = function () {
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
-	const log = require('std:log');
+	const log = require('std:log', true);
 	const period = require('std:period');
 
 	let __initialized__ = false;
+
+	function loginfo(msg) {
+		if (!log) return;
+		log.info(msg);
+	}
+
+	function logtime(msg, time) {
+		if (!log) return;
+		log.time(msg, time);
+	}
 
 	function defHidden(obj, prop, value, writable) {
 		Object.defineProperty(obj, prop, {
@@ -1700,11 +1714,11 @@ app.modules['std:validators'] = function () {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
 				if (utils.isPrimitiveCtor(propInfo)) {
-					log.info(`create scalar property: ${objname}.${p}`);
+					loginfo(`create scalar property: ${objname}.${p}`);
 					elem._meta_.props[p] = propInfo;
 				} else if (utils.isObjectExact(propInfo)) {
 					if (!propInfo.get) { // plain object
-						log.info(`create object property: ${objname}.${p}`);
+						loginfo(`create object property: ${objname}.${p}`);
 						elem._meta_.props[p] = TMarker;
 						if (!elem._meta_.markerProps)
 							elem._meta_.markerProps = {};
@@ -1728,7 +1742,7 @@ app.modules['std:validators'] = function () {
 					continue;
 				}
 				else if (utils.isFunction(propInfo)) {
-					log.info(`create property: ${objname}.${p}`);
+					loginfo(`create property: ${objname}.${p}`);
 					Object.defineProperty(elem, p, {
 						configurable: false,
 						enumerable: true,
@@ -1736,7 +1750,7 @@ app.modules['std:validators'] = function () {
 					});
 				} else if (utils.isObjectExact(propInfo)) {
 					if (propInfo.get) { // has get, maybe set
-						log.info(`create property: ${objname}.${p}`);
+						loginfo(`create property: ${objname}.${p}`);
 						Object.defineProperty(elem, p, {
 							configurable: false,
 							enumerable: true,
@@ -1864,7 +1878,7 @@ app.modules['std:validators'] = function () {
 			elem._seal_ = seal
 		}
 		if (startTime) {
-			log.time('create root time:', startTime, false);
+			logtime('create root time:', startTime, false);
 		}
 		return elem;
 	}
@@ -2301,18 +2315,18 @@ app.modules['std:validators'] = function () {
 				this._needValidate_ = true;
 			}
 		}
-		log.info('emit: ' + event);
+		loginfo('emit: ' + event);
 		let templ = this.$template;
 		if (!templ) return;
 		let events = templ.events;
 		if (!events) return;
 		if (event in events) {
 			// fire event
-			log.info('handle: ' + event);
+			loginfo('handle: ' + event);
 			let func = events[event];
 			let rv = func.call(this, ...arr);
 			if (rv === false)
-				log.info(event + ' returns false');
+				loginfo(event + ' returns false');
 			return rv;
 		}
 	}
@@ -2558,7 +2572,7 @@ app.modules['std:validators'] = function () {
 			}
 		}
 		var e = performance.now();
-		log.time('validation time:', startTime);
+		logtime('validation time:', startTime);
 		return allerrs;
 		//console.dir(allerrs);
 	}

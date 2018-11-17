@@ -82,8 +82,10 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\services\eusign.js" />
+    <Content Include="app\services\routing.js" />
     <Content Include="app\site\collectionview.js" />
     <Content Include="app\site\controller.js" />
+    <Content Include="app\site\store.js" />
     <Content Include="app\site\pager.js" />
     <Content Include="app\standalone\collectionview.js" />
     <Content Include="app\components\collectionview.js" />
@@ -125,24 +127,31 @@
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\standalone\shell.js" />
-    <Content Include="App_apps\VueSite\_Layout.js" />
-    <Content Include="App_apps\VueSite\Index\index.view.cshtml" />
+    <Content Include="App_application\Home\index.view.cshtml" />
     <Content Include="Less\Upload.less" />
-    <Content Include="App_apps\Web.config">
+    <Content Include="App_application\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_apps\VueSite\_ViewStart.cshtml">
+    <Content Include="App_application\_ViewStart.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="App_apps\VueSite\_Layout.cshtml">
+    <Content Include="App_application\Shared\_Layout.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="App_apps\VueSite\Blog\index.cshtml" />
-    <Content Include="App_apps\VueSite\Index\model.json" />
-    <Content Include="App_apps\VueSite\Blog\model.json" />
-    <Content Include="App_apps\VueSite\Index\index.template.js" />
+    <Content Include="App_application\Blog\index.cshtml" />
+    <Content Include="App_application\Home\model.json" />
+    <Content Include="App_application\Blog\model.json" />
+    <Content Include="App_application\Home\index.template.js" />
+    <Content Include="App_application\Contacts\index.cshtml" />
+    <Content Include="App_application\Contacts\model.json" />
+    <Content Include="App_application\Home\partInside.cshtml" />
+    <Content Include="App_application\Shared\partShared.cshtml" />
+    <Content Include="App_application\Shared\_SimpleLayout.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -7,5 +7,10 @@
 			"view": "index.view",
 			"template": "index.template"
 		}
+	},
+	"commands": {
+		"test": {
+			"type": "sql"
+		}
 	}
 }

@@ -103,6 +103,11 @@ namespace A2v10.Runtime
 			return Path.GetFullPath(fullPath);
 		}
 
+		public String MakeRelativePath(String path, String fileName)
+		{
+			throw new NotImplementedException();
+		}
+
 		public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
 		{
 			String fullPath = MakeFullPath(bAdmin, path, fileName);

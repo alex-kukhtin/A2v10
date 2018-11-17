@@ -37,6 +37,8 @@ namespace A2v10.Request
 
 		public const String NO_VIEW = "\b_NO_VIEW_\b";
 
+		public Func<String, String> NormalizeBaseUrl { get; set; }
+
 		public BaseController()
 		{
 			// DI ready
@@ -350,7 +352,7 @@ window.$currentModule = function() {
 			return output.ToString();
 		}
 
-		async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
+		public async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
 		{
 			StringBuilder output = new StringBuilder();
 			String dataModelText = "{}";
@@ -407,7 +409,7 @@ const vm = new DataModelController({
 		$ctrl: vm.__createController__(vm)
 	};
 
-	vm.__doInit__();
+	vm.__doInit__('$(BaseUrl)');
 
 })();
 </script>
@@ -424,6 +426,7 @@ const vm = new DataModelController({
 				output.Append(model.CreateScript(_scripter));
 			var footer = new StringBuilder(scriptFooter);
 			footer.Replace("$(RootId)", rootId);
+			footer.Replace("$(BaseUrl)", rw.ParentModel.BasePath);
 			footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());
 			output.Append(footer);
 			return output.ToString();

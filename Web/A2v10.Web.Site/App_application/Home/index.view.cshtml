@@ -2,10 +2,13 @@
 @{
 	var dataModel = Model.DataModel;
 	ViewBag.Title = "Home page";
+	Object home = Model.DataModel.Eval<dynamic>("Home");
 }
 <div id="@Model.PageId">
 	<div>
-		<a href="/blog">Go to the blog page</a>
+		<a href="/Blog">Go to the blog page</a>
+		<br />
+		<a href="/Contacts">Go to the Contacts page</a>
 	</div>
 	<div>
 		I am the index page (RAZOR)
@@ -17,11 +20,18 @@
 		<input type="text" v-model="Home.Text" />
 		<button v-on:click="$exec('sayHello')">Say hello!</button>
 		<button v-on:click="$reload">Reload me</button>
+		<button v-on:click="$save">Save</button>
+		<button v-on:click="$invoke('test')">Invoke</button>
 		<hr />
-		dirty: <span v-text="$isDirty"></span>
-		valid: <span v-text="Home.$valid"></span>
+		dirty: <code v-text="$isDirty"></code>
+		valid: <code v-text="Home.$valid"></code>
+		baseUrl: <code v-text="$baseUrl"></code>
 	</div>
 
+	<hr />
+	@Html.RenderPartialView("PartInside", home)
+	<hr />
+	@Html.RenderPartialView("PartShared", home)
 	<hr />
 	<code>
 		@Model.Script
