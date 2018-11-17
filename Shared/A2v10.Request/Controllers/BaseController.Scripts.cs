@@ -104,7 +104,7 @@ const vm = new DataModelController({
 			modelFunc.Replace("$(RequiredModules)", sbRequired?.ToString());
 			modelFunc.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
 			modelFunc.Replace("$(DataModelText)", dataModelText);
-			String modelScript = model != null ? model.CreateScript(_scripter) : _scripter.CreateEmptyStript();
+			String modelScript = _scripter.CreateDataModelScript(model);
 			modelFunc.Replace("$(ModelScript)", modelScript);
 			result.DataScript = modelFunc.ToString();
 
