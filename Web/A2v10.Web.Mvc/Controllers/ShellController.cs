@@ -95,10 +95,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
 			}
-			else if (pathInfo.StartsWith("_model/"))
-			{
-				await RenderModel(pathInfo.Substring(7));
-			}
+			//else if (pathInfo.StartsWith("_model/"))
+			//{
+				//await RenderModel(pathInfo.Substring(7));
+			//}
 			else if (pathInfo.StartsWith("_dialog/"))
 			{
 				await Render(pathInfo.Substring(8), RequestUrlKind.Dialog);
@@ -174,8 +174,10 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		/*
 		async Task RenderModel(String pathInfo)
 		{
+			// TODO: // delete me
 			try
 			{
 				Response.ContentType = "text/javascript";
@@ -189,6 +191,7 @@ namespace A2v10.Web.Mvc.Controllers
 				_baseController.WriteScriptException(ex, Response.Output);
 			}
 		}
+		*/
 
 		async Task Render(String pathInfo, RequestUrlKind kind)
 		{

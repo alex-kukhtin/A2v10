@@ -69,10 +69,11 @@ namespace A2v10.Request
 				PageId = pageId,
 				View = host.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
 				Path = rw.Path,
+				BaseUrl = rw.ParentModel.BasePath,
 				DataModel = dmrw.Model,
 				Id = rw.Id
 			};
-			viewInfo.Script = await _baseController.WriteModelScript(rw, viewInfo.DataModel, pageId);
+			viewInfo.Scripts = await _baseController.WriteModelScript(rw, viewInfo.DataModel, pageId);
 			return viewInfo;
 		}
 

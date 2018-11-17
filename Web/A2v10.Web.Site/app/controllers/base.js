@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181031-7339
+// 20181117-7359
 // controllers/base.js
 
 (function () {
@@ -108,8 +108,7 @@
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 				const root = this.$data;
-				root._exec_(cmd, arg, confirm, opts);
-				return;
+				return root._exec_(cmd, arg, confirm, opts);
                 /*
                 const doExec = () => {
                     let root = this.$data;
@@ -125,6 +124,10 @@
                     doExec();
                 }
                 */
+			},
+
+			$toJson(data) {
+				return utils.toJson(data);
 			},
 
 			$isReadOnly(opts) {
@@ -789,6 +792,8 @@
 
 			$format(value, opts) {
 				if (!opts) return value;
+				if (utils.isString(opts))
+					opts = { dataType: opts };
 				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
 				if (opts.mask)
@@ -830,9 +835,10 @@
 			},
 
 			$loadLazy(elem, propName) {
+				const routing = require('std:routing'); // defer loading
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/loadlazy',
+					url = `${root}/${routing.dataUrl()}/loadlazy`,
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
@@ -886,6 +892,24 @@
 			},
 
 			$defer: platform.defer,
+
+			$hasError(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return false;
+				let arr = err[path];
+				return arr && arr.length;
+			},
+
+			$errorMessage(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return '';
+				let arr = err[path];
+				if (arr && arr.length)
+					return arr[0].msg;
+				return '';
+			},
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;

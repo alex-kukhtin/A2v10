@@ -18,21 +18,24 @@ namespace A2v10.Web.Base
 		{
 			var viewInfo = htmlHelper.ViewData.Model;
 			var sb = new StringBuilder();
-			if (!String.IsNullOrEmpty(viewInfo?.Script))
-			{
-				sb.Append($"{viewInfo.Script}");
-			}
 
 			if (fileName != null)
 			{
 				var appKey = AppConfig.AppKey();
 				var appPath = AppConfig.AppPath();
 
-				String layoutScriptPath = HostingEnvironment.MapPath($"{appPath}{appKey}/{fileName}");
+				String layoutScriptPath = HostingEnvironment.MapPath($"{appPath}{appKey}/{viewInfo.Path}/{fileName}.js");
 
 				StringBuilder scriptText = new StringBuilder(File.ReadAllText(layoutScriptPath));
 				scriptText.Replace("$(PageId)", viewInfo.PageId);
-				sb.Append($"<script type=\"text/javascript\">{scriptText}</script>");
+				scriptText.Replace("$(DataModel)", viewInfo?.Scripts?.DataScript);
+				scriptText.Replace("$(BaseUrl)", viewInfo.BaseUrl);
+
+				sb.Append($"<script type=\"text/javascript\">{scriptText.ToString()}</script>");
+			}
+			else if (!String.IsNullOrEmpty(viewInfo?.Scripts?.Script))
+			{
+				sb.Append($"{viewInfo.Scripts.Script}");
 			}
 			return new MvcHtmlString(sb.ToString());
 		}

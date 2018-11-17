@@ -99,7 +99,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181104-7343
+// 20181117-7359
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -164,7 +164,8 @@ app.modules['std:utils'] = function () {
 		text: {
 			contains: textContains,
 			containsText: textContainsText,
-			sanitize
+			sanitize,
+			splitPath
 		},
 		func: {
 			curry,
@@ -541,6 +542,14 @@ app.modules['std:utils'] = function () {
 		let t = '' + text || '';
 		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
 			.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+	}
+
+	function splitPath(path) {
+		let propIx = path.lastIndexOf('.');
+		return {
+			obj: path.substring(0, propIx),
+			prop: path.substring(propIx + 1)
+		};
 	}
 
 	function textContains(text, probe) {
@@ -1710,7 +1719,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181112-7355
+// 20181117-7359
 // services/datamodel.js
 
 (function () {
@@ -2567,9 +2576,9 @@ app.modules['std:validators'] = function () {
 			const doExec = function () {
 				const realExec = function () {
 					if (utils.isFunction(cmdf))
-						cmdf.call(that, arg);
+						return cmdf.call(that, arg);
 					else if (utils.isFunction(cmdf.exec))
-						cmdf.exec.call(that, arg);
+						return cmdf.exec.call(that, arg);
 					else
 						console.error($`There is no method 'exec' in command '${cmd}'`);
 				};
@@ -2577,15 +2586,14 @@ app.modules['std:validators'] = function () {
 				if (optConfirm) {
 					vm.$confirm(optConfirm).then(realExec);
 				} else {
-					realExec();
+					return realExec();
 				}
 			};
 
 			if (optSaveRequired && vm.$isDirty)
 				vm.$save().then(doExec);
 			else
-				doExec();
-
+				return doExec();
 
 		} finally {
 			this._root_._enableValidate_ = true;
@@ -6023,7 +6031,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20181117-7359
 // components/collectionview.js
 
 /*
@@ -6034,7 +6042,7 @@ TODO:
 (function () {
 
 
-	const log = require('std:log');
+	const log = require('std:log', true);
 	const utils = require('std:utils');
 	const period = require('std:period');
 
@@ -6175,7 +6183,7 @@ TODO:
 					// not found in target array
 					arr.$origin.$clearSelected();
 				}
-				log.time('get paged source:', s);
+				if (log) log.time('get paged source:', s);
 				return arr;
 			},
 			sourceCount() {
@@ -8983,7 +8991,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181031-7339
+// 20181117-7359
 // controllers/base.js
 
 (function () {
@@ -9091,8 +9099,7 @@ Vue.directive('resize', {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 				const root = this.$data;
-				root._exec_(cmd, arg, confirm, opts);
-				return;
+				return root._exec_(cmd, arg, confirm, opts);
                 /*
                 const doExec = () => {
                     let root = this.$data;
@@ -9108,6 +9115,10 @@ Vue.directive('resize', {
                     doExec();
                 }
                 */
+			},
+
+			$toJson(data) {
+				return utils.toJson(data);
 			},
 
 			$isReadOnly(opts) {
@@ -9772,6 +9783,8 @@ Vue.directive('resize', {
 
 			$format(value, opts) {
 				if (!opts) return value;
+				if (utils.isString(opts))
+					opts = { dataType: opts };
 				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
 				if (opts.mask)
@@ -9813,9 +9826,10 @@ Vue.directive('resize', {
 			},
 
 			$loadLazy(elem, propName) {
+				const routing = require('std:routing'); // defer loading
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/loadlazy',
+					url = `${root}/${routing.dataUrl()}/loadlazy`,
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
@@ -9869,6 +9883,24 @@ Vue.directive('resize', {
 			},
 
 			$defer: platform.defer,
+
+			$hasError(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return false;
+				let arr = err[path];
+				return arr && arr.length;
+			},
+
+			$errorMessage(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return '';
+				let arr = err[path];
+				if (arr && arr.length)
+					return arr[0].msg;
+				return '';
+			},
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;

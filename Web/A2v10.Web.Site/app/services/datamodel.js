@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181112-7355
+// 20181117-7359
 // services/datamodel.js
 
 (function () {
@@ -857,9 +857,9 @@
 			const doExec = function () {
 				const realExec = function () {
 					if (utils.isFunction(cmdf))
-						cmdf.call(that, arg);
+						return cmdf.call(that, arg);
 					else if (utils.isFunction(cmdf.exec))
-						cmdf.exec.call(that, arg);
+						return cmdf.exec.call(that, arg);
 					else
 						console.error($`There is no method 'exec' in command '${cmd}'`);
 				};
@@ -867,15 +867,14 @@
 				if (optConfirm) {
 					vm.$confirm(optConfirm).then(realExec);
 				} else {
-					realExec();
+					return realExec();
 				}
 			};
 
 			if (optSaveRequired && vm.$isDirty)
 				vm.$save().then(doExec);
 			else
-				doExec();
-
+				return doExec();
 
 		} finally {
 			this._root_._enableValidate_ = true;

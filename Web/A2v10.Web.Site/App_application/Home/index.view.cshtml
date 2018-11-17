@@ -34,10 +34,10 @@
 	@Html.RenderPartialView("PartShared", home)
 	<hr />
 	<code>
-		@Model.Script
+		@Model.Scripts.DataScript
 	</code>
 </div>
 
 @section scripts {
-	@Html.RenderVueModelScript()
+	@Html.RenderVueModelScript("controller")
 }

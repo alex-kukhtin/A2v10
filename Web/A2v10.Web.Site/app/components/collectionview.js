@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20181117-7359
 // components/collectionview.js
 
 /*
@@ -11,7 +11,7 @@ TODO:
 (function () {
 
 
-	const log = require('std:log');
+	const log = require('std:log', true);
 	const utils = require('std:utils');
 	const period = require('std:period');
 
@@ -152,7 +152,7 @@ TODO:
 					// not found in target array
 					arr.$origin.$clearSelected();
 				}
-				log.time('get paged source:', s);
+				if (log) log.time('get paged source:', s);
 				return arr;
 			},
 			sourceCount() {

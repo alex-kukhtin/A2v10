@@ -127,6 +127,7 @@
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\standalone\shell.js" />
+    <Content Include="App_application\Home\controller.js" />
     <Content Include="App_application\Home\index.view.cshtml" />
     <Content Include="Less\Upload.less" />
     <Content Include="App_application\Web.config">

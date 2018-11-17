@@ -99,7 +99,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181104-7343
+// 20181117-7359
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -164,7 +164,8 @@ app.modules['std:utils'] = function () {
 		text: {
 			contains: textContains,
 			containsText: textContainsText,
-			sanitize
+			sanitize,
+			splitPath
 		},
 		func: {
 			curry,
@@ -541,6 +542,14 @@ app.modules['std:utils'] = function () {
 		let t = '' + text || '';
 		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
 			.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+	}
+
+	function splitPath(path) {
+		let propIx = path.lastIndexOf('.');
+		return {
+			obj: path.substring(0, propIx),
+			prop: path.substring(propIx + 1)
+		};
 	}
 
 	function textContains(text, probe) {
@@ -1852,7 +1861,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181112-7355
+// 20181117-7359
 // services/datamodel.js
 
 (function () {
@@ -2709,9 +2718,9 @@ app.modules['std:validators'] = function () {
 			const doExec = function () {
 				const realExec = function () {
 					if (utils.isFunction(cmdf))
-						cmdf.call(that, arg);
+						return cmdf.call(that, arg);
 					else if (utils.isFunction(cmdf.exec))
-						cmdf.exec.call(that, arg);
+						return cmdf.exec.call(that, arg);
 					else
 						console.error($`There is no method 'exec' in command '${cmd}'`);
 				};
@@ -2719,15 +2728,14 @@ app.modules['std:validators'] = function () {
 				if (optConfirm) {
 					vm.$confirm(optConfirm).then(realExec);
 				} else {
-					realExec();
+					return realExec();
 				}
 			};
 
 			if (optSaveRequired && vm.$isDirty)
 				vm.$save().then(doExec);
 			else
-				doExec();
-
+				return doExec();
 
 		} finally {
 			this._root_._enableValidate_ = true;
@@ -3083,7 +3091,634 @@ app.components['std:store'] = {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181031-7339
+// 20181117-7359
+// components/collectionview.js
+
+/*
+TODO:
+11. GroupBy for server, client (url is done)
+*/
+
+(function () {
+
+
+	const log = require('std:log', true);
+	const utils = require('std:utils');
+	const period = require('std:period');
+
+	const DEFAULT_PAGE_SIZE = 20;
+
+	function getModelInfoProp(src, propName) {
+		if (!src) return undefined;
+		let mi = src.$ModelInfo;
+		if (!mi) return undefined;
+		return mi[propName];
+	}
+
+	function setModelInfoProp(src, propName, value) {
+		if (!src) return;
+		let mi = src.$ModelInfo;
+		if (!mi) return;
+		mi[propName] = value;
+	}
+
+	function makeNewQueryFunc(that) {
+		let nq = { dir: that.dir, order: that.order, offset: that.offset, group: that.GroupBy };
+		for (let x in that.filter) {
+			let fVal = that.filter[x];
+			if (period.isPeriod(fVal)) {
+				nq[x] = fVal.format('DateUrl');
+			}
+			else if (utils.isDate(fVal)) {
+				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (utils.isObjectExact(fVal)) {
+				if (!('Id' in fVal)) {
+					console.error('The object in the Filter does not have Id property');
+				}
+				nq[x] = fVal.Id ? fVal.Id : undefined;
+			}
+			else if (fVal) {
+				nq[x] = fVal;
+			}
+			else {
+				nq[x] = undefined;
+			}
+		}
+		return nq;
+	}
+
+	function modelInfoToFilter(q, filter) {
+		if (!q) return;
+		for (let x in filter) {
+			if (x in q) {
+				let iv = filter[x];
+				if (period.isPeriod(iv)) {
+					filter[x] = iv.fromUrl(q[x]);
+				}
+				else if (utils.isDate(iv)) {
+					filter[x] = utils.date.tryParse(q[x]);
+				}
+				else if (utils.isObjectExact(iv)) 
+					iv.Id = q[x];
+				else {
+					filter[x] = q[x];
+				}
+			}
+		}
+	}
+
+	// client collection
+
+	Vue.component('collection-view', {
+		//store: component('std:store'),
+		template: `
+<div>
+	<slot :ItemsSource="pagedSource" :Pager="thisPager" :Filter="filter">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialPageSize: Number,
+			initialFilter: Object,
+			initialSort: Object,
+			runAt: String,
+			filterDelegate: Function
+		},
+		data() {
+			let lq = Object.assign({}, {
+				offset: 0,
+				dir: 'asc',
+				order: ''
+			}, this.initialFilter);
+
+			return {
+				filter: this.initialFilter,
+				filteredCount: 0,
+				localQuery: lq
+			};
+		},
+		computed: {
+			pageSize() {
+				if (this.initialPageSize > 0)
+					return this.initialPageSize;
+				return -1; // invisible pager
+			},
+			dir() {
+				return this.localQuery.dir;
+			},
+			offset() {
+				return this.localQuery.offset;
+			},
+			order() {
+				return this.localQuery.order;
+			},
+			pagedSource() {
+				let s = performance.now();
+				let arr = [].concat(this.ItemsSource);
+
+				if (this.filterDelegate) {
+					arr = arr.filter((item) => this.filterDelegate(item, this.filter));
+				}
+				// sort
+				if (this.order && this.dir) {
+					let p = this.order;
+					let d = this.dir === 'asc';
+					arr.sort((a, b) => {
+						if (a[p] === b[p])
+							return 0;
+						else if (a[p] < b[p])
+							return d ? -1 : 1;
+						return d ? 1 : -1;
+					});
+				}
+				// HACK!
+				this.filteredCount = arr.length;
+				// pager
+				if (this.pageSize > 0)
+					arr = arr.slice(this.offset, this.offset + this.pageSize);
+				arr.$origin = this.ItemsSource;
+				if (arr.indexOf(arr.$origin.$selected) === -1) {
+					// not found in target array
+					arr.$origin.$clearSelected();
+				}
+				if (log) log.time('get paged source:', s);
+				return arr;
+			},
+			sourceCount() {
+				return this.ItemsSource.length;
+			},
+			thisPager() {
+				return this;
+			},
+			pages() {
+				let cnt = this.filteredCount;
+				return Math.ceil(cnt / this.pageSize);
+			}
+		},
+		methods: {
+			$setOffset(offset) {
+				this.localQuery.offset = offset;
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				let nq = this.makeNewQuery();
+				if (nq.order === order)
+					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				else {
+					nq.order = order;
+					nq.dir = 'asc';
+				}
+				if (!nq.order)
+					nq.dir = null;
+				// local
+				this.localQuery.dir = nq.dir;
+				this.localQuery.order = nq.order;
+			},
+			makeNewQuery() {
+				return makeNewQueryFunc(this);
+			},
+			copyQueryToLocal(q) {
+				for (let x in q) {
+					let fVal = q[x];
+					if (x === 'offset')
+						this.localQuery[x] = q[x];
+					else
+						this.localQuery[x] = fVal ? fVal : undefined;
+				}
+			}
+		},
+		created() {
+			if (this.initialSort) {
+				this.localQuery.order = this.initialSort.order;
+				this.localQuery.dir = this.initialSort.dir;
+			}
+			this.$on('sort', this.doSort);
+		}
+	});
+
+
+	// server collection view
+	Vue.component('collection-view-server', {
+		//store: component('std:store'),
+		template: `
+<div>
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :ParentCollectionView="parentCw">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialFilter: Object,
+			persistentFilter: Array
+		},
+
+		data() {
+			return {
+				filter: this.initialFilter,
+				lockChange: true
+			};
+		},
+
+		watch: {
+			jsonFilter: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			}
+		},
+
+		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
+			thisPager() {
+				return this;
+			},
+			pageSize() {
+				return getModelInfoProp(this.ItemsSource, 'PageSize');
+			},
+			dir() {
+				return  getModelInfoProp(this.ItemsSource, 'SortDir');
+			},
+			order() {
+				return getModelInfoProp(this.ItemsSource, 'SortOrder');
+			},
+			offset() {
+				return getModelInfoProp(this.ItemsSource, 'Offset');
+			},
+			pages() {
+				cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
+			},
+			sourceCount() {
+				if (!this.ItemsSource) return 0;
+				return this.ItemsSource.$RowCount || 0;
+			},
+			parentCw() {
+				// find parent collection view;
+				let p = this.$parent;
+				while (p && p.$options && p.$options._componentTag && !p.$options._componentTag.startsWith('collection-view-server'))
+					p = p.$parent;
+				return p;
+			}
+		},
+		methods: {
+			$setOffset(offset) {
+				if (this.offset === offset)
+					return;
+				setModelInfoProp(this.ItemsSource, 'Offset', offset);
+				this.reload();
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			doSort(order) {
+				if (order === this.order) {
+					let dir = this.dir === 'asc' ? 'desc' : 'asc';
+					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
+				} else {
+					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
+					setModelInfoProp(this.ItemsSource, 'SortDir', 'asc');
+				}
+				this.reload();
+			},
+			filterChanged() {
+				if (this.lockChange) return;
+				let mi = this.ItemsSource.$ModelInfo;
+				if (!mi) {
+					mi = { Filter: this.filter };
+					this.ItemsSource.$ModelInfo = mi;
+				}
+				else {
+					this.ItemsSource.$ModelInfo.Filter = this.filter;
+				}
+				if (this.persistentFilter && this.persistentFilter.length) {
+					let parentProp = this.ItemsSource._path_;
+					let propIx = parentProp.lastIndexOf('.');
+					parentProp = parentProp.substring(propIx + 1);
+					for (let topElem of this.ItemsSource.$parent.$parent) {
+						if (!topElem[parentProp].$ModelInfo)
+							topElem[parentProp].$ModelInfo = mi;
+						else {
+							for (let pp of this.persistentFilter) {
+								if (!utils.isEqual(topElem[parentProp].$ModelInfo.Filter[pp], this.filter[pp])) {
+									topElem[parentProp].$ModelInfo.Filter[pp] = this.filter[pp];
+									topElem[parentProp].$loaded = false;
+								}
+							}
+						}
+					}
+				}
+				if ('Offset' in mi)
+					setModelInfoProp(this.ItemsSource, 'Offset', 0);
+				this.reload();
+			},
+			reload() {
+				this.$root.$emit('cwChange', this.ItemsSource);
+			},
+			updateFilter() {
+				// modelInfo to filter
+				let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
+				if (!mi) return;
+				let fi = mi.Filter;
+				if (!fi) return;
+				this.lockChange = true;
+				for (var prop in this.filter) {
+					if (prop in fi)
+						this.filter[prop] = fi[prop];
+				}
+				this.$nextTick(() => {
+					this.lockChange = false;
+				});
+			}
+		},
+		created() {
+			// get filter values from modelInfo
+			let mi = this.ItemsSource ? this.ItemsSource.$ModelInfo : null;
+			if (mi) {
+				modelInfoToFilter(mi.Filter, this.filter);
+			}
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
+			// from datagrid, etc
+			this.$on('sort', this.doSort);
+		},
+		updated() {
+			this.updateFilter();
+		}
+	});
+
+	// server url collection view
+	Vue.component('collection-view-server-url', {
+		store: component('std:store'),
+		template: `
+<div>
+	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :Grouping="thisGrouping">
+	</slot>
+</div>
+`,
+		props: {
+			ItemsSource: Array,
+			initialFilter: Object,
+			initialGroup: Object
+		},
+		data() {
+			return {
+				filter: this.initialFilter,
+				GroupBy: '',
+				lockChange: true
+			};
+		},
+		watch: {
+			jsonFilter: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			},
+			GroupBy: {
+				handler(newData, oldData) {
+					this.filterChanged();
+				}
+			}
+		},
+		computed: {
+			jsonFilter() {
+				return utils.toJson(this.filter);
+			},
+			pageSize() {
+				let ps = getModelInfoProp(this.ItemsSource, 'PageSize');
+				return ps ? ps : DEFAULT_PAGE_SIZE;
+			},
+			dir() {
+				let dir = this.$store.getters.query.dir;
+				if (!dir) dir = getModelInfoProp(this.ItemsSource, 'SortDir');
+				return dir;
+			},
+			offset() {
+				let ofs = this.$store.getters.query.offset;
+				if (!utils.isDefined(ofs))
+					ofs = getModelInfoProp(this.ItemsSource, 'Offset');
+				return ofs || 0;
+			},
+			order() {
+				return getModelInfoProp(this.ItemsSource,'SortOrder');
+			},
+			sourceCount() {
+				if (!this.ItemsSource) return 0;
+				return this.ItemsSource.$RowCount || 0;
+			},
+			thisPager() {
+				return this;
+			},
+			thisGrouping() {
+				return this;
+			},
+			pages() {
+				cnt = this.sourceCount;
+				return Math.ceil(cnt / this.pageSize);
+			},
+			Filter() {
+				return this.filter;
+			}
+		},
+		methods: {
+			commit(query) {
+				//console.dir(this.$root.$store);
+				this.$store.commit('setquery', query);
+			},
+			sortDir(order) {
+				return order === this.order ? this.dir : undefined;
+			},
+			$setOffset(offset) {
+				if (this.offset === offset)
+					return;
+				setModelInfoProp(this.ItemsSource, "Offset", offset);
+				this.commit({ offset: offset });
+			},
+			doSort(order) {
+				let nq = this.makeNewQuery();
+				if (nq.order === order)
+					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				else {
+					nq.order = order;
+					nq.dir = 'asc';
+				}
+				if (!nq.order)
+					nq.dir = null;
+				this.commit(nq);
+			},
+			makeNewQuery() {
+				return makeNewQueryFunc(this);
+			},
+			filterChanged() {
+				if (this.lockChange) return;
+				// for server only
+				let nq = this.makeNewQuery();
+				nq.offset = 0;
+				if (!nq.order) nq.dir = undefined;
+				//console.warn('filter changed');
+				this.commit(nq);
+			}
+		},
+		created() {
+			// get filter values from modelInfo and then from query
+			let mi = this.ItemsSource.$ModelInfo;
+			if (mi) {
+				modelInfoToFilter(mi.Filter, this.filter);
+				if (mi.GroupBy) {
+					this.GroupBy = mi.GroupBy;
+				}
+			}
+			// then query from url
+			let q = this.$store.getters.query;
+			modelInfoToFilter(q, this.filter);
+
+			this.$nextTick(() => {
+				this.lockChange = false;
+			});
+
+			this.$on('sort', this.doSort);
+		}
+	});
+
+})();
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181112-7353
+/*components/pager.js*/
+
+/*
+template: `
+<div class="pager">
+	<a href @click.prevent="source.first" :disabled="disabledFirst"><i class="ico ico-chevron-left-end"/></a>
+	<a href @click.prevent="source.prev" :disabled="disabledPrev"><i class="ico ico-chevron-left"/></a>
+
+	<a href v-for="b in middleButtons " @click.prevent="page(b)"><span v-text="b"></span></a>
+
+	<a href @click.prevent="source.next"><i class="ico ico-chevron-right"/></a>
+	<a href @click.prevent="source.last"><i class="ico ico-chevron-right-end"/></a>
+	<code>pager source: offset={{source.offset}}, pageSize={{source.pageSize}},
+		pages={{source.pages}} count={{source.sourceCount}}</code>
+</div>
+*/
+const locale = window.$$locale;
+
+Vue.component('a2-pager', {
+	props: {
+		source: Object
+	},
+	computed: {
+		pages() {
+			return Math.ceil(this.count / this.source.pageSize);
+		},
+		currentPage() {
+			return Math.ceil(this.offset / this.source.pageSize) + 1;
+		},
+		title() {
+			let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+			if (!this.count)
+				return locale.$NoElements;
+			return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
+		},
+		offset() {
+			return +this.source.offset;
+		},
+		count() {
+			return +this.source.sourceCount;
+		}
+	},
+	methods: {
+		setOffset(offset) {
+			offset = +offset;
+			if (this.offset === offset)
+				return;
+			this.source.$setOffset(offset);
+		},
+		isActive(page) {
+			return page === this.currentPage;
+		},
+		click(arg, $ev) {
+			$ev.preventDefault();
+			switch (arg) {
+				case 'prev':
+					this.setOffset(this.offset - this.source.pageSize);
+					break;
+				case 'next':
+					this.setOffset(this.offset + this.source.pageSize);
+					break;
+			}
+		},
+		goto(page, $ev) {
+			$ev.preventDefault();
+			let offset = (page - 1) * this.source.pageSize;
+			this.setOffset(offset);
+		}
+	},
+	render(h, ctx) {
+		if (this.source.pageSize === -1) return; // invisible
+		let contProps = {
+			class: 'a2-pager'
+		};
+		let children = [];
+		const dotsClass = { 'class': 'a2-pager-dots' };
+		const renderBtn = (page) => {
+			return h('button', {
+				domProps: { innerText: page },
+				on: { click: ($ev) => this.goto(page, $ev) },
+				class: { active: this.isActive(page) }
+			});
+		};
+		// prev
+		children.push(h('button', {
+			on: { click: ($ev) => this.click('prev', $ev) },
+			attrs: { disabled: this.offset === 0, 'aria-label': 'Previous page' }
+		}, [h('i', { 'class': 'ico ico-chevron-left' })]
+		));
+		// first
+		if (this.pages > 0)
+			children.push(renderBtn(1));
+		if (this.pages > 1)
+			children.push(renderBtn(2));
+		// middle
+		let ms = Math.max(this.currentPage - 2, 3);
+		let me = Math.min(ms + 5, this.pages - 1);
+		if (me - ms < 5)
+			ms = Math.max(me - 5, 3);
+		if (ms > 3)
+			children.push(h('span', dotsClass, '...'));
+		for (let mi = ms; mi < me; ++mi) {
+			children.push(renderBtn(mi));
+		}
+		if (me < this.pages - 1)
+			children.push(h('span', dotsClass, '...'));
+		// last
+		if (this.pages > 3)
+			children.push(renderBtn(this.pages - 1));
+		if (this.pages > 2)
+			children.push(renderBtn(this.pages));
+		// next
+		children.push(h('button', {
+			on: { click: ($ev) => this.click('next', $ev) },
+			attrs: { disabled: this.currentPage >= this.pages, 'aria-label': 'Next Page'  }
+		},
+			[h('i', { 'class': 'ico ico-chevron-right'})]
+		));
+
+		children.push(h('span', { class: 'a2-pager-divider' }));
+		children.push(h('span', { class: 'a2-pager-title', domProps: { innerHTML: this.title } }));
+		return h('div', contProps, children);
+	}
+});
+
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181117-7359
 // controllers/base.js
 
 (function () {
@@ -3191,8 +3826,7 @@ app.components['std:store'] = {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 				const root = this.$data;
-				root._exec_(cmd, arg, confirm, opts);
-				return;
+				return root._exec_(cmd, arg, confirm, opts);
                 /*
                 const doExec = () => {
                     let root = this.$data;
@@ -3208,6 +3842,10 @@ app.components['std:store'] = {
                     doExec();
                 }
                 */
+			},
+
+			$toJson(data) {
+				return utils.toJson(data);
 			},
 
 			$isReadOnly(opts) {
@@ -3872,6 +4510,8 @@ app.components['std:store'] = {
 
 			$format(value, opts) {
 				if (!opts) return value;
+				if (utils.isString(opts))
+					opts = { dataType: opts };
 				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
 				if (opts.mask)
@@ -3913,9 +4553,10 @@ app.components['std:store'] = {
 			},
 
 			$loadLazy(elem, propName) {
+				const routing = require('std:routing'); // defer loading
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/loadlazy',
+					url = `${root}/${routing.dataUrl()}/loadlazy`,
 					selfMi = elem[propName].$ModelInfo,
 					parentMi = elem.$parent.$ModelInfo;
 
@@ -3969,6 +4610,24 @@ app.components['std:store'] = {
 			},
 
 			$defer: platform.defer,
+
+			$hasError(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return false;
+				let arr = err[path];
+				return arr && arr.length;
+			},
+
+			$errorMessage(path) {
+				let ps = utils.text.splitPath(path);
+				let err = this[ps.obj]._errors_;
+				if (!err) return '';
+				let arr = err[path];
+				if (arr && arr.length)
+					return arr[0].msg;
+				return '';
+			},
 
 			__beginRequest() {
 				this.$data.__requestsCount__ += 1;

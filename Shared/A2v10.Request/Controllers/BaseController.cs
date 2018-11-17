@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
-using System.Collections.Generic;
-using A2v10.Infrastructure.Utilities;
 using System.Net;
 using A2v10.Data.Interfaces;
 using System.Threading;
@@ -18,6 +16,24 @@ using A2v10.Request.Properties;
 
 namespace A2v10.Request
 {
+	public class ScriptInfo
+	{
+		public String Script;
+		public String DataScript;
+	}
+
+	public class ViewInfo
+	{
+		public String PageId;
+		public String Id;
+
+		public String View;
+		public String Path;
+		public String BaseUrl;
+		public ScriptInfo Scripts;
+		public IDataModel DataModel;
+	}
+
 	public partial class BaseController
 	{
 		protected readonly IApplicationHost _host;
@@ -35,7 +51,7 @@ namespace A2v10.Request
 			public RequestView RequestView;
 		}
 
-		public const String NO_VIEW = "\b_NO_VIEW_\b";
+		//public const String NO_VIEW = "\b_NO_VIEW_\b";
 
 		public Func<String, String> NormalizeBaseUrl { get; set; }
 
@@ -101,13 +117,16 @@ namespace A2v10.Request
 			}
 		}
 
+		/*
 		public async Task RenderModel(String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
+			// TODO: delete me
 			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, RequestUrlKind.Page, pathInfo);
 			RequestView rw = rm.GetCurrentAction(RequestUrlKind.Page);
 			rw.view = NO_VIEW; // no view here
 			await Render(rw, writer, loadPrms);
 		}
+		*/
 
 		public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
@@ -236,17 +255,18 @@ namespace A2v10.Request
 			String modelScript = null;
 
 			String viewName = rw.GetView();
-			if (viewName == NO_VIEW)
-			{
-				modelScript = await GetModelScriptModel(rw, model, rootId);
-				writer.Write(modelScript);
-				return;
-			}
+			//if (viewName == NO_VIEW)
+			//{
+				//modelScript = await GetModelScriptModel(rw, model, rootId);
+				//writer.Write(modelScript);
+				//return;
+			//}
 
 			if (_renderer == null)
 				throw new InvalidOperationException("Service 'IRenderer' not registered");
 
-			modelScript = await WriteModelScript(rw, model, rootId);
+			var si = await WriteModelScript(rw, model, rootId);
+			modelScript = si.Script;
 			// TODO: use view engines
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
@@ -306,275 +326,6 @@ namespace A2v10.Request
 			writer.Write(modelScript);
 		}
 
-
-		internal async Task<String> GetModelScriptModel(RequestView rw, IDataModel model, String rootId)
-		{
-			StringBuilder output = new StringBuilder();
-			String dataModelText = "null";
-			String templateText = "{}";
-			StringBuilder sbRequired = new StringBuilder();
-			if (model != null)
-			{
-				// write model script
-				String fileTemplateText = null;
-				if (rw.template != null)
-				{
-					fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
-					AddRequiredModules(sbRequired, fileTemplateText);
-					templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
-				}
-				dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
-			}
-
-const String scriptText =
-@"
-'use strict';
-window.$currentModule = function() {
-	$(RequiredModules)
-
-
-	$(ModelScript)
-
-	const rawData = $(DataModelText);
-	const template = $(TemplateText);
-	return {
-		dataModel: modelData(template, rawData)
-	};
-};";
-			const String emptyModel = "function modelData() {return null;}";
-			var text = new StringBuilder(scriptText);
-			text.Replace("$(DataModelText)", dataModelText);
-			text.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
-			text.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
-			String modelScript = model !=null ? model.CreateScript(_scripter) : emptyModel;
-			text.Replace("$(ModelScript)", modelScript);
-			output.Append(text);
-			return output.ToString();
-		}
-
-		public async Task<String> WriteModelScript(RequestView rw, IDataModel model, String rootId)
-		{
-			StringBuilder output = new StringBuilder();
-			String dataModelText = "{}";
-			String templateText = "{}";
-			StringBuilder sbRequired = new StringBuilder();
-			// write model script
-			String fileTemplateText = null;
-			if (rw.template != null)
-			{
-				fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
-				AddRequiredModules(sbRequired, fileTemplateText);
-				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
-			}
-			if (model != null)
-			{
-				dataModelText = JsonConvert.SerializeObject(model.Root, StandardSerializerSettings);
-			}
-
-
-const String scriptHeader =
-@"
-<script type=""text/javascript"">
-
-'use strict';
-
-$(RequiredModules)
-
-(function() {
-	const DataModelController = component('baseController');
-
-	const utils = require('std:utils');
-	const uPeriod = require('std:period');
-
-	const rawData = $(DataModelText);
-	const template = $(TemplateText);
-";
-const String scriptFooter =
-@"
-const vm = new DataModelController({
-	el:'#$(RootId)',
-	props: {
-		inDialog: {type: Boolean, default: $(IsDialog)},
-		pageTitle: {type: String}
-	},
-	data: modelData(template, rawData),
-	computed: {
-		utils() { return utils; },
-		period() { return uPeriod; }
-	},
-});
-
-	vm.$data._host_ = {
-		$viewModel: vm,
-		$ctrl: vm.__createController__(vm)
-	};
-
-	vm.__doInit__('$(BaseUrl)');
-
-})();
-</script>
-";
-			var header = new StringBuilder(scriptHeader);
-			header.Replace("$(RootId)", rootId);
-			header.Replace("$(DataModelText)", dataModelText);
-			header.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
-			header.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
-			output.Append(header);
-			if (model == null || model.IsEmpty)
-				output.Append(_scripter.CreateEmptyStript());
-			else
-				output.Append(model.CreateScript(_scripter));
-			var footer = new StringBuilder(scriptFooter);
-			footer.Replace("$(RootId)", rootId);
-			footer.Replace("$(BaseUrl)", rw.ParentModel.BasePath);
-			footer.Replace("$(IsDialog)", rw.IsDialog.ToString().ToLowerInvariant());
-			output.Append(footer);
-			return output.ToString();
-		}
-
-		String CreateTemplateForWrite(String fileTemplateText)
-		{
-
-			const String tmlHeader =
-@"(function() {
-    let module = { exports: undefined };
-    (function(module, exports) {
-";
-
-			const String tmlFooter =
-	@"
-    })(module, module.exports);
-    return module.exports;
-})()";
-
-			var sb = new StringBuilder();
-
-			sb.AppendLine()
-			.AppendLine(tmlHeader)
-			.AppendLine(fileTemplateText)
-			.AppendLine(tmlFooter);
-			return sb.ToString();
-		}
-
-		HashSet<String> _modulesWritten;
-
-		void AddRequiredModules(StringBuilder sb, String clientScript)
-		{
-			const String tmlHeader =
-@"
-    app.modules['$(Module)'] = function() {
-    let module = { exports: undefined };
-    (function(module, exports) {
-";
-
-			const String tmlFooter =
-@"
-    })(module, module.exports);
-    return module.exports;
-};";
-
-			if (String.IsNullOrEmpty(clientScript))
-				return;
-			if (_modulesWritten == null)
-				_modulesWritten = new HashSet<String>();
-			Int32 iIndex = 0;
-			while (true)
-			{
-				String moduleName = FindModuleNameFromString(clientScript, ref iIndex);
-				if (moduleName == null)
-					return; // not found
-				if (String.IsNullOrEmpty(moduleName))
-					continue;
-				if (moduleName.ToLowerInvariant().StartsWith("global/"))
-					continue;
-				if (moduleName.ToLowerInvariant().StartsWith("std:"))
-					continue;
-				if (moduleName.ToLowerInvariant().StartsWith("app:"))
-					continue;
-				if (_modulesWritten.Contains(moduleName))
-					continue;
-				var fileName = moduleName.AddExtension("js");
-				var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, fileName.RemoveHeadSlash()));
-				if (!File.Exists(filePath))
-					throw new FileNotFoundException(filePath);
-				String moduleText = File.ReadAllText(filePath);
-				sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
-					.AppendLine(_localizer.Localize(null, moduleText, replaceNewLine:false))
-					.AppendLine(tmlFooter)
-					.AppendLine();
-				_modulesWritten.Add(moduleName);
-				AddRequiredModules(sb, moduleText);
-			}
-		}
-
-		public static String FindModuleNameFromString(String text, ref Int32 pos)
-		{
-			String funcName = "require";
-			Int32 rPos = text.IndexOf(funcName, pos);
-			if (rPos == -1)
-				return null; // не продолжаем, ничего не нашли
-			pos = rPos + funcName.Length;
-			// проверим, что мы не в комментарии
-			Int32 oc = text.LastIndexOf("/*", rPos);
-			Int32 cc = text.LastIndexOf("*/", rPos);
-			if (oc != -1)
-			{
-				// есть открывающий комментарий
-				if (cc == -1)
-				{
-					return String.Empty; // нет закрывающего
-				}
-				if (cc < oc)
-				{
-					return String.Empty; // закрывающий левее открывающего, мы внутри
-				}
-			}
-			Int32 startLine = text.LastIndexOfAny(new Char[] { '\r', '\n' }, rPos);
-			oc = text.LastIndexOf("//", rPos);
-			if ((oc != 1) && (oc > startLine))
-				return String.Empty; // есть однострочный и он после начала строки
-
-			Tokenizer tokenizer = null;
-			try
-			{
-				// проверим точку, как предыдущий токен
-				var dotPos = text.LastIndexOf('.', rPos);
-				if (dotPos != -1)
-				{
-					tokenizer = new Tokenizer(text, dotPos);
-					if (tokenizer.token.id == Tokenizer.TokenId.Dot)
-					{
-						tokenizer.NextToken();
-						var tok = tokenizer.token;
-						if (tok.id == Tokenizer.TokenId.Identifier && tok.Text == "require")
-						{
-							tokenizer.NextToken();
-							if (tokenizer.token.id == Tokenizer.TokenId.OpenParen)
-								return String.Empty; /* есть точка перед require */
-						}
-					}
-				}
-				tokenizer = new Tokenizer(text, rPos + funcName.Length);
-				if (tokenizer.token.id == Tokenizer.TokenId.OpenParen)
-				{
-					tokenizer.NextToken();
-					if (tokenizer.token.id == Tokenizer.TokenId.StringLiteral)
-					{
-						pos = tokenizer.GetTextPos();
-						return tokenizer.token.UnquotedText.Replace("\\\\", "/");
-					}
-				}
-				pos = tokenizer.GetTextPos();
-				return String.Empty;
-			}
-			catch (Exception /*ex*/)
-			{
-				// parser error
-				if (tokenizer != null)
-					pos = tokenizer.GetTextPos();
-				return null;
-			}
-		}
 
 		public static readonly JsonSerializerSettings StandardSerializerSettings =
 			new JsonSerializerSettings()

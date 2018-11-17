@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181104-7343
+// 20181117-7359
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -65,7 +65,8 @@ app.modules['std:utils'] = function () {
 		text: {
 			contains: textContains,
 			containsText: textContainsText,
-			sanitize
+			sanitize,
+			splitPath
 		},
 		func: {
 			curry,
@@ -442,6 +443,14 @@ app.modules['std:utils'] = function () {
 		let t = '' + text || '';
 		return t.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
 			.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+	}
+
+	function splitPath(path) {
+		let propIx = path.lastIndexOf('.');
+		return {
+			obj: path.substring(0, propIx),
+			prop: path.substring(propIx + 1)
+		};
 	}
 
 	function textContains(text, probe) {
