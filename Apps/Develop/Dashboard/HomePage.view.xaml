@@ -49,6 +49,50 @@
 		<StateCard DropShadow="Shadow1" Style="Primary" Grid.Row="2" Grid.Col="3" Header="PRIMARY" Icon="MessageOutline" Text="71233" Footer="Footer for primary card"/>
 
 	</Grid>
-</Page>
 
-    
+	<Block Padding="5">
+		<Alert Style="Default">
+			<Block>
+				<Paragraph>Default alert</Paragraph>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Warning" Icon="WaitingOutline" Content="Warning alert" />
+		<Alert Style="Info" Icon="InfoOutline">
+			<Block>
+				<Text>Info alert</Text>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Danger">
+			<Block>
+				<Paragraph>Danger alert</Paragraph>
+				<Line />
+			</Block></Alert>
+		<Alert Style="Success">Success alert</Alert>
+		<Alert Style="Dark">
+			<Block>
+				<Paragraph>Dark alert</Paragraph>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Light" Icon="AddressBook">
+			<Block>
+				<Text>Light alert</Text>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Success" DropShadow="Shadow1">
+			<Block>
+				<Header>Well Done</Header>
+				<Paragraph>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
+				</Paragraph>
+				<Line/>
+				<StackPanel Orientation="Horizontal">
+					<Button Style="Primary">Read More ...</Button>
+					<Button Style="Primary">And more</Button>
+				</StackPanel>
+			</Block>
+		</Alert>
+	</Block>
+</Page>

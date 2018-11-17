@@ -81,11 +81,11 @@ namespace A2v10.Xaml
 				context.Writer.Write(context.Localize(content.ToString()));
 		}
 
-		internal void RenderIcon(RenderContext context, Icon icon, String addClass = null)
+		internal Boolean RenderIcon(RenderContext context, Icon icon, String addClass = null)
 		{
 			var iconBind = GetBinding("Icon");
 			if (icon == Icon.NoIcon && iconBind == null)
-				return;
+				return false;
 			var iTag = new TagBuilder("i", "ico");
 			if (iconBind != null)
 				iTag.MergeAttribute(":class", $"'ico-' + {iconBind.GetPath(context)}");
@@ -94,6 +94,7 @@ namespace A2v10.Xaml
 			iTag.AddCssClass(addClass);
 			iTag.Render(context);
 			context.RenderSpace(); // after icon - always
+			return true;
 		}
 
 		internal void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)

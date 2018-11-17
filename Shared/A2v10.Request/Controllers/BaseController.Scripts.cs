@@ -31,7 +31,7 @@ internal const String HEADER =
 	const currentModule = $(CurrentModule);
 ";
 
-		internal const String DATAFUNC =
+internal const String DATAFUNC =
 @"
 	function() {
 		$(RequiredModules)
@@ -83,6 +83,7 @@ const vm = new DataModelController({
 			String dataModelText = "{}";
 			String templateText = "{}";
 			StringBuilder sbRequired = new StringBuilder();
+
 			// write model script
 			String fileTemplateText = null;
 			if (rw.template != null)
@@ -98,24 +99,18 @@ const vm = new DataModelController({
 
 			var header = new StringBuilder(SCRIPT_PARTS.HEADER);
 			header.Replace("$(RootId)", rootId);
-			header.Replace("$(DataModelText)", dataModelText);
 
 			var modelFunc = new StringBuilder(SCRIPT_PARTS.DATAFUNC);
-			modelFunc.Replace("$(RequiredModules)", sbRequired != null ? sbRequired.ToString() : String.Empty);
+			modelFunc.Replace("$(RequiredModules)", sbRequired?.ToString());
 			modelFunc.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
 			modelFunc.Replace("$(DataModelText)", dataModelText);
-			const String emptyModel = "function modelData() {return null;}";
-			String modelScript = model != null ? model.CreateScript(_scripter) : emptyModel;
+			String modelScript = model != null ? model.CreateScript(_scripter) : _scripter.CreateEmptyStript();
 			modelFunc.Replace("$(ModelScript)", modelScript);
-
-			header.Replace("$(CurrentModule)", modelFunc.ToString());
 			result.DataScript = modelFunc.ToString();
 
+			header.Replace("$(CurrentModule)", modelFunc.ToString());
 			output.Append(header);
-			if (model == null || model.IsEmpty)
-				output.Append(_scripter.CreateEmptyStript());
-			else
-				output.Append(model.CreateScript(_scripter));
+
 			var footer = new StringBuilder(SCRIPT_PARTS.FOOTER);
 			footer.Replace("$(RootId)", rootId);
 			footer.Replace("$(BaseUrl)", rw.ParentModel.BasePath);
