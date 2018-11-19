@@ -17,7 +17,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 		public Boolean Scroll { get; set; }
 		public TextAlign Align { get; set; }
-		public TextColorStyle Color { get; set; }
+		public TextColor Color { get; set; }
 
 		internal virtual void RenderChildren(RenderContext context)
 		{
@@ -52,7 +52,7 @@ namespace A2v10.Xaml
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
 			AddHackedBorder(div);
-			if (Color != TextColorStyle.Default)
+			if (Color != TextColor.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			MergeAlign(div, context, Align);
 			div.RenderStart(context);

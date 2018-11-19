@@ -2,6 +2,7 @@
 
 (function () {
 
+	$(Utils)
 	$(Locale)
 
 	const vm = new Vue({
@@ -17,6 +18,9 @@
 			}
 		},
 		methods: {
+			getReferUrl(url) {
+				return getReferralUrl(url);
+			}
 		}
 	});
 })();

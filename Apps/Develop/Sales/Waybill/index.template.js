@@ -20,7 +20,17 @@ const template = {
 			f.Name = '';
 		},
 		startWorkflow,
-		attachReport
+		attachReport,
+		test: {
+			exec: testCommand,
+			confirm: {
+				message: 'are you sure?',
+				style2: 'confirm',
+				title2: 'Confirm here',
+				okText2: "OK text",
+				cancelText2: "Cancel Text"
+			}
+		}
 	}
 };
 
@@ -56,4 +66,10 @@ async function attachReport(doc) {
 	//alert('attach result:' + result);
 	vm.$toast("Успешно добавлено");
 	doc.Attachments.$append({ Id: result.Id });
+}
+
+function testCommand(arg) {
+	console.dir(arg);
+	alert(1);
+	return true;
 }

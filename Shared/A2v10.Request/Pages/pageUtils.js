@@ -295,6 +295,7 @@ function getPopup() {
 			});
 		},
 		unbind(el) {
+			if (!window.require) return;
 			const popup = require('std:popup');
 			popup.unregisterPopup(el);
 		}

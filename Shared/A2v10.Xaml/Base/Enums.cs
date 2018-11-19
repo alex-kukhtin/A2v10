@@ -11,7 +11,7 @@ namespace A2v10.Xaml
 		Center
 	}
 
-	public enum TextColorStyle
+	public enum TextColor
 	{
 		Default = 0,
 		Gray,
