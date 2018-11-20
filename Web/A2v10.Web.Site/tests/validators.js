@@ -158,5 +158,29 @@ describe("Validators", function () {
 		).toEqual(result);
 	});
 
+	it('applyIf', function () {
+		function applyIf(obj, name) {
+			return obj.id === 22;
+		}
+
+		function isValid() {
+			console.dir('is valid');
+			return false;
+		}
+
+		let rule = { valid: isValid, msg: 'error message', applyIf: applyIf };
+
+		// not applied
+		expect(
+			val.validate(rule, {id: 23}, 'id')
+		).toEqual(blankArray);
+
+		// applied
+		let result = [{ msg: 'error message', severity:'error'}];
+		result.pending = 0;
+		expect(
+			val.validate(rule, { id: 22 }, 'id')
+		).toEqual(result);
+	});
 });
 

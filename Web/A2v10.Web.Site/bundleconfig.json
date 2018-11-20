@@ -142,27 +142,6 @@
 		"minify": { "enabled": false }
 	},
 	{
-		"outputFileName": "Scripts/eusignframe.js",
-		"inputFiles": [
-			"app/app.js",
-			"app/platform/polyfills.js",
-			"app/services/utils.js",
-			"app/services/url.js",
-			"app/services/period.js",
-			"app/services/modelinfo.js",
-			"app/services/mask.js",
-			"app/platform/webvue.js",
-			"app/services/http.js",
-			"app/services/validators.js",
-			"app/services/datamodel.js",
-			"app/services/dataservice.js",
-			"scripts/eusign.js",
-			"app/site/store.js",
-			"app/controllers/base.js"
-		],
-		"minify": { "enabled": false }
-	},
-	{
 		"outputFileName": "Scripts/a2v10-vue-site.js",
 		"inputFiles": [
 			"app/app.js",

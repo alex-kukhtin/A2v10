@@ -80,6 +80,7 @@ namespace A2v10.Web.Identity
 
 			if (dataProtectionProvider != null)
 			{
+				// DataProtectorTokenProvider.TokenLifespan may be set here
 				UserTokenProvider =
 					new DataProtectorTokenProvider<AppUser, Int64>(dataProtectionProvider.Create("ASP.NET Identity"));
 			}
