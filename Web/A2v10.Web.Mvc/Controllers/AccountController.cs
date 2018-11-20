@@ -137,8 +137,14 @@ namespace A2v10.Web.Mvc.Controllers
 		[AllowAnonymous]
 		[HttpGet]
 		[OutputCache(Duration = 0)]
-		public void Login()
+		public void Login(String Referral)
 		{
+			if (User.Identity.IsAuthenticated)
+			{
+				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+				Response.Redirect("/Account/Login");
+				return;
+			}
 			Session.Abandon();
 			ClearAllCookies();
 			String page = GetRedirectedPage("login", ResourceHelper.LoginHtml);

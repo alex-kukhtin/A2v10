@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181023-7326
+// 20181120-7363
 // locale-uk.js
 
 "use strict";
@@ -58,7 +58,8 @@
 		$HomePage: 'домашня сторінка',
 		$CreatedOpenSource: 'Створено з використанням програмного забезпечення з відкритим сирцевим кодом',
 		$Unknown: 'Не вказано',
-		$ChooseFile: 'Оберіть файл'
+		$ChooseFile: 'Оберіть файл',
+		$AccessDenied: 'Доступ до системи заборонено!'
 	};
 
 })();

@@ -7038,7 +7038,7 @@ TODO:
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181103-7342
+// 20181120-7363
 // components/modal.js
 
 
@@ -7249,7 +7249,11 @@ TODO:
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false, tabindex:1 }];
+					return [{ text: okText, result: false, tabindex: 1 }];
+				else if (this.dialog.style === 'alert-ok') {
+					this.dialog.style = 'alert';
+					return [{ text: okText, result: true, tabindex: 1 }];
+				}
 				else if (this.dialog.style === 'info')
 					return [{ text: okText, result: false, tabindex:1 }];
 				return [
@@ -10046,7 +10050,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181116-7357*/
+/*20181120-7363*/
 /* controllers/shell.js */
 
 (function () {
@@ -10178,6 +10182,7 @@ Vue.directive('resize', {
 				return urlTools.helpHref('');
 			},
 			hasHelp() {
+				if (!this.menu) return false;
 				let am = this.menu.find(x => this.isActive(x));
 				return am && am.Help;
 			}
@@ -10326,6 +10331,8 @@ Vue.directive('resize', {
 			currentView() {
 				let root = window.$$rootUrl;
 				let url = store.getters.url;
+				if (url === '/')
+					return; // no views here
 				let len = store.getters.len;
 				if (len === 2 || len === 3)
 					url += '/index/0';
@@ -10421,25 +10428,6 @@ Vue.directive('resize', {
 			hasModals() { return this.modals.length > 0; }
 		},
 		created() {
-			if (!this.menu) {
-				alert('access denied');
-				//window.location.assign('/account/login');
-				return;
-			}
-			this.sideBarCollapsed = this.sideBarInitialCollapsed;
-			let opts = { title: null };
-			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
-			newUrl = newUrl + window.location.search;
-			this.$store.commit('setstate', { url: newUrl, title: opts.title });
-
-			let firstUrl = {
-				url: '',
-				title: ''
-			};
-
-			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
-			firstUrl.title = opts.title;
-			urlTools.firstUrl = firstUrl;
 
 			let me = this;
 
@@ -10503,6 +10491,35 @@ Vue.directive('resize', {
 				me.modals.push(dlg);
 			});
 
+			if (!this.menu) {
+				let dlgData = {
+					promise: null, data: {
+						message: locale.$AccessDenied, title: locale.$Error, style: 'alert-ok'
+					}
+				};
+				eventBus.$emit('confirm', dlgData);
+				dlgData.promise.then(function () {
+					let root = window.$$rootUrl;
+					let url = urlTools.combine(root, '/account/login');
+					window.location.assign(url);
+				});
+				return;
+			}
+
+			this.sideBarCollapsed = this.sideBarInitialCollapsed;
+			let opts = { title: null };
+			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
+			newUrl = newUrl + window.location.search;
+			this.$store.commit('setstate', { url: newUrl, title: opts.title });
+
+			let firstUrl = {
+				url: '',
+				title: ''
+			};
+
+			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+			firstUrl.title = opts.title;
+			urlTools.firstUrl = firstUrl;
 		}
 	};
 

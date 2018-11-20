@@ -3399,7 +3399,7 @@ Vue.component('a2-pager', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181103-7342
+// 20181120-7363
 // components/modal.js
 
 
@@ -3610,7 +3610,11 @@ Vue.component('a2-pager', {
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false, tabindex:1 }];
+					return [{ text: okText, result: false, tabindex: 1 }];
+				else if (this.dialog.style === 'alert-ok') {
+					this.dialog.style = 'alert';
+					return [{ text: okText, result: true, tabindex: 1 }];
+				}
 				else if (this.dialog.style === 'info')
 					return [{ text: okText, result: false, tabindex:1 }];
 				return [
