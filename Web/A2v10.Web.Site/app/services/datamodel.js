@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181117-7359
+// 20181120-7363
 // services/datamodel.js
 
 (function () {
@@ -280,6 +280,16 @@
 			return !this.$valid;
 		});
 
+		elem.$errors = function (prop) {
+			if (!this) return null;
+			let root = this._root_;
+			if (!root) return null;
+			if (!root._validate_)
+				return null;
+			let path = `${this._path_}.${prop}`; 
+			return root._validate_(this, path, this[prop]);
+		};
+		
 		if (elem._meta_.$group === true) {
 			defPropertyGet(elem, "$groupName", function () {
 				if (!utils.isDefined(this.$level))

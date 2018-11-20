@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181117-7359
+// 20181120-7363
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -53,6 +53,7 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
+			format: formatDate,
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,

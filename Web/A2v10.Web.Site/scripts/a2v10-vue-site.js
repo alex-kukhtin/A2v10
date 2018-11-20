@@ -101,7 +101,7 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181117-7359
+// 20181120-7363
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -154,6 +154,7 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
+			format: formatDate,
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,
@@ -1863,7 +1864,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181117-7359
+// 20181120-7363
 // services/datamodel.js
 
 (function () {
@@ -2143,6 +2144,16 @@ app.modules['std:validators'] = function () {
 			return !this.$valid;
 		});
 
+		elem.$errors = function (prop) {
+			if (!this) return null;
+			let root = this._root_;
+			if (!root) return null;
+			if (!root._validate_)
+				return null;
+			let path = `${this._path_}.${prop}`; 
+			return root._validate_(this, path, this[prop]);
+		};
+		
 		if (elem._meta_.$group === true) {
 			defPropertyGet(elem, "$groupName", function () {
 				if (!utils.isDefined(this.$level))
