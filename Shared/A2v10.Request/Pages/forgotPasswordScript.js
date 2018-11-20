@@ -1,4 +1,5 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// version 7372
 
 (function () {
 
