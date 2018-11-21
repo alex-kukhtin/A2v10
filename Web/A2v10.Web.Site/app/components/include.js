@@ -25,7 +25,8 @@
 		props: {
 			src: String,
 			cssClass: String,
-			needReload: Boolean
+			needReload: Boolean,
+			done: Function
 		},
 		data() {
 			return {
@@ -37,6 +38,8 @@
 		methods: {
 			loaded(ok) {
 				this.loading = false;
+				if (this.done)
+					this.done();
 			},
 			requery() {
 				if (this.currentUrl) {

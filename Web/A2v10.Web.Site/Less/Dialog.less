@@ -127,3 +127,24 @@
 		white-space: pre-line;
 	}
 }
+
+.modal-window {
+	transform:translate(0, -33%);
+	//transform: rotateY(180deg);
+	backface-visibility: hidden;
+
+	&.loaded {
+		transition: transform ease-out .25s;
+		transform:translate(0, 0);
+		//transform: rotateY(0);
+	}
+}
+
+.modal-stack .modal-wrapper {
+	background-color: transparent;
+
+	&.show {
+		transition: background-color linear .125s;
+		background-color: rgba(0, 0, 0, .25);
+	}
+}

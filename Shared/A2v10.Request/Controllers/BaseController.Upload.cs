@@ -28,6 +28,7 @@ namespace A2v10.Request
 				setParams?.Invoke(savePrms);
 				savePrms.Set("Id", ru.Id);
 				savePrms.Set("Stream", files[0].InputStream);
+				savePrms.Set("FileName", files[0].FileName);
 				var result = await DoUploadClr(ru, savePrms);
 				writer.Write(JsonConvert.SerializeObject(result, StandardSerializerSettings));
 			}

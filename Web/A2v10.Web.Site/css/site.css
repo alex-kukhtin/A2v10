@@ -714,6 +714,9 @@ input[type=button] {
 span {
   word-break: break-word;
 }
+p {
+  margin: 0.5rem 0;
+}
 input[type=text]::-ms-clear {
   display: none;
 }
@@ -3294,6 +3297,21 @@ ul.news-list > li {
 .modal-body.alert > div,
 .modal-body.info > div {
   white-space: pre-line;
+}
+.modal-window {
+  transform: translate(0, -33%);
+  backface-visibility: hidden;
+}
+.modal-window.loaded {
+  transition: transform ease-out 0.25s;
+  transform: translate(0, 0);
+}
+.modal-stack .modal-wrapper {
+  background-color: transparent;
+}
+.modal-stack .modal-wrapper.show {
+  transition: background-color linear 0.125s;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 .wizard-panel {
   display: grid;

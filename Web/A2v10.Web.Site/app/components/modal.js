@@ -17,8 +17,8 @@
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window" @keydown.tab="tabPress">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+<div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
+	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
@@ -119,6 +119,7 @@
 		data() {
 			// always need a new instance of function (modal stack)
 			return {
+				modalCreated: false,
 				keyUpHandler: function () {
 					// escape
 					if (event.which === 27) {
@@ -132,6 +133,9 @@
 		methods: {
 			modalClose(result) {
 				eventBus.$emit('modalClose', result);
+			},
+			loaded() {
+				// include loading is complete
 			},
 			messageText() {
 				return utils.text.sanitize(this.dialog.message);
@@ -182,6 +186,9 @@
 			isInclude: function () {
 				return !!this.dialog.url;
 			},
+			mwClass() {
+				return this.modalCreated ? 'loaded' : null;
+			},
 			hasIcon() {
 				return !!this.dialog.style;
 			},
@@ -230,6 +237,9 @@
 				document.activeElement.blur();
 		},
 		mounted() {
+			setTimeout(() => {
+				this.modalCreated = true;
+			}, 50); // same as shell
 		},
 		destroyed() {
 			document.removeEventListener('keyup', this.keyUpHandler);

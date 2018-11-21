@@ -312,6 +312,7 @@
 		}
 	};
 
+	// 
 	const a2MainView = {
 		store,
 		template: `
@@ -321,7 +322,7 @@
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
-		<div class="modal-wrapper" v-for="dlg in modals">
+		<div class="modal-wrapper" v-for="dlg in modals" :class="{show: dlg.wrap}">
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>
@@ -377,8 +378,15 @@
 			pendingRequest() { return this.requestsCount > 0; },
 			hasModals() { return this.modals.length > 0; }
 		},
+		methods: {
+			setupWrapper(dlg) {
+				setTimeout(() => {
+					dlg.wrap = true;
+					console.dir("wrap:" + dlg.wrap);
+				}, 50); // same as modal
+			}
+		},
 		created() {
-
 			let me = this;
 
 			eventBus.$on('beginRequest', function () {
@@ -400,23 +408,25 @@
 				if (raw)
 					url = urlTools.combine(root, modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
-				let dlg = { title: "dialog", url: url, prms: prms.data };
+				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
+				me.setupWrapper(dlg);
 			});
 
 			eventBus.$on('modaldirect', function (modal, prms) {
 				let root = window.$$rootUrl;
 				let url = urlTools.combine(root, '/_dialog', modal);
-				let dlg = { title: "dialog", url: url, prms: prms.data };
+				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
+				me.setupWrapper(dlg);
 			});
 
 			eventBus.$on('modalClose', function (result) {
@@ -434,11 +444,13 @@
 
 			eventBus.$on('confirm', function (prms) {
 				let dlg = prms.data;
+				dlg.wrap = false;
 				dlg.promise = new Promise(function (resolve) {
 					dlg.resolve = resolve;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
+				me.setupWrapper(dlg);
 			});
 
 			if (!this.menu) {

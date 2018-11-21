@@ -3275,7 +3275,8 @@ Vue.component('a2-pager', {
 		props: {
 			src: String,
 			cssClass: String,
-			needReload: Boolean
+			needReload: Boolean,
+			done: Function
 		},
 		data() {
 			return {
@@ -3287,6 +3288,8 @@ Vue.component('a2-pager', {
 		methods: {
 			loaded(ok) {
 				this.loading = false;
+				if (this.done)
+					this.done();
 			},
 			requery() {
 				if (this.currentUrl) {
@@ -3416,8 +3419,8 @@ Vue.component('a2-pager', {
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window" @keydown.tab="tabPress">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url"></include>
+<div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
+	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
@@ -3518,6 +3521,7 @@ Vue.component('a2-pager', {
 		data() {
 			// always need a new instance of function (modal stack)
 			return {
+				modalCreated: false,
 				keyUpHandler: function () {
 					// escape
 					if (event.which === 27) {
@@ -3531,6 +3535,9 @@ Vue.component('a2-pager', {
 		methods: {
 			modalClose(result) {
 				eventBus.$emit('modalClose', result);
+			},
+			loaded() {
+				// include loading is complete
 			},
 			messageText() {
 				return utils.text.sanitize(this.dialog.message);
@@ -3581,6 +3588,9 @@ Vue.component('a2-pager', {
 			isInclude: function () {
 				return !!this.dialog.url;
 			},
+			mwClass() {
+				return this.modalCreated ? 'loaded' : null;
+			},
 			hasIcon() {
 				return !!this.dialog.style;
 			},
@@ -3629,6 +3639,9 @@ Vue.component('a2-pager', {
 				document.activeElement.blur();
 		},
 		mounted() {
+			setTimeout(() => {
+				this.modalCreated = true;
+			}, 50); // same as shell
 		},
 		destroyed() {
 			document.removeEventListener('keyup', this.keyUpHandler);
