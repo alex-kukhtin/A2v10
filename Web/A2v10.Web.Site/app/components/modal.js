@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20181122-7367
 // components/modal.js
 
 
@@ -40,16 +40,20 @@
 	const setWidthComponent = {
 		inserted(el, binding) {
 			// TODO: width or cssClass???
-			//alert('set width-created:' + binding.value);
-			// alert(binding.value.cssClass);
 			let mw = el.closest('.modal-window');
 			if (mw) {
 				if (binding.value.width)
 					mw.style.width = binding.value.width;
-				if (binding.value.cssClass)
-					mw.classList.add(binding.value.cssClass);
+				let cssClass = binding.value.cssClass;
+				switch (cssClass) {
+					case 'modal-large':
+						mw.style.width = '800px'; // from less
+						break;
+					case 'modal-small':
+						mw.style.width = '300px'; // from less
+						break;
+				}
 			}
-			//alert(el.closest('.modal-window'));
 		}
 	};
 

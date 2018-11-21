@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181121-7364*/
+/*20181122-7367*/
 /* controllers/shell.js */
 
 (function () {
@@ -382,7 +382,7 @@
 			setupWrapper(dlg) {
 				setTimeout(() => {
 					dlg.wrap = true;
-					console.dir("wrap:" + dlg.wrap);
+					//console.dir("wrap:" + dlg.wrap);
 				}, 50); // same as modal
 			}
 		},
