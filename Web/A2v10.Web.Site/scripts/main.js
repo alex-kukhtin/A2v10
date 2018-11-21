@@ -1315,7 +1315,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180227-7121
+// 20181121-7364
 /* platform/routex.js */
 
 (function () {
@@ -1381,7 +1381,8 @@ app.modules['std:http'] = function () {
 			navigate: function (state, to) { // to: {url, query, title}
 				let root = window.$$rootUrl;
 				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
-				state.route = to.url;
+				state.route = to.url.toLowerCase();
+				//console.dir(state.route);
 				state.query = Object.assign({}, to.query);
 				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
 				let h = window.history;
@@ -10050,7 +10051,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181120-7363*/
+/*20181121-7364*/
 /* controllers/shell.js */
 
 (function () {
@@ -10087,7 +10088,7 @@ Vue.directive('resize', {
 
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
-		url = urlTools.combine(url);
+		url = urlTools.combine(url).toLowerCase();
 		let sUrl = url.split('/');
 		if (sUrl.length >= 4)
 			return url; // full qualified

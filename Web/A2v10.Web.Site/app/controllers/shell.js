@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181120-7363*/
+/*20181121-7364*/
 /* controllers/shell.js */
 
 (function () {
@@ -37,7 +37,7 @@
 
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
-		url = urlTools.combine(url);
+		url = urlTools.combine(url).toLowerCase();
 		let sUrl = url.split('/');
 		if (sUrl.length >= 4)
 			return url; // full qualified
