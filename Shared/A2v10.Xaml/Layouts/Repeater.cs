@@ -41,5 +41,11 @@ namespace A2v10.Xaml
 			base.OnEndInit();
 			Content?.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			Content?.OnSetStyles();
+		}
 	}
 }

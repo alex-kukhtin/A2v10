@@ -49,5 +49,7 @@ namespace A2v10.Xaml
 				return resrc;
 			return null;
 		}
+
+		internal Styles Styles { get; set; }
 	}
 }

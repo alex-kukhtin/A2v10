@@ -31,7 +31,7 @@ namespace A2v10.Web.Mvc.Start
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
 					host as ITenantManager);
-				IRenderer renderer = new XamlRenderer(profiler);
+				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
 				IMessaging messaging = new MessageProcessor(host, dbContext);
 				IDataScripter scripter = new VueDataScripter();

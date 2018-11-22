@@ -130,5 +130,13 @@ namespace A2v10.Xaml
 				foreach (var ch in Children)
 					ch.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			if (_children != null)
+				foreach (var ch in Children)
+					ch.OnSetStyles();
+		}
 	}
 }

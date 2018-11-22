@@ -48,6 +48,13 @@ namespace A2v10.Xaml
 			foreach (var c in Cells)
 				c.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			foreach (var c in Cells)
+				c.OnSetStyles();
+		}
 	}
 
 	[TypeConverter(typeof(SheetRowsConverter))]

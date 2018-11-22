@@ -56,11 +56,15 @@
     <Compile Include="Base\ISupportBinding.cs" />
     <Compile Include="Base\ISupportTwoPhaseRendering.cs" />
     <Compile Include="Base\ITableControl.cs" />
+    <Compile Include="Base\Setter.cs" />
     <Compile Include="Base\RenderContext.cs" />
     <Compile Include="Base\Size.cs" />
     <Compile Include="Base\SortDescription.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\StaticResource.cs" />
+    <Compile Include="Base\Style.cs" />
+    <Compile Include="Base\StyleResource.cs" />
+    <Compile Include="Base\Styles.cs" />
     <Compile Include="Base\TagBuilder.cs" />
     <Compile Include="Base\Thickness.cs" />
     <Compile Include="Base\Toast.cs" />

@@ -67,6 +67,13 @@ namespace A2v10.Xaml
 				c.SetParent(this);
 		}
 
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			foreach (var c in Children)
+				c.OnSetStyles();
+		}
+
 		internal override void OnDispose()
 		{
 			base.OnDispose();

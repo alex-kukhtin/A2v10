@@ -3209,10 +3209,9 @@ ul.news-list > li {
 }
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
-  margin: 70px auto 30px auto;
+  margin: 70px auto 0 auto;
   width: 500px;
   height: auto;
-  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
   background-color: white;
 }
 .modal-stack .modal-wrapper .modal-window .modal-body-content {
@@ -3298,13 +3297,15 @@ ul.news-list > li {
 .modal-body.info > div {
   white-space: pre-line;
 }
-.modal-window {
+.modal-stack .modal-wrapper .modal-window {
   transform: translate(0, -33%);
   backface-visibility: hidden;
+  box-shadow: none;
 }
-.modal-window.loaded {
-  transition: transform ease-out 0.25s;
+.modal-stack .modal-wrapper .modal-window.loaded {
+  transition: transform ease-out 0.25s, box-shadow ease-out 0.25s;
   transform: translate(0, 0);
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 .modal-stack .modal-wrapper {
   background-color: transparent;

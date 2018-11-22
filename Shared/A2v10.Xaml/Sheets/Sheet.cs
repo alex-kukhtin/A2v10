@@ -131,5 +131,18 @@ namespace A2v10.Xaml
 			foreach (var s in Sections)
 				s.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			if (_header != null)
+				foreach (var h in Header)
+					h.OnSetStyles();
+			if (_footer != null)
+				foreach (var f in Footer)
+					f.OnSetStyles();
+			foreach (var s in Sections)
+				s.OnSetStyles();
+		}
 	}
 }

@@ -61,9 +61,9 @@
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" />
 	</Page.Pager>
-	<!--="{Bind Parent.GroupBy}-->
-	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+	<!--="{Bind Parent.GroupBy} ItemsSource="{Bind Parent.ItemsSource}" -->
+	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column"
+				Sort="True" FixedHeader="True"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"

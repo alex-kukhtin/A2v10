@@ -201,6 +201,13 @@ namespace A2v10.Xaml
 			if (Content is XamlElement)
 				(Content as XamlElement).SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			if (Content is XamlElement)
+				(Content as XamlElement).OnSetStyles();
+		}
 	}
 
 	public class DataGridColumnCollection : List<DataGridColumn>

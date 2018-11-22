@@ -55,6 +55,11 @@ namespace A2v10.Xaml
 
 		}
 
+		internal virtual void OnSetStyles()
+		{
+
+		}
+
 		internal void SetParent(XamlElement parent)
 		{
 			Parent = parent;

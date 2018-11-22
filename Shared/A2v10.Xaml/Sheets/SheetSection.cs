@@ -49,6 +49,13 @@ namespace A2v10.Xaml
 			foreach (var r in Children)
 				r.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			foreach (var r in Children)
+				r.OnSetStyles();
+		}
 	}
 
 	public class SheetSections : List<SheetSection>

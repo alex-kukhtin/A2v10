@@ -118,6 +118,15 @@ namespace A2v10.Xaml
 			CollectionView?.SetParent(this);
 		}
 
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			Toolbar?.OnSetStyles();
+			Taskpad?.OnSetStyles();
+			Pager?.OnSetStyles();
+			CollectionView?.OnSetStyles();
+		}
+
 		internal override void OnDispose()
 		{
 			base.OnDispose();

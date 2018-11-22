@@ -20,6 +20,8 @@ namespace A2v10.Xaml
 		public WrapMode Wrap { get; set; }
 		public Thickness Absolute { get; set; }
 
+		public StyleDescriptor XamlStyle { get; set; }
+
 		public String Tip { get; set; }
 
 		internal abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
@@ -243,6 +245,14 @@ namespace A2v10.Xaml
 			return null;
 		}
 
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+		}
 
+		internal override void OnSetStyles()
+		{
+			XamlStyle?.Set(this);
+		}
 	}
 }

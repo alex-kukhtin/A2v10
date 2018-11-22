@@ -184,5 +184,12 @@ namespace A2v10.Xaml
 			foreach (var col in Columns)
 				col.SetParent(this);
 		}
+
+		internal override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			foreach (var col in Columns)
+				col.OnSetStyles();
+		}
 	}
 }

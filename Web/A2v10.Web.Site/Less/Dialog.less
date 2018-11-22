@@ -22,13 +22,13 @@
 
 		.modal-window {
 			position: relative;
-			margin: 70px auto 30px auto;
+			margin: 70px auto 0 auto;
 			width: @modal-width-medium;
 			height: auto;
 			//border: 1px solid @dark-bk-color;
 			//box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 			// from material design
-			box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+			//box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 			background-color: white;
 
 			.modal-body-content {
@@ -128,14 +128,17 @@
 	}
 }
 
-.modal-window {
-	transform:translate(0, -33%);
+.modal-stack .modal-wrapper .modal-window {
+	transform: translate(0, -33%);
 	//transform: rotateY(180deg);
 	backface-visibility: hidden;
+	box-shadow: none;
 
 	&.loaded {
-		transition: transform ease-out .25s;
-		transform:translate(0, 0);
+		transition: transform ease-out .25s, box-shadow ease-out .25s;
+		//transition: box-shadow linear 5s; //.25s;
+		transform: translate(0, 0);
+		box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 		//transform: rotateY(0);
 	}
 }
