@@ -1136,8 +1136,8 @@ header .user-name .person-name,
   background-color: #e8e9f4;
 }
 .nav-bar li.active a {
-  color: #57a8fa;
-  border-bottom: 3px solid #57a8fa;
+  color: #208cf8;
+  border-bottom: 3px solid #208cf8;
   font-weight: 500;
 }
 .nav-bar li.aligner:hover {
@@ -1244,7 +1244,7 @@ header .user-name .person-name,
   left: 0;
   width: 100%;
   padding: 6px 6px 2px 8px;
-  color: #57a8fa;
+  color: #208cf8;
   font-size: 120%;
 }
 .taskpad.no-collapsible .taskpad-collapse-handle {
@@ -1258,7 +1258,7 @@ header .user-name .person-name,
   margin-left: 6px;
 }
 .taskpad.expanded .taskpad-collapse-handle:hover {
-  color: #57a8fa;
+  color: #208cf8;
   text-decoration: none;
   background-color: #f9f9f9;
 }
@@ -1385,8 +1385,8 @@ header .user-name .person-name,
   background-color: #b0debb;
 }
 .a2-simple-upload .upload-text {
-  color: #57a8fa;
-  border-bottom: 1px dotted #57a8fa;
+  color: #208cf8;
+  border-bottom: 1px dotted #208cf8;
   cursor: pointer;
   margin-right: 5px;
 }
@@ -1468,7 +1468,7 @@ footer .spinner,
 }
 footer .spinner.active,
 .footer .spinner.active {
-  border-color: #57a8fa;
+  border-color: #208cf8;
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
 }
@@ -1535,7 +1535,7 @@ textarea {
   resize: none;
 }
 a {
-  color: #57a8fa;
+  color: #208cf8;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1544,15 +1544,15 @@ a[disabled] {
   cursor: not-allowed;
 }
 a:hover {
-  color: #57a8fa;
+  color: #208cf8;
   text-decoration: none;
 }
 a:focus {
-  color: #57a8fa;
+  color: #208cf8;
   outline-style: none;
 }
 a:active {
-  color: #57a8fa;
+  color: #208cf8;
 }
 pre {
   font-family: Consolas, 'Courier New', Courier, monospace;
@@ -1823,7 +1823,7 @@ pre.a2-code {
 .control-group .input-group > a:hover,
 .control-group .input-group > .dropdown > a:hover {
   text-decoration: none;
-  color: #57a8fa;
+  color: #208cf8;
 }
 .control-group .input-group .a2-inline {
   margin-left: 0 !important;
@@ -1846,7 +1846,7 @@ pre.a2-code {
   top: calc(50% - 9px);
 }
 .control-group .input-group.focus {
-  border-color: #57a8fa !important;
+  border-color: #208cf8 !important;
   box-shadow: 0 0 2px 1px rgba(13, 130, 248, 0.3);
 }
 .control-group:hover .input-group.static {
@@ -1885,8 +1885,8 @@ pre.a2-code {
   padding: 0;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .select-text {
-  color: #57a8fa;
-  border-bottom: 2px dotted #57a8fa;
+  color: #208cf8;
+  border-bottom: 2px dotted #208cf8;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .caret {
   display: none;
@@ -2206,11 +2206,11 @@ pre.a2-code {
 .calendar-pane thead th > a,
 .calendar-pane tfoot td > a {
   padding: 2px 0;
-  color: #57a8fa;
+  color: #208cf8;
 }
 .calendar-pane thead th > a:hover,
 .calendar-pane tfoot td > a:hover {
-  color: #57a8fa;
+  color: #208cf8;
 }
 .calendar-pane a.today {
   text-transform: lowercase;
@@ -2297,8 +2297,8 @@ pre.a2-code {
 }
 .period-picker.pp-hyperlink .input-group .period-text {
   min-height: auto;
-  border-bottom: 1px dotted #57a8fa;
-  color: #57a8fa;
+  border-bottom: 1px dotted #208cf8;
+  color: #208cf8;
   padding: 0;
   line-height: normal;
 }
@@ -2331,7 +2331,7 @@ pre.a2-code {
   margin-bottom: 1px;
 }
 .input-group > .selector-pane {
-  border: 1px solid #57a8fa;
+  border: 1px solid #208cf8;
   position: absolute;
   background-color: #fff;
   left: 0;
@@ -2759,7 +2759,7 @@ table.data-grid > tbody > tr.bold > td {
   padding: 2px 2px 2px 0;
 }
 .toolbar.transparent .btn-tb {
-  color: #57a8fa;
+  color: #208cf8;
 }
 .toolbar.transparent .divider {
   border-right-color: #e3e7f0;
@@ -2850,7 +2850,7 @@ table.data-grid > tbody > tr.bold > td {
   padding: 0;
   overflow: visible;
   background-color: transparent;
-  color: #57a8fa;
+  color: #208cf8;
 }
 .commandbar .btn-cb {
   white-space: nowrap;
@@ -2905,7 +2905,7 @@ table.data-grid > tbody > tr.bold > td {
 .tree-view li a:hover,
 .tree-view li a:active {
   text-decoration: none;
-  color: #57a8fa;
+  color: #208cf8;
 }
 .tree-view li.active > .overlay {
   background-color: #cde6f7;
@@ -3005,8 +3005,9 @@ table.data-grid > tbody > tr.bold > td {
   border: 1px solid transparent;
   border-top-width: 3px;
   margin-bottom: -1px;
-  color: #57a8fa;
+  color: #208cf8;
   vertical-align: bottom;
+  font-weight: 500;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3021,7 +3022,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .tab-panel .tab-header > li:hover {
   background-color: #eee;
-  color: #57a8fa;
+  color: #208cf8;
   border-bottom-color: #ddd;
 }
 .tab-panel .tab-header > li.active {
@@ -3237,7 +3238,7 @@ ul.news-list > li {
   background-color: #fff29d;
   padding: 8px;
   cursor: move;
-  font-weight: bold;
+  font-weight: 500;
   border-bottom: 1px solid #ddd;
   min-height: 34px;
 }
@@ -4139,10 +4140,10 @@ TODO:
   display: inline-block;
   cursor: pointer;
   padding-bottom: 1px;
-  color: #57a8fa;
+  color: #208cf8;
 }
 .popover-wrapper > .popover-title {
-  border-bottom: 1px dotted #57a8fa;
+  border-bottom: 1px dotted #208cf8;
 }
 .popover-wrapper > .popover-title > span {
   -webkit-touch-callout: none;
@@ -4152,8 +4153,8 @@ TODO:
   user-select: none;
 }
 .popover-wrapper > .popover-title:hover {
-  color: #258ef9;
-  border-bottom-color: #258ef9;
+  color: #0772de;
+  border-bottom-color: #0772de;
 }
 .popover-wrapper > .popup-body {
   display: none;
@@ -4704,7 +4705,7 @@ iframe.eusign-iframe {
 .eusign-loader .big-spinner {
   width: 64px;
   height: 64px;
-  border: 5px solid #57a8fa;
+  border: 5px solid #208cf8;
   border-radius: 50%;
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
@@ -4988,7 +4989,7 @@ h5,
   font-size: 110%;
 }
 .side-bar .collapse-handle:hover {
-  color: #57a8fa;
+  color: #208cf8;
   text-decoration: none;
   background-color: #f2f3f9;
 }

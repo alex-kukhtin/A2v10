@@ -10068,7 +10068,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181122-7367*/
+/*20181122-7368*/
 /* controllers/shell.js */
 
 (function () {
@@ -10443,7 +10443,7 @@ Vue.directive('resize', {
 				let clpscls = this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-';
 				return clpscls + (this.sideBarCollapsed ? 'collapsed' : 'expanded');
 			},
-			pendingRequest() { return this.requestsCount > 0; },
+			pendingRequest() { return !this.hasModals && this.requestsCount > 0; },
 			hasModals() { return this.modals.length > 0; }
 		},
 		methods: {
