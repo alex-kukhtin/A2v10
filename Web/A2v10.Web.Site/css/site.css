@@ -4561,7 +4561,6 @@ TODO:
 }
 .stack-panel.horizontal {
   flex-direction: row;
-  align-items: baseline;
 }
 .stack-panel.horizontal .divider {
   flex-grow: 2;
