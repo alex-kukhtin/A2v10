@@ -119,9 +119,12 @@ table.a2-table {
 		max-width: ~"calc(100% - 2px)";
 	}
 
+	> tbody > tr {
+		vertical-align: top;
+	}
+
 	> tbody > tr > td {
 		padding: 4px 6px;
-		vertical-align: top;
 		border-color: @a2-table-brd-color;
 		//height:27px;
 		label {
@@ -136,9 +139,8 @@ table.a2-table {
 				//border-color: @a2-table-brd-color;
 				//border-style: none;
 				//border-color:transparent;
-
 				//select {
-					//width:100%; // fit
+				//width:100%; // fit
 				//}
 			}
 		}
@@ -148,9 +150,12 @@ table.a2-table {
 		}
 	}
 
+	> thead > tr, > tfoot > tr {
+		vertical-align: middle;
+	}
+
 	> thead > tr > td, > tfoot > tr > td {
 		padding: @table-cell-padding;
-		vertical-align: middle;
 		background-color: @table-hdr-bg-color;
 		border-color: @a2-table-brd-color;
 	}
@@ -169,8 +174,8 @@ table.a2-table {
 			}
 		}
 
-		.control-group:hover .input-group.static {
-			border-color: transparent !important;
+		.control-group:hover {
+			//border-color: transparent !important;
 		}
 	}
 

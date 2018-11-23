@@ -235,6 +235,7 @@
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
+    <Content Include="TestPages\validators.html" />
     <Content Include="TestPages\standalonemodel.html" />
     <Content Include="TestPages\Test.xml" />
     <Content Include="TestPages\checkbox.html" />
@@ -349,6 +350,7 @@
   <ItemGroup>
     <Folder Include="app\server\" />
     <Folder Include="scripts\eusign\" />
+    <Folder Include="Scss\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">

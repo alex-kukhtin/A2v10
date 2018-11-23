@@ -6,18 +6,18 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Workflow
 {
-    internal class InboxInfo
-    {
-        public Int64 Id { get; set; }
-        public Int64 ProcessId { get; set; }
-        public String Bookmark { get; set; }
-        public String Kind { get; set; }
-        public String Definition { get; set; }
-        public Guid WorkflowId { get; set; }
+	internal class InboxInfo
+	{
+		public Int64 Id { get; set; }
+		public Int64 ProcessId { get; set; }
+		public String Bookmark { get; set; }
+		public String Kind { get; set; }
+		public String Definition { get; set; }
+		public Guid WorkflowId { get; set; }
 
-        internal static async Task<InboxInfo> Load(IDbContext dbContext, Int64 id, Int64 userId)
-        {
-            return await dbContext.LoadAsync<InboxInfo>(null, "a2workflow.[InboxInfo.Load]", new { Id = id, UserId = userId });
-        }
-    }
+		internal static async Task<InboxInfo> Load(IDbContext dbContext, Int64 id, Int64 userId)
+		{
+			return await dbContext.LoadAsync<InboxInfo>(null, "a2workflow.[InboxInfo.Load]", new { Id = id, UserId = userId });
+		}
+	}
 }

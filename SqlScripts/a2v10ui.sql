@@ -1,11 +1,11 @@
 
-/* 20181026-7052 */
+/* 20181123-7053 */
 /*
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 26 oct 2018
-module version : 7052
+Last updated : 23 nov 2018
+module version : 7053
 */
 ------------------------------------------------
 set noexec off;
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7052);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7053);
 else
-	update a2sys.Versions set [Version] = 7052 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7053 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -51,7 +51,8 @@ begin
 		Model nvarchar(255) null,
 		Help nvarchar(255) null,
 		[Order] int not null constraint DF_Menu_Order default(0),
-		[Description] nvarchar(255) null
+		[Description] nvarchar(255) null,
+		[Params] nvarchar(255) null
 	);
 end
 go
@@ -61,7 +62,12 @@ begin
 	alter table a2ui.Menu add Help nvarchar(255) null;
 end
 go
-
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Params')
+begin
+	alter table a2ui.Menu add Params nvarchar(255) null;
+end
+go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Menu.Acl')
 begin
@@ -85,11 +91,18 @@ begin
 	(
 		Id	bigint identity(1, 1) not null constraint PK_Feedback primary key,
 		[Date] datetime not null
-			constraint DF_Feedback_Date default(getdate()),
+			constraint DF_Feedback_UtcDate default(getutcdate()),
 		UserId bigint not null
 			constraint FK_Feedback_UserId_Users foreign key references a2security.Users(Id),
 		[Text] nvarchar(max) null
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Feedback_Date' and parent_object_id = object_id(N'a2ui.Feedback'))
+begin
+	alter table a2ui.Feedback drop constraint DF_Feedback_Date;
+	alter table a2ui.Feedback add constraint DF_Feedback_UtcDate default(getutcdate()) for [Date];
 end
 go
 ------------------------------------------------
@@ -124,7 +137,7 @@ begin
 	)
 	select [Menu!TMenu!Tree] = null, [Id!!Id]=RT.Id, [!TMenu.Menu!ParentId]=RT.ParentId,
 		[Menu!TMenu!Array] = null,
-		m.Name, m.Url, m.Icon, m.[Description], m.Help
+		m.Name, m.Url, m.Icon, m.[Description], m.Help, m.Params
 	from RT 
 		inner join a2security.[Menu.Acl] a on a.Menu = RT.Id
 		inner join a2ui.Menu m on RT.Id=m.Id

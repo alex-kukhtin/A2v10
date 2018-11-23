@@ -95,22 +95,22 @@ TODO:
 	overflow: visible;
 	display: inline-block;
 
-	.dropdown-menu.down-right {
-		right: 0;
+	.dropdown-menu.down-left {
 		left: auto;
-	}
-
-	.dropdown-menu.up-left {
-		bottom: 100%;
-		top: auto;
-		box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+		right: 0;
 	}
 
 	.dropdown-menu.up-right {
 		bottom: 100%;
 		top: auto;
-		right: 0;
+		box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+	}
+
+	.dropdown-menu.up-left {
+		bottom: 100%;
+		top: auto;
 		left: auto;
+		right: 0;
 		box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
 	}
 
@@ -128,6 +128,7 @@ TODO:
 
 
 .dropdown {
+
 	.menu {
 		margin-top: @button-gap;
 		margin-bottom: @button-gap;
@@ -143,7 +144,7 @@ TODO:
 		right: 1px;
 	}
 
-	&.dir-down.show .btn:focus {
+	&.show .btn:focus {
 		outline-style: none !important;
 	}
 
@@ -156,7 +157,7 @@ TODO:
 	}
 
 	.btn {
-		height:100%;
+		height: 100%;
 	}
 
 	.btn-caret {
@@ -167,8 +168,15 @@ TODO:
 		}
 	}
 
-	&.show > .btn:hover {
-		background-color: @dropdown-bg-color;
+	&.show {
+		.btn {
+			position: relative;
+			z-index: @popup-index + 1;
+		}
+
+		> .btn:hover {
+			background-color: @dropdown-bg-color;
+		}
 	}
 }
 
@@ -188,8 +196,8 @@ TODO:
 		display: none !important;
 	}
 
-	&.show .menu {
-		//margin-top:2px;
+	.menu {
+		margin:2px 0;
 	}
 }
 

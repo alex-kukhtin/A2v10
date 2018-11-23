@@ -85,6 +85,7 @@ namespace A2v10.Workflow
 		public static async Task<WorkflowResult> ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
 		{
 			AppWorkflow aw = null;
+			var profiler = host.Profiler;
 			var result = new WorkflowResult
 			{
 				InboxIds = new List<Int64>()
@@ -92,14 +93,17 @@ namespace A2v10.Workflow
 			try
 			{
 				InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId);
-				result.ProcessId = inbox.ProcessId;
-				var def = WorkflowDefinition.Load(inbox);
-				Activity root = def.LoadFromSource(host);
-				aw = Create(dbContext, root, null, def.Identity);
-				aw._application.Extensions.Add(result);
-				aw._application.Extensions.Add(dbContext);
-				WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
-				aw._application.Load(instance, _wfTimeSpan);
+				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{inbox.Kind}'"))
+				{
+					result.ProcessId = inbox.ProcessId;
+					var def = WorkflowDefinition.Load(inbox);
+					Activity root = def.LoadFromSource(host);
+					aw = Create(dbContext, root, null, def.Identity);
+					aw._application.Extensions.Add(result);
+					aw._application.Extensions.Add(dbContext);
+					WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
+					aw._application.Load(instance, _wfTimeSpan);
+				}
 				foreach (var bm in aw._application.GetBookmarks())
 				{
 					if (bm.BookmarkName == inbox.Bookmark)
@@ -112,7 +116,10 @@ namespace A2v10.Workflow
 							UserId = info.UserId,
 							InboxId = info.Id
 						};
-						aw._application.ResumeBookmark(bm.BookmarkName, rr);
+						using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Resume '{bm.BookmarkName}'"))
+						{
+							aw._application.ResumeBookmark(bm.BookmarkName, rr);
+						}
 						return result; // already resumed
 					}
 				}

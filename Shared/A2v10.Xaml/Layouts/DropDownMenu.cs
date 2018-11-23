@@ -18,7 +18,7 @@ namespace A2v10.Xaml
 			var menu = new TagBuilder("div", "dropdown-menu menu");
 			menu.MergeAttribute("role", "menu");
 			MergeAttributes(menu, context);
-			if (Direction != DropDownDirection.DownLeft)
+			if (Direction != DropDownDirection.Default)
 				menu.AddCssClass(Direction.ToString().ToKebabCase());
 			menu.RenderStart(context);
 			RenderChildren(context);

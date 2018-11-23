@@ -115,10 +115,11 @@ namespace A2v10.Xaml
 
 	public enum DropDownDirection
 	{
-		DownLeft,
 		DownRight,
+		DownLeft,
 		UpLeft,
-		UpRight
+		UpRight,
+		Default = DownRight
 	}
 
 	public enum BackgroundStyle

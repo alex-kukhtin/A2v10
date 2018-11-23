@@ -27,6 +27,8 @@ namespace A2v10.Xaml
 		public TableCellCollection Cells { get; set; } = new TableCellCollection();
 
 		public MarkStyle Mark { get; set; }
+		public VerticalAlign VAlign { get; set; }
+		public TextAlign Align { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -43,6 +45,12 @@ namespace A2v10.Xaml
 			}
 			else if (Mark != MarkStyle.Default)
 				row.AddCssClass(Mark.ToString().ToKebabCase());
+
+			if (Align != TextAlign.Left)
+				row.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+
+			if (VAlign != VerticalAlign.Default)
+				row.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
 
 			row.RenderStart(context);
 			RenderCells(context);

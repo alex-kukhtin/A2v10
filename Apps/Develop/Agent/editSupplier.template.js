@@ -11,7 +11,14 @@ const template = {
 		"Model.load": modelLoad
 	},
 	validators: {
-		"Agent.Name": 'Введите наименование',
+		"Agent22.Name": 'Введите наименование',
+		"Agent.Name": {
+			valid: function (ag) {
+				return ag.Name === 'W';
+			},
+			msg: 'warning validator: must be "W"',
+			severity: 'info'
+		},
 		"Agent.Code":
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" }
 	}

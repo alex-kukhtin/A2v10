@@ -7,8 +7,8 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Script
 {
-    public class ScriptContext : IScriptContext, IDisposable
-    {
+	public class ScriptContext : IScriptContext, IDisposable
+	{
 		JavaScriptRuntime _runtime;
 		JavaScriptContext _context = JavaScriptContext.Invalid;
 		JavaScriptContext.Scope _scope;
@@ -38,7 +38,7 @@ namespace A2v10.Script
 				_runtime.Dispose();
 
 			}
-			catch (Exception )
+			catch (Exception)
 			{
 				// eat all
 			}

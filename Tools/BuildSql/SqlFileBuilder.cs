@@ -51,6 +51,7 @@ namespace BuildSql
 						Console.WriteLine($"\t{f}");
 						var inputText = File.ReadAllText(inputPath);
 						sw.Write(inputText);
+						sw.WriteLine();
 					}
 				}
 			}

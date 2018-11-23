@@ -6,7 +6,7 @@
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
 	<TabPanel>
-		<Tab Header="Общие">
+		<Tab Header="Общие 2">
 			<Grid Columns="1*, 1*">
 				<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" Value="{Bind Agent.Name}" TabIndex="1">
 					<TextBox.Validator>
@@ -23,10 +23,105 @@
 			</StackPanel>
 			-->
 		</Tab>
-		<!--
-		<Tab Header="Another tab (If)" If="{Bind Root.$$tabVisible}">
-			<Header Content="Tab with IF"/>
+		<Tab Header="Validators" Height="300px">
+			<Grid Columns="1*, 1*">
+				<TextBox Label="BottomLeft" Value="{Bind Agent.Name}">
+					<TextBox.Validator>
+						<Validator Placement="BottomLeft"/>
+					</TextBox.Validator>
+				</TextBox>
+				<TextBox Label="TopLeft" Value="{Bind Agent.Name}">
+					<TextBox.Validator>
+						<Validator Placement="TopLeft"/>
+					</TextBox.Validator>
+				</TextBox>
+				<TextBox Label="BottomRight" Value="{Bind Agent.Name}">
+					<TextBox.Validator>
+						<Validator Placement="BottomRight"/>
+					</TextBox.Validator>
+				</TextBox>
+				<TextBox Label="TopRight" Value="{Bind Agent.Name}">
+					<TextBox.Validator>
+						<Validator Placement="TopRight" />
+					</TextBox.Validator>
+				</TextBox>
+			</Grid>
+			<StackPanel Orientation="Horizontal" Padding="10">
+				<Button Content="Default" Size="Small">
+					<Button.DropDown>
+						<DropDownMenu>
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+				<Button Content="DownRight" Size="Small">
+					<Button.DropDown>
+						<DropDownMenu Direction="DownRight">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+				<Button Content="DownLeft" Size="Small">
+					<Button.DropDown>
+						<DropDownMenu Direction="DownLeft">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+				<Button Content="UpRight" Size="Small">
+					<Button.DropDown>
+						<DropDownMenu Direction="UpRight">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+				<Button Content="UpLeft" Size="Small">
+					<Button.DropDown>
+						<DropDownMenu Direction="UpLeft">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Padding="10">
+				<Hyperlink Content="Default" Icon="Menu">
+					<Hyperlink.DropDown>
+						<DropDownMenu>
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+				<Hyperlink Content="DownRight" Icon="Menu">
+					<Hyperlink.DropDown>
+						<DropDownMenu Direction="DownRight">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+				<Hyperlink Content="DownLeft" Icon="Menu">
+					<Hyperlink.DropDown>
+						<DropDownMenu Direction="DownLeft">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+				<Hyperlink Content="UpRight" Icon="EllipsisVertical">
+					<Hyperlink.DropDown>
+						<DropDownMenu Direction="UpRight">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+				<Hyperlink Content="UpLeft" Icon="Approve">
+					<Hyperlink.DropDown>
+						<DropDownMenu Direction="UpLeft">
+							<MenuItem Icon="Access" Content="Access" />
+						</DropDownMenu>
+					</Hyperlink.DropDown>
+				</Hyperlink>
+			</StackPanel>
 		</Tab>
+		<!--
 		<Tab Header="Another tab (Show)" Show="{Bind Root.$$tabVisible}">
 			<Header Content="Tab with Show"/>
 		</Tab>

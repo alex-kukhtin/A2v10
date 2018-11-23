@@ -3,38 +3,38 @@
 		Title="{Bind Customer.Id, Format='Свойства поставщика [{0}]'}" 
         Height="320">
 	<Dialog.Buttons>
-        <Button Command="{BindCmd SaveAndClose}">OK</Button>
+		<Button Command="{BindCmd SaveAndClose}">OK</Button>
 		<Button Command="{BindCmd Close}">Закрыть</Button>
 	</Dialog.Buttons>
-    <TabPanel FullPage="True">
-        <Tab Header="Общие" Height="100%">
-            <Grid Columns="150, Auto" Rows="Auto, Auto, 1*, Auto" Height="100%">
-                <TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" TabIndex="4"
+	<TabPanel FullPage="True">
+		<Tab Header="Общие" Height="100%">
+			<Grid Columns="150, Auto" Rows="Auto, Auto, 1*, Auto" Height="100%">
+				<TextBox Grid.Row="1" Grid.Col="1" Grid.ColSpan="2" TabIndex="4"
                          Label="Наименование" Required="True" Value="{Bind Customer.Name}" />
-                <Static Grid.Row="2" Grid.Col="1" Align="Right" TabIndex="1"
+				<Static Grid.Row="2" Grid.Col="1" Align="Right" TabIndex="1"
                         Label="Сумма продаж" Value="{Bind Customer.Amount, DataType=Currency}" />
-                <TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2" AutoSize="False"
+				<TextBox Grid.Row="4" Multiline="True" Rows="3" TabIndex="2" AutoSize="False"
                          Grid.Col="1" Grid.ColSpan="2" Label="Примечание" Value="{Bind Customer.Memo}" />
-                <ComboBox Grid.Row="3" TabIndex="3"
+				<ComboBox Grid.Row="3" TabIndex="3"
                          Grid.Col="1" Label="Примечание">
-                    <ComboBoxItem Content="1" Value="1"></ComboBoxItem>
-                </ComboBox>
-                <DatePicker Grid.Row="3" Grid.Col="2" Label="Date" Disabled="True"
+					<ComboBoxItem Content="1" Value="1"></ComboBoxItem>
+				</ComboBox>
+				<DatePicker Grid.Row="3" Grid.Col="2" Label="Date" Disabled="True"
                             Value="{Bind Customer.Date}"/>
-            </Grid>
-        </Tab>
-        <Tab Header="Фото">
-            <Image Source="{Bind Customer.Photo}" Base="/common/agent"/>
-        </Tab>
-        <Tab Header="Картинки">
-            <ImageList ItemsSource="{Bind Customer.Images}">
-                <Image Source="{Bind Photo}" Base="/common/agent"/>
-            </ImageList>
-        </Tab>
-        <Tab Header="Отладка">
-            <Code Content="{Bind Customer}" Multiline="True" Height="100%"/>
-        </Tab>
-    </TabPanel>
+			</Grid>
+		</Tab>
+		<Tab Header="Фото">
+			<Image Source="{Bind Customer.Photo}" Base="/common/agent"/>
+		</Tab>
+		<Tab Header="Картинки">
+			<ImageList ItemsSource="{Bind Customer.Images}">
+				<Image Source="{Bind Photo}" Base="/common/agent"/>
+			</ImageList>
+		</Tab>
+		<Tab Header="Отладка">
+			<Code Content="{Bind Customer}" Multiline="True" Height="100%"/>
+		</Tab>
+	</TabPanel>
 </Dialog>
 
     

@@ -42,7 +42,17 @@
 			</TextBox.AddOns>
 		</TextBox>
 		<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}" Style="Hyperlink"/>
-		<Block Grid.Row="5" Grid.ColSpan="4">
+		<Table Grid.Row="5" Grid.ColSpan="3" Background="Rose" Border="False" GridLines="None">
+			<TableRow>
+				<Label>Код документа</Label>
+				<Static Value="{Bind Document.Id}" Align="Right"/>
+			</TableRow>
+			<TableRow>
+				<Label>Номер документа</Label>
+				<TextBox Value="{Bind Document.No}" Align="Right" Number="True"/>
+			</TableRow>
+		</Table>
+		<Block Grid.Row="6" Grid.ColSpan="4">
 			<Toolbar Style="Transparent">
 				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
 				<Button Icon="Add" Content="В начало" Command="{BindCmd Prepend, Argument={Bind Document.Rows}}"/>
@@ -51,11 +61,11 @@
                     Width="100%" GridLines="Both" Border="True" Background="Paper"
                     Columns="Fit,100,Auto,Fit,100,100,100,Fit">
 				<Table.Header>
-					<TableRow>
+					<TableRow VAlign="Middle">
 						<TableCell Wrap="NoWrap">№ п.п.</TableCell>
 						<TableCell>Артикул</TableCell>
 						<TableCell>Товар</TableCell>
-						<TableCell Wrap="NoWrap">Ед. изм.</TableCell>
+						<TableCell Wrap="NoWrap" VAlign="Top">Ед. изм.</TableCell>
 						<TableCell>Количество</TableCell>
 						<TableCell>Цена</TableCell>
 						<TableCell>Сумма</TableCell>
@@ -85,7 +95,7 @@
 				</TableRow>
 			</Table>
 		</Block>
-		<TextBox Grid.Row="6" Grid.ColSpan="4" Label="Примечание" Multiline="True"
+		<TextBox Grid.Row="7" Grid.ColSpan="4" Label="Примечание" Multiline="True"
                  Value="{Bind Document.Memo}" Rows="3"/>
 	</Grid>
 </Page>

@@ -3601,7 +3601,7 @@ app.modules['std:routing'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181103-7342
+// 20181123-7370
 // components/control.js
 
 (function () {
@@ -3703,7 +3703,8 @@ app.modules['std:routing'] = function () {
 				if (!err) return false;
 				if (out) {
 					out.warn = err.every(r => r.severity === 'warning');
-					out.info = err.every(r => r.info === 'info');
+					out.info = err.every(r => r.severity === 'info');
+					out.all = err.length;
 				}
 				return err.length > 0;
 			},
@@ -3712,7 +3713,14 @@ app.modules['std:routing'] = function () {
 			},
 			cssClass() {
 				// method! no cached!!!
-				let cls = 'control-group' + (this.invalid() ? ' invalid' : ' valid');
+				let out = {};
+				let inv = this.invalid(out);
+				let cls = 'control-group' + (inv ? ' invalid' : ' valid');
+				console.dir(out);
+				if (inv && out.warn)
+					cls += ' val-warning';
+				else if (inv && out.info)
+					cls += ' val-info';
 				if (this.required) cls += ' required';
 				if (this.disabled) cls += ' disabled';
 				return cls;

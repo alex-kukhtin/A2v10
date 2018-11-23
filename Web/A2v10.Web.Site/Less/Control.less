@@ -321,8 +321,8 @@
 		margin-right: 20px;
 
 		> .popover-wrapper {
-			font-weight:normal;
-			font-style:normal;
+			font-weight: normal;
+			font-style: normal;
 			position: absolute;
 			right: -20px;
 			top: ~"calc(50% - 9px)";
@@ -336,8 +336,9 @@
 	}
 	/* можно запретить :hover */
 	&:hover .input-group.static {
-		border-color: @control-border !important;
-		box-shadow: none;
+		//border-color: @control-border !important;
+		//border-color: red !important;
+		//box-shadow: none;
 	}
 	// для "схлопнутых" элементов
 	.input-group.focus {
@@ -472,6 +473,7 @@
 }
 
 
+.hlink-dd-wrapper + .hlink-dd-wrapper,
 .a2-inline + .a2-inline {
 	margin-left: .4rem;
 }
@@ -509,5 +511,103 @@
 		margin-right: 2px;
 		vertical-align: 1px;
 		font-size: 75%;
+	}
+}
+
+@warn-val-color: #daa520;
+@warn-bk-color: lighten(@pane-yellow-bg, 5%);
+@warn-validator-shadow: 1px 4px 10px rgba(218,165,32, .4);
+@waring-box-shadow: 0 0 2px 1px rgba(218, 165, 32, 0.4);
+
+.control-group.val-warning {
+	.validator {
+		background-color: @warn-bk-color;
+		border-color: @warn-val-color;
+		color: @warn-val-color;
+		box-shadow: @warn-validator-shadow;
+
+		&:after {
+			border-bottom-color: @warn-bk-color;
+		}
+
+		&:before {
+			border-bottom-color: @warn-val-color;
+		}
+
+		&.top-left:after, &.top-right:after {
+			border-top-color: @warn-bk-color;
+		}
+
+		&.top-left:before, &.top-right:before {
+			border-top-color: @warn-val-color;
+		}
+	}
+
+	.input-group {
+		border-color: @warn-val-color !important;
+		background-color: @warn-bk-color !important;
+
+		&:after {
+			border-top-color: @warn-val-color;
+			border-right-color: @warn-val-color;
+		}
+	}
+
+	&:hover .input-group,
+	.input-group.focus {
+		box-shadow: @waring-box-shadow;
+	}
+
+	label {
+		color: @warn-val-color;
+	}
+}
+
+@info-val-color: #69a5f8;
+@info-bk-color: lighten(@pane-cyan-bg, 5%);
+@info-validator-shadow: 1px 4px 10px rgba(32,165,220, .2);
+@info-box-shadow: 0 0 2px 1px rgba(32,165,220, 0.2);
+
+.control-group.val-info {
+	.validator {
+		background-color: @info-bk-color;
+		border-color: @info-val-color;
+		color: @info-val-color;
+		box-shadow: @info-validator-shadow;
+
+		&:after {
+			border-bottom-color: @info-bk-color;
+		}
+
+		&:before {
+			border-bottom-color: @info-val-color;
+		}
+
+		&.top-left:after, &.top-right:after {
+			border-top-color: @info-bk-color;
+		}
+
+		&.top-left:before, &.top-right:before {
+			border-top-color: @info-val-color;
+		}
+	}
+
+	.input-group {
+		border-color: @info-val-color !important;
+		background-color: @info-bk-color !important;
+
+		&:after {
+			border-top-color: @info-val-color;
+			border-right-color: @info-val-color;
+		}
+	}
+
+	&:hover .input-group,
+	.input-group.focus {
+		box-shadow: @info-box-shadow;
+	}
+
+	label {
+		color: @info-val-color;
 	}
 }

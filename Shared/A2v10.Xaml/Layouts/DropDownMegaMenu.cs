@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 				return;
 			var menu = new TagBuilder("mega-menu");
 			MergeAttributes(menu, context);
-			if (Direction != DropDownDirection.DownLeft)
+			if (Direction != DropDownDirection.Default)
 				menu.AddCssClass(Direction.ToString().ToKebabCase());
 			var itms = GetBinding(nameof(ItemsSource));
 			if (itms == null)
