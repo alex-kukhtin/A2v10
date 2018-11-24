@@ -7,5 +7,6 @@
 		<Setter Property="GridLines" Value="Vertical" />
 		<Setter Property="HeadersVisibility" Value="Column" />
 		<Setter Property="ItemsSource" Value="{Bind Parent.ItemsSource}"/>
+		<Setter Property="UserSelect" Value="True"/>
 	</Style>
 </Styles>

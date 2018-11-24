@@ -24,7 +24,7 @@
 			<a class="nav-admin" href="/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span id ="layout-person-name"class="person-name">$(PersonName)</span><span class="caret"></span></button>
-				<div class="dropdown-menu menu down-right">
+				<div class="dropdown-menu menu down-left">
 					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> @[Profile]</a>
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
 					<div class="divider"></div>
@@ -53,7 +53,7 @@
 
 			<div class="debug-btn dropdown dir-up" v-dropdown>
 				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
-				<div class="dropdown-menu menu up-right">
+				<div class="dropdown-menu menu up-left">
 					<a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> @[DataModel]</a>
 					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
 					<div class="divider"></div>

@@ -31,7 +31,7 @@
 			<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
 				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name">$(PersonName)</span><span class="caret"></span></button>
-				<div class="dropdown-menu menu down-right">
+				<div class="dropdown-menu menu down-left">
 					<a v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> @[ChangePassword]</a>
 					<template v-if="userIsAdmin">
@@ -66,7 +66,7 @@
 			</span>
 			<div class="debug-btn dropdown dir-up" v-dropdown v-if="isDebug">
 				<button class="btn btn-debug" toggle>@[Debug]<span class="caret up"></span></button>
-				<div class="dropdown-menu menu up-right">
+				<div class="dropdown-menu menu up-left">
 					<a @click.prevent="debugModel" class="dropdown-item" tabindex="-1"><i class="ico ico-database"></i> @[DataModel]</a>
 					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
 					<div class="divider"></div>

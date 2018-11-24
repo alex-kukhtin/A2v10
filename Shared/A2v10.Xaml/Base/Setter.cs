@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,12 @@ namespace A2v10.Xaml
 			}
 			else
 			{
-				var val = Convert.ChangeType(Value, prop.PropertyType);
+				var propType = prop.PropertyType;
+				if (propType.IsNullableType())
+				{
+					propType = Nullable.GetUnderlyingType(propType);
+				}
+				var val = Convert.ChangeType(Value, propType);
 				prop.SetValue(elem, val);
 			}
 		}
