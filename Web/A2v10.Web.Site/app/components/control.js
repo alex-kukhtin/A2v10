@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181123-7370
+// 20181125-7372
 // components/control.js
 
 (function () {
@@ -115,7 +115,7 @@
 				let out = {};
 				let inv = this.invalid(out);
 				let cls = 'control-group' + (inv ? ' invalid' : ' valid');
-				console.dir(out);
+				//console.dir(out);
 				if (inv && out.warn)
 					cls += ' val-warning';
 				else if (inv && out.info)

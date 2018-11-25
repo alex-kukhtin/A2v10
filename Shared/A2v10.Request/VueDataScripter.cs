@@ -17,7 +17,7 @@ namespace A2v10.Request
 			return model != null ? model.CreateScript(this) : CreateEmptyStript();
 		}
 
-		public String CreateScript(IDictionary<String, Object> sys, IDictionary<String, IDataMetadata> meta)
+		public String CreateScript(IDataHelper helper, IDictionary<String, Object> sys, IDictionary<String, IDataMetadata> meta)
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("function modelData(template, data) {");
@@ -28,7 +28,7 @@ namespace A2v10.Request
 			}
 			sb.AppendLine("cmn.implementRoot(TRoot, template, ctors);");
 			sb.AppendLine("let root = new TRoot(data);");
-			sb.Append(SetModelInfo(sys));
+			sb.Append(SetModelInfo(helper, sys));
 			sb.AppendLine();
 			sb.AppendLine("return root;");
 			sb.AppendLine("}");
@@ -50,7 +50,7 @@ namespace A2v10.Request
 			return sb.ToString();
 		}
 
-		StringBuilder SetModelInfo(IDictionary<String, Object> sys)
+		StringBuilder SetModelInfo(IDataHelper helper, IDictionary<String, Object> sys)
 		{
 			if (sys == null)
 				return null;
@@ -64,6 +64,8 @@ namespace A2v10.Request
 					val = $"'{val}'";
 				else if (val is Object)
 					val = JsonConvert.SerializeObject(val);
+				else if (val is DateTime)
+					val = helper.DateTime2StringWrap(val);
 				sb.Append($"'{k.Key}': {val},");
 			}
 			sb.RemoveTailComma();

@@ -1146,7 +1146,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180903-7300
+// 20181125-7372
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1243,6 +1243,11 @@ app.modules['std:http'] = function () {
 		return new Promise(function (resolve, reject) {
 			doRequest('GET', url)
 				.then(function (html) {
+					if (html.startsWith('<!DOCTYPE')) {
+						// full page - may be login?
+						window.location.assign('/');
+						return;
+					}
 					let dp = new DOMParser();
 					let rdoc = dp.parseFromString(html, 'text/html');
 					// first element from fragment body
@@ -1723,7 +1728,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20181125-7372
 // services/datamodel.js
 
 (function () {
@@ -2010,7 +2015,9 @@ app.modules['std:validators'] = function () {
 			if (!root._validate_)
 				return null;
 			let path = `${this._path_}.${prop}`; 
-			return root._validate_(this, path, this[prop]);
+			let arr = root._validate_(this, path, this[prop]);
+			if (arr && arr.length === 0) return null;
+			return arr;
 		};
 		
 		if (elem._meta_.$group === true) {
@@ -3601,7 +3608,7 @@ app.modules['std:routing'] = function () {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181123-7370
+// 20181125-7372
 // components/control.js
 
 (function () {
@@ -3716,7 +3723,7 @@ app.modules['std:routing'] = function () {
 				let out = {};
 				let inv = this.invalid(out);
 				let cls = 'control-group' + (inv ? ' invalid' : ' valid');
-				console.dir(out);
+				//console.dir(out);
 				if (inv && out.warn)
 					cls += ' val-warning';
 				else if (inv && out.info)

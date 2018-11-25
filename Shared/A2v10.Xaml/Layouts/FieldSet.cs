@@ -10,6 +10,8 @@ namespace A2v10.Xaml
 
 		public String Title { get; set; }
 
+		public Popover Hint { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -33,15 +35,34 @@ namespace A2v10.Xaml
 			if (titleBind != null || Title != null)
 			{
 				var title = new TagBuilder("legend");
-				if (titleBind != null)
-					title.MergeAttribute("v-text", titleBind.GetPathFormat(context));
 				title.RenderStart(context);
+				var span = new TagBuilder("span");
+				if (titleBind != null)
+					span.MergeAttribute("v-text", titleBind.GetPathFormat(context));
+				span.RenderStart(context);
 				if (Title != null)
 				{
 					context.Writer.Write(context.Localize(Title));
 				}
+				span.RenderEnd(context);
+				RenderHint(context);
 				title.RenderEnd(context);
 			}
+		}
+
+		void RenderHint(RenderContext context)
+		{
+			if (Hint == null)
+				return;
+			if (Hint.Icon == Icon.NoIcon)
+				Hint.Icon = Icon.Help;
+			var tag = new TagBuilder("span");
+			tag.RenderStart(context);
+			Hint.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("hint");
+			});
+			tag.RenderEnd(context);
 		}
 	}
 }

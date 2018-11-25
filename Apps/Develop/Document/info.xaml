@@ -22,6 +22,7 @@
 				<Span Content="{Bind Document.UserModified.Name}"/>
 			</Text>
 		</PropertyGridItem>
+		<PropertyGridItem Name="Сумма" Content="{Bind Document.Sum, DataType=Currency, NegativeRed=True}" Bold="True"/>
 	</PropertyGrid>
 </Panel>
     

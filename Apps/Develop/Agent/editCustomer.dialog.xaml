@@ -11,6 +11,15 @@
 				<FieldSet Orientation="Horizontal" Grid.Row="1" Grid.ColSpan="2" Title="Тип">
 					<Radio Label="Юридическое лицо" Value="{Bind Agent.Type}" CheckedValue="C" TabIndex="1"/>
 					<Radio Label="Физическое лицо" Value="{Bind Agent.Type}" CheckedValue="P"/>
+					<FieldSet.Hint>
+						<Popover Placement="RightBottom">
+							<![CDATA[
+							Такая себе подсказка для <b>FieldSet</b>
+							<br />
+							<span style="color:red">с красным текстом</span>
+							]]>
+						</Popover>
+					</FieldSet.Hint>
 				</FieldSet>
 				<TextBox Grid.Row="2" Grid.ColSpan="2" Label="Наименование 234" TabIndex="2" TestId="name"
 						Value="{Bind Agent.Name}" Description="Наименование покупателя">

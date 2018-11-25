@@ -20,7 +20,6 @@ describe("Validators", function () {
 		expect(
 			val.validate(rule, null, '')
 		).toEqual(result);
-
 	});
 
 
@@ -75,7 +74,6 @@ describe("Validators", function () {
 		expect(
 			val.validate(rule, item, 'test1')
 		).toEqual(result);
-
 	});
 
 	it("rule as function", function () {
@@ -164,7 +162,7 @@ describe("Validators", function () {
 		}
 
 		function isValid() {
-			console.dir('is valid');
+			//console.dir('is valid');
 			return false;
 		}
 

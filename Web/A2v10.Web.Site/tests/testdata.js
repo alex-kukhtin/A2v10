@@ -103,6 +103,7 @@
 			props: {
 				Id: Number,
 				'Date': Date,
+				Name: String,
 				Rows: TRowArray
 			}
 		}, /* array item */ false);

@@ -45,7 +45,11 @@ namespace A2v10.Xaml
 			valCell.AddCssClassBoolNo(Bold, "bold");
 			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)
+			{
 				valCell.MergeAttribute("v-text", contBind.GetPathFormat(context));
+				if (contBind.NegativeRed)
+					valCell.MergeAttribute(":class", $"$getNegativeRedClass({contBind.GetPath(context)})");
+			}
 			valCell.RenderStart(context);
 			if (Content is UIElementBase)
 				(Content as UIElementBase).RenderElement(context);

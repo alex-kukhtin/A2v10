@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20180903-7300
+// 20181125-7372
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -97,6 +97,11 @@ app.modules['std:http'] = function () {
 		return new Promise(function (resolve, reject) {
 			doRequest('GET', url)
 				.then(function (html) {
+					if (html.startsWith('<!DOCTYPE')) {
+						// full page - may be login?
+						window.location.assign('/');
+						return;
+					}
 					let dp = new DOMParser();
 					let rdoc = dp.parseFromString(html, 'text/html');
 					// first element from fragment body
