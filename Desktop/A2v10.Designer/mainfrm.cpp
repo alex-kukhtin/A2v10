@@ -496,7 +496,7 @@ CWnd* CMainFrame::FindOrCreateCodeWindow(LPCWSTR szFileName)
 		POSITION dPos = pTemplate->GetFirstDocPosition();
 		while (dPos) {
 			CDocument* pDoc = pTemplate->GetNextDoc(dPos);
-			if (pDoc->GetPathName() == szFileName) {
+			if (pDoc->GetPathName().CompareNoCase(szFileName) == 0) {
 				POSITION vPos = pDoc->GetFirstViewPosition();
 				if (vPos) {
 					return pDoc->GetNextView(vPos);
@@ -504,7 +504,11 @@ CWnd* CMainFrame::FindOrCreateCodeWindow(LPCWSTR szFileName)
 			}
 		}
 	}
-	return NULL;
+	CDocument* pDoc = theApp.OpenDocumentFile(szFileName, FALSE /*addToMRU*/);
+	POSITION vPos = pDoc->GetFirstViewPosition();
+	if (vPos)
+		return pDoc->GetNextView(vPos);
+	return nullptr;
 }
 
 // afx_msg

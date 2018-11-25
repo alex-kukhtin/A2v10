@@ -64,7 +64,9 @@ namespace A2v10RuntimeNet
 		{
 			String[] app =
 			{
+				Resources.Application,
 				Resources.App_context,
+				Resources.Solution
 			};
 			ParseLibraryElements(app);
 		}

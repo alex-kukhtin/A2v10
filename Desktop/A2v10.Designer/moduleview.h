@@ -27,4 +27,5 @@ protected:
 	afx_msg void OnDebugStepOut();
 	afx_msg LRESULT OnWmiDebugBreak(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnWmiFillProps(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnChangeDebugMode(WPARAM wParam, LPARAM lParam);
 };

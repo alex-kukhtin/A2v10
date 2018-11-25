@@ -29,6 +29,7 @@ IMPLEMENT_DYNCREATE(CModuleView, CJsEditView)
 BEGIN_MESSAGE_MAP(CModuleView, CJsEditView)
 	ON_MESSAGE(WMI_DEBUG_BREAK, OnWmiDebugBreak)
 	ON_MESSAGE(WMI_FILL_PROPS, OnWmiFillProps)
+	ON_MESSAGE(WMI_DEBUG_MODE, OnChangeDebugMode)
 	ON_COMMAND(ID_DEBUG_RUN, OnDebugRun)
 	ON_COMMAND(ID_DEBUG_RUN_INT, OnDebugRunInt)
 	ON_COMMAND(ID_DEBUG_STEP_INTO, OnDebugStepInto)
@@ -125,6 +126,7 @@ LRESULT CModuleView::OnWmiDebugBreak(WPARAM wParam, LPARAM lParam)
 	DEBUG_BREAK_INFO* pBreakInfo = reinterpret_cast<DEBUG_BREAK_INFO*>(lParam);
 	if (!pBreakInfo)
 		return 0;
+	SetReadOnly(true);
 	CMDIChildWnd* pFrame = reinterpret_cast<CMDIChildWnd*>(GetParent());
 	pFrame->MDIActivate();
 	//GetParent()->SendMessage(WM_MDIACTIVATE, (WPARAM)GetSafeHwnd());
@@ -151,3 +153,15 @@ LRESULT CModuleView::OnWmiFillProps(WPARAM wParam, LPARAM lParam)
 	return (LRESULT)WMI_FILL_PROPS_RESULT_OK;
 }
 
+// afx_msg
+LRESULT CModuleView::OnChangeDebugMode(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam != WMI_DEBUG_MODE_WPARAM)
+		return 0L;
+	auto pVm = DYNAMIC_DOWNCAST(CA2VisualManager, CMFCVisualManager::GetInstance());
+	bool bMode = lParam ? true : false;
+	SetReadOnly(bMode);
+	if (GetSafeHwnd() && !bMode)
+		RemoveCurrentLineMarker();
+	return 0L;
+}

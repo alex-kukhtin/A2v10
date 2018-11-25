@@ -11,7 +11,8 @@ IMPLEMENT_DYNCREATE(CModuleDoc, CDocument)
 
 CModuleDoc::CModuleDoc()
 {
-	auto jsForm = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
+	auto jsGlob = JavaScriptValue::GlobalObject();
+	auto jsForm = jsGlob.GetPropertyChain(L"designer.solution");
 	auto jsCreate = jsForm.GetProperty(L"__createElement");
 	m_jsValue = jsCreate.CallFunction(jsForm, JavaScriptValue::FromString(L"Module"));
 }

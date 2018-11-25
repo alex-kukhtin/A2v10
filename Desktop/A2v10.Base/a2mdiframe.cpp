@@ -398,6 +398,7 @@ LRESULT CA2MDIFrameWnd::OnChangeDebugMode(WPARAM wParam, LPARAM lParam)
 	bool bMode = lParam ? true : false;
 	if (pVm->SetDebugMode(bMode))
 		OnDebugModeChanged(bMode);
+	SendMessageToDescendants(WMI_DEBUG_MODE, wParam, lParam);
 	return 0L;
 }
 
