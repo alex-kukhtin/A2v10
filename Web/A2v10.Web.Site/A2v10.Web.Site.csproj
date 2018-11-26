@@ -135,11 +135,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_application\_ViewStart.cshtml">
-      <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
     <Content Include="App_application\Shared\_Layout.cshtml">
-      <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
     <Content Include="App_application\Blog\index.cshtml" />
@@ -151,7 +149,6 @@
     <Content Include="App_application\Home\partInside.cshtml" />
     <Content Include="App_application\Shared\partShared.cshtml" />
     <Content Include="App_application\Shared\_SimpleLayout.cshtml">
-      <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
     <None Include="Web.Debug.config">

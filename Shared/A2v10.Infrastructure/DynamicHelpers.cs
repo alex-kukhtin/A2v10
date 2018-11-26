@@ -95,6 +95,21 @@ namespace A2v10.Infrastructure
 			}
 		}
 
+		public static void AppendIfNotExists(this ExpandoObject that, ExpandoObject other)
+		{
+			if (that == null)
+				return;
+			if (other == null)
+				return;
+			IDictionary<String, Object> thatD = that as IDictionary<String, Object>;
+			foreach (var k in other as IDictionary<String, Object>)
+			{
+				if (!thatD.ContainsKey(k.Key))
+					thatD.Add(k.Key, k.Value);
+			}
+		}
+
+
 		public static ExpandoObject RemoveEmptyArrays(this ExpandoObject obj)
 		{
 			if (obj == null)

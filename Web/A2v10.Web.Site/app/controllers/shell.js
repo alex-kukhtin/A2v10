@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181122-7368*/
+/*20181126-7373*/
 /* controllers/shell.js */
 
 (function () {
@@ -501,7 +501,7 @@
 			};
 		},
 		computed: {
-			processing() { return this.requestsCount > 0; },
+			processing() { return !this.hasModals && this.requestsCount > 0; },
 			modelStack() {
 				return this.__dataStack__;
 			}

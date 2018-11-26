@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20181013-7317 */
+/* 20181126-7373 */
 /*components/wizard.js*/
 
 (function () {
@@ -189,7 +189,7 @@
 					return false;
 				}
 				for (let c of this.controls) {
-					if (c.invalid() || c.pending()) {
+					if (c.invalid() /*|| c.pending() blinking? */) {
 						this.wasInvalid = true;
 						return true;
 					}

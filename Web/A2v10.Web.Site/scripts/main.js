@@ -7312,7 +7312,7 @@ TODO:
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
-/* 20181013-7317 */
+/* 20181126-7373 */
 /*components/wizard.js*/
 
 (function () {
@@ -7500,7 +7500,7 @@ TODO:
 					return false;
 				}
 				for (let c of this.controls) {
-					if (c.invalid() || c.pending()) {
+					if (c.invalid() /*|| c.pending() blinking? */) {
 						this.wasInvalid = true;
 						return true;
 					}
@@ -9041,7 +9041,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181117-7359
+// 20181126-7373
 // controllers/base.js
 
 (function () {
@@ -9188,7 +9188,7 @@ Vue.directive('resize', {
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
 			$canExecute(cmd, arg, opts) {
-				if (this.$isLoading) return false;
+				//if (this.$isLoading) return false; // do not check here. avoid blinking
 				if (this.$isReadOnly(opts))
 					return false;
 				let root = this.$data;
@@ -10083,7 +10083,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181122-7368*/
+/*20181126-7373*/
 /* controllers/shell.js */
 
 (function () {
@@ -10584,7 +10584,7 @@ Vue.directive('resize', {
 			};
 		},
 		computed: {
-			processing() { return this.requestsCount > 0; },
+			processing() { return !this.hasModals && this.requestsCount > 0; },
 			modelStack() {
 				return this.__dataStack__;
 			}
