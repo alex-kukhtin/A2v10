@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 11 nov 2018
-module version : 7319
+Last updated : 27 nov 2018
+module version : 7320
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7319);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7320);
 else
-	update a2sys.Versions set [Version] = 7319 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7320 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -49,11 +49,19 @@ begin
 		[Source] nvarchar(255) null,
 		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
 		LastTransactionDate datetime null,
-		DateCreated datetime not null constraint DF_Tenants_DateCreated default(getdate()),
+		DateCreated datetime not null constraint DF_Tenants_UtcDateCreated default(getutcdate()),
 		TrialPeriodExpired datetime null,
 		DataSize float null,
-		[State] nvarchar(128) null
+		[State] nvarchar(128) null,
+		UserSince datetime null
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Tenants_DateCreated' and parent_object_id = object_id(N'aa2security.Tenants'))
+begin
+	alter table a2security.Tenants drop constraint DF_Tenants_DateCreated;
+	alter table a2security.Tenants add constraint DF_Tenants_UtcDateCreated default(getutcdate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
@@ -81,6 +89,10 @@ go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'State')
 	alter table a2security.Tenants add [State] nvarchar(128) null;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'UserSince')
+	alter table a2security.Tenants add UserSince datetime null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Users')

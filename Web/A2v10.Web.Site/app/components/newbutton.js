@@ -12,7 +12,7 @@
 	const newButtonTemplate =
 `<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
 	<button class="btn btn-icon" :class="btnClass" toggle aria-label="New"><i class="ico" :class="iconClass"></i></button>
-	<div class="dropdown-menu menu down-right">
+	<div class="dropdown-menu menu down-left">
 		<div class="super-menu" :class="cssClass">
 			<div v-for="(m, mx) in topMenu" :key="mx" class="menu-group">
 				<div class="group-title" v-text="m.Name"></div>
