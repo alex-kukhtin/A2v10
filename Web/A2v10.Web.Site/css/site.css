@@ -4160,6 +4160,7 @@ TODO:
 .dropdown .menu {
   margin-top: -1px;
   margin-bottom: -1px;
+  font-weight: normal;
 }
 .dropdown.show:after {
   content: '';

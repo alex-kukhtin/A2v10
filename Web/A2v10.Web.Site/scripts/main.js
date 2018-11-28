@@ -9041,7 +9041,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181126-7373
+// 20181127-7375
 // controllers/base.js
 
 (function () {
@@ -9667,7 +9667,11 @@ Vue.directive('resize', {
 							let arr = arg.$parent;
 							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
 						default: // simple show dialog
-							return __runDialog(url, arg, query, () => { });
+							return __runDialog(url, arg, query, (result) => {
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
 					}
 				}
 
