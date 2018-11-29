@@ -106,6 +106,7 @@ namespace A2v10.Request
 		{
 			if (String.IsNullOrEmpty(cmd.template))
 				throw new RequestModelException($"template must be specified for command '{cmd.command}'");
+			// SYNC!
 		}
 
 		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)

@@ -108,7 +108,7 @@ namespace A2v10.Web.Config
 		{
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, "_localization"));
+			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
 			if (!Directory.Exists(dirPath))
 				dirPath = null;
 			if (!Directory.Exists(appPath))

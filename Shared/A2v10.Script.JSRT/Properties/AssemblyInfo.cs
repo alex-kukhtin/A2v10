@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("A2v10.Workflow")]
+[assembly: AssemblyTitle("A2v10.Script.JSRT")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("A2v10.Workflow")]
+[assembly: AssemblyProduct("A2v10.Script.JSRT")]
 [assembly: AssemblyCopyright("Copyright © 2015-2018 Alex Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,8 +19,11 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+// REQUIRED!!!!
+[module: DefaultCharSet(CharSet.Unicode)]
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("76269196-db55-4299-ae0f-a33a5bab294f")]
+[assembly: Guid("9f4a3a9f-1571-4fd4-9016-a4e4684d0d4b")]
 
 // Version information for an assembly consists of the following four values:
 //
