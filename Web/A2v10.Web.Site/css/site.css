@@ -4978,6 +4978,7 @@ h5,
 }
 .a2-changelog {
   padding: 1rem;
+  margin-top: -2rem;
 }
 .a2-changelog ol {
   margin-top: 4px;
@@ -4988,6 +4989,7 @@ h5,
   color: #777;
   font-weight: bold;
   font-family: inherit;
+  margin-top: 2rem;
 }
 .tooltip {
   position: absolute;
