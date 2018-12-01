@@ -264,5 +264,20 @@ const vm = new DataModelController({
 				return null;
 			}
 		}
+
+
+		public String CreateServerScript(IDataModel model, String template, String requiredModules)
+		{
+			var sb = new StringBuilder(SCRIPT_PARTS.DATAFUNC);
+			sb.Replace("$(TemplateText)", template);
+			sb.Replace("$(RequiredModules)", requiredModules);
+			String modelScript = model.CreateScript(_scripter);
+			String rawData = JsonConvert.SerializeObject(model.Root, BaseController.StandardSerializerSettings);
+			sb.Replace("$(DataModelText)", rawData);
+			sb.Replace("$(ModelScript)", modelScript);
+
+			return sb.ToString();
+		}
+
 	}
 }

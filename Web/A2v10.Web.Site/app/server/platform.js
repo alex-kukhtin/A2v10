@@ -1,26 +1,32 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 /*20180227-7121*/
-/* platform/webvue.js */
+/* server/platform.js */
 
 (function () {
 
 	function set(target, prop, value) {
-		Vue.set(target, prop, value);
+		target[prop] = value;
 	}
 
 	function defer(func) {
-		Vue.nextTick(func);
+		func();
 	}
 
 
 	app.modules['std:platform'] = {
 		set: set,
 		defer: defer,
-		File: File, /*file ctor*/
-		performance: performance
+		File: function () {
+			return this;
+		},
+		performance: {
+			now: function () {
+				return 0;
+			}
+		}
 	};
 
-	app.modules['std:eventBus'] = new Vue({});
-
+	app.modules['std:eventBus'] = {
+	};
 })();

@@ -82,7 +82,12 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\controllers\iframe.js" />
+    <Content Include="app\server\app.js" />
+    <Content Include="app\server\locale.js" />
+    <Content Include="app\server\platform.js" />
+    <Content Include="app\server\validate.js" />
     <Content Include="app\services\eusign.js" />
+    <Content Include="app\services\locale.js" />
     <Content Include="app\services\routing.js" />
     <Content Include="app\site\collectionview.js" />
     <Content Include="app\site\controller.js" />
@@ -233,6 +238,7 @@
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
+    <Content Include="scripts\server\library.js" />
     <Content Include="TestPages\validators.html" />
     <Content Include="TestPages\standalonemodel.html" />
     <Content Include="TestPages\Test.xml" />
@@ -271,6 +277,7 @@
     <Content Include="TestPages\treeview.html" />
     <Content Include="TestPages\include.html" />
     <Content Include="TestPages\gridlayout.html" />
+    <Content Include="TestPages\serverScripts.html" />
     <Content Include="TestPages\xstore.html" />
     <Content Include="TestPages\xstore.js" />
     <Content Include="tests\modelvalidators.js" />
@@ -347,7 +354,6 @@
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\server\" />
     <Folder Include="scripts\eusign\" />
     <Folder Include="Scss\" />
   </ItemGroup>

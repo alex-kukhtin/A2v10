@@ -82,11 +82,21 @@ namespace A2v10.Script.JSRT
 			//CreateGlobal();
 		}
 
+		public void LoadLibrary(String script)
+		{
+			JavaScriptValue jsLib = JavaScriptContext.ParseScript(script);
+		}
+
+
+		public void RunScript(String script)
+		{
+			JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
+		}
+
 		public void Stop()
 		{
 			StopScript();
 		}
-
 
 		public void StartDebugging()
 		{

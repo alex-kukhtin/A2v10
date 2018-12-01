@@ -1085,7 +1085,7 @@ header .user-name .person-name,
   top: 70px;
 }
 .side-bar-collapsed .content-view.partial-page {
-  left: 26px;
+  left: 42px;
 }
 .side-bar-compact-collapsed .content-view.partial-page {
   left: 58px;
@@ -1415,11 +1415,10 @@ footer,
   right: 0;
   height: 22px;
   background-color: #f2f3f9;
-  border-top: 1px solid #bdc5d8;
+  border-top: 1px solid #cfd6e5;
   z-index: 1020;
   padding: 0 2px 0 8px;
   font-size: 0.86rem;
-  line-height: 1.5rem;
   text-transform: lowercase;
 }
 footer .divider,
@@ -5050,13 +5049,14 @@ h5,
   white-space: nowrap;
   height: 100%;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   padding-left: 2px;
 }
 .side-bar .side-bar-title .side-bar-label {
   display: block;
-  padding-left: 10px;
+  padding-left: 16px;
   transform: rotate(90deg);
+  color: #999;
 }
 .side-bar .collapse-handle {
   position: absolute;
@@ -5076,11 +5076,12 @@ h5,
   content: "\e9a3";
 }
 .side-bar.collapsed {
-  width: 20px;
+  width: 36px;
   background-color: #f2f3f9;
 }
 .side-bar.collapsed .collapse-handle {
-  padding-right: 6px;
+  width: 100%;
+  text-align: center;
 }
 .side-bar.collapsed .collapse-handle:before {
   content: "\e9a5";

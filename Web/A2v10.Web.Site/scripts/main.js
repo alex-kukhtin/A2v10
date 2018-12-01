@@ -49,6 +49,15 @@
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+// 20181201-7379
+// services/locale.js
+
+app.modules['std:locale'] = function () {
+	return window.$$locale;
+};
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
 // 20181120-7363
 // platform/polyfills.js
 
@@ -101,12 +110,12 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20181201-7379
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
-	const locale = window.$$locale;
+	const locale = require('std:locale');
 	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
@@ -1137,7 +1146,9 @@ app.modules['std:modelInfo'] = function () {
 
 	app.modules['std:platform'] = {
 		set: set,
-		defer: defer
+		defer: defer,
+		File: File, /*file ctor*/
+		performance: performance
 	};
 
 	app.modules['std:eventBus'] = new Vue({});
@@ -1728,7 +1739,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20181201-7379
 // services/datamodel.js
 
 (function () {
@@ -1833,7 +1844,7 @@ app.modules['std:validators'] = function () {
 				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
-			case File:
+			case platform.File:
 			case Object:
 				shadow[prop] = null;
 				break;
@@ -1952,7 +1963,7 @@ app.modules['std:validators'] = function () {
 		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
-			startTime = performance.now();
+			startTime = platform.performance.now();
 		parent = parent || elem;
 		defHidden(elem, SRC, {});
 		defHidden(elem, PATH, path || '');
@@ -2753,7 +2764,7 @@ app.modules['std:validators'] = function () {
 		me._needValidate_ = false;
 		if (force)
 			validators.removeWeak();
-		var startTime = performance.now();
+		var startTime = platform.performance.now();
 		let tml = me.$template;
 		if (!tml) return;
 		let vals = tml.validators;
@@ -2765,7 +2776,6 @@ app.modules['std:validators'] = function () {
 				allerrs.push({ x: val, e: err1 });
 			}
 		}
-		var e = performance.now();
 		logtime('validation time:', startTime);
 		return allerrs;
 		//console.dir(allerrs);

@@ -1,11 +1,11 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20181201-7379
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
-	const locale = window.$$locale;
+	const locale = require('std:locale');
 	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 

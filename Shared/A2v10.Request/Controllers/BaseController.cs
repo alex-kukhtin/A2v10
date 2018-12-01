@@ -404,5 +404,30 @@ namespace A2v10.Request
 			writer.Write(errorHtml.ToString());
 
 		}
+
+		public async Task Server(String command, Int64 userId, HttpResponseBase response)
+		{
+			String testUrl = "/_page/sales/waybill/edit/169";
+
+
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, testUrl);
+			RequestView rw = rm.GetCurrentAction();
+			String loadProc = rw.LoadProcedure;
+			if (loadProc == null)
+				throw new RequestModelException("The data model is empty");
+			var prms = new ExpandoObject();
+			prms.Set("UserId", userId);
+			prms.Set("Id", rw.Id);
+			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms);
+			String fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
+			var sbRequired = new StringBuilder();
+			AddRequiredModules(sbRequired, fileTemplateText);
+			String templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
+			String script = CreateServerScript(model, templateText, sbRequired.ToString());
+			response.ContentType = "text/javascript";
+			response.Write("var _test = ");
+			response.Write(script);
+			response.Write("console.dir(_test)");
+		}
 	}
 }

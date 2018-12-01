@@ -50,6 +50,7 @@
     <Compile Include="IInvokeTarget.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IMessageService.cs" />
+    <Compile Include="IScriptProcessor.cs" />
     <Compile Include="ISmsService.cs" />
     <Compile Include="IUserId.cs" />
     <Compile Include="IUserStateManager.cs" />

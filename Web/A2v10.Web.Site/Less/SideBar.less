@@ -18,13 +18,14 @@
 		white-space: nowrap;
 		height: 100%;
 		cursor: pointer;
-		font-size: 14px;
+		font-size: 16px;
 		padding-left: 2px;
 
 		.side-bar-label {
 			display: block;
-			padding-left: 10px;
+			padding-left: 16px;
 			transform: rotate(90deg);
+			color: @label-color;
 		}
 	}
 
@@ -53,7 +54,8 @@
 		background-color: @side-bar-collapsed-bg-color;
 
 		.collapse-handle {
-			padding-right: 6px;
+			width: 100%;
+			text-align: center;
 
 			&:before {
 				content: "\e9a5"; // chevron-right

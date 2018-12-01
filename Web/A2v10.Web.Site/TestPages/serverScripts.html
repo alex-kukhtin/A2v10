@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+	<script type="text/javascript" src="/scripts/server/library.js"></script>
+	<script type="text/javascript" src="/_server/validate"></script>
+	<script type="text/javascript">
+		(function() {
+			var dm = _test().dataModel;
+			dm._host_ = {
+				$viewModel: {},
+				$ctrl: {}
+			};
+			console.dir(dm);
+			debugger;
+			let result = dm.$forceValidate();
+			console.dir(result);
+		}) ();
+	</script>
+</body>
+</html>

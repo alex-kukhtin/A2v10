@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20181201-7379
 // services/datamodel.js
 
 (function () {
@@ -105,7 +105,7 @@
 				let srcval = source[prop] || null;
 				shadow[prop] = srcval ? new Date(srcval) : utils.date.zero();
 				break;
-			case File:
+			case platform.File:
 			case Object:
 				shadow[prop] = null;
 				break;
@@ -224,7 +224,7 @@
 		const ctorname = elem.constructor.name;
 		let startTime = null;
 		if (ctorname === 'TRoot')
-			startTime = performance.now();
+			startTime = platform.performance.now();
 		parent = parent || elem;
 		defHidden(elem, SRC, {});
 		defHidden(elem, PATH, path || '');
@@ -1025,7 +1025,7 @@
 		me._needValidate_ = false;
 		if (force)
 			validators.removeWeak();
-		var startTime = performance.now();
+		var startTime = platform.performance.now();
 		let tml = me.$template;
 		if (!tml) return;
 		let vals = tml.validators;
@@ -1037,7 +1037,6 @@
 				allerrs.push({ x: val, e: err1 });
 			}
 		}
-		var e = performance.now();
 		logtime('validation time:', startTime);
 		return allerrs;
 		//console.dir(allerrs);

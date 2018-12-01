@@ -3,6 +3,7 @@
 		"outputFileName": "Scripts/main.js",
 		"inputFiles": [
 			"app/app.js",
+			"app/services/locale.js",
 			"app/platform/polyfills.js",
 			"app/services/utils.js",
 			"app/services/url.js",
@@ -145,6 +146,7 @@
 		"outputFileName": "Scripts/a2v10-vue-site.js",
 		"inputFiles": [
 			"app/app.js",
+			"app/services/locale.js",
 			"app/platform/polyfills.js",
 			"app/services/utils.js",
 			"app/services/url.js",
@@ -161,6 +163,20 @@
 			"app/components/collectionview.js",
 			"app/components/pager.js",
 			"app/controllers/base.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
+		"outputFileName": "Scripts/server/library.js",
+		"inputFiles": [
+			"app/server/app.js",
+			"app/server/locale.js",
+			"app/server/platform.js",
+			"app/services/utils.js",
+			"app/services/period.js",
+			"app/services/validators.js",
+			"app/services/datamodel.js",
+			"app/server/validate.js"
 		],
 		"minify": { "enabled": false }
 	}

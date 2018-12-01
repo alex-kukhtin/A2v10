@@ -22,6 +22,23 @@ namespace A2v10.Script
 			CreateContext();
 		}
 
+		public void LoadLibrary(String script)
+		{
+			JavaScriptValue jsLib = JavaScriptContext.ParseScriptLibrary(script);
+			if (jsLib.ValueType == JavaScriptValueType.Function)
+				jsLib.CallFunction(JavaScriptValue.Undefined);
+		}
+
+		public void RunScript(String script)
+		{
+			JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
+			if (jsScript.ValueType == JavaScriptValueType.Function)
+			{
+				var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
+				int z = 44;
+			}
+		}
+
 		public Boolean IsValid { get { return _runtime.IsValid; } }
 		#endregion
 

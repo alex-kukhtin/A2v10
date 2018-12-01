@@ -175,5 +175,38 @@ namespace A2v10.Request
 			sb.RemoveTailComma();
 			return ",\n" + sb.ToString();
 		}
+
+		public String CreateServerScript(IDataModel model, String template)
+		{
+			/*
+			const String DATAFUNC =
+							@"
+(function() {
+	$(RequiredModules)
+
+	const rawData = $(DataModelText);
+
+	$(TemplateText);
+
+	$(ModelScript)
+		
+	return {
+		dataModel: modelData(template, rawData)
+	};
+})();
+";
+
+			var sb = new StringBuilder(DATAFUNC);
+			sb.Replace("$(TemplateText)", template);
+
+			String modelScript = model.CreateScript(this);
+			String rawData = JsonConvert.SerializeObject(model.Root, BaseController.StandardSerializerSettings);
+			sb.Replace("$(DataModelText)", rawData);
+			sb.Replace("$(ModelScript)", modelScript);
+
+			return sb.ToString();
+			*/
+			throw new NotImplementedException();
+		}
 	}
 }
