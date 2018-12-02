@@ -1,4 +1,4 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
     using System.Runtime.Serialization;
@@ -6,7 +6,6 @@
     /// <summary>
     ///     An API usage exception occurred.
     /// </summary>
-    [Serializable]
     public sealed class JavaScriptUsageException : JavaScriptException
     {
         /// <summary>
@@ -33,8 +32,8 @@
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        private JavaScriptUsageException(SerializationInfo info, StreamingContext context) :
-            base(info, context)
+        private JavaScriptUsageException(string message, Exception innerException) :
+            base(message, innerException)
         {
         }
     }

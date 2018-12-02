@@ -26,7 +26,7 @@ namespace A2v10.Tests.Config
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var workflowEngine = new WorkflowEngine(host, dbContext);
 				var renderer = new XamlRenderer(profiler, host);
-				var scripter = new VueDataScripter();
+				var scripter = new VueDataScripter(host, localizer);
 
 				service.RegisterService<IDbContext>(dbContext);
 				service.RegisterService<IWorkflowEngine>(workflowEngine);

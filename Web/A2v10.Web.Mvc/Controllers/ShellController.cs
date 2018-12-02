@@ -484,7 +484,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);
-				String result = JsonConvert.SerializeObject(rval, BaseController.StandardSerializerSettings);
+				String result = JsonConvert.SerializeObject(rval, JsonHelpers.StandardSerializerSettings);
 				Response.Write(result);
 			}
 			catch (Exception ex)

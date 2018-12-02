@@ -1,4 +1,4 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     /// <summary>
     ///     Allocation callback event type.

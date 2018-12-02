@@ -1,16 +1,18 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
     using System.Runtime.InteropServices;
 
-    /// <summary>
-    ///     A JavaScript value.
-    /// </summary>
-    /// <remarks>
-    ///     A JavaScript value is one of the following types of values: Undefined, Null, Boolean, 
-    ///     String, Number, or Object.
-    /// </remarks>
-    public struct JavaScriptValue
+	/// <summary>
+	///     A JavaScript value.
+	/// </summary>
+	/// <remarks>
+	///     A JavaScript value is one of the following types of values: Undefined, Null, Boolean, 
+	///     String, Number, or Object.
+	/// </remarks>
+#pragma warning disable IDE0049 // Use framework type
+#pragma warning disable IDE0018 // Inline variable declaration
+	public struct JavaScriptValue
     {
         /// <summary>
         /// The reference.
@@ -291,21 +293,6 @@
         }
 
         /// <summary>
-        ///     Creates a JavaScript value that is a projection of the passed in object.
-        /// </summary>
-        /// <remarks>
-        ///     Requires an active script context.
-        /// </remarks>
-        /// <param name="value">An object to be projected.</param>
-        /// <returns>A JavaScript value that is a projection of the object.</returns>
-        public static JavaScriptValue FromObject(object value)
-        {
-            JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsVariantToValue(ref value, out reference));
-            return reference;
-        }
-
-        /// <summary>
         ///     Creates a new <c>Object</c>.
         /// </summary>
         /// <remarks>
@@ -538,6 +525,26 @@
         }
 
         /// <summary>
+        ///     Retrieves the <c>int</c> value of a <c>Number</c> value.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///     This function retrieves the value of a Number value. It will fail with
+        ///     <c>InvalidArgument</c> if the type of the value is not <c>Number</c>.
+        ///     </para>
+        ///     <para>
+        ///     Requires an active script context.
+        ///     </para>
+        /// </remarks>
+        /// <returns>The <c>int</c> value.</returns>
+        public int ToInt32()
+        {
+            int value;
+            Native.ThrowIfError(Native.JsNumberToInt(this, out value));
+            return value;
+        }
+
+        /// <summary>
         ///     Retrieves the string pointer of a <c>String</c> value.
         /// </summary>
         /// <remarks>
@@ -555,21 +562,7 @@
             IntPtr buffer;
             UIntPtr length;
             Native.ThrowIfError(Native.JsStringToPointer(this, out buffer, out length));
-            return Marshal.PtrToStringAuto(buffer, (int)length);
-        }
-
-        /// <summary>
-        ///     Retrieves the object representation of an <c>Object</c> value.
-        /// </summary>
-        /// <remarks>
-        ///     Requires an active script context.
-        /// </remarks>
-        /// <returns>The object representation of the value.</returns>
-        public object ToObject()
-        {
-            object value;
-            Native.ThrowIfError(Native.JsValueToVariant(this, out value));
-            return value;
+            return Marshal.PtrToStringUni(buffer, (int)length);
         }
 
         /// <summary>
@@ -881,4 +874,6 @@
             return returnReference;
         }
     }
+#pragma warning restore IDE0049 // Use framework type
+#pragma warning restore IDE0018 // Inline variable declaration
 }

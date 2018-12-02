@@ -79,11 +79,11 @@ namespace A2v10.Request
 				changeScript.Replace("$(PageGuid)", pageGuid);
 
 				changeHtml.Replace("$(PageGuid)", pageGuid);
-				var scripter = new VueDataScripter();
+				var scripter = new VueDataScripter(_host, _localizer);
 
 				String dataModelText = "{}";
 				if (dm != null)
-					dataModelText = JsonConvert.SerializeObject(dm.Root, StandardSerializerSettings);
+					dataModelText = JsonConvert.SerializeObject(dm.Root, JsonHelpers.StandardSerializerSettings);
 
 				changeHtml.Replace("$(Data)", dataModelText);
 				changeHtml.Replace("$(PageScript)", dm.CreateScript(scripter));

@@ -1,4 +1,4 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
 
@@ -104,7 +104,7 @@
         public static JavaScriptRuntime Create(JavaScriptRuntimeAttributes attributes, JavaScriptRuntimeVersion version, JavaScriptThreadServiceCallback threadServiceCallback)
         {
             JavaScriptRuntime handle;
-            Native.ThrowIfError(Native.JsCreateRuntime(attributes, version, threadServiceCallback, out handle));
+            Native.ThrowIfError(Native.JsCreateRuntime(attributes, threadServiceCallback, out handle));
             return handle;
         }
 
@@ -125,7 +125,7 @@
         /// <returns>The runtime created.</returns>
         public static JavaScriptRuntime Create()
         {
-            return Create(JavaScriptRuntimeAttributes.DisableBackgroundWork, JavaScriptRuntimeVersion.Version11, null);
+            return Create(JavaScriptRuntimeAttributes.None, JavaScriptRuntimeVersion.Version11, null);
         }
 
         /// <summary>
@@ -140,7 +140,6 @@
         {
             if (IsValid)
             {
-                //Native.JsCollectGarbage(this);
                 Native.ThrowIfError(Native.JsDisposeRuntime(this));
             }
 
@@ -209,46 +208,6 @@
         }
 
         /// <summary>
-        ///     Creates a debug script context for running scripts.
-        /// </summary>
-        /// <remarks>
-        ///     Each script context has its own global object that is isolated from all other script 
-        ///     contexts.
-        /// </remarks>
-        /// <param name="debugApplication">The debug application to use.</param>
-        /// <returns>The created script context.</returns>
-        public JavaScriptContext CreateContext(Native.IDebugApplication64 debugApplication)
-        {
-            JavaScriptContext reference;
-            if (!Environment.Is64BitProcess)
-            {
-                throw new InvalidOperationException();
-            }
-            Native.ThrowIfError(Native.JsCreateContext(this, debugApplication, out reference));
-            return reference;
-        }
-
-        /// <summary>
-        ///     Creates a debug script context for running scripts.
-        /// </summary>
-        /// <remarks>
-        ///     Each script context has its own global object that is isolated from all other script 
-        ///     contexts.
-        /// </remarks>
-        /// <param name="debugApplication">The debug application to use.</param>
-        /// <returns>The created script context.</returns>
-        public JavaScriptContext CreateContext(Native.IDebugApplication32 debugApplication)
-        {
-            JavaScriptContext reference;
-            if (Environment.Is64BitProcess)
-            {
-                throw new InvalidOperationException();
-            }
-            Native.ThrowIfError(Native.JsCreateContext(this, debugApplication, out reference));
-            return reference;
-        }
-
-        /// <summary>
         ///     Creates a script context for running scripts.
         /// </summary>
         /// <remarks>
@@ -259,11 +218,13 @@
         public JavaScriptContext CreateContext()
         {
             JavaScriptContext reference;
-            Native.ThrowIfError(
-                Environment.Is64BitProcess
-                    ? Native.JsCreateContext(this, (Native.IDebugApplication64)null, out reference)
-                    : Native.JsCreateContext(this, (Native.IDebugApplication32)null, out reference));
+            Native.ThrowIfError(Native.JsCreateContext(this, out reference));
             return reference;
         }
-    }
+
+		public void StartDebugging()
+		{
+			Native.ThrowIfError(Native.JsStartDebugging());
+		}
+	}
 }

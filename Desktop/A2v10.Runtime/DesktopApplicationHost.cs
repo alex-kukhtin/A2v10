@@ -108,12 +108,21 @@ namespace A2v10.Runtime
 			throw new NotImplementedException();
 		}
 
-		public async Task<String> ReadTextFile(Boolean bAdmin, String path, String fileName)
+		public async Task<String> ReadTextFileAsync(Boolean bAdmin, String path, String fileName)
 		{
 			String fullPath = MakeFullPath(bAdmin, path, fileName);
 			using (var tr = new StreamReader(fullPath))
 			{
 				return await tr.ReadToEndAsync();
+			}
+		}
+
+		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
+		{
+			String fullPath = MakeFullPath(bAdmin, path, fileName);
+			using (var tr = new StreamReader(fullPath))
+			{
+				return tr.ReadToEnd();
 			}
 		}
 	}

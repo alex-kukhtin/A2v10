@@ -24,18 +24,42 @@ namespace A2v10.Script
 
 		public void LoadLibrary(String script)
 		{
-			JavaScriptValue jsLib = JavaScriptContext.ParseScriptLibrary(script);
-			if (jsLib.ValueType == JavaScriptValueType.Function)
-				jsLib.CallFunction(JavaScriptValue.Undefined);
+			try
+			{
+				JavaScriptValue jsLib = JavaScriptContext.ParseScriptLibrary(script);
+				if (jsLib.ValueType == JavaScriptValueType.Function)
+					jsLib.CallFunction(JavaScriptValue.Undefined);
+			}
+			catch (JavaScriptScriptException ex)
+			{
+				var msg = ex.Error.GetProperty(JavaScriptPropertyId.FromString("message"));
+				throw new JSRuntimeException(msg.ToString());
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 		public void RunScript(String script)
 		{
-			JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
-			if (jsScript.ValueType == JavaScriptValueType.Function)
+			try
 			{
-				var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
-				int z = 44;
+				JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
+				if (jsScript.ValueType == JavaScriptValueType.Function)
+				{
+					var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
+					Int32 z = 44;
+				}
+			}
+			catch (JavaScriptScriptException ex)
+			{
+				var msg = ex.Error.GetProperty(JavaScriptPropertyId.FromString("message"));
+				throw new JSRuntimeException(msg.ToString());
+			} 
+			catch (Exception)
+			{
+				throw;
 			}
 		}
 

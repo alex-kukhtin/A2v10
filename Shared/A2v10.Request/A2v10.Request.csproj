@@ -51,11 +51,11 @@
     <Compile Include="Controllers\BaseController.Image.cs" />
     <Compile Include="Controllers\BaseController.Layout.cs" />
     <Compile Include="Controllers\BaseController.Attachments.cs" />
-    <Compile Include="Controllers\BaseController.Scripts.cs" />
     <Compile Include="Controllers\BaseController.Upload.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\StandaloneController.cs" />
     <Compile Include="Helpers\HostHelpers.cs" />
+    <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="ResourceHelper.cs" />
     <Compile Include="Models\RequestModel.cs" />

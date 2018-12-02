@@ -2081,7 +2081,7 @@ app.modules['std:validators'] = function () {
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
-			elem._seal_ = seal
+			elem._seal_ = seal;
 		}
 		if (startTime) {
 			logtime('create root time:', startTime, false);

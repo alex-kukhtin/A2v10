@@ -1,11 +1,12 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
 
-    /// <summary>
-    ///     A cookie that identifies a script for debugging purposes.
-    /// </summary>
-    public struct JavaScriptSourceContext : IEquatable<JavaScriptSourceContext>
+	/// <summary>
+	///     A cookie that identifies a script for debugging purposes.
+	/// </summary>
+#pragma warning disable IDE0049 // Use framework type
+	public struct JavaScriptSourceContext : IEquatable<JavaScriptSourceContext>
     {
         /// <summary>
         /// The context.
@@ -181,4 +182,5 @@
             return context.ToInt32();
         }
     }
+#pragma warning restore IDE0049 // Use framework type
 }

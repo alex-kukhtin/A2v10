@@ -1,4 +1,4 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     /// <summary>
     ///     The JavaScript type of a JavaScriptValue.
@@ -49,5 +49,25 @@
         ///     The value is a JavaScript array object value.
         /// </summary>
         Array = 8,
+
+        /// <summary>
+        ///     The value is a JavaScript array object value.
+        /// </summary>
+        Symbol = 9,
+
+        /// <summary>
+        ///     The value is a JavaScript ArrayBuffer object value.
+        /// </summary>
+        ArrayBuffer = 10,
+
+        /// <summary>
+        ///     The value is a JavaScript typed array object value.
+        /// </summary>
+        TypedArray = 11,
+
+        /// <summary>
+        ///     The value is a JavaScript DataView object value.
+        /// </summary>
+        DataView = 12,
     }
 }

@@ -43,6 +43,7 @@
     <Compile Include="ClrHelpers.cs" />
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="IBackgroundTasksManager.cs" />
     <Compile Include="IControllerProfiler.cs" />
     <Compile Include="IControllerTenant.cs" />

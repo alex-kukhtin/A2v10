@@ -8,14 +8,11 @@
 	<script type="text/javascript" src="/scripts/server/library.js"></script>
 	<script type="text/javascript" src="/_server/validate"></script>
 	<script type="text/javascript">
-		(function() {
-			var dm = _test().dataModel;
-			dm._host_ = {
-				$viewModel: {},
-				$ctrl: {}
-			};
+		(function () {
+			var rv = $$server();
+			console.dir(rv);
+			var dm = rv.dataModelDb;
 			console.dir(dm);
-			debugger;
 			let result = dm.$forceValidate();
 			console.dir(result);
 		}) ();

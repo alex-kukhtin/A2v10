@@ -1,162 +1,97 @@
 ﻿using System;
 using System.Configuration;
 
-using ChakraHostRT.Hosting;
+using ChakraHost.Hosting;
 
 using A2v10.Infrastructure;
 
 namespace A2v10.Script.JSRT
 {
-	public class JSScriptContext : IScriptContext, IDisposable
+	public class ScriptContext : IScriptContext, IDisposable
 	{
 		JavaScriptRuntime _runtime;
-		JavaScriptContext _context;
-		JavaScriptContext _prevContext;
-
-		#region IDisposable
-		public void Dispose()
-		{
-			if (!_runtime.IsValid)
-				return;
-			StopScript();
-		}
-
-		void StopScript()
-		{
-			if (_debugger != null)
-			{
-				_debugger.Release();
-				_debugger = null;
-			}
-			if (!_runtime.IsValid)
-				return;
-			var threadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
-			System.Diagnostics.Trace.WriteLine($"stop: {threadId}");
-			try
-			{
-				if (_context.IsValid && JavaScriptContext.HasException)
-					JavaScriptContext.GetAndClearException();
-				if (_context.IsValid)
-				{
-					var glob = JavaScriptValue.GlobalObject;
-					glob.DeleteProperty(JavaScriptPropertyId.FromString("__invoke"), true);
-					JavaScriptContext.Current = _prevContext;
-				}
-				_runtime.Dispose();
-			}
-			catch (Exception ex)
-			{
-				// eat all exceptions here
-				String msg = ex.Message;
-				System.Diagnostics.Trace.WriteLine($"stop exception: {msg}");
-			}
-			try
-			{
-				if (_runtime.IsValid)
-					_runtime.Dispose();
-			}
-			catch (Exception ex)
-			{
-				// eat all exceptions here
-				String msg = ex.Message;
-				System.Diagnostics.Trace.WriteLine($"stop exception: {msg}");
-			}
-		}
-		#endregion
+		JavaScriptContext _context = JavaScriptContext.Invalid;
+		JavaScriptContext.Scope _scope;
 
 		#region IScriptContext
-
-		public Boolean IsValid { get { return _runtime.IsValid; } }
-
 		public void Start()
 		{
-			if (_runtime.IsValid)
+			if (IsValid)
 				return;
-			var threadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
-			System.Diagnostics.Trace.WriteLine($"start: {threadId}");
-			_runtime = JavaScriptRuntime.Create(JavaScriptRuntimeAttributes.DisableBackgroundWork | JavaScriptRuntimeAttributes.AllowScriptInterrupt, JavaScriptRuntimeVersion.Version11);
-			_context = _runtime.CreateContext();
-			_prevContext = JavaScriptContext.Current;
-			JavaScriptContext.Current = _context;
-
-			//CreateGlobal();
+			_runtime = JavaScriptRuntime.Create();
+			CreateContext();
 		}
 
 		public void LoadLibrary(String script)
 		{
-			JavaScriptValue jsLib = JavaScriptContext.ParseScript(script);
+			try
+			{
+				JavaScriptValue jsLib = JavaScriptContext.ParseScript(script);
+				if (jsLib.ValueType == JavaScriptValueType.Function)
+					jsLib.CallFunction(JavaScriptValue.Undefined);
+			}
+			catch (JavaScriptScriptException ex)
+			{
+				var msg = ex.Error.GetProperty(JavaScriptPropertyId.FromString("message"));
+				throw new JSRuntimeException(msg.ToString());
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
-
 
 		public void RunScript(String script)
 		{
-			JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
+			try
+			{
+				JavaScriptValue jsScript = JavaScriptContext.ParseScript(script);
+				if (jsScript.ValueType == JavaScriptValueType.Function)
+				{
+					var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
+					Int32 z = 44;
+				}
+			}
+			catch (JavaScriptScriptException ex)
+			{
+				var msg = ex.Error.GetProperty(JavaScriptPropertyId.FromString("message"));
+				throw new JSRuntimeException(msg.ToString());
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
-		public void Stop()
-		{
-			StopScript();
-		}
+		public Boolean IsValid { get { return _runtime.IsValid; } }
+		#endregion
 
-		public void StartDebugging()
-		{
-			if (!IsDebugConfiguration)
-				return;
-			if (_debugger == null)
-				_debugger = new JSDebugger();
-			_debugger.Create();
-			_debugger.StartDebugging();
-		}
-
-		JavaScriptSourceContext sourceContext = new JavaScriptSourceContext();
-
-		public String RunScript(String code, String data, String action, String arg)
+		#region IDisposable
+		public void Dispose()
 		{
 			if (!IsValid)
-				throw new JavaScriptException(JavaScriptErrorCode.NoCurrentContext);
-			JavaScriptValue runtimeFunc = JavaScriptValue.Undefined;
-			JavaScriptValue codeFunc = JavaScriptValue.Undefined;
-			JavaScriptValue dataFunc = JavaScriptValue.Undefined;
-			/*
-			var appPath = Path.Combine(HostingEnvironment.ApplicationPhysicalPath, @"Scripts\Server\application.js");
-			String appCode = System.IO.File.ReadAllText(appPath);
+				return;
+			try
+			{
+				if (_context.IsValid && JavaScriptContext.HasException)
+					JavaScriptContext.GetAndClearException();
+				_scope.Dispose();
+				_runtime.Dispose();
 
-			JavaScriptContext.RunScript(appCode, ++sourceContext, "application");
-
-			var scriptPath = Path.Combine(HostingEnvironment.ApplicationPhysicalPath, @"Scripts\Server\runtime.js");
-			String runtimeCode = System.IO.File.ReadAllText(scriptPath);
-			runtimeFunc = JavaScriptContext.ParseScript(runtimeCode, ++sourceContext, "library");
-			if (!String.IsNullOrEmpty(code))
-				codeFunc = JavaScriptContext.ParseScript(code, ++sourceContext, "template");
-			if (!String.IsNullOrEmpty(data))
-				dataFunc = JavaScriptContext.ParseScript(data, ++sourceContext, "data");
-			var outerRuntime = runtimeFunc.CallFunction(JavaScriptValue.Undefined);
-			if (codeFunc.IsValid && codeFunc.ValueType == JavaScriptValueType.Function)
-			{
-				codeFunc = codeFunc.CallFunction(JavaScriptValue.Undefined);
-				if (codeFunc.ValueType != JavaScriptValueType.Function)
-					throw new InvalidProgramException("unknown code function");
 			}
-			if (dataFunc.IsValid && dataFunc.ValueType == JavaScriptValueType.Function)
+			catch (Exception)
 			{
-				dataFunc = dataFunc.CallFunction(JavaScriptValue.Undefined);
-				if (dataFunc.ValueType != JavaScriptValueType.Function)
-					throw new InvalidProgramException("unknown data function");
+				// eat all
 			}
-			if (outerRuntime.IsValid && outerRuntime.ValueType == JavaScriptValueType.Function)
-			{
-				var result = outerRuntime.CallFunction(JavaScriptValue.Undefined, codeFunc, dataFunc, JavaScriptValue.FromString(action ?? String.Empty), JavaScriptValue.FromString(arg ?? String.Empty));
-				if ((result.ValueType == JavaScriptValueType.Null) || (result.ValueType == JavaScriptValueType.Undefined))
-					return null;
-				return result.ToString();
-			}
-			*/
-			return null;
 		}
 		#endregion
 
-
-		JSDebugger _debugger = null;
+		void CreateContext()
+		{
+			_context = _runtime.CreateContext();
+			_scope = new JavaScriptContext.Scope(_context);
+			_runtime.StartDebugging();
+		}
 
 		public static Boolean IsDebugConfiguration
 		{

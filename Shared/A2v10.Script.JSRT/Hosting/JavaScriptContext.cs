@@ -1,22 +1,25 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
 
-    /// <summary>
-    ///     A script context.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     Each script context contains its own global object, distinct from the global object in 
-    ///     other script contexts.
-    ///     </para>
-    ///     <para>
-    ///     Many Chakra hosting APIs require an "active" script context, which can be set using 
-    ///     Current. Chakra hosting APIs that require a current context to be set will note 
-    ///     that explicitly in their documentation.
-    ///     </para>
-    /// </remarks>
-    public struct JavaScriptContext
+#pragma warning disable IDE0049 // Use framework type
+#pragma warning disable IDE0018 // Inline variable declaration
+
+	/// <summary>
+	///     A script context.
+	/// </summary>
+	/// <remarks>
+	///     <para>
+	///     Each script context contains its own global object, distinct from the global object in 
+	///     other script contexts.
+	///     </para>
+	///     <para>
+	///     Many Chakra hosting APIs require an "active" script context, which can be set using 
+	///     Current. Chakra hosting APIs that require a current context to be set will note 
+	///     that explicitly in their documentation.
+	///     </para>
+	/// </remarks>
+	public struct JavaScriptContext
     {
         /// <summary>
         ///     The reference.
@@ -84,22 +87,6 @@
                 bool hasException;
                 Native.ThrowIfError(Native.JsHasException(out hasException));
                 return hasException;
-            }
-        }
-
-        /// <summary>
-        ///     Gets a value indicating whether the heap of the current context is being enumerated.
-        /// </summary>
-        /// <remarks>
-        ///     Requires an active script context.
-        /// </remarks>
-        public static bool IsEnumeratingHeap
-        {
-            get
-            {
-                bool isEnumerating;
-                Native.ThrowIfError(Native.JsIsEnumeratingHeap(out isEnumerating));
-                return isEnumerating;
             }
         }
 
@@ -233,8 +220,6 @@
         /// <returns>The result of the script, if any.</returns>
         public static JavaScriptValue RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
-            
-
             JavaScriptValue result;
             Native.ThrowIfError(Native.JsRunScript(script, sourceContext, sourceName, out result));
             return result;
@@ -357,85 +342,6 @@
         }
 
         /// <summary>
-        ///     Starts debugging in the context.
-        /// </summary>
-        /// <param name="debugApplication">The debug application to use for debugging.</param>
-        public static void StartDebugging(Native.IDebugApplication64 debugApplication)
-        {
-            if (!Environment.Is64BitProcess)
-            {
-                throw new InvalidOperationException();
-            }
-            Native.ThrowIfError(Native.JsStartDebugging(debugApplication));
-        }
-
-        /// <summary>
-        ///     Starts debugging in the context.
-        /// </summary>
-        /// <param name="debugApplication">The debug application to use for debugging.</param>
-        public static void StartDebugging(Native.IDebugApplication32 debugApplication)
-        {
-            if (Environment.Is64BitProcess)
-            {
-                throw new InvalidOperationException();
-            }
-            Native.ThrowIfError(Native.JsStartDebugging(debugApplication));
-        }
-
-        /// <summary>
-        ///     Starts profiling in the current context.
-        /// </summary>
-        /// <remarks>
-        ///     Requires an active script context.
-        /// </remarks>
-        /// <param name="callback">The profiling callback to use.</param>
-        /// <param name="eventMask">The profiling events to callback with.</param>
-        /// <param name="context">A context to pass to the profiling callback.</param>
-        public static void StartProfiling(Native.IActiveScriptProfilerCallback callback, Native.ProfilerEventMask eventMask, int context)
-        {
-            Native.ThrowIfError(Native.JsStartProfiling(callback, eventMask, context));
-        }
-
-        /// <summary>
-        ///     Stops profiling in the current context.
-        /// </summary>
-        /// <remarks>
-        ///     <para>
-        ///     Will not return an error if profiling has not started.
-        ///     </para>
-        ///     <para>
-        ///     Requires an active script context.
-        ///     </para>
-        /// </remarks>
-        /// <param name="reason">
-        ///     The reason for stopping profiling to pass to the profiler callback.
-        /// </param>
-        public static void StopProfiling(int reason)
-        {
-            Native.ThrowIfError(Native.JsStopProfiling(reason));
-        }
-
-        /// <summary>
-        ///     Enumerates the heap of the current context.
-        /// </summary>
-        /// <remarks>
-        ///     <para>
-        ///     While the heap is being enumerated, the current context cannot be removed, and all calls to
-        ///     modify the state of the context will fail until the heap enumerator is released.
-        ///     </para>
-        ///     <para>
-        ///     Requires an active script context.
-        ///     </para>
-        /// </remarks>
-        /// <returns>A heap enumerator.</returns>
-        public static Native.IActiveScriptProfilerHeapEnum EnumerateHeap()
-        {
-            Native.IActiveScriptProfilerHeapEnum enumerator;
-            Native.ThrowIfError(Native.JsEnumerateHeap(out enumerator));
-            return enumerator;
-        }
-
-        /// <summary>
         ///     Adds a reference to a script context.
         /// </summary>
         /// <remarks>
@@ -505,4 +411,6 @@
             }
         }
     }
+#pragma warning restore IDE0018
+#pragma warning restore IDE0049 // Use framework type
 }

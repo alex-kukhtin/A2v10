@@ -1,5 +1,6 @@
 ﻿using A2v10.Data.Interfaces;
 using A2v10.Data.Tests.Configuration;
+using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Script;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,17 +17,23 @@ namespace A2v10.Tests
 
 	public class ServerValidate
 	{
-		IDbContext _dbContext;
+		readonly IDbContext _dbContext;
+		readonly ILocalizer _localizer;
+		readonly IApplicationHost _host;
+
 		public ServerValidate()
 		{
-			_dbContext = Starter.Create();
+			var ss = Starter.Create();
+			_dbContext = ss.dbContext;
+			_localizer = ss.localizer;
+			_host = ss.host;
 		}
 
 		[TestMethod]
 		public void ServerScriptValidate()
 		{
-			IDataScripter scripter = new VueDataScripter();
-			var sp = new ScriptProcessor(scripter);
+			IDataScripter scripter = new VueDataScripter(_host, _localizer);
+			var sp = new ScriptProcessor(scripter, _host);
 			IDataModel dm = _dbContext.LoadModel(null, "a2test.[Document.Load]");
 			sp.ValidateModel(dm, "const template = {};");
 		}

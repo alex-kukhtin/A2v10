@@ -20,7 +20,6 @@ namespace A2v10.Request
 		public SiteController()
 		{
 			_baseController = new BaseController();
-			//_baseController.NormalizeBaseUrl = NormalizeUrl;
 		}
 
 		public Func<Int64> UserId { get; set; }
@@ -73,7 +72,20 @@ namespace A2v10.Request
 				DataModel = dmrw.Model,
 				Id = rw.Id
 			};
-			viewInfo.Scripts = await _baseController.WriteModelScript(rw, viewInfo.DataModel, pageId);
+
+			var msi = new ModelScriptInfo()
+			{
+				DataModel = viewInfo.DataModel,
+				RootId = pageId,
+				Admin = false,
+				IsDialog = rw.IsDialog,
+				Template = rw.template,
+				Path = rw.Path,
+				BaseUrl = rw.ParentModel.BasePath
+			};
+
+			viewInfo.Scripts = await  _baseController.Scripter.GetModelScript(msi);
+
 			return viewInfo;
 		}
 

@@ -41,7 +41,7 @@ namespace A2v10.Request
 
 			SetUserStatePermission(dm);
 
-			String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), BaseController.StandardSerializerSettings);
+			String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), JsonHelpers.StandardSerializerSettings);
 
 			StringBuilder sb = new StringBuilder(shell);
 			sb.Replace("$(Menu)", jsonMenu);

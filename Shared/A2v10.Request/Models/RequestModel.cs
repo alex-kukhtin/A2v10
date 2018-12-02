@@ -707,7 +707,7 @@ namespace A2v10.Request
 			String redFilePath = host.MakeFullPath(bAdmin, String.Empty, "redirect.json");
 			if (System.IO.File.Exists(redFilePath))
 			{
-				String json = await host.ReadTextFile(bAdmin, String.Empty, "redirect.json");
+				String json = await host.ReadTextFileAsync(bAdmin, String.Empty, "redirect.json");
 				_redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(json);
 			}
 			if (host.IsDebugConfiguration && _redirectWatcher == null)
@@ -729,7 +729,7 @@ namespace A2v10.Request
 		{
 			var mi = GetModelInfo(kind, normalizedUrl);
 			String pathForLoad = await Redirect(host, bAdmin, mi.path);
-			String jsonText = await host.ReadTextFile(bAdmin, pathForLoad, "model.json");
+			String jsonText = await host.ReadTextFileAsync(bAdmin, pathForLoad, "model.json");
 			var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
 			rm.EndInit();
 			rm._action = mi.action;

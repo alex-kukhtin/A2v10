@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
@@ -12,18 +11,29 @@ namespace A2v10.Web.Script
 	public class ScriptProcessor : IScriptProcessor
 	{
 		private readonly IDataScripter _scripter;
+		private readonly IApplicationHost _host;
 
-		public ScriptProcessor(IDataScripter scripter)
+		public ScriptProcessor(IDataScripter scripter, IApplicationHost host)
 		{
 			_scripter = scripter;
+			_host = host;
 		}
 
-		public String ValidateModel(IDataModel model, String templateScript)
+		IScriptContext CreateScript()
 		{
-			using (var sc = new A2v10.Script.ScriptContext())
+			if (_host.IsDebugConfiguration)
+				return new A2v10.Script.JSRT.ScriptContext(); // EDGE
+			else
+				return new A2v10.Script.ScriptContext();  // CHAKRA CORE
+		}
+
+		public String ValidateModel(IDataModel model, String baseUrl)
+		{			
+			using (var disp = CreateScript() as IDisposable)
 			{
+				var sc = disp as IScriptContext;
 				StartScript(sc);
-				RunDataScript(sc, model, templateScript);
+				RunDataScript(sc, model, baseUrl);
 			}
 			return null;
 		}
@@ -44,21 +54,14 @@ namespace A2v10.Web.Script
 			sc.LoadLibrary(script);
 		}
 
-		void RunDataScript(IScriptContext sc, IDataModel model, String template)
+		void RunDataScript(IScriptContext sc, IDataModel model, String baseUrl)
 		{
-			var serverScript = _scripter.CreateServerScript(model, template);
-			sc.RunScript(serverScript.ToString());
-		}
-
-		public static readonly JsonSerializerSettings StandardSerializerSettings =
-			new JsonSerializerSettings()
+			var msi = new ModelScriptInfo()
 			{
-				Formatting = Formatting.Indented,
-				StringEscapeHandling = StringEscapeHandling.EscapeHtml,
-				DateFormatHandling = DateFormatHandling.IsoDateFormat,
-				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-				NullValueHandling = NullValueHandling.Ignore,
-				DefaultValueHandling = DefaultValueHandling.Ignore
+				DataModel = model
 			};
+			var ss = _scripter.GetServerScript(msi);
+			sc.RunScript(ss.Script);
+		}
 	}
 }

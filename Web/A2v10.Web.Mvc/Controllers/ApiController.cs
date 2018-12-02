@@ -232,7 +232,7 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 			}
 			else
-				writer.Write(JsonConvert.SerializeObject(result, BaseController.StandardSerializerSettings));
+				writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
 		}
 	}
 }

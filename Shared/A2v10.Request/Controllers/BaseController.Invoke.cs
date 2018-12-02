@@ -119,7 +119,7 @@ namespace A2v10.Request
 				result = await invoker.InvokeAsync(cmd.clrType, dataToExec);
 			else
 				result = invoker.Invoke(cmd.clrType, dataToExec);
-			writer.Write(JsonConvert.SerializeObject(result, StandardSerializerSettings));
+			writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
 		}
 
 		async Task StartWorkflow(RequestCommand cmd, ExpandoObject dataToStart, TextWriter writer)

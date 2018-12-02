@@ -1,4 +1,4 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
     using System.Runtime.Serialization;
@@ -6,7 +6,6 @@
     /// <summary>
     ///     A fatal exception occurred.
     /// </summary>
-    [Serializable]
     public sealed class JavaScriptFatalException : JavaScriptException
     {
         /// <summary>
@@ -33,8 +32,8 @@
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        private JavaScriptFatalException(SerializationInfo info, StreamingContext context) :
-            base(info, context)
+        private JavaScriptFatalException(string message, Exception innerException) :
+            base(message, innerException)
         {
         }
     }

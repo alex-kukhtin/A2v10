@@ -8,6 +8,6 @@ namespace A2v10.Infrastructure
 {
 	public interface IScriptProcessor
 	{
-		String ValidateModel(IDataModel model, String templateScript);
+		String ValidateModel(IDataModel model, String baseUrl);
 	}
 }

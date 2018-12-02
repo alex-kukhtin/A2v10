@@ -36,14 +36,14 @@ namespace A2v10.Web.Mvc.Start
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
 				IMessaging messaging = new MessageProcessor(host, dbContext);
-				IDataScripter scripter = new VueDataScripter();
+				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new EmailService(logger);
 				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
 				IExternalDataProvider dataProvider = new ExternalDataContext();
-				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter);
+				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);

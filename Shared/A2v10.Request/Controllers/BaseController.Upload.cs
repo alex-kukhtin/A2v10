@@ -30,7 +30,7 @@ namespace A2v10.Request
 				savePrms.Set("Stream", files[0].InputStream);
 				savePrms.Set("FileName", files[0].FileName);
 				var result = await DoUploadClr(ru, savePrms);
-				writer.Write(JsonConvert.SerializeObject(result, StandardSerializerSettings));
+				writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
 			}
 			else if (ru.parse == RequestUploadParseType.excel)
 			{

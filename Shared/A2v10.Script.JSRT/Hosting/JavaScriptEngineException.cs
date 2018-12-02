@@ -1,4 +1,4 @@
-namespace ChakraHostRT.Hosting
+namespace ChakraHost.Hosting
 {
     using System;
     using System.Runtime.Serialization;
@@ -6,7 +6,6 @@ namespace ChakraHostRT.Hosting
     /// <summary>
     ///     An exception that occurred in the workings of the JavaScript engine itself.
     /// </summary>
-    [Serializable]
     public sealed class JavaScriptEngineException : JavaScriptException
     {
         /// <summary>
@@ -33,8 +32,8 @@ namespace ChakraHostRT.Hosting
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        private JavaScriptEngineException(SerializationInfo info, StreamingContext context) :
-            base(info, context)
+        private JavaScriptEngineException(string message, Exception innerException) :
+            base(message, innerException)
         {
         }
     }

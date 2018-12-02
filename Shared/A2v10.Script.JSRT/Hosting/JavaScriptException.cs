@@ -1,13 +1,13 @@
-namespace ChakraHostRT.Hosting
+namespace ChakraHost.Hosting
 {
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     An exception returned from the Chakra engine.
-    /// </summary>
-    [Serializable]
-    public class JavaScriptException : Exception
+	/// <summary>
+	///     An exception returned from the Chakra engine.
+	/// </summary>
+#pragma warning disable IDE0049 // Use framework type
+	public class JavaScriptException : Exception
     {
         /// <summary>
         /// The error code.
@@ -39,15 +39,16 @@ namespace ChakraHostRT.Hosting
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        protected JavaScriptException(SerializationInfo info, StreamingContext context) :
-            base(info, context)
+        protected JavaScriptException(string message, Exception innerException) :
+            base(message, innerException)
         {
-            if (info != null)
+            if (message != null)
             {
-                code = (JavaScriptErrorCode) info.GetUInt32("code");
+                code = (JavaScriptErrorCode) base.HResult;
             }
         }
 
+        /*
         /// <summary>
         ///     Serializes the exception information.
         /// </summary>
@@ -58,7 +59,7 @@ namespace ChakraHostRT.Hosting
             base.GetObjectData(info, context);
             info.AddValue("code", (uint)code);
         }
-
+        */
         /// <summary>
         ///     Gets the error code.
         /// </summary>
@@ -67,4 +68,5 @@ namespace ChakraHostRT.Hosting
             get { return code; }
         }
     }
+#pragma warning restore IDE0049 // Use framework type
 }

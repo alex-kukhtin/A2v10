@@ -79,7 +79,7 @@ namespace A2v10.Request
 
 		void WriteJsonResult(TextWriter writer, Object data)
 		{
-			writer.Write(JsonConvert.SerializeObject(data, StandardSerializerSettings));
+			writer.Write(JsonConvert.SerializeObject(data, JsonHelpers.StandardSerializerSettings));
 		}
 
 		internal async Task ReloadData(Action<ExpandoObject> setParams, String json, TextWriter writer)
@@ -235,7 +235,7 @@ namespace A2v10.Request
 		void WriteDataModel(IDataModel model, TextWriter writer)
 		{
 			// Write data to output
-			writer.Write(JsonConvert.SerializeObject(model.Root, StandardSerializerSettings));
+			writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.StandardSerializerSettings));
 		}
 	}
 }

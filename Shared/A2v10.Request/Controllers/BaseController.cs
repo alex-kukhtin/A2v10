@@ -16,11 +16,6 @@ using A2v10.Request.Properties;
 
 namespace A2v10.Request
 {
-	public class ScriptInfo
-	{
-		public String Script;
-		public String DataScript;
-	}
 
 	public class ViewInfo
 	{
@@ -72,6 +67,8 @@ namespace A2v10.Request
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
 		public IDbContext DbContext => _dbContext;
 		public IApplicationHost Host => _host;
+		public IDataScripter Scripter => _scripter;
+
 		public Boolean Admin { get; set; }
 
 		public String CurrentLang
@@ -117,16 +114,6 @@ namespace A2v10.Request
 			}
 		}
 
-		/*
-		public async Task RenderModel(String pathInfo, ExpandoObject loadPrms, TextWriter writer)
-		{
-			// TODO: delete me
-			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, RequestUrlKind.Page, pathInfo);
-			RequestView rw = rm.GetCurrentAction(RequestUrlKind.Page);
-			rw.view = NO_VIEW; // no view here
-			await Render(rw, writer, loadPrms);
-		}
-		*/
 
 		public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
@@ -253,9 +240,9 @@ namespace A2v10.Request
 			var rw = dmAndView.RequestView;
 
 			String rootId = "el" + Guid.NewGuid().ToString();
-			String modelScript = null;
+			//String modelScript = null;
 
-			String viewName = rw.GetView();
+			//String viewName = rw.GetView();
 			//if (viewName == NO_VIEW)
 			//{
 				//modelScript = await GetModelScriptModel(rw, model, rootId);
@@ -266,8 +253,19 @@ namespace A2v10.Request
 			if (_renderer == null)
 				throw new InvalidOperationException("Service 'IRenderer' not registered");
 
-			var si = await WriteModelScript(rw, model, rootId);
-			modelScript = si.Script;
+			var msi = new ModelScriptInfo()
+			{
+				DataModel = model,
+				RootId = rootId,
+				Admin = Admin,
+				IsDialog = rw.IsDialog,
+				Template = rw.template,
+				Path = rw.Path,
+				BaseUrl = rw.ParentModel.BasePath
+			};
+			var si = await _scripter.GetModelScript(msi);
+
+			String modelScript = si.Script;
 			// TODO: use view engines
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
@@ -327,17 +325,6 @@ namespace A2v10.Request
 			writer.Write(modelScript);
 		}
 
-
-		public static readonly JsonSerializerSettings StandardSerializerSettings =
-			new JsonSerializerSettings()
-			{
-				Formatting = Formatting.Indented,
-				StringEscapeHandling = StringEscapeHandling.EscapeHtml,
-				DateFormatHandling = DateFormatHandling.IsoDateFormat,
-				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-				NullValueHandling = NullValueHandling.Ignore,
-				DefaultValueHandling = DefaultValueHandling.Ignore
-			};
 
 		public void ProfileException(Exception ex)
 		{
@@ -419,15 +406,17 @@ namespace A2v10.Request
 			prms.Set("UserId", userId);
 			prms.Set("Id", rw.Id);
 			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms);
-			String fileTemplateText = await _host.ReadTextFile(Admin, rw.Path, rw.template + ".js");
-			var sbRequired = new StringBuilder();
-			AddRequiredModules(sbRequired, fileTemplateText);
-			String templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
-			String script = CreateServerScript(model, templateText, sbRequired.ToString());
+
+			var msi = new ModelScriptInfo()
+			{
+				DataModel = model,
+				Template = rw.template,
+				Path = rw.Path
+			};
+			var ss = _scripter.GetServerScript(msi);
+
 			response.ContentType = "text/javascript";
-			response.Write("var _test = ");
-			response.Write(script);
-			response.Write("console.dir(_test)");
+			response.Write(ss.Script);
 		}
 	}
 }

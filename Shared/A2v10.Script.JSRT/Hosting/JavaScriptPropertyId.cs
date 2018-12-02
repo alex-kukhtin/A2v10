@@ -1,15 +1,16 @@
-﻿namespace ChakraHostRT.Hosting
+﻿namespace ChakraHost.Hosting
 {
     using System;
 
-    /// <summary>
-    ///     A property identifier.
-    /// </summary>
-    /// <remarks>
-    ///     Property identifiers are used to refer to properties of JavaScript objects instead of using
-    ///     strings.
-    /// </remarks>
-    public struct JavaScriptPropertyId : IEquatable<JavaScriptPropertyId>
+	/// <summary>
+	///     A property identifier.
+	/// </summary>
+	/// <remarks>
+	///     Property identifiers are used to refer to properties of JavaScript objects instead of using
+	///     strings.
+	/// </remarks>
+#pragma warning disable IDE0049 // Use framework type
+	public struct JavaScriptPropertyId : IEquatable<JavaScriptPropertyId>
     {
         /// <summary>
         /// The id.
@@ -112,12 +113,14 @@
         /// <returns>Whether the two property IDs are the same.</returns>
         public override bool Equals(object obj)
         {
+#pragma warning disable IDE0041 // Use 'is null' check
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
+#pragma warning restore IDE0041 // Use 'is null' check
 
-            return obj is JavaScriptPropertyId && Equals((JavaScriptPropertyId)obj);
+			return obj is JavaScriptPropertyId && Equals((JavaScriptPropertyId)obj);
         }
 
         /// <summary>
@@ -138,4 +141,5 @@
             return Name;
         }
     }
+#pragma warning restore IDE0049 // Use framework type
 }
