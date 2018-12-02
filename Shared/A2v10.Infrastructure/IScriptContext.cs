@@ -9,7 +9,7 @@ namespace A2v10.Infrastructure
 		void Start();
 
 		void LoadLibrary(String script);
-		void RunScript(String script);
+		Object RunScript(String script);
 
 		Boolean IsValid { get; }
 	}

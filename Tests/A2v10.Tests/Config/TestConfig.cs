@@ -6,6 +6,7 @@ using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Workflow;
 using A2v10.Xaml;
+using System.IO;
 
 namespace A2v10.Tests.Config
 {
@@ -22,6 +23,8 @@ namespace A2v10.Tests.Config
 			{
 				var profiler = new TestProfiler();
 				var host = new TestApplicationHost(profiler);
+				host.HostingPath = Path.GetFullPath("../../../../Web/A2v10.Web.Site");
+
 				var localizer = new TestLocalizer();
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var workflowEngine = new WorkflowEngine(host, dbContext);
@@ -33,6 +36,7 @@ namespace A2v10.Tests.Config
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IRenderer>(renderer);
+				service.RegisterService<ILocalizer>(localizer);
 				service.RegisterService<IDataScripter>(scripter);
 				_currentService = service;
 			};

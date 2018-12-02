@@ -1,16 +1,14 @@
-﻿using A2v10.Data.Interfaces;
-using A2v10.Data.Tests.Configuration;
+﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Script;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace A2v10.Tests
+using A2v10.Tests.Config;
+
+namespace A2v10.Tests.ServerScripts
 {
 	[TestClass]
 	[TestCategory("Server Scripts")]
@@ -23,10 +21,11 @@ namespace A2v10.Tests
 
 		public ServerValidate()
 		{
-			var ss = Starter.Create();
-			_dbContext = ss.dbContext;
-			_localizer = ss.localizer;
-			_host = ss.host;
+			TestConfig.Start();
+			var loc = ServiceLocator.Current;
+			_dbContext = loc.GetService<IDbContext>();
+			_localizer = loc.GetService<ILocalizer>();
+			_host = loc.GetService<IApplicationHost>();
 		}
 
 		[TestMethod]
@@ -34,8 +33,15 @@ namespace A2v10.Tests
 		{
 			IDataScripter scripter = new VueDataScripter(_host, _localizer);
 			var sp = new ScriptProcessor(scripter, _host);
-			IDataModel dm = _dbContext.LoadModel(null, "a2test.[Document.Load]");
-			sp.ValidateModel(dm, "const template = {};");
+			var ssi = new ServerScriptInfo()
+			{
+				DataModel = _dbContext.LoadModel(null, "a2test.[Document.Load]"),
+				Template = "document.template",
+				Path = "document/server",
+				RawData = "{Document: {Id:173}}"
+			};
+			var result = sp.ValidateModel(ssi);
+			Assert.IsNull(result);
 		}
 	}
 }

@@ -6,8 +6,16 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Infrastructure
 {
+	public class ServerScriptInfo
+	{
+		public IDataModel DataModel;
+		public String RawData;
+		public String Template;
+		public String Path;
+	}
+
 	public interface IScriptProcessor
 	{
-		String ValidateModel(IDataModel model, String baseUrl);
+		Object ValidateModel(ServerScriptInfo ssi);
 	}
 }

@@ -41,7 +41,20 @@ namespace A2v10.Script.JSRT
 			}
 		}
 
-		public void RunScript(String script)
+		Object JavaScriptValueToObject(JavaScriptValue val)
+		{
+			switch (val.ValueType)
+			{
+				case JavaScriptValueType.String:
+					return val.ToString();
+				case JavaScriptValueType.Null:
+				case JavaScriptValueType.Undefined:
+					return null;
+			}
+			throw new InvalidCastException($"JavaScriptValueToObject. Unknown value type: {val.ValueType}");
+		}
+
+		public Object RunScript(String script)
 		{
 			try
 			{
@@ -49,8 +62,9 @@ namespace A2v10.Script.JSRT
 				if (jsScript.ValueType == JavaScriptValueType.Function)
 				{
 					var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
-					Int32 z = 44;
+					return JavaScriptValueToObject(jsResult);
 				}
+				return null;
 			}
 			catch (JavaScriptScriptException ex)
 			{

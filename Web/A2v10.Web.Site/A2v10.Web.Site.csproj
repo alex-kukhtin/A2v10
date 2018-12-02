@@ -239,6 +239,7 @@
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
     <Content Include="scripts\server\library.js" />
+    <Content Include="scripts\server\validate.js" />
     <Content Include="TestPages\validators.html" />
     <Content Include="TestPages\standalonemodel.html" />
     <Content Include="TestPages\Test.xml" />

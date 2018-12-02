@@ -392,12 +392,9 @@ namespace A2v10.Request
 
 		}
 
-		public async Task Server(String command, Int64 userId, HttpResponseBase response)
+		public async Task Server(String command, String baseUrl, Int64 userId, HttpResponseBase response)
 		{
-			String testUrl = "/_page/sales/waybill/edit/169";
-
-
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, testUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
 			String loadProc = rw.LoadProcedure;
 			if (loadProc == null)

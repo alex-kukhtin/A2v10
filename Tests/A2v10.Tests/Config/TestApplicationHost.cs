@@ -2,6 +2,8 @@
 
 using System;
 using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -56,6 +58,7 @@ namespace A2v10.Tests.Config
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 
+		public String HostingPath { get; set; }
 
 		public String Theme => null;
 		public String HelpUrl => null;
@@ -72,7 +75,16 @@ namespace A2v10.Tests.Config
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
-			throw new NotImplementedException();
+			String appKey = bAdmin ? "admin" : AppKey;
+			if (fileName.StartsWith("/"))
+			{
+				path = String.Empty;
+				fileName = fileName.Remove(0, 1);
+			}
+			if (appKey != null)
+				appKey = "/" + appKey;
+			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
+			return Path.GetFullPath(fullPath);
 		}
 
 		public String MakeRelativePath(String path, String fileName)
@@ -87,7 +99,11 @@ namespace A2v10.Tests.Config
 
 		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
 		{
-			throw new NotImplementedException();
+			String fullPath = MakeFullPath(bAdmin, path, fileName);
+			using (var tr = new StreamReader(fullPath))
+			{
+				return tr.ReadToEnd();
+			}
 		}
 
 		public String AppVersion => throw new NotImplementedException();

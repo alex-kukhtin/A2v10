@@ -6,7 +6,7 @@
 </head>
 <body>
 	<script type="text/javascript" src="/scripts/server/library.js"></script>
-	<script type="text/javascript" src="/_server/validate"></script>
+	<script type="text/javascript" src="/_server/validate?baseUrl=/_page/sales/waybill/edit/169"></script>
 	<script type="text/javascript">
 		(function () {
 			var rv = $$server();
@@ -15,6 +15,12 @@
 			console.dir(dm);
 			let result = dm.$forceValidate();
 			console.dir(result);
+
+			var newDm = rv.createModel({ Document: {} });
+			console.dir(newDm);
+			newDm.Document.Rows.$append();
+			let result2 = newDm.$forceValidate();
+			console.dir(result2);
 		}) ();
 	</script>
 </body>

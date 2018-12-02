@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using A2v10.Infrastructure;
+using System.Reflection;
 
 namespace A2v10.Runtime
 {
@@ -37,6 +38,15 @@ namespace A2v10.Runtime
                     throw new ConfigurationErrorsException("Configuration parameter 'appSettings/appPath' not defined");
                 return path;
                 */
+			}
+		}
+
+		public String HostingPath
+		{
+			get
+			{
+				var path = Assembly.GetExecutingAssembly().Location;
+				return Path.GetDirectoryName(path);
 			}
 		}
 

@@ -256,7 +256,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				await _baseController.Server(pathInfo, UserId, Response);
+				var baseUrl = Request.QueryString["baseUrl"];
+				await _baseController.Server(pathInfo, baseUrl, UserId, Response);
 			} catch (Exception ex)
 			{
 				WriteExceptionStatus(ex);

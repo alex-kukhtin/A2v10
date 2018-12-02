@@ -15,6 +15,8 @@ namespace A2v10.Infrastructure
 		String SupportEmail { get; }
 		String Theme { get; }
 		String HelpUrl { get; }
+		String HostingPath { get; }
+
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }
 

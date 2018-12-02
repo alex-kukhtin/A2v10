@@ -70,7 +70,12 @@ namespace A2v10.Request
 
 		return {
 			dataModelDb: mdDb,
-			dataModelRq: mdRq
+			dataModelRq: mdRq,
+			createModel: function(jsonData) {
+				let md = modelData(template, jsonData);
+				md._host_ = host;
+				return md;
+			}
 		};
 	}
 ";
@@ -502,7 +507,7 @@ const vm = new DataModelController({
 			String modelScript = msi.DataModel.CreateScript(this);
 			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.StandardSerializerSettings);
 			sb.Replace("$(DataModelText)", rawData);
-			sb.Replace("$(RawDataText)", "{}");
+			sb.Replace("$(RawDataText)", msi.RawData != null ? msi.RawData : "{}");
 			sb.Replace("$(ModelScript)", modelScript);
 			return new ScriptInfo()
 			{

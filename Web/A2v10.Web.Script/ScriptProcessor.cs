@@ -27,15 +27,14 @@ namespace A2v10.Web.Script
 				return new A2v10.Script.ScriptContext();  // CHAKRA CORE
 		}
 
-		public String ValidateModel(IDataModel model, String baseUrl)
-		{			
+		public Object ValidateModel(ServerScriptInfo ssi)
+		{
 			using (var disp = CreateScript() as IDisposable)
 			{
 				var sc = disp as IScriptContext;
 				StartScript(sc);
-				RunDataScript(sc, model, baseUrl);
+				return RunDataScript(sc, ssi, "validate");
 			}
-			return null;
 		}
 
 
@@ -45,23 +44,34 @@ namespace A2v10.Web.Script
 			LoadLibrary(sc);
 		}
 
-		void LoadLibrary(IScriptContext sc)
+		String LoadFile(String file)
 		{
-			String path = Path.GetFullPath("../../../../Web/A2v10.Web.Site/scripts/server/library.js");
+			var hostPath = _host.HostingPath;
+			String path = Path.Combine(hostPath, $"scripts/server/{file}.js");
 			if (!File.Exists(path))
 				throw new FileNotFoundException(path);
-			String script = File.ReadAllText(path);
+			return File.ReadAllText(path);
+		}
+
+		void LoadLibrary(IScriptContext sc)
+		{
+			String script = LoadFile("library");
 			sc.LoadLibrary(script);
 		}
 
-		void RunDataScript(IScriptContext sc, IDataModel model, String baseUrl)
+		Object RunDataScript(IScriptContext sc, ServerScriptInfo ssi, String operation)
 		{
 			var msi = new ModelScriptInfo()
 			{
-				DataModel = model
+				DataModel = ssi.DataModel,
+				Template = ssi.Template,
+				Path = ssi.Path,
+				RawData = ssi.RawData
 			};
 			var ss = _scripter.GetServerScript(msi);
 			sc.RunScript(ss.Script);
+			var opScript = LoadFile(operation);
+			return sc.RunScript(opScript);
 		}
 	}
 }
