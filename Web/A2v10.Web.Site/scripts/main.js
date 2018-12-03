@@ -8885,7 +8885,7 @@ Vue.directive('settabindex', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181112-7253*/
+/*20181203-7381*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -8903,7 +8903,12 @@ Vue.directive('resize', {
 		if (!el._parts) return;
 		let p = el._parts;
 		if (p.init) return;
-		if (!p.grid.clientWidth) return; // yet not inserted
+		if (!p.grid.clientWidth) {
+			p.handle = findHandle(p.grid);
+			p.grid.style.visibility = 'visible';
+			p.init = true;
+			return; // yet not inserted
+		}
 		p.init = true;
 
 		p.handle = findHandle(p.grid);
