@@ -157,5 +157,13 @@ namespace A2v10.Request
 		{
 			_baseController.WriteExceptionStatus(ex, response);
 		}
+
+		public Task Server(String command, String baseUrl, HttpResponseBase response)
+		{
+			Int64 userId = 0;
+			if (UserId != null)
+				userId = UserId();
+			return _baseController.Server(command, baseUrl, userId, response);
+		}
 	}
 }
