@@ -82,12 +82,13 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181201-7379
+// 20181203-7381
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
 	const locale = require('std:locale');
+	const platform = require('std:platform');
 	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
@@ -168,7 +169,7 @@ app.modules['std:utils'] = function () {
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
-		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === File || ctor === Object;
+		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
 	}
 
 	function isDateCtor(ctor) {

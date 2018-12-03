@@ -101,12 +101,40 @@
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181201-7379
+/*20180227-7121*/
+/* platform/webvue.js */
+
+(function () {
+
+	function set(target, prop, value) {
+		Vue.set(target, prop, value);
+	}
+
+	function defer(func) {
+		Vue.nextTick(func);
+	}
+
+
+	app.modules['std:platform'] = {
+		set: set,
+		defer: defer,
+		File: File, /*file ctor*/
+		performance: performance
+	};
+
+	app.modules['std:eventBus'] = new Vue({});
+
+})();
+
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+// 20181203-7381
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
 	const locale = require('std:locale');
+	const platform = require('std:platform');
 	const dateLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
@@ -187,7 +215,7 @@ app.modules['std:utils'] = function () {
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
 
 	function isPrimitiveCtor(ctor) {
-		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === File || ctor === Object;
+		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
 	}
 
 	function isDateCtor(ctor) {
@@ -1118,33 +1146,6 @@ app.modules['std:modelInfo'] = function () {
 	}
 };
 
-
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-/*20180227-7121*/
-/* platform/webvue.js */
-
-(function () {
-
-	function set(target, prop, value) {
-		Vue.set(target, prop, value);
-	}
-
-	function defer(func) {
-		Vue.nextTick(func);
-	}
-
-
-	app.modules['std:platform'] = {
-		set: set,
-		defer: defer,
-		File: File, /*file ctor*/
-		performance: performance
-	};
-
-	app.modules['std:eventBus'] = new Vue({});
-
-})();
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
