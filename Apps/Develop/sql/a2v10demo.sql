@@ -455,7 +455,7 @@ begin
 		[Agent.Id!TAgent!Id], [Agent.Name!TAgent!Name], 
 		[DepFrom.Id!TAgent!Id],  [DepFrom.Name!TAgent!Name],
 		[DepTo.Id!TAgent!Id],  [DepTo.Name!TAgent!Name], Done,
-		DateCreated, DateModified, [ParentDoc!TDocParent!RefId],
+		[DateCreated!!UtcDate], [DateModified!!UtcDate], [ParentDoc!TDocParent!RefId],
 		[!!RowNumber])
 	as(
 		select d.Id, d.[Date], d.[No], d.[Sum], d.Memo, 

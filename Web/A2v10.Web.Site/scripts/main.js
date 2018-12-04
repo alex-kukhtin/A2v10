@@ -110,7 +110,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20181204-7382*/
 /* platform/webvue.js */
 
 (function () {
@@ -1740,7 +1740,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181201-7379
+// 20181204-7382
 // services/datamodel.js
 
 (function () {
@@ -2241,7 +2241,7 @@ app.modules['std:validators'] = function () {
 
 		defPropertyGet(arr, "$isEmpty", function () {
 			return !this.length;
-		});
+		});		
 
 		defPropertyGet(arr, "$checked", function () {
 			return this.filter((el) => el.$checked);
@@ -2294,10 +2294,10 @@ app.modules['std:validators'] = function () {
 			function append(src, select) {
 				let addingEvent = that._path_ + '[].adding';
 				let newElem = that.$new(src);
-				// TODO: emit adding and check result
+				// emit adding and check result
 				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
 				if (er === false)
-					return; // disabled
+					return null; // disabled
 				let len = that.length;
 				let ne = null;
 				switch (to) {
@@ -2346,9 +2346,28 @@ app.modules['std:validators'] = function () {
 
 		arr.$empty = function () {
 			if (this.$root.isReadOnly)
-				return;
+				return this;
 			this.splice(0, this.length);
 			if ('$RowCount' in this) this.$RowCount = 0;
+			return this;
+		};
+
+		arr.$renumberRows = function () {
+			if (!this.length) return this;
+			let item = this[0];
+			// renumber rows
+			if ('$rowNo' in item._meta_) {
+				let rowNoProp = item._meta_.$rowNo;
+				for (let i = 0; i < this.length; i++) {
+					this[i][rowNoProp] = i + 1; // 1-based
+				}
+			}
+			return this;
+		};
+
+		arr.$sort = function (compare) {
+			this.sort(compare);
+			this.$renumberRows();
 			return this;
 		};
 
@@ -2357,35 +2376,31 @@ app.modules['std:validators'] = function () {
 			if (!sel) return; // already null
 			sel.$selected = false;
 			emitSelect(this, null);
+			return this;
 		};
 
 		arr.$remove = function (item) {
 			if (this.$root.isReadOnly)
-				return;
+				return this;
 			if (!item)
-				return;
+				return this;
 			let index = this.indexOf(item);
 			if (index === -1)
-				return;
+				return this;
 			this.splice(index, 1);
 			if ('$RowCount' in this) this.$RowCount -= 1;
 			// EVENT
 			let eventName = this._path_ + '[].remove';
 			this._root_.$setDirty(true);
 			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-			if (!this.length) return;
+			if (!this.length) return this;
 			if (index >= this.length)
 				index -= 1;
-			// renumber rows
-			if ('$rowNo' in item._meta_) {
-				let rowNoProp = item._meta_.$rowNo;
-				for (let i = 0; i < this.length; i++) {
-					this[i][rowNoProp] = i + 1; // 1-based
-				}
-			}
+			this.$renumberRows();
 			if (this.length > index) {
 				this[index].$select();
 			}
+			return this;
 		};
 
 		arr.$copy = function (src) {
@@ -10461,6 +10476,9 @@ Vue.directive('resize', {
 				let sb = localStorage.getItem('sideBarCollapsed');
 				if (sb === 'true')
 					return true;
+				// auto collapse for tablet
+				if (screen && screen.width < 992)
+					return true;
 				return false;
 			},
 			sideBarComponent() {
@@ -10572,6 +10590,7 @@ Vue.directive('resize', {
 			}
 
 			this.sideBarCollapsed = this.sideBarInitialCollapsed;
+
 			let opts = { title: null };
 			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;

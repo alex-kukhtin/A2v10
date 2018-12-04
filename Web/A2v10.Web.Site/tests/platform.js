@@ -7,7 +7,10 @@
     }
 
 
-    app.modules['std:platform'] = {
-        set: set
-    }
+	app.modules['std:platform'] = {
+		set: set,
+		File: File, /*file ctor*/
+		performance: performance
+	};
+
 })();

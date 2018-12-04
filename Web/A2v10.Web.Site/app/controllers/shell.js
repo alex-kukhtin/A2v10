@@ -358,6 +358,9 @@
 				let sb = localStorage.getItem('sideBarCollapsed');
 				if (sb === 'true')
 					return true;
+				// auto collapse for tablet
+				if (screen && screen.width < 992)
+					return true;
 				return false;
 			},
 			sideBarComponent() {
@@ -469,6 +472,7 @@
 			}
 
 			this.sideBarCollapsed = this.sideBarInitialCollapsed;
+
 			let opts = { title: null };
 			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
 			newUrl = newUrl + window.location.search;

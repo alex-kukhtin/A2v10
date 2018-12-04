@@ -186,6 +186,37 @@ describe("DataModel", function () {
 		expect(arr[3].RowNo).toBe(4);
 	});
 
+	it('$append, $remove, $sort', function () {
+		let root = td.createCustomerArray({ Customers: [{ Name: "1. FIRST", RowNo: 1 }, { Name: "2. SECOND", RowNo: 2 }] });
+		let arr = root.Customers;
+		expect(arr.length).toBe(2);
+		expect(arr[0].RowNo).toBe(1);
+		expect(arr[1].RowNo).toBe(2);
+
+		let newCust = arr.$append({ Name: '3. THIRD' });
+		expect(arr.length).toBe(3);
+		expect(arr[2] === newCust);
+		expect(arr[2].RowNo).toBe(3);
+
+		arr.$sort(function (a, b) {
+			// descend
+			return a.Name === b.Name ? 0 : a.Name < b.Name ? 1 : -1;
+		});
+		expect(arr[0].RowNo).toBe(1);
+		expect(arr[0].Name).toBe("3. THIRD");
+
+		arr[0].$remove();
+
+		expect(arr[0].RowNo).toBe(1);
+		expect(arr[0].Name).toBe("2. SECOND");
+		expect(arr[1].RowNo).toBe(2);
+		expect(arr[1].Name).toBe("1. FIRST");
+
+		arr.$remove(arr[0]);
+		arr.$remove(arr[0]);
+		expect(arr.length).toBe(0);
+
+	});
 });
 
 

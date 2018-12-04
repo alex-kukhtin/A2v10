@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +53,7 @@
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
-      <Project>{3CEFBA76-9ED3-40B4-A844-CC17D960202F}</Project>
+      <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
       <Name>A2v10.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">

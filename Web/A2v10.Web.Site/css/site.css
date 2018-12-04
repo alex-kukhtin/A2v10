@@ -1175,6 +1175,9 @@ header .user-name .person-name,
   grid-column: 1;
   overflow: auto;
 }
+.partial-page .page.page-grid .page-toolbar {
+  border-bottom-style: none;
+}
 .page-canvas {
   pointer-events: none;
   position: absolute;
