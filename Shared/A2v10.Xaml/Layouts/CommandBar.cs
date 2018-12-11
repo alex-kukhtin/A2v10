@@ -15,6 +15,8 @@ namespace A2v10.Xaml
 	{
 		public CommandBarVisibility Visibility { get; set; }
 
+		public FloatMode Float { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -23,6 +25,8 @@ namespace A2v10.Xaml
 			onRender?.Invoke(tb);
 			if (Visibility != CommandBarVisibility.Default)
 				tb.AddCssClass("visible-" + Visibility.ToString().ToKebabCase());
+			if (Float != FloatMode.None)
+				tb.AddCssClass("float-" + Float.ToString().ToLowerInvariant());
 			MergeAttributes(tb, context);
 			tb.RenderStart(context);
 			RenderChildren(context);

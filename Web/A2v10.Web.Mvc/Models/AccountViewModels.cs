@@ -58,6 +58,12 @@ namespace A2v10.Web.Mvc.Models
 		public String Referral { get; set; }
 	}
 
+	public class UserReferralInfo
+	{
+		public Int64 UserId { get; set; }
+		public String Referral { get; set; }
+	}
+
 	public class RegisterViewModel
 	{
 		[Display(Name = "Name")]

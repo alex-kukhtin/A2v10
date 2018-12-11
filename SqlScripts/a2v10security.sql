@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 27 nov 2018
-module version : 7320
+Last updated : 11 dec 2018
+module version : 7321
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7320);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7321);
 else
-	update a2sys.Versions set [Version] = 7320 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7321 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -127,6 +127,7 @@ begin
 		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
 		RegisterHost nvarchar(255) null,
 		[Guid] uniqueidentifier null,
+		Referral bigint null
 	);
 end
 go
@@ -172,6 +173,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Guid')
 begin
 	alter table a2security.Users add [Guid] uniqueidentifier null
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Referral')
+begin
+	alter table a2security.Users add Referral bigint null;
 end
 go
 ------------------------------------------------
@@ -343,6 +350,34 @@ if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' a
 begin
 	alter table a2security.[Log] drop constraint DF_Log_EventTime;
 	alter table a2security.[Log] add constraint DF_Log_UtcEventTime default(getutcdate()) for EventTime with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Referrals')
+	create sequence a2security.SQ_Referrals as bigint start with 1000 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Referrals')
+begin
+	create table a2security.Referrals
+	(
+		Id	bigint not null constraint PK_Referrals primary key
+			constraint DF_Referrals_PK default(next value for a2security.SQ_Referrals),
+		Void bit not null constraint DF_Referrals_Void default(0),				
+		[Type] nchar(1) not null, /* (S)ystem, (C)ustomer */
+		[Link] nvarchar(255) not null constraint UNQ_Referrals_Link unique,
+		UserCreated bigint not null
+			constraint FK_Referrals_UserCreated_Users foreign key references a2security.Users(Id),
+		DateCreated	datetime not null
+			constraint DF_Referrals_DateCreated default(getutcdate()),
+		Memo nvarchar(255) null
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where CONSTRAINT_SCHEMA = N'a2security' and CONSTRAINT_NAME = N'FK_Users_Referral_Referrals')
+begin
+	alter table a2security.Users add constraint FK_Users_Referral_Referrals foreign key (Referral) references a2security.Referrals(Id);
 end
 go
 ------------------------------------------------
@@ -758,6 +793,20 @@ begin
 	when not matched by target then insert 
 		(Code, [Name]) values (s.Code, s.[Name])
 	when not matched by source then delete;
+end
+go
+create or alter procedure a2security.SaveReferral
+@UserId bigint,
+@Referral nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	declare @refid bigint;
+	select @refid = Id from a2security.Referrals where Link = @Referral;
+	if @refid is not null
+		update a2security.Users set Referral = @refid where Id=@UserId;
 end
 go
 ------------------------------------------------

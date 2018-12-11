@@ -320,6 +320,17 @@ namespace A2v10.Web.Mvc.Controllers
 				_ddosChecker.TryRemove(key, out DateTime outVal);
 		}
 
+		async Task SaveReferral(Int64 userId, String referral)
+		{
+			if (String.IsNullOrEmpty(referral))
+				return;
+			var uri = new UserReferralInfo() {
+				UserId = userId,
+				Referral= referral
+			};
+			await _dbContext.ExecuteAsync<UserReferralInfo>(_host.CatalogDataSource, "a2security.SaveReferral", uri);
+		}
+
 		void SaveDDOSTime()
 		{
 			String host = Request.UserHostAddress;
@@ -403,6 +414,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 
+					await SaveReferral(user.Id, model.Referral);
 					SaveDDOSTime();
 
 					status = "ConfirmSent";
