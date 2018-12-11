@@ -1740,7 +1740,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181204-7382
+// 20181211-7384
 // services/datamodel.js
 
 (function () {
@@ -1875,10 +1875,12 @@ app.modules['std:validators'] = function () {
 				if (val === this._src_[prop])
 					return;
 				let oldVal = this._src_[prop];
-				let changingEvent = (this._path_ || 'Root') + '.' + prop + '.changing';
-				let ret = this._root_.$emit(changingEvent, this, val, oldVal, prop);
-				if (ret === false)
-					return;
+				if (!this._lockEvents_) {
+					let changingEvent = (this._path_ || 'Root') + '.' + prop + '.changing';
+					let ret = this._root_.$emit(changingEvent, this, val, oldVal, prop);
+					if (ret === false)
+						return;
+				}
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
 					this._src_[prop].$set(val);
@@ -2413,6 +2415,14 @@ app.modules['std:validators'] = function () {
 				}
 			}
 			return this;
+		};
+
+		arr.__fireChange__ = function (opts) {
+			let root = this.$root;
+			let itm = this;
+			if (opts === 'selected')
+				itm = this.$selected;
+			root.$emit(this._path_ + '[].change', this, itm);
 		};
 	}
 
@@ -8130,7 +8140,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181112-7353*/
+/*20181211-7384*/
 /*components/newbutton.js*/
 
 (function () {
@@ -8148,7 +8158,7 @@ Vue.component('a2-panel', {
 				<div class="group-title" v-text="m.Name"></div>
 				<template v-for="(itm, ix) in m.Menu">
 					<div class="divider" v-if=isDivider(itm)></div>
-					<a v-else @click.prevent='doCommand(itm.Url, itm.Description)' 
+					<a v-else @click.prevent='doCommand(itm.Url, itm.Params)' 
 						class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.Icon"></i><span v-text="itm.Name"></span></a>
 				</template>
 			</div>
@@ -8179,7 +8189,7 @@ Vue.component('a2-panel', {
 				return this.btnStyle ? 'btn-' + this.btnStyle : '';
 			},
 			columns() {
-				let descr = this.menu ? this.menu[0].Description : '';
+				let descr = this.menu ? this.menu[0].Params : '';
 				if (!descr) return 1;
 				try {
 					return +JSON.parse(descr).columns || 1;
@@ -8900,7 +8910,7 @@ Vue.directive('settabindex', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181203-7381*/
+/*20181211-7384*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -8918,12 +8928,7 @@ Vue.directive('resize', {
 		if (!el._parts) return;
 		let p = el._parts;
 		if (p.init) return;
-		if (!p.grid.clientWidth) {
-			p.handle = findHandle(p.grid);
-			p.grid.style.visibility = 'visible';
-			p.init = true;
-			return; // yet not inserted
-		}
+		//if (!p.grid.clientWidth) return; // yet not inserted
 		p.init = true;
 
 		p.handle = findHandle(p.grid);
@@ -8950,7 +8955,7 @@ Vue.directive('resize', {
 			temp.style.width = w;
 			temp.style.position = 'absolute';
 			temp.style.visibility = 'hidden';
-			grid.appendChild(temp);
+			document.body.appendChild(temp);
 			let cw = temp.clientWidth;
 			temp.remove();
 			if (!cw)
@@ -9072,7 +9077,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181127-7375
+// 20181211-7384
 // controllers/base.js
 
 (function () {
@@ -9683,7 +9688,13 @@ Vue.directive('resize', {
 							});
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
-							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
+							return __runDialog(url, arg.$selected, query, (result) => {
+								arg.$selected.$merge(result);
+								arg.__fireChange__('selected');
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {
@@ -10118,7 +10129,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181126-7373*/
+/*20181211-7384*/
 /* controllers/shell.js */
 
 (function () {
@@ -10281,6 +10292,14 @@ Vue.directive('resize', {
 			isActive(item) {
 				return this.seg1 === item.Url;
 			},
+			isGroup(item) {
+				if (!item.Params) return false;
+				try {
+					return JSON.parse(item.Params).group || false;
+				} catch (err) {
+					return false;
+				}
+			},
 			navigate(item) {
 				if (this.isActive(item))
 					return;
@@ -10327,7 +10346,7 @@ Vue.directive('resize', {
 <div class='side-bar-compact' :class="cssClass">
 	<a href role="button" aria-label="Expand/Collapse Side bar" class="collapse-button" @click.prevent="toggle"></a>
 	<ul class='side-menu'>
-		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm)}" :key="itmIx">
+		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm), group: isGroup(itm)}" :key="itmIx">
 			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>
 		</li>
 	</ul>

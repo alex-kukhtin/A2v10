@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181112-7353*/
+/*20181211-7384*/
 /*components/newbutton.js*/
 
 (function () {
@@ -18,7 +18,7 @@
 				<div class="group-title" v-text="m.Name"></div>
 				<template v-for="(itm, ix) in m.Menu">
 					<div class="divider" v-if=isDivider(itm)></div>
-					<a v-else @click.prevent='doCommand(itm.Url, itm.Description)' 
+					<a v-else @click.prevent='doCommand(itm.Url, itm.Params)' 
 						class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.Icon"></i><span v-text="itm.Name"></span></a>
 				</template>
 			</div>
@@ -49,7 +49,7 @@
 				return this.btnStyle ? 'btn-' + this.btnStyle : '';
 			},
 			columns() {
-				let descr = this.menu ? this.menu[0].Description : '';
+				let descr = this.menu ? this.menu[0].Params : '';
 				if (!descr) return 1;
 				try {
 					return +JSON.parse(descr).columns || 1;

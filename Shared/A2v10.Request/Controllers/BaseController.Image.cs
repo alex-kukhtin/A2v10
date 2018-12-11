@@ -14,7 +14,7 @@ namespace A2v10.Request
 		public AttachmentInfo StaticImage(String url)
 		{
 			var ii = new AttachmentInfo();
-			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, url.RemoveHeadSlash()));
+			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, url.RemoveHeadSlash()));
 			ii.Stream = File.ReadAllBytes(filePath);
 			ii.Mime = MimeMapping.GetMimeMapping(filePath);
 			return ii;

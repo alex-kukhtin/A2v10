@@ -24,9 +24,15 @@
 			</div>
 			<div class="aligner"></div>
 		</header>
-		<div class="main-view app-link">
+		<div class="main-view">
 			<div class="load-indicator" v-show="processing"></div>
-			$(Partial)
+			<div class="content-view full-view">
+				<div class="include">
+					<div class="page absolute page-grid">
+						$(Partial)
+					</div>
+				</div>
+			</div>
 		</div>
 		<footer class="footer" style="padding-right:8px">
 			<div :class="{spinner: true, active: processing}"></div>

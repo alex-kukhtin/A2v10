@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181127-7375
+// 20181211-7384
 // controllers/base.js
 
 (function () {
@@ -611,7 +611,13 @@
 							});
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
-							return __runDialog(url, arg.$selected, query, (result) => { arg.$selected.$merge(result); });
+							return __runDialog(url, arg.$selected, query, (result) => {
+								arg.$selected.$merge(result);
+								arg.__fireChange__('selected');
+								if (opts && opts.reloadAfter) {
+									that.$reload();
+								}
+							});
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {

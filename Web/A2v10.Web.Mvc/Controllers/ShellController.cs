@@ -176,24 +176,6 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		/*
-		async Task RenderModel(String pathInfo)
-		{
-			// TODO: // delete me
-			try
-			{
-				Response.ContentType = "text/javascript";
-				ExpandoObject loadPrms = new ExpandoObject();
-				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-				SetSqlQueryParams(loadPrms);
-				await _baseController.RenderModel(pathInfo, loadPrms, Response.Output);
-			}
-			catch (Exception ex)
-			{
-				_baseController.WriteScriptException(ex, Response.Output);
-			}
-		}
-		*/
 
 		async Task Render(String pathInfo, RequestUrlKind kind)
 		{

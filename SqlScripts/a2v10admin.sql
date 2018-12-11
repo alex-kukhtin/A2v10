@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 11 nov 2018
-module version : 7168
+Last updated : 11 dec 2018
+module version : 7169
 */
 ------------------------------------------------
 set noexec off;
@@ -21,9 +21,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7168);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7169);
 else
-	update a2sys.Versions set [Version] = 7168 where Module = N'std:admin';
+	update a2sys.Versions set [Version] = 7169 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -72,7 +72,7 @@ begin
 	)
 	select [Menu!TMenu!Tree] = null, [Id!!Id]=RT.Id, [!TMenu.Menu!ParentId]=RT.ParentId,
 		[Menu!TMenu!Array] = null,
-		m.Name, m.Url, m.Icon, m.[Description]
+		m.Name, m.Url, m.Icon, m.[Description], m.Help, m.Params
 	from RT 
 		inner join a2ui.Menu m on RT.Id=m.Id
 	order by RT.[Level], m.[Order], RT.[Id];

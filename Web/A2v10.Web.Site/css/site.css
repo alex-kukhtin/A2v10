@@ -5026,12 +5026,6 @@ h5,
   word-break: break-word;
   white-space: pre-wrap;
 }
-.main-view.app-link > .app-page {
-  position: absolute;
-  top: 32px;
-  overflow: auto;
-  bottom: 22px;
-}
 .side-bar {
   position: absolute;
   left: 0;
@@ -5149,6 +5143,13 @@ h5,
 .side-bar-compact .side-menu li.active > a {
   background-color: white;
   color: #777;
+}
+.side-bar-compact .side-menu li.group {
+  border-top: 1px dotted white;
+  margin-top: 7px;
+}
+.side-bar-compact .side-menu li.group.active {
+  border-top: 1px solid white;
 }
 .side-bar-compact .side-menu li:hover {
   background-color: #86a4da;

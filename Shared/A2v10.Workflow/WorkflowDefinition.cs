@@ -91,7 +91,7 @@ namespace A2v10.Workflow
 
 		String GetWorkflowFullPath(IApplicationHost host)
 		{
-			String fullPath = System.IO.Path.Combine(host.AppPath, host.AppKey, Path);
+			String fullPath = System.IO.Path.Combine(host.AppPath, host.AppKey ?? String.Empty, Path);
 			fullPath = System.IO.Path.ChangeExtension(fullPath, "xaml");
 			fullPath = System.IO.Path.GetFullPath(fullPath);
 			return fullPath;

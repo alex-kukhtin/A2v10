@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181126-7373*/
+/*20181211-7384*/
 /* controllers/shell.js */
 
 (function () {
@@ -163,6 +163,14 @@
 			isActive(item) {
 				return this.seg1 === item.Url;
 			},
+			isGroup(item) {
+				if (!item.Params) return false;
+				try {
+					return JSON.parse(item.Params).group || false;
+				} catch (err) {
+					return false;
+				}
+			},
 			navigate(item) {
 				if (this.isActive(item))
 					return;
@@ -209,7 +217,7 @@
 <div class='side-bar-compact' :class="cssClass">
 	<a href role="button" aria-label="Expand/Collapse Side bar" class="collapse-button" @click.prevent="toggle"></a>
 	<ul class='side-menu'>
-		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm)}" :key="itmIx">
+		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm), group: isGroup(itm)}" :key="itmIx">
 			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>
 		</li>
 	</ul>

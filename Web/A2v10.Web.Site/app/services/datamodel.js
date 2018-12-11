@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181204-7382
+// 20181211-7384
 // services/datamodel.js
 
 (function () {
@@ -135,10 +135,12 @@
 				if (val === this._src_[prop])
 					return;
 				let oldVal = this._src_[prop];
-				let changingEvent = (this._path_ || 'Root') + '.' + prop + '.changing';
-				let ret = this._root_.$emit(changingEvent, this, val, oldVal, prop);
-				if (ret === false)
-					return;
+				if (!this._lockEvents_) {
+					let changingEvent = (this._path_ || 'Root') + '.' + prop + '.changing';
+					let ret = this._root_.$emit(changingEvent, this, val, oldVal, prop);
+					if (ret === false)
+						return;
+				}
 				if (this._src_[prop] && this._src_[prop].$set) {
 					// object
 					this._src_[prop].$set(val);
@@ -673,6 +675,14 @@
 				}
 			}
 			return this;
+		};
+
+		arr.__fireChange__ = function (opts) {
+			let root = this.$root;
+			let itm = this;
+			if (opts === 'selected')
+				itm = this.$selected;
+			root.$emit(this._path_ + '[].change', this, itm);
 		};
 	}
 

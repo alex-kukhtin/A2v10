@@ -363,7 +363,7 @@ const vm = new DataModelController({
 				if (_modulesWritten.Contains(moduleName))
 					continue;
 				var fileName = moduleName.AddExtension("js");
-				var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, fileName.RemoveHeadSlash()));
+				var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, fileName.RemoveHeadSlash()));
 				if (!File.Exists(filePath))
 					throw new FileNotFoundException(filePath);
 				String moduleText = File.ReadAllText(filePath);

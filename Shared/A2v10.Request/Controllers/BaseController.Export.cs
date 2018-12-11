@@ -27,7 +27,7 @@ namespace A2v10.Request
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
 			
 			var fileName = export.template.AddExtension(export.format.ToString());
-			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey, action.Path, fileName.RemoveHeadSlash()));
+			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, action.Path, fileName.RemoveHeadSlash()));
 			if (!File.Exists(filePath))
 				throw new FileNotFoundException(filePath);
 

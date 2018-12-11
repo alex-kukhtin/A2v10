@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20181203-7381*/
+/*20181211-7384*/
 /* directives/resize.js */
 
 Vue.directive('resize', {
@@ -18,12 +18,7 @@ Vue.directive('resize', {
 		if (!el._parts) return;
 		let p = el._parts;
 		if (p.init) return;
-		if (!p.grid.clientWidth) {
-			p.handle = findHandle(p.grid);
-			p.grid.style.visibility = 'visible';
-			p.init = true;
-			return; // yet not inserted
-		}
+		//if (!p.grid.clientWidth) return; // yet not inserted
 		p.init = true;
 
 		p.handle = findHandle(p.grid);
@@ -50,7 +45,7 @@ Vue.directive('resize', {
 			temp.style.width = w;
 			temp.style.position = 'absolute';
 			temp.style.visibility = 'hidden';
-			grid.appendChild(temp);
+			document.body.appendChild(temp);
 			let cw = temp.clientWidth;
 			temp.remove();
 			if (!cw)
