@@ -21,5 +21,6 @@ namespace A2v10.Infrastructure
 		Task<String> GenerateToken(String loginProvider, String providerKey);
 		Task<Boolean> SignInUserAsync(String loginProvider, String providerKey, String token);
 		Task<Boolean> CreateUserAsync(String loginProvider, ExternalUserInfo user);
+		Task<Boolean> IsUserExistsAsync(String loginProvider, String providerKey);
 	}
 }

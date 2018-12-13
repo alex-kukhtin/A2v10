@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2018 Alex Kukhtin
 
-Last updated : 11 dec 2018
-module version : 7321
+Last updated : 13 dec 2018
+module version : 7322
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7321);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7322);
 else
-	update a2sys.Versions set [Version] = 7321 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7322 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -795,6 +795,7 @@ begin
 	when not matched by source then delete;
 end
 go
+------------------------------------------------
 create or alter procedure a2security.SaveReferral
 @UserId bigint,
 @Referral nvarchar(255)
@@ -804,7 +805,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	declare @refid bigint;
-	select @refid = Id from a2security.Referrals where Link = @Referral;
+	select @refid = Id from a2security.Referrals where lower(Link) = lower(@Referral);
 	if @refid is not null
 		update a2security.Users set Referral = @refid where Id=@UserId;
 end

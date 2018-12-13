@@ -66,6 +66,12 @@ namespace A2v10.Web.Identity
 			//return result;
 		}
 
+		public async Task<Boolean> IsUserExistsAsync(String loginProvider, String providerKey)
+		{
+			AppUser user = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
+			return user != null;
+		}
+
 		public async Task<Boolean> CreateUserAsync(String loginProvider, ExternalUserInfo user)
 		{
 			var foundUser = await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", user.PhoneNumber));
