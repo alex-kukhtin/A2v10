@@ -54,7 +54,18 @@ namespace A2v10.Script
 			throw new InvalidCastException($"JavaScriptValueToObject. Unknown value type: {val.ValueType}");
 		}
 
-		public Object RunScript(String script)
+		JavaScriptValue ObjectToJavaScriptValue(Object parameter)
+		{
+			if (parameter == null)
+				return JavaScriptValue.Null;
+			else if (parameter is String)
+				return JavaScriptValue.FromString(parameter.ToString());
+			else if (parameter is Boolean)
+				return JavaScriptValue.FromBoolean((Boolean)parameter);
+			return JavaScriptValue.Undefined;
+		}
+
+		public Object RunScript(String script, Object parameter)
 		{
 			try
 			{
@@ -62,6 +73,8 @@ namespace A2v10.Script
 				if (jsScript.ValueType == JavaScriptValueType.Function)
 				{
 					var jsResult = jsScript.CallFunction(JavaScriptValue.Undefined);
+					if (jsResult.ValueType == JavaScriptValueType.Function)
+						jsResult = jsResult.CallFunction(JavaScriptValue.Undefined, ObjectToJavaScriptValue(parameter));
 					return JavaScriptValueToObject(jsResult);
 				}
 				return null;

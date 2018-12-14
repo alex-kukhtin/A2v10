@@ -1,11 +1,12 @@
 ﻿
-(function () {
+(function (param) {
+
 	const serverData = $$server();
 
 	// model from DB
-	var dmDb = serverData.dataModelDb; 
+	var dmDb = serverData.dataModelDb();
 	// model from Request
-	var dbRq = serverData.dataModelRq;
+	var dbRq = serverData.dataModelRq();
 
 	let result = dbRq.$forceValidate();
 
@@ -13,4 +14,4 @@
 		return null;
 
 	return JSON.stringify(result);
-})();
+});

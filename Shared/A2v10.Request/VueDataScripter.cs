@@ -58,19 +58,22 @@ namespace A2v10.Request
 
 		$(ModelScript)
 		
-		let mdDb = modelData(template, rawData);
-		let mdRq = modelData(template, rawDataRq);
-
 		const host = {
 			$viewModel: {},
 			$ctrl: {}
 		};
-		mdDb._host_ = host;
-		mdRq._host_ = host;
 
 		return {
-			dataModelDb: mdDb,
-			dataModelRq: mdRq,
+			dataModelDb: function() {
+				let md = modelData(template, rawData);
+				md._host_ = host;
+				return md;
+			},
+			dataModelRq: function() {
+				let md = modelData(template, rawDataRq);
+				md._host_ = host;
+				return md;
+			},
 			createModel: function(jsonData) {
 				let md = modelData(template, jsonData);
 				md._host_ = host;

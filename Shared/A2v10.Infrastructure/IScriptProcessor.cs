@@ -12,10 +12,12 @@ namespace A2v10.Infrastructure
 		public String RawData;
 		public String Template;
 		public String Path;
+		public Object Parameter;
 	}
 
 	public interface IScriptProcessor
 	{
 		Object ValidateModel(ServerScriptInfo ssi);
+		Object RunScript(ServerScriptInfo ssi, String scriptName);
 	}
 }

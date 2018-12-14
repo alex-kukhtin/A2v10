@@ -7,6 +7,7 @@ using A2v10.Request;
 using A2v10.Web.Script;
 
 using A2v10.Tests.Config;
+using System.Dynamic;
 
 namespace A2v10.Tests.ServerScripts
 {
@@ -38,7 +39,8 @@ namespace A2v10.Tests.ServerScripts
 				DataModel = _dbContext.LoadModel(null, "a2test.[Document.Load]"),
 				Template = "document.template",
 				Path = "document/server",
-				RawData = "{Document: {Id:173}}"
+				RawData = "{Document: {Id:173}}",
+				Parameter = new {Id = 123, Text = "ParamText"}
 			};
 			var result = sp.ValidateModel(ssi);
 			Assert.IsNull(result);

@@ -11,7 +11,7 @@
 		(function () {
 			var rv = $$server();
 			console.dir(rv);
-			var dm = rv.dataModelDb;
+			var dm = rv.dataModelDb();
 			console.dir(dm);
 			let result = dm.$forceValidate();
 			console.dir(result);

@@ -37,6 +37,16 @@ namespace A2v10.Web.Script
 			}
 		}
 
+		public Object RunScript(ServerScriptInfo ssi, String scriptName)
+		{
+			using (var disp = CreateScript() as IDisposable)
+			{
+				var sc = disp as IScriptContext;
+				StartScript(sc);
+				return RunDataScript(sc, ssi, scriptName);
+			}
+		}
+
 
 		void StartScript(IScriptContext sc)
 		{
@@ -69,9 +79,9 @@ namespace A2v10.Web.Script
 				RawData = ssi.RawData
 			};
 			var ss = _scripter.GetServerScript(msi);
-			sc.RunScript(ss.Script);
+			sc.RunScript(ss.Script, null);
 			var opScript = LoadFile(operation);
-			return sc.RunScript(opScript);
+			return sc.RunScript(opScript, ssi.Parameter);
 		}
 	}
 }
