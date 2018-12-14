@@ -11,4 +11,4 @@
 		console.dir(datamodel);
 	}
 
-})();
+});

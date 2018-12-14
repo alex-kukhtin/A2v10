@@ -2269,4 +2269,4 @@ app.modules['std:validators'] = function () {
 		console.dir(datamodel);
 	}
 
-})();
+});
