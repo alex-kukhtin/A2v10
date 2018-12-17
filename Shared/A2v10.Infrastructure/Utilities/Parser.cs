@@ -4,6 +4,7 @@ using System;
 
 namespace A2v10.Infrastructure.Utilities
 {
+	[Serializable]
 	public class ParseError : Exception
 	{
 		public ParseError(String msg)

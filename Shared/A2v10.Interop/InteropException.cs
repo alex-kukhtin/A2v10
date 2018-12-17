@@ -4,6 +4,7 @@ using System;
 
 namespace A2v10.Interop
 {
+	[Serializable]
 	public class InteropException : Exception
 	{
 		public InteropException(String message)

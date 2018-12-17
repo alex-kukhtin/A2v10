@@ -29,7 +29,7 @@ namespace A2v10.Web.Config
 
 	}
 
-	public class ProfileItem : ProfileTimer, IDisposable
+	public sealed class ProfileItem : ProfileTimer, IDisposable
 	{
 		readonly String _message;
 
@@ -102,7 +102,7 @@ namespace A2v10.Web.Config
 		}
 	}
 
-	public class WebProfiler : IProfiler, IDataProfiler
+	public sealed class WebProfiler : IProfiler, IDataProfiler, IDisposable
 	{
 		const String _sessionKey = "_Profile_";
 		const Int32 _requestCount = 50;
@@ -117,6 +117,12 @@ namespace A2v10.Web.Config
 
 		public WebProfiler()
 		{
+		}
+
+		public void Dispose()
+		{
+			if (_request != null)
+				_request.Dispose();
 		}
 
 		public IProfileRequest CurrentRequest => _request ?? new DummyRequest() as IProfileRequest;

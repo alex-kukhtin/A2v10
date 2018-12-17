@@ -22,6 +22,12 @@ namespace A2v10.Interop
 
 		public void Dispose()
 		{
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(Boolean disposing)
+		{
+
 		}
 
 		public Object ParseFile(Stream stream, ITableDescription table)

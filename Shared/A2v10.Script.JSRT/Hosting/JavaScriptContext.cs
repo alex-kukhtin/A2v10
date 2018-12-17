@@ -51,13 +51,13 @@
             get
             {
                 JavaScriptContext reference;
-                Native.ThrowIfError(Native.JsGetCurrentContext(out reference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out reference));
                 return reference;
             }
 
             set
             {
-                Native.ThrowIfError(Native.JsSetCurrentContext(value));
+                NativeMethods.ThrowIfError(NativeMethods.JsSetCurrentContext(value));
             }
         }
 
@@ -85,7 +85,7 @@
             get
             {
                 bool hasException;
-                Native.ThrowIfError(Native.JsHasException(out hasException));
+                NativeMethods.ThrowIfError(NativeMethods.JsHasException(out hasException));
                 return hasException;
             }
         }
@@ -98,7 +98,7 @@
             get
             {
                 JavaScriptRuntime handle;
-                Native.ThrowIfError(Native.JsGetRuntime(this, out handle));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntime(this, out handle));
                 return handle;
             }
         }
@@ -136,7 +136,7 @@
         public static uint Idle()
         {
             uint ticks;
-            Native.ThrowIfError(Native.JsIdle(out ticks));
+            NativeMethods.ThrowIfError(NativeMethods.JsIdle(out ticks));
             return ticks;
         }
 
@@ -155,7 +155,7 @@
         public static JavaScriptValue ParseScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
             JavaScriptValue result;
-            Native.ThrowIfError(Native.JsParseScript(script, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseScript(script, sourceContext, sourceName, out result));
             return result;
         }
 
@@ -175,7 +175,7 @@
         public static JavaScriptValue ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
             JavaScriptValue result;
-            Native.ThrowIfError(Native.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
             return result;
         }
 
@@ -221,7 +221,7 @@
         public static JavaScriptValue RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
             JavaScriptValue result;
-            Native.ThrowIfError(Native.JsRunScript(script, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunScript(script, sourceContext, sourceName, out result));
             return result;
         }
 
@@ -241,7 +241,7 @@
         public static JavaScriptValue RunScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
             JavaScriptValue result;
-            Native.ThrowIfError(Native.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
             return result;
         }
 
@@ -293,7 +293,7 @@
         public static ulong SerializeScript(string script, byte[] buffer)
         {
             var bufferSize = (ulong)buffer.Length;
-            Native.ThrowIfError(Native.JsSerializeScript(script, buffer, ref bufferSize));
+            NativeMethods.ThrowIfError(NativeMethods.JsSerializeScript(script, buffer, ref bufferSize));
             return bufferSize;
         }
 
@@ -317,7 +317,7 @@
         public static JavaScriptValue GetAndClearException()
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsGetAndClearException(out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetAndClearException(out reference));
             return reference;
         }
 
@@ -338,7 +338,7 @@
         /// </param>
         public static void SetException(JavaScriptValue exception)
         {
-            Native.ThrowIfError(Native.JsSetException(exception));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetException(exception));
         }
 
         /// <summary>
@@ -351,7 +351,7 @@
         public uint AddRef()
         {
             uint count;
-            Native.ThrowIfError(Native.JsContextAddRef(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextAddRef(this, out count));
             return count;
         }
 
@@ -365,7 +365,7 @@
         public uint Release()
         {
             uint count;
-            Native.ThrowIfError(Native.JsContextRelease(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextRelease(this, out count));
             return count;
         }
 

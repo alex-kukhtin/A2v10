@@ -45,7 +45,7 @@
 		{
 			get
 			{
-				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out String name));
+				NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyNameFromId(this, out String name));
 				return name;
 			}
 		}
@@ -67,7 +67,7 @@
 		/// <returns>The property ID in this runtime for the given name.</returns>
 		public static JavaScriptPropertyId FromString(String name)
 		{
-			Native.ThrowIfError(Native.JsGetPropertyIdFromName(name, out JavaScriptPropertyId id));
+			NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyIdFromName(name, out JavaScriptPropertyId id));
 			return id;
 		}
 

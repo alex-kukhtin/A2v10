@@ -17,7 +17,7 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Workflow
 {
-	public class AppWorkflow
+	public class AppWorkflow : IDisposable
 	{
 		private WorkflowApplication _application;
 		private static TimeSpan _wfTimeSpan = TimeSpan.FromSeconds(30);
@@ -30,6 +30,19 @@ namespace A2v10.Workflow
 		private Exception _unhandledException;
 
 		IDbContext _dbContext;
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(Boolean disposing)
+		{
+			var ee = _endEvent;
+			if (ee != null)
+				ee.Dispose();
+		}
 
 		public static async Task<WorkflowResult> StartWorkflow(IApplicationHost host, IDbContext dbContext, StartWorkflowInfo info)
 		{
@@ -196,6 +209,8 @@ namespace A2v10.Workflow
 			if (aw._application.InstanceStore != null)
 				aw._application.InstanceStore.DefaultInstanceOwner = null;
 			aw.WriteTrackingRecords();
+			aw.Dispose();
+			aw = null;
 			//TODO:if (profiler != null)
 			//profiler.EndWorkflow(aw._token);
 		}

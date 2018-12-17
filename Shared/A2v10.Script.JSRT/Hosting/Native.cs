@@ -8,7 +8,8 @@
 	///     Native interfaces.
 	/// </summary>
 #pragma warning disable IDE0049 // Use framework type
-	public static class Native
+#pragma warning disable IDE0018 // Inline variable declaration
+	public static class NativeMethods
     {
         /// <summary>
         /// Throws if a native method returns an error code.
@@ -79,8 +80,8 @@
 
                     case JavaScriptErrorCode.ScriptException:
                         {
-                            JavaScriptValue errorObject;
-                            JavaScriptErrorCode innerError = JsGetAndClearException(out errorObject);
+							JavaScriptValue errorObject;
+							JavaScriptErrorCode innerError = JsGetAndClearException(out errorObject);
 
                             if (innerError != JavaScriptErrorCode.NoError)
                             {
@@ -460,5 +461,6 @@
             JavaScriptSerializedScriptUnloadCallback scriptUnloadCallback, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceUrl, out JavaScriptValue result);
     }
 #pragma warning restore IDE0049 // Use framework type
+#pragma warning restore IDE0018 // Inline variable declaration
 
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -10,7 +11,15 @@ namespace A2v10.Xaml
 	[Serializable]
 	public class ResourceDictionary : Dictionary<String, Object>
 	{
+		public ResourceDictionary()
+		{
 
+		}
+
+		protected ResourceDictionary(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
 	}
 
 	public abstract class RootContainer : Container, IUriContext, IDisposable
@@ -22,8 +31,15 @@ namespace A2v10.Xaml
 		#region IDisposable
 		public void Dispose()
 		{
-			OnDispose();
+			Dispose(true);
 		}
+
+		protected virtual void Dispose(Boolean dispoising)
+		{
+			if (dispoising)
+				OnDispose();
+		}
+
 		#endregion
 		protected ResourceDictionary _resources;
 

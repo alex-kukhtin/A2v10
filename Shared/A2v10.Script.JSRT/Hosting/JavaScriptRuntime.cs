@@ -2,36 +2,38 @@
 {
     using System;
 
-    /// <summary>
-    ///     A Chakra runtime.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage 
-    ///     collected heap. As such, each runtime is completely isolated from other runtimes.
-    ///     </para>
-    ///     <para>
-    ///     Runtimes can be used on any thread, but only one thread can call into a runtime at any 
-    ///     time.
-    ///     </para>
-    ///     <para>
-    ///     NOTE: A JavaScriptRuntime, unlike other objects in the Chakra hosting API, is not 
-    ///     garbage collected since it contains the garbage collected heap itself. A runtime will 
-    ///     continue to exist until Dispose is called.
-    ///     </para>
-    /// </remarks>
-    public struct JavaScriptRuntime : IDisposable
+	/// <summary>
+	///     A Chakra runtime.
+	/// </summary>
+	/// <remarks>
+	///     <para>
+	///     Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage 
+	///     collected heap. As such, each runtime is completely isolated from other runtimes.
+	///     </para>
+	///     <para>
+	///     Runtimes can be used on any thread, but only one thread can call into a runtime at any 
+	///     time.
+	///     </para>
+	///     <para>
+	///     NOTE: A JavaScriptRuntime, unlike other objects in the Chakra hosting API, is not 
+	///     garbage collected since it contains the garbage collected heap itself. A runtime will 
+	///     continue to exist until Dispose is called.
+	///     </para>
+	/// </remarks>
+#pragma warning disable IDE0018 // Inline variable declaration
+#pragma warning disable IDE0049 // Use framework type
+	public struct JavaScriptRuntime : IDisposable
     {
         /// <summary>
         /// The handle.
         /// </summary>
         private IntPtr handle;
 
-        /// <summary>
-        ///     Gets a value indicating whether the runtime is valid.
-        /// </summary>
-        public bool IsValid
-        {
+							   /// <summary>
+							   ///     Gets a value indicating whether the runtime is valid.
+							   /// </summary>
+		public bool IsValid
+		{
             get { return handle != IntPtr.Zero; }
         }
 
@@ -46,8 +48,8 @@
         {
             get
             {
-                UIntPtr memoryUsage;
-                Native.ThrowIfError(Native.JsGetRuntimeMemoryUsage(this, out memoryUsage));
+				UIntPtr memoryUsage;
+				NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryUsage(this, out memoryUsage));
                 return memoryUsage;
             }
         }
@@ -64,13 +66,13 @@
             get
             {
                 UIntPtr memoryLimit;
-                Native.ThrowIfError(Native.JsGetRuntimeMemoryLimit(this, out memoryLimit));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryLimit(this, out memoryLimit));
                 return memoryLimit;
             }
 
             set
             {
-                Native.ThrowIfError(Native.JsSetRuntimeMemoryLimit(this, value));
+                NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryLimit(this, value));
             }
         }
 
@@ -82,15 +84,15 @@
             get
             {
                 bool isDisabled;
-                Native.ThrowIfError(Native.JsIsRuntimeExecutionDisabled(this, out isDisabled));
+                NativeMethods.ThrowIfError(NativeMethods.JsIsRuntimeExecutionDisabled(this, out isDisabled));
                 return isDisabled;
             }
 
             set 
             {
-                Native.ThrowIfError(value
-                                        ? Native.JsDisableRuntimeExecution(this)
-                                        : Native.JsEnableRuntimeExecution(this));
+                NativeMethods.ThrowIfError(value
+                                        ? NativeMethods.JsDisableRuntimeExecution(this)
+                                        : NativeMethods.JsEnableRuntimeExecution(this));
             }
         }
 
@@ -104,7 +106,7 @@
         public static JavaScriptRuntime Create(JavaScriptRuntimeAttributes attributes, JavaScriptRuntimeVersion version, JavaScriptThreadServiceCallback threadServiceCallback)
         {
             JavaScriptRuntime handle;
-            Native.ThrowIfError(Native.JsCreateRuntime(attributes, threadServiceCallback, out handle));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out handle));
             return handle;
         }
 
@@ -140,7 +142,7 @@
         {
             if (IsValid)
             {
-                Native.ThrowIfError(Native.JsDisposeRuntime(this));
+                NativeMethods.ThrowIfError(NativeMethods.JsDisposeRuntime(this));
             }
 
             handle = IntPtr.Zero;
@@ -151,7 +153,7 @@
         /// </summary>
         public void CollectGarbage()
         {
-            Native.ThrowIfError(Native.JsCollectGarbage(this));
+            NativeMethods.ThrowIfError(NativeMethods.JsCollectGarbage(this));
         }
 
         /// <summary>
@@ -182,7 +184,7 @@
         /// </param>
         public void SetMemoryAllocationCallback(IntPtr callbackState, JavaScriptMemoryAllocationCallback allocationCallback)
         {
-            Native.ThrowIfError(Native.JsSetRuntimeMemoryAllocationCallback(this, callbackState, allocationCallback));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryAllocationCallback(this, callbackState, allocationCallback));
         }
 
         /// <summary>
@@ -204,7 +206,7 @@
         /// <param name="beforeCollectCallback">The callback function being set.</param>
         public void SetBeforeCollectCallback(IntPtr callbackState, JavaScriptBeforeCollectCallback beforeCollectCallback)
         {
-            Native.ThrowIfError(Native.JsSetRuntimeBeforeCollectCallback(this, callbackState, beforeCollectCallback));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeBeforeCollectCallback(this, callbackState, beforeCollectCallback));
         }
 
         /// <summary>
@@ -218,13 +220,15 @@
         public JavaScriptContext CreateContext()
         {
             JavaScriptContext reference;
-            Native.ThrowIfError(Native.JsCreateContext(this, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateContext(this, out reference));
             return reference;
         }
 
 		public void StartDebugging()
 		{
-			Native.ThrowIfError(Native.JsStartDebugging());
+			NativeMethods.ThrowIfError(NativeMethods.JsStartDebugging());
 		}
 	}
+#pragma warning restore IDE0049 // Use framework type
+#pragma warning restore IDE0018 // Inline variable declaration
 }

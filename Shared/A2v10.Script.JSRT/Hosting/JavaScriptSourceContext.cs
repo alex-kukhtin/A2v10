@@ -165,8 +165,10 @@
         /// <returns>Whether the two source contexts are the same.</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
+#pragma warning disable IDE0041 // Use 'is null' check
+			if (ReferenceEquals(null, obj))
+#pragma warning restore IDE0041 // Use 'is null' check
+			{
                 return false;
             }
 

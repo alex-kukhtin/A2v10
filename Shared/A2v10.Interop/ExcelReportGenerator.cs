@@ -71,9 +71,17 @@ namespace A2v10.Interop
 
 		public void Dispose()
 		{
-			if (_resultFile != null)
-				File.Delete(_resultFile);
-			_resultFile = null;
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(Boolean disposing)
+		{
+			if (disposing)
+			{
+				if (_resultFile != null)
+					File.Delete(_resultFile);
+				_resultFile = null;
+			}
 		}
 
 		public String ResultFile => _resultFile;
@@ -84,8 +92,9 @@ namespace A2v10.Interop
 			String tempFileName = Path.GetTempFileName();
 			File.Delete(tempFileName);
 			File.Copy(_templateFile, tempFileName);
-			using (var doc = SpreadsheetDocument.Open(tempFileName, isEditable: true))
-			{
+			SpreadsheetDocument doc = null;
+			try {
+				doc = SpreadsheetDocument.Open(tempFileName, isEditable: true);
 				var workSheetPart = doc.WorkbookPart.WorksheetParts.First<WorksheetPart>();
 				_sharedStringTable = doc.WorkbookPart.SharedStringTablePart.SharedStringTable;
 				PrepareSharedStringTable();
@@ -109,7 +118,11 @@ namespace A2v10.Interop
 					_sharedStringTable.Save();
 				if (_wrkshtModified)
 					workSheet.Save();
-				doc.Close();
+			}
+			finally
+			{
+				if (doc != null)
+					doc.Close();
 			}
 			_resultFile = tempFileName;
 		}

@@ -6,6 +6,7 @@ namespace ChakraHost.Hosting
     /// <summary>
     ///     An exception that occurred in the workings of the JavaScript engine itself.
     /// </summary>
+	[Serializable]
     public sealed class JavaScriptEngineException : JavaScriptException
     {
         /// <summary>

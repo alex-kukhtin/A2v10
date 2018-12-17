@@ -10,6 +10,7 @@
 	///     strings.
 	/// </remarks>
 #pragma warning disable IDE0049 // Use framework type
+#pragma warning disable IDE0018 // Inline variable declaration
 	public struct JavaScriptPropertyId : IEquatable<JavaScriptPropertyId>
 	{
 		/// <summary>
@@ -47,7 +48,7 @@
 			get
 			{
 				string name;
-				Native.ThrowIfError(Native.JsGetPropertyNameFromId(this, out name));
+				NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyNameFromId(this, out name));
 				return name;
 			}
 		}
@@ -70,7 +71,7 @@
 		public static JavaScriptPropertyId FromString(string name)
 		{
 			JavaScriptPropertyId id;
-			Native.ThrowIfError(Native.JsGetPropertyIdFromName(name, out id));
+			NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyIdFromName(name, out id));
 			return id;
 		}
 
@@ -141,5 +142,6 @@
 			return Name;
 		}
 	}
+#pragma warning restore IDE0018 // Inline variable declaration
 #pragma warning restore IDE0049 // Use framework type
 }

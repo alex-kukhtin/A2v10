@@ -3,9 +3,11 @@
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     A fatal exception occurred.
-    /// </summary>
+#pragma warning disable IDE0049    
+	/// <summary>
+	///     A fatal exception occurred.
+	/// </summary>
+	[Serializable]
     public sealed class JavaScriptFatalException : JavaScriptException
     {
         /// <summary>
@@ -37,4 +39,5 @@
         {
         }
     }
+#pragma warning restore IDE0049
 }

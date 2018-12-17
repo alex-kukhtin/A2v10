@@ -1,0 +1,11 @@
+﻿[
+	{
+		"version": "10.0.7023",
+		"outputFile": "sql/develop_full.sql",
+		"inputFiles": [
+			"c:/inetpub/wwwroot/a2v10/sql/a2v10system.sql",
+			"c:/inetpub/wwwroot/a2v10/sql/a2v10security.sql",
+			"c:/inetpub/wwwroot/a2v10/sql/a2v10ui.sql"
+		]
+	}
+]

@@ -4,6 +4,7 @@ using System;
 
 namespace A2v10.Interop
 {
+	[Serializable]
 	public class XmlCreatorException : Exception
 	{
 		public XmlCreatorException(String msg)

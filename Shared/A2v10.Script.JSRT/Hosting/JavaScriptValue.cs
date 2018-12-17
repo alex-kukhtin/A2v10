@@ -47,7 +47,7 @@
             get
             {
                 JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetUndefinedValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetUndefinedValue(out value));
                 return value;
             }
         }
@@ -63,7 +63,7 @@
             get
             {
                 JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetNullValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetNullValue(out value));
                 return value;
             }
         }
@@ -79,7 +79,7 @@
             get
             {
                 JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetTrueValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetTrueValue(out value));
                 return value;
             }
         }
@@ -95,7 +95,7 @@
             get
             {
                 JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetFalseValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetFalseValue(out value));
                 return value;
             }
         }
@@ -111,7 +111,7 @@
             get
             {
                 JavaScriptValue value;
-                Native.ThrowIfError(Native.JsGetGlobalObject(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetGlobalObject(out value));
                 return value;
             }
         }
@@ -136,7 +136,7 @@
             get
             {
                 JavaScriptValueType type;
-                Native.ThrowIfError(Native.JsGetValueType(this, out type));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetValueType(this, out type));
                 return type;
             }
         }
@@ -153,7 +153,7 @@
             get
             {
                 int length;
-                Native.ThrowIfError(Native.JsGetStringLength(this, out length));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetStringLength(this, out length));
                 return length;
             }
         }
@@ -169,13 +169,13 @@
             get
             {
                 JavaScriptValue prototypeReference;
-                Native.ThrowIfError(Native.JsGetPrototype(this, out prototypeReference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetPrototype(this, out prototypeReference));
                 return prototypeReference;
             }
 
             set
             {
-                Native.ThrowIfError(Native.JsSetPrototype(this, value));
+                NativeMethods.ThrowIfError(NativeMethods.JsSetPrototype(this, value));
             }
         }
 
@@ -190,7 +190,7 @@
             get
             {
                 bool allowed;
-                Native.ThrowIfError(Native.JsGetExtensionAllowed(this, out allowed));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetExtensionAllowed(this, out allowed));
                 return allowed;
             }
         }
@@ -206,7 +206,7 @@
             get
             {
                 bool hasExternalData;
-                Native.ThrowIfError(Native.JsHasExternalData(this, out hasExternalData));
+                NativeMethods.ThrowIfError(NativeMethods.JsHasExternalData(this, out hasExternalData));
                 return hasExternalData;
             }
         }
@@ -222,13 +222,13 @@
             get
             {
                 IntPtr data;
-                Native.ThrowIfError(Native.JsGetExternalData(this, out data));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetExternalData(this, out data));
                 return data;
             }
 
             set
             {
-                Native.ThrowIfError(Native.JsSetExternalData(this, value));
+                NativeMethods.ThrowIfError(NativeMethods.JsSetExternalData(this, value));
             }
         }
 
@@ -243,7 +243,7 @@
         public static JavaScriptValue FromBoolean(bool value)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsBoolToBoolean(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsBoolToBoolean(value, out reference));
             return reference;
         }
 
@@ -258,7 +258,7 @@
         public static JavaScriptValue FromDouble(double value)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsDoubleToNumber(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsDoubleToNumber(value, out reference));
             return reference;
         }
 
@@ -273,7 +273,7 @@
         public static JavaScriptValue FromInt32(int value)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsIntToNumber(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsIntToNumber(value, out reference));
             return reference;
         }
 
@@ -288,7 +288,7 @@
         public static JavaScriptValue FromString(string value)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsPointerToString(value, new UIntPtr((uint)value.Length), out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsPointerToString(value, new UIntPtr((uint)value.Length), out reference));
             return reference;
         }
 
@@ -302,7 +302,7 @@
         public static JavaScriptValue CreateObject()
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateObject(out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateObject(out reference));
             return reference;
         }
 
@@ -320,7 +320,7 @@
         public static JavaScriptValue CreateExternalObject(IntPtr data, JavaScriptObjectFinalizeCallback finalizer)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateExternalObject(data, finalizer, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateExternalObject(data, finalizer, out reference));
             return reference;
         }
 
@@ -335,7 +335,7 @@
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateFunction(function, IntPtr.Zero, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, IntPtr.Zero, out reference));
             return reference;
         }
 
@@ -351,7 +351,7 @@
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function, IntPtr callbackData)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateFunction(function, callbackData, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, callbackData, out reference));
             return reference;
         }
 
@@ -366,7 +366,7 @@
         public static JavaScriptValue CreateArray(uint length)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateArray(length, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateArray(length, out reference));
             return reference;
         }
 
@@ -381,7 +381,7 @@
         public static JavaScriptValue CreateError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateError(message, out reference));
             return reference;
         }
 
@@ -396,7 +396,7 @@
         public static JavaScriptValue CreateRangeError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateRangeError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateRangeError(message, out reference));
             return reference;
         }
 
@@ -411,7 +411,7 @@
         public static JavaScriptValue CreateReferenceError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateReferenceError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateReferenceError(message, out reference));
             return reference;
         }
 
@@ -426,7 +426,7 @@
         public static JavaScriptValue CreateSyntaxError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateSyntaxError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateSyntaxError(message, out reference));
             return reference;
         }
 
@@ -441,7 +441,7 @@
         public static JavaScriptValue CreateTypeError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateTypeError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateTypeError(message, out reference));
             return reference;
         }
 
@@ -456,7 +456,7 @@
         public static JavaScriptValue CreateUriError(JavaScriptValue message)
         {
             JavaScriptValue reference;
-            Native.ThrowIfError(Native.JsCreateURIError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateURIError(message, out reference));
             return reference;
         }
 
@@ -472,7 +472,7 @@
         public uint AddRef()
         {
             uint count;
-            Native.ThrowIfError(Native.JsAddRef(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsAddRef(this, out count));
             return count;
         }
 
@@ -486,7 +486,7 @@
         public uint Release()
         {
             uint count;
-            Native.ThrowIfError(Native.JsRelease(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsRelease(this, out count));
             return count;
         }
 
@@ -500,7 +500,7 @@
         public bool ToBoolean()
         {
             bool value;
-            Native.ThrowIfError(Native.JsBooleanToBool(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsBooleanToBool(this, out value));
             return value;
         }
 
@@ -520,7 +520,7 @@
         public double ToDouble()
         {
             double value;
-            Native.ThrowIfError(Native.JsNumberToDouble(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsNumberToDouble(this, out value));
             return value;
         }
 
@@ -540,7 +540,7 @@
         public int ToInt32()
         {
             int value;
-            Native.ThrowIfError(Native.JsNumberToInt(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsNumberToInt(this, out value));
             return value;
         }
 
@@ -561,7 +561,7 @@
         {
             IntPtr buffer;
             UIntPtr length;
-            Native.ThrowIfError(Native.JsStringToPointer(this, out buffer, out length));
+            NativeMethods.ThrowIfError(NativeMethods.JsStringToPointer(this, out buffer, out length));
             return Marshal.PtrToStringUni(buffer, (int)length);
         }
 
@@ -575,7 +575,7 @@
         public JavaScriptValue ConvertToBoolean()
         {
             JavaScriptValue booleanReference;
-            Native.ThrowIfError(Native.JsConvertValueToBoolean(this, out booleanReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToBoolean(this, out booleanReference));
             return booleanReference;
         }
 
@@ -589,7 +589,7 @@
         public JavaScriptValue ConvertToNumber()
         {
             JavaScriptValue numberReference;
-            Native.ThrowIfError(Native.JsConvertValueToNumber(this, out numberReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToNumber(this, out numberReference));
             return numberReference;
         }
 
@@ -603,7 +603,7 @@
         public JavaScriptValue ConvertToString()
         {
             JavaScriptValue stringReference;
-            Native.ThrowIfError(Native.JsConvertValueToString(this, out stringReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToString(this, out stringReference));
             return stringReference;
         }
 
@@ -617,7 +617,7 @@
         public JavaScriptValue ConvertToObject()
         {
             JavaScriptValue objectReference;
-            Native.ThrowIfError(Native.JsConvertValueToObject(this, out objectReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToObject(this, out objectReference));
             return objectReference;
         }
 
@@ -629,7 +629,7 @@
         /// </remarks>
         public void PreventExtension()
         {
-            Native.ThrowIfError(Native.JsPreventExtension(this));
+            NativeMethods.ThrowIfError(NativeMethods.JsPreventExtension(this));
         }
 
         /// <summary>
@@ -643,7 +643,7 @@
         public JavaScriptValue GetOwnPropertyDescriptor(JavaScriptPropertyId propertyId)
         {
             JavaScriptValue descriptorReference;
-            Native.ThrowIfError(Native.JsGetOwnPropertyDescriptor(this, propertyId, out descriptorReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyDescriptor(this, propertyId, out descriptorReference));
             return descriptorReference;
         }
 
@@ -657,7 +657,7 @@
         public JavaScriptValue GetOwnPropertyNames()
         {
             JavaScriptValue propertyNamesReference;
-            Native.ThrowIfError(Native.JsGetOwnPropertyNames(this, out propertyNamesReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyNames(this, out propertyNamesReference));
             return propertyNamesReference;
         }
 
@@ -672,7 +672,7 @@
         public bool HasProperty(JavaScriptPropertyId propertyId)
         {
             bool hasProperty;
-            Native.ThrowIfError(Native.JsHasProperty(this, propertyId, out hasProperty));
+            NativeMethods.ThrowIfError(NativeMethods.JsHasProperty(this, propertyId, out hasProperty));
             return hasProperty;
         }
 
@@ -687,7 +687,7 @@
         public JavaScriptValue GetProperty(JavaScriptPropertyId id)
         {
             JavaScriptValue propertyReference;
-            Native.ThrowIfError(Native.JsGetProperty(this, id, out propertyReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetProperty(this, id, out propertyReference));
             return propertyReference;
         }
 
@@ -702,7 +702,7 @@
         /// <param name="useStrictRules">The property set should follow strict mode rules.</param>
         public void SetProperty(JavaScriptPropertyId id, JavaScriptValue value, bool useStrictRules)
         {
-            Native.ThrowIfError(Native.JsSetProperty(this, id, value, useStrictRules));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetProperty(this, id, value, useStrictRules));
         }
 
         /// <summary>
@@ -717,7 +717,7 @@
         public JavaScriptValue DeleteProperty(JavaScriptPropertyId propertyId, bool useStrictRules)
         {
             JavaScriptValue returnReference;
-            Native.ThrowIfError(Native.JsDeleteProperty(this, propertyId, useStrictRules, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsDeleteProperty(this, propertyId, useStrictRules, out returnReference));
             return returnReference;
         }
 
@@ -733,7 +733,7 @@
         public bool DefineProperty(JavaScriptPropertyId propertyId, JavaScriptValue propertyDescriptor)
         {
             bool result;
-            Native.ThrowIfError(Native.JsDefineProperty(this, propertyId, propertyDescriptor, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsDefineProperty(this, propertyId, propertyDescriptor, out result));
             return result;
         }
 
@@ -748,7 +748,7 @@
         public bool HasIndexedProperty(JavaScriptValue index)
         {
             bool hasProperty;
-            Native.ThrowIfError(Native.JsHasIndexedProperty(this, index, out hasProperty));
+            NativeMethods.ThrowIfError(NativeMethods.JsHasIndexedProperty(this, index, out hasProperty));
             return hasProperty;
         }
 
@@ -763,7 +763,7 @@
         public JavaScriptValue GetIndexedProperty(JavaScriptValue index)
         {
             JavaScriptValue propertyReference;
-            Native.ThrowIfError(Native.JsGetIndexedProperty(this, index, out propertyReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetIndexedProperty(this, index, out propertyReference));
             return propertyReference;
         }
 
@@ -777,7 +777,7 @@
         /// <param name="value">The value to set.</param>
         public void SetIndexedProperty(JavaScriptValue index, JavaScriptValue value)
         {
-            Native.ThrowIfError(Native.JsSetIndexedProperty(this, index, value));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetIndexedProperty(this, index, value));
         }
 
         /// <summary>
@@ -789,7 +789,7 @@
         /// <param name="index">The index to delete.</param>
         public void DeleteIndexedProperty(JavaScriptValue index)
         {
-            Native.ThrowIfError(Native.JsDeleteIndexedProperty(this, index));
+            NativeMethods.ThrowIfError(NativeMethods.JsDeleteIndexedProperty(this, index));
         }
 
         /// <summary>
@@ -808,7 +808,7 @@
         public bool Equals(JavaScriptValue other)
         {
             bool equals;
-            Native.ThrowIfError(Native.JsEquals(this, other, out equals));
+            NativeMethods.ThrowIfError(NativeMethods.JsEquals(this, other, out equals));
             return equals;
         }
 
@@ -828,7 +828,7 @@
         public bool StrictEquals(JavaScriptValue other)
         {
             bool equals;
-            Native.ThrowIfError(Native.JsStrictEquals(this, other, out equals));
+            NativeMethods.ThrowIfError(NativeMethods.JsStrictEquals(this, other, out equals));
             return equals;
         }
 
@@ -849,7 +849,7 @@
                 throw new ArgumentOutOfRangeException("arguments");
             }
 
-            Native.ThrowIfError(Native.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
             return returnReference;
         }
 
@@ -870,7 +870,7 @@
                 throw new ArgumentOutOfRangeException("arguments");
             }
 
-            Native.ThrowIfError(Native.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));
             return returnReference;
         }
     }

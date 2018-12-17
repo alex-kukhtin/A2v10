@@ -38,11 +38,13 @@ namespace BuildSql
 			String outFilePath = Path.Combine(_path, item.outputFile);
 			File.Delete(outFilePath);
 			var nl = Environment.NewLine;
-			using (var fw = File.Open(outFilePath, FileMode.CreateNew, FileAccess.Write))
-			{
+			FileStream fw = null;
+			try {
+				fw = File.Open(outFilePath, FileMode.CreateNew, FileAccess.Write);
 				Console.WriteLine($"Writing {item.outputFile}");
 				using (var sw = new StreamWriter(fw))
 				{
+					fw = null;
 					WriteVersion(item, sw);
 					sw.Write($"{nl}{nl}/* {item.outputFile} */{nl}{nl}");
 					foreach (var f in item.inputFiles)
@@ -54,6 +56,11 @@ namespace BuildSql
 						sw.WriteLine();
 					}
 				}
+			}
+			finally
+			{
+				if (fw != null)
+					fw.Close();
 			}
 		}
 

@@ -510,7 +510,7 @@ const vm = new DataModelController({
 			String modelScript = msi.DataModel.CreateScript(this);
 			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.StandardSerializerSettings);
 			sb.Replace("$(DataModelText)", rawData);
-			sb.Replace("$(RawDataText)", msi.RawData != null ? msi.RawData : "{}");
+			sb.Replace("$(RawDataText)", msi.RawData ?? "{}");
 			sb.Replace("$(ModelScript)", modelScript);
 			return new ScriptInfo()
 			{

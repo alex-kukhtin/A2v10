@@ -48,7 +48,7 @@
 		{
 			get
 			{
-				Native.ThrowIfError(Native.JsGetRuntimeMemoryUsage(this, out UIntPtr memoryUsage));
+				NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryUsage(this, out UIntPtr memoryUsage));
 				return memoryUsage;
 			}
 		}
@@ -64,13 +64,13 @@
 		{
 			get
 			{
-				Native.ThrowIfError(Native.JsGetRuntimeMemoryLimit(this, out UIntPtr memoryLimit));
+				NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryLimit(this, out UIntPtr memoryLimit));
 				return memoryLimit;
 			}
 
 			set
 			{
-				Native.ThrowIfError(Native.JsSetRuntimeMemoryLimit(this, value));
+				NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryLimit(this, value));
 			}
 		}
 
@@ -81,15 +81,15 @@
 		{
 			get
 			{
-				Native.ThrowIfError(Native.JsIsRuntimeExecutionDisabled(this, out Boolean isDisabled));
+				NativeMethods.ThrowIfError(NativeMethods.JsIsRuntimeExecutionDisabled(this, out Boolean isDisabled));
 				return isDisabled;
 			}
 
 			set
 			{
-				Native.ThrowIfError(value
-										? Native.JsDisableRuntimeExecution(this)
-										: Native.JsEnableRuntimeExecution(this));
+				NativeMethods.ThrowIfError(value
+										? NativeMethods.JsDisableRuntimeExecution(this)
+										: NativeMethods.JsEnableRuntimeExecution(this));
 			}
 		}
 
@@ -102,7 +102,7 @@
 		/// <returns>The runtime created.</returns>
 		public static JavaScriptRuntime Create(JavaScriptRuntimeAttributes attributes, JavaScriptRuntimeVersion version, JavaScriptThreadServiceCallback threadServiceCallback)
 		{
-			Native.ThrowIfError(Native.JsCreateRuntime(attributes, threadServiceCallback, out JavaScriptRuntime handle));
+			NativeMethods.ThrowIfError(NativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out JavaScriptRuntime handle));
 			return handle;
 		}
 
@@ -138,7 +138,7 @@
 		{
 			if (IsValid)
 			{
-				Native.ThrowIfError(Native.JsDisposeRuntime(this));
+				NativeMethods.ThrowIfError(NativeMethods.JsDisposeRuntime(this));
 			}
 
 			handle = IntPtr.Zero;
@@ -149,7 +149,7 @@
 		/// </summary>
 		public void CollectGarbage()
 		{
-			Native.ThrowIfError(Native.JsCollectGarbage(this));
+			NativeMethods.ThrowIfError(NativeMethods.JsCollectGarbage(this));
 		}
 
 		/// <summary>
@@ -180,7 +180,7 @@
 		/// </param>
 		public void SetMemoryAllocationCallback(IntPtr callbackState, JavaScriptMemoryAllocationCallback allocationCallback)
 		{
-			Native.ThrowIfError(Native.JsSetRuntimeMemoryAllocationCallback(this, callbackState, allocationCallback));
+			NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryAllocationCallback(this, callbackState, allocationCallback));
 		}
 
 		/// <summary>
@@ -202,7 +202,7 @@
 		/// <param name="beforeCollectCallback">The callback function being set.</param>
 		public void SetBeforeCollectCallback(IntPtr callbackState, JavaScriptBeforeCollectCallback beforeCollectCallback)
 		{
-			Native.ThrowIfError(Native.JsSetRuntimeBeforeCollectCallback(this, callbackState, beforeCollectCallback));
+			NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeBeforeCollectCallback(this, callbackState, beforeCollectCallback));
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@
 		/// <returns>The created script context.</returns>
 		public JavaScriptContext CreateContext()
 		{
-			Native.ThrowIfError(Native.JsCreateContext(this, out JavaScriptContext reference));
+			NativeMethods.ThrowIfError(NativeMethods.JsCreateContext(this, out JavaScriptContext reference));
 			return reference;
 		}
 	}

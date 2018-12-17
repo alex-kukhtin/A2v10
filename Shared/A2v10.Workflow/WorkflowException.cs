@@ -4,11 +4,12 @@ using System;
 
 namespace A2v10.Workflow
 {
-    public class WorkflowException : Exception
-    {
-        public WorkflowException(String message)
-            : base(message)
-        {
-        }
-    }
+	[Serializable]
+	public sealed class WorkflowException : Exception
+	{
+		public WorkflowException(String message)
+			: base(message)
+		{
+		}
+	}
 }

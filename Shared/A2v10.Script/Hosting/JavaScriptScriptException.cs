@@ -3,9 +3,11 @@ namespace ChakraHost.Hosting
 	using System;
 	using System.Runtime.Serialization;
 
+#pragma warning disable IDE0049
 	/// <summary>
 	///     A script exception.
 	/// </summary>
+	[Serializable]
 	public sealed class JavaScriptScriptException : JavaScriptException
 	{
 		/// <summary>
@@ -71,5 +73,11 @@ namespace ChakraHost.Hosting
 				return GetErrorMessage();
 			}
 		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+		}
 	}
+#pragma warning restore IDE0049
 }

@@ -4,6 +4,7 @@ using System;
 
 namespace A2v10.Infrastructure
 {
+	[Serializable]
 	public class JSRuntimeException : Exception
 	{
 		public JSRuntimeException(String message)

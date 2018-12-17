@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Native interfaces.
 	/// </summary>
-	public static partial class Native
+	public static partial class NativeMethods
 	{
 		[DllImport(DllName)]
 		internal static extern JavaScriptErrorCode JsDiagStartDebugging(

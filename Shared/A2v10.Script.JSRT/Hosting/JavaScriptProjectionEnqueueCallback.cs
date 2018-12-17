@@ -12,21 +12,23 @@
     /// </remarks>
     public struct JavaScriptProjectionCallbackContext
     {
-        /// <summary>
-        /// The reference.
-        /// </summary>
-        private readonly IntPtr reference;
-    }
+		/// <summary>
+		/// The reference.
+		/// </summary>
+#pragma warning disable CS0169
+		private readonly IntPtr reference;
+#pragma warning restore CS0169
+	}
 
-    /// <summary>
-    ///     The Jsrt callback which should be called with the context passed to JsProjectionEnqueueCallback on
-    ///     the correct thread.
-    /// </summary>
-    /// <remarks>
-    ///     Requires calling JsSetProjectionEnqueueCallback to receive callbacks.
-    /// </remarks>
-    /// <param name="jsContext">The context originally received by a call to JsProjectionEnqueueCallback.</param>
-    public delegate void JavaScriptProjectionCallback(JavaScriptProjectionCallbackContext jsContext);
+	/// <summary>
+	///     The Jsrt callback which should be called with the context passed to JsProjectionEnqueueCallback on
+	///     the correct thread.
+	/// </summary>
+	/// <remarks>
+	///     Requires calling JsSetProjectionEnqueueCallback to receive callbacks.
+	/// </remarks>
+	/// <param name="jsContext">The context originally received by a call to JsProjectionEnqueueCallback.</param>
+	public delegate void JavaScriptProjectionCallback(JavaScriptProjectionCallbackContext jsContext);
 
     /// <summary>
     ///     The application callback which is called by Jsrt when a projection API is completed on

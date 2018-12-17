@@ -47,13 +47,13 @@
         {
             get
             {
-                Native.ThrowIfError(Native.JsGetCurrentContext(out JavaScriptContext reference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out JavaScriptContext reference));
                 return reference;
             }
 
             set
             {
-                Native.ThrowIfError(Native.JsSetCurrentContext(value));
+                NativeMethods.ThrowIfError(NativeMethods.JsSetCurrentContext(value));
             }
         }
 
@@ -80,7 +80,7 @@
         {
             get
             {
-                Native.ThrowIfError(Native.JsHasException(out Boolean hasException));
+                NativeMethods.ThrowIfError(NativeMethods.JsHasException(out Boolean hasException));
                 return hasException;
             }
         }
@@ -92,7 +92,7 @@
         {
             get
             {
-                Native.ThrowIfError(Native.JsGetRuntime(this, out JavaScriptRuntime handle));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntime(this, out JavaScriptRuntime handle));
                 return handle;
             }
         }
@@ -129,7 +129,7 @@
         /// </returns>
         public static UInt32 Idle()
         {
-            Native.ThrowIfError(Native.JsIdle(out UInt32 ticks));
+            NativeMethods.ThrowIfError(NativeMethods.JsIdle(out UInt32 ticks));
             return ticks;
         }
 
@@ -147,13 +147,13 @@
         /// <returns>A <c>Function</c> representing the script code.</returns>
         public static JavaScriptValue ParseScript(String script, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            Native.ThrowIfError(Native.JsParseScript(script, sourceContext, sourceName, out JavaScriptValue result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseScript(script, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
 		public static JavaScriptValue ParseScriptLibrary(String script)
 		{
-			Native.ThrowIfError(Native.JsParseScriptWithAttributes(script, JavaScriptSourceContext.None, String.Empty, JsParseScriptAttributes.JsParseScriptAttributeLibraryCode, out JavaScriptValue result));
+			NativeMethods.ThrowIfError(NativeMethods.JsParseScriptWithAttributes(script, JavaScriptSourceContext.None, String.Empty, JsParseScriptAttributes.JsParseScriptAttributeLibraryCode, out JavaScriptValue result));
 			return result;
 		}
 
@@ -173,7 +173,7 @@
 		/// <returns>A <c>Function</c> representing the script code.</returns>
 		public static JavaScriptValue ParseScript(String script, Byte[] buffer, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            Native.ThrowIfError(Native.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -218,7 +218,7 @@
         /// <returns>The result of the script, if any.</returns>
         public static JavaScriptValue RunScript(String script, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            Native.ThrowIfError(Native.JsRunScript(script, sourceContext, sourceName, out JavaScriptValue result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunScript(script, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -237,7 +237,7 @@
         /// <returns>The result of the script, if any.</returns>
         public static JavaScriptValue RunScript(String script, Byte[] buffer, JavaScriptSourceContext sourceContext, String sourceName)
         {
-            Native.ThrowIfError(Native.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out JavaScriptValue result));
             return result;
         }
 
@@ -289,7 +289,7 @@
         public static UInt64 SerializeScript(String script, Byte[] buffer)
         {
             var bufferSize = (UInt64)buffer.Length;
-            Native.ThrowIfError(Native.JsSerializeScript(script, buffer, ref bufferSize));
+            NativeMethods.ThrowIfError(NativeMethods.JsSerializeScript(script, buffer, ref bufferSize));
             return bufferSize;
         }
 
@@ -312,7 +312,7 @@
         /// <returns>The exception for the runtime of the current context.</returns>
         public static JavaScriptValue GetAndClearException()
         {
-            Native.ThrowIfError(Native.JsGetAndClearException(out JavaScriptValue reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetAndClearException(out JavaScriptValue reference));
             return reference;
         }
 
@@ -333,7 +333,7 @@
         /// </param>
         public static void SetException(JavaScriptValue exception)
         {
-            Native.ThrowIfError(Native.JsSetException(exception));
+            NativeMethods.ThrowIfError(NativeMethods.JsSetException(exception));
         }
 
         /// <summary>
@@ -345,7 +345,7 @@
         /// <returns>The object's new reference count.</returns>
         public UInt32 AddRef()
         {
-            Native.ThrowIfError(Native.JsContextAddRef(this, out UInt32 count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextAddRef(this, out UInt32 count));
             return count;
         }
 
@@ -358,7 +358,7 @@
         /// <returns>The object's new reference count.</returns>
         public UInt32 Release()
         {
-            Native.ThrowIfError(Native.JsContextRelease(this, out UInt32 count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextRelease(this, out UInt32 count));
             return count;
         }
 

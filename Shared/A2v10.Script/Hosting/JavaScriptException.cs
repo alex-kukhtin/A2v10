@@ -3,9 +3,11 @@ namespace ChakraHost.Hosting
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     An exception returned from the Chakra engine.
-    /// </summary>
+#pragma warning disable IDE0049 // Use framework type
+	/// <summary>
+	///     An exception returned from the Chakra engine.
+	/// </summary>
+	[Serializable]
     public class JavaScriptException : Exception
     {
         /// <summary>
@@ -66,5 +68,11 @@ namespace ChakraHost.Hosting
         {
             get { return code; }
         }
-    }
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+		}
+	}
+#pragma warning restore IDE0049
 }

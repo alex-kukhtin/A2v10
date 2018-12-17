@@ -3,10 +3,12 @@ namespace ChakraHost.Hosting
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     A script exception.
-    /// </summary>
-    public sealed class JavaScriptScriptException : JavaScriptException
+	/// <summary>
+	///     A script exception.
+	/// </summary>
+#pragma warning disable IDE0049 // Use framework type
+	[Serializable]
+	public sealed class JavaScriptScriptException : JavaScriptException
     {
         /// <summary>
         /// The error.
@@ -23,14 +25,14 @@ namespace ChakraHost.Hosting
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptScriptException"/> class. 
-        /// </summary>
-        /// <param name="code">The error code returned.</param>
-        /// <param name="error">The JavaScript error object.</param>
-        /// <param name="message">The error message.</param>
-        public JavaScriptScriptException(JavaScriptErrorCode code, JavaScriptValue error, string message) :
-            base(code, message)
+							   /// <summary>
+							   ///     Initializes a new instance of the <see cref="JavaScriptScriptException"/> class. 
+							   /// </summary>
+							   /// <param name="code">The error code returned.</param>
+							   /// <param name="error">The JavaScript error object.</param>
+							   /// <param name="message">The error message.</param>
+		public JavaScriptScriptException(JavaScriptErrorCode code, JavaScriptValue error, string message) :
+			base(code, message)
         {
             this.error = error;
         }
@@ -55,5 +57,11 @@ namespace ChakraHost.Hosting
                 return error;
             }
         }
-    }
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+		}
+	}
+#pragma warning restore IDE0049 // Use framework type
 }

@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Native interfaces.
 	/// </summary>
-	public static partial class Native
+	public static partial class NativeMethods
 	{
 		/// <summary>
 		/// Throws if a native method returns an error code.

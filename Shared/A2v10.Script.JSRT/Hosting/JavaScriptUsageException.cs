@@ -3,10 +3,11 @@
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     An API usage exception occurred.
-    /// </summary>
-    public sealed class JavaScriptUsageException : JavaScriptException
+	/// <summary>
+	///     An API usage exception occurred.
+	/// </summary>
+	[Serializable]
+	public sealed class JavaScriptUsageException : JavaScriptException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="JavaScriptUsageException"/> class. 

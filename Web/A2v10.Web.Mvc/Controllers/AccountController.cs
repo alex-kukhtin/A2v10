@@ -79,9 +79,9 @@ namespace A2v10.Web.Mvc.Controllers
 				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();
 
 				StringBuilder script = new StringBuilder(rsrcScript);
-				script.Replace("$(Utils)", ResourceHelper.pageUtils);
-				script.Replace("$(Locale)", ResourceHelper.locale);
-				script.Replace("$(Mask)", ResourceHelper.mask);
+				script.Replace("$(Utils)", ResourceHelper.PageUtils);
+				script.Replace("$(Locale)", ResourceHelper.Locale);
+				script.Replace("$(Mask)", ResourceHelper.Mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
 				script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));

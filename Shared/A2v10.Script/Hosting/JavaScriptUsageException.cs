@@ -3,9 +3,11 @@
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     An API usage exception occurred.
-    /// </summary>
+#pragma warning disable IDE0049
+	/// <summary>
+	///     An API usage exception occurred.
+	/// </summary>
+	[Serializable]
     public sealed class JavaScriptUsageException : JavaScriptException
     {
         /// <summary>
@@ -37,4 +39,5 @@
         {
         }
     }
+#pragma warning restore IDE0049
 }

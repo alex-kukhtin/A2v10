@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace A2v10.Script.JSRT
 {
-	public class ScriptContext : IScriptContext, IDisposable
+	public sealed class ScriptContext : IScriptContext, IDisposable
 	{
 		JavaScriptRuntime _runtime;
 		JavaScriptContext _context = JavaScriptContext.Invalid;

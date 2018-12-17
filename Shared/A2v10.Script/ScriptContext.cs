@@ -7,7 +7,7 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Script
 {
-	public class ScriptContext : IScriptContext, IDisposable
+	public sealed class ScriptContext : IScriptContext, IDisposable
 	{
 		JavaScriptRuntime _runtime;
 		JavaScriptContext _context = JavaScriptContext.Invalid;

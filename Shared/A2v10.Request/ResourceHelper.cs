@@ -23,12 +23,13 @@ namespace A2v10.Request
 		public static String ErrorHtml => Resources.error;
 		public static String ConfirmEMailHtml => Resources.confirmEMail;
 
-		public static String pageUtils => Resources.pageUtils;
-		public static String mask => Resources.mask;
-
 		public static String StiReportHtml => Resources.stiReport;
 
-		public static String locale
+		public static String PageUtils => Resources.pageUtils;
+		public static String Mask => Resources.mask;
+
+
+		public static String Locale
 		{
 			get
 			{
@@ -40,7 +41,7 @@ namespace A2v10.Request
 					case "en": return Resources.locale_en;
 					case "ru": return Resources.locale_ru;
 				}
-				throw new InvalidProgramException("Only the following cultures are supported: 'uk', 'ru', 'en'");
+				throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en'");
 			}
 		}
 	}

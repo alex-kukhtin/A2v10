@@ -89,10 +89,12 @@ namespace A2v10.Interop
 				Encoding = Encoding.GetEncoding(_encoding),
 				Indent = true
 			};
-			using (var ms = new MemoryStream())
-			{
+			MemoryStream ms = null;
+			try {
+				ms = new MemoryStream();
 				using (var writer = XmlWriter.Create(ms, settings))
 				{
+					ms = null;
 					writer.WriteStartDocument();
 					foreach (XmlQualifiedName v in _schemaSet.GlobalElements.Names)
 					{
@@ -105,6 +107,10 @@ namespace A2v10.Interop
 					DoValidate(ms);
 				ms.Seek(0, SeekOrigin.Begin);
 				return ms.ToArray();
+			}
+			finally
+			{
+				ms?.Dispose();
 			}
 		}
 

@@ -60,6 +60,7 @@
     <None Include="Develop\Document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Develop\sql.json" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
   <ItemGroup>

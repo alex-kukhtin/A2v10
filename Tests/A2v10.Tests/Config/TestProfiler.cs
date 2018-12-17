@@ -19,7 +19,7 @@ namespace A2v10.Tests.Config
 		}
 	}
 
-	public class TestProfiler : IProfiler, IDataProfiler
+	public sealed class TestProfiler : IProfiler, IDataProfiler
 	{
 		public Boolean Enabled { get; set; }
 

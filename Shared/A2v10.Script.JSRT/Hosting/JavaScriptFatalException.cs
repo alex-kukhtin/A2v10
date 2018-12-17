@@ -3,10 +3,11 @@
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     A fatal exception occurred.
-    /// </summary>
-    public sealed class JavaScriptFatalException : JavaScriptException
+	/// <summary>
+	///     A fatal exception occurred.
+	/// </summary>
+	[Serializable]
+	public sealed class JavaScriptFatalException : JavaScriptException
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="JavaScriptFatalException"/> class. 

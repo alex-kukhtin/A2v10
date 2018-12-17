@@ -16,6 +16,7 @@ using A2v10.Interop;
 
 namespace A2v10.Request
 {
+	[Serializable]
 	public class RequestModelException : Exception
 	{
 		public RequestModelException(String message)
@@ -164,7 +165,7 @@ namespace A2v10.Request
 			get
 			{
 				if (index)
-					throw new RequestModelException($"Could not update index model '{CurrentModel}'");
+					throw new NotSupportedException($"Could not update index model '{CurrentModel}'");
 				var cm = CurrentModel;
 				if (String.IsNullOrEmpty(cm))
 					return null;
@@ -178,7 +179,7 @@ namespace A2v10.Request
 			get
 			{
 				if (_parent == null)
-					throw new ArgumentNullException(nameof(_parent));
+					throw new InvalidOperationException("_parent is null");
 				if (schema == null)
 					return _parent.schema;
 				return schema;
@@ -191,7 +192,7 @@ namespace A2v10.Request
 			get
 			{
 				if (_parent == null)
-					throw new ArgumentNullException(nameof(_parent));
+					throw new InvalidOperationException("_parent is null");
 				if (source == null)
 					return _parent.source;
 				return source;
@@ -204,7 +205,7 @@ namespace A2v10.Request
 			get
 			{
 				if (_parent == null)
-					throw new ArgumentNullException(nameof(_parent));
+					throw new InvalidOperationException("_parent is null");
 				if (model == null)
 					return _parent.model;
 				return model;
@@ -477,7 +478,7 @@ namespace A2v10.Request
 				{
 					case "save": return RequestDataAction.Save;
 					default:
-						throw new RequestModelException($"Invalid data action {_data}");
+						throw new InvalidOperationException($"Invalid data action {_data}");
 				}
 			}
 		}
@@ -494,7 +495,7 @@ namespace A2v10.Request
 						kind = "_page";
 						break;
 					default:
-						throw new RequestModelException($"Invalid RequestKind '{_kind}' for indirect query");
+						throw new InvalidOperationException($"Invalid RequestKind '{_kind}' for indirect query");
 				}
 				return $"/{kind}/{_modelPath}/{_action}/{_id}";
 			}
@@ -521,12 +522,12 @@ namespace A2v10.Request
 			get
 			{
 				if (Actions.Count == 0)
-					throw new RequestModelException($"There are no actions in model '{_modelPath}'");
+					throw new InvalidOperationException($"There are no actions in model '{_modelPath}'");
 				if (String.IsNullOrEmpty(_action))
-					throw new RequestModelException($"Invalid empty action in url for model {_modelPath}");
+					throw new InvalidOperationException($"Invalid empty action in url for model {_modelPath}");
 				if (Actions.TryGetValue(_action.ToLowerInvariant(), out RequestAction ma))
 					return ma;
-				throw new RequestModelException($"Action '{_action}' not found in model {_modelPath}");
+				throw new InvalidOperationException($"Action '{_action}' not found in model {_modelPath}");
 			}
 		}
 
@@ -535,15 +536,15 @@ namespace A2v10.Request
 			get
 			{
 				if (Dialogs.Count == 0)
-					throw new RequestModelException($"There are no dialogs in model '{_modelPath}'");
+					throw new InvalidOperationException($"There are no dialogs in model '{_modelPath}'");
 				if (String.IsNullOrEmpty(_dialog))
-					throw new RequestModelException($"Invalid empty dialog in url for {_modelPath}");
+					throw new InvalidOperationException($"Invalid empty dialog in url for {_modelPath}");
 				if (Dialogs.TryGetValue(_dialog, out RequestDialog da))
 				{
 					da.CheckPhase(Phase2);
 					return da;
 				}
-				throw new RequestModelException($"Dialog '{_dialog}' not found in model {_modelPath}");
+				throw new InvalidOperationException($"Dialog '{_dialog}' not found in model {_modelPath}");
 			}
 		}
 
@@ -552,12 +553,12 @@ namespace A2v10.Request
 			get
 			{
 				if (Popups.Count == 0)
-					throw new RequestModelException($"There are no popups in model '{_modelPath}'");
+					throw new InvalidOperationException($"There are no popups in model '{_modelPath}'");
 				if (String.IsNullOrEmpty(_popup))
-					throw new RequestModelException($"Invalid empty popup in url for {_modelPath}");
+					throw new InvalidOperationException($"Invalid empty popup in url for {_modelPath}");
 				if (Popups.TryGetValue(_popup, out RequestPopup pa))
 					return pa;
-				throw new RequestModelException($"Popup '{_popup}' not found in model {_modelPath}");
+				throw new InvalidOperationException($"Popup '{_popup}' not found in model {_modelPath}");
 			}
 		}
 

@@ -3,9 +3,11 @@ namespace ChakraHost.Hosting
     using System;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     An exception that occurred in the workings of the JavaScript engine itself.
-    /// </summary>
+#pragma warning disable IDE0049 // Use framework type
+	/// <summary>
+	///     An exception that occurred in the workings of the JavaScript engine itself.
+	/// </summary>
+	[Serializable]
     public sealed class JavaScriptEngineException : JavaScriptException
     {
         /// <summary>
@@ -17,13 +19,13 @@ namespace ChakraHost.Hosting
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptEngineException"/> class. 
-        /// </summary>
-        /// <param name="code">The error code returned.</param>
-        /// <param name="message">The error message.</param>
-        public JavaScriptEngineException(JavaScriptErrorCode code, string message) :
-            base(code, message)
+							   /// <summary>
+							   ///     Initializes a new instance of the <see cref="JavaScriptEngineException"/> class. 
+							   /// </summary>
+							   /// <param name="code">The error code returned.</param>
+							   /// <param name="message">The error message.</param>
+		public JavaScriptEngineException(JavaScriptErrorCode code, string message) :
+			base(code, message)
         {
         }
 
@@ -37,4 +39,5 @@ namespace ChakraHost.Hosting
         {
         }
     }
+#pragma warning restore IDE0049 // Use framework type
 }
