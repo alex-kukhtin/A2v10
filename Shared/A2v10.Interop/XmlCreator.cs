@@ -89,29 +89,24 @@ namespace A2v10.Interop
 				Encoding = Encoding.GetEncoding(_encoding),
 				Indent = true
 			};
-			MemoryStream ms = null;
-			try {
-				ms = new MemoryStream();
-				using (var writer = XmlWriter.Create(ms, settings))
-				{
-					ms = null;
-					writer.WriteStartDocument();
-					foreach (XmlQualifiedName v in _schemaSet.GlobalElements.Names)
-					{
-						var elem = _schemaSet.GlobalElements[v] as XmlSchemaElement;
-						ProcessElement(writer, elem, 0, _dataModel.Root);
-					}
-					writer.WriteEndDocument();
-				}
-				if (Validate)
-					DoValidate(ms);
-				ms.Seek(0, SeekOrigin.Begin);
-				return ms.ToArray();
-			}
-			finally
+			var ms = new MemoryStream();
+			using (var writer = XmlWriter.Create(ms, settings))
 			{
-				ms?.Dispose();
+				writer.WriteStartDocument();
+				foreach (XmlQualifiedName v in _schemaSet.GlobalElements.Names)
+				{
+					var elem = _schemaSet.GlobalElements[v] as XmlSchemaElement;
+					ProcessElement(writer, elem, 0, _dataModel.Root);
+				}
+				writer.WriteEndDocument();
+				writer.Flush();
 			}
+			if (Validate)
+				DoValidate(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+			var arr = ms.ToArray();
+			ms.Close();
+			return arr;
 		}
 
 
