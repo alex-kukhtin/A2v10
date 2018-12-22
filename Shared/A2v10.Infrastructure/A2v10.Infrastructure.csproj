@@ -44,6 +44,7 @@
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="IBackgroundProcessing.cs" />
     <Compile Include="IBackgroundTasksManager.cs" />
     <Compile Include="IControllerProfiler.cs" />
     <Compile Include="IControllerTenant.cs" />
@@ -51,6 +52,8 @@
     <Compile Include="IInvokeTarget.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IMessageService.cs" />
+    <Compile Include="Implementation\NullLocalizer.cs" />
+    <Compile Include="Implementation\NullProfiler.cs" />
     <Compile Include="IScriptProcessor.cs" />
     <Compile Include="ISmsService.cs" />
     <Compile Include="IUserId.cs" />

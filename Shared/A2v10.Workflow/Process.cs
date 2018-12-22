@@ -42,7 +42,20 @@ namespace A2v10.Workflow
 
 		public IDataModel Model => GetModel();
 
-		internal IDbContext DbContext { get; set; }
+		IDbContext _dbContext;
+		internal IDbContext DbContext
+		{
+			get
+			{
+				if (_dbContext == null)
+					_dbContext = ServiceLocator.Current.GetService<IDbContext>();
+				return _dbContext;
+			}
+			set
+			{
+				_dbContext = value;
+			}
+		}
 
 		public IDictionary<String, Object> CreateParams(Object obj)
 		{
@@ -73,10 +86,13 @@ namespace A2v10.Workflow
 			return p;
 		}
 
-		internal static Process GetProcessFromContext(WorkflowDataContext DataContext)
+		internal static Process GetProcessFromContext(ActivityContext context)
 		{
+			var DataContext = context.DataContext;
 			var pi = DataContext.GetProperties()["Process"];
 			var process = pi.GetValue(DataContext) as Process;
+			var dbContext = context.GetExtension<IDbContext>();
+			process.DbContext = dbContext;
 			return process;
 		}
 

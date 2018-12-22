@@ -1,10 +1,10 @@
-/* 20181014-7049 */
+/* 20181222-7050 */
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 14 oct 2017 17:00
-module version : 7049
+Last updated : 22 dec 2018 17:00
+module version : 7050
 */
 
 /*
@@ -32,9 +32,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7049);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7050);
 else
-	update a2sys.Versions set [Version] = 7049 where Module = N'std:workflow';
+	update a2sys.Versions set [Version] = 7050 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -327,6 +327,22 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'ProcessInfo.Load')
+	drop procedure a2workflow.[ProcessInfo.Load]
+go
+------------------------------------------------
+create procedure a2workflow.[ProcessInfo.Load]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	select p.Id, p.Kind, p.WorkflowId, p.[Definition]
+	from a2workflow.Processes p 
+	where p.Id = @Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Role.FindByKey')
 	drop procedure a2workflow.[Role.FindByKey]
 go
@@ -388,21 +404,22 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2wo
 go
 ------------------------------------------------
 create procedure a2workflow.[Process.Pendings]
-@Count int
+@Count int = 10,
+@Parameter nvarchar(255) = null
 as
 begin
 	set nocount on;
 	with T(ProcessId, WorkflowId, PendingTimer, AutoStart)
 	as
 	(
-		select p.Id, p.WorkflowId, PendingTimer, 0
+		select p.Id, p.WorkflowId, PendingTimer, cast(0 as bit)
 			from [System.Activities.DurableInstancing].InstancesTable w with(nolock)
 				inner join a2workflow.Processes p with(nolock) on p.WorkflowId = w.Id
 			where ExecutionStatus = N'Idle' and PendingTimer <= sysutcdatetime() and p.WorkflowId is not null
 				and p.Kind is not null
 		union all
-		select p.Id, p.WorkflowId, sysutcdatetime(), 1
-			from a2workflow.Processes p with(nolock) where p.AutoStart=1 
+		select p.Id, p.WorkflowId, sysutcdatetime(), p.AutoStart
+			from a2workflow.Processes p with(nolock) where p.AutoStart = 1 
 			and p.WorkflowId is null and p.Kind is not null
 	)
 	select top(@Count) ProcessId, WorkflowId, AutoStart from T

@@ -44,6 +44,8 @@ namespace A2v10.Request
 			return loadPrms;
 		}
 
+		public IDbContext DbContext => _baseController.DbContext;
+
 		public Task<ViewInfo> LoadView(String pathInfo)
 		{
 			pathInfo = NormalizeUrl(pathInfo);

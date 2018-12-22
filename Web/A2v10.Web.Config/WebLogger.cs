@@ -31,5 +31,10 @@ namespace A2v10.Web.Config
 		{
 			_dbContext.Execute(_host.CatalogDataSource, "a2api.WriteLog", entry);
 		}
+
+		public void LogBackground(LogEntry entry)
+		{
+			_dbContext.Execute(_host.CatalogDataSource, "a2background.WriteLog", entry);
+		}
 	}
 }

@@ -3,8 +3,6 @@
 using System;
 using System.Activities;
 
-using A2v10.Data.Interfaces;
-
 namespace A2v10.Workflow
 {
 	public class Track : CodeActivity
@@ -14,15 +12,15 @@ namespace A2v10.Workflow
 
 		protected override void Execute(CodeActivityContext context)
 		{
-			IDbContext dbContext = context.GetExtension<IDbContext>();
-			var process = Process.GetProcessFromContext(context.DataContext);
+			var process = Process.GetProcessFromContext(context);
 			String msg = Message.Get<String>(context);
+
 			var track = new TrackRecord()
 			{
 				ProcessId = process.Id,
 				Message = msg
 			};
-			track.Update(dbContext);
+			track.Update(process.DbContext);
 		}
 	}
 }

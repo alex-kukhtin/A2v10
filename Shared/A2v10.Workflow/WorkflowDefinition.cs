@@ -89,6 +89,11 @@ namespace A2v10.Workflow
 			return new WorkflowDefinition(info.Kind, info.Definition);
 		}
 
+		public static WorkflowDefinition Load(ProcessInfo info)
+		{
+			return new WorkflowDefinition(info.Kind, info.Definition);
+		}
+
 		String GetWorkflowFullPath(IApplicationHost host)
 		{
 			String fullPath = System.IO.Path.Combine(host.AppPath, host.AppKey ?? String.Empty, Path);
@@ -113,6 +118,18 @@ namespace A2v10.Workflow
 
 		public Boolean IsActivityCached => RuntimeActivity.IsTypeCached(GetHashedName());
 
+
+		public Activity LoadFromDefinition()
+		{
+			if (Type != WorkflowType.Definition)
+				throw new InvalidOperationException("Invalid WorkflowDefinition type. Expected 'WorkflowType.Definition'");
+			using (var sr = new StringReader(Definition))
+			{
+				Activity root = ActivityXamlServices.Load(sr) as Activity;
+				Cached = RuntimeActivity.Compile(GetHashedName(), root);
+				return root;
+			}
+		}
 
 		public Activity LoadFromSource(IApplicationHost host)
 		{

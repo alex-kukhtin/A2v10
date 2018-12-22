@@ -33,7 +33,7 @@ namespace A2v10.Workflow
 
 		protected override void Execute(NativeActivityContext context)
 		{
-			var process = Process.GetProcessFromContext(context.DataContext);
+			var process = Process.GetProcessFromContext(context);
 			var wfResult = context.GetExtension<WorkflowResult>();
 			Inbox inbox = Inbox.Get<Inbox>(context);
 			IDbContext dbContext = context.GetExtension<IDbContext>();
@@ -55,8 +55,7 @@ namespace A2v10.Workflow
 			if (!(obj is RequestResult))
 				throw new WorkflowException("Invalid ResponseType. Must be RequestResult");
 			IDbContext dbContext = context.GetExtension<IDbContext>();
-			Process process = Process.GetProcessFromContext(context.DataContext);
-			process.DbContext = dbContext;
+			Process process = Process.GetProcessFromContext(context);
 			var rr = obj as RequestResult;
 			Inbox inbox = Inbox.Get<Inbox>(context);
 			inbox.Resumed(dbContext, rr.InboxId, rr.UserId, rr.Answer);
@@ -74,7 +73,7 @@ namespace A2v10.Workflow
 		{
 			if (record == null)
 				return;
-			var process = Process.GetProcessFromContext(context.DataContext);
+			var process = Process.GetProcessFromContext(context);
 			record.ProcessId = process.Id;
 			if (record.UserId == 0 && userId.HasValue)
 				record.UserId = userId.Value;
@@ -92,7 +91,7 @@ namespace A2v10.Workflow
 		{
 			if (messageInfo == null)
 				return;
-			var process = Process.GetProcessFromContext(context.DataContext);
+			var process = Process.GetProcessFromContext(context);
 			IMessaging messaging = context.GetExtension<IMessaging>();
 			IMessage msg = messaging.CreateMessage();
 
@@ -118,7 +117,7 @@ namespace A2v10.Workflow
 			if (state == null)
 				return;
 			var prms = new ExpandoObject();
-			var process = Process.GetProcessFromContext(context.DataContext);
+			var process = Process.GetProcessFromContext(context);
 			prms.Set("Id", process.ModelId);
 			prms.Set("State", state.State);
 			prms.Set("Process", process.Id);

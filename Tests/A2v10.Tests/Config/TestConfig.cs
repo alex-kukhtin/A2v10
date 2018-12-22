@@ -21,13 +21,13 @@ namespace A2v10.Tests.Config
 
 			ServiceLocator.Start = (IServiceLocator service) =>
 			{
-				var profiler = new TestProfiler();
+				var profiler = new NullProfiler();
 				var host = new TestApplicationHost(profiler)
 				{
 					HostingPath = Path.GetFullPath("../../../../Web/A2v10.Web.Site")
 				};
 
-				var localizer = new TestLocalizer();
+				var localizer = new NullLocalizer();
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var workflowEngine = new WorkflowEngine(host, dbContext);
 				var renderer = new XamlRenderer(profiler, host);

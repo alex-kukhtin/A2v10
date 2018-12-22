@@ -95,6 +95,36 @@ namespace A2v10.Workflow
 			}
 		}
 
+		public static void ResumeWorkflowTimer(IDbContext dbContext, Int64 processId)
+		{
+			AppWorkflow aw = null;
+			var result = new WorkflowResult
+			{
+				InboxIds = new List<Int64>()
+			};
+			try
+			{
+				var pi = ProcessInfo.Load(dbContext, processId, 0);
+				var def = WorkflowDefinition.Load(pi);
+				Activity root = def.LoadFromDefinition();
+				aw = Create(dbContext, root, null, def.Identity);
+				aw._application.Extensions.Add(dbContext);
+				aw._application.Extensions.Add(result);
+				WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(pi.WorkflowId, aw._application.InstanceStore);
+				aw._application.Load(instance, _wfTimeSpan);
+				aw._application.Run(_wfTimeSpan);
+			}
+			catch (Exception ex)
+			{
+				if (!CatchWorkflow(aw, ex))
+					throw;
+			}
+			finally
+			{
+				ProcessFinally(aw);
+			}
+		}
+
 		public static async Task<WorkflowResult> ResumeWorkflow(IApplicationHost host, IDbContext dbContext, ResumeWorkflowInfo info)
 		{
 			AppWorkflow aw = null;
@@ -149,6 +179,11 @@ namespace A2v10.Workflow
 				ProcessFinally(aw);
 			}
 			return result;
+		}
+
+		public static void AutoStart(Int64 processId, ILogger logger)
+		{
+			throw new NotImplementedException();
 		}
 
 		internal void Track(TrackingRecord record)

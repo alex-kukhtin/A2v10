@@ -1,13 +1,11 @@
-﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
-
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 
-namespace A2v10.Tests.Config
+namespace A2v10.Infrastructure
 {
-	public class DummyRequest : IProfileRequest
+	public class NullRequest : IProfileRequest
 	{
 		public IDisposable Start(ProfileAction kind, String description)
 		{
@@ -19,27 +17,35 @@ namespace A2v10.Tests.Config
 		}
 	}
 
-	public sealed class TestProfiler : IProfiler, IDataProfiler
+	public class NullProfiler : IProfiler, IDataProfiler
 	{
+		readonly IProfileRequest _request = new NullRequest();
+		
+		#region IProfiler
+
 		public Boolean Enabled { get; set; }
 
-		readonly IProfileRequest _request = new DummyRequest();
+		public IProfileRequest CurrentRequest => _request;
 
 		public IProfileRequest BeginRequest(String address, String session)
 		{
 			return _request;
 		}
 
-		public IProfileRequest CurrentRequest => _request;
-
 		public String GetJson()
 		{
 			return null;
 		}
 
+		#endregion
+
+		#region IDataProfiler 
+
 		IDisposable IDataProfiler.Start(String command)
 		{
 			return null;
 		}
+		
+		#endregion
 	}
 }
