@@ -240,6 +240,7 @@
     <Content Include="scripts\main.js" />
     <Content Include="scripts\server\library.js" />
     <Content Include="scripts\server\validate.js" />
+    <Content Include="TestPages\diagram.html" />
     <Content Include="TestPages\validators.html" />
     <Content Include="TestPages\standalonemodel.html" />
     <Content Include="TestPages\Test.xml" />

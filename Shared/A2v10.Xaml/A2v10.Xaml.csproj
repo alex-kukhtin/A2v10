@@ -92,6 +92,10 @@
     <Compile Include="Controls\DatePicker.cs" />
     <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StateCard.cs" />
+    <Compile Include="Drawing\Diagram.cs" />
+    <Compile Include="Drawing\DrawingElement.cs" />
+    <Compile Include="Drawing\Group.cs" />
+    <Compile Include="Drawing\Rectangle.cs" />
     <Compile Include="Text\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\Attachments.cs" />

@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+	<link rel="stylesheet" href="../css/site.css"/>
+	<style>
+		.inside {
+			font-size:9px;
+			font-family:'Segoe UI';
+			color:#999;
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			height:100%;
+			line-height:1;
+			padding-left:24px;
+		}
+		.action {
+			cursor:pointer;
+			pointer-events:all;
+		}
+
+			.action:hover rect {
+				fill: #fff2cc;
+				stroke:#d6b656;
+		}
+
+		.d-action-text {
+			display:grid;
+			color:#999;
+			font-size:9px;
+			font-family:'Segoe UI'
+		}
+		.d-action-text > .ico {
+			font-size:16px;
+		}
+
+		.ico {
+			color:#999;
+			padding:6px 0 0 4px;
+			display:block;
+			font-size:16px;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div style="width:800px;height:500px;border:1px solid silver">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 500 200" shape-rendering="auto">
+				<path d="M0,0 L0,6 L9,6, L9,9, L9,0 z" fill="#0f0"></path>
+				<defs>
+					<marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+						<path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+					</marker>
+					<marker id="arrow-start" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+						<path d="M9,0 L0,3 L9,6 L7,3 z" fill="#f00" stroke="#0f0" stroke-width="0" />
+					</marker>
+					<filter xmlns="http://www.w3.org/2000/svg" id="dropShadow">
+						<feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="blur" id="feGaussianBlur14056" />
+						<feOffset in="blur" dx="3" dy="3" result="offsetBlur" id="feOffset14058" />
+						<feFlood flood-color="#999" flood-opacity="0.3" result="offsetColor" id="feFlood14060" />
+						<feComposite in="offsetColor" in2="offsetBlur" operator="in" result="offsetBlur" id="feComposite14062" />
+						<feBlend in="SourceGraphic" in2="offsetBlur" id="feBlend14064" />
+					</filter>
+				</defs>
+				<g class="action" filter="url(#dropShadow)" @click="click">
+					<rect x="20" y="20" width="100" height="30" fill="#f8f8f8" stroke="#999"></rect>
+					<foreignObject x="20" y="20" width="100" height="30">
+						<div class="inside">Нарахування амортизації</div>
+					</foreignObject>
+					<foreignObject x="20" y="20" width="100" height="30">
+						<i class="ico ico-file-content"></i>
+					</foreignObject>
+				</g>
+				<g class="action" filter="url(#dropShadow)">
+					<rect x="180" y="20" width="100" height="30" fill="#f8f8f8" stroke="#999"></rect>
+					<foreignObject x="180" y="20" width="100" height="30">
+						<div class="d-action-text"><i class="ico ico-access"></i><a href="">Подивитися</a><span>Нарахування амортизації</span></div>
+					</foreignObject>
+				</g>
+				<g class="block">
+					<rect x="20" y="80" width="300" height="50" fill="#dae8fc" stroke="#6c8ebf" filter="url(#dropShadow)" />
+					<foreignObject x="20" y="80" width="200" height="50">
+						<div class="d-action-text"><i class="ico ico-access"></i><a href="">Докладніше</a><span>Нарахування амортизації</span></div>
+					</foreignObject>
+				</g>
+				<path d="M130,35 L177,35" stroke="#000" stroke-width="1" marker-end="url(#arrow)" marker-start="url(#arrow-start)"></path>
+			</svg>
+		</div>
+		<button @click="click">Click!</button>
+	</div>
+	<script type="text/javascript" src="../scripts/vue.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			methods: {
+				click() {
+					alert('click');
+				}
+			}
+		});
+	</script>
+</body>
+</html>
