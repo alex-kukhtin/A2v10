@@ -16,6 +16,8 @@ namespace A2v10.Xaml
 				return;
 			if (Content is UIElementBase)
 				(Content as UIElementBase).RenderElement(context, onRender);
+			else if (Content is String)
+				context.Writer.Write(Content.ToString());
 		}
 
 		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)

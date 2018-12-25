@@ -9,7 +9,7 @@ namespace A2v10.Xaml
 	{
 		public Int32? ColSpan { get; set; }
 		public Int32? RowSpan { get; set; }
-		public TextAlign Align { get; set; }
+		public TextAlign? Align { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 			MergeAttributes(td, context);
 			td.MergeAttribute("colspan", ColSpan);
 			td.MergeAttribute("rowspan", RowSpan);
-			if (Align != TextAlign.Left)
+			if (Align != null)
 				td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			if (GroupIndent && IsInTreeSection)
 			{

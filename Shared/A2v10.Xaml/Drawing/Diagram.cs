@@ -10,6 +10,7 @@ namespace A2v10.Xaml.Drawing
 		{
 			var div = new TagBuilder("div", "diagram");
 			div.RenderStart(context);
+			MergeAttributes(div, context);
 			RenderDiagram(context);
 			div.RenderEnd(context);
 		}

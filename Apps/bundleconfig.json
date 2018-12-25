@@ -1,9 +1,10 @@
 [
   {
     "outputFileName": "Develop/_assets/app.min.css",
-    "inputFiles": [
-      "Develop/_assets/app.css"
-    ]
+		"inputFiles": [
+			"Develop/_assets/app.css",
+			"Develop/_assets/diagram.css"
+		]
   },
   {
     "outputFileName": "Develop/_assets/app.min.js",

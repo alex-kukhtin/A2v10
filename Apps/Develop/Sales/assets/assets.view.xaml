@@ -1,0 +1,53 @@
+<!-- assets dashboard -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Grid Columns="MinMax(250;1*), MinMax(250;1*), Auto">
+		<Panel Grid.ColSpan="2" Grid.Row="1"  Grid.VAlign="Top"
+			   Header="Нематеріальні активи" Style="Default" Collapsible="True" DropShadow="Shadow1">
+			<ContentControl Content="{Source diagram.html}"/>
+		</Panel>
+		<Panel Header="Бухгалтерській облік" Grid.VAlign="Top" Collapsible="True" DropShadow="Shadow1">
+			<StackPanel Orientation="Horizontal">
+				<Label>Період</Label>
+				<DatePicker></DatePicker>
+			</StackPanel>
+			<Sheet Striped="True" GridLines="Both" Wrap="NoWrap">
+				<Sheet.Header>
+					<SheetRow Style="Header">
+						<SheetCell ColSpan="2">Рахунок</SheetCell>
+						<SheetCell ColSpan="2">На 01.01.2018</SheetCell>
+						<SheetCell ColSpan="2">Обороти</SheetCell>
+						<SheetCell ColSpan="2">На 31.01.2018</SheetCell>
+					</SheetRow>
+					<SheetRow Style="Header">
+						<SheetCell>Код</SheetCell>
+						<SheetCell>Назва</SheetCell>
+						<SheetCell>Дт</SheetCell>
+						<SheetCell>Кт</SheetCell>
+						<SheetCell>Дт</SheetCell>
+						<SheetCell>Кт</SheetCell>
+						<SheetCell>Дт</SheetCell>
+						<SheetCell>Кт</SheetCell>
+					</SheetRow>
+				</Sheet.Header>
+				<SheetSection>
+					<SheetRow Align="Right">
+						<SheetCell Align="Center">10</SheetCell>
+						<SheetCell Wrap="Wrap" Align="Left">Необоротні активи</SheetCell>
+						<SheetCell>25 000.00</SheetCell>
+						<SheetCell />
+						<SheetCell />
+						<SheetCell>25 000.00</SheetCell>
+						<SheetCell>25 000.00</SheetCell>
+						<SheetCell />
+					</SheetRow>
+					<SheetRow >
+						<SheetCell Align="Center">13</SheetCell>
+						<SheetCell Wrap="Wrap" Align="Left">Знос</SheetCell>
+						<SheetCell Align="Right">25 000.00</SheetCell>
+						<SheetCell />
+					</SheetRow>
+				</SheetSection>
+			</Sheet>
+		</Panel>
+	</Grid>
+</Page>

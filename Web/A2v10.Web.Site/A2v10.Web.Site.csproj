@@ -156,6 +156,7 @@
     <Content Include="App_application\Shared\_SimpleLayout.cshtml">
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
+    <Content Include="Less\Diagram.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -46,7 +46,8 @@ namespace A2v10.Xaml
 			{
 				String basePath = System.IO.Path.GetDirectoryName(baseUri.PathAndQuery);
 				String targetDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, path));
-				if (System.IO.Path.GetExtension(targetDir).ToLowerInvariant() == ".js")
+				String ext = System.IO.Path.GetExtension(targetDir).ToLowerInvariant();
+				if (ext == ".js" || ext == ".html")
 				{
 					if (File.Exists(targetDir))
 						return File.ReadAllText(targetDir);

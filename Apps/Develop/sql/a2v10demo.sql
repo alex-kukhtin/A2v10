@@ -22,9 +22,9 @@ go
 set nocount on;
 
 if not exists(select * from a2sys.Versions where Module = N'demo')
-	insert into a2sys.Versions (Module, [Version]) values (N'demo', 7017);
+	insert into a2sys.Versions (Module, [Version]) values (N'demo', 7018);
 else
-	update a2sys.Versions set [Version] = 7017 where Module = N'demo';
+	update a2sys.Versions set [Version] = 7018 where Module = N'demo';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2demo')
@@ -2050,7 +2050,8 @@ begin
 		(62, 30,  N'Накладные',	  N'waybill',    N'file', 20, null),
 		(63, 30,  N'Покупатели',  N'customer',   N'user', 30, null),
 		(64, 30,  N'Справочники', N'catalog',    N'list', 40, null),
-		(70, 10,   N'Inbox (2)',       N'inbox',      N'workflow1', 50, null)
+		(70, 10,  N'Inbox (2)',        N'inbox',      N'workflow1', 50, null),
+		(71, 10,  N'Assets', N'assets', N'dashboard', 60, null)
 	merge a2ui.Menu as target
 	using @menu as source
 	on target.Id=source.id and target.Id >= 1 and target.Id < 200

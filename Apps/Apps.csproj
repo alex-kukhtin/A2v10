@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -60,6 +61,7 @@
     <None Include="Develop\Document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Develop\Sales\assets\model.json" />
     <None Include="Develop\sql.json" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
@@ -97,6 +99,9 @@
     <Content Include="Develop\Agent\editCustomer.template.js" />
     <Content Include="Develop\Agent\editFolder.template.js" />
     <Content Include="Develop\Agent\editSupplier.template.js" />
+    <Content Include="Develop\Sales\assets\assets.template.js" />
+    <Content Include="Develop\Sales\assets\diagram.html" />
+    <Content Include="Develop\_assets\diagram.css" />
     <Content Include="VueSite\blog\blog.html" />
     <Content Include="VueSite\blog\blog.js" />
     <Content Include="VueSite\index\index.view.html" />
@@ -457,6 +462,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\styles.xaml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Sales\assets\assets.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
