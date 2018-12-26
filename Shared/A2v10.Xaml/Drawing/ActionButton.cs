@@ -4,28 +4,47 @@ using System;
 
 namespace A2v10.Xaml.Drawing
 {
-	public class ActionButton : DrawingElement
+	public class ActionButton : DrawingElement, IHasPositionAndSize
 	{
 		public Icon Icon { get; set; }
+
+		public Size Size { get; set; }
+		public Point Pos { get; set; }
+
+		public Object Content { get; set; }
+		public Command Command { get; set; }
 
 		internal override void RenderElement(RenderContext context)
 		{
 			var g = new TagBuilder("g", "action-button");
 			MergeAttributes(g, context);
+			MergeCommandAttribute(g, context);
 			g.RenderStart(context);
 			var r = new TagBuilder("rect");
-			SetPositionAndSize(r);
+			this.SetPositionAndSize(r);
 			r.Render(context);
+
 			var f = new TagBuilder("foreignObject");
+			this.SetPositionAndSize(f);
 			f.RenderStart(context);
-			SetPositionAndSize(f);
+			RenderBody(context);
 			f.RenderEnd(context);
 			g.RenderEnd(context);
 		}
 
-		void SetPositionAndSize(TagBuilder t)
+		void RenderBody(RenderContext context)
 		{
-
+			var div = new TagBuilder("div", "d-ab-body");
+			div.RenderStart(context);
+			RenderIcon(context, Icon, "d-ab-ico");
+			if (Content != null)
+			{
+				// TODO: binding
+				var span = new TagBuilder("span", "d-ab-text");
+				span.SetInnerText(Content.ToString());
+				span.Render(context);
+			}
+			div.RenderEnd(context);
 		}
 	}
 }

@@ -96,6 +96,12 @@ namespace A2v10.Xaml
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			tag.AddCssClass(CssClass);
 			tag.AddCssClassBoolNo(UserSelect, "user-select");
+			if (Absolute != null)
+			{
+				Absolute.MergeAbsolute(tag);
+				tag.MergeStyle("width", "auto");
+				tag.MergeStyle("height", "auto");
+			}
 		}
 
 		void RenderTitle(RenderContext context)

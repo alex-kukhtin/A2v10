@@ -3,6 +3,8 @@
 using System;
 using System.ComponentModel;
 
+using A2v10.Infrastructure;
+
 namespace A2v10.Xaml
 {
 	public class XamlElement : ISupportInitialize, ISupportBinding
@@ -124,6 +126,32 @@ namespace A2v10.Xaml
 			tag.MergeAttribute(attrName, attrVal);
 		}
 
+		internal void MergeCommandAttribute(TagBuilder tag, RenderContext context, Boolean withHref = true)
+		{
+			var cmd = GetBindingCommand("Command");
+			if (cmd == null)
+				return;
+			cmd.MergeCommandAttributes(tag, context);
+			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
+			if (withHref)
+				tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
+		}
+
+		internal Boolean RenderIcon(RenderContext context, Icon icon, String addClass = null)
+		{
+			var iconBind = GetBinding("Icon");
+			if (icon == Icon.NoIcon && iconBind == null)
+				return false;
+			var iTag = new TagBuilder("i", "ico");
+			if (iconBind != null)
+				iTag.MergeAttribute(":class", $"'ico-' + {iconBind.GetPath(context)}");
+			else if (icon != Icon.NoIcon)
+				iTag.AddCssClass("ico-" + icon.ToString().ToKebabCase());
+			iTag.AddCssClass(addClass);
+			iTag.Render(context);
+			context.RenderSpace(); // after icon - always
+			return true;
+		}
 
 		#region ISupportInitialize
 		public void BeginInit()

@@ -95,9 +95,21 @@
     <Compile Include="Drawing\ActionButton.cs" />
     <Compile Include="Drawing\Diagram.cs" />
     <Compile Include="Drawing\DrawingElement.cs" />
+    <Compile Include="Drawing\DrawingElementCollection.cs" />
+    <Compile Include="Drawing\Extensions.cs" />
+    <Compile Include="Drawing\Interfaces.cs" />
+    <Compile Include="Drawing\Enums.cs" />
     <Compile Include="Drawing\Group.cs" />
     <Compile Include="Drawing\Line.cs" />
+    <Compile Include="Drawing\Path.cs" />
+    <Compile Include="Drawing\Size.cs" />
+    <Compile Include="Drawing\Point.cs" />
     <Compile Include="Drawing\Rectangle.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Text\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\Attachments.cs" />
@@ -189,6 +201,15 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Drawing\Resources\svgdefs.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

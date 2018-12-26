@@ -4245,6 +4245,7 @@ TODO:
   padding: 4px 6px 6px 6px;
   background-color: #fffce9;
   border: 1px solid #ddd;
+  white-space: normal;
   min-width: 150px;
   min-height: 30px;
   text-align: left;
@@ -5414,4 +5415,46 @@ h5,
   .a2-alert {
     display: none;
   }
+}
+.diagram .path {
+  stroke: #000;
+  stroke-width: 1;
+}
+.diagram .d-blue {
+  stroke: #6c8ebf;
+  fill: #dae8fc;
+}
+.diagram .d-green {
+  stroke: #82b366;
+  fill: #d5e8d4;
+}
+.diagram .d-orange {
+  fill: #ffe6cc;
+  stroke: #d79b00;
+}
+.diagram .action-button {
+  color: #999;
+  cursor: pointer;
+}
+.diagram .action-button rect {
+  fill: #f8f8f8;
+  stroke: #999;
+  stroke-width: 1;
+}
+.diagram .action-button:hover rect {
+  fill: #fff2cc;
+  stroke: #d6b656;
+}
+.diagram .action-button .d-ab-body {
+  line-height: 1;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+}
+.diagram .action-button .d-ab-body .d-ab-ico {
+  font-size: 24px;
+  margin: 2px 4px 0 0;
+}
+.diagram .action-button .d-ab-body .d-ab-text {
+  font-size: 12px;
 }

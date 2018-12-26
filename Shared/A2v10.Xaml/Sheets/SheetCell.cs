@@ -10,6 +10,8 @@ namespace A2v10.Xaml
 		public Int32? ColSpan { get; set; }
 		public Int32? RowSpan { get; set; }
 		public TextAlign? Align { get; set; }
+		public Boolean? Bold { get; set; }
+		public Boolean? Italic { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -28,6 +30,8 @@ namespace A2v10.Xaml
 				td.MergeAttribute(":class", "row.indentCssClass()");
 			}
 			MergeContent(td, context);
+			td.AddCssClassBoolNo(Bold, "bold");
+			td.AddCssClassBoolNo(Italic, "italic");
 			td.RenderStart(context);
 			RenderContent(context);
 			td.RenderEnd(context);

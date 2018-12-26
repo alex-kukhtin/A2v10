@@ -66,10 +66,9 @@ namespace A2v10.Xaml
 					Margin.MergeStyles("margin", tag);
 				if (Padding != null)
 					Padding.MergeStyles("padding", tag);
-
-				if (Absolute != null)
-					Absolute.MergeAbsolute(tag);
 			}
+			if (Absolute != null)
+				Absolute.MergeAbsolute(tag);
 		}
 
 		internal void RenderContent(RenderContext context, Object content)
@@ -81,22 +80,6 @@ namespace A2v10.Xaml
 				(content as UIElementBase).RenderElement(context);
 			else if (content != null)
 				context.Writer.Write(context.Localize(content.ToString()));
-		}
-
-		internal Boolean RenderIcon(RenderContext context, Icon icon, String addClass = null)
-		{
-			var iconBind = GetBinding("Icon");
-			if (icon == Icon.NoIcon && iconBind == null)
-				return false;
-			var iTag = new TagBuilder("i", "ico");
-			if (iconBind != null)
-				iTag.MergeAttribute(":class", $"'ico-' + {iconBind.GetPath(context)}");
-			else if (icon != Icon.NoIcon)
-				iTag.AddCssClass("ico-" + icon.ToString().ToKebabCase());
-			iTag.AddCssClass(addClass);
-			iTag.Render(context);
-			context.RenderSpace(); // after icon - always
-			return true;
 		}
 
 		internal void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)
@@ -115,17 +98,6 @@ namespace A2v10.Xaml
 				tag.MergeAttribute($":{attrName}", attrBind.GetPath(context));
 			else if (propValue != null)
 				tag.MergeAttribute($":{attrName}", propValue.ToString());
-		}
-
-		internal void MergeCommandAttribute(TagBuilder tag, RenderContext context, Boolean withHref = true)
-		{
-			var cmd = GetBindingCommand("Command");
-			if (cmd == null)
-				return;
-			cmd.MergeCommandAttributes(tag, context);
-			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
-			if (withHref)
-				tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
 		}
 
 		internal void MergeValueItemProp(TagBuilder input, RenderContext context, String valueName)

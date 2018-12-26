@@ -60,6 +60,7 @@ namespace A2v10.Xaml
 		public GridLinesVisibility GridLines { get; set; }
 		public Boolean Hover { get; set; }
 		public Boolean Striped { get; set; }
+		public Boolean? Border { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -72,6 +73,7 @@ namespace A2v10.Xaml
 				sheet.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");
 			sheet.AddCssClassBool(Hover, "hover");
 			sheet.AddCssClassBool(Striped, "striped");
+			sheet.AddCssClassBoolNo(Border, "border");
 			sheet.RenderStart(context);
 			RenderColumns(context);
 			RenderHeader(context);

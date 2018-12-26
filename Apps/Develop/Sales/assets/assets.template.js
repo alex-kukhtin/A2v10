@@ -6,6 +6,9 @@ const template = {
 	},
 	commands: {
 		openDocument
+	},
+	delegates: {
+		diagramByType
 	}
 };
 
@@ -13,4 +16,8 @@ module.exports = template;
 
 function openDocument(doc) {
 	alert(doc);
+}
+
+function diagramByType() {
+
 }

@@ -1,11 +1,11 @@
 ﻿<div class="diagram">
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 0 710 200" shape-rendering="geometricPrecision">
 		<defs>
 			<marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-				<path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+				<path d="M0,6 L9,3 L0,0 L3,3 z" fill="#000" />
 			</marker>
 			<marker id="arrow-start" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-				<path d="M9,0 L0,3 L9,6 L7,3 z" fill="#f00" stroke="#0f0" stroke-width="0" />
+				<path d="M9,0 L0,3 L9,6 L7,3 z" fill="#000" />
 			</marker>
 			<filter xmlns="http://www.w3.org/2000/svg" id="dropShadow">
 				<feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="blur" />
@@ -16,14 +16,14 @@
 			</filter>
 		</defs>
 		<g class="block">
-			<rect x="20" y="80" width="300" height="50" fill="#dae8fc" stroke="#6c8ebf" filter="url(#dropShadow)" />
-			<foreignObject x="20" y="80" width="200" height="50">
-				<div class="d-action-text">
-					<i class="ico ico-access"></i>
-					<a href="">Докладніше</a><span>Основні засоби на складі</span>
+			<rect x="0" y="80" width="200" height="60" fill="#dae8fc" stroke="#6c8ebf" filter="url(#dropShadow)" />
+			<foreignObject x="0" y="80" width="200" height="60">
+				<div class="d-card">
+					<span>На складі</span>
+					<span>25</span>
+					<div>250 000 ₴</div>
 				</div>
 			</foreignObject>
-			<path d="M130,35 L177,35" stroke="#000" stroke-width="1" marker-end="url(#arrow)" marker-start="url(#arrow-start)"></path>
 		</g>
 		<g class="action" @click="$exec('openDocument', 'amo')">
 			<rect x="20" y="20" width="100" height="30" fill="#f8f8f8" stroke="#999" filter="url(#dropShadow)"></rect>
@@ -34,5 +34,19 @@
 				</div>
 			</foreignObject>
 		</g>
+		<path d="M153,35 L177,35" stroke="#000" stroke-width="1" marker-end="url(#arrow)" marker-start="url(#arrow-start)"></path>
 	</svg>
+	<div>
+		Баланс підприємства
+		<table>
+			<tr>
+				<td>Актив</td>
+				<td>Пассив</td>
+			</tr>
+			<tr>
+				<td>Необоротные активы</td>
+			</tr>
+		</table>
+
+	</div>
 </div>

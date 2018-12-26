@@ -322,6 +322,8 @@ namespace A2v10.Xaml
 		String CommandArgument(RenderContext context, Boolean nullable = false)
 		{
 			String arg = null;
+			if (Argument != null)
+				return $"'{Argument}'";
 			if (nullable)
 			{
 				var argBind = GetBinding(nameof(Argument));

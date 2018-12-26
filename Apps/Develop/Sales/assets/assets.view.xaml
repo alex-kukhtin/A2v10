@@ -1,53 +1,105 @@
 <!-- assets dashboard -->
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
-	<Grid Columns="MinMax(250;1*), MinMax(250;1*), Auto">
-		<Panel Grid.ColSpan="2" Grid.Row="1"  Grid.VAlign="Top"
-			   Header="Нематеріальні активи" Style="Default" Collapsible="True" DropShadow="Shadow1">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+	 xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
+	  Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
+	<Grid Columns="MinMax(350;1*), MinMax(350;1*), Auto" Rows="Auto,Auto">
+		<Panel Grid.ColSpan="2" Grid.Row="1" Grid.Col="1" Grid.RowSpan="2" Grid.VAlign="Top" Header="Нематеріальні активи"
+			 DropShadow="Shadow1">
+			<!--
 			<ContentControl Content="{Source diagram.html}"/>
+			-->
+			<d:Diagram>
+				<d:Group DropShadow="True">
+					<d:ActionButton Size="120,40" Pos="0,0" Icon="FileContent" Content="Вхідний рахунок" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='invoiceIn'}"/>
+					<d:Path Points="60,40;60,57" MarkerEnd="Arrow"/>
+					<d:ActionButton Size="120,40" Pos="0,60" Icon="FileContent" Content="Прибуткова накладна" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='amo'}"/>
+					<d:Path Points="60,100;60,117" MarkerEnd="Arrow"/>
+					<d:Rectangle Size="240,60" Pos="0, 120" Style="Orange"></d:Rectangle>
+					<d:Path Points="10,10;100,300" MarkerStart="Arrow" MarkerEnd="Arrow"/>
+					<d:Path Points="150,120;250,100" MarkerStart="Arrow" MarkerEnd="Arrow"/>
+					<d:ActionButton Size="120,40" Pos="140,60" Icon="FileContent" Content="Нарахувати амортизацію" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='amo'}"/>
+				</d:Group>
+			</d:Diagram>
 		</Panel>
-		<Panel Header="Бухгалтерській облік" Grid.VAlign="Top" Collapsible="True" DropShadow="Shadow1">
-			<StackPanel Orientation="Horizontal">
-				<Label>Період</Label>
-				<DatePicker></DatePicker>
+		<Panel Grid.VAlign="Top" DropShadow="Shadow1" Header="Бухгалтерський облік НМА" Grid.Col="3">
+			<Table Striped="True" Wrap="NoWrap">
+				<Table.Header>
+					<TableRow>
+						<TableCell>Рахунок</TableCell>
+						<TableCell>Дебет</TableCell>
+						<TableCell>Кредит</TableCell>
+					</TableRow>
+				</Table.Header>
+				<TableRow>
+					<Popover Text="10. Необоротні активи" Placement="BottomLeft" Width="200">На дебеті 
+							цього рахунку щось таке є.</Popover>
+					<TableCell Bold="True" Align="Right">25 000.00</TableCell>
+					<TableCell Bold="True" Align="Right"/>
+				</TableRow>
+				<TableRow>
+					<Popover Text="13. Знос (амортизація)"></Popover>
+					<TableCell />
+					<TableCell Align="Right">10 000.00</TableCell>
+				</TableRow>
+				<TableRow>
+					<Popover Text="15. Капітальні інвестиції"></Popover>
+					<TableCell />
+					<TableCell Align="Right">25 000.00</TableCell>
+				</TableRow>
+			</Table>
+			<Line />
+			<StackPanel Orientation="Vertical" Margin="12,6,6,6">
+				<Hyperlink Icon="Table" Block="True" Margin="4">Оборотна відомість</Hyperlink>
+				<Hyperlink Icon="Table" Block="True" Margin="4">Відомість по МВО</Hyperlink>
+				<Hyperlink Icon="Table" Block="True" Margin="4">I ще один звіт</Hyperlink>
 			</StackPanel>
-			<Sheet Striped="True" GridLines="Both" Wrap="NoWrap">
-				<Sheet.Header>
-					<SheetRow Style="Header">
-						<SheetCell ColSpan="2">Рахунок</SheetCell>
-						<SheetCell ColSpan="2">На 01.01.2018</SheetCell>
-						<SheetCell ColSpan="2">Обороти</SheetCell>
-						<SheetCell ColSpan="2">На 31.01.2018</SheetCell>
-					</SheetRow>
-					<SheetRow Style="Header">
-						<SheetCell>Код</SheetCell>
-						<SheetCell>Назва</SheetCell>
-						<SheetCell>Дт</SheetCell>
-						<SheetCell>Кт</SheetCell>
-						<SheetCell>Дт</SheetCell>
-						<SheetCell>Кт</SheetCell>
-						<SheetCell>Дт</SheetCell>
-						<SheetCell>Кт</SheetCell>
-					</SheetRow>
-				</Sheet.Header>
-				<SheetSection>
-					<SheetRow Align="Right">
-						<SheetCell Align="Center">10</SheetCell>
-						<SheetCell Wrap="Wrap" Align="Left">Необоротні активи</SheetCell>
-						<SheetCell>25 000.00</SheetCell>
-						<SheetCell />
-						<SheetCell />
-						<SheetCell>25 000.00</SheetCell>
-						<SheetCell>25 000.00</SheetCell>
-						<SheetCell />
-					</SheetRow>
-					<SheetRow >
-						<SheetCell Align="Center">13</SheetCell>
-						<SheetCell Wrap="Wrap" Align="Left">Знос</SheetCell>
-						<SheetCell Align="Right">25 000.00</SheetCell>
-						<SheetCell />
-					</SheetRow>
-				</SheetSection>
-			</Sheet>
+		</Panel>
+		<Panel Grid.Row="2" Grid.Col="3" Header="Інформація" Grid.VAlign="Top" Padding="6">
+			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
+				<PropertyGridItem Name="На складі">2233</PropertyGridItem>
+				<PropertyGridItem Name="В експлуатації">2233</PropertyGridItem>
+				<PropertyGridItem Name="Початкова вартість">2233</PropertyGridItem>
+				<PropertyGridItem Name="Накопичений знос">2233</PropertyGridItem>
+				<PropertyGridItem Name="Залишкова вартість">2233</PropertyGridItem>
+			</PropertyGrid>
+			<StackPanel Orientation="Vertical">
+			<Text>Останнє нарахування амортизації за
+				<Span Bold="True">грудень 2018</Span>.
+			</Text>
+			<Hyperlink Icon="Calendar">Нарахувати амортизацію за cічень 2019</Hyperlink>
+			<Text>Ніяких дій не потрібно.</Text>
+			</StackPanel>
+		</Panel>
+		<Panel Header="Діаграма" Grid.Row="3" Grid.ColSpan="2" Height="200">
+			<TabPanel>
+				<Tab Header="По типах НМА">
+					<Graphics Delegate="diagramByType"></Graphics>
+				</Tab>
+				<Tab Header="По відповідальних особах">
+					<StackPanel Orientation="Horizontal">
+
+						<StateCard Header="Необоротні активи" Icon="Wrench" Text="123 444.44" Style="Cyan"/>
+
+						<StateCard Header="Залишкова вартість" Icon="Wrench" Text="123.44" Style="Green">
+							<StateCard.Footer>
+								<Text>
+									<Span Bold="True">+234</Span> за грудень місяць
+								</Text>
+							</StateCard.Footer>
+						</StateCard>
+						<StateCard Header="Накопичений знос" Icon="ArrowRight" Text="123.44" Style="Yellow">
+							<StateCard.Footer>
+								<Text>
+									<Span Bold="True">+234</Span> за грудень місяць
+								</Text>
+							</StateCard.Footer>
+						</StateCard>
+					</StackPanel>
+				</Tab>
+			</TabPanel>
 		</Panel>
 	</Grid>
 </Page>
