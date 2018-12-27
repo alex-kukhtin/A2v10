@@ -1,9 +1,11 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml.Drawing
 {
+	[ContentProperty("Content")]
 	public class ActionButton : DrawingElement, IHasPositionAndSize
 	{
 		public Icon Icon { get; set; }

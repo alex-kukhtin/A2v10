@@ -13,6 +13,8 @@ namespace A2v10.Xaml.Drawing
 		None,
 		Blue,
 		Green,
-		Orange
+		Orange,
+		Red,
+		Magenta
 	}
 }

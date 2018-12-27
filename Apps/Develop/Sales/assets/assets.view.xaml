@@ -1,26 +1,96 @@
 <!-- assets dashboard -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
-	 xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
-	  Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
-	<Grid Columns="MinMax(350;1*), MinMax(350;1*), Auto" Rows="Auto,Auto">
-		<Panel Grid.ColSpan="2" Grid.Row="1" Grid.Col="1" Grid.RowSpan="2" Grid.VAlign="Top" Header="Нематеріальні активи"
+	xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
+	Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
+	<Grid Columns="MinMax(455;1*), MinMax(455;1*), Auto" Rows="Auto,Auto">
+		<Panel Grid.ColSpan="2" Grid.Row="1" Grid.Col="1" Grid.RowSpan="2" Grid.VAlign="Top" Header="Необоротні активи"
 			 DropShadow="Shadow1">
 			<!--
 			<ContentControl Content="{Source diagram.html}"/>
 			-->
-			<d:Diagram>
+			<d:Diagram Size="920,370" ViewBox="-10,-10,910,360">
 				<d:Group DropShadow="True">
-					<d:ActionButton Size="120,40" Pos="0,0" Icon="FileContent" Content="Вхідний рахунок" 
+					<d:ActionButton Size="120,40" Pos="0,0" Icon="FileContent" Content="Придбання (рахунок)" 
 							Command="{BindCmd Execute, CommandName='openDocument', Argument='invoiceIn'}"/>
 					<d:Path Points="60,40;60,57" MarkerEnd="Arrow"/>
 					<d:ActionButton Size="120,40" Pos="0,60" Icon="FileContent" Content="Прибуткова накладна" 
-							Command="{BindCmd Execute, CommandName='openDocument', Argument='amo'}"/>
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='waybillIn'}"/>
 					<d:Path Points="60,100;60,117" MarkerEnd="Arrow"/>
-					<d:Rectangle Size="240,60" Pos="0, 120" Style="Orange"></d:Rectangle>
-					<d:Path Points="10,10;100,300" MarkerStart="Arrow" MarkerEnd="Arrow"/>
-					<d:Path Points="150,120;250,100" MarkerStart="Arrow" MarkerEnd="Arrow"/>
-					<d:ActionButton Size="120,40" Pos="140,60" Icon="FileContent" Content="Нарахувати амортизацію" 
+					<d:ActionButton Size="120,40" Pos="130,60" Icon="FileContent" Content="Будівництво" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='build'}"/>
+					<d:Path Points="190,100;190,117" MarkerEnd="Arrow"/>
+					<d:Path Points="250,150;267,150" MarkerEnd="Arrow" />
+					<d:ActionButton Size="120,40" Pos="270,130" Icon="FileContent" Content="Введення в експлуатацію" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='explIn'}"/>
+					<d:Path Points="390,150;407,150" MarkerEnd="Arrow" />
+					<!--В експлуатації-->
+					<d:ActionButton Size="120,40" Pos="0,200" Icon="FileContent" Content="Продаж (рахунок)" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='invoiceOut'}"/>
+					<d:Path Points="60,240;60,257" MarkerEnd="Arrow"/>
+					<d:Path Points="140,220;123,220" MarkerEnd="Arrow" />
+					<d:ActionButton Size="120,40" Pos="0,260" Icon="FileContent" Content="Видаткова накладна" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='waybillOut'}"/>
+					<d:Card Size="250,60" Pos="140, 200" Style="Red" Icon="FileLink" Header="Необоронті активи для продажу" Text="0.00"></d:Card>
+
+					<d:ActionButton Size="120,40" Pos="410,200" Icon="FileContent" Content="Виведення для продажу" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='waybillOut'}"/>
+					<d:Path Points="470,180;470,197" MarkerEnd="Arrow"/>
+					<d:Path Points="410,220;393,220" MarkerEnd="Arrow" />
+
+					<d:ActionButton Size="120,40" Pos="480,250" Icon="FileContent" Content="Безоплана передача" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='freeOut'}"/>
+					<d:Path Points="540,180;540,247" MarkerEnd="Arrow"/>
+
+					<d:ActionButton Size="120,40" Pos="550,300" Icon="FileContent" Content="Ліквідація" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='liquid'}"/>
+					<d:Path Points="610,180;610,297" MarkerEnd="Arrow"/>
+
+					<d:ActionButton Size="120,40" Pos="370,60" Icon="FileContent" Content="Інвентарізація" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='invent'}"/>
+					<d:Path Points="440,103;440,117" MarkerEnd="Arrow" MarkerStart="Arrow"/>
+					<d:ActionButton Size="120,40" Pos="440,0" Icon="FileContent" Content="Консервація" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='conserv'}"/>
+					<d:Path Points="500,43;500,117" MarkerEnd="Arrow" MarkerStart="Arrow"/>
+					<d:ActionButton Size="120,40" Pos="510,60" Icon="FileContent" Content="Ремонт або відновлення" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='conserv'}"/>
+					<d:Path Points="570,103;570,117" MarkerEnd="Arrow" MarkerStart="Arrow"/>
+					<d:ActionButton Size="120,40" Pos="580,0" Icon="FileContent" Content="Переміщення" 
+							Command="{BindCmd Execute, CommandName='openDocument', Argument='move'}"/>
+					<d:Path Points="640,43;640,117" MarkerEnd="Arrow" MarkerStart="Arrow"/>
+
+					<d:ActionButton Size="120,40" Pos="680,130" Icon="FileContent" Content="Нарахувати амортизацію" 
 							Command="{BindCmd Execute, CommandName='openDocument', Argument='amo'}"/>
+					<d:Path Points="660,150;677,150" MarkerEnd="Arrow" />
+					<d:Path Points="740,170;740,197" MarkerEnd="Arrow"/>
+
+					<d:Card Size="250,60" Pos="640, 200" Style="Magenta" Icon="FileLink" Header="Знос (амортизація)" Text="145 000.00"></d:Card>
+					<d:Card Size="250,60" Pos="410, 120" Style="Green" Icon="FileLink" Header="В експлуатації" Text="350 000.00">
+						<d:Card.Hint>
+							<Popover Placement="TopRight" Width="250">
+								<Html>
+									<![CDATA[
+								Необоротні активи в експлуатації.
+								<br />
+								Зберігаються на рахунках <b>10</b> класу.
+								]]>
+								</Html>
+							</Popover>
+						</d:Card.Hint>
+					</d:Card>
+					<d:Card Size="250,60" Pos="0, 120" Style="Blue" Icon="FileLink" Header="Капітальні інвестіції" 
+							Text="25 000.00">
+						<d:Card.Hint>
+							<Popover Placement="TopRight" Width="270">
+								<Html>
+									<![CDATA[
+								Необоротні активи, які придбано та ще не ввведено в експлуатацію.
+								<br />
+								Зберігаються на рахунках <b>15</b> класу.
+								]]>
+								</Html>
+							</Popover>
+						</d:Card.Hint>
+					</d:Card>
 				</d:Group>
 			</d:Diagram>
 		</Panel>

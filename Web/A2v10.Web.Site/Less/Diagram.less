@@ -1,10 +1,16 @@
 ﻿@dark-gray: #999;
 
 .diagram {
+	margin:auto;
 
 	.path {
 		stroke: #000;
 		stroke-width: 1;
+	}
+
+	rect {
+		fill: white;
+		stroke: #000;
 	}
 
 	.d-blue {
@@ -20,6 +26,16 @@
 	.d-orange {
 		fill: #ffe6cc;
 		stroke: #d79b00;
+	}
+
+	.d-red {
+		fill: #f8cecc;
+		stroke: #b85450;
+	}
+
+	.d-magenta {
+		fill: #e1d5e7;
+		stroke: #9673a6;
 	}
 
 	.action-button {
@@ -53,6 +69,29 @@
 			.d-ab-text {
 				font-size: 12px;
 			}
+		}
+	}
+
+	.card {
+		.d-card-ico {
+			font-size: 30px;
+			position: absolute;
+			right: 6px;
+			top: 6px;
+			color: hsla(0,0%,100%,.35);
+		}
+
+		.d-card-header {
+			display: block;
+			color: #000;
+			margin: 4px 8px;
+		}
+
+		.d-card-text {
+			display:block;
+			font-size:24px;
+			margin:4px 8px;
+			text-align:right;
 		}
 	}
 }

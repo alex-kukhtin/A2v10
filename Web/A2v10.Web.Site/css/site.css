@@ -5416,9 +5416,16 @@ h5,
     display: none;
   }
 }
+.diagram {
+  margin: auto;
+}
 .diagram .path {
   stroke: #000;
   stroke-width: 1;
+}
+.diagram rect {
+  fill: white;
+  stroke: #000;
 }
 .diagram .d-blue {
   stroke: #6c8ebf;
@@ -5431,6 +5438,14 @@ h5,
 .diagram .d-orange {
   fill: #ffe6cc;
   stroke: #d79b00;
+}
+.diagram .d-red {
+  fill: #f8cecc;
+  stroke: #b85450;
+}
+.diagram .d-magenta {
+  fill: #e1d5e7;
+  stroke: #9673a6;
 }
 .diagram .action-button {
   color: #999;
@@ -5457,4 +5472,22 @@ h5,
 }
 .diagram .action-button .d-ab-body .d-ab-text {
   font-size: 12px;
+}
+.diagram .card .d-card-ico {
+  font-size: 30px;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  color: hsla(0, 0%, 100%, 0.35);
+}
+.diagram .card .d-card-header {
+  display: block;
+  color: #000;
+  margin: 4px 8px;
+}
+.diagram .card .d-card-text {
+  display: block;
+  font-size: 24px;
+  margin: 4px 8px;
+  text-align: right;
 }

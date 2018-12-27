@@ -11,11 +11,15 @@ namespace A2v10.Xaml.Drawing
 	public class Diagram : UIElementBase
 	{
 		public DrawingElementCollection Content { get; set; } = new DrawingElementCollection();
+		public Size Size { get; set; }
+		public String ViewBox { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", "diagram");
 			MergeAttributes(div, context);
+			if (Size != null)
+				div.MergeStyle("width", $"{Size.Width.ToString()}px");
 			div.RenderStart(context);
 			RenderDiagram(context);
 			div.RenderEnd(context);
@@ -26,6 +30,17 @@ namespace A2v10.Xaml.Drawing
 			var svg = new TagBuilder("svg");
 			svg.MergeAttribute("xmlns", "http://www.w3.org/2000/svg");
 			svg.MergeAttribute("shape-rendering","geometricPrecision");
+			if (Size != null)
+			{
+				svg.MergeAttribute("width", Size.Width.ToString());
+				svg.MergeAttribute("height", Size.Height.ToString());
+			}
+			if (ViewBox != null)
+			{
+				svg.MergeAttribute("viewBox", ViewBox);
+				svg.MergeAttribute("preserveAspectRatio", "xMidYMid meet");
+			}
+
 			svg.RenderStart(context);
 			RenderDefs(context);
 			foreach (var c in Content)
