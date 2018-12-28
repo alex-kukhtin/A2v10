@@ -127,7 +127,8 @@ namespace A2v10.Xaml
 		None,
 		LightGray,
 		WhiteSmoke,
-		White
+		White,
+		LightYellow
 	}
 
 	public enum ShadowStyle
@@ -333,6 +334,7 @@ namespace A2v10.Xaml
 		TagOutline,
 		TagRed,
 		TagYellow,
+		TaskComplete,
 		Trash,
 		TriangleLeft,
 		TriangleRight,

@@ -690,6 +690,9 @@
 .ico-calc:before {
   content: "\eac0";
 }
+.ico-task-complete:before {
+  content: "\eac8";
+}
 * {
   box-sizing: border-box;
 }
@@ -2695,10 +2698,12 @@ table.data-grid tr.group td .grtitle {
 table.data-grid tr.group td .grcount {
   float: right;
   font-size: 85%;
-  background-color: #999;
+  background-color: #ccc;
   color: white;
   padding: 2px 4px;
-  border-radius: 4px;
+  border-radius: 10rem;
+  text-align: center;
+  min-width: 1.5rem;
 }
 table.data-grid tr.group.lev-2 td {
   padding-left: 12px;
@@ -4763,6 +4768,9 @@ TODO:
 }
 .background-white-smoke {
   background-color: #f9f9f9;
+}
+.background-light-yellow {
+  background-color: #ffffe6;
 }
 .background-white {
   background-color: white;
