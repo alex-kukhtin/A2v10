@@ -4863,7 +4863,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181019-7323
+// 20181228-7393
 // components/datagrid.js*/
 
 (function () {
@@ -5190,10 +5190,11 @@ Vue.component('validator-control', {
 					computed: {
 						hasIcon() { return col.icon || col.bindIcon; },
 						iconClass() {
+							let icoSingle = !col.content ? ' ico-single' : '';
 							if (col.bindIcon)
-								return 'ico-' + utils.eval(row, col.bindIcon);
+								return 'ico-' + utils.eval(row, col.bindIcon) + icoSingle;
 							else if (col.icon)
-								return 'ico-' + col.icon;
+								return 'ico-' + col.icon + icoSingle;
 							return null;
 						}
 					},

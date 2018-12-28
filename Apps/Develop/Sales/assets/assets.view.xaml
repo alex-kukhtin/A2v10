@@ -2,12 +2,9 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
 	xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
 	Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
-	<Grid Columns="MinMax(455;1*), MinMax(455;1*), Auto" Rows="Auto,Auto">
-		<Panel Grid.ColSpan="2" Grid.Row="1" Grid.Col="1" Grid.RowSpan="2" Grid.VAlign="Top" Header="Необоротні активи"
+	<Grid Columns="MinMax(455;1*), MinMax(455;1*), MinMax(350;Auto)" Rows="Auto">
+		<Panel Grid.ColSpan="2" Grid.Row="1" Grid.Col="1" Grid.VAlign="Top" Header="Необоротні активи"
 			 DropShadow="Shadow1">
-			<!--
-			<ContentControl Content="{Source diagram.html}"/>
-			-->
 			<d:Diagram Size="920,370" ViewBox="-10,-10,910,360">
 				<d:Group DropShadow="True">
 					<d:ActionButton Size="120,40" Pos="0,0" Icon="FileContent" Content="Придбання (рахунок)" 
@@ -127,7 +124,7 @@
 				<Hyperlink Icon="Table" Block="True" Margin="4">I ще один звіт</Hyperlink>
 			</StackPanel>
 		</Panel>
-		<Panel Grid.Row="2" Grid.Col="3" Header="Інформація" Grid.VAlign="Top" Padding="6">
+		<Panel Grid.Row="2" Grid.Col="3" Header="Задачы" Grid.VAlign="Top" Padding="6">
 			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
 				<PropertyGridItem Name="На складі">2233</PropertyGridItem>
 				<PropertyGridItem Name="В експлуатації">2233</PropertyGridItem>

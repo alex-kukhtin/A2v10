@@ -173,6 +173,7 @@ namespace A2v10.Xaml
 		BankAccount,
 		BankUah,
 		BrandExcel,
+		Calc,
 		Calendar,
 		Call,
 		ChartArea,

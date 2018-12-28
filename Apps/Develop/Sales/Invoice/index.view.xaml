@@ -78,9 +78,11 @@
 		</DataGridColumn>
 		<DataGridColumn Header="@[Date]" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="@[No]" Content="{Bind No}" Fit="True" Align="Right" Wrap="NoWrap"/>
-		<DataGridColumn Header="@[Purchaser]" Content="{Bind Agent.Name}" Width="100"/>
+		<DataGridColumn Header="@[Purchaser]" Icon="Rename"
+						Content="{Bind Agent.Name}" Width="100" Command="{BindCmd Dialog, Action=Browse, Url={StaticResource OpenUrl}}"/>
 		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
+		<DataGridColumn Icon="Bank" Command="{BindCmd Dialog, Action=Browse, Url='/aaa/aaa'}" Fit="True"/>
 		<DataGridColumn Fit="True">
 			<CommandBar Visibility="Active">
 				<Button Icon="ArrowOpen" Tip="Открыть"/>

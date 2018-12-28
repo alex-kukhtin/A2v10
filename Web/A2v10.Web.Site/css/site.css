@@ -687,6 +687,9 @@
 .ico-currency-other:before {
   content: "\e91f";
 }
+.ico-calc:before {
+  content: "\eac0";
+}
 * {
   box-sizing: border-box;
 }

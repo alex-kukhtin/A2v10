@@ -109,15 +109,29 @@ namespace A2v10.Xaml
 				case CommandType.Help:
 					return $"$helpHref({CommandUrl(context)})";
 				case CommandType.NavigateExternal:
-					return $"{CommandUrl(context, decorate:false, skipCheck:true)}";
+					return $"{CommandUrl(context, decorate: false, skipCheck: true)}";
 			}
 			return null;
 		}
 
 		internal String NewWindowJS => NewWindow.ToString().ToLowerInvariant();
 
+		Boolean IsIndirectSupported
+		{
+			get
+			{
+				return Command == CommandType.Open || Command == CommandType.Remove ||
+					Command == CommandType.Execute || Command == CommandType.Dialog;
+			}
+		}
+
 		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null)
 		{
+			if (indirect)
+			{
+				if (!IsIndirectSupported)
+					throw new XamlException($"Command '{Command}' is not available in this context");
+			}
 			switch (Command)
 			{
 				case CommandType.Unknown:

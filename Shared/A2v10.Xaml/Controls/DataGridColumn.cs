@@ -132,7 +132,7 @@ namespace A2v10.Xaml
 
 			var cmdBind = GetBindingCommand(nameof(Command));
 			if (cmdBind != null)
-				column.MergeAttribute(":command", cmdBind.GetCommand(context, true));
+				column.MergeAttribute(":command", cmdBind.GetCommand(context, indirect:true));
 			column.RenderStart(context);
 			column.RenderEnd(context);
 			if (isTemplate)
