@@ -61,6 +61,12 @@ namespace A2v10.Web.Mvc.Start
 				defaults: new { controller = "Static", action = "Default" }
 			);
 
+			routes.MapRoute(
+				name: "Demo",
+				url: "Demo",
+				defaults: new { controller = "Account", action = "Demo" }
+			);
+
 			if (siteMode == "site")
 				RegisterSiteRoutes(routes);
 			else

@@ -25,6 +25,7 @@ using A2v10.Web.Mvc.Models;
 using A2v10.Data.Interfaces;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
+using System.Configuration;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -766,6 +767,27 @@ namespace A2v10.Web.Mvc.Controllers
 			if (body.IndexOf("{0}") == - 1)
 				throw new InvalidDataException($"Invalid email template for {code}");
 			return body;
+		}
+
+		// GET: /DemoMode
+		[AllowAnonymous]
+		public async Task<ActionResult> Demo()
+		{
+			String demo = ConfigurationManager.AppSettings["demo"];
+			if (demo == null)
+				return new HttpStatusCodeResult(404);
+			var lp = demo.Split(';');
+			if (lp.Length != 2)
+				return new HttpStatusCodeResult(404);
+			String userName = lp[0].Trim();
+			String password = lp[1].Trim();
+			var result = await SignInManager.PasswordSignInAsync(userName: userName, password: password, isPersistent: false, shouldLockout: false);
+			switch (result)
+			{
+				case SignInStatus.Success:
+					return Redirect("~/");
+			}
+			return new HttpStatusCodeResult(404);
 		}
 
 		#endregion
