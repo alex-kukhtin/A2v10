@@ -123,6 +123,14 @@ namespace A2v10.Xaml
 
 		readonly private String _currentLocale;
 
+		[ThreadStatic]
+		public static String _partialDataContext;
+
+		public static void SetPartialContext(String ctx)
+		{
+			_partialDataContext = ctx;
+		}
+
 		public RenderContext(UIElementBase root, RenderInfo ri)
 		{
 			Writer = ri.Writer;
@@ -203,15 +211,16 @@ namespace A2v10.Xaml
 			if (path == null)
 				path = String.Empty;
 			if (path.StartsWith("!"))
-				return "!" + GetNormalizedPathInt(path.Substring(1));
-			return GetNormalizedPathInt(path);
+				return "!" + GetNormalizedPathInternal(path.Substring(1));
+			return GetNormalizedPathInternal(path);
 		}
 
-		private String GetNormalizedPathInt(String path)
+		private String GetNormalizedPathInternal(String path)
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
 			const String rootKey = "Root.";
+			const String contextKey = "Context.";
 			if (_stackScope.Count == 0)
 			{
 				if (path == "Root")
@@ -222,6 +231,12 @@ namespace A2v10.Xaml
 				return path;
 			if (path.StartsWith(rootKey))
 				return "$data." + path.Substring(rootKey.Length);
+			else if (path.StartsWith(contextKey))
+			{
+				if (_partialDataContext == null)
+					throw new XamlException($"There is no context for '{Path}' path");
+				return path.Replace(contextKey, _partialDataContext);
+			}
 			ScopeElem scope = _stackScope.Peek();
 			String result = scope.Scope;
 			if (!String.IsNullOrEmpty(path))

@@ -76,6 +76,7 @@
     <Compile Include="Base\XamlElement.cs" />
     <Compile Include="Base\XamlException.cs" />
     <Compile Include="Components\CollectionView.cs" />
+    <Compile Include="Components\Switch.cs" />
     <Compile Include="Components\Validator.cs" />
     <Compile Include="Controls\Alert.cs" />
     <Compile Include="Controls\Button.cs" />

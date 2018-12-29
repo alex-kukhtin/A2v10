@@ -1529,7 +1529,7 @@ app.modules['std:validators'] = function () {
 
 		defPropertyGet(arr, "$isEmpty", function () {
 			return !this.length;
-		});		
+		});
 
 		defPropertyGet(arr, "$checked", function () {
 			return this.filter((el) => el.$checked);
