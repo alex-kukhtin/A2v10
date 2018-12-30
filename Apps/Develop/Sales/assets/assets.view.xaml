@@ -89,6 +89,8 @@
 						</d:Card.Hint>
 					</d:Card>
 				</d:Group>
+				<d:Group>
+				</d:Group>
 			</d:Diagram>
 		</Panel>
 		<Panel Grid.VAlign="Top" DropShadow="Shadow1" Header="Бухгалтерський облік НМА" Grid.Col="3">
@@ -124,7 +126,7 @@
 				<Hyperlink Icon="Table" Block="True" Margin="4">I ще один звіт</Hyperlink>
 			</StackPanel>
 		</Panel>
-		<Panel Grid.Row="2" Grid.Col="3" Header="Задачы" Grid.VAlign="Top" Padding="6">
+		<Panel Grid.Row="2" Grid.Col="3" Header="Задачі" Grid.VAlign="Top" Padding="6">
 			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
 				<PropertyGridItem Name="На складі">2233</PropertyGridItem>
 				<PropertyGridItem Name="В експлуатації">2233</PropertyGridItem>

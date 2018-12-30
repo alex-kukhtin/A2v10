@@ -107,6 +107,7 @@
     <Compile Include="Drawing\Size.cs" />
     <Compile Include="Drawing\Point.cs" />
     <Compile Include="Drawing\Rectangle.cs" />
+    <Compile Include="Layouts\Flex.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
