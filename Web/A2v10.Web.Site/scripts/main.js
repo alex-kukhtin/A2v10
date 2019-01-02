@@ -9078,7 +9078,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20181211-7384
+// 20190102-7398
 // controllers/base.js
 
 (function () {
@@ -9963,7 +9963,8 @@ Vue.directive('resize', {
 							if (rcName in data) {
 								arr.$RowCount = data[rcName];
 							}
-							modelInfo.reconcile(data.$ModelInfo[propName]);
+							if (data.$ModelInfo)
+								modelInfo.reconcile(data.$ModelInfo[propName]);
 							arr._root_._setModelInfo_(arr, data);
 						}
 						resolve(arr);
