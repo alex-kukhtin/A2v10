@@ -21,9 +21,6 @@ namespace A2v10.BackgroundTasks
 
 	public class BackgroundTasksManager : IBackgroundTasksManager
 	{
-		private readonly IDbContext _dbContext;
-		private readonly ILogger _logger;
-
 		private readonly Timer _timer;
 		private readonly TimeSpan _timerTick = TimeSpan.FromMilliseconds(100);
 		private readonly BackgroundTasksHost _host;
@@ -32,10 +29,12 @@ namespace A2v10.BackgroundTasks
 
 		public Boolean RestartOnFailure { get; set; }
 
-		public BackgroundTasksManager(IDbContext dbContext, ILogger logger)
+		public BackgroundTasksManager(IApplicationHost host, IDbContext dbContext, ILogger logger)
 		{
-			_dbContext = dbContext;
-			_logger = logger;
+			/* Auto properties */
+			DbContext = dbContext;
+			Logger = logger;
+			Host = host;
 			_timer = new Timer(OnTimerElapsed);
 			_host = new BackgroundTasksHost();
 			RestartOnFailure = true;
@@ -46,13 +45,14 @@ namespace A2v10.BackgroundTasks
 			if (_disposed)
 				return;
 			StopTimer();
-			_logger.LogBackground("Task manager stopped");
+			Logger.LogBackground("Task manager stopped");
 		}
 
 		#region IBackgroundTasksManager
 
-		public IDbContext DbContext => _dbContext;
-		public ILogger Logger => _logger;
+		public IDbContext DbContext { get; }
+		public ILogger Logger { get; }
+		public IApplicationHost Host { get; }
 
 		readonly Object _lockTasks = new Object();
 		List<TaskItem> _tasksToExecute = new List<TaskItem>();
@@ -93,7 +93,7 @@ namespace A2v10.BackgroundTasks
 		public void Start()
 		{
 			StartTimer();
-			_logger.LogBackground("Task manager started");
+			Logger.LogBackground("Task manager started");
 		}
 
 		public void StartTasksFromConfig()
@@ -111,15 +111,15 @@ namespace A2v10.BackgroundTasks
 					var inst = System.Activator.CreateInstance(typeT[1].Trim(), typeT[0].Trim());
 					var taskinst = inst.Unwrap() as IBackgroundProcessing;
 					taskinst.Start(this, tsk.interval, tsk.count, tsk.parameter, tsk.batch, tsk.priority);
-					_logger.LogBackground($"Task '{tsk.name}' started. {typeT[0]}");
-					_logger.LogBackground($"\t{{interval: {tsk.interval}, count: {tsk.count}, parameter: {tsk.parameter},\n\tbatch: {tsk.batch}, priority: {tsk.priority}}}");
+					Logger.LogBackground($"Task '{tsk.name}' started. {typeT[0]}");
+					Logger.LogBackground($"\t{{interval: {tsk.interval}, count: {tsk.count}, parameter: {tsk.parameter},\n\tbatch: {tsk.batch}, priority: {tsk.priority}}}");
 				}
 			}
 			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				_logger.LogBackgroundError(ex.Message);
+				Logger.LogBackgroundError(ex.Message);
 			}
 		}
 		#endregion
@@ -161,7 +161,7 @@ namespace A2v10.BackgroundTasks
 		{
 			if (ex.InnerException != null)
 				ex = ex.InnerException;
-			_logger.LogBackgroundError(ex.Message);
+			Logger.LogBackgroundError(ex.Message);
 			var failAction = _failHandler;
 			failAction?.Invoke(ex);
 		}

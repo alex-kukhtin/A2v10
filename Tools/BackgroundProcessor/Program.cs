@@ -31,8 +31,9 @@ namespace BackgroundProcessor
 				var loc = ServiceLocator.Current;
 				ILogger logger = loc.GetService<ILogger>();
 				IDbContext dbContext = loc.GetService<IDbContext>();
+				IApplicationHost host = loc.GetService<IApplicationHost>();
 				Console.WriteLine("Service started");
-				_manager = new BackgroundTasksManager(dbContext, logger);
+				_manager = new BackgroundTasksManager(host, dbContext, logger);
 				logger.LogBackground($"CurrentCulutre: {Thread.CurrentThread.CurrentCulture}");
 				_manager.Start();
 				_manager.StartTasksFromConfig();

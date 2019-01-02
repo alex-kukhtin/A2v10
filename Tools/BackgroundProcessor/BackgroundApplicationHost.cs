@@ -18,17 +18,26 @@ namespace BackgroundProcessor
 		}
 
 		#region IApplicationHost
-		public IProfiler Profiler => throw new NotImplementedException();
+		public IProfiler Profiler => _profiler;
 
-		public String AppPath => throw new NotImplementedException();
-		public String AppKey => throw new NotImplementedException();
+		public String AppPath => ConfigurationManager.AppSettings["appPath"];
+		public String AppKey => ConfigurationManager.AppSettings["appKey"];
 		public String AppDescription => throw new NotImplementedException();
 		public String SupportEmail => throw new NotImplementedException();
 		public String Theme => throw new NotImplementedException();
 		public String HelpUrl => throw new NotImplementedException();
 		public String HostingPath => throw new NotImplementedException();
 
-		public Boolean IsDebugConfiguration => throw new NotImplementedException();
+		public Boolean IsDebugConfiguration
+		{
+			get
+			{
+				var debug = ConfigurationManager.AppSettings["configuration"];
+				if (String.IsNullOrEmpty(debug))
+					return true; // default is 'debug'
+				return debug.ToLowerInvariant() == "debug";
+			}
+		}
 
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException();
 		public String UseClaims => throw new NotImplementedException();

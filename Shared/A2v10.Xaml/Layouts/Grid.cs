@@ -10,6 +10,15 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
+	public enum AutoFlowMode
+	{
+		Default,
+		Row,
+		Column,
+		RowDense,
+		ColumnDense 
+	}
+
 	public class Grid : Container
 	{
 
@@ -98,11 +107,9 @@ namespace A2v10.Xaml
 
 
 		public Length Height { get; set; }
-
 		public BackgroundStyle Background { get; set; }
-
 		public ShadowStyle DropShadow { get; set; }
-
+		public AutoFlowMode AutoFlow { get; set; }
 
 		RowDefinitions _rows;
 		ColumnDefinitions _columns;
@@ -154,6 +161,11 @@ namespace A2v10.Xaml
 			{
 				grid.AddCssClass("drop-shadow");
 				grid.AddCssClass(DropShadow.ToString().ToLowerInvariant());
+			}
+
+			if (AutoFlow != AutoFlowMode.Default)
+			{
+				grid.MergeAttribute("grid-auto-flow", AutoFlow.ToString().ToKebabCase(delim:" "));
 			}
 
 			grid.RenderStart(context);

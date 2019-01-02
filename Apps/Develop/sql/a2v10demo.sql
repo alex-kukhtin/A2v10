@@ -2401,6 +2401,18 @@ begin
 end
 go
 ------------------------------------------------
+create or alter procedure a2demo.[Workflow.SetState]
+@UserId bigint = null,
+@Id bigint = 0,
+@Process bigint = 0,
+@State nvarchar(255) = null,
+@Invox bigint = null
+as
+begin
+	set nocount on;
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2demo to public;

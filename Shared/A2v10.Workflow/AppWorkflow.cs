@@ -72,6 +72,7 @@ namespace A2v10.Workflow
 				aw = Create(dbContext, root, args, def.Identity);
 				aw._application.Extensions.Add(result);
 				aw._application.Extensions.Add(dbContext);
+				aw._application.Extensions.Add(host);
 				process.DbContext = dbContext;
 				process.WorkflowId = aw._application.Id;
 				await process.Start(dbContext);
@@ -95,7 +96,7 @@ namespace A2v10.Workflow
 			}
 		}
 
-		public static void ResumeWorkflowTimer(IDbContext dbContext, Int64 processId)
+		public static void ResumeWorkflowTimer(IApplicationHost host, IDbContext dbContext, Int64 processId)
 		{
 			AppWorkflow aw = null;
 			var result = new WorkflowResult
@@ -109,6 +110,7 @@ namespace A2v10.Workflow
 				Activity root = def.LoadFromDefinition();
 				aw = Create(dbContext, root, null, def.Identity);
 				aw._application.Extensions.Add(dbContext);
+				aw._application.Extensions.Add(host);
 				aw._application.Extensions.Add(result);
 				WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(pi.WorkflowId, aw._application.InstanceStore);
 				aw._application.Load(instance, _wfTimeSpan);
@@ -144,6 +146,7 @@ namespace A2v10.Workflow
 					aw = Create(dbContext, root, null, def.Identity);
 					aw._application.Extensions.Add(result);
 					aw._application.Extensions.Add(dbContext);
+					aw._application.Extensions.Add(host);
 					WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
 					aw._application.Load(instance, _wfTimeSpan);
 				}

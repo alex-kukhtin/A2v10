@@ -35,7 +35,7 @@ namespace A2v10.Infrastructure
 			return b.ToString();
 		}
 
-		public static String ToKebabCase(this String s)
+		public static String ToKebabCase(this String s, String delim = "-")
 		{
 			if (String.IsNullOrEmpty(s))
 				return null;
@@ -45,7 +45,7 @@ namespace A2v10.Infrastructure
 				Char ch = s[i];
 				if (Char.IsUpper(ch) && (i > 0))
 				{
-					b.Append("-");
+					b.Append(delim);
 					b.Append(Char.ToLowerInvariant(ch));
 				}
 				else

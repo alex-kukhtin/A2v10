@@ -14,6 +14,7 @@ namespace A2v10.Infrastructure
 		void StartTasksFromConfig();
 
 		IDbContext DbContext { get; }
+		IApplicationHost Host { get; }
 		ILogger Logger { get; }
 	}
 }
