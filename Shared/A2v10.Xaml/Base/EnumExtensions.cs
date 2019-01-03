@@ -20,5 +20,25 @@ namespace A2v10.Xaml
 					return null;
 			}
 		}
+
+		public static String AlignSelf(this AlignItem vAlign)
+		{
+			switch (vAlign)
+			{
+				case AlignItem.Top:
+				case AlignItem.Start:
+					return "start";
+				case AlignItem.Middle:
+				case AlignItem.Center:
+					return "center";
+				case AlignItem.Bottom:
+				case AlignItem.End:
+					return "end";
+				case AlignItem.Stretch:
+					return "stretch";
+				default:
+					return null;
+			}
+		}
 	}
 }

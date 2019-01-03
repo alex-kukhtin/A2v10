@@ -18,8 +18,8 @@ namespace A2v10.Xaml.Drawing
 		{
 			var div = new TagBuilder("div", "diagram");
 			MergeAttributes(div, context);
-			if (Size != null)
-				div.MergeStyle("width", $"{Size.Width.ToString()}px");
+			//if (Size != null)
+				//div.MergeStyle("width", $"{Size.Width.ToString()}px");
 			div.RenderStart(context);
 			RenderDiagram(context);
 			div.RenderEnd(context);

@@ -152,6 +152,10 @@ app.modules['std:utils'] = function () {
 			sanitize,
 			splitPath
 		},
+		currency: {
+			round: currencyRound,
+			format: currencyFormat
+		},
 		func: {
 			curry,
 			debounce
@@ -578,6 +582,12 @@ app.modules['std:utils'] = function () {
 		return (..._arg) => {
 			return fn(...args, ..._arg);
 		};
+	}
+
+	function currencyRound(n) {
+		if (isNaN(n))
+			return Nan;
+		return Number(Math.round(n + 'e2') + 'e-2');
 	}
 };
 

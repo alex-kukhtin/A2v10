@@ -33,6 +33,20 @@ namespace A2v10.Xaml
 		Bottom
 	}
 
+	public enum AlignItem
+	{
+		Default,
+		Start,
+		End,
+		Center,
+		Stretch,
+		Top,
+		Middle,
+		Bottom
+	}
+
+
+
 	public enum GridLinesVisibility
 	{
 		None,

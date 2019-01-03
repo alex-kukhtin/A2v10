@@ -4134,6 +4134,7 @@ TODO:
   right: auto;
   top: 100%;
   bottom: auto;
+  text-align: left;
 }
 .dropdown-menu > .checkbox {
   margin-left: 4px;
@@ -4708,6 +4709,7 @@ TODO:
   margin: 0;
   padding: 0.4rem 0.6rem, 0.6rem 0.6rem;
   border: 1px solid #bdc5d8;
+  text-align: left;
 }
 .field-set legend {
   font-size: 0.95rem;
@@ -5428,7 +5430,8 @@ h5,
   }
 }
 .diagram {
-  margin: auto;
+  display: flex;
+  justify-content: center;
 }
 .diagram .path {
   stroke: #000;

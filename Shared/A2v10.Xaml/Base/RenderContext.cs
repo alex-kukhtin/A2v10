@@ -14,9 +14,9 @@ namespace A2v10.Xaml
 		private Int32? _col;
 		private Int32? _rowSpan;
 		private Int32? _colSpan;
-		private VerticalAlign? _vAlign;
+		private AlignItem? _vAlign;
 
-		public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, VerticalAlign? vAlign)
+		public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, AlignItem? vAlign)
 		{
 			_row = row;
 			_col = col;
@@ -34,19 +34,16 @@ namespace A2v10.Xaml
 				row = _row.Value.ToString();
 			if (_rowSpan != null && _rowSpan.Value != 0)
 			{
-				if (String.IsNullOrEmpty(row))
-					row = "1";
-				row += " / span " + _rowSpan.Value.ToString();
+				row += $"span {_rowSpan.Value}";
 			}
 			if (!String.IsNullOrEmpty(row))
 				rv.Add(new StringKeyValuePair() { Key = "grid-row", Value = row });
+
 			if (_col != null && _col.Value != 0)
 				col = _col.Value.ToString();
 			if (_colSpan != null && _colSpan.Value != 0)
 			{
-				if (String.IsNullOrEmpty(col))
-					col = "1";
-				col += " / span " + _colSpan.Value.ToString();
+				col = $"span {_colSpan.Value}";
 			}
 			if (!String.IsNullOrEmpty(col))
 				rv.Add(new StringKeyValuePair() { Key = "grid-column", Value = col });
@@ -171,7 +168,7 @@ namespace A2v10.Xaml
 			Writer.Write("&#xa;");
 		}
 
-		public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, VerticalAlign? vAlign)
+		public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, AlignItem? vAlign)
 		{
 			var rowCol = new GridRowCol(row, col, rowSpan, colSpan, vAlign);
 			return new GridContext(this, rowCol);
