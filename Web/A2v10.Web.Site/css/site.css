@@ -736,7 +736,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 .bold {
-  font-weight: bold;
+  font-weight: 500;
 }
 .no-bold {
   font-weight: normal;
@@ -1963,6 +1963,9 @@ pre.a2-code {
 .large {
   font-size: 1.15rem;
 }
+.normal {
+  font-size: 1rem;
+}
 .a2-hyperlink.small i.ico {
   font-size: 12px;
 }
@@ -2693,7 +2696,7 @@ table.data-grid tr.group td .expmark.expanded:after {
   /*tree-expanded*/
 }
 table.data-grid tr.group td .grtitle {
-  font-weight: bold;
+  font-weight: 500;
 }
 table.data-grid tr.group td .grcount {
   float: right;
@@ -2815,12 +2818,15 @@ table.data-grid > tbody > tr.bold > td {
   margin-top: 1px;
 }
 .data-grid-container.data-grid-light table.data-grid th {
-  color: #999;
+  color: #ccc;
   background-color: white;
   border-style: none;
 }
 .data-grid-container.data-grid-light table.data-grid th .h-holder {
-  padding: 6px 6px;
+  padding: 6px;
+}
+.data-grid-container.data-grid-light table.data-grid td {
+  padding: 6px;
 }
 .data-grid-container.data-grid-light table.data-grid tr.dg-row:last-child > td {
   border-bottom-style: none;
@@ -4849,7 +4855,7 @@ iframe.eusign-iframe {
   margin-bottom: 12px;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
-  color: #008abb;
+  color: #208cf8;
   font-size: 14px;
 }
 .flex-panel .divider {
@@ -4886,7 +4892,7 @@ table.sheet {
 }
 table.sheet td,
 table.sheet th {
-  padding: 4px 6px;
+  padding: 6px 6px;
 }
 table.sheet td {
   border-color: #e5e8eb;
@@ -4903,7 +4909,7 @@ table.sheet tr.row-title {
 table.sheet tr.row-title td {
   border-style: none !important;
   font-weight: 600;
-  padding: 8px 6px;
+  padding: 12px 6px;
 }
 table.sheet tr.row-parameter td {
   border-style: none !important;

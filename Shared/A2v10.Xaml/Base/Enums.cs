@@ -80,7 +80,8 @@ namespace A2v10.Xaml
 		Large = 1,
 		Medium = Default,
 		Small = 2,
-		Mini = 3
+		Mini = 3,
+		Normal = 4
 	};
 
 	public enum TextSize

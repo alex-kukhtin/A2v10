@@ -148,9 +148,9 @@
 			</Sheet>
 			<Separator />
 			<FlexList Orientation="Horizontal" BorderStyle="Top">
-				<Hyperlink Icon="Table">Оборотна відомість</Hyperlink>
-				<Hyperlink Icon="Table">Відомість по МВО</Hyperlink>
-				<Hyperlink Icon="Table">I ще один звіт</Hyperlink>
+				<Hyperlink Icon="Table" Size="Normal">Оборотна відомість</Hyperlink>
+				<Hyperlink Icon="Table" Size="Normal">Відомість по МВО</Hyperlink>
+				<Hyperlink Icon="Table" Size="Normal">I ще один звіт</Hyperlink>
 			</FlexList>
 		</FlexPanel>
 		<Panel Header="Задачі" Padding="6" DropShadow="Shadow1" Grid.ColSpan="2">
