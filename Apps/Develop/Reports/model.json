@@ -1,0 +1,16 @@
+﻿{
+	"schema": "a2demo",
+	"actions": {
+		"invoiceRegistry": {
+			"model": "Invoice.Registry",
+			"template": "report.template",
+			"view": "invoice.registry.view"
+		}
+	},
+	"commands": {
+		"fetchCustomer": {
+			"type": "sql",
+			"procedure": "Agent.Fetch"
+		}
+	}
+}

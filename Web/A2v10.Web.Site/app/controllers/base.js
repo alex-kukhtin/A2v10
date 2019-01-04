@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190102-7398
+// 20190104-7400
 // controllers/base.js
 
 (function () {
@@ -172,7 +172,7 @@
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
 					dataservice.post(url, jsonData).then(function (data) {
-						self.$data.$merge(data, true);
+						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
 						self.$data.$setDirty(false);
 						// data is a full model. Resolve requires only single element.

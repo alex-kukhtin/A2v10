@@ -126,9 +126,9 @@
 
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181203-7381
+// 20190104-7400
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -2034,9 +2034,9 @@ Vue.component('a2-pager', {
 });
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20181211-7384
+// 20190104-7400
 // services/datamodel.js
 
 (function () {
@@ -3148,7 +3148,7 @@ Vue.component('a2-pager', {
 		return opts && opts.noDirty;
 	}
 
-	function merge(src, afterSave) {
+	function merge(src, afterSave, existsOnly) {
 		let oldId = this.$id__;
 		try {
 			if (src === null)
@@ -3184,6 +3184,8 @@ Vue.component('a2-pager', {
 					} else if (utils.isPrimitiveCtor(ctor)) {
 						platform.set(this, prop, src[prop]);
 					} else {
+						if (existsOnly && !(prop in src))
+							continue; // no item in src
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}

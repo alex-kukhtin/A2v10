@@ -1,12 +1,13 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿/*! Copyright © 2015-2018 Alex Kukhtin. All rights reserved.*/
 
-// 20180821-7280
+// 20190104-7400
 // components/sheet.js
 
 (function () {
 
 	const sheetTemplate = `
 <table class="sheet">
+	<slot name="columns"></slot>
 	<thead>
 		<slot name="header"></slot>
 	</thead>

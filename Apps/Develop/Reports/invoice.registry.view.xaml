@@ -1,0 +1,33 @@
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов">
+	<Page.Toolbar>
+		<Toolbar>
+			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="30rem"/>
+			<Selector Value="{Bind Query.Agent}" DisplayProperty="Name" Delegate="fetchCustomers">
+				<Selector.AddOns>
+					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Url='/Agent/browseCustomer', Argument={Bind Query.Agent}}"/>
+				</Selector.AddOns>
+			</Selector>
+			<Button Content="Построить" Icon="ArrowRight" Command="{BindCmd Reload}"/>
+			<Button Content="Закрыть" Icon="Close" Command="{BindCmd Close}" Toolbar.Align="Right"/>
+		</Toolbar>
+	</Page.Toolbar>
+	<Sheet GridLines="Both" Columns="Fit,100,Fit,300">
+		<SheetSection ItemsSource="{Bind ReportData}">
+			<SheetRow>
+				<SheetCell Content="{Bind Id}" Align="Right"/>
+				<SheetCell Content="{Bind Date, DataType=Date}" />
+				<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
+				<SheetCell Content="{Bind Memo}"/>
+			</SheetRow>
+		</SheetSection>
+		<Sheet.Header>
+			<SheetRow Style="Header">
+				<SheetCell>Id</SheetCell>
+				<SheetCell>Дата</SheetCell>
+				<SheetCell>Номер</SheetCell>
+				<SheetCell>Примечание</SheetCell>
+			</SheetRow>
+		</Sheet.Header>
+	</Sheet>
+	<Code Content="{Bind Query}" Multiline="True"></Code>
+</Page>

@@ -7,7 +7,13 @@
 		]
   },
   {
-    "outputFileName": "Develop/_assets/app.min.js",
+		"outputFileName": "Develop/_assets/app.min.js",
+		"minify": {
+			"enabled": true,
+			"termSemicolons": true,
+			"renameLocals": false,
+			"outputMode": "none"
+		},	
     "inputFiles": [
       "Develop/_assets/app.js"
     ]

@@ -84,7 +84,13 @@ namespace A2v10.Xaml
 
 		void RenderColumns(RenderContext context)
 		{
-			_columns?.Render(context);
+			if (_columns == null)
+				return;
+			var cols = new TagBuilder("template");
+			cols.MergeAttribute("slot", "columns");
+			cols.RenderStart(context);
+			_columns.Render(context);
+			cols.RenderEnd(context);
 		}
 
 		void RenderHeader(RenderContext context)

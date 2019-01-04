@@ -135,9 +135,9 @@ app.modules['std:locale'] = function () {
 
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181203-7381
+// 20190104-7400
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1748,9 +1748,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20181211-7384
+// 20190104-7400
 // services/datamodel.js
 
 (function () {
@@ -2862,7 +2862,7 @@ app.modules['std:validators'] = function () {
 		return opts && opts.noDirty;
 	}
 
-	function merge(src, afterSave) {
+	function merge(src, afterSave, existsOnly) {
 		let oldId = this.$id__;
 		try {
 			if (src === null)
@@ -2898,6 +2898,8 @@ app.modules['std:validators'] = function () {
 					} else if (utils.isPrimitiveCtor(ctor)) {
 						platform.set(this, prop, src[prop]);
 					} else {
+						if (existsOnly && !(prop in src))
+							continue; // no item in src
 						let newsrc = new ctor(src[prop], prop, this);
 						platform.set(this, prop, newsrc);
 					}
@@ -8045,15 +8047,16 @@ Vue.component('a2-panel', {
 		}
 	}
 });
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+/*! Copyright © 2015-2018 Alex Kukhtin. All rights reserved.*/
 
-// 20180821-7280
+// 20190104-7400
 // components/sheet.js
 
 (function () {
 
 	const sheetTemplate = `
 <table class="sheet">
+	<slot name="columns"></slot>
 	<thead>
 		<slot name="header"></slot>
 	</thead>
@@ -9086,9 +9089,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190102-7398
+// 20190104-7400
 // controllers/base.js
 
 (function () {
@@ -9260,7 +9263,7 @@ Vue.directive('resize', {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
 					dataservice.post(url, jsonData).then(function (data) {
-						self.$data.$merge(data, true);
+						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
 						self.$data.$setDirty(false);
 						// data is a full model. Resolve requires only single element.
