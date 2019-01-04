@@ -18,6 +18,12 @@ namespace A2v10.Xaml
 		Cell
 	}
 
+	public enum DataGridStyle
+	{
+		Default,
+		Light
+	}
+
 	[ContentProperty("Columns")]
 	public class DataGrid : Control
 	{
@@ -26,6 +32,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 		public Boolean Sort { get; set; }
 		public Boolean Compact { get; set; }
+		public DataGridStyle Style { get; set; }
 
 		public Boolean FixedHeader { get; set; }
 		public HeadersVisibility HeadersVisibility { get; set; }
@@ -77,6 +84,8 @@ namespace A2v10.Xaml
 				dataGrid.MergeAttribute(":fixed-header", "true");
 			if (HeadersVisibility == HeadersVisibility.None)
 				dataGrid.MergeAttribute(":hide-header", "true");
+			if (Style != DataGridStyle.Default)
+				dataGrid.AddCssClass($"data-grid-{Style.ToString().ToKebabCase()}");
 			if (RowDetails != null)
 			{
 				dataGrid.MergeAttribute(":row-details", "true");

@@ -49,12 +49,12 @@
 			<CollectionView ItemsSource="{Bind Agents.Selected(Children)}" 
 								RunAt="Server">
 				<DataGrid Hover="True" HeadersVisibility="Column" ItemsSource="{Bind Parent.ItemsSource}"
-						Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False"
+						Sort="True" FixedHeader="False" Style="Light" GroupBy="Code"
 						DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents.Selected(Children)}}">
-					<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, 
+					<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Width="100"  Command="{BindCmd Dialog, 
 						Action=Edit, Url={Bind $EditUrl}, Argument={Bind}}"/>
 					<DataGridColumn Header="@[Name]" Content="{Bind Name}"/>
-					<DataGridColumn Header="ЕДРПОУ" Content="{Bind Code}" Align="Right" Fit="True"/>
+					<DataGridColumn Header="ЕДРПОУ" Content="{Bind Code}" Align="Right" Fit="True" Wrap="NoWrap"/>
 					<DataGridColumn Header="@[Memo]" Content="{Bind Memo}"/>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"/>

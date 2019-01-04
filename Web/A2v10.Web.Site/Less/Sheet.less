@@ -7,7 +7,8 @@
 
 table.sheet {
 	.user-select();
-
+	width: auto;
+	margin: 0 1px 0 0; /*border-collapse bug*/
 	td, th {
 		padding: @cell-padding-v @cell-padding-h;
 	}
@@ -37,12 +38,16 @@ table.sheet {
 
 	tr.row-parameter {
 		td {
-			border-style: none!important;
+			border-style: none !important;
 		}
 	}
 
 	tr.row-header {
 		background-color: #f5f5f5;
+	}
+
+	tr.row-light-header {
+		color: #ccc;
 	}
 
 	tr.row-footer {

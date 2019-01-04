@@ -29,7 +29,7 @@
 @group-txt-color: #777;
 @group-brd-color: @table-hdr-brd-color;
 
-@dg-header-height:calc(2rem + 1px); // 2rem + 1px
+@dg-header-height: calc(2rem + 1px); // 2rem + 1px
 
 
 .data-grid-container {
@@ -91,7 +91,6 @@ table.data-grid {
 
 	th {
 		border-color: @table-hdr-brd-color;
-		text-align: left !important;
 	}
 
 	td.cell-editable {
@@ -318,8 +317,8 @@ table.data-grid {
 				color: white;
 				padding: 2px 4px;
 				border-radius: 10rem;
-				text-align:center;
-				min-width:1.5rem;
+				text-align: center;
+				min-width: 1.5rem;
 			}
 		}
 
@@ -410,6 +409,7 @@ table.data-grid > tbody {
 				border-bottom-style: none;
 				height: 0;
 				visibility: hidden;
+				text-align: left !important;
 
 				> .h-fill {
 					padding: 0 @table-cell-padding-h;
@@ -439,7 +439,6 @@ table.data-grid > tbody {
 					border-bottom: 1px solid @table-hdr-brd-color;
 					border-top: 1px solid @table-hdr-brd-color;
 				}
-
 				/*
 				&:first-child > .h-holder {
 					border-left-style: none;
@@ -475,9 +474,33 @@ table.data-grid > tbody {
 }
 
 .data-grid-container > .data-grid-body > .data-grid-empty {
-	position:absolute;
-	top:@dg-header-height;
-	left:0;
-	right:0;
-	margin-top:1px;
+	position: absolute;
+	top: @dg-header-height;
+	left: 0;
+	right: 0;
+	margin-top: 1px;
+}
+
+.data-grid-container.data-grid-light {
+	table.data-grid {
+		th {
+			color: #999;
+			background-color: white;
+			border-style: none;
+
+			.h-holder {
+				padding: 6px 6px;
+			}
+		}
+
+		tr.dg-row:last-child > td {
+			border-bottom-style: none;
+		}
+
+		tr.group td {
+			background-color:#f9f9f9;
+			color:#999;
+			border-bottom-color:#ddd;
+		}
+	}
 }

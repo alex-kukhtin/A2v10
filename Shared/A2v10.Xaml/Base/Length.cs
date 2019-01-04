@@ -39,6 +39,10 @@ namespace A2v10.Xaml
 					strVal.EndsWith("px") ||
 					strVal.EndsWith("vh") ||
 					strVal.EndsWith("vw") ||
+					strVal.EndsWith("mm") ||
+					strVal.EndsWith("cm") ||
+					strVal.EndsWith("pt") ||
+					strVal.EndsWith("in") ||
 					strVal.EndsWith("em") ||
 					strVal.EndsWith("rem"));
 		}
@@ -93,8 +97,8 @@ namespace A2v10.Xaml
 				return new GridLength("auto");
 			else if (strVal.StartsWith("MinMax"))
 			{
-				var re = new Regex(@"MinMax\s*\(\s*(\w+[%\*]?)\s*;\s*(\w+[%\*]?)\s*\)");
-				var match = re.Match(strVal.Trim());
+				var re = new Regex(@"MinMax\(([\w\.]+[%\*\.]?);([\w\.]+[%\*\.]?)\)");
+				var match = re.Match(strVal.Replace(" ", String.Empty));
 				if (match.Groups.Count != 3)
 					throw new XamlException($"Invalid grid length value '{strVal}'");
 				GridLength gl1 = GridLength.FromString(match.Groups[1].Value);

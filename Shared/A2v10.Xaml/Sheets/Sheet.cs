@@ -61,6 +61,7 @@ namespace A2v10.Xaml
 		public Boolean Hover { get; set; }
 		public Boolean Striped { get; set; }
 		public Boolean? Border { get; set; }
+		public Length Width { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -74,6 +75,8 @@ namespace A2v10.Xaml
 			sheet.AddCssClassBool(Hover, "hover");
 			sheet.AddCssClassBool(Striped, "striped");
 			sheet.AddCssClassBoolNo(Border, "border");
+			if (Width != null)
+				sheet.MergeStyle("width", Width.Value);
 			sheet.RenderStart(context);
 			RenderColumns(context);
 			RenderHeader(context);

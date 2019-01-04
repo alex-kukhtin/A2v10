@@ -2,7 +2,7 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
 	xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
 	Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
-	<Grid AutoFlow="RowDense" Columns="Repeat(MinMax(230px;1*))" AlignItems="Stretch">
+	<Grid AutoFlow="RowDense" Columns="Repeat(MinMax(230.34px;1*))" AlignItems="Stretch">
 		<Panel Grid.ColSpan="4" Header="Необоротні активи" Background="LightYellow"
 			 DropShadow="Shadow1">
 			<d:Diagram Size="920,370" ViewBox="-10,-10,910,360">
@@ -112,39 +112,47 @@
 				</d:Card>
 			</d:Diagram>
 		</Panel>
-		<Panel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА">
-			<Table Striped="True" Wrap="NoWrap">
-				<Table.Header>
-					<TableRow>
-						<TableCell>Рахунок</TableCell>
-						<TableCell>Дебет</TableCell>
-						<TableCell>Кредит</TableCell>
-					</TableRow>
-				</Table.Header>
-				<TableRow>
-					<Popover Text="10. Необоротні активи" Placement="BottomLeft" Width="200">На дебеті 
+		<FlexPanel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА">
+			<Sheet Striped="True" Wrap="NoWrap">
+				<SheetSection>
+					<SheetRow Style="LightHeader">
+						<SheetCell>Рахунок</SheetCell>
+						<SheetCell Align="Right">Дебет</SheetCell>
+						<SheetCell Align="Right">Кредит</SheetCell>
+					</SheetRow>
+				</SheetSection>
+				<SheetSection>
+					<SheetRow>
+						<SheetCell>
+							<Popover Text="10. Необоротні активи" Placement="BottomLeft" Width="200">На дебеті 
 							цього рахунку щось таке є.</Popover>
-					<TableCell Bold="True" Align="Right">25 000.00</TableCell>
-					<TableCell Bold="True" Align="Right"/>
-				</TableRow>
-				<TableRow>
-					<Popover Text="13. Знос (амортизація)"></Popover>
-					<TableCell />
-					<TableCell Align="Right">10 000.00</TableCell>
-				</TableRow>
-				<TableRow>
-					<Popover Text="15. Капітальні інвестиції"></Popover>
-					<TableCell />
-					<TableCell Align="Right">25 000.00</TableCell>
-				</TableRow>
-			</Table>
-			<Line />
-			<StackPanel Orientation="Vertical" Margin="12,6,6,6">
-				<Hyperlink Icon="Table" Block="True" Margin="4">Оборотна відомість</Hyperlink>
-				<Hyperlink Icon="Table" Block="True" Margin="4">Відомість по МВО</Hyperlink>
-				<Hyperlink Icon="Table" Block="True" Margin="4">I ще один звіт</Hyperlink>
-			</StackPanel>
-		</Panel>
+						</SheetCell>
+						<SheetCell Bold="True" Align="Right">25 000.00</SheetCell>
+						<SheetCell Bold="True" Align="Right"/>
+					</SheetRow>
+					<SheetRow>
+						<SheetCell>
+							<Popover Text="13. Знос (амортизація)"></Popover>
+						</SheetCell>
+						<SheetCell />
+						<SheetCell Align="Right">10 000.00</SheetCell>
+					</SheetRow>
+					<SheetRow>
+						<SheetCell>
+							<Popover Text="15. Капітальні інвестиції"></Popover>
+						</SheetCell>
+						<SheetCell />
+						<SheetCell Align="Right">25 000.00</SheetCell>
+					</SheetRow>
+				</SheetSection>
+			</Sheet>
+			<Separator />
+			<FlexList Orientation="Horizontal" BorderStyle="Top">
+				<Hyperlink Icon="Table">Оборотна відомість</Hyperlink>
+				<Hyperlink Icon="Table">Відомість по МВО</Hyperlink>
+				<Hyperlink Icon="Table">I ще один звіт</Hyperlink>
+			</FlexList>
+		</FlexPanel>
 		<Panel Header="Задачі" Padding="6" DropShadow="Shadow1" Grid.ColSpan="2">
 			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
 				<PropertyGridItem Name="На складі">2233</PropertyGridItem>
@@ -154,11 +162,11 @@
 				<PropertyGridItem Name="Залишкова вартість">2233</PropertyGridItem>
 			</PropertyGrid>
 			<StackPanel Orientation="Vertical">
-			<Text>Останнє нарахування амортизації за
-				<Span Bold="True">грудень 2018</Span>.
-			</Text>
-			<Hyperlink Icon="Calendar">Нарахувати амортизацію за cічень 2019</Hyperlink>
-			<Text>Ніяких дій не потрібно.</Text>
+				<Text>Останнє нарахування амортизації за
+					<Span Bold="True">грудень 2018</Span> .
+				</Text>
+				<Hyperlink Icon="Calendar">Нарахувати амортизацію за cічень 2019</Hyperlink>
+				<Text>Ніяких дій не потрібно.</Text>
 			</StackPanel>
 		</Panel>
 		<Panel Header="Діаграма" DropShadow="Shadow1" Grid.ColSpan="3" >

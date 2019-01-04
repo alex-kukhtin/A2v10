@@ -10,7 +10,8 @@ namespace A2v10.Xaml
 	{
 		List,
 		TwoColumnsGrid,
-		ThreeColumnsGrid
+		ThreeColumnsGrid,
+		Underlined
 	}
 
 

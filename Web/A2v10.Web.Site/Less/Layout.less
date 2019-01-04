@@ -1,5 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+@panel-header-line-height:2rem;
+
 .stack-panel {
 	display: flex;
 	flex-direction: column;
@@ -37,7 +39,7 @@
 
 .panel {
 	margin-bottom: 12px;
-	background-color:white;
+	background-color: white;
 
 	.panel-header {
 		padding: 4px 6px;
@@ -45,7 +47,7 @@
 		display: flex;
 		justify-content: space-between;
 		cursor: pointer;
-		line-height: 1.5rem;
+		line-height: @panel-header-line-height;
 
 		.ico {
 			//font-size: 1.2rem;
@@ -54,7 +56,7 @@
 
 		.panel-collapse-handle {
 			font-size: 110%;
-			padding-top: 2px;
+			line-height: @panel-header-line-height;
 			margin: 0;
 
 			&:before {
@@ -233,19 +235,19 @@
 }
 
 .background-light-gray {
-	background-color: @light-gray-bg-color;
+	background-color: @light-gray-bg-color!important;
 }
 
 .background-white-smoke {
-	background-color: @whitesmoke-gray-bg-color;
+	background-color: @whitesmoke-gray-bg-color!important;
 }
 
 .background-light-yellow {
-	background-color:#ffffe6;
+	background-color:ivory!important;
 }
 
 .background-white {
-	background-color: white;
+	background-color: white!important;
 }
 
 iframe.a2-iframe {
@@ -289,5 +291,50 @@ iframe.eusign-iframe {
 	iframe {
 		border: none;
 		background-color: white;
+	}
+}
+
+@flex-padding:12px;
+
+.flex-panel {
+	background-color: white;
+	display: flex;
+	flex-flow: column nowrap;
+	padding:@flex-padding;
+
+	.flex-panel-header {
+		padding-bottom: @flex-padding;
+		margin-bottom:@flex-padding;
+		border-bottom: 1px solid #ddd;
+		font-weight: 500;
+		color: #008abb;
+		font-size: 14px;
+	}
+
+	.divider {
+		flex-grow:1;
+	}
+}
+
+.flex-list {
+	display:flex;
+	margin:0;
+	padding:0;
+	list-style:none;
+	.flex-list-item {
+		display:block;
+	}
+
+	&.horizontal {
+		flex-flow:row wrap;
+		.flex-list-item {
+			margin-right:@flex-padding;
+		}
+	}
+
+	&.border-top {
+		padding-top:@flex-padding;
+		margin-top:@flex-padding;
+		border-top:1px solid #ddd;
 	}
 }
