@@ -690,6 +690,12 @@
 .ico-calc:before {
   content: "\eac0";
 }
+.ico-account:before {
+  content: "\eac1";
+}
+.ico-account-folder:before {
+  content: "\eac2";
+}
 .ico-task-complete:before {
   content: "\eac8";
 }

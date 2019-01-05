@@ -168,6 +168,8 @@ namespace A2v10.Xaml
 	{
 		NoIcon = 0,
 		Access,
+		Account,
+		AccountFolder,
 		Add,
 		AddressBook,
 		AddressCard,
