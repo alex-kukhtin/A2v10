@@ -20,6 +20,8 @@ namespace A2v10.Xaml
 
 		public String Label { get; set; }
 
+		public Boolean? IsFolder { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			throw new NotImplementedException();
@@ -39,6 +41,11 @@ namespace A2v10.Xaml
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
 				sb.Append($"hasIcon: true, icon: '{iconBind.GetPath(context)}',");
+			var isFolderBind = GetBinding(nameof(IsFolder));
+			if (isFolderBind != null)
+				sb.Append($"isFolder: '{isFolderBind.GetPath(context)}',");
+			else if (IsFolder != null)
+				throw new XamlException("The IsFolder property must be a binding");
 		}
 	}
 

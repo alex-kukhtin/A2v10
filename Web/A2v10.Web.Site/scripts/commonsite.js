@@ -70,7 +70,7 @@
 		let elRect = el.getBoundingClientRect();
 		let pElem = el.parentElement;
 		while (pElem) {
-			if (pElem.offsetHeight <= pElem.scrollHeight)
+			if (pElem.offsetHeight < pElem.scrollHeight)
 				break;
 			pElem = pElem.parentElement;
 		}
@@ -2036,7 +2036,7 @@ Vue.component('a2-pager', {
 
 /*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190104-7400
+// 20190105-7402
 // services/datamodel.js
 
 (function () {
@@ -2289,6 +2289,9 @@ Vue.component('a2-pager', {
 
 		if (path && path.endsWith(']'))
 			elem.$selected = false;
+
+		if (elem._meta_.$items)
+			elem.$expanded = false; // tree elem
 
 		defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
@@ -2834,6 +2837,16 @@ Vue.component('a2-pager', {
 			if (sel) sel.$selected = false;
 			this.$selected = true;
 			emitSelect(arr, this);
+			if (this._meta_.$items) {
+				// expand all parent items
+				let p = this._parent_._parent_;
+				while (p) {
+					p.$expanded = true;
+					p = p._parent_._parent_;
+					if (!p || p === this.$root)
+						break;
+				}
+			}
 		};
 	}
 

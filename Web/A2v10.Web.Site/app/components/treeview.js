@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180225-7119*/
+/*20190105-7402*/
 // components/treeview.js
 
 
@@ -44,11 +44,6 @@
 			isActive: Function,
 			getHref: Function
 		},
-		data() {
-			return {
-				open: !this.options.isDynamic
-			};
-		},
 		methods: {
 			isFolderSelect(item) {
 				let fs = this.options.folderSelect;
@@ -76,15 +71,15 @@
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
-				this.open = !this.open;
+				this.item.$expanded = !this.item.$expanded;
 				if (this.options.isDynamic) {
 					this.expand(this.item, this.options.subitems);
 				}
 			},
-			openElem() {
+			openElem: function() {
 				if (!this.isFolder)
 					return;
-				this.open = true;
+				this.item.$expanded = true;
 				if (this.isDynamic)
 					this.expand(this.item, this.options.subitems);
 			}
@@ -93,14 +88,16 @@
 			isFolder: function () {
 				if (this.options.isDynamic && utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
 					return true;
+				if (utils.isDefined(this.options.isFolder))
+					return this.item[this.options.isFolder];
 				let ch = this.item[this.options.subitems];
 				return ch && ch.length;
 			},
 			isExpanded: function () {
-				return this.isFolder && this.open;
+				return this.isFolder && this.item.$expanded;
 			},
 			isCollapsed: function () {
-				return this.isFolder && !this.open;
+				return this.isFolder && !this.item.$expanded;
 			},
 			title() {
 				var t = this.item[this.options.title];
@@ -130,17 +127,19 @@
 			}
 		},
 		watch: {
-			isFolder(newVal) {
-				// TODO: auto expand???
+			isItemSelected(newVal) {
+				console.dir('isItemSelected:' + newVal);
+				if (newVal && this.$el.scrollIntoViewCheck)
+					this.$el.scrollIntoViewCheck();
 			}
 		},
 		updated(x) {
 			// close expanded when reloaded
-			if (this.options.isDynamic && this.open) {
+			if (this.options.isDynamic && this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];
 					if (!arr.$loaded)
-						this.open = false;
+						this.item.$expanded = false;
 				}
 			}
 		}

@@ -79,7 +79,7 @@ app.modules['std:locale'] = function () {
 		let elRect = el.getBoundingClientRect();
 		let pElem = el.parentElement;
 		while (pElem) {
-			if (pElem.offsetHeight <= pElem.scrollHeight)
+			if (pElem.offsetHeight < pElem.scrollHeight)
 				break;
 			pElem = pElem.parentElement;
 		}
@@ -1750,7 +1750,7 @@ app.modules['std:validators'] = function () {
 
 /*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190104-7400
+// 20190105-7402
 // services/datamodel.js
 
 (function () {
@@ -2003,6 +2003,9 @@ app.modules['std:validators'] = function () {
 
 		if (path && path.endsWith(']'))
 			elem.$selected = false;
+
+		if (elem._meta_.$items)
+			elem.$expanded = false; // tree elem
 
 		defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
@@ -2548,6 +2551,16 @@ app.modules['std:validators'] = function () {
 			if (sel) sel.$selected = false;
 			this.$selected = true;
 			emitSelect(arr, this);
+			if (this._meta_.$items) {
+				// expand all parent items
+				let p = this._parent_._parent_;
+				while (p) {
+					p.$expanded = true;
+					p = p._parent_._parent_;
+					if (!p || p === this.$root)
+						break;
+				}
+			}
 		};
 	}
 
@@ -5877,9 +5890,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180225-7119*/
+/*20190105-7402*/
 // components/treeview.js
 
 
@@ -5923,11 +5936,6 @@ Vue.component('popover', {
 			isActive: Function,
 			getHref: Function
 		},
-		data() {
-			return {
-				open: !this.options.isDynamic
-			};
-		},
 		methods: {
 			isFolderSelect(item) {
 				let fs = this.options.folderSelect;
@@ -5955,15 +5963,15 @@ Vue.component('popover', {
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
-				this.open = !this.open;
+				this.item.$expanded = !this.item.$expanded;
 				if (this.options.isDynamic) {
 					this.expand(this.item, this.options.subitems);
 				}
 			},
-			openElem() {
+			openElem: function() {
 				if (!this.isFolder)
 					return;
-				this.open = true;
+				this.item.$expanded = true;
 				if (this.isDynamic)
 					this.expand(this.item, this.options.subitems);
 			}
@@ -5972,14 +5980,16 @@ Vue.component('popover', {
 			isFolder: function () {
 				if (this.options.isDynamic && utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
 					return true;
+				if (utils.isDefined(this.options.isFolder))
+					return this.item[this.options.isFolder];
 				let ch = this.item[this.options.subitems];
 				return ch && ch.length;
 			},
 			isExpanded: function () {
-				return this.isFolder && this.open;
+				return this.isFolder && this.item.$expanded;
 			},
 			isCollapsed: function () {
-				return this.isFolder && !this.open;
+				return this.isFolder && !this.item.$expanded;
 			},
 			title() {
 				var t = this.item[this.options.title];
@@ -6009,17 +6019,19 @@ Vue.component('popover', {
 			}
 		},
 		watch: {
-			isFolder(newVal) {
-				// TODO: auto expand???
+			isItemSelected(newVal) {
+				console.dir('isItemSelected:' + newVal);
+				if (newVal && this.$el.scrollIntoViewCheck)
+					this.$el.scrollIntoViewCheck();
 			}
 		},
 		updated(x) {
 			// close expanded when reloaded
-			if (this.options.isDynamic && this.open) {
+			if (this.options.isDynamic && this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];
 					if (!arr.$loaded)
-						this.open = false;
+						this.item.$expanded = false;
 				}
 			}
 		}
@@ -9091,7 +9103,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190104-7400
+// 20190105-7402
 // controllers/base.js
 
 (function () {
@@ -10011,6 +10023,16 @@ Vue.directive('resize', {
 				if (arr && arr.length)
 					return arr[0].msg;
 				return '';
+			},
+
+			$validateAll() {
+				//todo: CHECK here
+				function update(itm) {
+					itm.$forceUpdate();
+					itm.$children.forEach((val) => update(val));
+				}
+				this.$data.$forceValidate();
+				update(this);
 			},
 
 			__beginRequest() {

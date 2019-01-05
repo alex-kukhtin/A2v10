@@ -21,7 +21,7 @@
 		let elRect = el.getBoundingClientRect();
 		let pElem = el.parentElement;
 		while (pElem) {
-			if (pElem.offsetHeight <= pElem.scrollHeight)
+			if (pElem.offsetHeight < pElem.scrollHeight)
 				break;
 			pElem = pElem.parentElement;
 		}

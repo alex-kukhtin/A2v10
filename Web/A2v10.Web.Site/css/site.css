@@ -2687,6 +2687,7 @@ table.data-grid tr.group td {
   cursor: pointer;
   color: #777;
   padding-left: 0;
+  line-height: 1;
 }
 table.data-grid tr.group td .expmark:after {
   font-family: 'A2v10';
@@ -2712,7 +2713,7 @@ table.data-grid tr.group td .grcount {
   padding: 2px 4px;
   border-radius: 10rem;
   text-align: center;
-  min-width: 1.5rem;
+  min-width: 1.1rem;
 }
 table.data-grid tr.group.lev-2 td {
   padding-left: 12px;
@@ -2840,7 +2841,7 @@ table.data-grid > tbody > tr.bold > td {
 .data-grid-container.data-grid-light table.data-grid tr.group td {
   background-color: #f9f9f9;
   color: #999;
-  border-bottom-color: #ddd;
+  border-bottom-color: transparent;
 }
 .toolbar {
   display: flex;
