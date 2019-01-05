@@ -6020,7 +6020,7 @@ Vue.component('popover', {
 		},
 		watch: {
 			isItemSelected(newVal) {
-				console.dir('isItemSelected:' + newVal);
+				//console.dir('isItemSelected:' + newVal);
 				if (newVal && this.$el.scrollIntoViewCheck)
 					this.$el.scrollIntoViewCheck();
 			}
