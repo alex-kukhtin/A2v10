@@ -191,8 +191,12 @@ TODO:
 			},
 			$removeTab(tab) {
 				let ix = this.tabs.indexOf(tab);
-				if (ix !== -1)
-					this.tabs.splice(ix, 1);
+				if (ix === -1) return;
+				this.tabs.splice(ix, 1);
+				if (this.tabs.indexOf(this.activeTab) === -1) {
+					if (this.tabs.length > 0)
+						this.select(this.tabs[0]);
+				}
 			}
 		},
 		mounted() {

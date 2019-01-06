@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190105-7402
+// 20190106-7403
 // controllers/base.js
 
 (function () {
@@ -920,16 +920,6 @@
 				if (arr && arr.length)
 					return arr[0].msg;
 				return '';
-			},
-
-			$validateAll() {
-				//todo: CHECK here
-				function update(itm) {
-					itm.$forceUpdate();
-					itm.$children.forEach((val) => update(val));
-				}
-				this.$data.$forceValidate();
-				update(this);
 			},
 
 			__beginRequest() {

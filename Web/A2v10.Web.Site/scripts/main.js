@@ -6954,8 +6954,12 @@ TODO:
 			},
 			$removeTab(tab) {
 				let ix = this.tabs.indexOf(tab);
-				if (ix !== -1)
-					this.tabs.splice(ix, 1);
+				if (ix === -1) return;
+				this.tabs.splice(ix, 1);
+				if (this.tabs.indexOf(this.activeTab) === -1) {
+					if (this.tabs.length > 0)
+						this.select(this.tabs[0]);
+				}
 			}
 		},
 		mounted() {
@@ -9103,7 +9107,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190105-7402
+// 20190106-7403
 // controllers/base.js
 
 (function () {
@@ -10023,16 +10027,6 @@ Vue.directive('resize', {
 				if (arr && arr.length)
 					return arr[0].msg;
 				return '';
-			},
-
-			$validateAll() {
-				//todo: CHECK here
-				function update(itm) {
-					itm.$forceUpdate();
-					itm.$children.forEach((val) => update(val));
-				}
-				this.$data.$forceValidate();
-				update(this);
 			},
 
 			__beginRequest() {
