@@ -175,5 +175,15 @@ describe("Date tools", function () {
 		expect(f.getTime()).toBe(new Date('Mon Mar 16 1964 03:00:00 GMT+0300').getTime());
 	});
 
+	it('parse date', function () {
+		let today = du.today();
+		expect(du.parse('01.01.2019').getTime()).toBe(du.create(2019, 1, 1).getTime());
+		expect(du.parse('01 / 01 / 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
+		expect(du.parse('01 \.. 01 ... 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
+		expect(du.parse('01 .,\\/: 01 ; 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
+		expect(du.parse('16.03').getTime()).toBe(du.create(today.getFullYear(), 3, 16).getTime());
+		expect(du.parse('16.').getTime()).toBe(du.create(today.getFullYear(), today.getMonth()+1, 16).getTime());
+	});
+
 });
 

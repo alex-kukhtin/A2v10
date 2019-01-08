@@ -294,25 +294,33 @@ iframe.eusign-iframe {
 	}
 }
 
-@flex-padding:12px;
+@card-padding:1.25rem;
+@flex-padding:1.25rem;
 
-.flex-panel {
+.card {
 	background-color: white;
 	display: flex;
 	flex-flow: column nowrap;
-	padding:@flex-padding;
 
-	.flex-panel-header {
-		padding-bottom: @flex-padding;
-		margin-bottom:@flex-padding;
+	.card-header {
+		padding: @card-padding/2 @card-padding;
 		border-bottom: 1px solid #ddd;
 		font-weight: 500;
 		color: @link-color;
 		font-size: 14px;
 	}
 
+	.card-body {
+		padding: @card-padding;
+	}
+
 	.divider {
-		flex-grow:1;
+		flex-grow: 1;
+	}
+
+	.card-footer {
+		padding: @card-padding/2 @card-padding;
+		border-top: 1px solid #ddd;
 	}
 }
 

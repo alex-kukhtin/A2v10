@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 		public Boolean? Select { get; set; }
 		public Object Mark { get; set; }
 		public Boolean Border { get; set; }
+		public Boolean Flush { get; set; }
 
 		public Length Height { get; set; }
 		public BackgroundStyle Background { get; set; }
@@ -40,6 +41,7 @@ namespace A2v10.Xaml
 			var isBind = GetBinding(nameof(ItemsSource));
 			ul.AddCssClassBool(Striped, "striped");
 			ul.AddCssClassBool(Border, "border");
+			ul.AddCssClassBool(Flush, "flush");
 			if (Select != null)
 				ul.MergeAttribute(":selectable", Select.Value.ToString().ToLowerInvariant());
 			ul.AddCssClass(Style.ToString().ToKebabCase());

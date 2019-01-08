@@ -3247,6 +3247,9 @@ table.data-grid > tbody > tr.bold > td {
 .a2-list.underlined .a2-list-item {
   border-bottom: 1px solid #ddd;
 }
+.a2-list.flush.underlined .a2-list-item:last-child {
+  border-bottom-style: none;
+}
 .generic-list-item {
   display: inline-grid;
   grid-template-rows: auto auto;
@@ -4851,22 +4854,27 @@ iframe.eusign-iframe {
   border: none;
   background-color: white;
 }
-.flex-panel {
+.card {
   background-color: white;
   display: flex;
   flex-flow: column nowrap;
-  padding: 12px;
 }
-.flex-panel .flex-panel-header {
-  padding-bottom: 12px;
-  margin-bottom: 12px;
+.card .card-header {
+  padding: 0.625rem 1.25rem;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
   color: #208cf8;
   font-size: 14px;
 }
-.flex-panel .divider {
+.card .card-body {
+  padding: 1.25rem;
+}
+.card .divider {
   flex-grow: 1;
+}
+.card .card-footer {
+  padding: 0.625rem 1.25rem;
+  border-top: 1px solid #ddd;
 }
 .flex-list {
   display: flex;
@@ -4881,11 +4889,11 @@ iframe.eusign-iframe {
   flex-flow: row wrap;
 }
 .flex-list.horizontal .flex-list-item {
-  margin-right: 12px;
+  margin-right: 1.25rem;
 }
 .flex-list.border-top {
-  padding-top: 12px;
-  margin-top: 12px;
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
   border-top: 1px solid #ddd;
 }
 table.sheet {
@@ -5508,6 +5516,7 @@ h5,
 .diagram {
   display: flex;
   justify-content: center;
+  text-align: left;
 }
 .diagram .path {
   stroke: #000;

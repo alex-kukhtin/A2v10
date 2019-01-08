@@ -109,7 +109,7 @@
     <Compile Include="Drawing\Rectangle.cs" />
     <Compile Include="Layouts\Flex.cs" />
     <Compile Include="Layouts\FlexList.cs" />
-    <Compile Include="Layouts\FlexPanel.cs" />
+    <Compile Include="Layouts\Card.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
