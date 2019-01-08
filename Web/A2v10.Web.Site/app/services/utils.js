@@ -325,7 +325,7 @@ app.modules['std:utils'] = function () {
 		str = str || '';
 		if (!str) return dateZero();
 		let today = dateToday();
-		let seg = str.split(/(?:,|:|;|\.|\s|\/|\\|\+|\-)+/);
+		let seg = str.split(/[^\d]/);
 		if (seg.length === 1) {
 			seg.push('' + (today.getMonth() + 1));
 			seg.push('' + today.getFullYear());

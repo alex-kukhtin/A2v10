@@ -324,6 +324,7 @@ namespace A2v10.Xaml
 		Refresh,
 		Reload,
 		Rename,
+		Report,
 		Requery,
 		Save,
 		SaveClose,
