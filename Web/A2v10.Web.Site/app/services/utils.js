@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190104-7400
+// 20190108-7407
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -511,10 +511,17 @@ app.modules['std:utils'] = function () {
 		};
 	}
 
-	function currencyRound(n) {
+	function currencyRound(n, digits) {
 		if (isNaN(n))
 			return Nan;
-		return Number(Math.round(n + 'e2') + 'e-2');
+		digits = digits || 2;
+		let m = false;
+		if (n < 0) {
+			n = -n;
+			m = true;
+		}
+		let r = Number(Math.round(n + `e${digits}`) + `e-${digits}`);
+		return m ? -r : r;
 	}
 };
 

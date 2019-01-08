@@ -283,6 +283,7 @@
     <Content Include="TestPages\serverScripts.html" />
     <Content Include="TestPages\xstore.html" />
     <Content Include="TestPages\xstore.js" />
+    <Content Include="tests\cytools.js" />
     <Content Include="tests\modelvalidators.js" />
     <Content Include="tests\platform.js" />
     <Content Include="tests\datamodel.js" />
