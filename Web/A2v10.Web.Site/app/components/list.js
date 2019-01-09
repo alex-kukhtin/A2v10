@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181116-7357
+// 20190109-7408
 // components/list.js
 
 /* TODO:
@@ -10,15 +10,17 @@
 
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
 
 	Vue.component("a2-list", {
 		template:
 			`<ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
-		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in itemsSource" :key="listItemIndex" 
+		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@click.prevent="select(listItem)" @keydown="keyDown" 
 				ref="li">
-			<slot name="items" :item="listItem" />
+			<span v-if="listItem.__group" v-text="listItem.__group"></span>
+			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
 	</template>
 	<template v-else>
@@ -29,10 +31,12 @@
 			itemsSource: Array,
 			autoSelect: String,
 			mark: String,
+			markStyle: String,
 			command: Function,
 			selectable: {
 				type: Boolean, default: true
-			}
+			},
+			groupBy: String
 		},
 		computed: {
 			selectedSource() {
@@ -42,16 +46,51 @@
 				if (src.$origin)
 					src = src.$origin;
 				return src.$selected;
+			},
+			source() {
+				if (!this.groupBy)
+					return this.itemsSource;
+				let grmap = {};
+				for (let itm of this.itemsSource) {
+					let key = utils.eval(itm, this.groupBy);
+					if (utils.isDate(key))
+						key = utils.format(key, "Date");
+					if (!utils.isDefined(key)) key = '';
+					if (key === '') key = locale.$Unknown || "Unknown";
+					if (!(key in grmap)) {
+						grmap[key] = {
+							group: key,
+							items: []
+						};
+					}
+					grmap[key].items.push(itm);
+				}
+				let rarr = [];
+				for (let key in grmap) {
+					let me = grmap[key];
+					rarr.push(Object.assign({}, me, { __group: me.group, __count: me.items.length }));
+					for (var e of me.items) {
+						rarr.push(e);
+					}
+				}
+				//console.dir(rarr);
+				return rarr;
 			}
 		},
 		methods: {
 			cssClass(item) {
-				let cls = item.$selected ? 'active' : '';
-				if (this.mark) {
-					let clsmrk = utils.eval(item, this.mark);
-					if (clsmrk) cls += ' ' + clsmrk;
-				}
-				return cls;
+				let getMark = el => {
+					if (!this.mark) return '';
+					let cls = utils.eval(el, this.mark);
+					if (this.markStyle === 'row')
+						cls += ' no-marker';
+					else if (this.markStyle === 'marker')
+						cls += ' no-background';
+					return cls;
+				};
+				if (this.groupBy && item.__group)
+					return 'group' + (this.mark ? ' mark' : '');
+				return (item.$selected ? 'active ' : ' ') + getMark(item);
 			},
 			select(item) {
 				if (!this.selectable) return;

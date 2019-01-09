@@ -89,6 +89,7 @@
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\locale.js" />
     <Content Include="app\services\routing.js" />
+    <Content Include="app\services\templates.js" />
     <Content Include="app\site\collectionview.js" />
     <Content Include="app\site\controller.js" />
     <Content Include="app\site\store.js" />

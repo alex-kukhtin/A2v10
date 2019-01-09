@@ -12,6 +12,7 @@
 
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
+	const platform = require('std:platform');
 
     /**
      * .stop for toggle is required!
@@ -71,16 +72,19 @@
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
-				this.item.$expanded = !this.item.$expanded;
-				if (this.options.isDynamic) {
+				this.expandItem(!this.item.$expanded);
+				if (this.options.isDynamic && this.expand) {
 					this.expand(this.item, this.options.subitems);
 				}
+			},
+			expandItem(val) {
+				platform.set(this.item, '$expanded', val);
 			},
 			openElem: function() {
 				if (!this.isFolder)
 					return;
-				this.item.$expanded = true;
-				if (this.isDynamic)
+				this.expandItem(true);
+				if (this.isDynamic && this.expand)
 					this.expand(this.item, this.options.subitems);
 			}
 		},
@@ -138,8 +142,9 @@
 			if (this.options.isDynamic && this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];
-					if (!arr.$loaded)
-						this.item.$expanded = false;
+					if (!arr.$loaded) {
+						this.expandItem(false);
+					}
 				}
 			}
 		}

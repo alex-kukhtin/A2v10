@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181228-7393
+// 20190109-7408
 // components/datagrid.js*/
 
 (function () {
@@ -625,6 +625,7 @@
 				}
 				else if (utils.isObjectExact(grBy))
 					grBy = [grBy];
+				if (!this.$items) return null;
 				for (let itm of this.$items) {
 					let root = grmap;
 					for (let gr of grBy) {

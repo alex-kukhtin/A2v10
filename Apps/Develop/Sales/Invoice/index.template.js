@@ -18,7 +18,7 @@ const template = {
 
 
 function mark() {
-    return this.Done ? "success" : '';
+    return this.Done ? "success" : 'warning';
 }
 
 function getShipment() {

@@ -1,11 +1,11 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180524-7195
+// 20190109-7408
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
 	template:
-`<div :class="cssClass">
+		`<div :class="cssClass">
 	<a class="ico taskpad-collapse-handle" @click.stop="toggle"></a>
 	<div v-if="expanded" class="taskpad-body">
 		<slot>
@@ -16,11 +16,14 @@ Vue.component("a2-taskpad", {
 	</div>
 </div>
 `,
+	props: {
+		title: String
+	},
 	data() {
-        return {
-            expanded: true,
-            __savedCols: ''
-        };
+		return {
+			expanded: true,
+			__savedCols: ''
+		};
 	},
 	computed: {
 		cssClass() {
@@ -29,7 +32,7 @@ Vue.component("a2-taskpad", {
 			return cls;
 		},
 		tasksText() {
-			return window.$$locale.$Tasks;
+			return this.title || window.$$locale.$Tasks;
 		}
 	},
 	methods: {

@@ -3815,7 +3815,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190106-7403
+// 20190109-7408
 // controllers/base.js
 
 (function () {
@@ -4176,6 +4176,7 @@ Vue.component('a2-pager', {
 			},
 			$navigate(url, data, newWindow, update, opts) {
 				if (this.$isReadOnly(opts)) return;
+				eventBus.$emit('closeAllPopups');
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
 					let nwin = window.open(urlToNavigate, "_blank");
@@ -4384,6 +4385,7 @@ Vue.component('a2-pager', {
 				if (this.$isReadOnly(opts))
 					return;
 				const that = this;
+				eventBus.$emit('closeAllPopups');
 				function argIsNotAnArray() {
 					if (!utils.isArray(arg)) {
 						console.error(`$dialog.${command}. The argument is not an array`);

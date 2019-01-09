@@ -4902,9 +4902,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181228-7393
+// 20190109-7408
 // components/datagrid.js*/
 
 (function () {
@@ -5529,6 +5529,7 @@ Vue.component('validator-control', {
 				}
 				else if (utils.isObjectExact(grBy))
 					grBy = [grBy];
+				if (!this.$items) return null;
 				for (let itm of this.$items) {
 					let root = grmap;
 					for (let gr of grBy) {
@@ -5920,6 +5921,7 @@ Vue.component('popover', {
 
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
+	const platform = require('std:platform');
 
     /**
      * .stop for toggle is required!
@@ -5979,16 +5981,19 @@ Vue.component('popover', {
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
-				this.item.$expanded = !this.item.$expanded;
-				if (this.options.isDynamic) {
+				this.expandItem(!this.item.$expanded);
+				if (this.options.isDynamic && this.expand) {
 					this.expand(this.item, this.options.subitems);
 				}
+			},
+			expandItem(val) {
+				platform.set(this.item, '$expanded', val);
 			},
 			openElem: function() {
 				if (!this.isFolder)
 					return;
-				this.item.$expanded = true;
-				if (this.isDynamic)
+				this.expandItem(true);
+				if (this.isDynamic && this.expand)
 					this.expand(this.item, this.options.subitems);
 			}
 		},
@@ -6046,8 +6051,9 @@ Vue.component('popover', {
 			if (this.options.isDynamic && this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];
-					if (!arr.$loaded)
-						this.item.$expanded = false;
+					if (!arr.$loaded) {
+						this.expandItem(false);
+					}
 				}
 			}
 		}
@@ -6988,9 +6994,9 @@ TODO:
 	});
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181116-7357
+// 20190109-7408
 // components/list.js
 
 /* TODO:
@@ -7000,15 +7006,17 @@ TODO:
 
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
+	const locale = window.$$locale;
 
 	Vue.component("a2-list", {
 		template:
 			`<ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
-		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in itemsSource" :key="listItemIndex" 
+		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@click.prevent="select(listItem)" @keydown="keyDown" 
 				ref="li">
-			<slot name="items" :item="listItem" />
+			<span v-if="listItem.__group" v-text="listItem.__group"></span>
+			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
 	</template>
 	<template v-else>
@@ -7019,10 +7027,12 @@ TODO:
 			itemsSource: Array,
 			autoSelect: String,
 			mark: String,
+			markStyle: String,
 			command: Function,
 			selectable: {
 				type: Boolean, default: true
-			}
+			},
+			groupBy: String
 		},
 		computed: {
 			selectedSource() {
@@ -7032,16 +7042,51 @@ TODO:
 				if (src.$origin)
 					src = src.$origin;
 				return src.$selected;
+			},
+			source() {
+				if (!this.groupBy)
+					return this.itemsSource;
+				let grmap = {};
+				for (let itm of this.itemsSource) {
+					let key = utils.eval(itm, this.groupBy);
+					if (utils.isDate(key))
+						key = utils.format(key, "Date");
+					if (!utils.isDefined(key)) key = '';
+					if (key === '') key = locale.$Unknown || "Unknown";
+					if (!(key in grmap)) {
+						grmap[key] = {
+							group: key,
+							items: []
+						};
+					}
+					grmap[key].items.push(itm);
+				}
+				let rarr = [];
+				for (let key in grmap) {
+					let me = grmap[key];
+					rarr.push(Object.assign({}, me, { __group: me.group, __count: me.items.length }));
+					for (var e of me.items) {
+						rarr.push(e);
+					}
+				}
+				//console.dir(rarr);
+				return rarr;
 			}
 		},
 		methods: {
 			cssClass(item) {
-				let cls = item.$selected ? 'active' : '';
-				if (this.mark) {
-					let clsmrk = utils.eval(item, this.mark);
-					if (clsmrk) cls += ' ' + clsmrk;
-				}
-				return cls;
+				let getMark = el => {
+					if (!this.mark) return '';
+					let cls = utils.eval(el, this.mark);
+					if (this.markStyle === 'row')
+						cls += ' no-marker';
+					else if (this.markStyle === 'marker')
+						cls += ' no-background';
+					return cls;
+				};
+				if (this.groupBy && item.__group)
+					return 'group' + (this.mark ? ' mark' : '');
+				return (item.$selected ? 'active ' : ' ') + getMark(item);
 			},
 			select(item) {
 				if (!this.selectable) return;
@@ -7962,14 +8007,14 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180524-7195
+// 20190109-7408
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
 	template:
-`<div :class="cssClass">
+		`<div :class="cssClass">
 	<a class="ico taskpad-collapse-handle" @click.stop="toggle"></a>
 	<div v-if="expanded" class="taskpad-body">
 		<slot>
@@ -7980,11 +8025,14 @@ Vue.component("a2-taskpad", {
 	</div>
 </div>
 `,
+	props: {
+		title: String
+	},
 	data() {
-        return {
-            expanded: true,
-            __savedCols: ''
-        };
+		return {
+			expanded: true,
+			__savedCols: ''
+		};
 	},
 	computed: {
 		cssClass() {
@@ -7993,7 +8041,7 @@ Vue.component("a2-taskpad", {
 			return cls;
 		},
 		tasksText() {
-			return window.$$locale.$Tasks;
+			return this.title || window.$$locale.$Tasks;
 		}
 	},
 	methods: {
@@ -9123,7 +9171,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190106-7403
+// 20190109-7408
 // controllers/base.js
 
 (function () {
@@ -9484,6 +9532,7 @@ Vue.directive('resize', {
 			},
 			$navigate(url, data, newWindow, update, opts) {
 				if (this.$isReadOnly(opts)) return;
+				eventBus.$emit('closeAllPopups');
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
 					let nwin = window.open(urlToNavigate, "_blank");
@@ -9692,6 +9741,7 @@ Vue.directive('resize', {
 				if (this.$isReadOnly(opts))
 					return;
 				const that = this;
+				eventBus.$emit('closeAllPopups');
 				function argIsNotAnArray() {
 					if (!utils.isArray(arg)) {
 						console.error(`$dialog.${command}. The argument is not an array`);
@@ -10174,9 +10224,9 @@ Vue.directive('resize', {
 	app.components['baseController'] = base;
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20180109-7408*/
 /* controllers/shell.js */
 
 (function () {
@@ -10190,6 +10240,7 @@ Vue.directive('resize', {
 	const log = require('std:log');
 	const utils = require('std:utils');
 	const locale = window.$$locale;
+	const platform = require('std:platform');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -10204,8 +10255,10 @@ Vue.directive('resize', {
 				if (parentMenu)
 					parentMenu.Url = itm.Url;
 				let found = findMenu(itm.Menu, func);
-				if (found)
+				if (found) {
+					platform.set(itm, '$expanded', true);
 					return found;
+				}
 			}
 		}
 		return null;
@@ -10416,7 +10469,7 @@ Vue.directive('resize', {
 	<div class="side-bar-body" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu',
+			subitems: 'Menu', expandAll:true,
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
 		</tree-view>
 	</div>
@@ -10670,6 +10723,17 @@ Vue.directive('resize', {
 			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
 			firstUrl.title = opts.title;
 			urlTools.firstUrl = firstUrl;
+
+			function expand(elems) {
+				if (!elems) return;
+				for (let el of elems) {
+					if ('Menu' in el) {
+						platform.set(el, "$expanded", true);
+						expand(el.Menu);
+					}
+				}
+			}
+			expand(this.menu);
 		}
 	};
 

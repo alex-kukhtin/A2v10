@@ -962,6 +962,9 @@ input[type=number]::-webkit-outer-spin-button {
 .text-color-gray {
   color: #777;
 }
+.text-color-light-gray {
+  color: #ccc;
+}
 .text-color-danger {
   color: #a94442;
 }
@@ -3215,25 +3218,45 @@ table.data-grid > tbody > tr.bold > td {
 .a2-list .a2-list-item.warning,
 .a2-list .a2-list-item.yellow {
   border-left-color: gold;
+  background-color: #fffff0;
 }
 .a2-list .a2-list-item.danger,
 .a2-list .a2-list-item.error,
 .a2-list .a2-list-item.red {
   border-left-color: #fc7c7c;
+  background-color: #fff5fa;
 }
 .a2-list .a2-list-item.success,
 .a2-list .a2-list-item.green {
+  background-color: #f5fff5;
   border-left-color: #89e489;
 }
 .a2-list .a2-list-item.info,
 .a2-list .a2-list-item.cyan {
   border-left-color: #72eaea;
+  background-color: #f0ffff;
+}
+.a2-list .a2-list-item.no-background {
+  background-color: transparent;
+}
+.a2-list .a2-list-item.no-marker {
+  border-left-color: transparent;
+}
+.a2-list .a2-list-item.group {
+  background-color: #f9f9f9;
+  color: #999;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  cursor: default;
+}
+.a2-list .a2-list-item.group:hover {
+  background-color: #f9f9f9 !important;
 }
 .a2-list.striped .a2-list-item:nth-of-type(even) {
   background-color: rgba(208, 208, 208, 0.15);
 }
 .a2-list.border {
-  border: 1px solid #bdc5d8;
+  border: 1px solid #ddd;
 }
 .a2-list.two-columns-grid {
   display: grid;
@@ -3250,8 +3273,17 @@ table.data-grid > tbody > tr.bold > td {
 .a2-list.underlined .a2-list-item {
   border-bottom: 1px solid #ddd;
 }
+.a2-list.underlined .a2-list-item.group:not(:first-child) {
+  border-top-style: none;
+}
 .a2-list.flush.underlined .a2-list-item:last-child {
   border-bottom-style: none;
+}
+.a2-list.compact {
+  font-size: 0.925rem;
+}
+.a2-list.compact .a2-list-item {
+  padding: 6px 6px 6px 4px;
 }
 .generic-list-item {
   display: inline-grid;
@@ -3291,13 +3323,13 @@ table.data-grid > tbody > tr.bold > td {
   grid-row: 3;
   grid-column: 2;
   margin-top: 4px;
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   color: #999;
 }
 .generic-list-item .list-item-body {
   grid-row: 2;
   grid-column: 2;
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   color: #999;
 }
 .generic-list-item .list-item-commands {
@@ -4866,7 +4898,7 @@ iframe.eusign-iframe {
   padding: 0.625rem 1.25rem;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
-  color: #208cf8;
+  color: #9ab3e0;
   font-size: 14px;
 }
 .card .card-body {
@@ -4878,6 +4910,10 @@ iframe.eusign-iframe {
 .card .card-footer {
   padding: 0.625rem 1.25rem;
   border-top: 1px solid #ddd;
+}
+.card.compact .card-header {
+  padding: 0.41666667rem 0.625rem;
+  font-size: 13px;
 }
 .flex-list {
   display: flex;

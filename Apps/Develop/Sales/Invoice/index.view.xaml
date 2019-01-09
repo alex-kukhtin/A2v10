@@ -69,7 +69,7 @@
 		<TagLabel Style="Magenta">Magenta</TagLabel>
 	</Block>
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="Agent.Name">
 		<DataGridColumn Header="@[Code]" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url={StaticResource OpenUrl}}"  Icon="{Bind $Icon}" Wrap="NoWrap"/>
@@ -109,4 +109,9 @@
 			</DataGridRowDetails>
 		</DataGrid.RowDetails>
 	</DataGrid>
+
+	<List ItemsSource="{Bind Parent.ItemsSource}" GroupBy="Agent.Name" Mark="{Bind $Mark}" MarkerStyle="Row"
+		  Border="True" Margin="50" Padding="20" Style="Underlined" Compact="True">
+		<ListItem Header="{Bind Agent.Name}" Content="{Bind Date}"/>
+	</List>
 </Page>

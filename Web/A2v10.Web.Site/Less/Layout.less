@@ -306,7 +306,7 @@ iframe.eusign-iframe {
 		padding: @card-padding/2 @card-padding;
 		border-bottom: 1px solid #ddd;
 		font-weight: 500;
-		color: @link-color;
+		color: #9ab3e0;
 		font-size: 14px;
 	}
 
@@ -321,6 +321,13 @@ iframe.eusign-iframe {
 	.card-footer {
 		padding: @card-padding/2 @card-padding;
 		border-top: 1px solid #ddd;
+	}
+
+	&.compact {
+		.card-header {
+			padding: @card-padding / 3 @card-padding / 2;
+			font-size: @font-size;
+		}
 	}
 }
 

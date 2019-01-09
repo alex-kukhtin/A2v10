@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 	{
 		Default = 0,
 		Gray,
+		LightGray,
 		Danger
 	}
 

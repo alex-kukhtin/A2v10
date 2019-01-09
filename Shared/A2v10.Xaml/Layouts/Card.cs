@@ -26,6 +26,7 @@ namespace A2v10.Xaml
 
 		public BackgroundStyle Background { get; set; }
 		public ShadowStyle DropShadow { get; set; }
+		public Boolean Compact { get; set; }
 
 		public TextAlign Align { get; set; }
 
@@ -47,6 +48,7 @@ namespace A2v10.Xaml
 			}
 			if (Align != TextAlign.Left)
 				card.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+			card.AddCssClassBool(Compact, "compact");
 			card.RenderStart(context);
 			RenderHeader(context);
 			RenderChildren(context);

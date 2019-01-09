@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20180109-7408*/
 /* controllers/shell.js */
 
 (function () {
@@ -14,6 +14,7 @@
 	const log = require('std:log');
 	const utils = require('std:utils');
 	const locale = window.$$locale;
+	const platform = require('std:platform');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -28,8 +29,10 @@
 				if (parentMenu)
 					parentMenu.Url = itm.Url;
 				let found = findMenu(itm.Menu, func);
-				if (found)
+				if (found) {
+					platform.set(itm, '$expanded', true);
 					return found;
+				}
 			}
 		}
 		return null;
@@ -240,7 +243,7 @@
 	<div class="side-bar-body" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu',
+			subitems: 'Menu', expandAll:true,
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
 		</tree-view>
 	</div>
@@ -494,6 +497,17 @@
 			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
 			firstUrl.title = opts.title;
 			urlTools.firstUrl = firstUrl;
+
+			function expand(elems) {
+				if (!elems) return;
+				for (let el of elems) {
+					if ('Menu' in el) {
+						platform.set(el, "$expanded", true);
+						expand(el.Menu);
+					}
+				}
+			}
+			expand(this.menu);
 		}
 	};
 

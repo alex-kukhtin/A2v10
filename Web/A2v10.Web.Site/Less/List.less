@@ -26,18 +26,42 @@
 
 		&.warning, &.yellow {
 			border-left-color: @cmn-warning-brd-color;
+			background-color: #fffff0;
 		}
 
 		&.danger, &.error, &.red {
 			border-left-color: @cmn-danger-brd-color;
+			background-color: #fff5fa;
 		}
 
 		&.success, &.green {
+			background-color: #f5fff5;
 			border-left-color: @cmn-success-brd-color;
 		}
 
 		&.info, &.cyan {
 			border-left-color: @cmn-info-brd-color;
+			background-color: #f0ffff;
+		}
+
+		&.no-background {
+			background-color: transparent;
+		}
+
+		&.no-marker {
+			border-left-color: transparent;
+		}
+
+		&.group {
+			background-color: #f9f9f9;
+			color: @label-color;
+			border-bottom: 1px solid @light-gray-color;
+			border-top: 1px solid @light-gray-color;
+			cursor: default;
+
+			&:hover {
+				background-color: #f9f9f9!important;
+			}
 		}
 	}
 
@@ -48,7 +72,7 @@
 	}
 
 	&.border {
-		border: 1px solid @default-brd-color;
+		border: 1px solid @light-gray-color;
 	}
 
 	&.two-columns-grid {
@@ -69,11 +93,23 @@
 		.a2-list-item {
 			border-bottom: 1px solid #ddd;
 		}
+
+		.a2-list-item.group:not(:first-child) {
+			border-top-style: none;
+		}
 	}
 
 	&.flush.underlined {
 		.a2-list-item:last-child {
-			border-bottom-style:none;
+			border-bottom-style: none;
+		}
+	}
+
+	&.compact {
+		font-size: @font-size-small;
+
+		.a2-list-item {
+			padding: 6px 6px 6px 4px;
 		}
 	}
 }
