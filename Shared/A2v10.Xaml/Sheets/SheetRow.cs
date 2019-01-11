@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 		Default,
 		Title,
 		Parameter,
+		LastParameter,
 		Header,
 		LightHeader,
 		Footer,

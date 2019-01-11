@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public BackgroundStyle Background { get; set; }
 		public Boolean? Collapsible { get; set; }
 		public String Title { get; set; }
+		public Boolean Overflow { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -21,6 +22,7 @@ namespace A2v10.Xaml
 			onRender?.Invoke(tag);
 			MergeAttributes(tag, context);
 			MergeBindingAttributeString(tag, context, "title", nameof(Title), Title);
+			tag.AddCssClassBool(Overflow, "overflow");
 
 			if (Background != BackgroundStyle.None)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());

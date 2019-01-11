@@ -5,6 +5,11 @@
 			"model": "Invoice.Registry",
 			"template": "report.template",
 			"view": "invoice.registry.view"
+		},
+		"waybillRegistry": {
+			"model": "Waybill.Registry",
+			"template": "report.template",
+			"view": "invoice.registry.view"
 		}
 	},
 	"commands": {

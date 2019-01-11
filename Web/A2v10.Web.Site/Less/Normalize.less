@@ -15,12 +15,18 @@ table {
 	border-spacing: 0;
 	empty-cells: show;
 	table-layout: auto;
+	text-align:left;
+}
+
+tr {
+	page-break-inside:avoid;
 }
 
 td, th {
 	padding: 0;
 	font-weight: normal;
-	text-align:left;
+	text-align:inherit;
+	page-break-inside:avoid;
 }
 
 button, input[type=button] {

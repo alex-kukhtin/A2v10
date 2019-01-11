@@ -11,23 +11,36 @@
 			<Button Content="Закрыть" Icon="Close" Command="{BindCmd Close}" Toolbar.Align="Right"/>
 		</Toolbar>
 	</Page.Toolbar>
-	<Sheet GridLines="Both" Columns="Fit,100,Fit,300">
-		<SheetSection ItemsSource="{Bind ReportData}">
-			<SheetRow>
-				<SheetCell Content="{Bind Id}" Align="Right"/>
-				<SheetCell Content="{Bind Date, DataType=Date}" />
-				<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
-				<SheetCell Content="{Bind Memo}"/>
-			</SheetRow>
-		</SheetSection>
-		<Sheet.Header>
-			<SheetRow Style="Header">
-				<SheetCell>Id</SheetCell>
-				<SheetCell>Дата</SheetCell>
-				<SheetCell>Номер</SheetCell>
-				<SheetCell>Примечание</SheetCell>
-			</SheetRow>
-		</Sheet.Header>
-	</Sheet>
-	<Code Content="{Bind Query}" Multiline="True"></Code>
+	<SheetPage>
+		<Sheet GridLines="Both" Columns="Fit,100,Fit,300">
+			<SheetSection ItemsSource="{Bind ReportData}">
+				<SheetRow>
+					<SheetCell Content="{Bind Id}" Align="Right"/>
+					<SheetCell Content="{Bind Date, DataType=Date}" />
+					<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
+					<SheetCell Content="{Bind Memo}"/>
+				</SheetRow>
+			</SheetSection>
+			<Sheet.Header>
+				<SheetRow Style="Title">
+					<SheetCell ColSpan="4">Заголовок отчета</SheetCell>
+				</SheetRow>
+				<SheetRow Style="Parameter">
+					<SheetCell ColSpan="2">Параметр отчета</SheetCell>
+				</SheetRow>
+				<SheetRow Style="Header">
+					<SheetCell>Id</SheetCell>
+					<SheetCell>Дата</SheetCell>
+					<SheetCell>Номер</SheetCell>
+					<SheetCell>Примечание</SheetCell>
+				</SheetRow>
+			</Sheet.Header>
+			<Sheet.Footer>
+				<SheetRow Style="Footer">
+					<SheetCell ColSpan="4">Длинный текст для футера</SheetCell>
+				</SheetRow>
+			</Sheet.Footer>
+		</Sheet>
+	</SheetPage>
+	<Code Content="{Bind Query}" Multiline="True" If="False"></Code>
 </Page>

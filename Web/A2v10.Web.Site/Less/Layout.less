@@ -11,6 +11,7 @@
 
 	&.horizontal {
 		flex-direction: row;
+		align-items:baseline;
 		.divider {
 			flex-grow: 2;
 		}
@@ -332,24 +333,30 @@ iframe.eusign-iframe {
 }
 
 .flex-list {
-	display:flex;
-	margin:0;
-	padding:0;
-	list-style:none;
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
 	.flex-list-item {
-		display:block;
+		display: block;
 	}
 
 	&.horizontal {
-		flex-flow:row wrap;
+		flex-flow: row wrap;
+
 		.flex-list-item {
-			margin-right:@flex-padding;
+			margin-right: @flex-padding;
+		}
+
+		.flex-list-item:last-child {
+			margin-right:0;
 		}
 	}
 
 	&.border-top {
-		padding-top:@flex-padding;
-		margin-top:@flex-padding;
-		border-top:1px solid #ddd;
+		padding-top: @flex-padding;
+		margin-top: @flex-padding;
+		border-top: 1px solid #ddd;
 	}
 }

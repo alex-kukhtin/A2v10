@@ -38,7 +38,7 @@
 				<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Agents.Selected(Children)}}" Tip="Обновить данные"/>
 				<Button Content="Отчеты" Icon="FileLink" Toolbar.Align="Right">
 					<Button.DropDown>
-						<DropDownMenu Direction="UpLeft">
+						<DropDownMenu Direction="DownLeft">
 							<MenuItem Content="Реестр счетов" Icon="Table"
 								Command="{BindCmd Open, Url='/Reports/InvoiceRegistry', 
 								Argument={Bind Root.$SelectedItem}, CheckArgument=True, NewWindow=True}"/>

@@ -415,6 +415,10 @@
   content: "\ea00";
   color: #034989;
 }
+.ico-reload-no-color:before,
+.ico-refresh-no-color:before {
+  content: "\ea00";
+}
 .ico-error:before,
 .ico-alert:before {
   content: "\ea02";
@@ -715,12 +719,17 @@ table {
   border-spacing: 0;
   empty-cells: show;
   table-layout: auto;
+  text-align: left;
+}
+tr {
+  page-break-inside: avoid;
 }
 td,
 th {
   padding: 0;
   font-weight: normal;
-  text-align: left;
+  text-align: inherit;
+  page-break-inside: avoid;
 }
 button,
 input[type=button] {
@@ -1248,7 +1257,7 @@ header .user-name .person-name,
 }
 /*see: taskpad.js*/
 .taskpad {
-  overflow: hidden;
+  overflow: visible;
   border-left: 1px solid #ddd;
   position: relative;
 }
@@ -1258,6 +1267,9 @@ header .user-name .person-name,
   margin-top: 24px;
   padding-left: 12px;
   padding-right: 12px;
+}
+.taskpad.overflow .taskpad-body {
+  overflow: visible;
 }
 .taskpad .taskpad-collapse-handle {
   position: absolute;
@@ -2325,6 +2337,10 @@ pre.a2-code {
   width: 100%;
   min-height: 1.77em;
   white-space: nowrap;
+}
+.period-picker.open .period-text {
+  z-index: 1071;
+  background-color: white;
 }
 .period-picker .caret {
   margin-right: 4px;
@@ -4653,6 +4669,7 @@ TODO:
 }
 .stack-panel.horizontal {
   flex-direction: row;
+  align-items: baseline;
 }
 .stack-panel.horizontal .divider {
   flex-grow: 2;
@@ -4936,6 +4953,9 @@ iframe.eusign-iframe {
 .flex-list.horizontal .flex-list-item {
   margin-right: 1.25rem;
 }
+.flex-list.horizontal .flex-list-item:last-child {
+  margin-right: 0;
+}
 .flex-list.border-top {
   padding-top: 1.25rem;
   margin-top: 1.25rem;
@@ -4950,9 +4970,13 @@ table.sheet {
   margin: 0 1px 0 0;
   /*border-collapse bug*/
 }
+table.sheet tr {
+  page-break-inside: avoid;
+}
 table.sheet td,
 table.sheet th {
   padding: 6px 6px;
+  vertical-align: baseline;
 }
 table.sheet td {
   border-color: #e5e8eb;
@@ -4969,10 +4993,28 @@ table.sheet tr.row-title {
 table.sheet tr.row-title td {
   border-style: none !important;
   font-weight: 600;
-  padding: 12px 6px;
+  padding: 0 6px 6px, 6px;
 }
-table.sheet tr.row-parameter td {
+table.sheet tr.row-title td:first-child {
+  padding-left: 0;
+}
+table.sheet tr.row-title td:last-child {
+  padding-right: 0;
+}
+table.sheet tr.row-parameter td,
+table.sheet tr.row-last-parameter td {
   border-style: none !important;
+}
+table.sheet tr.row-parameter td:first-child,
+table.sheet tr.row-last-parameter td:first-child {
+  padding-left: 0;
+}
+table.sheet tr.row-parameter td:last-child,
+table.sheet tr.row-last-parameter td:last-child {
+  padding-right: 0;
+}
+table.sheet tr.row-last-parameter td {
+  padding-bottom: 18px;
 }
 table.sheet tr.row-header {
   background-color: #f5f5f5;
@@ -5009,6 +5051,44 @@ table.sheet .group-cell > div .ico:before {
 table.sheet .group-cell.collapsed > div .ico:before {
   content: "\e9cd";
   /*tree-collapsed*/
+}
+.sheet-page-wrapper {
+  background-color: #e3e3e3;
+  padding: 30px 0;
+}
+.sheet-page-wrapper .sheet-page {
+  margin: 0 auto;
+  background-color: white;
+  padding: 1cm;
+  border: 1px solid #999;
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.25);
+}
+.sheet-page-wrapper .sheet-page.portrait {
+  max-width: 21cm;
+  width: 21cm;
+  min-height: 29.7cm;
+}
+@media print {
+  .sheet-page-wrapper {
+    background-color: white;
+    padding: 0 !important;
+    margin: 0;
+  }
+  .sheet-page-wrapper .sheet-page {
+    padding: 0 !important;
+    box-shadow: none;
+    border-style: none;
+    margin: 0;
+  }
+  .sheet-page-wrapper .sheet-page.portrait {
+    width: 19cm;
+    max-width: 19cm;
+    padding: 0 !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
+  }
 }
 .app-exception {
   margin: 50px auto;
@@ -5488,6 +5568,12 @@ h5,
   }
   .content-view.partial-page {
     position: static;
+  }
+  .content-view.full-view {
+    top: 0;
+  }
+  .page.page-grid {
+    display: block;
   }
   .page.page-grid .page-content {
     overflow: hidden;

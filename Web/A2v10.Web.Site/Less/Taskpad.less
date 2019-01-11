@@ -8,7 +8,7 @@
 @handle-size: 24px;
 
 .taskpad {
-	overflow: hidden;
+	overflow: visible;
 	border-left: 1px solid @taskpad-brd-color;
 	position: relative;
 
@@ -19,6 +19,12 @@
 		margin-top: @handle-size;
 		padding-left: @taskpad-gap; // ???
 		padding-right: @taskpad-gap; // ???
+	}
+
+	&.overflow {
+		.taskpad-body {
+			overflow:visible;
+		}
 	}
 
 	.taskpad-collapse-handle {

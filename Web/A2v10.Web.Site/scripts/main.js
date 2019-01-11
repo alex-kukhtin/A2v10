@@ -4453,9 +4453,9 @@ Vue.component('validator-control', {
 	});
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181022-7325
+// 20190111-7410
 // components/periodpicker.js
 
 
@@ -4475,7 +4475,7 @@ Vue.component('validator-control', {
 	Vue.component('a2-period-picker', {
 		extends: baseControl,
 		template: `
-<div class="control-group period-picker" @click.stop.prevent="toggle($event)">
+<div class="control-group period-picker" @click.stop.prevent="toggle($event)" :class="{open: isOpen}">
 	<label v-if="hasLabel" v-text="label" />
 	<div class="input-group">
 		<span class="period-text" v-text="text" :class="inputClass" :tabindex="tabIndex"/>
