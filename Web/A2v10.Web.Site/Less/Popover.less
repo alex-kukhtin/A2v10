@@ -22,6 +22,10 @@
 	padding-bottom: 1px;
 	color: @popover-text-color;
 
+	&:focus {
+		outline: none !important;
+	}
+
 	> .popover-title {
 		border-bottom: 1px dotted @popover-text-color;
 
@@ -271,14 +275,14 @@
 }
 
 .popover-wrapper.hint {
-	margin:0 6px;
-	color:#999;
+	margin: 0 6px;
+	color: #999;
 
 	> .popover-title {
-		border-bottom:none;
+		border-bottom: none;
 	}
-	
+
 	.ico {
-		font-size:12px;
+		font-size: 12px;
 	}
 }

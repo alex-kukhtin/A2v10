@@ -43,7 +43,7 @@ app.modules['std:eusign'] = function () {
 
 		return new Promise(function (resolve, reject) {
 
-			let addr = ['ca.ksystems.com.ua', 'masterkey.ua', 'acskidd.gov.ua'];
+			let addr = ['ca.ksystems.com.ua', 'masterkey.ua', 'acskidd.gov.ua', 'acsk.privatbank.ua'];
 
 			function getPrivateKeyCertificatesByCMP(key, onSuccess) {
 				var keyInfo = euSign.GetKeyInfoBinary(key, pwd);

@@ -3,6 +3,7 @@
 
 const utils = require('std:utils');
 const du = utils.date;
+const cu = utils.currency;
 
 module.exports = {
     // props
@@ -68,7 +69,7 @@ async function unApplyDocument(doc) {
 
 // row properties
 function getRowSum() {
-    return +(this.Price * this.Qty).toFixed(2);
+    return cu.round(this.Price * this.Qty);
 }
 
 function setRowSum(value) {

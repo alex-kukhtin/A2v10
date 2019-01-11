@@ -10,7 +10,8 @@ const template = {
 		//'TDocument.$DatePlusOne'() { return utils.date.add(this.Date, -2, 'day');},
 		'TDocument.$canShipment': canShipment,
 		'TDocument.$checked': Boolean,
-		'TDocLink.$Mark'() { return this.Done ? 'success' : null; }
+		'TDocLink.$Mark'() { return this.Done ? 'success' : null; },
+		'TRow.$RoundSum'() { return utils.currency.round(this.Price * this.Qty, 3);}
 	},
 	validators: {
 		'Document.Agent': 'Выберите покупателя',

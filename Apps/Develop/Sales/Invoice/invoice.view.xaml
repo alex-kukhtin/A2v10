@@ -108,10 +108,17 @@
 						</TextBox.AddOns>
 					</TextBox>
 					<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
-					<TextBox Value="{Bind Qty, DataType=Number}" Align="Right"/>
+					<TextBox Value="{Bind Qty, DataType=Number}" Align="Right">
+						<TextBox.AddOns>
+							<Popover Icon="History">
+								I am the popover
+							</Popover>
+						</TextBox.AddOns>
+					</TextBox>
 					<TextBox Value="{Bind Price, DataType=Currency}" Align="Right"/>
 					<TextBox Value="{Bind Sum, DataType=Currency}" Align="Right"/>
 					<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+					<Label Content="{Bind $RoundSum}"></Label>
 				</TableRow>
 			</Table>
 		</Block>

@@ -137,7 +137,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190108-7407
+// 20190108-7409
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -355,6 +355,8 @@ app.modules['std:utils'] = function () {
 					return '';
 				return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
+				if (isString(obj))
+					obj = string2Date(obj);
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
@@ -456,6 +458,16 @@ app.modules['std:utils'] = function () {
 			return dt;
 		}
 		return str;
+	}
+
+	function string2Date(str) {
+		try {
+			let dt = new Date(str);
+			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+			return dt;
+		} catch (err) {
+			return str;
+		}
 	}
 
 	function dateParse(str) {
@@ -657,7 +669,8 @@ app.modules['std:utils'] = function () {
 			n = -n;
 			m = true;
 		}
-		let r = Number(Math.round(n + `e${digits}`) + `e-${digits}`);
+		// toFixed = avoid js rounding error
+		let r = Number(Math.round(n.toFixed(12) + `e${digits}`) + `e-${digits}`);
 		return m ? -r : r;
 	}
 };

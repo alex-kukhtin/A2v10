@@ -3747,6 +3747,9 @@ table.a2-table td.ctrl .checkbox,
 table.a2-table td.ctrl .radio {
   margin: 0 6px;
 }
+table.a2-table td.ctrl .stack-panel.horizontal {
+  align-items: baseline;
+}
 table.a2-table td.ctrl .stack-panel.horizontal .control-group + .control-group {
   border-left: 1px solid #ddd;
 }
@@ -4302,6 +4305,9 @@ TODO:
   cursor: pointer;
   padding-bottom: 1px;
   color: #208cf8;
+}
+.popover-wrapper:focus {
+  outline: none !important;
 }
 .popover-wrapper > .popover-title {
   border-bottom: 1px dotted #208cf8;
