@@ -664,6 +664,30 @@
 				window.location = root + url;
 			},
 
+			$exportTo(format) {
+				const root = window.$$rootUrl;
+				let elem = this.$el.getElementsByClassName('sheet-page');
+				if (!elem.length) {
+					console.dir('element not found (.sheet-page)');
+					return;
+				}
+				let html = elem[0].innerHTML;
+				let data = { format, html };
+				const routing = require('std:routing');
+				let url = `${root}/${routing.dataUrl()}/exportTo`;
+				dataservice.post(url, utils.toJson(data), true).then(function (blob) {
+					let objUrl = URL.createObjectURL(blob);
+					console.dir(objUrl);
+					let link = document.createElement('a');
+					link.download = 'myfile.xlsx';
+					link.href = objUrl;
+					link.click();
+					URL.revokeObjectURL(objUrl);
+				}).catch(function (error) {
+					console.dir(error);
+				});
+			},
+
 			$report(rep, arg, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;

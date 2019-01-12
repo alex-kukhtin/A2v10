@@ -1280,12 +1280,18 @@ header .user-name .person-name,
   color: #208cf8;
   font-size: 120%;
 }
+.taskpad.no-collapsible {
+  padding-top: 12px;
+}
 .taskpad.no-collapsible .taskpad-collapse-handle {
   display: none;
 }
 .taskpad.no-collapsible .taskpad-body {
   margin-top: 0;
   height: 100%;
+}
+.taskpad.no-collapsible.expanded {
+  margin-left: 0;
 }
 .taskpad.expanded {
   margin-left: 6px;
@@ -5017,22 +5023,22 @@ table.sheet tr.row-last-parameter td {
   padding-bottom: 18px;
 }
 table.sheet tr.row-header {
-  background-color: #f5f5f5;
+  background-color: rgba(231, 231, 231, 0.4);
 }
 table.sheet tr.row-light-header {
   color: #ccc;
 }
 table.sheet tr.row-footer {
-  background-color: #f5f5f5;
+  background-color: rgba(231, 231, 231, 0.4);
 }
 table.sheet tr.row-total {
-  background-color: #fff9d3;
+  background-color: rgba(255, 239, 135, 0.4);
 }
 table.sheet tr.row-total td {
   font-weight: 600;
 }
 table.sheet tr.group {
-  background-color: rgba(221, 248, 236, 0.5);
+  background-color: rgba(221, 248, 236, 0.4);
   color: #208080;
 }
 table.sheet tr.group td {
@@ -5051,6 +5057,24 @@ table.sheet .group-cell > div .ico:before {
 table.sheet .group-cell.collapsed > div .ico:before {
   content: "\e9cd";
   /*tree-collapsed*/
+}
+table.sheet.striped > tbody > tr:nth-child(even) {
+  background-color: rgba(240, 240, 240, 0.25);
+}
+table.sheet col.yellow {
+  background-color: rgba(255, 255, 164, 0.25);
+}
+table.sheet col.green {
+  background-color: rgba(220, 255, 220, 0.25);
+}
+table.sheet col.gray {
+  background-color: rgba(240, 240, 240, 0.25);
+}
+table.sheet col.red {
+  background-color: rgba(255, 220, 237, 0.25);
+}
+table.sheet col.blue {
+  background-color: rgba(196, 237, 255, 0.25);
 }
 .sheet-page-wrapper {
   background-color: #e3e3e3;

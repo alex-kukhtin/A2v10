@@ -147,6 +147,15 @@ namespace A2v10.Xaml
 		LightYellow
 	}
 
+	public enum ColumnBackgroundStyle {
+		None,
+		Yellow,
+		Green,
+		Red,
+		Blue,
+		Gray
+	}
+
 	public enum ShadowStyle
 	{
 		None,

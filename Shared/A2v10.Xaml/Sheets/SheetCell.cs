@@ -37,6 +37,17 @@ namespace A2v10.Xaml
 			td.RenderEnd(context);
 		}
 
+		internal override void MergeContent(TagBuilder tag, RenderContext context)
+		{
+			var contBind = GetBinding(nameof(Content));
+			if (contBind != null)
+			{
+				tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
+				if (contBind.DataType != DataType.String)
+					tag.MergeAttribute("data-type", contBind.DataType.ToString().ToLowerInvariant());
+			}
+		}
+
 		Boolean IsInTreeSection
 		{
 			get

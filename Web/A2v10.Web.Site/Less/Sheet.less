@@ -4,6 +4,9 @@
 
 @cell-padding-v: 6px;
 @cell-padding-h: 6px;
+@sheet-bg-gray: rgba(231,231,231,.4);
+@sheet-bg-total: rgba(255,239,135, .4);
+@sheet-bg-group: rgba(221, 248, 236, .4);
 
 table.sheet {
 	.user-select();
@@ -70,7 +73,7 @@ table.sheet {
 	}
 
 	tr.row-header {
-		background-color: #f5f5f5;
+		background-color: @sheet-bg-gray;
 	}
 
 	tr.row-light-header {
@@ -78,11 +81,11 @@ table.sheet {
 	}
 
 	tr.row-footer {
-		background-color: #f5f5f5;
+		background-color: @sheet-bg-gray;
 	}
 
 	tr.row-total {
-		background-color: #fff9d3;
+		background-color: @sheet-bg-total;
 
 		td {
 			font-weight: @font-bold;
@@ -90,7 +93,7 @@ table.sheet {
 	}
 
 	tr.group {
-		background-color: rgba(221, 248, 236, 0.5);
+		background-color: @sheet-bg-group;
 		color: #208080;
 
 		td {
@@ -116,6 +119,32 @@ table.sheet {
 				}
 			}
 		}
+	}
+
+	&.striped > tbody {
+		> tr:nth-child(even){
+			background-color:rgba(240,240,240, 0.25);
+		}
+	}
+
+	col.yellow {
+		background-color: rgba(255,255,164, 0.25);
+	}
+
+	col.green {
+		background-color: rgba(220,255,220, 0.25);
+	}
+
+	col.gray {
+		background-color: rgba(240,240,240, 0.25);
+	}
+
+	col.red {
+		background-color: rgba(255,220,237, 0.25);
+	}
+
+	col.blue {
+		background-color: rgba(196,237,255, 0.25);
 	}
 }
 

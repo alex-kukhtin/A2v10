@@ -4455,7 +4455,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190111-7410
+// 20190112-7411
 // components/periodpicker.js
 
 
@@ -4476,7 +4476,7 @@ Vue.component('validator-control', {
 		extends: baseControl,
 		template: `
 <div class="control-group period-picker" @click.stop.prevent="toggle($event)" :class="{open: isOpen}">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<span class="period-text" v-text="text" :class="inputClass" :tabindex="tabIndex"/>
 		<span class="caret"/>
@@ -9846,6 +9846,30 @@ Vue.directive('resize', {
 				let url = self.$baseUrl;
 				url = url.replace('/_page/', '/_export/');
 				window.location = root + url;
+			},
+
+			$exportTo(format) {
+				const root = window.$$rootUrl;
+				let elem = this.$el.getElementsByClassName('sheet-page');
+				if (!elem.length) {
+					console.dir('element not found (.sheet-page)');
+					return;
+				}
+				let html = elem[0].innerHTML;
+				let data = { format, html };
+				const routing = require('std:routing');
+				let url = `${root}/${routing.dataUrl()}/exportTo`;
+				dataservice.post(url, utils.toJson(data), true).then(function (blob) {
+					let objUrl = URL.createObjectURL(blob);
+					console.dir(objUrl);
+					let link = document.createElement('a');
+					link.download = 'myfile.xlsx';
+					link.href = objUrl;
+					link.click();
+					URL.revokeObjectURL(objUrl);
+				}).catch(function (error) {
+					console.dir(error);
+				});
 			},
 
 			$report(rep, arg, opts) {

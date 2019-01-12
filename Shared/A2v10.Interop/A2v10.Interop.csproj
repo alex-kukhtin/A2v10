@@ -52,6 +52,7 @@
     <Compile Include="ClrInvoker.cs" />
     <Compile Include="ExcelParser.cs" />
     <Compile Include="ExcelReportGenerator.cs" />
+    <Compile Include="Html2Excel.cs" />
     <Compile Include="InteropException.cs" />
     <Compile Include="Ip2SmsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

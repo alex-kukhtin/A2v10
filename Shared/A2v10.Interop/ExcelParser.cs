@@ -3,13 +3,11 @@
 using System;
 using System.IO;
 using System.Linq;
-
-
-using DocumentFormat.OpenXml.Packaging;
-
-using DocumentFormat.OpenXml.Spreadsheet;
 using System.Dynamic;
 using System.Collections.Generic;
+
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 using A2v10.Data.Interfaces;
 

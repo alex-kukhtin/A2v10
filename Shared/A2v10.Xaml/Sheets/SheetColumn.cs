@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ namespace A2v10.Xaml
 	{
 		public Boolean Fit { get; set; }
 		public Length Width { get; set; }
+		public ColumnBackgroundStyle Background { get; set; }
 
 		public SheetColumn()
 		{
@@ -19,6 +21,19 @@ namespace A2v10.Xaml
 
 		public SheetColumn(String definition)
 		{
+			var len = definition.Length;
+			if (definition.IndexOf('+') == len - 2) {
+				var color = definition[len - 1];
+				switch (color) {
+					case 'Y': Background = ColumnBackgroundStyle.Yellow; break;
+					case 'B': Background = ColumnBackgroundStyle.Blue; break;
+					case 'G': Background = ColumnBackgroundStyle.Green; break;
+					case 'R': Background = ColumnBackgroundStyle.Red; break;
+					case 'A': Background = ColumnBackgroundStyle.Gray; break;
+					default: throw new XamlException($"Invalid BackgroundColor for SheetColumn ('{color}')");
+				}
+				definition = definition.Substring(0, len - 2);
+			}
 			if (definition == "Fit")
 				Fit = true;
 			else
@@ -32,6 +47,9 @@ namespace A2v10.Xaml
 				col.AddCssClass("fit");
 			if (Width != null)
 				col.MergeStyle("width", Width.Value);
+			if (Background != ColumnBackgroundStyle.None)
+				col.AddCssClass(Background.ToString().ToKebabCase());
+
 			col.Render(context, TagRenderMode.SelfClosing);
 		}
 	}

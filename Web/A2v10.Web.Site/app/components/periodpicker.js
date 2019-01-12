@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190111-7410
+// 20190112-7411
 // components/periodpicker.js
 
 
@@ -21,7 +21,7 @@
 		extends: baseControl,
 		template: `
 <div class="control-group period-picker" @click.stop.prevent="toggle($event)" :class="{open: isOpen}">
-	<label v-if="hasLabel" v-text="label" />
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<span class="period-text" v-text="text" :class="inputClass" :tabindex="tabIndex"/>
 		<span class="caret"/>

@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
-		internal void MergeContent(TagBuilder tag, RenderContext context)
+		internal virtual void MergeContent(TagBuilder tag, RenderContext context)
 		{
 			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)

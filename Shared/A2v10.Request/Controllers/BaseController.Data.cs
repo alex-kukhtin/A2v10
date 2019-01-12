@@ -12,6 +12,7 @@ using Newtonsoft.Json.Converters;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
+using A2v10.Interop;
 
 namespace A2v10.Request
 {
@@ -38,6 +39,9 @@ namespace A2v10.Request
 					break;
 				case "invoke":
 					await InvokeData(setParams, json, response);
+					break;
+				case "exportto":
+					ExportData(setParams, json, response);
 					break;
 				default:
 					throw new RequestModelException($"Invalid data action {command}");
@@ -230,6 +234,25 @@ namespace A2v10.Request
 
 			IDataModel model = await _dbContext.LoadModelAsync(action.CurrentSource, loadProc, execPrms);
 			WriteDataModel(model, writer);
+		}
+
+		internal void ExportData(Action<ExpandoObject> setParams, String json, HttpResponseBase response)
+		{
+			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+			response.ContentType = "application/octet-binary";
+			String format = jsonData.Get<String>("format");
+			try
+			{
+				var h = new Html2Excel();
+				using (var s = h.ConvertHtmlToExcel(jsonData.Get<String>("html"))) {
+					s.Seek(0, SeekOrigin.Begin);
+					s.CopyTo(response.OutputStream);
+				}
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex, response);
+			}
 		}
 
 		void WriteDataModel(IDataModel model, TextWriter writer)

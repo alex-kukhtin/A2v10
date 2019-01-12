@@ -1,7 +1,7 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов">
 	<Page.Toolbar>
 		<Toolbar>
-			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="30rem"/>
+			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="15rem"/>
 			<Selector Value="{Bind Query.Agent}" DisplayProperty="Name" Delegate="fetchCustomers">
 				<Selector.AddOns>
 					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Url='/Agent/browseCustomer', Argument={Bind Query.Agent}}"/>
@@ -11,13 +11,34 @@
 			<Button Content="Закрыть" Icon="Close" Command="{BindCmd Close}" Toolbar.Align="Right"/>
 		</Toolbar>
 	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Overflow="True" Background="WhiteSmoke" Collapsible="False">
+			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="20rem" Placement="BottomRight">
+				<PeriodPicker.Hint>
+					<Popover Placement="BottomRight" Width="15rem">Выберите период, за который будет строиться отчет</Popover>
+				</PeriodPicker.Hint>
+			</PeriodPicker>
+			<Selector Value="{Bind Query.Agent}" DisplayProperty="Name" Delegate="fetchCustomers" Label="Контрагент"
+					  Hint="Выберите контрагента, для которого будет строиться отчет">
+				<Selector.AddOns>
+					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Url='/Agent/browseCustomer', Argument={Bind Query.Agent}}"/>
+				</Selector.AddOns>
+			</Selector>
+			<Grid Padding="10,0" AutoFlow="Column">
+				<Button Content="Построить" Icon="ArrowRight" Command="{BindCmd Reload}"/>
+				<Button Content="Экспорт в Excel" Icon="ExportExcel" Style="Info"
+						Command="{BindCmd ExportTo, Format=Excel}"/>
+			</Grid>
+		</Taskpad>
+	</Page.Taskpad>
 	<SheetPage>
-		<Sheet GridLines="Both" Columns="Fit,100,Fit,300">
+		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow>
 					<SheetCell Content="{Bind Id}" Align="Right"/>
-					<SheetCell Content="{Bind Date, DataType=Date}" />
+					<SheetCell Content="{Bind Date, DataType=Date}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
+					<SheetCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 					<SheetCell Content="{Bind Memo}"/>
 				</SheetRow>
 			</SheetSection>
@@ -25,19 +46,28 @@
 				<SheetRow Style="Title">
 					<SheetCell ColSpan="4">Заголовок отчета</SheetCell>
 				</SheetRow>
-				<SheetRow Style="Parameter">
-					<SheetCell ColSpan="2">Параметр отчета</SheetCell>
+				<SheetRow Style="LastParameter">
+					<SheetCell ColSpan="5">
+						<Text>Параметр отчета:
+							<Span Bold="True" Content="{Bind Query.Agent.Name}"/>
+						</Text></SheetCell>
 				</SheetRow>
-				<SheetRow Style="Header">
+				<SheetRow Style="Header" Align="Center">
 					<SheetCell>Id</SheetCell>
 					<SheetCell>Дата</SheetCell>
 					<SheetCell>Номер</SheetCell>
+					<SheetCell>Сума</SheetCell>
 					<SheetCell>Примечание</SheetCell>
+				</SheetRow>
+				<SheetRow Style="Total">
+					<SheetCell ColSpan="3"/>
+					<SheetCell>234.55</SheetCell>
+					<SheetCell/>
 				</SheetRow>
 			</Sheet.Header>
 			<Sheet.Footer>
 				<SheetRow Style="Footer">
-					<SheetCell ColSpan="4">Длинный текст для футера</SheetCell>
+					<SheetCell ColSpan="5">Длинный текст для футера</SheetCell>
 				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>

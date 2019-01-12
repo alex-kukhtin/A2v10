@@ -46,7 +46,8 @@ namespace A2v10.Xaml
 		Download,
 		Attachment,
 		Help,
-		EUSign
+		EUSign,
+		ExportTo
 	}
 
 	public enum DialogAction
@@ -58,6 +59,11 @@ namespace A2v10.Xaml
 		Browse,
 		Append, // create in dialog and append to array,
 		Copy
+	}
+
+	public enum ExportToFormat
+	{
+		Excel
 	}
 
 	public class BindCmd : BindBase
@@ -86,6 +92,8 @@ namespace A2v10.Xaml
 		public Toast Toast { get; set; }
 
 		public String Data { get; set; }
+
+		public ExportToFormat Format { get; set; }
 
 		public BindCmd()
 		{
@@ -249,6 +257,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Export:
 					return $"$export()";
+
+				case CommandType.ExportTo:
+					return $"$exportTo('{Format}')";
 
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)
