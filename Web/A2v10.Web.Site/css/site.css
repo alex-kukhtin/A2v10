@@ -4993,6 +4993,15 @@ table.sheet td.indent.lev-2 {
 table.sheet td.indent.lev-2 {
   padding-left: 30px;
 }
+table.sheet .col-shadow {
+  visibility: collapse;
+}
+table.sheet .col-shadow td {
+  padding: 0!important;
+  border-style: none!important;
+  display: table-cell;
+  margin: -10px;
+}
 table.sheet tr.row-title {
   font-size: 120%;
 }

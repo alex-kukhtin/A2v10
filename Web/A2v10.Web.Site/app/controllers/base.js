@@ -671,7 +671,8 @@
 					console.dir('element not found (.sheet-page)');
 					return;
 				}
-				let html = elem[0].innerHTML;
+				let table = elem[0];
+				let html = table.innerHTML;
 				let data = { format, html };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;

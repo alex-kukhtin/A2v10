@@ -2,34 +2,34 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Xml;
 
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System.Xml;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
+
+using A2v10.Interop.ExportTo;
 
 /*TODO:
- * 1. RowSpan
- * 2. Styles
  * 3. ColumnWidth/RowHeight
- * 4. Date, DateTime format
- * 5. Number format
+ * 7. JS error - show error;
  */
 
 namespace A2v10.Interop
 {
-	public enum CellStyles : UInt32
-	{
-		Number = 1,
-	}
-
 	public class Html2Excel
 	{
 		List<String> _mergeCells = new List<String>();
 
 		public Stream ConvertHtmlToExcel(String html)
+		{
+			HtmlReader rdr = new HtmlReader();
+			var sheet = rdr.ReadHtmlSheet(html);
+			return SheetToExcel(sheet);
+		}
+
+		public Stream SheetToExcel(ExSheet exsheet)
 		{
 			MemoryStream ms = null;
 			ms = new MemoryStream();
@@ -40,10 +40,10 @@ namespace A2v10.Interop
 				WorksheetPart wsPart = wbPart.AddNewPart<WorksheetPart>();
 
 				WorkbookStylesPart workStylePart = wbPart.AddNewPart<WorkbookStylesPart>();
-				workStylePart.Stylesheet = AddStyles();
+				workStylePart.Stylesheet = AddStyles(exsheet.Styles);
 				workStylePart.Stylesheet.Save();
 
-				wsPart.Worksheet = GetDataFromHtml(GetXmlFromHtml(html));
+				wsPart.Worksheet = GetDataFromSheet(exsheet);
 
 				if (_mergeCells.Count > 0)
 				{
@@ -63,124 +63,168 @@ namespace A2v10.Interop
 			return ms;
 		}
 
-		Stylesheet AddStyles()
+
+		Stylesheet AddStyles(StylesDictionary styles)
 		{
-			Stylesheet styleSheet = null;
+			Color autoColor() { return new Color() { Auto = true }; }
 
 			Fonts fonts = new Fonts(
 				new Font( // Index 0 - default
 					new FontSize() { Val = 11 }
 
 				),
-				new Font( // Index 1 - header
-					new FontSize() { Val = 10 },
-					new Bold(),
-					new Color() { Rgb = "777777" }
+				new Font( // Index 1 - bold
+					new FontSize() { Val = 11 },
+					new Bold()
+				),
+				new Font( // Index 2 - title
+					new FontSize() { Val = 14 },
+					new Bold()
 				));
-
-			Fills fills = new Fills(
-					new Fill(new PatternFill() { PatternType = PatternValues.None }), // Index 0 - default
-					new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }), // Index 1 - default
-					new Fill(new PatternFill(new ForegroundColor { Rgb = new HexBinaryValue() { Value = "66666666" } })
-					{
-						PatternType = PatternValues.Solid
-					}) // Index 2 - header
-				);
 
 			Borders borders = new Borders(
 					new Border(), // index 0 default
 					new Border( // index 1 black border
-						new LeftBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-						new RightBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-						new TopBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-						new BottomBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin },
+						new LeftBorder(autoColor()) { Style = BorderStyleValues.Thin },
+						new RightBorder(autoColor()) { Style = BorderStyleValues.Thin },
+						new TopBorder(autoColor()) { Style = BorderStyleValues.Thin },
+						new BottomBorder(autoColor()) { Style = BorderStyleValues.Thin },
 						new DiagonalBorder())
 				);
 
-			CellFormats cellFormats = new CellFormats(
-					/*0*/ new CellFormat(), // default
-					/*1*/ new CellFormat { FontId = 0, FillId = 0, BorderId = 0, ApplyNumberFormat = true, NumberFormatId = 4 }, // body
-					/*2*/ new CellFormat { FontId = 1, FillId = 0, BorderId = 0}
+			Fills fills = new Fills(
+					new Fill(new PatternFill() { PatternType = PatternValues.None }));
+
+			NumberingFormats numFormats = new NumberingFormats(
+					/*date*/     new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy;@", NumberFormatId = 166 },
+					/*datetime*/ new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy hh:mm;@", NumberFormatId = 167 },
+					/*currency*/ new NumberingFormat() { FormatCode = "#,##0.00####;[Red]\\-#,##0.00####", NumberFormatId = 169 },
+					/*number*/   new NumberingFormat() { FormatCode = "#,##0.######;[Red]-#,##0.######", NumberFormatId = 170 }
 				);
 
-			styleSheet = new Stylesheet(fonts, fills, borders, cellFormats);
+			CellFormats cellFormats = new CellFormats(new CellFormat());
 
-			return styleSheet;
-		}
-
-
-		XmlDocument GetXmlFromHtml(String html)
-		{
-			var reg = new Regex("<col ([\\w=\"\\s:%;]+)>");
-			var xml = reg.Replace(html, (math) => $"<col {math.Groups[1].Value} />");
-			var doc = new XmlDocument();
-			doc.LoadXml(xml);
-			return doc;
-		}
-
-		String NormalizeNumber(String number)
-		{
-			if (number.IndexOf(".") != -1)
-				return new Regex(@"[\s,]").Replace(number, String.Empty);
-			else
-				return new Regex(@"[\s]").Replace(number, String.Empty).Replace(",", ".");
-		}
-
-		void SetCellValue(Cell cell, String text, XmlAttribute dataTypeAttr)
-		{
-			String strDataType = "string";
-			if (dataTypeAttr != null)
-				strDataType = dataTypeAttr.Value;
-			switch (strDataType)
+			for (var i=1 /*1-based!*/; i< styles.List.Count; i++)
 			{
-				case "string":
-					cell.CellValue = new CellValue(text);
+				Style st = styles.List[i];
+				cellFormats.Append(CreateCellFormat(st));
+			}
+
+			return new Stylesheet(numFormats, fonts, fills, borders, cellFormats);
+		}
+
+		CellFormat CreateCellFormat(Style style)
+		{
+			var cf = new CellFormat()
+			{
+				FontId = 0,
+				ApplyAlignment = true,
+				Alignment = new Alignment {
+					Vertical = VerticalAlignmentValues.Top
+				}
+			};
+			
+
+			// font
+			if (style.RowRole == RowRole.Title)
+			{
+				cf.FontId = 2;
+				cf.ApplyFont = true;
+			}
+			else if (style.Bold)
+			{
+				cf.FontId = 1;
+				cf.ApplyFont = true;
+			}
+			// dataType
+			switch (style.DataType)
+			{
+				case DataType.Currency:
+					cf.NumberFormatId = 169;
+					cf.ApplyNumberFormat = true;
+					break;
+				case DataType.Date:
+					cf.NumberFormatId = 166;
+					cf.ApplyNumberFormat = true;
+					break;
+				case DataType.DateTime:
+					cf.NumberFormatId = 167;
+					cf.ApplyNumberFormat = true;
+					break;
+				case DataType.Number:
+					break;
+				default:
+					cf.Alignment.WrapText = true;
+					break;
+			}
+			// border
+			if (style.HasBorder)
+			{
+				cf.BorderId = 1;
+				cf.ApplyBorder = true;
+			}
+
+			// align
+			if (style.DataType == DataType.Date || style.DataType == DataType.DateTime)
+			{
+				cf.Alignment.Horizontal = HorizontalAlignmentValues.Center;
+			}
+
+			if (style.Wrap)
+				cf.Alignment.WrapText = true;
+
+			switch (style.Align)
+			{
+				case HorizontalAlign.Center:
+					cf.Alignment.Horizontal = HorizontalAlignmentValues.Center;
+					break;
+				case HorizontalAlign.Right:
+					cf.Alignment.Horizontal = HorizontalAlignmentValues.Right;
+					break;
+			}
+			return cf;
+		}
+
+		void SetCellValue(Cell cell, ExCell exCell, ExRow exRow)
+		{
+			cell.CellValue = new CellValue(exCell.Value);
+			if (exCell.StyleIndex != 0)
+				cell.StyleIndex = exCell.StyleIndex;
+			if (exCell.Kind != CellKind.Normal)
+				return;
+			switch (exCell.DataType) {
+				case DataType.String:
 					cell.DataType = new EnumValue<CellValues>(CellValues.String);
 					break;
-				case "currency":
-					cell.CellValue = new CellValue(NormalizeNumber(text));
+				case DataType.Currency:
 					cell.DataType = new EnumValue<CellValues>(CellValues.Number);
-					cell.StyleIndex = (UInt32)CellStyles.Number;
+					break;
+				case DataType.Number:
+					cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+					break;
+				case DataType.Date:
+				case DataType.DateTime:
+					// DataType not needed
 					break;
 			}
 		}
 
-		Row ProcessRow(XmlNode node, Int32 rowNo)
+		Row ProcessRow(ExRow exrow, Int32 rowNo)
 		{
 			var row = new Row();
-			Char chIx = 'A';
-			var style = node.Attributes["class"];
-			foreach (var c in node.ChildNodes)
+			for (var col=0; col <exrow.Cells.Count; col++)
 			{
-				var cn = c as XmlNode;
+				var c = exrow.Cells[col];
+				if (c.Kind == CellKind.Null)
+					continue;
 				var cell = new Cell();
-				cell.CellReference = $"{chIx}{rowNo}";
-
-				var dataType = cn.Attributes["data-type"];
-				SetCellValue(cell, cn.InnerText, dataType);
-				row.Append(cell);
-				var colSpanAttr = cn.Attributes["colspan"];
-				if (colSpanAttr != null)
-				{
-					var colSpan = Int32.Parse(colSpanAttr.Value);
-					var mergeRef = $"{chIx}{rowNo}:{Char.ConvertFromUtf32(chIx + colSpan - 1)}{rowNo}";
+				SetCellValue(cell, c, exrow);
+				cell.CellReference = c.Reference(rowNo, col);
+				var mergeRef = c.MergeReference(rowNo, col);
+				if (mergeRef != null)
 					_mergeCells.Add(mergeRef);
-					for (Int32 i = 0; i < colSpan - 1; i++)
-						row.Append(new Cell() { CellReference = $"{++chIx}{rowNo}" });
-				}
-				chIx++;
+				row.Append(cell);
 			}
-			/*
-			sc.CellValue = new CellValue("12056439");
-			sc.DataType = new EnumValue<CellValues>(CellValues.Number);
-			sc.CellReference = $"A{rowNo}";
-			row.Append(sc);
-			sc = new Cell();
-			sc.CellValue = new CellValue("I AM THE TEXT");
-			sc.DataType = new EnumValue<CellValues>(CellValues.String);
-			sc.CellReference = $"B{rowNo}";
-			row.Append(sc);
-			*/
 			return row;
 		}
 
@@ -192,42 +236,28 @@ namespace A2v10.Interop
 
 			columns.Append(new Column() { Min = 1, Max = 1, BestFit = true, CustomWidth = true, Width = Convert.ToDouble(w) });
 			columns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true, BestFit = true });
+			columns.Append(new Column() { Min = 5, Max = 5, Width = 40, CustomWidth = true, BestFit = true });
 		}
 
-		Worksheet GetDataFromHtml(XmlDocument doc)
+		Worksheet GetDataFromSheet(ExSheet sheet)
 		{
-			var table = doc.FirstChild;
-			if (table.Name != "table")
-				throw new InteropException("Invalid element for Html2Excel");
 
 			var sd = new SheetData();
 			var cols = new Columns();
 
 			ProcessColums(cols, null);
 
-			Int32 rowNo = 1;
-			foreach (var n in table.ChildNodes)
-			{
-				var nd = n as XmlNode;
-				switch (nd.Name)
-				{
-					case "colgroup":
-						//foreach (var c in nd.ChildNodes)
-						//ProcessColums(cols, c as XmlNode);
-						break;
-					case "tbody":
-					case "thead":
-					case "tfoot":
-						foreach (var x in nd.ChildNodes)
-							sd.Append(ProcessRow(x as XmlNode, rowNo++));
-						break;
-				}
-			}
+			Int32 rowNo = 0;
+			foreach (var row in sheet.Rows)
+				sd.Append(ProcessRow(row, rowNo++));
+
 			var props = new SheetFormatProperties();
-			props.BaseColumnWidth = 8;
-			props.DefaultRowHeight = 20;
+			props.BaseColumnWidth = 10;
+			props.DefaultRowHeight = 30;
 			props.DyDescent = 0.25;
-			return new Worksheet(props, cols, sd);
+
+			var ws = new Worksheet(props, cols, sd);
+			return ws;
 		}
 	}
 }

@@ -11,6 +11,7 @@
 	<thead>
 		<slot name="header"></slot>
 	</thead>
+	<slot name="col-shadow"></slot>
 	<slot name="body"></slot>
 	<tfoot>
 		<slot name="footer"></slot>

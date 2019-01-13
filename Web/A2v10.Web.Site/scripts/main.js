@@ -8153,6 +8153,7 @@ Vue.component('a2-panel', {
 	<thead>
 		<slot name="header"></slot>
 	</thead>
+	<slot name="col-shadow"></slot>
 	<slot name="body"></slot>
 	<tfoot>
 		<slot name="footer"></slot>
@@ -9855,7 +9856,8 @@ Vue.directive('resize', {
 					console.dir('element not found (.sheet-page)');
 					return;
 				}
-				let html = elem[0].innerHTML;
+				let table = elem[0];
+				let html = table.innerHTML;
 				let data = { format, html };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;

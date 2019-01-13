@@ -35,8 +35,8 @@
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow>
-					<SheetCell Content="{Bind Id}" Align="Right"/>
-					<SheetCell Content="{Bind Date, DataType=Date}" Align="Center"/>
+					<SheetCell Content="{Bind Id, DataType=Number}" Align="Right"/>
+					<SheetCell Content="{Bind Date, DataType=DateTime}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
 					<SheetCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
 					<SheetCell Content="{Bind Memo}"/>
@@ -53,11 +53,14 @@
 						</Text></SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
+					<SheetCell ColSpan="3">Информация</SheetCell>
+					<SheetCell RowSpan="2">Сума</SheetCell>
+					<SheetCell RowSpan="2">Примечание</SheetCell>
+				</SheetRow>
+				<SheetRow Style="Header" Align="Center">
 					<SheetCell>Id</SheetCell>
 					<SheetCell>Дата</SheetCell>
 					<SheetCell>Номер</SheetCell>
-					<SheetCell>Сума</SheetCell>
-					<SheetCell>Примечание</SheetCell>
 				</SheetRow>
 				<SheetRow Style="Total">
 					<SheetCell ColSpan="3"/>

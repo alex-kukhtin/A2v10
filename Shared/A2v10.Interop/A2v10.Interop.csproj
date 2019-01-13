@@ -52,6 +52,14 @@
     <Compile Include="ClrInvoker.cs" />
     <Compile Include="ExcelParser.cs" />
     <Compile Include="ExcelReportGenerator.cs" />
+    <Compile Include="ExportTo\Enums.cs" />
+    <Compile Include="ExportTo\ExCell.cs" />
+    <Compile Include="ExportTo\ExColumn.cs" />
+    <Compile Include="ExportTo\ExRow.cs" />
+    <Compile Include="ExportTo\ExSheet.cs" />
+    <Compile Include="ExportTo\ExStyle.cs" />
+    <Compile Include="ExportTo\HtmlReader.cs" />
+    <Compile Include="Html2ExcelOld.cs" />
     <Compile Include="Html2Excel.cs" />
     <Compile Include="InteropException.cs" />
     <Compile Include="Ip2SmsClient.cs" />
