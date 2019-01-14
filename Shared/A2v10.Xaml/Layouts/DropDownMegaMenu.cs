@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 	public class DropDownMegaMenu : Container
 	{
 		public DropDownDirection Direction { get; set; }
+		public BackgroundStyle Background { get; set; }
 
 		public String GroupBy { get; set; }
 		public Int32 Columns { get; set; }
@@ -22,6 +23,8 @@ namespace A2v10.Xaml
 			MergeAttributes(menu, context);
 			if (Direction != DropDownDirection.Default)
 				menu.AddCssClass(Direction.ToString().ToKebabCase());
+			if (Background != BackgroundStyle.None)
+				menu.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			var itms = GetBinding(nameof(ItemsSource));
 			if (itms == null)
 				throw new XamlException("DropDownMegaMenu. ItemsSource binging must be specified");

@@ -72,9 +72,10 @@ namespace A2v10.Interop.ExportTo
 			switch (dataType)
 			{
 				case null:
+				case "":
 				case "string":
-					Value = text;
 					DataType = DataType.String;
+					Value = text;
 					break;
 				case "currency":
 					DataType = DataType.Currency;

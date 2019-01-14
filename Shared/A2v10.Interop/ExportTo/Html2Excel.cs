@@ -185,24 +185,30 @@ namespace A2v10.Interop.ExportTo
 
 		void SetCellValue(Cell cell, ExCell exCell, ExRow exRow)
 		{
-			cell.CellValue = new CellValue(exCell.Value);
 			if (exCell.StyleIndex != 0)
 				cell.StyleIndex = exCell.StyleIndex;
 			if (exCell.Kind != CellKind.Normal)
 				return;
 			switch (exCell.DataType) {
 				case DataType.String:
-					cell.DataType = new EnumValue<CellValues>(CellValues.String);
+					cell.DataType = new EnumValue<CellValues>(CellValues.InlineString);
+					cell.InlineString = new InlineString(new Text(exCell.Value));
 					break;
 				case DataType.Currency:
 					cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+					cell.CellValue = new CellValue(exCell.Value);
 					break;
 				case DataType.Number:
 					cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+					cell.CellValue = new CellValue(exCell.Value);
 					break;
 				case DataType.Date:
 				case DataType.DateTime:
 					// DataType not needed
+					cell.CellValue = new CellValue(exCell.Value);
+					break;
+				default:
+					cell.CellValue = new CellValue(exCell.Value);
 					break;
 			}
 		}

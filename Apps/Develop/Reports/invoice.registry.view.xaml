@@ -36,7 +36,7 @@
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow>
-					<SheetCell Content="{Bind Id, DataType=Number}" Align="Right"/>
+					<SheetCell Content="{Bind Id, DataType=String}" Align="Center" />
 					<SheetCell Content="{Bind Date, DataType=DateTime}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number}" Align="Right"/>
 					<SheetCell Content="{Bind Sum, DataType=Currency}" Align="Right"/>
