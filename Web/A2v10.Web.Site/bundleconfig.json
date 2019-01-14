@@ -19,6 +19,7 @@
 			"app/services/popup.js",
 			"app/services/mask.js",
 			"app/services/tools.js",
+			"app/services/html.js",
 			"app/services/routing.js",
 			"app/components/include.js",
 			"app/components/control.js",

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20190114-7411
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -17,6 +17,15 @@ app.modules['std:http'] = function () {
 		upload: upload,
 		localpost
 	};
+
+	function blob2String(blob, callback) {
+		const fr = new FileReader();
+		fr.addEventListener('loadend', (e) => {
+			const text = fr.result;
+			callback(text);
+		});
+		fr.readAsText(blob);
+	}
 
 	function doRequest(method, url, data, raw) {
 		return new Promise(function (resolve, reject) {
@@ -36,8 +45,12 @@ app.modules['std:http'] = function () {
 					resolve(xhrResult);
 				}
 				else if (xhr.status === 255) {
-					if (raw)
-						reject(xhr.statusText); // response is blob!
+					if (raw) {
+						if (xhr.response instanceof Blob)
+							blob2String(xhr.response, (msg) => reject('server error: ' + msg));
+						else
+							reject(xhr.statusText); // response is blob!
+					}
 					else
 						reject(xhr.responseText || xhr.statusText);
 				}

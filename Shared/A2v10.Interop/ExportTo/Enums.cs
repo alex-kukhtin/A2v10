@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+
 
 namespace A2v10.Interop.ExportTo
 {

@@ -9,14 +9,12 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-using A2v10.Interop.ExportTo;
-
 /*TODO:
- * 3. ColumnWidth/RowHeight
- * 7. JS error - show error;
+ * 3. RowHeight ?
+ * 14. Fill Styles ?
  */
 
-namespace A2v10.Interop
+namespace A2v10.Interop.ExportTo
 {
 	public class Html2Excel
 	{
@@ -54,7 +52,7 @@ namespace A2v10.Interop
 				}
 
 				Sheets sheets = doc.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
-				Sheet sheet = new Sheet() { Id = doc.WorkbookPart.GetIdOfPart(wsPart), SheetId = 1, Name = "Report" };
+				Sheet sheet = new Sheet() { Id = doc.WorkbookPart.GetIdOfPart(wsPart), SheetId = 1, Name = "Sheet1" };
 				sheets.Append(sheet);
 
 				wbPart.Workbook.Save();
@@ -228,15 +226,18 @@ namespace A2v10.Interop
 			return row;
 		}
 
-		void ProcessColums(Columns columns, XmlNode source)
+		void ProcessColums(ExSheet sheet, Columns columns, XmlNode source)
 		{
-			Decimal chars = 8;
 			Decimal charWidth = 7;
-			var w = Math.Truncate((chars * charWidth + 5L) / charWidth * 256L) / 256L;
 
-			columns.Append(new Column() { Min = 1, Max = 1, BestFit = true, CustomWidth = true, Width = Convert.ToDouble(w) });
-			columns.Append(new Column() { Min = 2, Max = 2, Width = 20, CustomWidth = true, BestFit = true });
-			columns.Append(new Column() { Min = 5, Max = 5, Width = 40, CustomWidth = true, BestFit = true });
+			for (UInt32 c = 0; c < sheet.Columns.Count; c++)
+			{
+				var col = sheet.Columns[(Int32) c];
+				if (col.Width != 0) {
+					var w = Math.Truncate((col.Width + 5L) / charWidth * 256L) / 256L;
+					columns.Append(new Column() { Min = c + 1, Max = c + 1, BestFit = true, CustomWidth = true, Width = Convert.ToDouble(w) });
+				}
+			}
 		}
 
 		Worksheet GetDataFromSheet(ExSheet sheet)
@@ -245,16 +246,18 @@ namespace A2v10.Interop
 			var sd = new SheetData();
 			var cols = new Columns();
 
-			ProcessColums(cols, null);
+			ProcessColums(sheet, cols, null);
 
 			Int32 rowNo = 0;
 			foreach (var row in sheet.Rows)
 				sd.Append(ProcessRow(row, rowNo++));
 
-			var props = new SheetFormatProperties();
-			props.BaseColumnWidth = 10;
-			props.DefaultRowHeight = 30;
-			props.DyDescent = 0.25;
+			var props = new SheetFormatProperties()
+			{
+				BaseColumnWidth = 10,
+				DefaultRowHeight = 30,
+				DyDescent = 0.25
+			};
 
 			var ws = new Worksheet(props, cols, sd);
 			return ws;

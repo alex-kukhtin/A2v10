@@ -25,10 +25,8 @@ namespace A2v10.Interop.ExportTo
 		public String Value { get; set; }
 
 		public CellKind Kind { get; set; }
-		public HorizontalAlign Align { get; set; }
 
 		public DataType DataType { get; set; }
-		public Boolean Bold { get; set; }
 		public UInt32 StyleIndex { get; set; }
 
 		String NormalizeNumber(String number)
@@ -53,13 +51,19 @@ namespace A2v10.Interop.ExportTo
 			throw new InteropException($"Invalid datetime {text}");
 		}
 
-		public Style GetStyle(ExRow row, String cls)
+		public Style GetStyle(ExRow row, String strClasses)
 		{
+			var cls = Utils.ParseClasses(strClasses);
+			var align = row.Align;
+			if (cls.Align != HorizontalAlign.NotSet)
+				align = cls.Align;
 			return new Style()
 			{
 				DataType = DataType,
 				RowRole = row.Role,
-				RowKind = row.Kind
+				RowKind = row.Kind,
+				Align = align,
+				Bold = cls.Bold
 			};
 		}
 

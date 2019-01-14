@@ -1195,9 +1195,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20190114-7411
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1214,6 +1214,15 @@ app.modules['std:http'] = function () {
 		upload: upload,
 		localpost
 	};
+
+	function blob2String(blob, callback) {
+		const fr = new FileReader();
+		fr.addEventListener('loadend', (e) => {
+			const text = fr.result;
+			callback(text);
+		});
+		fr.readAsText(blob);
+	}
 
 	function doRequest(method, url, data, raw) {
 		return new Promise(function (resolve, reject) {
@@ -1233,8 +1242,12 @@ app.modules['std:http'] = function () {
 					resolve(xhrResult);
 				}
 				else if (xhr.status === 255) {
-					if (raw)
-						reject(xhr.statusText); // response is blob!
+					if (raw) {
+						if (xhr.response instanceof Blob)
+							blob2String(xhr.response, (msg) => reject('server error: ' + msg));
+						else
+							reject(xhr.statusText); // response is blob!
+					}
 					else
 						reject(xhr.responseText || xhr.statusText);
 				}
@@ -3527,6 +3540,49 @@ app.modules['std:tools'] = function () {
 		return dlgData.promise;
 	}
 };
+
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
+// 20190114-7411
+/* services/http.js */
+
+app.modules['std:html'] = function () {
+
+
+	return {
+		getColumnsWidth,
+		downloadBlob
+	};
+
+	function getColumnsWidth(elem) {
+		let cols = elem.getElementsByTagName('col');
+		let cells = elem.querySelectorAll('tbody.col-shadow > tr > td');
+		let len = Math.min(cols.length, cells.length);
+		for (let i = 0; i < len; i++) {
+			let w = cells[i].offsetWidth;
+			cols[i].setAttribute('data-col-width', w);
+		}
+	}
+
+	function downloadBlob(blob, fileName, format) {
+		let objUrl = URL.createObjectURL(blob);
+		let link = document.createElement('a');
+		link.style = "display:none";
+		document.body.appendChild(link); // FF!
+		let downloadFile = fileName || 'file';
+		if (format === 'Excel')
+			downloadFile += '.xlsx';
+		link.download = downloadFile;
+		link.href = objUrl;
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(objUrl);
+	}
+};
+
+
+
+
 
 // Copyright © 2018 Alex Kukhtin. All rights reserved.
 
@@ -9185,7 +9241,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190109-7408
+// 20190114-7411
 // controllers/base.js
 
 (function () {
@@ -9202,6 +9258,7 @@ Vue.directive('resize', {
 	const mask = require('std:mask');
 	const modelInfo = require('std:modelInfo');
 	const platform = require('std:platform');
+	const htmlTools = require('std:html', true /*no error*/);
 
 	const store = component('std:store');
 	const documentTitle = component("std:doctitle", true /*no error*/);
@@ -9849,7 +9906,7 @@ Vue.directive('resize', {
 				window.location = root + url;
 			},
 
-			$exportTo(format) {
+			$exportTo(format, fileName) {
 				const root = window.$$rootUrl;
 				let elem = this.$el.getElementsByClassName('sheet-page');
 				if (!elem.length) {
@@ -9857,20 +9914,17 @@ Vue.directive('resize', {
 					return;
 				}
 				let table = elem[0];
+				if (htmlTools)
+					htmlTools.getColumnsWidth(table);
 				let html = table.innerHTML;
-				let data = { format, html };
+				let data = { format, html, fileName };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;
 				dataservice.post(url, utils.toJson(data), true).then(function (blob) {
-					let objUrl = URL.createObjectURL(blob);
-					console.dir(objUrl);
-					let link = document.createElement('a');
-					link.download = 'myfile.xlsx';
-					link.href = objUrl;
-					link.click();
-					URL.revokeObjectURL(objUrl);
+					if (htmlTools)
+						htmlTools.downloadBlob(blob, fileName, format);
 				}).catch(function (error) {
-					console.dir(error);
+					alert(error);
 				});
 			},
 

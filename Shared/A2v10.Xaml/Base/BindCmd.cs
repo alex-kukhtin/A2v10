@@ -94,6 +94,7 @@ namespace A2v10.Xaml
 		public String Data { get; set; }
 
 		public ExportToFormat Format { get; set; }
+		public String FileName { get; set; }
 
 		public BindCmd()
 		{
@@ -259,7 +260,7 @@ namespace A2v10.Xaml
 					return $"$export()";
 
 				case CommandType.ExportTo:
-					return $"$exportTo('{Format}')";
+					return $"$exportTo('{Format}', '{FileName}')";
 
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)

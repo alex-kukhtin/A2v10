@@ -18,6 +18,9 @@ namespace A2v10.Interop.ExportTo
 			if (table.Name != "table")
 				throw new InteropException("Invalid element for Html2Excel");
 
+			var bodyRowNo = 0;
+			var headerRowNo = 0;
+			var footerRowNo = 0;
 			foreach (var n in table.ChildNodes)
 			{
 				var nd = n as XmlNode;
@@ -28,13 +31,19 @@ namespace A2v10.Interop.ExportTo
 							AddColumn(x as XmlNode);
 						break;
 					case "tbody":
-					case "thead":
-					case "tfoot":
-						var rowNo = 0;
-						if (!Enum.TryParse<RowKind>(nd.Name, out RowKind kind))
-							throw new InvalidOperationException();
+						var bodyClassAttr = nd.Attributes["class"];
+						if (bodyClassAttr?.Value == "col-shadow")
+							continue; // skip shadows
 						foreach (var x in nd.ChildNodes)
-							AddRow(x as XmlNode, kind, rowNo++);
+							AddRow(x as XmlNode, RowKind.Body, bodyRowNo++);
+						break;
+					case "thead":
+						foreach (var x in nd.ChildNodes)
+							AddRow(x as XmlNode, RowKind.Header, headerRowNo++);
+						break;
+					case "tfoot":
+						foreach (var x in nd.ChildNodes)
+							AddRow(x as XmlNode, RowKind.Footer, footerRowNo++);
 						break;
 				}
 			}
@@ -43,8 +52,9 @@ namespace A2v10.Interop.ExportTo
 
 		XmlDocument GetXmlFromHtml(String html)
 		{
-			var reg = new Regex("<col ([\\w=\"\\s:%;]+)>");
-			var xml = reg.Replace(html, (math) => $"<col {math.Groups[1].Value} />");
+			var reg = new Regex("<col ([\\w=\"\\s:%;-]+)>");
+			var xml = reg.Replace(html, (math) => $"<col {math.Groups[1].Value} />")
+				.Replace("&nbsp;", "&#160;");
 			var doc = new XmlDocument();
 			doc.LoadXml(xml);
 			return doc;
@@ -83,10 +93,16 @@ namespace A2v10.Interop.ExportTo
 		void AddColumn(XmlNode src)
 		{
 			var classAttr = src.Attributes["class"];
+			var widthAttr = src.Attributes["data-col-width"];
 			ExColumn  col = _sheet.AddColumn();
 			if (classAttr != null)
 			{
-
+				// fit, color
+			}
+			if (widthAttr != null)
+			{
+				if (Int32.TryParse(widthAttr.Value, out Int32 width))
+					col.Width = width;
 			}
 		}
 	}

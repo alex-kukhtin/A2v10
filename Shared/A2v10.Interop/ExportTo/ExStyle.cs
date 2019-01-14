@@ -1,8 +1,6 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A2v10.Interop.ExportTo
 {
@@ -27,7 +25,7 @@ namespace A2v10.Interop.ExportTo
 		public RowRole RowRole;
 		public RowKind RowKind;
 
-		public Boolean HasBorder => RowKind == RowKind.tbody || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
+		public Boolean HasBorder => RowKind == RowKind.Body || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
 		public Boolean HasAlignment => Align != HorizontalAlign.NotSet || DataType == DataType.DateTime || DataType == DataType.Date;
 	}
 

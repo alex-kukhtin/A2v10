@@ -59,8 +59,8 @@
     <Compile Include="ExportTo\ExSheet.cs" />
     <Compile Include="ExportTo\ExStyle.cs" />
     <Compile Include="ExportTo\HtmlReader.cs" />
-    <Compile Include="Html2ExcelOld.cs" />
-    <Compile Include="Html2Excel.cs" />
+    <Compile Include="ExportTo\Html2Excel.cs" />
+    <Compile Include="ExportTo\Utils.cs" />
     <Compile Include="InteropException.cs" />
     <Compile Include="Ip2SmsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,9 +7,9 @@ namespace A2v10.Interop.ExportTo
 {
 	public enum RowKind
 	{
-		thead,
-		tfoot,
-		tbody
+		Header,
+		Footer,
+		Body
 	}
 
 	public enum ExRowStyle
@@ -59,48 +59,11 @@ namespace A2v10.Interop.ExportTo
 
 		public void SetRoleAndStyle(String strClass)
 		{
-			if (String.IsNullOrEmpty(strClass))
-				return;
-			var split = strClass.Split(' ');
-			foreach (var cls in split)
-			{
-				if (cls.StartsWith("row"))
-				{
-					switch (cls)
-					{
-						case "row-header":
-							Role = RowRole.Header;
-							break;
-						case "row-footer":
-							Role = RowRole.Footer;
-							break;
-						case "row-title":
-							Role = RowRole.Title;
-							break;
-						case "row-total":
-							Role = RowRole.Total;
-							break;
-						case "row-parameter":
-							Role = RowRole.Parameter;
-							break;
-					}
-				}
-				else if (cls.StartsWith("text"))
-				{
-					switch (cls)
-					{
-						case "text-center":
-							Align = HorizontalAlign.Center;
-							break;
-						case "text-right":
-							Align = HorizontalAlign.Right;
-							break;
-						case "text-left":
-							Align = HorizontalAlign.Left;
-							break;
-					}
-				}
-			}
+			var cls = Utils.ParseClasses(strClass);
+			if (cls.Role != RowRole.None)
+				Role = cls.Role;
+			if (cls.Align != HorizontalAlign.NotSet)
+				Align = cls.Align;
 		}
 	}
 }

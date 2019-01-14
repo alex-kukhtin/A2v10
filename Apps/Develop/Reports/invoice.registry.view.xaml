@@ -27,7 +27,8 @@
 			<Grid Padding="10,0" AutoFlow="Column">
 				<Button Content="Построить" Icon="ArrowRight" Command="{BindCmd Reload}"/>
 				<Button Content="Экспорт в Excel" Icon="ExportExcel" Style="Info"
-						Command="{BindCmd ExportTo, Format=Excel}"/>
+						Command="{BindCmd ExportTo, Format=Excel, FileName=invoice}"/>
+				<Button Icon="HelpBlue" Command="{BindCmd Help, Url='/an_account_plan/index'}">Help</Button>
 			</Grid>
 		</Taskpad>
 	</Page.Taskpad>
@@ -44,7 +45,7 @@
 			</SheetSection>
 			<Sheet.Header>
 				<SheetRow Style="Title">
-					<SheetCell ColSpan="4">Заголовок отчета</SheetCell>
+					<SheetCell ColSpan="5" Align="Center">Заголовок отчета</SheetCell>
 				</SheetRow>
 				<SheetRow Style="LastParameter">
 					<SheetCell ColSpan="5">
@@ -53,7 +54,7 @@
 						</Text></SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
-					<SheetCell ColSpan="3">Информация</SheetCell>
+					<SheetCell ColSpan="3" Bold="True">Информация</SheetCell>
 					<SheetCell RowSpan="2">Сума</SheetCell>
 					<SheetCell RowSpan="2">Примечание</SheetCell>
 				</SheetRow>
@@ -70,7 +71,7 @@
 			</Sheet.Header>
 			<Sheet.Footer>
 				<SheetRow Style="Footer">
-					<SheetCell ColSpan="5">Длинный текст для футера</SheetCell>
+					<SheetCell ColSpan="5" Bold="True">Длинный текст для футера</SheetCell>
 				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>

@@ -6,6 +6,6 @@ namespace A2v10.Interop.ExportTo
 {
 	public class ExColumn
 	{
-
+		public Int32 Width { get; set; }
 	}
 }

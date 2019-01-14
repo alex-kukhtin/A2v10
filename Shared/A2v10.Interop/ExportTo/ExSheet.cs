@@ -10,19 +10,19 @@ namespace A2v10.Interop.ExportTo
 		readonly IList<ExRow> _body = new List<ExRow>();
 		readonly IList<ExRow> _header = new List<ExRow>();
 		readonly IList<ExRow> _footer = new List<ExRow>();
-		readonly IList<ExColumn> _cols = new List<ExColumn>();
 
+		public IList<ExColumn> Columns { get; } = new List<ExColumn>();
 		public StylesDictionary Styles { get; } = new StylesDictionary();
 
 		public ExRow GetRow(Int32 rowNo, RowKind kind)
 		{
 			IList<ExRow> _rows = null;
 			switch (kind) {
-				case RowKind.thead:
+				case RowKind.Header:
 					_rows = _header; break;
-				case RowKind.tfoot:
+				case RowKind.Footer:
 					_rows = _footer; break;
-				case RowKind.tbody:
+				case RowKind.Body:
 					_rows = _body; break;
 			}
 			while (_rows.Count <= rowNo)
@@ -74,7 +74,7 @@ namespace A2v10.Interop.ExportTo
 		public ExColumn AddColumn()
 		{
 			var col = new ExColumn();
-			_cols.Add(col);
+			Columns.Add(col);
 			return col;
 		}
 	}
