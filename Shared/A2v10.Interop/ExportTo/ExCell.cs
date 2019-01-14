@@ -63,7 +63,9 @@ namespace A2v10.Interop.ExportTo
 				RowRole = row.Role,
 				RowKind = row.Kind,
 				Align = align,
-				Bold = cls.Bold
+				VAlign = cls.VAlign,
+				Bold = cls.Bold,
+				Indent = cls.Indent
 			};
 		}
 

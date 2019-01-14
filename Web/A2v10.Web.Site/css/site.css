@@ -5101,6 +5101,11 @@ table.sheet col.blue {
   width: 21cm;
   min-height: 29.7cm;
 }
+.sheet-page-wrapper .sheet-page.landscape {
+  max-width: 29.7cm;
+  width: 29.7cm;
+  min-height: 21cm;
+}
 @media print {
   .sheet-page-wrapper {
     background-color: white;
@@ -5118,10 +5123,17 @@ table.sheet col.blue {
     max-width: 19cm;
     padding: 0 !important;
   }
-  @page {
-    size: A4 portrait;
-    margin: 1cm;
+  .sheet-page-wrapper .sheet-page.landscape {
+    width: 27.7cm;
+    max-width: 27.7cm;
+    padding: 0 !important;
   }
+  /*
+	@page {
+		size: A4 portrait;
+		margin: @page-margin;
+	}
+	*/
 }
 .app-exception {
   margin: 50px auto;

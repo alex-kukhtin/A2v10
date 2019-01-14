@@ -19,11 +19,13 @@ namespace A2v10.Interop.ExportTo
 	public struct Style
 	{
 		public HorizontalAlign Align;
+		public VerticalAlign VAlign;
 		public Boolean Bold;
 		public DataType DataType;
 		public Boolean Wrap;
 		public RowRole RowRole;
 		public RowKind RowKind;
+		public UInt32 Indent;
 
 		public Boolean HasBorder => RowKind == RowKind.Body || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
 		public Boolean HasAlignment => Align != HorizontalAlign.NotSet || DataType == DataType.DateTime || DataType == DataType.Date;

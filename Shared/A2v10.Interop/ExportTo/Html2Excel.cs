@@ -151,7 +151,7 @@ namespace A2v10.Interop.ExportTo
 					break;
 				case DataType.Number:
 					break;
-				default:
+				case DataType.String:
 					cf.Alignment.WrapText = true;
 					break;
 			}
@@ -180,6 +180,21 @@ namespace A2v10.Interop.ExportTo
 					cf.Alignment.Horizontal = HorizontalAlignmentValues.Right;
 					break;
 			}
+
+			switch (style.VAlign)
+			{
+				case VerticalAlign.Middle:
+					cf.Alignment.Vertical = VerticalAlignmentValues.Center;
+					break;
+				case VerticalAlign.Top:
+					cf.Alignment.Vertical = VerticalAlignmentValues.Top;
+					break;
+				case VerticalAlign.Bottom:
+					cf.Alignment.Vertical = VerticalAlignmentValues.Bottom;
+					break;
+			}
+			if (style.Indent > 1)
+				cf.Alignment.Indent = style.Indent - 1;
 			return cf;
 		}
 

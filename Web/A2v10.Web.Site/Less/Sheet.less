@@ -180,6 +180,12 @@ table.sheet {
 			width: @page-width-p;
 			min-height: @page-height-p;
 		}
+
+		&.landscape {
+			max-width: @page-width-l;
+			width: @page-width-l;
+			min-height: @page-height-l;
+		}
 	}
 }
 
@@ -193,18 +199,26 @@ table.sheet {
 			padding: 0 !important;
 			box-shadow: none;
 			border-style: none;
-			margin:0;
+			margin: 0;
 
 			&.portrait {
 				width: @page-width-p - @page-margin * 2;
 				max-width: @page-width-p - @page-margin * 2;
 				padding: 0 !important;
 			}
+
+			&.landscape {
+				width: @page-width-l - @page-margin * 2;
+				max-width: @page-width-l - @page-margin * 2;
+				padding: 0 !important;
+			}
 		}
 	}
 
+	/*
 	@page {
 		size: A4 portrait;
 		margin: @page-margin;
 	}
+	*/
 }

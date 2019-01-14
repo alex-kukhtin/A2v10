@@ -20,4 +20,13 @@ namespace A2v10.Interop.ExportTo
 		Center,
 		Right
 	}
+
+	public enum VerticalAlign
+	{
+		NotSet,
+		Top,
+		Middle,
+		Bottom
+	}
+
 }

@@ -32,7 +32,7 @@
 			</Grid>
 		</Taskpad>
 	</Page.Taskpad>
-	<SheetPage>
+	<SheetPage Orientation="Landscape">
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow>
@@ -55,8 +55,8 @@
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
 					<SheetCell ColSpan="3" Bold="True">Информация</SheetCell>
-					<SheetCell RowSpan="2">Сума</SheetCell>
-					<SheetCell RowSpan="2">Примечание</SheetCell>
+					<SheetCell RowSpan="2" VAlign="Bottom">Сума</SheetCell>
+					<SheetCell RowSpan="2" VAlign="Top">Примечание</SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
 					<SheetCell>Id</SheetCell>

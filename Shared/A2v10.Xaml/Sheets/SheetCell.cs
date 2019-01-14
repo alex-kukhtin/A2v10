@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public TextAlign? Align { get; set; }
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
+		public VerticalAlign VAlign { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -25,6 +26,8 @@ namespace A2v10.Xaml
 			td.MergeAttribute("rowspan", RowSpan);
 			if (Align != null)
 				td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+			if (VAlign != VerticalAlign.Default)
+				td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
 			if (GroupIndent && IsInTreeSection)
 			{
 				td.MergeAttribute(":class", "row.indentCssClass()");

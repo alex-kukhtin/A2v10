@@ -3,6 +3,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Linq;
 
 namespace A2v10.Interop.ExportTo
 {
@@ -24,26 +25,28 @@ namespace A2v10.Interop.ExportTo
 			foreach (var n in table.ChildNodes)
 			{
 				var nd = n as XmlNode;
+				if (nd.NodeType != XmlNodeType.Element)
+					continue;
 				switch (nd.Name)
 				{
 					case "colgroup":
-						foreach (var x in nd.ChildNodes)
-							AddColumn(x as XmlNode);
+						foreach (var col in nd.ChildNodes.OfType<XmlNode>().Where(node => node.Name == "col"))
+							AddColumn(col);
 						break;
 					case "tbody":
 						var bodyClassAttr = nd.Attributes["class"];
 						if (bodyClassAttr?.Value == "col-shadow")
 							continue; // skip shadows
-						foreach (var x in nd.ChildNodes)
-							AddRow(x as XmlNode, RowKind.Body, bodyRowNo++);
+						foreach (var row in nd.ChildNodes.OfType<XmlNode>().Where(node => node.Name == "tr"))
+							AddRow(row, RowKind.Body, bodyRowNo++);
 						break;
 					case "thead":
-						foreach (var x in nd.ChildNodes)
-							AddRow(x as XmlNode, RowKind.Header, headerRowNo++);
+						foreach (var row in nd.ChildNodes.OfType<XmlNode>().Where(node => node.Name == "tr"))
+							AddRow(row, RowKind.Header, headerRowNo++);
 						break;
 					case "tfoot":
-						foreach (var x in nd.ChildNodes)
-							AddRow(x as XmlNode, RowKind.Footer, footerRowNo++);
+						foreach (var row in nd.ChildNodes.OfType<XmlNode>().Where(node => node.Name == "tr"))
+							AddRow(row as XmlNode, RowKind.Footer, footerRowNo++);
 						break;
 				}
 			}
@@ -66,9 +69,9 @@ namespace A2v10.Interop.ExportTo
 			var classAttr = src.Attributes["class"];
 			if (classAttr != null)
 				row.SetRoleAndStyle(classAttr.Value);
-			foreach (var c in src.ChildNodes)
+
+			foreach (var cn in src.ChildNodes.OfType<XmlNode>().Where(node=> node.Name == "td"))
 			{
-				var cn = c as XmlNode;
 				var colSpanAttr = cn.Attributes["colspan"];
 				var rowSpanAttr = cn.Attributes["rowspan"];
 				var span = new CellSpan();

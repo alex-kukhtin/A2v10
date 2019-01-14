@@ -62,6 +62,12 @@ namespace A2v10.Xaml
 		Horizontal
 	}
 
+	public enum PageOrientation
+	{
+		Portrait,
+		Landscape
+	}
+
 	public enum DataType
 	{
 		String,

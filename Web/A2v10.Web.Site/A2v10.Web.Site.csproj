@@ -82,6 +82,7 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\controllers\iframe.js" />
+    <Content Include="app\directives\pageorient.js" />
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />

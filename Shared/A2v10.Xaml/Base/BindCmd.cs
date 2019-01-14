@@ -260,7 +260,7 @@ namespace A2v10.Xaml
 					return $"$export()";
 
 				case CommandType.ExportTo:
-					return $"$exportTo('{Format}', '{FileName}')";
+					return $"$exportTo('{Format}', '{context.Localize(FileName)}')";
 
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)

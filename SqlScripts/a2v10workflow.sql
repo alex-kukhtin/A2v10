@@ -1,10 +1,10 @@
-/* 20181222-7050 */
+/* 20100114-7051 */
 /*
 ------------------------------------------------
-Copyright © 2008-2017 A. Kukhtin
+Copyright © 2008-2019 A. Kukhtin
 
-Last updated : 22 dec 2018 17:00
-module version : 7050
+Last updated : 14 jan 2019 20:05
+module version : 7051
 */
 
 /*
@@ -32,9 +32,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7050);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7051);
 else
-	update a2sys.Versions set [Version] = 7050 where Module = N'std:workflow';
+	update a2sys.Versions set [Version] = 7051 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -107,6 +107,7 @@ begin
 		ForId2 bigint null,
 		[Text] nvarchar(255) null,
 		Expired datetime,
+		TargetId bigint null,
 		DateCreated datetime not null constraint DF_Inbox_UtcDateCreated default(getutcdate()),
 		DateRemoved datetime null,
 		UserRemoved bigint null
@@ -120,6 +121,12 @@ if exists(select * from sys.default_constraints where name=N'DF_Inbox_DateCreate
 begin
 	alter table a2workflow.Inbox drop constraint DF_Inbox_DateCreated;
 	alter table a2workflow.Inbox add constraint DF_Inbox_UtcDateCreated default(getutcdate()) for DateCreated with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2workflow' and TABLE_NAME=N'Inbox' and COLUMN_NAME=N'TargetId')
+begin
+	alter table a2workflow.Inbox add TargetId bigint null;
 end
 go
 ------------------------------------------------
@@ -277,6 +284,7 @@ create procedure a2workflow.[Inbox.Create]
 @ForId2 bigint,
 @Text nvarchar(255),
 @Expired datetime = null,
+@TargetId bigint = null,
 @RetId bigint output
 as
 begin
@@ -286,9 +294,9 @@ begin
 
 	declare @outputTable table(Id bigint);
 	
-	insert into a2workflow.Inbox(ProcessId, Bookmark, [Action], [For], ForId, ForId2, [Text], Expired)
+	insert into a2workflow.Inbox(ProcessId, Bookmark, [Action], [For], ForId, ForId2, [Text], Expired, TargetId)
 		output inserted.Id into @outputTable(Id)
-	values (@ProcessId, @Bookmark, @Action, @For, @ForId, @ForId2, @Text, @Expired);
+	values (@ProcessId, @Bookmark, @Action, @For, @ForId, @ForId2, @Text, @Expired, @TargetId);
 
 	select top(1) @RetId = Id from @outputTable;
 end
