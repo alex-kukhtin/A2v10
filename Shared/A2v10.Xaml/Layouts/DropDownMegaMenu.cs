@@ -23,7 +23,7 @@ namespace A2v10.Xaml
 			MergeAttributes(menu, context);
 			if (Direction != DropDownDirection.Default)
 				menu.AddCssClass(Direction.ToString().ToKebabCase());
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				menu.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			var itms = GetBinding(nameof(ItemsSource));
 			if (itms == null)

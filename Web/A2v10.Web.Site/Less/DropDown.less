@@ -10,7 +10,7 @@ TODO:
 
 .menu {
 	padding: 2px;
-	margin: 2px 0;
+	margin: 3px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
 	//box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
@@ -81,6 +81,7 @@ TODO:
 	top: 100%;
 	bottom: auto;
 	text-align:left;
+	min-width:100%;
 
 	> .checkbox {
 		margin-left: 4px;
@@ -133,7 +134,7 @@ TODO:
 	.menu {
 		margin-top: @button-gap;
 		margin-bottom: @button-gap;
-		font-weight:normal;
+		font-weight: normal;
 	}
 
 	&.show:after {
@@ -144,6 +145,17 @@ TODO:
 		z-index: @popup-index + 1;
 		left: 1px;
 		right: 1px;
+	}
+
+	&.separate {
+		.menu {
+			background-color: white;
+			margin: 2px 0;
+		}
+
+		&:after {
+			display: none;
+		}
 	}
 
 	&.show .btn:focus {
@@ -164,9 +176,30 @@ TODO:
 
 	.btn-caret {
 		border-left: 1px solid @text-color;
-
+		padding-left:8px;
+		padding-right:8px;
 		.caret {
 			margin-left: 0;
+		}
+
+		&.btn-green, &.btn-success {
+			border-left-color: white;
+		}
+
+		&.btn-primary {
+			border-left-color: white;
+		}
+
+		&.btn-red, &.btn-danger {
+			border-left-color: white;
+		}
+
+		&.btn-info, &.btn-cyan {
+			border-left-color: white;
+		}
+
+		&.btn-warning, &.btn-orange {
+			border-left-color: white;
 		}
 	}
 
@@ -176,8 +209,13 @@ TODO:
 			z-index: @popup-index + 1;
 		}
 
-		> .btn:hover {
+		:not(.separate) > .btn:hover {
 			background-color: @dropdown-bg-color;
+		}
+
+		> .btn-caret {
+			//border-left-style: none;
+			//padding-left:7px;
 		}
 	}
 }

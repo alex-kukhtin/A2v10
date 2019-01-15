@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 
 		public DropDownDirection Direction { get; set; }
 		public BackgroundStyle Background { get; set; }
-
+		public Boolean Separate { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 			MergeAttributes(menu, context);
 			if (Direction != DropDownDirection.Default)
 				menu.AddCssClass(Direction.ToString().ToKebabCase());
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				menu.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			menu.RenderStart(context);
 			RenderChildren(context);

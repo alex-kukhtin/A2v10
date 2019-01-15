@@ -54,7 +54,7 @@ namespace A2v10.Xaml
 			ul.AddCssClass(Style.ToString().ToKebabCase());
 			//ul.MergeAttribute(":command", "()=> $navigate()");
 
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				ul.AddCssClass("background-" + Background.ToString().ToKebabCase());
 
 			var mbind = GetBinding(nameof(Mark));

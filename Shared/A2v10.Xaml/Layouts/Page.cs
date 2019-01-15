@@ -92,7 +92,7 @@ namespace A2v10.Xaml
 
 		void AddAttributes(TagBuilder tag)
 		{
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			tag.AddCssClass(CssClass);
 			tag.AddCssClassBoolNo(UserSelect, "user-select");

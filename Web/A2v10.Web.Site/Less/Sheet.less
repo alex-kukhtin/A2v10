@@ -34,12 +34,13 @@ table.sheet {
 	}
 
 	.col-shadow {
-		visibility:collapse;
+		visibility: collapse;
+
 		td {
-			padding:0!important;
-			border-style:none!important;
-			display:table-cell;
-			margin:-10px;
+			padding: 0 !important;
+			border-style: none !important;
+			display: table-cell;
+			margin: -10px;
 		}
 	}
 
@@ -58,6 +59,16 @@ table.sheet {
 
 		td:last-child {
 			padding-right: 0;
+		}
+	}
+
+	tr.row-no-border {
+		td {
+			border-style: none;
+		}
+
+		td.underline {
+			border-bottom: 1px solid @table-brd-color;
 		}
 	}
 
@@ -131,8 +142,8 @@ table.sheet {
 	}
 
 	&.striped > tbody {
-		> tr:nth-child(even){
-			background-color:rgba(240,240,240, 0.25);
+		> tr:nth-child(even) {
+			background-color: rgba(240,240,240, 0.25);
 		}
 	}
 

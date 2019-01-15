@@ -13,6 +13,7 @@ namespace A2v10.Xaml
 		public Boolean? Bold { get; set; }
 		public Boolean? Italic { get; set; }
 		public VerticalAlign VAlign { get; set; }
+		public Boolean Underline { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -32,6 +33,8 @@ namespace A2v10.Xaml
 			{
 				td.MergeAttribute(":class", "row.indentCssClass()");
 			}
+			if (Underline)
+				td.AddCssClass("underline");
 			MergeContent(td, context);
 			td.AddCssClassBoolNo(Bold, "bold");
 			td.AddCssClassBoolNo(Italic, "italic");

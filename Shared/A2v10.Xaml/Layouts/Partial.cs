@@ -16,7 +16,7 @@ namespace A2v10.Xaml
 			var page = new TagBuilder("div", "page partial");
 			page.MergeAttribute("id", context.RootId);
 
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				page.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			page.AddCssClass(CssClass);
 

@@ -6,7 +6,17 @@
 		<sys:String x:Key="OpenUrl">/Sales/Invoice/Edit</sys:String>
 	</Page.Resources>
 	<Page.Toolbar>
-		<Toolbar Style="Transparent">
+		<Block>
+		<StackPanel Orientation="Horizontal" Margin="5">
+			<Button Icon="Plus" Content="Створити новий елемент" Style="Orange" Command="{BindCmd Reload}">
+				<Button.DropDown>
+					<DropDownMenu Direction="DownRight" Separate="True">
+						<MenuItem Content="Drop down item with top and bottom and 1" Icon="Package"></MenuItem>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
+		</StackPanel>
+		<Toolbar Style="Default">
 			<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
 			<Button Icon="EyeDisabled" Command="{BindCmd OpenSelected, Url='/Sales/Invoice/Empty', Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
@@ -14,7 +24,7 @@
 			<Button Icon="Download" Content="Експорт" Command="{BindCmd Export}"/>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
-			<Button Icon="Menu">
+			<Button Icon="Plus" Command="{BindCmd Reload}" Content="Додати">
 				<Button.DropDown>
 					<DropDownMenu>
 						<MenuItem Content="Drop down item" Icon="Package"></MenuItem>
@@ -30,6 +40,7 @@
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" Size="Large" ShowAllData="False" Display="NameDate" Bold="True"/>
 			<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
 		</Toolbar>
+		</Block>
 	</Page.Toolbar>
 	<Page.CollectionView>
 		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
@@ -96,6 +107,7 @@
         -->
 		<DataGrid.RowDetails>
 			<DataGridRowDetails Visible="{Bind $HasDetails}" Activate="Cell">
+				<Group>
 				<StackPanel Orientation="Horizontal">
 					<Label Margin="0,6,0,0">Отгрузки:</Label>
 					<StackPanel Orientation="Vertical">
@@ -106,6 +118,14 @@
 						</Repeater>
 					</StackPanel>
 				</StackPanel>
+				<PropertyGrid ItemsSource="{Bind $Shipment}">
+						<PropertyGridItem Name="Отгрузка:">
+							<Hyperlink Icon="FileLink" 
+								Command="{BindCmd Open, Url='/Sales/Waybill/Edit', Argument={Bind}}"
+								Content="{Bind $DocName}" />
+						</PropertyGridItem>
+				</PropertyGrid>
+				</Group>
 			</DataGridRowDetails>
 		</DataGrid.RowDetails>
 	</DataGrid>

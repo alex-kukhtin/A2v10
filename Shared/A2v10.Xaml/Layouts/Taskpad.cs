@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 			MergeBindingAttributeString(tag, context, "title", nameof(Title), Title);
 			tag.AddCssClassBool(Overflow, "overflow");
 
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 
 			tag.AddCssClassBoolNo(Collapsible, "collapsible");

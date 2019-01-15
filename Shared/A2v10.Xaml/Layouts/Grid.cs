@@ -156,7 +156,7 @@ namespace A2v10.Xaml
 				grid.MergeStyle("grid-template-rows", _rows.ToAttribute());
 			if (_columns != null)
 				grid.MergeStyle("grid-template-columns", _columns.ToAttribute());
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				grid.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			if (DropShadow != ShadowStyle.None)
 			{

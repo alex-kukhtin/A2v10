@@ -39,7 +39,7 @@ namespace A2v10.Xaml
 				return;
 			var card = new TagBuilder("div", "card", IsInGrid);
 			MergeAttributes(card, context);
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				card.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			if (DropShadow != ShadowStyle.None)
 			{

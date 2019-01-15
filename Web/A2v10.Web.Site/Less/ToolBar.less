@@ -17,12 +17,12 @@
 	}
 
 	&.no-wrap {
-		flex-wrap:nowrap;
+		flex-wrap: nowrap;
 	}
 
 	> .control-group.first-elem {
 		label {
-			margin-left:6px;
+			margin-left: 6px;
 		}
 	}
 
@@ -40,9 +40,23 @@
 		}
 	}
 
-	> .btn, 
+	> .btn,
 	> .dropdown > .btn {
 		padding: 4px 6px 5px 6px;
+	}
+
+	> .dropdown > .btn-caret {
+		border-left-color: darken(@toolbar-bg-color, 6%);
+	}
+
+	.btn-caret {
+		background-color: transparent;
+
+		&:hover {
+			background-color: @hover-bg-color;
+			border-color: @tb-hover-brd-color;
+			outline: none;
+		}
 	}
 
 	.btn-tb {
@@ -132,10 +146,17 @@
 	color: @icon-color;
 }
 
-.dropdown.show > .btn {
-	background-color: @dropdown-bg-color;
-	border-color: @dropdown-brd-color;
-	color: @toolbar-txt-color;
+.dropdown.show:not(.separate) {
+	> .btn {
+		background-color: @dropdown-bg-color;
+		border-color: @dropdown-brd-color;
+		color: @toolbar-txt-color;
+	}
+
+	> .btn-caret {
+		border-left-style: none;
+		padding-left:7px;
+	}
 }
 
 .commandbar {

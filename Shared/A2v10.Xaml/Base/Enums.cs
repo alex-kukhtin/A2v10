@@ -146,7 +146,7 @@ namespace A2v10.Xaml
 
 	public enum BackgroundStyle
 	{
-		None,
+		Default,
 		LightGray,
 		WhiteSmoke,
 		White,

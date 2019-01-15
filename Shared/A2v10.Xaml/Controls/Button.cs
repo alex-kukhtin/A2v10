@@ -44,7 +44,9 @@ namespace A2v10.Xaml
 			Boolean bHasDropDown = DropDown != null;
 			if (bHasDropDown)
 			{
-				DropDownDirection? dir = (DropDown as DropDownMenu)?.Direction;
+				var ddm = (DropDown as DropDownMenu);
+				DropDownDirection? dir = ddm?.Direction;
+				Boolean? separate = ddm?.Separate;
 				Boolean bDropUp = (dir == DropDownDirection.UpLeft) || (dir == DropDownDirection.UpRight);
 				Boolean insideBar = IsParentCommandBar || IsParentToolBar;
 
@@ -54,6 +56,8 @@ namespace A2v10.Xaml
 				onRender?.Invoke(wrap);
 				if (!Block && !insideBar)
 					wrap.AddCssClass("a2-inline");
+				if (separate != null)
+					wrap.AddCssClassBool(separate.Value, "separate");
 
 				wrap.RenderStart(context);
 				RenderButton(context, true, bDropUp, onRender);
@@ -66,6 +70,22 @@ namespace A2v10.Xaml
 			}
 		}
 
+		void AddSize(TagBuilder tag)
+		{
+			switch (Size)
+			{
+				case ControlSize.Large:
+					tag.AddCssClass("lg");
+					break;
+				case ControlSize.Small:
+					tag.AddCssClass("sm");
+					break;
+				case ControlSize.Mini:
+					tag.AddCssClass("xs");
+					break;
+			}
+
+		}
 		void RenderButton(RenderContext context, Boolean hasDropDown, Boolean bDropUp, Action<TagBuilder> onRender)
 		{
 			var parentCB = IsParentCommandBar;
@@ -80,18 +100,7 @@ namespace A2v10.Xaml
 				button.AddCssClass("btn-tb");
 			else if (IsParentCommandBar)
 				button.AddCssClass("btn-cb");
-			switch (Size)
-			{
-				case ControlSize.Large:
-					button.AddCssClass("lg");
-					break;
-				case ControlSize.Small:
-					button.AddCssClass("sm");
-					break;
-				case ControlSize.Mini:
-					button.AddCssClass("xs");
-					break;
-			}
+			AddSize(button);
 			if (IconAlign == IconAlign.Top)
 				button.AddCssClass("icon-top");
 
@@ -119,8 +128,11 @@ namespace A2v10.Xaml
 			if (hasDropDown && hasCommand)
 			{
 				var open = new TagBuilder("button", "btn btn-caret")
-				.MergeAttribute("toggle", String.Empty)
-				.RenderStart(context);
+					.MergeAttribute("toggle", String.Empty);
+				if (Style != ButtonStyle.Default)
+					open.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
+				AddSize(open);
+				open.RenderStart(context);
 				RenderCaret(context, bDropUp);
 				open.RenderEnd(context);
 			}
@@ -130,9 +142,9 @@ namespace A2v10.Xaml
 		{
 			if (Content == null && Icon != Icon.NoIcon)
 				return; // icon only
-			new TagBuilder("span", "caret")
-				.AddCssClassBool(bDropUp, "up")
-				.Render(context);
+			var btn = new TagBuilder("span", "caret")
+				.AddCssClassBool(bDropUp, "up");
+			btn.Render(context);
 		}
 
 		public Boolean IsParentCommandBar => FindParent<CommandBar>() != null;

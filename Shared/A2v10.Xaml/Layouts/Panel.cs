@@ -49,7 +49,7 @@ namespace A2v10.Xaml
 			else if (Style != PaneStyle.Default)
 				panel.MergeAttribute("panel-style", Style.ToString().ToLowerInvariant());
 			MergeAttributes(panel, context, MergeAttrMode.Visibility);
-			if (Background != BackgroundStyle.None)
+			if (Background != BackgroundStyle.Default)
 				panel.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			if (Height != null)
 				panel.MergeStyle("height", Height.Value);
