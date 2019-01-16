@@ -22,15 +22,15 @@
 			emailError: ''
 		},
 		computed: {
-			valid() {
+			valid: function() {
 				if (!this.submitted) return true;
 				return this.validEmail && this.validPassword;
 			},
-			validEmail() {
+			validEmail: function() {
 				if (!this.submitted) return true;
 				return this.validEmailInline;
 			},
-			validEmailInline() {
+			validEmailInline: function() {
 				if (!this.email) {
 					this.emailError = this.locale.$EnterEMail;
 					return false;
@@ -41,15 +41,15 @@
 				this.emailError = '';
 				return true;
 			},
-			validPassword() {
+			validPassword: function() {
 				return this.submitted ? !!this.password : true;
 			},
-			locale() {
+			locale: function() {
 				return window.$$locale;
 			}
 		},
 		methods: {
-			submit() {
+			submit: function() {
 				//console.dir('submit called');
 				this.submitted = true;
 				this.serverError = '';
@@ -83,26 +83,26 @@
 						alert(error);
 					});
 			},
-			onLoginEnter() {
+			onLoginEnter: function() {
 				this.$refs.pwd.focus();
 			},
-			onPwdEnter(ev) {
+			onPwdEnter: function(ev) {
 				this.submit();
 			},
-			navigate() {
+			navigate: function() {
 				let qs = parseQueryString(window.location.search);
 				let url = qs.ReturnUrl || '/';
 				window.location.assign(url);
 			},
-			failure(msg) {
+			failure: function(msg) {
 				this.password = '';
 				this.submitted = false;
 				this.serverError = msg;
 			},
-			reload() {
+			reload: function() {
 				window.location.reload();
 			},
-			getReferUrl(url) {
+			getReferUrl: function(url) {
 				return getReferralUrl(url);
 			}
 		}

@@ -33,14 +33,14 @@
 			passwordError: ''
 		},
 		computed: {
-			locale() {
+			locale: function() {
 				return window.$$locale;
 			},
-			maskedPhone() {
+			maskedPhone: function() {
 				return this.phone ?
 					maskTools.getMasked(currentMask, this.phone) : this.phone;
 			},
-			valid() {
+			valid: function() {
 				if (!this.submitted) return true;
 				return this.validName &&
 					this.validPassword &&
@@ -48,10 +48,10 @@
 					this.validPhone &&
 					this.validConfirm;
 			},
-			validName() {
+			validName: function() {
 				return this.submitted ? !!this.name : true;
 			},
-			validEmail() {
+			validEmail: function() {
 				if (!this.submitted) return true;
 				if (!this.email) {
 					this.emailError = this.locale.$EnterEMail;
@@ -63,7 +63,7 @@
 				this.emailError = '';
 				return true;
 			},
-			validPassword() {
+			validPassword: function() {
 				if (!this.submitted) return true;
 				if (!this.password) {
 					this.passwordError = this.locale.$EnterPassword;
@@ -76,19 +76,19 @@
 				this.passwordError = '';
 				return true;
 			},
-			validConfirm() {
+			validConfirm: function() {
 				return this.submitted ? !!this.confirm && (this.password === this.confirm) : true;
 			},
-			validPhone() {
+			validPhone: function() {
 				return this.submitted ? !!this.phone : true;
 			},
-			refer() {
+			refer: function() {
 				let qs = parseQueryString(window.location.search.toLowerCase());
 				return qs.ref || '';
 			}
 		},
 		methods: {
-			submit() {
+			submit: function() {
 				this.submitted = true;
 				this.serverError = '';
 				this.email = this.email.trim();
@@ -128,47 +128,47 @@
 						alert(error);
 					});
 			},
-			navigate() {
+			navigate: function() {
 				let qs = parseQueryString(window.location.search);
 				let url = qs.ReturnUrl || '/';
 				window.location.assign(url);
 			},
-			confirmSent() {
+			confirmSent: function() {
 				this.confirmRegisterText = this.locale.$ConfirmRegister.replace('{0}', this.email);
 				this.showConfirm = true;
 			},
-			alreadyTaken() {
+			alreadyTaken: function() {
 				this.serverError = this.locale.$AlreadyTaken.replace('{0}', this.email);
 			},
-			phoneAlreadyTaken() {
+			phoneAlreadyTaken: function() {
 				this.serverError = this.locale.$PhoneNumberAlreadyTaken.replace('{0}', this.maskedPhone);
 			},
-			ddos() {
+			ddos: function() {
 				this.serverError = this.locale.$TryLater;
 			},
-			invalidEmail() {
+			invalidEmail: function() {
 				this.serverError = this.locale.$InvalidEMailError;
 			},
-			failure(msg) {
+			failure: function(msg) {
 				this.password = '';
 				this.submitted = false;
 				this.serverError = msg;
 			},
-			reload() {
+			reload: function() {
 				window.location.reload();
 			},
-			onPhoneChange(value) {
+			onPhoneChange: function(value) {
 				this.phone = maskTools.getUnmasked(currentMask, value);
 				if (this.$refs.phoneInput.value !== this.maskedPhone) {
 					this.$refs.phoneInput.value = this.maskedPhone;
 					this.$emit('change', this.phone);
 				}
 			},
-			getReferUrl(url) {
+			getReferUrl: function(url) {
 				return getReferralUrl(url);
 			}
 		},
-		mounted() {
+		mounted: function() {
 			maskTools.mountElement(this.$refs.phoneInput, currentMask);
 		}
 	});

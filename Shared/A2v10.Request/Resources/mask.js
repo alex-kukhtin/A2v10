@@ -9,11 +9,11 @@ function maskTool() {
 	const PLACE_CHAR = '_';
 
 	return {
-		getMasked,
-		getUnmasked,
-		mountElement,
-		unmountElement,
-		setMask
+		getMasked: getMasked,
+		getUnmasked: getUnmasked,
+		mountElement: mountElement,
+		unmountElement: unmountElement,
+		setMask: setMask
 	};
 
 	function isMaskChar(ch) {
@@ -171,7 +171,7 @@ function maskTool() {
 			}
 			return fitCaret(mask, 0, 'r'); // first
 		}
-		throw new Error(`mask.fitCaret. Invalid fit value '${fit}'`);
+		throw new Error('mask.fitCaret. Invalid fit value: ' + fit);
 	}
 
 	function setCaretPosition(input, pos, fit) {
@@ -322,8 +322,9 @@ function maskTool() {
 	function focusHandler(e) {
 		if (!this.value)
 			this.value = getMasked(this.__opts.mask, '');
-		setTimeout(() => {
-			setCaretPosition(this, 0, 'r');
+		let this_ = this;
+		setTimeout(function() {
+			setCaretPosition(this_, 0, 'r');
 		}, 10);
 	}
 

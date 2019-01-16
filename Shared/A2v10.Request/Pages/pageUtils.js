@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 Vue.directive('focus', {
-	bind(el, binding, vnode) {
+	bind: function(el, binding, vnode) {
 
 		el.addEventListener("focus", function (event) {
 			event.target.parentElement.classList.add('focus');
@@ -21,9 +21,9 @@ Vue.directive('focus', {
 			if (t.select) t.select();
 		}, false);
 	},
-	inserted(el) {
+	inserted: function (el) {
 		if (el.tabIndex === 1) {
-			setTimeout(() => {
+			setTimeout(function() {
 				if (el.focus) el.focus();
 				if (el.select) el.select();
 			}, 0);
@@ -70,7 +70,7 @@ function getReferralUrl(url) {
 	let qs = parseQueryString(window.location.search.toLowerCase());
 	let ref = qs.ref || '';
 	if (ref)
-		return `${url}?ref=${ref}`;
+		return url + '?ref=' + ref;
 	return url;
 }
 
@@ -85,25 +85,24 @@ function validEmail(addr) {
 /*components/popover.js*/
 
 Vue.component('popover', {
-	template: `
-<div v-dropdown class="popover-wrapper" :style="{top: top}">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
-	<div class="popup-body" :style="{width: width}">
-		<div class="arrow" />
-		<div v-if="visible">
-			<include :src="popoverUrl"/>
-		</div>
-		<slot />
-	</div>
-</div>
-`,
+	template: 
+'<div v-dropdown class="popover-wrapper" :style="{top: top}">' +
+	'<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>' +
+	'<div class="popup-body" :style="{width: width}">' +
+		'<div class="arrow" />' +
+		'<div v-if="visible">' +
+			'<include :src="popoverUrl"/>' +
+		'</div>' +
+		'<slot />' +
+	'</div>' +
+'</div>',
 	/*
 	1. Если добавить tabindex="-1" для toggle, то можно сделать закрытие по blur
 	2. можно добавить кнопку закрытия. Любой элемент с атрибутом close-dropdown
 	<span class="close" close-dropdown style="float:right">x</span >
 	*/
 
-	data() {
+	data: function() {
 		return {
 			state: 'hidden',
 			popoverUrl: ''
@@ -118,28 +117,29 @@ Vue.component('popover', {
 		top: String
 	},
 	computed: {
-		hasIcon() {
+		hasIcon: function() {
 			return !!this.icon;
 		},
-		iconClass() {
+		iconClass: function() {
 			let cls = "ico po-ico";
 			if (this.icon)
 				cls += ' ico-' + this.icon;
 			return cls;
 		},
-		visible() {
+		visible: function() {
 			return this.url && this.state === 'shown';
 		}
 	},
-	mounted() {
-		this.$el._show = () => {
-			this.state = 'shown';
-			if (this.url)
-				this.popoverUrl = '/_popup' + this.url;
+	mounted: function () {
+		let this_ = this;
+		this.$el._show = function() {
+			this_.state = 'shown';
+			if (this_.url)
+				this_.popoverUrl = '/_popup' + this_.url;
 		};
-		this.$el._hide = () => {
-			this.state = 'hidden';
-			this.popoverUrl = '';
+		this.$el._hide = function () {
+			this_.state = 'hidden';
+			this_.popoverUrl = '';
 		};
 		//this.state = 'shown';
 	}
@@ -147,10 +147,10 @@ Vue.component('popover', {
 
 function getPopup() {
 
-	const __dropDowns__ = [];
+	let __dropDowns__ = [];
 	let __started = false;
 
-	const __error = 'Perhaps you forgot to create a _close function for popup element';
+	let __error = 'Perhaps you forgot to create a _close function for popup element';
 
 
 	return {
@@ -191,7 +191,7 @@ function getPopup() {
 	}
 
 	function closeAllPopups() {
-		__dropDowns__.forEach((el) => {
+		__dropDowns__.forEach( function(el) {
 			if (el._close)
 				el._close(document);
 		});
@@ -245,7 +245,7 @@ function getPopup() {
 	popup.startService();
 
 	Vue.directive('dropdown', {
-		bind(el, binding, vnode) {
+		bind: function(el, binding, vnode) {
 
 			let me = this;
 
@@ -294,7 +294,7 @@ function getPopup() {
 				}
 			});
 		},
-		unbind(el) {
+		unbind: function(el) {
 			if (!window.require) return;
 			const popup = require('std:popup');
 			popup.unregisterPopup(el);

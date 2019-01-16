@@ -5286,12 +5286,16 @@ h5,
 }
 .not-supported {
   width: 400px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 20px;
   text-align: center;
   background-color: #f2dede;
   color: #a94442;
   border: 1px solid #dca7a7;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  right: 0;
 }
 .a2-graphics {
   display: block;

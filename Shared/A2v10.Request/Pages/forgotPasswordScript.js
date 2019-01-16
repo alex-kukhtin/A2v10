@@ -24,15 +24,15 @@
 			confirmText: ''
 		},
 		computed: {
-			valid() {
+			valid:function() {
 				if (!this.submitted) return true;
 				return this.validEmail;
 			},
-			validEmail() {
+			validEmail: function() {
 				if (!this.submitted) return true;
 				return this.validEmailInline;
 			},
-			validEmailInline() {
+			validEmailInline: function() {
 				if (!this.email) {
 					this.emailError = this.locale.$EnterEMail;
 					return false;
@@ -43,12 +43,12 @@
 				this.emailError = '';
 				return true;
 			},
-			locale() {
+			locale: function() {
 				return window.$$locale;
 			}
 		},
 		methods: {
-			submit() {
+			submit: function() {
 				this.submitted = true;
 				this.serverError = '';
 				this.email = this.email.trim();
@@ -79,14 +79,14 @@
 						alert(error);
 					});
 			},
-			failure(msg) {
+			failure: function(msg) {
 				this.submitted = false;
 				this.serverError = msg;
 			},
-			reload() {
+			reload: function() {
 				window.location.reload();
 			},
-			getReferUrl(url) {
+			getReferUrl: function(url) {
 				return getReferralUrl(url);
 			}
 		}
