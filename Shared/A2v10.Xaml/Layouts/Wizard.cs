@@ -18,6 +18,8 @@ namespace A2v10.Xaml
 			var wiz = new TagBuilder("a2-wizard-panel");
 			MergeCommand(wiz, context);
 			MergeHelp(wiz, context);
+			if (Height != null)
+				wiz.MergeAttribute("min-height", Height.Value);
 			wiz.RenderStart(context);
 			foreach (var p in Children)
 			{

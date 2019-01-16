@@ -46,7 +46,7 @@ namespace A2v10.Xaml
 			var content = new TagBuilder("div", "modal-content");
 			OnCreateContent(content);
 			if (Height != null)
-				content.MergeStyle("height", Height.Value);
+				content.MergeStyle("min-height", Height.Value);
 			if (Padding != null)
 				Padding.MergeStyles("padding", content);
 			content.RenderStart(context);

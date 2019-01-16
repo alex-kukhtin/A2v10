@@ -7522,7 +7522,7 @@ TODO:
 `;
 
 	const wizardPanelTemplate = `
-<div class="wizard-panel">
+<div class="wizard-panel" :style="panelStyle">
 	<ul class="wizard-header">
 		<li v-for="(p, px) in pages" :class="pageClass(p)" @click.prevent="selectPage(p)">
 			<a><span class="wizard-header-title" v-text="p.header"/><span class="wizard-header-descr" v-text="p.descr"></span><i v-if="p.errorIcon" class="ico ico-error-outline"></i></a>
@@ -7547,7 +7547,8 @@ TODO:
 		template: wizardPanelTemplate,
 		props: {
 			finish: Function,
-			helpLink: String
+			helpLink: String,
+			minHeight: String
 		},
 		data() {
 			return {
@@ -7569,6 +7570,11 @@ TODO:
 			},
 			backDisabled() {
 				return this.activePage === this.pages[0];
+			},
+			panelStyle() {
+				if (this.minHeight)
+					return { 'min-height': this.minHeight };
+				return undefined;
 			}
 		},
 		methods: {
