@@ -65,7 +65,8 @@ namespace A2v10.Interop.ExportTo
 				Align = align,
 				VAlign = cls.VAlign,
 				Bold = cls.Bold,
-				Indent = cls.Indent
+				Indent = cls.Indent,
+				Underline = cls.Underline
 			};
 		}
 

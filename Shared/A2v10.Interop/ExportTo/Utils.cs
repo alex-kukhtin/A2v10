@@ -11,6 +11,7 @@ namespace A2v10.Interop.ExportTo
 		public Boolean Bold { get; set; }
 		public RowRole Role { get; set; }
 		public UInt32 Indent { get; set; }
+		public Boolean Underline { get; set; }
 	}
 
 
@@ -82,6 +83,8 @@ namespace A2v10.Interop.ExportTo
 			}
 			if (strClass.Contains("indent"))
 				lst.Indent = level;
+			if (strClass.Contains("underline"))
+				lst.Underline = true;
 			return lst;
 		}
 	}

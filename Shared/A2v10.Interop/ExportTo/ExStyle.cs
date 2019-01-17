@@ -26,6 +26,7 @@ namespace A2v10.Interop.ExportTo
 		public RowRole RowRole;
 		public RowKind RowKind;
 		public UInt32 Indent;
+		public Boolean Underline;
 
 		public Boolean HasBorder => RowKind == RowKind.Body || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
 		public Boolean HasAlignment => Align != HorizontalAlign.NotSet || DataType == DataType.DateTime || DataType == DataType.Date;

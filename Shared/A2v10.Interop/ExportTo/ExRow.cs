@@ -29,6 +29,7 @@ namespace A2v10.Interop.ExportTo
 		public RowRole Role { get; set; }
 		public RowKind Kind { get; set; }
 		public HorizontalAlign Align { get; set; }
+		public UInt32 Height { get; set; }
 
 		public IList<ExCell> Cells { get; } = new List<ExCell>();
 

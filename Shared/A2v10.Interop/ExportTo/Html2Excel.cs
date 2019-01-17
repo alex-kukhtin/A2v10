@@ -87,6 +87,12 @@ namespace A2v10.Interop.ExportTo
 						new RightBorder(autoColor()) { Style = BorderStyleValues.Thin },
 						new TopBorder(autoColor()) { Style = BorderStyleValues.Thin },
 						new BottomBorder(autoColor()) { Style = BorderStyleValues.Thin },
+						new DiagonalBorder()),
+					new Border( // index 2 bottom border
+						new LeftBorder(),
+						new RightBorder(),
+						new TopBorder(),
+						new BottomBorder(autoColor()) { Style = BorderStyleValues.Thin },
 						new DiagonalBorder())
 				);
 
@@ -128,6 +134,7 @@ namespace A2v10.Interop.ExportTo
 			{
 				cf.FontId = 2;
 				cf.ApplyFont = true;
+				cf.Alignment.WrapText = true;
 			}
 			else if (style.Bold)
 			{
@@ -195,6 +202,8 @@ namespace A2v10.Interop.ExportTo
 			}
 			if (style.Indent > 1)
 				cf.Alignment.Indent = style.Indent - 1;
+			if (style.Underline)
+				cf.BorderId = 2;
 			return cf;
 		}
 
@@ -231,6 +240,11 @@ namespace A2v10.Interop.ExportTo
 		Row ProcessRow(ExRow exrow, Int32 rowNo)
 		{
 			var row = new Row();
+			if (exrow.Height != 0)
+			{
+				row.Height = ConvertToPoints(exrow.Height);
+				row.CustomHeight = true;
+			}
 			for (var col=0; col <exrow.Cells.Count; col++)
 			{
 				var c = exrow.Cells[col];
@@ -247,16 +261,26 @@ namespace A2v10.Interop.ExportTo
 			return row;
 		}
 
-		void ProcessColums(ExSheet sheet, Columns columns, XmlNode source)
+		Double ConvertUnit(UInt32 val)
 		{
 			Decimal charWidth = 7;
+			return (Double) Math.Truncate((val + 5L) / charWidth * 256L) / 256L;
+		}
 
+		Double ConvertToPoints(UInt32 px)
+		{
+			Double rows = Math.Ceiling(px / 18.0);
+			return Math.Round(rows * 15, 2);
+		}
+
+		void ProcessColums(ExSheet sheet, Columns columns, XmlNode source)
+		{
 			for (UInt32 c = 0; c < sheet.Columns.Count; c++)
 			{
 				var col = sheet.Columns[(Int32) c];
 				if (col.Width != 0) {
-					var w = Math.Truncate((col.Width + 5L) / charWidth * 256L) / 256L;
-					columns.Append(new Column() { Min = c + 1, Max = c + 1, BestFit = true, CustomWidth = true, Width = Convert.ToDouble(w) });
+					var w = ConvertUnit(col.Width);
+					columns.Append(new Column() { Min = c + 1, Max = c + 1, BestFit = true, CustomWidth = true, Width = w });
 				}
 			}
 		}

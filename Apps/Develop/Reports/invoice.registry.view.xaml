@@ -27,7 +27,7 @@
 			<Grid Padding="10,0" AutoFlow="Column">
 				<Button Content="Построить" Icon="ArrowRight" Command="{BindCmd Reload}"/>
 				<Button Content="Экспорт в Excel" Icon="ExportExcel" Style="Info"
-						Command="{BindCmd ExportTo, Format=Excel, FileName=invoice}"/>
+						Command="{BindCmd ExportTo, Format=Excel, FileName={Bind Query.Agent.Name}}"/>
 				<Button Icon="HelpBlue" Command="{BindCmd Help, Url='/an_account_plan/index'}">Help</Button>
 			</Grid>
 		</Taskpad>
@@ -72,6 +72,18 @@
 			<Sheet.Footer>
 				<SheetRow Style="Footer">
 					<SheetCell ColSpan="5" Bold="True">Длинный текст для футера</SheetCell>
+				</SheetRow>
+				<SheetRow Style="NoBorder">
+					<SheetCell>&#160;</SheetCell>
+				</SheetRow>
+				<SheetRow Style="NoBorder">
+					<SheetCell />
+					<SheetCell Underline="True"/>
+					<SheetCell ColSpan="2"/>
+					<SheetCell Underline="True"/>
+				</SheetRow>
+				<SheetRow Style="NoBorder">
+					<SheetCell ColSpan="2">Очень очень длинный текст с переносами строк, который должен увеличить высоту строки в Excel</SheetCell>
 				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>

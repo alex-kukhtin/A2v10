@@ -4514,8 +4514,10 @@ Vue.component('a2-pager', {
 					return;
 				}
 				let table = elem[0];
-				if (htmlTools)
+				if (htmlTools) {
 					htmlTools.getColumnsWidth(table);
+					htmlTools.getRowHeight(table);
+				}
 				let html = table.innerHTML;
 				let data = { format, html, fileName };
 				const routing = require('std:routing');

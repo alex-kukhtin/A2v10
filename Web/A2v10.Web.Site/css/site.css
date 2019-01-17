@@ -5053,6 +5053,7 @@ table.sheet tr.row-title td {
   border-style: none !important;
   font-weight: 600;
   padding: 0 6px 6px, 6px;
+  background-color: white;
 }
 table.sheet tr.row-title td:first-child {
   padding-left: 0;
@@ -5062,13 +5063,16 @@ table.sheet tr.row-title td:last-child {
 }
 table.sheet tr.row-no-border td {
   border-style: none;
+  background-color: white;
 }
 table.sheet tr.row-no-border td.underline {
   border-bottom: 1px solid #e5e8eb;
+  height: 30px;
 }
 table.sheet tr.row-parameter td,
 table.sheet tr.row-last-parameter td {
   border-style: none !important;
+  background-color: white;
 }
 table.sheet tr.row-parameter td:first-child,
 table.sheet tr.row-last-parameter td:first-child {

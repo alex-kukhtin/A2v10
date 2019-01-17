@@ -69,7 +69,12 @@ namespace A2v10.Interop.ExportTo
 			var classAttr = src.Attributes["class"];
 			if (classAttr != null)
 				row.SetRoleAndStyle(classAttr.Value);
-
+			var heightAttr = src.Attributes["data-row-height"];
+			if (heightAttr != null)
+			{
+				if (UInt32.TryParse(heightAttr.Value, out UInt32 height))
+					row.Height = height;
+			}
 			foreach (var cn in src.ChildNodes.OfType<XmlNode>().Where(node=> node.Name == "td"))
 			{
 				var colSpanAttr = cn.Attributes["colspan"];
@@ -104,7 +109,7 @@ namespace A2v10.Interop.ExportTo
 			}
 			if (widthAttr != null)
 			{
-				if (Int32.TryParse(widthAttr.Value, out Int32 width))
+				if (UInt32.TryParse(widthAttr.Value, out UInt32 width))
 					col.Width = width;
 			}
 		}

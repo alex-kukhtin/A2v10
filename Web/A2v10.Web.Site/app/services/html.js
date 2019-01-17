@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190117-7417
 /* services/http.js */
 
 app.modules['std:html'] = function () {
@@ -8,6 +8,7 @@ app.modules['std:html'] = function () {
 
 	return {
 		getColumnsWidth,
+		getRowHeight,
 		downloadBlob
 	};
 
@@ -18,6 +19,14 @@ app.modules['std:html'] = function () {
 		for (let i = 0; i < len; i++) {
 			let w = cells[i].offsetWidth;
 			cols[i].setAttribute('data-col-width', w);
+		}
+	}
+
+	function getRowHeight(elem) {
+		let rows = elem.getElementsByTagName('tr');
+		for (let r = 0; r < rows.length; r++) {
+			let h = rows[r].offsetHeight - 12; /* padding !!!*/
+			rows[r].setAttribute('data-row-height', h);
 		}
 	}
 

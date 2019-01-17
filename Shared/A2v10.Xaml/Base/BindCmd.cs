@@ -260,7 +260,7 @@ namespace A2v10.Xaml
 					return $"$export()";
 
 				case CommandType.ExportTo:
-					return $"$exportTo('{Format}', '{context.Localize(FileName)}')";
+					return $"$exportTo('{Format}', {CommandFileName(context)})";
 
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)
@@ -414,6 +414,18 @@ namespace A2v10.Xaml
 					return arg;
 				throw new XamlException($"Argument bind required for {Command} command");
 			}
+		}
+
+		String CommandFileName(RenderContext context, Boolean decorate = false)
+		{
+			var fnBind = GetBinding(nameof(FileName));
+			if (fnBind != null)
+			{
+				if (decorate)
+					return $"'{{{fnBind.Path}}}'";
+				return fnBind.GetPath(context);
+			}
+			return $"'{context.Localize(FileName)}'";
 		}
 
 		String CommandUrl(RenderContext context, Boolean decorate = false, Boolean skipCheck = false)
