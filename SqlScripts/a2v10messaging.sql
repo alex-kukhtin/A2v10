@@ -191,7 +191,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
-	select [Message!TMessage!Object] = null, [Template], [Key], TargetId,
+	select [Message!TMessage!Object] = null, [Id!!Id] = Id, [Template], [Key], TargetId,
 		[Parameters!TNameValue!Array] = null, [Environment!TNameValue!Array] = null
 	from a2messaging.[Messages] where Id=@Id;
 	select [!TNameValue!Array] = null, [Name], [Value], [!TMessage.Parameters!ParentId] = [Message]

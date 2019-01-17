@@ -471,6 +471,7 @@ begin
 end
 go
 
+
 -- CLEAN UP DATABASE
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2test' and ROUTINE_NAME=N'Workflow.Clear.All')

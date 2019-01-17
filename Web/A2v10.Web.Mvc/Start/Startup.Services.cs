@@ -35,7 +35,7 @@ namespace A2v10.Web.Mvc.Start
 					host as ITenantManager);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger);
-				IMessaging messaging = new MessageProcessor(host, dbContext, emailService);
+				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, logger);
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IDataScripter scripter = new VueDataScripter(host, localizer);

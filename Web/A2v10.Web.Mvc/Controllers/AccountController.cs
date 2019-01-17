@@ -483,6 +483,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			catch (Exception /*ex*/)
 			{
+				// TODO: log error here!
 				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}
 		}

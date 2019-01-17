@@ -101,7 +101,7 @@
   Key = "First",
   TargetId = Process.ModelId,
   Parameters = MessageInfo.CreateParameters(
-	  new {To = "sss.www.fff"}
+	  new {To = "sss@www.com"}
   ),
 }</mca:CSharpValue>
                     </InArgument>

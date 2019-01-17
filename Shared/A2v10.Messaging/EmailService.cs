@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text;
-
+using System.Threading.Tasks;
 using A2v10.Infrastructure;
 
 using Newtonsoft.Json;
@@ -35,7 +35,7 @@ namespace A2v10.Messaging
 			subjPI.SetValue(msg, subjString);
 		}
 
-		public void Send(String to, String subject, String body)
+		public async Task SendAsync(String to, String subject, String body)
 		{
 			try
 			{
@@ -63,7 +63,7 @@ namespace A2v10.Messaging
 
 						// sync variant. avoid exception loss
 						_logger.LogMessaging(GetJsonResult("send", to));
-						client.Send(mm);
+						await client.SendMailAsync(mm);
 						_logger.LogMessaging(GetJsonResult("result", to, "success"));
 					}
 				}
@@ -77,10 +77,10 @@ namespace A2v10.Messaging
 
 		void LogException(String to, Exception ex)
 		{
-			String msg = ex.Message;
 			if (ex.InnerException != null)
-				msg = ex.InnerException.Message;
-			_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", to, "exception", msg)));
+				ex = ex.InnerException;
+			var msg = GetJsonResult("result", to, "exception", ex.Message);
+			_logger.LogMessagingError(msg);
 		}
 
 		String GetJsonResult(String phase, String destination, String result = null, String message = null)

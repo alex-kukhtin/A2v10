@@ -20,12 +20,14 @@ namespace A2v10.Messaging
 		readonly private IApplicationHost _host;
 		readonly private IDbContext _dbContext;
 		readonly private IMessageService _emailService;
+		readonly private ILogger _logger;
 
-		public MessageProcessor(IApplicationHost host, IDbContext dbContext, IMessageService emailService)
+		public MessageProcessor(IApplicationHost host, IDbContext dbContext, IMessageService emailService, ILogger logger)
 		{
 			_host = host;
 			_dbContext = dbContext;
 			_emailService = emailService;
+			_logger = logger;
 		}
 
 		public IQueuedMessage CreateQueuedMessage()
@@ -45,13 +47,28 @@ namespace A2v10.Messaging
 
 		}
 
+		// not Task - simple void
+		public async void FireAndForget(Task task)
+		{
+			try
+			{
+				await task;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogMessagingException(ex);
+			}
+		}
+
 		public Int64 QueueMessage(IQueuedMessage message)
 		{
 			ExpandoObject msg = PrepareMessage(message);
 			IDataModel md = _dbContext.SaveModel(String.Empty, "a2messaging.[Message.Queue.Update]", msg);
 			Int64 msgId = md.Eval<Int64>("Result.Id");
 			if (message.Immediately)
-				SendMessage(msgId);
+			{
+				FireAndForget(SendMessageAsync(msgId));
+			}
 			return msgId;
 		}
 
@@ -60,8 +77,13 @@ namespace A2v10.Messaging
 			ExpandoObject msg = PrepareMessage(message);
 			IDataModel md = await _dbContext.SaveModelAsync(String.Empty, "a2messaging.[Message.Queue.Update]", msg);
 			Int64 msgId = md.Eval<Int64>("Result.Id");
-			if (message.Immediately)
-				SendMessage(msgId);
+			if (message.Immediately) { 
+				/*
+				Task.Run(() => {
+					SendMessageAsync(msgId);
+				});
+				*/
+			}
 			return msgId;
 		}
 
@@ -80,29 +102,34 @@ namespace A2v10.Messaging
 			msg.Set(name, arr);
 		}
 
-		void SendMessage(Int64 msgId)
+		async Task SendMessageAsync(Int64 msgId)
 		{
-			var msgModel = _dbContext.LoadModel(String.Empty, "a2messaging.[Message.Queue.Load]", new { Id = msgId });
-			ResolveMessage(msgModel);
+			var msgModel = await _dbContext.LoadModelAsync(String.Empty, "a2messaging.[Message.Queue.Load]", new { Id = msgId });
+			IMessageForSend msg = await ResolveMessageAsync(msgModel);
+			await msg.SendAsync(_emailService);
 		}
 
-		TemplatedMessage ResolveMessage(IDataModel dm)
+		Task<IMessageForSend> ResolveMessageAsync(IDataModel dm)
 		{
 			var templateName = dm.Eval<String>("Message.Template");
 			var key = dm.Eval<String>("Message.Key");
 			var templatePath = _host.MakeFullPath(false, templateName, String.Empty);
 			var fullPath = Path.ChangeExtension(templatePath, "xaml");
 
+			var env = dm.Eval<List<ExpandoObject>>("Message.Environment");
+			var hostObj = new ExpandoObject();
+			hostObj.Set("Name", "Host");
+			hostObj.Set("Value", _host.AppHost);
+			env.Add(hostObj);
+
 			var tml = XamlServices.Load(fullPath) as Template;
+
 			TemplatedMessage tm = tml.Get(key);
 			if (tm == null)
 				throw new MessagingException($"Message not found. Key = '{key}'");
-			var targetId = dm.Eval<Int64>("Message.TargetId");
 
-			var resolver = new MessageResolver(_dbContext);
-
-			tm.Resolve(targetId, _dbContext);
-			return tm;
+			var resolver = new MessageResolver(_host, _dbContext, dm);
+			return tm.ResolveAndSendAsync(resolver);
 		}
 	}
 }

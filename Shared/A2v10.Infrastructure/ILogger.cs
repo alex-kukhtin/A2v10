@@ -47,6 +47,18 @@ namespace A2v10.Infrastructure
 			logger.LogMessaging(new LogEntry(LogSeverity.Information, message));
 		}
 
+		public static void LogMessagingError(this ILogger logger, String message)
+		{
+			logger.LogMessaging(new LogEntry(LogSeverity.Error, message));
+		}
+
+		public static void LogMessagingException(this ILogger logger, Exception ex)
+		{
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			logger.LogMessaging(new LogEntry(LogSeverity.Information, ex.Message));
+		}
+
 		public static void LogApi(this ILogger logger, String message)
 		{
 			logger.LogApi(new LogEntry(LogSeverity.Information, message));

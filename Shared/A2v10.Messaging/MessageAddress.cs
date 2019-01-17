@@ -19,9 +19,10 @@ namespace A2v10.Messaging
 
 		}
 
-		public MessageAddress(String addr)
+		public MessageAddress(String addr, String displayName = null)
 		{
 			Address = addr;
+			DisplayName = displayName;
 		}
 
 	}

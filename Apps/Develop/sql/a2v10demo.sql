@@ -2413,6 +2413,16 @@ begin
 end
 go
 ------------------------------------------------
+create or alter procedure [a2demo].[MessageForSend.Load]
+@Id bigint
+as
+begin
+	set nocount on;
+	select [Message!TMessage!Object] = null, Id=@Id, [Text]=N'I am the message text';
+end
+go
+
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2demo to public;

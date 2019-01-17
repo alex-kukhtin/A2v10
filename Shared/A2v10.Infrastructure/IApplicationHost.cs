@@ -12,6 +12,7 @@ namespace A2v10.Infrastructure
 		String AppPath { get; }
 		String AppKey { get; }
 		String AppDescription { get; }
+		String AppHost { get; }
 		String SupportEmail { get; }
 		String Theme { get; }
 		String HelpUrl { get; }

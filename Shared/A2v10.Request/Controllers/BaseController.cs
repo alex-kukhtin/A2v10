@@ -371,7 +371,7 @@ namespace A2v10.Request
 			response.Write(Localize(ex.Message));
 		}
 
-		public void SendSupportEMail(String body)
+		public async Task SendSupportEMailAsync(String body)
 		{
 			if (_messageService == null)
 				throw new InvalidOperationException($"Service 'IMessageService' not registered");
@@ -379,7 +379,7 @@ namespace A2v10.Request
 			if (String.IsNullOrEmpty(to))
 				return;
 			String subject = "Feedback from service";
-			_messageService.Send(to, subject, body);
+			await _messageService.SendAsync(to, subject, body);
 		}
 
 		void RenderErrorDialog(TextWriter writer, String message)

@@ -556,7 +556,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var appUser = userManager.FindById(this.UserId);
 
 				String text = $"UserId: {appUser.Id}<br>UserName: {appUser.PersonName}<br>Login: {appUser.UserName}<br></br><p>{model.Text}</p>";
-				_baseController.SendSupportEMail(text);
+				await _baseController.SendSupportEMailAsync(text);
 			}
 			catch (Exception ex)
 			{

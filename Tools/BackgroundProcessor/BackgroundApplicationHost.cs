@@ -22,6 +22,7 @@ namespace BackgroundProcessor
 
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"];
+		public String AppHost => ConfigurationManager.AppSettings["appHost"];
 		public String AppDescription => throw new NotImplementedException();
 		public String SupportEmail => throw new NotImplementedException();
 		public String Theme => throw new NotImplementedException();

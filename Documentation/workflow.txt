@@ -1,0 +1,111 @@
+email в Workflow
+=====================================
+
+1. Почта работает асинхронно! Это необходимо, потому что выполнение workflow ограничено 20 секундами, 
+а почта может отсылаться и дольше.
+
+2. Работа с сообщениями построена на использовании шаблонов. Шаблон это Xaml-файл, который 
+содержит тексты сообщений и прочую информацию. В одном шаблоне может быть несколько сообщений. Они определяются ключами (атрибут x:Key) 
+и дополнительными свойствами.
+
+3. В самом Workflow за отправку сообщений отвечает класс MessageInfo. В нем:
+  Template: Имя шаблона начиная с корня приложения без начального слеша. Например "Workflows\Messages". Расширение не обязательно. Если нету - будет .xaml.
+  Key: Ключ сообщения (x:Key в шаблоне)
+  TargetId: Id модели, если сообщение будет использовать модель данных
+  Parameters: Дополнительные параметры. Проще всего создать методом MessageInfo.CreateParameters передав ему анонимный объект
+  Immediately: Признак немедленной отправки. Пока ОБЯЗАТЕЛЬНО указывать True. Отправляется сразу, но не в самом Workflow!
+  Вместо этого запускается дополнительный поток, в котором будет отправлено сообщение.
+
+4. Кроме самого сообщения и его параметров есть понятие Окружения (Environment). В него попадает доп информация
+  ProcessId: Id процесса
+  InboxId: Id инбокса
+  Host: адрес хоста из web.config (appSettings / appHost)
+  
+
+3. Отправка сообщения выполняется в два этапа. 
+
+  3.1. На первом этапе workflow просто записывает в таблицы 
+     a2messaging.Messages, a2messaging.Parameters и a2messaging.Environment 
+     все нужные атрибуты сообщения. 
+     Переменная окружения Host не записывается, потому что она зависит от среды, в которой будут 
+     отправляться сообщения.
+     В трек процесса попадет текст Message queued successfully {Id: msgId} где msgId - Id сообщения из таблицы a2messaging.Messages.
+
+  3.2. Если флаг Immediately установлен (а это пока должно быть всегда) то запускается поток отправки сообщения.
+     Этот поток считывает сообщение из базы данных, разбирает шаблон, формирует почту и отправляет ее. Лог работы пишется в 
+     a2messaging.[Log]
+     Описание шаблона - ниже.
+
+
+4. Шаблон (элемент Template) просто словарь элементов TemplatedMessage. Сейчас реализовано EMailMessage.
+Свойства EMailMessage:
+    Subject: Тема
+    Body: Тело
+    To: Адрес "кому",
+    Model, Schema: модель данных
+    BodyTemplate: Имя файла для тела (тоже от корня приложения: "Workflows/Mails/firstMail.html". Здесь обязательно расширение.
+    IsBodyHtml: Признак, что тело в формате html.
+
+Понятно, что Body/BodyTemplate взаимосключающие. Хотя ошибки не будет. BodyTemplate имеет приори
+
+Во всех элементах шаблона поддерживаются макросы для доступа к данным, параметрам и окружению.
+{{Data.Path}}: досуп к модели данных;
+[[ParamName]]: доступ к параметрам;
+((EnvKey)): доступ к окружению;
+
+ 
+5. Пример.
+SendBefore для какого-то Request:
+
+new MessageInfo() {
+  
+  Immediately = true,
+  
+  Template = "Workflows/Messaging",
+  
+  Key = "First",
+  
+  TargetId = Process.ModelId,
+  
+  Parameters = MessageInfo.CreateParameters(new {To = "sss@www.com"}
+),
+
+}
+
+это означает отправить сообщение c ключом "First" взятое из шаблона {appPath}/{appKey}/Workflows/Messaging.xaml. При этом будет использоваться модель данных с Id=Process.ModelId.
+К сообщению будет добавлен параметр c именем "To" и значением "sss@www.com".
+
+Шаблон Workflows/Messaging.xaml
+
+<!-- Messaging template -->
+<Template xmlns="clr-namespace:A2v10.Messaging;assembly=A2v10.Messaging"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	>
+	<!--
+	DataModel: {{}} - модель данных
+	Parameters [[]] - все параметры, переданные в сообщение из Workflow (записаны в a2messaging.Parameters)
+	Environment: (()) - ProcessId, InboxId, Host (ProcessId, InboxId - из табицы a2messaging.Environment, Host из web.config)
+	-->
+	<EmailMessage x:Key="First" Subject="SUBJECT"
+				Model="MessageForSend" Schema="a2demo" To="[[To]]">
+		<![CDATA[
+		Пожалуйста перейдите по ссылке что-то <a href="((Host))/cabinet/inbox/((InboxId))">ccылка на задачи</a>
+		<h4>Environment</h4>
+		<ul>
+			<li>ProcessId: ((ProcessId))</li>
+			<li>InboxId: ((InboxId))</li>
+			<li>Host: ((Host))</li>
+		</ul>
+		<h4>Data from model</h4>
+		<ul>
+			<li>Text: {{Message.Text}}</li>
+			<li>Id: {{Message.Id}}</li>
+		</ul>
+		]]>
+	</EmailMessage>
+</Template>
+
+
+При формировании сообщения загрузится модель процедурой "a2demo.[MessageForSend.Load]". Параметр - единственный: @Id будет равен TargetId из MessageInfo
+
+
