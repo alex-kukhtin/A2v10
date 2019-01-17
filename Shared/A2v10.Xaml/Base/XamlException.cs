@@ -4,7 +4,7 @@ using System;
 
 namespace A2v10.Xaml
 {
-    [Serializable]
+	[Serializable]
 	public class XamlException : Exception
 	{
 		public XamlException(String msg)

@@ -19,7 +19,7 @@ namespace A2v10.Workflow
 		public InArgument<ModelStateInfo> StateBefore { get; set; }
 		public InArgument<ModelStateInfo> StateAfter { get; set; }
 
-		protected override bool CanInduceIdle => true;
+		protected override Boolean CanInduceIdle => true;
 
 		protected override void CacheMetadata(NativeActivityMetadata metadata)
 		{
@@ -30,6 +30,7 @@ namespace A2v10.Workflow
 		{
 			Boolean waitComplete = WaitComplete.Get<Boolean>(context);
 			IDbContext dbContext = context.GetExtension<IDbContext>();
+			var messaging = context.GetExtension<IMessaging>();
 			IApplicationHost host = context.GetExtension<IApplicationHost>();
 			context.DoTrack(dbContext, TrackBefore.Get<TrackRecord>(context));
 			context.DoModelState(dbContext, StateBefore.Get<ModelStateInfo>(context));
@@ -56,7 +57,7 @@ namespace A2v10.Workflow
 				ActionBase = pi.ActionBase
 			};
 
-			var task = AppWorkflow.StartWorkflow(host, dbContext, sfi);
+			var task = AppWorkflow.StartWorkflow(host, dbContext, messaging, sfi);
 			task.Wait();
 			WorkflowResult result = task.Result;
 

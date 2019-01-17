@@ -29,12 +29,13 @@ namespace A2v10.BackgroundTasks
 
 		public Boolean RestartOnFailure { get; set; }
 
-		public BackgroundTasksManager(IApplicationHost host, IDbContext dbContext, ILogger logger)
+		public BackgroundTasksManager(IApplicationHost host, IDbContext dbContext, ILogger logger, IMessaging messaging)
 		{
 			/* Auto properties */
 			DbContext = dbContext;
 			Logger = logger;
 			Host = host;
+			Messaging = messaging;
 			_timer = new Timer(OnTimerElapsed);
 			_host = new BackgroundTasksHost();
 			RestartOnFailure = true;
@@ -53,6 +54,7 @@ namespace A2v10.BackgroundTasks
 		public IDbContext DbContext { get; }
 		public ILogger Logger { get; }
 		public IApplicationHost Host { get; }
+		public IMessaging Messaging { get; }
 
 		readonly Object _lockTasks = new Object();
 		List<TaskItem> _tasksToExecute = new List<TaskItem>();

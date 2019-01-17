@@ -69,6 +69,10 @@
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
+      <Project>{D83666A0-ACF5-47E6-94CF-732DDDABBEA2}</Project>
+      <Name>A2v10.Messaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-DB55-4299-AE0F-A33A5BAB294F}</Project>
       <Name>A2v10.Workflow</Name>

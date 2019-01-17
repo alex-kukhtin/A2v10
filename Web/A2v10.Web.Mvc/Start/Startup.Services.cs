@@ -33,12 +33,12 @@ namespace A2v10.Web.Mvc.Start
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
 					host as ITenantManager);
-				IRenderer renderer = new XamlRenderer(profiler, host);
-				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext);
-				IMessaging messaging = new MessageProcessor(host, dbContext);
-				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ILogger logger = new WebLogger(host, dbContext);
-				IMessageService emailService = new EmailService(logger);
+				IMessageService emailService = new IdentityEmailService(logger);
+				IMessaging messaging = new MessageProcessor(host, dbContext, emailService);
+				IRenderer renderer = new XamlRenderer(profiler, host);
+				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
+				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);

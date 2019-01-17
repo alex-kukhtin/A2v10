@@ -89,7 +89,7 @@
     <Compile Include="AppUser.cs" />
     <Compile Include="AppUserManager.cs" />
     <Compile Include="AppUserStore.cs" />
-    <Compile Include="EmailService.cs" />
+    <Compile Include="IdentityEmailService.cs" />
     <Compile Include="Services\ExternalLoginManager.cs" />
     <Compile Include="IdentityController.cs" />
     <Compile Include="IdentityExtensions.cs" />
@@ -112,6 +112,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Interop\A2v10.Interop.csproj">
       <Project>{39661034-47aa-4bdf-9b19-c835b614b545}</Project>
       <Name>A2v10.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
+      <Project>{D83666A0-ACF5-47E6-94CF-732DDDABBEA2}</Project>
+      <Name>A2v10.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

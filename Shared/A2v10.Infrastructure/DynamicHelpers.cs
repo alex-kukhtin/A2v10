@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -210,6 +211,22 @@ namespace A2v10.Infrastructure
 			}
 			return sb.ToString();
 		}
+
+		public static Dictionary<String, Object> Object2Dictionary(Object obj)
+		{
+			if (obj == null)
+				return null;
+			var e = new ExpandoObject();
+			var d =  new Dictionary<String, Object>();
+			foreach (var pi in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+			{
+				var val = pi.GetValue(obj);
+				if (val != null)
+					d.Add(pi.Name, val);
+			}
+			return d;
+		}
+	
 
 		public static ExpandoObject Merge(ExpandoObject that, ExpandoObject other)
 		{

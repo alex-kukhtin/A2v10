@@ -1,0 +1,27 @@
+<!-- Messaging template -->
+<Template xmlns="clr-namespace:A2v10.Messaging;assembly=A2v10.Messaging"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	>
+	<!--
+	Parameters [[]] - все параметры, переданные в сообщение из Workflow (записаны в a2messaging.Parameters)
+	DataModel: {{}} - модель данных
+	Environment: (()) - ProcessId, InboxId, Host (ProcessId, InboxId - из табицы a2messaging.Environment, Host из web.config)
+	-->
+	<EmailMessage x:Key="First" Subject="SUBJECT" IsBodyHtml="True"
+				Model="MessageForSend" Schema="a2demo" To="[[To]]">
+		<![CDATA[
+		Пожалуйста перейдите по ссылке что-то <a href="((Host))/cabinet/inbox">ccылка на задачи</a>
+		<h4>Environment</h4>
+		<ul>
+			<li>ProcessId: ((ProcessId))<li>
+			<li>InboxId: ((InboxId))<li>
+			<li>Host: ((Host))<li>
+		</ul>
+		<h4>Data from model</h4>
+		<ul>
+			<li>Text: {{Message.Text}}<li>
+			<li>Id: {{Message.Id}}<li>
+		</ul>
+		]]>
+	</EmailMessage>
+</Template>

@@ -25,7 +25,7 @@ namespace A2v10.Xaml
 	{
 		public String Value;
 
-		public override string ToString()
+		public override String ToString()
 		{
 			return Value;
 		}
@@ -33,7 +33,7 @@ namespace A2v10.Xaml
 		public Boolean IsEmpty => String.IsNullOrEmpty(Value);
 		public Boolean IsPixel => (Value != null) && Value.EndsWith("px");
 
-		internal static bool IsValidLength(String strVal)
+		internal static Boolean IsValidLength(String strVal)
 		{
 			return (strVal.EndsWith("%") ||
 					strVal.EndsWith("px") ||
@@ -80,7 +80,7 @@ namespace A2v10.Xaml
 			Value = value;
 		}
 
-		public override string ToString()
+		public override String ToString()
 		{
 			return Value;
 		}
@@ -117,7 +117,7 @@ namespace A2v10.Xaml
 
 	public class LengthConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -126,7 +126,7 @@ namespace A2v10.Xaml
 			return false;
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;
@@ -141,7 +141,7 @@ namespace A2v10.Xaml
 
 	public class GridLengthConverter : TypeConverter
 	{
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(String))
 				return true;
@@ -150,7 +150,7 @@ namespace A2v10.Xaml
 			return false;
 		}
 
-		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;

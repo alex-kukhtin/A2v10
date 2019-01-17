@@ -8,6 +8,7 @@ using A2v10.BackgroundTasks;
 using A2v10.Data;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using A2v10.Messaging;
 using A2v10.Workflow;
 
 namespace BackgroundProcessor
@@ -32,8 +33,9 @@ namespace BackgroundProcessor
 				ILogger logger = loc.GetService<ILogger>();
 				IDbContext dbContext = loc.GetService<IDbContext>();
 				IApplicationHost host = loc.GetService<IApplicationHost>();
+				IMessaging messaging = loc.GetService<IMessaging>();
 				Console.WriteLine("Service started");
-				_manager = new BackgroundTasksManager(host, dbContext, logger);
+				_manager = new BackgroundTasksManager(host, dbContext, logger, messaging);
 				logger.LogBackground($"CurrentCulutre: {Thread.CurrentThread.CurrentCulture}");
 				_manager.Start();
 				_manager.StartTasksFromConfig();
@@ -61,7 +63,9 @@ namespace BackgroundProcessor
 				var host = new BackgroundApplicationHost(profiler);
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var logger = new BackgroundLogger(dbContext);
-				var workflow = new WorkflowEngine(host, dbContext);
+				var workflow = new WorkflowEngine(host, dbContext, null);
+				var emailService = new EmailService(logger);
+				var messaging = new MessageProcessor(host, dbContext, emailService);
 
 				loc.RegisterService<IProfiler>(profiler);
 				loc.RegisterService<ILocalizer>(localizer);

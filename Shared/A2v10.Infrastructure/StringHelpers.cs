@@ -19,8 +19,8 @@ namespace A2v10.Infrastructure
 			if (String.IsNullOrEmpty(s))
 				return null;
 			var b = new StringBuilder(s);
-			bool bFirst = true;
-			for (int i = 0; i < s.Length; i++)
+			Boolean bFirst = true;
+			for (var i = 0; i < s.Length; i++)
 			{
 				Char ch = b[i];
 				if (bFirst)
@@ -40,7 +40,7 @@ namespace A2v10.Infrastructure
 			if (String.IsNullOrEmpty(s))
 				return null;
 			var b = new StringBuilder(s.Length + 5);
-			for (int i = 0; i < s.Length; i++)
+			for (var i = 0; i < s.Length; i++)
 			{
 				Char ch = s[i];
 				if (Char.IsUpper(ch) && (i > 0))

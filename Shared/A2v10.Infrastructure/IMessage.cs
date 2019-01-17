@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,5 @@ namespace A2v10.Infrastructure
 		IDictionary<String, Object> Environment { get; set; }
 
 		List<IMessageAddress> To { get; }
-		List<IMessageAddress> Bcc { get; }
-		List<IMessageAddress> Cc { get; }
 	}
 }

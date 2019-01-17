@@ -1,51 +1,24 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.AspNet.Identity;
-
-using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
 
-namespace A2v10.Web.Identity
+using Newtonsoft.Json;
+
+namespace A2v10.Messaging
 {
-	public class EmailService : IIdentityMessageService, IMessageService
+	public class EmailService : IMessageService
 	{
 		private readonly ILogger _logger;
+
 		public EmailService(ILogger logger)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		}
-
-		String GetJsonResult(String phase, String destination, String result = null, String message = null)
-		{
-			var r = new
-			{
-				sendmail = new
-				{
-					phase,
-					destination,
-					result,
-					message
-				}
-			};
-
-			return JsonConvert.SerializeObject(r, new JsonSerializerSettings()
-			{
-				NullValueHandling = NullValueHandling.Ignore
-			});
-		}
-
-		public Task SendAsync(IdentityMessage message)
-		{
-			Send(message.Destination, message.Subject, message.Body);
-			return Task.FromResult(0);
 		}
 
 		void HackSubjectEncoding(MailMessage mm, String subject)
@@ -77,7 +50,7 @@ namespace A2v10.Web.Identity
 						mm.HeadersEncoding = Encoding.UTF8;
 						mm.BodyEncoding = Encoding.UTF8;
 
-						mm.Subject =  subject;
+						mm.Subject = subject;
 						HackSubjectEncoding(mm, subject);
 
 						mm.Body = body;
@@ -108,6 +81,25 @@ namespace A2v10.Web.Identity
 			if (ex.InnerException != null)
 				msg = ex.InnerException.Message;
 			_logger.LogMessaging(new LogEntry(LogSeverity.Error, GetJsonResult("result", to, "exception", msg)));
+		}
+
+		String GetJsonResult(String phase, String destination, String result = null, String message = null)
+		{
+			var r = new
+			{
+				sendmail = new
+				{
+					phase,
+					destination,
+					result,
+					message
+				}
+			};
+
+			return JsonConvert.SerializeObject(r, new JsonSerializerSettings()
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			});
 		}
 	}
 }

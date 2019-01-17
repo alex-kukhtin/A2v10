@@ -171,6 +171,10 @@
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
+      <Project>{d83666a0-acf5-47e6-94cf-732dddabbea2}</Project>
+      <Name>A2v10.Messaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>
@@ -478,6 +482,12 @@
     <Content Include="Develop\Reports\invoice.registry.view.xaml">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\Workflows\Messaging.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

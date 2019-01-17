@@ -15,6 +15,7 @@ namespace A2v10.Infrastructure
 
 		IDbContext DbContext { get; }
 		IApplicationHost Host { get; }
+		IMessaging Messaging { get; }
 		ILogger Logger { get; }
 	}
 }

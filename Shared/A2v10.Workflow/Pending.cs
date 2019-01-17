@@ -78,7 +78,7 @@ namespace A2v10.Workflow
 						{
 							// resume timer
 							manager.Logger.LogBackground($"Resuming timer. ProcessId = {pId}");
-							AppWorkflow.ResumeWorkflowTimer(manager.Host, manager.DbContext, pId);
+							AppWorkflow.ResumeWorkflowTimer(manager.Host, manager.DbContext, manager.Messaging, pId);
 						}
 					});
 				}

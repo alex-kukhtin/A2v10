@@ -135,7 +135,7 @@ namespace A2v10RuntimeNet
 					host as IDataConfiguration,
 					localizer as IDataLocalizer);
 				IRenderer renderer = new XamlRenderer(profiler, host);
-				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext);
+				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IDbContext>(dbContext);

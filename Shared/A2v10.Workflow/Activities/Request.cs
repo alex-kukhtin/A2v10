@@ -22,7 +22,7 @@ namespace A2v10.Workflow
 
 		public OutArgument<Int64> InboxId { get; set; }
 
-		protected override bool CanInduceIdle { get { return true; } }
+		protected override Boolean CanInduceIdle { get { return true; } }
 
 		protected override void CacheMetadata(NativeActivityMetadata metadata)
 		{
@@ -67,29 +67,28 @@ namespace A2v10.Workflow
 			this.Result.Set(context, rr);
 		}
 
-		void SendMessage(MessageInfo messageInfo, Inbox inbox, NativeActivityContext context)
+		void SendMessage(MessageInfo mi, Inbox inbox, NativeActivityContext context)
 		{
-			if (messageInfo == null)
+			if (mi == null)
 				return;
 			var process = Process.GetProcessFromContext(context);
 			IMessaging messaging = context.GetExtension<IMessaging>();
-			IMessage msg = messaging.CreateMessage();
 
-			msg.Template = messageInfo.Template;
-			msg.Key = messageInfo.Key;
+			var qm = messaging.CreateQueuedMessage();
 
-			msg.DataSource = process.DataSource;
-			msg.Schema = process.Schema;
-			msg.Model = process.ModelName;
-			msg.ModelId = process.ModelId;
-			msg.Source = $"Inbox:{inbox.Id}";
+			qm.Template = mi.Template;
+			qm.Key = mi.Key;
+			qm.TargetId = mi.TargetId;
+			qm.Immediately = mi.Immediately;
 
-			msg.Params.Append(messageInfo.Params, replaceExisiting: true);
-			msg.Environment.Add("InboxId", inbox.Id);
-			msg.Environment.Add("ProcessId", process.Id);
+			qm.Source = $"Inbox:{inbox.Id}";
 
-			messaging.QueueMessage(msg);
-			context.TrackRecord($"Message queued successfully {{Id: {msg.Id}}}");
+			qm.Environment.Add("InboxId", inbox.Id);
+			qm.Environment.Add("ProcessId", process.Id);
+			qm.Parameters.Append(mi.Parameters, replaceExisiting:true);
+
+			Int64 msgId = messaging.QueueMessage(qm);
+			context.TrackRecord($"Message queued successfully {{Id: {msgId}}}");
 		}
 	}
 }
