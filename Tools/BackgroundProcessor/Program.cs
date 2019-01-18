@@ -73,6 +73,7 @@ namespace BackgroundProcessor
 				loc.RegisterService<ILogger>(logger);
 				loc.RegisterService<IApplicationHost>(host);
 				loc.RegisterService<IWorkflowEngine>(workflow);
+				loc.RegisterService<IMessaging>(messaging);
 			};
 
 			ServiceLocator.GetCurrentLocator = () =>

@@ -17,12 +17,24 @@ namespace A2v10.Messaging
 		private readonly IDbContext _dbContext;
 		private readonly IDataModel _msgModel;
 		private readonly IApplicationHost _host;
+		private readonly ExpandoObject _msgParams;
 
 		public MessageResolver(IApplicationHost host, IDbContext dbContext, IDataModel msgModel)
 		{
 			_host = host;
 			_dbContext = dbContext;
 			_msgModel = msgModel;
+			if (_msgModel == null) return;
+			_msgParams = new ExpandoObject();
+			_msgParams.Set("Id", msgModel.Eval<Int64>("Message.TargetId"));
+			var env = msgModel.Eval<List<ExpandoObject>>("Message.Environment");
+			foreach (var e in env)
+			{
+				var key = e.Get<String>("Name");
+				if (key == "Host")
+					return;
+				_msgParams.Set(key, e.Get<String>("Value"));
+			}
 		}
 
 		public async Task<String> ResolveAsync(TemplatedMessage msg, String text)
@@ -40,8 +52,7 @@ namespace A2v10.Messaging
 		{
 			if (text.IndexOf("{{") == -1)
 				return text;
-			var targetId = _msgModel.Eval<Int64>("Message.TargetId");
-			var dm = await msg.GetDataModelAsync(targetId, _dbContext);
+			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
 			return dm.Root.Resolve(text);
 		}
 
@@ -55,7 +66,7 @@ namespace A2v10.Messaging
 				return text;
 			var sb = new StringBuilder(text);
 			var env = _msgModel.Eval<List<ExpandoObject>>("Message.Environment")
-				.ToDictionary(k => k.Get<String>("Name"), v => v.Get<String>("Value")); ;
+				.ToDictionary(k => k.Get<String>("Name"), v => v.Get<String>("Value"));
 			foreach (Match m in ms)
 			{
 				String key = m.Groups[1].Value;

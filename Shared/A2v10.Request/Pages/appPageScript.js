@@ -1,8 +1,9 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+'use strict';
+
 (function () {
 
-	'use strict';
 
 	const eventBus = require('std:eventBus');
 

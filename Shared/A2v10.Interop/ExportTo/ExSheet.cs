@@ -47,15 +47,22 @@ namespace A2v10.Interop.ExportTo
 			if (span.Col == 0 && span.Row == 0)
 				return cell;
 			if (span.Col > 0 && span.Row == 0)
-				for (var c = 0; c < span.Col - 1; c++)  
+				for (var c = 0; c < span.Col - 1; c++)
 					AddSpanCell(exRow.Kind, rowNo, index + c + 1).StyleIndex = cell.StyleIndex;
 			else if (span.Col == 0 && span.Row > 0)
 				for (var r = 0; r < span.Row - 1; r++)
 					AddSpanCell(exRow.Kind, rowNo + r + 1, index).StyleIndex = cell.StyleIndex;
 			else
+			{
+				// first row
 				for (var c = 0; c < span.Col - 1; c++)
-					for (var r = 0; r < span.Row - 1; r++)
-						AddSpanCell(exRow.Kind, rowNo + r + 1, index + c + 1).StyleIndex = cell.StyleIndex;
+					AddSpanCell(exRow.Kind, rowNo, index + c + 1).StyleIndex = cell.StyleIndex;
+				// next rows
+				for (var r=1; r < span.Row; r++) {
+					for (var c = 0; c < span.Col; c++)
+						AddSpanCell(exRow.Kind, rowNo + r, index + c).StyleIndex = cell.StyleIndex;
+				}
+			}
 			return cell;
 		}
 

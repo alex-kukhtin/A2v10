@@ -2,6 +2,7 @@
 
 using System;
 using System.Configuration;
+using System.IO;
 using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -23,11 +24,11 @@ namespace BackgroundProcessor
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String AppDescription => throw new NotImplementedException();
-		public String SupportEmail => throw new NotImplementedException();
-		public String Theme => throw new NotImplementedException();
-		public String HelpUrl => throw new NotImplementedException();
-		public String HostingPath => throw new NotImplementedException();
+		public String AppDescription => throw new NotImplementedException("BackgroundApplicationHost.AppDescription");
+		public String SupportEmail => throw new NotImplementedException("BackgroundApplicationHost.SupportEmail");
+		public String Theme => throw new NotImplementedException("BackgroundApplicationHost.Theme");
+		public String HelpUrl => throw new NotImplementedException("BackgroundApplicationHost.HelpUrl");
+		public String HostingPath => throw new NotImplementedException("BackgroundApplicationHost.HostingPath");
 
 		public Boolean IsDebugConfiguration
 		{
@@ -40,15 +41,15 @@ namespace BackgroundProcessor
 			}
 		}
 
-		public Boolean IsRegistrationEnabled => throw new NotImplementedException();
-		public String UseClaims => throw new NotImplementedException();
-		public Boolean IsMultiTenant => throw new NotImplementedException();
-		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		public String CatalogDataSource => throw new NotImplementedException();
-		public String TenantDataSource => throw new NotImplementedException();
-		public String AppVersion => throw new NotImplementedException();
-		public String AppBuild => throw new NotImplementedException();
-		public String Copyright => throw new NotImplementedException();
+		public Boolean IsRegistrationEnabled => throw new NotImplementedException("BackgroundApplicationHost.IsRegistrationEnabled");
+		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
+		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
+		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
+		public String CatalogDataSource => throw new NotImplementedException(nameof(CatalogDataSource));
+		public String TenantDataSource => throw new NotImplementedException(nameof(TenantDataSource));
+		public String AppVersion => throw new NotImplementedException(nameof(AppVersion));
+		public String AppBuild => throw new NotImplementedException(nameof(AppBuild));
+		public String Copyright => throw new NotImplementedException(nameof(Copyright));
 
 		public String ConnectionString(String source)
 		{
@@ -63,22 +64,35 @@ namespace BackgroundProcessor
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
-			throw new NotImplementedException();
+			String appKey = AppKey;
+			if (fileName.StartsWith("/"))
+			{
+				path = String.Empty;
+				fileName = fileName.Remove(0, 1);
+			}
+			if (appKey != null)
+				appKey = "/" + appKey;
+			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
+			return Path.GetFullPath(fullPath);
 		}
 
 		public String MakeRelativePath(String path, String fileName)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("BackgroundApplicationHost.MakeRelativePath");
 		}
 
 		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
 		{
-			throw new NotImplementedException();
+			String fullPath = MakeFullPath(bAdmin, path, fileName);
+			using (var tr = new StreamReader(fullPath))
+			{
+				return tr.ReadToEnd();
+			}
 		}
 
 		public Task<String> ReadTextFileAsync(Boolean bAdmin, String path, String fileName)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("BackgroundApplicationHost.ReadTextFileAsync");
 		}
 		#endregion
 	}

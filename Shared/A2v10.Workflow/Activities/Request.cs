@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Activities;
@@ -82,8 +82,8 @@ namespace A2v10.Workflow
 			qm.Immediately = mi.Immediately;
 
 			qm.Source = $"Inbox:{inbox.Id}";
-
 			qm.Environment.Add("InboxId", inbox.Id);
+
 			qm.Environment.Add("ProcessId", process.Id);
 			qm.Parameters.Append(mi.Parameters, replaceExisiting:true);
 

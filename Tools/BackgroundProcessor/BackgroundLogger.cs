@@ -21,9 +21,9 @@ namespace BackgroundProcessor
 			throw new NotImplementedException();
 		}
 
-		public void LogMessaging(LogEntry enry)
+		public void LogMessaging(LogEntry entry)
 		{
-			throw new NotImplementedException();
+			Console.WriteLine($"{DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss")} {entry.Message}");
 		}
 
 		public void LogSecurity(LogEntry enry)

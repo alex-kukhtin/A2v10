@@ -2414,14 +2414,15 @@ end
 go
 ------------------------------------------------
 create or alter procedure [a2demo].[MessageForSend.Load]
-@Id bigint
+@Id bigint,
+@ProcessId bigint = 0,
+@InboxId bigint = 0
 as
 begin
 	set nocount on;
-	select [Message!TMessage!Object] = null, Id=@Id, [Text]=N'I am the message text';
+	select [Message!TMessage!Object] = null, Id=@Id, [Text]=N'I am the message text', ProcessId = @ProcessId, InboxId = @InboxId;
 end
 go
-
 ------------------------------------------------
 begin
 	set nocount on;

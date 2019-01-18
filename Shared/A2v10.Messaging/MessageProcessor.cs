@@ -12,6 +12,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using System.IO;
 using System.Xaml;
+using System.Linq;
 
 namespace A2v10.Messaging
 {

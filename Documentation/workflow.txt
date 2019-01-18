@@ -100,12 +100,18 @@ new MessageInfo() {
 		<ul>
 			<li>Text: {{Message.Text}}</li>
 			<li>Id: {{Message.Id}}</li>
+			<li>ProcessId: {{Message.ProcessId}}</li>
+			<li>InboxId: {{Message.InboxId}}</li>
 		</ul>
 		]]>
 	</EmailMessage>
 </Template>
 
 
-При формировании сообщения загрузится модель процедурой "a2demo.[MessageForSend.Load]". Параметр - единственный: @Id будет равен TargetId из MessageInfo
+При формировании сообщения загрузится модель процедурой "a2demo.[MessageForSend.Load]". Параметры: 
+@Id будет равен TargetId из MessageInfo
+@ProcessId - Id процесса, если сообщение из Workflow
+@InboxId - Id инбокса, если сообщение из Workflow.Request
+
 
 

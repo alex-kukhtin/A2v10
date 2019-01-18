@@ -1,9 +1,7 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
@@ -21,15 +19,5 @@ namespace A2v10.Messaging
 
 		public IDictionary<String, Object> Parameters { get; } = new Dictionary<String, Object>();
 		public IDictionary<String, Object> Environment { get; } = new Dictionary<String, Object>();
-
-		public static CommonMessage FromDataModel(IDataModel dm)
-		{
-			var msg = new CommonMessage();
-			var srcMsg = dm.Root.Get<ExpandoObject>("Message");
-			msg.Id = srcMsg.Get<Int64>("Id");
-			msg.Template = srcMsg.Get<String>("Template");
-			msg.Key = srcMsg.Get<String>("Key");
-			return msg;
-		}
 	}
 }

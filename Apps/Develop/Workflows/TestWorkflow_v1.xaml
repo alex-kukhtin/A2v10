@@ -200,48 +200,9 @@
           <mca:CSharpValue x:TypeArguments="x:TimeSpan">TimeSpan.FromSeconds(30);</mca:CSharpValue>
         </InArgument>
       </Delay>
-      <FlowStep.Next>
-        <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_11">
-          <aw:StartProcess Mark="{x:Null}" StateAfter="{x:Null}" TrackAfter="{x:Null}" WaitComplete="{x:Null}" DisplayName="Start Child-Process" sap2010:WorkflowViewState.IdRef="StartProcess_2">
-            <aw:StartProcess.ProcessInfo>
-              <InArgument x:TypeArguments="aw:StartProcessInfo">
-                <mca:CSharpValue x:TypeArguments="aw:StartProcessInfo" xml:space="preserve">new StartProcessInfo
-{
-   Workflow = "file:Workflows/TestWorkflow_v1",
-   ModelName = Process.ModelName,
-   ModelId = Process.ModelId,
-   DataSource = Process.DataSource,
-   Schema = Process.Schema
-}</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.ProcessInfo>
-            <aw:StartProcess.StateBefore>
-              <InArgument x:TypeArguments="aw:ModelStateInfo">
-                <mca:CSharpValue x:TypeArguments="aw:ModelStateInfo" xml:space="preserve">new ModelStateInfo
-{
-  State = "SSSS",
-  Procedure = "a2demo.[Workflow.SetState]",
-}</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.StateBefore>
-            <aw:StartProcess.TrackBefore>
-              <InArgument x:TypeArguments="aw:TrackRecord">
-                <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
-{
-   Message = "Start sub process"
-}</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.TrackBefore>
-          </aw:StartProcess>
-          <FlowStep.Next>
-            <x:Reference>__ReferenceID4</x:Reference>
-          </FlowStep.Next>
-        </FlowStep>
-      </FlowStep.Next>
     </FlowStep>
     <x:Reference>__ReferenceID5</x:Reference>
-    <x:Reference>__ReferenceID6</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbBMvA/UBDwIBATYJQRICAUhEDUoYAgFBTRF1HgIBKHgVlgEnAgEVmQEZqwEmAgEIrwEfrwFzAgECPg8+YAIBTzkPOWQCAUlHE0eiAQIBQlAXWBQCATtdF11rAgE1bxdyFgIBL2IXahQCASmHARuLARQCASKQARuTARQCARx7G4IBFAIBFpwBH6MBFAIBD6gBH6gBcwIBCQ==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbBMvA84BDwIBATYJQRICAUhEDUoYAgFBTRF1HgIBKHgVlgEnAgEVmQEZqwEmAgEIrwEfrwFzAgECPg8+YAIBTzkPOWQCAUlHE0eiAQIBQlAXWBQCATtdF11rAgE1bxdyFgIBL2IXahQCASmHARuLARQCASKQARuTARQCARx7G4IBFAIBFpwBH6MBFAIBD6gBH6gBcwIBCQ==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -342,28 +303,11 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="StartProcess_2" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_11">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">440,259</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">440,270 400,270</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_9">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">440,209</av:Point>
+            <av:Point x:Key="ShapeLocation">470,249</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">540,231 540,259</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
