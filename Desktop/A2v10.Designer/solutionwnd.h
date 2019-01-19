@@ -35,6 +35,7 @@ protected:
 	void LoadSolutionImpl();
 	void InsertCollection(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask);
 	void InsertDirectories(JavaScriptValue& collection, HTREEITEM hRoot, int iImage, DWORD mask);
+	void LoadFromFile(const wchar_t* szPathName);
 
 // Overrides
 public:
@@ -42,7 +43,7 @@ public:
 
 	void DoSave();
 	void DoLoad();
-	void DoCreate(LPCWSTR szFolder, LPCWSTR szName);
+	void DoCreate(const wchar_t* szFolder, const wchar_t* szName, const wchar_t* szTemplate);
 	void DoClose();
 	bool IsLoaded();
 

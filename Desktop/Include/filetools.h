@@ -23,6 +23,7 @@ public:
 	static void SplitPath(LPCWSTR szPath, CFilePath& path);
 	static bool LoadFile(LPCWSTR szFileName, CString& text);
 	static bool SaveFileUTF8(LPCWSTR szFileName, LPCWSTR szText);
+	static CString CombinePath(LPCWSTR szPath1, LPCWSTR szPath2);
 };
 
 #undef AFX_DATA

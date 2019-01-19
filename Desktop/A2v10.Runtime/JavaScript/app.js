@@ -29,7 +29,8 @@ var designer = (function () {
 			elements: {},
 			__createElement: createElement,
 			__registerElement: registerElement,
-			__loadSolution: null
+			__loadSolution: null,
+			__createSolution: null
 		}
 	};
 	Object.freeze(designer);

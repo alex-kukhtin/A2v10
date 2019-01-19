@@ -63,6 +63,19 @@ namespace A2v10.Interop.ExportTo
 			return doc;
 		}
 
+		String GetNodeText(XmlNode node)
+		{
+			if (!node.HasChildNodes)
+				return node.InnerText;
+			foreach (var ch in node.ChildNodes.OfType<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element))
+			{
+				var classAttr = ch.Attributes["class"];
+				if (classAttr != null && classAttr.Value.Contains("popover-wrapper"))
+					return ch.FirstChild?.InnerText;
+			}
+			return node.InnerText;
+		}
+
 		void AddRow(XmlNode src, RowKind kind, Int32 rowNo)
 		{
 			ExRow row = _sheet.GetRow(rowNo, kind);
@@ -94,7 +107,8 @@ namespace A2v10.Interop.ExportTo
 				if (cellClassAttr != null)
 					cellClass = cellClassAttr.Value;
 
-				_sheet.AddCell(rowNo, row, span, cn.InnerText, dataType, cellClass);
+				String cellText = GetNodeText(cn);
+				_sheet.AddCell(rowNo, row, span, cellText, dataType, cellClass);
 			}
 		}
 

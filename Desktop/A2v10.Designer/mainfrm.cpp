@@ -536,8 +536,7 @@ void CMainFrame::OnSolutionNew()
 	CSolutionCreateDlg dlg;
 	if (dlg.DoModal() != IDOK)
 		return;
-	AfxMessageBox(dlg.m_strFolder);
-	m_wndSolution.DoCreate(dlg.m_strFolder, dlg.m_strName);
+	m_wndSolution.DoCreate(dlg.m_strFolder, dlg.m_strName, dlg.m_strTemplate);
 }
 
 // afx_msg

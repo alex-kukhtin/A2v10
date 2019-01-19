@@ -498,6 +498,30 @@ void CSolutionWnd::DoSave()
 	}
 }
 
+void CSolutionWnd::LoadFromFile(const wchar_t* szPathName)
+{
+	// static 
+	CString jsonText;
+	if (!CFileTools::LoadFile(szPathName, jsonText)) {
+		AfxMessageBox(L"Can't load solution file");
+	}
+	try
+	{
+		auto solution = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
+		auto loadFunc = solution.GetProperty(L"__loadSolution");
+		if (loadFunc.ValueType() == JsValueType::JsFunction)
+			loadFunc.CallFunction(solution, JavaScriptValue::FromString((LPCWSTR)jsonText));
+		LoadSolution(szPathName);
+		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
+	}
+	catch (JavaScriptException& ex)
+	{
+		ex.ReportError();
+	}
+	if (IsLoaded())
+		m_strFilePath = szPathName;
+}
+
 void CSolutionWnd::DoLoad()
 {
 	CFileDialog dlg(TRUE, NULL, NULL,
@@ -506,52 +530,41 @@ void CSolutionWnd::DoLoad()
 	if (dlg.DoModal() != IDOK)
 		return;
 	CString strPath = dlg.GetPathName();
-	// static 
-	CString jsonText;
-	if (!CFileTools::LoadFile(strPath, jsonText)) {
-		AfxMessageBox(L"Can't load solution file");
-	}
-
-	//AddToRecentFileList(strPath);
-
-	try
-	{
-		auto solution = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
-		auto loadFunc = solution.GetProperty(L"__loadSolution");
-		if (loadFunc.ValueType() == JsValueType::JsFunction)
-			loadFunc.CallFunction(solution, JavaScriptValue::FromString((LPCWSTR)jsonText));
-		LoadSolution(strPath);
-		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
-	}
-	catch (JavaScriptException& ex)
-	{
-		ex.ReportError();
-	}
-	if (IsLoaded())
-		m_strFilePath = strPath;
+	LoadFromFile(strPath);
 }
 
-void CSolutionWnd::DoCreate(LPCWSTR szFolder, LPCWSTR szName)
+void CSolutionWnd::DoCreate(const wchar_t* szFolder, const wchar_t* szName, const wchar_t* szTempalte)
 {
-	// TODO: check is modified
+	LPCWSTR szSolutionName = L"solution.json";
+	CString folderPath = CFileTools::CombinePath(szFolder, szName);
+	if (folderPath.IsEmpty())
+		return;
+	CString json;
 	try
 	{
-		// load empty solution
+		// create solution.json
 		auto solution = JavaScriptValue::GlobalObject().GetPropertyChain(L"designer.solution");
-		auto loadFunc = solution.GetProperty(L"__loadSolution");
+		auto loadFunc = solution.GetProperty(L"__createSolution");
 		if (loadFunc.ValueType() == JsValueType::JsFunction) {
-			// TODO: spec symbols!!!!
-			CString nameJS;
-			nameJS.Format(L"{\"Name\": \"%s\"}", szName);
-			loadFunc.CallFunction(solution, JavaScriptValue::FromString(nameJS));
+			auto jsonText = loadFunc.CallFunction(solution, JavaScriptValue::FromString(szName));
+			json = jsonText.ToString();
 		}
-		LoadSolution(NULL);
-		AfxGetMainWnd()->SendMessageToDescendants(WMI_NOTIFY, WMIN_SOLUTION_OPENED, 0L);
 	}
 	catch (JavaScriptException& ex)
 	{
 		ex.ReportError();
+		return;
 	}
+	// create solition folder and solution.json file
+	if (!::CreateDirectory(folderPath, nullptr)) {
+		AfxMessageBox(L"could not create directory");
+		return;
+	}
+	CString solutionPath = CFileTools::CombinePath(folderPath, szSolutionName);
+	if (solutionPath.IsEmpty())
+		return;
+	CFileTools::SaveFileUTF8(solutionPath, json);
+	LoadFromFile(solutionPath);
 }
 
 void CSolutionWnd::DoClose()

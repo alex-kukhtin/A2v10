@@ -3,6 +3,7 @@
 #include "stdafx.h"
 
 #include "../include/filetools.h"
+#include "../include/appdefs.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,6 +16,23 @@ public:
 	static bool LoadTextFromFile(int offset, CFile& file, CString& text, UINT codePage = CP_UTF8);
 	static void SaveTextToFile(CFile& file, LPCWSTR szText, UINT codePage = CP_UTF8);
 };
+
+// static 
+CString CFileTools::CombinePath(LPCWSTR szPath1, LPCWSTR szPath2)
+{
+	if (wcsnlen_s(szPath1, _MAX_PATH) + wcsnlen_s(szPath2, _MAX_PATH) > MAX_PATH) {
+		CString msg(L"Path too long: ");
+		msg += szPath1;
+		msg += L"//";
+		msg += szPath2;
+		AfxMessageBox(msg);
+		return EMPTYSTR;
+	}
+	CString result;
+	::PathCombine(result.GetBuffer(_MAX_PATH), szPath1, szPath2);
+	result.ReleaseBuffer();
+	return result;
+}
 
 // static 
 void CFileTools::SplitPath(LPCWSTR szPath, CFilePath& path)

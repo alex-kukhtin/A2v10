@@ -147,8 +147,19 @@
 		return JSON.stringify(source, (key, value) => key[0] === '_' ? undefined : value, 2);
 	}
 
+	function createSolution(name) {
+		let ns = {
+			Name: name,
+			Schema: 'dbo',
+			Tables: [],
+			Views: []
+		};
+		return JSON.stringify(ns);
+	}
+
 	designer.solution.__loadSolution = loadSolution;
 	designer.solution.__saveSolution = saveSolution;
+	designer.solution.__createSolution = createSolution;
 
 	designer.solution.__registerElement(View);
 	designer.solution.__registerElement(Module);

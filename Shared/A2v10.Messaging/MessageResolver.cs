@@ -26,14 +26,18 @@ namespace A2v10.Messaging
 			_msgModel = msgModel;
 			if (_msgModel == null) return;
 			_msgParams = new ExpandoObject();
-			_msgParams.Set("Id", msgModel.Eval<Int64>("Message.TargetId"));
+			var trgId = msgModel.Eval<Int64>("Message.TargetId");
+			if (trgId != 0)
+				_msgParams.Set("TargetId", msgModel.Eval<Int64>("Message.TargetId"));
 			var env = msgModel.Eval<List<ExpandoObject>>("Message.Environment");
 			foreach (var e in env)
 			{
 				var key = e.Get<String>("Name");
 				if (key == "Host")
 					return;
-				_msgParams.Set(key, e.Get<String>("Value"));
+				var val = e.Get<String>("Value");
+				if (!String.IsNullOrEmpty(val))
+					_msgParams.Set(key, val);
 			}
 		}
 

@@ -85,6 +85,11 @@
 				<SheetRow Style="NoBorder">
 					<SheetCell ColSpan="2">Очень очень длинный текст с переносами строк, который должен увеличить высоту строки в Excel</SheetCell>
 				</SheetRow>
+				<SheetRow Style="NoBorder">
+					<SheetCell ColSpan="3">
+						<Popover Text="text">I am the popover for element</Popover>
+					</SheetCell>
+				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>
 	</SheetPage>
