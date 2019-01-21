@@ -130,6 +130,13 @@
 		</DataGrid.RowDetails>
 	</DataGrid>
 
+	<StackPanel Orientation="Horizontal">
+		<Button>1</Button>
+		<Button>2</Button>
+		<Separator />
+		<Button>3</Button>
+	</StackPanel>
+
 	<List ItemsSource="{Bind Parent.ItemsSource}" GroupBy="Agent.Name" Mark="{Bind $Mark}" MarkerStyle="Row"
 		  Border="True" Margin="50" Padding="20" Style="Underlined" Compact="True">
 		<ListItem Header="{Bind Agent.Name}" Content="{Bind Date}"/>

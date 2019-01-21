@@ -25,6 +25,7 @@ function EUSignCPModuleInitialized(isInitialized) {
 		euSign.SetProxySettings(settings);
 
 		settings = euSign.CreateTSPSettings();
+		settings.SetGetStamps(true);
 		euSign.SetTSPSettings(settings);
 
 		settings = euSign.CreateOCSPSettings();

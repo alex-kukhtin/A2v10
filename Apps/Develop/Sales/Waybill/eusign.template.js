@@ -19,7 +19,8 @@ const template = {
 			exec: readKey,
 			canExec: canReadKey
 		},
-		signFile
+		signFile,
+		createContainer
 	},
 	delegates: {
 	}
@@ -57,7 +58,7 @@ async function signFile() {
 	try {
 		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
 		console.dir('blob:'); console.dir(blob);
-		let sign = eusign.signData(blob);
+		let sign = eusign.signData(blob, att.$Info);
 		console.dir('signed:'); console.dir(sign);
 		let verify = eusign.verifyData(blob, sign);
 		console.dir('verify:'); console.dir(verify);
@@ -68,6 +69,22 @@ async function signFile() {
 			ownerInfo: verify,
 			base: '/sales/waybill/attachment'
 		});
+	} catch (err) {
+		vm.$alert(eusign.getMessage(err));
+	} finally {
+		eusign.endRequest();
+	}
+}
+
+async function createContainer() {
+	const vm = this.$vm;
+	const att = this.Attachment;
+	eusign.beginRequest();
+	try {
+		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
+		let sign = await eusign.loadSignature('/sales/waybill/attachment', att.Signatures[0].Id);
+		let cont = eusign.createContainer(blob, [sign]);
+		console.dir(cont);
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));
 	} finally {

@@ -6,7 +6,7 @@
 	</Dialog.Buttons>
 	<EUSignFrame Height="700">
 		<Block Margin="10">
-			<Grid Columns="150, 200, 120, 1*" Background="WhiteSmoke" DropShadow="Shadow1">
+			<Grid Columns="220, 200, 120, 1*" Background="WhiteSmoke" DropShadow="Shadow1">
 				<Header Size="Small" Grid.ColSpan="4"  Grid.Row="1">Завантаження електронного ключа та зчитування сертіфікатів</Header>
 				<UploadFile Value="{Bind Attachment.$File}" Grid.Row="2" Grid.Col="1"/>
 				<TextBox Grid.Row="2" Grid.Col="2" UpdateTrigger="Input"
@@ -20,6 +20,7 @@
 			</Grid>
 			<Grid Columns="200, 1*, 150">
 				<Button Icon="FileSignature" Content="Підписати документ" Command="{BindCmd Execute, CommandName=signFile}"/>
+				<Button Icon="AddressBook" Content="Контейнер" Command="{BindCmd Execute, CommandName=createContainer}" />
 			</Grid>
 
 			<Block Height="300" Border="True">
