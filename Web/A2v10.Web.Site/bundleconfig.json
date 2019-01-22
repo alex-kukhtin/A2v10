@@ -155,6 +155,7 @@
 			"app/services/period.js",
 			"app/services/modelinfo.js",
 			"app/services/mask.js",
+			"app/services/html.js",
 			"app/services/http.js",
 			"app/services/routing.js",
 			"app/services/validators.js",
