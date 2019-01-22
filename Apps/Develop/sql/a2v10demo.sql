@@ -2439,7 +2439,8 @@ begin
 	from a2demo.Signatures 
 	where Attachment = @attId;
 
-	select [!TKey!Array] = null, [!TAttachment.Keys!ParentId] = @attId, [Alias] = cast(null as nvarchar(255));
+	select [!TKey!Array] = null, [!TAttachment.Keys!ParentId] = @attId, [Alias] = cast(null as nvarchar(255))
+	where 0 <> 0;
 end
 go
 ------------------------------------------------
