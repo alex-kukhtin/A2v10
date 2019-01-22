@@ -1,18 +1,21 @@
 ﻿/* electronic signature */
 
-const utils = require('std:utils');
 const eusign = require('std:eusign');
-const http = require('std:http');
+const html = require('std:html');
+const platform = require('std:platform');
 
 const template = {
 	properties: {
 		'TAttachment.$Password': String,
 		'TAttachment.$File': File,
 		'TAttachment.$Info': Object,
+		'TAttachment.$HasKeys'() { return this.Keys.length > 0; },
+		'TAttachment.$Alias': String,
 		'TAttachment.$FrameUrl'() { return '/attachment/show/' + this.Id + '?base=/sales/waybill/attachment';}
 	},
 	events: {
-		"Model.load": modelLoad
+		"Model.load": modelLoad,
+		"Attachment.$File.change": fileChange
 	},
 	commands: {
 		readKey: {
@@ -20,7 +23,8 @@ const template = {
 			canExec: canReadKey
 		},
 		signFile,
-		createContainer
+		createContainer,
+		verifySignature
 	},
 	delegates: {
 	}
@@ -38,7 +42,7 @@ async function readKey() {
 	try {
 		const att = this.Attachment;
 		console.dir(att.$File);
-		let result = await eusign.readKey(att.$Password, att.$File);
+		let result = await eusign.readKey(att.$Password, att.$File, att.$Alias);
 		console.dir(result);
 		att.$Info = result;
 	} catch (err) {
@@ -55,19 +59,18 @@ async function signFile() {
 	const vm = this.$vm;
 	const att = this.Attachment;
 	eusign.beginRequest();
+	const base = '/sales/waybill/attachment';
 	try {
-		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
-		console.dir('blob:'); console.dir(blob);
-		let sign = eusign.signData(blob, att.$Info);
-		console.dir('signed:'); console.dir(sign);
-		let verify = eusign.verifyData(blob, sign);
-		console.dir('verify:'); console.dir(verify);
-		let saved = eusign.saveSignature({
+		let blobs = await eusign.loadAttachment(base, att.Id);
+		console.dir('blob:'); console.dir(blobs);
+		let signed = eusign.signData(blobs);
+		console.dir('signed:'); console.dir(signed.data);
+		eusign.saveSignature({
 			id: att.Id,
 			kind: 'customer',
-			signature: sign,
-			ownerInfo: verify,
-			base: '/sales/waybill/attachment'
+			signature: signed.data,
+			info: signed.ownerInfo,
+			base: base
 		});
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));
@@ -77,17 +80,41 @@ async function signFile() {
 }
 
 async function createContainer() {
+	const att = this.Attachment;
+	const base = '/sales/waybill/attachment';
+	let result = await eusign.loadSignedData(base, att.Id);
+	html.downloadBlob(new Blob([result]), 'test21', 'pdf');
+}
+
+async function verifySignature() {
 	const vm = this.$vm;
 	const att = this.Attachment;
-	eusign.beginRequest();
+	const base = '/sales/waybill/attachment';
+	let result = await eusign.loadSignedData(base, att.Id);
 	try {
-		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
-		let sign = await eusign.loadSignature('/sales/waybill/attachment', att.Signatures[0].Id);
-		let cont = eusign.createContainer(blob, [sign]);
-		console.dir(cont);
+		let verify = eusign.verifyData(result);
+		console.dir(verify);
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));
-	} finally {
-		eusign.endRequest();
+	}
+}
+
+function fileChange(att) {
+	let file = att.$File;
+	if (!file) {
+		att.Keys.$empty();
+		att.$Alias = '';
+		att.$Password = '';
+		return;
+	}
+	let name = file.name.toLowerCase();
+	if (name.indexOf('.jks') === name.length - 4) {
+		eusign.findKeys(file).then(function (result) {
+			for (let i = 0; i < result.length; i++) {
+				att.Keys.$append({ Alias: result[i] });
+			}
+			if (att.Keys.length)
+				att.$Alias = att.Keys[0].Alias;
+		});
 	}
 }

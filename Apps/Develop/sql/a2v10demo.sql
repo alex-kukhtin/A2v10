@@ -42,11 +42,19 @@ begin
 		Id bigint identity(100, 1) not null constraint PK_Attachments primary key,
 		Name nvarchar(255) null,
 		Mime nvarchar(255) null,
-		Data varbinary(max) null,
+		[Data] varbinary(max) null,
 		DateCreated datetime not null constraint DF_Attachments_DateCreated default(getdate()),
+		[SignedData] varbinary(max) null,
 		UserId bigint not null
 	);
 end
+go
+------------------------------------------------
+if (not exists (select 1 from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2demo' and TABLE_NAME=N'Attachments' and COLUMN_NAME=N'SignedData'))
+begin
+	alter table a2demo.Attachments add [SignedData] varbinary(max) null;
+end
+go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2demo' and SEQUENCE_NAME=N'SQ_Agents')
 	create sequence a2demo.SQ_Agents as bigint start with 100 increment by 1;
@@ -705,8 +713,15 @@ begin
 		[UtcTime] datetime,
 		Issuer nvarchar(255),
 		[Subject] nvarchar(255),
-		Serial nvarchar(255)
+		Serial nvarchar(255),
+		Title nvarchar(255)
 	);
+end
+go
+------------------------------------------------
+if (not exists (select 1 from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2demo' and TABLE_NAME=N'Signatures' and COLUMN_NAME=N'Title'))
+begin
+	alter table a2demo.Signatures add Title nvarchar(255);
 end
 go
 ------------------------------------------------
@@ -2304,6 +2319,26 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Waybill.Attachment.LoadPrev')
+	drop procedure a2demo.[Waybill.Attachment.LoadPrev]
+go
+------------------------------------------------
+create procedure a2demo.[Waybill.Attachment.LoadPrev]
+	@TenantId int = null,
+	@UserId bigint,
+	@Key nvarchar(255) = null,
+	@Id bigint = 0
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	select Mime = N'application/octet-stream', [Name] = N'binary', Stream = [SignedData] from 
+		a2demo.Attachments a inner join a2demo.DocAttachments da on da.Attachment = a.Id
+	where da.Id = @Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Waybill.Attachment.SaveSignature')
 	drop procedure a2demo.[Waybill.Attachment.SaveSignature]
 go
@@ -2318,7 +2353,8 @@ create procedure a2demo.[Waybill.Attachment.SaveSignature]
 	@Kind nvarchar(255),
 	@Issuer nvarchar(255),
 	@Subject nvarchar(255),
-	@Serial nvarchar(255)
+	@Serial nvarchar(255),
+	@Title nvarchar(255)
 as
 begin
 	set nocount on;
@@ -2329,21 +2365,25 @@ begin
 	declare @signid bigint;
 	select @attId = Attachment from a2demo.DocAttachments where Id = @Id;
 
+	begin tran;
+	update a2demo.Attachments set [SignedData] = @Stream where  Id=@attId;
+
 	declare @rtable table (Id bigint);
 	select @signId = Id from a2demo.Signatures where Attachment = @attId and [Kind] = @Kind;
 	if @signId is null
 	begin
-		insert into a2demo.Signatures ([User], Attachment, [Kind], [Signature], UtcTime, Issuer, [Subject], [Serial])
+		insert into a2demo.Signatures ([User], Attachment, [Kind], UtcTime, Issuer, [Subject], [Serial], Title)
 		output inserted.Id into @rtable(Id)
-		values (@UserId, @attId, @Kind, @Stream, @Time, @Issuer, @Subject, @Serial);
+		values (@UserId, @attId, @Kind, @Time, @Issuer, @Subject, @Serial, @Title);
 		select top(1) @signId = Id from @rtable;
 	end
 	else
 	begin
-		update a2demo.Signatures set [Signature] = @Stream, UtcTime=@Time, [Subject]=@Subject, [Serial]=@Serial,
+		update a2demo.Signatures set UtcTime=@Time, [Subject]=@Subject, [Serial]=@Serial, Title=@Title,
 			Issuer = @Issuer, [User] = @UserId
 		where Attachment = @attId and Kind = @Kind;
 	end
+	commit tran;
 	select Id = @signId;
 end
 go
@@ -2390,14 +2430,16 @@ begin
 	declare @attId bigint;
 	select @attId = Attachment from a2demo.DocAttachments where Id=@Id;
 	select [Attachment!TAttachment!Object] = null, [Id] = @Id, [AttId!!Id] = a.Id,
-		[Signatures!TSignature!Array] = null
+		[Signatures!TSignature!Array] = null, [Keys!TKey!Array] = null
 	from a2demo.Attachments a 
 	where Id=@attId;
 
 	select [!TSignature!Array] = null, [Id!!Id] = Id, [!TAttachment.Signatures!ParentId]=Attachment,
-	[Kind], Issuer, [Subject], [Serial]
+		[Kind], Issuer, [Subject], [Serial], Title
 	from a2demo.Signatures 
 	where Attachment = @attId;
+
+	select [!TKey!Array] = null, [!TAttachment.Keys!ParentId] = @attId, [Alias] = cast(null as nvarchar(255));
 end
 go
 ------------------------------------------------

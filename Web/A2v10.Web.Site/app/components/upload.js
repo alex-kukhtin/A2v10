@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20190122-7421
 // components/upload.js
 
 
@@ -124,15 +124,18 @@
 			}
 		},
 		methods: {
+			fireChange() {
+			},
 			clear() {
 				if (!this.item) return;
 				this.item[this.prop] = null;
+				this.fireChange();
 				this.$refs.file.value = '';
 			},
 			uploadChange(ev) {
 				let files = ev.target.files;
 				this.item[this.prop] = files[0];
-				console.dir(this.item[this.prop]);
+				this.fireChange();
 			}
 		}
 	});

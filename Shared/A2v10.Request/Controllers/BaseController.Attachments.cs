@@ -42,7 +42,7 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public async Task<AttachmentInfo> DownloadAttachment(String pathInfo, Action<ExpandoObject> setParams)
+		public async Task<AttachmentInfo> DownloadAttachment(String pathInfo, Action<ExpandoObject> setParams, String suffix = "Load")
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			// [{source}].[{schema}].[{base}.{key}.Load]
@@ -51,7 +51,7 @@ namespace A2v10.Request
 			String key = rm.ModelAction.ToPascalCase();
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
-			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Load]";
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.{suffix}]";
 			return await _dbContext.LoadAsync<AttachmentInfo>(rm.source, procedure, prms);
 		}
 

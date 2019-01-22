@@ -3579,8 +3579,11 @@ app.modules['std:html'] = function () {
 		link.style = "display:none";
 		document.body.appendChild(link); // FF!
 		let downloadFile = fileName || 'file';
-		if (format === 'Excel')
+		format = (format || '').toLowerCase();
+		if (format === 'excel')
 			downloadFile += '.xlsx';
+		else if (format === "pdf")
+			downloadFile += ".pdf";
 		link.download = downloadFile;
 		link.href = objUrl;
 		link.click();
@@ -6720,9 +6723,9 @@ TODO:
 	});
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20190122-7421
 // components/upload.js
 
 
@@ -6846,15 +6849,18 @@ TODO:
 			}
 		},
 		methods: {
+			fireChange() {
+			},
 			clear() {
 				if (!this.item) return;
 				this.item[this.prop] = null;
+				this.fireChange();
 				this.$refs.file.value = '';
 			},
 			uploadChange(ev) {
 				let files = ev.target.files;
 				this.item[this.prop] = files[0];
-				console.dir(this.item[this.prop]);
+				this.fireChange();
 			}
 		}
 	});

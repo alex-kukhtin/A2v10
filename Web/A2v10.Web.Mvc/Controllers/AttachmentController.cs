@@ -49,6 +49,12 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		[HttpPost]
+		public Task Prev(String Base, String id)
+		{
+			return _baseController.DownloadPrev(Base, id, true, Response, SetParams);
+		}
+
+		[HttpPost]
 		public Task Signature(String Base, String id)
 		{
 			return _baseController.Signature(Base, id, Response, SetParams);

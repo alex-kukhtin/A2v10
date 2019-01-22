@@ -14,14 +14,18 @@
 				<Button Grid.Row="2" Grid.Col="3"
 					Content="Зчитати ключ" Size="Small" Icon="Access" Style="Primary"
 						Command="{BindCmd Execute, CommandName='readKey' }"/>
+				<ComboBox ItemsSource="{Bind Attachment.Keys}" Label="Оберіть ключ" Value="{Bind Attachment.$Alias}" If="{Bind Attachment.$HasKeys}">
+					<ComboBoxItem Content="{Bind Alias}" Value="{Bind Alias}"/>
+				</ComboBox>
 				<Span Grid.Row="3" Grid.ColSpan="4" Small="True" Color="Danger">
 					Увага! Пароль та ключ НІКОЛИ не передаються на сервер. Вони залишаються на цьому компьютері.
 				</Span>
 			</Grid>
-			<Grid Columns="200, 1*, 150">
+			<FlexList Orientation="Horizontal" Margin="10">
 				<Button Icon="FileSignature" Content="Підписати документ" Command="{BindCmd Execute, CommandName=signFile}"/>
 				<Button Icon="AddressBook" Content="Контейнер" Command="{BindCmd Execute, CommandName=createContainer}" />
-			</Grid>
+				<Button Icon="Check" Content="Перевірити підпис" Command="{BindCmd Execute, CommandName=verifySignature}" />
+			</FlexList>
 
 			<Block Height="300" Border="True">
 				<IFrame Source="{Bind Attachment.$FrameUrl}" />

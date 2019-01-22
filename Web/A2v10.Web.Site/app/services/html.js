@@ -36,8 +36,11 @@ app.modules['std:html'] = function () {
 		link.style = "display:none";
 		document.body.appendChild(link); // FF!
 		let downloadFile = fileName || 'file';
-		if (format === 'Excel')
+		format = (format || '').toLowerCase();
+		if (format === 'excel')
 			downloadFile += '.xlsx';
+		else if (format === "pdf")
+			downloadFile += ".pdf";
 		link.download = downloadFile;
 		link.href = objUrl;
 		link.click();
