@@ -107,10 +107,6 @@
 			text-decoration: none;
 		}
 	}
-
-	.divider {
-		flex-grow: 2;
-	}
 }
 
 .modal-body.confirm, .modal-body.alert, .modal-body.info {
@@ -150,4 +146,8 @@
 		transition: background-color linear .125s;
 		background-color: rgba(0, 0, 0, .25);
 	}
+}
+
+.modal-content.content-iframe {
+	display:flex; // 3px larger bug
 }

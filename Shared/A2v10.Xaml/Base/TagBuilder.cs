@@ -70,6 +70,13 @@ namespace A2v10.Xaml
 			return this;
 		}
 
+		public TagBuilder AddCssClassBool(Boolean? bAdd, String value)
+		{
+			if (bAdd.HasValue && bAdd.Value)
+				return AddCssClass(value);
+			return this;
+		}
+
 		public TagBuilder AddCssClassBoolNo(Boolean? bAdd, String value)
 		{
 			if (!bAdd.HasValue)

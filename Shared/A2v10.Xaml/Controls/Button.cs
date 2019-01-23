@@ -47,7 +47,7 @@ namespace A2v10.Xaml
 				var ddm = (DropDown as DropDownMenu);
 				DropDownDirection? dir = ddm?.Direction;
 				Boolean? separate = ddm?.Separate;
-				Boolean bDropUp = (dir == DropDownDirection.UpLeft) || (dir == DropDownDirection.UpRight);
+				Boolean bDropUp = ddm != null && ddm.IsDropUp;
 				Boolean insideBar = IsParentCommandBar || IsParentToolBar;
 
 				var wrap = new TagBuilder("div", "dropdown")

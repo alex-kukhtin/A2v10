@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -29,9 +29,12 @@ namespace A2v10.Xaml
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
 					.MergeAttribute("v-dropdown", String.Empty);
 				onRender?.Invoke(wrap);
+				if (!Block)
+					wrap.AddCssClass("a2-inline");
 				MergeAttributes(wrap, context, MergeAttrMode.Visibility);
 				wrap.RenderStart(context);
-				RenderHyperlink(context, false, null, true);
+				var hasAddOn = wrap.HasClass("add-on");
+				RenderHyperlink(context, false, null, inside:true, addOn:hasAddOn);
 				DropDown.RenderElement(context);
 				wrap.RenderEnd(context);
 			}
@@ -41,7 +44,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		void RenderHyperlink(RenderContext context, Boolean inGrid, Action<TagBuilder> onRender = null, Boolean inside = false)
+		void RenderHyperlink(RenderContext context, Boolean inGrid, Action<TagBuilder> onRender = null, Boolean inside = false, Boolean addOn = false)
 		{
 			Boolean bHasDropDown = DropDown != null;
 
@@ -96,7 +99,13 @@ namespace A2v10.Xaml
 				context.Writer.Write(context.Localize(Content.ToString()));
 			}
 
-
+			if (bHasDropDown && !addOn)
+			{
+				var bDropUp = (DropDown as DropDownMenu)?.IsDropUp;
+				new TagBuilder("span", "caret")
+					.AddCssClassBool(bDropUp, "up")
+					.Render(context);
+			}
 			tag.RenderEnd(context);
 		}
 

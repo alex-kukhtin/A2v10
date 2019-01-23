@@ -130,9 +130,16 @@
 		</DataGrid.RowDetails>
 	</DataGrid>
 
-	<StackPanel Orientation="Horizontal">
+	<StackPanel Orientation="Horizontal" AlignItems="Center">
 		<Button>1</Button>
 		<Button>2</Button>
+		<Hyperlink Icon="Access">With caret
+			<Hyperlink.DropDown>
+				<DropDownMenu>
+					<MenuItem  Icon="TagBlue" Content="Tag blue"/>
+				</DropDownMenu>
+			</Hyperlink.DropDown>
+		</Hyperlink>
 		<Separator />
 		<Button>3</Button>
 	</StackPanel>

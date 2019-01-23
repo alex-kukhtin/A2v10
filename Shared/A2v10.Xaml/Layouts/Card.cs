@@ -30,6 +30,8 @@ namespace A2v10.Xaml
 
 		public TextAlign Align { get; set; }
 
+		public Length MaxHeight { get; set; }
+
 		Boolean HasHeader => GetBinding(nameof(Header)) != null || Header != null;
 		Boolean HasFooter => GetBinding(nameof(Footer)) != null || Footer != null;
 
@@ -41,6 +43,8 @@ namespace A2v10.Xaml
 			MergeAttributes(card, context);
 			if (Background != BackgroundStyle.Default)
 				card.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			if (MaxHeight != null)
+				card.MergeStyle("max-height", MaxHeight.Value);
 			if (DropShadow != ShadowStyle.None)
 			{
 				card.AddCssClass("drop-shadow");

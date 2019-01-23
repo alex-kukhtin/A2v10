@@ -34,7 +34,8 @@
 			color: @link-color;
 		}
 
-		.divider {
+		> .divider {
+			flex-grow:0;
 			border-right-color: lighten(@toolbar-bg-color, 6%);
 			background-color: lighten(@toolbar-bg-color, 12%);
 		}
@@ -104,6 +105,7 @@
 	}
 
 	> .divider {
+		flex-grow:0;
 		display: inline-block;
 		width: 2px;
 		border-right: 1px solid lighten(@toolbar-bg-color, 5%);
