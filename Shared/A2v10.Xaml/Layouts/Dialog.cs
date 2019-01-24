@@ -53,9 +53,7 @@ namespace A2v10.Xaml
 				Padding.MergeStyles("padding", content);
 			content.AddCssClassBool(IsContentIsIFrame, "content-iframe"); // bug fix (3px height)
 			content.RenderStart(context);
-			// static without wrapper
-			foreach (var c in Children)
-				c.RenderElement(context);
+			RenderChildren(context);
 			content.RenderEnd(context);
 
 			RenderFooter(context);
@@ -63,6 +61,13 @@ namespace A2v10.Xaml
 			dialog.RenderEnd(context);
 		}
 
+
+		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		{
+			// static without wrapper
+			foreach (var c in Children)
+				c.RenderElement(context);
+		}
 
 
 		void SetSize(TagBuilder dialog)
