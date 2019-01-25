@@ -115,6 +115,17 @@
 }
 
 
+.date-picker {
+	&.open {
+		.input-group {
+			input, a {
+				background-color: white;
+				z-index: @popup-index + 1;
+			}
+		}
+	}
+}
+
 
 .period-picker {
 	cursor: pointer;

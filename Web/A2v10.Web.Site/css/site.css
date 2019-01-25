@@ -706,6 +706,9 @@
 .ico-task-complete:before {
   content: "\eac8";
 }
+.ico-warehouse:before {
+  content: "\eac9";
+}
 * {
   box-sizing: border-box;
 }
@@ -1544,7 +1547,7 @@ textarea {
 }
 input,
 select {
-  height: 1.77em;
+  height: 1.95rem;
   padding: 0 5px;
 }
 /* hide for focused */
@@ -1790,13 +1793,12 @@ pre.a2-code {
   display: flex;
   align-items: baseline;
   background-color: white;
-  padding: 1px 0;
   width: auto;
   position: relative;
 }
 .control-group .input-group input,
 .control-group .input-group select {
-  height: 1.77em;
+  height: 1.95rem;
   font-weight: inherit;
   font-style: inherit;
   min-width: 32px;
@@ -1815,7 +1817,7 @@ pre.a2-code {
   padding: 0 5px;
 }
 .control-group .input-group .select-wrapper .select-text {
-  line-height: 1.77em;
+  line-height: 1.95rem;
   flex-grow: 2;
   overflow: hidden;
   white-space: nowrap;
@@ -1831,10 +1833,10 @@ pre.a2-code {
 }
 .control-group .input-group.static > span {
   padding: 0 5px;
-  line-height: 1.77em;
+  line-height: 1.95rem;
   display: block;
   width: 100%;
-  min-height: 1.77em;
+  min-height: 1.95rem;
 }
 .control-group .input-group.static > span:focus {
   outline-style: none;
@@ -2332,15 +2334,20 @@ pre.a2-code {
   bottom: 100%;
   box-shadow: 5px -5px 10px 0 rgba(0, 0, 0, 0.2);
 }
+.date-picker.open .input-group input,
+.date-picker.open .input-group a {
+  background-color: white;
+  z-index: 1071;
+}
 .period-picker {
   cursor: pointer;
 }
 .period-picker .period-text {
   padding: 0 0 0 5px;
-  line-height: 1.77em;
+  line-height: 1.95rem;
   display: block;
   width: 100%;
-  min-height: 1.77em;
+  min-height: 1.95rem;
   white-space: nowrap;
 }
 .period-picker.open .period-text {
@@ -2878,9 +2885,13 @@ table.data-grid > tbody > tr.bold > td {
   overflow: visible;
   background-color: #cfd6e5;
   color: #555;
+  min-height: 34px;
 }
 .toolbar .checkbox {
   margin: 0 6px;
+}
+.toolbar .select-text {
+  line-height: 1.7rem !important;
 }
 .toolbar.no-wrap {
   flex-wrap: nowrap;
@@ -2969,13 +2980,6 @@ table.data-grid > tbody > tr.bold > td {
   text-transform: lowercase;
   font-size: 100%;
   white-space: nowrap;
-}
-.toolbar > .control-group .input-group > a {
-  line-height: 1.77rem;
-}
-.toolbar > .control-group select,
-.toolbar > .control-group input {
-  height: 1.77rem;
 }
 .toolbar .control-group + .control-group {
   margin-left: 6px;

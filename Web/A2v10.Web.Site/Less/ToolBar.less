@@ -1,7 +1,5 @@
 ﻿
 
-@tb-control-height: 1.77rem;
-
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
@@ -11,9 +9,14 @@
 	overflow: visible;
 	background-color: @toolbar-bg-color;
 	color: @toolbar-txt-color;
+	min-height:34px;
 
 	.checkbox {
 		margin: 0 6px;
+	}
+
+	.select-text {
+		line-height:1.7rem!important;
 	}
 
 	&.no-wrap {
@@ -126,14 +129,6 @@
 			text-transform: lowercase;
 			font-size: 100%;
 			white-space: nowrap;
-		}
-
-		.input-group > a {
-			line-height: @tb-control-height;
-		}
-
-		select, input {
-			height: @tb-control-height;
 		}
 	}
 

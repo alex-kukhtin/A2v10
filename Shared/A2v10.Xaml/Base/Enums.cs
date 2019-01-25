@@ -385,6 +385,7 @@ namespace A2v10.Xaml
 		Users,
 		Waiting,
 		WaitingOutline,
+		Warehouse,
 		Warning,
 		WarningOutline,
 		WarningYellow,

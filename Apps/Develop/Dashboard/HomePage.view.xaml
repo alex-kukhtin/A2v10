@@ -29,7 +29,7 @@
 			</StateCard.Footer>
 		</StateCard>
 
-		<StateCard DropShadow="Shadow1" Style="Cyan" Grid.Row="1" Grid.Col="3" Header="ТЕНАНТИ" Icon="Items" Text="71233">
+		<StateCard DropShadow="Shadow1" Style="Cyan" Grid.Row="1" Grid.Col="3" Header="ТЕНАНТИ" Icon="Warehouse" Text="71233">
 			<StateCard.Footer>
 				<Text>
 					<Badge Bold="True">245</Badge> за вчора
