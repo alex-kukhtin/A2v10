@@ -168,7 +168,14 @@ namespace A2v10.Xaml
 				grid.MergeStyle("grid-auto-flow", AutoFlow.ToString().ToKebabCase(delim:" "));
 
 			if (AlignItems != AlignItem.Default)
-				grid.MergeStyle("align-items", AlignItems.ToString().ToLowerInvariant());
+			{
+				String aiStyle = AlignItems.ToString().ToLowerInvariant();
+				if (AlignItems == AlignItem.Top)
+					aiStyle = "start";
+				if (AlignItems == AlignItem.Bottom)
+					aiStyle = "end";
+				grid.MergeStyle("align-items", aiStyle);
+			}
 
 			grid.RenderStart(context);
 			RenderChildren(context);

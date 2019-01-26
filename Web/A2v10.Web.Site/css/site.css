@@ -4854,7 +4854,7 @@ TODO:
 }
 .field-set {
   margin: 0;
-  padding: 0.4rem 0.6rem, 0.6rem 0.6rem;
+  padding: 0.4rem 0.6rem 0.6rem 0.6rem;
   border: 1px solid #bdc5d8;
   text-align: left;
 }

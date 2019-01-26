@@ -148,4 +148,18 @@
 		  Border="True" Margin="50" Padding="20" Style="Underlined" Compact="True">
 		<ListItem Header="{Bind Agent.Name}" Content="{Bind Date}"/>
 	</List>
+
+	<Grid Columns="1*, 1*, 1*" AlignItems="Top">
+		<FieldSet>
+			<Radio Label="Option 1" CheckedValue="1"/>
+			<Radio Label="Option 2" CheckedValue="2"/>
+			<Radio Label="Option 3" CheckedValue="3"/>
+		</FieldSet>
+		<FieldSet>
+			<Radio Label="Option 1" Style="CheckBox" CheckedValue="1"/>
+			<Radio Label="Option 2" Style="CheckBox" CheckedValue="2"/>
+			<Radio Label="Option 3" Style="CheckBox" CheckedValue="3"/>
+		</FieldSet>
+		<Text>CheckedValue: <Span>Option 1</Span></Text>
+	</Grid>
 </Page>
