@@ -55,7 +55,7 @@ namespace A2v10.Xaml
 				return new Length() { Value = "auto" };
 			else if (strVal == "0")
 				return new Length() { Value = strVal };
-			else if (strVal.StartsWith("calc("))
+			else if (strVal.StartsWith("Calc("))
 				return new Length() { Value = strVal };
 			else if (IsValidLength(strVal))
 				return new Length() { Value = strVal };

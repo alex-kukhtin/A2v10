@@ -132,7 +132,8 @@ namespace A2v10.Xaml
 		Cyan,
 		Danger,
 		Red,
-		Error
+		Error,
+		Gray
 	}
 
 	public enum DropDownDirection

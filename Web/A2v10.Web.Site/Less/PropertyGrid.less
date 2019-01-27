@@ -5,6 +5,7 @@
 @v-pading: 4px;
 @h-padding: 6px;
 @v-pading-compact: 2px;
+@h-padding-compact: 4px;
 
 table.prop-grid {
     width: 100%;
@@ -12,6 +13,8 @@ table.prop-grid {
     td {
         border-color: @table-brd-color;
         line-height: normal;
+		padding:@v-pading @h-padding;
+		vertical-align:baseline;
     }
 
     col.prop-name {
@@ -20,11 +23,11 @@ table.prop-grid {
 
     td.prop-name {
         color: #999;
-        padding: @v-pading @h-padding @v-pading 0;
+        //padding: @v-pading @h-padding @v-pading 0;
     }
 
     td.prop-value {
-        padding: @v-pading 0 @v-pading @h-padding;
+        //padding: @v-pading 0 @v-pading @h-padding;
 
         .control-group {
             margin: 0;
@@ -37,22 +40,34 @@ table.prop-grid {
 
     &.grid-both, &.grid-vertical {
         td.prop-name {
-            padding-left: @h-padding;
+            //padding-left: @h-padding;
         }
 
         td.prop-value {
-            padding-right: @h-padding;
+            //padding-right: @h-padding;
         }
     }
+
+	&.grid-horizontal, &.grid-both {
+		tr:first-child > td {
+			border-top-style:none;
+		}
+		tr:last-child > td {
+			border-bottom-style:none;
+		}
+	}
 }
 
 table.prop-grid.compact {
     font-size:.95rem;
+	td {
+		padding:@v-pading-compact @h-padding-compact;
+	}
     td.prop-name {
-        padding: @v-pading-compact @h-padding @v-pading-compact 0;
+        //padding: @v-pading-compact @h-padding;
     }
 
     td.prop-value {
-        padding: @v-pading-compact 0 @v-pading-compact @h-padding;
+        //padding: @v-pading-compact @h-padding;
     }
 }

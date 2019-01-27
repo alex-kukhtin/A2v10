@@ -1833,8 +1833,9 @@ pre.a2-code {
 }
 .control-group .input-group.static > span {
   padding: 0 5px;
-  line-height: 1.95rem;
-  display: block;
+  line-height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
   width: 100%;
   min-height: 1.95rem;
 }
@@ -3658,6 +3659,9 @@ table tr.bold > td {
 table td.gray {
   background-color: #f9f9f9;
 }
+table tr.overline {
+  border-top: 2px solid #ddd;
+}
 .table-separate-border {
   border-collapse: separate;
 }
@@ -3782,7 +3786,7 @@ table.a2-table > tfoot > tr > td {
   border-color: #ddd;
 }
 table.a2-table td.ctrl {
-  padding: 0;
+  padding: 1px;
   vertical-align: top;
 }
 table.a2-table td.ctrl .checkbox,
@@ -3839,22 +3843,25 @@ table.a2-table td.row-divider {
 table.a2-table tr:last-child td.row-divider {
   display: none;
 }
-table.a2-table tr.success td,
-table.a2-table tr.green td {
+table.a2-table tr.success > td,
+table.a2-table tr.green > td {
   background-color: rgba(216, 255, 216, 0.5);
 }
-table.a2-table tr.info td,
-table.a2-table tr.cyan td {
+table.a2-table tr.info > td,
+table.a2-table tr.cyan > td {
   background-color: rgba(114, 234, 234, 0.15);
 }
-table.a2-table tr.warning td,
-table.a2-table tr.orange td {
+table.a2-table tr.warning > td,
+table.a2-table tr.orange > td {
   background-color: rgba(255, 216, 0, 0.15);
 }
-table.a2-table tr.danger td,
-table.a2-table tr.error td,
-table.a2-table tr.red td {
+table.a2-table tr.danger > td,
+table.a2-table tr.error > td,
+table.a2-table tr.red > td {
   background-color: rgba(254, 220, 220, 0.5);
+}
+table.a2-table tr.gray > td {
+  background-color: rgba(208, 208, 208, 0.15);
 }
 .a2-table.compact {
   font-size: 0.95rem;
@@ -3968,16 +3975,14 @@ table.prop-grid {
 table.prop-grid td {
   border-color: #e5e8eb;
   line-height: normal;
+  padding: 4px 6px;
+  vertical-align: baseline;
 }
 table.prop-grid col.prop-name {
   width: 1px;
 }
 table.prop-grid td.prop-name {
   color: #999;
-  padding: 4px 6px 4px 0;
-}
-table.prop-grid td.prop-value {
-  padding: 4px 0 4px 6px;
 }
 table.prop-grid td.prop-value .control-group {
   margin: 0;
@@ -3985,22 +3990,19 @@ table.prop-grid td.prop-value .control-group {
 table.prop-grid.striped > tbody > tr:nth-of-type(even) {
   background-color: rgba(208, 208, 208, 0.15);
 }
-table.prop-grid.grid-both td.prop-name,
-table.prop-grid.grid-vertical td.prop-name {
-  padding-left: 6px;
+table.prop-grid.grid-horizontal tr:first-child > td,
+table.prop-grid.grid-both tr:first-child > td {
+  border-top-style: none;
 }
-table.prop-grid.grid-both td.prop-value,
-table.prop-grid.grid-vertical td.prop-value {
-  padding-right: 6px;
+table.prop-grid.grid-horizontal tr:last-child > td,
+table.prop-grid.grid-both tr:last-child > td {
+  border-bottom-style: none;
 }
 table.prop-grid.compact {
   font-size: 0.95rem;
 }
-table.prop-grid.compact td.prop-name {
-  padding: 2px 6px 2px 0;
-}
-table.prop-grid.compact td.prop-value {
-  padding: 2px 0 2px 6px;
+table.prop-grid.compact td {
+  padding: 2px 4px;
 }
 label.checkbox,
 label.radio {
@@ -4764,12 +4766,6 @@ TODO:
 .panel .panel-header .panel-collapse-handle:before {
   content: "\e9a2";
 }
-.panel .panel-content > .prop-grid tr:first-child > td {
-  border-top-style: none;
-}
-.panel .panel-content > .prop-grid tr:last-child > td {
-  border-bottom-style: none;
-}
 .panel.drop-shadow {
   border-style: none !important;
 }
@@ -5124,19 +5120,19 @@ table.sheet .group-cell.collapsed > div .ico:before {
 table.sheet.striped > tbody > tr:nth-child(even) {
   background-color: rgba(240, 240, 240, 0.25);
 }
-table.sheet col.yellow {
+table > colgroup col.yellow {
   background-color: rgba(255, 255, 164, 0.25);
 }
-table.sheet col.green {
+table > colgroup col.green {
   background-color: rgba(220, 255, 220, 0.25);
 }
-table.sheet col.gray {
+table > colgroup col.gray {
   background-color: rgba(240, 240, 240, 0.25);
 }
-table.sheet col.red {
+table > colgroup col.red {
   background-color: rgba(255, 220, 237, 0.25);
 }
-table.sheet col.blue {
+table > colgroup col.blue {
   background-color: rgba(196, 237, 255, 0.25);
 }
 .sheet-page-wrapper {
@@ -5708,6 +5704,9 @@ h5,
   table tr .input-group,
   table td .input-group {
     border-style: none;
+  }
+  table td.ctrl {
+    padding: 1px;
   }
   table td.ctrl .input-group {
     border-color: #999;

@@ -22,6 +22,10 @@ table {
 	td.gray {
 		background-color: @table-cell-gray-color;
 	}
+
+	tr.overline {
+		border-top:2px solid @a2-table-brd-color;
+	}
 }
 
 .table-separate-border {
@@ -161,7 +165,7 @@ table.a2-table {
 	}
 
 	td.ctrl {
-		padding: 0;
+		padding: 1px;
 		vertical-align: top;
 
 		.checkbox, .radio {
@@ -169,7 +173,8 @@ table.a2-table {
 		}
 
 		.stack-panel.horizontal {
-			align-items:baseline;
+			align-items: baseline;
+
 			.control-group + .control-group {
 				border-left: 1px solid @a2-table-brd-color;
 			}
@@ -229,26 +234,32 @@ table.a2-table {
 	}
 
 	tr.success, tr.green {
-		td {
+		> td {
 			background-color: @dg-success-bg-color;
 		}
 	}
 
 	tr.info, tr.cyan {
-		td {
+		> td {
 			background-color: @dg-info-bg-color;
 		}
 	}
 
 	tr.warning, tr.orange {
-		td {
+		> td {
 			background-color: @dg-warning-bg-color;
 		}
 	}
 
 	tr.danger, tr.error, tr.red {
-		td {
+		> td {
 			background-color: @dg-danger-bg-color;
+		}
+	}
+
+	tr.gray {
+		> td {
+			background-color: @alter-bg-color;
 		}
 	}
 }

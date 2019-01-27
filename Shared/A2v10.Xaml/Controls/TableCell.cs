@@ -71,7 +71,11 @@ namespace A2v10.Xaml
 				td.MergeAttribute(":key", "cellIndex");
 			}
 			MergeAttributeInt32(td, context, nameof(ColSpan), "colspan", ColSpan);
-			MergeAttributeInt32(td, context, nameof(RowSpan), "rowspan", RowSpan);
+			var rowSpanBind = GetBinding(nameof(RowSpan));
+			if (rowSpanBind != null)
+				td.MergeAttribute(":rowspan", rowSpanBind.GetPath(context));
+			else
+				MergeAttributeInt32(td, context, nameof(RowSpan), "rowspan", RowSpan);
 			td.RenderStart(context);
 			RenderContent(context);
 			/*

@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ namespace A2v10.Xaml
 	{
 		public Boolean Fit { get; set; }
 		public Length Width { get; set; }
+		public ColumnBackgroundStyle Background { get; set; }
 
 		public Boolean? If { get; set; }
 
@@ -35,6 +37,8 @@ namespace A2v10.Xaml
 			if (Width != null)
 				col.MergeStyle("width", Width.Value);
 			MergeBindingAttributeBool(col, context, "v-if", nameof(If), If);
+			if (Background != ColumnBackgroundStyle.None)
+				col.AddCssClass(Background.ToString().ToKebabCase());
 			col.Render(context, TagRenderMode.SelfClosing);
 		}
 	}
