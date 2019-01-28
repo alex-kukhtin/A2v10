@@ -1809,10 +1809,10 @@ pre.a2-code {
 }
 .control-group .input-group .select-wrapper {
   position: absolute;
-  left: 1px;
-  top: 1px;
-  right: 1px;
-  bottom: 1px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   padding: 0 5px;
 }
@@ -2886,13 +2886,9 @@ table.data-grid > tbody > tr.bold > td {
   overflow: visible;
   background-color: #cfd6e5;
   color: #555;
-  min-height: 34px;
 }
 .toolbar .checkbox {
   margin: 0 6px;
-}
-.toolbar .select-text {
-  line-height: 1.7rem !important;
 }
 .toolbar.no-wrap {
   flex-wrap: nowrap;

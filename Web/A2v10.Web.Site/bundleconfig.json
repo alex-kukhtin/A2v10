@@ -161,6 +161,7 @@
 			"app/services/validators.js",
 			"app/services/datamodel.js",
 			"app/services/dataservice.js",
+			"app/services/popup.js",
 			"app/site/store.js",
 			"app/components/collectionview.js",
 			"app/components/pager.js",
