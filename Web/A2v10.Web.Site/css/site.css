@@ -808,13 +808,16 @@ input[type=number]::-webkit-outer-spin-button {
 .aligner {
   flex-grow: 1;
 }
-.valign-top {
-  vertical-align: baseline !important;
+.valign-top,
+.valign-top td {
+  vertical-align: top !important;
 }
-.valign-middle {
+.valign-middle,
+.valign-middle td {
   vertical-align: middle !important;
 }
-.valign-bottom {
+.valign-bottom,
+.valign-bottom td {
   vertical-align: bottom !important;
 }
 .user-select {
@@ -1834,7 +1837,7 @@ pre.a2-code {
 .control-group .input-group.static > span {
   padding: 0 5px;
   line-height: 1.4rem;
-  display: inline-flex;
+  display: inline-grid;
   align-items: center;
   width: 100%;
   min-height: 1.95rem;
@@ -3643,6 +3646,10 @@ ul.news-list > li {
 .toastr-stack .list-leave-active {
   position: absolute;
 }
+table td,
+table th {
+  vertical-align: middle;
+}
 table th {
   border: 1px solid #e5e8eb;
 }
@@ -3766,7 +3773,7 @@ table.a2-table > tbody > tr > td label {
   display: inline-block;
 }
 table.a2-table > tbody > tr > td .control-group {
-  margin: 0;
+  margin: -1px;
 }
 table.a2-table > tbody > tr > td .a2-table {
   margin: -1px;
@@ -3783,7 +3790,6 @@ table.a2-table > tfoot > tr > td {
 }
 table.a2-table td.ctrl {
   padding: 1px;
-  vertical-align: top;
 }
 table.a2-table td.ctrl .checkbox,
 table.a2-table td.ctrl .radio {

@@ -7,6 +7,9 @@
 @a2-table-brd-color: #ddd;
 
 table {
+	td, th {
+		vertical-align:middle;
+	}
 	th {
 		border: 1px solid @table-brd-color;
 	}
@@ -137,7 +140,7 @@ table.a2-table {
 
 		.control-group {
 			//margin: -1px -1px -2px -1px;
-			margin: 0;
+			margin: -1px;
 
 			.input-group {
 				//border-color: @a2-table-brd-color;
@@ -166,7 +169,6 @@ table.a2-table {
 
 	td.ctrl {
 		padding: 1px;
-		vertical-align: top;
 
 		.checkbox, .radio {
 			margin: 0 6px;
