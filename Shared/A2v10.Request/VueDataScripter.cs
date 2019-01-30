@@ -328,8 +328,6 @@ const vm = new DataModelController({
 			return sb.ToString();
 		}
 
-		HashSet<String> _modulesWritten;
-
 		void AddRequiredModules(StringBuilder sb, String clientScript)
 		{
 			const String tmlHeader =
@@ -347,8 +345,7 @@ const vm = new DataModelController({
 
 			if (String.IsNullOrEmpty(clientScript))
 				return;
-			if (_modulesWritten == null)
-				_modulesWritten = new HashSet<String>();
+            var _modulesWritten = new HashSet<String>();
 			Int32 iIndex = 0;
 			while (true)
 			{
