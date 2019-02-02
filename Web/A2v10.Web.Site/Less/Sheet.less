@@ -11,7 +11,8 @@
 table.sheet {
 	.user-select();
 	width: auto;
-	margin: 0 1px 0 0; /*border-collapse bug*/
+	border-collapse:collapse;
+	//margin: 0 1px 0 0; /*border-collapse bug*/
 	tr {
 		page-break-inside: avoid;
 	}
@@ -71,7 +72,7 @@ table.sheet {
 
 		td.underline {
 			border-bottom: 1px solid @table-brd-color;
-			height:30px;
+			height: 30px;
 		}
 	}
 

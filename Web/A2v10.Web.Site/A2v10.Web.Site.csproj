@@ -157,6 +157,7 @@
       <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Less\Diagram.less" />
+    <Content Include="Less\Table.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -314,7 +315,7 @@
     <Content Include="Less\DropDown.less" />
     <Content Include="Less\Page.less" />
     <Content Include="Less\Button.less" />
-    <Content Include="Less\Table.less" />
+    <Content Include="Less\TableNew.less" />
     <Content Include="Less\CheckBox.less" />
     <Content Include="Less\Popover.less" />
     <Content Include="Less\Pager.less" />

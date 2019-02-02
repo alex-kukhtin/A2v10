@@ -345,7 +345,7 @@ const vm = new DataModelController({
 
 			if (String.IsNullOrEmpty(clientScript))
 				return;
-            var _modulesWritten = new HashSet<String>();
+			var _modulesWritten = new HashSet<String>();
 			Int32 iIndex = 0;
 			while (true)
 			{

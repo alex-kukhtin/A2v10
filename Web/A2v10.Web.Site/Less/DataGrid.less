@@ -25,7 +25,7 @@
 @dg-info-brd-color: #72eaea;
 
 @group-padding: 12px;
-@group-bg-color: lighten(@table-hdr-brd-color, 12%);
+@group-bg-color: #efefef;//(@table-hdr-brd-color, 5%);
 @group-txt-color: #777;
 @group-brd-color: @table-hdr-brd-color;
 
@@ -55,6 +55,7 @@
 table.data-grid {
 	cursor: default;
 	width: 100%;
+	border-spacing:0;
 
 	col.fit {
 		width: .1%; //BUG?
@@ -69,8 +70,7 @@ table.data-grid {
 	td {
 		padding: 4px 6px;
 		vertical-align: top;
-		border-color: @table-brd-color;
-
+		//border-color: @table-brd-color;
 		> i.ico, > a > i.ico {
 			//float:left; /*for right aligned icons ??? */
 			padding-right: 4px;
@@ -289,10 +289,11 @@ table.data-grid {
 		td {
 			background-color: @group-bg-color;
 			border-bottom: 1px solid @group-brd-color;
+			border-top: 1px solid @group-brd-color;
 			cursor: pointer;
 			color: @group-txt-color;
 			padding-left: 0;
-			line-height:1;
+			line-height: 1;
 
 			& .expmark:after {
 				font-family: 'A2v10';
@@ -314,7 +315,7 @@ table.data-grid {
 			.grcount {
 				float: right;
 				font-size: 85%;
-				background-color: #ccc; //@dg-bage-bg-color;
+				background-color: #bbb; //@dg-bage-bg-color;
 				color: white;
 				padding: 2px 4px;
 				border-radius: 10rem;
