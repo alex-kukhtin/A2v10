@@ -74,14 +74,14 @@ table.hover {
 .grid-horizontal, .grid-vertical, .grid-both {
 	.input-group {
 		border-color:transparent;
+		margin:.1px; // fix chrome bug
 	}
 }
 
 
 
 .a2-table {
-	//background-color: #f8f8f8;
-	//background-color: #fcfaf6;
+
 	&.striped > tbody > tr:nth-of-type(even) {
 		background-color: @alter-bg-color;
 	}
@@ -99,7 +99,6 @@ table.hover {
 	> tbody > tr > td {
 		padding: 4px 6px;
 		border-color: @a2-table-brd-color;
-		//height:27px;
 		label {
 			display: inline-block;
 		}
@@ -137,10 +136,6 @@ table.hover {
 			.control-group + .control-group {
 				border-left: 1px solid @a2-table-brd-color;
 			}
-		}
-
-		.control-group:hover {
-			//border-color: transparent !important;
 		}
 	}
 
@@ -230,7 +225,7 @@ table.hover {
 
 	> tbody > tr > td, thead > tr > td, tfoot > tr > td {
 		padding: 2px 4px;
-		height:23px;
+		//height:23px;
 
 		.input-group {
 			padding: 0;
@@ -308,11 +303,11 @@ table.hover {
 	}
 }
 
-.child-border {
-	border-top: 1px solid @a2-table-brd-color;
-	border-bottom: 1px solid @a2-table-brd-color;
-
-	> .a2-table > thead > tr:first-child td {
-		border-top-style:none;
+.bordered-pane {
+	.a2-table {
+		margin: -1px 0;
+		tr > td:first-child {
+			border-left-style:none;
+		}
 	}
 }

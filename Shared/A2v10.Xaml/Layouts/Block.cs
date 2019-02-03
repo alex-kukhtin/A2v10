@@ -27,6 +27,7 @@ namespace A2v10.Xaml
 			}
 		}
 
+		/*
 		void AddHackedBorder(TagBuilder pane)
 		{
 			if (!Scroll) return;
@@ -37,6 +38,7 @@ namespace A2v10.Xaml
 					pane.AddCssClass("child-border");
 			}
 		}
+		*/
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -51,7 +53,7 @@ namespace A2v10.Xaml
 				div.MergeStyle("width", Width.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
-			AddHackedBorder(div);
+			//AddHackedBorder(div);
 			if (Color != TextColor.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			MergeAlign(div, context, Align);

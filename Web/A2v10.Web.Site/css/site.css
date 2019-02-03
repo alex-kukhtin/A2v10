@@ -3398,13 +3398,13 @@ ul.news-list > li {
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: 22px;
   z-index: 1050;
   overflow: auto;
 }
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
-  margin: 70px auto 0 auto;
+  margin: 70px auto 35px auto;
   width: 500px;
   height: auto;
   background-color: white;
@@ -3703,6 +3703,7 @@ table.hover > tbody > tr.active:hover {
 .grid-vertical .input-group,
 .grid-both .input-group {
   border-color: transparent;
+  margin: 0.1px;
 }
 .a2-table.striped > tbody > tr:nth-of-type(even) {
   background-color: rgba(208, 208, 208, 0.15);
@@ -3824,7 +3825,6 @@ table.hover > tbody > tr.active:hover {
 .a2-table.compact thead > tr > td,
 .a2-table.compact tfoot > tr > td {
   padding: 2px 4px;
-  height: 23px;
 }
 .a2-table.compact > tbody > tr > td .input-group,
 .a2-table.compact thead > tr > td .input-group,
@@ -3915,12 +3915,11 @@ table.hover > tbody > tr.active:hover {
   font-weight: bold;
   color: #777;
 }
-.child-border {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+.bordered-pane .a2-table {
+  margin: -1px 0;
 }
-.child-border > .a2-table > thead > tr:first-child td {
-  border-top-style: none;
+.bordered-pane .a2-table tr > td:first-child {
+  border-left-style: none;
 }
 table.prop-grid {
   width: 100%;
@@ -3939,6 +3938,12 @@ table.prop-grid td.prop-name {
 }
 table.prop-grid td.prop-value .control-group {
   margin: 0;
+}
+table.prop-grid.grid-horizontal td.prop-name {
+  padding-left: 0;
+}
+table.prop-grid.grid-horizontal td.prop-value {
+  padding-right: 0;
 }
 table.prop-grid.striped > tbody > tr:nth-of-type(even) {
   background-color: rgba(208, 208, 208, 0.15);
@@ -4287,21 +4292,26 @@ TODO:
 .dropdown .btn-caret.btn-green,
 .dropdown .btn-caret.btn-success {
   border-left-color: white;
+  background-color: #4c9d41;
 }
 .dropdown .btn-caret.btn-primary {
   border-left-color: white;
+  background-color: #2b5c94;
 }
 .dropdown .btn-caret.btn-red,
 .dropdown .btn-caret.btn-danger {
   border-left-color: white;
+  background-color: #c93c27;
 }
 .dropdown .btn-caret.btn-info,
 .dropdown .btn-caret.btn-cyan {
   border-left-color: white;
+  background-color: #3dacdf;
 }
 .dropdown .btn-caret.btn-warning,
 .dropdown .btn-caret.btn-orange {
   border-left-color: white;
+  background-color: #ffa624;
 }
 .dropdown.show .btn {
   position: relative;

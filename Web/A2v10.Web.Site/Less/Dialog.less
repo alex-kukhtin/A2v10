@@ -16,13 +16,13 @@
 		left: 0;
 		top: 0;
 		right: 0;
-		bottom: 0;
+		bottom: @footer-height;
 		z-index: @modal-wrapper-index;
 		overflow: auto;
 
 		.modal-window {
 			position: relative;
-			margin: 70px auto 0 auto;
+			margin: 70px auto 35px auto;
 			width: @modal-width-medium;
 			height: auto;
 			//border: 1px solid @dark-bk-color;
@@ -36,11 +36,11 @@
 			}
 
 			.modal-error-list {
-				padding:0;
-				margin:10px 0;
-				list-style-position:inside;
-				list-style-type:disc;
-				font-size:0.95rem;
+				padding: 0;
+				margin: 10px 0;
+				list-style-position: inside;
+				list-style-type: disc;
+				font-size: 0.95rem;
 			}
 		}
 
