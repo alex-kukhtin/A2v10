@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body>
+
+	<script type="text/javascript">
+
+		var uiLang = 'ru';
+
+	
+		var ext = {
+			ru: function (text) {
+				if (uiLang === 'ru') {
+					var s = new String(text);
+					s.uk = function () {
+						return text;
+					}
+					return s;
+				}
+				return this;
+			},
+			uk: function (text) {
+				if (uiLang === 'uk') {
+					var s = new String(text);
+					s.ru = function () {
+						return text;
+					}
+					return s;
+				}
+				return this;
+			}
+		};
+
+		alert(ext.ru('RUS').uk('UKR'));
+
+	</script>
+</body>
+</html>

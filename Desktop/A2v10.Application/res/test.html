@@ -11,86 +11,87 @@
     <link href="/css/site.min.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- TODO: REPLACE WITH NEW SHELL -->
-    <div id="shell" class="shell">
-        <header class="header">
-            <div class="h-block">
-                <i class="ico ico-dashboard"></i>
-                <a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
-                <span class="app-subtitle">демонстрационное приложение</span>
-            </div>
-            <div class="aligner"></div>
-            <a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
-            <div class="dropdown dir-down" v-dropdown>
-                <button class="btn" toggle><i class="ico ico-user"></i> Александр Кухтин<span class="caret"></span></button>
-                <div class="dropdown-menu menu down-right">
-                    <a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
-                    <div class="divider"></div>
-                    <a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
-                    <div class="divider"></div>
-                    <form id="logoutForm" method="post" action="Account/LogOff">
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
-                    </form>
-                </div>
-            </div>
-        </header>
-        <footer class="footer">
-            <div :class="{spinner: true, active:processing}"></div>
-            <a href="/app/about" @click.prevent="about">about</a>
-            version: <span v-text="version"></span>
-            <div class="right-part">
-                <div class="dropdown dir-up" v-dropdown>
-                    <button class="btn btn-debug" toggle>Debug<span class="caret up"></span></button>
-                    <div class="dropdown-menu menu up-right">
-                        <a @click.prevent="debugModel" class="dropdown-item"><i class="ico ico-database"></i> Модель данных</a>
-                        <a @click.prevent="debugTrace" class="dropdown-item"><i class="ico ico-log"></i> Профилирование</a>
-                        <div class="divider"></div>
-                        <a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <a2-main-view :menu="menu"></a2-main-view>
-    </div>
-    <script type="text/javascript" src="/scripts/vue.js"></script>
-    <script type="text/javascript" src="/scripts/main.js"></script>
-    <script type="text/javascript">
-        (function () {
+	<!-- TODO: REPLACE WITH NEW SHELL -->
+	<div id="shell" class="shell">
+		<header class="header">
+			<div class="h-block">
+				<i class="ico ico-dashboard"></i>
+				<a class="app-title" href='/' v-text="title" @click.prevent="root"></a>
+				<span class="app-subtitle">демонстрационное приложение 28</span>
+			</div>
+			<div class="aligner"></div>
+			<a class="nav-admin" href="/admin/"><i class="ico ico-gear-outline"></i></a>
+			<div class="dropdown dir-down" v-dropdown>
+				<button class="btn" toggle><i class="ico ico-user"></i> Александр Кухтин<span class="caret"></span></button>
+				<div class="dropdown-menu menu down-right">
+					<a @click.prevent="profile" class="dropdown-item"><i class="ico ico-user"></i> Профиль</a>
+					<div class="divider"></div>
+					<a @click.prevent="changeUser" class="dropdown-item"><i class="ico ico-switch"></i> Сменить пользователя</a>
+					<div class="divider"></div>
+					<form id="logoutForm" method="post" action="Account/LogOff">
+						<a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="ico ico-exit"></i> Выход</a>
+					</form>
+				</div>
+			</div>
+		</header>
+		<footer class="footer">
+			<div :class="{spinner: true, active:processing}"></div>
+			<a href="/app/about" @click.prevent="about">about</a>
+			version: <span v-text="version"></span>
+			<div class="right-part">
+				<div class="dropdown dir-up" v-dropdown>
+					<button class="btn btn-debug" toggle>Debug<span class="caret up"></span></button>
+					<div class="dropdown-menu menu up-right">
+						<a @click.prevent="debugModel" class="dropdown-item"><i class="ico ico-database"></i> Модель данных</a>
+						<a @click.prevent="debugTrace" class="dropdown-item"><i class="ico ico-log"></i> Профилирование</a>
+						<div class="divider"></div>
+						<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<a2-main-view :menu="menu"></a2-main-view>
+	</div>
+	<script type="text/javascript" src="/scripts/locale.js"></script>
+	<script type="text/javascript" src="/scripts/vue.js"></script>
+	<script type="text/javascript" src="/scripts/main.js"></script>
+	<script type="text/javascript">
+		(function () {
 
-            const Shell = component('std:shellController');
-            //{ Name: "Начало", Url: "home" },
+			const Shell = component('std:shellController');
+			//{ Name: "Начало", Url: "home" },
+			alert('shell');
+			const menu = [
+				{
+					type: 'tree', Name: 'Продажи', Url: 'sales', Menu: [
+						{ Name: "Покупатели", Url: 'customer', Icon: 'users' },
+						{ Name: "Накладные", Url: 'waybill', Icon: 'file' },
+					]
+				},
+				{
+					type: 'tree', Name: 'Документы', Url: 'document', Menu: [
+						{ Name: "Приходные накладные", Url: 'incoming', Icon: 'file' },
+						{ Name: "Расходные накладные", Url: 'outgoing', Icon: 'file' },
+					]
+				}
+			];
 
-    const menu = [
-        {
-            type:'tree', Name: 'Справочники', Url: 'catalog', Menu: [
-                { Name: "Поставщики", Url: 'suppliers', Icon:'users'},
-                { Name: "Покупатели", Url: 'customers', Icon:'users'},
-            ]
-        },
-        {
-            type:'tree', Name: 'Документы', Url: 'document', Menu: [
-                { Name: "Приходные накладные", Url: 'incoming', Icon: 'file'},
-                { Name: "Расходные накладные", Url: 'outgoing', Icon: 'file'},
-            ]
-        }
-    ];
 
 
+			// main VIEW SHELL
 
-    // main VIEW SHELL
+			const shell = new Shell({
+				el: '#shell',
+				data: {
+					title: 'A2:DEMO',
+					version: '10.0.70xx',
+					menu: menu
+				}
+			});
 
-    const shell = new Shell({
-        el: '#shell',
-        data: {
-            title: 'A2:DEMO',
-            version: '10.0.70xx',
-            menu: menu
-        }
-    });
+			window.$rootUrl = '';
 
-    window.$rootUrl = '';
-
-        })();
-    </script>
+		})();
+	</script>
 </body>
 </html>

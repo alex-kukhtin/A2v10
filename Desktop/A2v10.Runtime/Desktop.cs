@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Dynamic;
+using System.Web;
 
 using ChakraHost.Hosting;
 
@@ -13,7 +14,6 @@ using A2v10.Request;
 using A2v10.Runtime;
 using A2v10.Xaml;
 using A2v10.Workflow;
-using System.Web;
 using A2v10.Data.Interfaces;
 using A2v10.Data;
 using A2v10.Infrastructure;
@@ -136,11 +136,14 @@ namespace A2v10RuntimeNet
 					localizer as IDataLocalizer);
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
+				IDataScripter scripter = new VueDataScripter(host, localizer);
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IDbContext>(dbContext);
 				service.RegisterService<IRenderer>(renderer);
 				service.RegisterService<IWorkflowEngine>(wfEngine);
+				service.RegisterService<IDataScripter>(scripter);
+				service.RegisterService<ILocalizer>(localizer);
 			};
 		}
 
@@ -149,7 +152,7 @@ namespace A2v10RuntimeNet
 			ExpandoObject loadPrms = new ExpandoObject();
 			loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
 			// TODO: current user ID;
-			//loadPrms.Set("UserId", 100);
+			A2v10.Infrastructure.DynamicHelpers.Set(loadPrms, "UserId", 100);
 			ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
 		}
 

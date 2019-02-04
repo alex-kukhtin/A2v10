@@ -4,9 +4,10 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using A2v10.Infrastructure;
-using System.Reflection;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Runtime
 {
@@ -14,7 +15,7 @@ namespace A2v10.Runtime
 	//<add key = "appPath" value="c:/git/a2v10/apps" />
 	//<add key = "appKey" value="develop" />
 
-	public class DesktopApplicationHost : IApplicationHost
+	public class DesktopApplicationHost : IApplicationHost, IDataConfiguration
 	{
 		readonly IProfiler _profiler;
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
@@ -31,7 +32,7 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "c:/a2v10demo/apps";
+				return "C:/Git/A2v10/Apps";
 				/*
                 String path = ConfigurationManager.AppSettings["appPath"];
                 if (path == null)
@@ -59,7 +60,7 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "demo"; //ConfigurationManager.AppSettings["appKey"];
+				return "Develop"; //ConfigurationManager.AppSettings["appKey"];
 			}
 		}
 
