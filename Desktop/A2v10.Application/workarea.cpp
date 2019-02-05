@@ -1,6 +1,5 @@
-
-// workarea.cpp : implementation of the CWorkarea class
-//
+﻿
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 // SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail

@@ -1,4 +1,4 @@
-// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+п»ї// Copyright В© 2017-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 #include "A2v10.Application.h"
@@ -148,7 +148,7 @@ void CMainFrame::OnFileClose()
 
 void CMainFrame::CreateNewView() 
 {
-	// примерно так
+	// РїСЂРёРјРµСЂРЅРѕ С‚Р°Рє
 	UINT nViewId = AFX_IDW_PANE_FIRST + 10;
 	CWnd* pActiveView = GetDlgItem(AFX_IDW_PANE_FIRST);
 	CCreateContext ctx;

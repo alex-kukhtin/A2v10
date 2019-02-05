@@ -1,6 +1,4 @@
-
-// A2v10.Application.cpp : Defines the class behaviors for the application.
-//
+﻿// A2v10.Application.cpp : Defines the class behaviors for the application.
 
 #include "stdafx.h"
 #include "afxwinappex.h"

@@ -1,4 +1,4 @@
-// Copyright � 2008-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2008-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
