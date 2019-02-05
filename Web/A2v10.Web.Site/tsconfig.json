@@ -1,0 +1,17 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"noEmitOnError": true,
+		"removeComments": false,
+		"sourceMap": true,
+		"target": "es5",
+		"alwaysStrict": true,
+		"charset": "utf-8",
+		"module": "none"
+	},
+	"exclude": [
+		"node_modules",
+		"wwwroot"
+	]
+}
