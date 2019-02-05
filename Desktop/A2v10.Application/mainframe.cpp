@@ -1,11 +1,12 @@
-
-// mainframe.cpp : implementation of the CMainFrame class
-//
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 #include "A2v10.Application.h"
 
 #include "mainframe.h"
+#include "workarea.h"
+#include "cefclient.h"
+#include "cefview.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -31,6 +32,13 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+}
+
+// virtual 
+int CMainFrame::GetCaptionHeight() 
+{
+	// TODO: calc caption height
+	return 42;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -77,7 +85,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CA2VisualManager));
 
 	// Enable toolbar and docking window menu replacement
-	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
+	//EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 
 	ModifyStyle(0, FWS_PREFIXTITLE);
 
@@ -138,23 +146,40 @@ void CMainFrame::OnFileClose()
 	DestroyWindow();
 }
 
+void CMainFrame::CreateNewView() 
+{
+	// примерно так
+	UINT nViewId = AFX_IDW_PANE_FIRST + 10;
+	CWnd* pActiveView = GetDlgItem(AFX_IDW_PANE_FIRST);
+	CCreateContext ctx;
+	ctx.m_pCurrentDoc = GetActiveDocument();
+	ctx.m_pNewViewClass = RUNTIME_CLASS(CCefView);
+	ctx.m_pCurrentFrame = this;
+	CWnd* pNewView = CreateView(&ctx, nViewId);
+	ATLASSERT(pNewView);
+	::SetWindowLong(pActiveView->m_hWnd, GWL_ID, nViewId);
+	::SetWindowLong(pNewView->m_hWnd, GWL_ID, AFX_IDW_PANE_FIRST);
+
+	pActiveView->ShowWindow(SW_HIDE);
+	RecalcLayout();
+
+	OPEN_CEF_VIEW_INFO viewInfo;
+	viewInfo.szUrl = L"https://www.google.com.ua";
+	// send required
+	pNewView->SendMessage(WMI_OPEN_CEF_VIEW, WMI_OPEN_CEF_VIEW_WPARAM, reinterpret_cast<LPARAM>(&viewInfo));
+	SetActiveView(reinterpret_cast<CView*>(pNewView));
+	pNewView->Invalidate();
+}
+
 // afx_msg
 void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_SYS_ABOUTBOX)
-	{
 		PostMessage(WM_COMMAND, ID_APP_ABOUT);
-	}
 	else if ((nID & 0xFFF0) == IDM_SYS_OPTIONS)
-	{
 		PostMessage(WM_COMMAND, ID_TOOLS_OPTIONS);
-	}
 	else if ((nID & 0xFFF0) == IDM_SYS_DEVTOOLS)
-	{
-		PostMessage(WM_COMMAND, ID_SHOW_DEVTOOLS);
-	}
+		CreateNewView();//PostMessage(WM_COMMAND, ID_SHOW_DEVTOOLS);
 	else
-	{
 		__super::OnSysCommand(nID, lParam);
-	}
 }

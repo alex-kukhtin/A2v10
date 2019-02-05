@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -24,7 +24,7 @@ public:
 	void DockBorderPanes();
 
 protected:
-	int GetCaptionHeight();
+	virtual int GetCaptionHeight();
 
 	virtual void RecalcLayout(BOOL bNotify = TRUE);
 	virtual void AdjustDockingLayout(HDWP hdwp = NULL);

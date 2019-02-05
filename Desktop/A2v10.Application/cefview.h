@@ -56,6 +56,7 @@ protected:
 	afx_msg void OnReload();
 	afx_msg void OnReloadIgnoreCache();
 	afx_msg void OnShowDevTools();
+	afx_msg LRESULT OnOpenCefView(WPARAM wParam, LPARAM lParam);
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp

@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 
 #include "stdafx.h"
@@ -24,6 +24,7 @@ IMPLEMENT_DYNCREATE(CCefView, CView)
 
 BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_SIZE()
+	ON_MESSAGE(WMI_OPEN_CEF_VIEW, OnOpenCefView)
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
@@ -138,17 +139,13 @@ CWorkarea* CCefView::GetDocument() const // non-debug version is inline
 void CCefView::OnSize(UINT nType, int cx, int cy)
 {
 	__super::OnSize(nType, cx, cy);
-	if (m_clientHandler != nullptr)
-	{
-		if (m_browser != nullptr)
-		{
-			HWND hwnd = m_browser->GetHost()->GetWindowHandle();
-			CRect rect;
-			GetClientRect(&rect);
-			::SetWindowPos(hwnd, HWND_TOP, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
-			m_browser->GetHost()->WasResized();
-		}
-	}
+	if (m_clientHandler == nullptr) return;
+	if (m_browser == nullptr) return;
+	HWND hwnd = m_browser->GetHost()->GetWindowHandle();
+	CRect rect;
+	GetClientRect(&rect);
+	::SetWindowPos(hwnd, HWND_TOP, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+	m_browser->GetHost()->WasResized();
 }
 
 // m_browser->GetHost()->Find(findId++, "text", forward, case, next)
@@ -158,6 +155,11 @@ void CCefView::OnInitialUpdate()
 {
 	__super::OnInitialUpdate();
 
+	OPEN_CEF_VIEW_INFO viewInfo;
+	viewInfo.szUrl = L"http://app";
+	SendMessage(WMI_OPEN_CEF_VIEW, WMI_OPEN_CEF_VIEW_WPARAM, reinterpret_cast<LPARAM>(&viewInfo));
+
+	/*
 	CRect rect;
 	GetClientRect(&rect);
 
@@ -172,8 +174,29 @@ void CCefView::OnInitialUpdate()
 	LPCSTR szRootUrl = "http://app"; 
 	//LPCSTR szRootUrl = "https://www.google.com.ua";
 	m_clientHandler->CreateBrowser(info, browserSettings, CefString(szRootUrl));
+	*/
 }
 
+// afx_msg 
+LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam != WMI_OPEN_CEF_VIEW_WPARAM) 
+		return 0L;
+	OPEN_CEF_VIEW_INFO* pInfo = reinterpret_cast<OPEN_CEF_VIEW_INFO*>(lParam);
+	CRect rect;
+	GetClientRect(&rect);
+
+	CefWindowInfo info;
+	info.SetAsChild(GetSafeHwnd(), rect);
+
+	CefBrowserSettings browserSettings;
+	browserSettings.web_security = STATE_DISABLED;
+	browserSettings.local_storage = STATE_ENABLED;
+	cef_string_set(L"UTF-8", 5, &browserSettings.default_encoding, true);
+	m_clientHandler = new CCefClientHandler(this);
+	m_clientHandler->CreateBrowser(info, browserSettings, CefString(pInfo->szUrl));
+	return 0L;
+}
 
 void CCefView::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
 {

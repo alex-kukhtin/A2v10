@@ -29,10 +29,21 @@ public:
 
 	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual bool DoClose(CefRefPtr<CefBrowser> browser) override;
+	virtual bool OnOpenURLFromTab(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, CefRequestHandler::WindowOpenDisposition target_disposition, bool user_gesture) override;
 
 	void DetachDelegate();
 
 	void CreateBrowser(CefWindowInfo const & info, CefBrowserSettings const & settings, CefString const & url);
+
+	// CefDisplayHandler
+	virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) override;
+
+	// CefLifeSpanHandler
+	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name,
+		CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+		bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
+		CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access) override;
 
 	// CefRequestHandler
 	virtual ReturnValue OnBeforeResourceLoad(

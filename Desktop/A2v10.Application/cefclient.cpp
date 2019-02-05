@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
@@ -58,7 +58,11 @@ void CCefClientHandler::CreateBrowser(CefWindowInfo const & info, CefBrowserSett
 	CefBrowserHost::CreateBrowser(info, this, url, settings, nullptr);
 }
 
-
+// virtual 
+bool CCefClientHandler::OnOpenURLFromTab(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, CefRequestHandler::WindowOpenDisposition target_disposition, bool user_gesture)
+{
+	return false;
+}
 
 // virtual
 void CCefClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser)
@@ -100,4 +104,20 @@ CefRefPtr<CefResourceHandler> CCefClientHandler::GetResourceHandler(
 }
 
 
+// CefDisplayHandler
+// virtual 
+void CCefClientHandler::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title)
+{
+	int z = 55;
+}
 
+// CefLifeSpanHandler
+// virtual 
+bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
+	CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name,
+	CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+	bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
+	CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access)
+{
+	return false;
+}

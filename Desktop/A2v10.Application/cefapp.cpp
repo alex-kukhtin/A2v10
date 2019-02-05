@@ -1,3 +1,4 @@
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 
 #include "stdafx.h"
@@ -13,12 +14,12 @@ void CCefApplication::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> regi
 {
 	return;
 	registrar->AddCustomScheme("client", 
-		true /*is_standard*/, 
-		false /*is_local*/, 
-		false /*is_display_isolated*/, 
+		true,  /*is_standard*/
+		false, /*is_local*/
+		false, /*is_display_isolated*/
 		false, /*is_secure*/
 		false, /*is_cors_enabled*/
-		true /*is_csp_bypassing*/);
+		true   /*is_csp_bypassing*/);
 }
 
 // static 

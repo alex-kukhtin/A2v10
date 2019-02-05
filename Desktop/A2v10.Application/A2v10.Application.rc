@@ -179,7 +179,7 @@ BEGIN
             VALUE "FileDescription", "A2v10.Application"
             VALUE "FileVersion",     "10.0.7420.0"
             VALUE "InternalName",    "A2v10.Application.exe"
-			VALUE "LegalCopyright", "© 2007-2018 Alex Kukhtin.  All rights reserved."
+			VALUE "LegalCopyright", "© 2008-2019 Alex Kukhtin.  All rights reserved."
             VALUE "OriginalFilename","A2v10.Application.exe"
             VALUE "ProductName", "A2"
             VALUE "ProductVersion",  "10.0.0.0"

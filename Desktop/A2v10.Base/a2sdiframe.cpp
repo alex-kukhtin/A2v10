@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
@@ -61,6 +61,7 @@ void CA2SDIFrameWnd::DockBorderPanes()
 	m_borderPanes.DockPanes(this);
 }
 
+// virtual
 int CA2SDIFrameWnd::GetCaptionHeight()
 {
 	return max(::GetSystemMetrics(SM_CYCAPTION) + 4, 28);

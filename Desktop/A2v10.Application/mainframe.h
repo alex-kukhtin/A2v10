@@ -1,6 +1,4 @@
-
-// mainframe.h : interface of the CMainFrame class
-//
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -11,23 +9,17 @@ protected: // create from serialization only
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)
 
-// Attributes
 public:
+	virtual ~CMainFrame() override;
+	void CreateNewView();
 
-// Operations
-public:
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
+	virtual int GetCaptionHeight() override;
 
-// Overrides
-public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
-
-// Implementation
-public:
-	virtual ~CMainFrame();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
 // Generated message map functions
@@ -36,7 +28,6 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFileClose();
 	DECLARE_MESSAGE_MAP()
-
 };
 
 
