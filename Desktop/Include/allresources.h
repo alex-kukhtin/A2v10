@@ -141,6 +141,9 @@
 #define IDMENU_MAXIMIZE 0xD002
 #define IDMENU_MINIMIZE 0xD003
 #define IDMENU_HELP     0xD004
+#define IDMENU_BACK     0xD005
+#define IDMENU_FORWARD  0xD006
+#define IDMENU_RELOAD   0xD007
 
 #define AFX_IDW_TOOLBAR2                 0xE807 
 #define AFX_IDW_TOOLBAR3                 0xE808 

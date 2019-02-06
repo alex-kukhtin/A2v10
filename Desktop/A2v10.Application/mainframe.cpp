@@ -14,9 +14,14 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNCREATE(CMainFrame, CA2SDIFrameWnd)
+IMPLEMENT_DYNCREATE(CMainFrame, CA2SDIFrameWndBase)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWnd)
+BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
+	ON_WM_PAINT()
+	ON_MESSAGE(WM_NCHITTEST, OnNcHitTest)
+	ON_WM_NCMOUSEMOVE()
+	ON_WM_NCMOUSELEAVE()
+	ON_WM_NCLBUTTONDOWN()
 	ON_WM_CREATE()
 	ON_COMMAND(ID_FILE_CLOSE, &CMainFrame::OnFileClose)
 	ON_WM_SYSCOMMAND()
@@ -32,13 +37,6 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-}
-
-// virtual 
-int CMainFrame::GetCaptionHeight() 
-{
-	// TODO: calc caption height
-	return 42;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)

@@ -17,6 +17,7 @@
 #include "../include/a2captionbutton.h"
 #include "../include/a2borderpane.h"
 #include "../include/a2mdiframe.h"
+#include "../include/a2sdiframebase.h"
 #include "../include/a2sdiframe.h"
 #include "../include/a2dockablepane.h"
 #include "../include/a2toolbars.h"

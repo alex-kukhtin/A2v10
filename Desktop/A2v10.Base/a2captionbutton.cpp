@@ -10,8 +10,54 @@
 #define new DEBUG_NEW
 #endif
 
-CCaptionButtons::CCaptionButtons()
+CCaptionButtonsBase::CCaptionButtonsBase()
 	: m_nWidth(0), m_rect(0, 0, 0, 0)
+{
+}
+
+BOOL CCaptionButtonsBase::ClearHighlight()
+{
+	BOOL bRet = FALSE;
+	for (int i = 0; i < GetButtonsCount(); i++) {
+		CCaptionButton* pBtn = GetButton(i);
+		bRet = bRet | pBtn->SetHighlight(FALSE);
+	}
+	return bRet;
+}
+
+void CCaptionButtonsBase::Draw(CDC* pDC)
+{
+	for (int i = 0; i < GetButtonsCount(); i++) {
+		GetButton(i)->Draw(pDC);
+	}
+}
+
+BOOL CCaptionButtonsBase::MouseMove(CPoint point)
+{
+	BOOL bRet = FALSE;
+	for (int i = 0; i < GetButtonsCount(); i++) {
+		CCaptionButton* pBtn = GetButton(i);
+		bRet = bRet | pBtn->SetHighlight(pBtn->GetRect().PtInRect(point) ? TRUE : FALSE);
+	}
+	return bRet;
+}
+
+BOOL CCaptionButtonsBase::PressButton(CPoint point, CWnd* pWnd)
+{
+	for (int i = 0; i < GetButtonsCount(); i++) {
+		CCaptionButton* pBtn = GetButton(i);
+		if (pBtn->GetRect().PtInRect(point))
+		{
+			if (pBtn->TrackButton(pWnd, point)) {
+				pBtn->ExecuteCommand(pWnd);
+			}
+		}
+	}
+	return TRUE;
+}
+
+
+CCaptionButtons::CCaptionButtons()
 {
 	m_buttons[0].SetID(IDMENU_HELP);
 	m_buttons[1].SetID(IDMENU_MINIMIZE);
@@ -19,49 +65,46 @@ CCaptionButtons::CCaptionButtons()
 	m_buttons[3].SetID(IDMENU_CLOSE);
 }
 
+CCaptionNavigateButtons::CCaptionNavigateButtons()
+{
+	m_buttons[0].SetID(IDMENU_BACK);
+	m_buttons[1].SetID(IDMENU_FORWARD);
+	m_buttons[2].SetID(IDMENU_RELOAD);
+}
+
 void CCaptionButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
 {
 	int btnSize = clientRect.Height();
-	int btnsCount = _countof(m_buttons);
+	int btnsCount = GetButtonsCount();
 	CRect btnRect(clientRect);
 	btnRect.left = btnRect.right - btnSize;
 	for (int i = btnsCount - 1; i >= 0; i--) {
-		m_buttons[i].SetRect(btnRect);
+		auto pBtn = GetButton(i);
+		pBtn->SetRect(btnRect);
 		btnRect.OffsetRect(-btnSize, 0);
 	}
-	m_buttons[2].SetID(bZoomed ? IDMENU_RESTORE : IDMENU_MAXIMIZE);
 	m_nWidth = btnSize * btnsCount;
 	m_rect = clientRect;
 	m_rect.left = m_rect.right - m_nWidth;
+	m_buttons[2].SetID(bZoomed ? IDMENU_RESTORE : IDMENU_MAXIMIZE);
 }
 
-void CCaptionButtons::Draw(CDC* pDC)
+void CCaptionNavigateButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
 {
-	for (int i = 0; i < _countof(m_buttons); i++) {
-		m_buttons[i].Draw(pDC);
+	int btnSize = clientRect.Height();
+	int btnsCount = GetButtonsCount();
+	CRect btnRect(clientRect);
+	btnRect.right = btnRect.left + btnSize;
+	for (int i = 0; i < btnsCount; i++) {
+		auto pBtn = GetButton(i);
+		pBtn->SetRect(btnRect);
+		auto nId = pBtn->GetID();
+		btnRect.OffsetRect(btnSize, 0);
 	}
+	m_nWidth = btnSize * btnsCount;
+	m_rect = clientRect;
+	m_rect.right = m_rect.left + m_nWidth;
 }
-
-BOOL CCaptionButtons::ClearHighlight()
-{
-	BOOL bRet = FALSE;
-	for (int i = 0; i < _countof(m_buttons); i++) {
-		CCaptionButton& btn = m_buttons[i];
-		bRet = bRet | btn.SetHighlight(FALSE);
-	}
-	return bRet;
-}
-
-BOOL CCaptionButtons::MouseMove(CPoint point)
-{
-	BOOL bRet = FALSE;
-	for (int i = 0; i < _countof(m_buttons); i++) {
-		CCaptionButton& btn = m_buttons[i];
-		bRet = bRet | btn.SetHighlight(btn.GetRect().PtInRect(point) ? TRUE : FALSE);
-	}
-	return bRet;
-}
-
 
 void CCaptionButton::ExecuteCommand(CWnd* pWnd)
 {
@@ -75,6 +118,12 @@ void CCaptionButton::ExecuteCommand(CWnd* pWnd)
 		pWnd->PostMessageW(WM_SYSCOMMAND, SC_RESTORE);
 	else if (m_nID == IDMENU_HELP)
 		pWnd->PostMessageW(WM_COMMAND, ID_APP_ABOUT);
+	else if (m_nID == IDMENU_BACK)
+		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_BACK);
+	else if (m_nID == IDMENU_FORWARD)
+		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_FORWARD);
+	else if (m_nID == IDMENU_RELOAD)
+		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_REFRESH);
 }
 
 bool CCaptionButton::TrackButton(CWnd* pWnd, CPoint point)
@@ -136,20 +185,6 @@ bool CCaptionButton::TrackButton(CWnd* pWnd, CPoint point)
 	pWnd->InvalidateRect(m_rect);
 	ReleaseCapture();
 	return bCommand;
-}
-
-BOOL CCaptionButtons::PressButton(CPoint point, CWnd* pWnd)
-{
-	for (int i = 0; i < _countof(m_buttons); i++) {
-		CCaptionButton& btn = m_buttons[i];
-		if (btn.GetRect().PtInRect(point))
-		{
-			if (btn.TrackButton(pWnd, point)) {
-				btn.ExecuteCommand(pWnd);
-			}
-		}
-	}
-	return TRUE;
 }
 
 BOOL CCaptionButton::SetPress(bool bSet)

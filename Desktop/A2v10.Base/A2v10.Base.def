@@ -1,4 +1,4 @@
-EXPORTS
+﻿EXPORTS
 ?IsDebug@CAppData@@SA_NXZ
 ?ClearTrace@CAppData@@SAXXZ
 ?SetDebug@CAppData@@SAX_N@Z
@@ -29,13 +29,25 @@ EXPORTS
 ?PreTranslateMessage@CA2MDIFrameWnd@@MAEHPAUtagMSG@@@Z
 ;
 ?GetThisMessageMap@CA2SDIFrameWnd@@KGPBUAFX_MSGMAP@@XZ
+?AdjustDockingLayout@CA2SDIFrameWndBase@@MAEXPAX@Z
+?OnCmdMsg@CA2SDIFrameWndBase@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
+?OnCreate@CA2SDIFrameWndBase@@IAEHPAUtagCREATESTRUCTW@@@Z
 ?GetThisClass@CA2SDIFrameWnd@@SGPAUCRuntimeClass@@XZ
 ??0CA2SDIFrameWnd@@IAE@XZ
 ??1CA2SDIFrameWnd@@MAE@XZ
 ?RecalcLayout@CA2SDIFrameWnd@@MAEXH@Z
-?AdjustDockingLayout@CA2SDIFrameWnd@@MAEXPAX@Z
-?OnCmdMsg@CA2SDIFrameWnd@@MAEHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
-?OnCreate@CA2SDIFrameWnd@@IAEHPAUtagCREATESTRUCTW@@@Z
+?GetThisMessageMap@CA2SDIFrameWndBase@@KGPBUAFX_MSGMAP@@XZ
+?GetThisClass@CA2SDIFrameWndBase@@SGPAUCRuntimeClass@@XZ
+??0CA2SDIFrameWndBase@@IAE@XZ
+??1CA2SDIFrameWndBase@@MAE@XZ
+?RecalcLayout@CCaptionButtons@@QAEXVCRect@@H@Z
+?RecalcLayout@CCaptionNavigateButtons@@QAEXVCRect@@H@Z
+??0CCaptionButtons@@QAE@XZ
+??0CCaptionNavigateButtons@@QAE@XZ
+?MouseMove@CCaptionButtonsBase@@QAEHVCPoint@@@Z
+?ClearHighlight@CCaptionButtonsBase@@QAEHXZ
+?PressButton@CCaptionButtonsBase@@QAEHVCPoint@@PAVCWnd@@@Z
+?Draw@CCaptionButtonsBase@@QAEXPAVCDC@@@Z
 ;
 ?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
@@ -161,6 +173,7 @@ EXPORTS
 ?LoadFile@CFileTools@@SA_NPB_WAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
 ?SaveFileUTF8@CFileTools@@SA_NPB_W0@Z
 ?CombinePath@CFileTools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W0@Z
+;
 
 
 

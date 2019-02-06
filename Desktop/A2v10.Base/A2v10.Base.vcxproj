@@ -194,6 +194,7 @@
     <ClCompile Include="a2mdiframe.cpp" />
     <ClCompile Include="a2miniframewnd.cpp" />
     <ClCompile Include="a2sdiframe.cpp" />
+    <ClCompile Include="a2sdiframebase.cpp" />
     <ClCompile Include="a2tabbedpane.cpp" />
     <ClCompile Include="a2tabview.cpp" />
     <ClCompile Include="a2toolbars.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="..\Include\a2glowborder.h" />
     <ClInclude Include="..\Include\a2mdiframe.h" />
     <ClInclude Include="..\Include\a2sdiframe.h" />
+    <ClInclude Include="..\Include\a2sdiframebase.h" />
     <ClInclude Include="..\Include\a2tabview.h" />
     <ClInclude Include="..\Include\a2toolbars.h" />
     <ClInclude Include="..\Include\a2toolbox.h" />

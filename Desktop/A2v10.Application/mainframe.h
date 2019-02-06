@@ -2,12 +2,15 @@
 
 #pragma once
 
-class CMainFrame : public CA2SDIFrameWnd
+class CMainFrame : public CA2SDIFrameWndBase
 {
 	
 protected: // create from serialization only
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)
+
+	CCaptionButtons m_captionButtons;
+	CCaptionNavigateButtons m_navigateButtons;
 
 public:
 	virtual ~CMainFrame() override;
@@ -24,6 +27,14 @@ public:
 
 // Generated message map functions
 protected:
+	virtual void RecalcLayout(BOOL bNotify = TRUE) override;
+
+	afx_msg LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnPaint();
+	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);
+	afx_msg void OnNcMouseMove(UINT nHitTest, CPoint point);
+	afx_msg void OnNcMouseLeave();
+
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFileClose();

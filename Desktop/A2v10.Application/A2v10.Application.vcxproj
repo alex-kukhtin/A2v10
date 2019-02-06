@@ -207,6 +207,7 @@
     <ClCompile Include="cefapp.cpp" />
     <ClCompile Include="cefclient.cpp" />
     <ClCompile Include="cefscheme.cpp" />
+    <ClCompile Include="framepaint.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="cefview.cpp" />
     <ClCompile Include="stdafx.cpp">
