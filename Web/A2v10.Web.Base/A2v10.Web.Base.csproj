@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="Extensions\ViewInfoExtensions.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ViewEngineExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
