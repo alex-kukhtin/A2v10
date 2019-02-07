@@ -3664,7 +3664,7 @@ table tr.overline {
   border-top: 2px solid #ddd;
 }
 table td.wrap {
-  word-wrap: break-word;
+  word-break: break-word;
 }
 .table-separate-border {
   border-collapse: separate;
