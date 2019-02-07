@@ -13,8 +13,11 @@
 #endif
 
 
-#define TAB_HEIGHT  32
-#define TAB_GAP 4
+#define TAB_HEIGHT 32
+#define TOP_GAP 8
+#define LEFT_GAP 4
+#define BOTTOM_GAP 6
+#define SYSBTNS_HEIGHT 28
 
 /*
 
@@ -24,7 +27,7 @@
 int CMainFrame::GetCaptionHeight()
 {
 	// TODO: calc caption height
-	return TAB_HEIGHT + TAB_GAP;
+	return TAB_HEIGHT + TOP_GAP + BOTTOM_GAP;
 }
 
 
@@ -41,13 +44,18 @@ void CMainFrame::RecalcLayout(BOOL bNotify /*= TRUE*/)
 	GetClientRect(clientRect);
 	int cyCaption = GetCaptionHeight();
 	CRect captionRect = clientRect;
-	captionRect.bottom = captionRect.top + TAB_HEIGHT;
+	CRect navigateRect = clientRect;
+	captionRect.bottom = captionRect.top + SYSBTNS_HEIGHT;
+	navigateRect.top += TOP_GAP;
+	navigateRect.left += LEFT_GAP;
+	navigateRect.bottom = navigateRect.top + TAB_HEIGHT;
 	if (bZoomed) {
 		m_dockManager.m_rectInPlace = clientRect;
 		m_dockManager.m_rectInPlace.DeflateRect(m_nDelta8, cyCaption + m_nDelta8, m_nDelta8, m_nDelta8);
 		captionRect.OffsetRect(-m_nDelta8, m_nDelta8);
+		navigateRect.OffsetRect(m_nDelta8, m_nDelta8);
 		m_captionButtons.RecalcLayout(captionRect, bZoomed);
-		m_navigateButtons.RecalcLayout(captionRect, bZoomed);
+		m_navigateButtons.RecalcLayout(navigateRect, bZoomed);
 		__super::RecalcLayout(bNotify);
 		return;
 	}
@@ -55,7 +63,7 @@ void CMainFrame::RecalcLayout(BOOL bNotify /*= TRUE*/)
 	// caption only!!!
 	m_dockManager.m_rectInPlace.DeflateRect(0, cyCaption, 0, 0);
 	m_captionButtons.RecalcLayout(captionRect, bZoomed);
-	m_navigateButtons.RecalcLayout(captionRect, bZoomed);
+	m_navigateButtons.RecalcLayout(navigateRect, bZoomed);
 	__super::RecalcLayout(bNotify);
 
 }
@@ -68,6 +76,10 @@ LRESULT CMainFrame::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 	GetWindowRect(wr);
 	int cyCaption = GetCaptionHeight();
 	int dxIcon = (cyCaption - 24) / 2;
+	if (m_captionButtons.GetRect().PtInRect(pt))
+		return HTOBJECT;
+	else if (m_navigateButtons.GetRect().PtInRect(pt))
+		return HTOBJECT;
 	if (pt.y < (wr.top + cyCaption)) {
 		//if (pt.x < (wr.left + cyCaption + dxIcon * 2))
 			//return HTSYSMENU;
@@ -114,22 +126,24 @@ void CMainFrame::OnPaint()
 	CBrushSDC tabBrush(&dc, RGB(0xf2, 0xf3, 0xf9));
 	CPenSDC  tabPen(&dc, RGB(0xaf, 0xaf, 0xaf));
 	CRect tabRect(captionRect);
-	tabRect.top += TAB_HEIGHT;
+	tabRect.top += TAB_HEIGHT + TOP_GAP;
 	//tabRect.right = tabRect.left + 80;
 	dc.FillRect(tabRect, &tabBrush);
+
 	tabRect.CopyRect(captionRect);
-	tabRect.left += m_navigateButtons.Width();
+	tabRect.left += m_navigateButtons.Width() + LEFT_GAP;
 	tabRect.right = tabRect.left + 100;
-	tabRect.bottom -= TAB_GAP;
+	tabRect.bottom -= BOTTOM_GAP;
+	tabRect.top += TOP_GAP;
 	dc.FillRect(tabRect, &tabBrush);
 	dc.MoveTo(tabRect.left, tabRect.top);
-	dc.LineTo(tabRect.left, tabRect.bottom);
+	//dc.LineTo(tabRect.left, tabRect.bottom);
 	dc.MoveTo(tabRect.right-1, tabRect.top);
-	dc.LineTo(tabRect.right-1, tabRect.bottom);
+	//dc.LineTo(tabRect.right-1, tabRect.bottom);
 	tabRect.OffsetRect(16, 0);
 	dc.DrawText(L"Покупатели", &tabRect, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-	dc.MoveTo(tabRect.right + 100, tabRect.top);
-	dc.LineTo(tabRect.right + 100, tabRect.bottom);
+	dc.MoveTo(tabRect.right + 100, tabRect.top + 4);
+	dc.LineTo(tabRect.right + 100, tabRect.bottom - 4);
 	dc.SelectObject(pOldFont);
 }
 
