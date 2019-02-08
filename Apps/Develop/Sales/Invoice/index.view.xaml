@@ -15,7 +15,15 @@
 					</DropDownMenu>
 				</Button.DropDown>
 			</Button>
-		</StackPanel>
+				<Button Content="File" Style="Primary">
+					<Button.DropDown>
+						<DropDownMenu Direction="DownRight" Separate="True">
+							<MenuItem Content="Open" Icon="File" />
+							<MenuItem Content="Save" Icon="Save" />
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+			</StackPanel>
 		<Toolbar Style="Default">
 			<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}, NewWindow=False}">Открыть</Button>

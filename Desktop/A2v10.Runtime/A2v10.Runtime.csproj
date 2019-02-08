@@ -40,12 +40,14 @@
     <Compile Include="DesktopApplicationHost.cs" />
     <Compile Include="DesktopLocalizer.cs" />
     <Compile Include="DesktopProfiler.cs" />
+    <Compile Include="DesktopRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="DesktopResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
@@ -82,6 +84,7 @@
     <Content Include="JavaScript\app.js" />
     <Content Include="JavaScript\form.form.js" />
     <Content Include="JavaScript\solution.js" />
+    <None Include="Resources\default.uk.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

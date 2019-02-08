@@ -61,26 +61,28 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /*
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
+        ////*
         ///global elements for context
         ///*/
         ///
         ///(function () {
-        ///    // this = global context
+        ///	// this = global context
         ///
-        ///    let g = this;
-        ///    const modules = {};
+        ///	let g = this;
+        ///	const modules = {};
         ///
-        ///    g.require = function (module) {
-        ///        if (!(module in modules))
-        ///            modules[module] = __require(module, g.__context._dir_);
-        ///        return modules[module];
-        ///    };
+        ///	g.require = function (module) {
+        ///		if (!(module in modules))
+        ///			modules[module] = __require(module, g.__context._dir_);
+        ///		return modules[module];
+        ///	};
         ///
-        ///    g.__context = {
-        ///        _file_: null,
-        ///        _dir_: null
-        ///    };
+        ///	g.__context = {
+        ///		_file_: null,
+        ///		_dir_: null
+        ///	};
         ///})();
         ///.
         /// </summary>
@@ -91,26 +93,29 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
         ///// global variables!
         ///
         ///var designer = (function () {
         ///
-        ///    function createElement(name, ...args) {
-        ///        if (name in this.elements) {
-        ///            return new this.elements[name](...args);
-        ///        }
-        ///        console.error(`__createElement. Element &apos;${name}&apos; not found`);
-        ///        return null;
-        ///    }
+        ///	function createElement(name, ...args) {
+        ///		if (name in this.elements) {
+        ///			return new this.elements[name](...args);
+        ///		}
+        ///		console.log(`__createElement. Element &apos;${name}&apos; not found`);
+        ///		return null;
+        ///	}
         ///
-        ///    let designer = {
-        ///        form: {
-        ///            elements: {},
-        ///            __createElement: createElement,
-        ///            __registerElement(ctor) {
-        ///                var name = ctor.prototype.type;
-        ///    [rest of string was truncated]&quot;;.
+        ///	function registerElement(ctor) {
+        ///		var name = ctor.prototype.type;
+        ///		//console.log(&apos;register: &apos; + name);
+        ///		this.elements[name] = ctor;
+        ///	}
+        ///
+        ///	let designer = {
+        ///		form: {
+        ///			ele [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Application {
             get {
@@ -119,27 +124,60 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (function () {
+        ///   Looks up a localized string similar to ;
+        ///@About=Про систему
+        ///@Confidentiality=Конфедіційність
+        ///@Contacts=Конакти
+        ///@Version=Версія
+        ///@Debug=Відладка
+        ///@Quit=Вихід
+        ///@Tracing=Трасування
+        ///@Settings=Налаштування
+        ///@Feedback=Зворотній зв&apos;язок
+        ///@DataModel=Модель даних
+        ///@Profiling=Профілювання
+        ///@Profile=Профіль
+        ///@ChangePassword=Змінити пароль
+        ///@SubstUser=Змінити користувача
+        ///@AllUsers=Всі користувачі
+        ///@AdminUsers=Адміністратори
+        ///@User=Користувач
+        ///@OldPassword=Старий пароль
+        ///@NewPassword=Новий пароль
+        ///@SetPassword=Встановити пароль
+        ///@Error=Помилка
+        ///@Warnin [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string default_uk {
+            get {
+                return ResourceManager.GetString("default_uk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
-        ///    function Form() {
-        ///        // form properties
-        ///        this.Width = 150;
-        ///        this.Height = 200;
-        ///        this.Title = &quot;Form title from JS&quot;;
+        ///(function () {
+        ///
+        ///	function Form() {
+        ///		// form properties
+        ///		this.Width = 150;
+        ///		this.Height = 200;
+        ///		this.Title = &quot;Form title from JS&quot;;
         ///	}
         ///
         ///	Form.prototype.type = &quot;Form&quot;;
         ///
         ///	Form.prototype._meta_ = {
-        ///		properties: {
-        ///            Title: {
-        ///                category: &quot;Appearance&quot;,
-        ///                type: &quot;string&quot;,
-        ///                description: &quot;Specifies the text that will be displayed in the form&apos;s title bar&quot;
-        ///            },
-        ///			Width: {
-        ///				category: &quot;Layout&quot;,
-        ///				type: &quot; [rest of string was truncated]&quot;;.
+        ///		Title: {
+        ///			category: &quot;Appearance&quot;,
+        ///			type: &quot;string&quot;,
+        ///			description: &quot;Specifies the text that will be displayed in the form&apos;s title bar&quot;
+        ///		},
+        ///		Width: {
+        ///			category: &quot;Layout&quot;,
+        ///			type: &quot;number&quot;,
+        ///			description: &quot;Specifies the wi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Form_form {
             get {
@@ -148,33 +186,32 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///
         ///(function () {
         ///
-        ///    const cats = {
-        ///        general: &quot;Общие&quot;
-        ///    };
+        ///	const cats = {
+        ///		general: &quot;Общие&quot;
+        ///	};
         ///
-        ///    function copyProps(trg, src) {
-        ///        for (let p in trg._meta_) {
-        ///            let sprop = src[p];
-        ///            let mi = trg._meta_[p];
-        ///        }
-        ///    }
+        ///	function createProp(mi, sprop) {
+        ///		switch (mi.type) {
+        ///			case &quot;string&quot;:
+        ///				return sprop || &apos;&apos;;
+        ///			case &quot;enum&quot;:
+        ///				// TODO: check enum values
+        ///				return sprop || &apos;&apos;;
+        ///			case &quot;boolean&quot;:
+        ///				return sprop || false;
+        ///		}
+        ///		return null;
+        ///	}
         ///
-        ///    function Column(src) {
-        ///        copyProps(this, src);
-        ///    }
-        ///
-        ///    Column.prototype._meta_ = {
-        ///        Name: {
-        ///            category: cats.general,
-        ///            type: &quot;string&quot;,
-        ///            description: &quot;Наименование колонки таблицы&quot;
-        ///        }
-        ///    }
-        ///
-        ///    function [rest of string was truncated]&quot;;.
+        ///	function copyProps(trg, src) {
+        ///		for (let p in trg._meta_) {
+        ///			let sprop = src[p];
+        ///			let mi = trg._meta_[p];
+        ///			trg[p] = createPro [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Solution {
             get {

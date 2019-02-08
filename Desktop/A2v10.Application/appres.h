@@ -4,5 +4,5 @@
 class CApplicationResources
 {
 public:
-	static bool LoadResource(const char* url, LPCSTR* mime, std::vector<byte>& data, const char* postData);
+	static bool LoadResource(const char* url, const char** mime, std::vector<byte>& data, const char* postData);
 };

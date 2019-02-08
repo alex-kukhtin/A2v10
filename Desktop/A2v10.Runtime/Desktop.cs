@@ -2,9 +2,6 @@
 
 using System;
 using System.Globalization;
-using System.IO;
-using System.Dynamic;
-using System.Web;
 
 using ChakraHost.Hosting;
 
@@ -118,6 +115,9 @@ namespace A2v10RuntimeNet
 
 		public static void StartDesktopServices()
 		{
+			// TODO: LOCALE
+			CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("uk-UA");
+
 			ServiceLocator.GetCurrentLocator = () =>
 			{
 				if (_currentService == null)
@@ -129,11 +129,12 @@ namespace A2v10RuntimeNet
 			{
 				IProfiler profiler = new DesktopProfiler();
 				IApplicationHost host = new DesktopApplicationHost(profiler);
-				ILocalizer localizer = new DesktopLocalizer();
+				ILocalizer localizer = new DesktopLocalizer(host);
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
-					localizer as IDataLocalizer);
+					localizer as IDataLocalizer,
+					host as ITenantManager);
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
@@ -144,61 +145,14 @@ namespace A2v10RuntimeNet
 				service.RegisterService<IWorkflowEngine>(wfEngine);
 				service.RegisterService<IDataScripter>(scripter);
 				service.RegisterService<ILocalizer>(localizer);
+				host.TenantId = 1;
 			};
-		}
-
-		static void Render(BaseController ctrl, RequestUrlKind kind, String path, String search, TextWriter writer)
-		{
-			ExpandoObject loadPrms = new ExpandoObject();
-			loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
-			// TODO: current user ID;
-			A2v10.Infrastructure.DynamicHelpers.Set(loadPrms, "UserId", 100);
-			ctrl.RenderElementKind(kind, path, loadPrms, writer).Wait();
 		}
 
 
 		public static String ProcessRequest(String url, String search, String postData)
 		{
-			var controller = new BaseController();
-			if (url.StartsWith("admin/"))
-			{
-				url = url.Substring(6);
-				controller.Admin = true;
-			}
-			try
-			{
-				using (var writer = new StringWriter())
-				{
-					if (url.StartsWith("_page/"))
-						Render(controller, RequestUrlKind.Page, url.Substring(6), search, writer);
-					else if (url.StartsWith("_dialog/"))
-						Render(controller, RequestUrlKind.Dialog, url.Substring(8), search, writer);
-					else if (url.StartsWith("_popup/"))
-						Render(controller, RequestUrlKind.Popup, url.Substring(7), search, writer);
-					else if (url.StartsWith("_data/"))
-					{
-						var command = url.Substring(6);
-						controller.Data(command, null/*tenantId, userId*/, postData, null /**/).Wait();
-					}
-					else if (url.StartsWith("_image/"))
-					{
-						controller.DownloadAttachment("/" + url, null /*setParams*/).Wait(); // with _image prefix
-					}
-					else
-					{
-						// TODO: exception
-						writer.Write($"<div>page '{url}' not found.</div>");
-					}
-					return writer.ToString();
-				}
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				// TODO:: /exception
-				return $"<div>{ex.Message}</div>";
-			}
+			return new DesktopRequest().ProcessRequest(url, search, postData);
 		}
 	}
 }

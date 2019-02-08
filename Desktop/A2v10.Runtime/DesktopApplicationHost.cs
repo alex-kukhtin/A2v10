@@ -8,6 +8,8 @@ using System.Reflection;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace A2v10.Runtime
 {
@@ -15,7 +17,7 @@ namespace A2v10.Runtime
 	//<add key = "appPath" value="c:/git/a2v10/apps" />
 	//<add key = "appKey" value="develop" />
 
-	public class DesktopApplicationHost : IApplicationHost, IDataConfiguration
+	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		readonly IProfiler _profiler;
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
@@ -32,7 +34,7 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "C:/Git/A2v10/Apps";
+				return "C:/Git/app.main/apps";
 				/*
                 String path = ConfigurationManager.AppSettings["appPath"];
                 if (path == null)
@@ -51,7 +53,7 @@ namespace A2v10.Runtime
 			}
 		}
 
-		public String AppDescription => "A2.Web";
+		public String AppDescription => "A2v10.Desktop";
 		public String SupportEmail => null;
 		public String AppHost => null;
 
@@ -60,7 +62,7 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "Develop"; //ConfigurationManager.AppSettings["appKey"];
+				return "main"; //ConfigurationManager.AppSettings["appKey"];
 			}
 		}
 
@@ -75,11 +77,11 @@ namespace A2v10.Runtime
 			}
 		}
 
-		public Boolean IsMultiTenant => false;
+		public Boolean IsMultiTenant => true; // TODO:
 		public Boolean IsRegistrationEnabled => false;
 		public String UseClaims => null;
-		public Int32? TenantId { get; set; }
-		public String CatalogDataSource => null;
+		public Int32? TenantId { get; set; } 
+		public String CatalogDataSource => "Catalog";
 		public String TenantDataSource => null;
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
@@ -88,11 +90,14 @@ namespace A2v10.Runtime
 
 		public String ConnectionString(String source)
 		{
+			return "Data Source=localhost;Initial Catalog=bookkeeper;Integrated Security=True";
+			/*
 			if (String.IsNullOrEmpty(source))
 				source = "Default";
 
 			if (source == "Default")
 				return "Data Source=localhost;Initial Catalog=a2v10demo;Integrated Security=True";
+			*/
 
 			throw new ArgumentOutOfRangeException($"Connection string '{source}' not found");
 			/*
@@ -137,5 +142,46 @@ namespace A2v10.Runtime
 				return tr.ReadToEnd();
 			}
 		}
+
+		#region ITenantManager
+
+		const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
+
+		public async Task SetTenantIdAsync(SqlConnection cnn, String source)
+		{
+			if (!IsMultiTenant)
+				return;
+			if (source == CatalogDataSource)
+				return;
+			using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+			{
+				using (var cmd = cnn.CreateCommand())
+				{
+					cmd.CommandText = SET_TENANT_CMD;
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Parameters.AddWithValue("@TenantId", TenantId);
+					await cmd.ExecuteNonQueryAsync();
+				}
+			}
+		}
+
+		public void SetTenantId(SqlConnection cnn, String source)
+		{
+			if (!IsMultiTenant)
+				return;
+			if (source == CatalogDataSource)
+				return;
+			using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
+			{
+				using (var cmd = cnn.CreateCommand())
+				{
+					cmd.CommandText = SET_TENANT_CMD;
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Parameters.AddWithValue("@TenantId", TenantId);
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
+		#endregion
 	}
 }

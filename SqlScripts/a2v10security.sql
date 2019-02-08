@@ -53,7 +53,9 @@ begin
 		TrialPeriodExpired datetime null,
 		DataSize float null,
 		[State] nvarchar(128) null,
-		UserSince datetime null
+		UserSince datetime null,
+		LastPaymentDate datetime null,
+		Balance money null
 	);
 end
 go
@@ -80,6 +82,18 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'LastTransactionDate')
 begin
 	alter table a2security.Tenants add [LastTransactionDate] datetime null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'LastPaymentDate')
+begin
+	alter table a2security.Tenants add LastPaymentDate datetime null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'Balance')
+begin
+	alter table a2security.Tenants add Balance money null;
 end
 go
 ------------------------------------------------

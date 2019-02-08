@@ -27,14 +27,15 @@ LPCSTR mimeTtf   = "application/font-ttf";
 
 const RES_DEF resArray[] =
 {
-	{L"app/",                   IDWEB_SITE_MAIN_HTML,		mimeHtml  },
-	{L"app/admin/",             IDWEB_SITE_MAIN_HTML_ADMIN,	mimeHtml },
-	{L"app/css/site.min.css",   IDWEB_SITE_MAIN_CSS,		mimeCss   },
-	{L"app/scripts/locale.js",  IDWEB_SCRIPT_LOCALE_UK_JS,	mimeJs    },
-	{L"app/scripts/vue.js",	    IDWEB_SCRIPT_VUE_JS,		mimeJs    },
-	{L"app/scripts/main.js",	IDWEB_SCRIPT_MAIN_JS,		mimeJs    },
-	{L"app/css/fonts/a2v10.woff", IDWEB_FONT_A2V10_FONT,	mimeWoff },
-	{L"app/css/fonts/a2v10.ttf",  IDWEB_FONT_A2V10_FONT2,	mimeTtf }
+	{L"app/",							IDWEB_SITE_MAIN_HTML,		mimeHtml  },
+	{L"app/admin/",						IDWEB_SITE_MAIN_HTML_ADMIN,	mimeHtml },
+	{L"app/css/site.min.css",			IDWEB_SITE_MAIN_CSS,		mimeCss   },
+	{L"app/scripts/locale-uk.min.js",	IDWEB_SCRIPT_LOCALE_UK_JS,	mimeJs    },
+	{L"app/scripts/vue.js",				IDWEB_SCRIPT_VUE_JS,		mimeJs    },
+	{L"app/scripts/main.js",			IDWEB_SCRIPT_MAIN_JS,		mimeJs    },
+	{L"app/scripts/d3.min.js",			IDWEB_SCRIPT_D3_JS,			mimeJs    },
+	{L"app/css/fonts/a2v10.woff",		IDWEB_FONT_A2V10_FONT,	mimeWoff },
+	{L"app/css/fonts/a2v10.ttf",		IDWEB_FONT_A2V10_FONT2,	mimeTtf }
 
 };
 
@@ -62,13 +63,35 @@ public:
 	bool IsAppUrl() {
 		return 
 			(path.Find(L"app/_") == 0) ||
+			(path.Find(L"app/shell") == 0) ||
 			(path.Find(L"app/admin/_") == 0);
+	}
+
+	bool IsRootUrl() {
+		return (path.Find(L"app/") == 0) && !IsAppUrl() && !IsAppStatic();
 	}
 
 	bool IsAppData() {
 		return 
 			(path.Find(L"app/_data") == 0) ||
 			(path.Find(L"app/admin/_data") == 0);
+	}
+
+	bool IsAppScript() {
+		return
+			(path.Find(L"app/shell/script") == 0) ||
+			(path.Find(L"app/shell/appcripts") == 0);
+	}
+
+	bool IsAppStyle() {
+		return
+			(path.Find(L"app/shell/appstyles") == 0);
+	}
+
+	bool IsAppStatic() {
+		return
+			(path.Find(L"app/scripts") == 0) ||
+			(path.Find(L"app/css") == 0);
 	}
 
 	CString UrlToRequest() {
@@ -100,16 +123,20 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 }
 
 // static 
-bool CApplicationResources::LoadResource(const char* szUrl, LPCSTR* pMime, std::vector<byte>& data, const char* postData)
+bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, std::vector<byte>& data, const char* postData)
 {
 	ATLASSERT(pMime != nullptr);
 	*pMime = mimeHtml;
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
 	LPCWSTR szError = nullptr;
-	if (parsedUrl.IsAppUrl()) {
+	if (parsedUrl.IsAppUrl() || parsedUrl.IsRootUrl()) {
 		if (parsedUrl.IsAppData())
 			*pMime = mimeJson;
+		else if (parsedUrl.IsAppScript())
+			*pMime = mimeJs;
+		else if (parsedUrl.IsAppStyle())
+			*pMime = mimeCss;
 		try 
 		{
 			CString strUrl(parsedUrl.UrlToRequest());
