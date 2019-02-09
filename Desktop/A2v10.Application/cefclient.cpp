@@ -78,7 +78,7 @@ bool CCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser)
 	CEF_REQUIRE_UI_THREAD();
 	if (m_pDelegate != nullptr)
 		m_pDelegate->OnBrowserClosed(browser);
-	return false;
+	return true; // do not close
 }
 
 
@@ -108,7 +108,10 @@ CefRefPtr<CefResourceHandler> CCefClientHandler::GetResourceHandler(
 // virtual 
 void CCefClientHandler::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title)
 {
-	int z = 55;
+	CEF_REQUIRE_UI_THREAD();
+	if (m_pDelegate != nullptr) {
+		m_pDelegate->OnTitleChange(browser, title.c_str());
+	}
 }
 
 // CefLifeSpanHandler
@@ -119,5 +122,10 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 	bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
 	CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access)
 {
+	CEF_REQUIRE_UI_THREAD();
+	if (m_pDelegate != nullptr) {
+		m_pDelegate->OnBeforePopup(browser, target_url.c_str());
+		return true;
+	}
 	return false;
 }

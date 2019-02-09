@@ -11,10 +11,12 @@ protected: // create from serialization only
 
 	CCaptionButtons m_captionButtons;
 	CCaptionNavigateButtons m_navigateButtons;
+	CNavTabs m_navigateTabs;
+	UINT m_nViewId;
 
 public:
 	virtual ~CMainFrame() override;
-	void CreateNewView();
+	void CreateNewView(CEF_VIEW_INFO* pViewInfo);
 
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
@@ -25,9 +27,10 @@ public:
 	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
-// Generated message map functions
 protected:
 	virtual void RecalcLayout(BOOL bNotify = TRUE) override;
+	void SwitchToTab(HWND targetHWnd);
+	void CloseTab(HWND targetHWnd);
 
 	afx_msg LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -38,6 +41,11 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFileClose();
+	afx_msg LRESULT OnCefViewCommand(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnCefTabCommand(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnUpdateSysMenu(CCmdUI* pCmdUI);
+	afx_msg void OnAppTools();
+
 	DECLARE_MESSAGE_MAP()
 };
 

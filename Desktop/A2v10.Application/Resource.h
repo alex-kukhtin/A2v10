@@ -41,9 +41,11 @@
 
 
 // sysmenu
+#define IDM_SYS_FIRST					0x0010 
 #define IDM_SYS_ABOUTBOX                0x0010
 #define IDM_SYS_OPTIONS					0x0020
-#define IDM_SYS_DEVTOOLS				0x0040
+#define IDM_SYS_DEVTOOLS				0x0030
+#define IDM_SYS_LAST					0x0040 
 
 // Next default values for new objects
 //

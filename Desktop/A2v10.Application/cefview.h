@@ -52,6 +52,10 @@ protected:
 	//CCefClientHandler::Delegate
 	virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) override;
+	virtual void OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url) override;
+
+	// CefDisplayHandler::Deletage
+	void CCefView::OnTitleChange(CefRefPtr<CefBrowser> browser, const wchar_t* title) override;
 
 	afx_msg void OnReload();
 	afx_msg void OnReloadIgnoreCache();

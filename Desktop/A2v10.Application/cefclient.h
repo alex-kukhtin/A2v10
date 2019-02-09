@@ -13,6 +13,8 @@ public:
 	public:
 		virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
 		virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) = 0;
+		virtual void OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url) = 0;
+		virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const wchar_t* title) = 0;
 	protected:
 		virtual ~Delegate();
 	};

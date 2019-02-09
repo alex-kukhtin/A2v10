@@ -4,6 +4,7 @@
 #include "afxwinappex.h"
 #include "afxdialogex.h"
 #include "A2v10.Application.h"
+#include "navtabs.h"
 #include "mainframe.h"
 
 #include "workarea.h"
@@ -23,12 +24,12 @@
 // CMainApp
 
 BEGIN_MESSAGE_MAP(CMainApp, CA2WinApp)
-	ON_COMMAND(ID_FILE_NEW_FRAME, &CMainApp::OnFileNewFrame)
+	//ON_COMMAND(ID_FILE_NEW_FRAME, &CMainApp::OnFileNewFrame)
 	ON_COMMAND(ID_FILE_NEW, &CMainApp::OnFileNew)
 	// Standard file based document commands
-	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
+	//ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
+	//ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 

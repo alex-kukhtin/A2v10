@@ -15,12 +15,12 @@ CCaptionButtonsBase::CCaptionButtonsBase()
 {
 }
 
-BOOL CCaptionButtonsBase::ClearHighlight()
+bool CCaptionButtonsBase::ClearHighlight()
 {
-	BOOL bRet = FALSE;
+	bool bRet = false;
 	for (int i = 0; i < GetButtonsCount(); i++) {
 		CCaptionButton* pBtn = GetButton(i);
-		bRet = bRet | pBtn->SetHighlight(FALSE);
+		bRet = bRet | pBtn->SetHighlight(false);
 	}
 	return bRet;
 }
@@ -32,34 +32,35 @@ void CCaptionButtonsBase::Draw(CDC* pDC)
 	}
 }
 
-BOOL CCaptionButtonsBase::MouseMove(CPoint point)
+bool CCaptionButtonsBase::MouseMove(CPoint point)
 {
-	BOOL bRet = FALSE;
+	bool bRet = false;
 	for (int i = 0; i < GetButtonsCount(); i++) {
 		CCaptionButton* pBtn = GetButton(i);
-		bRet = bRet | pBtn->SetHighlight(pBtn->GetRect().PtInRect(point) ? TRUE : FALSE);
+		bRet = bRet | pBtn->SetHighlight(pBtn->GetRect().PtInRect(point) ? true : false);
 	}
 	return bRet;
 }
 
-BOOL CCaptionButtonsBase::PressButton(CPoint point, CWnd* pWnd)
+bool CCaptionButtonsBase::PressButton(CPoint point, CWnd* pWnd)
 {
 	for (int i = 0; i < GetButtonsCount(); i++) {
 		CCaptionButton* pBtn = GetButton(i);
 		if (pBtn->GetRect().PtInRect(point))
 		{
 			if (pBtn->TrackButton(pWnd, point)) {
-				pBtn->ExecuteCommand(pWnd);
+				pBtn->ExecuteCommand(pWnd, point);
 			}
+			return true;
 		}
 	}
-	return TRUE;
+	return false;
 }
 
 
-CCaptionButtons::CCaptionButtons()
+CCaptionButtons::CCaptionButtons(UINT nReplaceHelp /*= 0*/)
 {
-	m_buttons[0].SetID(IDMENU_HELP);
+	m_buttons[0].SetID(nReplaceHelp ? nReplaceHelp : IDMENU_HELP);
 	m_buttons[1].SetID(IDMENU_MINIMIZE);
 	m_buttons[2].SetID(IDMENU_MAXIMIZE);
 	m_buttons[3].SetID(IDMENU_CLOSE);
@@ -98,7 +99,6 @@ void CCaptionNavigateButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
 	for (int i = 0; i < btnsCount; i++) {
 		auto pBtn = GetButton(i);
 		pBtn->SetRect(btnRect);
-		auto nId = pBtn->GetID();
 		btnRect.OffsetRect(btnSize, 0);
 	}
 	m_nWidth = btnSize * btnsCount;
@@ -106,24 +106,37 @@ void CCaptionNavigateButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
 	m_rect.right = m_rect.left + m_nWidth;
 }
 
-void CCaptionButton::ExecuteCommand(CWnd* pWnd)
+void CCaptionButton::ExecuteCommand(CWnd* pWnd, CPoint point)
 {
-	if (m_nID == IDMENU_CLOSE)
+	switch (m_nID) {
+	case IDMENU_CLOSE:
 		pWnd->PostMessageW(WM_SYSCOMMAND, SC_CLOSE);
-	else if (m_nID == IDMENU_MINIMIZE)
+		break;
+	case IDMENU_MINIMIZE:
 		pWnd->PostMessageW(WM_SYSCOMMAND, SC_MINIMIZE);
-	else if (m_nID == IDMENU_MAXIMIZE)
+		break;
+	case IDMENU_MAXIMIZE:
 		pWnd->PostMessageW(WM_SYSCOMMAND, SC_MAXIMIZE);
-	else if (m_nID == IDMENU_RESTORE)
+		break;
+	case IDMENU_RESTORE:
 		pWnd->PostMessageW(WM_SYSCOMMAND, SC_RESTORE);
-	else if (m_nID == IDMENU_HELP)
+		break;
+	case IDMENU_HELP:
 		pWnd->PostMessageW(WM_COMMAND, ID_APP_ABOUT);
-	else if (m_nID == IDMENU_BACK)
+		break;
+	case IDMENU_BACK:
 		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_BACK);
-	else if (m_nID == IDMENU_FORWARD)
+		break;
+	case IDMENU_FORWARD:
 		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_FORWARD);
-	else if (m_nID == IDMENU_RELOAD)
+		break;
+	case IDMENU_RELOAD:
 		pWnd->PostMessageW(WM_COMMAND, ID_NAVIGATE_REFRESH);
+		break;
+	case IDMENU_TOOLS:
+		pWnd->PostMessageW(WM_COMMAND, ID_APP_TOOLS);
+		break;
+	}
 }
 
 bool CCaptionButton::TrackButton(CWnd* pWnd, CPoint point)
@@ -187,29 +200,34 @@ bool CCaptionButton::TrackButton(CWnd* pWnd, CPoint point)
 	return bCommand;
 }
 
-BOOL CCaptionButton::SetPress(bool bSet)
+bool CCaptionButton::SetPress(bool bSet)
 {
 	if (m_bPressed == bSet)
-		return FALSE;
+		return false;
 	m_bPressed = bSet;
-	return TRUE;
+	return true;
 }
 
-BOOL CCaptionButton::SetState(bool bHighlight, bool bPressed)
+// virtual 
+void CCaptionButton::SetRect(const CRect rect) { 
+	m_rect = rect; 
+}
+
+bool CCaptionButton::SetState(bool bHighlight, bool bPressed)
 {
 	if ((m_bHighlighted == bHighlight) && (m_bPressed == bPressed))
-		return FALSE;
+		return false;
 	m_bHighlighted = bHighlight,
 		m_bPressed = bPressed;
-	return TRUE;
+	return false;
 }
 
-BOOL CCaptionButton::SetHighlight(bool bSet)
+bool CCaptionButton::SetHighlight(bool bSet)
 {
 	if (m_bHighlighted == bSet)
-		return FALSE;
+		return false;
 	m_bHighlighted = bSet;
-	return TRUE;
+	return true;
 }
 
 void CCaptionButton::Draw(CDC* pDC)

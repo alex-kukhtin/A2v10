@@ -24,7 +24,7 @@ IMPLEMENT_DYNCREATE(CCefView, CView)
 
 BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_SIZE()
-	ON_MESSAGE(WMI_OPEN_CEF_VIEW, OnOpenCefView)
+	ON_MESSAGE(WMI_CEF_VIEW_COMMAND, OnOpenCefView)
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
@@ -155,10 +155,10 @@ void CCefView::OnInitialUpdate()
 {
 	__super::OnInitialUpdate();
 
-	OPEN_CEF_VIEW_INFO viewInfo;
+	CEF_VIEW_INFO viewInfo;
 	viewInfo.szUrl = L"http://app";
 	//viewInfo.szUrl = L"app://";
-	SendMessage(WMI_OPEN_CEF_VIEW, WMI_OPEN_CEF_VIEW_WPARAM, reinterpret_cast<LPARAM>(&viewInfo));
+	SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_OPEN, reinterpret_cast<LPARAM>(&viewInfo));
 
 	/*
 	CRect rect;
@@ -181,9 +181,9 @@ void CCefView::OnInitialUpdate()
 // afx_msg 
 LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 {
-	if (wParam != WMI_OPEN_CEF_VIEW_WPARAM) 
+	if (wParam != WMI_CEF_VIEW_COMMAND_OPEN) 
 		return 0L;
-	OPEN_CEF_VIEW_INFO* pInfo = reinterpret_cast<OPEN_CEF_VIEW_INFO*>(lParam);
+	CEF_VIEW_INFO* pInfo = reinterpret_cast<CEF_VIEW_INFO*>(lParam);
 	CRect rect;
 	GetClientRect(&rect);
 
@@ -210,7 +210,24 @@ void CCefView::OnBrowserClosed(CefRefPtr<CefBrowser> browser)
 	{
 		m_browser = nullptr;
 		m_clientHandler->DetachDelegate();
+		GetParentFrame()->SendMessage(WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSE, reinterpret_cast<LPARAM>(GetSafeHwnd()));
 	}
+}
+
+// virtual 
+void CCefView::OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url)
+{
+	CEF_VIEW_INFO viewInfo;
+	viewInfo.szUrl = url;
+	GetParentFrame()->SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
+}
+
+// virtual 
+void CCefView::OnTitleChange(CefRefPtr<CefBrowser> browser, const wchar_t* title)
+{
+	CEF_VIEW_INFO viewInfo;
+	viewInfo.szTitle = title;
+	GetParentFrame()->SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_SETTILE, reinterpret_cast<LPARAM>(&viewInfo));
 }
 
 // afx_msg

@@ -158,12 +158,23 @@ struct DEBUG_BREAK_INFO {
 #define HINT_UPDATE_SELECTION   14
 #define HINT_CLEAR_SELECTION    15
 
-#define WMI_OPEN_CEF_VIEW (WM_APP_A2 + 10)
-#define WMI_OPEN_CEF_VIEW_WPARAM  441133
+#define WMI_CEF_VIEW_COMMAND (WM_APP_A2 + 10)
+#define WMI_CEF_VIEW_COMMAND_OPEN       441133
+#define WMI_CEF_VIEW_COMMAND_CREATETAB  112233
+#define WMI_CEF_VIEW_COMMAND_SETTILE    445566
 
-struct OPEN_CEF_VIEW_INFO {
-	LPCWSTR szUrl;
+struct CEF_VIEW_INFO {
+	const wchar_t* szUrl;
+	const wchar_t* szTitle;
+	CEF_VIEW_INFO()
+		: szUrl(nullptr), szTitle(nullptr) {}
 };
+
+// LPARAM - View hWnd
+#define WMI_CEF_TAB_COMMAND (WM_APP_A2 + 11)
+#define WMI_CEF_TAB_COMMAND_SELECT 121223
+#define WMI_CEF_TAB_COMMAND_CLOSE  223389
+
 
 #undef AFX_DATA
 #define AFX_DATA

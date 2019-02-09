@@ -9,7 +9,7 @@
 
 class CCaptionButton
 {
-private:
+protected:
 	UINT m_nID;
 	CRect m_rect;
 	bool m_bHighlighted;
@@ -20,15 +20,16 @@ public:
 		m_bHighlighted(false), m_bPressed(false) {}
 	void SetID(UINT nID) { m_nID = nID;}
 	UINT GetID() const { return m_nID; }
-	void SetRect(const CRect rect) { m_rect = rect;}
-	BOOL SetState(bool bHighlight, bool bPressed);
-	BOOL SetHighlight(bool bSet);
-	BOOL SetPress(bool bSet);
+	bool SetState(bool bHighlight, bool bPressed);
+	bool SetHighlight(bool bSet);
+	bool SetPress(bool bSet);
 	const CRect& GetRect() { return m_rect; }
 
-	void Draw(CDC* pDC);
 	bool TrackButton(CWnd* pWnd, CPoint point);
-	void ExecuteCommand(CWnd* pWnd);
+
+	virtual void SetRect(const CRect rect);
+	virtual void Draw(CDC* pDC);
+	virtual void ExecuteCommand(CWnd* pWnd, CPoint point);
 };
 
 class CCaptionButtonsBase
@@ -40,12 +41,13 @@ protected:
 	virtual CCaptionButton* GetButton(int index) = 0;
 public:
 	CCaptionButtonsBase();
-	BOOL ClearHighlight();
-	void Draw(CDC* pDC);
-	BOOL MouseMove(CPoint point);
+
+	bool ClearHighlight();
+	virtual void Draw(CDC* pDC);
+	bool MouseMove(CPoint point);
 	int Width() { return m_nWidth; }
 	const CRect& GetRect() { return m_rect; }
-	BOOL PressButton(CPoint point, CWnd* pWnd);
+	bool PressButton(CPoint point, CWnd* pWnd);
 };
 
 class CCaptionButtons : public CCaptionButtonsBase
@@ -56,7 +58,7 @@ protected:
 	virtual CCaptionButton* GetButton(int index) override { return &m_buttons[index]; }
 
 public:
-	CCaptionButtons();
+	CCaptionButtons(UINT nReplaceHelp = 0);
 	void RecalcLayout(CRect clientRect, BOOL bZoomed);
 };
 
