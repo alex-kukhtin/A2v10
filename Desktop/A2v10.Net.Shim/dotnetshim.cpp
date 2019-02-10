@@ -78,10 +78,20 @@ std::wstring CDotNetRuntime::ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPC
 	auto url = gcnew System::String(szUrl);
 	auto search = gcnew System::String(szSearch);
 	auto postData = gcnew System::String(szPostData);
+	int mimeIndex;
 	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url, search, postData);
 	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
 	return ptr;
 }
+
+//static 
+std::wstring CDotNetRuntime::GetLastMime()
+{
+	auto result = A2v10RuntimeNet::Desktop::GetLastMime();
+	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
+	return ptr;
+}
+
 
 // static 
 void CDotNetRuntime::StartDesktopServices() 

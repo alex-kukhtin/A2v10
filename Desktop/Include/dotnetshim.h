@@ -25,6 +25,7 @@ public:
 
 	static void StartDesktopServices();
 	static std::wstring ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPCWSTR szPost);
+	static std::wstring GetLastMime();
 };
 
 #undef AFX_DATA

@@ -9,3 +9,4 @@ EXPORTS
 ;
 ?StartDesktopServices@CDotNetRuntime@@SAXXZ
 ?ProcessRequest@CDotNetRuntime@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PB_W00@Z
+?GetLastMime@CDotNetRuntime@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ

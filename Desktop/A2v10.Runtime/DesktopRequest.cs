@@ -14,7 +14,29 @@ namespace A2v10.Runtime
 	{
 		BaseController _controller = new BaseController();
 
+		public String MimeType { get; private set; }
+
+		const String MIME_JSON   = "application/json";
+		const String MIME_HTML   = "text/html";
+		const String MIME_SCRIPT = "application/javascript";
+		const String MIME_STYLE  = "text/css";
+
 		public String ProcessRequest(String url, String search, String postData)
+		{
+			using (_controller.Host.Profiler.BeginRequest(url, null) as IDisposable)
+			{
+				try
+				{
+					return ProcessRequestImpl(url, search, postData);
+				}
+				catch (Exception /*err*/)
+				{
+					throw;
+				}
+			}
+		}
+
+		String ProcessRequestImpl(String url, String search, String postData)
 		{
 			if (url.StartsWith("admin/"))
 			{
@@ -23,12 +45,16 @@ namespace A2v10.Runtime
 			}
 			try
 			{
+				MimeType = MIME_HTML;
 				using (var writer = new StringWriter())
 				{
 					if (String.IsNullOrEmpty(url))
 						RenderIndex(writer);
 					else if (url.StartsWith("shell/"))
-						Shell(url.Substring(6).ToLowerInvariant(), writer);
+					{
+						Shell(url.Substring(6).ToLowerInvariant(), writer, out String shellMime);
+						MimeType = shellMime;
+					}
 					else if (url.StartsWith("_page/"))
 						Render(RequestUrlKind.Page, url.Substring(6), search, writer);
 					else if (url.StartsWith("_dialog/"))
@@ -40,6 +66,7 @@ namespace A2v10.Runtime
 						var command = url.Substring(6);
 						var rb = new DesktopResponse(writer);
 						_controller.Data(command, SetSqlParams, postData, rb).Wait();
+						MimeType = rb.ContentType;
 					}
 					else if (url.StartsWith("_image/"))
 					{
@@ -94,20 +121,24 @@ namespace A2v10.Runtime
 			_controller.Layout(writer, prms);
 		}
 
-		public void Shell(String url, TextWriter writer)
+		public void Shell(String url, TextWriter writer, out String mimeType)
 		{
+			mimeType = MIME_SCRIPT;
 			switch (url)
 			{
 				case "appstyles":
 					_controller.GetAppStyleConent(writer);
+					mimeType = MIME_STYLE;
 					break;
 				case "appscripts":
 					_controller.GetAppScriptConent(writer);
+					mimeType = MIME_STYLE;
 					break;
 				case "script":
 					try
 					{
 						_controller.ShellScript(null, SetSqlParams, userAdmin: true, bAdmin: false, writer: writer).Wait();
+						mimeType = MIME_SCRIPT;
 					}
 					catch (Exception ex)
 					{
@@ -115,6 +146,11 @@ namespace A2v10.Runtime
 							ex = ex.InnerException;
 						writer.Write($"alert('{ex.Message.EncodeJs()}')");
 					}
+					break;
+				case "trace":
+					String json = _controller.Host.Profiler.GetJson();
+					mimeType = MIME_JSON;
+					writer.Write(json);
 					break;
 			}
 		}

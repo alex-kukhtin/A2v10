@@ -11,31 +11,42 @@
 #endif
 
 
+const char* MimeTypes[] = 
+{
+	/*0*/ "text/html",
+	/*1*/ "text/css",
+	/*2*/ "application/javascript",
+	/*3*/ "application/json",
+	/*4*/ "application/font-woff",
+	/*5*/ "application/font-ttf",
+};
+
+enum MimeIndex {
+	html = 0,
+	css = 1,
+	js = 2,
+	json = 3,
+	woff = 4,
+	ttf = 5
+};
+
 struct RES_DEF
 {
 	LPCWSTR szName;
 	UINT nRes;
-	LPCSTR szMime;
+	MimeIndex eMime;
 };
 
-LPCSTR mimeCss   = "text/css";
-LPCSTR mimeHtml  = "text/html";
-LPCSTR mimeJs    = "application/javascript";
-LPCSTR mimeJson  = "application/json";
-LPCSTR mimeWoff  = "application/font-woff";
-LPCSTR mimeTtf   = "application/font-ttf";
 
 const RES_DEF resArray[] =
 {
-	{L"app/",							IDWEB_SITE_MAIN_HTML,		mimeHtml  },
-	{L"app/admin/",						IDWEB_SITE_MAIN_HTML_ADMIN,	mimeHtml },
-	{L"app/css/site.min.css",			IDWEB_SITE_MAIN_CSS,		mimeCss   },
-	{L"app/scripts/locale-uk.min.js",	IDWEB_SCRIPT_LOCALE_UK_JS,	mimeJs    },
-	{L"app/scripts/vue.js",				IDWEB_SCRIPT_VUE_JS,		mimeJs    },
-	{L"app/scripts/main.js",			IDWEB_SCRIPT_MAIN_JS,		mimeJs    },
-	{L"app/scripts/d3.min.js",			IDWEB_SCRIPT_D3_JS,			mimeJs    },
-	{L"app/css/fonts/a2v10.woff",		IDWEB_FONT_A2V10_FONT,	mimeWoff },
-	{L"app/css/fonts/a2v10.ttf",		IDWEB_FONT_A2V10_FONT2,	mimeTtf }
+	{L"css/site.min.css",			IDWEB_SITE_MAIN_CSS,		MimeIndex::css   },
+	{L"scripts/locale-uk.min.js",	IDWEB_SCRIPT_LOCALE_UK_JS,	MimeIndex::js    },
+	{L"scripts/vue.js",				IDWEB_SCRIPT_VUE_JS,		MimeIndex::js    },
+	{L"scripts/main.js",			IDWEB_SCRIPT_MAIN_JS,		MimeIndex::js    },
+	{L"scripts/d3.min.js",			IDWEB_SCRIPT_D3_JS,			MimeIndex::js    },
+	{L"css/fonts/a2v10.woff",		IDWEB_FONT_A2V10_FONT,		MimeIndex::woff  },
+	{L"css/fonts/a2v10.ttf",		IDWEB_FONT_A2V10_FONT2,		MimeIndex::ttf   }
 
 };
 
@@ -44,9 +55,18 @@ static LPCWSTR _findResourceId(LPCWSTR szUrl, LPCSTR* mime)
 	for (int i = 0; i < _countof(resArray); i++) {
 		RES_DEF rd = resArray[i];
 		if (_wcsicmp(szUrl, rd.szName) == 0) {
-			*mime = rd.szMime;
+			*mime = MimeTypes[rd.eMime];
 			return MAKEINTRESOURCE(rd.nRes);
 		}
+	}
+	return nullptr;
+}
+
+static const char* _findMime(std::string& sample) {
+	for (int i = 0; i < _countof(MimeTypes); i++) {
+		const char* curMime = MimeTypes[i];
+		if (sample == curMime)
+			return curMime;
 	}
 	return nullptr;
 }
@@ -55,50 +75,14 @@ class CParsedUrl
 {
 public:
 	CString protocol;
+	CString domain;
 	CString host;
 	CString path;
 	CString search;
 	bool error;
+
 	static CParsedUrl CreateFrom(LPCSTR szUrl);
-	bool IsAppUrl() {
-		return 
-			(path.Find(L"app/_") == 0) ||
-			(path.Find(L"app/shell") == 0) ||
-			(path.Find(L"app/admin/_") == 0);
-	}
 
-	bool IsRootUrl() {
-		return (path.Find(L"app/") == 0) && !IsAppUrl() && !IsAppStatic();
-	}
-
-	bool IsAppData() {
-		return 
-			(path.Find(L"app/_data") == 0) ||
-			(path.Find(L"app/admin/_data") == 0);
-	}
-
-	bool IsAppScript() {
-		return
-			(path.Find(L"app/shell/script") == 0) ||
-			(path.Find(L"app/shell/appcripts") == 0);
-	}
-
-	bool IsAppStyle() {
-		return
-			(path.Find(L"app/shell/appstyles") == 0);
-	}
-
-	bool IsAppStatic() {
-		return
-			(path.Find(L"app/scripts") == 0) ||
-			(path.Find(L"app/css") == 0);
-	}
-
-	CString UrlToRequest() {
-		CString newPath(path);
-		newPath.Replace(L"app/", L"");
-		return newPath;
-	}
 };
 
 
@@ -110,14 +94,17 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 	CString strUrl(szUrl);
 	int pPos = strUrl.Find(L"://");
 	rv.protocol = strUrl.Left(pPos);
+	int dPos = strUrl.Find(L"/", pPos + 4);
+	rv.domain = strUrl.Mid(pPos + 3, dPos - pPos - 3);
+	strUrl = strUrl.Mid(dPos + 1);
 	int sPos = strUrl.Find(L"?");
 	if (sPos != -1) {
-		rv.search = strUrl.Mid(sPos);
-		rv.path = strUrl.Mid(pPos + 3, sPos - pPos - 3);
+		rv.search = strUrl.Mid(sPos + 1);
+		rv.path = strUrl.Left(sPos);
 	}
 	else 
 	{
-		rv.path = strUrl.Mid(pPos + 3);
+		rv.path = strUrl;
 	}
 	return rv;
 }
@@ -126,35 +113,32 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, std::vector<byte>& data, const char* postData)
 {
 	ATLASSERT(pMime != nullptr);
-	*pMime = mimeHtml;
+	*pMime = MimeTypes[MimeIndex::html];
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
+	if (LoadStatic(parsedUrl.path, pMime, data))
+		return true;
 	LPCWSTR szError = nullptr;
-	if (parsedUrl.IsAppUrl() || parsedUrl.IsRootUrl()) {
-		if (parsedUrl.IsAppData())
-			*pMime = mimeJson;
-		else if (parsedUrl.IsAppScript())
-			*pMime = mimeJs;
-		else if (parsedUrl.IsAppStyle())
-			*pMime = mimeCss;
-		try 
-		{
-			CString strUrl(parsedUrl.UrlToRequest());
-			// A2W
-			std::wstring wPost = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(postData);
-			std::wstring wResult = CDotNetRuntime::ProcessRequest(strUrl, parsedUrl.search, wPost.c_str()); // A2W_CP(postData, CP_UTF8));
-			// W2A
-			std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wResult.c_str());
-			size_t resSize = rrResult.length();
-			data.resize(resSize);
-			if (resSize != 0)
-				memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
-			return true;
-		}
-		catch (CDotNetException& ex) 
-		{
-			szError = ex.GetMessage();
-		}
+	try 
+	{
+		// A2W
+		std::wstring wPost = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(postData);
+		int mimeIndex = 0;
+		std::wstring wResult = CDotNetRuntime::ProcessRequest(parsedUrl.path, parsedUrl.search, wPost.c_str()); // A2W_CP(postData, CP_UTF8));
+		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
+		// W2A
+		std::string currentMime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
+		*pMime = _findMime(currentMime);
+		std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wResult.c_str());
+		size_t resSize = rrResult.length();
+		data.resize(resSize);
+		if (resSize != 0)
+			memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
+		return true;
+	}
+	catch (CDotNetException& ex) 
+	{
+		szError = ex.GetMessage();
 	}
 	if (szError) 
 	{
@@ -163,18 +147,18 @@ bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, 
 		size_t resSize = rrResult.length();
 		data.resize(resSize);
 		memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
+		*pMime = MimeTypes[MimeIndex::html];
 		return true;
 	}
+	return false;
+}
 
-	LPCWSTR resId = _findResourceId(parsedUrl.path, pMime);
-	if (!resId) {
-		// may be browse back from http:://
-		resId = _findResourceId(L"app/", pMime);
-		if (!resId) {
-			data.resize(0);
-			return false;
-		}
-	}
+// static
+bool CApplicationResources::LoadStatic(const wchar_t* path, const char** pMime, std::vector<byte>& data)
+{
+	LPCWSTR resId = _findResourceId(path, pMime);
+	if (!resId)
+		return false;
 	HINSTANCE hInst = AfxFindResourceHandle(resId, RT_RCDATA);
 	HRSRC hRsrc = ::FindResource(hInst, resId, RT_RCDATA);
 	size_t resSize = (int) ::SizeofResource(hInst, hRsrc);

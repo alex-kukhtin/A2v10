@@ -156,8 +156,8 @@ void CCefView::OnInitialUpdate()
 	__super::OnInitialUpdate();
 
 	CEF_VIEW_INFO viewInfo;
-	viewInfo.szUrl = L"http://app";
-	//viewInfo.szUrl = L"app://";
+	//viewInfo.szUrl = L"http://app";
+	viewInfo.szUrl = L"app://domain";
 	SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_OPEN, reinterpret_cast<LPARAM>(&viewInfo));
 
 	/*

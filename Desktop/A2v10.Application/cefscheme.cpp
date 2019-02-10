@@ -121,6 +121,8 @@ private:
 // static
 void CClientSchemeHandler::RegisterSchemaHandlerFactory()
 {
-	CefRegisterSchemeHandlerFactory("http", "app",
+	//CefRegisterSchemeHandlerFactory("http", "app",
+		//new ClientSchemeHandlerFactory());
+	CefRegisterSchemeHandlerFactory(L"app", L"domain",
 		new ClientSchemeHandlerFactory());
 }

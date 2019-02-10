@@ -134,7 +134,7 @@ namespace A2v10RuntimeNet
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
-					host as ITenantManager);
+					tenantManager:null); /*host as ITenantManager*/
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
@@ -149,10 +149,19 @@ namespace A2v10RuntimeNet
 			};
 		}
 
+		static String _lastMime = String.Empty;
+
+		public static String GetLastMime()
+		{
+			return _lastMime;
+		}
 
 		public static String ProcessRequest(String url, String search, String postData)
 		{
-			return new DesktopRequest().ProcessRequest(url, search, postData);
+			var dr = new DesktopRequest();
+			var result = dr.ProcessRequest(url, search, postData);
+			_lastMime = dr.MimeType;
+			return result;
 		}
 	}
 }

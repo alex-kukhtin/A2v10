@@ -25,6 +25,7 @@ namespace A2v10.Runtime
 		public DesktopApplicationHost(IProfiler profiler)
 		{
 			_profiler = profiler;
+			_profiler.Enabled = IsDebugConfiguration;
 		}
 
 		public IProfiler Profiler => _profiler;
@@ -116,7 +117,14 @@ namespace A2v10.Runtime
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
 			String appKey = bAdmin ? "admin" : AppKey;
-			String fullPath = Path.Combine($"{AppPath}/{appKey}", path, fileName);
+			if (fileName.StartsWith("/"))
+			{
+				path = String.Empty;
+				fileName = fileName.Remove(0, 1);
+			}
+			if (appKey != null)
+				appKey = "/" + appKey;
+			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
 			return Path.GetFullPath(fullPath);
 		}
 
@@ -145,42 +153,13 @@ namespace A2v10.Runtime
 
 		#region ITenantManager
 
-		const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
-
-		public async Task SetTenantIdAsync(SqlConnection cnn, String source)
+		public Task SetTenantIdAsync(SqlConnection cnn, String source)
 		{
-			if (!IsMultiTenant)
-				return;
-			if (source == CatalogDataSource)
-				return;
-			using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
-			{
-				using (var cmd = cnn.CreateCommand())
-				{
-					cmd.CommandText = SET_TENANT_CMD;
-					cmd.CommandType = CommandType.StoredProcedure;
-					cmd.Parameters.AddWithValue("@TenantId", TenantId);
-					await cmd.ExecuteNonQueryAsync();
-				}
-			}
+			return Task.FromResult(0);
 		}
 
 		public void SetTenantId(SqlConnection cnn, String source)
 		{
-			if (!IsMultiTenant)
-				return;
-			if (source == CatalogDataSource)
-				return;
-			using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
-			{
-				using (var cmd = cnn.CreateCommand())
-				{
-					cmd.CommandText = SET_TENANT_CMD;
-					cmd.CommandType = CommandType.StoredProcedure;
-					cmd.Parameters.AddWithValue("@TenantId", TenantId);
-					cmd.ExecuteNonQuery();
-				}
-			}
 		}
 		#endregion
 	}
