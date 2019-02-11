@@ -30,6 +30,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_WM_SYSCOMMAND()
 	ON_UPDATE_COMMAND_UI_RANGE(IDM_SYS_FIRST, IDM_SYS_LAST, OnUpdateSysMenu)
 	ON_COMMAND(ID_APP_TOOLS, OnAppTools)
+	ON_WM_CLOSE()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -139,6 +141,7 @@ void CMainFrame::CreateNewView(CEF_VIEW_INFO* pViewInfo)
 	::SetWindowLong(pNewView->m_hWnd, GWL_ID, AFX_IDW_PANE_FIRST);
 
 	m_navigateTabs.AddTab(pViewInfo->szUrl, pNewView->GetSafeHwnd(), nViewId);
+	GetActiveDocument()->SetTitle(pViewInfo->szTitle);
 
 	pActiveView->ShowWindow(SW_HIDE);
 	RecalcLayout();
@@ -175,12 +178,16 @@ void CMainFrame::SwitchToTab(HWND targetHWnd)
 	CNavTab* pActiveTab = m_navigateTabs.FindTab(activeHwnd);
 	if (!pActiveTab)
 		return;
+	CNavTab* pNewTab = m_navigateTabs.FindTab(targetHWnd);
+	if (pNewTab)
+		GetActiveDocument()->SetTitle(pNewTab->GetText());
 	CWnd* pNewView = CWnd::FromHandle(targetHWnd);
 	::SetWindowLong(pActiveView->m_hWnd, GWL_ID, pActiveTab->GetID());
 	::SetWindowLong(pNewView->m_hWnd, GWL_ID, AFX_IDW_PANE_FIRST);
 	pActiveView->ShowWindow(SW_HIDE);
 	pNewView->ShowWindow(SW_SHOW);
 	SetActiveView(reinterpret_cast<CView*>(pNewView));
+	RecalcLayout();
 	pNewView->Invalidate();
 	m_navigateTabs.SetActiveTab(m_navigateTabs.FindTab(targetHWnd));
 	Invalidate(TRUE);
@@ -192,6 +199,7 @@ void CMainFrame::CloseTab(HWND targetHWnd)
 	if (!pTab)
 		return;
 	if (m_navigateTabs.GetButtonsCount() == 1) {
+		::DestroyWindow(targetHWnd);
 		PostMessage(WM_COMMAND, ID_FILE_CLOSE);
 		return;
 	}
@@ -216,6 +224,7 @@ LRESULT CMainFrame::OnCefViewCommand(WPARAM wParam, LPARAM lParam)
 		if (pWnd) {
 			CNavTab* pTab = m_navigateTabs.FindTab(pWnd->GetSafeHwnd());
 			if (pTab && pTab->SetText(pViewInfo->szTitle)) {
+				GetActiveDocument()->SetTitle(pViewInfo->szTitle);
 				RecalcLayout();
 				Invalidate();
 			}
@@ -246,4 +255,17 @@ void CMainFrame::OnUpdateSysMenu(CCmdUI* pCmdUI)
 // afx_msg
 void CMainFrame::OnAppTools() {
 	AfxMessageBox(L"On App Tools");
+}
+
+// afx_msg
+void CMainFrame::OnClose()
+{
+	__super::OnClose();
+}
+
+// afx_msg
+void CMainFrame::OnDestroy()
+{
+	__super::OnDestroy();
+	//CefPostTask(TID_UI);
 }

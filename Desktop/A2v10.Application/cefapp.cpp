@@ -9,14 +9,16 @@
 #define new DEBUG_NEW
 #endif
 
+bool CCefApplication::m_bInit = false;
+
 // virtual 
 void CCefApplication::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar)
 {
 	//return;
-	registrar->AddCustomScheme("app", 
+	registrar->AddCustomScheme("http", 
 		true,  /*is_standard*/
 		true,  /*is_local*/
-		false, /*is_display_isolated*/
+		true, /*is_display_isolated*/
 		false, /*is_secure*/
 		true,  /*is_cors_enabled*/
 		true   /*is_csp_bypassing*/);
@@ -29,12 +31,12 @@ void CCefApplication::Init(HINSTANCE hInstance)
 
 	CefMainArgs args(hInstance);
 	CefSettings settings;
-	settings.single_process = true; // TODO: // check ????
-	settings.multi_threaded_message_loop = false;
+	//settings.single_process = true; // TODO: // check ????
+	settings.multi_threaded_message_loop = true;
 	settings.no_sandbox = true;
 	settings.remote_debugging_port = 5555; /// TODO
 
 	static CefRefPtr<CCefApplication> app(new CCefApplication());
 
-	CefInitialize(args, settings, app.get(), nullptr);
+	m_bInit =  CefInitialize(args, settings, app.get(), nullptr);
 }

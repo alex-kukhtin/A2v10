@@ -77,8 +77,9 @@ bool CCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser)
 {
 	CEF_REQUIRE_UI_THREAD();
 	if (m_pDelegate != nullptr)
-		m_pDelegate->OnBrowserClosed(browser);
-	return true; // do not close
+		m_pDelegate->OnBrowserClosing(browser);
+
+	return false;
 }
 
 
@@ -128,4 +129,13 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 		return true;
 	}
 	return false;
+}
+
+
+// virtual 
+void CCefClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser)
+{
+	CEF_REQUIRE_UI_THREAD();
+	if (m_pDelegate != nullptr)
+		m_pDelegate->OnBrowserClosed(browser);
 }

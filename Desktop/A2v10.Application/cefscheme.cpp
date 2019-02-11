@@ -17,9 +17,13 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	bool handled = false;
 	std::string url = request->GetURL();
 	std::string method = request->GetMethod();
-	std::string post;
+	std::vector<byte> post_;
+	bool isPost = false;
+
 	if (method == "POST") 
 	{
+		isPost = true;
+		auto rt = request->GetResourceType();
 		CefRefPtr<CefPostData> postData = request->GetPostData();
 		if (postData != nullptr) {
 			size_t postCnt = postData->GetElementCount();
@@ -28,16 +32,26 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 				postData->GetElements(elems);
 				for (auto it=elems.begin(); it != elems.end(); ++it) {
 					CefPostDataElement* elem = *it;
-					size_t bytes = elem->GetBytesCount();
-					post.resize(bytes);
-					elem->GetBytes(bytes, (void*)post.data());
+					auto type = elem->GetType();
+					if (type == cef_postdataelement_type_t::PDE_TYPE_BYTES) {
+						size_t bytes = elem->GetBytesCount();
+						post_.resize(bytes);
+						elem->GetBytes(bytes, (void*)post_.data());
+					}
+					else if (type == cef_postdataelement_type_t::PDE_TYPE_FILE) {
+						auto fileName = elem->GetFile();
+						size_t bytes = elem->GetBytesCount();
+						post_.resize(bytes);
+						elem->GetBytes(bytes, (void*)post_.data());
+						int z = 55;
+					}
 				}
 			}
 		}
 	}
 
 	const char* mime = nullptr;
-	bool rc = CApplicationResources::LoadResource(url.c_str(), &mime, data_, post.c_str());
+	bool rc = CApplicationResources::LoadResource(url.c_str(), &mime, data_, post_, isPost);
 	if (rc) {
 		mime_type_ = mime;
 		handled = true;
@@ -108,7 +122,8 @@ public:
 	CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefFrame> frame,
 		const CefString& scheme_name,
-		CefRefPtr<CefRequest> request) OVERRIDE {
+		CefRefPtr<CefRequest> request) OVERRIDE 
+	{
 		CEF_REQUIRE_IO_THREAD();
 		return new CClientSchemeHandler();
 	}
@@ -123,6 +138,6 @@ void CClientSchemeHandler::RegisterSchemaHandlerFactory()
 {
 	//CefRegisterSchemeHandlerFactory("http", "app",
 		//new ClientSchemeHandlerFactory());
-	CefRegisterSchemeHandlerFactory(L"app", L"domain",
+	CefRegisterSchemeHandlerFactory(L"http", L"domain",
 		new ClientSchemeHandlerFactory());
 }

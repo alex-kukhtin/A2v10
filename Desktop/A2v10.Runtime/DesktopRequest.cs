@@ -1,12 +1,16 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Dynamic;
 using System.IO;
+using System.Text;
 using System.Web;
 
 using A2v10.Infrastructure;
 using A2v10.Request;
+using Newtonsoft.Json;
 
 namespace A2v10.Runtime
 {
@@ -21,13 +25,13 @@ namespace A2v10.Runtime
 		const String MIME_SCRIPT = "application/javascript";
 		const String MIME_STYLE  = "text/css";
 
-		public String ProcessRequest(String url, String search, String postData)
+		public Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
 			using (_controller.Host.Profiler.BeginRequest(url, null) as IDisposable)
 			{
 				try
 				{
-					return ProcessRequestImpl(url, search, postData);
+					return ProcessRequestImpl(url, search, post, postMethod);
 				}
 				catch (Exception /*err*/)
 				{
@@ -36,7 +40,7 @@ namespace A2v10.Runtime
 			}
 		}
 
-		String ProcessRequestImpl(String url, String search, String postData)
+		Byte[] ProcessRequestImpl(String url, String search, Byte[] post, Boolean postMethod)
 		{
 			if (url.StartsWith("admin/"))
 			{
@@ -64,17 +68,33 @@ namespace A2v10.Runtime
 					else if (url.StartsWith("_data/"))
 					{
 						var command = url.Substring(6);
-						var rb = new DesktopResponse(writer);
-						_controller.Data(command, SetSqlParams, postData, rb).Wait();
+						var rb = new DesktopResponse(writer)
+						{
+							ContentType = "application/json" // default
+						};
+						String jsonData = Encoding.UTF8.GetString(post);
+						_controller.Data(command, SetSqlParams, jsonData, rb).Wait();
 						MimeType = rb.ContentType;
 					}
 					else if (url.StartsWith("_image/"))
 					{
-						_controller.DownloadAttachment("/" + url, SetSqlParams).Wait(); // with _image prefix
+						if (postMethod)
+							SaveImage("/" + url, writer);
+						//else
+						//return LoadImage("/" + url);
+						//_controller.DownloadAttachment("/" + url, SetSqlParams).Wait(); // with _image prefix
+						writer.Write("SAVE IMAGE HERE");
+					}
+					else if (url.StartsWith("_static_image/"))
+					{
+						var rb = new DesktopResponse(writer);
+						var bytes = StaticImage(url.Substring(14).Replace('-', '.'), rb);
+						MimeType = rb.ContentType;
+						return bytes;
 					}
 					else
 						RenderIndex(writer);
-					return writer.ToString();
+					return Encoding.UTF8.GetBytes(writer.ToString());
 				}
 			}
 			catch (Exception ex)
@@ -82,7 +102,8 @@ namespace A2v10.Runtime
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				// TODO:: /exception
-				return $"<div>{ex.Message}</div>";
+				String msg = $"<div>{ex.Message}</div>";
+				return Encoding.UTF8.GetBytes(msg) ;
 			}
 		}
 
@@ -153,6 +174,59 @@ namespace A2v10.Runtime
 					writer.Write(json);
 					break;
 			}
+		}
+
+		Byte[] StaticImage(String url, HttpResponseBase response)
+		{
+			try
+			{
+				AttachmentInfo info = _controller.StaticImage(url);
+				if (info == null || info.Stream == null)
+					return null;
+				response.ContentType = info.Mime;
+				return info.Stream;
+			}
+			catch (Exception ex)
+			{
+				WriteImageException(ex, response);
+			}
+			return null;
+		}
+
+		void WriteImageException(Exception ex, HttpResponseBase response)
+		{
+			response.ContentType = "image/png";
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			var b = new Bitmap(380, 30);
+			var g = Graphics.FromImage(b);
+			g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+			g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+			g.Save();
+			using (var ms = new MemoryStream())
+			{
+				b.Save(ms, ImageFormat.Png);
+				ms.Seek(0, SeekOrigin.Begin);
+				response.BinaryWrite(ms.GetBuffer());
+			}
+		}
+
+		String SaveImage(String url, TextWriter writer)
+		{
+			return "unknown";
+			/*
+			MimeType = MIME_JSON;
+			try
+			{
+				var files = Request.Files;
+				var list = _controller.SaveAttachments(1, url, files, UserId).Wait();
+				var rval = new ExpandoObject();
+				rval.Set("status", "OK");
+				rval.Set("ids", list);
+				String result = JsonConvert.SerializeObject(rval, JsonHelpers.StandardSerializerSettings);
+				writer.Write(result);
+			}
+			*/
 		}
 	}
 }

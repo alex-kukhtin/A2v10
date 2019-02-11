@@ -127,7 +127,7 @@ BOOL CMainApp::InitInstance()
 BOOL CMainApp::PumpMessage()
 {
 	BOOL rc = __super::PumpMessage();
-	CefDoMessageLoopWork();
+	//CefDoMessageLoopWork();
 	return rc;
 }
 
@@ -135,7 +135,12 @@ int CMainApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
-	CefShutdown();
+
+	if (CCefApplication::IsInit())
+		CefShutdown();
+
+	int z = 55;
+
 	return CWinAppEx::ExitInstance();
 }
 

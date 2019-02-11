@@ -19,6 +19,7 @@ const char* MimeTypes[] =
 	/*3*/ "application/json",
 	/*4*/ "application/font-woff",
 	/*5*/ "application/font-ttf",
+	/*6*/ "image/png",
 };
 
 enum MimeIndex {
@@ -110,7 +111,7 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 }
 
 // static 
-bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, std::vector<byte>& data, const char* postData)
+bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, std::vector<byte>& data, std::vector<byte>& post, bool postMethod)
 {
 	ATLASSERT(pMime != nullptr);
 	*pMime = MimeTypes[MimeIndex::html];
@@ -121,19 +122,11 @@ bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, 
 	LPCWSTR szError = nullptr;
 	try 
 	{
-		// A2W
-		std::wstring wPost = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.from_bytes(postData);
-		int mimeIndex = 0;
-		std::wstring wResult = CDotNetRuntime::ProcessRequest(parsedUrl.path, parsedUrl.search, wPost.c_str()); // A2W_CP(postData, CP_UTF8));
+		CDotNetRuntime::ProcessRequest(parsedUrl.path, parsedUrl.search, post, data, postMethod); // A2W_CP(postData, CP_UTF8));
 		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
 		// W2A
 		std::string currentMime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
 		*pMime = _findMime(currentMime);
-		std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wResult.c_str());
-		size_t resSize = rrResult.length();
-		data.resize(resSize);
-		if (resSize != 0)
-			memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
 		return true;
 	}
 	catch (CDotNetException& ex) 

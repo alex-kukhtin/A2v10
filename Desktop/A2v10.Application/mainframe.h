@@ -45,6 +45,8 @@ protected:
 	afx_msg LRESULT OnCefTabCommand(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnUpdateSysMenu(CCmdUI* pCmdUI);
 	afx_msg void OnAppTools();
+	afx_msg void OnClose();
+	afx_msg void OnDestroy();
 
 	DECLARE_MESSAGE_MAP()
 };

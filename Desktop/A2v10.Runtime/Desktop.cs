@@ -156,10 +156,10 @@ namespace A2v10RuntimeNet
 			return _lastMime;
 		}
 
-		public static String ProcessRequest(String url, String search, String postData)
+		public static Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
 			var dr = new DesktopRequest();
-			var result = dr.ProcessRequest(url, search, postData);
+			var result = dr.ProcessRequest(url, search, post, postMethod);
 			_lastMime = dr.MimeType;
 			return result;
 		}

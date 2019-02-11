@@ -13,6 +13,7 @@ public:
 	HWND GetHwnd() const { return m_hWnd; }
 	void SetActive(bool bSet) { m_bActive = bSet; }
 	bool SetText(const wchar_t* szCaption);
+	const wchar_t* GetText() const { return (const wchar_t*)m_caption; }
 
 	virtual void SetRect(const CRect rect) override;
 	virtual void Draw(CDC* pDC) override;

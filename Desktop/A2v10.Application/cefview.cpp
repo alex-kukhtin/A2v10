@@ -31,12 +31,14 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_CLOSE()
 	ON_COMMAND(ID_NAVIGATE_REFRESH, OnReload)
 	ON_COMMAND(ID_NAVIGATE_REFRESH_IGNORE_CACHE, OnReloadIgnoreCache)
 	ON_COMMAND(ID_SHOW_DEVTOOLS, OnShowDevTools)
 	ON_MESSAGE(WM_APPCOMMAND, OnAppCommand)
 	ON_COMMAND(ID_NAVIGATE_BACK, OnNavigateBack)
 	ON_COMMAND(ID_NAVIGATE_FORWARD, OnNavigateForward)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 // CCefView construction/destruction
@@ -98,6 +100,18 @@ void CCefView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 	// TODO: add cleanup after printing
 }
 
+// afx_msg
+void CCefView::OnClose()
+{
+	__super::OnClose();
+}
+
+// afx_msg
+void CCefView::OnDestroy()
+{
+	__super::OnDestroy();
+}
+
 void CCefView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
@@ -157,7 +171,7 @@ void CCefView::OnInitialUpdate()
 
 	CEF_VIEW_INFO viewInfo;
 	//viewInfo.szUrl = L"http://app";
-	viewInfo.szUrl = L"app://domain";
+	viewInfo.szUrl = L"http://domain";
 	SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_OPEN, reinterpret_cast<LPARAM>(&viewInfo));
 
 	/*
@@ -183,7 +197,9 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 {
 	if (wParam != WMI_CEF_VIEW_COMMAND_OPEN) 
 		return 0L;
+
 	CEF_VIEW_INFO* pInfo = reinterpret_cast<CEF_VIEW_INFO*>(lParam);
+	
 	CRect rect;
 	GetClientRect(&rect);
 
@@ -194,6 +210,7 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	browserSettings.web_security = STATE_DISABLED;
 	browserSettings.local_storage = STATE_ENABLED;
 	cef_string_set(L"UTF-8", 5, &browserSettings.default_encoding, true);
+
 	m_clientHandler = new CCefClientHandler(this);
 	m_clientHandler->CreateBrowser(info, browserSettings, CefString(pInfo->szUrl));
 	return 0L;
@@ -210,8 +227,15 @@ void CCefView::OnBrowserClosed(CefRefPtr<CefBrowser> browser)
 	{
 		m_browser = nullptr;
 		m_clientHandler->DetachDelegate();
-		GetParentFrame()->SendMessage(WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSE, reinterpret_cast<LPARAM>(GetSafeHwnd()));
+		HWND hWndFrame = ::GetParent(GetSafeHwnd());
+		::SendMessage(hWndFrame, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSE, reinterpret_cast<LPARAM>(GetSafeHwnd()));
 	}
+}
+
+// virtual 
+void CCefView::OnBrowserClosing(CefRefPtr<CefBrowser> browser)
+{
+
 }
 
 // virtual 
@@ -219,7 +243,8 @@ void CCefView::OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url)
 {
 	CEF_VIEW_INFO viewInfo;
 	viewInfo.szUrl = url;
-	GetParentFrame()->SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
+	HWND hFrame = ::GetParent(GetSafeHwnd());
+	::SendMessage(hFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
 }
 
 // virtual 
@@ -227,7 +252,8 @@ void CCefView::OnTitleChange(CefRefPtr<CefBrowser> browser, const wchar_t* title
 {
 	CEF_VIEW_INFO viewInfo;
 	viewInfo.szTitle = title;
-	GetParentFrame()->SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_SETTILE, reinterpret_cast<LPARAM>(&viewInfo));
+	HWND hWndFrame = ::GetParent(GetSafeHwnd());
+	::SendMessage(hWndFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_SETTILE, reinterpret_cast<LPARAM>(&viewInfo));
 }
 
 // afx_msg

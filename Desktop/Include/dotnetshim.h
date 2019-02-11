@@ -24,7 +24,7 @@ public:
 	static void OpenSolution(LPCWSTR szFileName);
 
 	static void StartDesktopServices();
-	static std::wstring ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPCWSTR szPost);
+	static void ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod);
 	static std::wstring GetLastMime();
 };
 

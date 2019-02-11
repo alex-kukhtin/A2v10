@@ -13,6 +13,7 @@ public:
 	public:
 		virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
 		virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) = 0;
+		virtual void OnBrowserClosing(CefRefPtr<CefBrowser> browser) = 0;
 		virtual void OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url) = 0;
 		virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const wchar_t* title) = 0;
 	protected:
@@ -29,7 +30,6 @@ public:
 	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() override { return this; }
 	virtual CefRefPtr<CefRequestHandler> GetRequestHandler() override { return this; }
 
-	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual bool DoClose(CefRefPtr<CefBrowser> browser) override;
 	virtual bool OnOpenURLFromTab(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, CefRequestHandler::WindowOpenDisposition target_disposition, bool user_gesture) override;
 
@@ -46,6 +46,8 @@ public:
 		CefLifeSpanHandler::WindowOpenDisposition target_disposition,
 		bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
 		CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access) override;
+	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
+	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
 
 	// CefRequestHandler
 	virtual ReturnValue OnBeforeResourceLoad(

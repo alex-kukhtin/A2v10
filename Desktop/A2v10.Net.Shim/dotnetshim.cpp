@@ -1,5 +1,6 @@
 
 #include "string"
+#include "vector"
 #include "windows.h"
 #include "vcclr.h"
 
@@ -73,15 +74,20 @@ void CDotNetRuntime::OpenSolution(LPCWSTR szFileName)
 }
 
 // satatic
-std::wstring CDotNetRuntime::ProcessRequest(LPCWSTR szUrl, LPCWSTR szSearch, LPCWSTR szPostData)
+void CDotNetRuntime::ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod)
 {
 	auto url = gcnew System::String(szUrl);
 	auto search = gcnew System::String(szSearch);
-	auto postData = gcnew System::String(szPostData);
-	int mimeIndex;
-	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url, search, postData);
-	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
-	return ptr;
+	auto postData = gcnew array<System::Byte>(post.size());
+	if (post.size() > 0)
+		System::Runtime::InteropServices::Marshal::Copy((System::IntPtr) post.data(), postData, 0, post.size());
+	auto result = A2v10RuntimeNet::Desktop::ProcessRequest(url, search, postData, postMethod);
+	if (result) {
+		int len = result->Length;
+		data.resize(len);
+		if (len > 0)
+			System::Runtime::InteropServices::Marshal::Copy(result, 0, (System::IntPtr) data.data(), len);
+	}
 }
 
 //static 

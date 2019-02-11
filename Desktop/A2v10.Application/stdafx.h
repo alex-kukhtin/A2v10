@@ -20,6 +20,7 @@
 #include "locale"
 #include "codecvt"
 #include "list"
+#include "vector"
 #include "algorithm"
 
 #include <afxwin.h>         // MFC core and standard components

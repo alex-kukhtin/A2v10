@@ -44,6 +44,8 @@ protected:
 	afx_msg LRESULT OnAppCommand(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnNavigateBack();
 	afx_msg void OnNavigateForward();
+	afx_msg void OnClose();
+	afx_msg void OnDestroy();
 	DECLARE_MESSAGE_MAP()
 
 	CefRefPtr<CCefClientHandler> m_clientHandler;
@@ -52,6 +54,7 @@ protected:
 	//CCefClientHandler::Delegate
 	virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) override;
+	virtual void OnBrowserClosing(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url) override;
 
 	// CefDisplayHandler::Deletage
