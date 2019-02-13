@@ -2,6 +2,12 @@
 
 #pragma once
 
+#define TAB_HEIGHT 32
+#define TOP_GAP 4
+#define LEFT_GAP 4
+#define BOTTOM_GAP 6
+#define SYSBTNS_HEIGHT 28
+
 class CMainFrame : public CA2SDIFrameWndBase
 {
 	

@@ -14,11 +14,6 @@
 #endif
 
 
-#define TAB_HEIGHT 32
-#define TOP_GAP 4
-#define LEFT_GAP 4
-#define BOTTOM_GAP 6
-#define SYSBTNS_HEIGHT 28
 
 #define BG_BRUSH_NORMAL RGB(0xf2, 0xf3, 0xf9)
 

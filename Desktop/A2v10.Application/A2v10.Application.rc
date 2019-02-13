@@ -106,7 +106,7 @@ IDR_POPUP_EDIT MENU
 BEGIN
 	POPUP "Edit"
 	BEGIN
-		MENUITEM "Cu&t\tCtrl+X",            ID_EDIT_CUT
+		MENUITEM "Developer tools...\tF12", ID_SHOW_DEVTOOLS
 		MENUITEM "&Copy\tCtrl+C",           ID_EDIT_COPY
 		MENUITEM "&Paste\tCtrl+V",          ID_EDIT_PASTE
     END
@@ -115,6 +115,16 @@ END
 IDR_HELP_MENU MENU 
 BEGIN
     MENUITEM "&About A2v10.Application...",          ID_APP_ABOUT
+END
+
+IDM_POPUP_APPTOOLS MENU
+BEGIN
+	POPUP "_0_"
+	BEGIN
+		MENUITEM "Developer tools...\tF12", ID_SHOW_DEVTOOLS
+		MENUITEM "Options...",				ID_TOOLS_OPTIONS
+		MENUITEM "About...",				ID_APP_ABOUT
+	END
 END
 
 /////////////////////////////////////////////////////////////////////////////

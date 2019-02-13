@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2019 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -12,8 +12,8 @@ private:
 	CUITools(void); // declaration only
 	~CUITools(void);
 public:
-	static void TrackPopupMenu(UINT nMenu, int nSubMenu, CWnd* pWnd, CPoint point);
-    static CString GetMonospaceFontFamily();
+	static void TrackPopupMenu(UINT nMenu, int nSubMenu, CWnd* pWnd, CPoint point, bool alignRight = false);
+	static CString GetMonospaceFontFamily();
 	static BOOL TryDoCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
 };
 

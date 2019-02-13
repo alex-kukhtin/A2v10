@@ -262,7 +262,9 @@ void CMainFrame::OnUpdateSysMenu(CCmdUI* pCmdUI)
 
 // afx_msg
 void CMainFrame::OnAppTools() {
-	AfxMessageBox(L"On App Tools");
+	auto navRect = m_captionButtons.GetRect();
+	ClientToScreen(navRect);
+	CUITools::TrackPopupMenu(IDM_POPUP_APPTOOLS, 0, this, CPoint(navRect.left + SYSBTNS_HEIGHT, navRect.bottom), true /*alignRight*/);
 }
 
 // afx_msg

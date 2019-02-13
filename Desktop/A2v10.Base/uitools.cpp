@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2019 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 
@@ -12,7 +12,7 @@
 #define CONSOLAS_FONT L"Consolas"
 
 // static 
-void CUITools::TrackPopupMenu(UINT nMenu, int nSubMenu, CWnd* pWnd, CPoint point)
+void CUITools::TrackPopupMenu(UINT nMenu, int nSubMenu, CWnd* pWnd, CPoint point, bool alignRight /*= false*/)
 {
 	CMenu menu;
 	menu.LoadMenu(nMenu);
@@ -20,16 +20,34 @@ void CUITools::TrackPopupMenu(UINT nMenu, int nSubMenu, CWnd* pWnd, CPoint point
 	CMenu* pSubMenu = menu.GetSubMenu(nSubMenu);
 	ATLASSERT(pSubMenu != NULL);
 
-	if (AfxGetMainWnd()->IsKindOf(RUNTIME_CLASS(CMDIFrameWndEx)))
-	{
-		CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
+	CWnd* pFrame= AfxGetMainWnd();
+	ATLASSERT(pFrame);
 
-		if (!pPopupMenu->Create(pWnd, point.x, point.y, 
-			(HMENU) pSubMenu->GetSafeHmenu(), FALSE, TRUE))
-			return;
+	CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
+
+	if (!pPopupMenu->Create(pWnd, point.x, point.y,
+		(HMENU)pSubMenu->GetSafeHmenu(), FALSE, TRUE))
+		return;
+
+	if (alignRight) {
+		CRect wr;
+		pPopupMenu->GetWindowRect(wr);
+		pPopupMenu->SetWindowPos(nullptr, wr.left - wr.Width(), wr.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	}
+
+	if (pFrame->IsKindOf(RUNTIME_CLASS(CMDIFrameWndEx)))
+	{
 
 		((CMDIFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
 		pWnd->UpdateDialogControls(pWnd, FALSE);
+	}
+	else if (pFrame->IsKindOf(RUNTIME_CLASS(CFrameWndEx))) 
+	{
+		((CFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
+		pWnd->UpdateDialogControls(pWnd, FALSE);
+	}
+	else {
+		ATLASSERT(FALSE);
 	}
 }
 

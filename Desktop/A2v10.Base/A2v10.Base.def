@@ -53,7 +53,7 @@
 ?ExecuteCommand@CCaptionButton@@UAEXPAVCWnd@@VCPoint@@@Z
 ?SetRect@CCaptionButton@@UAEXVCRect@@@Z
 ;
-?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@@Z
+?TrackPopupMenu@CUITools@@SAXIHPAVCWnd@@VCPoint@@_N@Z
 ?GetMonospaceFontFamily@CUITools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
 ?TryDoCmdMsg@CUITools@@SAHIHPAXPAUAFX_CMDHANDLERINFO@@@Z
 ;
