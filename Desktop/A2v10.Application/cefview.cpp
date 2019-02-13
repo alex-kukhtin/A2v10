@@ -24,11 +24,10 @@ IMPLEMENT_DYNCREATE(CCefView, CView)
 
 BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_SIZE()
+	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WMI_CEF_VIEW_COMMAND, OnOpenCefView)
-	// Standard printing commands
-	ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, OnFilePrintPreview)
+	ON_MESSAGE(WMI_CEF_TAB_COMMAND, OnCefTabCommand)
+
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_CLOSE()
@@ -54,6 +53,12 @@ CCefView::~CCefView()
 	if (m_clientHandler != nullptr)
 		m_clientHandler->DetachDelegate();
 	m_clientHandler = nullptr;
+}
+
+// afx_msg
+BOOL CCefView::OnEraseBkgnd(CDC* pDC)
+{
+	return TRUE;
 }
 
 BOOL CCefView::PreCreateWindow(CREATESTRUCT& cs)
@@ -170,8 +175,9 @@ void CCefView::OnInitialUpdate()
 	__super::OnInitialUpdate();
 
 	CEF_VIEW_INFO viewInfo;
-	//viewInfo.szUrl = L"http://app";
+	//viewInfo.szUrl = L"app://domain";
 	viewInfo.szUrl = L"http://domain";
+	//viewInfo.szUrl = L"https://www.google.com.ua";
 	SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_OPEN, reinterpret_cast<LPARAM>(&viewInfo));
 
 	/*
@@ -190,6 +196,15 @@ void CCefView::OnInitialUpdate()
 	//LPCSTR szRootUrl = "https://www.google.com.ua";
 	m_clientHandler->CreateBrowser(info, browserSettings, CefString(szRootUrl));
 	*/
+}
+
+LRESULT CCefView::OnCefTabCommand(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam == WMI_CEF_TAB_COMMAND_CLOSING) {
+		if (m_browser != nullptr)
+			m_browser->GetHost()->CloseBrowser(false);
+	}
+	return 0L;
 }
 
 // afx_msg 
@@ -216,26 +231,29 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-void CCefView::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
+HWND CCefView::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
 {
 	m_browser = browser;
+	return ::GetParent(GetSafeHwnd());
 }
 
 void CCefView::OnBrowserClosed(CefRefPtr<CefBrowser> browser)
 {
-	if ((m_browser != nullptr) && (m_browser->GetIdentifier() == browser->GetIdentifier()))
-	{
-		m_browser = nullptr;
-		m_clientHandler->DetachDelegate();
-		HWND hWndFrame = ::GetParent(GetSafeHwnd());
-		::SendMessage(hWndFrame, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSE, reinterpret_cast<LPARAM>(GetSafeHwnd()));
-	}
+	HWND hFrame = ::GetParent(GetSafeHwnd());
+	if (hFrame != nullptr)
+		::SendMessage(hFrame, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSED, reinterpret_cast<LPARAM>(GetSafeHwnd()));
+	::SendMessage(GetSafeHwnd(), WM_CLOSE, 0, 0L);
 }
 
 // virtual 
 void CCefView::OnBrowserClosing(CefRefPtr<CefBrowser> browser)
 {
+	HWND hWnd = GetSafeHwnd();
+	::PostMessage(hWnd, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSING, reinterpret_cast<LPARAM>(hWnd));
+}
 
+void CCefView::DoCloseBrowser() 
+{
 }
 
 // virtual 

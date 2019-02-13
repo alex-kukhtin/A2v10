@@ -22,7 +22,7 @@ namespace A2v10.Runtime
 
 		const String MIME_JSON   = "application/json";
 		const String MIME_HTML   = "text/html";
-		const String MIME_SCRIPT = "application/javascript";
+		const String MIME_SCRIPT = "text/javascript";
 		const String MIME_STYLE  = "text/css";
 
 		public Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
@@ -33,9 +33,10 @@ namespace A2v10.Runtime
 				{
 					return ProcessRequestImpl(url, search, post, postMethod);
 				}
-				catch (Exception /*err*/)
+				catch (Exception ex)
 				{
 					throw;
+					//WriteExceptionStatus(ex, response);
 				}
 			}
 		}
@@ -80,10 +81,13 @@ namespace A2v10.Runtime
 					{
 						if (postMethod)
 							SaveImage("/" + url, writer);
-						//else
-						//return LoadImage("/" + url);
-						//_controller.DownloadAttachment("/" + url, SetSqlParams).Wait(); // with _image prefix
-						writer.Write("SAVE IMAGE HERE");
+						else
+						{
+							var rb = new DesktopResponse(writer);
+							var bytes = LoadImage("/" + url, rb);
+							MimeType = rb.ContentType;
+							return bytes;
+						}
 					}
 					else if (url.StartsWith("_static_image/"))
 					{
@@ -91,6 +95,17 @@ namespace A2v10.Runtime
 						var bytes = StaticImage(url.Substring(14).Replace('-', '.'), rb);
 						MimeType = rb.ContentType;
 						return bytes;
+					}
+					else if (url.StartsWith("_export/"))
+					{
+						var ms = new MemoryStream();
+						using (var binaryWriter = new BinaryWriter(ms))
+						{
+							var rb = new DesktopResponse(binaryWriter);
+							Export("/" + url, rb);
+							MimeType = rb.ContentType;
+							return ms.GetBuffer();
+						}
 					}
 					else
 						RenderIndex(writer);
@@ -107,11 +122,14 @@ namespace A2v10.Runtime
 			}
 		}
 
+		// TODO: current user ID and tenantId;
+		public Int64 UserId { get { return 50; /*TODO*/ } }
+		public Int32 TenantId { get { return 1; } }
+
 		public void SetSqlParams(ExpandoObject prms)
 		{
-			// TODO: current user ID;
-			A2v10.Infrastructure.DynamicHelpers.Set(prms, "UserId", 50);
-			A2v10.Infrastructure.DynamicHelpers.Set(prms, "TenantId", 1);
+			A2v10.Infrastructure.DynamicHelpers.Set(prms, "UserId", UserId);
+			A2v10.Infrastructure.DynamicHelpers.Set(prms, "TenantId", TenantId);
 		}
 
 		void Render(RequestUrlKind kind, String path, String search, TextWriter writer)
@@ -119,7 +137,10 @@ namespace A2v10.Runtime
 			ExpandoObject loadPrms = new ExpandoObject();
 			loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
 			SetSqlParams(loadPrms);
-			_controller.RenderElementKind(kind, path, loadPrms, writer).Wait();
+			if (path.StartsWith("app/"))
+				_controller.RenderApplicationKind(kind, path, loadPrms, writer).Wait();
+			else
+				_controller.RenderElementKind(kind, path, loadPrms, writer).Wait();
 		}
 
 		void RenderIndex(TextWriter writer)
@@ -176,6 +197,26 @@ namespace A2v10.Runtime
 			}
 		}
 
+
+		Byte[] LoadImage(String url, HttpResponseBase response)
+		{
+			try
+			{
+				AttachmentInfo info = _controller.DownloadAttachment(url, SetSqlParams).Result;
+				if (info == null)
+					return null;
+				response.ContentType = info.Mime;
+				if (info.Stream == null)
+					return null;
+				return info.Stream;
+			}
+			catch (Exception ex)
+			{
+				WriteImageException(ex, response);
+			}
+			return null;
+		}
+
 		Byte[] StaticImage(String url, HttpResponseBase response)
 		{
 			try
@@ -213,20 +254,56 @@ namespace A2v10.Runtime
 
 		String SaveImage(String url, TextWriter writer)
 		{
-			return "unknown";
-			/*
-			MimeType = MIME_JSON;
+			throw new InvalidOperationException();
+		}
+
+		public Byte[] UploadFiles(String url, String files)
+		{
 			try
 			{
-				var files = Request.Files;
-				var list = _controller.SaveAttachments(1, url, files, UserId).Wait();
+				var fileColl = new SimpleHttpFileCollection(files);
+				MimeType = MIME_JSON;
+				var list = _controller.SaveAttachments(TenantId, "/" + url, fileColl, UserId).Result;
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);
 				String result = JsonConvert.SerializeObject(rval, JsonHelpers.StandardSerializerSettings);
-				writer.Write(result);
+				return Encoding.UTF8.GetBytes(result);
 			}
-			*/
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				// TODO:: /exception
+				String msg = $"<div>{ex.Message}</div>";
+				return Encoding.UTF8.GetBytes(msg);
+			}
 		}
+
+		void WriteExceptionStatus(Exception ex, HttpResponseBase response)
+		{
+			response.ContentType = "clr/error+server";
+			if (ex.InnerException != null)
+				ex = ex.InnerException;
+			response.Write(Encoding.UTF8.GetBytes(ex.Message));
+		}
+
+		void Export(String path, HttpResponseBase response)
+		{
+			// HTTP GET
+			try
+			{
+				ExpandoObject prms = new ExpandoObject();
+				ExpandoObject loadPrms = new ExpandoObject();
+				//loadPrms.Append(_controller.CheckPeriod(request.QueryString), toPascalCase: true);
+				SetSqlParams(loadPrms);
+				_controller.Export(path, TenantId, UserId, loadPrms, response).Wait();
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex, response);
+			}
+		}
+
 	}
 }

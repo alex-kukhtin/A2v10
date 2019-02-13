@@ -1,9 +1,7 @@
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
 
-// mainview.h : interface of the CCefView class
-//
 
 #pragma once
-
 
 class CCefView : public CView, public CCefClientHandler::Delegate
 {
@@ -34,6 +32,7 @@ public:
 #endif
 
 protected:
+	void DoCloseBrowser();
 
 	// Generated message map functions
 protected:
@@ -42,17 +41,18 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg LRESULT OnAppCommand(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnCefTabCommand(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnNavigateBack();
 	afx_msg void OnNavigateForward();
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
 	DECLARE_MESSAGE_MAP()
 
-	CefRefPtr<CCefClientHandler> m_clientHandler;
 	CefRefPtr<CefBrowser> m_browser;
+	CefRefPtr<CCefClientHandler> m_clientHandler;
 
 	//CCefClientHandler::Delegate
-	virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
+	virtual HWND OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBrowserClosed(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBrowserClosing(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url) override;
@@ -64,6 +64,7 @@ protected:
 	afx_msg void OnReloadIgnoreCache();
 	afx_msg void OnShowDevTools();
 	afx_msg LRESULT OnOpenCefView(WPARAM wParam, LPARAM lParam);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp

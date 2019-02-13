@@ -140,8 +140,10 @@ void CMainFrame::CreateNewView(CEF_VIEW_INFO* pViewInfo)
 	::SetWindowLong(pActiveView->m_hWnd, GWL_ID, nViewId);
 	::SetWindowLong(pNewView->m_hWnd, GWL_ID, AFX_IDW_PANE_FIRST);
 
-	m_navigateTabs.AddTab(pViewInfo->szUrl, pNewView->GetSafeHwnd(), nViewId);
-	GetActiveDocument()->SetTitle(pViewInfo->szTitle);
+	CString title(pViewInfo->szUrl);
+	title.Replace(L"http://domain/", EMPTYSTR);
+	m_navigateTabs.AddTab(title, pNewView->GetSafeHwnd(), nViewId);
+	GetActiveDocument()->SetTitle(title);
 
 	pActiveView->ShowWindow(SW_HIDE);
 	RecalcLayout();
@@ -159,10 +161,15 @@ LRESULT CMainFrame::OnCefTabCommand(WPARAM wParam, LPARAM lParam)
 		HWND targetHWnd = reinterpret_cast<HWND>(lParam);
 		SwitchToTab(targetHWnd);
 	}
-	else if (wParam == WMI_CEF_TAB_COMMAND_CLOSE) {
+	else if (wParam == WMI_CEF_TAB_COMMAND_CLOSING) {
+	}
+	else if (wParam == WMI_CEF_TAB_COMMAND_CLOSED) {
 		HWND targetHWnd = reinterpret_cast<HWND>(lParam);
 		CloseTab(targetHWnd);
-
+	}
+	else if (wParam == WMI_CEF_TAB_COMMAND_ISALLCLOSED) {
+		if (m_navigateTabs.GetButtonsCount() == 0)
+			PostMessage(WM_SYSCOMMAND, SC_CLOSE);
 	}
 	return 0L;
 }
@@ -198,14 +205,9 @@ void CMainFrame::CloseTab(HWND targetHWnd)
 	CNavTab* pTab = m_navigateTabs.FindTab(targetHWnd);
 	if (!pTab)
 		return;
-	if (m_navigateTabs.GetButtonsCount() == 1) {
-		::DestroyWindow(targetHWnd);
-		PostMessage(WM_COMMAND, ID_FILE_CLOSE);
-		return;
-	}
 	if (!m_navigateTabs.RemoveTab(pTab, this))
 		return;
-	::DestroyWindow(targetHWnd);
+
 	RecalcLayout();
 	Invalidate();
 }
@@ -216,10 +218,16 @@ LRESULT CMainFrame::OnCefViewCommand(WPARAM wParam, LPARAM lParam)
 	CEF_VIEW_INFO* pViewInfo = reinterpret_cast<CEF_VIEW_INFO*>(lParam);
 	if (pViewInfo == nullptr)
 		return 0L;
+	if (!pViewInfo->szTitle && !pViewInfo->szUrl)
+		return 0L;
 	if (wParam == WMI_CEF_VIEW_COMMAND_CREATETAB) {
+		if (!pViewInfo->szUrl)
+			return 0L;
 		CreateNewView(pViewInfo);
 	}
 	else if (wParam == WMI_CEF_VIEW_COMMAND_SETTILE) {
+		if (!pViewInfo->szTitle)
+			return 0L;
 		CWnd* pWnd = GetDlgItem(AFX_IDW_PANE_FIRST);
 		if (pWnd) {
 			CNavTab* pTab = m_navigateTabs.FindTab(pWnd->GetSafeHwnd());
@@ -260,6 +268,10 @@ void CMainFrame::OnAppTools() {
 // afx_msg
 void CMainFrame::OnClose()
 {
+	if (m_navigateTabs.GetButtonsCount() > 0) {
+		m_navigateTabs.CloseAllTabs();
+		return;
+	}
 	__super::OnClose();
 }
 
@@ -267,5 +279,4 @@ void CMainFrame::OnClose()
 void CMainFrame::OnDestroy()
 {
 	__super::OnDestroy();
-	//CefPostTask(TID_UI);
 }

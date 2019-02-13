@@ -3,9 +3,10 @@
 class CClientSchemeHandler : public CefResourceHandler
 {
 public:
-	CClientSchemeHandler() : offset_(0)
-	{
-	}
+	CClientSchemeHandler() 
+		: offset_(0) {}
+	virtual ~CClientSchemeHandler();
+
 	virtual bool ProcessRequest(CefRefPtr<CefRequest> request,
 		CefRefPtr<CefCallback> callback) override;
 	virtual void GetResponseHeaders(CefRefPtr<CefResponse> response,

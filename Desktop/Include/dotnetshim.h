@@ -25,6 +25,7 @@ public:
 
 	static void StartDesktopServices();
 	static void ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod);
+	static void UploadFiles(const wchar_t* szUrl, const wchar_t* szfiles, std::vector<byte>& data);
 	static std::wstring GetLastMime();
 };
 

@@ -90,18 +90,6 @@ BOOL CMainApp::InitInstance()
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
-
-	try
-	{
-		CDotNetRuntime::StartDesktopServices();
-	}
-	catch (CDotNetException& de)
-	{
-		de.ReportError();
-		return FALSE;
-	}
-
-
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
 	if (!ProcessShellCommand(cmdInfo))
@@ -133,15 +121,13 @@ BOOL CMainApp::PumpMessage()
 
 int CMainApp::ExitInstance()
 {
-	//TODO: handle additional resources you may have added
+	if (CCefApplication::IsInit()) {
+		CCefApplication::Destroy();
+	}
+
 	AfxOleTerm(FALSE);
 
-	if (CCefApplication::IsInit())
-		CefShutdown();
-
-	int z = 55;
-
-	return CWinAppEx::ExitInstance();
+	return __super::ExitInstance();
 }
 
 

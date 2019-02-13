@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\NativeFunctions">
+      <UniqueIdentifier>{c03483cf-ea0c-46ec-a1da-d46ae4ad39fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\NativeFunctions">
+      <UniqueIdentifier>{185a4188-b996-4b7e-bf53-b08359455a25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A2v10.Application.h">
@@ -51,6 +57,9 @@
     <ClInclude Include="navtabs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="upload.h">
+      <Filter>Header Files\NativeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -85,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="navtabs.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="upload.cpp">
+      <Filter>Source Files\NativeFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,5 @@
+// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+
 #pragma once
 
 
@@ -29,6 +31,7 @@ public:
 	virtual int GetButtonsCount() override { return m_tabs.GetCount(); }
 	virtual CCaptionButton* GetButton(int index) override { return m_tabs.GetAt(index); }
 
+
 	virtual void Draw(CDC* pDC) override;
 	void RecalcLayout(CRect clientRect, BOOL bZoomed);
 	CNavTab* GetTab(int index);
@@ -36,4 +39,5 @@ public:
 	void AddTab(const wchar_t* szCaption, HWND hWnd, UINT nId);
 	void SetActiveTab(CNavTab* pActiveTab);
 	bool RemoveTab(CNavTab* pTabToRemove, CWnd* pWnd);
+	void CloseAllTabs();
 };

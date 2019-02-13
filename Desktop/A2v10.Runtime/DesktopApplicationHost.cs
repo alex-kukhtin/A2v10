@@ -9,7 +9,6 @@ using System.Reflection;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
-using System.Data;
 
 namespace A2v10.Runtime
 {
@@ -68,7 +67,7 @@ namespace A2v10.Runtime
 		}
 
 		public String Theme => null;
-		public String HelpUrl => null;
+		public String HelpUrl => "http://help";
 
 		public Boolean IsDebugConfiguration
 		{

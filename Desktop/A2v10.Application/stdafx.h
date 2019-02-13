@@ -41,11 +41,18 @@
 #include "../include/A2v10.Net.Shim.h"
 
 
-#include "include\base\cef_lock.h"
-#include "include\cef_client.h"
-#include "include\cef_app.h"
-#include "include\wrapper\cef_helpers.h"
-#include "include\wrapper\cef_resource_manager.h"
+#include "include/base/cef_lock.h"
+#include "include/cef_client.h"
+#include "include/cef_urlrequest.h"
+#include "include/cef_app.h"
+#include "include/cef_stream.h"
+#include "include/cef_resource_handler.h"
+#include "include/cef_browser_process_handler.h"
+#include "Include/cef_v8.h"
+#include "include/views/cef_browser_view.h"
+#include "include/wrapper/cef_helpers.h"
+#include "include/wrapper/cef_resource_manager.h"
+#include "include/wrapper/cef_stream_resource_handler.h"
 
 
 #ifdef _UNICODE

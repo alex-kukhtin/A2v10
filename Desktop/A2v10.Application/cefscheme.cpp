@@ -9,10 +9,35 @@
 #define new DEBUG_NEW
 #endif
 
+// virutal
+CClientSchemeHandler::~CClientSchemeHandler() 
+{
+
+}
+
+std::string GetMimeFromString(const char* szString)
+{
+	// ANSI!
+	std::string result;
+	CStringA hdrString(szString);
+	hdrString.MakeLower();
+	int ctPos = hdrString.Find("content-type:");
+	if (ctPos == -1)
+		return result;
+	hdrString = hdrString.Mid(ctPos + 14);
+	int colonPos = hdrString.FindOneOf(";\r\n");
+	if (colonPos != -1) {
+		result = hdrString.Left(colonPos).Trim();
+	}
+	return result;
+}
+
 bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	CefRefPtr<CefCallback> callback)
 {
 	CEF_REQUIRE_IO_THREAD();
+
+	CApplicationResources::Init();
 
 	bool handled = false;
 	std::string url = request->GetURL();
@@ -20,15 +45,19 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	std::vector<byte> post_;
 	bool isPost = false;
 
+	std::string _files;
+
 	if (method == "POST") 
 	{
 		isPost = true;
 		auto rt = request->GetResourceType();
+		CefRequest::HeaderMap headerMap;
+		//request->GetHeaderMap(headerMap);
 		CefRefPtr<CefPostData> postData = request->GetPostData();
 		if (postData != nullptr) {
 			size_t postCnt = postData->GetElementCount();
 			if (postCnt != 0) {
-				CefPostData::ElementVector elems;
+				CefPostData::ElementVector elems;				
 				postData->GetElements(elems);
 				for (auto it=elems.begin(); it != elems.end(); ++it) {
 					CefPostDataElement* elem = *it;
@@ -39,19 +68,25 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 						elem->GetBytes(bytes, (void*)post_.data());
 					}
 					else if (type == cef_postdataelement_type_t::PDE_TYPE_FILE) {
-						auto fileName = elem->GetFile();
-						size_t bytes = elem->GetBytesCount();
-						post_.resize(bytes);
-						elem->GetBytes(bytes, (void*)post_.data());
-						int z = 55;
+						std::string fileName = elem->GetFile();
+						// fileName is a full path for file
+						std::string hdr = GetMimeFromString((const char*)post_.data());
+						std::string fileToUpload(fileName.c_str());
+						fileToUpload += "\b" + hdr + "\t";
+						_files += fileToUpload;
 					}
 				}
 			}
 		}
 	}
 
-	const char* mime = nullptr;
-	bool rc = CApplicationResources::LoadResource(url.c_str(), &mime, data_, post_, isPost);
+	std::string mime;
+	bool rc = false;
+
+	if (_files.length() > 0)
+		rc = CApplicationResources::UploadFiles(url.c_str(), _files.c_str(), mime, data_, isPost);
+	else
+		rc = CApplicationResources::LoadResource(url.c_str(), mime, data_, post_, isPost);
 	if (rc) {
 		mime_type_ = mime;
 		handled = true;
@@ -66,7 +101,7 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 		mime_type_ = mime;
 		handled = true;
 	}
-	if (handled) {
+	if (handled && callback != nullptr) {
 		callback->Continue();
 		return true;
 	}
@@ -109,7 +144,8 @@ bool CClientSchemeHandler::ReadResponse(void* data_out,
 		bytes_read = transfer_size;
 		has_data = true;
 	}
-
+	//if (has_data && callback)
+		//callback->Continue();
 	return has_data;
 }
 

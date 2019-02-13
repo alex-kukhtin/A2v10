@@ -15,7 +15,7 @@ const char* MimeTypes[] =
 {
 	/*0*/ "text/html",
 	/*1*/ "text/css",
-	/*2*/ "application/javascript",
+	/*2*/ "text/javascript",
 	/*3*/ "application/json",
 	/*4*/ "application/font-woff",
 	/*5*/ "application/font-ttf",
@@ -51,26 +51,18 @@ const RES_DEF resArray[] =
 
 };
 
-static LPCWSTR _findResourceId(LPCWSTR szUrl, LPCSTR* mime)
+static LPCWSTR _findResourceId(LPCWSTR szUrl, std::string& mime)
 {
 	for (int i = 0; i < _countof(resArray); i++) {
 		RES_DEF rd = resArray[i];
 		if (_wcsicmp(szUrl, rd.szName) == 0) {
-			*mime = MimeTypes[rd.eMime];
+			mime = MimeTypes[rd.eMime];
 			return MAKEINTRESOURCE(rd.nRes);
 		}
 	}
 	return nullptr;
 }
 
-static const char* _findMime(std::string& sample) {
-	for (int i = 0; i < _countof(MimeTypes); i++) {
-		const char* curMime = MimeTypes[i];
-		if (sample == curMime)
-			return curMime;
-	}
-	return nullptr;
-}
 
 class CParsedUrl
 {
@@ -110,23 +102,40 @@ CParsedUrl CParsedUrl::CreateFrom(LPCSTR szUrl)
 	return rv;
 }
 
+bool CApplicationResources::m_bInit = false;
+
 // static 
-bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, std::vector<byte>& data, std::vector<byte>& post, bool postMethod)
+void CApplicationResources::Init() {
+	CEF_REQUIRE_IO_THREAD();
+	if (m_bInit)
+		return;
+	try
+	{
+		CDotNetRuntime::StartDesktopServices();
+	}
+	catch (CDotNetException& de)
+	{
+		de.ReportError();
+	}
+
+}
+
+// static 
+bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, std::vector<byte>& data, std::vector<byte>& post, bool postMethod)
 {
-	ATLASSERT(pMime != nullptr);
-	*pMime = MimeTypes[MimeIndex::html];
+	CEF_REQUIRE_IO_THREAD();
+	mime = MimeTypes[MimeIndex::html];
 	//PARSE URL
 	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
-	if (LoadStatic(parsedUrl.path, pMime, data))
+	if (LoadStatic(parsedUrl.path, mime, data))
 		return true;
-	LPCWSTR szError = nullptr;
+	const wchar_t* szError = nullptr;
 	try 
 	{
 		CDotNetRuntime::ProcessRequest(parsedUrl.path, parsedUrl.search, post, data, postMethod); // A2W_CP(postData, CP_UTF8));
 		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
 		// W2A
-		std::string currentMime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
-		*pMime = _findMime(currentMime);
+		mime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
 		return true;
 	}
 	catch (CDotNetException& ex) 
@@ -135,21 +144,26 @@ bool CApplicationResources::LoadResource(const char* szUrl, const char** pMime, 
 	}
 	if (szError) 
 	{
-		// W2A
-		std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(szError);
-		size_t resSize = rrResult.length();
-		data.resize(resSize);
-		memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
-		*pMime = MimeTypes[MimeIndex::html];
+		FillError(szError, data);
+		mime = MimeTypes[MimeIndex::html];
 		return true;
 	}
 	return false;
 }
 
-// static
-bool CApplicationResources::LoadStatic(const wchar_t* path, const char** pMime, std::vector<byte>& data)
+// static 
+void CApplicationResources::FillError(const wchar_t* szError, std::vector<byte>& data)
 {
-	LPCWSTR resId = _findResourceId(path, pMime);
+	std::string rrResult = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(szError);
+	size_t resSize = rrResult.length();
+	data.resize(resSize);
+	memcpy_s(data.data(), resSize, rrResult.c_str(), resSize);
+}
+
+// static
+bool CApplicationResources::LoadStatic(const wchar_t* path, std::string& mime, std::vector<byte>& data)
+{
+	LPCWSTR resId = _findResourceId(path, mime);
 	if (!resId)
 		return false;
 	HINSTANCE hInst = AfxFindResourceHandle(resId, RT_RCDATA);
@@ -160,3 +174,36 @@ bool CApplicationResources::LoadStatic(const wchar_t* path, const char** pMime, 
 	memcpy_s(data.data(), resSize, ::LockResource(hGlob), resSize);
 	return true;
 }
+
+// static 
+bool CApplicationResources::UploadFiles(const char* szUrl, const char* szFiles, std::string& mime, std::vector<byte>& data, bool postMethod)
+{
+	if (!postMethod)
+		return false;
+	CEF_REQUIRE_IO_THREAD();
+	mime = MimeTypes[MimeIndex::html];
+	//PARSE URL
+	CParsedUrl parsedUrl = CParsedUrl::CreateFrom(szUrl);
+	const wchar_t* szError = nullptr;
+	try
+	{
+		CString strFiles(szFiles);
+		CDotNetRuntime::UploadFiles(parsedUrl.path, strFiles, data);
+		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
+		// W2A
+		mime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
+		return true;
+	}
+	catch (CDotNetException& ex)
+	{
+		szError = ex.GetMessage();
+	}
+	if (szError)
+	{
+		FillError(szError, data);
+		mime = MimeTypes[MimeIndex::html];
+		return true;
+	}
+	return false;
+}
+ 

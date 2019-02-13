@@ -90,6 +90,20 @@ void CDotNetRuntime::ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearc
 	}
 }
 
+// static 
+void CDotNetRuntime::UploadFiles(const wchar_t* szUrl, const wchar_t* szFiles, std::vector<byte>& data)
+{
+	auto url = gcnew System::String(szUrl);
+	auto files = gcnew System::String(szFiles);
+	auto result = A2v10RuntimeNet::Desktop::UploadFiles(url, files);
+	if (result) {
+		int len = result->Length;
+		data.resize(len);
+		if (len > 0)
+			System::Runtime::InteropServices::Marshal::Copy(result, 0, (System::IntPtr) data.data(), len);
+	}
+}
+
 //static 
 std::wstring CDotNetRuntime::GetLastMime()
 {

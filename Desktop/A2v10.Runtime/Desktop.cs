@@ -163,5 +163,14 @@ namespace A2v10RuntimeNet
 			_lastMime = dr.MimeType;
 			return result;
 		}
-	}
+
+		public static Byte[] UploadFiles(String url, String files)
+		{
+			var dr = new DesktopRequest();
+			var result = dr.UploadFiles(url, files);
+			_lastMime = dr.MimeType;
+			return result;
+		}
+
+}
 }

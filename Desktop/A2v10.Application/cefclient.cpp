@@ -17,10 +17,11 @@ CCefClientHandler::Delegate::~Delegate()
 }
 
 CCefClientHandler::CCefClientHandler(CCefClientHandler::Delegate* pDelegate)
-	: m_pDelegate(pDelegate)
+	: m_pDelegate(pDelegate), m_resourceHandler(nullptr), m_bClosing(false), m_hWndFrame(nullptr)
 {
 	m_manager = new CefResourceManager();
 	SetupResourceManager(m_manager);
+	CClientSchemeHandler::RegisterSchemaHandlerFactory();
 }
 
 
@@ -32,19 +33,13 @@ void CCefClientHandler::SetupResourceManager(CefRefPtr<CefResourceManager> resou
 		CefPostTask(TID_IO, base::Bind(SetupResourceManager, resource_manager));
 		return;
 	}
-
-	/*
-	const std::string& test_origin = shared::kTestOrigin;
-
-	resource_manager->AddProvider(
-	shared::CreateBinaryResourceProvider(test_origin), 100, std::string());
-	*/
 }
 
 // virtual
 CCefClientHandler::~CCefClientHandler()
 {
-
+	if (m_hWndFrame)
+		::PostMessage(m_hWndFrame, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_ISALLCLOSED, 0L);
 }
 
 void CCefClientHandler::DetachDelegate()
@@ -54,7 +49,6 @@ void CCefClientHandler::DetachDelegate()
 
 void CCefClientHandler::CreateBrowser(CefWindowInfo const & info, CefBrowserSettings const & settings, CefString const & url)
 {
-	CClientSchemeHandler::RegisterSchemaHandlerFactory();
 	CefBrowserHost::CreateBrowser(info, this, url, settings, nullptr);
 }
 
@@ -69,17 +63,31 @@ void CCefClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser)
 {
 	CEF_REQUIRE_UI_THREAD();
 	if (m_pDelegate != nullptr)
-		m_pDelegate->OnBrowserCreated(browser);
+		m_hWndFrame = m_pDelegate->OnBrowserCreated(browser);
+}
+
+// virtual 
+void CCefClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser)
+{
+	CEF_REQUIRE_UI_THREAD();
+	if (m_pDelegate != nullptr)
+		m_pDelegate->OnBrowserClosed(browser);
 }
 
 // virtual 
 bool CCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser)
 {
 	CEF_REQUIRE_UI_THREAD();
+	if (!m_bClosing) 
+	{
+		m_bClosing = true;
+		if (m_pDelegate != nullptr)
+			m_pDelegate->OnBrowserClosing(browser);
+		return true; // disable
+	}
 	if (m_pDelegate != nullptr)
-		m_pDelegate->OnBrowserClosing(browser);
-
-	return false;
+		m_pDelegate->OnBrowserClosed(browser);
+	return false; // enable
 }
 
 
@@ -91,8 +99,9 @@ CefRequestHandler::ReturnValue CCefClientHandler::OnBeforeResourceLoad(
 	CefRefPtr<CefRequestCallback> callback)
 {
 	CEF_REQUIRE_IO_THREAD();
-	return m_manager->OnBeforeResourceLoad(browser, frame, request, callback);
-	//return RV_CONTINUE;
+	if (m_manager != nullptr)
+		return m_manager->OnBeforeResourceLoad(browser, frame, request, callback);
+	return RV_CONTINUE;
 };
 
 //virtual 
@@ -101,7 +110,16 @@ CefRefPtr<CefResourceHandler> CCefClientHandler::GetResourceHandler(
 	CefRefPtr<CefFrame> frame,
 	CefRefPtr<CefRequest> request)
 {
-	return m_manager->GetResourceHandler(browser, frame, request);
+	CEF_REQUIRE_IO_THREAD();
+	/*
+	if (m_resourceHandler == nullptr)
+		m_resourceHandler = new CClientSchemeHandler();
+	return m_resourceHandler;
+	*/
+	if (m_manager != nullptr)
+		return m_manager->GetResourceHandler(browser, frame, request);
+	return nullptr;
+
 }
 
 
@@ -131,11 +149,17 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 	return false;
 }
 
-
+// CefKeyboardHandler
 // virtual 
-void CCefClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser)
+bool CCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
+	CefEventHandle os_event, bool* is_keyboard_shortcut)
 {
-	CEF_REQUIRE_UI_THREAD();
-	if (m_pDelegate != nullptr)
-		m_pDelegate->OnBrowserClosed(browser);
+	return false;
+}
+
+// CefDownloadHandler
+// virtual 
+void CCefClientHandler::OnBeforeDownload(CefRefPtr<CefBrowser> browser, CefRefPtr<CefDownloadItem> download_item,
+	const CefString& suggested_name, CefRefPtr<CefBeforeDownloadCallback> callback)
+{
 }

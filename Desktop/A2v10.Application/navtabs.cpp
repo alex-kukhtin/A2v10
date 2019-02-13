@@ -65,7 +65,7 @@ void CNavTab::Draw(CDC* pDC)
 void CNavTab::ExecuteCommand(CWnd* pWnd, CPoint point)
 {
 	if (m_closeBtnRect.PtInRect(point))
-		pWnd->PostMessage(WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSE, reinterpret_cast<LPARAM>(GetHwnd()));
+		::PostMessage(GetHwnd(), WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSING, reinterpret_cast<LPARAM>(GetHwnd()));
 	else
 		pWnd->PostMessage(WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_SELECT, reinterpret_cast<LPARAM>(GetHwnd()));
 }
@@ -157,8 +157,6 @@ void CNavTabs::SetActiveTab(CNavTab* pActiveTab)
 
 bool CNavTabs::RemoveTab(CNavTab* pTabToRemove, CWnd* pWnd) 
 {
-	if (m_tabs.GetSize() <= 1)
-		return false;
 	int iIndex = -1;
 	for (int i = 0; i < m_tabs.GetSize(); i++) {
 		CNavTab* pTab = m_tabs.GetAt(i);
@@ -181,5 +179,15 @@ bool CNavTabs::RemoveTab(CNavTab* pTabToRemove, CWnd* pWnd)
 	m_tabs.RemoveAt(iIndex);
 	return true;
 }
+
+void CNavTabs::CloseAllTabs()
+{
+	for (int i = 0; i < m_tabs.GetSize(); i++) {
+		CNavTab* pTab = m_tabs.GetAt(i);
+		HWND hWnd = pTab->GetHwnd();
+		::PostMessage(hWnd, WMI_CEF_TAB_COMMAND, WMI_CEF_TAB_COMMAND_CLOSING, reinterpret_cast<LPARAM>(hWnd));
+	}
+}
+
 
 
