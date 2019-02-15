@@ -3075,10 +3075,10 @@ table.data-grid > tbody > tr.bold > td {
   align-items: baseline;
   width: 100%;
   padding: 3px 0 5px 0;
+  color: #8591a2;
 }
 .tree-view li > .overlay .tv-folder {
-  font-weight: bold;
-  color: #8591a2;
+  color: currentColor;
 }
 .tree-view li > .overlay .toggle {
   display: inline-block;
@@ -3089,6 +3089,7 @@ table.data-grid > tbody > tr.bold > td {
   font-size: 16px;
   font-family: "A2v10";
   color: #8591a2;
+  position: relative;
 }
 .tree-view li > .overlay:hover {
   background-color: #fdf4bf;
@@ -3120,7 +3121,7 @@ table.data-grid > tbody > tr.bold > td {
   /*tree-collapsed*/
   position: absolute;
   left: 4px;
-  top: 6px;
+  top: 3px;
 }
 .tree-view li.collapsed ul {
   display: none;
@@ -3130,7 +3131,7 @@ table.data-grid > tbody > tr.bold > td {
   /*tree-expanded*/
   position: absolute;
   left: 2px;
-  top: 5px;
+  top: 2px;
 }
 .tab-panel {
   padding: 0;
@@ -5383,7 +5384,7 @@ h5,
   background-color: #9ab3e0;
   transition: width 0.1s ease-out;
 }
-.side-bar-compact .collapse-button {
+.side-bar-compact .collapse-handle {
   display: block;
   position: absolute;
   right: -8px;
@@ -5395,7 +5396,7 @@ h5,
   border-radius: 50%;
   z-index: 20;
 }
-.side-bar-compact .collapse-button:after {
+.side-bar-compact .collapse-handle:after {
   content: "\e9ab";
   font-family: 'A2v10';
   display: block;
@@ -5403,45 +5404,78 @@ h5,
   font-size: 16px;
   padding: 1px;
 }
-.side-bar-compact .collapse-button:hover {
+.side-bar-compact .collapse-handle:hover {
   background-color: #fdf4bf;
 }
-.side-bar-compact .side-menu {
+.side-bar-compact .side-bar-body {
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: auto;
+  padding: 0 6px;
 }
-.side-bar-compact .side-menu li {
-  margin: 6px;
+.side-bar-compact .side-bar-body .tv-folder {
+  padding: 10px 0 10px 12px;
+  color: white;
+  flex-grow: 2;
+  font-weight: normal;
+}
+.side-bar-compact .side-bar-body .tree-view ul {
+  padding: 0;
+}
+.side-bar-compact .side-bar-body .tree-view li {
+  margin: 6px 0;
+}
+.side-bar-compact .side-bar-body .tree-view li.folder {
+  border-top: 1px solid white;
+}
+.side-bar-compact .side-bar-body .tree-view li.folder > .overlay > .toggle {
+  order: 2;
+  margin-right: 12px;
+}
+.side-bar-compact .side-bar-body .tree-view li.folder > .overlay > .toggle:after {
+  left: 2px;
+  top: 3px;
+  content: '\e9a2';
+}
+.side-bar-compact .side-bar-body .tree-view li.folder.collapsed > .overlay > .toggle:after {
+  content: '\e9a4';
+}
+.side-bar-compact .side-bar-body .tree-view li.group {
+  border-top: 1px dotted white;
+}
+.side-bar-compact .side-bar-body .tree-view li.group.active {
+  border-top: 1px solid white;
+}
+.side-bar-compact .side-bar-body .tree-view li > .overlay {
   font-size: 15px;
   white-space: nowrap;
+  color: white;
+  padding: 0;
+  font-weight: 500;
 }
-.side-bar-compact .side-menu li > a {
+.side-bar-compact .side-bar-body .tree-view li > .overlay > a {
   display: block;
   padding: 10px 6px;
-  color: white;
+  color: currentColor;
 }
-.side-bar-compact .side-menu li > a .ico {
+.side-bar-compact .side-bar-body .tree-view li > .overlay .ico {
   font-size: 20px;
   display: inline-block;
   margin-left: 5px;
   width: auto;
   margin-right: 10px;
+  color: currentColor;
 }
-.side-bar-compact .side-menu li.active > a {
+.side-bar-compact .side-bar-body .tree-view li > .overlay .toggle {
+  width: 6px;
+}
+.side-bar-compact .side-bar-body .tree-view li > .overlay:hover {
+  background-color: #86a4da;
+}
+.side-bar-compact .side-bar-body .tree-view li.active .overlay {
   background-color: white;
   color: #777;
-}
-.side-bar-compact .side-menu li.group {
-  border-top: 1px dotted white;
-  margin-top: 7px;
-}
-.side-bar-compact .side-menu li.group.active {
-  border-top: 1px solid white;
-}
-.side-bar-compact .side-menu li:hover {
-  background-color: #86a4da;
 }
 .side-bar-compact.collapsed {
   width: 52px;
@@ -5450,8 +5484,14 @@ h5,
 .side-bar-compact.collapsed ul li a > span {
   display: none;
 }
-.side-bar-compact.collapsed .collapse-button:after {
+.side-bar-compact.collapsed .collapse-handle:after {
   content: "\e9ad";
+}
+.side-bar-compact.collapsed .tree-view li.folder > .overlay > .toggle {
+  margin: 10px;
+}
+.side-bar-compact.collapsed .tv-folder {
+  display: none;
 }
 .a2-new-btn .btn {
   padding: 4px 7px;

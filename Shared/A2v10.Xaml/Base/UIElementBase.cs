@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -42,24 +42,32 @@ namespace A2v10.Xaml
 			SpecialWizardPage = Margin | Wrap | Tip
 		}
 
+		internal virtual void MergeVisibilityAttribures(TagBuilder tag, RenderContext context)
+		{
+			MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
+			MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
+			// emulate v-hide
+			MergeBindingAttributeBool(tag, context, "v-show", nameof(Hide), Hide, bInvert: true);
+		}
+
 		internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			if (mode.HasFlag(MergeAttrMode.Visibility))
 			{
-				MergeBindingAttributeBool(tag, context, "v-if", nameof(If), If);
-				MergeBindingAttributeBool(tag, context, "v-show", nameof(Show), Show);
-				// emulate v-hide
-				MergeBindingAttributeBool(tag, context, "v-show", nameof(Hide), Hide, bInvert: true);
+				MergeVisibilityAttribures(tag, context);
 			}
+
 			if (mode.HasFlag(MergeAttrMode.Tip))
 			{
 				MergeBindingAttributeString(tag, context, "title", "Tip", Tip);
 			}
+
 			if (mode.HasFlag(MergeAttrMode.Wrap))
 			{
 				if (Wrap != WrapMode.Default)
 					tag.AddCssClass(Wrap.ToString().ToKebabCase());
 			}
+
 			if (mode.HasFlag(MergeAttrMode.Margin))
 			{
 				if (Margin != null)
@@ -67,6 +75,7 @@ namespace A2v10.Xaml
 				if (Padding != null)
 					Padding.MergeStyles("padding", tag);
 			}
+
 			if (Absolute != null)
 				Absolute.MergeAbsolute(tag);
 		}

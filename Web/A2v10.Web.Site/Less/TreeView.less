@@ -1,102 +1,103 @@
 ﻿
 .tree-view {
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
 
-    li {
-        list-style: none;
-        position: relative;
-        cursor: pointer;
+	li {
+		list-style: none;
+		position: relative;
+		cursor: pointer;
 
-        a:hover, a:active {
-            text-decoration:none;
-            color:@link-hover-color;
-        }
+		a:hover, a:active {
+			text-decoration: none;
+			color: @link-hover-color;
+		}
 
-        &.active > .overlay {
-            background-color: @active-bg-color;
+		&.active > .overlay {
+			background-color: @active-bg-color;
 
-            &:hover {
-                background-color: @active-bg-color;
-            }
-        }
+			&:hover {
+				background-color: @active-bg-color;
+			}
+		}
 
-        > .overlay {
-            display: inline-flex;
-            align-items: baseline;
-            width: 100%;
-            padding: 3px 0 5px 0;
+		> .overlay {
+			display: inline-flex;
+			align-items: baseline;
+			width: 100%;
+			padding: 3px 0 5px 0;
+			color: @tv-icon-color;
 
-            .tv-folder {
-                font-weight: bold;
-                color:@tv-icon-color;
-            }
+			.tv-folder {
+				color: currentColor;
+			}
 
-            .toggle {
-                display: inline-block;
-                flex-shrink: 0; /*fixed*/
-                width: 20px;
-                height: 16px;
-                font-size: 16px;
-                font-family: "A2v10";
-                color: @tv-icon-color;
-            }
+			.toggle {
+				display: inline-block;
+				flex-shrink: 0; /*fixed*/
+				width: 20px;
+				height: 16px;
+				font-size: 16px;
+				font-family: "A2v10";
+				color: @tv-icon-color;
+				position: relative;
+			}
 
-            &:hover {
-                background-color: @hover-bg-color;
-            }
+			&:hover {
+				background-color: @hover-bg-color;
+			}
 
-            i.ico {
-                flex-shrink: 0; /*fixed*/
-                color: #8591a2;
-                font-size: 14px;
-                margin-left: 2px;
-                width: 20px; /*16 + 4 margin*/
-            }
+			i.ico {
+				flex-shrink: 0; /*fixed*/
+				color: #8591a2;
+				font-size: 14px;
+				margin-left: 2px;
+				width: 20px; /*16 + 4 margin*/
+			}
 
-            .no-wrap {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            &.no-icons > .toggle {
-                margin-right:4px;
-            }
-        }
+			.no-wrap {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
 
-        > ul {
-            margin: 0;
-            padding-left: 16px; /*indentation*/
-        }
+			&.no-icons > .toggle {
+				margin-right: 4px;
+			}
+		}
 
-        &.collapsed {
-            > .overlay > .toggle {
+		> ul {
+			margin: 0;
+			padding-left: 16px; /*indentation*/
+		}
 
-                &:after {
-                    content: "\e9cd"; /*tree-collapsed*/
-                    position: absolute;
-                    left: 4px;
-                    top: 6px;
-                }
-            }
+		&.collapsed {
+			> .overlay > .toggle {
 
-            ul {
-                display: none;
-            }
-        }
+				&:after {
+					content: "\e9cd"; /*tree-collapsed*/
+					position: absolute;
+					left: 4px;
+					top: 3px;
+				}
+			}
 
-        &.expanded {
-            > .overlay > .toggle {
-                &:after {
-                    content: "\e9cb"; /*tree-expanded*/
-                    position: absolute;
-                    left: 2px;
-                    top: 5px;
-                }
-            }
-        }
-    }
+			ul {
+				display: none;
+			}
+		}
+
+		&.expanded {
+			> .overlay > .toggle {
+				&:after {
+					content: "\e9cb"; /*tree-expanded*/
+					position: absolute;
+					left: 2px;
+					top: 2px;
+				}
+			}
+		}
+	}
 }
-

@@ -75,7 +75,7 @@
 	background-color: @side-bar-compact-bg-color;
 	transition: width .1s ease-out;
 
-	.collapse-button {
+	.collapse-handle {
 		display: block;
 		position: absolute;
 		right: -8px;
@@ -101,21 +101,71 @@
 		}
 	}
 
-	.side-menu {
+	.side-bar-body {
 		height: 100%;
 		margin: 0;
 		padding: 0;
 		overflow: auto;
+		padding: 0 6px;
 
-		li {
-			margin: 6px;
-			font-size: 15px;
-			white-space: nowrap;
+		.tv-folder {
+			padding: 10px 0 10px 12px;
+			color: white;
+			flex-grow: 2;
+			font-weight: normal;
+		}
 
-			> a {
-				display: block;
-				padding: 10px 6px;
+		.tree-view ul {
+			padding: 0;
+		}
+
+		.tree-view li {
+			margin: 6px 0;
+
+			&.folder {
+				border-top: 1px solid white;
+
+				> .overlay > .toggle {
+					order: 2;
+					margin-right: 12px;
+
+					&:after {
+						left: 2px;
+						top: 3px;
+						content: '\e9a2';
+					}
+				}
+			}
+
+			&.folder.collapsed {
+				> .overlay > .toggle {
+					&:after {
+						content: '\e9a4';
+					}
+				}
+			}
+
+
+			&.group {
+				border-top: 1px dotted white;
+
+				&.active {
+					border-top: 1px solid white;
+				}
+			}
+
+			> .overlay {
+				font-size: 15px;
+				white-space: nowrap;
 				color: white;
+				padding: 0;
+				font-weight: 500;
+
+				> a {
+					display: block;
+					padding: 10px 6px;
+					color: currentColor;
+				}
 
 				.ico {
 					font-size: 20px;
@@ -123,27 +173,23 @@
 					margin-left: 5px;
 					width: auto;
 					margin-right: 10px;
+					color: currentColor;
+				}
+
+				.toggle {
+					width: 6px;
+				}
+
+				&:hover {
+					background-color: @side-bar-compact-hover-bg-color;
 				}
 			}
 
 			&.active {
-				> a {
+				.overlay {
 					background-color: white;
 					color: #777;
 				}
-			}
-
-			&.group {
-				border-top: 1px dotted white;
-				margin-top: 7px;
-
-				&.active {
-					border-top: 1px solid white;
-				}
-			}
-
-			&:hover {
-				background-color: @side-bar-compact-hover-bg-color;
 			}
 		}
 	}
@@ -154,17 +200,24 @@
 
 		ul li {
 			a {
-
 				> span {
 					display: none;
 				}
 			}
 		}
 
-		.collapse-button {
+		.collapse-handle {
 			&:after {
 				content: "\e9ad"; // chevron double right
 			}
+		}
+
+		.tree-view li.folder > .overlay > .toggle {
+			margin: 10px;
+		}
+
+		.tv-folder {
+			display: none;
 		}
 	}
 }

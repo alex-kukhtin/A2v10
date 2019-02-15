@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190105-7402*/
+/*20190215-7431*/
 // components/treeview.js
 
 
@@ -21,7 +21,7 @@
 		name: 'tree-item',
 		template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
-    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
+    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
@@ -43,6 +43,7 @@
 			click: Function,
 			expand: Function,
 			isActive: Function,
+			isGroup: Function,
 			getHref: Function
 		},
 		methods: {
@@ -116,6 +117,9 @@
 					return false;
 				return this.isActive && this.isActive(this.item);
 			},
+			isItemGroup() {
+				return this.isGroup && this.isGroup(this.item);
+			},
 			iconClass: function () {
 				let icons = this.options.staticIcons;
 				if (icons)
@@ -174,7 +178,7 @@
 <ul class="tree-view">
     <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
-        :click="click" :is-active="isActive" :expand="expand" :root-items="items">
+        :click="click" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
     </tree-item>
 </ul>
         `,
@@ -182,6 +186,7 @@
 			options: Object,
 			items: Array,
 			isActive: Function,
+			isGroup: Function,
 			click: Function,
 			expand: Function,
 			autoSelect: String,

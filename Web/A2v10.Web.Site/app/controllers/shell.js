@@ -78,7 +78,7 @@
 			opts.title = am.Name;
 			return urlTools.combine(url, am.Url);
 		}
-		return url; // TODO: ????
+		return url; //TODO: ????
 	}
 
 	const a2NavBar = {
@@ -145,13 +145,17 @@
 
 	const sideBarBase = {
 		props: {
-			menu: Array
+			menu: Array,
+			compact: Boolean
 		},
 		computed: {
 			seg0: () => store.getters.seg0,
 			seg1: () => store.getters.seg1,
 			cssClass() {
-				return this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded';
+				let cls = 'side-bar';
+				if (this.compact)
+					cls += '-compact';
+				return cls + (this.$parent.sideBarCollapsed ? ' collapsed' : ' expanded');
 			},
 			sideMenu() {
 				let top = this.topMenu;
@@ -215,33 +219,15 @@
 		}
 	};
 
-	const a2SideBarCompact = {
-		template: `
-<div class='side-bar-compact' :class="cssClass">
-	<a href role="button" aria-label="Expand/Collapse Side bar" class="collapse-button" @click.prevent="toggle"></a>
-	<ul class='side-menu'>
-		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm), group: isGroup(itm)}" :key="itmIx">
-			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>
-		</li>
-	</ul>
-</div>
-`,
-		mixins: [sideBarBase],
-		computed: {
-		},
-		methods: {
-		}
-	};
-
 	const a2SideBar = {
-		// TODO: 
+		//TODO: 
 		// 1. разные варианты меню
 		// 2. folderSelect как функция 
 		template: `
-<div class="side-bar" :class="cssClass">
+<div :class="cssClass">
 	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
 	<div class="side-bar-body" v-if="bodyIsVisible">
-		<tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
+		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
 			subitems: 'Menu', expandAll:true,
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
@@ -255,7 +241,7 @@
 		mixins: [sideBarBase],
 		computed: {
 			bodyIsVisible() {
-				return !this.$parent.sideBarCollapsed;
+				return !this.$parent.sideBarCollapsed || this.compact;
 			},
 			title() {
 				let sm = this.sideMenu;
@@ -323,13 +309,12 @@
 		}
 	};
 
-	// 
 	const a2MainView = {
 		store,
 		template: `
 <div :class="cssClass" class="main-view">
 	<a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
-	<component :is="sideBarComponent" :menu="menu" v-show="sideBarVisible"></component>
+	<a2-side-bar :menu="menu" v-show="sideBarVisible" :compact='isSideBarCompact'></a2-side-bar>
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
@@ -342,7 +327,6 @@
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
-			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
 			'a2-toastr': toastr
@@ -373,9 +357,6 @@
 				if (screen && screen.width < 992)
 					return true;
 				return false;
-			},
-			sideBarComponent() {
-				return this.isSideBarCompact ? 'a2-side-bar-compact' : 'a2-side-bar';
 			},
 			navBarVisible() {
 				let route = this.route;
@@ -659,4 +640,4 @@
 	});
 
 	app.components['std:shellController'] = shell;
-})();
+})();	

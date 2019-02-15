@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -131,6 +131,7 @@ namespace A2v10.Xaml
 					.MergeAttribute("toggle", String.Empty);
 				if (Style != ButtonStyle.Default)
 					open.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
+				MergeVisibilityAttribures(open, context); // Visible only
 				AddSize(open);
 				open.RenderStart(context);
 				RenderCaret(context, bDropUp);

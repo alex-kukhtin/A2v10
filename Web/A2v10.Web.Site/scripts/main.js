@@ -5990,7 +5990,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190105-7402*/
+/*20190215-7431*/
 // components/treeview.js
 
 
@@ -6011,7 +6011,7 @@ Vue.component('popover', {
 		name: 'tree-item',
 		template: `
 <li @click.stop.prevent="doClick(item)" :title="title"
-    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected}" >
+    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
     <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
         <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
         <span v-else class="toggle"/>
@@ -6033,6 +6033,7 @@ Vue.component('popover', {
 			click: Function,
 			expand: Function,
 			isActive: Function,
+			isGroup: Function,
 			getHref: Function
 		},
 		methods: {
@@ -6106,6 +6107,9 @@ Vue.component('popover', {
 					return false;
 				return this.isActive && this.isActive(this.item);
 			},
+			isItemGroup() {
+				return this.isGroup && this.isGroup(this.item);
+			},
 			iconClass: function () {
 				let icons = this.options.staticIcons;
 				if (icons)
@@ -6164,7 +6168,7 @@ Vue.component('popover', {
 <ul class="tree-view">
     <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
         :item="itm" :key="index"
-        :click="click" :is-active="isActive" :expand="expand" :root-items="items">
+        :click="click" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
     </tree-item>
 </ul>
         `,
@@ -6172,6 +6176,7 @@ Vue.component('popover', {
 			options: Object,
 			items: Array,
 			isActive: Function,
+			isGroup: Function,
 			click: Function,
 			expand: Function,
 			autoSelect: String,
@@ -10447,7 +10452,7 @@ Vue.directive('resize', {
 			opts.title = am.Name;
 			return urlTools.combine(url, am.Url);
 		}
-		return url; // TODO: ????
+		return url; //TODO: ????
 	}
 
 	const a2NavBar = {
@@ -10514,13 +10519,17 @@ Vue.directive('resize', {
 
 	const sideBarBase = {
 		props: {
-			menu: Array
+			menu: Array,
+			compact: Boolean
 		},
 		computed: {
 			seg0: () => store.getters.seg0,
 			seg1: () => store.getters.seg1,
 			cssClass() {
-				return this.$parent.sideBarCollapsed ? 'collapsed' : 'expanded';
+				let cls = 'side-bar';
+				if (this.compact)
+					cls += '-compact';
+				return cls + (this.$parent.sideBarCollapsed ? ' collapsed' : ' expanded');
 			},
 			sideMenu() {
 				let top = this.topMenu;
@@ -10584,33 +10593,15 @@ Vue.directive('resize', {
 		}
 	};
 
-	const a2SideBarCompact = {
-		template: `
-<div class='side-bar-compact' :class="cssClass">
-	<a href role="button" aria-label="Expand/Collapse Side bar" class="collapse-button" @click.prevent="toggle"></a>
-	<ul class='side-menu'>
-		<li v-for='(itm, itmIx) in sideMenu' :class="{active: isActive(itm), group: isGroup(itm)}" :key="itmIx">
-			<a :href="itemHref(itm)" :title="itm.Name" @click.prevent='navigate(itm)'><i :class="'ico ico-' + itm.Icon"></i> <span v-text='itm.Name'></span></a>
-		</li>
-	</ul>
-</div>
-`,
-		mixins: [sideBarBase],
-		computed: {
-		},
-		methods: {
-		}
-	};
-
 	const a2SideBar = {
-		// TODO: 
+		//TODO: 
 		// 1. разные варианты меню
 		// 2. folderSelect как функция 
 		template: `
-<div class="side-bar" :class="cssClass">
+<div :class="cssClass">
 	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
 	<div class="side-bar-body" v-if="bodyIsVisible">
-		<tree-view :items="sideMenu" :is-active="isActive" :click="navigate" :get-href="itemHref"
+		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
 			subitems: 'Menu', expandAll:true,
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
@@ -10624,7 +10615,7 @@ Vue.directive('resize', {
 		mixins: [sideBarBase],
 		computed: {
 			bodyIsVisible() {
-				return !this.$parent.sideBarCollapsed;
+				return !this.$parent.sideBarCollapsed || this.compact;
 			},
 			title() {
 				let sm = this.sideMenu;
@@ -10692,13 +10683,12 @@ Vue.directive('resize', {
 		}
 	};
 
-	// 
 	const a2MainView = {
 		store,
 		template: `
 <div :class="cssClass" class="main-view">
 	<a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
-	<component :is="sideBarComponent" :menu="menu" v-show="sideBarVisible"></component>
+	<a2-side-bar :menu="menu" v-show="sideBarVisible" :compact='isSideBarCompact'></a2-side-bar>
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
@@ -10711,7 +10701,6 @@ Vue.directive('resize', {
 		components: {
 			'a2-nav-bar': a2NavBar,
 			'a2-side-bar': a2SideBar,
-			'a2-side-bar-compact': a2SideBarCompact,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
 			'a2-toastr': toastr
@@ -10742,9 +10731,6 @@ Vue.directive('resize', {
 				if (screen && screen.width < 992)
 					return true;
 				return false;
-			},
-			sideBarComponent() {
-				return this.isSideBarCompact ? 'a2-side-bar-compact' : 'a2-side-bar';
 			},
 			navBarVisible() {
 				let route = this.route;
