@@ -16,7 +16,9 @@ namespace A2v10.Xaml
 		Default = 0,
 		Gray,
 		LightGray,
-		Danger
+		Danger,
+		Green,
+		Red
 	}
 
 	public enum FloatMode

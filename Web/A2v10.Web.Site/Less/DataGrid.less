@@ -484,10 +484,17 @@ table.data-grid > tbody {
 }
 
 .data-grid-container.data-grid-light {
+
+	&.fixed-header {
+		> .data-grid-body.fixed-header {
+			margin-top:30px;
+		}
+	}
+
+
 	table.data-grid {
 		th {
-			color: #ccc;
-			background-color: white;
+			color: @label-color;
 			border-style: none;
 
 			.h-holder {
@@ -496,17 +503,30 @@ table.data-grid > tbody {
 		}
 
 		td {
-			padding:6px;
+			padding: 6px;
 		}
 
-		tr.dg-row:last-child > td {
-			border-bottom-style: none;
-		}
+		//tr.dg-row:last-child > td {
+			//border-bottom-style: none;
+		//}
 
 		tr.group td {
-			background-color:#f9f9f9;
-			color:#999;
-			border-bottom-color:transparent;
+			background-color: #f9f9f9;
+			color: @label-color;
+			border-bottom-color: transparent;
 		}
+
+		&.grid-horizontal {
+			th {
+				.h-holder {
+					border-left: none !important;
+					margin-left:0!important;
+				}
+			}
+		}
+	}
+
+	.data-grid-header-border {
+		display: none;
 	}
 }

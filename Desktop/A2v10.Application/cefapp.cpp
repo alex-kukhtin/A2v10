@@ -37,7 +37,7 @@ void CCefApplication::OnBeforeCommandLineProcessing(const CefString& process_typ
 	if (command_line == nullptr)
 		return;
 	command_line->AppendSwitchWithValue(L"process-per-site", L"1");
-	//command_line->AppendSwitchWithValue(L"single-process", "1"); //?? closing???
+	//command_line->AppendSwitchWithValue(L"single-process", "1"); //?? debugger tools???
 
 	command_line->AppendSwitchWithValue(L"disable-gpu", L"1");
 	command_line->AppendSwitchWithValue(L"disable-software-rasterizer", L"1");
@@ -57,7 +57,6 @@ void CCefApplication::Init(HINSTANCE hInstance)
 
 	CefMainArgs args(hInstance);
 	CefSettings settings;
-	//settings.single_process = true; // TODO: // check ????
 	
 	settings.multi_threaded_message_loop = true;
 	settings.no_sandbox = true;

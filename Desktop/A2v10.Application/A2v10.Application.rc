@@ -117,16 +117,6 @@ BEGIN
     MENUITEM "&About A2v10.Application...",          ID_APP_ABOUT
 END
 
-IDM_POPUP_APPTOOLS MENU
-BEGIN
-	POPUP "_0_"
-	BEGIN
-		MENUITEM "Developer tools...\tF12", ID_SHOW_DEVTOOLS
-		MENUITEM "Options...",				ID_TOOLS_OPTIONS
-		MENUITEM "About...",				ID_APP_ABOUT
-	END
-END
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Accelerator
@@ -227,26 +217,12 @@ BEGIN
     AFX_IDS_APP_TITLE       "A2v10.Application"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
-STRINGTABLE
-BEGIN
-    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
-    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
-    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
-    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
-    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
-    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
-END
 
 STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
 END
 
-
-STRINGTABLE
-BEGIN
-    IDS_TOOLBAR_STANDARD    "Standard"
-END
 #endif
 
 #ifndef APSTUDIO_INVOKED

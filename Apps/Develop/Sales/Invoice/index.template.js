@@ -6,8 +6,10 @@ const du = utils.date;
 const template = {
 	properties: {
 		'TRoot.$ForCreate'() { return { AgentId: 11 };},
+		'TRoot.$tabIndex': Number,
         'TDocument.$Mark': mark,
         'TDocument.$Icon'() { return this.Done ? 'flag-green' : ''; },
+		'TDocument.$Color'() { return this.Sum > 100 ? 'red' : 'green'; },
         'TDocument.$Shipment': getShipment,
         'TDocument.$HasDetails'() { return this.Links.Count > 0; },
         'TDocLink.$DocName': linkDocName,

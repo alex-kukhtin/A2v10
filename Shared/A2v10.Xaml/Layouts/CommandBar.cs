@@ -8,7 +8,8 @@ namespace A2v10.Xaml
 	public enum CommandBarVisibility
 	{
 		Default,
-		Active
+		Active,
+		Hover
 	}
 
 	public class CommandBar : Container

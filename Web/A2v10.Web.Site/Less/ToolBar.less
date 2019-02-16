@@ -198,12 +198,16 @@
 	}
 }
 
-.commandbar.visible-active {
-	visibility:hidden;
+.commandbar.visible-active, .commandbar.visible-hover {
+	visibility: hidden;
 }
 
-.active .commandbar.visible-active {
-	visibility:visible;
+.active .commandbar.visible-active, .active .commandbar.visible-hover {
+	visibility: visible;
+}
+
+tr:hover .commandbar.visible-hover {
+	visibility: visible;
 }
 
 .data-grid td > .commandbar {

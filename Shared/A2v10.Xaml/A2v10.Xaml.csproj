@@ -93,6 +93,7 @@
     <Compile Include="Controls\DatePicker.cs" />
     <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StateCard.cs" />
+    <Compile Include="Controls\TabButton.cs" />
     <Compile Include="Drawing\ActionButton.cs" />
     <Compile Include="Drawing\Card.cs" />
     <Compile Include="Drawing\Diagram.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Layouts\Flex.cs" />
     <Compile Include="Layouts\FlexList.cs" />
     <Compile Include="Layouts\Card.cs" />
+    <Compile Include="Layouts\TabBar.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

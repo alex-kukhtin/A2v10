@@ -80,7 +80,7 @@ void CA2MiniFrameWnd::OnNcPaint()
 	CRect rectWindow;
 	GetWindowRect(rectWindow);
 	CRect rect;
-	rect.SetRect(0, 0, rectWindow.Width(), rectWindow.Height());
+	rect.SetRect(0, 0, rectWindow.Width(), GetCaptionHeight() + 5);
 
 	if (dcMem.CreateCompatibleDC(&dc) && bmp.CreateCompatibleBitmap(&dc, rect.Width(), rect.Height()))
 	{

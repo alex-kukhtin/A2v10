@@ -31,6 +31,13 @@ namespace A2v10.Xaml
 		Blue = 4
 	}
 
+	public enum PopoverUnderlineMode
+	{
+		Enable,
+		Disable,
+		Hover
+	}
+
 	[ContentProperty("Content")]
 	[TypeConverter(typeof(PopoverConverter))]
 	public class Popover : Inline
@@ -43,6 +50,8 @@ namespace A2v10.Xaml
 		public Length Top { get; set; }
 
 		public String Url { get; set; }
+
+		public PopoverUnderlineMode Underline { get; set; }
 
 		public PopoverBackgroundStyle Background { get; set; }
 
@@ -59,6 +68,8 @@ namespace A2v10.Xaml
 			if (Icon != Icon.NoIcon)
 				po.MergeAttribute("icon", Icon.ToString().ToKebabCase());
 			MergeBindingAttributeString(po, context, "content", nameof(Text), Text);
+			if (Underline != PopoverUnderlineMode.Enable)
+				po.AddCssClass("underline-" + Underline.ToString().ToLowerInvariant());
 
 			var urlBind = GetBinding(nameof(Url));
 			if (urlBind != null)

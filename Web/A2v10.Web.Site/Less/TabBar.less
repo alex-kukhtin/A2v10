@@ -1,0 +1,36 @@
+﻿
+@tabbar-border-height:.3rem;
+@tabbar-border-color:#ddd;
+@tabbar-padding:.65rem;
+
+.a2-tab-bar {
+	display: flex;
+	border-bottom: @tabbar-border-height solid @tabbar-border-color;
+	align-items: baseline;
+	margin: @tabbar-padding 0;
+}
+
+.a2-tab-bar-item {
+	padding:0 @tabbar-padding;
+	&:first-child {
+		padding-left:0;
+	}
+}
+
+.a2-tab-button {
+	padding: @tabbar-padding 0;
+	border-bottom: @tabbar-border-height solid @tabbar-border-color;
+	margin-bottom: -@tabbar-border-height;
+	font-weight: bold;
+	font-size:1.2rem;
+	display:block;
+
+	&.active {
+		border-bottom-color: @link-color;
+		color: @label-color;
+	}
+}
+
+.a2-tab-description {
+	color:@label-color;
+}

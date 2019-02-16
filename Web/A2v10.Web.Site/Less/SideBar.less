@@ -74,6 +74,7 @@
 	width: @side-bar-width;
 	background-color: @side-bar-compact-bg-color;
 	transition: width .1s ease-out;
+	color:white;
 
 	.collapse-handle {
 		display: block;
@@ -137,6 +138,10 @@
 				}
 			}
 
+			&.folder:first-child {
+				border-top:none;
+			}
+
 			&.folder.collapsed {
 				> .overlay > .toggle {
 					&:after {
@@ -147,7 +152,7 @@
 
 
 			&.group {
-				border-top: 1px dotted white;
+				border-top: 1px solid white;
 
 				&.active {
 					border-top: 1px solid white;

@@ -25,7 +25,7 @@ namespace A2v10.Xaml
 
 		public TagBuilder(String tagName = "div", String classes = null, Boolean inGrid = false)
 		{
-			TagName = tagName;
+			TagName = tagName ?? "div";
 			_inGrid = inGrid;
 			if (!String.IsNullOrEmpty(classes))
 				AddCssClass(classes);

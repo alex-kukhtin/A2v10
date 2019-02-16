@@ -17,7 +17,10 @@ namespace A2v10.Xaml
 		{
 			base.MergeAttributes(tag, context, mode);
 			tag.AddCssClassBool(Block, "block");
-			if (Color != TextColor.Default)
+			var bindColor = GetBinding(nameof(Color));
+			if (bindColor != null)
+				tag.MergeAttribute(":class", $"'text-color-'+{bindColor.GetPath(context)}");
+			else if (Color != TextColor.Default)
 				tag.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			if (Float != FloatMode.None)
 				tag.AddCssClass("float-" + Float.ToString().ToLowerInvariant());

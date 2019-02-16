@@ -154,7 +154,53 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 bool CCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
 	CefEventHandle os_event, bool* is_keyboard_shortcut)
 {
+	if (os_event->message == WM_KEYDOWN) {
+		if (HandleKey(os_event->wParam))
+			return true;
+	}
+	else if (os_event->message == WM_SYSKEYDOWN) {
+		if (HandleSysKey(os_event->wParam))
+			return true;
+	}
 	return false;
+}
+
+bool CCefClientHandler::HandleKey(WPARAM wKey)
+{
+	if (!m_hWndFrame)
+		return false;
+	switch (wKey) {
+	case VK_F1:
+		if (GetAsyncKeyState(VK_CONTROL) < 0 )
+			::PostMessage(m_hWndFrame, WM_COMMAND, ID_APP_ABOUT, 0L);
+		break;
+	case VK_F5:
+		::PostMessage(m_hWndFrame, WM_COMMAND, ID_NAVIGATE_REFRESH, 0L);
+		break;
+	case VK_F12: 
+		::PostMessage(m_hWndFrame, WM_COMMAND, ID_SHOW_DEVTOOLS, 0L);
+		break;
+	default:
+		return false;
+	}
+	return true;
+}
+
+bool CCefClientHandler::HandleSysKey(WPARAM wKey)
+{
+	if (!m_hWndFrame)
+		return false;
+	switch (wKey) {
+	case VK_LEFT:
+		::PostMessage(m_hWndFrame, WM_COMMAND, ID_NAVIGATE_BACK, 0L);
+		break;
+	case VK_RIGHT:
+		::PostMessage(m_hWndFrame, WM_COMMAND, ID_NAVIGATE_FORWARD, 0L);
+		break;
+	default:
+		return false;
+	}
+	return true;
 }
 
 // CefDownloadHandler

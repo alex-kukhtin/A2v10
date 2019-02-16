@@ -179,7 +179,7 @@ namespace A2v10.Runtime
 				case "script":
 					try
 					{
-						_controller.ShellScript(null, SetSqlParams, userAdmin: true, bAdmin: false, writer: writer).Wait();
+						_controller.ShellScript(null, SetSqlParams, userAdmin: false, bAdmin: false, writer: writer).Wait();
 						mimeType = MIME_SCRIPT;
 					}
 					catch (Exception ex)
@@ -212,9 +212,8 @@ namespace A2v10.Runtime
 			}
 			catch (Exception ex)
 			{
-				WriteImageException(ex, response);
+				return GetImageException(ex, response);
 			}
-			return null;
 		}
 
 		Byte[] StaticImage(String url, HttpResponseBase response)
@@ -229,12 +228,11 @@ namespace A2v10.Runtime
 			}
 			catch (Exception ex)
 			{
-				WriteImageException(ex, response);
+				return GetImageException(ex, response);
 			}
-			return null;
 		}
 
-		void WriteImageException(Exception ex, HttpResponseBase response)
+		Byte[] GetImageException(Exception ex, HttpResponseBase response)
 		{
 			response.ContentType = "image/png";
 			if (ex.InnerException != null)
@@ -248,7 +246,7 @@ namespace A2v10.Runtime
 			{
 				b.Save(ms, ImageFormat.Png);
 				ms.Seek(0, SeekOrigin.Begin);
-				response.BinaryWrite(ms.GetBuffer());
+				return ms.GetBuffer();
 			}
 		}
 

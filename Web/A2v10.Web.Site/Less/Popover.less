@@ -34,6 +34,18 @@
 		}
 	}
 
+	&.underline-disable {
+		> .popover-title {
+			border-bottom-style: none;
+		}
+	}
+
+	&.underline-hover {
+		> .popover-title {
+			border-bottom-color: transparent;
+		}
+	}
+
 	> .popover-title:hover {
 		color: @popover-hover-color;
 		border-bottom-color: @popover-hover-color;

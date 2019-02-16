@@ -1,19 +1,19 @@
 ﻿
 @btn-bg-color: white;
 @btn-dis-color: @whitesmoke-gray-bg-color;
-@btn-width: 21px;
+@btn-width: 25.5px;
 
 .a2-pager {
 	//background-color: #f8f8f8;
 	background-color:white;
-	padding: 2px 6px 2px 0;
+	padding: 8px 6px 2px 0;
 	display: flex;
 	align-items: center;
 	border-top: 1px solid @table-brd-color;
 	//border-bottom: 1px solid @table-brd-color;
 
 	button {
-		padding: 2px;
+		padding: 3px;
 		background-color: @btn-bg-color;
 		border: 1px solid #ccc;
 		min-width: @btn-width;
@@ -53,7 +53,7 @@
 	}
 
 	> .a2-pager-title {
-		font-size: .86rem;
+		font-size: .9em;
 		color: #777;
 	}
 
@@ -61,5 +61,12 @@
 		display: inline-block;
 		width: @btn-width;
 		text-align: center;
+	}
+
+	&.rounded {
+		button {
+			border-radius:10rem;
+			margin-right:4px;
+		}
 	}
 }

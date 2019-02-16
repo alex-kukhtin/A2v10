@@ -46,6 +46,8 @@ protected:
 	afx_msg void OnNavigateForward();
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
+
 	DECLARE_MESSAGE_MAP()
 
 	CefRefPtr<CefBrowser> m_browser;

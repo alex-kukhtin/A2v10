@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190112-7411
+// 20190217-7432
 // components/periodpicker.js
 
 
@@ -70,8 +70,11 @@
 			text() {
 				if (this.display === 'name')
 					return this.period.text();
-				else if (this.display === 'namedate')
+				else if (this.display === 'namedate') {
+					if (this.period.isAllData())
+						return this.period.text(true);
 					return `${this.period.text(true)} [${this.period.format('Date')}]`;
+				}
 				return this.period.format('Date');
 			},
 			period() {

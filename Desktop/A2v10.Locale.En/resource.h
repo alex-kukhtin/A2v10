@@ -4,6 +4,7 @@
 //
 #define IDM_POPUP_MENU                  600
 #define IDM_POPUP_FORM					601
+#define IDM_POPUP_APPTOOLS				603
 #define IDD_OPTION_GENERAL              800
 #define IDD_ABOUT						801
 #define IDS_STRING5000                  5000
@@ -32,6 +33,11 @@
 #define IDC_TEXT3						14018
 #define IDC_TEXT4						14019
 #define IDC_TEXT5						14020
+#define IDS_ID_APP_ABOUT				17000
+#define IDS_ID_TOOLS_OPTIONS			17001
+#define IDS_ID_SHOW_DEVTOOLS			17002
+#define ID_SHOW_DEVTOOLS				32154
+#define ID_TOOLS_OPTIONS                32400
 
 // Next default values for new objects
 // 

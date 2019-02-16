@@ -102,10 +102,17 @@ BOOL CMainApp::InitInstance()
 	
 	if (pSysMenu != nullptr)
 	{
+		CString strAbout;
+		CString strOptions;
+		CString strDevTools;
+		strAbout.LoadString(IDS_ID_APP_ABOUT);
+		strOptions.LoadString(IDS_ID_TOOLS_OPTIONS);
+		strDevTools.LoadString(IDS_ID_SHOW_DEVTOOLS);
+
 		pSysMenu->AppendMenu(MF_SEPARATOR);
-		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_OPTIONS,  L"Options...");
-		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_DEVTOOLS, L"Developer tools...\tF12");
-		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_ABOUTBOX, L"About...");
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_OPTIONS,  strOptions);
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_DEVTOOLS, strDevTools);
+		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_ABOUTBOX, strAbout);
 	}
 
 	return TRUE;

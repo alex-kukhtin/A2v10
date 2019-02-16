@@ -37,6 +37,7 @@ protected:
 	virtual void RecalcLayout(BOOL bNotify = TRUE) override;
 	void SwitchToTab(HWND targetHWnd);
 	void CloseTab(HWND targetHWnd);
+	void DoPaint(CDC& dc);
 
 	afx_msg LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnPaint();

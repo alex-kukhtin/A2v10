@@ -3994,7 +3994,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190217-7432
 // controllers/base.js
 
 (function () {
@@ -4998,6 +4998,7 @@ Vue.component('a2-pager', {
 					$requery: this.$requery,
 					$reload: this.$reload,
 					$notifyOwner: this.$notifyOwner,
+					$navigate: this.$navigate,
 					$defer: platform.defer
 				};
 				Object.defineProperty(ctrl, "$isDirty", {

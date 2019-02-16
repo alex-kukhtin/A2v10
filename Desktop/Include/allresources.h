@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2019 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -67,6 +67,10 @@
 #define IDC_TEXT3			14018
 #define IDC_TEXT4			14019
 #define IDC_TEXT5			14020
+
+#define IDS_ID_APP_ABOUT		17000
+#define IDS_ID_TOOLS_OPTIONS	17001
+#define IDS_ID_SHOW_DEVTOOLS	17002
 
 #define IDS_WEB_RESOURCE_FIRST    20000
 #define IDS_WEB_RESOURCE_LAST     20999

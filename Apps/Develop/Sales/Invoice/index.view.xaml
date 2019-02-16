@@ -45,7 +45,7 @@
 			<Button Icon="FileLink" Content="XML" Command="{BindCmd Report, Report='TestXml', Export=True, Argument={Bind Documents.$selected}}"/>
 			<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
-			<PeriodPicker Value="{Bind Parent.Filter.Period}" Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" Size="Large" ShowAllData="False" Display="NameDate" Bold="True"/>
+			<PeriodPicker Value="{Bind Parent.Filter.Period}" Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" Size="Large" ShowAllData="True" Display="NameDate" Bold="True"/>
 			<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
 		</Toolbar>
 		</Block>
@@ -64,7 +64,7 @@
 		</CollectionView>
 	</Page.CollectionView>
 	<Page.Pager>
-		<Pager Source="{Bind Parent.Pager}" />
+		<Pager Source="{Bind Parent.Pager}" Style="Rounded"/>
 	</Page.Pager>
 	<Block Padding="0, 0, 0, 20" If="False">
 		<Button Style="Green" Icon="Plus" Content="Create new">
@@ -88,7 +88,7 @@
 		<TagLabel Style="Magenta">Magenta</TagLabel>
 	</Block>
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False" Style="Light"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="Agent.Name">
 		<DataGridColumn Header="@[Code]" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url={StaticResource OpenUrl}}"  Icon="{Bind $Icon}" Wrap="NoWrap"/>
@@ -100,10 +100,13 @@
 		<DataGridColumn Header="@[Purchaser]" Icon="Rename"
 						Content="{Bind Agent.Name}" Width="100" Command="{BindCmd Dialog, Action=Browse, Url={StaticResource OpenUrl}}"/>
 		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="@[Sum]" Align="Right" Fit="True" Wrap="NoWrap">
+			<Span Content="{Bind Sum, DataType=Currency}" Color="{Bind $Color}" Bold="True"></Span>
+		</DataGridColumn>
 		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
 		<DataGridColumn Icon="Bank" Command="{BindCmd Dialog, Action=Browse, Url='/aaa/aaa'}" Fit="True"/>
 		<DataGridColumn Fit="True">
-			<CommandBar Visibility="Active">
+			<CommandBar Visibility="Hover">
 				<Button Icon="ArrowOpen" Tip="Открыть"/>
 				<Button Icon="Edit" Tip="Изменить"/>
 				<Button Icon="Copy" Tip="Копировать"/>
@@ -143,7 +146,7 @@
 		<Button>2</Button>
 		<Hyperlink Icon="Access">With caret
 			<Hyperlink.DropDown>
-				<DropDownMenu>
+				<DropDownMenu Background="White">
 					<MenuItem  Icon="TagBlue" Content="Tag blue"/>
 				</DropDownMenu>
 			</Hyperlink.DropDown>
@@ -152,9 +155,26 @@
 		<Button>3</Button>
 	</StackPanel>
 
+	<TabBar Value="{Bind Root.$tabIndex}" DropShadow="None">
+		<TabButton ActiveValue="0">Вихідні</TabButton>
+		<TabButton ActiveValue="1">Вхідні</TabButton>
+		<TabButton ActiveValue="2">Непроведені</TabButton>
+		<TabButton ActiveValue="3">Всі</TabButton>
+		<TabBar.Description>
+			<FlexList Orientation="Horizontal">
+				<Text Gray="True">First:
+					<Span Bold="True" Content="{Bind Documents.$RowCount}" Space="After"/>
+					<Span Space="Before">23</Span>
+				</Text>
+				<Span>Second</Span>
+				<Span>Third</Span>
+			</FlexList>
+		</TabBar.Description>
+	</TabBar>
+
 	<List ItemsSource="{Bind Parent.ItemsSource}" GroupBy="Agent.Name" Mark="{Bind $Mark}" MarkerStyle="Row"
 		  Border="True" Margin="50" Padding="20" Style="Underlined" Compact="True">
-		<ListItem Header="{Bind Agent.Name}" Content="{Bind Date}"/>
+		<ListItem Header="{Bind Agent.Name}" Content="{Bind Date, DataType=Date}"/>
 	</List>
 
 	<Grid Columns="1*, 1*, 1*" AlignItems="Top">

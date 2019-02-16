@@ -4523,7 +4523,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190112-7411
+// 20190217-7432
 // components/periodpicker.js
 
 
@@ -4593,8 +4593,11 @@ Vue.component('validator-control', {
 			text() {
 				if (this.display === 'name')
 					return this.period.text();
-				else if (this.display === 'namedate')
+				else if (this.display === 'namedate') {
+					if (this.period.isAllData())
+						return this.period.text(true);
 					return `${this.period.text(true)} [${this.period.format('Date')}]`;
+				}
 				return this.period.format('Date');
 			},
 			period() {
@@ -9294,7 +9297,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190217-7432
 // controllers/base.js
 
 (function () {
@@ -10298,6 +10301,7 @@ Vue.directive('resize', {
 					$requery: this.$requery,
 					$reload: this.$reload,
 					$notifyOwner: this.$notifyOwner,
+					$navigate: this.$navigate,
 					$defer: platform.defer
 				};
 				Object.defineProperty(ctrl, "$isDirty", {

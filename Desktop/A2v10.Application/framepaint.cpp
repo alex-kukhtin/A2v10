@@ -96,10 +96,51 @@ LRESULT CMainFrame::OnNcHitTest(WPARAM wParam, LPARAM lParam)
 	return HTNOWHERE;
 }
 
+
 // afx_msg
 void CMainFrame::OnPaint()
 {
 	CPaintDC dc(this);
+
+	CDC* pDC = &dc;
+	BOOL bMemDC = false;
+	CDC dcMem;
+	CBitmap bmp;
+	CBitmap* pOldBmp = nullptr;
+
+	CRect rectWindow;
+	GetWindowRect(rectWindow);
+	CRect rect;
+	rect.SetRect(0, 0, rectWindow.Width(), rectWindow.Height());
+
+	if (dcMem.CreateCompatibleDC(&dc) && bmp.CreateCompatibleBitmap(&dc, rect.Width(), rect.Height()))
+	{
+		// Off-screen DC successfully created. Better paint to it then!
+		bMemDC = true;
+		pOldBmp = dcMem.SelectObject(&bmp);
+		pDC = &dcMem;
+	}
+
+	DoPaint(*pDC);
+
+	if (bMemDC)
+	{
+		// Copy the results to the on-screen DC:
+		CRect rectClip;
+		int nClipType = dc.GetClipBox(rectClip);
+		if (nClipType != NULLREGION)
+		{
+			if (nClipType != SIMPLEREGION)
+				rectClip = rect;
+
+			dc.BitBlt(rectClip.left, rectClip.top, rectClip.Width(), rectClip.Height(), &dcMem, rectClip.left, rectClip.top, SRCCOPY);
+		}
+		dcMem.SelectObject(pOldBmp);
+	}
+}
+
+void CMainFrame::DoPaint(CDC& dc)
+{
 	CRect rc;
 	GetClientRect(rc);
 
@@ -129,32 +170,6 @@ void CMainFrame::OnPaint()
 	m_captionButtons.Draw(&dc);
 	m_navigateButtons.Draw(&dc);
 	m_navigateTabs.Draw(&dc);
-
-
-	/*
-	CFont* pOldFont = dc.SelectObject(CTheme::GetUIFont(CTheme::FontNonClient));
-	CPenSDC  tabPen(&dc, RGB(0xaf, 0xaf, 0xaf));
-	CRect tabRect(captionRect);
-	tabRect.top += TAB_HEIGHT + TOP_GAP;
-	//tabRect.right = tabRect.left + 80;
-	dc.FillRect(tabRect, &tabBrush);
-
-	tabRect.CopyRect(captionRect);
-	tabRect.left += m_navigateButtons.Width() + LEFT_GAP;
-	tabRect.right = tabRect.left + 200; /*MAX_TAB_WIDTH* /
-	tabRect.bottom -= BOTTOM_GAP;
-	tabRect.top += TOP_GAP;
-	dc.FillRect(tabRect, &tabBrush);
-	dc.MoveTo(tabRect.left, tabRect.top);
-	//dc.LineTo(tabRect.left, tabRect.bottom);
-	dc.MoveTo(tabRect.right-1, tabRect.top);
-	//dc.LineTo(tabRect.right-1, tabRect.bottom);
-	tabRect.OffsetRect(16, 0);
-	dc.DrawText(L"Покупатели", &tabRect, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-	dc.MoveTo(tabRect.right + 100, tabRect.top + 4);
-	dc.LineTo(tabRect.right + 100, tabRect.bottom - 4);
-	dc.SelectObject(pOldFont);
-	*/
 }
 
 // afx_msg 

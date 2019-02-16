@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_COMMAND(ID_NAVIGATE_BACK, OnNavigateBack)
 	ON_COMMAND(ID_NAVIGATE_FORWARD, OnNavigateForward)
 	ON_WM_DESTROY()
+	ON_WM_SETFOCUS()
 END_MESSAGE_MAP()
 
 // CCefView construction/destruction
@@ -109,6 +110,13 @@ void CCefView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 void CCefView::OnClose()
 {
 	__super::OnClose();
+}
+
+// afx_msg 
+void CCefView::OnSetFocus(CWnd* pOldWnd)
+{
+	if (m_browser == nullptr) return;
+	m_browser->GetHost()->SetFocus(true);
 }
 
 // afx_msg

@@ -8,7 +8,8 @@ class CCefClientHandler :
 	public CefLoadHandler,
 	public CefRequestHandler,
 	public CefKeyboardHandler,
-	public CefDownloadHandler
+	public CefDownloadHandler,
+	public CefFocusHandler
 {
 	bool m_bClosing;
 	HWND m_hWndFrame;
@@ -75,8 +76,12 @@ public:
 	virtual void OnBeforeDownload(CefRefPtr<CefBrowser> browser, CefRefPtr<CefDownloadItem> download_item,
 		const CefString& suggested_name, CefRefPtr<CefBeforeDownloadCallback> callback) override;
 
+	//CefFocusHandler
+
 private:
 	static void SetupResourceManager(CefRefPtr<CefResourceManager> resource_manager);
+	bool HandleKey(WPARAM wKey);
+	bool HandleSysKey(WPARAM wKey);
 
 	Delegate* m_pDelegate;
 	CefRefPtr<CefResourceManager> m_manager;
