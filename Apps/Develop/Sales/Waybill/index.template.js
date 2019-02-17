@@ -30,7 +30,8 @@ const template = {
 				okText2: "OK text",
 				cancelText2: "Cancel Text"
 			}
-		}
+		},
+		printToPdf
 	}
 };
 
@@ -72,4 +73,32 @@ function testCommand(arg) {
 	console.dir(arg);
 	alert(1);
 	return true;
+}
+
+function printToPdf(arg) {
+	let frame = null;
+	const frameId = "print-direct-frame";// todo: shared CONST
+	frame = window.frames[frameId];
+	if (frame)
+		document.body.removeChild(frame);
+
+	frame = document.createElement("iframe");
+
+	frame.id = frameId;
+	frame.style.display = "none";
+	document.body.appendChild(frame);
+	frame.setAttribute('src', `/attachment/show/${arg.Id}?base=%2FSales%2FWaybill%2FAttachment`);
+
+	frame.onload = function (ev) {
+		let cw = frame.contentWindow;
+		cw.onbeforeprint = function () {
+			console.dir('before print');
+		};
+		console.dir(cw);
+		cw.onblur = function (ev) {
+			console.dir('blur');
+		};
+		cw.print();
+	};
+
 }

@@ -1,15 +1,18 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190117-7417
+// 20190217-7434
 /* services/http.js */
 
 app.modules['std:html'] = function () {
 
+	const frameId = "print-direct-frame";// todo: shared CONST
 
 	return {
 		getColumnsWidth,
 		getRowHeight,
-		downloadBlob
+		downloadBlob,
+		printDirect,
+		removePrintFrame
 	};
 
 	function getColumnsWidth(elem) {
@@ -46,6 +49,28 @@ app.modules['std:html'] = function () {
 		link.click();
 		document.body.removeChild(link);
 		URL.revokeObjectURL(objUrl);
+	}
+
+	function printDirect(url) {
+
+		removePrintFrame();
+		let frame = document.createElement("iframe");
+
+		frame.id = frameId;
+		frame.style.cssText = "display:none;width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
+		document.body.appendChild(frame);
+		frame.setAttribute('src', url);
+
+		frame.onload = function (ev) {
+			let cw = frame.contentWindow;
+			cw.print();
+		};
+	}
+
+	function removePrintFrame() {
+		let frame = window.frames[frameId];
+		if (frame)
+			document.body.removeChild(frame);
 	}
 };
 

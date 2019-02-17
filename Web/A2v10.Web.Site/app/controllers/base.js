@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7432
+// 20190217-7434
 // controllers/base.js
 
 (function () {
@@ -694,10 +694,14 @@
 				if (this.$isLoading) return;
 
 				let cmd = 'show';
-				if (opts && opts.export)
-					cmd = 'export';
-				else if (opts && opts.attach)
-					cmd = 'attach';
+				if (opts) {
+					if (opts.export)
+						cmd = 'export';
+					else if (opts.attach)
+						cmd = 'attach';
+					else if (opts.print)
+						cmd = 'print';
+				}
 
 				const doReport = () => {
 					let id = arg;
@@ -710,10 +714,14 @@
 					let qry = { base: baseUrl, rep: rep };
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (opts && opts.export)
+					if (!opts)
+						window.open(url, '_blank');
+					if (opts.export)
 						window.location = url;
-					else if (opts && opts.attach)
-						return; // просто ничего не делаем
+					else if (opts.print)
+						htmlTools.printDirect(url);
+					else if (opts.attach)
+						return; // do nothing
 					else
 						window.open(url, '_blank');
 				};
@@ -1063,6 +1071,7 @@
 
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
+			htmlTools.removePrintFrame();
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();

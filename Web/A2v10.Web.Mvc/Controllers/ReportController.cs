@@ -149,7 +149,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				switch (ri.Type) {
 					case RequestReportType.stimulsoft:
-						return ExportStiReport(ri);
+						return ExportStiReport(ri, saveFile:true);
 					case RequestReportType.xml:
 						return ExportXmlReport(ri);
 					case RequestReportType.json:
@@ -167,16 +167,45 @@ namespace A2v10.Web.Mvc.Controllers
 			return new EmptyResult();
 		}
 
-		ActionResult ExportStiReport(ReportInfo ri)
+
+		[HttpGet]
+		[OutputCache(Duration = 0)]
+		public async Task<ActionResult> Print(String Base, String Rep, String id)
+		{
+			SetupLicense();
+			try
+			{
+				var url = $"/_report/{Base}/{Rep}/{id}";
+				ReportInfo ri = await GetReportInfo(url, id);
+
+				switch (ri.Type)
+				{
+					case RequestReportType.stimulsoft:
+						return ExportStiReport(ri, saveFile: false);
+					default:
+						throw new NotImplementedException();
+				}
+			}
+			catch (Exception ex)
+			{
+				Response.ContentType = "text/html";
+				Response.ContentEncoding = Encoding.UTF8;
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				Response.Write(ex.Message);
+			}
+			return new EmptyResult();
+		}
+
+		ActionResult ExportStiReport(ReportInfo ri, bool saveFile = true)
 		{
 			var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
 			r.AddDataModel(ri.DataModel);
 			if (ri.Variables != null)
 				r.AddVariables(ri.Variables);
-			// var ms = new MemoryStream();
 			// saveFileDialog: true -> download
-			// saveFileDialog: false -> show			
-			return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: true);
+			// saveFileDialog: false -> show
+			return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
 		}
 
 		ActionResult ExportJsonReport(ReportInfo ri)

@@ -8,7 +8,8 @@
 			<Separator/>
 			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}, SaveRequired=True, Confirm='Провести документ?'}" If="{Bind !Document.Done}"/>
 			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
-			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}"/>
+			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}" />
+			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Print=True}"/>
 			<Button Icon="Close" Toolbar.Align="Right"
                     Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>
