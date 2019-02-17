@@ -3555,7 +3555,8 @@ app.modules['std:html'] = function () {
 		getRowHeight,
 		downloadBlob,
 		printDirect,
-		removePrintFrame
+		removePrintFrame,
+		updateDocTitle
 	};
 
 	function getColumnsWidth(elem) {
@@ -3614,6 +3615,12 @@ app.modules['std:html'] = function () {
 		let frame = window.frames[frameId];
 		if (frame)
 			document.body.removeChild(frame);
+	}
+
+	function updateDocTitle(title) {
+		if (document.title === title)
+			return;
+		document.title = title;
 	}
 };
 
@@ -9322,7 +9329,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7434
+// 20190217-7435
 // controllers/base.js
 
 (function () {
@@ -10016,10 +10023,12 @@ Vue.directive('resize', {
 				if (this.$isLoading) return;
 
 				let cmd = 'show';
+				let fmt = '';
 				if (opts) {
-					if (opts.export)
+					if (opts.export) {
 						cmd = 'export';
-					else if (opts.attach)
+						fmt = opts.format || '';
+					} else if (opts.attach)
 						cmd = 'attach';
 					else if (opts.print)
 						cmd = 'print';
@@ -10034,6 +10043,8 @@ Vue.directive('resize', {
 					let reportUrl = this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = { base: baseUrl, rep: rep };
+					if (fmt)
+						qry.format = fmt;
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
 					if (!opts)
@@ -10412,7 +10423,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180109-7408*/
+/*20180217-7435*/
 /* controllers/shell.js */
 
 (function () {
@@ -10427,6 +10438,7 @@ Vue.directive('resize', {
 	const utils = require('std:utils');
 	const locale = window.$$locale;
 	const platform = require('std:platform');
+	const htmlTools = require('std:html');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -10580,7 +10592,10 @@ Vue.directive('resize', {
 		},
 		methods: {
 			isActive(item) {
-				return this.seg1 === item.Url;
+				let isActive = this.seg1 === item.Url;
+				if (isActive)
+					htmlTools.updateDocTitle(item.Name);
+				return isActive;
 			},
 			isGroup(item) {
 				if (!item.Params) return false;

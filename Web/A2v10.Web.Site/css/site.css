@@ -83,10 +83,12 @@
 .ico-arrow-sort:before {
   content: "\e90a";
 }
-.ico-import:before {
+.ico-import:before,
+.ico-save-as:before {
   content: "\e904";
 }
-.ico-export:before {
+.ico-export:before,
+.ico-upload2:before {
   content: "\e905";
 }
 .ico-ban:before {
@@ -2436,8 +2438,11 @@ pre.a2-code {
 .period-picker.pp-hyperlink .input-group .caret {
   display: none;
 }
-.period-picker.pp-large {
+.period-picker.pp-hyperlink.pp-large {
   font-size: 1.2rem;
+}
+.period-picker.pp-hyperlink.pp-large .input-group .period-text {
+  line-height: 2.3rem;
 }
 .period-picker.pp-small {
   font-size: 0.95rem;
@@ -4205,7 +4210,7 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  padding: 2px;
+  padding: 6px;
   margin: 3px 0;
   top: 100%;
   min-width: 160px;
@@ -4246,6 +4251,9 @@ TODO:
   height: 1px;
   margin: 4px 6px;
   background-color: #f7f7f7;
+}
+.menu.background-white .divider {
+  background-color: #ddd;
 }
 .menu .group-title {
   color: #8591a2;
@@ -5282,7 +5290,7 @@ h5,
 }
 .a2-header {
   margin: 0 0 0.8rem 0;
-  color: #777;
+  color: #999;
   font-weight: bold;
   font-family: inherit;
   word-break: break-word;

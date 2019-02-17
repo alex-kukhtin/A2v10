@@ -63,7 +63,11 @@ namespace A2v10.Xaml
 
 	public enum ExportToFormat
 	{
-		Excel
+		Pdf,
+		Excel,
+		Word,
+		OpenText,
+		OpenSheet
 	}
 
 	public class BindCmd : BindBase
@@ -255,7 +259,7 @@ namespace A2v10.Xaml
 					return $"$execSelected('{GetName()}', {CommandArgument(context)}, {GetConfirm(context)})";
 
 				case CommandType.Report:
-					return $"$report('{GetReportName()}', {CommandArgument(context, nullable: true)}, {GetOptions(context)})";
+					return $"$report({GetReportName(context)}, {CommandArgument(context, nullable: true)}, {GetOptions(context)})";
 
 				case CommandType.Export:
 					return $"$export()";
@@ -292,11 +296,14 @@ namespace A2v10.Xaml
 			return CommandName;
 		}
 
-		String GetReportName()
+		String GetReportName(RenderContext context)
 		{
-			if (String.IsNullOrEmpty(Report))
+			var repBind = GetBinding(nameof(Report));
+			if (repBind != null)
+				return repBind.GetPathFormat(context);
+			else if (String.IsNullOrEmpty(Report))
 				throw new XamlException($"'Report' is required for '{Command}' command");
-			return Report;
+			return $"'{Report}'";
 		}
 
 		String GetOptions(RenderContext context)
@@ -313,7 +320,10 @@ namespace A2v10.Xaml
 			if (CheckArgument)
 				sb.Append("checkArgument: true,");
 			if (Export)
+			{
 				sb.Append("export: true,");
+				sb.Append($"format: '{Format.ToString().ToLowerInvariant()}',");
+			}
 			else if (Print)
 				sb.Append("print: true,");
 			if (NewWindow)

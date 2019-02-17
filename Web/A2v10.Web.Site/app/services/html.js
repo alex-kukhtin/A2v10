@@ -12,7 +12,8 @@ app.modules['std:html'] = function () {
 		getRowHeight,
 		downloadBlob,
 		printDirect,
-		removePrintFrame
+		removePrintFrame,
+		updateDocTitle
 	};
 
 	function getColumnsWidth(elem) {
@@ -71,6 +72,12 @@ app.modules['std:html'] = function () {
 		let frame = window.frames[frameId];
 		if (frame)
 			document.body.removeChild(frame);
+	}
+
+	function updateDocTitle(title) {
+		if (document.title === title)
+			return;
+		document.title = title;
 	}
 };
 

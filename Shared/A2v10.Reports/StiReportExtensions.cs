@@ -33,6 +33,27 @@ namespace A2v10.Reports
 			};
 		}
 
+		public static StiWord2007ExportSettings GetDefaultWordSettings()
+		{
+			return new Stimulsoft.Report.Export.StiWord2007ExportSettings()
+			{
+			};
+		}
+
+		public static StiOdtExportSettings GetDefaultOdtSettings()
+		{
+			return new Stimulsoft.Report.Export.StiOdtExportSettings()
+			{
+			};
+		}
+
+		public static StiOdsExportSettings GetDefaultOdsSettings()
+		{
+			return new Stimulsoft.Report.Export.StiOdsExportSettings()
+			{
+			};
+		}
+
 		public static StiPdfExportSettings GetPdfExportSettings()
 		{
 			var pdf = new StiPdfExportSettings

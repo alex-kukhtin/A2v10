@@ -11,6 +11,15 @@ namespace A2v10.Xaml
 		Center
 	}
 
+	public enum AlignItems
+	{
+		Default,
+		Baseline,
+		Center,
+		Start,
+		End
+	}
+
 	public enum TextColor
 	{
 		Default = 0,
@@ -349,6 +358,7 @@ namespace A2v10.Xaml
 		Report,
 		Requery,
 		Save,
+		SaveAs,
 		SaveClose,
 		SaveCloseOutline,
 		SaveOutline,
@@ -383,6 +393,7 @@ namespace A2v10.Xaml
 		Unpin,
 		UnpinOutline,
 		Upload,
+		Upload2,
 		User,
 		UserMinus,
 		UserPlus,

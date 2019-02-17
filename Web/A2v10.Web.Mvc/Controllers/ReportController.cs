@@ -139,7 +139,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		[HttpGet]
 		[OutputCache(Duration = 0)]
-		public async Task<ActionResult> Export(String Base, String Rep, String id)
+		public async Task<ActionResult> Export(String Base, String Rep, String id, String Format)
 		{
 			SetupLicense();
 			try
@@ -149,7 +149,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				switch (ri.Type) {
 					case RequestReportType.stimulsoft:
-						return ExportStiReport(ri, saveFile:true);
+						return ExportStiReport(ri, Format, saveFile:true);
 					case RequestReportType.xml:
 						return ExportXmlReport(ri);
 					case RequestReportType.json:
@@ -170,7 +170,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		[HttpGet]
 		[OutputCache(Duration = 0)]
-		public async Task<ActionResult> Print(String Base, String Rep, String id)
+		public async Task<ActionResult> Print(String Base, String Rep, String id, String Format)
 		{
 			SetupLicense();
 			try
@@ -181,7 +181,7 @@ namespace A2v10.Web.Mvc.Controllers
 				switch (ri.Type)
 				{
 					case RequestReportType.stimulsoft:
-						return ExportStiReport(ri, saveFile: false);
+						return ExportStiReport(ri, Format, saveFile: false);
 					default:
 						throw new NotImplementedException();
 				}
@@ -197,15 +197,27 @@ namespace A2v10.Web.Mvc.Controllers
 			return new EmptyResult();
 		}
 
-		ActionResult ExportStiReport(ReportInfo ri, bool saveFile = true)
+		ActionResult ExportStiReport(ReportInfo ri, String format, bool saveFile = true)
 		{
+			var targetFormat = (format ?? "pdf").ToLowerInvariant();
 			var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
 			r.AddDataModel(ri.DataModel);
 			if (ri.Variables != null)
 				r.AddVariables(ri.Variables);
 			// saveFileDialog: true -> download
 			// saveFileDialog: false -> show
-			return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
+			if (targetFormat == "pdf")
+				return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
+			else if (format == "excel")
+				return StiMvcReportResponse.ResponseAsExcel2007(r, StiReportExtensions.GetDefaultXlSettings(), saveFileDialog: saveFile);
+			else if (format == "word")
+				return StiMvcReportResponse.ResponseAsWord2007(r, StiReportExtensions.GetDefaultWordSettings(), saveFileDialog: saveFile);
+			else if (format == "opentext")
+				return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
+			else if (format == "opensheet")
+				return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
+			else
+				throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
 		}
 
 		ActionResult ExportJsonReport(ReportInfo ri)

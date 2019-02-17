@@ -9,11 +9,10 @@ TODO:
 @divider-color:lighten(@dropdown-brd-color, 10%);
 
 .menu {
-	padding: 2px;
+	padding: 6px;
 	margin: 3px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
-	//box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
 	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
 	border: 1px solid @dropdown-brd-color;
 
@@ -54,10 +53,16 @@ TODO:
 	}
 
 	.divider {
-		flex-grow:0;
+		flex-grow: 0;
 		height: 1px;
 		margin: 4px 6px;
 		background-color: @divider-color;
+	}
+
+	&.background-white {
+		.divider {
+			background-color: @dropdown-brd-color;
+		}
 	}
 
 	.group-title {

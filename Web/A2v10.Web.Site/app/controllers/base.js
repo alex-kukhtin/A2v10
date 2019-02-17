@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7434
+// 20190217-7435
 // controllers/base.js
 
 (function () {
@@ -694,10 +694,12 @@
 				if (this.$isLoading) return;
 
 				let cmd = 'show';
+				let fmt = '';
 				if (opts) {
-					if (opts.export)
+					if (opts.export) {
 						cmd = 'export';
-					else if (opts.attach)
+						fmt = opts.format || '';
+					} else if (opts.attach)
 						cmd = 'attach';
 					else if (opts.print)
 						cmd = 'print';
@@ -712,6 +714,8 @@
 					let reportUrl = this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = { base: baseUrl, rep: rep };
+					if (fmt)
+						qry.format = fmt;
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
 					if (!opts)

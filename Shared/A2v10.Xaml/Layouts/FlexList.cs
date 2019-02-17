@@ -16,7 +16,7 @@ namespace A2v10.Xaml
 		public Orientation Orientation { get; set; }
 
 		public BorderStyle BorderStyle { get; set; }
-		public StackPanelAlignItems AlignItems { get; set; }
+		public AlignItems AlignItems { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 				return;
 			var list = new TagBuilder("ul", "flex-list", IsInGrid);
 			MergeAttributes(list, context);
-			if (AlignItems != StackPanelAlignItems.Default)
+			if (AlignItems != AlignItems.Default)
 				list.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
 			list.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			if (BorderStyle != BorderStyle.None)

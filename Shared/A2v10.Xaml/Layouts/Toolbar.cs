@@ -47,6 +47,7 @@ namespace A2v10.Xaml
 		#endregion
 
 		public ToolbarStyle Style { get; set; }
+		public AlignItems AlignItems { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -56,6 +57,8 @@ namespace A2v10.Xaml
 			onRender?.Invoke(tb);
 			if (Style != ToolbarStyle.Default)
 				tb.AddCssClass(Style.ToString().ToKebabCase());
+			if (AlignItems != AlignItems.Default)
+				tb.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
 			MergeAttributes(tb, context);
 			tb.RenderStart(context);
 			RenderChildren(context);

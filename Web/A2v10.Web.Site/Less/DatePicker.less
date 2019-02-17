@@ -17,7 +17,7 @@
 	//box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
 	padding: @elem-margin;
 	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
-	color:@text-color;
+	color: @text-color;
 }
 
 
@@ -233,8 +233,14 @@
 		}
 	}
 
-	&.pp-large {
+	&.pp-hyperlink.pp-large {
 		font-size: 1.2rem;
+
+		.input-group {
+			.period-text {
+				line-height: 2.3rem;
+			}
+		}
 	}
 
 	&.pp-small {
@@ -270,4 +276,3 @@
 		margin-bottom: 1px;
 	}
 }
-

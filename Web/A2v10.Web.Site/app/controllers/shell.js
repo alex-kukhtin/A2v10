@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180109-7408*/
+/*20180217-7435*/
 /* controllers/shell.js */
 
 (function () {
@@ -15,6 +15,7 @@
 	const utils = require('std:utils');
 	const locale = window.$$locale;
 	const platform = require('std:platform');
+	const htmlTools = require('std:html');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -168,7 +169,10 @@
 		},
 		methods: {
 			isActive(item) {
-				return this.seg1 === item.Url;
+				let isActive = this.seg1 === item.Url;
+				if (isActive)
+					htmlTools.updateDocTitle(item.Name);
+				return isActive;
 			},
 			isGroup(item) {
 				if (!item.Params) return false;

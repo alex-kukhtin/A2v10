@@ -1565,7 +1565,8 @@ app.modules['std:html'] = function () {
 		getRowHeight,
 		downloadBlob,
 		printDirect,
-		removePrintFrame
+		removePrintFrame,
+		updateDocTitle
 	};
 
 	function getColumnsWidth(elem) {
@@ -1624,6 +1625,12 @@ app.modules['std:html'] = function () {
 		let frame = window.frames[frameId];
 		if (frame)
 			document.body.removeChild(frame);
+	}
+
+	function updateDocTitle(title) {
+		if (document.title === title)
+			return;
+		document.title = title;
 	}
 };
 
@@ -4019,7 +4026,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7434
+// 20190217-7435
 // controllers/base.js
 
 (function () {
@@ -4713,10 +4720,12 @@ Vue.component('a2-pager', {
 				if (this.$isLoading) return;
 
 				let cmd = 'show';
+				let fmt = '';
 				if (opts) {
-					if (opts.export)
+					if (opts.export) {
 						cmd = 'export';
-					else if (opts.attach)
+						fmt = opts.format || '';
+					} else if (opts.attach)
 						cmd = 'attach';
 					else if (opts.print)
 						cmd = 'print';
@@ -4731,6 +4740,8 @@ Vue.component('a2-pager', {
 					let reportUrl = this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = { base: baseUrl, rep: rep };
+					if (fmt)
+						qry.format = fmt;
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
 					if (!opts)
