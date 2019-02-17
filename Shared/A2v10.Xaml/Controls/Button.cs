@@ -53,6 +53,7 @@ namespace A2v10.Xaml
 				var wrap = new TagBuilder("div", "dropdown")
 					.AddCssClass(bDropUp ? "dir-up" : "dir-down")
 					.MergeAttribute("v-dropdown", String.Empty);
+				MergeAttributes(wrap, context, MergeAttrMode.Visibility);
 				onRender?.Invoke(wrap);
 				if (!Block && !insideBar)
 					wrap.AddCssClass("a2-inline");

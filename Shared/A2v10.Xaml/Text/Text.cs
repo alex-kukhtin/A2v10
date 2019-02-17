@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Windows.Markup;
 
@@ -15,6 +16,7 @@ namespace A2v10.Xaml
 		public Boolean Big { get; set; }
 
 		public Boolean Gray { get; set; }
+		public TextColor Color { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -30,6 +32,10 @@ namespace A2v10.Xaml
 				tag.AddCssClassBool(Big, "text-big");
 			}
 			tag.AddCssClassBool(Gray, "text-gray");
+			if (Color != TextColor.Default)
+				tag.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
+			else
+				tag.AddCssClassBool(Gray, "text-gray");
 			tag.RenderStart(context);
 			Inlines.Render(context);
 			tag.RenderEnd(context);

@@ -978,8 +978,9 @@ input[type=number]::-webkit-outer-spin-button {
 .a2-alert.light hr {
   border-color: #eee;
 }
-.text-color-gray {
-  color: #777;
+.text-color-gray,
+.text-color-label {
+  color: #999;
 }
 .text-color-light-gray {
   color: #ccc;

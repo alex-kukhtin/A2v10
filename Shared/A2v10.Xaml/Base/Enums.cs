@@ -18,7 +18,8 @@ namespace A2v10.Xaml
 		LightGray,
 		Danger,
 		Green,
-		Red
+		Red,
+		Label
 	}
 
 	public enum FloatMode
