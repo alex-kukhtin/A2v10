@@ -1553,7 +1553,7 @@ app.modules['std:mask'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7434
+// 20190218-7435
 /* services/http.js */
 
 app.modules['std:html'] = function () {
@@ -1609,7 +1609,7 @@ app.modules['std:html'] = function () {
 
 		removePrintFrame();
 		let frame = document.createElement("iframe");
-
+		document.body.classList.add('waiting');
 		frame.id = frameId;
 		frame.style.cssText = "display:none;width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
 		document.body.appendChild(frame);
@@ -1617,6 +1617,7 @@ app.modules['std:html'] = function () {
 
 		frame.onload = function (ev) {
 			let cw = frame.contentWindow;
+			document.body.classList.remove('waiting');
 			cw.print();
 		};
 	}

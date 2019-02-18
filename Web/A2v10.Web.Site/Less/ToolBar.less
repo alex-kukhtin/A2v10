@@ -10,7 +10,6 @@
 	background-color: @toolbar-bg-color;
 	color: @toolbar-txt-color;
 	//min-height:34px;
-
 	.checkbox {
 		margin: 0 6px;
 	}
@@ -34,9 +33,16 @@
 		}
 
 		> .divider {
-			flex-grow:0;
+			flex-grow: 0;
 			border-right-color: lighten(@toolbar-bg-color, 6%);
 			background-color: lighten(@toolbar-bg-color, 12%);
+		}
+
+		.dropdown.show {
+			.btn {
+				background: white;
+				border:1px dotted #ccc;
+			}
 		}
 	}
 
@@ -104,7 +110,7 @@
 	}
 
 	> .divider {
-		flex-grow:0;
+		flex-grow: 0;
 		display: inline-block;
 		width: 2px;
 		border-right: 1px solid lighten(@toolbar-bg-color, 5%);

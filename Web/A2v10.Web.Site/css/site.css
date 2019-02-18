@@ -1023,6 +1023,9 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+body.waiting * {
+  cursor: wait;
+}
 [v-cloak] {
   display: none;
 }
@@ -2930,6 +2933,10 @@ table.data-grid > tbody > tr.bold > td {
   flex-grow: 0;
   border-right-color: #e3e7f0;
   background-color: #f7f8fb;
+}
+.toolbar.transparent .dropdown.show .btn {
+  background: white;
+  border: 1px dotted #ccc;
 }
 .toolbar > .btn,
 .toolbar > .dropdown > .btn {
