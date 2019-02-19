@@ -56,9 +56,9 @@
 		<!--
 		-->
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
-			Label="@[Purchaser]" Value="{Bind Document.Agent}" 
+			Label="@[Purchaser]" Value="{Bind Document.Agent}"  TextValue="{Bind Document.Memo}"
 				CreateNewCommand="{BindCmd Execute, CommandName='createNewCustomer'}"
-				Delegate="fetchCustomers" DisplayProperty="Name">
+				Delegate="fetchCustomers" DisplayProperty="Name" ShowCaret="True">
 			<Selector.AddOns>
 				<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 				<Hyperlink Icon="Menu">
@@ -73,6 +73,7 @@
 				<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" />
 			</Selector.AddOns>
 		</Selector>
+		<Static Grid.Row="3" Grid.Col="4" Value="{Bind Document.Agent.Name}"></Static>
 		<Block Grid.Row="4" Grid.ColSpan="4">
 			<Toolbar Style="Transparent">
 				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>

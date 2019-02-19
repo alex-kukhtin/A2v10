@@ -132,6 +132,7 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":hide-zeros", "true");
 		}
 
+
 		internal void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)
 		{
 			var valBind = GetBinding(valueName);
@@ -144,6 +145,20 @@ namespace A2v10.Xaml
 				throw new XamlException($"invalid binding for {valueName} '{path}'");
 			input.MergeAttribute(":item-to-validate", Path);
 			input.MergeAttribute("prop-to-validate", Prop);
+		}
+
+		internal void MergeCustomValueItemProp(TagBuilder input, RenderContext context, String valueName, String prefix)
+		{
+			var valBind = GetBinding(valueName);
+			if (valBind == null)
+				return;
+			// split to path and property
+			String path = valBind.GetPath(context);
+			(String Path, String Prop) = SplitToPathProp(path);
+			if (String.IsNullOrEmpty(Path) || String.IsNullOrEmpty(Prop))
+				throw new XamlException($"invalid binding for {valueName} '{path}'");
+			input.MergeAttribute($":{prefix}-item", Path);
+			input.MergeAttribute($"{prefix}-prop", Prop);
 		}
 
 		internal (String Path, String Prop) SplitToPathProp(String path)

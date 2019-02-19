@@ -2469,6 +2469,9 @@ pre.a2-code {
   bottom: 100%;
   margin-bottom: 1px;
 }
+.input-group a.selector-open {
+  padding-right: 8px;
+}
 .input-group > .selector-pane {
   border: 1px solid #208cf8;
   position: absolute;
@@ -2804,6 +2807,10 @@ table.data-grid > tbody > tr.info > td,
 table.data-grid > tbody > tr.cyan > td {
   background-color: rgba(114, 234, 234, 0.15);
 }
+table.data-grid > tbody > tr.info > td,
+table.data-grid > tbody > tr.light-yellow > td {
+  background-color: rgba(255, 216, 0, 0.07);
+}
 table.data-grid > tbody > tr.bold > td {
   font-weight: 600;
 }
@@ -2889,7 +2896,7 @@ table.data-grid > tbody > tr.bold > td {
 .data-grid-container.data-grid-light table.data-grid th .h-holder {
   padding: 6px;
 }
-.data-grid-container.data-grid-light table.data-grid td {
+.data-grid-container.data-grid-light table.data-grid > tbody > tr > td {
   padding: 6px;
 }
 .data-grid-container.data-grid-light table.data-grid tr.group td {
@@ -3488,7 +3495,7 @@ ul.news-list > li {
 }
 .modal-header {
   background-color: #fff29d;
-  padding: 8px;
+  padding: 0.75rem;
   cursor: move;
   font-weight: 500;
   border-bottom: 1px solid #ddd;
@@ -3506,22 +3513,23 @@ ul.news-list > li {
   border-color: #e5c365;
 }
 .modal-footer {
-  padding: 8px;
+  padding: 0.75rem;
   background-color: #f9f9f9;
   border-top: 1px solid #ddd;
   display: flex;
   justify-content: flex-end;
-  align-items: baseline;
+  align-items: flex-start;
 }
 .modal-footer .btn {
   min-width: 6rem;
   padding: 0.4rem 0.75rem;
 }
 .modal-footer .btn + .btn {
-  margin-left: 8px;
+  margin-left: 0.75rem;
 }
 .modal-footer .btn-help {
   cursor: pointer;
+  margin-top: 5px;
 }
 .modal-footer .btn-help .ico {
   margin-right: 4px;
@@ -3529,10 +3537,14 @@ ul.news-list > li {
 .modal-footer .btn-help:hover {
   text-decoration: none;
 }
+.modal-footer .btn + .btn-caret {
+  min-width: auto;
+  margin-left: 0;
+}
 .modal-body.confirm,
 .modal-body.alert,
 .modal-body.info {
-  margin: 16px 8px;
+  margin: 1.5rem 0.75rem;
   display: flex;
 }
 .modal-body.confirm > .ico,
@@ -4740,8 +4752,8 @@ TODO:
 }
 .grid {
   display: grid;
-  padding: 10px;
-  grid-gap: 10px;
+  padding: 0.75rem;
+  grid-gap: 0.75rem;
   align-items: flex-end;
   grid-template-columns: auto;
   grid-template-rows: auto;
@@ -5020,7 +5032,8 @@ iframe.eusign-iframe {
   padding: 0.625rem 1.25rem;
   border-top: 1px solid #ddd;
 }
-.card.compact .card-header {
+.card.compact .card-header,
+.card.compact .card-footer {
   padding: 0.41666667rem 0.625rem;
   font-size: 13px;
 }

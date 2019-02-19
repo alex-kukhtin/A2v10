@@ -46,20 +46,36 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 
+		bool ValidAllowAddress(RequestCommand ac)
+		{
+			if (String.IsNullOrEmpty(ac.AllowAddressForCheck))
+				return true;
+			if (!ac.AllowAddressForCheck.Contains(Request.UserHostAddress))
+			{
+				Response.StatusCode = 403; // forbidden
+				return false;
+			}
+			return true;
+		}
+
 		[HttpGet]
 		[ActionName("Default")]
 		public async Task DefaultGET(String pathInfo)
 		{
+			Guid apiGuid = Guid.NewGuid();
 			try
 			{
-				_logger.LogApi($"get: {pathInfo}");
+				_logger.LogApi($"get: {pathInfo}", Request.UserHostAddress, apiGuid);
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 
-				if (ac.allowOrigin == null)
+				if (ac.AllowOriginForCheck == null)
 					throw new RequestModelException($"'allowOrigin' is required for '{ac.command}' command");
 
-				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
+				if (!ValidAllowAddress(ac))
+					return;
+
+				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 
 				switch (ac.type)
 				{
@@ -69,7 +85,7 @@ namespace A2v10.Web.Mvc.Controllers
 						GetFile(ac);
 						break;
 					case CommandType.clr:
-						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper));
+						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper, apiGuid), apiGuid);
 						break;
 					default:
 						throw new NotImplementedException();
@@ -93,7 +109,7 @@ namespace A2v10.Web.Mvc.Controllers
 				prms.Set("TenantId", tenantId);
 		}
 
-		ExpandoObject GetDataToInvokeGet(String wrapper)
+		ExpandoObject GetDataToInvokeGet(String wrapper, Guid apiGuid)
 		{
 			var dataToInvoke = new ExpandoObject();
 			SetIdentityParams(dataToInvoke);
@@ -109,7 +125,7 @@ namespace A2v10.Web.Mvc.Controllers
 				wrap.Set(wrapper, dataToInvoke);
 				dataToInvoke = wrap;
 			}
-			_logger.LogApi($"getdata: {JsonConvert.SerializeObject(dataToInvoke)}");
+			_logger.LogApi($"getdata: {JsonConvert.SerializeObject(dataToInvoke)}", Request.UserHostAddress, apiGuid);
 			return dataToInvoke;
 		}
 
@@ -136,23 +152,20 @@ namespace A2v10.Web.Mvc.Controllers
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 
-				if (!String.IsNullOrEmpty(ac.allowAddress))
-				{
-					if (!ac.allowAddress.Contains(Request.UserHostAddress))
-						return;
-				}
+				if (!ValidAllowAddress(ac))
+					return;
 
 				Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 				Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With");
 				Response.AddHeader("Access-Control-Allow‌​-Credentials", "true");
 				Response.AddHeader("Access-Control-Max-Age", "60");
-				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
+				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 			}
 			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				_logger.LogApiError(ex.Message);
+				_logger.LogApiError(ex.Message, Request.UserHostAddress, Guid.NewGuid());
 
 			}
 		}
@@ -161,20 +174,25 @@ namespace A2v10.Web.Mvc.Controllers
 		[ActionName("Default")]
 		public async Task DefaultPOST(String pathInfo)
 		{
+			Guid apiGuid = Guid.NewGuid();
 			try
 			{
-				_logger.LogApi($"post: {pathInfo}");
+				_logger.LogApi($"post: {pathInfo}", Request.UserHostAddress, apiGuid);
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
+
+				if (!ValidAllowAddress(ac))
+					return;
+
 				Response.ContentType = "application/json";
-				Response.AddHeader("Access-Control-Allow-Origin", ac.allowOrigin);
+				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 
 				String json = null;
 				Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
 				using (var tr = new StreamReader(Request.InputStream))
 				{
 					json = tr.ReadToEnd();
-					_logger.LogApi($"request: {json}");
+					_logger.LogApi($"request: {json}", Request.UserHostAddress, apiGuid);
 				}
 				ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 				if (dataToInvoke == null)
@@ -186,29 +204,28 @@ namespace A2v10.Web.Mvc.Controllers
 					dataToInvoke = wrap;
 				}
 				SetIdentityParams(dataToInvoke);
-				await ExecuteCommand(ac, dataToInvoke);
+				await ExecuteCommand(ac, dataToInvoke, apiGuid);
 			}
 			catch (Exception ex)
 			{
-				// TODO log api
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				_logger.LogApiError(ex.Message);
+				_logger.LogApiError(ex.Message, Request.UserHostAddress, apiGuid);
 				_baseController.WriteExceptionStatus(ex, Response);
 			}
 		}
 
-		async Task ExecuteCommand(RequestCommand cmd, ExpandoObject dataToInvoke)
+		async Task ExecuteCommand(RequestCommand cmd, ExpandoObject dataToInvoke, Guid apiGuid)
 		{
 			switch (cmd.type)
 			{
 				case CommandType.clr:
-					await ExecuteClrCommand(cmd, dataToInvoke);
+					await ExecuteClrCommand(cmd, dataToInvoke, apiGuid);
 					break;
 			}
 		}
 
-		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToInvoke)
+		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToInvoke, Guid apiGuid)
 		{
 			TextWriter writer = Response.Output;
 			if (String.IsNullOrEmpty(cmd.clrType))
@@ -222,7 +239,10 @@ namespace A2v10.Web.Mvc.Controllers
 			if (result == null)
 				return;
 			if (result is String)
+			{
+				_logger.LogApi($"response: {result.ToString()}", Request.UserHostAddress, apiGuid);
 				writer.Write(result.ToString());
+			}
 			else if (result is XDocument xDoc)
 			{
 				Response.ContentType = "text/xml";
@@ -232,7 +252,11 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 			}
 			else
-				writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
+			{
+				String json = JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings);
+				_logger.LogApi($"response: {json}", Request.UserHostAddress, apiGuid);
+				writer.Write(json);
+			}
 		}
 	}
 }

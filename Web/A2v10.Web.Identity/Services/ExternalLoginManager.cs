@@ -81,6 +81,13 @@ namespace A2v10.Web.Identity
 				return true;
 			}
 
+			foundUser = await UserManager.FindAsync(new UserLoginInfo("UserName", user.Email.ToLowerInvariant()));
+			if (foundUser != null)
+			{
+				await UserManager.AddLoginAsync(foundUser.Id, new UserLoginInfo(loginProvider, user.ProviderKey));
+				return true;
+			}
+
 			var userToCreate = new AppUser
 			{
 				UserName = user.UserName,

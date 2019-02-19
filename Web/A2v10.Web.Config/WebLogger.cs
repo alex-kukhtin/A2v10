@@ -27,7 +27,7 @@ namespace A2v10.Web.Config
 			_dbContext.Execute(_host.CatalogDataSource, "a2messaging.WriteLog", entry);
 		}
 
-		public void LogApi(LogEntry entry)
+		public void LogApi(LogApiEntry entry)
 		{
 			_dbContext.Execute(_host.CatalogDataSource, "a2api.WriteLog", entry);
 		}

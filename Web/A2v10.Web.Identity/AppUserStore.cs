@@ -49,7 +49,7 @@ namespace A2v10.Web.Identity
 			public AppUser GetByEmail(String email)
 			{
 				foreach (var u in _mapIds)
-					if (u.Value.Email == email)
+					if (String.Compare(u.Value.Email, email, ignoreCase:true) == 0)
 						return u.Value;
 				return null;
 			}
@@ -250,6 +250,8 @@ namespace A2v10.Web.Identity
 		{
 			if (login.LoginProvider == "PhoneNumber")
 				return await FindByPhoneNumberAsync(login.ProviderKey);
+			else if (login.LoginProvider == "UserName")
+				return await FindByNameAsync(login.ProviderKey);
 			var user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByLogin]", new { login.LoginProvider, login.ProviderKey });
 			return user;
 		}
@@ -367,6 +369,7 @@ namespace A2v10.Web.Identity
 
 		public async Task<AppUser> FindByEmailAsync(String email)
 		{
+			var emaillwoer = (email ?? String.Empty).ToLowerInvariant();
 			AppUser user = _cache.GetByEmail(email);
 			if (user != null)
 				return user;

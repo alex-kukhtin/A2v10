@@ -363,6 +363,27 @@ namespace A2v10.Request
 				return _parent._modelPath;
 			}
 		}
+
+		[JsonIgnore]
+		public String AllowAddressForCheck
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(allowAddress))
+					return _parent.allowAddress;
+				return allowAddress;
+			}
+		}
+		[JsonIgnore]
+		public String AllowOriginForCheck
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(allowOrigin))
+					return _parent.allowOrigin;
+				return allowOrigin;
+			}
+		}
 	}
 
 	public enum RequestReportType
@@ -447,6 +468,10 @@ namespace A2v10.Request
 
 		[JsonIgnore]
 		internal RequestUrlKind CurrentKind => _kind;
+
+		// for API
+		public String allowAddress;
+		public String allowOrigin;
 
 		[JsonProperty("actions")]
 		public Dictionary<String, RequestAction> Actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.InvariantCultureIgnoreCase);

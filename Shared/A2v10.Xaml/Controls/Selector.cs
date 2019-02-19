@@ -25,8 +25,12 @@ namespace A2v10.Xaml
 		public UIElementBase NewPane { get; set; }
 		public Command CreateNewCommand { get; set; }
 
+		public Object TextValue { get; set; }
+
 		public UIElementBase ItemsPanel { get; set; }
 		public SelectorPanelPlacement PanelPlacement { get; set; }
+
+		public Boolean ShowCaret { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -48,11 +52,14 @@ namespace A2v10.Xaml
 					input.MergeAttribute("list-height", ListSize.Height.ToString());
 				}
 			}
+			if (ShowCaret)
+				input.MergeAttribute(":caret", "true");
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);
+			MergeCustomValueItemProp(input, context, nameof(TextValue), "text");
 			MergeCreateNew(input, context);
 
 			input.RenderStart(context);

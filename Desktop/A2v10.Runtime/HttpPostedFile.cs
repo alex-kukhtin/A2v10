@@ -10,10 +10,11 @@ namespace A2v10.Runtime
 {
 	public class SimpleHttpPostedFileBase : HttpPostedFileBase
 	{
-		Int32 _length;
-		String _mime;
-		String _name;
-		Stream _stream;
+		private readonly Int32 _length;
+		private readonly String _mime;
+		private readonly String _name;
+		private readonly Stream _stream;
+
 		public override Int32 ContentLength => _length;
 		public override String ContentType => _mime;
 		public override String FileName => _name;

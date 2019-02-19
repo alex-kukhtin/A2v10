@@ -16,7 +16,7 @@ namespace BackgroundProcessor
 		}
 
 		#region ILogger
-		public void LogApi(LogEntry entry)
+		public void LogApi(LogApiEntry entry)
 		{
 			throw new NotImplementedException();
 		}

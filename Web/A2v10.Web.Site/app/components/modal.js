@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181122-7367
+// 20190219-7436
 // components/modal.js
 
 
@@ -124,7 +124,7 @@
 			// always need a new instance of function (modal stack)
 			return {
 				modalCreated: false,
-				keyUpHandler: function () {
+				keyUpHandler: function (event) {
 					// escape
 					if (event.which === 27) {
 						eventBus.$emit('modalClose', false);

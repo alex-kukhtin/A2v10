@@ -23,6 +23,7 @@
 @dg-success-brd-color: #89e489;
 @dg-info-bg-color: rgba(114, 234, 234, 0.15);
 @dg-info-brd-color: #72eaea;
+@dg-light-yellow-bg-color: rgba(255, 216, 0, 0.07);
 
 @group-padding: 12px;
 @group-bg-color: #efefef;//(@table-hdr-brd-color, 5%);
@@ -383,6 +384,12 @@ table.data-grid > tbody {
 		}
 	}
 
+	> tr.info, > tr.light-yellow {
+		> td {
+			background-color: @dg-light-yellow-bg-color;
+		}
+	}
+
 	> tr.bold {
 		> td {
 			font-weight: @font-bold;
@@ -502,7 +509,7 @@ table.data-grid > tbody {
 			}
 		}
 
-		td {
+		> tbody > tr > td {
 			padding: 6px;
 		}
 

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181026-7330
+// 20190219-7436
 
 // components/selector.js
 
@@ -23,9 +23,10 @@
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
-			@input="debouncedUpdate" @blur.stop="cancel" @keydown="keyDown" @keyup="keyUp"
+			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp"
 			:disabled="disabled" />
 		<slot></slot>
+		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
@@ -49,6 +50,8 @@
 		props: {
 			item: Object,
 			prop: String,
+			textItem: Object,
+			textProp: String,
 			display: String,
 			itemToValidate: Object,
 			propToValidate: String,
@@ -59,7 +62,8 @@
 			listWidth: String,
 			listHeight: String,
 			createNew: Function,
-			placement: String
+			placement: String,
+			caret: Boolean
 		},
 		data() {
 			return {
@@ -74,11 +78,18 @@
 		},
 		computed: {
 			valueText() {
-				return this.item ? utils.simpleEval(this.item[this.prop], this.display) : '';
+				if (!this.item) return '';
+				if (this.hasText) {
+					let el = this.item[this.prop];
+					if (el.$isEmpty)
+						return this.textItem[this.textProp];
+				}
+				return utils.simpleEval(this.item[this.prop], this.display);
 			},
 			canNew() {
 				return !!this.createNew;
 			},
+			hasText() { return !!this.textProp; },
 			newText() {
 				return `${locale.$CreateLC} "${this.query}"`;
 			},
@@ -124,6 +135,11 @@
 		},
 		watch: {
 			valueText(newVal) {
+				if (this.hasText) {
+					let el = this.item[this.prop];
+					if (!el.$isEmpty)
+						this.textItem[this.textProp] = ''; // clear text
+				}
 				this.query = this.valueText;
 			}
 		},
@@ -147,6 +163,19 @@
 			itemName(itm) {
 				return utils.simpleEval(itm, this.display);
 			},
+			blur() {
+				let text = this.query;
+				if (this.hasText && text !== this.valueText) {
+					this.item[this.prop].$empty();
+					this.textItem[this.textProp] = text;
+				}
+				this.cancel();
+			},
+			open() {
+				if (!this.isOpen)
+					this.doFetch(this.valueText, true);
+				this.isOpen = !this.isOpen;
+			},
 			cancel() {
 				this.query = this.valueText;
 				this.isOpen = false;
@@ -156,6 +185,9 @@
 					event.preventDefault();
 					event.stopPropagation();
 					this.cancel();
+				} else if (event.which === 13) {
+					if (this.hasText)
+						this.blur();
 				}
 			},
 			keyDown(event) {
@@ -230,21 +262,32 @@
 					this.clear();
 					return;
 				}
-				this.loading = true;
-				this.fetchData(text).then((result) => {
-					this.loading = false;
-					// first property from result
-					let prop = Object.keys(result)[0];
-					this.items = result[prop];
-				}).catch(() => {
-					this.items = [];
-				});
+				this.doFetch(text, false);
 			},
-			fetchData(text) {
+			doFetch(text, all) {
+				this.loading = true;
+				let fData = this.fetchData(text, all);
+				if (fData.then) {
+					// promise
+					fData.then((result) => {
+						this.loading = false;
+						// first property from result
+						let prop = Object.keys(result)[0];
+						this.items = result[prop];
+					}).catch(() => {
+						this.items = [];
+					});
+				} else {
+					if (utils.isArray(fData))
+						this.items = fData;
+				}
+			},
+			fetchData(text, all) {
+				all = all || false;
 				let elem = this.item[this.prop];
 				if (!('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
-				return this.fetch.call(elem, elem, text);
+				return this.fetch.call(elem, elem, text, all);
 			},
 			doNew() {
 				//console.dir(this.createNew);

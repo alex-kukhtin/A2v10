@@ -15,7 +15,7 @@ namespace A2v10.Runtime
 
 		public BinaryWriter BinaryWriter { get; set; }
 
-		NameValueCollection _headers = new NameValueCollection();
+		private readonly NameValueCollection _headers = new NameValueCollection();
 		public DesktopResponse(TextWriter writer)
 		{
 			Output = writer;

@@ -32,11 +32,23 @@ namespace A2v10.Infrastructure
 		}
 	}
 
+	public class LogApiEntry : LogEntry
+	{
+		public String Host { get; set; }
+		public Guid Guid { get; set; }
+		public LogApiEntry(LogSeverity severity, String message, String host, Guid guid)
+			: base(severity, message)
+		{
+			Host = host;
+			Guid = guid;
+		}
+	}
+
 	public interface ILogger
 	{
 		void LogSecurity(LogEntry enry);
 		void LogMessaging(LogEntry enry);
-		void LogApi(LogEntry entry);
+		void LogApi(LogApiEntry entry);
 		void LogBackground(LogEntry entry);
 	}
 
@@ -59,14 +71,14 @@ namespace A2v10.Infrastructure
 			logger.LogMessaging(new LogEntry(LogSeverity.Information, ex.Message) { Id = Id });
 		}
 
-		public static void LogApi(this ILogger logger, String message)
+		public static void LogApi(this ILogger logger, String message, String host, Guid guid)
 		{
-			logger.LogApi(new LogEntry(LogSeverity.Information, message));
+			logger.LogApi(new LogApiEntry(LogSeverity.Information, message, host, guid));
 		}
 
-		public static void LogApiError(this ILogger logger, String message)
+		public static void LogApiError(this ILogger logger, String message, String host, Guid guid)
 		{
-			logger.LogApi(new LogEntry(LogSeverity.Error, message));
+			logger.LogApi(new LogApiEntry(LogSeverity.Error, message, host, guid));
 		}
 
 		public static void LogBackground(this ILogger logger, String message)

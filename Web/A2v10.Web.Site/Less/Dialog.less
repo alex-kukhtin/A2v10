@@ -1,6 +1,6 @@
 ﻿
 
-@modal-padding: 8px;
+@modal-padding: .75rem;
 @modal-header-height: 34px;
 
 @modal-footer-bg-color: @whitesmoke-gray-bg-color;
@@ -85,7 +85,7 @@
 	border-top: 1px solid @light-gray-color;
 	display: flex;
 	justify-content: flex-end;
-	align-items: baseline;
+	align-items: flex-start;
 
 	.btn {
 		min-width: 6rem;
@@ -98,6 +98,7 @@
 
 	.btn-help {
 		cursor: pointer;
+		margin-top:5px;
 
 		.ico {
 			margin-right: 4px;
@@ -106,6 +107,11 @@
 		&:hover {
 			text-decoration: none;
 		}
+	}
+
+	.btn + .btn-caret {
+		min-width:auto;
+		margin-left:0;
 	}
 }
 
