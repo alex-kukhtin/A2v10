@@ -6,10 +6,10 @@ TODO:
 */
 
 @button-gap: -1px;
-@divider-color:lighten(@dropdown-brd-color, 10%);
+@divider-color: @dropdown-brd-color;
 
 .menu {
-	padding: 6px;
+	padding: .5rem;
 	margin: 3px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
@@ -57,12 +57,6 @@ TODO:
 		height: 1px;
 		margin: 4px 6px;
 		background-color: @divider-color;
-	}
-
-	&.background-white {
-		.divider {
-			background-color: @dropdown-brd-color;
-		}
 	}
 
 	.group-title {

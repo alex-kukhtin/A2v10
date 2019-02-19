@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
 using System.Windows.Markup;
 
@@ -11,15 +12,37 @@ namespace A2v10.Xaml
 		internal abstract String ControlType { get; }
 		internal abstract String InputControlType { get; }
 
+		public TextColor Color { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (CheckDisabledModel(context))
 				return;
+			if (Hint != null)
+			{
+				var div = new TagBuilder("div");
+				// MergeAttrMode.NoTabIndex = Visibility | Margin | Wrap | Tip | Content,
+				MergeAttributes(div, context, MergeAttrMode.Visibility | MergeAttrMode.Margin);
+				div.RenderStart(context);
+				RenderControl(context, null, MergeAttrMode.Wrap | MergeAttrMode.Tip | MergeAttrMode.Content );
+				RenderCheckboxHint(context);
+				div.RenderEnd(context);
+			}
+			else
+			{
+				RenderControl(context, onRender, MergeAttrMode.NoTabIndex);
+			}
+		}
+
+		void RenderControl(RenderContext context, Action<TagBuilder> onRender, MergeAttrMode mode)
+		{ 
 			var tag = new TagBuilder("label", ControlType, IsInGrid);
 			onRender?.Invoke(tag);
-			MergeAttributes(tag, context, MergeAttrMode.NoTabIndex);
+			MergeAttributes(tag, context, mode);
 			if (IsLabelEmpty)
 				tag.AddCssClass("no-label");
+			if (Color != TextColor.Default)
+				tag.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			tag.RenderStart(context);
 			var input = new TagBuilder("input");
 			input.MergeAttribute("type", InputControlType);
@@ -50,6 +73,18 @@ namespace A2v10.Xaml
 			{
 				input.MergeAttribute("v-model", valBind.GetPath(context));
 			}
+		}
+
+		internal void RenderCheckboxHint(RenderContext context)
+		{
+			if (Hint == null)
+				return;
+			if (Hint.Icon == Icon.NoIcon)
+				Hint.Icon = Icon.Help;
+			Hint.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("hint");
+			});
 		}
 
 		Boolean IsLabelEmpty

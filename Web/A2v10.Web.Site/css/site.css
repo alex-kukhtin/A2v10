@@ -4044,16 +4044,16 @@ label.radio {
   line-height: 16px;
   white-space: nowrap;
 }
-label.checkbox span,
-label.radio span {
+label.checkbox > span,
+label.radio > span {
   display: inline-block;
   position: relative;
   padding-left: 21px;
   min-height: 1em;
   white-space: normal;
 }
-label.checkbox span::before,
-label.radio span::before {
+label.checkbox > span::before,
+label.radio > span::before {
   position: absolute;
   left: 0;
   top: 0;
@@ -4065,8 +4065,8 @@ label.radio span::before {
   border-radius: 1px;
   background-color: white;
 }
-label.checkbox span::after,
-label.radio span::after {
+label.checkbox > span::after,
+label.radio > span::after {
   content: '';
   font-family: 'A2v10';
   font-size: 85%;
@@ -4085,8 +4085,8 @@ label.checkbox.no-wrap span,
 label.radio.no-wrap span {
   white-space: nowrap;
 }
-label.checkbox.no-label span,
-label.radio.no-label span {
+label.checkbox.no-label > span,
+label.radio.no-label > span {
   padding-left: 15px;
 }
 label.radio span::before,
@@ -4229,7 +4229,7 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  padding: 6px;
+  padding: 0.5rem;
   margin: 3px 0;
   top: 100%;
   min-width: 160px;
@@ -4269,15 +4269,12 @@ TODO:
   flex-grow: 0;
   height: 1px;
   margin: 4px 6px;
-  background-color: #f7f7f7;
-}
-.menu.background-white .divider {
   background-color: #ddd;
 }
 .menu .group-title {
   color: #8591a2;
   padding-bottom: 2px;
-  border-bottom: 1px solid #f7f7f7;
+  border-bottom: 1px solid #ddd;
   margin-bottom: 4px;
 }
 .dropdown-menu {
@@ -4451,6 +4448,7 @@ TODO:
   position: absolute;
   cursor: default;
   color: #222;
+  font-size: 13px;
   padding: 4px 6px 6px 6px;
   background-color: #fffce9;
   border: 1px solid #ddd;
@@ -5589,7 +5587,6 @@ h5,
 .super-menu {
   display: grid;
   grid-gap: 1rem;
-  margin: 0.5rem;
 }
 .super-menu.with-width .dropdown-item {
   white-space: normal;
@@ -5748,16 +5745,13 @@ h5,
   margin: 0.5rem 0 1rem 0;
 }
 @media print {
-  .header {
-    display: none;
-  }
+  .header,
+  .footer,
   .nav-bar {
     display: none;
   }
-  .side-bar {
-    display: none;
-  }
-  .footer {
+  .side-bar,
+  .side-bar-compact {
     display: none;
   }
   .content-view.partial-page {
@@ -5772,10 +5766,10 @@ h5,
   .page.page-grid .page-content {
     overflow: hidden;
   }
-  .toolbar {
-    display: none;
-  }
-  .taskpad {
+  .toolbar,
+  .a2-tab-bar,
+  .taskpad,
+  .a2-alert {
     display: none;
   }
   .page.absolute {
@@ -5836,9 +5830,6 @@ h5,
   }
   table.a2-table > tbody > tr > td .control-group {
     margin: 1px;
-  }
-  .a2-alert {
-    display: none;
   }
 }
 .diagram {
