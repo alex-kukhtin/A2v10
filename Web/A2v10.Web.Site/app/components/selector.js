@@ -1,16 +1,17 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190219-7436
+// 20190220-7437
 
 // components/selector.js
 
 /*TODO*/
 
-(function () {
+(function selector_component() {
 	const popup = require('std:popup');
 	const utils = require('std:utils');
 	const platform = require('std:platform');
 	const locale = window.$$locale;
+	const eventBus = require('std:eventBus');
 
 	const baseControl = component('control');
 
@@ -59,6 +60,7 @@
 			delay: Number,
 			minChars: Number,
 			fetch: Function,
+			hitfunc: Function,
 			listWidth: String,
 			listHeight: String,
 			createNew: Function,
@@ -166,14 +168,18 @@
 			blur() {
 				let text = this.query;
 				if (this.hasText && text !== this.valueText) {
-					this.item[this.prop].$empty();
+					let to = this.item[this.prop];
+					if (to && to.$empty)
+						to.$empty();
 					this.textItem[this.textProp] = text;
 				}
 				this.cancel();
 			},
 			open() {
-				if (!this.isOpen)
+				if (!this.isOpen) {
+					eventBus.$emit('closeAllPopups');
 					this.doFetch(this.valueText, true);
+				}
 				this.isOpen = !this.isOpen;
 			},
 			cancel() {
@@ -228,6 +234,10 @@
 				this.isOpen = false;
 				this.isOpenNew = false;
 				this.$nextTick(() => {
+					if (this.hitfunc) {
+						this.hitfunc.call(this.item.$root, itm);
+						return;
+					}
 					if (obj.$merge)
 						obj.$merge(itm, true /*fire*/);
 					else

@@ -121,7 +121,7 @@ namespace A2v10.Xaml
 			var mbind = GetBinding(nameof(Mark));
 			if (mbind != null)
 			{
-				dataGrid.MergeAttribute("mark", mbind.GetPath(context));
+				dataGrid.MergeAttribute("mark", mbind.Path); // without context!!!
 			}
 			else if (Mark != MarkStyle.Default)
 			{

@@ -3490,6 +3490,13 @@ ul.news-list > li {
 .modal-stack .modal-wrapper .modal-window.modal-large {
   width: 800px;
 }
+.modal-stack .modal-wrapper .load-indicator {
+  top: 35px;
+  background-color: #ddd;
+}
+.modal-stack .modal-wrapper:not(:last-child) .load-indicator {
+  display: none;
+}
 .modal-stack .modal-body .app-exception {
   width: 498px;
 }

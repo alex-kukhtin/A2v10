@@ -51,6 +51,17 @@
 		.modal-window.modal-large {
 			width: 800px;
 		}
+
+		.load-indicator {
+			top:35px;
+			background-color:@default-brd-color;
+		}
+
+		&:not(:last-child) {
+			.load-indicator {
+				display:none;
+			}
+		}
 	}
 
 	.modal-body .app-exception {

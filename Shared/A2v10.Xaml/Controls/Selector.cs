@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 	{
 		public TextAlign Align { get; set; }
 		public String Delegate { get; set; }
+		public String SetDelegate { get; set; }
 		public String DisplayProperty { get; set; }
 		public String Placeholder { get; set; }
 
@@ -40,6 +41,8 @@ namespace A2v10.Xaml
 			onRender?.Invoke(input);
 			if (!String.IsNullOrEmpty(Delegate))
 				input.MergeAttribute(":fetch", $"$delegate('{Delegate}')");
+			if (!String.IsNullOrEmpty(SetDelegate))
+				input.MergeAttribute(":hitfunc", $"$delegate('{SetDelegate}')");
 			input.MergeAttribute("display", DisplayProperty);
 			if (PanelPlacement != SelectorPanelPlacement.Default)
 				input.MergeAttribute("placement", PanelPlacement.ToString().ToKebabCase());
