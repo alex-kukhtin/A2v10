@@ -24,7 +24,7 @@
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
-			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp"
+			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
 			:disabled="disabled" />
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
@@ -179,6 +179,9 @@
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
 					this.doFetch(this.valueText, true);
+					let input = this.$refs['input'];
+					if (input)
+						input.focus();
 				}
 				this.isOpen = !this.isOpen;
 			},

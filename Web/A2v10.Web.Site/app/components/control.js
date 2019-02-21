@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20190221-7438
 // components/control.js
 
 (function () {
@@ -17,6 +17,7 @@
 			disabled: Boolean,
 			tabIndex: Number,
 			dataType: String,
+			format: String,
 			validatorOptions: Object,
 			updateTrigger: String,
 			mask: String,
@@ -34,7 +35,7 @@
 				if (!this.item) return null;
 				let val = this.item[this.prop];
 				if (this.dataType)
-					return utils.format(val, this.dataType, this.hideZeros);
+					return utils.format(val, this.dataType, {hideZeros: this.hideZeros, format: this.format });
 				else if (this.mask && val)
 					return mask.getMasked(this.mask, val);
 				return val;

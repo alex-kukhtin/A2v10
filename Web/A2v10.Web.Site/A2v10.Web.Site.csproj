@@ -161,6 +161,7 @@
     </Content>
     <Content Include="Less\Diagram.less" />
     <Content Include="Less\Table.less" />
+    <Content Include="tests\format.js" />
     <Content Include="tsconfig.json" />
     <Content Include="Less\TabBar.less" />
     <None Include="Web.Debug.config">

@@ -101,7 +101,7 @@
 						Content="{Bind Agent.Name}" Width="100" Command="{BindCmd Dialog, Action=Browse, Url={StaticResource OpenUrl}}"/>
 		<DataGridColumn Header="@[Sum]" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="@[Sum]" Align="Right" Fit="True" Wrap="NoWrap">
-			<Span Content="{Bind Sum, DataType=Currency}" Color="{Bind $Color}" Bold="True"></Span>
+			<Span Content="{Bind Sum, DataType=Currency, Format='#,000.00'}" Color="{Bind $Color}" Bold="True"></Span>
 		</DataGridColumn>
 		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
 		<DataGridColumn Icon="Bank" Command="{BindCmd Dialog, Action=Browse, Url='/aaa/aaa'}" Fit="True"/>

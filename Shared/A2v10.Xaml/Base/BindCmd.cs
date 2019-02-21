@@ -259,7 +259,8 @@ namespace A2v10.Xaml
 					return $"$execSelected('{GetName()}', {CommandArgument(context)}, {GetConfirm(context)})";
 
 				case CommandType.Report:
-					return $"$report({GetReportName(context)}, {CommandArgument(context, nullable: true)}, {GetOptions(context)})";
+					return $"$report({GetReportName(context)}, {CommandArgument(context, nullable: true)}, " +
+						$"{GetOptions(context)}, {CommandUrlOptional(context)})";
 
 				case CommandType.Export:
 					return $"$export()";
@@ -439,6 +440,18 @@ namespace A2v10.Xaml
 				return fnBind.GetPath(context);
 			}
 			return $"'{context.Localize(FileName)}'";
+		}
+
+		String CommandUrlOptional(RenderContext context)
+		{
+			var urlBind = GetBinding(nameof(Url));
+			if (urlBind != null)
+				return urlBind.GetPath(context);
+			else if (String.IsNullOrEmpty(Url))
+				return nullString;
+			if (!Url.StartsWith("/"))
+				throw new NotImplementedException($"Url '{Url}' must start with '/'");
+			return $"'{Url}'";
 		}
 
 		String CommandUrl(RenderContext context, Boolean decorate = false, Boolean skipCheck = false)

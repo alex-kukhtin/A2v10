@@ -107,7 +107,7 @@
 			},
 			onKey(event) {
 				if (!this.number) return;
-				if (event.charCode < 48 || event.charCode > 57) {
+				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
 					event.stopPropagation();
 				}

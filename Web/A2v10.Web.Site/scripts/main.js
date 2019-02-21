@@ -137,7 +137,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190108-7409
+// 20190221-7438
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -155,6 +155,8 @@ app.modules['std:utils'] = function () {
 
 	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
+
+	let numFormatCache = {};
 
 
 	return {
@@ -340,7 +342,43 @@ app.modules['std:utils'] = function () {
 		return obj;
 	}
 
-	function format(obj, dataType, hideZeros) {
+	function formatNumber(num, format) {
+		if (!format)
+			return numberFormat(num);
+		if (numFormatCache[format])
+			return numFormatCache[format](num);
+		let re = /^([#][,\s])?(#*)?(0*)?\.?(0*)?(#*)?$/;
+		let fmt = format.match(re);
+		if (!fmt) {
+			console.error(`Invalid number format: '${format}'`);
+			return num;
+		}
+		function getlen(x) {
+			return x ? x.length : 0;
+		}
+
+		// 1-sep, 2-int part(#), 3-int part(0), 4-fract part (0), 5-fract part (#) 
+		let useGrp = !!fmt[1],
+			fih = getlen(fmt[2]), fi0 = getlen(fmt[3]),
+			fp0 = getlen(fmt[4]), fph = getlen(fmt[5]);
+
+		//console.dir(fmt);
+		//console.dir({ useGrp, fp0, fph, fi0, fih });
+
+		let formatFunc = Intl.NumberFormat(undefined, {
+			minimumFractionDigits: fp0,
+			maximumFractionDigits: fp0 + fph,
+			minimumIntegerDigits: fi0,
+			useGrouping: useGrp
+		}).format;
+
+		numFormatCache[format] = formatFunc;
+
+		return formatFunc(num);
+	}
+
+	function format(obj, dataType, opts) {
+		opts = opts || {};
 		if (!dataType)
 			return obj;
 		if (!isDefined(obj))
@@ -387,17 +425,20 @@ app.modules['std:utils'] = function () {
 					console.error(`Invalid Currency for utils.format (${obj})`);
 					return obj;
 				}
-				if (hideZeros && obj === 0)
+				if (opts.hideZeros && obj === 0)
 					return '';
+				if (opts.format)
+					return formatNumber(obj, opts.format);
 				return currencyFormat(obj);
 			case "Number":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Number for utils.format (${obj})`);
 					return obj;
 				}
-				if (hideZeros && obj === 0)
+				if (opts.hideZeros && obj === 0)
 					return '';
-				return numberFormat(obj);
+
+				return formatNumber(obj, opts.format);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
@@ -474,7 +515,7 @@ app.modules['std:utils'] = function () {
 		str = str || '';
 		if (!str) return dateZero();
 		let today = dateToday();
-		let seg = str.split(/[^\d]/);
+		let seg = str.split(/[^\d]/).filter(x => x);
 		if (seg.length === 1) {
 			seg.push('' + (today.getMonth() + 1));
 			seg.push('' + today.getFullYear());
@@ -663,7 +704,8 @@ app.modules['std:utils'] = function () {
 	function currencyRound(n, digits) {
 		if (isNaN(n))
 			return Nan;
-		digits = digits || 2;
+		if (!isDefined(digits))
+			digits = 2;
 		let m = false;
 		if (n < 0) {
 			n = -n;
@@ -674,7 +716,6 @@ app.modules['std:utils'] = function () {
 		return m ? -r : r;
 	}
 };
-
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -3797,9 +3838,9 @@ app.modules['std:routing'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181125-7372
+// 20190221-7438
 // components/control.js
 
 (function () {
@@ -3816,6 +3857,7 @@ app.modules['std:routing'] = function () {
 			disabled: Boolean,
 			tabIndex: Number,
 			dataType: String,
+			format: String,
 			validatorOptions: Object,
 			updateTrigger: String,
 			mask: String,
@@ -3833,7 +3875,7 @@ app.modules['std:routing'] = function () {
 				if (!this.item) return null;
 				let val = this.item[this.prop];
 				if (this.dataType)
-					return utils.format(val, this.dataType, this.hideZeros);
+					return utils.format(val, this.dataType, {hideZeros: this.hideZeros, format: this.format });
 				else if (this.mask && val)
 					return mask.getMasked(this.mask, val);
 				return val;
@@ -4115,7 +4157,7 @@ Vue.component('validator-control', {
 			},
 			onKey(event) {
 				if (!this.number) return;
-				if (event.charCode < 48 || event.charCode > 57) {
+				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
 					event.stopPropagation();
 				}
@@ -4774,7 +4816,7 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
-			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp"
+			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
 			:disabled="disabled" />
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
@@ -4929,6 +4971,9 @@ Vue.component('validator-control', {
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
 					this.doFetch(this.valueText, true);
+					let input = this.$refs['input'];
+					if (input)
+						input.focus();
 				}
 				this.isOpen = !this.isOpen;
 			},
@@ -10231,7 +10276,7 @@ Vue.directive('resize', {
 				if (opts.mask)
 					return value ? mask.getMasked(opts.mask, value) : value;
 				if (opts.dataType)
-					return utils.format(value, opts.dataType, opts.hideZeros);
+					return utils.format(value, opts.dataType, { hideZeros: opts.hideZeros, format: opts.format });
 				if (opts.format && opts.format.indexOf('{0}') !== -1)
 					return opts.format.replace('{0}', value);
 				return value;

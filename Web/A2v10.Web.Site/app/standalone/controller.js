@@ -100,7 +100,7 @@
 
 			$format(value, dataType, hideZeros) {
 				if (!dataType) return value;
-				return utils.format(value, dataType, hideZeros);
+				return utils.format(value, dataType, { hideZeros: hideZeros });
 			},
 
 			$save(opts) {

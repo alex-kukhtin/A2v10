@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 describe("Currency tools", function () {
 
@@ -13,6 +13,12 @@ describe("Currency tools", function () {
 		expect(ct.round(-7.2128, 3)).toBe(-7.213);
 		expect(ct.round(-7.2150, 2)).toBe(-7.22);
 		expect(ct.round(248.9950, 2)).toBe(249);
+		expect(ct.round(248.85, 0)).toBe(249);
+	});
+
+	it("format", function () {
+		expect(ct.format(0)).toBe('0.00');
+		expect(ct.format(248)).toBe('248.00');
 	});
 
 });

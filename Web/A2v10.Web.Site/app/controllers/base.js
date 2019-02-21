@@ -848,7 +848,7 @@
 				if (opts.mask)
 					return value ? mask.getMasked(opts.mask, value) : value;
 				if (opts.dataType)
-					return utils.format(value, opts.dataType, opts.hideZeros);
+					return utils.format(value, opts.dataType, { hideZeros: opts.hideZeros, format: opts.format });
 				if (opts.format && opts.format.indexOf('{0}') !== -1)
 					return opts.format.replace('{0}', value);
 				return value;

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190108-7409
+// 20190221-7438
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -18,6 +18,8 @@ app.modules['std:utils'] = function () {
 
 	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
+
+	let numFormatCache = {};
 
 
 	return {
@@ -203,7 +205,43 @@ app.modules['std:utils'] = function () {
 		return obj;
 	}
 
-	function format(obj, dataType, hideZeros) {
+	function formatNumber(num, format) {
+		if (!format)
+			return numberFormat(num);
+		if (numFormatCache[format])
+			return numFormatCache[format](num);
+		let re = /^([#][,\s])?(#*)?(0*)?\.?(0*)?(#*)?$/;
+		let fmt = format.match(re);
+		if (!fmt) {
+			console.error(`Invalid number format: '${format}'`);
+			return num;
+		}
+		function getlen(x) {
+			return x ? x.length : 0;
+		}
+
+		// 1-sep, 2-int part(#), 3-int part(0), 4-fract part (0), 5-fract part (#) 
+		let useGrp = !!fmt[1],
+			fih = getlen(fmt[2]), fi0 = getlen(fmt[3]),
+			fp0 = getlen(fmt[4]), fph = getlen(fmt[5]);
+
+		//console.dir(fmt);
+		//console.dir({ useGrp, fp0, fph, fi0, fih });
+
+		let formatFunc = Intl.NumberFormat(undefined, {
+			minimumFractionDigits: fp0,
+			maximumFractionDigits: fp0 + fph,
+			minimumIntegerDigits: fi0,
+			useGrouping: useGrp
+		}).format;
+
+		numFormatCache[format] = formatFunc;
+
+		return formatFunc(num);
+	}
+
+	function format(obj, dataType, opts) {
+		opts = opts || {};
 		if (!dataType)
 			return obj;
 		if (!isDefined(obj))
@@ -250,17 +288,20 @@ app.modules['std:utils'] = function () {
 					console.error(`Invalid Currency for utils.format (${obj})`);
 					return obj;
 				}
-				if (hideZeros && obj === 0)
+				if (opts.hideZeros && obj === 0)
 					return '';
+				if (opts.format)
+					return formatNumber(obj, opts.format);
 				return currencyFormat(obj);
 			case "Number":
 				if (!isNumber(obj)) {
 					console.error(`Invalid Number for utils.format (${obj})`);
 					return obj;
 				}
-				if (hideZeros && obj === 0)
+				if (opts.hideZeros && obj === 0)
 					return '';
-				return numberFormat(obj);
+
+				return formatNumber(obj, opts.format);
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
@@ -337,7 +378,7 @@ app.modules['std:utils'] = function () {
 		str = str || '';
 		if (!str) return dateZero();
 		let today = dateToday();
-		let seg = str.split(/[^\d]/);
+		let seg = str.split(/[^\d]/).filter(x => x);
 		if (seg.length === 1) {
 			seg.push('' + (today.getMonth() + 1));
 			seg.push('' + today.getFullYear());
@@ -526,7 +567,8 @@ app.modules['std:utils'] = function () {
 	function currencyRound(n, digits) {
 		if (isNaN(n))
 			return Nan;
-		digits = digits || 2;
+		if (!isDefined(digits))
+			digits = 2;
 		let m = false;
 		if (n < 0) {
 			n = -n;
@@ -537,4 +579,3 @@ app.modules['std:utils'] = function () {
 		return m ? -r : r;
 	}
 };
-
