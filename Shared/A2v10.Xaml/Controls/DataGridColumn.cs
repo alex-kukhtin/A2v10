@@ -21,29 +21,17 @@ namespace A2v10.Xaml
 		public Object Content { get; set; }
 		//TODO: may be UIElement
 		public String Header { get; set; }
-
 		public TextAlign Align { get; set; }
-
 		public Boolean Fit { get; set; }
-
 		public Boolean Editable { get; set; }
-
 		public Command Command { get; set; }
-
 		public ColumnControlType ControlType { get; set; }
-
 		public Object Mark { get; set; }
-
 		public Length Width { get; set; }
-
 		public Icon Icon { get; set; }
-
 		public WrapMode Wrap { get; set; }
-
 		public Boolean? Sort { get; set; }
-
 		public String SortProperty { get; set; }
-
 		public Boolean? Small { get; set; }
 		public Boolean? Bold { get; set; }
 

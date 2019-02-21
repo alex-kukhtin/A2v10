@@ -15,11 +15,8 @@ namespace A2v10.Xaml
 	public class TreeViewItem : UIElement
 	{
 		public Object ItemsSource { get; set; }
-
 		public Icon Icon { get; set; }
-
 		public String Label { get; set; }
-
 		public Boolean? IsFolder { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)

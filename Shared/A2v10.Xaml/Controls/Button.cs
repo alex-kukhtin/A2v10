@@ -28,13 +28,9 @@ namespace A2v10.Xaml
 	public class Button : CommandControl
 	{
 		public Icon Icon { get; set; }
-
 		public UIElementBase DropDown { get; set; }
-
 		public ButtonStyle Style { get; set; }
-
 		public ControlSize Size { get; set; }
-
 		public IconAlign IconAlign { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
