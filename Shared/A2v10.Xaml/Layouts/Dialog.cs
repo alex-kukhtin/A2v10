@@ -22,6 +22,8 @@ namespace A2v10.Xaml
 		public DialogSize Size { get; set; }
 		public Length Width { get; set; }
 		public Length Height { get; set; }
+		public String CanCloseDelegate { get; set; }
+		public Boolean AlwaysOk { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -31,12 +33,28 @@ namespace A2v10.Xaml
 
 		internal Boolean IsContentIsIFrame => Children?.Count == 1 && Children[0] is IFrame;
 
+		String GetControllerAttributes()
+		{
+			if (String.IsNullOrEmpty(CanCloseDelegate) && !AlwaysOk)
+				return null;
+			var opts = new StringBuilder("{");
+			if (!String.IsNullOrEmpty(CanCloseDelegate))
+				opts.Append($"'canClose': '{CanCloseDelegate}',");
+			if (AlwaysOk)
+				opts.Append("'alwaysOk': true");
+			opts.RemoveTailComma();
+			opts.Append("}");
+			return opts.ToString();
+		}
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var dialog = new TagBuilder("div", "modal");
 			dialog.MergeAttribute("id", context.RootId);
 			dialog.MergeAttribute("v-cloak", String.Empty);
 			dialog.AddCssClassBoolNo(UserSelect, "user-select");
+
+			dialog.MergeAttribute("data-controller-attr", GetControllerAttributes());
 
 			SetSize(dialog);
 

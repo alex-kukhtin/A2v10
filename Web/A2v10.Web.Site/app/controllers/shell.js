@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180217-7435*/
+/*20180221-7439*/
 /* controllers/shell.js */
 
 (function () {
@@ -428,10 +428,45 @@
 				me.setupWrapper(dlg);
 			});
 
+			eventBus.$on('modalSetAttribites', function (attr, instance) {
+				if (!me.modals.length || !attr || !instance)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				dlg.attrs = instance.__parseControllerAttributes(attr);
+			});
+
 			eventBus.$on('modalClose', function (result) {
-				let dlg = me.modals.pop();
-				if (result)
-					dlg.resolve(result);
+
+				function closeImpl() {
+					let dlg = me.modals.pop();
+					if (result)
+						dlg.resolve(result);
+				}
+
+				if (!me.modals.length) return;
+
+				let dlg = me.modals[me.modals.length - 1];
+				if (!dlg.attrs) {
+					closeImpl();
+					return;
+				}
+
+				if (dlg.attrs.alwaysOk) result = true;
+
+				if (dlg.attrs.canClose) { 
+					let canResult = dlg.attrs.canClose();
+					console.dir(canResult);
+					if (canResult === true)
+						closeImpl();
+					else if (canResult.then) {
+						result.then(function (innerResult) {
+							if (innerResult)
+								closeImpl();
+						});
+					}
+				} else {
+					closeImpl();
+				}
 			});
 
 			eventBus.$on('modalCloseAll', function () {

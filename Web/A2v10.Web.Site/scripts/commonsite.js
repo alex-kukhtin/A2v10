@@ -413,8 +413,9 @@ app.modules['std:utils'] = function () {
 				return obj.format('Date');
 			case "Currency":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Currency for utils.format (${obj})`);
-					return obj;
+					obj = toNumber(obj);
+					//TODO:check console.error(`Invalid Currency for utils.format (${obj})`);
+					//return obj;
 				}
 				if (opts.hideZeros && obj === 0)
 					return '';
@@ -423,8 +424,9 @@ app.modules['std:utils'] = function () {
 				return currencyFormat(obj);
 			case "Number":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Number for utils.format (${obj})`);
-					return obj;
+					obj = toNumber(obj);
+					//TODO:check console.error(`Invalid Number for utils.format (${obj})`);
+					//return obj;
 				}
 				if (opts.hideZeros && obj === 0)
 					return '';
@@ -708,9 +710,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180619-7227*/
+/*20190221-7439*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -732,7 +734,8 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment
+		replaceSegment: replaceSegment,
+		removeFirstSlash
 	};
 
 	function normalize(elem) {
@@ -752,6 +755,11 @@ app.modules['std:url'] = function () {
 		return path;
 	}
 
+	function removeFirstSlash(url) {
+		if (url && url.startsWith && url.startsWith('/'))
+			return url.substring(1);
+		return url;
+	}
 	function combine(...args) {
 		return '/' + args.map(normalize).filter(x => !!x).join('/');
 	}
@@ -1229,7 +1237,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190221-7439
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1364,10 +1372,16 @@ app.modules['std:http'] = function () {
 						}
 					}
 					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
-						let ve = selector.firstElementChild.__vue__;
+						let fec = selector.firstElementChild;
+						let ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
+						if (fec.classList.contains('modal')) {
+							let dca = fec.getAttribute('data-controller-attr');
+							if (dca)
+								eventBus.$emit('modalSetAttribites', dca, ve);
+						}
 					}
 					resolve(true);
 				})

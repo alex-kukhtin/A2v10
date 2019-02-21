@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190221-7439
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -135,10 +135,16 @@ app.modules['std:http'] = function () {
 						}
 					}
 					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
-						let ve = selector.firstElementChild.__vue__;
+						let fec = selector.firstElementChild;
+						let ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
+						if (fec.classList.contains('modal')) {
+							let dca = fec.getAttribute('data-controller-attr');
+							if (dca)
+								eventBus.$emit('modalSetAttribites', dca, ve);
+						}
 					}
 					resolve(true);
 				})

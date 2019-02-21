@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180619-7227*/
+/*20190221-7439*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -22,7 +22,8 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment
+		replaceSegment: replaceSegment,
+		removeFirstSlash
 	};
 
 	function normalize(elem) {
@@ -42,6 +43,11 @@ app.modules['std:url'] = function () {
 		return path;
 	}
 
+	function removeFirstSlash(url) {
+		if (url && url.startsWith && url.startsWith('/'))
+			return url.substring(1);
+		return url;
+	}
 	function combine(...args) {
 		return '/' + args.map(normalize).filter(x => !!x).join('/');
 	}

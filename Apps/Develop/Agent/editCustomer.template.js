@@ -34,12 +34,17 @@ const template = {
 		],
 		'Agent.Memo': { valid: 'notBlank', msg: 'Введите примечание', severity:'warning'},
 		'Agent.Address.Build': 'Введите номер дома'
+	},
+	delegates: {
+		canClose
 	}
+
 };
+
+module.exports = template;
 
 function modelLoad(root, caller) {
 	const ag = root.Agent;
-	console.dir(root.$ctrl);
 	if (!ag.$isNew) return;
 	ag.Type = 'C';
 	ag.Kind = 'Customer';
@@ -88,4 +93,9 @@ function isPage3Valid() {
 	return this.Name === 'VALID';
 }
 
-module.exports = template;
+
+function canClose() {
+	let ctrl = this.$vm;
+	return ctrl.$saveModified('are you sure?');
+}
+

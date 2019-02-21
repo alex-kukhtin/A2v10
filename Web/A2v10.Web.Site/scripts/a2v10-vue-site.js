@@ -422,8 +422,9 @@ app.modules['std:utils'] = function () {
 				return obj.format('Date');
 			case "Currency":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Currency for utils.format (${obj})`);
-					return obj;
+					obj = toNumber(obj);
+					//TODO:check console.error(`Invalid Currency for utils.format (${obj})`);
+					//return obj;
 				}
 				if (opts.hideZeros && obj === 0)
 					return '';
@@ -432,8 +433,9 @@ app.modules['std:utils'] = function () {
 				return currencyFormat(obj);
 			case "Number":
 				if (!isNumber(obj)) {
-					console.error(`Invalid Number for utils.format (${obj})`);
-					return obj;
+					obj = toNumber(obj);
+					//TODO:check console.error(`Invalid Number for utils.format (${obj})`);
+					//return obj;
 				}
 				if (opts.hideZeros && obj === 0)
 					return '';
@@ -717,9 +719,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180619-7227*/
+/*20190221-7439*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -741,7 +743,8 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment
+		replaceSegment: replaceSegment,
+		removeFirstSlash
 	};
 
 	function normalize(elem) {
@@ -761,6 +764,11 @@ app.modules['std:url'] = function () {
 		return path;
 	}
 
+	function removeFirstSlash(url) {
+		if (url && url.startsWith && url.startsWith('/'))
+			return url.substring(1);
+		return url;
+	}
 	function combine(...args) {
 		return '/' + args.map(normalize).filter(x => !!x).join('/');
 	}
@@ -1682,7 +1690,7 @@ app.modules['std:html'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190114-7411
+// 20190221-7439
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1817,10 +1825,16 @@ app.modules['std:http'] = function () {
 						}
 					}
 					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
-						let ve = selector.firstElementChild.__vue__;
+						let fec = selector.firstElementChild;
+						let ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
+						if (fec.classList.contains('modal')) {
+							let dca = fec.getAttribute('data-controller-attr');
+							if (dca)
+								eventBus.$emit('modalSetAttribites', dca, ve);
+						}
 					}
 					resolve(true);
 				})
@@ -4068,7 +4082,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7435
+// 20190221-7439
 // controllers/base.js
 
 (function () {
@@ -4757,7 +4771,7 @@ Vue.component('a2-pager', {
 				});
 			},
 
-			$report(rep, arg, opts) {
+			$report(rep, arg, opts, repBaseUrl) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
@@ -4779,7 +4793,7 @@ Vue.component('a2-pager', {
 						id = utils.getStringId(arg);
 					const root = window.$$rootUrl;
 					let url = `${root}/report/${cmd}/${id}`;
-					let reportUrl = this.$indirectUrl || this.$baseUrl;
+					let reportUrl = urltools.removeFirstSlash(repBaseUrl) || this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = { base: baseUrl, rep: rep };
 					if (fmt)
@@ -4861,8 +4875,9 @@ Vue.component('a2-pager', {
 			},
 
 			$close() {
-				if (this.$saveModified())
+				if (this.$saveModified()) {
 					this.$store.commit("close");
+				}
 			},
 
 			$showHelp(path) {
@@ -4879,12 +4894,12 @@ Vue.component('a2-pager', {
 				this.$reload();
 			},
 
-			$saveModified() {
+			$saveModified(message) {
 				if (!this.$isDirty)
 					return true;
 				let self = this;
 				let dlg = {
-					message: locale.$ElementWasChanged,
+					message: message || locale.$ElementWasChanged,
 					title: locale.$ConfirmClose,
 					buttons: [
 						{ text: locale.$Save, result: "save" },
@@ -4892,15 +4907,23 @@ Vue.component('a2-pager', {
 						{ text: locale.$Cancel, result: false }
 					]
 				};
+				function closeImpl(result) {
+					if (self.inDialog)
+						eventBus.$emit('modalClose', result);
+					else
+						self.$close();
+				}
+
 				this.$confirm(dlg).then(function (result) {
 					if (result === 'close') {
 						// close without saving
 						self.$data.$setDirty(false);
-						self.$close();
+						closeImpl(false);
 					} else if (result === 'save') {
 						// save then close
-						self.$save().then(function () {
-							self.$close();
+						self.$save().then(function (saveResult) {
+							console.dir(saveResult);
+							closeImpl(saveResult);
 						});
 					}
 				});
@@ -5078,7 +5101,9 @@ Vue.component('a2-pager', {
 					$modalClose: this.$modalClose,
 					$msg: this.$msg,
 					$alert: this.$alert,
+					$confirm: this.$confirm,
 					$showDialog: this.$showDialog,
+					$saveModified: this.$saveModified,
 					$asyncValid: this.$asyncValid,
 					$toast: this.$toast,
 					$requery: this.$requery,
@@ -5111,6 +5136,19 @@ Vue.component('a2-pager', {
 					let el = array.find(itm => itm.$id === token.id);
 					if (el && el.$select) el.$select();
 				});
+			},
+			__parseControllerAttributes(attr) {
+				if (!attr) return null;
+				let json = JSON.parse(attr.replace(/\'/g, '"'));
+				let result = {};
+				if (json.canClose) {
+					let ccd = this.$delegate(json.canClose);
+					if (ccd)
+						result.canClose = ccd.bind(this.$data);
+				}
+				if (json.closeOk)
+					result.closeOk = true;
+				return result;
 			}
 		},
 		created() {
