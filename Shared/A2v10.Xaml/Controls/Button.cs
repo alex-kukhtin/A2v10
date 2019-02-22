@@ -15,7 +15,8 @@ namespace A2v10.Xaml
 		Green = Success,
 		Orange = Warning,
 		Red = Danger,
-		Cyan = Info
+		Cyan = Info,
+		Outline = 6
 	}
 
 	public enum IconAlign
@@ -32,6 +33,7 @@ namespace A2v10.Xaml
 		public ButtonStyle Style { get; set; }
 		public ControlSize Size { get; set; }
 		public IconAlign IconAlign { get; set; }
+		public Boolean Rounded { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -103,9 +105,8 @@ namespace A2v10.Xaml
 
 			//if (!insideBar)
 			if (Style != ButtonStyle.Default)
-			{
 				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
-			}
+			button.AddCssClassBool(Rounded, "btn-rounded");
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);
 			MergeAttributes(button, context, MergeAttrMode.NoTabIndex); // dinamic

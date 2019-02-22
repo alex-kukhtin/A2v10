@@ -128,3 +128,33 @@
 .btn.btn-cyan, .btn.btn-info {
 	.color-button(@info-base-color);
 }
+
+.btn-rounded {
+	border-radius:10rem;
+	padding:.5rem;
+	min-width:2.6rem;
+	min-height:2.6rem;
+}
+
+.btn-outline {
+	background-color: transparent;
+	border: 1px solid #ddd;
+
+	&:hover {
+		border-color: @tb-hover-brd-color;
+		background-color: @hover-bg-color;
+	}
+
+	&:active {
+		background-color: @tb-active-bg-color;
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+		border-color: @tb-hover-brd-color;
+		outline: none;
+	}
+	&:focus {
+		outline:none;
+	}
+	.ico:before {
+		color: #777!important;
+	}
+}

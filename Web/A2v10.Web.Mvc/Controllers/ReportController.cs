@@ -67,7 +67,7 @@ namespace A2v10.Web.Mvc.Controllers
 			SetupLicense();
 			try
 			{
-				var url = $"/_report/{Base}/{Rep}/{id}";
+				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 				var rep = rm.GetReport();
 
@@ -144,7 +144,7 @@ namespace A2v10.Web.Mvc.Controllers
 			SetupLicense();
 			try
 			{
-				var url = $"/_report/{Base}/{Rep}/{id}";
+				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 				ReportInfo ri = await GetReportInfo(url, id);
 
 				switch (ri.Type) {
@@ -175,7 +175,7 @@ namespace A2v10.Web.Mvc.Controllers
 			SetupLicense();
 			try
 			{
-				var url = $"/_report/{Base}/{Rep}/{id}";
+				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 				ReportInfo ri = await GetReportInfo(url, id);
 
 				switch (ri.Type)
@@ -316,7 +316,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var Rep = rp.HttpContext.Request.Params["Rep"];
 				var Base = rp.HttpContext.Request.Params["Base"];
 				var id = rp.Routes["Id"];
-				var url = $"/_report/{Base}/{Rep}/{id}";
+				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 
 				//TODO: profile var token = Profiler.BeginReport("create");
 

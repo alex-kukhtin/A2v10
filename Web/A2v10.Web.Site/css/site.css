@@ -2258,6 +2258,32 @@ pre.a2-code {
 .btn.btn-info[disabled] {
   color: #f5f5f5;
 }
+.btn-rounded {
+  border-radius: 10rem;
+  padding: 0.5rem;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+}
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #ddd;
+}
+.btn-outline:hover {
+  border-color: #e5c365;
+  background-color: #fdf4bf;
+}
+.btn-outline:active {
+  background-color: #fff29d;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  border-color: #e5c365;
+  outline: none;
+}
+.btn-outline:focus {
+  outline: none;
+}
+.btn-outline .ico:before {
+  color: #777 !important;
+}
 .input-group > .calendar {
   display: flex;
   flex-direction: row;

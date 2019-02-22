@@ -151,6 +151,7 @@
 				</DropDownMenu>
 			</Hyperlink.DropDown>
 		</Hyperlink>
+		<Button Icon="Reload" Style="Outline" Rounded="True"></Button>
 		<Separator />
 		<Button>3</Button>
 	</StackPanel>
