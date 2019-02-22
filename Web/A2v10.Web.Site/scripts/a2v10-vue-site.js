@@ -4082,7 +4082,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190221-7439
+// 20190222-7439
 // controllers/base.js
 
 (function () {
@@ -4894,13 +4894,13 @@ Vue.component('a2-pager', {
 				this.$reload();
 			},
 
-			$saveModified(message) {
+			$saveModified(message, title) {
 				if (!this.$isDirty)
 					return true;
 				let self = this;
 				let dlg = {
 					message: message || locale.$ElementWasChanged,
-					title: locale.$ConfirmClose,
+					title: title || locale.$ConfirmClose,
 					buttons: [
 						{ text: locale.$Save, result: "save" },
 						{ text: locale.$NotSave, result: "close" },
@@ -5146,8 +5146,8 @@ Vue.component('a2-pager', {
 					if (ccd)
 						result.canClose = ccd.bind(this.$data);
 				}
-				if (json.closeOk)
-					result.closeOk = true;
+				if (json.alwaysOk)
+					result.alwaysOk = true;
 				return result;
 			}
 		},

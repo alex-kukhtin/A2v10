@@ -91,7 +91,6 @@
     <Content Include="app\services\locale.js" />
     <Content Include="app\services\routing.js" />
     <Content Include="app\services\templates.js" />
-    <TypeScriptCompile Include="app\site.ts\collectionview.ts" />
     <Content Include="app\site\collectionview.js" />
     <Content Include="app\site\controller.js" />
     <Content Include="app\site\store.js" />
@@ -162,7 +161,6 @@
     <Content Include="Less\Diagram.less" />
     <Content Include="Less\Table.less" />
     <Content Include="tests\format.js" />
-    <Content Include="tsconfig.json" />
     <Content Include="Less\TabBar.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -366,6 +364,7 @@
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\site.ts\" />
     <Folder Include="scripts\eusign\" />
     <Folder Include="Scss\" />
   </ItemGroup>

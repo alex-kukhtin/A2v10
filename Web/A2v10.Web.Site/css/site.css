@@ -2174,15 +2174,6 @@ pre.a2-code {
   border-bottom-color: currentColor;
   vertical-align: 2px;
 }
-.btn-default {
-  background-color: #e8e8e8;
-}
-.btn-default:not([disabled]):hover {
-  background-color: #e0e0e0;
-}
-.btn-default:active {
-  background-color: #d9d9d9 !important;
-}
 .btn.icon-top {
   display: inline-grid;
 }

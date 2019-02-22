@@ -15,7 +15,7 @@ namespace A2v10.Xaml
 		Green = Success,
 		Orange = Warning,
 		Red = Danger,
-		Cyan = Info,
+		Cyan = Info
 	}
 
 	public enum IconAlign
@@ -103,7 +103,9 @@ namespace A2v10.Xaml
 
 			//if (!insideBar)
 			if (Style != ButtonStyle.Default)
+			{
 				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
+			}
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);
 			MergeAttributes(button, context, MergeAttrMode.NoTabIndex); // dinamic

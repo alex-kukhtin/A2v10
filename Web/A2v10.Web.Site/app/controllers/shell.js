@@ -455,7 +455,7 @@
 
 				if (dlg.attrs.canClose) { 
 					let canResult = dlg.attrs.canClose();
-					console.dir(canResult);
+					//console.dir(canResult);
 					if (canResult === true)
 						closeImpl();
 					else if (canResult.then) {
