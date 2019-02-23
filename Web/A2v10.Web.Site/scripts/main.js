@@ -3079,9 +3079,9 @@ app.modules['std:validators'] = function () {
 
 	function checkPeriod(obj) {
 		let f = obj.Filter;
-		if (!f) return;
+		if (!f) return obj;
 		if (!('Period' in f))
-			return;
+			return obj;
 		let p = f.Period;
 		if (period.like(p))
 			f.Period = new period.constructor(p);
