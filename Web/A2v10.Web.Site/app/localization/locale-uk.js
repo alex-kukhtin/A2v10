@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20190223-7441
 // locale-uk.js
 
 "use strict";
@@ -53,6 +53,7 @@
 		$CurrQuart: 'Поточний квартал',
 		$YearToDate: 'З початку року',
 		$CurrYear: 'Поточний рік',
+		$PrevYear: 'Попередній рік',
 		$AllPeriodData: 'За весь час',
 		$License: 'ліцензія',
 		$HomePage: 'домашня сторінка',

@@ -1,6 +1,6 @@
 ﻿/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190105-7402
+// 20190223-7441
 // services/datamodel.js
 
 (function () {
@@ -19,6 +19,7 @@
 	const FLAG_VIEW = 1;
 	const FLAG_EDIT = 2;
 	const FLAG_DELETE = 4;
+	const DEFAULT_PAGE_SIZE = 20;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
@@ -368,16 +369,6 @@
 			} else if (utils.isObjectExact(val)) {
 				seal(val);
 			}
-		}
-	}
-
-	function setRootModelInfo(item, data) {
-		if (!data.$ModelInfo) return;
-		let elem = item;
-		for (let p in data.$ModelInfo) {
-			if (!elem) elem = this[p];
-			elem.$ModelInfo = data.$ModelInfo[p];
-			return; // first element only
 		}
 	}
 
@@ -1220,18 +1211,37 @@
         */
 	}
 
+	function checkPeriod(obj) {
+		let f = obj.Filter;
+		if (!f) return;
+		if (!('Period' in f))
+			return;
+		let p = f.Period;
+		if (period.like(p))
+			f.Period = new period.constructor(p);
+		return obj;
+	}
+
+	function setRootModelInfo(item, data) {
+		if (!data.$ModelInfo) return;
+		let elem = item;
+		for (let p in data.$ModelInfo) {
+			if (!elem) elem = this[p];
+			elem.$ModelInfo = checkPeriod(data.$ModelInfo[p]);
+			return; // first element only
+		}
+	}
+
 	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
-			PageSize: 20
+			PageSize: DEFAULT_PAGE_SIZE
 		};
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
 		for (let p in mi) {
-			root[p].$ModelInfo = mi[p];
+			root[p].$ModelInfo = checkPeriod(mi[p]);
 		}
-		//console.dir(rawData.$ModelInfo);
-		//root._setModelInfo_()
 	}
 
 	app.modules['std:datamodel'] = {

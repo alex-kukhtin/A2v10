@@ -927,9 +927,9 @@ app.modules['std:url'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20190223-7441
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1059,16 +1059,28 @@ app.modules['std:period'] = function () {
 	};
 
 
-	function isPeriod(value) { return value instanceof TPeriod; }
-
+	
 	return {
 		isPeriod,
+		like: likePeriod,
 		constructor: TPeriod,
 		zero: zeroPeriod,
 		all: allDataPeriod,
 		create: createPeriod,
 		predefined: predefined
 	};
+
+	function isPeriod(value) { return value instanceof TPeriod; }
+
+	function likePeriod(obj) {
+		if (!obj)
+			return false;
+		if (Object.getOwnPropertyNames(obj).length !== 2)
+			return false;
+		if (obj.hasOwnProperty('From') && obj.hasOwnProperty('To'))
+			return true;
+		return false;
+	}
 
 	function zeroPeriod() {
 		return new TPeriod();
@@ -1083,15 +1095,16 @@ app.modules['std:period'] = function () {
 			{ name: locale.$Today, key: 'today' },
 			{ name: locale.$Yesterday, key: 'yesterday' },
 			{ name: locale.$Last7Days, key: 'last7' },
-			{ name: locale.$Last30Days, key: 'last30' },
+			//{ name: locale.$Last30Days, key: 'last30' },
 			//{ name: locale.$MonthToDate, key: 'startMonth' },
 			{ name: locale.$CurrMonth, key: 'currMonth' },
 			{ name: locale.$PrevMonth, key: 'prevMonth' },
 			//{ name: locale.$QuartToDate, key: 'startQuart' },
 			{ name: locale.$CurrQuart, key: 'currQuart' },
 			{ name: locale.$PrevQuart, key: 'prevQuart' },
-			//{ name: locale.$YearToDate, key: 'startYear' }
-			{name: locale.$CurrYear, key: 'currYear'}
+			//{ name: locale.$YearToDate, key: 'startYear' },
+			{ name: locale.$CurrYear, key: 'currYear'},
+			{ name: locale.$PrevYear, key: 'prevYear' }
 		];
 		if (showAll) {
 			menu.push({ name: locale.$AllPeriodData, key: 'allData' });
@@ -1177,6 +1190,12 @@ app.modules['std:period'] = function () {
 					let dy2 = date.create(today.getFullYear(), 12, 31);
 					p.set(dy1, dy2);
 				}
+				break;
+			case 'prevYear': {
+				let dy1 = date.create(today.getFullYear() - 1, 1, 1);
+				let dy2 = date.create(today.getFullYear() - 1, 12, 31);
+				p.set(dy1, dy2);
+			}
 				break;
 			case 'allData':
 				// full period
@@ -1847,7 +1866,7 @@ app.modules['std:validators'] = function () {
 
 /*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190105-7402
+// 20190223-7441
 // services/datamodel.js
 
 (function () {
@@ -1866,6 +1885,7 @@ app.modules['std:validators'] = function () {
 	const FLAG_VIEW = 1;
 	const FLAG_EDIT = 2;
 	const FLAG_DELETE = 4;
+	const DEFAULT_PAGE_SIZE = 20;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
@@ -2215,16 +2235,6 @@ app.modules['std:validators'] = function () {
 			} else if (utils.isObjectExact(val)) {
 				seal(val);
 			}
-		}
-	}
-
-	function setRootModelInfo(item, data) {
-		if (!data.$ModelInfo) return;
-		let elem = item;
-		for (let p in data.$ModelInfo) {
-			if (!elem) elem = this[p];
-			elem.$ModelInfo = data.$ModelInfo[p];
-			return; // first element only
 		}
 	}
 
@@ -3067,18 +3077,37 @@ app.modules['std:validators'] = function () {
         */
 	}
 
+	function checkPeriod(obj) {
+		let f = obj.Filter;
+		if (!f) return;
+		if (!('Period' in f))
+			return;
+		let p = f.Period;
+		if (period.like(p))
+			f.Period = new period.constructor(p);
+		return obj;
+	}
+
+	function setRootModelInfo(item, data) {
+		if (!data.$ModelInfo) return;
+		let elem = item;
+		for (let p in data.$ModelInfo) {
+			if (!elem) elem = this[p];
+			elem.$ModelInfo = checkPeriod(data.$ModelInfo[p]);
+			return; // first element only
+		}
+	}
+
 	function setModelInfo(root, info, rawData) {
 		// may be default
 		root.__modelInfo = info ? info : {
-			PageSize: 20
+			PageSize: DEFAULT_PAGE_SIZE
 		};
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
 		for (let p in mi) {
-			root[p].$ModelInfo = mi[p];
+			root[p].$ModelInfo = checkPeriod(mi[p]);
 		}
-		//console.dir(rawData.$ModelInfo);
-		//root._setModelInfo_()
 	}
 
 	app.modules['std:datamodel'] = {

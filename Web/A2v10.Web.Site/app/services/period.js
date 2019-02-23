@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181024-7328
+// 20190223-7441
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -130,16 +130,28 @@ app.modules['std:period'] = function () {
 	};
 
 
-	function isPeriod(value) { return value instanceof TPeriod; }
-
+	
 	return {
 		isPeriod,
+		like: likePeriod,
 		constructor: TPeriod,
 		zero: zeroPeriod,
 		all: allDataPeriod,
 		create: createPeriod,
 		predefined: predefined
 	};
+
+	function isPeriod(value) { return value instanceof TPeriod; }
+
+	function likePeriod(obj) {
+		if (!obj)
+			return false;
+		if (Object.getOwnPropertyNames(obj).length !== 2)
+			return false;
+		if (obj.hasOwnProperty('From') && obj.hasOwnProperty('To'))
+			return true;
+		return false;
+	}
 
 	function zeroPeriod() {
 		return new TPeriod();
@@ -154,15 +166,16 @@ app.modules['std:period'] = function () {
 			{ name: locale.$Today, key: 'today' },
 			{ name: locale.$Yesterday, key: 'yesterday' },
 			{ name: locale.$Last7Days, key: 'last7' },
-			{ name: locale.$Last30Days, key: 'last30' },
+			//{ name: locale.$Last30Days, key: 'last30' },
 			//{ name: locale.$MonthToDate, key: 'startMonth' },
 			{ name: locale.$CurrMonth, key: 'currMonth' },
 			{ name: locale.$PrevMonth, key: 'prevMonth' },
 			//{ name: locale.$QuartToDate, key: 'startQuart' },
 			{ name: locale.$CurrQuart, key: 'currQuart' },
 			{ name: locale.$PrevQuart, key: 'prevQuart' },
-			//{ name: locale.$YearToDate, key: 'startYear' }
-			{name: locale.$CurrYear, key: 'currYear'}
+			//{ name: locale.$YearToDate, key: 'startYear' },
+			{ name: locale.$CurrYear, key: 'currYear'},
+			{ name: locale.$PrevYear, key: 'prevYear' }
 		];
 		if (showAll) {
 			menu.push({ name: locale.$AllPeriodData, key: 'allData' });
@@ -248,6 +261,12 @@ app.modules['std:period'] = function () {
 					let dy2 = date.create(today.getFullYear(), 12, 31);
 					p.set(dy1, dy2);
 				}
+				break;
+			case 'prevYear': {
+				let dy1 = date.create(today.getFullYear() - 1, 1, 1);
+				let dy2 = date.create(today.getFullYear() - 1, 12, 31);
+				p.set(dy1, dy2);
+			}
 				break;
 			case 'allData':
 				// full period
