@@ -24,6 +24,7 @@ namespace A2v10.Xaml
 		public Length Height { get; set; }
 		public String CanCloseDelegate { get; set; }
 		public Boolean AlwaysOk { get; set; }
+		public UIElementBase Taskpad { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -63,6 +64,7 @@ namespace A2v10.Xaml
 			RenderHeader(context);
 			RenderLoadIndicator(context);
 
+			
 			var content = new TagBuilder("div", "modal-content");
 			OnCreateContent(content);
 			if (Height != null)
@@ -71,14 +73,30 @@ namespace A2v10.Xaml
 				Padding.MergeStyles("padding", content);
 			content.AddCssClassBool(IsContentIsIFrame, "content-iframe"); // bug fix (3px height)
 			content.RenderStart(context);
-			RenderChildren(context);
+			if (Taskpad != null)
+			{
+				var grid = new TagBuilder("div", "dialog-grid");
+				if (Taskpad is Taskpad tp && tp.Width != null)
+					grid.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+				grid.RenderStart(context);
+				var gridContent = new TagBuilder("div", "dialog-grid-content");
+				gridContent.RenderStart(context);
+				RenderChildren(context);
+				gridContent.RenderEnd(context);
+				Taskpad.RenderElement(context);
+				grid.RenderEnd(context);
+			}
+			else
+			{
+				RenderChildren(context);
+			}
+
 			content.RenderEnd(context);
 
 			RenderFooter(context);
 
 			dialog.RenderEnd(context);
 		}
-
 
 		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{

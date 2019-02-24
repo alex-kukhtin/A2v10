@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
-@panel-header-line-height:2rem;
+@header-line-height-normal:2.6rem;
+@header-ling-height-compact:2rem;
 
 .stack-panel {
 	display: flex;
@@ -44,12 +45,12 @@
 	background-color: white;
 
 	.panel-header {
-		padding: 4px 6px;
+		padding: 0 .625rem;
 		//font-size: 110%;
 		display: flex;
 		justify-content: space-between;
 		cursor: pointer;
-		line-height: @panel-header-line-height;
+		line-height: @header-line-height-normal;
 
 		.ico {
 			//font-size: 1.2rem;
@@ -58,12 +59,18 @@
 
 		.panel-collapse-handle {
 			font-size: 110%;
-			line-height: @panel-header-line-height;
+			line-height: inherit;
 			margin: 0;
 
 			&:before {
 				content: "\e9a2"; // chevron-up
 			}
+		}
+	}
+
+	&.compact {
+		.panel-header {
+			line-height:@header-ling-height-compact;
 		}
 	}
 }
@@ -293,11 +300,13 @@ iframe.eusign-iframe {
 	flex-flow: column nowrap;
 
 	.card-header {
-		padding: @card-padding/2 @card-padding;
+		padding: 0 @card-padding;
 		border-bottom: 1px solid #ddd;
 		font-weight: 500;
 		color: #9ab3e0;
 		font-size: 14px;
+		line-height: @header-line-height-normal;
+		text-align: left;
 	}
 
 	.card-body {
@@ -305,14 +314,16 @@ iframe.eusign-iframe {
 	}
 
 	.card-footer {
-		padding: @card-padding/2 @card-padding;
+		padding: 0 @card-padding;
 		border-top: 1px solid #ddd;
+		line-height: @header-line-height-normal;
 	}
 
 	&.compact {
 		.card-header, .card-footer {
-			padding: @card-padding / 3 @card-padding / 2;
+			padding: 0 @card-padding / 2;
 			font-size: @font-size;
+			line-height: @header-ling-height-compact;
 		}
 	}
 }

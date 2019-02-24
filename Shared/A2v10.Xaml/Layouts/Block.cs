@@ -16,6 +16,7 @@ namespace A2v10.Xaml
 		public Length Width { get; set; }
 		public Boolean Border { get; set; }
 		public Boolean Scroll { get; set; }
+		public Boolean Relative { get; set; }
 		public TextAlign Align { get; set; }
 		public TextColor Color { get; set; }
 
@@ -53,6 +54,7 @@ namespace A2v10.Xaml
 				div.MergeStyle("width", Width.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
+			div.AddCssClassBool(Relative, "relative");
 			//AddHackedBorder(div);
 			if (Color != TextColor.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());

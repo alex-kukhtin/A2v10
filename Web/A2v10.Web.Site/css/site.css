@@ -835,6 +835,9 @@ input[type=number]::-webkit-outer-spin-button {
 .float-right {
   float: right;
 }
+.relative {
+  position: relative;
+}
 .divider {
   flex-grow: 2;
 }
@@ -1654,6 +1657,7 @@ pre.a2-code {
   color: #999;
   margin-bottom: 0.15em;
   display: block;
+  font-weight: normal;
 }
 .control-group .descr {
   display: inline-block;
@@ -3603,6 +3607,12 @@ ul.news-list > li {
 .modal-content.content-iframe {
   display: flex;
 }
+.modal-content .dialog-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0;
+  grid-gap: 0;
+}
 .wizard-panel {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -4823,22 +4833,25 @@ TODO:
   background-color: white;
 }
 .panel .panel-header {
-  padding: 4px 6px;
+  padding: 0 0.625rem;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  line-height: 2rem;
+  line-height: 2.6rem;
 }
 .panel .panel-header .ico {
   margin-right: 3px;
 }
 .panel .panel-header .panel-collapse-handle {
   font-size: 110%;
-  line-height: 2rem;
+  line-height: inherit;
   margin: 0;
 }
 .panel .panel-header .panel-collapse-handle:before {
   content: "\e9a2";
+}
+.panel.compact .panel-header {
+  line-height: 2rem;
 }
 .panel.drop-shadow {
   border-style: none !important;
@@ -5041,23 +5054,27 @@ iframe.eusign-iframe {
   flex-flow: column nowrap;
 }
 .card .card-header {
-  padding: 0.625rem 1.25rem;
+  padding: 0 1.25rem;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
   color: #9ab3e0;
   font-size: 14px;
+  line-height: 2.6rem;
+  text-align: left;
 }
 .card .card-body {
   padding: 1.25rem;
 }
 .card .card-footer {
-  padding: 0.625rem 1.25rem;
+  padding: 0 1.25rem;
   border-top: 1px solid #ddd;
+  line-height: 2.6rem;
 }
 .card.compact .card-header,
 .card.compact .card-footer {
-  padding: 0.41666667rem 0.625rem;
+  padding: 0 0.625rem;
   font-size: 13px;
+  line-height: 2rem;
 }
 .flex-list {
   display: flex;

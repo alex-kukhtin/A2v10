@@ -24,6 +24,9 @@ namespace A2v10.Xaml
 		public Object Footer { get; set; }
 		public Object Body { get; set; }
 
+		public Length Height { get; set; }
+		public Length Width { get; set; }
+
 		public BackgroundStyle Background { get; set; }
 		public ShadowStyle DropShadow { get; set; }
 		public Boolean Compact { get; set; }
@@ -53,6 +56,12 @@ namespace A2v10.Xaml
 			if (Align != TextAlign.Left)
 				card.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			card.AddCssClassBool(Compact, "compact");
+
+			if (Height != null)
+				card.MergeStyle("height", Height.Value);
+			if (Width != null)
+				card.MergeStyle("width", Width.Value);
+
 			card.RenderStart(context);
 			RenderHeader(context);
 			RenderChildren(context);

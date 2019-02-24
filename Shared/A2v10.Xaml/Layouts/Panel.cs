@@ -34,6 +34,8 @@ namespace A2v10.Xaml
 		public ShadowStyle DropShadow { get; set; }
 		public Length Height { get; set; }
 
+		public Boolean Compact { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -41,6 +43,7 @@ namespace A2v10.Xaml
 			var panel = new TagBuilder("a2-panel", null, IsInGrid);
 			MergeBindingAttributeBool(panel, context, ":initial-collapsed", nameof(Collapsed), Collapsed);
 			MergeBindingAttributeBool(panel, context, ":collapsible", nameof(Collapsible), Collapsible);
+			panel.AddCssClassBool(Compact, "compact");
 			if (!HasHeader)
 				panel.MergeAttribute(":no-header", "true");
 			var sb = GetBinding(nameof(Style));
