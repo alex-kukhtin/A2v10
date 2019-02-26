@@ -1715,13 +1715,15 @@ pre.a2-code {
   display: list-item;
   list-style-type: none;
   padding-left: 6px;
-  white-space: normal;
-  max-width: 100%;
+  white-space: nowrap;
 }
 .control-group .validator .error:before {
   content: '\2022';
   position: absolute;
   left: 3px;
+}
+.control-group .validator.with-width .error {
+  white-space: pre-line;
 }
 .control-group .validator.top-left {
   top: auto;
@@ -4719,6 +4721,7 @@ TODO:
 .popover-wrapper.hint {
   margin: 0 6px;
   color: #999;
+  padding-bottom: 0;
 }
 .popover-wrapper.hint > .popover-title {
   border-bottom: none;
@@ -5818,6 +5821,12 @@ h5,
     grid-template-columns: auto !important;
     height: auto;
     overflow: hidden;
+  }
+  .page.absolute > .cw-absolute {
+    position: static;
+  }
+  .a2-pager {
+    display: none;
   }
   table thead {
     display: table-row-group;

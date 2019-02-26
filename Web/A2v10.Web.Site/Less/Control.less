@@ -48,7 +48,7 @@
 		color: @label-color;
 		margin-bottom: .15em;
 		display: block;
-		font-weight:normal;
+		font-weight: normal;
 	}
 
 	.descr {
@@ -109,13 +109,18 @@
 			display: list-item;
 			list-style-type: none;
 			padding-left: 6px;
-			white-space: normal;
-			max-width: 100%;
+			white-space: nowrap;
 			// custom bullet
 			&:before {
 				content: '\2022';
 				position: absolute;
 				left: 3px;
+			}
+		}
+
+		&.with-width {
+			.error {
+				white-space:pre-line;
 			}
 		}
 	}
@@ -267,7 +272,7 @@
 				padding: 0 5px;
 				line-height: 1.4rem;
 				display: inline-grid;
-				align-items:center;
+				align-items: center;
 				width: 100%;
 				min-height: @control-height;
 			}

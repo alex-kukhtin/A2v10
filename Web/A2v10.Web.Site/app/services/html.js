@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190218-7435
+// 20190226-7444
 /* services/http.js */
 
 app.modules['std:html'] = function () {
@@ -60,10 +60,18 @@ app.modules['std:html'] = function () {
 		frame.id = frameId;
 		frame.style.cssText = "display:none;width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
 		document.body.appendChild(frame);
+		if (document.activeElement)
+			document.activeElement.blur();
 		frame.setAttribute('src', url);
+
 
 		frame.onload = function (ev) {
 			let cw = frame.contentWindow;
+			let finp = cw.document.createElement('input');
+			finp.setAttribute("id", "dummy-focus");
+			finp.cssText = "width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
+			cw.document.body.appendChild(finp);
+			finp.focus();
 			document.body.classList.remove('waiting');
 			cw.print();
 		};

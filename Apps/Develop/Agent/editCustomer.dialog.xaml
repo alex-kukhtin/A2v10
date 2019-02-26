@@ -22,7 +22,7 @@
 					</FieldSet.Hint>
 				</FieldSet>
 				<TextBox Grid.Row="2" Grid.ColSpan="2" Label="Наименование 234" TabIndex="2" TestId="name"
-						Value="{Bind Agent.Name}" Description="Наименование покупателя">
+						Value="{Bind Agent.Name}" Description="Наименование покупателя" Width="200">
 					<TextBox.Popover>
 						<Popover Icon="HelpOutline" Placement="BottomLeft" Width="200px">
 							<Text>Всплывающий элемент возле редактора:
@@ -37,6 +37,9 @@
 						<Hyperlink Icon="Search"></Hyperlink>
 						<Hyperlink Icon="Clear"></Hyperlink>
 					</TextBox.AddOns>
+					<TextBox.Validator>
+						<Validator Width="300"/>
+					</TextBox.Validator>
 				</TextBox>
 				<TextBox Grid.Row="3" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" TabIndex="3"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" 
@@ -60,7 +63,7 @@
 		</Tab>
 		<Tab Header="Validators" Padding="30, 10">
 			<Grid>
-				<TextBox Grid.Row="1" Label="TopLeft" Value="{Bind Agent.Name}" UpdateTrigger="Input" TabIndex="1">
+				<TextBox Grid.Row="1" Label="TopLeft" Value="{Bind Agent.Name}" UpdateTrigger="Input" TabIndex="1" Width="200">
 					<TextBox.Validator>
 						<Validator Placement="TopLeft" />
 					</TextBox.Validator>

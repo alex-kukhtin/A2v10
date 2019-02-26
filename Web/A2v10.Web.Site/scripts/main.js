@@ -1,6 +1,6 @@
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20190226-7444
 // app.js
 
 "use strict";
@@ -137,7 +137,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190221-7438
+// 20190226-7444
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -145,6 +145,7 @@ app.modules['std:utils'] = function () {
 	const locale = require('std:locale');
 	const platform = require('std:platform');
 	const dateLocale = locale.$Locale;
+	const numLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
 	const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
@@ -153,8 +154,8 @@ app.modules['std:utils'] = function () {
 	const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
 	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
-	const currencyFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
-	const numberFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
+	const currencyFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
+	const numberFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
 	let numFormatCache = {};
 
@@ -313,16 +314,15 @@ app.modules['std:utils'] = function () {
 		return r;
 	}
 
-	function evaluate(obj, path, dataType, hideZeros, skipFormat) {
+	function evaluate(obj, path, dataType, opts, skipFormat) {
 		let r = simpleEval(obj, path);
 		if (skipFormat) return r;
 		if (isDate(r))
-			return format(r, dataType, hideZeros);
+			return format(r, dataType);
 		else if (isObject(r))
 			return toJson(r);
-		else if (format)
-			return format(r, dataType, hideZeros);
-		return r;
+		else
+			return format(r, dataType, opts);
 	}
 
 	function pad2(num) {
@@ -365,7 +365,7 @@ app.modules['std:utils'] = function () {
 		//console.dir(fmt);
 		//console.dir({ useGrp, fp0, fph, fi0, fih });
 
-		let formatFunc = Intl.NumberFormat(undefined, {
+		let formatFunc = Intl.NumberFormat(numLocale, {
 			minimumFractionDigits: fp0,
 			maximumFractionDigits: fp0 + fph,
 			minimumIntegerDigits: fi0,
@@ -3627,7 +3627,7 @@ app.modules['std:tools'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190218-7435
+// 20190226-7444
 /* services/http.js */
 
 app.modules['std:html'] = function () {
@@ -3687,10 +3687,18 @@ app.modules['std:html'] = function () {
 		frame.id = frameId;
 		frame.style.cssText = "display:none;width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
 		document.body.appendChild(frame);
+		if (document.activeElement)
+			document.activeElement.blur();
 		frame.setAttribute('src', url);
+
 
 		frame.onload = function (ev) {
 			let cw = frame.contentWindow;
+			let finp = cw.document.createElement('input');
+			finp.setAttribute("id", "dummy-focus");
+			finp.cssText = "width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
+			cw.document.body.appendChild(finp);
+			finp.focus();
 			document.body.classList.remove('waiting');
 			cw.print();
 		};
@@ -4028,9 +4036,9 @@ app.modules['std:routing'] = function () {
 	app.components['control'] = control;
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20190226-7444*/
 /*components/validator.js*/
 
 Vue.component('validator', {
@@ -4049,8 +4057,12 @@ Vue.component('validator', {
 		},
 		cssClass() {
 			let r = {};
-			if (this.options && this.options.placement)
+			if (!this.options)
+				return r;
+			if (this.options.placement)
 				r[this.options.placement] = true;
+			if (this.options.width)
+				r['with-width'] = true;
 			return r;
 		}
 	}
@@ -5162,7 +5174,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190109-7408
+// 20190226-7444
 // components/datagrid.js*/
 
 (function () {
@@ -5298,6 +5310,7 @@ Vue.component('validator-control', {
 			content: String,
 			dataType: String,
 			hideZeros: Boolean,
+			format: String,
 			icon: String,
 			bindIcon: String,
 			id: String,
@@ -5357,6 +5370,12 @@ Vue.component('validator-control', {
 			},
 			headerText() {
 				return this.header || '\xa0';
+			},
+			evalOpts() {
+				return {
+					hideZeros: this.hideZeros,
+					format: this.format
+				};
 			}
 		},
 		methods: {
@@ -5469,7 +5488,7 @@ Vue.component('validator-control', {
 						arg = row[arg];
 					}
 				} else if (arg && doEval) {
-					arg = utils.eval(row, arg, col.dataType, col.hideZeros);
+					arg = utils.eval(row, arg, col.dataType, col.evalOpts);
 				}
 				return arg;
 			}
@@ -5485,7 +5504,7 @@ Vue.component('validator-control', {
 				let child = {
 					props: ['row', 'col'],
 					/*@click.prevent, no stop*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.hideZeros)"></span></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.evalOpts)"></span></a>',
 					computed: {
 						hasIcon() { return col.icon || col.bindIcon; },
 						iconClass() {
@@ -5525,14 +5544,14 @@ Vue.component('validator-control', {
 
 			function isNegativeRed(col) {
 				if (col.dataType === 'Number' || col.dataType === 'Currency') {
-					let val = utils.eval(row, col.content, col.dataType, col.hideZeros, true /*skip format*/);
+					let val = utils.eval(row, col.content, col.dataType, col.evalOpts, true /*skip format*/);
 					if (val < 0)
 						return true;
 				}
 				return false;
 			}
 
-			let content = utils.eval(row, col.content, col.dataType, col.hideZeros);
+			let content = utils.eval(row, col.content, col.dataType, col.evalOpts);
 			let chElems = [h('span', { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } }, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)

@@ -1,9 +1,9 @@
 ﻿/*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 13 dec 2018
-module version : 7322
+Last updated : 25 feb 2019
+module version : 7323
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7322);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7323);
 else
-	update a2sys.Versions set [Version] = 7322 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7323 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -413,6 +413,25 @@ as
 	where Void=0 and Id <> 0;
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
+	drop procedure a2security.[WriteLog]
+go
+------------------------------------------------
+create procedure [a2security].[WriteLog]
+	@UserId bigint = null,
+	@SeverityChar nchar(1),
+	@Code int = null,
+	@Message nvarchar(max) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
+		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserById')
 	drop procedure a2security.FindUserById
 go
@@ -755,25 +774,6 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
-	drop procedure a2security.[WriteLog]
-go
-------------------------------------------------
-create procedure [a2security].[WriteLog]
-	@UserId bigint = null,
-	@SeverityChar nchar(1),
-	@Code int = null,
-	@Message nvarchar(max) = null
-as
-begin
-	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
-		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
-end
-go
-------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'UserStateInfo.Load')
 	drop procedure a2security.[UserStateInfo.Load]
 go
@@ -810,7 +810,11 @@ begin
 end
 go
 ------------------------------------------------
-create or alter procedure a2security.SaveReferral
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'SaveReferral')
+	drop procedure a2security.SaveReferral
+go
+------------------------------------------------
+create procedure a2security.SaveReferral
 @UserId bigint,
 @Referral nvarchar(255)
 as

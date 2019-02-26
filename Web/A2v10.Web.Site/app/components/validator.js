@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180106-7085*/
+/*20190226-7444*/
 /*components/validator.js*/
 
 Vue.component('validator', {
@@ -19,8 +19,12 @@ Vue.component('validator', {
 		},
 		cssClass() {
 			let r = {};
-			if (this.options && this.options.placement)
+			if (!this.options)
+				return r;
+			if (this.options.placement)
 				r[this.options.placement] = true;
+			if (this.options.width)
+				r['with-width'] = true;
 			return r;
 		}
 	}

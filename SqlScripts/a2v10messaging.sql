@@ -1,10 +1,10 @@
-﻿/* 20190117-7050 */
+﻿/* 20190117-7052 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 17 jan 2019
-module version : 7051
+Last updated : 25 feb 2019
+module version : 7052
 */
 ------------------------------------------------
 set noexec off;
@@ -22,9 +22,15 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:messaging')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7051);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7052);
 else
-	update a2sys.Versions set [Version] = 7051 where Module = N'std:messaging';
+	update a2sys.Versions set [Version] = 7052 where Module = N'std:messaging';
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2messaging')
+begin
+	exec sp_executesql N'create schema a2messaging';
+end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2messaging' and SEQUENCE_NAME=N'SQ_Messages')
@@ -82,12 +88,6 @@ begin
 end
 go
 ------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2messaging')
-begin
-	exec sp_executesql N'create schema a2messaging';
-end
-go
-------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2messaging' and TABLE_NAME=N'Log')
 begin
 	create table a2messaging.[Log]
@@ -103,7 +103,11 @@ begin
 end
 go
 ------------------------------------------------
-create or alter procedure [a2messaging].[WriteLog]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2messaging' and ROUTINE_NAME=N'WriteLog')
+	drop procedure [a2messaging].[WriteLog]
+go
+------------------------------------------------
+create procedure [a2messaging].[WriteLog]
 	@UserId bigint = null,
 	@Severity int,
 	@Message nvarchar(max)
@@ -185,7 +189,11 @@ begin
 end
 go
 ------------------------------------------------
-create or alter procedure a2messaging.[Message.Queue.Load]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2messaging' and ROUTINE_NAME=N'Message.Queue.Load')
+	drop procedure a2messaging.[Message.Queue.Load]
+go
+------------------------------------------------
+create procedure a2messaging.[Message.Queue.Load]
 @Id bigint
 as
 begin

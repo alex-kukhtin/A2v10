@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190109-7408
+// 20190226-7444
 // components/datagrid.js*/
 
 (function () {
@@ -136,6 +136,7 @@
 			content: String,
 			dataType: String,
 			hideZeros: Boolean,
+			format: String,
 			icon: String,
 			bindIcon: String,
 			id: String,
@@ -195,6 +196,12 @@
 			},
 			headerText() {
 				return this.header || '\xa0';
+			},
+			evalOpts() {
+				return {
+					hideZeros: this.hideZeros,
+					format: this.format
+				};
 			}
 		},
 		methods: {
@@ -307,7 +314,7 @@
 						arg = row[arg];
 					}
 				} else if (arg && doEval) {
-					arg = utils.eval(row, arg, col.dataType, col.hideZeros);
+					arg = utils.eval(row, arg, col.dataType, col.evalOpts);
 				}
 				return arg;
 			}
@@ -323,7 +330,7 @@
 				let child = {
 					props: ['row', 'col'],
 					/*@click.prevent, no stop*/
-					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.hideZeros)"></span></a>',
+					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.evalOpts)"></span></a>',
 					computed: {
 						hasIcon() { return col.icon || col.bindIcon; },
 						iconClass() {
@@ -363,14 +370,14 @@
 
 			function isNegativeRed(col) {
 				if (col.dataType === 'Number' || col.dataType === 'Currency') {
-					let val = utils.eval(row, col.content, col.dataType, col.hideZeros, true /*skip format*/);
+					let val = utils.eval(row, col.content, col.dataType, col.evalOpts, true /*skip format*/);
 					if (val < 0)
 						return true;
 				}
 				return false;
 			}
 
-			let content = utils.eval(row, col.content, col.dataType, col.hideZeros);
+			let content = utils.eval(row, col.content, col.dataType, col.evalOpts);
 			let chElems = [h('span', { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } }, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)

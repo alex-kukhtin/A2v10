@@ -26,7 +26,7 @@ const template = {
 		"Agent.Address.City.change": (addr) => { addr.Street = ''; }
 	},
 	validators: {
-		"Agent.Name": 'Введите наименование',
+		"Agent.Name": 'Введите наименование.\n С очень очень длинным текстом и какими-то элементами',
 		'Agent.$Bit1': 'Установите значение',
 		"Agent.Code": [
 			'Введите код',

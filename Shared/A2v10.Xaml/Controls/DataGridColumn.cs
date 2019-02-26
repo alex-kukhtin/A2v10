@@ -95,6 +95,8 @@ namespace A2v10.Xaml
 						column.MergeAttribute("data-type", bindProp.DataType.ToString());
 					if (bindProp.HideZeros)
 						column.MergeAttribute(":hide-zeros", "true");
+					if (!String.IsNullOrEmpty(bindProp.Format))
+						column.MergeAttribute("format", bindProp.Format);
 				}
 				else if (Content != null)
 					throw new XamlException($"The Content property must be a binding ({Content})");

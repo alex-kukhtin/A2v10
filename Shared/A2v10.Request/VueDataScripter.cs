@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -459,7 +459,7 @@ const vm = new DataModelController({
 			{
 				fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
 				AddRequiredModules(sbRequired, fileTemplateText);
-				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
+				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
 			}
 			if (msi.DataModel != null)
 			{
@@ -471,7 +471,7 @@ const vm = new DataModelController({
 
 			var modelFunc = new StringBuilder(SCRIPT_PARTS.DATAFUNC);
 			modelFunc.Replace("$(RequiredModules)", sbRequired?.ToString());
-			modelFunc.Replace("$(TemplateText)", _localizer.Localize(null, templateText));
+			modelFunc.Replace("$(TemplateText)", _localizer.Localize(null, templateText, replaceNewLine:false));
 			modelFunc.Replace("$(DataModelText)", dataModelText);
 			String modelScript = CreateDataModelScript(msi.DataModel);
 			modelFunc.Replace("$(ModelScript)", modelScript);
@@ -499,7 +499,7 @@ const vm = new DataModelController({
 				String fileTemplateText = _host.ReadTextFile(msi.Admin, msi.Path, msi.Template + ".js");
 				sbRequired = new StringBuilder();
 				AddRequiredModules(sbRequired, fileTemplateText);
-				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText));
+				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
 			}
 			var sb = new StringBuilder(SCRIPT_PARTS.DATAFUNC_SERVER);
 			sb.Replace("$(TemplateText)", templateText);

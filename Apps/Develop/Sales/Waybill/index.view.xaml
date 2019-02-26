@@ -75,8 +75,8 @@
 				Text="{Bind Agent.Name}" Url="{Bind $AgentPopoverUrl}"/>
 		</DataGridColumn>
 		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
-		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency}" Align="Right" Fit="True" Wrap="NoWrap"/>
-		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" />
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Align="Right" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Wrap="NoWrap"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
 		<DataGridColumn Header="" Fit="True">
 			<CommandBar If="{Bind !Attachments.$isEmpty}">
