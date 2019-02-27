@@ -474,6 +474,14 @@ namespace A2v10.Xaml
 			return $"'{Url}'";
 		}
 
+		internal void MergeDisabled(TagBuilder tag, String disabledVal)
+		{
+			var existingDisabled = tag.GetAttribute(":disabled");
+			if (!String.IsNullOrEmpty(existingDisabled))
+				disabledVal = $"{existingDisabled} || {disabledVal}";
+			tag.MergeAttribute(":disabled", disabledVal, replaceExisting:true);
+		}
+
 		internal void MergeCommandAttributes(TagBuilder tag, RenderContext context)
 		{
 			switch (Command)
@@ -483,35 +491,35 @@ namespace A2v10.Xaml
 					if (CheckArgument) {
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})", replaceExisting:true);
 					} else if (CheckReadOnly)
-						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})");
+						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})", replaceExisting:true);
 					break;
 				case CommandType.Create:
 					if (CheckReadOnly)
-						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})");
+						tag.MergeAttribute(":disabled", $"$isReadOnly({GetOptions(context)})", replaceExisting:true);
 					break;
 				case CommandType.Save:
 				case CommandType.SaveAndClose:
 					if (context.IsDataModelIsReadOnly)
-						tag.MergeAttribute(":disabled", "true");
+						tag.MergeAttribute(":disabled", "true", replaceExisting:true);
 					else
-						tag.MergeAttribute(":disabled", "!$canSave");
+						tag.MergeAttribute(":disabled", "!$canSave", replaceExisting:true);
 					break;
 				case CommandType.Execute:
-					tag.MergeAttribute(":disabled", $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
+					MergeDisabled(tag, $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
 					break;
 				case CommandType.Append:
 				case CommandType.Prepend:
 				case CommandType.Remove:
 					if (context.IsDataModelIsReadOnly)
-						tag.MergeAttribute(":disabled", "true");
+						tag.MergeAttribute(":disabled", "true", replaceExisting:true);
 					break;
 				case CommandType.SelectChecked:
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!$hasChecked({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!$hasChecked({arg.GetPath(context)})", replaceExisting:true);
 					}
 					break;
 				case CommandType.OpenSelected:
@@ -522,17 +530,17 @@ namespace A2v10.Xaml
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptionsValid(context)})");
+							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptionsValid(context)})", replaceExisting:true);
 					}
 					break;
 				case CommandType.RemoveSelected:
 					if (context.IsDataModelIsReadOnly)
-						tag.MergeAttribute(":disabled", "true");
+						tag.MergeAttribute(":disabled", "true", replaceExisting:true);
 					else
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})", replaceExisting:true);
 					}
 					break;
 				case CommandType.Dialog:
@@ -540,20 +548,20 @@ namespace A2v10.Xaml
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})", replaceExisting:true);
 					}
 					else if (CheckArgument)
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})");
+							tag.MergeAttribute(":disabled", $"!({arg.GetPath(context)})", replaceExisting:true);
 					}
 					break;
 				case CommandType.Clear:
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)
-							tag.MergeAttribute("v-if", $"!({arg.GetPath(context)}.$isEmpty)");
+							tag.MergeAttribute("v-if", $"!({arg.GetPath(context)}.$isEmpty)", replaceExisting:true);
 						}
 					break;
 			}

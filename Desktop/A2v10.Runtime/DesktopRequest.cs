@@ -33,7 +33,7 @@ namespace A2v10.Runtime
 				{
 					return ProcessRequestImpl(url, search, post, postMethod);
 				}
-				catch (Exception ex)
+				catch (Exception /*ex*/)
 				{
 					throw;
 					//WriteExceptionStatus(ex, response);
