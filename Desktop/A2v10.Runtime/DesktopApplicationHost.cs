@@ -9,6 +9,7 @@ using System.Reflection;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
+using A2v10.Web.Base;
 
 namespace A2v10.Runtime
 {
@@ -77,6 +78,28 @@ namespace A2v10.Runtime
 			}
 		}
 
+		IApplicationReader _reader = null;
+
+		public void StartApplication(Boolean bAdmin)
+		{
+			var file = ZipApplicationFile;
+			String key = bAdmin ? "admin" : AppKey;
+			if (file != null)
+				_reader = new ZipApplicationReader(AppPath, key);
+			else
+				_reader = new FileApplicationReader(AppPath, key);
+		}
+
+		public IApplicationReader ApplicationReader
+		{
+			get
+			{
+				if (_reader == null)
+					throw new InvalidProgramException("ApplicationReader is not configured");
+				return _reader;
+			}
+		}
+
 		public Boolean IsMultiTenant => true; // TODO:
 		public Boolean IsRegistrationEnabled => false;
 		public String UseClaims => null;
@@ -111,6 +134,20 @@ namespace A2v10.Runtime
             _cnnStrings.Add(source, strSet.ConnectionString);
             return cnnStr;
             */
+		}
+
+		public String ZipApplicationFile
+		{
+			get
+			{
+				var path = Path.Combine(AppPath, AppKey);
+				path = Path.ChangeExtension(path, ".app");
+				if (File.Exists(path))
+				{
+					return path;
+				}
+				return null;
+			}
 		}
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)

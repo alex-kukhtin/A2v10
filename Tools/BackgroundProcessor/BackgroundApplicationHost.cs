@@ -62,6 +62,13 @@ namespace BackgroundProcessor
 			return strSet.ConnectionString;
 		}
 
+		public void StartApplication(Boolean adminMode)
+		{
+
+		}
+
+		public IApplicationReader ApplicationReader => null;
+
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
 			String appKey = AppKey;

@@ -71,11 +71,14 @@ namespace A2v10.Web.Mvc.Controllers
 			// simple routing
 			Response.ContentEncoding = Encoding.UTF8;
 			Response.HeaderEncoding = Encoding.UTF8;
+
 			if (String.IsNullOrEmpty(pathInfo))
 			{
+				_baseController.Host.StartApplication(false);
 				Index(); // root
 				return;
 			}
+
 			pathInfo = pathInfo.ToLowerInvariant();
 			if (pathInfo.StartsWith("admin/"))
 			{
@@ -83,6 +86,8 @@ namespace A2v10.Web.Mvc.Controllers
 				// ADMIN mode
 				_baseController.Admin = true;
 			}
+
+			_baseController.Host.StartApplication(_baseController.Admin);
 
 			if (pathInfo.StartsWith("shell"))
 			{

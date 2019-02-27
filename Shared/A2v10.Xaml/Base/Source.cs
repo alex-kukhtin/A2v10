@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
+using A2v10.Infrastructure;
 using System;
-using System.IO;
 using System.Reflection;
 using System.Windows.Markup;
 using System.Xaml;
@@ -37,43 +37,55 @@ namespace A2v10.Xaml
 				}
 
 				var root = serviceProvider.GetService(typeof(IUriContext)) as IUriContext;
-				return Load(Path, root.BaseUri);
+				String baseFileName = XamlRenderer.RootFileName;
+				if (root != null && root.BaseUri != null)
+					baseFileName = root.BaseUri.PathAndQuery;
+				return Load(baseFileName);
 			}
 			catch (Exception ex)
 			{
 				return new Span() { CssClass = "xaml-exception", Content = ex.Message };
 			}
+		}
 
-			Object Load(String path, Uri baseUri)
+		Object Load(String baseFileName)
+		{
+
+			String basePath = System.IO.Path.GetDirectoryName(baseFileName);
+			String targetDir = PathHelpers.CombineRelative(basePath, Path).ToLowerInvariant().Replace('\\','/');
+
+			String ext = System.IO.Path.GetExtension(targetDir);
+			var appReader = XamlRenderer.ApplicationReader;
+
+
+			if (appReader == null)
+				throw new XamlException("Invalid ApplicationReader");
+			if (ext == ".js" || ext == ".html")
 			{
-				String basePath = System.IO.Path.GetDirectoryName(baseUri.PathAndQuery);
-				String targetDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(basePath, path));
-				String ext = System.IO.Path.GetExtension(targetDir).ToLowerInvariant();
-				if (ext == ".js" || ext == ".html")
-				{
-					if (File.Exists(targetDir))
-						return File.ReadAllText(targetDir);
-					else
-						throw new XamlException($"File not found {path}");
-				}
+				if (appReader.FileExists(targetDir))
+					return appReader.FileReadAllText(targetDir);
 				else
+					throw new XamlException($"File not found {Path}");
+			}
+			else
+			{
+				String trgPath = System.IO.Path.ChangeExtension(targetDir, "xaml");
+				if (appReader.FileExists(trgPath))
 				{
-					String trgPath = System.IO.Path.ChangeExtension(targetDir, "xaml");
-					if (File.Exists(trgPath))
+					try
 					{
-						try
-						{
-							RenderContext.SetPartialContext(Context);
-							return XamlServices.Load(trgPath);
-						}
-						finally
-						{
-							RenderContext.SetPartialContext(null);
+						RenderContext.SetPartialContext(Context);
+						using (var stream = appReader.FileStreamFullPath(trgPath)) { 
+							return XamlServices.Load(stream);
 						}
 					}
-					else
-						throw new XamlException($"File not found {path}");
+					finally
+					{
+						RenderContext.SetPartialContext(null);
+					}
 				}
+				else
+					throw new XamlException($"File not found {Path}");
 			}
 		}
 	}

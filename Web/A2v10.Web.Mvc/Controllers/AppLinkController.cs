@@ -31,6 +31,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
 			_baseController = new A2v10.Request.BaseController();
+			_host.StartApplication(false);
 		}
 
 		public String CurrentLang => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;

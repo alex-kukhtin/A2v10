@@ -63,38 +63,36 @@ namespace A2v10.Request
 		{
 			get
 			{
-				var fp = _host.MakeFullPath(Admin, "_assets", "");
-				if (!Directory.Exists(fp))
+				var files = _host.ApplicationReader.EnumerateFiles("_assets", "*.js");
+				if (files == null)
 					return String.Empty;
-				foreach (var f in Directory.EnumerateFiles(fp, "*.js"))
-				{
+				foreach (var f in files)
 					// at least one file
 					return $"<script type=\"text/javascript\" src=\"/shell/appscripts\"></script>";
-				}
 				return String.Empty;
 			}
 		}
 
 		void GetAppFiles(String ext, TextWriter writer)
 		{
-			var fp = _host.MakeFullPath(Admin, "_assets", "");
-			if (!Directory.Exists(fp))
+			var files = _host.ApplicationReader.EnumerateFiles("_assets", $"*.{ext}");
+			if (files == null)
 				return;
-			foreach (var f in Directory.EnumerateFiles(fp, $"*.{ext}"))
+			foreach (var f in files)
 			{
 				var fileName = f.ToLowerInvariant();
 				if (!fileName.EndsWith($".min.{ext}"))
 				{
 					String minFile = fileName.Replace($".{ext}", $".min.{ext}");
-					if (File.Exists(minFile))
+					if (_host.ApplicationReader.FileExists(minFile))
 						continue; // min.{ext} found
 				}
-				var txt = File.ReadAllText(fileName);
+				var txt = _host.ApplicationReader.FileReadAllText(fileName);
 				writer.Write(txt);
 			}
 		}
 
-		public void GetAppStyleConent(TextWriter writer)
+			public void GetAppStyleConent(TextWriter writer)
 		{
 			GetAppFiles("css", writer);
 		}

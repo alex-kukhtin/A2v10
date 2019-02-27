@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.IO;
 
 namespace A2v10.Infrastructure
 {
@@ -25,5 +26,12 @@ namespace A2v10.Infrastructure
 			return This;
 		}
 
+		public static String CombineRelative(String path1, String path2)
+		{
+			var dirSep = new String(Path.DirectorySeparatorChar, 1);
+			var combined = Path.GetFullPath(Path.Combine(dirSep, path1, path2));
+			var root = Path.GetFullPath(dirSep);
+			return combined.Substring(root.Length);
+		}
 	}
 }

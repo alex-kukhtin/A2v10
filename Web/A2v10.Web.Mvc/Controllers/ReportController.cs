@@ -56,6 +56,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public ReportController()
 		{
+			_baseController.Host.StartApplication(false);
 		}
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
@@ -142,7 +143,7 @@ namespace A2v10.Web.Mvc.Controllers
 			if (Request.QueryString.Count == 0)
 				return eo;
 			eo.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
-			eo.RemoveKeys("rep,Rep,base,Base");
+			eo.RemoveKeys("rep,Rep,base,Base,Format,format");
 			return eo;
 		}
 
@@ -331,7 +332,7 @@ namespace A2v10.Web.Mvc.Controllers
 				//TODO: profile var token = Profiler.BeginReport("create");
 				var prms = new ExpandoObject();
 				prms.Append(_baseController.CheckPeriod(rp.HttpContext.Request.QueryString), toPascalCase: true);
-				prms.RemoveKeys("Rep,rep,Base,base");
+				prms.RemoveKeys("Rep,rep,Base,base,Format,format");
 
 				ReportInfo ri = await GetReportInfo(url, id, prms);
 				//TODO: image settings var rm = rm.ImageInfo;

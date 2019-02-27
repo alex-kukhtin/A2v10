@@ -27,6 +27,7 @@ namespace A2v10.Runtime
 
 		public Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
+			_controller.Host.StartApplication(false); // TODO: ?ADMIN?
 			using (_controller.Host.Profiler.BeginRequest(url, null) as IDisposable)
 			{
 				try
@@ -48,6 +49,7 @@ namespace A2v10.Runtime
 				url = url.Substring(6);
 				_controller.Admin = true;
 			}
+			_controller.Host.StartApplication(_controller.Admin);
 			try
 			{
 				MimeType = MIME_HTML;

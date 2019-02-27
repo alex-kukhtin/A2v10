@@ -44,6 +44,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_host.StartApplication(false);
 		}
 
 		public AccountController(AppUserManager userManager, AppSignInManager signInManager)
@@ -54,6 +55,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_host.StartApplication(false);
 		}
 
 		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null, String errorMessage = null)
@@ -109,9 +111,9 @@ namespace A2v10.Web.Mvc.Controllers
 			if (dotPos != -1)
 				host = host.Substring(0, dotPos);
 			host = host.Replace('.', '_').ToLowerInvariant();
-			String path = _host.MakeFullPath(false, "_meta/", $"{host}.head");
-			if (System.IO.File.Exists(path))
-				return System.IO.File.ReadAllText(path);
+			String metaText = _host.ApplicationReader.ReadTextFile("_meta/", $"{host}.head");
+			if (metaText != null)
+				return metaText;
 			return String.Empty;
 		}
 
@@ -760,13 +762,15 @@ namespace A2v10.Web.Mvc.Controllers
 			if (System.IO.File.Exists(emailFile))
 			{
 				body = System.IO.File.ReadAllText(emailFile);
-			} else {
+			}
+			else
+			{
 				if (dictName == null)
 					return null;
 				body = _localizer.Localize(null, dictName);
 			}
 			if (body.IndexOf("{0}") == - 1)
-				throw new InvalidDataException($"Invalid email template for {code}");
+				throw new InvalidProgramException($"Invalid email template for {code}");
 			return body;
 		}
 

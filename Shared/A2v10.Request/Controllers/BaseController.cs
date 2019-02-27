@@ -5,7 +5,6 @@ using System.Dynamic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
 using System.Net;
@@ -240,15 +239,6 @@ namespace A2v10.Request
 			var rw = dmAndView.RequestView;
 
 			String rootId = "el" + Guid.NewGuid().ToString();
-			//String modelScript = null;
-
-			//String viewName = rw.GetView();
-			//if (viewName == NO_VIEW)
-			//{
-				//modelScript = await GetModelScriptModel(rw, model, rootId);
-				//writer.Write(modelScript);
-				//return;
-			//}
 
 			if (_renderer == null)
 				throw new InvalidOperationException("Service 'IRenderer' not registered");
@@ -269,42 +259,41 @@ namespace A2v10.Request
 			// TODO: use view engines
 			// try xaml
 			String fileName = rw.GetView() + ".xaml";
-			String filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
 			String basePath = rw.ParentModel.BasePath;
+
+			String filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
+
 			Boolean bRendered = false;
-			if (System.IO.File.Exists(filePath))
+			if (_host.ApplicationReader.FileExists(filePath))
 			{
 				// render XAML
-				if (System.IO.File.Exists(filePath))
+				using (var strWriter = new StringWriter())
 				{
-					using (var strWriter = new StringWriter())
+					var ri = new RenderInfo()
 					{
-						var ri = new RenderInfo()
-						{
-							RootId = rootId,
-							FileName = filePath,
-							FileTitle = fileName,
-							Path = basePath,
-							Writer = strWriter,
-							DataModel = model,
-							Localizer = _localizer,
-							CurrentLocale = null,
-							IsDebugConfiguration = _host.IsDebugConfiguration,
-							SecondPhase = secondPhase
-						};
-						_renderer.Render(ri);
-						// write markup
-						writer.Write(strWriter.ToString());
-						bRendered = true;
-					}
+						RootId = rootId,
+						FileName = filePath,
+						FileTitle = fileName,
+						Path = basePath,
+						Writer = strWriter,
+						DataModel = model,
+						Localizer = _localizer,
+						CurrentLocale = null,
+						IsDebugConfiguration = _host.IsDebugConfiguration,
+						SecondPhase = secondPhase
+					};
+					_renderer.Render(ri);
+					// write markup
+					writer.Write(strWriter.ToString());
+					bRendered = true;
 				}
 			}
 			else
 			{
 				// try html
 				fileName = rw.GetView() + ".html";
-				filePath = _host.MakeFullPath(Admin, rw.Path, fileName);
-				if (System.IO.File.Exists(filePath))
+				filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
+				if (_host.ApplicationReader.FileExists(filePath))
 				{
 					using (_host.Profiler.CurrentRequest.Start(ProfileAction.Render, $"render: {fileName}"))
 					{

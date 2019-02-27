@@ -16,23 +16,21 @@ namespace A2v10.Request
 		{
 			controllerName = controllerName ?? throw new ArgumentNullException(nameof(controllerName));
 			// TODO _host AssestsDistionary
-			var fp = host.MakeFullPath(false, "_assets", "");
-			if (!Directory.Exists(fp))
+			var files = host.ApplicationReader.EnumerateFiles("_assets", "*.css");
+			if (files == null)
 				return String.Empty;
-			foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
-			{
-				// at least one file
+			// at least one file
+			foreach (var f in files)
 				return $"<link  href=\"/{controllerName.ToLowerInvariant()}/appstyles\" rel=\"stylesheet\" />";
-			}
 			return String.Empty;
 		}
 
 		public static String AppLinks(this IApplicationHost host)
 		{
-			var appPath = host.MakeFullPath(false, "", "links.json");
-			if (System.IO.File.Exists(appPath))
+			String appLinks = host.ApplicationReader.ReadTextFile(String.Empty, "links.json");
+			if (appLinks != null)
 			{
-				String appLinks = System.IO.File.ReadAllText(appPath);
+				// with validation
 				Object links = JsonConvert.DeserializeObject<List<Object>>(appLinks);
 				return JsonConvert.SerializeObject(links);
 			}

@@ -83,6 +83,10 @@
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
       <Name>A2v10.Xaml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Web\A2v10.Web.Base\A2v10.Web.Base.csproj">
+      <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
+      <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="JavaScript\app.context.js" />

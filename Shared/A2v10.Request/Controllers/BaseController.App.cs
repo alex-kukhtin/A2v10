@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 
 using A2v10.Request.Properties;
 using A2v10.Infrastructure;
-using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -34,8 +33,8 @@ namespace A2v10.Request
 
 		Task RenderAppPage(TextWriter writer, String page)
 		{
-			String path = _host.MakeFullPath(Admin, "_pages", $"{page}.{CurrentLang}.html");
-			if (!File.Exists(path))
+			String appPageConetent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{CurrentLang}.html");
+			if (appPageConetent == null)
 				throw new IOException($"Application page not found ({page}.{CurrentLang}).");
 			var appPageHtml = new StringBuilder(_localizer.Localize(null, Resources.appPage));
 			var appPageScript = new StringBuilder(Resources.appPageScript);
@@ -44,7 +43,6 @@ namespace A2v10.Request
 			appPageHtml.Replace("$(PageGuid)", pageGuid);
 			appPageHtml.Replace("$(AppPageScript)", appPageScript.ToString());
 
-			String appPageConetent = File.ReadAllText(path);
 			appPageHtml.Replace("$(AppPageContent)", appPageConetent);
 
 			writer.Write(appPageHtml.ToString());
@@ -53,14 +51,14 @@ namespace A2v10.Request
 
 		String GetAppData()
 		{
-			var appPath = _host.MakeFullPath(Admin, "", "app.json");
-			if (File.Exists(appPath))
+			var appJson = _host.ApplicationReader.ReadTextFile(String.Empty, "app.json");
+			if (appJson != null)
 			{
-				String appText = File.ReadAllText(appPath);
-				// validate
-				Object app = JsonConvert.DeserializeObject<ExpandoObject>(appText);
+				// with validation
+				Object app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
 				return _localizer.Localize(null, JsonConvert.SerializeObject(app));
 			}
+
 			ExpandoObject defAppData = new ExpandoObject();
 			defAppData.Set("version", _host.AppVersion);
 			defAppData.Set("title", "A2v10 Web Application");

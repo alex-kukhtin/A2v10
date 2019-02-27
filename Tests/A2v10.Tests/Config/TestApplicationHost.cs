@@ -55,6 +55,13 @@ namespace A2v10.Tests.Config
 			}
 		}
 
+		public void StartApplication(Boolean bAdmin)
+		{
+
+		}
+
+		public IApplicationReader ApplicationReader => null;
+
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
 

@@ -457,7 +457,8 @@ const vm = new DataModelController({
 			String fileTemplateText = null;
 			if (msi.Template != null)
 			{
-				fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
+				//fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
+				fileTemplateText = await _host.ApplicationReader.ReadTextFileAsync(msi.Path, msi.Template + ".js");
 				AddRequiredModules(sbRequired, fileTemplateText);
 				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
 			}

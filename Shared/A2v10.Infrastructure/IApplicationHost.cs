@@ -26,9 +26,13 @@ namespace A2v10.Infrastructure
 		Boolean IsMultiTenant { get; }
 		Int32? TenantId { get; set; }
 
+		IApplicationReader ApplicationReader { get; }
+
 		String ConnectionString(String source);
 		String CatalogDataSource { get; }
 		String TenantDataSource { get; }
+
+		void StartApplication(Boolean adminMode);
 
 		String MakeFullPath(Boolean bAdmin, String path, String fileName);
 		String MakeRelativePath(String path, String fileName);
