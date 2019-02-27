@@ -260,7 +260,7 @@ namespace A2v10.Xaml
 
 				case CommandType.Report:
 					return $"$report({GetReportName(context)}, {CommandArgument(context, nullable: true)}, " +
-						$"{GetOptions(context)}, {CommandUrlOptional(context)})";
+						$"{GetOptions(context)}, {CommandUrlOptional(context)}, {GetData(context)})";
 
 				case CommandType.Export:
 					return $"$export()";

@@ -10179,7 +10179,7 @@ Vue.directive('resize', {
 				});
 			},
 
-			$report(rep, arg, opts, repBaseUrl) {
+			$report(rep, arg, opts, repBaseUrl, data) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
@@ -10203,13 +10203,15 @@ Vue.directive('resize', {
 					let url = `${root}/report/${cmd}/${id}`;
 					let reportUrl = urltools.removeFirstSlash(repBaseUrl) || this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
-					let qry = { base: baseUrl, rep: rep };
+					let qry = Object.assign({}, { base: baseUrl, rep: rep }, data);
 					if (fmt)
 						qry.format = fmt;
 					url = url + urltools.makeQueryString(qry);
 					// open in new window
-					if (!opts)
+					if (!opts) {
 						window.open(url, '_blank');
+						return;
+					}
 					if (opts.export)
 						window.location = url;
 					else if (opts.print)

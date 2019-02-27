@@ -47,6 +47,17 @@ namespace A2v10.Infrastructure
 				d.Add(name, value);
 		}
 
+		public static void RemoveKeys(this ExpandoObject obj, String keys)
+		{
+			if (!(obj is IDictionary<String, Object> d))
+				return;
+			foreach (var key in keys.Split(','))
+			{
+				if (d.ContainsKey(key))
+					d.Remove(key);
+			}
+		}
+
 		public static Boolean HasProperty(this ExpandoObject obj, String name)
 		{
 			if (!(obj is IDictionary<String, Object> d))

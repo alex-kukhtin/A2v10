@@ -104,11 +104,11 @@ namespace A2v10.Xaml
 					var contBind = elem.GetBinding("Content");
 					if (contBind == null)
 						throw new XamlException("ComboBoxItem. Content binging must be specified");
-					combo.MergeAttribute(":name-prop", $"'{contBind.GetPath(context)}'");
+					combo.MergeAttribute(":name-prop", $"'{contBind.Path}'"); /*without context!*/
 					var valBind = elem.GetBinding("Value");
 					if (valBind == null)
 						throw new XamlException("ComboBoxItem. Value binging must be specified");
-					combo.MergeAttribute(":value-prop", $"'{valBind.GetPath(context)}'");
+					combo.MergeAttribute(":value-prop", $"'{valBind.Path}'");  /*without context!*/
 				}
 			}
 			MergeValue(combo, context);

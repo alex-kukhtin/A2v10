@@ -91,7 +91,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		async Task<ReportInfo> GetReportInfo(String url, String id)
+		async Task<ReportInfo> GetReportInfo(String url, String id, ExpandoObject prms)
 		{
 			var ri = new ReportInfo();
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
@@ -112,7 +112,6 @@ namespace A2v10.Web.Mvc.Controllers
 				ri.Validate = rep.validate;
 			}
 
-			ExpandoObject prms = new ExpandoObject();
 			prms.Set("UserId", UserId);
 			if (_baseController.Host.IsMultiTenant)
 				prms.Set("TenantId", TenantId);
@@ -137,6 +136,16 @@ namespace A2v10.Web.Mvc.Controllers
 			return ri;
 		}
 
+		ExpandoObject CreateParamsFromQueryString()
+		{
+			var eo = new ExpandoObject();
+			if (Request.QueryString.Count == 0)
+				return eo;
+			eo.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
+			eo.RemoveKeys("rep,Rep,base,Base");
+			return eo;
+		}
+
 		[HttpGet]
 		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Export(String Base, String Rep, String id, String Format)
@@ -145,7 +154,8 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-				ReportInfo ri = await GetReportInfo(url, id);
+
+				ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
 
 				switch (ri.Type) {
 					case RequestReportType.stimulsoft:
@@ -176,7 +186,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-				ReportInfo ri = await GetReportInfo(url, id);
+				ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
 
 				switch (ri.Type)
 				{
@@ -319,8 +329,11 @@ namespace A2v10.Web.Mvc.Controllers
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 
 				//TODO: profile var token = Profiler.BeginReport("create");
+				var prms = new ExpandoObject();
+				prms.Append(_baseController.CheckPeriod(rp.HttpContext.Request.QueryString), toPascalCase: true);
+				prms.RemoveKeys("Rep,rep,Base,base");
 
-				ReportInfo ri = await GetReportInfo(url, id);
+				ReportInfo ri = await GetReportInfo(url, id, prms);
 				//TODO: image settings var rm = rm.ImageInfo;
 				if (ri == null)
 					throw new InvalidProgramException("invalid data");
