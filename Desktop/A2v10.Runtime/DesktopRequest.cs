@@ -53,65 +53,57 @@ namespace A2v10.Runtime
 			try
 			{
 				MimeType = MIME_HTML;
-				using (var writer = new StringWriter())
+				using (var dr = new DesktopResponse())
 				{
 					if (String.IsNullOrEmpty(url))
-						RenderIndex(writer);
+						RenderIndex(dr.Output);
 					else if (url.StartsWith("shell/"))
 					{
-						Shell(url.Substring(6).ToLowerInvariant(), writer, out String shellMime);
+						Shell(url.Substring(6).ToLowerInvariant(), dr.Output, out String shellMime);
 						MimeType = shellMime;
 					}
 					else if (url.StartsWith("_page/"))
-						Render(RequestUrlKind.Page, url.Substring(6), search, writer);
+						Render(RequestUrlKind.Page, url.Substring(6), search, dr.Output);
 					else if (url.StartsWith("_dialog/"))
-						Render(RequestUrlKind.Dialog, url.Substring(8), search, writer);
+						Render(RequestUrlKind.Dialog, url.Substring(8), search, dr.Output);
 					else if (url.StartsWith("_popup/"))
-						Render(RequestUrlKind.Popup, url.Substring(7), search, writer);
+						Render(RequestUrlKind.Popup, url.Substring(7), search, dr.Output);
 					else if (url.StartsWith("_data/"))
 					{
 						var command = url.Substring(6);
-						var rb = new DesktopResponse(writer)
-						{
-							ContentType = "application/json" // default
-						};
+						dr.ContentType = "application/json";
 						String jsonData = Encoding.UTF8.GetString(post);
-						_controller.Data(command, SetSqlParams, jsonData, rb).Wait();
-						MimeType = rb.ContentType;
+						_controller.Data(command, SetSqlParams, jsonData, dr).Wait();
+						MimeType = dr.ContentType;
+						if (dr.IsBinaryWrited)
+							return dr.GetBytes();
 					}
 					else if (url.StartsWith("_image/"))
 					{
 						if (postMethod)
-							SaveImage("/" + url, writer);
+							SaveImage("/" + url, dr.Output);
 						else
 						{
-							var rb = new DesktopResponse(writer);
-							var bytes = LoadImage("/" + url, rb);
-							MimeType = rb.ContentType;
+							var bytes = LoadImage("/" + url, dr);
+							MimeType = dr.ContentType;
 							return bytes;
 						}
 					}
 					else if (url.StartsWith("_static_image/"))
 					{
-						var rb = new DesktopResponse(writer);
-						var bytes = StaticImage(url.Substring(14).Replace('-', '.'), rb);
-						MimeType = rb.ContentType;
+						var bytes = StaticImage(url.Substring(14).Replace('-', '.'), dr);
+						MimeType = dr.ContentType;
 						return bytes;
 					}
 					else if (url.StartsWith("_export/"))
 					{
-						var ms = new MemoryStream();
-						using (var binaryWriter = new BinaryWriter(ms))
-						{
-							var rb = new DesktopResponse(binaryWriter);
-							Export("/" + url, rb);
-							MimeType = rb.ContentType;
-							return ms.GetBuffer();
-						}
+						Export("/" + url, dr);
+						MimeType = dr.ContentType;
+						return dr.GetBytes();
 					}
 					else
-						RenderIndex(writer);
-					return Encoding.UTF8.GetBytes(writer.ToString());
+						RenderIndex(dr.Output);
+					return Encoding.UTF8.GetBytes(dr.Output.ToString());
 				}
 			}
 			catch (Exception ex)

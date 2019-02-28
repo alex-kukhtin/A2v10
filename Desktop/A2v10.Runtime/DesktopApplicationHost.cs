@@ -35,7 +35,8 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "C:/Git/app.main/apps";
+				return "C:/Temp/apps";
+				//return "C:/Git/app.main/apps";
 				/*
                 String path = ConfigurationManager.AppSettings["appPath"];
                 if (path == null)
@@ -63,7 +64,7 @@ namespace A2v10.Runtime
 			get
 			{
 				// TODO: CONFIG
-				return "main"; //ConfigurationManager.AppSettings["appKey"];
+				return "bookkeeper"; //ConfigurationManager.AppSettings["appKey"];
 			}
 		}
 

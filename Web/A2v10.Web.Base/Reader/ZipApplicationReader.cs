@@ -39,7 +39,15 @@ namespace A2v10.Web.Base
 				path = String.Empty;
 				fileName = fileName.Remove(0, 1);
 			}
-			String fullPath = Path.Combine(path, fileName);
+			// canonicalize
+			return GetCanonicalPath(path, fileName);
+		}
+
+		public String GetCanonicalPath(String path, String fileName)
+		{
+			var sep = new String(Path.DirectorySeparatorChar, 1);
+			String rootPath = Path.GetFullPath(sep);
+			String fullPath = Path.GetFullPath(Path.Combine(sep, path, fileName)).Substring(rootPath.Length);
 			return fullPath.Replace('\\', '/').ToLowerInvariant();
 		}
 
@@ -194,7 +202,7 @@ namespace A2v10.Web.Base
 		{
 			if (String.IsNullOrEmpty(path))
 				return entry.ToLowerInvariant();
-			return $"{path.Replace('\\', '/')}/{entry}".ToLowerInvariant();
+			return GetCanonicalPath(path, entry);
 		}
 
 

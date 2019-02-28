@@ -28,6 +28,7 @@ namespace A2v10.Request
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
 			
 			var fileName = export.template.AddExtension(export.format.ToString());
+			throw new NotImplementedException("TODO: USE Application Reader");
 			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, action.Path, fileName.RemoveHeadSlash()));
 			if (!File.Exists(filePath))
 				throw new FileNotFoundException(filePath);

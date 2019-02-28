@@ -363,10 +363,12 @@ const vm = new DataModelController({
 				if (_modulesWritten.Contains(moduleName))
 					continue;
 				var fileName = moduleName.AddExtension("js");
-				var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, fileName.RemoveHeadSlash()));
-				if (!File.Exists(filePath))
+				var appReader = _host.ApplicationReader;
+				String filePath = appReader.MakeFullPath(String.Empty, fileName.RemoveHeadSlash());
+				//var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, fileName.RemoveHeadSlash()));
+				if (!appReader.FileExists(filePath))
 					throw new FileNotFoundException(filePath);
-				String moduleText = File.ReadAllText(filePath);
+				String moduleText = appReader.FileReadAllText(filePath);
 				sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
 					.AppendLine(_localizer.Localize(null, moduleText, replaceNewLine: false))
 					.AppendLine(tmlFooter)

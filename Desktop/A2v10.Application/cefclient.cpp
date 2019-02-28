@@ -154,6 +154,8 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 bool CCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
 	CefEventHandle os_event, bool* is_keyboard_shortcut)
 {
+	if (!os_event)
+		return false;
 	if (os_event->message == WM_KEYDOWN) {
 		if (HandleKey(os_event->wParam))
 			return true;

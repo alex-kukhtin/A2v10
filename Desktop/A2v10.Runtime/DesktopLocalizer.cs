@@ -28,6 +28,19 @@ namespace A2v10.Runtime
 		}
 	}
 
+	struct LocalePath
+	{
+		public String Path;
+		public Boolean IsFileSystem;
+
+		public LocalePath(String path, Boolean fs)
+		{
+			Path = path;
+			IsFileSystem = fs;
+		}
+
+	}
+
 	public class DesktopLocalizer : BaseLocalizer, IDataLocalizer
 	{
 		private IApplicationHost _host;
@@ -50,7 +63,6 @@ namespace A2v10.Runtime
 
 		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
 		{
-
 			var map = GetCurrentMap(locale);
 			if (map.Loaded)
 				return map.Map;
@@ -80,33 +92,57 @@ namespace A2v10.Runtime
 			foreach (var line in ukGlobal)
 				AddLine(line);
 
-			foreach (var path in GetLocalizerFilePath(locale))
+
+			foreach (var localePath in GetLocalizerFilePath(locale))
 			{
-				var lines = File.ReadAllLines(path);
+				IEnumerable<String> lines = localePath.IsFileSystem ?
+					File.ReadAllLines(localePath.Path) :
+					_host.ApplicationReader.FileReadAllLines(localePath.Path);
+
 				foreach (var line in lines)
 					AddLine(line);
 			}
 			return map.Map;
 		}
 
-		IEnumerable<String> GetLocalizerFilePath(String locale)
+		IEnumerable<LocalePath> GetLocalizerFilePath(String locale)
 		{
-			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
-			if (!Directory.Exists(appPath))
+			// locale may be "uk_UA"
+			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
+			var appReader = _host.ApplicationReader;
+			///var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
+			var appPath = appReader.MakeFullPath("_localization", String.Empty);
+			if (!Directory.Exists(dirPath))
+				dirPath = null;
+
+			if (!appReader.DirectoryExists(appPath))
 				appPath = null;
-			if (appPath != null)
+
+			if (dirPath != null)
 			{
-				foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-					yield return s;
+				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+					yield return new LocalePath(s, true);
+			}
+			var appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+			if (appFiles != null)
+			{
+				foreach (var s in appFiles)
+					yield return new LocalePath(s, false);
 			}
 			// simple locale: uk
 			if (locale.Length > 2)
 			{
 				locale = locale.Substring(0, 2);
-				if (appPath != null)
+				if (dirPath != null)
 				{
-					foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-						yield return s;
+					foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+						yield return new LocalePath(s, true);
+				}
+				appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+				if (appFiles != null)
+				{
+					foreach (var s in appFiles)
+						yield return new LocalePath(s, false);
 				}
 			}
 		}
