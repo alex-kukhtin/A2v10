@@ -94,19 +94,20 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task<ReportInfo> GetReportInfo(String url, String id, ExpandoObject prms)
 		{
+			var appReader = _baseController.Host.ApplicationReader;
 			var ri = new ReportInfo();
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 			var rep = rm.GetReport();
 			ri.Type = rep.type;
 			if (rep.HasPath)
-				ri.ReportPath = _baseController.Host.MakeFullPath(false, rep.Path, rep.ReportName + ".mrt");
+				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
 			if (rep.type == RequestReportType.xml)
 			{
 				if (rep.xmlSchemas != null)
 				{
 					ri.XmlSchemaPathes = new List<String>();
 					foreach (var schema in rep.xmlSchemas)
-						ri.XmlSchemaPathes.Add(_baseController.Host.MakeFullPath(false, rep.Path, schema + ".xsd"));
+						ri.XmlSchemaPathes.Add(appReader.MakeFullPath(rep.Path, schema + ".xsd"));
 				}
 
 				ri.Encoding = rep.encoding;
@@ -211,24 +212,27 @@ namespace A2v10.Web.Mvc.Controllers
 		ActionResult ExportStiReport(ReportInfo ri, String format, bool saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			var r = StiReportExtensions.CreateReport(ri.ReportPath, ri.Name);
-			r.AddDataModel(ri.DataModel);
-			if (ri.Variables != null)
-				r.AddVariables(ri.Variables);
-			// saveFileDialog: true -> download
-			// saveFileDialog: false -> show
-			if (targetFormat == "pdf")
-				return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
-			else if (format == "excel")
-				return StiMvcReportResponse.ResponseAsExcel2007(r, StiReportExtensions.GetDefaultXlSettings(), saveFileDialog: saveFile);
-			else if (format == "word")
-				return StiMvcReportResponse.ResponseAsWord2007(r, StiReportExtensions.GetDefaultWordSettings(), saveFileDialog: saveFile);
-			else if (format == "opentext")
-				return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
-			else if (format == "opensheet")
-				return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
-			else
-				throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
+			using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPath(ri.ReportPath))
+			{
+				var r = StiReportExtensions.CreateReport(stream, ri.Name);
+				r.AddDataModel(ri.DataModel);
+				if (ri.Variables != null)
+					r.AddVariables(ri.Variables);
+				// saveFileDialog: true -> download
+				// saveFileDialog: false -> show
+				if (targetFormat == "pdf")
+					return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
+				else if (format == "excel")
+					return StiMvcReportResponse.ResponseAsExcel2007(r, StiReportExtensions.GetDefaultXlSettings(), saveFileDialog: saveFile);
+				else if (format == "word")
+					return StiMvcReportResponse.ResponseAsWord2007(r, StiReportExtensions.GetDefaultWordSettings(), saveFileDialog: saveFile);
+				else if (format == "opentext")
+					return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
+				else if (format == "opensheet")
+					return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
+				else
+					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
+			}
 		}
 
 		ActionResult ExportJsonReport(ReportInfo ri)
@@ -339,12 +343,15 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ri == null)
 					throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
-				var r = StiReportExtensions.CreateReport(path, ri.Name);
-				r.AddDataModel(ri.DataModel);
-				var vars = ri.Variables;
-				if (vars != null)
-					r.AddVariables(vars);
-				return StiMvcViewer.GetReportResult(r);
+				using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPath(path))
+				{
+					var r = StiReportExtensions.CreateReport(stream, ri.Name);
+					r.AddDataModel(ri.DataModel);
+					var vars = ri.Variables;
+					if (vars != null)
+						r.AddVariables(vars);
+					return StiMvcViewer.GetReportResult(r);
+				}
 			}
 			catch (Exception ex)
 			{

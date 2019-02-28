@@ -4,16 +4,12 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Dynamic;
-using System.Net.Http.Headers;
 
 using Microsoft.AspNet.Identity;
 
-using A2v10.Request;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Infrastructure;
-using System.Globalization;
-using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -25,6 +21,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public AttachmentController()
 		{
+			_baseController.Host.StartApplication(false);
 		}
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();

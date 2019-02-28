@@ -68,7 +68,7 @@ namespace A2v10.Request
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
-				View = host.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
+				View = host.ApplicationReader.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath,
 				DataModel = dmrw.Model,
@@ -79,7 +79,6 @@ namespace A2v10.Request
 			{
 				DataModel = viewInfo.DataModel,
 				RootId = pageId,
-				Admin = false,
 				IsDialog = rw.IsDialog,
 				Template = rw.template,
 				Path = rw.Path,
@@ -96,29 +95,29 @@ namespace A2v10.Request
 			var host = _baseController.Host;
 			var rm = await RequestModel.CreateFromBaseUrl(host, false, pathInfo);
 			var rw = rm.GetCurrentAction();
-			var layout = host.MakeFullPath(false, String.Empty, "layout.html");
-			if (!System.IO.File.Exists(layout))
-				throw new FileNotFoundException(layout);
-			String body = host.MakeFullPath(false, rw.Path, $"{rw.GetView()}.html");
-			if (!System.IO.File.Exists(body))
-				throw new FileNotFoundException(body);
+			var layoutText = host.ApplicationReader.ReadTextFile(String.Empty, "layout.html");
+			if (layoutText == null)
+				throw new FileNotFoundException("layout.html");
+			String bodyText = host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView()}.html");
+			if (bodyText == null)
+				throw new FileNotFoundException(host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView()}.html"));
 			String script = String.Empty;
 			if (!String.IsNullOrEmpty(rw.script))
 			{
-				String jsfile = host.MakeFullPath(false, rw.Path, $"{rw.script}.js");
-				if (!System.IO.File.Exists(jsfile))
-					throw new FileNotFoundException(jsfile);
+				String jsfileText = host.ApplicationReader.ReadTextFile(rw.Path, $"{rw.script}.js");
+				if (jsfileText == null)
+					throw new FileNotFoundException($"{rw.script}.js");
 				var sb = new StringBuilder("<script type=\"text/javascript\">")
 					.AppendLine("'use strict';\n(function() {" )
-					.AppendLine(System.IO.File.ReadAllText(jsfile))
+					.AppendLine(jsfileText)
 					.AppendLine("})();")
 					.AppendLine("</script>");
 				script = sb.ToString();
 			}
-			StringBuilder html = new StringBuilder(System.IO.File.ReadAllText(layout));
+			StringBuilder html = new StringBuilder(layoutText);
 
 			// todo : render body
-			html.Replace("@RenderBody()", System.IO.File.ReadAllText(body));
+			html.Replace("@RenderBody()", bodyText);
 			html.Replace("@RenderScript()", script);
 
 			Response.ContentType = "text/html";

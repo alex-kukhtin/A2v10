@@ -78,7 +78,7 @@ namespace A2v10.Request
 			{
 				xmlSchemaPathes = new List<String>();
 				foreach (var schema in cmd.xmlSchemas)
-					xmlSchemaPathes.Add(Host.MakeFullPath(false, cmd.Path, schema + ".xsd"));
+					xmlSchemaPathes.Add(Host.ApplicationReader.MakeFullPath(cmd.Path, schema + ".xsd"));
 			}
 
 			if (xmlSchemaPathes == null)
@@ -86,7 +86,7 @@ namespace A2v10.Request
 
 			foreach (var path in xmlSchemaPathes)
 			{
-				if (!System.IO.File.Exists(path))
+				if (!Host.ApplicationReader.FileExists(path))
 					throw new RequestModelException($"File not found '{path}'");
 			}
 

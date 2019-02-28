@@ -50,12 +50,12 @@ namespace A2v10.Xaml
 
 		Object Load(String baseFileName)
 		{
+			var appReader = XamlRenderer.ApplicationReader;
 
 			String basePath = System.IO.Path.GetDirectoryName(baseFileName);
-			String targetDir = PathHelpers.CombineRelative(basePath, Path).ToLowerInvariant().Replace('\\','/');
+			String targetDir = appReader.CombineRelativePath(basePath, Path).ToLowerInvariant().Replace('\\','/');
 
 			String ext = System.IO.Path.GetExtension(targetDir);
-			var appReader = XamlRenderer.ApplicationReader;
 
 
 			if (appReader == null)

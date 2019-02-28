@@ -32,6 +32,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public ApiController()
 		{
 			_logger = ServiceLocator.Current.GetService<ILogger>();
+			_baseController.Host.StartApplication(false);
 		}
 
 		public Int64? UserId
@@ -131,12 +132,13 @@ namespace A2v10.Web.Mvc.Controllers
 
 		void GetFile(RequestCommand cmd)
 		{
-			String fullPath = _baseController.Host.MakeFullPath(false, cmd.Path, cmd.file);
+			var appReader = _baseController.Host.ApplicationReader;
+			String fullPath = appReader.MakeFullPath(cmd.Path, cmd.file);
 			String htmlPath = fullPath + ".html";
-			if (!System.IO.File.Exists(htmlPath))
+			if (!appReader.FileExists(htmlPath))
 				throw new FileNotFoundException($"File not found '{fullPath}'");
 			Response.ContentType = MimeMapping.GetMimeMapping(htmlPath);
-			StringBuilder sb = new StringBuilder(System.IO.File.ReadAllText(htmlPath));
+			StringBuilder sb = new StringBuilder(appReader.FileReadAllText(htmlPath));
 			String serverUrl = Request.Url.GetLeftPart(UriPartial.Authority);
 			sb.Replace("$(ServerUrl)", serverUrl);
 			Response.Write(sb.ToString());

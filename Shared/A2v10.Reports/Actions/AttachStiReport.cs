@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using A2v10.Data.Interfaces;
@@ -25,9 +24,11 @@ namespace A2v10.Reports.Actions
 		public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema)
 		{
 			var dm = await _dbContext.LoadModelAsync(String.Empty, $"[{Schema}].[{Model}.Report]", new { UserId, TenantId, Id });
-			String path = _host.MakeFullPath(false, Report, String.Empty);
+			String path = _host.ApplicationReader.MakeFullPath(Report, String.Empty);
 			path = Path.ChangeExtension(path, ".mrt");
-			var r = StiReportExtensions.CreateReport(path, String.Empty);
+			if (!_host.ApplicationReader.FileExists(path))
+				throw new FileNotFoundException(path);
+			var r = StiReportExtensions.CreateReport(_host.ApplicationReader.FileStreamFullPath(path), String.Empty);
 			r.AddDataModel(dm);
 			using (var ms = new MemoryStream())
 			{

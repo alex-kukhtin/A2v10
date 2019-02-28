@@ -2,7 +2,6 @@
 
 
 using System;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,10 +46,9 @@ namespace A2v10.Web.Mvc.Controllers
 					return;
 				}
 
-				String path = _host.MakeFullPath(false, "_pages", $"{page}.{CurrentLang}.html");
-				if (!System.IO.File.Exists(path))
-					throw new IOException($"Application page not found ({page}.{CurrentLang}).");
-				String pageContent = System.IO.File.ReadAllText(path);
+				String pageContent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{CurrentLang}.html");
+				if (pageContent == null)
+					throw new InvalidOperationException($"Application page not found ({page}.{CurrentLang}).");
 				await SendPage(_localizer.Localize(null, pageContent));
 			}
 			catch (Exception ex)
@@ -79,23 +77,6 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(PageScript)", script.ToString());
 
 			Response.Write(layout.ToString());
-		}
-
-		String AppStyleSheetsLink
-		{
-			get
-			{
-				// TODO _host AssestsDistionary
-				var fp = _host.MakeFullPath(false, "_assets", "");
-				if (!Directory.Exists(fp))
-					return String.Empty;
-				foreach (var f in Directory.EnumerateFiles(fp, "*.css"))
-				{
-					// at least one file
-					return $"<link  href=\"/applink/appstyles\" rel=\"stylesheet\" />";
-				}
-				return String.Empty;
-			}
 		}
 
 		public void AppStyles()

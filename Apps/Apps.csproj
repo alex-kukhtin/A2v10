@@ -340,6 +340,7 @@
   <ItemGroup>
     <Folder Include="Develop\Localization\" />
     <Folder Include="Develop\_files\" />
+    <Folder Include="Develop\_localization\" />
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
   </ItemGroup>

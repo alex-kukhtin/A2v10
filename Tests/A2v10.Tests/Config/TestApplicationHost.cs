@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using A2v10.Web.Base;
 
 namespace A2v10.Tests.Config
 {
@@ -55,12 +56,13 @@ namespace A2v10.Tests.Config
 			}
 		}
 
+		IApplicationReader _appReader;
 		public void StartApplication(Boolean bAdmin)
 		{
-
+			_appReader = new FileApplicationReader(AppPath, AppKey);
 		}
 
-		public IApplicationReader ApplicationReader => null;
+		public IApplicationReader ApplicationReader => _appReader;
 
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
@@ -82,38 +84,6 @@ namespace A2v10.Tests.Config
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 
-		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
-		{
-			String appKey = bAdmin ? "admin" : AppKey;
-			if (fileName.StartsWith("/"))
-			{
-				path = String.Empty;
-				fileName = fileName.Remove(0, 1);
-			}
-			if (appKey != null)
-				appKey = "/" + appKey;
-			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
-			return Path.GetFullPath(fullPath);
-		}
-
-		public String MakeRelativePath(String path, String fileName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<String> ReadTextFileAsync(Boolean bAdmin, String path, String fileName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
-		{
-			String fullPath = MakeFullPath(bAdmin, path, fileName);
-			using (var tr = new StreamReader(fullPath))
-			{
-				return tr.ReadToEnd();
-			}
-		}
 
 #pragma warning disable CA1065
 		public String AppVersion => throw new NotSupportedException();

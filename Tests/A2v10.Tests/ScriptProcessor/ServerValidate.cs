@@ -27,6 +27,7 @@ namespace A2v10.Tests.ServerScripts
 			_dbContext = loc.GetService<IDbContext>();
 			_localizer = loc.GetService<ILocalizer>();
 			_host = loc.GetService<IApplicationHost>();
+			_host.StartApplication(false);
 		}
 
 		[TestMethod]

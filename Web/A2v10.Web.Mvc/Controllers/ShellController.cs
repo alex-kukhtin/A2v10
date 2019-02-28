@@ -338,14 +338,15 @@ namespace A2v10.Web.Mvc.Controllers
 			// HTTP GET
 			try
 			{
+				var appReader = _baseController.Host.ApplicationReader;
 				Int32 ix = path.LastIndexOf('-');
 				if (ix != -1)
 					path = path.Substring(0, ix) + "." + path.Substring(ix + 1);
-				String fullPath = _baseController.Host.MakeFullPath(false, "_files/" + path, "");
-				if (!System.IO.File.Exists(fullPath))
+				String fullPath = appReader.MakeFullPath("_files/" + path, "");
+				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
-				using (var stream = System.IO.File.OpenRead(fullPath))
+				using (var stream = appReader.FileStreamFullPath(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}
@@ -361,15 +362,16 @@ namespace A2v10.Web.Mvc.Controllers
 			// HTTP GET
 			try
 			{
+				var appReader = _baseController.Host.ApplicationReader;
 				Int32 ix = path.LastIndexOf('-');
 				if (ix != -1)
 					path = path.Substring(0, ix) + "." + path.Substring(ix + 1);
 				path += $".{_baseController.CurrentLang}.html";
-				String fullPath = _baseController.Host.MakeFullPath(false, "_fragments/" + path, "");
-				if (!System.IO.File.Exists(fullPath))
+				String fullPath = appReader.MakeFullPath("_fragments/" + path, "");
+				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = "text/html";
-				using (var stream = System.IO.File.OpenRead(fullPath))
+				using (var stream = appReader.FileStreamFullPath(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}

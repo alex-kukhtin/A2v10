@@ -119,10 +119,10 @@ namespace A2v10.Web.Mvc.Controllers
 
 		String GetRedirectedPage(String pageName, String fallback)
 		{
-			String path = _host.MakeFullPath(false, "_platform/", $"{pageName}.{CurrentLang}.html");
-			if (!System.IO.File.Exists(path))
+			String redirectedText = _host.ApplicationReader.ReadTextFile("_platform/", $"{pageName}.{CurrentLang}.html");
+			if (redirectedText == null)
 				return fallback;
-			String text = System.IO.File.ReadAllText(path) + "\r\n";
+			String text = redirectedText + "\r\n";
 			Int32 ix = text.IndexOf("@PartialFile:");
 			if (ix == -1)
 				return text;
@@ -130,8 +130,8 @@ namespace A2v10.Web.Mvc.Controllers
 			Int32 spIndex = text.IndexOfAny(" \n\r<>".ToCharArray(), ix);
 			sb.Append(text.Substring(0, ix));
 			String partialFileName = text.Substring(ix + 13, spIndex - ix - 13);
-			String partialPath = _host.MakeFullPath(false, "_platform/", $"{partialFileName}.{CurrentLang}.html");
-			sb.Append(System.IO.File.ReadAllText(partialPath));
+			String partialPathText = _host.ApplicationReader.ReadTextFile("_platform/", $"{partialFileName}.{CurrentLang}.html");
+			sb.Append(partialPathText);
 			sb.Append(text.Substring(spIndex));
 			return sb.ToString();
 		}
@@ -757,11 +757,11 @@ namespace A2v10.Web.Mvc.Controllers
 
 		String GetEMailBody(String code, String dictName)
 		{
-			String emailFile = _host.MakeFullPath(false, "_emails", $"{code}.{CurrentLang}.html");
+			String emailFileBody = _host.ApplicationReader.ReadTextFile("_emails", $"{code}.{CurrentLang}.html");
 			String body;
-			if (System.IO.File.Exists(emailFile))
+			if (emailFileBody != null)
 			{
-				body = System.IO.File.ReadAllText(emailFile);
+				body = emailFileBody;
 			}
 			else
 			{

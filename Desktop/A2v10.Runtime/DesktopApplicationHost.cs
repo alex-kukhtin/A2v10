@@ -150,43 +150,6 @@ namespace A2v10.Runtime
 			}
 		}
 
-		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
-		{
-			String appKey = bAdmin ? "admin" : AppKey;
-			if (fileName.StartsWith("/"))
-			{
-				path = String.Empty;
-				fileName = fileName.Remove(0, 1);
-			}
-			if (appKey != null)
-				appKey = "/" + appKey;
-			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
-			return Path.GetFullPath(fullPath);
-		}
-
-		public String MakeRelativePath(String path, String fileName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<String> ReadTextFileAsync(Boolean bAdmin, String path, String fileName)
-		{
-			String fullPath = MakeFullPath(bAdmin, path, fileName);
-			using (var tr = new StreamReader(fullPath))
-			{
-				return await tr.ReadToEndAsync();
-			}
-		}
-
-		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
-		{
-			String fullPath = MakeFullPath(bAdmin, path, fileName);
-			using (var tr = new StreamReader(fullPath))
-			{
-				return tr.ReadToEnd();
-			}
-		}
-
 		#region ITenantManager
 
 		public Task SetTenantIdAsync(SqlConnection cnn, String source)

@@ -98,6 +98,14 @@
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
       <Name>A2v10.Xaml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Web\A2v10.Web.Base\A2v10.Web.Base.csproj">
+      <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
+      <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Web\A2v10.Web.Config\A2v10.Web.Config.csproj">
+      <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
+      <Name>A2v10.Web.Config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
       <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
       <Name>A2v10.Web.Mvc</Name>

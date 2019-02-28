@@ -16,6 +16,9 @@ namespace A2v10.Request
 	{
 		BaseController _baseController = new BaseController();
 
+
+		public IApplicationHost Host => _baseController.Host;
+
 		public Task Show(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams)
 		{
 			return ShowImpl(Base, id, Response, setParams, "Load");

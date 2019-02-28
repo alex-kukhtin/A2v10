@@ -13,11 +13,13 @@ namespace A2v10.Web.Base
 	{
 		private String FileName { get; }
 
+		public Boolean IsFileSystem => false;
+
 		//IDictionary<String, String> _entries = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
 
 		public ZipApplicationReader(String appPath, String appKey)
 		{
-			String path = Path.Combine(appPath, appKey).ToLowerInvariant();
+			String path = Path.Combine(appPath, appKey ?? String.Empty).ToLowerInvariant();
 			FileName = Path.ChangeExtension(path, ".app");
 			/*
 			using (var za = ZipFile.OpenRead(FileName))
@@ -83,17 +85,35 @@ namespace A2v10.Web.Base
 
 		public IEnumerable<String> EnumerateFiles(String path, String searchPattern)
 		{
-			var searchExtension = Path.GetExtension(searchPattern).ToLowerInvariant();
+			String searchExtension = searchPattern;
+			if (searchExtension.StartsWith("*"))
+				searchExtension = searchExtension.Substring(1).ToLowerInvariant();
 			using (var za = ZipFile.OpenRead(FileName))
 			{
 				foreach (var e in za.Entries)
 				{
 					var ePath = Path.GetDirectoryName(e.FullName);
-					var eExt = Path.GetExtension(e.Name);
-					if (ePath == path && searchExtension == eExt)
+					var extMatch = e.Name.EndsWith(searchExtension);
+					if (ePath == path && extMatch)
 						yield return e.FullName;
 				}
 			}
+		}
+
+		public Boolean DirectoryExists(String fullPath)
+		{
+			if (fullPath == null)
+				return false;
+			using (var za = ZipFile.OpenRead(FileName))
+			{
+				foreach (var e in za.Entries)
+				{
+					var ePath = Path.GetDirectoryName(e.FullName);
+					if (ePath == fullPath)
+						return true;
+				}
+			}
+			return false;
 		}
 
 		public Boolean FileExists(String fullPath)
@@ -117,6 +137,24 @@ namespace A2v10.Web.Base
 				using (var sr = new StreamReader(ze.Open()))
 				{
 					return sr.ReadToEnd();
+				}
+			}
+		}
+
+		public IEnumerable<String> FileReadAllLines(String fullPath)
+		{
+			if (fullPath != null)
+			{
+				using (var za = ZipFile.OpenRead(FileName))
+				{
+					var ze = za.GetEntry(fullPath);
+					using (var sr = new StreamReader(ze.Open()))
+					{
+						while (!sr.EndOfStream)
+						{
+							yield return sr.ReadLine();
+						}
+					}
 				}
 			}
 		}
@@ -157,6 +195,17 @@ namespace A2v10.Web.Base
 			if (String.IsNullOrEmpty(path))
 				return entry.ToLowerInvariant();
 			return $"{path.Replace('\\', '/')}/{entry}".ToLowerInvariant();
+		}
+
+
+		public String CombineRelativePath(String path1, String path2)
+		{
+			return PathHelpers.CombineRelative(path1, path2);
+		}
+
+		public String MakeRelativePath(String path, String fileName)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

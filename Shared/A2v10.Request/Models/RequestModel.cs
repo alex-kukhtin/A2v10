@@ -730,21 +730,12 @@ namespace A2v10.Request
 		{
 			if (_redirectLoaded)
 				return;
-			//String redFilePath = host.MakeFullPath(bAdmin, String.Empty, "redirect.json");
 			String redJson = await host.ApplicationReader.ReadTextFileAsync(String.Empty, "redirect.json");
 			if (redJson != null)
 				_redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(redJson);
-			/* KILLME
-			if (System.IO.File.Exists(redFilePath))
+			if (host.IsDebugConfiguration && _redirectWatcher == null && host.ApplicationReader.IsFileSystem)
 			{
-				//String json = await host.ReadTextFileAsync(bAdmin, String.Empty, "redirect.json");
-				String json = await host.ApplicationReader.ReadTextFileAsync(String.Empty, "redirect.json");
-				_redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(json);
-			}
-			*/
-			if (host.IsDebugConfiguration && _redirectWatcher == null)
-			{
-				/*
+				String redFilePath = host.ApplicationReader.MakeFullPath(String.Empty, "redirect.json");
 				_redirectWatcher = new FileSystemWatcher(Path.GetDirectoryName(redFilePath), "*.json")
 				{
 					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
@@ -754,7 +745,6 @@ namespace A2v10.Request
 					_redirectLoaded = false;
 				};
 				_redirectWatcher.EnableRaisingEvents = true;
-				*/
 			}
 			_redirectLoaded = true;
 		}

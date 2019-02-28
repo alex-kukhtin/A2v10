@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190222-7439
+// 20190228-7447
 // controllers/base.js
 
 (function () {
@@ -842,7 +842,7 @@
 					} else if (result === 'save') {
 						// save then close
 						self.$save().then(function (saveResult) {
-							console.dir(saveResult);
+							//console.dir(saveResult);
 							closeImpl(saveResult);
 						});
 					}

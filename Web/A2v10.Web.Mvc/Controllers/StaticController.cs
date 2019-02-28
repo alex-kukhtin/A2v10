@@ -39,11 +39,11 @@ namespace A2v10.Web.Mvc.Controllers
 				pathInfo = pathInfo.ToLowerInvariant();
 				if (pathInfo.IndexOf('.') == -1)
 					pathInfo = Path.ChangeExtension(pathInfo, "html"); // no extension -> .html
-				var path = _host.MakeFullPath(false, "_static/", pathInfo);
-				if (!System.IO.File.Exists(path))
+				var path = _host.ApplicationReader.MakeFullPath("_static/", pathInfo);
+				if (!_host.ApplicationReader.FileExists(path))
 					throw new FileNotFoundException($"File not found '{pathInfo}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
-				using (var stream = System.IO.File.OpenRead(path))
+				using (var stream = _host.ApplicationReader.FileStreamFullPath(path))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}
@@ -55,7 +55,6 @@ namespace A2v10.Web.Mvc.Controllers
 					ex = ex.InnerException;
 				Response.Write(ex.Message);
 			}
-
 		}
 	}
 }

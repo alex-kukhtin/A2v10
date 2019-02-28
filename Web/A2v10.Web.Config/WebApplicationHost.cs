@@ -4,7 +4,6 @@ using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.IO;
-using System.IO.Compression;
 using System.Data;
 
 using A2v10.Infrastructure;
@@ -60,7 +59,7 @@ namespace A2v10.Web.Config
 		{
 			get
 			{
-				var path = Path.Combine(AppPath, AppKey);
+				var path = Path.Combine(AppPath, AppKey ?? String.Empty);
 				path = Path.ChangeExtension(path, ".app");
 				if (File.Exists(path))
 				{
@@ -143,24 +142,6 @@ namespace A2v10.Web.Config
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
 		public String TenantDataSource => null;
 
-		public async Task<String> ReadTextFileAsync(Boolean bAdmin, String path, String fileName)
-		{
-			String fullPath = MakeFullPath(bAdmin, path, fileName);
-			using (var tr = new StreamReader(fullPath))
-			{
-				return await tr.ReadToEndAsync();
-			}
-		}
-
-		public String ReadTextFile(Boolean bAdmin, String path, String fileName)
-		{
-			String fullPath = MakeFullPath(bAdmin, path, fileName);
-			using (var tr = new StreamReader(fullPath))
-			{
-				return tr.ReadToEnd();
-			}
-		}
-
 		public Boolean IsDebugConfiguration
 		{
 			get
@@ -205,20 +186,6 @@ namespace A2v10.Web.Config
 				_reader = new ZipApplicationReader(AppPath, key);
 			else
 				_reader = new FileApplicationReader(AppPath, key);
-		}
-
-		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
-		{
-			String appKey = bAdmin ? "admin" : AppKey;
-			if (fileName.StartsWith("/"))
-			{
-				path = String.Empty;
-				fileName = fileName.Remove(0, 1);
-			}
-			if (appKey != null)
-				appKey = "/" + appKey;
-			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
-			return Path.GetFullPath(fullPath);
 		}
 
 		public String AppVersion => AppInfo.MainAssembly.Version;

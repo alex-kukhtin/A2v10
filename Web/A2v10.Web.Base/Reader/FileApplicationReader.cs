@@ -13,6 +13,9 @@ namespace A2v10.Web.Base
 		private String AppPath { get;}
 		private String AppKey { get; }
 
+		public Boolean IsFileSystem => true;
+
+
 		public FileApplicationReader(String appPath, String appKey)
 		{
 			AppPath = appPath;
@@ -54,9 +57,20 @@ namespace A2v10.Web.Base
 			return File.Exists(fullPath);
 		}
 
+		public Boolean DirectoryExists(String fullPath)
+		{
+			return Directory.Exists(fullPath);
+		}
+
+
 		public String FileReadAllText(String fullPath)
 		{
 			return File.ReadAllText(fullPath);
+		}
+
+		public IEnumerable<String> FileReadAllLines(String fullPath)
+		{
+			return File.ReadAllLines(fullPath);
 		}
 
 		public Stream FileStream(String path, String fileName)
@@ -89,6 +103,24 @@ namespace A2v10.Web.Base
 				appKey = "/" + appKey;
 			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
 			return Path.GetFullPath(fullPath);
+		}
+
+		public String CombineRelativePath(String path1, String path2)
+		{
+			return Path.GetFullPath(Path.Combine(path1, path2));
+		}
+
+		public String MakeRelativePath(String path, String fileName)
+		{
+			if (fileName.StartsWith("/"))
+			{
+				path = String.Empty;
+				fileName = fileName.Remove(0, 1);
+			}
+			String appKey = AppConfig.AppKey();
+			String appPath = AppConfig.AppPath();
+			String fullPath = Path.Combine($"{appPath}{appKey}", path, fileName);
+			return fullPath;
 		}
 	}
 }

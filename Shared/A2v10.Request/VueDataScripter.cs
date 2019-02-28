@@ -497,7 +497,7 @@ const vm = new DataModelController({
 			String templateText = "{}";
 			if (msi.Template != null)
 			{
-				String fileTemplateText = _host.ReadTextFile(msi.Admin, msi.Path, msi.Template + ".js");
+				String fileTemplateText = _host.ApplicationReader.ReadTextFile(msi.Path, msi.Template + ".js");
 				sbRequired = new StringBuilder();
 				AddRequiredModules(sbRequired, fileTemplateText);
 				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
@@ -510,6 +510,7 @@ const vm = new DataModelController({
 			sb.Replace("$(DataModelText)", rawData);
 			sb.Replace("$(RawDataText)", msi.RawData ?? "{}");
 			sb.Replace("$(ModelScript)", modelScript);
+
 			return new ScriptInfo()
 			{
 				Script = sb.ToString()

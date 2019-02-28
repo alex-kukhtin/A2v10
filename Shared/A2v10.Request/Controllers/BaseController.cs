@@ -247,7 +247,6 @@ namespace A2v10.Request
 			{
 				DataModel = model,
 				RootId = rootId,
-				Admin = Admin,
 				IsDialog = rw.IsDialog,
 				Template = rw.template,
 				Path = rw.Path,

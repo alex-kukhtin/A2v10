@@ -21,6 +21,20 @@ namespace A2v10.Web.Config
 		}
 	}
 
+	struct LocalePath
+	{
+		public String Path;
+		public Boolean IsFileSystem;
+
+		public LocalePath(String path, Boolean fs)
+		{
+			Path = path;
+			IsFileSystem = fs;
+		}
+
+	}
+
+
 	public class WebLocalizer : BaseLocalizer, IDataLocalizer
 	{
 		private IApplicationHost _host;
@@ -41,27 +55,27 @@ namespace A2v10.Web.Config
 				return map.Map;
 			map.Loaded = true;
 
-			foreach (var path in GetLocalizerFilePath(locale))
+			foreach (var localePath  in GetLocalizerFilePath(locale))
 			{
-				var lines = File.ReadAllLines(path);
+				IEnumerable<String> lines = localePath.IsFileSystem ?
+					File.ReadAllLines(localePath.Path) :
+					_host.ApplicationReader.FileReadAllLines(localePath.Path);
+
 				foreach (var line in lines)
 				{
-					if (!String.IsNullOrWhiteSpace(line))
+					if (String.IsNullOrWhiteSpace(line))
+						continue;
+					if (line.StartsWith(";"))
+						continue;
+					Int32 pos = line.IndexOf('=');
+					if (pos != -1)
 					{
-						if (line.StartsWith(";"))
-							continue;
-						Int32 pos = line.IndexOf('=');
-						if (pos != -1)
-						{
-							var key = line.Substring(0, pos);
-							var val = line.Substring(pos + 1);
-							map.Map.AddOrUpdate(key, val, (k, oldVal) => val);
-						}
-						else
-						{
-							throw new InvalidDataException($"Invalid dictionary string '{line}'");
-						}
+						var key = line.Substring(0, pos);
+						var val = line.Substring(pos + 1);
+						map.Map.AddOrUpdate(key, val, (k, oldVal) => val);
 					}
+					else
+						throw new InvalidDataException($"Invalid dictionary string '{line}'");
 				}
 			}
 			return map.Map;
@@ -104,25 +118,30 @@ namespace A2v10.Web.Config
 			_maps.Clear();
 		}
 
-		IEnumerable<String> GetLocalizerFilePath(String locale)
+		IEnumerable<LocalePath> GetLocalizerFilePath(String locale)
 		{
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-			var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
+			var appReader = _host.ApplicationReader;
+			///var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
+			var appPath = appReader.MakeFullPath("_localization", String.Empty);
 			if (!Directory.Exists(dirPath))
 				dirPath = null;
-			if (!Directory.Exists(appPath))
+
+			if (!appReader.DirectoryExists(appPath))
 				appPath = null;
-			CreateWatchers(dirPath, appPath);
+
+			CreateWatchers(dirPath, appReader.IsFileSystem ? appPath : null);
 			if (dirPath != null)
 			{
 				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-					yield return s;
+					yield return new LocalePath(s, true);
 			}
-			if (appPath != null)
+			var appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+			if (appFiles != null)
 			{
-				foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-					yield return s;
+				foreach (var s in appFiles)
+					yield return new LocalePath(s, false);
 			}
 			// simple locale: uk
 			if (locale.Length > 2)
@@ -131,12 +150,13 @@ namespace A2v10.Web.Config
 				if (dirPath != null)
 				{
 					foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-						yield return s;
+						yield return new LocalePath(s, true);
 				}
-				if (appPath != null)
+				appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+				if (appFiles != null)
 				{
-					foreach (var s in Directory.EnumerateFiles(appPath, $"*.{locale}.txt"))
-						yield return s;
+					foreach (var s in appFiles)
+						yield return new LocalePath(s, false);
 				}
 			}
 		}

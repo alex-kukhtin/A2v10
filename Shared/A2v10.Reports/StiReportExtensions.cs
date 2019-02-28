@@ -9,6 +9,7 @@ using Stimulsoft.Report.Dictionary;
 using Stimulsoft.Report.Web;
 
 using A2v10.Data.Interfaces;
+using System.IO;
 
 namespace A2v10.Reports
 {
@@ -105,10 +106,10 @@ namespace A2v10.Reports
 			}
 		}
 
-		public static StiReport CreateReport(String path, String repName)
+		public static StiReport CreateReport(Stream stream, String repName)
 		{
 			var r = new Stimulsoft.Report.StiReport();
-			r.Load(path);
+			r.Load(stream);
 			r.AddReferencedAssemblies();
 			r.SubstDataSources();
 			if (!String.IsNullOrEmpty(repName))

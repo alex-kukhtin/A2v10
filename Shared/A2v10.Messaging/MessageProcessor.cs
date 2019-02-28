@@ -12,7 +12,6 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using System.IO;
 using System.Xaml;
-using System.Linq;
 
 namespace A2v10.Messaging
 {
@@ -114,7 +113,7 @@ namespace A2v10.Messaging
 		{
 			var templateName = dm.Eval<String>("Message.Template");
 			var key = dm.Eval<String>("Message.Key");
-			var templatePath = _host.MakeFullPath(false, templateName, String.Empty);
+			var templatePath = _host.ApplicationReader.MakeFullPath(templateName, String.Empty);
 			var fullPath = Path.ChangeExtension(templatePath, "xaml");
 
 			var env = dm.Eval<List<ExpandoObject>>("Message.Environment");
@@ -123,14 +122,14 @@ namespace A2v10.Messaging
 			hostObj.Set("Value", _host.AppHost);
 			env.Add(hostObj);
 
-			var tml = XamlServices.Load(fullPath) as Template;
-
-			TemplatedMessage tm = tml.Get(key);
-			if (tm == null)
-				throw new MessagingException($"Message not found. Key = '{key}'");
-
-			var resolver = new MessageResolver(_host, _dbContext, dm);
-			return tm.ResolveAndSendAsync(resolver);
+			using (var stream = _host.ApplicationReader.FileStreamFullPath(templatePath)) {
+				var tml = XamlServices.Load(stream) as Template;
+				TemplatedMessage tm = tml.Get(key);
+				if (tm == null)
+					throw new MessagingException($"Message not found. Key = '{key}'");
+				var resolver = new MessageResolver(_host, _dbContext, dm);
+				return tm.ResolveAndSendAsync(resolver);
+			}
 		}
 	}
 }

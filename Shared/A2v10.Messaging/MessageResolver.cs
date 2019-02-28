@@ -4,7 +4,6 @@ using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -112,11 +111,10 @@ namespace A2v10.Messaging
 		{
 			if (String.IsNullOrEmpty(fileName))
 				return null;
-			String path = _host.MakeFullPath(false, fileName, String.Empty);
-			if (!File.Exists(path))
-				throw new MessagingException($"File not found {path}");
-			String text = File.ReadAllText(path);
-			return ResolveAsync(msg, text);
+			String fileText = _host.ApplicationReader.ReadTextFile(fileName, String.Empty);
+			if (fileText == null)
+				throw new MessagingException($"File not found '{fileName}'");
+			return ResolveAsync(msg, fileText);
 		}
 	}
 }
