@@ -97,7 +97,7 @@ namespace A2v10.Runtime
 					}
 					else if (url.StartsWith("_export/"))
 					{
-						Export("/" + url, dr);
+						Export("/" + url, search, dr);
 						MimeType = dr.ContentType;
 						return dr.GetBytes();
 					}
@@ -280,14 +280,13 @@ namespace A2v10.Runtime
 			response.Write(Encoding.UTF8.GetBytes(ex.Message));
 		}
 
-		void Export(String path, HttpResponseBase response)
+		void Export(String path, String search, HttpResponseBase response)
 		{
 			// HTTP GET
 			try
 			{
-				ExpandoObject prms = new ExpandoObject();
 				ExpandoObject loadPrms = new ExpandoObject();
-				//loadPrms.Append(_controller.CheckPeriod(request.QueryString), toPascalCase: true);
+				loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
 				SetSqlParams(loadPrms);
 				_controller.Export(path, TenantId, UserId, loadPrms, response).Wait();
 			}

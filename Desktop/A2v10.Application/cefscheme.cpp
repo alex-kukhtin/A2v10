@@ -118,6 +118,7 @@ void CClientSchemeHandler::GetResponseHeaders(CefRefPtr<CefResponse> response,
 
 	response->SetMimeType(mime_type_);
 	response->SetStatus(200);
+	// TODO: setHeaderMaps
 
 	// Set the resulting response length.
 	response_length = data_.size();
