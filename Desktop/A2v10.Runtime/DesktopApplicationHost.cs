@@ -10,6 +10,7 @@ using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
 using A2v10.Web.Base;
+using A2v10.Request;
 
 namespace A2v10.Runtime
 {
@@ -149,6 +150,11 @@ namespace A2v10.Runtime
 				}
 				return null;
 			}
+		}
+
+		public String MakeRelativePath(String path, String fileName)
+		{
+			throw new NotImplementedException();
 		}
 
 		#region ITenantManager

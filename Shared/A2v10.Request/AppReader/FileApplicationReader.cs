@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace A2v10.Web.Base
+namespace A2v10.Request
 {
 	public class FileApplicationReader : IApplicationReader
 	{
@@ -108,19 +108,6 @@ namespace A2v10.Web.Base
 		public String CombineRelativePath(String path1, String path2)
 		{
 			return Path.GetFullPath(Path.Combine(path1, path2));
-		}
-
-		public String MakeRelativePath(String path, String fileName)
-		{
-			if (fileName.StartsWith("/"))
-			{
-				path = String.Empty;
-				fileName = fileName.Remove(0, 1);
-			}
-			String appKey = AppConfig.AppKey();
-			String appPath = AppConfig.AppPath();
-			String fullPath = Path.Combine($"{appPath}{appKey}", path, fileName);
-			return fullPath;
 		}
 	}
 }

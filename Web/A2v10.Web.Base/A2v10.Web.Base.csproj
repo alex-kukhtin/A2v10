@@ -52,10 +52,8 @@
     <Compile Include="Extensions\ViewInfoExtensions.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ViewEngineExtensions.cs" />
-    <Compile Include="Reader\FileApplicationReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Start\ViewEnginesConfig.cs" />
-    <Compile Include="Reader\ZipApplicationReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">

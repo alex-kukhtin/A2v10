@@ -57,6 +57,7 @@ namespace A2v10.Request
 			return LoadViewKind(pathInfo, RequestUrlKind.Dialog);
 		}
 
+
 		async Task<ViewInfo> LoadViewKind(String pathInfo, RequestUrlKind kind)
 		{
 			var host = _baseController.Host;
@@ -68,7 +69,7 @@ namespace A2v10.Request
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
-				View = host.ApplicationReader.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
+				View = host.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath,
 				DataModel = dmrw.Model,

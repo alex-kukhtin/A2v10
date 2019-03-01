@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using A2v10.Request;
 using A2v10.Web.Base;
 
 namespace A2v10.Tests.Config
@@ -83,6 +84,11 @@ namespace A2v10.Tests.Config
 		public String TenantDataSource => null;
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
+
+		public String MakeRelativePath(String path, String fileName)
+		{
+			throw new NotImplementedException();
+		}
 
 
 #pragma warning disable CA1065

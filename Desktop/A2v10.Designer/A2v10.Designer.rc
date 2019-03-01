@@ -487,7 +487,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 10,0,7420,0
+ FILEVERSION 10,0,7450,0
  PRODUCTVERSION 10,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -505,7 +505,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "A2v10.Designer"
-            VALUE "FileVersion", "10.0.7420.0"
+            VALUE "FileVersion", "10.0.7450.0"
             VALUE "InternalName", "A2v10.Designer.exe"
             VALUE "LegalCopyright", "© 2007-2018 Alex Kukhtin.  All rights reserved."
             VALUE "OriginalFilename", "A2v10.Designer.exe"

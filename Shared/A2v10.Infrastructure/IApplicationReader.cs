@@ -15,7 +15,7 @@ namespace A2v10.Infrastructure
 		Task<String> ReadTextFileAsync(String path, String fileName);
 		String ReadTextFile(String path, String fileName);
 		String CombineRelativePath(String path1, String path2);
-		String MakeRelativePath(String path, String fileName);
+		//String MakeRelativePath(String path, String fileName);
 
 		IEnumerable<String> EnumerateFiles(String path, String searchPattern);
 		Boolean FileExists(String fullPath);

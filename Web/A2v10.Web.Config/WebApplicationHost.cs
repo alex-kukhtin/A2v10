@@ -12,6 +12,7 @@ using A2v10.Data.Interfaces;
 using System.Data.SqlClient;
 using System.Web.Hosting;
 using A2v10.Web.Base;
+using A2v10.Request;
 
 namespace A2v10.Web.Config
 {
@@ -208,7 +209,7 @@ namespace A2v10.Web.Config
 				using (var cmd = cnn.CreateCommand())
 				{
 					cmd.CommandText = SET_TENANT_CMD;
-					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.CommandType = System.Data.CommandType.StoredProcedure;
 					cmd.Parameters.AddWithValue("@TenantId", TenantId);
 					await cmd.ExecuteNonQueryAsync();
 				}
@@ -226,7 +227,7 @@ namespace A2v10.Web.Config
 				using (var cmd = cnn.CreateCommand())
 				{
 					cmd.CommandText = SET_TENANT_CMD;
-					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.CommandType = System.Data.CommandType.StoredProcedure;
 					cmd.Parameters.AddWithValue("@TenantId", TenantId);
 					cmd.ExecuteNonQuery();
 				}

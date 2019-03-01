@@ -159,7 +159,7 @@ END
 //
 
 VS_VERSION_INFO     VERSIONINFO
-  FILEVERSION       10,0,7420,0
+  FILEVERSION       10,0,7450,0
   PRODUCTVERSION    10,0,0,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
@@ -177,7 +177,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "A2v10.Application"
-            VALUE "FileVersion",     "10.0.7420.0"
+            VALUE "FileVersion",     "10.0.7450.0"
             VALUE "InternalName",    "A2v10.Application.exe"
 			VALUE "LegalCopyright", "© 2008-2019 Alex Kukhtin.  All rights reserved."
             VALUE "OriginalFilename","A2v10.Application.exe"

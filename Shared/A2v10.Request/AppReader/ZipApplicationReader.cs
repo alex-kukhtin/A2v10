@@ -7,7 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-namespace A2v10.Web.Base
+namespace A2v10.Request
 {
 	public class ZipApplicationReader : IApplicationReader
 	{
@@ -209,11 +209,6 @@ namespace A2v10.Web.Base
 		public String CombineRelativePath(String path1, String path2)
 		{
 			return PathHelpers.CombineRelative(path1, path2);
-		}
-
-		public String MakeRelativePath(String path, String fileName)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
