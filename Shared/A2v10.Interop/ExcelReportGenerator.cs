@@ -59,6 +59,7 @@ namespace A2v10.Interop
 		Dictionary<Int32, SharedStringDef> _sharedStringIndexMap;
 
 		readonly String _templateFile;
+		readonly Stream _templateStream;
 		String _resultFile;
 
 		Boolean _sharedStringModified = false;
@@ -67,6 +68,12 @@ namespace A2v10.Interop
 		public ExcelReportGenerator(String templateFile)
 		{
 			_templateFile = templateFile;
+		}
+
+		public ExcelReportGenerator(Stream templateStream)
+		{
+			_templateStream = templateStream;
+
 		}
 
 		public void Dispose()
@@ -91,9 +98,18 @@ namespace A2v10.Interop
 			_dataModel = dataModel;
 			String tempFileName = Path.GetTempFileName();
 			File.Delete(tempFileName);
-			File.Copy(_templateFile, tempFileName);
+			if (_templateStream != null) {
+				using (var br = new FileStream(tempFileName, FileMode.Create)) {
+					_templateStream.CopyTo(br);
+				}
+			}
+			else if (_templateFile != null)
+				File.Copy(_templateFile, tempFileName);
+			else
+				throw new InteropException("Template file or template stream is required");
 			SpreadsheetDocument doc = null;
 			try {
+				// Stream is not working ?
 				doc = SpreadsheetDocument.Open(tempFileName, isEditable: true);
 				var workSheetPart = doc.WorkbookPart.WorksheetParts.First<WorksheetPart>();
 				_sharedStringTable = doc.WorkbookPart.SharedStringTablePart.SharedStringTable;

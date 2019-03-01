@@ -150,22 +150,32 @@ namespace A2v10RuntimeNet
 		}
 
 		static String _lastMime = String.Empty;
+		static String _lastContentDisposition = String.Empty;
 
 		public static String GetLastMime()
 		{
 			return _lastMime;
 		}
 
+		public static String GetLastContentDisposition()
+		{
+			return _lastContentDisposition;
+		}
+
 		public static Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
+			_lastContentDisposition = String.Empty;
+			_lastMime = String.Empty;
 			var dr = new DesktopRequest();
 			var result = dr.ProcessRequest(url, search, post, postMethod);
 			_lastMime = dr.MimeType;
+			_lastContentDisposition = dr.ContentDisposition ?? String.Empty;
 			return result;
 		}
 
 		public static Byte[] UploadFiles(String url, String files)
 		{
+			_lastMime = String.Empty;
 			var dr = new DesktopRequest();
 			var result = dr.UploadFiles(url, files);
 			_lastMime = dr.MimeType;

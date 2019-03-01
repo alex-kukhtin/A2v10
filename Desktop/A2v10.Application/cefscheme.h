@@ -21,6 +21,7 @@ public:
 private:
 	std::vector<byte> data_;
 	std::string mime_type_;
+	std::string content_disposition_;
 	size_t offset_;
 
 	IMPLEMENT_REFCOUNTING(CClientSchemeHandler);

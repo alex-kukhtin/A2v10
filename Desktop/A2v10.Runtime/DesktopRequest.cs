@@ -19,6 +19,7 @@ namespace A2v10.Runtime
 		BaseController _controller = new BaseController();
 
 		public String MimeType { get; private set; }
+		public String ContentDisposition { get; private set; }
 
 		const String MIME_JSON   = "application/json";
 		const String MIME_HTML   = "text/html";
@@ -99,6 +100,7 @@ namespace A2v10.Runtime
 					{
 						Export("/" + url, search, dr);
 						MimeType = dr.ContentType;
+						ContentDisposition = dr.Headers["Content-Disposition"];
 						return dr.GetBytes();
 					}
 					else

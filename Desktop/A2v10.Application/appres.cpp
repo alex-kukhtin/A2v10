@@ -121,7 +121,8 @@ void CApplicationResources::Init() {
 }
 
 // static 
-bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, std::vector<byte>& data, std::vector<byte>& post, bool postMethod)
+bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, std::string& contentDisposition,
+	std::vector<byte>& data, std::vector<byte>& post, bool postMethod)
 {
 	CEF_REQUIRE_IO_THREAD();
 	mime = MimeTypes[MimeIndex::html];
@@ -134,8 +135,10 @@ bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, s
 	{
 		CDotNetRuntime::ProcessRequest(parsedUrl.path, parsedUrl.search, post, data, postMethod); // A2W_CP(postData, CP_UTF8));
 		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
+		std::wstring wContentDisposition = CDotNetRuntime::GetLastContentDisposition();
 		// W2A
 		mime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
+		contentDisposition = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wContentDisposition.c_str());
 		return true;
 	}
 	catch (CDotNetException& ex) 

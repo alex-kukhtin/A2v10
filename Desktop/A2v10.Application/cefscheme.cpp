@@ -81,14 +81,16 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	}
 
 	std::string mime;
+	std::string content_disposition;
 	bool rc = false;
 
 	if (_files.length() > 0)
 		rc = CApplicationResources::UploadFiles(url.c_str(), _files.c_str(), mime, data_, isPost);
 	else
-		rc = CApplicationResources::LoadResource(url.c_str(), mime, data_, post_, isPost);
+		rc = CApplicationResources::LoadResource(url.c_str(), mime, content_disposition, data_, post_, isPost);
 	if (rc) {
 		mime_type_ = mime;
+		content_disposition_ = content_disposition;
 		handled = true;
 	}
 	else 
@@ -118,7 +120,13 @@ void CClientSchemeHandler::GetResponseHeaders(CefRefPtr<CefResponse> response,
 
 	response->SetMimeType(mime_type_);
 	response->SetStatus(200);
-	// TODO: setHeaderMaps
+
+	if (!content_disposition_.empty()) {
+		CefResponse::HeaderMap headerMap;
+		response->GetHeaderMap(headerMap);
+		headerMap.insert(::std::make_pair(L"Content-Disposition", content_disposition_));
+		response->SetHeaderMap(headerMap);
+	}
 
 	// Set the resulting response length.
 	response_length = data_.size();

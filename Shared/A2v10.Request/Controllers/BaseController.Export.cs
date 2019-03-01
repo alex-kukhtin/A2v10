@@ -27,15 +27,15 @@ namespace A2v10.Request
 				prms.Append(action.parameters);
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
 			
-			// TODO: USE ApplicationReader!
 			var fileName = export.template.AddExtension(export.format.ToString());
-			var filePath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, action.Path, fileName.RemoveHeadSlash()));
-			if (!File.Exists(filePath))
+			var appReader = _host.ApplicationReader;
+			var filePath = appReader.MakeFullPath(action.Path, fileName.RemoveHeadSlash());
+			if (!appReader.FileExists(filePath))
 				throw new FileNotFoundException(filePath);
 
 			switch (export.format) {
 				case RequestExportFormat.xlsx:
-					using (var rep = new ExcelReportGenerator(filePath))
+					using (var rep = new ExcelReportGenerator(appReader.FileStreamFullPath(filePath)))
 					{
 						rep.GenerateReport(dm);
 						Byte[] bytes = File.ReadAllBytes(rep.ResultFile);

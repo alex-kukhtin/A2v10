@@ -112,6 +112,13 @@ std::wstring CDotNetRuntime::GetLastMime()
 	return ptr;
 }
 
+std::wstring CDotNetRuntime::GetLastContentDisposition()
+{
+	auto result = A2v10RuntimeNet::Desktop::GetLastContentDisposition();
+	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
+	return ptr;
+}
+
 
 // static 
 void CDotNetRuntime::StartDesktopServices() 

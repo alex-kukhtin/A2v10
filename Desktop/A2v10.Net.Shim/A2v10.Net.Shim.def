@@ -10,4 +10,5 @@ EXPORTS
 ?StartDesktopServices@CDotNetRuntime@@SAXXZ
 ?ProcessRequest@CDotNetRuntime@@SAXPB_W0AAV?$vector@EV?$allocator@E@std@@@std@@1_N@Z
 ?GetLastMime@CDotNetRuntime@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ
+?GetLastContentDisposition@CDotNetRuntime@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ
 ?UploadFiles@CDotNetRuntime@@SAXPB_W0AAV?$vector@EV?$allocator@E@std@@@std@@@Z
