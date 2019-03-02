@@ -80,6 +80,66 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_string2table') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_string2table;
+go
+------------------------------------------------
+create function a2sys.fn_string2table(@var nvarchar(max), @delim nchar(1))
+	returns @ret table(VAL nvarchar(max))
+as
+begin
+	select @var = @var + @delim; -- sure delim
+
+	declare @pos int, @start int;
+	declare @sub nvarchar(255);
+
+	set @start = 1;
+	set @pos   = charindex(@delim, @var, @start);
+
+	while @pos <> 0
+		begin
+			set @sub = ltrim(rtrim(substring(@var, @start, @pos-@start)));
+
+			if @sub <> N''
+				insert into @ret(VAL) values (@sub);
+
+			set @start = @pos + 1;
+			set @pos   = charindex(@delim, @var, @start);
+		end
+	return;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_string2table_count') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_string2table_count;
+go
+------------------------------------------------
+create function a2sys.fn_string2table_count(@var nvarchar(max), @count int)
+	returns @ret table(RowNo int, VAL nvarchar(max))
+as
+begin
+
+	declare @start int;
+	declare @RowNo int;
+	declare @sub nvarchar(255);
+
+	set @start = 1;
+	set @RowNo = 1;
+
+	while @start <= len(@var)
+		begin
+			set @sub = substring(@var, @start, @count);
+
+			if @sub <> N''
+				insert into @ret(RowNo, VAL) values (@RowNo, @sub);
+
+			set @start = @start + @count;
+			set @RowNo = @RowNo + 1;
+		end
+	return;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Id.TableType' and DATA_TYPE=N'table type')
 begin
 	create type a2sys.[Id.TableType]
