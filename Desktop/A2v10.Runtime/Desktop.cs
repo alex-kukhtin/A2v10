@@ -28,15 +28,11 @@ namespace A2v10RuntimeNet
 
 		public static void Start()
 		{
-			try
+			TryCatch(() =>
 			{
 				Resources.Culture = CultureInfo.InvariantCulture;
 				ScriptContext.Start();
-			}
-			catch (Exception ex)
-			{
-				SetLastError(ex);
-			}
+			});
 		}
 
 		public static void Stop()
@@ -78,6 +74,12 @@ namespace A2v10RuntimeNet
 			}
 		}
 
+		static void ClearError()
+		{
+			HasError = false;
+			LastErrorMessage = null;
+		}
+
 		static void SetLastError(Exception ex)
 		{
 			HasError = true;
@@ -101,16 +103,25 @@ namespace A2v10RuntimeNet
 			}
 		}
 
-		public static void OpenSolution(String fileName)
+		public static void TryCatch(Action doAction)
 		{
+			ClearError();
 			try
 			{
-				throw new Exception($"opens file {fileName} (from C#)");
+				doAction();
 			}
 			catch (Exception ex)
 			{
 				SetLastError(ex);
 			}
+		}
+
+		public static void OpenSolution(String fileName)
+		{
+			TryCatch(() =>
+			{
+				throw new Exception($"opens file {fileName} (from C#)");
+			});
 		}
 
 		public static void StartDesktopServices()
@@ -182,5 +193,9 @@ namespace A2v10RuntimeNet
 			return result;
 		}
 
-}
+		public static void StartApplication(String cnnString)
+		{
+			TryCatch(() => DesktopApplicationHost.StartApplication(cnnString));
+		}
+	}
 }

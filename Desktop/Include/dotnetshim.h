@@ -22,7 +22,7 @@ public:
 	static void LoadModuleContext();
 	static void SetMainWnd(HWND hWnd);
 	static void OpenSolution(LPCWSTR szFileName);
-
+	static void StartApplication(const wchar_t* szConnectionString);
 	static void StartDesktopServices();
 	static void ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod);
 	static void UploadFiles(const wchar_t* szUrl, const wchar_t* szfiles, std::vector<byte>& data);

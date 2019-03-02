@@ -54,6 +54,7 @@ protected:
 	afx_msg void OnAppTools();
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
+	afx_msg void OnAppLoad();
 
 	DECLARE_MESSAGE_MAP()
 };

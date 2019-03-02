@@ -36,6 +36,7 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
+#include <afxdialogex.h>
 
 #include "../include/A2v10.Base.h"
 #include "../include/A2v10.Net.Shim.h"

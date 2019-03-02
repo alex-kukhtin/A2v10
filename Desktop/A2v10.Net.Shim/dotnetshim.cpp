@@ -73,7 +73,15 @@ void CDotNetRuntime::OpenSolution(LPCWSTR szFileName)
 	ThrowIfError();
 }
 
-// satatic
+// static
+void CDotNetRuntime::StartApplication(const wchar_t* szConnectionString)
+{
+	auto connStr = gcnew System::String(szConnectionString);
+	A2v10RuntimeNet::Desktop::StartApplication(connStr);
+	ThrowIfError();
+}
+
+// static
 void CDotNetRuntime::ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod)
 {
 	auto url = gcnew System::String(szUrl);

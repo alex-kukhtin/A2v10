@@ -40,6 +40,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfiguration.cs" />
     <Compile Include="Desktop.cs" />
     <Compile Include="DesktopApplicationHost.cs" />
     <Compile Include="DesktopLocalizer.cs" />

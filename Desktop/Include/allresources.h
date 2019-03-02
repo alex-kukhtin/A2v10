@@ -40,6 +40,7 @@
 #define IDD_OPTION_GENERAL  800
 #define IDD_ABOUT			801
 #define IDD_SOLUTION_CREATE 802
+#define IDD_DB_LOGIN		803
 
 #define IDS_OPTIONS_CAPTION  12000
 #define IDS_LANGUAGES        12001
@@ -57,20 +58,33 @@
 #define IDC_TITLE3			  14008
 #define IDC_TITLE4			  14009
 #define IDC_TITLE5			  14010
-#define IDC_PROMPT1			  14011	
-#define IDC_PROMPT2			  14012	
-#define IDC_PROMPT3			  14013	
-#define IDC_PROMPT4			  14014	
-#define IDC_PROMPT5			  14015	
+#define IDC_PROMPT1			  14011
+#define IDC_PROMPT2			  14012
+#define IDC_PROMPT3			  14013
+#define IDC_PROMPT4			  14014
+#define IDC_PROMPT5			  14015
 #define IDC_TEXT1			14016
 #define IDC_TEXT2			14017
 #define IDC_TEXT3			14018
 #define IDC_TEXT4			14019
 #define IDC_TEXT5			14020
+#define IDC_RADIO1			14021
+#define IDC_RADIO2			14022
+#define IDC_RADIO3			14023
+#define IDC_RADIO4			14024
+#define IDC_RADIO5			14025
+#define IDC_CHECK1			14026
+#define IDC_CHECK2			14027
+#define IDC_CHECK3			14028
+#define IDC_CHECK4			14029
+#define IDC_CHECK5			14030
+
 
 #define IDS_ID_APP_ABOUT		17000
 #define IDS_ID_TOOLS_OPTIONS	17001
 #define IDS_ID_SHOW_DEVTOOLS	17002
+
+#define IDS_LOADING				18000
 
 #define IDS_WEB_RESOURCE_FIRST    20000
 #define IDS_WEB_RESOURCE_LAST     20999
@@ -81,6 +95,8 @@
 #define ID_FILE_SAVE_SOLUTION		32002
 #define ID_FILE_NEW_SOLUTION		32003
 #define ID_FILE_SAVE_ALL			32004
+#define ID_APP_START				32005
+#define ID_APP_LOAD					32006
 // edit: 32100
 #define ID_EDIT_FIND_IN_FILES	32100
 // browse: 32150

@@ -182,11 +182,13 @@ void CCefView::OnInitialUpdate()
 {
 	__super::OnInitialUpdate();
 
+	/*
 	CEF_VIEW_INFO viewInfo;
 	//viewInfo.szUrl = L"app://domain";
 	viewInfo.szUrl = L"http://domain";
 	//viewInfo.szUrl = L"https://www.google.com.ua";
 	SendMessage(WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_OPEN, reinterpret_cast<LPARAM>(&viewInfo));
+	*/
 
 	/*
 	CRect rect;

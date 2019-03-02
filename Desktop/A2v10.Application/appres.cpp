@@ -117,7 +117,6 @@ void CApplicationResources::Init() {
 	{
 		de.ReportError();
 	}
-
 }
 
 // static 

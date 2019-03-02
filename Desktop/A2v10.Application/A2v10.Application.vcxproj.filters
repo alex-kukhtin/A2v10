@@ -60,6 +60,12 @@
     <ClInclude Include="upload.h">
       <Filter>Header Files\NativeFunctions</Filter>
     </ClInclude>
+    <ClInclude Include="defaultview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="logindlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -97,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="upload.cpp">
       <Filter>Source Files\NativeFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logindlg.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

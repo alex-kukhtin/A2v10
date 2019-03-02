@@ -11,6 +11,7 @@
 #include "cefclient.h"
 #include "cefview.h"
 #include "cefapp.h"
+#include "defaultview.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -48,7 +49,7 @@ CMainApp::CMainApp()
 
 	// TODO: replace application ID string below with unique ID string; recommended
 	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("A2v10.Application.AppID.NoVersion"));
+	SetAppID(_T("A2v10.Desktop.NoVersion"));
 
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
@@ -79,7 +80,7 @@ BOOL CMainApp::InitInstance()
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CWorkarea),
 		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
-		RUNTIME_CLASS(CCefView));
+		RUNTIME_CLASS(CDefaultView));
 	if (!pDocTemplate)
 		return FALSE;
 	m_pDocTemplate = pDocTemplate;
@@ -115,6 +116,7 @@ BOOL CMainApp::InitInstance()
 		pSysMenu->AppendMenu(MF_STRING, IDM_SYS_ABOUTBOX, strAbout);
 	}
 
+	m_pMainWnd->PostMessage(WM_COMMAND, ID_APP_START);
 	return TRUE;
 }
 

@@ -32,16 +32,19 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_COMMAND(ID_APP_TOOLS, OnAppTools)
 	ON_WM_CLOSE()
 	ON_WM_DESTROY()
+	ON_COMMAND(ID_APP_LOAD, OnAppLoad)
 END_MESSAGE_MAP()
 
 
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame()
-: m_nViewId(AFX_IDW_PANE_FIRST + 1), 
+: m_nViewId(AFX_IDW_PANE_FIRST + 2), 
   m_captionButtons(IDMENU_TOOLS)
 {
-	m_navigateTabs.AddTab(EMPTYSTR, nullptr, m_nViewId);
+	// After create browser
+// TODO:CEF
+//m_navigateTabs.AddTab(EMPTYSTR, nullptr, m_nViewId);
 }
 
 CMainFrame::~CMainFrame()
@@ -113,6 +116,10 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	if (pApp->m_pMainWnd == nullptr)
 		pApp->m_pMainWnd = this;
 
+	if (m_navigateTabs.GetButtonsCount() == 0)
+		return TRUE;
+
+	// TODO:CEF
 	CWnd* pActiveView = GetDlgItem(AFX_IDW_PANE_FIRST);
 	CNavTab* pFirstTab = m_navigateTabs.GetTab(0);
 
@@ -140,8 +147,8 @@ void CMainFrame::CreateNewView(CEF_VIEW_INFO* pViewInfo)
 	::SetWindowLong(pActiveView->m_hWnd, GWL_ID, nViewId);
 	::SetWindowLong(pNewView->m_hWnd, GWL_ID, AFX_IDW_PANE_FIRST);
 
-	CString title(pViewInfo->szUrl);
-	title.Replace(L"http://domain/", EMPTYSTR);
+	CString title;
+	VERIFY(title.LoadString(IDS_LOADING));
 	m_navigateTabs.AddTab(title, pNewView->GetSafeHwnd(), nViewId);
 	GetActiveDocument()->SetTitle(title);
 
@@ -230,9 +237,11 @@ LRESULT CMainFrame::OnCefViewCommand(WPARAM wParam, LPARAM lParam)
 			return 0L;
 		CWnd* pWnd = GetDlgItem(AFX_IDW_PANE_FIRST);
 		if (pWnd) {
+			CString title(pViewInfo->szTitle);
+			title.Replace(L"domain/", L"");
 			CNavTab* pTab = m_navigateTabs.FindTab(pWnd->GetSafeHwnd());
-			if (pTab && pTab->SetText(pViewInfo->szTitle)) {
-				GetActiveDocument()->SetTitle(pViewInfo->szTitle);
+			if (pTab && pTab->SetText(title)) {
+				GetActiveDocument()->SetTitle(title);
 				RecalcLayout();
 				Invalidate();
 			}
@@ -281,4 +290,13 @@ void CMainFrame::OnClose()
 void CMainFrame::OnDestroy()
 {
 	__super::OnDestroy();
+}
+
+// afx_msg
+void CMainFrame::OnAppLoad()
+{
+	CEF_VIEW_INFO viewInfo;
+	viewInfo.szUrl = L"http://domain";
+	HWND hFrame = GetSafeHwnd();
+	::SendMessage(hFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
 }

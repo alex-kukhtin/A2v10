@@ -33,9 +33,20 @@
 #define IDC_TEXT3						14018
 #define IDC_TEXT4						14019
 #define IDC_TEXT5						14020
+#define IDC_RADIO1			14021
+#define IDC_RADIO2			14022
+#define IDC_RADIO3			14023
+#define IDC_RADIO4			14024
+#define IDC_RADIO5			14025
+#define IDC_CHECK1			14026
+#define IDC_CHECK2			14027
+#define IDC_CHECK3			14028
+#define IDC_CHECK4			14029
+#define IDC_CHECK5			14030
 #define IDS_ID_APP_ABOUT				17000
 #define IDS_ID_TOOLS_OPTIONS			17001
 #define IDS_ID_SHOW_DEVTOOLS			17002
+#define IDS_LOADING						18000
 #define ID_SHOW_DEVTOOLS				32154
 #define ID_TOOLS_OPTIONS                32400
 

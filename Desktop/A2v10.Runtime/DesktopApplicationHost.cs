@@ -1,15 +1,14 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Data.SqlClient;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
-using System.Data.SqlClient;
-using A2v10.Web.Base;
 using A2v10.Request;
 
 namespace A2v10.Runtime
@@ -31,21 +30,12 @@ namespace A2v10.Runtime
 
 		public IProfiler Profiler => _profiler;
 
-		public String AppPath
-		{
-			get
-			{
-				// TODO: CONFIG
-				return "C:/Temp/apps";
-				//return "C:/Git/app.main/apps";
-				/*
-                String path = ConfigurationManager.AppSettings["appPath"];
-                if (path == null)
-                    throw new ConfigurationErrorsException("Configuration parameter 'appSettings/appPath' not defined");
-                return path;
-                */
-			}
-		}
+		private static String CurrentAppPath { get; set; }
+		private static String CurrentAppKey { get; set; }
+		private static String CurrentAppConnectionString { get; set; }
+
+		public String AppPath => CurrentAppPath;
+		public String AppKey => CurrentAppKey;
 
 		public String HostingPath
 		{
@@ -59,15 +49,6 @@ namespace A2v10.Runtime
 		public String AppDescription => "A2v10.Desktop";
 		public String SupportEmail => null;
 		public String AppHost => null;
-
-		public String AppKey
-		{
-			get
-			{
-				// TODO: CONFIG
-				return "bookkeeper"; //ConfigurationManager.AppSettings["appKey"];
-			}
-		}
 
 		public String Theme => null;
 		public String HelpUrl => "http://help";
@@ -113,29 +94,10 @@ namespace A2v10.Runtime
 		public String AppBuild => AppInfo.MainAssembly.Build;
 		public String Copyright => AppInfo.MainAssembly.Copyright;
 
+
 		public String ConnectionString(String source)
 		{
-			return "Data Source=localhost;Initial Catalog=bookkeeper;Integrated Security=True";
-			/*
-			if (String.IsNullOrEmpty(source))
-				source = "Default";
-
-			if (source == "Default")
-				return "Data Source=localhost;Initial Catalog=a2v10demo;Integrated Security=True";
-			*/
-
-			throw new ArgumentOutOfRangeException($"Connection string '{source}' not found");
-			/*
-            String cnnStr = null;
-            if (_cnnStrings.TryGetValue(source, out cnnStr))
-                return cnnStr;
-            var strSet = ConfigurationManager.ConnectionStrings[source];
-            if (strSet == null)
-                throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-            cnnStr = strSet.ConnectionString;
-            _cnnStrings.Add(source, strSet.ConnectionString);
-            return cnnStr;
-            */
+			return CurrentAppConnectionString;
 		}
 
 		public String ZipApplicationFile
@@ -168,5 +130,15 @@ namespace A2v10.Runtime
 		{
 		}
 		#endregion
+
+		internal static void StartApplication(String cnnString)
+		{
+			var appConfig = new AppConfiguration();
+			appConfig.Load(cnnString);
+
+			CurrentAppConnectionString = cnnString;
+			CurrentAppPath = appConfig.AppPath;
+			CurrentAppKey = appConfig.AppKey;
+		}
 	}
 }
