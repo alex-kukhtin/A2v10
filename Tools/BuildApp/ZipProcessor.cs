@@ -43,7 +43,7 @@ namespace BuildApp
 			foreach (var f in Directory.GetFiles(srcDir))
 			{
 				String fn = Path.GetFileName(f).ToLowerInvariant();
-				if (IsSkipFile(fn))
+				if (IsSkipFile(fn, dir))
 					continue;
 				String zipPath = Path.Combine(dir, fn).Replace("\\", "/");
 				za.CreateEntryFromFile(f, zipPath);
@@ -57,12 +57,18 @@ namespace BuildApp
 			}
 		}
 
-		Boolean IsSkipFile(String fileName)
+		Boolean IsSkipFile(String fileName, String dirName)
 		{
-			if (Path.GetExtension(fileName) == ".sql")
+			String ext = Path.GetExtension(fileName).ToLowerInvariant();
+			if (ext == ".sql")
 				return true;
-			if (fileName == "sql.json")
+			else if (fileName == "sql.json")
 				return true;
+			else if (ext == ".pdf")
+			{
+				if (dirName.StartsWith("fiscal_report/"))
+					return true;
+			}
 			return false;
 		}
 	}

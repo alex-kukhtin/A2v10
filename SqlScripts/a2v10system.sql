@@ -1,11 +1,11 @@
-﻿/* 20180831-7047 */
+﻿/* 20190303-7048 */
 
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 31 aug 2018
-module version : 7047
+Last updated : 04 mar 2018
+module version : 7048
 */
 ------------------------------------------------
 set noexec off;
@@ -39,9 +39,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7047);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7048);
 else
-	update a2sys.Versions set [Version] = 7047 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7048 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -77,6 +77,18 @@ begin
 	set @i = cast(@f as int);
 	set @ret = cast(@i as datetime);
 	return @ret;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_trim') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_trim;
+go
+------------------------------------------------
+create function a2sys.fn_trim(@value nvarchar(max))
+returns nvarchar(max)
+as
+begin
+	return ltrim(rtrim(@value));
 end
 go
 ------------------------------------------------
