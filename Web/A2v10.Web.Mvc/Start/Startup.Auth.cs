@@ -1,9 +1,7 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
-using System.Web.Helpers;
-using System.Security.Claims;
 using System.Web;
 
 using Owin;
@@ -39,7 +37,10 @@ namespace A2v10.Web.Mvc.Start
 							return user.GetUserId<Int64>();
 						},
 						regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager)
-					)
+					),
+				OnResponseSignedIn = (context) =>
+				{
+				}
 			};
 
 			var originalHandler = authProvider.OnApplyRedirect;

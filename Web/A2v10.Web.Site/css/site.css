@@ -5689,9 +5689,8 @@ h5,
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 2.25rem;
-  height: 2.25rem;
-  border-bottom: 1px solid #ddd;
+  min-height: 32px;
+  height: 32px;
 }
 .debug-panel .debug-body {
   overflow: auto;

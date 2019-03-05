@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
+using A2v10.Web.Mvc.Filters;
 using System.Web.Mvc;
 
 namespace A2v10.Web.Mvc.Start

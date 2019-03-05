@@ -10562,6 +10562,11 @@ Vue.directive('resize', {
 					if (ccd)
 						result.canClose = ccd.bind(this.$data);
 				}
+				if (json.getResult) {
+					let grd = this.$delegate(json.getResult);
+					if (grd)
+						result.getResult = grd.bind(this.$data);
+				}
 				if (json.alwaysOk)
 					result.alwaysOk = true;
 				return result;
@@ -11070,35 +11075,45 @@ Vue.directive('resize', {
 
 			eventBus.$on('modalClose', function (result) {
 
-				function closeImpl() {
+				function closeImpl(closeResult) {
 					let dlg = me.modals.pop();
-					if (result)
-						dlg.resolve(result);
+					if (closeResult)
+						dlg.resolve(closeResult);
 				}
 
 				if (!me.modals.length) return;
 
 				let dlg = me.modals[me.modals.length - 1];
+
 				if (!dlg.attrs) {
-					closeImpl();
+					closeImpl(result);
 					return;
 				}
 
-				if (dlg.attrs.alwaysOk) result = true;
+				function getResult(oldResult) {
+					let gr = dlg.attrs.getResult;
+					if (gr) return gr(oldResult);
+					return oldResult;
+				}
+
+				if (dlg.attrs.alwaysOk)
+					result = true;
 
 				if (dlg.attrs.canClose) { 
 					let canResult = dlg.attrs.canClose();
 					//console.dir(canResult);
-					if (canResult === true)
-						closeImpl();
+					if (canResult === true) {
+						closeImpl(getResult(result));
+					}
 					else if (canResult.then) {
 						result.then(function (innerResult) {
-							if (innerResult)
-								closeImpl();
+							if (innerResult) {
+								closeImpl(getResult(result));
+							}
 						});
 					}
 				} else {
-					closeImpl();
+					closeImpl(getResult(result));
 				}
 			});
 

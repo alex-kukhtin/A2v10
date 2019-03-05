@@ -694,6 +694,8 @@ namespace A2v10.Web.Mvc.Controllers
 		public ActionResult LogOff()
 		{
 			AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+			Session.Abandon();
+			ClearAllCookies();
 			return RedirectToLocal("~/");
 		}
 

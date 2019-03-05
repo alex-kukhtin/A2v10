@@ -1066,6 +1066,11 @@
 					if (ccd)
 						result.canClose = ccd.bind(this.$data);
 				}
+				if (json.getResult) {
+					let grd = this.$delegate(json.getResult);
+					if (grd)
+						result.getResult = grd.bind(this.$data);
+				}
 				if (json.alwaysOk)
 					result.alwaysOk = true;
 				return result;
