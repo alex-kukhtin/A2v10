@@ -1,14 +1,8 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190219-7436
+// 20190305-7456
 // components/modal.js
 
-
-/*
-			<ul v-if="hasList">
-				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
-			</ul>
- */
 
 (function () {
 
@@ -18,7 +12,7 @@
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded"></include>
+	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
@@ -184,6 +178,9 @@
 						this._tabElems[0].el.focus();
 					}
 				}
+			},
+			__modalRequery() {
+				alert('requery');
 			}
 		},
 		computed: {

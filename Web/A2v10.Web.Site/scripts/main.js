@@ -3737,15 +3737,16 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20190305-7456
 /*components/include.js*/
 
 (function () {
 
 	const http = require('std:http');
 	const urlTools = require('std:url');
+	const eventBus = require('std:eventBus');
 
 	function _destroyElement(el) {
 		let fc = el.firstElementChild;
@@ -3765,6 +3766,7 @@ app.modules['std:routing'] = function () {
 			src: String,
 			cssClass: String,
 			needReload: Boolean,
+			insideDialog: Boolean,
 			done: Function
 		},
 		data() {
@@ -3777,6 +3779,8 @@ app.modules['std:routing'] = function () {
 		methods: {
 			loaded(ok) {
 				this.loading = false;
+				if (this.insideDialog)
+					eventBus.$emit('modalCreated', this);
 				if (this.done)
 					this.done();
 			},
@@ -3790,6 +3794,12 @@ app.modules['std:routing'] = function () {
 			__destroy() {
 				//console.warn('include has been destroyed');
 				_destroyElement(this.$el);
+			},
+			modalRequery() {
+				if (!this.insideDialog) return;
+				setTimeout(() => {
+					this.requery();
+				},1)
 			}
 		},
 		computed: {
@@ -3852,7 +3862,6 @@ app.modules['std:routing'] = function () {
 				_destroyElement(this.$el);
 			},
 			loaded() {
-
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
@@ -7469,15 +7478,9 @@ TODO:
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190219-7436
+// 20190305-7456
 // components/modal.js
 
-
-/*
-			<ul v-if="hasList">
-				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
-			</ul>
- */
 
 (function () {
 
@@ -7487,7 +7490,7 @@ TODO:
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded"></include>
+	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
@@ -7653,6 +7656,9 @@ TODO:
 						this._tabElems[0].el.focus();
 					}
 				}
+			},
+			__modalRequery() {
+				alert('requery');
 			}
 		},
 		computed: {
@@ -9490,7 +9496,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190228-7447
+// 20190305-7456
 // controllers/base.js
 
 (function () {
@@ -9816,7 +9822,7 @@ Vue.directive('resize', {
 
 			$requery() {
 				if (this.inDialog)
-					alert('$requery command is not supported in dialogs');
+					eventBus.$emit('modalRequery');
 				else
 					eventBus.$emit('requery');
 			},
@@ -10610,7 +10616,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180221-7439*/
+/*20180305-7456*/
 /* controllers/shell.js */
 
 (function () {
@@ -11043,6 +11049,23 @@ Vue.directive('resize', {
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				dlg.attrs = instance.__parseControllerAttributes(attr);
+			});
+
+			eventBus.$on('modalCreated', function (instance) {
+				// include instance!
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				dlg.instance = instance;
+			});
+
+			eventBus.$on('modalRequery', function () {
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				let inst = dlg.instance; // include instance
+				if (inst && inst.modalRequery)
+					inst.modalRequery();
 			});
 
 			eventBus.$on('modalClose', function (result) {

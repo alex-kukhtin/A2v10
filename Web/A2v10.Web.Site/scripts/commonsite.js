@@ -3433,15 +3433,16 @@ Vue.component('a2-pager', {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180426-7167
+// 20190305-7456
 /*components/include.js*/
 
 (function () {
 
 	const http = require('std:http');
 	const urlTools = require('std:url');
+	const eventBus = require('std:eventBus');
 
 	function _destroyElement(el) {
 		let fc = el.firstElementChild;
@@ -3461,6 +3462,7 @@ Vue.component('a2-pager', {
 			src: String,
 			cssClass: String,
 			needReload: Boolean,
+			insideDialog: Boolean,
 			done: Function
 		},
 		data() {
@@ -3473,6 +3475,8 @@ Vue.component('a2-pager', {
 		methods: {
 			loaded(ok) {
 				this.loading = false;
+				if (this.insideDialog)
+					eventBus.$emit('modalCreated', this);
 				if (this.done)
 					this.done();
 			},
@@ -3486,6 +3490,12 @@ Vue.component('a2-pager', {
 			__destroy() {
 				//console.warn('include has been destroyed');
 				_destroyElement(this.$el);
+			},
+			modalRequery() {
+				if (!this.insideDialog) return;
+				setTimeout(() => {
+					this.requery();
+				},1)
 			}
 		},
 		computed: {
@@ -3548,7 +3558,6 @@ Vue.component('a2-pager', {
 				_destroyElement(this.$el);
 			},
 			loaded() {
-
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
@@ -3587,15 +3596,9 @@ Vue.component('a2-pager', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190219-7436
+// 20190305-7456
 // components/modal.js
 
-
-/*
-			<ul v-if="hasList">
-				<li v-for="(li, lx) in dialog.list" :key="lx", v-text="li" />
-			</ul>
- */
 
 (function () {
 
@@ -3605,7 +3608,7 @@ Vue.component('a2-pager', {
 
 	const modalTemplate = `
 <div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
-	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded"></include>
+	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
 		<div :class="bodyClass">
@@ -3771,6 +3774,9 @@ Vue.component('a2-pager', {
 						this._tabElems[0].el.focus();
 					}
 				}
+			},
+			__modalRequery() {
+				alert('requery');
 			}
 		},
 		computed: {

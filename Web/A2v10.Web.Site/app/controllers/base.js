@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190228-7447
+// 20190305-7456
 // controllers/base.js
 
 (function () {
@@ -326,7 +326,7 @@
 
 			$requery() {
 				if (this.inDialog)
-					alert('$requery command is not supported in dialogs');
+					eventBus.$emit('modalRequery');
 				else
 					eventBus.$emit('requery');
 			},

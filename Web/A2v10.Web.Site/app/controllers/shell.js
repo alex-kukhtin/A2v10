@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180221-7439*/
+/*20180305-7456*/
 /* controllers/shell.js */
 
 (function () {
@@ -433,6 +433,23 @@
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				dlg.attrs = instance.__parseControllerAttributes(attr);
+			});
+
+			eventBus.$on('modalCreated', function (instance) {
+				// include instance!
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				dlg.instance = instance;
+			});
+
+			eventBus.$on('modalRequery', function () {
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				let inst = dlg.instance; // include instance
+				if (inst && inst.modalRequery)
+					inst.modalRequery();
 			});
 
 			eventBus.$on('modalClose', function (result) {
