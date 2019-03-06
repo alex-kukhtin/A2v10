@@ -2226,6 +2226,8 @@ Vue.component('a2-pager', {
 	}
 
 	function propFromPath(path) {
+		if (!path)
+			return '';
 		let propIx = path.lastIndexOf('.');
 		return path.substring(propIx + 1);
 	}
@@ -2468,7 +2470,8 @@ Vue.component('a2-pager', {
 
 		let constructEvent = ctorname + '.construct';
 		let _lastCaller = null;
-		elem._root_.$emit(constructEvent, elem);
+		let propForConstruct = path ? propFromPath(path) : '';
+		elem._root_.$emit(constructEvent, elem, propForConstruct);
 		if (elem._root_ === elem) {
 			// root element
 			elem._root_ctor_ = elem.constructor;

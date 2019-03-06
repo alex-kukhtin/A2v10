@@ -111,6 +111,7 @@ namespace A2v10.Xaml
 		public ShadowStyle DropShadow { get; set; }
 		public AutoFlowMode AutoFlow { get; set; }
 		public AlignItem AlignItems { get; set; }
+		public GapSize Gap { get; set; }
 
 		RowDefinitions _rows;
 		ColumnDefinitions _columns;
@@ -163,6 +164,8 @@ namespace A2v10.Xaml
 				grid.AddCssClass("drop-shadow");
 				grid.AddCssClass(DropShadow.ToString().ToLowerInvariant());
 			}
+			if (Gap != null)
+				grid.MergeStyle("grid-gap", Gap.ToString());
 
 			if (AutoFlow != AutoFlowMode.Default)
 				grid.MergeStyle("grid-auto-flow", AutoFlow.ToString().ToKebabCase(delim:" "));

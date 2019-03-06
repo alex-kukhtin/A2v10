@@ -37,6 +37,16 @@ namespace A2v10.Xaml
 			}
 			return t;
 		}
+
+		public String ToAttribute()
+		{
+			if (Width == null && Height == null)
+				return null;
+			if (Width == Height)
+				return Width.ToString();
+			else
+				return $"{Width.ToString()} {Height.ToString()}";
+		}
 	}
 
 	public class SizeConverter : TypeConverter
