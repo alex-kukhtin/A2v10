@@ -1866,7 +1866,7 @@ app.modules['std:validators'] = function () {
 
 /*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190223-7441
+// 20190306-7457
 // services/datamodel.js
 
 (function () {
@@ -2207,7 +2207,8 @@ app.modules['std:validators'] = function () {
 			};
 			elem._fireLoad_ = () => {
 				platform.defer(() => {
-					elem.$emit('Model.load', elem, _lastCaller);
+					let isRequery = elem.$vm.__isModalRequery();
+					elem.$emit('Model.load', elem, _lastCaller, isRequery);
 					elem._root_.$setDirty(false);
 				});
 			};
@@ -3739,7 +3740,7 @@ app.modules['std:routing'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190305-7456
+// 20190306-7457
 /*components/include.js*/
 
 (function () {
@@ -9496,7 +9497,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190305-7456
+// 20190306-7457
 // controllers/base.js
 
 (function () {
@@ -10120,11 +10121,12 @@ Vue.directive('resize', {
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {
-								if (arg.$merge)
-									arg.$merge(result);
-								if (opts && opts.reloadAfter) {
+								if (result === 'reload')
 									that.$reload();
-								}
+								else if (arg.$merge && utils.isObjectExact(result))
+									arg.$merge(result);
+								else if (opts && opts.reloadAfter)
+									that.$reload();
 							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
@@ -10562,14 +10564,14 @@ Vue.directive('resize', {
 					if (ccd)
 						result.canClose = ccd.bind(this.$data);
 				}
-				if (json.getResult) {
-					let grd = this.$delegate(json.getResult);
-					if (grd)
-						result.getResult = grd.bind(this.$data);
-				}
 				if (json.alwaysOk)
 					result.alwaysOk = true;
 				return result;
+			},
+			__isModalRequery() {
+				let arg = { url: this.$baseUrl, result: false };
+				eventBus.$emit('isModalRequery', arg);
+				return arg.result;
 			}
 		},
 		created() {
@@ -10621,7 +10623,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180305-7456*/
+/*20180306-7457*/
 /* controllers/shell.js */
 
 (function () {
@@ -10964,7 +10966,8 @@ Vue.directive('resize', {
 			return {
 				sideBarCollapsed: false,
 				requestsCount: 0,
-				modals: []
+				modals: [],
+				modalRequeryUrl: ''
 			};
 		},
 		computed: {
@@ -11000,6 +11003,7 @@ Vue.directive('resize', {
 		},
 		methods: {
 			setupWrapper(dlg) {
+				this.modalRequeryUrl = '';
 				setTimeout(() => {
 					dlg.wrap = true;
 					//console.dir("wrap:" + dlg.wrap);
@@ -11064,16 +11068,26 @@ Vue.directive('resize', {
 				dlg.instance = instance;
 			});
 
+			eventBus.$on('isModalRequery', function (arg) {
+				if (arg.url && me.modalRequeryUrl && me.modalRequeryUrl === arg.url)
+					arg.result = true;
+			});
+
 			eventBus.$on('modalRequery', function () {
 				if (!me.modals.length)
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				let inst = dlg.instance; // include instance
-				if (inst && inst.modalRequery)
+				if (inst && inst.modalRequery) {
+					me.modalRequeryUrl = dlg.url;
 					inst.modalRequery();
+				}
 			});
 
 			eventBus.$on('modalClose', function (result) {
+
+				if (!me.modals.length) return;
+				const dlg = me.modals[me.modals.length - 1];
 
 				function closeImpl(closeResult) {
 					let dlg = me.modals.pop();
@@ -11081,19 +11095,9 @@ Vue.directive('resize', {
 						dlg.resolve(closeResult);
 				}
 
-				if (!me.modals.length) return;
-
-				let dlg = me.modals[me.modals.length - 1];
-
 				if (!dlg.attrs) {
 					closeImpl(result);
 					return;
-				}
-
-				function getResult(oldResult) {
-					let gr = dlg.attrs.getResult;
-					if (gr) return gr(oldResult);
-					return oldResult;
 				}
 
 				if (dlg.attrs.alwaysOk)
@@ -11102,18 +11106,19 @@ Vue.directive('resize', {
 				if (dlg.attrs.canClose) { 
 					let canResult = dlg.attrs.canClose();
 					//console.dir(canResult);
-					if (canResult === true) {
-						closeImpl(getResult(result));
-					}
+					if (canResult === true)
+						closeImpl(result);
 					else if (canResult.then) {
 						result.then(function (innerResult) {
 							if (innerResult) {
-								closeImpl(getResult(result));
+								closeImpl(innerResult);
 							}
 						});
 					}
+					else if (canResult)
+						closeImpl(canResult);
 				} else {
-					closeImpl(getResult(result));
+					closeImpl(result);
 				}
 			});
 

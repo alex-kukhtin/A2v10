@@ -1,6 +1,6 @@
 ﻿/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190223-7441
+// 20190306-7457
 // services/datamodel.js
 
 (function () {
@@ -341,7 +341,8 @@
 			};
 			elem._fireLoad_ = () => {
 				platform.defer(() => {
-					elem.$emit('Model.load', elem, _lastCaller);
+					let isRequery = elem.$vm.__isModalRequery();
+					elem.$emit('Model.load', elem, _lastCaller, isRequery);
 					elem._root_.$setDirty(false);
 				});
 			};

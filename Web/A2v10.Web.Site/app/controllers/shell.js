@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180305-7456*/
+/*20180306-7457*/
 /* controllers/shell.js */
 
 (function () {
@@ -343,7 +343,8 @@
 			return {
 				sideBarCollapsed: false,
 				requestsCount: 0,
-				modals: []
+				modals: [],
+				modalRequeryUrl: ''
 			};
 		},
 		computed: {
@@ -379,6 +380,7 @@
 		},
 		methods: {
 			setupWrapper(dlg) {
+				this.modalRequeryUrl = '';
 				setTimeout(() => {
 					dlg.wrap = true;
 					//console.dir("wrap:" + dlg.wrap);
@@ -443,16 +445,26 @@
 				dlg.instance = instance;
 			});
 
+			eventBus.$on('isModalRequery', function (arg) {
+				if (arg.url && me.modalRequeryUrl && me.modalRequeryUrl === arg.url)
+					arg.result = true;
+			});
+
 			eventBus.$on('modalRequery', function () {
 				if (!me.modals.length)
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				let inst = dlg.instance; // include instance
-				if (inst && inst.modalRequery)
+				if (inst && inst.modalRequery) {
+					me.modalRequeryUrl = dlg.url;
 					inst.modalRequery();
+				}
 			});
 
 			eventBus.$on('modalClose', function (result) {
+
+				if (!me.modals.length) return;
+				const dlg = me.modals[me.modals.length - 1];
 
 				function closeImpl(closeResult) {
 					let dlg = me.modals.pop();
@@ -460,19 +472,9 @@
 						dlg.resolve(closeResult);
 				}
 
-				if (!me.modals.length) return;
-
-				let dlg = me.modals[me.modals.length - 1];
-
 				if (!dlg.attrs) {
 					closeImpl(result);
 					return;
-				}
-
-				function getResult(oldResult) {
-					let gr = dlg.attrs.getResult;
-					if (gr) return gr(oldResult);
-					return oldResult;
 				}
 
 				if (dlg.attrs.alwaysOk)
@@ -481,18 +483,19 @@
 				if (dlg.attrs.canClose) { 
 					let canResult = dlg.attrs.canClose();
 					//console.dir(canResult);
-					if (canResult === true) {
-						closeImpl(getResult(result));
-					}
+					if (canResult === true)
+						closeImpl(result);
 					else if (canResult.then) {
 						result.then(function (innerResult) {
 							if (innerResult) {
-								closeImpl(getResult(result));
+								closeImpl(innerResult);
 							}
 						});
 					}
+					else if (canResult)
+						closeImpl(canResult);
 				} else {
-					closeImpl(getResult(result));
+					closeImpl(result);
 				}
 			});
 

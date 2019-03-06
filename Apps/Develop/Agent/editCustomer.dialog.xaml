@@ -3,6 +3,7 @@
 	Title="Свойства покупателя" Height="400" Size="Large" CanCloseDelegate="canClose">
 	<Dialog.Buttons>
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}" TabIndex="28"/>
+		<Button Content="Requery" Command="{BindCmd Requery}" />
 		<Button Content="Отмена" Command="{BindCmd Close}" TabIndex="29"/>
 	</Dialog.Buttons>
 	<TabPanel FullPage="True">

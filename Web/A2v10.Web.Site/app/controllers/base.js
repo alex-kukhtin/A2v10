@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190305-7456
+// 20190306-7457
 // controllers/base.js
 
 (function () {
@@ -624,11 +624,12 @@
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {
-								if (arg.$merge)
-									arg.$merge(result);
-								if (opts && opts.reloadAfter) {
+								if (result === 'reload')
 									that.$reload();
-								}
+								else if (arg.$merge && utils.isObjectExact(result))
+									arg.$merge(result);
+								else if (opts && opts.reloadAfter)
+									that.$reload();
 							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
@@ -1066,14 +1067,14 @@
 					if (ccd)
 						result.canClose = ccd.bind(this.$data);
 				}
-				if (json.getResult) {
-					let grd = this.$delegate(json.getResult);
-					if (grd)
-						result.getResult = grd.bind(this.$data);
-				}
 				if (json.alwaysOk)
 					result.alwaysOk = true;
 				return result;
+			},
+			__isModalRequery() {
+				let arg = { url: this.$baseUrl, result: false };
+				eventBus.$emit('isModalRequery', arg);
+				return arg.result;
 			}
 		},
 		created() {
