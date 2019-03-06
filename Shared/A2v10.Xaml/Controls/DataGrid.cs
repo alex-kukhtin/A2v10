@@ -78,6 +78,7 @@ namespace A2v10.Xaml
 			onRender?.Invoke(dataGrid);
 			MergeBindingAttributeBool(dataGrid, context, ":compact", nameof(Compact), Compact);
 			MergeAttributes(dataGrid, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
+			dataGrid.MergeAttribute("key", Guid.NewGuid().ToString()); // disable vue reusing
 			if (Height != null)
 				dataGrid.MergeStyle("height", Height.Value);
 			if (FixedHeader)
