@@ -180,7 +180,7 @@
 						let dataToResolve;
 						let newId;
 						for (let p in data) {
-							// always first element in the result
+							// always first element in the result //TODO:check ????
 							dataToResolve = data[p];
 							newId = self.$data[p].$id; // new element
 							if (dataToResolve)

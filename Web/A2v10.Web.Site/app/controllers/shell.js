@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180306-7457*/
+/*20180307-7460*/
 /* controllers/shell.js */
 
 (function () {
@@ -487,7 +487,9 @@
 						closeImpl(result);
 					else if (canResult.then) {
 						result.then(function (innerResult) {
-							if (innerResult) {
+							if (innerResult === true)
+								closeImpl(result);
+							else if (innerResult) {
 								closeImpl(innerResult);
 							}
 						});

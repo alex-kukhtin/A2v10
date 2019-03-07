@@ -290,6 +290,7 @@ namespace A2v10.Xaml
 		FlagGreen,
 		FlagRed,
 		FlagYellow,
+		Flag2,
 		File,
 		FileContent,
 		FileError,

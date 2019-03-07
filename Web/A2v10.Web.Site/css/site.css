@@ -132,6 +132,9 @@
   content: "\e935";
   color: #16cd16 !important;
 }
+.ico-flag2:before {
+  content: "\e938";
+}
 .ico-approve:before {
   content: "\e936";
 }

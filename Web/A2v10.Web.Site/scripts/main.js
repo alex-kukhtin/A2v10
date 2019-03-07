@@ -3249,9 +3249,9 @@ app.modules['std:popup'] = function () {
 };
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180821-7280*/
+/*20190307-7460*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -3533,7 +3533,12 @@ app.modules['std:mask'] = function () {
 		if (clearSelectionFull(e, this)) return;
 		let pos = getCaretPosition(this);
 		//console.dir(e.which);
-		switch (e.which) {
+		let char = e.which;
+		if (char === 229) {
+			// mobile fix
+			char = e.target.value.charAt(e.target.selectionStart - 1).charCodeAt();
+		}
+		switch (char) {
 			case 37: /* left */
 				setCaretPosition(this, pos - 1, 'l');
 				handled = true;
@@ -9680,7 +9685,7 @@ Vue.directive('resize', {
 						let dataToResolve;
 						let newId;
 						for (let p in data) {
-							// always first element in the result
+							// always first element in the result //TODO:check ????
 							dataToResolve = data[p];
 							newId = self.$data[p].$id; // new element
 							if (dataToResolve)
@@ -10626,7 +10631,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180306-7457*/
+/*20180307-7460*/
 /* controllers/shell.js */
 
 (function () {
@@ -11113,7 +11118,9 @@ Vue.directive('resize', {
 						closeImpl(result);
 					else if (canResult.then) {
 						result.then(function (innerResult) {
-							if (innerResult) {
+							if (innerResult === true)
+								closeImpl(result);
+							else if (innerResult) {
 								closeImpl(innerResult);
 							}
 						});
