@@ -81,6 +81,7 @@
     <Compile Include="Components\Validator.cs" />
     <Compile Include="Controls\Alert.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\ChatItem.cs" />
     <Compile Include="Controls\CheckBox.cs" />
     <Compile Include="Controls\CheckBoxBase.cs" />
     <Compile Include="Controls\Code.cs" />

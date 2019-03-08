@@ -101,6 +101,7 @@
     <Content Include="Develop\Agent\editCustomer.template.js" />
     <Content Include="Develop\Agent\editFolder.template.js" />
     <Content Include="Develop\Agent\editSupplier.template.js" />
+    <Content Include="Develop\Purchase\Supplier\index.template.js" />
     <Content Include="Develop\Reports\report.template.js" />
     <Content Include="Develop\sales\assets\assets.template.js" />
     <Content Include="Develop\sales\assets\diagram.html" />

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181104-7343*/
+/*20190308-7461*/
 /*components/textbox.js*/
 
 (function () {
@@ -31,7 +31,7 @@
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
+		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
@@ -78,7 +78,8 @@
 			placeholder: String,
 			password: Boolean,
 			number: Boolean,
-			spellCheck: { type: Boolean, default: undefined }
+			spellCheck: { type: Boolean, default: undefined },
+			keyPressDelegate: String
 		},
 		computed: {
 			controlType() {
@@ -106,6 +107,13 @@
 					this.updateValue(value);
 			},
 			onKey(event) {
+				if (this.keyPressDelegate) {
+					let dlgt = this.item.$vm.$delegate(this.keyPressDelegate);
+					if (dlgt && dlgt.call(this.item.$root, event.charCode)) {
+						this.$refs.input.value = this.modelValue;
+						return;
+					}
+				}
 				if (!this.number) return;
 				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
@@ -152,7 +160,19 @@
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
 			}
+		},
+		watch: {
+			modelValue() {
+				if (!this.autoSize) return;
+				let inp = this.$refs.input;
+				if (!inp) return;
+				// send for auto size
+				var evt = document.createEvent('HTMLEvents');
+				evt.initEvent('autosize', false, true);
+				inp.dispatchEvent(evt);
+			}
 		}
+
 	});
 
 	Vue.component('static', {

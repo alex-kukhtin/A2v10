@@ -28,13 +28,22 @@
         <Pager Source="{Bind Parent.Pager}" />
     </Page.Pager>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False"
                 DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents}}">
         <DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
         <DataGridColumn Header="Наименование" Content="{Bind Name}"/>
         <DataGridColumn Header="Код ЕДРПОУ" Content="{Bind Code}" Align="Right" Fit="True"/>
         <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
 	</DataGrid>
+	<Block Width="250" Background="WhiteSmoke" Padding="1rem">
+		<List ItemsSource="{Bind Parent.ItemsSource}" Style="Chat" Height="200" AutoSelect="LastItem">
+			<ChatItem Content="{Bind Name}" User="{Bind Memo}" Time="{Bind Id}"/>
+		</List>
+		<TextBox Placeholder="Напишіть комментар" Margin="5,0" UpdateTrigger="Input"
+				 Value="{Bind Root.$comment}" Multiline="True" AutoSize="True">
+			<TextBox.AddOns>
+				<Hyperlink Icon="Send" Command="{BindCmd Execute, CommandName=enterComment}"/>
+			</TextBox.AddOns>
+		</TextBox>
+	</Block>
 </Page>
-
-    

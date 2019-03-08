@@ -1,5 +1,6 @@
 ﻿
 @list-body-color:#999;
+@chat-gap: .5rem;
 
 .a2-list {
 	list-style-type: none;
@@ -60,7 +61,7 @@
 			cursor: default;
 
 			&:hover {
-				background-color: #f9f9f9!important;
+				background-color: #f9f9f9 !important;
 			}
 		}
 	}
@@ -96,6 +97,21 @@
 
 		.a2-list-item.group:not(:first-child) {
 			border-top-style: none;
+		}
+	}
+
+	&.chat {
+		user-select: text;
+
+		.a2-list-item {
+			padding: 0;
+			background-color: transparent;
+			border: none;
+			cursor: default;
+
+			&:hover, &.active {
+				background-color: transparent !important;
+			}
 		}
 	}
 
@@ -170,11 +186,50 @@
 	}
 }
 
-ul.news-list {
-	padding:0;
-	margin:0;
-	list-style:none;
-	> li {
-		margin:.5rem 0;
+.chat-item {
+	padding: @chat-gap / 2;
+	display: inline-block;
+	text-align: left;
+
+	.chat-time, .chat-user {
+		font-size: @font-size-small;
+		color: @dark-gray-text-color;
+	}
+
+	.chat-time {
+		margin-left: @chat-gap;
+	}
+
+	.chat-user {
+		font-weight: @font-bold;
+	}
+
+	.chat-body {
+		background-color: #fffce9;
+		padding: @chat-gap;
+		margin: 6px 0 3px 0;
+		display: block;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.12); //, 0 1px 2px rgba(0,0,0,0.24);
+		position: relative;
+		white-space:pre-line;
+
+		&:before {
+			content: '';
+			border: 6px solid transparent;
+			position: absolute;
+			left: 4px;
+			top: -12px;
+			border-bottom-color: #fffce9;
+		}
 	}
 }
+
+ul.news-list {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+
+		> li {
+			margin: .5rem 0;
+		}
+	}

@@ -273,5 +273,17 @@ namespace A2v10.Xaml
 				.Append(bSelfClosing ? "/>" : ">");
 			return sb.ToString();
 		}
+
+		public static void RenderSpanText(RenderContext context, String cssClass, Bind binding, String value = null)
+		{
+			if (binding == null)
+				return;
+			var tag = new TagBuilder("span", cssClass);
+			tag.MergeAttribute("v-text", binding.GetPathFormat(context));
+			tag.RenderStart(context);
+			if (value != null)
+				context.Writer.Write(value);
+			tag.RenderEnd(context);
+		}
 	}
 }

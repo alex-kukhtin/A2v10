@@ -288,28 +288,17 @@ input, select {
 }
 
 /* hide for focused */
-input::-moz-placeholder {
+input::-moz-placeholder,input:focus::-moz-placeholder,textarea::-moz-placeholder,textarea:focus::-moz-placeholder {
 	color: @placeholder-color;
 }
 
-input:focus::-moz-placeholder {
-	color: transparent;
-}
-
-input:-ms-input-placeholder {
+input:-ms-input-placeholder, textarea:-ms-input-placeholder, input:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder {
 	color: @placeholder-color;
 }
 
-input:focus:-ms-input-placeholder {
-	color: transparent;
-}
 
-input::-webkit-input-placeholder {
+input::-webkit-input-placeholder, input:focus::-webkit-input-placeholder, textarea::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
 	color: @placeholder-color;
-}
-
-input:focus::-webkit-input-placeholder {
-	color: transparent;
 }
 
 select {

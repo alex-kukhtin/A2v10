@@ -4121,9 +4121,9 @@ Vue.component('validator-control', {
     }
 });
 */
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181104-7343*/
+/*20190308-7461*/
 /*components/textbox.js*/
 
 (function () {
@@ -4154,7 +4154,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
-		<textarea v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
+		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
@@ -4201,7 +4201,8 @@ Vue.component('validator-control', {
 			placeholder: String,
 			password: Boolean,
 			number: Boolean,
-			spellCheck: { type: Boolean, default: undefined }
+			spellCheck: { type: Boolean, default: undefined },
+			keyPressDelegate: String
 		},
 		computed: {
 			controlType() {
@@ -4229,6 +4230,13 @@ Vue.component('validator-control', {
 					this.updateValue(value);
 			},
 			onKey(event) {
+				if (this.keyPressDelegate) {
+					let dlgt = this.item.$vm.$delegate(this.keyPressDelegate);
+					if (dlgt && dlgt.call(this.item.$root, event.charCode)) {
+						this.$refs.input.value = this.modelValue;
+						return;
+					}
+				}
 				if (!this.number) return;
 				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
@@ -4275,7 +4283,19 @@ Vue.component('validator-control', {
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
 			}
+		},
+		watch: {
+			modelValue() {
+				if (!this.autoSize) return;
+				let inp = this.$refs.input;
+				if (!inp) return;
+				// send for auto size
+				var evt = document.createEvent('HTMLEvents');
+				evt.initEvent('autosize', false, true);
+				inp.dispatchEvent(evt);
+			}
 		}
+
 	});
 
 	Vue.component('static', {
@@ -7299,7 +7319,7 @@ TODO:
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190118-7419
+// 20190308-7461
 // components/list.js
 
 /* TODO:
@@ -7333,6 +7353,9 @@ TODO:
 			markStyle: String,
 			command: Function,
 			selectable: {
+				type: Boolean, default: true
+			},
+			hover: {
 				type: Boolean, default: true
 			},
 			groupBy: String
@@ -7411,6 +7434,11 @@ TODO:
 					let fe = src[0];
 					this.select(fe);
 					return;
+				} else if (this.autoSelect === 'last-item') {
+					// from source (not $origin!)
+					let fe = src[src.length - 1];
+					this.select(fe);
+					return;
 				} else if (this.autoSelect === 'item-id') {
 					let rootId = this.$root.$modelInfo.Id;
 					if (!utils.isDefined(rootId)) {
@@ -7480,7 +7508,9 @@ TODO:
 			let ix = src.$selectedIndex;
 			let li = this.$refs.li;
 			if (ix !== -1 && li && ix < li.length)
-				li[ix].scrollIntoViewCheck();
+				setTimeout(() => {
+					li[ix].scrollIntoViewCheck();
+				}, 0);
 		}
 	});
 })();
@@ -9102,47 +9132,54 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180122-7095*/
+/*20190308-7461*/
 /* directives/autosize.js */
 
 Vue.directive('autoSize', {
-    bind(el, binding, vnode) {
-        if (!binding.value) return;
+	bind(el, binding, vnode) {
+		if (!binding.value) return;
 
-        el.style.overflowY = false;
-        el._ops = {
-            initHeight: -1,
-            extraSpace: 0
-        };
+		el.style.overflowY = false;
+		el._ops = {
+			initHeight: -1,
+			extraSpace: 0
+		};
 
-        el._autosize = function () {
-            if (!el.offsetHeight)
-                return;
-            const ops = el._ops;
-            if (ops.initHeight === -1) {
-                ops.initHeight = el.offsetHeight;
-            }
-            el.style.height = ops.initHeight + "px";
-            var needHeight = el.scrollHeight + ops.extraSpace;
-            if (needHeight > ops.initHeight)
-                el.style.height = needHeight + "px";
-        };
+		el._autosize = function () {
+			if (!el.offsetHeight)
+				return;
+			const ops = el._ops;
+			if (ops.initHeight === -1) {
+				ops.initHeight = el.offsetHeight;
+			}
+			el.style.height = ops.initHeight + "px";
+			var needHeight = el.scrollHeight + ops.extraSpace;
+			if (needHeight > ops.initHeight)
+				el.style.height = needHeight + "px";
+		};
 
-        function onInput(event) {
-            el._autosize();
-        }
+		function onInput() {
+			el._autosize();
+		}
 
-        el.addEventListener("input", onInput);
-    },
-    inserted(el, binding) {
-        if (!binding.value) return;
-        let style = window.getComputedStyle(el);
-        let es = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-        el._ops.extraSpace = es;
-        setTimeout(() => el._autosize(), 1);
-    }
+		function onAutoSize() {
+			Vue.nextTick(() => el._autosize());
+		}
+
+		el.addEventListener("input", onInput);
+		// Perhaps the value was set programmatically.
+		el.addEventListener("autosize", onAutoSize);
+	},
+
+	inserted(el, binding) {
+		if (!binding.value) return;
+		let style = window.getComputedStyle(el);
+		let es = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+		el._ops.extraSpace = es;
+		setTimeout(() => el._autosize(), 1);
+	}
 });
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.

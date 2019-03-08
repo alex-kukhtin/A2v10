@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190118-7419
+// 20190308-7461
 // components/list.js
 
 /* TODO:
@@ -34,6 +34,9 @@
 			markStyle: String,
 			command: Function,
 			selectable: {
+				type: Boolean, default: true
+			},
+			hover: {
 				type: Boolean, default: true
 			},
 			groupBy: String
@@ -112,6 +115,11 @@
 					let fe = src[0];
 					this.select(fe);
 					return;
+				} else if (this.autoSelect === 'last-item') {
+					// from source (not $origin!)
+					let fe = src[src.length - 1];
+					this.select(fe);
+					return;
 				} else if (this.autoSelect === 'item-id') {
 					let rootId = this.$root.$modelInfo.Id;
 					if (!utils.isDefined(rootId)) {
@@ -181,7 +189,9 @@
 			let ix = src.$selectedIndex;
 			let li = this.$refs.li;
 			if (ix !== -1 && li && ix < li.length)
-				li[ix].scrollIntoViewCheck();
+				setTimeout(() => {
+					li[ix].scrollIntoViewCheck();
+				}, 0);
 		}
 	});
 })();

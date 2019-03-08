@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 		public Boolean Relative { get; set; }
 		public TextAlign Align { get; set; }
 		public TextColor Color { get; set; }
+		public BackgroundStyle Background { get; set; }
 
 		internal virtual void RenderChildren(RenderContext context)
 		{
@@ -55,6 +56,8 @@ namespace A2v10.Xaml
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
 			div.AddCssClassBool(Relative, "relative");
+			if (Background != BackgroundStyle.Default)
+				div.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			//AddHackedBorder(div);
 			if (Color != TextColor.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());

@@ -122,6 +122,7 @@ namespace A2v10.Xaml
 	{
 		None,
 		FirstItem,
+		LastItem,
 		ItemId
 	}
 
@@ -365,6 +366,7 @@ namespace A2v10.Xaml
 		SaveOutline,
 		Search,
 		Security,
+		Send,
 		Server,
 		Share,
 		Square,
