@@ -262,6 +262,8 @@ const vm = new DataModelController({
 				sb.Append($"$rowNo: '{meta.RowNumber}',");
 			if (!String.IsNullOrEmpty(meta.HasChildren))
 				sb.Append($"$hasChildren: '{meta.HasChildren}',");
+			if (!String.IsNullOrEmpty(meta.MapItemType))
+				sb.Append($"$itemType: {meta.MapItemType},");
 			if (!String.IsNullOrEmpty(meta.Permissions))
 				sb.Append($"$permissions: '{meta.Permissions}',");
 			if (!String.IsNullOrEmpty(meta.Items))

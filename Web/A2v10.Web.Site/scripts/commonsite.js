@@ -2468,6 +2468,13 @@ Vue.component('a2-pager', {
 			});
 		}
 
+		if (elem._meta_.$itemType) {
+			elem.$setProperty = function (prop, src) {
+				let itmPath = path + '.' + prop;
+				platform.set(this, prop, new elem._meta_.$itemType(src, itmPath, elem));
+			};
+		}
+
 		let constructEvent = ctorname + '.construct';
 		let _lastCaller = null;
 		let propForConstruct = path ? propFromPath(path) : '';

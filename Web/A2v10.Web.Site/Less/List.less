@@ -1,5 +1,5 @@
 ﻿
-@list-body-color:#999;
+@list-body-color: #999;
 @chat-gap: .5rem;
 
 .a2-list {
@@ -158,10 +158,10 @@
 		grid-row: 1;
 		grid-column: 2;
 		margin-bottom: 4px;
-		font-size:1.05rem;
-		overflow:hidden;
-		text-overflow:ellipsis;
-		padding-bottom:3px; /*for 'g' letters */
+		font-size: 1.05rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-bottom: 3px; /*for 'g' letters */
 	}
 
 	.list-item-footer {
@@ -188,7 +188,7 @@
 
 .chat-item {
 	padding: @chat-gap / 2;
-	display: inline-block;
+	display: block;
 	text-align: left;
 
 	.chat-time, .chat-user {
@@ -204,14 +204,31 @@
 		font-weight: @font-bold;
 	}
 
+	.chat-add-on {
+		float: right;
+		font-size: @font-size-small;
+
+		.ico {
+			font-size: @font-size-small;
+		}
+
+		.dropdown {
+			border-radius:10rem;
+			padding:2px 4px;
+			&.show {
+				background-color: #ddd;
+			}
+		}
+	}
+
 	.chat-body {
 		background-color: #fffce9;
 		padding: @chat-gap;
 		margin: 6px 0 3px 0;
-		display: block;
+		display: inline-block;
 		box-shadow: 0 1px 2px rgba(0,0,0,0.12); //, 0 1px 2px rgba(0,0,0,0.24);
 		position: relative;
-		white-space:pre-line;
+		white-space: pre-line;
 
 		&:before {
 			content: '';
@@ -225,11 +242,11 @@
 }
 
 ul.news-list {
-		padding: 0;
-		margin: 0;
-		list-style: none;
+	padding: 0;
+	margin: 0;
+	list-style: none;
 
-		> li {
-			margin: .5rem 0;
-		}
+	> li {
+		margin: .5rem 0;
 	}
+}

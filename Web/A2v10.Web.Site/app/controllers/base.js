@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190306-7457
+// 20190309-7461
 // controllers/base.js
 
 (function () {
@@ -597,6 +597,13 @@
 				function doDialog() {
 					// result always is raw data
 					switch (command) {
+						case 'new':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, 0, query, (result) => {
+								let sel = arg.$selected;
+								if (sel)
+									sel.$merge(result);
+							});
 						case 'append':
 							if (argIsNotAnArray()) return;
 							return __runDialog(url, 0, query, (result) => { arg.$append(result); });

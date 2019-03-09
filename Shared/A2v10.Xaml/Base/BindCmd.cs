@@ -58,6 +58,7 @@ namespace A2v10.Xaml
 		Show,
 		Browse,
 		Append, // create in dialog and append to array,
+		New, // create in dialog and update selected in array;
 		Copy
 	}
 

@@ -2182,6 +2182,13 @@ app.modules['std:validators'] = function () {
 			});
 		}
 
+		if (elem._meta_.$itemType) {
+			elem.$setProperty = function (prop, src) {
+				let itmPath = path + '.' + prop;
+				platform.set(this, prop, new elem._meta_.$itemType(src, itmPath, elem));
+			};
+		}
+
 		let constructEvent = ctorname + '.construct';
 		let _lastCaller = null;
 		let propForConstruct = path ? propFromPath(path) : '';
@@ -9542,7 +9549,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190306-7457
+// 20190309-7461
 // controllers/base.js
 
 (function () {
@@ -10139,6 +10146,13 @@ Vue.directive('resize', {
 				function doDialog() {
 					// result always is raw data
 					switch (command) {
+						case 'new':
+							if (argIsNotAnArray()) return;
+							return __runDialog(url, 0, query, (result) => {
+								let sel = arg.$selected;
+								if (sel)
+									sel.$merge(result);
+							});
 						case 'append':
 							if (argIsNotAnArray()) return;
 							return __runDialog(url, 0, query, (result) => { arg.$append(result); });

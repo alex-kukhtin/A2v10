@@ -3489,7 +3489,7 @@ tr:hover .commandbar.visible-hover {
 }
 .chat-item {
   padding: 0.25rem;
-  display: inline-block;
+  display: block;
   text-align: left;
 }
 .chat-item .chat-time,
@@ -3503,11 +3503,25 @@ tr:hover .commandbar.visible-hover {
 .chat-item .chat-user {
   font-weight: 600;
 }
+.chat-item .chat-add-on {
+  float: right;
+  font-size: 0.925rem;
+}
+.chat-item .chat-add-on .ico {
+  font-size: 0.925rem;
+}
+.chat-item .chat-add-on .dropdown {
+  border-radius: 10rem;
+  padding: 2px 4px;
+}
+.chat-item .chat-add-on .dropdown.show {
+  background-color: #ddd;
+}
 .chat-item .chat-body {
   background-color: #fffce9;
   padding: 0.5rem;
   margin: 6px 0 3px 0;
-  display: block;
+  display: inline-block;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
   position: relative;
   white-space: pre-line;
@@ -3586,6 +3600,7 @@ ul.news-list > li {
 .modal-header .btnclose {
   float: right;
   color: #aaa;
+  line-height: 1.6rem;
 }
 .modal-header .btnclose:hover,
 .modal-header .btnclose:active,
@@ -4317,7 +4332,7 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  padding: 0.5rem;
+  padding: 2px;
   margin: 3px 0;
   top: 100%;
   min-width: 160px;
@@ -5683,6 +5698,7 @@ h5,
 .super-menu {
   display: grid;
   grid-gap: 1rem;
+  padding: 0.5rem;
 }
 .super-menu.with-width .dropdown-item {
   white-space: normal;
