@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 	public class ChatItem : UIElementBase
 	{
 		public String Content { get; set; }
-		public Object Time { get; set; }
+		public String Time { get; set; }
 		public String User { get; set; }
 
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
@@ -28,8 +28,8 @@ namespace A2v10.Xaml
 
 			var h = new TagBuilder("div", "chat-header");
 			h.RenderStart(context);
-			TagBuilder.RenderSpanText(context, "chat-user", GetBinding(nameof(User)));
-			TagBuilder.RenderSpanText(context, "chat-time", GetBinding(nameof(Time)));
+			TagBuilder.RenderSpanText(context, "chat-user", GetBinding(nameof(User)), User);
+			TagBuilder.RenderSpanText(context, "chat-time", GetBinding(nameof(Time)), Time);
 			RenderAddOns(context);
 			h.RenderEnd(context);
 

@@ -186,6 +186,7 @@ namespace A2v10.Xaml
 			{
 				new TagBuilder("span", "badge")
 					.MergeAttribute("v-text", badgeBind.GetPathFormat(context))
+					.MergeAttribute("v-if", badgeBind.GetPathFormat(context))
 					.Render(context);
 			}
 			else if (!String.IsNullOrEmpty(badge))

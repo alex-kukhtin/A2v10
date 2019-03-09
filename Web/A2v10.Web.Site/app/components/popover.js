@@ -6,7 +6,7 @@
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper" :style="{top: top}">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
 	<div class="popup-body" :style="{width: width}">
 		<div class="arrow" />
 		<div v-if="visible">

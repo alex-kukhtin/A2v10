@@ -31,10 +31,13 @@ namespace A2v10.Xaml
 		public Boolean Compact { get; set; }
 
 		public Length Height { get; set; }
+		public Length MaxHeight { get; set; }
 		public BackgroundStyle Background { get; set; }
 
 		public ListStyle Style { get; set; }
 		public String GroupBy { get; set; }
+
+		public UIElement EmptyPanel { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -76,10 +79,13 @@ namespace A2v10.Xaml
 			MergeAttributes(ul, context);
 			if (Height != null)
 				ul.MergeStyle("height", Height.Value);
+			if (MaxHeight != null)
+				ul.MergeStyle("max-height", MaxHeight.Value);
 			if (AutoSelect != AutoSelectMode.None)
 				ul.MergeAttribute("auto-select", AutoSelect.ToString().ToKebabCase());
 			ul.RenderStart(context);
 			RenderBody(context, isBind != null);
+			RenderEmptyPanel(context);
 			ul.RenderEnd(context);
 		}
 
@@ -115,5 +121,17 @@ namespace A2v10.Xaml
 				tml.RenderEnd(context);
 			}
 		}
+
+		void RenderEmptyPanel(RenderContext context)
+		{
+			if (EmptyPanel == null)
+				return;
+			var panel = new TagBuilder("template");
+			panel.MergeAttribute("slot", "empty");
+			panel.RenderStart(context);
+			EmptyPanel.RenderElement(context);
+			panel.RenderEnd(context);
+		}
+
 	}
 }

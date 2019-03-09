@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180820-7277
+// 20190309-7462
 // components/panel.js
 
 Vue.component('a2-panel', {
@@ -29,7 +29,8 @@ Vue.component('a2-panel', {
 			let cls = "panel";
 			if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
 			if (this.panelStyle) {
-				switch (this.panelStyle.toLowerCase()) {
+				let ps = this.panelStyle.toLowerCase(); 
+				switch (ps) {
 					case "red":
 					case "danger":
 					case "error":
@@ -46,6 +47,9 @@ Vue.component('a2-panel', {
 					case "warning":
 					case "yellow":
 						cls += ' panel-yellow';
+						break;
+					default:
+						cls += ' panel-' + ps;
 						break;
 				}
 			}

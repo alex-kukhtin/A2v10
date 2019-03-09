@@ -1864,9 +1864,9 @@ app.modules['std:validators'] = function () {
 
 
 
-/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190306-7457
+// 20190309-7462
 // services/datamodel.js
 
 (function () {
@@ -2185,7 +2185,10 @@ app.modules['std:validators'] = function () {
 		if (elem._meta_.$itemType) {
 			elem.$setProperty = function (prop, src) {
 				let itmPath = path + '.' + prop;
-				platform.set(this, prop, new elem._meta_.$itemType(src, itmPath, elem));
+				let ne = new elem._meta_.$itemType(src, itmPath, elem);
+				platform.set(this, prop, ne);
+				this._root_.$setDirty(true);
+				return ne;
 			};
 		}
 
@@ -4130,7 +4133,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190308-7461*/
+/*20190309-7462*/
 /*components/textbox.js*/
 
 (function () {
@@ -4164,6 +4167,7 @@ Vue.component('validator-control', {
 		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
+			v-on:keypress="onKey($event)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -4209,7 +4213,7 @@ Vue.component('validator-control', {
 			password: Boolean,
 			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined },
-			keyPressDelegate: String
+			enterCommand: Function
 		},
 		computed: {
 			controlType() {
@@ -4237,13 +4241,6 @@ Vue.component('validator-control', {
 					this.updateValue(value);
 			},
 			onKey(event) {
-				if (this.keyPressDelegate) {
-					let dlgt = this.item.$vm.$delegate(this.keyPressDelegate);
-					if (dlgt && dlgt.call(this.item.$root, event.charCode)) {
-						this.$refs.input.value = this.modelValue;
-						return;
-					}
-				}
 				if (!this.number) return;
 				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
@@ -4268,7 +4265,8 @@ Vue.component('validator-control', {
 			placeholder: String,
 			autoSize: Boolean,
 			rows: Number,
-			spellCheck: { type: Boolean, default:undefined }
+			spellCheck: { type: Boolean, default:undefined },
+			enterCommand: Function
 		},
 		computed: {
 			modelValue2() {
@@ -4289,6 +4287,13 @@ Vue.component('validator-control', {
 			onChange(value) {
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
+			},
+			onKey(event) {
+				if (event.code === "Enter" && event.ctrlKey) {
+					if (this.enterCommand) {
+						this.enterCommand();
+					}
+				}
 			}
 		},
 		watch: {
@@ -6171,7 +6176,7 @@ Vue.component('a2-pager', {
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper" :style="{top: top}">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span></span>
+	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
 	<div class="popup-body" :style="{width: width}">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -7326,7 +7331,7 @@ TODO:
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190308-7461
+// 20190309-7462
 // components/list.js
 
 /* TODO:
@@ -7340,7 +7345,9 @@ TODO:
 
 	Vue.component("a2-list", {
 		template:
-			`<ul class="a2-list" v-lazy="itemsSource">
+
+`
+<ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@click.prevent="select(listItem)" @keydown="keyDown" 
@@ -7348,11 +7355,15 @@ TODO:
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
+		<div class="list-empty" v-if="$isEmpty">
+			<slot name="empty" />
+		</div>
 	</template>
 	<template v-else>
 		<slot />
 	</template>
-</ul>`,
+</ul>
+`,
 		props: {
 			itemsSource: Array,
 			autoSelect: String,
@@ -7404,6 +7415,9 @@ TODO:
 				}
 				//console.dir(rarr);
 				return rarr;
+			},
+			$isEmpty() {
+				return this.itemsSource && this.itemsSource.length === 0;
 			}
 		},
 		methods: {
@@ -7512,12 +7526,12 @@ TODO:
 			}
 			let src = this.itemsSource;
 			if (!src) return;
-			let ix = src.$selectedIndex;
-			let li = this.$refs.li;
-			if (ix !== -1 && li && ix < li.length)
-				setTimeout(() => {
-					li[ix].scrollIntoViewCheck();
-				}, 0);
+			setTimeout(() => {
+				let ix = src.$selectedIndex;
+				let li = this.$refs.li;
+				if (ix !== -1 && li && ix < li.length)
+				li[ix].scrollIntoViewCheck();
+			}, 0);
 		}
 	});
 })();
@@ -8406,9 +8420,9 @@ Vue.component("a2-taskpad", {
 });
 
 
-// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180820-7277
+// 20190309-7462
 // components/panel.js
 
 Vue.component('a2-panel', {
@@ -8437,7 +8451,8 @@ Vue.component('a2-panel', {
 			let cls = "panel";
 			if (this.collapsed) cls += ' collapsed'; else cls += ' expanded';
 			if (this.panelStyle) {
-				switch (this.panelStyle.toLowerCase()) {
+				let ps = this.panelStyle.toLowerCase(); 
+				switch (ps) {
 					case "red":
 					case "danger":
 					case "error":
@@ -8454,6 +8469,9 @@ Vue.component('a2-panel', {
 					case "warning":
 					case "yellow":
 						cls += ' panel-yellow';
+						break;
+					default:
+						cls += ' panel-' + ps;
 						break;
 				}
 			}

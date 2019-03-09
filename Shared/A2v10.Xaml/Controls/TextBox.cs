@@ -26,7 +26,7 @@ namespace A2v10.Xaml
 		public UpdateTrigger UpdateTrigger { get; set; }
 		public Boolean? SpellCheck { get; set; }
 
-		public String KeyPressDelegate { get; set; }
+		public Bind EnterCommand { get; set; }
 
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -50,8 +50,11 @@ namespace A2v10.Xaml
 				input.MergeAttribute("update-trigger", UpdateTrigger.ToString().ToLowerInvariant());
 			if (SpellCheck != null)
 				input.MergeAttribute(":spell-check", SpellCheck.Value.ToString().ToLowerInvariant());
-			if (KeyPressDelegate != null)
-				input.MergeAttribute("key-press-delegate", $"{KeyPressDelegate}");
+			var enterCmd = GetBindingCommand(nameof(EnterCommand));
+			if (enterCmd != null)
+			{
+				input.MergeAttribute(":enter-command", $"() => {enterCmd.GetCommand(context)}"); // FUNCTION!!!
+			}
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);

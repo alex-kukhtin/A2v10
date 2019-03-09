@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190308-7461*/
+/*20190309-7462*/
 /*components/textbox.js*/
 
 (function () {
@@ -34,6 +34,7 @@
 		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
+			v-on:keypress="onKey($event)"
 			:rows="rows" :class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -79,7 +80,7 @@
 			password: Boolean,
 			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined },
-			keyPressDelegate: String
+			enterCommand: Function
 		},
 		computed: {
 			controlType() {
@@ -107,13 +108,6 @@
 					this.updateValue(value);
 			},
 			onKey(event) {
-				if (this.keyPressDelegate) {
-					let dlgt = this.item.$vm.$delegate(this.keyPressDelegate);
-					if (dlgt && dlgt.call(this.item.$root, event.charCode)) {
-						this.$refs.input.value = this.modelValue;
-						return;
-					}
-				}
 				if (!this.number) return;
 				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
 					event.preventDefault();
@@ -138,7 +132,8 @@
 			placeholder: String,
 			autoSize: Boolean,
 			rows: Number,
-			spellCheck: { type: Boolean, default:undefined }
+			spellCheck: { type: Boolean, default:undefined },
+			enterCommand: Function
 		},
 		computed: {
 			modelValue2() {
@@ -159,6 +154,13 @@
 			onChange(value) {
 				if (this.updateTrigger !== 'input')
 					this.updateValue(value);
+			},
+			onKey(event) {
+				if (event.code === "Enter" && event.ctrlKey) {
+					if (this.enterCommand) {
+						this.enterCommand();
+					}
+				}
 			}
 		},
 		watch: {

@@ -3,12 +3,20 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	  Title="Home page title" Background="WhiteSmoke">
 	<Grid Rows="Auto, Auto, Auto, 1*" Columns="Auto, Auto, Auto">
-		<Block Grid.Row="2" Grid.Col="2"></Block>
+		<Block Grid.Row="2" Grid.Col="2">
+		</Block>
 		<Block Grid.Row="2" Grid.Col="1"></Block>
 		<Button Grid.Row="3" Grid.Col="1" Icon="Approve" Command="{BindCmd Reload}">Button</Button>
 		<Grid Grid.Row="3" Grid.Col="2">
 			<Button Grid.Row="1" Grid.Col="1" Icon="CommentDiscussion" >Button inside</Button>
+			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
+				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">
+					<TextBox Label="Договір"></TextBox>
+					<TextBox Label="Проект"></TextBox>
+				</Grid>
+			</Panel>
 		</Grid>
+				
 
 		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ" Icon="Database" Text="14534">
 			<StateCard.Footer>

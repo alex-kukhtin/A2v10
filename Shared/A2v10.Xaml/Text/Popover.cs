@@ -28,7 +28,8 @@ namespace A2v10.Xaml
 		Cyan = 1,
 		Green = 2,
 		Red = 3,
-		Blue = 4
+		Blue = 4,
+		White
 	}
 
 	public enum PopoverUnderlineMode
@@ -54,6 +55,9 @@ namespace A2v10.Xaml
 		public PopoverUnderlineMode Underline { get; set; }
 
 		public PopoverBackgroundStyle Background { get; set; }
+
+		public String Badge { get; set; }
+
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -99,8 +103,21 @@ namespace A2v10.Xaml
 			{
 				context.Writer.Write(context.Localize(Content.ToString()));
 			}
+			RenderPopoverBadge(context);
 			po.RenderEnd(context);
 		}
+
+		void RenderPopoverBadge(RenderContext context)
+		{
+			if (GetBinding(nameof(Badge)) == null && Badge == null)
+				return;
+			var tag = new TagBuilder("template");
+			tag.MergeAttribute("slot", "badge");
+			tag.RenderStart(context);
+			RenderBadge(context, Badge);
+			tag.RenderEnd(context);
+		}
+
 
 		protected override void OnEndInit()
 		{

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190308-7461
+// 20190309-7462
 // components/list.js
 
 /* TODO:
@@ -14,7 +14,9 @@
 
 	Vue.component("a2-list", {
 		template:
-			`<ul class="a2-list" v-lazy="itemsSource">
+
+`
+<ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@click.prevent="select(listItem)" @keydown="keyDown" 
@@ -22,11 +24,15 @@
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
+		<div class="list-empty" v-if="$isEmpty">
+			<slot name="empty" />
+		</div>
 	</template>
 	<template v-else>
 		<slot />
 	</template>
-</ul>`,
+</ul>
+`,
 		props: {
 			itemsSource: Array,
 			autoSelect: String,
@@ -78,6 +84,9 @@
 				}
 				//console.dir(rarr);
 				return rarr;
+			},
+			$isEmpty() {
+				return this.itemsSource && this.itemsSource.length === 0;
 			}
 		},
 		methods: {
@@ -186,12 +195,12 @@
 			}
 			let src = this.itemsSource;
 			if (!src) return;
-			let ix = src.$selectedIndex;
-			let li = this.$refs.li;
-			if (ix !== -1 && li && ix < li.length)
-				setTimeout(() => {
-					li[ix].scrollIntoViewCheck();
-				}, 0);
+			setTimeout(() => {
+				let ix = src.$selectedIndex;
+				let li = this.$refs.li;
+				if (ix !== -1 && li && ix < li.length)
+				li[ix].scrollIntoViewCheck();
+			}, 0);
 		}
 	});
 })();

@@ -44,6 +44,10 @@
 	margin-bottom: 12px;
 	background-color: white;
 
+	.panel-content {
+		height:100%; //TODO:???
+	}
+
 	.panel-header {
 		padding: 0 .625rem;
 		//font-size: 110%;
@@ -65,6 +69,11 @@
 			&:before {
 				content: "\e9a2"; // chevron-up
 			}
+		}
+		.a2-header {
+			font-weight:normal;
+			margin:0;
+			color:currentColor;
 		}
 	}
 
@@ -149,6 +158,28 @@
 
 .panel.panel-yellow {
 	.panel-varaint(@pane-yellow-brd, @pane-yellow-bg, @pane-yellow-txt);
+}
+
+.panel.panel-cut {
+	.panel-varaint(transparent, transparent, @pane-def-txt);
+	background-color: transparent;
+	text-align:left;
+
+	.panel-header {
+		padding: 0;
+		display: inline-block;
+		color: @link-color;
+		margin-bottom: .5rem;
+
+		.panel-collapse-handle {
+			display: none;
+		}
+
+		.panel-header-slot {
+			line-height: 1.25rem;
+			border-bottom: 1px dotted @link-color;
+		}
+	}
 }
 
 .field-set {

@@ -3416,6 +3416,7 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-list.chat {
   user-select: text;
+  padding: 0 0 0 6px;
 }
 .a2-list.chat .a2-list-item {
   padding: 0;
@@ -3435,6 +3436,10 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-list.compact .a2-list-item {
   padding: 6px 6px 6px 4px;
+}
+.a2-list .list-empty {
+  text-align: center;
+  padding: 8px;
 }
 .generic-list-item {
   display: inline-grid;
@@ -3509,30 +3514,42 @@ tr:hover .commandbar.visible-hover {
 }
 .chat-item .chat-add-on .ico {
   font-size: 0.925rem;
+  color: #999;
 }
 .chat-item .chat-add-on .dropdown {
   border-radius: 10rem;
   padding: 2px 4px;
 }
+.chat-item .chat-add-on .dropdown:hover {
+  background-color: #eee;
+}
 .chat-item .chat-add-on .dropdown.show {
-  background-color: #ddd;
+  background-color: #eee;
 }
 .chat-item .chat-body {
   background-color: #fffce9;
   padding: 0.5rem;
   margin: 6px 0 3px 0;
   display: inline-block;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 1px 1px 5px 0 rgba(174, 174, 174, 0.5), 0 5px 10px 0 rgba(0, 0, 0, 0.15);
   position: relative;
   white-space: pre-line;
 }
-.chat-item .chat-body:before {
+.chat-item .chat-body:after {
   content: '';
   border: 6px solid transparent;
   position: absolute;
   left: 4px;
-  top: -12px;
+  top: -11px;
   border-bottom-color: #fffce9;
+}
+.chat-item .chat-body:before {
+  content: '';
+  border: 7px solid transparent;
+  position: absolute;
+  left: 3px;
+  top: -14px;
+  border-bottom-color: #f0f0f0;
 }
 ul.news-list {
   padding: 0;
@@ -3875,9 +3892,9 @@ table.hover > tbody > tr.active:hover {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
 }
-.grid-horizontal .input-group,
-.grid-vertical .input-group,
-.grid-both .input-group {
+.grid-horizontal td > .control-group > .input-group,
+.grid-vertical td > .control-group > .input-group,
+.grid-both td > .control-group > .input-group {
   border-color: transparent;
   margin: 0.1px;
 }
@@ -4528,6 +4545,7 @@ TODO:
 }
 .popover-wrapper > .popover-title {
   border-bottom: 1px dotted #208cf8;
+  position: relative;
 }
 .popover-wrapper > .popover-title > span {
   -webkit-touch-callout: none;
@@ -4535,6 +4553,17 @@ TODO:
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.popover-wrapper > .popover-title > .badge {
+  position: absolute;
+  top: -4px;
+  right: -60%;
+  margin: 0;
+  border-radius: 20rem;
+  font-size: 10px;
+  line-height: 13px;
+  padding: 0 3px 0 4px;
+  background-color: #bbb;
 }
 .popover-wrapper.underline-disable > .popover-title {
   border-bottom-style: none;
@@ -4785,6 +4814,25 @@ TODO:
 .popover-wrapper.po-blue.po-bottom-right > .popup-body > .arrow:after {
   border-bottom-color: #e5f1fe;
 }
+.popover-wrapper.po-white > .popup-body {
+  background-color: white;
+}
+.popover-wrapper.po-white.po-right-top > .popup-body > .arrow:after,
+.popover-wrapper.po-white.po-right-bottom > .popup-body > .arrow:after {
+  border-right-color: white;
+}
+.popover-wrapper.po-white.po-left-top > .popup-body > .arrow:after,
+.popover-wrapper.po-white.po-left-bottom > .popup-body > .arrow:after {
+  border-left-color: white;
+}
+.popover-wrapper.po-white.po-top-left > .popup-body > .arrow:after,
+.popover-wrapper.po-white.po-top-right > .popup-body > .arrow:after {
+  border-top-color: white;
+}
+.popover-wrapper.po-white.po-bottom-left > .popup-body > .arrow:after,
+.popover-wrapper.po-white.po-bottom-right > .popup-body > .arrow:after {
+  border-bottom-color: white;
+}
 .popover-wrapper.hint {
   margin: 0 6px;
   color: #999;
@@ -4902,6 +4950,9 @@ TODO:
   margin-bottom: 12px;
   background-color: white;
 }
+.panel .panel-content {
+  height: 100%;
+}
 .panel .panel-header {
   padding: 0 0.625rem;
   display: flex;
@@ -4919,6 +4970,11 @@ TODO:
 }
 .panel .panel-header .panel-collapse-handle:before {
   content: "\e9a2";
+}
+.panel .panel-header .a2-header {
+  font-weight: normal;
+  margin: 0;
+  color: currentColor;
 }
 .panel.compact .panel-header {
   line-height: 2rem;
@@ -5004,6 +5060,32 @@ TODO:
 }
 .panel.panel-yellow > .panel-header .panel-collapse-handle {
   color: #856404;
+}
+.panel.panel-cut {
+  border: 1px solid transparent;
+  background-color: transparent;
+  text-align: left;
+}
+.panel.panel-cut > .panel-header {
+  color: #383838;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+}
+.panel.panel-cut > .panel-header .panel-collapse-handle {
+  color: #383838;
+}
+.panel.panel-cut .panel-header {
+  padding: 0;
+  display: inline-block;
+  color: #208cf8;
+  margin-bottom: 0.5rem;
+}
+.panel.panel-cut .panel-header .panel-collapse-handle {
+  display: none;
+}
+.panel.panel-cut .panel-header .panel-header-slot {
+  line-height: 1.25rem;
+  border-bottom: 1px dotted #208cf8;
 }
 .field-set {
   margin: 0;

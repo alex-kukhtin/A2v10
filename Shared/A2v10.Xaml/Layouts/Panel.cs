@@ -16,7 +16,8 @@ namespace A2v10.Xaml
 		Green,
 		Cyan,
 		Red,
-		Yellow
+		Yellow,
+		Cut
 	}
 
 	public class Panel : Container, ITableControl

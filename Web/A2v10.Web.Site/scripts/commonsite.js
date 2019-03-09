@@ -2150,9 +2150,9 @@ Vue.component('a2-pager', {
 });
 
 
-/*! Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190306-7457
+// 20190309-7462
 // services/datamodel.js
 
 (function () {
@@ -2471,7 +2471,10 @@ Vue.component('a2-pager', {
 		if (elem._meta_.$itemType) {
 			elem.$setProperty = function (prop, src) {
 				let itmPath = path + '.' + prop;
-				platform.set(this, prop, new elem._meta_.$itemType(src, itmPath, elem));
+				let ne = new elem._meta_.$itemType(src, itmPath, elem);
+				platform.set(this, prop, ne);
+				this._root_.$setDirty(true);
+				return ne;
 			};
 		}
 

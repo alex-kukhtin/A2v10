@@ -26,9 +26,22 @@
 
 	> .popover-title {
 		border-bottom: 1px dotted @popover-text-color;
+		position:relative;
 
 		> span {
 			.noselect();
+		}
+
+		> .badge {
+			position:absolute;
+			top:-4px;
+			right:-60%;
+			margin:0;
+			border-radius:20rem;
+			font-size:10px;
+			line-height:13px;
+			padding:0 3px 0 4px;
+			background-color:#bbb;
 		}
 	}
 
@@ -283,6 +296,10 @@
 
 .popover-wrapper.po-blue {
 	.popover-color(@popup-bk-color-blue);
+}
+
+.popover-wrapper.po-white {
+	.popover-color(white);
 }
 
 .popover-wrapper.hint {
