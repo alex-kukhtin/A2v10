@@ -36,7 +36,7 @@
         <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
 	</DataGrid>
 	<Block Width="250" Border="True" Background="LightYellow">
-		<List ItemsSource="{Bind Parent.ItemsSource}" Style="Chat" MaxHeight="200" AutoSelect="LastItem">
+		<List ItemsSource="{Bind Parent.ItemsSource}" Style="Chat" MaxHeight="200">
 			<ChatItem Content="{Bind Name}" User="{Bind Memo}" Time="{Bind Id}">
 				<ChatItem.AddOns>
 					<Hyperlink Icon="EllipsisVertical">
@@ -62,5 +62,16 @@
 				<Hyperlink Icon="Send" Command="{BindCmd Execute, CommandName=enterComment}"/>
 			</TextBox.AddOns>
 		</TextBox>
+	</Block>
+	<Block>
+		<Slot Scope="{Bind Agents.$selected}">
+			<Panel>
+				<Code Content="{Bind}" Multiline="True"></Code>
+				<TextBox Value="{Bind Name}" Label="Agent Name"/>
+			</Panel>
+			<Slot.Fallback>
+				<Text>No selected item here</Text>
+			</Slot.Fallback>
+		</Slot>
 	</Block>
 </Page>

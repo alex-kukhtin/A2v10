@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -126,14 +126,6 @@ namespace A2v10.Xaml
 
 		readonly private String _currentLocale;
 
-		[ThreadStatic]
-		public static String _partialDataContext;
-
-		public static void SetPartialContext(String ctx)
-		{
-			_partialDataContext = ctx;
-		}
-
 		public RenderContext(UIElementBase root, RenderInfo ri)
 		{
 			Writer = ri.Writer;
@@ -223,7 +215,6 @@ namespace A2v10.Xaml
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
 			const String rootKey = "Root.";
-			const String contextKey = "Context.";
 			if (_stackScope.Count == 0)
 			{
 				if (path == "Root")
@@ -234,12 +225,6 @@ namespace A2v10.Xaml
 				return path;
 			if (path.StartsWith(rootKey))
 				return "$data." + path.Substring(rootKey.Length);
-			else if (path.StartsWith(contextKey))
-			{
-				if (_partialDataContext == null)
-					throw new XamlException($"There is no context for '{Path}' path");
-				return path.Replace(contextKey, _partialDataContext);
-			}
 			ScopeElem scope = _stackScope.Peek();
 			String result = scope.Scope;
 			if (!String.IsNullOrEmpty(path))

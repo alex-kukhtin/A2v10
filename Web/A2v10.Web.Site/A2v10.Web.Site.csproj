@@ -160,6 +160,7 @@
     </Content>
     <Content Include="Less\Diagram.less" />
     <Content Include="Less\Table.less" />
+    <Content Include="TestPages\slot.html" />
     <Content Include="tests\format.js" />
     <Content Include="Less\TabBar.less" />
     <None Include="Web.Debug.config">

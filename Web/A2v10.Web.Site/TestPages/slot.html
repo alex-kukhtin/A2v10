@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<h3>Test SLOT</h3>
+
+
+		<div style="background-color:aliceblue;border:1px solid red;width:190px;min-height:50px">
+			<scope :item="items[1]">
+				<template slot-scope="_elem">
+					<span>{{_elem}}</span>
+				</template>
+			</scope>
+			<template v-for="x in [items[2]]">
+				<span>{{x}}</span>
+			</template>
+			<div :slot-scope="{x: items[2]}">
+				{{x}}
+			</div>
+		</div>
+
+
+		<pre><code v-text="items"></code></pre>
+	</div>
+	<script type="text/javascript" src="../scripts/vue.js"></script>
+	<script>
+		(function () {
+			Vue.component("scope", {
+				template: 
+`<div>
+	<slot :_scope="item"/>
+</div>
+`,
+				props: {
+					item: Object
+				}
+			});
+
+			let vm = new Vue({
+				el: "#app",
+				data: {
+					items: [{x:1}, {x:2}, {x:3}],
+				},
+				created: function () {
+				},
+				methods: {
+				}
+			});
+		})();
+	</script>
+</body>
+</html>

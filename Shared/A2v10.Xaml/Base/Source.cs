@@ -1,6 +1,5 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Reflection;
 using System.Windows.Markup;
@@ -11,7 +10,6 @@ namespace A2v10.Xaml
 	public class Source : MarkupExtension
 	{
 		public String Path { get; set; }
-		public String Context { get; set; }
 
 		public Source()
 		{
@@ -72,16 +70,8 @@ namespace A2v10.Xaml
 				String trgPath = System.IO.Path.ChangeExtension(targetDir, "xaml");
 				if (appReader.FileExists(trgPath))
 				{
-					try
-					{
-						RenderContext.SetPartialContext(Context);
-						using (var stream = appReader.FileStreamFullPath(trgPath)) { 
-							return XamlServices.Load(stream);
-						}
-					}
-					finally
-					{
-						RenderContext.SetPartialContext(null);
+					using (var stream = appReader.FileStreamFullPath(trgPath)) { 
+						return XamlServices.Load(stream);
 					}
 				}
 				else
