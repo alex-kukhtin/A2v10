@@ -10,7 +10,9 @@ namespace A2v10.Xaml
 	public enum SelectorPanelPlacement {
 		Default,
 		BottomLeft = Default,
-		BottomRight
+		BottomRight,
+		TopLeft,
+		TopRight
 	}
 
 

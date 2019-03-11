@@ -6,6 +6,7 @@
 
 .input-group a.selector-open {
 	padding-right:8px;
+	padding-top:0 !important;
 }
 .input-group > .selector-pane {
 	//border: 1px solid @dropdown-brd-color;
@@ -21,7 +22,7 @@
 	z-index: @popup-index !important;
 	margin-top: 0;
 	margin-left: -1px;
-	box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
 	padding: 0;
 	overflow: hidden;
 	display: block !important;
@@ -29,6 +30,20 @@
 	&.panel-bottom-right {
 		left: auto;
 		right: -1px;
+	}
+
+	&.panel-top-right {
+		left: auto;
+		right: -1px;
+		bottom: 100%;
+		top: auto;
+		box-shadow: -3px -3px 10px 0 rgba(174, 174, 174, .5), 0 -5px 40px 0 rgba(0, 0, 0, .15);
+	}
+
+	&.panel-top-left {
+		bottom: 100%;
+		top: auto;
+		box-shadow: -3px -3px 10px 0 rgba(174, 174, 174, .5), 0 -5px 40px 0 rgba(0, 0, 0, .15);
 	}
 
 	.selector-body {
