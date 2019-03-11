@@ -41,6 +41,8 @@ namespace A2v10.Xaml
 			var markBind = GetBinding(nameof(Mark));
 			if (markBind != null)
 			{
+				if (GetBinding(nameof(Bold)) != null)
+					throw new XamlException("The Bold and Mark bindings cannot be used at the same time");
 				row.MergeAttribute(":class", markBind.GetPathFormat(context));
 			}
 			else if (Mark != MarkStyle.Default)

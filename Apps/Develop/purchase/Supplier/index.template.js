@@ -12,6 +12,10 @@ const template = {
 		enterComment: {
 			canExec() { return this.$comment; },
 			exec: onKeyPress
+		},
+		testCommand: {
+			exec() { alert('command'); },
+			canExec() { return this.Agents.$selected; }
 		}
 	}
 };

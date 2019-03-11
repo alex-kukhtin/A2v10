@@ -31,8 +31,9 @@
 	border: 1px solid @danger-brd-color;
 	box-shadow: @dnager-validator-shadow;
 	white-space: pre;
+
 	.error {
-		white-space:normal;
+		white-space: normal;
 	}
 }
 
@@ -120,7 +121,7 @@
 
 		&.with-width {
 			.error {
-				white-space:pre-line;
+				white-space: pre-line;
 			}
 		}
 	}
@@ -372,13 +373,13 @@
 
 .control-group.bold {
 	textarea {
-		font-weight:bold;
+		font-weight: bold;
 	}
 }
 
 .control-group.italic {
 	textarea {
-		font-style:italic;
+		font-style: italic;
 	}
 }
 
@@ -388,7 +389,8 @@
 
 		.select-wrapper {
 			right: auto;
-			padding:0;
+			padding: 0;
+
 			.select-text {
 				color: @link-color;
 				border-bottom: 2px dotted @link-color;
@@ -401,7 +403,7 @@
 	}
 
 	.input-group.focus {
-		box-shadow:none;
+		box-shadow: none;
 	}
 }
 /* avoid validator blinking */
@@ -432,14 +434,14 @@
 	}
 
 	&:hover .validator,
-		.input-group.focus .validator {
+	.input-group.focus .validator {
 		display: block;
 	}
 
 	&:hover .input-group,
 	.input-group.focus {
 		box-shadow: @danger-box-shadow;
-		z-index:@invalid-hover-index;
+		z-index: @invalid-hover-index;
 	}
 
 	.input-group {
@@ -470,7 +472,7 @@
 
 	a {
 		pointer-events: none;
-		opacity:0.5;
+		opacity: 0.5;
 	}
 }
 
@@ -494,6 +496,21 @@
 
 .normal {
 	font-size: 1rem;
+}
+
+.a2-hyperlink.highlight {
+
+	&:not([disabled]) {
+		.ico {
+			background-color: #208cf8; //currentColor;
+			border-radius: 50%;
+			padding: 3px 2px 3px 4px;
+
+			&:before {
+				color: white !important;
+			}
+		}
+	}
 }
 
 .a2-hyperlink.small {

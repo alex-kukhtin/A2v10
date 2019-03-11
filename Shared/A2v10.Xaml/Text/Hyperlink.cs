@@ -11,6 +11,7 @@ namespace A2v10.Xaml
 		public Object Content { get; set; }
 		public ControlSize Size { get; set; }
 		public Icon Icon { get; set; }
+		public Boolean Highlight {get; set;}
 
 		public Command Command { get; set; }
 
@@ -56,6 +57,7 @@ namespace A2v10.Xaml
 			MergeAttributes(tag, context, attrMode);
 			MergeCommandAttribute(tag, context);
 			tag.AddCssClassBool(Block, "block");
+			tag.AddCssClassBool(Highlight, "highlight");
 			if (!Block)
 				tag.AddCssClass("a2-inline");
 

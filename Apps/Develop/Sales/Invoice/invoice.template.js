@@ -11,7 +11,9 @@ const template = {
 		'TDocument.$canShipment': canShipment,
 		'TDocument.$checked': Boolean,
 		'TDocLink.$Mark'() { return this.Done ? 'success' : null; },
-		'TRow.$RoundSum'() { return utils.currency.round(this.Price * this.Qty, 3);}
+		'TRow.$RoundSum'() { return utils.currency.round(this.Price * this.Qty, 3);},
+		'TRow.$RowBold'() { return this.Qty === 3; },
+		'TRow.$RowMark'() { return this.Qty === 3 ? 'green' : undefined; }
 	},
 	validators: {
 		'Document.Agent': 'Выберите покупателя',

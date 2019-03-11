@@ -2026,6 +2026,14 @@ pre.a2-code {
 .normal {
   font-size: 1rem;
 }
+.a2-hyperlink.highlight:not([disabled]) .ico {
+  background-color: #208cf8;
+  border-radius: 50%;
+  padding: 3px 2px 3px 4px;
+}
+.a2-hyperlink.highlight:not([disabled]) .ico:before {
+  color: white !important;
+}
 .a2-hyperlink.small i.ico {
   font-size: 12px;
 }

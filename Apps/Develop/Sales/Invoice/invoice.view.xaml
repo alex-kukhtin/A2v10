@@ -100,7 +100,7 @@
 						<TableCell />
 					</TableRow>
 				</Table.Footer>
-				<TableRow>
+				<TableRow Mark="{Bind $RowMark}">
 					<TableCell Content="{Bind RowNo}" Align="Right"/>
 					<TextBox Value="{Bind Entity.Article}"/>
 					<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
