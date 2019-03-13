@@ -533,4 +533,19 @@ h5, .h5 {
 	border:1px solid #ccc;
 }
 
+.title-notify {
+	animation: blink .5s infinite alternate ease-in-out;
+	display: none;
+
+	&.warning {
+		color: gold;
+		display: inline;
+	}
+
+	&.danger {
+		display: inline;
+		color: tomato;
+	}
+}
+
 @import "AppPages.less";

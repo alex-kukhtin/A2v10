@@ -17,6 +17,7 @@
 			title: menu.SysParams ? menu.SysParams.AppTitle : '',
 			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
 			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
+			userState: menu.UserState,
 			userIsAdmin: $(Admin),
 			isDebug: $(Debug),
 			appData: $(AppData)
@@ -33,12 +34,26 @@
 			},
 			profileItems() {
 				return this.appData ? this.appData.profileMenu : null;
+			},
+			notifyText() {
+				return this.getNotify(2);
+			},
+			notifyClass() {
+				return this.getNotify(1).toLowerCase();
 			}
+
 		},
 		methods: {
 			doProfileMenu(itm) {
-				//console.dir(this);
 				this.navigate(itm.url);
+			},
+			getNotify(ix) {
+				let n = this.userState ? this.userState.Notify : 0;
+				if (!n) return '';
+				let m = n.match(/\((.*)\)(.*)/);
+				if (m && m.length > ix)
+					return m[ix];
+				return '';
 			}
 		}
 	});

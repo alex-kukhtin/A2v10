@@ -847,6 +847,14 @@ input[type=number]::-webkit-outer-spin-button {
 .divider {
   flex-grow: 2;
 }
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;
@@ -2437,14 +2445,6 @@ pre.a2-code {
   font-size: 1rem;
   font-weight: normal;
   font-style: normal;
-}
-@keyframes blink {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
 }
 .period-picker .current-period {
   font-weight: 500;
@@ -5586,6 +5586,18 @@ h5,
   padding: 6px;
   background-color: white;
   border: 1px solid #ccc;
+}
+.title-notify {
+  animation: blink 0.5s infinite alternate ease-in-out;
+  display: none;
+}
+.title-notify.warning {
+  color: gold;
+  display: inline;
+}
+.title-notify.danger {
+  display: inline;
+  color: tomato;
 }
 .about-source-list {
   list-style-position: inside;

@@ -25,6 +25,8 @@
 				<span class="app-subtitle" v-text="subtitle"></span>
 			</div>
 			<div class="aligner"></div>
+			<span class="title-notify" v-text="notifyText" :class="notifyClass"></span>
+			<div class="aligner"></div>
 			<a2-new-button :menu="newMenu" icon="plus" btn-style="success"></a2-new-button>
 			<a2-new-button :menu="settingsMenu" icon="gear-outline" title="@[Settings]"></a2-new-button>
 			<a class="nav-admin middle" v-if="hasFeedback" tabindex="-1" @click.prevent="showFeedback" title="@[Feedback]" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
