@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 
 		public Boolean FullPage { get; set; }
+		public Length MinHeight { get; set; }
 
 		public TabCollection Tabs { get; set; } = new TabCollection();
 
@@ -33,6 +34,10 @@ namespace A2v10.Xaml
 			MergeAttributes(panel, context);
 			panel.AddCssClassBool(Border, "bordered");
 			panel.AddCssClassBool(FullPage, "full-page");
+
+			if (MinHeight != null)
+				panel.MergeStyleUnit("min-height", MinHeight.Value);
+
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
 			{

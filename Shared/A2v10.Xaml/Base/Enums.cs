@@ -55,7 +55,8 @@ namespace A2v10.Xaml
 		Stretch,
 		Top,
 		Middle,
-		Bottom
+		Bottom,
+		Baseline
 	}
 
 
