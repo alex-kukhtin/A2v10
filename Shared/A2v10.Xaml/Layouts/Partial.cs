@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 				return;
 			var page = new TagBuilder("div", "page partial");
 			page.MergeAttribute("id", context.RootId);
+			MergeAttributes(page, context, MergeAttrMode.Margin);
 
 			if (Background != BackgroundStyle.Default)
 				page.AddCssClass("background-" + Background.ToString().ToKebabCase());

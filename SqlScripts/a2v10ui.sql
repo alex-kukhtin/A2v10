@@ -1,11 +1,11 @@
 
-/* 20181123-7053 */
+/* 20190320-7054 */
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 23 nov 2018
-module version : 7053
+Last updated : 20 mar 2019
+module version : 7054
 */
 ------------------------------------------------
 set noexec off;
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7053);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7054);
 else
-	update a2sys.Versions set [Version] = 7053 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7054 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -262,6 +262,96 @@ begin
 			values (source.[ObjectId], source.UserId, source.CanView)
 	when not matched by source then
 		delete;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateAcl.Menu.User')
+	drop procedure [a2security].[Permission.UpdateAcl.Menu.User]
+go
+------------------------------------------------
+create procedure [a2security].[Permission.UpdateAcl.Menu.User]
+@UserId bigint
+as
+begin
+	set nocount on;
+	declare @MenuTable table (Id bigint, UserId bigint, GroupId bigint, CanView smallint);
+
+	insert into @MenuTable (Id, UserId, GroupId, CanView)
+		select f.Id, a.UserId, a.GroupId, a.CanView
+		from a2security.Acl a 
+			cross apply a2security.fn_GetMenuFor(a.ObjectId) f
+			/*exclude denied parents */
+		where a.[Object] = N'std:menu' and Not (Parent = 1 and CanView = -1)
+		group by f.Id, UserId, GroupId, CanView;
+
+	declare @UserTable table (ObjectId bigint, UserId bigint, CanView bit);
+
+	with T(ObjectId, UserId, CanView)
+	as
+	(
+		select a.Id, UserId=isnull(ur.UserId, a.UserId), a.CanView
+		from @MenuTable a
+		left join a2security.UserGroups ur on a.GroupId = ur.GroupId
+		where isnull(ur.UserId, a.UserId) = @UserId
+	)
+	insert into @UserTable(ObjectId, UserId, CanView)
+	select ObjectId, UserId,
+		_CanView = isnull(case 
+				when min(T.CanView) = -1 then 0
+				when max(T.CanView) = 1 then 1
+				end, 0)
+	from T
+	group by ObjectId, UserId;
+
+	merge a2security.[Menu.Acl] as target
+	using
+	(
+		select ObjectId, UserId, CanView
+		from @UserTable T
+		where CanView = 1
+	) as source(ObjectId, UserId, CanView)
+		on target.Menu = source.[ObjectId] and target.UserId=source.UserId
+	when matched then
+		update set 
+			target.CanView = source.CanView
+	when not matched by target then
+		insert (Menu, UserId, CanView)
+			values (source.[ObjectId], source.UserId, source.CanView)
+	when not matched by source and target.UserId = @UserId then
+		delete;
+end
+go
+-----------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_IsMenuVisible') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_IsMenuVisible;
+go
+------------------------------------------------
+create function a2security.fn_IsMenuVisible(@MenuId bigint, @UserId bigint)
+returns bit
+as
+begin
+	declare @result bit;
+	select @result = case when CanView = 1 then 1 else 0 end from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId;
+	return isnull(@result, 1); -- not found - visible
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui' and ROUTINE_NAME=N'Menu.SetVisible')
+	drop procedure a2ui.[Menu.SetVisible]
+go
+------------------------------------------------
+create procedure a2ui.[Menu.SetVisible]
+@UserId bigint,
+@MenuId bigint,
+@Visible bit
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	if @Visible = 0 and not exists(select * from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId)
+		 insert into a2security.Acl ([Object], ObjectId, UserId, CanView) values (N'std:menu', @MenuId, @UserId, -1);
+	else if @Visible = 1
+		delete from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId;
 end
 go
 ------------------------------------------------

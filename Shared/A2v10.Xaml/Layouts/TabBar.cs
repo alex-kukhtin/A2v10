@@ -65,7 +65,7 @@ namespace A2v10.Xaml
 			else if (Description is UIElementBase uiDescr)
 				uiDescr.RenderElement(context);
 			else if (Description != null)
-				context.Writer.Write(Description.ToString());
+				context.Writer.Write(context.Localize(Description.ToString()));
 			wrap.RenderEnd(context);
 		}
 

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © 2015-2019 Alex Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
+ 
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("10.0.7467.0")]
-[assembly: AssemblyFileVersion("10.0.7467.0")]
+[assembly: AssemblyVersion("10.0.7468.0")]
+[assembly: AssemblyFileVersion("10.0.7468.0")]
