@@ -720,9 +720,8 @@ begin
 		begin
 			declare @sql nvarchar(255);
 			declare @prms nvarchar(255);
-			set @sql = N'a2security.OnCreateNewUser @TenantId, @UserId';
-			set @prms = N'@TenantId int, @UserId bigint';
-
+			set @sql = N'a2security.OnCreateNewUser @TenantId, @userId';
+			set @prms = N'@TenantId int, @userId bigint';
 			exec sp_executesql @sql, @prms, @tenantId, @userId;
 		end
 
@@ -738,10 +737,11 @@ begin
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
-
 		commit tran;
+
+		exec a2security.[Permission.UpdateUserInfo];
+
 	end
-	exec a2security.[Permission.UpdateUserInfo];
 	set @RetId = @userId;
 
 	declare @msg nvarchar(255);

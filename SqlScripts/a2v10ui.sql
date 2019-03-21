@@ -265,11 +265,11 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateAcl.Menu.User')
-	drop procedure [a2security].[Permission.UpdateAcl.Menu.User]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateUserAcl.Menu')
+	drop procedure [a2security].[Permission.UpdateUserAcl.Menu]
 go
 ------------------------------------------------
-create procedure [a2security].[Permission.UpdateAcl.Menu.User]
+create procedure [a2security].[Permission.UpdateUserAcl.Menu]
 @UserId bigint
 as
 begin
