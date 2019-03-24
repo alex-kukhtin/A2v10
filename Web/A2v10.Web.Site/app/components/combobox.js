@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181013-7223*/
+/*20190324-7470*/
 /*components/combobox.js*/
 
 (function () {
@@ -12,16 +12,16 @@
 `<div :class="cssClass()" v-lazy="itemsSource">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
-		<div class="select-wrapper">
-			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
-			<span class="caret"/>
-		</div>
 		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()" :id="testId">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
 			</slot>
 		</select>
+		<div class="select-wrapper">
+			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
+			<span class="caret"/>
+		</div>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<slot name="popover"></slot>
@@ -105,14 +105,18 @@
 					let ob = this.itemsSource.find(x => x[vProp] === cv);
 					return ob ? this.getName(ob) : '';
 				} else {
-					return this.getOptionsText();
+					return this.getOptionsText(cv);
 				}
 			},
-			getOptionsText() {
+			getOptionsText(cv) {
 					// get text from select directly.
 				let sel = this.$refs.sel;
 				if (!sel) return '';
 				let ops = sel.options;
+				for (let i = 0; i < ops.length; i++) {
+					if (''+ ops[i].value === '' + cv)
+						return ops[i].text;
+				}
 				let si = sel.selectedIndex;
 				if (si < 0 || si >= ops.length) return '';
 				return ops[si].text;
