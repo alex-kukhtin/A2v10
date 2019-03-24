@@ -12,16 +12,16 @@
 `<div :class="cssClass()" v-lazy="itemsSource">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
+		<div class="select-wrapper">
+			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
+			<span class="caret"/>
+		</div>
 		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()" :id="testId">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
 			</slot>
 		</select>
-		<div class="select-wrapper">
-			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
-			<span class="caret"/>
-		</div>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<slot name="popover"></slot>
