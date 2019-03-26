@@ -15,6 +15,10 @@
 
 		&:hover {
 			background-color: @hover-bg-color !important;
+
+			.commandbar.visible-hover {
+				visibility:visible;
+			}
 		}
 
 		&.active {
@@ -188,6 +192,7 @@
 	.list-item-commands {
 		grid-row: 1 / span 2;
 		grid-column: 3;
+		align-self:baseline;
 	}
 }
 

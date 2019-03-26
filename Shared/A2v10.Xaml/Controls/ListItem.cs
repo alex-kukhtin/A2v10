@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -15,6 +15,8 @@ namespace A2v10.Xaml
 		public Object Footer { get; set; }
 
 		public Command Command { get; set; }
+
+		public CommandBar CommandBar { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -99,6 +101,13 @@ namespace A2v10.Xaml
 						context.Writer.Write(context.Localize(Footer.ToString()));
 				}
 				fTag.RenderEnd(context);
+			}
+			if (CommandBar != null)
+			{
+				CommandBar.RenderElement(context, tag =>
+				{
+					tag.AddCssClass("list-item-commands");
+				});
 			}
 		}
 	}

@@ -2953,7 +2953,6 @@ table.data-grid > tbody > tr.bold > td {
 .data-grid-container.data-grid-light table.data-grid tr.group td {
   background-color: #f9f9f9;
   color: #999;
-  border-bottom-color: transparent;
 }
 .data-grid-container.data-grid-light table.data-grid.grid-horizontal th .h-holder {
   border-left: none !important;
@@ -3368,6 +3367,9 @@ tr:hover .commandbar.visible-hover {
 .a2-list .a2-list-item:hover {
   background-color: #fdf4bf !important;
 }
+.a2-list .a2-list-item:hover .commandbar.visible-hover {
+  visibility: visible;
+}
 .a2-list .a2-list-item.active {
   background-color: #cde6f7 !important;
 }
@@ -3512,6 +3514,7 @@ tr:hover .commandbar.visible-hover {
 .generic-list-item .list-item-commands {
   grid-row: 1 / span 2;
   grid-column: 3;
+  align-self: baseline;
 }
 .chat-item {
   padding: 0.25rem;
@@ -4941,6 +4944,10 @@ TODO:
 .grid > .panel {
   margin-bottom: 0;
 }
+.grid .grid-divider {
+  background-color: #ddd;
+  align-self: stretch;
+}
 .stack-panel {
   display: flex;
   flex-direction: column;
@@ -5153,13 +5160,10 @@ TODO:
 .full-height-panel .tab-item {
   height: 100%;
 }
-.full-height-panel .cw {
+.cw {
   height: 100%;
 }
 .a2-include.full-height {
-  height: 100%;
-}
-.a2-include.full-height .cw {
   height: 100%;
 }
 .scrollable-pane {
