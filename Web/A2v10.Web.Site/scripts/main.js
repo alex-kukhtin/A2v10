@@ -7335,7 +7335,7 @@ TODO:
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190309-7462
+// 20190328-7473
 // components/list.js
 
 /* TODO:
@@ -7354,7 +7354,7 @@ TODO:
 <ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
-				@click.prevent="select(listItem)" @keydown="keyDown" 
+				@mousedown.prevent="select(listItem)" @keydown="keyDown" 
 				ref="li">
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
@@ -7530,11 +7530,12 @@ TODO:
 			}
 			let src = this.itemsSource;
 			if (!src) return;
+			let li = this.$refs.li;
+			if (!li) return;
 			setTimeout(() => {
-				let ix = src.$selectedIndex;
-				let li = this.$refs.li;
+				let ix = li.findIndex(itm => itm.classList.contains('active'));
 				if (ix !== -1 && li && ix < li.length)
-				li[ix].scrollIntoViewCheck();
+					li[ix].scrollIntoViewCheck();
 			}, 0);
 		}
 	});

@@ -23,9 +23,13 @@ TODO:
 		white-space: nowrap;
 		color: @text-color;
 		align-items: baseline;
+		background-color: transparent;
+		width:100%;
+		text-align:left;
 
 		&:hover {
 			text-decoration: none;
+			background-color: transparent;
 		}
 
 		> .ico {
@@ -41,6 +45,7 @@ TODO:
 
 		&[disabled] {
 			cursor: not-allowed;
+			opacity:0.5;
 		}
 
 		&[disabled]:hover {
@@ -63,7 +68,7 @@ TODO:
 		color: @dark-bk-color;
 		padding-bottom: 2px;
 		border-bottom: 1px solid @divider-color;
-		//font-weight: bold;
+		font-weight: 500;
 		margin-bottom: 4px;
 	}
 }

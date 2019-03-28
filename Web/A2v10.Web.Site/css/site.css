@@ -2939,6 +2939,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container.data-grid-light.fixed-header > .data-grid-body.fixed-header {
   margin-top: 30px;
+  height: calc(100% - 30px);
 }
 .data-grid-container.data-grid-light table.data-grid th {
   color: #999;
@@ -2956,7 +2957,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container.data-grid-light table.data-grid.grid-horizontal th .h-holder {
   border-left: none !important;
-  margin-left: 0!important;
+  margin-left: 0 !important;
 }
 .data-grid-container.data-grid-light .data-grid-header-border {
   display: none;
@@ -4387,9 +4388,13 @@ TODO:
   white-space: nowrap;
   color: #222;
   align-items: baseline;
+  background-color: transparent;
+  width: 100%;
+  text-align: left;
 }
 .menu .dropdown-item:hover {
   text-decoration: none;
+  background-color: transparent;
 }
 .menu .dropdown-item > .ico {
   display: inline-block;
@@ -4402,6 +4407,7 @@ TODO:
 }
 .menu .dropdown-item[disabled] {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 .menu .dropdown-item[disabled]:hover {
   background-color: transparent;
@@ -4419,6 +4425,7 @@ TODO:
   color: #8591a2;
   padding-bottom: 2px;
   border-bottom: 1px solid #ddd;
+  font-weight: 500;
   margin-bottom: 4px;
 }
 .dropdown-menu {

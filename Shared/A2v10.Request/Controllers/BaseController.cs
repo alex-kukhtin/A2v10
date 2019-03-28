@@ -200,6 +200,8 @@ namespace A2v10.Request
 					}
 				}
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
+				if (rw.copy)
+					model.MakeCopy();
 				if (!String.IsNullOrEmpty(rw.Id) && !rw.copy)
 				{
 					var me = model.MainElement;

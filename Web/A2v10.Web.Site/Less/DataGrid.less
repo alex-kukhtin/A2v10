@@ -494,7 +494,8 @@ table.data-grid > tbody {
 
 	&.fixed-header {
 		> .data-grid-body.fixed-header {
-			margin-top:30px;
+			margin-top: 30px;
+			height: ~"calc(100% - 30px)";
 		}
 	}
 
@@ -512,11 +513,9 @@ table.data-grid > tbody {
 		> tbody > tr > td {
 			padding: 6px;
 		}
-
 		//tr.dg-row:last-child > td {
-			//border-bottom-style: none;
+		//border-bottom-style: none;
 		//}
-
 		tr.group td {
 			background-color: #f9f9f9;
 			color: @label-color;
@@ -527,7 +526,7 @@ table.data-grid > tbody {
 			th {
 				.h-holder {
 					border-left: none !important;
-					margin-left:0!important;
+					margin-left: 0 !important;
 				}
 			}
 		}

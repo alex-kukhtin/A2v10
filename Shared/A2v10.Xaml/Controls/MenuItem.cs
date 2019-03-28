@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -12,7 +12,7 @@ namespace A2v10.Xaml
 		{
 			if (SkipRender(context))
 				return;
-			var mi = new TagBuilder("a", "dropdown-item");
+			var mi = new TagBuilder("button", "dropdown-item");
 			if (HasIcon)
 			{
 				MergeAttributes(mi, context, MergeAttrMode.NoContent);
