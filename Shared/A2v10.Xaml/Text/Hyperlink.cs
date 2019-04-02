@@ -5,6 +5,12 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+	public enum HyperlinkStyle
+	{
+		Default,
+		Popover
+	}
+
 	[ContentProperty("Content")]
 	public class Hyperlink : Inline
 	{
@@ -16,6 +22,8 @@ namespace A2v10.Xaml
 		public Command Command { get; set; }
 
 		public UIElementBase DropDown { get; set; }
+
+		public HyperlinkStyle Style { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -32,6 +40,8 @@ namespace A2v10.Xaml
 				onRender?.Invoke(wrap);
 				if (!Block)
 					wrap.AddCssClass("a2-inline");
+				if (Style != HyperlinkStyle.Default)
+					wrap.AddCssClass(Style.ToString().ToLowerInvariant());
 				MergeAttributes(wrap, context, MergeAttrMode.Visibility);
 				wrap.RenderStart(context);
 				var hasAddOn = wrap.HasClass("add-on");

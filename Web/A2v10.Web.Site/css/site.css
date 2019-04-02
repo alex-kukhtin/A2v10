@@ -2025,6 +2025,12 @@ pre.a2-code {
 .a2-inline + .a2-inline {
   margin-left: 0.4rem;
 }
+.hlink-dd-wrapper.popover .a2-hyperlink {
+  border-bottom: 1px dotted #208cf8;
+}
+.hlink-dd-wrapper.popover .caret {
+  display: none;
+}
 .small {
   font-size: 0.86rem;
 }
