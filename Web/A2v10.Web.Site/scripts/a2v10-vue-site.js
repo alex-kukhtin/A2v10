@@ -721,7 +721,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190221-7439*/
+/*20190402-7475*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -743,8 +743,9 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment,
-		removeFirstSlash
+		replaceSegment,
+		removeFirstSlash,
+		isNewPath
 	};
 
 	function normalize(elem) {
@@ -829,10 +830,17 @@ app.modules['std:url'] = function () {
 		let os = o1.split('/');
 		if (ns.length !== os.length)
 			return false;
-		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+
+		function isNewPath(arr) {
+			let ai = arr[arr.length - 1];
+			return ai === 'new' || ai === '0';
+		}
+
+		if (isNewPath(os) && !isNewPath(ns)) {
 			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
 				return true;
 		}
+
 		return false;
 	}
 
@@ -912,13 +920,31 @@ app.modules['std:url'] = function () {
 		alert('todo::replaceId');
 	}
 
+	function isDialogPath(url) {
+		return url.startsWith('/_dialog/');
+	}
+
 	function replaceSegment(url, id, action) {
 		let parts = url.split('/');
-		if (action) parts.pop();
-		if (id) parts.pop();
-		if (action) parts.push(action);
-		if (id) parts.push(id);
+		if (isDialogPath(url)) {
+			parts.pop();
+			if (id)
+				parts.push(id);
+		} else {
+			if (action) parts.pop();
+			if (id) parts.pop();
+			if (action) parts.push(action);
+			if (id) parts.push(id);
+		}
 		return parts.join('/');
+	}
+
+	function isNewPath(url) {
+		if (url.indexOf('/new') !== -1)
+			return true;
+		if (isDialogPath(url) && url.endsWith('/0'))
+			return true;
+		return false;
 	}
 };
 
@@ -4138,7 +4164,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190309-7461
+// 20190402-7475
 // controllers/base.js
 
 (function () {
@@ -4292,6 +4318,12 @@ Vue.component('a2-pager', {
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
+			$setCurrentUrl(url) {
+				if (this.inDialog)
+					url = urltools.combine('_dialog', url);
+				this.$data.__baseUrl__ = url;
+				eventBus.$emit('modalSetBase', url);
+			},
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -4309,7 +4341,7 @@ Vue.component('a2-pager', {
 				}
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
+					let wasNew = urltools.isNewPath(self.$baseUrl);
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
@@ -4464,7 +4496,7 @@ Vue.component('a2-pager', {
 
 			$requery() {
 				if (this.inDialog)
-					eventBus.$emit('modalRequery');
+					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
 					eventBus.$emit('requery');
 			},

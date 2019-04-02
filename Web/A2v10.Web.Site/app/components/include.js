@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190306-7457
+// 20190402-7475
 /*components/include.js*/
 
 (function () {
@@ -60,7 +60,7 @@
 				if (!this.insideDialog) return;
 				setTimeout(() => {
 					this.requery();
-				},1)
+				}, 1);
 			}
 		},
 		computed: {
@@ -80,7 +80,11 @@
 		},
 		watch: {
 			src: function (newUrl, oldUrl) {
-				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+				if (this.insideDialog) {
+					// Dialog. No need to reload always.
+					this.currentUrl = newUrl;
+				}
+				else if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
 					// Only the search has changed. No need to reload.
 					this.currentUrl = newUrl;
 				}

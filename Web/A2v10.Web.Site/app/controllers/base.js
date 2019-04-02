@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190309-7461
+// 20190402-7475
 // controllers/base.js
 
 (function () {
@@ -154,6 +154,12 @@
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
+			$setCurrentUrl(url) {
+				if (this.inDialog)
+					url = urltools.combine('_dialog', url);
+				this.$data.__baseUrl__ = url;
+				eventBus.$emit('modalSetBase', url);
+			},
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -171,7 +177,7 @@
 				}
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
+					let wasNew = urltools.isNewPath(self.$baseUrl);
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
@@ -326,7 +332,7 @@
 
 			$requery() {
 				if (this.inDialog)
-					eventBus.$emit('modalRequery');
+					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
 					eventBus.$emit('requery');
 			},

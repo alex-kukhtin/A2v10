@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190221-7439*/
+/*20190402-7475*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -22,8 +22,9 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment,
-		removeFirstSlash
+		replaceSegment,
+		removeFirstSlash,
+		isNewPath
 	};
 
 	function normalize(elem) {
@@ -108,10 +109,17 @@ app.modules['std:url'] = function () {
 		let os = o1.split('/');
 		if (ns.length !== os.length)
 			return false;
-		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+
+		function isNewPath(arr) {
+			let ai = arr[arr.length - 1];
+			return ai === 'new' || ai === '0';
+		}
+
+		if (isNewPath(os) && !isNewPath(ns)) {
 			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
 				return true;
 		}
+
 		return false;
 	}
 
@@ -191,13 +199,31 @@ app.modules['std:url'] = function () {
 		alert('todo::replaceId');
 	}
 
+	function isDialogPath(url) {
+		return url.startsWith('/_dialog/');
+	}
+
 	function replaceSegment(url, id, action) {
 		let parts = url.split('/');
-		if (action) parts.pop();
-		if (id) parts.pop();
-		if (action) parts.push(action);
-		if (id) parts.push(id);
+		if (isDialogPath(url)) {
+			parts.pop();
+			if (id)
+				parts.push(id);
+		} else {
+			if (action) parts.pop();
+			if (id) parts.pop();
+			if (action) parts.push(action);
+			if (id) parts.push(id);
+		}
 		return parts.join('/');
+	}
+
+	function isNewPath(url) {
+		if (url.indexOf('/new') !== -1)
+			return true;
+		if (isDialogPath(url) && url.endsWith('/0'))
+			return true;
+		return false;
 	}
 };
 

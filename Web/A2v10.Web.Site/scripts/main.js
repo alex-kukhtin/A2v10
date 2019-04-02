@@ -721,7 +721,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190221-7439*/
+/*20190402-7475*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -743,8 +743,9 @@ app.modules['std:url'] = function () {
 		firstUrl: '',
 		encodeUrl: encodeURIComponent,
 		helpHref,
-		replaceSegment: replaceSegment,
-		removeFirstSlash
+		replaceSegment,
+		removeFirstSlash,
+		isNewPath
 	};
 
 	function normalize(elem) {
@@ -829,10 +830,17 @@ app.modules['std:url'] = function () {
 		let os = o1.split('/');
 		if (ns.length !== os.length)
 			return false;
-		if (os[os.length - 1] === 'new' && ns[ns.length - 1] !== 'new') {
+
+		function isNewPath(arr) {
+			let ai = arr[arr.length - 1];
+			return ai === 'new' || ai === '0';
+		}
+
+		if (isNewPath(os) && !isNewPath(ns)) {
 			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
 				return true;
 		}
+
 		return false;
 	}
 
@@ -912,13 +920,31 @@ app.modules['std:url'] = function () {
 		alert('todo::replaceId');
 	}
 
+	function isDialogPath(url) {
+		return url.startsWith('/_dialog/');
+	}
+
 	function replaceSegment(url, id, action) {
 		let parts = url.split('/');
-		if (action) parts.pop();
-		if (id) parts.pop();
-		if (action) parts.push(action);
-		if (id) parts.push(id);
+		if (isDialogPath(url)) {
+			parts.pop();
+			if (id)
+				parts.push(id);
+		} else {
+			if (action) parts.pop();
+			if (id) parts.pop();
+			if (action) parts.push(action);
+			if (id) parts.push(id);
+		}
 		return parts.join('/');
+	}
+
+	function isNewPath(url) {
+		if (url.indexOf('/new') !== -1)
+			return true;
+		if (isDialogPath(url) && url.endsWith('/0'))
+			return true;
+		return false;
 	}
 };
 
@@ -3758,7 +3784,7 @@ app.modules['std:routing'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190306-7457
+// 20190402-7475
 /*components/include.js*/
 
 (function () {
@@ -3818,7 +3844,7 @@ app.modules['std:routing'] = function () {
 				if (!this.insideDialog) return;
 				setTimeout(() => {
 					this.requery();
-				},1)
+				}, 1);
 			}
 		},
 		computed: {
@@ -3838,7 +3864,11 @@ app.modules['std:routing'] = function () {
 		},
 		watch: {
 			src: function (newUrl, oldUrl) {
-				if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
+				if (this.insideDialog) {
+					// Dialog. No need to reload always.
+					this.currentUrl = newUrl;
+				}
+				else if (newUrl.split('?')[0] === oldUrl.split('?')[0]) {
 					// Only the search has changed. No need to reload.
 					this.currentUrl = newUrl;
 				}
@@ -9572,7 +9602,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190309-7461
+// 20190402-7475
 // controllers/base.js
 
 (function () {
@@ -9726,6 +9756,12 @@ Vue.directive('resize', {
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
+			$setCurrentUrl(url) {
+				if (this.inDialog)
+					url = urltools.combine('_dialog', url);
+				this.$data.__baseUrl__ = url;
+				eventBus.$emit('modalSetBase', url);
+			},
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -9743,7 +9779,7 @@ Vue.directive('resize', {
 				}
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
-					let wasNew = self.$baseUrl.indexOf('/new') !== -1;
+					let wasNew = urltools.isNewPath(self.$baseUrl);
 					dataservice.post(url, jsonData).then(function (data) {
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
@@ -9898,7 +9934,7 @@ Vue.directive('resize', {
 
 			$requery() {
 				if (this.inDialog)
-					eventBus.$emit('modalRequery');
+					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
 					eventBus.$emit('requery');
 			},
@@ -10705,7 +10741,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180307-7460*/
+/*20180402-7475*/
 /* controllers/shell.js */
 
 (function () {
@@ -11155,15 +11191,24 @@ Vue.directive('resize', {
 					arg.result = true;
 			});
 
-			eventBus.$on('modalRequery', function () {
+			eventBus.$on('modalRequery', function (baseUrl) {
 				if (!me.modals.length)
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				let inst = dlg.instance; // include instance
 				if (inst && inst.modalRequery) {
+					if (baseUrl)
+						dlg.url = baseUrl;
 					me.modalRequeryUrl = dlg.url;
 					inst.modalRequery();
 				}
+			});
+
+			eventBus.$on('modalSetBase', function (baseUrl) {
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				dlg.url = baseUrl;
 			});
 
 			eventBus.$on('modalClose', function (result) {

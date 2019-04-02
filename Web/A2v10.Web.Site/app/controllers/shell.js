@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180307-7460*/
+/*20180402-7475*/
 /* controllers/shell.js */
 
 (function () {
@@ -450,15 +450,24 @@
 					arg.result = true;
 			});
 
-			eventBus.$on('modalRequery', function () {
+			eventBus.$on('modalRequery', function (baseUrl) {
 				if (!me.modals.length)
 					return;
 				let dlg = me.modals[me.modals.length - 1];
 				let inst = dlg.instance; // include instance
 				if (inst && inst.modalRequery) {
+					if (baseUrl)
+						dlg.url = baseUrl;
 					me.modalRequeryUrl = dlg.url;
 					inst.modalRequery();
 				}
+			});
+
+			eventBus.$on('modalSetBase', function (baseUrl) {
+				if (!me.modals.length)
+					return;
+				let dlg = me.modals[me.modals.length - 1];
+				dlg.url = baseUrl;
 			});
 
 			eventBus.$on('modalClose', function (result) {
