@@ -2134,7 +2134,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190309-7462
+// 20190403-7477
 // services/datamodel.js
 
 (function () {
@@ -2479,6 +2479,8 @@ app.modules['std:validators'] = function () {
 			}
 			elem._setModelInfo_ = setRootModelInfo;
 			elem._findRootModelInfo = findRootModelInfo;
+			elem._saveSelections = saveSelections;
+			elem._restoreSelections = restoreSelections;
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
@@ -3262,6 +3264,36 @@ app.modules['std:validators'] = function () {
 		let t = root.$template;
 		let opts = t && t.options;
 		return opts && opts.noDirty;
+	}
+
+	function saveSelections() {
+		let root = this;
+		let t = root.$template;
+		let opts = t && t.options;
+		if (!opts) return;
+		let ps = opts.persistSelect;
+		if (!ps || !ps.length) return;
+		let result = {};
+		for (let p of ps) {
+			let arr = utils.simpleEval(root, p);
+			if (utils.isArray(arr)) {
+				result[p] = arr.$selectedIndex;
+			}
+		}
+		return result;
+	}
+
+
+	function restoreSelections(sels) {
+		if (!sels) return;
+		let root = this;
+		for (let p in sels) {
+			let arr = utils.simpleEval(root, p);
+			let si = sels[p];
+			if (utils.isArray(arr) && si >= 0 && si < arr.length) {
+				arr[si].$select();
+			}
+		}
 	}
 
 	function merge(src, afterSave, existsOnly) {
@@ -4164,7 +4196,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190402-7475
+// 20190403-7477
 // controllers/base.js
 
 (function () {
@@ -4339,6 +4371,10 @@ Vue.component('a2-pager', {
 					this.$alert(locale.$MakeValidFirst, undefined, errs);
 					return;
 				}
+				self.$data.$emit('Model.beforeSave', self.$data);
+
+				let saveSels = self.$data._saveSelections();
+
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = urltools.isNewPath(self.$baseUrl);
@@ -4369,6 +4405,7 @@ Vue.component('a2-pager', {
 							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
+						self.$data._restoreSelections(saveSels);
 						resolve(dataToResolve); // single element (raw data)
 						let toast = opts && opts.toast ? opts.toast : null;
 						if (toast)
@@ -4470,6 +4507,8 @@ Vue.component('a2-pager', {
 					}
 				}
 
+				let saveSels = dat._saveSelections();
+
 				return new Promise(function (resolve, reject) {
 					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
@@ -4484,6 +4523,7 @@ Vue.component('a2-pager', {
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
+							dat._restoreSelections(saveSels);
 							resolve(dat);
 						} else {
 							throw new Error('Invalid response type for $reload');

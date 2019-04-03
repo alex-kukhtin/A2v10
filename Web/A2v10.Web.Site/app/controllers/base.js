@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190402-7475
+// 20190403-7477
 // controllers/base.js
 
 (function () {
@@ -175,6 +175,10 @@
 					this.$alert(locale.$MakeValidFirst, undefined, errs);
 					return;
 				}
+				self.$data.$emit('Model.beforeSave', self.$data);
+
+				let saveSels = self.$data._saveSelections();
+
 				return new Promise(function (resolve, reject) {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = urltools.isNewPath(self.$baseUrl);
@@ -205,6 +209,7 @@
 							// and in the __baseUrl__
 							self.$data.__baseUrl__ = urltools.replaceSegment(self.$data.__baseUrl__, newId, 'edit');
 						}
+						self.$data._restoreSelections(saveSels);
 						resolve(dataToResolve); // single element (raw data)
 						let toast = opts && opts.toast ? opts.toast : null;
 						if (toast)
@@ -306,6 +311,8 @@
 					}
 				}
 
+				let saveSels = dat._saveSelections();
+
 				return new Promise(function (resolve, reject) {
 					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
 					if (utils.isDefined(dat.Query)) {
@@ -320,6 +327,7 @@
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
 							dat._fireLoad_();
+							dat._restoreSelections(saveSels);
 							resolve(dat);
 						} else {
 							throw new Error('Invalid response type for $reload');
