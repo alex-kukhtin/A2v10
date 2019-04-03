@@ -4195,7 +4195,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190309-7462*/
+/*20190403-7478*/
 /*components/textbox.js*/
 
 (function () {
@@ -4205,7 +4205,7 @@ Vue.component('validator-control', {
 
 	let textBoxTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
@@ -4224,7 +4224,7 @@ Vue.component('validator-control', {
 
 	let textAreaTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
@@ -4241,7 +4241,7 @@ Vue.component('validator-control', {
 
 	let staticTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
 		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>
@@ -4398,7 +4398,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190324-7470*/
+/*20190403-7478*/
 /*components/combobox.js*/
 
 (function () {
@@ -4408,7 +4408,7 @@ Vue.component('validator-control', {
 
 	let comboBoxTemplate =
 `<div :class="cssClass()" v-lazy="itemsSource">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<div class="select-wrapper">
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
@@ -4655,9 +4655,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180821-7280
+// 20190403-7478
 // components/datepicker.js
 
 
@@ -4675,7 +4675,7 @@ Vue.component('validator-control', {
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()" class="date-picker">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
@@ -4963,7 +4963,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190220-7437
+// 20190403-7478
 
 // components/selector.js
 
@@ -4984,7 +4984,7 @@ Vue.component('validator-control', {
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 

@@ -50,15 +50,30 @@
 	<Grid Columns="12rem, 12rem, 150, 1*">
 		<Alert Style="Danger">Русский текст</Alert>
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
-		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}"/>
-		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right"/>
-		<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right" />
+		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}">
+			<DatePicker.Link>
+				<Hyperlink Content="Select date"/>
+			</DatePicker.Link>
+		</DatePicker>
+		<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right">
+			<TextBox.Link>
+				<Hyperlink Content="Select no"/>
+			</TextBox.Link>
+		</TextBox>
+		<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right">
+			<Static.Link>
+				<Hyperlink Content="Static"/>
+			</Static.Link>
+		</Static>
 		<!--
 		-->
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
 			Label="@[Purchaser]" Value="{Bind Document.Agent}"  TextValue="{Bind Document.Memo}"
 				CreateNewCommand="{BindCmd Execute, CommandName='createNewCustomer'}"
 				Delegate="fetchCustomers" DisplayProperty="Name" ShowCaret="True">
+			<Selector.Link>
+				<Hyperlink Content="Зберегти цей рахунок"/>
+			</Selector.Link>
 			<Selector.AddOns>
 				<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 				<Hyperlink Icon="Menu">
@@ -124,7 +139,11 @@
 			</Table>
 		</Block>
 		<TextBox Grid.Row="6" Grid.ColSpan="4" Label="@[Memo]" Multiline="True" AutoSize="True"
-			Value="{Bind Document.Memo}" Rows="3" UpdateTrigger="Input"/>
+			Value="{Bind Document.Memo}" Rows="3" UpdateTrigger="Input">
+			<TextBox.Link>
+				<Hyperlink Content="Set memo"></Hyperlink>
+			</TextBox.Link>
+		</TextBox>
 		<!--
 			<Code Grid.Row="7" Content="{Bind Document.Memo}"></Code>
 		-->

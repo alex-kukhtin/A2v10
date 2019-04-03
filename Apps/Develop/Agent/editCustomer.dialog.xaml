@@ -90,6 +90,9 @@
 			<Grid Columns="1*, 1*">
 				<ComboBox Label="Страна" Grid.Row="1" ItemsSource="{Bind Countries}"
 						Value="{Bind Agent.Address.Country}" TestId="country">
+					<ComboBox.Link>
+						<Hyperlink Content="Combo link"></Hyperlink>
+					</ComboBox.Link>
 					<ComboBoxItem Content="{Bind Name}" Value="{Bind Code}"/>
 					<ComboBox.Popover>
 						<Popover Icon="HelpOutline" Placement="BottomLeft" Width="200px" Top="22">

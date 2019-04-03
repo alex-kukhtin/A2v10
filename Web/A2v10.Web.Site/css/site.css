@@ -1673,6 +1673,9 @@ pre.a2-code {
   display: block;
   font-weight: normal;
 }
+.control-group .control-link {
+  float: right;
+}
 .control-group .descr {
   display: inline-block;
   font-size: 95%;

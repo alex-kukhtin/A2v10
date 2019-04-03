@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190324-7470*/
+/*20190403-7478*/
 /*components/combobox.js*/
 
 (function () {
@@ -10,7 +10,7 @@
 
 	let comboBoxTemplate =
 `<div :class="cssClass()" v-lazy="itemsSource">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<div class="select-wrapper">
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>

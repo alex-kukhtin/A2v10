@@ -17,6 +17,7 @@ namespace A2v10.Xaml
 		public Popover Popover { get; set; }
 		public String TestId { get; set; }
 		public Popover Hint { get; set; }
+		public UIElement Link { get; set; }
 
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
@@ -55,6 +56,7 @@ namespace A2v10.Xaml
 		{
 			RenderPopover(context);
 			RenderHint(context);
+			RenderLink(context);
 			if (!_addOns.IsValueCreated)
 				return;
 			foreach (var ctl in AddOns)
@@ -91,6 +93,20 @@ namespace A2v10.Xaml
 			Hint.RenderElement(context, (t) =>
 			{
 				t.AddCssClass("hint");
+			});
+			tag.RenderEnd(context);
+		}
+
+		internal void RenderLink(RenderContext context)
+		{
+			if (Link == null)
+				return;
+			var tag = new TagBuilder("template");
+			tag.MergeAttribute("slot", "link");
+			tag.RenderStart(context);
+			Link.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("control-link");
 			});
 			tag.RenderEnd(context);
 		}

@@ -120,6 +120,7 @@ namespace A2v10.Xaml
 			}
 			RenderPopover(context);
 			RenderHint(context);
+			RenderLink(context);
 			combo.RenderEnd(context);
 		}
 

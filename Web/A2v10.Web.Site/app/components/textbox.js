@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190309-7462*/
+/*20190403-7478*/
 /*components/textbox.js*/
 
 (function () {
@@ -10,7 +10,7 @@
 
 	let textBoxTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
 		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
@@ -29,7 +29,7 @@
 
 	let textAreaTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
 			v-on:change="onChange($event.target.value)" 
@@ -46,7 +46,7 @@
 
 	let staticTemplate =
 `<div :class="cssClass()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
 		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
 		<slot></slot>

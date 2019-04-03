@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190220-7437
+// 20190403-7478
 
 // components/selector.js
 
@@ -21,7 +21,7 @@
 		extends: baseControl,
 		template: `
 <div :class="cssClass2()">
-	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
