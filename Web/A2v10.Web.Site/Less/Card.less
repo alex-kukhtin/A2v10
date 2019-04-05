@@ -1,12 +1,16 @@
 ﻿
 @card-gap:1.46666rem;
 @card-margin:0.7rem;
+@card-margin-compact: 0.5rem;
+@card-gap-compact:1.2rem;
 @card-ghost-color: hsla(0,0%,100%,.25);
 
 .a2-state-card {
 	position: relative;
 	background-color: white;
 	color: #aaa;
+	// disble margin collapsing
+	display: inline-block;
 
 	.a2-state-card-header {
 		line-height: 1;
@@ -70,5 +74,18 @@
 
 	&.a2-state-card-primary {
 		background-color: @primary-base-color;
+	}
+
+	&.compact {
+		.a2-state-card-text {
+			font-size: 1.6rem;
+		}
+
+		.a2-card-icon {
+			position: absolute;
+			right: @card-gap-compact;
+			top: @card-gap-compact;
+			font-size: @card-gap-compact * 3;
+		}
 	}
 }

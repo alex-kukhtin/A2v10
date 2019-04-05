@@ -21,6 +21,7 @@ namespace A2v10.Xaml
 		public Object Footer { get; set; }
 		public Object Text { get; set; }
 		public CardStyle Style {get; set;}
+		public Boolean Compact { get; set; }
 
 		public ShadowStyle DropShadow { get; set; }
 
@@ -44,6 +45,7 @@ namespace A2v10.Xaml
 				panel.AddCssClass("a2-state-card-styled");
 				panel.AddCssClass("a2-state-card-" + Style.ToString().ToLowerInvariant());
 			}
+			panel.AddCssClassBool(Compact, "compact");
 			panel.RenderStart(context);
 			if (HasHeader)
 				RenderHeader(context);

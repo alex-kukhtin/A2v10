@@ -4888,6 +4888,7 @@ TODO:
   position: relative;
   background-color: white;
   color: #aaa;
+  display: inline-block;
 }
 .a2-state-card .a2-state-card-header {
   line-height: 1;
@@ -4939,6 +4940,15 @@ TODO:
 }
 .a2-state-card.a2-state-card-primary {
   background-color: #3470b4;
+}
+.a2-state-card.compact .a2-state-card-text {
+  font-size: 1.6rem;
+}
+.a2-state-card.compact .a2-card-icon {
+  position: absolute;
+  right: 1.2rem;
+  top: 1.2rem;
+  font-size: 3.6rem;
 }
 .grid {
   display: grid;
