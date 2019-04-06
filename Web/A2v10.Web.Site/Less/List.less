@@ -17,7 +17,7 @@
 			background-color: @hover-bg-color !important;
 
 			.commandbar.visible-hover {
-				visibility:visible;
+				visibility: visible;
 			}
 		}
 
@@ -76,8 +76,21 @@
 		}
 	}
 
-	&.border {
+	&.border, &.border-all {
 		border: 1px solid @light-gray-color;
+	}
+
+	&.border-top {
+		border-top: 1px solid @light-gray-color;
+	}
+
+	&.border-bottom {
+		border-bottom: 1px solid @light-gray-color;
+	}
+
+	&.border-top-bottom {
+		border-top: 1px solid @light-gray-color;
+		border-bottom: 1px solid @light-gray-color;
 	}
 
 	&.two-columns-grid {
@@ -106,7 +119,8 @@
 
 	&.chat {
 		user-select: text;
-		padding:0 0 0 6px;
+		padding: 0 0 0 6px;
+
 		.a2-list-item {
 			padding: 0;
 			background-color: transparent;
@@ -134,9 +148,9 @@
 	}
 
 	.list-empty {
-		text-align:center;
-		padding:8px;
-	} 
+		text-align: center;
+		padding: 8px;
+	}
 }
 
 .generic-list-item {

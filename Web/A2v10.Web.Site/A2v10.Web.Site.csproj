@@ -163,6 +163,7 @@
     <Content Include="TestPages\slot.html" />
     <Content Include="tests\format.js" />
     <Content Include="Less\TabBar.less" />
+    <Content Include="Less\D3.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

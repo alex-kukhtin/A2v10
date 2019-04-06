@@ -7,6 +7,7 @@ namespace A2v10.Xaml
 	public class StaticImage : Inline
 	{
 		public String Url { get; set; }
+		public Length Height { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -15,6 +16,8 @@ namespace A2v10.Xaml
 			var img = new TagBuilder("a2-static-image", null, IsInGrid);
 			onRender?.Invoke(img);
 			MergeAttributes(img, context);
+			if (Height != null)
+				img.MergeStyle("height", Height.Value);
 			var urlBind = GetBinding(nameof(Url));
 			if (urlBind != null)
 				img.MergeAttribute(":url", urlBind.GetPathFormat(context));

@@ -8,7 +8,9 @@ namespace A2v10.Xaml
 	public enum BorderStyle
 	{
 		None,
-		Top
+		Top,
+		TopBottom,
+		All
 	}
 
 	public class FlexList : Container, ITableControl

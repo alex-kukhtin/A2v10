@@ -29,6 +29,7 @@ namespace A2v10.Xaml
 		public Boolean Border { get; set; }
 		public Boolean Flush { get; set; }
 		public Boolean Compact { get; set; }
+		public BorderStyle BorderStyle { get; set; }
 
 		public Length Height { get; set; }
 		public Length MaxHeight { get; set; }
@@ -51,6 +52,8 @@ namespace A2v10.Xaml
 			ul.AddCssClassBool(Flush, "flush");
 			ul.AddCssClassBool(Compact, "compact");
 			ul.MergeAttribute("group-by", GroupBy);
+			if (BorderStyle != BorderStyle.None)
+				ul.AddCssClass($"border-{BorderStyle.ToString().ToKebabCase()}");
 			if (MarkerStyle != RowMarkerStyle.None)
 				ul.MergeAttribute("mark-style", MarkerStyle.ToString().ToKebabCase());
 			if (Select != null)
