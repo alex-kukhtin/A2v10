@@ -17,6 +17,7 @@ namespace A2v10.Infrastructure
 		String Theme { get; }
 		String HelpUrl { get; }
 		String HostingPath { get; }
+		Boolean Mobile { get; set; }
 
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }

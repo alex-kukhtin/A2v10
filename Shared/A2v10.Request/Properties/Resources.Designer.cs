@@ -120,6 +120,7 @@ namespace A2v10.Request.Properties {
         ///
         ///(function () {
         ///
+        ///	$(Utils)
         ///	$(Locale)
         ///
         ///	const vm = new Vue({
@@ -144,9 +145,9 @@ namespace A2v10.Request.Properties {
         ///			locale() {
         ///				return window.$$locale;
         ///			}
-        ///		}
-        ///	});
-        ///})();.
+        ///		},
+        ///		methods: {
+        ///		 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string appLinkScript {
             get {
@@ -178,9 +179,10 @@ namespace A2v10.Request.Properties {
         /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
+        ///&apos;use strict&apos;;
+        ///
         ///(function () {
         ///
-        ///	&apos;use strict&apos;;
         ///
         ///	const eventBus = require(&apos;std:eventBus&apos;);
         ///
@@ -203,7 +205,7 @@ namespace A2v10.Request.Properties {
         ///				this.$store.commit(&quot;close&quot;);
         ///			},
         ///			$requery() {
-        ///				eventBus.$emit(&apos;re [rest of string was truncated]&quot;;.
+        ///				eventBus.$emit(&apos;r [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string appPageScript {
             get {
@@ -230,7 +232,7 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ConfirmEMailPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div&gt;
@@ -248,7 +250,7 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///&lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$Error&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div&gt;
@@ -361,7 +363,7 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ///&lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///&lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
@@ -370,9 +372,9 @@ namespace A2v10.Request.Properties {
         ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
         ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
         ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-        ///		&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
         ///	&lt;/div&gt;
-        ///	&lt;div v [rest of string was truncated]&quot;;.
+        ///	&lt;div v-else class=&quot;gr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string forgotPassword {
             get {
@@ -381,7 +383,10 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+        ///// version 7372
+        ///
+        ///&apos;use strict&apos;;
         ///
         ///(function () {
         ///
@@ -406,11 +411,9 @@ namespace A2v10.Request.Properties {
         ///			confirmText: &apos;&apos;
         ///		},
         ///		computed: {
-        ///			valid() {
+        ///			valid:function() {
         ///				if (!this.submitted) return true;
-        ///				return this.validEmail;
-        ///			},
-        ///			validEmail() {        /// [rest of string was truncated]&quot;;.
+        ///				return  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string forgotPasswordScript {
             get {
@@ -444,15 +447,15 @@ namespace A2v10.Request.Properties {
         ///&lt;html lang=&quot;$(Locale)&quot;&gt;
         ///&lt;head&gt;
         ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
         ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
         ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
         ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
         ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
-        ///	&lt;title&gt;&lt;/title&gt;
-        ///	&lt;link href=&quot;/css/$(Theme).min.c [rest of string was truncated]&quot;;.
+        ///	&lt;meta name=&quot;theme-color&quot; content=&quot;#4d6082&quot; /&gt;
+        ///	&lt;ti [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layout {
             get {
@@ -478,6 +481,27 @@ namespace A2v10.Request.Properties {
         internal static string layoutAdmin {
             get {
                 return ResourceManager.GetString("layoutAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;$(Locale)&quot;&gt;
+        ///&lt;head&gt;
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
+        ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
+        ///	&lt;meta name=&quot;theme-color&quot; content=&quot;#4d6082&quot; /&gt;
+        ///	&lt;ti [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string layoutMobile {
+            get {
+                return ResourceManager.GetString("layoutMobile", resourceCulture);
             }
         }
         
@@ -576,7 +600,7 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$LoginPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
@@ -585,7 +609,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;form&gt;
         ///		&lt;div class=&quot;grid&quot; style=&quot;grid-template-columns:auto 1fr; width:400px&quot;&gt;
         ///			&lt;label style=&quot;grid-row:1; grid-column:1&quot; class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
-        ///	 [rest of string was truncated]&quot;;.
+        ///			&lt;div class=&quot;control-group&quot; st [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string login {
             get {
@@ -594,7 +618,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+        ///
+        ///&quot;use strict&quot;;
         ///
         ///(function () {
         ///
@@ -618,11 +644,9 @@ namespace A2v10.Request.Properties {
         ///			emailError: &apos;&apos;
         ///		},
         ///		computed: {
-        ///			valid() {
+        ///			valid: function() {
         ///				if (!this.submitted) return true;
-        ///				return this.validEmail &amp;&amp; this.validPassword;
-        ///			},
-        ///		 [rest of string was truncated]&quot;;.
+        ///				return this.validEmail &amp;&amp; thi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string loginScript {
             get {
@@ -642,11 +666,11 @@ namespace A2v10.Request.Properties {
         ///	const PLACE_CHAR = &apos;_&apos;;
         ///
         ///	return {
-        ///		getMasked,
-        ///		getUnmasked,
-        ///		mountElement,
-        ///		unmountElement,
-        ///		setMask
+        ///		getMasked: getMasked,
+        ///		getUnmasked: getUnmasked,
+        ///		mountElement: mountElement,
+        ///		unmountElement: unmountElement,
+        ///		setMask: setMask
         ///	};
         ///
         ///	function isMaskChar(ch) {
@@ -658,8 +682,7 @@ namespace A2v10.Request.Properties {
         ///	}
         ///
         ///	function isValidChar(mask, char) {
-        ///		if (mask === &apos;#&apos;) {
-        ///			return char &gt;= &apos;0&apos; &amp;&amp; char &lt;= &apos;9&apos; || char === PLA [rest of string was truncated]&quot;;.
+        ///		if (mask = [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string mask {
             get {
@@ -671,7 +694,7 @@ namespace A2v10.Request.Properties {
         ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
         ///Vue.directive(&apos;focus&apos;, {
-        ///	bind(el, binding, vnode) {
+        ///	bind: function(el, binding, vnode) {
         ///
         ///		el.addEventListener(&quot;focus&quot;, function (event) {
         ///			event.target.parentElement.classList.add(&apos;focus&apos;);
@@ -685,7 +708,7 @@ namespace A2v10.Request.Properties {
         ///
         ///		el.addEventListener(&quot;click&quot;, function (event) {
         ///			let t = event.target;
-        ///			if (t._select [rest of string was truncated]&quot;;.
+        ///			if  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pageUtils {
             get {
@@ -694,7 +717,7 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$RegisterPrompt&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
@@ -704,7 +727,8 @@ namespace A2v10.Request.Properties {
         ///		&lt;div v-if=&quot;showConfirm&quot; class=&quot;user-select&quot;&gt;
         ///			&lt;p v-text=&quot;confirmRegisterText&quot;&gt;&lt;/p&gt;
         ///			&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-        ///			&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot; [rest of string was truncated]&quot;;.
+        ///			&lt;a tabindex=&quot;3&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///		&lt;/di [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenant {
             get {
@@ -713,7 +737,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+        ///
+        ///&quot;use strict&quot;;
         ///
         ///(function () {
         ///
@@ -741,8 +767,7 @@ namespace A2v10.Request.Properties {
         ///			info: $(PageData),
         ///			appLinks: $(AppLinks),
         ///			submitted: false,
-        ///			serverError: &apos;&apos;,
-        ///		 [rest of string was truncated]&quot;;.
+        ///			ser [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenantScript {
             get {
@@ -751,7 +776,7 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;content-view full-view&quot; style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ResetPasswordTitle&quot;&gt;&lt;/h4&gt;
         ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
         ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
@@ -763,7 +788,7 @@ namespace A2v10.Request.Properties {
         ///			&lt;/p&gt;
         ///			&lt;a tabindex=&quot;1&quot; href=&quot;/&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
         ///		&lt;/div&gt;
-        ///		&lt;div  [rest of string was truncated]&quot;;.
+        ///		&lt;div v-else class=&quot;grid&quot; style=&quot;grid [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string resetPassword {
             get {
@@ -773,6 +798,7 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+        ///// version 7372
         ///
         ///(function () {
         ///
@@ -800,7 +826,7 @@ namespace A2v10.Request.Properties {
         ///		},
         ///		computed: {
         ///			locale() {
-        ///				return window.$$locale [rest of string was truncated]&quot;;.
+        ///				retur [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string resetPasswordScript {
             get {
@@ -873,6 +899,7 @@ namespace A2v10.Request.Properties {
         ///
         ///(function () {
         ///
+        ///	$(Utils)
         ///	$(Locale)
         ///
         ///	const vm = new Vue({
@@ -888,6 +915,9 @@ namespace A2v10.Request.Properties {
         ///			}
         ///		},
         ///		methods: {
+        ///			getReferUrl(url) {
+        ///				return getReferralUrl(url);
+        ///			}
         ///		}
         ///	});
         ///})();.
@@ -909,9 +939,15 @@ namespace A2v10.Request.Properties {
         ///	const DialogController = component(&apos;standaloneController&apos;);
         ///
         ///	const vm = new DialogController({
-        ///		el: &quot;$(PageGuid)&quot;,
+        ///		el: &quot;#$(PageGuid)&quot;,
+        ///		props: {
+        ///			inDialog: { type: Boolean, default: true }
+        ///		},
         ///		data: cm.dataModel
         ///	});
+        ///
+        ///	DialogController.init(vm, null);
+        ///
         ///})();.
         /// </summary>
         internal static string standaloneDialogScript {

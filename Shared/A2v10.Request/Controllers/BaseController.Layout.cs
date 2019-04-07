@@ -20,7 +20,8 @@ namespace A2v10.Request
 	{
 		public void Layout(TextWriter writer, IDictionary<String, String> prms)
 		{
-			String layout = Admin ? Resources.layoutAdmin : Resources.layout;
+			String layout = Admin ? Resources.layoutAdmin : 
+							_host.Mobile ? Resources.layoutMobile :  Resources.layout;
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);

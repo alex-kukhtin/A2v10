@@ -68,7 +68,8 @@ namespace A2v10.Web.Mvc.Start
 			{
 				if (HttpContext.Current == null)
 					throw new InvalidProgramException("There is no http context");
-				var locator = HttpContext.Current.Items["ServiceLocator"];
+				var currentContext = HttpContext.Current;
+				var locator = currentContext.Items["ServiceLocator"];
 				if (locator == null)
 					new ServiceLocator();
 				return HttpContext.Current.Items["ServiceLocator"] as IServiceLocator;

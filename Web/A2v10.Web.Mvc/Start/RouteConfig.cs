@@ -25,12 +25,16 @@ namespace A2v10.Web.Mvc.Start
 				defaults: new { controller = "Account" }
 			);
 
-			routes.MapRoute(
-				name: "AppLink",
-				url: "AppLink/{*pathInfo}",
-				defaults: new { controller = "AppLink", action="Default" }
-			);
+			foreach (var name in new String[] { "Report", "Attachment", "EUSign" })
+			{
+				routes.MapRoute(
+					name: name,
+					url: $"{name}/{{action}}/{{id}}",
+					defaults: new { controller = name }
+				);
+			}
 
+			/*
 			routes.MapRoute(
 				name: "Report",
 				url: "Report/{action}/{id}",
@@ -48,7 +52,17 @@ namespace A2v10.Web.Mvc.Start
 				url: "EUSign/{action}/{id}",
 				defaults: new { controller = "EUSign" }
 			);
+			*/
 
+			foreach (var name in new String[] {"Api", "Static", "AppLink" })
+			{
+				routes.MapRoute(
+					name: name,
+					url: $"{name}/{{*pathInfo}}",
+					defaults: new { controller = name, action = "Default" }
+				);
+			}
+			/*
 			routes.MapRoute(
 				name: "Api",
 				url: "Api/{*pathInfo}",
@@ -60,6 +74,13 @@ namespace A2v10.Web.Mvc.Start
 				url: "Static/{*pathInfo}",
 				defaults: new { controller = "Static", action = "Default" }
 			);
+
+			routes.MapRoute(
+				name: "AppLink",
+				url: "AppLink/{*pathInfo}",
+				defaults: new { controller = "AppLink", action = "Default" }
+			);
+			*/
 
 			routes.MapRoute(
 				name: "Demo",

@@ -99,6 +99,7 @@
     <Content Include="Pages\forgotPassword.html" />
     <Content Include="Pages\forgotPasswordScript.js" />
     <Content Include="Pages\appLinkScript.js" />
+    <Content Include="Pages\layoutMobile.html" />
     <Content Include="Pages\standaloneDialogScript.js" />
     <Content Include="Pages\stiReport.html" />
     <Content Include="Pages\initLayout.html" />

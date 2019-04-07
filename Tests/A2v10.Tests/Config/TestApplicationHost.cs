@@ -31,13 +31,10 @@ namespace A2v10.Tests.Config
 			return cnnStr.ConnectionString;
 		}
 
-		public IProfiler Profiler
-		{
-			get
-			{
-				return _profiler;
-			}
-		}
+		public IProfiler Profiler => _profiler;
+
+		public Boolean Mobile { get; set; }
+
 
 		public String AppPath
 		{

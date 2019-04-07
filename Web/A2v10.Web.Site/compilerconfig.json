@@ -2,11 +2,9 @@
 	{
 		"outputFile": "css/site.css",
 		"inputFile": "Less/Site.less"
+	},
+	{
+		"outputFile": "css/mobile.css",
+		"inputFile": "Less.Mobile/Site.Mobile.less"
 	}
-	/*
-  {
-    "outputFile": "Less/Data_URI.css",
-    "inputFile": "Less/Data_URI.less"
-  }
-	*/
 ]

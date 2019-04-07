@@ -10,11 +10,13 @@ using System.Web.Mvc;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
+using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Mvc.Models;
 
 namespace A2v10.Web.Mvc.Controllers
 {
 	[AllowAnonymous]
+	[CheckMobileFilter]
 	public class AppLinkController : Controller
 	{
 		private readonly IApplicationHost _host;

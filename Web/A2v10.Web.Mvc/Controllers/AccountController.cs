@@ -30,6 +30,7 @@ using System.Configuration;
 namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
+	[CheckMobileFilter]
 	public class AccountController : IdentityController
 	{
 

@@ -28,6 +28,8 @@ namespace A2v10.Web.Config
 
 		public IProfiler Profiler => _profiler;
 
+		public Boolean Mobile { get; set; }
+
 		#region IDataConfiguration
 
 		public String ConnectionString(String source)

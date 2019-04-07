@@ -29,6 +29,7 @@ namespace A2v10.Runtime
 		}
 
 		public IProfiler Profiler => _profiler;
+		public Boolean Mobile { get; set; }
 
 		private static String CurrentAppPath { get; set; }
 		private static String CurrentAppKey { get; set; }
