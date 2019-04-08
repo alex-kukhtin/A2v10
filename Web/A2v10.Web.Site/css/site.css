@@ -3231,17 +3231,17 @@ tr:hover .commandbar.visible-hover {
   top: 2px;
 }
 .tab-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto;
   padding: 0;
   padding-top: 6px;
   align-self: stretch;
   overflow: auto;
-  height: auto;
   background-color: #f9f9f9;
-  display: grid;
   grid-gap: 0;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr auto;
   align-items: stretch;
+  height: 100%;
 }
 .tab-panel .tab-header {
   background-color: #f9f9f9;
@@ -6179,6 +6179,9 @@ h5,
   display: block;
   color: #000;
   margin: 4px 8px;
+}
+.diagram .card foreignObject {
+  overflow: visible;
 }
 .diagram .card .d-card-text {
   display: block;
