@@ -753,6 +753,9 @@ span {
 p {
   margin: 0.5rem 0;
 }
+b {
+  font-weight: 500;
+}
 input[type=text]::-ms-clear {
   display: none;
 }
