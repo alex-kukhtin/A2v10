@@ -70,8 +70,12 @@ namespace A2v10.Interop.ExportTo
 			foreach (var ch in node.ChildNodes.OfType<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element))
 			{
 				var classAttr = ch.Attributes["class"];
-				if (classAttr != null && classAttr.Value.Contains("popover-wrapper"))
+				if (classAttr == null)
+					return node.InnerText;
+				if (classAttr.Value.Contains("popover-wrapper"))
 					return ch.FirstChild?.InnerText;
+				else if (classAttr.Value.Contains("hlink-dd-wrapper"))
+					return ch.FirstChild?.FirstChild?.InnerText;
 			}
 			return node.InnerText;
 		}
