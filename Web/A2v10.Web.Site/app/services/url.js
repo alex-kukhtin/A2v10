@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190402-7475*/
+/*20190411-7483*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -110,12 +110,12 @@ app.modules['std:url'] = function () {
 		if (ns.length !== os.length)
 			return false;
 
-		function isNewPath(arr) {
+		function isNewPathArr(arr) {
 			let ai = arr[arr.length - 1];
 			return ai === 'new' || ai === '0';
 		}
 
-		if (isNewPath(os) && !isNewPath(ns)) {
+		if (isNewPathArr(os) && !isNewPathArr(ns)) {
 			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
 				return true;
 		}
@@ -219,6 +219,8 @@ app.modules['std:url'] = function () {
 	}
 
 	function isNewPath(url) {
+		url = url.split('?')[0]; // first segment
+		if (!url) return false;
 		if (url.indexOf('/new') !== -1)
 			return true;
 		if (isDialogPath(url) && url.endsWith('/0'))

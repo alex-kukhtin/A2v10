@@ -712,7 +712,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190402-7475*/
+/*20190411-7483*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -822,12 +822,12 @@ app.modules['std:url'] = function () {
 		if (ns.length !== os.length)
 			return false;
 
-		function isNewPath(arr) {
+		function isNewPathArr(arr) {
 			let ai = arr[arr.length - 1];
 			return ai === 'new' || ai === '0';
 		}
 
-		if (isNewPath(os) && !isNewPath(ns)) {
+		if (isNewPathArr(os) && !isNewPathArr(ns)) {
 			if (ns.slice(0, ns.length - 1).join('/') === os.slice(0, os.length - 1).join('/'))
 				return true;
 		}
@@ -931,6 +931,8 @@ app.modules['std:url'] = function () {
 	}
 
 	function isNewPath(url) {
+		url = url.split('?')[0]; // first segment
+		if (!url) return false;
 		if (url.indexOf('/new') !== -1)
 			return true;
 		if (isDialogPath(url) && url.endsWith('/0'))
@@ -2178,7 +2180,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190403-7477
+// 20190412-7483
 // services/datamodel.js
 
 (function () {
@@ -2738,7 +2740,7 @@ Vue.component('a2-pager', {
 			return this.$insert(src, 'start');
 		};
 
-		arr.$insert = function (src, to) {
+		arr.$insert = function (src, to, current) {
 			const that = this;
 
 			function append(src, select) {
@@ -2750,6 +2752,7 @@ Vue.component('a2-pager', {
 					return null; // disabled
 				let len = that.length;
 				let ne = null;
+				let ix;
 				switch (to) {
 					case 'end':
 						len = that.push(newElem);
@@ -2759,6 +2762,18 @@ Vue.component('a2-pager', {
 						that.unshift(newElem);
 						ne = that[0];
 						len = 1; 
+						break;
+					case 'above':
+						ix = that.indexOf(current);
+						that.splice(ix, 0, newElem);
+						ne = that[ix];
+						len = ix + 1;
+						break;
+					case 'below':
+						ix = that.indexOf(current) + 1;
+						that.splice(ix, 0, newElem);
+						ne = that[ix];
+						len = ix + 1;
 						break;
 				}
 				if ('$RowCount' in that) that.$RowCount += 1;

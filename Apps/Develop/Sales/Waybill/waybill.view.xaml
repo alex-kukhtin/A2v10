@@ -96,7 +96,11 @@
 							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
-							<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+							<Group>
+								<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+								<Hyperlink Size="Small" Icon="ArrowUp" Command="{BindCmd Execute, CommandName=insertAbove, Argument={Bind}}"/>
+								<Hyperlink Size="Small" Icon="ArrowDown" Command="{BindCmd Execute, CommandName=insertBelow, Argument={Bind}}"/>
+							</Group>
 						</TableRow>
 					</Table>
 				</Block>

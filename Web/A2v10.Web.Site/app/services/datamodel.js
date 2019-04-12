@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190403-7477
+// 20190412-7483
 // services/datamodel.js
 
 (function () {
@@ -560,7 +560,7 @@
 			return this.$insert(src, 'start');
 		};
 
-		arr.$insert = function (src, to) {
+		arr.$insert = function (src, to, current) {
 			const that = this;
 
 			function append(src, select) {
@@ -572,6 +572,7 @@
 					return null; // disabled
 				let len = that.length;
 				let ne = null;
+				let ix;
 				switch (to) {
 					case 'end':
 						len = that.push(newElem);
@@ -581,6 +582,18 @@
 						that.unshift(newElem);
 						ne = that[0];
 						len = 1; 
+						break;
+					case 'above':
+						ix = that.indexOf(current);
+						that.splice(ix, 0, newElem);
+						ne = that[ix];
+						len = ix + 1;
+						break;
+					case 'below':
+						ix = that.indexOf(current) + 1;
+						that.splice(ix, 0, newElem);
+						ne = that[ix];
+						len = ix + 1;
 						break;
 				}
 				if ('$RowCount' in that) that.$RowCount += 1;

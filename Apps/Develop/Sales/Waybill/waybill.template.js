@@ -39,7 +39,9 @@ const template = {
     commands: {
         apply: cmn.docApply,
 		unApply: cmn.docUnApply,
-		resumeWorkflow
+		resumeWorkflow,
+		insertAbove,
+		insertBelow
 	}
 };
 
@@ -71,4 +73,12 @@ function setDocumentDate(newDate) {
 	vm.$confirm('are you sure?').then(() => {
 		this.Date = newDate;
 	});
+}
+
+function insertAbove(row) {
+	this.Document.Rows.$insert(null, 'above', row);
+}
+
+function insertBelow(row) {
+	this.Document.Rows.$insert(null, 'below', row);
 }
