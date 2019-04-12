@@ -40,8 +40,8 @@ const template = {
         apply: cmn.docApply,
 		unApply: cmn.docUnApply,
 		resumeWorkflow,
-		insertAbove,
-		insertBelow
+		insertAbove: insertRow('above'),
+		insertBelow: insertRow('below')
 	}
 };
 
@@ -75,10 +75,8 @@ function setDocumentDate(newDate) {
 	});
 }
 
-function insertAbove(row) {
-	this.Document.Rows.$insert(null, 'above', row);
-}
-
-function insertBelow(row) {
-	this.Document.Rows.$insert(null, 'below', row);
+function insertRow(to) {
+	return function (row) {
+		this.Document.Rows.$insert(null, to, row);
+	};
 }

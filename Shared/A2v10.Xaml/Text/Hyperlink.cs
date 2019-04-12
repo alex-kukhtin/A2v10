@@ -24,6 +24,8 @@ namespace A2v10.Xaml
 		public UIElementBase DropDown { get; set; }
 
 		public HyperlinkStyle Style { get; set; }
+		public Boolean HideCaret { get; set; }
+
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -111,7 +113,7 @@ namespace A2v10.Xaml
 				context.Writer.Write(context.Localize(Content.ToString()));
 			}
 
-			if (bHasDropDown && !addOn)
+			if (bHasDropDown && !addOn && !HideCaret)
 			{
 				var bDropUp = (DropDown as DropDownMenu)?.IsDropUp;
 				new TagBuilder("span", "caret")

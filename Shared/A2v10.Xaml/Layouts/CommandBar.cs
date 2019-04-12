@@ -12,7 +12,7 @@ namespace A2v10.Xaml
 		Hover
 	}
 
-	public class CommandBar : Container
+	public class CommandBar : Container, ITableControl
 	{
 		public CommandBarVisibility Visibility { get; set; }
 

@@ -3,8 +3,8 @@
 
 namespace A2v10.Xaml
 {
-    // marker
-    public interface ITableControl
-    {
-    }
+	// marker
+	public interface ITableControl
+	{
+	}
 }

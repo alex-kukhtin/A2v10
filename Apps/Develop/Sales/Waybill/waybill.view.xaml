@@ -27,6 +27,26 @@
 				<TextBox Value="{Bind Root.$Answer}"/>
 				<Button Style="Cyan" Command="{BindCmd Execute, CommandName='resumeWorkflow'}">Продолжить</Button>
 			</Panel>
+			<Hyperlink Icon="EllipsisVertical" HideCaret="True">
+				<Hyperlink.DropDown>
+					<DropDownMenu Background="White">
+						<MenuItem Content="Удалить что-то 1" />
+						<MenuItem Content="Удалить что-то 2" />
+						<MenuItem Content="Удалить что-то 3" />
+					</DropDownMenu>
+				</Hyperlink.DropDown>
+			</Hyperlink>
+			<CommandBar>
+				<Button Icon="EllipsisVertical">
+					<Button.DropDown>
+						<DropDownMenu Separate="True">
+							<MenuItem Content="Menu item # 1"/>
+							<MenuItem Content="Menu item # 2"/>
+							<MenuItem Content="Menu item # 3"/>
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+			</CommandBar>
 		</Taskpad>
 	</Page.Taskpad>
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
@@ -64,7 +84,7 @@
 					</Toolbar>
 					<Table ItemsSource="{Bind Document.Rows}"
                     Width="100%" GridLines="Both" Border="True" Background="Paper"
-                    Columns="Fit,100,Auto,Fit,100,100,100,Fit">
+                    Columns="Fit,100,Auto,Fit,100,100,100,Fit,Fit">
 						<Table.Header>
 							<TableRow VAlign="Middle">
 								<TableCell Wrap="NoWrap">№ п.п.</TableCell>
@@ -74,6 +94,7 @@
 								<TableCell>Количество</TableCell>
 								<TableCell>Цена</TableCell>
 								<TableCell>Сумма</TableCell>
+								<TableCell/>
 								<TableCell/>
 							</TableRow>
 						</Table.Header>
@@ -96,11 +117,25 @@
 							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
+
 							<Group>
 								<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
 								<Hyperlink Size="Small" Icon="ArrowUp" Command="{BindCmd Execute, CommandName=insertAbove, Argument={Bind}}"/>
 								<Hyperlink Size="Small" Icon="ArrowDown" Command="{BindCmd Execute, CommandName=insertBelow, Argument={Bind}}"/>
 							</Group>
+							<TableCell>
+								<CommandBar>
+									<Button Icon="EllipsisVertical">
+										<Button.DropDown>
+											<DropDownMenu Separate="True" Direction="DownLeft">
+												<MenuItem Content="Menu item # 1"/>
+												<MenuItem Content="Menu item # 2"/>
+												<MenuItem Content="Menu item # 3"/>
+											</DropDownMenu>
+										</Button.DropDown>
+									</Button>
+								</CommandBar>
+							</TableCell>
 						</TableRow>
 					</Table>
 				</Block>
