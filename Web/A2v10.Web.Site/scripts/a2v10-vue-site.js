@@ -137,7 +137,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
+// 20190414-7485
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -208,7 +208,8 @@ app.modules['std:utils'] = function () {
 			contains: textContains,
 			containsText: textContainsText,
 			sanitize,
-			splitPath
+			splitPath,
+			capitalize
 		},
 		currency: {
 			round: currencyRound,
@@ -658,6 +659,11 @@ app.modules['std:utils'] = function () {
 			obj: path.substring(0, propIx),
 			prop: path.substring(propIx + 1)
 		};
+	}
+
+	function capitalize(text) {
+		if (!text) return '';
+		return text.charAt(0).toUpperCase() + text.slice(1);
 	}
 
 	function textContains(text, probe) {

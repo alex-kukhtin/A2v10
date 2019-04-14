@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180508-7178
+// 20190414-7485
 // components/calendar.js
 
 (function () {
@@ -13,20 +13,26 @@
 <div @click.stop.prevent="dummy">
 	<table class="calendar-pane">
 		<thead><tr>
-				<th><a  v-if="hasPrev" @click.stop.prevent='prevMonth'><i class="ico ico-triangle-left"></i></a></th>
-				<th colspan="5"  class="month-title"><span v-text="title"></span></th>
-				<th><a v-if="hasNext" @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>					
+				<th class="h-btn"><a v-if="hasPrev" @click.stop.prevent="prevMonth"><i class="ico ico-triangle-left"></i></a></th>
+				<th :colspan="isDayView ? 5 : 7" class="month-title"><span v-text="title"></span></th>
+				<th class="h-btn"><a v-if="hasNext" @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>
 			</tr>
-			<tr class="weekdays"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
+			<tr class="weekdays" v-if="isDayView"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
+			<tr class="weekdays" v-else><th colspan="9"></th></tr>
 		</thead>
-		<tbody>
+		<tbody v-if="isDayView">
 			<tr v-for="row in days">
 				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" 
 					@mouseover="mouseOver(day)"
 					v-text="day.getDate()" :title="dayTitle(day)"/></td>
 			</tr>
 		</tbody>
-		<tfoot v-if="showToday" ><tr><td colspan="7" class="calendar-footer">
+		<tbody v-else>
+			<tr v-for="qr in monthes">
+				<td v-for="m in qr" class="mcell" :class="monthClass(m.date)" colspan="3"><a @click.stop.prevent="selectDay(m.date)" v-text="m.name"/></td>
+			</tr>
+		</tbody>
+		<tfoot v-if="showFooter" ><tr><td colspan="7" class="calendar-footer">
 			<a class="today" @click.stop.prevent='today' v-text='todayText'></a></td></tr></tfoot>
 	</table>
 </div>
@@ -38,9 +44,16 @@
 			setMonth: Function,
 			setDay: Function,
 			getDayClass: Function,
-			hover: Function
+			hover: Function,
+			view: String
 		},
 		computed: {
+			isDayView() {
+				return (this.view || 'day') === 'day';
+			},
+			showFooter() {
+				return this.showToday && this.isDayView;
+			},
 			days() {
 				let dt = new Date(this.model);
 				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
@@ -63,6 +76,20 @@
 				}
 				return arr;
 			},
+			monthes() {
+				let ma = [];
+				for (let q = 0; q < 4; q++) {
+					let ia = [];
+					for (let m = 0; m < 3; m++) {
+						let mno = q * 3 + m;
+						let dt = utils.date.create(this.model.getFullYear(), mno + 1, 1);
+						let mname = utils.text.capitalize(dt.toLocaleDateString(locale.$Locale, { month: 'long' }));
+						ia.push({ date:dt, month: mno + 1, name: mname });
+					}
+					ma.push(ia);
+				}
+				return ma;
+			},
 			hasPrev() {
 				return this.pos !== 'right';
 			},
@@ -71,7 +98,7 @@
 			},
 			title() {
 				let mn = this.model.toLocaleString(locale.$Locale, { month: "long", year: 'numeric' });
-				return mn.charAt(0).toUpperCase() + mn.slice(1);
+				return utils.text.capitalize(mn);
 			},
 			todayText() {
 				return locale.$Today;
@@ -81,12 +108,18 @@
 			dummy() { },
 			nextMonth() {
 				let dt = new Date(this.model);
-				dt.setMonth(dt.getMonth() + 1);
+				if (this.isDayView)
+					dt.setMonth(dt.getMonth() + 1);
+				else
+					dt.setFullYear(dt.getFullYear() + 1);
 				this.setMonth(dt, this.pos);
 			},
 			prevMonth() {
 				let dt = new Date(this.model);
-				dt.setMonth(dt.getMonth() - 1);
+				if (this.isDayView)
+					dt.setMonth(dt.getMonth() - 1);
+				else
+					dt.setFullYear(dt.getFullYear() - 1);
 				this.setMonth(dt, this.pos);
 			},
 			wdTitle(d) {
@@ -114,8 +147,13 @@
 					cls += ' active';
 				return cls;
 			},
+			monthClass(day) {
+				let cls = '';
+				if (day.getFullYear() === this.model.getFullYear() && day.getMonth() === this.model.getMonth())
+					cls += ' active';
+				return cls;
+			},
 			dayTitle(day) {
-				// todo: localize
 				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			mouseOver(day) {

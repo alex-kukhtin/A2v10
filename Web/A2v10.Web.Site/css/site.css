@@ -2347,12 +2347,24 @@ pre.a2-code {
   text-align: center;
   vertical-align: central;
 }
+.calendar-pane .h-btn {
+  width: 27px;
+}
 .calendar-pane .calendar-footer {
   text-align: center;
 }
 .calendar-pane .month-title {
   font-weight: 500;
   line-height: 2rem;
+}
+.calendar-pane .month-title a {
+  color: #222;
+}
+.calendar-pane td.mcell {
+  padding: 6px 0;
+}
+.calendar-pane td.mcell > a {
+  padding: 4px;
 }
 .calendar-pane a {
   display: block;
@@ -2361,14 +2373,14 @@ pre.a2-code {
   color: #222;
 }
 .calendar-pane a:hover {
-  background-color: #fdf4bf;
+  background-color: #fdf4bf !important;
 }
 .calendar-pane tbody td.today > a {
   font-weight: 500;
   background-color: #fff9d0;
 }
 .calendar-pane tbody td.active > a {
-  background-color: #cde6f7;
+  background-color: #cde6f7 !important;
 }
 .calendar-pane tbody td.other > a {
   opacity: 0.33;
@@ -2382,6 +2394,9 @@ pre.a2-code {
 .calendar-pane tbody > tr:first-child > td {
   padding-top: 6px;
 }
+.calendar-pane tbody > tr:first-child > td.mcell {
+  padding-top: 12px;
+}
 .calendar-pane thead th,
 .calendar-pane tfoot td {
   border-style: none;
@@ -2390,10 +2405,6 @@ pre.a2-code {
 .calendar-pane thead th > a,
 .calendar-pane tfoot td > a {
   padding: 2px 0;
-  color: #208cf8;
-}
-.calendar-pane thead th > a:hover,
-.calendar-pane tfoot td > a:hover {
   color: #208cf8;
 }
 .calendar-pane a.today {

@@ -15,12 +15,19 @@ namespace A2v10.Xaml
 		TopRight
 	}
 
+	public enum DatePickerView
+	{
+		Day,
+		Month
+	}
+
 	public class DatePicker : ValuedControl, ITableControl
 	{
 
 		public TextAlign Align { get; set; }
-
 		public DatePickerDropDownPlacement Placement { get; set; }
+		public DatePickerView View { get; set; }
+		
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -34,6 +41,7 @@ namespace A2v10.Xaml
 			if (Placement  != DatePickerDropDownPlacement.BottomLeft)
 				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			MergeValue(input, context);
+			input.MergeAttribute("view", View.ToString().ToLowerInvariant());
 			input.RenderStart(context);
 			RenderAddOns(context);
 			input.RenderEnd(context);

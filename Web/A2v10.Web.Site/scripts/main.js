@@ -137,7 +137,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
+// 20190414-7485
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -208,7 +208,8 @@ app.modules['std:utils'] = function () {
 			contains: textContains,
 			containsText: textContainsText,
 			sanitize,
-			splitPath
+			splitPath,
+			capitalize
 		},
 		currency: {
 			round: currencyRound,
@@ -658,6 +659,11 @@ app.modules['std:utils'] = function () {
 			obj: path.substring(0, propIx),
 			prop: path.substring(propIx + 1)
 		};
+	}
+
+	function capitalize(text) {
+		if (!text) return '';
+		return text.charAt(0).toUpperCase() + text.slice(1);
 	}
 
 	function textContains(text, probe) {
@@ -4543,9 +4549,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180508-7178
+// 20190414-7485
 // components/calendar.js
 
 (function () {
@@ -4558,20 +4564,26 @@ Vue.component('validator-control', {
 <div @click.stop.prevent="dummy">
 	<table class="calendar-pane">
 		<thead><tr>
-				<th><a  v-if="hasPrev" @click.stop.prevent='prevMonth'><i class="ico ico-triangle-left"></i></a></th>
-				<th colspan="5"  class="month-title"><span v-text="title"></span></th>
-				<th><a v-if="hasNext" @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>					
+				<th class="h-btn"><a v-if="hasPrev" @click.stop.prevent="prevMonth"><i class="ico ico-triangle-left"></i></a></th>
+				<th :colspan="isDayView ? 5 : 7" class="month-title"><span v-text="title"></span></th>
+				<th class="h-btn"><a v-if="hasNext" @click.stop.prevent='nextMonth'><i class="ico ico-triangle-right"></i></a></th>
 			</tr>
-			<tr class="weekdays"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
+			<tr class="weekdays" v-if="isDayView"><th v-for="d in 7" v-text="wdTitle(d)">Пн</th></tr>
+			<tr class="weekdays" v-else><th colspan="9"></th></tr>
 		</thead>
-		<tbody>
+		<tbody v-if="isDayView">
 			<tr v-for="row in days">
 				<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" 
 					@mouseover="mouseOver(day)"
 					v-text="day.getDate()" :title="dayTitle(day)"/></td>
 			</tr>
 		</tbody>
-		<tfoot v-if="showToday" ><tr><td colspan="7" class="calendar-footer">
+		<tbody v-else>
+			<tr v-for="qr in monthes">
+				<td v-for="m in qr" class="mcell" :class="monthClass(m.date)" colspan="3"><a @click.stop.prevent="selectDay(m.date)" v-text="m.name"/></td>
+			</tr>
+		</tbody>
+		<tfoot v-if="showFooter" ><tr><td colspan="7" class="calendar-footer">
 			<a class="today" @click.stop.prevent='today' v-text='todayText'></a></td></tr></tfoot>
 	</table>
 </div>
@@ -4583,9 +4595,16 @@ Vue.component('validator-control', {
 			setMonth: Function,
 			setDay: Function,
 			getDayClass: Function,
-			hover: Function
+			hover: Function,
+			view: String
 		},
 		computed: {
+			isDayView() {
+				return (this.view || 'day') === 'day';
+			},
+			showFooter() {
+				return this.showToday && this.isDayView;
+			},
 			days() {
 				let dt = new Date(this.model);
 				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
@@ -4608,6 +4627,20 @@ Vue.component('validator-control', {
 				}
 				return arr;
 			},
+			monthes() {
+				let ma = [];
+				for (let q = 0; q < 4; q++) {
+					let ia = [];
+					for (let m = 0; m < 3; m++) {
+						let mno = q * 3 + m;
+						let dt = utils.date.create(this.model.getFullYear(), mno + 1, 1);
+						let mname = utils.text.capitalize(dt.toLocaleDateString(locale.$Locale, { month: 'long' }));
+						ia.push({ date:dt, month: mno + 1, name: mname });
+					}
+					ma.push(ia);
+				}
+				return ma;
+			},
 			hasPrev() {
 				return this.pos !== 'right';
 			},
@@ -4616,7 +4649,7 @@ Vue.component('validator-control', {
 			},
 			title() {
 				let mn = this.model.toLocaleString(locale.$Locale, { month: "long", year: 'numeric' });
-				return mn.charAt(0).toUpperCase() + mn.slice(1);
+				return utils.text.capitalize(mn);
 			},
 			todayText() {
 				return locale.$Today;
@@ -4626,12 +4659,18 @@ Vue.component('validator-control', {
 			dummy() { },
 			nextMonth() {
 				let dt = new Date(this.model);
-				dt.setMonth(dt.getMonth() + 1);
+				if (this.isDayView)
+					dt.setMonth(dt.getMonth() + 1);
+				else
+					dt.setFullYear(dt.getFullYear() + 1);
 				this.setMonth(dt, this.pos);
 			},
 			prevMonth() {
 				let dt = new Date(this.model);
-				dt.setMonth(dt.getMonth() - 1);
+				if (this.isDayView)
+					dt.setMonth(dt.getMonth() - 1);
+				else
+					dt.setFullYear(dt.getFullYear() - 1);
 				this.setMonth(dt, this.pos);
 			},
 			wdTitle(d) {
@@ -4659,8 +4698,13 @@ Vue.component('validator-control', {
 					cls += ' active';
 				return cls;
 			},
+			monthClass(day) {
+				let cls = '';
+				if (day.getFullYear() === this.model.getFullYear() && day.getMonth() === this.model.getMonth())
+					cls += ' active';
+				return cls;
+			},
 			dayTitle(day) {
-				// todo: localize
 				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			mouseOver(day) {
@@ -4672,7 +4716,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190403-7478
+// 20190414-7485
 // components/datepicker.js
 
 
@@ -4691,12 +4735,12 @@ Vue.component('validator-control', {
 		template: `
 <div :class="cssClass2()" class="date-picker">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
-	<div class="input-group">
-		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
+	<div class="input-group"  @click="clickInput($event)">
+		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="inputDisabled"/>
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
-			<a2-calendar :model="modelDate"
+			<a2-calendar :model="modelDate" :view="view"
 				:set-month="setMonth" :set-day="selectDay" :get-day-class="dayClass"/>
 		</div>
 	</div>
@@ -4709,7 +4753,8 @@ Vue.component('validator-control', {
 			itemToValidate: Object,
 			propToValidate: String,
 			// override control.align (default value)
-			align: { type: String, default: 'center' }
+			align: { type: String, default: 'center' },
+			view: String
 		},
 		data() {
 			return {
@@ -4725,6 +4770,13 @@ Vue.component('validator-control', {
 						this.item[this.prop] = utils.date.today();
 				}
 				this.isOpen = !this.isOpen;
+			},
+			clickInput(ev) {
+				if (this.view === 'month') {
+					this.toggle(ev);
+					ev.stopPropagation();
+					ev.preventDefault();
+				}
 			},
 			setMonth(dt) {
 				this.item[this.prop] = dt;
@@ -4758,11 +4810,17 @@ Vue.component('validator-control', {
 			modelDate() {
 				return this.item[this.prop];
 			},
+			inputDisabled() {
+				return this.disabled || this.view === 'month';
+			},
 			model: {
 				get() {
 					if (utils.date.isZero(this.modelDate))
 						return '';
-					return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
+					if (this.view === 'month')
+						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long' }));
+					else
+						return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);

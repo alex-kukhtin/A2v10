@@ -31,6 +31,10 @@
 		vertical-align: central;
 	}
 
+	.h-btn {
+		width: 27px;
+	}
+
 	.calendar-footer {
 		text-align: center;
 	}
@@ -38,6 +42,17 @@
 	.month-title {
 		font-weight: 500;
 		line-height: 2rem;
+
+		a {
+			color: @text-color;
+		}
+	}
+
+	td.mcell{
+		padding:6px 0;
+		> a {
+			padding: 4px;
+		}
 	}
 
 	a {
@@ -47,8 +62,7 @@
 		color: @text-color;
 
 		&:hover {
-			background-color: @hover-bg-color;
-			//border-color: @tb-hover-brd-color;
+			background-color: @hover-bg-color !important;
 		}
 	}
 
@@ -60,7 +74,7 @@
 		}
 
 		&.active > a {
-			background-color: @active-bg-color;
+			background-color: @active-bg-color !important;
 		}
 
 		&.other > a {
@@ -83,6 +97,10 @@
 		padding-top: 6px;
 	}
 
+	tbody > tr:first-child > td.mcell {
+		padding-top: 12px;
+	}
+
 	thead th, tfoot td {
 		//background-color: #f5f5f5;
 		border-style: none;
@@ -91,10 +109,6 @@
 		> a {
 			padding: 2px 0;
 			color: @link-color;
-
-			&:hover {
-				color: @link-hover-color;
-			}
 		}
 	}
 

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190403-7478
+// 20190414-7485
 // components/datepicker.js
 
 
@@ -19,12 +19,12 @@
 		template: `
 <div :class="cssClass2()" class="date-picker">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
-	<div class="input-group">
-		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="disabled" />
+	<div class="input-group"  @click="clickInput($event)">
+		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="inputDisabled"/>
 		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
-			<a2-calendar :model="modelDate"
+			<a2-calendar :model="modelDate" :view="view"
 				:set-month="setMonth" :set-day="selectDay" :get-day-class="dayClass"/>
 		</div>
 	</div>
@@ -37,7 +37,8 @@
 			itemToValidate: Object,
 			propToValidate: String,
 			// override control.align (default value)
-			align: { type: String, default: 'center' }
+			align: { type: String, default: 'center' },
+			view: String
 		},
 		data() {
 			return {
@@ -53,6 +54,13 @@
 						this.item[this.prop] = utils.date.today();
 				}
 				this.isOpen = !this.isOpen;
+			},
+			clickInput(ev) {
+				if (this.view === 'month') {
+					this.toggle(ev);
+					ev.stopPropagation();
+					ev.preventDefault();
+				}
 			},
 			setMonth(dt) {
 				this.item[this.prop] = dt;
@@ -86,11 +94,17 @@
 			modelDate() {
 				return this.item[this.prop];
 			},
+			inputDisabled() {
+				return this.disabled || this.view === 'month';
+			},
 			model: {
 				get() {
 					if (utils.date.isZero(this.modelDate))
 						return '';
-					return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
+					if (this.view === 'month')
+						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long' }));
+					else
+						return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);
