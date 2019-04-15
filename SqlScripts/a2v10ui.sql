@@ -1,11 +1,11 @@
 
-/* 20190320-7054 */
+/* 20190415-7055 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 20 mar 2019
-module version : 7054
+Last updated : 15 apr 2019
+module version : 7055
 */
 ------------------------------------------------
 set noexec off;
@@ -23,9 +23,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7054);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7055);
 else
-	update a2sys.Versions set [Version] = 7054 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7055 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -83,6 +83,10 @@ begin
 		constraint PK_MenuAcl primary key(Menu, UserId)
 	);
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where [name] = N'IX_MenuAcl_UserId')
+	create nonclustered index IX_MenuAcl_UserId on a2security.[Menu.Acl] (UserId);
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Feedback')
