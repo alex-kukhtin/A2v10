@@ -6,6 +6,7 @@
 		<Panel Grid.ColSpan="4" Header="Необоротні активи" Background="LightYellow"
 			 DropShadow="Shadow1">
 			<d:Diagram Size="920,370" ViewBox="-10,-10,910,360">
+				<d:Rectangle Pos="20,20" Size="300,300" Style="TransparentGray" Border="Dashed"></d:Rectangle>
 				<d:Group DropShadow="True">
 					<d:ActionButton Size="120,40" Pos="0,0" Icon="FileContent" Content="Придбання (рахунок)" 
 							Command="{BindCmd Execute, CommandName='openDocument', Argument='invoiceIn'}"/>
@@ -112,7 +113,7 @@
 				</d:Card>
 			</d:Diagram>
 		</Panel>
-		<FlexPanel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА">
+		<Panel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА">
 			<Sheet Striped="True" Wrap="NoWrap">
 				<SheetSection>
 					<SheetRow Style="LightHeader">
@@ -152,7 +153,7 @@
 				<Hyperlink Icon="Table" Size="Normal">Відомість по МВО</Hyperlink>
 				<Hyperlink Icon="Table" Size="Normal">I ще один звіт</Hyperlink>
 			</FlexList>
-		</FlexPanel>
+		</Panel>
 		<Panel Header="Задачі" Padding="6" DropShadow="Shadow1" Grid.ColSpan="2">
 			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
 				<PropertyGridItem Name="На складі">2233</PropertyGridItem>

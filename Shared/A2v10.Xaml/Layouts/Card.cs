@@ -87,7 +87,7 @@ namespace A2v10.Xaml
 			}
 			else if (Header is String hStr)
 			{
-				context.Writer.Write(hStr);
+				context.Writer.Write(context.Localize(hStr));
 			}
 			h.RenderEnd(context);
 		}
@@ -111,7 +111,7 @@ namespace A2v10.Xaml
 			}
 			else if (Footer is String fStr)
 			{
-				context.Writer.Write(fStr);
+				context.Writer.Write(context.Localize(fStr));
 			}
 			f.RenderEnd(context);
 		}

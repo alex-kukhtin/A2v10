@@ -1,7 +1,6 @@
-﻿// Copyright © 2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2018-2019 Alex Kukhtin. All rights reserved.
 
-using System;
-using System.Windows.Markup;
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml.Drawing
 {
@@ -10,6 +9,7 @@ namespace A2v10.Xaml.Drawing
 		public Size Size { get; set; }
 		public Point Pos { get; set; }
 		public RectStyle Style { get; set; }
+		public BorderStyle Border { get; set; }
 
 		internal override void RenderElement(RenderContext context)
 		{
@@ -17,7 +17,9 @@ namespace A2v10.Xaml.Drawing
 			MergeAttributes(r, context);
 			this.SetPositionAndSize(r);
 			if (Style != RectStyle.None)
-				r.AddCssClass($"d-{Style.ToString().ToLowerInvariant()}");
+				r.AddCssClass($"d-{Style.ToString().ToKebabCase()}");
+			if (Border != BorderStyle.Default)
+				r.AddCssClass($"d-border-{Border.ToString().ToKebabCase()}");
 			r.Render(context);
 		}
 	}

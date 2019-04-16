@@ -15,6 +15,13 @@ namespace A2v10.Xaml.Drawing
 		Green,
 		Orange,
 		Red,
-		Magenta
+		Magenta,
+		TransparentGray
+	}
+
+	public enum BorderStyle
+	{
+		Default,
+		Dashed
 	}
 }

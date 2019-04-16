@@ -1,13 +1,14 @@
 ﻿@dark-gray: #999;
 
 .diagram {
-	display:flex;
-	justify-content:center;
-	text-align:left;
+	display: flex;
+	justify-content: center;
+	text-align: left;
 
 	.path {
 		stroke: #000;
 		stroke-width: 1;
+		fill:none;
 	}
 
 	rect {
@@ -38,6 +39,15 @@
 	.d-magenta {
 		fill: #e1d5e7;
 		stroke: #9673a6;
+	}
+
+	.d-transparent-gray {
+		fill: rgba(224,224,224,.35);
+		stroke: #777;
+	}
+
+	.d-border-dashed {
+		stroke-dasharray: 3;
 	}
 
 	.action-button {
@@ -90,14 +100,14 @@
 		}
 
 		foreignObject {
-			overflow:visible;
+			overflow: visible;
 		}
 
 		.d-card-text {
-			display:block;
-			font-size:24px;
-			margin:4px 8px;
-			text-align:right;
+			display: block;
+			font-size: 24px;
+			margin: 4px 8px;
+			text-align: right;
 		}
 	}
 }

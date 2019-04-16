@@ -6131,6 +6131,7 @@ h5,
 .diagram .path {
   stroke: #000;
   stroke-width: 1;
+  fill: none;
 }
 .diagram rect {
   fill: white;
@@ -6155,6 +6156,13 @@ h5,
 .diagram .d-magenta {
   fill: #e1d5e7;
   stroke: #9673a6;
+}
+.diagram .d-transparent-gray {
+  fill: rgba(224, 224, 224, 0.35);
+  stroke: #777;
+}
+.diagram .d-border-dashed {
+  stroke-dasharray: 3;
 }
 .diagram .action-button {
   color: #999;
