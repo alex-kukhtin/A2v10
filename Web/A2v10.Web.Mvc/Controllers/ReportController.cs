@@ -2,16 +2,17 @@
 
 
 using System;
-using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Dynamic;
 using System.IO;
 using System.Text;
 using System.Configuration;
 using System.Threading;
-using System.Collections.Generic;
+using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
+
+using Newtonsoft.Json;
 
 using Stimulsoft.Report.Mvc;
 using Stimulsoft.Report.Web;
@@ -21,23 +22,10 @@ using A2v10.Request;
 using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
-using A2v10.Data.Interfaces;
 using A2v10.Interop;
-using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Controllers
 {
-	class ReportInfo
-	{
-		public IDataModel DataModel;
-		public String ReportPath;
-		public String Name;
-		public ExpandoObject Variables;
-		public RequestReportType Type;
-		public IList<String> XmlSchemaPathes;
-		public String Encoding;
-		public Boolean Validate;
-	}
 
 	public class EmptyView : IView, IViewDataContainer
 	{
@@ -54,6 +42,7 @@ namespace A2v10.Web.Mvc.Controllers
 	public class ReportController : Controller
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
+		ReportHelper _reportHelper = new ReportHelper();
 
 		public ReportController()
 		{
@@ -95,48 +84,12 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task<ReportInfo> GetReportInfo(String url, String id, ExpandoObject prms)
 		{
-			var appReader = _baseController.Host.ApplicationReader;
-			var ri = new ReportInfo();
-			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
-			var rep = rm.GetReport();
-			ri.Type = rep.type;
-			if (rep.HasPath)
-				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
-			if (rep.type == RequestReportType.xml)
+			var rc = new ReportContext()
 			{
-				if (rep.xmlSchemas != null)
-				{
-					ri.XmlSchemaPathes = new List<String>();
-					foreach (var schema in rep.xmlSchemas)
-						ri.XmlSchemaPathes.Add(appReader.MakeFullPath(rep.Path, schema + ".xsd"));
-				}
-
-				ri.Encoding = rep.encoding;
-				ri.Validate = rep.validate;
-			}
-
-			prms.Set("UserId", UserId);
-			if (_baseController.Host.IsMultiTenant)
-				prms.Set("TenantId", TenantId);
-			prms.Set("Id", id);
-			prms.AppendIfNotExists(rep.parameters);
-
-			ri.DataModel = await _baseController.DbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
-
-			// after query
-			ExpandoObject vars = rep.variables;
-			if (vars == null)
-				vars = new ExpandoObject();
-			vars.Set("UserId", UserId);
-			if (_baseController.Host.IsMultiTenant)
-				vars.Set("TenantId", TenantId);
-			vars.Set("Id", id);
-			ri.Variables = vars;
-			var repName = _baseController.Localize(String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);
-			if (ri.DataModel != null && ri.DataModel.Root != null)
-				repName = ri.DataModel.Root.Resolve(repName);
-			ri.Name = repName;
-			return ri;
+				UserId = UserId,
+				TenantId = TenantId
+			};
+			return await _reportHelper.GetReportInfo(rc, url, id, prms);
 		}
 
 		ExpandoObject CreateParamsFromQueryString()
@@ -157,12 +110,11 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-
 				ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
 
 				switch (ri.Type) {
 					case RequestReportType.stimulsoft:
-						return ExportStiReport(ri, Format, saveFile:true);
+						return _reportHelper.ExportStiReport(ri, Format, saveFile:true);
 					case RequestReportType.xml:
 						return ExportXmlReport(ri);
 					case RequestReportType.json:
@@ -194,7 +146,7 @@ namespace A2v10.Web.Mvc.Controllers
 				switch (ri.Type)
 				{
 					case RequestReportType.stimulsoft:
-						return ExportStiReport(ri, Format, saveFile: false);
+						return _reportHelper.ExportStiReport(ri, Format, saveFile: false);
 					default:
 						throw new NotImplementedException();
 				}
@@ -208,32 +160,6 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write(ex.Message);
 			}
 			return new EmptyResult();
-		}
-
-		ActionResult ExportStiReport(ReportInfo ri, String format, bool saveFile = true)
-		{
-			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPath(ri.ReportPath))
-			{
-				var r = StiReportExtensions.CreateReport(stream, ri.Name);
-				r.AddDataModel(ri.DataModel);
-				if (ri.Variables != null)
-					r.AddVariables(ri.Variables);
-				// saveFileDialog: true -> download
-				// saveFileDialog: false -> show
-				if (targetFormat == "pdf")
-					return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
-				else if (format == "excel")
-					return StiMvcReportResponse.ResponseAsExcel2007(r, StiReportExtensions.GetDefaultXlSettings(), saveFileDialog: saveFile);
-				else if (format == "word")
-					return StiMvcReportResponse.ResponseAsWord2007(r, StiReportExtensions.GetDefaultWordSettings(), saveFileDialog: saveFile);
-				else if (format == "opentext")
-					return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
-				else if (format == "opensheet")
-					return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
-				else
-					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
-			}
 		}
 
 		ActionResult ExportJsonReport(ReportInfo ri)

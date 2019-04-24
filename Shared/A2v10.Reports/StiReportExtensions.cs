@@ -4,6 +4,7 @@ using System;
 using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
+using System.Dynamic;
 
 using Stimulsoft.Report.Export;
 using Stimulsoft.Report;

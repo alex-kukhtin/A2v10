@@ -34,6 +34,7 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Stimulsoft.Report.Mvc, Version=2018.3.2.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -76,6 +77,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Reports\A2v10.Reports.csproj">
+      <Project>{0562C1FE-B4B7-4EE2-BF83-1808EBD63D05}</Project>
+      <Name>A2v10.Reports</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
       <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>
