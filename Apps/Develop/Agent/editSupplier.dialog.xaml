@@ -13,7 +13,7 @@
 						<Validator Placement="BottomLeft" />
 					</TextBox.Validator>
 				</TextBox>
-				<TextBox Grid.Row="2" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}"/>
+				<TextBox Grid.Row="2" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" CssClass="aaa sss sdsss"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" Rows="3" Multiline="True"/>
 			</Grid>
 			<!--
@@ -125,9 +125,9 @@
 		<Tab Header="Another tab (Show)" Show="{Bind Root.$$tabVisible}">
 			<Header Content="Tab with Show"/>
 		</Tab>
+		-->
 		<Tab Header="Another tab (Hide)" Hide="{Bind Root.$$tabVisible}">
 			<Header Content="Tab with Hide"/>
 		</Tab>
-		-->
 	</TabPanel>
 </Dialog>
