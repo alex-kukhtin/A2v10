@@ -55,7 +55,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpGet]
 		public async Task Show(String Base, String Rep, String id)
 		{
-			SetupLicense();
+			_reportHelper.SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
@@ -106,7 +106,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Export(String Base, String Rep, String id, String Format)
 		{
-			SetupLicense();
+			_reportHelper.SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
@@ -137,7 +137,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Print(String Base, String Rep, String id, String Format)
 		{
-			SetupLicense();
+			_reportHelper.SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
@@ -238,17 +238,6 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		private Boolean _licenseSet = false;
-
-		private void SetupLicense()
-		{
-			if (_licenseSet)
-				return;
-			_licenseSet = true;
-			var lic = ConfigurationManager.AppSettings["stimulsoft.license"];
-			if (!String.IsNullOrEmpty(lic))
-				Stimulsoft.Base.StiLicense.LoadFromString(lic);
-		}
 
 		public async Task<ActionResult> GetReport()
 		{

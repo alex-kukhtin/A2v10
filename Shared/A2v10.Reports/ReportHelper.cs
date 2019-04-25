@@ -11,6 +11,7 @@ using Stimulsoft.Report.Mvc;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
+using System.Configuration;
 
 namespace A2v10.Reports
 {
@@ -120,6 +121,18 @@ namespace A2v10.Reports
 				else
 					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
 			}
+		}
+
+		private Boolean _licenseSet = false;
+
+		public void SetupLicense()
+		{
+			if (_licenseSet)
+				return;
+			_licenseSet = true;
+			var lic = ConfigurationManager.AppSettings["stimulsoft.license"];
+			if (!String.IsNullOrEmpty(lic))
+				Stimulsoft.Base.StiLicense.LoadFromString(lic);
 		}
 	}
 }
