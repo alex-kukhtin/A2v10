@@ -133,6 +133,7 @@
 					<DataGridColumn Header="Third"/>
 				</DataGrid>
 			</Block>
+			<UploadFile Value="{Bind Agent.Image}"></UploadFile>
 		</Tab>
 	</TabPanel>
 </Dialog>

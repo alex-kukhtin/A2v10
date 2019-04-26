@@ -46,6 +46,10 @@
 			<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
 			<PeriodPicker Value="{Bind Parent.Filter.Period}" Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" Size="Large" ShowAllData="True" Display="NameDate" Bold="True"/>
+				<ComboBox Value="{Bind Root.$Combo}" Size="Large" Style="Hyperlink" Toolbar.Align="Right" Bold="True">
+					<ComboBoxItem Content="First element" Value=""></ComboBoxItem>
+					<ComboBoxItem Content="Second element" Value="S"></ComboBoxItem>
+				</ComboBox>
 			<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
 		</Toolbar>
 		</Block>

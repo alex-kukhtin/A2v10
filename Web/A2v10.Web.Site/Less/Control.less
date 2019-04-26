@@ -397,7 +397,7 @@
 
 			.select-text {
 				color: @link-color;
-				border-bottom: 2px dotted @link-color;
+				border-bottom: 1px dotted @link-color;
 			}
 
 			.caret {
@@ -408,6 +408,16 @@
 
 	.input-group.focus {
 		box-shadow: none;
+	}
+
+	&.cb-large {
+		select {
+			font-size:1.2rem;
+		}
+		.select-text {
+			font-size:1.2rem;
+			line-height:2.3rem;
+		}
 	}
 }
 /* avoid validator blinking */

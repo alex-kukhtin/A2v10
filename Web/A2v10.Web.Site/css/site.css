@@ -1965,13 +1965,20 @@ pre.a2-code {
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .select-text {
   color: #208cf8;
-  border-bottom: 2px dotted #208cf8;
+  border-bottom: 1px dotted #208cf8;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .caret {
   display: none;
 }
 .control-group.combo-hyperlink .input-group.focus {
   box-shadow: none;
+}
+.control-group.combo-hyperlink.cb-large select {
+  font-size: 1.2rem;
+}
+.control-group.combo-hyperlink.cb-large .select-text {
+  font-size: 1.2rem;
+  line-height: 2.3rem;
 }
 /* avoid validator blinking */
 .control-group.open:hover {

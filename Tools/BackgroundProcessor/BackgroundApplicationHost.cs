@@ -25,11 +25,11 @@ namespace BackgroundProcessor
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String AppDescription => throw new NotImplementedException("BackgroundApplicationHost.AppDescription");
-		public String SupportEmail => throw new NotImplementedException("BackgroundApplicationHost.SupportEmail");
-		public String Theme => throw new NotImplementedException("BackgroundApplicationHost.Theme");
-		public String HelpUrl => throw new NotImplementedException("BackgroundApplicationHost.HelpUrl");
-		public String HostingPath => throw new NotImplementedException("BackgroundApplicationHost.HostingPath");
+		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
+		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));
+		public String Theme => throw new NotImplementedException(nameof(Theme));
+		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
+		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));
 
 		public Boolean IsDebugConfiguration
 		{
@@ -42,7 +42,7 @@ namespace BackgroundProcessor
 			}
 		}
 
-		public Boolean IsRegistrationEnabled => throw new NotImplementedException("BackgroundApplicationHost.IsRegistrationEnabled");
+		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
 		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
 		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
 		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
@@ -63,12 +63,16 @@ namespace BackgroundProcessor
 			return strSet.ConnectionString;
 		}
 
+		IApplicationReader _reader;
 		public void StartApplication(Boolean adminMode)
 		{
-
+			if (AppPath.StartsWith("db:"))
+				_reader = new DbApplicationReader(AppPath);
+			else
+				throw new NotImplementedException($"StartApplication error. AppPath must start with 'db:' ({AppPath})");
 		}
 
-		public IApplicationReader ApplicationReader => null;
+		public IApplicationReader ApplicationReader => _reader;
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{

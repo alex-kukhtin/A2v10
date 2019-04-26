@@ -187,6 +187,8 @@ namespace A2v10.Web.Config
 			String key = bAdmin ? "admin" : AppKey;
 			if (file != null)
 				_reader = new ZipApplicationReader(AppPath, key);
+			else if (AppPath.StartsWith("db:"))
+				throw new NotImplementedException("DbApplicationReader");
 			else
 				_reader = new FileApplicationReader(AppPath, key);
 		}

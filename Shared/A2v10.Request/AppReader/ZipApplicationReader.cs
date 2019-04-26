@@ -15,21 +15,10 @@ namespace A2v10.Request
 
 		public Boolean IsFileSystem => false;
 
-		//IDictionary<String, String> _entries = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
-
 		public ZipApplicationReader(String appPath, String appKey)
 		{
 			String path = Path.Combine(appPath, appKey ?? String.Empty).ToLowerInvariant();
 			FileName = Path.ChangeExtension(path, ".app");
-			/*
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				foreach (var ze in za.Entries)
-				{
-					_entries.Add(ze.FullName.ToLowerInvariant(), ze.FullName);
-				}
-			}
-			*/
 		}
 
 		public String MakeFullPath(String path, String fileName)
@@ -55,12 +44,6 @@ namespace A2v10.Request
 		{
 			var entry = MakeEntry(path, fileName).ToLowerInvariant();
 			return archive.GetEntry(entry);
-			/*
-			if (_entries.TryGetValue(entry, out String outKey)) {
-				return archive.GetEntry(outKey);
-			}
-			return null;
-			*/
 		}
 
 		public async Task<String> ReadTextFileAsync(String path, String fileName)

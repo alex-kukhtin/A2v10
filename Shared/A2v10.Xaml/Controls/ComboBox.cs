@@ -58,6 +58,7 @@ namespace A2v10.Xaml
 		public Boolean ShowValue { get; set; }
 		public TextAlign Align { get; set; }
 		public ComboBoxStyle Style { get; set; }
+		public ControlSize Size { get; set; }
 
 		ComboBoxItems _children;
 
@@ -89,6 +90,8 @@ namespace A2v10.Xaml
 			MergeAttributes(combo, context);
 			MergeAlign(combo, context, Align);
 			MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);
+			if (Size != ControlSize.Default)
+				combo.AddCssClass($"cb-{Size.ToString().ToLowerInvariant()}");
 			MergeDisabled(combo, context);
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

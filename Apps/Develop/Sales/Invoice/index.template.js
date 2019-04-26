@@ -5,6 +5,7 @@ const du = utils.date;
 
 const template = {
 	properties: {
+		'TRoot.$Combo': String,
 		'TRoot.$ForCreate'() { return { AgentId: 11 };},
 		'TRoot.$tabIndex': Number,
         'TDocument.$Mark': mark,

@@ -37,6 +37,7 @@ namespace BackgroundProcessor
 				Console.WriteLine("Service started");
 				_manager = new BackgroundTasksManager(host, dbContext, logger, messaging);
 				logger.LogBackground($"CurrentCulutre: {Thread.CurrentThread.CurrentCulture}");
+				host.StartApplication(false);
 				_manager.Start();
 				_manager.StartTasksFromConfig();
 				Console.WriteLine("Press any key to stop service...");
