@@ -372,7 +372,7 @@ const vm = new DataModelController({
 					throw new FileNotFoundException(filePath);
 				String moduleText = appReader.FileReadAllText(filePath);
 				sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
-					.AppendLine(_localizer.Localize(null, moduleText, replaceNewLine: false))
+					.AppendLine(Localize(moduleText))
 					.AppendLine(tmlFooter)
 					.AppendLine();
 				_modulesWritten.Add(moduleName);
@@ -449,6 +449,12 @@ const vm = new DataModelController({
 			}
 		}
 
+		private String Localize(String source)
+		{
+			String result = _localizer.Localize(null, source, replaceNewLine: false);
+			return _host.GetAppSettings(result);
+		}
+
 		public async Task<ScriptInfo> GetModelScript(ModelScriptInfo msi)
 		{
 			var result = new ScriptInfo();
@@ -464,7 +470,7 @@ const vm = new DataModelController({
 				//fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
 				fileTemplateText = await _host.ApplicationReader.ReadTextFileAsync(msi.Path, msi.Template + ".js");
 				AddRequiredModules(sbRequired, fileTemplateText);
-				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
+				templateText = CreateTemplateForWrite(Localize(fileTemplateText));
 			}
 			if (msi.DataModel != null)
 			{
@@ -476,7 +482,7 @@ const vm = new DataModelController({
 
 			var modelFunc = new StringBuilder(SCRIPT_PARTS.DATAFUNC);
 			modelFunc.Replace("$(RequiredModules)", sbRequired?.ToString());
-			modelFunc.Replace("$(TemplateText)", _localizer.Localize(null, templateText, replaceNewLine:false));
+			modelFunc.Replace("$(TemplateText)", Localize(templateText));
 			modelFunc.Replace("$(DataModelText)", dataModelText);
 			String modelScript = CreateDataModelScript(msi.DataModel);
 			modelFunc.Replace("$(ModelScript)", modelScript);
@@ -504,7 +510,7 @@ const vm = new DataModelController({
 				String fileTemplateText = _host.ApplicationReader.ReadTextFile(msi.Path, msi.Template + ".js");
 				sbRequired = new StringBuilder();
 				AddRequiredModules(sbRequired, fileTemplateText);
-				templateText = CreateTemplateForWrite(_localizer.Localize(null, fileTemplateText, replaceNewLine:false));
+				templateText = CreateTemplateForWrite(Localize(fileTemplateText));
 			}
 			var sb = new StringBuilder(SCRIPT_PARTS.DATAFUNC_SERVER);
 			sb.Replace("$(TemplateText)", templateText);

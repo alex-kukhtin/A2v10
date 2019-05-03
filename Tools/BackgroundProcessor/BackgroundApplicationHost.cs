@@ -107,5 +107,10 @@ namespace BackgroundProcessor
 			throw new NotImplementedException("BackgroundApplicationHost.ReadTextFileAsync");
 		}
 		#endregion
+
+		public String GetAppSettings(String source)
+		{
+			throw new NotImplementedException("BackgroundApplicationHost.GetAppSettings");
+		}
 	}
 }

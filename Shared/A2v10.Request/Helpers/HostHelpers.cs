@@ -37,5 +37,16 @@ namespace A2v10.Request
 			return "[]";
 		}
 
+		public static String CustomAppHead(this IApplicationHost host)
+		{
+			String head = host.ApplicationReader.ReadTextFile("_layout", "_head.html");
+			return head != null ? host.GetAppSettings(head) : String.Empty;
+		}
+
+		public static String CustomAppScripts(this IApplicationHost host)
+		{
+			String scripts = host.ApplicationReader.ReadTextFile("_layout", "_scripts.html");
+			return scripts != null ?  host.GetAppSettings(scripts) : String.Empty;
+		}
 	}
 }

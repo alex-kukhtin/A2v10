@@ -141,5 +141,10 @@ namespace A2v10.Runtime
 			CurrentAppPath = appConfig.AppPath;
 			CurrentAppKey = appConfig.AppKey;
 		}
+
+		public String GetAppSettings(String source)
+		{
+			throw new NotImplementedException("BackgroundApplicationHost.GetAppSettings");
+		}
 	}
 }

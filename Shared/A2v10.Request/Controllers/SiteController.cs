@@ -20,6 +20,7 @@ namespace A2v10.Request
 		public SiteController()
 		{
 			_baseController = new BaseController();
+			_baseController.Host.StartApplication(false);
 		}
 
 		public Func<Int64> UserId { get; set; }

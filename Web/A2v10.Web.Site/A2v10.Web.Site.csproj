@@ -374,6 +374,7 @@
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\eusign\" />
     <Folder Include="Scss\" />

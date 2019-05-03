@@ -93,5 +93,11 @@ namespace A2v10.Tests.Config
 		public String AppBuild => throw new NotSupportedException();
 		public String Copyright => throw new NotSupportedException();
 #pragma warning restore CA1065
+
+		public String GetAppSettings(String source)
+		{
+			throw new NotImplementedException("BackgroundApplicationHost.GetAppSettings");
+		}
+
 	}
 }

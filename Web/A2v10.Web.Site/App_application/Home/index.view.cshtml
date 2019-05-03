@@ -26,6 +26,7 @@
 		dirty: <code v-text="$isDirty"></code>
 		valid: <code v-text="Home.$valid"></code>
 		baseUrl: <code v-text="$baseUrl"></code>
+		text: <code v-text="Home.Text"></code>
 	</div>
 
 	<hr />
@@ -39,5 +40,5 @@
 </div>
 
 @section scripts {
-	@Html.RenderVueModelScript("controller")
+	@Html.RenderVueModelScript()
 }

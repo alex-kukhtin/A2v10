@@ -15,6 +15,9 @@ const template = {
 		},
 		'TAgent.$Placeholder'() {
 			return this.$Bit1 ? '000 000 000' : '+38 (000) 000-00-00';
+		},
+		'TAgent.$MapUrl'() {
+			return 'https://www.google.com/maps/embed/v1/place?key=@{AppSettings.GoogleMapsApiKey}&q=Eiffel+Tower,Paris+France&language=uk&region=UA';
 		}
 	},
 	events: {
@@ -36,7 +39,8 @@ const template = {
 		'Agent.Address.Build': 'Введите номер дома'
 	},
 	delegates: {
-		canClose
+		canClose,
+		uploadFile
 	}
 
 };
@@ -45,6 +49,7 @@ module.exports = template;
 
 function modelLoad(root, caller) {
 	const ag = root.Agent;
+	runMap();
 	if (!ag.$isNew) return;
 	ag.Type = 'C';
 	ag.Kind = 'Customer';
@@ -99,3 +104,47 @@ function canClose() {
 	return ctrl.$saveModified('are you sure?');
 }
 
+
+function uploadFile(result) {
+	console.dir(result);
+	alert('upload');
+}
+
+function runMap() {
+	navigator.geolocation.getCurrentPosition(function (pos) {
+		var centerPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+		var map = new google.maps.Map(document.getElementById('mapId'), {
+			center: centerPos,
+			zoom: 15
+		});
+
+		var marker = new google.maps.Marker({
+			position: centerPos,
+			map: map,
+			title: 'Center marker'
+		});
+		console.dir(map);
+		drawOsm(centerPos);
+	});
+}
+
+function drawOsm(pos) {
+	var map = new OpenLayers.Map("mapdiv");
+	map.addLayer(new OpenLayers.Layer.OSM());
+
+	var lonLat = new OpenLayers.LonLat(pos.lng, pos.lat)
+		.transform(
+			new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+			map.getProjectionObject() // to Spherical Mercator Projection
+		);
+
+	var zoom = 16;
+	console.dir(map.size);
+
+	var markers = new OpenLayers.Layer.Markers("Markers");
+	map.addLayer(markers);
+
+	markers.addMarker(new OpenLayers.Marker(lonLat));
+
+	map.setCenter(lonLat, zoom);
+}

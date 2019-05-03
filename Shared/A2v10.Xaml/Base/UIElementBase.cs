@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 		public Thickness Padding { get; set; }
 		public WrapMode Wrap { get; set; }
 		public Thickness Absolute { get; set; }
+		public String HtmlId { get; set; }
 
 		public StyleDescriptor XamlStyle { get; set; }
 
@@ -78,6 +79,8 @@ namespace A2v10.Xaml
 
 			if (Absolute != null)
 				Absolute.MergeAbsolute(tag);
+
+			tag.MergeAttribute("id", HtmlId);
 		}
 
 		internal void RenderContent(RenderContext context, Object content)

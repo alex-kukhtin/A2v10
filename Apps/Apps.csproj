@@ -107,6 +107,8 @@
     <Content Include="Develop\sales\assets\diagram.html" />
     <Content Include="Develop\_assets\diagram.css" />
     <Content Include="Develop\Workflows\first-mail.html" />
+    <Content Include="Develop\_layout\_scripts.html" />
+    <Content Include="Develop\_layout\_head.html" />
     <Content Include="VueSite\blog\blog.html" />
     <Content Include="VueSite\blog\blog.js" />
     <Content Include="VueSite\index\index.view.html" />

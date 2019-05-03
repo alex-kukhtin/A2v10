@@ -40,5 +40,7 @@ namespace A2v10.Infrastructure
 		String AppVersion { get; }
 		String AppBuild { get; }
 		String Copyright { get; }
+
+		String GetAppSettings(String source);
 	}
 }

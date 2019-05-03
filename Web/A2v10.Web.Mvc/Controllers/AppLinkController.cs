@@ -66,6 +66,8 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(Lang)", CurrentLang);
 			layout.Replace("$(Build)", _host.AppBuild);
 			layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
+			layout.Replace("$(LayoutHead)", _host.CustomAppHead());
+			layout.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);

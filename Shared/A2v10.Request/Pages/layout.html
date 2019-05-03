@@ -15,6 +15,7 @@
 	$(AssetsStyleSheets)
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	$(LayoutHead)
 </head>
 <body>
 	<div id="shell" class="shell" v-cloak>
@@ -73,8 +74,8 @@
 					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
 					<div class="divider"></div>
 					<!--
-				<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
-				-->
+					<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
+					-->
 					<label class="checkbox">
 						<input type="checkbox" v-model="traceEnabled" />
 						<span>@[Tracing]</span>
@@ -90,5 +91,6 @@
 	<script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
 	$(AssetsScripts)
 	<script type="text/javascript" src="/shell/script"></script>
+	$(LayoutScripts)
 </body>
 </html>

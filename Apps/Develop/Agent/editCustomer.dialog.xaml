@@ -135,6 +135,15 @@
 			</Block>
 			<UploadFile Value="{Bind Agent.Image}"></UploadFile>
 		</Tab>
+		<Tab Header="Google maps (Api)">
+			<Block HtmlId="mapId" Height="500"/>
+		</Tab>
+		<Tab Header="Google maps (url)">
+			<IFrame Source="{Bind Agent.$MapUrl}" Height="500" Padding="10"></IFrame>
+		</Tab>
+		<Tab Header="Open Street map">
+			<Block HtmlId="mapdiv" Height="500" Width="800"></Block>
+		</Tab>
 	</TabPanel>
 </Dialog>
 

@@ -27,6 +27,8 @@ namespace A2v10.Request
 				sb.Replace(p.Key, p.Value);
 			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
+			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
+			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			writer.Write(sb.ToString());
 		}
 
