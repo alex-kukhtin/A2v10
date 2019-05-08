@@ -11574,4 +11574,4 @@ Vue.directive('resize', {
 	});
 
 	app.components['std:shellController'] = shell;
-})();
+})();	
