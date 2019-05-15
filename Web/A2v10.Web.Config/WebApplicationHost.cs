@@ -77,9 +77,7 @@ namespace A2v10.Web.Config
 		{
 			get
 			{
-				// TODO: ???
-				var key =  ConfigurationManager.AppSettings["appKey"];
-				return key;
+				return ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 			}
 		}
 

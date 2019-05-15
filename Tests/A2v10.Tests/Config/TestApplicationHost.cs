@@ -49,7 +49,7 @@ namespace A2v10.Tests.Config
 			get
 			{
 				// TODO: ???
-				return ConfigurationManager.AppSettings["appKey"];
+				return ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 
 			}
 		}
