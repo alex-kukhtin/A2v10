@@ -6617,7 +6617,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-// 20190527-7494
+// 20190527-7495
 // components/collectionview.js
 
 /*
@@ -6961,6 +6961,10 @@ TODO:
 				this.$nextTick(() => {
 					this.lockChange = false;
 				});
+			},
+			__setFilter(props) {
+				if (this.ItemsSource !== props.source) return;
+				this.filter[props.prop] = props.value;
 			}
 		},
 		created() {
@@ -6974,9 +6978,13 @@ TODO:
 			});
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
+			eventBus.$on('setFilter', this.__setFilter);
 		},
 		updated() {
 			this.updateFilter();
+		},
+		beforeDestroy() {
+			eventBus.$off('setFilter', this.__setFilter);
 		}
 	});
 
