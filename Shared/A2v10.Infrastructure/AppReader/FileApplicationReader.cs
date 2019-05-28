@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace A2v10.Request
+namespace A2v10.Infrastructure
 {
 	public class FileApplicationReader : IApplicationReader
 	{

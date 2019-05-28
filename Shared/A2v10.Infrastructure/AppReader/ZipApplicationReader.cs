@@ -1,13 +1,12 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
-namespace A2v10.Request
+namespace A2v10.Infrastructure
 {
 	public class ZipApplicationReader : IApplicationReader
 	{

@@ -69,7 +69,10 @@ namespace BackgroundProcessor
 			if (AppPath.StartsWith("db:"))
 				_reader = new DbApplicationReader(AppPath);
 			else
-				throw new NotImplementedException($"StartApplication error. AppPath must start with 'db:' ({AppPath})");
+			{
+				String key = adminMode ? "admin" : AppKey;
+				_reader = new FileApplicationReader(AppPath, key);
+			}
 		}
 
 		public IApplicationReader ApplicationReader => _reader;
