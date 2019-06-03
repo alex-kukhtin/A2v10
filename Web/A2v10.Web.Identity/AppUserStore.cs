@@ -139,10 +139,14 @@ namespace A2v10.Web.Identity
 
 		public async Task<AppUser> FindByIdAsync(Int64 userId)
 		{
+			if (userId == 0)
+				return null;
 			AppUser user = _cache.GetById(userId);
 			if (user != null)
 				return user;
 			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserById]", new { Id = userId });
+			if (user == null)
+				return null;
 			CacheUser(user);
 			return user;
 		}
