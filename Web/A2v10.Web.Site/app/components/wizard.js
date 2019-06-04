@@ -27,7 +27,7 @@
 	</div>
 	<div class="modal-footer">
 		<template v-if="helpLink">
-			<a class="btn-help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
+			<a class="btn-help" rel="help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
 			<div class="aligner"/>
 		</template>
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>

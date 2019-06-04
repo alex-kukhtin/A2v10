@@ -1900,7 +1900,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190412-7483
+// 20190604-7498
 // services/datamodel.js
 
 (function () {
@@ -2763,7 +2763,7 @@ app.modules['std:validators'] = function () {
 			return null;
 		}
 		if (name in tml.delegates) {
-			return tml.delegates[name];
+			return tml.delegates[name].bind(this.$root);
 		}
 		console.error(`Delegate "${name}" not found in the template`);
 	}
@@ -7974,7 +7974,7 @@ TODO:
 	</div>
 	<div class="modal-footer">
 		<template v-if="helpLink">
-			<a class="btn-help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
+			<a class="btn-help" rel="help" :href="helpLink" @click.prevent="$showHelp()"><i class="ico ico-help"/><span v-text="$locale.$Help"/></a>
 			<div class="aligner"/>
 		</template>
 		<button class="btn a2-inline" :disabled="backDisabled" @click.stop="back"><i class="ico ico-chevron-left"/> <span v-text="$locale.$Back"/></button>
@@ -8382,6 +8382,30 @@ TODO:
 			}
 		}
 	});
+
+	Vue.component('a2-file-image', {
+		template: '<img :src="href" :style="cssStyle" />',
+		props: {
+			url: String,
+			width: String,
+			height: String,
+			value: [String, Number]
+		},
+		computed: {
+			href: function () {
+				let root = window.$$rootUrl;
+				return url.combine(root, '_file', this.url, this.value);
+			},
+			cssStyle() {
+				let r = {};
+				if (this.width)
+					r.maxWidth = this.width;
+				if (this.height)
+					r.maxHeight = this.height;
+				return r;
+			}
+		}
+	});
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -8405,14 +8429,16 @@ TODO:
 	const locale = window.$$locale;
 	const tools = require('std:tools');
 
-	const uploadAttachment = {
+	Vue.component('a2-file-upload', {
 		template: `
+<div class="a2-file-upload">
 <label :class="cssClass" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
 	<input v-if='canUpload' type="file" @change="uploadFile" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
 	<i class="ico ico-upload"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
-		`,
+</div>
+`,
 		data() {
 			return {
 				hover: false
@@ -8420,7 +8446,6 @@ TODO:
 		},
 		props: {
 			accept: String,
-			tip: String,
 			url: String,
 			source: Object,
 			delegate: Function,
@@ -8436,7 +8461,11 @@ TODO:
 			},
 			isMultiple() {
 				return false;
-			}
+			},
+			tip() {
+				if (this.readOnly) return '';
+				return locale.$ClickToDownloadFile;
+			},
 		},
 		methods: {
 			dragOver(ev) {
@@ -8448,8 +8477,8 @@ TODO:
 			uploadFile(ev) {
 				let root = window.$$rootUrl;
 
-				let id = 1; //%%%%this.item[this.prop];
-				let uploadUrl = url.combine(root, '_upload', this.url);
+				let id = 1;
+				let uploadUrl = url.combine(root, '_file', this.url);
 				let na = this.argument ? Object.assign({}, this.argument) : { Id: id };
 				uploadUrl = url.createUrlForNavigate(uploadUrl, na);
 				var fd = new FormData();
@@ -8460,66 +8489,16 @@ TODO:
 				http.upload(uploadUrl, fd).then((result) => {
 					ev.target.value = ''; // clear current selected files
 					if (this.delegate)
-						this.delegate.call(this.source, result);
-					//this.source.$merge(result);
+						this.delegate(result);
 				}).catch(msg => {
 					if (this.errorDelegate)
-						this.errorDelegate.call(this.source, msg);
+						this.errorDelegate(msg);
 					else if (msg.indexOf('UI:') === 0)
 						tools.alert(msg.substring(3).replace('\\n', '\n'));
 					else
 						alert(msg);
 				});
 			}
-		}
-	};
-
-	/*
-	<ul>
-		<li><a @click.prevent="clickFile">filename</a></li>
-	</ul>
-	*/
-
-	Vue.component('a2-attachments', {
-		template: `
-<div class="a2-attachments">
-	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate" :error-delegate="errorDelegate"
-		:url="url" :tip="tip" :read-only='readOnly' :accept="accept" :argument="argument"/>
-</div>
-`,
-		components: {
-			'a2-upload-attachment': uploadAttachment
-		},
-		props: {
-			url: String,
-			source: Object,
-			readOnly: Boolean,
-			accept: String,
-			delegate: Function,
-			errorDelegate: Function,
-			argument: [Object, String, Number]
-		},
-		computed: {
-			tip() {
-				if (this.readOnly) return '';
-				return locale.$ClickToDownloadFile;
-			},
-			isUploadVisible: function () {
-				return true;
-			}
-		},
-		methods: {
-			removeFile: function () {
-				if (this.inArray)
-					this.item.$remove();
-				else
-					this.item[this.prop] = undefined;
-			},
-			clickFile() {
-				alert('click file here');
-			}
-		},
-		created() {
 		}
 	});
 })();
@@ -10966,7 +10945,7 @@ Vue.directive('resize', {
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
 	<li class="aligner"></li>
-	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" rel="help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
@@ -11597,4 +11576,4 @@ Vue.directive('resize', {
 	});
 
 	app.components['std:shellController'] = shell;
-})();
+})();	

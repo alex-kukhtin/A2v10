@@ -34,9 +34,8 @@ namespace A2v10.Xaml
 					throw new XamlException("The 'Source' markup extension can only be used for properties that are of type 'System.Object' or 'A2v10.Xaml.UIElement'");
 				}
 
-				var root = serviceProvider.GetService(typeof(IUriContext)) as IUriContext;
 				String baseFileName = XamlRenderer.RootFileName;
-				if (root != null && root.BaseUri != null)
+				if (serviceProvider.GetService(typeof(IUriContext)) is IUriContext root && root.BaseUri != null)
 					baseFileName = root.BaseUri.PathAndQuery;
 				return Load(baseFileName);
 			}

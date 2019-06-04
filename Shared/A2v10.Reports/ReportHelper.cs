@@ -99,7 +99,7 @@ namespace A2v10.Reports
 
 		// saveFileDialog: true -> download
 		// saveFileDialog: false -> show
-		public StiMvcActionResult ExportStiReport(ReportInfo ri, String format, bool saveFile = true)
+		public StiMvcActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
 			using (var stream = _host.ApplicationReader.FileStreamFullPath(ri.ReportPath))

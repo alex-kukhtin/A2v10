@@ -174,6 +174,7 @@ namespace A2v10.Xaml
 				return;
 			//<a class="btn-help"><i class="ico ico-help"></i>Справка</a>
 			var ha = new TagBuilder("a", "btn-help");
+			ha.MergeAttribute("rel", "help");
 			// TODO: Help path
 			var hbind = GetBinding(nameof(HelpUrl));
 			if (hbind != null)

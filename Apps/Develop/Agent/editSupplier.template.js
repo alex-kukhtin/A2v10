@@ -11,7 +11,6 @@ const template = {
 		"Model.load": modelLoad
 	},
 	validators: {
-		"Agent22.Name": 'Введите наименование',
 		"Agent.Name": {
 			valid: function (ag) {
 				return ag.Name === 'W';
@@ -21,6 +20,9 @@ const template = {
 		},
 		"Agent.Code":
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" }
+	},
+	delegates: {
+		uploadAttachment
 	}
 };
 
@@ -41,4 +43,12 @@ function duplicateCode(agent, code) {
 	return vm.$asyncValid('duplicateCode', { Code: agent.Code, Id: agent.Id });
 }
 
+
+function uploadAttachment(result) {
+	console.dir(this);
+	console.dir(result);
+	let coll = this.Agent.Attachments;
+	for (let i = 0; i < result.length; i++)
+		coll.$append(result[i]);
+}
 module.exports = template;

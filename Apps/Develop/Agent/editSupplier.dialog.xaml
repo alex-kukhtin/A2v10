@@ -126,8 +126,29 @@
 			<Header Content="Tab with Show"/>
 		</Tab>
 		-->
-		<Tab Header="Another tab (Hide)" Hide="{Bind Root.$$tabVisible}">
-			<Header Content="Tab with Hide"/>
+		<Tab Header="Attachments">
+			<Header Content="Attachments"/>
+			<List ItemsSource="{Bind Agent.Attachments}" Style="Underlined">
+				<ListItem Icon="FileContent">
+					<ListItem.Header>
+						<Hyperlink Content="{Bind Name}" Command="{BindCmd Command=Download, Url='/agent/attachment'}"/>
+					</ListItem.Header>
+					<ListItem.Content>
+						<FlexList Orientation="Horizontal">
+							<Span Content="{Bind Id}"/>
+							<Span Content="{Bind Mime}"/>
+							<Span Content="{Bind Size}"/>
+							<FileImage Url="/agent/attachment" Value="{Bind Id}"/>
+						</FlexList>
+					</ListItem.Content>
+					<ListItem.CommandBar>
+						<CommandBar>
+							<Button Icon="Clear" Command="{BindCmd Remove, Argument={Bind}}"/>
+						</CommandBar>
+					</ListItem.CommandBar>
+				</ListItem>
+			</List>
+			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment"/>
 		</Tab>
 	</TabPanel>
 </Dialog>

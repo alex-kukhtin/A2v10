@@ -101,10 +101,6 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
 			}
-			//else if (pathInfo.StartsWith("_model/"))
-			//{
-			//await RenderModel(pathInfo.Substring(7));
-			//}
 			else if (pathInfo.StartsWith("_dialog/"))
 			{
 				await Render(pathInfo.Substring(8), RequestUrlKind.Dialog);
@@ -126,9 +122,9 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				await Attachment("/" + pathInfo); // with _attachment/ prefix
 			}
-			else if (pathInfo.StartsWith("_upload/"))
+			else if (pathInfo.StartsWith("_file/"))
 			{
-				await Upload("/" + pathInfo); // with _image prefix
+				await File("/" + pathInfo); // with _image prefix
 			}
 			else if (pathInfo.StartsWith("_export/"))
 			{
@@ -414,21 +410,40 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		async Task Upload(String url)
+		async Task File(String url)
 		{
-			if (Request.HttpMethod != "POST")
-				throw new RequestModelException("Invalid HttpMethod for upload");
-			if (IsNotAjax())
-				return;
-			Response.ContentType = "application/json";
-			try
+			switch (Request.HttpMethod.ToUpperInvariant())
 			{
-				var files = Request.Files;
-				await _baseController.SaveUploads(url, files, SetQueryStringAndSqlQueryParams, Response.Output);
-			}
-			catch (Exception ex)
-			{
-				WriteExceptionStatus(ex);
+				case "POST":
+					if (IsNotAjax())
+						return;
+					Response.ContentType = "application/json";
+					try
+					{
+						var files = Request.Files;
+						await _baseController.SaveFiles(url, files, SetQueryStringAndSqlQueryParams, Response.Output);
+					}
+					catch (Exception ex)
+					{
+						WriteExceptionStatus(ex);
+					}
+					break;
+				case "GET":
+					try
+					{
+						var ai = await _baseController.DownloadAttachment(url, SetQueryStringAndSqlQueryParams);
+						if (ai == null)
+							return;
+						Response.ContentType = ai.Mime;
+						if (ai.Stream == null)
+							return;
+						Response.BinaryWrite(ai.Stream);
+					}
+					catch (Exception ex)
+					{
+						WriteExceptionStatus(ex);
+					}
+					break;
 			}
 		}
 

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -8,7 +8,6 @@ using System.Web;
 using System.Collections.Generic;
 
 using A2v10.Infrastructure;
-using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -28,6 +27,14 @@ namespace A2v10.Request
 		public String Mime { get; set; }
 		public String Name { get; set; }
 		public Stream Stream { get; set; }
+	}
+
+	public class AttachmentUpdateResult
+	{
+		public Object Id { get; set; }
+		public String Mime { get; set; }
+		public String Name { get; set; }
+		public Int64 Size { get; set; }
 	}
 
 	public class ReturnSignatureInfo

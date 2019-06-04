@@ -124,8 +124,8 @@
     <Compile Include="Sheets\SheetPage.cs" />
     <Compile Include="Text\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
-    <Compile Include="Controls\Attachments.cs" />
     <Compile Include="Controls\UploadFile.cs" />
+    <Compile Include="Controls\UploadFileSimple.cs" />
     <Compile Include="Layouts\EUSignFrame.cs" />
     <Compile Include="Layouts\IFrame.cs" />
     <Compile Include="Layouts\CommandBar.cs" />

@@ -8,7 +8,7 @@ namespace BuildApp
 {
 	public class ZipProcessor
 	{
-		String _dirName;
+		private readonly String _dirName;
 
 		public String FileName { get; }
 		public Int32 Count { get; private set; }

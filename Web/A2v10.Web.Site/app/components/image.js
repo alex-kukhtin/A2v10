@@ -112,4 +112,28 @@
 			}
 		}
 	});
+
+	Vue.component('a2-file-image', {
+		template: '<img :src="href" :style="cssStyle" />',
+		props: {
+			url: String,
+			width: String,
+			height: String,
+			value: [String, Number]
+		},
+		computed: {
+			href: function () {
+				let root = window.$$rootUrl;
+				return url.combine(root, '_file', this.url, this.value);
+			},
+			cssStyle() {
+				let r = {};
+				if (this.width)
+					r.maxWidth = this.width;
+				if (this.height)
+					r.maxHeight = this.height;
+				return r;
+			}
+		}
+	});
 })();

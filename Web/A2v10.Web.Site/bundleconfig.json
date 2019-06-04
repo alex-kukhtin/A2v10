@@ -42,7 +42,7 @@
 			"app/components/wizard.js",
 			"app/components/toastr.js",
 			"app/components/image.js",
-			"app/components/attachments.js",
+			"app/components/fileupload.js",
 			"app/components/taskpad.js",
 			"app/components/panel.js",
 			"app/components/sheet.js",

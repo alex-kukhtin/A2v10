@@ -20,14 +20,16 @@
 	const locale = window.$$locale;
 	const tools = require('std:tools');
 
-	const uploadAttachment = {
+	Vue.component('a2-file-upload', {
 		template: `
+<div class="a2-file-upload">
 <label :class="cssClass" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
 	<input v-if='canUpload' type="file" @change="uploadFile" v-bind:multiple="isMultiple" :accept="accept" ref="inputFile"/>
 	<i class="ico ico-upload"></i>
 	<span class="upload-tip" v-text="tip" v-if="tip"></span>
 </label>
-		`,
+</div>
+`,
 		data() {
 			return {
 				hover: false
@@ -35,7 +37,6 @@
 		},
 		props: {
 			accept: String,
-			tip: String,
 			url: String,
 			source: Object,
 			delegate: Function,
@@ -51,7 +52,11 @@
 			},
 			isMultiple() {
 				return false;
-			}
+			},
+			tip() {
+				if (this.readOnly) return '';
+				return locale.$ClickToDownloadFile;
+			},
 		},
 		methods: {
 			dragOver(ev) {
@@ -63,8 +68,8 @@
 			uploadFile(ev) {
 				let root = window.$$rootUrl;
 
-				let id = 1; //%%%%this.item[this.prop];
-				let uploadUrl = url.combine(root, '_upload', this.url);
+				let id = 1;
+				let uploadUrl = url.combine(root, '_file', this.url);
 				let na = this.argument ? Object.assign({}, this.argument) : { Id: id };
 				uploadUrl = url.createUrlForNavigate(uploadUrl, na);
 				var fd = new FormData();
@@ -75,66 +80,16 @@
 				http.upload(uploadUrl, fd).then((result) => {
 					ev.target.value = ''; // clear current selected files
 					if (this.delegate)
-						this.delegate.call(this.source, result);
-					//this.source.$merge(result);
+						this.delegate(result);
 				}).catch(msg => {
 					if (this.errorDelegate)
-						this.errorDelegate.call(this.source, msg);
+						this.errorDelegate(msg);
 					else if (msg.indexOf('UI:') === 0)
 						tools.alert(msg.substring(3).replace('\\n', '\n'));
 					else
 						alert(msg);
 				});
 			}
-		}
-	};
-
-	/*
-	<ul>
-		<li><a @click.prevent="clickFile">filename</a></li>
-	</ul>
-	*/
-
-	Vue.component('a2-attachments', {
-		template: `
-<div class="a2-attachments">
-	<a2-upload-attachment v-if="isUploadVisible" :source="source" :delegate="delegate" :error-delegate="errorDelegate"
-		:url="url" :tip="tip" :read-only='readOnly' :accept="accept" :argument="argument"/>
-</div>
-`,
-		components: {
-			'a2-upload-attachment': uploadAttachment
-		},
-		props: {
-			url: String,
-			source: Object,
-			readOnly: Boolean,
-			accept: String,
-			delegate: Function,
-			errorDelegate: Function,
-			argument: [Object, String, Number]
-		},
-		computed: {
-			tip() {
-				if (this.readOnly) return '';
-				return locale.$ClickToDownloadFile;
-			},
-			isUploadVisible: function () {
-				return true;
-			}
-		},
-		methods: {
-			removeFile: function () {
-				if (this.inArray)
-					this.item.$remove();
-				else
-					this.item[this.prop] = undefined;
-			},
-			clickFile() {
-				alert('click file here');
-			}
-		},
-		created() {
 		}
 	});
 })();

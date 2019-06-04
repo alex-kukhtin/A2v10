@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -6,18 +6,34 @@ namespace A2v10.Xaml
 {
 	public class UploadFile : UIElementBase
 	{
-		public Object Value { get; set; }
-		public Length Width { get; set; }
+		public String Url { get; set; }
+		public String Accept { get; set; }
+
+		public String Delegate { get; set; }
+		public String ErrorDelegate { get; set; }
+
+		public Object Argument { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
-			var tag = new TagBuilder("a2-simple-upload", null, IsInGrid);
-			MergeAttributes(tag, context, MergeAttrMode.Visibility);
-			if (Width != null)
-				tag.MergeStyle("width", Width.Value);
-			MergeValueItemProp(tag, context, nameof(Value));
+			var tag = new TagBuilder("a2-file-upload", null, IsInGrid);
+			onRender?.Invoke(tag);
+			MergeAttributes(tag, context);
+
+			MergeBindingAttributeString(tag, context, "url", nameof(Url), Url);
+
+			if (String.IsNullOrEmpty(Delegate))
+				throw new XamlException("Delegate is required for Attachments element");
+			tag.MergeAttribute(":delegate", $"$delegate('{Delegate}')");
+			if (ErrorDelegate != null)
+				tag.MergeAttribute(":error-delegate", $"$delegate('{ErrorDelegate}')");
+
+			MergeBindingAttributeString(tag, context, "accept", nameof(Accept), Accept);
+			var argBind = GetBinding(nameof(Argument));
+			if (argBind != null)
+				tag.MergeAttribute(":argument", argBind.GetPath(context));
 			tag.Render(context);
 		}
 	}

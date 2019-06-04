@@ -47,7 +47,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 
-		bool ValidAllowAddress(RequestCommand ac)
+		Boolean ValidAllowAddress(RequestCommand ac)
 		{
 			if (String.IsNullOrEmpty(ac.AllowAddressForCheck))
 				return true;

@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -16,37 +17,46 @@ namespace A2v10.Request
 {
 	public partial class BaseController
 	{
-		public async Task SaveUploads(String pathInfo, HttpFileCollectionBase files, Action<ExpandoObject> setParams, TextWriter writer)
+		public async Task SaveFiles(String pathInfo, HttpFileCollectionBase files, Action<ExpandoObject> setParams, TextWriter writer)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
-			var ru = rm.GetUpload();
+			var ru = rm.GetFile();
 
-			if (!String.IsNullOrEmpty(ru.clrType))
+			ExpandoObject savePrms = new ExpandoObject();
+			setParams?.Invoke(savePrms);
+
+			switch (ru.type)
 			{
-				ExpandoObject savePrms = new ExpandoObject();
-				setParams?.Invoke(savePrms);
-				savePrms.Set("Id", ru.Id);
-				savePrms.Set("Stream", files[0].InputStream);
-				savePrms.Set("FileName", files[0].FileName);
-				var result = await DoUploadClr(ru, savePrms);
-				writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
-			}
-			else if (ru.parse == RequestUploadParseType.excel)
-			{
-				ExpandoObject savePrms = new ExpandoObject();
-				setParams?.Invoke(savePrms);
-				savePrms.Set("Id", ru.Id);
-				var dm = await SaveExcel(ru, files[0].InputStream, savePrms);
-				WriteDataModel(dm, writer);
-			}
-			else
-			{
-				throw new NotImplementedException();
+				case RequestFileType.clr:
+					{
+						if (String.IsNullOrEmpty(ru.clrType))
+							throw new RequestModelException($"'clrType' is required for '{rm.ModelFile}' file");
+						savePrms.Set("Id", ru.Id);
+						savePrms.Set("Stream", files[0].InputStream);
+						savePrms.Set("FileName", files[0].FileName);
+						var result = await DoUploadClr(ru, savePrms);
+						writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
+					}
+					break;
+				case RequestFileType.parse:
+					{
+						savePrms.Set("Id", ru.Id);
+						var dm = await SaveExcel(ru, files[0].InputStream, savePrms);
+						WriteDataModel(dm, writer);
+					}
+					break;
+				case RequestFileType.sql:
+					{
+						savePrms.Set("Id", ru.Id);
+						var result = await SaveFilesSql(ru, savePrms, files);
+						writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.StandardSerializerSettings));
+					}
+					break;
 			}
 		}
 
-		async Task<IDataModel> SaveExcel(RequestUpload ru, Stream stream, ExpandoObject prms)
+		async Task<IDataModel> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms)
 		{
 			using (var xp = new ExcelParser())
 			{
@@ -58,7 +68,7 @@ namespace A2v10.Request
 			}
 		}
 
-		async Task<Object> DoUploadClr(RequestUpload ru, ExpandoObject prms)
+		async Task<Object> DoUploadClr(RequestFile ru, ExpandoObject prms)
 		{
 			var invoker = new ClrInvoker();
 			Object result;
@@ -67,6 +77,27 @@ namespace A2v10.Request
 			else
 				result = invoker.Invoke(ru.clrType, prms);
 			return result;
+		}
+
+		async Task<Object> SaveFilesSql(RequestFile ru, ExpandoObject prms, HttpFileCollectionBase files)
+		{
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo()
+			{
+				UserId = prms.Get<Int64>("UserId")
+			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = prms.Get<Int32>("TenantId");
+			var resultList = new List<AttachmentUpdateResult>();
+			for (Int32 i = 0; i < files.Count; i++)
+			{
+				HttpPostedFileBase file = files[i];
+				ii.Name = Path.GetFileName(file.FileName);
+				ii.Mime = file.ContentType;
+				ii.Stream = file.InputStream;
+				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateResult>(ru.source, ru.FileProcedureUpdate, ii);
+				resultList.Add(result);
+			}
+			return resultList;
 		}
 	}
 }

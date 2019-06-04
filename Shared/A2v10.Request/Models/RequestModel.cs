@@ -1,18 +1,16 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Dynamic;
 using System.Text.RegularExpressions;
+using System.IO;
 
 using Newtonsoft.Json;
 
-using A2v10.Infrastructure;
-using System.IO;
-using System.Text;
-using A2v10.Data.Interfaces;
 using A2v10.Interop;
+using A2v10.Infrastructure;
 
 namespace A2v10.Request
 {
@@ -35,7 +33,7 @@ namespace A2v10.Request
 		Data,
 		Image,
 		Attachment,
-		Upload,
+		File,
 		Report,
 		Export,
 		Api
@@ -56,7 +54,7 @@ namespace A2v10.Request
 		public String path;
 		public String data;
 		public String report;
-		public String upload;
+		public String file;
 	}
 
 
@@ -424,18 +422,29 @@ namespace A2v10.Request
 		public Boolean HasPath => type == RequestReportType.stimulsoft;
 	}
 
-	public enum RequestUploadParseType
+	public enum RequestFileParseType
 	{
 		none,
 		excel,
 	}
 
-
-	public class RequestUpload : RequestBase
+	public enum RequestFileType
 	{
-		public RequestUploadParseType parse;
+		sql,
+		clr,
+		parse
+	}
+
+
+	public class RequestFile : RequestBase
+	{
+		public RequestFileType type;
+		public RequestFileParseType parse;
 		public String clrType;
 		public Boolean async;
+		public String procedure;
+		[JsonIgnore]
+		public String FileProcedureUpdate => $"[{CurrentSchema}].[{CurrentModel}.Update]";
 	}
 
 	public class RequestImage : RequestBase
@@ -450,7 +459,7 @@ namespace A2v10.Request
 		private String _popup;
 		private String _command;
 		private String _report;
-		private String _upload;
+		private String _file;
 		private String _data;
 		private RequestUrlKind _kind;
 
@@ -483,8 +492,8 @@ namespace A2v10.Request
 		public Dictionary<String, RequestCommand> Commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
 		[JsonProperty("reports")]
 		public Dictionary<String, RequestReport> Reports { get; set; } = new Dictionary<String, RequestReport>(StringComparer.InvariantCultureIgnoreCase);
-		[JsonProperty("uploads")]
-		public Dictionary<String, RequestUpload> Uploads { get; set; } = new Dictionary<String, RequestUpload>(StringComparer.InvariantCultureIgnoreCase);
+		[JsonProperty("files")]
+		public Dictionary<String, RequestFile> Files { get; set; } = new Dictionary<String, RequestFile>(StringComparer.InvariantCultureIgnoreCase);
 
 
 		[JsonIgnore]
@@ -493,6 +502,8 @@ namespace A2v10.Request
 		public String ModelCommand => _command;
 		[JsonIgnore]
 		public String ModelDialog => _dialog;
+		[JsonIgnore]
+		public String ModelFile => _file;
 
 		[JsonIgnore]
 		public RequestDataAction DataAction
@@ -623,7 +634,7 @@ namespace A2v10.Request
 				p?.SetParent(this);
 			foreach (var r in Reports.Values)
 				r?.SetParent(this);
-			foreach (var u in Uploads.Values)
+			foreach (var u in Files.Values)
 				u?.SetParent(this);
 		}
 
@@ -644,11 +655,11 @@ namespace A2v10.Request
 			throw new RequestModelException($"Report '{_report}' not found");
 		}
 
-		public RequestUpload GetUpload()
+		public RequestFile GetFile()
 		{
-			if (Uploads.TryGetValue(_upload, out RequestUpload upload))
-				return upload;
-			throw new RequestModelException($"Upload '{_upload}' not found");
+			if (Files.TryGetValue(_file, out RequestFile file))
+				return file;
+			throw new RequestModelException($"File '{_file}' not found");
 		}
 
 		public static RequestModelInfo GetModelInfo(RequestUrlKind kind, String normalizedUrl)
@@ -692,8 +703,8 @@ namespace A2v10.Request
 				case RequestUrlKind.Attachment:
 					mi.action = action;
 					break;
-				case RequestUrlKind.Upload:
-					mi.upload = action;
+				case RequestUrlKind.File:
+					mi.file = action;
 					break;
 				case RequestUrlKind.Report:
 					mi.report = action;
@@ -765,7 +776,7 @@ namespace A2v10.Request
 			rm._popup = mi.popup;
 			rm._command = mi.command;
 			rm._report = mi.report;
-			rm._upload = mi.upload;
+			rm._file = mi.file;
 			rm._data = mi.data;
 			rm._modelPath = pathForLoad;
 			rm._kind = kind;
@@ -810,10 +821,10 @@ namespace A2v10.Request
 				kind = RequestUrlKind.Attachment;
 				baseUrl = baseUrl.Substring(13);
 			}
-			else if (baseUrl.StartsWith("/_upload"))
+			else if (baseUrl.StartsWith("/_file"))
 			{
-				kind = RequestUrlKind.Upload;
-				baseUrl = baseUrl.Substring(9);
+				kind = RequestUrlKind.File;
+				baseUrl = baseUrl.Substring(7);
 			}
 			else if (baseUrl.StartsWith("/_report"))
 			{

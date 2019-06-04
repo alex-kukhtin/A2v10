@@ -39,5 +39,11 @@
 			"type": "sql",
 			"procedure": "Agent.Code.CheckDuplicate"
 		}
+	},
+	"files": {
+		"attachment": {
+			"type": "sql",
+			"model": "Agent.Attachment"
+		}
 	}
 }
