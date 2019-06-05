@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
-/* services/http.js */
+// 20190405-7498
+/* services/html.js */
 
 app.modules['std:html'] = function () {
 
@@ -11,6 +11,7 @@ app.modules['std:html'] = function () {
 		getColumnsWidth,
 		getRowHeight,
 		downloadBlob,
+		downloadUrl,
 		printDirect,
 		removePrintFrame,
 		updateDocTitle
@@ -32,6 +33,16 @@ app.modules['std:html'] = function () {
 			let h = rows[r].offsetHeight - 12; /* padding !!!*/
 			rows[r].setAttribute('data-row-height', h);
 		}
+	}
+
+	function downloadUrl(url) {
+		let link = document.createElement('a');
+		link.style = "display:none";
+		document.body.appendChild(link);
+		link.href = url;
+		link.setAttribute('download', '');
+		link.click();
+		document.body.removeChild(link);
 	}
 
 	function downloadBlob(blob, fileName, format) {
@@ -62,16 +73,22 @@ app.modules['std:html'] = function () {
 		document.body.appendChild(frame);
 		if (document.activeElement)
 			document.activeElement.blur();
+		//let emb = document.createElement('embed');
+		//emb.setAttribute('src', url);
+		//frame.appendChild(emb);
 		frame.setAttribute('src', url);
 
 
 		frame.onload = function (ev) {
 			let cw = frame.contentWindow;
-			let finp = cw.document.createElement('input');
-			finp.setAttribute("id", "dummy-focus");
-			finp.cssText = "width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
-			cw.document.body.appendChild(finp);
-			finp.focus();
+			if (cw.document.body) {
+				let finp = cw.document.createElement('input');
+				finp.setAttribute("id", "dummy-focus");
+				finp.cssText = "width:0;height:0;border:none;position:absolute;left:-10000,top:-100000";
+				cw.document.body.appendChild(finp);
+				finp.focus();
+				cw.document.body.removeChild(finp);
+			}
 			document.body.classList.remove('waiting');
 			cw.print();
 		};

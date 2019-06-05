@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190527-7494
+// 20190605-7498
 // controllers/base.js
 
 (function () {
@@ -407,6 +407,24 @@
 				const root = window.$$rootUrl;
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
+			},
+
+			$file(url, arg, opts) {
+				const root = window.$$rootUrl;
+				let id = arg;
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
+				let fileUrl = urltools.combine(root, '_file', url, id);
+				switch ((opts || {}).action) {
+					case 'download':
+						htmlTools.downloadUrl(fileUrl + '?export=1');
+						break;
+					case 'print':
+						htmlTools.printDirect(fileUrl);
+						break;
+					default:
+						window.open(fileUrl, '_blank');
+				}
 			},
 
 			$attachment(url, arg, opts) {

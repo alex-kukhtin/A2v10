@@ -131,14 +131,14 @@
 			<List ItemsSource="{Bind Agent.Attachments}" Style="Underlined">
 				<ListItem Icon="FileContent">
 					<ListItem.Header>
-						<Hyperlink Content="{Bind Name}" Command="{BindCmd Command=Download, Url='/agent/attachment'}"/>
+						<Hyperlink Content="{Bind Name}" Command="{BindCmd Command=File, Url='/agent/attachment', Argument={Bind Id}, FileAction=Print}"/>
 					</ListItem.Header>
 					<ListItem.Content>
 						<FlexList Orientation="Horizontal">
 							<Span Content="{Bind Id}"/>
 							<Span Content="{Bind Mime}"/>
 							<Span Content="{Bind Size}"/>
-							<FileImage Url="/agent/attachment" Value="{Bind Id}"/>
+							<FileImage Url="/agent/attachment" Value="{Bind Id}" Width="50" Height="50"/>
 						</FlexList>
 					</ListItem.Content>
 					<ListItem.CommandBar>
@@ -148,7 +148,7 @@
 					</ListItem.CommandBar>
 				</ListItem>
 			</List>
-			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment"/>
+			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*"/>
 		</Tab>
 	</TabPanel>
 </Dialog>

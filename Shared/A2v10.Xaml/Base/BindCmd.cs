@@ -47,7 +47,8 @@ namespace A2v10.Xaml
 		Attachment,
 		Help,
 		EUSign,
-		ExportTo
+		ExportTo,
+		File
 	}
 
 	public enum DialogAction
@@ -60,6 +61,14 @@ namespace A2v10.Xaml
 		Append, // create in dialog and append to array,
 		New, // create in dialog and update selected in array;
 		Copy
+	}
+
+	public enum FileAction
+	{
+		Unknown,
+		Show,
+		Download,
+		Print
 	}
 
 	public enum ExportToFormat
@@ -80,6 +89,7 @@ namespace A2v10.Xaml
 		public String UpdateAfter { get; set; }
 		public String Url { get; set; }
 		public DialogAction Action { get; set; }
+		public FileAction FileAction { get; set; }
 
 		public String Execute { get; set; }
 		public String CommandName { get; set; }
@@ -269,6 +279,9 @@ namespace A2v10.Xaml
 				case CommandType.ExportTo:
 					return $"$exportTo('{Format}', {CommandFileName(context)})";
 
+				case CommandType.File:
+					return $"$file({CommandUrl(context)}, {CommandArgument(context)}, {GetOptionsForFile(context)})";
+
 				case CommandType.Dialog:
 					if (Action == DialogAction.Unknown)
 						throw new XamlException($"Action required for {Command} command");
@@ -335,6 +348,13 @@ namespace A2v10.Xaml
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();
+		}
+
+		String GetOptionsForFile(RenderContext context)
+		{
+			if (FileAction == FileAction.Unknown)
+				return nullString;
+			return $"{{action: '{FileAction.ToString().ToLowerInvariant()}'}}";
 		}
 
 		String GetOptionsValid(RenderContext context)

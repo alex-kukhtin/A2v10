@@ -445,6 +445,8 @@ namespace A2v10.Request
 		public String procedure;
 		[JsonIgnore]
 		public String FileProcedureUpdate => $"[{CurrentSchema}].[{CurrentModel}.Update]";
+		[JsonIgnore]
+		public String FileProcedureLoad => $"[{CurrentSchema}].[{CurrentModel}.Load]";
 	}
 
 	public class RequestImage : RequestBase

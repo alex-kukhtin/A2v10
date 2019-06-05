@@ -54,6 +54,7 @@
     <Compile Include="Controllers\BaseController.Upload.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\StandaloneController.cs" />
+    <Compile Include="Handlers\FileHandler.cs" />
     <Compile Include="Helpers\HostHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />

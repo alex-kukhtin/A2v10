@@ -23,6 +23,7 @@ using A2v10.Request;
 using A2v10.Web.Identity;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Request.Models;
+using System.Net.Http.Headers;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -124,7 +125,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else if (pathInfo.StartsWith("_file/"))
 			{
-				await File("/" + pathInfo); // with _image prefix
+				await DoFile("/" + pathInfo); // with _image prefix
 			}
 			else if (pathInfo.StartsWith("_export/"))
 			{
@@ -410,7 +411,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		async Task File(String url)
+		async Task DoFile(String url)
 		{
 			switch (Request.HttpMethod.ToUpperInvariant())
 			{
@@ -431,10 +432,18 @@ namespace A2v10.Web.Mvc.Controllers
 				case "GET":
 					try
 					{
-						var ai = await _baseController.DownloadAttachment(url, SetQueryStringAndSqlQueryParams);
+						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams);
 						if (ai == null)
 							return;
 						Response.ContentType = ai.Mime;
+						if (Request.QueryString["export"] != null)
+						{
+							var cdh = new ContentDispositionHeaderValue("attachment")
+							{
+								FileNameStar = _baseController.Localize(ai.Name)
+							};
+							Response.Headers.Add("Content-Disposition", cdh.ToString());
+						}
 						if (ai.Stream == null)
 							return;
 						Response.BinaryWrite(ai.Stream);

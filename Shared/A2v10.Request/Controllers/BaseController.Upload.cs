@@ -94,10 +94,29 @@ namespace A2v10.Request
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Mime = file.ContentType;
 				ii.Stream = file.InputStream;
-				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateResult>(ru.source, ru.FileProcedureUpdate, ii);
+				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateResult>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
 				resultList.Add(result);
 			}
 			return resultList;
+		}
+
+		public async Task<AttachmentInfo> LoadFileGet(String pathInfo, Action<ExpandoObject> setParams)
+		{
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var ru = rm.GetFile();
+
+			ExpandoObject loadPrms = new ExpandoObject();
+			setParams?.Invoke(loadPrms);
+			loadPrms.Set("Id", ru.Id);
+			loadPrms.RemoveKeys("export,Export");
+
+			switch (ru.type)
+			{
+				case RequestFileType.sql:
+					return await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
+				default:
+					throw new InvalidOperationException("The 'POST' method is not allowed for requested url");
+			}
 		}
 	}
 }
