@@ -8188,9 +8188,9 @@ TODO:
 	});
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180416-7158
+// 20190610-7499
 // components/toastr.js
 
 
@@ -8209,7 +8209,7 @@ TODO:
 	const toastrTemplate = `
 <div class="toastr-stack" >
 	<transition-group name="list" tag="ul">
-		<a2-toast v-for="(t,k) in items" :key="k" :toast="t"></a2-toast>
+		<a2-toast v-for="(t, k) in items":toast="t" :key="t.$index"></a2-toast>
 	</transition-group>
 </div>
 `;
