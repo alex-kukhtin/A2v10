@@ -104,6 +104,13 @@
 		"minify": { "enabled": false }
 	},
 	{
+		"outputFileName": "Scripts/locale-de.min.js",
+		"inputFiles": [
+			"app/localization/locale-de.js"
+		],
+		"minify": { "enabled": false }
+	},
+	{
 		"outputFileName": "Scripts/eusign.js",
 		"inputFiles": [
 			"app/services/eusign.js"

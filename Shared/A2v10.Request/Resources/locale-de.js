@@ -1,0 +1,69 @@
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
+// 20190223-7441
+// locale-de.js
+
+"use strict";
+
+(function () {
+
+	const locale = {
+		$Locale: 'de-DE',
+		$Ok: 'OK',
+		$Cancel: 'Abbrechen',
+		$Close: 'Schließen',
+		$Apply: 'Übernehmen',
+		$Back: 'Zurück',
+		$Next: 'Weiter',
+		$Finish: 'Stop',
+		$Tasks: 'Aufgaben',
+		$LoginPrompt: 'Login prompt',
+		$Save: 'Speichern',
+		$NotSave: 'Nicht speichern',
+		$Refresh: 'Aktualisieren',
+		$Confirm: 'Bestätigung',
+		$Message: 'Nachricht',
+		$Error: 'Fehler',
+		$Help: 'Hilfe',
+		$ConfirmClose: 'Bestätigung beim schließen',
+		$MakeValidFirst: 'Erst Fehlerkorrektur',
+		$ElementWasChanged: 'Das Element wurde geändert. Änderungen speichern?',
+		$Profiling: 'Profiling',
+		$DataModel: 'Datenmodel',
+		$Today: 'Heute',
+		$Yesterday: 'Gestern',
+		$CreateLC: 'Neu',
+		$NoElements: 'keine Elemente',
+		$PagerElements: 'Element',
+		$Of: 'von',
+		$Register: 'Registraton',
+		$ClickToDownloadPicture: 'Klicken um ein Bild herunterladen',
+		$ClickToDownloadFile: 'Klicken um ein Datei herunterladen',
+		$EnterPassword: 'Passwort eingeben',
+		$MatchError: 'das Passwort stimmt nicht mit der Bestätigung überein',
+		$PasswordLength: 'das Passwort muss mindestens 6 Zeichen lang sein',
+		$InvalidOldPassword: 'Ungültiges altes Passwort',
+		$ChangePasswordSuccess: 'Passwort erfolgreich geändert',
+		$Last7Days: 'Letzte 7 Tage',
+		$Last30Days: 'Letzte 30 Tage',
+		$MonthToDate: 'Monat bis Datum',
+		$PrevMonth: 'Vorheriger Monat',
+		$CurrMonth: 'Aktueller Monat',
+		$QuartToDate: 'Quartal bis Datum',
+		$PrevQuart: 'Vorheriges Quartal',
+		$CurrQuart: 'Aktuelles Quartal',
+		$YearToDate: 'Jahr bis Datum',
+		$CurrYear: 'Aktuelles Jahr',
+		$PrevYear: 'Vorheriges Jahr',
+		$AllPeriodData: 'Für gesamte Zeit',
+		$License: 'Lizenz',
+		$HomePage: 'homepage',
+		$CreatedOpenSource: 'Mit der folgenden Open Source-Software erstellt',
+		$Unknown: 'Unbekannt',
+		$ChooseFile: 'Datei auswählen',
+		$AccessDenied: 'Zigriff verweigert!'
+	};
+
+	window.$$locale = locale;
+
+})();
