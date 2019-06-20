@@ -172,6 +172,7 @@
 			"app/site/store.js",
 			"app/components/collectionview.js",
 			"app/components/pager.js",
+			"app/components/include.js",
 			"app/controllers/base.js"
 		],
 		"minify": { "enabled": false }

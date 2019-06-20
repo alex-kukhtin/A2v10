@@ -1429,7 +1429,10 @@ app.modules['std:http'] = function () {
 						let s = rdoc.scripts[i];
 						if (s.type === 'text/javascript') {
 							let newScript = document.createElement("script");
-							newScript.text = s.text;
+							if (s.src)
+								newScript.src = s.src;
+							else
+								newScript.text = s.text;
 							document.body.appendChild(newScript).parentNode.removeChild(newScript);
 						}
 					}
