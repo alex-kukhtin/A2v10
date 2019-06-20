@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190221-7439
+// 20190620-7501
 /* services/http.js */
 
 app.modules['std:http'] = function () {
