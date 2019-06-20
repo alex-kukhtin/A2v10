@@ -40,8 +40,9 @@ namespace A2v10.Request
 					case "uk": return Resources.locale_uk;
 					case "en": return Resources.locale_en;
 					case "ru": return Resources.locale_ru;
+					case "de": return Resources.locale_de;
 				}
-				throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en'");
+				throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en', 'de'");
 			}
 		}
 	}
