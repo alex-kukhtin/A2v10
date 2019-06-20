@@ -506,6 +506,40 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20190223-7441
+        ///// locale-de.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///	window.$$locale = {
+        ///		$Locale: &apos;de-DE&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Abbrechen&apos;,
+        ///		$Close: &apos;Schließen&apos;,
+        ///		$Apply: &apos;Übernehmen&apos;,
+        ///		$Back: &apos;Zurück&apos;,
+        ///		$Next: &apos;Weiter&apos;,
+        ///		$Finish: &apos;Stop&apos;,
+        ///		$Tasks: &apos;Aufgaben&apos;,
+        ///		$Save: &apos;Speichern&apos;,
+        ///		$NotSave: &apos;Nicht speichern&apos;,
+        ///		$Refresh: &apos;Aktualisieren&apos;,
+        ///		$Confirm: &apos;Bestätigung&apos;,
+        ///		$Message: &apos;Nachricht&apos;,
+        ///		$Error: &apos;Fehler&apos;,
+        ///		$ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string locale_de {
+            get {
+                return ResourceManager.GetString("locale_de", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
         ///// 20180401-7145

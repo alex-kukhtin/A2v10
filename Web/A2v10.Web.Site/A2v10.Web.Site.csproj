@@ -82,6 +82,7 @@
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\directives\pageorient.js" />
+    <Content Include="app\localization\locale-de.js" />
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
@@ -164,6 +165,7 @@
     </Content>
     <Content Include="Less\Diagram.less" />
     <Content Include="Less\Table.less" />
+    <Content Include="scripts\locale-de.min.js" />
     <Content Include="TestMobile\index.html" />
     <Content Include="TestPages\slot.html" />
     <Content Include="tests\format.js" />
