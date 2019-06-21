@@ -167,6 +167,7 @@
     <Content Include="Less\Table.less" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="TestMobile\index.html" />
+    <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\slot.html" />
     <Content Include="tests\format.js" />
     <Content Include="Less\TabBar.less" />
@@ -312,7 +313,6 @@
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
     <Content Include="TestPages\attention.txt" />
-    <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\datagridwithdata.html" />
     <Content Include="TestPages\datagrid.html" />
     <Content Include="TestPages\formcontrol.html" />
