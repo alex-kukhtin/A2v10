@@ -17,6 +17,9 @@ const template = {
 	validators: {
 	},
 	commands: {
+		showAlert() {
+			alert('click!');
+		}
 	}
 };
 

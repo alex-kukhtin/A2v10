@@ -119,10 +119,11 @@ namespace A2v10.Xaml
 			button.RenderStart(context);
 			RenderIcon(context, Icon);
 
-			if (GetBinding(nameof(Content)) != null)
+			var contBind = GetBinding(nameof(Content));
+			if (contBind != null)
 			{
 				var cont = new TagBuilder("span");
-				MergeAttributes(cont, context, MergeAttrMode.Content);
+				cont.MergeAttribute("v-text", contBind.GetPathFormat(context));
 				cont.Render(context);
 			}
 
