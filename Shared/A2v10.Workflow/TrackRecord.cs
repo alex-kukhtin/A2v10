@@ -17,5 +17,15 @@ namespace A2v10.Workflow
 		{
 			dbContext.Execute(String.Empty, "a2workflow.[Process.AddToTrack]", this);
 		}
+
+		public TrackRecord Clone()
+		{
+			return new TrackRecord()
+			{
+				UserId = this.UserId,
+				Message = this.Message,
+				ProcessId = this.ProcessId
+			};
+		}
 	}
 }

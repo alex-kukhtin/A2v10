@@ -3,6 +3,9 @@
 
 const template = {
 	properties: {
+		'TRoot.$text'() {
+			return 'button text';
+		}
 	},
 	methods: {
 	},

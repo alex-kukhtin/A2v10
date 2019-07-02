@@ -8,13 +8,14 @@
 		<Block Grid.Row="2" Grid.Col="1"></Block>
 		<Button Grid.Row="3" Grid.Col="1" Icon="Approve" Command="{BindCmd Reload}">Button</Button>
 		<Grid Grid.Row="3" Grid.Col="2">
-			<Button Grid.Row="1" Grid.Col="1" Icon="CommentDiscussion" >Button inside</Button>
+			<Button Grid.Row="1" Grid.Col="1" Icon="Gear" Content="{Bind Root.$text}"></Button>
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">
 					<TextBox Label="Договір"></TextBox>
 					<TextBox Label="Проект"></TextBox>
 				</Grid>
 			</Panel>
+			<Code Content="{Bind Root.$text}"></Code>
 		</Grid>
 				
 

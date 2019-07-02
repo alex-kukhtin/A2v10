@@ -42,9 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Develop\sales\invoice\model_definition.ts" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <TypeScriptCompile Include="Develop\sales\invoice\ts_test.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Identity\Group\model.json" />
@@ -66,7 +64,6 @@
     <None Include="Develop\Reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
-    <None Include="Develop\sales\invoice\json1.json" />
     <None Include="Develop\sql.json" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>

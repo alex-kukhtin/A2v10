@@ -81,7 +81,7 @@
                 </aw:Track>
                 <FlowStep.Next>
                   <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
-                    <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" TrackAfter="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
+                    <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
                       <aw:Request.Inbox>
                         <InArgument x:TypeArguments="aw:Inbox">
                           <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
@@ -113,6 +113,14 @@
 }</mca:CSharpValue>
                         </InArgument>
                       </aw:Request.SendBefore>
+                      <aw:Request.TrackAfter>
+                        <InArgument x:TypeArguments="aw:TrackRecord">
+                          <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+{
+   Message = "Answer is {{Answer}}"
+}</mca:CSharpValue>
+                        </InArgument>
+                      </aw:Request.TrackAfter>
                       <aw:Request.TrackBefore>
                         <InArgument x:TypeArguments="aw:TrackRecord">
                           <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
@@ -205,7 +213,7 @@
     <x:Reference>__ReferenceID4</x:Reference>
     <x:Reference>__ReferenceID5</x:Reference>
     <x:Reference>__ReferenceID6</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbBUvA9EBDwIBATYJQRICAU9EDUgVAgFISxFRHAIBQVQVfCICASh/GZ0BKwIBFaABHbIBKgIBCLYBI7YBdwIBAj4PPmACAVY5DzlkAgFQRhFGagIBSU4XTqYBAgFCVxtfFAIBO2QbZG8CATV2G3kWAgEvaRtxFAIBKY4BH5IBFAIBIpcBH5oBFAIBHIIBH4kBFAIBFqMBI6oBFAIBD68BI68BdwIBCQ==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbBYvA9kBDwIBATYJQRICAVVEDUgVAgFOSxFRHAIBR1QVhAEiAgEohwEZpQErAgEVqAEdugEqAgEIvgEjvgF3AgECPg8+YAIBXDkPOWQCAVZGEUZqAgFPThdOpgECAUhXG18UAgFBZBtkbwIBO34bgQEWAgE1dht5FAIBL2kbcRQCASmWAR+aARQCASKfAR+iARQCARyKAR+RARQCARarASOyARQCAQ+3ASO3AXcCAQk=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

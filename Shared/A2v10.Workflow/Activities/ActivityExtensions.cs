@@ -28,14 +28,12 @@ namespace A2v10.Workflow
 			dbContext.LoadModel(state.DataSource, state.Procedure, prms);
 		}
 
-		public static void DoTrack(this NativeActivityContext context, IDbContext dbContext, TrackRecord record, Int64? userId = null)
+		public static void DoTrack(this NativeActivityContext context, IDbContext dbContext, TrackRecord record)
 		{
 			if (record == null)
 				return;
 			var process = Process.GetProcessFromContext(context);
 			record.ProcessId = process.Id;
-			if (record.UserId == 0 && userId.HasValue)
-				record.UserId = userId.Value;
 			record.Update(dbContext);
 			context.TrackRecord($"TrackRecord written successfully {{Id:{record.Id}}}");
 		}

@@ -103,13 +103,13 @@ namespace A2v10.Xaml
 			if (IconAlign == IconAlign.Top)
 				button.AddCssClass("icon-top");
 
-			//if (!insideBar)
 			if (Style != ButtonStyle.Default)
 				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
 			button.AddCssClassBool(Rounded, "btn-rounded");
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);
-			MergeAttributes(button, context, MergeAttrMode.NoTabIndex); // dinamic
+			MergeAttributes(button, context, MergeAttrMode.NoTabIndex & ~MergeAttrMode.Content); // dinamic
+			
 			if (TabIndex != 0)
 				button.MergeAttribute("tabindex", TabIndex.ToString());
 			if (!HasContent && (Icon != Icon.NoIcon))
@@ -118,7 +118,16 @@ namespace A2v10.Xaml
 			button.MergeAttribute("v-settabindex", String.Empty);
 			button.RenderStart(context);
 			RenderIcon(context, Icon);
+
+			if (GetBinding(nameof(Content)) != null)
+			{
+				var cont = new TagBuilder("span");
+				MergeAttributes(cont, context, MergeAttrMode.Content);
+				cont.Render(context);
+			}
+
 			RenderContent(context);
+
 			if (hasDropDown)
 			{
 				if (!hasCommand)

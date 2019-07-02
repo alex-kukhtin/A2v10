@@ -4,6 +4,7 @@ using A2v10.Infrastructure;
 using System;
 using System.Dynamic;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace A2v10.Workflow
 {
@@ -30,6 +31,17 @@ namespace A2v10.Workflow
 			if (Params == null)
 				throw new WorkflowException("There are no Params in RequestResult");
 			return Params.Eval<T>(Expression, default(T), throwIfError: true);
+		}
+
+		public String Resolve(String expr)
+		{
+
+			if (String.IsNullOrEmpty(expr))
+				return expr;
+			var sb = new StringBuilder(expr);
+			sb.Replace("{{Answer}}", Answer);
+			sb.Replace("{{Comment}}", Comment);
+			return sb.ToString();
 		}
 	}
 }

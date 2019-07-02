@@ -59,7 +59,14 @@ namespace A2v10.Workflow
 			inbox.Resumed(dbContext, rr.InboxId, rr.UserId, rr.Answer);
 			context.TrackRecord($"Inbox resumed {{Id: {rr.InboxId}, UserId: {rr.UserId}) Result:'{rr.Answer}'}}");
 			// track after
-			context.DoTrack(dbContext, TrackAfter.Get<TrackRecord>(context), rr.UserId);
+			var trAfter = TrackAfter.Get<TrackRecord>(context);
+			if (trAfter != null)
+			{
+				trAfter = trAfter.Clone();
+				trAfter.UserId = rr.UserId;
+				trAfter.Message = rr.Resolve(trAfter.Message);
+				context.DoTrack(dbContext, trAfter);
+			}
 			// send after
 			SendMessage(SendAfter.Get<MessageInfo>(context), inbox, context);
 			// state after
