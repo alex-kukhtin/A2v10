@@ -8,7 +8,7 @@
 		<Block Margin="10">
 			<Grid Columns="220, 200, 120, 1*" Background="WhiteSmoke" DropShadow="Shadow1">
 				<Header Size="Small" Grid.ColSpan="4"  Grid.Row="1">Завантаження електронного ключа та зчитування сертіфікатів</Header>
-				<UploadFile Value="{Bind Attachment.$File}" Grid.Row="2" Grid.Col="1"/>
+				<UploadFileSimple Value="{Bind Attachment.$File}" Grid.Row="2" Grid.Col="1"/>
 				<TextBox Grid.Row="2" Grid.Col="2" UpdateTrigger="Input"
 					Password="True" Placeholder="Введіть пароль на ключ" Value="{Bind Attachment.$Password}" />
 				<Button Grid.Row="2" Grid.Col="3"
