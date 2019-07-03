@@ -65,6 +65,7 @@
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
     <None Include="Develop\sql.json" />
+    <Content Include="tsconfig.json" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +344,7 @@
   <ItemGroup>
     <Folder Include="Develop\Localization\" />
     <Folder Include="Develop\_files\" />
+    <Folder Include="Develop\_interfaces\" />
     <Folder Include="Develop\_localization\" />
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
@@ -493,6 +495,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Develop\sales\invoice\invoice2.template.ts" />
+    <TypeScriptCompile Include="_declarations\a2v10.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

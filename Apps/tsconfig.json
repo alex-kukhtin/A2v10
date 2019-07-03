@@ -1,0 +1,10 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"noEmitOnError": true,
+		"removeComments": false,
+		"inlineSourceMap": true,
+		"target": "es2017"
+	}
+}
