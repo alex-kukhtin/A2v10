@@ -35,7 +35,7 @@ interface ITemplate {
 		[prop: string]: Object
 	},
 	events?: {
-		[prop: string]: (this: IElement) => any
+		[prop: string]: (this: IElement, elem: IElement, val: any, oldVal: any, prop: string) => void;
 	},
 	commands?: {
 		[prop: string]: ICommand

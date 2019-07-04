@@ -24,6 +24,7 @@ using A2v10.Web.Identity;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Request.Models;
 using System.Net.Http.Headers;
+using System.Linq;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -82,6 +83,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 
 			pathInfo = pathInfo.ToLowerInvariant();
+
 			if (pathInfo.StartsWith("admin/"))
 			{
 				pathInfo = pathInfo.Substring(6);
@@ -90,6 +92,12 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 
 			_baseController.Host.StartApplication(_baseController.Admin);
+
+			if (pathInfo.EndsWith(".ts"))
+			{
+				TypeScriptSource(pathInfo);
+				return;
+			}
 
 			if (pathInfo.StartsWith("shell"))
 			{
@@ -243,7 +251,8 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var baseUrl = Request.QueryString["baseUrl"];
 				await _baseController.Server(pathInfo, baseUrl, UserId, Response);
-			} catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				WriteExceptionStatus(ex);
 			}
@@ -600,6 +609,20 @@ namespace A2v10.Web.Mvc.Controllers
 		protected void WriteExceptionStatus(Exception ex)
 		{
 			_baseController.WriteExceptionStatus(ex, Response);
+		}
+
+		void TypeScriptSource(String pathInfo)
+		{
+			// path/[action|dialog|etc]/ts-file
+			Response.ContentType = "application/x-typescript";
+			String[] segments = pathInfo.Split('/');
+			Int32 len = segments.Length;
+			if (len < 3)
+				throw new RequestModelException($"Invalid typescript request: '{pathInfo}'");
+			String segmentPath = Path.Combine(segments.Take(len - 2).ToArray<String>());
+			String fullPath = _baseController.Host.ApplicationReader.MakeFullPath(segmentPath, segments[len-1]);
+			String content = System.IO.File.ReadAllText(fullPath);
+			Response.Write(content);
 		}
 	}
 }

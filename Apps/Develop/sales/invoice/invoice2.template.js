@@ -1,15 +1,40 @@
+"use strict";
 /* type script code here */
 const template = {
     properties: {
-        "TDocument.Name"() { return this.MyText; },
+        'TDocument.$checked': Boolean,
+        "TDocument.Name"() { return this.Memo + '2'; },
         "TDocument.$XXX": String,
-        "TDocument.$ZZZsds": Number
+        "TDocument.$ZZZsds": Number,
+        'TRow.Sum'() { return 222; },
+        'TDocument.Sum'() { return 2222; },
+        'TDocument.$DatePlusOne'() { return this.Date; },
+        'TDocument.$canShipment'() { return false; },
+        'TDocLink.$Mark'() { return this.Done ? 'success' : null; },
+        'TRow.$RoundSum'() { return this.Price * this.Qty; },
+        'TRow.$RowBold'() { return this.Qty === 3; },
+        'TRow.$RowMark'() { return this.Qty === 3 ? 'green' : undefined; }
+    },
+    validators: {
+        'Document.Agent': 'Выберите покупателя',
+        'Document.Rows[].Entity': 'Выберите товар2',
+        'Document.Rows[].Price': 'Укажите цену'
     },
     events: {
-        "aaaa.SSSS.change"() { return this.$isEmpty; },
-        "bbbb.tttt.change": docNoChanged
+        'Document.Rows[].add': (arr, row) => row.Qty = 1,
+        'Document.Rows[].Entity.Article.change'() { },
+        'Document.Agent.change': (doc) => { console.dir('Agent.change'); },
+        'Document.Date.change': (doc, newVal, oldVal) => { console.dir(`Date.change nv:${newVal}, ov:${oldVal}`); }
     },
     commands: {
+        apply: function (doc) {
+            alert('apply');
+            debugger;
+        },
+        unApply() { },
+        createShipment() { },
+        createPayment() { },
+        createNewCustomer() { },
         "aaaa": async function () {
             return await this.$vm.$invoke('myCommand345');
         }
@@ -20,11 +45,10 @@ const template = {
     }
 };
 module.exports = template;
-function docNoChanged() {
+function docNoChanged(doc) {
     return this.$isNew;
 }
 function fetchCustomers(agent, text) {
     let vm = this.$vm;
     return vm.$invoke('fetchCustomer', { Text: text, Kind: 'Customer' });
 }
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW52b2ljZTIudGVtcGxhdGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbnZvaWNlMi50ZW1wbGF0ZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQSwyQkFBMkI7QUFFM0IsTUFBTSxRQUFRLEdBQWM7SUFDM0IsVUFBVSxFQUFFO1FBQ1gsZ0JBQWdCLEtBQUssT0FBTyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQztRQUMxQyxnQkFBZ0IsRUFBRSxNQUFNO1FBQ3hCLG1CQUFtQixFQUFFLE1BQU07S0FDM0I7SUFDRCxNQUFNLEVBQUU7UUFDUCxrQkFBa0IsS0FBSyxPQUFPLElBQUksQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDO1FBQzlDLGtCQUFrQixFQUFFLFlBQVk7S0FDaEM7SUFDRCxRQUFRLEVBQUU7UUFDVCxNQUFNLEVBQUUsS0FBSztZQUNaLE9BQU8sTUFBTSxJQUFJLENBQUMsR0FBRyxDQUFDLE9BQU8sQ0FBQyxjQUFjLENBQUMsQ0FBQztRQUFDLENBQUM7S0FDakQ7SUFDRCxTQUFTLEVBQUU7UUFDVixZQUFZLEVBQUUsQ0FBQyxDQUFDLEVBQUUsQ0FBQyxFQUFFLEVBQUUsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxHQUFHLENBQUM7UUFDakMsY0FBYztLQUNkO0NBQ0QsQ0FBQztBQUVGLE1BQU0sQ0FBQyxPQUFPLEdBQUcsUUFBUSxDQUFDO0FBRzFCLFNBQVMsWUFBWTtJQUNwQixPQUFPLElBQUksQ0FBQyxNQUFNLENBQUM7QUFDcEIsQ0FBQztBQUVELFNBQVMsY0FBYyxDQUFhLEtBQUssRUFBRSxJQUFJO0lBQzlDLElBQUksRUFBRSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUM7SUFDbEIsT0FBTyxFQUFFLENBQUMsT0FBTyxDQUFDLGVBQWUsRUFBRSxFQUFFLElBQUksRUFBRSxJQUFJLEVBQUUsSUFBSSxFQUFFLFVBQVUsRUFBRSxDQUFDLENBQUM7QUFDdEUsQ0FBQyJ9
