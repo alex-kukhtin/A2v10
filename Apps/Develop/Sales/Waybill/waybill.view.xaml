@@ -6,7 +6,7 @@
 			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
 			<Separator/>
-			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}, SaveRequired=True, Confirm='Провести документ?'}" If="{Bind !Document.Done}"/>
+			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
 			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
 			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}" />
 			<Button Icon="Print" Content="PrintDirect" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Print=True}"/>

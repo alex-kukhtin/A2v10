@@ -11,7 +11,8 @@ module.exports = {
     rowSum: { get: getRowSum, set: setRowSum },
     // events
     findArticle,
-    documentCreate,
+	documentCreate,
+	applyDocument,
     // commands
     docApply: {
         saveRequired: true,

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190605-7498
+// 20190704-7504
 // controllers/base.js
 
 (function () {
@@ -110,21 +110,6 @@
 				if (this.$isLoading) return;
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
-                /*
-                const doExec = () => {
-                    let root = this.$data;
-                    if (!confirm)
-                        root._exec_(cmd, arg, confirm, opts);
-                    else
-                        this.$confirm(confirm).then(() => root._exec_(cmd, arg));
-                }
-
-                if (opts && opts.saveRequired && this.$isDirty) {
-                    this.$save().then(() => doExec());
-                } else {
-                    doExec();
-                }
-                */
 			},
 
 			$toJson(data) {
@@ -550,6 +535,7 @@
 			},
 
 			$confirm(prms) {
+				// TODO: tools
 				if (utils.isString(prms))
 					prms = { message: prms };
 				prms.style = prms.style || 'confirm';
@@ -566,6 +552,12 @@
 
 			$alert(msg, title, list) {
 				// TODO: tools
+				if (utils.isObject(msg) && !title && !list) {
+					let prms = msg;
+					msg = prms.message || prms.msg;
+					title = prms.title;
+					list = prms.list;
+				}
 				let dlgData = {
 					promise: null, data: {
 						message: msg, title: title, style: 'alert', list: list
@@ -1014,6 +1006,33 @@
 				if (arr && arr.length)
 					return arr[0].msg;
 				return '';
+			},
+
+			$getErrors(severity) {
+				let errs = this.$data.$forceValidate();
+				if (!errs || !errs.length)
+					return null;
+
+				if (severity && !utils.isArray(severity))
+					severity = [severity];
+
+				function isInclude(sev) {
+					if (!severity)
+						return true; // include
+					if (severity.indexOf(sev) !== -1)
+						return true;
+					return false;
+				}
+
+				let result = [];
+				for (let x of errs) {
+					for (let ix = 0; ix < x.e.length; ix++) {
+						let y = x.e[ix];
+						if (isInclude(y.severity))
+							result.push({ path: x, msg: y.msg, severity: y.severity, index:ix });
+					}
+				}
+				return result.length ? result : null;
 			},
 
 			__beginRequest() {
