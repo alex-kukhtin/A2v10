@@ -5225,6 +5225,9 @@ TODO:
 .a2-include.full-height {
   height: 100%;
 }
+.a2-include.full-height .partial {
+  height: 100%;
+}
 .scrollable-pane {
   overflow: auto;
 }

@@ -16,6 +16,9 @@
 	window.require = require;
 	window.component = component;
 
+	// amd typescript support
+	window.define = define;
+
 	let rootElem = document.querySelector('meta[name=rootUrl]');
 	window.$$rootUrl = rootElem ? rootElem.content || '' : '';
 
@@ -46,6 +49,15 @@
 	function nextToken() {
 		return '' + currentToken++;
 	}
+
+	function define(args, factory) {
+		let exports = {
+			default: undefined
+		};
+		factory(require, exports);
+		return exports.default;
+	}
+
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 

@@ -1,11 +1,23 @@
 {
-	"compileOnSave": true,	
+	"compileOnSave": true,
 	"compilerOptions": {
-		"noImplicitAny": false,
-		"noEmitOnError": true,
-		"removeComments": false,
-		"sourceMap": false,
+		"module": "amd",
 		"target": "es2017",
-		"alwaysStrict": true
-	}
+		"sourceMap": false,
+		"removeComments": true,
+		"listFiles": false,
+		"baseUrl": ".",
+		"traceResolution": false,
+		"lib": [ "es2017", "dom" ],
+		"typeRoots": [ "@types" ],
+		"paths": {
+		}
+	},
+	"include": [
+		"develop/**/*.ts",
+		"@types/platfrom.d.ts"
+	],
+	"exclude": [
+		"develop/**/.d.ts"
+	]
 }

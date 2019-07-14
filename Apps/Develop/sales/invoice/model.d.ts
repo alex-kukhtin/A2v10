@@ -1,27 +1,30 @@
 ﻿
 
-interface TAgent extends IElement {
+export interface TAgent extends IElement {
 	Id: number,
 	Name: string,
 	Memo: string
 }
 
-interface TRow extends IElement {
+export interface TRow extends IElement {
 	Qty: number;
 	Price: number;
 	Sum: number;
 }
 
-interface TDocument extends IElement {
+export interface TRows extends IElementArray<TRow> {
+}
+
+export interface TDocument extends IElement {
 	Id: number;
 	Date: Date;
 	Done: boolean;
 	Memo: string;
 	Sum: number;
 	Agent: TAgent;
-	Rows: TRow[];
+	Rows: TRows;
 }
 
-interface TRoot extends IRoot {
+export interface TRoot extends IRoot {
 	Document: TDocument;
 }

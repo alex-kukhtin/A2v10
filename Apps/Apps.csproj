@@ -65,6 +65,7 @@
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
     <None Include="Develop\sql.json" />
+    <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="tsconfig.json" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
@@ -497,8 +498,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="%40types\platfrom.d.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\invoice2.template.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\model.d.ts" />
+    <TypeScriptCompile Include="Develop\sales\waybill\model.d.ts" />
     <TypeScriptCompile Include="_declarations\a2v10.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

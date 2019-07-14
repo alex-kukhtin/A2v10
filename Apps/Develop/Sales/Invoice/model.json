@@ -19,7 +19,7 @@
         "Kind": "TEST"
       },*/
 			"view": "invoice.view",
-			"template": "invoice.template"
+			"template": "invoice2.template"
 		},
 		"empty": {
 			"model": "Empty",

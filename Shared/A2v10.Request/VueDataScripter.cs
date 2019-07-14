@@ -308,6 +308,11 @@ const vm = new DataModelController({
 
 		String CreateTemplateForWrite(String fileTemplateText)
 		{
+			if (fileTemplateText.Contains("define([\"require\", \"exports\"]"))
+			{
+				// amd module
+				return fileTemplateText;
+			}
 
 			const String tmlHeader =
 @"(function() {

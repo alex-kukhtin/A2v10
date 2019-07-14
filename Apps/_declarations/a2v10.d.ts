@@ -1,11 +1,7 @@
 ﻿
 
-interface IInvokeOpts {
-
-}
-
 interface IViewModel {
-	$invoke(cmd: string, data?: Object, base?: string, opts?: IInvokeOpts): Promise<any>;
+	$invoke(cmd: string, data?: Object, base?: string, opts?: {}): Promise<any>;
 }
 
 interface IElement {
@@ -44,9 +40,3 @@ interface ITemplate {
 		[prop: string]: (this: IRoot, ...args: any[]) => any
 	}
 }
-
-declare interface IModule {
-	exports: ITemplate
-}
-
-declare const module: IModule;
