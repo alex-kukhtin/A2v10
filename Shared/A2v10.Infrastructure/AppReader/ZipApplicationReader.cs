@@ -171,7 +171,7 @@ namespace A2v10.Infrastructure
 			return ms;
 		}
 
-		public Stream FileStreamFullPath(String fullPath)
+		public Stream FileStreamFullPathRO(String fullPath)
 		{
 			using (var za = ZipFile.OpenRead(FileName))
 			{

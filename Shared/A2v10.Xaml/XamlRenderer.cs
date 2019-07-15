@@ -38,7 +38,7 @@ namespace A2v10.Xaml
 					// XamlServices.Load sets IUriContext
 					if (!String.IsNullOrEmpty(info.FileName))
 					{
-						using (var fileStream = _host.ApplicationReader.FileStreamFullPath(info.FileName))
+						using (var fileStream = _host.ApplicationReader.FileStreamFullPathRO(info.FileName))
 						{
 
 							RootFileName = info.FileName;

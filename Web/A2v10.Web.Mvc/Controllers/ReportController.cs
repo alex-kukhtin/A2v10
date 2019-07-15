@@ -259,7 +259,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ri == null)
 					throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
-				using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPath(path))
+				using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPathRO(path))
 				{
 					var r = StiReportExtensions.CreateReport(stream, ri.Name);
 					r.AddDataModel(ri.DataModel);

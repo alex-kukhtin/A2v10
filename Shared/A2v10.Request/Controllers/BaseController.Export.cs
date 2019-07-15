@@ -35,7 +35,7 @@ namespace A2v10.Request
 
 			switch (export.format) {
 				case RequestExportFormat.xlsx:
-					using (var rep = new ExcelReportGenerator(appReader.FileStreamFullPath(filePath)))
+					using (var rep = new ExcelReportGenerator(appReader.FileStreamFullPathRO(filePath)))
 					{
 						rep.GenerateReport(dm);
 						Byte[] bytes = File.ReadAllBytes(rep.ResultFile);

@@ -43,7 +43,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!_host.ApplicationReader.FileExists(path))
 					throw new FileNotFoundException($"File not found '{pathInfo}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
-				using (var stream = _host.ApplicationReader.FileStreamFullPath(path))
+				using (var stream = _host.ApplicationReader.FileStreamFullPathRO(path))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}

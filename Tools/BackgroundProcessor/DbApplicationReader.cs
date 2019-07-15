@@ -69,13 +69,13 @@ namespace BackgroundProcessor
 			throw new NotImplementedException(nameof(FileStream));
 		}
 
-		public Stream FileStreamFullPath(String fullPath)
+		public Stream FileStreamFullPathRO(String fullPath)
 		{
 			fullPath = fullPath.Replace('\\', '/').ToLowerInvariant();
 			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath });
 			if (appStream == null)
 				throw new FileNotFoundException($"file not found: {fullPath}");
-			return new MemoryStream(Encoding.UTF8.GetBytes(appStream.Stream));
+			return new MemoryStream(Encoding.UTF8.GetBytes(appStream.Stream), writable:false);
 		}
 
 		public String MakeFullPath(String path, String fileName)

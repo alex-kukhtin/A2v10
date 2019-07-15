@@ -81,9 +81,9 @@ namespace A2v10.Infrastructure
 			return null;
 		}
 
-		public Stream FileStreamFullPath(String fullPath)
+		public Stream FileStreamFullPathRO(String fullPath)
 		{
-			return new FileStream(fullPath, FileMode.Open);
+			return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		}
 
 		public String MakeFullPath(String path, String fileName)

@@ -24,6 +24,6 @@ namespace A2v10.Infrastructure
 		IEnumerable<String> FileReadAllLines(String fullPath);
 
 		Stream FileStream(String path, String fileName);
-		Stream FileStreamFullPath(String fullPath);
+		Stream FileStreamFullPathRO(String fullPath);
 	}
 }

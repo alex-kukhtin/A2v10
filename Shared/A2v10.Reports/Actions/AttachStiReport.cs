@@ -31,7 +31,7 @@ namespace A2v10.Reports.Actions
 			path = Path.ChangeExtension(path, ".mrt");
 			if (!_host.ApplicationReader.FileExists(path))
 				throw new FileNotFoundException(path);
-			var r = StiReportExtensions.CreateReport(_host.ApplicationReader.FileStreamFullPath(path), String.Empty);
+			var r = StiReportExtensions.CreateReport(_host.ApplicationReader.FileStreamFullPathRO(path), String.Empty);
 			r.AddDataModel(dm);
 			using (var ms = new MemoryStream())
 			{

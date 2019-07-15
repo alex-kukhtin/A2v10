@@ -353,7 +353,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
-				using (var stream = appReader.FileStreamFullPath(fullPath))
+				using (var stream = appReader.FileStreamFullPathRO(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}
@@ -378,7 +378,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = "text/html";
-				using (var stream = appReader.FileStreamFullPath(fullPath))
+				using (var stream = appReader.FileStreamFullPathRO(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);
 				}

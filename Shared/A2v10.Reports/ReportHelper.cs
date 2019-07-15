@@ -102,7 +102,7 @@ namespace A2v10.Reports
 		public StiMvcActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			using (var stream = _host.ApplicationReader.FileStreamFullPath(ri.ReportPath))
+			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(ri.ReportPath))
 			{
 				var r = StiReportExtensions.CreateReport(stream, ri.Name);
 				r.AddDataModel(ri.DataModel);

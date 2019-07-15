@@ -88,6 +88,11 @@ namespace A2v10.Interop
 				if (_resultFile != null)
 					File.Delete(_resultFile);
 				_resultFile = null;
+				if (_templateStream != null)
+				{
+					_templateStream.Close();
+					_templateStream.Dispose();
+				}
 			}
 		}
 
@@ -138,7 +143,10 @@ namespace A2v10.Interop
 			finally
 			{
 				if (doc != null)
+				{
 					doc.Close();
+					doc.Dispose();
+				}
 			}
 			_resultFile = tempFileName;
 		}

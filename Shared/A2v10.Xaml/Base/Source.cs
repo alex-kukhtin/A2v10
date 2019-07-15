@@ -69,7 +69,7 @@ namespace A2v10.Xaml
 				String trgPath = System.IO.Path.ChangeExtension(targetDir, "xaml");
 				if (appReader.FileExists(trgPath))
 				{
-					using (var stream = appReader.FileStreamFullPath(trgPath)) { 
+					using (var stream = appReader.FileStreamFullPathRO(trgPath)) { 
 						return XamlServices.Load(stream);
 					}
 				}
