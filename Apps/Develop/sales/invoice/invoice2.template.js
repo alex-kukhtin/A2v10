@@ -49,6 +49,7 @@ define(["require", "exports"], function (require, exports) {
     exports.default = template;
     function docNoChanged(doc, newVal, oldVal) {
         console.log(this.Document.$isNew);
+        console.log(this.Document.Agent.Name);
     }
     async function fetchCustomers(agent, text) {
         let vm = this.$vm;

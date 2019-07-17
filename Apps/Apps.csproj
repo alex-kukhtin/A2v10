@@ -64,6 +64,7 @@
     <None Include="Develop\Reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
+    <None Include="Develop\sales\invoice\define.json" />
     <None Include="Develop\sql.json" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="tsconfig.json" />

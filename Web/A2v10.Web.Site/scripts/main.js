@@ -170,7 +170,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190414-7485
+// 20190717-7506
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -624,7 +624,6 @@ app.modules['std:utils'] = function () {
 				let du = 1000 * 60 * 60 * 24;
 				return Math.floor((d2 - d1) / du);
 			case "year":
-			case 'year':
 				var dd = new Date(d1.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds(), d2.getMilliseconds());
 				return d2.getFullYear() - d1.getFullYear() + (dd < d1 ? (d2 > d1 ? -1 : 0) : (d2 < d1 ? 1 : 0));
 		}
@@ -4269,7 +4268,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190403-7478*/
+/*20190717-7506*/
 /*components/textbox.js*/
 
 (function () {
@@ -4281,8 +4280,8 @@ Vue.component('validator-control', {
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
-		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
+		<input v-if="password" type="password" style="display:none" autocomplete="new-password"/>
+		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText" :id="testId"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
 				v-on:input="onInput($event.target.value)"
@@ -4354,6 +4353,9 @@ Vue.component('validator-control', {
 		computed: {
 			controlType() {
 				return this.password ? 'password' : 'text';
+			},
+			autocompleteText() {
+				return this.password ? 'new-password' : 'off';
 			}
 		},
 		methods: {

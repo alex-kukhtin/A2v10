@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190403-7478*/
+/*20190717-7506*/
 /*components/textbox.js*/
 
 (function () {
@@ -12,8 +12,8 @@
 `<div :class="cssClass()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<input v-if="password" type="password" style="display:none" autocomplete="off"/>
-		<input ref="input" :type="controlType" v-focus autocomplete="off" :id="testId"
+		<input v-if="password" type="password" style="display:none" autocomplete="new-password"/>
+		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText" :id="testId"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
 				v-on:input="onInput($event.target.value)"
@@ -85,6 +85,9 @@
 		computed: {
 			controlType() {
 				return this.password ? 'password' : 'text';
+			},
+			autocompleteText() {
+				return this.password ? 'new-password' : 'off';
 			}
 		},
 		methods: {

@@ -242,6 +242,7 @@ namespace A2v10.Xaml
 		ChevronDoubleRight,
 		ChevronRightEnd,
 		ChevronUp,
+		Circle,
 		Clear,
 		Close,
 		Cloud,

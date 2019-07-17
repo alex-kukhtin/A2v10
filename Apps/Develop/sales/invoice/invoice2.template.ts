@@ -25,7 +25,7 @@ const template: Template = {
 	events: {
 		'Document.Rows[].add': (arr: TRows, row: TRow) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change'() { },
-		'Document.Agent.change': (doc: TDocument, newVal:any) => { console.dir('Agent.change'); },
+		'Document.Agent.change': (doc: TDocument, newVal: TAgent) => { console.dir('Agent.change'); },
 		'Document.Date.change': (doc: TDocument, newVal:Date, oldVal:Date) => { console.dir(`Date.change nv:${newVal}, ov:${oldVal}`); },
 		'Document.No.change': docNoChanged
 	},
@@ -52,6 +52,7 @@ export default template;
 
 function docNoChanged(this: TRoot, doc: TDocument, newVal:number, oldVal:number): void {
 	console.log(this.Document.$isNew);
+	console.log(this.Document.Agent.Name);
 }
 
 async function fetchCustomers(this: TRoot, agent: TAgent, text: string): Promise<any> {
