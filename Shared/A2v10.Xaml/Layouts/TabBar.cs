@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 		public ShadowStyle DropShadow { get; set; }
 		public Object Description { get; set; }
 
+		public Object ItemsSource { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -38,15 +40,31 @@ namespace A2v10.Xaml
 
 		void RenderButtons(RenderContext context)
 		{
+			var isBind = GetBinding(nameof(ItemsSource));
+			if (isBind != null && Buttons.Count != 1)
+				throw new XamlException("For a TabBar with an items source, only one child element is allowed");
 			String valPath = null;
 			var valBind = GetBinding(nameof(Value));
 			valPath = valBind?.GetPathFormat(context);
 			foreach (var b in Buttons)
 			{
 				var tag = new TagBuilder(null, "a2-tab-bar-item");
-				tag.RenderStart(context);
-				b.RenderMe(context, valPath);
-				tag.RenderEnd(context);
+				if (isBind != null)
+				{
+					tag.MergeAttribute("v-for", $"(btn, btnIndex) in {isBind.GetPath(context)}");
+					tag.RenderStart(context);
+					using (new ScopeContext(context, "btn"))
+					{
+						b.RenderMe(context, valPath);
+					}
+					tag.RenderEnd(context);
+				}
+				else
+				{
+					tag.RenderStart(context);
+					b.RenderMe(context, valPath);
+					tag.RenderEnd(context);
+				}
 			}
 		}
 

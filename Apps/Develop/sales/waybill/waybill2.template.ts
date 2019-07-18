@@ -1,6 +1,7 @@
 ﻿/*invoice template*/
 
 import { TRoot, TDocument, TRow } from "model";
+import { TRows } from "../invoice/model";
 
 const utils = require('std:utils') as Utils;
 const cst = require('std:const');
@@ -22,7 +23,7 @@ const template: Template = {
 			set: setDocumentDate
 		},
 		'TDocument.$FormattedDate': {
-			get(this: TDocument): String {
+			get(this: TDocument): string {
 				return du.formatDate(this.Date);
 			}
 		}
@@ -33,7 +34,7 @@ const template: Template = {
 		'Document.Rows[].Entity': 'Выберите товар',
 		'Document.Rows[].Price': 'Укажите цену',
 		'Document.No': {
-			valid(doc) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
+			valid(doc: TDocument) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
 		}
 	},
 	events: {
@@ -41,10 +42,10 @@ const template: Template = {
 		'Model.saved'(root: TRoot) {
 			console.dir(root);
 		},
-		'Document.Rows[].add': (arr, row: TRow) => row.Qty = 1,
+		'Document.Rows[].add': (arr: TRows, row: TRow) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
-		"Document.Rows[].adding"(arr, a) {
-			console.dir(a);
+		"Document.Rows[].adding"(arr: TRows, row: TRow) {
+			console.dir(row);
 		}
 	},
 	commands: {
@@ -55,8 +56,8 @@ const template: Template = {
 		},
 		unApply: cmn.docUnApply,
 		resumeWorkflow,
-		insertAbove: insertRow('above'),
-		insertBelow: insertRow('below')
+		insertAbove: insertRow(InsertTo.above),
+		insertBelow: insertRow(InsertTo.below)
 	}
 };
 
@@ -90,8 +91,8 @@ function setDocumentDate(this: TDocument, newDate: Date):void {
 	});
 }
 
-function insertRow(to:string) {
-	return function (this: TRoot, row) {
+function insertRow(to: InsertTo) {
+	return function (this: TRoot, row: TRow) {
 		this.Document.Rows.$insert(null, to, row);
 	};
 }

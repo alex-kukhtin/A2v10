@@ -39,7 +39,7 @@ const template: Template = {
 		createPayment() {},
 		createNewCustomer() {},
 		"aaaa": async function () {
-			return await this.$vm.$invoke('myCommand345'); }
+			return await this.$vm.$invoke('myCommand345', null); }
 	},
 	delegates: {
 		"myDelegate": (a, b) => a + b - 7,

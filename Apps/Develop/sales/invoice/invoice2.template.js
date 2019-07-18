@@ -38,7 +38,7 @@ define(["require", "exports"], function (require, exports) {
             createPayment() { },
             createNewCustomer() { },
             "aaaa": async function () {
-                return await this.$vm.$invoke('myCommand345');
+                return await this.$vm.$invoke('myCommand345', null);
             }
         },
         delegates: {

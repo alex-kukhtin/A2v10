@@ -39,8 +39,8 @@ define(["require", "exports"], function (require, exports) {
             },
             'Document.Rows[].add': (arr, row) => row.Qty = 1,
             'Document.Rows[].Entity.Article.change': cmn.findArticle,
-            "Document.Rows[].adding"(arr, a) {
-                console.dir(a);
+            "Document.Rows[].adding"(arr, row) {
+                console.dir(row);
             }
         },
         commands: {
@@ -51,8 +51,8 @@ define(["require", "exports"], function (require, exports) {
             },
             unApply: cmn.docUnApply,
             resumeWorkflow,
-            insertAbove: insertRow('above'),
-            insertBelow: insertRow('below')
+            insertAbove: insertRow("above"),
+            insertBelow: insertRow("below")
         }
     };
     exports.default = template;

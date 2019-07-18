@@ -2200,7 +2200,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190604-7498
+// 20190718-7506
 // services/datamodel.js
 
 (function () {
@@ -2560,6 +2560,9 @@ Vue.component('a2-pager', {
 					elem.$emit('Model.load', elem, _lastCaller, isRequery);
 					elem._root_.$setDirty(false);
 				});
+			};
+			elem._fireUnload_ = () => {
+				elem.$emit('Model.unload', elem);
 			};
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);

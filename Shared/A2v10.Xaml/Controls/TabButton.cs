@@ -27,13 +27,21 @@ namespace A2v10.Xaml
 		{
 			if (SkipRender(context))
 				return;
+
 			var btn = new TagBuilder("a", "a2-tab-button");
+
+			var activeValueArg = $"'{ActiveValue}'";
+			var avBind = GetBinding(nameof(ActiveValue));
+			if (avBind != null)
+				activeValueArg = avBind.GetPathFormat(context);
+
 			MergeAttributes(btn, context);
 			if (valuePath != null)
 			{
-				btn.MergeAttribute(":class", $"{{'active': '{ActiveValue}' == {valuePath}}}");
-				btn.MergeAttribute("@click.prevent", $"{valuePath}='{ActiveValue}'");
+				btn.MergeAttribute(":class", $"{{'active': {activeValueArg} == {valuePath}}}");
+				btn.MergeAttribute("@click.prevent", $"{valuePath}={activeValueArg}");
 			}
+
 			btn.RenderStart(context);
 			var cntBind = GetBinding(nameof(Content));
 			if (cntBind != null)

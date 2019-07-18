@@ -5,10 +5,12 @@
 
 const template = {
 	properties: {
-		'TRoot.$$tabVisible': Boolean
+		'TRoot.$$tabVisible': Boolean,
+		'TAgent.$SelectedMime': String
 	},
 	events: {
-		"Model.load": modelLoad
+		"Model.load": modelLoad,
+		"Model.unload": modelUnload
 	},
 	validators: {
 		"Agent.Name": {
@@ -30,6 +32,10 @@ function modelLoad(root) {
 	const ag = root.Agent;
 	if (ag.$isNew)
 		customerCreate(ag);
+}
+
+function modelUnload(root) {
+	console.dir({event: 'unload', root, this_: this });
 }
 
 function customerCreate(ag) {

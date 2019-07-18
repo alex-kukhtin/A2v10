@@ -149,6 +149,12 @@
 				</ListItem>
 			</List>
 			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*"/>
+			<Block>
+				<Span Content="{Bind Agent.$SelectedMime}"></Span>
+			</Block>
+			<TabBar ItemsSource="{Bind Agent.Attachments}" Value="{Bind Agent.$SelectedMime}">
+				<TabButton Content="{Bind Name}" ActiveValue="{Bind Name}"/>
+			</TabBar>
 		</Tab>
 	</TabPanel>
 </Dialog>
