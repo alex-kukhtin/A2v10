@@ -2,6 +2,12 @@
  * edit customer
  */
 
+const eventBus = require('std:eventBus');
+
+function __myEvent(arg) {
+	console.dir(this);
+	console.dir(arg);
+}
 
 const template = {
 	properties: {
@@ -32,10 +38,12 @@ function modelLoad(root) {
 	const ag = root.Agent;
 	if (ag.$isNew)
 		customerCreate(ag);
+	eventBus.$on('myEvent', __myEvent);
 }
 
 function modelUnload(root) {
 	console.dir({event: 'unload', root, this_: this });
+	eventBus.$off('myEvent', __myEvent);
 }
 
 function customerCreate(ag) {

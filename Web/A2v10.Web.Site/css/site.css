@@ -97,6 +97,9 @@
 .ico-circle:before {
   content: "\ea0b";
 }
+.ico-circle-small:before {
+  content: "\ea0c";
+}
 .ico-ban-red:before {
   content: "\ea0a";
   color: #a94442;
@@ -185,6 +188,12 @@
 }
 .ico-check-bold:before {
   content: "\e977";
+}
+.ico-checkbox:before {
+  content: "\e979";
+}
+.ico-checkbox-checked:before {
+  content: "\e97a";
 }
 .ico-chevron-down:before {
   content: "\e9a4";
