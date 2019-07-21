@@ -56,7 +56,7 @@
 			tip() {
 				if (this.readOnly) return '';
 				return locale.$ClickToDownloadFile;
-			},
+			}
 		},
 		methods: {
 			dragOver(ev) {

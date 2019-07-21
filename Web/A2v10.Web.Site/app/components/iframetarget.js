@@ -19,7 +19,7 @@
 			};
 		},
 		computed: {
-			visible() { return !!this.iFrameUrl; },
+			visible() { return !!this.iFrameUrl; }
 		},
 		created() {
 			eventBus.$on('openframe', (url) => {

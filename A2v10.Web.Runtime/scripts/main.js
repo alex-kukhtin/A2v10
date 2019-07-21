@@ -8526,7 +8526,7 @@ TODO:
 			tip() {
 				if (this.readOnly) return '';
 				return locale.$ClickToDownloadFile;
-			},
+			}
 		},
 		methods: {
 			dragOver(ev) {
@@ -9345,7 +9345,7 @@ Vue.component('a2-panel', {
 			};
 		},
 		computed: {
-			visible() { return !!this.iFrameUrl; },
+			visible() { return !!this.iFrameUrl; }
 		},
 		created() {
 			eventBus.$on('openframe', (url) => {
