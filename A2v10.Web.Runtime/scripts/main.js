@@ -170,7 +170,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190717-7506
+// 20190721-7507
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -625,7 +625,10 @@ app.modules['std:utils'] = function () {
 				return Math.floor((d2 - d1) / du);
 			case "year":
 				var dd = new Date(d1.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds(), d2.getMilliseconds());
-				return d2.getFullYear() - d1.getFullYear() + (dd < d1 ? (d2 > d1 ? -1 : 0) : (d2 < d1 ? 1 : 0));
+				let dy = dd < d1 ?
+					d2 > d1 ? -1 : 0 :
+					d2 < d1 ? 1  : 0;
+				return d2.getFullYear() - d1.getFullYear() + dy;
 		}
 		throw new Error('Invalid unit value for utils.date.diff');
 	}
@@ -9487,42 +9490,49 @@ Vue.directive('dropdown', {
 });
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180114-7091*/
+/*20190721-7507*/
 /* directives/focus.js */
 
 Vue.directive('focus', {
+
 	bind(el, binding, vnode) {
 
-		function doSelect(event) {
-			let t = event.target;
-			if (t._selectDone)
-				return;
+		// selects all text on focus
+
+		function doSelect(t) {
+			if (!t.select) return;
+			if (t._selectDone) return;
+			t.select();
 			t._selectDone = true;
-			if (t.select) t.select();
 		}
 
 		el.addEventListener("focus", function (event) {
+			// focus occurs before click!
 			event.target.parentElement.classList.add('focus');
 			if (el.__opts && el.__opts.mask) return;
+			let target = event.target;
+			target._selectDone = false;
 			setTimeout(() => {
-				doSelect(event);
+				doSelect(target);
 			}, 0);
 		}, false);
 
 		el.addEventListener("blur", function (event) {
 			let t = event.target;
-			t._selectDone = false;
-			event.target.parentElement.classList.remove('focus');
+			t._selectDone = true;
+			t.parentElement.classList.remove('focus');
 		}, false);
 
 		el.addEventListener("click", function (event) {
 			if (el.__opts && el.__opts.mask) return;
-			doSelect(event);
+			doSelect(event.target);
 		}, false);
 	},
+
 	inserted(el) {
+		el._selectDone = false;
 		if (el.tabIndex === 1) {
 			setTimeout(() => {
 				if (el.focus) el.focus();

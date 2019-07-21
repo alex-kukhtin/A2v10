@@ -15,7 +15,7 @@
 	},
 	"include": [
 		"develop/**/*.ts",
-		"@types/platfrom.d.ts"
+		"@types/platform.d.ts"
 	],
 	"exclude": [
 		"develop/**/.d.ts"

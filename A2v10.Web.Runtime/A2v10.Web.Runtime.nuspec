@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7506</version>
+		<version>10.0.7507</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -61,6 +61,6 @@
 		<file src="bin/Newtonsoft.Json.dll" target="lib/net461" />
 		<file src="bin/Owin.dll" target="lib/net461" />
 		<file src="bin/WebActivatorEx.dll" target="lib/net461" />
-		<file src="./App_application/@types/platfrom.d.ts" target="content/App_application/@types" />
+		<file src="./App_application/@types/platform.d.ts" target="content/App_application/@types" />
 	</files>
 </package>

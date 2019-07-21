@@ -499,7 +499,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="%40types\platfrom.d.ts" />
+    <TypeScriptCompile Include="%40types\platform.d.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\invoice2.template.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\model.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\model.d.ts" />

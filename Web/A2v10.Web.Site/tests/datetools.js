@@ -162,6 +162,28 @@ describe("Date tools", function () {
 		expect(f).toBe(15);
 	});
 
+	it('date diff (year) ', function () {
+		let d1 = new Date(2018, 1, 2); // 2 feb
+		let d2 = new Date(2019, 5, 15); // 15 jun
+		let f = du.diff("year", d1, d2);
+		expect(f).toBe(1);
+
+		d1 = new Date(2019, 5, 2); // 2 jun
+		d2 = new Date(2018, 1, 1); // 1 feb
+		f = du.diff("year", d1, d2);
+		expect(f).toBe(1);
+
+		d1 = new Date(2019, 1, 1);
+		d2 = new Date(2018, 1, 2);
+		f = du.diff("year", d1, d2);
+		expect(f).toBe(0);
+
+		d1 = new Date(2018, 1, 2); // 2 feb
+		d2 = new Date(2020, 1, 2); // 2 feb
+		f = du.diff("year", d1, d2);
+		expect(f).toBe(2);
+	});
+
 	it('format date', function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let f = du.formatDate(d1);
