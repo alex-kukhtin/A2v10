@@ -46,6 +46,8 @@ namespace A2v10.Infrastructure
 
 		public IEnumerable<String> EnumerateFiles(String path, String searchPattern)
 		{
+			if (String.IsNullOrEmpty(path))
+				return null;
 			var fullPath = GetFullPath(path, String.Empty);
 			if (!Directory.Exists(fullPath))
 				return null;

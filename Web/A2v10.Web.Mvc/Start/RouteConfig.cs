@@ -12,8 +12,8 @@ namespace A2v10.Web.Mvc.Start
 		public static void RegisterRoutes(RouteCollection routes)
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-			routes.IgnoreRoute("Content/{resource}/{*pathInfo}");
-			routes.IgnoreRoute("Scripts/{resource}/{*pathInfo}");
+			routes.IgnoreRoute("content/{resource}/{*pathInfo}");
+			routes.IgnoreRoute("scripts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("favicon.ico");
 

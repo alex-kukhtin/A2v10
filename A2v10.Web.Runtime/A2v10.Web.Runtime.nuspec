@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>A2v10.Web.Runtime</id>
+		<version>10.0.7506</version>
+		<title>A2v10.Web Runtime</title>
+		<authors>AlexKukhtin</authors>
+		<owners>AlexKukhtin</owners>
+		<projectUrl>https://github.com/alex-kukhtin/A2v10</projectUrl>
+		<!--
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+	-->
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A2v10 Platform Runtime</description>
+		<releaseNotes>First NUGET release.</releaseNotes>
+		<copyright>Copyright © 2015-2019 Alex Kukhtin.</copyright>
+		<tags>A2v10 Platform Business WebApp</tags>
+		<references>
+			<reference file="A2v10.Web.Mvc.dll" />
+			<reference file="A2v10.Xaml.dll" />
+			<reference file="A2v10.Workflow.dll" />
+		</references>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Activities" targetFramework="net461" />
+		</frameworkAssemblies>
+	</metadata>
+	<files>
+		<file src="bin/A2v10.Data.dll" target="lib/net461" />
+		<file src="bin/A2v10.Data.Interfaces.dll" target="lib/net461" />
+		<file src="bin/A2v10.Data.Providers.dll" target="lib/net461" />
+		<file src="bin/A2v10.Infrastructure.dll" target="lib/net461" />
+		<file src="bin/A2v10.Interop.dll" target="lib/net461" />
+		<file src="bin/A2v10.Messaging.dll" target="lib/net461" />
+		<file src="bin/A2v10.Reports.dll" target="lib/net461" />
+		<file src="bin/A2v10.Request.dll" target="lib/net461" />
+		<file src="bin/A2v10.Script.dll" target="lib/net461" />
+		<file src="bin/A2v10.Web.Base.dll" target="lib/net461" />
+		<file src="bin/A2v10.Web.Config.dll" target="lib/net461" />
+		<file src="bin/A2v10.Web.Identity.dll" target="lib/net461" />
+		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net461" />
+		<file src="bin/A2v10.Web.Script.dll" target="lib/net461" />
+		<file src="bin/A2v10.Workflow.dll" target="lib/net461" />
+		<file src="bin/A2v10.Xaml.dll" target="lib/net461" />
+		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net461" />
+		<file src="bin/Microsoft.AspNet.Identity.Core.dll" target="lib/net461" />
+		<file src="bin/Microsoft.AspNet.Identity.Owin.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Owin.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Owin.Host.SystemWeb.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Owin.Security.Cookies.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Owin.Security.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Owin.Security.OAuth.dll" target="lib/net461" />
+		<file src="bin/Microsoft.Web.Infrastructure.dll" target="lib/net461" />
+		<file src="bin/System.ValueTuple.dll" target="lib/net461" />
+		<file src="bin/System.Web.Mvc.dll" target="lib/net461" />
+		<file src="bin/System.Web.Razor.dll" target="lib/net461" />
+		<file src="bin/System.Web.WebPages.dll" target="lib/net461" />
+		<file src="bin/System.Web.WebPages.Razor.dll" target="lib/net461" />
+		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net461"/>
+		<file src="bin/Newtonsoft.Json.dll" target="lib/net461" />
+		<file src="bin/Owin.dll" target="lib/net461" />
+		<file src="bin/WebActivatorEx.dll" target="lib/net461" />
+		<file src="./App_application/@types/platfrom.d.ts" target="content/App_application/@types" />
+	</files>
+</package>

@@ -1,0 +1,86 @@
+﻿;
+@About=О системе
+@Confidentiality=Конфедициальность
+@Contacts=Конакты
+@Version=Версия
+@Debug=Отладка
+@Quit=Выход
+@Tracing=Трассировка
+@Settings=Настройка
+@Feedback=Обратная связь
+@DataModel=Модель данных
+@Profiling=Профилирование
+@Profile=Профиль
+@ChangePassword=Сменить пароль
+@SubstUser=Сменить пользователя
+@AllUsers=Все пользователи
+@AdminUsers=Администраторы
+@User=Пользователь
+@OldPassword=Старый пароль
+@NewPassword=Новый пароль
+@SetPassword=Установить пароль
+@Error=Ошибка
+@Warning=Предупреждение
+;
+@ResetPassword=Восстановление пароля
+@ResetPasswordMailText=Для восстановления пароля перейдите <a href="{0}">по ссылке</a>
+@ConfirmEMail=Подтверждение е-mail
+@ConfirmEMailMailText=Для подтверждения е-mail перейдите <a href="{0}">по ссылке</a>
+@EMailAlreadyConfirmed=Ваш e-mail уже подтвержден.
+@SetNewPassword=Установка пароля
+@InviteEMail=Добро пожаловать!
+@ChangePasswordDisabled=Смена пароля запрещена
+;
+@Home=Главная
+@Documents=Документы
+@Catalogs=Справочники
+@Sales=Продажи
+@Purchase=Закупки
+@Inventory=Запасы
+@Accounting=Бухгалтерия
+@Dashboard=Панель управления
+;
+@Create=Создать
+@CreateDocument=Создать докуменрт
+@CreateFolder=Создать папку
+@Edit=Изменить
+@Save=Сохранить
+@SaveAndClose=Сохранить и закрыть
+@Reload=Обновить
+@Refresh=Обновить
+@Delete=Удалить
+@Close=Закрыть
+@Print=Печать
+@Search=Поиск
+@Help=Помощь
+@Export=Экспорт
+;
+@General=Общие
+@Properties=Свойства
+@FolderProperties=Свойства папки
+@NewFilder=Новая папка
+@NewElement=Новый элемент
+@Cancel=Отмена
+@Select=Выбрать
+;
+@Code=Код
+@Date=Дата
+@Name=Наименование
+@FullName=Полное наименование
+@Tag=Признак
+@Sum=Сумма
+@Qty=Количество
+@Price=Цена
+@No=Номер
+@Purchaser=Покупатель
+@Memo=Примечание
+;
+@Confirm=Подтверждение
+@ConfirmDeleteDocument=Удалить документ?
+@DocumentSaved=Документ сохранен успешно
+;
+@Error.EnterName=Введите наименование элемента
+@Error.DuplicateCode=Элемент с таким кодом уже существует
+@Error.Exception=Что-то пошло не так, как ожидалось :-(
+@Error.FileFormatException=Некорректный формат файла
+@Error.DataReadOnly=База данных только для чтения

@@ -2,12 +2,12 @@
   "name": "myproject",
   "dependencies": {
     "vuex": "v3.1.1",
-    "d3": "v5.9.2",
+    "d3": "v5.9.7",
     "vue": "v2.6.10"
   },
   "resolutions": {
     "vue": "v2.6.10",
     "vuex": "v3.1.1",
-    "d3": "v5.9.2"
+    "d3": "v5.9.7"
   }
 }

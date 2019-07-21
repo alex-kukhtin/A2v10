@@ -1,0 +1,88 @@
+﻿;
+@About=About
+@Confidentiality=Confidentiality
+@Contacts=Contacts
+@Version=Version
+@Debug=Debug
+@Quit=Quit
+@Tracing=Tracing
+@Settings=Settings
+@Feedback=Feedback
+@DataModel=Data model
+@Profiling=Profiling
+@Profile=Profile
+@ChangePassword=Change password
+@SubstUser=Change user
+@User=User
+@OldPassword=Old password
+@NewPassword=New password
+@SetPassword=Set password
+@Error=Error
+@Warning=Warning
+;
+@Home=Home
+@Documents=Documents
+@Catalogs=Catalogs
+@Sales=Sales
+@Purchase=Purchase
+@Inventory=Inventory
+@Accounting=Accounting
+@Dashboard=Dashboard
+;
+@ResetPassword=Password recovery
+@ResetPasswordMailText=To reset your password, click <a href="{0}">here</a> please
+@ConfirmEMail=Confirm е-mail
+@ConfirmEMailMailText=To confirm your е-mail, click <a href="{0}">here</a> please
+@EMailAlreadyConfirmed=Your e-mail already confirmed.
+@SetNewPassword=Set new password
+@OldPassword=Old password
+@NewPassword=New password
+@SetPassword=Set password
+@InviteEMail=Welcome!
+@ChangePasswordDisabled=Change password is disabled
+;
+@Create=Create
+@CreateDocument=Create document
+@CreateFolder=Create folder
+@Edit=Edit
+@Save=Save
+@SaveAndClose=Save and close
+@Reload=Reload
+@Refresh=Refresh
+@Delete=Delete
+@Close=Close
+@Print=Print
+@Search=Search
+@Help=Help
+@Export=Export
+;
+@General=General
+@Properties=Properties
+@FolderProperties=Folder properties
+@NewFilder=New folder
+@NewElement=New item
+@Cancel=Cancel
+@Select=Select
+;
+@Code=Code
+@Date=Date
+@Name=Name
+@FullName=Full name
+@Tag=Tag
+@Sum=Sum
+@Qty=Quantity
+@Price=Price
+@No=Number
+@Purchaser=Purchaser
+@Memo=Memo
+;
+@Confirm=Confirm
+@ConfirmDeleteDocument=Delete document?
+@DocumentSaved=Document saved successfully
+;
+@Error.EnterName=Enter item name
+@Error.DuplicateCode=Duplicate code
+@Error.Exception=Something went wrong as expected :-(
+@Error.FileFormatException=File contains corrupted data
+@Error.DataReadOnly=The database is read-only
+
