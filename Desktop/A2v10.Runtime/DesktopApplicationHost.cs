@@ -40,6 +40,8 @@ namespace A2v10.Runtime
 		public String AppPath => CurrentAppPath;
 		public String AppKey => CurrentAppKey;
 
+		public String SmtpConfig => throw new NotImplementedException(nameof(SmtpConfig));
+
 		public String HostingPath
 		{
 			get

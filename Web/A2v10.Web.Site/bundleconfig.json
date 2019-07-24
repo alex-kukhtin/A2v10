@@ -58,7 +58,7 @@
 			"app/controllers/base.js",
 			"app/controllers/shell.js"
 		],
-		"minify": { "enabled": false }
+		"minify": { "enabled": false, "renameLocals": false }
 	},
 	{
 		"outputFileName": "Scripts/vue.min.js",

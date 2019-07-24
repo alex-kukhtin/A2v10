@@ -137,7 +137,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>powershell $(ProjectDir)makeNuGetPackage.ps1 $(ProjectDir)
+    <PostBuildEvent>powershell $(ProjectDir)makeNuGetPackage.ps1 $(ProjectDir) -ConfigurationName $(ConfigurationName)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

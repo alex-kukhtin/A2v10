@@ -1,6 +1,7 @@
-﻿// Copyright © 2012-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
@@ -15,10 +16,12 @@ namespace A2v10.Messaging
 	public class EmailService : IMessageService
 	{
 		private readonly ILogger _logger;
+		private readonly IApplicationHost _host;
 
-		public EmailService(ILogger logger)
+		public EmailService(ILogger logger, IApplicationHost host)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			_host = host ?? throw new ArgumentNullException(nameof(host));
 		}
 
 		void HackSubjectEncoding(MailMessage mm, String subject)
@@ -35,6 +38,27 @@ namespace A2v10.Messaging
 			subjPI.SetValue(msg, subjString);
 		}
 
+		SmtpConfig GetCurrentConfig()
+		{
+			var strConfig = _host.SmtpConfig;
+			if (String.IsNullOrEmpty(strConfig))
+				return null;
+			return JsonConvert.DeserializeObject<SmtpConfig>(strConfig.Replace('\'', '"'));
+		}
+
+		void SetParameters(SmtpClient client, SmtpConfig config)
+		{
+			if (config == null)
+				return;
+			client.DeliveryMethod = config.deliveryMethod;
+			client.PickupDirectoryLocation = config.pickupDirectoryLocation;
+			client.Host = config.host;
+			client.Port = config.port;
+			client.EnableSsl = config.enableSsl;
+			// credentials
+			client.Credentials = new NetworkCredential(config.userName, config.password);
+		}
+
 		public async Task SendAsync(String to, String subject, String body)
 		{
 			try
@@ -42,8 +66,12 @@ namespace A2v10.Messaging
 				using (var client = new SmtpClient())
 				{
 					client.DeliveryFormat = SmtpDeliveryFormat.International;
+					var config = GetCurrentConfig();
+					SetParameters(client, config);
 					using (var mm = new MailMessage())
 					{
+						if (config != null && !String.IsNullOrEmpty(config.from))
+							mm.From = new MailAddress(config.from);
 						mm.To.Add(new MailAddress(to));
 						mm.BodyTransferEncoding = TransferEncoding.Base64;
 						mm.SubjectEncoding = Encoding.Unicode;

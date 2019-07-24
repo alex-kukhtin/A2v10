@@ -65,7 +65,7 @@ namespace BackgroundProcessor
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var logger = new BackgroundLogger(dbContext);
 				var workflow = new WorkflowEngine(host, dbContext, null);
-				var emailService = new EmailService(logger);
+				var emailService = new EmailService(logger, host);
 				var messaging = new MessageProcessor(host, dbContext, emailService, logger);
 
 				loc.RegisterService<IProfiler>(profiler);

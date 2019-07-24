@@ -1,6 +1,11 @@
  param (
-    [Parameter(Mandatory=$true)][string]$target
- );
+    [Parameter(Mandatory=$true)][string]$target,
+    [string]$ConfigurationName = $(throw "-ConfigurationName is required.")
+);
+
+if ($ConfigurationName -ne "Release") {
+	Exit;
+}
 
 Set-Location -Path $target;
 
