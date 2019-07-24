@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190323-7488*/
+/*20190722-7508*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -110,7 +110,7 @@ app.modules['std:eusign'] = function () {
 
 		return new Promise(function (resolve, reject) {
 
-			let addr = ['ca.ksystems.com.ua', 'masterkey.ua', 'acskidd.gov.ua', 'acsk.privatbank.ua', 'uakey.com.ua'];
+			let addr = ['acskidd.gov.ua', 'ca.informjust.ua', 'acsk.privatbank.ua', 'ca.ksystems.com.ua', 'masterkey.ua', 'uakey.com.ua'];
 
 			function getPrivateKeyCertificatesByCMP(key, onSuccess) {
 				var keyInfo = euSign.GetKeyInfoBinary(key, pwd);
