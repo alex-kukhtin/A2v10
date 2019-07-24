@@ -18,6 +18,6 @@
 		"@types/platform.d.ts"
 	],
 	"exclude": [
-		"develop/**/.d.ts"
+		"./**/.d.ts"
 	]
 }

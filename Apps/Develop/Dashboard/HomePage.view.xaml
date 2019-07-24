@@ -91,15 +91,15 @@
 				<Line />
 			</Block>
 		</Alert>
-		<Alert Style="Success" DropShadow="Shadow1">
+		<Alert Style="Warning" DropShadow="Shadow1">
 			<Block>
 				<Header>Well Done</Header>
-				<Paragraph>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-				</Paragraph>
+				<Text>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
+				</Text>
 				<Line/>
 				<FlexList Orientation="Horizontal">
-					<Button Style="Primary">Read More ...</Button>
-					<Button Style="Primary">And more</Button>
+					<Button Style="Warning" Size="Small">Read More ...</Button>
+					<Button Style="Primary" Size="Small">And more</Button>
 				</FlexList>
 			</Block>
 		</Alert>

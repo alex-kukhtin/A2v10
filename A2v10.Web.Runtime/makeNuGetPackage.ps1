@@ -31,7 +31,7 @@ foreach ($elem in $SourceSql) {
 }
 
 
-Write-Host "Successfully copied client files";
+Write-Host "Successfully copied client files.";
 
 Remove-item -Path "d:\NuGet.Local\*.*";
 
