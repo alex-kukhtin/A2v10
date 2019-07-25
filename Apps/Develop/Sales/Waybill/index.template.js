@@ -31,7 +31,13 @@ const template = {
 				cancelText2: "Cancel Text"
 			}
 		},
-		printToPdf
+		printToPdf,
+		incId(doc) {
+			doc.Id += 1;
+		}
+	},
+	delegates: {
+		drawSparkline
 	}
 };
 
@@ -101,4 +107,33 @@ function printToPdf(arg) {
 		cw.print();
 	};
 
+}
+
+const scaleColor = d3.scaleOrdinal()
+	.domain([104, 218])
+	.range(d3.schemeSet3);
+
+const scaleX = d3.scaleLinear()
+	.range([0, 50])
+	.domain([104, 218]);
+
+
+function drawSparkline(g, arg) {
+	const chart = g.append('svg')
+		.attr('width', '100px')
+		.attr('viewBox', `0 0 50 20`);
+
+	chart.append('rect')
+		.attr('x', 0)
+		.attr('y', 0)
+		.attr('width', scaleX(arg.Id))
+		.attr('fill', scaleColor(arg.Id))
+		.attr('height', 20);
+
+	chart.append('text')
+		.attr('x', 25)
+		.attr('y', 15)
+		.attr('text-anchor', 'middle')
+		.attr('fill', '#999')
+		.text(arg.Id);
 }

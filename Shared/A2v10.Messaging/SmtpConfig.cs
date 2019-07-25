@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
+using Newtonsoft.Json;
 using System;
 using System.Net.Mail;
 
@@ -31,5 +32,10 @@ namespace A2v10.Messaging
 		public String userName { get; set; }
 		public String password { get; set; }
 #pragma warning restore IDE1006 // Naming Styles
+
+		public static SmtpConfig FromJson(String json)
+		{
+			return JsonConvert.DeserializeObject<SmtpConfig>(json.Replace('\'', '"'));
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -12,7 +12,7 @@ namespace A2v10.Infrastructure
 		Information = 73	/* 'I' */,
 		Warning = 87		/* 'W' */,
 		Error = 69			/* 'E' */,
-		Fatal = 70			/* 'D' */
+		Fatal = 70			/* 'F' */
 	};
 
 	public class LogEntry

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A2v10.Messaging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -59,6 +60,27 @@ namespace TestMail
 
 		private void Form1_Load(Object sender, EventArgs e)
 		{
+
+		}
+
+		private void txtSettings_Leave(Object sender, EventArgs e)
+		{
+			String json = txtSettings.Text;
+			try
+			{
+				var config = SmtpConfig.FromJson(json);
+				txtHost.Text = config.host;
+				txtPort.Text = config.port.ToString();
+				txtPassword.Text = config.password;
+				txtUser.Text = config.userName;
+				chkEnableSSL.Checked = config.enableSsl;
+				txtSendFrom.Text = config.from;
+				txtDirectory.Text = config.pickupDirectoryLocation;
+				txtMethod.Text = config.deliveryMethod.ToString();
+			} catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
 
 		}
 	}

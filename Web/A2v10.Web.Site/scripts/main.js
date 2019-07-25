@@ -8897,9 +8897,9 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20180206-7105
+// 20190725-7508
 // components/graphics.js
 
 /* TODO:
@@ -8907,25 +8907,50 @@ Vue.component('a2-panel', {
 
 (function () {
 
-    Vue.component("a2-graphics", {
-        template:
-        `<div :id="id" class="a2-graphics"></div>`,
-        props: {
-            id: String,
-            render: Function
-        },
-        computed: {
-            controller() {
-                return this.$root;
-            }
-        },
-        methods: {
-        },
-        mounted() {
-            const chart = d3.select('#' + this.id);
-            this.render.call(this.controller.$data, chart);
-        }
-    });
+	let graphId = 1237;
+
+	function nextGraphicsId() {
+		graphId += 1;
+		return 'el-gr-' + graphId;
+	}
+
+	Vue.component("a2-graphics", {
+		template:
+			`<div :id="id" class="a2-graphics"></div>`,
+		props: {
+			render: Function,
+			arg: [Object, String, Number, Array],
+			watchmode: String
+		},
+		data() {
+			return {
+				unwatch: null,
+				id: nextGraphicsId()
+			};
+		},
+		computed: {
+			controller() {
+				return this.$root;
+			}
+		},
+		methods: {
+			draw() {
+				const chart = d3.select('#' + this.id);
+				chart.selectAll('*').remove();
+				this.render.call(this.controller.$data, chart, this.arg);
+			}
+		},
+		mounted() {
+			this.draw();
+			if (this.watchmode === 'none') return;
+			let deep = this.watchmode === 'deep';
+			this.unwatch = this.$watch('arg', () => this.draw(), { deep: deep });
+		},
+		beforeDestroy() {
+			if (this.unwatch)
+				this.unwatch();
+		}
+	});
 })();
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.

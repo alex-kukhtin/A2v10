@@ -78,6 +78,9 @@
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Align="Right" Fit="True" Wrap="NoWrap"/>
 		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Wrap="NoWrap"/>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<DataGridColumn Header="Sparkline">
+			<Graphics Delegate="drawSparkline" Argument="{Bind}" Watch="Deep"/>
+		</DataGridColumn>
 		<DataGridColumn Header="" Fit="True">
 			<CommandBar If="{Bind !Attachments.$isEmpty}">
 				<Repeater ItemsSource="{Bind Attachments}">
@@ -89,7 +92,7 @@
 				<Button Icon="EllipsisVertical">
 					<Button.DropDown>
 						<DropDownMenu Separate="True">
-							<MenuItem Content="Menu item # 1"/>
+							<MenuItem Content="Id plus one" Command="{BindCmd Execute, CommandName=incId, Argument={Bind}}"/>
 							<MenuItem Content="Menu item # 2"/>
 							<MenuItem Content="Menu item # 3"/>
 						</DropDownMenu>

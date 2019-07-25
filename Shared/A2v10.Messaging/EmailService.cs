@@ -43,7 +43,7 @@ namespace A2v10.Messaging
 			var strConfig = _host.SmtpConfig;
 			if (String.IsNullOrEmpty(strConfig))
 				return null;
-			return JsonConvert.DeserializeObject<SmtpConfig>(strConfig.Replace('\'', '"'));
+			return SmtpConfig.FromJson(strConfig);
 		}
 
 		void SetParameters(SmtpClient client, SmtpConfig config)
@@ -91,7 +91,9 @@ namespace A2v10.Messaging
 
 						// sync variant. avoid exception loss
 						_logger.LogMessaging(GetJsonResult("send", to));
-						await client.SendMailAsync(mm);
+						// avoid SmtpClient deadlock 
+						await Task.Run(() => client.Send(mm));
+						//await client.SendMailAsync(mm);
 						_logger.LogMessaging(GetJsonResult("result", to, "success"));
 					}
 				}

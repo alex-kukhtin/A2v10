@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
+      <Project>{d83666a0-acf5-47e6-94cf-732dddabbea2}</Project>
+      <Name>A2v10.Messaging</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
