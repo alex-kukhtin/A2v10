@@ -85,7 +85,7 @@ namespace A2v10.Web.Config
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["smtpConfig"];
+		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
 
 		public String HostingPath => HostingEnvironment.MapPath("~");
 

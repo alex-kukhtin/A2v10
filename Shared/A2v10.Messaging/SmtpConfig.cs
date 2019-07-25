@@ -16,7 +16,7 @@ namespace A2v10.Messaging
 
 	to:
 	<appSettings>
-		<add key="smtpConfig" value="{from:'from@domain.com', host:'mail.domain.com', port:'111', userName:'userName', password:'userPassword', enableSsl:'true',  deliveryMethod: 'SpecifiedPickupDirectory', pickupDirectoryLocation: 'c:\pickup'}" />
+		<add key="mailSettings" value="{from:'from@domain.com', host:'mail.domain.com', port:'111', userName:'userName', password:'userPassword', enableSsl:'true',  deliveryMethod: 'SpecifiedPickupDirectory', pickupDirectoryLocation: 'c:\pickup'}" />
 	</appSettings>
 	 */
 	public class SmtpConfig

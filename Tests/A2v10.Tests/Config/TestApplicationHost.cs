@@ -66,7 +66,7 @@ namespace A2v10.Tests.Config
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
 
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["smtpConfig"];
+		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
 
 		public String HostingPath { get; set; }
 
@@ -97,8 +97,7 @@ namespace A2v10.Tests.Config
 
 		public String GetAppSettings(String source)
 		{
-			throw new NotImplementedException("BackgroundApplicationHost.GetAppSettings");
+			return source;
 		}
-
 	}
 }

@@ -4,6 +4,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
+
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
@@ -25,7 +26,7 @@ namespace BackgroundProcessor
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["smtpConfig"];
+		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
 		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
 		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));
 		public String Theme => throw new NotImplementedException(nameof(Theme));
