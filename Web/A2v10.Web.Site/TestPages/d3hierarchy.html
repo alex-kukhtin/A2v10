@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+	<link rel="stylesheet" href="../css/site.min.css" />
+	<style>
+		foreignObject {
+			overflow:visible;
+		}
+		foreignObject div {
+			overflow:visible;
+		}
+		.link {
+			fill:none;
+			stroke:blue;
+			stroke-width:.5;
+		}
+		.doc {
+		}
+
+		.node {
+			fill: rgba(122,234, 123, 0.2);
+			stroke: orange;
+			stroke-width: 0.5;
+			color: #777;
+		}
+
+		.node.current {
+			fill: rgba(234,177, 123, 0.2);
+			stroke:red;
+			stroke-dasharray:2;
+			color:#ccc;
+			stroke-width:2;
+			font-weight:bold;
+		}
+
+		.doc-card {
+			padding: 4px;
+			cursor: pointer;
+			display: flex;
+			flex-direction: row;
+			color: #777;
+		}
+
+		.doc:hover {
+			background-color:azure;
+		}
+
+		.doc-card > .ico {
+			font-size:2rem;
+			margin:4px 6px 0 0;
+			color:#999;
+		}
+
+		.doc-card-body {
+			font-size22:12px;
+			display:flex;
+			flex-direction:column;
+			line-height:1.2;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h3>Draw d3 hierarchy</h3>
+		<hr />
+		<div style="display:flex;overflow:auto; height:700px;align-items:baseline">
+			<div id="hie" style="margin:auto;overflow:visible;background-color:aliceblue">
+
+			</div>
+		</div>
+		<hr />
+	</div>
+	<script src="../scripts/d3.min.js"></script>
+	<script src="../scripts/vue.min.js"></script>
+	<script src="../scripts/locale-uk.min.js"></script>
+	<script src="../scripts/main.js"></script>
+	<script src="d3hierarchy.js"></script>
+</body>
+</html>
