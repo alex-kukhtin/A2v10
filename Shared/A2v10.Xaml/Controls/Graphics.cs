@@ -16,6 +16,7 @@ namespace A2v10.Xaml
 		public String Delegate { get; set; }
 		public Object Argument { get; set; }
 		public WatchMode Watch { get; set; }
+		public Boolean CenterContent { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -23,6 +24,8 @@ namespace A2v10.Xaml
 				return;
 			var g = new TagBuilder("a2-graphics", null, IsInGrid);
 			MergeAttributes(g, context);
+			if (CenterContent)
+				g.AddCssClass("center-content");
 
 			if (!String.IsNullOrEmpty(Delegate))
 				g.MergeAttribute(":render", $"$delegate('{Delegate}')");

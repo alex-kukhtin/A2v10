@@ -30,6 +30,11 @@
 			"model": "EUSign",
 			"template": "checkeusign.template",
 			"twoPhase": true
+		},
+		"showLinks": {
+			"model": "",
+			"template": "links.template",
+			"view": "links.dialog"
 		}
 	},
 	"commands": {

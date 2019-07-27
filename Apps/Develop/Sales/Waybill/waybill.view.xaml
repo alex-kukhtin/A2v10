@@ -47,6 +47,7 @@
 					</Button.DropDown>
 				</Button>
 			</CommandBar>
+			<Hyperlink Icon="Link" Command="{BindCmd Dialog, Action=Show, Argument={Bind Document}, Url='/sales/waybill/showLinks'}">Show Links</Hyperlink>
 		</Taskpad>
 	</Page.Taskpad>
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">

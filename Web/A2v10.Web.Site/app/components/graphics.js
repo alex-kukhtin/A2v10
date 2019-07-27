@@ -42,7 +42,7 @@
 			}
 		},
 		mounted() {
-			this.draw();
+			this.$nextTick(() => this.draw());
 			if (this.watchmode === 'none') return;
 			let deep = this.watchmode === 'deep';
 			this.unwatch = this.$watch('arg', () => this.draw(), { deep: deep });

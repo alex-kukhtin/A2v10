@@ -8,20 +8,24 @@
 5. styles: hover/current
 */
 
-const CARD_SIZE = { cx: 200, cy: 72, dx: 20, dy: 40, mx: 40, my: 40 };
+const CARD_SIZE = { cx: 200, cy: 78, dx: 20, dy: 40, mx: 40, my: 40 };
 
 function createHtml(d) {
-	return `<div class='doc-card' @click.prevent='$click'>
+	return `<div class='doc-card' @click2.prevent='$click'>
 	<i class="ico ico-file-content" title='Документ не проведено'></i> 
 	<div class="doc-card-body">
-		<span>Податкове зобов'язання</span><popover class="a2-inline po-bottom-right" content='№ 23 від 20.05.2019'>це документ з номером 23 від 20.05.2019</popover>
+		<span>Податкове зобов'язання</span><popover class="a2-inline po-bottom-right" :hover="false" content='№ 23 від 20.05.2019'>це документ з номером 23 від 20.05.2019</popover>
 		<span>Сума: <b>400 000.00</b><span>${d.name}</span>
-		<div class="dropdown hlink-dd-wrapper dir-up a2-inline" v-dropdown>
-			<a class="a2-hyperlink a2-inline" toggle><i class="ico ico-ellipsis-vertical"></i></span></a><div class="dropdown-menu menu up-left background-white" role="menu">
-				<template>
-					<button class="dropdown-item" @click.prevent="$navigateSimple('/reports/agents/turnoversheetagent361/0', true)" v-disable>Показати</button>
-					<button class="dropdown-item" @click.prevent="$navigateSimple('/reports/entities/warehouseturnoversheetentity/0', true)" v-disable>Перейти до...</button>
-				</template>
+		<div>
+			<div class="commandbar">
+				<button title="Змінити" class="btn btn-cb btn-icon"><i class="ico ico-edit"></i></button>
+				<button title="Друкувати" class="btn btn-cb btn-icon"><i class="ico ico-print"></i></button>
+				<a class="a2-hyperlink a2-inline" toggle><i class="ico ico-ellipsis-vertical"></i></span></a><div class="dropdown-menu menu up-left background-white" role="menu">
+					<template>
+						<button class="dropdown-item" @click.prevent="$navigateSimple('/reports/agents/turnoversheetagent361/0', true)" v-disable>Показати</button>
+						<button class="dropdown-item" @click.prevent="$navigateSimple('/reports/entities/warehouseturnoversheetentity/0', true)" v-disable>Перейти до...</button>
+					</template>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -78,7 +82,6 @@ let sizes = {
 
 console.dir(sizes);
 
-
 nodes.descendants().forEach(d => {
 	sizes.minX = Math.min(sizes.minX, d.x);
 	sizes.maxX = Math.max(sizes.maxX, d.x);
@@ -86,6 +89,7 @@ nodes.descendants().forEach(d => {
 });
 
 console.dir(sizes.width());
+
 const TREE_SIZE = { cx: sizes.width() + CARD_SIZE.cx + CARD_SIZE.mx * 2, cy: sizes.height() + CARD_SIZE.cy + CARD_SIZE.my * 2 };
 
 // height -> max 
@@ -94,7 +98,6 @@ let svg = d3.select("#hie")
 	.append('svg')
 	.attr('width', TREE_SIZE.cx)
 	.attr('height', TREE_SIZE.cy);
-//.style('height', '100%')
 //.attr('viewBox', `0 0 ${TREE_SIZE.cx} ${TREE_SIZE.cy}`)
 //.attr('preserveAspectRatio', 'xMidYMid meet');
 

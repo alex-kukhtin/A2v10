@@ -308,7 +308,7 @@ const vm = new DataModelController({
 
 		String CreateTemplateForWrite(String fileTemplateText)
 		{
-			if (fileTemplateText.Contains("define([\"require\", \"exports\"]"))
+			if (fileTemplateText != null && fileTemplateText.Contains("define([\"require\", \"exports\"]"))
 			{
 				// amd module
 				return fileTemplateText;
@@ -474,6 +474,8 @@ const vm = new DataModelController({
 			{
 				//fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
 				fileTemplateText = await _host.ApplicationReader.ReadTextFileAsync(msi.Path, msi.Template + ".js");
+				if (fileTemplateText == null)
+					throw new FileNotFoundException($"Template file '{Path.Combine(msi.Path, msi.Template + ".js").Replace('\\', '/')}' not found.");
 				AddRequiredModules(sbRequired, fileTemplateText);
 				templateText = CreateTemplateForWrite(Localize(fileTemplateText));
 			}

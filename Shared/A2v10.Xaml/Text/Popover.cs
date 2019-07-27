@@ -29,7 +29,7 @@ namespace A2v10.Xaml
 		Green = 2,
 		Red = 3,
 		Blue = 4,
-		White
+		White = 5
 	}
 
 	public enum PopoverUnderlineMode
@@ -57,6 +57,7 @@ namespace A2v10.Xaml
 		public PopoverBackgroundStyle Background { get; set; }
 
 		public String Badge { get; set; }
+		public Boolean ShowOnHover { get; set; }
 
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -76,6 +77,14 @@ namespace A2v10.Xaml
 				po.AddCssClass("underline-" + Underline.ToString().ToLowerInvariant());
 
 			var urlBind = GetBinding(nameof(Url));
+
+			if (ShowOnHover)
+			{
+				po.MergeAttribute(":hover", "true");
+				if (urlBind != null || !String.IsNullOrEmpty(Url))
+					throw new XamlException("'ShowOnHover' and 'Url' are not compatible.");
+			}
+
 			if (urlBind != null)
 				po.MergeAttribute(":url", urlBind.GetPathFormat(context));
 			else if (!String.IsNullOrEmpty(Url))

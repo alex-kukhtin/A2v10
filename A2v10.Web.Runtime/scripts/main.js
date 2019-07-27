@@ -6370,13 +6370,13 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-//20180729-7259
+//20180729-7509
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
-<div v-dropdown class="popover-wrapper" :style="{top: top}">
-	<span toggle class="popover-title"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
+<div v-dropdown class="popover-wrapper" :style="{top: top}" :class="{show: isShowHover}">
+	<span toggle class="popover-title" v-on:mouseover="mouseover" v-on:mouseout="mouseout"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
 	<div class="popup-body" :style="{width: width}">
 		<div class="arrow" />
 		<div v-if="visible">
@@ -6387,14 +6387,16 @@ Vue.component('popover', {
 </div>
 `,
 	/*
-	1. Если добавить tabindex="-1" для toggle, то можно сделать закрытие по blur
-	2. можно добавить кнопку закрытия. Любой элемент с атрибутом close-dropdown
-	<span class="close" close-dropdown style="float:right">x</span >
+	1. If you add tabindex = "- 1" for 'toggle', then you can close it by 'blur'
+
+	2. You can add a close button. It can be any element with a 'close-dropdown' attribute.
+		For expample: <span class="close" close-dropdown style="float:right">x</span >
 	*/
 
 	data() {
 		return {
 			state: 'hidden',
+			hoverstate : false,
 			popoverUrl: ''
 		};
 	},
@@ -6404,7 +6406,8 @@ Vue.component('popover', {
 		content: String,
 		title: String,
 		width: String,
-		top: String
+		top: String,
+		hover: Boolean
 	},
 	computed: {
 		hasIcon() {
@@ -6418,6 +6421,19 @@ Vue.component('popover', {
 		},
 		visible() {
 			return this.url && this.state === 'shown';
+		},
+		isShowHover() {
+			return this.hoverstate ? 'show' : undefined;
+		}
+	},
+	methods: {
+		mouseover() {
+			console.dir('mouseover 2');
+			this.hoverstate = true;
+		},
+		mouseout() {
+			this.hoverstate = false;
+			console.dir('mouseout 2');
 		}
 	},
 	mounted() {

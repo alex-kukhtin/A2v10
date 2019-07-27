@@ -49,6 +49,10 @@
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
     <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Develop\Agent\model.json" />
     <None Include="Develop\dashboard\model.json" />
     <None Include="Develop\links.json" />
@@ -70,7 +74,14 @@
     </None>
     <None Include="Develop\sql.json" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
+    <Content Include="Develop\_assets\doclinks.css">
+      <DependentUpon>doclinks.less</DependentUpon>
+    </Content>
+    <Content Include="Develop\_assets\doclinks.min.css">
+      <DependentUpon>doclinks.css</DependentUpon>
+    </Content>
     <Content Include="tsconfig.json" />
+    <None Include="Develop\_assets\doclinks.less" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
   <ItemGroup>
@@ -507,6 +518,12 @@
     <TypeScriptCompile Include="Develop\sales\invoice\model.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\model.d.ts" />
     <TypeScriptCompile Include="_declarations\a2v10.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\sales\waybill\links.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

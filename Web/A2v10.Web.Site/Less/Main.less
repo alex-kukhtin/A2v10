@@ -267,6 +267,26 @@ footer, .footer {
 	}
 }
 
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
 
 input, select, textarea {
 	border-style: none;
@@ -505,12 +525,24 @@ h5, .h5 {
 .a2-graphics {
 	display: block;
 	width: 100%;
-	line-height:0;
+	svg {
+		// avoid 3 extra pixels. default alignment is baseline!
+		display:block;
+	}
 }
+
+.center-content {
+	display: flex;
+	width: auto;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
 
 .a2-changelog {
 	padding: 1rem;
-	margin-top:-2rem;
+	margin-top: -2rem;
 
 	ol {
 		margin-top: 4px;
@@ -522,7 +554,7 @@ h5, .h5 {
 		color: #777;
 		font-weight: bold;
 		font-family: inherit;
-		margin-top:2rem;
+		margin-top: 2rem;
 	}
 }
 
