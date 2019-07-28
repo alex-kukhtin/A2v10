@@ -83,7 +83,7 @@ namespace A2v10.Xaml
 			else if (Description is UIElementBase uiDescr)
 				uiDescr.RenderElement(context);
 			else if (Description != null)
-				context.Writer.Write(context.Localize(Description.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Description.ToString()));
 			wrap.RenderEnd(context);
 		}
 

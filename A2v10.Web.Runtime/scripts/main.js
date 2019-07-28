@@ -6368,9 +6368,9 @@ Vue.component('a2-pager', {
 });
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-//20180729-7509
+//20190727-7509
 /*components/popover.js*/
 
 Vue.component('popover', {
@@ -6423,17 +6423,23 @@ Vue.component('popover', {
 			return this.url && this.state === 'shown';
 		},
 		isShowHover() {
-			return this.hoverstate ? 'show' : undefined;
+			return this.hover && this.hoverstate ? 'show' : undefined;
 		}
 	},
 	methods: {
 		mouseover() {
-			console.dir('mouseover 2');
-			this.hoverstate = true;
+			if (this.hover)
+				this.hoverstate = true;
 		},
 		mouseout() {
-			this.hoverstate = false;
-			console.dir('mouseout 2');
+			if (this.hover) {
+				this.hoverstate = false;
+				/*
+				setTimeout(x => {
+					this.hoverstate = false;
+				}, 250);
+				*/
+			}
 		}
 	},
 	mounted() {
@@ -6446,7 +6452,6 @@ Vue.component('popover', {
 			this.state = 'hidden';
 			this.popoverUrl = '';
 		};
-		//this.state = 'shown';
 	}
 });
 
@@ -8957,7 +8962,7 @@ Vue.component('a2-panel', {
 			}
 		},
 		mounted() {
-			this.draw();
+			this.$nextTick(() => this.draw());
 			if (this.watchmode === 'none') return;
 			let deep = this.watchmode === 'deep';
 			this.unwatch = this.$watch('arg', () => this.draw(), { deep: deep });

@@ -54,6 +54,7 @@
     <Content Include="App_application\%40sql\platform\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\a2v10workflow.sql" />
+    <Content Include="App_application\samples\dasboard\dashboard.template.js" />
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="css\site.css" />
     <Content Include="css\site.min.css" />
@@ -106,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="App_application\%40types\platform.d.ts" />
+    <TypeScriptCompile Include="App_application\samples\dasboard\dashboard.template.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

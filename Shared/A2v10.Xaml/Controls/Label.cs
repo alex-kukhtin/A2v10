@@ -31,7 +31,7 @@ namespace A2v10.Xaml
 			label.RenderStart(context);
 
 			if (Content != null)
-				context.Writer.Write(context.Localize(Content.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 
 			label.RenderEnd(context);
 		}

@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 
 			span.RenderStart(context);
 			if (Content != null && Content is String)
-				context.Writer.Write(context.Localize(Content.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 			span.RenderEnd(context);
 		}
 	}

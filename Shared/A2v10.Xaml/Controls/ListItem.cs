@@ -81,7 +81,7 @@ namespace A2v10.Xaml
 				if (Content is UIElementBase)
 					(Content as UIElementBase).RenderElement(context);
 				else if (Content != null)
-					context.Writer.Write(context.Localize(Content.ToString()));
+					context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 				hBody.RenderEnd(context);
 			}
 			if (HasFooter)
@@ -98,7 +98,7 @@ namespace A2v10.Xaml
 					if (Footer is UIElementBase)
 						(Footer as UIElementBase).RenderElement(context);
 					else
-						context.Writer.Write(context.Localize(Footer.ToString()));
+						context.Writer.Write(context.LocalizeCheckApostrophe(Footer.ToString()));
 				}
 				fTag.RenderEnd(context);
 			}

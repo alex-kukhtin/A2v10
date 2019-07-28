@@ -1,0 +1,7 @@
+﻿
+
+const template: Template = {
+	properties: {
+
+	}
+}

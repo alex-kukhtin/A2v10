@@ -53,7 +53,7 @@ namespace A2v10.Xaml
 			else if (Content is UIElementBase contUi)
 				contUi.RenderElement(context);
 			else if (Content != null)
-				context.Writer.Write(context.Localize(Content.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 			btn.RenderEnd(context);
 		}
 	}

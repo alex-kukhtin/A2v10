@@ -252,5 +252,11 @@ namespace A2v10.Xaml
 			return _localizer.Localize(_currentLocale, text, replaceNewLine);
 		}
 
+		public String LocalizeCheckApostrophe(String text)
+		{
+			var txt = Localize(text);
+			if (txt == null) return null;
+			return txt.Replace("\\'", "'");
+		}
 	}
 }

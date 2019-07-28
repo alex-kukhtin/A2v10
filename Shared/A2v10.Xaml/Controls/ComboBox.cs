@@ -34,7 +34,7 @@ namespace A2v10.Xaml
 			}
 			option.RenderStart(context);
 			if (Content != null)
-				context.Writer.Write(context.Localize(Content));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Content));
 			option.RenderEnd(context);
 		}
 	}

@@ -134,7 +134,7 @@ namespace A2v10.Xaml
 				if (hdr != null)
 					span.MergeAttribute("v-text", hdr.GetPathFormat(context));
 				else if (Title != null)
-					span.SetInnerText(context.Localize(Title));
+					span.SetInnerText(context.LocalizeCheckApostrophe(Title));
 				span.Render(context);
 			}
 			var close = new TagBuilder("button", "btnclose");

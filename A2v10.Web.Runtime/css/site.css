@@ -328,6 +328,9 @@
 .ico-file:before {
   content: "\e9dd";
 }
+.ico-file-failure:before {
+  content: "\e9e0";
+}
 .ico-file-content:before {
   content: "\e9e1";
 }
@@ -345,6 +348,12 @@
 }
 .ico-file-signature:before {
   content: "\e9e6";
+}
+.ico-file-success:before {
+  content: "\e9e7";
+}
+.ico-file-warning:before {
+  content: "\e9e8";
 }
 .ico-report:before {
   content: "\e9e9";
@@ -1577,6 +1586,20 @@ footer .app-links a,
   100% {
     transform: rotate(360deg);
   }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+keyframes fadeOut from {
+  opacity: 1;
+}
+keyframes fadeOut to {
+  opacity: 0;
 }
 input,
 select,
@@ -5645,7 +5668,16 @@ h5,
 .a2-graphics {
   display: block;
   width: 100%;
-  line-height: 0;
+}
+.a2-graphics svg {
+  display: block;
+}
+.center-content {
+  display: flex;
+  width: auto;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 .a2-changelog {
   padding: 1rem;

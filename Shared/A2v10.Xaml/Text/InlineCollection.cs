@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 				if (x == null)
 					continue;
 				if (x is String)
-					context.Writer.Write(context.Localize(x.ToString()));
+					context.Writer.Write(context.LocalizeCheckApostrophe(x.ToString()));
 				else if (x is Inline)
 					(x as Inline).RenderElement(context);
 				else

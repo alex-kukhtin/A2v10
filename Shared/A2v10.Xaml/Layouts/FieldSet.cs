@@ -42,7 +42,7 @@ namespace A2v10.Xaml
 				span.RenderStart(context);
 				if (Title != null)
 				{
-					context.Writer.Write(context.Localize(Title));
+					context.Writer.Write(context.LocalizeCheckApostrophe(Title));
 				}
 				span.RenderEnd(context);
 				RenderHint(context);

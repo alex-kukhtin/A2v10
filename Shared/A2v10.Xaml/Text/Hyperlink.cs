@@ -110,7 +110,7 @@ namespace A2v10.Xaml
 			}
 			else if (Content != null)
 			{
-				context.Writer.Write(context.Localize(Content.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 			}
 
 			if (bHasDropDown && !addOn && !HideCaret)

@@ -35,7 +35,7 @@ namespace A2v10.Xaml
 			if (headerBind != null)
 				tab.MergeAttribute(":header", headerBind.GetPathFormat(context));
 			else if (Header is String)
-				tab.MergeAttribute("header", context.Localize(Header?.ToString()));
+				tab.MergeAttribute("header", context.LocalizeCheckApostrophe(Header?.ToString()));
 			var badgeBind = GetBinding(nameof(Badge));
 			if (badgeBind != null)
 				tab.MergeAttribute(":badge", badgeBind.GetPathFormat(context));

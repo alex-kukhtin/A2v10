@@ -97,7 +97,7 @@ namespace A2v10.Xaml
 			}
 			else if (Header != null)
 			{
-				context.Writer.Write(context.Localize(Header.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(Header.ToString()));
 			}
 			header.RenderEnd(context);
 		}

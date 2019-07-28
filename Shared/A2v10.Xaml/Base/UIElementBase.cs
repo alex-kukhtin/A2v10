@@ -91,7 +91,7 @@ namespace A2v10.Xaml
 			if (content is UIElementBase)
 				(content as UIElementBase).RenderElement(context);
 			else if (content != null)
-				context.Writer.Write(context.Localize(content.ToString()));
+				context.Writer.Write(context.LocalizeCheckApostrophe(content.ToString()));
 		}
 
 		internal void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)
@@ -195,7 +195,7 @@ namespace A2v10.Xaml
 			else if (!String.IsNullOrEmpty(badge))
 			{
 				new TagBuilder("span", "badge")
-					.SetInnerText(context.Localize(badge))
+					.SetInnerText(context.LocalizeCheckApostrophe(badge))
 					.Render(context);
 			}
 		}

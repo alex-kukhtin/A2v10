@@ -74,6 +74,7 @@
     </None>
     <None Include="Develop\sql.json" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
+    <Content Include="Develop\sales\waybill\links.template.js" />
     <Content Include="Develop\_assets\doclinks.css">
       <DependentUpon>doclinks.less</DependentUpon>
     </Content>

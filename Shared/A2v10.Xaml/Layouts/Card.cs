@@ -87,7 +87,7 @@ namespace A2v10.Xaml
 			}
 			else if (Header is String hStr)
 			{
-				context.Writer.Write(context.Localize(hStr));
+				context.Writer.Write(context.LocalizeCheckApostrophe(hStr));
 			}
 			h.RenderEnd(context);
 		}
@@ -111,7 +111,7 @@ namespace A2v10.Xaml
 			}
 			else if (Footer is String fStr)
 			{
-				context.Writer.Write(context.Localize(fStr));
+				context.Writer.Write(context.LocalizeCheckApostrophe(fStr));
 			}
 			f.RenderEnd(context);
 		}
