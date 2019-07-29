@@ -2206,9 +2206,14 @@ pre.a2-code {
 .btn.btn-icon > .ico {
   margin-right: 0;
 }
-.btn:active {
+.btn:not([disabled]):hover {
+  box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.4);
+  transition: box-shadow linear 0.2s;
+}
+.btn:not([disabled]):active {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   outline-style: none;
+  transition: box-shadow linear 0.2s;
 }
 .btn.lg {
   padding: 0.85rem 1rem;
@@ -4576,6 +4581,9 @@ TODO:
 .dropdown.show .btn:focus {
   outline-style: none !important;
 }
+.dropdown.show .btn:hover {
+  box-shadow: none!important;
+}
 .dropdown.dir-down.show:after {
   bottom: 0;
 }
@@ -4689,7 +4697,7 @@ TODO:
   color: #222;
   font-size: 13px;
   padding: 4px 6px 6px 6px;
-  background-color: #fffce9;
+  background-color: #fffff0;
   border: 1px solid #ddd;
   white-space: normal;
   min-width: 150px;
@@ -4731,7 +4739,7 @@ TODO:
 .popover-wrapper.po-right-bottom > .popup-body > .arrow:after {
   left: -7px;
   top: -8px;
-  border-right-color: #fffce9;
+  border-right-color: #fffff0;
 }
 .popover-wrapper.po-right-top > .popup-body {
   left: 100%;
@@ -4747,7 +4755,7 @@ TODO:
 .popover-wrapper.po-right-top > .popup-body > .arrow:after {
   left: -7px;
   top: -8px;
-  border-right-color: #fffce9;
+  border-right-color: #fffff0;
 }
 .popover-wrapper.po-left-bottom > .popup-body {
   right: 100%;
@@ -4763,7 +4771,7 @@ TODO:
 .popover-wrapper.po-left-bottom > .popup-body > .arrow:after {
   left: -9px;
   top: -8px;
-  border-left-color: #fffce9;
+  border-left-color: #fffff0;
 }
 .popover-wrapper.po-left-top > .popup-body {
   right: 100%;
@@ -4779,7 +4787,7 @@ TODO:
 .popover-wrapper.po-left-top > .popup-body > .arrow:after {
   left: -9px;
   top: -8px;
-  border-left-color: #fffce9;
+  border-left-color: #fffff0;
 }
 .popover-wrapper.po-top-right > .popup-body {
   left: 0;
@@ -4795,7 +4803,7 @@ TODO:
 .popover-wrapper.po-top-right > .popup-body > .arrow:after {
   left: -8px;
   top: -9px;
-  border-top-color: #fffce9;
+  border-top-color: #fffff0;
 }
 .popover-wrapper.po-top-left > .popup-body {
   right: 0;
@@ -4811,7 +4819,7 @@ TODO:
 .popover-wrapper.po-top-left > .popup-body > .arrow:after {
   left: -8px;
   top: -9px;
-  border-top-color: #fffce9;
+  border-top-color: #fffff0;
 }
 .popover-wrapper.po-bottom-right > .popup-body {
   left: 0;
@@ -4827,7 +4835,7 @@ TODO:
 .popover-wrapper.po-bottom-right > .popup-body > .arrow:after {
   left: -8px;
   top: -7px;
-  border-bottom-color: #fffce9;
+  border-bottom-color: #fffff0;
 }
 .popover-wrapper.po-bottom-left > .popup-body {
   right: 0;
@@ -4843,7 +4851,7 @@ TODO:
 .popover-wrapper.po-bottom-left > .popup-body > .arrow:after {
   left: -8px;
   top: -7px;
-  border-bottom-color: #fffce9;
+  border-bottom-color: #fffff0;
 }
 .popover-wrapper.po-cyan > .popup-body {
   background-color: #edfcfe;

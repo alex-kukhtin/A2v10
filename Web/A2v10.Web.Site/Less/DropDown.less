@@ -163,8 +163,14 @@ TODO:
 		}
 	}
 
-	&.show .btn:focus {
-		outline-style: none !important;
+	&.show {
+		.btn:focus {
+			outline-style: none !important;
+		}
+
+		.btn:hover {
+			box-shadow:none!important;
+		}
 	}
 
 	&.dir-down.show:after {

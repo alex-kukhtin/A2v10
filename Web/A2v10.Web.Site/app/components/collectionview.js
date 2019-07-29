@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190527-7495
+// 20190729-7510
 // components/collectionview.js
 
 /*
@@ -71,6 +71,8 @@ TODO:
 				}
 				else if (utils.isObjectExact(iv)) 
 					iv.Id = q[x];
+				else if (utils.isNumber(iv))
+					filter[x] = +q[x];
 				else {
 					filter[x] = q[x];
 				}
