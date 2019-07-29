@@ -586,6 +586,27 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Document.Merge.Load')
+	drop procedure a2demo.[Document.Merge.Load]
+go
+------------------------------------------------
+create procedure a2demo.[Document.Merge.Load]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint = null,
+	@Kind nvarchar(255) = null
+as
+begin
+	set nocount on;
+
+	select [Meged!TMerge!Object] = null, [Id!!Id] = d.Id, Kind, [Date], [No], [Sum], Tag, d.Memo,
+		Done,
+		[DateCreated!!UtcDate] = DateCreated, [DateModified!!UtcDate] = DateModified
+	from a2demo.Documents d 
+	where d.Id=@Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2demo' and ROUTINE_NAME=N'Document.Copy')
 	drop procedure a2demo.[Document.Copy]
 go

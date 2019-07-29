@@ -58,6 +58,13 @@ namespace A2v10.Request
 	}
 
 
+	public class RequestMerge
+	{
+		public String model;
+		public String source;
+		public String schema;
+	}
+
 	public class RequestBase
 	{
 		public String model; // or parent
@@ -68,6 +75,7 @@ namespace A2v10.Request
 		public String template;
 		public String script;
 		public ExpandoObject parameters;
+		public RequestMerge merge;
 
 		[JsonIgnore]
 		protected RequestModel _parent;
@@ -79,6 +87,9 @@ namespace A2v10.Request
 
 		[JsonIgnore]
 		internal RequestModel ParentModel => _parent;
+
+		[JsonIgnore]
+		internal Boolean HasMerge => merge != null && !String.IsNullOrEmpty(merge.model);
 
 		[JsonIgnore]
 		public String Path
@@ -110,6 +121,17 @@ namespace A2v10.Request
 					index ? "Index" :
 					copy ? "Copy" : "Load";
 				return $"[{CurrentSchema}].[{cm}.{action}]";
+			}
+		}
+
+		[JsonIgnore]
+		public String MergeLoadProcedure
+		{
+			get
+			{
+				if (merge == null)
+					throw new InvalidOperationException("_parent is null");
+				return $"[{MergeSchema}].[{merge.model}.Load]";
 			}
 		}
 
@@ -194,6 +216,32 @@ namespace A2v10.Request
 				if (source == null)
 					return _parent.source;
 				return source;
+			}
+		}
+
+		[JsonIgnore]
+		public String MergeSource
+		{
+			get
+			{
+				if (merge == null)
+					throw new InvalidOperationException("merge is null");
+				if (String.IsNullOrEmpty(merge.source))
+					return CurrentSource;
+				return merge.source;
+			}
+		}
+
+		[JsonIgnore]
+		public String MergeSchema
+		{
+			get
+			{
+				if (merge == null)
+					throw new InvalidOperationException("merge is null");
+				if (String.IsNullOrEmpty(merge.schema))
+					return CurrentSchema;
+				return merge.schema;
 			}
 		}
 

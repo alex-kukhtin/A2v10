@@ -2207,7 +2207,7 @@ pre.a2-code {
   margin-right: 0;
 }
 .btn:not([disabled]):hover {
-  box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.4);
   transition: box-shadow linear 0.2s;
 }
 .btn:not([disabled]):active {

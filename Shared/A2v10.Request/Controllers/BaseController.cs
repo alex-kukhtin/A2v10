@@ -200,6 +200,11 @@ namespace A2v10.Request
 					}
 				}
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
+				if (rw.HasMerge)
+				{
+					var mergeModel = await _dbContext.LoadModelAsync(rw.MergeSource, rw.MergeLoadProcedure, prms2);
+					model.Merge(mergeModel);
+				}
 				if (rw.copy)
 					model.MakeCopy();
 				if (!String.IsNullOrEmpty(rw.Id) && !rw.copy)
