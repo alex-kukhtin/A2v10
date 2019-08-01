@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -13,6 +13,7 @@ using A2v10.Request.Properties;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using A2v10.Request.Models;
+using System.Linq;
 
 namespace A2v10.Request
 {
@@ -39,12 +40,27 @@ namespace A2v10.Request
 			ExpandoObject loadPrms = new ExpandoObject();
 			setParams?.Invoke(loadPrms);
 
+			if (_host.IsMultiTenant)
+			{
+				Int64 userId = loadPrms.Get<Int64>("UserId");
+				Int32 tenantId = loadPrms.Get<Int32>("TenantId");
+				if (userId != (Int64)tenantId)
+				{
+					// the user is NOT a tenant admin
+					var menuKeys = await _dbContext.LoadListAsync<TenantUserModel>(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", loadPrms);
+					var visibleKeys = String.Join(";", menuKeys);
+					loadPrms.Set("Keys", visibleKeys);
+				}
+			}
+
 			String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
+			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
+
 			SetUserStatePermission(dm);
 
-			String jsonMenu = JsonConvert.SerializeObject(dm.Root.RemoveEmptyArrays(), JsonHelpers.StandardSerializerSettings);
+			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
 
 			StringBuilder sb = new StringBuilder(shell);
 			sb.Replace("$(Menu)", jsonMenu);

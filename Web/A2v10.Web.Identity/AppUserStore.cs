@@ -203,6 +203,7 @@ namespace A2v10.Web.Identity
 		{
 			if (_host.IsMultiTenant)
 			{
+				// with TenantRoles
 				var createdUser = await FindByIdAsync(user.Id);
 				_host.TenantId = createdUser.Tenant;
 				await _dbContext.ExecuteAsync(_host.TenantDataSource, $"[{DbSchema}].[CreateTenantUser]", createdUser);

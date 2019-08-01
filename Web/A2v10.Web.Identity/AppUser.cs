@@ -43,6 +43,9 @@ namespace A2v10.Web.Identity
 		public Boolean ChangePasswordEnabled { get; set; }
 		public String RegisterHost { get; set; }
 
+		// for CreateTenantUser only
+		public String TenantRoles { get; set; }
+
 		DateTime? _lastLoginDate;
 		String _lastLoginHost;
 

@@ -28,6 +28,7 @@ namespace A2v10.Xaml
 					{
 						c.RenderElement(context, (tag) =>
 						{
+							onRenderStatic?.Invoke(tag);
 							tag.MergeAttribute(":key", "xIndex");
 						});
 					}

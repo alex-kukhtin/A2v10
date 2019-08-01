@@ -58,6 +58,7 @@
     <Compile Include="Helpers\HostHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />
+    <Compile Include="Models\TenantUserModel.cs" />
     <Compile Include="ResourceHelper.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

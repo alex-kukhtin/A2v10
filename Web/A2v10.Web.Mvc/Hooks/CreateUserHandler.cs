@@ -38,6 +38,9 @@ namespace A2v10.Web.Mvc.Hooks
 
 			var userId = after.Eval<Int64>("User.Id");
 			var pwd = before.Eval<String>("User.Password");
+			String tenantRoles = null;
+			if (_host.IsMultiTenant)
+				tenantRoles = before.Eval<String>("User.TenantRoles");
 
 			var token = await _userManager.GeneratePasswordResetTokenAsync(userId);
 			var ir = await _userManager.ResetPasswordAsync(userId, token, pwd);
@@ -50,6 +53,8 @@ namespace A2v10.Web.Mvc.Hooks
 			}
 			var user = await _userManager.FindByIdAsync(userId);
 			user.EmailConfirmed = true;
+			if (tenantRoles != null)
+				user.TenantRoles = tenantRoles;
 			user.SetModified(UserModifiedFlag.EmailConfirmed);
 			await _userManager.UpdateAsync(user);
 		}

@@ -45,8 +45,9 @@ begin
 			constraint DF_Menu_PK default(next value for a2ui.SQ_Menu),
 		Parent bigint null
 			constraint FK_Menu_Parent_Menu foreign key references a2ui.Menu(Id),
-		Name nvarchar(255) null,
-		Url nvarchar(255) null,
+		[Key] nchar(4) null,
+		[Name] nvarchar(255) null,
+		[Url] nvarchar(255) null,
 		Icon nvarchar(255) null,
 		Model nvarchar(255) null,
 		Help nvarchar(255) null,
@@ -60,6 +61,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Help')
 begin
 	alter table a2ui.Menu add Help nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Key')
+begin
+	alter table a2ui.Menu add [Key] nchar(4) null;
 end
 go
 ------------------------------------------------
