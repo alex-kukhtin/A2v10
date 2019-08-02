@@ -661,3 +661,27 @@
 		color: @info-val-color;
 	}
 }
+
+.static-validator {
+	background-color: @danger-bg-color;
+	color: @danger-txt-color;
+	font-size: 96%;
+	padding: 2px 6px 4px 6px;
+	border: 1px solid @danger-brd-color;
+	text-align: left;
+	box-shadow: @dnager-validator-shadow;
+	line-height: 1.2em;
+	position:relative;
+	.error {
+		display: list-item;
+		list-style-type: none;
+		padding-left: 6px;
+		white-space: nowrap;
+		// custom bullet
+		&:before {
+			content: '\2022';
+			position: absolute;
+			left: 3px;
+		}
+	}
+}

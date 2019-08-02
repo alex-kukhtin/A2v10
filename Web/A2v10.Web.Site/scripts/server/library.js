@@ -1156,7 +1156,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190718-7506
+// 20190802-7511
 // services/datamodel.js
 
 (function () {
@@ -1614,7 +1614,7 @@ app.modules['std:validators'] = function () {
 			return arr;
 		for (let i = 0; i < source.length; i++) {
 			arr[i] = new arr._elem_(source[i], dotPath, arr);
-			arr[i].$checked = false;
+			arr[i].__checked = false;
 		}
 		return arr;
 	}
@@ -1633,7 +1633,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$new = function (src) {
 			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-			newElem.$checked = false;
+			newElem.__checked = false;
 			return newElem;
 		};
 
@@ -1991,6 +1991,19 @@ app.modules['std:validators'] = function () {
 				}
 			}
 		};
+		Object.defineProperty(elem.prototype, '$checked', {
+			enumerable: true,
+			configurable: true, /* needed */
+			get() {
+				return this.__checked;
+			},
+			set(val) {
+				this.__checked = val;
+				let arr = this.$parent;
+				let checkEvent = arr._path_ + '[].check';
+				arr._root_.$emit(checkEvent, arr/*array*/, this);
+			}
+		});
 	}
 
 	function emit(event, ...arr) {

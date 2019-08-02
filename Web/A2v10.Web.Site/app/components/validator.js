@@ -31,6 +31,45 @@ Vue.component('validator', {
 });
 
 
+Vue.component('a2-static-validator', {
+	props: {
+		item: {
+			type: Object, default() {
+				return {};
+			}
+		},
+		prop: String
+	},
+	template: '<div v-if="invalid()" class="static-validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+	computed: {
+		path() {
+			return this.item._path_ + '.' + this.prop;
+		},
+		modelValue() {
+			if (!this.item) return null;
+			return this.item[this.prop];
+		},
+		errors() {
+			if (!this.item) return null;
+			let root = this.item._root_;
+			if (!root) return null;
+			if (!root._validate_)
+				return null;
+			let err;
+			err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
+			return err;
+		}
+	},
+	methods: {
+		invalid(out) {
+			// method! no cache!
+			let err = this.errors;
+			if (!err) return false;
+			return err.length > 0;
+		}
+	}
+});
+
 /*
 TODO: нужно, чтобы добавлялся invalid для родительского элемента.
 Vue.component('validator-control', {

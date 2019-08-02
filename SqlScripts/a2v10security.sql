@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 25 feb 2019
-module version : 7323
+Last updated : 02 aug 2019
+module version : 7511
 */
 
 ------------------------------------------------
@@ -684,6 +684,7 @@ create procedure a2security.CreateUser
 @Tenant int = null,
 @PersonName nvarchar(255) = null,
 @RegisterHost nvarchar(255) = null,
+@Memo nvarchar(255) = null,
 @RetId bigint output
 as
 begin
@@ -707,9 +708,9 @@ begin
 
 		select top(1) @tenantId = id from @tenants;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost, Memo)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost);			
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost, @Memo);
 		select top(1) @userId = id from @users;
 
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
@@ -731,9 +732,9 @@ begin
 	begin
 		begin tran;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo);
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);

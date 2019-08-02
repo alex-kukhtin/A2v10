@@ -64,11 +64,12 @@
 				<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right" Number="True"/>
 				<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right"/>
 				<TextBox Grid.Row="3" Grid.ColSpan="3"
-			Label="Покупатель" Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
+					Label="Покупатель" Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 					</TextBox.AddOns>
 				</TextBox>
+				<ValidatorLabel Grid.Row="4" Grid.Col="4"  Value="{Bind Document.Agent}"/>
 				<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}" Style="Hyperlink"/>
 				<Table Grid.Row="5" Grid.ColSpan="3" Background="Rose" Border="False" GridLines="None">
 					<TableRow>

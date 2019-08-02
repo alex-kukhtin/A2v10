@@ -2186,6 +2186,28 @@ pre.a2-code {
 .control-group.val-info label {
   color: #69a5f8;
 }
+.static-validator {
+  background-color: #f2dede;
+  color: #a94442;
+  font-size: 96%;
+  padding: 2px 6px 4px 6px;
+  border: 1px solid #dca7a7;
+  text-align: left;
+  box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
+  line-height: 1.2em;
+  position: relative;
+}
+.static-validator .error {
+  display: list-item;
+  list-style-type: none;
+  padding-left: 6px;
+  white-space: nowrap;
+}
+.static-validator .error:before {
+  content: '\2022';
+  position: absolute;
+  left: 3px;
+}
 .btn {
   padding: 0.5rem 0.75rem;
   vertical-align: middle;

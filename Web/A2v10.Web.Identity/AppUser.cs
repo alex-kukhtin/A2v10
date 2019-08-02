@@ -31,6 +31,7 @@ namespace A2v10.Web.Identity
 		public Int32 Tenant { get; set; }
 		public String Email { get; set; }
 		public String PhoneNumber { get; set; }
+		public String Memo { get; set; }
 
 		public String PasswordHash { get; set; }
 		public String SecurityStamp { get; set; }
