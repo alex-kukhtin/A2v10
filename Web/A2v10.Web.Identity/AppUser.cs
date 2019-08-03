@@ -42,10 +42,15 @@ namespace A2v10.Web.Identity
 		public Boolean EmailConfirmed { get; set; }
 		public Boolean PhoneNumberConfirmed { get; set; }
 		public Boolean ChangePasswordEnabled { get; set; }
+		// for multi tenant environment
 		public String RegisterHost { get; set; }
+		public String TariffPlan { get; set; }
 
 		// for CreateTenantUser only
 		public String TenantRoles { get; set; }
+
+		// optional (for delete)
+		public Int64 CurrentUser { get; set; }
 
 		DateTime? _lastLoginDate;
 		String _lastLoginHost;

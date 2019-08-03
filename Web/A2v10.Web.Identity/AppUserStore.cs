@@ -132,9 +132,9 @@ namespace A2v10.Web.Identity
 			}
 		}
 
-		public Task DeleteAsync(AppUser user)
+		public async Task DeleteAsync(AppUser user)
 		{
-			throw new NotImplementedException();
+			await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[DeleteUser]", user);
 		}
 
 		public async Task<AppUser> FindByIdAsync(Int64 userId)

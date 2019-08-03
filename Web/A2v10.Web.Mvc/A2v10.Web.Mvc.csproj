@@ -128,11 +128,12 @@
     <Compile Include="Filters\HttpOptionsAttribute.cs" />
     <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
+    <Compile Include="Hooks\DeleteTenantUserHandler.cs" />
     <Compile Include="Hooks\UpdateTenantUserHandler.cs" />
     <Compile Include="Hooks\CreateUserHandler.cs" />
     <Compile Include="Hooks\SetPasswordHandler.cs" />
     <Compile Include="Hooks\SetPersonNameHandler.cs" />
-    <Compile Include="Hooks\SetPhoneHandler.cs" />
+    <Compile Include="Hooks\SetPhoneNumberHandler.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

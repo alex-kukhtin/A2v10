@@ -140,6 +140,7 @@ begin
 		Memo nvarchar(255) null,
 		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
 		RegisterHost nvarchar(255) null,
+		TariffPlan nvarchar(255) null,
 		[Guid] uniqueidentifier null,
 		Referral bigint null
 	);
@@ -181,6 +182,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'RegisterHost')
 begin
 	alter table a2security.Users add RegisterHost nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'TariffPlan')
+begin
+	alter table a2security.Users add TariffPlan nvarchar(255) null;
 end
 go
 ------------------------------------------------
@@ -406,7 +413,7 @@ as
 	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
-		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled,
+		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
@@ -685,6 +692,7 @@ create procedure a2security.CreateUser
 @PersonName nvarchar(255) = null,
 @RegisterHost nvarchar(255) = null,
 @Memo nvarchar(255) = null,
+@TariffPlan nvarchar(255) = null,
 @RetId bigint output
 as
 begin
@@ -708,9 +716,9 @@ begin
 
 		select top(1) @tenantId = id from @tenants;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost, Memo)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost, Memo, TariffPlan)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost, @Memo);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost, @Memo, @TariffPlan);
 		select top(1) @userId = id from @users;
 
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
@@ -732,9 +740,9 @@ begin
 	begin
 		begin tran;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo, TariffPlan)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo, @TariffPlan);
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
@@ -795,7 +803,8 @@ begin
 	insert into @codes(Code, [Name])
 	values
 		(1,  N'Login'		        ), 
-		(2,  N'UserCreated'		    ), 
+		(2,  N'UserCreated'         ), 
+		(3,  N'TeantUserCreated'    ), 
 		(15, N'PasswordUpdated'     ), 
 		(18, N'AccessFailedCount'   ), 
 		(26, N'EmailConfirmed'      ), 
@@ -827,6 +836,52 @@ begin
 	select @refid = Id from a2security.Referrals where lower(Link) = lower(@Referral);
 	if @refid is not null
 		update a2security.Users set Referral = @refid where Id=@UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'DeleteUser')
+	drop procedure a2security.DeleteUser
+go
+------------------------------------------------
+create procedure a2security.DeleteUser
+@CurrentUser bigint,
+@Tenant bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level serializable;
+	set xact_abort on;
+	declare @TenantAdmin bigint;
+	select @TenantAdmin = [Admin] from a2security.Tenants where Id = @Tenant;
+	if @TenantAdmin <> @CurrentUser
+	begin
+		raiserror(N'Invalid teanant administrator', 16, 1);
+		return;
+	end
+	if @TenantAdmin = @Id
+	begin
+		raiserror(N'Unable to delete tenant administrator', 16, 1);
+		return;
+	end
+	begin try
+		begin tran
+		delete from a2security.UserRoles where UserId = @Id;
+		delete from a2security.UserGroups where UserId = @Id;
+		delete from a2security.[Menu.Acl] where UserId = @Id;
+		delete from a2security.[Log] where UserId = @Id;
+		delete from a2security.Users where Tenant = @Tenant and Id = @Id;
+		commit tran
+	end try
+	begin catch
+		if @@trancount > 0
+		begin
+			rollback tran;
+		end
+		declare @msg nvarchar(255);
+		set @msg = error_message();
+		raiserror(@msg, 16, 1);
+	end catch
 end
 go
 ------------------------------------------------

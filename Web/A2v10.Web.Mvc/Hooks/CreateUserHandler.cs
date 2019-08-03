@@ -40,7 +40,11 @@ namespace A2v10.Web.Mvc.Hooks
 			var pwd = before.Eval<String>("User.Password");
 			String tenantRoles = null;
 			if (_host.IsMultiTenant)
+			{
 				tenantRoles = before.Eval<String>("User.TenantRoles");
+				var afterUser = after.Get<ExpandoObject>("User");
+				afterUser.Set("TenantRoles", tenantRoles);
+			}
 
 			var token = await _userManager.GeneratePasswordResetTokenAsync(userId);
 			var ir = await _userManager.ResetPasswordAsync(userId, token, pwd);
