@@ -25,15 +25,19 @@
 		</Tab>
 		<Tab Header="Validators" Height="300px">
 			<Grid Columns="1*, 1*">
-				<TextBox Label="BottomLeft" Value="{Bind Agent.Name}">
+				<TextBox Label="BottomLeft" Value="{Bind Agent.Name}" Validator="BottomLeft">
+					<!--
 					<TextBox.Validator>
 						<Validator Placement="BottomLeft"/>
 					</TextBox.Validator>
+					-->
 				</TextBox>
-				<TextBox Label="TopLeft" Value="{Bind Agent.Name}">
+				<TextBox Label="TopLeft" Value="{Bind Agent.Name}" Validator="TopLeft,150px">
+					<!--
 					<TextBox.Validator>
 						<Validator Placement="TopLeft"/>
 					</TextBox.Validator>
+					-->
 				</TextBox>
 				<TextBox Label="BottomRight" Value="{Bind Agent.Name}">
 					<TextBox.Validator>
