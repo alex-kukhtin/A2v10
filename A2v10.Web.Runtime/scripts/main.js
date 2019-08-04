@@ -1938,7 +1938,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190718-7506
+// 20190802-7511
 // services/datamodel.js
 
 (function () {
@@ -2396,7 +2396,7 @@ app.modules['std:validators'] = function () {
 			return arr;
 		for (let i = 0; i < source.length; i++) {
 			arr[i] = new arr._elem_(source[i], dotPath, arr);
-			arr[i].$checked = false;
+			arr[i].__checked = false;
 		}
 		return arr;
 	}
@@ -2415,7 +2415,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$new = function (src) {
 			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-			newElem.$checked = false;
+			newElem.__checked = false;
 			return newElem;
 		};
 
@@ -2773,6 +2773,19 @@ app.modules['std:validators'] = function () {
 				}
 			}
 		};
+		Object.defineProperty(elem.prototype, '$checked', {
+			enumerable: true,
+			configurable: true, /* needed */
+			get() {
+				return this.__checked;
+			},
+			set(val) {
+				this.__checked = val;
+				let arr = this.$parent;
+				let checkEvent = arr._path_ + '[].check';
+				arr._root_.$emit(checkEvent, arr/*array*/, this);
+			}
+		});
 	}
 
 	function emit(event, ...arr) {
@@ -4237,6 +4250,45 @@ Vue.component('validator', {
 	}
 });
 
+
+Vue.component('a2-static-validator', {
+	props: {
+		item: {
+			type: Object, default() {
+				return {};
+			}
+		},
+		prop: String
+	},
+	template: '<div v-if="invalid()" class="static-validator"><span v-for="err in errors" v-text="err.msg" :class="err.severity"></span></div>',
+	computed: {
+		path() {
+			return this.item._path_ + '.' + this.prop;
+		},
+		modelValue() {
+			if (!this.item) return null;
+			return this.item[this.prop];
+		},
+		errors() {
+			if (!this.item) return null;
+			let root = this.item._root_;
+			if (!root) return null;
+			if (!root._validate_)
+				return null;
+			let err;
+			err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
+			return err;
+		}
+	},
+	methods: {
+		invalid(out) {
+			// method! no cache!
+			let err = this.errors;
+			if (!err) return false;
+			return err.length > 0;
+		}
+	}
+});
 
 /*
 TODO: нужно, чтобы добавлялся invalid для родительского элемента.
@@ -6457,7 +6509,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190215-7431*/
+/*20190804-7511*/
 // components/treeview.js
 
 
@@ -6575,7 +6627,11 @@ Vue.component('popover', {
 				return this.isActive && this.isActive(this.item);
 			},
 			isItemGroup() {
-				return this.isGroup && this.isGroup(this.item);
+				let gp = this.options ? this.options.isGroup : undefined;
+				if (gp)
+					return utils.eval(this.item, gp);
+				else
+					return this.isGroup && this.isGroup(this.item);
 			},
 			iconClass: function () {
 				let icons = this.options.staticIcons;

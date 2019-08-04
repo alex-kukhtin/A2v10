@@ -160,7 +160,7 @@
 		<Button>3</Button>
 	</StackPanel>
 
-	<TabBar Value="{Bind Root.$tabIndex}" DropShadow="None">
+	<TabBar Value="{Bind Root.$tabIndex}" DropShadow="None" Style="MainMenu">
 		<TabButton ActiveValue="0">Вихідні</TabButton>
 		<TabButton ActiveValue="1">Вхідні</TabButton>
 		<TabButton ActiveValue="2">Непроведені</TabButton>

@@ -34,6 +34,11 @@ namespace A2v10.Web.Mvc.Hooks
 			_dbContext = dbContext;
 		}
 
+		public Task<Boolean> BeforeSave(Object beforeData)
+		{
+			return Task.FromResult(false);
+		}
+
 		public async Task AfterSave(Object beforeData, Object afterData)
 		{
 			var before = beforeData as ExpandoObject;

@@ -74,10 +74,22 @@ namespace A2v10.Request
 			setParams?.Invoke(prms);
 			prms.Append(rw.parameters);
 			CheckUserState(prms);
-			IDataModel model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+			IDataModel model = null;
+
 			IModelHandler handler = rw.GetHookHandler();
 			if (handler != null)
-				await handler.AfterSave(data, model.Root);
+			{
+				var handled = await handler.BeforeSave(data);
+				if (!handled)
+				{
+					model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+					await handler.AfterSave(data, model.Root);
+				}
+			}
+			else
+			{
+				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+			}
 			WriteDataModel(model, writer);
 		}
 
@@ -263,7 +275,10 @@ namespace A2v10.Request
 		void WriteDataModel(IDataModel model, TextWriter writer)
 		{
 			// Write data to output
-			writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.StandardSerializerSettings));
+			if (model != null)
+				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.StandardSerializerSettings));
+			else
+				writer.Write("{}");
 		}
 	}
 }

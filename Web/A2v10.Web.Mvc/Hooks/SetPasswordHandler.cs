@@ -31,7 +31,7 @@ namespace A2v10.Web.Mvc.Hooks
 			_host = host;
 		}
 
-		public async Task AfterSave(Object beforeData, Object afterData)
+		public async Task<Boolean> BeforeSave(Object beforeData)
 		{
 			var before = beforeData as ExpandoObject;
 
@@ -49,6 +49,13 @@ namespace A2v10.Web.Mvc.Hooks
 			}
 			var user = await _userManager.FindByIdAsync(userId);
 			await _userManager.UpdateAsync(user);
+			return true;
 		}
+
+		public Task AfterSave(Object beforeData, Object afterData)
+		{
+			return Task.FromResult(0);
+		}
+
 	}
 }

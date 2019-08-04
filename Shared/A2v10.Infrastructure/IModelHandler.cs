@@ -7,6 +7,9 @@ namespace A2v10.Infrastructure
 {
 	public interface IModelHandler
 	{
+		// If returns true, then saving is not called
+		Task<Boolean> BeforeSave(Object beforeData);
+
 		Task AfterSave(Object beforeData, Object afterData);
 		// Inject
 	}

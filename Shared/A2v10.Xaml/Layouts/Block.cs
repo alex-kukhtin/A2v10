@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -20,6 +20,7 @@ namespace A2v10.Xaml
 		public TextAlign Align { get; set; }
 		public TextColor Color { get; set; }
 		public BackgroundStyle Background { get; set; }
+		public ShadowStyle DropShadow { get; set; }
 
 		internal virtual void RenderChildren(RenderContext context)
 		{
@@ -56,6 +57,13 @@ namespace A2v10.Xaml
 			div.AddCssClassBool(Border, "bordered-pane");
 			div.AddCssClassBool(Scroll, "scrollable-pane");
 			div.AddCssClassBool(Relative, "relative");
+
+			if (DropShadow != ShadowStyle.None)
+			{
+				div.AddCssClass("drop-shadow");
+				div.AddCssClass(DropShadow.ToString().ToLowerInvariant());
+			}
+
 			if (Background != BackgroundStyle.Default)
 				div.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			//AddHackedBorder(div);

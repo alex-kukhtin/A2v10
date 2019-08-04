@@ -74,7 +74,7 @@
 	width: @side-bar-width;
 	background-color: @side-bar-compact-bg-color;
 	transition: width .1s ease-out;
-	color:white;
+	color: white;
 
 	.collapse-handle {
 		display: block;
@@ -108,7 +108,7 @@
 		padding: 0;
 		overflow: auto;
 		padding: 0 6px;
-
+		/*
 		.tv-folder {
 			padding: 10px 0 10px 12px;
 			color: white;
@@ -119,84 +119,7 @@
 		.tree-view ul {
 			padding: 0;
 		}
-
-		.tree-view li {
-			margin: 6px 0;
-
-			&.folder {
-				border-top: 1px solid white;
-
-				> .overlay > .toggle {
-					order: 2;
-					margin-right: 12px;
-
-					&:after {
-						left: 2px;
-						top: 3px;
-						content: '\e9a2';
-					}
-				}
-			}
-
-			&.folder:first-child {
-				border-top:none;
-			}
-
-			&.folder.collapsed {
-				> .overlay > .toggle {
-					&:after {
-						content: '\e9a4';
-					}
-				}
-			}
-
-
-			&.group {
-				border-top: 1px solid white;
-
-				&.active {
-					border-top: 1px solid white;
-				}
-			}
-
-			> .overlay {
-				font-size: 15px;
-				white-space: nowrap;
-				color: white;
-				padding: 0;
-				font-weight: 500;
-
-				> a {
-					display: block;
-					padding: 10px 6px;
-					color: currentColor;
-				}
-
-				.ico {
-					font-size: 20px;
-					display: inline-block;
-					margin-left: 5px;
-					width: auto;
-					margin-right: 10px;
-					color: currentColor;
-				}
-
-				.toggle {
-					width: 6px;
-				}
-
-				&:hover {
-					background-color: @side-bar-compact-hover-bg-color;
-				}
-			}
-
-			&.active {
-				.overlay {
-					background-color: white;
-					color: #777;
-				}
-			}
-		}
+		*/
 	}
 
 	&.collapsed {

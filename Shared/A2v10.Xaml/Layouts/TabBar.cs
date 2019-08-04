@@ -1,11 +1,19 @@
 ﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
 
 
+using A2v10.Infrastructure;
 using System;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+
+	public enum TabBarStyle
+	{
+		Default,
+		MainMenu
+	}
+
 	[ContentProperty("Buttons")]
 	public class TabBar : UIElement
 	{
@@ -15,6 +23,7 @@ namespace A2v10.Xaml
 		public Object Description { get; set; }
 
 		public Object ItemsSource { get; set; }
+		public TabBarStyle Style { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -28,6 +37,8 @@ namespace A2v10.Xaml
 				panel.AddCssClass("drop-shadow");
 				panel.AddCssClass(DropShadow.ToString().ToLowerInvariant());
 			}
+			if (Style != TabBarStyle.Default)
+				panel.AddCssClass($"tab-bar-{Style.ToString().ToKebabCase()}");
 
 			panel.RenderStart(context);
 			RenderButtons(context);

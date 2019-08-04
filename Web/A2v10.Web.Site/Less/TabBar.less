@@ -34,3 +34,32 @@
 .a2-tab-description {
 	color:@label-color;
 }
+
+.a2-tab-bar.tab-bar-main-menu {
+	background-color: @navbar-bg-color;
+	border-bottom-color: @navbar-bg-color;
+	margin: 0;
+	padding: 0 8px;
+	align-items:stretch;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
+	.a2-tab-bar-item {
+		line-height:29px;
+		&:hover {
+			background-color: @navbar-highlight-color;
+		}
+	}
+
+	.a2-tab-button {
+		font-weight: normal;
+		text-transform: uppercase;
+		border-bottom-color: transparent;
+		padding: 0;
+
+		&.active {
+			font-weight: 500;
+			color: @link-color;
+			border-bottom-color: @link-color;
+		}
+	}
+}

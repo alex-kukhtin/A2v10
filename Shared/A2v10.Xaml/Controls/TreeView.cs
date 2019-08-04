@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 		public Icon Icon { get; set; }
 		public String Label { get; set; }
 		public Boolean? IsFolder { get; set; }
+		public Boolean? IsGroup { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -43,11 +44,22 @@ namespace A2v10.Xaml
 				sb.Append($"isFolder: '{isFolderBind.GetPath(context)}',");
 			else if (IsFolder != null)
 				throw new XamlException("The IsFolder property must be a binding");
+			var isGroupBind = GetBinding(nameof(IsGroup));
+			if (isGroupBind != null)
+				sb.Append($"isGroup: '{isGroupBind.GetPath(context)}',");
+			else if (IsGroup != null)
+				throw new XamlException("The IsGroup property must be a binding");
 		}
 	}
 
 	public class TreeViewItemCollection : List<TreeViewItem>
 	{
+	}
+
+	public enum TreeViewStyle
+	{
+		Normal,
+		SideBarMenu
 	}
 
 	[ContentProperty("Children")]
@@ -64,6 +76,9 @@ namespace A2v10.Xaml
 		public AutoSelectMode AutoSelect { get; set; }
 
 		public Boolean ExpandFirstItem { get; set; }
+		public Length Height { get; set; }
+
+		public TreeViewStyle Style { get; set; }
 
 		public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
@@ -73,6 +88,12 @@ namespace A2v10.Xaml
 				return;
 			var cont = new TagBuilder("tree-view", null, IsInGrid);
 			MergeAttributes(cont, context);
+
+			if (Height != null)
+				cont.MergeStyle("height", Height.Value);
+			if (Style != TreeViewStyle.Normal)
+				cont.AddCssClass($"tree-view-{Style.ToString().ToKebabCase()}");
+
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
 			{

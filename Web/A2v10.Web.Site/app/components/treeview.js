@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190215-7431*/
+/*20190804-7511*/
 // components/treeview.js
 
 
@@ -118,7 +118,11 @@
 				return this.isActive && this.isActive(this.item);
 			},
 			isItemGroup() {
-				return this.isGroup && this.isGroup(this.item);
+				let gp = this.options ? this.options.isGroup : undefined;
+				if (gp)
+					return utils.eval(this.item, gp);
+				else
+					return this.isGroup && this.isGroup(this.item);
 			},
 			iconClass: function () {
 				let icons = this.options.staticIcons;

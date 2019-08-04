@@ -6,11 +6,11 @@ namespace A2v10.Request.Models
 {
 	public class TenantUserModel
 	{
-		public String Role { get; set; }
+		public String Module { get; set; }
 
 		public override String ToString()
 		{
-			return Role;
+			return Module;
 		}
 	}
 }
