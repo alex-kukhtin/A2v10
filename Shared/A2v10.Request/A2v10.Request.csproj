@@ -52,6 +52,7 @@
     <Compile Include="Controllers\BaseController.Layout.cs" />
     <Compile Include="Controllers\BaseController.Attachments.cs" />
     <Compile Include="Controllers\BaseController.Upload.cs" />
+    <Compile Include="Controllers\SimpleTypes.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\StandaloneController.cs" />
     <Compile Include="Handlers\FileHandler.cs" />

@@ -48,6 +48,7 @@ namespace A2v10.Web.Identity
 
 		// for CreateTenantUser only
 		public String TenantRoles { get; set; }
+		public Boolean IsTenantAdmin { get; set; }
 
 		// optional (for delete)
 		public Int64 CurrentUser { get; set; }

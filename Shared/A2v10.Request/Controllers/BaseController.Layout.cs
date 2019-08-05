@@ -13,7 +13,6 @@ using A2v10.Request.Properties;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using A2v10.Request.Models;
-using System.Linq;
 
 namespace A2v10.Request
 {
@@ -33,7 +32,7 @@ namespace A2v10.Request
 			writer.Write(sb.ToString());
 		}
 
-		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, Boolean userAdmin, Boolean bAdmin, TextWriter writer)
+		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
 		{
 			String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
@@ -42,14 +41,15 @@ namespace A2v10.Request
 
 			if (_host.IsMultiTenant)
 			{
-				Int64 userId = loadPrms.Get<Int64>("UserId");
-				Int32 tenantId = loadPrms.Get<Int32>("TenantId");
-				if (userId != (Int64)tenantId)
+				if (!userInfo.IsTenantAdmin)
 				{
 					// the user is NOT a tenant admin
 					var menuKeys = await _dbContext.LoadListAsync<TenantUserModel>(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", loadPrms);
-					var visibleKeys = String.Join(";", menuKeys);
-					loadPrms.Set("Keys", visibleKeys);
+					if (menuKeys != null)
+					{
+						var visibleKeys = String.Join(";", menuKeys);
+						loadPrms.Set("Keys", visibleKeys);
+					}
 				}
 			}
 
@@ -63,11 +63,13 @@ namespace A2v10.Request
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
 
 			StringBuilder sb = new StringBuilder(shell);
-			sb.Replace("$(Menu)", jsonMenu);
-			sb.Replace("$(AppVersion)", _host.AppVersion);
-			sb.Replace("$(Admin)", userAdmin ? "true" : "false");
-			sb.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false");
-			sb.Replace("$(AppData)", GetAppData());
+			sb.Replace("$(Menu)", jsonMenu)
+			.Replace("$(AppVersion)", _host.AppVersion)
+			.Replace("$(Admin)", userInfo.IsAdmin ? "true" : "false")
+			.Replace("$(TenantAdmin)", userInfo.IsTenantAdmin ? "true" : "false")
+			.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false")
+			.Replace("$(AppData)", GetAppData());
+
 			writer.Write(sb.ToString());
 		}
 

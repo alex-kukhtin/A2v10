@@ -538,10 +538,12 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "application/javascript";
 			try
 			{
-				Boolean isUserAdmin = User.Identity.IsUserAdmin();
-				if (admin && !isUserAdmin)
+				var userInfo = User.Identity.UserInfo();
+
+				if (admin && !userInfo.IsAdmin)
 					throw new AccessViolationException("The current user is not an administrator");
-				await _baseController.ShellScript(CatalogDataSource, SetSqlQueryParams, User.Identity.IsUserAdmin(), admin, Response.Output);
+
+				await _baseController.ShellScript(CatalogDataSource, SetSqlQueryParams, userInfo, admin, Response.Output);
 			}
 			catch (Exception ex)
 			{

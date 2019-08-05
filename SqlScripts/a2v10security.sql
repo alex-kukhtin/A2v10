@@ -60,6 +60,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Tenants') and name = N'IX_Tenants_Admin')
+	create index IX_Tenants_Admin on a2security.Tenants ([Admin]) include (Id);
+go
+------------------------------------------------
 if exists(select * from sys.default_constraints where name=N'DF_Tenants_DateCreated' and parent_object_id = object_id(N'aa2security.Tenants'))
 begin
 	alter table a2security.Tenants drop constraint DF_Tenants_DateCreated;
@@ -414,7 +418,8 @@ as
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
 		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan,
-		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
+		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit),
+		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
 	where Void=0 and Id <> 0;
@@ -780,6 +785,44 @@ begin
 		[NewPassword] = cast(null as nvarchar(255)),
 		[ConfirmPassword] = cast(null as nvarchar(255)) 
 	from a2security.Users where Id=@UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Login.CheckDuplicate')
+	drop procedure a2security.[Login.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2security.[Login.CheckDuplicate]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@Login nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Users where UserName = @Login and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'PhoneNumber.CheckDuplicate')
+	drop procedure a2security.[PhoneNumber.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2security.[PhoneNumber.CheckDuplicate]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@PhoneNumber nvarchar(255)
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Users where PhoneNumber = @PhoneNumber and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
 end
 go
 ------------------------------------------------

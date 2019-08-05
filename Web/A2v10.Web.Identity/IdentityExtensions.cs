@@ -4,9 +4,17 @@ using System;
 using System.Security.Principal;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
+using A2v10.Infrastructure;
 
 namespace A2v10.Web.Identity
 {
+	public class IdentityUserInfo : IUserInfo
+	{
+		public Int64 UserId { get; set; }
+		public Boolean IsAdmin { get; set; }
+		public Boolean IsTenantAdmin { get; set; }
+	}
+
 	public static class IdentityExtensions
 	{
 		public static String GetUserPersonName(this IIdentity identity)
@@ -23,6 +31,31 @@ namespace A2v10.Web.Identity
 				return false;
 			var value = user.FindFirstValue("Admin");
 			return value == "Admin";
+		}
+
+		public static Boolean IsTenantAdmin(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return false;
+			var value = user.FindFirstValue("TenantAdmin");
+			return value == "TenantAdmin";
+		}
+
+		public static IUserInfo UserInfo(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			var ui = new IdentityUserInfo()
+			{
+				UserId = identity.GetUserId<Int64>()
+			};
+
+			var value = user.FindFirstValue("Admin");
+			ui.IsAdmin = value == "Admin";
+
+			value = user.FindFirstValue("TenantAdmin");
+			ui.IsTenantAdmin = value == "TenantAdmin";
+			return ui;
 		}
 
 		public static Int32 GetUserTenantId(this IIdentity identity)

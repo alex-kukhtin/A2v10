@@ -19,6 +19,7 @@
 			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
 			userState: menu.UserState,
 			userIsAdmin: $(Admin),
+			userIsTenantAdmin: $(TenantAdmin),
 			isDebug: $(Debug),
 			appData: $(AppData)
 		},

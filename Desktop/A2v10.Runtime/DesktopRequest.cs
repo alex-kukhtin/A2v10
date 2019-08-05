@@ -14,6 +14,14 @@ using Newtonsoft.Json;
 
 namespace A2v10.Runtime
 {
+	public class DesktopUserInfo : IUserInfo
+	{
+		public Int64 UserId { get; set; }
+		public Boolean IsAdmin { get; set; }
+		public Boolean IsTenantAdmin { get; set; }
+	}
+
+
 	public class DesktopRequest
 	{
 		BaseController _controller = new BaseController();
@@ -175,7 +183,8 @@ namespace A2v10.Runtime
 				case "script":
 					try
 					{
-						_controller.ShellScript(null, SetSqlParams, userAdmin: false, bAdmin: false, writer: writer).Wait();
+						var userInfo = new DesktopUserInfo();
+						_controller.ShellScript(null, SetSqlParams, userInfo, bAdmin: false, writer: writer).Wait();
 						mimeType = MIME_SCRIPT;
 					}
 					catch (Exception ex)
