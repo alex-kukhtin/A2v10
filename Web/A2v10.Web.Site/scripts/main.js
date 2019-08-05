@@ -4073,7 +4073,7 @@ app.modules['std:routing'] = function () {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190221-7438
+// 20190805-7512
 // components/control.js
 
 (function () {
@@ -4113,6 +4113,11 @@ app.modules['std:routing'] = function () {
 					return mask.getMasked(this.mask, val);
 				return val;
 			},
+			modelValueRaw() {
+				if (!this.item) return null;
+				let val = this.item[this.prop];
+				return val;
+			},
 			errors() {
 				if (!this.item) return null;
 				let root = this.item._root_;
@@ -4123,7 +4128,7 @@ app.modules['std:routing'] = function () {
 				if (this.itemToValidate)
 					err = root._validate_(this.itemToValidate, this.pathToValidate, this.itemToValidate[this.propToValidate], this.deferUpdate);
 				else
-					err = root._validate_(this.item, this.path, this.modelValue, this.deferUpdate);
+					err = root._validate_(this.item, this.path, this.modelValueRaw, this.deferUpdate);
 				return err;
 			},
 			inputClass() {
