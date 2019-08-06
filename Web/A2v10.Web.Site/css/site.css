@@ -1161,6 +1161,7 @@ header .user-name .person-name,
   overflow: hidden;
   max-width: 20rem;
   text-overflow: ellipsis;
+  user-select: text;
 }
 .content-view {
   position: absolute;
