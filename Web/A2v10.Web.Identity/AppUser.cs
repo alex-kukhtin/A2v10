@@ -19,7 +19,7 @@ namespace A2v10.Web.Identity
 		PhoneNumber = 0x0010
 	}
 
-	public class AppUser : IUser<Int64>
+	public class AppUser : IUser<Int64>, IEquatable<AppUser>
 	{
 		#region IUser<Int64>
 		public Int64 Id { get; set; }
@@ -101,6 +101,33 @@ namespace A2v10.Web.Identity
 			var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
 			// Add custom user claims here
 			return userIdentity;
+		}
+
+		public Boolean Equals(AppUser other)
+		{
+			return 
+				Id         == other.Id && 
+				UserName   == other.UserName &&
+				PersonName == other.PersonName &&
+				IsAdmin    == other.IsAdmin &&
+				Tenant     == other.Tenant &&
+				Email      == other.Email &&
+				Memo       == other.Memo &&
+				PhoneNumber   == other.PhoneNumber &&
+				PasswordHash  == other.PasswordHash &&
+				SecurityStamp == other.SecurityStamp &&
+				LockoutEndDateUtc == other.LockoutEndDateUtc &&
+				AccessFailedCount == other.AccessFailedCount &&
+				LockoutEnabled   == other.LockoutEnabled &&
+				TwoFactorEnabled == other.TwoFactorEnabled &&
+				EmailConfirmed   == other.EmailConfirmed &&
+				PhoneNumberConfirmed  == other.PhoneNumberConfirmed &&
+				ChangePasswordEnabled == other.ChangePasswordEnabled &&
+				RegisterHost  == other.RegisterHost &&
+				TariffPlan    == other.TariffPlan &&
+				TenantRoles   == other.TenantRoles &&
+				IsTenantAdmin == other.IsTenantAdmin &&
+				CurrentUser   == other.CurrentUser;
 		}
 	}
 }

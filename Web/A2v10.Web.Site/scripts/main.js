@@ -4845,7 +4845,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190414-7485
+// 20190806-7514
 // components/datepicker.js
 
 
@@ -4892,6 +4892,7 @@ Vue.component('validator-control', {
 		},
 		methods: {
 			toggle(ev) {
+				if (this.disabled) return;
 				if (!this.isOpen) {
 					// close other popups
 					eventBus.$emit('closeAllPopups');

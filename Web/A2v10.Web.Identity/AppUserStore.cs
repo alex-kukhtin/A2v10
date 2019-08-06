@@ -73,7 +73,7 @@ namespace A2v10.Web.Identity
 				else
 				{
 					var existing = _mapIds[user.Id];
-					if (!Comparer<AppUser>.Equals(user, existing))
+					if (!user.Equals(existing))
 						throw new InvalidProgramException("Invalid user cache");
 				}
 				if (!_mapNames.ContainsKey(user.UserName))
@@ -83,7 +83,7 @@ namespace A2v10.Web.Identity
 				else
 				{
 					var existing = _mapIds[user.Id];
-					if (!Comparer<AppUser>.Equals(user, existing))
+					if (!user.Equals(existing))
 						throw new InvalidProgramException("Invalid user cache");
 				}
 			}
