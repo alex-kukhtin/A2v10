@@ -26,6 +26,7 @@ namespace A2v10.Infrastructure
 		String UseClaims { get; }
 
 		Boolean IsMultiTenant { get; }
+		Boolean IsMultiCompany { get; }
 		Int32? TenantId { get; set; }
 
 		IApplicationReader ApplicationReader { get; }

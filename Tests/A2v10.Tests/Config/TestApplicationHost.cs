@@ -74,6 +74,7 @@ namespace A2v10.Tests.Config
 		public String HelpUrl => null;
 
 		public Boolean IsMultiTenant => false;
+		public Boolean IsMultiCompany => false;
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDebugConfiguration => true;
 

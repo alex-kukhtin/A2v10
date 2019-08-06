@@ -2,7 +2,7 @@
 /* Copyright © 2019 Alex Kukhtin. All rights reserved.*/
 
 /*TODO:
-controller methods
+ * ????
 */
 
 declare function require(url: string): any;
@@ -17,7 +17,7 @@ interface IElement {
 	readonly $name: any;
 
 	readonly $root: IRoot;
-	readonly $parent: IElement;
+	readonly $parent: IElement | IElementArray<IElement>;
 
 	readonly $vm: ViewModel;
 	readonly $ctrl: IController;
@@ -28,6 +28,13 @@ interface IElement {
 
 interface IArrayElement extends IElement {
 	$remove(): void;
+	$selected: boolean;
+	$checked: boolean;
+	readonly $parent: IElementArray<IElement>;
+}
+
+interface ITreeElement extends IArrayElement {
+	$expanded: boolean;
 }
 
 declare const enum InsertTo {
@@ -37,7 +44,7 @@ declare const enum InsertTo {
 	below = 'below'
 }
 
-interface IElementArray<T> {
+interface IElementArray<T> extends Array<T> {
 	[index: number]: T;
 
 	readonly Count: number;
@@ -70,11 +77,10 @@ interface IRoot extends IElement {
 	readonly $isCopy: boolean
 	readonly $template: Template;
 
-	$defer(): void;
-	$emit(): void;
+	$defer(): void; // TODO
+	$emit(event: string, ...params: any[]): void;
 	$forceValidate(): void;
-	$setDirty(): void;
-
+	$setDirty(dirty: boolean, path?: string): void;
 }
 
 
@@ -84,7 +90,7 @@ interface templateCommandFunc { (this: IRoot, arg?: any): void; }
 interface templateCommandObj {
 	exec: templateCommandFunc,
 	canExec?: (this: IRoot, arg?: any) => boolean;
-	confirm?: string;
+	confirm?: string; // TODO: object
 	saveRequired?: boolean;
 }
 
@@ -134,7 +140,8 @@ declare type templateValidator = String | tempateValidatorFunc | templateValidat
 
 interface Template {
 	options?: {
-		noDirty?: boolean
+		noDirty?: boolean,
+		persistSelect?: string[]
 	};
 	properties?: {
 		[prop: string]: templateProperty
@@ -163,13 +170,13 @@ interface IController {
 	$msg(): any; //TODO
 	$alert(msg: string | IMessage);
 	$confirm(msg: string | IMessage): Promise<boolean>;
-	$showDialog(url: string): Promise<object>;
+	$showDialog(url: string, data?: object, query?: object): Promise<object>;
 	$saveModified(msg?: string, title?: string): boolean;
 	$asyncValid(cmd: string, arg: object): any; //TODO
-	$toast(): any; //TODO
+	$toast(): void; //TODO
 	$notifyOwner(): any; //TODO
-	$navigate(url: string): void; //TODO
-	$defer(): any; //TODO
+	$navigate(url: string, data?: object, newWindow?: boolean): void;
+	$defer(func: () => void): void;
 	$setFilter(): any; //TODO
 }
 
@@ -178,7 +185,6 @@ interface IMessage {
 	style?: string;
 	list?: any;
 }
-
 
 interface ViewModel extends IController {
 	$getErrors(severity: string): any[]; // TODO result type
@@ -211,10 +217,20 @@ interface UtilsDate {
 	equal(d1: Date, d2: Date): boolean;
 	isZero(d: Date): boolean;
 	add(d: Date, nm: number, unit: DateTimeUnit);
+	format(d: number | Date): string;
+	formatDate(d: number | Date): string;
+	parse(str: string): Date;
+	create(year: number, month: number, day: number): Date;
+	compare(d1: Date, d2: Date): number;
+	endOfMonth(d: Date): Date;
+	diff(): number; // TODO
+	minDate: Date;
+	maxDate: Date;
 }
 
 interface UtilsText {
 	contains(text: string, probe: string): boolean;
+	capitalize(text: string): string;
 }
 
 interface UtilsCurrency {
@@ -255,8 +271,8 @@ interface Http {
 }
 
 interface EventBus {
-	$on(name: string, handler: (...params: any[]) => any);
-	$off(name: string, handler: (...params: any[]) => any);
-	$once(name: string, handler: (...params: any[]) => any);
-	$emit(name: string, ...params: any[]);
+	$on(event: string, handler: (...params: any[]) => any);
+	$off(event: string, handler: (...params: any[]) => any);
+	$once(event: string, handler: (...params: any[]) => any);
+	$emit(event: string, ...params: any[]);
 }

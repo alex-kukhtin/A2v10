@@ -23,8 +23,10 @@ namespace A2v10.Web.Mvc.Hooks
 
 	class DeleteTeanantUserResult
 	{
+#pragma warning disable IDE1006 // Naming Styles
 		public String status { get; set; }
 		public String message { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
 	}
 
 	public class DeleteTenantUserHandler : IInvokeTarget

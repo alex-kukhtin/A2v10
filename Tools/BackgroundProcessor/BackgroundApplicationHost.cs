@@ -47,6 +47,7 @@ namespace BackgroundProcessor
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
 		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
 		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
+		public Boolean IsMultiCompany => false;
 		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
 		public String CatalogDataSource => throw new NotImplementedException(nameof(CatalogDataSource));
 		public String TenantDataSource => throw new NotImplementedException(nameof(TenantDataSource));

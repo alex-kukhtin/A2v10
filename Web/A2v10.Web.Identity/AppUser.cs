@@ -129,5 +129,22 @@ namespace A2v10.Web.Identity
 				IsTenantAdmin == other.IsTenantAdmin &&
 				CurrentUser   == other.CurrentUser;
 		}
+
+		public String GetClientId()
+		{
+			if (RegisterHost == null)
+				return null;
+			if (RegisterHost.Length < 3)
+				return null;
+			if (Tenant == 0)
+				return null;
+			// a-la SQL GetClientId
+			var x = RegisterHost.Substring(0, 3).ToUpperInvariant();
+			if (x[1] == 'O')
+				x = x.Substring(0, 1) + x.Substring(2, 1);
+			else
+				x = x.Substring(0, 2);
+			return $"{x}-{Tenant}";
+		}
 	}
 }

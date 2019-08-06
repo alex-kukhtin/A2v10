@@ -38,6 +38,8 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public Int64 CompanyId => 1;
+
 		public String CatalogDataSource => _baseController.Host.CatalogDataSource;
 
 		public ShellController()
@@ -163,6 +165,15 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		public String GetUserPersonName()
+		{
+			var name = User.Identity.GetUserPersonName();
+			var clientId = User.Identity.GetUserClientId();
+			if (clientId != null)
+				name += $" [{clientId}]";
+			return Server.HtmlEncode(name);
+		}
+
 		public void Index()
 		{
 			try
@@ -172,7 +183,7 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					{ "$(RootUrl)", RootUrl },
 					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
-					{ "$(PersonName)", Server.HtmlEncode(User.Identity.GetUserPersonName()) },
+					{ "$(PersonName)", GetUserPersonName() },
 					{ "$(Theme)", _baseController.Host.Theme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },
@@ -291,7 +302,11 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			prms.Set("UserId", UserId);
 			if (_baseController.Host.IsMultiTenant)
+			{
 				prms.Set("TenantId", TenantId);
+			}
+			if (_baseController.Host.IsMultiCompany)
+				prms.Set("CompanyId", CompanyId);
 		}
 
 		void SetClaimsToParams(ExpandoObject prms)

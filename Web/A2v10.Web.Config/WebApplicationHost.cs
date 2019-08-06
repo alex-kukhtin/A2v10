@@ -111,6 +111,15 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public Boolean IsMultiCompany { get
+			{
+				var mc = ConfigurationManager.AppSettings["multiCompany"];
+				if (String.IsNullOrEmpty(mc))
+					return false;
+				return mc.ToLowerInvariant() == "true";
+			}
+		}
+
 		public Boolean IsRegistrationEnabled
 		{
 			get

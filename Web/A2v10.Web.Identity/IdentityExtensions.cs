@@ -33,6 +33,14 @@ namespace A2v10.Web.Identity
 			return value == "Admin";
 		}
 
+		public static String GetUserClientId(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			var value = user.FindFirstValue("ClientId");
+			return String.IsNullOrEmpty(value) ? null : value;
+		}
+
 		public static Boolean IsTenantAdmin(this IIdentity identity)
 		{
 			if (!(identity is ClaimsIdentity user))

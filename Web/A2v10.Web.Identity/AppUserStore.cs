@@ -483,8 +483,14 @@ namespace A2v10.Web.Identity
 			};
 			if (user.IsAdmin)
 				list.Add(new Claim("Admin", "Admin"));
-			if (user.IsTenantAdmin)
-				list.Add(new Claim("TenantAdmin", "TenantAdmin"));
+			if (_host.IsMultiTenant)
+			{
+				var clientId = user.GetClientId();
+				if (clientId != null)
+					list.Add(new Claim("ClientId", clientId));
+				if (user.IsTenantAdmin)
+					list.Add(new Claim("TenantAdmin", "TenantAdmin"));
+			}
 
 			/*
 			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
