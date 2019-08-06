@@ -1177,7 +1177,7 @@ header .user-name .person-name,
   left: 42px;
 }
 .side-bar-compact-collapsed .content-view.partial-page {
-  left: 58px;
+  left: 62px;
 }
 .content-view.full-page {
   top: 64px;
@@ -3397,6 +3397,15 @@ tr:hover .commandbar.visible-hover {
 .tree-view.tree-view-side-bar-menu li.active .overlay {
   background-color: white;
   color: #777;
+}
+.side-bar-compact .side-bar-body .tree-view::-webkit-scrollbar,
+.tree-view.tree-view-side-bar-menu::-webkit-scrollbar {
+  width: 8px;
+}
+.side-bar-compact .side-bar-body .tree-view::-webkit-scrollbar-thumb,
+.tree-view.tree-view-side-bar-menu::-webkit-scrollbar-thumb {
+  background-color: #8196bb;
+  border-radius: 2rem;
 }
 .tab-panel {
   display: grid;
@@ -5993,9 +6002,24 @@ h5,
 		}
 		*/
 }
+.side-bar-compact .side-bar-body::-webkit-scrollbar {
+  width: 8px;
+}
+.side-bar-compact .side-bar-body::-webkit-scrollbar-thumb {
+  background-color: #8196bb;
+  border-radius: 2rem;
+  /*
+			&:hover {
+				background-color: @side-bar-compact-hover-bg-color;
+			}
+			*/
+}
 .side-bar-compact.collapsed {
-  width: 52px;
+  width: 56px;
   transition: width 0.1s ease-out;
+}
+.side-bar-compact.collapsed .side-bar-body::-webkit-scrollbar {
+  width: 4px;
 }
 .side-bar-compact.collapsed ul li a > span {
   display: none;

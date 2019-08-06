@@ -29,7 +29,7 @@ using System.Linq;
 namespace A2v10.Web.Mvc.Controllers
 {
 
-	[Authorize]
+	[AuthorizeFilter]
 	[ExecutingFilter]
 	[CheckMobileFilter]
 	public class ShellController : Controller, IControllerProfiler, IControllerTenant

@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 	public class TabButton : UIElementBase
 	{
 		public Object Content { get; set; }
+		public Object Description { get; set; }
 
 		public String ActiveValue { get; set; }
 
@@ -43,18 +44,39 @@ namespace A2v10.Xaml
 			}
 
 			btn.RenderStart(context);
+			RenderContent(context);
+			RenderDescription(context);
+			btn.RenderEnd(context);
+		}
+
+		void RenderContent(RenderContext context)
+		{
+			var span = new TagBuilder("span", "content");
 			var cntBind = GetBinding(nameof(Content));
 			if (cntBind != null)
-			{
-				var span = new TagBuilder("span");
 				span.MergeAttribute("v-text", cntBind.GetPathFormat(context));
-				span.Render(context);
-			}
-			else if (Content is UIElementBase contUi)
+			span.RenderStart(context);
+			if (Content is UIElementBase contUi)
 				contUi.RenderElement(context);
 			else if (Content != null)
 				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
-			btn.RenderEnd(context);
+			span.RenderEnd(context);
+		}
+
+		void RenderDescription(RenderContext context)
+		{
+			var descBind = GetBinding(nameof(Description));
+			if (descBind == null && Description == null)
+				return;
+			var span = new TagBuilder("span", "description");
+			if (descBind != null)
+				span.MergeAttribute("v-text", descBind.GetPathFormat(context));
+			span.RenderStart(context);
+			if (Description is UIElementBase descUi)
+				descUi.RenderElement(context);
+			else if (Description != null)
+				context.Writer.Write(context.LocalizeCheckApostrophe(Description.ToString()));
+			span.RenderEnd(context);
 		}
 	}
 }

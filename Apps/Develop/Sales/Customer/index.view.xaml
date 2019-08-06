@@ -17,7 +17,7 @@
 				<Button Icon="Edit" Command="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}" />
 				<Button Icon="Delete" Command="{BindCmd Execute, CommandName=DeleteFolder, Argument={Bind Agents.$selected}, Confirm='Удалить папку?'}"/>
 			</Toolbar>
-			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Style="SideBarMenu"
+			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True"
 					ItemsSource="{Bind Agents}" FolderSelect="True">
 				<TreeViewItem ItemsSource="{Bind SubItems}" Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
 			</TreeView>

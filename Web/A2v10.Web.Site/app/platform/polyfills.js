@@ -28,10 +28,16 @@
 		if (!pElem)
 			return;
 		let parentRect = pElem.getBoundingClientRect();
-		if (elRect.top < parentRect.top)
-			el.scrollIntoView(true);
-		else if (elRect.bottom > parentRect.bottom)
-			el.scrollIntoView(false);
+		if (elRect.top < parentRect.top) {
+			//pElem.scrollTop -= parentRect.top - elRect.top + 1;
+			//el.scrollIntoView(true);
+			el.scrollIntoView({ block: 'nearest' });
+		}
+		else if (elRect.bottom > parentRect.bottom) {
+			//pElem.scrollTop += elRect.bottom - parentRect.bottom + 1;
+			el.scrollIntoView({ block: 'nearest' });
+			//el.scrollIntoView(false);
+		}
 	};
 
 

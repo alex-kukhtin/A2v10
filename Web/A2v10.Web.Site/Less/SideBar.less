@@ -108,6 +108,21 @@
 		padding: 0;
 		overflow: auto;
 		padding: 0 6px;
+
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: @side-bar-compact-scroll-bg-color;
+			border-radius: 2rem;
+
+			/*
+			&:hover {
+				background-color: @side-bar-compact-hover-bg-color;
+			}
+			*/
+		}
 		/*
 		.tv-folder {
 			padding: 10px 0 10px 12px;
@@ -125,6 +140,10 @@
 	&.collapsed {
 		width: @side-bar-compact-collapsed-width;
 		transition: width .1s ease-out;
+
+		.side-bar-body::-webkit-scrollbar {
+			width: 4px;
+		}
 
 		ul li {
 			a {

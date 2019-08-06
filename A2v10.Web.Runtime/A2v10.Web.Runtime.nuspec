@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7512</version>
+		<version>10.0.7513</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -12,7 +12,7 @@
 	-->
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime</description>
-		<releaseNotes>First NUGET release.</releaseNotes>
+		<releaseNotes>Current NUGET release</releaseNotes>
 		<copyright>Copyright © 2015-2019 Alex Kukhtin.</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<references>

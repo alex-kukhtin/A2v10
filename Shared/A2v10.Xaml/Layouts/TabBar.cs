@@ -11,7 +11,9 @@ namespace A2v10.Xaml
 	public enum TabBarStyle
 	{
 		Default,
-		MainMenu
+		MainMenu,
+		Tab,
+		Wizard
 	}
 
 	[ContentProperty("Buttons")]

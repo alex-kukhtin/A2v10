@@ -53,6 +53,11 @@ app.modules['std:http'] = function () {
 					}
 					else
 						reject(xhr.responseText || xhr.statusText);
+				} else if (xhr.status === 473 /*non standard */) {
+					if (xhr.statusText === 'Unauthorized') {
+						// go to login page
+						window.location.assign('/');
+					}
 				}
 				else
 					reject(xhr.statusText);
