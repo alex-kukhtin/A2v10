@@ -122,6 +122,11 @@ namespace A2v10.Messaging
 			hostObj.Set("Value", _host.AppHost);
 			env.Add(hostObj);
 
+			var userHostObj = new ExpandoObject();
+			userHostObj.Set("Name", "UserHost");
+			userHostObj.Set("Value", _host.UserAppHost);
+			env.Add(userHostObj);
+
 			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(fullPath)) {
 				var tml = XamlServices.Load(stream) as Template;
 				TemplatedMessage tm = tml.Get(key);

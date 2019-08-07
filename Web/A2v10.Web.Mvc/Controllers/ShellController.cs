@@ -174,6 +174,13 @@ namespace A2v10.Web.Mvc.Controllers
 			return Server.HtmlEncode(name);
 		}
 
+		public String GetCompanyButton()
+		{
+			if (!_baseController.Host.IsMultiCompany)
+				return String.Empty;
+			return "<a2-company-button></a2-company-button>";
+		}
+
 		public void Index()
 		{
 			try
@@ -184,6 +191,7 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(RootUrl)", RootUrl },
 					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
 					{ "$(PersonName)", GetUserPersonName() },
+					{ "$(CompanyButton)", GetCompanyButton() },
 					{ "$(Theme)", _baseController.Host.Theme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },

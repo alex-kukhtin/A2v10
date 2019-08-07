@@ -54,6 +54,7 @@ namespace A2v10.Runtime
 		public String AppDescription => "A2v10.Desktop";
 		public String SupportEmail => null;
 		public String AppHost => null;
+		public String UserAppHost => null;
 
 		public String Theme => null;
 		public String HelpUrl => "http://help";

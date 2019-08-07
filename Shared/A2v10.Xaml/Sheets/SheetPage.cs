@@ -4,7 +4,7 @@ using System;
 
 namespace A2v10.Xaml
 {
-	public class SheetPage : Container
+	public class SheetPage : Container, IHasWrapper
 	{
 		public PageOrientation Orientation { get; set; }
 

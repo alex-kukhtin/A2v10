@@ -26,6 +26,7 @@ namespace BackgroundProcessor
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
+		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
 		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
 		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
 		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));

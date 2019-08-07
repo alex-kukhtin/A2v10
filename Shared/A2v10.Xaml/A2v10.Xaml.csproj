@@ -52,6 +52,7 @@
     <Compile Include="Base\Enums.cs" />
     <Compile Include="Base\FilterDescription.cs" />
     <Compile Include="Base\GroupDescription.cs" />
+    <Compile Include="Base\IHasWrapper.cs" />
     <Compile Include="Base\IJavaScriptSource.cs" />
     <Compile Include="Base\ISupportBinding.cs" />
     <Compile Include="Base\ISupportTwoPhaseRendering.cs" />

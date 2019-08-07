@@ -80,6 +80,8 @@ namespace A2v10.Messaging
 				{
 					if (key == "Host")
 						throw new MessagingException("Configuration parameter 'appSettings/appHost' not defined");
+					else if (key == "UserHost")
+						throw new MessagingException("Configuration parameter 'appSettings/userAppHost' not defined");
 					throw new MessagingException($"Invalid environment key. '{key}'");
 				}
 			}

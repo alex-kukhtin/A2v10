@@ -5659,6 +5659,7 @@ table > colgroup col.blue {
 .sheet-page-wrapper {
   background-color: #e3e3e3;
   padding: 30px 0;
+  min-height: 100%;
 }
 .sheet-page-wrapper .sheet-page {
   margin: 0 auto;
@@ -5688,16 +5689,22 @@ table > colgroup col.blue {
     box-shadow: none;
     border-style: none;
     margin: 0;
+    min-height: 1px;
   }
   .sheet-page-wrapper .sheet-page.portrait {
     width: 19cm;
     max-width: 19cm;
     padding: 0 !important;
+    min-height: 27.7cm;
   }
   .sheet-page-wrapper .sheet-page.landscape {
     width: 27.7cm;
     max-width: 27.7cm;
     padding: 0 !important;
+    min-height: 19cm;
+  }
+  .sheet-page-wrapper .sheet-page .a2-hyperlink {
+    border-bottom: none!important;
   }
   /*
 	@page {

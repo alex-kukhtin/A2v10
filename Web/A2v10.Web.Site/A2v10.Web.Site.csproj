@@ -93,6 +93,7 @@
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
+    <Content Include="app\components\companybutton.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />
@@ -193,6 +194,7 @@
     <Content Include="Less.Mobile\Variables.less" />
     <Content Include="Less.Mobile\Site.Mobile.less" />
     <Content Include="Less.Mobile\Main.less" />
+    <Content Include="Less\CompanyButton.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

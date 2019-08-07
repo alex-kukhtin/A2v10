@@ -48,6 +48,7 @@
 			"app/components/panel.js",
 			"app/components/sheet.js",
 			"app/components/newbutton.js",
+			"app/components/companybutton.js",
 			"app/components/graphics.js",
 			"app/components/debug.js",
 			"app/components/feedback.js",

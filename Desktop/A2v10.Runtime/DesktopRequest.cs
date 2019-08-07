@@ -158,6 +158,7 @@ namespace A2v10.Runtime
 					{ "$(RootUrl)", String.Empty },
 					{ "$(HelpUrl)", _controller.Host.HelpUrl },
 					{ "$(PersonName)", userName },
+					{ "$(CompanyButton)", ""},
 					{ "$(Theme)", theme },
 					{ "$(Build)", _controller.Host.AppBuild },
 					{ "$(Locale)", locale },

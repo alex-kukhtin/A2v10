@@ -69,7 +69,10 @@ namespace A2v10.Xaml
 				Toolbar?.RenderElement(context, (tag) => tag.AddCssClass("page-toolbar"));
 				Taskpad?.RenderElement(context, (tag) => tag.AddCssClass("page-taskpad"));
 				Pager?.RenderElement(context, (tag) => tag.AddCssClass("page-pager"));
-				var content = new TagBuilder("div", "page-content").RenderStart(context);
+				var content = new TagBuilder("div", "page-content");
+				if (ChildHasWrapper)
+					content.AddCssClass("with-wrapper");
+				content.RenderStart(context);
 				RenderChildren(context);
 				content.RenderEnd(context);
 			}
@@ -89,6 +92,8 @@ namespace A2v10.Xaml
 				page.RenderEnd(context);
 			}
 		}
+
+		public Boolean ChildHasWrapper => Children != null && Children.Count == 1 && Children[0] is IHasWrapper;
 
 		void AddAttributes(TagBuilder tag)
 		{
