@@ -247,6 +247,16 @@ namespace A2v10.Infrastructure
 			return eo;
 		}
 
+		public static void AddNameValue(this List<ExpandoObject> coll, String name, Object value)
+		{
+			if (value == null) return;
+			var nvObj = new ExpandoObject();
+			nvObj.Set("Name", name);
+			nvObj.Set("Value", value);
+			coll.Add(nvObj);
+		}
+
+
 		public static Boolean IsNullableType(this Type type)
 		{
 			return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
