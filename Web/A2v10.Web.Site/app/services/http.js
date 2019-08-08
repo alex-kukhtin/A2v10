@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190620-7501
+// 20190808-7517
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -157,8 +157,7 @@ app.modules['std:http'] = function () {
 					resolve(true);
 				})
 				.catch(function (error) {
-					alert(error);
-					resolve(false);
+					reject(error);
 				});
 		});
 	}

@@ -1310,7 +1310,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190620-7501
+// 20190808-7517
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1467,8 +1467,7 @@ app.modules['std:http'] = function () {
 					resolve(true);
 				})
 				.catch(function (error) {
-					alert(error);
-					resolve(false);
+					reject(error);
 				});
 		});
 	}
@@ -3572,7 +3571,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190402-7475
+// 20190808-7508
 /*components/include.js*/
 
 (function () {
@@ -3621,7 +3620,9 @@ Vue.component('a2-pager', {
 				if (this.currentUrl) {
 					// Do not set loading. Avoid blinking
 					this.__destroy();
-					http.load(this.currentUrl, this.$el).then(this.loaded);
+					http.load(this.currentUrl, this.$el)
+						.then(this.loaded)
+						.catch(this.error);
 				}
 			},
 			__destroy() {
@@ -3633,6 +3634,21 @@ Vue.component('a2-pager', {
 				setTimeout(() => {
 					this.requery();
 				}, 1);
+			},
+			error(msg) {
+				msg = msg || '';
+				if (this.insideDialog)
+					eventBus.$emit('modalClose', false);
+				if (msg.indexOf('UI:') === 0) {
+					let dlgData = {
+						promise: null, data: {
+							message: msg.substring(3).replace('\\n', '\n'),
+							style: 'alert'
+						}
+					};
+					eventBus.$emit('confirm', dlgData);
+				} else
+					alert(msg);
 			}
 		},
 		computed: {
@@ -3644,7 +3660,9 @@ Vue.component('a2-pager', {
 			//console.warn('include has been mounted');
 			if (this.src) {
 				this.currentUrl = this.src;
-				http.load(this.src, this.$el).then(this.loaded);
+				http.load(this.src, this.$el)
+					.then(this.loaded)
+					.catch(this.error);
 			}
 		},
 		destroyed() {
@@ -3671,7 +3689,9 @@ Vue.component('a2-pager', {
 					this.loading = true; // hides the current view
 					this.currentUrl = newUrl;
 					this.__destroy();
-					http.load(newUrl, this.$el).then(this.loaded);
+					http.load(newUrl, this.$el)
+						.then(this.loaded)
+						.catch(this.error);
 				}
 			},
 			needReload(val) {
@@ -3707,7 +3727,9 @@ Vue.component('a2-pager', {
 			load() {
 				let url = this.makeUrl();
 				this.__destroy();
-				http.load(url, this.$el).then(this.loaded);
+				http.load(url, this.$el)
+					.then(this.loaded)
+					.catch(this.error);
 			}
 		},
 		watch: {
@@ -3727,7 +3749,9 @@ Vue.component('a2-pager', {
 		mounted() {
 			if (this.source) {
 				this.currentUrl = this.makeUrl(this.source);
-				http.load(this.currentUrl, this.$el).then(this.loaded);
+				http.load(this.currentUrl, this.$el)
+					.then(this.loaded)
+					.catch(this.error);
 			}
 		},
 		destroyed() {

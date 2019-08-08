@@ -230,7 +230,15 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			catch (Exception ex)
 			{
-				_baseController.WriteHtmlException(ex, Response.Output);
+				if (ex.Message.StartsWith("UI:"))
+				{
+					var error = _baseController.Localize(ex.Message.Substring(3));
+					_baseController.WriteExceptionStatus(ex, Response);
+				}
+				else
+				{
+					_baseController.WriteHtmlException(ex, Response.Output);
+				}
 			}
 		}
 
