@@ -158,6 +158,7 @@ namespace A2v10.Xaml
 			}
 			RenderRowDetails(context);
 			RenderEmptyPanel(context);
+			RenderFooter(context);
 			dataGrid.RenderEnd(context);
 		}
 
@@ -186,6 +187,20 @@ namespace A2v10.Xaml
 			panel.RenderStart(context);
 			EmptyPanel.RenderElement(context);
 			panel.RenderEnd(context);
+		}
+
+		void RenderFooter(RenderContext context)
+		{
+			/*TODO: do it!
+			var templ = new TagBuilder("template");
+			templ.MergeAttribute("slot", "footer");
+			templ.RenderStart(context);
+			var tfoot = new TagBuilder("tfoot");
+			tfoot.RenderStart(context);
+			context.Writer.Write("<tr><td colspan=\"3\">11</td><td>22</td><td>33</td></tr>");
+			tfoot.RenderEnd(context);
+			templ.RenderEnd(context);
+			*/
 		}
 
 		protected override void OnEndInit()
