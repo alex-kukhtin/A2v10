@@ -365,7 +365,6 @@
     <Folder Include="Develop\_localization\" />
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
-    <Folder Include="Develop\_tests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Agent\browseCustomer.dialog.xaml">
@@ -523,6 +522,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\sales\waybill\links.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\_tests\dialogs\CreateAgent.feature.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
