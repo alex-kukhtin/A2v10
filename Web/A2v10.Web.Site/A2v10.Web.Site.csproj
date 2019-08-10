@@ -95,6 +95,7 @@
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\components\companybutton.js" />
     <Content Include="app\controllers\iframe.js" />
+    <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />
     <Content Include="app\server\app.js" />

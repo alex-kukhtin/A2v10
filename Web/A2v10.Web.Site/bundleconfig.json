@@ -57,7 +57,8 @@
 			"app/components/iframetarget.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",
-			"app/controllers/shell.js"
+			"app/controllers/shell.js",
+			"app/controllers/tests.js"
 		],
 		"minify": { "enabled": false, "renameLocals": false }
 	},

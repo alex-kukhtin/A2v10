@@ -2,6 +2,8 @@
 <Feature xmlns="clr-namespace:A2v10.Tests.Browser.Xaml;assembly=A2v10.Tests.Browser"
 		Description="Создание приходной накладной">
 	<Scenario Description="">
-		<OpenUrl Url="/purchase/operations2"/>
+		<Navigate Url="/purchase/operations2"/>
+		<ClickButton Text="Створити документ"/>
+		<EnsureDropDown Items="Створити,sss,ssss"/>
 	</Scenario>
 </Feature>

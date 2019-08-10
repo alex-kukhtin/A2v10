@@ -83,6 +83,7 @@
     </Content>
     <Content Include="tsconfig.json" />
     <None Include="Develop\_assets\doclinks.less" />
+    <None Include="Develop\_tests\Tests.Runner.config" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
   <ItemGroup>
@@ -365,6 +366,7 @@
     <Folder Include="Develop\_localization\" />
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
+    <Folder Include="Develop\_tests\dialogs\more dialog\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Agent\browseCustomer.dialog.xaml">
