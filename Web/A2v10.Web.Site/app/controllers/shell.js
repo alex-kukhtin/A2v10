@@ -712,8 +712,14 @@
 
 			popup.startService();
 
-			eventBus.$on('beginRequest', () => me.requestsCount += 1);
-			eventBus.$on('endRequest', () => me.requestsCount -= 1);
+			eventBus.$on('beginRequest', () => {
+				me.requestsCount += 1;
+				window.__requestsCount__ = me.requestsCount;
+			});
+			eventBus.$on('endRequest', () => {
+				me.requestsCount -= 1;
+				window.__requestsCount__ = me.requestsCount;
+			});
 
 			eventBus.$on('closeAllPopups', popup.closeAll);
 		}

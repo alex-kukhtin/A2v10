@@ -365,6 +365,7 @@
     <Folder Include="Develop\_localization\" />
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
+    <Folder Include="Develop\_tests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Agent\browseCustomer.dialog.xaml">
