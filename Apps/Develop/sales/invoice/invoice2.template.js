@@ -22,6 +22,7 @@ define(["require", "exports"], function (require, exports) {
             'Document.Rows[].Price': 'Укажите цену'
         },
         events: {
+            'Model.load': modelLoad,
             'Document.Rows[].add': (arr, row) => row.Qty = 1,
             'Document.Rows[].Entity.Article.change'() { },
             'Document.Agent.change': (doc, newVal) => { console.dir('Agent.change'); },
@@ -47,6 +48,9 @@ define(["require", "exports"], function (require, exports) {
         }
     };
     exports.default = template;
+    function modelLoad(root) {
+        console.dir(root.Document.$permissions);
+    }
     function docNoChanged(doc, newVal, oldVal) {
         console.log(this.Document.$isNew);
         console.log(this.Document.Agent.Name);

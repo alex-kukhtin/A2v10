@@ -5,17 +5,17 @@ import { TDocument, TRoot, TAgent, TRow, TRows } from 'model';
 const template: Template = {
 	properties: {
 		'TDocument.$checked': Boolean,
-		"TDocument.Name"(this: TDocument) { return this.Done + '3';  },
+		"TDocument.Name"(this: TDocument) { return this.Done + '3'; },
 		"TDocument.$XXX": String,
 		"TDocument.$ZZZsds": Number,
-		'TRow.Sum'(this: TRow) { return 222;},
+		'TRow.Sum'(this: TRow) { return 222; },
 		'TDocument.Sum'() { return 2222; },
-		'TDocument.$DatePlusOne'(this: TDocument):Date { return this.Date; },
+		'TDocument.$DatePlusOne'(this: TDocument): Date { return this.Date; },
 		'TDocument.$canShipment'(this: TDocument) { return false },
 		'TDocLink.$Mark'(this: TDocument) { return this.Done ? 'success' : undefined; },
 		'TRow.$RoundSum'(this: TRow) { return this.Price * this.Qty; },
 		'TRow.$RowBold'(this: TRow) { return this.Qty === 3; },
-		'TRow.$RowMark'(this:TRow) { return this.Qty === 3 ? 'green' : undefined; }
+		'TRow.$RowMark'(this: TRow) { return this.Qty === 3 ? 'green' : undefined; }
 	},
 	validators: {
 		'Document.Agent': 'Выберите покупателя 234',
@@ -23,6 +23,7 @@ const template: Template = {
 		'Document.Rows[].Price': 'Укажите цену'
 	},
 	events: {
+		'Model.load': modelLoad,
 		'Document.Rows[].add': (arr: TRows, row: TRow) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change'() { },
 		'Document.Agent.change': (doc: TDocument, newVal: TAgent) => { console.dir('Agent.change'); },
@@ -49,6 +50,10 @@ const template: Template = {
 
 export default template;
 
+
+function modelLoad(root) {
+	console.dir(root.Document.$permissions);
+}
 
 function docNoChanged(this: TRoot, doc: TDocument, newVal:number, oldVal:number): void {
 	console.log(this.Document.$isNew);
