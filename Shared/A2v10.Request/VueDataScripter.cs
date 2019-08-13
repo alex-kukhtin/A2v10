@@ -23,6 +23,7 @@ namespace A2v10.Request
 
 (function() {
 	const DataModelController = component('baseController');
+	const eventBus = require('std:eventBus');
 
 	const utils = require('std:utils');
 	const uPeriod = require('std:period');
@@ -85,6 +86,7 @@ namespace A2v10.Request
 
 		internal const String FOOTER =
 		@"
+eventBus.$emit('beginLoad');
 const vm = new DataModelController({
 	el:'#$(RootId)',
 	props: {
@@ -96,6 +98,9 @@ const vm = new DataModelController({
 		utils() { return utils; },
 		period() { return uPeriod; }
 	},
+	mounted() {
+		eventBus.$emit('endLoad');
+	}
 });
 
 	vm.$data._host_ = {

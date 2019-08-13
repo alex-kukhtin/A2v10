@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
+// 20190813-7521
 // app.js
 
 "use strict";

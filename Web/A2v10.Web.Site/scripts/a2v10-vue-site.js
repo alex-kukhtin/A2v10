@@ -1,6 +1,6 @@
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
+// 20190813-7521
 // app.js
 
 "use strict";
@@ -1927,6 +1927,7 @@ app.modules['std:http'] = function () {
 			fc.__vue__.$destroy();
 		}
 		return new Promise(function (resolve, reject) {
+			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
 					if (html.startsWith('<!DOCTYPE')) {
@@ -1969,9 +1970,11 @@ app.modules['std:http'] = function () {
 						}
 					}
 					resolve(true);
+					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
 					reject(error);
+					eventBus.$emit('endLoad');
 				});
 		});
 	}
@@ -4543,7 +4546,7 @@ Vue.component('a2-pager', {
 	const htmlTools = require('std:html', true /*no error*/);
 
 	const store = component('std:store');
-	const documentTitle = component("std:doctitle", true /*no error*/);
+	const documentTitle = component('std:doctitle', true /*no error*/);
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -5701,6 +5704,8 @@ Vue.component('a2-pager', {
 		},
 		beforeCreate() {
 			__createStartTime = performance.now();
+		},
+		mounted() {
 		},
 		updated() {
 			if (log)

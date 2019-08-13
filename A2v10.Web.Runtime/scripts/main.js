@@ -1,6 +1,6 @@
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190226-7444
+// 20190813-7521
 // app.js
 
 "use strict";
@@ -1453,6 +1453,7 @@ app.modules['std:http'] = function () {
 			fc.__vue__.$destroy();
 		}
 		return new Promise(function (resolve, reject) {
+			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
 					if (html.startsWith('<!DOCTYPE')) {
@@ -1495,9 +1496,11 @@ app.modules['std:http'] = function () {
 						}
 					}
 					resolve(true);
+					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
 					reject(error);
+					eventBus.$emit('endLoad');
 				});
 		});
 	}
@@ -9994,7 +9997,7 @@ Vue.directive('resize', {
 	const htmlTools = require('std:html', true /*no error*/);
 
 	const store = component('std:store');
-	const documentTitle = component("std:doctitle", true /*no error*/);
+	const documentTitle = component('std:doctitle', true /*no error*/);
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -11153,6 +11156,8 @@ Vue.directive('resize', {
 		beforeCreate() {
 			__createStartTime = performance.now();
 		},
+		mounted() {
+		},
 		updated() {
 			if (log)
 				log.time('update time:', __updateStartTime, false);
@@ -11164,7 +11169,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180402-7475*/
+/*20180813-7521*/
 /* controllers/shell.js */
 
 (function () {
@@ -11744,6 +11749,7 @@ Vue.directive('resize', {
 		data() {
 			return {
 				requestsCount: 0,
+				loadsCount:0,
 				debugShowTrace: false,
 				debugShowModel: false,
 				feedbackVisible: false,
@@ -11885,19 +11891,40 @@ Vue.directive('resize', {
 				window.__requestsCount__ = me.requestsCount;
 			});
 
+			eventBus.$on('beginLoad', () => {
+				if (window.__loadsCount__ === undefined)
+					window.__loadsCount__ = 0;
+				me.loadsCount += 1;
+				window.__loadsCount__ = me.loadsCount;
+			});
+			eventBus.$on('endLoad', () => {
+				me.loadsCount -= 1;
+				window.__loadsCount__ = me.loadsCount;
+			});
+
 			eventBus.$on('closeAllPopups', popup.closeAll);
-		}
+	}
 	});
 
 	app.components['std:shellController'] = shell;
 })();	
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
+/*20180813-7521*/
+
 (function () {
 
 	const store = component('std:store');
 
 	window.__tests__ = {
-		$navigate: navigate
+		$navigate: navigate,
+		$isReady: function () {
+			console.dir('from isReady:' + window.__requestsCount__);
+			return document.readyState === 'complete' &&
+				window.__requestsCount__ + window.__loadsCount__ === 0;
+		}
 	};
+
 
 	function navigate(url) {
 		store.commit('navigate', { url: url });

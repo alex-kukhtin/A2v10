@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180402-7475*/
+/*20180813-7521*/
 /* controllers/shell.js */
 
 (function () {
@@ -580,6 +580,7 @@
 		data() {
 			return {
 				requestsCount: 0,
+				loadsCount:0,
 				debugShowTrace: false,
 				debugShowModel: false,
 				feedbackVisible: false,
@@ -721,8 +722,19 @@
 				window.__requestsCount__ = me.requestsCount;
 			});
 
+			eventBus.$on('beginLoad', () => {
+				if (window.__loadsCount__ === undefined)
+					window.__loadsCount__ = 0;
+				me.loadsCount += 1;
+				window.__loadsCount__ = me.loadsCount;
+			});
+			eventBus.$on('endLoad', () => {
+				me.loadsCount -= 1;
+				window.__loadsCount__ = me.loadsCount;
+			});
+
 			eventBus.$on('closeAllPopups', popup.closeAll);
-		}
+	}
 	});
 
 	app.components['std:shellController'] = shell;

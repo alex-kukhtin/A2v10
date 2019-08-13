@@ -113,6 +113,7 @@ app.modules['std:http'] = function () {
 			fc.__vue__.$destroy();
 		}
 		return new Promise(function (resolve, reject) {
+			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
 					if (html.startsWith('<!DOCTYPE')) {
@@ -155,9 +156,11 @@ app.modules['std:http'] = function () {
 						}
 					}
 					resolve(true);
+					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
 					reject(error);
+					eventBus.$emit('endLoad');
 				});
 		});
 	}

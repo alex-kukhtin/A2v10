@@ -20,7 +20,7 @@
 	const htmlTools = require('std:html', true /*no error*/);
 
 	const store = component('std:store');
-	const documentTitle = component("std:doctitle", true /*no error*/);
+	const documentTitle = component('std:doctitle', true /*no error*/);
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -1178,6 +1178,8 @@
 		},
 		beforeCreate() {
 			__createStartTime = performance.now();
+		},
+		mounted() {
 		},
 		updated() {
 			if (log)
