@@ -6,7 +6,7 @@ function msgbox(a) {
 }
 class Test {
     constructor() {
-        this.x = 2;
+        this.x = 355;
     }
 }
 exports.default = Test;

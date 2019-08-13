@@ -16,7 +16,7 @@ namespace A2v10.Web.Mvc.Filters
 			if (rqUrl != null)
 				bMobile = rqUrl.Host.StartsWith("m.");
 			var serviceLocator = ServiceLocator.Current;
-			serviceLocator.GetService<IApplicationHost>().Mobile = false;// true; //bMobile;
+			serviceLocator.GetService<IApplicationHost>().Mobile = bMobile;
 		}
 	}
 }

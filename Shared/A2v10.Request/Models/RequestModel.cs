@@ -264,20 +264,24 @@ namespace A2v10.Request
 		public String schema;
 		public String model;
 		public String view;
+		public String viewMobile;
 		public String template;
 	}
 
 	public abstract class RequestView : RequestBase
 	{
 		public String view;
+		public String viewMobile;
 		public String hook;
 		public Boolean indirect;
 		public String target;
 		public String targetId;
 		public TargetModel targetModel;
 
-		public String GetView()
+		public String GetView(Boolean mobile)
 		{
+			if (mobile && !String.IsNullOrEmpty(viewMobile))
+				return viewMobile;
 			return view;
 		}
 
@@ -285,9 +289,9 @@ namespace A2v10.Request
 
 		public virtual Boolean IsDialog { get { return false; } }
 
-		public String GetRelativePath(String extension)
+		public String GetRelativePath(String extension, Boolean mobile)
 		{
-			return $"~/{Path}/{GetView()}{extension}";
+			return $"~/{Path}/{GetView(mobile)}{extension}";
 		}
 
 		public IModelHandler GetHookHandler()

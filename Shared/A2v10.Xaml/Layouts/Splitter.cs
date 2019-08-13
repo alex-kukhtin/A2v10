@@ -60,6 +60,7 @@ namespace A2v10.Xaml
 				return;
 			var spl = new TagBuilder("div", "splitter");
 			onRender?.Invoke(spl);
+			spl.MergeAttribute("key", Guid.NewGuid().ToString()); // disable vue reusing
 			MergeAttributes(spl, context);
 			if (Height != null)
 				spl.MergeStyle("height", Height.Value);

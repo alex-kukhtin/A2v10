@@ -14,6 +14,7 @@ namespace A2v10.Xaml
 		Large = 2,
 	}
 
+
 	public class Dialog : RootContainer, ISupportTwoPhaseRendering
 	{
 		public String Title { get; set; }
@@ -142,6 +143,8 @@ namespace A2v10.Xaml
 			close.SetInnerText("&#x2715;");
 			close.Render(context);
 
+			RenderHelp(context);
+
 			header.RenderEnd(context);
 		}
 
@@ -159,7 +162,7 @@ namespace A2v10.Xaml
 			var footer = new TagBuilder("div", "modal-footer");
 			footer.RenderStart(context);
 
-			RenderHelp(context);
+			//RenderHelp(context);
 			foreach (var b in Buttons)
 				b.RenderElement(context);
 
@@ -172,28 +175,27 @@ namespace A2v10.Xaml
 		{
 			if (!HasHelp)
 				return;
-			//<a class="btn-help"><i class="ico ico-help"></i>Справка</a>
 			var ha = new TagBuilder("a", "btn-help");
 			ha.MergeAttribute("rel", "help");
-			// TODO: Help path
+			ha.MergeAttribute("title", context.Localize("@[Help]"));
+
 			var hbind = GetBinding(nameof(HelpUrl));
 			if (hbind != null)
 			{
 				String hpath = hbind.GetPathFormat(context);
-				ha.MergeAttribute("@click.prevent", $"$showHelp({hpath})");
+				ha.MergeAttribute("@click.stop.prevent", $"$showHelp({hpath})");
 				ha.MergeAttribute(":href", $"$helpHref({hpath})");
 			}
 			else if (!String.IsNullOrEmpty(HelpUrl))
 			{
-				ha.MergeAttribute("@click.prevent", $"$showHelp('{HelpUrl}')");
+				ha.MergeAttribute("@click.stop.prevent", $"$showHelp('{HelpUrl}')");
 				ha.MergeAttribute(":href", $"$helpHref('{HelpUrl}')");
 			}
 			ha.RenderStart(context);
 			new TagBuilder("i", "ico ico-help")
 				.Render(context);
-			context.Writer.Write(context.Localize("@[Help]"));
+			//context.Writer.Write(context.Localize("@[Help]"));
 			ha.RenderEnd(context);
-			new TagBuilder("div", "aligner").Render(context);
 		}
 
 		public void RenderSecondPhase(RenderContext context)

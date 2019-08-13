@@ -7,6 +7,6 @@ function msgbox(a: string):void {
 export default class Test {
 	x: number;
 	constructor() {
-		this.x = 2;
+		this.x = 355;
 	}
 }

@@ -56,7 +56,8 @@ namespace A2v10.Xaml
 
 		protected override void RenderHelp(RenderContext context)
 		{
-			// do nothing
+			// on header
+			base.RenderHelp(context);
 		}
 
 		protected override void RenderFooter(RenderContext context)

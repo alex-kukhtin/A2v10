@@ -68,6 +68,8 @@ namespace A2v10.Request
 		public IApplicationHost Host => _host;
 		public IDataScripter Scripter => _scripter;
 
+		public Boolean Mobile => _host.Mobile;
+
 		public Boolean Admin { get; set; }
 
 		public String CurrentLang
@@ -152,6 +154,7 @@ namespace A2v10.Request
 				}
 				rw.model = innerModel.Root.Resolve(rw.targetModel.model);
 				rw.view = innerModel.Root.Resolve(rw.targetModel.view);
+				rw.viewMobile = innerModel.Root.Resolve(rw.targetModel.viewMobile);
 				rw.schema = innerModel.Root.Resolve(rw.targetModel.schema);
 				if (String.IsNullOrEmpty(rw.schema))
 					rw.schema = null;
@@ -224,6 +227,7 @@ namespace A2v10.Request
 			{
 				// side effect!
 				rw.view = model.Root.Resolve(rw.view);
+				rw.viewMobile = model.Root.Resolve(rw.viewMobile);
 				rw.template = model.Root.Resolve(rw.template);
 			}
 
@@ -264,7 +268,7 @@ namespace A2v10.Request
 			String modelScript = si.Script;
 			// TODO: use view engines
 			// try xaml
-			String fileName = rw.GetView() + ".xaml";
+			String fileName = rw.GetView(_host.Mobile) + ".xaml";
 			String basePath = rw.ParentModel.BasePath;
 
 			String filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
@@ -297,7 +301,7 @@ namespace A2v10.Request
 			else
 			{
 				// try html
-				fileName = rw.GetView() + ".html";
+				fileName = rw.GetView(_host.Mobile) + ".html";
 				filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
 				if (_host.ApplicationReader.FileExists(filePath))
 				{
@@ -315,7 +319,7 @@ namespace A2v10.Request
 			}
 			if (!bRendered)
 			{
-				throw new RequestModelException($"The view '{rw.GetView()}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml")}\n{rw.GetRelativePath(".html")}");
+				throw new RequestModelException($"The view '{rw.GetView(_host.Mobile)}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml", _host.Mobile)}\n{rw.GetRelativePath(".html", _host.Mobile)}");
 			}
 			writer.Write(modelScript);
 		}

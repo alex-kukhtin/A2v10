@@ -70,7 +70,7 @@ namespace A2v10.Request
 			var viewInfo = new ViewInfo()
 			{
 				PageId = pageId,
-				View = host.MakeRelativePath(rw.Path, $"{rw.GetView()}.cshtml"),
+				View = host.MakeRelativePath(rw.Path, $"{rw.GetView(_baseController.Mobile)}.cshtml"),
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath,
 				DataModel = dmrw.Model,
@@ -100,9 +100,9 @@ namespace A2v10.Request
 			var layoutText = host.ApplicationReader.ReadTextFile(String.Empty, "layout.html");
 			if (layoutText == null)
 				throw new FileNotFoundException("layout.html");
-			String bodyText = host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView()}.html");
+			String bodyText = host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView(_baseController.Mobile)}.html");
 			if (bodyText == null)
-				throw new FileNotFoundException(host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView()}.html"));
+				throw new FileNotFoundException(host.ApplicationReader.MakeFullPath(rw.Path, $"{rw.GetView(_baseController.Mobile)}.html"));
 			String script = String.Empty;
 			if (!String.IsNullOrEmpty(rw.script))
 			{

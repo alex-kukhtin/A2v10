@@ -1,11 +1,11 @@
 
-/* 20190415-7055 */
+/* 20190813-7519 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 15 apr 2019
-module version : 7055
+Last updated : 13 aug 2019
+module version : 7519
 */
 ------------------------------------------------
 set noexec off;
@@ -130,14 +130,15 @@ go
 create procedure a2ui.[Menu.User.Load]
 @TenantId int = null,
 @UserId bigint,
+@Mobile bit = 0,
 @Groups nvarchar(255) = null -- for use claims
 as
 begin
 	set nocount on;
-	-- TODO: 
-	-- 1. get default root for user
-	-- 4.
-	declare @RootId bigint = 1;
+	declare @RootId bigint;
+	set @RootId = 1;
+	if @Mobile = 1
+		set @RootId = 2;
 	with RT as (
 		select Id=m0.Id, ParentId = m0.Parent, [Level]=0
 			from a2ui.Menu m0

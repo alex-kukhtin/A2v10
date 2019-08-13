@@ -86,7 +86,7 @@ namespace A2v10.Request
 			var rw = requestModel.CurrentDialog;
 			ViewInfo viewInfo = new ViewInfo()
 			{
-				View = $"{rw.Path}/{rw.GetView()}",
+				View = $"{rw.Path}/{rw.GetView(_baseController.Host.Mobile)}",
 				PageId = $"el{Guid.NewGuid()}",
 				Id = rw.Id
 			};

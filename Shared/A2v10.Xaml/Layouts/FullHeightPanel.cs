@@ -52,6 +52,7 @@ namespace A2v10.Xaml
 			if (SkipRender(context))
 				return;
 			var panel = new TagBuilder("div", "full-height-panel", IsInGrid);
+			panel.MergeAttribute("key", Guid.NewGuid().ToString()); // disable vue reusing
 			MergeAttributes(panel, context);
 			if (MinWidth != null)
 				panel.MergeStyleUnit("min-width", MinWidth.Value);

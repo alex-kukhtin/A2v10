@@ -81,10 +81,25 @@
 	.btnclose {
 		float: right;
 		color: #aaa;
-		line-height:1.6rem;
+		line-height: 1.6rem;
 
 		&:hover, &:active, &:focus {
 			color: #555;
+			background-color: lighten(@dialog-header-bg-color, 10%);
+			border-color: @tb-hover-brd-color;
+		}
+	}
+
+	.btn-help {
+		float: right;
+		color: #999;
+		line-height: 1.6rem; /* ? */
+		padding: 0 4px;
+		margin-right: .2rem;
+		border:1px solid  transparent;
+
+		&:hover {
+			/*color: @link-hover-color-dark;*/
 			background-color: lighten(@dialog-header-bg-color, 10%);
 			border-color: @tb-hover-brd-color;
 		}

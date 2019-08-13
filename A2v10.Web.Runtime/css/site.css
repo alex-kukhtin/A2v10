@@ -3885,6 +3885,20 @@ ul.news-list > li {
   background-color: #fff9d0;
   border-color: #e5c365;
 }
+.modal-header .btn-help {
+  float: right;
+  color: #999;
+  line-height: 1.6rem;
+  /* ? */
+  padding: 0 4px;
+  margin-right: 0.2rem;
+  border: 1px solid  transparent;
+}
+.modal-header .btn-help:hover {
+  /*color: @link-hover-color-dark;*/
+  background-color: #fff9d0;
+  border-color: #e5c365;
+}
 .modal-footer {
   padding: 0.75rem;
   background-color: #f9f9f9;
