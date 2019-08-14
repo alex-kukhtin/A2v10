@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190718-7506
+// 20190814-7522
 // controllers/base.js
 
 (function () {
@@ -59,7 +59,8 @@
 				__baseUrl__: '',
 				__baseQuery__: {},
 				__requestsCount__: 0,
-				__lockQuery__: true
+				__lockQuery__: true,
+				__testId__: null
 			};
 		},
 
@@ -1138,6 +1139,19 @@
 				let arg = { url: this.$baseUrl, result: false };
 				eventBus.$emit('isModalRequery', arg);
 				return arg.result;
+			},
+			__invoke__test__(args) {
+				args = args || {};
+				if (args.target !== 'controller')
+					return;
+				if (args.testId !== this.__testId__)
+					return;
+				const root = this.$data;
+				switch (args.action) {
+					case 'eval':
+						args.result = utils.eval(root, args.path);
+						break;
+				}
 			}
 		},
 		created() {
@@ -1149,6 +1163,7 @@
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 			eventBus.$on('childrenSaved', this.__notified);
+			eventBus.$on('invokeTest', this.__invoke__test__);
 
 			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
@@ -1168,6 +1183,7 @@
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
 			eventBus.$off('childrenSaved', this.__notified);
+			eventBus.$off('invokeTest', this.__invoke__test__);
 
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
@@ -1180,6 +1196,9 @@
 			__createStartTime = performance.now();
 		},
 		mounted() {
+			let testId = this.$el.getAttribute('test-id');
+			if (testId)
+				this.__testId__ = testId;
 		},
 		updated() {
 			if (log)

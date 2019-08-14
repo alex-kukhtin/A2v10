@@ -1,7 +1,17 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20190814-7522*/
 /* directives/resize.js */
+
+function findHandle(el) {
+	for (let ch of el.childNodes) {
+		if (ch.nodeType === Node.ELEMENT_NODE) {
+			if (ch.classList.contains('drag-handle'))
+				return ch;
+		}
+	}
+	return null;
+}
 
 Vue.directive('resize', {
 	unbind(el, binding, vnode) {
@@ -18,10 +28,7 @@ Vue.directive('resize', {
 		if (!el._parts) return;
 		let p = el._parts;
 		if (p.init) return;
-		//if (!p.grid.clientWidth) return; // yet not inserted
 		p.init = true;
-
-		p.handle = findHandle(p.grid);
 
 		let dataMinWidth = el.getAttribute('data-min-width');
 		let secondMinWidth = el.getAttribute('second-min-width');
@@ -54,34 +61,18 @@ Vue.directive('resize', {
 				return MIN_WIDTH;
 			return cw;
 		}
-
-		function findHandle(el) {
-			for (let ch of el.childNodes) {
-				if (ch.nodeType === Node.ELEMENT_NODE) {
-					if (ch.classList.contains('drag-handle'))
-						return ch;
-				}
-			}
-			return null;
-		}
-
 	},
+
 	inserted(el, binding, vnode) {
 
 		const HANDLE_WIDTH = 6;
 
 		let grid = el.parentElement;
 
-		let dataMinWidth = el.getAttribute('data-min-width');
-
-		if (dataMinWidth) {
-			grid.style.visibility = 'hidden'; // avoid flickering 
-		}
-
 		let parts = {
 			handleWidth: HANDLE_WIDTH,
 			grid: grid,
-			handle: null,
+			handle: findHandle(grid),
 			resizing: false,
 			firstWidth: 0,
 			minWidth: 0,

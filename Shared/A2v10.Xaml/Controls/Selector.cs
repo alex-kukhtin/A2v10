@@ -34,6 +34,7 @@ namespace A2v10.Xaml
 		public SelectorPanelPlacement PanelPlacement { get; set; }
 
 		public Boolean ShowCaret { get; set; }
+		public Boolean ShowClear { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -59,6 +60,8 @@ namespace A2v10.Xaml
 			}
 			if (ShowCaret)
 				input.MergeAttribute(":caret", "true");
+			if (ShowClear)
+				input.MergeAttribute(":has-clear", "true");
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);

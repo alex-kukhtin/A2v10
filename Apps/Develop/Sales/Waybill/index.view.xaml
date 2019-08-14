@@ -63,7 +63,7 @@
 	</Page.Pager>
 	<!--="{Bind Parent.GroupBy} ItemsSource="{Bind Parent.ItemsSource}" -->
 	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column"
-				Sort="True" FixedHeader="True"
+				Sort="True" FixedHeader="True" TestId="MyDataGrid"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"

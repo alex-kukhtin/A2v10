@@ -70,7 +70,7 @@
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
 			Label="@[Purchaser]" Value="{Bind Document.Agent}"  TextValue="{Bind Document.Memo}"
 				CreateNewCommand="{BindCmd Execute, CommandName='createNewCustomer'}"
-				Delegate="fetchCustomers" DisplayProperty="Name" ShowCaret="True">
+				Delegate="fetchCustomers" DisplayProperty="Name" ShowCaret="True" ShowClear="True">
 			<Selector.Link>
 				<Hyperlink Content="Зберегти цей рахунок"/>
 			</Selector.Link>

@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 	{
 		public String Title { get; set; }
 		public String HelpUrl { get; set; }
+		public String TestId { get; set; }
 
 		public DialogSize Size { get; set; }
 		public Length Width { get; set; }
@@ -57,6 +58,10 @@ namespace A2v10.Xaml
 			dialog.AddCssClassBoolNo(UserSelect, "user-select");
 
 			dialog.MergeAttribute("data-controller-attr", GetControllerAttributes());
+
+			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
+				dialog.MergeAttribute("test-id", TestId);
+
 
 			SetSize(dialog);
 

@@ -5208,7 +5208,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190403-7478
+// 20190814-7522
 
 // components/selector.js
 
@@ -5236,6 +5236,7 @@ Vue.component('validator-control', {
 			:disabled="disabled" />
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
+		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible">&#x2715</a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
@@ -5273,7 +5274,8 @@ Vue.component('validator-control', {
 			listHeight: String,
 			createNew: Function,
 			placement: String,
-			caret: Boolean
+			caret: Boolean,
+			hasClear: Boolean
 		},
 		data() {
 			return {
@@ -5298,6 +5300,11 @@ Vue.component('validator-control', {
 			},
 			canNew() {
 				return !!this.createNew;
+			},
+			clearVisible() {
+				if (!this.hasClear) return false;
+				let to = this.item[this.prop];
+				return to && utils.isDefined(to) && !to.$isEmpty;
 			},
 			hasText() { return !!this.textProp; },
 			newText() {
@@ -5535,7 +5542,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190418-7488
+// 20190814-7522
 // components/datagrid.js*/
 
 (function () {
@@ -5558,6 +5565,7 @@ Vue.component('validator-control', {
 
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
 
 	/* group marker
@@ -5571,7 +5579,7 @@ Vue.component('validator-control', {
 	 */
 
 	const dataGridTemplate = `
-<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">
 	<div class="data-grid-header-border" v-if="fixedHeader" />
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<div class="data-grid-empty" v-if="$isEmpty">
@@ -6065,7 +6073,8 @@ Vue.component('validator-control', {
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
 			hitItem: Function,
-			emptyPanelCallback: Function
+			emptyPanelCallback: Function,
+			testId: String
 		},
 		template: dataGridTemplate,
 		components: {
@@ -6336,6 +6345,23 @@ Vue.component('validator-control', {
 				// lev 1-based
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
+			},
+			__invoke__test__(args) {
+				args = args || {};
+				if (args.target !== 'datagrid')
+					return;
+				if (args.testId !== this.testId)
+					return;
+				switch (args.action) {
+					case 'selectRow':
+						this.$items.forEach(e => {
+							if (e.$id.toString() === args.id) {
+								e.$select();
+								args.result = 'success';
+							}
+						});
+						break;
+				}
 			}
 		},
 		updated() {
@@ -6347,6 +6373,14 @@ Vue.component('validator-control', {
 				let tr = rows[ix].$refs.tr;
 				tr.scrollIntoViewCheck();
 			}
+		},
+		mounted() {
+			if (this.testId)
+				eventBus.$on('invokeTest', this.__invoke__test__);
+		},
+		beforeDestroy() {
+			if (this.testId)
+				eventBus.$off('invokeTest', this.__invoke__test__);
 		}
 	});
 })();
@@ -9808,10 +9842,20 @@ Vue.directive('settabindex', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20190814-7522*/
 /* directives/resize.js */
+
+function findHandle(el) {
+	for (let ch of el.childNodes) {
+		if (ch.nodeType === Node.ELEMENT_NODE) {
+			if (ch.classList.contains('drag-handle'))
+				return ch;
+		}
+	}
+	return null;
+}
 
 Vue.directive('resize', {
 	unbind(el, binding, vnode) {
@@ -9828,10 +9872,7 @@ Vue.directive('resize', {
 		if (!el._parts) return;
 		let p = el._parts;
 		if (p.init) return;
-		//if (!p.grid.clientWidth) return; // yet not inserted
 		p.init = true;
-
-		p.handle = findHandle(p.grid);
 
 		let dataMinWidth = el.getAttribute('data-min-width');
 		let secondMinWidth = el.getAttribute('second-min-width');
@@ -9864,34 +9905,18 @@ Vue.directive('resize', {
 				return MIN_WIDTH;
 			return cw;
 		}
-
-		function findHandle(el) {
-			for (let ch of el.childNodes) {
-				if (ch.nodeType === Node.ELEMENT_NODE) {
-					if (ch.classList.contains('drag-handle'))
-						return ch;
-				}
-			}
-			return null;
-		}
-
 	},
+
 	inserted(el, binding, vnode) {
 
 		const HANDLE_WIDTH = 6;
 
 		let grid = el.parentElement;
 
-		let dataMinWidth = el.getAttribute('data-min-width');
-
-		if (dataMinWidth) {
-			grid.style.visibility = 'hidden'; // avoid flickering 
-		}
-
 		let parts = {
 			handleWidth: HANDLE_WIDTH,
 			grid: grid,
-			handle: null,
+			handle: findHandle(grid),
 			resizing: false,
 			firstWidth: 0,
 			minWidth: 0,
@@ -9977,7 +10002,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190718-7506
+// 20190814-7522
 // controllers/base.js
 
 (function () {
@@ -10036,7 +10061,8 @@ Vue.directive('resize', {
 				__baseUrl__: '',
 				__baseQuery__: {},
 				__requestsCount__: 0,
-				__lockQuery__: true
+				__lockQuery__: true,
+				__testId__: null
 			};
 		},
 
@@ -11115,6 +11141,19 @@ Vue.directive('resize', {
 				let arg = { url: this.$baseUrl, result: false };
 				eventBus.$emit('isModalRequery', arg);
 				return arg.result;
+			},
+			__invoke__test__(args) {
+				args = args || {};
+				if (args.target !== 'controller')
+					return;
+				if (args.testId !== this.__testId__)
+					return;
+				const root = this.$data;
+				switch (args.action) {
+					case 'eval':
+						args.result = utils.eval(root, args.path);
+						break;
+				}
 			}
 		},
 		created() {
@@ -11126,6 +11165,7 @@ Vue.directive('resize', {
 			eventBus.$on('endRequest', this.__endRequest);
 			eventBus.$on('queryChange', this.__queryChange);
 			eventBus.$on('childrenSaved', this.__notified);
+			eventBus.$on('invokeTest', this.__invoke__test__);
 
 			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
@@ -11145,6 +11185,7 @@ Vue.directive('resize', {
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);
 			eventBus.$off('childrenSaved', this.__notified);
+			eventBus.$off('invokeTest', this.__invoke__test__);
 
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
@@ -11157,6 +11198,9 @@ Vue.directive('resize', {
 			__createStartTime = performance.now();
 		},
 		mounted() {
+			let testId = this.$el.getAttribute('test-id');
+			if (testId)
+				this.__testId__ = testId;
 		},
 		updated() {
 			if (log)
@@ -11910,11 +11954,12 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180813-7521*/
+/*20180814-7522*/
 
 (function () {
 
 	const store = component('std:store');
+	const eventBus = require('std:eventBus');
 
 	window.__tests__ = {
 		$navigate: navigate,
@@ -11922,6 +11967,10 @@ Vue.directive('resize', {
 			console.dir('from isReady:' + window.__requestsCount__);
 			return document.readyState === 'complete' &&
 				window.__requestsCount__ + window.__loadsCount__ === 0;
+		},
+		$invoke: function (args) {
+			eventBus.$emit('invokeTest', args);
+			return args.result;
 		}
 	};
 

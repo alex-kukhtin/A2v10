@@ -31,6 +31,9 @@ const template = {
 	},
 	delegates: {
 		uploadAttachment
+	},
+	commands: {
+		runTest
 	}
 };
 
@@ -66,3 +69,9 @@ function uploadAttachment(result) {
 		coll.$append(result[i]);
 }
 module.exports = template;
+
+function runTest() {
+	let args = { target: 'controller', testId: 'SupplierProps', action: 'eval', path: 'Agent.Id', result: undefined };
+	window.__tests__.$invoke(args);
+	console.dir(args.result);
+}

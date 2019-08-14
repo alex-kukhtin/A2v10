@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190418-7488
+// 20190814-7522
 // components/datagrid.js*/
 
 (function () {
@@ -23,6 +23,7 @@
 
 	const utils = require('std:utils');
 	const log = require('std:log');
+	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
 
 	/* group marker
@@ -36,7 +37,7 @@
 	 */
 
 	const dataGridTemplate = `
-<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">
 	<div class="data-grid-header-border" v-if="fixedHeader" />
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<div class="data-grid-empty" v-if="$isEmpty">
@@ -530,7 +531,8 @@
 			rowDetailsVisible: [String /*path*/, Boolean],
 			isItemActive: Function,
 			hitItem: Function,
-			emptyPanelCallback: Function
+			emptyPanelCallback: Function,
+			testId: String
 		},
 		template: dataGridTemplate,
 		components: {
@@ -801,6 +803,23 @@
 				// lev 1-based
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
+			},
+			__invoke__test__(args) {
+				args = args || {};
+				if (args.target !== 'datagrid')
+					return;
+				if (args.testId !== this.testId)
+					return;
+				switch (args.action) {
+					case 'selectRow':
+						this.$items.forEach(e => {
+							if (e.$id.toString() === args.id) {
+								e.$select();
+								args.result = 'success';
+							}
+						});
+						break;
+				}
 			}
 		},
 		updated() {
@@ -812,6 +831,14 @@
 				let tr = rows[ix].$refs.tr;
 				tr.scrollIntoViewCheck();
 			}
+		},
+		mounted() {
+			if (this.testId)
+				eventBus.$on('invokeTest', this.__invoke__test__);
+		},
+		beforeDestroy() {
+			if (this.testId)
+				eventBus.$off('invokeTest', this.__invoke__test__);
 		}
 	});
 })();

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190403-7478
+// 20190814-7522
 
 // components/selector.js
 
@@ -28,6 +28,7 @@
 			:disabled="disabled" />
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
+		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible">&#x2715</a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
@@ -65,7 +66,8 @@
 			listHeight: String,
 			createNew: Function,
 			placement: String,
-			caret: Boolean
+			caret: Boolean,
+			hasClear: Boolean
 		},
 		data() {
 			return {
@@ -90,6 +92,11 @@
 			},
 			canNew() {
 				return !!this.createNew;
+			},
+			clearVisible() {
+				if (!this.hasClear) return false;
+				let to = this.item[this.prop];
+				return to && utils.isDefined(to) && !to.$isEmpty;
 			},
 			hasText() { return !!this.textProp; },
 			newText() {

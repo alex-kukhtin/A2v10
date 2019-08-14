@@ -2614,6 +2614,9 @@ pre.a2-code {
   padding-right: 8px;
   padding-top: 0 !important;
 }
+.input-group a.selector-clear {
+  padding-right: 8px;
+}
 .input-group > .selector-pane {
   border: 1px solid #208cf8;
   position: absolute;
