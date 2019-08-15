@@ -38,11 +38,9 @@
 		const root = window.$$rootUrl;
 		const routing = require('std:routing');
 		const url = `${root}/${routing.dataUrl()}/invoke`;
-		const cmd = args.command;
-		let lp = cmd.lastIndexOf('/');
 		const data = {
-			cmd: cmd.substring(lp + 1),
-			baseUrl: `/_page${cmd.substring(0, lp)}/index/${args.id}`,
+			cmd: args.cmd,
+			baseUrl: `/_page${args.path}/index/${args.id}`,
 			data: null
 		};
 		http.post(url, JSON.stringify(data))
