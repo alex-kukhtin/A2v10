@@ -20,8 +20,8 @@ namespace A2v10.Request
 	{
 		public void Layout(TextWriter writer, IDictionary<String, String> prms)
 		{
-			String layout = Admin ? Resources.layoutAdmin : 
-							_host.Mobile ? Resources.layoutMobile :  Resources.layout;
+			String layout = Admin ? Resources.layoutAdmin :
+							_host.Mobile ? Resources.layoutMobile : Resources.layout;
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
@@ -30,6 +30,41 @@ namespace A2v10.Request
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			writer.Write(sb.ToString());
+		}
+
+		void SetMulitTenantParams(ExpandoObject root, ExpandoObject prms)
+		{
+			if (root == null)
+				return;
+			// get keys and features
+			StringBuilder strKeys = new StringBuilder();
+			StringBuilder strFeatures = new StringBuilder();
+			var modules = root.Eval<List<ExpandoObject>>("Modules");
+			var features = root.Eval<List<ExpandoObject>>("Features");
+			if (modules != null)
+			{
+				modules.ForEach(m =>
+				{
+					var key = m.Eval<String>("Module");
+					if (key != null)
+						strKeys.Append(key).Append(',');
+				});
+			}
+			if (features != null)
+			{
+				features.ForEach(f =>
+				{
+					var feature = f.Eval<String>("Feature");
+					if (feature != null)
+						strFeatures.Append(feature).Append(",");
+				});
+				if (strKeys.Length > 0)
+					prms.Set("Keys", strKeys.RemoveTailComma().ToString());
+				if (strFeatures.Length > 0)
+					prms.Set("Features", strFeatures.RemoveTailComma().ToString());
+				else
+					prms.Set("Features", "____"); // all features disabled
+			}
 		}
 
 		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
@@ -41,16 +76,9 @@ namespace A2v10.Request
 
 			if (_host.IsMultiTenant)
 			{
-				if (!userInfo.IsTenantAdmin)
-				{
-					// the user is NOT a tenant admin
-					var menuKeys = await _dbContext.LoadListAsync<TenantUserModel>(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", loadPrms);
-					if (menuKeys != null)
-					{
-						var visibleKeys = String.Join(";", menuKeys);
-						loadPrms.Set("Keys", visibleKeys);
-					}
-				}
+				// for all users (include features)
+				var permssionModel = await _dbContext.LoadModelAsync(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", loadPrms);
+				SetMulitTenantParams(permssionModel?.Root, loadPrms);
 			}
 
 			if (_host.Mobile)
@@ -117,7 +145,7 @@ namespace A2v10.Request
 			}
 		}
 
-			public void GetAppStyleConent(TextWriter writer)
+		public void GetAppStyleConent(TextWriter writer)
 		{
 			GetAppFiles("css", writer);
 		}

@@ -734,9 +734,9 @@ begin
 		begin
 			declare @sql nvarchar(255);
 			declare @prms nvarchar(255);
-			set @sql = N'a2security.OnCreateNewUser @TenantId, @userId';
-			set @prms = N'@TenantId int, @userId bigint';
-			exec sp_executesql @sql, @prms, @tenantId, @userId;
+			set @sql = N'a2security.OnCreateNewUser @TenantId, @CompanyId, @UserId';
+			set @prms = N'@TenantId int, @CompanyId bigint, @UserId bigint';
+			exec sp_executesql @sql, @prms, @tenantId, 1, @userId;
 		end
 
 		commit tran;
