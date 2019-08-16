@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 
 		public BorderStyle BorderStyle { get; set; }
 		public AlignItems AlignItems { get; set; }
+		public Length MinWidth { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -31,6 +32,8 @@ namespace A2v10.Xaml
 			list.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			if (BorderStyle != BorderStyle.None)
 				list.AddCssClass($"border-{BorderStyle.ToString().ToKebabCase()}");
+			if (MinWidth != null)
+				list.MergeStyleUnit("min-width", MinWidth.Value);
 			list.RenderStart(context);
 			RenderChildren(context);
 			list.RenderEnd(context);

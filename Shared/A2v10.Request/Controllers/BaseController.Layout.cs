@@ -32,10 +32,20 @@ namespace A2v10.Request
 			writer.Write(sb.ToString());
 		}
 
-		void SetMulitTenantParams(ExpandoObject root, ExpandoObject prms)
+		async Task<String> ProcessMultiTenantParams(ExpandoObject prms)
 		{
+			var permssionModel = await _dbContext.LoadModelAsync(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", prms);
+			if (permssionModel == null)
+				return null;
+			var root = permssionModel.Root;
 			if (root == null)
-				return;
+				return null;
+
+			// current company id
+			Int64 currentCompanyId = root.Eval<Int64>("CurrentCompany.Id");
+			if (currentCompanyId != 0)
+				_userStateManager.SetUserCompanyId(currentCompanyId);
+
 			// get keys and features
 			StringBuilder strKeys = new StringBuilder();
 			StringBuilder strFeatures = new StringBuilder();
@@ -65,6 +75,12 @@ namespace A2v10.Request
 				else
 					prms.Set("Features", "____"); // all features disabled
 			}
+
+			// avaliable companies
+			var companies = root.Eval<List<ExpandoObject>>("Companies");
+			if (companies != null)
+				return JsonConvert.SerializeObject(companies, JsonHelpers.StandardSerializerSettings);
+			return null;
 		}
 
 		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
@@ -74,11 +90,12 @@ namespace A2v10.Request
 			ExpandoObject loadPrms = new ExpandoObject();
 			setParams?.Invoke(loadPrms);
 
+			String jsonCompanies = null;
+
 			if (_host.IsMultiTenant)
 			{
 				// for all users (include features)
-				var permssionModel = await _dbContext.LoadModelAsync(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", loadPrms);
-				SetMulitTenantParams(permssionModel?.Root, loadPrms);
+				jsonCompanies = await ProcessMultiTenantParams(loadPrms);
 			}
 
 			if (_host.Mobile)
@@ -96,6 +113,7 @@ namespace A2v10.Request
 
 			StringBuilder sb = new StringBuilder(shell);
 			sb.Replace("$(Menu)", jsonMenu)
+			.Replace("$(Companies)", jsonCompanies ?? "null")
 			.Replace("$(AppVersion)", _host.AppVersion)
 			.Replace("$(Admin)", userInfo.IsAdmin ? "true" : "false")
 			.Replace("$(TenantAdmin)", userInfo.IsTenantAdmin ? "true" : "false")

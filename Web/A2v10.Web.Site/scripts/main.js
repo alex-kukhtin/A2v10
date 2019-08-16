@@ -7929,7 +7929,7 @@ TODO:
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190305-7456
+// 20190816-7525
 // components/modal.js
 
 
@@ -8148,13 +8148,9 @@ TODO:
 				if (this.dialog.buttons)
 					return this.dialog.buttons;
 				else if (this.dialog.style === 'alert')
-					return [{ text: okText, result: false, tabindex: 1 }];
-				else if (this.dialog.style === 'alert-ok') {
-					this.dialog.style = 'alert';
 					return [{ text: okText, result: true, tabindex: 1 }];
-				}
 				else if (this.dialog.style === 'info')
-					return [{ text: okText, result: false, tabindex:1 }];
+					return [{ text: okText, result: true, tabindex:1 }];
 				return [
 					{ text: okText, result: true, tabindex:2 },
 					{ text: cancelText, result: false, tabindex:1 }
@@ -8965,9 +8961,9 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20190816-7525*/
 /*components/newbutton.js*/
 
 (function () {
@@ -8977,7 +8973,7 @@ Vue.component('a2-panel', {
 	const eventBus = require('std:eventBus');
 
 	const newButtonTemplate =
-`<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
+`<div class="dropdown dir-down a2-new-btn separate" v-dropdown v-if="isVisible">
 	<button class="btn btn-icon" :class="btnClass" toggle aria-label="New"><i class="ico" :class="iconClass"></i></button>
 	<div class="dropdown-menu menu down-left">
 		<div class="super-menu" :class="cssClass">
@@ -9071,20 +9067,27 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190807-7516*/
+/*20190816-7525*/
 /*components/newbutton.js*/
 
 (function () {
 
 
 	const companyButtonTemplate =
-`<div class="a2-company-btn"><div class="dropdown dir-down" v-dropdown v-if="isVisible">
+		`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown v-if="isVisible">
 	<button class="btn" :class="btnClass" toggle aria-label="Company">
-		<i class="ico" :class="iconClass"></i>
-		<span class="company-name">Название компании с очень очень длинным текстом</span>
+		<i class="ico ico-home"></i>
+		<span class="company-name" v-text=companyName></span>
 		<span class="caret"/>
 	</button>
-	<div class="dropdown-menu menu down-left separate">
+	<div class="dropdown-menu menu down-left">
+		<a v-for="comp in source" @click.prevent="selectCompany(comp)" href="" tabindex="-1" class="dropdown-item">
+			<i class="ico" :class="icoClass(comp)"/><span class="company-menu-name" v-text="comp.Name"/>
+		</a>
+		<div class="divider" v-if="hasLinks"/>
+		<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1">
+			<i class="ico ico-none"/><span v-text="link.Name" />
+		</a>
 	</div>
 </div></div>
 `;
@@ -9092,13 +9095,21 @@ Vue.component('a2-panel', {
 	Vue.component('a2-company-button', {
 		template: companyButtonTemplate,
 		props: {
+			source: Array,
+			links: Array
 		},
 		computed: {
+			hasLinks() {
+				return this.links && this.links.length;
+			},
+			companyName() {
+				let comp = this.source.find(x => x.Current);
+				if (comp)
+					return comp.Name;
+				return "*** UNSELECTED ***";
+			},
 			isVisible() {
 				return true;
-			},
-			iconClass() {
-				return 'ico-home'; // this.icon ? 'ico-' + this.icon : '';
 			},
 			btnClass() {
 				return "btn-companyname"; //this.btnStyle ? 'btn-' + this.btnStyle : '';
@@ -9107,6 +9118,21 @@ Vue.component('a2-panel', {
 		created() {
 		},
 		methods: {
+			selectCompany(comp) {
+				const http = require("std:http");
+				const urlTools = require("std:url");
+				const rootUrl = window.$$rootUrl;
+				const data = JSON.stringify({ company: comp.Id });
+				http.post(urlTools.combine(rootUrl, 'account/switchtocompany'), data)
+					.then(x => {
+						window.location.assign(rootUrl); // reload
+					}).catch(err => {
+						alert(err);
+					});
+			},
+			icoClass(cmp) {
+				return cmp.Current ? 'ico-check' : 'ico-none';
+			}
 		}
 	});
 
@@ -11744,7 +11770,7 @@ Vue.directive('resize', {
 			if (!this.menu) {
 				let dlgData = {
 					promise: null, data: {
-						message: locale.$AccessDenied, title: locale.$Error, style: 'alert-ok'
+						message: locale.$AccessDenied, title: locale.$Error, style: 'alert'
 					}
 				};
 				eventBus.$emit('confirm', dlgData);

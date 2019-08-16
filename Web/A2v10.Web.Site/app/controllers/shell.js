@@ -531,7 +531,7 @@
 			if (!this.menu) {
 				let dlgData = {
 					promise: null, data: {
-						message: locale.$AccessDenied, title: locale.$Error, style: 'alert-ok'
+						message: locale.$AccessDenied, title: locale.$Error, style: 'alert'
 					}
 				};
 				eventBus.$emit('confirm', dlgData);

@@ -13,10 +13,16 @@ namespace A2v10.Web.Config
 		private readonly IApplicationHost _host;
 
 		const String _sessionKey = "_userState_";
+		const String _userCompanyKey = "_userCompany_";
 
 		class UserState
 		{
 			public Boolean ReadOnly { get; set; }
+		}
+
+		class UserCompany
+		{
+			public Int64 CompanyId { get; set; }
 		}
 
 		public WebUserStateManager(IApplicationHost host, IDbContext dbContext)
@@ -39,6 +45,21 @@ namespace A2v10.Web.Config
 				userState = SetUserState(userId);
 			return userState.ReadOnly;
 		}
+
+		public void SetUserCompanyId(Int64 CompanyId)
+		{
+			var userCompany = new UserCompany() { CompanyId = CompanyId };
+			HttpContext.Current.Session[_userCompanyKey] = userCompany;
+		}
+		public Int64 UserCompanyId(Int32 TenantId, Int64 UserId)
+		{
+			if (UserId == 0)
+				throw new InvalidOperationException(nameof(UserCompanyId));
+			if (!(HttpContext.Current.Session[_userCompanyKey] is UserCompany userCompany))
+				userCompany = SetUserCompany(TenantId, UserId);
+			return userCompany.CompanyId;
+		}
+
 		#endregion
 
 		UserState SetUserState(Int64 userId)
@@ -48,6 +69,15 @@ namespace A2v10.Web.Config
 			userState.ReadOnly = dm.Eval<Boolean>("UserState.ReadOnly");
 			HttpContext.Current.Session[_sessionKey] = userState;
 			return userState;
+		}
+
+		UserCompany SetUserCompany(Int32 TenantId, Int64 UserId)
+		{
+			var userCompany = new UserCompany();
+			var dm = _dbContext.LoadModel(null, "[a2security_tenant].[UserCompany.Load]", new { TenantId, UserId });
+			userCompany.CompanyId = dm.Eval<Int64>("UserCompany.Company");
+			HttpContext.Current.Session[_userCompanyKey] = userCompany;
+			return userCompany;
 		}
 	}
 }

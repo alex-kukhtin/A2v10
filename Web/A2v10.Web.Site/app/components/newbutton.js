@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181211-7384*/
+/*20190816-7525*/
 /*components/newbutton.js*/
 
 (function () {
@@ -10,7 +10,7 @@
 	const eventBus = require('std:eventBus');
 
 	const newButtonTemplate =
-`<div class="dropdown dir-down a2-new-btn" v-dropdown v-if="isVisible">
+`<div class="dropdown dir-down a2-new-btn separate" v-dropdown v-if="isVisible">
 	<button class="btn btn-icon" :class="btnClass" toggle aria-label="New"><i class="ico" :class="iconClass"></i></button>
 	<div class="dropdown-menu menu down-left">
 		<div class="super-menu" :class="cssClass">

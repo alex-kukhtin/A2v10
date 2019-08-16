@@ -412,11 +412,12 @@
 
 	&.cb-large {
 		select {
-			font-size:1.2rem;
+			font-size: 1.2rem;
 		}
+
 		.select-text {
-			font-size:1.2rem;
-			line-height:2.3rem;
+			font-size: 1.2rem;
+			line-height: 2.3rem;
 		}
 	}
 }
@@ -502,10 +503,11 @@
 
 .hlink-dd-wrapper.popover {
 	.a2-hyperlink {
-		border-bottom:1px dotted @link-color;
+		border-bottom: 1px dotted @link-color;
 	}
+
 	.caret {
-		display:none;
+		display: none;
 	}
 }
 
@@ -523,15 +525,23 @@
 
 .a2-hyperlink.highlight {
 
+	/*special behaviour for icon 'send' */
+	.ico.ico-send:before {
+		content: "\e950"; // outline
+	}
+
 	&:not([disabled]) {
 		.ico {
-			background-color: #208cf8; //currentColor;
-			border-radius: 50%;
-			padding: 3px 2px 3px 4px;
-
+			//background-color: #208cf8; //currentColor;
+			//border-radius: 50%;
+			//padding: 3px 2px 3px 4px;
 			&:before {
-				color: white !important;
+				color: #208cf8 !important;
 			}
+		}
+
+		.ico.ico-send:before {
+			content: "\e951"; // filled
 		}
 	}
 }
@@ -671,7 +681,8 @@
 	text-align: left;
 	box-shadow: @dnager-validator-shadow;
 	line-height: 1.2em;
-	position:relative;
+	position: relative;
+
 	.error {
 		display: list-item;
 		list-style-type: none;

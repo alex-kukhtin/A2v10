@@ -617,6 +617,28 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpPost]
 		[Authorize]
 		[IsAjaxOnly]
+		public async Task<ActionResult> SwitchToCompany()
+		{
+			if (!_host.IsMultiCompany)
+				throw new InvalidOperationException(nameof(SwitchToCompany));
+			using (var tr = new StreamReader(Request.InputStream))
+			{
+				String json = tr.ReadToEnd();
+				var postModel = JsonConvert.DeserializeObject<SwitchToCompanyPostModel>(json);
+				var saveModel = new SwitchToCompanySaveModel()
+				{
+					UserId = UserId,
+					TenantId = TenantId,
+					CompanyId = postModel.company
+				};
+				await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security_tenant.SwitchToCompany", saveModel);
+			}
+			return new EmptyResult();
+		}
+
+		[HttpPost]
+		[Authorize]
+		[IsAjaxOnly]
 		public async Task<ActionResult> ChangePassword()
 		{
 			String status;

@@ -1,11 +1,12 @@
 ﻿
-/*20181005-7312*/
+/*20190816-7525*/
 
 (function () {
 
 	const Shell = component('std:shellController');
 
 	const menu = $(Menu);
+	const companies = $(Companies);
 
 	const shell = new Shell({
 		el: '#shell',
@@ -14,6 +15,7 @@
 			menu: menu.Menu ? menu.Menu[0].Menu : null,
 			newMenu: menu.NewMenu,
 			settingsMenu: menu.SettingsMenu,
+			companies: companies,
 			title: menu.SysParams ? menu.SysParams.AppTitle : '',
 			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
 			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
@@ -61,4 +63,5 @@
 
 	window.$$rootUrl = '';
 	window.$$debug = $(Debug);
+
 })();

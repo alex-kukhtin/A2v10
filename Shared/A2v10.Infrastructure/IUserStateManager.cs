@@ -8,5 +8,8 @@ namespace A2v10.Infrastructure
 	{
 		void SetReadOnly(Boolean readOnly);
 		Boolean IsReadOnly(Int64 userId);
+
+		void SetUserCompanyId(Int64 CompanyId);
+		Int64 UserCompanyId(Int32 TenantId, Int64 UserId);
 	}
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;

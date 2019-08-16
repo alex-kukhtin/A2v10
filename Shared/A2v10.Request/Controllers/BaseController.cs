@@ -67,6 +67,7 @@ namespace A2v10.Request
 		public IDbContext DbContext => _dbContext;
 		public IApplicationHost Host => _host;
 		public IDataScripter Scripter => _scripter;
+		public IUserStateManager UserStateManager => _userStateManager;
 
 		public Boolean Mobile => _host.Mobile;
 

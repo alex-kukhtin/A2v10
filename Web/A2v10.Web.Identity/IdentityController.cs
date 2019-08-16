@@ -52,6 +52,8 @@ namespace A2v10.Web.Identity
 		}
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
+		public Int32 TenantId => User.Identity.GetUserTenantId();
+
 		protected IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
 

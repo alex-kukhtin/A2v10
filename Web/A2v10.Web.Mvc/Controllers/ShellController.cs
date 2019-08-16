@@ -38,7 +38,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
-		public Int64 CompanyId => 1;
+		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 
 		public String CatalogDataSource => _baseController.Host.CatalogDataSource;
 
@@ -178,7 +178,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (!_baseController.Host.IsMultiCompany)
 				return String.Empty;
-			return "<a2-company-button></a2-company-button>";
+			return "<a2-company-button :source=\"companies\"></a2-company-button>";
 		}
 
 		public void Index()
@@ -308,9 +308,16 @@ namespace A2v10.Web.Mvc.Controllers
 			prms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 		}
 
+		void SetSqlQueryParamsWithoutCompany(ExpandoObject prms)
+		{
+			SetUserTenantToParams(prms);
+			SetClaimsToParams(prms);
+		}
+
 		void SetSqlQueryParams(ExpandoObject prms)
 		{
 			SetUserTenantToParams(prms);
+			SetUserCompanyToParams(prms);
 			SetClaimsToParams(prms);
 		}
 
@@ -321,6 +328,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				prms.Set("TenantId", TenantId);
 			}
+		}
+
+		void SetUserCompanyToParams(ExpandoObject prms)
+		{
 			if (_baseController.Host.IsMultiCompany)
 				prms.Set("CompanyId", CompanyId);
 		}
@@ -574,7 +585,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (admin && !userInfo.IsAdmin)
 					throw new AccessViolationException("The current user is not an administrator");
 
-				await _baseController.ShellScript(CatalogDataSource, SetSqlQueryParams, userInfo, admin, Response.Output);
+				await _baseController.ShellScript(CatalogDataSource, SetSqlQueryParamsWithoutCompany, userInfo, admin, Response.Output);
 			}
 			catch (Exception ex)
 			{

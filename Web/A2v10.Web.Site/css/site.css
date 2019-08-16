@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7506') format('woff'), url('/css/fonts/A2v10.ttf?v=7506') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7525') format('woff'), url('/css/fonts/A2v10.ttf?v=7525') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -70,6 +70,9 @@
 }
 .ico-arrow-right:before {
   content: "\e903";
+}
+.ico-arrow-left-right:before {
+  content: "\e906";
 }
 .ico-arrow-export:before {
   content: "\e908";
@@ -144,8 +147,11 @@
 .ico-approve:before {
   content: "\e936";
 }
-.ico-send:before {
+.ico-send-outline:before {
   content: "\e950";
+}
+.ico-send:before {
+  content: "\e951";
 }
 .ico-attach:before {
   content: "\e954";
@@ -659,6 +665,9 @@
 .ico-external:before {
   content: "\e9d0";
 }
+.ico-bell:before {
+  content: "\e9d1";
+}
 .ico-log:before {
   content: "\ea25";
 }
@@ -1170,6 +1179,12 @@ header .company-name,
   max-width: 20rem;
   text-overflow: ellipsis;
   user-select: text;
+}
+header .company-menu-name,
+.header .company-menu-name {
+  max-width: 20rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .content-view {
   position: absolute;
@@ -2100,13 +2115,17 @@ pre.a2-code {
 .normal {
   font-size: 1rem;
 }
-.a2-hyperlink.highlight:not([disabled]) .ico {
-  background-color: #208cf8;
-  border-radius: 50%;
-  padding: 3px 2px 3px 4px;
+.a2-hyperlink.highlight {
+  /*special behaviour for icon 'send' */
+}
+.a2-hyperlink.highlight .ico.ico-send:before {
+  content: "\e950";
 }
 .a2-hyperlink.highlight:not([disabled]) .ico:before {
-  color: white !important;
+  color: #208cf8 !important;
+}
+.a2-hyperlink.highlight:not([disabled]) .ico.ico-send:before {
+  content: "\e951";
 }
 .a2-hyperlink.small i.ico {
   font-size: 12px;
@@ -3551,6 +3570,9 @@ tr:hover .commandbar.visible-hover {
 .a2-tab-button.active {
   border-bottom-color: #208cf8;
   color: #999;
+}
+.a2-tab-button .content {
+  white-space: nowrap;
 }
 .a2-tab-description {
   color: #999;
