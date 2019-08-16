@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 02 aug 2019
-module version : 7511
+Last updated : 16 aug 2019
+module version : 7526
 */
 
 ------------------------------------------------
@@ -796,7 +796,8 @@ create procedure a2security.[Login.CheckDuplicate]
 	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
-	@Login nvarchar(255)
+	@CompanyId bigint = 1,
+	@Login nvarchar(255) = null
 as
 begin
 	set nocount on;
@@ -815,7 +816,8 @@ create procedure a2security.[PhoneNumber.CheckDuplicate]
 	@TenantId int = null,
 	@UserId bigint,
 	@Id bigint,
-	@PhoneNumber nvarchar(255)
+	@CompanyId bigint = 1,
+	@PhoneNumber nvarchar(255) = null
 as
 begin
 	set nocount on;

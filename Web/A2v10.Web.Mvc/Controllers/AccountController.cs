@@ -37,6 +37,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
+		private readonly IUserStateManager _userStateManager;
 
 		public AccountController()
 		{
@@ -45,6 +46,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_userStateManager = serviceLocator.GetService<IUserStateManager>();
 			_host.StartApplication(false);
 		}
 
@@ -632,6 +634,7 @@ namespace A2v10.Web.Mvc.Controllers
 					CompanyId = postModel.company
 				};
 				await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security_tenant.SwitchToCompany", saveModel);
+				_userStateManager.SetUserCompanyId(saveModel.CompanyId);
 			}
 			return new EmptyResult();
 		}
