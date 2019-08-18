@@ -21,6 +21,7 @@ const template = {
 		},
 		startWorkflow,
 		attachReport,
+		clickDate() { alert('date clicked');},
 		test: {
 			exec: testCommand,
 			confirm: {
@@ -77,6 +78,7 @@ async function attachReport(doc) {
 
 function testCommand(arg) {
 	console.dir(arg);
+	this.$vm.$msg('message').then(f => alert('then'));
 	alert(1);
 	return true;
 }

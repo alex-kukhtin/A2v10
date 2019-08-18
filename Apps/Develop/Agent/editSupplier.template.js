@@ -10,6 +10,9 @@ function __myEvent(arg) {
 }
 
 const template = {
+	options: {
+		skipDirty: ['Agent.Code']
+	},
 	properties: {
 		'TRoot.$$tabVisible': Boolean,
 		'TAgent.$SelectedMime': String

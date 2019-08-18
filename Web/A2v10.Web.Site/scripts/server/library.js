@@ -1156,7 +1156,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190811-7518
+// 20190818-7528
 // services/datamodel.js
 
 (function () {
@@ -1310,7 +1310,7 @@ app.modules['std:validators'] = function () {
 					this._src_[prop] = val;
 				}
 				if (!skipDirty) // skip special properties
-					this._root_.$setDirty(true, this._path_);
+					this._root_.$setDirty(true, this._path_, prop);
 				if (this._lockEvents_) return; // events locked
 				if (eventWasFired) return; // was fired
 				let eventName = (this._path_ || 'Root') + '.' + prop + '.change';
@@ -2287,14 +2287,15 @@ app.modules['std:validators'] = function () {
 		//console.dir(allerrs);
 	}
 
-	function setDirty(val, path) {
+	function setDirty(val, path, prop) {
 		if (this.$root.$readOnly)
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
 		if (isNoDirty(this.$root))
 			return;
-		// TODO: template.options.skipDirty
+		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
+			return;
 		this.$dirty = val;
 	}
 
@@ -2330,6 +2331,15 @@ app.modules['std:validators'] = function () {
 		let t = root.$template;
 		let opts = t && t.options;
 		return opts && opts.noDirty;
+	}
+
+	function isSkipDirty(root, path) {
+		let t = root.$template;
+		const opts = t && t.options;
+		if (!opts) return false;
+		const sd = opts.skipDirty;
+		if (!sd || !utils.isArray(sd)) return false;
+		return sd.indexOf(path) !== -1;
 	}
 
 	function saveSelections() {
@@ -2419,6 +2429,7 @@ app.modules['std:validators'] = function () {
 			let eventName = this._path_ + '.change';
 			this._root_.$emit(eventName, this.$parent, this, this, propFromPath(this._path_));
 		}
+		return this;
 	}
 
 	function implementRoot(root, template, ctors) {

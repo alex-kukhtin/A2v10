@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190814-7522
+// 20190818-7528
 // components/datagrid.js*/
 
 (function () {
@@ -354,7 +354,10 @@
 						},
 						eval: utils.eval,
 						getHref() {
-							if (col.command && col.command.isDialog)
+							if (!col.command) return null;
+							if (col.command.isDialog)
+								return null;
+							if (col.command.cmd.name.indexOf('$exec') !== -1)
 								return null;
 							let id = arg2;
 							if (utils.isObjectExact(arg2))

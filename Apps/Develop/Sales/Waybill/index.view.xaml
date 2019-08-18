@@ -68,7 +68,8 @@
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"
 			Command="{BindCmd Open, Url={StaticResource OpenUrl}}" Icon="{Bind $Icon}"/>
-		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"
+						Command="{BindCmd Execute, CommandName='clickDate'}"/>
 		<DataGridColumn Header="Номер" Content="{Bind No}" Fit="True" Align="Right" Wrap="NoWrap"/>
 		<DataGridColumn Header="Покупатель">
 			<Popover Placement="BottomRight" If="{Bind Agent.Id}"

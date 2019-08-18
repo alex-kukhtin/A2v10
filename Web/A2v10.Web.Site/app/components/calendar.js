@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190414-7485
+// 20190818-7528
 // components/calendar.js
 
 (function () {
@@ -109,7 +109,7 @@
 			nextMonth() {
 				let dt = new Date(this.model);
 				if (this.isDayView)
-					dt.setMonth(dt.getMonth() + 1);
+					dt = utils.date.add(dt, 1, 'month');
 				else
 					dt.setFullYear(dt.getFullYear() + 1);
 				this.setMonth(dt, this.pos);
@@ -117,7 +117,7 @@
 			prevMonth() {
 				let dt = new Date(this.model);
 				if (this.isDayView)
-					dt.setMonth(dt.getMonth() - 1);
+					dt = utils.date.add(dt, -1, 'month');
 				else
 					dt.setFullYear(dt.getFullYear() - 1);
 				this.setMonth(dt, this.pos);
