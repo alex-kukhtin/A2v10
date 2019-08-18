@@ -26,7 +26,7 @@ namespace A2v10.Xaml
 	{
 		public TableCellCollection Cells { get; set; } = new TableCellCollection();
 
-		public MarkStyle Mark { get; set; }
+		public Object Mark { get; set; }
 		public VerticalAlign VAlign { get; set; }
 		public TextAlign Align { get; set; }
 
@@ -45,8 +45,6 @@ namespace A2v10.Xaml
 					throw new XamlException("The Bold and Mark bindings cannot be used at the same time");
 				row.MergeAttribute(":class", markBind.GetPathFormat(context));
 			}
-			else if (Mark != MarkStyle.Default)
-				row.AddCssClass(Mark.ToString().ToKebabCase());
 
 			if (Align != TextAlign.Left)
 				row.AddCssClass("text-" + Align.ToString().ToLowerInvariant());

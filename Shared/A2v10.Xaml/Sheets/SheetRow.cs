@@ -31,6 +31,8 @@ namespace A2v10.Xaml
 		public RowStyle Style { get; set; }
 		public TextAlign? Align { get; set; }
 
+		public MarkStyle Mark { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -38,6 +40,17 @@ namespace A2v10.Xaml
 			var tr = new TagBuilder("tr");
 			onRender?.Invoke(tr);
 			MergeAttributes(tr, context);
+
+			var markBind = GetBinding(nameof(Mark));
+			if (markBind != null)
+			{
+				if (GetBinding(nameof(Bold)) != null)
+					throw new XamlException("The Bold and Mark bindings cannot be used at the same time");
+				tr.MergeAttribute(":class", markBind.GetPathFormat(context));
+			}
+			else if (Mark != MarkStyle.Default)
+				tr.AddCssClass(Mark.ToString().ToKebabCase());
+
 			if (Style != RowStyle.Default)
 				tr.AddCssClass("row-" + Style.ToString().ToKebabCase());
 			if (Align != null)

@@ -35,7 +35,7 @@
 	<SheetPage Orientation="Landscape">
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
-				<SheetRow>
+				<SheetRow Mark="{Bind $Mark}">
 					<SheetCell Content="{Bind Id, DataType=String}" Align="Center" />
 					<SheetCell Content="{Bind Date, DataType=DateTime}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number, Format='00'}" Align="Right"/>
@@ -47,7 +47,7 @@
 				<SheetRow Style="Title">
 					<SheetCell ColSpan="5" Align="Center">Заголовок отчета</SheetCell>
 				</SheetRow>
-				<SheetRow Style="LastParameter">
+				<SheetRow Style="LastParameter" Bold="True">
 					<SheetCell ColSpan="5">
 						<Text>Параметр отчета:
 							<Span Bold="True" Content="{Bind Query.Agent.Name}"/>

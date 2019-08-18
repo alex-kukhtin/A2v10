@@ -49,7 +49,10 @@ const template = {
 		unApply: cmn.docUnApply,
 		resumeWorkflow,
 		insertAbove: insertRow('above'),
-		insertBelow: insertRow('below')
+		insertBelow: insertRow('below'),
+		setDate(doc) {
+			doc.Date = new Date();
+		}
 	}
 };
 

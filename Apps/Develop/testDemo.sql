@@ -57,7 +57,7 @@ go
 --alter table a2v10demo.[Catalog.Customers] add Photo bigint null;
 --alter table a2v10demo.[Catalog.Customers] add [Date] datetime null;
 ------------------------------------------------
-alter procedure a2v10demo.[Catalog.Customer.Index]
+create or alter procedure a2v10demo.[Catalog.Customer.Index]
 @UserId bigint,
 @Id bigint = null, -- если вызывается как Browse
 @Order nvarchar(255) = null,
@@ -108,7 +108,7 @@ begin
 end
 go
 ------------------------------------------------
-alter procedure a2v10demo.[Catalog.Customer.Load]
+create or alter procedure a2v10demo.[Catalog.Customer.Load]
 @UserId bigint,
 @Id bigint = null /*for create new */
 as
@@ -125,7 +125,7 @@ begin
 end
 go
 ------------------------------------------------
-alter procedure a2v10demo.[Catalog.Customer.Photo.Load]
+create or alter procedure a2v10demo.[Catalog.Customer.Photo.Load]
 @UserId bigint,
 @Id bigint = null,
 @Key nvarchar(255)
@@ -136,7 +136,7 @@ begin
 end
 go
 ------------------------------------------------
-alter procedure a2v10demo.[Catalog.Customer.Photo.Update]
+create or alter procedure a2v10demo.[Catalog.Customer.Photo.Update]
 @UserId bigint,
 @Id bigint,
 @Key nvarchar(255),
@@ -231,7 +231,7 @@ end
 go
 
 ------------------------------------------------
-alter procedure a2v10demo.[Catalog.Invoke]
+create or alter procedure a2v10demo.[Catalog.Invoke]
 @UserId bigint,
 @Id bigint = null,
 @Name nvarchar(255) = null,
@@ -246,6 +246,42 @@ begin
 end
 go
 
+
+------------------------------------------------
+create or alter procedure [a2demo].[Agent.Copy]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint = null,
+	@Name nvarchar(255) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select [Agent!TAgent!Object] = null, [Id!!Id] = cast(0 as bigint), [Name!!Name] = [Name], [Type], 
+		Code, Tag, Memo, Folder, ParentFolder=Parent, Phone,
+		[Address!TAddress!Object] = null,
+		DateCreated, DateModified
+	from a2demo.Agents where Id=@Id and Void=0;
+
+	select [!TAddress!Object] = null, [Id!!Id] = Id, [!TAgent.Address!ParentId] = cast(0 as bigint),
+		Country, City, Street, Build, Appt 
+	from a2demo.Addresses where Agent = @Id;
+
+	select [Countries!TCountry!Array] = null, [Code!!Id] = Code, [Name!!Name] = [Name], [Cities!TCity!LazyArray] = null
+	from a2demo.Countries;
+
+	-- we need type declaration for City
+	select [!TCity!Array] = null, [Id!!Id] = Id, [Name!!Name] = [Name], [Streets!TStreet!LazyArray] = null
+	from a2demo.Cities where 0 <> 0; 
+
+	-- we need type declaration for Street
+	select [!TStreet!Array] = null, [Id!!Id] = Id, [Name!!Name] = [Name]
+	from a2demo.Streets where 0 <> 0; 
+
+	select [Params!TParam!Object] = null, [Name] = @Name;
+	select [!$System!] = null, [!!Copy] = 1;
+end
+go
 ------------------------------------------------
 set noexec off;
 go

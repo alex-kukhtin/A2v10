@@ -42,6 +42,7 @@ const template = {
 
 function modelLoad(root) {
 	const ag = root.Agent;
+	console.dir(root.$isCopy);
 	if (ag.$isNew)
 		customerCreate(ag);
 	eventBus.$on('myEvent', __myEvent);

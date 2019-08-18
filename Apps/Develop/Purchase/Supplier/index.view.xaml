@@ -10,7 +10,8 @@
         <Toolbar>
             <Button Icon="Add" Tip="Создать поставщика" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Agents}}">Создать</Button>
             <Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents}}">Изменить</Button>
-            <Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Agents}, Confirm='Удалить поставщика?'}">Удалить</Button>
+			<Button Icon="Copy" Command="{BindCmd Dialog, Action=EditSelected, Url='/Agent/CopySupplier', Argument={Bind Agents}}">Копировать</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Agents}, Confirm='Удалить поставщика?'}">Удалить</Button>
             <Separator />
             <TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" Placeholder="фрагмент имени или кода" Width="240">
                 <TextBox.AddOns>

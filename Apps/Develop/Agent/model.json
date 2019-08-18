@@ -22,6 +22,12 @@
 			"view": "editSupplier.dialog",
 			"template": "editSupplier.template"
 		},
+		"copySupplier": {
+			"copy": true,
+			"model": "Agent",
+			"view": "editSupplier.dialog",
+			"template": "editSupplier.template"
+		},
 		"editFolder": {
 			"model": "Agent",
 			"view": "editFolder.dialog",

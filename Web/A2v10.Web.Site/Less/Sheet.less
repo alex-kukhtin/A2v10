@@ -155,6 +155,27 @@ table.sheet {
 			background-color: rgba(240,240,240, 0.25);
 		}
 	}
+
+	tr.success, tr.green {
+		background-color: @dg-success-bg-color !important;
+	}
+
+	tr.danger, tr.red, tr.error {
+		background-color: @dg-danger-bg-color !important;
+		color: @danger-txt-color;
+	}
+
+	tr.warning, tr.orange {
+		background-color: @dg-warning-bg-color !important;
+	}
+
+	tr.info, tr.cyan {
+		background-color: @dg-info-bg-color !important;
+	}
+
+	tr.gray {
+		background-color: @alter-bg-color !important;
+	}
 }
 
 table > colgroup {

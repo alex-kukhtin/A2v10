@@ -5691,6 +5691,27 @@ table.sheet .group-cell.collapsed > div .ico:before {
 table.sheet.striped > tbody > tr:nth-child(even) {
   background-color: rgba(240, 240, 240, 0.25);
 }
+table.sheet tr.success,
+table.sheet tr.green {
+  background-color: rgba(216, 255, 216, 0.5) !important;
+}
+table.sheet tr.danger,
+table.sheet tr.red,
+table.sheet tr.error {
+  background-color: rgba(254, 220, 220, 0.5) !important;
+  color: #a94442;
+}
+table.sheet tr.warning,
+table.sheet tr.orange {
+  background-color: rgba(255, 216, 0, 0.15) !important;
+}
+table.sheet tr.info,
+table.sheet tr.cyan {
+  background-color: rgba(114, 234, 234, 0.15) !important;
+}
+table.sheet tr.gray {
+  background-color: rgba(208, 208, 208, 0.15) !important;
+}
 table > colgroup col.yellow {
   background-color: rgba(255, 255, 164, 0.25);
 }

@@ -2,6 +2,7 @@
 
 const template = {
 	properties: {
+		'TData.$Mark'() { return this.Id === 129 ? 'error bold': undefined; }
 	},
 	validators: {
 	},

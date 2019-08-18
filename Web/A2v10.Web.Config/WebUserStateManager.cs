@@ -76,6 +76,8 @@ namespace A2v10.Web.Config
 			var userCompany = new UserCompany();
 			var dm = _dbContext.LoadModel(null, "[a2security_tenant].[UserCompany.Load]", new { TenantId, UserId });
 			userCompany.CompanyId = dm.Eval<Int64>("UserCompany.Company");
+			if (userCompany.CompanyId == 0)
+				throw new InvalidOperationException("Procedure 'UserCompany.Load' returned '0'.");
 			HttpContext.Current.Session[_userCompanyKey] = userCompany;
 			return userCompany;
 		}

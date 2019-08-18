@@ -633,6 +633,8 @@ namespace A2v10.Web.Mvc.Controllers
 					TenantId = TenantId,
 					CompanyId = postModel.company
 				};
+				if (postModel.company == 0)
+					throw new InvalidOperationException("Unable to switch to company with id='0'");
 				await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security_tenant.SwitchToCompany", saveModel);
 				_userStateManager.SetUserCompanyId(saveModel.CompanyId);
 			}
