@@ -13,6 +13,7 @@ using Newtonsoft.Json.Converters;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 using A2v10.Interop.ExportTo;
+using A2v10.Interop;
 
 namespace A2v10.Request
 {
@@ -77,6 +78,7 @@ namespace A2v10.Request
 			IDataModel model = null;
 
 			IModelHandler handler = rw.GetHookHandler();
+			String invokeTarget = rw.GetInvokeTarget();
 			if (handler != null)
 			{
 				var handled = await handler.BeforeSave(data);
@@ -85,6 +87,12 @@ namespace A2v10.Request
 					model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 					await handler.AfterSave(data, model.Root);
 				}
+			}
+			else if (invokeTarget != null)
+			{
+				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+				var clr = new ClrInvoker();
+				clr.Invoke(invokeTarget, prms); // after save
 			}
 			else
 			{

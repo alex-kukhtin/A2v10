@@ -46,6 +46,7 @@ namespace BackgroundProcessor
 		}
 
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
+		public Boolean IsDTCEnabled =>  throw new NotImplementedException(nameof(IsDTCEnabled));
 		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
 		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
 		public Boolean IsMultiCompany => false;

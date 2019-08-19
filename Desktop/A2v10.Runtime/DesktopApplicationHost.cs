@@ -92,6 +92,7 @@ namespace A2v10.Runtime
 		public Boolean IsMultiTenant => true; // TODO:
 		public Boolean IsMultiCompany => false;
 		public Boolean IsRegistrationEnabled => false;
+		public Boolean IsDTCEnabled => false;
 		public String UseClaims => null;
 		public Int32? TenantId { get; set; } 
 		public String CatalogDataSource => "Catalog";

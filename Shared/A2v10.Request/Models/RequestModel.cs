@@ -273,6 +273,7 @@ namespace A2v10.Request
 		public String view;
 		public String viewMobile;
 		public String hook;
+		public String invoke;
 		public Boolean indirect;
 		public String target;
 		public String targetId;
@@ -292,6 +293,13 @@ namespace A2v10.Request
 		public String GetRelativePath(String extension, Boolean mobile)
 		{
 			return $"~/{Path}/{GetView(mobile)}{extension}";
+		}
+
+		public String GetInvokeTarget()
+		{
+			if (String.IsNullOrEmpty(invoke))
+				return null;
+			return invoke;
 		}
 
 		public IModelHandler GetHookHandler()

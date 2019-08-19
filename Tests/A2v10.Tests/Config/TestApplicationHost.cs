@@ -78,6 +78,7 @@ namespace A2v10.Tests.Config
 		public Boolean IsMultiCompany => false;
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDebugConfiguration => true;
+		public Boolean IsDTCEnabled => false;
 
 		public Int32? TenantId { get; set; }
 		public String CatalogDataSource => null;

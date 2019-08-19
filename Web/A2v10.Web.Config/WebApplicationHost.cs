@@ -132,6 +132,17 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public Boolean IsDTCEnabled
+		{
+			get
+			{
+				var mt = ConfigurationManager.AppSettings["enableDTC"];
+				if (String.IsNullOrEmpty(mt))
+					return false;
+				return mt.ToLowerInvariant() == "true";
+			}
+		}
+
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 
 		Int32 _tenantId;
