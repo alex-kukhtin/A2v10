@@ -51,6 +51,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 
 		[HttpGet]
 		public async Task Show(String Base, String Rep, String id)
@@ -87,7 +88,8 @@ namespace A2v10.Web.Mvc.Controllers
 			var rc = new ReportContext()
 			{
 				UserId = UserId,
-				TenantId = TenantId
+				TenantId = TenantId,
+				CompanyId = CompanyId
 			};
 			return await _reportHelper.GetReportInfo(rc, url, id, prms);
 		}

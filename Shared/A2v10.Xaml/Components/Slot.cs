@@ -28,7 +28,10 @@ namespace A2v10.Xaml
 			using (var ctx = new ScopeContext(context, SLOT_ITEM))
 			{
 				foreach (var c in Children)
+				{
+					c.IsInGrid = IsInGrid;
 					c.RenderElement(context);
+				}
 			}
 			tag.RenderEnd(context);
 			if (Fallback != null)

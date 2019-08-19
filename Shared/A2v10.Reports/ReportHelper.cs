@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Threading.Tasks;
 
 using Stimulsoft.Report.Mvc;
@@ -19,6 +18,7 @@ namespace A2v10.Reports
 	{
 		public Int64 UserId;
 		public Int32 TenantId;
+		public Int64 CompanyId;
 	}
 
 	public class ReportInfo
@@ -76,6 +76,8 @@ namespace A2v10.Reports
 			prms.Set("UserId", context.UserId);
 			if (_host.IsMultiTenant)
 				prms.Set("TenantId", context.TenantId);
+			if (_host.IsMultiCompany)
+				prms.Set("CompanyId", context.CompanyId);
 			prms.Set("Id", id);
 			prms.AppendIfNotExists(rep.parameters);
 
@@ -88,6 +90,8 @@ namespace A2v10.Reports
 			vars.Set("UserId", context.UserId);
 			if (_host.IsMultiTenant)
 				vars.Set("TenantId", context.TenantId);
+			if (_host.IsMultiCompany)
+				prms.Set("CompanyId", context.CompanyId);
 			vars.Set("Id", id);
 			ri.Variables = vars;
 			var repName = _localizer.Localize(null, String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);

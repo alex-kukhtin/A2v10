@@ -27,6 +27,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 
 		[HttpGet]
 		public Task Show(String Base, String id)
@@ -68,6 +69,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			prms.Set("UserId", UserId);
 			prms.Set("TenantId", TenantId);
+			if (_baseController.Host.IsMultiCompany)
+				prms.Set("CompanyId", CompanyId);
 		}
 	}
 }

@@ -18,6 +18,7 @@ namespace A2v10.Request
 
 
 		public IApplicationHost Host => _baseController.Host;
+		public IUserStateManager UserStateManager => _baseController.UserStateManager;
 
 		public Task Show(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams)
 		{
