@@ -216,7 +216,7 @@ namespace A2v10.Xaml
 					return $"$dbRemove({CommandArgument(context)}, {GetConfirm(context)}, {GetOptions(context)})";
 
 				case CommandType.DbRemoveSelected:
-					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";
+					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)}, {GetOptions(context)})";
 
 				case CommandType.MailTo:
 					return null;

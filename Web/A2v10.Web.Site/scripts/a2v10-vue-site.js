@@ -4540,7 +4540,7 @@ Vue.component('a2-pager', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190821-7534
+// 20190821-7535
 // controllers/base.js
 
 (function () {
@@ -5008,7 +5008,6 @@ Vue.component('a2-pager', {
 			},
 
 			$dbRemove(elem, confirm, opts) {
-				debugger;
 				if (!elem)
 					return;
 
@@ -5051,12 +5050,12 @@ Vue.component('a2-pager', {
 				}
 			},
 
-			$dbRemoveSelected(arr, confirm) {
+			$dbRemoveSelected(arr, confirm, opts) {
 				if (this.$isLoading) return;
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				this.$dbRemove(sel, confirm);
+				this.$dbRemove(sel, confirm, opts);
 			},
 
 			$openSelectedFrame(url, arr) {

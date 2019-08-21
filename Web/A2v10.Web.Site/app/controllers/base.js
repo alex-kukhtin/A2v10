@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190821-7534
+// 20190821-7535
 // controllers/base.js
 
 (function () {
@@ -468,7 +468,6 @@
 			},
 
 			$dbRemove(elem, confirm, opts) {
-				debugger;
 				if (!elem)
 					return;
 
@@ -511,12 +510,12 @@
 				}
 			},
 
-			$dbRemoveSelected(arr, confirm) {
+			$dbRemoveSelected(arr, confirm, opts) {
 				if (this.$isLoading) return;
 				let sel = arr.$selected;
 				if (!sel)
 					return;
-				this.$dbRemove(sel, confirm);
+				this.$dbRemove(sel, confirm, opts);
 			},
 
 			$openSelectedFrame(url, arr) {

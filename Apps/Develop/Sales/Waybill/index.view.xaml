@@ -10,7 +10,7 @@
 		<Toolbar>
 			<Button Icon="Add" Tip="Создать накладную" Command="{BindCmd Create, Url={StaticResource OpenUrl}}">Создать</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
-			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?'}">Удалить</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?', Permission=CanEdit}">Удалить</Button>
 			<Button Icon="Workflow1" Command="{BindCmd ExecuteSelected, CommandName='startWorkflow', Argument={Bind Documents}}">Workflow</Button>
 			<Button Icon="Attach" Command="{BindCmd ExecuteSelected, CommandName='attachReport', Argument={Bind Documents}}">Attach report</Button>
 			<Separator />
