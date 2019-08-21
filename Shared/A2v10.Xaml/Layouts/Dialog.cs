@@ -21,6 +21,8 @@ namespace A2v10.Xaml
 		public String HelpUrl { get; set; }
 		public String TestId { get; set; }
 
+		public UIElement TitleInfo { get; set; }
+
 		public DialogSize Size { get; set; }
 		public Length Width { get; set; }
 		public Length Height { get; set; }
@@ -142,6 +144,13 @@ namespace A2v10.Xaml
 				else if (Title != null)
 					span.SetInnerText(context.LocalizeCheckApostrophe(Title));
 				span.Render(context);
+			}
+			if (TitleInfo != null)
+			{
+				var span = new TagBuilder("span", "modal-title-info");
+				span.RenderStart(context);
+				TitleInfo.RenderElement(context, null);
+				span.RenderEnd(context);
 			}
 			var close = new TagBuilder("button", "btnclose");
 			close.MergeAttribute("@click.prevent", "$modalClose(false)");

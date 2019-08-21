@@ -60,7 +60,8 @@
 		$CreatedOpenSource: 'Created using the following open source software',
 		$Unknown: 'Unknown',
 		$ChooseFile: 'Choose file',
-		$AccessDenied: 'Access denied!'
-	};
+		$AccessDenied: 'Access denied!',
+		$PermissionDenied: 'Access denied!'
+};
 
 })();

@@ -3906,6 +3906,9 @@ ul.news-list > li {
   border-bottom: 1px solid #ddd;
   min-height: 34px;
 }
+.modal-header .modal-title-info {
+  margin-left: 1rem;
+}
 .modal-header .btnclose {
   float: right;
   color: #aaa;

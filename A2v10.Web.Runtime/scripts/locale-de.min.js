@@ -60,7 +60,8 @@
 		$CreatedOpenSource: 'Mit der folgenden Open Source-Software erstellt',
 		$Unknown: 'Unbekannt',
 		$ChooseFile: 'Datei auswählen',
-		$AccessDenied: 'Zigriff verweigert!'
+		$AccessDenied: 'Zigriff verweigert!',
+		$PermissionDenied: 'Zigriff verweigert!'
 	};
 
 })();

@@ -84,6 +84,8 @@
 		</DataGridColumn>
 		<DataGridColumn Header="" Fit="True">
 			<CommandBar If="{Bind !Attachments.$isEmpty}">
+				<Button Icon="Copy" Command="{BindCmd Dialog, Action=Show, Url='/test/1/2/3', Permission=CanEdit, Argument={Bind}}"/>
+				<Button Icon="Clear" Command="{BindCmd DbRemove, Permission=CanEdit, Argument={Bind}}"/>
 				<Repeater ItemsSource="{Bind Attachments}">
 					<Group>
 						<Button Icon="FilePreview" Command="{BindCmd Attachment, Url='/Sales/Waybill/Attachment', Argument={Bind}, Export=False, NewWindow=True}" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190820-7532*/
+/*20190821-7534*/
 /*components/newbutton.js*/
 
 (function () {
@@ -20,7 +20,7 @@
 		<template v-if="hasLinks">
 			<div class="divider"/>
 			<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1" class="dropdown-item">
-				<i class="ico ico-none"/><span v-text="link.Name" />
+				<i class="ico" :class="linkClass(link)"/><span v-text="link.Name" />
 			</a>
 		</template>
 	</div>
@@ -64,6 +64,9 @@
 			},
 			icoClass(cmp) {
 				return cmp.Current ? 'ico-check' : 'ico-none';
+			},
+			linkClass(link) {
+				return `ico-${link.Icon || 'none'}`;
 			}
 		}
 	});

@@ -14,6 +14,17 @@ namespace A2v10.Infrastructure
 			return This + '.' + append;
 		}
 
+		public static String ToCamelCase(this String s)
+		{
+			if (String.IsNullOrEmpty(s))
+				return null;
+			var b = new StringBuilder(s);
+			Char ch = b[0];
+			if (Char.IsUpper(ch))
+				b[0] = Char.ToLowerInvariant(ch);
+			return b.ToString();
+		}
+
 		public static String ToPascalCase(this String s)
 		{
 			if (String.IsNullOrEmpty(s))
@@ -26,7 +37,7 @@ namespace A2v10.Infrastructure
 				if (bFirst)
 				{
 					if (Char.IsLower(ch))
-						b[i] = Char.ToUpper(ch);
+						b[i] = Char.ToUpperInvariant(ch);
 					bFirst = false;
 				}
 				else if (ch == '.')

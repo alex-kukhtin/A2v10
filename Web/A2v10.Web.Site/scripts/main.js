@@ -9084,7 +9084,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190820-7532*/
+/*20190821-7534*/
 /*components/newbutton.js*/
 
 (function () {
@@ -9104,7 +9104,7 @@ Vue.component('a2-panel', {
 		<template v-if="hasLinks">
 			<div class="divider"/>
 			<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1" class="dropdown-item">
-				<i class="ico ico-none"/><span v-text="link.Name" />
+				<i class="ico" :class="linkClass(link)"/><span v-text="link.Name" />
 			</a>
 		</template>
 	</div>
@@ -9148,6 +9148,9 @@ Vue.component('a2-panel', {
 			},
 			icoClass(cmp) {
 				return cmp.Current ? 'ico-check' : 'ico-none';
+			},
+			linkClass(link) {
+				return `ico-${link.Icon || 'none'}`;
 			}
 		}
 	});
@@ -10042,7 +10045,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190814-7522
+// 20190821-7534
 // controllers/base.js
 
 (function () {
@@ -10086,6 +10089,24 @@ Vue.directive('resize', {
 			}
 		}
 		return ra.length ? ra : null;
+	}
+
+	function isPermissionsDisabled(opts, arg) {
+		if (opts && opts.checkPermission) {
+			if (utils.isObjectExact(arg)) {
+				if (arg.$permissions) {
+					let perm = arg.$permissions;
+					let prop = opts.checkPermission;
+					if (prop in perm) {
+						if (!perm[prop])
+							return true;
+					} else {
+						console.error(`invalid permssion name: '${prop}'`);
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	const base = Vue.extend({
@@ -10491,9 +10512,15 @@ Vue.directive('resize', {
 				});
 			},
 
-			$dbRemove(elem, confirm) {
+			$dbRemove(elem, confirm, opts) {
+				debugger;
 				if (!elem)
 					return;
+
+				if (isPermissionsDisabled(opts, elem)) {
+					this.$alert(locale.$PermissionDenied);
+					return;
+				}
 				if (this.$isLoading) return;
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
@@ -10663,6 +10690,10 @@ Vue.directive('resize', {
 
 				function doDialog() {
 					// result always is raw data
+					if (isPermissionsDisabled(opts, arg)) {
+						that.$alert(locale.$PermissionDenied);
+						return;
+					}
 					switch (command) {
 						case 'new':
 							if (argIsNotAnArray()) return;

@@ -80,7 +80,7 @@ namespace A2v10.Request
 			var companies = root.Eval<List<ExpandoObject>>("Companies");
 			var links = root.Eval<List<ExpandoObject>>("CompaniesLinks");
 			if (companies != null)
-				return JsonConvert.SerializeObject(new { menu = companies, links = links}, 
+				return JsonConvert.SerializeObject(new { menu = companies, links}, 
 					JsonHelpers.StandardSerializerSettings);
 			return null;
 		}

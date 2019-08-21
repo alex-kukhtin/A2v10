@@ -80,6 +80,16 @@ namespace A2v10.Xaml
 		OpenSheet
 	}
 
+	public enum Permission
+	{
+		None = 0,
+		CanView = 1,
+		CanEdit = 2,
+		CanDelete = 4,
+		CanApply = 8,
+		CanUnapply = 16,
+	}
+
 	public class BindCmd : BindBase
 	{
 		private const String nullString = "null";
@@ -111,6 +121,8 @@ namespace A2v10.Xaml
 
 		public ExportToFormat Format { get; set; }
 		public String FileName { get; set; }
+
+		public Permission Permission { get; set; }
 
 		public BindCmd()
 		{
@@ -201,11 +213,10 @@ namespace A2v10.Xaml
 					return $"$removeSelected({CommandArgument(context)}, {GetConfirm(context)})";
 
 				case CommandType.DbRemove:
-					return $"$dbRemove({CommandArgument(context)}, {GetConfirm(context)})";
+					return $"$dbRemove({CommandArgument(context)}, {GetConfirm(context)}, {GetOptions(context)})";
 
 				case CommandType.DbRemoveSelected:
 					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)})";
-
 
 				case CommandType.MailTo:
 					return null;
@@ -323,7 +334,8 @@ namespace A2v10.Xaml
 
 		String GetOptions(RenderContext context)
 		{
-			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export && !Print && !NewWindow && !CheckArgument && !ReloadAfter)
+			if (!SaveRequired && !ValidRequired && !CheckReadOnly && !Export && !Print && !NewWindow 
+				&& !CheckArgument && !ReloadAfter && Permission == Permission.None)
 				return nullString;
 			StringBuilder sb = new StringBuilder("{");
 			if (SaveRequired)
@@ -334,6 +346,8 @@ namespace A2v10.Xaml
 				sb.Append("checkReadOnly: true,");
 			if (CheckArgument)
 				sb.Append("checkArgument: true,");
+			if (Permission != Permission.None)
+				sb.Append($"checkPermission: '{Permission.ToString().ToCamelCase()}'");
 			if (Export)
 			{
 				sb.Append("export: true,");
