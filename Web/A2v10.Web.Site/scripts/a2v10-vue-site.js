@@ -2210,7 +2210,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190818-7528
+// 20190821-7533
 // services/datamodel.js
 
 (function () {
@@ -2230,6 +2230,7 @@ app.modules['std:validators'] = function () {
 	const FLAG_EDIT = 2;
 	const FLAG_DELETE = 4;
 	const FLAG_APPLY = 8;
+	const FLAG_UNAPPLY = 16;
 
 	const DEFAULT_PAGE_SIZE = 20;
 
@@ -3022,12 +3023,13 @@ app.modules['std:validators'] = function () {
 				let permName = this._meta_.$permissions;
 				if (!permName) return undefined;
 				var perm = this[permName];
-				return {
+				return Object.freeze({
 					canView: !!(perm & FLAG_VIEW),
 					canEdit: !!(perm & FLAG_EDIT),
 					canDelete: !!(perm & FLAG_DELETE),
-					canApply: !!(perm & FLAG_APPLY)
-				};
+					canApply: !!(perm & FLAG_APPLY),
+					canUnapply: !!(perm & FLAG_UNAPPLY)
+				});
 			});
 		}
 	}

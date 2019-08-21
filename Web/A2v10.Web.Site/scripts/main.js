@@ -1951,7 +1951,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190818-7528
+// 20190821-7533
 // services/datamodel.js
 
 (function () {
@@ -1971,6 +1971,7 @@ app.modules['std:validators'] = function () {
 	const FLAG_EDIT = 2;
 	const FLAG_DELETE = 4;
 	const FLAG_APPLY = 8;
+	const FLAG_UNAPPLY = 16;
 
 	const DEFAULT_PAGE_SIZE = 20;
 
@@ -2763,12 +2764,13 @@ app.modules['std:validators'] = function () {
 				let permName = this._meta_.$permissions;
 				if (!permName) return undefined;
 				var perm = this[permName];
-				return {
+				return Object.freeze({
 					canView: !!(perm & FLAG_VIEW),
 					canEdit: !!(perm & FLAG_EDIT),
 					canDelete: !!(perm & FLAG_DELETE),
-					canApply: !!(perm & FLAG_APPLY)
-				};
+					canApply: !!(perm & FLAG_APPLY),
+					canUnapply: !!(perm & FLAG_UNAPPLY)
+				});
 			});
 		}
 	}
@@ -9082,15 +9084,15 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190816-7525*/
+/*20190820-7532*/
 /*components/newbutton.js*/
 
 (function () {
 
 
 	const companyButtonTemplate =
-		`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown v-if="isVisible">
-	<button class="btn" :class="btnClass" toggle aria-label="Company">
+`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown>
+	<button class="btn btn-companyname" toggle aria-label="Company">
 		<i class="ico ico-home"></i>
 		<span class="company-name" v-text=companyName></span>
 		<span class="caret"/>
@@ -9099,10 +9101,12 @@ Vue.component('a2-panel', {
 		<a v-for="comp in source" @click.prevent="selectCompany(comp)" href="" tabindex="-1" class="dropdown-item">
 			<i class="ico" :class="icoClass(comp)"/><span class="company-menu-name" v-text="comp.Name"/>
 		</a>
-		<div class="divider" v-if="hasLinks"/>
-		<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1">
-			<i class="ico ico-none"/><span v-text="link.Name" />
-		</a>
+		<template v-if="hasLinks">
+			<div class="divider"/>
+			<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1" class="dropdown-item">
+				<i class="ico ico-none"/><span v-text="link.Name" />
+			</a>
+		</template>
 	</div>
 </div></div>
 `;
@@ -9122,15 +9126,7 @@ Vue.component('a2-panel', {
 				if (comp)
 					return comp.Name;
 				return "*** UNSELECTED ***";
-			},
-			isVisible() {
-				return true;
-			},
-			btnClass() {
-				return "btn-companyname"; //this.btnStyle ? 'btn-' + this.btnStyle : '';
 			}
-		},
-		created() {
 		},
 		methods: {
 			selectCompany(comp) {
@@ -9140,10 +9136,15 @@ Vue.component('a2-panel', {
 				const data = JSON.stringify({ company: comp.Id });
 				http.post(urlTools.combine(rootUrl, 'account/switchtocompany'), data)
 					.then(x => {
-						window.location.assign(rootUrl); // reload
+						window.location.assign(urlTools.combine(rootUrl, '/') /*always root */);
 					}).catch(err => {
 						alert(err);
 					});
+			},
+			gotoLink(link) {
+				const store = component('std:store');
+				if (store)
+					store.commit('navigate', { url: link.Url});
 			},
 			icoClass(cmp) {
 				return cmp.Current ? 'ico-check' : 'ico-none';
@@ -9208,9 +9209,9 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20190821-7533
 // components/debug.js*/
 
 (function () {
@@ -9236,7 +9237,7 @@ Vue.component('a2-panel', {
 		'$host': null,
 		'$root': null,
 		'$parent': null,
-		'$items':null
+		'$items': null
 	};
 
 	function toJsonDebug(data) {
@@ -9254,15 +9255,13 @@ Vue.component('a2-panel', {
 		name: 'a2-trace-item',
 		template: `
 <div v-if="hasElem" class="trace-item-body">
-    <span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
-    <ul class="a2-debug-trace-item">
-        <li v-for="itm in elem">
-            
-            <div class="rq-title"><span class="elapsed" v-text="itm.elapsed + ' ms'"/> <span v-text="itm.text"/></div>
-        </li>
-    </ul>
-</div>
-`,
+	<span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
+	<ul class="a2-debug-trace-item">
+		<li v-for="itm in elem">
+			<div class="rq-title"><span class="elapsed" v-text="itm.elapsed + ' ms'"/> <span v-text="itm.text"/></div>
+		</li>
+	</ul>
+</div>`,
 		props: {
 			name: String,
 			elem: Array

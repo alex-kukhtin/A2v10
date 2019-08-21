@@ -1186,6 +1186,14 @@ header .company-menu-name,
   text-overflow: ellipsis;
   overflow: hidden;
 }
+header .dropdown.separate.show .btn,
+.header .dropdown.separate.show .btn {
+  background-color: #7186ab;
+}
+header .dropdown.separate.show .btn.btn-success,
+.header .dropdown.separate.show .btn.btn-success {
+  background-color: #52a845;
+}
 .content-view {
   position: absolute;
   left: 0;

@@ -84,3 +84,4 @@
 @Error.Exception=Что-то пошло не так, как ожидалось :-(
 @Error.FileFormatException=Некорректный формат файла
 @Error.DataReadOnly=База данных только для чтения
+@UIError.AccessDenied=UI:Доступ запрещен

@@ -1,14 +1,14 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190816-7525*/
+/*20190820-7532*/
 /*components/newbutton.js*/
 
 (function () {
 
 
 	const companyButtonTemplate =
-		`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown v-if="isVisible">
-	<button class="btn" :class="btnClass" toggle aria-label="Company">
+`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown>
+	<button class="btn btn-companyname" toggle aria-label="Company">
 		<i class="ico ico-home"></i>
 		<span class="company-name" v-text=companyName></span>
 		<span class="caret"/>
@@ -17,10 +17,12 @@
 		<a v-for="comp in source" @click.prevent="selectCompany(comp)" href="" tabindex="-1" class="dropdown-item">
 			<i class="ico" :class="icoClass(comp)"/><span class="company-menu-name" v-text="comp.Name"/>
 		</a>
-		<div class="divider" v-if="hasLinks"/>
-		<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1">
-			<i class="ico ico-none"/><span v-text="link.Name" />
-		</a>
+		<template v-if="hasLinks">
+			<div class="divider"/>
+			<a v-for="link in links" @click.prevent="gotoLink(link)" href="" tabindex="-1" class="dropdown-item">
+				<i class="ico ico-none"/><span v-text="link.Name" />
+			</a>
+		</template>
 	</div>
 </div></div>
 `;
@@ -40,15 +42,7 @@
 				if (comp)
 					return comp.Name;
 				return "*** UNSELECTED ***";
-			},
-			isVisible() {
-				return true;
-			},
-			btnClass() {
-				return "btn-companyname"; //this.btnStyle ? 'btn-' + this.btnStyle : '';
 			}
-		},
-		created() {
 		},
 		methods: {
 			selectCompany(comp) {
@@ -58,10 +52,15 @@
 				const data = JSON.stringify({ company: comp.Id });
 				http.post(urlTools.combine(rootUrl, 'account/switchtocompany'), data)
 					.then(x => {
-						window.location.assign(rootUrl); // reload
+						window.location.assign(urlTools.combine(rootUrl, '/') /*always root */);
 					}).catch(err => {
 						alert(err);
 					});
+			},
+			gotoLink(link) {
+				const store = component('std:store');
+				if (store)
+					store.commit('navigate', { url: link.Url});
 			},
 			icoClass(cmp) {
 				return cmp.Current ? 'ico-check' : 'ico-none';

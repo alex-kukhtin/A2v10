@@ -76,10 +76,12 @@ namespace A2v10.Request
 					prms.Set("Features", "____"); // all features disabled
 			}
 
-			// avaliable companies
+			// avaliable companies & xtra links
 			var companies = root.Eval<List<ExpandoObject>>("Companies");
+			var links = root.Eval<List<ExpandoObject>>("CompaniesLinks");
 			if (companies != null)
-				return JsonConvert.SerializeObject(companies, JsonHelpers.StandardSerializerSettings);
+				return JsonConvert.SerializeObject(new { menu = companies, links = links}, 
+					JsonHelpers.StandardSerializerSettings);
 			return null;
 		}
 

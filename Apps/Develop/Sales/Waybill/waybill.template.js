@@ -59,7 +59,7 @@ const template = {
 module.exports = template;
 
 function modelLoad(root) {
-	console.dir(root);
+	console.dir(root.Document.$permissions);
 	if (root.Document.$isNew)
 		cmn.documentCreate(root.Document, 'Waybill');
 }

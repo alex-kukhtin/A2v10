@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7514 */
+/* Version 10.0.7533 */
 
 /*TODO:
  * ????
@@ -20,11 +20,19 @@ interface IElement {
 	readonly $root: IRoot;
 	readonly $parent: IElement | IElementArray<IElement>;
 
+	readonly $permissions: {
+		readonly canView: boolean;
+		readonly canEdit: boolean;
+		readonly canDelete: boolean;
+		readonly canApply: boolean;
+		readonly canUnapply: boolean;
+	}
+
 	readonly $vm: ViewModel;
 	readonly $ctrl: IController;
 
-	$merge(src: object): void;
-	$empty(this: IElement): void;
+	$merge(src: object): IElement;
+	$empty(): IElement;
 }
 
 interface IArrayElement extends IElement {
@@ -53,6 +61,7 @@ interface IElementArray<T> extends Array<T> {
 	readonly $hasSelected: boolean;
 	readonly $checked: IElementArray<T>;
 	readonly $selectedIndex: number;
+	readonly $parent: IElement;
 
 	Selected(prop: string): IElementArray<T>;
 
@@ -78,7 +87,7 @@ interface IRoot extends IElement {
 	readonly $isCopy: boolean
 	readonly $template: Template;
 
-	$defer(): void; // TODO
+	$defer(handler: () => any): void;
 	$emit(event: string, ...params: any[]): void;
 	$forceValidate(): void;
 	$setDirty(dirty: boolean, path?: string): void;
@@ -128,7 +137,7 @@ declare const enum Severity {
 
 /* template validators */
 
-interface tempateValidatorFunc { (elem: IElement, value?: any): boolean; }
+interface tempateValidatorFunc { (elem: IElement, value?: any): boolean | string | Promise<any>; }
 
 interface templateValidatorObj {
 	valid: tempateValidatorFunc | StdValidator,
@@ -142,7 +151,8 @@ declare type templateValidator = String | tempateValidatorFunc | templateValidat
 interface Template {
 	options?: {
 		noDirty?: boolean,
-		persistSelect?: string[]
+		persistSelect?: string[],
+		skipDirty?: string[]
 	};
 	properties?: {
 		[prop: string]: templateProperty
@@ -165,25 +175,31 @@ interface IController {
 	$save(): Promise<object>;
 	$requery(): void;
 	$reload(args?: any): void;
-	$invoke(command: string, arg: object, path?: string): Promise<object>;
+	$invoke(command: string, arg: object, path?: string, opts?: { catchError: boolean }): Promise<object>;
 	$close(): void;
 	$modalClose(result?: any): any;
-	$msg(): any; //TODO
-	$alert(msg: string | IMessage);
+	$msg(msg: string): Promise<boolean>;
+	$alert(msg: string | IMessage): Promise<boolean>;
 	$confirm(msg: string | IMessage): Promise<boolean>;
 	$showDialog(url: string, data?: object, query?: object): Promise<object>;
 	$saveModified(msg?: string, title?: string): boolean;
 	$asyncValid(cmd: string, arg: object): any; //TODO
 	$toast(): void; //TODO
 	$notifyOwner(): any; //TODO
-	$navigate(url: string, data?: object, newWindow?: boolean): void;
+	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
 	$defer(func: () => void): void;
 	$setFilter(): any; //TODO
 }
 
+declare const enum MessageStyle {
+	confirm = 'confirm',
+	alert = 'alert',
+	info = 'info'
+}
+
 interface IMessage {
 	msg: string;
-	style?: string;
+	style?: MessageStyle;
 	list?: any;
 }
 

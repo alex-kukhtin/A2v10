@@ -178,7 +178,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (!_baseController.Host.IsMultiCompany)
 				return String.Empty;
-			return "<a2-company-button :source=\"companies\"></a2-company-button>";
+			return "<a2-company-button :source=\"companies.menu\" :links=\"companies.links\"></a2-company-button>";
 		}
 
 		public void Index()

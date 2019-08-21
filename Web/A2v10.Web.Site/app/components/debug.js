@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20181027-7333
+// 20190821-7533
 // components/debug.js*/
 
 (function () {
@@ -26,7 +26,7 @@
 		'$host': null,
 		'$root': null,
 		'$parent': null,
-		'$items':null
+		'$items': null
 	};
 
 	function toJsonDebug(data) {
@@ -44,15 +44,13 @@
 		name: 'a2-trace-item',
 		template: `
 <div v-if="hasElem" class="trace-item-body">
-    <span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
-    <ul class="a2-debug-trace-item">
-        <li v-for="itm in elem">
-            
-            <div class="rq-title"><span class="elapsed" v-text="itm.elapsed + ' ms'"/> <span v-text="itm.text"/></div>
-        </li>
-    </ul>
-</div>
-`,
+	<span class="title" v-text="name"/><span class="badge" v-text="elem.length"/>
+	<ul class="a2-debug-trace-item">
+		<li v-for="itm in elem">
+			<div class="rq-title"><span class="elapsed" v-text="itm.elapsed + ' ms'"/> <span v-text="itm.text"/></div>
+		</li>
+	</ul>
+</div>`,
 		props: {
 			name: String,
 			elem: Array

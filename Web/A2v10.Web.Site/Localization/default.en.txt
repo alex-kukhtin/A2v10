@@ -85,4 +85,6 @@
 @Error.Exception=Something went wrong as expected :-(
 @Error.FileFormatException=File contains corrupted data
 @Error.DataReadOnly=The database is read-only
+@UIError.AccessDenied=UI:Access denied
+
 

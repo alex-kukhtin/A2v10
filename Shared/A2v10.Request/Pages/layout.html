@@ -33,7 +33,7 @@
 			<a2-new-button :menu="settingsMenu" icon="gear-outline" title="@[Settings]"></a2-new-button>
 			<a class="nav-admin middle" v-if="hasFeedback" tabindex="-1" @click.prevent="showFeedback" title="@[Feedback]" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
 			<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
-			<div class="dropdown dir-down" v-dropdown>
+			<div class="dropdown dir-down separate" v-dropdown>
 				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name">$(PersonName)</span><span class="caret"></span></button>
 				<div class="dropdown-menu menu down-left">
 					<a v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>

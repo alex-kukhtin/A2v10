@@ -135,9 +135,19 @@ header, .header {
 	}
 
 	.company-menu-name {
-		max-width:20rem;
-		text-overflow:ellipsis;
-		overflow:hidden;
+		max-width: 20rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.dropdown.separate.show {
+		.btn {
+			background-color: @brand-hover-color;
+		}
+
+		.btn.btn-success {
+			background-color: darken(@success-base-color, 5%);
+		}
 	}
 }
 
