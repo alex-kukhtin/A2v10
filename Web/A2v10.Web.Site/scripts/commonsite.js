@@ -2216,7 +2216,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190821-7533
+// 20190822-7536
 // services/datamodel.js
 
 (function () {
@@ -3029,6 +3029,11 @@ Vue.component('a2-pager', {
 				let permName = this._meta_.$permissions;
 				if (!permName) return undefined;
 				var perm = this[permName];
+				if (this.$isNew && perm === 0) {
+					let mi = this.$ModelInfo;
+					if (mi && utils.isDefined(mi.Permissions))
+						perm = mi.Permissions;
+				}
 				return Object.freeze({
 					canView: !!(perm & FLAG_VIEW),
 					canEdit: !!(perm & FLAG_EDIT),

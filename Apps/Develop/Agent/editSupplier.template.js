@@ -5,8 +5,8 @@
 const eventBus = require('std:eventBus');
 
 function __myEvent(arg) {
-	console.dir(this);
-	console.dir(arg);
+	//console.dir(this);
+	//console.dir(arg);
 }
 
 const template = {
@@ -42,14 +42,15 @@ const template = {
 
 function modelLoad(root) {
 	const ag = root.Agent;
-	console.dir(root.$isCopy);
+	console.dir(root);
+	//console.dir(root.$isCopy);
 	if (ag.$isNew)
 		customerCreate(ag);
 	eventBus.$on('myEvent', __myEvent);
 }
 
 function modelUnload(root) {
-	console.dir({event: 'unload', root, this_: this });
+	//console.dir({event: 'unload', root, this_: this });
 	eventBus.$off('myEvent', __myEvent);
 }
 

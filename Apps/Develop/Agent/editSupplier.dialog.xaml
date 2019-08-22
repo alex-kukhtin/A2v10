@@ -30,6 +30,7 @@
 				<Code Content="{Bind Root.$$tabVisible}"/>
 			</StackPanel>
 			-->
+			<Code Multiline="True" Content="{Bind Agent.$permissions}"></Code>
 		</Tab>
 		<Tab Header="Validators" Height="300px">
 			<Grid Columns="1*, 1*">
