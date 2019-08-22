@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -7,10 +7,9 @@ namespace A2v10.Xaml
 	public class FieldSet : Container, ITableControl
 	{
 		public Orientation Orientation { get; set; }
-
 		public String Title { get; set; }
-
 		public Popover Hint { get; set; }
+		public Boolean Disabled {get;set;}
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -20,8 +19,10 @@ namespace A2v10.Xaml
 			onRender?.Invoke(div);
 			MergeAttributes(div, context);
 			div.AddCssClass(Orientation.ToString().ToLowerInvariant());
+			MergeDisabled(div, context);
 			div.RenderStart(context);
 			RenderTitle(context);
+
 			RenderChildren(context, (ch) =>
 			{
 				ch.AddCssClass("field-set-item");
@@ -64,5 +65,18 @@ namespace A2v10.Xaml
 			});
 			tag.RenderEnd(context);
 		}
+
+		internal virtual void MergeDisabled(TagBuilder tag, RenderContext context)
+		{
+			// may override the disabled attribute from the command
+			var disBind = GetBinding(nameof(Disabled));
+			if (disBind != null)
+				tag.MergeAttribute(":disabled", disBind.GetPath(context), replaceExisting: true);
+			else if (Disabled)
+			{
+				tag.MergeAttribute("disabled", String.Empty, replaceExisting: true);
+			}
+		}
+
 	}
 }

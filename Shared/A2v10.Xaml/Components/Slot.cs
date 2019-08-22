@@ -21,11 +21,15 @@ namespace A2v10.Xaml
 			var scopeBind = GetBinding(nameof(Scope));
 			if (scopeBind == null)
 				throw new XamlException("Scope must be specified for Slot component");
+
+			String slotItem = $"{SLOT_ITEM}{context.ScopeLevel}";
+
 			var tag = new TagBuilder("template", null, IsInGrid);
 			tag.MergeAttribute("v-if", $"!!{scopeBind.GetPathFormat(context)}");
-			tag.MergeAttribute("v-for", $"{SLOT_ITEM} in [{scopeBind.GetPath(context)}]");
+			tag.MergeAttribute("v-for", $"{slotItem} in [{scopeBind.GetPath(context)}]");
+
 			tag.RenderStart(context);
-			using (var ctx = new ScopeContext(context, SLOT_ITEM))
+			using (var ctx = new ScopeContext(context, slotItem))
 			{
 				foreach (var c in Children)
 				{

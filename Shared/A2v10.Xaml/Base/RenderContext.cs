@@ -187,6 +187,8 @@ namespace A2v10.Xaml
 			_stackScope.Push(new ScopeElem(scope, replace));
 		}
 
+		internal Int32 ScopeLevel => _stackScope.Count;
+
 		internal void PopScope()
 		{
 			_stackScope.Pop();
