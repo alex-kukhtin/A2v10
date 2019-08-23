@@ -67,7 +67,7 @@ namespace A2v10.Xaml
 			var mbind = GetBinding(nameof(Mark));
 			if (mbind != null)
 			{
-				ul.MergeAttribute("mark", mbind.GetPath(context));
+				ul.MergeAttribute("mark", mbind.Path /*without scope, property name*/);
 			}
 			else if (Mark != null)
 			{

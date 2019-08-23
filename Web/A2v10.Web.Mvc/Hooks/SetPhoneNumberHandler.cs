@@ -96,6 +96,9 @@ namespace A2v10.Web.Mvc.Hooks
 			{
 				var user = await _userManager.FindByIdAsync(UserId);
 				await _userManager.UpdateAsync(user);
+
+				if (_host.IsMultiTenant)
+					await _dbContext.ExecuteAsync(_host.TenantDataSource, "a2security.SetTenantUserPhoneNumber", new {_host.TenantId, UserId, PhoneNumber });
 				return "success";
 			}
 			return String.Join(", ", result.Errors);
