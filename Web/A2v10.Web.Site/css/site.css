@@ -1004,15 +1004,15 @@ input[type=number]::-webkit-outer-spin-button {
   border-color: #f5c6cb;
 }
 .a2-alert.info {
-  background-color: #d1ecf1;
-  border-color: #bee5eb;
-  color: #0c5460;
+  background-color: #d9edf7;
+  border-color: #bcdff1;
+  color: #31708f;
 }
 .a2-alert.info > .ico {
-  color: #0c5460;
+  color: #31708f;
 }
 .a2-alert.info hr {
-  border-color: #bee5eb;
+  border-color: #bcdff1;
 }
 .a2-alert.dark {
   background-color: #d6d8d9;
@@ -2191,20 +2191,20 @@ pre.a2-code {
   color: #daa520;
 }
 .control-group.val-info .validator {
-  background-color: #e5f4f7;
+  background-color: #eef7fb;
   border-color: #69a5f8;
   color: #69a5f8;
   box-shadow: 1px 4px 10px rgba(32, 165, 220, 0.2);
 }
 .control-group.val-info .validator:after {
-  border-bottom-color: #e5f4f7;
+  border-bottom-color: #eef7fb;
 }
 .control-group.val-info .validator:before {
   border-bottom-color: #69a5f8;
 }
 .control-group.val-info .validator.top-left:after,
 .control-group.val-info .validator.top-right:after {
-  border-top-color: #e5f4f7;
+  border-top-color: #eef7fb;
 }
 .control-group.val-info .validator.top-left:before,
 .control-group.val-info .validator.top-right:before {
@@ -2212,7 +2212,7 @@ pre.a2-code {
 }
 .control-group.val-info .input-group {
   border-color: #69a5f8 !important;
-  background-color: #e5f4f7 !important;
+  background-color: #eef7fb !important;
 }
 .control-group.val-info .input-group:after {
   border-top-color: #69a5f8;
@@ -5351,15 +5351,15 @@ TODO:
   color: #383838;
 }
 .panel.panel-cyan {
-  border: 1px solid #bee5eb;
+  border: 1px solid #bcdff1;
 }
 .panel.panel-cyan > .panel-header {
-  color: #0c5460;
-  background-color: #d1ecf1;
-  border-bottom: 1px solid #bee5eb;
+  color: #31708f;
+  background-color: #d9edf7;
+  border-bottom: 1px solid #bcdff1;
 }
 .panel.panel-cyan > .panel-header .panel-collapse-handle {
-  color: #0c5460;
+  color: #31708f;
 }
 .panel.panel-green {
   border: 1px solid #c3e6cb;

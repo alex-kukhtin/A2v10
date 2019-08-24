@@ -42,10 +42,6 @@ namespace A2v10.Web.Mvc.Hooks
 		public async Task AfterSave(Object beforeData, Object afterData)
 		{
 			var before = beforeData as ExpandoObject;
-			var after = afterData as ExpandoObject;
-
-			var afterUser = after.Get<ExpandoObject>("User");
-			afterUser.Set("TenantRoles", before.Eval<String>("User.TenantRoles"));
 
 			String json = JsonConvert.SerializeObject(before.Get<Object>("User"));
 			var appUser = JsonConvert.DeserializeObject<AppUser>(json);
