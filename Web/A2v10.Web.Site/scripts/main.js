@@ -10050,7 +10050,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190821-7535
+// 20190824-7540
 // controllers/base.js
 
 (function () {
@@ -10177,6 +10177,11 @@ Vue.directive('resize', {
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
+
+				if (isPermissionsDisabled(opts, arg)) {
+					this.$alert(locale.$PermissionDenied);
+					return;
+				}
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
 			},
