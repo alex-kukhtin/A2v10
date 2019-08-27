@@ -54,12 +54,8 @@ namespace A2v10.Web.Mvc.Hooks
 
 			void ExecuteSql()
 			{
-				var tenantCompanyInfo = _dbContext.ExecuteAndLoad<DeleteTenantCompanyParams, TenantCompanyInfo>(_host.TenantDataSource, "a2security_tenant.[DeleteCompany]", prms);
-
-				tenantCompanyInfo.UserId = UserId;
-				tenantCompanyInfo.TenantId = _host.TenantId ?? -1;
-
-				_dbContext.Execute<TenantCompanyInfo>(_host.CatalogDataSource, "a2security.[UpdateTenantCompanies]", tenantCompanyInfo);
+				var dm = _dbContext.LoadModel(_host.TenantDataSource, "a2security_tenant.[DeleteCompany]", prms);
+				_dbContext.SaveModel(_host.CatalogDataSource, "a2security.[Tenant.Companies.Update]", dm.Root, prms);
 				result.status = "success";
 			}
 

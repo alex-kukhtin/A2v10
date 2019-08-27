@@ -68,6 +68,12 @@ namespace A2v10.Request
 			if (String.IsNullOrEmpty(cmd.procedure))
 				throw new RequestModelException("A procedure must be specified for sql-type command");
 			IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec);
+			String invokeTarget = cmd.GetInvokeTarget();
+			if (invokeTarget != null) {
+				var clr = new ClrInvoker();
+				clr.EnableThrow();
+				clr.Invoke(invokeTarget, dataToExec); // after execute
+			}
 			WriteDataModel(model, writer);
 		}
 

@@ -12,11 +12,18 @@ namespace A2v10.Web.Mvc.Hooks
 	{
 		IApplicationHost _host;
 		IDbContext _dbContext;
+		Boolean _enableThrow;
 
 		public UpdateTenantCompanyHandler()
 		{
 			_host = null;
 			_dbContext = null;
+			_enableThrow = false;
+		}
+
+		public void EnableThrow()
+		{
+			_enableThrow = true;
 		}
 
 		public void Inject(IApplicationHost host, IDbContext dbContext)
@@ -41,12 +48,8 @@ namespace A2v10.Web.Mvc.Hooks
 
 			void ExecuteSql()
 			{
-				var tenantCompanyInfo = _dbContext.ExecuteAndLoad<TenantParams, TenantCompanyInfo>(_host.TenantDataSource, "a2security_tenant.GetCompaniesInfo", prms);
-
-				tenantCompanyInfo.UserId = UserId;
-				tenantCompanyInfo.TenantId = _host.TenantId ?? -1;
-
-				_dbContext.Execute<TenantCompanyInfo>(_host.CatalogDataSource, "a2security.[UpdateTenantCompanies]", tenantCompanyInfo);
+				var dm = _dbContext.LoadModel(_host.TenantDataSource, "a2security_tenant.GetCompaniesInfo", prms);
+				_dbContext.SaveModel(_host.CatalogDataSource, "a2security.[Tenant.Companies.Update]", dm.Root, prms);
 				result.status = "success";
 			}
 
@@ -68,6 +71,8 @@ namespace A2v10.Web.Mvc.Hooks
 			}
 			catch (Exception ex)
 			{
+				if (_enableThrow)
+					throw ex;
 				result.status = "error";
 				if (_host.IsDebugConfiguration)
 					result.message = ex.Message;

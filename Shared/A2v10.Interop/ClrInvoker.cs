@@ -13,6 +13,8 @@ namespace A2v10.Interop
 {
 	public class ClrInvoker
 	{
+		private Boolean _enableThrow;
+
 		Object DefaultValue(Type tp)
 		{
 			return tp.IsValueType ? Activator.CreateInstance(tp) : null;
@@ -133,6 +135,8 @@ namespace A2v10.Interop
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
+			if (_enableThrow)
+				EnableThrowForInstance(instance);
 			return CallInvoke(instance, parameters);
 		}
 
@@ -140,7 +144,23 @@ namespace A2v10.Interop
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
+			if (_enableThrow)
+				EnableThrowForInstance(instance);
 			return await CallInvokeAsync(instance, parameters);
 		}
+
+		void EnableThrowForInstance(Object instance)
+		{
+			var type = instance.GetType();
+			var miEnableThrow = type.GetMethod("EnableThrow", BindingFlags.Public | BindingFlags.Instance);
+			if (miEnableThrow != null)
+				miEnableThrow.Invoke(instance, null);
+		}
+
+		public void EnableThrow()
+		{
+			_enableThrow = true;
+		}
+
 	}
 }

@@ -76,6 +76,7 @@ namespace A2v10.Request
 		public String script;
 		public ExpandoObject parameters;
 		public RequestMerge merge;
+		public String invoke;
 
 		[JsonIgnore]
 		protected RequestModel _parent;
@@ -92,22 +93,10 @@ namespace A2v10.Request
 		internal Boolean HasMerge => merge != null && !String.IsNullOrEmpty(merge.model);
 
 		[JsonIgnore]
-		public String Path
-		{
-			get
-			{
-				return _parent._modelPath;
-			}
-		}
+		public String Path => _parent._modelPath;
 
 		[JsonIgnore]
-		public String Id
-		{
-			get
-			{
-				return _parent._id;
-			}
-		}
+		public String Id => _parent._id;
 
 		[JsonIgnore]
 		public String LoadProcedure
@@ -257,6 +246,14 @@ namespace A2v10.Request
 				return model;
 			}
 		}
+
+		public String GetInvokeTarget()
+		{
+			if (String.IsNullOrEmpty(invoke))
+				return null;
+			return invoke;
+		}
+
 	}
 
 	public class TargetModel
@@ -273,7 +270,6 @@ namespace A2v10.Request
 		public String view;
 		public String viewMobile;
 		public String hook;
-		public String invoke;
 		public Boolean indirect;
 		public String target;
 		public String targetId;
@@ -293,13 +289,6 @@ namespace A2v10.Request
 		public String GetRelativePath(String extension, Boolean mobile)
 		{
 			return $"~/{Path}/{GetView(mobile)}{extension}";
-		}
-
-		public String GetInvokeTarget()
-		{
-			if (String.IsNullOrEmpty(invoke))
-				return null;
-			return invoke;
 		}
 
 		public IModelHandler GetHookHandler()
