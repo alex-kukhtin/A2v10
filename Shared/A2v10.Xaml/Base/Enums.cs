@@ -262,6 +262,7 @@ namespace A2v10.Xaml
 		CommentPrevious,
 		CommentUrgent,
 		Company,
+		Confirm,
 		CurrencyUah,
 		CurrencyUsd,
 		CurrencyEuro,
