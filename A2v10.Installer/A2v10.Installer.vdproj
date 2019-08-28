@@ -2185,7 +2185,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_08550F6CFED173D2078D348741E9D67A"
@@ -2219,11 +2219,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_09A3E508FA0945709F38BF56549174BA"
-                    {
-                    "Name" = "8:A2v10.Workflow.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Workflow.dll"
             "TargetName" = "8:"
@@ -2250,11 +2245,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Owin.Security.Cookies, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0AADA65E8E4BB778CE796921F97799DB"
-                    {
-                    "Name" = "8:Microsoft.Owin.Security.Cookies.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Owin.Security.Cookies.DLL"
             "TargetName" = "8:"
@@ -2281,11 +2271,6 @@
             "AssemblyAsmDisplayName" = "8:System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_12D95BCCCAACBF9514D211EA5AF5F27E"
-                    {
-                    "Name" = "8:System.Web.WebPages.Razor.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Web.WebPages.Razor.DLL"
             "TargetName" = "8:"
@@ -2312,11 +2297,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1444C10634208FCBEF7DAC6F0A88A02A"
-                    {
-                    "Name" = "8:Microsoft.Owin.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Owin.DLL"
             "TargetName" = "8:"
@@ -2374,11 +2354,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1BDD15ACA9E243EB376FD8AD54FAED8B"
-                    {
-                    "Name" = "8:Microsoft.Owin.Security.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Owin.Security.DLL"
             "TargetName" = "8:"
@@ -2405,11 +2380,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Data.Interfaces, Version=10.0.7203.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1BE040C93213418DAE3169986E158B30"
-                    {
-                    "Name" = "8:A2v10.Data.Interfaces.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Data.Interfaces.dll"
             "TargetName" = "8:"
@@ -2433,7 +2403,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1C79E148A29A4F45BA88C506757550EA"
@@ -2487,11 +2457,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_204EACB57C334149235D50AEED08BBB7"
-                    {
-                    "Name" = "8:A2v10.Reports.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Reports.DLL"
             "TargetName" = "8:"
@@ -2589,11 +2554,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Site, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_232ED0121B334D84873A3011B1168065"
-                    {
-                    "Name" = "8:A2v10.Web.Site.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Web.Site.dll"
             "TargetName" = "8:"
@@ -2651,11 +2611,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2EC6F2BBEED3426D8CFE355DF2831DEF"
-                    {
-                    "Name" = "8:A2v10.Request.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Request.dll"
             "TargetName" = "8:"
@@ -2679,7 +2634,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BuildSql, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:BuildSql, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_324D3FF2D9564FFD81D787A93601D4D1"
@@ -2713,11 +2668,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Xaml, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3291FCB53626433093FD7B62353667D1"
-                    {
-                    "Name" = "8:A2v10.Xaml.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Xaml.dll"
             "TargetName" = "8:"
@@ -2803,7 +2753,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Reports, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_384353D2B8F24D19A02EDA3203073AD1"
@@ -2834,7 +2784,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.BackgroundTasks, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.BackgroundTasks, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3B3D6BEB5A2F59A5DBFD36A096F24EE7"
@@ -2990,11 +2940,6 @@
             "AssemblyAsmDisplayName" = "8:System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_41165C8E20D2BED33C00FE399FEBE4B6"
-                    {
-                    "Name" = "8:System.Web.Razor.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Web.Razor.DLL"
             "TargetName" = "8:"
@@ -3041,11 +2986,6 @@
             "AssemblyAsmDisplayName" = "8:System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4226E5CF9DD8E2AF93778CF9F6247B87"
-                    {
-                    "Name" = "8:System.Web.WebPages.Deployment.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Web.WebPages.Deployment.DLL"
             "TargetName" = "8:"
@@ -3112,11 +3052,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Config, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_55D963A73963A4A0B8317CADD9F61BDF"
-                    {
-                    "Name" = "8:A2v10.Web.Config.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Web.Config.DLL"
             "TargetName" = "8:"
@@ -3222,7 +3157,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BackgroundProcessor, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:BackgroundProcessor, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_576D6FF53C1C401EACA34B8F20AD7E39"
@@ -3307,11 +3242,6 @@
             "AssemblyAsmDisplayName" = "8:System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5BCFFEAC5164B38D58CA6B1FF1833D13"
-                    {
-                    "Name" = "8:System.Web.Mvc.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Web.Mvc.DLL"
             "TargetName" = "8:"
@@ -3338,11 +3268,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Mvc, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5ED8701D8D9A48249DC6C98B212D8671"
-                    {
-                    "Name" = "8:A2v10.Web.Mvc.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Web.Mvc.dll"
             "TargetName" = "8:"
@@ -3409,11 +3334,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Owin.Host.SystemWeb, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_67848C7C216FF2DA9A3429569509F80C"
-                    {
-                    "Name" = "8:Microsoft.Owin.Host.SystemWeb.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Owin.Host.SystemWeb.DLL"
             "TargetName" = "8:"
@@ -3471,11 +3391,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6AC8F5C4C721411C9D042943D03D29CE"
-                    {
-                    "Name" = "8:A2v10.Infrastructure.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Infrastructure.dll"
             "TargetName" = "8:"
@@ -3522,11 +3437,6 @@
             "AssemblyAsmDisplayName" = "8:System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6BBD6C19189EB38C1537F455084A9254"
-                    {
-                    "Name" = "8:System.Web.WebPages.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Web.WebPages.DLL"
             "TargetName" = "8:"
@@ -3573,11 +3483,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Data.Providers, Version=10.0.7203.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6E93AE4152F9EA416E56DE40859598F5"
-                    {
-                    "Name" = "8:A2v10.Data.Providers.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Data.Providers.DLL"
             "TargetName" = "8:"
@@ -3604,11 +3509,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Activities.Extensions, Version=2.0.6.9, Culture=neutral, PublicKeyToken=23b0c89d0d5ad43f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_704081A34F22B765787DA7ADA6BC83BA"
-                    {
-                    "Name" = "8:Microsoft.Activities.Extensions.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Activities.Extensions.DLL"
             "TargetName" = "8:"
@@ -3635,11 +3535,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Interop, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7358069E141C54049479FF853F6CE688"
-                    {
-                    "Name" = "8:A2v10.Interop.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Interop.DLL"
             "TargetName" = "8:"
@@ -3666,11 +3561,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Infrastructure, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_745AFB8D6BDA30BD873A1D3F24A79A5B"
-                    {
-                    "Name" = "8:A2v10.Infrastructure.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Infrastructure.DLL"
             "TargetName" = "8:"
@@ -3697,11 +3587,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Data.Interfaces, Version=10.0.7203.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_749D3B9047CD8CA8C0B8661A05D8B42D"
-                    {
-                    "Name" = "8:A2v10.Data.Interfaces.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Data.Interfaces.DLL"
             "TargetName" = "8:"
@@ -3728,11 +3613,6 @@
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_78763B8B6B085F021F6282159B4C8FCE"
-                    {
-                    "Name" = "8:Newtonsoft.Json.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Newtonsoft.Json.DLL"
             "TargetName" = "8:"
@@ -3779,11 +3659,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Script.JSRT, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7CB97CE7F7DFDB5383C994726D2809C9"
-                    {
-                    "Name" = "8:A2v10.Script.JSRT.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Script.JSRT.DLL"
             "TargetName" = "8:"
@@ -3850,11 +3725,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Identity, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8A6451B76FEDEFCAF54BF020C5C24AFC"
-                    {
-                    "Name" = "8:A2v10.Web.Identity.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Web.Identity.DLL"
             "TargetName" = "8:"
@@ -3961,11 +3831,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Request, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_938D16475178B93B8C7FFA4ADCFA38E5"
-                    {
-                    "Name" = "8:A2v10.Request.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Request.DLL"
             "TargetName" = "8:"
@@ -4032,11 +3897,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Script, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9C05E6DFAAE14F6A8126C23B2ADB8451"
-                    {
-                    "Name" = "8:A2v10.Script.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Script.dll"
             "TargetName" = "8:"
@@ -4094,11 +3954,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9E22DD00D8073A082E955E29365BDE8A"
-                    {
-                    "Name" = "8:Microsoft.AspNet.Identity.Core.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.AspNet.Identity.Core.DLL"
             "TargetName" = "8:"
@@ -4125,11 +3980,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A08465E83B4A44215801212B630AE4E2"
-                    {
-                    "Name" = "8:Microsoft.Web.Infrastructure.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.Web.Infrastructure.DLL"
             "TargetName" = "8:"
@@ -4153,7 +4003,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A4676109DADC44E5BCECB1345BF6B884"
@@ -4187,11 +4037,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Messaging, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A47335C9BE8346039C39109B3A8CE522"
-                    {
-                    "Name" = "8:A2v10.Messaging.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Messaging.dll"
             "TargetName" = "8:"
@@ -4215,7 +4060,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Script, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Script, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A8435CFF9BF935F5B34A040065866CC3"
@@ -4266,7 +4111,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Messaging, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Messaging, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_AE0A95D44373612E8F9D22815ED4DEE4"
@@ -4300,11 +4145,6 @@
             "AssemblyAsmDisplayName" = "8:WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B07AEF745C64970BCFB8DCC979DB0930"
-                    {
-                    "Name" = "8:WebActivatorEx.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:WebActivatorEx.DLL"
             "TargetName" = "8:"
@@ -4331,11 +4171,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Script, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B28AEAD977B1448C1467F2C7D5DF293F"
-                    {
-                    "Name" = "8:A2v10.Web.Script.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Web.Script.DLL"
             "TargetName" = "8:"
@@ -4413,11 +4248,6 @@
             "AssemblyAsmDisplayName" = "8:Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B865140FD255F63298B7A24EAF17C07D"
-                    {
-                    "Name" = "8:Owin.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Owin.DLL"
             "TargetName" = "8:"
@@ -4475,11 +4305,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Data, Version=10.0.7203.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C057E6B88771478A8461C9C6A05DDFF9"
-                    {
-                    "Name" = "8:A2v10.Data.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Data.dll"
             "TargetName" = "8:"
@@ -4637,11 +4462,6 @@
             "AssemblyAsmDisplayName" = "8:A2v10.Web.Base, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C9A38B43BC80743452E2670EFC10069F"
-                    {
-                    "Name" = "8:A2v10.Web.Base.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:A2v10.Web.Base.DLL"
             "TargetName" = "8:"
@@ -4668,11 +4488,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.Owin.Security.OAuth, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CAE80CD7936740BEB560C2BA575C3A3D"
-                    {
-                    "Name" = "8:Microsoft.Owin.Security.OAuth.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\Microsoft.Owin.Security.OAuth.dll"
             "TargetName" = "8:"
@@ -4699,11 +4514,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CFDFAAAAEC061A1649CD9EB4691DE36A"
-                    {
-                    "Name" = "8:Microsoft.AspNet.Identity.Owin.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.AspNet.Identity.Owin.DLL"
             "TargetName" = "8:"
@@ -4841,11 +4651,6 @@
             "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DDE1246B116DD1472D75A903BCB02301"
-                    {
-                    "Name" = "8:DocumentFormat.OpenXml.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DocumentFormat.OpenXml.DLL"
             "TargetName" = "8:"
@@ -4960,7 +4765,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:A2v10.Workflow, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F1F0EEC026283B24209C2523DA109BED"
@@ -5085,11 +4890,6 @@
             "AssemblyAsmDisplayName" = "8:System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_FF64764C4354394B627542C0B19A8A02"
-                    {
-                    "Name" = "8:System.ValueTuple.DLL"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.ValueTuple.DLL"
             "TargetName" = "8:"
@@ -5113,7 +4913,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TestMail, Version=10.0.7541.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:TestMail, Version=10.0.7542.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_FFD74B0BDC854679A3850C4B6119B07B"
@@ -5339,15 +5139,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{E8F4C4C8-3CFF-476E-B726-52F06B0C4840}"
-        "PackageCode" = "8:{D8C40F8F-6F24-4017-906B-62DA7C02EA90}"
+        "ProductCode" = "8:{2D7BBFF2-2794-4B6F-AA22-BDCF99A0449F}"
+        "PackageCode" = "8:{0257F5B7-07EF-461E-9AD2-2255D05DF60B}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7541"
+        "ProductVersion" = "8:10.0.7542"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

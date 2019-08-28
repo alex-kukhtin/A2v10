@@ -92,6 +92,7 @@ namespace A2v10.Request
 			{
 				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 				var clr = new ClrInvoker();
+				clr.EnableThrow();
 				clr.Invoke(invokeTarget, prms); // after save
 			}
 			else
