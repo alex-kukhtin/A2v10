@@ -14,16 +14,24 @@ namespace A2v10.Web.Mvc.Hooks
 		IDbContext _dbContext;
 		Boolean _enableThrow;
 
+		Boolean _enableDtc;
+
 		public UpdateTenantCompanyHandler()
 		{
 			_host = null;
 			_dbContext = null;
 			_enableThrow = false;
+			_enableDtc = true;
 		}
 
 		public void EnableThrow()
 		{
 			_enableThrow = true;
+		}
+
+		public void DisableDtc()
+		{
+			_enableDtc = false;
 		}
 
 		public void Inject(IApplicationHost host, IDbContext dbContext)
@@ -55,7 +63,7 @@ namespace A2v10.Web.Mvc.Hooks
 
 			try
 			{
-				if (_host.IsDTCEnabled)
+				if (_host.IsDTCEnabled && _enableDtc)
 				{
 					// distributed transaction!!!!
 					using (var trans = new TransactionScope(TransactionScopeOption.RequiresNew))

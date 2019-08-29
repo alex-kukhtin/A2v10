@@ -78,6 +78,7 @@ namespace A2v10.Web.Mvc.Hooks
 					var update = new UpdateTenantCompanyHandler();
 					update.Inject(_host, _dbContext);
 					update.EnableThrow();
+					update.DisableDtc();
 					update.Invoke(UserId, 0);
 				}
 			}
