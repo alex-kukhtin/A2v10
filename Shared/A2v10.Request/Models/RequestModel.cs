@@ -379,6 +379,7 @@ namespace A2v10.Request
 		public String clrType;
 		public Boolean async;
 		public String wrapper;
+		public Int32 commandTimeout;
 
 		public IList<String> xmlSchemas;
 		public Boolean validate;
