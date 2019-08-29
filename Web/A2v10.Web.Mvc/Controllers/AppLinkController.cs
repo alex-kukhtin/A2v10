@@ -68,10 +68,11 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
 			layout.Replace("$(LayoutHead)", _host.CustomAppHead());
 			layout.Replace("$(LayoutScripts)", _host.CustomAppScripts());
-
+			layout.Replace("$(HelpUrl)", _host.HelpUrl);
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
 			layout.Replace("$(Description)", _host.AppDescription);
+			layout.Replace("@(SiteMeta)", Request.GetSiteMetaTags(_host));
 
 			StringBuilder script = new StringBuilder(ResourceHelper.AppLinksScript);
 			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false, registation: false }}");
