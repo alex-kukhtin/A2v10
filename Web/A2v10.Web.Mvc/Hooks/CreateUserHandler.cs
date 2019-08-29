@@ -11,12 +11,15 @@ using Microsoft.AspNet.Identity.Owin;
 
 using A2v10.Infrastructure;
 using A2v10.Web.Identity;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Hooks
 {
 	public class CreateUserHandler : IModelHandler
 	{
 		private IApplicationHost _host;
+		private IDbContext _dbContext;
+
 		readonly IOwinContext _context;
 		readonly AppUserManager _userManager;
 
@@ -26,17 +29,18 @@ namespace A2v10.Web.Mvc.Hooks
 			_userManager = _context.GetUserManager<AppUserManager>();
 		}
 
-		public void Inject(IApplicationHost host)
+		public void Inject(IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
+			_dbContext = dbContext;
 		}
 
-		public Task<Boolean> BeforeSave(Object beforeData)
+		public Task<Boolean> BeforeSave(Int64 UserId, Object beforeData)
 		{
 			return Task.FromResult(false);
 		}
 
-		public async Task AfterSave(Object beforeData, Object afterData)
+		public async Task AfterSave(Int64 UserId, Object beforeData, Object afterData)
 		{
 			var before = beforeData as ExpandoObject;
 			var after = afterData as ExpandoObject;
@@ -66,6 +70,14 @@ namespace A2v10.Web.Mvc.Hooks
 				user.TenantRoles = tenantRoles;
 			user.SetModified(UserModifiedFlag.EmailConfirmed);
 			await _userManager.UpdateAsync(user);
+
+			if (_host.IsMultiTenant && _host.IsMultiCompany)
+			{
+				var update = new UpdateTenantCompanyHandler();
+				update.Inject(_host, _dbContext);
+				update.EnableThrow();
+				update.Invoke(UserId, 0);
+			}
 		}
 	}
 }

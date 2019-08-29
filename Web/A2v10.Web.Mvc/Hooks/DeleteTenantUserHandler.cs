@@ -3,6 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Web;
+using System.Transactions;
 
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -49,7 +50,7 @@ namespace A2v10.Web.Mvc.Hooks
 			_dbContext = dbContext;
 		}
 
-		public async Task<Object> InvokeAsync(Int64 UserId, Int64 Id)
+		public Object Invoke(Int64 UserId, Int64 Id)
 		{
 			if (!_host.IsMultiTenant)
 				throw new InvalidOperationException("DeleteTenantUser is available only in multitenant environment");
@@ -65,10 +66,37 @@ namespace A2v10.Web.Mvc.Hooks
 				CurrentUser = UserId
 			};
 			var result = new DeleteTeanantUserResult(); 
+
+			void ExecuteSql()
+			{
+				_dbContext.Execute<DeleteTenantUserParams>(_host.TenantDataSource, "a2security_tenant.[DeleteUser]", prms);
+				_dbContext.Execute<DeleteTenantUserParams>(_host.CatalogDataSource, "a2security.[DeleteTeanatUser]", prms);
+				//await _userManager.DeleteAsync(appUser);
+
+				if (_host.IsMultiCompany && _host.IsMultiTenant)
+				{
+					var update = new UpdateTenantCompanyHandler();
+					update.Inject(_host, _dbContext);
+					update.EnableThrow();
+					update.Invoke(UserId, 0);
+				}
+			}
+
 			try
 			{
-				await _dbContext.ExecuteAsync<DeleteTenantUserParams>(_host.TenantDataSource, "a2security_tenant.[DeleteUser]", prms);
-				await _userManager.DeleteAsync(appUser);
+				if (_host.IsDTCEnabled)
+				{
+					// distributed transaction!!!!
+					using (var trans = new TransactionScope(TransactionScopeOption.RequiresNew))
+					{
+						ExecuteSql();
+						trans.Complete();
+					}
+				}
+				else
+				{
+					ExecuteSql();
+				}
 				result.status = "success";
 			}
 			catch (Exception ex)

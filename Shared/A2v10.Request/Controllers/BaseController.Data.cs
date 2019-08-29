@@ -81,11 +81,12 @@ namespace A2v10.Request
 			String invokeTarget = rw.GetInvokeTarget();
 			if (handler != null)
 			{
-				var handled = await handler.BeforeSave(data);
+				Int64 userId = prms.Get<Int64>("UserId");
+				var handled = await handler.BeforeSave(userId, data);
 				if (!handled)
 				{
 					model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
-					await handler.AfterSave(data, model.Root);
+					await handler.AfterSave(userId, data, model.Root);
 				}
 			}
 			else if (invokeTarget != null)

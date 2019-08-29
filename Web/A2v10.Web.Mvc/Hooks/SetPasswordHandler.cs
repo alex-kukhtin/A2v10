@@ -31,7 +31,7 @@ namespace A2v10.Web.Mvc.Hooks
 			_host = host;
 		}
 
-		public async Task<Boolean> BeforeSave(Object beforeData)
+		public async Task<Boolean> BeforeSave(Int64 UserId, Object beforeData)
 		{
 			var before = beforeData as ExpandoObject;
 
@@ -52,7 +52,7 @@ namespace A2v10.Web.Mvc.Hooks
 			return true;
 		}
 
-		public Task AfterSave(Object beforeData, Object afterData)
+		public Task AfterSave(Int64 UserId, Object beforeData, Object afterData)
 		{
 			return Task.FromResult(0);
 		}
