@@ -591,7 +591,10 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				Response.Write($"alert('{ex.Message.EncodeJs()}')");
+				if (ex.Message.StartsWith("DB1001")) /*There is no such user*/
+					Response.Write($"window.location.assign('/account/login')");
+				else
+					Response.Write($"alert('{ex.Message.EncodeJs()}')");
 			}
 		}
 

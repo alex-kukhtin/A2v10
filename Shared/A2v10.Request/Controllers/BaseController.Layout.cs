@@ -59,6 +59,10 @@ namespace A2v10.Request
 					if (key != null)
 						strKeys.Append(key).Append(',');
 				});
+				if (strKeys.Length > 0)
+					prms.Set("Keys", strKeys.RemoveTailComma().ToString());
+				else
+					prms.Set("Keys", "none"); // disable all
 			}
 			if (features != null)
 			{
@@ -68,8 +72,6 @@ namespace A2v10.Request
 					if (feature != null)
 						strFeatures.Append(feature).Append(",");
 				});
-				if (strKeys.Length > 0)
-					prms.Set("Keys", strKeys.RemoveTailComma().ToString());
 				if (strFeatures.Length > 0)
 					prms.Set("Features", strFeatures.RemoveTailComma().ToString());
 				else
