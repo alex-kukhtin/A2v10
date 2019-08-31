@@ -159,6 +159,8 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else if (pathInfo.StartsWith("_server"))
 				await RunServer(pathInfo.Substring(8));
+			else if (pathInfo.StartsWith("_application"))
+				await ApplicationCommand(pathInfo.Substring(13));
 			else
 			{
 				Index(); // root element (always)
@@ -264,6 +266,28 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					String json = tr.ReadToEnd();
 					await _baseController.Data(command, SetSqlQueryParams, json, Response);
+				}
+			}
+			catch (Exception ex)
+			{
+				WriteExceptionStatus(ex);
+			}
+		}
+
+		async Task ApplicationCommand(String command)
+		{
+			//  Ajax
+			if (IsNotAjax())
+				return;
+			if (Request.HttpMethod != "POST")
+				return;
+			Response.ContentType = "application/json";
+			try
+			{
+				using (var tr = new StreamReader(Request.InputStream))
+				{
+					String json = tr.ReadToEnd();
+					await _baseController.ApplicationCommand(command, SetSqlQueryParams, json, Response);
 				}
 			}
 			catch (Exception ex)

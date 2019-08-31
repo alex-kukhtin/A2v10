@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180813-7521*/
+/*20180831-7549*/
 /* controllers/shell.js */
 
 (function () {
@@ -11,11 +11,13 @@
 	const toastr = component('std:toastr');
 	const popup = require('std:popup');
 	const urlTools = require('std:url');
+	const period = require('std:period');
 	const log = require('std:log');
 	const utils = require('std:utils');
 	const locale = window.$$locale;
 	const platform = require('std:platform');
 	const htmlTools = require('std:html');
+	const http = require('std:http');
 
 	const UNKNOWN_TITLE = 'unknown title';
 
@@ -88,17 +90,24 @@
 	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
-	<li class="aligner"></li>
+	<li class="aligner"/>
+	<div class="nav-global-period" v-if="hasPeriod">
+		<a2-period-picker class="drop-bottom-right pp-hyperlink pp-navbar" 
+			display="namedate" :callback="periodChanged" prop="period" :item="that"/>
+	</div>
 	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" rel="help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
 </ul>
 `,
 		props: {
-			menu: Array
+			menu: Array,
+			period: period.constructor
 		},
 		computed: {
 			seg0: () => store.getters.seg0,
 			seg1: () => store.getters.seg1,
-			locale() { return locale; }
+			locale() { return locale; },
+			hasPeriod() { return !!this.period; },
+			that() { return this; }
 		},
 		methods: {
 			isActive(item) {
@@ -139,6 +148,16 @@
 				if (!this.menu) return false;
 				let am = this.menu.find(x => this.isActive(x));
 				return am && am.Help;
+			},
+			periodChanged(period) {
+				// post to shell
+				http.post('/_application/setperiod', period.toJson())
+					.then(() => {
+						eventBus.$emit('globalPeriodChanged', period);
+					})
+					.catch((err) => {
+						alert(err);
+					});
 			}
 		}
 	};
@@ -317,7 +336,7 @@
 		store,
 		template: `
 <div :class="cssClass" class="main-view">
-	<a2-nav-bar :menu="menu" v-show="navBarVisible"></a2-nav-bar>
+	<a2-nav-bar :menu="menu" v-show="navBarVisible" :period="period"></a2-nav-bar>
 	<a2-side-bar :menu="menu" v-show="sideBarVisible" :compact='isSideBarCompact'></a2-side-bar>
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
@@ -337,7 +356,8 @@
 		},
 		props: {
 			menu: Array,
-			sideBarMode: String
+			sideBarMode: String,
+			period: period.constructor
 		},
 		data() {
 			return {
@@ -389,7 +409,6 @@
 		},
 		created() {
 			let me = this;
-
 			eventBus.$on('beginRequest', function () {
 				//if (me.hasModals)
 					//return;
@@ -584,6 +603,7 @@
 				debugShowTrace: false,
 				debugShowModel: false,
 				feedbackVisible: false,
+				globalPeriod: null,
 				dataCounter: 0,
 				traceEnabled: log.traceEnabled()
 			};
@@ -680,6 +700,9 @@
 		},
 		created() {
 			let me = this;
+			if (this.initialPeriod) {
+				this.globalPeriod = new period.constructor(this.initialPeriod);
+			}
 
 			me.__dataStack__ = [];
 

@@ -1004,7 +1004,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190223-7441
+/*20180831-7549*/
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1133,6 +1133,9 @@ app.modules['std:period'] = function () {
 		return this.normalize();
 	};
 
+	TPeriod.prototype.toJson = function () {
+		return JSON.stringify(this);
+	};
 
 	
 	return {
@@ -2210,7 +2213,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190822-7536
+/*20180831-7549*/
 // services/datamodel.js
 
 (function () {
@@ -2582,6 +2585,10 @@ app.modules['std:validators'] = function () {
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
 			elem._seal_ = seal;
+
+			elem._fireGlobalPeriodChanged_ = (period) => {
+				elem.$emit('GlobalPeriod.change', elem, period);
+			};
 		}
 		if (startTime) {
 			logtime('create root time:', startTime, false);
@@ -4545,7 +4552,7 @@ Vue.component('a2-pager', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190824-7540
+/*20180831-7549*/
 // controllers/base.js
 
 (function () {
@@ -5607,7 +5614,7 @@ Vue.component('a2-pager', {
 					for (let ix = 0; ix < x.e.length; ix++) {
 						let y = x.e[ix];
 						if (isInclude(y.severity))
-							result.push({ path: x, msg: y.msg, severity: y.severity, index:ix });
+							result.push({ path: x, msg: y.msg, severity: y.severity, index: ix });
 					}
 				}
 				return result.length ? result : null;
@@ -5729,6 +5736,9 @@ Vue.component('a2-pager', {
 						args.result = utils.eval(root, args.path);
 						break;
 				}
+			},
+			__global_period_changed__(period) {
+				this.$data._fireGlobalPeriodChanged_(period);
 			}
 		},
 		created() {
@@ -5741,6 +5751,7 @@ Vue.component('a2-pager', {
 			eventBus.$on('queryChange', this.__queryChange);
 			eventBus.$on('childrenSaved', this.__notified);
 			eventBus.$on('invokeTest', this.__invoke__test__);
+			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
 
 			// TODO: delete this.__queryChange
 			this.$on('localQueryChange', this.__queryChange);
@@ -5761,6 +5772,7 @@ Vue.component('a2-pager', {
 			eventBus.$off('queryChange', this.__queryChange);
 			eventBus.$off('childrenSaved', this.__notified);
 			eventBus.$off('invokeTest', this.__invoke__test__);
+			eventBus.$off('globalPeriodChanged', this.__global_period_changed__);
 
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);

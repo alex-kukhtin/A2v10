@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190217-7432
+// 20190831-7549
 // components/periodpicker.js
 
 
@@ -51,7 +51,8 @@
 				type: Boolean,
 				default: true
 			},
-			display: String
+			display: String,
+			callback: Function
 		},
 		data() {
 			return {
@@ -78,6 +79,8 @@
 				return this.period.format('Date');
 			},
 			period() {
+				if (!this.item)
+					return this.currentPeriod;
 				let period = this.item[this.prop];
 				if (!uPeriod.isPeriod(period))
 					console.error('PeriodPicker. Value is not a Period');
@@ -142,6 +145,8 @@
 				this.isOpen = false;
 			},
 			fireEvent() {
+				if (this.callback)
+					this.callback(this.period);
 				let root = this.item.$root;
 				if (!root) return;
 				let eventName = this.item._path_ + '.' + this.prop + '.change';

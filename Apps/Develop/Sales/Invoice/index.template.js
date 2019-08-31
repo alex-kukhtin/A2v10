@@ -16,9 +16,16 @@ const template = {
         'TDocLink.$DocName': linkDocName,
         "TDocument.$State"() { return this.Done ? 'Проведен' : ''; },
         "TDocument.$StateStyle"() { return this.Done ? 'info' : 'hidden'; }
-    }
+	},
+	events: {
+		'GlobalPeriod.change': globalPeriodChange
+	}
 };
 
+function globalPeriodChange(root, period) {
+	//console.dir(period);
+	root.$ctrl.$setFilter(root.Documents, 'Period', period);
+}
 
 function mark() {
     return this.Done ? "success" : 'warning';

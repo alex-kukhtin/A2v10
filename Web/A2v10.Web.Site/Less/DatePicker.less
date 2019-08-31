@@ -48,8 +48,9 @@
 		}
 	}
 
-	td.mcell{
-		padding:6px 0;
+	td.mcell {
+		padding: 6px 0;
+
 		> a {
 			padding: 4px;
 		}
@@ -153,7 +154,7 @@
 		white-space: nowrap;
 	}
 
-	&.open .period-text {
+	&.open:not(.pp-navbar):not(.pp-hyperlink) .period-text {
 		z-index: @popup-index + 1;
 		background-color: white;
 	}
@@ -243,6 +244,18 @@
 		.input-group {
 			.period-text {
 				line-height: 2.3rem;
+			}
+		}
+	}
+
+	&.pp-navbar {
+		margin-bottom: 0;
+
+		.input-group {
+			background-color: transparent;
+
+			.period-text {
+				font-size: 15px;
 			}
 		}
 	}

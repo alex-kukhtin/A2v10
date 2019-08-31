@@ -16,6 +16,13 @@ using A2v10.Request.Models;
 
 namespace A2v10.Request
 {
+	public class MultiTenantParamJson
+	{
+		public String Companies { get; set; }
+		public String Period { get; set; }
+
+	}
+
 	public partial class BaseController
 	{
 		public void Layout(TextWriter writer, IDictionary<String, String> prms)
@@ -32,7 +39,7 @@ namespace A2v10.Request
 			writer.Write(sb.ToString());
 		}
 
-		async Task<String> ProcessMultiTenantParams(ExpandoObject prms)
+		async Task<MultiTenantParamJson> ProcessMultiTenantParams(ExpandoObject prms)
 		{
 			var permssionModel = await _dbContext.LoadModelAsync(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", prms);
 			if (permssionModel == null)
@@ -81,9 +88,18 @@ namespace A2v10.Request
 			// avaliable companies & xtra links
 			var companies = root.Eval<List<ExpandoObject>>("Companies");
 			var links = root.Eval<List<ExpandoObject>>("CompaniesLinks");
-			if (companies != null)
-				return JsonConvert.SerializeObject(new { menu = companies, links}, 
+			var period = root.Eval<Object>("Period");
+			if (companies != null || period != null)
+			{
+				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
 					JsonHelpers.StandardSerializerSettings);
+				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.StandardSerializerSettings);
+				return new MultiTenantParamJson()
+				{
+					Companies = jsonCompanies,
+					Period = jsonPeriod
+				};
+			}
 			return null;
 		}
 
@@ -95,11 +111,17 @@ namespace A2v10.Request
 			setParams?.Invoke(loadPrms);
 
 			String jsonCompanies = null;
+			String jsonPeriod = null;
 
 			if (_host.IsMultiTenant)
 			{
 				// for all users (include features)
-				jsonCompanies = await ProcessMultiTenantParams(loadPrms);
+				var res = await ProcessMultiTenantParams(loadPrms);
+				if (res != null)
+				{
+					jsonCompanies = res.Companies;
+					jsonPeriod = res.Period;
+				}
 			}
 
 			if (_host.Mobile)
@@ -118,6 +140,7 @@ namespace A2v10.Request
 			StringBuilder sb = new StringBuilder(shell);
 			sb.Replace("$(Menu)", jsonMenu)
 			.Replace("$(Companies)", jsonCompanies ?? "null")
+			.Replace("$(Period)", jsonPeriod ?? "null")
 			.Replace("$(AppVersion)", _host.AppVersion)
 			.Replace("$(Admin)", userInfo.IsAdmin ? "true" : "false")
 			.Replace("$(TenantAdmin)", userInfo.IsTenantAdmin ? "true" : "false")

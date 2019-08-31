@@ -282,6 +282,65 @@ begin
 	select [!$System!] = null, [!!Copy] = 1;
 end
 go
+
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2user_state')
+begin
+	exec sp_executesql N'create schema a2user_state';
+	grant execute on schema ::a2user_state to public;
+end
+go
+
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2user_state' and TABLE_NAME=N'UserInfo')
+begin
+	create table a2user_state.UserInfo
+	(
+		UserId bigint not null,
+		[Key] nvarchar(32) not null,
+		[StringVal] nvarchar(255) null,
+		[DateFrom] datetime null,
+		[DateTo] datetime null,
+		[BoolVal] bit null,
+		[IntVal] bigint null,
+		[FloatVal] float null,
+		constraint PK_UserInfo primary key(UserId, [Key])
+	);
+end
+go
+------------------------------------------------
+create or alter procedure a2user_state.[SetGlobalPeriod]
+@TenantId int = 0,
+@UserId bigint,
+@From datetime,
+@To datetime
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	update a2user_state.UserInfo set DateFrom=@From, DateTo = @To
+	where UserId = @UserId and [Key] = N'Period';
+	if @@rowcount = 0
+		insert into a2user_state.UserInfo(UserId, [Key], [DateFrom], [DateTo])
+			values (@UserId, N'Period', @From, @To);
+end
+go
+
+------------------------------------------------
+create or alter procedure a2user_state.GetUserGlobalPeriod(@UserId bigint, @From datetime = null output, @To datetime = null output)
+as
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	if @From is null and @To is null
+	begin
+		select @From = [DateFrom], @To = DateTo 
+		from a2user_state.UserInfo where UserId = @UserId;
+		if @From is null
+			set @From = a2sys.fn_trimtime(getdate());
+		if @To is null
+			set @To = @From;
+	end
+go
 ------------------------------------------------
 set noexec off;
 go

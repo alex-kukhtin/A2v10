@@ -5,17 +5,16 @@
 	right: 0;
 	top: @header-height;
 	height: @navbar-height;
-	line-height: @navbar-height;
-	font-size: 15px;
 	padding: 0;
 	margin: 0;
 	background-color: @navbar-bg-color;
-	text-transform: uppercase;
 	display: flex;
 	z-index: 3;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
-	li {
+	> li {
+		font-size: 15px;
+		line-height: @navbar-height;
 		display: inline-flex;
 		align-items: stretch;
 		list-style: none;
@@ -23,6 +22,7 @@
 		margin: 0;
 		height: 100%;
 		white-space: nowrap;
+		text-transform: uppercase;
 
 		a {
 			&:hover {
@@ -47,6 +47,17 @@
 		a.btn-help {
 			font-size: 1rem;
 			text-transform: lowercase;
+		}
+	}
+
+	.nav-global-period {
+		display:flex;
+		align-items:center;
+		margin-right:.5rem;
+		label {
+			font-size:15px;
+			color:@label-color;
+			margin:0 .5rem 0 0;
 		}
 	}
 }

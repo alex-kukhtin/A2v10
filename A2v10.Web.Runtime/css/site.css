@@ -1232,17 +1232,16 @@ header .dropdown.separate.show .btn.btn-success,
   right: 0;
   top: 32px;
   height: 32px;
-  line-height: 32px;
-  font-size: 15px;
   padding: 0;
   margin: 0;
   background-color: #f2f3f9;
-  text-transform: uppercase;
   display: flex;
   z-index: 3;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
-.nav-bar li {
+.nav-bar > li {
+  font-size: 15px;
+  line-height: 32px;
   display: inline-flex;
   align-items: stretch;
   list-style: none;
@@ -1250,24 +1249,35 @@ header .dropdown.separate.show .btn.btn-success,
   margin: 0;
   height: 100%;
   white-space: nowrap;
+  text-transform: uppercase;
 }
-.nav-bar li a:hover {
+.nav-bar > li a:hover {
   text-decoration: none;
 }
-.nav-bar li:hover {
+.nav-bar > li:hover {
   background-color: #e8e9f4;
 }
-.nav-bar li.active a {
+.nav-bar > li.active a {
   color: #208cf8;
   border-bottom: 3px solid #208cf8;
   font-weight: 500;
 }
-.nav-bar li.aligner:hover {
+.nav-bar > li.aligner:hover {
   background-color: #f2f3f9;
 }
-.nav-bar li a.btn-help {
+.nav-bar > li a.btn-help {
   font-size: 1rem;
   text-transform: lowercase;
+}
+.nav-bar .nav-global-period {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+.nav-bar .nav-global-period label {
+  font-size: 15px;
+  color: #999;
+  margin: 0 0.5rem 0 0;
 }
 .page {
   width: 100%;
@@ -2543,7 +2553,7 @@ pre.a2-code {
   min-height: 1.95rem;
   white-space: nowrap;
 }
-.period-picker.open .period-text {
+.period-picker.open:not(.pp-navbar):not(.pp-hyperlink) .period-text {
   z-index: 1071;
   background-color: white;
 }
@@ -2614,6 +2624,15 @@ pre.a2-code {
 }
 .period-picker.pp-hyperlink.pp-large .input-group .period-text {
   line-height: 2.3rem;
+}
+.period-picker.pp-navbar {
+  margin-bottom: 0;
+}
+.period-picker.pp-navbar .input-group {
+  background-color: transparent;
+}
+.period-picker.pp-navbar .input-group .period-text {
+  font-size: 15px;
 }
 .period-picker.pp-small {
   font-size: 0.95rem;

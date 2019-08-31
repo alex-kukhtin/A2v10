@@ -7,6 +7,7 @@
 
 	const menu = $(Menu);
 	const companies = $(Companies);
+	const initialPeriod = $(Period);
 
 	const shell = new Shell({
 		el: '#shell',
@@ -16,6 +17,7 @@
 			newMenu: menu.NewMenu,
 			settingsMenu: menu.SettingsMenu,
 			companies: companies,
+			initialPeriod: initialPeriod,
 			title: menu.SysParams ? menu.SysParams.AppTitle : '',
 			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
 			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',

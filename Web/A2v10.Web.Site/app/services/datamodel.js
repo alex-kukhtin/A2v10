@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-// 20190822-7536
+/*20180831-7549*/
 // services/datamodel.js
 
 (function () {
@@ -372,6 +372,10 @@
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
 			elem._seal_ = seal;
+
+			elem._fireGlobalPeriodChanged_ = (period) => {
+				elem.$emit('GlobalPeriod.change', elem, period);
+			};
 		}
 		if (startTime) {
 			logtime('create root time:', startTime, false);
