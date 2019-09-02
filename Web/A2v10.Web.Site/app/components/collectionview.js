@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190729-7510
+// 20190902-7550
 // components/collectionview.js
 
 /*
@@ -349,7 +349,10 @@ TODO:
 			},
 			__setFilter(props) {
 				if (this.ItemsSource !== props.source) return;
-				this.filter[props.prop] = props.value;
+				if (period.isPeriod(props.value))
+					this.filter[props.prop].assign(props.value);
+				else
+					this.filter[props.prop] = props.value;
 			}
 		},
 		created() {
@@ -486,7 +489,10 @@ TODO:
 			},
 			__setFilter(props) {
 				if (this.ItemsSource !== props.source) return;
-				this.Filter[props.prop] = props.value;
+				if (period.isPeriod(props.value))
+					this.filter[props.prop].assign(props.value);
+				else
+					this.Filter[props.prop] = props.value;
 			}
 		},
 		created() {

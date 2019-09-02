@@ -1159,7 +1159,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20180831-7549*/
+/*20180902-7550*/
 // services/datamodel.js
 
 (function () {
@@ -1422,6 +1422,18 @@ app.modules['std:validators'] = function () {
 
 		if (elem._meta_.$items)
 			elem.$expanded = false; // tree elem
+
+		elem.$lockEvents = function () {
+			this._lockEvents_ += 1;
+		};
+
+		elem.$unlockEvents = function () {
+			this._lockEvents_ -= 1;
+		};
+
+		defHiddenGet(elem, '$eventsLocked', function () {
+			return this._lockEvents_ > 0;
+		});
 
 		defPropertyGet(elem, '$valid', function () {
 			if (this._root_._needValidate_)
@@ -1708,6 +1720,12 @@ app.modules['std:validators'] = function () {
 		arr.$load = function () {
 			if (!this.$isLazy()) return;
 			platform.defer(() => this.$loadLazy());
+		};
+
+		arr.$resetLazy = function () {
+			this.$empty();
+			if (this.$loaded)
+				this.$loaded = false;
 		};
 
 		arr.$loadLazy = function () {
@@ -2435,6 +2453,7 @@ app.modules['std:validators'] = function () {
 			this._root_._needValidate_ = true;
 			this._lockEvents_ -= 1;
 		}
+		if (this.$parent._lockEvents_) return this; // may be custom lock
 		let newId = this.$id__;
 		let fireChange = false;
 		if (utils.isDefined(newId) && utils.isDefined(oldId))
@@ -2494,12 +2513,19 @@ app.modules['std:validators'] = function () {
 		return obj;
 	}
 
-	function setRootModelInfo(item, data) {
+	function setRootModelInfo(elem, data) {
 		if (!data.$ModelInfo) return;
-		let elem = item;
 		for (let p in data.$ModelInfo) {
 			if (!elem) elem = this[p];
 			elem.$ModelInfo = checkPeriod(data.$ModelInfo[p]);
+
+			elem.$ModelInfo.$setFilter = function (prop, val) {
+				if (period.isPeriod(val))
+					this.Filter[prop].assign(val);
+				else
+					this.Filter[prop] = val;
+			};
+
 			return; // first element only
 		}
 	}
