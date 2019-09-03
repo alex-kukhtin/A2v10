@@ -5,6 +5,7 @@ const du = utils.date;
 
 const template = {
 	properties: {
+		'TRoot.$SelectedDoc': Object,
 		'TRoot.$$ColumnVisible': Boolean,
 		'TDocument.$Mark': mark,
 		'TDocument.$Icon'() { return this.Done ? 'flag-green' : ''; },

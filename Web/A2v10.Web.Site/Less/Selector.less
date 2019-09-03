@@ -68,6 +68,7 @@
 			list-style: none;
 			padding: 3px 6px;
 			white-space: nowrap;
+			cursor:pointer;
 
 			&:hover {
 				background-color: @hover-bg-color;
@@ -87,3 +88,25 @@
 	}
 }
 
+
+.control-group.selector-hyperlink {
+	.input-group {
+		border: none;
+
+		.select-text {
+			color: @link-color;
+			border-bottom: 1px dotted @link-color;
+
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+
+	&.sel-large {
+		.select-text {
+			font-size: 1.2rem;
+			line-height: 2.3rem;
+		}
+	}
+}

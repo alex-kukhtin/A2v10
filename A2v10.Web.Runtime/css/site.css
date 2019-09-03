@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7525') format('woff'), url('/css/fonts/A2v10.ttf?v=7525') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7550') format('woff'), url('/css/fonts/A2v10.ttf?v=7550') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -1929,6 +1929,14 @@ pre.a2-code {
   opacity: 0;
   cursor: pointer;
 }
+.control-group .input-group .selector-combo {
+  padding: 0 5px;
+  line-height: 1.95rem;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  min-height: 100%;
+}
 .control-group .input-group .select-wrapper {
   position: absolute;
   left: 0;
@@ -2035,6 +2043,20 @@ pre.a2-code {
 }
 .control-group.italic textarea {
   font-style: italic;
+}
+.control-group.selector-hyperlink .input-group {
+  border: none;
+}
+.control-group.selector-hyperlink .input-group .select-text {
+  color: #208cf8;
+  border-bottom: 1px dotted #208cf8;
+}
+.control-group.selector-hyperlink .input-group .select-text:focus {
+  outline: none;
+}
+.control-group.selector-hyperlink.sel-large .select-text {
+  font-size: 1.2rem;
+  line-height: 2.3rem;
 }
 .control-group.combo-hyperlink .input-group {
   border-style: none;
@@ -2713,6 +2735,7 @@ pre.a2-code {
   list-style: none;
   padding: 3px 6px;
   white-space: nowrap;
+  cursor: pointer;
 }
 .input-group > .selector-pane ul.selector-ul li:hover {
   background-color: #fdf4bf;
@@ -2725,6 +2748,20 @@ pre.a2-code {
   display: block;
   border-top: 1px solid #ddd;
   background-color: #f9f9f9;
+}
+.control-group.selector-hyperlink .input-group {
+  border: none;
+}
+.control-group.selector-hyperlink .input-group .select-text {
+  color: #208cf8;
+  border-bottom: 1px dotted #208cf8;
+}
+.control-group.selector-hyperlink .input-group .select-text:focus {
+  outline: none;
+}
+.control-group.selector-hyperlink.sel-large .select-text {
+  font-size: 1.2rem;
+  line-height: 2.3rem;
 }
 /*
     TODO:
@@ -5063,7 +5100,7 @@ TODO:
   right: 0;
   top: 100%;
   margin-top: 9px;
-  margin-right: -9px;
+  margin-right: -7px;
 }
 .popover-wrapper.po-bottom-left > .popup-body > .arrow {
   right: 6px;
@@ -5174,6 +5211,9 @@ TODO:
   margin: 0 6px;
   color: #999;
   padding-bottom: 0;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 13px;
 }
 .popover-wrapper.hint > .popover-title {
   border-bottom: none;
@@ -5477,7 +5517,7 @@ TODO:
   display: grid;
   height: 100%;
 }
-.full-height-panel .data-grid-container {
+.full-height-panel > .data-grid-container {
   height: auto;
   max-height: -webkit-fill-available;
 }

@@ -246,6 +246,15 @@
 			cursor: pointer;
 		}
 
+		.selector-combo {
+			padding:0 5px;
+			line-height:@control-height;
+			width:100%;
+			cursor:pointer;
+			display:flex;
+			min-height:100%;
+		}
+
 		.select-wrapper {
 			position: absolute;
 			left: 0;
@@ -384,6 +393,26 @@
 .control-group.italic {
 	textarea {
 		font-style: italic;
+	}
+}
+
+.control-group.selector-hyperlink {
+	.input-group {
+		border:none;
+		.select-text {
+			color: @link-color;
+			border-bottom: 1px dotted @link-color;
+			&:focus {
+				outline:none;
+			}
+		}
+	}
+
+	&.sel-large {
+		.select-text {
+			font-size: 1.2rem;
+			line-height: 2.3rem;
+		}
 	}
 }
 

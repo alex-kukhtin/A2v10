@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190814-7522
+// 20190903-7551
 
 // components/selector.js
 
@@ -23,7 +23,8 @@
 <div :class="cssClass2()">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId"
+		<div v-if="isCombo" class="selector-combo" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
+		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId" v-else
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
 			:disabled="disabled" />
 		<slot></slot>
@@ -52,6 +53,7 @@
 		props: {
 			item: Object,
 			prop: String,
+			itemsSource: Array,
 			textItem: Object,
 			textProp: String,
 			display: String,
@@ -67,7 +69,8 @@
 			createNew: Function,
 			placement: String,
 			caret: Boolean,
-			hasClear: Boolean
+			hasClear: Boolean,
+			mode: String
 		},
 		data() {
 			return {
@@ -88,7 +91,12 @@
 					if (el.$isEmpty)
 						return this.textItem[this.textProp];
 				}
-				return utils.simpleEval(this.item[this.prop], this.display);
+				let el = this.item[this.prop];
+				if (utils.isNumber(el) && this.itemsSource) {
+					el = this.itemsSource.find(x => x.$id === el);
+					if (!el) return '';
+				}
+				return utils.simpleEval(el, this.display);
 			},
 			canNew() {
 				return !!this.createNew;
@@ -140,6 +148,9 @@
 					this.filter = this.query;
 					this.update();
 				}, delay);
+			},
+			isCombo() {
+				return this.mode === 'combo-box' || this.mode === 'hyperlink';
 			}
 		},
 		watch: {
@@ -164,6 +175,8 @@
 				let cx = this.cssClass();
 				if (this.isOpen || this.isOpenNew)
 					cx += ' open';
+				if (this.mode === 'hyperlink')
+					cx += ' selector-hyperlink';
 				return cx;
 			},
 			isItemActive(ix) {
@@ -186,9 +199,15 @@
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
 					this.doFetch(this.valueText, true);
-					let input = this.$refs['input'];
-					if (input)
-						input.focus();
+					if (this.isCombo) {
+						let combo = this.$refs['xcombo'];
+						if (combo)
+							combo.focus();
+					} else {
+						let input = this.$refs['input'];
+						if (input)
+							input.focus();
+					}
 				}
 				this.isOpen = !this.isOpen;
 			},
@@ -207,8 +226,11 @@
 				}
 			},
 			keyDown(event) {
-				if (!this.isOpen)
+				if (!this.isOpen) {
+					if (event.which === 115)
+						this.open();
 					return;
+				}
 				event.stopPropagation();
 				switch (event.which) {
 					case 27: // esc
@@ -234,6 +256,9 @@
 						this.query = this.itemName(this.items[this.current]);
 						this.scrollIntoView();
 						break;
+					case 115: // F4
+						this.cancel();
+						break;
 					default:
 						return;
 				}
@@ -248,8 +273,10 @@
 						this.hitfunc.call(this.item.$root, itm);
 						return;
 					}
-					if (obj.$merge)
+					if (obj && obj.$merge)
 						obj.$merge(itm, true /*fire*/);
+					else if (utils.isNumber(obj))
+						this.item[this.prop] = itm.$id;
 					else
 						platform.set(this.item, this.prop, itm);
 				});
@@ -285,6 +312,21 @@
 				this.doFetch(text, false);
 			},
 			doFetch(text, all) {
+				if (this.itemsSource) {
+					if (!this.items.length)
+						this.items = this.itemsSource;
+					let fi = -1;
+					let el = this.item[this.prop];
+					if (utils.isNumber(el))
+						fi = this.items.findIndex(x => x.Id === el);
+					else
+						fi = this.items.indexOf(el);
+					if (fi !== -1) {
+						this.current = fi;
+						setTimeout(() => this.scrollIntoView(), 10);
+					}
+					return;
+				}
 				this.loading = true;
 				let fData = this.fetchData(text, all);
 				if (fData.then) {

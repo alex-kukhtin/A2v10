@@ -242,7 +242,7 @@
 	right: 0;
 	top: 100%;
 	margin-top: @arrow-gap + 3px;
-	margin-right: -(@arrow-size);
+	margin-right: -(@arrow-size - 2px);
 	//display: block; // debug
 	> .arrow {
 		right: @arrow-gap;
@@ -307,6 +307,9 @@
 	margin: 0 6px;
 	color: #999;
 	padding-bottom:0;
+	font-weight:normal;
+	line-height:normal;
+	font-size:@font-size;
 
 	> .popover-title {
 		border-bottom: none;

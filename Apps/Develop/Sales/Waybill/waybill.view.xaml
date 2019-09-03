@@ -49,6 +49,12 @@
 				</Button>
 			</CommandBar>
 			<Hyperlink Icon="Link" Command="{BindCmd Dialog, Action=Show, Argument={Bind Document}, Url='/sales/waybill/showLinks'}">Show Links</Hyperlink>
+			<Card Header="Карточка" DropShadow="Shadow1"
+				  Hint="Поставте позначку для тих розділів, які використовуються. Якщо зняти позначку, розділ не буде включено до головного меню системи.">
+				<CardBody>
+					Текст карточки внутри с чем-то еще.
+				</CardBody>
+			</Card>
 		</Taskpad>
 	</Page.Taskpad>
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">

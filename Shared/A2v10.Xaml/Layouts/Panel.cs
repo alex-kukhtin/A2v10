@@ -37,6 +37,8 @@ namespace A2v10.Xaml
 
 		public Boolean Compact { get; set; }
 
+		public Popover Hint { get; set; }
+
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -99,7 +101,21 @@ namespace A2v10.Xaml
 			{
 				context.Writer.Write(context.LocalizeCheckApostrophe(Header.ToString()));
 			}
+			RenderHint(context);
 			header.RenderEnd(context);
 		}
+
+		void RenderHint(RenderContext context)
+		{
+			if (Hint == null)
+				return;
+			if (Hint.Icon == Icon.NoIcon)
+				Hint.Icon = Icon.Help;
+			Hint.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("hint");
+			});
+		}
+
 	}
 }

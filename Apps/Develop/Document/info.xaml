@@ -2,6 +2,11 @@
 <Panel xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
 		Header="Информация о документе" Style="Info" Icon="InfoOutline"
 		Collapsible="True" Padding="0, 6" DropShadow="Shadow1">
+	<Panel.Hint>
+		<Popover Placement="BottomLeft">
+			Это информация о документе (странная)
+		</Popover>
+	</Panel.Hint>
 	<PropertyGrid GridLines="Horizontal" Compact="True" >
 		<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
 		<PropertyGridItem Name="Создан">
