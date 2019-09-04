@@ -29,6 +29,7 @@
 			"app/components/combobox.js",
 			"app/components/calendar.js",
 			"app/components/datepicker.js",
+			"app/components/timepicker.js",
 			"app/components/periodpicker.js",
 			"app/components/selector.js",
 			"app/components/datagrid.js",

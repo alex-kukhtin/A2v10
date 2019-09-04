@@ -241,7 +241,8 @@ app.modules['std:utils'] = function () {
 			endOfMonth: endOfMonth,
 			minDate: dateCreate(1901, 1, 1),
 			maxDate: dateCreate(2999, 12, 31),
-			fromDays: fromDays
+			fromDays: fromDays,
+			parseTime: timeParse
 		},
 		text: {
 			contains: textContains,
@@ -551,6 +552,19 @@ app.modules['std:utils'] = function () {
 		} catch (err) {
 			return str;
 		}
+	}
+
+	function timeParse(str) {
+		str = str || '';
+		if (!str) return dateZero();
+		let seg = str.split(/[^\d]/).filter(x => x);
+		if (seg.length === 1) {
+			seg.push('0');
+		}
+		let h = Math.min(+seg[0], 23);
+		let m = Math.min(+seg[1], 59);
+		let td = new Date(0, 0, 1, h, m, 0, 0);
+		return td;
 	}
 
 	function dateParse(str) {

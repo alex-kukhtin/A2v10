@@ -60,6 +60,14 @@ namespace A2v10.Xaml
 	}
 
 
+	public enum DropDownPlacement
+	{
+		BottomLeft,
+		BottomRight,
+		TopLeft,
+		TopRight
+	}
+
 
 	public enum GridLinesVisibility
 	{

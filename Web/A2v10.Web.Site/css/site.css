@@ -2043,20 +2043,6 @@ pre.a2-code {
 .control-group.italic textarea {
   font-style: italic;
 }
-.control-group.selector-hyperlink .input-group {
-  border: none;
-}
-.control-group.selector-hyperlink .input-group .select-text {
-  color: #208cf8;
-  border-bottom: 1px dotted #208cf8;
-}
-.control-group.selector-hyperlink .input-group .select-text:focus {
-  outline: none;
-}
-.control-group.selector-hyperlink.sel-large .select-text {
-  font-size: 1.2rem;
-  line-height: 2.3rem;
-}
 .control-group.combo-hyperlink .input-group {
   border-style: none;
 }
@@ -2553,6 +2539,22 @@ pre.a2-code {
   border-bottom: 1px solid #ddd;
   padding: 2px 0;
 }
+.time-picker-pane {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+.time-picker-pane .divider {
+  border-left: 1px solid #ddd;
+  padding-right: 8px;
+  margin-left: 8px;
+}
+.time-picker-pane th {
+  font-weight: 500;
+  border-bottom: 1px solid #ddd !important;
+  color: #555;
+  padding: 0 0 7px 0;
+}
 .drop-up .input-group > .calendar {
   top: auto;
   bottom: 100%;
@@ -2761,6 +2763,19 @@ pre.a2-code {
 .control-group.selector-hyperlink.sel-large .select-text {
   font-size: 1.2rem;
   line-height: 2.3rem;
+}
+.control-group.selector-combobox .input-group .selector-combo {
+  line-height: 1.95rem;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  min-height: 100%;
+}
+.control-group.selector-combobox .input-group .selector-combo .select-text {
+  padding: 0 4px;
+}
+.control-group.selector-combobox .input-group .selector-combo .select-text:focus {
+  outline: none;
 }
 /*
     TODO:

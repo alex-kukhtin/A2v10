@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190806-7514
+// 20190904-7552
 // components/datepicker.js
 
 
@@ -64,11 +64,20 @@
 				}
 			},
 			setMonth(dt) {
-				this.item[this.prop] = dt;
+				this.setDate(dt);
 			},
 			selectDay(day) {
-				this.item[this.prop] = day;
+				this.setDate(day);
 				this.isOpen = false;
+			},
+			setDate(d) {
+				// save time
+				let od = this.modelDate;
+				let h = od.getHours();
+				let m = od.getMinutes();
+				var nd = new Date(d);
+				nd.setHours(h, m, 0, 0);
+				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
 				let cls = '';
@@ -103,13 +112,13 @@
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { timeZone:'UTC',  year: 'numeric', month: 'long' }));
 					else
-						return this.modelDate.toLocaleString(locale.$Locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
+						return this.modelDate.toLocaleString(locale.$Locale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);
-					this.item[this.prop] = md;
+					this.setDate(md);
 					if (utils.date.isZero(md))
 						this.isOpen = false;
 				}

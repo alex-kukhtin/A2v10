@@ -47,8 +47,8 @@
 			<Button Icon="FileSignature" Content="Подписать" Command="{BindCmd Dialog, Action=Show, Argument={Bind Documents.$selected.Attachments[0]}, Url='/Sales/Waybill/EUSign'}" />
 			<Button Icon="Check" Content="Проверить подпись" Command="{BindCmd Dialog, Action=Show, Argument={Bind Documents.$selected.Attachments[0]}, Url='/Sales/Waybill/CheckEUSign'}" />
 			<Button Icon="TagRed" Content="Test" Command="{BindCmd Execute, CommandName='test', Argument={Bind Documents.$selected}}" />
-			<Selector ItemsSource="{Bind Documents}" ListSize="250,200" Size="Large"
-					  Value="{Bind Root.$SelectedDoc}" DisplayProperty="Id" Style="Hyperlink" Width="150px">
+			<Selector ItemsSource="{Bind Documents}" ListSize="250,200" Size="Default"
+					  Value="{Bind Root.$SelectedDoc}" DisplayProperty="Id" Style="ComboBox" Width="150px">
 				<Selector.ItemsPanel>
 					<DataGrid HeadersVisibility="None" GridLines="Horizontal" Hover="True">
 						<DataGridColumn Header="Id" Content="{Bind Id}"/>

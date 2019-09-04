@@ -91,6 +91,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\calendar.js" />
+    <Content Include="app\components\timepicker.js" />
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\components\companybutton.js" />
@@ -242,12 +243,6 @@
     <Content Include="eusign.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Less\Data_URI.css">
-      <DependentUpon>Data_URI.less</DependentUpon>
-    </Content>
-    <Content Include="Less\Data_URI.min.css">
-      <DependentUpon>Data_URI.css</DependentUpon>
-    </Content>
     <Content Include="Less\Variables.less" />
     <Content Include="Less\Site.less" />
     <Content Include="bower.json" />

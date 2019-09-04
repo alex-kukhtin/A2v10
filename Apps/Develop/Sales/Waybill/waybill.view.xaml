@@ -62,10 +62,12 @@
 	</Alert>
 	<TabPanel>
 		<Tab Header="Документ">
-			<Grid Columns="150, 150, 150, 150, 1*">
+			<Grid Columns="150, 150, 150, 150, 150, 1*">
 
 				<DatePicker Grid.Row="2" Grid.Col="4" Value="{Bind Document.Date}" Label="Date"/>
+				<TimePicker Grid.Row="2" Grid.Col="5" Value="{Bind Document.Date}" Label="Time" Placement="BottomRight"/>
 				<DatePicker Grid.Row="3" Grid.Col="4" Value="{Bind Document.Date}" Label="Date" View="Month"/>
+				<Code Grid.Row="3" Grid.Col="5" Content="{Bind Document.Date}"/>
 				<Header Grid.ColSpan="4" Badge="{Bind Document.Id}" Render="Show">Расходная накладная</Header>
 				<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.$Date}" Render="{Bind 'Document.Id == 164 ? `Show` : `Hide`'}"/>
 				<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right" Number="True"/>

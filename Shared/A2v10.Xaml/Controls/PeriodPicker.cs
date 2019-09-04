@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 
 		public TextAlign Align { get; set; }
 
-		public DatePickerDropDownPlacement Placement { get; set; }
+		public DropDownPlacement Placement { get; set; }
 		public PeriodPickerStyle Style { get; set; }
 		public ControlSize Size { get; set; }
 		public Boolean? ShowAllData { get; set; }
@@ -48,7 +48,7 @@ namespace A2v10.Xaml
 			MergeDisabled(tag, context);
 			MergeAlign(tag, context, Align);
 			MergeValue(tag, context);
-			if (Placement != DatePickerDropDownPlacement.BottomLeft)
+			if (Placement != DropDownPlacement.BottomLeft)
 				tag.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			tag.RenderStart(context);
 			RenderAddOns(context);

@@ -5442,6 +5442,8 @@ Vue.component('validator-control', {
 					cx += ' open';
 				if (this.mode === 'hyperlink')
 					cx += ' selector-hyperlink';
+				else if (this.mode === 'combo-box')
+					cx += ' selector-combobox';
 				return cx;
 			},
 			isItemActive(ix) {

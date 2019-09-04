@@ -99,6 +99,7 @@
     <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StateCard.cs" />
     <Compile Include="Controls\TabButton.cs" />
+    <Compile Include="Controls\TimePicker.cs" />
     <Compile Include="Controls\ValidatorLabel.cs" />
     <Compile Include="Drawing\ActionButton.cs" />
     <Compile Include="Drawing\Card.cs" />

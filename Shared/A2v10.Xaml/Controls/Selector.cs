@@ -1,19 +1,10 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
-
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-
-	public enum SelectorPanelPlacement {
-		Default,
-		BottomLeft = Default,
-		BottomRight,
-		TopLeft,
-		TopRight
-	}
 
 	public enum SelectorStyle
 	{
@@ -39,9 +30,9 @@ namespace A2v10.Xaml
 
 		public Object ItemsSource { get; set; }
 		public UIElementBase ItemsPanel { get; set; }
-		public SelectorPanelPlacement PanelPlacement { get; set; }
+		public DropDownPlacement PanelPlacement { get; set; }
 
-		public Boolean ShowCaret { get; set; }
+		public Boolean? ShowCaret { get; set; }
 		public Boolean ShowClear { get; set; }
 
 		public SelectorStyle Style { get; set; }
@@ -58,7 +49,7 @@ namespace A2v10.Xaml
 			if (!String.IsNullOrEmpty(SetDelegate))
 				input.MergeAttribute(":hitfunc", $"$delegate('{SetDelegate}')");
 			input.MergeAttribute("display", DisplayProperty);
-			if (PanelPlacement != SelectorPanelPlacement.Default)
+			if (PanelPlacement != DropDownPlacement.BottomLeft)
 				input.MergeAttribute("placement", PanelPlacement.ToString().ToKebabCase());
 			if (Style != SelectorStyle.Default)
 				input.MergeAttribute("mode", Style.ToString().ToKebabCase());
@@ -73,7 +64,7 @@ namespace A2v10.Xaml
 					input.MergeAttribute("list-height", ListSize.Height.ToString());
 				}
 			}
-			if (ShowCaret)
+			if (ShowCaret.HasValue && ShowCaret.Value)
 				input.MergeAttribute(":caret", "true");
 			if (ShowClear)
 				input.MergeAttribute(":has-clear", "true");
@@ -147,6 +138,13 @@ namespace A2v10.Xaml
 				});
 			}
 			tml.RenderEnd(context);
+		}
+
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			if (Style == SelectorStyle.ComboBox && !ShowCaret.HasValue)
+				ShowCaret = true;
 		}
 	}
 }
