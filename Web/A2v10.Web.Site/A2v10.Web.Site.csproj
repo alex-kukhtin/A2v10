@@ -184,7 +184,6 @@
     <Content Include="Less\Table.less" />
     <Content Include="Localization\de.xml" />
     <Content Include="scripts\locale-de.min.js" />
-    <Content Include="scripts\main.min.js" />
     <Content Include="TestMobile\index.html" />
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />

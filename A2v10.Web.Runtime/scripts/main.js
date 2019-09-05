@@ -8260,7 +8260,7 @@ TODO:
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190816-7525
+// 20190905-7553
 // components/modal.js
 
 
@@ -8307,6 +8307,8 @@ TODO:
 						mw.style.width = '300px'; // from less
 						break;
 				}
+				if (binding.value.minWidth)
+					mw.style.minWidth = binding.value.minWidth;
 			}
 		}
 	};

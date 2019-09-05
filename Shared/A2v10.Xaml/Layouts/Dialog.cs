@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 
 		public DialogSize Size { get; set; }
 		public Length Width { get; set; }
+		public Length MinWidth { get; set; }
 		public Length Height { get; set; }
 		public String CanCloseDelegate { get; set; }
 		public Boolean AlwaysOk { get; set; }
@@ -125,6 +126,8 @@ namespace A2v10.Xaml
 				sb.Append("cssClass:'modal-small',");
 			if (Width != null)
 				sb.Append($"width:'{Width.Value}',");
+			if (MinWidth != null)
+				sb.Append($"minWidth:'{MinWidth.Value}',");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			dialog.MergeAttribute("v-modal-width", sb.ToString());

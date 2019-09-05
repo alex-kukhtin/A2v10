@@ -5358,6 +5358,7 @@ TODO:
 }
 .panel .panel-content {
   height: 100%;
+  overflow: auto;
 }
 .panel .panel-header {
   padding: 0 0.625rem;
