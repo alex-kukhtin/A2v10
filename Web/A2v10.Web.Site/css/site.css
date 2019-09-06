@@ -1302,6 +1302,7 @@ header .dropdown.separate.show .btn.btn-success,
   grid-column: 1;
   border-style: none;
   border-top-style: solid;
+  padding: 8px 6px 8px 0;
 }
 .page.page-grid .page-content {
   grid-row: 2;

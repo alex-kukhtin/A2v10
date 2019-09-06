@@ -5837,7 +5837,7 @@ Vue.component('validator-control', {
 				let elem = this.item[this.prop];
 				if (!('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
-				return this.fetch.call(elem, elem, text, all);
+				return this.fetch.call(this.item.$root, elem, text, all);
 			},
 			doNew() {
 				//console.dir(this.createNew);
@@ -6840,7 +6840,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-//20190727-7509
+//20190906-7554
 /*components/popover.js*/
 
 Vue.component('popover', {
@@ -6873,7 +6873,7 @@ Vue.component('popover', {
 	props: {
 		icon: String,
 		url: String,
-		content: String,
+		content: [String, Number],
 		title: String,
 		width: String,
 		top: String,
