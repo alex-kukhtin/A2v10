@@ -5837,7 +5837,7 @@ Vue.component('validator-control', {
 				let elem = this.item[this.prop];
 				if (!('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
-				return this.fetch.call(elem, elem, text, all);
+				return this.fetch.call(this.item.$root, elem, text, all);
 			},
 			doNew() {
 				//console.dir(this.createNew);
