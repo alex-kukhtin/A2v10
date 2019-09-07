@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -17,6 +17,8 @@ namespace A2v10.Xaml
 
 		public Boolean Gray { get; set; }
 		public TextColor Color { get; set; }
+		public Boolean Block { get; set; }
+		public TextAlign Align { get; set; }
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -24,6 +26,9 @@ namespace A2v10.Xaml
 				return;
 			var tag = new TagBuilder("span", null, IsInGrid);
 			MergeAttributes(tag, context);
+			tag.AddCssClassBool(Block, "block");
+			if (Align != TextAlign.Left)
+				tag.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			if (Size != TextSize.Normal)
 				tag.AddCssClass("text-" + Size.ToString().ToLowerInvariant());
 			else
