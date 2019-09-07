@@ -52,7 +52,8 @@ const template = {
 		insertBelow: insertRow('below'),
 		setDate(doc) {
 			doc.Date = new Date();
-		}
+		},
+		saveTime
 	}
 };
 
@@ -105,4 +106,12 @@ async function applyDoc(doc) {
 		if (!result) return;
 	}
 	alert('apply document here: ' + doc.Id);
+}
+
+async function saveTime() {
+	const ctrl = this.$ctrl;
+	const doc = this.Document;
+	let r = await ctrl.$invoke('saveTime', { Id: doc.Id, DateTime: doc.Date });
+	doc.Date = r.Result.DateTime;
+	await ctrl.$showDialog('/sales/waybill/testTime', 0, { DateTime: doc.Date });
 }

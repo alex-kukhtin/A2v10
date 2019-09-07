@@ -176,7 +176,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190721-7507
+// 20190907-7555
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -195,6 +195,8 @@ app.modules['std:utils'] = function () {
 
 	const currencyFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
+
+	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
 	let numFormatCache = {};
 
@@ -446,6 +448,8 @@ app.modules['std:utils'] = function () {
 			case "DateUrl":
 				if (dateIsZero(obj))
 					return '';
+				if (dateHasTime(obj))
+					return obj.toISOString();
 				return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
 			case "Time":
 				if (!isDate(obj)) {
@@ -569,6 +573,9 @@ app.modules['std:utils'] = function () {
 
 	function dateParse(str) {
 		str = str || '';
+		if (utcdatRegEx.test(str)) {
+			return new Date(str);
+		}
 		if (!str) return dateZero();
 		let today = dateToday();
 		let seg = str.split(/[^\d]/).filter(x => x);
@@ -603,6 +610,11 @@ app.modules['std:utils'] = function () {
 	function dateIsZero(d1) {
 		if (!isDate(d1)) return false;
 		return dateEqual(d1, dateZero());
+	}
+
+	function dateHasTime(d1) {
+		if (!isDate(d1)) return false;
+		return d1.getUTCHours() !== 0 || d1.getUTCMinutes() !== 0 && d1.getUTCSeconds() !== 0;
 	}
 
 	function endOfMonth(dt) {

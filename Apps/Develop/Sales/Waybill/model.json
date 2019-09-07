@@ -39,6 +39,9 @@
 			"model": "",
 			"template": "links.template",
 			"view": "links.dialog"
+		},
+		"testTime": {
+			"model": "Test.Time"
 		}
 	},
 	"commands": {
@@ -68,6 +71,10 @@
 				"Model": "Document",
 				"Schema": "a2demo"
 			}
+		},
+		"saveTime": {
+			"type": "sql",
+			"procedure":  "SaveDocumentTime"
 		}
 	},
 	"reports": {
