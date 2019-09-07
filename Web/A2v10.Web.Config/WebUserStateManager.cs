@@ -53,6 +53,8 @@ namespace A2v10.Web.Config
 		}
 		public Int64 UserCompanyId(Int32 TenantId, Int64 UserId)
 		{
+			if (!_host.IsMultiCompany)
+				return 0;
 			if (UserId == 0)
 				throw new InvalidOperationException(nameof(UserCompanyId));
 			if (!(HttpContext.Current.Session[_userCompanyKey] is UserCompany userCompany))

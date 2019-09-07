@@ -89,8 +89,9 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				UserId = UserId,
 				TenantId = TenantId,
-				CompanyId = CompanyId
 			};
+			if (_baseController.Host.IsMultiCompany)
+				rc.CompanyId = CompanyId;
 			return await _reportHelper.GetReportInfo(rc, url, id, prms);
 		}
 
