@@ -536,7 +536,7 @@ namespace A2v10.Web.Identity
 			if (_userRoles != null)
 				return _userRoles;
 			var list = await _dbContext.LoadListAsync<AppRole>(DataSource, $"[{DbSchema}].[GetUserGroups]", new { UserId = user.Id });
-			_userRoles =  list.Select<AppRole, String>(x => x.Name).ToList();
+			_userRoles =  list.Select<AppRole, String>(x => x.Key).ToList();
 			return _userRoles;
 		}
 
