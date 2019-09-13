@@ -1,7 +1,7 @@
 ﻿;
 @About=Про систему
 @Confidentiality=Конфедіційність
-@Contacts=Конакти
+@Contacts=Контакти
 @Version=Версія
 @Debug=Відладка
 @Quit=Вихід

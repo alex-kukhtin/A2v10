@@ -22,6 +22,7 @@
 					</TextBox.Validator>
 				</TextBox>
 				<TextBox Grid.Row="2" Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" CssClass="aaa sss sdsss"/>
+				<Button Icon="Package" Command="{BindCmd Dialog, Action=Append, Argument={Bind Countries}, Url='/catalog/edit', Data={Bind Agent.$EditArg}, SaveRequired=True}"></Button>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" Rows="3" Multiline="True"/>
 			</Grid>
 			<!--

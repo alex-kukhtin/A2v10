@@ -1980,7 +1980,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20180902-7550*/
+/*20180913-7558*/
 // services/datamodel.js
 
 (function () {
@@ -2363,6 +2363,8 @@ app.modules['std:validators'] = function () {
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
+			defHiddenGet(elem, '$mainObject', mainObject);
+
 			elem._seal_ = seal;
 
 			elem._fireGlobalPeriodChanged_ = (period) => {
@@ -2418,6 +2420,14 @@ app.modules['std:validators'] = function () {
 				return true;
 		}
 		return false;
+	}
+
+	function mainObject() {
+		if ('$main' in this._meta_) {
+			let mainProp = this._meta_.$main;
+			return this[mainProp];
+		}
+		return null;
 	}
 
 	function isModelIsCopy() {
@@ -10373,7 +10383,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180831-7549*/
+/*20180913-7558*/
 // controllers/base.js
 
 (function () {
@@ -11026,6 +11036,9 @@ Vue.directive('resize', {
 						that.$alert(locale.$PermissionDenied);
 						return;
 					}
+					if (utils.isFunction(query)) {
+						query = query();
+					}
 					switch (command) {
 						case 'new':
 							if (argIsNotAnArray()) return;
@@ -11086,7 +11099,8 @@ Vue.directive('resize', {
 					return;
 				}
 
-				if (opts && opts.saveRequired && this.$isDirty) {
+				let mo = this.$data.$mainObject;
+				if (opts && opts.saveRequired && (this.$isDirty || mo && mo.$isNew)) {
 					let dlgResult = null;
 					this.$save().then(() => { dlgResult = doDialog(); });
 					return dlgResult;

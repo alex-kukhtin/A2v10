@@ -15,7 +15,8 @@ const template = {
 	},
 	properties: {
 		'TRoot.$$tabVisible': Boolean,
-		'TAgent.$SelectedMime': String
+		'TAgent.$SelectedMime': String,
+		'TAgent.$EditArg'() { return { Id: this.Id };}
 	},
 	events: {
 		"Model.load": modelLoad,

@@ -273,6 +273,8 @@ const vm = new DataModelController({
 				sb.Append($"$permissions: '{meta.Permissions}',");
 			if (!String.IsNullOrEmpty(meta.Items))
 				sb.Append($"$items: '{meta.Items}',");
+			if (!String.IsNullOrEmpty(meta.MainObject))
+				sb.Append($"$main: '{meta.MainObject}',");
 			if (meta.IsGroup)
 				sb.Append($"$group: true,");
 			StringBuilder lazyFields = new StringBuilder();

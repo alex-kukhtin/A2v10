@@ -1112,7 +1112,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
-	select [Agent!TAgent!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], [Type], 
+	select [Agent!TAgent!MainObject] = null, [Id!!Id] = Id, [Name!!Name] = [Name], [Type], 
 		Code, Tag, Memo, Folder, ParentFolder=Parent, Phone,
 		[Address!TAddress!Object] = null,
 		DateCreated, DateModified
@@ -2087,7 +2087,13 @@ begin
 		(63, 30,  N'Покупатели',  N'customer',   N'user', 30, null),
 		(64, 30,  N'Справочники', N'catalog',    N'list', 40, null),
 		(70, 10,  N'Inbox (2)',        N'inbox',      N'workflow1', 50, null),
-		(71, 10,  N'Assets', N'assets', N'dashboard', 60, null)
+		(71, 10,  N'Assets', N'assets', N'dashboard', 60, null),
+		(2, null, N'Mobile',     null,           null,     0, null),
+		(100, 2,  N'Панель',      N'm-dashboard',  N'dashboard-outline',     5, '/help/dashboard'),
+		(105, 2,  N'Продажи',     N'm-sales',      N'pack-outline',    10, '/help/sales'),
+		(110, 2,  N'Закупки',     N'm-purchase',   N'users',    20, '/help/purchase'),
+		(120, 2,  N'Документы',   N'm-document',	 N'file',    30, null),
+		(125, 2,  N'Справочники', N'm-catalog',	 N'menu',    40, null);
 	merge a2ui.Menu as target
 	using @menu as source
 	on target.Id=source.id and target.Id >= 1 and target.Id < 200
@@ -2109,6 +2115,11 @@ begin
 	begin
 		insert into a2security.Acl ([Object], ObjectId, GroupId, CanView)
 			values (N'std:menu', 1, 1, 1);
+	end
+	if not exists (select * from a2security.Acl where [Object] = 'std:menu' and [ObjectId] = 2 and GroupId = 1)
+	begin
+		insert into a2security.Acl ([Object], ObjectId, GroupId, CanView)
+			values (N'std:menu', 2, 1, 1);
 	end
 	exec a2security.[Permission.UpdateAcl.Menu];
 end

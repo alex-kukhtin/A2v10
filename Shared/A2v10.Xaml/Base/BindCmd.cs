@@ -308,7 +308,7 @@ namespace A2v10.Xaml
 						// command, url, data
 						return $"{{cmd:$dialog, isDialog:true, arg1:'{action}', arg2:{CommandUrl(context, decorate:true)}, arg3: '{arg3}'}}";
 					}
-					return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context)}, {GetOptions(context)})";
+					return $"$dialog('{action}', {CommandUrl(context)}, {CommandArgument(context, bNullable)}, {GetData(context, func:true)}, {GetOptions(context)})";
 				case CommandType.EUSign:
 					return $"$eusign({CommandUrl(context)}, {CommandArgument(context)})";
 				default:
@@ -412,11 +412,15 @@ namespace A2v10.Xaml
 			return arg;
 		}
 
-		String GetData(RenderContext context)
+		String GetData(RenderContext context, Boolean func = false)
 		{
 			var dataBind = GetBinding(nameof(Data));
 			if (dataBind != null)
+			{
+				if (func)
+					return $"()=>{dataBind.GetPath(context)}"; // FUNCTION!!!
 				return dataBind.GetPath(context);
+			}
 			else if (Data != null)
 				return $"'{Data}'";
 			return nullString;

@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20180902-7550*/
+/*20180913-7558*/
 // services/datamodel.js
 
 (function () {
@@ -383,6 +383,8 @@
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
+			defHiddenGet(elem, '$mainObject', mainObject);
+
 			elem._seal_ = seal;
 
 			elem._fireGlobalPeriodChanged_ = (period) => {
@@ -438,6 +440,14 @@
 				return true;
 		}
 		return false;
+	}
+
+	function mainObject() {
+		if ('$main' in this._meta_) {
+			let mainProp = this._meta_.$main;
+			return this[mainProp];
+		}
+		return null;
 	}
 
 	function isModelIsCopy() {
