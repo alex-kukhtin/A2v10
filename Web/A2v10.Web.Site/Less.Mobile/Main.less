@@ -7,17 +7,144 @@ html {
 	color: @text-color;
 	box-sizing: border-box;
 	padding: 0;
+	-webkit-tap-highlight-color:transparent;
 }
 
 body {
 	margin:0;
 	padding:0;
+	overflow:hidden;
+}
+
+a {
+	text-decoration:none;
+}
+
+.relative {
+	position: relative;
 }
 
 header, .header {
 	background-color: @brand-bk-color;
 	color: white;
+	width: 100%;
 	height: @header-height;
-	width:100%;
+	position: fixed;
+	top: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 2px 3px 0 rgba(0,0,0,.1);
+
+	.ico {
+		font-size: 1.5rem;
+		padding: 0 .5rem;
+	}
+
+	a {
+		line-height: 1.5rem;
+		font-size: 1.5rem;
+		color: white;
+	}
+
+	.h-title {
+		flex-grow:2;
+		font-size:16px;
+		font-weight:500;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+		overflow:hidden;
+	}
+	.profile {
+		white-space:nowrap;
+		margin: 0 .5rem;
+	}
+	.menu {
+		margin-right:0.5rem;
+	}
+}
+
+
+footer, .footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: @footer-height;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+	background-color: #f2f3f9;
+	border-top: 1px solid #cfd6e5 ;
+	font-size: .85rem;
+
+	a {
+		display: block;
+		color:@link-color;
+		text-transform:lowercase;
+	}
+}
+
+.main-view {
+	overflow:hidden;
 	position:fixed;
+	width:100%;
+	top:@header-height;
+	bottom:@footer-height;
+}
+
+
+.content-view {
+	overflow:auto;
+	height:100%;
+}
+
+[v-cloak] {
+	display: none;
+}
+
+.x-badge {
+	position: absolute;
+	box-sizing: border-box;
+	font-weight: bold;
+	left: 18px;
+	top: -3px;
+	background-color: #f44336;
+	border-radius: 10px;
+	font-size: 12px;
+	line-height: 13px;
+	padding: 1px 3px 2px 2px;
+	min-width: 16px;
+	text-align: center;
+}
+
+.app-exception {
+	margin: 50px auto;
+	width: 90%;
+	height: auto;
+	text-align: center;
+	z-index: auto; //@exception-index;
+	position: relative;
+	padding: 0;
+	background-color: @danger-bg-color;
+	color: @danger-txt-color;
+	border: 1px solid @danger-brd-color;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	user-select: text;
+
+	.message {
+		padding: 15px 10px;
+		white-space: pre-line;
+		font-weight: bold;
+	}
+
+	.stack-trace {
+		border-top: 1px solid @danger-txt-color;
+		background-color: lighten(@danger-bg-color, 5%);
+		overflow: auto;
+		padding: 10px;
+		max-height: 300px;
+		font-size: 92%;
+	}
 }

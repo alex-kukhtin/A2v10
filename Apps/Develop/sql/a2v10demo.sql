@@ -2089,14 +2089,19 @@ begin
 		(70, 10,  N'Inbox (2)',        N'inbox',      N'workflow1', 50, null),
 		(71, 10,  N'Assets', N'assets', N'dashboard', 60, null),
 		(2, null, N'Mobile',     null,           null,     0, null),
-		(100, 2,  N'Панель',      N'm-dashboard',  N'dashboard-outline',     5, '/help/dashboard'),
-		(105, 2,  N'Продажи',     N'm-sales',      N'pack-outline',    10, '/help/sales'),
-		(110, 2,  N'Закупки',     N'm-purchase',   N'users',    20, '/help/purchase'),
-		(120, 2,  N'Документы',   N'm-document',	 N'file',    30, null),
-		(125, 2,  N'Справочники', N'm-catalog',	 N'menu',    40, null);
+		(100, 2,  N'Панель управління',  N'dashboard',  N'dashboard-outline',     5, '/help/dashboard'),
+		(105, 2,  N'Продажи',     N'sales',      N'pack-outline',    10, null),
+		(1050, 105,  N'Прибуткові накладні',     N'waybill', N'file',    10,   '/help/sales'),
+		(1051, 105,  N'Рахунки',     N'invoice', N'file',    20,   '/help/sales'),
+		(1052, 105,  N'Контрагенти',   N'customers',   N'users',    30, '/help/sales'),
+		(110, 2,  N'Закупівлі',     N'purchase',   N'users',    20, '/help/purchase'),
+		(120, 2,  N'Грошові кошти',   N'money',	N'currency-uah',    30, null),
+		(1200, 120,  N'Платежі',   N'payments',	N'file',    30, null),
+		(1205, 120,  N'Каса',		N'cash',	N'currency-uah',    30, null),
+		(125, 2,  N'Довідники', N'catalog',	 N'menu',    40, null);
 	merge a2ui.Menu as target
 	using @menu as source
-	on target.Id=source.id and target.Id >= 1 and target.Id < 200
+	on target.Id=source.id and target.Id >= 1 and target.Id < 2000
 	when matched then
 		update set
 			target.Id = source.id,

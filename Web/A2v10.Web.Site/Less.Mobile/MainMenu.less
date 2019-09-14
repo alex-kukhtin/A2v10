@@ -1,0 +1,90 @@
+﻿
+@ani-time: .2s;
+@menu-width:72%;
+@menu-margin:.7rem;
+
+.menu-overlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,.2);
+
+	&.fade-enter-active, &.fade-leave-active {
+		transition: opacity @ani-time ease-out;
+	}
+
+	&.fade-enter, &.fade-leave-to {
+		opacity: 0;
+	}
+}
+
+.menu-container {
+	width: @menu-width;
+	padding: @menu-margin / 2;
+	background-color: @menu-bk-color;
+	color: white;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
+	box-shadow: 3px 0 3px 0 rgba(0,0,0,.1);
+
+	ul.menu-view {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 15px;
+
+		li {
+			font-weight: 500;
+			color: white;
+
+			> ul {
+				//padding-left: 1rem;
+			}
+
+			.menu-folder {
+				white-space: nowrap;
+				padding: @menu-margin 1rem;
+				border-top: 1px solid white;
+				font-weight: normal;
+			}
+
+			a {
+				display: block;
+				padding: @menu-margin 1rem;
+				white-space: nowrap;
+				overflow: hidden;
+				color: currentColor;
+
+				&.active {
+					background-color: white;
+					color: #777;
+				}
+
+				&:focus, &:active {
+					background-color:lighten(@menu-bk-color,5%);
+				}
+			}
+
+			&.group {
+				border-top: 1px solid white;
+			}
+		}
+
+		.ico {
+			font-size: 1.5rem;
+			margin-right: @menu-margin;
+		}
+	}
+
+	&.slide-enter-active, &.slide-leave-active {
+		transition: width @ani-time ease-out;
+	}
+
+	&.slide-enter, &.slide-leave-to {
+		width: 0;
+	}
+}

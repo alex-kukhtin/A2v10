@@ -7,27 +7,49 @@
 	<title></title>
 	<meta name="rootUrl" content="" />
 	<style>
-		[v-cloak] {
-			display: none;
-		}
 	</style>
 </head>
 <body>
-	<div id="app">
-		<header class="header">
-			HEADER here
-		</header>
-		<div class="main-view" style="padding-top:2rem">
-			<div style="position:fixed;top:2rem;height:2rem;background-color:wheat">
-				TOOLBAR
-			</div>
-			I am the mobile application		
-			<div style="background-color:lavender;height:600px;width:200px">
+	<div id="app" v-cloak>
+		<div class="main-view">
+			<form-group>
+				<input-group>
+
+				</input-group>
+			</form-group>
+			<input />
+			<table class="data-grid grid-horizontal">
+				<thead>
+					<tr>
+						<th>Дата</th>
+						<th>Сума</th>
+						<th>Контрагент</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>21.02.2019</td>
+						<td>Агропромстрой</td>
+						<td>k;lk;lk;l</td>
+					</tr>
+					<tr>
+						<td>21.02.2019</td>
+						<td>Агропромстрой</td>
+						<td>k;lk;lk;l</td>
+					</tr>
+					<tr v-for="o in [1,2,2,2,2,2,2,2,2,22]">
+						<td>21.02.2019</td>
+						<td>Агропромстрой</td>
+						<td>k;lk;lk;l</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="background-color:lavender;padding:20rem 0;">
 				big text
 				<button>
 					I am the button
 				</button>
-				<ul>
+				<ul class="tree-view">
 					<li>Element 1</li>
 					<li>Element 1</li>
 					<li>Element 1</li>
@@ -35,8 +57,55 @@
 					<li>Element 1</li>
 				</ul>
 			</div>
+			<button>Button</button>
+			<input />
 		</div>
+		<header class="header">
+			<div class="menu">
+				<a @click.stop.prevent="toggleMenu" href=""><i class="ico ico-menu"></i></a>
+			</div>
+			<a class="h-title" href="index.html">Платежные поручения</a>
+			<div class="profile relative">
+				<i class="ico ico-bell">
+				</i>
+				<span class="x-badge">2</span>
+				<i class="ico ico-user"></i>
+			</div>
+		</header>
+		<footer class="footer">
+			<a>про систему</a>
+			<a>контакти</a>
+			<a>умови використання</a>
+		</footer>
+		<transition name="fade">
+			<div class="menu-overlay" @click.stop.prevent="hideMenu" v-if="menuVisible">
+			</div>
+		</transition>
+		<transition name="slide">
+			<div class="menu-container" v-if="menuVisible">
+				<ul class="menu-view">
+					<li><a><i class="ico ico-file"></i><span class="menu-text">Element menu 1</span></a></li>
+					<li><a><i class="ico ico-file"></i><span class="menu-text">Element menu 2</span></a></li>
+					<li>
+						<div class="menu-folder">Sub menu number 3</div>
+						<ul class="menu-view">
+							<li><a><i class="ico ico-file"></i><span class="menu-text">Element menu 3.1</span></a></li>
+							<li><a><i class="ico ico-file"></i><span class="menu-text">Element menu 3.2</span></a></li>
+						</ul>
+					</li>
+					<li class="group"><a><i class="ico ico-file"></i><span class="menu-text">Element menu 4</span></a></li>
+					<li class="active"><a><i class="ico ico-file"></i><span class="menu-text">Element menu 5</span></a></li>
+					<li><a><i class="ico ico-file"></i><span class="menu-text">Element menu 6</span></a></li>
+					<li><a><i class="ico ico-report"></i><span class="menu-text">Element menu 7</span></a></li>
+					<li class="group"><a><i class="ico ico-users"></i><span class="menu-text">Element menu 8</span></a></li>
+					<li><a><i class="ico ico-user"></i><span class="menu-text">Element menu 9</span></a></li>
+					<li><a><i class="ico ico-package-outline"></i><span class="menu-text">Element menu 10</span></a></li>
+					<li class="group"><a><i class="ico ico-exit"></i><span class="menu-text">Вихід</span></a></li>
+				</ul>
+			</div>
+		</transition>
 	</div>
 	<script src="../scripts/vue.js"></script>
+	<script src="testmobile.js"></script>
 </body>
 </html>

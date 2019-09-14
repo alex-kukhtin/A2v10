@@ -99,6 +99,7 @@
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />
+    <Content Include="app\mobile\shell.js" />
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
@@ -184,7 +185,9 @@
     <Content Include="Less\Table.less" />
     <Content Include="Localization\de.xml" />
     <Content Include="scripts\locale-de.min.js" />
+    <Content Include="scripts\mobile.js" />
     <Content Include="TestMobile\index.html" />
+    <Content Include="TestMobile\testmobile.js" />
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\JasmineTests.html" />
@@ -196,6 +199,9 @@
     <Content Include="Less.Mobile\Site.Mobile.less" />
     <Content Include="Less.Mobile\Main.less" />
     <Content Include="Less\CompanyButton.less" />
+    <Content Include="Less.Mobile\MainMenu.less" />
+    <Content Include="Less.Mobile\DataGrid.less" />
+    <Content Include="Less.Mobile\Modal.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
