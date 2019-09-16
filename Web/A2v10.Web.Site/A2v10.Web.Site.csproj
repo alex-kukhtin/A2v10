@@ -202,6 +202,10 @@
     <Content Include="Less.Mobile\MainMenu.less" />
     <Content Include="Less.Mobile\DataGrid.less" />
     <Content Include="Less.Mobile\Modal.less" />
+    <Content Include="Less.Mobile\Control.less" />
+    <Content Include="Less.Mobile\CheckBox.less" />
+    <Content Include="Less.Mobile\Button.less" />
+    <Content Include="Less.Mobile\DropDown.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

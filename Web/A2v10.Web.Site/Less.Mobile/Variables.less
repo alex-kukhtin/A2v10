@@ -8,12 +8,26 @@
 
 // colors
 @text-color: #222;
+@gray-text-color: #ccc;
 @dark-gray-text-color: #999;
 @light-gray-color: #ddd;
 @default-brd-color: #ddd; //#bdc5d8;
+@disabled-bg-color: #fafafa;
 @brand-bk-color: #4d6082;
 @menu-bk-color:#9ab3e0;
 @link-color: #208cf8; //#57a8fa;
+@link-hover-color: @link-color;
+@link-hover-color-dark: darken(@link-color, 10%);
+@icon-color: #333;
+@dark-bk-color: #8591a2;
+
+
+@warning-base-color: #ffb74d;
+@danger-base-color: #da533f;
+@success-base-color: #5db750;
+@info-base-color: #60bbe5;
+//@primary-base-color: #5f8ce0;
+@primary-base-color: #3470b4;
 
 @alter-bg-color: rgba(208, 208, 208, 0.15);
 @hover-bg-color: #fdf4bf;
@@ -27,17 +41,55 @@
 @table-brd-color: #ddd; // #e5e8eb;
 @label-color: @dark-gray-text-color;
 
+@toolbar-bg-color: #cfd6e5;
+@toolbar-txt-color: #555;
+@tb-active-bg-color: #fff29d;
+@tb-hover-brd-color: #e5c365;
+
+@dropdown-brd-color: @default-brd-color;
+@dropdown-bg-color: #eaf0ff;
+
 // icon-colors
 @icon-folder: #dcb67a;
 // header/footer
 @header-height:3rem;
 @footer-height:2rem;
 
+@whitesmoke-gray-bg-color: #f9f9f9;
+
 @danger-txt-color: #a94442;
 @danger-bg-color: #f2dede;
 @danger-brd-color: darken(@danger-bg-color, 15%);
 @danger-shadow-color: rgba(169,68,66,0.3);
 
+@pane-yellow-txt: #856404;
+@pane-yellow-bg: #fff3cd;
+@pane-yellow-brd: #ffeeba;
+
+@pane-cyan-txt: #31708f;
+@pane-cyan-bg: #d9edf7;
+@pane-cyan-brd: #bcdff1;
+
 @table-cell-padding-v: 4px;
 @table-cell-padding-h: 6px;
 @table-cell-padding: @table-cell-padding-v @table-cell-padding-h;
+
+@footer-index: 1020;
+@validator-index: 1030;
+@modal-wrapper-index: 1050;
+@exception-index: 1060;
+@popup-index: 1070;
+@toastr-z-index: 1080;
+@focus-index: auto; //90;
+@hover-index: auto; //92;
+@hover-open-index: auto; //99;
+@invalid-hover-index: auto; //98;
+@invalid-index: auto; //94;
+
+@control-height: 1.95rem;
+@input-padding: 5px;
+@select-padding: 2px;
+@placeholder-color: @gray-text-color;
+@label-color: @dark-gray-text-color;
+@control-focus-color: @link-hover-color;
+@header-text-color: @dark-gray-text-color;
