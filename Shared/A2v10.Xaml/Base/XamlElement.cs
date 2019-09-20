@@ -146,7 +146,7 @@ namespace A2v10.Xaml
 			if (iconBind != null)
 				iTag.MergeAttribute(":class", $"'ico-' + {iconBind.GetPath(context)}");
 			else if (icon != Icon.NoIcon)
-				iTag.AddCssClass("ico-" + icon.ToString().ToKebabCase());
+				iTag.AddCssClass($"ico-{icon.ToString().ToKebabCase()}");
 			iTag.AddCssClass(addClass);
 			iTag.Render(context);
 			context.RenderSpace(); // after icon - always

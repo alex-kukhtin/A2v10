@@ -2,7 +2,8 @@
 /* index template */
 
 const template = {
-	properties: {
+    properties: {
+        'TRoot.$style': String,
 		'TRoot.$text'() {
 			return 'button text';
 		}

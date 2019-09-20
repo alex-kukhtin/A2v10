@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 		Green = Success,
 		Orange = Warning,
 		Red = Danger,
+        Error = Danger,
 		Cyan = Info,
 		Outline = 6
 	}
@@ -103,8 +104,11 @@ namespace A2v10.Xaml
 			if (IconAlign == IconAlign.Top)
 				button.AddCssClass("icon-top");
 
-			if (Style != ButtonStyle.Default)
-				button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
+            var styleBind = GetBinding(nameof(Style));
+            if (styleBind != null)
+                button.MergeAttribute(":class", $"'btn-' + {styleBind.GetPathFormat(context)}");
+            else if (Style != ButtonStyle.Default)
+                button.AddCssClass($"btn-{Style.ToString().ToLowerInvariant()}");
 			button.AddCssClassBool(Rounded, "btn-rounded");
 			if (hasDropDown && !hasCommand)
 				button.MergeAttribute("toggle", String.Empty);
