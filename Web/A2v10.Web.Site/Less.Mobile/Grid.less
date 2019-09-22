@@ -1,0 +1,34 @@
+﻿
+@grid-gap: .75rem;
+
+
+.grid {
+	display: grid;
+	//background-color: aliceblue;
+	padding: @grid-gap;
+	grid-gap: @grid-gap;
+	align-items: flex-end;
+	grid-template-columns: auto;
+	grid-template-rows: auto;
+
+	.control-group {
+		margin-bottom: 0;
+	}
+
+	.a2-header {
+		margin: 0;
+	}
+
+	> .grid {
+		padding: 0;
+	}
+
+	> .panel {
+		margin-bottom: 0;
+	}
+
+	.grid-divider {
+		background-color:#ddd;
+		align-self:stretch;
+	}
+}

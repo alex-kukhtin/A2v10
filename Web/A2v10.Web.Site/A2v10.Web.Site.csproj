@@ -206,6 +206,13 @@
     <Content Include="Less.Mobile\CheckBox.less" />
     <Content Include="Less.Mobile\Button.less" />
     <Content Include="Less.Mobile\DropDown.less" />
+    <Content Include="Less.Mobile\List.less" />
+    <Content Include="Less.Mobile\Card.less" />
+    <Content Include="Less.Mobile\Layout.less" />
+    <Content Include="Less.Mobile\Text.less" />
+    <Content Include="Less.Mobile\Utlis.less" />
+    <Content Include="Less.Mobile\ToolBar.less" />
+    <Content Include="Less.Mobile\Grid.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
