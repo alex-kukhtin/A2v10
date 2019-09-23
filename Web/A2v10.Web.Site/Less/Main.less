@@ -33,23 +33,6 @@ body.waiting * {
 	display: none;
 }
 
-button {
-	font-size: @font-size;
-	border: 1px solid transparent;
-	cursor: pointer;
-
-	&:focus {
-		outline-style: none;
-	}
-}
-
-
-hr {
-	margin: .8rem 0;
-	border: 1px solid @light-gray-color;
-	border-bottom-style: none;
-}
-
 header, .header {
 	position: absolute;
 	left: 0;
@@ -306,84 +289,6 @@ keyframes fadeOut {
 }
 
 
-input, select, textarea {
-	border-style: none;
-	font-size: @font-size;
-	color: @text-color;
-
-	&:focus {
-		outline-style: none;
-	}
-}
-
-textarea {
-	padding: 2px @input-padding;
-}
-
-input, select {
-	height: @control-height;
-	padding: 0 @input-padding;
-}
-
-/* hide for focused */
-input::-moz-placeholder,input:focus::-moz-placeholder,textarea::-moz-placeholder,textarea:focus::-moz-placeholder {
-	color: @placeholder-color;
-}
-
-input:-ms-input-placeholder, textarea:-ms-input-placeholder, input:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder {
-	color: @placeholder-color;
-}
-
-
-input::-webkit-input-placeholder, input:focus::-webkit-input-placeholder, textarea::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
-	color: @placeholder-color;
-}
-
-select {
-	padding: 0 @select-padding;
-}
-
-textarea {
-	resize: none;
-}
-
-a {
-	color: @link-color;
-	text-decoration: none;
-	cursor: pointer;
-
-	&[disabled] {
-		opacity: 0.5;
-		cursor: not-allowed;
-		//pointer-events: none; // disable click
-	}
-
-	&:hover {
-		color: @link-hover-color;
-		text-decoration: none;
-	}
-
-	&:focus {
-		color: @link-hover-color;
-		outline-style: none;
-	}
-
-	&:active {
-		color: @link-hover-color;
-	}
-}
-
-pre {
-	font-family: @monospace-font;
-	font-size: 0.85em;
-	background-color: @whitesmoke-gray-bg-color;
-	padding: 6px;
-	white-space: pre-wrap;
-	word-break: break-all;
-	word-wrap: break-word;
-	user-select: text;
-}
-
 pre.a2-code {
 	overflow: auto;
 	max-height: 300px;
@@ -476,22 +381,6 @@ pre.a2-code {
 	to {
 		left: 100%;
 	}
-}
-
-h2, .h2 {
-	font-size: 1.6em;
-}
-
-h3, .h3 {
-	font-size: 1.2em;
-}
-
-h4, .h4 {
-	font-size: 1em;
-}
-
-h5, .h5 {
-	font-size: 0.85em;
 }
 
 .a2-header {
