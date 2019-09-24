@@ -2415,7 +2415,8 @@ label.checkbox.small span:after {
   outline-style: none;
 }
 .a2-list .a2-list-item.warning,
-.a2-list .a2-list-item.yellow {
+.a2-list .a2-list-item.yellow,
+.a2-list .a2-list-item.light-yellow {
   border-left-color: gold;
   background-color: #fffff0;
 }
@@ -3584,6 +3585,58 @@ iframe.eusign-iframe {
   margin-top: 0.7rem;
   border-top: 1px solid #ddd;
 }
+.a2-pager {
+  background-color: white;
+  padding: 8px 6px 2px 0;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+.a2-pager button {
+  padding: 3px;
+  background-color: white;
+  border: 1px solid #ccc;
+  min-width: 25.5px;
+  min-height: 25.5px;
+  text-align: center;
+  margin-right: -1px;
+}
+.a2-pager button:hover {
+  background-color: #e0e0e0;
+}
+.a2-pager button[disabled] {
+  color: #ccc;
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+.a2-pager button[disabled]:hover {
+  background-color: #f9f9f9;
+}
+.a2-pager button.active {
+  background-color: #cde6f7;
+}
+.a2-pager button.active:hover {
+  background-color: #cde6f7;
+}
+.a2-pager button:first-child {
+  border-left-width: 1px;
+}
+.a2-pager > .a2-pager-divider {
+  flex-grow: 2;
+}
+.a2-pager > .a2-pager-title {
+  font-size: 0.9em;
+  color: #777;
+}
+.a2-pager .a2-pager-dots {
+  display: inline-block;
+  width: 25.5px;
+  text-align: center;
+}
+.a2-pager.rounded button {
+  border-radius: 10rem;
+  margin-right: 4px;
+}
 .grid {
   display: grid;
   padding: 0.75rem;
@@ -3607,6 +3660,84 @@ iframe.eusign-iframe {
 .grid .grid-divider {
   background-color: #ddd;
   align-self: stretch;
+}
+.a2-tab-bar {
+  display: flex;
+  border-bottom: 0.3rem solid #ddd;
+  align-items: baseline;
+  margin: 0.65rem 0;
+}
+.a2-tab-bar-item {
+  padding: 0 0.65rem;
+}
+.a2-tab-bar-item:first-child {
+  padding-left: 0;
+}
+.a2-tab-button {
+  padding: 0.65rem 0;
+  border-bottom: 0.3rem solid #ddd;
+  margin-bottom: -0.3rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: block;
+}
+.a2-tab-button.active {
+  border-bottom-color: #208cf8;
+  color: #999;
+}
+.a2-tab-button .content {
+  white-space: nowrap;
+}
+.a2-tab-description {
+  color: #999;
+}
+.a2-tab-bar.tab-bar-main-menu {
+  background-color: #f2f3f9;
+  border-bottom-color: #f2f3f9;
+  margin: 0;
+  padding: 0 8px;
+  align-items: stretch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.a2-tab-bar.tab-bar-main-menu .a2-tab-bar-item {
+  line-height: 29px;
+}
+.a2-tab-bar.tab-bar-main-menu .a2-tab-bar-item:hover {
+  background-color: #e8e9f4;
+}
+.a2-tab-bar.tab-bar-main-menu .a2-tab-button {
+  font-weight: normal;
+  text-transform: uppercase;
+  border-bottom-color: transparent;
+  padding: 0;
+}
+.a2-tab-bar.tab-bar-main-menu .a2-tab-button.active {
+  font-weight: 500;
+  color: #208cf8;
+  border-bottom-color: #208cf8;
+}
+.a2-tab-bar.tab-bar-button-group {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  align-items: stretch;
+  border: none;
+}
+.a2-tab-bar.tab-bar-button-group .a2-tab-bar-item {
+  flex: 1 1 auto;
+  padding: 0;
+}
+.a2-tab-bar.tab-bar-button-group .a2-tab-button {
+  text-align: center;
+  border: 1px solid #f2f3f9;
+  font-weight: normal;
+  font-size: 1rem;
+  margin: 0;
+}
+.a2-tab-bar.tab-bar-button-group .a2-tab-button.active {
+  background-color: #9ab3e0;
+  border-color: #9ab3e0;
+  color: white;
 }
 .block {
   display: block!important;

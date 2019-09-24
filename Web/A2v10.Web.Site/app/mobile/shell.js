@@ -1,6 +1,6 @@
 ﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
 
-/*20180914-7559*/
+/*20180924-7561*/
 /* mobile/shell.js */
 
 
@@ -420,7 +420,7 @@
 							return m.Name;
 						for (let sm of m.Menu) {
 							if (sm.Url === seg1)
-								return sm.Name;
+								return `${m.Name} / ${sm.Name}`;
 						}
 					}
 				}

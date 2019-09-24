@@ -67,3 +67,30 @@
 		}
 	}
 }
+
+.a2-tab-bar.tab-bar-button-group {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    align-items: stretch;
+    border: none;
+
+    .a2-tab-bar-item {
+        flex: 1 1 auto;
+        padding: 0;
+    }
+
+    .a2-tab-button {
+        text-align: center;
+        border: 1px solid @navbar-bg-color;
+        font-weight:normal;
+        font-size:1rem;
+        margin:0;
+
+        &.active {
+            background-color: @menu-bk-color;
+            border-color:@menu-bk-color;
+            color:white;
+        }
+    }
+}
