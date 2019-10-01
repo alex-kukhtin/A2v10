@@ -8,6 +8,7 @@ namespace BuildSql
 	{
 #pragma warning disable IDE1006 // Naming Styles
 		public String version { get; set; }
+        public Boolean replaceSessionContext { get; set; }
 		public String outputFile { get; set; }
 		public String[] inputFiles { get; set; }
 #pragma warning restore IDE1006 // Naming Styles

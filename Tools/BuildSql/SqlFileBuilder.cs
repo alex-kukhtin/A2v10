@@ -42,20 +42,22 @@ namespace BuildSql
 			try {
 				fw = File.Open(outFilePath, FileMode.CreateNew, FileAccess.Write);
 				Console.WriteLine($"Writing {item.outputFile}");
-				using (var sw = new StreamWriter(fw))
-				{
-					fw = null;
-					WriteVersion(item, sw);
-					sw.Write($"{nl}{nl}/* {item.outputFile} */{nl}{nl}");
-					foreach (var f in item.inputFiles)
-					{
-						var inputPath = Path.Combine(_path, f);
-						Console.WriteLine($"\t{f}");
-						var inputText = File.ReadAllText(inputPath);
-						sw.Write(inputText);
-						sw.WriteLine();
-					}
-				}
+                using (var sw = new StreamWriter(fw, new UTF8Encoding(true)))
+                {
+                    fw = null;
+                    WriteVersion(item, sw);
+                    sw.Write($"{nl}{nl}/* {item.outputFile} */{nl}{nl}");
+                    foreach (var f in item.inputFiles)
+                    {
+                        var inputPath = Path.Combine(_path, f);
+                        Console.WriteLine($"\t{f}");
+                        var inputText = File.ReadAllText(inputPath);
+                        if (item.replaceSessionContext)
+                            inputText = inputText.Replace("default(cast(session_context(N'TenantId') as int))", "default(1)");
+                        sw.Write(inputText);
+                        sw.WriteLine();
+                    }
+                }
 			}
 			finally
 			{
