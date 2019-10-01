@@ -149,6 +149,7 @@ namespace A2v10RuntimeNet
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
+                IUserStateManager userStateManager = new DesktopUserStateManager(host, dbContext);
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IDbContext>(dbContext);
@@ -156,7 +157,8 @@ namespace A2v10RuntimeNet
 				service.RegisterService<IWorkflowEngine>(wfEngine);
 				service.RegisterService<IDataScripter>(scripter);
 				service.RegisterService<ILocalizer>(localizer);
-				host.TenantId = 1;
+                service.RegisterService<IUserStateManager>(userStateManager);
+                host.TenantId = 1;
 			};
 		}
 
