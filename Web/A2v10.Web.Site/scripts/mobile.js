@@ -4810,7 +4810,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190818-7528
+// 20191003-7562
 // components/calendar.js
 
 (function () {
@@ -4964,7 +4964,8 @@ Vue.component('validator-control', {
 				return cls;
 			},
 			dayTitle(day) {
-				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+				return day.toString();
+				//return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			mouseOver(day) {
 				if (this.hover)
@@ -4975,7 +4976,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190904-7552
+// 20191003-7562
 // components/datepicker.js
 
 
@@ -5042,16 +5043,18 @@ Vue.component('validator-control', {
 				this.setDate(dt);
 			},
 			selectDay(day) {
-				this.setDate(day);
+				var dt = new Date(day);
+				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				this.setDate(dt);
 				this.isOpen = false;
 			},
 			setDate(d) {
 				// save time
-				let od = this.modelDate;
-				let h = od.getHours();
-				let m = od.getMinutes();
+				let od = new Date(this.modelDate);
+				let h = od.getUTCHours();
+				let m = od.getUTCMinutes();
 				var nd = new Date(d);
-				nd.setHours(h, m, 0, 0);
+				nd.setUTCHours(h, m, 0, 0);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {

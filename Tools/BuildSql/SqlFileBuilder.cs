@@ -8,40 +8,42 @@ using System.Threading.Tasks;
 
 namespace BuildSql
 {
-	public class SqlFileBuilder
-	{
-		readonly String _path;
+    public class SqlFileBuilder
+    {
+        readonly String _path;
 
-		public SqlFileBuilder(String path)
-		{
-			_path = path;
-		}
+        public SqlFileBuilder(String path)
+        {
+            _path = path;
+        }
 
-		public void Process()
-		{
-			String jsonPath = Path.Combine(_path, "sql.json");
-			if (!File.Exists(jsonPath)) {
-				Console.WriteLine($"File not found: {jsonPath}");
-			}
+        public void Process()
+        {
+            String jsonPath = Path.Combine(_path, "sql.json");
+            if (!File.Exists(jsonPath))
+            {
+                Console.WriteLine($"File not found: {jsonPath}");
+            }
 
-			String jsonText = File.ReadAllText(jsonPath);
-			List<ConfigItem> list = JsonConvert.DeserializeObject<List<ConfigItem>>(jsonText);
+            String jsonText = File.ReadAllText(jsonPath);
+            List<ConfigItem> list = JsonConvert.DeserializeObject<List<ConfigItem>>(jsonText);
 
-			foreach (var item in list)
-			{
-				ProcessOneItem(item);
-			}
-		}
+            foreach (var item in list)
+            {
+                ProcessOneItem(item);
+            }
+        }
 
-		void ProcessOneItem(ConfigItem item)
-		{
-			String outFilePath = Path.Combine(_path, item.outputFile);
-			File.Delete(outFilePath);
-			var nl = Environment.NewLine;
-			FileStream fw = null;
-			try {
-				fw = File.Open(outFilePath, FileMode.CreateNew, FileAccess.Write);
-				Console.WriteLine($"Writing {item.outputFile}");
+        void ProcessOneItem(ConfigItem item)
+        {
+            String outFilePath = Path.Combine(_path, item.outputFile);
+            File.Delete(outFilePath);
+            var nl = Environment.NewLine;
+            FileStream fw = null;
+            try
+            {
+                fw = File.Open(outFilePath, FileMode.CreateNew, FileAccess.Write);
+                Console.WriteLine($"Writing {item.outputFile}");
                 using (var sw = new StreamWriter(fw, new UTF8Encoding(true)))
                 {
                     fw = null;
@@ -58,23 +60,23 @@ namespace BuildSql
                         sw.WriteLine();
                     }
                 }
-			}
-			finally
-			{
-				if (fw != null)
-					fw.Close();
-			}
-		}
+            }
+            finally
+            {
+                if (fw != null)
+                    fw.Close();
+            }
+        }
 
-		void WriteVersion(ConfigItem item, StreamWriter writer)
-		{
-			if (String.IsNullOrEmpty(item.version))
-				return;
-			// write version
-			var nl = Environment.NewLine;
-			Console.WriteLine($"version: {item.version}");
-			String msg = $"/*{nl}version: {item.version}{nl}generated: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}{nl}*/";
-			writer.WriteLine(msg);
-		}
-	}
+        void WriteVersion(ConfigItem item, StreamWriter writer)
+        {
+            if (String.IsNullOrEmpty(item.version))
+                return;
+            // write version
+            var nl = Environment.NewLine;
+            Console.WriteLine($"version: {item.version}");
+            String msg = $"/*{nl}version: {item.version}{nl}generated: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}{nl}*/";
+            writer.WriteLine(msg);
+        }
+    }
 }

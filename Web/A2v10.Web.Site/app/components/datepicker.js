@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190904-7552
+// 20191003-7562
 // components/datepicker.js
 
 
@@ -67,16 +67,18 @@
 				this.setDate(dt);
 			},
 			selectDay(day) {
-				this.setDate(day);
+				var dt = new Date(day);
+				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				this.setDate(dt);
 				this.isOpen = false;
 			},
 			setDate(d) {
 				// save time
-				let od = this.modelDate;
-				let h = od.getHours();
-				let m = od.getMinutes();
+				let od = new Date(this.modelDate);
+				let h = od.getUTCHours();
+				let m = od.getUTCMinutes();
 				var nd = new Date(d);
-				nd.setHours(h, m, 0, 0);
+				nd.setUTCHours(h, m, 0, 0);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
