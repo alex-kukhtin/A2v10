@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,8 @@ namespace A2v10.Xaml
 		#region Attached Properties
 		[ThreadStatic]
 		static IDictionary<Object, Boolean> _attachedFill;
+		[ThreadStatic]
+		static IDictionary<Object, Boolean> _attachedSkip;
 
 		public static void SetFill(Object obj, Boolean fill)
 		{
@@ -24,9 +26,23 @@ namespace A2v10.Xaml
 			return AttachedHelpers.GetAttached(_attachedFill, obj);
 		}
 
+		public static void SetSkip(Object obj, Boolean skip)
+		{
+			if (_attachedSkip == null)
+				_attachedSkip = new Dictionary<Object, Boolean>();
+			AttachedHelpers.SetAttached(_attachedSkip, obj, skip);
+		}
+
+		public static Boolean? GetSkip(Object obj)
+		{
+			return AttachedHelpers.GetAttached(_attachedSkip, obj);
+		}
+
+
 		internal static void ClearAttached()
 		{
 			_attachedFill = null;
+			_attachedSkip = null;
 		}
 
 		#endregion
@@ -38,6 +54,9 @@ namespace A2v10.Xaml
 			StringBuilder sb = new StringBuilder(); 
 			foreach (var c in Children)
 			{
+				var skip = GetSkip(c);
+				if (skip.HasValue && skip.Value)
+					continue;
 				var fill = GetFill(c);
 				if (fill.HasValue && fill.Value)
 					sb.Append("1fr ");

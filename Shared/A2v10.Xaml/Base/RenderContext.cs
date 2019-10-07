@@ -59,6 +59,8 @@ namespace A2v10.Xaml
 				String vAlign = _vAlign.Value.AlignSelf();
 				if (vAlign != null)
 					rv.Add(new StringKeyValuePair() { Key = "align-self", Value = vAlign });
+				if (vAlign == "stretch")
+					rv.Add(new StringKeyValuePair() { Key = "overflow", Value = "auto" });
 			}
 			return rv;
 		}

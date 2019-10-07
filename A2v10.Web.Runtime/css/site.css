@@ -1184,6 +1184,11 @@ body.waiting * {
 [v-cloak] {
   display: none;
 }
+hr {
+  margin: 0.8rem 0;
+  border: 1px solid #ddd;
+  border-bottom-style: none;
+}
 header,
 .header {
   position: absolute;
