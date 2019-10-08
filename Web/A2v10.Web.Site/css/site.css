@@ -2755,8 +2755,8 @@ pre.a2-code {
 }
 .input-group > .selector-pane ul.selector-ul li {
   list-style: none;
-  padding: 3px 6px;
-  white-space: nowrap;
+  padding: 4px 6px;
+  white-space: normal;
   cursor: pointer;
 }
 .input-group > .selector-pane ul.selector-ul li:hover {

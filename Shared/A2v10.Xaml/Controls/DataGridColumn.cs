@@ -188,15 +188,15 @@ namespace A2v10.Xaml
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
-			if (Content is XamlElement)
-				(Content as XamlElement).SetParent(this);
+			if (Content is XamlElement xamlElement)
+				xamlElement.SetParent(this);
 		}
 
 		internal override void OnSetStyles()
 		{
 			base.OnSetStyles();
-			if (Content is XamlElement)
-				(Content as XamlElement).OnSetStyles();
+			if (Content is XamlElement xamlElement)
+				xamlElement.OnSetStyles();
 		}
 	}
 
