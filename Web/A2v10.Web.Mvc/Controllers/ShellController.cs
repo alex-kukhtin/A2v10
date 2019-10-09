@@ -394,7 +394,6 @@ namespace A2v10.Web.Mvc.Controllers
 			// HTTP GET
 			try
 			{
-				ExpandoObject prms = new ExpandoObject();
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				SetSqlQueryParams(loadPrms);

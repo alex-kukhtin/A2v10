@@ -5696,6 +5696,9 @@ iframe.eusign-iframe {
 .flex-list.horizontal {
   flex-flow: row wrap;
 }
+.flex-list.horizontal.no-wrap {
+  flex-wrap: nowrap;
+}
 .flex-list.horizontal .flex-list-item {
   margin-right: 1.25rem;
 }
@@ -6083,7 +6086,7 @@ table > colgroup col.blue {
   display: block;
   word-wrap: break-word;
   word-break: break-word;
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 .side-bar {
   position: absolute;

@@ -23,8 +23,11 @@ namespace A2v10.Request
 			var export = action.Export;
 			if (export == null)
 				throw new RequestModelException($"There is no export in '{rm.ModelAction}' action");
-			if(prms != null)
+			if (prms != null)
+			{
 				prms.Append(action.parameters);
+				prms.SetIfNotExists("Id", action.Id);
+			}
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
 			
 			var fileName = export.template.AddExtension(export.format.ToString());

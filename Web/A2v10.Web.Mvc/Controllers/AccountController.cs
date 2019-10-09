@@ -107,7 +107,8 @@ namespace A2v10.Web.Mvc.Controllers
 
 		String GetRedirectedPage(String pageName, String fallback)
 		{
-			String redirectedText = _host.ApplicationReader.ReadTextFile("_platform/", $"{pageName}.{CurrentLang}.html");
+			var mobileSuffix = _host.Mobile ? ".mobile" : String.Empty;
+			String redirectedText = _host.ApplicationReader.ReadTextFile("_platform/", $"{pageName}.{CurrentLang}{mobileSuffix}.html");
 			if (redirectedText == null)
 				return fallback;
 			String text = redirectedText + "\r\n";
@@ -118,7 +119,7 @@ namespace A2v10.Web.Mvc.Controllers
 			Int32 spIndex = text.IndexOfAny(" \n\r<>".ToCharArray(), ix);
 			sb.Append(text.Substring(0, ix));
 			String partialFileName = text.Substring(ix + 13, spIndex - ix - 13);
-			String partialPathText = _host.ApplicationReader.ReadTextFile("_platform/", $"{partialFileName}.{CurrentLang}.html");
+			String partialPathText = _host.ApplicationReader.ReadTextFile("_platform/", $"{partialFileName}.{CurrentLang}{mobileSuffix}.html");
 			sb.Append(partialPathText);
 			sb.Append(text.Substring(spIndex));
 			return sb.ToString();

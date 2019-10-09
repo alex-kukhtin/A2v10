@@ -11113,13 +11113,18 @@ Vue.directive('resize', {
 				return doDialog();
 			},
 
-			$export() {
+			$export(arg, url, dat) {
 				if (this.$isLoading) return;
+
+				let id = arg || '0';
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
 				const self = this;
 				const root = window.$$rootUrl;
-				let url = self.$baseUrl;
-				url = url.replace('/_page/', '/_export/');
-				window.location = root + url;
+				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
+				alert(newurl);
+				//window.location = root + newurl;
 			},
 
 			$exportTo(format, fileName) {

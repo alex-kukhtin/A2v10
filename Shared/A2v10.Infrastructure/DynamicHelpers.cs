@@ -47,6 +47,14 @@ namespace A2v10.Infrastructure
 				d.Add(name, value);
 		}
 
+		public static void SetIfNotExists(this ExpandoObject obj, String name, Object value)
+		{
+			if (!(obj is IDictionary<String, Object> d))
+				return;
+			if (!d.ContainsKey(name))
+				d.Add(name, value);
+		}
+
 		public static void RemoveKeys(this ExpandoObject obj, String keys)
 		{
 			if (!(obj is IDictionary<String, Object> d))

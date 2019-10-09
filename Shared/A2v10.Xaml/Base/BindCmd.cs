@@ -285,7 +285,7 @@ namespace A2v10.Xaml
 						$"{GetOptions(context)}, {CommandUrlOptional(context)}, {GetData(context)})";
 
 				case CommandType.Export:
-					return $"$export()";
+					return $"$export({CommandArgument(context, nullable:true)}, {CommandUrlOptional(context)}, {GetData(context)})";
 
 				case CommandType.ExportTo:
 					return $"$exportTo('{Format}', {CommandFileName(context)})";

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180913-7558*/
+/*20181009-7565*/
 // controllers/base.js
 
 (function () {
@@ -727,13 +727,17 @@
 				return doDialog();
 			},
 
-			$export() {
+			$export(arg, url, dat) {
 				if (this.$isLoading) return;
+
+				let id = arg || '0';
+				if (arg && utils.isObject(arg))
+					id = utils.getStringId(arg);
 				const self = this;
 				const root = window.$$rootUrl;
-				let url = self.$baseUrl;
-				url = url.replace('/_page/', '/_export/');
-				window.location = root + url;
+				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
+				htmlTools.downloadUrl(newurl);
 			},
 
 			$exportTo(format, fileName) {
