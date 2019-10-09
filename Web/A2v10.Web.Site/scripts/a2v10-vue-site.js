@@ -5357,7 +5357,7 @@ Vue.component('a2-pager', {
 				const root = window.$$rootUrl;
 				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
 				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
-				htmlTools.downloadUrl(newurl);
+				window.location = newurl; // to display errors
 			},
 
 			$exportTo(format, fileName) {
