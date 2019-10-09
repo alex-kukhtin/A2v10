@@ -10386,7 +10386,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180913-7558*/
+/*20181009-7565*/
 // controllers/base.js
 
 (function () {
@@ -11123,8 +11123,7 @@ Vue.directive('resize', {
 				const root = window.$$rootUrl;
 				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
 				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
-				alert(newurl);
-				//window.location = root + newurl;
+				htmlTools.downloadUrl(newurl);
 			},
 
 			$exportTo(format, fileName) {
