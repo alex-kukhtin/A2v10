@@ -38,7 +38,10 @@ const template = {
 		uploadAttachment
 	},
 	commands: {
-		runTest
+		runTest: {
+			exec: runTest,
+			canExec() { return this.$ready; } // return this.$vm && !this.$vm.$isLoading; }
+		}
 	}
 };
 
@@ -50,14 +53,15 @@ function modelLoad(root) {
 		customerCreate(ag);
 	eventBus.$on('myEvent', __myEvent);
 
+	/*
 	let url = 'https://maps.google.com/maps/api/geocode/json?address=%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB%D0%B0%20%D0%9D%D0%B0%D1%83%D0%BC%D0%BE%D0%B2%D0%B0,%2023%D0%90&%20key=asdasdasd123q131233'
 	http.get(url)
 		.then(function () {
 			alert('success');
-		}).catch(function() {
+		}).catch(function () {
 			alert('error');
-		})
-	
+		});
+	*/
 }
 
 function modelUnload(root) {
@@ -87,7 +91,11 @@ function uploadAttachment(result) {
 module.exports = template;
 
 function runTest() {
+	/*
 	let args = { target: 'controller', testId: 'SupplierProps', action: 'eval', path: 'Agent.Id', result: undefined };
 	window.__tests__.$invoke(args);
 	console.dir(args.result);
+	*/
+
+	this.$ctrl.$invoke('sleep');
 }

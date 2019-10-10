@@ -30,6 +30,7 @@ namespace A2v10.Xaml
 		public String CanCloseDelegate { get; set; }
 		public Boolean AlwaysOk { get; set; }
 		public UIElementBase Taskpad { get; set; }
+		public Boolean ShowWaitCursor { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -59,7 +60,6 @@ namespace A2v10.Xaml
 			dialog.MergeAttribute("id", context.RootId);
 			dialog.MergeAttribute("v-cloak", String.Empty);
 			dialog.AddCssClassBoolNo(UserSelect, "user-select");
-
 			dialog.MergeAttribute("data-controller-attr", GetControllerAttributes());
 
 			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
@@ -69,6 +69,12 @@ namespace A2v10.Xaml
 			SetSize(dialog);
 
 			dialog.RenderStart(context);
+
+			if (ShowWaitCursor)
+				new TagBuilder("wait-cursor", "dialog")
+					.MergeAttribute(":ready", "$data.$ready")
+					.Render(context, TagRenderMode.Normal);
+
 
 			RenderHeader(context);
 			RenderLoadIndicator(context);

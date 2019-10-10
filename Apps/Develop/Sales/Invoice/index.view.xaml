@@ -30,7 +30,7 @@
 			<Button Icon="EyeDisabled" Command="{BindCmd OpenSelected, Url='/Sales/Invoice/Empty', Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
 			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='@[ConfirmDeleteDocument]'}">@[Delete]</Button>
 			<Button Icon="Download" Content="Експорт" Command="{BindCmd Export, Url='/sales/invoice/index', 
-				Argument={Bind Documents.$selected}, Data={Bind Documents.$selected}}"/>
+				Argument={Bind Documents.$selected}}"/>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
 			<Button Icon="Plus" Command="{BindCmd Reload}" Content="Додати">

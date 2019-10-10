@@ -95,6 +95,7 @@
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\components\companybutton.js" />
+    <Content Include="app\components\waitcursor.js" />
     <Content Include="app\controllers\iframe.js" />
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
@@ -213,6 +214,7 @@
     <Content Include="Less.Mobile\Utlis.less" />
     <Content Include="Less.Mobile\ToolBar.less" />
     <Content Include="Less.Mobile\Grid.less" />
+    <Content Include="Less\WaitCursor.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1980,7 +1980,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20180913-7558*/
+/*20181010-7567*/
 // services/datamodel.js
 
 (function () {
@@ -2751,6 +2751,11 @@ app.modules['std:validators'] = function () {
 			if (this._root_ && this._root_._host_)
 				return this._root_._host_.$ctrl;
 			return null;
+		});
+
+		defHiddenGet(obj, "$ready", function () {
+			if (!this.$vm) return true;
+			return !this.$vm.$isLoading;
 		});
 
 		obj.$isValid = function (props) {
@@ -8531,6 +8536,28 @@ TODO:
 	};
 
 	app.components['std:modal'] = modalComponent;
+})();
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
+// 20191010-7567
+// components/waitcursor.js
+
+
+(function () {
+	const waitCursor = {
+		template: `<div class="wait-cursor" v-if="visible"></div>`,
+		props: {
+			ready: Boolean
+		},
+		computed: {
+			visible() {
+				console.dir(this.ready);
+				return !this.ready;
+			}
+		}
+	};
+
+	Vue.component("wait-cursor", waitCursor);
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 

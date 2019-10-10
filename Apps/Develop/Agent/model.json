@@ -44,6 +44,10 @@
 		"duplicateCode": {
 			"type": "sql",
 			"procedure": "Agent.Code.CheckDuplicate"
+		},
+		"sleep": {
+			"type": "sql",
+			"procedure": "Sleep"
 		}
 	},
 	"files": {
