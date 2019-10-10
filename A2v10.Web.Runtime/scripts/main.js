@@ -8545,13 +8545,12 @@ TODO:
 
 (function () {
 	const waitCursor = {
-		template: `<div class="wait-cursor" v-if="visible"></div>`,
+		template: `<div class="wait-cursor" v-if="visible"><div class="spinner"/></div>`,
 		props: {
 			ready: Boolean
 		},
 		computed: {
 			visible() {
-				console.dir(this.ready);
 				return !this.ready;
 			}
 		}

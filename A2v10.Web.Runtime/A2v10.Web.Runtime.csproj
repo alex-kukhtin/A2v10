@@ -89,12 +89,6 @@
     <Content Include="css\fonts\A2v10.woff2" />
     <Content Include="App_application\tsconfig.json" />
     <Content Include="Web.config.sample" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
