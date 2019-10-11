@@ -130,6 +130,12 @@
         "Entry"
         {
         "MsmKey" = "8:_1513164A640927F7470009C50AF31B95"
+        "OwnerKey" = "8:_3090F7816E494F859358F36BD286BC47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1513164A640927F7470009C50AF31B95"
         "OwnerKey" = "8:_745AFB8D6BDA30BD873A1D3F24A79A5B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -267,6 +273,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3090F7816E494F859358F36BD286BC47"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_324D3FF2D9564FFD81D787A93601D4D1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -311,6 +323,12 @@
         {
         "MsmKey" = "8:_3D922F21FB0F6B1600FCBEA20A30FF7C"
         "OwnerKey" = "8:_1C79E148A29A4F45BA88C506757550EA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3D922F21FB0F6B1600FCBEA20A30FF7C"
+        "OwnerKey" = "8:_3090F7816E494F859358F36BD286BC47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1582,6 +1600,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3090F7816E494F859358F36BD286BC47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_08550F6CFED173D2078D348741E9D67A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2679,6 +2703,37 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3090F7816E494F859358F36BD286BC47"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:BuildApp, Version=10.0.7567.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_3090F7816E494F859358F36BD286BC47"
+                    {
+                    "Name" = "8:BuildApp.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Tools\\BuildApp\\bin\\Release\\BuildApp.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EF23EE953FAB4DE69EE75E00B413FF81"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
