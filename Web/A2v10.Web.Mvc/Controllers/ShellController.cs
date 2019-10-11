@@ -48,6 +48,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		#region IControllerProfiler
 		public IProfiler Profiler => _baseController.Host.Profiler;
+		public Boolean SkipRequest(String Url) { return false; }
 		#endregion
 
 		protected String RootUrl

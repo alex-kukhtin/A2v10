@@ -1,15 +1,11 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190821-7533
+// 20191011-7568
 // components/debug.js*/
 
 (function () {
 
     /**
-     * TODO
-    1. Trace window
-    2. Dock right/left
-    6.
      */
 
 	const dataService = require('std:dataservice');
@@ -65,29 +61,30 @@
 	Vue.component('a2-debug', {
 		template: `
 <div class="debug-panel" v-if="paneVisible" :class="panelClass">
-    <div class="debug-pane-header">
-        <span class="debug-pane-title" v-text="title"></span>
-        <a class="btn btn-close" @click.prevent="close">&#x2715</a>
-    </div>
-    <div class="toolbar">
-        <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+	<div class="debug-pane-header">
+		<span class="debug-pane-title" v-text="title"></span>
+		<a class="btn btn-close" @click.prevent="close">&#x2715</a>
+	</div>
+	<div class="toolbar">
+		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
 		<div class="aligner"></div>
-        <button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
-    </div>
-    <div class="debug-model debug-body" v-if="modelVisible">
-        <pre class="a2-code" v-text="modelJson()"></pre>
-    </div>
-    <div class="debug-trace debug-body" v-if="traceVisible">
-        <ul class="a2-debug-trace">
-            <li v-for="r in trace">
-                <div class="rq-title"><span class="elapsed" v-text="r.elapsed + ' ms'"/> <span v-text="r.url" /></div>
-                <a2-trace-item name="Sql" :elem="r.items.Sql"></a2-trace-item>
-                <a2-trace-item name="Render" :elem="r.items.Render"></a2-trace-item>
-                <a2-trace-item name="Workflow" :elem="r.items.Workflow"></a2-trace-item>
-                <a2-trace-item class="exception" name="Exceptions" :elem="r.items.Exception"></a2-trace-item>
-            </li>
-        </ul>
-    </div>
+		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
+	</div>
+	<div class="debug-model debug-body" v-if="modelVisible">
+		<pre class="a2-code" v-text="modelJson()"></pre>
+	</div>
+	<div class="debug-trace debug-body" v-if="traceVisible">
+		<ul class="a2-debug-trace">
+			<li v-for="r in trace">
+				<div class="rq-title"><span class="elapsed" v-text="r.elapsed + ' ms'"/> <span v-text="r.url" /></div>
+				<a2-trace-item name="Sql" :elem="r.items.Sql"></a2-trace-item>
+				<a2-trace-item name="Render" :elem="r.items.Render"></a2-trace-item>
+				<a2-trace-item name="Report" :elem="r.items.Report"></a2-trace-item>
+				<a2-trace-item name="Workflow" :elem="r.items.Workflow"></a2-trace-item>
+				<a2-trace-item class="exception" name="Exceptions" :elem="r.items.Exception"></a2-trace-item>
+			</li>
+		</ul>
+	</div>
 </div>
 `,
 		components: {

@@ -17,6 +17,8 @@ namespace A2v10.Web.Mvc.Filters
 			if (!(filterContext.Controller is IControllerProfiler iCtrl))
 				return;
 			var ctrl = filterContext.Controller as Controller;
+			if (iCtrl.SkipRequest(ctrl.Request.Url.LocalPath))
+				return;
 			_request = iCtrl.Profiler.BeginRequest(ctrl.Request.Url.PathAndQuery, ctrl.Session.SessionID);
 		}
 

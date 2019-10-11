@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Dynamic;
 using System.IO;
 using System.Text;
-using System.Configuration;
 using System.Threading;
 using System.Web.Mvc;
 
@@ -39,7 +38,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class ReportController : Controller
+	public class ReportController : Controller, IControllerProfiler
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
 		ReportHelper _reportHelper = new ReportHelper();
@@ -52,6 +51,18 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
+		public IProfiler Profiler => _baseController.Host.Profiler;
+
+		static String[] _internalActions = new String[] { /*"GetReport", for profile query*/ "ViewerEvent", "PrintReport", "ExportReport", "Interaction" };
+
+		public Boolean SkipRequest(String Url)
+		{
+			foreach (var a in _internalActions) {
+				if (Url.Contains($"/{a}/"))
+					return true;
+			}
+			return false;
+		}
 
 		[HttpGet]
 		public async Task Show(String Base, String Rep, String id)
@@ -63,10 +74,14 @@ namespace A2v10.Web.Mvc.Controllers
 				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 				var rep = rm.GetReport();
 
-				var view = new EmptyView();
-				var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
-				var hh = new HtmlHelper(vc, view);
-				var result = hh.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer", ViewerOptions);
+				MvcHtmlString result = null;
+				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {Rep}"))
+				{
+					var view = new EmptyView();
+					var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
+					var hh = new HtmlHelper(vc, view);
+					result = hh.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer", ViewerOptions);
+				}
 
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
 				sb.Replace("$(StiReport)", result.ToHtmlString());
@@ -112,16 +127,20 @@ namespace A2v10.Web.Mvc.Controllers
 			_reportHelper.SetupLicense();
 			try
 			{
-				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-				ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
+				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {Rep}"))
+				{
+					var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
+					ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
 
-				switch (ri.Type) {
-					case RequestReportType.stimulsoft:
-						return _reportHelper.ExportStiReport(ri, Format, saveFile:true);
-					case RequestReportType.xml:
-						return ExportXmlReport(ri);
-					case RequestReportType.json:
-						return ExportJsonReport(ri);
+					switch (ri.Type)
+					{
+						case RequestReportType.stimulsoft:
+							return _reportHelper.ExportStiReport(ri, Format, saveFile: true);
+						case RequestReportType.xml:
+							return ExportXmlReport(ri);
+						case RequestReportType.json:
+							return ExportJsonReport(ri);
+					}
 				}
 			}
 			catch (Exception ex)

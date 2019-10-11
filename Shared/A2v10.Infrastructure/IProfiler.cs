@@ -10,6 +10,7 @@ namespace A2v10.Infrastructure
 		Render,
 		Workflow,
 		Script,
+		Report,
 		Exception
 	};
 
