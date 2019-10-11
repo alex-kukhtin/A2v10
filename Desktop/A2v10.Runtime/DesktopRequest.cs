@@ -10,6 +10,7 @@ using System.Web;
 
 using A2v10.Infrastructure;
 using A2v10.Request;
+using A2v10.Web.Mvc.Controllers;
 using Newtonsoft.Json;
 
 namespace A2v10.Runtime
@@ -70,6 +71,13 @@ namespace A2v10.Runtime
 					{
 						Shell(url.Substring(6).ToLowerInvariant(), dr.Output, out String shellMime);
 						MimeType = shellMime;
+					}
+					else if (url.StartsWith("report/"))
+					{
+						Report(url.Substring(6).ToLowerInvariant(), search, dr);
+						MimeType = dr.ContentType;
+						if (dr.IsBinaryWrited)
+							return dr.GetBytes();
 					}
 					else if (url.StartsWith("_page/"))
 						Render(RequestUrlKind.Page, url.Substring(6), search, dr.Output);
@@ -166,6 +174,24 @@ namespace A2v10.Runtime
 					{ "$(Description)", _controller.Host.AppDescription }
 				};
 			_controller.Layout(writer, prms);
+		}
+
+		public void Report(String url, String search, DesktopResponse dr)
+		{
+			var reportController = new ReportController();
+			var qry = HttpUtility.ParseQueryString(search.ToLowerInvariant());
+			/*  /export/{id} */
+			var urlParts = url.ToLowerInvariant().Split('/');
+			var rep = qry.Get("rep");
+			var baseUrl = qry.Get("base");
+			var format = qry.Get("format");
+			var id = urlParts[urlParts.Length - 1];
+			if (urlParts[1] == "export")
+			{
+				reportController.ExportDesktop(baseUrl, rep, id, format, dr).Wait();
+			}
+			else
+				throw new NotImplementedException();
 		}
 
 		public void Shell(String url, TextWriter writer, out String mimeType)

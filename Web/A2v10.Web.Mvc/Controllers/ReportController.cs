@@ -22,6 +22,7 @@ using A2v10.Reports;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Interop;
+using System.Web;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -53,7 +54,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 		public IProfiler Profiler => _baseController.Host.Profiler;
 
-		static String[] _internalActions = new String[] { /*"GetReport", for profile query*/ "ViewerEvent", "PrintReport", "ExportReport", "Interaction" };
+		readonly static String[] _internalActions = new String[] { /*"GetReport", for profile query*/ "ViewerEvent", "PrintReport", "ExportReport", "Interaction" };
 
 		public Boolean SkipRequest(String Url)
 		{
@@ -118,6 +119,40 @@ namespace A2v10.Web.Mvc.Controllers
 			eo.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 			eo.RemoveKeys("rep,Rep,base,Base,Format,format");
 			return eo;
+		}
+
+		public async Task ExportDesktop(String Base, String Rep, String id, String Format, HttpResponseBase response)
+		{
+			_reportHelper.SetupLicense();
+			try
+			{
+				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {Rep}"))
+				{
+					var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
+					ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
+
+					switch (ri.Type)
+					{
+						case RequestReportType.stimulsoft:
+							//return _reportHelper.ExportStiReport(ri, Format, saveFile: true);
+							throw new NotImplementedException();
+						case RequestReportType.xml:
+							throw new NotImplementedException();
+							//return ExportXmlReport(ri);
+						case RequestReportType.json:
+							throw new NotImplementedException();
+							//return ExportJsonReport(ri);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				response.ContentType = "text/html";
+				response.ContentEncoding = Encoding.UTF8;
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				response.Write(ex.Message);
+			}
 		}
 
 		[HttpGet]

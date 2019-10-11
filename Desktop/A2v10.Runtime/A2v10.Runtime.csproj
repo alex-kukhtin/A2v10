@@ -39,6 +39,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfiguration.cs" />
@@ -89,6 +90,10 @@
     <ProjectReference Include="..\..\Web\A2v10.Web.Base\A2v10.Web.Base.csproj">
       <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
       <Name>A2v10.Web.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
+      <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
+      <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
