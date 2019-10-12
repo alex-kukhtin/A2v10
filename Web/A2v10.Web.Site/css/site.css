@@ -6016,6 +6016,13 @@ table > colgroup col.blue {
   vertical-align: baseline;
   border-radius: 0.25rem;
 }
+.a2-badge {
+  background-color: #8591a2;
+  color: white;
+  padding: 0 0.2rem 0.1rem 0.2rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+}
 .xaml-exception {
   padding: 6px;
   display: inline-block;

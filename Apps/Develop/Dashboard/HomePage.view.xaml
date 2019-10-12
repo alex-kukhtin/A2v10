@@ -74,6 +74,10 @@
 	</Grid>
 
 	<Block Padding="5">
+		<Block>
+			<Text>А am the text
+				<Badge>23</Badge></Text>
+		</Block>
 		<Alert Style="Default">
 			<Block>
 				<Paragraph>Default alert</Paragraph>

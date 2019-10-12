@@ -11,7 +11,7 @@ namespace A2v10.Xaml
 		const String SLOT_ITEM = "__si__";
 
 		public Object Scope { get; set; }
-		public UIElement Fallback { get; set; }
+		public UIElementBase Fallback { get; set; }
 		public UIElementCollection Children { get; set; } = new UIElementCollection();
 
 		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
