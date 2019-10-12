@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 		public String HelpUrl { get; set; }
 		public String TestId { get; set; }
 
-		public UIElement TitleInfo { get; set; }
+		public UIElementBase TitleInfo { get; set; }
 
 		public DialogSize Size { get; set; }
 		public Length Width { get; set; }

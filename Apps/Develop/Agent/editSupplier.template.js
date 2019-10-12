@@ -35,7 +35,8 @@ const template = {
 			{ valid: duplicateCode, async: true, msg: "Контрагент с таким кодом ОКПО уже существует" }
 	},
 	delegates: {
-		uploadAttachment
+		uploadAttachment,
+		canClose
 	},
 	commands: {
 		runTest: {
@@ -98,4 +99,9 @@ function runTest() {
 	*/
 
 	this.$ctrl.$invoke('sleep');
+}
+
+function canClose() {
+	console.dir(this);
+	return true;
 }
