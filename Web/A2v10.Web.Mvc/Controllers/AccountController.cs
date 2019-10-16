@@ -69,7 +69,9 @@ namespace A2v10.Web.Mvc.Controllers
 
 				AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 
-				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", ResourceHelper.InitLayoutHtml)));
+				var layoutHtml = _host.Mobile ? ResourceHelper.InitLayoutMobileHtml : ResourceHelper.InitLayoutHtml;
+
+				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", layoutHtml)));
 				layout.Replace("$(Lang)", CurrentLang);
 				layout.Replace("$(Build)", _host.AppBuild);
 				layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
@@ -139,7 +141,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			Session.Abandon();
 			ClearAllCookies();
-			String page = GetRedirectedPage("login", ResourceHelper.LoginHtml);
+			String page = GetRedirectedPage("login", _host.Mobile ? ResourceHelper.LoginMobileHtml : ResourceHelper.LoginHtml);
 			SendPage(page, ResourceHelper.LoginScript);
 		}
 

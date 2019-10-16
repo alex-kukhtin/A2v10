@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="$(Lang)">
+<head>
+	@(SiteMeta)
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="$(Description)" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="google" content="notranslate" />
+	<meta name="helpUrl" content="$(HelpUrl)" />
+	<title>$(Title)</title>
+	<link href="/css/mobile.min.css?v=$(Build)" rel="stylesheet" />
+	$(AssetsStyleSheets)
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+	<div id="app" class="shell initial-mobile" v-cloak>
+		<header class="header">
+			<div class="h-block">
+				<a class="app-title" :href="getReferUrl('/')" v-text="info.title" tabindex="-1"></a>
+				<div class="app-subtitle" v-text="info.subtitle"></div>
+			</div>
+		</header>
+		<div class="main-view">
+			<div class="load-indicator" v-show="processing"></div>
+			<div class="content-view full-view">
+				<div class="include">
+					<div class="page-mobile">
+						$(Partial)
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+			<a v-for="(lnk, lx) in appLinks" :href="lnk.url" :key="lx" tabindex="-1" v-text="lnk.title"></a>
+		</footer>
+	</div>
+
+	<script type="text/javascript">
+		(function () {
+			function isNewBrowser() {
+				if (typeof CSS === 'undefined') return false;
+				return CSS.supports && CSS.supports("display", "grid");
+			}
+
+			if (!isNewBrowser()) {
+				var appElem = document.getElementById("app");
+				//appElem.parentElement.removeChild(appElem);
+				var nsd = document.createElement("div");
+				nsd.classList.add("not-supported");
+				nsd.innerText = "We're sorry, but this browser is not supported.";
+				document.body.appendChild(nsd);
+			}
+		})();
+	</script>
+
+	<script type="text/javascript" src="/scripts/vue.min.js?v=2.5.16"></script>
+	<script type="text/javascript">
+		$(PageScript)
+	</script>
+</body>
+</html>

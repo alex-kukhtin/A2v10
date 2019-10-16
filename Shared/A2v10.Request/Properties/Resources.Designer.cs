@@ -444,6 +444,27 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;$(Lang)&quot;&gt;
+        ///&lt;head&gt;
+        ///	@(SiteMeta)
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;meta name=&quot;google&quot; content=&quot;notranslate&quot; /&gt;
+        ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
+        ///	&lt;title&gt;$(Title)&lt;/title&gt;
+        ///	&lt;link href=&quot;/css/mobile.min.css?v=$(Build)&quot; rel=&quot;styleshee [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string initLayoutMobile {
+            get {
+                return ResourceManager.GetString("initLayoutMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html lang=&quot;$(Locale)&quot;&gt;
         ///&lt;head&gt;
         ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
@@ -489,7 +510,7 @@ namespace A2v10.Request.Properties {
         ///&lt;html lang=&quot;$(Locale)&quot;&gt;
         ///&lt;head&gt;
         ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
         ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
@@ -497,7 +518,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(RootUrl)&quot; /&gt;
         ///	&lt;meta name=&quot;helpUrl&quot; content=&quot;$(HelpUrl)&quot; /&gt;
         ///	&lt;meta name=&quot;theme-color&quot; content=&quot;#4d6082&quot; /&gt;
-        ///	&lt;ti [rest of string was truncated]&quot;;.
+        ///	&lt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string layoutMobile {
             get {
@@ -515,23 +536,20 @@ namespace A2v10.Request.Properties {
         ///
         ///(function () {
         ///
-        ///	window.$$locale = {
+        ///
+        ///	const locale = {
         ///		$Locale: &apos;de-DE&apos;,
         ///		$Ok: &apos;OK&apos;,
         ///		$Cancel: &apos;Abbrechen&apos;,
-        ///		$Close: &apos;Schließen&apos;,
-        ///		$Apply: &apos;Übernehmen&apos;,
-        ///		$Back: &apos;Zurück&apos;,
-        ///		$Next: &apos;Weiter&apos;,
-        ///		$Finish: &apos;Stop&apos;,
-        ///		$Tasks: &apos;Aufgaben&apos;,
-        ///		$Save: &apos;Speichern&apos;,
-        ///		$NotSave: &apos;Nicht speichern&apos;,
-        ///		$Refresh: &apos;Aktualisieren&apos;,
-        ///		$Confirm: &apos;Bestätigung&apos;,
-        ///		$Message: &apos;Nachricht&apos;,
         ///		$Error: &apos;Fehler&apos;,
-        ///		$ [rest of string was truncated]&quot;;.
+        ///		$Login: &apos;Anmelden&apos;,
+        ///		$User: &apos;Benutzer&apos;,
+        ///		$Confirm: &apos;Bestätigung&apos;,
+        ///		$LoginPrompt: &apos;Systemanmeldung&apos;,
+        ///		$LoginLink: &apos;Anmeldungslink&apos;,
+        ///		$RegisterPrompt: &apos;Im System registrieren&apos;,
+        ///		$ForgotPrompt: &apos;Passwort zurücksetzen&apos;,
+        ///		$ConfirmEMailPrompt: &apos;E-mail bestätigen&apos;,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string locale_de {
             get {
@@ -648,6 +666,26 @@ namespace A2v10.Request.Properties {
         internal static string login {
             get {
                 return ResourceManager.GetString("login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$LoginPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;form&gt;
+        ///		&lt;div class=&quot;mobile-form&quot;&gt;
+        ///			&lt;div class=&quot;control-group&quot; :class=&quot;{invalid: !validEmail}&quot;&gt;
+        ///				&lt;label class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
+        ///				&lt;div class=&quot;input-group&quot;&gt;
+        ///					&lt;input v-f [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string loginMobile {
+            get {
+                return ResourceManager.GetString("loginMobile", resourceCulture);
             }
         }
         
@@ -870,13 +908,15 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ////*20181005-7312*/
+        ////*20190816-7525*/
         ///
         ///(function () {
         ///
         ///	const Shell = component(&apos;std:shellController&apos;);
         ///
         ///	const menu = $(Menu);
+        ///	const companies = $(Companies);
+        ///	const initialPeriod = $(Period);
         ///
         ///	const shell = new Shell({
         ///		el: &apos;#shell&apos;,
@@ -885,10 +925,10 @@ namespace A2v10.Request.Properties {
         ///			menu: menu.Menu ? menu.Menu[0].Menu : null,
         ///			newMenu: menu.NewMenu,
         ///			settingsMenu: menu.SettingsMenu,
+        ///			companies: companies,
+        ///			initialPeriod: initialPeriod,
         ///			title: menu.SysParams ? menu.SysParams.AppTitle : &apos;&apos;,
-        ///			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : &apos;&apos;,
-        ///			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : &apos;&apos;,
-        ///			use [rest of string was truncated]&quot;;.
+        ///			subti [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shell {
             get {

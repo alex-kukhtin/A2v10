@@ -1,0 +1,38 @@
+﻿<div class="mobile-page">
+	<h4 class="a2-header" v-text="locale.$LoginPrompt"></h4>
+	<hr class="hline"/>
+	<div v-if="serverError" class="validation-summary">
+		<span class="error" v-text="serverError"></span>
+	</div>
+	<form>
+		<div class="mobile-form">
+			<div class="control-group" :class="{invalid: !validEmail}">
+				<label class="a2-label required" v-text="locale.$Email"></label>
+				<div class="input-group">
+					<input v-focus class="control" id="login" name="email" type="text" v-model="email" tabindex="1" @keyup.enter="onLoginEnter" autocomplete="email" spellcheck="false" />
+					<div class="validator">
+						<span class="error" v-text="emailError"></span>
+					</div>
+				</div>
+			</div>
+			<div class="control-group" :class="{invalid: !validPassword}">
+				<label class="a2-label required" v-text="locale.$Password"></label>
+				<div class="input-group">
+					<input class="control" v-focus type="password" id="password" name="password" v-model="password" autocomplete="current-password" tabindex="2" @keydown.enter.stop.prevent="onPwdEnter" ref="pwd" />
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterPassword"></span>
+					</div>
+				</div>
+			</div>
+			<a class="a2-hyperlink sublink" :href="getReferUrl('/account/forgotpassword')" tabindex="6" v-text="locale.$ForgotPassword"></a>
+			<label class="checkbox">
+				<input type="checkbox" v-model="rememberMe" tabindex="3" />
+				<span v-text="locale.$RememberCredentials"></span>
+			</label>
+			<div class="btns">
+				<button @click.stop.prevent="submit" class="btn btn-primary block" id="submit" tabindex="4" v-text="locale.$Login" ref="submit"></button>
+				<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="5" v-text="locale.$RegisterLink"></a>
+			</div>
+		</div>
+	</form>
+</div>

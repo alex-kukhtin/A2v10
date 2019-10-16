@@ -163,6 +163,9 @@
   <data name="initLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\initLayout.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="initLayoutMobile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\initLayoutMobile.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="layout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\layout.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -186,6 +189,9 @@
   </data>
   <data name="login" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\login.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="loginMobile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\loginMobile.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="loginScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\loginScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

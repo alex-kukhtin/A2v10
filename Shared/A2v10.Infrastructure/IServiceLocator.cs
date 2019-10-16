@@ -29,8 +29,8 @@ namespace A2v10.Infrastructure
 		public void Stop()
 		{
 			foreach (var s in _services)
-				if (s.Value is ISupportStopService)
-					(s.Value as ISupportStopService).Stop();
+				if (s.Value is ISupportStopService stopService)
+					stopService.Stop();
 		}
 
 		public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();

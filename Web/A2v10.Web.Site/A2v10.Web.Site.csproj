@@ -215,6 +215,7 @@
     <Content Include="Less.Mobile\ToolBar.less" />
     <Content Include="Less.Mobile\Grid.less" />
     <Content Include="Less\WaitCursor.less" />
+    <Content Include="Less.Mobile\MobilePage.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

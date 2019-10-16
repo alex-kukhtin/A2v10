@@ -2635,6 +2635,7 @@ ul.news-list > li {
 .btn {
   padding: 0.5rem 0.75rem;
   vertical-align: middle;
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.4);
 }
 .btn:focus {
   outline-offset: -3px;
@@ -2652,12 +2653,8 @@ ul.news-list > li {
 .btn.btn-icon > .ico {
   margin-right: 0;
 }
-.btn:not([disabled]):hover {
-  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.4);
-  transition: box-shadow linear 0.2s;
-}
 .btn:not([disabled]):active {
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: none;
   outline-style: none;
   transition: box-shadow linear 0.2s;
 }
@@ -3825,4 +3822,50 @@ iframe.eusign-iframe {
   to {
     opacity: 0;
   }
+}
+.page-mobile {
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+.page-mobile h4 {
+  font-size: 1.5rem;
+}
+.page-mobile .control-group {
+  margin-bottom: 1.5rem;
+}
+.page-mobile .control-group .input-group input {
+  height: 2.5rem;
+}
+.page-mobile .control-group .a2-label {
+  font-size: 1rem;
+}
+.page-mobile .control-group .validator {
+  font-size: 1rem;
+}
+.page-mobile .btn {
+  padding: 1rem;
+  text-transform: uppercase;
+}
+.page-mobile .sublink {
+  margin: -1rem 0 1.5rem 0;
+  display: block;
+}
+.page-mobile .mobile-form {
+  margin-top: 2rem;
+}
+.page-mobile .mobile-form .btns {
+  margin-top: 1.5rem;
+}
+.initial-mobile {
+  padding: 5rem 0 2rem 0;
+}
+.initial-mobile .header {
+  height: 5rem;
+}
+.initial-mobile .main-view {
+  position: static;
+}
+.initial-mobile .h-block {
+  width: 100%;
+  text-align: center;
 }

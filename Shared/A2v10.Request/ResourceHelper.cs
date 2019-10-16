@@ -9,7 +9,9 @@ namespace A2v10.Request
 	public static class ResourceHelper
 	{
 		public static String InitLayoutHtml => Resources.initLayout;
+		public static String InitLayoutMobileHtml => Resources.initLayoutMobile;
 		public static String LoginHtml => Resources.login;
+		public static String LoginMobileHtml => Resources.loginMobile;
 		public static String LoginScript => Resources.loginScript;
 		public static String RegisterTenantHtml => Resources.registerTenant;
 		public static String RegisterTenantScript => Resources.registerTenantScript;
