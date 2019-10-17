@@ -4988,7 +4988,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191003-7562
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -5066,7 +5066,7 @@ Vue.component('validator-control', {
 				let h = od.getUTCHours();
 				let m = od.getUTCMinutes();
 				var nd = new Date(d);
-				nd.setUTCHours(h, m, 0, 0);
+				nd.setUTCHours(h, m);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -5108,9 +5108,12 @@ Vue.component('validator-control', {
 				},
 				set(str) {
 					let md = utils.date.parse(str);
-					this.setDate(md);
-					if (utils.date.isZero(md))
+					if (utils.date.isZero(md)) {
+						this.item[this.prop] = md;
 						this.isOpen = false;
+					} else {
+						this.setDate(md);
+					}
 				}
 			}
 		},
@@ -5126,7 +5129,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190904-7552
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -5304,9 +5307,13 @@ Vue.component('validator-control', {
 					return md.toLocaleTimeString(locale.$Locale, { timeZone: 'UTC', hour: '2-digit', minute:"2-digit"});
 				},
 				set(str) {
-					let time = utils.date.parseTime(str);
 					let md = new Date(this.modelDate);
-					md.setUTCHours(time.getHours(), time.getMinutes());
+					if (str) {
+						let time = utils.date.parseTime(str);
+						md.setUTCHours(time.getHours(), time.getMinutes());
+					} else {
+						md.setUTCHours(0, 0);
+					}
 					this.item[this.prop] = md;
 					this.isOpen = false;
 				}

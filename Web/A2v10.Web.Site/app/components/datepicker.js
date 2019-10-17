@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191003-7562
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -78,7 +78,7 @@
 				let h = od.getUTCHours();
 				let m = od.getUTCMinutes();
 				var nd = new Date(d);
-				nd.setUTCHours(h, m, 0, 0);
+				nd.setUTCHours(h, m);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -120,9 +120,12 @@
 				},
 				set(str) {
 					let md = utils.date.parse(str);
-					this.setDate(md);
-					if (utils.date.isZero(md))
+					if (utils.date.isZero(md)) {
+						this.item[this.prop] = md;
 						this.isOpen = false;
+					} else {
+						this.setDate(md);
+					}
 				}
 			}
 		},

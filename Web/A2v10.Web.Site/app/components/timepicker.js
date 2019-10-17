@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190904-7552
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -178,9 +178,13 @@
 					return md.toLocaleTimeString(locale.$Locale, { timeZone: 'UTC', hour: '2-digit', minute:"2-digit"});
 				},
 				set(str) {
-					let time = utils.date.parseTime(str);
 					let md = new Date(this.modelDate);
-					md.setUTCHours(time.getHours(), time.getMinutes());
+					if (str) {
+						let time = utils.date.parseTime(str);
+						md.setUTCHours(time.getHours(), time.getMinutes());
+					} else {
+						md.setUTCHours(0, 0);
+					}
 					this.item[this.prop] = md;
 					this.isOpen = false;
 				}
