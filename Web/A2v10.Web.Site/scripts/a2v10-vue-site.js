@@ -176,7 +176,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190907-7555
+// 20191017-7568
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -325,7 +325,7 @@ app.modules['std:utils'] = function () {
 			return '';
 		else if (isObject(obj))
 			return toJson(obj);
-		return obj + '';
+		return '' + obj;
 	}
 
 	function defaultValue(type) {
@@ -1730,7 +1730,7 @@ app.modules['std:mask'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190405-7498
+// 20190717-7568
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -1795,6 +1795,11 @@ app.modules['std:html'] = function () {
 
 	function printDirect(url) {
 
+
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+			window.open(url);
+			return;
+		}
 		removePrintFrame();
 		let frame = document.createElement("iframe");
 		document.body.classList.add('waiting');
@@ -2239,7 +2244,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181010-7567*/
+/*20181017-7568*/
 // services/datamodel.js
 
 (function () {
@@ -2311,6 +2316,8 @@ app.modules['std:validators'] = function () {
 			val = utils.defaultValue(type);
 		if (type === Number)
 			return utils.toNumber(val);
+		else if (type === String)
+			return utils.toString(val);
 		else if (type === Date && !utils.isDate(val))
 			return utils.date.parse('' + val);
 		return val;

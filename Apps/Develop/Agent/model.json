@@ -48,6 +48,10 @@
 		"sleep": {
 			"type": "sql",
 			"procedure": "Sleep"
+		},
+		"getNumber": {
+			"type": "sql",
+			"procedure": "GetNumber"
 		}
 	},
 	"files": {

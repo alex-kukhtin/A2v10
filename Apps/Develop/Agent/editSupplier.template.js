@@ -17,7 +17,8 @@ const template = {
 	properties: {
 		'TRoot.$$tabVisible': Boolean,
 		'TAgent.$SelectedMime': String,
-		'TAgent.$EditArg'() { return { Id: this.Id };}
+		'TAgent.$EditArg'() { return { Id: this.Id };},
+		'TAgent.$Test': String
 	},
 	events: {
 		"Model.load": modelLoad,
@@ -49,6 +50,7 @@ const template = {
 function modelLoad(root) {
 	const ag = root.Agent;
 	console.dir(root);
+	ag.$Test = 223.4455;
 	//console.dir(root.$isCopy);
 	if (ag.$isNew)
 		customerCreate(ag);
@@ -92,13 +94,13 @@ function uploadAttachment(result) {
 module.exports = template;
 
 function runTest() {
-	/*
-	let args = { target: 'controller', testId: 'SupplierProps', action: 'eval', path: 'Agent.Id', result: undefined };
-	window.__tests__.$invoke(args);
-	console.dir(args.result);
-	*/
+	let args = { target: 'controller', testId: 'SupplierProps', action: 'eval', path: 'Agent.Id', result: undefined};
+	//window.__tests__.$invoke(args);
 
-	this.$ctrl.$invoke('sleep');
+	this.$ctrl.$invoke('getNumber', { Num: Math.PI });
+	console.dir(args.result);
+
+	//this.$ctrl.$invoke('sleep');
 }
 
 function canClose() {

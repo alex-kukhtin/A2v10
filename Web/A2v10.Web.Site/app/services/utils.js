@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190907-7555
+// 20191017-7568
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -149,7 +149,7 @@ app.modules['std:utils'] = function () {
 			return '';
 		else if (isObject(obj))
 			return toJson(obj);
-		return obj + '';
+		return '' + obj;
 	}
 
 	function defaultValue(type) {
