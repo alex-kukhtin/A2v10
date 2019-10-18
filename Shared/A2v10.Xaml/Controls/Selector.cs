@@ -38,7 +38,7 @@ namespace A2v10.Xaml
 		public SelectorStyle Style { get; set; }
 		public ControlSize Size { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (CheckDisabledModel(context))
 				return;

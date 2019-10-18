@@ -8,12 +8,12 @@ namespace A2v10.Xaml
 	{
 		public Command FinishCommand { get; set; }
 
-		internal override void OnCreateContent(TagBuilder tag)
+		protected override void OnCreateContent(TagBuilder tag)
 		{
 			tag.AddCssClass("wizard");
 		}
 
-		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		public override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			var wiz = new TagBuilder("a2-wizard-panel");
 			MergeCommand(wiz, context);

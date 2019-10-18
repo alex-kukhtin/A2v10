@@ -14,7 +14,7 @@ namespace A2v10.Xaml.Drawing
 		public Size Size { get; set; }
 		public String ViewBox { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var div = new TagBuilder("div", "diagram");
 			MergeAttributes(div, context);

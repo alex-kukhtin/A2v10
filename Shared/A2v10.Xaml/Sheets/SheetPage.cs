@@ -8,7 +8,7 @@ namespace A2v10.Xaml
 	{
 		public PageOrientation Orientation { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var wrap = new TagBuilder("div", "sheet-page-wrapper", IsInGrid);
 			MergeAttributes(wrap, context);

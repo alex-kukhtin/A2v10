@@ -9,7 +9,7 @@ namespace A2v10.Xaml
 		public String Url { get; set; }
 		public Length Height { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

@@ -11,7 +11,7 @@ namespace A2v10.Xaml
 		public UIElement Content { get; set; }
 		public Length Height { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("iframe");
 			tag.MergeAttribute("frameborder", "0");

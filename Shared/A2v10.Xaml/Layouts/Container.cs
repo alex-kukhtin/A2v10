@@ -12,7 +12,7 @@ namespace A2v10.Xaml
 
 		public Object ItemsSource { get; set; }
 
-		internal virtual void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		public virtual void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			var tml = new TagBuilder("template");
 			onRenderStatic?.Invoke(tml);

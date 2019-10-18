@@ -9,7 +9,7 @@ namespace A2v10.Xaml
 
 		public Object Value { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var tag = new TagBuilder("a2-static-validator", null, IsInGrid);
 			onRender?.Invoke(tag);

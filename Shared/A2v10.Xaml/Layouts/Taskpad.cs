@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 		public String Title { get; set; }
 		public Boolean Overflow { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

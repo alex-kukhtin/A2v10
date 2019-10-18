@@ -19,9 +19,9 @@ namespace A2v10.Xaml
 		public TextAlign Align { get; set; }
 		public DropDownPlacement Placement { get; set; }
 		public DatePickerView View { get; set; }
-		
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (CheckDisabledModel(context))
 				return;

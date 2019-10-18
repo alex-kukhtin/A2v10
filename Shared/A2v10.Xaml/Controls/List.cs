@@ -40,7 +40,7 @@ namespace A2v10.Xaml
 
 		public UIElement EmptyPanel { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 		public Boolean? IsFolder { get; set; }
 		public Boolean? IsGroup { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			throw new NotImplementedException();
 		}
@@ -82,7 +82,7 @@ namespace A2v10.Xaml
 
 		public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

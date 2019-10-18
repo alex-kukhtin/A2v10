@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 	{
 		public String Value { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			RenderChildren(context);
 		}
@@ -34,7 +34,7 @@ namespace A2v10.Xaml
 
 		public CaseCollection Cases { get; set; } = new CaseCollection();
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var expr = GetBinding(nameof(Expression));
 			if (expr == null)

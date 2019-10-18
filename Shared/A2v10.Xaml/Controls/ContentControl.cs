@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -10,7 +10,7 @@ namespace A2v10.Xaml
 	{
 		public Object Content { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 				context.Writer.Write(Content.ToString());
 		}
 
-		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+		public override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			base.MergeAttributes(tag, context, mode);
 			if (mode.HasFlag(MergeAttrMode.Content))
@@ -31,7 +31,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal void RenderContent(RenderContext context)
+		protected void RenderContent(RenderContext context)
 		{
 			RenderContent(context, Content);
 		}
@@ -50,7 +50,7 @@ namespace A2v10.Xaml
 				xamlElem.OnSetStyles();
 		}
 
-		internal Boolean HasContent
+		protected Boolean HasContent
 		{
 			get
 			{

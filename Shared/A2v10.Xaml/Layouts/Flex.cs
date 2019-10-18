@@ -6,7 +6,7 @@ namespace A2v10.Xaml.Layouts
 {
 	public class Flex : Container
 	{
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
@@ -18,7 +18,7 @@ namespace A2v10.Xaml.Layouts
 			flex.RenderEnd(context);
 		}
 
-		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		public override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			foreach (var ch in Children)
 			{

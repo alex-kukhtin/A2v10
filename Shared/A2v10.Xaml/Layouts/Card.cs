@@ -8,7 +8,7 @@ namespace A2v10.Xaml
 {
 	public class CardBody : Container
 	{
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var body = new TagBuilder("div", "card-body");
 			MergeAttributes(body, context);
@@ -40,7 +40,7 @@ namespace A2v10.Xaml
 		Boolean HasHeader => GetBinding(nameof(Header)) != null || Header != null;
 		Boolean HasFooter => GetBinding(nameof(Footer)) != null || Footer != null;
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

@@ -6,7 +6,7 @@ namespace A2v10.Xaml
 {
 	public class SheetTreeSection : SheetSection
 	{
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

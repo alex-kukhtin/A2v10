@@ -15,7 +15,7 @@ namespace A2v10.Xaml
 		public Int32 Columns { get; set; }
 		public Length Width { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

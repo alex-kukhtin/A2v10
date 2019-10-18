@@ -49,7 +49,7 @@ namespace A2v10.Xaml
 		public ToolbarStyle Style { get; set; }
 		public AlignItems AlignItems { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
@@ -65,7 +65,7 @@ namespace A2v10.Xaml
 			tb.RenderEnd(context);
 		}
 
-		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		public override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			if (_attachedPart == null)
 			{

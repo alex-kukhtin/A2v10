@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -9,7 +9,7 @@ namespace A2v10.Xaml
 	{
 		public Command Command { get; set; }
 
-		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+		public override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			base.MergeAttributes(tag, context, mode);
 			MergeCommandAttribute(tag, context);

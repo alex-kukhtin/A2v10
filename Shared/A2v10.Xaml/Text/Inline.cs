@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 		public TextColor Color { get; set; }
 		public FloatMode Float { get; set; }
 
-		internal override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+		public override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			base.MergeAttributes(tag, context, mode);
 			tag.AddCssClassBool(Block, "block");

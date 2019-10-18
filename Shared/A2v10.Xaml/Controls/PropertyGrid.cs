@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 		public PropertyGridItems Children { get; set; } = new PropertyGridItems();
 		public GridLinesVisibility GridLines { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

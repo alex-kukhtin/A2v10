@@ -7,7 +7,7 @@ using System.Text;
 
 namespace A2v10.Xaml
 {
-	internal enum TagRenderMode
+	public enum TagRenderMode
 	{
 		Normal = 0,
 		StartTag = 1,
@@ -15,7 +15,7 @@ namespace A2v10.Xaml
 		SelfClosing = 3
 	}
 
-	internal class TagBuilder
+	public class TagBuilder
 	{
 		public String TagName { get; }
 		public String InnerText { get; set; }

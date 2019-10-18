@@ -25,7 +25,7 @@ namespace A2v10.Xaml
 
 		public String Tip { get; set; }
 
-		internal abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
+		public abstract void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
 
 		[Flags]
 		public enum MergeAttrMode
@@ -51,7 +51,7 @@ namespace A2v10.Xaml
 			MergeBindingAttributeBool(tag, context, "v-show", nameof(Hide), Hide, bInvert: true);
 		}
 
-		internal virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
+		public virtual void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 		{
 			if (mode.HasFlag(MergeAttrMode.Visibility))
 			{

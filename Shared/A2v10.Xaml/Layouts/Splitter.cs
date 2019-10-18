@@ -51,7 +51,7 @@ namespace A2v10.Xaml
 
 		#endregion
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			/* TODO: 
              * 1. Horizontal splitter

@@ -34,7 +34,7 @@ namespace A2v10.Xaml
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
-		internal virtual void OnCreateContent(TagBuilder tag)
+		protected virtual void OnCreateContent(TagBuilder tag)
 		{
 		}
 
@@ -54,7 +54,7 @@ namespace A2v10.Xaml
 			return opts.ToString();
 		}
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var dialog = new TagBuilder("div", "modal");
 			dialog.MergeAttribute("id", context.RootId);
@@ -113,7 +113,7 @@ namespace A2v10.Xaml
 			dialog.RenderEnd(context);
 		}
 
-		internal override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
+		public override void RenderChildren(RenderContext context, Action<TagBuilder> onRenderStatic = null)
 		{
 			// static without wrapper
 			foreach (var c in Children)

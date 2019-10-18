@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 
 		public Boolean ReadOnly { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
@@ -42,7 +42,7 @@ namespace A2v10.Xaml
 		public Length Height { get; set; }
 		public Object Value { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

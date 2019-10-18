@@ -70,7 +70,7 @@ namespace A2v10.Xaml
 			set { _groupBy = value; }
 		}
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

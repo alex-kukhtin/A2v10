@@ -11,7 +11,7 @@ namespace A2v10.Xaml
 		public Object ItemsSource { get; set; }
 		public UIElementBase Content { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

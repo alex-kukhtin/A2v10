@@ -36,7 +36,7 @@ namespace A2v10.Xaml
 		public IconAlign IconAlign { get; set; }
 		public Boolean Rounded { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (CheckDisabledModel(context))
 				return;

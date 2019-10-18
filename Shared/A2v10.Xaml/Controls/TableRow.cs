@@ -30,7 +30,7 @@ namespace A2v10.Xaml
 		public VerticalAlign VAlign { get; set; }
 		public TextAlign Align { get; set; }
 
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
@@ -96,7 +96,7 @@ namespace A2v10.Xaml
 
 	public class TableRowDivider : TableRow
 	{
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;

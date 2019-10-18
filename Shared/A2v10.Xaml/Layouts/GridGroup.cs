@@ -6,7 +6,7 @@ namespace A2v10.Xaml
 {
 	public class GridGroup : Container
 	{
-		internal override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			throw new XamlException("A GridGroup can only be a direct child of the Grid");
 		}
