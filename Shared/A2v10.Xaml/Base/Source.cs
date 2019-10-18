@@ -29,9 +29,9 @@ namespace A2v10.Xaml
 				var targetProp = iTarget.TargetProperty as PropertyInfo;
 				if (targetProp == null)
 					return null;
-				if (targetProp.PropertyType != typeof(Object) && targetProp.PropertyType != typeof(UIElement))
+				if (targetProp.PropertyType != typeof(Object) && targetProp.PropertyType != typeof(UIElementBase))
 				{
-					throw new XamlException("The 'Source' markup extension can only be used for properties that are of type 'System.Object' or 'A2v10.Xaml.UIElement'");
+					throw new XamlException("The 'Source' markup extension can only be used for properties that are of type 'System.Object' or 'A2v10.Xaml.UIElementBase'");
 				}
 
 				String baseFileName = XamlRenderer.RootFileName;
