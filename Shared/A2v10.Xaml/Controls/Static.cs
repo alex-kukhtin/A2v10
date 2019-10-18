@@ -19,7 +19,11 @@ namespace A2v10.Xaml
 			MergeAlign(input, context, Align);
 			var valBind = GetBinding(nameof(Value));
 			if (valBind != null)
+			{
 				input.MergeAttribute(":text", valBind.GetPathFormat(context)); // formatted
+				if (valBind.NegativeRed)
+					input.MergeAttribute(":class", $"$getNegativeRedClass({valBind.GetPath(context)})");
+			}
 			input.RenderStart(context);
 			RenderAddOns(context);
 			input.RenderEnd(context);

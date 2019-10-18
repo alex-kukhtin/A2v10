@@ -14,7 +14,11 @@ namespace A2v10.Xaml
 		{
 			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)
+			{
 				tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
+				if (contBind.NegativeRed)
+					tag.MergeAttribute(":class", $"$getNegativeRedClass({contBind.GetPath(context)})");
+			}
 		}
 
 		internal void RenderContent(RenderContext context)

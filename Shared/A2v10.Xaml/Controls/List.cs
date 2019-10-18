@@ -115,8 +115,8 @@ namespace A2v10.Xaml
 				foreach (var c in Content)
 				{
 					var li = new TagBuilder("li", "a2-list-item");
+					c.MergeBindingAttributeBool(li, context, "v-if", "If", c.If);
 					li.MergeAttribute("tabindex", "1");
-					//li.MergeAttribute("@click.prevent", "$exec('test')");
 					li.RenderStart(context);
 					c.RenderElement(context);
 					li.RenderEnd(context);

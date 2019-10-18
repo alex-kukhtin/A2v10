@@ -269,13 +269,13 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatDate(obj);
-			case "DateUrl":
+			case 'DateUrl':
 				if (dateIsZero(obj))
 					return '';
 				if (dateHasTime(obj))
 					return obj.toISOString();
 				return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
-			case "Time":
+			case 'Time':
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
@@ -283,13 +283,13 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatTime(obj);
-			case "Period":
+			case 'Period':
 				if (!obj.format) {
 					console.error(`Invalid Period for utils.format (${obj})`);
 					return obj;
 				}
 				return obj.format('Date');
-			case "Currency":
+			case 'Currency':
 				if (!isNumber(obj)) {
 					obj = toNumber(obj);
 					//TODO:check console.error(`Invalid Currency for utils.format (${obj})`);
@@ -300,7 +300,7 @@ app.modules['std:utils'] = function () {
 				if (opts.format)
 					return formatNumber(obj, opts.format);
 				return currencyFormat(obj);
-			case "Number":
+			case 'Number':
 				if (!isNumber(obj)) {
 					obj = toNumber(obj);
 					//TODO:check console.error(`Invalid Number for utils.format (${obj})`);

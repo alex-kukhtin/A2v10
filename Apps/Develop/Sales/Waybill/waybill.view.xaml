@@ -91,14 +91,14 @@
 						<TextBox Value="{Bind Document.No}" Align="Right" Number="True"/>
 					</TableRow>
 				</Table>
-				<Block Grid.Row="6" Grid.ColSpan="4">
+				<Block Grid.Row="6" Grid.ColSpan="6">
 					<Toolbar Style="Transparent">
 						<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
 						<Button Icon="Add" Content="В начало" Command="{BindCmd Prepend, Argument={Bind Document.Rows}}"/>
 					</Toolbar>
 					<Table ItemsSource="{Bind Document.Rows}"
                     Width="100%" GridLines="Both" Border="True" Background="Paper"
-                    Columns="Fit,100,Auto,Fit,100,100,100,Fit,Fit">
+                    Columns="Fit,100,Auto,Fit,100,100,100,Fit,Fit,Fit,Fit">
 						<Table.Header>
 							<TableRow VAlign="Middle">
 								<TableCell Wrap="NoWrap">№ п.п.</TableCell>
@@ -131,6 +131,8 @@
 							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
+							<Static Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right" Wrap="NoWrap"/>
+							<TableCell Content="{Bind Sum, DataType=Number, HideZeros=True}"></TableCell>
 
 							<Group>
 								<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
