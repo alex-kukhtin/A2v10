@@ -17,6 +17,7 @@
 		$Next: 'Weiter',
 		$Finish: 'Stop',
 		$Tasks: 'Aufgaben',
+		$Quit: 'Ausgang',
 		$Save: 'Speichern',
 		$NotSave: 'Nicht speichern',
 		$Refresh: 'Aktualisieren',
