@@ -486,7 +486,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public void ForgotPassword()
 		{
-			String page = GetRedirectedPage("forgotpassword", ResourceHelper.ForgotPasswordHtml);
+			String page = GetRedirectedPage("forgotpassword", _host.Mobile ? ResourceHelper.ForgotPasswordMobileHtml  : ResourceHelper.ForgotPasswordHtml);
 			SendPage(page, ResourceHelper.ForgotPasswordScript);
 		}
 

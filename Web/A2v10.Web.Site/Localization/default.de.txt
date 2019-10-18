@@ -1,0 +1,86 @@
+﻿;
+@About=About
+@Confidentiality=Vertraulichkeit
+@Contacts=Kontakt
+@Version=Version
+@Debug=Debuggen
+@Quit=Ausgang
+@Tracing=Tracing
+@Settings=Einstellungen
+@Feedback=Feedback
+@DataModel=Datenmodell
+@Profiling=Profilierung
+@Profile=Profil
+@ChangePassword=Passwort ändern
+@SubstUser=Benutzer wechseln
+@AllUsers=Alle Benutzer
+@AdminUsers=Administratoren
+@User=Benutzer
+@OldPassword=altes Passwort
+@NewPassword=Neues Passwort
+@SetPassword=Passwort festlegen
+@Error=Fehler
+@Warning=Warnung
+;
+@ResetPassword=Passwortwiederherstellung
+@ResetPasswordMailText=Um Ihr Passwort wiederherzustellen, klicken Sie <a href="{0}">hier</a>
+@ConfirmEMail=E-Mail-Bestätigung
+@ConfirmEMailMailText=Um Ihre E-Mail zu bestätigen, klicken Sie <a href="{0}">hier</a>
+@EMailAlreadyConfirmed=Ihre E-Mail-Adresse wurde bereits bestätigt.
+@SetNewPassword=Passwortfestlegung
+@InviteEMail=Willkommen!
+@ChangePasswordDisabled=Passwortänderung ist nicht erlaubt
+;
+@Home=Home
+@Documents=Dokumente
+@Catalogs=Kataloge 
+@Sales=Verkäufe
+@Purchase=Einkäufe
+@Inventory=Inventar
+@Accounting=Rechnungswesen
+@Dashboard=Desktop
+;
+@Create=Erstellen
+@CreateDocument=Dokument erstellen
+@CreateFolder=Ordner erstellen
+@Edit=Bearbeiten
+@Save=Speichern
+@SaveAndClose=Speichern und schließen
+@Reload=Neuladen
+@Refresh=Aktualisieren
+@Delete=Löschen
+@Close=Schließen
+@Print=Drucken
+@Search=Suchen
+@Help=Hilfe
+@Export=Экспорт
+;
+@General=Algemeine
+@Properties=Eigenschaften
+@FolderProperties=Ordnereigenschaften
+@NewFilder=Neue Ordner
+@NewElement=Neues Element
+@Cancel=Abbrechen
+@Select=Auswählen
+;
+@Code=Code
+@Date=Datum
+@Name=Name
+@FullName=vollständige Name
+@Tag=Tag
+@Sum=Summe
+@Qty=Anzahl
+@Price=Preis
+@No=Nummer
+@Purchaser=Käufer
+@Memo=Hinweis
+;
+@Confirm=Bestätigung
+@ConfirmDeleteDocument=Dokument löschen?
+@DocumentSaved=Das Dokument wurde erfolgreich gespeichert
+;
+@Error.EnterName=Geben Sie den Namen des Elements ein
+@Error.DuplicateCode=Ein Element mit diesem Code ist bereits vorhanden
+@Error.Exception=Etwas ist unerwartet schief gelaufen :-(
+@Error.FileFormatException=Falsches Dateiformat
+@Error.DataReadOnly=Datenbank ist schreibgeschützt

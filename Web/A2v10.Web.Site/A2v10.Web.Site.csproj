@@ -185,6 +185,7 @@
     <Content Include="Less\Diagram.less" />
     <Content Include="Less\Table.less" />
     <Content Include="Localization\de.xml" />
+    <Content Include="Localization\default.de.txt" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\mobile.js" />
     <Content Include="TestMobile\index.html" />

@@ -5540,6 +5540,9 @@ TODO:
   line-height: 1.25rem;
   border-bottom: 1px dotted #208cf8;
 }
+.panel.panel-cut .panel-content {
+  overflow: visible;
+}
 .field-set {
   margin: 0;
   padding: 0.4rem 0.6rem 0.6rem 0.6rem;

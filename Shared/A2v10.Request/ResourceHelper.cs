@@ -16,6 +16,7 @@ namespace A2v10.Request
 		public static String RegisterTenantHtml => Resources.registerTenant;
 		public static String RegisterTenantScript => Resources.registerTenantScript;
 		public static String ForgotPasswordHtml => Resources.forgotPassword;
+		public static String ForgotPasswordMobileHtml => Resources.forgotPasswordMobile;
 		public static String ForgotPasswordScript => Resources.forgotPasswordScript;
 		public static String ResetPasswordHtml => Resources.resetPassword;
 		public static String ResetPasswordScript => Resources.resetPasswordScript;

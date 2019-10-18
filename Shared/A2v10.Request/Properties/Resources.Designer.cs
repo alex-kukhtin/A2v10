@@ -383,6 +383,27 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-else class=&quot;gr [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string forgotPasswordMobile {
+            get {
+                return ResourceManager.GetString("forgotPasswordMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
         ///// version 7372
         ///
@@ -670,18 +691,18 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div style=&quot;margin:8px;overflow:auto&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;mobile-page&quot;&gt;
         ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$LoginPrompt&quot;&gt;&lt;/h4&gt;
-        ///	&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
-        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///	&lt;hr class=&quot;hline&quot;/&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot;&gt;
         ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
         ///	&lt;/div&gt;
         ///	&lt;form&gt;
         ///		&lt;div class=&quot;mobile-form&quot;&gt;
         ///			&lt;div class=&quot;control-group&quot; :class=&quot;{invalid: !validEmail}&quot;&gt;
-        ///				&lt;label class=&quot;a2-label required text-right&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
+        ///				&lt;label class=&quot;a2-label required&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
         ///				&lt;div class=&quot;input-group&quot;&gt;
-        ///					&lt;input v-f [rest of string was truncated]&quot;;.
+        ///					&lt;input v-focus class=&quot;control&quot; id=&quot;login&quot; name=&quot;email&quot; type=&quot;text&quot; v-model=&quot;email [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string loginMobile {
             get {

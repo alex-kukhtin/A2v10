@@ -96,6 +96,7 @@
     <Content Include="Pages\about.html" />
     <Content Include="Pages\confirmEMail.html" />
     <Content Include="Pages\error.html" />
+    <Content Include="Pages\forgotPasswordMobile.html" />
     <Content Include="Pages\forgotPassword.html" />
     <Content Include="Pages\forgotPasswordScript.js" />
     <Content Include="Pages\appLinkScript.js" />

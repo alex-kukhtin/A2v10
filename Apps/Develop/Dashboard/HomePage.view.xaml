@@ -13,25 +13,31 @@
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">
 					<TextBox Label="Договір"></TextBox>
-					<TextBox Label="Проект"></TextBox>
-                    <ComboBox Label="Style" Value="{Bind Root.$style}">
-                        <ComboBoxItem Content="Default" Value=""/>
-                        <ComboBoxItem Content="Red" Value="red"/>
-                        <ComboBoxItem Content="Primary" Value="primary"/>
-                        <ComboBoxItem Content="Danger" Value="danger"/>
-                        <ComboBoxItem Content="Error" Value="error"/>
-                        <ComboBoxItem Content="Warning" Value="warning"/>
-                        <ComboBoxItem Content="Orange" Value="orange"/>
-                        <ComboBoxItem Content="Outline" Value="outline"/>
-                        <ComboBoxItem Content="Info" Value="info"/>
-                        <ComboBoxItem Content="Success" Value="success"/>
-                        <ComboBoxItem Content="Green" Value="green"/>
-                    </ComboBox>
+					<TextBox Label="Проект">
+						<TextBox.Hint>
+							<Popover Placement="BottomRight">
+								I am the popover here
+							</Popover>
+						</TextBox.Hint>
+					</TextBox>
+					<ComboBox Label="Style" Value="{Bind Root.$style}">
+						<ComboBoxItem Content="Default" Value=""/>
+						<ComboBoxItem Content="Red" Value="red"/>
+						<ComboBoxItem Content="Primary" Value="primary"/>
+						<ComboBoxItem Content="Danger" Value="danger"/>
+						<ComboBoxItem Content="Error" Value="error"/>
+						<ComboBoxItem Content="Warning" Value="warning"/>
+						<ComboBoxItem Content="Orange" Value="orange"/>
+						<ComboBoxItem Content="Outline" Value="outline"/>
+						<ComboBoxItem Content="Info" Value="info"/>
+						<ComboBoxItem Content="Success" Value="success"/>
+						<ComboBoxItem Content="Green" Value="green"/>
+					</ComboBox>
 				</Grid>
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
 		</Grid>
-				
+
 
 		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ" Icon="Database" Text="14534">
 			<StateCard.Footer>
@@ -76,7 +82,8 @@
 	<Block Padding="5">
 		<Block>
 			<Text>А am the text
-				<Badge>23</Badge></Text>
+				<Badge>23</Badge>
+			</Text>
 		</Block>
 		<Alert Style="Default">
 			<Block>
@@ -95,7 +102,8 @@
 			<Block>
 				<Paragraph>Danger alert</Paragraph>
 				<Line />
-			</Block></Alert>
+			</Block>
+		</Alert>
 		<Alert Style="Success">Success alert</Alert>
 		<Alert Style="Dark">
 			<Block>

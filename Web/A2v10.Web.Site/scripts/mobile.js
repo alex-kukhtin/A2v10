@@ -11792,7 +11792,11 @@ Vue.directive('resize', {
 				<i class="ico" :class="'ico-'+m.Icon"></i><span class="menu-text" v-text="m.Name"></span>
 			</a>
 		</li>
-		<li class="group"><a><i class="ico ico-exit"></i><span class="menu-text">Вихід</span></a></li>
+		<li class="group">
+			<form id="logoutForm" method="post" action="/account/logoff">
+				<a href="javascript:document.getElementById('logoutForm').submit()" tabindex="-1" class="dropdown-item"><i class="ico ico-exit"></i><span class=menu-text v-text="locale.$Quit"/></a>
+			</form>
+		</li>
 	</ul>
 </div>
 </transition>
@@ -11826,7 +11830,7 @@ Vue.directive('resize', {
 					return s1 === this.seg0 && s2 === this.seg1;
 				else
 					return s1 === this.seg0;
-			},
+			}
 		},
 		computed: {
 			seg0() {
@@ -11834,6 +11838,9 @@ Vue.directive('resize', {
 			},
 			seg1() {
 				return this.$store.getters.seg1;
+			},
+			locale() {
+				return window.$$locale;
 			}
 		}
 	};

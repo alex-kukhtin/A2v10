@@ -157,6 +157,9 @@
   <data name="forgotPassword" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\forgotPassword.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="forgotPasswordMobile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\forgotPasswordMobile.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="forgotPasswordScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\forgotPasswordScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
