@@ -176,7 +176,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190907-7555
+// 20191017-7568
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -325,7 +325,7 @@ app.modules['std:utils'] = function () {
 			return '';
 		else if (isObject(obj))
 			return toJson(obj);
-		return obj + '';
+		return '' + obj;
 	}
 
 	function defaultValue(type) {
@@ -445,13 +445,13 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatDate(obj);
-			case "DateUrl":
+			case 'DateUrl':
 				if (dateIsZero(obj))
 					return '';
 				if (dateHasTime(obj))
 					return obj.toISOString();
 				return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
-			case "Time":
+			case 'Time':
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
@@ -459,13 +459,13 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				return formatTime(obj);
-			case "Period":
+			case 'Period':
 				if (!obj.format) {
 					console.error(`Invalid Period for utils.format (${obj})`);
 					return obj;
 				}
 				return obj.format('Date');
-			case "Currency":
+			case 'Currency':
 				if (!isNumber(obj)) {
 					obj = toNumber(obj);
 					//TODO:check console.error(`Invalid Currency for utils.format (${obj})`);
@@ -476,7 +476,7 @@ app.modules['std:utils'] = function () {
 				if (opts.format)
 					return formatNumber(obj, opts.format);
 				return currencyFormat(obj);
-			case "Number":
+			case 'Number':
 				if (!isNumber(obj)) {
 					obj = toNumber(obj);
 					//TODO:check console.error(`Invalid Number for utils.format (${obj})`);
@@ -1980,7 +1980,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181010-7567*/
+/*20181017-7568*/
 // services/datamodel.js
 
 (function () {
@@ -2052,6 +2052,8 @@ app.modules['std:validators'] = function () {
 			val = utils.defaultValue(type);
 		if (type === Number)
 			return utils.toNumber(val);
+		else if (type === String)
+			return utils.toString(val);
 		else if (type === Date && !utils.isDate(val))
 			return utils.date.parse('' + val);
 		return val;
@@ -3900,7 +3902,7 @@ app.modules['std:tools'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190405-7498
+// 20190717-7568
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3965,6 +3967,11 @@ app.modules['std:html'] = function () {
 
 	function printDirect(url) {
 
+
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+			window.open(url);
+			return;
+		}
 		removePrintFrame();
 		let frame = document.createElement("iframe");
 		document.body.classList.add('waiting');
@@ -4981,7 +4988,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191003-7562
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -5059,7 +5066,7 @@ Vue.component('validator-control', {
 				let h = od.getUTCHours();
 				let m = od.getUTCMinutes();
 				var nd = new Date(d);
-				nd.setUTCHours(h, m, 0, 0);
+				nd.setUTCHours(h, m);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -5101,9 +5108,12 @@ Vue.component('validator-control', {
 				},
 				set(str) {
 					let md = utils.date.parse(str);
-					this.setDate(md);
-					if (utils.date.isZero(md))
+					if (utils.date.isZero(md)) {
+						this.item[this.prop] = md;
 						this.isOpen = false;
+					} else {
+						this.setDate(md);
+					}
 				}
 			}
 		},
@@ -5119,7 +5129,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190904-7552
+// 20191017-7568
 // components/datepicker.js
 
 
@@ -5297,9 +5307,13 @@ Vue.component('validator-control', {
 					return md.toLocaleTimeString(locale.$Locale, { timeZone: 'UTC', hour: '2-digit', minute:"2-digit"});
 				},
 				set(str) {
-					let time = utils.date.parseTime(str);
 					let md = new Date(this.modelDate);
-					md.setUTCHours(time.getHours(), time.getMinutes());
+					if (str) {
+						let time = utils.date.parseTime(str);
+						md.setUTCHours(time.getHours(), time.getMinutes());
+					} else {
+						md.setUTCHours(0, 0);
+					}
 					this.item[this.prop] = md;
 					this.isOpen = false;
 				}
@@ -9581,16 +9595,12 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190821-7533
+// 20191011-7568
 // components/debug.js*/
 
 (function () {
 
     /**
-     * TODO
-    1. Trace window
-    2. Dock right/left
-    6.
      */
 
 	const dataService = require('std:dataservice');
@@ -9646,29 +9656,30 @@ Vue.component('a2-panel', {
 	Vue.component('a2-debug', {
 		template: `
 <div class="debug-panel" v-if="paneVisible" :class="panelClass">
-    <div class="debug-pane-header">
-        <span class="debug-pane-title" v-text="title"></span>
-        <a class="btn btn-close" @click.prevent="close">&#x2715</a>
-    </div>
-    <div class="toolbar">
-        <button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+	<div class="debug-pane-header">
+		<span class="debug-pane-title" v-text="title"></span>
+		<a class="btn btn-close" @click.prevent="close">&#x2715</a>
+	</div>
+	<div class="toolbar">
+		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
 		<div class="aligner"></div>
-        <button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
-    </div>
-    <div class="debug-model debug-body" v-if="modelVisible">
-        <pre class="a2-code" v-text="modelJson()"></pre>
-    </div>
-    <div class="debug-trace debug-body" v-if="traceVisible">
-        <ul class="a2-debug-trace">
-            <li v-for="r in trace">
-                <div class="rq-title"><span class="elapsed" v-text="r.elapsed + ' ms'"/> <span v-text="r.url" /></div>
-                <a2-trace-item name="Sql" :elem="r.items.Sql"></a2-trace-item>
-                <a2-trace-item name="Render" :elem="r.items.Render"></a2-trace-item>
-                <a2-trace-item name="Workflow" :elem="r.items.Workflow"></a2-trace-item>
-                <a2-trace-item class="exception" name="Exceptions" :elem="r.items.Exception"></a2-trace-item>
-            </li>
-        </ul>
-    </div>
+		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
+	</div>
+	<div class="debug-model debug-body" v-if="modelVisible">
+		<pre class="a2-code" v-text="modelJson()"></pre>
+	</div>
+	<div class="debug-trace debug-body" v-if="traceVisible">
+		<ul class="a2-debug-trace">
+			<li v-for="r in trace">
+				<div class="rq-title"><span class="elapsed" v-text="r.elapsed + ' ms'"/> <span v-text="r.url" /></div>
+				<a2-trace-item name="Sql" :elem="r.items.Sql"></a2-trace-item>
+				<a2-trace-item name="Render" :elem="r.items.Render"></a2-trace-item>
+				<a2-trace-item name="Report" :elem="r.items.Report"></a2-trace-item>
+				<a2-trace-item name="Workflow" :elem="r.items.Workflow"></a2-trace-item>
+				<a2-trace-item class="exception" name="Exceptions" :elem="r.items.Exception"></a2-trace-item>
+			</li>
+		</ul>
+	</div>
 </div>
 `,
 		components: {
