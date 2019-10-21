@@ -8,8 +8,9 @@
 		</Group>
 	</Dialog.TitleInfo>
 	<Dialog.Buttons>
-		<Button Content="Run Test" Command="{BindCmd Execute, CommandName=runTest}"/>
+		<Button Content="Run Test" Command="{BindCmd Execute, CommandName=runTest, SaveRequired=True}"/>
 		<Separator />
+		<Button Content="Сохранить" Command="{BindCmd Save}"/>
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>

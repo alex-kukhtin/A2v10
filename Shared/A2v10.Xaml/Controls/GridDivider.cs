@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var t = new TagBuilder("div", "grid-divider", IsInGrid);
+			MergeAttributes(t, context, MergeAttrMode.Visibility);
 			t.Render(context);
 		}
 	}

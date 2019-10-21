@@ -5,6 +5,7 @@ const du = utils.date;
 
 const template = {
 	properties: {
+		'TRoot.$BrowseData'() { return {X:1, Y:'ssss'}},
 		'TRoot.$SelectedDoc': Object,
 		'TRoot.$$ColumnVisible': Boolean,
 		'TDocument.$Mark': mark,

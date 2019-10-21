@@ -16,7 +16,7 @@
 			<Separator />
 			<TextBox Label="Контрагент:" Value="{Bind Parent.Filter.Agent.Name}">
 				<TextBox.AddOns>
-					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Parent.Filter.Agent}, Url='/Agent/BrowseCustomer'}"/>
+					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Parent.Filter.Agent}, Url='/Agent/BrowseCustomer', Data={Bind Root.$BrowseData}}"/>
 					<Hyperlink Icon="Clear" Command="{BindCmd Execute, CommandName=clearFilter, Argument={Bind Parent.Filter.Agent}}"/>
 				</TextBox.AddOns>
 			</TextBox>

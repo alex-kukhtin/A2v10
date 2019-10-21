@@ -1,7 +1,9 @@
 ﻿
-@tabbar-border-height:.3rem;
-@tabbar-border-color:#ddd;
-@tabbar-padding:.65rem;
+@tabbar-border-height: .3rem;
+@tabbar-border-color: #ddd;
+@tabbar-padding: .65rem;
+@tab-active-brd-color: gold;
+@tab-brd-color: @light-gray-color;
 
 .a2-tab-bar {
 	display: flex;
@@ -11,9 +13,10 @@
 }
 
 .a2-tab-bar-item {
-	padding:0 @tabbar-padding;
+	padding: 0 @tabbar-padding;
+
 	&:first-child {
-		padding-left:0;
+		padding-left: 0;
 	}
 }
 
@@ -22,8 +25,8 @@
 	border-bottom: @tabbar-border-height solid @tabbar-border-color;
 	margin-bottom: -@tabbar-border-height;
 	font-weight: bold;
-	font-size:1.2rem;
-	display:block;
+	font-size: 1.2rem;
+	display: block;
 
 	&.active {
 		border-bottom-color: @link-color;
@@ -31,12 +34,12 @@
 	}
 
 	.content {
-		white-space:nowrap;
+		white-space: nowrap;
 	}
 }
 
 .a2-tab-description {
-	color:@label-color;
+	color: @label-color;
 }
 
 .a2-tab-bar.tab-bar-main-menu {
@@ -44,13 +47,15 @@
 	border-bottom-color: @navbar-bg-color;
 	margin: 0;
 	padding: 0 8px;
-	align-items:stretch;
+	align-items: stretch;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
 	.a2-tab-bar-item {
-		line-height:29px;
+		line-height: 29px;
+
 		&:hover {
 			background-color: @navbar-highlight-color;
+			margin-bottom: -@tabbar-border-height;
 		}
 	}
 
@@ -69,28 +74,56 @@
 }
 
 .a2-tab-bar.tab-bar-button-group {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    align-items: stretch;
-    border: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	align-items: stretch;
+	border: none;
 
-    .a2-tab-bar-item {
-        flex: 1 1 auto;
-        padding: 0;
-    }
+	.a2-tab-bar-item {
+		flex: 1 1 auto;
+		padding: 0;
+	}
 
-    .a2-tab-button {
-        text-align: center;
-        border: 1px solid @navbar-bg-color;
-        font-weight:normal;
-        font-size:1rem;
-        margin:0;
+	.a2-tab-button {
+		text-align: center;
+		border: 1px solid @navbar-bg-color;
+		font-weight: normal;
+		font-size: 1rem;
+		margin: 0;
 
-        &.active {
-            background-color: @menu-bk-color;
-            border-color:@menu-bk-color;
-            color:white;
-        }
-    }
+		&.active {
+			background-color: @menu-bk-color;
+			border-color: @menu-bk-color;
+			color: white;
+		}
+	}
+}
+
+.a2-tab-bar.tab-bar-tab {
+	border-bottom: 1px solid @tab-brd-color;
+	border-top: @tabbar-border-height solid transparent;
+	background-color: @whitesmoke-gray-bg-color;
+	margin: 0;
+
+	.a2-tab-bar-item {
+		padding: 0;
+		margin-top: -@tabbar-border-height;
+		margin-bottom: -1px;
+	}
+
+	.a2-tab-button {
+		font-size: 1rem;
+		border: 1px solid transparent;
+		padding: .45rem 1rem .55rem 1rem;
+		margin: 0;
+
+		&.active {
+			background-color:white;
+			border-top: @tabbar-border-height solid @tab-active-brd-color;
+			border-left-color: @tab-brd-color;
+			border-right-color: @tab-brd-color;
+			border-bottom-color: white;
+		}
+	}
 }

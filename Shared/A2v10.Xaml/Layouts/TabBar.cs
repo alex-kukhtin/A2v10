@@ -14,7 +14,7 @@ namespace A2v10.Xaml
 		MainMenu,
 		Tab,
 		Wizard,
-        ButtonGroup
+		ButtonGroup
 	}
 
 	[ContentProperty("Buttons")]
