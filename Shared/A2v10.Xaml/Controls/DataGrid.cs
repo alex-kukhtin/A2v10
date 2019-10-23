@@ -210,7 +210,7 @@ namespace A2v10.Xaml
 				col.SetParent(this);
 		}
 
-		internal override void OnSetStyles()
+		public override void OnSetStyles()
 		{
 			base.OnSetStyles();
 			foreach (var col in Columns)

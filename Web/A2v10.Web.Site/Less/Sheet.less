@@ -4,6 +4,8 @@
 
 @cell-padding-v: 6px;
 @cell-padding-h: 6px;
+@cell-padding-compact-v: 2px;
+@cell-padding-compact-h: 4px;
 @sheet-bg-gray: rgba(231,231,231,.4);
 @sheet-bg-total: rgba(255,239,135, .4);
 @sheet-bg-group: rgba(221, 248, 236, .4);
@@ -176,6 +178,13 @@ table.sheet {
 	tr.gray {
 		background-color: @alter-bg-color !important;
 	}
+
+	&.compact {
+		font-size:.95rem;
+		td, th {
+			padding:@cell-padding-compact-v @cell-padding-compact-h;
+		}
+	}
 }
 
 table > colgroup {
@@ -211,6 +220,7 @@ table > colgroup {
 	background-color: @page-wrapper-bg-color;
 	padding: 30px 0;
 	min-height: 100%;
+	min-width:max-content;
 
 	.sheet-page {
 		margin: 0 auto;

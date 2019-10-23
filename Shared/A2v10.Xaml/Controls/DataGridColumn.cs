@@ -192,7 +192,7 @@ namespace A2v10.Xaml
 				xamlElement.SetParent(this);
 		}
 
-		internal override void OnSetStyles()
+		public override void OnSetStyles()
 		{
 			base.OnSetStyles();
 			if (Content is XamlElement xamlElement)

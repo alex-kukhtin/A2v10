@@ -50,7 +50,7 @@ namespace A2v10.Xaml
 				r.SetParent(this);
 		}
 
-		internal override void OnSetStyles()
+		public override void OnSetStyles()
 		{
 			base.OnSetStyles();
 			foreach (var r in Children)

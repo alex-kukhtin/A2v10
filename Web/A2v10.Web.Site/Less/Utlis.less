@@ -84,6 +84,21 @@
 	vertical-align: bottom !important;
 }
 
+td.vert {
+	vertical-align: bottom !important;
+	text-align: center;
+	text-align: -webkit-center; // chrome bug fix
+
+	> .vcell {
+		writing-mode: vertical-rl;
+		white-space: pre-line;
+		text-orientation: mixed;
+		transform: rotate(180deg);
+		line-height: 1.2;
+		margin: 0;
+	}
+}
+
 .user-select {
 	user-select:text;
 }

@@ -14,6 +14,7 @@ namespace A2v10.Xaml
 		public Boolean? Italic { get; set; }
 		public VerticalAlign VAlign { get; set; }
 		public Boolean Underline { get; set; }
+		public Boolean Vertical { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -35,15 +36,48 @@ namespace A2v10.Xaml
 			}
 			if (Underline)
 				td.AddCssClass("underline");
-			MergeContent(td, context);
 			td.AddCssClassBoolNo(Bold, "bold");
 			td.AddCssClassBoolNo(Italic, "italic");
-			td.RenderStart(context);
-			RenderContent(context);
-			td.RenderEnd(context);
+			if (Vertical)
+			{
+				td.AddCssClass("vert");
+				td.RenderStart(context);
+				var div = new TagBuilder("p", "vcell");
+				MergeContent(div, context);
+				div.RenderStart(context);
+				RenderContentVert(context, Content);
+				div.RenderEnd(context);
+				td.RenderEnd(context);
+			}
+			else
+			{
+				MergeContent(td, context);
+				td.RenderStart(context);
+				RenderContent(context);
+				td.RenderEnd(context);
+			}
 		}
 
-		internal override void MergeContent(TagBuilder tag, RenderContext context)
+		protected void RenderContentVert(RenderContext context, Object content)
+		{
+			// if it's a binding, it will be added via MergeAttribute
+			if (content == null)
+				return;
+			if (content is UIElementBase)
+				(content as UIElementBase).RenderElement(context);
+			else if (content != null)
+			{
+				context.Writer.Write(
+					context.LocalizeCheckApostrophe(
+						content.ToString()
+						.Replace("\\n", "<br>")
+						.Replace(" ", "&#xa0;")
+					)
+				);
+			}
+		}
+
+		protected override void MergeContent(TagBuilder tag, RenderContext context)
 		{
 			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)

@@ -62,6 +62,7 @@ namespace A2v10.Xaml
 		public Boolean Striped { get; set; }
 		public Boolean? Border { get; set; }
 		public Length Width { get; set; }
+		public Boolean Compact { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -75,6 +76,7 @@ namespace A2v10.Xaml
 			sheet.AddCssClassBool(Hover, "hover");
 			sheet.AddCssClassBool(Striped, "striped");
 			sheet.AddCssClassBoolNo(Border, "border");
+			sheet.AddCssClassBool(Compact, "compact");
 			if (Width != null)
 				sheet.MergeStyle("width", Width.Value);
 			sheet.RenderStart(context);
@@ -163,7 +165,7 @@ namespace A2v10.Xaml
 				s.SetParent(this);
 		}
 
-		internal override void OnSetStyles()
+		public override void OnSetStyles()
 		{
 			base.OnSetStyles();
 			if (_header != null)

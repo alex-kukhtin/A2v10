@@ -129,7 +129,7 @@ namespace A2v10.Xaml
 			CollectionView?.SetParent(this);
 		}
 
-		internal override void OnSetStyles()
+		public override void OnSetStyles()
 		{
 			base.OnSetStyles();
 			Toolbar?.OnSetStyles();
@@ -138,7 +138,7 @@ namespace A2v10.Xaml
 			CollectionView?.OnSetStyles();
 		}
 
-		internal override void OnDispose()
+		public override void OnDispose()
 		{
 			base.OnDispose();
 			Toolbar?.OnDispose();

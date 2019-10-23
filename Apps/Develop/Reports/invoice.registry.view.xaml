@@ -55,7 +55,7 @@
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
 					<SheetCell ColSpan="3" Bold="True">Информация</SheetCell>
-					<SheetCell RowSpan="2" VAlign="Bottom">Сума</SheetCell>
+					<SheetCell RowSpan="2" Vertical="True">Сума\nс переносом текста\nв три строки</SheetCell>
 					<SheetCell RowSpan="2" VAlign="Top">Примечание</SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
@@ -65,7 +65,7 @@
 				</SheetRow>
 				<SheetRow Style="Total">
 					<SheetCell ColSpan="3"/>
-					<SheetCell>234.55</SheetCell>
+					<SheetCell Align="Right">234.55</SheetCell>
 					<SheetCell/>
 				</SheetRow>
 			</Sheet.Header>
