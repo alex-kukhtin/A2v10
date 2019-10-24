@@ -36,6 +36,17 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 	}
 
+	public class DesktopReport
+	{
+		public String Base;
+		public String Report;
+		public String Id;
+		public String Format;
+		public Int64 UserId;
+		public Int32 TenantId;
+		public Int64 CompanyId;
+	}
+
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
@@ -111,9 +122,23 @@ namespace A2v10.Web.Mvc.Controllers
 			return await _reportHelper.GetReportInfo(rc, url, id, prms);
 		}
 
+		async Task<ReportInfo> GetReportInfoDesktop(String url, String id, ExpandoObject prms)
+		{
+			var rc = new ReportContext()
+			{
+				UserId = UserId,
+				TenantId = TenantId,
+			};
+			if (_baseController.Host.IsMultiCompany)
+				rc.CompanyId = CompanyId;
+			return await _reportHelper.GetReportInfo(rc, url, id, prms);
+		}
+
 		ExpandoObject CreateParamsFromQueryString()
 		{
 			var eo = new ExpandoObject();
+			if (Request == null)
+				return eo;
 			if (Request.QueryString.Count == 0)
 				return eo;
 			eo.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
@@ -121,27 +146,26 @@ namespace A2v10.Web.Mvc.Controllers
 			return eo;
 		}
 
-		public async Task ExportDesktop(String Base, String Rep, String id, String Format, HttpResponseBase response)
+		public async Task ExportDesktop(DesktopReport rep, HttpResponseBase response)
 		{
+			// TODO: query string ???
 			_reportHelper.SetupLicense();
 			try
 			{
-				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {Rep}"))
+				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {rep.Report}"))
 				{
-					var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-					ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
+					var url = $"/_report/{rep.Base.RemoveHeadSlash()}/{rep.Report}/{rep.Id}";
+					ReportInfo ri = await GetReportInfo(url, rep.Id, CreateParamsFromQueryString());
 
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
-							//return _reportHelper.ExportStiReport(ri, Format, saveFile: true);
-							throw new NotImplementedException();
+							_reportHelper.ExportStiReportStream(ri, rep.Format, response.OutputStream);
+							break;
 						case RequestReportType.xml:
 							throw new NotImplementedException();
-							//return ExportXmlReport(ri);
 						case RequestReportType.json:
 							throw new NotImplementedException();
-							//return ExportJsonReport(ri);
 					}
 				}
 			}

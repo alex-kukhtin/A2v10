@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Text;
 using System.Web;
 
 namespace A2v10.Runtime
@@ -11,6 +12,7 @@ namespace A2v10.Runtime
 	{
 
 		public override String ContentType { get; set; }
+		public override Encoding ContentEncoding { get; set; }
 		public override NameValueCollection Headers => _headers;
 
 		private MemoryStream _stream;

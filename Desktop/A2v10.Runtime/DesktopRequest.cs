@@ -137,6 +137,7 @@ namespace A2v10.Runtime
 		// TODO: current user ID and tenantId;
 		public Int64 UserId { get { return 50; /*TODO*/ } }
 		public Int32 TenantId { get { return 1; } }
+		public Int64 CompanyId { get { return 1; } } /*TODO*/
 
 		public void SetSqlParams(ExpandoObject prms)
 		{
@@ -188,10 +189,22 @@ namespace A2v10.Runtime
 			var id = urlParts[urlParts.Length - 1];
 			if (urlParts[1] == "export")
 			{
-				reportController.ExportDesktop(baseUrl, rep, id, format, dr).Wait();
+				DesktopReport ri = new DesktopReport()
+				{
+					Report = rep,
+					Base = baseUrl,
+					Id = id,
+					Format = format,
+					UserId = UserId,
+					TenantId = TenantId,
+					CompanyId = CompanyId
+				};
+				reportController.ExportDesktop(ri, dr).Wait();
 			}
-			else
+			else if (urlParts[1] == "print")
+			{
 				throw new NotImplementedException();
+			}
 		}
 
 		public void Shell(String url, TextWriter writer, out String mimeType)

@@ -11,6 +11,8 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using System.Configuration;
+using Stimulsoft.Report;
+using System.IO;
 
 namespace A2v10.Reports
 {
@@ -122,6 +124,30 @@ namespace A2v10.Reports
 					return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
 				else if (format == "opensheet")
 					return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
+				else
+					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
+			}
+		}
+
+		public void ExportStiReportStream(ReportInfo ri, String format, Stream output)
+		{
+			var targetFormat = (format ?? "pdf").ToLowerInvariant();
+			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(ri.ReportPath))
+			{
+				var r = StiReportExtensions.CreateReport(stream, ri.Name);
+				r.AddDataModel(ri.DataModel);
+				if (ri.Variables != null)
+					r.AddVariables(ri.Variables);
+				if (targetFormat == "pdf")
+					r.ExportDocument(StiExportFormat.Pdf, output, StiReportExtensions.GetDefaultPdfSettings());
+				else if (format == "excel")
+					r.ExportDocument(StiExportFormat.Excel2007, output, StiReportExtensions.GetDefaultXlSettings());
+				else if (format == "word")
+					r.ExportDocument(StiExportFormat.Word2007, output, StiReportExtensions.GetDefaultWordSettings());
+				else if (format == "opentext")
+					r.ExportDocument(StiExportFormat.Odt, output, StiReportExtensions.GetDefaultOdtSettings());
+				else if (format == "opensheet")
+					r.ExportDocument(StiExportFormat.Ods, output, StiReportExtensions.GetDefaultOdsSettings());
 				else
 					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
 			}
