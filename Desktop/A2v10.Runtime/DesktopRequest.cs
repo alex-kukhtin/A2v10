@@ -201,7 +201,7 @@ namespace A2v10.Runtime
 				};
 				reportController.ExportDesktop(ri, dr).Wait();
 			}
-			else if (urlParts[1] == "print")
+			else if (urlParts[1] == "print?")
 			{
 				throw new NotImplementedException();
 			}

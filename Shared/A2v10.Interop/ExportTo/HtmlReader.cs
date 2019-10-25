@@ -57,7 +57,7 @@ namespace A2v10.Interop.ExportTo
 		{
 			var reg = new Regex("<col ([\\w=\"\\s:%;-]+)>");
 			var xml = reg.Replace(html, (math) => $"<col {math.Groups[1].Value} />")
-				.Replace("&nbsp;", "&#160;");
+				.Replace("&nbsp;", "&#160;").Replace("<br>", "&#10;");
 			var doc = new XmlDocument();
 			doc.LoadXml(xml);
 			return doc;
