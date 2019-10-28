@@ -79,7 +79,7 @@ namespace A2v10.Xaml
 			td.RenderStart(context);
 			RenderContent(context);
 			/*
-             * Никакого толку, содержимое в атрибуте
+             * no use, the content in the attribute
             if (Validate)
             {
                 var val = new TagBuilder("validator-control");
