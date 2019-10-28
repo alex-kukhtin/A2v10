@@ -3384,6 +3384,7 @@ tr:hover .commandbar.visible-hover {
   list-style: none;
   position: relative;
   cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .tree-view li a:hover,
 .tree-view li a:active {
