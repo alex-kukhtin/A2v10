@@ -23,6 +23,7 @@ using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using System.Web;
+using System.Net.Http.Headers;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -122,16 +123,16 @@ namespace A2v10.Web.Mvc.Controllers
 			return await _reportHelper.GetReportInfo(rc, url, id, prms);
 		}
 
-		async Task<ReportInfo> GetReportInfoDesktop(String url, String id, ExpandoObject prms)
+		async Task<ReportInfo> GetReportInfoDesktop(DesktopReport dr, String url, ExpandoObject prms)
 		{
 			var rc = new ReportContext()
 			{
-				UserId = UserId,
-				TenantId = TenantId,
+				UserId = dr.UserId,
+				TenantId = dr.TenantId,
 			};
 			if (_baseController.Host.IsMultiCompany)
-				rc.CompanyId = CompanyId;
-			return await _reportHelper.GetReportInfo(rc, url, id, prms);
+				rc.CompanyId = dr.CompanyId;
+			return await _reportHelper.GetReportInfo(rc, url, dr.Id, prms);
 		}
 
 		ExpandoObject CreateParamsFromQueryString()
@@ -155,18 +156,28 @@ namespace A2v10.Web.Mvc.Controllers
 				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {rep.Report}"))
 				{
 					var url = $"/_report/{rep.Base.RemoveHeadSlash()}/{rep.Report}/{rep.Id}";
-					ReportInfo ri = await GetReportInfo(url, rep.Id, CreateParamsFromQueryString());
-
+					ReportInfo ri = await GetReportInfoDesktop(rep, url, CreateParamsFromQueryString());
+					ExportReportResult err = null;
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
-							_reportHelper.ExportStiReportStream(ri, rep.Format, response.OutputStream);
+							err = _reportHelper.ExportStiReportStream(ri, rep.Format, response.OutputStream);
 							break;
 						case RequestReportType.xml:
 							throw new NotImplementedException();
 						case RequestReportType.json:
 							throw new NotImplementedException();
 					}
+					if (err != null)
+					{
+						response.ContentType = err.ContentType;
+						var cdh = new ContentDispositionHeaderValue("attachment")
+						{
+							FileNameStar = $"{_baseController.Localize(ri.Name)}.{err.Extension}"
+						};
+						response.Headers.Add("Content-Disposition", cdh.ToString());
+					}
+
 				}
 			}
 			catch (Exception ex)

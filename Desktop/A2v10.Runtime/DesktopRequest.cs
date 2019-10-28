@@ -76,6 +76,7 @@ namespace A2v10.Runtime
 					{
 						Report(url.Substring(6).ToLowerInvariant(), search, dr);
 						MimeType = dr.ContentType;
+						ContentDisposition = dr.Headers["Content-Disposition"];
 						if (dr.IsBinaryWrited)
 							return dr.GetBytes();
 					}
@@ -201,9 +202,9 @@ namespace A2v10.Runtime
 				};
 				reportController.ExportDesktop(ri, dr).Wait();
 			}
-			else if (urlParts[1] == "print?")
+			else if (urlParts[1] == "print")
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException("PRINT REPORT HERE");
 			}
 		}
 

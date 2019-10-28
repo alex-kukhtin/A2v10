@@ -75,7 +75,7 @@ namespace A2v10.Runtime
 		public Byte[] GetBytes()
 		{
 			if (_stream != null)
-				return _stream.GetBuffer();
+				return _stream.ToArray();
 			return null;
 		}
 	}

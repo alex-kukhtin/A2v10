@@ -89,7 +89,7 @@ namespace A2v10.Runtime
 			}
 		}
 
-		public Boolean IsMultiTenant => false; // TODO:
+		public Boolean IsMultiTenant => true; // TODO:
 		public Boolean IsMultiCompany => true;
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDTCEnabled => false;

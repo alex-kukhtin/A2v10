@@ -9,7 +9,8 @@ class CCefClientHandler :
 	public CefRequestHandler,
 	public CefKeyboardHandler,
 	public CefDownloadHandler,
-	public CefFocusHandler
+	public CefFocusHandler,
+	public CefResourceRequestHandler
 {
 	bool m_bClosing;
 	HWND m_hWndFrame;
@@ -53,11 +54,25 @@ public:
 		CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name,
 		CefLifeSpanHandler::WindowOpenDisposition target_disposition,
 		bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
-		CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access) override;
+		CefRefPtr<CefClient>& client, CefBrowserSettings& settings, CefRefPtr<CefDictionaryValue>& extra_info,
+		bool* no_javascript_access) override;
 	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
 
 	// CefRequestHandler
+
+	virtual CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(
+		CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame,
+		CefRefPtr<CefRequest> request,
+		bool is_navigation,
+		bool is_download,
+		const CefString& request_initiator,
+		bool& disable_default_handling) override {
+		return this;
+	}
+
+	// CefResourceRequestHandler
 	virtual ReturnValue OnBeforeResourceLoad(
 		CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefFrame> frame,

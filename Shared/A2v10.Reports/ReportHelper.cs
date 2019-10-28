@@ -23,6 +23,13 @@ namespace A2v10.Reports
 		public Int64 CompanyId;
 	}
 
+	public class ExportReportResult
+	{
+		public String ContentType;
+		public String Extension;
+	}
+	
+
 	public class ReportInfo
 	{
 		public IDataModel DataModel { get; set; }
@@ -129,8 +136,9 @@ namespace A2v10.Reports
 			}
 		}
 
-		public void ExportStiReportStream(ReportInfo ri, String format, Stream output)
+		public ExportReportResult ExportStiReportStream(ReportInfo ri, String format, Stream output)
 		{
+			var rr = new ExportReportResult();
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
 			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(ri.ReportPath))
 			{
@@ -139,18 +147,44 @@ namespace A2v10.Reports
 				if (ri.Variables != null)
 					r.AddVariables(ri.Variables);
 				if (targetFormat == "pdf")
+				{
+					r.Render();
 					r.ExportDocument(StiExportFormat.Pdf, output, StiReportExtensions.GetDefaultPdfSettings());
+					rr.ContentType = "application/pdf";
+					rr.Extension = "pdf";
+				}
 				else if (format == "excel")
+				{
+					r.Render();
 					r.ExportDocument(StiExportFormat.Excel2007, output, StiReportExtensions.GetDefaultXlSettings());
+					rr.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+					rr.Extension = "xlsx";
+				}
 				else if (format == "word")
+				{
+					r.Render();
 					r.ExportDocument(StiExportFormat.Word2007, output, StiReportExtensions.GetDefaultWordSettings());
+					rr.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+					rr.Extension = "docx";
+				}
 				else if (format == "opentext")
+				{
+					r.Render();
 					r.ExportDocument(StiExportFormat.Odt, output, StiReportExtensions.GetDefaultOdtSettings());
+					rr.ContentType = "application/vnd.oasis.opendocument.text";
+					rr.Extension = "odt";
+				}
 				else if (format == "opensheet")
+				{
+					r.Render();
 					r.ExportDocument(StiExportFormat.Ods, output, StiReportExtensions.GetDefaultOdsSettings());
+					rr.ContentType = "application/vnd.oasis.opendocument.spreadsheet";
+					rr.Extension = "ods";
+				}
 				else
 					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
 			}
+			return rr;
 		}
 
 		private Boolean _licenseSet = false;

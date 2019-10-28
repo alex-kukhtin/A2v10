@@ -22,13 +22,17 @@ CCefApplication::~CCefApplication()
 void CCefApplication::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar)
 {
 	//return;
-	registrar->AddCustomScheme("http", 
-		true,  /* is_standard */
-		false, /* is_local*/
-		false, /* is_display_isolated */
-		false, /* is_secure*/
-		true,  /* is_cors_enabled*/
-		false  /* is_csp_bypassing*/);
+	int opts = cef_scheme_options_t::CEF_SCHEME_OPTION_STANDARD | cef_scheme_options_t::CEF_SCHEME_OPTION_CORS_ENABLED;
+	
+	registrar->AddCustomScheme("http", opts);
+	/*
+		true,  /* is_standard * /
+		false, /* is_local* /
+		false, /* is_display_isolated * /
+		false, /* is_secure* /
+		true,  /* is_cors_enabled* /
+		false  /* is_csp_bypassing* /;
+	*/
 }
 
 // virtual 
@@ -41,6 +45,7 @@ void CCefApplication::OnBeforeCommandLineProcessing(const CefString& process_typ
 
 	command_line->AppendSwitchWithValue(L"disable-gpu", L"1");
 	command_line->AppendSwitchWithValue(L"disable-software-rasterizer", L"1");
+	command_line->AppendSwitchWithValue(L"enable-print-preview", L"1");
 }
 
 void CCefApplication::Destroy()

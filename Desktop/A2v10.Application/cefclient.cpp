@@ -49,7 +49,7 @@ void CCefClientHandler::DetachDelegate()
 
 void CCefClientHandler::CreateBrowser(CefWindowInfo const & info, CefBrowserSettings const & settings, CefString const & url)
 {
-	CefBrowserHost::CreateBrowser(info, this, url, settings, nullptr);
+	CefBrowserHost::CreateBrowser(info, this, url, settings, nullptr, nullptr);
 }
 
 // virtual 
@@ -92,7 +92,7 @@ bool CCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser)
 
 
 //virtual 
-CefRequestHandler::ReturnValue CCefClientHandler::OnBeforeResourceLoad(
+CefResourceRequestHandler::ReturnValue CCefClientHandler::OnBeforeResourceLoad(
 	CefRefPtr<CefBrowser> browser,
 	CefRefPtr<CefFrame> frame,
 	CefRefPtr<CefRequest> request,
@@ -139,7 +139,8 @@ bool CCefClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
 	CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name,
 	CefLifeSpanHandler::WindowOpenDisposition target_disposition,
 	bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo,
-	CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access)
+	CefRefPtr<CefClient>& client, CefBrowserSettings& settings, CefRefPtr<CefDictionaryValue>& extra_info,
+	bool* no_javascript_access)
 {
 	CEF_REQUIRE_UI_THREAD();
 	if (m_pDelegate != nullptr) {
