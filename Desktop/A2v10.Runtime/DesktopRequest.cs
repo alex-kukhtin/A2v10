@@ -198,13 +198,25 @@ namespace A2v10.Runtime
 					Format = format,
 					UserId = UserId,
 					TenantId = TenantId,
-					CompanyId = CompanyId
+					CompanyId = CompanyId,
+					AddContentDisposition = true
 				};
 				reportController.ExportDesktop(ri, dr).Wait();
 			}
 			else if (urlParts[1] == "print")
 			{
-				throw new NotImplementedException("PRINT REPORT HERE");
+				DesktopReport ri = new DesktopReport()
+				{
+					Report = rep,
+					Base = baseUrl,
+					Id = id,
+					Format = "pdf",
+					UserId = UserId,
+					TenantId = TenantId,
+					CompanyId = CompanyId,
+					AddContentDisposition = false
+				};
+				reportController.ExportDesktop(ri, dr).Wait();
 			}
 		}
 

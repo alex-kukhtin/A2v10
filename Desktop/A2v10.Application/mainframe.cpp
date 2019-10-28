@@ -283,6 +283,7 @@ void CMainFrame::OnClose()
 		m_navigateTabs.CloseAllTabs();
 		return;
 	}
+	ShowWindow(SW_HIDE);
 	__super::OnClose();
 }
 

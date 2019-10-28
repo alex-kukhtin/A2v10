@@ -46,6 +46,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int64 UserId;
 		public Int32 TenantId;
 		public Int64 CompanyId;
+		public Boolean AddContentDisposition;
 	}
 
 	[Authorize]
@@ -171,11 +172,14 @@ namespace A2v10.Web.Mvc.Controllers
 					if (err != null)
 					{
 						response.ContentType = err.ContentType;
-						var cdh = new ContentDispositionHeaderValue("attachment")
+						if (rep.AddContentDisposition)
 						{
-							FileNameStar = $"{_baseController.Localize(ri.Name)}.{err.Extension}"
-						};
-						response.Headers.Add("Content-Disposition", cdh.ToString());
+							var cdh = new ContentDispositionHeaderValue("attachment")
+							{
+								FileNameStar = $"{_baseController.Localize(ri.Name)}.{err.Extension}"
+							};
+							response.Headers.Add("Content-Disposition", cdh.ToString());
+						}
 					}
 
 				}

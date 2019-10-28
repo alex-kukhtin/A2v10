@@ -21,8 +21,10 @@ CCefApplication::~CCefApplication()
 // virtual 
 void CCefApplication::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar)
 {
-	//return;
-	int opts = cef_scheme_options_t::CEF_SCHEME_OPTION_STANDARD | cef_scheme_options_t::CEF_SCHEME_OPTION_CORS_ENABLED;
+	int opts = 
+		cef_scheme_options_t::CEF_SCHEME_OPTION_STANDARD | 
+		cef_scheme_options_t::CEF_SCHEME_OPTION_LOCAL |
+		cef_scheme_options_t::CEF_SCHEME_OPTION_CORS_ENABLED;
 	
 	registrar->AddCustomScheme("http", opts);
 	/*
@@ -52,7 +54,7 @@ void CCefApplication::Destroy()
 {
 
 	CefClearSchemeHandlerFactories();
-	CefShutdown(); // CEF BUG for single process mode
+	//CefShutdown(); // CEF BUG for single process mode
 }
 
 // static 
@@ -81,11 +83,14 @@ void CCefApplication::OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> comma
 // virtual 
 void CCefApplication::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context)
 {
+	auto moduleVersion = CModuleVersion::GetCurrentFullAppVersion();
+
 	// Retrieve the context's window object.
 	CefRefPtr<CefV8Value> global = context->GetGlobal();
 	
 	CefRefPtr<CefV8Value> host = CefV8Value::CreateObject(nullptr, nullptr);
-	CefRefPtr<CefV8Value> str = CefV8Value::CreateString("My Value!");
+	CefRefPtr<CefV8Value> str = CefV8Value::CreateString(moduleVersion.GetString());
+
 
 	CefRefPtr<CefV8Handler> upload = new CNativeUploadHandler();
 	CefRefPtr<CefV8Value> uploadFunc = CefV8Value::CreateFunction(L"upload", upload);

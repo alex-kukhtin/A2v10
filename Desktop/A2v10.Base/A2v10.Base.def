@@ -178,6 +178,7 @@
 ?SaveFileUTF8@CFileTools@@SA_NPB_W0@Z
 ?CombinePath@CFileTools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W0@Z
 ;
-
+?GetCurrentFullAppVersion@CModuleVersion@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
+;
 
 

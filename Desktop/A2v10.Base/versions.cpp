@@ -131,7 +131,7 @@ CString CModuleVersion::GetCurrentFullAppVersion()
 		int b0 = (int)HIWORD(ver.dwFileVersionLS);
 		int b1 = (int)LOWORD(ver.dwFileVersionLS);
 		// i0.i1.b0.b1
-		s.Format(L"%d.%d.%d", i0, i1, b1);
+		s.Format(L"%d.%d.%d", i0, i1, b0);
 	}
 	return s;
 }

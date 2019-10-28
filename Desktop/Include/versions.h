@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2018 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
