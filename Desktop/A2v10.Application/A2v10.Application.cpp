@@ -130,11 +130,11 @@ BOOL CMainApp::PumpMessage()
 
 int CMainApp::ExitInstance()
 {
+	AfxOleTerm(FALSE);
+
 	if (CCefApplication::IsInit()) {
 		CCefApplication::Destroy();
 	}
-
-	AfxOleTerm(FALSE);
 
 	return __super::ExitInstance();
 }

@@ -120,6 +120,22 @@ namespace A2v10.Runtime
 						ContentDisposition = dr.Headers["Content-Disposition"];
 						return dr.GetBytes();
 					}
+					else if (url.StartsWith("_application/"))
+					{
+						var command = url.Substring(13);
+						String jsonData = Encoding.UTF8.GetString(post);
+						_controller.ApplicationCommand(command, SetSqlParams, jsonData, dr).Wait();
+						MimeType = MIME_JSON;
+						if (dr.OutputStream.Length == 0)
+							dr.Output.WriteLine("{}");
+						return Encoding.UTF8.GetBytes(dr.Output.ToString());
+					}
+					else if (url.StartsWith("fragment/"))
+					{
+						LoadFragment(url.Substring(9), dr);
+						MimeType = dr.ContentType;
+						return dr.GetBytes();
+					}
 					else
 						RenderIndex(dr.Output);
 					return Encoding.UTF8.GetBytes(dr.Output.ToString());
@@ -360,5 +376,22 @@ namespace A2v10.Runtime
 			}
 		}
 
+		void LoadFragment(String path, HttpResponseBase resp)
+		{
+			// HTTP GET
+			var appReader = _controller.Host.ApplicationReader;
+			Int32 ix = path.LastIndexOf('-');
+			if (ix != -1)
+				path = path.Substring(0, ix) + "." + path.Substring(ix + 1);
+			path += $".{_controller.CurrentLang}.html";
+			String fullPath = appReader.MakeFullPath("_fragments/" + path, "");
+			if (!appReader.FileExists(fullPath))
+				throw new FileNotFoundException($"File not found '{path}'");
+			resp.ContentType = "text/html";
+			using (var stream = appReader.FileStreamFullPathRO(fullPath))
+			{
+				stream.CopyTo(resp.OutputStream);
+			}
+		}
 	}
 }

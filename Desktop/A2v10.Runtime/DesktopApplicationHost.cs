@@ -21,16 +21,15 @@ namespace A2v10.Runtime
 
 	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration
 	{
-		readonly IProfiler _profiler;
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 
 		public DesktopApplicationHost(IProfiler profiler)
 		{
-			_profiler = profiler;
-			_profiler.Enabled = IsDebugConfiguration;
+			Profiler = profiler;
+			Profiler.Enabled = IsDebugConfiguration;
 		}
 
-		public IProfiler Profiler => _profiler;
+		public IProfiler Profiler { get; }
 		public Boolean Mobile { get; set; }
 
 		private static String CurrentAppPath { get; set; }
