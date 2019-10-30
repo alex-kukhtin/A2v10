@@ -127,6 +127,10 @@ std::wstring CDotNetRuntime::GetLastContentDisposition()
 	return ptr;
 }
 
+int CDotNetRuntime::GetLastStatusCode()
+{
+	return A2v10RuntimeNet::Desktop::GetLastStatusCode();
+}
 
 // static 
 void CDotNetRuntime::StartDesktopServices() 

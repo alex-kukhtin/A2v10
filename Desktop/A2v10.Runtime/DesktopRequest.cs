@@ -29,6 +29,7 @@ namespace A2v10.Runtime
 
 		public String MimeType { get; private set; }
 		public String ContentDisposition { get; private set; }
+		public Int32 StatusCode { get; private set; }
 
 		const String MIME_JSON   = "application/json";
 		const String MIME_HTML   = "text/html";
@@ -146,8 +147,8 @@ namespace A2v10.Runtime
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				// TODO:: /exception
-				String msg = $"<div>{ex.Message}</div>";
-				return Encoding.UTF8.GetBytes(msg) ;
+				StatusCode = 255;
+				return Encoding.UTF8.GetBytes(ex.Message);
 			}
 		}
 
@@ -165,7 +166,7 @@ namespace A2v10.Runtime
 		void Render(RequestUrlKind kind, String path, String search, TextWriter writer)
 		{
 			ExpandoObject loadPrms = new ExpandoObject();
-			loadPrms.Append(HttpUtility.ParseQueryString(search), toPascalCase: true);
+			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
 			SetSqlParams(loadPrms);
 			if (path.StartsWith("app/"))
 				_controller.RenderApplicationKind(kind, path, loadPrms, writer).Wait();

@@ -164,6 +164,7 @@ namespace A2v10RuntimeNet
 
 		static String _lastMime = String.Empty;
 		static String _lastContentDisposition = String.Empty;
+		static Int32 _lastStatusCode = 0;
 
 		public static String GetLastMime()
 		{
@@ -175,6 +176,11 @@ namespace A2v10RuntimeNet
 			return _lastContentDisposition;
 		}
 
+		public static Int32 GetLastStatusCode()
+		{
+			return _lastStatusCode;
+		}
+
 		public static Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
 			_lastContentDisposition = String.Empty;
@@ -183,6 +189,7 @@ namespace A2v10RuntimeNet
 			var result = dr.ProcessRequest(url, search, post, postMethod);
 			_lastMime = dr.MimeType;
 			_lastContentDisposition = dr.ContentDisposition ?? String.Empty;
+			_lastStatusCode = dr.StatusCode;
 			return result;
 		}
 

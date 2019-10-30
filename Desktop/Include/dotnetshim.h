@@ -28,6 +28,7 @@ public:
 	static void UploadFiles(const wchar_t* szUrl, const wchar_t* szfiles, std::vector<byte>& data);
 	static std::wstring GetLastMime();
 	static std::wstring GetLastContentDisposition();
+	static int GetLastStatusCode();
 };
 
 #undef AFX_DATA

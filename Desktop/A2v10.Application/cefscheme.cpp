@@ -12,7 +12,6 @@
 // virutal
 CClientSchemeHandler::~CClientSchemeHandler() 
 {
-
 }
 
 std::string GetMimeFromString(const char* szString)
@@ -87,7 +86,7 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	if (_files.length() > 0)
 		rc = CApplicationResources::UploadFiles(url.c_str(), _files.c_str(), mime, data_, isPost);
 	else
-		rc = CApplicationResources::LoadResource(url.c_str(), mime, content_disposition, data_, post_, isPost);
+		rc = CApplicationResources::LoadResource(url.c_str(), mime, content_disposition, data_, post_, isPost, status_code_);
 	if (rc) {
 		mime_type_ = mime;
 		content_disposition_ = content_disposition;
@@ -119,7 +118,13 @@ void CClientSchemeHandler::GetResponseHeaders(CefRefPtr<CefResponse> response,
 	DCHECK(!data_.empty());
 
 	response->SetMimeType(mime_type_);
-	response->SetStatus(200);
+	if (status_code_ != 0) {
+		response->SetStatus(status_code_);
+		response->SetStatusText(L"Custom server error");
+	}
+	else {
+		response->SetStatus(200);
+	}
 
 	if (!content_disposition_.empty()) {
 		CefResponse::HeaderMap headerMap;

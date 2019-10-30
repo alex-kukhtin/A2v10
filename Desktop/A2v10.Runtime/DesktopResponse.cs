@@ -37,6 +37,11 @@ namespace A2v10.Runtime
 			}
 		}
 
+		public override void Write(String s)
+		{
+			Output.Write(s);
+		}
+
 		BinaryWriter _binaryWriter;
 		public BinaryWriter BinaryWriter
 		{
