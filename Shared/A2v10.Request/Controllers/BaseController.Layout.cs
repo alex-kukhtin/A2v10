@@ -113,7 +113,7 @@ namespace A2v10.Request
 			String jsonCompanies = null;
 			String jsonPeriod = null;
 
-			if (_host.IsMultiTenant)
+			if (_host.IsMultiTenant || _host.IsUsePeriodAndCompanies)
 			{
 				// for all users (include features)
 				var res = await ProcessMultiTenantParams(loadPrms);

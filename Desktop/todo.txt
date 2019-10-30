@@ -9,7 +9,7 @@
 2. Пользователи (Id и имя)
 3. Фирмы и комбик с фирмами
 4. Внешние ссылки (help)
-5. SingleTenantMode
 6. Убрать "Зворотній зв'язок" app.desktop.json ?
-7. Поломался период в SingleTenantMode
+8. Переключение фирм. В AccountController использует _userManager.
+
 

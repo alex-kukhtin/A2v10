@@ -76,6 +76,7 @@ namespace A2v10.Tests.Config
 
 		public Boolean IsMultiTenant => false;
 		public Boolean IsMultiCompany => false;
+		public Boolean IsUsePeriodAndCompanies => false;
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDebugConfiguration => true;
 		public Boolean IsDTCEnabled => false;

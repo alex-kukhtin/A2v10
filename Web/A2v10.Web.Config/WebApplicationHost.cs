@@ -101,47 +101,26 @@ namespace A2v10.Web.Config
 			}
 		}
 
-		public Boolean IsMultiTenant
+		Boolean IsAppSettingsIsTrue(String name)
+		{
+			var mt = ConfigurationManager.AppSettings[name];
+			if (String.IsNullOrEmpty(mt))
+				return false;
+			return mt.ToLowerInvariant() == "true";
+		}
+
+		public Boolean IsUsePeriodAndCompanies
 		{
 			get
 			{
-				var mt = ConfigurationManager.AppSettings["multiTenant"];
-				if (String.IsNullOrEmpty(mt))
-					return false;
-				return mt.ToLowerInvariant() == "true";
+				return IsAppSettingsIsTrue("custom");
 			}
 		}
 
-		public Boolean IsMultiCompany { get
-			{
-				var mc = ConfigurationManager.AppSettings["multiCompany"];
-				if (String.IsNullOrEmpty(mc))
-					return false;
-				return mc.ToLowerInvariant() == "true";
-			}
-		}
-
-		public Boolean IsRegistrationEnabled
-		{
-			get
-			{
-				var mt = ConfigurationManager.AppSettings["registration"];
-				if (String.IsNullOrEmpty(mt))
-					return true;
-				return mt.ToLowerInvariant() == "true";
-			}
-		}
-
-		public Boolean IsDTCEnabled
-		{
-			get
-			{
-				var mt = ConfigurationManager.AppSettings["enableDTC"];
-				if (String.IsNullOrEmpty(mt))
-					return false;
-				return mt.ToLowerInvariant() == "true";
-			}
-		}
+		public Boolean IsMultiTenant => IsAppSettingsIsTrue("multiTenant");
+		public Boolean IsMultiCompany => IsAppSettingsIsTrue("multiCompany");
+		public Boolean IsRegistrationEnabled => IsAppSettingsIsTrue("registration");
+		public Boolean IsDTCEnabled => IsAppSettingsIsTrue("enableDTC");
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 

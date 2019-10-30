@@ -21,6 +21,11 @@ namespace A2v10.Request
 					setParams?.Invoke(dataToSet);
 					await _dbContext.ExecuteExpandoAsync(null, "a2user_state.SetGlobalPeriod", dataToSet);
 					break;
+				case "switchtocompany":
+					if (!_host.IsMultiCompany)
+						throw new InvalidOperationException("switchtocompany");
+					ExpandoObject dataToExec = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+					break;
 				default:
 					throw new RequestModelException($"Invalid application command '{command}'");
 			}

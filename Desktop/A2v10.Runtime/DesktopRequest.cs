@@ -174,6 +174,13 @@ namespace A2v10.Runtime
 				_controller.RenderElementKind(kind, path, loadPrms, writer).Wait();
 		}
 
+		public String GetCompanyButton()
+		{
+			if (!_controller.Host.IsMultiCompany)
+				return String.Empty;
+			return "<a2-company-button :source=\"companies.menu\" :links=\"companies.links\"></a2-company-button>";
+		}
+
 		void RenderIndex(TextWriter writer)
 		{
 			// TODO: userName
@@ -185,7 +192,7 @@ namespace A2v10.Runtime
 					{ "$(RootUrl)", String.Empty },
 					{ "$(HelpUrl)", _controller.Host.HelpUrl },
 					{ "$(PersonName)", userName },
-					{ "$(CompanyButton)", ""},
+					{ "$(CompanyButton)", GetCompanyButton()},
 					{ "$(Theme)", theme },
 					{ "$(Build)", _controller.Host.AppBuild },
 					{ "$(Locale)", locale },
