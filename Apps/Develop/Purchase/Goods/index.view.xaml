@@ -18,6 +18,7 @@
 			</TextBox>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Entities}}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="BrandExcel" Command="{BindCmd Export, Url='/purchase/goods/excel', Argument=0}" Content="Export Error"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>

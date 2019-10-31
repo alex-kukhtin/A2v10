@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace A2v10.Interop
 		internal IList<Row> RowsForClone;
 		internal UInt32 FirstRow;
 		internal UInt32 RowCount;
+		internal UInt32 LastRow;
 	}
 
 	class SharedStringDef
@@ -34,17 +35,19 @@ namespace A2v10.Interop
 			iIndex = ix;
 		}
 
-		internal void Parse()
+		internal Boolean Parse()
 		{
 			if (bParsed)
-				return;
+				return true;
 
 			String str = Item.Text.Text;
 			if (str.StartsWith("{") && str.EndsWith("}"))
 			{
 				Expression = str.Substring(1, str.Length - 2);
+				bParsed = true;
+				return true;
 			}
-			bParsed = true;
+			return false;
 		}
 	}
 
@@ -123,7 +126,7 @@ namespace A2v10.Interop
 				_sheetData = workSheet.GetFirstChild<SheetData>();
 
 				var workBook = doc.WorkbookPart.Workbook;
-				var defName = workBook.DefinedNames.FirstChild;
+				var defName = workBook?.DefinedNames?.FirstChild;
 				while (defName != null)
 				{
 					if (defName is DefinedName dn)
@@ -208,6 +211,7 @@ namespace A2v10.Interop
 			RowSetDef rd = new RowSetDef
 			{
 				FirstRow = startRow,
+				LastRow = endRow,
 				RowCount = endRow - startRow + 1
 			};
 			_dataSetRows.Add(propName, rd);
@@ -219,8 +223,37 @@ namespace A2v10.Interop
 		{
 			_sharedStringCount = _sharedStringTable.Elements<SharedStringItem>().Count<SharedStringItem>();
 
+			ProcessPlainTable();
+
 			if (_dataSetRows != null)
 				ProcessDataSets();
+		}
+
+		Boolean IsRowInRange(UInt32 rowIndex)
+		{
+			if (_dataSetRows == null)
+				return false;
+			foreach (var rd in _dataSetRows)
+			{
+				var rdv = rd.Value;
+				if (rowIndex >= rdv.FirstRow && rowIndex <= rdv.LastRow)
+					return true;
+			}
+			return false;
+		}
+
+		void ProcessPlainTable()
+		{
+			var rows = _sheetData.Elements<Row>();
+			foreach (var row in rows)
+			{
+				if (IsRowInRange(row.RowIndex))
+					return;
+				foreach (var cell in row.Elements<Cell>())
+				{
+					SetCellData(cell, _dataModel.Root);
+				}
+			}
 		}
 
 		void ProcessDataSets()
@@ -246,7 +279,7 @@ namespace A2v10.Interop
 
 		void SetRecordData(RowSetDef def, ExpandoObject data)
 		{
-			// Пока просто индекс
+			// just an index (for now)
 			foreach (var r in def.Rows)
 			{
 				foreach (var c in r.Elements<Cell>())
@@ -265,7 +298,7 @@ namespace A2v10.Interop
 			if (_sharedStringIndexMap == null)
 				return;
 			String addr = cell.CellValue.Text.ToString();
-			// это номер строки из SharedStrings
+			// this is the line number from SharedStrings
 			if (!Int32.TryParse(addr, out Int32 strIndex))
 				return;
 			if (!_sharedStringIndexMap.ContainsKey(strIndex))
@@ -273,9 +306,11 @@ namespace A2v10.Interop
 			SharedStringDef ssd = _sharedStringIndexMap[strIndex];
 			if (ssd == null)
 				return;
-			ssd.Parse();
-			Object dat = _dataModel.Eval<Object>(data, ssd.Expression);
-			SetCellValueData(cell, dat);
+			if (ssd.Parse())
+			{
+				Object dat = _dataModel.Eval<Object>(data, ssd.Expression);
+				SetCellValueData(cell, dat);
+			}
 		}
 
 		void SetCellValueData(Cell cell, Object obj)

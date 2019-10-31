@@ -2,10 +2,18 @@
   "schema": "a2demo",
   "model": "Goods",
   "actions": {
-    "index": {
-      "index": true,
-					"view": "index.view",
-					"template": "index.template"
-    }
+	"index": {
+		"index": true,
+		"view": "index.view",
+		"template": "index.template"
+	},
+	"excel": {
+		"model": "Error",
+		"export": {
+			"format": "xlsx",
+			"template": "exporterror",
+			"fileName": "ERROR"
+		}
+	}
   }
 }
