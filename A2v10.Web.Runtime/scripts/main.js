@@ -3902,7 +3902,7 @@ app.modules['std:tools'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190717-7568
+// 20191028-7574
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3968,7 +3968,7 @@ app.modules['std:html'] = function () {
 	function printDirect(url) {
 
 
-		if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+		if (window.cefHost || navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
 			window.open(url);
 			return;
 		}
