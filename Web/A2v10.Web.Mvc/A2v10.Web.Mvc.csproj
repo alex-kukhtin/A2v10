@@ -140,7 +140,6 @@
     <Compile Include="Hooks\SetPasswordHandler.cs" />
     <Compile Include="Hooks\SetPersonNameHandler.cs" />
     <Compile Include="Hooks\SetPhoneNumberHandler.cs" />
-    <Compile Include="Models\SwitchToCompanyModels.cs" />
     <Compile Include="Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

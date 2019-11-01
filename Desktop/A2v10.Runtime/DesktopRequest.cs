@@ -92,7 +92,7 @@ namespace A2v10.Runtime
 						var command = url.Substring(6);
 						dr.ContentType = "application/json";
 						String jsonData = Encoding.UTF8.GetString(post);
-						_controller.Data(command, SetSqlParams, jsonData, dr).Wait();
+						_controller.Data(command, SetSqlQueryParams, jsonData, dr).Wait();
 						MimeType = dr.ContentType;
 						if (dr.IsBinaryWrited)
 							return dr.GetBytes();
@@ -123,9 +123,11 @@ namespace A2v10.Runtime
 					}
 					else if (url.StartsWith("_application/"))
 					{
+						if (!postMethod)
+							throw new InvalidOperationException();
 						var command = url.Substring(13);
 						String jsonData = Encoding.UTF8.GetString(post);
-						_controller.ApplicationCommand(command, SetSqlParams, jsonData, dr).Wait();
+						_controller.ApplicationCommand(command, SetUserTenantToParams, jsonData, dr).Wait();
 						MimeType = MIME_JSON;
 						if (dr.OutputStream.Length == 0)
 							dr.Output.WriteLine("{}");
@@ -155,19 +157,32 @@ namespace A2v10.Runtime
 		// TODO: current user ID and tenantId;
 		public Int64 UserId { get { return 50; /*TODO*/ } }
 		public Int32 TenantId { get { return 1; } }
-		public Int64 CompanyId { get { return 1; } } /*TODO*/
+		public Int64 CompanyId => _controller.UserStateManager.UserCompanyId(TenantId, UserId);
 
-		public void SetSqlParams(ExpandoObject prms)
+		public void SetUserTenantToParams(ExpandoObject prms)
 		{
 			A2v10.Infrastructure.DynamicHelpers.Set(prms, "UserId", UserId);
 			A2v10.Infrastructure.DynamicHelpers.Set(prms, "TenantId", TenantId);
+
+		}
+
+		void SetUserCompanyToParams(ExpandoObject prms)
+		{
+			if (_controller.Host.IsMultiCompany)
+				prms.Set("CompanyId", CompanyId);
+		}
+
+		void SetSqlQueryParams(ExpandoObject prms)
+		{
+			SetUserTenantToParams(prms);
+			SetUserCompanyToParams(prms);
 		}
 
 		void Render(RequestUrlKind kind, String path, String search, TextWriter writer)
 		{
 			ExpandoObject loadPrms = new ExpandoObject();
 			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
-			SetSqlParams(loadPrms);
+			SetSqlQueryParams(loadPrms);
 			if (path.StartsWith("app/"))
 				_controller.RenderApplicationKind(kind, path, loadPrms, writer).Wait();
 			else
@@ -261,7 +276,7 @@ namespace A2v10.Runtime
 					try
 					{
 						var userInfo = new DesktopUserInfo();
-						_controller.ShellScript(null, SetSqlParams, userInfo, bAdmin: false, writer: writer).Wait();
+						_controller.ShellScript(null, SetUserTenantToParams, userInfo, bAdmin: false, writer: writer).Wait();
 						mimeType = MIME_SCRIPT;
 					}
 					catch (Exception ex)
@@ -284,7 +299,7 @@ namespace A2v10.Runtime
 		{
 			try
 			{
-				AttachmentInfo info = _controller.DownloadAttachment(url, SetSqlParams).Result;
+				AttachmentInfo info = _controller.DownloadAttachment(url, SetSqlQueryParams).Result;
 				if (info == null)
 					return null;
 				response.ContentType = info.Mime;
@@ -375,7 +390,7 @@ namespace A2v10.Runtime
 			{
 				ExpandoObject loadPrms = new ExpandoObject();
 				loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
-				SetSqlParams(loadPrms);
+				SetSqlQueryParams(loadPrms);
 				_controller.Export(path, TenantId, UserId, loadPrms, response).Wait();
 			}
 			catch (Exception ex)

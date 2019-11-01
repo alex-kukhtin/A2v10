@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190821-7534*/
+/*20190821-7575*/
 /*components/newbutton.js*/
 
 (function () {
@@ -50,7 +50,7 @@
 				const urlTools = require("std:url");
 				const rootUrl = window.$$rootUrl;
 				const data = JSON.stringify({ company: comp.Id });
-				http.post(urlTools.combine(rootUrl, 'account/switchtocompany'), data)
+				http.post(urlTools.combine(rootUrl, '_application/switchtocompany'), data)
 					.then(x => {
 						window.location.assign(urlTools.combine(rootUrl, '/') /*always root */);
 					}).catch(err => {

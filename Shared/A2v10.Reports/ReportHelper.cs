@@ -83,7 +83,7 @@ namespace A2v10.Reports
 			}
 
 			prms.Set("UserId", context.UserId);
-			if (_host.IsMultiTenant)
+			if (_host.IsMultiTenant || context.TenantId != 0 /*hack for desktop*/)
 				prms.Set("TenantId", context.TenantId);
 			if (_host.IsMultiCompany)
 				prms.Set("CompanyId", context.CompanyId);
