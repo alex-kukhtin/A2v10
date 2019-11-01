@@ -7,9 +7,7 @@
 == Application 
 
 2. Пользователи (Id и имя)
-3. Фирмы и комбик с фирмами
 4. Внешние ссылки (help)
 6. Убрать "Зворотній зв'язок" app.desktop.json ?
-8. Переключение фирм. В AccountController использует _userManager.
 
 

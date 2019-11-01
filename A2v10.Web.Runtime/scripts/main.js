@@ -1030,7 +1030,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180831-7549*/
+/*20191101-7575*/
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1134,7 +1134,7 @@ app.modules['std:period'] = function () {
 			}
 		}
 		if (showCustom)
-			return 'Довільно';
+			return locale.$CustomPeriod;
 		let from = this.From;
 		let to = this.To;
 		return utils.format(from, 'Date') + ' - ' + (utils.format(to, 'Date') || '???');
@@ -9465,7 +9465,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190821-7534*/
+/*20190821-7575*/
 /*components/newbutton.js*/
 
 (function () {
@@ -9515,7 +9515,7 @@ Vue.component('a2-panel', {
 				const urlTools = require("std:url");
 				const rootUrl = window.$$rootUrl;
 				const data = JSON.stringify({ company: comp.Id });
-				http.post(urlTools.combine(rootUrl, 'account/switchtocompany'), data)
+				http.post(urlTools.combine(rootUrl, '_application/switchtocompany'), data)
 					.then(x => {
 						window.location.assign(urlTools.combine(rootUrl, '/') /*always root */);
 					}).catch(err => {
