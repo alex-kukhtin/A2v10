@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181017-7568*/
+/*20181101-7576*/
 // services/datamodel.js
 
 (function () {
@@ -139,8 +139,14 @@
 				let eventWasFired = false;
 				let skipDirty = prop.startsWith('$$');
 				let ctor = this._meta_.props[prop];
-				if (ctor.type) ctor = ctor.type;
-				val = ensureType(ctor, val);
+				let isjson = false;
+				if (ctor.type) {
+					isjson = !!ctor.json;
+					ctor = ctor.type;
+				}
+				if (!isjson) {
+					val = ensureType(ctor, val);
+				}
 				if (val === this._src_[prop])
 					return;
 				let oldVal = this._src_[prop];
