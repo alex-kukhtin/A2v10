@@ -8,6 +8,7 @@ namespace A2v10.Runtime
 	{
 		public String AppKey { get; set; }
 		public String AppPath { get; set; }
+		public String HelpUrl { get; set; }
 
 		public void Load(String cnnString)
 		{
@@ -22,9 +23,10 @@ namespace A2v10.Runtime
 					{
 						while (rdr.Read())
 						{
-							// (0) AppPath, (1) UserId, (2) UserName, (3) PersonName
+							// (0) AppPath, (1) UserId, (2) UserName, (3) PersonName, HelpUrl = (4)
 							ParseAppPath(rdr.GetString(0));
 							Int64 userId = rdr.GetInt64(1);
+							HelpUrl = rdr.GetString(4);
 						}
 					}
 				}

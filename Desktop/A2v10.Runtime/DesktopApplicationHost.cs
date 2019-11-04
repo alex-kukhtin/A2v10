@@ -35,6 +35,7 @@ namespace A2v10.Runtime
 		private static String CurrentAppPath { get; set; }
 		private static String CurrentAppKey { get; set; }
 		private static String CurrentAppConnectionString { get; set; }
+		private static String CurrentHelpUrl { get; set; }
 
 		public String AppPath => CurrentAppPath;
 		public String AppKey => CurrentAppKey;
@@ -56,7 +57,7 @@ namespace A2v10.Runtime
 		public String UserAppHost => null;
 
 		public String Theme => null;
-		public String HelpUrl => "http://help";
+		public String HelpUrl => CurrentHelpUrl;
 
 		public Boolean IsDebugConfiguration
 		{
@@ -148,6 +149,7 @@ namespace A2v10.Runtime
 			CurrentAppConnectionString = cnnString;
 			CurrentAppPath = appConfig.AppPath;
 			CurrentAppKey = appConfig.AppKey;
+			CurrentHelpUrl = appConfig.HelpUrl;
 		}
 
 		public String GetAppSettings(String source)

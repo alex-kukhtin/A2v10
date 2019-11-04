@@ -7,9 +7,6 @@
 == Application 
 
 2. Пользователи (Id и имя)
-4. Внешние ссылки (help)
 6. Убрать "Зворотній зв'язок" app.desktop.json ?
-11. OnUpdateNavigate
-12. 
-
+13. Login dialog
 
