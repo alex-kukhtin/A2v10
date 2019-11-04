@@ -67,6 +67,7 @@ protected:
 	afx_msg void OnShowDevTools();
 	afx_msg LRESULT OnOpenCefView(WPARAM wParam, LPARAM lParam);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg LRESULT OnIdleUpdateButtons(WPARAM wParam, LPARAM lParam);
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp

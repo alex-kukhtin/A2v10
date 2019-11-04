@@ -55,7 +55,7 @@ public:
 
 	CBrush* GetDockedPaneBorderBrush() { return &m_brDockedPaneBorder; }
 	CBrush* GetWindowCaptionBackgroundBrush() { return &m_brWindowCaption; }
-	void OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, bool bHighlighted, bool bPressed);
+	void OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, bool bHighlighted, bool bPressed, bool bDisabled);
 
 	virtual int GetDockingTabsBordersSize() { return 0; }
 	virtual void OnDrawMiniFrameBorder(CDC* pDC, CPaneFrameWnd* pFrameWnd, CRect rectBorder, CRect rectBorderSize);

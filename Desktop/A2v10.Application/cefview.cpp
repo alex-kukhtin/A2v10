@@ -23,11 +23,11 @@
 IMPLEMENT_DYNCREATE(CCefView, CView)
 
 BEGIN_MESSAGE_MAP(CCefView, CView)
+	ON_MESSAGE(WMI_CEF_IDLE_UPDATE_BUTTONS, OnIdleUpdateButtons)
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WMI_CEF_VIEW_COMMAND, OnOpenCefView)
 	ON_MESSAGE(WMI_CEF_TAB_COMMAND, OnCefTabCommand)
-
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_CLOSE()
@@ -338,4 +338,17 @@ LRESULT CCefView::OnAppCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return 0;
+}
+
+// afx_msg
+LRESULT CCefView::OnIdleUpdateButtons(WPARAM wParam, LPARAM lParam) 
+{
+	if (wParam == WMI_CEF_IDLE_UPDATE_WPARAM_NAVIGATE) {
+		if (m_browser == nullptr)
+			return 0L;
+		int canGoBack = m_browser->CanGoBack() ? 1 : 0;
+		int canGoForward = m_browser->CanGoForward() ? 1 : 0;
+		return MAKELPARAM(canGoBack, canGoForward);
+	}
+	return 0L;
 }

@@ -14,15 +14,17 @@ protected:
 	CRect m_rect;
 	bool m_bHighlighted;
 	bool m_bPressed;
+	bool m_bDisabled;
 public:
 	CCaptionButton(UINT nID = 0)
 		: m_nID(0), m_rect(0, 0, 0, 0),
-		m_bHighlighted(false), m_bPressed(false) {}
+		m_bHighlighted(false), m_bPressed(false), m_bDisabled(false) {}
 	void SetID(UINT nID) { m_nID = nID;}
 	UINT GetID() const { return m_nID; }
 	bool SetState(bool bHighlight, bool bPressed);
 	bool SetHighlight(bool bSet);
 	bool SetPress(bool bSet);
+	bool SetDisabled(bool bSet);
 	const CRect& GetRect() { return m_rect; }
 
 	bool TrackButton(CWnd* pWnd, CPoint point);
@@ -72,6 +74,7 @@ protected:
 public:
 	CCaptionNavigateButtons();
 	void RecalcLayout(CRect clientRect, BOOL bZoomed);
+	bool DisableButton(int index, bool bDisable);
 };
 
 #undef AFX_DATA

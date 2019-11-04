@@ -71,6 +71,8 @@ CCaptionNavigateButtons::CCaptionNavigateButtons()
 	m_buttons[0].SetID(IDMENU_BACK);
 	m_buttons[1].SetID(IDMENU_FORWARD);
 	m_buttons[2].SetID(IDMENU_RELOAD);
+	m_buttons[0].SetDisabled(true);
+	m_buttons[1].SetDisabled(true);
 }
 
 void CCaptionButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
@@ -105,6 +107,16 @@ void CCaptionNavigateButtons::RecalcLayout(CRect clientRect, BOOL bZoomed)
 	m_rect = clientRect;
 	m_rect.right = m_rect.left + m_nWidth;
 }
+
+bool CCaptionNavigateButtons::DisableButton(int index, bool bDisable)
+{
+	if (index >= 0 && index < _countof(m_buttons))
+	{
+		return m_buttons[index].SetDisabled(bDisable);
+	}
+	return false;
+}
+
 
 void CCaptionButton::ExecuteCommand(CWnd* pWnd, CPoint point)
 {
@@ -202,6 +214,8 @@ bool CCaptionButton::TrackButton(CWnd* pWnd, CPoint point)
 
 bool CCaptionButton::SetPress(bool bSet)
 {
+	if (m_bDisabled)
+		bSet = false;
 	if (m_bPressed == bSet)
 		return false;
 	m_bPressed = bSet;
@@ -215,18 +229,32 @@ void CCaptionButton::SetRect(const CRect rect) {
 
 bool CCaptionButton::SetState(bool bHighlight, bool bPressed)
 {
+	if (m_bDisabled) {
+		bHighlight = false;
+		bPressed = false;
+	}
 	if ((m_bHighlighted == bHighlight) && (m_bPressed == bPressed))
 		return false;
-	m_bHighlighted = bHighlight,
-		m_bPressed = bPressed;
+	m_bHighlighted = bHighlight;
+	m_bPressed = bPressed;
 	return false;
 }
 
 bool CCaptionButton::SetHighlight(bool bSet)
 {
+	if (m_bDisabled)
+		bSet = false;
 	if (m_bHighlighted == bSet)
 		return false;
 	m_bHighlighted = bSet;
+	return true;
+}
+
+bool CCaptionButton::SetDisabled(bool bSet)
+{
+	if (m_bDisabled == bSet)
+		return false;
+	m_bDisabled = bSet;
 	return true;
 }
 
@@ -235,5 +263,5 @@ void CCaptionButton::Draw(CDC* pDC)
 	CA2VisualManager* pVM = DYNAMIC_DOWNCAST(CA2VisualManager, CMFCVisualManager::GetInstance());
 	if (!pVM)
 		return;
-	pVM->OnDrawA2CaptionButton(pDC, m_rect, m_nID, m_bHighlighted, m_bPressed);
+	pVM->OnDrawA2CaptionButton(pDC, m_rect, m_nID, m_bHighlighted, m_bPressed, m_bDisabled);
 }

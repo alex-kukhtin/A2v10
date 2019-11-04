@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_WM_NCMOUSEMOVE()
 	ON_WM_NCMOUSELEAVE()
 	ON_WM_NCLBUTTONDOWN()
+	ON_MESSAGE_VOID(WM_IDLEUPDATECMDUI, OnIdleUpdateCmdUI)	
 	ON_WM_CREATE()
 	ON_MESSAGE(WMI_CEF_VIEW_COMMAND, OnCefViewCommand)
 	ON_MESSAGE(WMI_CEF_TAB_COMMAND, OnCefTabCommand)
@@ -159,6 +160,7 @@ void CMainFrame::CreateNewView(CEF_VIEW_INFO* pViewInfo)
 	SetActiveView(reinterpret_cast<CView*>(pNewView));
 	pNewView->Invalidate();
 	SetWindowPos(nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_DRAWFRAME);
+	PostMessage(WM_IDLEUPDATECMDUI, 0, 0);
 	Invalidate(TRUE);
 }
 
@@ -178,6 +180,7 @@ LRESULT CMainFrame::OnCefTabCommand(WPARAM wParam, LPARAM lParam)
 		if (m_navigateTabs.GetButtonsCount() == 0)
 			PostMessage(WM_SYSCOMMAND, SC_CLOSE);
 	}
+	PostMessage(WM_IDLEUPDATECMDUI, 0, 0);
 	return 0L;
 }
 
@@ -247,6 +250,7 @@ LRESULT CMainFrame::OnCefViewCommand(WPARAM wParam, LPARAM lParam)
 			}
 		}
 	}
+	PostMessage(WM_IDLEUPDATECMDUI, 0, 0);
 	return 0L;
 }
 
@@ -300,4 +304,21 @@ void CMainFrame::OnAppLoad()
 	viewInfo.szUrl = L"http://domain";
 	HWND hFrame = GetSafeHwnd();
 	::SendMessage(hFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
+}
+
+// afx_msg
+void CMainFrame::OnIdleUpdateCmdUI()
+{
+	CWnd* pActiveWnd = GetDlgItem(AFX_IDW_PANE_FIRST);
+	if (!pActiveWnd)
+		return;
+	LRESULT lr = pActiveWnd->SendMessage(WMI_CEF_IDLE_UPDATE_BUTTONS, WMI_CEF_IDLE_UPDATE_WPARAM_NAVIGATE);
+	bool canBack = LOWORD(lr) != 0;
+	bool canForward = HIWORD(lr) != 0;
+	bool r1 = m_navigateButtons.DisableButton(0 /*BACK*/, !canBack);
+	bool r2 = m_navigateButtons.DisableButton(1/*FORWARD*/, !canForward);
+	if (r1 || r2) {
+		//Invalidate();
+		InvalidateRect(CRect(0, 0, 32767, GetCaptionHeight()));
+	}
 }

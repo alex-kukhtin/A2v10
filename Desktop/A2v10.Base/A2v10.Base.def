@@ -45,6 +45,7 @@
 ??0CCaptionButtons@@QAE@I@Z
 ??0CCaptionNavigateButtons@@QAE@XZ
 ?MouseMove@CCaptionButtonsBase@@QAE_NVCPoint@@@Z
+?DisableButton@CCaptionNavigateButtons@@QAE_NH_N@Z
 ?ClearHighlight@CCaptionButtonsBase@@QAE_NXZ
 ?PressButton@CCaptionButtonsBase@@QAE_NVCPoint@@PAVCWnd@@@Z
 ?Draw@CCaptionButtonsBase@@UAEXPAVCDC@@@Z

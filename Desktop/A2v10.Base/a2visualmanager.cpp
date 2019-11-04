@@ -847,9 +847,12 @@ void CA2VisualManager::OnEraseTabsButton(CDC* pDC, CRect rect,
 }
 
 
-void CA2VisualManager::OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, bool bHighlighted, bool bPressed)
+void CA2VisualManager::OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, bool bHighlighted, bool bPressed, bool bDisabled)
 {
-	if (bPressed)
+	if (bDisabled) {
+		// do nothing
+	} 
+	else if (bPressed)
 	{
 		pDC->FillRect(rect, &m_brHighlightDn);
 		pDC->Draw3dRect(rect, m_clrMenuItemBorder, m_clrMenuItemBorder);
@@ -868,7 +871,7 @@ void CA2VisualManager::OnDrawA2CaptionButton(CDC* pDC, CRect rect, UINT nID, boo
 	int dy = (rect.Height() - imageSize.cy) / 2;
 	int dx = (rect.Width() - imageSize.cx) / 2;
 	int iImage = GetCmdMgr()->GetCmdImage(nID);
-	pMI->Draw(pDC, rect.left + dx, rect.top + dy, iImage);
+	pMI->Draw(pDC, rect.left + dx, rect.top + dy, iImage, FALSE/*hilite*/, bDisabled ? TRUE : FALSE /*disabled*/);
 	pMI->EndDrawImage(ds);
 }
 
