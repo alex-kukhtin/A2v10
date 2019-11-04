@@ -412,6 +412,7 @@
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\eusign\" />
     <Folder Include="Scss\" />
@@ -428,9 +429,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="app.ts\app.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
