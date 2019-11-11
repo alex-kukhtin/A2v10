@@ -25,7 +25,14 @@ namespace A2v10.Runtime
 
 	public class DesktopRequest
 	{
-		BaseController _controller = new BaseController();
+		private readonly BaseController _controller;
+		private readonly ISupportUserInfo _userInfo;
+
+		public DesktopRequest()
+		{
+			_controller = new BaseController();
+			_userInfo = ServiceLocator.Current.GetService<ISupportUserInfo>();
+		}
 
 		public String MimeType { get; private set; }
 		public String ContentDisposition { get; private set; }
@@ -154,9 +161,8 @@ namespace A2v10.Runtime
 			}
 		}
 
-		// TODO: current user ID and tenantId;
-		public Int64 UserId { get { return 50; /*TODO*/ } }
-		public Int32 TenantId { get { return 1; } }
+		public Int64 UserId { get { return _userInfo.UserInfo.UserId; } }
+		public Int32 TenantId { get { return 1; /*TODO: multi tenant mode */} }
 		public Int64 CompanyId => _controller.UserStateManager.UserCompanyId(TenantId, UserId);
 
 		public void SetUserTenantToParams(ExpandoObject prms)
@@ -198,8 +204,9 @@ namespace A2v10.Runtime
 
 		void RenderIndex(TextWriter writer)
 		{
-			// TODO: userName
-			String userName = "User Name";
+			String userName = _userInfo.UserInfo.PersonName;
+			if (String.IsNullOrEmpty(userName))
+				userName = _userInfo.UserInfo.UserName;
 			String locale = "uk"; // TODO: ctrl.CurrentLang
 			String theme = "site"; // TODO: ctrl.Host.Theme
 			var prms = new Dictionary<String, String>

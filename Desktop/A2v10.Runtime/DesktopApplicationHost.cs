@@ -9,7 +9,6 @@ using System.Data.SqlClient;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
-using A2v10.Request;
 using System.Text;
 using System.Configuration;
 
@@ -19,7 +18,7 @@ namespace A2v10.Runtime
 	//<add key = "appPath" value="c:/git/a2v10/apps" />
 	//<add key = "appKey" value="develop" />
 
-	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration
+	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration, ISupportUserInfo
 	{
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 
@@ -36,9 +35,14 @@ namespace A2v10.Runtime
 		private static String CurrentAppKey { get; set; }
 		private static String CurrentAppConnectionString { get; set; }
 		private static String CurrentHelpUrl { get; set; }
+		private static String CurrentUserName { get; set; }
+		private static String CurrentPersonName { get; set; }
+		private static FullUserInfo CurrentUserInfo { get; set; }
 
 		public String AppPath => CurrentAppPath;
 		public String AppKey => CurrentAppKey;
+
+		public FullUserInfo UserInfo => CurrentUserInfo;
 
 		public String SmtpConfig => throw new NotImplementedException(nameof(SmtpConfig));
 
@@ -150,6 +154,8 @@ namespace A2v10.Runtime
 			CurrentAppPath = appConfig.AppPath;
 			CurrentAppKey = appConfig.AppKey;
 			CurrentHelpUrl = appConfig.HelpUrl;
+
+			CurrentUserInfo = appConfig.UserInfo;
 		}
 
 		public String GetAppSettings(String source)

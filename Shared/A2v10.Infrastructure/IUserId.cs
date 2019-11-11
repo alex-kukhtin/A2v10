@@ -16,4 +16,15 @@ namespace A2v10.Infrastructure
 		Boolean IsTenantAdmin { get; set; }
 	}
 
+	public struct FullUserInfo
+	{
+		public Int64 UserId { get; set; }
+		public String UserName { get; set; }
+		public String PersonName { get; set; }
+	}
+
+	public interface ISupportUserInfo
+	{
+		FullUserInfo  UserInfo { get; }
+	}
 }
