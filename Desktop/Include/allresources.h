@@ -97,6 +97,7 @@
 #define ID_FILE_SAVE_ALL			32004
 #define ID_APP_START				32005
 #define ID_APP_LOAD					32006
+#define ID_APP_LICENSE				32007
 // edit: 32100
 #define ID_EDIT_FIND_IN_FILES	32100
 // browse: 32150

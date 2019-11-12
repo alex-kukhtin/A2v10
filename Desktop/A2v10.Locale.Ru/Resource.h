@@ -46,6 +46,7 @@
 #define IDS_ID_TOOLS_OPTIONS			17001
 #define IDS_LOADING						18000
 #define IDS_ID_SHOW_DEVTOOLS			17002
+#define ID_APP_LICENSE                  32007
 #define ID_SHOW_DEVTOOLS				32154
 #define ID_TOOLS_OPTIONS                32400
 

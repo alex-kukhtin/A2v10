@@ -3,14 +3,14 @@
 // Used by A2v10.Locale.Uk.rc
 //
 #define IDM_POPUP_MENU                  600
-#define IDM_POPUP_FORM					601
-#define IDM_POPUP_APPTOOLS				603
+#define IDM_POPUP_FORM                  601
+#define IDM_POPUP_APPTOOLS              603
 #define IDD_OPTION_GENERAL              800
-#define IDD_ABOUT						801
+#define IDD_ABOUT                       801
 #define IDS_OPTIONS_CAPTION             12000
 #define IDS_LANGUAGES                   12001
-#define IDS_TOOLBAR_STANDARD			12002
-#define IDS_TOOLBAR_DEBUG				12003
+#define IDS_TOOLBAR_STANDARD            12002
+#define IDS_TOOLBAR_DEBUG               12003
 #define IDC_DIALOG_FIRST                14000
 #define IDC_COMBO1                      14001
 #define IDC_COMBO2                      14002
@@ -27,26 +27,27 @@
 #define IDC_PROMPT3                     14013
 #define IDC_PROMPT4                     14014
 #define IDC_PROMPT5                     14015
-#define IDC_TEXT1						14016
-#define IDC_TEXT2						14017
-#define IDC_TEXT3						14018
-#define IDC_TEXT4						14019
-#define IDC_TEXT5						14020
-#define IDC_RADIO1			14021
-#define IDC_RADIO2			14022
-#define IDC_RADIO3			14023
-#define IDC_RADIO4			14024
-#define IDC_RADIO5			14025
-#define IDC_CHECK1			14026
-#define IDC_CHECK2			14027
-#define IDC_CHECK3			14028
-#define IDC_CHECK4			14029
-#define IDC_CHECK5			14030
-#define IDS_ID_APP_ABOUT				17000
-#define IDS_ID_TOOLS_OPTIONS			17001
-#define IDS_ID_SHOW_DEVTOOLS			17002
-#define IDS_LOADING						18000
-#define ID_SHOW_DEVTOOLS				32154
+#define IDC_TEXT1                       14016
+#define IDC_TEXT2                       14017
+#define IDC_TEXT3                       14018
+#define IDC_TEXT4                       14019
+#define IDC_TEXT5                       14020
+#define IDC_RADIO1                      14021
+#define IDC_RADIO2                      14022
+#define IDC_RADIO3                      14023
+#define IDC_RADIO4                      14024
+#define IDC_RADIO5                      14025
+#define IDC_CHECK1                      14026
+#define IDC_CHECK2                      14027
+#define IDC_CHECK3                      14028
+#define IDC_CHECK4                      14029
+#define IDC_CHECK5                      14030
+#define IDS_ID_APP_ABOUT                17000
+#define IDS_ID_TOOLS_OPTIONS            17001
+#define IDS_ID_SHOW_DEVTOOLS            17002
+#define IDS_LOADING                     18000
+#define ID_APP_LICENSE                  32007
+#define ID_SHOW_DEVTOOLS                32154
 #define ID_TOOLS_OPTIONS                32400
 
 // Next default values for new objects
@@ -54,7 +55,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        3001
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_COMMAND_VALUE         32773
 #define _APS_NEXT_CONTROL_VALUE         3000
 #define _APS_NEXT_SYMED_VALUE           3000
 #endif

@@ -25,13 +25,14 @@ CA2WinApp::~CA2WinApp()
 }
 
 BEGIN_MESSAGE_MAP(CA2WinApp, CWinAppEx)
-	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_FILE_SAVE_ALL, OnFileSaveAll)
 	// Windows
 	ON_COMMAND(ID_WINDOW_CLOSE_ALL, OnCloseAllDocuments)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_CLOSE_ALL, OnUpdateCloseAllDocuments)
 	// Tools
 	ON_COMMAND(ID_TOOLS_OPTIONS, OnToolsOptions)
+	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
+	ON_COMMAND(ID_APP_LICENSE, OnAppLicense)
 END_MESSAGE_MAP()
 
 // virtual 
@@ -171,4 +172,10 @@ void CA2WinApp::OnFileSaveAll()
 void CA2WinApp::OnToolsOptions()
 {
 	COptionsPropertySheet::DoOptions(COptionsPropertySheet::page_all);
+}
+
+// afx_msg
+void CA2WinApp::OnAppLicense()
+{
+	AfxMessageBox(L"License here");
 }

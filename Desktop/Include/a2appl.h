@@ -28,6 +28,7 @@ protected:
 	afx_msg void OnCloseAllDocuments();
 	afx_msg void OnUpdateCloseAllDocuments(CCmdUI* pCmdUI);
 	afx_msg void OnToolsOptions();
+	afx_msg void OnAppLicense();
 };
 
 class CA2CommandLineInfo : public CCommandLineInfo

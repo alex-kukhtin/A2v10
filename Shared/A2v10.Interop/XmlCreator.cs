@@ -329,6 +329,11 @@ namespace A2v10.Interop
 				return null;
 			switch (typeName)
 			{
+				case "integer":
+					var iVal = Convert.ToInt32(val);
+					if (isNillable && iVal == 0)
+						return null;
+					return val.ToString();
 				case "DGpercentAlloc":
 					var dVal1 = Convert.ToDecimal(val);
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal1); ;
@@ -350,6 +355,12 @@ namespace A2v10.Interop
 					if (isNillable && dVal3 == 0)
 						return null;
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
+				case "DGdecimal6":
+				case "Decimal6Column":
+					var dVal6 = Convert.ToDecimal(val);
+					if (isNillable && dVal6 == 0)
+						return null;
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.000000}", dVal6); ;
 				case "DGdecimal0":
 					var dVal0 = Convert.ToDecimal(val);
 					if (isNillable && dVal0 == 0)
