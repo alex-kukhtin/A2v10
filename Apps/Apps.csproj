@@ -82,8 +82,15 @@
     <Content Include="Develop\_assets\doclinks.min.css">
       <DependentUpon>doclinks.css</DependentUpon>
     </Content>
+    <Content Include="Develop\_assets\toolbar.css">
+      <DependentUpon>toolbar.less</DependentUpon>
+    </Content>
+    <Content Include="Develop\_assets\toolbar.min.css">
+      <DependentUpon>toolbar.css</DependentUpon>
+    </Content>
     <Content Include="tsconfig.json" />
     <None Include="Develop\_assets\doclinks.less" />
+    <None Include="Develop\_assets\toolbar.less" />
     <None Include="Develop\_tests\Tests.Runner.config" />
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>

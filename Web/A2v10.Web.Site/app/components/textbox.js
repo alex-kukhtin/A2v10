@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190717-7506*/
+/*20191115-7578*/
 /*components/textbox.js*/
 
 (function () {
@@ -9,11 +9,11 @@
 	const mask = require('std:mask');
 
 	let textBoxTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-if="password" type="password" style="display:none" autocomplete="new-password"/>
-		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText" :id="testId"
+		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
 				v-on:input="onInput($event.target.value)"
@@ -28,10 +28,10 @@
 `;
 
 	let textAreaTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
+		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			v-on:keypress="onKey($event)"
@@ -45,10 +45,10 @@
 `;
 
 	let staticTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>

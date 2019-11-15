@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190805-7512
+// 20191115-7578
 // components/control.js
 
 (function () {

@@ -24,7 +24,7 @@
 					</Button.DropDown>
 				</Button>
 			</StackPanel>
-		<Toolbar Style="Default">
+		<Toolbar Style="Default" CssClass="my-toolbar">
 			<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
 			<Button Icon="EyeDisabled" Command="{BindCmd OpenSelected, Url='/Sales/Invoice/Empty', Argument={Bind Documents}, NewWindow=False}">Открыть</Button>

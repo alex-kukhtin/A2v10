@@ -4232,7 +4232,7 @@ app.modules['std:routing'] = function () {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190805-7512
+// 20191115-7578
 // components/control.js
 
 (function () {
@@ -4490,7 +4490,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190717-7506*/
+/*20191115-7578*/
 /*components/textbox.js*/
 
 (function () {
@@ -4499,11 +4499,11 @@ Vue.component('validator-control', {
 	const mask = require('std:mask');
 
 	let textBoxTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-if="password" type="password" style="display:none" autocomplete="new-password"/>
-		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText" :id="testId"
+		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
 				v-on:input="onInput($event.target.value)"
@@ -4518,10 +4518,10 @@ Vue.component('validator-control', {
 `;
 
 	let textAreaTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :id="testId"
+		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			v-on:keypress="onKey($event)"
@@ -4535,10 +4535,10 @@ Vue.component('validator-control', {
 `;
 
 	let staticTemplate =
-`<div :class="cssClass()">
+`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" :id="testId"/>
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" />
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -4696,7 +4696,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190729-7510*/
+/*20191115-7578*/
 /*components/combobox.js*/
 
 (function () {
@@ -4705,14 +4705,14 @@ Vue.component('validator-control', {
 	const utils = require('std:utils');
 
 	let comboBoxTemplate =
-`<div :class="cssClass()" v-lazy="itemsSource">
+`<div :class="cssClass()" v-lazy="itemsSource" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<div class="select-wrapper">
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>
-		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()" :id="testId">
+		<select v-focus v-model="cmbValue" :disabled="disabled" :tabindex="tabIndex" ref="sel" :title="getWrapText()">
 			<slot>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" 
 					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
@@ -5536,8 +5536,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190903-7551
-
+/*20191115-7578*/
 // components/selector.js
 
 /*TODO*/
@@ -5556,11 +5555,11 @@ Vue.component('validator-control', {
 	Vue.component('a2-selector', {
 		extends: baseControl,
 		template: `
-<div :class="cssClass2()">
+<div :class="cssClass2()"  :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<div v-if="isCombo" class="selector-combo" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
-		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" :id="testId" v-else
+		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" v-else
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
 			:disabled="disabled" />
 		<slot></slot>
@@ -12451,7 +12450,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180815-7523*/
+/*20181115-7578*/
 
 (function () {
 
@@ -12463,7 +12462,7 @@ Vue.directive('resize', {
 	window.__tests__ = {
 		$navigate: navigate,
 		$isReady: function () {
-			console.dir('from isReady:' + window.__requestsCount__);
+			//console.dir('from isReady:' + window.__requestsCount__);
 			return document.readyState === 'complete' &&
 				window.__requestsCount__ + window.__loadsCount__ === 0;
 		},

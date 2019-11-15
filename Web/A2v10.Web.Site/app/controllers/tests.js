@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180815-7523*/
+/*20181115-7578*/
 
 (function () {
 
@@ -12,7 +12,7 @@
 	window.__tests__ = {
 		$navigate: navigate,
 		$isReady: function () {
-			console.dir('from isReady:' + window.__requestsCount__);
+			//console.dir('from isReady:' + window.__requestsCount__);
 			return document.readyState === 'complete' &&
 				window.__requestsCount__ + window.__loadsCount__ === 0;
 		},
