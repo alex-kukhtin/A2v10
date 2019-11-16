@@ -167,9 +167,10 @@ namespace A2v10.Runtime
 
 		public void SetUserTenantToParams(ExpandoObject prms)
 		{
-			A2v10.Infrastructure.DynamicHelpers.Set(prms, "UserId", UserId);
-			A2v10.Infrastructure.DynamicHelpers.Set(prms, "TenantId", TenantId);
-
+			prms.Set("UserId", UserId);
+			prms.Set("TenantId", TenantId);
+			//A2v10.Infrastructure.DynamicHelpers.Set(prms, "UserId", UserId);
+			//A2v10.Infrastructure.DynamicHelpers.Set(prms, "TenantId", TenantId);
 		}
 
 		void SetUserCompanyToParams(ExpandoObject prms)

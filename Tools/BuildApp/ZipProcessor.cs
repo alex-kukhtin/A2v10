@@ -45,20 +45,39 @@ namespace BuildApp
 				String fn = Path.GetFileName(f).ToLowerInvariant();
 				if (IsSkipFile(fn, dir))
 					continue;
+				if (IsSkipBox(f))
+					continue;
 				String zipPath = Path.Combine(dir, fn).Replace("\\", "/");
+				zipPath = zipPath.Replace(".box.", ".");
 				za.CreateEntryFromFile(f, zipPath);
 				Console.WriteLine(zipPath);
 				Count++;
 			}
 			foreach (var d in Directory.GetDirectories(srcDir))
 			{
-				String subDir = Path.Combine(dir, Path.GetFileName(d)).Replace("\\", "/");
+				String subDir = Path.Combine(dir, Path.GetFileName(d)).Replace("\\", "/").ToLowerInvariant();
 				AddFilesFromDirectory(za, subDir);
 			}
 		}
 
+		Boolean IsSkipBox(String path)
+		{
+			// skip file if '*.box.*' is exists
+			path = path.ToLowerInvariant();
+			if (path.Contains(".box."))
+				return false;
+			String ext = Path.GetExtension(path);
+			String fileName = Path.GetFileNameWithoutExtension(path);
+			String dir = Path.GetDirectoryName(path);
+			String newFile = $"{Path.Combine(dir, fileName)}.box{ext}";
+			return File.Exists(newFile);
+
+		}
+
 		Boolean IsSkipFile(String fileName, String dirName)
 		{
+			if (dirName.StartsWith("_platform") || dirName.StartsWith("_api") || dirName.StartsWith("_meta") || dirName.StartsWith("_emails"))
+				return true;
 			String ext = Path.GetExtension(fileName).ToLowerInvariant();
 			if (ext == ".sql")
 				return true;
