@@ -137,12 +137,14 @@ namespace A2v10.Request
 
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
 
+			Boolean isUserIsAdmin = userInfo.IsAdmin && _host.IsAdminAppPresent;
+
 			StringBuilder sb = new StringBuilder(shell);
 			sb.Replace("$(Menu)", jsonMenu)
 			.Replace("$(Companies)", jsonCompanies ?? "null")
 			.Replace("$(Period)", jsonPeriod ?? "null")
 			.Replace("$(AppVersion)", _host.AppVersion)
-			.Replace("$(Admin)", userInfo.IsAdmin ? "true" : "false")
+			.Replace("$(Admin)", isUserIsAdmin ? "true" : "false")
 			.Replace("$(TenantAdmin)", userInfo.IsTenantAdmin ? "true" : "false")
 			.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false")
 			.Replace("$(AppData)", GetAppData());

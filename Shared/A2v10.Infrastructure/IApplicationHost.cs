@@ -24,6 +24,7 @@ namespace A2v10.Infrastructure
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }
 		Boolean IsDTCEnabled { get; }
+		Boolean IsAdminAppPresent { get; }
 
 		String UseClaims { get; }
 

@@ -101,6 +101,19 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public Boolean IsAdminAppPresent {
+			get
+			{
+				String dirName = Path.Combine(AppPath, "Admin").ToLowerInvariant();
+				if (Directory.Exists(dirName))
+					return true;
+				String appFile = Path.Combine(AppPath, "admin.app");
+				if (File.Exists(appFile))
+					return true;
+				return false;
+			}
+		}
+
 		Boolean IsAppSettingsIsTrue(String name)
 		{
 			var mt = ConfigurationManager.AppSettings[name];

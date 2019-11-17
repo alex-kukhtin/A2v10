@@ -99,6 +99,7 @@ namespace A2v10.Runtime
 
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDTCEnabled => false;
+		public Boolean IsAdminAppPresent => false;
 		public String UseClaims => null;
 		public Int32? TenantId { get; set; } 
 		public String CatalogDataSource => "Catalog";

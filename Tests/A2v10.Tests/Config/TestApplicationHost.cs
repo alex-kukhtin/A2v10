@@ -80,6 +80,7 @@ namespace A2v10.Tests.Config
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDebugConfiguration => true;
 		public Boolean IsDTCEnabled => false;
+		public Boolean IsAdminAppPresent => false;
 
 		public Int32? TenantId { get; set; }
 		public String CatalogDataSource => null;
