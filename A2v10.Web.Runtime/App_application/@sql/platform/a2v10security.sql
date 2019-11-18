@@ -126,6 +126,7 @@ begin
 		Tenant int null 
 			constraint FK_Users_Tenant_Tenants foreign key references a2security.Tenants(Id),
 		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
+		DomainUser nvarchar(255) null,
 		Void bit not null constraint DF_Users_Void default(0),
 		SecurityStamp nvarchar(max)	not null,
 		PasswordHash nvarchar(max)	null,
@@ -170,6 +171,12 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'DomainUser')
+begin
+	alter table a2security.Users add DomainUser nvarchar(255) null;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'ChangePasswordEnabled')
 begin
 	alter table a2security.Users add ChangePasswordEnabled bit not null constraint DF_Users_ChangePasswordEnabled default(1) with values;
@@ -205,6 +212,10 @@ if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2se
 begin
 	alter table a2security.Users add Referral bigint null;
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Users') and name = N'UNQ_Users_DomainUser')
+	create unique index UNQ_Users_DomainUser on a2security.Users(DomainUser) where DomainUser is not null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Tenant')
@@ -414,7 +425,7 @@ go
 ------------------------------------------------
 create view a2security.ViewUsers
 as
-	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
+	select Id, UserName, DomainUser, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
 		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan,
