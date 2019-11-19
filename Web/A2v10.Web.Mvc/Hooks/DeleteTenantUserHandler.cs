@@ -70,7 +70,7 @@ namespace A2v10.Web.Mvc.Hooks
 			void ExecuteSql()
 			{
 				_dbContext.Execute<DeleteTenantUserParams>(_host.TenantDataSource, "a2security_tenant.[DeleteUser]", prms);
-				_dbContext.Execute<DeleteTenantUserParams>(_host.CatalogDataSource, "a2security.[DeleteTeanatUser]", prms);
+				_dbContext.Execute<DeleteTenantUserParams>(_host.CatalogDataSource, "a2security.[DeleteTenantUser]", prms);
 				//await _userManager.DeleteAsync(appUser);
 
 				if (_host.IsMultiCompany && _host.IsMultiTenant)
