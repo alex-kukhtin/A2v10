@@ -186,6 +186,16 @@ namespace A2v10.Runtime.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] publicKeys {
+            get {
+                object obj = ResourceManager.GetObject("publicKeys", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
         ///
         ///(function () {

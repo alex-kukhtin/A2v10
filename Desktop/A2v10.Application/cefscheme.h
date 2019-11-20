@@ -19,6 +19,9 @@ public:
 	virtual void Cancel() override {};
 	static void RegisterSchemaHandlerFactory();
 private:
+
+	void CheckLicense(const std::string& url);
+
 	std::vector<byte> data_;
 	std::string mime_type_;
 	std::string content_disposition_;

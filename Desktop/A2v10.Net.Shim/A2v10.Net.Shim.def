@@ -14,4 +14,5 @@ EXPORTS
 ?UploadFiles@CDotNetRuntime@@SAXPB_W0AAV?$vector@EV?$allocator@E@std@@@std@@@Z
 ?StartApplication@CDotNetRuntime@@SAXPB_W@Z
 ?GetLastStatusCode@CDotNetRuntime@@SAHXZ
+?VerifyLicense@CDotNetRuntime@@SAHXZ
 

@@ -29,6 +29,7 @@ public:
 	static std::wstring GetLastMime();
 	static std::wstring GetLastContentDisposition();
 	static int GetLastStatusCode();
+	static int VerifyLicense();
 };
 
 #undef AFX_DATA

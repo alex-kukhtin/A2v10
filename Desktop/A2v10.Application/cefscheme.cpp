@@ -9,6 +9,8 @@
 #define new DEBUG_NEW
 #endif
 
+#define LIC_NO_ERROR		0
+
 // virutal
 CClientSchemeHandler::~CClientSchemeHandler() 
 {
@@ -78,6 +80,11 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 			}
 		}
 	}
+	else 
+	{
+		// GET
+		CheckLicense(url);
+	}
 
 	std::string mime;
 	std::string content_disposition;
@@ -107,6 +114,21 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 		return true;
 	}
 	return false;
+}
+
+void CClientSchemeHandler::CheckLicense(const std::string& url) 
+{
+	if (url.find("_page") == std::string::npos)
+		return;
+	int licRC = CDotNetRuntime::VerifyLicense();
+	if (licRC == LIC_NO_ERROR)
+		return;
+	CString caption;
+	CString msg;
+	caption.LoadString(IDS_LIC_ERROR_BASE);
+	msg.LoadString(IDS_LIC_ERROR_BASE + licRC);
+	HWND hFrame = AfxGetApp()->m_pMainWnd->GetSafeHwnd();
+	::MessageBox(hFrame, (LPCWSTR) msg, (LPCWSTR) caption, MB_OK | MB_ICONHAND);
 }
 
 // virtual 

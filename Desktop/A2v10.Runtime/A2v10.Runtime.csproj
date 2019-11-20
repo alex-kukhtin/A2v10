@@ -38,13 +38,32 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.AccessControl.4.6.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Xml, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.Xml.4.6.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Permissions.4.6.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Principal.Windows.4.6.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfiguration.cs" />
     <Compile Include="Desktop.cs" />
     <Compile Include="DesktopApplicationHost.cs" />
+    <Compile Include="DesktopLicenseManager.cs" />
     <Compile Include="DesktopLocalizer.cs" />
     <Compile Include="DesktopProfiler.cs" />
     <Compile Include="DesktopRequest.cs" />
@@ -92,7 +111,7 @@
       <Name>A2v10.Web.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
-      <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
+      <Project>{478240ab-9772-4f70-8e31-bd0303cbf836}</Project>
       <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
@@ -101,8 +120,10 @@
     <Content Include="JavaScript\app.js" />
     <Content Include="JavaScript\form.form.js" />
     <Content Include="JavaScript\solution.js" />
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\default.uk.txt" />
+    <None Include="Resources\publicKeys.bin" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

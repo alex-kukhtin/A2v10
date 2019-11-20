@@ -17,6 +17,18 @@ using A2v10.Infrastructure;
 
 namespace A2v10RuntimeNet
 {
+	// see cefscheme.cpp & resource files
+	public enum LicenseErrors
+	{
+		NoError = 0,
+		NotInstalled = 1,
+		BadSignature = 2,
+		Expired = 3,
+		BadCompany = 4,
+		FileCorrupt = 5,
+		Unknown = 6
+	}
+
 	public static class Desktop
 	{
 		static IScriptContext _scriptContext;
@@ -150,6 +162,7 @@ namespace A2v10RuntimeNet
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				IUserStateManager userStateManager = new DesktopUserStateManager(host, dbContext);
+				ILicenseManager licManager = new DesktopLicenseManager(dbContext);
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IDbContext>(dbContext);
@@ -159,6 +172,7 @@ namespace A2v10RuntimeNet
 				service.RegisterService<ILocalizer>(localizer);
 				service.RegisterService<IUserStateManager>(userStateManager);
 				service.RegisterService<ISupportUserInfo>(host);
+				service.RegisterService<ILicenseManager>(licManager);
 				host.TenantId = 1;
 			};
 		}
@@ -180,6 +194,38 @@ namespace A2v10RuntimeNet
 		public static Int32 GetLastStatusCode()
 		{
 			return _lastStatusCode;
+		}
+
+		public static Int32 VerifyLicense()
+		{
+			try
+			{
+				String companyCode = DesktopApplicationHost.GetCompanyCode();
+				var licManager = ServiceLocator.Current.GetService<ILicenseManager>();
+				if (String.IsNullOrEmpty(companyCode))
+					return (Int32)LicenseErrors.BadCompany;
+				var rc = licManager.VerifyLicense(companyCode);
+				switch (rc)
+				{
+					case LicenseState.Ok:
+						return (Int32)LicenseErrors.NoError;
+					case LicenseState.NotFound:
+						return (Int32)LicenseErrors.NotInstalled;
+					case LicenseState.InvalidSignature:
+						return (Int32)LicenseErrors.BadSignature;
+					case LicenseState.Expired:
+						return (Int32)LicenseErrors.Expired;
+					case LicenseState.InvalidCompany:
+						return (Int32)LicenseErrors.BadCompany;
+					case LicenseState.FileCorrupt:
+						return (Int32)LicenseErrors.FileCorrupt;
+				}
+				return (Int32)LicenseErrors.Unknown;
+			}
+			catch (Exception /*ex*/)
+			{
+				return (Int32)LicenseErrors.Unknown;
+			}
 		}
 
 		public static Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)

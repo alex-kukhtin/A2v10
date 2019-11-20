@@ -35,9 +35,11 @@ namespace A2v10.Runtime
 		private static String CurrentAppKey { get; set; }
 		private static String CurrentAppConnectionString { get; set; }
 		private static String CurrentHelpUrl { get; set; }
+
 		private static String CurrentUserName { get; set; }
 		private static String CurrentPersonName { get; set; }
 		private static FullUserInfo CurrentUserInfo { get; set; }
+		private static Dictionary<Int64, String> CurrentCompanyMap { get; set; }
 
 		public String AppPath => CurrentAppPath;
 		public String AppKey => CurrentAppKey;
@@ -155,8 +157,17 @@ namespace A2v10.Runtime
 			CurrentAppPath = appConfig.AppPath;
 			CurrentAppKey = appConfig.AppKey;
 			CurrentHelpUrl = appConfig.HelpUrl;
-
 			CurrentUserInfo = appConfig.UserInfo;
+			CurrentCompanyMap = appConfig.CompanyMap;
+		}
+
+		internal static String GetCompanyCode()
+		{
+			var userStateManager = ServiceLocator.Current.GetService<IUserStateManager>();
+			Int64 companyId = userStateManager.UserCompanyId(1, CurrentUserInfo.UserId);
+			if (CurrentCompanyMap.ContainsKey(companyId))
+				return CurrentCompanyMap[companyId];
+			return String.Empty;
 		}
 
 		public String GetAppSettings(String source)

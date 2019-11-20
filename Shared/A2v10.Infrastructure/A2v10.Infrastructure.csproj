@@ -49,6 +49,7 @@
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IApplicationReader.cs" />
+    <Compile Include="ILicenseManager.cs" />
     <Compile Include="Implementation\NullMessaging.cs" />
     <Compile Include="IQueuedMessage.cs" />
     <Compile Include="IBackgroundProcessing.cs" />

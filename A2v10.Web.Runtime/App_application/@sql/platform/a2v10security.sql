@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 16 aug 2019
-module version : 7526
+Last updated : 20 nov 2019
+module version : 7583
 */
 
 ------------------------------------------------
@@ -950,6 +950,51 @@ begin
 		insert into a2security.Groups(Id, [Key], [Name]) values (1, N'Users', N'@[AllUsers]');
 	if not exists(select * from a2security.Groups where Id = 77)
 		insert into a2security.Groups(Id, [Key], [Name]) values (77, N'Admins', N'@[AdminUsers]');
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'License')
+begin
+	create table a2security.License
+	(
+		[Text] nvarchar(max) not null,
+		DateCreated datetime not null constraint DF_License_UtcDateCreated default(getutcdate()),
+		DateModified datetime not null constraint DF_License_UtcDateModified default (getutcdate())
+	);
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'License.Load')
+	drop procedure a2security.[License.Load]
+go
+------------------------------------------------
+create procedure a2security.[License.Load]
+as
+begin
+	set nocount on;
+	select [Text] from a2security.License;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'License.Update')
+	drop procedure a2security.[License.Update]
+go
+------------------------------------------------
+create procedure a2security.[License.Update]
+@License nvarchar(max),
+@Code nvarchar(255),
+@Name nvarchar(255)
+as
+begin
+	set nocount on;
+	if exists(select * from a2security.License)
+		update a2security.License set [Text]=@License, DateModified = getutcdate();
+	else
+		insert into a2security.License ([Text]) values (@License);
+
+	update a2.Agents set Code=@Code, [Name]=@Name where TenantId = 1 and Id=1 and Kind = N'COMP';
+
+	select [Text] from a2security.License;
 end
 go
 ------------------------------------------------
