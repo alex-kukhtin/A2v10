@@ -5440,10 +5440,13 @@ TODO:
 .panel {
   margin-bottom: 12px;
   background-color: white;
-}
-.panel .panel-content {
-  height: 100%;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  /* ???
+	.panel-content {
+		height:100%; //TODO:???
+	}
+	*/
 }
 .panel .panel-header {
   padding: 0 0.625rem;

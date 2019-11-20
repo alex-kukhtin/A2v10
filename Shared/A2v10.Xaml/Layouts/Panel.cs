@@ -34,10 +34,10 @@ namespace A2v10.Xaml
 
 		public ShadowStyle DropShadow { get; set; }
 		public Length Height { get; set; }
-
 		public Boolean Compact { get; set; }
 
 		public Popover Hint { get; set; }
+
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{

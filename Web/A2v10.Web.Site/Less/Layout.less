@@ -43,11 +43,15 @@
 .panel {
 	margin-bottom: 12px;
 	background-color: white;
+	// flex: prevent margin collapse
+	display:flex;
+	flex-direction:column;
 
+	/* ???
 	.panel-content {
 		height:100%; //TODO:???
-		overflow:auto; // prevent margin collapsing
 	}
+	*/
 
 	.panel-header {
 		padding: 0 .625rem;
