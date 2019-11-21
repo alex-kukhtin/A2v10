@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 20 nov 2019
-module version : 7583
+Last updated : 21 nov 2019
+module version : 7586
 */
 
 ------------------------------------------------
@@ -981,9 +981,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2se
 go
 ------------------------------------------------
 create procedure a2security.[License.Update]
-@License nvarchar(max),
-@Code nvarchar(255),
-@Name nvarchar(255)
+@License nvarchar(max)
 as
 begin
 	set nocount on;
@@ -991,10 +989,6 @@ begin
 		update a2security.License set [Text]=@License, DateModified = getutcdate();
 	else
 		insert into a2security.License ([Text]) values (@License);
-
-	update a2.Agents set Code=@Code, [Name]=@Name where TenantId = 1 and Id=1 and Kind = N'COMP';
-
-	select [Text] from a2security.License;
 end
 go
 ------------------------------------------------

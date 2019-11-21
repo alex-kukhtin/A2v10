@@ -1006,6 +1006,12 @@ td.vert > .vcell {
     opacity: 0;
   }
 }
+.page-break-before {
+  page-break-before: always;
+}
+.page-break-after {
+  page-break-after: always;
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;

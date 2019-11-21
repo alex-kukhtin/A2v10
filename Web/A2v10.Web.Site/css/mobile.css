@@ -3872,6 +3872,12 @@ td.vert > .vcell {
     opacity: 0;
   }
 }
+.page-break-before {
+  page-break-before: always;
+}
+.page-break-after {
+  page-break-after: always;
+}
 .popover-wrapper {
   position: relative;
   display: inline-block;
