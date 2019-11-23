@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191115-7578*/
+/*20191123-7587*/
 // components/selector.js
 
 /*TODO*/
@@ -25,7 +25,7 @@
 		<div v-if="isCombo" class="selector-combo" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" v-else
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
-			:disabled="disabled" />
+			:disabled="disabled" @click="clickInput($event)"/>
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
 		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible">&#x2715</a>
@@ -224,6 +224,13 @@
 				} else if (event.which === 13) {
 					if (this.hasText)
 						this.blur();
+				}
+			},
+			clickInput(event) {
+				if (this.caret && !this.isOpen) {
+					event.stopPropagation();
+					event.preventDefault();
+					this.open();
 				}
 			},
 			keyDown(event) {

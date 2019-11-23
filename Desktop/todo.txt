@@ -6,10 +6,10 @@
 
 == Application 
 
-6. Убрать "Зворотній зв'язок" app.desktop.json ?
-13. Login dialog
+13. Login dialog (сохранять сервер и базу)
 14. Сменить пароль
 15. Выход из интерфейса (account/login?)
 16. Лицензии
+17. Login dialog - sql auth
 
 
