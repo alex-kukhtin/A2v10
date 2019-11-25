@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 
 		public HyperlinkStyle Style { get; set; }
 		public Boolean HideCaret { get; set; }
+		public String TestId { get; set; }
 
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -93,6 +94,9 @@ namespace A2v10.Xaml
 
 			if (bHasDropDown)
 				tag.MergeAttribute("toggle", String.Empty);
+
+			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
+				tag.MergeAttribute("test-id", TestId);
 
 			tag.RenderStart(context);
 
