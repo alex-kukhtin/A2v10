@@ -38,6 +38,7 @@ namespace A2v10.Xaml
 
 		public Popover Hint { get; set; }
 
+		public String TestId { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -46,6 +47,8 @@ namespace A2v10.Xaml
 			var panel = new TagBuilder("a2-panel", null, IsInGrid);
 			MergeBindingAttributeBool(panel, context, ":initial-collapsed", nameof(Collapsed), Collapsed);
 			MergeBindingAttributeBool(panel, context, ":collapsible", nameof(Collapsible), Collapsible);
+			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
+				panel.MergeAttribute("test-id", TestId);
 			panel.AddCssClassBool(Compact, "compact");
 			if (!HasHeader)
 				panel.MergeAttribute(":no-header", "true");

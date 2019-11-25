@@ -9195,24 +9195,25 @@ Vue.component("a2-taskpad", {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190309-7462
+// 20190309-7488
 // components/panel.js
 
 Vue.component('a2-panel', {
 	template:
-		`<div :class="cssClass">
-    <div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
-        <slot name='header'></slot>
-	    <span v-if="collapsible" class="ico panel-collapse-handle"></span>
-    </div>
-    <slot v-if="expanded"></slot>
+`<div :class="cssClass" :test-id="testId">
+	<div class="panel-header" @click.prevent="toggle" v-if="!noHeader">
+		<slot name='header'></slot>
+		<span v-if="collapsible" class="ico panel-collapse-handle"></span>
+	</div>
+	<slot v-if="expanded"></slot>
 </div>
 `,
 	props: {
 		initialCollapsed: Boolean,
 		collapsible: Boolean,
 		panelStyle: String,
-		noHeader: Boolean
+		noHeader: Boolean,
+		testId: String
 	},
 	data() {
 		return {
