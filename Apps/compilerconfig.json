@@ -1,10 +1,2 @@
 ﻿[
-  {
-    "outputFile": "Develop/_assets/doclinks.css",
-    "inputFile": "Develop/_assets/doclinks.less"
-  },
-  {
-    "outputFile": "Develop/_assets/toolbar.css",
-    "inputFile": "Develop/_assets/toolbar.less"
-  }
 ]
