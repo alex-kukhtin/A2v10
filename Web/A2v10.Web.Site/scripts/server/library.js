@@ -35,7 +35,6 @@ var require = function require(module, noerror) {
 	throw new Error('module "' + module + '" not found');
 };
 
-
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 // 20181201-7379
