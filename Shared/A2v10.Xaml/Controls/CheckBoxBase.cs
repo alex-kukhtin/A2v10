@@ -72,6 +72,8 @@ namespace A2v10.Xaml
 			if (valBind != null)
 			{
 				input.MergeAttribute("v-model", valBind.GetPath(context));
+				// for testing purposes
+				input.MergeAttribute("v-bind:xcheck", valBind.GetPath(context));
 			}
 		}
 
