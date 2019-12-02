@@ -5917,7 +5917,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190818-7528
+// 20191202-7591
 // components/datagrid.js*/
 
 (function () {
@@ -6590,6 +6590,8 @@ Vue.component('validator-control', {
 					if (this.itemsSource.length)
 						return false;
 					return mi.HasRows === false;
+				} else {
+					return this.itemsSource.length === 0;
 				}
 				return false;
 			}
@@ -6893,15 +6895,15 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-//20190906-7554
+//20191202-7591
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper" :style="{top: top}" :class="{show: isShowHover}">
 	<span toggle class="popover-title" v-on:mouseover="mouseover" v-on:mouseout="mouseout"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
-	<div class="popup-body" :style="{width: width}">
-		<div class="arrow" />
+	<div class="popup-body" :style="{width: width, left:offsetLeft}">
+		<div class="arrow" :style="{left:offsetArrowLeft}"/>
 		<div v-if="visible">
 			<include :src="popoverUrl"/>
 		</div>
@@ -6930,11 +6932,20 @@ Vue.component('popover', {
 		title: String,
 		width: String,
 		top: String,
-		hover: Boolean
+		hover: Boolean,
+		offsetX: String
 	},
 	computed: {
 		hasIcon() {
 			return !!this.icon;
+		},
+		offsetLeft() {
+			return this.offsetX || undefined;
+		},
+		offsetArrowLeft() {
+			if (this.offsetX && this.offsetX.indexOf('-') === 0)
+				return `calc(${this.offsetX.substring(1)} + 6px)`;
+			return undefined;
 		},
 		iconClass() {
 			let cls = "ico po-ico";

@@ -192,6 +192,7 @@
     <Content Include="TestMobile\testmobile.js" />
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
+    <Content Include="TestPages\nativeHost.html" />
     <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\slot.html" />
     <Content Include="tests\format.js" />

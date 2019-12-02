@@ -3770,10 +3770,10 @@ iframe.eusign-iframe {
   width: 100%;
 }
 .bold {
-  font-weight: 500;
+  font-weight: 500!important;
 }
 .no-bold {
-  font-weight: normal;
+  font-weight: normal!important;
 }
 .no-wrap {
   white-space: nowrap;
@@ -3871,12 +3871,6 @@ td.vert > .vcell {
   to {
     opacity: 0;
   }
-}
-.page-break-before {
-  page-break-before: always;
-}
-.page-break-after {
-  page-break-after: always;
 }
 .popover-wrapper {
   position: relative;
@@ -4197,10 +4191,10 @@ td.vert > .vcell {
   width: 100%;
 }
 .bold {
-  font-weight: 500;
+  font-weight: 500!important;
 }
 .no-bold {
-  font-weight: normal;
+  font-weight: normal!important;
 }
 .no-wrap {
   white-space: nowrap;

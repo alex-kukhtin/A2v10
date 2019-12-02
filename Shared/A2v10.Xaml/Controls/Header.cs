@@ -11,6 +11,8 @@ namespace A2v10.Xaml
 
 		public String Badge { get; set; }
 
+		public Boolean? Bold { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -25,6 +27,7 @@ namespace A2v10.Xaml
 
 			var h = new TagBuilder(tagName, "a2-header", IsInGrid);
 			MergeAttributes(h, context);
+			h.AddCssClassBoolNo(Bold, "bold");
 			if (Align != TextAlign.Left)
 				h.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			Boolean bHasBadge = GetBinding(nameof(Badge)) != null ||

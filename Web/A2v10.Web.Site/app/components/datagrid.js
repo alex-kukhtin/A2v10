@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20190818-7528
+// 20191202-7591
 // components/datagrid.js*/
 
 (function () {
@@ -673,6 +673,8 @@
 					if (this.itemsSource.length)
 						return false;
 					return mi.HasRows === false;
+				} else {
+					return this.itemsSource.length === 0;
 				}
 				return false;
 			}
