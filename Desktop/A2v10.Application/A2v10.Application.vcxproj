@@ -230,6 +230,7 @@
     <ResourceCompile Include="A2v10.Application.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\a2logo_256.ico" />
     <Image Include="res\A2v10.Application.ico" />
     <Image Include="res\A2v10.ApplicationDoc.ico" />
   </ItemGroup>
