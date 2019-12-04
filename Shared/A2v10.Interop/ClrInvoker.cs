@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
@@ -14,10 +13,16 @@ namespace A2v10.Interop
 	public class ClrInvoker
 	{
 		private Boolean _enableThrow;
+		private IRequestInfo _requestInfo;
 
 		Object DefaultValue(Type tp)
 		{
 			return tp.IsValueType ? Activator.CreateInstance(tp) : null;
+		}
+
+		public void SetRequestInfo(IRequestInfo info)
+		{
+			_requestInfo = info;
 		}
 
 		public static void CallInject(Object instance)
@@ -41,6 +46,17 @@ namespace A2v10.Interop
 				}
 			}
 			minject.Invoke(instance, injparsToCall.ToArray());
+		}
+
+		public static void CallSetRequestInfo(Object instance, IRequestInfo info)
+		{
+			if (info == null)
+				return;
+			var type = instance.GetType();
+			var miSetRI = type.GetMethod("SetRequestInfo", BindingFlags.Public | BindingFlags.Instance);
+			if (miSetRI == null)
+				return;
+			miSetRI.Invoke(instance, new Object[] { info });
 		}
 
 		Object[] GetParameters(MethodInfo method, ExpandoObject parameters)
@@ -135,6 +151,7 @@ namespace A2v10.Interop
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
+			CallSetRequestInfo(instance, _requestInfo);
 			if (_enableThrow)
 				EnableThrowForInstance(instance);
 			return CallInvoke(instance, parameters);
@@ -144,6 +161,7 @@ namespace A2v10.Interop
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
+			CallSetRequestInfo(instance, _requestInfo);
 			if (_enableThrow)
 				EnableThrowForInstance(instance);
 			return await CallInvokeAsync(instance, parameters);

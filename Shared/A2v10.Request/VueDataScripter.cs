@@ -457,7 +457,7 @@ const vm = new DataModelController({
 				pos = tokenizer.GetTextPos();
 				return String.Empty;
 			}
-			catch (Exception ex)
+			catch (Exception /*ex*/)
 			{
 				// parser error
 				if (tokenizer != null)

@@ -62,6 +62,7 @@
     <Compile Include="IMessageService.cs" />
     <Compile Include="Implementation\NullLocalizer.cs" />
     <Compile Include="Implementation\NullProfiler.cs" />
+    <Compile Include="IRequestInfo.cs" />
     <Compile Include="IScriptProcessor.cs" />
     <Compile Include="ISmsService.cs" />
     <Compile Include="IUserId.cs" />

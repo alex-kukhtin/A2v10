@@ -23,6 +23,29 @@ using A2v10.Web.Identity;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+
+	public class ClrRequestInfo : IRequestInfo
+	{
+		private HttpRequestBase _request;
+
+		public ClrRequestInfo(HttpRequestBase request)
+		{
+			_request = request;
+		}
+
+		public String HostAddress => _request.UserHostAddress;
+		public String HostName => _request.UserHostName;
+		public String HostText
+		{
+			get
+			{
+				if (_request.UserHostName == _request.UserHostAddress)
+					return _request.UserHostName;
+				return $"{_request.UserHostName} [{_request.UserHostAddress}]";
+			}
+		}
+	}
+
 	[AllowAnonymous]
 	public class ApiController : Controller
 	{
@@ -227,12 +250,15 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		IRequestInfo RequestInfo => new ClrRequestInfo(Request);
+
 		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToInvoke, Guid apiGuid)
 		{
 			TextWriter writer = Response.Output;
 			if (String.IsNullOrEmpty(cmd.clrType))
 				throw new RequestModelException($"clrType must be specified for command '{cmd.command}'");
 			var invoker = new ClrInvoker();
+			invoker.SetRequestInfo(RequestInfo);
 			Object result = null;
 			if (cmd.async)
 				result = await invoker.InvokeAsync(cmd.clrType, dataToInvoke);
