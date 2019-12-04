@@ -21,6 +21,7 @@ public:
 private:
 
 	void CheckLicense(const std::string& url);
+	bool ProcessPredefinedUrls(const std::string& url);
 
 	std::vector<byte> data_;
 	std::string mime_type_;

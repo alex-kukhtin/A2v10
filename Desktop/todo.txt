@@ -1,5 +1,5 @@
 
-== Solution
+== Designer
 1. Показать в свойствах полное имя файла solution.json
 2. Добавить шаблоны solutions 
 
@@ -8,8 +8,8 @@
 
 13. Login dialog (сохранять сервер и базу)
 14. Сменить пароль
-15. Выход из интерфейса (account/login?)
-16. Лицензии
+16. Показать текст лицензии в диалоге
 17. Login dialog - sql auth
-
+18. Debug/release configuration (command line?)
+19. 
 

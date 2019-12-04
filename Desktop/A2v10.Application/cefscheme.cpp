@@ -33,6 +33,17 @@ std::string GetMimeFromString(const char* szString)
 	return result;
 }
 
+bool CClientSchemeHandler::ProcessPredefinedUrls(const std::string& url) {
+	if (url == "http://domain/account/logoff") {
+		mime_type_ = "text/plain";
+		data_.assign(1, 0x20);
+		HWND hFrame = AfxGetApp()->m_pMainWnd->GetSafeHwnd();
+		::PostMessage(hFrame, WM_SYSCOMMAND, SC_CLOSE, 0L);
+		return true;
+	}
+	return false;
+}
+
 bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	CefRefPtr<CefCallback> callback)
 {
@@ -47,9 +58,10 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	bool isPost = false;
 
 	std::string _files;
-
-	if (method == "POST") 
+	if (method == "POST")
 	{
+		if (ProcessPredefinedUrls(url))
+			return false;
 		isPost = true;
 		auto rt = request->GetResourceType();
 		CefRequest::HeaderMap headerMap;
