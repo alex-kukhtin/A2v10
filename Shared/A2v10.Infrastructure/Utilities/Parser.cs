@@ -31,7 +31,8 @@ namespace A2v10.Infrastructure.Utilities
 			Plus,
 			Minus,
 			Slash,
-			Dot
+			Dot,
+			Comma
 		}
 
 		public struct Token
@@ -129,6 +130,10 @@ namespace A2v10.Infrastructure.Utilities
 				case '-':
 					NextChar();
 					t = TokenId.Minus;
+					break;
+				case ',':
+					NextChar();
+					t = TokenId.Comma;
 					break;
 				case '"':
 				case '\'':

@@ -1,6 +1,8 @@
 ﻿
 import { TDocument, TRoot, TAgent, TRow, TRows } from 'model';
 
+const cmn = require('/document/common');
+alert(cmn);
 
 const template: Template = {
 	properties: {
