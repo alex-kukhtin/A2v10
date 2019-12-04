@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20181009-7565*/
+/*20191204-7592*/
 // controllers/base.js
 
 (function () {
@@ -1186,8 +1186,11 @@
 				args = args || {};
 				if (args.target !== 'controller')
 					return;
-				if (args.testId !== this.__testId__)
-					return;
+				if (this.inDialog) {
+					// testId for dialogs only
+					if (args.testId !== this.__testId__)
+						return;
+				}
 				const root = this.$data;
 				switch (args.action) {
 					case 'eval':
