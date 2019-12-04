@@ -58,8 +58,10 @@
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="css\site.css" />
     <Content Include="css\site.min.css" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="localization\de.xml" />
+    <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />
     <Content Include="localization\default.ru.txt" />
     <Content Include="localization\default.uk.txt" />
