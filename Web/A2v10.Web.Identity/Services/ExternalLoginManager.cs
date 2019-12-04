@@ -51,7 +51,7 @@ namespace A2v10.Web.Identity
 			return await UserManager.GenerateUserTokenAsync(loginProvider, user.Id);
 		}
 
-		public async Task<Boolean> SignInUserAsync(String loginProvider, String providerKey, String token)
+		public async Task<Boolean> SignInUserAsync(String loginProvider, String providerKey, String token, IRequestInfo request)
 		{
 			AppUser user = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
 			if (user == null)
@@ -61,6 +61,12 @@ namespace A2v10.Web.Identity
 			//if (result)
 			//{
 			await SignInManager.SignInAsync(user, false, false);
+			if (request != null)
+			{
+				user.LastLoginDate = DateTime.Now;
+				user.LastLoginHost = request.HostText;
+				await _userManager.UpdateAsync(user);
+			}
 			return true;
 			//}
 			//return result;

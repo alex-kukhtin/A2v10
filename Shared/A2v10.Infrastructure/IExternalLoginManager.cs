@@ -19,7 +19,7 @@ namespace A2v10.Infrastructure
 	public interface IExternalLoginManager
 	{
 		Task<String> GenerateToken(String loginProvider, String providerKey);
-		Task<Boolean> SignInUserAsync(String loginProvider, String providerKey, String token);
+		Task<Boolean> SignInUserAsync(String loginProvider, String providerKey, String token, IRequestInfo request);
 		Task<Boolean> CreateUserAsync(String loginProvider, ExternalUserInfo user);
 		Task<Boolean> IsUserExistsAsync(String loginProvider, String providerKey);
 	}
