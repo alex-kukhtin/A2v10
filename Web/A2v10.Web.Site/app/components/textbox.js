@@ -1,7 +1,9 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191115-7578*/
+/*20191206-7595*/
 /*components/textbox.js*/
+
+/* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
 
 (function () {
 
@@ -12,7 +14,7 @@
 `<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<input v-if="password" type="password" style="display:none" autocomplete="new-password"/>
+		<input v-if="password" type="text" class="fake-pwd-field" />
 		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 

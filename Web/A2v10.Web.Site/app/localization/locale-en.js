@@ -43,6 +43,7 @@
 		$MatchError: 'the password does not match the confirmation',
 		$PasswordLength: 'the password must be at least 6 characters long',
 		$InvalidOldPassword: 'Invalid old password',
+		$ChangePasswordNotAllowed: 'Change password not allowed',
 		$ChangePasswordSuccess: 'Password changed successfully',
 		$Last7Days: 'Last 7 days',
 		$Last30Days: 'Last 30 days',
