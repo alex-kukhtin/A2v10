@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -25,6 +25,8 @@ namespace A2v10.Web.Identity
 		public Int64 Id { get; set; }
 		public String UserName { get; set; }
 		#endregion
+
+		public String Segment { get; set; }
 
 		public String PersonName { get; set; }
 		public Boolean IsAdmin { get; set; }
@@ -93,7 +95,7 @@ namespace A2v10.Web.Identity
 		public Boolean IsPasswordModified     => _modifiedFlag.HasFlag(UserModifiedFlag.Password);
 		public Boolean IsLastLoginModified    => _modifiedFlag.HasFlag(UserModifiedFlag.LastLogin);
 		public Boolean IsEmailConfirmModified => _modifiedFlag.HasFlag(UserModifiedFlag.EmailConfirmed);
-		public Boolean IsPhoneNumberModified => _modifiedFlag.HasFlag(UserModifiedFlag.PhoneNumber);
+		public Boolean IsPhoneNumberModified  => _modifiedFlag.HasFlag(UserModifiedFlag.PhoneNumber);
 
 		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 		{
@@ -127,7 +129,8 @@ namespace A2v10.Web.Identity
 				TariffPlan    == other.TariffPlan &&
 				TenantRoles   == other.TenantRoles &&
 				IsTenantAdmin == other.IsTenantAdmin &&
-				CurrentUser   == other.CurrentUser;
+				CurrentUser   == other.CurrentUser &&
+				Segment       == other.Segment;
 		}
 
 		public String GetClientId()

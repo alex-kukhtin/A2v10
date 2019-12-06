@@ -203,7 +203,7 @@ namespace A2v10.Request
 				if (_parent == null)
 					throw new InvalidOperationException("_parent is null");
 				if (source == null)
-					return _parent.source;
+					return _parent.CurrentSource;
 				return source;
 			}
 		}
@@ -515,6 +515,8 @@ namespace A2v10.Request
 		private String _data;
 		private RequestUrlKind _kind;
 
+		private IApplicationHost _host;
+
 		[JsonIgnore]
 		internal String _modelPath;
 		[JsonIgnore]
@@ -556,6 +558,9 @@ namespace A2v10.Request
 		public String ModelDialog => _dialog;
 		[JsonIgnore]
 		public String ModelFile => _file;
+
+		[JsonIgnore]
+		public String CurrentSource => source ?? _host.TenantDataSource;
 
 		[JsonIgnore]
 		public RequestDataAction DataAction
@@ -822,6 +827,7 @@ namespace A2v10.Request
 				throw new FileNotFoundException($"File not found '{pathForLoad}/model.json'");
 
 			var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
+			rm._host = host;
 			rm.EndInit();
 			rm._action = mi.action;
 			rm._dialog = mi.dialog;

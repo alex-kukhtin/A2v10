@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -41,7 +41,7 @@ namespace A2v10.Web.Config
 			var strSet = ConfigurationManager.ConnectionStrings[source];
 			if (strSet == null)
 				throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-			return strSet.ConnectionString;
+			return strSet.ConnectionString; //.Replace("$(UserSegment)", "Segment2");
 		}
 		#endregion
 

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -120,10 +120,8 @@ namespace A2v10.Web.Identity
 			if (_host.IsMultiTenant)
 			{
 				/*
-				var createdUser = await FindByIdAsync(user.Id);
-				_host.TenantId = createdUser.Tenant;
-				await _dbContext.ExecuteAsync(_host.TenantDataSource, $"[{DbSchema}].[CreateTenantUser]", createdUser);
-				CacheUser(createdUser);
+				 * Do nothing.
+				 * Tenant will be created after email confirmation.
 				*/
 			}
 			else
@@ -469,17 +467,17 @@ namespace A2v10.Web.Identity
 		}
 
 		#region IUserClaimStore 
+		/* 
+		 * Add all the elements that may be needed WITHOUT loading the object.
+		 * Access via: var user = HttpContext.Current.User.Identity as ClaimsIdentity;
+		 */
 		public async Task<IList<Claim>> GetClaimsAsync(AppUser user)
 		{
-			//TODO:
-			/* добавляем все элементы, которые могут быть нужны БЕЗ загрузки объекта 
-             * доступ через 
-             * var user = HttpContext.Current.User.Identity as ClaimsIdentity;
-             */
 			List<Claim> list = new List<Claim>
 			{
 				new Claim("PersonName", user.PersonName ?? String.Empty),
-				new Claim("TenantId", user.Tenant.ToString())
+				new Claim("TenantId", user.Tenant.ToString()),
+				new Claim("Segment", user.Segment ?? String.Empty)
 			};
 			if (user.IsAdmin)
 				list.Add(new Claim("Admin", "Admin"));

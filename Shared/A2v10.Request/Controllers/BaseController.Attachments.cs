@@ -59,7 +59,7 @@ namespace A2v10.Request
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.{suffix}]";
-			return await _dbContext.LoadAsync<AttachmentInfo>(rm.source, procedure, prms);
+			return await _dbContext.LoadAsync<AttachmentInfo>(rm.CurrentSource, procedure, prms);
 		}
 
 		public async Task<SignatureInfo> DownloadSignature(String pathInfo, Action<ExpandoObject> setParams)
@@ -72,7 +72,7 @@ namespace A2v10.Request
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.LoadSignature]";
-			return await _dbContext.LoadAsync<SignatureInfo>(rm.source, procedure, prms);
+			return await _dbContext.LoadAsync<SignatureInfo>(rm.CurrentSource, procedure, prms);
 		}
 
 		public async Task<ReturnSignatureInfo> SaveSignature(String pathInfo, ExpandoObject prms)
@@ -83,7 +83,7 @@ namespace A2v10.Request
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.SaveSignature]";
-			return await _dbContext.LoadAsync<ReturnSignatureInfo>(rm.source, procedure, prms);
+			return await _dbContext.LoadAsync<ReturnSignatureInfo>(rm.CurrentSource, procedure, prms);
 		}
 
 		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)
@@ -107,7 +107,7 @@ namespace A2v10.Request
 				ii.Mime = file.ContentType;
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Stream = file.InputStream;
-				await _dbContext.ExecuteAsync(rm.source, procedure, ii);
+				await _dbContext.ExecuteAsync(rm.CurrentSource, procedure, ii);
 				retList.Add(ii.Id);
 			}
 			return retList;
