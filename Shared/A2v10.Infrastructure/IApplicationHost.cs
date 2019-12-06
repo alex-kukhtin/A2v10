@@ -32,6 +32,8 @@ namespace A2v10.Infrastructure
 		Boolean IsUsePeriodAndCompanies { get; }
 
 		Int32? TenantId { get; set; }
+		Int64? UserId { get; set; }
+		String UserSegment { get; set; }
 
 		IApplicationReader ApplicationReader { get; }
 
@@ -39,7 +41,7 @@ namespace A2v10.Infrastructure
 		String CatalogDataSource { get; }
 		String TenantDataSource { get; }
 
-		void StartApplication(Boolean adminMode);
+		void StartApplication(Boolean bAdmin);
 
 		String MakeRelativePath(String path, String fileName);
 

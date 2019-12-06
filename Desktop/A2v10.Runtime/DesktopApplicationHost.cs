@@ -104,6 +104,8 @@ namespace A2v10.Runtime
 		public Boolean IsAdminAppPresent => false;
 		public String UseClaims => null;
 		public Int32? TenantId { get; set; } 
+		public Int64? UserId { get; set; }
+		public String UserSegment { get; set; }
 		public String CatalogDataSource => "Catalog";
 		public String TenantDataSource => null;
 

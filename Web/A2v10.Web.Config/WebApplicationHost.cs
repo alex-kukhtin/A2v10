@@ -19,7 +19,7 @@ namespace A2v10.Web.Config
 {
 	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
-		IProfiler _profiler;
+		private readonly IProfiler _profiler;
 
 		public WebApplicationHost(IProfiler profiler)
 		{
@@ -38,10 +38,19 @@ namespace A2v10.Web.Config
 			if (String.IsNullOrEmpty(source))
 				source = "Default";
 
+			if (!String.IsNullOrEmpty(UserSegment) && source != CatalogDataSource)
+				source = UserSegment;
+
 			var strSet = ConfigurationManager.ConnectionStrings[source];
 			if (strSet == null)
 				throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-			return strSet.ConnectionString; //.Replace("$(UserSegment)", "Segment2");
+			var cnnString = strSet.ConnectionString;
+			if (source != CatalogDataSource && cnnString.Contains("$(")) {
+				cnnString = cnnString
+					.Replace("$(UserId)", UserId.Value.ToString())
+					.Replace("$(TenantId)", TenantId.Value.ToString());
+				}
+			return cnnString;
 		}
 		#endregion
 
@@ -154,6 +163,9 @@ namespace A2v10.Web.Config
 				_tenantId = value.Value;
 			}
 		}
+
+		public Int64? UserId { get; set; }
+		public String UserSegment { get; set; }
 
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
 		public String TenantDataSource => null;

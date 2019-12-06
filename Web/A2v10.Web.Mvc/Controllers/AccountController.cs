@@ -31,7 +31,7 @@ namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
 	[CheckMobileFilter]
-	public class AccountController : IdentityController
+	public class AccountController : IdentityController, IControllerTenant
 	{
 
 		private readonly IApplicationHost _host;
@@ -789,5 +789,16 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		#endregion
+
+		#region IControllerTenant
+		public void StartTenant()
+		{
+			var host = ServiceLocator.Current.GetService<IApplicationHost>();
+			host.TenantId = TenantId;
+			host.UserId = UserId;
+			host.UserSegment = UserSegment;
+		}
+		#endregion
+
 	}
 }

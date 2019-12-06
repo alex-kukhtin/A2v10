@@ -78,6 +78,15 @@ namespace A2v10.Web.Identity
 			return 0;
 		}
 
+		public static String GetUserSegment(this IIdentity identity)
+		{
+			if (identity == null)
+				return null;
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			return user.FindFirstValue("Segment");
+		}
+
 		public static String GetUserClaim(this IIdentity identity, String claim)
 		{
 			if (!(identity is ClaimsIdentity user))

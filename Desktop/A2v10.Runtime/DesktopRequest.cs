@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +22,6 @@ namespace A2v10.Runtime
 		public Boolean IsAdmin { get; set; }
 		public Boolean IsTenantAdmin { get; set; }
 	}
-
 
 	public class DesktopRequest
 	{

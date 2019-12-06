@@ -83,6 +83,8 @@ namespace A2v10.Tests.Config
 		public Boolean IsAdminAppPresent => false;
 
 		public Int32? TenantId { get; set; }
+		public Int64? UserId { get; set; }
+		public String UserSegment { get; set; }
 		public String CatalogDataSource => null;
 		public String TenantDataSource => null;
 

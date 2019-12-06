@@ -52,7 +52,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class ReportController : Controller, IControllerProfiler
+	public class ReportController : Controller, IControllerProfiler, IControllerTenant
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
 		ReportHelper _reportHelper = new ReportHelper();
@@ -64,6 +64,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public String UserSegment => User.Identity.GetUserSegment();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 		public IProfiler Profiler => _baseController.Host.Profiler;
 
@@ -394,5 +395,16 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			return StiMvcViewer.InteractionResult();
 		}
+
+		#region IControllerTenant
+		public void StartTenant()
+		{
+			var host = ServiceLocator.Current.GetService<IApplicationHost>();
+			host.TenantId = TenantId;
+			host.UserId = UserId;
+			host.UserSegment = UserSegment;
+		}
+		#endregion
+
 	}
 }

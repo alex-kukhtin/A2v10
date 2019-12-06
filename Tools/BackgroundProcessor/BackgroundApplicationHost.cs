@@ -53,6 +53,8 @@ namespace BackgroundProcessor
 		public Boolean IsUsePeriodAndCompanies => throw new NotImplementedException(nameof(IsUsePeriodAndCompanies));
 		public Boolean IsMultiCompany => false;
 		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
+		public Int64? UserId { get => throw new NotImplementedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
+		public String UserSegment { get => throw new NotImplementedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
 		public String CatalogDataSource => throw new NotImplementedException(nameof(CatalogDataSource));
 		public String TenantDataSource => throw new NotImplementedException(nameof(TenantDataSource));
 		public String AppVersion => throw new NotImplementedException(nameof(AppVersion));
@@ -71,13 +73,14 @@ namespace BackgroundProcessor
 		}
 
 		IApplicationReader _reader;
-		public void StartApplication(Boolean adminMode)
+		public void StartApplication(Boolean bAdminMode)
 		{
+
 			if (AppPath.StartsWith("db:"))
 				_reader = new DbApplicationReader(AppPath);
 			else
 			{
-				String key = adminMode ? "admin" : AppKey;
+				String key = bAdminMode ? "admin" : AppKey;
 				_reader = new FileApplicationReader(AppPath, key);
 			}
 		}

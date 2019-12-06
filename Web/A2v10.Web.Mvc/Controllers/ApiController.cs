@@ -47,7 +47,7 @@ namespace A2v10.Web.Mvc.Controllers
 	}
 
 	[AllowAnonymous]
-	public class ApiController : Controller
+	public class ApiController : Controller, IControllerTenant
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
 		ILogger _logger;
@@ -57,6 +57,16 @@ namespace A2v10.Web.Mvc.Controllers
 			_logger = ServiceLocator.Current.GetService<ILogger>();
 			_baseController.Host.StartApplication(false);
 		}
+
+		#region IControllerTenant
+		public void StartTenant()
+		{
+			var host = ServiceLocator.Current.GetService<IApplicationHost>();
+			host.TenantId = TenantId;
+			host.UserId = UserId;
+			host.UserSegment = UserSegment;
+		}
+		#endregion
 
 		public Int64? UserId
 		{
@@ -69,6 +79,7 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public String UserSegment => User.Identity.GetUserSegment();
 
 		Boolean ValidAllowAddress(RequestCommand ac)
 		{

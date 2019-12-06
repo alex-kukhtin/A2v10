@@ -203,7 +203,11 @@ namespace A2v10.Web.Identity
 			{
 				// with TenantRoles
 				var createdUser = await FindByIdAsync(user.Id);
+				// WITHOUT CACHE!
+				//var createdUser = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserById]", new { Id user.Id });
 				_host.TenantId = createdUser.Tenant;
+				_host.UserId = createdUser.Id;
+				_host.UserSegment = createdUser.Segment;
 				await _dbContext.ExecuteAsync(_host.TenantDataSource, $"[{DbSchema}].[CreateTenantUser]", createdUser);
 			}
 		}

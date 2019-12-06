@@ -16,7 +16,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class AttachmentController : Controller, IControllerProfiler
+	public class AttachmentController : Controller, IControllerProfiler, IControllerTenant
 	{
 		A2v10.Request.AttachmentController _baseController = new A2v10.Request.AttachmentController();
 
@@ -28,6 +28,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
+		public String UserSegment => User.Identity.GetUserSegment();
 		public IProfiler Profiler => _baseController.Host.Profiler;
 		public Boolean SkipRequest(String Url) { return false; }
 
@@ -74,5 +75,15 @@ namespace A2v10.Web.Mvc.Controllers
 			if (_baseController.Host.IsMultiCompany)
 				prms.Set("CompanyId", CompanyId);
 		}
+
+		#region IControllerTenant
+		public void StartTenant()
+		{
+			var host = ServiceLocator.Current.GetService<IApplicationHost>();
+			host.TenantId = TenantId;
+			host.UserId = UserId;
+			host.UserSegment = UserSegment;
+		}
+		#endregion
 	}
 }

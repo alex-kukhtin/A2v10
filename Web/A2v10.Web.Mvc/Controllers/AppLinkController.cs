@@ -37,6 +37,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public String CurrentLang => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
 
+
 		public async Task Default(String pathInfo)
 		{
 			var page = pathInfo.ToLowerInvariant();

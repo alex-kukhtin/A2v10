@@ -38,6 +38,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
+		public String UserSegment => User.Identity.GetUserSegment();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 
 		public String CatalogDataSource => _baseController.Host.CatalogDataSource;
@@ -69,6 +70,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			var host = ServiceLocator.Current.GetService<IApplicationHost>();
 			host.TenantId = TenantId;
+			host.UserId = UserId;
+			host.UserSegment = UserSegment;
 		}
 		#endregion
 
