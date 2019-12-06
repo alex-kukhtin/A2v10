@@ -10446,7 +10446,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191204-7592*/
+/*20191206-7595*/
 // controllers/base.js
 
 (function () {
@@ -11199,7 +11199,7 @@ Vue.directive('resize', {
 					htmlTools.getRowHeight(table);
 				}
 				let html = table.innerHTML;
-				let data = { format, html, fileName };
+				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;
 				dataservice.post(url, utils.toJson(data), true).then(function (blob) {

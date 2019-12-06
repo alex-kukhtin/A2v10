@@ -268,6 +268,7 @@ namespace A2v10.Request
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			response.ContentType = "application/octet-binary";
 			String format = jsonData.Get<String>("format");
+			//Double zoom = jsonData.Get<Double>("zoom");
 			try
 			{
 				var h = new Html2Excel();
