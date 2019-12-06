@@ -43,6 +43,7 @@
 		$MatchError: 'пароль та підтвердження не співпадають',
 		$PasswordLength: 'пароль має містити принаймні 6 символів',
 		$InvalidOldPassword: 'Неправильний старий пароль',
+		$ChangePasswordNotAllowed: 'Зміну пароля заборонено',
 		$ChangePasswordSuccess: 'Пароль змінено вдало',
 		$Last7Days: 'Останні 7 днів',
 		$Last30Days: 'Останні 30 днів',

@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 21 nov 2019
-module version : 7586
+Last updated : 06 dec 2019
+module version : 7595
 */
 
 ------------------------------------------------
@@ -56,6 +56,16 @@ begin
 		UserSince datetime null,
 		LastPaymentDate datetime null,
 		Balance money null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Config')
+begin
+	create table a2security.Config
+	(
+		[Key] sysname not null constraint PK_Config primary key,
+		[Value] nvarchar(255) not null,
 	);
 end
 go
@@ -117,6 +127,20 @@ if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N
 	create sequence a2security.SQ_Users as bigint start with 100 increment by 1;
 go
 ------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_GetCurrentSegment') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_GetCurrentSegment;
+go
+------------------------------------------------
+create function a2security.fn_GetCurrentSegment()
+returns nvarchar(32)
+as
+begin
+	declare @ret nvarchar(32);
+	select @ret = [Value] from a2security.Config where [Key] = N'CurrentSegment';
+	return @ret;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users')
 begin
 	create table a2security.Users
@@ -147,7 +171,8 @@ begin
 		RegisterHost nvarchar(255) null,
 		TariffPlan nvarchar(255) null,
 		[Guid] uniqueidentifier null,
-		Referral bigint null
+		Referral bigint null,
+		Segment nvarchar(32) null
 	);
 end
 go
@@ -211,6 +236,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Referral')
 begin
 	alter table a2security.Users add Referral bigint null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Segment')
+begin
+	alter table a2security.Users add Segment nvarchar(32) null;
 end
 go
 ------------------------------------------------
@@ -428,7 +459,7 @@ as
 	select Id, UserName, DomainUser, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
-		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan,
+		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan, Segment,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit),
 		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit)
 	from a2security.Users u
@@ -732,9 +763,11 @@ begin
 
 		select top(1) @tenantId = id from @tenants;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost, Memo, TariffPlan)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, 
+			RegisterHost, Memo, TariffPlan, Segment)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost, @Memo, @TariffPlan);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, 
+				@RegisterHost, @Memo, @TariffPlan, a2security.fn_GetCurrentSegment());
 		select top(1) @userId = id from @users;
 
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
