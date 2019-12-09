@@ -11707,7 +11707,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20180831-7549*/
+/*20181208-7596*/
 /* controllers/shell.js */
 
 (function () {
@@ -12272,7 +12272,12 @@ Vue.directive('resize', {
 			this.sideBarCollapsed = this.sideBarInitialCollapsed;
 
 			let opts = { title: null };
-			let newUrl = makeMenuUrl(this.menu, urlTools.normalizeRoot(window.location.pathname), opts);
+			let menuPath = urlTools.normalizeRoot(window.location.pathname);
+			// fix frequent error
+			if (menuPath === '/home' && this.menu && !this.menu.find(v => v.Url.toLowerCase() === 'home')) {
+				menuPath = '/';
+			}
+			let newUrl = makeMenuUrl(this.menu, menuPath, opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
@@ -12282,6 +12287,7 @@ Vue.directive('resize', {
 			};
 
 			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+
 			firstUrl.title = opts.title;
 			urlTools.firstUrl = firstUrl;
 

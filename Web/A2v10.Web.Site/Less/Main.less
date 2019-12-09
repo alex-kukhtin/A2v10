@@ -488,17 +488,20 @@ pre.a2-code {
 }
 
 .title-notify {
-	animation: blink .5s infinite alternate ease-in-out;
+	animation: pulse 1s infinite ease-out;
 	display: none;
+	padding: 2px 12px;
+	border-radius: 1rem;
+	color: white;
 
 	&.warning {
-		color: gold;
+		background-color: @warning-base-color;
 		display: inline;
 	}
 
 	&.danger {
 		display: inline;
-		color: tomato;
+		background-color: @danger-base-color;
 	}
 }
 

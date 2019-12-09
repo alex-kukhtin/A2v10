@@ -608,6 +608,8 @@ namespace A2v10.Xaml
 
 		internal Boolean IsSkipCheckReadOnly()
 		{
+			if (CheckReadOnly)
+				return false; // always disable readonly commands
 			switch (Command)
 			{
 				case CommandType.Close:

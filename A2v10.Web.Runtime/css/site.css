@@ -1006,6 +1006,17 @@ td.vert > .vcell {
     opacity: 0;
   }
 }
+@keyframes pulse {
+  40% {
+    color: currentColor;
+  }
+  50% {
+    color: transparent;
+  }
+  60% {
+    color: currentColor;
+  }
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;
@@ -6143,16 +6154,19 @@ table > colgroup col.blue {
   border: 1px solid #ccc;
 }
 .title-notify {
-  animation: blink 0.5s infinite alternate ease-in-out;
+  animation: pulse 1s infinite ease-out;
   display: none;
+  padding: 2px 12px;
+  border-radius: 1rem;
+  color: white;
 }
 .title-notify.warning {
-  color: gold;
+  background-color: #ffb74d;
   display: inline;
 }
 .title-notify.danger {
   display: inline;
-  color: tomato;
+  background-color: #da533f;
 }
 .about-source-list {
   list-style-position: inside;

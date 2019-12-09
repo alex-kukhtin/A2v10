@@ -3872,6 +3872,17 @@ td.vert > .vcell {
     opacity: 0;
   }
 }
+@keyframes pulse {
+  40% {
+    color: currentColor;
+  }
+  50% {
+    color: transparent;
+  }
+  60% {
+    color: currentColor;
+  }
+}
 .popover-wrapper {
   position: relative;
   display: inline-block;

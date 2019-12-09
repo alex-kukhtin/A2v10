@@ -4,14 +4,30 @@ using System;
 
 namespace A2v10.Xaml
 {
+	public enum SeparatorMode
+	{
+		None,
+		Before,
+		After
+	}
+
 	public class MenuItem : CommandControl
 	{
 		public Icon Icon { get; set; }
+
+		public SeparatorMode Separator { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
+			if (Separator == SeparatorMode.Before)
+			{
+				var s = new TagBuilder("div", "divider");
+				s.MergeAttribute("role", "separator");
+				MergeAttributes(s, context, MergeAttrMode.Visibility);
+				s.Render(context);
+			}
 			var mi = new TagBuilder("button", "dropdown-item");
 			if (HasIcon)
 			{
@@ -36,6 +52,15 @@ namespace A2v10.Xaml
 				RenderContent(context);
 				mi.RenderEnd(context);
 			}
+
+			if (Separator == SeparatorMode.After)
+			{
+				var s = new TagBuilder("div", "divider");
+				s.MergeAttribute("role", "separator");
+				MergeAttributes(s, context, MergeAttrMode.Visibility);
+				s.Render(context);
+			}
+
 		}
 
 		Boolean HasIcon => GetBinding(nameof(Icon)) != null || Icon != Icon.NoIcon;
