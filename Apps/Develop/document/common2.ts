@@ -1,5 +1,5 @@
 ﻿
-import { TDocument } from "Develop/sales/invoice/model";
+import { TDocument } from "../sales/invoice/model";
 
 /* document common module */
 

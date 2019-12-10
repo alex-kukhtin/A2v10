@@ -10,7 +10,6 @@ const cst = require('std:const');
 const du = utils.date;
 
 // common module
-debugger;
 const cmn = require('document/common2') as IDocumentModule;
 console.dir(cmn);
 
@@ -79,7 +78,7 @@ function docParentName(this: TDocument) {
 	return `№ ${doc.No} от ${du.formatDate(doc.Date)}, ${utils.format(doc.Sum, DataType.Currency)} грн.`;
 }
 
-async function resumeWorkflow(this: TRoot) {
+async function resumeWorkflow(this: TRoot): Promise<any> {
 	const root = this;
 	const vm = this.$vm;
 	//alert(root.$Comment);
@@ -102,7 +101,7 @@ function insertRow(to: InsertTo) {
 	};
 }
 
-async function applyDoc(this: TRoot, doc: TDocument) {
+async function applyDoc(this: TRoot, doc: TDocument): Promise<any> {
 	const vm = this.$vm;
 	let errs = vm.$getErrors(cst.SEVERITY.ERROR);
 	if (errs) {

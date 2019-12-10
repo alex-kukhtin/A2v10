@@ -4,7 +4,6 @@ define(["require", "exports"], function (require, exports) {
     const utils = require('std:utils');
     const cst = require('std:const');
     const du = utils.date;
-    debugger;
     const cmn = require('document/common2');
     console.dir(cmn);
     const template = {

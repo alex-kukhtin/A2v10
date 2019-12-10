@@ -364,6 +364,7 @@
     <Folder Include="Develop\_platform\" />
     <Folder Include="Develop\_static\" />
     <Folder Include="Develop\_tests\dialogs\more dialog\" />
+    <Folder Include="_declarations\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\Agent\browseCustomer.dialog.xaml">
@@ -517,7 +518,6 @@
     <TypeScriptCompile Include="Develop\sales\invoice\invoice2.template.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\model.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\model.d.ts" />
-    <TypeScriptCompile Include="_declarations\a2v10.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\sales\waybill\links.dialog.xaml">

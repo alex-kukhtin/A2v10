@@ -10,14 +10,14 @@
 		"traceResolution": false,
 		"lib": [ "es2017", "dom" ],
 		"typeRoots": [ "@types" ],
-		"paths": {
-		}
+		"rootDirs": [
+		]
 	},
 	"include": [
-		"develop/**/*.ts",
+		"./**/*.ts",
 		"@types/platform.d.ts"
 	],
 	"exclude": [
-		"develop/**/.d.ts"
+		"./**/.d.ts"
 	]
 }
