@@ -10,7 +10,7 @@
 		"edit": {
 			"model": "Document",
 			"view": "waybill.view",
-			"template": "waybill.template",
+			"template": "waybill2.template",
 			"merge": {
 				"schema": "a2demo",
 				"model": "Document.Merge"

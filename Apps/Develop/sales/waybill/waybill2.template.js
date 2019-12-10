@@ -4,7 +4,9 @@ define(["require", "exports"], function (require, exports) {
     const utils = require('std:utils');
     const cst = require('std:const');
     const du = utils.date;
-    const cmn = require('document/common');
+    debugger;
+    const cmn = require('document/common2');
+    console.dir(cmn);
     const template = {
         properties: {
             'TRoot.$Answer': String,
@@ -58,6 +60,7 @@ define(["require", "exports"], function (require, exports) {
     exports.default = template;
     function modelLoad(root) {
         console.dir(root);
+        console.dir(cmn);
         if (root.Document.$isNew)
             cmn.documentCreate(root.Document, 'Waybill');
     }

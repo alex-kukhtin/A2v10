@@ -73,6 +73,8 @@
       <Link>Develop\sales\invoice\_data.defs.json</Link>
     </None>
     <None Include="Develop\sql.json" />
+    <TypeScriptCompile Include="Develop\document\commondoc.d.ts" />
+    <TypeScriptCompile Include="Develop\document\common2.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\sales\invoice\invoice2.template.js" />
     <Content Include="Develop\sales\waybill\empty.template.js" />

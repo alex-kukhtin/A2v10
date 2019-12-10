@@ -2,13 +2,17 @@
 
 import { TRoot, TDocument, TRow } from "model";
 import { TRows } from "../invoice/model";
+import { IDocumentModule } from '../../document/commondoc';
+
 
 const utils = require('std:utils') as Utils;
 const cst = require('std:const');
 const du = utils.date;
 
 // common module
-const cmn = require('document/common');
+debugger;
+const cmn = require('document/common2') as IDocumentModule;
+console.dir(cmn);
 
 const template: Template = {
 	properties: {
@@ -65,6 +69,7 @@ export default template;
 
 function modelLoad(root: TRoot):void {
 	console.dir(root);
+	console.dir(cmn);
 	if (root.Document.$isNew)
 		cmn.documentCreate(root.Document, 'Waybill');
 }

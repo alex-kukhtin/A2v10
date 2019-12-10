@@ -388,10 +388,21 @@ const vm = new DataModelController({
 				if (!appReader.FileExists(filePath))
 					throw new FileNotFoundException(filePath);
 				String moduleText = appReader.FileReadAllText(filePath);
-				sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
+
+				if (moduleText.Contains("define([\"require\", \"exports\"]"))
+				{
+					sb.Append("app.modules['").Append(moduleName).Append("'] = function() {return ")
 					.AppendLine(Localize(moduleText))
-					.AppendLine(tmlFooter)
-					.AppendLine();
+					.AppendLine()
+					.AppendLine("};");
+				}
+				else
+				{
+					sb.AppendLine(tmlHeader.Replace("$(Module)", moduleName))
+						.AppendLine(Localize(moduleText))
+						.AppendLine(tmlFooter)
+						.AppendLine();
+				}
 				_modulesWritten.Add(moduleName);
 				AddRequiredModules(sb, moduleText);
 			}
