@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 06 dec 2019
-module version : 7595
+Last updated : 12 dec 2019
+module version : 7596
 */
 
 ------------------------------------------------
@@ -22,9 +22,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7323);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7596);
 else
-	update a2sys.Versions set [Version] = 7323 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7596 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -49,7 +49,7 @@ begin
 		[Source] nvarchar(255) null,
 		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
 		LastTransactionDate datetime null,
-		DateCreated datetime not null constraint DF_Tenants_UtcDateCreated default(getutcdate()),
+		DateCreated datetime not null constraint DF_Tenants_UtcDateCreated2 default(a2sys.fn_getCurrentDate()),
 		TrialPeriodExpired datetime null,
 		DataSize float null,
 		[State] nvarchar(128) null,
@@ -74,10 +74,10 @@ if not exists (select * from sys.indexes where object_id = object_id(N'a2securit
 	create index IX_Tenants_Admin on a2security.Tenants ([Admin]) include (Id);
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Tenants_DateCreated' and parent_object_id = object_id(N'aa2security.Tenants'))
+if exists(select * from sys.default_constraints where name=N'DF_Tenants_UtcDateCreated' and parent_object_id = object_id(N'a2security.Tenants'))
 begin
-	alter table a2security.Tenants drop constraint DF_Tenants_DateCreated;
-	alter table a2security.Tenants add constraint DF_Tenants_UtcDateCreated default(getutcdate()) for DateCreated with values;
+	alter table a2security.Tenants drop constraint DF_Tenants_UtcDateCreated;
+	alter table a2security.Tenants add constraint DF_Tenants_UtcDateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
@@ -399,7 +399,7 @@ begin
 		Code int not null
 			constraint FK_Log_Code_Codes foreign key references a2security.LogCodes(Code),
 		EventTime	datetime not null
-			constraint DF_Log_UtcEventTime default(getutcdate()),
+			constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()),
 		Severity nchar(1) not null,
 		[Message] nvarchar(max) sparse null
 	);
@@ -413,10 +413,10 @@ begin
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' and parent_object_id = object_id(N'a2security.Log'))
+if exists(select * from sys.default_constraints where name=N'DF_Log_UtcEventTime' and parent_object_id = object_id(N'a2security.Log'))
 begin
-	alter table a2security.[Log] drop constraint DF_Log_EventTime;
-	alter table a2security.[Log] add constraint DF_Log_UtcEventTime default(getutcdate()) for EventTime with values;
+	alter table a2security.[Log] drop constraint DF_Log_UtcEventTime;
+	alter table a2security.[Log] add constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()) for EventTime with values;
 end
 go
 ------------------------------------------------
@@ -436,11 +436,19 @@ begin
 		UserCreated bigint not null
 			constraint FK_Referrals_UserCreated_Users foreign key references a2security.Users(Id),
 		DateCreated	datetime not null
-			constraint DF_Referrals_DateCreated default(getutcdate()),
+			constraint DF_Referrals_DateCreated2 default(a2sys.fn_getCurrentDate()),
 		Memo nvarchar(255) null
 	)
 end
 go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateCreated' and parent_object_id = object_id(N'a2security.Referrals'))
+begin
+	alter table a2security.Referrals drop constraint DF_Referrals_DateCreated;
+	alter table a2security.Referrals add constraint DF_Referrals_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
+end
+go
+
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where CONSTRAINT_SCHEMA = N'a2security' and CONSTRAINT_NAME = N'FK_Users_Referral_Referrals')
 begin
@@ -991,9 +999,23 @@ begin
 	create table a2security.License
 	(
 		[Text] nvarchar(max) not null,
-		DateCreated datetime not null constraint DF_License_UtcDateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_License_UtcDateModified default (getutcdate())
+		DateCreated datetime not null constraint DF_License_DateCreated2 default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_License_DateModified2 default (a2sys.fn_getCurrentDate())
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateCreated' and parent_object_id = object_id(N'a2security.License'))
+begin
+	alter table a2security.License drop constraint DF_License_UtcDateCreated;
+	alter table a2security.License add constraint DF_License_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateModified' and parent_object_id = object_id(N'a2security.License'))
+begin
+	alter table a2security.License drop constraint DF_License_UtcDateModified;
+	alter table a2security.License add constraint DF_License_DateModified2 default(a2sys.fn_getCurrentDate()) for DateModified with values;
 end
 go
 ------------------------------------------------
@@ -1019,7 +1041,7 @@ as
 begin
 	set nocount on;
 	if exists(select * from a2security.License)
-		update a2security.License set [Text]=@License, DateModified = getutcdate();
+		update a2security.License set [Text]=@License, DateModified = a2sys.fn_getCurrentDate();
 	else
 		insert into a2security.License ([Text]) values (@License);
 end

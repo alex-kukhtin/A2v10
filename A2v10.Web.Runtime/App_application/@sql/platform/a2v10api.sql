@@ -27,12 +27,19 @@ begin
 		UserId bigint not null
 			constraint FK_Log_UserId_Users foreign key references a2security.Users(Id),
 		UtcEventTime	datetime not null
-			constraint DF_Log_EventTime default(getutcdate()),
+			constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()),
 		Severity nchar(1) not null,
 		[Message] nvarchar(max) null,
 		Host nvarchar(255) null,
 		[Guid] uniqueidentifier
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' and parent_object_id = object_id(N'a2api.Log'))
+begin
+	alter table a2api.[Log] drop constraint DF_Log_EventTime;
+	alter table a2api.[Log] add constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()) for UtcEventTime with values;
 end
 go
 ------------------------------------------------
