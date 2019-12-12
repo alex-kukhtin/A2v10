@@ -1,11 +1,11 @@
-/* 20171027-7045 */
+/* 20191212-7046 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 27 oct 2017
-module version : 7045
+Last updated : 12 dec 2019
+module version : 7046
 */
 
 ------------------------------------------------
@@ -24,9 +24,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:meta')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7045);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7046);
 else
-	update a2sys.Versions set [Version] = 7045 where Module = N'std:meta';
+	update a2sys.Versions set [Version] = 7046 where Module = N'std:meta';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2meta')
@@ -97,8 +97,8 @@ begin
 		Name sysname not null constraint PK_Modules primary key,
 		UiName nvarchar(255) null,
 		[Version] int not null constraint DF_Modules_Version default(0),
-		DateCreated datetime not null constraint DF_Modules_DateCreated default(getdate()),
-		DateModified datetime not null constraint DF_Modules_DateModified default(getdate()),
+		DateCreated datetime not null constraint DF_Modules_DateCreated default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Modules_DateModified default(a2sys.fn_getCurrentDate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -112,8 +112,8 @@ begin
 		[Description] nvarchar(255) null,
 		Paged bit not null constraint DF_Models_Paged default(0),
 		PageSize int null,
-		DateCreated datetime not null constraint DF_Models_DateCreated default(getdate()),
-		DateModified datetime not null constraint DF_Models_DateModified default(getdate()),
+		DateCreated datetime not null constraint DF_Models_DateCreated default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Models_DateModified default(a2sys.fn_getCurrentDate()),
 	);
 end
 go
@@ -129,8 +129,8 @@ begin
 		UiName nvarchar(255) null,
 		Parent sysname null constraint FK_Tables_Parent_Tables foreign key references a2meta.[Tables]([Key]),
 		[Version] int not null constraint DF_Tables_Version default(1),
-		DateCreated datetime not null constraint DF_Tables_DateCreated default(getdate()),
-		DateModified datetime not null constraint DF_Tables_DateModified default(getdate()),
+		DateCreated datetime not null constraint DF_Tables_DateCreated default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Tables_DateModified default(a2sys.fn_getCurrentDate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -146,8 +146,8 @@ begin
 		[Key] as cast(Module + N'.' + Name as sysname) persisted not null constraint PK_Views primary key,
 		UiName nvarchar(255) null,
 		[Version] int not null constraint DF_Views_Version default(1),
-		DateCreated datetime not null constraint DF_Views_DateCreated default(getdate()),
-		DateModified datetime not null constraint DF_Views_DateModified default(getdate()),
+		DateCreated datetime not null constraint DF_Views_DateCreated default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Views_DateModified default(a2sys.fn_getCurrentDate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -172,8 +172,8 @@ begin
 		[Unique] bit not null constraint DF_Columns_Unique default(0),
 		[References] sysname null
 			constraint DF_Columns_References_Columns foreign key references a2meta.[Columns]([Key]),
-		DateCreated datetime not null constraint DF_Columns_DateCreated default(getdate()),
-		DateModified datetime not null constraint DF_Columns_DateModified default(getdate()),
+		DateCreated datetime not null constraint DF_Columns_DateCreated default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Columns_DateModified default(a2sys.fn_getCurrentDate()),
 		[Description] nvarchar(255) null
 	);
 end
@@ -337,9 +337,9 @@ begin
 				$Columns$
 				Void bit not null constraint DF_$Name$_Void default(0),
 				Active bit not null constraint DF_$Name$_Active default(1),
-				DateCreated datetime not null constraint DF_$Name$_DateCreated default(getdate()),
+				DateCreated datetime not null constraint DF_$Name$_DateCreated default(a2sys.fn_getCurrentDate()),
 				UserCreated bigint not null,
-				DateModified datetime not null constraint DF_$Name$_DateModified default(getdate()),
+				DateModified datetime not null constraint DF_$Name$_DateModified default(a2sys.fn_getCurrentDate()),
 				UserModified bigint not null,
 				RowVersion rowversion
 			)';

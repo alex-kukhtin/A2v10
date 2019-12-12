@@ -61,6 +61,7 @@
     <Compile Include="RequestModelTest.cs" />
     <Compile Include="ScriptProcessor\ServerValidate.cs" />
     <Compile Include="WorkflowTest.cs" />
+    <Compile Include="XamlAccel.cs" />
     <Compile Include="XamlTest.cs" />
   </ItemGroup>
   <ItemGroup>

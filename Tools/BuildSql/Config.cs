@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -8,7 +8,7 @@ namespace BuildSql
 	{
 #pragma warning disable IDE1006 // Naming Styles
 		public String version { get; set; }
-        public Boolean replaceSessionContext { get; set; }
+		public Boolean replaceSessionContext { get; set; }
 		public String outputFile { get; set; }
 		public String[] inputFiles { get; set; }
 #pragma warning restore IDE1006 // Naming Styles

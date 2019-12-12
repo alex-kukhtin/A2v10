@@ -11,7 +11,7 @@ using System.Dynamic;
 using A2v10.Data.Interfaces;
 using A2v10.Data.Tests;
 
-namespace A2v10.Tests
+namespace A2v10.Tests.Workflow
 {
 
 	[TestClass]

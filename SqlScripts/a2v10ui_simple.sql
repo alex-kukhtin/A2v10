@@ -1,20 +1,20 @@
 
-/* 20190830-7548 */
+/* 20191212-7549 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 30 aug 2019
-module version : 7548
+Last updated : 12 dec 2019
+module version : 7549
 */
 --- multitenant environment
 ------------------------------------------------
 begin
 set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:ui')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7548);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7549);
 	else
-		update a2sys.Versions set [Version] = 7548 where Module = N'std:ui';
+		update a2sys.Versions set [Version] = 7549 where Module = N'std:ui';
 end
 go
 ------------------------------------------------
@@ -80,7 +80,7 @@ begin
 	(
 		Id	bigint identity(1, 1) not null constraint PK_Feedback primary key,
 		[Date] datetime not null
-			constraint DF_Feedback_UtcDate default(getutcdate()),
+			constraint DF_Feedback_CurrentDate default(a2sys.fn_getCurrentDate()),
 		UserId bigint not null
 			constraint FK_Feedback_UserId_Users foreign key references a2security.Users(Id),
 		[Text] nvarchar(max) null
@@ -88,10 +88,10 @@ begin
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Feedback_Date' and parent_object_id = object_id(N'a2ui.Feedback'))
+if exists(select * from sys.default_constraints where name=N'DF_Feedback_UtcDate' and parent_object_id = object_id(N'a2ui.Feedback'))
 begin
-	alter table a2ui.Feedback drop constraint DF_Feedback_Date;
-	alter table a2ui.Feedback add constraint DF_Feedback_UtcDate default(getutcdate()) for [Date];
+	alter table a2ui.Feedback drop constraint DF_Feedback_UtcDate;
+	alter table a2ui.Feedback add constraint DF_Feedback_CurrentDate default(a2sys.fn_getCurrentDate()) for [Date];
 end
 go
 ------------------------------------------------

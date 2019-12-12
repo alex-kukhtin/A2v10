@@ -71,7 +71,23 @@ namespace A2v10.Infrastructure
 		{
 			if (String.IsNullOrEmpty(s))
 				return null;
-			return s.Replace("'", "\\'").Replace("\"", "\\\"");
+			var sb = new StringBuilder();
+			for (Int32 i = 0; i<s.Length; i++)
+			{
+				var ch = s[i];
+				switch (ch) {
+					case '\'':
+					case '"':
+					case '\r':
+					case '\n':
+						sb.Append('\\').Append(ch);
+						break;
+					default:
+						sb.Append(ch);
+						break;
+				}
+			}
+			return sb.ToString();
 		}
 
 		public static StringBuilder RemoveTailComma(this StringBuilder sb)

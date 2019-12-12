@@ -1,19 +1,19 @@
-/*
+﻿/*
 version: 10.0.7023
-generated: 17.12.2018 15:06:30
+generated: 12.12.2019 17:16:47
 */
 
 
 /* sql/develop_full.sql */
 
-/* 20180831-7047 */
+/* 20191212-7049 */
 
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 31 aug 2018
-module version : 7047
+Last updated : 12 dec 2019
+module version : 7049
 */
 ------------------------------------------------
 set noexec off;
@@ -47,9 +47,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7047);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7049);
 else
-	update a2sys.Versions set [Version] = 7047 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7049 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -88,6 +88,86 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_getCurrentDate') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+exec sp_executesql N'
+create or alter function a2sys.fn_getCurrentDate() 
+returns datetime 
+as begin return getdate(); end
+';
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_trim') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_trim;
+go
+------------------------------------------------
+create function a2sys.fn_trim(@value nvarchar(max))
+returns nvarchar(max)
+as
+begin
+	return ltrim(rtrim(@value));
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_string2table') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_string2table;
+go
+------------------------------------------------
+create function a2sys.fn_string2table(@var nvarchar(max), @delim nchar(1))
+	returns @ret table(VAL nvarchar(max))
+as
+begin
+	select @var = @var + @delim; -- sure delim
+
+	declare @pos int, @start int;
+	declare @sub nvarchar(255);
+
+	set @start = 1;
+	set @pos   = charindex(@delim, @var, @start);
+
+	while @pos <> 0
+		begin
+			set @sub = ltrim(rtrim(substring(@var, @start, @pos-@start)));
+
+			if @sub <> N''
+				insert into @ret(VAL) values (@sub);
+
+			set @start = @pos + 1;
+			set @pos   = charindex(@delim, @var, @start);
+		end
+	return;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_string2table_count') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_string2table_count;
+go
+------------------------------------------------
+create function a2sys.fn_string2table_count(@var nvarchar(max), @count int)
+	returns @ret table(RowNo int, VAL nvarchar(max))
+as
+begin
+
+	declare @start int;
+	declare @RowNo int;
+	declare @sub nvarchar(255);
+
+	set @start = 1;
+	set @RowNo = 1;
+
+	while @start <= len(@var)
+		begin
+			set @sub = substring(@var, @start, @count);
+
+			if @sub <> N''
+				insert into @ret(RowNo, VAL) values (@RowNo, @sub);
+
+			set @start = @start + @count;
+			set @RowNo = @RowNo + 1;
+		end
+	return;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Id.TableType' and DATA_TYPE=N'table type')
 begin
 	create type a2sys.[Id.TableType]
@@ -109,10 +189,10 @@ go
 
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 11 dec 2018
-module version : 7321
+Last updated : 12 dec 2019
+module version : 7596
 */
 
 ------------------------------------------------
@@ -131,9 +211,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7321);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7596);
 else
-	update a2sys.Versions set [Version] = 7321 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7596 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -158,19 +238,35 @@ begin
 		[Source] nvarchar(255) null,
 		[TransactionCount] bigint not null constraint DF_Tenants_TransactionCount default(0),
 		LastTransactionDate datetime null,
-		DateCreated datetime not null constraint DF_Tenants_UtcDateCreated default(getutcdate()),
+		DateCreated datetime not null constraint DF_Tenants_UtcDateCreated2 default(a2sys.fn_getCurrentDate()),
 		TrialPeriodExpired datetime null,
 		DataSize float null,
 		[State] nvarchar(128) null,
-		UserSince datetime null
+		UserSince datetime null,
+		LastPaymentDate datetime null,
+		Balance money null
 	);
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Tenants_DateCreated' and parent_object_id = object_id(N'aa2security.Tenants'))
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Config')
 begin
-	alter table a2security.Tenants drop constraint DF_Tenants_DateCreated;
-	alter table a2security.Tenants add constraint DF_Tenants_UtcDateCreated default(getutcdate()) for DateCreated with values;
+	create table a2security.Config
+	(
+		[Key] sysname not null constraint PK_Config primary key,
+		[Value] nvarchar(255) not null,
+	);
+end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Tenants') and name = N'IX_Tenants_Admin')
+	create index IX_Tenants_Admin on a2security.Tenants ([Admin]) include (Id);
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Tenants_UtcDateCreated' and parent_object_id = object_id(N'a2security.Tenants'))
+begin
+	alter table a2security.Tenants drop constraint DF_Tenants_UtcDateCreated;
+	alter table a2security.Tenants add constraint DF_Tenants_UtcDateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
@@ -192,6 +288,18 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'LastPaymentDate')
+begin
+	alter table a2security.Tenants add LastPaymentDate datetime null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'Balance')
+begin
+	alter table a2security.Tenants add Balance money null;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'DataSize')
 	alter table a2security.Tenants add DataSize float null;
 go
@@ -208,6 +316,20 @@ if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N
 	create sequence a2security.SQ_Users as bigint start with 100 increment by 1;
 go
 ------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_GetCurrentSegment') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_GetCurrentSegment;
+go
+------------------------------------------------
+create function a2security.fn_GetCurrentSegment()
+returns nvarchar(32)
+as
+begin
+	declare @ret nvarchar(32);
+	select @ret = [Value] from a2security.Config where [Key] = N'CurrentSegment';
+	return @ret;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users')
 begin
 	create table a2security.Users
@@ -217,6 +339,7 @@ begin
 		Tenant int null 
 			constraint FK_Users_Tenant_Tenants foreign key references a2security.Tenants(Id),
 		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
+		DomainUser nvarchar(255) null,
 		Void bit not null constraint DF_Users_Void default(0),
 		SecurityStamp nvarchar(max)	not null,
 		PasswordHash nvarchar(max)	null,
@@ -235,8 +358,10 @@ begin
 		Memo nvarchar(255) null,
 		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
 		RegisterHost nvarchar(255) null,
+		TariffPlan nvarchar(255) null,
 		[Guid] uniqueidentifier null,
-		Referral bigint null
+		Referral bigint null,
+		Segment nvarchar(32) null
 	);
 end
 go
@@ -260,6 +385,12 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'DomainUser')
+begin
+	alter table a2security.Users add DomainUser nvarchar(255) null;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'ChangePasswordEnabled')
 begin
 	alter table a2security.Users add ChangePasswordEnabled bit not null constraint DF_Users_ChangePasswordEnabled default(1) with values;
@@ -279,6 +410,12 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'TariffPlan')
+begin
+	alter table a2security.Users add TariffPlan nvarchar(255) null;
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Guid')
 begin
 	alter table a2security.Users add [Guid] uniqueidentifier null
@@ -289,6 +426,16 @@ if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2se
 begin
 	alter table a2security.Users add Referral bigint null;
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Segment')
+begin
+	alter table a2security.Users add Segment nvarchar(32) null;
+end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2security.Users') and name = N'UNQ_Users_DomainUser')
+	create unique index UNQ_Users_DomainUser on a2security.Users(DomainUser) where DomainUser is not null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Tenant')
@@ -441,7 +588,7 @@ begin
 		Code int not null
 			constraint FK_Log_Code_Codes foreign key references a2security.LogCodes(Code),
 		EventTime	datetime not null
-			constraint DF_Log_UtcEventTime default(getutcdate()),
+			constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()),
 		Severity nchar(1) not null,
 		[Message] nvarchar(max) sparse null
 	);
@@ -455,10 +602,10 @@ begin
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' and parent_object_id = object_id(N'a2security.Log'))
+if exists(select * from sys.default_constraints where name=N'DF_Log_UtcEventTime' and parent_object_id = object_id(N'a2security.Log'))
 begin
-	alter table a2security.[Log] drop constraint DF_Log_EventTime;
-	alter table a2security.[Log] add constraint DF_Log_UtcEventTime default(getutcdate()) for EventTime with values;
+	alter table a2security.[Log] drop constraint DF_Log_UtcEventTime;
+	alter table a2security.[Log] add constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()) for EventTime with values;
 end
 go
 ------------------------------------------------
@@ -478,11 +625,19 @@ begin
 		UserCreated bigint not null
 			constraint FK_Referrals_UserCreated_Users foreign key references a2security.Users(Id),
 		DateCreated	datetime not null
-			constraint DF_Referrals_DateCreated default(getutcdate()),
+			constraint DF_Referrals_DateCreated2 default(a2sys.fn_getCurrentDate()),
 		Memo nvarchar(255) null
 	)
 end
 go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateCreated' and parent_object_id = object_id(N'a2security.Referrals'))
+begin
+	alter table a2security.Referrals drop constraint DF_Referrals_DateCreated;
+	alter table a2security.Referrals add constraint DF_Referrals_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
+end
+go
+
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where CONSTRAINT_SCHEMA = N'a2security' and CONSTRAINT_NAME = N'FK_Users_Referral_Referrals')
 begin
@@ -498,14 +653,34 @@ go
 ------------------------------------------------
 create view a2security.ViewUsers
 as
-	select Id, UserName, PasswordHash, SecurityStamp, Email, PhoneNumber,
+	select Id, UserName, DomainUser, PasswordHash, SecurityStamp, Email, PhoneNumber,
 		LockoutEnabled, AccessFailedCount, LockoutEndDateUtc, TwoFactorEnabled, [Locale],
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
-		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled,
-		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit)
+		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan, Segment,
+		IsAdmin = cast(case when ug.GroupId = 77 /*predefined*/ then 1 else 0 end as bit),
+		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit)
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77
 	where Void=0 and Id <> 0;
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
+	drop procedure a2security.[WriteLog]
+go
+------------------------------------------------
+create procedure [a2security].[WriteLog]
+	@UserId bigint = null,
+	@SeverityChar nchar(1),
+	@Code int = null,
+	@Message nvarchar(max) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
+		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
+end
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindUserById')
@@ -760,6 +935,8 @@ create procedure a2security.CreateUser
 @Tenant int = null,
 @PersonName nvarchar(255) = null,
 @RegisterHost nvarchar(255) = null,
+@Memo nvarchar(255) = null,
+@TariffPlan nvarchar(255) = null,
 @RetId bigint output
 as
 begin
@@ -783,9 +960,11 @@ begin
 
 		select top(1) @tenantId = id from @tenants;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, RegisterHost)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, 
+			RegisterHost, Memo, TariffPlan, Segment)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, @RegisterHost);			
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, 
+				@RegisterHost, @Memo, @TariffPlan, a2security.fn_GetCurrentSegment());
 		select top(1) @userId = id from @users;
 
 		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
@@ -796,10 +975,9 @@ begin
 		begin
 			declare @sql nvarchar(255);
 			declare @prms nvarchar(255);
-			set @sql = N'a2security.OnCreateNewUser @TenantId, @UserId';
-			set @prms = N'@TenantId int, @UserId bigint';
-
-			exec sp_executesql @sql, @prms, @tenantId, @userId;
+			set @sql = N'a2security.OnCreateNewUser @TenantId, @CompanyId, @UserId';
+			set @prms = N'@TenantId int, @CompanyId bigint, @UserId bigint';
+			exec sp_executesql @sql, @prms, @tenantId, 1, @userId;
 		end
 
 		commit tran;
@@ -808,16 +986,17 @@ begin
 	begin
 		begin tran;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo, TariffPlan)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo, @TariffPlan);
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
-
 		commit tran;
+
+		exec a2security.[Permission.UpdateUserInfo];
+
 	end
-	exec a2security.[Permission.UpdateUserInfo];
 	set @RetId = @userId;
 
 	declare @msg nvarchar(255);
@@ -850,22 +1029,43 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
-	drop procedure a2security.[WriteLog]
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Login.CheckDuplicate')
+	drop procedure a2security.[Login.CheckDuplicate]
 go
 ------------------------------------------------
-create procedure [a2security].[WriteLog]
-	@UserId bigint = null,
-	@SeverityChar nchar(1),
-	@Code int = null,
-	@Message nvarchar(max) = null
+create procedure a2security.[Login.CheckDuplicate]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@CompanyId bigint = 1,
+	@Login nvarchar(255) = null
 as
 begin
 	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
-		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
+	declare @valid bit = 1;
+	if exists(select * from a2security.Users where UserName = @Login and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'PhoneNumber.CheckDuplicate')
+	drop procedure a2security.[PhoneNumber.CheckDuplicate]
+go
+------------------------------------------------
+create procedure a2security.[PhoneNumber.CheckDuplicate]
+	@TenantId int = null,
+	@UserId bigint,
+	@Id bigint,
+	@CompanyId bigint = 1,
+	@PhoneNumber nvarchar(255) = null
+as
+begin
+	set nocount on;
+	declare @valid bit = 1;
+	if exists(select * from a2security.Users where PhoneNumber = @PhoneNumber and Id <> @Id)
+		set @valid = 0;
+	select [Result!TResult!Object] = null, [Value] = @valid;
 end
 go
 ------------------------------------------------
@@ -889,7 +1089,8 @@ begin
 	insert into @codes(Code, [Name])
 	values
 		(1,  N'Login'		        ), 
-		(2,  N'UserCreated'		    ), 
+		(2,  N'UserCreated'         ), 
+		(3,  N'TeantUserCreated'    ), 
 		(15, N'PasswordUpdated'     ), 
 		(18, N'AccessFailedCount'   ), 
 		(26, N'EmailConfirmed'      ), 
@@ -904,7 +1105,12 @@ begin
 	when not matched by source then delete;
 end
 go
-create or alter procedure a2security.SaveReferral
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'SaveReferral')
+	drop procedure a2security.SaveReferral
+go
+------------------------------------------------
+create procedure a2security.SaveReferral
 @UserId bigint,
 @Referral nvarchar(255)
 as
@@ -913,9 +1119,55 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 	declare @refid bigint;
-	select @refid = Id from a2security.Referrals where Link = @Referral;
+	select @refid = Id from a2security.Referrals where lower(Link) = lower(@Referral);
 	if @refid is not null
 		update a2security.Users set Referral = @refid where Id=@UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'DeleteUser')
+	drop procedure a2security.DeleteUser
+go
+------------------------------------------------
+create procedure a2security.DeleteUser
+@CurrentUser bigint,
+@Tenant bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level serializable;
+	set xact_abort on;
+	declare @TenantAdmin bigint;
+	select @TenantAdmin = [Admin] from a2security.Tenants where Id = @Tenant;
+	if @TenantAdmin <> @CurrentUser
+	begin
+		raiserror(N'Invalid teanant administrator', 16, 1);
+		return;
+	end
+	if @TenantAdmin = @Id
+	begin
+		raiserror(N'Unable to delete tenant administrator', 16, 1);
+		return;
+	end
+	begin try
+		begin tran
+		delete from a2security.UserRoles where UserId = @Id;
+		delete from a2security.UserGroups where UserId = @Id;
+		delete from a2security.[Menu.Acl] where UserId = @Id;
+		delete from a2security.[Log] where UserId = @Id;
+		delete from a2security.Users where Tenant = @Tenant and Id = @Id;
+		commit tran
+	end try
+	begin catch
+		if @@trancount > 0
+		begin
+			rollback tran;
+		end
+		declare @msg nvarchar(255);
+		set @msg = error_message();
+		raiserror(@msg, 16, 1);
+	end catch
 end
 go
 ------------------------------------------------
@@ -931,6 +1183,59 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'License')
+begin
+	create table a2security.License
+	(
+		[Text] nvarchar(max) not null,
+		DateCreated datetime not null constraint DF_License_DateCreated2 default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_License_DateModified2 default (a2sys.fn_getCurrentDate())
+	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateCreated' and parent_object_id = object_id(N'a2security.License'))
+begin
+	alter table a2security.License drop constraint DF_License_UtcDateCreated;
+	alter table a2security.License add constraint DF_License_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateModified' and parent_object_id = object_id(N'a2security.License'))
+begin
+	alter table a2security.License drop constraint DF_License_UtcDateModified;
+	alter table a2security.License add constraint DF_License_DateModified2 default(a2sys.fn_getCurrentDate()) for DateModified with values;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'License.Load')
+	drop procedure a2security.[License.Load]
+go
+------------------------------------------------
+create procedure a2security.[License.Load]
+as
+begin
+	set nocount on;
+	select [Text] from a2security.License;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'License.Update')
+	drop procedure a2security.[License.Update]
+go
+------------------------------------------------
+create procedure a2security.[License.Update]
+@License nvarchar(max)
+as
+begin
+	set nocount on;
+	if exists(select * from a2security.License)
+		update a2security.License set [Text]=@License, DateModified = a2sys.fn_getCurrentDate();
+	else
+		insert into a2security.License ([Text]) values (@License);
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2security to public;
@@ -942,13 +1247,13 @@ go
 
 
 
-/* 20181123-7053 */
+/* 20191212-7549 */
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 23 nov 2018
-module version : 7053
+Last updated : 12 dec 2019
+module version : 7549
 */
 ------------------------------------------------
 set noexec off;
@@ -966,9 +1271,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7053);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7549);
 else
-	update a2sys.Versions set [Version] = 7053 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7549 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -988,8 +1293,9 @@ begin
 			constraint DF_Menu_PK default(next value for a2ui.SQ_Menu),
 		Parent bigint null
 			constraint FK_Menu_Parent_Menu foreign key references a2ui.Menu(Id),
-		Name nvarchar(255) null,
-		Url nvarchar(255) null,
+		[Key] nchar(4) null,
+		[Name] nvarchar(255) null,
+		[Url] nvarchar(255) null,
 		Icon nvarchar(255) null,
 		Model nvarchar(255) null,
 		Help nvarchar(255) null,
@@ -1003,6 +1309,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Help')
 begin
 	alter table a2ui.Menu add Help nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Key')
+begin
+	alter table a2ui.Menu add [Key] nchar(4) null;
 end
 go
 ------------------------------------------------
@@ -1028,13 +1340,17 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where [name] = N'IX_MenuAcl_UserId')
+	create nonclustered index IX_MenuAcl_UserId on a2security.[Menu.Acl] (UserId);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Feedback')
 begin
 	create table a2ui.Feedback
 	(
 		Id	bigint identity(1, 1) not null constraint PK_Feedback primary key,
 		[Date] datetime not null
-			constraint DF_Feedback_UtcDate default(getutcdate()),
+			constraint DF_Feedback_CurrentDate default(a2sys.fn_getCurrentDate()),
 		UserId bigint not null
 			constraint FK_Feedback_UserId_Users foreign key references a2security.Users(Id),
 		[Text] nvarchar(max) null
@@ -1042,10 +1358,10 @@ begin
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Feedback_Date' and parent_object_id = object_id(N'a2ui.Feedback'))
+if exists(select * from sys.default_constraints where name=N'DF_Feedback_UtcDate' and parent_object_id = object_id(N'a2ui.Feedback'))
 begin
-	alter table a2ui.Feedback drop constraint DF_Feedback_Date;
-	alter table a2ui.Feedback add constraint DF_Feedback_UtcDate default(getutcdate()) for [Date];
+	alter table a2ui.Feedback drop constraint DF_Feedback_UtcDate;
+	alter table a2ui.Feedback add constraint DF_Feedback_CurrentDate default(a2sys.fn_getCurrentDate()) for [Date];
 end
 go
 ------------------------------------------------
@@ -1062,14 +1378,15 @@ go
 create procedure a2ui.[Menu.User.Load]
 @TenantId int = null,
 @UserId bigint,
+@Mobile bit = 0,
 @Groups nvarchar(255) = null -- for use claims
 as
 begin
 	set nocount on;
-	-- TODO: 
-	-- 1. get default root for user
-	-- 4.
-	declare @RootId bigint = 1;
+	declare @RootId bigint;
+	set @RootId = 1;
+	if @Mobile = 1
+		set @RootId = 2;
 	with RT as (
 		select Id=m0.Id, ParentId = m0.Parent, [Level]=0
 			from a2ui.Menu m0
@@ -1205,6 +1522,96 @@ begin
 			values (source.[ObjectId], source.UserId, source.CanView)
 	when not matched by source then
 		delete;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateUserAcl.Menu')
+	drop procedure [a2security].[Permission.UpdateUserAcl.Menu]
+go
+------------------------------------------------
+create procedure [a2security].[Permission.UpdateUserAcl.Menu]
+@UserId bigint
+as
+begin
+	set nocount on;
+	declare @MenuTable table (Id bigint, UserId bigint, GroupId bigint, CanView smallint);
+
+	insert into @MenuTable (Id, UserId, GroupId, CanView)
+		select f.Id, a.UserId, a.GroupId, a.CanView
+		from a2security.Acl a 
+			cross apply a2security.fn_GetMenuFor(a.ObjectId) f
+			/*exclude denied parents */
+		where a.[Object] = N'std:menu' and Not (Parent = 1 and CanView = -1)
+		group by f.Id, UserId, GroupId, CanView;
+
+	declare @UserTable table (ObjectId bigint, UserId bigint, CanView bit);
+
+	with T(ObjectId, UserId, CanView)
+	as
+	(
+		select a.Id, UserId=isnull(ur.UserId, a.UserId), a.CanView
+		from @MenuTable a
+		left join a2security.UserGroups ur on a.GroupId = ur.GroupId
+		where isnull(ur.UserId, a.UserId) = @UserId
+	)
+	insert into @UserTable(ObjectId, UserId, CanView)
+	select ObjectId, UserId,
+		_CanView = isnull(case 
+				when min(T.CanView) = -1 then 0
+				when max(T.CanView) = 1 then 1
+				end, 0)
+	from T
+	group by ObjectId, UserId;
+
+	merge a2security.[Menu.Acl] as target
+	using
+	(
+		select ObjectId, UserId, CanView
+		from @UserTable T
+		where CanView = 1
+	) as source(ObjectId, UserId, CanView)
+		on target.Menu = source.[ObjectId] and target.UserId=source.UserId
+	when matched then
+		update set 
+			target.CanView = source.CanView
+	when not matched by target then
+		insert (Menu, UserId, CanView)
+			values (source.[ObjectId], source.UserId, source.CanView)
+	when not matched by source and target.UserId = @UserId then
+		delete;
+end
+go
+-----------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_IsMenuVisible') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_IsMenuVisible;
+go
+------------------------------------------------
+create function a2security.fn_IsMenuVisible(@MenuId bigint, @UserId bigint)
+returns bit
+as
+begin
+	declare @result bit;
+	select @result = case when CanView = 1 then 1 else 0 end from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId;
+	return isnull(@result, 1); -- not found - visible
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui' and ROUTINE_NAME=N'Menu.SetVisible')
+	drop procedure a2ui.[Menu.SetVisible]
+go
+------------------------------------------------
+create procedure a2ui.[Menu.SetVisible]
+@UserId bigint,
+@MenuId bigint,
+@Visible bit
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	if @Visible = 0 and not exists(select * from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId)
+		 insert into a2security.Acl ([Object], ObjectId, UserId, CanView) values (N'std:menu', @MenuId, @UserId, -1);
+	else if @Visible = 1
+		delete from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId;
 end
 go
 ------------------------------------------------

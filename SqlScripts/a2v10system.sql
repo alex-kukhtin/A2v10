@@ -1,11 +1,11 @@
-﻿/* 20190303-7048 */
+﻿/* 20191212-7049 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 04 mar 2019
-module version : 7048
+Last updated : 12 dec 2019
+module version : 7049
 */
 ------------------------------------------------
 set noexec off;
@@ -39,9 +39,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7048);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7049);
 else
-	update a2sys.Versions set [Version] = 7048 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7049 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -78,6 +78,13 @@ begin
 	set @ret = cast(@i as datetime);
 	return @ret;
 end
+go
+------------------------------------------------
+if not exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_getCurrentDate') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+exec sp_executesql N'
+create function a2sys.fn_getCurrentDate() 
+returns datetime 
+as begin return getdate(); end';
 go
 ------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_trim') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))

@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿// Copyright © 2018-2019 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BuildSql
 {
@@ -54,8 +54,10 @@ namespace BuildSql
 						var inputPath = Path.Combine(_path, f);
 						Console.WriteLine($"\t{f}");
 						var inputText = File.ReadAllText(inputPath);
-						if (item.replaceSessionContext)
+						if (item.replaceSessionContext) {
+							// TODO:
 							inputText = inputText.Replace("default(cast(session_context(N'TenantId') as int))", "default(1)");
+						}
 						sw.Write(inputText);
 						sw.WriteLine();
 					}

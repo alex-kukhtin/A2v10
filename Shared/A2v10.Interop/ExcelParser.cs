@@ -28,7 +28,7 @@ namespace A2v10.Interop
 
 		}
 
-		public Object ParseFile(Stream stream, ITableDescription table)
+		public ExpandoObject ParseFile(Stream stream, ITableDescription table)
 		{
 			try
 			{
@@ -43,7 +43,7 @@ namespace A2v10.Interop
 			}
 		}
 
-		Object ParseFileImpl(Stream stream, ITableDescription table)
+		ExpandoObject ParseFileImpl(Stream stream, ITableDescription table)
 		{
 			if (table == null)
 				throw new ArgumentNullException(nameof(table));

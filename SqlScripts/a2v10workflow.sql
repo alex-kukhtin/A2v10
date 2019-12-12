@@ -1,10 +1,10 @@
-/* 20100114-7051 */
+/* 20191212-7052 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 A. Kukhtin
 
-Last updated : 14 jan 2019 20:05
-module version : 7051
+Last updated : 12 dec 2019 20:05
+module version : 7052
 */
 
 /*
@@ -32,9 +32,9 @@ go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7051);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7052);
 else
-	update a2sys.Versions set [Version] = 7051 where Module = N'std:workflow';
+	update a2sys.Versions set [Version] = 7052 where Module = N'std:workflow';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -66,24 +66,24 @@ begin
 		Model nvarchar(255) null,
 		ModelId bigint null,
 
-		DateCreated datetime not null constraint DF_Processes_UtcDateCreated default(getutcdate()),
-		DateModified datetime not null constraint DF_Processes_UtcDateModified default(getutcdate()),
+		DateCreated datetime not null constraint DF_Processes_DateCreated2 default(a2sys.fn_getCurrentDate()),
+		DateModified datetime not null constraint DF_Processes_DateModified2 default(a2sys.fn_getCurrentDate()),
 		AutoStart bit null
 	);
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Processes_DateCreated')
+if exists(select * from sys.default_constraints where name=N'DF_Processes_UtcDateCreated' and parent_object_id = object_id(N'a2workflow.Processes'))
 begin
-	alter table a2workflow.Processes drop constraint DF_Processes_DateCreated;
-	alter table a2workflow.Processes add constraint DF_Processes_UtcDateCreated default(getutcdate()) for DateCreated with values;
+	alter table a2workflow.Processes drop constraint DF_Processes_UtcDateCreated;
+	alter table a2workflow.Processes add constraint DF_Processes_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Processes_DateModified')
+if exists(select * from sys.default_constraints where name=N'DF_Processes_UtcDateModified' and parent_object_id = object_id(N'a2workflow.Processes'))
 begin
-	alter table a2workflow.Processes drop constraint DF_Processes_DateModified;
-	alter table a2workflow.Processes add constraint DF_Processes_UtcDateModified default(getutcdate()) for DateModified with values;
+	alter table a2workflow.Processes drop constraint DF_Processes_UtcDateModified;
+	alter table a2workflow.Processes add constraint DF_Processes_DateModified2 default(a2sys.fn_getCurrentDate()) for DateModified with values;
 end
 go
 ------------------------------------------------
@@ -108,7 +108,7 @@ begin
 		[Text] nvarchar(255) null,
 		Expired datetime,
 		TargetId bigint null,
-		DateCreated datetime not null constraint DF_Inbox_UtcDateCreated default(getutcdate()),
+		DateCreated datetime not null constraint DF_Inbox_DateCreated2 default(a2sys.fn_getCurrentDate()),
 		DateRemoved datetime null,
 		UserRemoved bigint null
 			constraint FK_Inbox_UserRemoved references a2security.Users(Id),
@@ -117,10 +117,10 @@ begin
 end
 go
 ------------------------------------------------
-if exists(select * from sys.default_constraints where name=N'DF_Inbox_DateCreated')
+if exists(select * from sys.default_constraints where name=N'DF_Inbox_UtcDateCreated' and parent_object_id = object_id(N'a2workflow.Inbox'))
 begin
-	alter table a2workflow.Inbox drop constraint DF_Inbox_DateCreated;
-	alter table a2workflow.Inbox add constraint DF_Inbox_UtcDateCreated default(getutcdate()) for DateCreated with values;
+	alter table a2workflow.Inbox drop constraint DF_Inbox_UtcDateCreated;
+	alter table a2workflow.Inbox add constraint DF_Inbox_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
@@ -210,7 +210,7 @@ begin
 
 	if @state is not null
 	begin
-		update a2workflow.Processes set [State] = @state, DateModified = getutcdate() where WorkflowId = @InstanceId;
+		update a2workflow.Processes set [State] = @state, DateModified = a2sys.fn_getCurrentDate() where WorkflowId = @InstanceId;
 	end
 end
 go
@@ -234,7 +234,7 @@ begin
 
 	insert into a2workflow.Track(ProcessId, [UserId], [Message], [DateTime])
 		output inserted.Id into @outputTable(Id)
-		values (@ProcessId, @UserId, @Message, getutcdate());
+		values (@ProcessId, @UserId, @Message, a2sys.fn_getCurrentDate());
 	select top(1) @RetId = Id from @outputTable;
 end
 go
@@ -313,7 +313,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
-	update a2workflow.Inbox set Void=0, Answer='Remove', UserRemoved=0, DateRemoved=getutcdate() 
+	update a2workflow.Inbox set Void=0, Answer='Remove', UserRemoved=0, DateRemoved=a2sys.fn_getCurrentDate() 
 	where Id = @Id;
 end
 go
@@ -401,7 +401,7 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	update a2workflow.Inbox set Void=1, UserRemoved = @UserId, DateRemoved=getutcdate(),
+	update a2workflow.Inbox set Void=1, UserRemoved = @UserId, DateRemoved=a2sys.fn_getCurrentDate(),
 		Answer = @Answer
 	where Id = @Id;
 end

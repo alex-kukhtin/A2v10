@@ -388,9 +388,9 @@
 				eventBus.$emit('closeAllPopups');
 				let urlToNavigate = urltools.createUrlForNavigate(url, data);
 				if (newWindow === true) {
-                    let nwin = window.open(urlToNavigate, "_blank");
-                    if (nwin)
-                        nwin.$$token = { token: this.__currentToken__, update: update };
+					let nwin = window.open(urlToNavigate, "_blank");
+					if (nwin)
+						nwin.$$token = { token: this.__currentToken__, update: update };
 				}
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
@@ -398,9 +398,9 @@
 
 			$navigateSimple(url, newWindow, update) {
 				if (newWindow === true) {
-                    let nwin = window.open(url, "_blank");
-                    if (nwin)
-                        nwin.$$token = { token: this.__currentToken__, update: update };
+					let nwin = window.open(url, "_blank");
+					if (nwin)
+						nwin.$$token = { token: this.__currentToken__, update: update };
 				}
 				else
 					this.$store.commit('navigate', { url: url });

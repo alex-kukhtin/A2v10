@@ -7,7 +7,7 @@ using A2v10.Infrastructure;
 using A2v10.Tests.Config;
 using A2v10.Xaml;
 
-namespace A2v10.Tests
+namespace A2v10.Tests.Xaml
 {
 	[TestClass]
 	[TestCategory("Xaml")]

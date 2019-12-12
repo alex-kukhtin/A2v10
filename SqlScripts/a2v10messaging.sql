@@ -47,8 +47,15 @@ begin
 		[Key] nvarchar(255) not null,
 		TargetId bigint null,
 		[Source] nvarchar(255) null,
-		DateCreated datetime not null constraint DF_Processes_UtcDateCreated default(getutcdate())
+		DateCreated datetime not null constraint DF_Messages_DateCreated2 default(a2sys.fn_getCurrentDate())
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Processes_UtcDateCreated' and parent_object_id = object_id(N'a2messaging.Messages'))
+begin
+	alter table a2messaging.[Messages] drop constraint DF_Processes_UtcDateCreated;
+	alter table a2messaging.[Messages] add constraint DF_Messages_DateCreated2 default(a2sys.fn_getCurrentDate()) for DateCreated with values;
 end
 go
 ------------------------------------------------
@@ -96,10 +103,17 @@ begin
 		UserId bigint not null
 			constraint FK_Log_UserId_Users foreign key references a2security.Users(Id),
 		EventTime	datetime not null
-			constraint DF_Log_EventTime default(getdate()),
+			constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()),
 		Severity nchar(1) not null,
 		[Message] nvarchar(max) null,
 	);
+end
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Log_EventTime' and parent_object_id = object_id(N'a2messaging.Log'))
+begin
+	alter table a2messaging.[Log] drop constraint DF_Log_EventTime;
+	alter table a2messaging.[Log] add constraint DF_Log_EventTime2 default(a2sys.fn_getCurrentDate()) for EventTime with values;
 end
 go
 ------------------------------------------------
