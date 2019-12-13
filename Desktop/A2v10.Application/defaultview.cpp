@@ -9,6 +9,7 @@
 #endif
 
 #include "defaultview.h"
+#include "logininfo.h"
 #include "logindlg.h"
 
 

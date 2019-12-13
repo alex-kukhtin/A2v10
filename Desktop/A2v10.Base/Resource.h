@@ -32,6 +32,11 @@
 #define IDC_TEXT3			  14018
 #define IDC_TEXT4			  14019
 #define IDC_TEXT5			  14020
+#define IDC_CHECK1			14026
+#define IDC_CHECK2			14027
+#define IDC_CHECK3			14028
+#define IDC_CHECK4			14029
+#define IDC_CHECK5			14030
 
 #define ID_VIEW_PROPERTIES		32200
 #define	ID_VIEW_TOOLBOX			32201

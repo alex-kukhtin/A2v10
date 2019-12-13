@@ -196,6 +196,7 @@
     <ClInclude Include="cefscheme.h" />
     <ClInclude Include="defaultview.h" />
     <ClInclude Include="logindlg.h" />
+    <ClInclude Include="logininfo.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="cefview.h" />
     <ClInclude Include="navtabs.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="defaultview.cpp" />
     <ClCompile Include="framepaint.cpp" />
     <ClCompile Include="logindlg.cpp" />
+    <ClCompile Include="logininfo.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="cefview.cpp" />
     <ClCompile Include="navtabs.cpp" />

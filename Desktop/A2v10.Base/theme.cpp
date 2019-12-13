@@ -50,6 +50,10 @@ CFont* CTheme::GetUIFont(FontType ft/*= FontNormal*/)
 	case FontBig:
 		lf.lfHeight = (int)((double)lf.lfHeight * 9.75 / 8.25);
 		break;
+	case FontBigBold:
+		lf.lfHeight = (int)((double)lf.lfHeight * 9.75 / 8.25);
+		lf.lfWeight = 700;
+		break;
 	case FontUiDefault:
 		lf.lfHeight = lf.lfHeight * 75;
 		break;
