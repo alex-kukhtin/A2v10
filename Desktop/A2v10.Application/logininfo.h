@@ -6,6 +6,11 @@ public:
 	CString m_login;
 	int m_authType; // 0-windows, 1-sql-server
 	CString m_password;
+	bool m_bRemember;
+
+
+	CLoginUser()
+		: m_authType(0), m_bRemember(false) {}
 
 	CLoginUser& operator=(const CLoginUser& user);
 
