@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 		public Boolean Small { get; set; }
 		public Boolean Big { get; set; }
 		public SpaceMode Space { get; set; }
+		public UInt32 MaxChars { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -33,7 +34,7 @@ namespace A2v10.Xaml
 			var cbind = GetBinding(nameof(Content));
 			if (cbind != null)
 			{
-				span.MergeAttribute("v-text", cbind.GetPathFormat(context));
+				span.MergeAttribute("v-text", MaxChars > 0 ? $"$maxChars({cbind.GetPathFormat(context)}, {MaxChars})" : cbind.GetPathFormat(context));
 				if (cbind.NegativeRed)
 				{
 					if (GetBinding(nameof(Color)) != null)

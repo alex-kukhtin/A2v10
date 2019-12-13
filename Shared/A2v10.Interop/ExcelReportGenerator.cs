@@ -266,13 +266,26 @@ namespace A2v10.Interop
 					throw new InteropException($"The data model does not have a '{dataSet.Key}' property ");
 				}
 				RowSetDef def = dataSet.Value;
-				UInt32 count = 0;
-				Row lr = null;
-				for (Int32 i=0; i<list.Count; i++)
+				if (list.Count == 0)
 				{
-					lr = InsertRowFromTemplate(def, ref count);
+					// no records - delete range
+					for (Int32 i = 0; i <def.RowCount; i++)
+					{
+						var row = _sheetData.Elements<Row>().First<Row>(r => r.RowIndex == def.FirstRow + i);
+						row.Remove();
+					}
 					_wrkshtModified = true;
-					SetRecordData(def, list[i]);
+				}
+				else
+				{
+					UInt32 count = 0;
+					Row lr = null;
+					for (Int32 i = 0; i < list.Count; i++)
+					{
+						lr = InsertRowFromTemplate(def, ref count);
+						_wrkshtModified = true;
+						SetRecordData(def, list[i]);
+					}
 				}
 			}
 		}

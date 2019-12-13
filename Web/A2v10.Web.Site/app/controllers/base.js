@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191206-7595*/
+/*20191213-7599*/
 // controllers/base.js
 
 (function () {
@@ -139,7 +139,9 @@
 			$toJson(data) {
 				return utils.toJson(data);
 			},
-
+			$maxChars(text, length) {
+				return utils.text.maxChars(text, length);
+			},
 			$isReadOnly(opts) {
 				return opts && opts.checkReadOnly && this.$data.$readOnly;
 			},

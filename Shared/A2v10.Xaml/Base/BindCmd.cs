@@ -269,9 +269,8 @@ namespace A2v10.Xaml
 				case CommandType.Execute:
 					if (indirect)
 					{
-						if (!IsArgumentEmpty(context))
-							return $"{{cmd:$exec, arg1:'{GetName()}', arg2:'{CommandArgument(context)}'}}";
-						return $"{{cmd:$exec, arg1:'{GetName()}', arg2:'this'}}";
+						var arg2 = IsArgumentEmpty(context) ? "this" : CommandArgument(context);
+						return $"{{cmd:$exec, arg1:'{GetName()}', arg2:'{arg2}', arg3: {GetConfirm(context)}, arg4: {GetOptions(context)}}}";
 					}
 					if (argument != null)
 						return $"$exec('{GetName()}', {argument}, {GetConfirm(context)}, {GetOptions(context)})";

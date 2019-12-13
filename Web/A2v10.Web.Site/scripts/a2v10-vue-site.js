@@ -176,7 +176,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191017-7568
+// 20191213-7599
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -251,7 +251,8 @@ app.modules['std:utils'] = function () {
 			containsText: textContainsText,
 			sanitize,
 			splitPath,
-			capitalize
+			capitalize,
+			maxChars
 		},
 		currency: {
 			round: currencyRound,
@@ -731,6 +732,12 @@ app.modules['std:utils'] = function () {
 	function capitalize(text) {
 		if (!text) return '';
 		return text.charAt(0).toUpperCase() + text.slice(1);
+	}
+	function maxChars(text, length) {
+		text = '' + text || '';
+		if (text.length < length)
+			return text;
+		return text.substring(0, length - 1) + '\u2026' /*ellipsis*/;
 	}
 
 	function textContains(text, probe) {
@@ -4635,7 +4642,7 @@ Vue.component('a2-pager', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191206-7595*/
+/*20191213-7599*/
 // controllers/base.js
 
 (function () {
@@ -4774,7 +4781,9 @@ Vue.component('a2-pager', {
 			$toJson(data) {
 				return utils.toJson(data);
 			},
-
+			$maxChars(text, length) {
+				return utils.text.maxChars(text, length);
+			},
 			$isReadOnly(opts) {
 				return opts && opts.checkReadOnly && this.$data.$readOnly;
 			},

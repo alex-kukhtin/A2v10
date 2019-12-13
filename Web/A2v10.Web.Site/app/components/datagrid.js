@@ -1,24 +1,19 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191202-7591
+// 20191213-7599
 // components/datagrid.js*/
 
 (function () {
+
+	/**
+	 * Some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable
+	 * Groupings. "v-show" on a line is much faster than "v-if" on an entire template.
+	 */
 
 	/*TODO:
    7. Доделать checked
    10.
    */
-
-	/*some ideas from https://github.com/andrewcourtice/vuetiful/tree/master/src/components/datatable */
-
-	/**
-	 * группировки. v-show на строке гораздо быстрее, чем v-if на всем шаблоне
-	 */
-
-	/*
-		{{g.group}} level:{{g.level}} expanded:{{g.expanded}} source:{{g.source}} count:
-	 */
 
 
 	const utils = require('std:utils');
@@ -300,7 +295,7 @@
 			};
 
 			function normalizeArg(arg, doEval) {
-				if (utils.isBoolean(arg) || utils.isNumber(arg))
+				if (utils.isBoolean(arg) || utils.isNumber(arg) || utils.isObjectExact(arg))
 					return arg;
 				arg = arg || '';
 				if (arg === 'this')
