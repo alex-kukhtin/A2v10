@@ -21,7 +21,7 @@ protected:
 	CString m_database;
 	CString m_login;
 	CString m_password;
-	int m_authIndex;
+	BOOL m_bRemember;
 
 	CComboBox m_cmbAuth;
 	CComboBox m_cmbServer;
@@ -29,9 +29,12 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 	virtual BOOL OnInitDialog() override;
 
+	DECLARE_MESSAGE_MAP()
+
 	void UpdateUI();
 
-	DECLARE_MESSAGE_MAP()
+	bool LoadLoginInfo();
+	void SaveLoginInfo();
 
 	afx_msg void OnOk();
 	afx_msg void OnAuthSelEndOk();

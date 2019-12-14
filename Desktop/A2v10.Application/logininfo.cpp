@@ -8,15 +8,6 @@ IMPLEMENT_SERIAL(CLoginUser, CObject, 1)
 IMPLEMENT_SERIAL(CLoginServer, CObject, 1)
 IMPLEMENT_SERIAL(CLoginInfo, CObject, 1)
 
-CLoginUser& CLoginUser::operator=(const CLoginUser& user)
-{
-	m_login = user.m_login;
-	m_password = user.m_password;
-	m_authType = user.m_authType;
-	m_bRemember = user.m_bRemember;
-	return *this;
-}
-
 void CLoginUser::Serialize(CArchive & ar)
 {
 	if (ar.IsStoring()) 
@@ -38,41 +29,141 @@ void CLoginUser::Serialize(CArchive & ar)
 ////////////////
 // CLoginServer
 
+// virtual 
+CLoginServer::~CLoginServer()
+{
+	for (int i = 0; i < m_users.GetCount(); i++)
+		delete m_users.ElementAt(i);
+	m_users.RemoveAll();
+}
+
 void CLoginServer::Serialize(CArchive & ar)
 {
 	if (ar.IsStoring()) 
 	{
 		ar << m_name;
+		ar << m_lastUserIndex;
+		ar << m_lastDbIndex;
+		ar << (int) m_users.GetCount();
+		for (int i = 0; i < m_users.GetCount(); i++)
+			ar << m_users.ElementAt(i);
 	} 
 	else 
 	{
 		ar >> m_name;
+		ar >> m_lastUserIndex;
+		ar >> m_lastDbIndex;
+
+		int cnt;
+		CLoginUser* pUser;
+		ar >> cnt;
+		for (int i = 0; i < cnt; i++) {
+			ar >> pUser;
+			m_users.Add(pUser);
+		}
 	}
-	m_users.Serialize(ar);
 	m_databases.Serialize(ar);
 }
 
-CLoginServer& CLoginServer::operator=(const CLoginServer& server)
+void CLoginServer::FindOrCreateDatabase(LPCWSTR szDatabase)
 {
-	m_name = server.m_name;
-	m_users.Copy(server.m_users);
-	m_databases.Copy(server.m_databases);
-	return *this;
+	for (int i = 0; i < m_databases.GetCount(); i++) {
+		CString& db = m_databases.ElementAt(i);
+		if (db == szDatabase) {
+			return;
+		}
+	}
+	m_databases.Add(szDatabase);
+}
+
+LPCWSTR CLoginServer::GetCurrentDatabase()
+{
+	if (m_lastDbIndex < 0 || m_lastDbIndex >= m_databases.GetSize())
+		return nullptr;
+	return (LPCWSTR) m_databases.ElementAt(m_lastDbIndex);
+}
+
+CLoginUser* CLoginServer::GetCurrentUser()
+{
+	if (m_lastUserIndex < 0 || m_lastUserIndex >= m_users.GetSize())
+		return nullptr;
+	return m_users.GetAt(m_lastUserIndex);
 }
 
 
 ////////////////
 // CLoginInfo
 
-void CLoginInfo::Serialize(CArchive & ar)
+// virtual 
+CLoginInfo::~CLoginInfo()
 {
-	if (ar.IsStoring())
-		ar << m_lastIndex;
-	else
-		ar >> m_lastIndex;
-	m_servers.Serialize(ar);
-
-	CLoginServer srv;
-	m_servers.Add(srv);
+	for (int i = 0; i < m_servers.GetCount(); i++)
+		delete m_servers.ElementAt(i);
+	m_servers.RemoveAll();
 }
 
+
+void CLoginInfo::Serialize(CArchive & ar)
+{
+	if (ar.IsStoring()) 
+	{
+		ar << m_lastIndex;
+		ar << (int)m_servers.GetCount();
+		for (int i = 0; i < m_servers.GetCount(); i++)
+			ar << m_servers.ElementAt(i);
+	} 
+	else 
+	{
+		ar >> m_lastIndex;
+		int cnt = 0;
+		ar >> cnt;
+		CLoginServer* pSrv;
+		for (int i = 0; i < cnt; i++) {
+			ar >> pSrv;
+			m_servers.Add(pSrv);
+		}
+	}
+}
+
+CLoginServer& CLoginInfo::GetCurrent() 
+{
+	return *m_servers.ElementAt(m_lastIndex);
+}
+
+CLoginServer& CLoginInfo::GetOrCreateServer(LPCWSTR szServer) 
+{
+	CLoginServer* pSrv;
+	for (int i = 0; i < m_servers.GetCount(); i++) {
+		pSrv = m_servers.ElementAt(i);
+		if (pSrv->m_name == szServer) {
+			m_lastIndex = i;
+			return *pSrv;
+		}
+	}
+	pSrv = new CLoginServer();
+	pSrv->m_name = szServer;
+	m_servers.Add(pSrv);
+	m_lastIndex = m_servers.GetUpperBound();
+	return *pSrv;
+}
+
+void CLoginInfo::FillDefault()
+{
+	CLoginServer* pSrv = new CLoginServer();
+	m_servers.Add(pSrv);
+	//
+	pSrv->m_databases.Add(L"database1");
+	pSrv->m_databases.Add(L"database2");
+	pSrv->m_lastDbIndex = 1;
+	CLoginUser* pUser = new CLoginUser();
+	pUser->m_authType = AUTH_SQL;
+	pUser->m_login = L"login";
+	pUser->m_password = L"password";
+	pUser->m_bRemember = true;
+	pSrv->m_users.Add(pUser);
+	pSrv->m_name = L"localhost";
+	pSrv->m_lastDbIndex = 0;
+	pSrv->m_lastUserIndex = 0;
+	//
+	m_lastIndex = 0;
+}
