@@ -129,6 +129,9 @@
     <ClCompile Include="a2sdiframebase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="jsonparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -257,6 +260,9 @@
       <Filter>Include Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\a2sdiframebase.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\jsonparser.h">
       <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>

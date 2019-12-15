@@ -181,5 +181,9 @@
 ;
 ?GetCurrentFullAppVersion@CModuleVersion@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
 ;
+??0JsonParser@@QAE@XZ
+??1JsonParser@@UAE@XZ
+?Parse@JsonParser@@QAEXPB_W@Z
+?SetTarget@JsonParser@@QAEXPAVJsonTarget@@@Z
 
 

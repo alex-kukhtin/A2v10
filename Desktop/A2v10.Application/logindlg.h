@@ -17,25 +17,23 @@ protected:
 
 	CLoginInfo m_loginInfo;
 
-	CString m_server;
-	CString m_database;
-	CString m_login;
-	CString m_password;
-	BOOL m_bRemember;
-
 	CComboBox m_cmbAuth;
 	CComboBox m_cmbServer;
+	CComboBox m_cmbDatabase;
+	CComboBox m_cmbUsers;
 
 	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 	virtual BOOL OnInitDialog() override;
 
 	DECLARE_MESSAGE_MAP()
 
+	CString GetLoginsPath(bool bCreate);
 	void UpdateUI();
 
 	bool LoadLoginInfo();
-	void SaveLoginInfo();
+	void SaveLoginInfo(CLoginInfo& info);
 
 	afx_msg void OnOk();
 	afx_msg void OnAuthSelEndOk();
+	afx_msg void OnLoginSelEndOk();
 };

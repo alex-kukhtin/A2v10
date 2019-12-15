@@ -4,90 +4,214 @@
 #include "A2v10.Application.h"
 #include "logininfo.h"
 
-IMPLEMENT_SERIAL(CLoginUser, CObject, 1)
-IMPLEMENT_SERIAL(CLoginServer, CObject, 1)
-IMPLEMENT_SERIAL(CLoginInfo, CObject, 1)
 
-void CLoginUser::Serialize(CArchive & ar)
+inline LPCWSTR _bool2String(bool bVal) {
+	return bVal ? L"true" : L"false";
+}
+
+void CLoginUser::Serialize(CString& target)
 {
-	if (ar.IsStoring()) 
-	{
-		ar << m_login;
-		ar << m_authType;
-		ar << m_password;
-		ar << m_bRemember;
+	CString s;
+	s.Format(L"{\"login\": \"%s\", \"password\": \"%s\", \"auth\":\"%s\", \"remember\":%s, \"selected\": %s}", 
+		(LPCWSTR) m_login, (LPCWSTR) m_password, m_authType == AUTH_WINDOWS ? L"windows" : L"sql",
+		_bool2String(m_bRemember), _bool2String(m_bSelected));
+	target += s;
+}
+
+// virtual 
+void CLoginUser::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
+{
+	CString err;
+	if (wcscmp(szName, L"login") == 0)
+		m_login = szValue;
+	else if (wcscmp(szName, L"password") == 0)
+		m_password = szValue;
+	else if (wcscmp(szName, L"auth") == 0) {
+		if (wcscmp(szValue, L"windows") == 0)
+			m_authType = AUTH_WINDOWS;
+		else if (wcscmp(szValue, L"sql") == 0)
+			m_authType = AUTH_SQL;
 	}
-	else 
-	{
-		ar >> m_login;
-		ar >> m_authType;
-		ar >> m_password;
-		ar >> m_bRemember;
-	}
+}
+
+// virtual 
+void CLoginUser::SetBoolValue(const wchar_t* szName, bool bValue)
+{
+	if (wcscmp(szName, L"remember") == 0)
+		m_bRemember = bValue;
+	else if (wcscmp(szName, L"selected") == 0)
+		m_bSelected = bValue;
+}
+
+CLoginUsers::~CLoginUsers()
+{
+	for (int i = 0; i < GetCount(); i++)
+		delete ElementAt(i);
+	RemoveAll();
+}
+
+// virtual 
+JsonTarget* CLoginUsers::CreateObject(const wchar_t* szName)
+{
+	CLoginUser*  pUser = new CLoginUser();
+	Add(pUser);
+	return pUser;
+}
+
+/////////////////
+// CLoginDatabase
+
+void CLoginDatabase::Serialize(CString& target)
+{
+	CString s;
+	s.Format(L"{\"name\": \"%s\", \"selected\": %s}",
+		(LPCWSTR)m_name, _bool2String(m_bSelected));
+	target += s;
+}
+
+// virtual 
+void CLoginDatabase::SetBoolValue(const wchar_t* szName, bool bValue)
+{
+	if (wcscmp(szName, L"selected") == 0)
+		m_bSelected = bValue;
+}
+
+
+// virtual 
+void CLoginDatabase::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
+{
+	CString err;
+	if (wcscmp(szName, L"name") == 0)
+		m_name = szValue;
+}
+
+CLoginDatabases::~CLoginDatabases()
+{
+	for (int i = 0; i < GetCount(); i++)
+		delete ElementAt(i);
+	RemoveAll();
+}
+
+// virtual 
+JsonTarget* CLoginDatabases::CreateObject(const wchar_t* szName)
+{
+	CLoginDatabase*  pDb = new CLoginDatabase();
+	Add(pDb);
+	return pDb;
 }
 
 ////////////////
 // CLoginServer
 
-// virtual 
-CLoginServer::~CLoginServer()
+void CLoginServer::Serialize(CString& target)
 {
-	for (int i = 0; i < m_users.GetCount(); i++)
-		delete m_users.ElementAt(i);
-	m_users.RemoveAll();
-}
+	CString s;
+	s.Format(L"{\"name\": \"%s\", \"selected\": %s, ",
+		(LPCWSTR)m_name, _bool2String(m_bSelected));
 
-void CLoginServer::Serialize(CArchive & ar)
-{
-	if (ar.IsStoring()) 
-	{
-		ar << m_name;
-		ar << m_lastUserIndex;
-		ar << m_lastDbIndex;
-		ar << (int) m_users.GetCount();
-		for (int i = 0; i < m_users.GetCount(); i++)
-			ar << m_users.ElementAt(i);
-	} 
-	else 
-	{
-		ar >> m_name;
-		ar >> m_lastUserIndex;
-		ar >> m_lastDbIndex;
+	target += s;
 
-		int cnt;
-		CLoginUser* pUser;
-		ar >> cnt;
-		for (int i = 0; i < cnt; i++) {
-			ar >> pUser;
-			m_users.Add(pUser);
-		}
+	target += L"\"users\":[";
+
+	for (int i = 0; i < m_users.GetCount(); i++) {
+		m_users[i]->Serialize(target);
+		if (i != m_users.GetUpperBound())
+			target += L",\n";
 	}
-	m_databases.Serialize(ar);
+	target += L"],\"databases\":[";
+	for (int i = 0; i < m_databases.GetCount(); i++) {
+		m_databases[i]->Serialize(target);
+		if (i != m_databases.GetUpperBound())
+			target += L",";
+	}
+	target += L"]}";
 }
 
 void CLoginServer::FindOrCreateDatabase(LPCWSTR szDatabase)
 {
 	for (int i = 0; i < m_databases.GetCount(); i++) {
-		CString& db = m_databases.ElementAt(i);
-		if (db == szDatabase) {
+		CLoginDatabase* pDb = m_databases.ElementAt(i);
+		if (pDb->m_name == szDatabase) {
+			SelectDatabase(pDb);
 			return;
 		}
 	}
-	m_databases.Add(szDatabase);
+	CLoginDatabase* pDb = new CLoginDatabase();
+	pDb->m_name = szDatabase;
+	m_databases.Add(pDb);
+	SelectDatabase(pDb);
 }
 
-LPCWSTR CLoginServer::GetCurrentDatabase()
+void CLoginServer::SelectDatabase(CLoginDatabase* pTarget)
 {
-	if (m_lastDbIndex < 0 || m_lastDbIndex >= m_databases.GetSize())
+	for (int i = 0; i < m_databases.GetCount(); i++) {
+		CLoginDatabase* pDb = m_databases.ElementAt(i);
+		pDb->m_bSelected = (pDb == pTarget);
+	}
+}
+
+CLoginUser* CLoginServer::FindUser(LPCWSTR szLogin, bool bCreate)
+{
+	for (int i = 0; i < m_users.GetCount(); i++) {
+		CLoginUser* pUsr = m_users.ElementAt(i);
+		if (pUsr->m_login == szLogin) {
+			SelectUser(pUsr);
+			return pUsr;
+		}
+	}
+	if (!bCreate)
 		return nullptr;
-	return (LPCWSTR) m_databases.ElementAt(m_lastDbIndex);
+	CLoginUser* pUsr = new CLoginUser();
+	pUsr->m_login = szLogin;
+	m_users.Add(pUsr);
+	SelectUser(pUsr);
+	return pUsr;
+}
+
+void CLoginServer::SelectUser(CLoginUser* pTarget)
+{
+	for (int i = 0; i < m_users.GetCount(); i++) {
+		CLoginUser* pUsr = m_users.ElementAt(i);
+		pUsr->m_bSelected = (pTarget == pUsr);
+	}
 }
 
 CLoginUser* CLoginServer::GetCurrentUser()
 {
-	if (m_lastUserIndex < 0 || m_lastUserIndex >= m_users.GetSize())
-		return nullptr;
-	return m_users.GetAt(m_lastUserIndex);
+	for (int i = 0; i < m_users.GetCount(); i++) {
+		CLoginUser* pUsr = m_users.ElementAt(i);
+		if (pUsr->m_bSelected)
+			return pUsr;
+	}
+	return nullptr;
+}
+
+// virtual 
+JsonTarget* CLoginServer::CreateArray(const wchar_t* szName)
+{
+	if (wcscmp(szName, L"users") == 0) {
+		return &m_users;
+	}
+	else if (wcscmp(szName, L"databases") == 0) {
+		return &m_databases;
+	}
+	CString msg;
+	msg.Format(L"Invalid object name '%s'", szName);
+	throw new JsonException(msg);
+}
+
+// virtual 
+void CLoginServer::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
+{
+	if (wcscmp(szName, L"name") == 0)
+		m_name = szValue;
+}
+
+// virtual 
+void CLoginServer::SetBoolValue(const wchar_t* szName, bool bValue)
+{
+	if (wcscmp(szName, L"selected") == 0)
+		m_bSelected = bValue;
 }
 
 
@@ -102,68 +226,87 @@ CLoginInfo::~CLoginInfo()
 	m_servers.RemoveAll();
 }
 
-
-void CLoginInfo::Serialize(CArchive & ar)
+void CLoginInfo::Serialize(CString& target)
 {
-	if (ar.IsStoring()) 
-	{
-		ar << m_lastIndex;
-		ar << (int)m_servers.GetCount();
-		for (int i = 0; i < m_servers.GetCount(); i++)
-			ar << m_servers.ElementAt(i);
-	} 
-	else 
-	{
-		ar >> m_lastIndex;
-		int cnt = 0;
-		ar >> cnt;
-		CLoginServer* pSrv;
-		for (int i = 0; i < cnt; i++) {
-			ar >> pSrv;
-			m_servers.Add(pSrv);
-		}
-	}
-}
-
-CLoginServer& CLoginInfo::GetCurrent() 
-{
-	return *m_servers.ElementAt(m_lastIndex);
-}
-
-CLoginServer& CLoginInfo::GetOrCreateServer(LPCWSTR szServer) 
-{
-	CLoginServer* pSrv;
+	target += L"[";
 	for (int i = 0; i < m_servers.GetCount(); i++) {
-		pSrv = m_servers.ElementAt(i);
-		if (pSrv->m_name == szServer) {
-			m_lastIndex = i;
-			return *pSrv;
-		}
+		CLoginServer* pSrv = m_servers.ElementAt(i);
+		pSrv->Serialize(target);
+		if (i != m_servers.GetUpperBound())
+			target += L",";
 	}
-	pSrv = new CLoginServer();
-	pSrv->m_name = szServer;
-	m_servers.Add(pSrv);
-	m_lastIndex = m_servers.GetUpperBound();
-	return *pSrv;
+	target += L"]";
+}
+
+void CLoginInfo::SelectServer(CLoginServer* pTarget)
+{
+	for (int i = 0; i < m_servers.GetCount(); i++) {
+		CLoginServer* pSrv = m_servers.ElementAt(i);
+		pSrv->m_bSelected = (pSrv == pTarget);
+	}
 }
 
 void CLoginInfo::FillDefault()
 {
 	CLoginServer* pSrv = new CLoginServer();
+	pSrv->m_bSelected = true;
 	m_servers.Add(pSrv);
+
 	//
-	pSrv->m_databases.Add(L"database1");
-	pSrv->m_databases.Add(L"database2");
-	pSrv->m_lastDbIndex = 1;
+	CLoginDatabase* pDB = new CLoginDatabase();
+	pDB->m_name = L"database1";
+	pSrv->m_databases.Add(pDB);
+	pDB = new CLoginDatabase();
+	pDB->m_name = L"database2";
+	pDB->m_bSelected = true;
+	pSrv->m_databases.Add(pDB);
+
 	CLoginUser* pUser = new CLoginUser();
 	pUser->m_authType = AUTH_SQL;
 	pUser->m_login = L"login";
 	pUser->m_password = L"password";
 	pUser->m_bRemember = true;
+	pUser->m_bSelected = true;
 	pSrv->m_users.Add(pUser);
 	pSrv->m_name = L"localhost";
-	pSrv->m_lastDbIndex = 0;
-	pSrv->m_lastUserIndex = 0;
 	//
-	m_lastIndex = 0;
 }
+
+// virtual 
+JsonTarget* CLoginInfo::CreateObject(const wchar_t* szName)
+{
+	CLoginServer* pSrv = new CLoginServer();
+	m_servers.Add(pSrv);
+	return pSrv;
+}
+
+
+CLoginServer* CLoginInfo::FindServer(LPCWSTR szServer, bool bCreate)
+{
+	CLoginServer* pSrv;
+	for (int i = 0; i < m_servers.GetCount(); i++) {
+		pSrv = m_servers.ElementAt(i);
+		if (pSrv->m_name == szServer) {
+			SelectServer(pSrv);
+			return pSrv;
+		}
+	}
+	if (!bCreate)
+		return nullptr;
+	pSrv = new CLoginServer();
+	pSrv->m_name = szServer;
+	m_servers.Add(pSrv);
+	SelectServer(pSrv);
+	return pSrv;
+}
+
+void CLoginInfo::SaveCurrentInfo(LPCWSTR szServerName, LPCWSTR szDbName, LPCWSTR szLogin, LPCWSTR szPassword, int nAuthType, bool bRemember)
+{
+	CLoginServer* pSrv = FindServer(szServerName, true);
+	pSrv->FindOrCreateDatabase(szDbName);
+	CLoginUser* pUser = pSrv->FindUser(szLogin, true);
+	pUser->m_authType = nAuthType;
+	pUser->m_password = szPassword;
+	pUser->m_bRemember = bRemember;
+}
+
