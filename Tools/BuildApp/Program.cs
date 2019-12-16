@@ -17,13 +17,10 @@ namespace BuildApp
 			String dir = Path.GetFullPath(args[0].ToLowerInvariant());
 
 			Console.WriteLine($"Processing: {dir}");
-			String outFileName = Path.GetFileName(dir);
-			String outFilePath = Path.Combine(dir, $"..\\{outFileName}.app");
-			String outFile = Path.GetFullPath(outFilePath);
-			var zp = new ZipProcessor(dir, outFile);
+			var zp = new AppFilesProcessor(dir);
 			zp.Process();
 			Console.WriteLine();
-			Console.WriteLine($"Generating app file: {zp.FileName}");
+			Console.WriteLine($"Generating app file: {zp.OutFileName}");
 			Console.WriteLine($"Files have been added: {zp.Count}");
 			Console.WriteLine();
 			return 0;

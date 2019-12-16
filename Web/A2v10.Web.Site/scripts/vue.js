@@ -1,5 +1,5 @@
 /*!
- * Vue.js v2.6.10
+ * Vue.js v2.6.11
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
@@ -1969,7 +1969,7 @@
     isUsingMicroTask = true;
   } else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
     // Fallback to setImmediate.
-    // Techinically it leverages the (macro) task queue,
+    // Technically it leverages the (macro) task queue,
     // but it is still a better choice than setTimeout.
     timerFunc = function () {
       setImmediate(flushCallbacks);
@@ -2058,7 +2058,7 @@
       warn(
         "Property \"" + key + "\" must be accessed with \"$data." + key + "\" because " +
         'properties starting with "$" or "_" are not proxied in the Vue instance to ' +
-        'prevent conflicts with Vue internals' +
+        'prevent conflicts with Vue internals. ' +
         'See: https://vuejs.org/v2/api/#data',
         target
       );
@@ -2918,7 +2918,7 @@
       if (typeof key === 'string' && key) {
         baseObj[values[i]] = values[i + 1];
       } else if (key !== '' && key !== null) {
-        // null is a speical value for explicitly removing a binding
+        // null is a special value for explicitly removing a binding
         warn(
           ("Invalid value for dynamic directive argument (expected string or null): " + key),
           this
@@ -3413,6 +3413,12 @@
       ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
       if (config.isReservedTag(tag)) {
         // platform built-in elements
+        if (isDef(data) && isDef(data.nativeOn)) {
+          warn(
+            ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
+            context
+          );
+        }
         vnode = new VNode(
           config.parsePlatformTagName(tag), data, children,
           undefined, undefined, context
@@ -3538,7 +3544,7 @@
       // render self
       var vnode;
       try {
-        // There's no need to maintain a stack becaues all render fns are called
+        // There's no need to maintain a stack because all render fns are called
         // separately from one another. Nested component's render fns are called
         // when parent component is patched.
         currentRenderingInstance = vm;
@@ -5437,7 +5443,7 @@
     value: FunctionalRenderContext
   });
 
-  Vue.version = '2.6.10';
+  Vue.version = '2.6.11';
 
   /*  */
 
@@ -6110,7 +6116,7 @@
       }
     }
 
-    function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
+    function removeVnodes (vnodes, startIdx, endIdx) {
       for (; startIdx <= endIdx; ++startIdx) {
         var ch = vnodes[startIdx];
         if (isDef(ch)) {
@@ -6221,7 +6227,7 @@
         refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
         addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
       } else if (newStartIdx > newEndIdx) {
-        removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+        removeVnodes(oldCh, oldStartIdx, oldEndIdx);
       }
     }
 
@@ -6313,7 +6319,7 @@
           if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
           addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
         } else if (isDef(oldCh)) {
-          removeVnodes(elm, oldCh, 0, oldCh.length - 1);
+          removeVnodes(oldCh, 0, oldCh.length - 1);
         } else if (isDef(oldVnode.text)) {
           nodeOps.setTextContent(elm, '');
         }
@@ -6542,7 +6548,7 @@
 
           // destroy old node
           if (isDef(parentElm)) {
-            removeVnodes(parentElm, [oldVnode], 0, 0);
+            removeVnodes([oldVnode], 0, 0);
           } else if (isDef(oldVnode.tag)) {
             invokeDestroyHook(oldVnode);
           }
@@ -9248,7 +9254,7 @@
   var startTagClose = /^\s*(\/?)>/;
   var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
   var doctype = /^<!DOCTYPE [^>]+>/i;
-  // #7298: escape - to avoid being pased as HTML comment when inlined in page
+  // #7298: escape - to avoid being passed as HTML comment when inlined in page
   var comment = /^<!\--/;
   var conditionalComment = /^<!\[/;
 
@@ -9533,7 +9539,7 @@
   /*  */
 
   var onRE = /^@|^v-on:/;
-  var dirRE = /^v-|^@|^:/;
+  var dirRE = /^v-|^@|^:|^#/;
   var forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/;
   var forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
   var stripParensRE = /^\(|\)$/g;
@@ -10157,7 +10163,7 @@
             if (el.parent && !maybeComponent(el.parent)) {
               warn$2(
                 "<template v-slot> can only appear at the root level inside " +
-                "the receiving the component",
+                "the receiving component",
                 el
               );
             }
@@ -10720,7 +10726,7 @@
 
   /*  */
 
-  var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*(?:[\w$]+)?\s*\(/;
+  var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function(?:\s+[\w$]+)?\s*\(/;
   var fnInvokeRE = /\([^)]*?\);*$/;
   var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/;
 
@@ -11489,6 +11495,8 @@
             var range = node.rawAttrsMap[name];
             if (name === 'v-for') {
               checkFor(node, ("v-for=\"" + value + "\""), warn, range);
+            } else if (name === 'v-slot' || name[0] === '#') {
+              checkFunctionParameterExpression(value, (name + "=\"" + value + "\""), warn, range);
             } else if (onRE.test(name)) {
               checkEvent(value, (name + "=\"" + value + "\""), warn, range);
             } else {
@@ -11508,9 +11516,9 @@
   }
 
   function checkEvent (exp, text, warn, range) {
-    var stipped = exp.replace(stripStringRE, '');
-    var keywordMatch = stipped.match(unaryOperatorsRE);
-    if (keywordMatch && stipped.charAt(keywordMatch.index - 1) !== '$') {
+    var stripped = exp.replace(stripStringRE, '');
+    var keywordMatch = stripped.match(unaryOperatorsRE);
+    if (keywordMatch && stripped.charAt(keywordMatch.index - 1) !== '$') {
       warn(
         "avoid using JavaScript unary operator as property name: " +
         "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim()),
@@ -11562,6 +11570,19 @@
           range
         );
       }
+    }
+  }
+
+  function checkFunctionParameterExpression (exp, text, warn, range) {
+    try {
+      new Function(exp, '');
+    } catch (e) {
+      warn(
+        "invalid function parameter expression: " + (e.message) + " in\n\n" +
+        "    " + exp + "\n\n" +
+        "  Raw expression: " + (text.trim()) + "\n",
+        range
+      );
     }
   }
 
@@ -11944,7 +11965,7 @@
 }));
 
 /**
- * vuex v3.1.1
+ * vuex v3.1.2
  * (c) 2019 Evan You
  * @license MIT
  */
@@ -12272,6 +12293,7 @@
     this._modulesNamespaceMap = Object.create(null);
     this._subscribers = [];
     this._watcherVM = new Vue();
+    this._makeLocalGettersCache = Object.create(null);
 
     // bind commit and dispatch to self
     var store = this;
@@ -12503,12 +12525,14 @@
 
     // bind store public getters
     store.getters = {};
+    // reset local getters cache
+    store._makeLocalGettersCache = Object.create(null);
     var wrappedGetters = store._wrappedGetters;
     var computed = {};
     forEachValue(wrappedGetters, function (fn, key) {
       // use computed to leverage its lazy-caching mechanism
       // direct inline function use will lead to closure preserving oldVm.
-      // using partial to return function with only arguments preserved in closure enviroment.
+      // using partial to return function with only arguments preserved in closure environment.
       computed[key] = partial(fn, store);
       Object.defineProperty(store.getters, key, {
         get: function () { return store._vm[key]; },
@@ -12552,6 +12576,9 @@
 
     // register in namespace map
     if (module.namespaced) {
+      if (store._modulesNamespaceMap[namespace] && "development" !== 'production') {
+        console.error(("[vuex] duplicate namespace " + namespace + " for the namespaced module " + (path.join('/'))));
+      }
       store._modulesNamespaceMap[namespace] = module;
     }
 
@@ -12560,6 +12587,13 @@
       var parentState = getNestedState(rootState, path.slice(0, -1));
       var moduleName = path[path.length - 1];
       store._withCommit(function () {
+        {
+          if (moduleName in parentState) {
+            console.warn(
+              ("[vuex] state field \"" + moduleName + "\" was overridden by a module with the same name at \"" + (path.join('.')) + "\"")
+            );
+          }
+        }
         Vue.set(parentState, moduleName, module.state);
       });
     }
@@ -12647,26 +12681,28 @@
   }
 
   function makeLocalGetters (store, namespace) {
-    var gettersProxy = {};
+    if (!store._makeLocalGettersCache[namespace]) {
+      var gettersProxy = {};
+      var splitPos = namespace.length;
+      Object.keys(store.getters).forEach(function (type) {
+        // skip if the target getter is not match this namespace
+        if (type.slice(0, splitPos) !== namespace) { return }
 
-    var splitPos = namespace.length;
-    Object.keys(store.getters).forEach(function (type) {
-      // skip if the target getter is not match this namespace
-      if (type.slice(0, splitPos) !== namespace) { return }
+        // extract local getter type
+        var localType = type.slice(splitPos);
 
-      // extract local getter type
-      var localType = type.slice(splitPos);
-
-      // Add a port to the getters proxy.
-      // Define as getter property because
-      // we do not want to evaluate the getters in this time.
-      Object.defineProperty(gettersProxy, localType, {
-        get: function () { return store.getters[type]; },
-        enumerable: true
+        // Add a port to the getters proxy.
+        // Define as getter property because
+        // we do not want to evaluate the getters in this time.
+        Object.defineProperty(gettersProxy, localType, {
+          get: function () { return store.getters[type]; },
+          enumerable: true
+        });
       });
-    });
+      store._makeLocalGettersCache[namespace] = gettersProxy;
+    }
 
-    return gettersProxy
+    return store._makeLocalGettersCache[namespace]
   }
 
   function registerMutation (store, type, handler, local) {
@@ -12678,7 +12714,7 @@
 
   function registerAction (store, type, handler, local) {
     var entry = store._actions[type] || (store._actions[type] = []);
-    entry.push(function wrappedActionHandler (payload, cb) {
+    entry.push(function wrappedActionHandler (payload) {
       var res = handler.call(store, {
         dispatch: local.dispatch,
         commit: local.commit,
@@ -12686,7 +12722,7 @@
         state: local.state,
         rootGetters: store.getters,
         rootState: store.state
-      }, payload, cb);
+      }, payload);
       if (!isPromise(res)) {
         res = Promise.resolve(res);
       }
@@ -12767,6 +12803,9 @@
    */
   var mapState = normalizeNamespace(function (namespace, states) {
     var res = {};
+    if (!isValidMap(states)) {
+      console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
+    }
     normalizeMap(states).forEach(function (ref) {
       var key = ref.key;
       var val = ref.val;
@@ -12800,6 +12839,9 @@
    */
   var mapMutations = normalizeNamespace(function (namespace, mutations) {
     var res = {};
+    if (!isValidMap(mutations)) {
+      console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
+    }
     normalizeMap(mutations).forEach(function (ref) {
       var key = ref.key;
       var val = ref.val;
@@ -12833,6 +12875,9 @@
    */
   var mapGetters = normalizeNamespace(function (namespace, getters) {
     var res = {};
+    if (!isValidMap(getters)) {
+      console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
+    }
     normalizeMap(getters).forEach(function (ref) {
       var key = ref.key;
       var val = ref.val;
@@ -12863,6 +12908,9 @@
    */
   var mapActions = normalizeNamespace(function (namespace, actions) {
     var res = {};
+    if (!isValidMap(actions)) {
+      console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
+    }
     normalizeMap(actions).forEach(function (ref) {
       var key = ref.key;
       var val = ref.val;
@@ -12908,9 +12956,21 @@
    * @return {Object}
    */
   function normalizeMap (map) {
+    if (!isValidMap(map)) {
+      return []
+    }
     return Array.isArray(map)
       ? map.map(function (key) { return ({ key: key, val: key }); })
       : Object.keys(map).map(function (key) { return ({ key: key, val: map[key] }); })
+  }
+
+  /**
+   * Validate whether given map is valid or not
+   * @param {*} map
+   * @return {Boolean}
+   */
+  function isValidMap (map) {
+    return Array.isArray(map) || isObject(map)
   }
 
   /**
@@ -12948,7 +13008,7 @@
   var index = {
     Store: Store,
     install: install,
-    version: '3.1.1',
+    version: '3.1.2',
     mapState: mapState,
     mapMutations: mapMutations,
     mapGetters: mapGetters,
