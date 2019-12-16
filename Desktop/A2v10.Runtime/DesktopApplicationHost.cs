@@ -73,10 +73,12 @@ namespace A2v10.Runtime
 			}
 		}
 
-		IApplicationReader _reader = null;
+		static IApplicationReader _reader = null;
 
 		public void StartApplication(Boolean bAdmin)
 		{
+			if (_reader != null)
+				return;
 			var file = ZipApplicationFile;
 			String key = bAdmin ? "admin" : AppKey;
 			if (file != null)
