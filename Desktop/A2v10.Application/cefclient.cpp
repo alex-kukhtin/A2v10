@@ -128,8 +128,11 @@ CefRefPtr<CefResourceHandler> CCefClientHandler::GetResourceHandler(
 void CCefClientHandler::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title)
 {
 	CEF_REQUIRE_UI_THREAD();
+	CefString title2 = title;
 	if (m_pDelegate != nullptr) {
-		m_pDelegate->OnTitleChange(browser, title.c_str());
+		if (title2 == "domain")
+			title2 = " "; // simple domain - single space string
+		m_pDelegate->OnTitleChange(browser, title2.c_str());
 	}
 }
 

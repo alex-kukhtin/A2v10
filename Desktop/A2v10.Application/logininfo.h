@@ -7,15 +7,23 @@
 
 class CLoginUser : public JsonTarget
 {
-public:
 	CString m_login;
 	int m_authType; // 0-windows, 1-sql-server
+
+public:
+
 	CString m_password;
 	bool m_bRemember;
 	bool m_bSelected;
 
 	CLoginUser()
 		: m_authType(0), m_bRemember(false), m_bSelected(false) {}
+
+	static CString GetWindowsUser();
+
+	CString GetName();
+	int GetAuth();
+	void SetName(int nAuth, LPCWSTR szName);
 
 	void Serialize(CString& target);
 
@@ -74,10 +82,13 @@ public:
 		m_bSelected(false) {}
 
 	void FindOrCreateDatabase(LPCWSTR szDatabase);
-	CLoginUser* FindUser(LPCWSTR szLogin, bool bCreate);
-	CLoginUser* GetCurrentUser();
+	CLoginUser* FindUser(int nAuth, LPCWSTR szLogin, bool bCreate);
+	CLoginUser* GetCurrentUser(int nAuth);
 
 	void Serialize(CString& target);
+
+	void SelectDatabase(CLoginDatabase* pTarget);
+	void SelectUser(CLoginUser* pTarget);
 
 	//  json target
 	virtual JsonTarget* CreateObject(const wchar_t* szName) { return nullptr; }
@@ -85,9 +96,6 @@ public:
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
 	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) { }
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
-private:
-	void SelectDatabase(CLoginDatabase* pTarget);
-	void SelectUser(CLoginUser* pTarget);
 };
 
 class CLoginInfo : public JsonTarget
@@ -112,6 +120,5 @@ public:
 	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) { }
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue) { }
 
-private:
 	void SelectServer(CLoginServer* pTarget);
 };

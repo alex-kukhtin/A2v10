@@ -8,8 +8,9 @@
 
 class CAppData
 {
-	CAppData(void); // declaration only
-	~CAppData(void);
+	// declaration only
+	CAppData(void); 
+	~CAppData(void); 
 public:
 	enum Lang {
 		LangUk = 0,

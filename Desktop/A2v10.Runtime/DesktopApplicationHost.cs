@@ -161,6 +161,10 @@ namespace A2v10.Runtime
 			CurrentHelpUrl = appConfig.HelpUrl;
 			CurrentUserInfo = appConfig.UserInfo;
 			CurrentCompanyMap = appConfig.CompanyMap;
+			if (appConfig.UserInfo.UserId == 0)
+			{
+				throw new DesktopException(DesktopException.UserNotRegistered);
+			}
 		}
 
 		internal static String GetCompanyCode()

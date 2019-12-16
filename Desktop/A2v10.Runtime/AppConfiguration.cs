@@ -1,4 +1,6 @@
-﻿using A2v10.Infrastructure;
+﻿// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+
+using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -14,6 +16,7 @@ namespace A2v10.Runtime
 
 		public FullUserInfo UserInfo {get; private set;}
 		public Dictionary<Int64, String> CompanyMap { get; private set; }
+		public List<Int64> Users { get; private set; }
 
 		public void Load(String cnnString)
 		{

@@ -32,8 +32,10 @@ protected:
 
 	bool LoadLoginInfo();
 	void SaveLoginInfo(CLoginInfo& info);
+	void FillServerInfo(CLoginServer* pServer);
 
 	afx_msg void OnOk();
+	afx_msg void OnServerSelEndOk();
 	afx_msg void OnAuthSelEndOk();
 	afx_msg void OnLoginSelEndOk();
 };

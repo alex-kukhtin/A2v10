@@ -54,6 +54,7 @@
     <Compile Include="AppConfiguration.cs" />
     <Compile Include="Desktop.cs" />
     <Compile Include="DesktopApplicationHost.cs" />
+    <Compile Include="DesktopException.cs" />
     <Compile Include="DesktopLicenseManager.cs" />
     <Compile Include="DesktopLocalizer.cs" />
     <Compile Include="DesktopProfiler.cs" />

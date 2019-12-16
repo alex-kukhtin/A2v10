@@ -132,7 +132,7 @@ namespace A2v10RuntimeNet
 		{
 			TryCatch(() =>
 			{
-				throw new Exception($"opens file {fileName} (from C#)");
+				throw new DesktopException($"opens file {fileName} (from C#)");
 			});
 		}
 

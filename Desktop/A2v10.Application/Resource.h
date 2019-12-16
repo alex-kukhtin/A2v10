@@ -74,7 +74,9 @@
 #define IDMENU_FORWARD                  0xD006
 #define IDMENU_RELOAD                   0xD007
 #define IDMENU_TOOLS                    0xD008
-
+#define IDS_ERR_USER_NOT_FOUND          40000
+#define IDS_ERR_DB_NOT_A2V10            40001
+#define IDS_ERR_INVALID_SERVER_NAME     40002
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

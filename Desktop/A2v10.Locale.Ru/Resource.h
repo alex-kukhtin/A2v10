@@ -56,7 +56,9 @@
 #define ID_APP_LICENSE                  32007
 #define ID_SHOW_DEVTOOLS				32154
 #define ID_TOOLS_OPTIONS                32400
-
+#define IDS_ERR_USER_NOT_FOUND          40000
+#define IDS_ERR_DB_NOT_A2V10            40001
+#define IDS_ERR_INVALID_SERVER_NAME     40002
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

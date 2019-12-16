@@ -6,10 +6,12 @@
 
 == Application 
 
-13. Login dialog (сохран€ть сервер и базу)
 14. —менить пароль
 16. ѕоказать текст лицензии в диалоге
-17. Login dialog - sql auth
 18. Debug/release configuration (command line?)
-19. 
-
+19. Login Dialog - Localization
+20. ѕоиск контрагента по API из сервиса.
+22. DbManager - создание пользователей
+23. Application.Start - получить всех пользователей и провер€ть лицензии.
+26. «аголовок (коробочное приложение ????)
+27.

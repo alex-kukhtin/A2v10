@@ -1,13 +1,13 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20190821-7575*/
+/*20191216-7600*/
 /*components/newbutton.js*/
 
 (function () {
 
 
 	const companyButtonTemplate =
-`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown>
+`<div class="a2-company-btn"><div class="dropdown dir-down separate" v-dropdown v-if="isVisible">
 	<button class="btn btn-companyname" toggle aria-label="Company">
 		<i class="ico ico-home"></i>
 		<span class="company-name" v-text=companyName></span>
@@ -34,10 +34,15 @@
 			links: Array
 		},
 		computed: {
+			isVisible() {
+				return this.source.length > 0;
+			},
 			hasLinks() {
 				return this.links && this.links.length;
 			},
 			companyName() {
+				if (this.source.length === 0)
+					return '';
 				let comp = this.source.find(x => x.Current);
 				if (comp)
 					return comp.Name;

@@ -4,9 +4,48 @@
 #include "A2v10.Application.h"
 #include "logininfo.h"
 
+#define SECURITY_WIN32
+#include "Security.h"
+
+
+const LPCWSTR WIN_USER = L"{WINDOWS_USER}";
 
 inline LPCWSTR _bool2String(bool bVal) {
 	return bVal ? L"true" : L"false";
+}
+
+// static
+CString CLoginUser::GetWindowsUser()
+{
+	WCHAR buf[256];
+	ULONG len = 255;
+	::GetUserNameEx(NameSamCompatible, buf, &len);
+	return CString(buf);
+}
+
+CString CLoginUser::GetName()
+{
+	if (m_authType == AUTH_WINDOWS) {
+		return GetWindowsUser();
+	}
+	else {
+		return (LPCWSTR) m_login;
+	}
+}
+
+int CLoginUser::GetAuth()
+{
+	return m_authType;
+}
+
+
+void CLoginUser::SetName(int nAuth, LPCWSTR szName)
+{
+	m_authType = nAuth;
+	if (nAuth == AUTH_WINDOWS)
+		m_login = WIN_USER;
+	else
+		m_login = szName;
 }
 
 void CLoginUser::Serialize(CString& target)
@@ -106,8 +145,10 @@ JsonTarget* CLoginDatabases::CreateObject(const wchar_t* szName)
 void CLoginServer::Serialize(CString& target)
 {
 	CString s;
+	CString name = m_name;
+	name.Replace(L"\\", L"\\\\");
 	s.Format(L"{\"name\": \"%s\", \"selected\": %s, ",
-		(LPCWSTR)m_name, _bool2String(m_bSelected));
+		(LPCWSTR)name, _bool2String(m_bSelected));
 
 	target += s;
 
@@ -150,11 +191,11 @@ void CLoginServer::SelectDatabase(CLoginDatabase* pTarget)
 	}
 }
 
-CLoginUser* CLoginServer::FindUser(LPCWSTR szLogin, bool bCreate)
+CLoginUser* CLoginServer::FindUser(int nAuth, LPCWSTR szLogin, bool bCreate)
 {
 	for (int i = 0; i < m_users.GetCount(); i++) {
 		CLoginUser* pUsr = m_users.ElementAt(i);
-		if (pUsr->m_login == szLogin) {
+		if (wcscmp(pUsr->GetName(), szLogin) == 0) {
 			SelectUser(pUsr);
 			return pUsr;
 		}
@@ -162,7 +203,7 @@ CLoginUser* CLoginServer::FindUser(LPCWSTR szLogin, bool bCreate)
 	if (!bCreate)
 		return nullptr;
 	CLoginUser* pUsr = new CLoginUser();
-	pUsr->m_login = szLogin;
+	pUsr->SetName(nAuth, szLogin);
 	m_users.Add(pUsr);
 	SelectUser(pUsr);
 	return pUsr;
@@ -176,12 +217,21 @@ void CLoginServer::SelectUser(CLoginUser* pTarget)
 	}
 }
 
-CLoginUser* CLoginServer::GetCurrentUser()
+CLoginUser* CLoginServer::GetCurrentUser(int nAuth)
 {
+	CLoginUser* pUsr;
 	for (int i = 0; i < m_users.GetCount(); i++) {
-		CLoginUser* pUsr = m_users.ElementAt(i);
-		if (pUsr->m_bSelected)
+		pUsr = m_users.ElementAt(i);
+		if (pUsr->m_bSelected && (nAuth == pUsr->GetAuth()))
 			return pUsr;
+	}
+	// not found - select the first with the specified type
+	for (int i = 0; i < m_users.GetCount(); i++) {
+		pUsr = m_users.ElementAt(i);
+		if (nAuth == pUsr->GetAuth()) {
+			SelectUser(pUsr);
+			return pUsr;
+		}
 	}
 	return nullptr;
 }
@@ -250,26 +300,13 @@ void CLoginInfo::FillDefault()
 {
 	CLoginServer* pSrv = new CLoginServer();
 	pSrv->m_bSelected = true;
+	pSrv->m_name = L"localhost\\SQLEXPRESS";
 	m_servers.Add(pSrv);
 
-	//
-	CLoginDatabase* pDB = new CLoginDatabase();
-	pDB->m_name = L"database1";
-	pSrv->m_databases.Add(pDB);
-	pDB = new CLoginDatabase();
-	pDB->m_name = L"database2";
-	pDB->m_bSelected = true;
-	pSrv->m_databases.Add(pDB);
-
 	CLoginUser* pUser = new CLoginUser();
-	pUser->m_authType = AUTH_SQL;
-	pUser->m_login = L"login";
-	pUser->m_password = L"password";
-	pUser->m_bRemember = true;
+	pUser->SetName(AUTH_WINDOWS, nullptr);
 	pUser->m_bSelected = true;
 	pSrv->m_users.Add(pUser);
-	pSrv->m_name = L"localhost";
-	//
 }
 
 // virtual 
@@ -304,8 +341,7 @@ void CLoginInfo::SaveCurrentInfo(LPCWSTR szServerName, LPCWSTR szDbName, LPCWSTR
 {
 	CLoginServer* pSrv = FindServer(szServerName, true);
 	pSrv->FindOrCreateDatabase(szDbName);
-	CLoginUser* pUser = pSrv->FindUser(szLogin, true);
-	pUser->m_authType = nAuthType;
+	CLoginUser* pUser = pSrv->FindUser(nAuthType, szLogin, true);
 	pUser->m_password = szPassword;
 	pUser->m_bRemember = bRemember;
 }

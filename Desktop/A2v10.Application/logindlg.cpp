@@ -26,6 +26,7 @@ CLoginDlg::~CLoginDlg()
 
 BEGIN_MESSAGE_MAP(CLoginDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, OnOk)
+	ON_CBN_SELENDOK(IDC_SERVER, OnServerSelEndOk)
 	ON_CBN_SELENDOK(IDC_AUTH, OnAuthSelEndOk)
 	ON_CBN_SELENDOK(IDC_LOGIN, OnLoginSelEndOk)
 END_MESSAGE_MAP()
@@ -61,7 +62,21 @@ BOOL CLoginDlg::OnInitDialog()
 	}
 
 	if (pSrv == nullptr)
-		return true;
+		return TRUE;
+
+	FillServerInfo(pSrv);
+
+	return TRUE;
+};
+
+
+void CLoginDlg::FillServerInfo(CLoginServer* pSrv) 
+{
+	m_cmbDatabase.ResetContent();
+	m_cmbUsers.ResetContent();
+	SetDlgItemText(IDC_PASSWORD, EMPTYSTR);
+	SetDlgItemText(IDC_LOGIN, EMPTYSTR);
+	CheckDlgButton(IDC_REMEMBER, BST_UNCHECKED);
 
 	for (int i = 0; i < pSrv->m_databases.GetCount(); i++) {
 		CLoginDatabase* pDb = pSrv->m_databases.ElementAt(i);
@@ -73,29 +88,25 @@ BOOL CLoginDlg::OnInitDialog()
 	m_cmbAuth.SetCurSel(AUTH_WINDOWS);
 	for (int i = 0; i < pSrv->m_users.GetCount(); i++) {
 		CLoginUser* pUser = pSrv->m_users.ElementAt(i);
-		m_cmbUsers.AddString(pUser->m_login);
+		m_cmbUsers.AddString(pUser->GetName());
 		if (pUser->m_bSelected) {
-			m_cmbUsers.SetWindowText(pUser->m_login);
-			m_cmbAuth.SetCurSel(pUser->m_authType);
+			m_cmbUsers.SetWindowText(pUser->GetName());
+			m_cmbAuth.SetCurSel(pUser->GetAuth());
 			if (pUser->m_bRemember) {
 				SetDlgItemText(IDC_PASSWORD, pUser->m_password);
 				CheckDlgButton(IDC_REMEMBER, BST_CHECKED);
 			}
 		}
 	}
-
 	UpdateUI();
-
-	return TRUE;
-};
-
+}
 
 // afx_msg
 void CLoginDlg::OnOk()
 {
 	//m_strConnectionString = L"Data Source=servername;Initial Catalog=dbnamne;Integrated Security=True";
 	LPCWSTR szFormatIntegrated = L"Data Source=%s;Initial Catalog=%s;Integrated Security=True";
-	LPCWSTR szFormatSql = L"Data Source=%s;Initial Catalog=%s;Integrated Security=False;";
+	LPCWSTR szFormatSql = L"Data Source=%s;Initial Catalog=%s;Integrated Security=False;User Id=%s;Password=%s";
 
 
 	CString strServerName(EMPTYSTR);
@@ -108,39 +119,67 @@ void CLoginDlg::OnOk()
 
 	m_cmbServer.GetWindowText(strServerName);
 	m_cmbDatabase.GetWindowText(strDbName);
+	m_cmbUsers.GetWindowText(strLogin);
 
-	if (nAuthType == AUTH_SQL) {
-		m_cmbUsers.GetWindowText(strLogin);
-		bRemember = IsDlgButtonChecked(IDC_REMEMBER) ? true : false;
-		if (bRemember)
-			GetDlgItemText(IDC_PASSWORD, strPassword);
+	if (strServerName.FindOneOf(L" /,:;'&#@") != -1) {
+		AfxMessageBox(IDS_ERR_INVALID_SERVER_NAME);
+		return;
 	}
 
+
 	CString strConnectionString;
-	strConnectionString.Format(szFormatIntegrated, (LPCWSTR)strServerName, (LPCWSTR)strDbName);
+	if (nAuthType == AUTH_SQL) 
+	{
+		GetDlgItemText(IDC_PASSWORD, strPassword);
+		bRemember = IsDlgButtonChecked(IDC_REMEMBER) ? true : false;
+		strConnectionString.Format(szFormatSql, (LPCWSTR)strServerName, (LPCWSTR)strDbName, (LPCWSTR) strLogin, (LPCWSTR) strPassword);
+	}
+	else 
+	{
+		strConnectionString.Format(szFormatIntegrated, (LPCWSTR)strServerName, (LPCWSTR)strDbName);
+	}
 
 	try 
 	{
 		CWaitCursor wc;
-		//CDotNetRuntime::StartApplication(strConnectionString);
+		if (!bRemember)
+			strPassword.Empty();
 		m_loginInfo.SaveCurrentInfo(strServerName, strDbName, strLogin, strPassword, nAuthType, bRemember);
-
-		/*
-		m_loginInfo.SetInfo(serverName, dbName);
-		CLoginServer& srv = m_loginInfo.GetOrCreateServer(m_server);
-		srv.FindOrCreateDatabase(dbName);
-		*/
 		SaveLoginInfo(m_loginInfo);
-
+		CDotNetRuntime::StartApplication(strConnectionString);
 	}
 	catch (CDotNetException& de)
 	{
+		CString msg = de.GetMessage();
+		CString outMsg;
+		if (msg.Find(L"a2ui.Application.Start") != -1) {
+			// procedure not found
+			outMsg.FormatMessage(IDS_ERR_DB_NOT_A2V10, strDbName);
+			AfxMessageBox(outMsg);
+			return;
+		}
+		msg = msg.Mid(0, 6); // error codes
+		if (msg == L"DE1001") {
+			outMsg.FormatMessage(IDS_ERR_USER_NOT_FOUND, strLogin);
+			AfxMessageBox(outMsg);
+			return;
+		} 
 		de.ReportError();
-		return;
+		return; // not OK!
 	}
 	__super::OnOK();
 }
 
+
+// afx_msg
+void CLoginDlg::OnServerSelEndOk()
+{
+	int cs = m_cmbServer.GetCurSel();
+	CString strServer;
+	m_cmbServer.GetLBText(cs, strServer);
+	CLoginServer* pServer = m_loginInfo.FindServer(strServer, false);
+	FillServerInfo(pServer);
+}
 
 // afx_msg
 void CLoginDlg::OnAuthSelEndOk() 
@@ -148,23 +187,34 @@ void CLoginDlg::OnAuthSelEndOk()
 	int authIndex = m_cmbAuth.GetCurSel();
 	BOOL enabled = authIndex == AUTH_SQL;
 
-	if (enabled) {
-		// set current user for this server
-		CString serverName;
-		m_cmbServer.GetWindowText(serverName);
-		CLoginServer* pServer = m_loginInfo.FindServer(serverName, false);
-		if (pServer) {
-			CLoginUser* pUser = pServer->GetCurrentUser();
-			if (pUser) {
-				m_cmbUsers.SetWindowText(pUser->m_login);
+	// set current user for this server
+	CString serverName;
+	m_cmbServer.GetWindowText(serverName);
+	CLoginServer* pServer = m_loginInfo.FindServer(serverName, false);
+	if (pServer) {
+		CLoginUser* pUser = pServer->GetCurrentUser(authIndex);
+		if (pUser) {
+			if (enabled) {
+				m_cmbUsers.SetWindowText(pUser->GetName());
+				pServer->SelectUser(pUser);
 				CheckDlgButton(IDC_REMEMBER, pUser->m_bRemember ? BST_CHECKED : BST_UNCHECKED);
 				if (pUser->m_bRemember) {
 					SetDlgItemText(IDC_PASSWORD, pUser->m_password);
 				}
 			}
+			else {
+				pUser->SetName(AUTH_WINDOWS, nullptr);
+				pUser->m_password = EMPTYSTR;
+				pUser->m_bRemember = false;
+				m_cmbUsers.SetWindowText(pUser->GetName());
+				SetDlgItemText(IDC_PASSWORD, EMPTYSTR);
+				CheckDlgButton(IDC_REMEMBER, BST_UNCHECKED);
+			}
+		}
+		else {
+			m_cmbUsers.SetWindowText(EMPTYSTR);
 		}
 	}
-
 	UpdateUI();
 }
 
@@ -176,13 +226,17 @@ void CLoginDlg::OnLoginSelEndOk()
 	CLoginServer* pServer = m_loginInfo.FindServer(serverName, false);
 	if (pServer) {
 		CString strLogin;
-		m_cmbUsers.GetWindowText(strLogin);
-		CLoginUser* pUser = pServer->FindUser(strLogin, false);
+		int cs = m_cmbUsers.GetCurSel();
+		m_cmbUsers.GetLBText(cs, strLogin);
+		CLoginUser* pUser = pServer->FindUser(-1, strLogin, false);
 		if (pUser) {
-			m_cmbAuth.SetCurSel(pUser->m_authType);
+			m_cmbAuth.SetCurSel(pUser->GetAuth());
 			CheckDlgButton(IDC_REMEMBER, pUser->m_bRemember ? BST_CHECKED : BST_UNCHECKED);
 			if (pUser->m_bRemember) {
 				SetDlgItemText(IDC_PASSWORD, pUser->m_password);
+			}
+			else {
+				SetDlgItemText(IDC_PASSWORD, EMPTYSTR);
 			}
 		}
 	}
@@ -197,7 +251,6 @@ void CLoginDlg::UpdateUI()
 	GetDlgItem(IDC_PASSWORD)->EnableWindow(enabled);
 	GetDlgItem(IDC_REMEMBER)->EnableWindow(enabled);
 	if (!enabled) {
-		m_cmbUsers.SetWindowTextW(EMPTYSTR);
 		CheckDlgButton(IDC_REMEMBER, BST_UNCHECKED);
 		SetDlgItemText(IDC_PASSWORD, EMPTYSTR);
 	}
@@ -215,7 +268,8 @@ CString CLoginDlg::GetLoginsPath(bool bCreate)
 		CreateDirectory(szAppDataPath, nullptr);
 
 	::PathAppend(szAppDataPath, L"logins.json");
-	if (!::PathFileExists(szAppDataPath))
+
+	if (!bCreate && !::PathFileExists(szAppDataPath))
 		return EMPTYSTR;
 
 	return szAppDataPath;
@@ -236,6 +290,8 @@ bool CLoginDlg::LoadLoginInfo()
 		JsonParser prs;
 		prs.SetTarget(&m_loginInfo);
 		prs.Parse(json);
+		if (m_loginInfo.m_servers.GetCount() == 0)
+			return false;
 		return true;
 	}
 	catch (CFileException* ex) 
