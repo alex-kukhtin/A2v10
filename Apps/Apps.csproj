@@ -76,6 +76,7 @@
     <TypeScriptCompile Include="Develop\document\commondoc.d.ts" />
     <TypeScriptCompile Include="Develop\document\common2.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
+    <Content Include="Develop\dashboard\homepage.template.box.js" />
     <Content Include="Develop\sales\invoice\invoice2.template.js" />
     <Content Include="Develop\sales\waybill\empty.template.js" />
     <Content Include="Develop\sales\waybill\links.template.js" />
@@ -527,6 +528,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\_tests\dialogs\CreateAgent.feature.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\dashboard\homepage.view.box.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

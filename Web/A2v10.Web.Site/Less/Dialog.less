@@ -16,7 +16,7 @@
 		left: 0;
 		top: 0;
 		right: 0;
-		bottom: @footer-height;
+		bottom: 0;
 		z-index: @modal-wrapper-index;
 		overflow: auto;
 
@@ -69,6 +69,9 @@
 	}
 }
 
+.debug .modal-stack .modal-wrapper {
+	bottom:@footer-height;
+}
 
 .modal-header {
 	background-color: @dialog-header-bg-color;
@@ -180,7 +183,7 @@
 	&.show {
 		transition: background-color linear .25s, backdrop-filter step-end .25s;
 		background-color: rgba(0, 0, 0, .3);
-		backdrop-filter: blur(5px);
+		backdrop-filter: saturate(75%) blur(10px);
 	}
 }
 

@@ -151,6 +151,7 @@
 		],
 		"minify": { "enabled": false }
 	},
+	/*
 	{
 		"outputFileName": "Scripts/d3.min.js",
 		"inputFiles": [
@@ -158,6 +159,7 @@
 		],
 		"minify": { "enabled": false }
 	},
+	*/
 	{
 		"outputFileName": "Scripts/locale-uk.min.js",
 		"inputFiles": [

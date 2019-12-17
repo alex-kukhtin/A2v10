@@ -14,6 +14,8 @@ namespace A2v10.Infrastructure
 
 		public Boolean IsFileSystem => true;
 
+		public Boolean EmulateBox { get; set; }
+
 
 		public FileApplicationReader(String appPath, String appKey)
 		{
@@ -103,6 +105,19 @@ namespace A2v10.Infrastructure
 			if (appKey != null)
 				appKey = "/" + appKey;
 			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
+
+			if (EmulateBox)
+			{
+				var ext = Path.GetExtension(fullPath);
+				if (!String.IsNullOrEmpty(ext))
+				{
+					var boxPath = $"{fullPath.Substring(0, fullPath.Length - ext.Length)}.box{ext}";
+					var boxFullPath = Path.GetFullPath(boxPath);
+					if (File.Exists(boxFullPath))
+						return boxFullPath;
+				}
+			}
+
 			return Path.GetFullPath(fullPath);
 		}
 

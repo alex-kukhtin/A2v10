@@ -1,0 +1,133 @@
+﻿<!-- Home Page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  Title="Home page title" Background="LightYellow">
+	<Grid Rows="Auto, Auto, Auto, 1*" Columns="Auto, Auto, Auto">
+		<Block Grid.Row="2" Grid.Col="2">
+		</Block>
+		<Block Grid.Row="2" Grid.Col="1"></Block>
+		<Button Grid.Row="3" Grid.Col="1" Icon="Approve" Command="{BindCmd Reload}">Button</Button>
+		<Grid Grid.Row="3" Grid.Col="2">
+			<Button Grid.Row="1" Grid.Col="1" Icon="Gear" Style="{Bind Root.$style}" 
+                    Content="{Bind Root.$text}" Command="{BindCmd Execute, CommandName='showAlert'}"></Button>
+			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
+				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">
+					<TextBox Label="Договір"></TextBox>
+					<TextBox Label="Проект">
+						<TextBox.Hint>
+							<Popover Placement="BottomRight">
+								I am the popover here
+							</Popover>
+						</TextBox.Hint>
+					</TextBox>
+					<ComboBox Label="Style" Value="{Bind Root.$style}">
+						<ComboBoxItem Content="Default" Value=""/>
+						<ComboBoxItem Content="Red" Value="red"/>
+						<ComboBoxItem Content="Primary" Value="primary"/>
+						<ComboBoxItem Content="Danger" Value="danger"/>
+						<ComboBoxItem Content="Error" Value="error"/>
+						<ComboBoxItem Content="Warning" Value="warning"/>
+						<ComboBoxItem Content="Orange" Value="orange"/>
+						<ComboBoxItem Content="Outline" Value="outline"/>
+						<ComboBoxItem Content="Info" Value="info"/>
+						<ComboBoxItem Content="Success" Value="success"/>
+						<ComboBoxItem Content="Green" Value="green"/>
+					</ComboBox>
+				</Grid>
+			</Panel>
+			<Code Content="{Bind Root.$text}"></Code>
+		</Grid>
+
+
+		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ (BOX)" Icon="Database" Text="14534 (BOX)">
+			<StateCard.Footer>
+				<Text>
+					<Badge Bold="True">245</Badge> за сьогодні
+				</Text>
+			</StateCard.Footer>
+		</StateCard>
+
+		<StateCard DropShadow="Shadow1" Grid.Row="1" Grid.Col="2" Header="Тенанти" Icon="Database" Text="4455">
+			<Group>
+				<Graphics Delegate="drawChart"/>
+			</Group>
+			<StateCard.Footer>
+				<Text>
+					<Span Bold="True">245</Span> за сьогодні
+				</Text>
+			</StateCard.Footer>
+		</StateCard>
+
+		<StateCard DropShadow="Shadow1" Style="Cyan" Grid.Row="1" Grid.Col="3" Header="ТЕНАНТИ" Icon="Warehouse" Text="71233">
+			<StateCard.Footer>
+				<Text>
+					<Badge Bold="True">245</Badge> за вчора
+				</Text>
+			</StateCard.Footer>
+		</StateCard>
+
+		<StateCard DropShadow="Shadow1" Style="Red" Grid.Row="2" Grid.Col="1" Header="ТЕНАНТИ" Icon="Items" Text="71233">
+			<StateCard.Footer>
+				<Text>
+					<Badge Bold="True">245</Badge> за вчора
+				</Text>
+			</StateCard.Footer>
+		</StateCard>
+
+		<StateCard DropShadow="Shadow1" Style="Green" Grid.Row="2" Grid.Col="2" Header="TEST FOOTER" Icon="Gear" Text="71233" Footer="Footer for card"/>
+		<StateCard DropShadow="Shadow1" Style="Primary" Grid.Row="2" Grid.Col="3" Header="PRIMARY" Icon="MessageOutline" Text="71233" Footer="Footer for primary card"/>
+
+	</Grid>
+
+	<Block Padding="5">
+		<Block>
+			<Text>А am the text
+				<Badge>23</Badge>
+			</Text>
+		</Block>
+		<Alert Style="Default">
+			<Block>
+				<Paragraph>Default alert</Paragraph>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Warning" Icon="WaitingOutline" Content="Warning alert" />
+		<Alert Style="Info" Icon="InfoOutline">
+			<Block>
+				<Text>Info alert</Text>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Danger">
+			<Block>
+				<Paragraph>Danger alert</Paragraph>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Success">Success alert</Alert>
+		<Alert Style="Dark">
+			<Block>
+				<Paragraph>Dark alert</Paragraph>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Light" Icon="AddressBook">
+			<Block>
+				<Text>Light alert</Text>
+				<Line />
+			</Block>
+		</Alert>
+		<Alert Style="Warning" DropShadow="Shadow1">
+			<Block>
+				<Header>Well Done</Header>
+				<Text>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
+				</Text>
+				<Line/>
+				<FlexList Orientation="Horizontal">
+					<Button Style="Warning" Size="Small">Read More ...</Button>
+					<Button Style="Primary" Size="Small">And more</Button>
+				</FlexList>
+			</Block>
+		</Alert>
+	</Block>
+</Page>

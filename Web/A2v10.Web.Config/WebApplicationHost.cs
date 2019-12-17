@@ -18,11 +18,13 @@ namespace A2v10.Web.Config
 	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		private readonly IProfiler _profiler;
+		private readonly Boolean _emulateBox = false;
 
 		public WebApplicationHost(IProfiler profiler)
 		{
 			_profiler = profiler;
 			_profiler.Enabled = IsDebugConfiguration;
+			_emulateBox = IsAppSettingsIsTrue("emulateBox");
 		}
 
 		public IProfiler Profiler => _profiler;
@@ -213,7 +215,10 @@ namespace A2v10.Web.Config
 			else if (AppPath.StartsWith("db:"))
 				throw new NotImplementedException("DbApplicationReader");
 			else
-				_reader = new FileApplicationReader(AppPath, key);
+				_reader = new FileApplicationReader(AppPath, key)
+				{
+					EmulateBox = _emulateBox
+				};
 		}
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
