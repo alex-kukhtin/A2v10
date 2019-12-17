@@ -178,8 +178,9 @@
 	background-color: transparent;
 
 	&.show {
-		transition: background-color linear .125s;
-		background-color: rgba(0, 0, 0, .25);
+		transition: background-color linear .25s, backdrop-filter step-end .25s;
+		background-color: rgba(0, 0, 0, .3);
+		backdrop-filter: blur(5px);
 	}
 }
 

@@ -1213,12 +1213,15 @@ hr {
   border: 1px solid #ddd;
   border-bottom-style: none;
 }
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow: hidden;
+}
 header,
 .header {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
+  grid-row: 1;
   height: 32px;
   padding: 0 4px 0 8px;
   background-color: #4d6082;
@@ -1671,16 +1674,12 @@ header .dropdown.separate.show .btn.btn-success,
 }
 footer,
 .footer {
-  position: absolute;
+  grid-row: 3;
   display: flex;
   align-items: center;
-  left: 0;
-  bottom: 0;
-  right: 0;
   height: 22px;
   background-color: #f2f3f9;
   border-top: 1px solid #cfd6e5;
-  z-index: 1020;
   padding: 0 2px 0 8px;
   font-size: 0.86rem;
   text-transform: lowercase;
@@ -4171,8 +4170,9 @@ ul.news-list > li {
   background-color: transparent;
 }
 .modal-stack .modal-wrapper.show {
-  transition: background-color linear 0.125s;
-  background-color: rgba(0, 0, 0, 0.25);
+  transition: background-color linear 0.25s, backdrop-filter step-end 0.25s;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
 }
 .modal-content.content-iframe {
   display: flex;

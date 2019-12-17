@@ -968,6 +968,7 @@ footer a,
   text-transform: lowercase;
 }
 .main-view {
+  grid-row: 2;
   overflow: hidden;
   position: fixed;
   width: 100%;

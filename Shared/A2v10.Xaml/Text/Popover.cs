@@ -51,7 +51,7 @@ namespace A2v10.Xaml
 		public Length Top { get; set; }
 
 		public String Url { get; set; }
-		public String OffsetX { get; set; }
+		public Length OffsetX { get; set; }
 
 		public PopoverUnderlineMode Underline { get; set; }
 
@@ -74,8 +74,8 @@ namespace A2v10.Xaml
 			if (Icon != Icon.NoIcon)
 				po.MergeAttribute("icon", Icon.ToString().ToKebabCase());
 			MergeBindingAttributeString(po, context, "content", nameof(Text), Text);
-			if (!String.IsNullOrEmpty(OffsetX))
-				po.MergeAttribute("offset-x", OffsetX);
+			if (OffsetX != null)
+				po.MergeAttribute("offset-x", OffsetX.Value);
 			if (Underline != PopoverUnderlineMode.Enable)
 				po.AddCssClass("underline-" + Underline.ToString().ToLowerInvariant());
 
