@@ -1,5 +1,5 @@
 ﻿
-/*20190816-7525*/
+/*20191217-7601*/
 
 (function () {
 
@@ -53,7 +53,7 @@
 				this.navigate(itm.url);
 			},
 			getNotify(ix) {
-				let n = this.userState ? this.userState.Notify : 0;
+				let n = this.userState ? this.userState.Notify : null;
 				if (!n) return '';
 				let m = n.match(/\((.*)\)(.*)/);
 				if (m && m.length > ix)

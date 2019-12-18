@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace BuildSql
 	{
 		static void Main(String[] args)
 		{
+			var v = Assembly.GetExecutingAssembly().GetName().Version;
+			Console.WriteLine($"BuildSQL Version: {v.Major}.{v.Minor}.{v.Build}");
 			if (args.Length == 0)
 			{
 				Console.WriteLine("Usage: buildsql [appdir]");

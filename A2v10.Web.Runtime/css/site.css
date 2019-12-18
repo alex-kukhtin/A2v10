@@ -1213,15 +1213,12 @@ hr {
   border: 1px solid #ddd;
   border-bottom-style: none;
 }
-.shell {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  height: 100%;
-  overflow: hidden;
-}
 header,
 .header {
-  grid-row: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
   height: 32px;
   padding: 0 4px 0 8px;
   background-color: #4d6082;
@@ -1674,9 +1671,12 @@ header .dropdown.separate.show .btn.btn-success,
 }
 footer,
 .footer {
-  grid-row: 3;
+  position: absolute;
   display: flex;
   align-items: center;
+  left: 0;
+  bottom: 0;
+  right: 0;
   height: 22px;
   background-color: #f2f3f9;
   border-top: 1px solid #cfd6e5;
@@ -4035,7 +4035,7 @@ ul.news-list > li {
   left: 0;
   top: 0;
   right: 0;
-  bottom: 22px;
+  bottom: 0;
   z-index: 1050;
   overflow: auto;
 }
@@ -4071,6 +4071,9 @@ ul.news-list > li {
 }
 .modal-stack .modal-body .app-exception {
   width: 498px;
+}
+.debug .modal-stack .modal-wrapper {
+  bottom: 22px;
 }
 .modal-header {
   background-color: #fff29d;
@@ -4172,7 +4175,7 @@ ul.news-list > li {
 .modal-stack .modal-wrapper.show {
   transition: background-color linear 0.25s, backdrop-filter step-end 0.25s;
   background-color: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
+  backdrop-filter: saturate(75%) blur(10px);
 }
 .modal-content.content-iframe {
   display: flex;

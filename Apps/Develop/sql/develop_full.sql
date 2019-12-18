@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7023
-generated: 12.12.2019 17:16:47
+generated: 18.12.2019 10:38:36
 */
 
 
@@ -90,10 +90,9 @@ go
 ------------------------------------------------
 if not exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_getCurrentDate') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 exec sp_executesql N'
-create or alter function a2sys.fn_getCurrentDate() 
+create function a2sys.fn_getCurrentDate() 
 returns datetime 
-as begin return getdate(); end
-';
+as begin return getdate(); end';
 go
 ------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_trim') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
