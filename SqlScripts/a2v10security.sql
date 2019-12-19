@@ -2,29 +2,15 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 12 dec 2019
-module version : 7596
+Last updated : 19 dec 2019
+module version : 7597
 */
-
-------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
-begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
-end
-go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7596);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7597);
 else
-	update a2sys.Versions set [Version] = 7596 where Module = N'std:security';
+	update a2sys.Versions set [Version] = 7597 where Module = N'std:security';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1051,8 +1037,5 @@ begin
 	set nocount on;
 	grant execute on schema ::a2security to public;
 end
-go
-------------------------------------------------
-set noexec off;
 go
 

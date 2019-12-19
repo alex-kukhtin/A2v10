@@ -4,6 +4,7 @@
 #include "A2v10.Application.h"
 #include "logininfo.h"
 #include "logindlg.h"
+#include "checkverinfo.h"
 
 
 #define IDC_AUTH		IDC_COMBO1
@@ -147,6 +148,9 @@ void CLoginDlg::OnOk()
 		m_loginInfo.SaveCurrentInfo(strServerName, strDbName, strLogin, strPassword, nAuthType, bRemember);
 		SaveLoginInfo(m_loginInfo);
 		CDotNetRuntime::StartApplication(strConnectionString);
+
+		if (!CheckVersions())
+			return;
 	}
 	catch (CDotNetException& de)
 	{
@@ -168,6 +172,18 @@ void CLoginDlg::OnOk()
 		return; // not OK!
 	}
 	__super::OnOK();
+}
+
+bool CLoginDlg::CheckVersions()
+{
+	std::wstring vers = CDotNetRuntime::GetVersions();
+	if (vers.empty())
+		return true;
+	CVersionModules modules;
+	if (!modules.Parse(vers.c_str()))
+		return false;
+	AfxMessageBox(L"RUN CHECK VERSION HERE");
+	return true;
 }
 
 
@@ -300,7 +316,7 @@ bool CLoginDlg::LoadLoginInfo()
 		ex->Delete();
 		return false;
 	}
-	catch (JsonException je) 
+	catch (JsonException& je) 
 	{
 		AfxMessageBox(je.GetMessage());
 		return false;

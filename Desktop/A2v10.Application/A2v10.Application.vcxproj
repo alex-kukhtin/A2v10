@@ -194,6 +194,7 @@
     <ClInclude Include="cefapp.h" />
     <ClInclude Include="cefclient.h" />
     <ClInclude Include="cefscheme.h" />
+    <ClInclude Include="checkverinfo.h" />
     <ClInclude Include="defaultview.h" />
     <ClInclude Include="logindlg.h" />
     <ClInclude Include="logininfo.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="cefapp.cpp" />
     <ClCompile Include="cefclient.cpp" />
     <ClCompile Include="cefscheme.cpp" />
+    <ClCompile Include="checkverinfo.cpp" />
     <ClCompile Include="defaultview.cpp" />
     <ClCompile Include="framepaint.cpp" />
     <ClCompile Include="logindlg.cpp" />

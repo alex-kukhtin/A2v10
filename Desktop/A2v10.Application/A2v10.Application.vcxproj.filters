@@ -69,6 +69,9 @@
     <ClInclude Include="logininfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="checkverinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -114,6 +117,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="logininfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="checkverinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

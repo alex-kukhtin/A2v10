@@ -204,6 +204,8 @@ void JsonParser::SetTarget(JsonTarget* pTarget)
 
 void JsonParser::Parse(const wchar_t* szText)
 {
+	if (_target == nullptr)
+		throw JsonException(L"Invalid target value. Forgot 'SetTarget'?");
 	_scan->SetText(szText);
 	const JsonToken& ct = _scan->CurrentToken();
 	_scan->NextToken();
@@ -256,7 +258,7 @@ void JsonParser::ParseObject(JsonTarget* target)
 			name = ct._value;
 			_scan->NextToken();
 			if (ct._tok != TokenId::Colon)
-				throw JsonException();
+				throw JsonException(L"Lxpected ':'");
 			_scan->NextToken();
 			switch (ct._tok) {
 			case TokenId::OpenCurly:

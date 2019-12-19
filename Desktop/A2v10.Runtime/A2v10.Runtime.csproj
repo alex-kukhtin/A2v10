@@ -78,6 +78,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="DesktopResponse.cs" />
+    <Compile Include="Versions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">

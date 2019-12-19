@@ -33,6 +33,7 @@ protected:
 	bool LoadLoginInfo();
 	void SaveLoginInfo(CLoginInfo& info);
 	void FillServerInfo(CLoginServer* pServer);
+	bool CheckVersions();
 
 	afx_msg void OnOk();
 	afx_msg void OnServerSelEndOk();

@@ -30,6 +30,7 @@ public:
 	static std::wstring GetLastContentDisposition();
 	static int GetLastStatusCode();
 	static int VerifyLicense();
+	static std::wstring GetVersions();
 };
 
 #undef AFX_DATA

@@ -116,6 +116,8 @@ void CDotNetRuntime::UploadFiles(const wchar_t* szUrl, const wchar_t* szFiles, s
 std::wstring CDotNetRuntime::GetLastMime()
 {
 	auto result = A2v10RuntimeNet::Desktop::GetLastMime();
+	if (result == nullptr)
+		return std::wstring();
 	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
 	return ptr;
 }
@@ -123,6 +125,8 @@ std::wstring CDotNetRuntime::GetLastMime()
 std::wstring CDotNetRuntime::GetLastContentDisposition()
 {
 	auto result = A2v10RuntimeNet::Desktop::GetLastContentDisposition();
+	if (result == nullptr)
+		return std::wstring();
 	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
 	return ptr;
 }
@@ -142,4 +146,15 @@ void CDotNetRuntime::StartDesktopServices()
 {
 	A2v10RuntimeNet::Desktop::StartDesktopServices();
 	ThrowIfError();
+}
+
+//static 
+std::wstring CDotNetRuntime::GetVersions()
+{
+	auto result = A2v10RuntimeNet::Desktop::GetVersions();
+	ThrowIfError();
+	if (result == nullptr)
+		return std::wstring();
+	pin_ptr<const wchar_t> ptr = PtrToStringChars(result);
+	return ptr;
 }

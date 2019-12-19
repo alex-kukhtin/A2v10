@@ -73,18 +73,10 @@ namespace A2v10.Runtime
 			}
 		}
 
-		static IApplicationReader _reader = null;
+		private static IApplicationReader _reader = null;
 
 		public void StartApplication(Boolean bAdmin)
 		{
-			if (_reader != null)
-				return;
-			var file = ZipApplicationFile;
-			String key = bAdmin ? "admin" : AppKey;
-			if (file != null)
-				_reader = new ZipApplicationReader(AppPath, key);
-			else
-				_reader = new FileApplicationReader(AppPath, key);
 		}
 
 		public IApplicationReader ApplicationReader
@@ -121,18 +113,15 @@ namespace A2v10.Runtime
 			return CurrentAppConnectionString;
 		}
 
-		public String ZipApplicationFile
+		public static String ZipApplicationFileName(String appPath, String appKey)
 		{
-			get
+			var path = Path.Combine(appPath, appKey);
+			path = Path.ChangeExtension(path, ".app");
+			if (File.Exists(path))
 			{
-				var path = Path.Combine(AppPath, AppKey);
-				path = Path.ChangeExtension(path, ".app");
-				if (File.Exists(path))
-				{
-					return path;
-				}
-				return null;
+				return path;
 			}
+			return null;
 		}
 
 		public String MakeRelativePath(String path, String fileName)
@@ -167,6 +156,17 @@ namespace A2v10.Runtime
 			{
 				throw new DesktopException(DesktopException.UserNotRegistered);
 			}
+			CreateReader();
+		}
+
+		static void CreateReader()
+		{
+			var file = ZipApplicationFileName(CurrentAppPath, CurrentAppKey);
+			String key = CurrentAppKey;
+			if (file != null)
+				_reader = new ZipApplicationReader(CurrentAppPath, key);
+			else
+				_reader = new FileApplicationReader(CurrentAppPath, key);
 		}
 
 		internal static String GetCompanyCode()
@@ -176,6 +176,12 @@ namespace A2v10.Runtime
 			if (CurrentCompanyMap.ContainsKey(companyId))
 				return CurrentCompanyMap[companyId];
 			return String.Empty;
+		}
+
+		public static String GetVersions()
+		{
+			var v = new AppVersions(CurrentAppConnectionString, _reader);
+			return v.GetCurrentVersions();
 		}
 
 		public String GetAppSettings(String source)

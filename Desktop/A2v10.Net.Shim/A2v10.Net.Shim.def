@@ -15,4 +15,5 @@ EXPORTS
 ?StartApplication@CDotNetRuntime@@SAXPB_W@Z
 ?GetLastStatusCode@CDotNetRuntime@@SAHXZ
 ?VerifyLicense@CDotNetRuntime@@SAHXZ
+?GetVersions@CDotNetRuntime@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ
 

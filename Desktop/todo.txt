@@ -14,6 +14,5 @@
 22. DbManager - создание пользователей
 23. Application.Start - получить всех пользователей и проверять лицензии.
 26. Заголовок (коробочное приложение ????)
-27. IsDesktopEmulation
-28. Exclude files for BuildApp
-29.
+29. Check version dialog ???
+

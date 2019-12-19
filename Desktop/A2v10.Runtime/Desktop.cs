@@ -228,6 +228,21 @@ namespace A2v10RuntimeNet
 			}
 		}
 
+
+		public static String GetVersions()
+		{
+			ClearError();
+			try
+			{
+				return DesktopApplicationHost.GetVersions();
+			}
+			catch (Exception ex)
+			{
+				SetLastError(ex);
+			}
+			return String.Empty;
+		}
+
 		public static Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
 		{
 			_lastContentDisposition = String.Empty;

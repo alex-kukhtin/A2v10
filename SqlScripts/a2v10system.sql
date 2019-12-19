@@ -1,25 +1,12 @@
-﻿/* 20191212-7049 */
+﻿/* 20191219-7050 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 12 dec 2019
-module version : 7049
+Last updated : 19 dec 2019
+module version : 7050
 */
-------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
-begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
-end
-go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2sys')
@@ -39,9 +26,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7049);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7050);
 else
-	update a2sys.Versions set [Version] = 7049 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7050 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -168,12 +155,24 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'GetVersions')
+	drop procedure a2sys.[GetVersions]
+go
+------------------------------------------------
+create procedure a2sys.[GetVersions]
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select Module, Version from a2sys.Versions;
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2sys to public;
 end
 go
 ------------------------------------------------
-set noexec off;
 go
 
