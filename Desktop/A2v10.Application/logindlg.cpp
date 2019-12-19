@@ -5,6 +5,7 @@
 #include "logininfo.h"
 #include "logindlg.h"
 #include "checkverinfo.h"
+#include "versiondlg.h"
 
 
 #define IDC_AUTH		IDC_COMBO1
@@ -35,7 +36,6 @@ END_MESSAGE_MAP()
 void CLoginDlg::DoDataExchange(CDataExchange* pDX)
 {
 	__super::DoDataExchange(pDX);
-	
 	DDX_Control(pDX, IDC_AUTH, m_cmbAuth);
 	DDX_Control(pDX, IDC_LOGIN, m_cmbUsers);
 	DDX_Control(pDX, IDC_SERVER, m_cmbServer);
@@ -182,7 +182,9 @@ bool CLoginDlg::CheckVersions()
 	CVersionModules modules;
 	if (!modules.Parse(vers.c_str()))
 		return false;
-	AfxMessageBox(L"RUN CHECK VERSION HERE");
+	CVersionDlg verdlg(&modules, this);
+	if (verdlg.DoModal() != IDOK)
+		return false;
 	return true;
 }
 

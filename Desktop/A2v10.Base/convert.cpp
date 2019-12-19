@@ -64,3 +64,11 @@ CString CConvert::Double2String(double d)
 	s.ReleaseBuffer(len);
 	return s;
 }
+
+
+//static
+CString CConvert::Long2String(long v) {
+	CString s;
+	s.Format(L"%ld", v);
+	return s;
+}

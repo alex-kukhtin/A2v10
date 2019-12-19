@@ -12,6 +12,7 @@ public:
 	static COLORREF String2Color(LPCWSTR szString, COLORREF clrDefault = UNKNOWN_COLOR);
 
 	static CString Double2String(double d);
+	static CString Long2String(long v);
 
 private:
 	CConvert(void);  // declare only

@@ -59,7 +59,6 @@
 #define IDD_OPTION_GENERAL              800
 #define IDD_SOLUTION_CREATE             802
 #define IDC_FOLDER                      1000
-#define IDC_LIST1                       1001
 #define IDC_EDIT1                       1002
 #define IDC_NAME                        1002
 #define IDS_OPTIONS_CAPTION             12000
@@ -92,6 +91,9 @@
 #define IDC_CHECK3			14028
 #define IDC_CHECK4			14029
 #define IDC_CHECK5			14030
+#define IDC_LIST1			14036
+#define IDC_LIST2			14037
+#define IDC_LIST3			14038
 #define ID_FILE_OPEN_SOLUTION           32000
 #define ID_FILE_CLOSE_SOLUTION          32001
 #define ID_FILE_SAVE_SOLUTION           32002

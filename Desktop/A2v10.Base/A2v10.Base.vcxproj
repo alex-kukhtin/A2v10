@@ -293,6 +293,7 @@
   <ItemGroup>
     <Image Include="res\imagelist10x10.bmp" />
     <Image Include="res\imagelist12x12.bmp" />
+    <Image Include="res\imagelist16x16.bmp" />
     <Image Include="res\imagelist48x48.bmp" />
     <Image Include="res\menuimages.bmp" />
   </ItemGroup>

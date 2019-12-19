@@ -114,7 +114,7 @@ struct IL_DEF
 
 static IL_DEF ilDefs[CTheme::ImageListCount] =
 {
-	{ 0,			16, 16, MASK_COLOR },
+	{ IDIL_16x16,	16, 16, MASK_COLOR },
 	{ IDIL_10X10,	10, 10, MASK_COLOR },
 	{ IDIL_12X12,	12, 12, MASK_COLOR },
 };

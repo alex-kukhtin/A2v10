@@ -19,6 +19,16 @@ void CVersionModule::SetNumberValue(const wchar_t* szName, const wchar_t* szValu
 		m_installed = _wtoi(szValue);
 }
 
+CString CVersionModule::InstalledVersion() const
+{
+	return CConvert::Long2String(m_installed);
+}
+
+CString CVersionModule::RequiredVersion() const
+{
+	return CConvert::Long2String(m_version);
+}
+
 
 // CVersionModules 
 ///////////////////////

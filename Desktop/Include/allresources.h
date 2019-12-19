@@ -36,11 +36,14 @@
 #define IDIL_10X10				700
 #define IDIL_12x12				701
 #define IDIL_48X48				702
+#define IDIL_16x16				703
 
 #define IDD_OPTION_GENERAL  800
 #define IDD_ABOUT			801
 #define IDD_SOLUTION_CREATE 802
 #define IDD_DB_LOGIN		803
+#define IDD_DB_VERSION		804
+#define IDD_LICENSE			805
 
 #define IDS_OPTIONS_CAPTION  12000
 #define IDS_LANGUAGES        12001

@@ -173,6 +173,7 @@
 ?Color2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@K@Z
 ?Double2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@N@Z
 ?String2Color@CConvert@@SAKPB_WK@Z
+?Long2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@J@Z
 ;
 ?SplitPath@CFileTools@@SAXPB_WAAUCFilePath@@@Z
 ?LoadFile@CFileTools@@SA_NPB_WAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
@@ -185,5 +186,6 @@
 ??1JsonParser@@UAE@XZ
 ?Parse@JsonParser@@QAEXPB_W@Z
 ?SetTarget@JsonParser@@QAEXPAVJsonTarget@@@Z
+?GetImageList@CTheme@@SAPAVCImageList@@W4ImageListType@1@@Z
 
 

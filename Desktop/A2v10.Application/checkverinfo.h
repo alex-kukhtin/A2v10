@@ -18,6 +18,10 @@ public:
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
 	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue);
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue) {};
+
+	bool IsVersionOk() const { return m_version == m_installed; }
+	CString InstalledVersion() const;
+	CString RequiredVersion() const;
 };
 
 class CVersionModules : public CArray<CVersionModule*, CVersionModule*>, public JsonTargetArray

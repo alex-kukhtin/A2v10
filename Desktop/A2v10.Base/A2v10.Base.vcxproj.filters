@@ -284,5 +284,8 @@
     <Image Include="res\menuimages.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\imagelist16x16.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
