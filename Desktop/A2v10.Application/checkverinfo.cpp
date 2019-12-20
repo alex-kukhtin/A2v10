@@ -8,6 +8,10 @@ void CVersionModule::SetStringValue(const wchar_t* szName, const wchar_t* szValu
 {
 	if (wcscmp(szName, L"module") == 0)
 		m_module = szValue;
+	else if (wcscmp(szName, L"file") == 0)
+		m_file = szValue;
+	else if (wcscmp(szName, L"title") == 0)
+		m_title = szValue;
 }
 
 // virtual 
@@ -28,6 +32,12 @@ CString CVersionModule::RequiredVersion() const
 {
 	return CConvert::Long2String(m_version);
 }
+
+LPCWSTR CVersionModule::Caption() const
+{
+	return (LPCWSTR) (m_title.IsEmpty() ? m_file : m_title);
+}
+
 
 
 // CVersionModules 
