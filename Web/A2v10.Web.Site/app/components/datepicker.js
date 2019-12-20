@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191017-7568
+// 20191220-7601
 // components/datepicker.js
 
 
@@ -17,7 +17,7 @@
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
 		template: `
-<div :class="cssClass2()" class="date-picker">
+<div :class="cssClass2()" class="date-picker" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group"  @click="clickInput($event)">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="inputDisabled"/>
