@@ -27,7 +27,7 @@ begin
 end
 go
 ------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'Versions' and COLUMN_NAME=N'Name')
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'Versions' and COLUMN_NAME=N'Title')
 begin
 	alter table a2sys.Versions add [Title] nvarchar(255) null;
 	alter table a2sys.Versions add [File] nvarchar(255) null;
@@ -173,7 +173,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
-	select Module, [Version], [Name], [File] from a2sys.Versions;
+	select [Module], [Version], [File], [Title] from a2sys.Versions;
 end
 go
 ------------------------------------------------
