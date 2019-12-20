@@ -182,6 +182,8 @@ bool CLoginDlg::CheckVersions()
 	CVersionModules modules;
 	if (!modules.Parse(vers.c_str()))
 		return false;
+	if (modules.IsOk())
+		return true;
 	CVersionDlg verdlg(&modules, this);
 	if (verdlg.DoModal() != IDOK)
 		return false;

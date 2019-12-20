@@ -9,6 +9,7 @@ namespace BuildSql
 #pragma warning disable IDE1006 // Naming Styles
 		public String version { get; set; }
 		public String name { get; set; }
+		public String title { get; set; }
 		public Boolean replaceSessionContext { get; set; }
 		public String remove { get; set; }
 		public String outputFile { get; set; }

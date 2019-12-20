@@ -75,8 +75,6 @@ namespace A2v10.Runtime
 					}
 				}
 			}
-			if (versions.IsOk())
-				return null;
 			return JsonConvert.SerializeObject(versions);
 		}
 	}

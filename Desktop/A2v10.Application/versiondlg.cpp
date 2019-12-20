@@ -64,10 +64,11 @@ void CVersionDlg::FillList()
 
 // afx_msg 
 void CVersionDlg::OnRetry() {
-	// TODO: fill always
 	std::wstring vers = CDotNetRuntime::GetVersions();
 	m_pModules->Clear();;
 	if (!m_pModules->Parse(vers.c_str()))
 		return;
 	FillList();
+	BOOL enable = m_pModules->IsOk() ? TRUE : FALSE;
+	GetDlgItem(IDOK)->EnableWindow(enable);
 }

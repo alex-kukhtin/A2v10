@@ -68,3 +68,10 @@ bool CVersionModules::Parse(const wchar_t* json)
 		return false;
 	}
 }
+
+bool CVersionModules::IsOk() {
+	for (int i = 0; i < GetCount(); i++)
+		if (!ElementAt(i)->IsVersionOk())
+			return false;
+	return true;
+}

@@ -7,6 +7,7 @@
 #define IDIL_10X10				700
 #define IDIL_12X12				701
 #define IDIL_48X48				702
+#define IDIL_16x16				703
 #define IDD_OPTION_GENERAL		800
 #define IDD_ABOUT				801
 #define IDS_OPTIONS_CAPTION		12000
@@ -37,6 +38,9 @@
 #define IDC_CHECK3			14028
 #define IDC_CHECK4			14029
 #define IDC_CHECK5			14030
+#define IDC_LIST1			14036
+#define IDC_LIST2			14037
+#define IDC_LIST3			14038
 
 #define ID_VIEW_PROPERTIES		32200
 #define	ID_VIEW_TOOLBOX			32201

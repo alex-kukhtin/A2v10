@@ -46,6 +46,9 @@
 #define IDC_CHECK3                      14028
 #define IDC_CHECK4                      14029
 #define IDC_CHECK5                      14030
+#define IDC_LIST1			14036
+#define IDC_LIST2			14037
+#define IDC_LIST3			14038
 #define IDS_WEB_RESOURCE_FIRST          20000
 #define IDWEB_SITE_MAIN_HTML            20001
 #define IDWEB_SITE_MAIN_HTML_ADMIN      20002

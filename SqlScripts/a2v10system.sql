@@ -1,11 +1,11 @@
-﻿/* 20191219-7050 */
+﻿/* 20191220-7051 */
 
 /*
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 19 dec 2019
-module version : 7050
+Last updated : 20 dec 2019
+module version : 7051
 */
 ------------------------------------------------
 set nocount on;
@@ -20,15 +20,24 @@ begin
 	create table a2sys.Versions
 	(
 		Module sysname not null constraint PK_Versions primary key,
-		[Version] int null
+		[Version] int null,
+		[Title] nvarchar(255),
+		[File] nvarchar(255)
 	);
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'Versions' and COLUMN_NAME=N'Name')
+begin
+	alter table a2sys.Versions add [Title] nvarchar(255) null;
+	alter table a2sys.Versions add [File] nvarchar(255) null;
+end
+go
+------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7050);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7051);
 else
-	update a2sys.Versions set [Version] = 7050 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7051 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -164,7 +173,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
-	select Module, Version from a2sys.Versions;
+	select Module, [Version], [Name], [File] from a2sys.Versions;
 end
 go
 ------------------------------------------------

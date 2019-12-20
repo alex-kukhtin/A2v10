@@ -30,6 +30,7 @@ public:
 	virtual ~CVersionModules();
 	void Clear();
 	bool Parse(const wchar_t* json);
+	bool IsOk();
 
 	//  json target array
 	virtual JsonTarget* CreateObject(const wchar_t* szName);

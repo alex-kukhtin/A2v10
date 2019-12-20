@@ -101,6 +101,9 @@ namespace BuildSql
 			{
 				var numVersion = item.NumVersion;
 				var moduleName = $"script:{item.name}";
+				var moduleTitle = "null";
+				if (!String.IsNullOrEmpty(item.title))
+					moduleTitle = $"N'{item.title}'";
 
 				String updateVersion = $@"
 set nocount on;
@@ -112,14 +115,16 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys
 	create table a2sys.Versions
 	(
 		Module sysname not null constraint PK_Versions primary key,
-		[Version] int null
+		[Version] int null,
+		[Title] nvarchar(255),
+		[File] nvarchar(255)
 	);
 go
 ----------------------------------------------
 if exists(select * from a2sys.Versions where [Module]=N'{moduleName}')
-	update a2sys.Versions set Version={numVersion} where [Module]=N'{moduleName}';
+	update a2sys.Versions set [Version]={numVersion}, [File]=N'{item.outputFile}', Title={moduleTitle} where [Module]=N'{moduleName}';
 else
-	insert into a2sys.Versions([Module], [Version]) values (N'{moduleName}', {numVersion});
+	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'{moduleName}', {numVersion}, N'{item.outputFile}', {moduleTitle});
 go
 ";
 				writer.WriteLine(updateVersion);
