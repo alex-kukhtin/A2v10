@@ -1,11 +1,8 @@
-﻿/* 20191220-7051 */
-
-/*
-------------------------------------------------
+﻿/*
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 20 dec 2019
-module version : 7051
+Last updated : 21 dec 2019
+module version : 7052
 */
 ------------------------------------------------
 set nocount on;
@@ -35,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7051);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7052);
 else
-	update a2sys.Versions set [Version] = 7051 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7052 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')

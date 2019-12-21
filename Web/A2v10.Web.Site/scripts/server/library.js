@@ -2617,5 +2617,4 @@ app.modules['std:validators'] = function () {
 	function validate(datamodel, template) {
 		console.dir(datamodel);
 	}
-
 });

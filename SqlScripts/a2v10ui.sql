@@ -1,31 +1,15 @@
-
-/* 20191212-7549 */
 /*
-------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 12 dec 2019
-module version : 7549
+Last updated : 21 dec 2019
+module version : 7550
 */
-------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
-begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
-end
-go
 ------------------------------------------------
 set nocount on;
 if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7549);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7550);
 else
-	update a2sys.Versions set [Version] = 7549 where Module = N'std:ui';
+	update a2sys.Versions set [Version] = 7550 where Module = N'std:ui';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -53,7 +37,8 @@ begin
 		Help nvarchar(255) null,
 		[Order] int not null constraint DF_Menu_Order default(0),
 		[Description] nvarchar(255) null,
-		[Params] nvarchar(255) null
+		[Params] nvarchar(255) null,
+		[Feature] nchar(4) null
 	);
 end
 go
@@ -73,6 +58,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Params')
 begin
 	alter table a2ui.Menu add Params nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Feature')
+begin
+	alter table a2ui.Menu add [Feature] nchar(4) null;
 end
 go
 ------------------------------------------------
@@ -387,7 +378,4 @@ begin
 	set nocount on;
 	grant execute on schema ::a2ui to public;
 end
-go
-------------------------------------------------
-set noexec off;
 go

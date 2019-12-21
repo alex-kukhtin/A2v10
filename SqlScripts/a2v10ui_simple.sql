@@ -51,7 +51,8 @@ begin
 		Help nvarchar(255) null,
 		[Order] int not null constraint DF_Menu_Order default(0),
 		[Description] nvarchar(255) null,
-		[Params] nvarchar(255) null
+		[Params] nvarchar(255) null,
+		[Feature] nchar(4) null
 	);
 end
 go
@@ -71,6 +72,12 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Params')
 begin
 	alter table a2ui.Menu add Params nvarchar(255) null;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Feature')
+begin
+	alter table a2ui.Menu add [Feature] nchar(4) null;
 end
 go
 ------------------------------------------------
