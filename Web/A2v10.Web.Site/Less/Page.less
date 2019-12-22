@@ -33,9 +33,11 @@
 		grid-row: 2;
 		grid-column: 1;
 		overflow: auto;
+		padding:1px; /*avoid unexpected h-scroll*/
 
 		&.with-wrapper {
 			background-color: @page-wrapper-bg-color;
+			padding:0;
 		}
 	}
 }

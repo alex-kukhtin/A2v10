@@ -72,6 +72,7 @@ namespace A2v10.Xaml
 				var content = new TagBuilder("div", "page-content");
 				if (ChildHasWrapper)
 					content.AddCssClass("with-wrapper");
+				MergeAttributes(content, context, MergeAttrMode.Margin);
 				content.RenderStart(context);
 				RenderChildren(context);
 				content.RenderEnd(context);

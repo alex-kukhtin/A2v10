@@ -1,4 +1,4 @@
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов" Padding="2rem">
 	<Page.Toolbar>
 		<Toolbar>
 			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="15rem"/>
@@ -32,7 +32,9 @@
 			</Grid>
 		</Taskpad>
 	</Page.Taskpad>
+	<!--
 	<SheetPage Orientation="Landscape">
+	-->
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow Mark="{Bind $Mark}">
@@ -92,6 +94,7 @@
 				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>
-	</SheetPage>
+	<!--
+	</SheetPage> -->
 	<Code Content="{Bind Query}" Multiline="True" If="False"></Code>
 </Page>
