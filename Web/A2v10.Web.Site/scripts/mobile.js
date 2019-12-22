@@ -4834,7 +4834,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191003-7562
+// 20191222-7601
 // components/calendar.js
 
 (function () {
@@ -4988,8 +4988,7 @@ Vue.component('validator-control', {
 				return cls;
 			},
 			dayTitle(day) {
-				return day.toString();
-				//return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			mouseOver(day) {
 				if (this.hover)
