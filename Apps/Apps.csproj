@@ -65,6 +65,7 @@
     <None Include="Develop\document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Develop\pos\model.json" />
     <None Include="Develop\Reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
@@ -77,6 +78,7 @@
     <TypeScriptCompile Include="Develop\document\common2.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\dashboard\homepage.template.box.js" />
+    <Content Include="Develop\pos\pos.template.js" />
     <Content Include="Develop\sales\invoice\invoice2.template.js" />
     <Content Include="Develop\sales\waybill\empty.template.js" />
     <Content Include="Develop\sales\waybill\links.template.js" />
@@ -534,6 +536,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\dashboard\homepage.view.box.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\pos\pos.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

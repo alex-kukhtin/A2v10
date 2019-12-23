@@ -2,15 +2,17 @@
 ------------------------------------------------
 Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 19 dec 2019
-module version : 7597
+Last updated : 23 dec 2019
+module version : 7598
 */
 ------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:security')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7597);
-else
-	update a2sys.Versions set [Version] = 7597 where Module = N'std:security';
+begin
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:security')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7598);
+	else
+		update a2sys.Versions set [Version] = 7598 where Module = N'std:security';
+end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -158,9 +160,16 @@ begin
 		TariffPlan nvarchar(255) null,
 		[Guid] uniqueidentifier null,
 		Referral bigint null,
-		Segment nvarchar(32) null
+		Segment nvarchar(32) null,
+		DateCreated datetime null
+			constraint DF_Users_DateCreated default(a2sys.fn_getCurrentDate()),
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'DateCreated')
+	alter table a2security.Users add DateCreated datetime null
+			constraint DF_Users_DateCreated default(a2sys.fn_getCurrentDate());
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserLogins')

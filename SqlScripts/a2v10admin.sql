@@ -1,29 +1,18 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2018 Alex Kukhtin
+Copyright © 2008-2019 Alex Kukhtin
 
-Last updated : 11 dec 2018
-module version : 7169
+Last updated : 23 dec 2019
+module version : 7170
 */
 ------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
 begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:admin')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7170);
+	else
+		update a2sys.Versions set [Version] = 7170 where Module = N'std:admin';
 end
-go
-------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:admin')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7169);
-else
-	update a2sys.Versions set [Version] = 7169 where Module = N'std:admin';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -57,6 +46,7 @@ create procedure a2admin.[Menu.Admin.Load]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	exec a2admin.[Ensure.Admin] @TenantId, @UserId;
 	declare @RootId bigint;
@@ -100,6 +90,7 @@ create procedure a2admin.[User.Index]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -157,6 +148,7 @@ create procedure a2admin.[User.Load]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -295,6 +287,8 @@ create procedure a2admin.[User.Login.CheckDuplicate]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @valid bit = 1;
 	if exists(select * from a2security.Users where UserName = @Login and Id <> @Id)
 		set @valid = 0;
@@ -338,6 +332,7 @@ create procedure a2admin.[Group.Index]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -395,6 +390,7 @@ create procedure a2admin.[Group.Load]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 	
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -527,6 +523,8 @@ create procedure a2admin.[Group.Key.CheckDuplicate]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @valid bit = 1;
 	if exists(select * from a2security.Groups where [Key] = @Key and Id <> @Id)
 		set @valid = 0;
@@ -546,6 +544,8 @@ create procedure a2admin.[Group.Name.CheckDuplicate]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @valid bit = 1;
 	if exists(select * from a2security.Groups where [Name] = @Name and Id <> @Id)
 		set @valid = 0;
@@ -558,16 +558,17 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Index]
-	@TenantId int = null,
-	@UserId bigint,
-	@Order nvarchar(255) = N'Id',
-	@Dir nvarchar(255) = N'desc',
-	@Offset int = 0,
-	@PageSize int = 20,
-	@Fragment nvarchar(255) = null
+@TenantId int = null,
+@UserId bigint,
+@Order nvarchar(255) = N'Id',
+@Dir nvarchar(255) = N'desc',
+@Offset int = 0,
+@PageSize int = 20,
+@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -618,12 +619,13 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Load]
-	@TenantId int = null,
-	@UserId bigint,
-	@Id bigint = null
+@TenantId int = null,
+@UserId bigint,
+@Id bigint = null
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 	
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
@@ -649,9 +651,9 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Delete]
-	@TenantId int = null,
-	@UserId bigint,
-	@Id bigint = null
+@TenantId int = null,
+@UserId bigint,
+@Id bigint = null
 as
 begin
 	set nocount on;
@@ -669,13 +671,15 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Key.CheckDuplicate]
-	@TenantId int = null,
-	@UserId bigint,
-	@Id bigint,
-	@Key nvarchar(255)
+@TenantId int = null,
+@UserId bigint,
+@Id bigint,
+@Key nvarchar(255)
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @valid bit = 1;
 	if exists(select * from a2security.Roles where [Key] = @Key and Id <> @Id)
 		set @valid = 0;
@@ -688,13 +692,15 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ad
 go
 ------------------------------------------------
 create procedure a2admin.[Role.Name.CheckDuplicate]
-	@TenantId int = null,
-	@UserId bigint,
-	@Id bigint,
-	@Name nvarchar(255)
+@TenantId int = null,
+@UserId bigint,
+@Id bigint,
+@Name nvarchar(255)
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @valid bit = 1;
 	if exists(select * from a2security.Roles where [Name] = @Name and Id <> @Id)
 		set @valid = 0;
@@ -806,6 +812,8 @@ create or alter procedure a2admin.[Process.Index]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
@@ -844,6 +852,8 @@ create or alter procedure a2admin.[Inbox.Index]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
@@ -917,7 +927,4 @@ begin
 	set nocount on;
 	grant execute on schema ::a2admin to public;
 end
-go
-------------------------------------------------
-set noexec off;
 go

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191213-7599*/
+/*20191223-7601*/
 // controllers/base.js
 
 (function () {
@@ -1120,6 +1120,7 @@
 					caller = this.$caller.$data;
 				this.__createController__();
 				root._modelLoad_(caller);
+				root._seal_(root);
 			},
 			__createController__() {
 				let ctrl = {

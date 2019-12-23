@@ -1,10 +1,9 @@
-/* 20191212-7052 */
 /*
 ------------------------------------------------
 Copyright © 2008-2019 A. Kukhtin
 
-Last updated : 12 dec 2019 20:05
-module version : 7052
+Last updated : 23 dec 2019
+module version : 7053
 */
 
 /*
@@ -17,24 +16,13 @@ Depends on Windows Workflow Foundation scripts.
 */
 
 ------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
 begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
-end
-go
-------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7052);
-else
-	update a2sys.Versions set [Version] = 7052 where Module = N'std:workflow';
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:workflow')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7053);
+	else
+		update a2sys.Versions set [Version] = 7053 where Module = N'std:workflow';
+	end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -473,8 +461,5 @@ begin
 	set nocount on;
 	grant execute on schema ::a2workflow to public;
 end
-go
-------------------------------------------------
-set noexec off;
 go
 

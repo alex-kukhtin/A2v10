@@ -53,7 +53,7 @@ namespace A2v10.Web.Config
 		}
 		public Int64 UserCompanyId(Int32 TenantId, Int64 UserId)
 		{
-			if (!_host.IsMultiCompany)
+			if (!_host.IsMultiCompany && !_host.IsUsePeriodAndCompanies)
 				return 0;
 			if (UserId == 0)
 				throw new InvalidOperationException(nameof(UserCompanyId));
@@ -75,8 +75,10 @@ namespace A2v10.Web.Config
 
 		UserCompany SetUserCompany(Int32 TenantId, Int64 UserId)
 		{
+			// TenantId is null
+			Object TenantToCall = TenantId == 0 ? null : (Object) TenantId;
 			var userCompany = new UserCompany();
-			var dm = _dbContext.LoadModel(null, "[a2security_tenant].[UserCompany.Load]", new { TenantId, UserId });
+			var dm = _dbContext.LoadModel(null, "[a2security_tenant].[UserCompany.Load]", new { TenantId = TenantToCall, UserId });
 			userCompany.CompanyId = dm.Eval<Int64>("UserCompany.Company");
 			if (userCompany.CompanyId == 0)
 				throw new InvalidOperationException("Procedure 'UserCompany.Load' returned '0'.");

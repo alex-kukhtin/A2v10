@@ -1,0 +1,9 @@
+﻿/*home*/
+{
+	"actions": {
+		"index": {
+			"view": "pos.view",
+			"template": "pos.template"
+		}
+	}
+}

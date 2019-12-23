@@ -1,32 +1,18 @@
-/* 20191212-7046 */
-
 /*
 ------------------------------------------------
 Copyright © 2008-2017 A. Kukhtin
 
-Last updated : 12 dec 2019
-module version : 7046
+Last updated : 23 dec 2019
+module version : 7047
 */
-
 ------------------------------------------------
-set noexec off;
-go
-------------------------------------------------
-if DB_NAME() = N'master'
 begin
-	declare @err nvarchar(255);
-	set @err = N'Error! Can not use the master database!';
-	print @err;
-	raiserror (@err, 16, -1) with nowait;
-	set noexec on;
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:meta')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7047);
+	else
+		update a2sys.Versions set [Version] = 7047 where Module = N'std:meta';
 end
-go
-------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:meta')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:meta', 7046);
-else
-	update a2sys.Versions set [Version] = 7046 where Module = N'std:meta';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2meta')
@@ -482,6 +468,3 @@ drop table a2meta.[Views]
 drop table a2meta.[Modules]
 drop table a2meta.[Models]
 */
-------------------------------------------------
-set noexec off;
-go

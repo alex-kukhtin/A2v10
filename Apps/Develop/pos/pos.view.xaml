@@ -1,0 +1,4 @@
+﻿<!-- Pos MAIN Page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+	  Title="POS" Background="LightYellow">
+</Page>

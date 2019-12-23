@@ -5,11 +5,13 @@ Last updated : 21 dec 2019
 module version : 7550
 */
 ------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:ui')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7550);
-else
-	update a2sys.Versions set [Version] = 7550 where Module = N'std:ui';
+begin
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:ui')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7550);
+	else
+		update a2sys.Versions set [Version] = 7550 where Module = N'std:ui';
+	end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
