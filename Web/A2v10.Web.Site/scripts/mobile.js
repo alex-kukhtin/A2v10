@@ -11713,7 +11713,6 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
-
 // Copyright © 2019 Alex Kukhtin. All rights reserved.
 
 /*20180924-7561*/
