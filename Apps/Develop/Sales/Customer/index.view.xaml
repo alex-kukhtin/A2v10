@@ -16,6 +16,7 @@
 				<Button Icon="Add" Tip="Создать папку" Command="{BindCmd Execute, CommandName=AddTopFolder, Argument={Bind Agents}}" />
 				<Button Icon="Edit" Command="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}" />
 				<Button Icon="Delete" Command="{BindCmd Execute, CommandName=DeleteFolder, Argument={Bind Agents.$selected}, Confirm='Удалить папку?'}"/>
+				<Button Icon="Disapprove" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross'}"/>
 			</Toolbar>
 			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True"
 					ItemsSource="{Bind Agents}" FolderSelect="True">

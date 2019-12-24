@@ -34,6 +34,24 @@ namespace A2v10.Xaml
 			var td = new TagBuilder("td");
 			onRender?.Invoke(td);
 
+			Bind isBind = GetBinding(nameof(ItemsSource));
+			if (isBind != null)
+			{
+				td.MergeAttribute("v-for", $"(cell, cellIndex) in {isBind.GetPath(context)}");
+				td.MergeAttribute(":key", "cellIndex");
+				using (var scope = new ScopeContext(context, "cell"))
+				{
+					RenderCell(td, context);
+				}
+			}
+			else
+			{
+				RenderCell(td, context);
+			}
+		}
+
+		void RenderCell(TagBuilder td, RenderContext context)
+		{ 
 			MergeAttributes(td, context);
 
 			var boldBind = GetBinding(nameof(Bold));
@@ -53,7 +71,6 @@ namespace A2v10.Xaml
 			td.AddCssClassBoolNo(Italic, "italic");
 			td.AddCssClassBool(Gray, "gray");
 
-			MergeContent(td, context);
 
 			if (Align != TextAlign.Left)
 				td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
@@ -64,12 +81,7 @@ namespace A2v10.Xaml
 			if (Content is ITableControl)
 				td.AddCssClass("ctrl");
 
-			Bind isBind = GetBinding(nameof(ItemsSource));
-			if (isBind != null)
-			{
-				td.MergeAttribute("v-for", $"(cell, cellIndex) in {isBind.GetPath(context)}");
-				td.MergeAttribute(":key", "cellIndex");
-			}
+			MergeContent(td, context);
 			MergeAttributeInt32(td, context, nameof(ColSpan), "colspan", ColSpan);
 			var rowSpanBind = GetBinding(nameof(RowSpan));
 			if (rowSpanBind != null)

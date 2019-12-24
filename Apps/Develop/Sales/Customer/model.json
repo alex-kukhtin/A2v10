@@ -1,11 +1,19 @@
 ﻿{
-  "schema": "a2demo",
-  "model": "Customer",
-  "actions": {
-    "index": {
-      "index": true,
-      "template": "index.template",
-      "view": "index.view"
-    }
-  }
+	"schema": "a2demo",
+	"model": "Customer",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view"
+		}
+	},
+	"dialogs": {
+		"testCross": {
+			"source": "Test",
+			"schema": "a2test",
+			"model": "CrossModel",
+			"view": "testcross.dialog"
+		}
+	}
 }
