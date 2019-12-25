@@ -40,7 +40,7 @@ namespace A2v10.Xaml
 				Width = Length.FromString(definition);
 		}
 
-		internal void Render(RenderContext context)
+		public virtual void Render(RenderContext context)
 		{
 			var col = new TagBuilder("col");
 			if (Fit)

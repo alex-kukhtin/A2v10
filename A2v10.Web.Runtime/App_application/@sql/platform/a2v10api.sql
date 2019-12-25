@@ -1,16 +1,18 @@
-﻿/* 20190219-7255 */
-/*
+﻿/*
 ------------------------------------------------
 Copyright © 2018-2019 Alex Kukhtin
 
-Last updated : 19 feb 2019
-module version : 7255
+Last updated : 23 dec 2019
+module version : 7256
 */
 ------------------------------------------------
-if not exists(select * from a2sys.Versions where Module = N'std:api')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:api', 7255);
-else
-	update a2sys.Versions set [Version] = 7255 where Module = N'std:api';
+begin
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:api')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:api', 7256);
+	else
+		update a2sys.Versions set [Version] = 7256 where Module = N'std:api';
+end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2api')

@@ -261,6 +261,21 @@ const vm = new DataModelController({
 			return sb;
 		}
 
+		String GetCrossProperties(IDataMetadata meta)
+		{
+			var sb = new StringBuilder("{");
+			foreach (var c in meta.Cross)
+			{
+				sb.Append($"{c.Key}: [");
+				foreach (var s in c.Value)
+					sb.Append($"'{s}',");
+				sb.RemoveTailComma();
+				sb.Append("]");
+			}
+			sb.AppendLine("}");
+			return sb.ToString();
+		}
+
 		public String GetSpecialProperties(IDataMetadata meta)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -282,6 +297,8 @@ const vm = new DataModelController({
 				sb.Append($"$main: '{meta.MainObject}',");
 			if (meta.IsGroup)
 				sb.Append($"$group: true,");
+			if (meta.HasCross)
+				sb.Append($"$cross: {GetCrossProperties(meta)},");
 			StringBuilder lazyFields = new StringBuilder();
 			foreach (var f in meta.Fields)
 			{

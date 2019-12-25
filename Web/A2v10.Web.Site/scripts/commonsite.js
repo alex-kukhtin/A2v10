@@ -2249,7 +2249,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181101-7576*/
+/*20181225-7601*/
 // services/datamodel.js
 
 (function () {
@@ -2735,6 +2735,11 @@ Vue.component('a2-pager', {
 		defPropertyGet(arr, "$invalid", function () {
 			return !this.$valid;
 		});
+
+		if (ctor.prototype._meta_.$cross)
+			defPropertyGet(arr, "$cross", function () {
+				return ctor.prototype._meta_.$cross;
+			});
 
 		createObjProperties(arr, arrctor);
 

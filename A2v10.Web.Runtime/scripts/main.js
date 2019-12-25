@@ -1984,7 +1984,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181101-7576*/
+/*20181225-7601*/
 // services/datamodel.js
 
 (function () {
@@ -2470,6 +2470,11 @@ app.modules['std:validators'] = function () {
 		defPropertyGet(arr, "$invalid", function () {
 			return !this.$valid;
 		});
+
+		if (ctor.prototype._meta_.$cross)
+			defPropertyGet(arr, "$cross", function () {
+				return ctor.prototype._meta_.$cross;
+			});
 
 		createObjProperties(arr, arrctor);
 
@@ -4494,7 +4499,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191206-7595*/
+/*20191225-7601*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -4565,7 +4570,7 @@ Vue.component('validator-control', {
 		template: textBoxTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -4621,7 +4626,7 @@ Vue.component('validator-control', {
 		template: textAreaTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -4681,7 +4686,7 @@ Vue.component('validator-control', {
 		template: staticTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -4834,7 +4839,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191003-7562
+// 20191222-7601
 // components/calendar.js
 
 (function () {
@@ -4988,8 +4993,7 @@ Vue.component('validator-control', {
 				return cls;
 			},
 			dayTitle(day) {
-				return day.toString();
-				//return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+				return day.toLocaleString(locale.$Locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 			},
 			mouseOver(day) {
 				if (this.hover)
@@ -10453,7 +10457,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191213-7599*/
+/*20191223-7601*/
 // controllers/base.js
 
 (function () {
@@ -11573,6 +11577,7 @@ Vue.directive('resize', {
 					caller = this.$caller.$data;
 				this.__createController__();
 				root._modelLoad_(caller);
+				root._seal_(root);
 			},
 			__createController__() {
 				let ctrl = {
@@ -11713,7 +11718,6 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
-
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 /*20181208-7596*/

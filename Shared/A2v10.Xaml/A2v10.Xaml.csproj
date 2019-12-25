@@ -125,6 +125,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sheets\SheetCellGroup.cs" />
+    <Compile Include="Sheets\SheetColumnGroup.cs" />
     <Compile Include="Sheets\SheetPage.cs" />
     <Compile Include="Text\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />

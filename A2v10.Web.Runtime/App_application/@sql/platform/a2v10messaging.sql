@@ -5,11 +5,13 @@ Last updated : 21 dec 2019
 module version : 7053
 */
 ------------------------------------------------
-set nocount on;
-if not exists(select * from a2sys.Versions where Module = N'std:messaging')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7053);
-else
-	update a2sys.Versions set [Version] = 7053 where Module = N'std:messaging';
+begin
+	set nocount on;
+	if not exists(select * from a2sys.Versions where Module = N'std:messaging')
+		insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7053);
+	else
+		update a2sys.Versions set [Version] = 7053 where Module = N'std:messaging';
+end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2messaging')

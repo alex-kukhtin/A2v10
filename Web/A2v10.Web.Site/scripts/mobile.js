@@ -1984,7 +1984,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181101-7576*/
+/*20181225-7601*/
 // services/datamodel.js
 
 (function () {
@@ -2470,6 +2470,11 @@ app.modules['std:validators'] = function () {
 		defPropertyGet(arr, "$invalid", function () {
 			return !this.$valid;
 		});
+
+		if (ctor.prototype._meta_.$cross)
+			defPropertyGet(arr, "$cross", function () {
+				return ctor.prototype._meta_.$cross;
+			});
 
 		createObjProperties(arr, arrctor);
 
@@ -4494,7 +4499,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191206-7595*/
+/*20191225-7601*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -4565,7 +4570,7 @@ Vue.component('validator-control', {
 		template: textBoxTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -4621,7 +4626,7 @@ Vue.component('validator-control', {
 		template: textAreaTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -4681,7 +4686,7 @@ Vue.component('validator-control', {
 		template: staticTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},

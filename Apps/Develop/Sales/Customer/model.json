@@ -13,7 +13,8 @@
 			"source": "Test",
 			"schema": "a2test",
 			"model": "CrossModel",
-			"view": "testcross.dialog"
+			"view": "testcross.dialog",
+			"template": "testcross.template"
 		}
 	}
 }

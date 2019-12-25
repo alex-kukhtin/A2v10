@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -24,8 +24,18 @@ namespace A2v10.Xaml
 				return;
 			var td = new TagBuilder("td");
 			MergeAttributes(td, context);
-			td.MergeAttribute("colspan", ColSpan);
-			td.MergeAttribute("rowspan", RowSpan);
+
+			var colSpanBind = GetBinding(nameof(ColSpan));
+			if (colSpanBind != null)
+				td.MergeAttribute(":colspan", colSpanBind.GetPath(context));
+			else
+				td.MergeAttribute("colspan", ColSpan);
+			var rowSpanBind = GetBinding(nameof(RowSpan));
+			if (rowSpanBind != null)
+				td.MergeAttribute(":rowspan", rowSpanBind.GetPath(context));
+			else
+				td.MergeAttribute("rowspan", RowSpan);
+
 			if (Align != null)
 				td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			if (VAlign != VerticalAlign.Default)

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -82,12 +82,18 @@ namespace A2v10.Xaml
 				td.AddCssClass("ctrl");
 
 			MergeContent(td, context);
-			MergeAttributeInt32(td, context, nameof(ColSpan), "colspan", ColSpan);
+
+			var colSpanBind = GetBinding(nameof(ColSpan));
+			if (colSpanBind != null)
+				td.MergeAttribute(":colspan", colSpanBind.GetPath(context));
+			else
+				MergeAttributeInt32(td, context, nameof(ColSpan), "colspan", ColSpan);
 			var rowSpanBind = GetBinding(nameof(RowSpan));
 			if (rowSpanBind != null)
 				td.MergeAttribute(":rowspan", rowSpanBind.GetPath(context));
 			else
 				MergeAttributeInt32(td, context, nameof(RowSpan), "rowspan", RowSpan);
+
 			td.RenderStart(context);
 			RenderContent(context);
 			/*

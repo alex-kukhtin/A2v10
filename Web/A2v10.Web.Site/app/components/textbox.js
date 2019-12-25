@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-/*20191206-7595*/
+/*20191225-7601*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -71,7 +71,7 @@
 		template: textBoxTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -127,7 +127,7 @@
 		template: textAreaTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
@@ -187,7 +187,7 @@
 		template: staticTemplate,
 		props: {
 			item: {
-				type: Object, default() {
+				type: [Object, Array], default() {
 					return {};
 				}
 			},
