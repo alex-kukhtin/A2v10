@@ -15,6 +15,13 @@
 			"model": "CrossModel",
 			"view": "testcross.dialog",
 			"template": "testcross.template"
+		},
+		"testCross2": {
+			"source": "Test",
+			"schema": "a2test",
+			"model": "CrossModelObj",
+			"view": "testcross2.dialog",
+			"template": "testcross2.template"
 		}
 	}
 }
