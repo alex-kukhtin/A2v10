@@ -557,12 +557,16 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "image/png";
 			if (ex.InnerException != null)
 				ex = ex.InnerException;
-			var b = new Bitmap(380, 30);
-			var g = Graphics.FromImage(b);
-			g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
-			g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
-			g.Save();
-			b.Save(Response.OutputStream, ImageFormat.Png);
+			using (var b = new Bitmap(380, 30))
+			{
+				using (var g = Graphics.FromImage(b))
+				{
+					g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+					g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+					g.Save();
+					b.Save(Response.OutputStream, ImageFormat.Png);
+				}
+			}
 		}
 
 		async Task SaveImage(String url)

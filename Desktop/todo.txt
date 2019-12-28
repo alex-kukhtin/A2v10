@@ -11,8 +11,5 @@
 18. Debug/release configuration (command line?)
 19. Login Dialog - Localization
 20. ѕоиск контрагента по API из сервиса.
-22. DbManager - создание пользователей
 23. Application.Start - получить всех пользователей и провер€ть лицензии.
-26. «аголовок (коробочное приложение ????)
-29. Check version dialog ???
-
+30. 
