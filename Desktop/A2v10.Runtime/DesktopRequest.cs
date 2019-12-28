@@ -342,16 +342,20 @@ namespace A2v10.Runtime
 			response.ContentType = "image/png";
 			if (ex.InnerException != null)
 				ex = ex.InnerException;
-			var b = new Bitmap(380, 30);
-			var g = Graphics.FromImage(b);
-			g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
-			g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
-			g.Save();
-			using (var ms = new MemoryStream())
+			using (var b = new Bitmap(380, 30))
 			{
-				b.Save(ms, ImageFormat.Png);
-				ms.Seek(0, SeekOrigin.Begin);
-				return ms.GetBuffer();
+				using (var g = Graphics.FromImage(b))
+				{
+					g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+					g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+					g.Save();
+					using (var ms = new MemoryStream())
+					{
+						b.Save(ms, ImageFormat.Png);
+						ms.Seek(0, SeekOrigin.Begin);
+						return ms.GetBuffer();
+					}
+				}
 			}
 		}
 

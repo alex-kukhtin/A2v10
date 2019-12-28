@@ -16,7 +16,7 @@
 					<TextBox Label="Проект">
 						<TextBox.Hint>
 							<Popover Placement="BottomRight">
-								I am the popover here
+								I am the popover here 22
 							</Popover>
 						</TextBox.Hint>
 					</TextBox>
@@ -33,6 +33,7 @@
 						<ComboBoxItem Content="Success" Value="success"/>
 						<ComboBoxItem Content="Green" Value="green"/>
 					</ComboBox>
+					<StaticImage Url="/myImage/image.png" Height="29px" />
 				</Grid>
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
