@@ -1,10 +1,7 @@
 ﻿
 /* Copyright © 2019 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7550 */
+/* Version 10.0.7603 */
 
-/*TODO:
- * ????
-*/
 
 declare function require(url: string): any;
 
@@ -36,10 +33,10 @@ interface IElement {
 }
 
 interface IArrayElement extends IElement {
-	$remove(): void;
+	readonly $parent: IElementArray<IElement>;
 	$selected: boolean;
 	$checked: boolean;
-	readonly $parent: IElementArray<IElement>;
+	$remove(): void;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -67,6 +64,7 @@ interface IElementArray<T> extends Array<T> {
 	readonly $selected: T;
 	readonly $selectedIndex: number;
 	readonly $parent: IElement;
+	readonly $cross: { [prop: string]: string[] };
 	readonly $ModelInfo: IModelInfo;
 
 	Selected(prop: string): IElementArray<T>;
@@ -75,10 +73,10 @@ interface IElementArray<T> extends Array<T> {
 	$prepend(src?: object): T;
 	$insert(src: object, to: InsertTo, ref?: T): T;
 
-	$clearSelected(): void;
+	$clearSelected(): IElementArray<T>;
 	$load(): void;
 	$loadLazy(): Promise<IElementArray<T>>;
-	$resetLazy(): void;
+	$resetLazy(): IElementArray<T>;
 
 	$isLazy(): boolean;
 
@@ -108,7 +106,7 @@ interface templateCommandFunc { (this: IRoot, arg?: any): void; }
 interface templateCommandObj {
 	exec: templateCommandFunc,
 	canExec?: (this: IRoot, arg?: any) => boolean;
-	confirm?: string; // TODO: object
+	confirm?: string | IConfirm;
 	saveRequired?: boolean;
 }
 
@@ -134,7 +132,8 @@ declare const enum StdValidator {
 	notBlank = 'notBlank',
 	email = 'email',
 	url = 'url',
-	isTrue = 'isTrue'
+	isTrue = 'isTrue',
+	regExp = 'regExp'
 }
 
 declare const enum Severity {
@@ -164,6 +163,7 @@ interface templateValidatorObj {
 	valid: tempateValidatorFunc | StdValidator,
 	async?: boolean,
 	msg?: string,
+	regExp?: RegExp,
 	severity?: Severity
 }
 
@@ -201,7 +201,7 @@ interface IController {
 	$modalClose(result?: any): any;
 	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
 	$alert(msg: string | IMessage): Promise<boolean>;
-	$confirm(msg: string | IMessage): Promise<boolean>;
+	$confirm(msg: string | IConfirm): Promise<boolean>;
 	$showDialog(url: string, data?: object, query?: object): Promise<object>;
 	$saveModified(msg?: string, title?: string): boolean;
 	$asyncValid(cmd: string, arg: object): any | Promise<any>;
@@ -209,7 +209,7 @@ interface IController {
 	$toast(toast: { text: string, style?: CommonStyle }): void;
 	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle }): void;
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
-	$defer(func: () => void): void;
+	$defer(handler: () => void): void;
 	$setFilter(target: object, prop: string, value: any): void;
 }
 
@@ -219,8 +219,24 @@ interface IMessage {
 	list?: any;
 }
 
+interface IConfirm {
+	msg: string;
+	style?: MessageStyle;
+}
+
+interface IErrorInfo {
+	path: string;
+	msg: string;
+	severity: Severity;
+	index: number;
+}
+
 interface IViewModel extends IController {
-	$getErrors(severity: string): any[]; // TODO result type
+	$errorMessage(path: string): string;
+	$hasError(path: string): boolean;
+	$getErrors(severity: Severity): IErrorInfo[] | null;
+	$dbRemove(elem: object, confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
+	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 }
 
 // utilities
@@ -230,7 +246,8 @@ declare const enum DataType {
 	Number = "Number",
 	DateTime = "DateTime",
 	Date = "Date",
-	Time = "Time"
+	Time = "Time",
+	Period = "Period"
 }
 
 declare const enum DateTimeUnit {

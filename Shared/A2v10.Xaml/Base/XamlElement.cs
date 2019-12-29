@@ -62,7 +62,7 @@ namespace A2v10.Xaml
 
 		}
 
-		internal void SetParent(XamlElement parent)
+		public void SetParent(XamlElement parent)
 		{
 			Parent = parent;
 		}

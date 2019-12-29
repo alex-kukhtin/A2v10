@@ -6,12 +6,12 @@ using System.Windows.Markup;
 namespace A2v10.Xaml
 {
 	[ContentProperty("Cells")]
-	public class SheetCellGroup : SheetCell
+	public class SheetCellGroup : XamlElement, ISheetCell
 	{
 		public SheetCells Cells { get; } = new SheetCells();
 		public Object ItemsSource { get; set; }
 
-		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
@@ -25,7 +25,8 @@ namespace A2v10.Xaml
 				}
 				t.RenderEnd(context);
 
-			} else
+			}
+			else
 			{
 				RenderChildren(context);
 			}
@@ -35,6 +36,19 @@ namespace A2v10.Xaml
 		{
 			foreach (var c in Cells)
 				c.RenderElement(context);
+		}
+
+		protected override void OnEndInit()
+		{
+			foreach (var c in Cells)
+				c.SetParent(this);
+		}
+
+		public override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			foreach (var c in Cells)
+				c.OnSetStyles();
 		}
 	}
 }

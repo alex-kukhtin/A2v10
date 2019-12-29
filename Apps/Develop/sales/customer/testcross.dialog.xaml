@@ -27,7 +27,8 @@
 			<TableCell>STATIC</TableCell>
 		</TableRow>
 	</Table>
-	<Sheet Margin="1rem" GridLines="Both" Compact="True">
+	<!--
+	<Sheet GridLines="Both" Compact="True" Margin="1rem">
 		<Sheet.Columns>
 			<SheetColumn />
 			<SheetColumn Background="Blue"/>
@@ -49,6 +50,13 @@
 				</SheetCellGroup>
 				<SheetCell>Total</SheetCell>
 			</SheetRow>
+			<SheetRow Style="Total">
+				<SheetCell ColSpan="2">Total</SheetCell>
+				<SheetCellGroup ItemsSource="{Bind RepData.$CrossTotal}">
+					<SheetCell Content="{Bind Val}" ColSpan="2"/>
+				</SheetCellGroup>
+				<SheetCell Content="{Bind RepData.$GrandTotal}"/>
+			</SheetRow>
 		</Sheet.Header>
 		<SheetSection ItemsSource="{Bind RepData}">
 			<SheetRow>
@@ -56,12 +64,49 @@
 				<SheetCell Content="{Bind S1}"/>
 				<SheetCellGroup ItemsSource="{Bind Cross1}">
 					<SheetCell Content="{Bind Val, DataType=Number, HideZeros=True}"/>
-					<SheetCell Content="{Bind Key}"></SheetCell>
+					<SheetCell Content="{Bind Key}"/>
 				</SheetCellGroup>
 				<SheetCell Content="{Bind $CrossTotal}"/>
 			</SheetRow>
 		</SheetSection>
 	</Sheet>
+	-->
+
+	<Sheet Margin="1rem" GridLines="Both" Compact="True">
+		<Sheet.Header>
+			<SheetRow Style="Header">
+				<SheetCell RowSpan="2">Id</SheetCell>
+				<SheetCell RowSpan="2">S1</SheetCell>
+				<SheetCell RowSpan="2">N1</SheetCell>
+				<SheetCell ColSpan="{Bind RepData.$Cross1Span}">Cross1</SheetCell>
+			</SheetRow>
+			<SheetRow Style="Header">
+				<SheetCellGroup ItemsSource="{Bind RepData.$cross.Cross1}">
+					<SheetCell Content="{Bind}" />
+				</SheetCellGroup>
+				<SheetCell>Total</SheetCell>
+			</SheetRow>
+			<SheetRow Style="Total">
+				<SheetCell ColSpan="3">Total</SheetCell>
+				<SheetCellGroup ItemsSource="{Bind RepData.$Cross1Total}">
+					<SheetCell Content="{Bind Val}" />
+				</SheetCellGroup>
+				<SheetCell Content="{Bind RepData.$GrandTotal}"/>
+			</SheetRow>
+		</Sheet.Header>
+		<SheetSection ItemsSource="{Bind RepData}">
+			<SheetRow>
+				<SheetCell Content="{Bind Id}" />
+				<SheetCell Content="{Bind S1}" />
+				<SheetCell Content="{Bind N1}" />
+				<SheetCellGroup ItemsSource="{Bind Cross1}">
+					<SheetCell Content="{Bind Val, DataType=Number, HideZeros=True}" />
+				</SheetCellGroup>
+				<SheetCell Content="{Bind $Cross1Total}"/>
+			</SheetRow>
+		</SheetSection>
+	</Sheet>
+
 	<Static Value="{Bind RepData.$CrossSpan}"/>
 	<Code Multiline="True" Content="{Bind RepData.$cross}">
 

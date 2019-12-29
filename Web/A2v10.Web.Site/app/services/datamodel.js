@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181228-7602*/
+/*20181229-7602*/
 // services/datamodel.js
 
 (function () {
@@ -590,6 +590,7 @@
 			this.$empty();
 			if (this.$loaded)
 				this.$loaded = false;
+			return this;
 		};
 
 		arr.$loadLazy = function () {
@@ -710,7 +711,7 @@
 
 		arr.$clearSelected = function () {
 			let sel = this.$selected;
-			if (!sel) return; // already null
+			if (!sel) return this; // already null
 			sel.$selected = false;
 			emitSelect(this, null);
 			return this;
@@ -742,7 +743,7 @@
 
 		arr.$copy = function (src) {
 			if (this.$root.isReadOnly)
-				return;
+				return this;
 			this.$empty();
 			if (utils.isArray(src)) {
 				for (let i = 0; i < src.length; i++) {

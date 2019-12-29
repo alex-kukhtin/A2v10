@@ -1984,7 +1984,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
 
-/*20181225-7601*/
+/*20181229-7602*/
 // services/datamodel.js
 
 (function () {
@@ -2233,7 +2233,7 @@ app.modules['std:validators'] = function () {
 		defHidden(elem, PARENT, parent);
 		defHidden(elem, ERRORS, null, true);
 		defHidden(elem, '_lockEvents_', 0, true);
-		elem._uiprops_ = {};
+		elem._uiprops_ = {}; // observable!
 
 		let hasTemplProps = false;
 		const templ = elem._root_.$template;
@@ -2574,6 +2574,7 @@ app.modules['std:validators'] = function () {
 			this.$empty();
 			if (this.$loaded)
 				this.$loaded = false;
+			return this;
 		};
 
 		arr.$loadLazy = function () {
@@ -2694,7 +2695,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$clearSelected = function () {
 			let sel = this.$selected;
-			if (!sel) return; // already null
+			if (!sel) return this; // already null
 			sel.$selected = false;
 			emitSelect(this, null);
 			return this;
@@ -2726,7 +2727,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$copy = function (src) {
 			if (this.$root.isReadOnly)
-				return;
+				return this;
 			this.$empty();
 			if (utils.isArray(src)) {
 				for (let i = 0; i < src.length; i++) {

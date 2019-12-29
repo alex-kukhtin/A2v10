@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace A2v10.Xaml
 {
-	public class SheetCell : UiContentElement
+	public class SheetCell : UiContentElement, ISheetCell
 	{
 		public Int32? ColSpan { get; set; }
 		public Int32? RowSpan { get; set; }
@@ -109,7 +109,7 @@ namespace A2v10.Xaml
 		}
 	}
 
-	public class SheetCells : List<SheetCell>
+	public class SheetCells : List<ISheetCell>
 	{
 
 	}
