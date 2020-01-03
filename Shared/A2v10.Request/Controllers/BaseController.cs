@@ -140,6 +140,8 @@ namespace A2v10.Request
 				if (loadProc != null)
 				{
 					loadPrms.Set("Id", rw.Id);
+					if (rw.parameters != null)
+						loadPrms.AppendIfNotExists(rw.parameters);
 					var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
 					innerModel.Merge(newModel);
 					innerModel.System.Set("__indirectUrl__", rm.BaseUrl);

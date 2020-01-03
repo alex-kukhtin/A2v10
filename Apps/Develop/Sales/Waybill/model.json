@@ -11,6 +11,11 @@
 			"model": "Document",
 			"view": "waybill.view",
 			"template": "waybill2.template",
+			/*
+			"parameters": {
+				"Kind": "TEST"
+			},
+			*/
 			"merge": {
 				"schema": "a2demo",
 				"model": "Document.Merge"
