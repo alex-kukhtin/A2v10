@@ -73,6 +73,12 @@
 	bottom:@footer-height;
 }
 
+.modal {
+	display:flex;
+	flex-direction:column;
+	height:100%;
+}
+
 .modal-header {
 	background-color: @dialog-header-bg-color;
 	padding: @modal-padding;
@@ -192,10 +198,12 @@
 }
 
 .modal-content {
+	flex-grow:2;
 	.dialog-grid {
 		display:grid;
 		grid-template-columns:1fr auto;
 		padding:0;
 		grid-gap:0;
+		height:100%;
 	}
 }

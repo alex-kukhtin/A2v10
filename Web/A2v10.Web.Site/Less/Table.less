@@ -1,8 +1,10 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 @table-hdr-bg-color: #f5f5f5;
 
 @a2-table-brd-color: #ddd;
+
+@compact-ctrl-height:1.67rem;
 
 table {
 
@@ -78,7 +80,7 @@ table.hover {
 .grid-horizontal, .grid-vertical, .grid-both {
 	td > .control-group > .input-group {
 		border-color:transparent;
-		margin:.1px; // fix chrome bug
+		margin:.1px 0; // fix chrome bug
 	}
 }
 
@@ -127,7 +129,7 @@ table.hover {
 	}
 
 	td.ctrl {
-		padding: 0;
+		padding: 0!important;
 		vertical-align:top;
 
 		.checkbox, .radio {
@@ -230,29 +232,27 @@ table.hover {
 	> tbody > tr > td, thead > tr > td, tfoot > tr > td {
 		padding: 2px 4px;
 		//height:23px;
-
 		.input-group {
 			padding: 0;
 		}
 
 		.input-group input {
 			//font-size: 97%;
-			height: 1.67em;
+			height: @compact-ctrl-height;
 		}
 
 		.input-group.static > span {
-			line-height: 1.67em;
-			min-height: 1.67em;
+			line-height: @compact-ctrl-height;
+			min-height: @compact-ctrl-height;
+			height: @compact-ctrl-height;
 		}
 
 		&.row-divider {
 			padding: 0;
-			height:1px;
+			height: 1px;
 		}
 
 		&.ctrl {
-			padding: 0;
-			vertical-align: baseline;
 
 			.checkbox, .radio {
 				margin: 0 6px 0 4px;
@@ -265,6 +265,10 @@ table.hover {
 				> span {
 					padding-left: 18px;
 				}
+			}
+
+			.control-group .input-group > a {
+				line-height: @compact-ctrl-height;
 			}
 		}
 	}

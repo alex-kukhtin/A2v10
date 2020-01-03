@@ -1,17 +1,21 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
-namespace A2v10.Xaml.Layouts
+namespace A2v10.Xaml
 {
 	public class Flex : Container
 	{
+		public Orientation Orientation { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
 			var flex = new TagBuilder("div", "flex", IsInGrid);
 			onRender?.Invoke(flex);
+			if (Orientation != Orientation.Vertical)
+				flex.AddCssClass("horz");
 			MergeAttributes(flex, context);
 			flex.RenderStart(context);
 			RenderChildren(context);
@@ -22,10 +26,7 @@ namespace A2v10.Xaml.Layouts
 		{
 			foreach (var ch in Children)
 			{
-				var wrap = new TagBuilder("div", "flex-item");
-				wrap.RenderStart(context);
 				ch.RenderElement(context);
-				wrap.RenderEnd(context);
 			}
 		}
 	}

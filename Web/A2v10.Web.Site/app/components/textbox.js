@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20191225-7601*/
+/*20200103-7604*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -33,7 +33,7 @@
 `<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2"
+		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :style="areaStyle"
 			v-on:change="onChange($event.target.value)" 
 			v-on:input="onInput($event.target.value)"
 			v-on:keypress="onKey($event)"
@@ -138,12 +138,18 @@
 			autoSize: Boolean,
 			rows: Number,
 			spellCheck: { type: Boolean, default:undefined },
-			enterCommand: Function
+			enterCommand: Function,
+			maxHeight: String
 		},
 		computed: {
 			modelValue2() {
 				if (!this.item) return null;
 				return this.item[this.prop];
+			},
+			areaStyle() {
+				if (this.maxHeight)
+					return { 'max-height': this.maxHeight };
+				return undefined;
 			}
 		},
 		methods: {

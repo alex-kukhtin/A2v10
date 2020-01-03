@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 		public TextAlign Align { get; set; }
 		public UpdateTrigger UpdateTrigger { get; set; }
 		public Boolean? SpellCheck { get; set; }
+		public Length MaxHeight { get; set; }
 
 		public Bind EnterCommand { get; set; }
 
@@ -50,6 +51,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute("update-trigger", UpdateTrigger.ToString().ToLowerInvariant());
 			if (SpellCheck != null)
 				input.MergeAttribute(":spell-check", SpellCheck.Value.ToString().ToLowerInvariant());
+			if (MaxHeight != null)
+				input.MergeAttribute("max-height", MaxHeight.Value);
 			var enterCmd = GetBindingCommand(nameof(EnterCommand));
 			if (enterCmd != null)
 			{
