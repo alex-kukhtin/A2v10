@@ -4078,6 +4078,11 @@ ul.news-list > li {
 .debug .modal-stack .modal-wrapper {
   bottom: 22px;
 }
+.modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .modal-header {
   background-color: #fff29d;
   padding: 0.75rem;
@@ -4183,11 +4188,15 @@ ul.news-list > li {
 .modal-content.content-iframe {
   display: flex;
 }
+.modal-content {
+  flex-grow: 2;
+}
 .modal-content .dialog-grid {
   display: grid;
   grid-template-columns: 1fr auto;
   padding: 0;
   grid-gap: 0;
+  height: 100%;
 }
 .wizard-panel {
   display: grid;
@@ -4386,7 +4395,7 @@ table.hover > tbody > tr.active:hover {
 .grid-vertical td > .control-group > .input-group,
 .grid-both td > .control-group > .input-group {
   border-color: transparent;
-  margin: 0.1px;
+  margin: 0.1px 0;
 }
 .a2-table.striped > tbody > tr:nth-of-type(even) {
   background-color: rgba(208, 208, 208, 0.15);
@@ -4423,7 +4432,7 @@ table.hover > tbody > tr.active:hover {
   border-color: #ddd;
 }
 .a2-table td.ctrl {
-  padding: 0;
+  padding: 0!important;
   vertical-align: top;
 }
 .a2-table td.ctrl .checkbox,
@@ -4517,25 +4526,20 @@ table.hover > tbody > tr.active:hover {
 .a2-table.compact > tbody > tr > td .input-group input,
 .a2-table.compact thead > tr > td .input-group input,
 .a2-table.compact tfoot > tr > td .input-group input {
-  height: 1.67em;
+  height: 1.67rem;
 }
 .a2-table.compact > tbody > tr > td .input-group.static > span,
 .a2-table.compact thead > tr > td .input-group.static > span,
 .a2-table.compact tfoot > tr > td .input-group.static > span {
-  line-height: 1.67em;
-  min-height: 1.67em;
+  line-height: 1.67rem;
+  min-height: 1.67rem;
+  height: 1.67rem;
 }
 .a2-table.compact > tbody > tr > td.row-divider,
 .a2-table.compact thead > tr > td.row-divider,
 .a2-table.compact tfoot > tr > td.row-divider {
   padding: 0;
   height: 1px;
-}
-.a2-table.compact > tbody > tr > td.ctrl,
-.a2-table.compact thead > tr > td.ctrl,
-.a2-table.compact tfoot > tr > td.ctrl {
-  padding: 0;
-  vertical-align: baseline;
 }
 .a2-table.compact > tbody > tr > td.ctrl .checkbox,
 .a2-table.compact thead > tr > td.ctrl .checkbox,
@@ -4567,6 +4571,11 @@ table.hover > tbody > tr.active:hover {
 .a2-table.compact thead > tr > td.ctrl .radio > span,
 .a2-table.compact tfoot > tr > td.ctrl .radio > span {
   padding-left: 18px;
+}
+.a2-table.compact > tbody > tr > td.ctrl .control-group .input-group > a,
+.a2-table.compact thead > tr > td.ctrl .control-group .input-group > a,
+.a2-table.compact tfoot > tr > td.ctrl .control-group .input-group > a {
+  line-height: 1.67rem;
 }
 .a2-table.bk-paper {
   background-color: #fcfaf6;
@@ -5756,6 +5765,14 @@ iframe.eusign-iframe {
 }
 .card .a2-list.compact .a2-list-item {
   padding: 6px 6px 6px 12px;
+}
+.flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.flex.horz {
+  flex-direction: row;
 }
 .flex-list {
   display: flex;

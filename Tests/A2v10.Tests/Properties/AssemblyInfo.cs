@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("A2v10.Tests")]
-[assembly: AssemblyCopyright("Copyright © 2015-2019 Alex Kukhtin. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2015-2020 Alex Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -16,5 +16,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("a3c33261-f421-4ce9-9422-0158b081de6a")]
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("10.0.7603.0")]
-[assembly: AssemblyFileVersion("10.0.7603.0")]
+[assembly: AssemblyVersion("10.0.7604.0")]
+[assembly: AssemblyFileVersion("10.0.7604.0")]
