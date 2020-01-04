@@ -42,10 +42,8 @@ namespace A2v10.Web.Mvc.Hooks
 
 		public Object Invoke(Int64 UserId, Int64 Id)
 		{
-			if (!_host.IsMultiTenant)
+			if (!_host.IsMultiTenant || !_host.IsMultiCompany)
 				throw new InvalidOperationException("UpdateTenantCompany is available only in multitenant environment");
-			if (!_host.IsMultiCompany)
-				throw new InvalidOperationException("UpdateTenantCompany is available only in multicompany environment");
 
 			var prms = new TenantParams() {
 				UserId  = UserId, 

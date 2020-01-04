@@ -206,6 +206,7 @@ namespace A2v10.Xaml
 	public enum Icon
 	{
 		NoIcon = 0,
+		Empty,
 		Access,
 		Account,
 		AccountFolder,

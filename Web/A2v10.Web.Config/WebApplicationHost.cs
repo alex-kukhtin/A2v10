@@ -168,7 +168,7 @@ namespace A2v10.Web.Config
 		public String UserSegment { get; set; }
 
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
-		public String TenantDataSource => null;
+		public String TenantDataSource => String.IsNullOrEmpty(UserSegment) ? null : UserSegment;
 
 		public Boolean IsDebugConfiguration
 		{

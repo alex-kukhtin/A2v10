@@ -28,6 +28,9 @@
 .ico-none:before {
   content: "";
 }
+.ico-empty:before {
+  content: "";
+}
 .ico-alert:before {
   content: "\e935";
   color: #a94442;
@@ -968,7 +971,6 @@ footer a,
   text-transform: lowercase;
 }
 .main-view {
-  grid-row: 2;
   overflow: hidden;
   position: fixed;
   width: 100%;

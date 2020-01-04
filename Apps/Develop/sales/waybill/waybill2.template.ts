@@ -66,7 +66,7 @@ const template: Template = {
 
 export default template;
 
-function modelLoad(root: TRoot):void {
+function modelLoad(root: TRoot): void {
 	console.dir(root);
 	console.dir(cmn);
 	if (root.Document.$isNew)

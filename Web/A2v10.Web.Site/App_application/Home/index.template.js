@@ -7,6 +7,9 @@ const template = {
 	validators: {
 		'Home.Text': 'Enter text here!'
 	},
+	events: {
+		"Model.load": modelLoad
+	},
 	commands: {
 		sayHello() {
 			alert('hello!');
@@ -16,3 +19,7 @@ const template = {
 };
 
 module.exports = template;
+
+function modelLoad(root) {
+	console.dir(root);
+}

@@ -44,6 +44,9 @@
 .ico-none:before {
   content: "";
 }
+.ico-empty:before {
+  content: "";
+}
 .ico-alert:before {
   content: "\e935";
   color: #a94442;
@@ -4432,7 +4435,7 @@ table.hover > tbody > tr.active:hover {
   border-color: #ddd;
 }
 .a2-table td.ctrl {
-  padding: 0!important;
+  padding: 0;
   vertical-align: top;
 }
 .a2-table td.ctrl .checkbox,
@@ -4540,6 +4543,11 @@ table.hover > tbody > tr.active:hover {
 .a2-table.compact tfoot > tr > td.row-divider {
   padding: 0;
   height: 1px;
+}
+.a2-table.compact > tbody > tr > td.ctrl,
+.a2-table.compact thead > tr > td.ctrl,
+.a2-table.compact tfoot > tr > td.ctrl {
+  padding: 0;
 }
 .a2-table.compact > tbody > tr > td.ctrl .checkbox,
 .a2-table.compact thead > tr > td.ctrl .checkbox,

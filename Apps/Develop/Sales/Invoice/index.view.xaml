@@ -18,8 +18,8 @@
 				<Button Content="File" Style="Primary">
 					<Button.DropDown>
 						<DropDownMenu Direction="DownRight" Separate="True">
-							<MenuItem Content="Open" Icon="File" />
-							<MenuItem Content="Save" Icon="Save" />
+							<MenuItem Content="Open" Icon="Empty" />
+							<MenuItem Content="Save" Icon="Empty" />
 						</DropDownMenu>
 					</Button.DropDown>
 				</Button>

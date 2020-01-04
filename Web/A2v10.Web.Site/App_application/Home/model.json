@@ -10,7 +10,8 @@
 	},
 	"commands": {
 		"test": {
-			"type": "sql"
+			"type": "sql",
+			"procedure": "Site.Test.Command"
 		}
 	}
 }
