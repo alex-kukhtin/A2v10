@@ -6781,7 +6781,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200104-7606
+// 20200106-7607
 /*components/pager.js*/
 
 
@@ -6807,7 +6807,9 @@ template: `
 
 	Vue.component('a2-pager', {
 		props: {
-			source: Object
+			source: Object,
+			emptyText: String,
+			templateText: String
 		},
 		computed: {
 			pages() {
@@ -6817,10 +6819,22 @@ template: `
 				return Math.ceil(this.offset / this.source.pageSize) + 1;
 			},
 			title() {
-				let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
 				if (!this.count)
-					return locale.$NoElements;
-				return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
+					return this.emptyString;
+				return this.textString;
+			},
+			emptyString() {
+				return this.emptyText ? this.emptyText : locale.$NoElements;
+			},
+			textString() {
+				let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+				if (this.templateText)
+					return this.templateText
+						.replace(/\#\[Start\]/g, this.offset + 1)
+						.replace(/\#\[End\]/g, lastNo)
+						.replace(/\#\[Count\]/g, this.count);
+				else
+					return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
 			},
 			offset() {
 				return +this.source.offset;
@@ -9963,6 +9977,39 @@ Vue.component('a2-panel', {
 
 	app.components['std:doctitle'] = documentTitle;
 
+})();
+// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+
+// 20200106-7607
+// components/a2-span-sum.js*/
+
+(function () {
+	Vue.component('a2-span-sum', {
+		props: {
+			content: [String, Number],
+			dir: Number
+		},
+		render(h, ctx) {
+			let children = [];
+			children.push(h('span', {
+				domProps: { innerText: this.content }
+			}));
+			let dcls = 'span-sum ';
+			if (this.dir === 1) {/* in */
+				children.push(h('i', { 'class': 'ico ico-arrow-up-green' }));
+				dcls += 'in';
+			}
+			else if (this.dir === -1) { /* out */
+				children.push(h('i', { 'class': 'ico ico-arrow-down-red' }));
+				dcls += 'out';
+			}
+			else if (this.dir === 0) { /* inout */
+				children.push(h('i', { 'class': 'ico ico-arrow-sort' }));
+				dcls += 'inout';
+			}
+			return h('span', { class: dcls}, children);
+		}
+	});
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 

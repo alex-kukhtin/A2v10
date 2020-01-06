@@ -872,19 +872,19 @@ pre {
 }
 h2,
 .h2 {
-  font-size: 1.6em;
+  font-size: 1.6rem;
 }
 h3,
 .h3 {
-  font-size: 1.2em;
+  font-size: 1.25rem;
 }
 h4,
 .h4 {
-  font-size: 1em;
+  font-size: 1rem;
 }
 h5,
 .h5 {
-  font-size: 0.85em;
+  font-size: 0.85rem;
 }
 html {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -3636,6 +3636,9 @@ iframe.eusign-iframe {
   display: inline-block;
   width: 25.5px;
   text-align: center;
+}
+.a2-pager.rounded {
+  padding: 0.7rem 0 0 0;
 }
 .a2-pager.rounded button {
   border-radius: 10rem;

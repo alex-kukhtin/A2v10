@@ -29,6 +29,8 @@ namespace A2v10.Xaml
 
 		public Bind EnterCommand { get; set; }
 
+		public Accel Accel { get; set; }
+
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -53,6 +55,11 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":spell-check", SpellCheck.Value.ToString().ToLowerInvariant());
 			if (MaxHeight != null)
 				input.MergeAttribute("max-height", MaxHeight.Value);
+
+			if (Accel != null)
+				input.MergeAttribute("accel", Accel.GetKeyCode());
+
+
 			var enterCmd = GetBindingCommand(nameof(EnterCommand));
 			if (enterCmd != null)
 			{

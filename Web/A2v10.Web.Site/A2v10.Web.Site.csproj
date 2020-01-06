@@ -91,6 +91,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\calendar.js" />
+    <Content Include="app\components\spansum.js" />
     <Content Include="app\components\timepicker.js" />
     <Content Include="app\components\iframetarget.js" />
     <Content Include="app\bootstrap\pager.js" />
@@ -219,6 +220,7 @@
     <Content Include="Less.Mobile\Grid.less" />
     <Content Include="Less\WaitCursor.less" />
     <Content Include="Less.Mobile\MobilePage.less" />
+    <Content Include="Less.Mobile\Pager.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

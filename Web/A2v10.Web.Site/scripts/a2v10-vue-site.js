@@ -4329,7 +4329,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200104-7606
+// 20200106-7607
 /*components/pager.js*/
 
 
@@ -4355,7 +4355,9 @@ template: `
 
 	Vue.component('a2-pager', {
 		props: {
-			source: Object
+			source: Object,
+			emptyText: String,
+			templateText: String
 		},
 		computed: {
 			pages() {
@@ -4365,10 +4367,22 @@ template: `
 				return Math.ceil(this.offset / this.source.pageSize) + 1;
 			},
 			title() {
-				let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
 				if (!this.count)
-					return locale.$NoElements;
-				return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
+					return this.emptyString;
+				return this.textString;
+			},
+			emptyString() {
+				return this.emptyText ? this.emptyText : locale.$NoElements;
+			},
+			textString() {
+				let lastNo = Math.min(this.count, this.offset + this.source.pageSize);
+				if (this.templateText)
+					return this.templateText
+						.replace(/\#\[Start\]/g, this.offset + 1)
+						.replace(/\#\[End\]/g, lastNo)
+						.replace(/\#\[Count\]/g, this.count);
+				else
+					return `${locale.$PagerElements}: <b>${this.offset + 1}</b>-<b>${lastNo}</b> ${locale.$Of} <b>${this.count}</b>`;
 			},
 			offset() {
 				return +this.source.offset;

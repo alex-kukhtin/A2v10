@@ -888,19 +888,19 @@ pre {
 }
 h2,
 .h2 {
-  font-size: 1.6em;
+  font-size: 1.6rem;
 }
 h3,
 .h3 {
-  font-size: 1.2em;
+  font-size: 1.25rem;
 }
 h4,
 .h4 {
-  font-size: 1em;
+  font-size: 1rem;
 }
 h5,
 .h5 {
-  font-size: 0.85em;
+  font-size: 0.85rem;
 }
 .block {
   display: block!important;
@@ -1175,6 +1175,33 @@ td.vert > .vcell {
 }
 .text-color-green {
   color: #3EA055;
+}
+.empty-panel {
+  text-align: center;
+  margin: 70px auto;
+  color: #ccc;
+}
+.empty-panel .ico {
+  font-size: 4rem;
+  display: block;
+  margin: 12px;
+}
+.span-sum {
+  white-space: nowrap;
+  font-weight: 600;
+}
+.span-sum .ico {
+  margin-left: 0.25rem;
+  font-size: 0.85rem;
+}
+.span-sum.in {
+  color: #3EA055;
+}
+.span-sum.out {
+  color: #a94442;
+}
+.span-sum.inout {
+  color: #555;
 }
 html {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
@@ -4847,6 +4874,9 @@ label.checkbox.small span:after {
   display: inline-block;
   width: 25.5px;
   text-align: center;
+}
+.a2-pager.rounded {
+  padding: 1rem 0 0 0;
 }
 .a2-pager.rounded button {
   border-radius: 10rem;

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -16,6 +16,9 @@ namespace A2v10.Xaml
 
 		public PagerStyle Style { get; set; }
 
+		public String EmptyText { get; set; }
+		public String TemplateText { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -30,6 +33,8 @@ namespace A2v10.Xaml
 			if (source == null)
 				throw new XamlException("Pager has no Source binding");
 			pager.MergeAttribute(":source", source.GetPath(context));
+			MergeBindingAttributeString(pager, context, "empty-text", nameof(EmptyText), EmptyText);
+			MergeBindingAttributeString(pager, context, "template-text", nameof(TemplateText), TemplateText);
 			pager.Render(context, TagRenderMode.Normal);
 		}
 	}

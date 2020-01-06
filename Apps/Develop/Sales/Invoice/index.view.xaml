@@ -108,6 +108,9 @@
 		<DataGridColumn Header="@[Sum]" Align="Right" Fit="True" Wrap="NoWrap">
 			<Span Content="{Bind Sum, DataType=Currency, Format='#,000.00'}" Color="{Bind $Color}" Bold="True"></Span>
 		</DataGridColumn>
+		<DataGridColumn Header="@[Sum]" Align="Right" Fit="True">
+			<SpanSum Content="{Bind Sum, DataType=Currency, Format='#,000.00'}" Dir="0"/>
+		</DataGridColumn>
 		<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" Width="150"/>
 		<DataGridColumn Icon="Bank" Command="{BindCmd Dialog, Action=Browse, Url='/aaa/aaa'}" Fit="True"/>
 		<DataGridColumn Fit="True">

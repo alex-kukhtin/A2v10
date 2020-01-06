@@ -95,6 +95,7 @@
     <Compile Include="Controls\DataGridColumn.cs" />
     <Compile Include="Controls\DataGridRowDetails.cs" />
     <Compile Include="Controls\DatePicker.cs" />
+    <Compile Include="Controls\EmptyPanel.cs" />
     <Compile Include="Controls\GridDivider.cs" />
     <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StateCard.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Sheets\SheetCellGroup.cs" />
     <Compile Include="Sheets\SheetColumnGroup.cs" />
     <Compile Include="Sheets\SheetPage.cs" />
+    <Compile Include="Text\SpanSum.cs" />
     <Compile Include="Text\StaticImage.cs" />
     <Compile Include="Controls\TableMarkerCell.cs" />
     <Compile Include="Controls\UploadFile.cs" />
