@@ -1,12 +1,13 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191115-7578
+// 20191115-7608
 // components/control.js
 
 (function () {
 
 	const utils = require('std:utils');
 	const mask = require('std:mask');
+	const maccel = require('std:accel');
 
 	const control = {
 		props: {
@@ -22,7 +23,8 @@
 			updateTrigger: String,
 			mask: String,
 			hideZeros: Boolean,
-			testId: String
+			testId: String,
+			accel: String
 		},
 		computed: {
 			path() {
@@ -87,6 +89,8 @@
 			// direct parent only
 			if (this.$parent.$registerControl)
 				this.$parent.$registerControl(this);
+			if (this.accel)
+				maccel.registerControl(this.accel, this.$refs.input, 'focus');
 			if (!this.mask) return;
 			mask.mountElement(this.$refs.input, this.mask);
 		},
@@ -94,6 +98,8 @@
 			// direct parent only
 			if (this.$parent.$unregisterControl)
 				this.$parent.$unregisterControl(this);
+			if (this.accel)
+				maccel.unregisterControl(this.$refs.input);
 			if (!this.mask) return;
 			mask.unmountElement(this.$refs.input, this.mask);
 		},

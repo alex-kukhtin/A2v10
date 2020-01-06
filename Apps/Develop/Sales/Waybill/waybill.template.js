@@ -10,6 +10,7 @@ const cmn = require('document/common');
 const template = {
 	properties: {
 		'TRoot.$Answer': String,
+		'TRoot.$BarCode': String,
 		'TRow.Sum': cmn.rowSum,
 		'TDocument.Sum': cmn.docTotalSum,
 		'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
@@ -34,6 +35,7 @@ const template = {
 		'Model.saved'(root) {
 			console.dir(root);
 		},
+		//'$BarCode.change': barCodeChange,
 		'Document.Rows[].add': (arr, row) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
 		"Document.Rows[].adding"(arr, a) {
@@ -114,4 +116,8 @@ async function saveTime() {
 	let r = await ctrl.$invoke('saveTime', { Id: doc.Id, DateTime: doc.Date });
 	doc.Date = r.Result.DateTime;
 	await ctrl.$showDialog('/sales/waybill/testTime', 0, { DateTime: doc.Date });
+}
+
+function barCodeChange(el, val) {
+	console.dir(val);
 }

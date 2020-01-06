@@ -1,0 +1,11 @@
+﻿/*document/request*/
+{
+	"schema": "a2v10demo",
+	"model": "Catalog.Entity",
+	"commands": {
+		"findArticle": {
+			"type": "sql",
+			"procedure": "Entity.FindArticle"
+		}
+	}
+}

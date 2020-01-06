@@ -18,6 +18,7 @@
 	</Page.Toolbar>
 	<Page.Taskpad>
 		<Taskpad Width="290">
+			<TextBox Accel="Ctrl+F7" Label="Штрих-код" Value="{Bind Root.$BarCode}"/>
 			<ContentControl Content="{Source Path='../../Document/Info'}"/>
 			<Panel Header="Основание" Icon="Link" If="{Bind Document.$HasParent}" Style="Default" Padding="6" Collapsible="True">
 				<Hyperlink Icon="FileLink"

@@ -9,6 +9,7 @@ define(["require", "exports"], function (require, exports) {
     const template = {
         properties: {
             'TRoot.$Answer': String,
+            'TRoot.$BarCode': String,
             'TRow.Sum': cmn.rowSum,
             'TDocument.Sum': cmn.docTotalSum,
             'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
@@ -42,7 +43,8 @@ define(["require", "exports"], function (require, exports) {
             'Document.Rows[].Entity.Article.change': cmn.findArticle,
             "Document.Rows[].adding"(arr, row) {
                 console.dir(row);
-            }
+            },
+            'Root.$BarCode.change': barcodeChange
         },
         commands: {
             apply: {
@@ -100,5 +102,8 @@ define(["require", "exports"], function (require, exports) {
                 return;
         }
         alert('apply document here: ' + doc.Id);
+    }
+    function barcodeChange(root, val) {
+        console.dir(val);
     }
 });

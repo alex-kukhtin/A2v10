@@ -54,6 +54,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="Develop\Agent\model.json" />
+    <None Include="Develop\Common\Entity\model.json" />
     <None Include="Develop\dashboard\model.json" />
     <None Include="Develop\links.json" />
     <None Include="Develop\Catalog\Buildings\model.json" />

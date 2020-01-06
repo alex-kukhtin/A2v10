@@ -29,7 +29,7 @@ define(["require", "exports"], function (require, exports) {
         const vm = entity.$vm;
         const row = entity.$parent;
         const dat = { Article: entity.Article };
-        vm.$invoke('findArticle', dat, '/Entity').then(r => {
+        vm.$invoke('findArticle', dat, '/common/entity').then(r => {
             if ('Entity' in r)
                 row.Entity = r.Entity;
             else

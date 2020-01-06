@@ -5,7 +5,7 @@
 
 app.modules['std:accel'] = function () {
 
-	let elems = [];
+	const _elems = [];
 	let _listenerAdded = false;
 
 	return {
@@ -14,11 +14,19 @@ app.modules['std:accel'] = function () {
 	};
 
 	function _keyDownHandler(ev) {
-		console.dir(ev);
+		// control/alt/shift/meta
+		const keyAccel = `${ev.ctrlKey ? 'C' : '_'}${ev.altKey ? 'A' : '_'}${ev.shiftKey ? 'S' : '_'}${ev.metaKey ? 'M' : '_'}:${ev.code}`;
+		let el = _elems.find(x => x.accel === keyAccel);
+		if (!el) return;
+		if (el.action === 'focus') {
+			Vue.nextTick(() => {
+				el.elem.focus();
+			});
+		}
 	}
 
 	function setListeners() {
-		if (elems.length > 0) {
+		if (_elems.length > 0) {
 			if (_listenerAdded)
 				return;
 			document.addEventListener('keydown', _keyDownHandler, false);
@@ -30,16 +38,16 @@ app.modules['std:accel'] = function () {
 		}
 	}
 
-	function registerControl(accel, elem) {
-		var found = elems.findIndex(c => c.elem === elem);
+	function registerControl(accel, elem, action) {
+		var found = _elems.findIndex(c => c.elem === elem);
 		if (found === -1)
-			elems.push({ elem: elem, accel: accel });
+			_elems.push({ elem: elem, accel: accel, action: action });
 		setListeners();
 	}
 
 	function unregisterControl(elem) {
-		var found = elems.findIndex(c => c.elem === elem);
+		var found = _elems.findIndex(c => c.elem === elem);
 		if (found !== -1)
-			elems.splice(found);
+			_elems.splice(found);
 	}
 };

@@ -16,6 +16,7 @@ console.dir(cmn);
 const template: Template = {
 	properties: {
 		'TRoot.$Answer': String,
+		'TRoot.$BarCode' : String,
 		'TRow.Sum': cmn.rowSum,
 		'TDocument.Sum': cmn.docTotalSum,
 		'TDocument.$HasParent'(this: TDocument) { return this.ParentDoc.Id !== 0; },
@@ -49,7 +50,8 @@ const template: Template = {
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
 		"Document.Rows[].adding"(arr: TRows, row: TRow) {
 			console.dir(row);
-		}
+		},
+		'Root.$BarCode.change': barcodeChange
 	},
 	commands: {
 		apply: {
@@ -114,4 +116,8 @@ async function applyDoc(this: TRoot, doc: TDocument): Promise<any> {
 		if (!result) return;
 	}
 	alert('apply document here: ' + doc.Id);
+}
+
+function barcodeChange(root, val) {
+	console.dir(val);
 }
