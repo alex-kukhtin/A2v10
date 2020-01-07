@@ -1203,7 +1203,8 @@ td.vert > .vcell {
 .span-sum.inout {
   color: #555;
 }
-.kbd-key {
+.kbd-key,
+kbd {
   display: inline-block;
   font-size: 0.85rem;
   padding: 0 3px;
