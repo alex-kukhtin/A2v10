@@ -4052,6 +4052,60 @@ app.modules['std:routing'] = function () {
 
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
+/*20191211-7596*/
+/* services/accel.js */
+
+app.modules['std:accel'] = function () {
+
+	const _elems = [];
+	let _listenerAdded = false;
+
+	return {
+		registerControl,
+		unregisterControl
+	};
+
+	function _keyDownHandler(ev) {
+		// control/alt/shift/meta
+		const keyAccel = `${ev.ctrlKey ? 'C' : '_'}${ev.altKey ? 'A' : '_'}${ev.shiftKey ? 'S' : '_'}${ev.metaKey ? 'M' : '_'}:${ev.code}`;
+		let el = _elems.find(x => x.accel === keyAccel);
+		if (!el) return;
+		if (el.action === 'focus') {
+			Vue.nextTick(() => {
+				el.elem.focus();
+			});
+		}
+	}
+
+	function setListeners() {
+		if (_elems.length > 0) {
+			if (_listenerAdded)
+				return;
+			document.addEventListener('keydown', _keyDownHandler, false);
+			_listenerAdded = true;
+		} else {
+			if (!_listenerAdded)
+				return;
+			document.removeEventListener('keydown', _keyDownHandler, false);
+		}
+	}
+
+	function registerControl(accel, elem, action) {
+		var found = _elems.findIndex(c => c.elem === elem);
+		if (found === -1)
+			_elems.push({ elem: elem, accel: accel, action: action });
+		setListeners();
+	}
+
+	function unregisterControl(elem) {
+		var found = _elems.findIndex(c => c.elem === elem);
+		if (found !== -1)
+			_elems.splice(found);
+	}
+};
+
+// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+
 // 20190808-7508
 /*components/include.js*/
 
@@ -4242,13 +4296,14 @@ app.modules['std:routing'] = function () {
 })();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191115-7578
+// 20191115-7608
 // components/control.js
 
 (function () {
 
 	const utils = require('std:utils');
 	const mask = require('std:mask');
+	const maccel = require('std:accel');
 
 	const control = {
 		props: {
@@ -4264,7 +4319,8 @@ app.modules['std:routing'] = function () {
 			updateTrigger: String,
 			mask: String,
 			hideZeros: Boolean,
-			testId: String
+			testId: String,
+			accel: String
 		},
 		computed: {
 			path() {
@@ -4329,6 +4385,8 @@ app.modules['std:routing'] = function () {
 			// direct parent only
 			if (this.$parent.$registerControl)
 				this.$parent.$registerControl(this);
+			if (this.accel)
+				maccel.registerControl(this.accel, this.$refs.input, 'focus');
 			if (!this.mask) return;
 			mask.mountElement(this.$refs.input, this.mask);
 		},
@@ -4336,6 +4394,8 @@ app.modules['std:routing'] = function () {
 			// direct parent only
 			if (this.$parent.$unregisterControl)
 				this.$parent.$unregisterControl(this);
+			if (this.accel)
+				maccel.unregisterControl(this.$refs.input);
 			if (!this.mask) return;
 			mask.unmountElement(this.$refs.input, this.mask);
 		},
@@ -4500,7 +4560,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200103-7604*/
+/*20200106-7608*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
