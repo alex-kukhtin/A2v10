@@ -1238,6 +1238,7 @@ hr {
 kbd {
   display: inline-block;
   font-size: 0.85rem;
+  font-family: Consolas, 'Courier New', Courier, monospace;
   padding: 0 3px;
   margin: 0 2px;
   border: 1px solid #ccc;
