@@ -163,6 +163,7 @@
     <Content Include="css\mobile.min.css">
       <DependentUpon>mobile.css</DependentUpon>
     </Content>
+    <Content Include="404.html" />
     <Content Include="Less\Upload.less" />
     <Content Include="App_application\Web.config">
       <SubType>Designer</SubType>

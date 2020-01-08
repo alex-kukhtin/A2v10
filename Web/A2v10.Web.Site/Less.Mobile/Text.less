@@ -193,3 +193,48 @@
 .text-color-green {
 	color: #3EA055;
 }
+
+.empty-panel {
+	text-align: center;
+	margin: 70px auto;
+	color: @gray-text-color;
+
+	.ico {
+		font-size: 4rem;
+		display: block;
+		margin: 12px;
+	}
+}
+
+.span-sum {
+	white-space: nowrap;
+	font-weight: @font-bold;
+
+	.ico {
+		margin-left: .25rem;
+		font-size: .85rem;
+	}
+
+	&.in {
+		color: #3EA055;
+	}
+
+	&.out {
+		color: @danger-txt-color;
+	}
+
+	&.inout {
+		color: #555;
+	}
+}
+
+.kbd-key, kbd {
+	display: inline-block;
+	font-size: .85rem;
+	padding: 0 3px;
+	margin: 0 2px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px 0 #999;
+	background-color: #f8f8f8;
+}

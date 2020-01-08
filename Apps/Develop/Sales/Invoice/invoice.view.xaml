@@ -81,11 +81,11 @@
 						<DropDownMenu Direction="DownLeft">
 							<MenuItem Icon="Search" Content="Выбрать" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 							<MenuItem Icon="Edit" Content="Изменить" Command="{BindCmd Dialog, Action=Edit, Argument={Bind Document.Agent}, Url='/Agent/EditCustomer'}"/>
-							<MenuItem Icon="Clear" Content="Очистить" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" />
+							<MenuItem Icon="Clear" Content="Очистить" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" If="{Bind Document.Agent.$isEmpty}"/>
 						</DropDownMenu>
 					</Hyperlink.DropDown>
 				</Hyperlink>
-				<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" />
+				<Hyperlink Icon="Clear" Command="{BindCmd Clear, Argument={Bind Document.Agent}}" If="{Bind !Document.Agent.$isEmpty}"/>
 			</Selector.AddOns>
 		</Selector>
 		<Static Grid.Row="3" Grid.Col="4" Value="{Bind Document.Agent.Name}"></Static>

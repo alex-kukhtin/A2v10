@@ -1,21 +1,17 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190122-7421
+// 20200108-7609
 // components/upload.js
-
-
 
 (function () {
 
 	const url = require('std:url');
 	const http = require('std:http');
+	const tools = require('std:tools');
 
 	const locale = window.$$locale;
 
 	Vue.component("a2-upload", {
-        /* TODO:
-         4. ControllerName (_image ???)
-        */
 		template: `
 <label :class="cssClass" @dragover="dragOver" @dragleave="dragLeave">
 	<input v-if='canUpload' type="file" @change="uploadImage" v-bind:multiple="isMultiple" :accept="accept" />
@@ -30,7 +26,8 @@
 			newItem: Boolean,
 			tip: String,
 			readOnly: Boolean,
-			accept: String
+			accept: String,
+			limit: Number
 		},
 		data: function () {
 			return {
@@ -60,19 +57,29 @@
 				this.hover = false;
 				ev.preventDefault();
 			},
+			checkLimit(file) {
+				if (!this.limit) return false;
+				let sizeKB = file.size / 1024;
+				return sizeKB > this.limit;
+			},
 			uploadImage(ev) {
 				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
 				var fd = new FormData();
 				for (let file of ev.target.files) {
+					if (this.checkLimit(file)) {
+						ev.target.value = ''; // clear current selection
+						let msg = locale.$FileTooLarge.replace('{0}', this.limit);
+						tools.alert(msg);
+						return;
+					}
 					fd.append('file', file, file.name);
 				}
 				http.upload(imgUrl, fd).then((result) => {
 					// result = {status: '', ids:[]}
 					ev.target.value = ''; // clear current selection
 					if (result.status === 'OK') {
-						// TODO: // multiple
 						if (this.newItem) {
 							let p0 = this.item.$parent;
 							for (let id of result.ids) {
@@ -83,8 +90,11 @@
 							this.item[this.prop] = result.ids[0];
 						}
 					}
-				}).catch(result => {
-					alert(result);
+				}).catch(msg => {
+					if (msg.indexOf('UI:') === 0)
+						tools.alert(msg.substring(3).replace('\\n', '\n'));
+					else
+						alert(msg);
 				});
 			}
 		}

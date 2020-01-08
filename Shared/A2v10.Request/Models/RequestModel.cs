@@ -387,6 +387,7 @@ namespace A2v10.Request
 		// for api
 		public String allowOrigin;
 		public String allowAddress;
+		public String method;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
@@ -431,6 +432,16 @@ namespace A2v10.Request
 					return _parent.allowOrigin;
 				return allowOrigin;
 			}
+		}
+
+		public Boolean IsGet()
+		{
+			return String.IsNullOrEmpty(method) || method == "get";
+		}
+
+		public Boolean IsPost()
+		{
+			return String.IsNullOrEmpty(method) || method == "post";
 		}
 	}
 

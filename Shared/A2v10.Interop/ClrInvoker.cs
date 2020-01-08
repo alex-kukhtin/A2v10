@@ -59,7 +59,7 @@ namespace A2v10.Interop
 			miSetRI.Invoke(instance, new Object[] { info });
 		}
 
-		Object[] GetParameters(MethodInfo method, ExpandoObject parameters)
+		Object[] GetParameters(MethodInfo method, ExpandoObject parameters, Guid? guid)
 		{
 			var mtdParams = method.GetParameters();
 			var prmsD = parameters as IDictionary<String, Object>;
@@ -71,8 +71,11 @@ namespace A2v10.Interop
 				var pi = mtdParams[i];
 				if (pi.Name == "UserId" && pi.ParameterType == typeof(Int64))
 				{
-					// TODO: UserId ????
 					parsToCall.Add(parameters.Get<Int64>("UserId"));
+				}
+				else if (guid != null && pi.Name == "Guid" && pi.ParameterType == typeof(Guid))
+				{
+					parsToCall.Add(guid.Value);
 				}
 				else if (prmsD.TryGetValue(pi.Name, out Object srcObj))
 				{
@@ -105,23 +108,23 @@ namespace A2v10.Interop
 			return parsToCall.ToArray();
 		}
 
-		async Task<Object> CallInvokeAsync(Object instance, ExpandoObject parameters)
+		async Task<Object> CallInvokeAsync(Object instance, ExpandoObject parameters, Guid? guid)
 		{
 			var type = instance.GetType();
 			var method = type.GetMethod("InvokeAsync", BindingFlags.Public | BindingFlags.Instance);
 			if (method == null)
 				throw new InteropException($"Method: 'InvokeAsync' is not found in type '{type.FullName}'");
-			var parsToCall = GetParameters(method, parameters);
+			var parsToCall = GetParameters(method, parameters, guid);
 			return await (Task<Object>) method.Invoke(instance, parsToCall);
 		}
 
-		Object CallInvoke(Object instance, ExpandoObject parameters)
+		Object CallInvoke(Object instance, ExpandoObject parameters, Guid? guid)
 		{
 			var type = instance.GetType();
 			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance);
 			if (method == null)
 				throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
-			var parsToCall = GetParameters(method, parameters);
+			var parsToCall = GetParameters(method, parameters, guid);
 			return method.Invoke(instance, parsToCall);
 		}
 
@@ -147,24 +150,24 @@ namespace A2v10.Interop
 			return instance;
 		}
 
-		public Object Invoke(String clrType, ExpandoObject parameters)
+		public Object Invoke(String clrType, ExpandoObject parameters, Guid? guid = null)
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
 			CallSetRequestInfo(instance, _requestInfo);
 			if (_enableThrow)
 				EnableThrowForInstance(instance);
-			return CallInvoke(instance, parameters);
+			return CallInvoke(instance, parameters, guid);
 		}
 
-		public async Task<Object> InvokeAsync(String clrType, ExpandoObject parameters)
+		public async Task<Object> InvokeAsync(String clrType, ExpandoObject parameters, Guid? guid = null)
 		{
 			Object instance = CreateInstance(clrType);
 			CallInject(instance);
 			CallSetRequestInfo(instance, _requestInfo);
 			if (_enableThrow)
 				EnableThrowForInstance(instance);
-			return await CallInvokeAsync(instance, parameters);
+			return await CallInvokeAsync(instance, parameters, guid);
 		}
 
 		void EnableThrowForInstance(Object instance)

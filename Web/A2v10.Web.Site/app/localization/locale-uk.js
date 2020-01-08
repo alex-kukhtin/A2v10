@@ -64,7 +64,8 @@
 		$Unknown: 'Не вказано',
 		$ChooseFile: 'Оберіть файл',
 		$AccessDenied: 'Доступ до системи заборонено!',
-		$PermissionDenied: 'Доступ заборонено!'
+		$PermissionDenied: 'Доступ заборонено!',
+		$FileTooLarge: 'Файл занадто великий. Розмір файлу не повинен перевищувати {0} KB'
 	};
 
 	if (window.d3) {

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20200108-7609
 // components/image.js
 
 (function () {
@@ -24,7 +24,7 @@
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
 	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
 	<a2-upload v-if="isUploadVisible" :style="uploadStyle" accept="image/*"
-		:item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly'/>
+		:item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly' :limit="limit"/>
 </div>
 `,
 		props: {
@@ -36,7 +36,8 @@
 			source: Array,
 			width: String,
 			height: String,
-			readOnly: Boolean
+			readOnly: Boolean,
+			limit: Number
 		},
 		data() {
 			return {

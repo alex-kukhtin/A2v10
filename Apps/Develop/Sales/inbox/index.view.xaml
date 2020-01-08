@@ -35,7 +35,7 @@
 		<DataGridColumn Header="DateCreated" Content="{Bind DateCreated, DataType=DateTime}" />
 		<DataGridColumn Fit="True">
 			<CommandBar Visibility="Active">
-				<Button Icon="ArrowOpen" Tip="Открыть"/>
+				<Button Icon="ArrowOpen" Tip="Открыть" Command="{BindCmd Open, Argument={Bind $Arg}, Url='/sales/inbox/open'}"/>
 				<Button Icon="Edit" Tip="Изменить"/>
 				<Button Icon="Copy" Tip="Копировать"/>
 				<Button Icon="Clear" Tip="Удалить"/>

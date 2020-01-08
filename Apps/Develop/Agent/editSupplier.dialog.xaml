@@ -163,7 +163,7 @@
 					</ListItem.CommandBar>
 				</ListItem>
 			</List>
-			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*"/>
+			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*" Limit="100"/>
 			<Block>
 				<Span Content="{Bind Agent.$SelectedMime}"></Span>
 			</Block>

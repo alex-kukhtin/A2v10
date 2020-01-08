@@ -64,7 +64,8 @@
 		$Unknown: 'Unknown',
 		$ChooseFile: 'Choose file',
 		$AccessDenied: 'Access denied!',
-		$PermissionDenied: 'Access denied!'
+		$PermissionDenied: 'Access denied!',
+		$FileTooLarge: 'File is too large. File size should be no more than {0} KB'
 };
 
 })();

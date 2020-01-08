@@ -107,6 +107,9 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ac.AllowOriginForCheck == null)
 					throw new RequestModelException($"'allowOrigin' is required for '{ac.command}' command");
 
+				if (!ac.IsGet())
+					throw new RequestModelException($"Method 'get' is required for '{ac.command}' command");
+
 				if (!ValidAllowAddress(ac))
 					return;
 
@@ -220,6 +223,9 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!ValidAllowAddress(ac))
 					return;
 
+				if (!ac.IsPost())
+					throw new RequestModelException($"Method 'post' is required for '{ac.command}' command");
+
 				Response.ContentType = "application/json";
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 
@@ -272,9 +278,9 @@ namespace A2v10.Web.Mvc.Controllers
 			invoker.SetRequestInfo(RequestInfo);
 			Object result = null;
 			if (cmd.async)
-				result = await invoker.InvokeAsync(cmd.clrType, dataToInvoke);
+				result = await invoker.InvokeAsync(cmd.clrType, dataToInvoke, apiGuid);
 			else
-				result = invoker.Invoke(cmd.clrType, dataToInvoke);
+				result = invoker.Invoke(cmd.clrType, dataToInvoke, apiGuid);
 			if (result == null)
 				return;
 			if (result is String)

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -13,6 +13,8 @@ namespace A2v10.Xaml
 		public String ErrorDelegate { get; set; }
 
 		public Object Argument { get; set; }
+
+		public Int32 Limit { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -34,6 +36,9 @@ namespace A2v10.Xaml
 			var argBind = GetBinding(nameof(Argument));
 			if (argBind != null)
 				tag.MergeAttribute(":argument", argBind.GetPath(context));
+
+			tag.MergeAttribute(":limit", Limit.ToString());
+
 			tag.Render(context);
 		}
 	}

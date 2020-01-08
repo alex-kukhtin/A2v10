@@ -1,7 +1,7 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180703-7238
-// components/attachments.js
+// 20200108-7609
+// components/fileupload.js
 
 (function () {
 
@@ -41,7 +41,8 @@
 			source: Object,
 			delegate: Function,
 			errorDelegate: Function,
-			argument: [Object, String, Number]
+			argument: [Object, String, Number],
+			limit:Number
 		},
 		computed: {
 			cssClass() {
@@ -65,6 +66,11 @@
 			dragLeave(ev) {
 				this.hover = false;
 			},
+			checkLimit(file) {
+				if (!this.limit) return false;
+				let sizeKB = file.size / 1024;
+				return sizeKB > this.limit;
+			},
 			uploadFile(ev) {
 				let root = window.$$rootUrl;
 
@@ -74,6 +80,12 @@
 				uploadUrl = url.createUrlForNavigate(uploadUrl, na);
 				var fd = new FormData();
 				for (let file of ev.target.files) {
+					if (this.checkLimit(file)) {
+						ev.target.value = ''; // clear current selection
+						let msg = locale.$FileTooLarge.replace('{0}', this.limit);
+						tools.alert(msg);
+						return;
+					}
 					fd.append('file', file, file.name);
 				}
 				this.$refs.inputFile.value = '';

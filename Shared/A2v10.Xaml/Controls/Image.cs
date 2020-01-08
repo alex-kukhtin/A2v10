@@ -14,6 +14,8 @@ namespace A2v10.Xaml
 
 		public Boolean ReadOnly { get; set; }
 
+		public Int32 Limit { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -28,6 +30,7 @@ namespace A2v10.Xaml
 				tag.MergeAttribute("width", Width.Value);
 			if (Height != null)
 				tag.MergeAttribute("height", Height.Value);
+			tag.MergeAttribute(":limit", Limit.ToString());
 			MergeBindingAttributeBool(tag, context, ":read-only", nameof(ReadOnly), ReadOnly);
 			MergeValueItemProp(tag, context, nameof(Source));
 			MergeBindingAttributeString(tag, context, "base", nameof(Base), Base);

@@ -3,6 +3,7 @@
 
 const template = {
 	properties: {
+		'TInbox.$Arg'() { return { X: 5, Y: 6 };}
     }
 };
 

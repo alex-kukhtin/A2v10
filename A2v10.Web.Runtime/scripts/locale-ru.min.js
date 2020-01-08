@@ -64,7 +64,8 @@
 		$Unknown: 'Не указано',
 		$ChooseFile: 'Выберите файл',
 		$AccessDenied: 'Доступ к системе запрещен!',
-		$PermissionDenied: 'Доступ запрещен!'
+		$PermissionDenied: 'Доступ запрещен!',
+		$FileTooLarge: 'Файл слишком большой. Размер файла должен быть не более {0} KB'
 	};
 
 	if (window.d3) {
