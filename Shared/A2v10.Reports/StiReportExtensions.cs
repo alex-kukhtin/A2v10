@@ -32,7 +32,8 @@ namespace A2v10.Reports
 		{
 			return new Stimulsoft.Report.Export.StiExcelExportSettings()
 			{
-				ExcelType = StiExcelType.Excel2007
+				ExcelType = StiExcelType.Excel2007,
+				UseOnePageHeaderAndFooter = true
 			};
 		}
 

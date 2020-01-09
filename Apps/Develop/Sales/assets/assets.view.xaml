@@ -173,7 +173,7 @@
 		<Panel Header="Діаграма" DropShadow="Shadow1" Grid.ColSpan="3" >
 			<TabPanel>
 				<Tab Header="По типах НМА">
-					<Graphics Delegate="diagramByType"></Graphics>
+					<Graphics Delegate="diagramByType" Height="200px"></Graphics>
 				</Tab>
 				<Tab Header="По відповідальних особах">
 					<StackPanel Orientation="Horizontal">

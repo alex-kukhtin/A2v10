@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -17,6 +17,7 @@ namespace A2v10.Xaml
 		public Object Argument { get; set; }
 		public WatchMode Watch { get; set; }
 		public Boolean CenterContent { get; set; }
+		public Length Height { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -32,6 +33,10 @@ namespace A2v10.Xaml
 			else
 				throw new XamlException("Graphics. Delegate must be specified");
 			g.MergeAttribute("watchmode", Watch.ToString().ToLowerInvariant());
+
+			if (Height != null)
+				g.MergeStyle("height", Height.Value);
+
 			/*
 			Guid guid = Guid.NewGuid();
 			String id = $"el{guid.ToString()}";

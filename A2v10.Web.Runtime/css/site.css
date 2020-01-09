@@ -1206,6 +1206,7 @@ td.vert > .vcell {
 .kbd-key,
 kbd {
   display: inline-block;
+  font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.85rem;
   padding: 0 3px;
   margin: 0 2px;

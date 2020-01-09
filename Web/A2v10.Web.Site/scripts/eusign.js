@@ -1,6 +1,6 @@
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20190722-7508*/
+/*20200109-7610.2*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -206,7 +206,7 @@ app.modules['std:eusign'] = function () {
 			cont = euSign.CreateEmptySign(data);
 		let result = euSign.AppendSigner(signer, cert, cont);
 		let info = euSign.VerifyDataInternal(result);
-		return { data: result, ownerInfo: info };
+		return { data: result, ownerInfo: euSign.GetPrivateKeyOwnerInfo() };
 	}
 
 	function verifyData(data) {
@@ -229,14 +229,12 @@ app.modules['std:eusign'] = function () {
 			let postUrl = `/attachment/sign/${prms.id}` + urltools.makeQueryString({ base: prms.base });
 			formData.append("file", new Blob([prms.signature]), "blob");
 			formData.append("kind", prms.kind || '');
-			if (prms.info) {
-				let ownerInfo = prms.info.ownerInfo;
-				let time = prms.info.timeInfo;
+			if (prms.ownerInfo) {
+				let ownerInfo = prms.ownerInfo;
 				formData.append("subjCN", ownerInfo.GetSubjCN());
 				formData.append("issuer", ownerInfo.GetIssuerCN());
 				formData.append("serial", ownerInfo.GetSerial());
 				formData.append("title", ownerInfo.GetSubjTitle());
-				formData.append("time", time.GetTime().getTime());
 			}
 			http.upload(postUrl, formData, true).then(function (result) {
 				console.dir(result);
