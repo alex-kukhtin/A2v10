@@ -3916,9 +3916,9 @@ app.modules['std:tools'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191028-7574
+// 20200109-7610
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3937,12 +3937,16 @@ app.modules['std:html'] = function () {
 
 	function getColumnsWidth(elem) {
 		let cols = elem.getElementsByTagName('col');
+		// FF bug fix. Popover does not work inside <td>.
+		let body = elem.querySelectorAll('tbody.col-shadow')[0];
+		body.style.display = "table-row-group";
 		let cells = elem.querySelectorAll('tbody.col-shadow > tr > td');
 		let len = Math.min(cols.length, cells.length);
 		for (let i = 0; i < len; i++) {
 			let w = cells[i].offsetWidth;
 			cols[i].setAttribute('data-col-width', w);
 		}
+		body.style.display = "none";
 	}
 
 	function getRowHeight(elem) {
@@ -9393,9 +9397,9 @@ Vue.component('a2-panel', {
 		}
 	}
 });
-/*! Copyright © 2015-2018 Alex Kukhtin. All rights reserved.*/
+/*! Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-// 20190104-7400
+// 20200109-7610
 // components/sheet.js
 
 (function () {
@@ -9403,11 +9407,11 @@ Vue.component('a2-panel', {
 	const sheetTemplate = `
 <table class="sheet">
 	<slot name="columns"></slot>
+	<slot name="body"></slot>
+	<slot name="col-shadow"></slot>
 	<thead>
 		<slot name="header"></slot>
 	</thead>
-	<slot name="col-shadow"></slot>
-	<slot name="body"></slot>
 	<tfoot>
 		<slot name="footer"></slot>
 	</tfoot>    

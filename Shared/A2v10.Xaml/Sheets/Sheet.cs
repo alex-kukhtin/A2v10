@@ -81,9 +81,9 @@ namespace A2v10.Xaml
 				sheet.MergeStyle("width", Width.Value);
 			sheet.RenderStart(context);
 			RenderColumns(context);
-			RenderHeader(context);
-			RenderColumnsShadow(context);
 			RenderBody(context);
+			RenderColumnsShadow(context);
+			RenderHeader(context);
 			RenderFooter(context);
 			sheet.RenderEnd(context);
 		}

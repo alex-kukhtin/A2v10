@@ -9393,9 +9393,9 @@ Vue.component('a2-panel', {
 		}
 	}
 });
-/*! Copyright © 2015-2018 Alex Kukhtin. All rights reserved.*/
+/*! Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-// 20190104-7400
+// 20200109-7610
 // components/sheet.js
 
 (function () {
@@ -9403,11 +9403,11 @@ Vue.component('a2-panel', {
 	const sheetTemplate = `
 <table class="sheet">
 	<slot name="columns"></slot>
+	<slot name="body"></slot>
+	<slot name="col-shadow"></slot>
 	<thead>
 		<slot name="header"></slot>
 	</thead>
-	<slot name="col-shadow"></slot>
-	<slot name="body"></slot>
 	<tfoot>
 		<slot name="footer"></slot>
 	</tfoot>    

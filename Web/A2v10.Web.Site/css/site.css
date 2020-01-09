@@ -16,6 +16,7 @@
 */
 /* mixins */
 /* icon colors */
+/*7550 - preload in layout.html*/
 @font-face {
   font-family: 'A2v10';
   font-display: fallback;
@@ -5902,6 +5903,7 @@ table.sheet td.indent.lev-4 {
 }
 table.sheet .col-shadow {
   visibility: collapse;
+  display: none;
 }
 table.sheet .col-shadow td {
   padding: 0 !important;
