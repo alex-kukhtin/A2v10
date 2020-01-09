@@ -42,7 +42,7 @@ table.sheet {
 
 	.col-shadow {
 		visibility: collapse;
-		display:none;
+		display: none; // FF bug. Popover does not work inside <td>.
 		td {
 			padding: 0 !important;
 			border-style: none !important;
@@ -180,9 +180,10 @@ table.sheet {
 	}
 
 	&.compact {
-		font-size:.95rem;
+		font-size: .95rem;
+
 		td, th {
-			padding:@cell-padding-compact-v @cell-padding-compact-h;
+			padding: @cell-padding-compact-v @cell-padding-compact-h;
 		}
 	}
 }
