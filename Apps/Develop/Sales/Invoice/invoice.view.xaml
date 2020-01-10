@@ -49,6 +49,12 @@
 	</Page.Taskpad>
 	<Grid Columns="12rem, 12rem, 150, 1*">
 		<Alert Style="Danger">Русский текст</Alert>
+		<Hyperlink Command="{BindCmd Execute,CommandName='apply'}" Content="I am the hyperlink">
+			<Hyperlink.Hint>
+				<Popover Placement="BottomRight">I am the popover for hyperlink</Popover>
+			</Hyperlink.Hint>
+		</Hyperlink>
+		
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
 		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}">
 			<DatePicker.Link>

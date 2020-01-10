@@ -2,7 +2,6 @@
 import { TDocument, TRoot, TAgent, TRow, TRows } from 'model';
 
 const cmn = require('/document/common');
-alert(cmn);
 
 const template: Template = {
 	properties: {
@@ -18,7 +17,7 @@ const template: Template = {
 		'TRow.$RoundSum'(this: TRow) { return this.Price * this.Qty; },
 		'TRow.$RowBold'(this: TRow) { return this.Qty === 3; },
 		'TRow.$RowMark'(this: TRow) { return this.Qty === 3 ? 'green' : undefined; }
-	},
+	},	
 	validators: {
 		'Document.Agent': 'Выберите покупателя 234',
 		'Document.Rows[].Entity': 'Выберите товар2',
@@ -35,7 +34,6 @@ const template: Template = {
 	commands: {
 		apply: function (this:TRoot, doc: TDocument) {
 			alert('apply');
-			debugger;
 		},
 		unApply() {},
 		createShipment() {},

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -27,6 +27,7 @@ namespace A2v10.Xaml
 		public Boolean HideCaret { get; set; }
 		public String TestId { get; set; }
 
+		public Popover Hint { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -124,6 +125,22 @@ namespace A2v10.Xaml
 					.AddCssClassBool(bDropUp, "up")
 					.Render(context);
 			}
+			RenderHint(context);
+			tag.RenderEnd(context);
+		}
+
+		void RenderHint(RenderContext context)
+		{
+			if (Hint == null)
+				return;
+			if (Hint.Icon == Icon.NoIcon)
+				Hint.Icon = Icon.Help;
+			var tag = new TagBuilder("span");
+			tag.RenderStart(context);
+			Hint.RenderElement(context, (t) =>
+			{
+				t.AddCssClass("hint");
+			});
 			tag.RenderEnd(context);
 		}
 

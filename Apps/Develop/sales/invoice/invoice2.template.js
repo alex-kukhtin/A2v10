@@ -2,7 +2,6 @@ define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const cmn = require('/document/common');
-    alert(cmn);
     const template = {
         properties: {
             'TDocument.$checked': Boolean,
@@ -34,7 +33,6 @@ define(["require", "exports"], function (require, exports) {
         commands: {
             apply: function (doc) {
                 alert('apply');
-                debugger;
             },
             unApply() { },
             createShipment() { },
