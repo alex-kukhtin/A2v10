@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Text;
@@ -31,6 +31,7 @@ namespace A2v10.Xaml
 		public Boolean AlwaysOk { get; set; }
 		public UIElementBase Taskpad { get; set; }
 		public Boolean ShowWaitCursor { get; set; }
+		public BackgroundStyle Background { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -87,6 +88,8 @@ namespace A2v10.Xaml
 			if (Padding != null)
 				Padding.MergeStyles("padding", content);
 			content.AddCssClassBool(IsContentIsIFrame, "content-iframe"); // bug fix (3px height)
+			if (Background != BackgroundStyle.Default)
+				content.AddCssClass("background-" + Background.ToString().ToKebabCase());
 			content.RenderStart(context);
 			if (Taskpad != null)
 			{

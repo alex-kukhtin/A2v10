@@ -11,43 +11,49 @@
 	overflow: visible;
 	border-left: 1px solid @taskpad-brd-color;
 	position: relative;
+	padding-top: 12px;
 
 	.taskpad-body {
-		//background-color: azure;
 		overflow: auto;
-		height: ~"calc(100% - 24px)"; // margin-top
-		margin-top: @handle-size;
+		height: 100%;
 		padding-left: @taskpad-gap; // ???
 		padding-right: @taskpad-gap; // ???
 	}
 
 	&.overflow {
 		.taskpad-body {
-			overflow:visible;
+			overflow: visible;
 		}
 	}
 
 	.taskpad-collapse-handle {
 		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		padding: 6px 6px 2px 8px;
+		display: block;
+		top: 50%;
+		left: -10px;
+		width: 20px;
+		height: 20px;
 		color: @link-color;
-		font-size: 120%;
+		border: 1px solid @link-color;
+		border-radius: 50%;
+		background-color: white;
+		text-align: center;
+		line-height: 19px;
+		z-index: 20;
+		text-decoration: none;
+
+		&:hover {
+			background-color: @taskpad-collapsed-bg-color;
+		}
 	}
 
 	&.no-collapsible {
 		.taskpad-collapse-handle {
-			display:none;
+			display: none;
 		}
-		padding-top:12px;
-		.taskpad-body {
-			margin-top:0;
-			height:100%;
-		}
+
 		&.expanded {
-			margin-left:0;
+			margin-left: 0;
 		}
 	}
 
@@ -56,14 +62,9 @@
 		margin-left: 6px;
 
 		.taskpad-collapse-handle {
-			&:hover {
-				color: @link-hover-color;
-				text-decoration: none;
-				background-color: @taskpad-collapsed-bg-color;
-			}
 
 			&:before {
-				content: "\e9a5"; // chevron-left
+				content: "\e9ad"; // chevron-double-right
 			}
 		}
 	}
@@ -74,7 +75,7 @@
 
 		.taskpad-collapse-handle {
 			&:before {
-				content: "\e9a3"; // chevron-right
+				content: "\e9ab"; // chevron-double-left
 			}
 		}
 	}

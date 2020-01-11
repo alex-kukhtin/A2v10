@@ -17,6 +17,7 @@ const template: Template = {
 	properties: {
 		'TRoot.$Answer': String,
 		'TRoot.$BarCode' : String,
+		'TRoot.$Collapsed'() { return !window.matchMedia('(min-width:1025px)').matches;},
 		'TRow.Sum': cmn.rowSum,
 		'TDocument.Sum': cmn.docTotalSum,
 		'TDocument.$HasParent'(this: TDocument) { return this.ParentDoc.Id !== 0; },

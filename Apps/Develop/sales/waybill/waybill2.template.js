@@ -10,6 +10,7 @@ define(["require", "exports"], function (require, exports) {
         properties: {
             'TRoot.$Answer': String,
             'TRoot.$BarCode': String,
+            'TRoot.$Collapsed'() { return !window.matchMedia('(min-width:1025px)').matches; },
             'TRow.Sum': cmn.rowSum,
             'TDocument.Sum': cmn.docTotalSum,
             'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },

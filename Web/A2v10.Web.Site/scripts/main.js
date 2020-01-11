@@ -9272,9 +9272,9 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190109-7408
+// 20200111-7611
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
@@ -9291,7 +9291,8 @@ Vue.component("a2-taskpad", {
 </div>
 `,
 	props: {
-		title: String
+		title: String,
+		initialCollapsed: Boolean
 	},
 	data() {
 		return {
@@ -9310,19 +9311,24 @@ Vue.component("a2-taskpad", {
 		}
 	},
 	methods: {
-		toggle() {
+		setExpanded(exp) {
+			this.expanded = exp;
 			// HACK
 			let topStyle = this.$el.parentElement.style;
-			this.expanded = !this.expanded;
 			if (this.expanded)
 				topStyle.gridTemplateColumns = this.__savedCols;
 			else
 				topStyle.gridTemplateColumns = "1fr 36px"; // TODO: ???
+		},
+		toggle() {
+			this.setExpanded(!this.expanded);
 		}
 	},
 	mounted() {
 		let topStyle = this.$el.parentElement.style;
 		this.__savedCols = topStyle.gridTemplateColumns;
+		if (this.initialCollapsed)
+			this.setExpanded(false);
 	}
 });
 
@@ -11866,9 +11872,9 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20181208-7596*/
+/*20200111-7611*/
 /* controllers/shell.js */
 
 (function () {
@@ -12247,7 +12253,7 @@ Vue.directive('resize', {
 				if (sb === 'true')
 					return true;
 				// auto collapse for tablet
-				if (screen && screen.width < 992)
+				if (!window.matchMedia('(min-width:1025px)').matches)
 					return true;
 				return false;
 			},

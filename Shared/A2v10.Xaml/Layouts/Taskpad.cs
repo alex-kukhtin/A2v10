@@ -13,6 +13,7 @@ namespace A2v10.Xaml
 		public Boolean? Collapsible { get; set; }
 		public String Title { get; set; }
 		public Boolean Overflow { get; set; }
+		public Boolean Collapsed { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -28,6 +29,12 @@ namespace A2v10.Xaml
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 
 			tag.AddCssClassBoolNo(Collapsible, "collapsible");
+
+			var colBind = GetBinding(nameof(Collapsed));
+			if (colBind != null)
+				tag.MergeAttribute(":initial-collapsed", colBind.GetPath(context));
+			else
+				tag.MergeAttribute(":initial-collapsed", Collapsed.ToString().ToLowerInvariant());
 
 			tag.RenderStart(context);
 			RenderChildren(context);

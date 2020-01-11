@@ -1530,11 +1530,11 @@ header .dropdown.separate.show .btn.btn-success,
   overflow: visible;
   border-left: 1px solid #ddd;
   position: relative;
+  padding-top: 12px;
 }
 .taskpad .taskpad-body {
   overflow: auto;
-  height: calc(100% - 24px);
-  margin-top: 24px;
+  height: 100%;
   padding-left: 12px;
   padding-right: 12px;
 }
@@ -1543,22 +1543,25 @@ header .dropdown.separate.show .btn.btn-success,
 }
 .taskpad .taskpad-collapse-handle {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 6px 6px 2px 8px;
+  display: block;
+  top: 50%;
+  left: -10px;
+  width: 20px;
+  height: 20px;
   color: #208cf8;
-  font-size: 120%;
+  border: 1px solid #208cf8;
+  border-radius: 50%;
+  background-color: white;
+  text-align: center;
+  line-height: 19px;
+  z-index: 20;
+  text-decoration: none;
 }
-.taskpad.no-collapsible {
-  padding-top: 12px;
+.taskpad .taskpad-collapse-handle:hover {
+  background-color: #f9f9f9;
 }
 .taskpad.no-collapsible .taskpad-collapse-handle {
   display: none;
-}
-.taskpad.no-collapsible .taskpad-body {
-  margin-top: 0;
-  height: 100%;
 }
 .taskpad.no-collapsible.expanded {
   margin-left: 0;
@@ -1566,20 +1569,15 @@ header .dropdown.separate.show .btn.btn-success,
 .taskpad.expanded {
   margin-left: 6px;
 }
-.taskpad.expanded .taskpad-collapse-handle:hover {
-  color: #208cf8;
-  text-decoration: none;
-  background-color: #f9f9f9;
-}
 .taskpad.expanded .taskpad-collapse-handle:before {
-  content: "\e9a5";
+  content: "\e9ad";
 }
 .taskpad.collapsed {
   background-color: #f9f9f9;
   margin-left: 3px;
 }
 .taskpad.collapsed .taskpad-collapse-handle:before {
-  content: "\e9a3";
+  content: "\e9ab";
 }
 .taskpad .taskpad-title {
   background-color: #f9f9f9;
@@ -4841,7 +4839,6 @@ label.checkbox.small span:after {
   transform: scale(0.9, 0.9);
 }
 .a2-pager {
-  background-color: white;
   padding: 8px 6px 2px 0;
   display: flex;
   align-items: center;

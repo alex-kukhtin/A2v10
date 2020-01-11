@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20181208-7596*/
+/*20200111-7611*/
 /* controllers/shell.js */
 
 (function () {
@@ -379,7 +379,7 @@
 				if (sb === 'true')
 					return true;
 				// auto collapse for tablet
-				if (screen && screen.width < 992)
+				if (!window.matchMedia('(min-width:1025px)').matches)
 					return true;
 				return false;
 			},
