@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -39,10 +39,14 @@ namespace A2v10.Xaml
 					strVal.EndsWith("px") ||
 					strVal.EndsWith("vh") ||
 					strVal.EndsWith("vw") ||
+					strVal.EndsWith("vmin") ||
+					strVal.EndsWith("vmax") ||
 					strVal.EndsWith("mm") ||
 					strVal.EndsWith("cm") ||
 					strVal.EndsWith("pt") ||
 					strVal.EndsWith("in") ||
+					strVal.EndsWith("ch") ||
+					strVal.EndsWith("ex") ||
 					strVal.EndsWith("em") ||
 					strVal.EndsWith("rem"));
 		}
