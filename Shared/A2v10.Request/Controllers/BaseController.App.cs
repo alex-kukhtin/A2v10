@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System.IO;
 using System;
@@ -55,7 +55,8 @@ namespace A2v10.Request
 			if (appJson != null)
 			{
 				// with validation
-				Object app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
+				ExpandoObject app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
+				app.Set("embedded", _host.Embedded);
 				return _localizer.Localize(null, JsonConvert.SerializeObject(app));
 			}
 
@@ -63,6 +64,7 @@ namespace A2v10.Request
 			defAppData.Set("version", _host.AppVersion);
 			defAppData.Set("title", "A2v10 Web Application");
 			defAppData.Set("copyright", _host.Copyright);
+			defAppData.Set("embedded", _host.Embedded);
 			return JsonConvert.SerializeObject(defAppData);
 		}
 

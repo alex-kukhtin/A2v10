@@ -65,7 +65,8 @@
 		$ChooseFile: 'Choose file',
 		$AccessDenied: 'Access denied!',
 		$PermissionDenied: 'Access denied!',
-		$FileTooLarge: 'File is too large. File size should be no more than {0} KB'
+		$FileTooLarge: 'File is too large. File size should be no more than {0} KB',
+		$DesktopNotSupported: 'This action is not supported on the desktop version'
 };
 
 })();

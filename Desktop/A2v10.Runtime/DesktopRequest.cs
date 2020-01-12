@@ -188,6 +188,7 @@ namespace A2v10.Runtime
 		void Render(RequestUrlKind kind, String path, String search, TextWriter writer)
 		{
 			ExpandoObject loadPrms = new ExpandoObject();
+			path = path.ToLowerInvariant();
 			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
 			SetSqlQueryParams(loadPrms);
 			if (path.StartsWith("app/"))

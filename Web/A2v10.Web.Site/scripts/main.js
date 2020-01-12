@@ -11874,7 +11874,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200111-7611*/
+/*20200112-7612*/
 /* controllers/shell.js */
 
 (function () {
@@ -12118,8 +12118,8 @@ Vue.directive('resize', {
 
 	const a2SideBar = {
 		//TODO: 
-		// 1. разные варианты меню
-		// 2. folderSelect как функция 
+		// 1. various menu variants
+		// 2. folderSelect as function 
 		template: `
 <div :class="cssClass">
 	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
@@ -12553,6 +12553,12 @@ Vue.directive('resize', {
 				alert('change user');
 			},
 			changePassword() {
+
+				if (window.cefHost) {
+					this.$alert(locale.$DesktopNotSupported);
+					return;
+				}
+
 				const dlgData = {
 					promise: null, data: { Id: -1 }
 				};

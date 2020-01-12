@@ -1,9 +1,7 @@
-﻿// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2017-2020 Alex Kukhtin. All rights reserved.
 
 
 #include "stdafx.h"
-// SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
-// and search filter handlers and allows sharing of document code with that project.
 #ifndef SHARED_HANDLERS
 #include "A2v10.Application.h"
 #endif
@@ -41,12 +39,8 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_SETFOCUS()
 END_MESSAGE_MAP()
 
-// CCefView construction/destruction
-
 CCefView::CCefView()
 {
-	// TODO: add construction code here
-
 }
 
 CCefView::~CCefView()
@@ -64,8 +58,6 @@ BOOL CCefView::OnEraseBkgnd(CDC* pDC)
 
 BOOL CCefView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
 	if (!__super::PreCreateWindow(cs))
 		return FALSE;
 	cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
@@ -77,33 +69,6 @@ BOOL CCefView::PreCreateWindow(CREATESTRUCT& cs)
 void CCefView::OnDraw(CDC* /*pDC*/)
 {
 	// do nothing
-}
-
-
-// CCefView printing
-
-
-void CCefView::OnFilePrintPreview()
-{
-#ifndef SHARED_HANDLERS
-	AFXPrintPreview(this);
-#endif
-}
-
-BOOL CCefView::OnPreparePrinting(CPrintInfo* pInfo)
-{
-	// default preparation
-	return DoPreparePrinting(pInfo);
-}
-
-void CCefView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: add extra initialization before printing
-}
-
-void CCefView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: add cleanup after printing
 }
 
 // afx_msg

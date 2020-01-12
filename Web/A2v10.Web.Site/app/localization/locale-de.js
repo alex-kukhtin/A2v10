@@ -65,7 +65,8 @@
 		$ChooseFile: 'Datei auswählen',
 		$AccessDenied: 'Zigriff verweigert!',
 		$PermissionDenied: 'Zigriff verweigert!',
-		$FileTooLarge: 'Datei ist zu groß. Die Dateigröße sollte nicht mehr als {0} KB betragen'
+		$FileTooLarge: 'Datei ist zu groß. Die Dateigröße sollte nicht mehr als {0} KB betragen',
+		$DesktopNotSupported: 'Diese Aktion wird in der Desktop-Version nicht unterstützt'
 	};
 
 })();

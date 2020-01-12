@@ -22,6 +22,7 @@ namespace BackgroundProcessor
 		#region IApplicationHost
 		public IProfiler Profiler => _profiler;
 		public Boolean Mobile { get; set; }
+		public Boolean Embedded => false;
 
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
 		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;

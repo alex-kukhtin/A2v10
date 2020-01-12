@@ -1,4 +1,4 @@
-// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2017-2020 Alex Kukhtin. All rights reserved.
 
 
 #pragma once
@@ -18,9 +18,6 @@ public:
 	virtual void OnDraw(CDC* pDC) override;  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 protected:
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
 	virtual void OnInitialUpdate() override;
 
 	// Implementation

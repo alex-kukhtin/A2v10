@@ -30,6 +30,7 @@ namespace A2v10.Web.Config
 		public IProfiler Profiler => _profiler;
 
 		public Boolean Mobile { get; set; }
+		public Boolean Embedded => false;
 
 		#region IDataConfiguration
 

@@ -34,6 +34,7 @@ namespace A2v10.Tests.Config
 		public IProfiler Profiler => _profiler;
 
 		public Boolean Mobile { get; set; }
+		public Boolean Embedded => false;
 
 
 		public String AppPath

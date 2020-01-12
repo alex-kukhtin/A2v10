@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -19,6 +19,7 @@ namespace A2v10.Infrastructure
 		String HostingPath { get; }
 		String SmtpConfig { get; }
 		Boolean Mobile { get; set; }
+		Boolean Embedded { get; }
 
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }

@@ -28,6 +28,7 @@ namespace A2v10.Runtime
 			Profiler.Enabled = IsDebugConfiguration;
 		}
 
+		public Boolean Embedded => true;
 		public IProfiler Profiler { get; }
 		public Boolean Mobile { get; set; }
 
@@ -166,7 +167,10 @@ namespace A2v10.Runtime
 			if (file != null)
 				_reader = new ZipApplicationReader(CurrentAppPath, key);
 			else
-				_reader = new FileApplicationReader(CurrentAppPath, key);
+				_reader = new FileApplicationReader(CurrentAppPath, key)
+				{
+					EmulateBox = true
+				};
 		}
 
 		internal static String GetCompanyCode()
