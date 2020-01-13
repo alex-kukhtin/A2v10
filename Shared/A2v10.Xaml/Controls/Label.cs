@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -11,6 +11,7 @@ namespace A2v10.Xaml
 		public String Content { get; set; }
 		public TextAlign Align { get; set; }
 		public Boolean Required { get; set; }
+		public ControlSize Size { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -28,6 +29,7 @@ namespace A2v10.Xaml
 				label.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 			label.AddCssClassBool(Required, "required");
 
+			AddSize(label);
 			label.RenderStart(context);
 
 			if (Content != null)
@@ -35,5 +37,21 @@ namespace A2v10.Xaml
 
 			label.RenderEnd(context);
 		}
+
+		void AddSize(TagBuilder tag)
+		{
+			switch (Size)
+			{
+				case ControlSize.Large:
+					tag.AddCssClass("lg");
+					break;
+				case ControlSize.Default:
+				case ControlSize.Normal:
+					break;
+				default:
+					throw new XamlException("Only ControlSize.Normal or ControlSize.Large are supported for the TextBox");
+			}
+		}
+
 	}
 }

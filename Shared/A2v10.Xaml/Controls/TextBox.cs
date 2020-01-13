@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -30,6 +30,7 @@ namespace A2v10.Xaml
 		public Bind EnterCommand { get; set; }
 
 		public Accel Accel { get; set; }
+		public ControlSize Size { get; set; }
 
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -41,6 +42,7 @@ namespace A2v10.Xaml
 			onRender?.Invoke(input);
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
+			AddSize(input);
 			if (Multiline)
 				MergeAttributeInt32(input, context, "rows", nameof(Rows), Rows);
 			if (Password)
@@ -72,6 +74,22 @@ namespace A2v10.Xaml
 			RenderAddOns(context);
 			input.RenderEnd(context);
 		}
+
+		void AddSize(TagBuilder tag)
+		{
+			switch (Size)
+			{
+				case ControlSize.Large:
+					tag.AddCssClass("lg");
+					break;
+				case ControlSize.Default:
+				case ControlSize.Normal:
+					break;
+				default:
+					throw new XamlException("Only ControlSize.Normal or ControlSize.Large are supported for the TextBox");
+			}
+		}
+
 
 		protected override void OnEndInit()
 		{

@@ -332,6 +332,7 @@ namespace A2v10.Web.Mvc.Controllers
 		void SetQueryStringAndSqlQueryParams(ExpandoObject prms)
 		{
 			SetUserTenantToParams(prms);
+			SetUserCompanyToParams(prms);
 			SetClaimsToParams(prms);
 			prms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 		}

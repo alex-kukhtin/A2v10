@@ -41,6 +41,11 @@
 		return null;
 	}
 
+	function isSeparatePage(pages, seg) {
+		if (!seg || !pages) return false;
+		return pages.indexOf(seg + ',') !== -1;
+	}
+
 	function makeMenuUrl(menu, url, opts) {
 		opts = opts || {};
 		url = urlTools.combine(url).toLowerCase();
@@ -51,6 +56,8 @@
 		let seg1 = sUrl[1];
 		if (seg1 === 'app')
 			return url; // app
+		if (opts && isSeparatePage(opts.pages, seg1))
+			return url; // separate page
 		let am = null;
 		if (seg1)
 			am = menu.find((mi) => mi.Url === seg1);
@@ -312,9 +319,14 @@
 				let route = this.$store.getters.route;
 				if (route.seg0 === 'app')
 					return 'full-view';
+				if (isSeparatePage(this.pages, route.seg0))
+					return 'full-view';
 				return route.len === 3 ? 'partial-page' :
 					route.len === 2 ? 'full-page' : 'full-view';
 			}
+		},
+		props: {
+			pages: String
 		},
 		data() {
 			return {
@@ -338,7 +350,7 @@
 <div :class="cssClass" class="main-view">
 	<a2-nav-bar :menu="menu" v-show="navBarVisible" :period="period"></a2-nav-bar>
 	<a2-side-bar :menu="menu" v-show="sideBarVisible" :compact='isSideBarCompact'></a2-side-bar>
-	<a2-content-view></a2-content-view>
+	<a2-content-view :pages="pages"></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
 		<div class="modal-wrapper" v-for="dlg in modals" :class="{show: dlg.wrap}">
@@ -357,7 +369,8 @@
 		props: {
 			menu: Array,
 			sideBarMode: String,
-			period: period.constructor
+			period: period.constructor,
+			pages: String
 		},
 		data() {
 			return {
@@ -385,6 +398,7 @@
 			},
 			navBarVisible() {
 				let route = this.route;
+				if (isSeparatePage(this.pages, route.seg0)) return false;
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
 			},
 			sideBarVisible() {
@@ -564,7 +578,7 @@
 
 			this.sideBarCollapsed = this.sideBarInitialCollapsed;
 
-			let opts = { title: null };
+			let opts = { title: null, pages: this.pages };
 			let menuPath = urlTools.normalizeRoot(window.location.pathname);
 			// fix frequent error
 			if (menuPath === '/home' && this.menu && !this.menu.find(v => v.Url.toLowerCase() === 'home')) {

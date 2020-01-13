@@ -3032,10 +3032,6 @@ tr:hover .commandbar.visible-hover {
 .data-grid td > .commandbar {
   margin: -3px;
 }
-/*
-TODO: 
-    1. shadow into variables
-*/
 .menu {
   padding: 2px;
   margin: 3px 0;

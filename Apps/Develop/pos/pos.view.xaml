@@ -1,4 +1,26 @@
 ﻿<!-- Pos MAIN Page -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-	  Title="POS" Background="LightYellow">
+	  Title="POS" Background="WhiteSmoke">
+	<Grid Rows="Auto,1*,Auto" Columns="1*,1px,Auto" Height="100%">
+		<FlexList Orientation="Horizontal" Grid.Row="1" Grid.Col="1" AlignItems="Center" Margin="1rem,0">
+			<Label Size="Large">Штрих-код</Label>
+			<TextBox Width="200px" Size="Large" Accel="F7"/>
+			<Button Content="Шукати"/>
+		</FlexList>
+		<DataGrid Grid.Row="2" Grid.Col="1" Style="Light" FixedHeader="True" GridLines="Horizontal">
+			<DataGridColumn Fit="True" Header="#"/>
+			<DataGridColumn Fit="True" Header="Штрих-код"/>
+			<DataGridColumn Header="Назва"/>
+		</DataGrid>
+		<GridDivider Grid.Col="2" Grid.RowSpan="3"/>
+		<Flex Orientation="Vertical" Grid.Row="1" Grid.Col="3" Grid.RowSpan="2">
+			<StackPanel Orientation="Horizontal">
+				<Button>+1</Button>
+				<Button>-1</Button>
+			</StackPanel>
+		</Flex>
+		<StackPanel Grid.Row="3">
+			<Header>Total Sum</Header>
+		</StackPanel>
+	</Grid>
 </Page>

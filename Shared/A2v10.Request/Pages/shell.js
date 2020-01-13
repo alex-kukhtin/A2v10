@@ -1,5 +1,5 @@
 ﻿
-/*20191217-7601*/
+/*20200113-7612*/
 
 (function () {
 
@@ -21,6 +21,7 @@
 			title: menu.SysParams ? menu.SysParams.AppTitle : '',
 			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
 			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
+			pages: menu.SysParams ? (menu.SysParams.Pages + ',') : '',
 			userState: menu.UserState,
 			userIsAdmin: $(Admin),
 			userIsTenantAdmin: $(TenantAdmin),

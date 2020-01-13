@@ -2096,6 +2096,14 @@ pre.a2-code {
   font-size: 1px;
   z-index: -10;
 }
+.control-group.lg .input-group input {
+  font-size: 1.3rem;
+  height: 2.45rem;
+  padding: 0 8px;
+}
+.control-group.lg label {
+  font-size: 1rem;
+}
 .control-group.with-width .input-group {
   width: 100%;
 }
@@ -2265,6 +2273,9 @@ pre.a2-code {
   margin-right: 2px;
   vertical-align: 1px;
   font-size: 75%;
+}
+.a2-label.lg {
+  font-size: 1rem;
 }
 .control-group.val-warning .validator {
   background-color: #fff9e7;
@@ -4897,7 +4908,7 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  padding: 2px;
+  padding: 6px;
   margin: 3px 0;
   top: 100%;
   min-width: 160px;

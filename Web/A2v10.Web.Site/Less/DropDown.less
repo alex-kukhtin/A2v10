@@ -9,11 +9,11 @@ TODO:
 @divider-color: @dropdown-brd-color;
 
 .menu {
-	padding: 2px;
+	padding: 6px;
 	margin: 3px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
-	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
+	box-shadow: @dropdown-shadow;
 	border: 1px solid @dropdown-brd-color;
 
 	.dropdown-item {
@@ -24,8 +24,8 @@ TODO:
 		color: @text-color;
 		align-items: baseline;
 		background-color: transparent;
-		width:100%;
-		text-align:left;
+		width: 100%;
+		text-align: left;
 
 		&:hover {
 			text-decoration: none;
@@ -45,7 +45,7 @@ TODO:
 
 		&[disabled] {
 			cursor: not-allowed;
-			opacity:0.5;
+			opacity: 0.5;
 		}
 
 		&[disabled]:hover {

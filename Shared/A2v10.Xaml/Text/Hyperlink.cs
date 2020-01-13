@@ -89,7 +89,7 @@ namespace A2v10.Xaml
 						tag.AddCssClass("normal");
 						break;
 					default:
-						throw new XamlException("Only ControlSize.Small, ControlSize.Normal or ControlSize.Large is supported for the Hyperlink");
+						throw new XamlException("Only ControlSize.Small, ControlSize.Normal or ControlSize.Large are supported for the Hyperlink");
 				}
 			}
 

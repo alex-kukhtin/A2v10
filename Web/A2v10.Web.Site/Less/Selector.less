@@ -27,11 +27,11 @@
 	z-index: @popup-index !important;
 	margin-top: 0;
 	margin-left: -1px;
-	box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, .5), 0 5px 40px 0 rgba(0, 0, 0, .15);
+	box-shadow: @dropdown-shadow;
 	padding: 0;
 	overflow: hidden;
 	display: block !important;
-	font-weight:normal;
+	font-weight: normal;
 
 	&.panel-bottom-right {
 		left: auto;
@@ -68,7 +68,7 @@
 			list-style: none;
 			padding: 4px 6px;
 			white-space: normal;
-			cursor:pointer;
+			cursor: pointer;
 
 			&:hover {
 				background-color: @hover-bg-color;
