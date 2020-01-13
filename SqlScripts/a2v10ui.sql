@@ -150,9 +150,9 @@ begin
 	order by RT.[Level], m.[Order], RT.[Id];
 
 	-- system parameters
-	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode]
+	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [Pages]
 	from (select Name, Value=StringValue from a2sys.SysParams) as s
-		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle], [SideBarMode])) as p;
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle], [SideBarMode], [Pages])) as p;
 end
 go
 ------------------------------------------------
