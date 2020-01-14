@@ -45,5 +45,6 @@
 #include "../include/xmltools.h"
 
 #include "../Include/jsonparser.h"
+#include "../Include/scaner.h"
 
 

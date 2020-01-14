@@ -5,6 +5,7 @@
 
 #include "cefapp.h"
 #include "upload.h"
+#include "posterm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -95,8 +96,12 @@ void CCefApplication::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<
 
 	CefRefPtr<CefV8Handler> upload = new CNativeUploadHandler();
 	CefRefPtr<CefV8Value> uploadFunc = CefV8Value::CreateFunction(L"upload", upload);
+
+	CefRefPtr<CefV8Handler> posterm = new CNativePosTermHandler();
+	CefRefPtr<CefV8Value> postermFunc = CefV8Value::CreateFunction(L"posterm", posterm);
+
 	host->SetValue(L"version", str, V8_PROPERTY_ATTRIBUTE_READONLY);
 	host->SetValue(L"upload", uploadFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
+	host->SetValue(L"posterm", postermFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
 	global->SetValue(L"cefHost", host, V8_PROPERTY_ATTRIBUTE_READONLY);
-	int z = 55;
 }

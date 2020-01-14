@@ -301,7 +301,12 @@ void CMainFrame::OnDestroy()
 void CMainFrame::OnAppLoad()
 {
 	CEF_VIEW_INFO viewInfo;
-	viewInfo.szUrl = L"http://domain";
+	CString strUrl = L"http://domain";
+	if (!theApp.m_strInitialUrl.IsEmpty()) {
+		strUrl += L"/";
+		strUrl += theApp.m_strInitialUrl;
+	}
+	viewInfo.szUrl = strUrl;
 	HWND hFrame = GetSafeHwnd();
 	::SendMessage(hFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
 }

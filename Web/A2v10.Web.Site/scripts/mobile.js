@@ -1484,10 +1484,18 @@ app.modules['std:http'] = function () {
 	}
 
 	function load(url, selector, baseUrl) {
-		let fc = selector ? selector.firstElementChild : null;
-		if (fc && fc.__vue__) {
-			fc.__vue__.$destroy();
+		if (selector) {
+			let fc = selector.firstElementChild
+			if (fc && fc.__vue__) {
+				let ve = fc.__vue__;
+				ve.$destroy();
+				ve.$el.remove();
+				ve.$el = null;
+				fc.__vue__ = null;
+			}
+			selector.innerHTML = '';
 		}
+
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
@@ -1531,6 +1539,7 @@ app.modules['std:http'] = function () {
 								eventBus.$emit('modalSetAttribites', dca, ve);
 						}
 					}
+					rdoc.body.remove();
 					resolve(true);
 					eventBus.$emit('endLoad');
 				})
@@ -3332,6 +3341,7 @@ app.modules['std:validators'] = function () {
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
+		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};
@@ -3394,6 +3404,11 @@ app.modules['std:validators'] = function () {
 		for (let p in mi) {
 			root[p].$ModelInfo = checkPeriod(mi[p]);
 		}
+	}
+
+	function destroyRoot() {
+		this._host_.$viewModel = null;
+		this._host_ = null;
 	}
 
 	app.modules['std:datamodel'] = {
@@ -4129,6 +4144,7 @@ app.modules['std:accel'] = function () {
 		if (vue && vue.$marker()) {
 			vue.$destroy();
 		}
+		el.__vue__ = null;
 	}
 
 	Vue.component('include', {
@@ -9744,6 +9760,9 @@ Vue.component('a2-panel', {
 		beforeDestroy() {
 			if (this.unwatch)
 				this.unwatch();
+			const chart = d3.select('#' + this.id);
+			chart.selectAll('*').remove();
+			this.$el.remove();
 		}
 	});
 })();
@@ -11841,6 +11860,7 @@ Vue.directive('resize', {
 		},
 		destroyed() {
 			//console.dir('base.js has been destroyed');
+			this.$caller = null;
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
@@ -11852,6 +11872,9 @@ Vue.directive('resize', {
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
 			htmlTools.removePrintFrame();
+			if (this.$data.$destroy)
+				this.$data.$destroy();
+			this._data = null;
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();

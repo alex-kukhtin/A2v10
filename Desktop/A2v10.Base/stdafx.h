@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2020 Alex Kukhtin. All rights reserved.
 
 // stdafx.h : include file for standard system include files,
 // or project specific include files that are used frequently, but
@@ -23,27 +23,14 @@
 #include "list"
 #include "algorithm"
 
-#ifndef _AFX_NO_OLE_SUPPORT
-#include <afxole.h>         // MFC OLE classes
-#include <afxodlgs.h>       // MFC OLE dialog classes
-#include <afxdisp.h>        // MFC Automation classes
-#endif // _AFX_NO_OLE_SUPPORT
-
-#ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>           // MFC support for Internet Explorer 4 Common Controls
-#endif
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>                     // MFC support for Windows Common Controls
-#endif // _AFX_NO_AFXCMN_SUPPORT
-
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 #include <afxautohidedocksite.h>
 
 #include <atlbase.h>
 
-#include "..\Include\allresources.h"
+#include "..\include\allresources.h"
 
 // JAVASCRIPT
 #include "stdint.h"
-#include "..\Include\ChakraCore.h"
+#include "..\include\ChakraCore.h"
 

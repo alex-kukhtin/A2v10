@@ -75,6 +75,9 @@
     <ClInclude Include="versiondlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="posterm.h">
+      <Filter>Header Files\NativeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="versiondlg.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="posterm.cpp">
+      <Filter>Source Files\NativeFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -132,6 +132,9 @@
     <ClCompile Include="jsonparser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scaner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="A2v10.Base.def">
@@ -263,6 +266,9 @@
       <Filter>Include Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\jsonparser.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\scaner.h">
       <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>

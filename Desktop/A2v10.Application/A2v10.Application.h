@@ -16,6 +16,9 @@ class CMainApp : public CA2WinApp
 public:
 	CMainApp();
 
+	CString m_strUdlFileName;
+	CString m_strInitialUrl;
+
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
 
@@ -29,5 +32,6 @@ protected:
 	afx_msg void OnFileNew();
 	DECLARE_MESSAGE_MAP()
 };
+
 
 extern CMainApp theApp;

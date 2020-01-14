@@ -38,6 +38,7 @@ typedef unsigned __int64 BIG_INT;
 #define RPAR_CHR  L')'
 #define ZERO_CHR  L'0'
 #define SPACE_CHR L' '
+#define DQUOTE_CHR L'"'
 
 #define LOPART64(l) ((DWORD)((DWORD64)(l) & 0xffffffff))
 #define HIPART64(l) ((DWORD)((DWORD64)(l) >> 32))

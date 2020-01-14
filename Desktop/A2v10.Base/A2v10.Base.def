@@ -187,5 +187,6 @@
 ?Parse@JsonParser@@QAEXPB_W@Z
 ?SetTarget@JsonParser@@QAEXPAVJsonTarget@@@Z
 ?GetImageList@CTheme@@SAPAVCImageList@@W4ImageListType@1@@Z
-
+;
+?NextToken@CTScaner@@QAE_NXZ
 

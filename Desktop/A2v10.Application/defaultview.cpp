@@ -64,6 +64,49 @@ BOOL CDefaultView::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
+void _addToString(CString& target, LPCWSTR szName, LPCWSTR szValue)
+{
+	CString text;
+	text.Format(L"%s=\"%s\";", szName, szValue);
+	target += text;
+}
+
+CString _createConnectionStringFromUrl(LPCWSTR szUdlFileName)
+{
+	CString text;
+	CString cnnString;
+	CFileTools::LoadFile(szUdlFileName, text);
+	CTScaner scan(text);
+	BOOL bMore = scan.NextToken();
+	while (bMore) {
+		if (scan.NoMore())
+			return cnnString;
+		if (scan.Token() == CTScaner::_tok_ider) {
+			CString val = scan.Value();
+			val.MakeLower();
+			if (val == L"initial catalog") {
+				scan.NextToken(); // equal
+				scan.NextToken(); // value
+				_addToString(cnnString, L"Initial Catalog", scan.Value());
+			}
+			else if (val == L"data source") {
+				scan.NextToken(); // =
+				scan.NextToken();
+				_addToString(cnnString, L"Data Source", scan.Value());
+			}
+			else if (val == L"integrated security") {
+				scan.NextToken();
+				scan.NextToken();
+				CString sval = scan.Value();
+				if (sval == L"SSPI") {
+					_addToString(cnnString, L"Integrated Security", L"True");
+				}
+			}
+		}
+		bMore = scan.NextToken();
+	}
+	return cnnString;
+}
 
 // afx_msg
 void CDefaultView::OnStart() 
@@ -71,10 +114,18 @@ void CDefaultView::OnStart()
 	CFrameWnd* pFrame = GetParentFrame();
 	ATLASSERT(pFrame);
 
-	CLoginDlg dlg;
-	if (dlg.DoModal() != IDOK) {
-		pFrame->PostMessage(WM_SYSCOMMAND, SC_CLOSE);
-		return;
+	if (!theApp.m_strUdlFileName.IsEmpty()) 
+	{
+		CString strConnectionString = _createConnectionStringFromUrl(theApp.m_strUdlFileName);
+		CDotNetRuntime::StartApplication(strConnectionString);
+	}
+	else 
+	{
+		CLoginDlg dlg;
+		if (dlg.DoModal() != IDOK) {
+			pFrame->PostMessage(WM_SYSCOMMAND, SC_CLOSE);
+			return;
+		}
 	}
 
 	pFrame->PostMessage(WM_COMMAND, ID_APP_LOAD);

@@ -124,10 +124,23 @@ void CA2WinApp::OnAppAbout()
 void CA2CommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast)
 {
 	CString strParam(pszParam);
-	if (bFlag && (strParam.CompareNoCase(L"DEBUG") == 0))
-	{
-		m_bDebug = true;
-		return;
+	if (bFlag) {
+		if (strParam.CompareNoCase(L"DEBUG") == 0)
+		{
+			m_bDebug = true;
+			return;
+		}
+		else if (strParam.CompareNoCase(L"URL") == 0) {
+			m_eMode = ParseMode::_url;
+			return;
+		}
+	} 
+	else {
+		if (m_eMode == ParseMode::_url) {
+			m_strUrl = strParam;
+			m_eMode = ParseMode::_none;
+			return;
+		}
 	}
 	__super::ParseParam(pszParam, bFlag, bLast);
 }

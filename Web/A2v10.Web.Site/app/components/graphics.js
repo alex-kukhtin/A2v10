@@ -50,6 +50,9 @@
 		beforeDestroy() {
 			if (this.unwatch)
 				this.unwatch();
+			const chart = d3.select('#' + this.id);
+			chart.selectAll('*').remove();
+			this.$el.remove();
 		}
 	});
 })();

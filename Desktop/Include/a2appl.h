@@ -33,13 +33,21 @@ protected:
 
 class CA2CommandLineInfo : public CCommandLineInfo
 {
+	enum ParseMode {
+		_none,
+		_url
+	};
+
 	bool m_bDebug;
+	ParseMode m_eMode;
+	CString m_strUrl;
 public:
 	CA2CommandLineInfo()
-		: m_bDebug(false) {}
+		: m_bDebug(false), m_eMode(_none) {}
 	virtual void ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast);
 	bool IsDebugMode() const
 		{ return m_bDebug; }
+	const LPCWSTR Url() { return m_strUrl; }
 };
 
 #undef AFX_DATA

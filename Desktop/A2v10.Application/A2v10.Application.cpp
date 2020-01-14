@@ -25,12 +25,8 @@
 // CMainApp
 
 BEGIN_MESSAGE_MAP(CMainApp, CA2WinApp)
-	//ON_COMMAND(ID_FILE_NEW_FRAME, &CMainApp::OnFileNewFrame)
-	ON_COMMAND(ID_FILE_NEW, &CMainApp::OnFileNew)
-	// Standard file based document commands
-	//ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
-	// Standard print setup command
-	//ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
+	//ON_COMMAND(ID_FILE_NEW_FRAME, OnFileNewFrame)
+	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 END_MESSAGE_MAP()
 
 
@@ -88,9 +84,11 @@ BOOL CMainApp::InitInstance()
 
 
 	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
+	CA2CommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
+	m_strUdlFileName = cmdInfo.m_strFileName;
+	m_strInitialUrl = cmdInfo.Url();
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
 	if (!ProcessShellCommand(cmdInfo))
@@ -218,5 +216,4 @@ void CMainApp::OnFileNew()
 		pDoc->OnNewDocument();
 	}
 }
-
 
