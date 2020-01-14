@@ -10,4 +10,10 @@ public:
 	virtual bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) override;
 
 	IMPLEMENT_REFCOUNTING(CNativePosTermHandler);
+
+protected:
+	bool _connected;
+
+	bool Connect(CefRefPtr<CefV8Value>& opts);
+	bool NullBill();
 };

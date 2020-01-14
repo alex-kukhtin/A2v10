@@ -1484,10 +1484,18 @@ app.modules['std:http'] = function () {
 	}
 
 	function load(url, selector, baseUrl) {
-		let fc = selector ? selector.firstElementChild : null;
-		if (fc && fc.__vue__) {
-			fc.__vue__.$destroy();
+		if (selector) {
+			let fc = selector.firstElementChild
+			if (fc && fc.__vue__) {
+				let ve = fc.__vue__;
+				ve.$destroy();
+				ve.$el.remove();
+				ve.$el = null;
+				fc.__vue__ = null;
+			}
+			selector.innerHTML = '';
 		}
+
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
@@ -1531,6 +1539,7 @@ app.modules['std:http'] = function () {
 								eventBus.$emit('modalSetAttribites', dca, ve);
 						}
 					}
+					rdoc.body.remove();
 					resolve(true);
 					eventBus.$emit('endLoad');
 				})
@@ -3332,6 +3341,7 @@ app.modules['std:validators'] = function () {
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
+		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};
@@ -3394,6 +3404,11 @@ app.modules['std:validators'] = function () {
 		for (let p in mi) {
 			root[p].$ModelInfo = checkPeriod(mi[p]);
 		}
+	}
+
+	function destroyRoot() {
+		this._host_.$viewModel = null;
+		this._host_ = null;
 	}
 
 	app.modules['std:datamodel'] = {
@@ -4129,6 +4144,7 @@ app.modules['std:accel'] = function () {
 		if (vue && vue.$marker()) {
 			vue.$destroy();
 		}
+		el.__vue__ = null;
 	}
 
 	Vue.component('include', {
@@ -9744,6 +9760,9 @@ Vue.component('a2-panel', {
 		beforeDestroy() {
 			if (this.unwatch)
 				this.unwatch();
+			const chart = d3.select('#' + this.id);
+			chart.selectAll('*').remove();
+			this.$el.remove();
 		}
 	});
 })();
@@ -10609,9 +10628,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20191223-7601*/
+/*20200114-7615*/
 // controllers/base.js
 
 (function () {
@@ -10805,6 +10824,7 @@ Vue.directive('resize', {
 					let jsonData = utils.toJson({ baseUrl: urlToSave, data: self.$data });
 					let wasNew = urltools.isNewPath(self.$baseUrl);
 					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
 						self.$data.$setDirty(false);
@@ -10870,6 +10890,7 @@ Vue.directive('resize', {
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
 					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
 						if (utils.isObject(data))
 							resolve(data);
 						else if (utils.isString(data))
@@ -10900,8 +10921,10 @@ Vue.directive('resize', {
 				}
 				val.data = djson;
 				return new Promise(function (resolve, reject) {
+					if (vm.__destroyed__) return;
 					Vue.nextTick(() => {
 						vm.$invoke(cmd, data).then((result) => {
+							if (vm.__destroyed__) return;
 							val.result = result.Result.Value;
 							resolve(val.result);
 						});
@@ -10945,6 +10968,7 @@ Vue.directive('resize', {
 					}
 					let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
 						if (utils.isObject(data)) {
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
@@ -11116,6 +11140,7 @@ Vue.directive('resize', {
 					}
 					let jsonData = utils.toJson(jsonObj);
 					dataservice.post(postUrl, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {
 						self.$alertUi(msg);
@@ -11575,6 +11600,7 @@ Vue.directive('resize', {
 					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
 
 				dataservice.post(url, jsonData).then(function (data) {
+					if (self.__destroyed__) return;
 					let srcArray = data[propName];
 					arr.$empty();
 					for (let el of srcArray)
@@ -11619,6 +11645,7 @@ Vue.directive('resize', {
 						return;
 					}
 					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
 						if (propName in data) {
 							arr.$empty();
 							for (let el of data[propName])
@@ -11820,6 +11847,7 @@ Vue.directive('resize', {
 			let out = { caller: null };
 			eventBus.$emit('registerData', this, out);
 			this.$caller = out.caller;
+			this.__destroyed__ = false;
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);
@@ -11841,6 +11869,7 @@ Vue.directive('resize', {
 		},
 		destroyed() {
 			//console.dir('base.js has been destroyed');
+			this.$caller = null;
 			eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
@@ -11852,6 +11881,10 @@ Vue.directive('resize', {
 			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
 			htmlTools.removePrintFrame();
+			if (this.$data.$destroy)
+				this.$data.$destroy();
+			this._data = null;
+			this.__destroyed__ = true;
 		},
 		beforeUpdate() {
 			__updateStartTime = performance.now();
