@@ -1,0 +1,13 @@
+﻿
+1. cefHost.posterm(command: string, onSuccess: function, onFailure: function, arguments: any);
+
+
+2. Posterm native function
+	2.1: сохраняет callbacks в карту. Карта возвращает ключ (int)
+	2.3: Команда с ключом и аргументами передается потоку взаимодействия с pos-терминалом.
+	2.4: Поток выполняет команду и возвращает результаты через WMI_APP_POS_MESSAGE в CefView.
+	2.5. CefView упаковывает результаты и вызывает SendProcessMessage(PID_RENDERER)
+	2.6. CCefApplication::OnProcessMessageReceived получает результат и вызывает нужный callback
+
+
+

@@ -9,6 +9,7 @@
 #include "workarea.h"
 #include "cefclient.h"
 #include "cefview.h"
+#include "cefapp.h"
 
 
 #ifdef _DEBUG
@@ -37,6 +38,7 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_COMMAND(ID_NAVIGATE_FORWARD, OnNavigateForward)
 	ON_WM_DESTROY()
 	ON_WM_SETFOCUS()
+	ON_MESSAGE(WMI_POS_COMMAND_RESULT, OnPosCommandResult)
 END_MESSAGE_MAP()
 
 CCefView::CCefView()
@@ -315,5 +317,17 @@ LRESULT CCefView::OnIdleUpdateButtons(WPARAM wParam, LPARAM lParam)
 		int canGoForward = m_browser->CanGoForward() ? 1 : 0;
 		return MAKELPARAM(canGoBack, canGoForward);
 	}
+	return 0L;
+}
+
+// afx_msg
+LRESULT CCefView::OnPosCommandResult(WPARAM wParam, LPARAM lParam)
+{
+	// RESULT. To RENDERER thread
+	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(L"pos_result");
+	CefRefPtr<CefListValue> args = msg->GetArgumentList();
+	args->SetInt(0, (int)wParam);
+	args->SetString(1, (LPCWSTR) lParam);
+	m_browser->GetMainFrame()->SendProcessMessage(PID_RENDERER, msg);
 	return 0L;
 }

@@ -4,6 +4,9 @@
 #include "stdafx.h"
 
 #include "posterm.h"
+#include "cefapp.h"
+#include "callbackmap.h"
+#include "A2v10.Application.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -11,36 +14,46 @@
 
 const int CMD_LENGTH = 64;
 
+const wchar_t* ERR_INVALID_ARGNO = L"invalid number of arguments";
+
 CNativePosTermHandler::CNativePosTermHandler()
-	:_connected(false)
 {
 }
-
-bool CNativePosTermHandler::NullBill()
-{
-	return true;
-}
-
-bool CNativePosTermHandler::Connect(CefRefPtr<CefV8Value>& opts)
-{
-	return true;
-}
-
 // virtual 
 bool CNativePosTermHandler::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
 	const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
-	CefRefPtr<CefV8Value> cmd = arguments[1];
-	const wchar_t* szCmd = cmd->GetStringValue().c_str();
-	bool rc = false;
-	if (wcsncmp(szCmd, L"nullbill", CMD_LENGTH) == 0) {
-		rc = NullBill();
+	int argSize = arguments.size();
+	if (argSize < 3) {
+		exception = ERR_INVALID_ARGNO;
+		return true;
 	}
-	else if (wcsncmp(szCmd, L"connect", CMD_LENGTH) == 0) {
-		CefRefPtr<CefV8Value> opts = arguments[1];
-		rc = Connect(opts);
-	}
-	retval = CefV8Value::CreateString(rc ? L"success" : L"fail");
+
+	CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
+	CefRefPtr<CefBrowser> browser = context->GetBrowser();
+	int browser_id = browser->GetIdentifier();
+
+	CefRefPtr<CefV8Value> success = arguments[0];
+	CefRefPtr<CefV8Value> fail = arguments[1];
+	CefRefPtr<CefV8Value> data = arguments[2];
+
+	CefRefPtr<CefV8Value> global = context->GetGlobal();
+	CefRefPtr<CefV8Value> stringify = global->GetValue(L"JSON")->GetValue(L"stringify");
+	CefV8ValueList list;
+	list.push_back(data);
+	auto json = stringify->ExecuteFunction(nullptr, list);
+
+	auto cbMap = CallbackMap::Current();
+	int key = cbMap->Add(context, success);
+
+	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(L"pos_src");
+	auto argList = msg->GetArgumentList();
+	argList->SetInt(0, key);
+	argList->SetString(1, json->GetStringValue());
+	browser->GetMainFrame()->SendProcessMessage(PID_BROWSER, msg);
+
+	retval = CefV8Value::CreateBool(true);
+
 	return true;
 }
 

@@ -11,6 +11,8 @@
 #include "resource.h"       // main symbols
 
 
+class CPosThread;
+
 class CMainApp : public CA2WinApp
 {
 public:
@@ -21,11 +23,15 @@ public:
 
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
+	DWORD m_dwPosThreadId;
+	HANDLE m_hPosThreadHandle;
 
 public:
 	virtual BOOL InitInstance() override;
 	virtual int ExitInstance() override;
 	virtual BOOL PumpMessage() override;
+
+	void SendPosMessage(int key, LPCWSTR szMessage);
 
 protected:
 	afx_msg void OnFileNewFrame();

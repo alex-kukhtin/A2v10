@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "cefapp.h"
+#include "callbackmap.h"
 #include "upload.h"
 #include "posterm.h"
 
@@ -11,6 +12,7 @@
 #define new DEBUG_NEW
 #endif
 
+//static 
 bool CCefApplication::m_bInit = false;
 
 // virtual
@@ -44,9 +46,9 @@ void CCefApplication::OnBeforeCommandLineProcessing(const CefString& process_typ
 	if (command_line == nullptr)
 		return;
 	command_line->AppendSwitchWithValue(L"process-per-site", L"1");
-	//command_line->AppendSwitchWithValue(L"single-process", "1"); //?? debugger tools???
+	//command_line->AppendSwitchWithValue(L"single-process", "1"); //??? debugger tools???
 
-	command_line->AppendSwitchWithValue(L"disable-gpu", L"1");
+	//command_line->AppendSwitchWithValue(L"disable-gpu", L"1");
 	command_line->AppendSwitchWithValue(L"disable-software-rasterizer", L"1");
 	command_line->AppendSwitchWithValue(L"enable-print-preview", L"1");
 }
@@ -105,3 +107,31 @@ void CCefApplication::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<
 	host->SetValue(L"posterm", postermFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
 	global->SetValue(L"cefHost", host, V8_PROPERTY_ATTRIBUTE_READONLY);
 }
+
+// virtual 
+void CCefApplication::OnContextReleased(CefRefPtr<CefBrowser> browser,
+	CefRefPtr<CefFrame> frame,
+	CefRefPtr<CefV8Context> context) 
+{
+}
+
+// virtual 
+bool CCefApplication::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+	CefRefPtr<CefFrame> frame,
+	CefProcessId source_process,
+	CefRefPtr<CefProcessMessage> message) 
+{
+	CEF_REQUIRE_RENDERER_THREAD();
+
+	// RESULT from UI thread
+	CallbackMap* pMap = CallbackMap::Current();
+	if (wcsncmp(message->GetName().c_str(), L"pos_result", 32) == 0) {
+		CefRefPtr<CefListValue> args = message->GetArgumentList();
+		auto argList = message->GetArgumentList();
+		int key = argList->GetInt(0);
+		pMap->Process(key, argList->GetString(1).c_str());
+		return true;
+	}
+	return false;
+}
+

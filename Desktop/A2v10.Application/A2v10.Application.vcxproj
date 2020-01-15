@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="A2v10.Application.h" />
     <ClInclude Include="appres.h" />
+    <ClInclude Include="callbackmap.h" />
     <ClInclude Include="cefapp.h" />
     <ClInclude Include="cefclient.h" />
     <ClInclude Include="cefscheme.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="cefview.h" />
     <ClInclude Include="navtabs.h" />
     <ClInclude Include="posterm.h" />
+    <ClInclude Include="posthread.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -212,6 +214,7 @@
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp" />
     <ClCompile Include="appres.cpp" />
+    <ClCompile Include="callbackmap.cpp" />
     <ClCompile Include="cefapp.cpp" />
     <ClCompile Include="cefclient.cpp" />
     <ClCompile Include="cefscheme.cpp" />
@@ -224,6 +227,7 @@
     <ClCompile Include="cefview.cpp" />
     <ClCompile Include="navtabs.cpp" />
     <ClCompile Include="posterm.cpp" />
+    <ClCompile Include="posthread.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

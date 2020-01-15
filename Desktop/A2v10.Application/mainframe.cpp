@@ -34,18 +34,15 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_WM_CLOSE()
 	ON_WM_DESTROY()
 	ON_COMMAND(ID_APP_LOAD, OnAppLoad)
+	ON_MESSAGE(WMI_POS_COMMAND_RESULT, OnPosCommandResult)
 END_MESSAGE_MAP()
 
 
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame()
-: m_nViewId(AFX_IDW_PANE_FIRST + 2), 
-  m_captionButtons(IDMENU_TOOLS)
+	: m_nViewId(AFX_IDW_PANE_FIRST + 2), m_captionButtons(IDMENU_TOOLS)
 {
-	// After create browser
-// TODO:CEF
-//m_navigateTabs.AddTab(EMPTYSTR, nullptr, m_nViewId);
 }
 
 CMainFrame::~CMainFrame()
@@ -63,12 +60,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//EnableDocking(CBRS_ALIGN_ANY);
 
 
-	// enable Visual Studio 2005 style docking window behavior
-	//CDockingManager::SetDockingMode(DT_SMART);
-	// enable Visual Studio 2005 style docking window auto-hide behavior
-	//EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	CMFCToolBar::AddToolBarForImageCollection(IDR_MENU_IMAGES, IDR_MENU_IMAGES);
+
 	// MFC BUG. Sets transparent color only when painting
 	CMFCToolBarImages* pImages = CMFCToolBar::GetImages();
 	pImages->SetTransparentColor(GetGlobalData()->clrBtnFace);
@@ -326,4 +320,14 @@ void CMainFrame::OnIdleUpdateCmdUI()
 		//Invalidate();
 		InvalidateRect(CRect(0, 0, 32767, GetCaptionHeight()));
 	}
+}
+
+// afx_msg
+LRESULT CMainFrame::OnPosCommandResult(WPARAM wParam, LPARAM lParam)
+{
+	CWnd* pActiveView = GetDlgItem(AFX_IDW_PANE_FIRST);
+	if (!pActiveView)
+		return 0L;
+	pActiveView->SendMessage(WMI_POS_COMMAND_RESULT, wParam, lParam);
+	return 0L;
 }

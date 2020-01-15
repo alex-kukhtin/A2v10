@@ -12,6 +12,7 @@
 #include "cefview.h"
 #include "cefapp.h"
 #include "defaultview.h"
+#include "posthread.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -33,6 +34,8 @@ END_MESSAGE_MAP()
 // CMainApp construction
 
 CMainApp::CMainApp()
+	:m_dwPosThreadId(0), m_hPosThreadHandle(0),
+	m_pDocTemplate(nullptr)
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
@@ -115,8 +118,41 @@ BOOL CMainApp::InitInstance()
 	}
 
 	m_pMainWnd->PostMessage(WM_COMMAND, ID_APP_START);
+
+	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
+	pThread->m_bAutoDelete = TRUE;
+	pThread->ResumeThread();
+
+	m_dwPosThreadId = pThread->m_nThreadID;
+	m_hPosThreadHandle = pThread->m_hThread;
+	/*
+	BOOL rc = ::PostThreadMessage(pThread->m_nThreadID, WMI_POS_COMMAND_SEND, 10, (LPARAM) L"TEST");
+	if (!rc) {
+		DWORD dw = ::GetLastError();
+		int z = 55;
+	}
+	*/
+	/*
+	CPosThreadWnd* pWnd = new CPosThreadWnd();
+	pWnd->Start(m_pMainWnd->GetSafeHwnd());
+	BOOL created = pWnd->Create(nullptr, nullptr, WS_OVERLAPPED, CRect(0, 0, 0, 0), m_pMainWnd, 0, nullptr);
+	if (!created) {
+		DWORD dwError = ::GetLastError();
+		AfxMessageBox(L"Unable to create pos window");
+		return FALSE;
+	}
+	m_hPosWndHandle = pWnd->GetSafeHwnd();
+	*/
+
 	return TRUE;
 }
+
+void CMainApp::SendPosMessage(int key, LPCWSTR szMessage)
+{
+	if (!m_dwPosThreadId) return;
+	::PostThreadMessage(m_dwPosThreadId, WMI_POS_COMMAND_SEND, key, (LPARAM) szMessage);
+}
+
 
 // virtual 
 BOOL CMainApp::PumpMessage()
@@ -128,6 +164,11 @@ BOOL CMainApp::PumpMessage()
 
 int CMainApp::ExitInstance()
 {
+	if (m_hPosThreadHandle) {
+		::TerminateThread(m_hPosThreadHandle, 0);
+		::WaitForSingleObject(m_hPosThreadHandle, 100);
+	}
+
 	AfxOleTerm(FALSE);
 
 	if (CCefApplication::IsInit()) {

@@ -78,6 +78,12 @@
     <ClInclude Include="posterm.h">
       <Filter>Header Files\NativeFunctions</Filter>
     </ClInclude>
+    <ClInclude Include="callbackmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="posthread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -133,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="posterm.cpp">
       <Filter>Source Files\NativeFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="callbackmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="posthread.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

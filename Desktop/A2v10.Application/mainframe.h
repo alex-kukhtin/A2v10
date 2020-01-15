@@ -56,6 +56,7 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnAppLoad();
 	afx_msg void OnIdleUpdateCmdUI();
+	afx_msg LRESULT OnPosCommandResult(WPARAM wParam, LPARAM lParam);
 
 	DECLARE_MESSAGE_MAP()
 };

@@ -41,6 +41,7 @@ public:
 
 	virtual bool DoClose(CefRefPtr<CefBrowser> browser) override;
 	virtual bool OnOpenURLFromTab(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, CefRequestHandler::WindowOpenDisposition target_disposition, bool user_gesture) override;
+	virtual  bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
 
 	void DetachDelegate();
 

@@ -1,6 +1,5 @@
 #pragma once
 
-
 class CCefApplication : 
 	public CefApp,
 	public CefBrowserProcessHandler,
@@ -24,6 +23,8 @@ public:
 	virtual void OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) override;
 	// CefRenderProcessHandler
 	virtual void OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context) override;
+	virtual  void OnContextReleased(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context);
+	virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
 
 private:
 	IMPLEMENT_REFCOUNTING(CCefApplication);

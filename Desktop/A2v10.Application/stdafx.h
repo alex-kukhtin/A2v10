@@ -54,6 +54,7 @@
 #include "include/wrapper/cef_helpers.h"
 #include "include/wrapper/cef_resource_manager.h"
 #include "include/wrapper/cef_stream_resource_handler.h"
+#include "Include/cef_parser.h"
 
 
 #ifdef _UNICODE

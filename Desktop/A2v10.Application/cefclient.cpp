@@ -4,6 +4,8 @@
 
 #include "cefclient.h"
 #include "cefscheme.h"
+#include "cefapp.h"
+#include "A2v10.Application.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -217,4 +219,22 @@ void CCefClientHandler::OnBeforeDownload(CefRefPtr<CefBrowser> browser, CefRefPt
 	if (callback != nullptr) {
 		callback->Continue(L"", true);
 	}
+}
+
+
+// IPC
+// virtual 
+bool CCefClientHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
+	CefProcessId source_process, CefRefPtr<CefProcessMessage> message) 
+{
+	// from POS_TERM
+	CEF_REQUIRE_UI_THREAD();
+	if (wcsncmp(message->GetName().c_str(), L"pos_src", 32) == 0) {
+		auto argList = message->GetArgumentList();
+		int key = argList->GetInt(0);
+		auto str = argList->GetString(1);
+		theApp.SendPosMessage(key, str.c_str());
+		return true;
+	}
+	return false;
 }

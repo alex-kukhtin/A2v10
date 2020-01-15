@@ -191,4 +191,5 @@ void CA2WinApp::OnToolsOptions()
 void CA2WinApp::OnAppLicense()
 {
 	AfxMessageBox(L"License here");
+	
 }

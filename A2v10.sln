@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{825023F4-F682-4FA8-BA5D-F253B5BB52F3}"
 	ProjectSection(SolutionItems) = preProject
+		Desktop\posterm.txt = Desktop\posterm.txt
 		Desktop\todo.txt = Desktop\todo.txt
 	EndProjectSection
 EndProject

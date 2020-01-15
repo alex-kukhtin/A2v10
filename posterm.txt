@@ -1,0 +1,8 @@
+
+1. cefHost.posterm(command: string, onSuccess: function, onFailure: function, arguments: any);
+
+
+2. 
+
+
+

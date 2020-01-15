@@ -4137,11 +4137,12 @@ ul.news-list > li {
 }
 .modal-header {
   background-color: #fff29d;
-  padding: 0.75rem;
+  padding: 8px 0.75rem;
   cursor: move;
   font-weight: 500;
   border-bottom: 1px solid #ddd;
   min-height: 34px;
+  line-height: 1.6rem;
 }
 .modal-header .modal-title-info {
   margin-left: 1rem;
