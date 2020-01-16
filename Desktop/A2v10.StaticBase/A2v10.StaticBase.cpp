@@ -5,3 +5,7 @@
 #include "framework.h"
 #include "staticbase.h"
 
+int StaticBaseLibrary()
+{
+	return 1;
+}

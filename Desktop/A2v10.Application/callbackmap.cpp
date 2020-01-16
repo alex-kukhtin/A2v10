@@ -20,7 +20,7 @@ CallbackMap* CallbackMap::Current()
 	return &s_map;
 }
 
-int CallbackMap::Add(CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Value> onSuccess)
+int CallbackMap::Add(CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Value> onSuccess, CefRefPtr<CefV8Value> onFail)
 {
 	m_cs.Lock();
 	s_key++;
@@ -28,6 +28,7 @@ int CallbackMap::Add(CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Value> onSu
 	CallbackItem* pItem = new CallbackItem();
 	pItem->context = context;
 	pItem->onSuccess = onSuccess;
+	pItem->onFailure = onFail;
 	pItem->key = key;
 	AddTail(pItem);
 	m_cs.Unlock();

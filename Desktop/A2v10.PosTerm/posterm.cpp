@@ -1,22 +1,27 @@
-// A2v10.PosTerm.cpp : Defines the functions for the static library.
-//
 
 #include "pch.h"
 #include "framework.h"
 #include "posterm.h"
+#include "command.h"
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
 pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 {
 	JsonParser parser;
+	PosCommand cmd;
 	try 
 	{
-		result.assign(json);
-		//parser.Parse(json);
+		parser.SetTarget(&cmd);
+		parser.Parse(json);
+		return cmd.ExecuteCommand(result);
 	}
 	catch (JsonException ex) {
 		result.assign(ex.GetMessage());
+		return pos_result_t::_invalid_json;
+	}
+	catch (...) {
+		result.assign(L"Unknown exception");
 		return pos_result_t::_invalid_json;
 	}
 	return pos_result_t::_success;

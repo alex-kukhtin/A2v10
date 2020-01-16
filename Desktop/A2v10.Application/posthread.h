@@ -14,4 +14,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg void OnPosCommand(WPARAM wParam, LPARAM lParam);
+
+	CString ProcessResult(pos_result_t rc, const wchar_t* result);
 };

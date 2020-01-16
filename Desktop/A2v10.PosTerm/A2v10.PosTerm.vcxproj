@@ -72,14 +72,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Desktop\Lib</OutDir>
+    <OutDir>$(SolutionDir)Desktop\Lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Desktop\Lib</OutDir>
+    <OutDir>$(SolutionDir)Desktop\Lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -153,11 +153,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="command.h" />
+    <ClInclude Include="fiscalprinterImpl.h" />
+    <ClInclude Include="fp_Datecs3141.h" />
+    <ClInclude Include="fp_DatecsBase.h" />
+    <ClInclude Include="fp_Null.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="posterm.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="command.cpp" />
+    <ClCompile Include="fiscalprinterimpl.cpp" />
+    <ClCompile Include="fp_Datecs3141.cpp" />
+    <ClCompile Include="fp_DatecsBase.cpp" />
+    <ClCompile Include="fp_Null.cpp" />
     <ClCompile Include="posterm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\fiscalprinters">
+      <UniqueIdentifier>{55e8a185-ee2d-4725-a984-b1a22947f97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\fiscalprinters">
+      <UniqueIdentifier>{c154f98f-908b-4fcc-9461-c6720c709489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,12 +30,42 @@
     <ClInclude Include="posterm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fiscalprinterImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fp_DatecsBase.h">
+      <Filter>Header Files\fiscalprinters</Filter>
+    </ClInclude>
+    <ClInclude Include="fp_Datecs3141.h">
+      <Filter>Header Files\fiscalprinters</Filter>
+    </ClInclude>
+    <ClInclude Include="fp_Null.h">
+      <Filter>Header Files\fiscalprinters</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="posterm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fiscalprinterimpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fp_DatecsBase.cpp">
+      <Filter>Source Files\fiscalprinters</Filter>
+    </ClCompile>
+    <ClCompile Include="fp_Datecs3141.cpp">
+      <Filter>Source Files\fiscalprinters</Filter>
+    </ClCompile>
+    <ClCompile Include="fp_Null.cpp">
+      <Filter>Source Files\fiscalprinters</Filter>
+    </ClCompile>
+    <ClCompile Include="command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

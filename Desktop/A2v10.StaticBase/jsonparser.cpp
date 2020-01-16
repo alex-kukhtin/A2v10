@@ -230,7 +230,7 @@ void JsonParser::ParseArray(JsonTarget* target, const wchar_t* szName)
 	const JsonToken& ct = _scan->CurrentToken();
 	while (!_scan->IsEOF() && ct._tok != TokenId::CloseBracket) {
 		if (ct._tok == TokenId::OpenCurly) {
-			auto newTarget = target->CreateObject(szName);
+			auto newTarget = target ? target->CreateObject(szName) : nullptr;
 			_scan->NextToken();
 			ParseObject(newTarget);
 		}
@@ -285,6 +285,10 @@ void JsonParser::ParseObject(JsonTarget* target)
 
 void JsonParser::SetValue(JsonTarget* target, const wchar_t* szName)
 {
+	if (!target) {
+		_scan->NextToken();
+		return;
+	}
 	const JsonToken& ct = _scan->CurrentToken();
 	if (ct._tok == TokenId::StringLiteral) {
 		target->SetStringValue(szName, ct._value.c_str());
@@ -310,7 +314,7 @@ void JsonTarget::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
 		return;
 	while (props && props->name) {
 		if (props->pString && wcsncmp(props->name, szName, MAX_PROP_LENGTH) == 0) {
-			*props->pString->assign(szValue);
+			props->pString->assign(szValue);
 			return;
 		}
 		props++;
