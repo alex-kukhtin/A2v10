@@ -17,6 +17,7 @@
 #include "codecvt"
 #include "list"
 #include "vector"
+#include "memory"
 
 #include "../A2v10.StaticBase/staticbase.h"
 #endif //PCH_H

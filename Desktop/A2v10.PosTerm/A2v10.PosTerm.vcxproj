@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="command.h" />
+    <ClInclude Include="fiscalprinter.h" />
     <ClInclude Include="fiscalprinterImpl.h" />
     <ClInclude Include="fp_Datecs3141.h" />
     <ClInclude Include="fp_DatecsBase.h" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command.cpp" />
+    <ClCompile Include="fiscalprinter.cpp" />
     <ClCompile Include="fiscalprinterimpl.cpp" />
     <ClCompile Include="fp_Datecs3141.cpp" />
     <ClCompile Include="fp_DatecsBase.cpp" />

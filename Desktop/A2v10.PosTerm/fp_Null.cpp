@@ -6,6 +6,18 @@
 
 #define MAX_COMMAND_LEN 512
 
+//virtual 
+int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
+{
+	return m_nLastReceipt++;
+}
+
+// virtual 
+bool CFiscalPrinter_Null::OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo)
+{
+	throw CFPException(L"Yet not implemented");
+}
+
 // virtual 
 void CFiscalPrinter_Null::Close()
 {
@@ -15,7 +27,7 @@ void CFiscalPrinter_Null::Close()
 }
 
 // virtual 
-bool CFiscalPrinter_Null::Open(LPCWSTR Port, DWORD nBaudRate)
+bool CFiscalPrinter_Null::Open(const wchar_t* Port, DWORD nBaudRate)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): Open.\n(Port=\"%s\",BaudRate=\"%d\")", m_strKey.c_str(), Port, (int) nBaudRate);
@@ -24,7 +36,7 @@ bool CFiscalPrinter_Null::Open(LPCWSTR Port, DWORD nBaudRate)
 }
 
 // virtual 
-bool CFiscalPrinter_Null::NullCheck(bool bOpenCashDrawer)
+bool CFiscalPrinter_Null::NullBill(bool bOpenCashDrawer)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print null bill.\n(OpenCashDrawer=%s)", m_strKey.c_str(), bOpenCashDrawer ? L"true" : L"false");
@@ -33,7 +45,13 @@ bool CFiscalPrinter_Null::NullCheck(bool bOpenCashDrawer)
 }
 
 // virtual 
-bool CFiscalPrinter_Null::CancelCheckCommand(__int64 termId)
+bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+bool CFiscalPrinter_Null::CancelReceiptCommand(__int64 termId)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Cancel bill", m_strKey.c_str());
@@ -42,7 +60,7 @@ bool CFiscalPrinter_Null::CancelCheckCommand(__int64 termId)
 }
 
 // virtual 
-bool CFiscalPrinter_Null::CopyCheck()
+bool CFiscalPrinter_Null::CopyBill()
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print bill copy", m_strKey.c_str());
@@ -205,10 +223,19 @@ bool CFiscalPrinter_Null::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE 
 */
 
 // virtual 
-bool CFiscalPrinter_Null::PrintFiscalText(LPCWSTR szText)
+bool CFiscalPrinter_Null::PrintFiscalText(const wchar_t* szText)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Фискальный текст: %s", szText);
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: FiscalText: %s", szText);
+	ReportMessage(buff);
+	return true;
+}
+
+// virtual 
+bool CFiscalPrinter_Null::PrintNonFiscalText(const wchar_t* szText)
+{
+	wchar_t buff[MAX_COMMAND_LEN];
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: NonFiscalText: %s", szText);
 	ReportMessage(buff);
 	return true;
 }
@@ -251,3 +278,63 @@ bool CFiscalPrinter_Null::GetCash(__int64 termId, COleCurrency& cy)
 	return true;
 }
 */
+
+// virtual 
+void CFiscalPrinter_Null::DisplayDateTime()
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+void CFiscalPrinter_Null::DisplayClear()
+{
+	DisplayRow(0, L"");
+	DisplayRow(1, L"");
+}
+
+// virtual 
+void CFiscalPrinter_Null::DisplayRow(int nRow, const wchar_t* szString)
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+void CFiscalPrinter_Null::SetCurrentTime()
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+//virtual 
+bool CFiscalPrinter_Null::ReportByArticles()
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+bool CFiscalPrinter_Null::ReportRems()
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+bool CFiscalPrinter_Null::ReportModemState()
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+bool CFiscalPrinter_Null::PrintDiscount(long Type, long Sum, const wchar_t* szDescr)
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+// virtual 
+bool CFiscalPrinter_Null::PrintDiscountForAllReceipt(long dscPercent, long dscSum)
+{
+	throw CFPException(L"Yet not implemented");
+}
+
+void CFiscalPrinter_Null::ReportMessage(const wchar_t* msg)
+{
+	::MessageBox(nullptr, msg, nullptr, MB_OK | MB_ICONHAND);
+}

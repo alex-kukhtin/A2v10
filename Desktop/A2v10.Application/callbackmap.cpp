@@ -12,7 +12,15 @@
 
 // static
 CallbackMap CallbackMap::s_map;
-int CallbackMap::s_key = 0;
+
+int _nextKey() {
+	const int MAX_KEY_VALUE = 16383;
+	static int s_key = 0;
+	s_key++;
+	if (s_key > MAX_KEY_VALUE)
+		s_key = 1;
+	return s_key;
+}
 
 // static
 CallbackMap* CallbackMap::Current()
@@ -23,8 +31,7 @@ CallbackMap* CallbackMap::Current()
 int CallbackMap::Add(CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Value> onSuccess, CefRefPtr<CefV8Value> onFail)
 {
 	m_cs.Lock();
-	s_key++;
-	int key = s_key;
+	int key = _nextKey();
 	CallbackItem* pItem = new CallbackItem();
 	pItem->context = context;
 	pItem->onSuccess = onSuccess;
@@ -45,14 +52,19 @@ CallbackItem* CallbackMap::Pop()
 	return pItem;
 }
 
-bool CallbackMap::Process(int key, LPCWSTR result)
+bool CallbackMap::Process(WPARAM wParam, LPCWSTR result)
 {
+	int key = LOWORD(wParam);
+	int success = HIWORD(wParam);
 	CallbackItem* pItem = Pop();
 	if (pItem && pItem->key == key) {
 		CefV8ValueList args;
 		CefRefPtr<CefV8Value> val = CefV8Value::CreateString(result);
 		args.push_back(val);
-		pItem->onSuccess->ExecuteFunctionWithContext(pItem->context, nullptr, args);
+		if (success)
+			pItem->onSuccess->ExecuteFunctionWithContext(pItem->context, nullptr, args);
+		else
+			pItem->onFailure->ExecuteFunctionWithContext(pItem->context, nullptr, args);
 		delete pItem;
 		return true;
 	}

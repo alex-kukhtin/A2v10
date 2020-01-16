@@ -2,18 +2,18 @@
 
 #pragma once
 
-enum CHECK_STATUS
+enum RECEIPT_STATUS
 {
-	CHS_NORMAL = 0, // закрыт
-	CHS_TITLED = 1, // отпечатан заголовок
-	CHS_ITEMED = 2, // выполнена продажа
-	CHS_PAYED = 3, // оплачивается
-	CHS_CLOSING = 4, // завершение
-	CHS_NF_OPENED = 5, // открыт нефискальный чек
+	CHS_NORMAL = 0,     // закрыт
+	CHS_TITLED = 1,     // отпечатан заголовок
+	CHS_ITEMED = 2,     // выполнена продажа
+	CHS_PAYED = 3,      // оплачивается
+	CHS_CLOSING = 4,    // завершение
+	CHS_NF_OPENED = 5,  // открыт нефискальный чек
 	CHS_DISCOUNTED = 6, // сделана скидка
 	CHS_NOTUSED = 7,
-	CHS_CANCELING = 8, // выполнены анулирования
-	CHS_CANCELED = 9, // режим анулирования
+	CHS_CANCELING = 8,  // выполнены анулирования
+	CHS_CANCELED = 9,   // режим анулирования
 };
 
 class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
@@ -38,7 +38,7 @@ public:
 
 	virtual bool PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
-	virtual bool NullCheck(bool bOpenCashDrawer);
+	virtual bool NullBill(bool bOpenCashDrawer);
 	virtual bool XReport();
 	virtual bool ZReport();
 	virtual bool ServiceInOut(__int64 sum, __int64 hid);
@@ -47,7 +47,7 @@ public:
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
-	virtual int GetLastCheckNo(__int64 termId, bool bFromPrinter = false) override;
+	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) override;
 	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
@@ -58,7 +58,7 @@ public:
 
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) override;
 	virtual bool AddArticle(__int64 termId, __int64 art, LPCWSTR szName, __int64 vtid, long price) override;
-	virtual bool CopyCheck() override;
+	virtual bool CopyBill() override;
 	virtual bool Init(__int64 termId) override;
 	virtual bool OpenCashDrawer() override;
 	virtual bool PrintFiscalText(LPCWSTR szText) override;
@@ -67,8 +67,8 @@ public:
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	virtual bool ReportByArticles() override;
 	virtual bool ReportModemState() override;
-	virtual bool CancelCheck(__int64 termId, bool& bClosed) override;
-	virtual bool CancelCheckCommand(__int64 termId) override;
+	virtual bool CancelReceipt(__int64 termId, bool& bClosed) override;
+	virtual bool CancelReceiptCommand(__int64 termId) override;
 	virtual bool IsEndOfTape() override;
 
 protected:
@@ -93,9 +93,9 @@ protected:
 	void PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight);
 	void AddPrinterArticle(int code, LPCWSTR szName, bool bVat);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
-	CHECK_STATUS GetCheckStatus();
-	void CancelCheckPrinter();
-	bool GetPrinterLastCheckNo(long& chNo, bool bShowStateError = true);
+	RECEIPT_STATUS GetReceiptStatus();
+	void CancelReceiptPrinter();
+	bool GetPrinterLastReceiptNo(long& chNo, bool bShowStateError = true);
 	bool GetPrinterLastZReportNo(__int64 termId, long& zNo);
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
 	//bool GetDaySum(long src, long ix, CY& value1, CY& value2);

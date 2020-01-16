@@ -2,8 +2,8 @@
 
 #pragma once
 
-class CFPCheckItemInfo;
-class CFiscalPrinterInfo;
+//class CFPCheckItemInfo;
+//class CFiscalPrinterInfo;
 
 class CFPException
 {
@@ -23,7 +23,6 @@ class CFiscalPrinterImpl
 public:
 	std::wstring m_strKey;
 	std::wstring m_strError;
-	bool m_bBigMsg;
 
 	enum PrinterFlags
 	{
@@ -39,34 +38,34 @@ public:
 	virtual bool IsReady() const;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) = 0;
 	virtual bool Init(__int64 termId);
-	virtual void Close() = 0;
+	virtual void Close();
 	virtual DWORD GetFlags();
 
-	virtual int GetLastCheckNo(__int64 termId, bool bFromPrinter = false);
-	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false);
+	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) = 0;
+	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) = 0;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 
-	virtual void SetPrinterInfo(const CFiscalPrinterInfo& info);
-	virtual bool PrintDiagnostic();
+	//virtual void SetPrinterInfo(const CFiscalPrinterInfo& info);
+	//virtual bool PrintDiagnostic();
 	virtual bool XReport()  = 0;
 	virtual bool ZReport() = 0;
-	virtual bool NullCheck(bool bOpenCashDrawer) = 0;
-	virtual bool PostNullCheck(__int64 hid);
-	virtual bool PostClose(__int64 hid);
-	virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
-	virtual bool CancelCheck(__int64 termId, bool& bClosed) = 0;
-	virtual bool CancelCheckCommand(__int64 termId) = 0;
-	virtual bool OpenCheck(const wchar_t* szDepartmentName, __int64 termId) = 0;
-	virtual bool OpenReturnCheck(const wchar_t* szDepartmentName, __int64 termId, long checkNo) = 0;
-	virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
-	virtual bool PrintDiscount(LONG Type, LONG Sum, const wchar_t* szDescr) = 0;
-	virtual bool PrintDiscountForCheck(long dscPercent, long dscSum) = 0;
+	virtual bool NullBill(bool bOpenCashDrawer) = 0;
+	//virtual bool PostNullCheck(__int64 hid);
+	//virtual bool PostClose(__int64 hid);
+	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
+	virtual bool CancelReceipt(__int64 termId, bool& bClosed) = 0;
+	virtual bool CancelReceiptCommand(__int64 termId) = 0;
+	virtual bool OpenBill(const wchar_t* szDepartmentName, __int64 termId) = 0;
+	virtual bool OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo) = 0;
+	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
+	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr) = 0;
+	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum) = 0;
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = nullptr);
 	//virtual bool CloseCheck2(int sum, int ret, int get, CFiscalPrinter::PAY_MODE pm);
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) = 0;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
-	virtual bool CopyCheck() = 0;
+	virtual bool CopyBill() = 0;
 	virtual bool ReportByArticles() = 0;
 	virtual bool ReportRems() = 0;
 	virtual bool ReportModemState() = 0;

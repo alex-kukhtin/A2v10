@@ -37,8 +37,9 @@ void CPosThreadWnd::OnPosCommand(WPARAM wParam, LPARAM lParam)
 	// RunCommand
 	std::wstring result;
 	pos_result_t rc = PosProcessCommand(szCommand, result);
+	BOOL rcBool = rc == pos_result_t::_success ? TRUE : FALSE;
 	s_result = ProcessResult(rc, result.c_str());
-	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, wParam, (LPARAM) (LPCWSTR) s_result);
+	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, MAKEWPARAM(wParam, rcBool), (LPARAM) (LPCWSTR) s_result);
 }
 
 CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
@@ -51,7 +52,7 @@ CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
 	case _invalid_json:
 		break;
 	case _not_connected:
-		msg = L"Printer not connected";
+		msg = L"{\"message\":\"Printer not connected\"}";
 		break;
 	case _already_connected:
 		msg = L"Printer already connected";

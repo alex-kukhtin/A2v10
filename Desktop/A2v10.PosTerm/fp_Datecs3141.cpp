@@ -173,7 +173,7 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 
 		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // получим ID чека
 	}
 	catch (CFPException ex)
 	{
@@ -193,7 +193,7 @@ bool CFiscalPrinter_Datecs3141::ReportModemState()
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report
 		CreateCommand(FPCMD_MODEMSTATEREP, buff);
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // get bill ID
+		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill ID
 	}
 	catch (CFPException ex)
 	{
@@ -226,7 +226,7 @@ bool CFiscalPrinter_Datecs3141::Beep()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::NullCheck(bool bOpenCashDrawer)
+bool CFiscalPrinter_Datecs3141::NullBill(bool bOpenCashDrawer)
 {
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -393,13 +393,13 @@ bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
 	try {
 		// сначала получить статус (с допечаткой буфера)
 		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
-		GetPrinterLastCheckNo(m_nLastCheckNo, false); // чтобы обработался статус
+		GetPrinterLastReceiptNo(m_nLastCheckNo, false); // чтобы обработался статус
 
 		GetPrinterPayModes();
 		GetTaxRates();
 
 		// last article
-		CHECK_STATUS cs = GetCheckStatus();
+		RECEIPT_STATUS cs = GetReceiptStatus();
 		if (cs == CHS_NORMAL)
 		{
 			// CheckPrinterSession(); 24 часа Z-отчета?
@@ -407,8 +407,8 @@ bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
 			return true;
 		}
 
-		CancelCheckPrinter();
-		GetPrinterLastCheckNo(m_nLastCheckNo, false); // еще раз
+		CancelReceiptPrinter();
+		GetPrinterLastReceiptNo(m_nLastCheckNo, false); // еще раз
 		// CheckPrinterSession(); 24 часа Z-отчета?
 		//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 	}
@@ -421,7 +421,7 @@ bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CopyCheck()
+bool CFiscalPrinter_Datecs3141::CopyBill()
 {
 	try
 	{
@@ -477,9 +477,9 @@ void CFiscalPrinter_Datecs3141::CheckStatus()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CancelCheckCommand(__int64 termId)
+bool CFiscalPrinter_Datecs3141::CancelReceiptCommand(__int64 termId)
 {
-	CHECK_STATUS cs = GetCheckStatus();
+	RECEIPT_STATUS cs = GetReceiptStatus();
 	/*
 	CString s;
 	try
@@ -519,12 +519,12 @@ bool CFiscalPrinter_Datecs3141::CancelCheckCommand(__int64 termId)
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CancelCheck(__int64 termId, bool& bClosed)
+bool CFiscalPrinter_Datecs3141::CancelReceipt(__int64 termId, bool& bClosed)
 {
 	try
 	{
 		bClosed = false;
-		CancelCheckPrinter();
+		CancelReceiptPrinter();
 	}
 	catch (CFPException e)
 	{
@@ -534,9 +534,9 @@ bool CFiscalPrinter_Datecs3141::CancelCheck(__int64 termId, bool& bClosed)
 	return true;
 }
 
-void CFiscalPrinter_Datecs3141::CancelCheckPrinter()
+void CFiscalPrinter_Datecs3141::CancelReceiptPrinter()
 {
-	CHECK_STATUS cs = GetCheckStatus();
+	RECEIPT_STATUS cs = GetReceiptStatus();
 	if (cs == CHS_NORMAL)
 		return;
 	else if (cs == CHS_NF_OPENED)
@@ -573,7 +573,7 @@ bool CFiscalPrinter_Datecs3141::OpenCheck(LPCWSTR szDepartmentName, __int64 term
 	int tno = 1;
 	try {
 		std::wstring info;
-		CancelCheckPrinter();
+		CancelReceiptPrinter();
 		OpenFiscal(op, L"", tno, info);
 	}
 	catch (CFPException e)
@@ -591,7 +591,7 @@ bool CFiscalPrinter_Datecs3141::OpenReturnCheck(LPCWSTR szDepartmentName, __int6
 	int tno = 1;
 	try {
 		std::wstring info;
-		CancelCheckPrinter();
+		CancelReceiptPrinter();
 		OpenFiscalReturn(op, L"", tno, info);
 	}
 	catch (CFPException e)
@@ -602,9 +602,9 @@ bool CFiscalPrinter_Datecs3141::OpenReturnCheck(LPCWSTR szDepartmentName, __int6
 	return true;
 }
 
-CHECK_STATUS CFiscalPrinter_Datecs3141::GetCheckStatus()
+RECEIPT_STATUS CFiscalPrinter_Datecs3141::GetReceiptStatus()
 {
-	return (CHECK_STATUS)(m_status[2] & FPS2_CHECK_STATE);
+	return (RECEIPT_STATUS)(m_status[2] & FPS2_CHECK_STATE);
 }
 
 // virtual 
@@ -742,10 +742,10 @@ bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
-int CFiscalPrinter_Datecs3141::GetLastCheckNo(__int64 termId, bool bFromPrinter /*= false*/)
+int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
-		GetPrinterLastCheckNo(m_nLastCheckNo, false);
+		GetPrinterLastReceiptNo(m_nLastCheckNo, false);
 	return m_nLastCheckNo;
 }
 
@@ -1002,7 +1002,7 @@ bool CFiscalPrinter_Datecs3141::XReport()
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s1;", EMPTY_PARAM);
 		CreateCommand(FPCMD_DAYREPORTS, buff);
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // получим ID чека
 	}
 	catch (CFPException ex) {
 		ex.ReportError2();
@@ -1020,7 +1020,7 @@ bool CFiscalPrinter_Datecs3141::ZReport()
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s0;", EMPTY_PARAM);
 		CreateCommand(FPCMD_DAYREPORTS, buff);
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // get bill id
+		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill id
 	}
 	catch (CFPException ex) {
 		ex.ReportError2();
@@ -1047,7 +1047,7 @@ bool CFiscalPrinter_Datecs3141::ServiceInOut(__int64 sum, __int64 hid)
 	try {
 		CreateCommand(FPCMD_SVCINOUT, buff);
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // get bill id
+		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill id
 
 		CreateCommand(FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
@@ -1174,7 +1174,7 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo(__int64 termId, long& zN
 	return true;
 }
 
-bool CFiscalPrinter_Datecs3141::GetPrinterLastCheckNo(long& chNo, bool bShowStateError /*= true*/)
+bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowStateError /*= true*/)
 {
 	CreateCommand(FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();

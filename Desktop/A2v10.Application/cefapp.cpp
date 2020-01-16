@@ -128,8 +128,8 @@ bool CCefApplication::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 	if (wcsncmp(message->GetName().c_str(), L"pos_result", 32) == 0) {
 		CefRefPtr<CefListValue> args = message->GetArgumentList();
 		auto argList = message->GetArgumentList();
-		int key = argList->GetInt(0);
-		pMap->Process(key, argList->GetString(1).c_str());
+		int wParam = argList->GetInt(0);
+		pMap->Process(wParam, argList->GetString(1).c_str());
 		return true;
 	}
 	return false;
