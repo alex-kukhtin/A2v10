@@ -174,6 +174,7 @@
 ?Double2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@N@Z
 ?String2Color@CConvert@@SAKPB_WK@Z
 ?Long2String@CConvert@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@J@Z
+?String2Long@CConvert@@SAJPB_W@Z
 ;
 ?SplitPath@CFileTools@@SAXPB_WAAUCFilePath@@@Z
 ?LoadFile@CFileTools@@SA_NPB_WAAV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@@Z
@@ -181,12 +182,9 @@
 ?CombinePath@CFileTools@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@PB_W0@Z
 ;
 ?GetCurrentFullAppVersion@CModuleVersion@@SA?AV?$CStringT@_WV?$StrTraitMFC_DLL@_WV?$ChTraitsCRT@_W@ATL@@@@@ATL@@XZ
-;
-??0JsonParser@@QAE@XZ
-??1JsonParser@@UAE@XZ
-?Parse@JsonParser@@QAEXPB_W@Z
-?SetTarget@JsonParser@@QAEXPAVJsonTarget@@@Z
+
 ?GetImageList@CTheme@@SAPAVCImageList@@W4ImageListType@1@@Z
+
 ;
 ?NextToken@CTScaner@@QAE_NXZ
 

@@ -10,8 +10,7 @@
 
 #include "resource.h"       // main symbols
 
-
-class CPosThread;
+class CAppConfig;
 
 class CMainApp : public CA2WinApp
 {
@@ -20,23 +19,27 @@ public:
 
 	CString m_strUdlFileName;
 	CString m_strInitialUrl;
+	CString m_strConnectionString;
 
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
 	DWORD m_dwPosThreadId;
 	HANDLE m_hPosThreadHandle;
-
+	CAppConfig* m_pAppConfig;
 public:
 	virtual BOOL InitInstance() override;
 	virtual int ExitInstance() override;
 	virtual BOOL PumpMessage() override;
 
-	void SendPosMessage(int key, LPCWSTR szMessage);
+	void PostPosThreadMessage(int key, LPCWSTR szMessage);
 
 protected:
-	afx_msg void OnFileNewFrame();
 	afx_msg void OnFileNew();
+
 	DECLARE_MESSAGE_MAP()
+
+	void StartPosThread();
+	CAppConfig* LoadConfigFile(LPCWSTR szConfig);
 };
 
 

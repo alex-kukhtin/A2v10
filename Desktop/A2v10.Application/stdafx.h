@@ -55,7 +55,8 @@
 #include "include/wrapper/cef_resource_manager.h"
 #include "include/wrapper/cef_stream_resource_handler.h"
 #include "Include/cef_parser.h"
-
+#include "A2v10.StaticBase/staticbase.h"
+#include "A2v10.PosTerm/posterm.h"
 
 #ifdef _UNICODE
 #if defined _M_IX86

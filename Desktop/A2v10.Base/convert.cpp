@@ -13,7 +13,7 @@ CString CConvert::Color2String(COLORREF clr)
 	return s;
 }
 // static 
-COLORREF CConvert::String2Color(LPCWSTR szString, COLORREF clrDefault /*= UNKNOWN_COLOR*/)
+COLORREF CConvert::String2Color(const wchar_t* szString, COLORREF clrDefault /*= UNKNOWN_COLOR*/)
 {
 	CString s(szString);
 	s.Trim();
@@ -71,4 +71,12 @@ CString CConvert::Long2String(long v) {
 	CString s;
 	s.Format(L"%ld", v);
 	return s;
+}
+
+// static 
+long CConvert::String2Long(const wchar_t* szString)
+{
+	if (!szString || !*szString)
+		return 0;
+	return _ttol(szString);
 }

@@ -1,14 +1,17 @@
-// Copyright © 2019 Alex Kukhtin. All rights reserved.
 
-#include "stdafx.h"
-#include "../include/jsonparser.h"
+#include "pch.h"
+#include "jsonparser.h"
 
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+#define MAX_PROP_LENGTH 64
+#define NULL_CHR L'\0'
 
-const wchar_t nullchar = L'\0';
+long _string2Long(const wchar_t* szString)
+{
+	if (!szString || !*szString)
+		return 0;
+	return _wtol(szString);
+}
 
 enum TokenId {
 	End,
@@ -82,7 +85,7 @@ void JsonToken::CheckIder()
 ////////////////////////
 
 JsonScaner::JsonScaner(const wchar_t* szText)
-	: _text(szText), _pos(0), _ch(nullchar), _len(0)
+	: _text(szText), _pos(0), _ch(NULL_CHR), _len(0)
 {
 	SetText(szText);
 }
@@ -91,7 +94,7 @@ void JsonScaner::SetText(const wchar_t* szText)
 {
 	_text = szText;
 	_pos = 0;
-	_ch = nullchar;
+	_ch = NULL_CHR;
 	if (szText) {
 		_len = wcslen(szText);
 		_ch = _pos < _len ? _text[_pos] : '\0';
@@ -101,7 +104,7 @@ void JsonScaner::SetText(const wchar_t* szText)
 void JsonScaner::NextChar()
 {
 	if (_pos < _len) _pos++;
-	_ch = _pos < _len ? _text[_pos] : nullchar;
+	_ch = _pos < _len ? _text[_pos] : NULL_CHR;
 }
 
 void JsonScaner::AppendChar(wchar_t ch)
@@ -297,3 +300,72 @@ void JsonParser::SetValue(JsonTarget* target, const wchar_t* szName)
 	}
 	_scan->NextToken();
 }
+
+
+// virtual 
+void JsonTarget::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
+{
+	PROP_ENTRY* props = __getPropsTable();
+	if (!props)
+		return;
+	while (props && props->name) {
+		if (props->pString && wcsncmp(props->name, szName, MAX_PROP_LENGTH) == 0) {
+			*props->pString->assign(szValue);
+			return;
+		}
+		props++;
+	}
+}
+
+////////////////
+// JsonTarget
+JsonTarget::~JsonTarget()
+{
+
+}
+
+// virtual 
+void JsonTarget::SetNumberValue(const wchar_t* szName, const wchar_t* szValue)
+{
+	PROP_ENTRY* props = __getPropsTable();
+	if (!props)
+		return;
+	while (props && props->name) {
+		if (props->pInt && wcsncmp(props->name, szName, MAX_PROP_LENGTH) == 0) {
+			*props->pInt = _string2Long(szValue);
+			return;
+		}
+		props++;
+	}
+}
+
+// virtual 
+void JsonTarget::SetBoolValue(const wchar_t* szName, bool bValue)
+{
+	PROP_ENTRY* props = __getPropsTable();
+	if (!props)
+		return;
+	while (props && props->name) {
+		if (props->pBool && wcsncmp(props->name, szName, MAX_PROP_LENGTH) == 0) {
+			*props->pBool = bValue;
+			return;
+		}
+		props++;
+	}
+}
+
+//virtual 
+JsonTarget* JsonTarget::CreateArray(const wchar_t* szName)
+{
+	PROP_ENTRY* props = __getPropsTable();
+	if (!props)
+		return nullptr;
+	while (props && props->name) {
+		if (props->pArray && wcsncmp(props->name, szName, MAX_PROP_LENGTH) == 0) {
+			return props->pArray;
+		}
+		props++;
+	}
+	return nullptr;
+}
+

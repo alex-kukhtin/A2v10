@@ -28,15 +28,16 @@ BEGIN_MESSAGE_MAP(CPosThreadWnd, CWinThread)
 	ON_THREAD_MESSAGE(WMI_POS_COMMAND_SEND, OnPosCommand)
 END_MESSAGE_MAP()
 
-static CString s_cmd;
+static std::wstring s_cmd;
 
 // afx_msg
 void CPosThreadWnd::OnPosCommand(WPARAM wParam, LPARAM lParam)
 {
-	LPCWSTR szCommand = reinterpret_cast<LPCWSTR>(lParam);
-	s_cmd = szCommand;
+	const wchar_t* szCommand = reinterpret_cast<const wchar_t*>(lParam);
 	// RunCommand
-	::Sleep(500);
-	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, wParam, (LPARAM)(LPCWSTR) s_cmd);
+	std::wstring result;
+	pos_result_t rc = PosProcessCommand(szCommand, result);
+	s_cmd = result;
+	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, wParam, (LPARAM) s_cmd.c_str());
 }
 

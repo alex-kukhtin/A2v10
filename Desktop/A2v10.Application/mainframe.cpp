@@ -297,7 +297,8 @@ void CMainFrame::OnAppLoad()
 	CEF_VIEW_INFO viewInfo;
 	CString strUrl = L"http://domain";
 	if (!theApp.m_strInitialUrl.IsEmpty()) {
-		strUrl += L"/";
+		if (theApp.m_strInitialUrl[0] != L'/')
+			strUrl += L"/";
 		strUrl += theApp.m_strInitialUrl;
 	}
 	viewInfo.szUrl = strUrl;

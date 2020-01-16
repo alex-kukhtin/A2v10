@@ -84,6 +84,9 @@
     <ClInclude Include="posthread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="appconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="posthread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="appconfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

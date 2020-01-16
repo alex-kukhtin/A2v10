@@ -28,10 +28,8 @@ public:
 	void Serialize(CString& target);
 
 	//  json target
-	virtual JsonTarget* CreateObject(const wchar_t* szName) { return this; }
 	virtual JsonTarget* CreateArray(const wchar_t* szName) { throw JsonException(L"CLoginUser::CreateArray. Not implemented."); }
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) { }
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
 };
 
@@ -46,10 +44,8 @@ public:
 	void Serialize(CString& target);
 
 	//  json target
-	virtual JsonTarget* CreateObject(const wchar_t* szName) { return this; }
 	virtual JsonTarget* CreateArray(const wchar_t* szName) { throw JsonException(L"CLoginDatabase::CreateArray. Not implemented."); }
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) {}
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
 };
 
@@ -94,7 +90,6 @@ public:
 	virtual JsonTarget* CreateObject(const wchar_t* szName) { return nullptr; }
 	virtual JsonTarget* CreateArray(const wchar_t* szName);
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) { }
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
 };
 
@@ -116,9 +111,6 @@ public:
 	//  json target
 	virtual JsonTarget* CreateObject(const wchar_t* szName);
 	virtual JsonTarget* CreateArray(const wchar_t* szName) { return this; };
-	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue) { }
-	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue) { }
-	virtual void SetBoolValue(const wchar_t* szName, bool bValue) { }
 
 	void SelectServer(CLoginServer* pTarget);
 };

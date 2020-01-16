@@ -6243,6 +6243,9 @@ table > colgroup col.blue {
   padding: 2px 12px;
   border-radius: 1rem;
   color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .title-notify.warning {
   background-color: #ffb74d;

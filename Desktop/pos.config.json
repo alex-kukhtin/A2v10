@@ -1,0 +1,11 @@
+﻿{
+	"connectionString": "",
+	"startUrl": "/pos",
+	"fiscalPrinters": [
+		{
+			"model": "TESTPRINTER",
+			"port": "COM1",
+			"baud": 9600
+		}
+	]
+}

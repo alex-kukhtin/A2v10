@@ -1,4 +1,4 @@
-// Copyright © 2008-2017 Alex Kukhtin. All rights reserved.
+// Copyright © 2008-2020 Alex Kukhtin. All rights reserved.
 
 
 #include "stdafx.h"
@@ -134,10 +134,20 @@ void CA2CommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLas
 			m_eMode = ParseMode::_url;
 			return;
 		}
-	} 
-	else {
+		else if (strParam.CompareNoCase(L"CONFIG") == 0) {
+			m_eMode = ParseMode::_config;
+			return;
+		}
+	}
+	else 
+	{
 		if (m_eMode == ParseMode::_url) {
 			m_strUrl = strParam;
+			m_eMode = ParseMode::_none;
+			return;
+		}
+		else if (m_eMode == ParseMode::_config) {
+			m_strConfig = strParam;
 			m_eMode = ParseMode::_none;
 			return;
 		}

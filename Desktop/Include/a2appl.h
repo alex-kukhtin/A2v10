@@ -35,12 +35,14 @@ class CA2CommandLineInfo : public CCommandLineInfo
 {
 	enum ParseMode {
 		_none,
-		_url
+		_url,
+		_config
 	};
 
 	bool m_bDebug;
 	ParseMode m_eMode;
 	CString m_strUrl;
+	CString m_strConfig;
 public:
 	CA2CommandLineInfo()
 		: m_bDebug(false), m_eMode(_none) {}
@@ -48,6 +50,7 @@ public:
 	bool IsDebugMode() const
 		{ return m_bDebug; }
 	const LPCWSTR Url() { return m_strUrl; }
+	const LPCWSTR Config() { return m_strConfig; }
 };
 
 #undef AFX_DATA

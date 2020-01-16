@@ -1,6 +1,0 @@
-﻿{
-	"database": "desktop.udl",
-	"fiscalprinters": [
-		{"id": "pos1", "terinal": 112, "model": "TEST", "baud": 9600, "port": "COM1"}
-	]
-}

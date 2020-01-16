@@ -13,6 +13,7 @@
 #include "cefapp.h"
 #include "defaultview.h"
 #include "posthread.h"
+#include "appconfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -22,11 +23,12 @@
 #pragma comment(lib,"../../bin/A2v10.Net.Shim.lib")
 
 #pragma comment(lib,"../../bin/libcef.lib")
+#pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
+#pragma comment(lib,"../Lib/A2v10.PosTerm.lib")
 
 // CMainApp
 
 BEGIN_MESSAGE_MAP(CMainApp, CA2WinApp)
-	//ON_COMMAND(ID_FILE_NEW_FRAME, OnFileNewFrame)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 END_MESSAGE_MAP()
 
@@ -35,27 +37,20 @@ END_MESSAGE_MAP()
 
 CMainApp::CMainApp()
 	:m_dwPosThreadId(0), m_hPosThreadHandle(0),
-	m_pDocTemplate(nullptr)
+	m_pDocTemplate(nullptr), m_pAppConfig(nullptr)
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
 #ifdef _MANAGED
-	// If the application is built using Common Language Runtime support (/clr):
-	//     1) This additional setting is needed for Restart Manager support to work properly.
-	//     2) In your project, you must add a reference to System.Windows.Forms in order to build.
 	System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException);
 #endif
 
 	// TODO: replace application ID string below with unique ID string; recommended
 	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("A2v10.Desktop.NoVersion"));
-
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
 }
 
 // The one and only CMainApp object
-
 CMainApp theApp;
 
 
@@ -67,13 +62,13 @@ BOOL CMainApp::InitInstance()
 	if (!__super::InitInstance())
 		return FALSE;
 
+	CCefApplication::Init(m_hInstance);
+
+	if (wcsstr(m_lpCmdLine, L"--") != nullptr)
+		return TRUE;
 
 	EnableTaskbarInteraction(FALSE);
 
-	CCefApplication::Init(m_hInstance);
-
-	// Register the application's document templates.  Document templates
-	//  serve as the connection between documents, frame windows and views
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CMultiDocTemplate(
 		IDR_MAINFRAME,
@@ -92,6 +87,15 @@ BOOL CMainApp::InitInstance()
 
 	m_strUdlFileName = cmdInfo.m_strFileName;
 	m_strInitialUrl = cmdInfo.Url();
+
+	m_pAppConfig = LoadConfigFile(cmdInfo.Config());
+	if (m_pAppConfig) {
+		if (!m_pAppConfig->m_startUrl.empty())
+			m_strInitialUrl = m_pAppConfig->m_startUrl.c_str();
+		if (!m_pAppConfig->m_connectionString.empty())
+			m_strConnectionString = m_pAppConfig->m_connectionString.c_str();
+	}
+
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
 	if (!ProcessShellCommand(cmdInfo))
@@ -119,35 +123,57 @@ BOOL CMainApp::InitInstance()
 
 	m_pMainWnd->PostMessage(WM_COMMAND, ID_APP_START);
 
+	StartPosThread();
+	return TRUE;
+}
+
+CAppConfig* CMainApp::LoadConfigFile(LPCWSTR szConfig)
+{
+	if (!szConfig || !*szConfig)
+		return nullptr;
+	CString configText;
+	CFileTools::LoadFile(szConfig, configText);
+	if (configText.IsEmpty())
+		return nullptr; // file not found
+	CAppConfig* pAppConfig = new CAppConfig();
+	try
+	{
+		JsonParser prs;
+		prs.SetTarget(pAppConfig);
+		prs.Parse(configText);
+		return pAppConfig;
+	}
+	catch (CFileException* ex)
+	{
+		ex->ReportError();
+		ex->Delete();
+	}
+	catch (JsonException& je)
+	{
+		AfxMessageBox(je.GetMessage());
+	}
+	catch (...) {
+		AfxMessageBox(L"JSON. Unknown error");
+	}
+	if (pAppConfig)
+		delete pAppConfig;
+	return nullptr;
+}
+
+void CMainApp::StartPosThread()
+{
+	if (!m_pAppConfig || !m_pAppConfig->HasFiscalPrinters())
+		return;
+
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
 	pThread->m_bAutoDelete = TRUE;
 	pThread->ResumeThread();
 
 	m_dwPosThreadId = pThread->m_nThreadID;
 	m_hPosThreadHandle = pThread->m_hThread;
-	/*
-	BOOL rc = ::PostThreadMessage(pThread->m_nThreadID, WMI_POS_COMMAND_SEND, 10, (LPARAM) L"TEST");
-	if (!rc) {
-		DWORD dw = ::GetLastError();
-		int z = 55;
-	}
-	*/
-	/*
-	CPosThreadWnd* pWnd = new CPosThreadWnd();
-	pWnd->Start(m_pMainWnd->GetSafeHwnd());
-	BOOL created = pWnd->Create(nullptr, nullptr, WS_OVERLAPPED, CRect(0, 0, 0, 0), m_pMainWnd, 0, nullptr);
-	if (!created) {
-		DWORD dwError = ::GetLastError();
-		AfxMessageBox(L"Unable to create pos window");
-		return FALSE;
-	}
-	m_hPosWndHandle = pWnd->GetSafeHwnd();
-	*/
-
-	return TRUE;
 }
 
-void CMainApp::SendPosMessage(int key, LPCWSTR szMessage)
+void CMainApp::PostPosThreadMessage(int key, LPCWSTR szMessage)
 {
 	if (!m_dwPosThreadId) return;
 	::PostThreadMessage(m_dwPosThreadId, WMI_POS_COMMAND_SEND, key, (LPARAM) szMessage);
@@ -175,69 +201,25 @@ int CMainApp::ExitInstance()
 		CCefApplication::Destroy();
 	}
 
+	if (m_pAppConfig) {
+		delete m_pAppConfig;
+		m_pAppConfig = nullptr;
+	}
 	return __super::ExitInstance();
 }
 
 
 // CMainApp message handlers
 
-void CMainApp::OnFileNewFrame() 
-{
-	ASSERT(m_pDocTemplate != NULL);
-
-	CDocument* pDoc = NULL;
-	CFrameWnd* pFrame = NULL;
-
-	// Create a new instance of the document referenced
-	// by the m_pDocTemplate member.
-	if (m_pDocTemplate != NULL)
-		pDoc = m_pDocTemplate->CreateNewDocument();
-
-	if (pDoc != NULL)
-	{
-		// If creation worked, use create a new frame for
-		// that document.
-		pFrame = m_pDocTemplate->CreateNewFrame(pDoc, NULL);
-		if (pFrame != NULL)
-		{
-			// Set the title, and initialize the document.
-			// If document initialization fails, clean-up
-			// the frame window and document.
-
-			m_pDocTemplate->SetDefaultTitle(pDoc);
-			if (!pDoc->OnNewDocument())
-			{
-				pFrame->DestroyWindow();
-				pFrame = NULL;
-			}
-			else
-			{
-				// Otherwise, update the frame
-				m_pDocTemplate->InitialUpdateFrame(pFrame, pDoc, TRUE);
-			}
-		}
-	}
-
-	// If we failed, clean up the document and show a
-	// message to the user.
-
-	if (pFrame == NULL || pDoc == NULL)
-	{
-		delete pDoc;
-		AfxMessageBox(AFX_IDP_FAILED_TO_CREATE_DOC);
-	}
-}
-
 void CMainApp::OnFileNew() 
 {
-	CDocument* pDoc = NULL;
-	CFrameWnd* pFrame;
-	pFrame = DYNAMIC_DOWNCAST(CFrameWnd, CWnd::GetActiveWindow());
+	CDocument* pDoc = nullptr;
+	CFrameWnd* pFrame = DYNAMIC_DOWNCAST(CFrameWnd, CWnd::GetActiveWindow());
 	
-	if (pFrame != NULL)
+	if (pFrame != nullptr)
 		pDoc = pFrame->GetActiveDocument();
 
-	if (pFrame == NULL || pDoc == NULL)
+	if (pFrame == nullptr || pDoc == nullptr)
 	{
 		// if it's the first document, create as normal
 		CWinApp::OnFileNew();
@@ -250,9 +232,9 @@ void CMainApp::OnFileNew()
 			return;
 
 		CDocTemplate* pTemplate = pDoc->GetDocTemplate();
-		ASSERT(pTemplate != NULL);
+		ATLASSERT(pTemplate != nullptr);
 
-		if (pTemplate != NULL)
+		if (pTemplate != nullptr)
 			pTemplate->SetDefaultTitle(pDoc);
 		pDoc->OnNewDocument();
 	}

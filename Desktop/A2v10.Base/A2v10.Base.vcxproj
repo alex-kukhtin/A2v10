@@ -226,7 +226,6 @@
     <ClCompile Include="javascriptpropertyid.cpp" />
     <ClCompile Include="javascriptruntime.cpp" />
     <ClCompile Include="javascriptvalue.cpp" />
-    <ClCompile Include="jsonparser.cpp" />
     <ClCompile Include="optionsps.cpp" />
     <ClCompile Include="scaner.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -274,7 +273,6 @@
     <ClInclude Include="..\Include\javascriptpropertyid.h" />
     <ClInclude Include="..\Include\javascriptruntime.h" />
     <ClInclude Include="..\Include\javascriptvalue.h" />
-    <ClInclude Include="..\Include\jsonparser.h" />
     <ClInclude Include="..\Include\optionsps.h" />
     <ClInclude Include="..\Include\scaner.h" />
     <ClInclude Include="..\Include\theme.h" />

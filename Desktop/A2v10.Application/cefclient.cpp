@@ -233,7 +233,7 @@ bool CCefClientHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, 
 		auto argList = message->GetArgumentList();
 		int key = argList->GetInt(0);
 		auto str = argList->GetString(1);
-		theApp.SendPosMessage(key, str.c_str());
+		theApp.PostPosThreadMessage(key, str.c_str());
 		return true;
 	}
 	return false;
