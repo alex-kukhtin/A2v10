@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by A2v10.Locale.En.rc
 //
+#define ID_WND_CONSOLE                  505
 #define IDM_POPUP_MENU                  600
 #define IDM_POPUP_FORM					601
 #define IDM_POPUP_APPTOOLS				603

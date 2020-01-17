@@ -34,9 +34,10 @@ protected:
 	bool m_bEndOfTape;
 
 	void ClearBuffers();
-	void CreateCommand(BYTE cmd, const wchar_t* strCmd);
+	void CreateCommand(const wchar_t* name, BYTE cmd, const wchar_t* strCmd);
 	void CreateCommandB(BYTE cmd, BYTE* data, BYTE len);
-	void CreateCommand(BYTE cmd);
+	void CreateCommand(const wchar_t* name, BYTE cmd);
+	void CreateCommandV(const wchar_t* name, BYTE cmd, const wchar_t* strCmd, ...);
 	void SendCommand(bool bResend = true);
 	bool ParseRcv();
 	void IncSeq();

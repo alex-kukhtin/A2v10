@@ -1,4 +1,4 @@
-// Copyright © 2017-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2017-2020 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -20,6 +20,8 @@ protected: // create from serialization only
 	CNavTabs m_navigateTabs;
 	UINT m_nViewId;
 
+	CConsoleWnd m_wndConsole;
+
 public:
 	virtual ~CMainFrame() override;
 	void CreateNewView(CEF_VIEW_INFO* pViewInfo);
@@ -38,6 +40,7 @@ protected:
 	void SwitchToTab(HWND targetHWnd);
 	void CloseTab(HWND targetHWnd);
 	void DoPaint(CDC& dc);
+	BOOL CreateDockingWindows();
 
 	afx_msg LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -57,6 +60,8 @@ protected:
 	afx_msg void OnAppLoad();
 	afx_msg void OnIdleUpdateCmdUI();
 	afx_msg LRESULT OnPosCommandResult(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnWmiConsole(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnPosTrace(WPARAM wParam, LPARAM lParam);
 
 	DECLARE_MESSAGE_MAP()
 };

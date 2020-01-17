@@ -10,10 +10,15 @@ class FiscalPrinter
 
 public:
 	static FiscalPrinter* FindPrinter(const wchar_t* id);
-	void Create(const wchar_t* model);
+	static pos_result_t Connect(const wchar_t* model, const wchar_t* port, int baud);
 
-	void Open();
-	void OpenReturn(long retNo);
+	bool Create(const wchar_t* model);
+	bool Open(const wchar_t* port, int baud);
+	const wchar_t* GetLastError();
+
+	bool NullReceipt(bool bOpenCashDrawer);
+
+	void OpenReturnReceipt(long retNo);
 	void PrintDiscountForBill(long discountPercent, long discountSum);
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);
@@ -22,6 +27,8 @@ public:
 	void PrintFiscalText(const wchar_t* szText);
 	void PrintNonFiscalText(const wchar_t* szText);
 	void OpenCashDrawer();
+	bool XReport();
+	bool ZReport();
 
 	// customer display
 	void DisplayDateTime();

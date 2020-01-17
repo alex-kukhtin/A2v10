@@ -6,15 +6,15 @@
 
 #define MAX_COMMAND_LEN 255
 
+//#define NO_PORT_MODE -- DEBUG
+
 void W2A(const wchar_t* szWideChar, char* szMbChars, int cbMultiByte)
 {
 	UINT acp = CP_THREAD_ACP;
 	*szMbChars = '\0';
 	int ret = WideCharToMultiByte(acp, 0, szWideChar, -1, szMbChars, cbMultiByte, nullptr, nullptr);
-	if (ret == 0)
-		_ASSERT(false);
+	_ASSERT(ret != 0);
 }
-
 
 
 #define SYN 0x16
@@ -26,7 +26,7 @@ void W2A(const wchar_t* szWideChar, char* szMbChars, int cbMultiByte)
 BYTE CFiscalPrinter_DatecsBase::m_seq = 0x20;
 
 #define IDP_FP_ERROR L"Fiscal printer error"
-#define IDP_DISPID_FP_COMGENERIC L"Generic COM error"
+#define IDP_FP_COM_GENERIC L"General COM-port error"
 
 
 CFiscalPrinter_DatecsBase::CFiscalPrinter_DatecsBase()
@@ -50,8 +50,8 @@ bool CFiscalPrinter_DatecsBase::Open(const wchar_t* Port, DWORD nBaudRate)
 			return true; // already open
 		OpenComPort(Port, nBaudRate);
 	}
-	catch (CFPException e) {
-		e.ReportError2();
+	catch (CFPException ex) {
+		m_strError = ex.GetError();
 		return false;
 	}
 	return IsOpen();
@@ -66,22 +66,28 @@ void CFiscalPrinter_DatecsBase::Close()
 
 void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate /*= CBR_19200*/)
 {
+#ifdef NO_PORT_MODE
+	m_hCom = (HANDLE)1111;
+	return;
+#endif
 	DWORD baudRate = nBaudRate;
+	if (baudRate == 0)
+		baudRate = CBR_19200;
 	m_hCom = CreateFile(Port, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
 	DWORD dwError = 0;
 	if (m_hCom == INVALID_HANDLE_VALUE) {
 		dwError = ::GetLastError();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	DCB dcb = { 0 };
 	dcb.DCBlength = sizeof(DCB);
 	if (!GetCommState(m_hCom, &dcb)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
-	dcb.BaudRate = baudRate;     // set the baud rate
+	dcb.BaudRate = baudRate;      // set the baud rate
 	dcb.ByteSize = 8;             // data size, xmit, and rcv
 	dcb.Parity = NOPARITY;        // no parity bit
 	dcb.StopBits = ONESTOPBIT;    // one stop bit
@@ -90,13 +96,13 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	dcb.fAbortOnError = TRUE;
 	if (!SetCommState(m_hCom, &dcb)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	COMMTIMEOUTS cmto = { 0 };
 	if (!GetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	cmto.ReadIntervalTimeout = 300;
@@ -106,17 +112,17 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	cmto.WriteTotalTimeoutMultiplier = 20;
 	if (!SetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	if (!PurgeComm(m_hCom, PURGE_RXCLEAR | PURGE_TXCLEAR)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	if (!SetupComm(m_hCom, 1024, 1024)) {
 		Close();
-		throw CFPException(IDP_DISPID_FP_COMGENERIC);
+		throw CFPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 }
@@ -140,14 +146,24 @@ void CFiscalPrinter_DatecsBase::ClearBuffers()
 	m_sndBytes = 0;
 }
 
-void CFiscalPrinter_DatecsBase::CreateCommand(BYTE cmd)
+void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd)
 {
-	CreateCommand(cmd, L"");
+	CreateCommand(name, cmd, L"");
 }
 
-void CFiscalPrinter_DatecsBase::CreateCommand(BYTE cmd, const wchar_t* strCmd)
+void CFiscalPrinter_DatecsBase::CreateCommandV(const wchar_t* name, BYTE cmd, const wchar_t* format, ...)
 {
-	TraceINFO(L"SND:0x%X %s", (int)cmd, strCmd);
+	va_list argList;
+	va_start(argList, format);
+	wchar_t buff[MAX_COMMAND_LEN];
+	vswprintf(buff, MAX_COMMAND_LEN - 1, format, argList);
+	CreateCommand(name, cmd, buff);
+	va_end(argList);
+}
+
+void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd, const wchar_t* strCmd)
+{
+	TraceINFO(L"  %s\tSND:0x%X %s", name, (int)cmd, strCmd);
 	char buffer[MAX_COMMAND_LEN];
 	W2A(strCmd, buffer, MAX_COMMAND_LEN - 1);
 	CreateCommandB(cmd, (BYTE*) (const char*) buffer, (BYTE) strnlen(buffer, MAX_COMMAND_LEN-1));
@@ -198,6 +214,9 @@ void CFiscalPrinter_DatecsBase::IncSeqAndBuffer()
 
 void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 {
+#ifdef NO_PORT_MODE
+	return;
+#endif
 	::PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);
 	m_bEndOfTape = false;
 	m_dwError = 0;

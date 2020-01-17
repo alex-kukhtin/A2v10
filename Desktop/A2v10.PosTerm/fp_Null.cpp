@@ -22,25 +22,21 @@ bool CFiscalPrinter_Null::OpenReturnReceipt(const wchar_t* szDepartmentName, __i
 void CFiscalPrinter_Null::Close()
 {
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): Close)", m_strKey.c_str());
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): Close)", _id.c_str());
 	ReportMessage(buff);
 }
 
 // virtual 
-bool CFiscalPrinter_Null::Open(const wchar_t* Port, DWORD nBaudRate)
+bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): Open.\n(Port=\"%s\",BaudRate=\"%d\")", m_strKey.c_str(), Port, (int) nBaudRate);
-	ReportMessage(buff);
+	TraceINFO(L"TESTPRINTER [%s]. Open(port='%s', baud=%d})", _id.c_str(), port, (int) baud);
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinter_Null::NullBill(bool bOpenCashDrawer)
+bool CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print null bill.\n(OpenCashDrawer=%s)", m_strKey.c_str(), bOpenCashDrawer ? L"true" : L"false");
-	ReportMessage(buff);
+	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	return true;
 }
 
@@ -54,7 +50,7 @@ bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
 bool CFiscalPrinter_Null::CancelReceiptCommand(__int64 termId)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Cancel bill", m_strKey.c_str());
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Cancel bill", _id.c_str());
 	ReportMessage(buff);
 	return true;
 }
@@ -63,19 +59,11 @@ bool CFiscalPrinter_Null::CancelReceiptCommand(__int64 termId)
 bool CFiscalPrinter_Null::CopyBill()
 {
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print bill copy", m_strKey.c_str());
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print bill copy", _id.c_str());
 	ReportMessage(buff);
 	return true;
 }
 
-// virtual 
-bool CFiscalPrinter_Null::XReport()
-{
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): print X-report", m_strKey.c_str());
-	ReportMessage(buff);
-	return true;
-}
 
 //virtual 
 /*
@@ -122,9 +110,9 @@ bool CFiscalPrinter_Null::Init(__int64 termId)
 	{
 		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
 	}
-	catch (CFPException e)
+	catch (CFPException ex)
 	{
-		e.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -160,18 +148,23 @@ bool CFiscalPrinter_Null::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
+bool CFiscalPrinter_Null::XReport()
+{
+	TraceINFO(L"TESTPRINTER [%s]. XReport()", _id.c_str());
+	return true;
+}
+
+// virtual 
 bool CFiscalPrinter_Null::ZReport()
 {
-	ReportMessage(L"NOPRINTER: Print Z-report");
+	TraceINFO(L"TESTPRINTER [%s]. ZReport()", _id.c_str());
 	return true;
 }
 
 // virtual 
 bool CFiscalPrinter_Null::OpenCashDrawer()
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): OpenCashDrawer)", m_strKey.c_str());
-	ReportMessage(buff);
+	TraceINFO(L"TESTPRINTER [%s]. OpenCashDrawer()", _id.c_str());
 	return true;
 }
 
@@ -198,7 +191,7 @@ bool CFiscalPrinter_Null::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE 
 {
 	CString msg;
 	if (pm == CFiscalPrinter::_fpay_card)
-		msg.Format(L"NOPRINTER (key=%s): Печать чека (кредитная карта)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)m_strKey, sum / 100, sum % 100, get / 100, get % 100);
+		msg.Format(L"NOPRINTER (key=%s): Печать чека (кредитная карта)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)_id, sum / 100, sum % 100, get / 100, get % 100);
 	else if (pm == CFiscalPrinter::_fpay_cash)
 		msg.Format(L"NOPRINTER (key=%s): Печать чека (наличные)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)m_strKey, sum / 100, sum % 100, get / 100, get % 100);
 	else if (pm == CFiscalPrinter::_fpay_credit)

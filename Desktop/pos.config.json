@@ -4,8 +4,9 @@
 	"fiscalPrinters": [
 		{
 			"model": "TESTPRINTER",
-			"port": "COM1",
-			"baud": 9600
+			"model234": "DATECS-T260",
+			"port": "COM3",
+			"baud": 19200
 		}
 	]
 }

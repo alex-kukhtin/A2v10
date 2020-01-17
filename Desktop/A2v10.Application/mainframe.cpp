@@ -4,6 +4,7 @@
 #include "A2v10.Application.h"
 
 #include "navtabs.h"
+#include "consolewnd.h"
 #include "mainframe.h"
 #include "workarea.h"
 #include "cefclient.h"
@@ -12,6 +13,8 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#define HORZ_PANE_HEIGHT 175
 
 // CMainFrame
 
@@ -22,9 +25,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_MESSAGE(WM_NCHITTEST, OnNcHitTest)
 	ON_WM_NCMOUSEMOVE()
 	ON_WM_NCMOUSELEAVE()
-	ON_WM_NCLBUTTONDOWN()
 	ON_MESSAGE_VOID(WM_IDLEUPDATECMDUI, OnIdleUpdateCmdUI)	
 	ON_WM_CREATE()
+	ON_WM_NCLBUTTONDOWN()
+	ON_MESSAGE(WMI_CONSOLE, OnWmiConsole)
 	ON_MESSAGE(WMI_CEF_VIEW_COMMAND, OnCefViewCommand)
 	ON_MESSAGE(WMI_CEF_TAB_COMMAND, OnCefTabCommand)
 	ON_COMMAND(ID_FILE_CLOSE, OnFileClose)
@@ -35,6 +39,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CA2SDIFrameWndBase)
 	ON_WM_DESTROY()
 	ON_COMMAND(ID_APP_LOAD, OnAppLoad)
 	ON_MESSAGE(WMI_POS_COMMAND_RESULT, OnPosCommandResult)
+	ON_MESSAGE(WMI_POS_TRACE, OnPosTrace)
 END_MESSAGE_MAP()
 
 
@@ -59,6 +64,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//EnableDocking(CBRS_ALIGN_ANY);
 
+	CDockingManager::SetDockingMode(DT_SMART);
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 
 	CMFCToolBar::AddToolBarForImageCollection(IDR_MENU_IMAGES, IDR_MENU_IMAGES);
@@ -69,6 +76,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CA2VisualManager));
 
+	// create docking windows
+	if (!CreateDockingWindows())
+	{
+		TRACE0("Failed to create docking windows\n");
+		return -1;
+	}
+
+	m_wndConsole.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndConsole);
+
 	ModifyStyle(0, FWS_PREFIXTITLE);
 
 	CRect rc;
@@ -76,6 +93,24 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_FRAMECHANGED | SWP_NOZORDER);
 
 	return 0;
+}
+
+BOOL CMainFrame::CreateDockingWindows()
+{
+	CString strTitle;
+
+	DWORD dwDefaultStyle =
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI;
+
+	// console window
+	VERIFY(strTitle.LoadString(ID_WND_CONSOLE));
+	if (!m_wndConsole.Create(strTitle, this, CRect(0, 0, 500, HORZ_PANE_HEIGHT), TRUE, ID_WND_CONSOLE,
+		dwDefaultStyle | CBRS_BOTTOM))
+	{
+		TRACE0("Failed to create console window\n");
+		return FALSE; // failed to create
+	}
+	return TRUE;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -269,6 +304,7 @@ void CMainFrame::OnUpdateSysMenu(CCmdUI* pCmdUI)
 
 // afx_msg
 void CMainFrame::OnAppTools() {
+
 	auto navRect = m_captionButtons.GetRect();
 	ClientToScreen(navRect);
 	CUITools::TrackPopupMenu(IDM_POPUP_APPTOOLS, 0, this, CPoint(navRect.left + SYSBTNS_HEIGHT, navRect.bottom), true /*alignRight*/);
@@ -330,5 +366,31 @@ LRESULT CMainFrame::OnPosCommandResult(WPARAM wParam, LPARAM lParam)
 	if (!pActiveView)
 		return 0L;
 	pActiveView->SendMessage(WMI_POS_COMMAND_RESULT, wParam, lParam);
+	return 0L;
+}
+
+// afx_msg
+LRESULT CMainFrame::OnWmiConsole(WPARAM wParam, LPARAM lParam)
+{
+	if ((wParam < WMI_CONSOLE_MIN) || (wParam > WMI_CONSOLE_MAX))
+		return 0L;
+	m_wndConsole.ShowPane(TRUE, FALSE, TRUE);
+	LPCWSTR szMessage = reinterpret_cast<LPCWSTR>(lParam);
+	if (!szMessage)
+		return 0L;
+	m_wndConsole.WriteToConsole((CConsoleWnd::ConsoleMsgType) wParam, szMessage);
+	return 0L;
+}
+
+LRESULT CMainFrame::OnPosTrace(WPARAM wParam, LPARAM lParam)
+{
+	LPCWSTR szMessage = reinterpret_cast<LPCWSTR>(lParam);
+	if (!szMessage)
+		return 0L;
+	ShowPane(&m_wndConsole, TRUE, FALSE, FALSE);
+	if (wParam == WMI_POS_TRACE_WPARAM_INFO)
+		m_wndConsole.WriteToConsole(CConsoleWnd::ConsoleMsgType::Info, szMessage);
+	else if (wParam == WMI_POS_TRACE_WPARAM_ERROR)
+		m_wndConsole.WriteToConsole(CConsoleWnd::ConsoleMsgType::Error, szMessage);
 	return 0L;
 }

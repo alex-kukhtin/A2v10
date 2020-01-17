@@ -4,6 +4,7 @@
 #include "A2v10.Application.h"
 
 #include "navtabs.h"
+#include "consolewnd.h"
 #include "mainframe.h"
 #include "workarea.h"
 #include "cefclient.h"

@@ -8,21 +8,23 @@
 class CFPException
 {
 	UINT m_nID;
-	std::wstring m_strError;
+	std::wstring _error;
 public:
 	CFPException(unsigned nID)
 		: m_nID(nID) {};
 	CFPException(const wchar_t* szError)
-		: m_nID(0), m_strError(szError) {};
-	void ReportError2();
-	std::wstring GetError();
+		: m_nID(0), _error(szError) {};
+	//void ReportError2();
+	const wchar_t* GetError();
 };
 
 class CFiscalPrinterImpl
 {
 public:
-	std::wstring m_strKey;
+	std::wstring _id;
 	std::wstring m_strError;
+
+	static HWND _hostHwnd;
 
 	enum PrinterFlags
 	{
@@ -33,6 +35,8 @@ public:
 
 	CFiscalPrinterImpl(void);
 	virtual ~CFiscalPrinterImpl();
+
+	const wchar_t* GetLastError();
 
 	virtual bool IsOpen() const;
 	virtual bool IsReady() const;
@@ -49,17 +53,17 @@ public:
 	//virtual bool PrintDiagnostic();
 	virtual bool XReport()  = 0;
 	virtual bool ZReport() = 0;
-	virtual bool NullBill(bool bOpenCashDrawer) = 0;
+	virtual bool NullReceipt(bool bOpenCashDrawer) = 0;
 	//virtual bool PostNullCheck(__int64 hid);
 	//virtual bool PostClose(__int64 hid);
 	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
 	virtual bool CancelReceipt(__int64 termId, bool& bClosed) = 0;
 	virtual bool CancelReceiptCommand(__int64 termId) = 0;
-	virtual bool OpenBill(const wchar_t* szDepartmentName, __int64 termId) = 0;
+	virtual bool OpenReceipt(const wchar_t* szDepartmentName, __int64 termId) = 0;
 	virtual bool OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo) = 0;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
-	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr) = 0;
-	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum) = 0;
+	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
+	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = nullptr);
 	//virtual bool CloseCheck2(int sum, int ret, int get, CFiscalPrinter::PAY_MODE pm);
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) = 0;
@@ -67,12 +71,12 @@ public:
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
 	virtual bool CopyBill() = 0;
 	virtual bool ReportByArticles() = 0;
-	virtual bool ReportRems() = 0;
+	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;
 	virtual bool AddArticle(__int64 termId, __int64 art, const wchar_t* szName, __int64 vtid, long price) = 0;
 	virtual bool OpenCashDrawer() = 0;
 	virtual bool PrintFiscalText(const wchar_t* szText) = 0;
-	virtual bool PrintNonFiscalText(const wchar_t* szText) = 0;
+	virtual bool PrintNonFiscalText(const wchar_t* szText);
 	virtual bool Beep();
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
 	virtual void SetCurrentTime() = 0;
@@ -85,4 +89,8 @@ public:
 	void TraceINFO(const wchar_t* info, ...);
 	void TraceERROR(const wchar_t* info, ...);
 	bool IsDebugMode() const;
+
+	static void SetHostHandle(HWND hHandle);
+private:
+	void Trace(int type, const wchar_t* msg, va_list args);
 };

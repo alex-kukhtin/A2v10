@@ -26,7 +26,7 @@ public:
 		return true;
 	}
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info);
-	virtual bool OpenBill(const wchar_t* szDepartmentName, __int64 termId) override
+	virtual bool OpenReceipt(const wchar_t* szDepartmentName, __int64 termId) override
 	{
 		return true;
 	}
@@ -34,7 +34,7 @@ public:
 	virtual void Close() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
-	virtual bool NullBill(bool bOpenCashDrawer) override;
+	virtual bool NullReceipt(bool bOpenCashDrawer) override;
 	virtual bool CopyBill() override;
 	virtual bool XReport() override;
 	virtual bool ZReport() override;

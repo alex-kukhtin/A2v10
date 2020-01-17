@@ -44,7 +44,8 @@ void CPosThreadWnd::OnPosCommand(WPARAM wParam, LPARAM lParam)
 
 CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
 {
-	CString msg(result);
+	const wchar_t* r = result && *result ? result : L"{}";
+	CString msg(r);
 	switch (rc)
 	{
 	case _success:
@@ -55,7 +56,7 @@ CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
 		msg = L"{\"message\":\"Printer not connected\"}";
 		break;
 	case _already_connected:
-		msg = L"Printer already connected";
+		msg = L"{\"message\":\"Printer aready connected\"}";
 		break;
 	default:
 		break;

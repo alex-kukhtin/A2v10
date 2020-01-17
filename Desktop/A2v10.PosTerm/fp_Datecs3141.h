@@ -18,7 +18,7 @@ enum RECEIPT_STATUS
 
 class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 {
-	long m_nLastCheckNo;
+	long m_nLastReceiptNo;
 	long m_nLastZReportNo;
 	//CMap<DB_ID, DB_ID, int, int> m_mapCodes;
 	WCHAR m_payModeCash;
@@ -27,23 +27,17 @@ class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 	WCHAR m_vatTaxGroup20;
 	WCHAR m_vatTaxGroup7;
 	WCHAR m_novatTaxGroup;
-	BOOL m_bKrypton;
 public:
 	CFiscalPrinter_Datecs3141();
 
-	void SetKrypton(BOOL bSet)
-	{
-		m_bKrypton = bSet;
-	}
-
 	virtual bool PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
-	virtual bool NullBill(bool bOpenCashDrawer);
-	virtual bool XReport();
-	virtual bool ZReport();
-	virtual bool ServiceInOut(__int64 sum, __int64 hid);
-	virtual bool OpenCheck(LPCWSTR szDepartmentName, __int64 termId);
-	virtual bool OpenReturnCheck(LPCWSTR szDepartmentName, __int64 termId, long checkNo);
+	virtual bool NullReceipt(bool bOpenCashDrawer) override;
+	virtual bool XReport() override;
+	virtual bool ZReport() override;
+	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
+	virtual bool OpenReceipt(LPCWSTR szDepartmentName, __int64 termId) override;
+	virtual bool OpenReturnReceipt(LPCWSTR szDepartmentName, __int64 termId, long checkNo) override;
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
@@ -56,7 +50,7 @@ public:
 	virtual void DisplayClear() override;
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
 
-	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) override;
+	//virtual bool PrintReceiptItem(const CFPCheckItemInfo& info) override;
 	virtual bool AddArticle(__int64 termId, __int64 art, LPCWSTR szName, __int64 vtid, long price) override;
 	virtual bool CopyBill() override;
 	virtual bool Init(__int64 termId) override;
@@ -82,8 +76,9 @@ protected:
 	virtual void GetErrorCode() override;
 	virtual std::wstring GetLastErrorS() override;
 
-	void ReportError(CFPException& ex);
 	bool CheckPaymentSum(int get);
+
+	RECEIPT_STATUS GetReceiptStatus();
 
 	void OpenFiscal(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
 	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
@@ -93,7 +88,6 @@ protected:
 	void PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight);
 	void AddPrinterArticle(int code, LPCWSTR szName, bool bVat);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
-	RECEIPT_STATUS GetReceiptStatus();
 	void CancelReceiptPrinter();
 	bool GetPrinterLastReceiptNo(long& chNo, bool bShowStateError = true);
 	bool GetPrinterLastZReportNo(__int64 termId, long& zNo);

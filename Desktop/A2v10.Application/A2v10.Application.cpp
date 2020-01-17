@@ -5,6 +5,7 @@
 #include "afxdialogex.h"
 #include "A2v10.Application.h"
 #include "navtabs.h"
+#include "consolewnd.h"
 #include "mainframe.h"
 
 #include "workarea.h"
@@ -164,7 +165,9 @@ void CMainApp::StartPosThread()
 {
 	if (!m_pAppConfig || !m_pAppConfig->HasFiscalPrinters())
 		return;
-
+	PosSetHostHandle(m_pMainWnd->GetSafeHwnd());
+	if (!m_pAppConfig->ConnectToPrinter())
+		return;
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
 	pThread->m_bAutoDelete = TRUE;
 	pThread->ResumeThread();

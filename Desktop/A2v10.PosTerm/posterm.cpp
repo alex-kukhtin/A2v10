@@ -3,8 +3,20 @@
 #include "framework.h"
 #include "posterm.h"
 #include "command.h"
+#include "fiscalprinter.h"
+#include "fiscalprinterimpl.h"
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
+
+void PosSetHostHandle(HWND handle)
+{
+	CFiscalPrinterImpl::SetHostHandle(handle);
+}
+
+pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud)
+{
+	return FiscalPrinter::Connect(model, port, baud);
+}
 
 pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 {

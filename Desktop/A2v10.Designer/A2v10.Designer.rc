@@ -552,7 +552,6 @@ BEGIN
     ID_WND_COMMAND          "Command"
     ID_WND_SOLUTION         "Solution"
     ID_WND_OUTLINE          "Outline"
-    ID_WND_CONSOLE          "Console"
 END
 
 STRINGTABLE

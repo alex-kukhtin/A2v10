@@ -11,3 +11,15 @@ CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
 {
 
 }
+
+bool CAppConfig::ConnectToPrinter()
+{
+	if (!HasFiscalPrinters())
+		return false;
+	CAppConfigFiscalPrinter* pPrinter = m_fiscalPrinters.ElementAt(0);
+	pos_result_t rc = PosConnectToPrinter(pPrinter->m_model.c_str(), pPrinter->m_port.c_str(), pPrinter->m_baud);
+	if (rc == pos_result_t::_success)
+		return true;
+	AfxMessageBox(L"Unable to connect to fiscal printer");
+	return false;
+}

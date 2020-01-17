@@ -3,6 +3,7 @@
 // Used by A2v10.Locale.Uk.rc
 //
 #define IDCANCEL2                       5
+#define ID_WND_CONSOLE                  505
 #define IDM_POPUP_MENU                  600
 #define IDM_POPUP_FORM                  601
 #define IDM_POPUP_APPTOOLS              603

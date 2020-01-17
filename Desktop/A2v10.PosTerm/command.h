@@ -3,6 +3,7 @@
 #pragma once
 
 class FiscalPrinter;
+class PosCommand;
 
 class PosConnectData : public JsonTarget
 {
@@ -18,10 +19,28 @@ protected:
 	END_JSON_PROPS()
 };
 
+class PosNullReceiptData : public JsonTarget
+{
+public:
+	PosNullReceiptData()
+		: m_openCashDrawer(false) {}
+	bool m_openCashDrawer;
+protected:
+	BEGIN_JSON_PROPS(1)
+		BOOL_PROP(openCashDrawer, m_openCashDrawer)
+	END_JSON_PROPS()
+};
+
+typedef bool (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
+
+
 class PosCommand : public JsonTarget
 {
-	bool m_bConnected;
-public: 
+	struct COMMAND_BIND {
+		const wchar_t* _name;
+		PFexecute _func;
+	};
+public:
 	std::wstring _command;
 	std::wstring _id;
 
@@ -36,8 +55,13 @@ protected:
 		STRING_PROP(command, _command)
 	END_JSON_PROPS()
 
-	pos_result_t  ConnectToPrinter();
-	pos_result_t ExecuteCommandInt(FiscalPrinter* pPrinter);
+	pos_result_t ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result);
 
 	virtual JsonTarget* CreateObject(const wchar_t* szName) override;
+
+	bool NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	bool XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	bool ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+private:
+	static COMMAND_BIND _binded_commands[];
 };

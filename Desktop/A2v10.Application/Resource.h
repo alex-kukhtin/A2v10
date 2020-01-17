@@ -12,6 +12,7 @@
 #define IDR_MAINFRAME                   128
 #define IDR_A2v10TYPE                   130
 #define IDR_MENU_IMAGES                 230
+#define IDR_WND_CONSOLE                 238
 #define IDD_DB_LOGIN                    803
 #define IDC_EDIT1                       1000
 #define IDS_TOOLBAR_STANDARD            12002

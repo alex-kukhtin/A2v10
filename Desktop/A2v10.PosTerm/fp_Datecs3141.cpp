@@ -68,10 +68,9 @@ enum {
 #define EMPTY_PARAM L"000000;"
 
 CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
-	: CFiscalPrinter_DatecsBase(), m_nLastCheckNo(0), m_nLastZReportNo(0),
+	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0),
 	m_payModeCash(L'0'), m_payModeCard(L'2'), m_payModeCredit(L'-'),
-	m_vatTaxGroup20(L'0'), m_novatTaxGroup(L'1'), m_vatTaxGroup7(L'2'),
-	m_bKrypton(FALSE)
+	m_vatTaxGroup20(L'0'), m_novatTaxGroup(L'1'), m_vatTaxGroup7(L'2')
 {
 }
 
@@ -80,18 +79,18 @@ CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
 bool CFiscalPrinter_Datecs3141::PrintDiagnostic()
 {
 	try {
-		CreateCommand(FPCMD_OPENNONFISCAL, EMPTY_PARAM);
+		CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
 		SendCommand();
 
-		CreateCommand(FPCMD_PRINTDIAG, L"000000;0;"); /*0 - tech info*/
+		CreateCommand(L"PRINTDIAG", FPCMD_PRINTDIAG, L"000000;0;"); /*0 - tech info*/
 		SendCommand();
 
-		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
+		CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
 
 	}
 	catch (CFPException ex) {
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -162,22 +161,19 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 {
 	try
 	{
-		CreateCommand(FPCMD_OPENNONFISCAL, EMPTY_PARAM);
+		CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
 		SendCommand();
 		
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%s", EMPTY_PARAM, L"0;999999;");
-
-		CreateCommand(FPCMD_ARTICLEREPORT, buff);
+		CreateCommandV(L"ARTICLEREPORT", FPCMD_ARTICLEREPORT, L"%s%s", EMPTY_PARAM, L"0;999999;");
 		SendCommand();
 
-		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
+		CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 	}
 	catch (CFPException ex)
 	{
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -189,15 +185,13 @@ bool CFiscalPrinter_Datecs3141::ReportModemState()
 	try
 	{
 		// print without service document!
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report
-		CreateCommand(FPCMD_MODEMSTATEREP, buff);
+		CreateCommandV(L"MODEMSTATEREP", FPCMD_MODEMSTATEREP, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report;
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill ID
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill ID
 	}
 	catch (CFPException ex)
 	{
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -214,46 +208,47 @@ bool CFiscalPrinter_Datecs3141::Beep()
 {
 	try
 	{
-		CreateCommand(FPCMD_BEEP, L"000000;2;"); /*1-KEY;2-OK;3-WARN;4-ERROR*/
+		CreateCommand(L"FPCMD_BEEP", FPCMD_BEEP, L"000000;2;"); /*1-KEY;2-OK;3-WARN;4-ERROR*/
 		SendCommand();
 	}
 	catch (CFPException ex)
 	{
-		// не показываем ошибку
+		// do not show error??
 		return false;
 	}
 	return false;
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::NullBill(bool bOpenCashDrawer)
+bool CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 {
+	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
 	try {
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%01d;0;", EMPTY_PARAM, op, tno);
-		CreateCommand(FPCMD_OPENFISCAL, buff);
+		CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%01d;0;", EMPTY_PARAM, op, tno);
 		SendCommand();
 
-		// Напечатать итог
-		CreateCommand(FPCMD_PRINTTOTAL, L"000000;0;");
+		// print total
+		CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 		SendCommand();
 
-		CreateCommand(FPCMD_PAYMENT, L"000000;0;0.00;");
+		// payment = 0
+		CreateCommand(L"PAYMENT", FPCMD_PAYMENT, L"000000;0;0.00;");
 		SendCommand();
 
-		CloseFiscal(m_nLastCheckNo);
+		CloseFiscal(m_nLastReceiptNo);
 
 		if (bOpenCashDrawer)
 		{
-			CreateCommand(FPCMD_CASHDRAWER, EMPTY_PARAM);
+			CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 			SendCommand();
 		}
 
 	}
-	catch (CFPException ex) {
-		ex.ReportError2();
+	catch (CFPException ex) 
+	{
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -393,7 +388,7 @@ bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
 	try {
 		// сначала получить статус (с допечаткой буфера)
 		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
-		GetPrinterLastReceiptNo(m_nLastCheckNo, false); // чтобы обработался статус
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
 
 		GetPrinterPayModes();
 		GetTaxRates();
@@ -408,13 +403,13 @@ bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
 		}
 
 		CancelReceiptPrinter();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, false); // еще раз
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // еще раз
 		// CheckPrinterSession(); 24 часа Z-отчета?
 		//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 	}
 	catch (CFPException ex)
 	{
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -426,7 +421,7 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 	try
 	{
 		long checkNo = -1;
-		CreateCommand(FPCMD_DAYCOUNTERS, L"000000;5;"); // останній доступний чек в копії
+		CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;5;"); // last available receipt for copy
 		SendCommand();
 		/*
 		USES_CONVERSION;
@@ -440,17 +435,15 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 			return false; // НЕТ ДОСТУПНЫХ ЧЕКОВ
 		//if (!GetPrinterLastCheckNo(checkNo, true))
 			//return false;
-		CreateCommand(FPCMD_OPENNONFISCAL, EMPTY_PARAM);
-		SendCommand();
 		*/
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%ld;%ld;", EMPTY_PARAM, checkNo, checkNo);
-		CreateCommand(FPCMD_PRINTCOPY, buff);
+		CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
 		SendCommand();
-		CloseFiscal(m_nLastCheckNo);
+		CreateCommandV(L"PRINTCOPY", FPCMD_PRINTCOPY, L"%s%ld;%ld;", EMPTY_PARAM, checkNo, checkNo);
+		SendCommand();
+		CloseFiscal(m_nLastReceiptNo);
 	}
 	catch (CFPException ex) {
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -528,7 +521,7 @@ bool CFiscalPrinter_Datecs3141::CancelReceipt(__int64 termId, bool& bClosed)
 	}
 	catch (CFPException e)
 	{
-		m_strError = e.GetError(); // без сообщения
+		m_strError = e.GetError();
 		return false;
 	}
 	return true;
@@ -541,11 +534,11 @@ void CFiscalPrinter_Datecs3141::CancelReceiptPrinter()
 		return;
 	else if (cs == CHS_NF_OPENED)
 	{
-		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
+		CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
 	}
 	else {
-		CreateCommand(FPCMD_CANCELRECEIPT, L"000000;0;");
+		CreateCommand(L"CANCELRECEIPT", FPCMD_CANCELRECEIPT, L"000000;0;");
 		SendCommand();
 	}
 }
@@ -567,7 +560,7 @@ void CFiscalPrinter_Datecs3141::GetErrorCode()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::OpenCheck(LPCWSTR szDepartmentName, __int64 termId)
+bool CFiscalPrinter_Datecs3141::OpenReceipt(LPCWSTR szDepartmentName, __int64 termId)
 {
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -585,7 +578,7 @@ bool CFiscalPrinter_Datecs3141::OpenCheck(LPCWSTR szDepartmentName, __int64 term
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::OpenReturnCheck(LPCWSTR szDepartmentName, __int64 termId, long checkNo)
+bool CFiscalPrinter_Datecs3141::OpenReturnReceipt(LPCWSTR szDepartmentName, __int64 termId, long checkNo)
 {
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -596,7 +589,7 @@ bool CFiscalPrinter_Datecs3141::OpenReturnCheck(LPCWSTR szDepartmentName, __int6
 	}
 	catch (CFPException e)
 	{
-		m_strError = e.GetError();  // без сообщения
+		m_strError = e.GetError();
 		return false;
 	}
 	return true;
@@ -622,7 +615,7 @@ void CFiscalPrinter_Datecs3141::SetCurrentTime()
 	}
 	catch (CFPException ex)
 	{
-		ex.ReportError2();
+		m_strError = ex.GetError();
 	}
 }
 
@@ -745,8 +738,8 @@ bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
 int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
-		GetPrinterLastReceiptNo(m_nLastCheckNo, false);
-	return m_nLastCheckNo;
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, false);
+	return m_nLastReceiptNo;
 }
 
 // virtual 
@@ -765,7 +758,7 @@ bool CFiscalPrinter_Datecs3141::CheckPaymentSum(int get)
 	*/
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s3;1;", EMPTY_PARAM); // источник 3, значение  1 = сумма по чеку
-	CreateCommand(FPCMD_GETFISCTRANS, buff);
+	CreateCommand(L"GETFISCTRANS", FPCMD_GETFISCTRANS, buff);
 	SendCommand();
 	/*
 	CString info;
@@ -810,7 +803,7 @@ bool CFiscalPrinter_Datecs3141::PrintFiscalText(LPCWSTR szText)
 	}
 	catch (CFPException ex)
 	{
-		m_strError = ex.GetError(); // без сообщения
+		m_strError = ex.GetError();
 		return false;
 	}
 	*/
@@ -820,9 +813,7 @@ bool CFiscalPrinter_Datecs3141::PrintFiscalText(LPCWSTR szText)
 // virtual 
 DWORD CFiscalPrinter_Datecs3141::GetFlags()
 {
-	DWORD dw = CFiscalPrinterImpl::FP_SYNCTIME;
-	if (m_bKrypton)
-		dw |= CFiscalPrinterImpl::FP_MODEMSTATE;
+	DWORD dw = CFiscalPrinterImpl::FP_SYNCTIME | CFiscalPrinterImpl::FP_MODEMSTATE;
 	return dw;
 }
 
@@ -870,7 +861,7 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 
 	}
 	catch (CFPException e) {
-		m_strError = e.GetError();  // без сообщения
+		m_strError = e.GetError();
 		return false;
 	}
 	return true;
@@ -891,7 +882,7 @@ bool CFiscalPrinter_Datecs3141::AddArticle(__int64 termId, __int64 artId, LPCWST
 	}
 	catch (CFPException e)
 	{
-		m_strError = e.GetError();  // без сообщения
+		m_strError = e.GetError();
 		return false;
 	}
 	return true;
@@ -908,7 +899,7 @@ bool CFiscalPrinter_Datecs3141::PrintCheckItem(const CFPCheckItemInfo& info)
 	}
 	catch (CFPException e)
 	{
-		m_strError = e.GetError();  // без сообщения
+		m_strError = e.GetError();
 		return false;
 	}
 	return true;
@@ -919,7 +910,7 @@ void CFiscalPrinter_Datecs3141::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, s
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;0;", EMPTY_PARAM, opNo, tNo);
-	CreateCommand(FPCMD_OPENFISCAL, buff);
+	CreateCommand(L"OPENFISCAL", FPCMD_OPENFISCAL, buff);
 	SendCommand();
 }
 
@@ -928,7 +919,7 @@ void CFiscalPrinter_Datecs3141::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int 
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;1;", EMPTY_PARAM, opNo, tNo);
-	CreateCommand(FPCMD_OPENFISCAL, buff);
+	CreateCommand(L"OPENFISCAL", FPCMD_OPENFISCAL, buff);
 	SendCommand();
 }
 
@@ -962,7 +953,7 @@ bool CFiscalPrinter_Datecs3141::GetDaySum(long src, long ix, CY& value1, CY& val
 void CFiscalPrinter_Datecs3141::PrintTotal()
 {
 	// Напечатать итог
-	CreateCommand(FPCMD_PRINTTOTAL, L"000000;0;");
+	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 	SendCommand();
 }
 
@@ -972,7 +963,7 @@ void CFiscalPrinter_Datecs3141::Payment(WCHAR mode, int sum, std::wstring& info)
 	int sum2 = sum % 100;
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%c;%d.%02d;", EMPTY_PARAM, mode, sum1, sum2);
-	CreateCommand(FPCMD_PAYMENT, buff);
+	CreateCommand(L"PAYMENT", FPCMD_PAYMENT, buff);
 	SendCommand();
 }
 
@@ -981,7 +972,7 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 	//USES_CONVERSION;
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s0;", EMPTY_PARAM);
-	CreateCommand(FPCMD_CLOSEFISCAL, buff);
+	CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, buff);
 	SendCommand();
 	/*
 	CString res = A2W((char*)m_data);
@@ -997,15 +988,16 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 // virtual
 bool CFiscalPrinter_Datecs3141::XReport()
 {
-	try {
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s1;", EMPTY_PARAM);
-		CreateCommand(FPCMD_DAYREPORTS, buff);
+	try 
+	{
+		TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
+		CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 	}
-	catch (CFPException ex) {
-		ex.ReportError2();
+	catch (CFPException ex) 
+	{
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -1015,15 +1007,15 @@ bool CFiscalPrinter_Datecs3141::XReport()
 // virtual 
 bool CFiscalPrinter_Datecs3141::ZReport()
 {
-	try {
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s0;", EMPTY_PARAM);
-		CreateCommand(FPCMD_DAYREPORTS, buff);
+	try 
+	{
+		TraceINFO(L"DATECS [%s]. ZReport()", _id.c_str());
+		CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s0;", EMPTY_PARAM);
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill id
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 	}
 	catch (CFPException ex) {
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -1045,17 +1037,17 @@ bool CFiscalPrinter_Datecs3141::ServiceInOut(__int64 sum, __int64 hid)
 	else
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum / 100), (int)(sum % 100));
 	try {
-		CreateCommand(FPCMD_SVCINOUT, buff);
+		CreateCommand(L"SVCINOUT", FPCMD_SVCINOUT, buff);
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastCheckNo, true); // get bill id
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill id
 
-		CreateCommand(FPCMD_CASHDRAWER, EMPTY_PARAM);
+		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
 
 	}
 	catch (CFPException ex)
 	{
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -1152,7 +1144,7 @@ void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, LPCWSTR szName, bool
 
 bool CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo(__int64 termId, long& zNo)
 {
-	CreateCommand(FPCMD_DAYCOUNTERS, L"000000;0;");
+	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;0;");
 	SendCommand();
 	/*
 	USES_CONVERSION;
@@ -1176,7 +1168,7 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo(__int64 termId, long& zN
 
 bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowStateError /*= true*/)
 {
-	CreateCommand(FPCMD_DAYCOUNTERS, L"000000;3;");
+	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
 	/*
 	USES_CONVERSION;
@@ -1203,11 +1195,11 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowSt
 bool CFiscalPrinter_Datecs3141::OpenCashDrawer()
 {
 	try {
-		CreateCommand(FPCMD_CASHDRAWER, EMPTY_PARAM);
+		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
 	}
 	catch (CFPException ex) {
-		ex.ReportError2();
+		m_strError = ex.GetError();
 		return false;
 	}
 	return true;
@@ -1286,22 +1278,6 @@ std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
 
 
 	return s;
-}
-
-void CFiscalPrinter_Datecs3141::ReportError(CFPException& ex)
-{
-	std::wstring s = GetLastErrorS();
-	if (s.empty())
-	{
-		ex.ReportError2();
-		return;
-	}
-	/*
-	if (m_bBigMsg)
-		CMessageBox::DoMessageBox(s, NULL, MB_ICONHAND);
-	else
-		AfxMessageBox(s);
-	*/
 }
 
 // virtual 

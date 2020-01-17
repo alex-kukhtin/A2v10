@@ -87,6 +87,9 @@
     <ClInclude Include="appconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="consolewnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -152,6 +155,9 @@
     <ClCompile Include="appconfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="consolewnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="A2v10.Application.rc">
@@ -166,6 +172,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\a2logo_256.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\consoletoolbar.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
