@@ -7,7 +7,7 @@
 
 
 const wchar_t* CMD_CONNECT = L"connect";
-const wchar_t* CMD_NULL = L"null";
+const wchar_t* CMD_NULL = L"nullReceipt";
 const wchar_t* CMD_OPEN_FISCAL = L"openFiscal";
 
 PosCommand::PosCommand()
@@ -18,7 +18,7 @@ PosCommand::PosCommand()
 pos_result_t PosCommand::ExecuteCommand(std::wstring& result)
 {
 	result.clear();
-	if (m_command == CMD_CONNECT) {
+	if (_command == CMD_CONNECT) {
 		if (m_bConnected)
 			return  pos_result_t::_already_connected;
 		return ConnectToPrinter();
@@ -27,7 +27,7 @@ pos_result_t PosCommand::ExecuteCommand(std::wstring& result)
 	{
 		if (!m_bConnected)
 			return pos_result_t::_not_connected;
-		FiscalPrinter* pPrinter = FiscalPrinter::FindPrinter(m_id.c_str());
+		FiscalPrinter* pPrinter = FiscalPrinter::FindPrinter(_id.c_str());
 		if (pPrinter == nullptr)
 			return pos_result_t::_printer_not_found;
 		return ExecuteCommandInt(pPrinter);
@@ -43,5 +43,14 @@ pos_result_t PosCommand::ConnectToPrinter()
 pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter)
 {
 	return pos_result_t::_success;
+}
+
+// virtual 
+JsonTarget* PosCommand::CreateObject(const wchar_t* szName) 
+{
+	// !!!CMD CONNECT
+	if (_command == CMD_CONNECT)
+		_data.reset(new PosConnectData());
+	return _data.get();
 }
 
