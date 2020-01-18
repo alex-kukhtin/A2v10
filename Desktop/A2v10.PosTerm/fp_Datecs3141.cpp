@@ -1,6 +1,7 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
+#include "posterm.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
@@ -76,24 +77,16 @@ CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
 
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::PrintDiagnostic()
+void CFiscalPrinter_Datecs3141::PrintDiagnostic()
 {
-	try {
-		CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
-		SendCommand();
+	CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
+	SendCommand();
 
-		CreateCommand(L"PRINTDIAG", FPCMD_PRINTDIAG, L"000000;0;"); /*0 - tech info*/
-		SendCommand();
+	CreateCommand(L"PRINTDIAG", FPCMD_PRINTDIAG, L"000000;0;"); /*0 - tech info*/
+	SendCommand();
 
-		CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
-		SendCommand();
-
-	}
-	catch (CFPException ex) {
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
+	SendCommand();
 }
 
 // virtual 
@@ -220,38 +213,29 @@ bool CFiscalPrinter_Datecs3141::Beep()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
+void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 {
 	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
-	try {
-		CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%01d;0;", EMPTY_PARAM, op, tno);
-		SendCommand();
+	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%01d;0;", EMPTY_PARAM, op, tno);
+	SendCommand();
 
-		// print total
-		CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
-		SendCommand();
+	// print total
+	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
+	SendCommand();
 
-		// payment = 0
-		CreateCommand(L"PAYMENT", FPCMD_PAYMENT, L"000000;0;0.00;");
-		SendCommand();
+	// payment = 0
+	CreateCommand(L"PAYMENT", FPCMD_PAYMENT, L"000000;0;0.00;");
+	SendCommand();
 
-		CloseFiscal(m_nLastReceiptNo);
+	CloseFiscal(m_nLastReceiptNo);
 
-		if (bOpenCashDrawer)
-		{
-			CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
-			SendCommand();
-		}
-
-	}
-	catch (CFPException ex) 
+	if (bOpenCashDrawer)
 	{
-		m_strError = ex.GetError();
-		return false;
+		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
+		SendCommand();
 	}
-	return true;
 }
 
 /*
@@ -986,39 +970,22 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 }
 
 // virtual
-bool CFiscalPrinter_Datecs3141::XReport()
+void CFiscalPrinter_Datecs3141::XReport()
 {
-	try 
-	{
-		TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
-		CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
-		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
-	}
-	catch (CFPException ex) 
-	{
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
+	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
+	SendCommand();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 }
 
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::ZReport()
+void CFiscalPrinter_Datecs3141::ZReport()
 {
-	try 
-	{
-		TraceINFO(L"DATECS [%s]. ZReport()", _id.c_str());
-		CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s0;", EMPTY_PARAM);
-		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
-	}
-	catch (CFPException ex) {
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	TraceINFO(L"DATECS [%s]. ZReport()", _id.c_str());
+	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s0;", EMPTY_PARAM);
+	SendCommand();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 }
 
 // virtual 
@@ -1192,17 +1159,10 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowSt
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::OpenCashDrawer()
+void CFiscalPrinter_Datecs3141::OpenCashDrawer()
 {
-	try {
-		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
-		SendCommand();
-	}
-	catch (CFPException ex) {
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
+	SendCommand();
 }
 
 static void _append(std::wstring& s, const wchar_t* szAdd)

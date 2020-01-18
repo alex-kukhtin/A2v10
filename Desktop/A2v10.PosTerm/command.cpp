@@ -4,6 +4,7 @@
 #include "posterm.h"
 #include "command.h"
 #include "fiscalprinter.h"
+#include "fiscalprinterImpl.h"
 
 
 const wchar_t* CMD_NULL_RECEIPT = L"nullReceipt";
@@ -38,11 +39,12 @@ pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring
 	while (entry && entry->_name) {
 		if (_command == entry->_name) {
 			auto func = entry->_func;
-			bool rc = (this->*entry->_func)(pPrinter, _data.get(), result);
-			if (rc)
+			try {
+				(this->*entry->_func)(pPrinter, _data.get(), result);
 				return pos_result_t::_success;
-			else {
-				result = pPrinter->GetLastError();
+			}
+			catch (CFPException ex) {
+				result = ex.GetError();
 				return pos_result_t::_error;
 			}
 		}
@@ -61,21 +63,21 @@ JsonTarget* PosCommand::CreateObject(const wchar_t* szName)
 	return _data.get();
 }
 
-bool PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+void PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
 	PosNullReceiptData* pnrd = dynamic_cast<PosNullReceiptData*>(data);
 	bool bOpenDrawer = false;
 	if (pnrd)
 		bOpenDrawer = pnrd->m_openCashDrawer;
-	return pPrinter->NullReceipt(bOpenDrawer);
+	pPrinter->NullReceipt(bOpenDrawer);
 }
 
-bool PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+void PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
-	return pPrinter->XReport();
+	pPrinter->XReport();
 }
 
-bool PosCommand::ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+void PosCommand::ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
-	return pPrinter->ZReport();
+	pPrinter->ZReport();
 }

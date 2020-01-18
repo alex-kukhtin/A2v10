@@ -8,9 +8,10 @@
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
-void PosSetHostHandle(HWND handle)
+
+void PosSetTraceTarget(ITraceTarget* target)
 {
-	CFiscalPrinterImpl::SetHostHandle(handle);
+	CFiscalPrinterImpl::PosSetTraceTarget(target);
 }
 
 pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud)

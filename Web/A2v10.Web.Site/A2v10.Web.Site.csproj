@@ -191,6 +191,7 @@
     <Content Include="Localization\default.de.txt" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\mobile.js" />
+    <Content Include="scripts\server\invoke.js" />
     <Content Include="TestMobile\index.html" />
     <Content Include="TestMobile\testmobile.js" />
     <Content Include="TestPages\d3hierarchy.html" />

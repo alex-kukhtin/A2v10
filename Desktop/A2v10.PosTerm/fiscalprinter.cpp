@@ -59,11 +59,10 @@ bool FiscalPrinter::Open(const wchar_t* port, int baud)
 }
 
 // virtual 
-bool FiscalPrinter::NullReceipt(bool bOpenCashDrawer)
+void FiscalPrinter::NullReceipt(bool bOpenCashDrawer)
 {
 	if (_impl)
-		return _impl->NullReceipt(bOpenCashDrawer);
-	return false;
+		_impl->NullReceipt(bOpenCashDrawer);
 }
 
 // const 
@@ -74,12 +73,14 @@ const wchar_t* FiscalPrinter::GetLastError()
 	return nullptr;
 }
 
-bool FiscalPrinter::XReport()
+void FiscalPrinter::XReport()
 {
-	return _impl ? _impl->XReport() : false;
+	if (_impl)
+	_impl->XReport();
 }
 
-bool FiscalPrinter::ZReport()
+void FiscalPrinter::ZReport()
 {
-	return _impl ? _impl->ZReport() : false;
+	if (_impl)
+		_impl->ZReport();
 }

@@ -165,7 +165,8 @@ void CMainApp::StartPosThread()
 {
 	if (!m_pAppConfig || !m_pAppConfig->HasFiscalPrinters())
 		return;
-	PosSetHostHandle(m_pMainWnd->GetSafeHwnd());
+	_traceTarget.m_hWnd = m_pMainWnd->GetSafeHwnd();
+	PosSetTraceTarget(&_traceTarget);
 	if (!m_pAppConfig->ConnectToPrinter())
 		return;
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
@@ -243,3 +244,14 @@ void CMainApp::OnFileNew()
 	}
 }
 
+//virtual 
+void CAppTraceTarget::Trace(TraceType type, const wchar_t* message)
+{
+	WPARAM wParam = WMI_POS_TRACE_WPARAM_INFO;
+	switch (type) {
+	case ITraceTarget::TraceType::_error:
+		wParam = WMI_POS_TRACE_WPARAM_ERROR;
+		break;
+	}
+	::SendMessage(m_hWnd, WMI_POS_TRACE, wParam, (LPARAM)message);
+}

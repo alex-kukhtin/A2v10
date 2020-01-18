@@ -63,7 +63,8 @@ const template: Template = {
 		unApply: cmn.docUnApply,
 		resumeWorkflow,
 		insertAbove: insertRow(InsertTo.above),
-		insertBelow: insertRow(InsertTo.below)
+		insertBelow: insertRow(InsertTo.below),
+		runServerScript
 	}
 };
 
@@ -121,4 +122,16 @@ async function applyDoc(this: TRoot, doc: TDocument): Promise<any> {
 
 function barcodeChange(root, val) {
 	console.dir(val);
+}
+
+async function runServerScript() {
+	const ctrl = this.$ctrl;
+	try {
+		let result = await ctrl.$invoke('serverScript', { Id: this.Document.Id });
+		console.dir(result);
+		ctrl.$reload();
+	}
+	catch (err) {
+		alert(err);
+	}
 }

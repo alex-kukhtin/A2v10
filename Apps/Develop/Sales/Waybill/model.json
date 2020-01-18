@@ -79,7 +79,13 @@
 		},
 		"saveTime": {
 			"type": "sql",
-			"procedure":  "SaveDocumentTime"
+			"procedure": "SaveDocumentTime"
+		},
+		"serverScript": {
+			"type": "script",
+			"template": "server.template",
+			"model": "Document",
+			"command": "serverProcessAndSave"
 		}
 	},
 	"reports": {

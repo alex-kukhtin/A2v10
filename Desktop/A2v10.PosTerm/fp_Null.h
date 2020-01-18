@@ -34,11 +34,11 @@ public:
 	virtual void Close() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
-	virtual bool NullReceipt(bool bOpenCashDrawer) override;
+	virtual void NullReceipt(bool bOpenCashDrawer) override;
 	virtual bool CopyBill() override;
-	virtual bool XReport() override;
-	virtual bool ZReport() override;
-	virtual bool OpenCashDrawer() override;
+	virtual void XReport() override;
+	virtual void ZReport() override;
+	virtual void OpenCashDrawer() override;
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;

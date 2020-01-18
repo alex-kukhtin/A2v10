@@ -372,7 +372,12 @@ namespace A2v10.Request
 
 	public class RequestCommand : RequestBase
 	{
+		[JsonIgnore]
 		public String command;
+
+		[JsonProperty("command")]
+		public String commandProp;
+
 		public CommandType type;
 		public String procedure;
 		public String file;

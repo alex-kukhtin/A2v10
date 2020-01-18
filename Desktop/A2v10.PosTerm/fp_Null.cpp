@@ -1,6 +1,7 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
+#include "posterm.h"
 #include "fiscalprinterimpl.h"
 #include "fp_Null.h"
 
@@ -34,10 +35,9 @@ bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 }
 
 // virtual 
-bool CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
+void CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
 {
 	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
-	return true;
 }
 
 // virtual 
@@ -148,24 +148,21 @@ bool CFiscalPrinter_Null::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
-bool CFiscalPrinter_Null::XReport()
+void CFiscalPrinter_Null::XReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. XReport()", _id.c_str());
-	return true;
 }
 
 // virtual 
-bool CFiscalPrinter_Null::ZReport()
+void CFiscalPrinter_Null::ZReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. ZReport()", _id.c_str());
-	return true;
 }
 
 // virtual 
-bool CFiscalPrinter_Null::OpenCashDrawer()
+void CFiscalPrinter_Null::OpenCashDrawer()
 {
 	TraceINFO(L"TESTPRINTER [%s]. OpenCashDrawer()", _id.c_str());
-	return true;
 }
 
 // virtual 

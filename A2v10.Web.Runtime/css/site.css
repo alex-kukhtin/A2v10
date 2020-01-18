@@ -5943,6 +5943,12 @@ table.sheet tr.row-no-border td.underline {
   border-bottom: 1px solid #ddd;
   height: 30px;
 }
+table.sheet tr.row-page-header td {
+  font-size: 0.95rem;
+  color: #999;
+  height: 3rem;
+  border-style: none;
+}
 table.sheet tr.row-parameter td,
 table.sheet tr.row-last-parameter td {
   border-style: none !important;

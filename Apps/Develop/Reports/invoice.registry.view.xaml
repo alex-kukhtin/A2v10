@@ -32,16 +32,14 @@
 			</Grid>
 		</Taskpad>
 	</Page.Taskpad>
-	<!--
 	<SheetPage Orientation="Landscape">
-	-->
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow Mark="{Bind $Mark}">
 					<SheetCell Content="{Bind Id, DataType=String}" Align="Center" />
 					<SheetCell Content="{Bind Date, DataType=DateTime}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number, Format='00'}" Align="Right"/>
-					<SheetCell Content="{Bind Sum, DataType=Currency, Format='#,000.0000'}" Align="Right"/>
+					<SheetCell Content="{Bind Sum, DataType=Currency, Format='#,000.0000', NegativeRed=True}" Align="Right"/>
 					<SheetCell Content="{Bind Memo}"/>
 				</SheetRow>
 			</SheetSection>
@@ -53,7 +51,8 @@
 					<SheetCell ColSpan="5">
 						<Text>Параметр отчета:
 							<Span Bold="True" Content="{Bind Query.Agent.Name}"/>
-						</Text></SheetCell>
+						</Text>
+					</SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
 					<SheetCell ColSpan="3" Bold="True">Информация</SheetCell>
@@ -94,7 +93,6 @@
 				</SheetRow>
 			</Sheet.Footer>
 		</Sheet>
-	<!--
-	</SheetPage> -->
+	</SheetPage>
 	<Code Content="{Bind Query}" Multiline="True" If="False"></Code>
 </Page>

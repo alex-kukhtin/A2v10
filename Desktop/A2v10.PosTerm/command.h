@@ -31,7 +31,7 @@ protected:
 	END_JSON_PROPS()
 };
 
-typedef bool (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
+typedef void (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
 
 
 class PosCommand : public JsonTarget
@@ -59,9 +59,9 @@ protected:
 
 	virtual JsonTarget* CreateObject(const wchar_t* szName) override;
 
-	bool NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	bool XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	bool ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 private:
 	static COMMAND_BIND _binded_commands[];
 };

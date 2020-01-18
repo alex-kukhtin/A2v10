@@ -1,6 +1,7 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
+#include "posterm.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 
@@ -8,13 +9,22 @@
 
 //#define NO_PORT_MODE -- DEBUG
 
-void W2A(const wchar_t* szWideChar, char* szMbChars, int cbMultiByte)
+void W2A(const wchar_t* szWideChars, char* szMbChars, int cbMultiByte)
 {
 	UINT acp = CP_THREAD_ACP;
 	*szMbChars = '\0';
-	int ret = WideCharToMultiByte(acp, 0, szWideChar, -1, szMbChars, cbMultiByte, nullptr, nullptr);
+	int ret = WideCharToMultiByte(acp, 0, szWideChars, -1, szMbChars, cbMultiByte, nullptr, nullptr);
 	_ASSERT(ret != 0);
 }
+
+void A2W(const char* szMultiByte, wchar_t* szWideChars, int cbWide)
+{
+	UINT acp = CP_THREAD_ACP;
+	*szWideChars = L'\0';
+	int ret = MultiByteToWideChar(acp, 0, szMultiByte, -1, szWideChars, cbWide);
+	_ASSERT(ret != 0);
+}
+
 
 
 #define SYN 0x16

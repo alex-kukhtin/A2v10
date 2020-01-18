@@ -555,6 +555,8 @@ const vm = new DataModelController({
 			if (msi.Template != null)
 			{
 				String fileTemplateText = _host.ApplicationReader.ReadTextFile(msi.Path, msi.Template + ".js");
+				if (fileTemplateText == null)
+					throw new FileNotFoundException($"File not found. '{Path.Combine(msi.Path, msi.Template)}'");
 				sbRequired = new StringBuilder();
 				AddRequiredModules(sbRequired, fileTemplateText);
 				templateText = CreateTemplateForWrite(Localize(fileTemplateText));

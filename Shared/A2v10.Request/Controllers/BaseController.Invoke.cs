@@ -112,7 +112,33 @@ namespace A2v10.Request
 		{
 			if (String.IsNullOrEmpty(cmd.template))
 				throw new RequestModelException($"template must be specified for command '{cmd.command}'");
+			IScriptProcessor scriptProcessor = ServiceLocator.Current.GetService<IScriptProcessor>();
 			// SYNC!
+			IDataModel dataModel = null;
+			if (!String.IsNullOrEmpty(cmd.CurrentModel))
+				dataModel = _dbContext.LoadModel(cmd.CurrentSource, cmd.LoadProcedure, dataToExec, cmd.commandTimeout);
+			var ssi = new ServerScriptInfo
+			{
+				DataModel = dataModel,
+				Path = cmd.Path,
+				Template = cmd.template,
+				Parameter = cmd.commandProp
+			};
+			var resultJson = scriptProcessor.RunScript(ssi, "invoke");
+			var result = JsonConvert.DeserializeObject<ExpandoObject>(resultJson?.ToString(), new ExpandoObjectConverter());
+			var status = result.Get<String>("status");
+			switch (status)
+			{
+				case "save":
+					{
+						var dataToSave = result.Get<ExpandoObject>("data");
+						var savedDm= _dbContext.SaveModel(cmd.CurrentSource, cmd.UpdateProcedure, dataToSave, dataToExec);
+						writer.Write("{}");
+					}
+					break;
+				case "error":
+					throw new RequestModelException(result.Get<String>("message"));
+			}
 		}
 
 		async Task ExecuteClrCommand(RequestCommand cmd, ExpandoObject dataToExec, TextWriter writer)

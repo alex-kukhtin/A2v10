@@ -95,6 +95,8 @@ namespace A2v10.Xaml
 				tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
 				if (contBind.DataType != DataType.String)
 					tag.MergeAttribute("data-type", contBind.DataType.ToString().ToLowerInvariant());
+				if (contBind.NegativeRed)
+					tag.MergeAttribute(":class", $"$getNegativeRedClass({contBind.GetPath(context)})");
 			}
 		}
 

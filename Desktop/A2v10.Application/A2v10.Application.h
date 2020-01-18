@@ -12,6 +12,13 @@
 
 class CAppConfig;
 
+class CAppTraceTarget : public ITraceTarget
+{
+public:
+	HWND m_hWnd;
+	virtual void Trace(TraceType type, const wchar_t* message) override;
+};
+
 class CMainApp : public CA2WinApp
 {
 public:
@@ -20,7 +27,7 @@ public:
 	CString m_strUdlFileName;
 	CString m_strInitialUrl;
 	CString m_strConnectionString;
-
+	CAppTraceTarget _traceTarget;
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
 	DWORD m_dwPosThreadId;

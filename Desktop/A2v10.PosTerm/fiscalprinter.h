@@ -16,7 +16,7 @@ public:
 	bool Open(const wchar_t* port, int baud);
 	const wchar_t* GetLastError();
 
-	bool NullReceipt(bool bOpenCashDrawer);
+	void NullReceipt(bool bOpenCashDrawer);
 
 	void OpenReturnReceipt(long retNo);
 	void PrintDiscountForBill(long discountPercent, long discountSum);
@@ -27,8 +27,8 @@ public:
 	void PrintFiscalText(const wchar_t* szText);
 	void PrintNonFiscalText(const wchar_t* szText);
 	void OpenCashDrawer();
-	bool XReport();
-	bool ZReport();
+	void XReport();
+	void ZReport();
 
 	// customer display
 	void DisplayDateTime();

@@ -24,7 +24,7 @@ public:
 	std::wstring _id;
 	std::wstring m_strError;
 
-	static HWND _hostHwnd;
+	static ITraceTarget* _traceTarget;
 
 	enum PrinterFlags
 	{
@@ -51,9 +51,9 @@ public:
 
 	//virtual void SetPrinterInfo(const CFiscalPrinterInfo& info);
 	//virtual bool PrintDiagnostic();
-	virtual bool XReport()  = 0;
-	virtual bool ZReport() = 0;
-	virtual bool NullReceipt(bool bOpenCashDrawer) = 0;
+	virtual void XReport()  = 0;
+	virtual void ZReport() = 0;
+	virtual void NullReceipt(bool bOpenCashDrawer) = 0;
 	//virtual bool PostNullCheck(__int64 hid);
 	//virtual bool PostClose(__int64 hid);
 	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
@@ -74,7 +74,7 @@ public:
 	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;
 	virtual bool AddArticle(__int64 termId, __int64 art, const wchar_t* szName, __int64 vtid, long price) = 0;
-	virtual bool OpenCashDrawer() = 0;
+	virtual void OpenCashDrawer() = 0;
 	virtual bool PrintFiscalText(const wchar_t* szText) = 0;
 	virtual bool PrintNonFiscalText(const wchar_t* szText);
 	virtual bool Beep();
@@ -90,7 +90,7 @@ public:
 	void TraceERROR(const wchar_t* info, ...);
 	bool IsDebugMode() const;
 
-	static void SetHostHandle(HWND hHandle);
+	static void PosSetTraceTarget(ITraceTarget* target);
 private:
-	void Trace(int type, const wchar_t* msg, va_list args);
+	void Trace(ITraceTarget::TraceType type, const wchar_t* msg, va_list args);
 };

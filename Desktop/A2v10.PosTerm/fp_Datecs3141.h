@@ -30,11 +30,11 @@ class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 public:
 	CFiscalPrinter_Datecs3141();
 
-	virtual bool PrintDiagnostic();
+	virtual void PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
-	virtual bool NullReceipt(bool bOpenCashDrawer) override;
-	virtual bool XReport() override;
-	virtual bool ZReport() override;
+	virtual void NullReceipt(bool bOpenCashDrawer) override;
+	virtual void XReport() override;
+	virtual void ZReport() override;
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
 	virtual bool OpenReceipt(LPCWSTR szDepartmentName, __int64 termId) override;
 	virtual bool OpenReturnReceipt(LPCWSTR szDepartmentName, __int64 termId, long checkNo) override;
@@ -54,7 +54,7 @@ public:
 	virtual bool AddArticle(__int64 termId, __int64 art, LPCWSTR szName, __int64 vtid, long price) override;
 	virtual bool CopyBill() override;
 	virtual bool Init(__int64 termId) override;
-	virtual bool OpenCashDrawer() override;
+	virtual void OpenCashDrawer() override;
 	virtual bool PrintFiscalText(LPCWSTR szText) override;
 	virtual bool Beep() override;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To) override;

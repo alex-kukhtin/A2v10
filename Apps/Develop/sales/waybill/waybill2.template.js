@@ -56,7 +56,8 @@ define(["require", "exports"], function (require, exports) {
             unApply: cmn.docUnApply,
             resumeWorkflow,
             insertAbove: insertRow("above"),
-            insertBelow: insertRow("below")
+            insertBelow: insertRow("below"),
+            runServerScript
         }
     };
     exports.default = template;
@@ -106,5 +107,16 @@ define(["require", "exports"], function (require, exports) {
     }
     function barcodeChange(root, val) {
         console.dir(val);
+    }
+    async function runServerScript() {
+        const ctrl = this.$ctrl;
+        try {
+            let result = await ctrl.$invoke('serverScript', { Id: this.Document.Id });
+            console.dir(result);
+            ctrl.$reload();
+        }
+        catch (err) {
+            alert(err);
+        }
     }
 });

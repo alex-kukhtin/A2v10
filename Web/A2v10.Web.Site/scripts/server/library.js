@@ -21,6 +21,19 @@ if (typeof window === 'undefined') {
 	};
 }
 
+if (typeof console === 'undefined') {
+
+	let dummy = function dummy() {
+	};
+
+	var console = {
+		log: dummy,
+		dir: dummy,
+		error: dummy,
+		info: dummy
+	};
+}
+
 var require = function require(module, noerror) {
 	if (module in app.modules) {
 		let am = app.modules[module];

@@ -12,6 +12,7 @@
 			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}" />
 			<Button Icon="Print" Content="PrintDirect" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Print=True}"/>
 			<Button Icon="Download" Content="Download" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Export=True, Format=OpenSheet}"/>
+			<Button Icon="Process" Content="RunServerScript" Command="{BindCmd Execute, CommandName=runServerScript}" />
 			<Button Icon="Close" Toolbar.Align="Right"
                     Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>

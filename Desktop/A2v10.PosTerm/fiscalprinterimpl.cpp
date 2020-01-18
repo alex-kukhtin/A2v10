@@ -1,16 +1,9 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
-#include "framework.h"
+#include "posterm.h"
 #include "fiscalprinterimpl.h"
 
-
-#define WM_APP_A2 (WM_APP + 80)
-#define WMI_POS_TRACE (WM_APP_A2 + 15) // see: appdefs.h
-#define WMI_POS_TRACE_WPARAM_FIRST 11
-#define WMI_POS_TRACE_WPARAM_INFO  11
-#define WMI_POS_TRACE_WPARAM_ERROR 12
-#define WMI_POS_TRACE_WPARAM_LAST  12
 
 #define MAX_MSG_LEN 1024
 
@@ -45,7 +38,7 @@ CFiscalPrinterImpl::~CFiscalPrinterImpl(void)
 }
 
 // static 
-HWND CFiscalPrinterImpl::_hostHwnd = nullptr;
+ITraceTarget* CFiscalPrinterImpl::_traceTarget = nullptr;
 
 const wchar_t* CFiscalPrinterImpl::GetLastError()
 {
@@ -128,9 +121,9 @@ const std::wstring& CFiscalPrinterImpl::GetError() const
 }
 
 // static 
-void CFiscalPrinterImpl::SetHostHandle(HWND hHandle)
+void CFiscalPrinterImpl::PosSetTraceTarget(ITraceTarget* target)
 {
-	_hostHwnd = hHandle;
+	_traceTarget = target;
 }
 
 bool CFiscalPrinterImpl::IsDebugMode() const
@@ -138,12 +131,11 @@ bool CFiscalPrinterImpl::IsDebugMode() const
 	return true; // TODO!!!
 }
 
-
 void CFiscalPrinterImpl::TraceINFO(const wchar_t* info, ...)
 {
 	va_list argList;
 	va_start(argList, info);
-	Trace(WMI_POS_TRACE_WPARAM_INFO, info, argList);
+	Trace(ITraceTarget::_info, info, argList);
 	va_end(argList);
 }
 
@@ -151,17 +143,17 @@ void CFiscalPrinterImpl::TraceERROR(const wchar_t* info, ...)
 {
 	va_list argList;
 	va_start(argList, info);
-	Trace(WMI_POS_TRACE_WPARAM_ERROR, info, argList);
+	Trace(ITraceTarget::_info, info, argList);
 	va_end(argList);
 }
 
 // static 
-void CFiscalPrinterImpl::Trace(int type, const wchar_t* info, va_list args)
+void CFiscalPrinterImpl::Trace(ITraceTarget::TraceType type, const wchar_t* info, va_list args)
 {
-	if (!_hostHwnd)
+	if (!_traceTarget)
 		return;
 	wchar_t buff[MAX_MSG_LEN];
 	vswprintf(buff, MAX_MSG_LEN - 1, info, args);
-	::SendMessage(_hostHwnd, WMI_POS_TRACE, (WPARAM)type, (LPARAM)buff);
+	_traceTarget->Trace(type, buff);
 }
 

@@ -20,7 +20,8 @@ namespace A2v10.Xaml
 		LightHeader,
 		Footer,
 		Total,
-		NoBorder
+		NoBorder,
+		PageHeader
 	}
 
 	[ContentProperty("Cells")]

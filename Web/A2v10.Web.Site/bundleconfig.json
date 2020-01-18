@@ -296,7 +296,8 @@
 			"app/services/period.js",
 			"app/services/validators.js",
 			"app/services/datamodel.js",
-			"app/server/validate.js"
+			"app/server/validate.js",
+			"app/server/invoke.js"
 		],
 		"minify": {
 			"enabled": false,
