@@ -2,18 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7600</version>
+		<version>10.0.7616</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
 		<projectUrl>https://github.com/alex-kukhtin/A2v10</projectUrl>
-		<!--
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
-	-->
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2015-2019 Alex Kukhtin.</copyright>
+		<copyright>Copyright © 2015-2020 Alex Kukhtin.</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<references>
 			<reference file="A2v10.Web.Mvc.dll" />
@@ -53,7 +50,6 @@
 		<file src="bin/Microsoft.Owin.Security.OAuth.dll" target="lib/net461" />
 		<file src="bin/Microsoft.Web.Infrastructure.dll" target="lib/net461" />
 		<file src="bin/System.ValueTuple.dll" target="lib/net461" />
-		<file src="bin/System.Security.Cryptography.Xml.dll" target="lib/net461"/>
 		<file src="bin/System.Web.Mvc.dll" target="lib/net461" />
 		<file src="bin/System.Web.Razor.dll" target="lib/net461" />
 		<file src="bin/System.Web.WebPages.dll" target="lib/net461" />

@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7603 */
+/* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
+/* Version 10.0.7616 */
 
 
 declare function require(url: string): any;
@@ -101,7 +101,12 @@ interface IRoot extends IElement {
 
 
 /* template commands */
-interface templateCommandFunc { (this: IRoot, arg?: any): void; }
+
+declare const enum TemplateCommandResult {
+	save = 'save'
+}
+
+interface templateCommandFunc { (this: IRoot, arg?: any): void | TemplateCommandResult | Promise<any>; }
 
 interface templateCommandObj {
 	exec: templateCommandFunc,
@@ -246,6 +251,7 @@ declare const enum DataType {
 	Number = "Number",
 	DateTime = "DateTime",
 	Date = "Date",
+	DateUrl = "DateUrl",
 	Time = "Time",
 	Period = "Period"
 }
@@ -343,3 +349,4 @@ interface EventBus {
 	$once(event: string, handler: (...params: any[]) => any);
 	$emit(event: string, ...params: any[]);
 }
+
