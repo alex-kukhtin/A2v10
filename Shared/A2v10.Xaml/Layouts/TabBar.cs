@@ -63,6 +63,7 @@ namespace A2v10.Xaml
 			foreach (var b in Buttons)
 			{
 				var tag = new TagBuilder(null, "a2-tab-bar-item");
+				b.MergeAttributes(tag, context, MergeAttrMode.Visibility);
 				if (isBind != null)
 				{
 					tag.MergeAttribute("v-for", $"(btn, btnIndex) in {isBind.GetPath(context)}");
