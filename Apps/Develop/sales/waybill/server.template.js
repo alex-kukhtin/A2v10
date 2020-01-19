@@ -128,5 +128,5 @@ function serverProcessAndSave() {
 	root.Document.Memo = 'MEMO FROM SERVER SCRIPT';
 	root.Document.Rows.$append().Qty = 2;
 	//throw new Error('UI:unable to save');
-	//return 'save';
+	return 'save';
 }
