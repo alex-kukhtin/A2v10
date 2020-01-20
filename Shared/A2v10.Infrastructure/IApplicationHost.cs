@@ -20,7 +20,8 @@ namespace A2v10.Infrastructure
 		String SmtpConfig { get; }
 		Boolean Mobile { get; set; }
 		Boolean Embedded { get; }
-
+		String ScriptEngine { get; }
+	
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }
 		Boolean IsDTCEnabled { get; }

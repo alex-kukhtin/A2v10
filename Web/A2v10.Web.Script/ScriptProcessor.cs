@@ -1,10 +1,9 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using Newtonsoft.Json;
 
 namespace A2v10.Web.Script
 {
@@ -21,10 +20,17 @@ namespace A2v10.Web.Script
 
 		IScriptContext CreateScript()
 		{
-			if (_host.IsDebugConfiguration)
-				return new A2v10.Script.JSRT.ScriptContext(); // EDGE
-			else
-				return new A2v10.Script.ScriptContext();  // CHAKRA CORE
+			switch (_host.ScriptEngine)
+			{
+				case "JSRT":
+					return new A2v10.Script.JSRT.ScriptContext(false); // EDGE without debugging
+				case "JSRTDebug":
+					return new A2v10.Script.JSRT.ScriptContext(true); // EDGE with debugging
+				case "ChakraCore":
+					return new A2v10.Script.ScriptContext();  // CHAKRA CORE
+				default:
+					throw new InvalidProgramException("Invalid script engine. The possible values are 'ChakraCore', 'JSRT', 'JSRTDebug'");
+			}
 		}
 
 		public Object ValidateModel(ServerScriptInfo ssi)

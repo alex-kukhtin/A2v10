@@ -68,6 +68,7 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
 
 		public String ZipApplicationFile
 		{

@@ -91,6 +91,8 @@ namespace A2v10.Tests.Config
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 
+		public String ScriptEngine => null;
+
 		public String MakeRelativePath(String path, String fileName)
 		{
 			throw new NotImplementedException();

@@ -62,6 +62,7 @@ namespace A2v10.Runtime
 		public String SupportEmail => null;
 		public String AppHost => null;
 		public String UserAppHost => null;
+		public String ScriptEngine => null;
 
 		public String Theme => null;
 		public String HelpUrl => CurrentHelpUrl;

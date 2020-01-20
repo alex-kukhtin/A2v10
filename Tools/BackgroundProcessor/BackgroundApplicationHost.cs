@@ -46,6 +46,8 @@ namespace BackgroundProcessor
 			}
 		}
 
+		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
+
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
 		public Boolean IsDTCEnabled =>  throw new NotImplementedException(nameof(IsDTCEnabled));
 		public Boolean IsAdminAppPresent => throw new NotImplementedException(nameof(IsAdminAppPresent));

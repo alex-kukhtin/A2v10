@@ -1,7 +1,6 @@
 ﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Configuration;
 
 using ChakraHost.Hosting;
 
@@ -15,6 +14,12 @@ namespace A2v10.Script.JSRT
 		JavaScriptRuntime _runtime;
 		JavaScriptContext _context = JavaScriptContext.Invalid;
 		JavaScriptContext.Scope _scope;
+		bool _debug;
+
+		public ScriptContext(bool startDebugger)
+		{
+			_debug = startDebugger;
+		}
 
 		#region IScriptContext
 		public void Start()
@@ -131,17 +136,8 @@ namespace A2v10.Script.JSRT
 		{
 			_context = _runtime.CreateContext();
 			_scope = new JavaScriptContext.Scope(_context);
-			if (IsDebugConfiguration)
+			if (_debug)
 				_runtime.StartDebugging();
-		}
-
-		public static Boolean IsDebugConfiguration
-		{
-			get
-			{
-				String config = ConfigurationManager.AppSettings["configuration"];
-				return (config != null) && (config.ToLower() == "debug");
-			}
 		}
 	}
 }
