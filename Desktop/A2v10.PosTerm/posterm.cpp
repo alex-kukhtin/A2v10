@@ -11,7 +11,7 @@
 
 void PosSetTraceTarget(ITraceTarget* target)
 {
-	CFiscalPrinterImpl::PosSetTraceTarget(target);
+	FiscalPrinterImpl::PosSetTraceTarget(target);
 }
 
 pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud)
@@ -38,4 +38,9 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 		return pos_result_t::_invalid_json;
 	}
 	return pos_result_t::_success;
+}
+
+void PosShutDown()
+{
+	FiscalPrinter::ShutDown();
 }

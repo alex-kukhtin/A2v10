@@ -797,7 +797,7 @@ bool CFiscalPrinter_Datecs3141::PrintFiscalText(LPCWSTR szText)
 // virtual 
 DWORD CFiscalPrinter_Datecs3141::GetFlags()
 {
-	DWORD dw = CFiscalPrinterImpl::FP_SYNCTIME | CFiscalPrinterImpl::FP_MODEMSTATE;
+	DWORD dw = FiscalPrinterImpl::FP_SYNCTIME | FiscalPrinterImpl::FP_MODEMSTATE;
 	return dw;
 }
 

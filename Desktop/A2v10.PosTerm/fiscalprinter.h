@@ -1,19 +1,21 @@
 #pragma once
 
-class CFiscalPrinterImpl;
+class FiscalPrinterImpl;
 
 class FiscalPrinter
 {
 	std::wstring _id;
-	std::unique_ptr<CFiscalPrinterImpl> _impl;
+	std::unique_ptr<FiscalPrinterImpl> _impl;
 	static std::vector<std::unique_ptr<FiscalPrinter> > _printers;
 
 public:
 	static FiscalPrinter* FindPrinter(const wchar_t* id);
 	static pos_result_t Connect(const wchar_t* model, const wchar_t* port, int baud);
+	static void ShutDown();
 
 	bool Create(const wchar_t* model);
 	bool Open(const wchar_t* port, int baud);
+	void Disconnect();
 	const wchar_t* GetLastError();
 
 	void NullReceipt(bool bOpenCashDrawer);

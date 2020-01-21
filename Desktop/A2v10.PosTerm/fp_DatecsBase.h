@@ -2,7 +2,7 @@
 
 #pragma once
 
-class CFiscalPrinter_DatecsBase : public CFiscalPrinterImpl
+class CFiscalPrinter_DatecsBase : public FiscalPrinterImpl
 {
 	HANDLE m_hCom;
 

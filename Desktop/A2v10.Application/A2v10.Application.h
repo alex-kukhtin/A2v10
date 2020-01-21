@@ -45,7 +45,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-	void StartPosThread();
+	bool StartPosThread();
 	CAppConfig* LoadConfigFile(LPCWSTR szConfig);
 };
 

@@ -51,11 +51,26 @@ pos_result_t FiscalPrinter::Connect(const wchar_t* model, const wchar_t* port, i
 	return pos_result_t::_invalid_model;
 }
 
+// static 
+void FiscalPrinter::ShutDown()
+{
+	for (auto it = _printers.begin(); it != _printers.end(); ++it) {
+		auto p = it->get();
+		p->Disconnect();
+	}
+}
+
 bool FiscalPrinter::Open(const wchar_t* port, int baud)
 {
 	if (_impl)
 		return _impl->Open(port, baud);
 	return false;
+}
+
+void FiscalPrinter::Disconnect() {
+	if (_impl)
+		_impl->Close();
+
 }
 
 // virtual 

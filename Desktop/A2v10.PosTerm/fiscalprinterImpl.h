@@ -18,7 +18,7 @@ public:
 	const wchar_t* GetError();
 };
 
-class CFiscalPrinterImpl
+class FiscalPrinterImpl
 {
 public:
 	std::wstring _id;
@@ -33,8 +33,8 @@ public:
 	};
 
 
-	CFiscalPrinterImpl(void);
-	virtual ~CFiscalPrinterImpl();
+	FiscalPrinterImpl(void);
+	virtual ~FiscalPrinterImpl();
 
 	const wchar_t* GetLastError();
 

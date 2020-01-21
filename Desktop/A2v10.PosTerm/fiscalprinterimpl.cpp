@@ -1,5 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
-
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved
 #include "pch.h"
 #include "posterm.h"
 #include "fiscalprinterimpl.h"
@@ -27,111 +26,111 @@ void CFPException::ReportError2()
 }
 */
 
-CFiscalPrinterImpl::CFiscalPrinterImpl(void)
+FiscalPrinterImpl::FiscalPrinterImpl(void)
 {
 }
 
-CFiscalPrinterImpl::~CFiscalPrinterImpl(void)
+FiscalPrinterImpl::~FiscalPrinterImpl(void)
 {
 	if (IsOpen())
 		Close();
 }
 
 // static 
-ITraceTarget* CFiscalPrinterImpl::_traceTarget = nullptr;
+ITraceTarget* FiscalPrinterImpl::_traceTarget = nullptr;
 
-const wchar_t* CFiscalPrinterImpl::GetLastError()
+const wchar_t* FiscalPrinterImpl::GetLastError()
 {
 	return m_strError.c_str();
 }
 
 // virtual 
-bool CFiscalPrinterImpl::IsOpen() const
+bool FiscalPrinterImpl::IsOpen() const
 {
 	return false;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::Init(__int64 termId)
+bool FiscalPrinterImpl::Init(__int64 termId)
 {
 	return true;
 }
 
 // virtual 
-void CFiscalPrinterImpl::Close()
+void FiscalPrinterImpl::Close()
 {
 }
 
 // virtual 
-bool CFiscalPrinterImpl::IsReady() const
+bool FiscalPrinterImpl::IsReady() const
 {
 	return false;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::IsEndOfTape()
+bool FiscalPrinterImpl::IsEndOfTape()
 {
 	return false;
 }
 
-bool CFiscalPrinterImpl::PrintNonFiscalText(const wchar_t* szText)
+bool FiscalPrinterImpl::PrintNonFiscalText(const wchar_t* szText)
 {
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::Beep()
+bool FiscalPrinterImpl::Beep()
 {
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::ReportRems()
+bool FiscalPrinterImpl::ReportRems()
 {
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::CancelReceiptCommand(__int64 termId)
+bool FiscalPrinterImpl::CancelReceiptCommand(__int64 termId)
 {
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::PrintDiscount(long Type, long Sum, const wchar_t* szDescr)
+bool FiscalPrinterImpl::PrintDiscount(long Type, long Sum, const wchar_t* szDescr)
 {
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinterImpl::PrintDiscountForAllReceipt(long dscPercent, long dscSum)
+bool FiscalPrinterImpl::PrintDiscountForAllReceipt(long dscPercent, long dscSum)
 {
 	return true;
 }
 
 // virtual 
-DWORD CFiscalPrinterImpl::GetFlags()
+DWORD FiscalPrinterImpl::GetFlags()
 {
 	return 0;
 }
 
-const std::wstring& CFiscalPrinterImpl::GetError() const
+const std::wstring& FiscalPrinterImpl::GetError() const
 {
 	throw CFPException(L"Yet not implemented");
 }
 
 // static 
-void CFiscalPrinterImpl::PosSetTraceTarget(ITraceTarget* target)
+void FiscalPrinterImpl::PosSetTraceTarget(ITraceTarget* target)
 {
 	_traceTarget = target;
 }
 
-bool CFiscalPrinterImpl::IsDebugMode() const
+bool FiscalPrinterImpl::IsDebugMode() const
 {
 	return true; // TODO!!!
 }
 
-void CFiscalPrinterImpl::TraceINFO(const wchar_t* info, ...)
+void FiscalPrinterImpl::TraceINFO(const wchar_t* info, ...)
 {
 	va_list argList;
 	va_start(argList, info);
@@ -139,7 +138,7 @@ void CFiscalPrinterImpl::TraceINFO(const wchar_t* info, ...)
 	va_end(argList);
 }
 
-void CFiscalPrinterImpl::TraceERROR(const wchar_t* info, ...)
+void FiscalPrinterImpl::TraceERROR(const wchar_t* info, ...)
 {
 	va_list argList;
 	va_start(argList, info);
@@ -148,7 +147,7 @@ void CFiscalPrinterImpl::TraceERROR(const wchar_t* info, ...)
 }
 
 // static 
-void CFiscalPrinterImpl::Trace(ITraceTarget::TraceType type, const wchar_t* info, va_list args)
+void FiscalPrinterImpl::Trace(ITraceTarget::TraceType type, const wchar_t* info, va_list args)
 {
 	if (!_traceTarget)
 		return;

@@ -55,7 +55,6 @@ namespace A2v10.Runtime
 				catch (Exception /*ex*/)
 				{
 					throw;
-					//WriteExceptionStatus(ex, response);
 				}
 			}
 		}
@@ -157,7 +156,7 @@ namespace A2v10.Runtime
 					ex = ex.InnerException;
 				// TODO:: /exception
 				StatusCode = 255;
-				return Encoding.UTF8.GetBytes(ex.Message);
+				return Encoding.UTF8.GetBytes(_controller.Localize(ex.Message));
 			}
 		}
 

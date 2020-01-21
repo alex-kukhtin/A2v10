@@ -7,6 +7,24 @@
 
 #define MAX_COMMAND_LEN 512
 
+// virtual 
+bool CFiscalPrinter_Null::IsOpen() const
+{
+	return true;
+}
+
+// virtual 
+bool CFiscalPrinter_Null::IsReady() const
+{
+	return true;
+}
+
+// virtual 
+void CFiscalPrinter_Null::Close()
+{
+	TraceINFO(L"TESTPRINTER [%s]. Close()", _id.c_str());
+}
+
 //virtual 
 int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
@@ -17,14 +35,6 @@ int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= 
 bool CFiscalPrinter_Null::OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo)
 {
 	throw CFPException(L"Yet not implemented");
-}
-
-// virtual 
-void CFiscalPrinter_Null::Close()
-{
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=\"%s\"): Close)", _id.c_str());
-	ReportMessage(buff);
 }
 
 // virtual 
@@ -49,9 +59,7 @@ bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
 // virtual 
 bool CFiscalPrinter_Null::CancelReceiptCommand(__int64 termId)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Cancel bill", _id.c_str());
-	ReportMessage(buff);
+	TraceINFO(L"TESTPRINTER [%s]. CancelReceiptCommand()", _id.c_str());
 	return true;
 }
 
@@ -63,7 +71,6 @@ bool CFiscalPrinter_Null::CopyBill()
 	ReportMessage(buff);
 	return true;
 }
-
 
 //virtual 
 /*

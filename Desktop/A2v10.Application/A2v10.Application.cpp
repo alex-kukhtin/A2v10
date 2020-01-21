@@ -124,7 +124,8 @@ BOOL CMainApp::InitInstance()
 
 	m_pMainWnd->PostMessage(WM_COMMAND, ID_APP_START);
 
-	StartPosThread();
+	if (!StartPosThread())
+		return FALSE;
 	return TRUE;
 }
 
@@ -161,20 +162,21 @@ CAppConfig* CMainApp::LoadConfigFile(LPCWSTR szConfig)
 	return nullptr;
 }
 
-void CMainApp::StartPosThread()
+bool CMainApp::StartPosThread()
 {
 	if (!m_pAppConfig || !m_pAppConfig->HasFiscalPrinters())
-		return;
+		return true;
 	_traceTarget.m_hWnd = m_pMainWnd->GetSafeHwnd();
 	PosSetTraceTarget(&_traceTarget);
 	if (!m_pAppConfig->ConnectToPrinter())
-		return;
+		return false;
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
 	pThread->m_bAutoDelete = TRUE;
 	pThread->ResumeThread();
 
 	m_dwPosThreadId = pThread->m_nThreadID;
 	m_hPosThreadHandle = pThread->m_hThread;
+	return true;
 }
 
 void CMainApp::PostPosThreadMessage(int key, LPCWSTR szMessage)
@@ -194,10 +196,15 @@ BOOL CMainApp::PumpMessage()
 
 int CMainApp::ExitInstance()
 {
+	_traceTarget.m_hWnd = nullptr;
+
 	if (m_hPosThreadHandle) {
 		::TerminateThread(m_hPosThreadHandle, 0);
 		::WaitForSingleObject(m_hPosThreadHandle, 100);
 	}
+
+	if (m_pAppConfig)
+		m_pAppConfig->ShutDown();
 
 	AfxOleTerm(FALSE);
 
@@ -247,6 +254,7 @@ void CMainApp::OnFileNew()
 //virtual 
 void CAppTraceTarget::Trace(TraceType type, const wchar_t* message)
 {
+	if (!m_hWnd) return;
 	WPARAM wParam = WMI_POS_TRACE_WPARAM_INFO;
 	switch (type) {
 	case ITraceTarget::TraceType::_error:

@@ -2,7 +2,7 @@
 
 #pragma once
 
-class CFiscalPrinter_Null : public CFiscalPrinterImpl
+class CFiscalPrinter_Null : public FiscalPrinterImpl
 {
 	int m_nLastReceipt;
 	long m_nLastZReportNo;
@@ -10,15 +10,10 @@ public:
 	CFiscalPrinter_Null()
 		: m_nLastReceipt(0), m_nLastZReportNo(0) {}
 	virtual bool Init(__int64 termId) override;
-	virtual bool IsOpen() const override
-	{
-		return true;
-	}
-	virtual bool IsReady() const override
-	{
-		return true;
-	}
+	virtual bool IsOpen() const override;
+	virtual bool IsReady() const override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
+	virtual void Close() override;
 	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) override;
 
 	virtual bool AddArticle(__int64 termId, __int64 art, const wchar_t* szName, __int64 vtid, long price)
@@ -31,7 +26,6 @@ public:
 		return true;
 	}
 	virtual bool OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo) override;
-	virtual void Close() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual void NullReceipt(bool bOpenCashDrawer) override;

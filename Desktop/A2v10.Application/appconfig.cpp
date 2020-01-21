@@ -23,3 +23,8 @@ bool CAppConfig::ConnectToPrinter()
 	AfxMessageBox(L"Unable to connect to fiscal printer");
 	return false;
 }
+
+void CAppConfig::ShutDown()
+{
+	PosShutDown();
+}

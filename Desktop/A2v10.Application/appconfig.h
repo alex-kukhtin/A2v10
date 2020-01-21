@@ -48,7 +48,7 @@ public:
 	bool HasFiscalPrinters() const { return m_fiscalPrinters.GetCount() > 0; }
 
 	bool ConnectToPrinter();
-
+	void ShutDown();
 protected:
 	BEGIN_JSON_PROPS(3)
 		STRING_PROP(connectionString, m_connectionString)
