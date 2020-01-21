@@ -8,7 +8,8 @@
 			"view": "index.view",
 			"export": {
 				"format": "xlsx",
-				"template": "index.template",
+				"template22": "index.template",
+				"template": "{{Stream.Data}}",
 				"fileName": "Перелік документів"
 			}
 		},

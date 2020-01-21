@@ -330,6 +330,16 @@ namespace A2v10.Request
 		public String fileName;
 		public String template;
 		public RequestExportFormat format;
+
+		public String GetTemplateExpression()
+		{
+			if (String.IsNullOrEmpty(template))
+				return null;
+			var tx = template.Trim();
+			if (tx.StartsWith("{{") && tx.EndsWith("}}"))
+				return tx.Substring(2, tx.Length - 4).Trim();
+			return null;
+		}
 	}
 
 	public class RequestAction : RequestView

@@ -29,16 +29,29 @@ namespace A2v10.Request
 				prms.SetIfNotExists("Id", action.Id);
 			}
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
-			
-			var fileName = export.template.AddExtension(export.format.ToString());
-			var appReader = _host.ApplicationReader;
-			var filePath = appReader.MakeFullPath(action.Path, fileName.RemoveHeadSlash());
-			if (!appReader.FileExists(filePath))
-				throw new FileNotFoundException(filePath);
+
+			Stream stream = null;
+			var templExpr = export.GetTemplateExpression();
+			if (!String.IsNullOrEmpty(templExpr))
+			{
+				var bytes = dm.Eval<Byte[]>(templExpr);
+				if (bytes == null)
+					throw new RequestModelException($"Template stream not found or its format is invalid. ({templExpr})");
+				stream = new MemoryStream(dm.Eval<Byte[]>(templExpr));
+			}
+			else
+			{
+				var fileName = export.template.AddExtension(export.format.ToString());
+				var appReader = _host.ApplicationReader;
+				var filePath = appReader.MakeFullPath(action.Path, fileName.RemoveHeadSlash());
+				if (!appReader.FileExists(filePath))
+					throw new FileNotFoundException($"Template file not found. ({fileName})");
+				stream = appReader.FileStreamFullPathRO(filePath);
+			}
 
 			switch (export.format) {
 				case RequestExportFormat.xlsx:
-					using (var rep = new ExcelReportGenerator(appReader.FileStreamFullPathRO(filePath)))
+					using (var rep = new ExcelReportGenerator(stream))
 					{
 						rep.GenerateReport(dm);
 						Byte[] bytes = File.ReadAllBytes(rep.ResultFile);
@@ -46,6 +59,7 @@ namespace A2v10.Request
 							throw new RequestModelException("There are no bytes to send");
 						SetResponseInfo(response, export);
 						response.BinaryWrite(bytes);
+						stream.Close();
 					}
 					break;
 			}
