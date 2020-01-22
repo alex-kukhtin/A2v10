@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(RenderElement));
 		}
 
 		internal void AppendJsValues(StringBuilder sb, RenderContext context)

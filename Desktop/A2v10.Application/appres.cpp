@@ -11,15 +11,15 @@
 #endif
 
 
-const char* MimeTypes[] = 
+const wchar_t* MimeTypes[] = 
 {
-	/*0*/ "text/html",
-	/*1*/ "text/css",
-	/*2*/ "text/javascript",
-	/*3*/ "application/json",
-	/*4*/ "application/font-woff",
-	/*5*/ "application/font-ttf",
-	/*6*/ "image/png",
+	/*0*/ L"text/html",
+	/*1*/ L"text/css",
+	/*2*/ L"text/javascript",
+	/*3*/ L"application/json",
+	/*4*/ L"application/font-woff",
+	/*5*/ L"application/font-ttf",
+	/*6*/ L"image/png",
 };
 
 enum MimeIndex {
@@ -51,7 +51,7 @@ const RES_DEF resArray[] =
 
 };
 
-static LPCWSTR _findResourceId(LPCWSTR szUrl, std::string& mime)
+static LPCWSTR _findResourceId(LPCWSTR szUrl, std::wstring& mime)
 {
 	for (int i = 0; i < _countof(resArray); i++) {
 		RES_DEF rd = resArray[i];
@@ -120,7 +120,7 @@ void CApplicationResources::Init() {
 }
 
 // static 
-bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, std::string& contentDisposition,
+bool CApplicationResources::LoadResource(const char* szUrl, std::wstring& mime, std::string& contentDisposition,
 	std::vector<byte>& data, std::vector<byte>& post, bool postMethod, int& status_code)
 {
 	CEF_REQUIRE_IO_THREAD();
@@ -137,7 +137,7 @@ bool CApplicationResources::LoadResource(const char* szUrl, std::string& mime, s
 		std::wstring wContentDisposition = CDotNetRuntime::GetLastContentDisposition();
 		status_code = CDotNetRuntime::GetLastStatusCode();
 		// W2A
-		mime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
+		mime = wMimeResult; // TODO std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
 		contentDisposition = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wContentDisposition.c_str());
 		return true;
 	}
@@ -164,7 +164,7 @@ void CApplicationResources::FillError(const wchar_t* szError, std::vector<byte>&
 }
 
 // static
-bool CApplicationResources::LoadStatic(const wchar_t* path, std::string& mime, std::vector<byte>& data)
+bool CApplicationResources::LoadStatic(const wchar_t* path, std::wstring& mime, std::vector<byte>& data)
 {
 	LPCWSTR resId = _findResourceId(path, mime);
 	if (!resId)
@@ -179,7 +179,7 @@ bool CApplicationResources::LoadStatic(const wchar_t* path, std::string& mime, s
 }
 
 // static 
-bool CApplicationResources::UploadFiles(const char* szUrl, const char* szFiles, std::string& mime, std::vector<byte>& data, bool postMethod)
+bool CApplicationResources::UploadFiles(const char* szUrl, const wchar_t* szFiles, std::wstring& mime, std::vector<byte>& data, bool postMethod, int& status_code)
 {
 	if (!postMethod)
 		return false;
@@ -191,10 +191,10 @@ bool CApplicationResources::UploadFiles(const char* szUrl, const char* szFiles, 
 	try
 	{
 		CString strFiles(szFiles);
-		CDotNetRuntime::UploadFiles(parsedUrl.path, strFiles, data);
+		CDotNetRuntime::UploadFiles(parsedUrl.path, parsedUrl.search, strFiles, data);
 		std::wstring wMimeResult = CDotNetRuntime::GetLastMime();
-		// W2A
-		mime = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wMimeResult.c_str());
+		mime = wMimeResult; 
+		status_code = CDotNetRuntime::GetLastStatusCode();
 		return true;
 	}
 	catch (CDotNetException& ex)
@@ -205,6 +205,7 @@ bool CApplicationResources::UploadFiles(const char* szUrl, const char* szFiles, 
 	{
 		FillError(szError, data);
 		mime = MimeTypes[MimeIndex::html];
+		status_code = CDotNetRuntime::GetLastStatusCode();
 		return true;
 	}
 	return false;

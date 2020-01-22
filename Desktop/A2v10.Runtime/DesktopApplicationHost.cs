@@ -128,7 +128,7 @@ namespace A2v10.Runtime
 
 		public String MakeRelativePath(String path, String fileName)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("DesktopApplicationHost.MakeRelativePath");
 		}
 
 		#region ITenantManager

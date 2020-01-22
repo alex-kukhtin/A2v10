@@ -1991,9 +1991,9 @@ app.modules['std:validators'] = function () {
 
 
 
-/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20181229-7602*/
+/*20200121-7619*/
 // services/datamodel.js
 
 (function () {
@@ -2400,6 +2400,7 @@ app.modules['std:validators'] = function () {
 
 	function seal(elem) {
 		Object.seal(elem);
+		if (!elem._meta_) return;
 		for (let p in elem._meta_.props) {
 			let ctor = elem._meta_.props[p];
 			if (ctor.type) ctor = ctor.type;
@@ -11907,7 +11908,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200112-7612*/
+/*20200122-7619*/
 /* controllers/shell.js */
 
 (function () {
@@ -11997,6 +11998,98 @@ Vue.directive('resize', {
 		}
 		return url; //TODO: ????
 	}
+
+
+	const a2AppHeader = {
+		template: `
+<header class="header">
+	<div class="h-block">
+		<!--<i class="ico-user"></i>-->
+		<a class="app-title" href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
+		<span class="app-subtitle" v-text="subtitle"></span>
+	</div>
+	<div class="aligner"></div>
+	<span class="title-notify" v-if="notifyText" v-text="notifyText" :title="notifyText" :class="notifyClass"></span>
+	<div class="aligner"></div>
+	<template v-if="!isSinglePage ">
+		<a2-new-button :menu="newMenu" icon="plus" btn-style="success"></a2-new-button>
+		<slot></slot>
+		<a2-new-button :menu="settingsMenu" icon="gear-outline" :title="locale.$Settings"></a2-new-button>
+		<a class="nav-admin middle" v-if="hasFeedback" tabindex="-1" @click.prevent="showFeedback" :title="locale.$Feedback" :class="{open: feedbackVisible}"><i class="ico ico-comment-outline"></i></a>
+		<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
+	</template>
+	<div class="dropdown dir-down separate" v-dropdown>
+		<button class="btn user-name" toggle :title="personName"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name" v-text="personName"></span><span class="caret"></span></button>
+		<div class="dropdown-menu menu down-left">
+			<a v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
+			<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
+			<div class="divider"></div>
+			<form id="logoutForm" method="post" action="/account/logoff">
+				<a href="javascript:document.getElementById('logoutForm').submit()" tabindex="-1" class="dropdown-item"><i class="ico ico-exit"></i> <span v-text="locale.$Quit"></span></a>
+			</form>
+		</div>
+	</div>
+</header>
+`,
+		props: {
+			title: String,
+			subtitle: String,
+			userState: Object,
+			personName: String,
+			userIsAdmin: Boolean,
+			menu: Array,
+			newMenu: Array,
+			settingsMenu: Array,
+			appData: Object,
+			showFeedback: Function,
+			feedbackVisible: Boolean,
+			singlePage: String,
+			changePassword: Function
+		},
+		computed: {
+			isSinglePage() {
+				return !!this.singlePage;
+			},
+			locale() { return locale; },
+			notifyText() {
+				return this.getNotify(2);
+			},
+			notifyClass() {
+				return this.getNotify(1).toLowerCase();
+			},
+			feedback() {
+				return this.appData ? this.appData.feedback : null;
+			},
+			hasFeedback() {
+				return this.appData && this.appData.feedback;
+			},
+			profileItems() {
+				return this.appData ? this.appData.profileMenu : null;
+			}
+		},
+		methods: {
+			getNotify(ix) {
+				let n = this.userState ? this.userState.Notify : null;
+				if (!n) return '';
+				let m = n.match(/\((.*)\)(.*)/);
+				if (m && m.length > ix)
+					return m[ix];
+				return '';
+			},
+			root() {
+				let opts = { title: null };
+				let currentUrl = this.$store.getters.url;
+				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : makeMenuUrl(this.menu, '/', opts);
+				if (currentUrl === menuUrl) {
+					return; // already in root
+				}
+				this.$store.commit('navigate', { url: menuUrl, title: opts.title });
+			},
+			doProfileMenu(itm) {
+				store.commit('navigate', { url: itm.url });
+			}
+		}
+	};
 
 	const a2NavBar = {
 		template: `
@@ -12520,7 +12613,8 @@ Vue.directive('resize', {
 
 	const shell = Vue.extend({
 		components: {
-			'a2-main-view': a2MainView
+			'a2-main-view': a2MainView,
+			'a2-app-header': a2AppHeader
 		},
 		store,
 		data() {
@@ -12539,6 +12633,12 @@ Vue.directive('resize', {
 			processing() { return !this.hasModals && this.requestsCount > 0; },
 			modelStack() {
 				return this.__dataStack__;
+			},
+			singlePage() {
+				let seg0 = this.$store.getters.seg0;
+				if (isSeparatePage(this.pages, seg0))
+					return seg0;
+				return undefined;
 			}
 		},
 		watch: {
@@ -12555,15 +12655,6 @@ Vue.directive('resize', {
 			},
 			navigate(url) {
 				this.$store.commit('navigate', { url: url });
-			},
-			root() {
-				let opts = { title: null };
-				let currentUrl = this.$store.getters.url;
-				let menuUrl = makeMenuUrl(this.menu, '/', opts);
-				if (currentUrl === menuUrl) {
-					return; // already in root
-				}
-				this.$store.commit('navigate', { url: makeMenuUrl(this.menu, '/', opts), title: opts.title });
 			},
 			debugOptions() {
 				alert('debug options');
@@ -12600,7 +12691,6 @@ Vue.directive('resize', {
 				alert('change user');
 			},
 			changePassword() {
-
 				if (window.cefHost) {
 					this.$alert(locale.$DesktopNotSupported);
 					return;
@@ -12690,7 +12780,7 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('closeAllPopups', popup.closeAll);
-	}
+		}
 	});
 
 	app.components['std:shellController'] = shell;

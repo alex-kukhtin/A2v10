@@ -319,7 +319,7 @@ const vm = new DataModelController({
 
 		public String CreateServerScript(IDataModel model, String template)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(CreateServerScript));
 		}
 
 		public String CreateServerScript(IDataModel model, String template, String requiredModules)

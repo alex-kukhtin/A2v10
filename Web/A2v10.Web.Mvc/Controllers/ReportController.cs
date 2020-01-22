@@ -166,9 +166,9 @@ namespace A2v10.Web.Mvc.Controllers
 							err = _reportHelper.ExportStiReportStream(ri, rep.Format, response.OutputStream);
 							break;
 						case RequestReportType.xml:
-							throw new NotImplementedException();
+							throw new NotImplementedException("ExportDesktop. RequestReportType.xml");
 						case RequestReportType.json:
-							throw new NotImplementedException();
+							throw new NotImplementedException("ExportDesktop. RequestReportType.json");
 					}
 					if (err != null)
 					{
@@ -245,7 +245,7 @@ namespace A2v10.Web.Mvc.Controllers
 					case RequestReportType.stimulsoft:
 						return _reportHelper.ExportStiReport(ri, Format, saveFile: false);
 					default:
-						throw new NotImplementedException();
+						throw new NotImplementedException("ReportController.Print. ri.Type");
 				}
 			}
 			catch (Exception ex)

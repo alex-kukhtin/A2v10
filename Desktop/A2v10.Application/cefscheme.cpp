@@ -16,17 +16,17 @@ CClientSchemeHandler::~CClientSchemeHandler()
 {
 }
 
-std::string GetMimeFromString(const char* szString)
+std::wstring GetMimeFromString(const char* szString)
 {
 	// ANSI!
-	std::string result;
-	CStringA hdrString(szString);
+	std::wstring result;
+	CString hdrString(szString);
 	hdrString.MakeLower();
-	int ctPos = hdrString.Find("content-type:");
+	int ctPos = hdrString.Find(L"content-type:");
 	if (ctPos == -1)
 		return result;
 	hdrString = hdrString.Mid(ctPos + 14);
-	int colonPos = hdrString.FindOneOf(";\r\n");
+	int colonPos = hdrString.FindOneOf(L";\r\n");
 	if (colonPos != -1) {
 		result = hdrString.Left(colonPos).Trim();
 	}
@@ -35,7 +35,7 @@ std::string GetMimeFromString(const char* szString)
 
 bool CClientSchemeHandler::ProcessPredefinedUrls(const std::string& url) {
 	if (url == "http://domain/account/logoff" || url == "http://domain/account/login") {
-		mime_type_ = "text/plain";
+		mime_type_ = L"text/plain";
 		data_.assign(1, 0x20); // single space
 		HWND hFrame = AfxGetApp()->m_pMainWnd->GetSafeHwnd();
 		::PostMessage(hFrame, WM_SYSCOMMAND, SC_CLOSE, 0L);
@@ -57,7 +57,7 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 	std::vector<byte> post_;
 	bool isPost = false;
 
-	std::string _files;
+	std::wstring _files;
 
 	if (ProcessPredefinedUrls(url))
 		return false;
@@ -83,11 +83,11 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 						elem->GetBytes(bytes, (void*)post_.data());
 					}
 					else if (type == cef_postdataelement_type_t::PDE_TYPE_FILE) {
-						std::string fileName = elem->GetFile();
+						std::wstring fileName = elem->GetFile();
 						// fileName is a full path for file
-						std::string hdr = GetMimeFromString((const char*)post_.data());
-						std::string fileToUpload(fileName.c_str());
-						fileToUpload += "\b" + hdr + "\t";
+						std::wstring hdr = GetMimeFromString((const char*)post_.data());
+						std::wstring fileToUpload(fileName.c_str());
+						fileToUpload += L"\b" + hdr + L"\t";
 						_files += fileToUpload;
 					}
 				}
@@ -100,12 +100,12 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 		CheckLicense(url);
 	}
 
-	std::string mime;
+	std::wstring mime;
 	std::string content_disposition;
 	bool rc = false;
 
 	if (_files.length() > 0)
-		rc = CApplicationResources::UploadFiles(url.c_str(), _files.c_str(), mime, data_, isPost);
+		rc = CApplicationResources::UploadFiles(url.c_str(), _files.c_str(), mime, data_, isPost, status_code_);
 	else
 		rc = CApplicationResources::LoadResource(url.c_str(), mime, content_disposition, data_, post_, isPost, status_code_);
 	if (rc) {

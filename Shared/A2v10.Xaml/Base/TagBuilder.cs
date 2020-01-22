@@ -33,7 +33,7 @@ namespace A2v10.Xaml
 
 		internal void SetInnerText(Object p)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(SetInnerText));
 		}
 
 		void CheckRendered()

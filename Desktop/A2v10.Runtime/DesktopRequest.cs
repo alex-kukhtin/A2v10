@@ -34,6 +34,8 @@ namespace A2v10.Runtime
 			_userInfo = ServiceLocator.Current.GetService<ISupportUserInfo>();
 		}
 
+		public string Search { get; set; }
+
 		public String MimeType { get; private set; }
 		public String ContentDisposition { get; private set; }
 		public Int32 StatusCode { get; private set; }
@@ -43,14 +45,14 @@ namespace A2v10.Runtime
 		const String MIME_SCRIPT = "text/javascript";
 		const String MIME_STYLE  = "text/css";
 
-		public Byte[] ProcessRequest(String url, String search, Byte[] post, Boolean postMethod)
+		public Byte[] ProcessRequest(String url, Byte[] post, Boolean postMethod)
 		{
 			_controller.Host.StartApplication(false); // TODO: ?ADMIN?
 			using (_controller.Host.Profiler.BeginRequest(url, null) as IDisposable)
 			{
 				try
 				{
-					return ProcessRequestImpl(url, search, post, postMethod);
+					return ProcessRequestImpl(url, post, postMethod);
 				}
 				catch (Exception /*ex*/)
 				{
@@ -59,7 +61,7 @@ namespace A2v10.Runtime
 			}
 		}
 
-		Byte[] ProcessRequestImpl(String url, String search, Byte[] post, Boolean postMethod)
+		Byte[] ProcessRequestImpl(String url, Byte[] post, Boolean postMethod)
 		{
 			if (url.StartsWith("admin/"))
 			{
@@ -81,18 +83,18 @@ namespace A2v10.Runtime
 					}
 					else if (url.StartsWith("report/"))
 					{
-						Report(url.Substring(6).ToLowerInvariant(), search, dr);
+						Report(url.Substring(6).ToLowerInvariant(), dr);
 						MimeType = dr.ContentType;
 						ContentDisposition = dr.Headers["Content-Disposition"];
 						if (dr.IsBinaryWrited)
 							return dr.GetBytes();
 					}
 					else if (url.StartsWith("_page/"))
-						Render(RequestUrlKind.Page, url.Substring(6), search, dr.Output);
+						Render(RequestUrlKind.Page, url.Substring(6), dr.Output);
 					else if (url.StartsWith("_dialog/"))
-						Render(RequestUrlKind.Dialog, url.Substring(8), search, dr.Output);
+						Render(RequestUrlKind.Dialog, url.Substring(8), dr.Output);
 					else if (url.StartsWith("_popup/"))
-						Render(RequestUrlKind.Popup, url.Substring(7), search, dr.Output);
+						Render(RequestUrlKind.Popup, url.Substring(7), dr.Output);
 					else if (url.StartsWith("_data/"))
 					{
 						var command = url.Substring(6);
@@ -106,7 +108,7 @@ namespace A2v10.Runtime
 					else if (url.StartsWith("_image/"))
 					{
 						if (postMethod)
-							SaveImage("/" + url, dr.Output);
+							throw new NotImplementedException("SaveImage (post)");
 						else
 						{
 							var bytes = LoadImage("/" + url, dr);
@@ -122,7 +124,7 @@ namespace A2v10.Runtime
 					}
 					else if (url.StartsWith("_export/"))
 					{
-						Export("/" + url, search, dr);
+						Export("/" + url, dr);
 						MimeType = dr.ContentType;
 						ContentDisposition = dr.Headers["Content-Disposition"];
 						return dr.GetBytes();
@@ -184,11 +186,18 @@ namespace A2v10.Runtime
 			SetUserCompanyToParams(prms);
 		}
 
-		void Render(RequestUrlKind kind, String path, String search, TextWriter writer)
+		void SetQueryStringAndSqlQueryParams(ExpandoObject prms)
+		{
+			SetUserTenantToParams(prms);
+			SetUserCompanyToParams(prms);
+			prms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(this.Search)), toPascalCase: true);
+		}
+
+		void Render(RequestUrlKind kind, String path, TextWriter writer)
 		{
 			ExpandoObject loadPrms = new ExpandoObject();
 			path = path.ToLowerInvariant();
-			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
+			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(Search)), toPascalCase: true);
 			SetSqlQueryParams(loadPrms);
 			if (path.StartsWith("app/"))
 				_controller.RenderApplicationKind(kind, path, loadPrms, writer).Wait();
@@ -225,10 +234,10 @@ namespace A2v10.Runtime
 			_controller.Layout(writer, prms);
 		}
 
-		public void Report(String url, String search, DesktopResponse dr)
+		public void Report(String url, DesktopResponse dr)
 		{
 			var reportController = new ReportController();
-			var qry = HttpUtility.ParseQueryString(search.ToLowerInvariant());
+			var qry = HttpUtility.ParseQueryString(Search?.ToLowerInvariant());
 			/*  /export/{id} */
 			var urlParts = url.ToLowerInvariant().Split('/');
 			var rep = qry.Get("rep");
@@ -359,18 +368,13 @@ namespace A2v10.Runtime
 			}
 		}
 
-		String SaveImage(String url, TextWriter writer)
+		public Byte[] SaveImage(String url,  String files, DesktopResponse dr)
 		{
-			throw new InvalidOperationException();
-		}
-
-		public Byte[] UploadFiles(String url, String files)
-		{
+			dr.ContentType = "application/json";
 			try
 			{
 				var fileColl = new SimpleHttpFileCollection(files);
-				MimeType = MIME_JSON;
-				var list = _controller.SaveAttachments(TenantId, "/" + url, fileColl, UserId).Result;
+				var list = _controller.SaveAttachments(TenantId, url, fileColl, UserId).Result;
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);
@@ -381,8 +385,31 @@ namespace A2v10.Runtime
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				// TODO:: /exception
-				String msg = $"<div>{ex.Message}</div>";
+				MimeType = "text/plain";
+				StatusCode = 255;
+				String msg = $"{ex.Message}";
+				return Encoding.UTF8.GetBytes(msg);
+			}
+		}
+
+		public Byte[] UploadFiles(String url, String files, DesktopResponse dr)
+		{
+			try
+			{
+				dr.ContentType = "application/json";
+				var fileColl = new SimpleHttpFileCollection(files);
+				_controller.SaveFiles("/" + url, fileColl, SetQueryStringAndSqlQueryParams, dr.Output).Wait();
+				MimeType = dr.ContentType;
+				StatusCode = dr.StatusCode;
+				return Encoding.UTF8.GetBytes(dr.Output.ToString());
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				MimeType = "text/plain";
+				StatusCode = 255;
+				String msg = $"{ex.Message}";
 				return Encoding.UTF8.GetBytes(msg);
 			}
 		}
@@ -395,13 +422,13 @@ namespace A2v10.Runtime
 			response.Write(Encoding.UTF8.GetBytes(ex.Message));
 		}
 
-		void Export(String path, String search, HttpResponseBase response)
+		void Export(String path, HttpResponseBase response)
 		{
 			// HTTP GET
 			try
 			{
 				ExpandoObject loadPrms = new ExpandoObject();
-				loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(search)), toPascalCase: true);
+				loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(Search)), toPascalCase: true);
 				SetSqlQueryParams(loadPrms);
 				_controller.Export(path, TenantId, UserId, loadPrms, response).Wait();
 			}

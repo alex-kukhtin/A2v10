@@ -1,5 +1,5 @@
 ﻿
-/*20200113-7612*/
+/*20200122-7619*/
 
 (function () {
 
@@ -32,35 +32,14 @@
 			appLinks() {
 				return this.appData ? this.appData.links : null;
 			},
-			feedback() {
-				return this.appData ? this.appData.feedback : null;
-			},
 			hasFeedback() {
 				return this.appData && this.appData.feedback;
 			},
-			profileItems() {
-				return this.appData ? this.appData.profileMenu : null;
-			},
-			notifyText() {
-				return this.getNotify(2);
-			},
-			notifyClass() {
-				return this.getNotify(1).toLowerCase();
+			feedback() {
+				return this.appData ? this.appData.feedback : null;
 			}
-
 		},
 		methods: {
-			doProfileMenu(itm) {
-				this.navigate(itm.url);
-			},
-			getNotify(ix) {
-				let n = this.userState ? this.userState.Notify : null;
-				if (!n) return '';
-				let m = n.match(/\((.*)\)(.*)/);
-				if (m && m.length > ix)
-					return m[ix];
-				return '';
-			}
 		}
 	});
 

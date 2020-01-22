@@ -99,11 +99,12 @@ void CDotNetRuntime::ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearc
 }
 
 // static 
-void CDotNetRuntime::UploadFiles(const wchar_t* szUrl, const wchar_t* szFiles, std::vector<byte>& data)
+void CDotNetRuntime::UploadFiles(const wchar_t* szUrl, const wchar_t* szSearch, const wchar_t* szFiles, std::vector<byte>& data)
 {
 	auto url = gcnew System::String(szUrl);
 	auto files = gcnew System::String(szFiles);
-	auto result = A2v10RuntimeNet::Desktop::UploadFiles(url, files);
+	auto search = gcnew System::String(szSearch);
+	auto result = A2v10RuntimeNet::Desktop::UploadFiles(url, files, search);
 	if (result) {
 		int len = result->Length;
 		data.resize(len);

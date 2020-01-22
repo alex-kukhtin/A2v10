@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -13,6 +13,7 @@ using A2v10.Xaml;
 using A2v10.Workflow;
 using A2v10.Data.Interfaces;
 using A2v10.Data;
+using A2v10.Data.Providers;
 using A2v10.Infrastructure;
 
 namespace A2v10RuntimeNet
@@ -163,6 +164,7 @@ namespace A2v10RuntimeNet
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				IUserStateManager userStateManager = new DesktopUserStateManager(host, dbContext);
 				ILicenseManager licManager = new DesktopLicenseManager(dbContext);
+				IExternalDataProvider dataProvider = new ExternalDataContext();
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
 				service.RegisterService<IDbContext>(dbContext);
@@ -173,6 +175,7 @@ namespace A2v10RuntimeNet
 				service.RegisterService<IUserStateManager>(userStateManager);
 				service.RegisterService<ISupportUserInfo>(host);
 				service.RegisterService<ILicenseManager>(licManager);
+				service.RegisterService<IExternalDataProvider>(dataProvider);
 				host.TenantId = 1;
 			};
 		}
@@ -247,20 +250,36 @@ namespace A2v10RuntimeNet
 		{
 			_lastContentDisposition = String.Empty;
 			_lastMime = String.Empty;
-			var dr = new DesktopRequest();
-			var result = dr.ProcessRequest(url, search, post, postMethod);
+			var dr = new DesktopRequest()
+			{
+				Search = search
+			};
+			var result = dr.ProcessRequest(url, post, postMethod);
 			_lastMime = dr.MimeType;
 			_lastContentDisposition = dr.ContentDisposition ?? String.Empty;
 			_lastStatusCode = dr.StatusCode;
 			return result;
 		}
 
-		public static Byte[] UploadFiles(String url, String files)
+		public static Byte[] UploadFiles(String url, String files, String search)
 		{
 			_lastMime = String.Empty;
-			var dr = new DesktopRequest();
-			var result = dr.UploadFiles(url, files);
+			var dr = new DesktopRequest() { 
+				Search = search
+			};
+			Byte[] result;
+			using (var resp = new DesktopResponse()) {
+				if (url.StartsWith("_image/"))
+				{
+					result = dr.SaveImage("/" + url, files, resp);
+				}
+				else
+				{
+					result = dr.UploadFiles(url, files, resp);
+				}
+			}
 			_lastMime = dr.MimeType;
+			_lastStatusCode = dr.StatusCode;
 			return result;
 		}
 

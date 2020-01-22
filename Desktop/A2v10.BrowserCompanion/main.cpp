@@ -1,6 +1,10 @@
 // Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
 #include <iostream>
+#include "../A2v10.PosTerm/posterm.h"
+
+#pragma comment(lib,"../Lib/A2v10.PosTerm.lib")
+
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -29,7 +33,10 @@ int main(int argc, char *argv[], char *envp[])
 
 			buf[len._len] = '\0';
 
-			// process message
+			// PosProcessMessage
+			std::string result;
+			//PosProcessCommand(buf, result);
+
 			len._len = strnlen_s(buf, MAX_LEN);
 
 			std::cout << len._b[0] << len._b[1] << len._b[2] << len._b[3];
@@ -38,4 +45,5 @@ int main(int argc, char *argv[], char *envp[])
 			}
 		}
 	}
+	PosShutDown();
 }

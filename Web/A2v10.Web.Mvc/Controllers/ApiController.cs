@@ -126,7 +126,7 @@ namespace A2v10.Web.Mvc.Controllers
 						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper, apiGuid), apiGuid);
 						break;
 					default:
-						throw new NotImplementedException();
+						throw new NotImplementedException(nameof(DefaultGET));
 				}
 			} catch (Exception ex)
 			{

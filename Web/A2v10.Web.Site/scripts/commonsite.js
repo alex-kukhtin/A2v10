@@ -2256,9 +2256,9 @@ Vue.component('a2-pager', {
 });
 
 
-/* Copyright © 2015-2019 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20181229-7602*/
+/*20200121-7619*/
 // services/datamodel.js
 
 (function () {
@@ -2665,6 +2665,7 @@ Vue.component('a2-pager', {
 
 	function seal(elem) {
 		Object.seal(elem);
+		if (!elem._meta_) return;
 		for (let p in elem._meta_.props) {
 			let ctor = elem._meta_.props[p];
 			if (ctor.type) ctor = ctor.type;

@@ -14,6 +14,7 @@ namespace A2v10.Runtime
 		public override String ContentType { get; set; }
 		public override Encoding ContentEncoding { get; set; }
 		public override NameValueCollection Headers => _headers;
+		public override Int32 StatusCode { get; set; }
 
 		private MemoryStream _stream;
 		public override Stream OutputStream

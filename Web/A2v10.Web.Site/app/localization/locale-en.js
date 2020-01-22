@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191101-7575
+// 20200122-7619
 // locale-en.js
 
 "use strict";
@@ -45,6 +45,7 @@
 		$InvalidOldPassword: 'Invalid old password',
 		$ChangePasswordNotAllowed: 'Change password not allowed',
 		$ChangePasswordSuccess: 'Password changed successfully',
+		$ChangePassword: 'Change password',
 		$Last7Days: 'Last 7 days',
 		$Last30Days: 'Last 30 days',
 		$MonthToDate: 'Month to date',
@@ -66,7 +67,9 @@
 		$AccessDenied: 'Access denied!',
 		$PermissionDenied: 'Access denied!',
 		$FileTooLarge: 'File is too large. File size should be no more than {0} KB',
-		$DesktopNotSupported: 'This action is not supported on the desktop version'
-};
+		$DesktopNotSupported: 'This action is not supported on the desktop version',
+		$Settings: 'Settings',
+		$Feedback: 'Feedback'
+	};
 
 })();

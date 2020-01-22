@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(RenderElement));
 		}
 
 		internal void RenderMe(RenderContext context, String valuePath)

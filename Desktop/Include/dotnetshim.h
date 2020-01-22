@@ -25,7 +25,7 @@ public:
 	static void StartApplication(const wchar_t* szConnectionString);
 	static void StartDesktopServices();
 	static void ProcessRequest(const wchar_t* szUrl, const wchar_t* szSearch, std::vector<byte>& post, std::vector<byte>& data, bool postMethod);
-	static void UploadFiles(const wchar_t* szUrl, const wchar_t* szfiles, std::vector<byte>& data);
+	static void UploadFiles(const wchar_t* szUrl, const wchar_t* szSearch, const wchar_t* szfiles, std::vector<byte>& data);
 	static std::wstring GetLastMime();
 	static std::wstring GetLastContentDisposition();
 	static int GetLastStatusCode();

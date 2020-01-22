@@ -24,7 +24,7 @@ private:
 	bool ProcessPredefinedUrls(const std::string& url);
 
 	std::vector<byte> data_;
-	std::string mime_type_;
+	std::wstring mime_type_;
 	std::string content_disposition_;
 	size_t offset_;
 	int status_code_;

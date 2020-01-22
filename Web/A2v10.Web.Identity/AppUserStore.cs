@@ -244,7 +244,7 @@ namespace A2v10.Web.Identity
 
 		public Task RemoveLoginAsync(AppUser user, UserLoginInfo login)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(RemoveLoginAsync));
 		}
 
 		public Task<IList<UserLoginInfo>> GetLoginsAsync(AppUser user)
@@ -524,13 +524,13 @@ namespace A2v10.Web.Identity
 		public Task AddToRoleAsync(AppUser user, String roleName)
 		{
 			_userRoles = null;
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(AddToRoleAsync));
 		}
 
 		public Task RemoveFromRoleAsync(AppUser user, String roleName)
 		{
 			_userRoles = null;
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(RemoveFromRoleAsync));
 		}
 
 		public async Task<IList<String>> GetRolesAsync(AppUser user)

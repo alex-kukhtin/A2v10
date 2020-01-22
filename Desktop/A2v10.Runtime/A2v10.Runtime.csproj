@@ -85,6 +85,10 @@
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Providers\A2v10.Data.Providers.csproj">
+      <Project>{1562ee09-1fd2-41f6-b575-5be0343196a4}</Project>
+      <Name>A2v10.Data.Providers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
       <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
       <Name>A2v10.Data</Name>

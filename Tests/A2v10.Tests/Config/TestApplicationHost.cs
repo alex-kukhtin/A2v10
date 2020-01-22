@@ -95,7 +95,7 @@ namespace A2v10.Tests.Config
 
 		public String MakeRelativePath(String path, String fileName)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException(nameof(MakeRelativePath));
 		}
 
 
