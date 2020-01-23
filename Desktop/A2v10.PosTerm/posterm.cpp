@@ -44,3 +44,25 @@ void PosShutDown()
 {
 	FiscalPrinter::ShutDown();
 }
+
+const wchar_t* PosErrorMessage(pos_result_t res)
+{
+	switch (res)
+	{
+	case _success:
+		return nullptr;
+	case _generic_error:
+		return L"generic error";
+	case _invalid_json:
+		return L"invalid json";
+	case _invalid_model:
+		return L"invalid model";
+	case _could_not_connect:
+		return L"could not connect";
+	case _already_connected:
+		return L"already connected";
+	case _printer_not_found:
+		return L"printer not found";
+	}
+	return L"unknown error";
+}

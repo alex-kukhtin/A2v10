@@ -45,7 +45,7 @@ pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring
 			}
 			catch (CFPException ex) {
 				result = ex.GetError();
-				return pos_result_t::_error;
+				return pos_result_t::_generic_error;
 			}
 		}
 		entry++;

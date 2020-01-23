@@ -20,7 +20,10 @@ bool CAppConfig::ConnectToPrinter()
 	pos_result_t rc = PosConnectToPrinter(pPrinter->m_model.c_str(), pPrinter->m_port.c_str(), pPrinter->m_baud);
 	if (rc == pos_result_t::_success)
 		return true;
-	AfxMessageBox(L"Unable to connect to fiscal printer");
+	CString msg;
+	msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  port:'%s',\n  baud:%d,\n  error:'%s'\n}", 
+		pPrinter->m_model.c_str(), pPrinter->m_port.c_str(), pPrinter->m_baud, PosErrorMessage(rc));
+	AfxMessageBox(msg);
 	return false;
 }
 

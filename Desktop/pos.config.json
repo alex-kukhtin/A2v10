@@ -1,10 +1,10 @@
 ﻿{
-	"connectionString": "",
+	"connectionString": "Data Source=localhost;Initial Catalog=bookkeeper;Integrated Security=True",
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
 			"model": "TESTPRINTER",
-			"model234": "DATECS-T260",
+			"model22": "DATECS-T260",
 			"port": "COM3",
 			"baud": 19200
 		}

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -16,6 +16,7 @@ namespace A2v10.Xaml
 		public Object ItemsSource { get; set; }
 		public Boolean Compact { get; set; }
 		public Boolean Striped { get; set; }
+		public String TestId { get; set; }
 
 		public PropertyGridItems Children { get; set; } = new PropertyGridItems();
 		public GridLinesVisibility GridLines { get; set; }
@@ -28,6 +29,8 @@ namespace A2v10.Xaml
 			onRender?.Invoke(table);
 			table.AddCssClassBool(Compact, "compact");
 			table.AddCssClassBool(Striped, "striped");
+			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
+				table.MergeAttribute("test-id", TestId);
 			MergeAttributes(table, context);
 			if (GridLines != GridLinesVisibility.None)
 				table.AddCssClass($"grid-{GridLines.ToString().ToLowerInvariant()}");

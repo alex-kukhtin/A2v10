@@ -46,7 +46,7 @@ pos_result_t FiscalPrinter::Connect(const wchar_t* model, const wchar_t* port, i
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
 			return pos_result_t::_success;
 		}
-		return pos_result_t::_not_connected;
+		return pos_result_t::_could_not_connect;
 	}
 	return pos_result_t::_invalid_model;
 }

@@ -119,6 +119,10 @@ void CDefaultView::OnStart()
 		CString strConnectionString = _createConnectionStringFromUrl(theApp.m_strUdlFileName);
 		CDotNetRuntime::StartApplication(strConnectionString);
 	}
+	else if (!theApp.m_strConnectionString.IsEmpty()) 
+	{
+		CDotNetRuntime::StartApplication(theApp.m_strConnectionString);
+	}
 	else 
 	{
 		CLoginDlg dlg;
