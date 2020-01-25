@@ -1,4 +1,4 @@
-// Copyright © 2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"
 #include "A2v10.Application.h"
@@ -29,7 +29,7 @@ CString CLoginUser::GetName()
 		return GetWindowsUser();
 	}
 	else {
-		return (LPCWSTR) m_login;
+		return (LPCWSTR) m_login.c_str();
 	}
 }
 
@@ -52,7 +52,7 @@ void CLoginUser::Serialize(CString& target)
 {
 	CString s;
 	s.Format(L"{\"login\": \"%s\", \"password\": \"%s\", \"auth\":\"%s\", \"remember\":%s, \"selected\": %s}", 
-		(LPCWSTR) m_login, (LPCWSTR) m_password, m_authType == AUTH_WINDOWS ? L"windows" : L"sql",
+		m_login.c_str(), m_password.c_str(), m_authType == AUTH_WINDOWS ? L"windows" : L"sql",
 		_bool2String(m_bRemember), _bool2String(m_bSelected));
 	target += s;
 }
@@ -60,41 +60,15 @@ void CLoginUser::Serialize(CString& target)
 // virtual 
 void CLoginUser::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
 {
-	CString err;
-	if (wcscmp(szName, L"login") == 0)
-		m_login = szValue;
-	else if (wcscmp(szName, L"password") == 0)
-		m_password = szValue;
-	else if (wcscmp(szName, L"auth") == 0) {
+	if (wcscmp(szName, L"auth") == 0) {
 		if (wcscmp(szValue, L"windows") == 0)
 			m_authType = AUTH_WINDOWS;
 		else if (wcscmp(szValue, L"sql") == 0)
 			m_authType = AUTH_SQL;
 	}
-}
-
-// virtual 
-void CLoginUser::SetBoolValue(const wchar_t* szName, bool bValue)
-{
-	if (wcscmp(szName, L"remember") == 0)
-		m_bRemember = bValue;
-	else if (wcscmp(szName, L"selected") == 0)
-		m_bSelected = bValue;
-}
-
-CLoginUsers::~CLoginUsers()
-{
-	for (int i = 0; i < GetCount(); i++)
-		delete ElementAt(i);
-	RemoveAll();
-}
-
-// virtual 
-JsonTarget* CLoginUsers::CreateObject(const wchar_t* szName)
-{
-	CLoginUser*  pUser = new CLoginUser();
-	Add(pUser);
-	return pUser;
+	else {
+		__super::SetStringValue(szName, szValue);
+	}
 }
 
 /////////////////
@@ -104,74 +78,49 @@ void CLoginDatabase::Serialize(CString& target)
 {
 	CString s;
 	s.Format(L"{\"name\": \"%s\", \"selected\": %s}",
-		(LPCWSTR)m_name, _bool2String(m_bSelected));
+		m_name.c_str(), _bool2String(m_bSelected));
 	target += s;
-}
-
-// virtual 
-void CLoginDatabase::SetBoolValue(const wchar_t* szName, bool bValue)
-{
-	if (wcscmp(szName, L"selected") == 0)
-		m_bSelected = bValue;
-}
-
-
-// virtual 
-void CLoginDatabase::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
-{
-	CString err;
-	if (wcscmp(szName, L"name") == 0)
-		m_name = szValue;
-}
-
-CLoginDatabases::~CLoginDatabases()
-{
-	for (int i = 0; i < GetCount(); i++)
-		delete ElementAt(i);
-	RemoveAll();
-}
-
-// virtual 
-JsonTarget* CLoginDatabases::CreateObject(const wchar_t* szName)
-{
-	CLoginDatabase*  pDb = new CLoginDatabase();
-	Add(pDb);
-	return pDb;
 }
 
 ////////////////
 // CLoginServer
 
+void _removeLastComma(CString str)
+{
+	if (str[str.GetLength() - 1] == L',')
+		str.Truncate(str.GetLength() - 1);
+}
+
 void CLoginServer::Serialize(CString& target)
 {
 	CString s;
-	CString name = m_name;
+	CString name = m_name.c_str();
 	name.Replace(L"\\", L"\\\\");
 	s.Format(L"{\"name\": \"%s\", \"selected\": %s, ",
 		(LPCWSTR)name, _bool2String(m_bSelected));
-
 	target += s;
 
 	target += L"\"users\":[";
+	for (auto it = m_users.begin(); it != m_users.end(); ++it) {
+		it->get()->Serialize(target);
+		target += L",";
+	}
+	_removeLastComma(target);
 
-	for (int i = 0; i < m_users.GetCount(); i++) {
-		m_users[i]->Serialize(target);
-		if (i != m_users.GetUpperBound())
-			target += L",\n";
-	}
 	target += L"],\"databases\":[";
-	for (int i = 0; i < m_databases.GetCount(); i++) {
-		m_databases[i]->Serialize(target);
-		if (i != m_databases.GetUpperBound())
-			target += L",";
+	for (auto it = m_databases.begin(); it != m_databases.end(); ++it) {
+		CLoginDatabase* pDB = it->get();
+		pDB->Serialize(target);
+		target += L",";
 	}
+	_removeLastComma(target);
 	target += L"]}";
 }
 
 void CLoginServer::FindOrCreateDatabase(LPCWSTR szDatabase)
 {
-	for (int i = 0; i < m_databases.GetCount(); i++) {
-		CLoginDatabase* pDb = m_databases.ElementAt(i);
+	for (auto it = m_databases.begin(); it != m_databases.end(); ++it) {
+		CLoginDatabase* pDb = it->get();
 		if (pDb->m_name == szDatabase) {
 			SelectDatabase(pDb);
 			return;
@@ -179,22 +128,22 @@ void CLoginServer::FindOrCreateDatabase(LPCWSTR szDatabase)
 	}
 	CLoginDatabase* pDb = new CLoginDatabase();
 	pDb->m_name = szDatabase;
-	m_databases.Add(pDb);
+	m_databases.push_back(std::unique_ptr<CLoginDatabase>(pDb));
 	SelectDatabase(pDb);
 }
 
 void CLoginServer::SelectDatabase(CLoginDatabase* pTarget)
 {
-	for (int i = 0; i < m_databases.GetCount(); i++) {
-		CLoginDatabase* pDb = m_databases.ElementAt(i);
+	for (auto it = m_databases.begin(); it != m_databases.end(); ++it) {
+		CLoginDatabase* pDb = it->get();
 		pDb->m_bSelected = (pDb == pTarget);
 	}
 }
 
 CLoginUser* CLoginServer::FindUser(int nAuth, LPCWSTR szLogin, bool bCreate)
 {
-	for (int i = 0; i < m_users.GetCount(); i++) {
-		CLoginUser* pUsr = m_users.ElementAt(i);
+	for (auto it = m_users.begin(); it != m_users.end(); ++it) {
+		CLoginUser* pUsr = it->get();
 		if (wcscmp(pUsr->GetName(), szLogin) == 0) {
 			SelectUser(pUsr);
 			return pUsr;
@@ -204,15 +153,15 @@ CLoginUser* CLoginServer::FindUser(int nAuth, LPCWSTR szLogin, bool bCreate)
 		return nullptr;
 	CLoginUser* pUsr = new CLoginUser();
 	pUsr->SetName(nAuth, szLogin);
-	m_users.Add(pUsr);
+	m_users.push_back(std::unique_ptr<CLoginUser>(pUsr));
 	SelectUser(pUsr);
 	return pUsr;
 }
 
 void CLoginServer::SelectUser(CLoginUser* pTarget)
 {
-	for (int i = 0; i < m_users.GetCount(); i++) {
-		CLoginUser* pUsr = m_users.ElementAt(i);
+	for (auto it = m_users.begin(); it != m_users.end(); ++it) {
+		CLoginUser* pUsr = it->get();
 		pUsr->m_bSelected = (pTarget == pUsr);
 	}
 }
@@ -220,48 +169,20 @@ void CLoginServer::SelectUser(CLoginUser* pTarget)
 CLoginUser* CLoginServer::GetCurrentUser(int nAuth)
 {
 	CLoginUser* pUsr;
-	for (int i = 0; i < m_users.GetCount(); i++) {
-		pUsr = m_users.ElementAt(i);
+	for (auto it = m_users.begin(); it != m_users.end(); ++it) {
+		pUsr = it->get();
 		if (pUsr->m_bSelected && (nAuth == pUsr->GetAuth()))
 			return pUsr;
 	}
 	// not found - select the first with the specified type
-	for (int i = 0; i < m_users.GetCount(); i++) {
-		pUsr = m_users.ElementAt(i);
+	for (auto it = m_users.begin(); it != m_users.end(); ++it) {
+		pUsr = it->get();
 		if (nAuth == pUsr->GetAuth()) {
 			SelectUser(pUsr);
 			return pUsr;
 		}
 	}
 	return nullptr;
-}
-
-// virtual 
-JsonTarget* CLoginServer::CreateArray(const wchar_t* szName)
-{
-	if (wcscmp(szName, L"users") == 0) {
-		return &m_users;
-	}
-	else if (wcscmp(szName, L"databases") == 0) {
-		return &m_databases;
-	}
-	CString msg;
-	msg.Format(L"Invalid object name '%s'", szName);
-	throw new JsonException(msg);
-}
-
-// virtual 
-void CLoginServer::SetStringValue(const wchar_t* szName, const wchar_t* szValue)
-{
-	if (wcscmp(szName, L"name") == 0)
-		m_name = szValue;
-}
-
-// virtual 
-void CLoginServer::SetBoolValue(const wchar_t* szName, bool bValue)
-{
-	if (wcscmp(szName, L"selected") == 0)
-		m_bSelected = bValue;
 }
 
 
@@ -306,7 +227,7 @@ void CLoginInfo::FillDefault()
 	CLoginUser* pUser = new CLoginUser();
 	pUser->SetName(AUTH_WINDOWS, nullptr);
 	pUser->m_bSelected = true;
-	pSrv->m_users.Add(pUser);
+	pSrv->m_users.push_back(std::unique_ptr<CLoginUser>(pUser));
 }
 
 // virtual 

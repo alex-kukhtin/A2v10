@@ -138,6 +138,10 @@ void CA2CommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLas
 			m_eMode = ParseMode::_config;
 			return;
 		}
+		else {
+			m_eMode = ParseMode::_unknown;
+			return;
+		}
 	}
 	else 
 	{
@@ -148,6 +152,10 @@ void CA2CommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLas
 		}
 		else if (m_eMode == ParseMode::_config) {
 			m_strConfig = strParam;
+			m_eMode = ParseMode::_none;
+			return;
+		}
+		else if (m_eMode == ParseMode::_unknown) {
 			m_eMode = ParseMode::_none;
 			return;
 		}

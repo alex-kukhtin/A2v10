@@ -7,12 +7,13 @@
 
 class CLoginUser : public JsonTarget
 {
-	CString m_login;
-	int m_authType; // 0-windows, 1-sql-server
 
 public:
 
-	CString m_password;
+	std::wstring m_login;
+	std::wstring m_password;
+
+	int m_authType; // 0-windows, 1-sql-server
 	bool m_bRemember;
 	bool m_bSelected;
 
@@ -27,52 +28,41 @@ public:
 
 	void Serialize(CString& target);
 
+	BEGIN_JSON_PROPS(4)
+		BOOL_PROP(remember, m_bRemember)
+		BOOL_PROP(selected, m_bSelected)
+		STRING_PROP(login, m_login)
+		STRING_PROP(password, m_password)
+	END_JSON_PROPS()
+
 	//  json target
-	virtual JsonTarget* CreateArray(const wchar_t* szName) { throw JsonException(L"CLoginUser::CreateArray. Not implemented."); }
-	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
+	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue) override;
 };
 
 class CLoginDatabase : public JsonTarget
 {
 public:
-	CString m_name;
+	std::wstring m_name;
 	bool m_bSelected;
 
 	CLoginDatabase()
 		: m_bSelected(false) {}
 	void Serialize(CString& target);
 
-	//  json target
-	virtual JsonTarget* CreateArray(const wchar_t* szName) { throw JsonException(L"CLoginDatabase::CreateArray. Not implemented."); }
-	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
-};
-
-class CLoginDatabases : public CArray<CLoginDatabase*, CLoginDatabase*>, public JsonTargetArray
-{
-public:
-	virtual ~CLoginDatabases();
-	//  json target array
-	virtual JsonTarget* CreateObject(const wchar_t* szName);
-};
-
-class CLoginUsers : public CArray<CLoginUser*, CLoginUser*>, public JsonTargetArray
-{
-public:
-	virtual ~CLoginUsers();
-	//  json target
-	virtual JsonTarget* CreateObject(const wchar_t* szName);
+	BEGIN_JSON_PROPS(2)
+		STRING_PROP(name, m_name)
+		BOOL_PROP(selected, m_bSelected)
+	END_JSON_PROPS()
 };
 
 class CLoginServer : public JsonTarget
 {
 public:
-	CString m_name;
+	std::wstring m_name;
 	bool m_bSelected;
 	
-	CLoginUsers m_users;
-	CLoginDatabases m_databases;
+	JsonTargetTypedArray <CLoginUser> m_users;
+	JsonTargetTypedArray<CLoginDatabase> m_databases;
 
 	CLoginServer():
 		m_bSelected(false) {}
@@ -86,11 +76,12 @@ public:
 	void SelectDatabase(CLoginDatabase* pTarget);
 	void SelectUser(CLoginUser* pTarget);
 
-	//  json target
-	virtual JsonTarget* CreateObject(const wchar_t* szName) { return nullptr; }
-	virtual JsonTarget* CreateArray(const wchar_t* szName);
-	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
-	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
+	BEGIN_JSON_PROPS(4)
+		STRING_PROP(name, m_name)
+		BOOL_PROP(selected, m_bSelected)
+		ARRAY_PROP(databases, m_databases)
+		ARRAY_PROP(users, m_users)
+	END_JSON_PROPS()
 };
 
 class CLoginInfo : public JsonTarget
@@ -109,8 +100,7 @@ public:
 	void SaveCurrentInfo(LPCWSTR szServerName, LPCWSTR szDbName, LPCWSTR szLogin, LPCWSTR szPassword, int nAuthType, bool bRemember);
 
 	//  json target
-	virtual JsonTarget* CreateObject(const wchar_t* szName);
-	virtual JsonTarget* CreateArray(const wchar_t* szName) { return this; };
+	virtual JsonTarget* CreateObject(const wchar_t* szName) override;
 
 	void SelectServer(CLoginServer* pTarget);
 };

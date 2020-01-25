@@ -55,9 +55,9 @@ BOOL CLoginDlg::OnInitDialog()
 	CLoginServer* pSrv = nullptr;
 	for (int i = 0; i < m_loginInfo.m_servers.GetCount(); i++) {
 		CLoginServer* piSrv1 = m_loginInfo.m_servers.GetAt(i);
-		m_cmbServer.AddString(piSrv1->m_name);
+		m_cmbServer.AddString(piSrv1->m_name.c_str());
 		if (piSrv1->m_bSelected) {
-			m_cmbServer.SetWindowText(piSrv1->m_name);
+			m_cmbServer.SetWindowText(piSrv1->m_name.c_str());
 			pSrv = piSrv1;
 		}
 	}
@@ -79,22 +79,22 @@ void CLoginDlg::FillServerInfo(CLoginServer* pSrv)
 	SetDlgItemText(IDC_LOGIN, EMPTYSTR);
 	CheckDlgButton(IDC_REMEMBER, BST_UNCHECKED);
 
-	for (int i = 0; i < pSrv->m_databases.GetCount(); i++) {
-		CLoginDatabase* pDb = pSrv->m_databases.ElementAt(i);
-		m_cmbDatabase.AddString(pDb->m_name);
+	for (auto it = pSrv->m_databases.begin(); it != pSrv->m_databases.end(); ++it) {
+		CLoginDatabase* pDb = it->get();
+		m_cmbDatabase.AddString(pDb->m_name.c_str());
 		if (pDb->m_bSelected)
-			m_cmbDatabase.SetWindowText(pDb->m_name);
+			m_cmbDatabase.SetWindowText(pDb->m_name.c_str());
 	}
 
 	m_cmbAuth.SetCurSel(AUTH_WINDOWS);
-	for (int i = 0; i < pSrv->m_users.GetCount(); i++) {
-		CLoginUser* pUser = pSrv->m_users.ElementAt(i);
+	for (auto it = pSrv->m_users.begin(); it != pSrv->m_users.end(); ++it) {
+		CLoginUser* pUser = it->get();
 		m_cmbUsers.AddString(pUser->GetName());
 		if (pUser->m_bSelected) {
 			m_cmbUsers.SetWindowText(pUser->GetName());
 			m_cmbAuth.SetCurSel(pUser->GetAuth());
 			if (pUser->m_bRemember) {
-				SetDlgItemText(IDC_PASSWORD, pUser->m_password);
+				SetDlgItemText(IDC_PASSWORD, pUser->m_password.c_str());
 				CheckDlgButton(IDC_REMEMBER, BST_CHECKED);
 			}
 		}
@@ -219,7 +219,7 @@ void CLoginDlg::OnAuthSelEndOk()
 				pServer->SelectUser(pUser);
 				CheckDlgButton(IDC_REMEMBER, pUser->m_bRemember ? BST_CHECKED : BST_UNCHECKED);
 				if (pUser->m_bRemember) {
-					SetDlgItemText(IDC_PASSWORD, pUser->m_password);
+					SetDlgItemText(IDC_PASSWORD, pUser->m_password.c_str());
 				}
 			}
 			else {
@@ -253,7 +253,7 @@ void CLoginDlg::OnLoginSelEndOk()
 			m_cmbAuth.SetCurSel(pUser->GetAuth());
 			CheckDlgButton(IDC_REMEMBER, pUser->m_bRemember ? BST_CHECKED : BST_UNCHECKED);
 			if (pUser->m_bRemember) {
-				SetDlgItemText(IDC_PASSWORD, pUser->m_password);
+				SetDlgItemText(IDC_PASSWORD, pUser->m_password.c_str());
 			}
 			else {
 				SetDlgItemText(IDC_PASSWORD, EMPTYSTR);

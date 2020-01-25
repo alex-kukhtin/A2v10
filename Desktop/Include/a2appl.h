@@ -36,7 +36,8 @@ class CA2CommandLineInfo : public CCommandLineInfo
 	enum ParseMode {
 		_none,
 		_url,
-		_config
+		_config,
+		_unknown
 	};
 
 	bool m_bDebug;

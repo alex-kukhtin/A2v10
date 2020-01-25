@@ -1,24 +1,5 @@
 #pragma once
 
-template<class T>
-class JsonTargetTypedArray : public CArray<T*, T*>, public JsonTargetArray
-{
-public:
-	virtual ~JsonTargetTypedArray()
-	{
-		for (int i = 0; i < GetCount(); i++)
-			delete ElementAt(i);
-		RemoveAll();
-	}
-	//  json target array
-	virtual JsonTarget* CreateObject(const wchar_t* szName)
-	{
-		T* pItem = new T();
-		Add(pItem);
-		return pItem;
-
-	}
-};
 
 
 class CAppConfigFiscalPrinter : public JsonTarget
@@ -45,7 +26,7 @@ public:
 	std::wstring m_startUrl;
 	JsonTargetTypedArray<CAppConfigFiscalPrinter> m_fiscalPrinters;
 
-	bool HasFiscalPrinters() const { return m_fiscalPrinters.GetCount() > 0; }
+	bool HasFiscalPrinters() const { return m_fiscalPrinters.size() > 0; }
 
 	bool ConnectToPrinter();
 	void ShutDown();

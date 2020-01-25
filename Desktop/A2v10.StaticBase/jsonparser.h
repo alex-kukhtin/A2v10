@@ -63,27 +63,19 @@ public:
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue) {};
 };
 
-/**
 template<class T>
-class JsonTargetTypedArray : public CArray<T*, T*>, public JsonTargetArray
+class JsonTargetTypedArray : public std::vector<std::unique_ptr<T> >, public JsonTargetArray
 {
 public:
-	virtual ~JsonTargetTypedArray()
-	{
-		for (int i = 0; i < GetCount(); i++)
-			delete ElementAt(i);
-		RemoveAll();
-	}
 	//  json target array
-	virtual JsonTarget* CreateObject(const wchar_t* szName)
+	virtual JsonTarget* CreateObject(const wchar_t* szName) override
 	{
 		T* pItem = new T();
-		Add(pItem);
-		return pItem;
-
+		push_back(std::unique_ptr<T>(pItem));
+		// constraint?
+		return (JsonTarget*) pItem;
 	}
 };
-*/
 
 class JsonParser
 {

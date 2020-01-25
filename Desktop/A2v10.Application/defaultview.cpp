@@ -64,14 +64,14 @@ BOOL CDefaultView::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
-void _addToString(CString& target, LPCWSTR szName, LPCWSTR szValue)
+void _addToString(CString& target, const wchar_t* szName, const wchar_t* szValue)
 {
 	CString text;
 	text.Format(L"%s=\"%s\";", szName, szValue);
 	target += text;
 }
 
-CString _createConnectionStringFromUrl(LPCWSTR szUdlFileName)
+CString _createConnectionStringFromUrl(const wchar_t* szUdlFileName)
 {
 	CString text;
 	CString cnnString;
@@ -108,6 +108,24 @@ CString _createConnectionStringFromUrl(LPCWSTR szUdlFileName)
 	return cnnString;
 }
 
+
+bool CDefaultView::StartApplication(const wchar_t* connString) 
+{
+	CFrameWnd* pFrame = GetParentFrame();
+	ATLASSERT(pFrame);
+	try
+	{
+		CDotNetRuntime::StartApplication(connString);
+		return true;
+	}
+	catch (CDotNetException ex) 
+	{
+		MessageBox(ex.GetMessage(), nullptr, MB_OK|MB_ICONSTOP);
+		pFrame->PostMessage(WM_SYSCOMMAND, SC_CLOSE);
+		return false;
+	}
+}
+
 // afx_msg
 void CDefaultView::OnStart() 
 {
@@ -117,11 +135,13 @@ void CDefaultView::OnStart()
 	if (!theApp.m_strUdlFileName.IsEmpty()) 
 	{
 		CString strConnectionString = _createConnectionStringFromUrl(theApp.m_strUdlFileName);
-		CDotNetRuntime::StartApplication(strConnectionString);
+		if (!StartApplication(strConnectionString))
+			return;
 	}
 	else if (!theApp.m_strConnectionString.IsEmpty()) 
 	{
-		CDotNetRuntime::StartApplication(theApp.m_strConnectionString);
+		if (!StartApplication(theApp.m_strConnectionString))
+			return;
 	}
 	else 
 	{

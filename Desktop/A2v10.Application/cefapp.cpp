@@ -71,7 +71,7 @@ void CCefApplication::Init(HINSTANCE hInstance)
 	settings.multi_threaded_message_loop = true;
 	settings.no_sandbox = true;
 	settings.windowless_rendering_enabled = false;
-	settings.remote_debugging_port = 5555; /// TODO
+	settings.remote_debugging_port = 5599; /// TODO
 	settings.background_color = 0xfff2f3f9; // BG_BRUSH_NORMAL (TABS)
 
 	m_bInit =  CefInitialize(args, settings, new CCefApplication(), nullptr);

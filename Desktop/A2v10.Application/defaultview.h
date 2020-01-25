@@ -18,4 +18,6 @@ protected:
 
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnStart();
+
+	bool StartApplication(const wchar_t* connString);
 };
