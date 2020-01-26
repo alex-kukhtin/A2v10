@@ -91,7 +91,7 @@ namespace A2v10.Tests.Config
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 
-		public String ScriptEngine => null;
+		public String ScriptEngine => "ChakraCore";
 
 		public String MakeRelativePath(String path, String fileName)
 		{
