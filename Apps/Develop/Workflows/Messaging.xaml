@@ -9,9 +9,6 @@
 	-->
 	<EmailMessage x:Key="First" Subject="SUBJECT"
 				Model="MessageForSend" Schema="a2demo"
-				  BodyTemplate="Workflows/first-mail.html">
-		<EmailMessage.To>
-			<![CDATA[{{Message.To}}]]>
-		</EmailMessage.To>
+				BodyTemplate="Workflows/first-mail.html" To=" {{Message.To}}">
 	</EmailMessage>
 </Template>
