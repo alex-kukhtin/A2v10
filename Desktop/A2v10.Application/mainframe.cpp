@@ -100,7 +100,7 @@ BOOL CMainFrame::CreateDockingWindows()
 	CString strTitle;
 
 	DWORD dwDefaultStyle =
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI;
+		WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI;
 
 	// console window
 	VERIFY(strTitle.LoadString(ID_WND_CONSOLE));

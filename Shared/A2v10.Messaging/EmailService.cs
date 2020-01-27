@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Net;
@@ -72,7 +72,8 @@ namespace A2v10.Messaging
 					{
 						if (config != null && !String.IsNullOrEmpty(config.from))
 							mm.From = new MailAddress(config.from);
-						mm.To.Add(new MailAddress(to));
+						foreach (var addr in to.Split(';'))
+							mm.To.Add(new MailAddress(addr.Trim()));
 						mm.BodyTransferEncoding = TransferEncoding.Base64;
 						mm.SubjectEncoding = Encoding.Unicode;
 						mm.HeadersEncoding = Encoding.UTF8;

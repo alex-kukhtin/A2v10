@@ -13,9 +13,13 @@ namespace A2v10.Web.Mvc.Start
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 			routes.IgnoreRoute("content/{resource}/{*pathInfo}");
+			routes.IgnoreRoute("css/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("scripts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
-			routes.IgnoreRoute("favicon.ico");
+			routes.IgnoreRoute("*.ico");
+			routes.IgnoreRoute("*.png");
+			routes.IgnoreRoute("robots.txt");
+			routes.IgnoreRoute("manifest.json");
 
 			var siteMode = ConfigurationManager.AppSettings["siteMode"];
 

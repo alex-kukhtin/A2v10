@@ -8,6 +8,10 @@
 	Environment: (()) - ProcessId, InboxId, Host (ProcessId, InboxId - из табицы a2messaging.Environment, Host из web.config)
 	-->
 	<EmailMessage x:Key="First" Subject="SUBJECT"
-				Model="MessageForSend" Schema="a2demo" To="[[To]]" BodyTemplate="Workflows/first-mail.html">
+				Model="MessageForSend" Schema="a2demo"
+				  BodyTemplate="Workflows/first-mail.html">
+		<EmailMessage.To>
+			<![CDATA[{{Message.To}}]]>
+		</EmailMessage.To>
 	</EmailMessage>
 </Template>
