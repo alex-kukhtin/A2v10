@@ -119,6 +119,7 @@
     <Compile Include="Layouts\Flex.cs" />
     <Compile Include="Layouts\FlexList.cs" />
     <Compile Include="Layouts\Card.cs" />
+    <Compile Include="Layouts\InlineDialog.cs" />
     <Compile Include="Layouts\TabBar.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
