@@ -1,17 +1,18 @@
 ﻿
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
-using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
+
+using Newtonsoft.Json;
+
+using A2v10.Data.Interfaces;
+using A2v10.Infrastructure;
 
 namespace A2v10.Interop
 {
@@ -96,13 +97,6 @@ namespace A2v10.Interop
 				)
 			);
 			return xml.ToString();
-			/*
-			using (var sw = new StringWriter())
-			{
-				xml.Save(sw);
-				return sw.ToString();
-			}
-			*/
 		}
 
 		Ip2SmsResponse ParseResult(String result)
