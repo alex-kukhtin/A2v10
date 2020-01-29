@@ -4690,7 +4690,7 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7623*/
+/*20200129-7624*/
 // controllers/base.js
 
 (function () {
@@ -4717,7 +4717,7 @@ template: `
 
 	function __runDialog(url, arg, query, cb) {
 		return new Promise(function (resolve, reject) {
-			const dlgData = { promise: null, data: arg, query: query };
+			const dlgData = { promise: null, data: arg, query: query, rd:true };
 			eventBus.$emit('modal', url, dlgData);
 			dlgData.promise.then(function (result) {
 				cb(result);

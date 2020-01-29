@@ -108,6 +108,6 @@ function runTest() {
 }
 
 function canClose() {
-	console.dir(this);
+	console.dir(this.$ctrl);
 	return true;
 }

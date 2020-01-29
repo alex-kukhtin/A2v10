@@ -10696,7 +10696,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7623*/
+/*20200129-7624*/
 // controllers/base.js
 
 (function () {
@@ -10723,7 +10723,7 @@ Vue.directive('resize', {
 
 	function __runDialog(url, arg, query, cb) {
 		return new Promise(function (resolve, reject) {
-			const dlgData = { promise: null, data: arg, query: query };
+			const dlgData = { promise: null, data: arg, query: query, rd:true };
 			eventBus.$emit('modal', url, dlgData);
 			dlgData.promise.then(function (result) {
 				cb(result);
@@ -11981,7 +11981,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7623*/
+/*20200129-7624*/
 /* controllers/shell.js */
 
 (function () {
@@ -12507,6 +12507,17 @@ Vue.directive('resize', {
 				me.requestsCount -= 1;
 			});
 
+			function findRealDialog() {
+				// skip alerts, confirm, etc
+				for (let i = me.modals.length - 1; i >= 0; --i) {
+					let md = me.modals[i];
+					if (md.rd) {
+						return md;
+					}
+				}
+				return null;
+			}
+
 			eventBus.$on('modal', function (modal, prms) {
 				let id = utils.getStringId(prms ? prms.data : null);
 				let raw = prms && prms.raw;
@@ -12515,7 +12526,7 @@ Vue.directive('resize', {
 				if (raw)
 					url = urlTools.combine(root, modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
-				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false };
+				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false, rd: prms.rd };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
 				});
@@ -12537,17 +12548,16 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modalSetAttribites', function (attr, instance) {
-				if (!me.modals.length || !attr || !instance)
-					return;
-				let dlg = me.modals[me.modals.length - 1];
+				if (!attr || !instance) return;
+				let dlg = findRealDialog();
+				if (!dlg) return;
 				dlg.attrs = instance.__parseControllerAttributes(attr);
 			});
 
 			eventBus.$on('modalCreated', function (instance) {
 				// include instance!
-				if (!me.modals.length)
-					return;
-				let dlg = me.modals[me.modals.length - 1];
+				let dlg = findRealDialog();
+				if (!dlg) return;
 				dlg.instance = instance;
 			});
 
@@ -12557,16 +12567,7 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modalRequery', function (baseUrl) {
-				if (!me.modals.length)
-					return;
-				let dlg = null;
-				// skip alerts, confirm, etc
-				for (let i = me.modals.length - 1; i >= 0; --i) {
-					let md = me.modals[i];
-					if (md.instance) {
-						dlg = md;
-					}
-				}
+				let dlg = findRealDialog();
 				if (!dlg) return;
 				let inst = dlg.instance; // include instance
 				if (inst && inst.modalRequery) {
@@ -12578,15 +12579,15 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modalSetBase', function (baseUrl) {
-				if (!me.modals.length)
-					return;
-				let dlg = me.modals[me.modals.length - 1];
+				let dlg = findRealDialog();
+				if (!dlg) return;
 				dlg.url = baseUrl;
 			});
 
 			eventBus.$on('modalClose', function (result) {
 
 				if (!me.modals.length) return;
+				// not real! any.
 				const dlg = me.modals[me.modals.length - 1];
 
 				function closeImpl(closeResult) {
