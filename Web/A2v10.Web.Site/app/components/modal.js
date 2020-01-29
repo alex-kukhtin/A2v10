@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190905-7553
+// 20200129-7623
 // components/modal.js
 
 
@@ -11,7 +11,7 @@
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
+<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass">
 	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>

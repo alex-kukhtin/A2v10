@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200122-7619*/
+/*20200129-7623*/
 /* controllers/shell.js */
 
 (function () {
@@ -445,7 +445,7 @@
 	<a2-content-view :pages="pages"></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
-		<div class="modal-wrapper" v-for="dlg in modals" :class="{show: dlg.wrap}">
+		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals" :class="{show: dlg.wrap}">
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>
@@ -578,7 +578,15 @@
 			eventBus.$on('modalRequery', function (baseUrl) {
 				if (!me.modals.length)
 					return;
-				let dlg = me.modals[me.modals.length - 1];
+				let dlg = null;
+				// skip alerts, confirm, etc
+				for (let i = me.modals.length - 1; i >= 0; --i) {
+					let md = me.modals[i];
+					if (md.instance) {
+						dlg = md;
+					}
+				}
+				if (!dlg) return;
 				let inst = dlg.instance; // include instance
 				if (inst && inst.modalRequery) {
 					if (baseUrl)

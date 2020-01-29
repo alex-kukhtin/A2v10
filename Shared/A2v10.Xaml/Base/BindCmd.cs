@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -162,7 +162,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null)
+		internal String GetCommand(RenderContext context, Boolean indirect = false, String argument = null, XamlElement src = null)
 		{
 			if (indirect)
 			{
@@ -187,6 +187,11 @@ namespace A2v10.Xaml
 					return $"{CommandArgument(context)}.$empty()";
 
 				case CommandType.Close:
+					if (src != null) {
+						var inlineModal = src.FindParent<InlineDialog>();
+						if (inlineModal != null)
+						return $"$inlineClose('{inlineModal.Id}', false)";
+					}
 					return context.IsDialog ? "$modalClose()" : "$close()";
 
 				case CommandType.CloseOk:

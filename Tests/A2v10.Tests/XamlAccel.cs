@@ -20,8 +20,10 @@ namespace A2v10.Tests.Xaml.Accelerators
 		[TestMethod]
 		public void SimpleKeyCodes()
 		{
-			var a = new Accel();
-			a.Key = "A";
+			var a = new Accel()
+			{
+				Key = "A"
+			};
 			Assert.AreEqual("____:KeyA", a.GetKeyCode());
 			a.Key = "Z";
 			Assert.AreEqual("____:KeyZ", a.GetKeyCode());
@@ -34,8 +36,10 @@ namespace A2v10.Tests.Xaml.Accelerators
 		[TestMethod]
 		public void ArrowKeyCodes()
 		{
-			var a = new Accel();
-			a.Key = "Left";
+			var a = new Accel()
+			{
+				Key = "Left"
+			};
 			Assert.AreEqual("____:ArrowLeft", a.GetKeyCode());
 			a.Key = "Right";
 			Assert.AreEqual("____:ArrowRight", a.GetKeyCode());
@@ -48,8 +52,10 @@ namespace A2v10.Tests.Xaml.Accelerators
 		[TestMethod]
 		public void FuncKeyCodes()
 		{
-			var a = new Accel();
-			a.Key = "F1";
+			var a = new Accel()
+			{
+				Key = "F1"
+			};
 			Assert.AreEqual("____:F1", a.GetKeyCode());
 			a.Key = "F12";
 			Assert.AreEqual("____:F12", a.GetKeyCode());
@@ -60,8 +66,10 @@ namespace A2v10.Tests.Xaml.Accelerators
 		[TestMethod]
 		public void KeyWithModifiers()
 		{
-			var a = new Accel();
-			a.Key = "Ctrl + F1";
+			var a = new Accel()
+			{
+				Key = "Ctrl + F1"
+			};
 			Assert.AreEqual("C___:F1", a.GetKeyCode());
 			a.Key = "Alt+Down";
 			Assert.AreEqual("_A__:ArrowDown", a.GetKeyCode());

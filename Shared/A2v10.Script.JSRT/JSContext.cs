@@ -14,9 +14,9 @@ namespace A2v10.Script.JSRT
 		JavaScriptRuntime _runtime;
 		JavaScriptContext _context = JavaScriptContext.Invalid;
 		JavaScriptContext.Scope _scope;
-		bool _debug;
+		readonly Boolean _debug;
 
-		public ScriptContext(bool startDebugger)
+		public ScriptContext(Boolean startDebugger)
 		{
 			_debug = startDebugger;
 		}

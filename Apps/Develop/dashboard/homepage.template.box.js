@@ -19,7 +19,11 @@ const template = {
 	},
 	commands: {
 		showAlert() {
-			alert('click from box!');
+			this.$ctrl.$inlineOpen('Service');
+
+		},
+		dlgCommand(arg) {
+			alert('dlgCommand:' + arg);
 		}
 	}
 };

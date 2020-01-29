@@ -183,12 +183,11 @@ namespace A2v10.Xaml
 
 		protected virtual void RenderFooter(RenderContext context)
 		{
-			if (Buttons.Count == 0 && !HasHelp)
+			if (Buttons.Count == 0)
 				return;
 			var footer = new TagBuilder("div", "modal-footer");
 			footer.RenderStart(context);
 
-			//RenderHelp(context);
 			foreach (var b in Buttons)
 				b.RenderElement(context);
 

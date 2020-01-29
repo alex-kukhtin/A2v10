@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -132,7 +132,7 @@ namespace A2v10.Xaml
 			if (cmd == null)
 				return;
 			cmd.MergeCommandAttributes(tag, context);
-			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context));
+			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context, indirect:false, argument:null, src:this));
 			if (withHref)
 				tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
 		}

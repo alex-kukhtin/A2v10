@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20180804-7264*/
+/*20200129-7623*/
 /* controllers/iframe.js */
 
 (function () {
@@ -17,7 +17,7 @@
 		template: `
 <div class="main-view">
 	<div class="modal-stack" v-if="hasModals">
-		<div class="modal-wrapper" v-for="dlg in modals">
+		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals">
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>

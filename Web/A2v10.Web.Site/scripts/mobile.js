@@ -8449,9 +8449,9 @@ TODO:
 	});
 })();
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190905-7553
+// 20200129-7623
 // components/modal.js
 
 
@@ -8462,7 +8462,7 @@ TODO:
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window" @keydown.tab="tabPress" :class="mwClass">
+<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass">
 	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
@@ -9420,6 +9420,71 @@ Vue.component('a2-panel', {
 		}
 	}
 });
+// Copyright © 2020 Alex Kukhtin. All rights reserved.
+
+// 20200129-7623
+// components/inlinedialog.js
+(function () {
+	const eventBus = require('std:eventBus');
+
+	Vue.component('a2-inline-dialog', {
+		template:
+`<div class="inline-modal-wrapper modal-animation-frame" v-if="visible" :class="{show: open}" v-cloak>
+	<div class="modal-window modal-animation-window" :class="{loaded: open}">
+		<slot></slot>
+	</div>
+</div>
+`,
+		props: {
+			dialogId: String,
+			dialogTitle: String
+		},
+		data() {
+			return {
+				visible: false,
+				open: false //for animation
+			};
+		},
+		computed: {
+		},
+		methods: {
+			__keyUp(event) {
+				if (event.which === 27) {
+					eventBus.$emit('inlineDialog', { cmd: 'close', id: this.dialogId });
+					event.stopPropagation();
+					event.preventDefault();
+				}
+			},
+			__inlineEvent(opts) {
+				if (!opts) return;
+				if (opts.id !== this.dialogId) return;
+				switch (opts.cmd) {
+					case 'close':
+						this.open = false;
+						this.visible = false;
+						document.removeEventListener('keyup', this.__keyUp);
+						break;
+					case 'open':
+						this.visible = true;
+						document.addEventListener('keyup', this.__keyUp);
+						setTimeout(() => {
+							this.open = true;
+						}, 50); // same as shell
+						break;
+					default:
+						console.error(`invalid inline command '${opts.cmd}'`);
+				}
+			}
+		},
+		created() {
+			eventBus.$on('inlineDialog', this.__inlineEvent);
+		},
+		beforeDestroy() {
+			eventBus.$off('inlineDialog', this.__inlineEvent);
+		}
+	});
+
+})();
 /*! Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
 // 20200113-7612
@@ -10631,7 +10696,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200114-7615*/
+/*20200129-7623*/
 // controllers/base.js
 
 (function () {
@@ -11033,7 +11098,6 @@ Vue.directive('resize', {
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
-
 			$navigateSimple(url, newWindow, update) {
 				if (newWindow === true) {
 					let nwin = window.open(url, "_blank");
@@ -11260,6 +11324,13 @@ Vue.directive('resize', {
 				return this.$dialog('show', url, arg, query, opts);
 			},
 
+			$inlineOpen(id) {
+				eventBus.$emit('inlineDialog', { cmd: 'open', id: id});
+			},
+
+			$inlineClose(id, result) {
+				eventBus.$emit('inlineDialog', { cmd: 'close', id: id, result: result });
+			},
 
 			$dialog(command, url, arg, query, opts) {
 				if (this.$isReadOnly(opts))
@@ -11771,6 +11842,8 @@ Vue.directive('resize', {
 					$alert: this.$alert,
 					$confirm: this.$confirm,
 					$showDialog: this.$showDialog,
+					$inlineOpen: this.$inlineOpen,
+					$inlineClose: this.$inlineClose,
 					$saveModified: this.$saveModified,
 					$asyncValid: this.$asyncValid,
 					$toast: this.$toast,
@@ -11906,9 +11979,9 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
-// Copyright © 2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
-/*20180924-7561*/
+/*20200129-7623*/
 /* mobile/shell.js */
 
 
@@ -11998,7 +12071,7 @@ Vue.directive('resize', {
 		template: `
 <div>
 <transition name="fade">
-	<div class="menu-overlay" @click.stop.prevent="hideMenu" v-if=visible>
+	<div class="menu-overlay" @click.stop.prevent="hideMenu" v-if="visible">
 	</div>
 </transition>
 <transition name="slide">
@@ -12120,7 +12193,7 @@ Vue.directive('resize', {
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
-		<div class="modal-wrapper" v-for="dlg in modals" :class="{show: dlg.wrap}">
+		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals" :class="{show: dlg.wrap}">
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>

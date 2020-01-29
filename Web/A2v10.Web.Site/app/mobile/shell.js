@@ -1,6 +1,6 @@
-﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
-/*20180924-7561*/
+/*20200129-7623*/
 /* mobile/shell.js */
 
 
@@ -90,7 +90,7 @@
 		template: `
 <div>
 <transition name="fade">
-	<div class="menu-overlay" @click.stop.prevent="hideMenu" v-if=visible>
+	<div class="menu-overlay" @click.stop.prevent="hideMenu" v-if="visible">
 	</div>
 </transition>
 <transition name="slide">
@@ -212,7 +212,7 @@
 	<a2-content-view></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
-		<div class="modal-wrapper" v-for="dlg in modals" :class="{show: dlg.wrap}">
+		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals" :class="{show: dlg.wrap}">
 			<a2-modal :dialog="dlg"></a2-modal>
 		</div>
 	</div>

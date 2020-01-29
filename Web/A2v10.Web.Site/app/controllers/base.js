@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200114-7615*/
+/*20200129-7623*/
 // controllers/base.js
 
 (function () {
@@ -402,7 +402,6 @@
 				else
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
-
 			$navigateSimple(url, newWindow, update) {
 				if (newWindow === true) {
 					let nwin = window.open(url, "_blank");
@@ -629,6 +628,13 @@
 				return this.$dialog('show', url, arg, query, opts);
 			},
 
+			$inlineOpen(id) {
+				eventBus.$emit('inlineDialog', { cmd: 'open', id: id});
+			},
+
+			$inlineClose(id, result) {
+				eventBus.$emit('inlineDialog', { cmd: 'close', id: id, result: result });
+			},
 
 			$dialog(command, url, arg, query, opts) {
 				if (this.$isReadOnly(opts))
@@ -1140,6 +1146,8 @@
 					$alert: this.$alert,
 					$confirm: this.$confirm,
 					$showDialog: this.$showDialog,
+					$inlineOpen: this.$inlineOpen,
+					$inlineClose: this.$inlineClose,
 					$saveModified: this.$saveModified,
 					$asyncValid: this.$asyncValid,
 					$toast: this.$toast,

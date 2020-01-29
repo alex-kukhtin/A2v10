@@ -94,6 +94,9 @@ function uploadAttachment(result) {
 module.exports = template;
 
 function runTest() {
+	this.$ctrl.$alert("message");
+	this.$ctrl.$requery();
+	/*
 	let args = { target: 'controller', testId: 'SupplierProps', action: 'eval', path: 'Agent.Id', result: undefined};
 	//window.__tests__.$invoke(args);
 
@@ -101,6 +104,7 @@ function runTest() {
 	console.dir(args.result);
 
 	//this.$ctrl.$invoke('sleep');
+	*/
 }
 
 function canClose() {
