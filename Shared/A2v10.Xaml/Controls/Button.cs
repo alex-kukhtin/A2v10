@@ -95,7 +95,7 @@ namespace A2v10.Xaml
 			Boolean insideBar = IsParentToolBar || IsParentCommandBar;
 			var button = new TagBuilder("button", "btn", IsInGrid);
 			onRender?.Invoke(button);
-			if (!Block && !insideBar)
+			if (!Block && !insideBar && !IsInGrid)
 				button.AddCssClass("a2-inline");
 			if (Parent is Toolbar && Style == ButtonStyle.Default)
 				button.AddCssClass("btn-tb");

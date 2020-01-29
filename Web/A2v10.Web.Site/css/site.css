@@ -4200,7 +4200,6 @@ ul.news-list > li {
 }
 .modal-footer .btn {
   min-width: 6rem;
-  padding: 0.4rem 0.75rem;
 }
 .modal-footer .btn + .btn {
   margin-left: 0.75rem;
