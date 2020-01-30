@@ -53,7 +53,7 @@ public:
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price) override;
 	virtual bool CopyBill() override;
-	virtual bool Init(__int64 termId) override;
+	virtual void Init() override;
 	virtual void OpenCashDrawer() override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;
 	virtual void Beep() override;
@@ -90,9 +90,10 @@ protected:
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
 	void CancelReceiptPrinter();
 	bool GetPrinterLastReceiptNo(long& chNo, bool bShowStateError = true);
-	bool GetPrinterLastZReportNo(__int64 termId, long& zNo);
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
 	//bool GetDaySum(long src, long ix, CY& value1, CY& value2);
+private:
+	long GetPrinterLastZReportNo();
 	void GetPrinterPayModes();
 	void GetTaxRates();
 };

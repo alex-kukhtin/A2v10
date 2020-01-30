@@ -127,31 +127,23 @@ bool CFiscalPrinter_Null::PrintCheckItem(const CFPCheckItemInfo& info)
 LONG CFiscalPrinter_Null::GetCurrentZReportNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
-		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
+		m_nLastZReportNo = GetPrinterLastZReportNo();
 	return m_nLastZReportNo;
 }
 
 // virtual 
-bool CFiscalPrinter_Null::Init(__int64 termId)
+void CFiscalPrinter_Null::Init()
 {
-	try
-	{
-		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
-	}
-	catch (CFPException ex)
-	{
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	TraceINFO(L"TESTPRINTER [%s]. Init()", _id.c_str());
+	m_nLastZReportNo = GetPrinterLastZReportNo();
 }
 
-bool CFiscalPrinter_Null::GetPrinterLastZReportNo(__int64 termId, long& zNo)
+long CFiscalPrinter_Null::GetPrinterLastZReportNo()
 {
 	__int64 no = 0; //TODO: ZREPORT_INFO::GetTestNumber(termId);
 	if (no == 0)
 		return false;
-	zNo = (LONG)no;
+	return (LONG)no;
 	return true;
 }
 

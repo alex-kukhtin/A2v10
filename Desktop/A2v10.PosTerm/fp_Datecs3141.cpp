@@ -68,6 +68,20 @@ enum {
 
 #define EMPTY_PARAM L"000000;"
 
+std::vector<std::string> _split(const std::string& str, char delim = L' ')
+{
+	std::vector<std::string> result;
+	std::size_t current, previous = 0;
+	current = str.find(delim);
+	while (current != std::string::npos) {
+		result.push_back(str.substr(previous, current - previous));
+		previous = current + 1;
+		current = str.find(delim, previous);
+	}
+	result.push_back(str.substr(previous, current - previous));
+	return result;
+}
+
 CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
 	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0),
 	m_payModeCash(L'0'), m_payModeCard(L'2'), m_payModeCredit(L'-'),
@@ -237,10 +251,10 @@ void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 }
 
 /*
-	  Маска разрешений для формы оплаты
-		bit 0. Разрешение использования при продаже
-		bit 1. Разрешение использования при возврате
-		bit 7. Разрешение начисления сдачи наличными
+	Payment form mask
+		bit 0. allowed to sell receipt
+		bit 1. allowed to return receipt
+		bit 7. cash change allowed
 */
 
 void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
@@ -365,36 +379,28 @@ void CFiscalPrinter_Datecs3141::GetTaxRates()
 
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::Init(__int64 termId)
+void CFiscalPrinter_Datecs3141::Init()
 {
-	try {
-		// сначала получить статус (с допечаткой буфера)
-		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
+	// Get status (with buffer print)
+	m_nLastZReportNo = GetPrinterLastZReportNo();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
 
-		GetPrinterPayModes();
-		GetTaxRates();
+	GetPrinterPayModes();
+	GetTaxRates();
 
-		// last article
-		RECEIPT_STATUS cs = GetReceiptStatus();
-		if (cs == CHS_NORMAL)
-		{
-			// CheckPrinterSession(); 24 часа Z-отчета?
-			//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
-			return true;
-		}
-
-		CancelReceiptPrinter();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // еще раз
+	// last article
+	RECEIPT_STATUS cs = GetReceiptStatus();
+	if (cs == CHS_NORMAL)
+	{
 		// CheckPrinterSession(); 24 часа Z-отчета?
 		//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
+		return;
 	}
-	catch (CFPException ex)
-	{
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+
+	CancelReceiptPrinter();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // еще раз
+	// CheckPrinterSession(); 24 часа Z-отчета?
+	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 }
 
 // virtual 
@@ -714,7 +720,7 @@ int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinte
 LONG CFiscalPrinter_Datecs3141::GetCurrentZReportNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
-		GetPrinterLastZReportNo(termId, m_nLastZReportNo);
+		m_nLastZReportNo = GetPrinterLastZReportNo();
 	return m_nLastZReportNo;
 }
 
@@ -1068,10 +1074,17 @@ void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, LPCWSTR szName, bool
 	*/
 }
 
-bool CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo(__int64 termId, long& zNo)
+long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 {
+	long z_no = 0;
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;0;");
 	SendCommand();
+	std::string info((char*) m_data);
+	auto sinfo = _split(info, ';');
+	if (sinfo.size() < 2)
+		throw CFPException(L"DAYCOUNTERS data error");
+	// ????;Z_NO;
+	std::string r = sinfo[1];
 	/*
 	USES_CONVERSION;
 	CString info = A2W((char*)m_data);
@@ -1089,7 +1102,7 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo(__int64 termId, long& zN
 		zNo = (LONG)no;
 	}
 	*/
-	return true;
+	return z_no;
 }
 
 bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowStateError /*= true*/)

@@ -25,9 +25,16 @@ struct RECEIPT_ITEM {
 	__int64 qty;
 	__int64 sum;
 	RECEIPT_ITEM()
-		: article(0), price(0), qty(0), sum(0) {
+		: article(0), price(0), qty(0), sum(0) {}
+};
 
-	}
+struct PAYMENT_INFO {
+	__int64 sumCash;
+	__int64 sumGet;
+	__int64 sumCard;
+
+	PAYMENT_INFO()
+		: sumCash(0), sumGet(0), sumCard(0) {}
 };
 
 class FiscalPrinterImpl
@@ -53,7 +60,7 @@ public:
 	virtual bool IsOpen() const;
 	virtual bool IsReady() const;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) = 0;
-	virtual bool Init(__int64 termId);
+	virtual void Init();
 	virtual void Close();
 	virtual DWORD GetFlags();
 

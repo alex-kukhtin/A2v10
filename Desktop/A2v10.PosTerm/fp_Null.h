@@ -9,7 +9,7 @@ class CFiscalPrinter_Null : public FiscalPrinterImpl
 public:
 	CFiscalPrinter_Null()
 		: m_nLastReceipt(0), m_nLastZReportNo(0) {}
-	virtual bool Init(__int64 termId) override;
+	virtual void Init() override;
 	virtual bool IsOpen() const override;
 	virtual bool IsReady() const override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
@@ -48,6 +48,6 @@ public:
 	virtual bool ReportRems() override;
 	virtual bool ReportModemState() override;
 protected:
-	bool GetPrinterLastZReportNo(__int64 termId, long& zNo);
+	long GetPrinterLastZReportNo();
 	void ReportMessage(const wchar_t* msg);
 };

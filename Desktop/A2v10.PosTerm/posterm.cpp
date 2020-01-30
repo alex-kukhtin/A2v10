@@ -33,9 +33,13 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 		result.assign(ex.GetMessage());
 		return pos_result_t::_invalid_json;
 	}
+	catch (CFPException ex) {
+		result.assign(ex.GetError());
+		return pos_result_t::_printer_error;
+	}
 	catch (...) {
 		result.assign(L"Unknown exception");
-		return pos_result_t::_invalid_json;
+		return pos_result_t::_generic_error;
 	}
 	return pos_result_t::_success;
 }

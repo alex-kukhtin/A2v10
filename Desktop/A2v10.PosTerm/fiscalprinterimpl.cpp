@@ -51,9 +51,8 @@ bool FiscalPrinterImpl::IsOpen() const
 }
 
 // virtual 
-bool FiscalPrinterImpl::Init(__int64 termId)
+void FiscalPrinterImpl::Init()
 {
-	return true;
 }
 
 // virtual 

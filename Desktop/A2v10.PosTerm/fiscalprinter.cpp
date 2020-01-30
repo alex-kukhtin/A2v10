@@ -78,8 +78,7 @@ void FiscalPrinter::Disconnect() {
 // virtual 
 void FiscalPrinter::NullReceipt(bool bOpenCashDrawer)
 {
-	if (_impl)
-		_impl->NullReceipt(bOpenCashDrawer);
+	_impl->NullReceipt(bOpenCashDrawer);
 }
 
 // const 
@@ -137,6 +136,7 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 	item.price = pItem->_price;
 	item.sum = pItem->_sum;
 	item.qty = pItem->_qty;
+	// TODO: discounts
 	_impl->PrintReceiptItem(item);
 }
 
@@ -152,9 +152,22 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 	if (!pData->_topText.empty())
 		_impl->PrintFiscalText(pData->_topText.c_str());
 
+	__int64 totalAmount = 0;
+
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
-		PrintItem(it->get());
+		auto pItem = it->get();
+		totalAmount += pItem->_sum;
+		PrintItem(pItem);
 	}
+	
+	/*
+	validate amounts
+
+	if (pData->_cardSum != 0)
+		_impl->Payment(payment_mode::card, pData->_cardSum);
+	if (pData->_cashSum != 0)
+		_impl->Payment(payment_mode::sum)
+	*/
 
 	// Close Check
 }
