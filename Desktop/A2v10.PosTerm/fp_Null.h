@@ -16,16 +16,10 @@ public:
 	virtual void Close() override;
 	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) override;
 
-	virtual bool AddArticle(__int64 termId, __int64 art, const wchar_t* szName, __int64 vtid, long price)
-	{
-		return true;
-	}
-	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info);
-	virtual bool OpenReceipt(const wchar_t* szDepartmentName, __int64 termId) override
-	{
-		return true;
-	}
-	virtual bool OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo) override;
+	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 vtid, __int64 price) override;
+	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
+	virtual void OpenReceipt() override;
+	virtual void OpenReturnReceipt() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
@@ -36,8 +30,8 @@ public:
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;
-	virtual bool PrintFiscalText(const wchar_t* szText) override;
-	virtual bool PrintNonFiscalText(const wchar_t* szText) override;
+	virtual void PrintFiscalText(const wchar_t* szText) override;
+	virtual void PrintNonFiscalText(const wchar_t* szText) override;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr) override;
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum) override;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To) override;

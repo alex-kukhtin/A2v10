@@ -23,6 +23,7 @@ public:
 		const wchar_t* name;
 		std::wstring* pString;
 		int* pInt;
+		__int64* pInt64;
 		bool* pBool;
 		JsonTarget* pArray;
 	};
@@ -45,13 +46,15 @@ JsonTarget::PROP_ENTRY __propsTable[cnt + 1] = {
 JsonTarget::PROP_ENTRY* __getPropsTable() override {return __propsTable; }
 
 #define STRING_PROP(name, val)\
-{L#name, &##val, nullptr, nullptr, nullptr},
+{L#name, &##val, nullptr, nullptr, nullptr, nullptr},
 #define INT_PROP(name, val)\
-{L#name, nullptr, &##val, nullptr, nullptr},
+{L#name, nullptr, &##val, nullptr, nullptr, nullptr},
+#define INT64_PROP(name, val)\
+{L#name, nullptr, nullptr, &##val, nullptr, nullptr},
 #define BOOL_PROP(name, val)\
-{L#name, nullptr, nullptr, &##val, nullptr},
+{L#name, nullptr, nullptr, nullptr, &##val, nullptr},
 #define ARRAY_PROP(name, val)\
-{L#name, nullptr, nullptr, nullptr, &##val},
+{L#name, nullptr, nullptr, nullptr, nullptr, &##val},
 
 class JsonTargetArray abstract : public JsonTarget
 {
@@ -71,7 +74,7 @@ public:
 	virtual JsonTarget* CreateObject(const wchar_t* szName) override
 	{
 		T* pItem = new T();
-		push_back(std::unique_ptr<T>(pItem));
+		this->push_back(std::unique_ptr<T>(pItem));
 		// constraint?
 		return (JsonTarget*) pItem;
 	}

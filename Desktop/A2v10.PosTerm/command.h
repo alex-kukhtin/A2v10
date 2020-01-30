@@ -19,26 +19,15 @@ protected:
 	END_JSON_PROPS()
 };
 
-class PosNullReceiptData : public JsonTarget
-{
-public:
-	PosNullReceiptData()
-		: m_openCashDrawer(false) {}
-	bool m_openCashDrawer;
-protected:
-	BEGIN_JSON_PROPS(1)
-		BOOL_PROP(openCashDrawer, m_openCashDrawer)
-	END_JSON_PROPS()
-};
-
 typedef void (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
-
+typedef JsonTarget* (PosCommand::*PFCreateData)();
 
 class PosCommand : public JsonTarget
 {
 	struct COMMAND_BIND {
 		const wchar_t* _name;
 		PFexecute _func;
+		PFCreateData _createData;
 	};
 public:
 	std::wstring _command;
@@ -62,6 +51,11 @@ protected:
 	void NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+
+	JsonTarget* NullReceiptData();
+	JsonTarget* PrintReceiptData();
+
 private:
 	static COMMAND_BIND _binded_commands[];
 };

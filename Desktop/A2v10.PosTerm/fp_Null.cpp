@@ -19,6 +19,19 @@ bool CFiscalPrinter_Null::IsReady() const
 	return true;
 }
 
+void CFiscalPrinter_Null::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price)
+{
+	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%I64d})", 
+		_id.c_str(), article, szName, tax, price);
+}
+
+// virtual 
+void CFiscalPrinter_Null::PrintReceiptItem(const RECEIPT_ITEM& item)
+{
+	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%I64d, price:%I64d})",
+		_id.c_str(), item.article, item.name, item.qty, item.price);
+}
+
 // virtual 
 void CFiscalPrinter_Null::Close()
 {
@@ -32,23 +45,31 @@ int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= 
 }
 
 // virtual 
-bool CFiscalPrinter_Null::OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo)
-{
-	throw CFPException(L"Yet not implemented");
-}
-
-// virtual 
 bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 {
-	TraceINFO(L"TESTPRINTER [%s]. Open(port='%s', baud=%d})", _id.c_str(), port, (int) baud);
+	TraceINFO(L"TESTPRINTER [%s]. Open(port:'%s', baud:%d})", _id.c_str(), port, (int) baud);
 	return true;
 }
 
 // virtual 
 void CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
 {
-	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
+	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 }
+
+
+// virtual 
+void CFiscalPrinter_Null::OpenReceipt()
+{
+	TraceINFO(L"TESTPRINTER [%s]. OpenReceipt()", _id.c_str());
+}
+
+// virtual 
+void CFiscalPrinter_Null::OpenReturnReceipt()
+{
+	TraceINFO(L"TESTPRINTER [%s]. OpenReturnReceipt()", _id.c_str());
+}
+
 
 // virtual 
 bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
@@ -220,21 +241,17 @@ bool CFiscalPrinter_Null::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE 
 */
 
 // virtual 
-bool CFiscalPrinter_Null::PrintFiscalText(const wchar_t* szText)
+void CFiscalPrinter_Null::PrintFiscalText(const wchar_t* szText)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: FiscalText: %s", szText);
-	ReportMessage(buff);
-	return true;
+	TraceINFO(L"TESTPRINTER [%s]. PrintFiscalText({text:'%s')",
+		_id.c_str(), szText);
 }
 
 // virtual 
-bool CFiscalPrinter_Null::PrintNonFiscalText(const wchar_t* szText)
+void CFiscalPrinter_Null::PrintNonFiscalText(const wchar_t* szText)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: NonFiscalText: %s", szText);
-	ReportMessage(buff);
-	return true;
+	TraceINFO(L"TESTPRINTER [%s]. PrintNonFiscalText({text:'%s')",
+		_id.c_str(), szText);
 }
 
 // virtual 

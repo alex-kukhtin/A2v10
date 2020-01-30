@@ -18,6 +18,18 @@ public:
 	const wchar_t* GetError();
 };
 
+struct RECEIPT_ITEM {
+	__int64 article;
+	const wchar_t* name;
+	__int64 price;
+	__int64 qty;
+	__int64 sum;
+	RECEIPT_ITEM()
+		: article(0), price(0), qty(0), sum(0) {
+
+	}
+};
+
 class FiscalPrinterImpl
 {
 public:
@@ -59,8 +71,9 @@ public:
 	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
 	virtual bool CancelReceipt(__int64 termId, bool& bClosed) = 0;
 	virtual bool CancelReceiptCommand(__int64 termId) = 0;
-	virtual bool OpenReceipt(const wchar_t* szDepartmentName, __int64 termId) = 0;
-	virtual bool OpenReturnReceipt(const wchar_t* szDepartmentName, __int64 termId, long billNo) = 0;
+	virtual void OpenReceipt() = 0;
+	virtual void OpenReturnReceipt() = 0;
+	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) = 0;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
@@ -73,11 +86,11 @@ public:
 	virtual bool ReportByArticles() = 0;
 	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;
-	virtual bool AddArticle(__int64 termId, __int64 art, const wchar_t* szName, __int64 vtid, long price) = 0;
+	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price) = 0;
 	virtual void OpenCashDrawer() = 0;
-	virtual bool PrintFiscalText(const wchar_t* szText) = 0;
-	virtual bool PrintNonFiscalText(const wchar_t* szText);
-	virtual bool Beep();
+	virtual void PrintFiscalText(const wchar_t* szText) = 0;
+	virtual void PrintNonFiscalText(const wchar_t* szText);
+	virtual void Beep();
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
 	virtual void SetCurrentTime() = 0;
 	virtual void DisplayDateTime() = 0;

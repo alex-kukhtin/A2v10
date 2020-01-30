@@ -2,21 +2,21 @@
 
 #include "pch.h"
 #include "posterm.h"
+#include "commanddata.h"
 #include "command.h"
 #include "fiscalprinter.h"
 #include "fiscalprinterImpl.h"
 
 
-const wchar_t* CMD_NULL_RECEIPT = L"nullReceipt";
 const size_t CMD_MAX_LEN = 64;
-
 
 //static 
 PosCommand::COMMAND_BIND PosCommand::_binded_commands[] = 
 {
-	{L"nullReceipt", &PosCommand::NullReceipt},
-	{L"xReport",     &PosCommand::XReport},
-	{L"zReport",     &PosCommand::ZReport},
+	{L"nullReceipt",  &PosCommand::NullReceipt, &PosCommand::NullReceiptData},
+	{L"xReport",      &PosCommand::XReport,     nullptr},
+	{L"zReport",      &PosCommand::ZReport,     nullptr},
+	{L"printReceipt", &PosCommand::PrintReceipt, &PosCommand::PrintReceiptData},
 	{nullptr, nullptr}
 };
 
@@ -57,8 +57,18 @@ pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring
 JsonTarget* PosCommand::CreateObject(const wchar_t* szName) 
 {
 	if (wcsncmp(szName, L"data", CMD_MAX_LEN) == 0) {
-		if (wcsncmp(_command.c_str(), CMD_NULL_RECEIPT, CMD_MAX_LEN) == 0)
-			_data.reset(new PosNullReceiptData());
+		PosCommand::COMMAND_BIND* entry = _binded_commands;
+		while (entry && entry->_name) {
+			if (_command == entry->_name) {
+				auto func = entry->_createData;
+				if (func != nullptr) {
+					JsonTarget* pData = (this->*entry->_createData)();
+					_data.reset(pData);
+					return _data.get();
+				}
+			}
+			entry++;
+		}
 	}
 	return _data.get();
 }
@@ -72,6 +82,12 @@ void PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wst
 	pPrinter->NullReceipt(bOpenDrawer);
 }
 
+JsonTarget* PosCommand::NullReceiptData()
+{
+	return new PosNullReceiptData();
+}
+
+
 void PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
 	pPrinter->XReport();
@@ -81,3 +97,16 @@ void PosCommand::ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring
 {
 	pPrinter->ZReport();
 }
+
+JsonTarget* PosCommand::PrintReceiptData()
+{
+	return new PosPrintReceiptData();
+}
+
+void PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+{
+	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
+	pPrinter->PrintReceipt(pprd);
+}
+
+

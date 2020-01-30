@@ -73,15 +73,13 @@ bool FiscalPrinterImpl::IsEndOfTape()
 	return false;
 }
 
-bool FiscalPrinterImpl::PrintNonFiscalText(const wchar_t* szText)
+void FiscalPrinterImpl::PrintNonFiscalText(const wchar_t* szText)
 {
-	return true;
 }
 
 // virtual 
-bool FiscalPrinterImpl::Beep()
+void FiscalPrinterImpl::Beep()
 {
-	return true;
 }
 
 // virtual 

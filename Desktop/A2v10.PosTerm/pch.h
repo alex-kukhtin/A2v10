@@ -20,4 +20,5 @@
 #include "memory"
 
 #include "../A2v10.StaticBase/staticbase.h"
+
 #endif //PCH_H

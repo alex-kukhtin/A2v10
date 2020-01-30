@@ -34,7 +34,7 @@ namespace A2v10.Runtime
 			_userInfo = ServiceLocator.Current.GetService<ISupportUserInfo>();
 		}
 
-		public string Search { get; set; }
+		public String Search { get; set; }
 
 		public String MimeType { get; private set; }
 		public String ContentDisposition { get; private set; }

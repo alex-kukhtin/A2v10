@@ -36,8 +36,8 @@ public:
 	virtual void XReport() override;
 	virtual void ZReport() override;
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
-	virtual bool OpenReceipt(LPCWSTR szDepartmentName, __int64 termId) override;
-	virtual bool OpenReturnReceipt(LPCWSTR szDepartmentName, __int64 termId, long checkNo) override;
+	virtual void OpenReceipt() override;
+	virtual void OpenReturnReceipt() override;
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
@@ -50,13 +50,13 @@ public:
 	virtual void DisplayClear() override;
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
 
-	//virtual bool PrintReceiptItem(const CFPCheckItemInfo& info) override;
-	virtual bool AddArticle(__int64 termId, __int64 art, LPCWSTR szName, __int64 vtid, long price) override;
+	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
+	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price) override;
 	virtual bool CopyBill() override;
 	virtual bool Init(__int64 termId) override;
 	virtual void OpenCashDrawer() override;
-	virtual bool PrintFiscalText(LPCWSTR szText) override;
-	virtual bool Beep() override;
+	virtual void PrintFiscalText(const wchar_t* szText) override;
+	virtual void Beep() override;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To) override;
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	virtual bool ReportByArticles() override;

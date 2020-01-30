@@ -9,6 +9,8 @@
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
 
+#include "commanddata.h"
+
 const size_t PRINTER_NAME_LEN = 64;
 const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
 const wchar_t* DATECS_KRYPTON = L"DATECS-Krypton";
@@ -88,14 +90,71 @@ const wchar_t* FiscalPrinter::GetLastError()
 	return nullptr;
 }
 
+void FiscalPrinter::OpenReceipt()
+{
+	_impl->OpenReceipt();
+}
+
+void FiscalPrinter::OpenReturnReceipt(long retNo)
+{
+	_impl->OpenReturnReceipt();
+}
+
 void FiscalPrinter::XReport()
 {
-	if (_impl)
 	_impl->XReport();
 }
 
 void FiscalPrinter::ZReport()
 {
-	if (_impl)
-		_impl->ZReport();
+	_impl->ZReport();
+}
+
+void FiscalPrinter::OpenCashDrawer() {
+	_impl->OpenCashDrawer();
+}
+
+void FiscalPrinter::PrintFiscalText(const wchar_t* szText)
+{
+	_impl->PrintFiscalText(szText);
+}
+
+void FiscalPrinter::PrintNonFiscalText(const wchar_t* szText)
+{
+	_impl->PrintNonFiscalText(szText);
+}
+
+void FiscalPrinter::AddArticle(const PosReceiptItemData* pItem)
+{
+	_impl->AddArticle(pItem->_article, pItem->_name.c_str(), 0, pItem->_price);
+}
+
+void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
+{
+	RECEIPT_ITEM item;
+	item.article = pItem->_article;
+	item.name = pItem->_name.c_str();
+	item.price = pItem->_price;
+	item.sum = pItem->_sum;
+	item.qty = pItem->_qty;
+	_impl->PrintReceiptItem(item);
+}
+
+void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
+{
+	//_impl->CancelReceipt(); // discard previous, if needed
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		AddArticle(it->get());
+	}
+
+	_impl->OpenReceipt();
+	if (!pData->_topText.empty())
+		_impl->PrintFiscalText(pData->_topText.c_str());
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		PrintItem(it->get());
+	}
+
+	// Close Check
 }
