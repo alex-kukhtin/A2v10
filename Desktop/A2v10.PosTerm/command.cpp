@@ -107,6 +107,7 @@ void PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::ws
 {
 	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
 	pPrinter->PrintReceipt(pprd);
+	result.assign(L"{\"no\": 123}");
 }
 
 

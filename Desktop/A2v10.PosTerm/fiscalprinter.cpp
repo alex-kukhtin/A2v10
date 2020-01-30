@@ -153,10 +153,12 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 		_impl->PrintFiscalText(pData->_topText.c_str());
 
 	__int64 totalAmount = 0;
+	__int64 totalDiscountSum = 0;
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		auto pItem = it->get();
 		totalAmount += pItem->_sum;
+		//totalDiscountSum += pItem->_discountSum;
 		PrintItem(pItem);
 	}
 	
@@ -167,6 +169,8 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 		_impl->Payment(payment_mode::card, pData->_cardSum);
 	if (pData->_cashSum != 0)
 		_impl->Payment(payment_mode::sum)
+
+	long chNo = _impl.CloseCheck();
 	*/
 
 	// Close Check
