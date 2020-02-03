@@ -231,6 +231,7 @@ namespace A2v10.Infrastructure
 			return sb.ToString();
 		}
 
+
 		public static Dictionary<String, Object> Object2Dictionary(Object obj)
 		{
 			if (obj == null)

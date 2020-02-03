@@ -1,7 +1,9 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Dynamic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace A2v10.Infrastructure
 {
@@ -98,6 +100,24 @@ namespace A2v10.Infrastructure
 			if (sb[len - 1] == ',')
 				sb.Remove(len - 1, 1);
 			return sb;
+		}
+
+		public static String ResolveMacros(this String source, ExpandoObject macros)
+		{
+			if (source == null)
+				return null;
+			var r = new Regex("\\$\\((.+?)\\)");
+			var ms = r.Matches(source);
+			if (ms.Count == 0)
+				return source;
+			var sb = new StringBuilder(source);
+			foreach (Match m in ms)
+			{
+				String key = m.Groups[1].Value;
+				String val = macros.Get<String>(key);
+				sb.Replace(m.Value, val);
+			}
+			return sb.ToString();
 		}
 	}
 }

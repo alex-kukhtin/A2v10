@@ -111,8 +111,18 @@ namespace A2v10.Request
 			ExpandoObject loadPrms = new ExpandoObject();
 			setParams?.Invoke(loadPrms);
 
-			String jsonCompanies = null;
-			String jsonPeriod = null;
+			var macros = new ExpandoObject();
+			Boolean isUserIsAdmin = userInfo.IsAdmin && _host.IsAdminAppPresent;
+			macros.Append(new Dictionary<String, Object>
+			{
+				{ "AppVersion", _host.AppVersion },
+				{ "Admin", isUserIsAdmin ? "true" : "false" },
+				{ "TenantAdmin", userInfo.IsTenantAdmin ? "true" : "false" },
+				{ "Debug", IsDebugConfiguration ? "true" : "false" },
+				{ "AppData", GetAppData() },
+				{ "Companies", "null" },
+				{ "Period", "null" },
+			});
 
 			if (_host.IsMultiTenant || _host.IsUsePeriodAndCompanies)
 			{
@@ -120,8 +130,10 @@ namespace A2v10.Request
 				var res = await ProcessMultiTenantParams(loadPrms);
 				if (res != null)
 				{
-					jsonCompanies = res.Companies;
-					jsonPeriod = res.Period;
+					if (res.Companies != null)
+						macros.Set("Companies", res.Companies);
+					if (res.Period != null)
+						macros.Set("Period", res.Period);
 				}
 			}
 
@@ -133,24 +145,12 @@ namespace A2v10.Request
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
-
 			SetUserStatePermission(dm);
 
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
+			macros.Set("Menu", jsonMenu);
 
-			Boolean isUserIsAdmin = userInfo.IsAdmin && _host.IsAdminAppPresent;
-
-			StringBuilder sb = new StringBuilder(shell);
-			sb.Replace("$(Menu)", jsonMenu)
-			.Replace("$(Companies)", jsonCompanies ?? "null")
-			.Replace("$(Period)", jsonPeriod ?? "null")
-			.Replace("$(AppVersion)", _host.AppVersion)
-			.Replace("$(Admin)", isUserIsAdmin ? "true" : "false")
-			.Replace("$(TenantAdmin)", userInfo.IsTenantAdmin ? "true" : "false")
-			.Replace("$(Debug)", IsDebugConfiguration ? "true" : "false")
-			.Replace("$(AppData)", GetAppData());
-
-			writer.Write(sb.ToString());
+			writer.Write(shell.ResolveMacros(macros));
 		}
 
 		void SetUserStatePermission(IDataModel model)
