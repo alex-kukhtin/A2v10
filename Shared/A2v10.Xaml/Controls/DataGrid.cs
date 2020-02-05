@@ -33,6 +33,7 @@ namespace A2v10.Xaml
 		public Boolean Sort { get; set; }
 		public Boolean Compact { get; set; }
 		public DataGridStyle Style { get; set; }
+		public BackgroundStyle Background { get; set; }
 
 		public Boolean FixedHeader { get; set; }
 		public HeadersVisibility HeadersVisibility { get; set; }
@@ -87,6 +88,10 @@ namespace A2v10.Xaml
 				dataGrid.MergeAttribute(":hide-header", "true");
 			if (Style != DataGridStyle.Default)
 				dataGrid.AddCssClass($"data-grid-{Style.ToString().ToKebabCase()}");
+
+			if (Background != BackgroundStyle.Default)
+				dataGrid.AddCssClass("background-" + Background.ToString().ToKebabCase());
+
 			if (RowDetails != null)
 			{
 				dataGrid.MergeAttribute(":row-details", "true");

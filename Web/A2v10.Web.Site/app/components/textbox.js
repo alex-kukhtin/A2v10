@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200106-7608*/
+/*20200205-7625*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -50,7 +50,7 @@
 `<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" />
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" class="static-input"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>

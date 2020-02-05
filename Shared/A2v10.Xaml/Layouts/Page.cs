@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -15,6 +15,7 @@ namespace A2v10.Xaml
 		public UIElementBase Taskpad { get; set; }
 		public Pager Pager { get; set; }
 		public String Title { get; set; }
+		//public Double Zoom { get; set; }
 
 		public BackgroundStyle Background { get; set; }
 		public CollectionView CollectionView { get; set; }
@@ -108,6 +109,11 @@ namespace A2v10.Xaml
 				tag.MergeStyle("width", "auto");
 				tag.MergeStyle("height", "auto");
 			}
+
+			/*
+			if (Zoom != 0.0)
+				tag.MergeStyle("zoom", Zoom.ToString());
+			*/
 		}
 
 		void RenderTitle(RenderContext context)

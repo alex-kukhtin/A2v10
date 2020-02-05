@@ -2096,7 +2096,8 @@ pre.a2-code {
   font-size: 1px;
   z-index: -10;
 }
-.control-group.lg .input-group input {
+.control-group.lg .input-group input,
+.control-group.lg .input-group .static-input {
   font-size: 1.3rem;
   height: 2.45rem;
   padding: 0 8px;

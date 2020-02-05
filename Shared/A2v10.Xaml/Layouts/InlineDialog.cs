@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 		public String Id { get; set; }
 
 		public String Title { get; set; }
+		public Length Width { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -22,6 +23,9 @@ namespace A2v10.Xaml
 			dlg.AddCssClassBoolNo(UserSelect, "user-select");
 			dlg.MergeAttribute("dialog-id", Id);
 			MergeBindingAttributeString(dlg, context, "dialog-title", nameof(Title), Title);
+			if (Width != null)
+				dlg.MergeAttribute("width", Width.Value);
+
 
 			dlg.RenderStart(context);
 			var m = new TagBuilder("div", "modal");

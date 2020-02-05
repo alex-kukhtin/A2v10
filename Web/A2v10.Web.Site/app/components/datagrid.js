@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191213-7599
+// 20200206-7625
 // components/datagrid.js*/
 
 (function () {
@@ -322,7 +322,6 @@
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
 				let arg3 = normalizeArg(col.command.arg3, false);
 				let arg4 = col.command.arg4; // without normalize
-				let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
 					/*@click.prevent, no stop*/
@@ -340,11 +339,7 @@
 					},
 					methods: {
 						doCommand(ev) {
-							if (ev) {
-								// ??? lock double click ???
-								//ev.stopImmediatePropagation();
-								//ev.preventDefault();
-							}
+							//console.dir(`cell click: x:${ev.x}, y:${ev.y}`);
 							col.command.cmd(arg1, arg2, arg3, arg4);
 						},
 						eval: utils.eval,
@@ -449,11 +444,12 @@
 				return cssClass.trim();
 			},
 			rowSelect(row) {
-				//console.dir('select');
+				//console.dir('row select');
 				if (row.$select)
 					row.$select();
 			},
 			mouseDown(row) {
+				//console.dir('row select mouse down');
 				if (this.hitItem)
 					this.hitItem(row);
 			},

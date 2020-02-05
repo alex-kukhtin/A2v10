@@ -1,6 +1,6 @@
 ﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
 
-// 20200129-7623
+// 20200205-7625
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -8,14 +8,15 @@
 	Vue.component('a2-inline-dialog', {
 		template:
 `<div class="inline-modal-wrapper modal-animation-frame" v-if="visible" :class="{show: open}" v-cloak>
-	<div class="modal-window modal-animation-window" :class="{loaded: open}">
+	<div class="modal-window modal-animation-window" :class="{loaded: open}" :style="dlgStyle">
 		<slot></slot>
 	</div>
 </div>
 `,
 		props: {
 			dialogId: String,
-			dialogTitle: String
+			dialogTitle: String,
+			width: String
 		},
 		data() {
 			return {
@@ -24,6 +25,11 @@
 			};
 		},
 		computed: {
+			dlgStyle() {
+				if (this.width)
+					return { width: this.width };
+				return undefined;
+			}
 		},
 		methods: {
 			__keyUp(event) {
