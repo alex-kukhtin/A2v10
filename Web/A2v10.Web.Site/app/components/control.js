@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191115-7608
+// 20200206-7625
 // components/control.js
 
 (function () {
@@ -65,6 +65,8 @@
 				if (this.align && this.align !== 'left')
 					cls += 'text-' + this.align;
 				if (this.isNegative) cls += ' negative-red';
+				if (this.updateTrigger === 'input')
+					cls += ' trigger-input';
 				return cls;
 			},
 			isNegative() {

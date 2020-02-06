@@ -4315,9 +4315,9 @@ app.modules['std:accel'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191115-7608
+// 20200206-7625
 // components/control.js
 
 (function () {
@@ -4382,6 +4382,8 @@ app.modules['std:accel'] = function () {
 				if (this.align && this.align !== 'left')
 					cls += 'text-' + this.align;
 				if (this.isNegative) cls += ' negative-red';
+				if (this.updateTrigger === 'input')
+					cls += ' trigger-input';
 				return cls;
 			},
 			isNegative() {
@@ -4581,7 +4583,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200106-7608*/
+/*20200205-7625*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -4631,7 +4633,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
-		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" />
+		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" class="static-input"/>
 		<slot></slot>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -6016,9 +6018,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191213-7599
+// 20200206-7625
 // components/datagrid.js*/
 
 (function () {
@@ -6340,7 +6342,6 @@ Vue.component('validator-control', {
 				let arg2 = normalizeArg(col.command.arg2, col.command.eval);
 				let arg3 = normalizeArg(col.command.arg3, false);
 				let arg4 = col.command.arg4; // without normalize
-				let ev = col.command.$ev;
 				let child = {
 					props: ['row', 'col'],
 					/*@click.prevent, no stop*/
@@ -6358,11 +6359,7 @@ Vue.component('validator-control', {
 					},
 					methods: {
 						doCommand(ev) {
-							if (ev) {
-								// ??? lock double click ???
-								//ev.stopImmediatePropagation();
-								//ev.preventDefault();
-							}
+							//console.dir(`cell click: x:${ev.x}, y:${ev.y}`);
 							col.command.cmd(arg1, arg2, arg3, arg4);
 						},
 						eval: utils.eval,
@@ -6467,11 +6464,12 @@ Vue.component('validator-control', {
 				return cssClass.trim();
 			},
 			rowSelect(row) {
-				//console.dir('select');
+				//console.dir('row select');
 				if (row.$select)
 					row.$select();
 			},
 			mouseDown(row) {
+				//console.dir('row select mouse down');
 				if (this.hitItem)
 					this.hitItem(row);
 			},
@@ -9422,7 +9420,7 @@ Vue.component('a2-panel', {
 });
 // Copyright © 2020 Alex Kukhtin. All rights reserved.
 
-// 20200129-7623
+// 20200205-7625
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -9430,14 +9428,15 @@ Vue.component('a2-panel', {
 	Vue.component('a2-inline-dialog', {
 		template:
 `<div class="inline-modal-wrapper modal-animation-frame" v-if="visible" :class="{show: open}" v-cloak>
-	<div class="modal-window modal-animation-window" :class="{loaded: open}">
+	<div class="modal-window modal-animation-window" :class="{loaded: open}" :style="dlgStyle">
 		<slot></slot>
 	</div>
 </div>
 `,
 		props: {
 			dialogId: String,
-			dialogTitle: String
+			dialogTitle: String,
+			width: String
 		},
 		data() {
 			return {
@@ -9446,6 +9445,11 @@ Vue.component('a2-panel', {
 			};
 		},
 		computed: {
+			dlgStyle() {
+				if (this.width)
+					return { width: this.width };
+				return undefined;
+			}
 		},
 		methods: {
 			__keyUp(event) {
