@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 //using RazorGenerator.Mvc;
 
+/*
 [assembly: WebActivatorEx.PostApplicationStartMethod(typeof(A2v10.Web.Mvc.Start.RazorGeneratorMvcStart), "Start")]
 
 namespace A2v10.Web.Mvc.Start
@@ -13,7 +14,7 @@ namespace A2v10.Web.Mvc.Start
 	{
         public static void Start()
 		{
-			/*
+			/ *
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {
                 UsePhysicalViewsIfNewer = HttpContext.Current.Request.IsLocal
             };
@@ -21,7 +22,8 @@ namespace A2v10.Web.Mvc.Start
             ViewEngines.Engines.Insert(0, engine);
             // StartPage lookups are done by WebPages. 
             VirtualPathFactoryManager.RegisterVirtualPathFactory(engine);
-			*/
+			* /
         }
     }
 }
+*/

@@ -1,8 +1,7 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
-using System.Text;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
