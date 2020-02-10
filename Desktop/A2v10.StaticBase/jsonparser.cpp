@@ -20,6 +20,13 @@ __int64 _string2Int64(const wchar_t* szString)
 	return _wtoi64(szString);
 }
 
+double _string2Double(const wchar_t* szString)
+{
+	if (!szString || !*szString)
+		return 0;
+	return _wtof(szString);
+}
+
 enum TokenId {
 	End,
 	Equal,
@@ -347,6 +354,8 @@ void JsonTarget::SetNumberValue(const wchar_t* szName, const wchar_t* szValue)
 				*props->pInt = _string2Long(szValue);
 			else if (props->pInt64)
 				*props->pInt64 = _string2Int64(szValue);
+			else if (props->pDouble)
+				*props->pDouble = _string2Double(szValue);
 			return;
 		}
 		props++;

@@ -19,18 +19,18 @@ class PosReceiptItemData : public JsonTarget
 public:
 	std::wstring _name;
 	__int64 _article;
-	__int64 _price;
-	__int64 _qty;
-	__int64 _sum;
+	double _price;
+	double _qty;
+	double _sum;
 	PosReceiptItemData()
 		: _article(0), _price(0), _qty(0), _sum(0) {}
 protected:
 	BEGIN_JSON_PROPS(5)
 		STRING_PROP(name, _name)
 		INT64_PROP(article, _article)
-		INT64_PROP(price, _price)
-		INT64_PROP(qty, _qty)
-		INT64_PROP(sum, _sum)
+		DOUBLE_PROP(price, _price)
+		DOUBLE_PROP(qty, _qty)
+		DOUBLE_PROP(sum, _sum)
 	END_JSON_PROPS()
 };
 

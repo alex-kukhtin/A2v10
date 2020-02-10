@@ -28,8 +28,8 @@ void CFiscalPrinter_Null::AddArticle(__int64 article, const wchar_t* szName, __i
 // virtual 
 void CFiscalPrinter_Null::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
-	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%I64d, price:%I64d})",
-		_id.c_str(), item.article, item.name, item.qty, item.price);
+	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%I64d, price:%I64d, sum:%I64d})",
+		_id.c_str(), item.article, item.name, item.qty, item.price, item.sum);
 }
 
 // virtual 
