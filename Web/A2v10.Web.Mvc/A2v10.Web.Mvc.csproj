@@ -144,6 +144,7 @@
     <Compile Include="Start\Startup.Auth.cs" />
     <Compile Include="Start\Startup.cs" />
     <Compile Include="Start\Startup.Services.cs" />
+    <Compile Include="Start\CacheForStaticFiles.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />
     <Compile Include="Views\Account\SendCode.generated.cs">

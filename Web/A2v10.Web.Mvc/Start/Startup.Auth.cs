@@ -93,6 +93,8 @@ namespace A2v10.Web.Mvc.Start
 			//    ClientSecret = ""
 			//});
 
+			app.UseCacheForStaticFiles();
+
 			String GetApplicationCookieName()
 			{
 				var key = ConfigurationManager.AppSettings["AppKey"];

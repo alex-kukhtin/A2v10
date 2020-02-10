@@ -1,18 +1,19 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200109-7610.2*/
+/*20200210-7629*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
 
 	const http = require('std:http');
 	const urltools = require('std:url');
-	const platform = require('std:platform');
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
-	const html = require('std:html');
+
+	const enableLog = true;
 
 	const EUSIGN_URL = 'eusign';
+
 	return {
 		loadAttachment,
 		loadSignature,
@@ -26,6 +27,12 @@ app.modules['std:eusign'] = function () {
 		beginRequest() { eventBus.$emit('beginRequest', EUSIGN_URL); },
 		endRequest() { eventBus.$emit('endRequest', EUSIGN_URL); }
 	};
+
+	function log(obj) {
+		if (!enableLog)
+			return;
+		console.dir(obj);
+	}
 
 
 	function uploadData(data, filename) {
@@ -44,6 +51,9 @@ app.modules['std:eusign'] = function () {
 			subjCN: ownerInfo.GetSubjCN(),
 			serial: ownerInfo.GetSerial(),
 			issuerCN: ownerInfo.GetIssuerCN(),
+			subject: ownerInfo.GetSubject(),
+			EDRPOUCode: ownerInfo.GetSubjEDRPOUCode(),
+			subjDRFOCode: ownerInfo.GetSubjDRFOCode(),
 			time: null
 		};
 		if (timeInfo && timeInfo.IsTimeAvail)
@@ -114,9 +124,9 @@ app.modules['std:eusign'] = function () {
 
 			function getPrivateKeyCertificatesByCMP(key, onSuccess) {
 				var keyInfo = euSign.GetKeyInfoBinary(key, pwd);
-				console.dir(keyInfo);
+				log(keyInfo);
 				var certs = euSign.GetCertificatesByKeyInfo(keyInfo, addr);
-				console.dir(certs);
+				log(certs);
 				onSuccess(certs);
 			}
 
@@ -125,7 +135,7 @@ app.modules['std:eusign'] = function () {
 					euSign.SaveCertificates(certs);
 					euSign.ReadPrivateKeyBinary(key, password);
 					const ownerInfo = euSign.GetPrivateKeyOwnerInfo();
-					console.dir(ownerInfo);
+					log(ownerInfo);
 					let rw = customOwnerInfo(ownerInfo);
 					eventBus.$emit('endRequest', EUSIGN_URL);
 					resolve(rw);
@@ -133,7 +143,8 @@ app.modules['std:eusign'] = function () {
 			}
 
 			setTimeout(() => {
-				euSign.ReadFile(file, function (file) {
+				//euSign.ReadFile
+				internalReadFile(file, function (file) {
 					euSign.ResetPrivateKey();
 					let container = new Uint8Array(file.data);
 					if (alias) {
@@ -143,7 +154,7 @@ app.modules['std:eusign'] = function () {
 						}
 						euSign.ReadPrivateKeyBinary(jksKey.GetPrivateKey(), pwd);
 						const ownerInfo = euSign.GetPrivateKeyOwnerInfo();
-						console.dir(ownerInfo);
+						log(ownerInfo);
 						let rw = customOwnerInfo(ownerInfo);
 						eventBus.$emit('endRequest', EUSIGN_URL);
 						resolve(rw);
@@ -237,11 +248,36 @@ app.modules['std:eusign'] = function () {
 				formData.append("title", ownerInfo.GetSubjTitle());
 			}
 			http.upload(postUrl, formData, true).then(function (result) {
-				console.dir(result);
+				log(result);
 				resolve(result);
 			}).catch(function(error) {
 				reject(error);
 			});
 		});
+	}
+
+
+	function internalReadFile(file, onSuccess, onError) {
+		let fr = new FileReader();
+		fr.onloadend = function (evt) {
+			if (evt.target.readyState !== FileReader.DONE)
+				return;
+			try {
+				let loadedFile = new EndUserFile();
+
+				loadedFile.SetTransferableObject({
+					'file': file,
+					'data': new Uint8Array(evt.target.result)
+				});
+				onSuccess(loadedFile);
+			}
+			catch (e) {
+				onError(e);
+			}
+		};
+		fr.onerror = function (e) {
+			onError(e);
+		};
+		fr.readAsArrayBuffer(file);
 	}
 };
