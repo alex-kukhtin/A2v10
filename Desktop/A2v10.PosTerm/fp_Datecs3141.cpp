@@ -829,7 +829,7 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 */
 
 // virtual 
-void CFiscalPrinter_Datecs3141::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price)
+void CFiscalPrinter_Datecs3141::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price)
 {
 	int art = (int)article;
 	int code = 0;
@@ -906,6 +906,28 @@ void CFiscalPrinter_Datecs3141::PrintTotal()
 	// Напечатать итог
 	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 	SendCommand();
+}
+
+// virtual 
+void CFiscalPrinter_Datecs3141::Payment(PAYMENT_MODE mode, long sum)
+{
+	std::wstring info;
+	switch (mode)
+	{
+	case _pay_cash:
+		Payment(m_payModeCash, sum, info);
+		break;
+	case _pay_card:
+		Payment(m_payModeCard, sum, info);
+		break;
+	}
+};
+
+// virtual 
+void CFiscalPrinter_Datecs3141::CloseReceipt()
+{
+	long chNo = 0;
+	CloseFiscal(chNo);
 }
 
 void CFiscalPrinter_Datecs3141::Payment(WCHAR mode, int sum, std::wstring& info)

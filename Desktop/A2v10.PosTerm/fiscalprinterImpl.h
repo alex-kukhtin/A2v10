@@ -21,20 +21,24 @@ public:
 struct RECEIPT_ITEM {
 	__int64 article;
 	const wchar_t* name;
-	__int64 price;
-	__int64 qty;
-	__int64 sum;
+	long price;
+	long qty;
+	long sum;
 	RECEIPT_ITEM()
-		: article(0), price(0), qty(0), sum(0) {}
+		: article(0) {}
 };
 
 struct PAYMENT_INFO {
-	__int64 sumCash;
-	__int64 sumGet;
-	__int64 sumCard;
+	__currency sumCash;
+	__currency sumGet;
+	__currency sumCard;
 
-	PAYMENT_INFO()
-		: sumCash(0), sumGet(0), sumCard(0) {}
+	PAYMENT_INFO() {}
+};
+
+enum PAYMENT_MODE {
+	_pay_cash,
+	_pay_card
 };
 
 class FiscalPrinterImpl
@@ -81,6 +85,8 @@ public:
 	virtual void OpenReceipt() = 0;
 	virtual void OpenReturnReceipt() = 0;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) = 0;
+	virtual void Payment(PAYMENT_MODE mode, long sum) = 0;
+	virtual void CloseReceipt() = 0;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
@@ -93,7 +99,7 @@ public:
 	virtual bool ReportByArticles() = 0;
 	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;
-	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price) = 0;
+	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price) = 0;
 	virtual void OpenCashDrawer() = 0;
 	virtual void PrintFiscalText(const wchar_t* szText) = 0;
 	virtual void PrintNonFiscalText(const wchar_t* szText);

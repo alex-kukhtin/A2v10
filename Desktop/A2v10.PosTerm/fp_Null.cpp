@@ -19,17 +19,39 @@ bool CFiscalPrinter_Null::IsReady() const
 	return true;
 }
 
-void CFiscalPrinter_Null::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price)
+void CFiscalPrinter_Null::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price)
 {
-	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%I64d})", 
+	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%ld})", 
 		_id.c_str(), article, szName, tax, price);
 }
 
 // virtual 
 void CFiscalPrinter_Null::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
-	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%I64d, price:%I64d, sum:%I64d})",
+	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%ld, price:%ld, sum:%ld})",
 		_id.c_str(), item.article, item.name, item.qty, item.price, item.sum);
+}
+
+// virtual 
+void CFiscalPrinter_Null::Payment(PAYMENT_MODE mode, long sum)
+{
+	const wchar_t* strMode = L"unknown";
+	switch (mode) {
+	case PAYMENT_MODE::_pay_card:
+		strMode = L"card";
+		break;
+	case PAYMENT_MODE::_pay_cash:
+		strMode = L"cash";
+		break;
+	}
+	TraceINFO(L"TESTPRINTER [%s]. Payment({mode:'%s', sum:%ld})",
+		_id.c_str(), strMode, sum);
+}
+
+// virtual 
+void CFiscalPrinter_Null::CloseReceipt()
+{
+	TraceINFO(L"TESTPRINTER [%s]. CloseReceipt()", _id.c_str());
 }
 
 // virtual 

@@ -1,6 +1,6 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200210-7629*/
+/*20200211-7630*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -53,7 +53,7 @@ app.modules['std:eusign'] = function () {
 			issuerCN: ownerInfo.GetIssuerCN(),
 			subject: ownerInfo.GetSubject(),
 			EDRPOUCode: ownerInfo.GetSubjEDRPOUCode(),
-			subjDRFOCode: ownerInfo.GetSubjDRFOCode(),
+			DRFOCode: ownerInfo.GetSubjDRFOCode(),
 			time: null
 		};
 		if (timeInfo && timeInfo.IsTimeAvail)

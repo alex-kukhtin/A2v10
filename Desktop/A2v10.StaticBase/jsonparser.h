@@ -24,7 +24,7 @@ public:
 		std::wstring* pString;
 		int* pInt;
 		__int64* pInt64;
-		double* pDouble;
+		__currency* pCurrency;
 		bool* pBool;
 		JsonTarget* pArray;
 	};
@@ -52,7 +52,7 @@ JsonTarget::PROP_ENTRY* __getPropsTable() override {return __propsTable; }
 {L#name, nullptr, &##val, nullptr, nullptr, nullptr, nullptr},
 #define INT64_PROP(name, val)\
 {L#name, nullptr, nullptr, &##val, nullptr, nullptr, nullptr},
-#define DOUBLE_PROP(name, val)\
+#define CURRENCY_PROP(name, val)\
 {L#name, nullptr, nullptr, nullptr, &##val, nullptr, nullptr},
 #define BOOL_PROP(name, val)\
 {L#name, nullptr, nullptr, nullptr, nullptr, &##val, nullptr},

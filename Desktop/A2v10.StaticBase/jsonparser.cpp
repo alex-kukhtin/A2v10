@@ -1,10 +1,12 @@
 
 #include "pch.h"
+#include "types.h"
 #include "jsonparser.h"
 
 
 #define MAX_PROP_LENGTH 64
 #define NULL_CHR L'\0'
+
 
 long _string2Long(const wchar_t* szString)
 {
@@ -20,11 +22,13 @@ __int64 _string2Int64(const wchar_t* szString)
 	return _wtoi64(szString);
 }
 
-double _string2Double(const wchar_t* szString)
+__currency _string2Currency(const wchar_t* szString)
 {
+	__currency cur;
 	if (!szString || !*szString)
-		return 0;
-	return _wtof(szString);
+		return cur;
+	cur.int64 = std::llround(_wtof(szString) * 10000.0);
+	return cur;
 }
 
 enum TokenId {
@@ -354,8 +358,8 @@ void JsonTarget::SetNumberValue(const wchar_t* szName, const wchar_t* szValue)
 				*props->pInt = _string2Long(szValue);
 			else if (props->pInt64)
 				*props->pInt64 = _string2Int64(szValue);
-			else if (props->pDouble)
-				*props->pDouble = _string2Double(szValue);
+			else if (props->pCurrency)
+				*props->pCurrency = _string2Currency(szValue);
 			return;
 		}
 		props++;

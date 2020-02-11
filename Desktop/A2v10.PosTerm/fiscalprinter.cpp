@@ -125,8 +125,7 @@ void FiscalPrinter::PrintNonFiscalText(const wchar_t* szText)
 
 void FiscalPrinter::AddArticle(const PosReceiptItemData* pItem)
 {
-	__int64 intPrice = std::lround(pItem->_price * 100.0);
-	_impl->AddArticle(pItem->_article, pItem->_name.c_str(), 0, intPrice);
+	_impl->AddArticle(pItem->_article, pItem->_name.c_str(), 0, pItem->_price);
 }
 
 void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
@@ -134,9 +133,9 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 	RECEIPT_ITEM item;
 	item.article = pItem->_article;
 	item.name = pItem->_name.c_str();
-	item.price = std::lround(pItem->_price * 100.0);
-	item.sum = std::lround(pItem->_sum * 100.0);
-	item.qty = std::lround(pItem->_qty);
+	item.price = pItem->_price;
+	item.sum = pItem->_sum;
+	item.qty = pItem->_qty;
 	// TODO: discounts
 	_impl->PrintReceiptItem(item);
 }
@@ -153,16 +152,20 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 	if (!pData->_topText.empty())
 		_impl->PrintFiscalText(pData->_topText.c_str());
 
-	__int64 totalAmount = 0;
-	__int64 totalDiscountSum = 0;
+	__currency totalAmount;
+	__currency totalDiscountSum;
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		auto pItem = it->get();
-		totalAmount += std::lround(pItem->_sum * 100.0);
-		//totalDiscountSum += pItem->_discountSum;
+		totalAmount += pItem->_sum;
+		totalDiscountSum += pItem->_discount;
 		PrintItem(pItem);
 	}
 	
+	if (pData->_cardSum)
+		_impl->Payment(PAYMENT_MODE::_pay_card, pData->_cardSum);
+
+	_impl->CloseReceipt();
 	/*
 	validate amounts
 

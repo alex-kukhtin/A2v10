@@ -38,6 +38,9 @@ public:
 	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
+	virtual void Payment(PAYMENT_MODE mode, long sum) override;
+	virtual void CloseReceipt() override;
+
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
@@ -51,7 +54,7 @@ public:
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
-	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, __int64 price) override;
+	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price) override;
 	virtual bool CopyBill() override;
 	virtual void Init() override;
 	virtual void OpenCashDrawer() override;
