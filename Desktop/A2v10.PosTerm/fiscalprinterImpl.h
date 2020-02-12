@@ -21,11 +21,15 @@ public:
 struct RECEIPT_ITEM {
 	__int64 article;
 	const wchar_t* name;
-	long price;
-	long qty;
-	long sum;
+	const wchar_t* unit;
+	__currency vat; /* percent * 100 */
+	int qty;
+	__currency weight;
+	__currency price;
+	__currency sum;
+	__currency discount;
 	RECEIPT_ITEM()
-		: article(0) {}
+		: article(0), qty(0), name(nullptr), unit(nullptr) {}
 };
 
 struct PAYMENT_INFO {
@@ -92,14 +96,14 @@ public:
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = nullptr);
 	//virtual bool CloseCheck2(int sum, int ret, int get, CFiscalPrinter::PAY_MODE pm);
-	virtual bool ServiceInOut(__int64 sum, __int64 hid) = 0;
+	virtual void ServiceInOut(__currency sum) = 0;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
 	virtual bool CopyBill() = 0;
 	virtual bool ReportByArticles() = 0;
 	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;
-	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price) = 0;
+	virtual void AddArticle(const RECEIPT_ITEM& item) = 0;
 	virtual void OpenCashDrawer() = 0;
 	virtual void PrintFiscalText(const wchar_t* szText) = 0;
 	virtual void PrintNonFiscalText(const wchar_t* szText);

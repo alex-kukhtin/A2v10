@@ -18,6 +18,8 @@ union __currency {
 	__currency& operator+=(const __currency v1);
 	operator long() const;
 	operator bool() const;
+
+	long units() const;
 };
 
 __currency operator +(const __currency& v1, const __currency& v2);

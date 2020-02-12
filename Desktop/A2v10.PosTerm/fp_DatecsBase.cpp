@@ -7,7 +7,7 @@
 
 #define MAX_COMMAND_LEN 255
 
-//#define NO_PORT_MODE -- DEBUG
+#define EMULATION_MODE true
 
 void W2A(const wchar_t* szWideChars, char* szMbChars, int cbMultiByte)
 {
@@ -25,8 +25,6 @@ void A2W(const char* szMultiByte, wchar_t* szWideChars, int cbWide)
 	_ASSERT(ret != 0);
 }
 
-
-
 #define SYN 0x16
 
 #define MESSAGE_LENGTH 20
@@ -34,6 +32,11 @@ void A2W(const char* szMultiByte, wchar_t* szWideChars, int cbWide)
 
 // static 
 BYTE CFiscalPrinter_DatecsBase::m_seq = 0x20;
+
+bool CFiscalPrinter_DatecsBase::IS_EMULATION() const
+{
+	return EMULATION_MODE;
+}
 
 #define IDP_FP_ERROR L"Fiscal printer error"
 #define IDP_FP_COM_GENERIC L"General COM-port error"
@@ -76,10 +79,11 @@ void CFiscalPrinter_DatecsBase::Close()
 
 void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate /*= CBR_19200*/)
 {
-#ifdef NO_PORT_MODE
-	m_hCom = (HANDLE)1111;
-	return;
-#endif
+	if (IS_EMULATION()) {
+		m_hCom = (HANDLE)1111;
+		return;
+	}
+	TraceINFO(L"Open\t{Port:'%s', Baud:%ld}", Port, (long)nBaudRate);
 	DWORD baudRate = nBaudRate;
 	if (baudRate == 0)
 		baudRate = CBR_19200;
@@ -224,9 +228,8 @@ void CFiscalPrinter_DatecsBase::IncSeqAndBuffer()
 
 void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 {
-#ifdef NO_PORT_MODE
-	return;
-#endif
+	if (IS_EMULATION())
+		return;
 	::PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);
 	m_bEndOfTape = false;
 	m_dwError = 0;

@@ -20,13 +20,10 @@ class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 {
 	long m_nLastReceiptNo;
 	long m_nLastZReportNo;
-	//CMap<DB_ID, DB_ID, int, int> m_mapCodes;
-	WCHAR m_payModeCash;
-	WCHAR m_payModeCard;
-	WCHAR m_payModeCredit;
-	WCHAR m_vatTaxGroup20;
-	WCHAR m_vatTaxGroup7;
-	WCHAR m_novatTaxGroup;
+	std::unordered_map <__int64, long> _mapCodes;
+	wchar_t _payModeCash;
+	wchar_t _payModeCard;
+	std::unordered_map <long, wchar_t> _taxChars; // prc*100 -> char
 public:
 	CFiscalPrinter_Datecs3141();
 
@@ -35,7 +32,7 @@ public:
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
 	virtual void XReport() override;
 	virtual void ZReport() override;
-	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
+	virtual void ServiceInOut(__currency sum) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;
@@ -54,7 +51,7 @@ public:
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
-	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price) override;
+	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual bool CopyBill() override;
 	virtual void Init() override;
 	virtual void OpenCashDrawer() override;
@@ -88,8 +85,7 @@ protected:
 	void Payment(WCHAR mode, int sum, std::wstring& info);
 	void CloseFiscal(long& chNo);
 	void PrintTotal();
-	void PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight);
-	void AddPrinterArticle(int code, LPCWSTR szName, bool bVat);
+	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
 	void CancelReceiptPrinter();
 	bool GetPrinterLastReceiptNo(long& chNo, bool bShowStateError = true);

@@ -7,6 +7,8 @@
 #include "fp_Datecs3141.h"
 
 #define MAX_COMMAND_LEN 255
+#define MAX_NAME_LEN    75
+#define MAX_UNIT_LEN    6
 
 enum FP_COMMANDS {
 	FPCMD_SETDATETIME = 0x20,
@@ -82,10 +84,14 @@ std::vector<std::string> _split(const std::string& str, char delim = L' ')
 	return result;
 }
 
+void _toUpper(std::string& s) {
+	setlocale(LC_ALL, "uk-UA");
+	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+}
+
 CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
 	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0),
-	m_payModeCash(L'0'), m_payModeCard(L'2'), m_payModeCredit(L'-'),
-	m_vatTaxGroup20(L'0'), m_novatTaxGroup(L'1'), m_vatTaxGroup7(L'2')
+	_payModeCash(L'0'), _payModeCard(L'2')
 {
 }
 
@@ -259,134 +265,96 @@ void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 
 void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 {
-	/*
-	CString s;
-	CString info;
-	CString r;
-	bool bSetCash = false;
-	bool bSetCard = false;
-	bool bSetCredit = false;
+	TraceINFO(L"DATECS [%s]. GetPaymentModes()", _id.c_str());
+	bool bCashSet = false;
+	bool bCardSet = false;
 	DWORD dwCardFlags = 0;
+
+	/* pay mode flag bits
+		0. sale allowed
+		1. refund allowed
+		7. cash withdrawal allowed
+	*/
+
 	for (int i = 0; i < 9; i++)
 	{
-		s.Format(L"000000;%d;", i);
-		CreateCommand(PFCMD_GETPAYMODE, s);
+		CreateCommandV(L"GETPAYMODE", PFCMD_GETPAYMODE, L"000000;%d;", i);
 		SendCommand();
-		info = (LPCSTR)m_data;  // ANSI!
-		TraceINFO(L"RCV:%s", info);
-
-		if (AfxExtractSubString(r, info, 2, L';'))
-		{
-			r.MakeUpper();
-			if ((r == L"ГОТІВКА") || (r == L"НАЛИЧНЫЕ") || (r == L"ГРОШІ")) {
-				if (!bSetCash)
-				{
-					m_payModeCash = L'0' + i;
-					bSetCash = true;
-				}
+		// 000;xxxx;NAME;
+		std::string  info((char*)m_data);
+		auto items = _split(info, ';');
+		if (items.size() > 2) {
+			std::string payName = items[2];
+			_toUpper(payName);
+			if (payName == "ГОТІВКА" || payName == "НАЛИЧНЫЕ" || payName == "ГРОШІ") {
+				_payModeCash = L'0' + i;
+				TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
+				bCashSet = true;
 			}
-			else if ((r == L"КАРТКА") || (r == L"КАРТА") || (r == L"КАРТОЧКА")) {
-				if (!bSetCard)
-				{
-					m_payModeCard = L'0' + i;
-					bSetCard = true;
-					CString f;
-					if (AfxExtractSubString(f, info, 1, L';'))
-					{
-						int val = 0;
-						if (swscanf_s(f, L"%02x", &val) == 1)
-							dwCardFlags = (DWORD)val;
-					}
-				}
+			else if (payName == "КАРТКА" || payName == "КАРТА" || payName == "КАРТОЧКА") {
+				_payModeCard = L'0' + i;
+				TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
+				std::string flags = items[1];
+				int val = 0;
+				if (scanf_s(flags.c_str(), "%02x", &val) == 1)
+					dwCardFlags = (DWORD)val;
+				bCardSet = true;
 			}
-			else if ((r == L"КРЕДИТ") || (r == L"КРЕДІТ")) {
-				if (!bSetCredit)
-				{
-					m_payModeCredit = L'0' + i;
-					bSetCredit = true;
-				}
-			}
+			if (bCashSet && bCardSet)
+				break;
 		}
-		if (bSetCard && bSetCash && bSetCredit)
-			break;
 	}
-	TraceINFO(L"Оплата готівкою. Код оплаты: %C", m_payModeCash);
-	TraceINFO(L"Оплата карткою. Код оплаты: %C", m_payModeCard);
-	TraceINFO(L"Оплата в кредит. Код оплаты: %C", m_payModeCredit);
-	if (!bSetCard)
-		AfxMessageBox(L"Фискальный регистратор.\nНе найдена форма оплаты КАРТА (КАРТОЧКА, КАРТКА).\nПерепрограммируйте принтер.");
-	/ * БИТЫ ДЛЯ ФЛАЖКОВ
-	0. Разрешение использования при продаже
-	1. Разрешение использования при возврате
-	7. Разрешение начисления сдачи наличными
-	* /
+	if (IS_EMULATION()) {
+		_payModeCard = L'1';
+		_payModeCash = L'2';
+		dwCardFlags = 0x02;
+		bCardSet = true;
+		bCashSet = true;
+	}
+	if (!bCardSet)
+		throw CFPException(L"Фіскальний реєстратор.\nНе знайдено форму оплати КАРТКА (КАРТОЧКА, КАРТА).\nПерепрограмуйте реєстратор.");
+
 	if ((dwCardFlags & 0x02) == 0)
-		AfxMessageBox(L"Фискальный регистратор.\nДля формы оплаты КАРТА запрещены возвраты.\nПерепрограммируйте принтер.");
-	*/
+		throw CFPException(L"Фіскальний реєстратор.\nДля форми оплати КАРТКА заборонені повернення.\nПерепрограмуйте реєстратор.");
 }
 
 void CFiscalPrinter_Datecs3141::GetTaxRates()
 {
-	/*
-	CString info;
-	CString s;
-	CString r;
-	bool bVatSet = false;
-	bool bNoVatSet = false;
-	bool bVat7Set = false;
+	TraceINFO(L"DATECS [%s]. GetTaxRates()", _id.c_str());
 	for (int i = 0; i < 5; i++)
 	{
-		s.Format(L"000000;%d;", i);
-		CreateCommand(FPCMD_GETTAXRATE, s);
+		CreateCommandV(L"GETTAXRATE", FPCMD_GETTAXRATE, L"000000;%d;", i);
 		SendCommand();
-		info = (LPCSTR)m_data; // ANSI!
-		TraceINFO(L"RCV:%s", info);
-		if (AfxExtractSubString(r, info, 2, L';'))
+		std::string info((char*)m_data);
+		auto elems = _split(info, ';');
+		if (elems.size() > 2) 
 		{
-			if (r == L"20.00")
-			{
-				// первый с НДС
-				if (!bVatSet)
-				{
-					m_vatTaxGroup20 = L'0' + i;
-					bVatSet = true;
-				}
-			}
-			else if (r == L"7.00")
-			{
-				if (!bVat7Set)
-				{
-					m_vatTaxGroup7 = L'0' + i;
-					bVat7Set = true;
-				}
-			}
-			else if (r == L"0.00")
-			{
-				if (!bNoVatSet) {
-					m_novatTaxGroup = L'0' + i;
-					bNoVatSet = true;
-				}
-			}
+			std::string vatPercent = elems[2];
+			long taxIndex = (long) std::round(atof(vatPercent.c_str()) * 100.0);
+			_taxChars[taxIndex] = L'0' + i;
+			TraceINFO(L"  Vat rate: %ld. Tax code: %C", taxIndex, L'0' + i);
 		}
-		if (bVatSet && bNoVatSet)
-			break;
 	}
-	TraceINFO(L"Ставка НДС 20%%. Код налога: %C", m_vatTaxGroup20);
-	TraceINFO(L"Ставка НДС 7%%. Код налога: %C", m_vatTaxGroup7);
-	TraceINFO(L"Ставка НДС 0%%. Код налога: %C", m_novatTaxGroup);
-	*/
+	if (IS_EMULATION()) {
+		_taxChars[2000] = L'2';
+		_taxChars[700]  = L'7';
+		_taxChars[0]   =  L'0';
+	}
 }
 
 
 // virtual 
 void CFiscalPrinter_Datecs3141::Init()
 {
+	TraceINFO(L"DATECS [%s]. Init()", _id.c_str());
+
 	// Get status (with buffer print)
 	m_nLastZReportNo = GetPrinterLastZReportNo();
 	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
 
 	GetPrinterPayModes();
 	GetTaxRates();
+	DisplayDateTime(); // customer display
 
 	// last article
 	RECEIPT_STATUS cs = GetReceiptStatus();
@@ -398,7 +366,7 @@ void CFiscalPrinter_Datecs3141::Init()
 	}
 
 	CancelReceiptPrinter();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // еще раз
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // again
 	// CheckPrinterSession(); 24 часа Z-отчета?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 }
@@ -579,13 +547,13 @@ void CFiscalPrinter_Datecs3141::SetCurrentTime()
 {
 	try
 	{
-		/* TODO:
-		COleDateTime dt = COleDateTime::GetCurrentTime();
-		CString s;
-		s.Format(L"%s%02d%02d%02d;%02d%02d;", EMPTY_PARAM, dt.GetDay(), dt.GetMonth(), dt.GetYear() - 2000, dt.GetHour(), dt.GetMinute());
-		CreateCommand(FPCMD_SETDATETIME, s);
+		time_t time = std::time(nullptr);
+		tm loctime = { 0 };
+		localtime_s(&loctime, &time);
+		CreateCommandV(L"SETDATETIME", FPCMD_SETDATETIME, L"%s%02d%02d%02d;%02d%02d;",
+			EMPTY_PARAM, loctime.tm_mday, loctime.tm_mon + 1, loctime.tm_year + 1900 - 2000, 
+			loctime.tm_hour, loctime.tm_min);
 		SendCommand();
-		*/
 	}
 	catch (CFPException ex)
 	{
@@ -759,13 +727,12 @@ bool CFiscalPrinter_Datecs3141::CheckPaymentSum(int get)
 // virtual 
 void CFiscalPrinter_Datecs3141::PrintFiscalText(const wchar_t* szText)
 {
-	size_t max_len = 75; // printer requirements
 	std::wstring text(szText);
 	if (text.empty())
 		return; // empty string, nothing to print
-	text.replace(text.begin(), text.end(), L';', L','); // semicolon is divider!
-	if (text.length() > max_len)
-		text.resize(max_len);
+	std::replace(text.begin(), text.end(), L';', L','); // semicolon is divider!
+	if (text.length() > MAX_NAME_LEN)
+		text.resize(MAX_NAME_LEN);
 
 	CreateCommandV(L"PRINTTEXT", FPCMD_PRINTTEXT, L"%s%s;", EMPTY_PARAM, text.c_str());
 	SendCommand();
@@ -829,32 +796,13 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 */
 
 // virtual 
-void CFiscalPrinter_Datecs3141::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price)
+void CFiscalPrinter_Datecs3141::AddArticle(const RECEIPT_ITEM& item)
 {
-	int art = (int)article;
-	int code = 0;
-	//TODO::if (m_mapCodes.Lookup(art, code))
-		//return true;
-	AddPrinterArticle(art, szName, (tax == 20) ? true : false);
-	//m_mapCodes.SetAt(art, art);
-}
-
-//virtual 
-void CFiscalPrinter_Datecs3141::PrintReceiptItem(const RECEIPT_ITEM& item)
-{
-	/*
-	try
-	{
-		int code = GetPrintCodeByArticle(info.m_art, info.m_name);
-		PrintItem(code, info.m_iQty, info.m_fQty, info.m_price, info.m_dscPercent, info.m_dscSum, info.m_bIsWeight);
-	}
-	catch (CFPException e)
-	{
-		m_strError = e.GetError();
-		return false;
-	}
-	return true;
-	*/
+	if (_mapCodes.count(item.article) > 0)
+		return;
+	long code = (long) item.article;
+	AddPrinterArticle(code, item.name, item.unit, item.vat.units());
+	_mapCodes[item.article] = code;
 }
 
 void CFiscalPrinter_Datecs3141::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
@@ -903,7 +851,6 @@ bool CFiscalPrinter_Datecs3141::GetDaySum(long src, long ix, CY& value1, CY& val
 
 void CFiscalPrinter_Datecs3141::PrintTotal()
 {
-	// Напечатать итог
 	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 	SendCommand();
 }
@@ -915,10 +862,10 @@ void CFiscalPrinter_Datecs3141::Payment(PAYMENT_MODE mode, long sum)
 	switch (mode)
 	{
 	case _pay_cash:
-		Payment(m_payModeCash, sum, info);
+		Payment(_payModeCash, sum, info);
 		break;
 	case _pay_card:
-		Payment(m_payModeCard, sum, info);
+		Payment(_payModeCard, sum, info);
 		break;
 	}
 };
@@ -976,20 +923,21 @@ void CFiscalPrinter_Datecs3141::ZReport()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::ServiceInOut(__int64 sum, __int64 hid)
+void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum)
 {
 	//long inCash = -1; // %%%%%
 	int op = 1; // %%%%%
+	long sum_c = sum.units();
 	bool bNeg = false;
-	if (sum < 0) {
+	if (sum_c < 0) {
 		bNeg = true;
-		sum = -sum;
+		sum_c = -sum_c;
 	}
 	wchar_t buff[MAX_COMMAND_LEN];
 	if (bNeg)
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;-%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum / 100), (int)(sum % 100));
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;-%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
 	else
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum / 100), (int)(sum % 100));
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
 	try {
 		CreateCommand(L"SVCINOUT", FPCMD_SVCINOUT, buff);
 		SendCommand();
@@ -1002,13 +950,28 @@ bool CFiscalPrinter_Datecs3141::ServiceInOut(__int64 sum, __int64 hid)
 	catch (CFPException ex)
 	{
 		m_strError = ex.GetError();
-		return false;
+		return;
 	}
-	return true;
 }
 
-void CFiscalPrinter_Datecs3141::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
+//virtual 
+void CFiscalPrinter_Datecs3141::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
+	long code = GetPrintCodeByArticle(item.article, item.name);
+	long price_c = item.price.units();
+	if (item.qty)
+		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%ld.000;%ld.%02ld;", EMPTY_PARAM,
+			code, item.qty, price_c / 100, price_c % 100);
+	else
+		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%#.03f;%ld.%02ld;", EMPTY_PARAM, 
+			code, item.weight, price_c / 100, price_c % 100);
+	SendCommand();
+	if (item.discount) {
+		long disc_c = item.discount.units();
+		CreateCommandV(L"DISCOUNTABS", FPCMD_DISCOUNTABS, L"%s-%ld.%02ld;", EMPTY_PARAM, disc_c / 100, disc_c % 100);
+		SendCommand();
+	}
+	//void CFiscalPrinter_Datecs3141::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
 	//ПЕЧАТЬ ДРОБНОГО КОЛИЧЕСТВА!!!!
 	/*
 	CString s;
@@ -1045,55 +1008,39 @@ void CFiscalPrinter_Datecs3141::PrintItem(int code, int qty, double fQty, int pr
 
 int CFiscalPrinter_Datecs3141::GetPrintCodeByArticle(__int64 art, LPCWSTR szName)
 {
-	int code = 0;
-	//if (m_mapCodes.Lookup(art, code))
-		//return code;
-	_ASSERT(FALSE);
-	return (int)art;
+	if (_mapCodes.count(art) > 0)
+		return _mapCodes[art];
+	return 0;
 }
 
-void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, LPCWSTR szName, bool bVat)
+void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat)
 {
 	//%%%%TODO: TERMINAL
-	/*
-	int tno = 1;
-	USES_CONVERSION;
-	CString strFind;
-	strFind.Format(L"%s%ld;", EMPTY_PARAM, code);
-	CreateCommand(PFCMD_FINDARTICLE, strFind);
+	long tno = 1;
+
+	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%ld;", EMPTY_PARAM, code);
 	SendCommand();
-	CString find = A2W((char*)m_data);
-	TraceINFO(L"RCV:%s", find);
-	if (find.Find(L"FFFFFF") == -1)
-		return; // уже запрограммирован
+	std::string found((char*) m_data); // char!
+	if (found.size() > 0 && found.find("FFFFFF") == -1)
+		return; // already programmed
 
-	CString name(szName);
-	name.Replace(L";", L","); // ТОЧКА С ЗАПЯТОЙ - РАЗДЕЛИТЕЛЬ!!!!
-	if (name.GetLength() > 75)
-		name = name.Left(75);
-	_ASSERT(name.GetLength() <= 75);
-	CString unit(L"");
+	std::wstring sname(name);
+	std::replace(sname.begin(), sname.end(), L';', L','); // semicolon is divider!
+	if (sname.length() > MAX_NAME_LEN)
+		sname.resize(MAX_NAME_LEN);
 
-	/ *
-	CString strUnit(unit);
-	if (strUnit.GetLength() > 6)
-		strUnit = strUnit.Left(6); // не более 6 символов
-	* /
 
-	CString s;
-	s.Format(L"%s%ld;%s;%c;%ld;00;%s;",
-		EMPTY_PARAM, (long)code, (LPCWSTR)name, bVat ? m_vatTaxGroup20 : m_novatTaxGroup,
-		(long)tno, (LPCWSTR)unit);
-	//00-модификатор весового товара
-	CreateCommand(FPCMD_ADDARTICLE, s);
+	std::wstring sunit(unit);
+	std::replace(sunit.begin(), sunit.end(), L';', L','); // semicolon is divider!
+	if (sunit.length() > MAX_UNIT_LEN)
+		sunit.resize(MAX_UNIT_LEN);
+
+	//00-weight modifier ??
+	wchar_t taxGroup = _taxChars[vat];
+
+	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%ld;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
+		code, sname.c_str(), taxGroup, tno, sunit.c_str());
 	SendCommand();
-	if (IsDebugMode())
-	{
-		USES_CONVERSION;
-		CString info = A2W((char*)m_data);
-		TraceINFO(L"RCV:%s", info);
-	}
-	*/
 }
 
 long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
@@ -1101,12 +1048,24 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 	long z_no = 0;
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;0;");
 	SendCommand();
+
+	if (IS_EMULATION()) {
+		return 1122;
+	}
+
 	std::string info((char*) m_data);
+	// ????;Z_NO;
 	auto sinfo = _split(info, ';');
 	if (sinfo.size() < 2)
 		throw CFPException(L"DAYCOUNTERS data error");
-	// ????;Z_NO;
 	std::string r = sinfo[1];
+	z_no = atol(r.c_str());
+	if (z_no == 0) {
+		// the printer is not FISCALIZED, Get value from DB?
+		//__int64 no = ZREPORT_INFO::GetTestNumber(termId);
+		// ;
+
+	}
 	/*
 	USES_CONVERSION;
 	CString info = A2W((char*)m_data);
@@ -1131,6 +1090,14 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowSt
 {
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
+	std::string info((char*)m_data);
+	// XXXX;RECEIPT_NO;
+	auto arr = _split(info, ';');
+	long rcpNo = 0;
+	if (arr.size() > 1) {
+		rcpNo = atol(arr[1].c_str());
+	}
+	return true;
 	/*
 	USES_CONVERSION;
 	CString info = A2W((char*)m_data);

@@ -28,3 +28,8 @@ __currency::operator bool() const
 __currency operator +(const __currency& v1, const __currency& v2) {
 	return __currency(v1.int64 + v2.int64);
 }
+
+long __currency::units() const
+{
+	return (long) (int64 / 100);
+}

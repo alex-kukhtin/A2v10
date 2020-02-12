@@ -19,17 +19,17 @@ bool CFiscalPrinter_Null::IsReady() const
 	return true;
 }
 
-void CFiscalPrinter_Null::AddArticle(__int64 article, const wchar_t* szName, __int64 tax, long price)
+void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
 {
 	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%ld})", 
-		_id.c_str(), article, szName, tax, price);
+		_id.c_str(), item.article, item.name, item.vat, item.price);
 }
 
 // virtual 
 void CFiscalPrinter_Null::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
-	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%ld, price:%ld, sum:%ld})",
-		_id.c_str(), item.article, item.name, item.qty, item.price, item.sum);
+	TraceINFO(L"TESTPRINTER [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%d, weight:%ld, price:%ld, sum:%ld, discount:%ld})",
+		_id.c_str(), item.article, item.name, item.qty, item.weight.units(), item.price.units(), item.sum.units(), item.discount.units());
 }
 
 // virtual 
@@ -208,20 +208,15 @@ void CFiscalPrinter_Null::OpenCashDrawer()
 }
 
 // virtual 
-bool CFiscalPrinter_Null::ServiceInOut(__int64 sum, __int64 hid)
+void CFiscalPrinter_Null::ServiceInOut(__currency sum)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	if (sum < 0)
-	{
-		__int64 sx = -sum;
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Service withdraw (%d.%02d)", (int)(sx / 100), (int)(sx % 100));
-	}
-	else if (sum > 0)
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Service deposit (%d.%02d)", (int)(sum / 100), (int)(sum % 100));
+	long sum_c = sum.units();
+	if (sum_c < 0)
+		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'withdraw', sum:%ld})", _id.c_str(), -sum_c);
+	else if (sum_c > 0)
+		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'deposit', sum:%ld})", _id.c_str(), sum_c);
 	else
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Service withdraw/deposit. Empty value");
-	ReportMessage(buff);
-	return true;
+		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'null', sum:%ld})", _id.c_str(), sum_c);
 }
 
 // virtual 

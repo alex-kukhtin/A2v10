@@ -18,6 +18,8 @@
 #include "list"
 #include "vector"
 #include "memory"
+#include "unordered_map"
+#include "algorithm"
 
 #include "../A2v10.StaticBase/staticbase.h"
 

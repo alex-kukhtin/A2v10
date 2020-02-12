@@ -17,6 +17,8 @@ protected:
 	void OpenComPort(const wchar_t* Port, DWORD nBaudRate /*= CBR_19200*/);
 	void CloseComPort();
 
+	bool IS_EMULATION() const;
+
 	virtual void CheckStatus();
 	virtual void GetErrorCode();
 	virtual std::wstring GetLastErrorS();

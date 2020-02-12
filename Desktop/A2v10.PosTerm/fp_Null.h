@@ -16,7 +16,7 @@ public:
 	virtual void Close() override;
 	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) override;
 
-	virtual void AddArticle(__int64 article, const wchar_t* szName, __int64 vtid, long price) override;
+	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
@@ -29,7 +29,7 @@ public:
 	virtual void XReport() override;
 	virtual void ZReport() override;
 	virtual void OpenCashDrawer() override;
-	virtual bool ServiceInOut(__int64 sum, __int64 hid) override;
+	virtual void ServiceInOut(__currency sum) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;

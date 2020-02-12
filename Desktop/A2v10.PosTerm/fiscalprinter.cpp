@@ -64,15 +64,23 @@ void FiscalPrinter::ShutDown()
 
 bool FiscalPrinter::Open(const wchar_t* port, int baud)
 {
-	if (_impl)
-		return _impl->Open(port, baud);
+	try 
+	{
+		_impl->Open(port, baud);
+		if (!_impl->IsOpen())
+			return false;
+		_impl->Init();
+		return true;
+	}
+	catch (CFPException ex) 
+	{
+		_impl->TraceERROR(L"Error: %s", ex.GetError());
+	}
 	return false;
 }
 
 void FiscalPrinter::Disconnect() {
-	if (_impl)
-		_impl->Close();
-
+	_impl->Close();
 }
 
 // virtual 
@@ -123,25 +131,36 @@ void FiscalPrinter::PrintNonFiscalText(const wchar_t* szText)
 	_impl->PrintNonFiscalText(szText);
 }
 
+static void _fillReceiptItem(RECEIPT_ITEM& item, const PosReceiptItemData* pItem)
+{
+	item.article = pItem->_article;
+	item.name = pItem->_name.c_str();
+	item.unit = pItem->_unit.c_str();
+	item.vat = pItem->_vat;
+	item.price = pItem->_price;
+	item.sum = pItem->_sum;
+	item.qty = pItem->_qty;
+	item.weight = pItem->_weight;
+	item.discount = pItem->_dscSum;
+}
+
 void FiscalPrinter::AddArticle(const PosReceiptItemData* pItem)
 {
-	_impl->AddArticle(pItem->_article, pItem->_name.c_str(), 0, pItem->_price);
+	RECEIPT_ITEM item;
+	_fillReceiptItem(item, pItem);
+	_impl->AddArticle(item);
 }
 
 void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 {
 	RECEIPT_ITEM item;
-	item.article = pItem->_article;
-	item.name = pItem->_name.c_str();
-	item.price = pItem->_price;
-	item.sum = pItem->_sum;
-	item.qty = pItem->_qty;
-	// TODO: discounts
+	_fillReceiptItem(item, pItem);
 	_impl->PrintReceiptItem(item);
 }
 
 void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 {
+	_impl->TraceINFO(L"PRINT_RECEIPT");
 	//_impl->CancelReceipt(); // discard previous, if needed
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
@@ -158,12 +177,14 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		auto pItem = it->get();
 		totalAmount += pItem->_sum;
-		totalDiscountSum += pItem->_discount;
+		totalDiscountSum += pItem->_dscSum;
 		PrintItem(pItem);
 	}
 	
 	if (pData->_cardSum)
 		_impl->Payment(PAYMENT_MODE::_pay_card, pData->_cardSum);
+	else if (pData->_cashSum)
+		_impl->Payment(PAYMENT_MODE::_pay_cash, pData->_cashSum);
 
 	_impl->CloseReceipt();
 	/*

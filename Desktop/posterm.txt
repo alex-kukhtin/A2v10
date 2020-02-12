@@ -17,4 +17,3 @@ CCefApplication::    <--------   *SendProcessMessage(pos_result)
 OnProcessMessageReceived
 *ExecuteCallbacs
 
-
