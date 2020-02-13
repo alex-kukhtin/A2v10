@@ -57,6 +57,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\AttachXlsxReport.cs" />
     <Compile Include="Actions\AttachStiReport.cs" />
     <Compile Include="ReportHelper.cs" />
     <Compile Include="StiReportExtensions.cs" />
@@ -70,6 +71,10 @@
     <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Interop\A2v10.Interop.csproj">
+      <Project>{39661034-47AA-4BDF-9B19-C835B614B545}</Project>
+      <Name>A2v10.Interop</Name>
     </ProjectReference>
     <ProjectReference Include="..\A2v10.Request\A2v10.Request.csproj">
       <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>

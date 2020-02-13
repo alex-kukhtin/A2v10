@@ -1,9 +1,9 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2019 A. Kukhtin
+Copyright © 2008-2020 A. Kukhtin
 
-Last updated : 23 dec 2019
-module version : 7053
+Last updated : 13 feb 2019
+module version : 7054
 */
 
 /*
@@ -19,9 +19,9 @@ Depends on Windows Workflow Foundation scripts.
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7053);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7054);
 	else
-		update a2sys.Versions set [Version] = 7053 where Module = N'std:workflow';
+		update a2sys.Versions set [Version] = 7054 where Module = N'std:workflow';
 	end
 go
 ------------------------------------------------
@@ -53,7 +53,8 @@ begin
 		[Schema] nvarchar(255) null,
 		Model nvarchar(255) null,
 		ModelId bigint null,
-
+		ParentId bigint null
+			constraint FK_Processes_ParentId_Processes references a2workflow.Processes(Id),
 		DateCreated datetime not null constraint DF_Processes_DateCreated2 default(a2sys.fn_getCurrentDate()),
 		DateModified datetime not null constraint DF_Processes_DateModified2 default(a2sys.fn_getCurrentDate()),
 		AutoStart bit null
@@ -72,6 +73,13 @@ if exists(select * from sys.default_constraints where name=N'DF_Processes_UtcDat
 begin
 	alter table a2workflow.Processes drop constraint DF_Processes_UtcDateModified;
 	alter table a2workflow.Processes add constraint DF_Processes_DateModified2 default(a2sys.fn_getCurrentDate()) for DateModified with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2workflow' and TABLE_NAME=N'Processes' and COLUMN_NAME=N'ParentId')
+begin
+	alter table a2workflow.Processes add ParentId bigint null
+			constraint FK_Processes_ParentId_Processes references a2workflow.Processes(Id);
 end
 go
 ------------------------------------------------
@@ -242,6 +250,7 @@ create procedure a2workflow.[Process.Create]
 @Schema nvarchar(255),
 @ModelName nvarchar(255),
 @ModelId bigint,
+@Parent bigint = null,
 @RetId bigint output
 as
 begin
@@ -251,9 +260,9 @@ begin
 
 	declare @outputTable table(Id bigint);
 
-	insert into a2workflow.Processes(WorkflowId, [Owner], [Definition], [ActionBase], [Kind], [Source], [DataSource], [Schema], Model, ModelId)
+	insert into a2workflow.Processes(WorkflowId, [Owner], [ParentId], [Definition], [ActionBase], [Kind], [Source], [DataSource], [Schema], Model, ModelId)
 		output inserted.Id into @outputTable(Id)
-		values (@WorkflowId, @Owner, @Definition, @ActionBase, @Kind, @Source, @DataSource, @Schema, @ModelName, @ModelId);
+		values (@WorkflowId, @Owner, nullif(@Parent, 0), @Definition, @ActionBase, @Kind, @Source, @DataSource, @Schema, @ModelName, @ModelId);
 
 	select top(1) @RetId = Id from @outputTable;
 end

@@ -4363,8 +4363,8 @@ ul.news-list > li {
   position: absolute;
   z-index: 1080;
   width: 320px;
-  left: calc(50% - 150px);
-  bottom: 10px;
+  left: calc(50% - 160px);
+  bottom: 32px;
 }
 .toastr-stack > ul {
   margin: 0;

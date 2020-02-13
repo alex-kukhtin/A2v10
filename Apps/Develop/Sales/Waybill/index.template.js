@@ -23,6 +23,7 @@ const template = {
 		},
 		startWorkflow,
 		attachReport,
+		attachReport2,
 		clickDate() { alert('date clicked');},
 		test: {
 			exec: testCommand,
@@ -72,6 +73,15 @@ async function startWorkflow(doc) {
 async function attachReport(doc) {
 	const vm = this.$vm;
 	let result = await vm.$invoke('attachReport', { Id: doc.Id });
+	console.dir(result);
+	//alert('attach result:' + result);
+	vm.$toast("Успешно добавлено");
+	doc.Attachments.$append({ Id: result.Id });
+}
+
+async function attachReport2(doc) {
+	const vm = this.$vm;
+	let result = await vm.$invoke('attachReportXlsx', { Id: doc.Id });
 	console.dir(result);
 	//alert('attach result:' + result);
 	vm.$toast("Успешно добавлено");

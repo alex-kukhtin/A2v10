@@ -67,8 +67,7 @@ namespace A2v10.Reports
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_host, false, url);
 			var rep = rm.GetReport();
 			ri.Type = rep.type;
-			if (rep.HasPath)
-				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
+
 			if (rep.type == RequestReportType.xml)
 			{
 				if (rep.xmlSchemas != null)
@@ -107,6 +106,10 @@ namespace A2v10.Reports
 			if (ri.DataModel != null && ri.DataModel.Root != null)
 				repName = ri.DataModel.Root.Resolve(repName);
 			ri.Name = repName;
+
+			if (rep.HasPath)
+				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
+
 			return ri;
 		}
 

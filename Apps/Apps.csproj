@@ -74,6 +74,7 @@
     <None Include="..\..\A2v10.Data\A2v10.Data.Tests\TestFiles\_data.defs.json">
       <Link>Develop\sales\invoice\_data.defs.json</Link>
     </None>
+    <None Include="Develop\sales\waybill\waybill.xlsx" />
     <None Include="Develop\sql.json" />
     <TypeScriptCompile Include="Develop\document\commondoc.d.ts" />
     <TypeScriptCompile Include="Develop\document\common2.ts" />

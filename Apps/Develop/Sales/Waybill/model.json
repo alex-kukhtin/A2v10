@@ -77,6 +77,16 @@
 				"Schema": "a2demo"
 			}
 		},
+		"attachReportXlsx": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Reports.Actions.AttachXlsxReport;assembly=A2v10.Reports",
+			"async": true,
+			"parameters": {
+				"Report": "sales/waybill/waybill",
+				"Model": "Document",
+				"Schema": "a2demo"
+			}
+		},
 		"saveTime": {
 			"type": "sql",
 			"procedure": "SaveDocumentTime"
