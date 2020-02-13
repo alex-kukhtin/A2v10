@@ -140,6 +140,8 @@ namespace A2v10.Workflow
 			try
 			{
 				InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId);
+				if (inbox == null)
+					throw new WorkflowException("The task is already done by another user");
 				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{inbox.Kind}'"))
 				{
 					result.ProcessId = inbox.ProcessId;

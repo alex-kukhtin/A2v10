@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Runtime.Serialization;
@@ -39,6 +39,8 @@ namespace A2v10.Workflow
 
 		[DataMember]
 		public String ActionBase { get; set; }
+
+		public Int64 Parent { get; set; }
 
 		public IDataModel Model => GetModel();
 
@@ -81,7 +83,8 @@ namespace A2v10.Workflow
 				DataSource = info.DataSource,
 				Schema = info.Schema,
 				ModelName = info.Model,
-				ModelId = info.ModelId
+				ModelId = info.ModelId,
+				Parent = info.Parent
 			};
 			return p;
 		}

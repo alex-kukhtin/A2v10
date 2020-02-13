@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace A2v10.Infrastructure
 		public String Model { get; set; }
 		public Int64 ModelId { get; set; }
 		public String Comment { get; set; }
+		public Int64 Parent { get; set; }
 	}
 
 	public struct ResumeWorkflowInfo

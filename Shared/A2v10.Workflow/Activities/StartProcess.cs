@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Activities;
@@ -38,23 +38,24 @@ namespace A2v10.Workflow
 			var pi = ProcessInfo.Get<StartProcessInfo>(context);
 
 			String bookmark = null;
+			var process = Process.GetProcessFromContext(context);
 			if (waitComplete)
 			{
 				bookmark = Guid.NewGuid().ToString();
 				var wfResult = context.GetExtension<WorkflowResult>();
-				var process = Process.GetProcessFromContext(context);
 				// TODO: WAIT COMPLETE FOR CHILDREN
 				//Int64 pid = process.CreateChildren(dbContext, kind, docId, bookmark, Mark.Get<String>(context));
 			}
 
 			var sfi = new StartWorkflowInfo() {
-				UserId = 0,
+				UserId = process.Owner,
 				Source = pi.Workflow,
 				DataSource = pi.DataSource,
 				Schema = pi.Schema,
 				Model = pi.ModelName,
 				ModelId = pi.ModelId,
-				ActionBase = pi.ActionBase
+				ActionBase = pi.ActionBase,
+				Parent = process.Id
 			};
 
 			var task = AppWorkflow.StartWorkflow(host, dbContext, messaging, sfi);
