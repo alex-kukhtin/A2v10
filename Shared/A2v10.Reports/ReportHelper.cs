@@ -121,7 +121,7 @@ namespace A2v10.Reports
 			{
 				ri.ReportStream = ri.DataModel.Eval<Byte[]>(rep.ReportExpression);
 				if (ri.ReportStream == null)
-					throw new InvalidDataException($"Expression '{rep.ReportName}'  null");
+					throw new InvalidDataException($"Expression '{rep.ReportName}'  is null");
 			}
 			else if (rep.HasPath)
 				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");

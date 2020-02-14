@@ -119,5 +119,16 @@ namespace A2v10.Infrastructure
 			}
 			return sb.ToString();
 		}
+
+		public static String TemplateExpression(this String source)
+		{
+			if (String.IsNullOrEmpty(source))
+				return null;
+			var tx = source.Trim();
+			if (tx.StartsWith("{{") && tx.EndsWith("}}"))
+				return tx.Substring(2, tx.Length - 4).Trim();
+			return null;
+		}
+
 	}
 }

@@ -333,12 +333,7 @@ namespace A2v10.Request
 
 		public String GetTemplateExpression()
 		{
-			if (String.IsNullOrEmpty(template))
-				return null;
-			var tx = template.Trim();
-			if (tx.StartsWith("{{") && tx.EndsWith("}}"))
-				return tx.Substring(2, tx.Length - 4).Trim();
-			return null;
+			return template.TemplateExpression();
 		}
 	}
 
@@ -500,19 +495,7 @@ namespace A2v10.Request
 		[JsonIgnore]
 		public Boolean ReportFromDataModel => ReportName.Contains("{{");
 
-		public String ReportExpression
-		{
-			get
-			{
-				if (String.IsNullOrEmpty(ReportName))
-					return null;
-				var tx = ReportName.Trim();
-				if (tx.StartsWith("{{") && tx.EndsWith("}}"))
-					return tx.Substring(2, tx.Length - 4).Trim();
-				return null;
-			}
-		}
-
+		public String ReportExpression => ReportName.TemplateExpression();
 	}
 
 	public enum RequestFileParseType

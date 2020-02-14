@@ -11,11 +11,13 @@ using Stimulsoft.Report;
 
 namespace A2v10.Reports.Actions
 {
-	public class AttachStiReport : IInvokeTarget
+	public class AttachStiReport : AttachReportBase, IInvokeTarget
 	{
-		private IApplicationHost _host;
 		private IDbContext _dbContext;
 		private ReportHelper _reportHelper;
+
+		protected override String FileExtension => ".mrt";
+
 		public void Inject(IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
@@ -27,30 +29,30 @@ namespace A2v10.Reports.Actions
 		{
 			_reportHelper.SetupLicense();
 			var dm = await _dbContext.LoadModelAsync(String.Empty, $"[{Schema}].[{Model}.Report]", new { UserId, TenantId, Id });
-			String path = _host.ApplicationReader.MakeFullPath(Report, String.Empty);
-			path = Path.ChangeExtension(path, ".mrt");
-			if (!_host.ApplicationReader.FileExists(path))
-				throw new FileNotFoundException(path);
-			var r = StiReportExtensions.CreateReport(_host.ApplicationReader.FileStreamFullPathRO(path), String.Empty);
-			r.AddDataModel(dm);
-			using (var ms = new MemoryStream())
+
+			using (var stream = CreateStream(dm, Report))
 			{
-				r.Render();
-				r.ExportDocument(StiExportFormat.Pdf, ms, StiReportExtensions.GetDefaultPdfSettings());
-				ms.Seek(0, SeekOrigin.Begin);
-				AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
+				var r = StiReportExtensions.CreateReport(stream, String.Empty);
+				r.AddDataModel(dm);
+				using (var ms = new MemoryStream())
 				{
-					UserId = UserId,
-					TenantId = TenantId,
-					Id = Id,
-					Mime = "application/pdf",
-					Stream = ms,
-					Name = r.ReportName
-				};
-				if (String.IsNullOrEmpty(ai.Name))
-					ai.Name = "Attachment";
-				await _dbContext.ExecuteAsync(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
-				return new { ai.Id };
+					r.Render();
+					r.ExportDocument(StiExportFormat.Pdf, ms, StiReportExtensions.GetDefaultPdfSettings());
+					ms.Seek(0, SeekOrigin.Begin);
+					AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
+					{
+						UserId = UserId,
+						TenantId = TenantId,
+						Id = Id,
+						Mime = "application/pdf",
+						Stream = ms,
+						Name = r.ReportName
+					};
+					if (String.IsNullOrEmpty(ai.Name))
+						ai.Name = "Attachment";
+					await _dbContext.ExecuteAsync(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
+					return new { ai.Id };
+				}
 			}
 		}
 	}

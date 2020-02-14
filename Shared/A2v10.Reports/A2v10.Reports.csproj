@@ -57,6 +57,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\AttachReportBase.cs" />
     <Compile Include="Actions\AttachXlsxReport.cs" />
     <Compile Include="Actions\AttachStiReport.cs" />
     <Compile Include="ReportHelper.cs" />
