@@ -2258,7 +2258,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200121-7619*/
+/*20200214-7632*/
 // services/datamodel.js
 
 (function () {
@@ -2527,8 +2527,11 @@ Vue.component('a2-pager', {
 		if (path && path.endsWith(']'))
 			elem.$selected = false;
 
-		if (elem._meta_.$items)
+		if (elem._meta_.$items) {
 			elem.$expanded = false; // tree elem
+			elem.$collapsed = false; // sheet elem
+			elem.$level = 0;
+		}
 
 		elem.$lockEvents = function () {
 			this._lockEvents_ += 1;

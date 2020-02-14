@@ -496,6 +496,23 @@ namespace A2v10.Request
 
 		[JsonIgnore]
 		public Boolean HasPath => type == RequestReportType.stimulsoft;
+
+		[JsonIgnore]
+		public Boolean ReportFromDataModel => ReportName.Contains("{{");
+
+		public String ReportExpression
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(ReportName))
+					return null;
+				var tx = ReportName.Trim();
+				if (tx.StartsWith("{{") && tx.EndsWith("}}"))
+					return tx.Substring(2, tx.Length - 4).Trim();
+				return null;
+			}
+		}
+
 	}
 
 	public enum RequestFileParseType

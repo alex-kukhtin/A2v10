@@ -199,6 +199,10 @@
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
       <Project>{d83666a0-acf5-47e6-94cf-732dddabbea2}</Project>
       <Name>A2v10.Messaging</Name>

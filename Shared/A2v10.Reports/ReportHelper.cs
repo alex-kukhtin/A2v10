@@ -37,10 +37,20 @@ namespace A2v10.Reports
 		public ExpandoObject Variables { get; set; }
 
 		public String ReportPath;
+		public Byte[] ReportStream;
 		public RequestReportType Type;
 		public IList<String> XmlSchemaPathes;
 		public String Encoding;
 		public Boolean Validate;
+
+		public Stream GetStream(IApplicationReader reader)
+		{
+			if (!String.IsNullOrEmpty(ReportPath))
+				return reader.FileStreamFullPathRO(ReportPath);
+			else if (ReportStream != null)
+				return new MemoryStream(ReportStream);
+			throw new InvalidOperationException("Invalid report stream mode");
+		}
 	}
 
 	public class ReportHelper
@@ -107,7 +117,13 @@ namespace A2v10.Reports
 				repName = ri.DataModel.Root.Resolve(repName);
 			ri.Name = repName;
 
-			if (rep.HasPath)
+			if (rep.ReportFromDataModel)
+			{
+				ri.ReportStream = ri.DataModel.Eval<Byte[]>(rep.ReportExpression);
+				if (ri.ReportStream == null)
+					throw new InvalidDataException($"Expression '{rep.ReportName}'  null");
+			}
+			else if (rep.HasPath)
 				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
 
 			return ri;
@@ -118,7 +134,7 @@ namespace A2v10.Reports
 		public StiMvcActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(ri.ReportPath))
+			using (var stream = ri.GetStream(_host.ApplicationReader))
 			{
 				var r = StiReportExtensions.CreateReport(stream, ri.Name);
 				r.AddDataModel(ri.DataModel);
@@ -143,7 +159,7 @@ namespace A2v10.Reports
 		{
 			var rr = new ExportReportResult();
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(ri.ReportPath))
+			using (var stream = ri.GetStream(_host.ApplicationReader))
 			{
 				var r = StiReportExtensions.CreateReport(stream, ri.Name);
 				r.AddDataModel(ri.DataModel);

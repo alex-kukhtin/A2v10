@@ -64,8 +64,8 @@
 	"reports": {
 		"invoice": {
 			"type": "stimulsoft",
-			"report222": "invoice",
-			"report": "{{ReportStream}}",
+			"report": "invoice",
+			"report22": "{{Report.Stream}}",
 			"model": "Document",
 			"name": "@[Invoice] {{Document.No}}"
 		},

@@ -201,6 +201,12 @@ namespace A2v10.Infrastructure
 			return currentContext;
 		}
 
+		// for workflow
+		public static Object EvalObject(this ExpandoObject root, String expression)
+		{
+			return root.Eval<Object>(expression, null, true);
+		}
+
 		public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
 		{
 			if (expression == null)
