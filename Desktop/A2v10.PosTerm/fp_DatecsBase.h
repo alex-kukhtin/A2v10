@@ -12,6 +12,7 @@ public:
 	virtual bool IsOpen() const override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void Close() override;
+	virtual void TraceCommand(const wchar_t* command) override;
 
 protected:
 	void OpenComPort(const wchar_t* Port, DWORD nBaudRate /*= CBR_19200*/);

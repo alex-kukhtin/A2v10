@@ -361,3 +361,9 @@ void CFiscalPrinter_Null::ReportMessage(const wchar_t* msg)
 {
 	::MessageBox(nullptr, msg, nullptr, MB_OK | MB_ICONHAND);
 }
+
+// virtual 
+void CFiscalPrinter_Null::TraceCommand(const wchar_t* command)
+{
+	TraceINFO(L"TESTPRINTER [%s]. %s", _id.c_str(), command);
+}

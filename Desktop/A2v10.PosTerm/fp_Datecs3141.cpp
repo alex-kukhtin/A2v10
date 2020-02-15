@@ -5,6 +5,7 @@
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
+#include "stringtools.h"
 
 #define MAX_COMMAND_LEN 255
 #define MAX_NAME_LEN    75
@@ -282,6 +283,7 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 		SendCommand();
 		// 000;xxxx;NAME;
 		std::string  info((char*)m_data);
+		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 		auto items = _split(info, ';');
 		if (items.size() > 2) {
 			std::string payName = items[2];
@@ -311,6 +313,7 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 		bCardSet = true;
 		bCashSet = true;
 	}
+	// TODO: LOCALIZE MESSAGES
 	if (!bCardSet)
 		throw CFPException(L"Фіскальний реєстратор.\nНе знайдено форму оплати КАРТКА (КАРТОЧКА, КАРТА).\nПерепрограмуйте реєстратор.");
 
@@ -326,6 +329,7 @@ void CFiscalPrinter_Datecs3141::GetTaxRates()
 		CreateCommandV(L"GETTAXRATE", FPCMD_GETTAXRATE, L"000000;%d;", i);
 		SendCommand();
 		std::string info((char*)m_data);
+		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 		auto elems = _split(info, ';');
 		if (elems.size() > 2) 
 		{
@@ -379,10 +383,10 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 		long checkNo = -1;
 		CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;5;"); // last available receipt for copy
 		SendCommand();
+		std::string info((char*)m_data);
+		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 		/*
 		USES_CONVERSION;
-		CString info = A2W((char*)m_data);
-		TraceINFO(L"RCV:%s", info);
 		CString r;
 		if (!AfxExtractSubString(r, info, 1, L';'))
 			return false;
@@ -578,7 +582,7 @@ void CFiscalPrinter_Datecs3141::DisplayRow(int nRow, LPCTSTR szString)
 {
 	/*
 	CString txt(szString ? szString : EMPTYSTR);
-	txt.Replace(L'\t', L' '); // Табуляция не поддерживается
+	txt.Replace(L'\t', L' '); // tab is not supported
 	txt += CString(L' ', 20);
 	if (txt.GetLength() > 20)
 		txt = txt.Left(20); // не более 20 символов
@@ -702,10 +706,9 @@ bool CFiscalPrinter_Datecs3141::CheckPaymentSum(int get)
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s3;1;", EMPTY_PARAM); // источник 3, значение  1 = сумма по чеку
 	CreateCommand(L"GETFISCTRANS", FPCMD_GETFISCTRANS, buff);
 	SendCommand();
+	std::string info((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	/*
-	CString info;
-	info = (LPCSTR)m_data; // ANSI!
-	TraceINFO(L"RCV:%s", info);
 	// 0000;sum
 	// sum - сумма по чеку (если она БОЛЬШЕ get, то ЗАПРЕТ оплаты и анулирование чека
 	CString r;
@@ -730,6 +733,7 @@ void CFiscalPrinter_Datecs3141::PrintFiscalText(const wchar_t* szText)
 	std::wstring text(szText);
 	if (text.empty())
 		return; // empty string, nothing to print
+
 	std::replace(text.begin(), text.end(), L';', L','); // semicolon is divider!
 	if (text.length() > MAX_NAME_LEN)
 		text.resize(MAX_NAME_LEN);
@@ -833,7 +837,7 @@ bool CFiscalPrinter_Datecs3141::GetDaySum(long src, long ix, CY& value1, CY& val
 	SendCommand();
 	USES_CONVERSION;
 	CString info = A2W((char*)m_data);
-	TraceINFO(L"RCV:%s", info);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	CString r1;
 	CString r2;
 	if (!AfxExtractSubString(r1, info, 1, L';'))
@@ -892,6 +896,9 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s0;", EMPTY_PARAM);
 	CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, buff);
 	SendCommand();
+	/*00000;<RECEIPT_NO>;*/
+	std::string info((char*) m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	/*
 	CString res = A2W((char*)m_data);
 	TraceINFO(L"RCV:%s", res);
@@ -1021,6 +1028,7 @@ void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, const wchar_t* name,
 	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%ld;", EMPTY_PARAM, code);
 	SendCommand();
 	std::string found((char*) m_data); // char!
+	TraceINFO(L"\t\tRCV:%s", A2W(found.c_str()).c_str());
 	if (found.size() > 0 && found.find("FFFFFF") == -1)
 		return; // already programmed
 
@@ -1049,12 +1057,14 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;0;");
 	SendCommand();
 
+	// ????;Z_NO;
+	std::string info((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
+
 	if (IS_EMULATION()) {
 		return 1122;
 	}
 
-	std::string info((char*) m_data);
-	// ????;Z_NO;
 	auto sinfo = _split(info, ';');
 	if (sinfo.size() < 2)
 		throw CFPException(L"DAYCOUNTERS data error");
@@ -1066,23 +1076,6 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 		// ;
 
 	}
-	/*
-	USES_CONVERSION;
-	CString info = A2W((char*)m_data);
-	TraceINFO(L"RCV:%s", info);
-	CString r;
-	if (!AfxExtractSubString(r, info, 1, L';'))
-		return false;
-	zNo = _ttol(r);
-	if (zNo == 0)
-	{
-		// ПРИНТЕР НЕ ФИСКАЛИЗИРОВАН, вернем значение из БД
-		__int64 no = ZREPORT_INFO::GetTestNumber(termId);
-		if (no == 0)
-			return false;
-		zNo = (LONG)no;
-	}
-	*/
 	return z_no;
 }
 
@@ -1091,6 +1084,7 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowSt
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
 	std::string info((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	// XXXX;RECEIPT_NO;
 	auto arr = _split(info, ';');
 	long rcpNo = 0;

@@ -49,6 +49,7 @@ public:
 	virtual bool ReportByArticles() override;
 	virtual bool ReportRems() override;
 	virtual bool ReportModemState() override;
+	virtual void TraceCommand(const wchar_t* command) override;
 protected:
 	long GetPrinterLastZReportNo();
 	void ReportMessage(const wchar_t* msg);

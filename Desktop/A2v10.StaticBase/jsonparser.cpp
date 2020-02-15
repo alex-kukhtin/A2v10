@@ -1,3 +1,4 @@
+// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "types.h"

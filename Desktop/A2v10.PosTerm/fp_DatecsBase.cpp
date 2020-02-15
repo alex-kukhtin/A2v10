@@ -4,26 +4,11 @@
 #include "posterm.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
+#include "stringtools.h"
 
 #define MAX_COMMAND_LEN 255
 
-#define EMULATION_MODE true
-
-void W2A(const wchar_t* szWideChars, char* szMbChars, int cbMultiByte)
-{
-	UINT acp = CP_THREAD_ACP;
-	*szMbChars = '\0';
-	int ret = WideCharToMultiByte(acp, 0, szWideChars, -1, szMbChars, cbMultiByte, nullptr, nullptr);
-	_ASSERT(ret != 0);
-}
-
-void A2W(const char* szMultiByte, wchar_t* szWideChars, int cbWide)
-{
-	UINT acp = CP_THREAD_ACP;
-	*szWideChars = L'\0';
-	int ret = MultiByteToWideChar(acp, 0, szMultiByte, -1, szWideChars, cbWide);
-	_ASSERT(ret != 0);
-}
+#define EMULATION_MODE false
 
 #define SYN 0x16
 
@@ -79,11 +64,11 @@ void CFiscalPrinter_DatecsBase::Close()
 
 void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate /*= CBR_19200*/)
 {
+	TraceINFO(L"DATECS [%s]. Open({Port:'%s', Baud:%ld})", _id.c_str(), Port, (long)nBaudRate);
 	if (IS_EMULATION()) {
 		m_hCom = (HANDLE)1111;
 		return;
 	}
-	TraceINFO(L"Open\t{Port:'%s', Baud:%ld}", Port, (long)nBaudRate);
 	DWORD baudRate = nBaudRate;
 	if (baudRate == 0)
 		baudRate = CBR_19200;
@@ -177,10 +162,9 @@ void CFiscalPrinter_DatecsBase::CreateCommandV(const wchar_t* name, BYTE cmd, co
 
 void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd, const wchar_t* strCmd)
 {
-	TraceINFO(L"  %s\tSND:0x%X %s", name, (int)cmd, strCmd);
-	char buffer[MAX_COMMAND_LEN];
-	W2A(strCmd, buffer, MAX_COMMAND_LEN - 1);
-	CreateCommandB(cmd, (BYTE*) (const char*) buffer, (BYTE) strnlen(buffer, MAX_COMMAND_LEN-1));
+	TraceINFO(L"  %s\tSND:0x%X %s", name, (int) cmd, strCmd);
+	std::string cmdA = W2A(strCmd);
+	CreateCommandB(cmd, (BYTE*) cmdA.c_str(), (BYTE) cmdA.size());
 }
 
 void CFiscalPrinter_DatecsBase::CreateCommandB(BYTE cmd, BYTE* data, BYTE len)
@@ -266,7 +250,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 	if (IsDebugMode()) {
 		if (cnt == 0)
 		{
-			// не было получено никаких результатов, попробуем переотправить
+			// there are no results, try to resend
 			TraceINFO(L"DATECS resend command");
 			SendCommand();
 			return;
@@ -343,4 +327,9 @@ bool CFiscalPrinter_DatecsBase::ParseRcv()
 }
 
 
+// virtual 
+void CFiscalPrinter_DatecsBase::TraceCommand(const wchar_t* command)
+{
+	TraceINFO(L"DATECS [%s]. %s", _id.c_str(), command);
+}
 

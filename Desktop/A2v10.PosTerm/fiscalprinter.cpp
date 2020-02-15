@@ -160,7 +160,7 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 
 void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 {
-	_impl->TraceINFO(L"PRINT_RECEIPT");
+	_impl->TraceCommand(L"PrintReceipt()");
 	//_impl->CancelReceipt(); // discard previous, if needed
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {

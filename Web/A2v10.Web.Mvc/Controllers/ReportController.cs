@@ -335,7 +335,6 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-
 		public async Task<ActionResult> GetReport()
 		{
 			try
@@ -356,7 +355,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ri == null)
 					throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
-				using (var stream = _baseController.Host.ApplicationReader.FileStreamFullPathRO(path))
+				using (var stream = ri.GetStream(_baseController.Host.ApplicationReader))
 				{
 					var r = StiReportExtensions.CreateReport(stream, ri.Name);
 					r.AddDataModel(ri.DataModel);

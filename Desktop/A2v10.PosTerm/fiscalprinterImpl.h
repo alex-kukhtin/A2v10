@@ -114,6 +114,7 @@ public:
 	virtual void DisplayClear() = 0;
 	virtual void DisplayRow(int rowNo, const wchar_t* szString) = 0;
 	virtual bool IsEndOfTape();
+	virtual void TraceCommand(const wchar_t* command) = 0;
 	virtual const std::wstring& GetError() const;
 
 	void TraceINFO(const wchar_t* info, ...);
