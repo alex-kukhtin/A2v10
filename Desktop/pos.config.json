@@ -3,8 +3,8 @@
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model": "TESTPRINTER",
-			"model22": "DATECS-T260",
+			"model22": "TESTPRINTER",
+			"model": "DATECS-T260",
 			"port": "COM3",
 			"baud": 19200
 		}

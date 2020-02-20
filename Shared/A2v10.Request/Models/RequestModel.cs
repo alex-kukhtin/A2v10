@@ -493,7 +493,7 @@ namespace A2v10.Request
 		public Boolean HasPath => type == RequestReportType.stimulsoft;
 
 		[JsonIgnore]
-		public Boolean ReportFromDataModel => ReportName.Contains("{{");
+		public Boolean ReportFromDataModel => ReportName != null && ReportName.Contains("{{");
 
 		public String ReportExpression => ReportName.TemplateExpression();
 	}
