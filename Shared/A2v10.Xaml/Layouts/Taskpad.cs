@@ -2,9 +2,11 @@
 
 using A2v10.Infrastructure;
 using System;
+using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+	[ContentProperty("Children")]
 	public class Taskpad : Container
 	{
 
