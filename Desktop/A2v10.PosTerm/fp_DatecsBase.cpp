@@ -8,7 +8,7 @@
 
 #define MAX_COMMAND_LEN 255
 
-#define EMULATION_MODE true
+#define EMULATION_MODE false
 
 #define SYN 0x16
 
@@ -48,7 +48,9 @@ bool CFiscalPrinter_DatecsBase::Open(const wchar_t* Port, DWORD nBaudRate)
 			return true; // already open
 		OpenComPort(Port, nBaudRate);
 	}
-	catch (CFPException ex) {
+	catch (CFPException ex) 
+	{
+		TraceERROR(L"  \tExecption({Message:'%s', Error:0x%08lx})", m_strError.c_str(), (long) ::GetLastError());
 		m_strError = ex.GetError();
 		return false;
 	}
@@ -221,9 +223,11 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 	if (!WriteFile(m_hCom, m_sndBuffer, m_sndBytes, &dwSent, NULL)) {
 		CloseComPort();
 		m_dwError = ::GetLastError();
+		TraceERROR(L"Write COM error. 0x%08lx", (long) m_dwError);
 		ThrowCommonError();
 	}
 	if (m_sndBytes != dwSent) {
+		TraceERROR(L"Invalid bytes sent. size=%d, sent:%d", (int) m_sndBytes, (int) dwSent);
 		ThrowCommonError();
 	}
 	// receive response
@@ -236,11 +240,14 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 		if (buff != SYN)
 			m_rcvBuffer[m_rcvBytes++] = buff;
 	}
+
+	TraceERROR(L"  \tReceive bytes. count=%ld, bytes=%s", (int)m_rcvBytes, (const wchar_t*) ReceiveBuffer().c_str());
+
 	if (m_rcvBytes == 0) {
 		// repeat again
 		::Sleep(100);
 		cnt++;
-		TraceINFO(L"DATECS timeout");
+		TraceINFO(L"  \tTimeout");
 		while (ReadFile(m_hCom, &buff, 1, &dwRead, NULL) && (dwRead == 1)) {
 			if (buff != SYN)
 				m_rcvBuffer[m_rcvBytes++] = buff;
@@ -251,7 +258,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 		if (cnt == 0)
 		{
 			// there are no results, try to resend
-			TraceINFO(L"DATECS resend command");
+			TraceINFO(L"  \tResend command");
 			SendCommand();
 			return;
 		}
@@ -259,6 +266,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 
 
 	if (!ParseRcv()) {
+		TraceERROR(L"  \tCould not parse received bytes");
 		ThrowCommonError();
 	}
 
@@ -306,6 +314,7 @@ bool CFiscalPrinter_DatecsBase::ParseRcv()
 	m_bEndOfTape = false;
 	if (m_rcvBytes == 0)
 		return false;
+	TraceINFO(L"  \tRCV:%s", ReceiveBuffer().c_str());
 	if (m_rcvBuffer[0] != 0x01)
 		return false;
 	int len = (int)m_rcvBuffer[1] - 0x20;
@@ -333,3 +342,15 @@ void CFiscalPrinter_DatecsBase::TraceCommand(const wchar_t* command)
 	TraceINFO(L"DATECS [%s]. %s", _id.c_str(), command);
 }
 
+
+std::wstring CFiscalPrinter_DatecsBase::ReceiveBuffer()
+{
+	std::wstring result = L"0x";
+	wchar_t buff[255];
+	for (int i = 0; i < m_rcvBytes; i++) {
+		buff[0] = '\0';
+		_itow_s(m_rcvBuffer[i], buff, _countof(buff), 16);
+		result.append(buff);
+	}
+	return result;
+}

@@ -10165,7 +10165,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
-// 20200106-7607
+// 20200224-7635
 // components/a2-span-sum.js*/
 
 (function () {
@@ -10180,11 +10180,11 @@ Vue.component('a2-panel', {
 				domProps: { innerText: this.content }
 			}));
 			let dcls = 'span-sum ';
-			if (this.dir === 1) {/* in */
+			if (this.dir > 0) {/* in */
 				children.push(h('i', { 'class': 'ico ico-arrow-up-green' }));
 				dcls += 'in';
 			}
-			else if (this.dir === -1) { /* out */
+			else if (this.dir < 0) { /* out */
 				children.push(h('i', { 'class': 'ico ico-arrow-down-red' }));
 				dcls += 'out';
 			}

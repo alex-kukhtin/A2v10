@@ -46,6 +46,7 @@ protected:
 	void IncSeq();
 	void IncSeqAndBuffer();
 	void CalcSendCRC();
+	std::wstring ReceiveBuffer();
 
 	void ThrowLastError();
 	void ThrowCommonError();
