@@ -3,154 +3,154 @@
 @chat-gap: .5rem;
 
 .a2-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    overflow: auto;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	overflow: auto;
 
-    .a2-list-item {
-        cursor: pointer;
-        padding: 8px 8px 8px 6px;
-        border-left: 4px solid transparent;
+	.a2-list-item {
+		cursor: pointer;
+		padding: 8px 8px 8px 6px;
+		border-left: 4px solid transparent;
 
-        &:hover {
-            background-color: @hover-bg-color !important;
+		&:hover {
+			background-color: @hover-bg-color !important;
 
-            .commandbar.visible-hover {
-                visibility: visible;
-            }
-        }
+			.commandbar.visible-hover {
+				visibility: visible;
+			}
+		}
 
-        &.active {
-            background-color: @active-bg-color !important;
-        }
+		&.active {
+			background-color: @active-bg-color !important;
+		}
 
-        &:focus {
-            outline-style: none;
-        }
+		&:focus {
+			outline-style: none;
+		}
 
-        &.warning, &.yellow, &.light-yellow {
-            border-left-color: @cmn-warning-brd-color;
-            background-color: @light-yellow-bg-color;
-        }
+		&.warning, &.yellow, &.light-yellow {
+			border-left-color: @cmn-warning-brd-color;
+			background-color: @light-yellow-bg-color;
+		}
 
-        &.danger, &.error, &.red {
-            border-left-color: @cmn-danger-brd-color;
-            background-color: #fff5fa;
-        }
+		&.danger, &.error, &.red {
+			border-left-color: @cmn-danger-brd-color;
+			background-color: #fff5fa;
+		}
 
-        &.success, &.green {
-            background-color: #f5fff5;
-            border-left-color: @cmn-success-brd-color;
-        }
+		&.success, &.green {
+			background-color: #f5fff5;
+			border-left-color: @cmn-success-brd-color;
+		}
 
-        &.info, &.cyan {
-            border-left-color: @cmn-info-brd-color;
-            background-color: #f0ffff;
-        }
+		&.info, &.cyan {
+			border-left-color: @cmn-info-brd-color;
+			background-color: #f0ffff;
+		}
 
-        &.no-background {
-            background-color: transparent;
-        }
+		&.no-background {
+			background-color: transparent;
+		}
 
-        &.no-marker {
-            border-left-color: transparent;
-        }
+		&.no-marker {
+			border-left-color: transparent;
+		}
 
-        &.group {
-            background-color: #f9f9f9;
-            color: @label-color;
-            border-bottom: 1px solid @light-gray-color;
-            border-top: 1px solid @light-gray-color;
-            cursor: default;
+		&.group {
+			background-color: #f9f9f9;
+			color: @label-color;
+			border-bottom: 1px solid @light-gray-color;
+			border-top: 1px solid @light-gray-color;
+			cursor: default;
 
-            &:hover {
-                background-color: #f9f9f9 !important;
-            }
-        }
-    }
+			&:hover {
+				background-color: #f9f9f9 !important;
+			}
+		}
+	}
 
-    &.striped {
-        .a2-list-item:nth-of-type(even) {
-            background-color: @alter-bg-color;
-        }
-    }
+	&.striped {
+		.a2-list-item:nth-of-type(even) {
+			background-color: @alter-bg-color;
+		}
+	}
 
-    &.border, &.border-all {
-        border: 1px solid @light-gray-color;
-    }
+	&.border, &.border-all {
+		border: 1px solid @light-gray-color;
+	}
 
-    &.border-top {
-        border-top: 1px solid @light-gray-color;
-    }
+	&.border-top {
+		border-top: 1px solid @light-gray-color;
+	}
 
-    &.border-bottom {
-        border-bottom: 1px solid @light-gray-color;
-    }
+	&.border-bottom {
+		border-bottom: 1px solid @light-gray-color;
+	}
 
-    &.border-top-bottom {
-        border-top: 1px solid @light-gray-color;
-        border-bottom: 1px solid @light-gray-color;
-    }
+	&.border-top-bottom {
+		border-top: 1px solid @light-gray-color;
+		border-bottom: 1px solid @light-gray-color;
+	}
 
-    &.two-columns-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 1rem;
-        padding: 1rem 1rem 0 1rem;
-    }
+	&.two-columns-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 1rem;
+		padding: 1rem 1rem 0 1rem;
+	}
 
-    &.three-columns-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 1rem;
-        padding: 1rem 1rem 0 1rem;
-    }
+	&.three-columns-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-gap: 1rem;
+		padding: 1rem 1rem 0 1rem;
+	}
 
-    &.underlined {
-        .a2-list-item {
-            border-bottom: 1px solid #ddd;
-        }
+	&.underlined {
+		.a2-list-item {
+			border-bottom: 1px solid #ddd;
+		}
 
-        .a2-list-item.group:not(:first-child) {
-            border-top-style: none;
-        }
-    }
+		.a2-list-item.group:not(:first-child) {
+			border-top-style: none;
+		}
+	}
 
-    &.chat {
-        user-select: text;
-        padding: 0 0 0 6px;
+	&.chat {
+		user-select: text;
+		padding: 0 0 0 6px;
 
-        .a2-list-item {
-            padding: 0;
-            background-color: transparent;
-            border: none;
-            cursor: default;
+		.a2-list-item {
+			padding: 0;
+			background-color: transparent;
+			border: none;
+			cursor: default;
 
-            &:hover, &.active {
-                background-color: transparent !important;
-            }
-        }
-    }
+			&:hover, &.active {
+				background-color: transparent !important;
+			}
+		}
+	}
 
-    &.flush.underlined {
-        .a2-list-item:last-child {
-            border-bottom-style: none;
-        }
-    }
+	&.flush.underlined {
+		.a2-list-item:last-child {
+			border-bottom-style: none;
+		}
+	}
 
-    &.compact {
-        font-size: @font-size-small;
+	&.compact {
+		font-size: @font-size-small;
 
-        .a2-list-item {
-            padding: 6px 6px 6px 4px;
-        }
-    }
+		.a2-list-item {
+			padding: 6px 6px 6px 4px;
+		}
+	}
 
-    .list-empty {
-        text-align: center;
-        padding: 8px;
-    }
+	.list-empty {
+		text-align: center;
+		padding: 8px;
+	}
 }
 
 .generic-list-item {
@@ -206,7 +206,7 @@
 	.list-item-commands {
 		grid-row: 1 / span 2;
 		grid-column: 3;
-		align-self:flex-start;
+		align-self: flex-start;
 	}
 }
 
