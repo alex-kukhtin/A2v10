@@ -19,6 +19,9 @@
     <Filter Include="Source Files\fiscalprinters">
       <UniqueIdentifier>{c154f98f-908b-4fcc-9461-c6720c709489}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\acqterminals">
+      <UniqueIdentifier>{0c407ead-d8da-4be3-8cc1-beaeee26363d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,6 +57,12 @@
     <ClInclude Include="stringtools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="acqterminal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="acqterminalimpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -81,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stringtools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="acqterminal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

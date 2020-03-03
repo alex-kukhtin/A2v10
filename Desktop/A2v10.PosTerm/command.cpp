@@ -29,7 +29,7 @@ pos_result_t PosCommand::ExecuteCommand(std::wstring& result)
 	result.clear();
 	FiscalPrinter* pPrinter = FiscalPrinter::FindPrinter(_id.c_str());
 	if (pPrinter == nullptr)
-		return pos_result_t::_printer_not_found;
+		return pos_result_t::_device_not_found;
 	return ExecuteCommandInt(pPrinter, result);
 }
 

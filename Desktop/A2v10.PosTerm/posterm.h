@@ -7,8 +7,8 @@ enum pos_result_t {
 	_invalid_model,
 	_could_not_connect,
 	_already_connected,
-	_printer_not_found,
-	_printer_error
+	_device_not_found,
+	_device_error
 };
 
 

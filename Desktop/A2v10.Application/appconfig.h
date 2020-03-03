@@ -19,21 +19,37 @@ protected:
 	END_JSON_PROPS()
 };
 
+class CAppConfigAcqTerminal : public JsonTarget
+{
+public:
+	std::wstring m_model;
+	std::wstring m_port;
+protected:
+	BEGIN_JSON_PROPS(2)
+		STRING_PROP(model, m_model)
+		STRING_PROP(port, m_port)
+	END_JSON_PROPS()
+};
+
 class CAppConfig : public JsonTarget
 {
 public:
 	std::wstring m_connectionString;
 	std::wstring m_startUrl;
 	JsonTargetTypedArray<CAppConfigFiscalPrinter> m_fiscalPrinters;
+	JsonTargetTypedArray<CAppConfigAcqTerminal> m_acqTerminals;
 
 	bool HasFiscalPrinters() const { return m_fiscalPrinters.size() > 0; }
+	bool HasETerminals() const { return m_acqTerminals.size() > 0; }
 
 	bool ConnectToPrinter();
 	void ShutDown();
+
 protected:
-	BEGIN_JSON_PROPS(3)
+	BEGIN_JSON_PROPS(4)
 		STRING_PROP(connectionString, m_connectionString)
 		STRING_PROP(startUrl, m_startUrl)
 		ARRAY_PROP(fiscalPrinters, m_fiscalPrinters)
+		ARRAY_PROP(acquiringTerminals, m_acqTerminals)
 	END_JSON_PROPS()
 };

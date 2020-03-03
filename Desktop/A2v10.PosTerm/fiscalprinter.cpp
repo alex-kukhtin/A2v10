@@ -11,6 +11,8 @@
 
 #include "commanddata.h"
 
+#include "acqterminalimpl.h"
+
 const size_t PRINTER_NAME_LEN = 64;
 const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
 const wchar_t* DATECS_KRYPTON = L"DATECS-Krypton";

@@ -53,10 +53,10 @@ CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
 	case _invalid_json:
 		break;
 	case _could_not_connect:
-		msg = L"{\"message\":\"Printer not connected\"}";
+		msg = L"{\"message\":\"Device not connected\"}";
 		break;
 	case _already_connected:
-		msg = L"{\"message\":\"Printer aready connected\"}";
+		msg = L"{\"message\":\"Device aready connected\"}";
 		break;
 	default:
 		break;

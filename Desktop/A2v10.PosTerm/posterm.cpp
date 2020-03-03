@@ -5,6 +5,7 @@
 #include "command.h"
 #include "fiscalprinter.h"
 #include "fiscalprinterimpl.h"
+#include "acqterminal.h"
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
@@ -35,7 +36,7 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 	}
 	catch (CFPException ex) {
 		result.assign(ex.GetError());
-		return pos_result_t::_printer_error;
+		return pos_result_t::_device_error;
 	}
 	catch (...) {
 		result.assign(L"Unknown exception");
@@ -47,6 +48,7 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 void PosShutDown()
 {
 	FiscalPrinter::ShutDown();
+	AcqTerminal::ShutDown();
 }
 
 const wchar_t* PosErrorMessage(pos_result_t res)
@@ -65,8 +67,8 @@ const wchar_t* PosErrorMessage(pos_result_t res)
 		return L"could not connect";
 	case _already_connected:
 		return L"already connected";
-	case _printer_not_found:
-		return L"printer not found";
+	case _device_not_found:
+		return L"device not found";
 	}
 	return L"unknown error";
 }
