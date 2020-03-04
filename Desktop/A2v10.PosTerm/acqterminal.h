@@ -19,7 +19,7 @@ class AcqTerminal
 
 public:
 	static AcqTerminal* FindTerminal(const wchar_t* id);
-	static eterm_result_t Connect(const wchar_t* model, const wchar_t* port, int baud);
+	static eterm_result_t Connect(const wchar_t* model, const wchar_t* port);
 	static void ShutDown();
 
 	bool Create(const wchar_t* model);

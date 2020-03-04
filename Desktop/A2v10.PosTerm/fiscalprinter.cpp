@@ -11,12 +11,11 @@
 
 #include "commanddata.h"
 
-#include "acqterminalimpl.h"
-
 const size_t PRINTER_NAME_LEN = 64;
 const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
 const wchar_t* DATECS_KRYPTON = L"DATECS-Krypton";
 const wchar_t* FP_DATECST260  = L"DATECS-T260";
+
 // static 
 std::vector<std::unique_ptr<FiscalPrinter> > FiscalPrinter::_printers;
 

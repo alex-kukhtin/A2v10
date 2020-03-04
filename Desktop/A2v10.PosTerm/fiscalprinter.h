@@ -3,13 +3,11 @@
 class FiscalPrinterImpl;
 class PosPrintReceiptData;
 class PosReceiptItemData;
-class AcqTerminalImpl;
 
 class FiscalPrinter
 {
 	std::wstring _id;
 	std::unique_ptr<FiscalPrinterImpl> _impl;
-	std::unique_ptr< AcqTerminalImpl> _etermImpl;
 	static std::vector<std::unique_ptr<FiscalPrinter> > _printers;
 
 public:

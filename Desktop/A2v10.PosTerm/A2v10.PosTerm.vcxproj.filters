@@ -22,6 +22,9 @@
     <Filter Include="Source Files\acqterminals">
       <UniqueIdentifier>{0c407ead-d8da-4be3-8cc1-beaeee26363d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\acqterminals">
+      <UniqueIdentifier>{addbc7e0-541c-4997-8dbf-f20040413e64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -63,6 +66,9 @@
     <ClInclude Include="acqterminalimpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="acqt_Null.h">
+      <Filter>Header Files\acqterminals</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -93,6 +99,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="acqterminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="acqt_Null.cpp">
+      <Filter>Source Files\acqterminals</Filter>
+    </ClCompile>
+    <ClCompile Include="acqterminalimpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

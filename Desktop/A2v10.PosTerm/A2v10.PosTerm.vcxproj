@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="acqt_Null.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="commanddata.h" />
     <ClInclude Include="acqterminal.h" />
@@ -176,6 +177,8 @@
     <ClInclude Include="stringtools.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="acqterminalimpl.cpp" />
+    <ClCompile Include="acqt_Null.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="acqterminal.cpp" />
     <ClCompile Include="fiscalprinter.cpp" />
