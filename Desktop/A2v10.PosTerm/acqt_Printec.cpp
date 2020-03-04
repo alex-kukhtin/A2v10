@@ -7,9 +7,13 @@
 #include "acqt_Printec.h"
 #include "stringtools.h"
 
+/* dynamic */
 #include "Vendor/Printec_1_23/posapi.h"
-
 #pragma comment(lib,"../A2v10.PosTerm/Vendor/Printec_1_23/posapi.lib")
+
+/* static */
+//#include "Vendor/Printec_1_23/pos.h"
+//#pragma comment(lib,"../A2v10.PosTerm/Vendor/Printec_1_23/pos.lib")
 
 const char* CURRENCY_CODE = "980";
 const int TIMEOUT = 30000; // ms
@@ -23,17 +27,19 @@ enum AcqResult {
 
 class AcqTerminal_PrintecImpl
 {
-public:
 	std::string _port;
 	std::string _log;
-	AcqResult payment(long amount);
 	AcqResult _result;
 	std::wstring _errorMessage;
-
 	IAcqTerminalDriver& _driver;
+
+public:
 	AcqTerminal_PrintecImpl(IAcqTerminalDriver& driver, const char* port, const char* log)
 		: _driver(driver), _port(port), _log(log), _result(AcqResult::EQ_ERROR) {}
 	virtual ~AcqTerminal_PrintecImpl() {}
+
+	AcqResult payment(long amount);
+	const wchar_t* errorMessage() { return _errorMessage.c_str(); }
 private:
 	AcqResult read_response(POS_HANDLE handle);
 	void parse_response(POS_HANDLE handle, int response);
@@ -45,14 +51,19 @@ AcqResult AcqTerminal_PrintecImpl::payment(long amount)
 {
 	POS_HANDLE handle;
 	bool rc = pos_open(&handle, _port.c_str(), _log.c_str());
+	if (check_error(rc, L"port not open"))
+		return AcqResult::EQ_ERROR;
 
 	rc = pos_set(handle, POS_AMOUNT, std::to_string(amount).c_str());
-
 	if (check_error(rc, L"set amount failed"))
 		return AcqResult::EQ_ERROR;
 
 	rc = pos_set(handle, POS_CURRENCY, CURRENCY_CODE);
 	if (check_error(rc, L"set currency failed"))
+		return AcqResult::EQ_ERROR;
+
+	rc = pos_send(handle, ACTION_PAYMENT);
+	if (check_error(rc, L"send failed"))
 		return AcqResult::EQ_ERROR;
 
 	return read_response(handle);
@@ -112,9 +123,9 @@ void AcqTerminal_PrintecImpl::parse_response(POS_HANDLE handle, int response)
 
 	if (pos_get_first(handle, par, sizeof(par), val, len + 1))
 	{
-		std::wstring wpar = A2W(par);
-		std::wstring wval = A2W(val);
 		do {
+			std::wstring wpar = A2W(par);
+			std::wstring wval = A2W(val);
 			if (ident)
 				_driver.Identifier(wpar.c_str(), wval.c_str());
 			else if (msg)
@@ -158,8 +169,11 @@ bool AcqTerminal_Printec::Payment(long amount)
 	TraceINFO(L"PRINTEC [%s]. Payment({amount:'%ld'})", _id.c_str(), amount);
 	AcqResult rc = _impl->payment(amount);
 	addResult(_response, rc);
+	if (rc == AcqResult::EQ_ERROR)
+		_response.Add(L"error_message", _impl->errorMessage());
 	TraceINFO(L"\t Response:(%s)", _response.ToString().c_str());
 	return true;
+
 }
 
 

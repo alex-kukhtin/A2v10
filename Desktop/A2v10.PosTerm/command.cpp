@@ -134,7 +134,7 @@ void PosCommand::AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::
 	//TODO: acqTerm id from printer
 	PosAcquirePaymentData* pacqd = dynamic_cast<PosAcquirePaymentData*>(data);
 	auto pTerminal = AcqTerminal::FindTerminal(L"");
-	bool rc = pTerminal->Payment(pacqd->_amount);
+	pTerminal->Payment(pacqd->_amount);
 	result.assign(pTerminal->Response().c_str());
 }
 

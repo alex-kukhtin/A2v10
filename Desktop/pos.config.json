@@ -5,15 +5,15 @@
 		{
 			"model": "TESTPRINTER",
 			"model22": "DATECS-T260",
-			"port": "COM3",
+			"port": "COM5",
 			"baud": 19200
 		}
 	],
 	"acquiringTerminals": [
 		{
 			"id": "main",
-			"model": "TESTACQUIRING",
-			"port": "COM9",
+			"model": "PRINTEC-3.1",
+			"port": "COM5",
 			"log": "d:/temp/log.txt"
 		}
 	]
