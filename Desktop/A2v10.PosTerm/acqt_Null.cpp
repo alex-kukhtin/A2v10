@@ -9,9 +9,10 @@
 
 
 // virtual 
-void AcqTerminal_Null::Open(const wchar_t* port, const wchar_t* log)
+bool AcqTerminal_Null::Open(const wchar_t* port, const wchar_t* log)
 {
 	TraceINFO(L"TESTACQUIRING [%s]. Open({port:'%s', log:'%s'})", _id.c_str(), port, log);
+	return true;
 }
 
 // virtual 

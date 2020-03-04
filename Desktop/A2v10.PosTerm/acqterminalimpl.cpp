@@ -12,10 +12,6 @@ void AcqTerminalImpl::Close()
 
 }
 
-// virtual 
-void AcqTerminalImpl::Open(const wchar_t* port, const wchar_t* log)
-{
-}
 
 // virtual 
 void AcqTerminalImpl::Init()

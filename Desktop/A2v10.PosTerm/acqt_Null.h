@@ -6,6 +6,6 @@
 class AcqTerminal_Null : public AcqTerminalImpl
 {
 public:
-	virtual void Open(const wchar_t* port, const wchar_t* log) override;
+	virtual bool Open(const wchar_t* port, const wchar_t* log) override;
 	virtual bool Payment(long amount) override;
 };

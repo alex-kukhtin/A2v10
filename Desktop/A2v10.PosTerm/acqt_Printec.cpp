@@ -38,6 +38,7 @@ public:
 		: _driver(driver), _port(port), _log(log), _result(AcqResult::EQ_ERROR) {}
 	virtual ~AcqTerminal_PrintecImpl() {}
 
+	bool check_connection();
 	AcqResult payment(long amount);
 	const wchar_t* errorMessage() { return _errorMessage.c_str(); }
 private:
@@ -46,7 +47,16 @@ private:
 	bool check_error(bool code, const wchar_t* error);
 };
 
-// virtual 
+bool AcqTerminal_PrintecImpl::check_connection()
+{
+	POS_HANDLE handle;
+	bool rc = pos_open(&handle, _port.c_str(), _log.c_str());
+	if (!rc)
+		return false;
+	pos_close(&handle);
+	return true;
+}
+
 AcqResult AcqTerminal_PrintecImpl::payment(long amount)
 {
 	POS_HANDLE handle;
@@ -140,10 +150,13 @@ void AcqTerminal_PrintecImpl::parse_response(POS_HANDLE handle, int response)
 
 
 // virtual 
-void AcqTerminal_Printec::Open(const wchar_t* port, const wchar_t* log)
+bool AcqTerminal_Printec::Open(const wchar_t* port, const wchar_t* log)
 {
 	TraceINFO(L"PRINTEC [%s]. Open({port:'%s', log:'%s'})", _id.c_str(), port, log);
 	_impl.reset(new AcqTerminal_PrintecImpl(*this, W2A(port).c_str(), W2A(log).c_str()));
+	if (!_impl->check_connection())
+		return false;
+	return true;
 }
 
 static void addResult(JsonObject& resp, AcqResult rc)
@@ -170,7 +183,7 @@ bool AcqTerminal_Printec::Payment(long amount)
 	AcqResult rc = _impl->payment(amount);
 	addResult(_response, rc);
 	if (rc == AcqResult::EQ_ERROR)
-		_response.Add(L"error_message", _impl->errorMessage());
+		_response.Add(L"status", _impl->errorMessage());
 	TraceINFO(L"\t Response:(%s)", _response.ToString().c_str());
 	return true;
 

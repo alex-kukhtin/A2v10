@@ -23,7 +23,7 @@ class AcqTerminal_Printec : public AcqTerminalImpl, public IAcqTerminalDriver
 	std::unique_ptr<AcqTerminal_PrintecImpl, AcqPrintecImplDeleter> _impl;
 
 public:
-	virtual void Open(const wchar_t* port, const wchar_t* log) override;
+	virtual bool Open(const wchar_t* port, const wchar_t* log) override;
 	virtual bool Payment(long amount) override;
 
 public:

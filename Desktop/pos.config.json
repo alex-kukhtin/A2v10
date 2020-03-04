@@ -13,7 +13,7 @@
 		{
 			"id": "main",
 			"model": "PRINTEC-3.1",
-			"port": "COM5",
+			"port": "COM3",
 			"log": "d:/temp/log.txt"
 		}
 	]

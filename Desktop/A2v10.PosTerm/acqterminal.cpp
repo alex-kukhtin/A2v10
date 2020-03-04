@@ -64,7 +64,8 @@ bool AcqTerminal::Open(const wchar_t* port, const wchar_t* log)
 {
 	try
 	{
-		_impl->Open(port, log);
+		if (!_impl->Open(port, log))
+			return false;
 		if (!_impl->IsOpen())
 			return false;
 		_impl->Init();

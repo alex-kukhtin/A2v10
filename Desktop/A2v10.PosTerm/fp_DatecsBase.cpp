@@ -236,7 +236,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 	DWORD dwRead = 0;
 	m_rcvBytes = 0;
 	int cnt = 0;
-	while (ReadFile(m_hCom, &buff, 1, &dwRead, NULL) && (dwRead == 1)) {
+	while (ReadFile(m_hCom, &buff, 1, &dwRead, nullptr) && (dwRead == 1)) {
 		cnt++;
 		if (buff != SYN)
 			m_rcvBuffer[m_rcvBytes++] = buff;

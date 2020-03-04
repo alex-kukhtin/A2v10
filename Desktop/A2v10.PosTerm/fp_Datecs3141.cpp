@@ -354,12 +354,13 @@ void CFiscalPrinter_Datecs3141::Init()
 	TraceINFO(L"DATECS [%s]. Init()", _id.c_str());
 
 	// Get status (with buffer print)
-	m_nLastZReportNo = GetPrinterLastZReportNo();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
 
 	GetPrinterPayModes();
 	GetTaxRates();
 	DisplayDateTime(); // customer display
+
+	m_nLastZReportNo = GetPrinterLastZReportNo();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
 
 	// last article
 	RECEIPT_STATUS cs = GetReceiptStatus();
