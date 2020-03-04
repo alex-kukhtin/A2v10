@@ -43,7 +43,7 @@ bool CFiscalPrinter_DatecsBase::IsOpen() const
 // virtual 
 bool CFiscalPrinter_DatecsBase::Open(const wchar_t* Port, DWORD nBaudRate)
 {
-	try 
+	try
 	{
 		if (IsOpen())
 			return true; // already open
@@ -72,10 +72,9 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 		m_hCom = (HANDLE)1111;
 		return;
 	}
+
 	DWORD baudRate = nBaudRate;
-	if (baudRate == 0)
-		baudRate = CBR_19200;
-	m_hCom = CreateFile(Port, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
+	m_hCom = CreateFile(Port, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 	DWORD dwError = 0;
 	if (m_hCom == INVALID_HANDLE_VALUE) {
 		dwError = ::GetLastError();
@@ -89,7 +88,7 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
-	dcb.BaudRate = baudRate;      // set the baud rate
+	dcb.BaudRate = baudRate;     // set the baud rate
 	dcb.ByteSize = 8;             // data size, xmit, and rcv
 	dcb.Parity = NOPARITY;        // no parity bit
 	dcb.StopBits = ONESTOPBIT;    // one stop bit
@@ -165,9 +164,9 @@ void CFiscalPrinter_DatecsBase::CreateCommandV(const wchar_t* name, BYTE cmd, co
 
 void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd, const wchar_t* strCmd)
 {
-	TraceINFO(L"  %s\tSND:0x%X %s", name, (int) cmd, strCmd);
+	TraceINFO(L"  %s\tSND:0x%X %s", name, (int)cmd, strCmd);
 	std::string cmdA = W2A(strCmd);
-	CreateCommandB(cmd, (BYTE*) cmdA.c_str(), (BYTE) cmdA.size());
+	CreateCommandB(cmd, (BYTE*)cmdA.c_str(), (BYTE)cmdA.size());
 }
 
 void CFiscalPrinter_DatecsBase::CreateCommandB(BYTE cmd, BYTE* data, BYTE len)
@@ -217,6 +216,8 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 {
 	if (IS_EMULATION())
 		return;
+
+
 	::PurgeComm(m_hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);
 	m_bEndOfTape = false;
 	m_dwError = 0;
@@ -224,11 +225,11 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 	if (!WriteFile(m_hCom, m_sndBuffer, m_sndBytes, &dwSent, NULL)) {
 		CloseComPort();
 		m_dwError = ::GetLastError();
-		TraceERROR(L"Write COM error. 0x%08lx", (long) m_dwError);
+		TraceERROR(L"Write COM error. 0x%08lx", (long)m_dwError);
 		ThrowCommonError();
 	}
 	if (m_sndBytes != dwSent) {
-		TraceERROR(L"Invalid bytes sent. size=%d, sent:%d", (int) m_sndBytes, (int) dwSent);
+		TraceERROR(L"Invalid bytes sent. size=%d, sent:%d", (int)m_sndBytes, (int)dwSent);
 		ThrowCommonError();
 	}
 	// receive response
@@ -236,13 +237,13 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 	DWORD dwRead = 0;
 	m_rcvBytes = 0;
 	int cnt = 0;
-	while (ReadFile(m_hCom, &buff, 1, &dwRead, nullptr) && (dwRead == 1)) {
+	while (ReadFile(m_hCom, &buff, 1, &dwRead, NULL) && (dwRead == 1)) {
 		cnt++;
 		if (buff != SYN)
 			m_rcvBuffer[m_rcvBytes++] = buff;
 	}
 
-	TraceERROR(L"  \tReceive bytes. count=%ld, bytes=%s", (int)m_rcvBytes, (const wchar_t*) ReceiveBuffer().c_str());
+	TraceERROR(L"  \tReceive bytes. count=%ld, bytes=%s", (int)m_rcvBytes, (const wchar_t*)ReceiveBuffer().c_str());
 
 	if (m_rcvBytes == 0) {
 		// repeat again
@@ -271,6 +272,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 		ThrowCommonError();
 	}
 
+	// thrown error, if needed
 	CheckStatus();
 }
 
