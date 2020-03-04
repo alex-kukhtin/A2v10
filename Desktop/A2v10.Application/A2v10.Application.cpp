@@ -164,11 +164,13 @@ CAppConfig* CMainApp::LoadConfigFile(LPCWSTR szConfig)
 
 bool CMainApp::StartPosThread()
 {
-	if (!m_pAppConfig || !m_pAppConfig->HasFiscalPrinters())
+	if (!m_pAppConfig || !m_pAppConfig->NeedBackgroundThread())
 		return true;
 	_traceTarget.m_hWnd = m_pMainWnd->GetSafeHwnd();
 	PosSetTraceTarget(&_traceTarget);
 	if (!m_pAppConfig->ConnectToPrinter())
+		return false;
+	if (!m_pAppConfig->ConnectToAcquiringTerminal())
 		return false;
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
 	pThread->m_bAutoDelete = TRUE;

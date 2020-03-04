@@ -1,12 +1,14 @@
 #pragma once
 
-class AcqTerminalImpl
+class AcqTerminalImpl : public EquipmentBaseImpl
 {
-	static ITraceTarget* _traceTarget;
 public:
+	std::wstring _id;
+
+	virtual void Open(const wchar_t* port, const wchar_t* log);
 	virtual void Close();
+	virtual void Init();
+	virtual bool IsOpen();
+
 	virtual bool Payment(long amount) = 0;
-public:
-	static void PosSetTraceTarget(ITraceTarget* target);
-	void TraceINFO(const wchar_t* info, ...);
 };

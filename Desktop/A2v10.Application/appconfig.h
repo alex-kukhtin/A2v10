@@ -22,12 +22,14 @@ protected:
 class CAppConfigAcqTerminal : public JsonTarget
 {
 public:
-	std::wstring m_model;
-	std::wstring m_port;
+	std::wstring _model;
+	std::wstring _port;
+	std::wstring _log;
 protected:
-	BEGIN_JSON_PROPS(2)
-		STRING_PROP(model, m_model)
-		STRING_PROP(port, m_port)
+	BEGIN_JSON_PROPS(3)
+		STRING_PROP(model, _model)
+		STRING_PROP(port,  _port)
+		STRING_PROP(log,   _log)
 	END_JSON_PROPS()
 };
 
@@ -40,10 +42,12 @@ public:
 	JsonTargetTypedArray<CAppConfigAcqTerminal> m_acqTerminals;
 
 	bool HasFiscalPrinters() const { return m_fiscalPrinters.size() > 0; }
-	bool HasETerminals() const { return m_acqTerminals.size() > 0; }
+	bool HasAcqTerminals() const { return m_acqTerminals.size() > 0; }
 
 	bool ConnectToPrinter();
+	bool ConnectToAcquiringTerminal();
 	void ShutDown();
+	bool NeedBackgroundThread();
 
 protected:
 	BEGIN_JSON_PROPS(4)

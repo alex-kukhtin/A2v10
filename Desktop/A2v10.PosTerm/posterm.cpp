@@ -4,6 +4,7 @@
 #include "posterm.h"
 #include "command.h"
 #include "fiscalprinter.h"
+#include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 #include "acqterminal.h"
 
@@ -12,12 +13,17 @@
 
 void PosSetTraceTarget(ITraceTarget* target)
 {
-	FiscalPrinterImpl::PosSetTraceTarget(target);
+	EquipmentBaseImpl::SetTraceTarget(target);
 }
 
 pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud)
 {
 	return FiscalPrinter::Connect(model, port, baud);
+}
+
+pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* port, const wchar_t* log)
+{
+	return AcqTerminal::Connect(model, port, log);
 }
 
 pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
@@ -34,7 +40,7 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 		result.assign(ex.GetMessage());
 		return pos_result_t::_invalid_json;
 	}
-	catch (CFPException ex) {
+	catch (EQUIPException ex) {
 		result.assign(ex.GetError());
 		return pos_result_t::_device_error;
 	}

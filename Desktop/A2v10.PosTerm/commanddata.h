@@ -59,3 +59,13 @@ protected:
 		ARRAY_PROP(items, _items)
 	END_JSON_PROPS()
 };
+
+class PosAcquirePaymentData : public JsonTarget
+{
+public:
+	__currency _amount;
+protected:
+	BEGIN_JSON_PROPS(1)
+		CURRENCY_PROP(amount, _amount)
+	END_JSON_PROPS()
+};

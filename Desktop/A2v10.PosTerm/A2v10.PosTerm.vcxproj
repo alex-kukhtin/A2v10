@@ -162,10 +162,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="acqt_Null.h" />
+    <ClInclude Include="acqt_Printec.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="commanddata.h" />
     <ClInclude Include="acqterminal.h" />
     <ClInclude Include="acqterminalimpl.h" />
+    <ClInclude Include="equipmentbase.h" />
     <ClInclude Include="fiscalprinter.h" />
     <ClInclude Include="fiscalprinterImpl.h" />
     <ClInclude Include="fp_Datecs3141.h" />
@@ -179,8 +181,10 @@
   <ItemGroup>
     <ClCompile Include="acqterminalimpl.cpp" />
     <ClCompile Include="acqt_Null.cpp" />
+    <ClCompile Include="acqt_Printec.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="acqterminal.cpp" />
+    <ClCompile Include="equipmentbase.cpp" />
     <ClCompile Include="fiscalprinter.cpp" />
     <ClCompile Include="fiscalprinterimpl.cpp" />
     <ClCompile Include="fp_Datecs3141.cpp" />

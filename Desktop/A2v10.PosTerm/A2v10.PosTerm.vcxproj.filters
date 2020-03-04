@@ -69,6 +69,12 @@
     <ClInclude Include="acqt_Null.h">
       <Filter>Header Files\acqterminals</Filter>
     </ClInclude>
+    <ClInclude Include="equipmentbase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="acqt_Printec.h">
+      <Filter>Header Files\acqterminals</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -106,6 +112,12 @@
     </ClCompile>
     <ClCompile Include="acqterminalimpl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="equipmentbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="acqt_Printec.cpp">
+      <Filter>Source Files\acqterminals</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

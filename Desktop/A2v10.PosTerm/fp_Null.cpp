@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "posterm.h"
+#include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 #include "fp_Null.h"
 
@@ -69,7 +70,7 @@ int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= 
 // virtual 
 bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 {
-	TraceINFO(L"TESTPRINTER [%s]. Open(port:'%s', baud:%d})", _id.c_str(), port, (int) baud);
+	TraceINFO(L"TESTPRINTER [%s]. Open({port:'%s', baud:%d})", _id.c_str(), port, (int) baud);
 	return true;
 }
 
@@ -96,7 +97,7 @@ void CFiscalPrinter_Null::OpenReturnReceipt()
 // virtual 
 bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
@@ -305,7 +306,7 @@ bool CFiscalPrinter_Null::GetCash(__int64 termId, COleCurrency& cy)
 // virtual 
 void CFiscalPrinter_Null::DisplayDateTime()
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
@@ -318,43 +319,43 @@ void CFiscalPrinter_Null::DisplayClear()
 // virtual 
 void CFiscalPrinter_Null::DisplayRow(int nRow, const wchar_t* szString)
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 void CFiscalPrinter_Null::SetCurrentTime()
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 //virtual 
 bool CFiscalPrinter_Null::ReportByArticles()
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 bool CFiscalPrinter_Null::ReportRems()
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 bool CFiscalPrinter_Null::ReportModemState()
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 bool CFiscalPrinter_Null::PrintDiscount(long Type, long Sum, const wchar_t* szDescr)
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 bool CFiscalPrinter_Null::PrintDiscountForAllReceipt(long dscPercent, long dscSum)
 {
-	throw CFPException(L"Yet not implemented");
+	throw EQUIPException(L"Yet not implemented");
 }
 
 void CFiscalPrinter_Null::ReportMessage(const wchar_t* msg)

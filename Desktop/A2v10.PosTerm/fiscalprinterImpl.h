@@ -2,21 +2,6 @@
 
 #pragma once
 
-//class CFPCheckItemInfo;
-//class CFiscalPrinterInfo;
-
-class CFPException
-{
-	UINT m_nID;
-	std::wstring _error;
-public:
-	CFPException(unsigned nID)
-		: m_nID(nID) {};
-	CFPException(const wchar_t* szError)
-		: m_nID(0), _error(szError) {};
-	//void ReportError2();
-	const wchar_t* GetError();
-};
 
 struct RECEIPT_ITEM {
 	__int64 article;
@@ -45,20 +30,17 @@ enum PAYMENT_MODE {
 	_pay_card
 };
 
-class FiscalPrinterImpl
+class FiscalPrinterImpl : public EquipmentBaseImpl
 {
 public:
 	std::wstring _id;
 	std::wstring m_strError;
-
-	static ITraceTarget* _traceTarget;
 
 	enum PrinterFlags
 	{
 		FP_SYNCTIME = 0x0001,
 		FP_MODEMSTATE = 0x0002
 	};
-
 
 	FiscalPrinterImpl(void);
 	virtual ~FiscalPrinterImpl();
@@ -117,11 +99,5 @@ public:
 	virtual void TraceCommand(const wchar_t* command) = 0;
 	virtual const std::wstring& GetError() const;
 
-	void TraceINFO(const wchar_t* info, ...);
-	void TraceERROR(const wchar_t* info, ...);
 	bool IsDebugMode() const;
-
-	static void PosSetTraceTarget(ITraceTarget* target);
-private:
-	void Trace(ITraceTarget::TraceType type, const wchar_t* msg, va_list args);
 };

@@ -19,15 +19,15 @@ class AcqTerminal
 
 public:
 	static AcqTerminal* FindTerminal(const wchar_t* id);
-	static eterm_result_t Connect(const wchar_t* model, const wchar_t* port);
+	static pos_result_t Connect(const wchar_t* model, const wchar_t* port, const wchar_t* log);
 	static void ShutDown();
+	static bool HasTerminal() { return _terminals.size() > 0; };
 
 	bool Create(const wchar_t* model);
-	bool Open(const wchar_t* port, int baud);
+	bool Open(const wchar_t* port, const wchar_t* log);
 	void Disconnect();
 	const wchar_t* GetLastError();
 
-
-	eterm_result_t Payment(long amount);
-	eterm_result_t Return(long amount);
+	bool Payment(long amount);
+	bool Return(long amount);
 };

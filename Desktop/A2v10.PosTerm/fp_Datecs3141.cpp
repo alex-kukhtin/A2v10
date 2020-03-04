@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "posterm.h"
+#include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
@@ -130,7 +131,7 @@ bool CFiscalPrinter_Datecs3141::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 		SendCommand();
 		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		ex.ReportError2();
 		return false;
@@ -161,7 +162,7 @@ bool CFiscalPrinter_Datecs3141::PeriodicalByDate(BOOL Short, COleDateTime From, 
 		SendCommand();
 		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		ex.ReportError2();
 		return false;
@@ -185,7 +186,7 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 		SendCommand();
 		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		m_strError = ex.GetError();
 		return false;
@@ -203,7 +204,7 @@ bool CFiscalPrinter_Datecs3141::ReportModemState()
 		SendCommand();
 		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill ID
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		m_strError = ex.GetError();
 		return false;
@@ -225,7 +226,7 @@ void CFiscalPrinter_Datecs3141::Beep()
 		CreateCommand(L"FPCMD_BEEP", FPCMD_BEEP, L"000000;2;"); /*1-KEY;2-OK;3-WARN;4-ERROR*/
 		SendCommand();
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		// do not show error??
 	}
@@ -315,10 +316,10 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 	}
 	// TODO: LOCALIZE MESSAGES
 	if (!bCardSet)
-		throw CFPException(L"Фіскальний реєстратор.\nНе знайдено форму оплати КАРТКА (КАРТОЧКА, КАРТА).\nПерепрограмуйте реєстратор.");
+		throw EQUIPException(L"Фіскальний реєстратор.\nНе знайдено форму оплати КАРТКА (КАРТОЧКА, КАРТА).\nПерепрограмуйте реєстратор.");
 
 	if ((dwCardFlags & 0x02) == 0)
-		throw CFPException(L"Фіскальний реєстратор.\nДля форми оплати КАРТКА заборонені повернення.\nПерепрограмуйте реєстратор.");
+		throw EQUIPException(L"Фіскальний реєстратор.\nДля форми оплати КАРТКА заборонені повернення.\nПерепрограмуйте реєстратор.");
 }
 
 void CFiscalPrinter_Datecs3141::GetTaxRates()
@@ -402,7 +403,7 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 		SendCommand();
 		CloseFiscal(m_nLastReceiptNo);
 	}
-	catch (CFPException ex) {
+	catch (EQUIPException ex) {
 		m_strError = ex.GetError();
 		return false;
 	}
@@ -463,7 +464,7 @@ bool CFiscalPrinter_Datecs3141::CancelReceiptCommand(__int64 termId)
 		else
 			AfxMessageBox(s);
 	}
-	catch (CFPException ex) {
+	catch (EQUIPException ex) {
 		ex.ReportError2();
 		return false;
 	}
@@ -479,7 +480,7 @@ bool CFiscalPrinter_Datecs3141::CancelReceipt(__int64 termId, bool& bClosed)
 		bClosed = false;
 		CancelReceiptPrinter();
 	}
-	catch (CFPException e)
+	catch (EQUIPException e)
 	{
 		m_strError = e.GetError();
 		return false;
@@ -559,7 +560,7 @@ void CFiscalPrinter_Datecs3141::SetCurrentTime()
 			loctime.tm_hour, loctime.tm_min);
 		SendCommand();
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		m_strError = ex.GetError();
 	}
@@ -594,7 +595,7 @@ void CFiscalPrinter_Datecs3141::DisplayRow(int nRow, LPCTSTR szString)
 		CreateCommand(FPCMD_DISPLAY, buff);
 		SendCommand();
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		// do nothing
 		TraceERROR(L"DisplayRow exception (%s)", ex.GetError().c_str());
@@ -615,7 +616,7 @@ bool CFiscalPrinter_Datecs3141::GetCash(__int64 termId, COleCurrency& cy)
 		GetDaySum(3, 0, sum, dummy);
 		cy = sum;
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		ex.ReportError2();
 		return false;
@@ -671,7 +672,7 @@ bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
 		zri.m_ret_sum_nv.int64 = _abs64(zri.m_ret_sum_nv.int64);
 		zri.m_ret_vsum.int64 = _abs64(zri.m_ret_vsum.int64);
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		ex.ReportError2();
 		return false;
@@ -759,7 +760,7 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 			// отменяем ЧЕК
 			CreateCommand(FPCMD_CANCELRECEIPT, L"000000;0;");
 			SendCommand();
-			throw CFPException(L"Внтутренняя ошибка фискального регистратора\nТекущий чек анулирован.\nОбратитесь к администратору системы.");
+			throw EQUIPException(L"Внтутренняя ошибка фискального регистратора\nТекущий чек анулирован.\nОбратитесь к администратору системы.");
 			return false;
 		}
 		CString payinfo;
@@ -791,7 +792,7 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 		}
 
 	}
-	catch (CFPException e) {
+	catch (EQUIPException e) {
 		m_strError = e.GetError();
 		return false;
 	}
@@ -954,7 +955,7 @@ void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum)
 		SendCommand();
 
 	}
-	catch (CFPException ex)
+	catch (EQUIPException ex)
 	{
 		m_strError = ex.GetError();
 		return;
@@ -1067,7 +1068,7 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 
 	auto sinfo = _split(info, ';');
 	if (sinfo.size() < 2)
-		throw CFPException(L"DAYCOUNTERS data error");
+		throw EQUIPException(L"DAYCOUNTERS data error");
 	std::string r = sinfo[1];
 	z_no = atol(r.c_str());
 	if (z_no == 0) {

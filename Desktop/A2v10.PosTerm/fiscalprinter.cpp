@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "posterm.h"
 #include "fiscalprinter.h"
+#include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 
 #include "fp_Null.h"
@@ -73,7 +74,7 @@ bool FiscalPrinter::Open(const wchar_t* port, int baud)
 		_impl->Init();
 		return true;
 	}
-	catch (CFPException ex) 
+	catch (EQUIPException ex) 
 	{
 		_impl->TraceERROR(L"Error: %s", ex.GetError());
 	}

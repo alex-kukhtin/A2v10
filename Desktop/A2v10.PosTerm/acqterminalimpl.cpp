@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "posterm.h"
+#include "equipmentbase.h"
 #include "acqterminalimpl.h"
 
 
@@ -9,4 +10,21 @@
 void AcqTerminalImpl::Close()
 {
 
+}
+
+// virtual 
+void AcqTerminalImpl::Open(const wchar_t* port, const wchar_t* log)
+{
+}
+
+// virtual 
+void AcqTerminalImpl::Init()
+{
+
+}
+
+// virtual 
+bool AcqTerminalImpl::IsOpen()
+{
+	return true;
 }

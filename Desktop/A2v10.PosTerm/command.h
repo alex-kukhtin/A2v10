@@ -52,9 +52,12 @@ protected:
 	void XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();
+	JsonTarget* AcquirePaymentData();
 
 private:
 	static COMMAND_BIND _binded_commands[];

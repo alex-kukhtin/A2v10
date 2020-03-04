@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "posterm.h"
+#include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "stringtools.h"
@@ -48,7 +49,7 @@ bool CFiscalPrinter_DatecsBase::Open(const wchar_t* Port, DWORD nBaudRate)
 			return true; // already open
 		OpenComPort(Port, nBaudRate);
 	}
-	catch (CFPException ex) 
+	catch (EQUIPException ex)
 	{
 		TraceERROR(L"  \tExecption({Message:'%s', Error:0x%08lx})", m_strError.c_str(), (long) ::GetLastError());
 		m_strError = ex.GetError();
@@ -78,14 +79,14 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	DWORD dwError = 0;
 	if (m_hCom == INVALID_HANDLE_VALUE) {
 		dwError = ::GetLastError();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	DCB dcb = { 0 };
 	dcb.DCBlength = sizeof(DCB);
 	if (!GetCommState(m_hCom, &dcb)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	dcb.BaudRate = baudRate;      // set the baud rate
@@ -97,13 +98,13 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	dcb.fAbortOnError = TRUE;
 	if (!SetCommState(m_hCom, &dcb)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	COMMTIMEOUTS cmto = { 0 };
 	if (!GetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	cmto.ReadIntervalTimeout = 300;
@@ -113,17 +114,17 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	cmto.WriteTotalTimeoutMultiplier = 20;
 	if (!SetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	if (!PurgeComm(m_hCom, PURGE_RXCLEAR | PURGE_TXCLEAR)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 	if (!SetupComm(m_hCom, 1024, 1024)) {
 		Close();
-		throw CFPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(IDP_FP_COM_GENERIC);
 		return;
 	}
 }
@@ -288,12 +289,12 @@ std::wstring CFiscalPrinter_DatecsBase::GetLastErrorS()
 void CFiscalPrinter_DatecsBase::ThrowLastError()
 {
 	std::wstring err = GetLastErrorS();
-	throw CFPException(err.c_str());
+	throw EQUIPException(err.c_str());
 }
 
 void CFiscalPrinter_DatecsBase::ThrowCommonError()
 {
-	throw CFPException(IDP_FP_ERROR);
+	throw EQUIPException(IDP_FP_ERROR);
 }
 
 void CFiscalPrinter_DatecsBase::IncSeq()
