@@ -28,3 +28,10 @@ bool AcqTerminalImpl::IsOpen()
 {
 	return true;
 }
+
+// virtual 
+std::wstring AcqTerminalImpl::Response()
+{
+	return _response.ToString();
+}
+

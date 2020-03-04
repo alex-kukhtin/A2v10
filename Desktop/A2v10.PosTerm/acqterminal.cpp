@@ -86,3 +86,8 @@ bool AcqTerminal::Payment(long amount)
 {
 	return _impl->Payment(amount);
 }
+
+std::wstring AcqTerminal::Response()
+{
+	return _impl->Response();
+}

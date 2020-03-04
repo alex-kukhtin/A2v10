@@ -30,4 +30,6 @@ public:
 
 	bool Payment(long amount);
 	bool Return(long amount);
+
+	std::wstring Response();
 };

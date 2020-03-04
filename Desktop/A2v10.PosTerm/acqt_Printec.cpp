@@ -135,22 +135,33 @@ void AcqTerminal_Printec::Open(const wchar_t* port, const wchar_t* log)
 	_impl.reset(new AcqTerminal_PrintecImpl(*this, W2A(port).c_str(), W2A(log).c_str()));
 }
 
+static void addResult(JsonObject& resp, AcqResult rc)
+{
+	const wchar_t* r = L"error";
+	switch (rc) {
+	case AcqResult::EQ_CONFIRM:
+		r = L"confirm";
+		break;
+	case AcqResult::EQ_DECLINE:
+		r = L"decline";
+		break;
+	case AcqResult::EQ_BREAK:
+		r = L"break";
+		break;
+	}
+	resp.Add(L"result", r); // action result
+}
+
 // virtual 
 bool AcqTerminal_Printec::Payment(long amount)
 {
 	TraceINFO(L"PRINTEC [%s]. Payment({amount:'%ld'})", _id.c_str(), amount);
 	AcqResult rc = _impl->payment(amount);
-	_response.Add(L"result", L"confirm");
-	_response.Add(L"receipt", L"43");
-	_response.Add(L"card_pan", L"431403**********");
-	_response.Add(L"date_time", L"20200303193504");
-	_response.Add(L"merchant_id", L"030010000000006");
-	_response.Add(L"status", L"ВIДМОВИТИ У ПРИЙОМI!");
-	_response.Add(L"status_code", "1");
-	_response.Add(L"decline_reason", L"в авторизации отказано, без уточнения причин");
+	addResult(_response, rc);
 	TraceINFO(L"\t Response:(%s)", _response.ToString().c_str());
 	return true;
 }
+
 
 // virtual 
 void AcqTerminal_Printec::Response(const wchar_t* name, const wchar_t* value)
@@ -166,7 +177,6 @@ void AcqTerminal_Printec::Message(const wchar_t* name, const wchar_t* value) {
 // virtual 
 void AcqTerminal_Printec::Identifier(const wchar_t* name, const wchar_t* value)
 {
-
 }
 
 void AcqPrintecImplDeleter::operator()(AcqTerminal_PrintecImpl* pImpl)

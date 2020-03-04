@@ -135,10 +135,7 @@ void PosCommand::AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::
 	PosAcquirePaymentData* pacqd = dynamic_cast<PosAcquirePaymentData*>(data);
 	auto pTerminal = AcqTerminal::FindTerminal(L"");
 	bool rc = pTerminal->Payment(pacqd->_amount);
-	if (rc)
-		result.assign(L"{\"success\": true}");
-	else
-		result.assign(L"{\"success\": false}");
+	result.assign(pTerminal->Response().c_str());
 }
 
 
