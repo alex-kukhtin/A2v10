@@ -372,7 +372,8 @@ namespace A2v10.Request
 		xml,
 		file,
 		startProcess,
-		resumeProcess
+		resumeProcess,
+		callApi
 	}
 
 	public class RequestCommand : RequestBase
@@ -452,6 +453,12 @@ namespace A2v10.Request
 		public Boolean IsPost()
 		{
 			return String.IsNullOrEmpty(method) || method == "post";
+		}
+
+		public Task<ServerCommandResult> ExecuteCommand(ExpandoObject data)
+		{
+			var cmd = ServerCommandRegistry.GetCommand(type);
+			return cmd.Execute(this, data);
 		}
 	}
 

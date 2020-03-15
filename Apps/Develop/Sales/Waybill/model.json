@@ -96,6 +96,16 @@
 			"template": "server.template",
 			"model": "Document",
 			"command": "serverProcessAndSave"
+		},
+		"callApi": {
+			"type": "callApi",
+			"parameters": {
+				"url": "((MyApi.url))/{{CompanyInfo}}",
+				"method": "get",
+				"headers": {
+					"Authorization": "bearer ((MyApi.apiKey))"
+				}
+			}
 		}
 	},
 	"reports": {

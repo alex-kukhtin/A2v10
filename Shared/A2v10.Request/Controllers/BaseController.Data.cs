@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -101,11 +101,6 @@ namespace A2v10.Request
 				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
 			}
 			WriteDataModel(model, writer);
-		}
-
-		void WriteJsonResult(TextWriter writer, Object data)
-		{
-			writer.Write(JsonConvert.SerializeObject(data, JsonHelpers.StandardSerializerSettings));
 		}
 
 		internal async Task ReloadData(Action<ExpandoObject> setParams, String json, TextWriter writer)
@@ -290,6 +285,27 @@ namespace A2v10.Request
 				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.StandardSerializerSettings));
 			else
 				writer.Write("{}");
+		}
+
+		async Task InvokeData(Action<ExpandoObject> setParams, String json, HttpResponseBase response)
+		{
+			ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+			String baseUrl = dataToInvoke.Get<String>("baseUrl");
+			if (NormalizeBaseUrl != null)
+				baseUrl = NormalizeBaseUrl(baseUrl);
+			String command = dataToInvoke.Get<String>("cmd");
+			ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
+			if (dataToExec == null)
+				dataToExec = new ExpandoObject();
+			setParams?.Invoke(dataToExec);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var cmd = rm.GetCommand(command);
+			dataToExec.Append(cmd.parameters);
+
+			var result = await cmd.ExecuteCommand(dataToExec);
+			response.ContentType = result.ConentType;
+			if (result.Data != null)
+				response.Output.Write(result.Data);
 		}
 	}
 }
