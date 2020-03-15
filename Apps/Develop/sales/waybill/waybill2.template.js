@@ -57,7 +57,8 @@ define(["require", "exports"], function (require, exports) {
             resumeWorkflow,
             insertAbove: insertRow("above"),
             insertBelow: insertRow("below"),
-            runServerScript
+            runServerScript,
+            callApi
         }
     };
     exports.default = template;
@@ -114,6 +115,16 @@ define(["require", "exports"], function (require, exports) {
             let result = await ctrl.$invoke('serverScript', { Id: this.Document.Id });
             console.dir(result);
             ctrl.$reload();
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    async function callApi() {
+        const ctrl = this.$ctrl;
+        try {
+            let result = await ctrl.$invoke('callApi', { Code: '11223344' });
+            console.dir(result);
         }
         catch (err) {
             alert(err);

@@ -64,7 +64,8 @@ const template: Template = {
 		resumeWorkflow,
 		insertAbove: insertRow(InsertTo.above),
 		insertBelow: insertRow(InsertTo.below),
-		runServerScript
+		runServerScript,
+		callApi
 	}
 };
 
@@ -130,6 +131,17 @@ async function runServerScript() {
 		let result = await ctrl.$invoke('serverScript', { Id: this.Document.Id });
 		console.dir(result);
 		ctrl.$reload();
+	}
+	catch (err) {
+		alert(err);
+	}
+}
+
+async function callApi() {
+	const ctrl = this.$ctrl;
+	try {
+		let result = await ctrl.$invoke('callApi', { Code: '11223344' });
+		console.dir(result);
 	}
 	catch (err) {
 		alert(err);

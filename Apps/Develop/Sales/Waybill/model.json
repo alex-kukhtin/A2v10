@@ -100,7 +100,7 @@
 		"callApi": {
 			"type": "callApi",
 			"parameters": {
-				"url": "((MyApi.url))/{{CompanyInfo}}",
+				"url": "((MyApi.url))/companyInfo/[[Code]]",
 				"method": "get",
 				"headers": {
 					"Authorization": "bearer ((MyApi.apiKey))"

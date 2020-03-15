@@ -55,13 +55,16 @@ namespace A2v10.Request
 
 		String Resolve(String source, ExpandoObject data)
 		{
-			source = ResolveEnvironment(source, data);
+			if (source == null)
+				return null;
+			source = ResolveEnvironment(source);
 			return ResolveParameters(source, data);
 		}
 
 		static Regex _envRegEx;
+		static Regex _prmRegEx;
 
-		String ResolveEnvironment(String source, ExpandoObject data)
+		String ResolveEnvironment(String source)
 		{
 			if (source.IndexOf("((") == -1)
 				return source;
@@ -86,9 +89,20 @@ namespace A2v10.Request
 
 		String ResolveParameters(String source, ExpandoObject data)
 		{
-			if (source.IndexOf("{{") == -1)
+			if (source.IndexOf("[[") == -1)
 				return source;
-			return data.Resolve(source);
+			if (_prmRegEx == null)
+				_prmRegEx = new Regex("\\[\\[(.+?)\\]\\]", RegexOptions.Compiled);
+			var ms = _prmRegEx.Matches(source);
+			if (ms.Count == 0)
+				return source;
+			var sb = new StringBuilder(source);
+			foreach (Match m in ms)
+			{
+				String key = m.Groups[1].Value;
+				sb.Replace(m.Value, data.Eval<String>(key, null, throwIfError:true));
+			}
+			return sb.ToString();
 		}
 
 		void SetHeaders(HttpRequestMessage msg, ExpandoObject headers, ExpandoObject data)
@@ -104,10 +118,8 @@ namespace A2v10.Request
 		{
 			String[] keys = key.Split('.');
 			// first elem is appSettings key
-			val = 
-			val = "";
-			return false;
+			val = key;
+			return true;
 		}
-
 	}
 }
