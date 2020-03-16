@@ -1,7 +1,8 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
+using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -127,6 +128,11 @@ namespace BackgroundProcessor
 		public String GetAppSettings(String source)
 		{
 			throw new NotImplementedException("BackgroundApplicationHost.GetAppSettings");
+		}
+
+		public ExpandoObject GetEnvironmentObject(String key)
+		{
+			throw new NotImplementedException(nameof(GetEnvironmentObject));
 		}
 	}
 }

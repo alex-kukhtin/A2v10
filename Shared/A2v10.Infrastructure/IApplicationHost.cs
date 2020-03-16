@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Dynamic;
 
 namespace A2v10.Infrastructure
 {
@@ -52,5 +53,6 @@ namespace A2v10.Infrastructure
 		String Copyright { get; }
 
 		String GetAppSettings(String source);
+		ExpandoObject GetEnvironmentObject(String key);
 	}
 }

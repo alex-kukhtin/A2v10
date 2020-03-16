@@ -1,14 +1,11 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
+using System.Dynamic;
+
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using A2v10.Request;
-using A2v10.Web.Base;
 
 namespace A2v10.Tests.Config
 {
@@ -108,6 +105,11 @@ namespace A2v10.Tests.Config
 		public String GetAppSettings(String source)
 		{
 			return source;
+		}
+
+		public ExpandoObject GetEnvironmentObject(String key)
+		{
+			throw new NotImplementedException(nameof(GetEnvironmentObject));
 		}
 	}
 }

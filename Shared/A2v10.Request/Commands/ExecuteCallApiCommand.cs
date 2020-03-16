@@ -79,10 +79,7 @@ namespace A2v10.Request
 			foreach (Match m in ms)
 			{
 				String key = m.Groups[1].Value;
-				if (GetEnvironmentValue(key, out String val))
-					sb.Replace(m.Value, val);
-				else
-					throw new RequestModelException($"Invalid environment key. '{key}'");
+				sb.Replace(m.Value, GetEnvironmentValue(key));
 			}
 			return sb.ToString();
 		}
@@ -114,12 +111,17 @@ namespace A2v10.Request
 				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data));
 		}
 
-		Boolean GetEnvironmentValue(String key, out String val)
+		String GetEnvironmentValue(String key)
 		{
 			String[] keys = key.Split('.');
 			// first elem is appSettings key
-			val = key;
-			return true;
+			if (keys.Length < 2)
+				throw new ArgumentOutOfRangeException($"Invalid environment key 'key'");
+			var env = _host.GetEnvironmentObject(keys[0]);
+			// to simplify the evaluation
+			var envObj = new ExpandoObject();
+			envObj.Set(keys[0], env);
+			return envObj.Eval<String>(key, fallback:null, throwIfError: true);
 		}
 	}
 }

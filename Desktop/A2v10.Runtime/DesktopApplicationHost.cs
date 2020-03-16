@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Data.SqlClient;
+using System.Text;
+using System.Configuration;
+using System.Dynamic;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
-using System.Text;
-using System.Configuration;
 
 namespace A2v10.Runtime
 {
@@ -212,5 +213,11 @@ namespace A2v10.Runtime
 			sb.Append(source.Substring(xpos));
 			return sb.ToString();
 		}
+
+		public ExpandoObject GetEnvironmentObject(String key)
+		{
+			throw new NotImplementedException(nameof(GetEnvironmentObject));
+		}
+
 	}
 }

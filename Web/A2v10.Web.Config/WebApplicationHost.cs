@@ -1,16 +1,20 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using System.Dynamic;
+using System.Data.SqlClient;
+using System.Web.Hosting;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 
-using System.Data.SqlClient;
-using System.Web.Hosting;
 using A2v10.Web.Base;
 
 namespace A2v10.Web.Config
@@ -61,7 +65,7 @@ namespace A2v10.Web.Config
 			{
 				String path = ConfigurationManager.AppSettings["appPath"];
 				if (path == null)
-					throw new InvalidOperationException("Configuration parameter 'appSettings/appPath' not defined");
+					throw new ConfigurationErrorsException("Configuration parameter 'appSettings/appPath' not defined");
 				if (path.StartsWith("~"))
 					path = HostingEnvironment.MapPath(path);
 				return path;
@@ -249,6 +253,14 @@ namespace A2v10.Web.Config
 			} while (true);
 			sb.Append(source.Substring(xpos));
 			return sb.ToString();
+		}
+
+		public ExpandoObject GetEnvironmentObject(String key)
+		{
+			var val = ConfigurationManager.AppSettings[key];
+			if (val == null)
+				throw new ConfigurationErrorsException($"Configuration parameter 'appSettings/{key}' not defined");
+			return JsonConvert.DeserializeObject<ExpandoObject>(val, new ExpandoObjectConverter());
 		}
 
 
