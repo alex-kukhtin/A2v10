@@ -123,10 +123,11 @@ define(["require", "exports"], function (require, exports) {
     async function callApi() {
         const ctrl = this.$ctrl;
         try {
-            let result = await ctrl.$invoke('callApi', { Code: '11223344' });
+            let result = await ctrl.$invoke('callApi', { Code: '11223344' }, null, { catchError: true });
             console.dir(result);
         }
         catch (err) {
+            alert('1');
             alert(err);
         }
     }
