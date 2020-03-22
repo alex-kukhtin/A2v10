@@ -34,7 +34,7 @@ namespace A2v10.Web.Mvc.OAuth2
 			}
 		}
 
-		ServerElement GetServerInfo(NameValueCollection body, BaseValidatingContext<OAuthAuthorizationServerOptions> context)
+		ClientElement GetClientInfo(NameValueCollection body, BaseValidatingContext<OAuthAuthorizationServerOptions> context)
 		{
 			var oauth2Config = ConfigurationManager.GetSection("oauth2") as Oauth2Section;
 
@@ -45,21 +45,30 @@ namespace A2v10.Web.Mvc.OAuth2
 				context.Rejected();
 				return null;
 			}
-			var server = oauth2Config.servers.GetSource(clientId);
-			if (server == null)
+			var client = oauth2Config.clients.GetSource(clientId);
+			if (client == null)
 			{
 				context.SetError("'client_id' not found");
 				context.Rejected();
 				return null;
 			}
-			return server;
+			if (!String.IsNullOrEmpty(client.allowIp) && client.allowIp != "*")
+			{
+				// TODO: check Ip
+			}
+			if (!String.IsNullOrEmpty(client.allowOrigin) && client.allowOrigin != "*")
+			{
+				// TODO: checkOrigin
+			}
+
+			return client;
 		}
 
 		public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
 		{
 			NameValueCollection body = ParseBody(context.Request.Body);
 
-			var info = GetServerInfo(body, context);
+			var info = GetClientInfo(body, context);
 			if (info != null)
 				context.Validated();
 			return Task.CompletedTask;
@@ -68,9 +77,9 @@ namespace A2v10.Web.Mvc.OAuth2
 		public override Task GrantClientCredentials(OAuthGrantClientCredentialsContext context)
 		{
 			NameValueCollection body = ParseBody(context.Request.Body);
-			var server = GetServerInfo(body, context);
+			var client = GetClientInfo(body, context);
 
-			if (server == null)
+			if (client == null)
 				return Task.CompletedTask;
 
 			var strData = body["data"];
@@ -81,10 +90,10 @@ namespace A2v10.Web.Mvc.OAuth2
 				return Task.CompletedTask;
 			}
 
-			var dataJson = Encrypt.DecryptString_Aes(strData, server.key, server.vector);
+			var dataJson = Encrypt.DecryptString_Aes(strData, client.key, client.vector);
 			var dataEO = JsonConvert.DeserializeObject<ExpandoObject>(dataJson, new ExpandoObjectConverter());
 
-			if (dataEO == null || dataEO.Get<String>("client_id") != server.clientId)
+			if (dataEO == null || dataEO.Get<String>("client_id") != client.id)
 			{
 				context.Rejected();
 				return Task.CompletedTask;

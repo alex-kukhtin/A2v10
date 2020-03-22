@@ -1,14 +1,15 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
 
 namespace A2v10.Web.Mvc.OAuth2
 {
+#pragma warning disable IDE1006 // Naming Styles
 	public class Oauth2Section : ConfigurationSection
 	{
-		[ConfigurationProperty(nameof(servers))]
-		public ServersCollection servers => (ServersCollection)base[nameof(servers)];
+		[ConfigurationProperty(nameof(clients))]
+		public ClientsCollection clients => (ClientsCollection)base[nameof(clients)];
 
 		[ConfigurationProperty(nameof(tokenEndpoint), IsRequired = true)]
 		public String tokenEndpoint
@@ -31,32 +32,32 @@ namespace A2v10.Web.Mvc.OAuth2
 
 	}
 
-	[ConfigurationCollection(typeof(ServerElement), AddItemName = "server", CollectionType = ConfigurationElementCollectionType.BasicMap)]
-	public class ServersCollection : ConfigurationElementCollection
+	[ConfigurationCollection(typeof(ClientElement), AddItemName = "client", CollectionType = ConfigurationElementCollectionType.BasicMap)]
+	public class ClientsCollection : ConfigurationElementCollection
 	{
 		protected override ConfigurationElement CreateNewElement()
 		{
-			return new ServerElement();
+			return new ClientElement();
 		}
 
 		protected override Object GetElementKey(ConfigurationElement element)
 		{
-			return ((ServerElement)element).clientId;
+			return ((ClientElement)element).id;
 		}
 
-		public ServerElement GetSource(String key)
+		public ClientElement GetSource(String key)
 		{
-			return (ServerElement)BaseGet(key);
+			return (ClientElement)BaseGet(key);
 		}
 	}
 
-	public class ServerElement : ConfigurationElement
+	public class ClientElement : ConfigurationElement
 	{
-		[ConfigurationProperty(nameof(clientId), IsKey = true, IsRequired = true)]
-		public String clientId
+		[ConfigurationProperty(nameof(id), IsKey = true, IsRequired = true)]
+		public String id
 		{
-			get { return (String)this[nameof(clientId)]; }
-			set { this[nameof(clientId)] = value; }
+			get { return (String)this[nameof(id)]; }
+			set { this[nameof(id)] = value; }
 		}
 
 		[ConfigurationProperty(nameof(key), IsRequired = true)]
@@ -72,5 +73,20 @@ namespace A2v10.Web.Mvc.OAuth2
 			get { return (String)this[nameof(vector)]; }
 			set { this[nameof(vector)] = value; }
 		}
+
+		[ConfigurationProperty(nameof(allowIp), IsRequired = true)]
+		public String allowIp
+		{
+			get { return (String)this[nameof(allowIp)]; }
+			set { this[nameof(allowIp)] = value; }
+		}
+
+		[ConfigurationProperty(nameof(allowOrigin), IsRequired = true)]
+		public String allowOrigin
+		{
+			get { return (String)this[nameof(allowOrigin)]; }
+			set { this[nameof(allowOrigin)] = value; }
+		}
 	}
+#pragma warning restore IDE1006 // Naming Styles
 }
