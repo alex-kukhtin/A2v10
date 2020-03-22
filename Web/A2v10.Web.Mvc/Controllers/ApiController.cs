@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -20,6 +20,7 @@ using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Interop;
 using A2v10.Web.Identity;
+using System.Security.Claims;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -145,6 +146,16 @@ namespace A2v10.Web.Mvc.Controllers
 			Int32 tenantId = TenantId;
 			if (tenantId != 0)
 				prms.Set("TenantId", tenantId);
+
+			if (User.Identity is ClaimsIdentity claims)
+			{
+				var clEO = new ExpandoObject();
+				foreach (var v in claims.Claims)
+				{
+					clEO.Set(v.Subject.Name, v.Value);
+				}
+				prms.Set("Claims", clEO);
+			}
 		}
 
 		ExpandoObject GetDataToInvokeGet(String wrapper, Guid apiGuid)
@@ -211,6 +222,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		[HttpPost]
 		[ActionName("Default")]
+		[Authorize]
 		public async Task DefaultPOST(String pathInfo)
 		{
 			Guid apiGuid = Guid.NewGuid();
@@ -225,6 +237,13 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (!ac.IsPost())
 					throw new RequestModelException($"Method 'post' is required for '{ac.command}' command");
+
+				if (ac.authorize && !User.Identity.IsAuthenticated)
+				{
+					_logger.LogApiError("Unauthorized", Request.UserHostAddress, apiGuid);
+					Response.StatusCode = 401;
+					return;
+				}
 
 				Response.ContentType = "application/json";
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -280,6 +280,11 @@ namespace A2v10.Infrastructure
 		public static Type GetNonNullableType(this Type type)
 		{
 			return IsNullableType(type) ? type.GetGenericArguments()[0] : type;
+		}
+
+		public static IEnumerable<KeyValuePair<String, Object>> Enumerate(this ExpandoObject obj)
+		{
+			return obj as IDictionary<String, Object>;
 		}
 	}
 }

@@ -9,8 +9,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
 
 using A2v10.Web.Identity;
+using A2v10.Web.Mvc.OAuth2;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -63,35 +65,12 @@ namespace A2v10.Web.Mvc.Start
 				Provider = authProvider,
 				CookieName = GetApplicationCookieName()
 			});
+
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 			//AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier; // 
 
 			// Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
 			//app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
-
-			// Enables the application to remember the second login verification factor such as phone or email.
-			// Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
-			// This is similar to the RememberMe option when you log in.
-			//app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
-
-			// Uncomment the following lines to enable logging in with third party login providers
-			//app.UseMicrosoftAccountAuthentication(
-			//    clientId: "",
-			//    clientSecret: "");
-
-			//app.UseTwitterAuthentication(
-			//   consumerKey: "",
-			//   consumerSecret: "");
-
-			//app.UseFacebookAuthentication(
-			//   appId: "",
-			//   appSecret: "");
-
-			//app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-			//{
-			//    ClientId = "",
-			//    ClientSecret = ""
-			//});
 
 			app.UseCacheForStaticFiles();
 
@@ -99,6 +78,22 @@ namespace A2v10.Web.Mvc.Start
 			{
 				var key = ConfigurationManager.AppSettings["AppKey"];
 				return $"{key}.ASP.NET.ApplicationCookie";
+			}
+
+			var oauth2Config = ConfigurationManager.GetSection("oauth2") as Oauth2Section;
+			if (oauth2Config != null && oauth2Config.servers.Count > 0)
+			{
+				var expTimeSpan = oauth2Config.expireTimeSpan;
+				if (expTimeSpan.TotalMilliseconds == 0)
+					expTimeSpan = TimeSpan.FromMinutes(20);
+
+				app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions()
+				{
+					Provider = new OAuth2Provider(),
+					TokenEndpointPath = new PathString(oauth2Config.tokenEndpoint),
+					AllowInsecureHttp = oauth2Config.allowInsecureHttp,
+					AccessTokenExpireTimeSpan = expTimeSpan
+				});
 			}
 		}
 	}

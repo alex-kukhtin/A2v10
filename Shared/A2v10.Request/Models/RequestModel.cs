@@ -399,6 +399,7 @@ namespace A2v10.Request
 		public String allowOrigin;
 		public String allowAddress;
 		public String method;
+		public Boolean authorize;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";
