@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200109-7610
+// 20200322-7643
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -12,6 +12,7 @@ app.modules['std:html'] = function () {
 		getRowHeight,
 		downloadBlob,
 		downloadUrl,
+		openUrl,
 		printDirect,
 		removePrintFrame,
 		updateDocTitle
@@ -37,6 +38,16 @@ app.modules['std:html'] = function () {
 			let h = rows[r].offsetHeight - 12; /* padding !!!*/
 			rows[r].setAttribute('data-row-height', h);
 		}
+	}
+
+	function openUrl(url) {
+		let link = document.createElement('a');
+		link.style = "display:none";
+		document.body.appendChild(link);
+		link.href = url;
+		link.setAttribute('target', '_blank');
+		link.click();
+		document.body.removeChild(link);
 	}
 
 	function downloadUrl(url) {

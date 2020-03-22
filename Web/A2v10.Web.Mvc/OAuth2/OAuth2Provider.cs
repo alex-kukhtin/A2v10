@@ -70,7 +70,10 @@ namespace A2v10.Web.Mvc.OAuth2
 
 			var info = GetClientInfo(body, context);
 			if (info != null)
+			{
 				context.Validated();
+				context.Response.Headers.Add("Access-Control-Allow-Origin", new String[] { "*"});
+			}
 			return Task.CompletedTask;
 		}
 

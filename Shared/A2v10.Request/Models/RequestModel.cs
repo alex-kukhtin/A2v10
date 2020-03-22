@@ -400,6 +400,7 @@ namespace A2v10.Request
 		public String allowAddress;
 		public String method;
 		public Boolean authorize;
+		public Int32 errorCode;
 
 		[JsonIgnore]
 		public String CommandProcedure => $"[{CurrentSchema}].[{procedure}]";

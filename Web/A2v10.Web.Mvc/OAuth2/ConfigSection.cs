@@ -87,6 +87,13 @@ namespace A2v10.Web.Mvc.OAuth2
 			get { return (String)this[nameof(allowOrigin)]; }
 			set { this[nameof(allowOrigin)] = value; }
 		}
+
+		[ConfigurationProperty(nameof(url), IsRequired = true)]
+		public String url
+		{
+			get { return (String)this[nameof(url)]; }
+			set { this[nameof(url)] = value; }
+		}
 	}
 #pragma warning restore IDE1006 // Naming Styles
 }

@@ -124,7 +124,7 @@ namespace A2v10.Web.Mvc.Controllers
 						GetFile(ac);
 						break;
 					case CommandType.clr:
-						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper, apiGuid), apiGuid);
+						await ExecuteClrCommand(ac, GetDataToInvokeGet(ac.wrapper, apiGuid, ac.authorize), apiGuid);
 						break;
 					default:
 						throw new NotImplementedException(nameof(DefaultGET));
@@ -138,7 +138,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
-		void SetIdentityParams(ExpandoObject prms)
+		void SetIdentityParams(ExpandoObject prms, Boolean authorize)
 		{
 			Int64? userId = UserId;
 			if (userId != null)
@@ -147,21 +147,21 @@ namespace A2v10.Web.Mvc.Controllers
 			if (tenantId != 0)
 				prms.Set("TenantId", tenantId);
 
-			if (User.Identity is ClaimsIdentity claims)
+			if (authorize && User.Identity is ClaimsIdentity claims)
 			{
 				var clEO = new ExpandoObject();
 				foreach (var v in claims.Claims)
 				{
-					clEO.Set(v.Subject.Name, v.Value);
+					clEO.Set(v.Type, v.Value);
 				}
 				prms.Set("Claims", clEO);
 			}
 		}
 
-		ExpandoObject GetDataToInvokeGet(String wrapper, Guid apiGuid)
+		ExpandoObject GetDataToInvokeGet(String wrapper, Guid apiGuid, Boolean authorize)
 		{
 			var dataToInvoke = new ExpandoObject();
-			SetIdentityParams(dataToInvoke);
+			SetIdentityParams(dataToInvoke, authorize);
 			var qs = Request.QueryString;
 			if (qs.HasKeys())
 			{
@@ -206,7 +206,7 @@ namespace A2v10.Web.Mvc.Controllers
 					return;
 
 				Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-				Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With");
+				Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Authorization");
 				Response.AddHeader("Access-Control-Allow‌​-Credentials", "true");
 				Response.AddHeader("Access-Control-Max-Age", "60");
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
@@ -226,6 +226,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public async Task DefaultPOST(String pathInfo)
 		{
 			Guid apiGuid = Guid.NewGuid();
+			Int32 errorCode = 0;
 			try
 			{
 				_logger.LogApi($"post: {pathInfo}", Request.UserHostAddress, apiGuid);
@@ -237,6 +238,8 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (!ac.IsPost())
 					throw new RequestModelException($"Method 'post' is required for '{ac.command}' command");
+
+				errorCode = ac.errorCode;
 
 				if (ac.authorize && !User.Identity.IsAuthenticated)
 				{
@@ -264,7 +267,7 @@ namespace A2v10.Web.Mvc.Controllers
 					wrap.Set(ac.wrapper, dataToInvoke);
 					dataToInvoke = wrap;
 				}
-				SetIdentityParams(dataToInvoke);
+				SetIdentityParams(dataToInvoke, ac.authorize);
 				await ExecuteCommand(ac, dataToInvoke, apiGuid);
 			}
 			catch (Exception ex)
@@ -272,7 +275,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				_logger.LogApiError(ex.Message, Request.UserHostAddress, apiGuid);
-				_baseController.WriteExceptionStatus(ex, Response);
+				_baseController.WriteExceptionStatus(ex, Response, errorCode);
 			}
 		}
 

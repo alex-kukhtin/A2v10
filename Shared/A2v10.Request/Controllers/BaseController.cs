@@ -361,15 +361,17 @@ namespace A2v10.Request
 		}
 
 
-		public void WriteExceptionStatus(Exception ex, HttpResponseBase response)
+		public void WriteExceptionStatus(Exception ex, HttpResponseBase response, Int32 errorCode = 0)
 		{
 			if (ex.InnerException != null)
 				ex = ex.InnerException;
+			if (errorCode == 0)
+				errorCode = 255;
 			ProfileException(ex);
 			response.SuppressContent = false;
-			response.StatusCode = 255; // CUSTOM ERROR!!!!
+			response.StatusCode = errorCode; // CUSTOM ERROR!!!!
 			response.ContentType = "text/plain";
-			response.StatusDescription = "Custom server error";
+			response.StatusDescription = "Server error";
 			response.Write(Localize(ex.Message));
 		}
 
