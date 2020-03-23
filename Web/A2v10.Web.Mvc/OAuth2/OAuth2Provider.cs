@@ -85,16 +85,24 @@ namespace A2v10.Web.Mvc.OAuth2
 			if (client == null)
 				return Task.CompletedTask;
 
-			var strData = body["data"];
-			if (strData == null)
-			{
-				context.SetError("'data' not found");
-				context.Rejected();
-				return Task.CompletedTask;
-			}
+			ExpandoObject dataEO = null;
 
-			var dataJson = Encrypt.DecryptString_Aes(strData, client.key, client.vector);
-			var dataEO = JsonConvert.DeserializeObject<ExpandoObject>(dataJson, new ExpandoObjectConverter());
+			var strData = body["data"];
+			if (strData != null)
+			{
+				var dataJson = Encrypt.DecryptString_Aes(strData, client.key, client.vector);
+				dataEO = JsonConvert.DeserializeObject<ExpandoObject>(dataJson, new ExpandoObjectConverter());
+			}
+			var strSecret = body["client_secret"];
+			if (strSecret != null)
+			{
+				if (strSecret == client.secret)
+				{
+					dataEO = new ExpandoObject();
+					dataEO.Set("client_id", body["client_id"]);
+					dataEO.Set("session_id", body["session_id"]);
+				}
+			}
 
 			if (dataEO == null || dataEO.Get<String>("client_id") != client.id)
 			{

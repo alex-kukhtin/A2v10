@@ -60,28 +60,35 @@ namespace A2v10.Web.Mvc.OAuth2
 			set { this[nameof(id)] = value; }
 		}
 
-		[ConfigurationProperty(nameof(key), IsRequired = true)]
+		[ConfigurationProperty(nameof(key), IsRequired = false)]
 		public String key
 		{
 			get { return (String)this[nameof(key)]; }
 			set { this[nameof(key)] = value; }
 		}
 
-		[ConfigurationProperty(nameof(vector), IsRequired = true)]
+		[ConfigurationProperty(nameof(vector), IsRequired = false)]
 		public String vector
 		{
 			get { return (String)this[nameof(vector)]; }
 			set { this[nameof(vector)] = value; }
 		}
 
-		[ConfigurationProperty(nameof(allowIp), IsRequired = true)]
+		[ConfigurationProperty(nameof(secret), IsRequired = false)]
+		public String secret
+		{
+			get { return (String)this[nameof(secret)]; }
+			set { this[nameof(secret)] = value; }
+		}
+
+		[ConfigurationProperty(nameof(allowIp), IsRequired = false)]
 		public String allowIp
 		{
 			get { return (String)this[nameof(allowIp)]; }
 			set { this[nameof(allowIp)] = value; }
 		}
 
-		[ConfigurationProperty(nameof(allowOrigin), IsRequired = true)]
+		[ConfigurationProperty(nameof(allowOrigin), IsRequired = false)]
 		public String allowOrigin
 		{
 			get { return (String)this[nameof(allowOrigin)]; }
