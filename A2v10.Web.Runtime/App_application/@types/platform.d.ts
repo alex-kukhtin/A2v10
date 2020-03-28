@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7616 */
+/* Version 10.0.7645 */
 
 
 declare function require(url: string): any;
@@ -30,6 +30,7 @@ interface IElement {
 
 	$merge(src: object): IElement;
 	$empty(): IElement;
+	$set(src: object): IElement;
 }
 
 interface IArrayElement extends IElement {
@@ -37,6 +38,7 @@ interface IArrayElement extends IElement {
 	$selected: boolean;
 	$checked: boolean;
 	$remove(): void;
+	$select(): void;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -208,6 +210,8 @@ interface IController {
 	$alert(msg: string | IMessage): Promise<boolean>;
 	$confirm(msg: string | IConfirm): Promise<boolean>;
 	$showDialog(url: string, data?: object, query?: object): Promise<object>;
+	$inlineOpen(id: string): void;
+	$inlineClose(id: string, result?: any): void;
 	$saveModified(msg?: string, title?: string): boolean;
 	$asyncValid(cmd: string, arg: object): any | Promise<any>;
 	$toast(text: string, style?: CommonStyle): void;
@@ -338,6 +342,11 @@ interface Utils {
 	readonly currency: UtilsCurrency;
 }
 
+interface Blob {
+	readonly size: number;
+	readonly type: string;
+}
+
 interface Http {
 	$post(url: string, data?: string | Blob): Promise<any>;
 	$get(url: string): Promise<any>;
@@ -349,4 +358,3 @@ interface EventBus {
 	$once(event: string, handler: (...params: any[]) => any);
 	$emit(event: string, ...params: any[]);
 }
-
