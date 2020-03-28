@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -118,7 +117,7 @@ namespace A2v10.Request
 			if (keys.Length < 2)
 				throw new ArgumentOutOfRangeException($"Invalid environment key 'key'");
 			var env = _host.GetEnvironmentObject(keys[0]);
-			// to simplify the evaluation
+			// wrap it to simplify expression evaluation
 			var envObj = new ExpandoObject();
 			envObj.Set(keys[0], env);
 			return envObj.Eval<String>(key, fallback:null, throwIfError: true);

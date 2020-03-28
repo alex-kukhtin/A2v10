@@ -14,6 +14,7 @@
 			<Button Icon="Download" Content="Download" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Export=True, Format=OpenSheet}"/>
 			<Button Icon="Process" Content="RunServerScript" Command="{BindCmd Execute, CommandName=runServerScript}" />
 			<Button Icon="Call" Content="CallApi" Command="{BindCmd Execute, CommandName=callApi}" />
+			<Button Icon="Cloud" Content="CallApi" Command="{BindCmd Execute, CommandName=getWeather}" />
 			<Button Icon="Close" Toolbar.Align="Right"
                     Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>

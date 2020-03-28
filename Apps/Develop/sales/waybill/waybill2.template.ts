@@ -65,7 +65,8 @@ const template: Template = {
 		insertAbove: insertRow(InsertTo.above),
 		insertBelow: insertRow(InsertTo.below),
 		runServerScript,
-		callApi
+		callApi,
+		getWeather
 	}
 };
 
@@ -141,6 +142,18 @@ async function callApi() {
 	const ctrl = this.$ctrl;
 	try {
 		let result = await ctrl.$invoke('callApi', { Code: '11223344' }, null, {catchError:true});
+		console.dir(result);
+	}
+	catch (err) {
+		alert('1');
+		alert(err);
+	}
+}
+
+async function getWeather() {
+	const ctrl = this.$ctrl;
+	try {
+		let result = await ctrl.$invoke('getWeather', { City: 'London' }, null, {catchError:true});
 		console.dir(result);
 	}
 	catch (err) {

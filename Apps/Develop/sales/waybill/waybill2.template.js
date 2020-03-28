@@ -58,7 +58,8 @@ define(["require", "exports"], function (require, exports) {
             insertAbove: insertRow("above"),
             insertBelow: insertRow("below"),
             runServerScript,
-            callApi
+            callApi,
+            getWeather
         }
     };
     exports.default = template;
@@ -124,6 +125,17 @@ define(["require", "exports"], function (require, exports) {
         const ctrl = this.$ctrl;
         try {
             let result = await ctrl.$invoke('callApi', { Code: '11223344' }, null, { catchError: true });
+            console.dir(result);
+        }
+        catch (err) {
+            alert('1');
+            alert(err);
+        }
+    }
+    async function getWeather() {
+        const ctrl = this.$ctrl;
+        try {
+            let result = await ctrl.$invoke('getWeather', { City: 'London' }, null, { catchError: true });
             console.dir(result);
         }
         catch (err) {

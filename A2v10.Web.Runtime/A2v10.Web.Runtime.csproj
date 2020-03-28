@@ -48,13 +48,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\a2v10api.sql" />
     <Content Include="App_application\%40sql\platform\a2v10messaging.sql" />
     <Content Include="App_application\%40sql\platform\a2v10security.sql" />
     <Content Include="App_application\%40sql\platform\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\a2v10workflow.sql" />
-    <Content Include="App_application\samples\dasboard\dashboard.template.js" />
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="css\site.css" />
     <Content Include="css\site.min.css" />
@@ -77,6 +77,7 @@
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
     <Content Include="App_application\%40schemas\model-json-schema.json" />
+    <Content Include="App_application\%40schemas\sql-json-schema.json" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -99,12 +100,9 @@
       <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_application\admin\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="App_application\%40types\platform.d.ts" />
-    <TypeScriptCompile Include="App_application\samples\dasboard\dashboard.template.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

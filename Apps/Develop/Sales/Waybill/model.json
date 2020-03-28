@@ -106,6 +106,13 @@
 					"Authorization": "bearer ((MyApi.apiKey))"
 				}
 			}
+		},
+		"getWeather": {
+			"type": "callApi",
+			"parameters": {
+				"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+				"method": "get"
+			}
 		}
 	},
 	"reports": {
