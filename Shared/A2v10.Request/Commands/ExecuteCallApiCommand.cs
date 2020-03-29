@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
+using Newtonsoft.Json;
 
 namespace A2v10.Request
 {
@@ -28,14 +29,21 @@ namespace A2v10.Request
 			String url = Resolve(dataToExec.Get<String>("url"), dataToExec);
 			String method = dataToExec.Get<String>("method")?.ToLowerInvariant();
 			var headers = dataToExec.Get<ExpandoObject>("headers");
+			var body = dataToExec.Get<Object>("body");
+			String bodyStr = null;
 
 			HttpMethod mtd = HttpMethod.Get;
 			if (method == "post")
+			{
 				mtd = HttpMethod.Post;
+				bodyStr = ResolveBody(body, dataToExec);
+			}
 
 			using (var msg = new HttpRequestMessage(mtd, url))
 			{
 				SetHeaders(msg, headers, dataToExec);
+				if (bodyStr != null && mtd == HttpMethod.Post)
+					msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
 				var result = await _httpClient.SendAsync(msg);
 				if (result.IsSuccessStatusCode)
 				{
@@ -96,7 +104,14 @@ namespace A2v10.Request
 			foreach (Match m in ms)
 			{
 				String key = m.Groups[1].Value;
-				sb.Replace(m.Value, data.Eval<String>(key, null, throwIfError:true));
+				var valObj = data.Eval<Object>(key, null, throwIfError:true);
+				if (valObj is String valStr)
+					sb.Replace(m.Value, valStr);
+				else if (valObj is ExpandoObject valEo)
+					sb.Replace(m.Value, JsonConvert.SerializeObject(valEo));
+				else
+					sb.Replace(m.Value, valObj.ToString());
+
 			}
 			return sb.ToString();
 		}
@@ -109,6 +124,16 @@ namespace A2v10.Request
 			foreach (var hp in d)
 				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data));
 		}
+
+		String ResolveBody(Object body, ExpandoObject data)
+		{
+			if (body is String strBody)
+				return Resolve(strBody, data);
+			else if (body is ExpandoObject eoBody)
+				return JsonConvert.SerializeObject(eoBody);
+			throw new InvalidOperationException($"Invalid body type for CallApi ({body.GetType().Name})");
+		}
+
 
 		String GetEnvironmentValue(String key)
 		{

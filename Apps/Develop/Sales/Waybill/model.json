@@ -113,6 +113,17 @@
 				"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
 				"method": "get"
 			}
+		},
+		"testPost": {
+			"type": "callApi",
+			"parameters": {
+				"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+				"method": "post",
+				"headers": {
+					"Authorization": "bearer ((MyApi.apiKey))"
+				},
+				"body": "[[Body]]"
+			}
 		}
 	},
 	"reports": {

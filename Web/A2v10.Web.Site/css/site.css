@@ -2451,7 +2451,7 @@ pre.a2-code {
   vertical-align: 2px;
 }
 .btn.icon-top {
-  display: inline-grid;
+  display: inline-grid !important;
 }
 .btn.btn-primary {
   background-color: #3470b4;

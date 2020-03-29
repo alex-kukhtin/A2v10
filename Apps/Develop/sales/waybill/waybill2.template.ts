@@ -66,7 +66,8 @@ const template: Template = {
 		insertBelow: insertRow(InsertTo.below),
 		runServerScript,
 		callApi,
-		getWeather
+		getWeather,
+		testPost
 	}
 };
 
@@ -154,6 +155,18 @@ async function getWeather() {
 	const ctrl = this.$ctrl;
 	try {
 		let result = await ctrl.$invoke('getWeather', { City: 'London' }, null, {catchError:true});
+		console.dir(result);
+	}
+	catch (err) {
+		alert('1');
+		alert(err);
+	}
+}
+
+async function testPost() {
+	const ctrl = this.$ctrl;
+	try {
+		let result = await ctrl.$invoke('testPost', { City: 'London', Body: {x:1, y:2, s:'i am the string'} }, null, { catchError: true });
 		console.dir(result);
 	}
 	catch (err) {
